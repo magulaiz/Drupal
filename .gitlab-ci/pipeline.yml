@@ -249,7 +249,8 @@ variables:
 
 '🚲 Performance tests':
   <<: [ *with-composer, *default-job-settings ]
-  when: manual
+  rules:
+    - if: $PERFORMANCE_TEST == "1"
   variables:
     KUBERNETES_CPU_REQUEST: "24"
     MINK_DRIVER_ARGS_WEBDRIVER: '["chrome", {"browserName":"chrome","goog:chromeOptions":{"args":["--disable-dev-shm-usage","--disable-gpu","--headless","--no-sandbox"]}}, "http://chrome:9515"]'
