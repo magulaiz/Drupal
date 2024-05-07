@@ -53,35 +53,35 @@ final class LegacyEventDispatcher implements EventDispatcherInterface {
    * {@inheritdoc}
    */
   public function removeListener(string $eventName, callable|array $listener) {
-    $this->removeListener($eventName, $listener);
+    $this->inner->removeListener($eventName, $listener);
   }
 
   /**
    * {@inheritdoc}
    */
   public function removeSubscriber(EventSubscriberInterface $subscriber) {
-    $this->removeSubscriber($subscriber);
+    $this->inner->removeSubscriber($subscriber);
   }
 
   /**
    * {@inheritdoc}
    */
   public function getListeners(?string $eventName = NULL): array {
-    return $this->getListeners($eventName);
+    return $this->inner->getListeners($eventName);
   }
 
   /**
    * {@inheritdoc}
    */
   public function getListenerPriority(string $eventName, callable|array $listener): ?int {
-    return $this->getListenerPriority($eventName, $listener);
+    return $this->inner->getListenerPriority($eventName, $listener);
   }
 
   /**
    * {@inheritdoc}
    */
   public function hasListeners(?string $eventName = NULL): bool {
-    return $this->hasListeners($eventName);
+    return $this->inner->hasListeners($eventName);
   }
 
 }
