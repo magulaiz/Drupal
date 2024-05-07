@@ -1,10 +1,20 @@
-((Drupal) => {
+/**
+ * @file
+ * Focus trap functionality.
+ */
+
+((Drupal, tabbable) => {
+  /**
+   * Focus Trap implementation.
+   *
+   * @namespace Drupal.focusTrap
+   */
+  Drupal.focusTrap = {};
+
   /**
    * Array of elements in which focus will be available.
    */
   let focusTrapElements = [];
-
-  Drupal.focusTrap = {};
 
   /**
    * Creates the focus trap.
@@ -36,15 +46,19 @@
   }
 
   /**
-   * Add a focus trap
-   * @param {Array} elements
+   * Add a focus trap.
+   * @param {Array} elements - array of elements in which any tabbable elements
+   * will still be tabbable.
    */
   Drupal.focusTrap.add = (elements) => {
     focusTrapElements = elements;
     document.addEventListener('keydown', createFocusTrap);
   };
 
+  /**
+   * Remove the focus trap.
+   */
   Drupal.focusTrap.remove = () => {
     document.removeEventListener('keydown', createFocusTrap);
   };
-})(Drupal);
+})(Drupal, tabbable);
