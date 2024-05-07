@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Drupal\KernelTests\Core\Recipe;
 
 use Drupal\block\Entity\Block;
+use Drupal\contact\Entity\ContactForm;
 use Drupal\Core\Entity\EntityDisplayRepositoryInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Extension\ThemeInstallerInterface;
@@ -14,6 +15,7 @@ use Drupal\FunctionalTests\Core\Recipe\RecipeTestTrait;
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\Tests\block\Traits\BlockCreationTrait;
 use Drupal\Tests\node\Traits\ContentTypeCreationTrait;
+use Drupal\Tests\node\Traits\NodeCreationTrait;
 
 /**
  * @group Recipe
@@ -22,6 +24,7 @@ class EntityMethodConfigActionsTest extends KernelTestBase {
 
   use BlockCreationTrait;
   use ContentTypeCreationTrait;
+  use NodeCreationTrait;
   use RecipeTestTrait;
 
   /**
@@ -30,6 +33,7 @@ class EntityMethodConfigActionsTest extends KernelTestBase {
   protected static $modules = [
     'config_test',
     'field',
+    'filter',
     'layout_builder',
     'layout_discovery',
     'node',
@@ -44,7 +48,10 @@ class EntityMethodConfigActionsTest extends KernelTestBase {
   protected function setUp(): void {
     parent::setUp();
 
+    $this->installConfig('filter');
     $this->installConfig('node');
+    $this->installEntitySchema('node');
+    $this->installEntitySchema('user');
     $this->createContentType(['type' => 'test']);
 
     $this->container->get(EntityDisplayRepositoryInterface::class)
@@ -224,6 +231,44 @@ YAML;
     $block = Block::load($block->id());
     $this->assertSame('highlighted', $block->getRegion());
     $this->assertSame(-10, $block->getWeight());
+  }
+
+  public function testContactFormEntityActions(): void {
+    $this->enableModules(['contact']);
+    $this->installConfig('contact');
+
+    $form = ContactForm::load('personal');
+    $this->assertSame('Your message has been sent.', $form->getMessage());
+    $this->assertEmpty($form->getRecipients());
+    $this->assertSame('/', $form->getRedirectUrl()->toString());
+    $this->assertEmpty($form->getReply());
+    $this->assertSame(0, $form->getWeight());
+
+    $node = $this->createNode(['type' => 'test']);
+
+    $recipe = <<<YAML
+name: 'Change contact form'
+config:
+  actions:
+    {$form->getConfigDependencyName()}:
+      setMessage: 'Fly, little message!'
+      setRecipients:
+        - ben@deep.space
+        - jake@deep.space
+      setRedirectPath: {$node->toUrl()->toString()}
+      setReply: "From hell's heart, I reply to thee."
+      setWeight: -10
+YAML;
+
+    $recipe = $this->createRecipe($recipe);
+    RecipeRunner::processRecipe($recipe);
+
+    $form = ContactForm::load($form->id());
+    $this->assertSame('Fly, little message!', $form->getMessage());
+    $this->assertSame(['ben@deep.space', 'jake@deep.space'], $form->getRecipients());
+    $this->assertSame($node->toUrl()->toString(), $form->getRedirectUrl()->toString());
+    $this->assertSame("From hell's heart, I reply to thee.", $form->getReply());
+    $this->assertSame(-10, $form->getWeight());
   }
 
 }
