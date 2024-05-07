@@ -362,6 +362,7 @@ abstract class FieldConfigBase extends ConfigEntityBase implements FieldConfigIn
   /**
    * {@inheritdoc}
    */
+  #[ActionMethod(adminLabel: new TranslatableMarkup('Set whether field is translatable'), pluralize: FALSE)]
   public function setTranslatable($translatable) {
     $this->translatable = $translatable;
     return $this;
@@ -412,6 +413,7 @@ abstract class FieldConfigBase extends ConfigEntityBase implements FieldConfigIn
   /**
    * {@inheritdoc}
    */
+  #[ActionMethod(adminLabel: new TranslatableMarkup('Set whether field is required'), pluralize: FALSE)]
   public function setRequired($required) {
     $this->required = $required;
     return $this;

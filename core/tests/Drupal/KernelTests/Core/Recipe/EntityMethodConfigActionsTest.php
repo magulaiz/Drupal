@@ -10,7 +10,6 @@ use Drupal\Core\Recipe\RecipeRunner;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\FunctionalTests\Core\Recipe\RecipeTestTrait;
 use Drupal\KernelTests\KernelTestBase;
-use Drupal\node\Entity\NodeType;
 use Drupal\Tests\node\Traits\ContentTypeCreationTrait;
 
 /**
@@ -159,7 +158,11 @@ YAML;
     $this->assertSame($expected_status, $storage->load('foo')->status());
   }
 
-  public function testSetFieldLabelAndDescription(): void {
+  public function testChangeFieldSettings(): void {
+    $field = FieldConfig::loadByName('node', 'test', 'body');
+    $this->assertTrue($field->isTranslatable());
+    $this->assertFalse($field->isRequired());
+
     $recipe = <<<YAML
 name: 'Set field label and description'
 config:
@@ -167,6 +170,8 @@ config:
     field.field.node.*.body:
       setLabel: 'Not what you were expecting!'
       setDescription: "Any ol' nonsense can go here."
+      setTranslatable: false
+      setRequired: true
 YAML;
     $recipe = $this->createRecipe($recipe);
     RecipeRunner::processRecipe($recipe);
@@ -175,6 +180,8 @@ YAML;
     $this->assertNotEmpty($field);
     $this->assertSame('Not what you were expecting!', $field->getLabel());
     $this->assertSame("Any ol' nonsense can go here.", $field->getDescription());
+    $this->assertFalse($field->isTranslatable());
+    $this->assertTrue($field->isRequired());
   }
 
 }
