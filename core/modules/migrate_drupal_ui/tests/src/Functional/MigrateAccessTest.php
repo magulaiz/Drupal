@@ -26,10 +26,10 @@ class MigrateAccessTest extends BrowserTestBase {
   protected $defaultTheme = 'stark';
 
   /**
-   * Tests that only user 1 can access the migrate UI.
+   * Tests that only user with 'access drupal migration' can access the migrate UI.
    */
   public function testAccess() {
-    $this->drupalLogin($this->rootUser);
+    $this->drupalLogin($this->createUser(['access drupal migration']));
     $this->drupalGet('upgrade');
     $this->assertSession()->statusCodeEquals(200);
     $this->assertSession()->pageTextContains('Upgrade');
