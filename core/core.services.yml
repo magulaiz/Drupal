@@ -881,7 +881,6 @@ services:
   event_dispatcher.legacy:
     decorates: event_dispatcher
     class: Drupal\Core\LegacyEventDispatcher
-    public: false
     arguments: ['@event_dispatcher.legacy.inner']
   Symfony\Contracts\EventDispatcher\EventDispatcherInterface: '@event_dispatcher'
   controller_resolver:
