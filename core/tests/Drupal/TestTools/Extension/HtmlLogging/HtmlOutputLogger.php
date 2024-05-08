@@ -9,11 +9,8 @@ use PHPUnit\Event\TestRunner\Finished as TestRunnerFinished;
 use PHPUnit\Event\TestRunner\Started as TestRunnerStarted;
 
 /**
-<<<<<<< HEAD
-=======
  * Drupal's extension for providing HTML output results for functional tests.
  *
->>>>>>> 11.x
  * @internal
  */
 final class HtmlOutputLogger {
@@ -24,15 +21,9 @@ final class HtmlOutputLogger {
   private static ?self $instance = NULL;
 
   /**
-<<<<<<< HEAD
-   * @todo
-   */
-  private static array $links = [];
-=======
    * A file with list of links to HTML pages generated.
    */
   private ?string $browserOutputFile = NULL;
->>>>>>> 11.x
 
   /**
    * @throws \PHPUnit\Event\EventFacadeIsSealedException
