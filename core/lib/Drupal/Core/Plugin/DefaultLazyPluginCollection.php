@@ -164,7 +164,9 @@ class DefaultLazyPluginCollection extends LazyPluginCollection {
     if (
       isset($this->pluginInstances[$instance_id]) &&
       isset($this->configurations[$instance_id]) &&
-      $configuration[$this->pluginKey] ?? '' !== $this->configurations[$instance_id][$this->pluginKey]
+      isset($configuration[$this->pluginKey]) &&
+      isset($this->configurations[$instance_id][$this->pluginKey]) &&
+      $configuration[$this->pluginKey] !== $this->configurations[$instance_id][$this->pluginKey]
     ) {
       // If the plugin has already been instantiated by the configuration was
       // for a different plugin then we need to unset the instantiated plugin.
