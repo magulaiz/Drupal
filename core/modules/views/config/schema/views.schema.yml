@@ -9,8 +9,6 @@ views.settings:
     display_extenders:
       type: sequence
       label: 'Display extenders'
-      constraints:
-        FullyValidatable: null
       sequence:
         type: string
         label: 'Display extender'
@@ -73,8 +71,6 @@ views.settings:
     field_rewrite_elements:
       type: sequence
       label: 'Field rewrite elements'
-      constraints:
-        FullyValidatable: null
       sequence:
         type: label
         label: 'Element'
