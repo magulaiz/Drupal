@@ -43,7 +43,9 @@ use Drupal\Core\StringTranslation\TranslationInterface;
  *   # PermissionHandlerInterface::getPermissions().
  *   - Drupal\filter\FilterPermissions::permissions
  * @endcode
- *
+ * Permissions are sorted alphabetically by module and then by title. Sorting is
+ * done using the case-insensitive strcasecmp() function to ensure that the
+ * sorting is correct regardless of the case of the module and permission titles.
  * @see \Drupal\user\PermissionHandlerInterface::getPermissions()
  * @see filter.permissions.yml
  * @see \Drupal\filter\FilterPermissions
