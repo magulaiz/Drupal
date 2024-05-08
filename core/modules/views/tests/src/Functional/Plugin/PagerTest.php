@@ -87,7 +87,6 @@ class PagerTest extends ViewTestBase {
     $this->drupalGet('admin/structure/views/nojs/display/test_view/default/pager_options');
     $this->submitForm($edit, 'Apply');
     $this->assertSession()->pageTextContains('All items');
-    $this->assertTrue(FALSE);
 
     $edit = [
       'pager[type]' => 'none',
