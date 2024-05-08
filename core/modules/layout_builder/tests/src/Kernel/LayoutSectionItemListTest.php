@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\layout_builder\Kernel;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\entity_test\Entity\EntityTestBaseFieldDisplay;
 use Drupal\layout_builder\Entity\LayoutBuilderEntityViewDisplay;
@@ -12,11 +13,11 @@ use Drupal\layout_builder\Plugin\SectionStorage\OverridesSectionStorage;
 /**
  * Tests the field type for Layout Sections.
  *
- * @coversDefaultClass \Drupal\layout_builder\Field\LayoutSectionItemList
  *
  * @group layout_builder
  * @group #slow
  */
+#[CoversClass(\Drupal\layout_builder\Field\LayoutSectionItemList::class)]
 class LayoutSectionItemListTest extends SectionListTestBase {
 
   /**
@@ -53,9 +54,6 @@ class LayoutSectionItemListTest extends SectionListTestBase {
     return $entity->get(OverridesSectionStorage::FIELD_NAME);
   }
 
-  /**
-   * @covers ::equals
-   */
   public function testEquals() {
     $this->sectionList->getSection(0)->setLayoutSettings(['foo' => 1]);
 
@@ -66,9 +64,6 @@ class LayoutSectionItemListTest extends SectionListTestBase {
     $this->assertFalse($this->sectionList->equals($second_section_storage));
   }
 
-  /**
-   * @covers ::equals
-   */
   public function testEqualsNonSection() {
     $list = $this->prophesize(FieldItemListInterface::class);
     $this->assertFalse($this->sectionList->equals($list->reveal()));

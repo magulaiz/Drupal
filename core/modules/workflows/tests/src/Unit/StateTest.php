@@ -4,24 +4,18 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\workflows\Unit;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use Drupal\Tests\UnitTestCase;
 use Drupal\workflow_type_test\Plugin\WorkflowType\TestType;
 use Drupal\workflows\State;
 use Drupal\workflows\WorkflowTypeInterface;
 
 /**
- * @coversDefaultClass \Drupal\workflows\State
- *
  * @group workflows
  */
+#[CoversClass(\Drupal\workflows\State::class)]
 class StateTest extends UnitTestCase {
 
-  /**
-   * @covers ::__construct
-   * @covers ::id
-   * @covers ::label
-   * @covers ::weight
-   */
   public function testGetters() {
     $state = new State(
       $this->prophesize(WorkflowTypeInterface::class)->reveal(),
@@ -34,9 +28,6 @@ class StateTest extends UnitTestCase {
     $this->assertEquals(3, $state->weight());
   }
 
-  /**
-   * @covers ::canTransitionTo
-   */
   public function testCanTransitionTo() {
     $workflow_type = new TestType([], '', []);
     $workflow_type
@@ -51,9 +42,6 @@ class StateTest extends UnitTestCase {
     $this->assertFalse($state->canTransitionTo('published'));
   }
 
-  /**
-   * @covers ::getTransitionTo
-   */
   public function testGetTransitionTo() {
     $workflow_type = new TestType([], '', []);
     $workflow_type
@@ -65,9 +53,6 @@ class StateTest extends UnitTestCase {
     $this->assertEquals('Publish', $transition->label());
   }
 
-  /**
-   * @covers ::getTransitionTo
-   */
   public function testGetTransitionToException() {
     $this->expectException(\InvalidArgumentException::class);
     $this->expectExceptionMessage("Can not transition to 'published' state");
@@ -77,9 +62,6 @@ class StateTest extends UnitTestCase {
     $state->getTransitionTo('published');
   }
 
-  /**
-   * @covers ::getTransitions
-   */
   public function testGetTransitions() {
     $workflow_type = new TestType([], '', []);
     $workflow_type
@@ -96,9 +78,6 @@ class StateTest extends UnitTestCase {
     $this->assertEquals('Publish', $transitions['publish']->label());
   }
 
-  /**
-   * @covers ::labelCallback
-   */
   public function testLabelCallback() {
     $workflow_type = $this->prophesize(WorkflowTypeInterface::class)->reveal();
     $states = [

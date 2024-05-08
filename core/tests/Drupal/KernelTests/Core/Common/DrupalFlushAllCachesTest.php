@@ -4,13 +4,14 @@ declare(strict_types=1);
 
 namespace Drupal\KernelTests\Core\Common;
 
+use PHPUnit\Framework\Attributes\CoversFunction;
 use Drupal\Core\DependencyInjection\ContainerBuilder;
 use Drupal\KernelTests\KernelTestBase;
 
 /**
- * @covers ::drupal_flush_all_caches
  * @group Common
  */
+#[CoversFunction('drupal_flush_all_caches')]
 class DrupalFlushAllCachesTest extends KernelTestBase {
 
   /**

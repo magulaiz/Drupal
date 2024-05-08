@@ -4,14 +4,15 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\breakpoint\Unit;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use Drupal\breakpoint\Breakpoint;
 use Drupal\Tests\UnitTestCase;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 
 /**
- * @coversDefaultClass \Drupal\breakpoint\Breakpoint
  * @group Breakpoint
  */
+#[CoversClass(\Drupal\breakpoint\Breakpoint::class)]
 class BreakpointTest extends UnitTestCase {
 
   /**
@@ -61,18 +62,12 @@ class BreakpointTest extends UnitTestCase {
     $this->breakpoint->setStringTranslation($this->stringTranslation);
   }
 
-  /**
-   * @covers ::getLabel
-   */
   public function testGetLabel() {
     $this->pluginDefinition['label'] = 'Test label';
     $this->setupBreakpoint();
     $this->assertEquals(new TranslatableMarkup('Test label', [], ['context' => 'breakpoint'], $this->stringTranslation), $this->breakpoint->getLabel());
   }
 
-  /**
-   * @covers ::getWeight
-   */
   public function testGetWeight() {
     $this->pluginDefinition['weight'] = '4';
     $this->setupBreakpoint();
@@ -80,36 +75,24 @@ class BreakpointTest extends UnitTestCase {
     $this->assertSame(4, $this->breakpoint->getWeight());
   }
 
-  /**
-   * @covers ::getMediaQuery
-   */
   public function testGetMediaQuery() {
     $this->pluginDefinition['mediaQuery'] = 'only screen and (min-width: 1220px)';
     $this->setupBreakpoint();
     $this->assertEquals('only screen and (min-width: 1220px)', $this->breakpoint->getMediaQuery());
   }
 
-  /**
-   * @covers ::getMultipliers
-   */
   public function testGetMultipliers() {
     $this->pluginDefinition['multipliers'] = ['1x', '2x'];
     $this->setupBreakpoint();
     $this->assertSame(['1x', '2x'], $this->breakpoint->getMultipliers());
   }
 
-  /**
-   * @covers ::getProvider
-   */
   public function testGetProvider() {
     $this->pluginDefinition['provider'] = 'Breakpoint';
     $this->setupBreakpoint();
     $this->assertEquals('Breakpoint', $this->breakpoint->getProvider());
   }
 
-  /**
-   * @covers ::getGroup
-   */
   public function testGetGroup() {
     $this->pluginDefinition['group'] = 'Breakpoint';
     $this->setupBreakpoint();

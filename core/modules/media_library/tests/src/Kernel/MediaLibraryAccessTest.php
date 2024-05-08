@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\media_library\Kernel;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Access\AccessResultReasonInterface;
 use Drupal\entity_test\Entity\EntityTestBundle;
@@ -21,6 +22,7 @@ use Drupal\views\Views;
  *
  * @group media_library
  */
+#[CoversClass(\Drupal\media_library\MediaLibraryEditorOpener::class)]
 class MediaLibraryAccessTest extends KernelTestBase {
 
   use UserCreationTrait;
@@ -113,13 +115,11 @@ class MediaLibraryAccessTest extends KernelTestBase {
   }
 
   /**
-   * @covers \Drupal\media_library\MediaLibraryEditorOpener::checkAccess
    *
    * @param bool $media_embed_enabled
    *   Whether to test with media_embed filter enabled on the text format.
    * @param bool $can_use_format
    *   Whether the logged in user is allowed to use the text format.
-   *
    * @dataProvider editorOpenerAccessProvider
    */
   public function testEditorOpenerAccess($media_embed_enabled, $can_use_format) {

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\link\Unit\Plugin\Validation\Constraint;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use Drupal\Core\Routing\UrlGeneratorInterface;
 use Drupal\Core\Url;
 use Drupal\link\LinkItemInterface;
@@ -15,14 +16,11 @@ use Symfony\Component\Routing\Exception\RouteNotFoundException;
 use Symfony\Component\Validator\Context\ExecutionContextInterface;
 
 /**
- * @coversDefaultClass \Drupal\link\Plugin\Validation\Constraint\LinkNotExistingInternalConstraintValidator
  * @group Link
  */
+#[CoversClass(\Drupal\link\Plugin\Validation\Constraint\LinkNotExistingInternalConstraintValidator::class)]
 class LinkNotExistingInternalConstraintValidatorTest extends UnitTestCase {
 
-  /**
-   * @covers ::validate
-   */
   public function testValidateFromUri(): void {
     $url = Url::fromUri('https://www.drupal.org');
 
@@ -38,9 +36,6 @@ class LinkNotExistingInternalConstraintValidatorTest extends UnitTestCase {
     $this->validate($link, $context);
   }
 
-  /**
-   * @covers ::validate
-   */
   public function testValidateFromRoute(): void {
     $url = Url::fromRoute('example.existing_route');
 
@@ -63,9 +58,6 @@ class LinkNotExistingInternalConstraintValidatorTest extends UnitTestCase {
     $this->validate($link, $context);
   }
 
-  /**
-   * @covers ::validate
-   */
   public function testValidateFromNonExistingRoute(): void {
     $url = Url::fromRoute('example.not_existing_route');
 
@@ -89,8 +81,6 @@ class LinkNotExistingInternalConstraintValidatorTest extends UnitTestCase {
   }
 
   /**
-   * @covers ::validate
-   *
    * @see \Drupal\Core\Url::fromUri
    */
   public function testValidateWithMalformedUri(): void {

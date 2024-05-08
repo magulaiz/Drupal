@@ -4,13 +4,14 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\serialization\Unit\Encoder;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use Drupal\serialization\Encoder\JsonEncoder;
 use Drupal\Tests\UnitTestCase;
 
 /**
- * @coversDefaultClass \Drupal\serialization\Encoder\JsonEncoder
  * @group serialization
  */
+#[CoversClass(\Drupal\serialization\Encoder\JsonEncoder::class)]
 class JsonEncoderTest extends UnitTestCase {
 
   /**

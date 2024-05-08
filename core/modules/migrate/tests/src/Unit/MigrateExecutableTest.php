@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\migrate\Unit;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use Drupal\Component\Utility\Html;
 use Drupal\migrate\Plugin\MigrateDestinationInterface;
 use Drupal\migrate\Plugin\MigrateProcessInterface;
@@ -14,9 +15,9 @@ use Drupal\migrate\Row;
 use Prophecy\Argument;
 
 /**
- * @coversDefaultClass \Drupal\migrate\MigrateExecutable
  * @group migrate
  */
+#[CoversClass(\Drupal\migrate\MigrateExecutable::class)]
 class MigrateExecutableTest extends MigrateTestCase {
 
   /**
@@ -478,8 +479,6 @@ class MigrateExecutableTest extends MigrateTestCase {
    *   MigrationInterface::RESULT_COMPLETED.
    *
    * @dataProvider providerTestRollback
-   *
-   * @covers ::rollback
    */
   public function testRollback(array $id_map_records, bool $rollback_called = TRUE, array $source_id_keys = ['source'], array $destination_id_keys = ['destination'], int $expected_result = MigrationInterface::RESULT_COMPLETED) {
     $id_map = $this

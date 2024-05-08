@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\content_translation\Unit\Access;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use Drupal\content_translation\Access\ContentTranslationManageAccessCheck;
 use Drupal\Core\Access\AccessResult;
 use Drupal\Core\DependencyInjection\ContainerBuilder;
@@ -17,10 +18,10 @@ use Symfony\Component\Routing\Route;
 /**
  * Tests for content translation manage check.
  *
- * @coversDefaultClass \Drupal\content_translation\Access\ContentTranslationManageAccessCheck
  * @group Access
  * @group content_translation
  */
+#[CoversClass(\Drupal\content_translation\Access\ContentTranslationManageAccessCheck::class)]
 class ContentTranslationManageAccessCheckTest extends UnitTestCase {
 
   /**
@@ -48,8 +49,6 @@ class ContentTranslationManageAccessCheckTest extends UnitTestCase {
 
   /**
    * Tests the create access method.
-   *
-   * @covers ::access
    */
   public function testCreateAccess() {
     // Set the mock translation handler.

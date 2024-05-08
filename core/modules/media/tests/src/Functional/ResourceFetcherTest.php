@@ -4,18 +4,18 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\media\Functional;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use Drupal\media\OEmbed\Resource;
 use Drupal\Tests\media\Traits\OEmbedTestTrait;
 
 // cspell:ignore dailymotion Schipulcon
-
 /**
  * Tests the oEmbed resource fetcher service.
  *
- * @coversDefaultClass \Drupal\media\OEmbed\ResourceFetcher
  *
  * @group media
  */
+#[CoversClass(\Drupal\media\OEmbed\ResourceFetcher::class)]
 class ResourceFetcherTest extends MediaFunctionalTestBase {
 
   use OEmbedTestTrait;
@@ -64,7 +64,6 @@ class ResourceFetcherTest extends MediaFunctionalTestBase {
    * @param string $title
    *   The expected title of the resource.
    *
-   * @covers ::fetchResource
    *
    * @dataProvider providerFetchResource
    */

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\file\Unit\Upload;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use Drupal\file\Upload\ContentDispositionFilenameParser;
 use Drupal\Tests\UnitTestCase;
 use Symfony\Component\HttpFoundation\Request;
@@ -13,14 +14,12 @@ use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
  * Tests the ContentDispositionFilenameParser class.
  *
  * @group file
- * @coversDefaultClass \Drupal\file\Upload\ContentDispositionFilenameParser
  */
+#[CoversClass(\Drupal\file\Upload\ContentDispositionFilenameParser::class)]
 class ContentDispositionFilenameParserTest extends UnitTestCase {
 
   /**
    * Tests the parseFilename() method.
-   *
-   * @covers ::parseFilename
    */
   public function testParseFilenameSuccess(): void {
     $request = $this->createRequest('filename="test.txt"');
@@ -29,7 +28,6 @@ class ContentDispositionFilenameParserTest extends UnitTestCase {
   }
 
   /**
-   * @covers ::parseFilename
    * @dataProvider invalidHeaderProvider
    */
   public function testParseFilenameInvalid(string | bool $contentDisposition): void {
@@ -39,9 +37,6 @@ class ContentDispositionFilenameParserTest extends UnitTestCase {
     ContentDispositionFilenameParser::parseFilename($request);
   }
 
-  /**
-   * @covers ::parseFilename
-   */
   public function testParseFilenameMissing(): void {
     $this->expectException(BadRequestHttpException::class);
     $this->expectExceptionMessage('"Content-Disposition" header is required. A file name in the format "filename=FILENAME" must be provided.');
@@ -49,9 +44,6 @@ class ContentDispositionFilenameParserTest extends UnitTestCase {
     ContentDispositionFilenameParser::parseFilename($request);
   }
 
-  /**
-   * @covers ::parseFilename
-   */
   public function testParseFilenameExtended(): void {
     $this->expectException(BadRequestHttpException::class);
     $this->expectExceptionMessage('The extended "filename*" format is currently not supported in the "Content-Disposition" header.');

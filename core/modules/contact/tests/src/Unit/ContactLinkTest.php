@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\contact\Unit;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use Drupal\contact\Plugin\views\field\ContactLink;
 use Drupal\Core\Access\AccessManagerInterface;
 use Drupal\Core\Entity\EntityRepositoryInterface;
@@ -17,9 +18,9 @@ use Drupal\views\ResultRow;
 use Drupal\views\ViewExecutable;
 
 /**
- * @coversDefaultClass \Drupal\contact\Plugin\views\field\ContactLink
  * @group contact
  */
+#[CoversClass(\Drupal\contact\Plugin\views\field\ContactLink::class)]
 class ContactLinkTest extends UnitTestCase {
 
   use ViewsLoggerTestTrait;
@@ -37,8 +38,6 @@ class ContactLinkTest extends UnitTestCase {
 
   /**
    * Test the render method when getEntity returns NULL.
-   *
-   * @covers ::render
    */
   public function testRenderNullEntity(): void {
     $row = new ResultRow();

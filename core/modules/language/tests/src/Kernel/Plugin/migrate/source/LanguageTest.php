@@ -4,14 +4,15 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\language\Kernel\Plugin\migrate\source;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use Drupal\Tests\migrate\Kernel\MigrateSqlSourceTestBase;
 
 /**
  * Tests the language source plugin.
  *
- * @covers \Drupal\language\Plugin\migrate\source\Language
  * @group language
  */
+#[CoversClass(\Drupal\language\Plugin\migrate\source\Language::class)]
 class LanguageTest extends MigrateSqlSourceTestBase {
 
   /**

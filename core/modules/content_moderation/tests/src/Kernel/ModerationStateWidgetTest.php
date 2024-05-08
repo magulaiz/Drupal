@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\content_moderation\Kernel;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use Drupal\content_moderation\Plugin\Field\FieldWidget\ModerationStateWidget;
 use Drupal\Core\Entity\Entity\EntityFormDisplay;
 use Drupal\Core\Form\FormState;
@@ -13,9 +14,9 @@ use Drupal\node\Entity\NodeType;
 use Drupal\Tests\content_moderation\Traits\ContentModerationTestTrait;
 
 /**
- * @coversDefaultClass \Drupal\content_moderation\Plugin\Field\FieldWidget\ModerationStateWidget
  * @group content_moderation
  */
+#[CoversClass(\Drupal\content_moderation\Plugin\Field\FieldWidget\ModerationStateWidget::class)]
 class ModerationStateWidgetTest extends KernelTestBase {
 
   use ContentModerationTestTrait;
@@ -82,9 +83,6 @@ class ModerationStateWidgetTest extends KernelTestBase {
     $this->assertEquals(0, $entity->moderation_state->count());
   }
 
-  /**
-   * @covers ::isApplicable
-   */
   public function testIsApplicable() {
     // The moderation_state field definition should be applicable to our widget.
     $fields = $this->container->get('entity_field.manager')->getFieldDefinitions('node', 'test_type');

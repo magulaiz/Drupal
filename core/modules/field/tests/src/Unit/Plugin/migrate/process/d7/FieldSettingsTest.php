@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\field\Unit\Plugin\migrate\process\d7;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use Drupal\field\Plugin\migrate\process\d7\FieldSettings;
 use Drupal\migrate\Plugin\MigrationInterface;
 use Drupal\migrate\MigrateExecutableInterface;
@@ -11,15 +12,13 @@ use Drupal\migrate\Row;
 use Drupal\Tests\migrate\Unit\MigrateTestCase;
 
 /**
- * @coversDefaultClass \Drupal\field\Plugin\migrate\process\d7\FieldSettings
  * @group field
  */
+#[CoversClass(\Drupal\field\Plugin\migrate\process\d7\FieldSettings::class)]
 class FieldSettingsTest extends MigrateTestCase {
 
   /**
    * Tests transformation of image field settings.
-   *
-   * @covers ::transform
    */
   public function testTransformImageSettings() {
     $migration = $this->createMock(MigrationInterface::class);

@@ -4,21 +4,21 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\views\Unit\Plugin\views\filter;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use Drupal\Tests\UnitTestCase;
 use Drupal\views\Plugin\views\display\DisplayPluginBase;
 use Drupal\views\Plugin\views\filter\NumericFilter;
 use Drupal\views\ViewExecutable;
 
 /**
- * @coversDefaultClass \Drupal\views\Plugin\views\filter\NumericFilter
  * @group Views
  */
+#[CoversClass(\Drupal\views\Plugin\views\filter\NumericFilter::class)]
 class NumericFilterTest extends UnitTestCase {
 
   /**
    * Tests the acceptExposedInput method.
    *
-   * @covers ::acceptExposedInput
    * @dataProvider provideAcceptExposedInput
    */
   public function testAcceptExposedInput($options, $value, $expected): void {

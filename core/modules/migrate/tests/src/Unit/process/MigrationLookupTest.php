@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\migrate\Unit\process;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use Drupal\migrate\MigrateSkipRowException;
 use Drupal\migrate\Plugin\MigrationInterface;
 use Drupal\migrate\Plugin\migrate\process\MigrationLookup;
@@ -12,14 +13,11 @@ use Drupal\migrate\Plugin\MigrationPluginManagerInterface;
 use Prophecy\Argument;
 
 /**
- * @coversDefaultClass \Drupal\migrate\Plugin\migrate\process\MigrationLookup
  * @group migrate
  */
+#[CoversClass(\Drupal\migrate\Plugin\migrate\process\MigrationLookup::class)]
 class MigrationLookupTest extends MigrationLookupTestCase {
 
-  /**
-   * @covers ::transform
-   */
   public function testTransformWithStubSkipping() {
     $migration_plugin = $this->prophesize(MigrationInterface::class);
     $migration_plugin_manager = $this->prophesize(MigrationPluginManagerInterface::class);
@@ -47,8 +45,6 @@ class MigrationLookupTest extends MigrationLookupTestCase {
   }
 
   /**
-   * @covers ::transform
-   *
    * @dataProvider providerTestTransformWithStubbing
    */
   public function testTransformWithStubbing($exception_class, $exception_message, $expected_message): void {

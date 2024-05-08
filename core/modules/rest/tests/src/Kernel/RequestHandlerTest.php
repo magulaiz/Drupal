@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\rest\Kernel;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use Drupal\Component\Serialization\Json;
 use Drupal\Core\Routing\RouteMatch;
 use Drupal\KernelTests\KernelTestBase;
@@ -21,8 +22,8 @@ use Symfony\Component\Serializer\SerializerInterface;
  * Test REST RequestHandler controller logic.
  *
  * @group rest
- * @coversDefaultClass \Drupal\rest\RequestHandler
  */
+#[CoversClass(\Drupal\rest\RequestHandler::class)]
 class RequestHandlerTest extends KernelTestBase {
 
   /**
@@ -51,9 +52,6 @@ class RequestHandlerTest extends KernelTestBase {
     $this->requestHandler = new RequestHandler($serializer->reveal());
   }
 
-  /**
-   * @covers ::handle
-   */
   public function testHandle() {
     $request = new Request([], [], [], [], [], ['CONTENT_TYPE' => 'application/json'], Json::encode(['this is an array']));
     $route_match = new RouteMatch('test', (new Route('/rest/test', ['_rest_resource_config' => 'rest_plugin', 'example' => ''], ['_format' => 'json']))->setMethods(['GET']));

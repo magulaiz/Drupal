@@ -4,13 +4,14 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\views\Unit\Plugin\area;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use Drupal\Tests\UnitTestCase;
 use Drupal\views\Plugin\views\area\View as ViewAreaPlugin;
 
 /**
- * @coversDefaultClass \Drupal\views\Plugin\views\area\View
  * @group views
  */
+#[CoversClass(\Drupal\views\Plugin\views\area\View::class)]
 class ViewTest extends UnitTestCase {
 
   /**
@@ -39,9 +40,6 @@ class ViewTest extends UnitTestCase {
       ->getMock();
   }
 
-  /**
-   * @covers ::calculateDependencies
-   */
   public function testCalculateDependencies() {
     /** @var \Drupal\views\Entity\View $view_this */
     /** @var \Drupal\views\Entity\View $view_other */

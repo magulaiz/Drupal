@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\layout_builder\Unit;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use Drupal\Core\Block\BlockManagerInterface;
 use Drupal\Core\Block\BlockPluginInterface;
 use Drupal\Core\DependencyInjection\ContainerBuilder;
@@ -17,14 +18,11 @@ use Prophecy\Argument;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
 /**
- * @coversDefaultClass \Drupal\layout_builder\SectionComponent
  * @group layout_builder
  */
+#[CoversClass(\Drupal\layout_builder\SectionComponent::class)]
 class SectionComponentTest extends UnitTestCase {
 
-  /**
-   * @covers ::toRenderArray
-   */
   public function testToRenderArray() {
     $existing_block = $this->prophesize(BlockPluginInterface::class);
     $existing_block->getPluginId()->willReturn('block_plugin_id');

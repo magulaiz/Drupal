@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\media_library\Unit;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\StringTranslation\TranslationInterface;
 use Drupal\media_library\Plugin\views\field\MediaLibrarySelectForm;
@@ -18,9 +19,9 @@ use Symfony\Component\HttpFoundation\InputBag;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
- * @coversDefaultClass \Drupal\media_library\Plugin\views\field\MediaLibrarySelectForm
  * @group media_library
  */
+#[CoversClass(\Drupal\media_library\Plugin\views\field\MediaLibrarySelectForm::class)]
 class MediaLibrarySelectFormTest extends UnitTestCase {
 
   /**
@@ -32,9 +33,6 @@ class MediaLibrarySelectFormTest extends UnitTestCase {
     \Drupal::setContainer($container);
   }
 
-  /**
-   * @covers ::viewsForm
-   */
   public function testViewsForm(): void {
     $row = new ResultRow();
 

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\migrate\Unit\Plugin\migrate\destination;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Field\FieldTypePluginManagerInterface;
@@ -16,9 +17,9 @@ use Drupal\migrate\Row;
 /**
  * Tests entity revision destination functionality.
  *
- * @coversDefaultClass \Drupal\migrate\Plugin\migrate\destination\EntityRevision
  * @group migrate
  */
+#[CoversClass(\Drupal\migrate\Plugin\migrate\destination\EntityRevision::class)]
 class EntityRevisionTest extends EntityTestBase {
 
   /**

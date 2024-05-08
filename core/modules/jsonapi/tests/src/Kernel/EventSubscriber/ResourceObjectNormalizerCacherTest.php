@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\jsonapi\Kernel\EventSubscriber;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Cache\CacheableMetadata;
 use Drupal\jsonapi\EventSubscriber\ResourceObjectNormalizationCacher;
@@ -17,11 +18,10 @@ use Symfony\Component\HttpKernel\Event\TerminateEvent;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 
 /**
- * @coversDefaultClass \Drupal\jsonapi\EventSubscriber\ResourceObjectNormalizationCacher
  * @group jsonapi
- *
  * @internal
  */
+#[CoversClass(\Drupal\jsonapi\EventSubscriber\ResourceObjectNormalizationCacher::class)]
 class ResourceObjectNormalizerCacherTest extends KernelTestBase {
 
   /**

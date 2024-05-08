@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\jsonapi\Kernel\Normalizer;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use Drupal\Core\Field\BaseFieldDefinition;
 use Drupal\Core\Field\FieldItemInterface;
 use Drupal\entity_test\Entity\EntityTest;
@@ -12,11 +13,10 @@ use Drupal\jsonapi\Normalizer\Value\CacheableNormalization;
 use Drupal\Tests\jsonapi\Kernel\JsonapiKernelTestBase;
 
 /**
- * @coversDefaultClass \Drupal\jsonapi\Normalizer\FieldItemNormalizer
  * @group jsonapi
- *
  * @internal
  */
+#[CoversClass(\Drupal\jsonapi\Normalizer\FieldItemNormalizer::class)]
 class FieldItemNormalizerTest extends JsonapiKernelTestBase {
 
   /**
@@ -57,8 +57,6 @@ class FieldItemNormalizerTest extends JsonapiKernelTestBase {
 
   /**
    * Tests a field item that has no properties.
-   *
-   * @covers ::normalize
    */
   public function testNormalizeFieldItemWithoutProperties(): void {
     $item = $this->prophesize(FieldItemInterface::class);

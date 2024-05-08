@@ -4,19 +4,18 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\jsonapi\Unit\Query;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use Drupal\jsonapi\Query\EntityConditionGroup;
 use Drupal\Tests\UnitTestCase;
 
 /**
- * @coversDefaultClass \Drupal\jsonapi\Query\EntityConditionGroup
  * @group jsonapi
- *
  * @internal
  */
+#[CoversClass(\Drupal\jsonapi\Query\EntityConditionGroup::class)]
 class EntityConditionGroupTest extends UnitTestCase {
 
   /**
-   * @covers ::__construct
    * @dataProvider constructProvider
    */
   public function testConstruct($case) {
@@ -30,9 +29,6 @@ class EntityConditionGroupTest extends UnitTestCase {
     }
   }
 
-  /**
-   * @covers ::__construct
-   */
   public function testConstructException() {
     $this->expectException(\InvalidArgumentException::class);
     new EntityConditionGroup('NOT_ALLOWED', []);

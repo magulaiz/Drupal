@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\migrate\Unit\process;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use Drupal\migrate\ProcessPluginBase as CoreProcessPluginBase;
 use Drupal\Tests\UnitTestCase;
 
@@ -11,17 +12,12 @@ use Drupal\Tests\UnitTestCase;
  * Tests the base process plugin class.
  *
  * @group migrate
- *
- * @coversDefaultClass \Drupal\migrate\ProcessPluginBase
  */
+#[CoversClass(\Drupal\migrate\ProcessPluginBase::class)]
 class ProcessPluginBaseTest extends UnitTestCase {
 
   /**
    * Tests stopping the pipeline.
-   *
-   * @covers ::isPipelineStopped
-   * @covers ::stopPipeline
-   * @covers ::reset
    */
   public function testStopPipeline() {
     $plugin = new ProcessPluginBase([], 'plugin_id', []);

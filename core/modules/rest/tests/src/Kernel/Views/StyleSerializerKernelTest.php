@@ -4,14 +4,15 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\rest\Kernel\Views;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use Drupal\Tests\views\Kernel\ViewsKernelTestBase;
 use Drupal\views\Entity\View;
 use Drupal\views\Tests\ViewTestData;
 
 /**
- * @coversDefaultClass \Drupal\rest\Plugin\views\style\Serializer
  * @group views
  */
+#[CoversClass(\Drupal\rest\Plugin\views\style\Serializer::class)]
 class StyleSerializerKernelTest extends ViewsKernelTestBase {
 
   /**
@@ -33,9 +34,6 @@ class StyleSerializerKernelTest extends ViewsKernelTestBase {
     ViewTestData::createTestViews(static::class, ['rest_test_views']);
   }
 
-  /**
-   * @covers ::calculateDependencies
-   */
   public function testCalculateDependencies() {
     /** @var \Drupal\views\Entity\View $view */
     $view = View::load('test_serializer_display_entity');

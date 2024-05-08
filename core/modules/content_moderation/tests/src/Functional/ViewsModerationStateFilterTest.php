@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\content_moderation\Functional;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use Drupal\Tests\content_moderation\Traits\ContentModerationTestTrait;
 use Drupal\Tests\views\Functional\ViewTestBase;
 use Drupal\views\Entity\View;
@@ -13,11 +14,11 @@ use Drupal\workflows\Entity\Workflow;
 /**
  * Tests the views 'moderation_state_filter' filter plugin.
  *
- * @coversDefaultClass \Drupal\content_moderation\Plugin\views\filter\ModerationStateFilter
  *
  * @group content_moderation
  * @group #slow
  */
+#[CoversClass(\Drupal\content_moderation\Plugin\views\filter\ModerationStateFilter::class)]
 class ViewsModerationStateFilterTest extends ViewTestBase {
 
   use ContentModerationTestTrait;
@@ -81,9 +82,6 @@ class ViewsModerationStateFilterTest extends ViewTestBase {
 
   /**
    * Tests the dependency handling of the moderation state filter.
-   *
-   * @covers ::calculateDependencies
-   * @covers ::onDependencyRemoval
    */
   public function testModerationStateFilterDependencyHandling() {
     // First, check that the view doesn't have any config dependency when there

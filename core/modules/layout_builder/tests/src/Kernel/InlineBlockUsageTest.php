@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\layout_builder\Kernel;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use Drupal\Core\Database\Connection;
 use Drupal\entity_test\Entity\EntityTest;
 use Drupal\KernelTests\KernelTestBase;
@@ -12,10 +13,10 @@ use Drupal\layout_builder\InlineBlockUsageInterface;
 /**
  * Class for testing the InlineBlockUsage service.
  *
- * @coversDefaultClass \Drupal\layout_builder\InlineBlockUsage
  *
  * @group layout_builder
  */
+#[CoversClass(\Drupal\layout_builder\InlineBlockUsage::class)]
 class InlineBlockUsageTest extends KernelTestBase {
 
   /**

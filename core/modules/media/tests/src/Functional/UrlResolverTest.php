@@ -4,18 +4,18 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\media\Functional;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use Drupal\Tests\media\Traits\OEmbedTestTrait;
 
 // cspell:ignore dailymotion
-
 /**
  * Tests the oEmbed URL resolver service.
  *
- * @coversDefaultClass \Drupal\media\OEmbed\UrlResolver
  *
  * @group media
  * @group #slow
  */
+#[CoversClass(\Drupal\media\OEmbed\UrlResolver::class)]
 class UrlResolverTest extends MediaFunctionalTestBase {
 
   use OEmbedTestTrait;
@@ -65,8 +65,6 @@ class UrlResolverTest extends MediaFunctionalTestBase {
   /**
    * Tests resource URL resolution with a matched provider endpoint.
    *
-   * @covers ::getProviderByUrl
-   * @covers ::getResourceUrl
    *
    * @param string $url
    *   The asset URL to resolve.
@@ -124,9 +122,6 @@ class UrlResolverTest extends MediaFunctionalTestBase {
    * @param string $resource_url
    *   The expected oEmbed resource URL of the asset.
    *
-   * @covers ::discoverResourceUrl
-   * @covers ::getProviderByUrl
-   * @covers ::getResourceUrl
    *
    * @dataProvider providerUrlDiscovery
    */

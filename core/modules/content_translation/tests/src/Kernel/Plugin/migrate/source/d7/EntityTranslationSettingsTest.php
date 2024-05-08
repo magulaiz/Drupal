@@ -4,15 +4,16 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\content_translation\Kernel\Plugin\migrate\source\d7;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use Drupal\Tests\migrate\Kernel\MigrateSqlSourceTestBase;
 
 /**
  * Tests entity translation settings source plugin.
  *
- * @covers \Drupal\content_translation\Plugin\migrate\source\d7\EntityTranslationSettings
  *
  * @group content_translation
  */
+#[CoversClass(\Drupal\content_translation\Plugin\migrate\source\d7\EntityTranslationSettings::class)]
 class EntityTranslationSettingsTest extends MigrateSqlSourceTestBase {
 
   /**

@@ -4,15 +4,16 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\filter\Kernel\Plugin\migrate\source\d6;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use Drupal\Tests\migrate\Kernel\MigrateSqlSourceTestBase;
 
 /**
  * Tests D6 filter format source plugin.
  *
- * @covers \Drupal\filter\Plugin\migrate\source\d6\FilterFormat
  *
  * @group filter
  */
+#[CoversClass(\Drupal\filter\Plugin\migrate\source\d6\FilterFormat::class)]
 class FilterFormatTest extends MigrateSqlSourceTestBase {
 
   /**

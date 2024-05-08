@@ -4,14 +4,14 @@ declare(strict_types=1);
 
 namespace Drupal\KernelTests\Core\Condition;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use Drupal\Core\Condition\ConditionPluginCollection;
 use Drupal\KernelTests\KernelTestBase;
 
 /**
- * @coversDefaultClass \Drupal\Core\Condition\ConditionPluginCollection
- *
  * @group Condition
  */
+#[CoversClass(\Drupal\Core\Condition\ConditionPluginCollection::class)]
 class ConditionPluginCollectionTest extends KernelTestBase {
 
   /**
@@ -23,9 +23,6 @@ class ConditionPluginCollectionTest extends KernelTestBase {
     'path_alias',
   ];
 
-  /**
-   * @covers ::getConfiguration
-   */
   public function testGetConfiguration(): void {
     // Include a condition that has custom configuration and a type mismatch on
     // 'negate' by using 0 instead of FALSE.

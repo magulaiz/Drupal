@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\settings_tray\Unit\Access;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use Drupal\block\BlockInterface;
 use Drupal\Core\Access\AccessResultAllowed;
 use Drupal\Core\Access\AccessResultInterface;
@@ -16,14 +17,12 @@ use Drupal\TestTools\Random;
 use Prophecy\Argument;
 
 /**
- * @coversDefaultClass \Drupal\settings_tray\Access\BlockPluginHasSettingsTrayFormAccessCheck
  * @group settings_tray
  */
+#[CoversClass(\Drupal\settings_tray\Access\BlockPluginHasSettingsTrayFormAccessCheck::class)]
 class BlockPluginHasSettingsTrayFormAccessCheckTest extends UnitTestCase {
 
   /**
-   * @covers ::access
-   * @covers ::accessBlockPlugin
    * @dataProvider providerTestAccess
    */
   public function testAccess($with_forms, array $plugin_definition, AccessResultInterface $expected_access_result) {

@@ -4,15 +4,15 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\user\Kernel\ContextProvider;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\user\Entity\User;
 
 /**
- * @coversDefaultClass \Drupal\user\ContextProvider\CurrentUserContext
- *
  * @group user
  */
+#[CoversClass(\Drupal\user\ContextProvider\CurrentUserContext::class)]
 class CurrentUserContextTest extends KernelTestBase {
 
   /**
@@ -29,9 +29,6 @@ class CurrentUserContextTest extends KernelTestBase {
     $this->installEntitySchema('user');
   }
 
-  /**
-   * @covers ::getAvailableContexts
-   */
   public function testGetAvailableContexts() {
     $context_repository = $this->container->get('context.repository');
 

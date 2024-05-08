@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\workspaces\Kernel;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Form\FormState;
 use Drupal\field\Entity\FieldConfig;
@@ -24,6 +25,7 @@ use Drupal\workspaces\Entity\Workspace;
  * @group views
  * @group workspaces
  */
+#[CoversClass(\Drupal\workspaces\ViewsQueryAlter::class)]
 class WorkspaceViewsIntegrationTest extends ViewsKernelTestBase {
 
   use ContentTypeCreationTrait;
@@ -99,9 +101,6 @@ class WorkspaceViewsIntegrationTest extends ViewsKernelTestBase {
 
   /**
    * Tests workspace query alter for views.
-   *
-   * @covers \Drupal\workspaces\ViewsQueryAlter::alterQueryForEntityType
-   * @covers \Drupal\workspaces\ViewsQueryAlter::getRevisionTableJoin
    */
   public function testViewsQueryAlter(): void {
     // Create a test entity and two nodes.

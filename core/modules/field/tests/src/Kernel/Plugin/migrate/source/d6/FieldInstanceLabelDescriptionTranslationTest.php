@@ -4,16 +4,16 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\field\Kernel\Plugin\migrate\source\d6;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use Drupal\Tests\migrate\Kernel\MigrateSqlSourceTestBase;
 
 // cspell:ignore objectid
-
 /**
  * Tests the field label and description translation source plugin.
  *
- * @covers \Drupal\field\Plugin\migrate\source\d6\FieldLabelDescriptionTranslation
  * @group migrate_drupal
  */
+#[CoversClass(\Drupal\field\Plugin\migrate\source\d6\FieldLabelDescriptionTranslation::class)]
 class FieldInstanceLabelDescriptionTranslationTest extends MigrateSqlSourceTestBase {
 
   /**

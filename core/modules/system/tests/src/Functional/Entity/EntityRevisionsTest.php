@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\system\Functional\Entity;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use Drupal\entity_test\Entity\EntityTestMulRev;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
@@ -15,6 +16,7 @@ use Drupal\Tests\BrowserTestBase;
  *
  * @group Entity
  */
+#[CoversClass(\Drupal\Core\Entity\ContentEntityBase::class)]
 class EntityRevisionsTest extends BrowserTestBase {
 
   /**
@@ -224,11 +226,6 @@ class EntityRevisionsTest extends BrowserTestBase {
 
   /**
    * Tests manual revert of the revision ID value.
-   *
-   * @covers \Drupal\Core\Entity\ContentEntityBase::getRevisionId
-   * @covers \Drupal\Core\Entity\ContentEntityBase::getLoadedRevisionId
-   * @covers \Drupal\Core\Entity\ContentEntityBase::setNewRevision
-   * @covers \Drupal\Core\Entity\ContentEntityBase::isNewRevision
    */
   public function testNewRevisionRevert() {
     $entity = EntityTestMulRev::create(['name' => 'EntityLoadedRevisionTest']);

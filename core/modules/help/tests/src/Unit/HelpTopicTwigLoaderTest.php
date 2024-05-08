@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\help\Unit;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Extension\ThemeHandlerInterface;
 use Drupal\help\HelpTopicTwigLoader;
@@ -14,9 +15,9 @@ use Twig\Error\LoaderError;
 /**
  * Unit test for the HelpTopicTwigLoader class.
  *
- * @coversDefaultClass \Drupal\help\HelpTopicTwigLoader
  * @group help
  */
+#[CoversClass(\Drupal\help\HelpTopicTwigLoader::class)]
 class HelpTopicTwigLoaderTest extends UnitTestCase {
 
   /**
@@ -55,9 +56,6 @@ class HelpTopicTwigLoaderTest extends UnitTestCase {
     $this->helpLoader = new HelpTopicTwigLoader('\fake\root\path', $module_handler, $theme_handler);
   }
 
-  /**
-   * @covers ::__construct
-   */
   public function testConstructor() {
     // Verify that the module/theme directories were added in the constructor,
     // and non-existent directories were omitted.
@@ -67,17 +65,11 @@ class HelpTopicTwigLoaderTest extends UnitTestCase {
     $this->assertContains($this->directories['theme']['test'] . '/help_topics', $paths);
   }
 
-  /**
-   * @covers ::getSourceContext
-   */
   public function testGetSourceContext() {
     $source = $this->helpLoader->getSourceContext('@' . HelpTopicTwigLoader::MAIN_NAMESPACE . '/test.topic.html.twig');
     $this->assertEquals('{% line 4 %}<h2>Test</h2>', $source->getCode());
   }
 
-  /**
-   * @covers ::getSourceContext
-   */
   public function testGetSourceContextException() {
     $this->expectException(LoaderError::class);
     $this->expectExceptionMessage("Malformed YAML in help topic \"vfs://root/modules/test/help_topics/test.invalid_yaml.html.twig\":");

@@ -4,14 +4,14 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\update\Unit;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use Drupal\Tests\UnitTestCase;
 use Drupal\update\ProjectRelease;
 
 /**
- * @coversDefaultClass \Drupal\update\ProjectRelease
- *
  * @group update
  */
+#[CoversClass(\Drupal\update\ProjectRelease::class)]
 class ProjectReleaseTest extends UnitTestCase {
 
   /**
@@ -22,12 +22,6 @@ class ProjectReleaseTest extends UnitTestCase {
    * @param mixed[] $expected
    *   The values expected to be returned from the object methods.
    *
-   * @covers ::createFromArray
-   * @covers ::isInsecure
-   * @covers ::isSecurityRelease
-   * @covers ::isPublished
-   * @covers ::isUnsupported
-   * @covers ::isUnsupported
    *
    * @dataProvider providerCreateFromArray
    */
@@ -106,8 +100,6 @@ class ProjectReleaseTest extends UnitTestCase {
 
   /**
    * Tests that optional fields can be omitted.
-   *
-   * @covers ::createFromArray
    */
   public function testOptionalFields(): void {
     $data = $this->getValidData();
@@ -134,7 +126,6 @@ class ProjectReleaseTest extends UnitTestCase {
    * @param string $missing_field
    *   The field to test.
    *
-   * @covers ::createFromArray
    *
    * @dataProvider providerCreateFromArrayMissingField
    */
@@ -169,7 +160,6 @@ class ProjectReleaseTest extends UnitTestCase {
    * @param string $expected_message
    *   The expected message for the field.
    *
-   * @covers ::createFromArray
    *
    * @dataProvider providerCreateFromArrayInvalidField
    */

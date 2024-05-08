@@ -4,15 +4,16 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\migrate_drupal\Unit\source;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use Drupal\Core\Database\Connection;
 use Drupal\Tests\migrate\Unit\MigrateTestCase;
 use Drupal\migrate\Exception\RequirementsException;
 use Drupal\migrate_drupal\Plugin\migrate\source\DrupalSqlBase;
 
 /**
- * @coversDefaultClass \Drupal\migrate_drupal\Plugin\migrate\source\DrupalSqlBase
  * @group migrate_drupal
  */
+#[CoversClass(\Drupal\migrate_drupal\Plugin\migrate\source\DrupalSqlBase::class)]
 class DrupalSqlBaseTest extends MigrateTestCase {
 
   /**
@@ -74,9 +75,6 @@ class DrupalSqlBaseTest extends MigrateTestCase {
     $this->entityTypeManager = $this->createMock('Drupal\Core\Entity\EntityTypeManagerInterface');
   }
 
-  /**
-   * @covers ::checkRequirements
-   */
   public function testSourceProviderNotActive() {
     $plugin = new TestDrupalSqlBase([], 'placeholder_id', $this->pluginDefinition, $this->getMigration(), $this->state, $this->entityTypeManager);
     $plugin->setDatabase($this->getDatabase($this->databaseContents));
@@ -93,9 +91,6 @@ class DrupalSqlBaseTest extends MigrateTestCase {
     }
   }
 
-  /**
-   * @covers ::checkRequirements
-   */
   public function testSourceDatabaseError() {
     $plugin = new TestDrupalSqlBase([], 'test', $this->pluginDefinition, $this->getMigration(), $this->state, $this->entityTypeManager);
     $this->expectException(RequirementsException::class);
@@ -104,7 +99,6 @@ class DrupalSqlBaseTest extends MigrateTestCase {
   }
 
   /**
-   * @covers ::checkRequirements
    *
    * @param bool $success
    *   True if this test will not throw an exception.
@@ -112,7 +106,6 @@ class DrupalSqlBaseTest extends MigrateTestCase {
    *   The minimum version declared in the configuration of a source plugin.
    * @param string $schema_version
    *   The schema version for the source module declared in a source plugin.
-   *
    * @dataProvider providerMinimumVersion
    */
   public function testMinimumVersion($success, $minimum_version, $schema_version) {

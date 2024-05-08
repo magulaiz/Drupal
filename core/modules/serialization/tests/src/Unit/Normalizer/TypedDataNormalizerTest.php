@@ -4,13 +4,14 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\serialization\Unit\Normalizer;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use Drupal\Tests\UnitTestCase;
 use Drupal\serialization\Normalizer\TypedDataNormalizer;
 
 /**
- * @coversDefaultClass \Drupal\serialization\Normalizer\TypedDataNormalizer
  * @group serialization
  */
+#[CoversClass(\Drupal\serialization\Normalizer\TypedDataNormalizer::class)]
 class TypedDataNormalizerTest extends UnitTestCase {
 
   /**

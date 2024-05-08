@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\file\Kernel;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use Drupal\entity_test\Entity\EntityTest;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
@@ -17,6 +18,8 @@ use org\bovigo\vfs\vfsStream;
  *
  * @group file
  */
+#[CoversClass(\Drupal\file\Plugin\Validation\Constraint\FileValidationConstraint::class)]
+#[CoversClass(\Drupal\file\Plugin\Validation\Constraint\FileValidationConstraintValidator::class)]
 class FileItemValidationTest extends KernelTestBase {
 
   /**
@@ -58,8 +61,6 @@ class FileItemValidationTest extends KernelTestBase {
   }
 
   /**
-   * @covers \Drupal\file\Plugin\Validation\Constraint\FileValidationConstraint
-   * @covers \Drupal\file\Plugin\Validation\Constraint\FileValidationConstraintValidator
    * @dataProvider getFileTypes
    */
   public function testFileValidationConstraint($file_type) {

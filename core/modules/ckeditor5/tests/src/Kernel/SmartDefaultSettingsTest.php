@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Drupal\Tests\ckeditor5\Kernel;
 
 // cspell:ignore arta codesnippet
-
+use PHPUnit\Framework\Attributes\CoversClass;
 use Drupal\ckeditor5\HTMLRestrictions;
 use Drupal\Component\Render\FormattableMarkup;
 use Drupal\Component\Utility\NestedArray;
@@ -17,10 +17,10 @@ use Drupal\Tests\SchemaCheckTestTrait;
 use Symfony\Component\Yaml\Yaml;
 
 /**
- * @covers \Drupal\ckeditor5\SmartDefaultSettings::computeSmartDefaultSettings
  * @group ckeditor5
  * @internal
  */
+#[CoversClass(\Drupal\ckeditor5\SmartDefaultSettings::computeSmartDefaultSettings)]
 class SmartDefaultSettingsTest extends KernelTestBase {
 
   use SchemaCheckTestTrait;

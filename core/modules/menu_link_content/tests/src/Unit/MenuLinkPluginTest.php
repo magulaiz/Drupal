@@ -4,19 +4,16 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\menu_link_content\Unit;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use Drupal\menu_link_content\Plugin\Menu\MenuLinkContent;
 use Drupal\Tests\UnitTestCase;
 
 /**
- * @coversDefaultClass \Drupal\menu_link_content\Plugin\Menu\MenuLinkContent
- *
  * @group Menu
  */
+#[CoversClass(\Drupal\menu_link_content\Plugin\Menu\MenuLinkContent::class)]
 class MenuLinkPluginTest extends UnitTestCase {
 
-  /**
-   * @covers ::getUuid
-   */
   public function testGetInstanceReflection() {
     /** @var \Drupal\menu_link_content\Plugin\Menu\MenuLinkContent $menu_link_content_plugin */
     $menu_link_content_plugin = $this->prophesize(MenuLinkContent::class);

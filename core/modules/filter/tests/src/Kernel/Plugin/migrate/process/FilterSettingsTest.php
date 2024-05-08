@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\filter\Kernel\Plugin\migrate\process;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use Drupal\filter\Plugin\migrate\process\FilterSettings;
 use Drupal\migrate\MigrateExecutableInterface;
 use Drupal\migrate\Plugin\MigrationInterface;
@@ -13,16 +14,15 @@ use Drupal\Tests\migrate\Unit\MigrateTestCase;
 /**
  * Unit tests of the filter_settings plugin.
  *
- * @coversDefaultClass \Drupal\filter\Plugin\migrate\process\FilterSettings
  * @group filter
  */
+#[CoversClass(\Drupal\filter\Plugin\migrate\process\FilterSettings::class)]
 class FilterSettingsTest extends MigrateTestCase {
 
   /**
    * Tests transformation of filter settings.
    *
    * @dataProvider dataProvider
-   * @covers ::transform
    */
   public function testTransform($value, $destination_id, $expected_value) {
     $migration = $this->createMock(MigrationInterface::class);

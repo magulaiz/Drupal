@@ -4,15 +4,16 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\block\Unit\Plugin\migrate\process;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use Drupal\block\Plugin\migrate\process\BlockSettings;
 use Drupal\migrate\MigrateExecutableInterface;
 use Drupal\migrate\Row;
 use Drupal\Tests\UnitTestCase;
 
 /**
- * @coversDefaultClass \Drupal\block\Plugin\migrate\process\BlockSettings
  * @group block
  */
+#[CoversClass(\Drupal\block\Plugin\migrate\process\BlockSettings::class)]
 class BlockSettingsTest extends UnitTestCase {
 
   /**
@@ -23,7 +24,6 @@ class BlockSettingsTest extends UnitTestCase {
    * @param array $expected
    *   The expected result.
    *
-   * @covers ::transform
    *
    * @dataProvider providerTestTransform
    */

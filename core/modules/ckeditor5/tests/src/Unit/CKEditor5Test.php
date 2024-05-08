@@ -4,15 +4,17 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\ckeditor5\Unit;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use Drupal\ckeditor5\Plugin\Editor\CKEditor5;
 use Drupal\Tests\ckeditor5\Traits\PrivateMethodUnitTestTrait;
 use Drupal\Tests\UnitTestCase;
 
 /**
- * @coversDefaultClass \Drupal\ckeditor5\Plugin\Editor\CKEditor5
  * @group ckeditor5
  * @internal
  */
+#[CoversClass(\Drupal\ckeditor5\Plugin\Editor\CKEditor5::class)]
+#[CoversClass(\Drupal\ckeditor5\Plugin\Editor\CKEditor5::class)]
 class CKEditor5Test extends UnitTestCase {
 
   use PrivateMethodUnitTestTrait;
@@ -40,7 +42,6 @@ class CKEditor5Test extends UnitTestCase {
   ];
 
   /**
-   * @covers \Drupal\ckeditor5\Plugin\Editor\CKEditor5::mapViolationPropertyPathsToFormNames
    * @dataProvider providerPathsToFormNames
    */
   public function testPathsToFormNames(string $property_path, string $expected_form_item_name, bool $expect_exception = FALSE): void {

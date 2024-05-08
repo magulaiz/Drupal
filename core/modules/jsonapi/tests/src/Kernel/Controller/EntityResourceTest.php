@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\jsonapi\Kernel\Controller;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
 use Drupal\jsonapi\CacheableResourceResponse;
 use Drupal\jsonapi\ResourceType\ResourceType;
@@ -19,11 +20,10 @@ use Symfony\Component\HttpFoundation\InputBag;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
- * @coversDefaultClass \Drupal\jsonapi\Controller\EntityResource
  * @group jsonapi
- *
  * @internal
  */
+#[CoversClass(\Drupal\jsonapi\Controller\EntityResource::class)]
 class EntityResourceTest extends JsonapiKernelTestBase {
 
   /**
@@ -192,9 +192,6 @@ class EntityResourceTest extends JsonapiKernelTestBase {
     return $this->container->get('jsonapi.entity_resource');
   }
 
-  /**
-   * @covers ::getCollection
-   */
   public function testGetPagedCollection() {
     $request = Request::create('/jsonapi/node/article');
     $request->query = new InputBag([
@@ -221,9 +218,6 @@ class EntityResourceTest extends JsonapiKernelTestBase {
     $this->assertEqualsCanonicalizing(['node:2', 'node_list'], $response->getCacheableMetadata()->getCacheTags());
   }
 
-  /**
-   * @covers ::getCollection
-   */
   public function testGetEmptyCollection() {
     $request = Request::create('/jsonapi/node/article');
     $request->query = new InputBag(['filter' => ['id' => 'invalid']]);

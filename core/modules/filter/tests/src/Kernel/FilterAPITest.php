@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\filter\Kernel;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use Drupal\Core\Language\LanguageInterface;
 use Drupal\Core\Session\AnonymousUserSession;
 use Drupal\Core\TypedData\OptionsProviderInterface;
@@ -19,6 +20,7 @@ use Symfony\Component\Validator\ConstraintViolationListInterface;
  *
  * @group filter
  */
+#[CoversClass(\Drupal\filter\Entity\FilterFormat::class)]
 class FilterAPITest extends EntityKernelTestBase {
 
   protected static $modules = ['system', 'filter', 'filter_test', 'user'];
@@ -85,9 +87,6 @@ class FilterAPITest extends EntityKernelTestBase {
 
   /**
    * Tests that HTML restrictions and filter types are correct.
-   *
-   * @covers \Drupal\filter\Entity\FilterFormat::getHtmlRestrictions
-   * @covers \Drupal\filter\Entity\FilterFormat::getFilterTypes
    */
   public function testFilterFormatAPI() {
     // Test on filtered_html.

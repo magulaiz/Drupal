@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\FunctionalTests\Entity;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use Drupal\Core\Entity\Controller\VersionHistoryController;
 use Drupal\entity_test\Entity\EntityTestRev;
 use Drupal\entity_test_revlog\Entity\EntityTestWithRevisionLog;
@@ -14,8 +15,9 @@ use Drupal\Tests\BrowserTestBase;
  *
  * @group Entity
  * @group #slow
- * @coversDefaultClass \Drupal\Core\Entity\Controller\VersionHistoryController
  */
+#[CoversClass(\Drupal\Core\Entity\Controller\VersionHistoryController::class)]
+#[CoversClass(\Drupal\Core\Entity\Controller\VersionHistoryController::class)]
 class RevisionVersionHistoryTest extends BrowserTestBase {
 
   /**
@@ -65,8 +67,6 @@ class RevisionVersionHistoryTest extends BrowserTestBase {
 
   /**
    * Test current revision is indicated.
-   *
-   * @covers \Drupal\Core\Entity\Controller\VersionHistoryController::revisionOverview
    */
   public function testCurrentRevision(): void {
     /** @var \Drupal\entity_test\Entity\EntityTestRev $entity */
@@ -94,8 +94,6 @@ class RevisionVersionHistoryTest extends BrowserTestBase {
 
   /**
    * Test description with entity implementing revision log.
-   *
-   * @covers ::getRevisionDescription
    */
   public function testDescriptionRevLog(): void {
     /** @var \Drupal\entity_test_revlog\Entity\EntityTestWithRevisionLog $entity */
@@ -113,8 +111,6 @@ class RevisionVersionHistoryTest extends BrowserTestBase {
 
   /**
    * Test description with entity implementing revision log, with empty values.
-   *
-   * @covers ::getRevisionDescription
    */
   public function testDescriptionRevLogNullValues(): void {
     $entity = EntityTestWithRevisionLog::create(['type' => 'entity_test_revlog']);
@@ -132,8 +128,6 @@ class RevisionVersionHistoryTest extends BrowserTestBase {
 
   /**
    * Test description with entity, without revision log, no label access.
-   *
-   * @covers ::getRevisionDescription
    */
   public function testDescriptionNoRevLogNoLabelAccess(): void {
     /** @var \Drupal\entity_test\Entity\EntityTestRev $entity */
@@ -148,8 +142,6 @@ class RevisionVersionHistoryTest extends BrowserTestBase {
 
   /**
    * Test description with entity, without revision log, with label access.
-   *
-   * @covers ::getRevisionDescription
    */
   public function testDescriptionNoRevLogWithLabelAccess(): void {
     // Permission grants 'view label' access.
@@ -167,8 +159,6 @@ class RevisionVersionHistoryTest extends BrowserTestBase {
 
   /**
    * Test revision link, without access to revision page.
-   *
-   * @covers ::getRevisionDescription
    */
   public function testDescriptionLinkNoAccess(): void {
     /** @var \Drupal\entity_test_revlog\Entity\EntityTestWithRevisionLog $entity */
@@ -186,8 +176,6 @@ class RevisionVersionHistoryTest extends BrowserTestBase {
    *
    * Test two revisions. Usually the latest revision only checks canonical
    * route access, whereas all others will check individual revision access.
-   *
-   * @covers ::getRevisionDescription
    */
   public function testDescriptionLinkWithAccess(): void {
     /** @var \Drupal\entity_test_revlog\Entity\EntityTestWithRevisionLog $entity */
@@ -215,8 +203,6 @@ class RevisionVersionHistoryTest extends BrowserTestBase {
 
   /**
    * Test revision log message if supported, and HTML tags are stripped.
-   *
-   * @covers ::getRevisionDescription
    */
   public function testDescriptionRevisionLogMessage(): void {
     /** @var \Drupal\entity_test_revlog\Entity\EntityTestWithRevisionLog $entity */
@@ -232,8 +218,6 @@ class RevisionVersionHistoryTest extends BrowserTestBase {
 
   /**
    * Test revert operation.
-   *
-   * @covers ::buildRevertRevisionLink
    */
   public function testOperationRevertRevision(): void {
     /** @var \Drupal\entity_test_revlog\Entity\EntityTestWithRevisionLog $entity */
@@ -272,8 +256,6 @@ class RevisionVersionHistoryTest extends BrowserTestBase {
 
   /**
    * Test delete operation.
-   *
-   * @covers ::buildDeleteRevisionLink
    */
   public function testOperationDeleteRevision(): void {
     /** @var \Drupal\entity_test_revlog\Entity\EntityTestWithRevisionLog $entity */

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\KernelTests\Core\Config;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use Drupal\Core\TypedData\DataDefinition;
 use Drupal\KernelTests\KernelTestBase;
 
@@ -12,10 +13,9 @@ use Drupal\KernelTests\KernelTestBase;
  *
  * @group config
  * @group Validation
- *
- * @covers \Drupal\Core\Config\Plugin\Validation\Constraint\ConfigExistsConstraint
- * @covers \Drupal\Core\Config\Plugin\Validation\Constraint\ConfigExistsConstraintValidator
  */
+#[CoversClass(\Drupal\Core\Config\Plugin\Validation\Constraint\ConfigExistsConstraint::class)]
+#[CoversClass(\Drupal\Core\Config\Plugin\Validation\Constraint\ConfigExistsConstraintValidator::class)]
 class ConfigExistsConstraintValidatorTest extends KernelTestBase {
 
   /**

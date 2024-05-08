@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\jsonapi\Kernel\Serializer;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use Drupal\Core\Render\Markup;
 use Drupal\jsonapi\JsonApiResource\ResourceObject;
 use Drupal\jsonapi\Normalizer\Value\CacheableNormalization;
@@ -21,6 +22,7 @@ use Drupal\user\Entity\User;
  *
  * @internal
  */
+#[CoversClass(\Drupal\jsonapi\Serializer\Serializer::class)]
 class SerializerTest extends JsonapiKernelTestBase {
 
   /**
@@ -102,9 +104,6 @@ class SerializerTest extends JsonapiKernelTestBase {
     $this->sut = $this->container->get('sut');
   }
 
-  /**
-   * @covers \Drupal\jsonapi\Serializer\Serializer::normalize
-   */
   public function testFallbackNormalizer() {
     $context = [
       'account' => $this->user,

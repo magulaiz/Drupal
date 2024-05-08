@@ -4,17 +4,17 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\image\Kernel\Plugin\migrate\source\d7;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use Drupal\Tests\migrate\Kernel\MigrateSqlSourceTestBase;
 
 // cspell:ignore ieid isid
-
 /**
  * Tests the D7 ImageStyles source plugin.
  *
- * @covers \Drupal\image\Plugin\migrate\source\d7\ImageStyles
  *
  * @group image
  */
+#[CoversClass(\Drupal\image\Plugin\migrate\source\d7\ImageStyles::class)]
 class ImageStylesTest extends MigrateSqlSourceTestBase {
 
   /**

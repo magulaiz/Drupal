@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\serialization\Unit\Normalizer;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use Drupal\Core\TypedData\DataDefinition;
 use Drupal\Core\TypedData\Plugin\DataType\BooleanData;
 use Drupal\Core\TypedData\Plugin\DataType\IntegerData;
@@ -12,9 +13,9 @@ use Drupal\Tests\UnitTestCase;
 use Drupal\serialization\Normalizer\PrimitiveDataNormalizer;
 
 /**
- * @coversDefaultClass \Drupal\serialization\Normalizer\PrimitiveDataNormalizer
  * @group serialization
  */
+#[CoversClass(\Drupal\serialization\Normalizer\PrimitiveDataNormalizer::class)]
 class PrimitiveDataNormalizerTest extends UnitTestCase {
 
   /**
@@ -34,23 +35,18 @@ class PrimitiveDataNormalizerTest extends UnitTestCase {
   }
 
   /**
-   * @covers ::supportsNormalization
    * @dataProvider dataProviderPrimitiveData
    */
   public function testSupportsNormalization($primitive_data, $expected) {
     $this->assertTrue($this->normalizer->supportsNormalization($primitive_data));
   }
 
-  /**
-   * @covers ::supportsNormalization
-   */
   public function testSupportsNormalizationFail() {
     // Test that an object not implementing PrimitiveInterface fails.
     $this->assertFalse($this->normalizer->supportsNormalization(new \stdClass()));
   }
 
   /**
-   * @covers ::normalize
    * @dataProvider dataProviderPrimitiveData
    */
   public function testNormalize($primitive_data, $expected) {

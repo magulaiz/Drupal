@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\rest\Unit\Plugin\views\style;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use Drupal\rest\Plugin\views\display\RestExport;
 use Drupal\rest\Plugin\views\style\Serializer;
 use Drupal\Tests\UnitTestCase;
@@ -12,9 +13,9 @@ use Prophecy\Argument;
 use Symfony\Component\Serializer\SerializerInterface;
 
 /**
- * @coversDefaultClass \Drupal\rest\Plugin\views\style\Serializer
  * @group rest
  */
+#[CoversClass(\Drupal\rest\Plugin\views\style\Serializer::class)]
 class SerializerTest extends UnitTestCase {
 
   /**
@@ -56,8 +57,6 @@ class SerializerTest extends UnitTestCase {
 
   /**
    * Tests that the symfony serializer receives style plugin from the render() method.
-   *
-   * @covers ::render
    */
   public function testSerializerReceivesOptions() {
     $mock_serializer = $this->prophesize(SerializerInterface::class);

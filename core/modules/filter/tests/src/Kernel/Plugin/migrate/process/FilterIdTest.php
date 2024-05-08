@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\filter\Kernel\Plugin\migrate\process;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use Drupal\filter\Plugin\migrate\process\FilterID;
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\migrate\MigrateExecutableInterface;
@@ -13,9 +14,9 @@ use Drupal\migrate\Row;
 /**
  * Unit tests of the filter_id plugin.
  *
- * @coversDefaultClass \Drupal\filter\Plugin\migrate\process\FilterID
  * @group filter
  */
+#[CoversClass(\Drupal\filter\Plugin\migrate\process\FilterID::class)]
 class FilterIdTest extends KernelTestBase {
 
   /**
@@ -53,8 +54,6 @@ class FilterIdTest extends KernelTestBase {
    *   is a transformation-only filter.
    *
    * @dataProvider provideFilters
-   *
-   * @covers ::transform
    */
   public function testTransform($value, $expected_value, $invalid_id = NULL, $stop_pipeline = FALSE) {
     $configuration = [

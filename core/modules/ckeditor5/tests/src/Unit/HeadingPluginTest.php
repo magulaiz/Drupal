@@ -4,16 +4,17 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\ckeditor5\Unit;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use Drupal\ckeditor5\Plugin\CKEditor5Plugin\Heading;
 use Drupal\editor\EditorInterface;
 use Drupal\Tests\UnitTestCase;
 use Symfony\Component\Yaml\Yaml;
 
 /**
- * @coversDefaultClass \Drupal\ckeditor5\Plugin\CKEditor5Plugin\Language
  * @group ckeditor5
  * @internal
  */
+#[CoversClass(\Drupal\ckeditor5\Plugin\CKEditor5Plugin\Language::class)]
 class HeadingPluginTest extends UnitTestCase {
 
   /**
@@ -102,7 +103,6 @@ class HeadingPluginTest extends UnitTestCase {
   }
 
   /**
-   * @covers ::getDynamicPluginConfig
    * @dataProvider providerGetDynamicPluginConfig
    */
   public function testGetDynamicPluginConfig(array $configuration, array $expected_dynamic_config): void {

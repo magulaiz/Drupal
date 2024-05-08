@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\mysql\Unit;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use Drupal\mysql\Driver\Database\mysql\Connection;
 use Drupal\mysql\Driver\Database\mysql\Install\Tasks;
 use Drupal\Tests\UnitTestCase;
@@ -11,9 +12,9 @@ use Drupal\Tests\UnitTestCase;
 /**
  * Tests the MySQL install tasks.
  *
- * @coversDefaultClass \Drupal\mysql\Driver\Database\mysql\Install\Tasks
  * @group Database
  */
+#[CoversClass(\Drupal\mysql\Driver\Database\mysql\Install\Tasks::class)]
 class InstallTasksTest extends UnitTestCase {
 
   /**
@@ -88,8 +89,6 @@ class InstallTasksTest extends UnitTestCase {
   }
 
   /**
-   * @covers ::minimumVersion
-   * @covers ::name
    * @dataProvider providerNameAndMinimumVersion
    */
   public function testNameAndMinimumVersion(bool $is_mariadb, string $expected_name, string $expected_minimum_version): void {
@@ -127,9 +126,6 @@ class InstallTasksTest extends UnitTestCase {
     ];
   }
 
-  /**
-   * @covers ::name
-   */
   public function testNameWithNoConnection() {
     $tasks = $this->createTasksNoConnection();
     $this->assertSame('MySQL, MariaDB, Percona Server, or equivalent', $tasks->name());

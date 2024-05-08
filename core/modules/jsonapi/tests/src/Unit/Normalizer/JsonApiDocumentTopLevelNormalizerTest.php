@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\jsonapi\Unit\Normalizer;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Entity\EntityTypeInterface;
@@ -19,11 +20,10 @@ use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 use Drupal\jsonapi\ResourceType\ResourceTypeRepository;
 
 /**
- * @coversDefaultClass \Drupal\jsonapi\Normalizer\JsonApiDocumentTopLevelNormalizer
  * @group jsonapi
- *
  * @internal
  */
+#[CoversClass(\Drupal\jsonapi\Normalizer\JsonApiDocumentTopLevelNormalizer::class)]
 class JsonApiDocumentTopLevelNormalizerTest extends UnitTestCase {
 
   /**
@@ -86,7 +86,6 @@ class JsonApiDocumentTopLevelNormalizerTest extends UnitTestCase {
   }
 
   /**
-   * @covers ::denormalize
    * @dataProvider denormalizeProvider
    */
   public function testDenormalize($input, $expected) {
@@ -208,7 +207,6 @@ class JsonApiDocumentTopLevelNormalizerTest extends UnitTestCase {
    * @param bool $expect_exception
    *   Whether to expect an exception.
    *
-   * @covers ::denormalize
    * @dataProvider denormalizeUuidProvider
    */
   public function testDenormalizeUuid($id, $expect_exception) {

@@ -4,19 +4,17 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\migrate\Unit\Event;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use Drupal\migrate\Event\MigratePreRowSaveEvent;
 
 /**
- * @coversDefaultClass \Drupal\migrate\Event\MigratePreRowSaveEvent
  * @group migrate
  */
+#[CoversClass(\Drupal\migrate\Event\MigratePreRowSaveEvent::class)]
 class MigratePreRowSaveEventTest extends EventBaseTest {
 
   /**
    * Tests getRow method.
-   *
-   * @covers ::__construct
-   * @covers ::getRow
    */
   public function testGetRow() {
     $migration = $this->prophesize('\Drupal\migrate\Plugin\MigrationInterface')->reveal();

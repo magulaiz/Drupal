@@ -4,15 +4,16 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\node\Kernel\Plugin\migrate\source\d6;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use Drupal\Tests\migrate\Kernel\MigrateSqlSourceTestBase;
 
 /**
  * Tests D6 node type source plugin.
  *
- * @covers \Drupal\node\Plugin\migrate\source\d6\NodeType
  *
  * @group node
  */
+#[CoversClass(\Drupal\node\Plugin\migrate\source\d6\NodeType::class)]
 class NodeTypeTest extends MigrateSqlSourceTestBase {
 
   /**

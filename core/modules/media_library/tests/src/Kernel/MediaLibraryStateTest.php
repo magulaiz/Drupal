@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\media_library\Kernel;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Cache\CacheableDependencyInterface;
 use Drupal\KernelTests\KernelTestBase;
@@ -16,9 +17,8 @@ use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
  * Tests the media library state value object.
  *
  * @group media_library
- *
- * @coversDefaultClass \Drupal\media_library\MediaLibraryState
  */
+#[CoversClass(\Drupal\media_library\MediaLibraryState::class)]
 class MediaLibraryStateTest extends KernelTestBase {
 
   use MediaTypeCreationTrait;
@@ -97,7 +97,6 @@ class MediaLibraryStateTest extends KernelTestBase {
    * @param string $exception_message
    *   The expected exception message.
    *
-   * @covers ::create
    * @dataProvider providerCreate
    */
   public function testCreate($opener_id, array $allowed_media_type_ids, $selected_type_id, $remaining_slots, $exception_message = '') {
@@ -275,7 +274,6 @@ class MediaLibraryStateTest extends KernelTestBase {
    * @param bool $exception_expected
    *   Whether an AccessDeniedHttpException is expected or not.
    *
-   * @covers ::fromRequest
    * @dataProvider providerFromRequest
    */
   public function testFromRequest(array $query_overrides, $exception_expected) {
@@ -292,9 +290,6 @@ class MediaLibraryStateTest extends KernelTestBase {
     $this->assertInstanceOf(MediaLibraryState::class, $state);
   }
 
-  /**
-   * @covers ::fromRequest
-   */
   public function testFromRequestQueryLess() {
     $this->expectException(\InvalidArgumentException::class);
     $this->expectExceptionMessage('The opener ID parameter is required and must be a string.');
@@ -363,9 +358,6 @@ class MediaLibraryStateTest extends KernelTestBase {
     return $test_data;
   }
 
-  /**
-   * @covers ::getOpenerParameters
-   */
   public function testOpenerParameters() {
     $state = MediaLibraryState::create('test', ['file'], 'file', -1, [
       'foo' => 'baz',

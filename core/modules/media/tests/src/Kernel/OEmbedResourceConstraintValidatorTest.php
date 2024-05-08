@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\media\Kernel;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\media\Entity\Media;
 use Drupal\media\OEmbed\Provider;
@@ -16,10 +17,9 @@ use Prophecy\Argument;
 use Symfony\Component\Validator\Context\ExecutionContextInterface;
 
 /**
- * @coversDefaultClass \Drupal\media\Plugin\Validation\Constraint\OEmbedResourceConstraintValidator
- *
  * @group media
  */
+#[CoversClass(\Drupal\media\Plugin\Validation\Constraint\OEmbedResourceConstraintValidator::class)]
 class OEmbedResourceConstraintValidatorTest extends KernelTestBase {
 
   use MediaTypeCreationTrait;
@@ -38,9 +38,6 @@ class OEmbedResourceConstraintValidatorTest extends KernelTestBase {
     $this->installEntitySchema('user');
   }
 
-  /**
-   * @covers ::validate
-   */
   public function testValidateEmptySource() {
     $media = Media::create([
       'bundle' => $this->createMediaType('oembed:video')->id(),
@@ -65,9 +62,6 @@ class OEmbedResourceConstraintValidatorTest extends KernelTestBase {
     $validator->validate($this->getValue($media), $constraint);
   }
 
-  /**
-   * @covers ::validate
-   */
   public function testValidateUrlResolverInvoked() {
     $media = Media::create([
       'bundle' => $this->createMediaType('oembed:video')->id(),

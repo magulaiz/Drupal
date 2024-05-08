@@ -4,14 +4,15 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\user\Kernel\Plugin\migrate\source\d6;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use Drupal\Tests\migrate\Kernel\MigrateSqlSourceTestBase;
 
 /**
  * Tests the d6_user_picture source plugin.
  *
- * @covers \Drupal\user\Plugin\migrate\source\d6\UserPicture
  * @group user
  */
+#[CoversClass(\Drupal\user\Plugin\migrate\source\d6\UserPicture::class)]
 class UserPictureTest extends MigrateSqlSourceTestBase {
 
   /**

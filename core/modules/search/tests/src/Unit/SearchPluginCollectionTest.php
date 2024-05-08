@@ -4,13 +4,14 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\search\Unit;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use Drupal\search\Plugin\SearchPluginCollection;
 use Drupal\Tests\UnitTestCase;
 
 /**
- * @coversDefaultClass \Drupal\search\Plugin\SearchPluginCollection
  * @group search
  */
+#[CoversClass(\Drupal\search\Plugin\SearchPluginCollection::class)]
 class SearchPluginCollectionTest extends UnitTestCase {
 
   /**

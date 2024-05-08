@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\field_layout\Unit;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use Drupal\Core\Entity\EntityFieldManagerInterface;
 use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\field_layout\Display\EntityDisplayWithLayoutInterface;
@@ -15,9 +16,9 @@ use Drupal\Tests\UnitTestCase;
 use Prophecy\Argument;
 
 /**
- * @coversDefaultClass \Drupal\field_layout\FieldLayoutBuilder
  * @group field_layout
  */
+#[CoversClass(\Drupal\field_layout\FieldLayoutBuilder::class)]
 class FieldLayoutBuilderTest extends UnitTestCase {
 
   /**
@@ -74,10 +75,6 @@ class FieldLayoutBuilderTest extends UnitTestCase {
     $this->fieldLayoutBuilder = new FieldLayoutBuilder($this->layoutPluginManager->reveal(), $this->entityFieldManager->reveal());
   }
 
-  /**
-   * @covers ::buildView
-   * @covers ::getFields
-   */
   public function testBuildView() {
     $definitions = [];
     $non_configurable_field_definition = $this->prophesize(FieldDefinitionInterface::class);
@@ -163,10 +160,6 @@ class FieldLayoutBuilderTest extends UnitTestCase {
     $this->assertSame($expected, $build);
   }
 
-  /**
-   * @covers ::buildForm
-   * @covers ::getFields
-   */
   public function testBuildForm() {
     $definitions = [];
     $non_configurable_field_definition = $this->prophesize(FieldDefinitionInterface::class);
@@ -264,9 +257,6 @@ class FieldLayoutBuilderTest extends UnitTestCase {
     $this->assertSame($expected, $build);
   }
 
-  /**
-   * @covers ::buildForm
-   */
   public function testBuildFormEmpty() {
     $definitions = [];
     $non_configurable_field_definition = $this->prophesize(FieldDefinitionInterface::class);
@@ -305,9 +295,6 @@ class FieldLayoutBuilderTest extends UnitTestCase {
     $this->assertSame($expected, $build);
   }
 
-  /**
-   * @covers ::buildForm
-   */
   public function testBuildFormNoLayout() {
     $this->entityFieldManager->getFieldDefinitions(Argument::any(), Argument::any())->shouldNotBeCalled();
 

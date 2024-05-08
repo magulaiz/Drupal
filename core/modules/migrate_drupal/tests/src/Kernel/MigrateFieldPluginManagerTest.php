@@ -4,14 +4,15 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\migrate_drupal\Kernel;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use Drupal\Component\Plugin\Exception\PluginNotFoundException;
 
 /**
  * Tests the field plugin manager.
  *
  * @group migrate_drupal
- * @coversDefaultClass \Drupal\migrate_drupal\Plugin\MigrateFieldPluginManager
  */
+#[CoversClass(\Drupal\migrate_drupal\Plugin\MigrateFieldPluginManager::class)]
 class MigrateFieldPluginManagerTest extends MigrateDrupalTestBase {
 
   /**
@@ -48,8 +49,6 @@ class MigrateFieldPluginManagerTest extends MigrateDrupalTestBase {
 
   /**
    * Tests that the correct MigrateField plugins are used.
-   *
-   * @covers ::getPluginIdFromFieldType
    */
   public function testPluginSelection() {
     $this->assertSame('link', $this->pluginManager->getPluginIdFromFieldType('link', ['core' => 6]));
@@ -70,7 +69,6 @@ class MigrateFieldPluginManagerTest extends MigrateDrupalTestBase {
   /**
    * Tests that a PluginNotFoundException is thrown when a plugin isn't found.
    *
-   * @covers ::getPluginIdFromFieldType
    * @dataProvider nonExistentPluginExceptionsData
    */
   public function testNonExistentPluginExceptions($core, $field_type) {

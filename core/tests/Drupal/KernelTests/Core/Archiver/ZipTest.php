@@ -4,12 +4,13 @@ declare(strict_types=1);
 
 namespace Drupal\KernelTests\Core\Archiver;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use Drupal\Core\Archiver\Zip;
 
 /**
- * @coversDefaultClass \Drupal\Core\Archiver\Zip
  * @group zip
  */
+#[CoversClass(\Drupal\Core\Archiver\Zip::class)]
 class ZipTest extends ArchiverTestBase {
   /**
    * {@inheritdoc}

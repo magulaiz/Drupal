@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\media\Kernel;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use Drupal\Component\Utility\Crypt;
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Render\RenderContext;
@@ -20,10 +21,9 @@ use GuzzleHttp\Psr7\Utils;
 use Prophecy\Argument;
 
 /**
- * @coversDefaultClass \Drupal\media\Plugin\media\Source\OEmbed
- *
  * @group media
  */
+#[CoversClass(\Drupal\media\Plugin\media\Source\OEmbed::class)]
 class OEmbedSourceTest extends MediaKernelTestBase {
 
   /**
@@ -31,9 +31,6 @@ class OEmbedSourceTest extends MediaKernelTestBase {
    */
   protected static $modules = ['media'];
 
-  /**
-   * @covers ::getMetadata
-   */
   public function testGetMetadata() {
     $configuration = [
       'source_field' => 'field_test_oembed',
@@ -103,7 +100,6 @@ class OEmbedSourceTest extends MediaKernelTestBase {
    * @param string $expected_extension
    *   The extension that the downloaded thumbnail should have.
    *
-   * @covers ::getLocalThumbnailUri
    *
    * @dataProvider providerThumbnailUri
    */

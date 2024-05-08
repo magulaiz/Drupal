@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\jsonapi\Unit\Routing;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\jsonapi\ResourceType\ResourceType;
 use Drupal\jsonapi\ResourceType\ResourceTypeRelationship;
@@ -14,11 +15,10 @@ use Drupal\Core\Routing\RouteObjectInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
- * @coversDefaultClass \Drupal\jsonapi\Routing\Routes
  * @group jsonapi
- *
  * @internal
  */
+#[CoversClass(\Drupal\jsonapi\Routing\Routes::class)]
 class RoutesTest extends UnitTestCase {
 
   /**
@@ -65,9 +65,6 @@ class RoutesTest extends UnitTestCase {
     $this->routes['ok'] = Routes::create($container->reveal());
   }
 
-  /**
-   * @covers ::routes
-   */
   public function testRoutesCollection() {
     // Get the route collection and start making assertions.
     $routes = $this->routes['ok']->routes();
@@ -101,9 +98,6 @@ class RoutesTest extends UnitTestCase {
     $this->assertSame(Routes::CONTROLLER_SERVICE_NAME . ':createIndividual', $route->getDefault(RouteObjectInterface::CONTROLLER_NAME));
   }
 
-  /**
-   * @covers ::routes
-   */
   public function testRoutesIndividual() {
     // Get the route collection and start making assertions.
     $iterator = $this->routes['ok']->routes()->getIterator();
@@ -144,9 +138,6 @@ class RoutesTest extends UnitTestCase {
     ], $route->getOption('parameters'));
   }
 
-  /**
-   * @covers ::routes
-   */
   public function testRoutesRelated() {
     // Get the route collection and start making assertions.
     $iterator = $this->routes['ok']->routes()->getIterator();
@@ -165,9 +156,6 @@ class RoutesTest extends UnitTestCase {
     ], $route->getOption('parameters'));
   }
 
-  /**
-   * @covers ::routes
-   */
   public function testRoutesRelationships() {
     // Get the route collection and start making assertions.
     $iterator = $this->routes['ok']->routes()->getIterator();

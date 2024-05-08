@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\views\Unit\Plugin\field;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use Drupal\Core\Entity\EntityFieldManagerInterface;
 use Drupal\Core\Entity\EntityRepositoryInterface;
 use Drupal\Core\Entity\EntityTypeBundleInfoInterface;
@@ -16,9 +17,9 @@ use Drupal\views\ResultRow;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 
 /**
- * @coversDefaultClass \Drupal\views\Plugin\views\field\EntityField
  * @group views
  */
+#[CoversClass(\Drupal\views\Plugin\views\field\EntityField::class)]
 class FieldTest extends UnitTestCase {
 
   use HandlerTestTrait;
@@ -122,9 +123,6 @@ class FieldTest extends UnitTestCase {
     \Drupal::setContainer($this->container);
   }
 
-  /**
-   * @covers ::__construct
-   */
   public function testConstruct() {
     $definition = [
       'entity_type' => 'test_entity',
@@ -137,9 +135,6 @@ class FieldTest extends UnitTestCase {
     $this->assertEquals('title', $handler->definition['field_name']);
   }
 
-  /**
-   * @covers ::defineOptions
-   */
   public function testDefineOptionsWithNoOptions() {
     $definition = [
       'entity_type' => 'test_entity',
@@ -164,9 +159,6 @@ class FieldTest extends UnitTestCase {
     $this->assertEquals(0, $handler->options['delta_limit']);
   }
 
-  /**
-   * @covers ::defineOptions
-   */
   public function testDefineOptionsWithDefaultFormatterOnFieldDefinition() {
     $definition = [
       'entity_type' => 'test_entity',
@@ -192,9 +184,6 @@ class FieldTest extends UnitTestCase {
     $this->assertEquals('test_example', $handler->options['type']);
   }
 
-  /**
-   * @covers ::defineOptions
-   */
   public function testDefineOptionsWithDefaultFormatterOnFieldType() {
     $definition = [
       'entity_type' => 'test_entity',
@@ -219,9 +208,6 @@ class FieldTest extends UnitTestCase {
     $this->assertEquals(['link_to_entity' => TRUE], $handler->options['settings']);
   }
 
-  /**
-   * @covers ::calculateDependencies
-   */
   public function testCalculateDependenciesWithBaseField() {
     $definition = [
       'entity_type' => 'test_entity',
@@ -241,9 +227,6 @@ class FieldTest extends UnitTestCase {
     $this->assertEmpty($dependencies);
   }
 
-  /**
-   * @covers ::calculateDependencies
-   */
   public function testCalculateDependenciesWithConfiguredField() {
     $definition = [
       'entity_type' => 'test_entity',
@@ -267,9 +250,6 @@ class FieldTest extends UnitTestCase {
     $this->assertEquals(['config' => ['field.field_storage_config.body']], $dependencies);
   }
 
-  /**
-   * @covers ::access
-   */
   public function testAccess() {
     $definition = [
       'entity_type' => 'test_entity',
@@ -340,8 +320,6 @@ class FieldTest extends UnitTestCase {
    *
    * @param string $order
    *   The sort order.
-   *
-   * @covers ::clickSort
    */
   public function testClickSortWithBaseField($order) {
     $definition = [
@@ -400,8 +378,6 @@ class FieldTest extends UnitTestCase {
    *
    * @param string $order
    *   The sort order.
-   *
-   * @covers ::clickSort
    */
   public function testClickSortWithConfiguredField($order) {
     $definition = [
@@ -455,9 +431,6 @@ class FieldTest extends UnitTestCase {
     $handler->clickSort($order);
   }
 
-  /**
-   * @covers ::query
-   */
   public function testQueryWithGroupByForBaseField() {
     $definition = [
       'entity_type' => 'test_entity',
@@ -517,9 +490,6 @@ class FieldTest extends UnitTestCase {
     $handler->query(TRUE);
   }
 
-  /**
-   * @covers ::query
-   */
   public function testQueryWithGroupByForConfigField() {
     $definition = [
       'entity_type' => 'test_entity',
@@ -580,8 +550,6 @@ class FieldTest extends UnitTestCase {
   }
 
   /**
-   * @covers ::prepareItemsByDelta
-   *
    * @dataProvider providerTestPrepareItemsByDelta
    */
   public function testPrepareItemsByDelta(array $options, array $expected_values) {

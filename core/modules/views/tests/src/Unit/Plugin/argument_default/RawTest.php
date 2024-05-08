@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\views\Unit\Plugin\argument_default;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use Drupal\Core\Path\CurrentPathStack;
 use Drupal\path_alias\AliasManagerInterface;
 use Drupal\Tests\UnitTestCase;
@@ -12,9 +13,9 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 
 /**
- * @coversDefaultClass \Drupal\views\Plugin\views\argument_default\Raw
  * @group views
  */
+#[CoversClass(\Drupal\views\Plugin\views\argument_default\Raw::class)]
 class RawTest extends UnitTestCase {
 
   /**

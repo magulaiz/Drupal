@@ -4,13 +4,14 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\language\Unit\process;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use Drupal\language\Plugin\migrate\process\LanguageDomains;
 use Drupal\Tests\migrate\Unit\process\MigrateProcessTestCase;
 
 /**
- * @coversDefaultClass \Drupal\language\Plugin\migrate\process\LanguageDomains
  * @group language
  */
+#[CoversClass(\Drupal\language\Plugin\migrate\process\LanguageDomains::class)]
 class LanguageDomainsTest extends MigrateProcessTestCase {
 
   /**
@@ -36,9 +37,6 @@ class LanguageDomainsTest extends MigrateProcessTestCase {
     $base_url = 'http://example.com';
   }
 
-  /**
-   * @covers ::transform
-   */
   public function testTransform() {
     $source = [
       ['language' => 'en', 'domain' => ''],

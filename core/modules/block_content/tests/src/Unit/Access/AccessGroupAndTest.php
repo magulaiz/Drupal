@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\block_content\Unit\Access;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use Drupal\block_content\Access\AccessGroupAnd;
 use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Session\AccountInterface;
@@ -14,6 +15,7 @@ use Drupal\Tests\UnitTestCase;
  *
  * @group block_content
  */
+#[CoversClass(\Drupal\block_content\Access\AccessGroupAnd::class)]
 class AccessGroupAndTest extends UnitTestCase {
 
   use AccessibleTestingTrait;
@@ -26,9 +28,6 @@ class AccessGroupAndTest extends UnitTestCase {
     $this->account = $this->prophesize(AccountInterface::class)->reveal();
   }
 
-  /**
-   * @covers \Drupal\block_content\Access\AccessGroupAnd
-   */
   public function testGroups() {
     $allowedAccessible = $this->createAccessibleDouble(AccessResult::allowed());
     $forbiddenAccessible = $this->createAccessibleDouble(AccessResult::forbidden());

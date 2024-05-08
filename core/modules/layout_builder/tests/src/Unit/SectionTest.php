@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\layout_builder\Unit;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use Drupal\Core\DependencyInjection\ContainerBuilder;
 use Drupal\Core\Layout\LayoutInterface;
 use Drupal\Core\Layout\LayoutPluginManagerInterface;
@@ -13,9 +14,9 @@ use Drupal\layout_builder\SectionComponent;
 use Drupal\Tests\UnitTestCase;
 
 /**
- * @coversDefaultClass \Drupal\layout_builder\Section
  * @group layout_builder
  */
+#[CoversClass(\Drupal\layout_builder\Section::class)]
 class SectionTest extends UnitTestCase {
 
   /**
@@ -46,11 +47,6 @@ class SectionTest extends UnitTestCase {
     );
   }
 
-  /**
-   * @covers ::__construct
-   * @covers ::setComponent
-   * @covers ::getComponents
-   */
   public function testGetComponents() {
     $expected = [
       'existing-uuid' => (new SectionComponent('existing-uuid', 'some-region', ['id' => 'existing-block-id']))->setWeight(0),
@@ -61,28 +57,18 @@ class SectionTest extends UnitTestCase {
     $this->assertComponents($expected, $this->section);
   }
 
-  /**
-   * @covers ::getComponent
-   */
   public function testGetComponentInvalidUuid() {
     $this->expectException(\InvalidArgumentException::class);
     $this->expectExceptionMessage('Invalid UUID "invalid-uuid"');
     $this->section->getComponent('invalid-uuid');
   }
 
-  /**
-   * @covers ::getComponent
-   */
   public function testGetComponent() {
     $expected = new SectionComponent('existing-uuid', 'some-region', ['id' => 'existing-block-id']);
 
     $this->assertEquals($expected, $this->section->getComponent('existing-uuid'));
   }
 
-  /**
-   * @covers ::removeComponent
-   * @covers ::getComponentsByRegion
-   */
   public function testRemoveComponent() {
     $expected = [
       'existing-uuid' => (new SectionComponent('existing-uuid', 'some-region', ['id' => 'existing-block-id']))->setWeight(0),
@@ -93,11 +79,6 @@ class SectionTest extends UnitTestCase {
     $this->assertComponents($expected, $this->section);
   }
 
-  /**
-   * @covers ::appendComponent
-   * @covers ::getNextHighestWeight
-   * @covers ::getComponentsByRegion
-   */
   public function testAppendComponent() {
     $expected = [
       'existing-uuid' => (new SectionComponent('existing-uuid', 'some-region', ['id' => 'existing-block-id']))->setWeight(0),
@@ -110,9 +91,6 @@ class SectionTest extends UnitTestCase {
     $this->assertComponents($expected, $this->section);
   }
 
-  /**
-   * @covers ::insertAfterComponent
-   */
   public function testInsertAfterComponent() {
     $expected = [
       'existing-uuid' => (new SectionComponent('existing-uuid', 'some-region', ['id' => 'existing-block-id']))->setWeight(0),
@@ -125,28 +103,18 @@ class SectionTest extends UnitTestCase {
     $this->assertComponents($expected, $this->section);
   }
 
-  /**
-   * @covers ::insertAfterComponent
-   */
   public function testInsertAfterComponentValidUuidRegionMismatch() {
     $this->expectException(\InvalidArgumentException::class);
     $this->expectExceptionMessage('Invalid preceding UUID "existing-uuid"');
     $this->section->insertAfterComponent('existing-uuid', new SectionComponent('new-uuid', 'ordered-region'));
   }
 
-  /**
-   * @covers ::insertAfterComponent
-   */
   public function testInsertAfterComponentInvalidUuid() {
     $this->expectException(\InvalidArgumentException::class);
     $this->expectExceptionMessage('Invalid preceding UUID "invalid-uuid"');
     $this->section->insertAfterComponent('invalid-uuid', new SectionComponent('new-uuid', 'ordered-region'));
   }
 
-  /**
-   * @covers ::insertComponent
-   * @covers ::getComponentsByRegion
-   */
   public function testInsertComponent() {
     $expected = [
       'existing-uuid' => (new SectionComponent('existing-uuid', 'some-region', ['id' => 'existing-block-id']))->setWeight(0),
@@ -159,9 +127,6 @@ class SectionTest extends UnitTestCase {
     $this->assertComponents($expected, $this->section);
   }
 
-  /**
-   * @covers ::insertComponent
-   */
   public function testInsertComponentAppend() {
     $expected = [
       'existing-uuid' => (new SectionComponent('existing-uuid', 'some-region', ['id' => 'existing-block-id']))->setWeight(0),
@@ -174,9 +139,6 @@ class SectionTest extends UnitTestCase {
     $this->assertComponents($expected, $this->section);
   }
 
-  /**
-   * @covers ::insertComponent
-   */
   public function testInsertComponentInvalidDelta() {
     $this->expectException(\OutOfBoundsException::class);
     $this->expectExceptionMessage('Invalid delta "7" for the "new-uuid" component');
@@ -200,7 +162,6 @@ class SectionTest extends UnitTestCase {
   }
 
   /**
-   * @covers ::getThirdPartySettings
    * @dataProvider providerTestGetThirdPartySettings
    */
   public function testGetThirdPartySettings($provider, $expected) {
@@ -228,7 +189,6 @@ class SectionTest extends UnitTestCase {
   }
 
   /**
-   * @covers ::getThirdPartySetting
    * @dataProvider providerTestGetThirdPartySetting
    */
   public function testGetThirdPartySetting(string $provider, string $key, ?string $expected, mixed $default = FALSE): void {
@@ -275,7 +235,6 @@ class SectionTest extends UnitTestCase {
   }
 
   /**
-   * @covers ::setThirdPartySetting
    * @dataProvider providerTestSetThirdPartySetting
    */
   public function testSetThirdPartySetting($provider, $key, $value, $expected) {
@@ -319,7 +278,6 @@ class SectionTest extends UnitTestCase {
   }
 
   /**
-   * @covers ::unsetThirdPartySetting
    * @dataProvider providerTestUnsetThirdPartySetting
    */
   public function testUnsetThirdPartySetting($provider, $key, $expected) {
@@ -361,9 +319,6 @@ class SectionTest extends UnitTestCase {
     return $data;
   }
 
-  /**
-   * @covers ::getThirdPartyProviders
-   */
   public function testGetThirdPartyProviders() {
     $this->assertSame(['bad_judgement', 'hunt_and_peck'], $this->section->getThirdPartyProviders());
     $this->section->unsetThirdPartySetting('hunt_and_peck', 'delay');
@@ -371,7 +326,6 @@ class SectionTest extends UnitTestCase {
   }
 
   /**
-   * @covers ::getLayout
    * @dataProvider providerTestGetLayout
    */
   public function testGetLayout(array $contexts, bool $should_context_apply) {

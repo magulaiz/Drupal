@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\layout_builder\Unit;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use Drupal\Core\DependencyInjection\ContainerBuilder;
 use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
@@ -17,15 +18,11 @@ use Drupal\Tests\UnitTestCase;
 use Prophecy\Argument;
 
 /**
- * @coversDefaultClass \Drupal\layout_builder\Cache\LayoutBuilderIsActiveCacheContext
- *
  * @group layout_builder
  */
+#[CoversClass(\Drupal\layout_builder\Cache\LayoutBuilderIsActiveCacheContext::class)]
 class LayoutBuilderIsActiveCacheContextTest extends UnitTestCase {
 
-  /**
-   * @covers ::getContext
-   */
   public function testGetContextMissingEntityTypeId() {
     $route_match = $this->prophesize(RouteMatchInterface::class);
     $cache_context = new LayoutBuilderIsActiveCacheContext($route_match->reveal());
@@ -34,10 +31,6 @@ class LayoutBuilderIsActiveCacheContextTest extends UnitTestCase {
     $cache_context->getContext();
   }
 
-  /**
-   * @covers ::getContext
-   * @covers ::getDisplay
-   */
   public function testGetContextNonFieldableEntity() {
     $route_match = $this->prophesize(RouteMatchInterface::class);
     $route_match->getParameter('not_a_fieldable_entity')->willReturn('something that is not a fieldable entity');
@@ -49,8 +42,6 @@ class LayoutBuilderIsActiveCacheContextTest extends UnitTestCase {
   }
 
   /**
-   * @covers ::getContext
-   * @covers ::getDisplay
    *
    * @dataProvider providerTestGetContext
    */

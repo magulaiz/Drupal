@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\user\Kernel\Controller;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use Drupal\Core\Url;
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\Tests\user\Traits\UserCreationTrait;
@@ -13,9 +14,8 @@ use Drupal\user\Controller\UserController;
  * Tests for the User controller.
  *
  * @group user
- *
- * @coversDefaultClass \Drupal\user\Controller\UserController
  */
+#[CoversClass(\Drupal\user\Controller\UserController::class)]
 class UserControllerTest extends KernelTestBase {
 
   use UserCreationTrait;
@@ -57,8 +57,6 @@ class UserControllerTest extends KernelTestBase {
 
   /**
    * Tests the redirection to a user edit page.
-   *
-   * @covers ::userEditPage
    */
   public function testUserEditPage() {
 

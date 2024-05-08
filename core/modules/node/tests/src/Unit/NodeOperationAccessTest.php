@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\node\Unit;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Cache\Context\CacheContextsManager;
 use Drupal\Core\DependencyInjection\ContainerBuilder;
@@ -21,9 +22,9 @@ use Drupal\Tests\UnitTestCase;
 /**
  * Tests node operations.
  *
- * @coversDefaultClass \Drupal\node\NodeAccessControlHandler
  * @group node
  */
+#[CoversClass(\Drupal\node\NodeAccessControlHandler::class)]
 class NodeOperationAccessTest extends UnitTestCase {
 
   /**

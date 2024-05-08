@@ -4,16 +4,17 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\workflows\Kernel;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\workflows\Entity\Workflow;
 
 /**
  * Tests configuration dependencies in workflows.
  *
- * @coversDefaultClass \Drupal\workflows\Entity\Workflow
  *
  * @group workflows
  */
+#[CoversClass(\Drupal\workflows\Entity\Workflow::class)]
 class WorkflowDependenciesTest extends KernelTestBase {
 
   /**

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\taxonomy\Functional;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use Drupal\Tests\BrowserTestBase;
 use Drupal\taxonomy\Entity\Term;
 use Drupal\Tests\taxonomy\Traits\TaxonomyTestTrait;
@@ -12,8 +13,8 @@ use Drupal\Tests\taxonomy\Traits\TaxonomyTestTrait;
  * Taxonomy term version history test.
  *
  * @group taxonomy
- * @coversDefaultClass \Drupal\Core\Entity\Controller\VersionHistoryController
  */
+#[CoversClass(\Drupal\Core\Entity\Controller\VersionHistoryController::class)]
 class TaxonomyRevisionVersionHistoryTest extends BrowserTestBase {
 
   use TaxonomyTestTrait;

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\field_ui\Unit;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use Drupal\Core\Entity\EntityDisplayRepositoryInterface;
 use Drupal\Core\Render\ElementInfoManagerInterface;
 use Drupal\Core\TempStore\PrivateTempStore;
@@ -11,10 +12,9 @@ use Drupal\field_ui\Form\FieldConfigEditForm;
 use Drupal\Tests\UnitTestCase;
 
 /**
- * @coversDefaultClass \Drupal\field_ui\Form\FieldConfigEditForm
- *
  * @group field_ui
  */
+#[CoversClass(\Drupal\field_ui\Form\FieldConfigEditForm::class)]
 class FieldConfigEditFormTest extends UnitTestCase {
 
   /**
@@ -39,8 +39,6 @@ class FieldConfigEditFormTest extends UnitTestCase {
   }
 
   /**
-   * @covers ::hasAnyRequired
-   *
    * @dataProvider providerRequired
    */
   public function testHasAnyRequired(array $element, bool $result) {

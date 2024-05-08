@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\migrate\Unit;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use Drupal\Component\Plugin\Exception\PluginException;
 use Drupal\Component\Plugin\Exception\PluginNotFoundException;
 use Drupal\migrate\MigrateLookup;
@@ -16,15 +17,12 @@ use Drupal\migrate\Plugin\MigrationPluginManagerInterface;
  * Provides unit testing for the migration lookup service.
  *
  * @group migrate
- *
- * @coversDefaultClass \Drupal\migrate\MigrateLookup
  */
+#[CoversClass(\Drupal\migrate\MigrateLookup::class)]
 class MigrateLookupTest extends MigrateTestCase {
 
   /**
    * Tests the lookup function.
-   *
-   * @covers ::lookup
    */
   public function testLookup() {
     $source_ids = ['id' => '1'];

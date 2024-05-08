@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\migrate\Unit\process;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use Drupal\Core\File\FileExists;
 use Drupal\Core\File\FileSystemInterface;
 use Drupal\Core\StreamWrapper\StreamWrapperManagerInterface;
@@ -14,9 +15,8 @@ use Drupal\migrate\Plugin\MigrateProcessInterface;
  * Tests the file copy process plugin.
  *
  * @group migrate
- *
- * @coversDefaultClass \Drupal\migrate\Plugin\migrate\process\FileCopy
  */
+#[CoversClass(\Drupal\migrate\Plugin\migrate\process\FileCopy::class)]
 class FileCopyTest extends MigrateProcessTestCase {
 
   /**

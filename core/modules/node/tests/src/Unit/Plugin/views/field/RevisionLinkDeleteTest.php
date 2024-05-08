@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\node\Unit\Plugin\views\field;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use Drupal\Core\Access\AccessManagerInterface;
 use Drupal\Core\Entity\EntityRepositoryInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
@@ -17,9 +18,9 @@ use Drupal\views\ResultRow;
 use Drupal\views\ViewExecutable;
 
 /**
- * @coversDefaultClass \Drupal\node\Plugin\views\field\RevisionLinkDelete
  * @group node
  */
+#[CoversClass(\Drupal\node\Plugin\views\field\RevisionLinkDelete::class)]
 class RevisionLinkDeleteTest extends UnitTestCase {
 
   use ViewsLoggerTestTrait;
@@ -37,8 +38,6 @@ class RevisionLinkDeleteTest extends UnitTestCase {
 
   /**
    * Test the render method when getEntity returns NULL.
-   *
-   * @covers ::render
    */
   public function testRenderNullEntity(): void {
     $row = new ResultRow();

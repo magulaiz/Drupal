@@ -4,16 +4,17 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\layout_builder\Kernel;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use Drupal\layout_builder\Section;
 use Drupal\layout_builder\SectionListInterface;
 use Drupal\layout_builder\SectionListTrait;
 
 /**
- * @coversDefaultClass \Drupal\layout_builder\SectionListTrait
  *
  * @group layout_builder
  * @group #slow
  */
+#[CoversClass(\Drupal\layout_builder\SectionListTrait::class)]
 class SectionListTraitTest extends SectionListTestBase {
 
   /**
@@ -23,9 +24,6 @@ class SectionListTraitTest extends SectionListTestBase {
     return new TestSectionList($section_data);
   }
 
-  /**
-   * @covers ::addBlankSection
-   */
   public function testAddBlankSection() {
     $this->expectException(\Exception::class);
     $this->expectExceptionMessage('A blank section must only be added to an empty list');

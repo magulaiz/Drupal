@@ -4,15 +4,15 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\rest\Unit\Entity;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use Drupal\rest\Entity\RestResourceConfig;
 use Drupal\rest\RestResourceConfigInterface;
 use Drupal\Tests\UnitTestCase;
 
 /**
- * @coversDefaultClass \Drupal\rest\Entity\RestResourceConfig
- *
  * @group rest
  */
+#[CoversClass(\Drupal\rest\Entity\RestResourceConfig::class)]
 class RestResourceConfigTest extends UnitTestCase {
 
   /**

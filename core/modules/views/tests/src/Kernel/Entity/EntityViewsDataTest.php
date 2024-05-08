@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\views\Kernel\Entity;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Config\Entity\ConfigEntityBase;
 use Drupal\Core\Config\Entity\ConfigEntityType;
@@ -17,9 +18,9 @@ use Drupal\views\EntityViewsData;
 /**
  * Tests entity views data.
  *
- * @coversDefaultClass \Drupal\views\EntityViewsData
  * @group views
  */
+#[CoversClass(\Drupal\views\EntityViewsData::class)]
 class EntityViewsDataTest extends KernelTestBase {
 
   /**

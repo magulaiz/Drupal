@@ -4,15 +4,16 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\field\Unit\Plugin\migrate\process\d7;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use Drupal\field\Plugin\migrate\process\d7\FieldTypeDefaults;
 use Drupal\Tests\migrate\Unit\process\MigrateProcessTestCase;
 
 /**
  * Tests D7 field formatter defaults.
  *
- * @coversDefaultClass \Drupal\field\Plugin\migrate\process\d7\FieldTypeDefaults
  * @group field
  */
+#[CoversClass(\Drupal\field\Plugin\migrate\process\d7\FieldTypeDefaults::class)]
 class FieldTypeDefaultsTest extends MigrateProcessTestCase {
 
   /**
@@ -25,8 +26,6 @@ class FieldTypeDefaultsTest extends MigrateProcessTestCase {
 
   /**
    * Tests various default cases.
-   *
-   * @covers ::transform
    */
   public function testDefaults() {
     // Assert common values are passed through without modification.

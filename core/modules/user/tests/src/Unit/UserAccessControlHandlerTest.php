@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\user\Unit;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Cache\Context\CacheContextsManager;
 use Drupal\Core\DependencyInjection\Container;
@@ -15,9 +16,8 @@ use Drupal\user\UserAccessControlHandler;
  *
  * @group Drupal
  * @group User
- *
- * @coversDefaultClass \Drupal\user\UserAccessControlHandler
  */
+#[CoversClass(\Drupal\user\UserAccessControlHandler::class)]
 class UserAccessControlHandlerTest extends UnitTestCase {
 
   /**

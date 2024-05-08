@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\block_content\Unit\Access;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use Drupal\block_content\Access\AccessGroupAnd;
 use Drupal\Core\Access\AccessResult;
 use Drupal\block_content\Access\RefinableDependentAccessInterface;
@@ -12,10 +13,9 @@ use Drupal\Core\Session\AccountInterface;
 use Drupal\Tests\UnitTestCase;
 
 /**
- * @coversDefaultClass  \Drupal\block_content\Access\RefinableDependentAccessTrait
- *
  * @group block_content
  */
+#[CoversClass(\Drupal\block_content\Access\RefinableDependentAccessTrait::class)]
 class DependentAccessTest extends UnitTestCase {
   use AccessibleTestingTrait;
 
@@ -46,7 +46,6 @@ class DependentAccessTest extends UnitTestCase {
   /**
    * Tests that the previous dependency is replaced when using set.
    *
-   * @covers ::setAccessDependency
    *
    * @dataProvider providerTestSetFirst
    */

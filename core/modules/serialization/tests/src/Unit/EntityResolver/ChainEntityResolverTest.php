@@ -4,13 +4,14 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\serialization\Unit\EntityResolver;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use Drupal\Tests\UnitTestCase;
 use Drupal\serialization\EntityResolver\ChainEntityResolver;
 
 /**
- * @coversDefaultClass \Drupal\serialization\EntityResolver\ChainEntityResolver
  * @group serialization
  */
+#[CoversClass(\Drupal\serialization\EntityResolver\ChainEntityResolver::class)]
 class ChainEntityResolverTest extends UnitTestCase {
 
   /**
@@ -46,9 +47,6 @@ class ChainEntityResolverTest extends UnitTestCase {
 
   /**
    * Tests the resolve method with no matching resolvers.
-   *
-   * @covers ::__construct
-   * @covers ::resolve
    */
   public function testResolverWithNoneResolved() {
     $resolvers = [
@@ -63,9 +61,6 @@ class ChainEntityResolverTest extends UnitTestCase {
 
   /**
    * Tests the resolve method with no matching resolvers, using addResolver.
-   *
-   * @covers ::addResolver
-   * @covers ::resolve
    */
   public function testResolverWithNoneResolvedUsingAddResolver() {
     $resolver = new ChainEntityResolver();
@@ -77,9 +72,6 @@ class ChainEntityResolverTest extends UnitTestCase {
 
   /**
    * Tests the resolve method with a matching resolver first.
-   *
-   * @covers ::__construct
-   * @covers ::resolve
    */
   public function testResolverWithFirstResolved() {
     $resolvers = [
@@ -94,9 +86,6 @@ class ChainEntityResolverTest extends UnitTestCase {
 
   /**
    * Tests the resolve method with a matching resolver last.
-   *
-   * @covers ::__construct
-   * @covers ::resolve
    */
   public function testResolverWithLastResolved() {
     $resolvers = [
@@ -111,9 +100,6 @@ class ChainEntityResolverTest extends UnitTestCase {
 
   /**
    * Tests the resolve method where one resolver returns 0.
-   *
-   * @covers ::__construct
-   * @covers ::resolve
    */
   public function testResolverWithResolvedToZero() {
     $resolvers = [

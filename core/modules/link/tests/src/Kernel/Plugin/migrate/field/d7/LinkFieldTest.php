@@ -4,15 +4,16 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\link\Kernel\Plugin\migrate\field\d7;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\migrate\Plugin\MigrationInterface;
 use Drupal\link\Plugin\migrate\field\d7\LinkField;
 use Prophecy\Argument;
 
 /**
- * @coversDefaultClass \Drupal\link\Plugin\migrate\field\d7\LinkField
  * @group link
  */
+#[CoversClass(\Drupal\link\Plugin\migrate\field\d7\LinkField::class)]
 class LinkFieldTest extends KernelTestBase {
 
   /**
@@ -52,9 +53,6 @@ class LinkFieldTest extends KernelTestBase {
     $this->migration = $migration->reveal();
   }
 
-  /**
-   * @covers ::alterFieldInstanceMigration
-   */
   public function testAlterFieldInstanceMigration($method = 'alterFieldInstanceMigration') {
     $this->plugin->$method($this->migration);
 

@@ -4,14 +4,15 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\migrate\Kernel\Plugin;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use Drupal\KernelTests\KernelTestBase;
 
 /**
  * Tests the migration plugin manager.
  *
- * @coversDefaultClass \Drupal\migrate\Plugin\MigratePluginManager
  * @group migrate
  */
+#[CoversClass(\Drupal\migrate\Plugin\MigratePluginManager::class)]
 class MigrationPluginConfigurationTest extends KernelTestBase {
 
   /**

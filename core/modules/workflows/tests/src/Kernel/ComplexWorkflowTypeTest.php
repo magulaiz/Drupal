@@ -4,16 +4,18 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\workflows\Kernel;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\workflows\Entity\Workflow;
 
 /**
  * Workflow entity tests that require modules or storage.
  *
- * @coversDefaultClass \Drupal\workflow_type_test\Plugin\WorkflowType\ComplexTestType
  *
  * @group workflows
  */
+#[CoversClass(\Drupal\workflow_type_test\Plugin\WorkflowType\ComplexTestType::class)]
+#[CoversClass(\Drupal\workflows\Entity\Workflow::class)]
 class ComplexWorkflowTypeTest extends KernelTestBase {
 
   /**
@@ -21,9 +23,6 @@ class ComplexWorkflowTypeTest extends KernelTestBase {
    */
   protected static $modules = ['workflows', 'workflow_type_test'];
 
-  /**
-   * @covers \Drupal\workflows\Entity\Workflow::loadMultipleByType
-   */
   public function testLoadMultipleByType() {
     $workflow1 = Workflow::create([
       'id' => 'test1',

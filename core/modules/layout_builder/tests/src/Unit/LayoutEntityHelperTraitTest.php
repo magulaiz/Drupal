@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\layout_builder\Unit;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use Drupal\Component\Plugin\ConfigurableInterface;
 use Drupal\Component\Plugin\DerivativeInspectionInterface;
 use Drupal\Component\Plugin\PluginInspectionInterface;
@@ -14,10 +15,9 @@ use Drupal\Tests\UnitTestCase;
 use Prophecy\Prophet;
 
 /**
- * @coversDefaultClass \Drupal\layout_builder\LayoutEntityHelperTrait
- *
  * @group layout_builder
  */
+#[CoversClass(\Drupal\layout_builder\LayoutEntityHelperTrait::class)]
 class LayoutEntityHelperTraitTest extends UnitTestCase {
 
   /**
@@ -90,8 +90,6 @@ class LayoutEntityHelperTraitTest extends UnitTestCase {
   }
 
   /**
-   * @covers ::getInlineBlockComponents
-   *
    * @dataProvider providerSectionsWithInlineComponents
    */
   public function testGetInlineBlockComponents($sections, $expected_components) {
@@ -100,8 +98,6 @@ class LayoutEntityHelperTraitTest extends UnitTestCase {
   }
 
   /**
-   * @covers ::getInlineBlockRevisionIdsInSections
-   *
    * @dataProvider providerSectionsWithInlineComponents
    */
   public function testGetInlineBlockRevisionIdsInSections($sections, $components, $expected_revision_ids) {

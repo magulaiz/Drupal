@@ -4,14 +4,14 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\taxonomy\Kernel\Plugin\migrate\source\d7;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 // cspell:ignore tsid
-
 /**
  * Tests D7 i18n term localized source plugin.
  *
- * @covers \Drupal\taxonomy\Plugin\migrate\source\d7\TermTranslation
  * @group taxonomy
  */
+#[CoversClass(\Drupal\taxonomy\Plugin\migrate\source\d7\TermTranslation::class)]
 class TermTranslationTest extends TermTest {
 
   /**

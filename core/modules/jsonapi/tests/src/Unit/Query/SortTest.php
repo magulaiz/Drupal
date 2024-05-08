@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\jsonapi\Unit\Query;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use Drupal\Core\Cache\Context\CacheContextsManager;
 use Drupal\Core\DependencyInjection\Container;
 use Drupal\jsonapi\Query\Sort;
@@ -12,11 +13,10 @@ use Prophecy\Argument;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 
 /**
- * @coversDefaultClass \Drupal\jsonapi\Query\Sort
  * @group jsonapi
- *
  * @internal
  */
+#[CoversClass(\Drupal\jsonapi\Query\Sort::class)]
 class SortTest extends UnitTestCase {
 
   /**
@@ -34,7 +34,6 @@ class SortTest extends UnitTestCase {
   }
 
   /**
-   * @covers ::createFromQueryParameter
    * @dataProvider parameterProvider
    */
   public function testCreateFromQueryParameter($input, $expected) {
@@ -82,7 +81,6 @@ class SortTest extends UnitTestCase {
   }
 
   /**
-   * @covers ::createFromQueryParameter
    * @dataProvider badParameterProvider
    */
   public function testCreateFromQueryParameterFail($input) {

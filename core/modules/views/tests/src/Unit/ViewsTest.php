@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\views\Unit;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Tests\UnitTestCase;
@@ -15,9 +16,9 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 
 /**
- * @coversDefaultClass \Drupal\views\Views
  * @group views
  */
+#[CoversClass(\Drupal\views\Views::class)]
 class ViewsTest extends UnitTestCase {
 
   /**
@@ -51,8 +52,6 @@ class ViewsTest extends UnitTestCase {
 
   /**
    * Tests the getView() method.
-   *
-   * @covers ::getView
    */
   public function testGetView() {
     $view = new View(['id' => 'test_view'], 'view');
@@ -80,8 +79,6 @@ class ViewsTest extends UnitTestCase {
 
   /**
    * Tests the getView() method against a non-existent view.
-   *
-   * @covers ::getView
    */
   public function testGetNonExistentView() {
     $entity_type_manager = $this->prophesize(EntityTypeManagerInterface::class);
@@ -94,8 +91,6 @@ class ViewsTest extends UnitTestCase {
   }
 
   /**
-   * @covers ::getApplicableViews
-   *
    * @dataProvider providerTestGetApplicableViews
    */
   public function testGetApplicableViews($applicable_type, $expected) {

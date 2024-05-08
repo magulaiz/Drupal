@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\ckeditor5\Kernel;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use Drupal\Component\Utility\Html;
 use Drupal\Core\Entity\Entity\EntityViewMode;
 use Drupal\editor\EditorInterface;
@@ -15,17 +16,20 @@ use Drupal\Tests\SchemaCheckTestTrait;
 use Symfony\Component\Yaml\Yaml;
 
 // cspell:ignore onhover baguette
-
 /**
- * @covers \Drupal\ckeditor5\Plugin\Validation\Constraint\ToolbarItemConstraintValidator
- * @covers \Drupal\ckeditor5\Plugin\Validation\Constraint\ToolbarItemDependencyConstraintValidator
- * @covers \Drupal\ckeditor5\Plugin\Validation\Constraint\EnabledConfigurablePluginsConstraintValidator
- * @covers \Drupal\ckeditor5\Plugin\Editor\CKEditor5::validatePair
- * @covers \Drupal\ckeditor5\Plugin\Validation\Constraint\FundamentalCompatibilityConstraintValidator
- * @covers \Drupal\ckeditor5\Plugin\Validation\Constraint\CKEditor5MediaAndFilterSettingsInSyncConstraintValidator
  * @group ckeditor5
  * @group #slow
  */
+#[CoversClass(\Drupal\ckeditor5\Plugin\Validation\Constraint\ToolbarItemConstraintValidator::class)]
+#[CoversClass(\Drupal\ckeditor5\Plugin\Validation\Constraint\ToolbarItemDependencyConstraintValidator::class)]
+#[CoversClass(\Drupal\ckeditor5\Plugin\Validation\Constraint\EnabledConfigurablePluginsConstraintValidator::class)]
+#[CoversClass(\Drupal\ckeditor5\Plugin\Editor\CKEditor5::validatePair)]
+#[CoversClass(\Drupal\ckeditor5\Plugin\Validation\Constraint\FundamentalCompatibilityConstraintValidator::class)]
+#[CoversClass(\Drupal\ckeditor5\Plugin\Validation\Constraint\CKEditor5MediaAndFilterSettingsInSyncConstraintValidator::class)]
+#[CoversClass(\Drupal\ckeditor5\Plugin\Validation\Constraint\CKEditor5ElementConstraintValidator::class)]
+#[CoversClass(\Drupal\ckeditor5\Plugin\Validation\Constraint\StyleSensibleElementConstraintValidator::class)]
+#[CoversClass(\Drupal\ckeditor5\Plugin\Validation\Constraint\UniqueLabelInListConstraintValidator::class)]
+#[CoversClass(\Drupal\ckeditor5\Plugin\Validation\Constraint\SourceEditingPreventSelfXssConstraintValidator::class)]
 class ValidatorsTest extends KernelTestBase {
 
   use SchemaCheckTestTrait;
@@ -61,9 +65,6 @@ class ValidatorsTest extends KernelTestBase {
   }
 
   /**
-   * @covers \Drupal\ckeditor5\Plugin\Validation\Constraint\CKEditor5ElementConstraintValidator
-   * @covers \Drupal\ckeditor5\Plugin\Validation\Constraint\StyleSensibleElementConstraintValidator
-   * @covers \Drupal\ckeditor5\Plugin\Validation\Constraint\UniqueLabelInListConstraintValidator
    * @dataProvider provider
    *
    * @param array $ckeditor5_settings
@@ -643,7 +644,6 @@ class ValidatorsTest extends KernelTestBase {
   }
 
   /**
-   * @covers \Drupal\ckeditor5\Plugin\Validation\Constraint\SourceEditingPreventSelfXssConstraintValidator
    * @dataProvider providerPair
    *
    * @param array $ckeditor5_settings
@@ -1582,8 +1582,6 @@ class ValidatorsTest extends KernelTestBase {
 
   /**
    * Tests that validation works with >1 enabled HTML restrictor filters.
-   *
-   * @covers \Drupal\ckeditor5\Plugin\Validation\Constraint\FundamentalCompatibilityConstraintValidator::checkHtmlRestrictionsMatch
    */
   public function testMultipleHtmlRestrictingFilters(): void {
     $this->container->get('module_installer')->install(['filter_test']);

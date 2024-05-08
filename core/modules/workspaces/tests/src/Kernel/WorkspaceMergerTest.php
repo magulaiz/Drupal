@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\workspaces\Kernel;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\Tests\node\Traits\ContentTypeCreationTrait;
 use Drupal\Tests\node\Traits\NodeCreationTrait;
@@ -12,10 +13,10 @@ use Drupal\Tests\user\Traits\UserCreationTrait;
 /**
  * Tests workspace merging.
  *
- * @coversDefaultClass \Drupal\workspaces\WorkspaceMerger
  *
  * @group workspaces
  */
+#[CoversClass(\Drupal\workspaces\WorkspaceMerger::class)]
 class WorkspaceMergerTest extends KernelTestBase {
 
   use ContentTypeCreationTrait;
@@ -71,12 +72,6 @@ class WorkspaceMergerTest extends KernelTestBase {
 
   /**
    * Tests workspace merging.
-   *
-   * @covers ::merge
-   * @covers ::getNumberOfChangesOnSource
-   * @covers ::getNumberOfChangesOnTarget
-   * @covers ::getDifferringRevisionIdsOnSource
-   * @covers ::getDifferringRevisionIdsOnTarget
    */
   public function testWorkspaceMerger() {
     $this->initializeWorkspacesModule();

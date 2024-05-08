@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\system\Unit\Menu;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\DependencyInjection\ContainerBuilder;
@@ -16,9 +17,9 @@ use Drupal\Tests\Core\Menu\MenuLinkMock;
 use Drupal\Tests\UnitTestCase;
 
 /**
- * @coversDefaultClass \Drupal\Core\Menu\MenuLinkTree
  * @group Menu
  */
+#[CoversClass(\Drupal\Core\Menu\MenuLinkTree::class)]
 class MenuLinkTreeTest extends UnitTestCase {
 
   /**
@@ -52,51 +53,8 @@ class MenuLinkTreeTest extends UnitTestCase {
   }
 
   /**
-   * @covers ::build
-   *
-   * MenuLinkTree::build() gathers both:
-   * 1. the tree's access cacheability: the cacheability of the access result
-   *    of checking a link in a menu tree's access. Callers can opt out of
-   *    this by MenuLinkTreeElement::access to NULL (the default) value, in
-   *    which case the menu link is always visible. Only when an
-   *    AccessResultInterface object is specified, we gather this cacheability
-   *    metadata.
-   *    This means there are three cases:
-   *    a. no access result (NULL): menu link is visible
-   *    b. AccessResultInterface object that is allowed: menu link is visible
-   *    c. AccessResultInterface object that is not allowed: menu link is
-   *       invisible, but cacheability metadata is still applicable
-   * 2. the tree's menu links' cacheability: the cacheability of a menu link
-   *    itself, because it may be dynamic. For this reason, MenuLinkInterface
-   *    extends CacheableDependencyInterface. It allows any menu link plugin to
-   *    mark itself as uncacheable (max-age=0) or dynamic (by specifying cache
-   *    tags and/or contexts), to indicate the extent of dynamism.
-   *    This means there are two cases:
-   *    a. permanently cacheable, no cache tags, no cache contexts
-   *    b. anything else: non-permanently cacheable, and/or cache tags, and/or
-   *       cache contexts.
-   *
-   * Finally, there are four important shapes of trees, all of which we want to
-   * test:
-   * 1. the empty tree
-   * 2. a single-element tree
-   * 3. a single-level tree (>1 element; just 1 element is case 2)
-   * 4. a multi-level tree
-   *
-   * The associated data provider aims to test the handling of both of these
-   * types of cacheability, and for all four tree shapes, for each of the types
-   * of values for the two types of cacheability.
-   *
-   * There is another level of cacheability involved when actually rendering
-   * built menu trees (i.e. when invoking RendererInterface::render() on the
-   * return value of MenuLinkTreeInterface::build()): the cacheability of the
-   * generated URLs.
-   * Fortunately, that doesn't need additional test coverage here because that
-   * cacheability is handled at the level of the Renderer (i.e. menu.html.twig
-   * template's link() function invocation). It also has its own test coverage.
    *
    * @see \Drupal\menu_link_content\Tests\MenuLinkContentCacheabilityBubblingTest
-   *
    * @dataProvider providerTestBuildCacheability
    */
   public function testBuildCacheability($description, $tree, $expected_build, $access, array $access_cache_contexts = []) {

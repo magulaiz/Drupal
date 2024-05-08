@@ -4,17 +4,17 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\image\Kernel\Plugin\migrate\source\d6;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use Drupal\Tests\migrate\Kernel\MigrateSqlSourceTestBase;
 
 // cspell:ignore actionid imagecache presetid presetname
-
 /**
  * Tests the d6_imagecache_presets source plugin.
  *
- * @covers \Drupal\image\Plugin\migrate\source\d6\ImageCachePreset
  *
  * @group image
  */
+#[CoversClass(\Drupal\image\Plugin\migrate\source\d6\ImageCachePreset::class)]
 class ImageCachePresetTest extends MigrateSqlSourceTestBase {
 
   /**

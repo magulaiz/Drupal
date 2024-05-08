@@ -4,15 +4,16 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\taxonomy\Kernel\Plugin\migrate\source\d6;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
 use Drupal\Tests\migrate\Kernel\MigrateSqlSourceTestBase;
 
 /**
  * Tests D6 vocabulary per type source plugin.
  *
- * @covers \Drupal\taxonomy\Plugin\migrate\source\d6\VocabularyPerType
  * @group taxonomy
  */
+#[CoversClass(\Drupal\taxonomy\Plugin\migrate\source\d6\VocabularyPerType::class)]
 class VocabularyPerTypeTest extends MigrateSqlSourceTestBase {
 
   /**

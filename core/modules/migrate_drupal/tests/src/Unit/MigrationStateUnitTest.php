@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\migrate_drupal\Unit;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Messenger\MessengerInterface;
 use Drupal\migrate\Plugin\MigrateDestinationInterface;
@@ -20,23 +21,14 @@ use org\bovigo\vfs\vfsStreamWrapper;
  * Defines a class for testing \Drupal\migrate_drupal\MigrationState.
  *
  * @group migrate_drupal
- *
- * @coversDefaultClass \Drupal\migrate_drupal\MigrationState
  */
+#[CoversClass(\Drupal\migrate_drupal\MigrationState::class)]
 class MigrationStateUnitTest extends UnitTestCase {
 
   /**
    * Tests ::getUpgradeStates.
    *
    * @dataProvider providerGetUpgradeStates
-   *
-   * @covers ::getUpgradeStates
-   * @covers ::buildDiscoveredDestinationsBySource
-   * @covers ::buildDeclaredStateBySource
-   * @covers ::buildUpgradeState
-   * @covers ::getMigrationStates
-   * @covers ::getSourceState
-   * @covers ::getDestinationsForSource
    */
   public function testGetUpgradeStates($modules_to_enable, $files, $field_plugins, $migrations, $source_system_data, $expected_7, $expected_6) {
     $fieldPluginManager = $this->prophesize(MigrateFieldPluginManagerInterface::class);

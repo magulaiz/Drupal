@@ -4,24 +4,22 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\jsonapi\Unit;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use Drupal\jsonapi\JsonApiSpec;
 use Drupal\Tests\UnitTestCase;
 
 // cspell:ignore kitt
-
 /**
- * @coversDefaultClass \Drupal\jsonapi\JsonApiSpec
  * @group jsonapi
- *
  * @internal
  */
+#[CoversClass(\Drupal\jsonapi\JsonApiSpec::class)]
 class JsonApiSpecTest extends UnitTestCase {
 
   /**
    * Ensures that member names are properly validated.
    *
    * @dataProvider providerTestIsValidMemberName
-   * @covers ::isValidMemberName
    */
   public function testIsValidMemberName($member_name, $expected) {
     $this->assertSame($expected, JsonApiSpec::isValidMemberName($member_name));
@@ -101,8 +99,6 @@ class JsonApiSpecTest extends UnitTestCase {
    * Provides test cases.
    *
    * @dataProvider providerTestIsValidCustomQueryParameter
-   * @covers ::isValidCustomQueryParameter
-   * @covers ::isValidMemberName
    */
   public function testIsValidCustomQueryParameter($custom_query_parameter, $expected) {
     $this->assertSame($expected, JsonApiSpec::isValidCustomQueryParameter($custom_query_parameter));

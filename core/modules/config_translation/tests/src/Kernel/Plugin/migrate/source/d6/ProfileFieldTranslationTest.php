@@ -4,16 +4,16 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\config_translation\Kernel\Plugin\migrate\source\d6;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use Drupal\Tests\migrate\Kernel\MigrateSqlSourceTestBase;
 
 // cspell:ignore objectid
-
 /**
  * Tests the i18nProfileField source plugin.
  *
- * @covers \Drupal\config_translation\Plugin\migrate\source\d6\ProfileFieldTranslation
  * @group migrate_drupal
  */
+#[CoversClass(\Drupal\config_translation\Plugin\migrate\source\d6\ProfileFieldTranslation::class)]
 class ProfileFieldTranslationTest extends MigrateSqlSourceTestBase {
 
   /**

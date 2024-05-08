@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\mysql\Unit;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use Drupal\mysql\Driver\Database\mysql\Connection;
 use Drupal\Tests\UnitTestCase;
 use Prophecy\Argument;
@@ -11,9 +12,9 @@ use Prophecy\Argument;
 /**
  * Tests MySQL database connections.
  *
- * @coversDefaultClass \Drupal\mysql\Driver\Database\mysql\Connection
  * @group Database
  */
+#[CoversClass(\Drupal\mysql\Driver\Database\mysql\Connection::class)]
 class ConnectionTest extends UnitTestCase {
 
   /**
@@ -75,8 +76,6 @@ class ConnectionTest extends UnitTestCase {
   }
 
   /**
-   * @covers ::version
-   * @covers ::isMariaDb
    * @dataProvider providerVersionAndIsMariaDb
    */
   public function testVersionAndIsMariaDb(bool $expected_is_mariadb, string $server_version, string $expected_version): void {

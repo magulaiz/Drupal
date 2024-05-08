@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\views\Kernel\Handler;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use Drupal\Tests\views\Kernel\ViewsKernelTestBase;
 use Drupal\views\Views;
 
@@ -12,9 +13,8 @@ use Drupal\views\Views;
  *
  * @group views
  * @group #slow
- *
- * @coversDefaultClass \Drupal\views\Plugin\views\filter\Combine
  */
+#[CoversClass(\Drupal\views\Plugin\views\filter\Combine::class)]
 class FilterCombineTest extends ViewsKernelTestBase {
 
   /**
@@ -346,8 +346,6 @@ class FilterCombineTest extends ViewsKernelTestBase {
 
   /**
    * Tests the Combine field filter using the 'equal' operator.
-   *
-   * @covers ::opEqual
    */
   public function testFilterCombineEqual() {
     $view = Views::getView('test_view');
@@ -394,8 +392,6 @@ class FilterCombineTest extends ViewsKernelTestBase {
 
   /**
    * Tests the Combine field filter using the 'not equal' operator.
-   *
-   * @covers ::opEqual
    */
   public function testFilterCombineNotEqual(): void {
     $view = Views::getView('test_view');

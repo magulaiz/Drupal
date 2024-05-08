@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\layout_builder\Kernel;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use Drupal\Core\Plugin\Context\Context;
 use Drupal\Core\Plugin\Context\ContextDefinition;
 use Drupal\Core\Plugin\Context\EntityContext;
@@ -18,11 +19,11 @@ use Drupal\layout_builder\SectionComponent;
 use Drupal\Tests\user\Traits\UserCreationTrait;
 
 /**
- * @coversDefaultClass \Drupal\layout_builder\Plugin\SectionStorage\OverridesSectionStorage
  *
  * @group layout_builder
  * @group #slow
  */
+#[CoversClass(\Drupal\layout_builder\Plugin\SectionStorage\OverridesSectionStorage::class)]
 class OverridesSectionStorageTest extends KernelTestBase {
 
   use UserCreationTrait;
@@ -61,7 +62,6 @@ class OverridesSectionStorageTest extends KernelTestBase {
   }
 
   /**
-   * @covers ::access
    * @dataProvider providerTestAccess
    *
    * @param bool $expected
@@ -171,9 +171,6 @@ class OverridesSectionStorageTest extends KernelTestBase {
     return $data;
   }
 
-  /**
-   * @covers ::getContexts
-   */
   public function testGetContexts() {
     $entity = EntityTest::create();
     $entity->save();
@@ -190,9 +187,6 @@ class OverridesSectionStorageTest extends KernelTestBase {
     $this->assertSame($context, $result['entity']);
   }
 
-  /**
-   * @covers ::getContextsDuringPreview
-   */
   public function testGetContextsDuringPreview() {
     $entity = EntityTest::create();
     $entity->save();
@@ -209,9 +203,6 @@ class OverridesSectionStorageTest extends KernelTestBase {
     $this->assertSame($context, $result['layout_builder.entity']);
   }
 
-  /**
-   * @covers ::getDefaultSectionStorage
-   */
   public function testGetDefaultSectionStorage() {
     $entity = EntityTest::create();
     $entity->save();
@@ -220,9 +211,6 @@ class OverridesSectionStorageTest extends KernelTestBase {
     $this->assertInstanceOf(DefaultsSectionStorageInterface::class, $this->plugin->getDefaultSectionStorage());
   }
 
-  /**
-   * @covers ::getTempstoreKey
-   */
   public function testGetTempstoreKey() {
     $entity = EntityTest::create();
     $entity->save();
@@ -233,9 +221,6 @@ class OverridesSectionStorageTest extends KernelTestBase {
     $this->assertSame('entity_test.1.default.en', $result);
   }
 
-  /**
-   * @covers ::deriveContextsFromRoute
-   */
   public function testDeriveContextsFromRoute() {
     $display = LayoutBuilderEntityViewDisplay::create([
       'targetEntityType' => 'entity_test',
@@ -258,9 +243,6 @@ class OverridesSectionStorageTest extends KernelTestBase {
     $this->assertSame('default', $result['view_mode']->getContextValue());
   }
 
-  /**
-   * @covers ::isOverridden
-   */
   public function testIsOverridden() {
     $display = LayoutBuilderEntityViewDisplay::create([
       'targetEntityType' => 'entity_test',

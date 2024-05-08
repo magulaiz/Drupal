@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\views\Unit;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use Drupal\Component\Plugin\PluginManagerInterface;
 use Drupal\Core\DependencyInjection\ContainerBuilder;
 use Drupal\Core\Extension\ModuleHandlerInterface;
@@ -18,9 +19,9 @@ use Drupal\views\ViewExecutable;
 use Symfony\Component\Routing\Route;
 
 /**
- * @coversDefaultClass \Drupal\views\ViewExecutable
  * @group views
  */
+#[CoversClass(\Drupal\views\ViewExecutable::class)]
 class ViewExecutableTest extends UnitTestCase {
 
   /**
@@ -173,9 +174,6 @@ class ViewExecutableTest extends UnitTestCase {
     \Drupal::setContainer($container);
   }
 
-  /**
-   * @covers ::getUrl
-   */
   public function testGetUrlWithOverriddenUrl() {
     $url = Url::fromRoute('example');
     $this->executable->override_url = $url;
@@ -183,9 +181,6 @@ class ViewExecutableTest extends UnitTestCase {
     $this->assertSame($url, $this->executable->getUrl());
   }
 
-  /**
-   * @covers ::getUrl
-   */
   public function testGetUrlWithPathNoPlaceholders() {
     $this->displayHandler->expects($this->any())
       ->method('getRoutedDisplay')
@@ -203,9 +198,6 @@ class ViewExecutableTest extends UnitTestCase {
     $this->assertEquals(Url::fromRoute('views.test.page_1'), $this->executable->getUrl());
   }
 
-  /**
-   * @covers ::getUrl
-   */
   public function testGetUrlWithoutRouterDisplay() {
     $this->displayHandler = $this->createMock('Drupal\views\Plugin\views\display\DisplayPluginInterface');
     $this->displayHandlers->expects($this->any())
@@ -217,9 +209,6 @@ class ViewExecutableTest extends UnitTestCase {
     $this->executable->getUrl();
   }
 
-  /**
-   * @covers ::getUrl
-   */
   public function testGetUrlWithPlaceholdersAndArgs() {
     $this->displayHandler->expects($this->any())
       ->method('getRoutedDisplay')
@@ -243,9 +232,6 @@ class ViewExecutableTest extends UnitTestCase {
     $this->assertEquals(Url::fromRoute('views.test.page_1', ['arg_0' => 'test']), $this->executable->getUrl(['test']));
   }
 
-  /**
-   * @covers ::getUrl
-   */
   public function testGetUrlWithPlaceholdersAndWithoutArgs() {
     $this->displayHandler->expects($this->any())
       ->method('getRoutedDisplay')
@@ -269,9 +255,6 @@ class ViewExecutableTest extends UnitTestCase {
     $this->assertEquals(Url::fromRoute('views.test.page_1', ['arg_0' => '*', 'arg_1' => '*']), $this->executable->getUrl());
   }
 
-  /**
-   * @covers ::getUrl
-   */
   public function testGetUrlWithPlaceholdersAndWithoutArgsAndExceptionValue() {
     $this->displayHandler->expects($this->any())
       ->method('getRoutedDisplay')
@@ -306,9 +289,6 @@ class ViewExecutableTest extends UnitTestCase {
     $this->assertEquals(Url::fromRoute('views.test.page_1', ['arg_0' => 'exception_0', 'arg_1' => 'exception_1']), $this->executable->getUrl());
   }
 
-  /**
-   * @covers ::buildThemeFunctions
-   */
   public function testBuildThemeFunctions() {
     /** @var \Drupal\views\ViewExecutable|\PHPUnit\Framework\MockObject\MockObject $view */
     /** @var \Drupal\views\Plugin\views\display\DisplayPluginBase|\PHPUnit\Framework\MockObject\MockObject $display */
@@ -350,9 +330,6 @@ class ViewExecutableTest extends UnitTestCase {
     $this->assertEquals($expected, $view->buildThemeFunctions('test_hook'));
   }
 
-  /**
-   * @covers ::generateHandlerId
-   */
   public function testGenerateHandlerId() {
     // Test the generateHandlerId() method.
     $test_ids = ['test' => 'test', 'test_1' => 'test_1'];
@@ -361,7 +338,6 @@ class ViewExecutableTest extends UnitTestCase {
   }
 
   /**
-   * @covers ::addHandler
    *
    * @dataProvider addHandlerProvider
    *
@@ -403,7 +379,6 @@ class ViewExecutableTest extends UnitTestCase {
   }
 
   /**
-   * @covers ::addHandler
    *
    * @dataProvider addHandlerProvider
    *
@@ -473,7 +448,6 @@ class ViewExecutableTest extends UnitTestCase {
    * @param bool $expected_to_be_attached
    *   Expected result.
    *
-   * @covers ::attachDisplays
    * @dataProvider providerAttachDisplays
    */
   public function testAttachDisplays($display_enabled, $access_granted, $expected_to_be_attached) {
@@ -588,10 +562,6 @@ class ViewExecutableTest extends UnitTestCase {
     return [$view, $display];
   }
 
-  /**
-   * @covers ::setItemsPerPage
-   * @covers ::getItemsPerPage
-   */
   public function testSetItemsPerPageBeforePreRender() {
     /** @var \Drupal\views\ViewExecutable|\PHPUnit\Framework\MockObject\MockObject $view */
     /** @var \Drupal\views\Plugin\views\display\DisplayPluginBase|\PHPUnit\Framework\MockObject\MockObject $display */
@@ -602,10 +572,6 @@ class ViewExecutableTest extends UnitTestCase {
     $this->assertContains('items_per_page:12', $view->element['#cache']['keys']);
   }
 
-  /**
-   * @covers ::setItemsPerPage
-   * @covers ::getItemsPerPage
-   */
   public function testSetItemsPerPageDuringPreRender() {
     /** @var \Drupal\views\ViewExecutable|\PHPUnit\Framework\MockObject\MockObject $view */
     /** @var \Drupal\views\Plugin\views\display\DisplayPluginBase|\PHPUnit\Framework\MockObject\MockObject $display */
@@ -620,10 +586,6 @@ class ViewExecutableTest extends UnitTestCase {
     $this->assertNotContains('items_per_page:12', $view->element['#cache']['keys']);
   }
 
-  /**
-   * @covers ::setOffset
-   * @covers ::getOffset
-   */
   public function testSetOffsetBeforePreRender() {
     /** @var \Drupal\views\ViewExecutable|\PHPUnit\Framework\MockObject\MockObject $view */
     /** @var \Drupal\views\Plugin\views\display\DisplayPluginBase|\PHPUnit\Framework\MockObject\MockObject $display */
@@ -634,10 +596,6 @@ class ViewExecutableTest extends UnitTestCase {
     $this->assertContains('offset:12', $view->element['#cache']['keys']);
   }
 
-  /**
-   * @covers ::setOffset
-   * @covers ::getOffset
-   */
   public function testSetOffsetDuringPreRender() {
     /** @var \Drupal\views\ViewExecutable|\PHPUnit\Framework\MockObject\MockObject $view */
     /** @var \Drupal\views\Plugin\views\display\DisplayPluginBase|\PHPUnit\Framework\MockObject\MockObject $display */
@@ -652,10 +610,6 @@ class ViewExecutableTest extends UnitTestCase {
     $this->assertNotContains('offset:12', $view->element['#cache']['keys']);
   }
 
-  /**
-   * @covers ::setCurrentPage
-   * @covers ::getCurrentPage
-   */
   public function testSetCurrentPageBeforePreRender() {
     /** @var \Drupal\views\ViewExecutable|\PHPUnit\Framework\MockObject\MockObject $view */
     /** @var \Drupal\views\Plugin\views\display\DisplayPluginBase|\PHPUnit\Framework\MockObject\MockObject $display */
@@ -666,10 +620,6 @@ class ViewExecutableTest extends UnitTestCase {
     $this->assertContains('page:12', $view->element['#cache']['keys']);
   }
 
-  /**
-   * @covers ::setCurrentPage
-   * @covers ::getCurrentPage
-   */
   public function testSetCurrentPageDuringPreRender() {
     /** @var \Drupal\views\ViewExecutable|\PHPUnit\Framework\MockObject\MockObject $view */
     /** @var \Drupal\views\Plugin\views\display\DisplayPluginBase|\PHPUnit\Framework\MockObject\MockObject $display */
@@ -684,9 +634,6 @@ class ViewExecutableTest extends UnitTestCase {
     $this->assertNotContains('page:12', $view->element['#cache']['keys']);
   }
 
-  /**
-   * @covers ::execute
-   */
   public function testCacheIsIgnoredDuringPreview() {
     /** @var \Drupal\views\ViewExecutable|\PHPUnit\Framework\MockObject\MockObject $view */
     /** @var \Drupal\views\Plugin\views\display\DisplayPluginBase|\PHPUnit\Framework\MockObject\MockObject $display */
@@ -719,7 +666,6 @@ class ViewExecutableTest extends UnitTestCase {
    * @param bool $expected_result
    *   The expected result when calling execute().
    *
-   * @covers ::execute
    * @dataProvider providerExecuteReturn
    */
   public function testExecuteReturn($display_enabled, $expected_result) {

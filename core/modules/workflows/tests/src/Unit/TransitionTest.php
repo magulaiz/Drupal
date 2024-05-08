@@ -4,23 +4,18 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\workflows\Unit;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use Drupal\Tests\UnitTestCase;
 use Drupal\workflow_type_test\Plugin\WorkflowType\TestType;
 use Drupal\workflows\Transition;
 use Drupal\workflows\WorkflowTypeInterface;
 
 /**
- * @coversDefaultClass \Drupal\workflows\Transition
- *
  * @group workflows
  */
+#[CoversClass(\Drupal\workflows\Transition::class)]
 class TransitionTest extends UnitTestCase {
 
-  /**
-   * @covers ::__construct
-   * @covers ::id
-   * @covers ::label
-   */
   public function testGetters() {
     $state = new Transition(
       $this->prophesize(WorkflowTypeInterface::class)->reveal(),
@@ -33,10 +28,6 @@ class TransitionTest extends UnitTestCase {
     $this->assertEquals('Publish', $state->label());
   }
 
-  /**
-   * @covers ::from
-   * @covers ::to
-   */
   public function testFromAndTo() {
     $workflow = new TestType([], '', []);
     $workflow

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\layout_builder\Unit;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use Drupal\Component\Plugin\Exception\PluginException;
 use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Block\BlockManagerInterface;
@@ -26,9 +27,9 @@ use Prophecy\Argument;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 
 /**
- * @coversDefaultClass \Drupal\layout_builder\Section
  * @group layout_builder
  */
+#[CoversClass(\Drupal\layout_builder\Section::class)]
 class SectionRenderTest extends UnitTestCase {
 
   /**
@@ -98,9 +99,6 @@ class SectionRenderTest extends UnitTestCase {
     \Drupal::setContainer($container);
   }
 
-  /**
-   * @covers ::toRenderArray
-   */
   public function testToRenderArray() {
     $block_content = ['#markup' => 'The block content.'];
     $placeholder_label = 'Placeholder Label';
@@ -147,9 +145,6 @@ class SectionRenderTest extends UnitTestCase {
     $this->assertEquals($expected, $result);
   }
 
-  /**
-   * @covers ::toRenderArray
-   */
   public function testToRenderArrayAccessDenied() {
     $block = $this->prophesize(BlockPluginInterface::class);
     $this->blockManager->createInstance('block_plugin_id', ['id' => 'block_plugin_id'])->willReturn($block->reveal());
@@ -179,9 +174,6 @@ class SectionRenderTest extends UnitTestCase {
     $this->assertEquals($expected, $result);
   }
 
-  /**
-   * @covers ::toRenderArray
-   */
   public function testToRenderArrayPreview() {
     $block_content = ['#markup' => 'The block content.'];
     $placeholder_label = 'Placeholder Label';
@@ -229,9 +221,6 @@ class SectionRenderTest extends UnitTestCase {
     $this->assertEquals($expected, $result);
   }
 
-  /**
-   * @covers ::toRenderArray
-   */
   public function testToRenderArrayEmpty() {
     $section = [];
     $expected = [];
@@ -239,9 +228,6 @@ class SectionRenderTest extends UnitTestCase {
     $this->assertEquals($expected, $result);
   }
 
-  /**
-   * @covers ::toRenderArray
-   */
   public function testContextAwareBlock() {
     $block_content = ['#markup' => 'The block content.'];
     $placeholder_label = 'Placeholder Label';
@@ -291,9 +277,6 @@ class SectionRenderTest extends UnitTestCase {
     $this->assertEquals($expected, $result);
   }
 
-  /**
-   * @covers ::toRenderArray
-   */
   public function testToRenderArrayMissingPluginId() {
     $this->expectException(PluginException::class);
     $this->expectExceptionMessage('No plugin ID specified for component with "some_uuid" UUID');

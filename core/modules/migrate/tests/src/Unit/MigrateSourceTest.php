@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\migrate\Unit;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\DependencyInjection\ContainerBuilder;
 use Drupal\Core\Extension\ModuleHandlerInterface;
@@ -18,9 +19,9 @@ use Drupal\migrate\Plugin\MigrateSourceInterface;
 use Drupal\migrate\Row;
 
 /**
- * @coversDefaultClass \Drupal\migrate\Plugin\migrate\source\SourcePluginBase
  * @group migrate
  */
+#[CoversClass(\Drupal\migrate\Plugin\migrate\source\SourcePluginBase::class)]
 class MigrateSourceTest extends MigrateTestCase {
 
   /**
@@ -151,9 +152,6 @@ class MigrateSourceTest extends MigrateTestCase {
     return $source_plugin;
   }
 
-  /**
-   * @covers ::__construct
-   */
   public function testHighwaterTrackChangesIncompatible() {
     $source_config = ['track_changes' => TRUE, 'high_water_property' => ['name' => 'something']];
     $this->expectException(MigrateException::class);
@@ -162,8 +160,6 @@ class MigrateSourceTest extends MigrateTestCase {
 
   /**
    * Tests that the source count is correct.
-   *
-   * @covers ::count
    */
   public function testCount() {
     // Mock the cache to validate set() receives appropriate arguments.
@@ -200,8 +196,6 @@ class MigrateSourceTest extends MigrateTestCase {
 
   /**
    * Tests that the key can be set for the count cache.
-   *
-   * @covers ::count
    */
   public function testCountCacheKey() {
     // Mock the cache to validate set() receives appropriate arguments.
@@ -281,8 +275,6 @@ class MigrateSourceTest extends MigrateTestCase {
 
   /**
    * Tests basic row preparation.
-   *
-   * @covers ::prepareRow
    */
   public function testPrepareRow() {
     $this->migrationConfiguration['id'] = 'test_migration';
@@ -324,8 +316,6 @@ class MigrateSourceTest extends MigrateTestCase {
 
   /**
    * Tests that global prepare hooks can skip rows.
-   *
-   * @covers ::prepareRow
    */
   public function testPrepareRowGlobalPrepareSkip() {
     $this->migrationConfiguration['id'] = 'test_migration';
@@ -353,8 +343,6 @@ class MigrateSourceTest extends MigrateTestCase {
 
   /**
    * Tests that migrate specific prepare hooks can skip rows.
-   *
-   * @covers ::prepareRow
    */
   public function testPrepareRowMigratePrepareSkip() {
     $this->migrationConfiguration['id'] = 'test_migration';
@@ -382,8 +370,6 @@ class MigrateSourceTest extends MigrateTestCase {
 
   /**
    * Tests that a skip exception during prepare hooks correctly skips.
-   *
-   * @covers ::prepareRow
    */
   public function testPrepareRowPrepareException() {
     $this->migrationConfiguration['id'] = 'test_migration';

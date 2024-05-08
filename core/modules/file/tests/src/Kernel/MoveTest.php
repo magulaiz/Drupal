@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\file\Kernel;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use Drupal\Core\Entity\EntityStorageException;
 use Drupal\Core\Entity\EntityTypeManager;
 use Drupal\Core\File\Exception\FileExistsException;
@@ -15,9 +16,9 @@ use Drupal\file\FileRepository;
 /**
  * Tests the file move function.
  *
- * @coversDefaultClass \Drupal\file\FileRepository
  * @group file
  */
+#[CoversClass(\Drupal\file\FileRepository::class)]
 class MoveTest extends FileManagedUnitTestBase {
 
   /**
@@ -37,8 +38,6 @@ class MoveTest extends FileManagedUnitTestBase {
 
   /**
    * Move a normal file.
-   *
-   * @covers ::move
    */
   public function testNormal() {
     $contents = $this->randomMachineName(10);
@@ -69,8 +68,6 @@ class MoveTest extends FileManagedUnitTestBase {
 
   /**
    * Tests renaming when moving onto a file that already exists.
-   *
-   * @covers ::move
    */
   public function testExistingRename() {
     // Setup a file to overwrite.
@@ -106,8 +103,6 @@ class MoveTest extends FileManagedUnitTestBase {
 
   /**
    * Tests replacement when moving onto a file that already exists.
-   *
-   * @covers ::move
    */
   public function testExistingReplace() {
     // Setup a file to overwrite.
@@ -140,8 +135,6 @@ class MoveTest extends FileManagedUnitTestBase {
 
   /**
    * Tests replacement when moving onto itself.
-   *
-   * @covers ::move
    */
   public function testExistingReplaceSelf() {
     // Setup a file to overwrite.
@@ -170,8 +163,6 @@ class MoveTest extends FileManagedUnitTestBase {
 
   /**
    * Tests that moving onto an existing file fails when instructed to do so.
-   *
-   * @covers ::move
    */
   public function testExistingError() {
     $contents = $this->randomMachineName(10);
@@ -205,8 +196,6 @@ class MoveTest extends FileManagedUnitTestBase {
 
   /**
    * Tests for an invalid stream wrapper.
-   *
-   * @covers ::move
    */
   public function testInvalidStreamWrapper() {
     $this->expectException(InvalidStreamWrapperException::class);
@@ -217,8 +206,6 @@ class MoveTest extends FileManagedUnitTestBase {
 
   /**
    * Tests for entity storage exception.
-   *
-   * @covers ::move
    */
   public function testEntityStorageException() {
     /** @var \Drupal\Core\Entity\EntityTypeManager $entityTypeManager */

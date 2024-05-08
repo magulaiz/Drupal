@@ -4,17 +4,17 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\file\Kernel\Plugin\migrate\source\d6;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use Drupal\Tests\migrate\Kernel\MigrateSqlSourceTestBase;
 
 // cspell:ignore abantu tnid
-
 /**
  * Tests D6 d6_upload source plugin.
  *
- * @covers \Drupal\file\Plugin\migrate\source\d6\Upload
  *
  * @group file
  */
+#[CoversClass(\Drupal\file\Plugin\migrate\source\d6\Upload::class)]
 class UploadTest extends MigrateSqlSourceTestBase {
 
   /**

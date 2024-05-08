@@ -4,14 +4,15 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\responsive_image\Kernel\Plugin\migrate\source\d7;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use Drupal\Tests\migrate\Kernel\MigrateSqlSourceTestBase;
 
 /**
  * Tests D7 responsive image styles source plugin.
  *
- * @covers \Drupal\responsive_image\Plugin\migrate\source\d7\ResponsiveImageStyles
  * @group image
  */
+#[CoversClass(\Drupal\responsive_image\Plugin\migrate\source\d7\ResponsiveImageStyles::class)]
 class ResponsiveImageStylesTest extends MigrateSqlSourceTestBase {
 
   /**

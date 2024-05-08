@@ -4,13 +4,14 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\migrate\Unit\process;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use Drupal\migrate\MigrateException;
 use Drupal\migrate\Plugin\migrate\process\ArrayBuild;
 
 /**
- * @coversDefaultClass \Drupal\migrate\Plugin\migrate\process\ArrayBuild
  * @group migrate
  */
+#[CoversClass(\Drupal\migrate\Plugin\migrate\process\ArrayBuild::class)]
 class ArrayBuildTest extends MigrateProcessTestCase {
 
   /**

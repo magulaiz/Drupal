@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\comment\Unit;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use Drupal\comment\CommentManager;
 use Drupal\Core\Entity\EntityDisplayRepositoryInterface;
 use Drupal\Core\Entity\EntityFieldManagerInterface;
@@ -13,15 +14,13 @@ use Drupal\Core\Session\AccountInterface;
 use Drupal\Tests\UnitTestCase;
 
 /**
- * @coversDefaultClass \Drupal\comment\CommentManager
  * @group comment
  */
+#[CoversClass(\Drupal\comment\CommentManager::class)]
 class CommentManagerTest extends UnitTestCase {
 
   /**
    * Tests the getFields method.
-   *
-   * @covers ::getFields
    */
   public function testGetFields() {
     // Set up a content entity type.

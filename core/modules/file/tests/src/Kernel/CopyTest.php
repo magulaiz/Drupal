@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\file\Kernel;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use Drupal\Core\Entity\EntityStorageException;
 use Drupal\Core\Entity\EntityTypeManager;
 use Drupal\Core\File\Exception\FileExistsException;
@@ -15,9 +16,9 @@ use Drupal\file\FileRepository;
 /**
  * Tests the file copy function.
  *
- * @coversDefaultClass \Drupal\file\FileRepository
  * @group file
  */
+#[CoversClass(\Drupal\file\FileRepository::class)]
 class CopyTest extends FileManagedUnitTestBase {
 
   /**
@@ -37,8 +38,6 @@ class CopyTest extends FileManagedUnitTestBase {
 
   /**
    * Tests file copying in the normal, base case.
-   *
-   * @covers ::copy
    */
   public function testNormal() {
     $contents = $this->randomMachineName(10);
@@ -68,8 +67,6 @@ class CopyTest extends FileManagedUnitTestBase {
 
   /**
    * Tests renaming when copying over a file that already exists.
-   *
-   * @covers ::copy
    */
   public function testExistingRename() {
     // Setup a file to overwrite.
@@ -110,8 +107,6 @@ class CopyTest extends FileManagedUnitTestBase {
 
   /**
    * Tests replacement when copying over a file that already exists.
-   *
-   * @covers ::copy
    */
   public function testExistingReplace() {
     // Setup a file to overwrite.
@@ -150,8 +145,6 @@ class CopyTest extends FileManagedUnitTestBase {
 
   /**
    * Tests that copying over an existing file fails when instructed to do so.
-   *
-   * @covers ::copy
    */
   public function testExistingError() {
     $contents = $this->randomMachineName(10);
@@ -182,8 +175,6 @@ class CopyTest extends FileManagedUnitTestBase {
 
   /**
    * Tests for an invalid stream wrapper.
-   *
-   * @covers ::copy
    */
   public function testInvalidStreamWrapper() {
     $this->expectException(InvalidStreamWrapperException::class);
@@ -194,8 +185,6 @@ class CopyTest extends FileManagedUnitTestBase {
 
   /**
    * Tests for entity storage exception.
-   *
-   * @covers ::copy
    */
   public function testEntityStorageException() {
     /** @var \Drupal\Core\Entity\EntityTypeManager $entityTypeManager */

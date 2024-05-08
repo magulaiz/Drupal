@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\views\Unit\Plugin\views\query;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use Drupal\Core\Database\Connection;
 use Drupal\Tests\UnitTestCase;
 use Drupal\views\Plugin\views\query\MysqlDateSql;
@@ -11,10 +12,10 @@ use Drupal\views\Plugin\views\query\MysqlDateSql;
 /**
  * Tests the MySQL-specific date query handler.
  *
- * @coversDefaultClass \Drupal\views\Plugin\views\query\MysqlDateSql
  *
  * @group views
  */
+#[CoversClass(\Drupal\views\Plugin\views\query\MysqlDateSql::class)]
 class MysqlDateSqlTest extends UnitTestCase {
 
   /**
@@ -34,8 +35,6 @@ class MysqlDateSqlTest extends UnitTestCase {
 
   /**
    * Tests the getDateField method.
-   *
-   * @covers ::getDateField
    */
   public function testGetDateField() {
     $date_sql = new MysqlDateSql($this->database);
@@ -50,7 +49,6 @@ class MysqlDateSqlTest extends UnitTestCase {
   /**
    * Tests date formatting replacement.
    *
-   * @covers ::getDateFormat
    *
    * @dataProvider providerTestGetDateFormat
    */
@@ -73,8 +71,6 @@ class MysqlDateSqlTest extends UnitTestCase {
 
   /**
    * Tests timezone offset formatting.
-   *
-   * @covers ::setFieldTimezoneOffset
    */
   public function testSetFieldTimezoneOffset() {
     $date_sql = new MysqlDateSql($this->database);
@@ -86,8 +82,6 @@ class MysqlDateSqlTest extends UnitTestCase {
 
   /**
    * Tests setting the database offset.
-   *
-   * @covers ::setTimezoneOffset
    */
   public function testSetTimezoneOffset() {
     $database = $this->prophesize(Connection::class);

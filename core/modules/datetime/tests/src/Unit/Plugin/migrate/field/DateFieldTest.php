@@ -4,25 +4,24 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\datetime\Unit\Plugin\migrate\field;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use Drupal\datetime\Plugin\migrate\field\DateField;
 use Drupal\migrate\MigrateException;
 use Drupal\Tests\UnitTestCase;
 
 // cspell:ignore todate
-
 /**
  * Provides unit tests for the DateField Plugin.
  *
- * @coversDefaultClass \Drupal\datetime\Plugin\migrate\field\DateField
  *
  * @group migrate
  */
+#[CoversClass(\Drupal\datetime\Plugin\migrate\field\DateField::class)]
 class DateFieldTest extends UnitTestCase {
 
   /**
    * Tests defineValueProcessPipeline.
    *
-   * @covers ::defineValueProcessPipeline
    *
    * @dataProvider providerTestDefineValueProcessPipeline
    */
@@ -131,8 +130,6 @@ class DateFieldTest extends UnitTestCase {
 
   /**
    * Tests invalid date types throw an exception.
-   *
-   * @covers ::defineValueProcessPipeline
    */
   public function testDefineValueProcessPipelineException() {
     $migration = $this->createMock('Drupal\migrate\Plugin\MigrationInterface');

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\workflows\Unit;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Routing\RouteMatch;
 use Drupal\Core\Session\AccountInterface;
@@ -14,15 +15,14 @@ use Prophecy\Argument;
 use Symfony\Component\Routing\Route;
 
 /**
- * @coversDefaultClass \Drupal\workflows\WorkflowStateTransitionOperationsAccessCheck
  * @group workflows
  */
+#[CoversClass(\Drupal\workflows\WorkflowStateTransitionOperationsAccessCheck::class)]
 class WorkflowStateTransitionOperationsAccessCheckTest extends UnitTestCase {
 
   /**
    * Tests the access method correctly proxies to the entity access system.
    *
-   * @covers ::access
    * @dataProvider accessTestCases
    */
   public function testAccess($route_requirement, $resulting_entity_access_check, $route_parameters = []) {
@@ -91,9 +91,6 @@ class WorkflowStateTransitionOperationsAccessCheckTest extends UnitTestCase {
     ];
   }
 
-  /**
-   * @covers ::access
-   */
   public function testMissingRouteParams() {
     $workflow = $this->prophesize(WorkflowInterface::class);
     $workflow->access()->shouldNotBeCalled();
@@ -123,7 +120,6 @@ class WorkflowStateTransitionOperationsAccessCheckTest extends UnitTestCase {
   }
 
   /**
-   * @covers ::access
    * @dataProvider invalidOperationNameTestCases
    */
   public function testInvalidOperationName($operation_name) {

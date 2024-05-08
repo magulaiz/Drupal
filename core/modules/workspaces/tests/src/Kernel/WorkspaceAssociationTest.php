@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\workspaces\Kernel;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\Tests\node\Traits\ContentTypeCreationTrait;
 use Drupal\Tests\node\Traits\NodeCreationTrait;
@@ -13,10 +14,10 @@ use Drupal\workspaces\Entity\Workspace;
 /**
  * Tests workspace associations.
  *
- * @coversDefaultClass \Drupal\workspaces\WorkspaceAssociation
  *
  * @group workspaces
  */
+#[CoversClass(\Drupal\workspaces\WorkspaceAssociation::class)]
 class WorkspaceAssociationTest extends KernelTestBase {
 
   use ContentTypeCreationTrait;
@@ -79,9 +80,6 @@ class WorkspaceAssociationTest extends KernelTestBase {
 
   /**
    * Tests the revisions tracked by a workspace.
-   *
-   * @covers ::getTrackedEntities
-   * @covers ::getAssociatedRevisions
    */
   public function testWorkspaceAssociation() {
     $this->createNode(['title' => 'Test article 1 - live - unpublished', 'type' => 'article', 'status' => 0]);

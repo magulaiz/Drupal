@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\menu_link_content\Kernel;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use Drupal\Core\Menu\MenuTreeParameters;
 use Drupal\entity_test\Entity\EntityTestExternal;
 use Drupal\KernelTests\KernelTestBase;
@@ -17,6 +18,7 @@ use Drupal\user\Entity\User;
  *
  * @group Menu
  */
+#[CoversClass(\Drupal\menu_link_content\Plugin\Validation\Constraint\MenuTreeHierarchyConstraintValidator::class)]
 class MenuLinksTest extends KernelTestBase {
 
   /**
@@ -328,8 +330,6 @@ class MenuLinksTest extends KernelTestBase {
 
   /**
    * Tests handling of pending revisions.
-   *
-   * @covers \Drupal\menu_link_content\Plugin\Validation\Constraint\MenuTreeHierarchyConstraintValidator::validate
    */
   public function testPendingRevisions() {
     /** @var \Drupal\Core\Entity\RevisionableStorageInterface $storage */

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\system\Kernel\Common;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use Drupal\Component\Utility\UrlHelper;
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Language\Language;
@@ -15,11 +16,11 @@ use Drupal\KernelTests\KernelTestBase;
 /**
  * Tests the Url object.
  *
- * @covers \Drupal\Component\Utility\UrlHelper::filterQueryParameters
- * @covers \Drupal\Core\Utility\LinkGenerator::generate
  *
  * @group Common
  */
+#[CoversClass(\Drupal\Component\Utility\UrlHelper::filterQueryParameters)]
+#[CoversClass(\Drupal\Core\Utility\LinkGenerator::generate)]
 class UrlTest extends KernelTestBase {
 
   protected static $modules = ['common_test', 'url_alter_test'];

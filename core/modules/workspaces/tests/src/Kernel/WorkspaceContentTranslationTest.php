@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\workspaces\Kernel;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\language\Entity\ConfigurableLanguage;
 use Drupal\Tests\user\Traits\UserCreationTrait;
@@ -14,6 +15,7 @@ use Drupal\workspaces\Entity\Workspace;
  *
  * @group workspaces
  */
+#[CoversClass(\Drupal\workspaces\EntityOperations::class)]
 class WorkspaceContentTranslationTest extends KernelTestBase {
 
   use UserCreationTrait;
@@ -64,8 +66,6 @@ class WorkspaceContentTranslationTest extends KernelTestBase {
 
   /**
    * Tests translations created in a workspace.
-   *
-   * @covers \Drupal\workspaces\EntityOperations::entityTranslationInsert
    */
   public function testTranslations(): void {
     $storage = $this->entityTypeManager->getStorage('entity_test_mulrevpub');

@@ -4,16 +4,17 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\pgsql\Kernel\pgsql;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use Drupal\KernelTests\Core\Database\DriverSpecificSchemaTestBase;
 
 // cSpell:ignore relkind objid refobjid regclass attname attrelid attnum
 // cSpell:ignore refobjsubid
-
 /**
  * Tests schema API for the PostgreSQL driver.
  *
  * @group Database
  */
+#[CoversClass(\Drupal\pgsql\Driver\Database\pgsql\Schema::class)]
 class SchemaTest extends DriverSpecificSchemaTestBase {
 
   /**
@@ -62,9 +63,6 @@ class SchemaTest extends DriverSpecificSchemaTestBase {
     $this->assertTrue($this->schema->tableExists('test_timestamp'));
   }
 
-  /**
-   * @covers \Drupal\pgsql\Driver\Database\pgsql\Schema::introspectIndexSchema
-   */
   public function testIntrospectIndexSchema(): void {
     $table_specification = [
       'fields' => [
@@ -235,9 +233,6 @@ class SchemaTest extends DriverSpecificSchemaTestBase {
     $this->assertFalse($this->schema->tableExists($table_name_new));
   }
 
-  /**
-   * @covers \Drupal\pgsql\Driver\Database\pgsql\Schema::extensionExists
-   */
   public function testPgsqlExtensionExists(): void {
     // Test the method for a non existing extension.
     $this->assertFalse($this->schema->extensionExists('non_existing_extension'));

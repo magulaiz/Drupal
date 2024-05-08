@@ -4,13 +4,14 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\media\Kernel;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use Drupal\entity_test\Entity\EntityTestBundle;
 use Drupal\Tests\field\Traits\EntityReferenceFieldCreationTrait;
 
 /**
- * @coversDefaultClass \Drupal\media\Plugin\Field\FieldFormatter\MediaThumbnailFormatter
  * @group media
  */
+#[CoversClass(\Drupal\media\Plugin\Field\FieldFormatter\MediaThumbnailFormatter::class)]
 class MediaThumbnailFormatterTest extends MediaKernelTestBase {
 
   use EntityReferenceFieldCreationTrait;
@@ -72,7 +73,6 @@ class MediaThumbnailFormatterTest extends MediaKernelTestBase {
    * @param array $expected_summary
    *   The expected settings summary.
    *
-   * @covers ::settingsSummary
    *
    * @dataProvider providerTestSettingsSummary
    */

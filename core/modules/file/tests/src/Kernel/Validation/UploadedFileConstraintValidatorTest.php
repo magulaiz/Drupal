@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\file\Kernel\Validation;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\file\Upload\FormUploadedFile;
 use Drupal\KernelTests\KernelTestBase;
@@ -13,9 +14,9 @@ use Symfony\Component\Validator\Validator\ValidatorInterface;
 /**
  * Tests the uploaded file validator.
  *
- * @coversDefaultClass \Drupal\file\Validation\Constraint\UploadedFileConstraintValidator
  * @group file
  */
+#[CoversClass(\Drupal\file\Validation\Constraint\UploadedFileConstraintValidator::class)]
 class UploadedFileConstraintValidatorTest extends KernelTestBase {
 
   /**
@@ -64,9 +65,6 @@ class UploadedFileConstraintValidatorTest extends KernelTestBase {
     $fileSystem->saveData('foo', $this->path);
   }
 
-  /**
-   * @covers ::validate
-   */
   public function testValidateSuccess(): void {
     $uploadedFile = new FormUploadedFile(new UploadedFile(
       path: $this->path,
@@ -78,7 +76,6 @@ class UploadedFileConstraintValidatorTest extends KernelTestBase {
   }
 
   /**
-   * @covers ::validate
    * @dataProvider validateProvider
    */
   public function testValidateFail(int $errorCode, string $message): void {

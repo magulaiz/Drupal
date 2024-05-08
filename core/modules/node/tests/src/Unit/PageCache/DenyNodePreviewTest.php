@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\node\Unit\PageCache;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use Drupal\Core\PageCache\ResponsePolicyInterface;
 use Drupal\node\PageCache\DenyNodePreview;
 use Drupal\Tests\UnitTestCase;
@@ -11,9 +12,9 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
- * @coversDefaultClass \Drupal\node\PageCache\DenyNodePreview
  * @group node
  */
+#[CoversClass(\Drupal\node\PageCache\DenyNodePreview::class)]
 class DenyNodePreviewTest extends UnitTestCase {
 
   /**
@@ -60,7 +61,6 @@ class DenyNodePreviewTest extends UnitTestCase {
    * Asserts that caching is denied on the node preview route.
    *
    * @dataProvider providerPrivateImageStyleDownloadPolicy
-   * @covers ::check
    */
   public function testPrivateImageStyleDownloadPolicy($expected_result, $route_name) {
     $this->routeMatch->expects($this->once())

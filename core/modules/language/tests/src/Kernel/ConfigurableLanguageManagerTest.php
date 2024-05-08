@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\language\Kernel;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use Drupal\Core\Language\LanguageInterface;
 use Drupal\Core\Url;
 
@@ -11,8 +12,8 @@ use Drupal\Core\Url;
  * Tests the ConfigurableLanguage entity.
  *
  * @group language
- * @coversDefaultClass \Drupal\language\ConfigurableLanguageManager
  */
+#[CoversClass(\Drupal\language\ConfigurableLanguageManager::class)]
 class ConfigurableLanguageManagerTest extends LanguageTestBase {
 
   /**
@@ -46,9 +47,6 @@ class ConfigurableLanguageManagerTest extends LanguageTestBase {
     $this->languageManager = $this->container->get('language_manager');
   }
 
-  /**
-   * @covers ::getLanguageSwitchLinks
-   */
   public function testLanguageSwitchLinks() {
     $this->languageNegotiator->setCurrentUser($this->prophesize('Drupal\Core\Session\AccountInterface')->reveal());
     $this->languageManager->getLanguageSwitchLinks(LanguageInterface::TYPE_INTERFACE, new Url('<current>'));

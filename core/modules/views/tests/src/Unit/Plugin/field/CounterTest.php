@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\views\Unit\Plugin\field;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use Drupal\Tests\UnitTestCase;
 use Drupal\views\Entity\View;
 use Drupal\views\Plugin\views\field\Counter;
@@ -12,9 +13,9 @@ use Drupal\views\Tests\ViewTestData;
 use Drupal\views\ViewExecutable;
 
 /**
- * @coversDefaultClass \Drupal\views\Plugin\views\field\Counter
  * @group views
  */
+#[CoversClass(\Drupal\views\Plugin\views\field\Counter::class)]
 class CounterTest extends UnitTestCase {
 
   /**

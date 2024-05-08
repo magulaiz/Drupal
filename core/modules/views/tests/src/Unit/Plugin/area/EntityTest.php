@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\views\Unit\Plugin\area;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use Drupal\Core\Entity\EntityDisplayRepositoryInterface;
 use Drupal\Core\Entity\EntityRepositoryInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
@@ -12,9 +13,9 @@ use Drupal\views\Plugin\views\area\Entity;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 
 /**
- * @coversDefaultClass \Drupal\views\Plugin\views\area\Entity
  * @group Entity
  */
+#[CoversClass(\Drupal\views\Plugin\views\area\Entity::class)]
 class EntityTest extends UnitTestCase {
 
   /**
@@ -152,11 +153,6 @@ class EntityTest extends UnitTestCase {
     ];
   }
 
-  /**
-   * @covers ::render
-   * @covers ::defineOptions
-   * @covers ::init
-   */
   public function testRenderWithId() {
     $this->setupEntityTypeManager();
     $options = [
@@ -187,9 +183,6 @@ class EntityTest extends UnitTestCase {
   }
 
   /**
-   * @covers ::render
-   * @covers ::defineOptions
-   * @covers ::init
    *
    * @dataProvider providerTestTokens
    */
@@ -227,11 +220,6 @@ class EntityTest extends UnitTestCase {
     $this->assertEquals(['#markup' => 'hallo'], $result);
   }
 
-  /**
-   * @covers ::render
-   * @covers ::defineOptions
-   * @covers ::init
-   */
   public function testRenderWithUuid() {
     $this->setupEntityTypeManager();
     $uuid = '1d52762e-b9d8-4177-908f-572d1a5845a4';
@@ -261,8 +249,6 @@ class EntityTest extends UnitTestCase {
   }
 
   /**
-   * @covers ::calculateDependencies
-   *
    * @dataProvider providerTestTokens
    */
   public function testCalculateDependenciesWithPlaceholder($token, $id) {
@@ -276,9 +262,6 @@ class EntityTest extends UnitTestCase {
     $this->assertEquals([], $this->entityHandler->calculateDependencies());
   }
 
-  /**
-   * @covers ::calculateDependencies
-   */
   public function testCalculateDependenciesWithUuid() {
     $this->setupEntityTypeManager();
 
@@ -308,9 +291,6 @@ class EntityTest extends UnitTestCase {
     $this->assertEquals(['content' => ['entity_test:test-bundle:1d52762e-b9d8-4177-908f-572d1a5845a4']], $this->entityHandler->calculateDependencies());
   }
 
-  /**
-   * @covers ::calculateDependencies
-   */
   public function testCalculateDependenciesWithEntityId() {
     $this->setupEntityTypeManager();
 

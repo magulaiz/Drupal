@@ -4,15 +4,16 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\block\Unit;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use Drupal\block\BlockRepository;
 use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Tests\UnitTestCase;
 
 /**
- * @coversDefaultClass \Drupal\block\BlockRepository
  * @group block
  */
+#[CoversClass(\Drupal\block\BlockRepository::class)]
 class BlockRepositoryTest extends UnitTestCase {
 
   /**
@@ -74,7 +75,6 @@ class BlockRepositoryTest extends UnitTestCase {
   /**
    * Tests the retrieval of block entities.
    *
-   * @covers ::getVisibleBlocksPerRegion
    *
    * @dataProvider providerBlocksConfig
    */
@@ -146,8 +146,6 @@ class BlockRepositoryTest extends UnitTestCase {
 
   /**
    * Tests the retrieval of block entities that are context-aware.
-   *
-   * @covers ::getVisibleBlocksPerRegion
    */
   public function testGetVisibleBlocksPerRegionWithContext() {
     $block = $this->createMock('Drupal\block\BlockInterface');

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\serialization\Unit\Normalizer;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Field\FieldDefinitionInterface;
@@ -20,9 +21,9 @@ use Symfony\Component\Serializer\Serializer;
  * Tests that TimestampItem (de)normalization uses Timestamp (de)normalization.
  *
  * @group serialization
- * @coversDefaultClass \Drupal\serialization\Normalizer\TimestampItemNormalizer
  * @see \Drupal\serialization\Normalizer\TimestampNormalizer
  */
+#[CoversClass(\Drupal\serialization\Normalizer\TimestampItemNormalizer::class)]
 class TimestampItemNormalizerTest extends UnitTestCase {
 
   /**
@@ -46,9 +47,6 @@ class TimestampItemNormalizerTest extends UnitTestCase {
     $this->normalizer = new TimestampItemNormalizer();
   }
 
-  /**
-   * @covers ::supportsNormalization
-   */
   public function testSupportsNormalization() {
     $timestamp_item = $this->createTimestampItemProphecy();
     $this->assertTrue($this->normalizer->supportsNormalization($timestamp_item->reveal()));
@@ -57,9 +55,6 @@ class TimestampItemNormalizerTest extends UnitTestCase {
     $this->assertFalse($this->normalizer->supportsNormalization($entity_ref_item->reveal()));
   }
 
-  /**
-   * @covers ::supportsDenormalization
-   */
   public function testSupportsDenormalization() {
     $timestamp_item = $this->createTimestampItemProphecy();
     $this->assertTrue($this->normalizer->supportsDenormalization($timestamp_item->reveal(), TimestampItem::class));
@@ -73,7 +68,6 @@ class TimestampItemNormalizerTest extends UnitTestCase {
   }
 
   /**
-   * @covers ::normalize
    * @see \Drupal\Tests\serialization\Unit\Normalizer\TimestampNormalizerTest
    */
   public function testNormalize() {
@@ -109,9 +103,6 @@ class TimestampItemNormalizerTest extends UnitTestCase {
     $this->assertSame(['value' => $timestamp_datetype_normalization, 'format' => \DateTime::RFC3339], $normalized);
   }
 
-  /**
-   * @covers ::denormalize
-   */
   public function testDenormalize() {
     $timestamp_item_normalization = [
       'value' => $this->randomMachineName(),

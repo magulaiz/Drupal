@@ -4,15 +4,16 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\migrate\Unit\process;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Entity\Query\QueryInterface;
 use Drupal\migrate\Plugin\migrate\process\MakeUniqueEntityField;
 
 /**
- * @coversDefaultClass \Drupal\migrate\Plugin\migrate\process\MakeUniqueEntityField
  * @group migrate
  */
+#[CoversClass(\Drupal\migrate\Plugin\migrate\process\MakeUniqueEntityField::class)]
 class MakeUniqueEntityFieldTest extends MigrateProcessTestCase {
 
   /**

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\media\Kernel;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Access\AccessResultInterface;
 use Drupal\media\Entity\Media;
@@ -14,9 +15,8 @@ use Drupal\Tests\user\Traits\UserCreationTrait;
  *
  * @group media
  * @group #slow
- *
- * @coversDefaultClass \Drupal\media\MediaAccessControlHandler
  */
+#[CoversClass(\Drupal\media\MediaAccessControlHandler::class)]
 class MediaAccessControlHandlerTest extends MediaKernelTestBase {
 
   use UserCreationTrait;
@@ -39,7 +39,6 @@ class MediaAccessControlHandlerTest extends MediaKernelTestBase {
    * @param bool $is_latest_revision
    *   If FALSE, the media is historic revision.
    *
-   * @covers ::checkAccess
    * @dataProvider providerAccess
    */
   public function testAccess(array $permissions, array $entity_values, string $operation, AccessResultInterface $expected_result, array $expected_cache_contexts, array $expected_cache_tags, bool $is_latest_revision) {
@@ -88,7 +87,6 @@ class MediaAccessControlHandlerTest extends MediaKernelTestBase {
    * @param string[] $expected_cache_tags
    *   Expected cache tags.
    *
-   * @covers ::checkCreateAccess
    * @dataProvider providerCreateAccess
    */
   public function testCreateAccess(array $permissions, AccessResultInterface $expected_result, array $expected_cache_contexts, array $expected_cache_tags) {

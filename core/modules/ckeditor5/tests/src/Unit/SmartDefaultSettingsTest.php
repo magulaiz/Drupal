@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\ckeditor5\Unit;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use Drupal\ckeditor5\Annotation\CKEditor5Plugin;
 use Drupal\ckeditor5\HTMLRestrictions;
 use Drupal\ckeditor5\Plugin\CKEditor5PluginDefinition;
@@ -18,15 +19,14 @@ use Drupal\Tests\UnitTestCase;
 use Psr\Log\LoggerInterface;
 
 /**
- * @coversDefaultClass \Drupal\ckeditor5\SmartDefaultSettings
  * @group ckeditor5
  */
+#[CoversClass(\Drupal\ckeditor5\SmartDefaultSettings::class)]
 class SmartDefaultSettingsTest extends UnitTestCase {
 
   use PrivateMethodUnitTestTrait;
 
   /**
-   * @covers ::computeSurplusScore
    * @dataProvider providerSurplusScore
    */
   public function testSurplusScore(HTMLRestrictions $surplus, HTMLRestrictions $needed, int $expected): void {
@@ -81,8 +81,6 @@ class SmartDefaultSettingsTest extends UnitTestCase {
   }
 
   /**
-   * @covers ::getCandidates
-   * @covers ::selectCandidate
    * @dataProvider providerCandidates
    */
   public function testCandidates(HTMLRestrictions $provided, HTMLRestrictions $still_needed, array $disabled_plugin_definitions, array $expected_candidates, array $expected_selection = []): void {

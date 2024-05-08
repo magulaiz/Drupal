@@ -4,18 +4,16 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\views\Unit\Plugin\filter;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use Drupal\Tests\UnitTestCase;
 use Drupal\views\Plugin\views\filter\InOperator;
 
 /**
- * @coversDefaultClass \Drupal\views\Plugin\views\filter\InOperator
  * @group views
  */
+#[CoversClass(\Drupal\views\Plugin\views\filter\InOperator::class)]
 class InOperatorTest extends UnitTestCase {
 
-  /**
-   * @covers ::validate
-   */
   public function testValidate() {
     $definition = [
       'title' => 'Is InOperator Test',

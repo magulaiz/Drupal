@@ -4,15 +4,16 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\block\Unit;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use Drupal\Component\Utility\Html;
 use Drupal\block\Controller\CategoryAutocompleteController;
 use Drupal\Tests\UnitTestCase;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
- * @coversDefaultClass \Drupal\block\Controller\CategoryAutocompleteController
  * @group block
  */
+#[CoversClass(\Drupal\block\Controller\CategoryAutocompleteController::class)]
 class CategoryAutocompleteTest extends UnitTestCase {
 
   /**

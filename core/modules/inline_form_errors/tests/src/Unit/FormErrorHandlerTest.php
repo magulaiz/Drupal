@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\inline_form_errors\Unit;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use Drupal\Core\Form\FormState;
 use Drupal\Core\Messenger\MessengerInterface;
 use Drupal\Core\Render\RendererInterface;
@@ -11,9 +12,9 @@ use Drupal\inline_form_errors\FormErrorHandler;
 use Drupal\Tests\UnitTestCase;
 
 /**
- * @coversDefaultClass \Drupal\inline_form_errors\FormErrorHandler
  * @group InlineFormErrors
  */
+#[CoversClass(\Drupal\inline_form_errors\FormErrorHandler::class)]
 class FormErrorHandlerTest extends UnitTestCase {
 
   /**
@@ -114,11 +115,6 @@ class FormErrorHandlerTest extends UnitTestCase {
     ];
   }
 
-  /**
-   * @covers ::handleFormErrors
-   * @covers ::displayErrorMessages
-   * @covers ::setElementErrorsFromFormState
-   */
   public function testErrorMessagesInline() {
     $messages = [
       'no title given',

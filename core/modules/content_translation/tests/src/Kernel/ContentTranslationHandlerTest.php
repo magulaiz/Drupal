@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\content_translation\Kernel;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use Drupal\Core\Form\FormState;
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\language\Entity\ConfigurableLanguage;
@@ -12,9 +13,8 @@ use Drupal\language\Entity\ConfigurableLanguage;
  * Tests the content translation handler.
  *
  * @group content_translation
- *
- * @coversDefaultClass \Drupal\content_translation\ContentTranslationHandler
  */
+#[CoversClass(\Drupal\content_translation\ContentTranslationHandler::class)]
 class ContentTranslationHandlerTest extends KernelTestBase {
 
   /**
@@ -99,9 +99,6 @@ class ContentTranslationHandlerTest extends KernelTestBase {
    *   The expected altered element.
    *
    * @dataProvider providerTestEntityFormSharedElements
-   *
-   * @covers ::entityFormSharedElements
-   * @covers ::addTranslatabilityClue
    */
   public function testEntityFormSharedElements(array $element, $default_translation_affected, $default_translation, $translation_form, array $expected) {
     $this->state->set('entity_test.translation', TRUE);

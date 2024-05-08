@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\user\Kernel;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\Tests\user\Traits\UserCreationTrait;
 
@@ -11,8 +12,8 @@ use Drupal\Tests\user\Traits\UserCreationTrait;
  * Tests the ModulePermissionsLinkHelper.
  *
  * @group user
- * @coversDefaultClass \Drupal\user\ModulePermissionsLinkHelper
  */
+#[CoversClass(\Drupal\user\ModulePermissionsLinkHelper::class)]
 class ModulePermissionsLinkHelperTest extends KernelTestBase {
 
   use UserCreationTrait;
@@ -36,9 +37,6 @@ class ModulePermissionsLinkHelperTest extends KernelTestBase {
     ]);
   }
 
-  /**
-   * @covers ::getModulePermissionsLink
-   */
   public function testGetModulePermissionsLink(): void {
 
     /** @var \Drupal\user\ModulePermissionsLinkHelper $permsLinkHelper */

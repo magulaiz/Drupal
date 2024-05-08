@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\language\Unit;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use Drupal\language\Entity\ConfigurableLanguage;
 use Drupal\Tests\UnitTestCase;
 
@@ -11,14 +12,11 @@ use Drupal\Tests\UnitTestCase;
  * Tests the ConfigurableLanguage entity class.
  *
  * @group language
- * @coversDefaultClass \Drupal\language\Entity\ConfigurableLanguage
  * @see \Drupal\language\Entity\ConfigurableLanguage.
  */
+#[CoversClass(\Drupal\language\Entity\ConfigurableLanguage::class)]
 class ConfigurableLanguageUnitTest extends UnitTestCase {
 
-  /**
-   * @covers ::getDirection
-   */
   public function testDirection() {
     // Direction of language writing, an integer. Usually either
     // ConfigurableLanguage::DIRECTION_LTR or
@@ -31,10 +29,6 @@ class ConfigurableLanguageUnitTest extends UnitTestCase {
     $this->assertEquals(ConfigurableLanguage::DIRECTION_RTL, $configurableLanguage->getDirection());
   }
 
-  /**
-   * @covers ::getWeight
-   * @covers ::setWeight
-   */
   public function testWeight() {
     // The weight, an integer. Used to order languages with larger positive
     // weights sinking items toward the bottom of lists.

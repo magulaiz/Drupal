@@ -4,14 +4,15 @@ declare(strict_types=1);
 
 namespace Drupal\KernelTests\Components;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use Drupal\Tests\Core\Theme\Component\ComponentKernelTestBase;
 
 /**
  * Tests the node visitor.
  *
- * @coversDefaultClass \Drupal\Core\Template\ComponentNodeVisitor
  * @group sdc
  */
+#[CoversClass(\Drupal\Core\Template\ComponentNodeVisitor::class)]
 class ComponentNodeVisitorTest extends ComponentKernelTestBase {
 
   /**

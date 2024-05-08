@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\migrate\Kernel;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\migrate\MigrateException;
 use Drupal\migrate\Plugin\MigrateIdMapInterface;
@@ -14,9 +15,9 @@ use Drupal\TestTools\Random;
 /**
  * Tests query batching.
  *
- * @covers \Drupal\migrate_query_batch_test\Plugin\migrate\source\QueryBatchTest
  * @group migrate
  */
+#[CoversClass(\Drupal\migrate_query_batch_test\Plugin\migrate\source\QueryBatchTest::class)]
 class QueryBatchTest extends KernelTestBase {
 
   /**

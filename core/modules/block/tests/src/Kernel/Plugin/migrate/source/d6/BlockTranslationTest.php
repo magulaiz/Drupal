@@ -4,15 +4,16 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\block\Kernel\Plugin\migrate\source\d6;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use Drupal\Tests\block\Kernel\Plugin\migrate\source\BlockTest;
 
 /**
  * Tests i18n block source plugin.
  *
- * @covers \Drupal\block\Plugin\migrate\source\d6\BlockTranslation
  *
  * @group content_translation
  */
+#[CoversClass(\Drupal\block\Plugin\migrate\source\d6\BlockTranslation::class)]
 class BlockTranslationTest extends BlockTest {
 
   /**

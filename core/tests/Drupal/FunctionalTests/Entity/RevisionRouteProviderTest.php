@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\FunctionalTests\Entity;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use Drupal\entity_test\Entity\EntityTestRev;
 use Drupal\Tests\BrowserTestBase;
 
@@ -11,8 +12,8 @@ use Drupal\Tests\BrowserTestBase;
  * Tests revision route provider.
  *
  * @group Entity
- * @coversDefaultClass \Drupal\Core\Entity\Routing\RevisionHtmlRouteProvider
  */
+#[CoversClass(\Drupal\Core\Entity\Routing\RevisionHtmlRouteProvider::class)]
 class RevisionRouteProviderTest extends BrowserTestBase {
 
   /**

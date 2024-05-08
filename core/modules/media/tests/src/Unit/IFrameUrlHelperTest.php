@@ -4,16 +4,16 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\media\Unit;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use Drupal\Core\PrivateKey;
 use Drupal\Core\Routing\RequestContext;
 use Drupal\media\IFrameUrlHelper;
 use Drupal\Tests\UnitTestCase;
 
 /**
- * @coversDefaultClass \Drupal\media\IFrameUrlHelper
- *
  * @group media
  */
+#[CoversClass(\Drupal\media\IFrameUrlHelper::class)]
 class IFrameUrlHelperTest extends UnitTestCase {
 
   /**
@@ -73,7 +73,6 @@ class IFrameUrlHelperTest extends UnitTestCase {
    * @param bool $secure
    *   The expected result of isSecure().
    *
-   * @covers ::isSecure
    *
    * @dataProvider providerIsSecure
    */

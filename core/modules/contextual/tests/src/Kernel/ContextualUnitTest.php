@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\contextual\Kernel;
 
+use PHPUnit\Framework\Attributes\CoversFunction;
 use Drupal\KernelTests\KernelTestBase;
 
 /**
@@ -11,6 +12,8 @@ use Drupal\KernelTests\KernelTestBase;
  *
  * @group contextual
  */
+#[CoversFunction('_contextual_links_to_id')]
+#[CoversFunction('_contextual_id_to_links')]
 class ContextualUnitTest extends KernelTestBase {
 
   /**
@@ -106,7 +109,6 @@ class ContextualUnitTest extends KernelTestBase {
    * @param string $id
    *   The serialized representation of the passed links.
    *
-   * @covers ::_contextual_links_to_id
    *
    * @dataProvider contextualLinksDataProvider
    */
@@ -122,7 +124,6 @@ class ContextualUnitTest extends KernelTestBase {
    * @param string $id
    *   The serialized representation of the passed links.
    *
-   * @covers ::_contextual_id_to_links
    *
    * @dataProvider contextualLinksDataProvider
    */

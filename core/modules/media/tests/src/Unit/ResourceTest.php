@@ -4,13 +4,14 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\media\Unit;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use Drupal\media\OEmbed\Resource;
 use Drupal\Tests\UnitTestCase;
 
 /**
- * @coversDefaultClass \Drupal\media\OEmbed\Resource
  * @group media
  */
+#[CoversClass(\Drupal\media\OEmbed\Resource::class)]
 class ResourceTest extends UnitTestCase {
 
   /**
@@ -74,7 +75,6 @@ class ResourceTest extends UnitTestCase {
   }
 
   /**
-   * @covers ::setDimensions
    * @dataProvider setDimensionsTestCases
    */
   public function testSetDimensions($factory, $width, $height, $exception = NULL, $expected_width = NULL, $expected_height = NULL) {

@@ -4,14 +4,15 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\search\Kernel\Migrate\d6;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use Drupal\Tests\migrate\Kernel\MigrateSqlSourceTestBase;
 
 /**
  * Tests D6 search page source plugin.
  *
- * @covers \Drupal\search\Plugin\migrate\source\d6\SearchPage
  * @group search
  */
+#[CoversClass(\Drupal\search\Plugin\migrate\source\d6\SearchPage::class)]
 class SearchPageTest extends MigrateSqlSourceTestBase {
 
   /**

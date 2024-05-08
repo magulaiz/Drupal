@@ -4,15 +4,15 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\node\Kernel\Plugin\migrate\source\d7;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 // cspell:ignore tnid
-
 /**
  * Tests D7 node translation source plugin.
  *
- * @covers \Drupal\node\Plugin\migrate\source\d7\Node
  *
  * @group node
  */
+#[CoversClass(\Drupal\node\Plugin\migrate\source\d7\Node::class)]
 class NodeTranslationTest extends NodeTest {
 
   /**

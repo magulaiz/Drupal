@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\workspaces\Kernel;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use Drupal\Component\Utility\Crypt;
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\Tests\user\Traits\UserCreationTrait;
@@ -12,9 +13,9 @@ use Drupal\workspaces\Entity\Workspace;
 /**
  * Tests the query parameter workspace negotiator.
  *
- * @coversDefaultClass \Drupal\workspaces\Negotiator\QueryParameterWorkspaceNegotiator
  * @group workspaces
  */
+#[CoversClass(\Drupal\workspaces\Negotiator\QueryParameterWorkspaceNegotiator::class)]
 class WorkspaceQueryParameterNegotiatorTest extends KernelTestBase {
 
   use UserCreationTrait;
@@ -49,7 +50,6 @@ class WorkspaceQueryParameterNegotiatorTest extends KernelTestBase {
   }
 
   /**
-   * @covers ::getActiveWorkspaceId
    * @dataProvider providerTestWorkspaceQueryParameter
    */
   public function testWorkspaceQueryParameter(?string $workspace, ?string $token, ?string $negotiated_workspace, bool $has_active_workspace): void {

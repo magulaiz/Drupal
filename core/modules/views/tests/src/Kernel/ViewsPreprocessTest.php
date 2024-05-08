@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\views\Kernel;
 
+use PHPUnit\Framework\Attributes\CoversFunction;
 use Drupal\entity_test\Entity\EntityTest;
 use Drupal\views\Views;
 
@@ -12,6 +13,7 @@ use Drupal\views\Views;
  *
  * @group views
  */
+#[CoversFunction('template_preprocess_views_mini_pager')]
 class ViewsPreprocessTest extends ViewsKernelTestBase {
 
   /**
@@ -61,8 +63,6 @@ class ViewsPreprocessTest extends ViewsKernelTestBase {
 
   /**
    * Tests template_preprocess_views_mini_pager() when an empty pagination_heading_level value is passed.
-   *
-   * @covers ::template_preprocess_views_mini_pager
    */
   public function testEmptyPaginationHeadingLevelSet() {
     require_once $this->root . '/core/modules/views/views.theme.inc';
@@ -80,8 +80,6 @@ class ViewsPreprocessTest extends ViewsKernelTestBase {
 
   /**
    * Tests template_preprocess_views_mini_pager() when no pagination_heading_level is passed.
-   *
-   * @covers ::template_preprocess_views_mini_pager
    */
   public function testPaginationHeadingLevelNotSet() {
     require_once $this->root . '/core/modules/views/views.theme.inc';
@@ -98,8 +96,6 @@ class ViewsPreprocessTest extends ViewsKernelTestBase {
 
   /**
    * Tests template_preprocess_views_mini_pager() when a pagination_heading_level value is passed.
-   *
-   * @covers ::template_preprocess_views_mini_pager
    */
   public function testPaginationHeadingLevelSet() {
     require_once $this->root . '/core/modules/views/views.theme.inc';

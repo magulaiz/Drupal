@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\search\Unit;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\search\Entity\SearchPage;
@@ -11,9 +12,9 @@ use Drupal\search\SearchPageRepository;
 use Drupal\Tests\UnitTestCase;
 
 /**
- * @coversDefaultClass \Drupal\search\SearchPageRepository
  * @group search
  */
+#[CoversClass(\Drupal\search\SearchPageRepository::class)]
 class SearchPageRepositoryTest extends UnitTestCase {
 
   /**

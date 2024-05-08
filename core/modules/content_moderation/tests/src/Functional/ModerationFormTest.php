@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\content_moderation\Functional;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use Drupal\Core\Entity\Entity\EntityFormDisplay;
 use Drupal\Core\Url;
 use Drupal\Tests\content_translation\Traits\ContentTranslationTestTrait;
@@ -14,6 +15,7 @@ use Drupal\Tests\content_translation\Traits\ContentTranslationTestTrait;
  * @group content_moderation
  * @group #slow
  */
+#[CoversClass(\Drupal\content_moderation\Plugin\WorkflowType\ContentModeration::class)]
 class ModerationFormTest extends ModerationStateTestBase {
 
   use ContentTranslationTestTrait;
@@ -510,9 +512,6 @@ class ModerationFormTest extends ModerationStateTestBase {
 
   /**
    * Tests that workflows and states can not be deleted if they are in use.
-   *
-   * @covers \Drupal\content_moderation\Plugin\WorkflowType\ContentModeration::workflowHasData
-   * @covers \Drupal\content_moderation\Plugin\WorkflowType\ContentModeration::workflowStateHasData
    */
   public function testWorkflowInUse() {
     $user = $this->createUser([

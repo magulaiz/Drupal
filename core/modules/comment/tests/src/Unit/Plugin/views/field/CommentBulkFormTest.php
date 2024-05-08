@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\comment\Unit\Plugin\views\field;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use Drupal\Core\DependencyInjection\ContainerBuilder;
 use Drupal\comment\Plugin\views\field\CommentBulkForm;
 use Drupal\Core\Entity\EntityRepositoryInterface;
@@ -12,9 +13,9 @@ use Drupal\Core\Routing\ResettableStackedRouteMatchInterface;
 use Drupal\Tests\UnitTestCase;
 
 /**
- * @coversDefaultClass \Drupal\comment\Plugin\views\field\CommentBulkForm
  * @group comment
  */
+#[CoversClass(\Drupal\comment\Plugin\views\field\CommentBulkForm::class)]
 class CommentBulkFormTest extends UnitTestCase {
 
   /**

@@ -4,14 +4,15 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\language\Unit\process;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use Drupal\language\Plugin\migrate\process\LanguageNegotiation;
 use Drupal\Tests\migrate\Unit\process\MigrateProcessTestCase;
 use Drupal\migrate\MigrateException;
 
 /**
- * @coversDefaultClass \Drupal\language\Plugin\migrate\process\LanguageNegotiation
  * @group language
  */
+#[CoversClass(\Drupal\language\Plugin\migrate\process\LanguageNegotiation::class)]
 class LanguageNegotiationTest extends MigrateProcessTestCase {
 
   /**

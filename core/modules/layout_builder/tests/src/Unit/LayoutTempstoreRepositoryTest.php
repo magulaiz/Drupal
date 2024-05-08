@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\layout_builder\Unit;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use Drupal\Core\TempStore\SharedTempStore;
 use Drupal\Core\TempStore\SharedTempStoreFactory;
 use Drupal\layout_builder\LayoutTempstoreRepository;
@@ -11,15 +12,11 @@ use Drupal\layout_builder\SectionStorageInterface;
 use Drupal\Tests\UnitTestCase;
 
 /**
- * @coversDefaultClass \Drupal\layout_builder\LayoutTempstoreRepository
  * @group layout_builder
  */
+#[CoversClass(\Drupal\layout_builder\LayoutTempstoreRepository::class)]
 class LayoutTempstoreRepositoryTest extends UnitTestCase {
 
-  /**
-   * @covers ::get
-   * @covers ::has
-   */
   public function testGetEmptyTempstore() {
     $section_storage = $this->prophesize(SectionStorageInterface::class);
     $section_storage->getStorageType()->willReturn('my_storage_type');
@@ -39,10 +36,6 @@ class LayoutTempstoreRepositoryTest extends UnitTestCase {
     $this->assertSame($section_storage->reveal(), $result);
   }
 
-  /**
-   * @covers ::get
-   * @covers ::has
-   */
   public function testGetLoadedTempstore() {
     $section_storage = $this->prophesize(SectionStorageInterface::class);
     $section_storage->getStorageType()->willReturn('my_storage_type');
@@ -63,9 +56,6 @@ class LayoutTempstoreRepositoryTest extends UnitTestCase {
     $this->assertNotSame($section_storage->reveal(), $result);
   }
 
-  /**
-   * @covers ::get
-   */
   public function testGetInvalidEntry() {
     $section_storage = $this->prophesize(SectionStorageInterface::class);
     $section_storage->getStorageType()->willReturn('my_storage_type');

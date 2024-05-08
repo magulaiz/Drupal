@@ -4,16 +4,16 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\menu_link_content\Kernel\Plugin\migrate\source\d7;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use Drupal\Tests\migrate\Kernel\MigrateSqlSourceTestBase;
 
 // cspell:ignore mlid plid tsid
-
 /**
  * Tests menu link localized translation source plugin.
  *
- * @covers \Drupal\menu_link_content\Plugin\migrate\source\d7\MenuLinkLocalized
  * @group menu_link_content
  */
+#[CoversClass(\Drupal\menu_link_content\Plugin\migrate\source\d7\MenuLinkLocalized::class)]
 class MenuLinkLocalizedTest extends MigrateSqlSourceTestBase {
 
   /**

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\node\Unit\Plugin\views\field;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use Drupal\Core\DependencyInjection\ContainerBuilder;
 use Drupal\Core\Entity\EntityRepositoryInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
@@ -12,9 +13,9 @@ use Drupal\node\Plugin\views\field\NodeBulkForm;
 use Drupal\Tests\UnitTestCase;
 
 /**
- * @coversDefaultClass \Drupal\node\Plugin\views\field\NodeBulkForm
  * @group node
  */
+#[CoversClass(\Drupal\node\Plugin\views\field\NodeBulkForm::class)]
 class NodeBulkFormTest extends UnitTestCase {
 
   /**

@@ -4,14 +4,15 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\serialization\Unit\EntityResolver;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use Drupal\Core\Entity\EntityRepositoryInterface;
 use Drupal\Tests\UnitTestCase;
 use Drupal\serialization\EntityResolver\UuidResolver;
 
 /**
- * @coversDefaultClass \Drupal\serialization\EntityResolver\UuidResolver
  * @group serialization
  */
+#[CoversClass(\Drupal\serialization\EntityResolver\UuidResolver::class)]
 class UuidResolverTest extends UnitTestCase {
 
   /**

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\content_translation\Kernel;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use Drupal\entity_test\Entity\EntityTestMulBundle;
 use Drupal\KernelTests\KernelTestBase;
 
@@ -11,9 +12,8 @@ use Drupal\KernelTests\KernelTestBase;
  * Tests the content translation dynamic permissions.
  *
  * @group content_translation
- *
- * @coversDefaultClass \Drupal\content_translation\ContentTranslationPermissions
  */
+#[CoversClass(\Drupal\content_translation\ContentTranslationPermissions::class)]
 class ContentTranslationPermissionsTest extends KernelTestBase {
 
   /**

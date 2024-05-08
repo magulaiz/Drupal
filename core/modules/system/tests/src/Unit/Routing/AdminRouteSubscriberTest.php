@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\system\Unit\Routing;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use Drupal\Core\Routing\RouteBuildEvent;
 use Drupal\system\EventSubscriber\AdminRouteSubscriber;
 use Drupal\Tests\UnitTestCase;
@@ -11,14 +12,12 @@ use Symfony\Component\Routing\Route;
 use Symfony\Component\Routing\RouteCollection;
 
 /**
- * @coversDefaultClass \Drupal\system\EventSubscriber\AdminRouteSubscriber
  * @group system
  */
+#[CoversClass(\Drupal\system\EventSubscriber\AdminRouteSubscriber::class)]
 class AdminRouteSubscriberTest extends UnitTestCase {
 
   /**
-   * @covers ::alterRoutes
-   * @covers ::isHtmlRoute
    *
    * @dataProvider providerTestAlterRoutes
    */

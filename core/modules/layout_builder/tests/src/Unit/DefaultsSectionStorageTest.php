@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\layout_builder\Unit;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use Drupal\Core\DependencyInjection\ContainerBuilder;
 use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Entity\EntityType;
@@ -25,10 +26,10 @@ use Symfony\Component\Routing\Route;
 use Symfony\Component\Routing\RouteCollection;
 
 /**
- * @coversDefaultClass \Drupal\layout_builder\Plugin\SectionStorage\DefaultsSectionStorage
- *
  * @group layout_builder
  */
+#[CoversClass(\Drupal\layout_builder\Plugin\SectionStorage\DefaultsSectionStorage::class)]
+#[CoversClass(\Drupal\layout_builder\Routing\LayoutBuilderRoutesTrait::class)]
 class DefaultsSectionStorageTest extends UnitTestCase {
 
   /**
@@ -69,10 +70,6 @@ class DefaultsSectionStorageTest extends UnitTestCase {
     $this->plugin = new DefaultsSectionStorage([], '', $definition, $this->entityTypeManager->reveal(), $entity_type_bundle_info->reveal(), $this->sampleEntityGenerator->reveal());
   }
 
-  /**
-   * @covers ::getThirdPartySetting
-   * @covers ::setThirdPartySetting
-   */
   public function testThirdPartySettings() {
     $this->entityTypeManager->getDefinition('entity_view_display')->willReturn(new EntityType(['id' => 'entity_view_display']));
 
@@ -109,7 +106,6 @@ class DefaultsSectionStorageTest extends UnitTestCase {
   }
 
   /**
-   * @covers ::extractEntityFromRoute
    *
    * @dataProvider providerTestExtractEntityFromRoute
    *
@@ -191,9 +187,6 @@ class DefaultsSectionStorageTest extends UnitTestCase {
     return $data;
   }
 
-  /**
-   * @covers ::extractEntityFromRoute
-   */
   public function testExtractEntityFromRouteCreate() {
     $expected = 'the_return_value';
     $value = 'foo.bar.baz';
@@ -215,11 +208,6 @@ class DefaultsSectionStorageTest extends UnitTestCase {
     $this->assertSame($expected, $result);
   }
 
-  /**
-   * @covers ::buildRoutes
-   * @covers ::getEntityTypes
-   * @covers \Drupal\layout_builder\Routing\LayoutBuilderRoutesTrait::buildLayoutRoutes
-   */
   public function testBuildRoutes() {
     $module_handler = $this->prophesize(ModuleHandlerInterface::class);
     $module_handler->moduleExists('field_ui')->willReturn(TRUE);
@@ -412,9 +400,6 @@ class DefaultsSectionStorageTest extends UnitTestCase {
     $this->assertSame(array_keys($expected), array_keys($collection->all()));
   }
 
-  /**
-   * @covers ::buildRoutes
-   */
   public function testBuildRoutesNoFieldUi() {
     $module_handler = $this->prophesize(ModuleHandlerInterface::class);
     $module_handler->moduleExists('field_ui')->willReturn(FALSE);

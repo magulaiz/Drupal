@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Drupal\KernelTests\Config\Schema;
 
 // cspell:ignore childkey
-
+use PHPUnit\Framework\Attributes\CoversClass;
 use Drupal\block\Entity\Block;
 use Drupal\Core\Config\Schema\Mapping;
 use Drupal\Core\TypedData\MapDataDefinition;
@@ -15,9 +15,9 @@ use Drupal\filter\Entity\FilterFormat;
 use Drupal\KernelTests\KernelTestBase;
 
 /**
- * @coversDefaultClass \Drupal\Core\Config\Schema\Mapping
  * @group Config
  */
+#[CoversClass(\Drupal\Core\Config\Schema\Mapping::class)]
 class MappingTest extends KernelTestBase {
 
   /**

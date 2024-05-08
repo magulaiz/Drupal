@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\big_pipe\Unit\Render;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use Drupal\big_pipe\Render\BigPipe;
 use Drupal\big_pipe\Render\BigPipeResponse;
 use Drupal\Core\Config\ConfigFactoryInterface;
@@ -17,14 +18,12 @@ use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 
 /**
- * @coversDefaultClass \Drupal\big_pipe\Render\BigPipe
  * @group big_pipe
  */
+#[CoversClass(\Drupal\big_pipe\Render\BigPipe::class)]
+#[CoversClass(\Drupal\big_pipe\Render\BigPipe::class)]
 class ManyPlaceholderTest extends UnitTestCase {
 
-  /**
-   * @covers \Drupal\big_pipe\Render\BigPipe::sendNoJsPlaceholders
-   */
   public function testManyNoJsPlaceHolders() {
     $session = $this->prophesize(SessionInterface::class);
     $session->start()->willReturn(TRUE);

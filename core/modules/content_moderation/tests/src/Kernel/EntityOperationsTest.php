@@ -4,16 +4,16 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\content_moderation\Kernel;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\node\Entity\Node;
 use Drupal\node\Entity\NodeType;
 use Drupal\Tests\content_moderation\Traits\ContentModerationTestTrait;
 
 /**
- * @coversDefaultClass \Drupal\content_moderation\EntityOperations
- *
  * @group content_moderation
  */
+#[CoversClass(\Drupal\content_moderation\EntityOperations::class)]
 class EntityOperationsTest extends KernelTestBase {
 
   use ContentModerationTestTrait;

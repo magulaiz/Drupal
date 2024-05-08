@@ -4,18 +4,18 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\sqlite\Unit;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use Drupal\sqlite\Driver\Database\sqlite\Connection;
 use Drupal\Tests\Core\Database\Stub\StubPDO;
 use Drupal\Tests\UnitTestCase;
 
 /**
- * @coversDefaultClass \Drupal\sqlite\Driver\Database\sqlite\Connection
  * @group Database
  */
+#[CoversClass(\Drupal\sqlite\Driver\Database\sqlite\Connection::class)]
 class ConnectionTest extends UnitTestCase {
 
   /**
-   * @covers ::createConnectionOptionsFromUrl
    * @dataProvider providerCreateConnectionOptionsFromUrl
    *
    * @param string $url

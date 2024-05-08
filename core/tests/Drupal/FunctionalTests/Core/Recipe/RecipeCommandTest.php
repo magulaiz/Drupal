@@ -4,15 +4,16 @@ declare(strict_types=1);
 
 namespace Drupal\FunctionalTests\Core\Recipe;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use Drupal\Core\Config\Checkpoint\Checkpoint;
 use Drupal\Tests\BrowserTestBase;
 
 /**
- * @coversDefaultClass \Drupal\Core\Recipe\RecipeCommand
  * @group Recipe
  *
  * BrowserTestBase is used for a proper Drupal install.
  */
+#[CoversClass(\Drupal\Core\Recipe\RecipeCommand::class)]
 class RecipeCommandTest extends BrowserTestBase {
 
   use RecipeTestTrait;

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\views\Unit\Plugin\area;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use Drupal\Core\Routing\RouteProviderInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Tests\UnitTestCase;
@@ -16,9 +17,9 @@ use Drupal\views\ViewsData;
 use Prophecy\Argument;
 
 /**
- * @coversDefaultClass \Drupal\views\Plugin\views\area\Result
  * @group views
  */
+#[CoversClass(\Drupal\views\Plugin\views\area\Result::class)]
 class ResultTest extends UnitTestCase {
 
   /**

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\workspaces\Kernel;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\entity_test\Entity\EntityTestMulRevPub;
@@ -12,9 +13,9 @@ use Drupal\Tests\user\Traits\UserCreationTrait;
 use Drupal\workspaces\Entity\Workspace;
 
 /**
- * @coversDefaultClass \Drupal\workspaces\Plugin\Validation\Constraint\EntityWorkspaceConflictConstraintValidator
  * @group workspaces
  */
+#[CoversClass(\Drupal\workspaces\Plugin\Validation\Constraint\EntityWorkspaceConflictConstraintValidator::class)]
 class EntityWorkspaceConflictConstraintValidatorTest extends KernelTestBase {
 
   use UserCreationTrait;
@@ -51,9 +52,6 @@ class EntityWorkspaceConflictConstraintValidatorTest extends KernelTestBase {
     $this->createUser();
   }
 
-  /**
-   * @covers ::validate
-   */
   public function testNewEntitiesAllowedInDefaultWorkspace(): void {
     // Create two top-level workspaces and a second-level one.
     $stage = Workspace::create(['id' => 'stage', 'label' => 'Stage']);

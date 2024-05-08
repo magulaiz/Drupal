@@ -4,20 +4,18 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\views\Unit;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use Drupal\Core\Form\FormState;
 use Drupal\Tests\UnitTestCase;
 use Drupal\views\Plugin\views\wizard\WizardPluginBase;
 
 /**
- * @coversDefaultClass \Drupal\views\Plugin\views\wizard\WizardPluginBase
- *
  * @group views
  */
+#[CoversClass(\Drupal\views\Plugin\views\wizard\WizardPluginBase::class)]
 class WizardPluginBaseTest extends UnitTestCase {
 
   /**
-   * @covers ::getSelected
-   *
    * @dataProvider providerTestGetSelected
    */
   public function testGetSelected($expected, $element = [], $parents = [], $user_input = [], $not_rebuilding_expected = NULL) {

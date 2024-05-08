@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\sqlite\Kernel\sqlite;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use Drupal\KernelTests\Core\Database\DriverSpecificSchemaTestBase;
 
 /**
@@ -11,6 +12,7 @@ use Drupal\KernelTests\Core\Database\DriverSpecificSchemaTestBase;
  *
  * @group Database
  */
+#[CoversClass(\Drupal\sqlite\Driver\Database\sqlite\Schema::class)]
 class SchemaTest extends DriverSpecificSchemaTestBase {
 
   /**
@@ -46,9 +48,6 @@ class SchemaTest extends DriverSpecificSchemaTestBase {
     $this->assertTrue($this->schema->tableExists('test_timestamp'));
   }
 
-  /**
-   * @covers \Drupal\sqlite\Driver\Database\sqlite\Schema::introspectIndexSchema
-   */
   public function testIntrospectIndexSchema(): void {
     $table_specification = [
       'fields' => [

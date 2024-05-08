@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\layout_builder\Unit;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use Drupal\Core\Routing\RouteObjectInterface;
 use Drupal\layout_builder\LayoutTempstoreRepositoryInterface;
 use Drupal\layout_builder\Routing\LayoutTempstoreRouteEnhancer;
@@ -13,15 +14,11 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Route;
 
 /**
- * @coversDefaultClass \Drupal\layout_builder\Routing\LayoutTempstoreRouteEnhancer
- *
  * @group layout_builder
  */
+#[CoversClass(\Drupal\layout_builder\Routing\LayoutTempstoreRouteEnhancer::class)]
 class LayoutTempstoreRouteEnhancerTest extends UnitTestCase {
 
-  /**
-   * @covers ::enhance
-   */
   public function testEnhance() {
     $section_storage = $this->prophesize(SectionStorageInterface::class);
     $layout_tempstore_repository = $this->prophesize(LayoutTempstoreRepositoryInterface::class);

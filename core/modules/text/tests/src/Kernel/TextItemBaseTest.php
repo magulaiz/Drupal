@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\text\Kernel;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use Drupal\Core\Field\BaseFieldDefinition;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
@@ -14,9 +15,9 @@ use Drupal\text\Plugin\Field\FieldType\TextItemBase;
 /**
  * Tests TextItemBase.
  *
- * @coversDefaultClass \Drupal\text\Plugin\Field\FieldType\TextItemBase
  * @group text
  */
+#[CoversClass(\Drupal\text\Plugin\Field\FieldType\TextItemBase::class)]
 class TextItemBaseTest extends KernelTestBase {
 
   /**
@@ -27,7 +28,6 @@ class TextItemBaseTest extends KernelTestBase {
   /**
    * Tests creation of sample values.
    *
-   * @covers ::generateSampleValue
    * @dataProvider providerTextFieldSampleValue
    */
   public function testTextFieldSampleValue($max_length) {
@@ -63,9 +63,6 @@ class TextItemBaseTest extends KernelTestBase {
     ];
   }
 
-  /**
-   * @covers ::calculateDependencies
-   */
   public function testCalculateDependencies() {
     $format = FilterFormat::create([
       'format' => 'test_format',

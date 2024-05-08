@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\user\Unit\Form;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Config\ConfigManagerInterface;
 use Drupal\Core\Config\Entity\ConfigEntityDependency;
@@ -22,9 +23,10 @@ use Symfony\Component\Routing\Route;
 /**
  * Tests the permissions administration form for a bundle.
  *
- * @coversDefaultClass \Drupal\user\Form\EntityPermissionsForm
  * @group user
  */
+#[CoversClass(\Drupal\user\Form\EntityPermissionsForm::class)]
+#[CoversClass(\Drupal\user\Form\EntityPermissionsForm::class)]
 class EntityPermissionsFormTest extends UnitTestCase {
 
   /**
@@ -40,8 +42,6 @@ class EntityPermissionsFormTest extends UnitTestCase {
    *   TRUE if there is a permission to be managed by the form.
    *
    * @dataProvider providerTestPermissionsByProvider
-   * @covers \Drupal\user\Form\EntityPermissionsForm::access
-   * @covers \Drupal\user\Form\EntityPermissionsForm::permissionsByProvider
    */
   public function testPermissionsByProvider(string $dependency_name, bool $found) {
 

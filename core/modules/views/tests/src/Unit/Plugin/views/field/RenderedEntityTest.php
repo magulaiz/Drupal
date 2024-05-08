@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\views\Unit\Plugin\views\field;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use Drupal\Core\Entity\EntityDisplayRepositoryInterface;
 use Drupal\Core\Entity\EntityRepositoryInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
@@ -16,9 +17,9 @@ use Drupal\views\ResultRow;
 use Drupal\views\ViewExecutable;
 
 /**
- * @coversDefaultClass \Drupal\views\Plugin\views\field\RenderedEntity
  * @group Views
  */
+#[CoversClass(\Drupal\views\Plugin\views\field\RenderedEntity::class)]
 class RenderedEntityTest extends UnitTestCase {
 
   use ViewsLoggerTestTrait;
@@ -33,8 +34,6 @@ class RenderedEntityTest extends UnitTestCase {
 
   /**
    * Tests the render method when getEntity returns NULL.
-   *
-   * @covers ::render
    */
   public function testRenderNullEntity(): void {
     $row = new ResultRow();

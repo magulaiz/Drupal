@@ -4,19 +4,17 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\locale\Unit;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use Drupal\locale\SourceString;
 use Drupal\locale\StringStorageException;
 use Drupal\Tests\UnitTestCase;
 
 /**
- * @coversDefaultClass \Drupal\locale\StringBase
  * @group locale
  */
+#[CoversClass(\Drupal\locale\StringBase::class)]
 class StringBaseTest extends UnitTestCase {
 
-  /**
-   * @covers ::save
-   */
   public function testSaveWithoutStorage() {
     $string = new SourceString(['source' => 'test']);
     $this->expectException(StringStorageException::class);
@@ -24,9 +22,6 @@ class StringBaseTest extends UnitTestCase {
     $string->save();
   }
 
-  /**
-   * @covers ::delete
-   */
   public function testDeleteWithoutStorage() {
     $string = new SourceString(['lid' => 1, 'source' => 'test']);
     $this->expectException(StringStorageException::class);

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\system\Kernel\System;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use Drupal\Core\Database\Database;
 use Drupal\Core\DependencyInjection\ContainerBuilder;
 use Drupal\Core\Logger\RfcLogLevel;
@@ -24,6 +25,8 @@ use Psr\Log\LoggerInterface;
  *
  * @group system
  */
+#[CoversClass(\Drupal\Core\Queue\SuspendQueueException::class)]
+#[CoversClass(\Drupal\Core\Queue\RequeueException::class)]
 class CronQueueTest extends KernelTestBase {
 
   /**
@@ -223,7 +226,6 @@ class CronQueueTest extends KernelTestBase {
    * Tests suspend queue exception is handled properly.
    *
    * @see \Drupal\cron_queue_test\Plugin\QueueWorker\CronQueueTestSuspendQueue
-   * @covers \Drupal\Core\Queue\SuspendQueueException
    */
   public function testSuspendQueueException(): void {
     $this->logger->log(
@@ -267,7 +269,6 @@ class CronQueueTest extends KernelTestBase {
    * Tests requeue exception is handled properly.
    *
    * @see \Drupal\cron_queue_test\Plugin\QueueWorker\CronQueueTestRequeueException
-   * @covers \Drupal\Core\Queue\RequeueException
    */
   public function testRequeueException(): void {
     // Test the requeueing functionality.

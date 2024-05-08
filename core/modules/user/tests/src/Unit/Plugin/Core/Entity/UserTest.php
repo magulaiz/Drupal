@@ -4,13 +4,14 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\user\Unit\Plugin\Core\Entity;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use Drupal\Tests\Core\Session\UserSessionTest;
 use Drupal\user\RoleInterface;
 
 /**
- * @coversDefaultClass \Drupal\user\Entity\User
  * @group user
  */
+#[CoversClass(\Drupal\user\Entity\User::class)]
 class UserTest extends UserSessionTest {
 
   /**
@@ -42,7 +43,6 @@ class UserTest extends UserSessionTest {
    * Tests the method getRoles exclude or include locked roles based in param.
    *
    * @see \Drupal\user\Entity\User::getRoles()
-   * @covers ::getRoles
    */
   public function testUserGetRoles() {
     // Anonymous user.

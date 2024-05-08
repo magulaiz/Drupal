@@ -4,18 +4,18 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\layout_builder\FunctionalJavascript;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
 
 // cspell:ignore datefield
-
 /**
- * @coversDefaultClass \Drupal\layout_builder\Plugin\Block\FieldBlock
  *
  * @group field
  * @group legacy
  */
+#[CoversClass(\Drupal\layout_builder\Plugin\Block\FieldBlock::class)]
 class FieldBlockTest extends WebDriverTestBase {
 
   /**

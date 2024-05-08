@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\media\Unit;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use Drupal\Component\Serialization\Json;
 use Drupal\Core\Cache\NullBackend;
 use Drupal\media\OEmbed\ResourceException;
@@ -17,9 +18,8 @@ use GuzzleHttp\RequestOptions;
 
 /**
  * @group media
- *
- * @coversDefaultClass \Drupal\media\OEmbed\ResourceFetcher
  */
+#[CoversClass(\Drupal\media\OEmbed\ResourceFetcher::class)]
 class ResourceFetcherTest extends UnitTestCase {
 
   /**
@@ -52,8 +52,6 @@ class ResourceFetcherTest extends UnitTestCase {
 
   /**
    * Tests how the resource fetcher handles unknown Content-Type headers.
-   *
-   * @covers ::fetchResource
    */
   public function testUnknownContentTypeHeader(): void {
     $headers = [

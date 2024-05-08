@@ -4,13 +4,14 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\filter\Unit;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use Drupal\filter\Plugin\Filter\FilterImageLazyLoad;
 use Drupal\Tests\UnitTestCase;
 
 /**
- * @coversDefaultClass \Drupal\filter\Plugin\Filter\FilterImageLazyLoad
  * @group editor
  */
+#[CoversClass(\Drupal\filter\Plugin\Filter\FilterImageLazyLoad::class)]
 final class FilterImageLazyLoadTest extends UnitTestCase {
 
   /**
@@ -27,7 +28,6 @@ final class FilterImageLazyLoadTest extends UnitTestCase {
   }
 
   /**
-   * @covers ::process
    *
    * @dataProvider providerHtml
    *

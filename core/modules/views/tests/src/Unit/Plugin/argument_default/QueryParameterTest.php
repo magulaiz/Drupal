@@ -4,20 +4,20 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\views\Unit\Plugin\argument_default;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use Drupal\Tests\UnitTestCase;
 use Drupal\views\Plugin\views\argument_default\QueryParameter;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
- * @coversDefaultClass \Drupal\views\Plugin\views\argument_default\QueryParameter
  * @group views
  */
+#[CoversClass(\Drupal\views\Plugin\views\argument_default\QueryParameter::class)]
 class QueryParameterTest extends UnitTestCase {
 
   /**
    * Tests the getArgument() method.
    *
-   * @covers ::getArgument
    * @dataProvider providerGetArgument
    */
   public function testGetArgument($options, Request $request, $expected) {

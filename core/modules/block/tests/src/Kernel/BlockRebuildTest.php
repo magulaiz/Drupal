@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\block\Kernel;
 
+use PHPUnit\Framework\Attributes\CoversFunction;
 use Drupal\block\Entity\Block;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\KernelTests\KernelTestBase;
@@ -14,6 +15,7 @@ use Drupal\Tests\block\Traits\BlockCreationTrait;
  *
  * @group block
  */
+#[CoversFunction('block_rebuild')]
 class BlockRebuildTest extends KernelTestBase {
 
   use BlockCreationTrait;
@@ -44,9 +46,6 @@ class BlockRebuildTest extends KernelTestBase {
     require_once static::getDrupalRoot() . '/core/modules/block/block.module';
   }
 
-  /**
-   * @covers ::block_rebuild
-   */
   public function testRebuildNoBlocks() {
     block_rebuild();
     $messages = \Drupal::messenger()->all();
@@ -54,9 +53,6 @@ class BlockRebuildTest extends KernelTestBase {
     $this->assertEquals([], $messages);
   }
 
-  /**
-   * @covers ::block_rebuild
-   */
   public function testRebuildNoInvalidBlocks() {
     $this->placeBlock('system_powered_by_block', ['region' => 'content']);
 
@@ -66,9 +62,6 @@ class BlockRebuildTest extends KernelTestBase {
     $this->assertEquals([], $messages);
   }
 
-  /**
-   * @covers ::block_rebuild
-   */
   public function testRebuildInvalidBlocks() {
     $this->placeBlock('system_powered_by_block', ['region' => 'content']);
     $block1 = $this->placeBlock('system_powered_by_block');

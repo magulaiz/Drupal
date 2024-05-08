@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\link\Unit\Plugin\Validation\Constraint;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use Drupal\Component\Utility\UrlHelper;
 use Drupal\Core\Url;
 use Drupal\link\Plugin\Validation\Constraint\LinkExternalProtocolsConstraint;
@@ -12,13 +13,12 @@ use Drupal\Tests\UnitTestCase;
 use Symfony\Component\Validator\Context\ExecutionContextInterface;
 
 /**
- * @coversDefaultClass \Drupal\link\Plugin\Validation\Constraint\LinkExternalProtocolsConstraintValidator
  * @group Link
  */
+#[CoversClass(\Drupal\link\Plugin\Validation\Constraint\LinkExternalProtocolsConstraintValidator::class)]
 class LinkExternalProtocolsConstraintValidatorTest extends UnitTestCase {
 
   /**
-   * @covers ::validate
    * @dataProvider providerValidate
    * @runInSeparateProcess
    */
@@ -67,8 +67,6 @@ class LinkExternalProtocolsConstraintValidatorTest extends UnitTestCase {
   }
 
   /**
-   * @covers ::validate
-   *
    * @see \Drupal\Core\Url::fromUri
    */
   public function testValidateWithMalformedUri() {
@@ -88,9 +86,6 @@ class LinkExternalProtocolsConstraintValidatorTest extends UnitTestCase {
     $validator->validate($link, $constraint);
   }
 
-  /**
-   * @covers ::validate
-   */
   public function testValidateIgnoresInternalUrls() {
     $link = $this->createMock('Drupal\link\LinkItemInterface');
     $link->expects($this->any())

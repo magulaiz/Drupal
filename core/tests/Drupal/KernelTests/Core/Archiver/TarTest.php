@@ -4,12 +4,13 @@ declare(strict_types=1);
 
 namespace Drupal\KernelTests\Core\Archiver;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use Drupal\Core\Archiver\Tar;
 
 /**
- * @coversDefaultClass \Drupal\Core\Archiver\Tar
  * @group tar
  */
+#[CoversClass(\Drupal\Core\Archiver\Tar::class)]
 class TarTest extends ArchiverTestBase {
   /**
    * {@inheritdoc}

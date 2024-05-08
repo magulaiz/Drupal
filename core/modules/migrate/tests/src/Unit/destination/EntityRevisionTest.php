@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\migrate\Unit\destination;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use Drupal\Core\Entity\ContentEntityInterface;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityTypeInterface;
@@ -18,8 +19,8 @@ use Prophecy\Argument;
  * Tests entity revision destination.
  *
  * @group migrate
- * @coversDefaultClass \Drupal\migrate\Plugin\migrate\destination\EntityRevision
  */
+#[CoversClass(\Drupal\migrate\Plugin\migrate\destination\EntityRevision::class)]
 class EntityRevisionTest extends UnitTestCase {
 
   /**
@@ -71,8 +72,6 @@ class EntityRevisionTest extends UnitTestCase {
 
   /**
    * Tests that passed old destination values are used by default.
-   *
-   * @covers ::getEntity
    */
   public function testGetEntityDestinationValues() {
     $destination = $this->getEntityRevisionDestination([]);
@@ -89,8 +88,6 @@ class EntityRevisionTest extends UnitTestCase {
 
   /**
    * Tests that revision updates update.
-   *
-   * @covers ::getEntity
    */
   public function testGetEntityUpdateRevision() {
     $destination = $this->getEntityRevisionDestination([]);
@@ -116,8 +113,6 @@ class EntityRevisionTest extends UnitTestCase {
 
   /**
    * Tests that new revisions are flagged to be written as new.
-   *
-   * @covers ::getEntity
    */
   public function testGetEntityNewRevision() {
     $destination = $this->getEntityRevisionDestination([]);
@@ -146,8 +141,6 @@ class EntityRevisionTest extends UnitTestCase {
 
   /**
    * Tests entity load failure.
-   *
-   * @covers ::getEntity
    */
   public function testGetEntityLoadFailure() {
     $destination = $this->getEntityRevisionDestination([]);
@@ -169,8 +162,6 @@ class EntityRevisionTest extends UnitTestCase {
 
   /**
    * Tests entity revision save.
-   *
-   * @covers ::save
    */
   public function testSave() {
     $entity = $this->prophesize('\Drupal\Core\Entity\ContentEntityInterface');

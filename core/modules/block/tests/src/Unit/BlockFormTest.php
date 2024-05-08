@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\block\Unit;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use Drupal\block\BlockForm;
 use Drupal\block\BlockRepository;
 use Drupal\block\Entity\Block;
@@ -12,9 +13,9 @@ use Drupal\Core\Plugin\PluginFormFactoryInterface;
 use Drupal\Tests\UnitTestCase;
 
 /**
- * @coversDefaultClass \Drupal\block\BlockForm
  * @group block
  */
+#[CoversClass(\Drupal\block\BlockForm::class)]
 class BlockFormTest extends UnitTestCase {
 
   /**

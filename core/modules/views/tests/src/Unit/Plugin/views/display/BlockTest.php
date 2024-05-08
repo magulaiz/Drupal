@@ -4,12 +4,13 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\views\Unit\Plugin\views\display;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use Drupal\Tests\UnitTestCase;
 
 /**
- * @coversDefaultClass \Drupal\views\Plugin\views\display\Block
  * @group block
  */
+#[CoversClass(\Drupal\views\Plugin\views\display\Block::class)]
 class BlockTest extends UnitTestCase {
 
   /**

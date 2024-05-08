@@ -4,19 +4,17 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\views\Unit\Plugin\display;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use Drupal\Tests\UnitTestCase;
 use Drupal\views\Plugin\views\display\Page;
 use Symfony\Component\Routing\Route;
 
 /**
- * @coversDefaultClass \Drupal\views\Plugin\views\display\Page
  * @group views
  */
+#[CoversClass(\Drupal\views\Plugin\views\display\Page::class)]
 class PageTest extends UnitTestCase {
 
-  /**
-   * @covers ::buildBasicRenderable
-   */
   public function testBuildBasicRenderable() {
     $route = new Route('/test-view');
     $route->setDefault('view_id', 'test_view');
@@ -30,9 +28,6 @@ class PageTest extends UnitTestCase {
     $this->assertEquals(TRUE, $result['#view_display_show_admin_links']);
   }
 
-  /**
-   * @covers ::buildBasicRenderable
-   */
   public function testBuildBasicRenderableWithMissingRoute() {
     $this->expectException(\BadFunctionCallException::class);
     Page::buildBasicRenderable('test_view', 'page_1', []);

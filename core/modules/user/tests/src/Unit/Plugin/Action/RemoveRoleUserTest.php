@@ -4,12 +4,13 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\user\Unit\Plugin\Action;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use Drupal\user\Plugin\Action\RemoveRoleUser;
 
 /**
- * @coversDefaultClass \Drupal\user\Plugin\Action\RemoveRoleUser
  * @group user
  */
+#[CoversClass(\Drupal\user\Plugin\Action\RemoveRoleUser::class)]
 class RemoveRoleUserTest extends RoleUserTestBase {
 
   /**

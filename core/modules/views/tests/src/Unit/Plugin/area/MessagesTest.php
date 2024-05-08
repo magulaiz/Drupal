@@ -4,13 +4,14 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\views\Unit\Plugin\area;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use Drupal\Tests\UnitTestCase;
 use Drupal\views\Plugin\views\area\Messages;
 
 /**
- * @coversDefaultClass \Drupal\views\Plugin\views\area\Messages
  * @group views
  */
+#[CoversClass(\Drupal\views\Plugin\views\area\Messages::class)]
 class MessagesTest extends UnitTestCase {
 
   /**
@@ -38,9 +39,6 @@ class MessagesTest extends UnitTestCase {
 
   /**
    * Tests the render method.
-   *
-   * @covers ::defineOptions
-   * @covers ::render
    */
   public function testRender() {
     // The handler is configured to show with empty views by default, so should

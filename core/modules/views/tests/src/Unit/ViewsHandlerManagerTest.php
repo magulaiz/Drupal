@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\views\Unit;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use Drupal\Tests\UnitTestCase;
 use Drupal\views\Plugin\ViewsHandlerManager;
 
@@ -11,9 +12,8 @@ use Drupal\views\Plugin\ViewsHandlerManager;
  * Tests the ViewsHandlerManager class.
  *
  * @group views
- *
- * @coversDefaultClass \Drupal\views\Plugin\ViewsHandlerManager
  */
+#[CoversClass(\Drupal\views\Plugin\ViewsHandlerManager::class)]
 class ViewsHandlerManagerTest extends UnitTestCase {
 
   /**
@@ -66,9 +66,6 @@ class ViewsHandlerManagerTest extends UnitTestCase {
 
   /**
    * Tests that hook_views_plugins_TYPE_alter() is invoked for a handler type.
-   *
-   * @covers ::__construct
-   * @covers ::getDefinitions
    */
   public function testAlterHookInvocation() {
     $this->moduleHandler->expects($this->once())

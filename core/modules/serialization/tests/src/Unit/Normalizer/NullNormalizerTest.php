@@ -4,13 +4,14 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\serialization\Unit\Normalizer;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use Drupal\serialization\Normalizer\NullNormalizer;
 use Drupal\Tests\UnitTestCase;
 
 /**
- * @coversDefaultClass \Drupal\serialization\Normalizer\NullNormalizer
  * @group serialization
  */
+#[CoversClass(\Drupal\serialization\Normalizer\NullNormalizer::class)]
 class NullNormalizerTest extends UnitTestCase {
 
   /**
@@ -36,10 +37,6 @@ class NullNormalizerTest extends UnitTestCase {
     $this->normalizer = new NullNormalizer($this->interface);
   }
 
-  /**
-   * @covers ::__construct
-   * @covers ::supportsNormalization
-   */
   public function testSupportsNormalization() {
     $mock = $this->createMock('Drupal\Core\TypedData\TypedDataInterface');
     $this->assertTrue($this->normalizer->supportsNormalization($mock));
@@ -47,9 +44,6 @@ class NullNormalizerTest extends UnitTestCase {
     $this->assertFalse($this->normalizer->supportsNormalization(new \stdClass()));
   }
 
-  /**
-   * @covers ::normalize
-   */
   public function testNormalize() {
     $mock = $this->createMock('Drupal\Core\TypedData\TypedDataInterface');
     $this->assertNull($this->normalizer->normalize($mock));

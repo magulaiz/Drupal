@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\help\Unit;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use Drupal\Component\Discovery\DiscoveryException;
 use Drupal\Core\DependencyInjection\ContainerBuilder;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
@@ -13,14 +14,11 @@ use Drupal\Tests\UnitTestCase;
 use org\bovigo\vfs\vfsStream;
 
 /**
- * @coversDefaultClass \Drupal\help\HelpTopicDiscovery
  * @group help
  */
+#[CoversClass(\Drupal\help\HelpTopicDiscovery::class)]
 class HelpTopicDiscoveryTest extends UnitTestCase {
 
-  /**
-   * @covers ::findAll
-   */
   public function testDiscoveryExceptionMissingLabel() {
     vfsStream::setup('root');
 
@@ -41,9 +39,6 @@ class HelpTopicDiscoveryTest extends UnitTestCase {
     $discovery->getDefinitions();
   }
 
-  /**
-   * @covers ::findAll
-   */
   public function testDiscoveryExceptionInvalidYamlKey() {
     vfsStream::setup('root');
     $topic_content = <<<EOF
@@ -69,9 +64,6 @@ EOF;
     $discovery->getDefinitions();
   }
 
-  /**
-   * @covers ::findAll
-   */
   public function testDiscoveryExceptionInvalidTopLevel() {
     vfsStream::setup('root');
     $topic_content = <<<EOF
@@ -97,9 +89,6 @@ EOF;
     $discovery->getDefinitions();
   }
 
-  /**
-   * @covers ::findAll
-   */
   public function testDiscoveryExceptionInvalidRelated() {
     vfsStream::setup('root');
     $topic_content = <<<EOF
@@ -125,9 +114,6 @@ EOF;
     $discovery->getDefinitions();
   }
 
-  /**
-   * @covers ::findAll
-   */
   public function testHelpTopicsExtensionProviderSpecialCase() {
     vfsStream::setup('root');
     $topic_content = <<<EOF
@@ -150,9 +136,6 @@ EOF;
     $this->assertArrayHasKey('core.topic', $discovery->getDefinitions());
   }
 
-  /**
-   * @covers ::findAll
-   */
   public function testHelpTopicsInCore() {
     vfsStream::setup('root');
     $topic_content = <<<EOF
@@ -173,9 +156,6 @@ EOF;
     $this->assertArrayHasKey('core.topic', $discovery->getDefinitions());
   }
 
-  /**
-   * @covers ::findAll
-   */
   public function testHelpTopicsBrokenYaml() {
     vfsStream::setup('root');
     $topic_content = <<<EOF
@@ -200,9 +180,6 @@ EOF;
     $discovery->getDefinitions();
   }
 
-  /**
-   * @covers ::findAll
-   */
   public function testHelpTopicsDefinition() {
     $container = new ContainerBuilder();
     $container->set('string_translation', $this->getStringTranslationStub());

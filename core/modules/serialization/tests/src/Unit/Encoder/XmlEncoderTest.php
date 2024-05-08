@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\serialization\Unit\Encoder;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use Drupal\serialization\Encoder\XmlEncoder;
 use Symfony\Component\Serializer\Encoder\XmlEncoder as BaseXmlEncoder;
 use Symfony\Component\Serializer\Normalizer\GetSetMethodNormalizer;
@@ -11,9 +12,9 @@ use Symfony\Component\Serializer\Serializer;
 use Drupal\Tests\UnitTestCase;
 
 /**
- * @coversDefaultClass \Drupal\serialization\Encoder\XmlEncoder
  * @group serialization
  */
+#[CoversClass(\Drupal\serialization\Encoder\XmlEncoder::class)]
 class XmlEncoderTest extends UnitTestCase {
 
   /**
@@ -86,9 +87,6 @@ class XmlEncoderTest extends UnitTestCase {
     $this->assertEquals($this->testArray, $this->encoder->decode('test', 'test'));
   }
 
-  /**
-   * @covers ::getBaseEncoder
-   */
   public function testDefaultEncoderHasSerializer() {
     // The serializer should be set on the Drupal encoder, which should then
     // set it on our default encoder.

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\system\Kernel;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Cache\Context\CacheContextsManager;
 use Drupal\Core\Datetime\Entity\DateFormat;
@@ -13,9 +14,9 @@ use Drupal\Tests\user\Traits\UserCreationTrait;
 use Prophecy\Prophet;
 
 /**
- * @coversDefaultClass \Drupal\system\DateFormatAccessControlHandler
  * @group system
  */
+#[CoversClass(\Drupal\system\DateFormatAccessControlHandler::class)]
 class DateFormatAccessControlHandlerTest extends KernelTestBase {
 
   use UserCreationTrait {
@@ -49,8 +50,6 @@ class DateFormatAccessControlHandlerTest extends KernelTestBase {
   }
 
   /**
-   * @covers ::checkAccess
-   * @covers ::checkCreateAccess
    * @dataProvider testAccessProvider
    */
   public function testAccess($permissions, $which_entity, $view_label_access_result, $view_access_result, $update_access_result, $delete_access_result, $create_access_result) {

@@ -4,15 +4,16 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\layout_builder\Kernel;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use Drupal\Core\Config\Schema\SchemaIncompleteException;
 use Drupal\layout_builder\Entity\LayoutBuilderEntityViewDisplay;
 
 /**
- * @coversDefaultClass \Drupal\layout_builder\Entity\LayoutBuilderEntityViewDisplay
  *
  * @group layout_builder
  * @group #slow
  */
+#[CoversClass(\Drupal\layout_builder\Entity\LayoutBuilderEntityViewDisplay::class)]
 class LayoutBuilderEntityViewDisplayTest extends SectionListTestBase {
 
   /**

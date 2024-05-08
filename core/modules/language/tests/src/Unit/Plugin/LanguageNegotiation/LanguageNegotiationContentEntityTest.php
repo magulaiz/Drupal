@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\language\Unit\Plugin\LanguageNegotiation;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use Drupal\Core\Cache\Context\CacheContextsManager;
 use Drupal\Core\DependencyInjection\ContainerBuilder;
 use Drupal\Core\Entity\EntityTypeManager;
@@ -21,9 +22,9 @@ use Symfony\Component\Routing\Route;
  * Tests the LanguageNegotiationContentEntity plugin class.
  *
  * @group language
- * @coversDefaultClass \Drupal\language\Plugin\LanguageNegotiation\LanguageNegotiationContentEntity
  * @see \Drupal\language\Plugin\LanguageNegotiation\LanguageNegotiationContentEntity
  */
+#[CoversClass(\Drupal\language\Plugin\LanguageNegotiation\LanguageNegotiationContentEntity::class)]
 class LanguageNegotiationContentEntityTest extends LanguageNegotiationTestBase {
 
   /**
@@ -94,9 +95,6 @@ class LanguageNegotiationContentEntityTest extends LanguageNegotiationTestBase {
     \Drupal::setContainer($container);
   }
 
-  /**
-   * @covers ::getLangcode
-   */
   public function testGetLangcode() {
     $languageNegotiationContentEntity = $this->createLanguageNegotiationPlugin();
 
@@ -128,9 +126,6 @@ class LanguageNegotiationContentEntityTest extends LanguageNegotiationTestBase {
     $this->assertNull($languageNegotiationContentEntity->getLangcode($request));
   }
 
-  /**
-   * @covers ::processOutbound
-   */
   public function testProcessOutbound() {
 
     // Case 1: Not all processing conditions are met.
@@ -205,9 +200,6 @@ class LanguageNegotiationContentEntityTest extends LanguageNegotiationTestBase {
     $this->assertEquals('de', $options['query'][LanguageNegotiationContentEntity::QUERY_PARAMETER]);
   }
 
-  /**
-   * @covers ::getLanguageSwitchLinks
-   */
   public function testGetLanguageSwitchLinks() {
     $languageNegotiationContentEntity = $this->createLanguageNegotiationPlugin();
     $languageNegotiationContentEntity->setLanguageManager($this->languageManager);

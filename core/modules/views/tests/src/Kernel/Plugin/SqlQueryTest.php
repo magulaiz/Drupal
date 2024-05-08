@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\views\Kernel\Plugin;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use Drupal\Core\Database\Database;
 use Drupal\Tests\views\Kernel\ViewsKernelTestBase;
 use Drupal\views\Views;
@@ -14,6 +15,9 @@ use Drupal\views\Views;
  * @group views
  * @see \Drupal\views\Plugin\views\query\Sql
  */
+#[CoversClass(\Drupal\views\Plugin\views\query\Sql::getConnection
+This needs to be a kernel test because the tested method uses the method
+\Drupal\Core\Database\Database)]
 class SqlQueryTest extends ViewsKernelTestBase {
 
   /**
@@ -84,12 +88,6 @@ class SqlQueryTest extends ViewsKernelTestBase {
 
   /**
    * Tests the method \Drupal\views\Plugin\views\query\Sql::getConnection().
-   *
-   * @covers \Drupal\views\Plugin\views\query\Sql::getConnection
-   *
-   * This needs to be a kernel test because the tested method uses the method
-   * \Drupal\Core\Database\Database::getConnection() which is a 'final' method
-   * and therefore cannot be mocked.
    */
   public function testGetConnection() {
     $view = Views::getView('test_view');

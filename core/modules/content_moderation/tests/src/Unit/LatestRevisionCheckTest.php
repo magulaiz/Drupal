@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\content_moderation\Unit;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use Drupal\block_content\Entity\BlockContent;
 use Drupal\Core\Access\AccessResultAllowed;
 use Drupal\Core\Access\AccessResultForbidden;
@@ -21,9 +22,9 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\Routing\Route;
 
 /**
- * @coversDefaultClass \Drupal\content_moderation\Access\LatestRevisionCheck
  * @group content_moderation
  */
+#[CoversClass(\Drupal\content_moderation\Access\LatestRevisionCheck::class)]
 class LatestRevisionCheckTest extends UnitTestCase {
 
   /**

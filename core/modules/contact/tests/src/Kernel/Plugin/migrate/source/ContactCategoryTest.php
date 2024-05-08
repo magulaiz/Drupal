@@ -4,14 +4,15 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\contact\Kernel\Plugin\migrate\source;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use Drupal\Tests\migrate\Kernel\MigrateSqlSourceTestBase;
 
 /**
  * Tests D6 contact category source plugin.
  *
- * @covers \Drupal\contact\Plugin\migrate\source\ContactCategory
  * @group contact
  */
+#[CoversClass(\Drupal\contact\Plugin\migrate\source\ContactCategory::class)]
 class ContactCategoryTest extends MigrateSqlSourceTestBase {
 
   /**

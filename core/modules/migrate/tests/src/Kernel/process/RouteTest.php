@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\migrate\Kernel\process;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\migrate\MigrateExecutableInterface;
 use Drupal\migrate\Plugin\migrate\process\Route;
@@ -12,14 +13,13 @@ use Drupal\migrate\Row;
 use Drupal\Tests\user\Traits\UserCreationTrait;
 
 // cspell:ignore nzdt
-
 /**
  * Tests the route process plugin.
  *
- * @coversDefaultClass \Drupal\migrate\Plugin\migrate\process\Route
  *
  * @group migrate
  */
+#[CoversClass(\Drupal\migrate\Plugin\migrate\process\Route::class)]
 class RouteTest extends KernelTestBase {
 
   use UserCreationTrait;

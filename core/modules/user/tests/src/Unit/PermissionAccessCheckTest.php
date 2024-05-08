@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\user\Unit;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use Drupal\Core\Access\AccessResult;
 use Drupal\Tests\UnitTestCase;
 use Drupal\user\Access\PermissionAccessCheck;
@@ -12,10 +13,10 @@ use Drupal\Core\Cache\Context\CacheContextsManager;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 
 /**
- * @coversDefaultClass \Drupal\user\Access\PermissionAccessCheck
  * @group Routing
  * @group Access
  */
+#[CoversClass(\Drupal\user\Access\PermissionAccessCheck::class)]
 class PermissionAccessCheckTest extends UnitTestCase {
 
   /**
@@ -68,7 +69,6 @@ class PermissionAccessCheckTest extends UnitTestCase {
    * Tests the access check method.
    *
    * @dataProvider providerTestAccess
-   * @covers ::access
    */
   public function testAccess($requirements, $access, array $contexts = [], $message = '') {
     $access_result = AccessResult::allowedIf($access)->addCacheContexts($contexts);

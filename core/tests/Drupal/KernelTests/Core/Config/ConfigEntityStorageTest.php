@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\KernelTests\Core\Config;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use Drupal\Core\Config\ConfigDuplicateUUIDException;
 use Drupal\KernelTests\KernelTestBase;
 
@@ -12,6 +13,7 @@ use Drupal\KernelTests\KernelTestBase;
  *
  * @group config
  */
+#[CoversClass(\Drupal\Core\Config\Entity\ConfigEntityStorage::class)]
 class ConfigEntityStorageTest extends KernelTestBase {
 
   /**
@@ -54,8 +56,6 @@ class ConfigEntityStorageTest extends KernelTestBase {
 
   /**
    * Tests the hasData() method for config entity storage.
-   *
-   * @covers \Drupal\Core\Config\Entity\ConfigEntityStorage::hasData
    */
   public function testHasData() {
     $storage = \Drupal::entityTypeManager()->getStorage('config_test');

@@ -4,14 +4,15 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\pgsql\Unit;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use Drupal\pgsql\Driver\Database\pgsql\Schema;
 use Drupal\Tests\UnitTestCase;
 use Prophecy\Argument;
 
 /**
- * @coversDefaultClass \Drupal\pgsql\Driver\Database\pgsql\Schema
  * @group Database
  */
+#[CoversClass(\Drupal\pgsql\Driver\Database\pgsql\Schema::class)]
 class SchemaTest extends UnitTestCase {
 
   /**
@@ -24,7 +25,6 @@ class SchemaTest extends UnitTestCase {
    * @param string $expected
    *   The expected computed constraint name.
    *
-   * @covers ::constraintExists
    * @dataProvider providerComputedConstraintName
    */
   public function testComputedConstraintName($table_name, $name, $expected) {

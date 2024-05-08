@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\content_moderation\Unit;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use Drupal\content_moderation\ModerationInformationInterface;
 use Drupal\Core\DependencyInjection\ContainerBuilder;
 use Drupal\Core\Entity\ContentEntityInterface;
@@ -16,9 +17,9 @@ use Drupal\workflows\WorkflowTypeManager;
 use Prophecy\Argument;
 
 /**
- * @coversDefaultClass \Drupal\content_moderation\StateTransitionValidation
  * @group content_moderation
  */
+#[CoversClass(\Drupal\content_moderation\StateTransitionValidation::class)]
 class StateTransitionValidationTest extends UnitTestCase {
 
   /**

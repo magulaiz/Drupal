@@ -4,15 +4,16 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\path_alias\Kernel;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use Drupal\KernelTests\KernelTestBase;
 
 /**
  * Tests the path_alias storage schema.
  *
- * @coversDefaultClass \Drupal\path_alias\PathAliasStorageSchema
  *
  * @group path_alias
  */
+#[CoversClass(\Drupal\path_alias\PathAliasStorageSchema::class)]
 class PathAliasStorageSchemaTest extends KernelTestBase {
 
   /**
@@ -30,8 +31,6 @@ class PathAliasStorageSchemaTest extends KernelTestBase {
 
   /**
    * Tests that the path_alias__status index is removed.
-   *
-   * @covers ::getEntitySchema
    */
   public function testPathAliasStatusIndexRemoved(): void {
     $schema = \Drupal::database()->schema();

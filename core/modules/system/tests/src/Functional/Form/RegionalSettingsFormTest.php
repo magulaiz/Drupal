@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\system\Functional\Form;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use Drupal\Tests\BrowserTestBase;
 use Drupal\user\UserInterface;
 
@@ -11,8 +12,8 @@ use Drupal\user\UserInterface;
  * Tests the system_regional_settings form.
  *
  * @group system
- * @covers \Drupal\system\Form\RegionalForm
  */
+#[CoversClass(\Drupal\system\Form\RegionalForm::class)]
 class RegionalSettingsFormTest extends BrowserTestBase {
 
   /**

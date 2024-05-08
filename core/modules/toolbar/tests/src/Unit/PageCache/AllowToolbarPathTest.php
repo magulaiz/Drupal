@@ -4,15 +4,16 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\toolbar\Unit\PageCache;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use Drupal\toolbar\PageCache\AllowToolbarPath;
 use Drupal\Core\PageCache\RequestPolicyInterface;
 use Drupal\Tests\UnitTestCase;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
- * @coversDefaultClass \Drupal\toolbar\PageCache\AllowToolbarPath
  * @group toolbar
  */
+#[CoversClass(\Drupal\toolbar\PageCache\AllowToolbarPath::class)]
 class AllowToolbarPathTest extends UnitTestCase {
 
   /**
@@ -35,7 +36,6 @@ class AllowToolbarPathTest extends UnitTestCase {
    * Asserts that caching is allowed if the request goes to toolbar subtree.
    *
    * @dataProvider providerTestAllowToolbarPath
-   * @covers ::check
    */
   public function testAllowToolbarPath($expected_result, $path) {
     $request = Request::create($path);

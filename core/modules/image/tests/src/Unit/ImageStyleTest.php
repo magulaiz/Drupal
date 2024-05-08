@@ -4,15 +4,15 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\image\Unit;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use Drupal\Component\Utility\Crypt;
 use Drupal\Core\DependencyInjection\ContainerBuilder;
 use Drupal\Tests\UnitTestCase;
 
 /**
- * @coversDefaultClass \Drupal\image\Entity\ImageStyle
- *
  * @group Image
  */
+#[CoversClass(\Drupal\image\Entity\ImageStyle::class)]
 class ImageStyleTest extends UnitTestCase {
 
   /**
@@ -95,9 +95,6 @@ class ImageStyleTest extends UnitTestCase {
       ->willReturn($this->entityType);
   }
 
-  /**
-   * @covers ::getDerivativeExtension
-   */
   public function testGetDerivativeExtension() {
     $image_effect_id = $this->randomMachineName();
     $logger = $this->getMockBuilder('\Psr\Log\LoggerInterface')->getMock();
@@ -117,9 +114,6 @@ class ImageStyleTest extends UnitTestCase {
     }
   }
 
-  /**
-   * @covers ::buildUri
-   */
   public function testBuildUri() {
     // Image style that changes the extension.
     $image_effect_id = $this->randomMachineName();
@@ -147,9 +141,6 @@ class ImageStyleTest extends UnitTestCase {
     $this->assertEquals($image_style->buildUri('public://test.jpeg'), 'public://styles/' . $image_style->id() . '/public/test.jpeg');
   }
 
-  /**
-   * @covers ::getPathToken
-   */
   public function testGetPathToken() {
     $logger = $this->getMockBuilder('\Psr\Log\LoggerInterface')->getMock();
     $private_key = $this->randomMachineName();
@@ -199,9 +190,6 @@ class ImageStyleTest extends UnitTestCase {
     $this->assertEquals(substr(Crypt::hmacBase64($image_style->id() . ':' . 'public://test.jpeg', $private_key . $hash_salt), 0, 8), $image_style->getPathToken('public://test.jpeg'));
   }
 
-  /**
-   * @covers ::flush
-   */
   public function testFlush() {
     $cache_tag_invalidator = $this->createMock('\Drupal\Core\Cache\CacheTagsInvalidator');
     $file_system = $this->createMock('\Drupal\Core\File\FileSystemInterface');

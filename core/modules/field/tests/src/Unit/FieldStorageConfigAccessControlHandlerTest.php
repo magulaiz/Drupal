@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\field\Unit;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use Drupal\Component\Uuid\UuidInterface;
 use Drupal\Core\Cache\Context\CacheContextsManager;
 use Drupal\Core\Config\Entity\ConfigEntityTypeInterface;
@@ -20,9 +21,8 @@ use Drupal\Tests\UnitTestCase;
  * Tests the field storage config access controller.
  *
  * @group field
- *
- * @coversDefaultClass \Drupal\field\FieldStorageConfigAccessControlHandler
  */
+#[CoversClass(\Drupal\field\FieldStorageConfigAccessControlHandler::class)]
 class FieldStorageConfigAccessControlHandlerTest extends UnitTestCase {
 
   /**

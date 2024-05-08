@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\big_pipe\Unit\Render;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use Drupal\big_pipe\Render\BigPipeResponse;
 use Drupal\big_pipe\Render\BigPipeResponseAttachmentsProcessor;
 use Drupal\Core\Ajax\AjaxResponse;
@@ -24,14 +25,12 @@ use Prophecy\Prophet;
 use Symfony\Component\HttpFoundation\RequestStack;
 
 /**
- * @coversDefaultClass \Drupal\big_pipe\Render\BigPipeResponseAttachmentsProcessor
  * @group big_pipe
  */
+#[CoversClass(\Drupal\big_pipe\Render\BigPipeResponseAttachmentsProcessor::class)]
 class BigPipeResponseAttachmentsProcessorTest extends UnitTestCase {
 
   /**
-   * @covers ::processAttachments
-   *
    * @dataProvider nonHtmlResponseProvider
    */
   public function testNonHtmlResponse($response_class) {
@@ -50,8 +49,6 @@ class BigPipeResponseAttachmentsProcessorTest extends UnitTestCase {
   }
 
   /**
-   * @covers ::processAttachments
-   *
    * @dataProvider attachmentsProvider
    */
   public function testHtmlResponse(array $attachments) {

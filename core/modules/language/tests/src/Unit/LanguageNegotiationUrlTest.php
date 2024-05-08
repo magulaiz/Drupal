@@ -13,9 +13,9 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
- * @coversDefaultClass \Drupal\language\Plugin\LanguageNegotiation\LanguageNegotiationUrl
  * @group language
  */
+#[\PHPUnit\Framework\Attributes\CoversClass(\Drupal\language\Plugin\LanguageNegotiation\LanguageNegotiationUrl::class)]
 class LanguageNegotiationUrlTest extends UnitTestCase {
 
   protected $languageManager;

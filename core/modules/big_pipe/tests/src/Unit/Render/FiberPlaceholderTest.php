@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\big_pipe\Unit\Render;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use Drupal\big_pipe\Render\BigPipe;
 use Drupal\big_pipe\Render\BigPipeResponse;
 use Drupal\Core\Config\ConfigFactoryInterface;
@@ -25,14 +26,12 @@ use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
 /**
- * @coversDefaultClass \Drupal\big_pipe\Render\BigPipe
  * @group big_pipe
  */
+#[CoversClass(\Drupal\big_pipe\Render\BigPipe::class)]
+#[CoversClass(\Drupal\big_pipe\Render\BigPipe::class)]
 class FiberPlaceholderTest extends UnitTestCase {
 
-  /**
-   * @covers \Drupal\big_pipe\Render\BigPipe::sendPlaceholders
-   */
   public function testLongPlaceholderFiberSuspendingLoop() {
     $request_stack = $this->prophesize(RequestStack::class);
     $request_stack->getMainRequest()

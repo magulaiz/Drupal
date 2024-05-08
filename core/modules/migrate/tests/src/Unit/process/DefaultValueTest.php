@@ -4,20 +4,20 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\migrate\Unit\process;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use Drupal\migrate\Plugin\migrate\process\DefaultValue;
 
 /**
  * Tests the default_value process plugin.
  *
  * @group migrate
- * @coversDefaultClass \Drupal\migrate\Plugin\migrate\process\DefaultValue
  */
+#[CoversClass(\Drupal\migrate\Plugin\migrate\process\DefaultValue::class)]
 class DefaultValueTest extends MigrateProcessTestCase {
 
   /**
    * Tests the default_value process plugin.
    *
-   * @covers ::transform
    *
    * @dataProvider defaultValueDataProvider
    */

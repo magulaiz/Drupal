@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\link\Unit\Plugin\Validation\Constraint;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use Drupal\link\Plugin\Validation\Constraint\LinkAccessConstraint;
 use Drupal\link\Plugin\Validation\Constraint\LinkAccessConstraintValidator;
 use Drupal\Tests\UnitTestCase;
@@ -12,15 +13,14 @@ use Symfony\Component\Validator\Context\ExecutionContextInterface;
 /**
  * Tests the LinkAccessConstraintValidator validator.
  *
- * @coversDefaultClass \Drupal\link\Plugin\Validation\Constraint\LinkAccessConstraintValidator
  * @group validation
  */
+#[CoversClass(\Drupal\link\Plugin\Validation\Constraint\LinkAccessConstraintValidator::class)]
 class LinkAccessConstraintValidatorTest extends UnitTestCase {
 
   /**
    * Tests the access validation constraint for links.
    *
-   * @covers ::validate
    * @dataProvider providerValidate
    */
   public function testValidate(bool $mayLinkAnyPage, bool $urlAccess, bool $valid): void {

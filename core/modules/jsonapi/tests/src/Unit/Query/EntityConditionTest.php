@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\jsonapi\Unit\Query;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use Drupal\Core\Cache\Context\CacheContextsManager;
 use Drupal\Core\DependencyInjection\Container;
 use Drupal\jsonapi\Query\EntityCondition;
@@ -12,11 +13,10 @@ use Prophecy\Argument;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 
 /**
- * @coversDefaultClass \Drupal\jsonapi\Query\EntityCondition
  * @group jsonapi
- *
  * @internal
  */
+#[CoversClass(\Drupal\jsonapi\Query\EntityCondition::class)]
 class EntityConditionTest extends UnitTestCase {
 
   /**
@@ -34,7 +34,6 @@ class EntityConditionTest extends UnitTestCase {
   }
 
   /**
-   * @covers ::createFromQueryParameter
    * @dataProvider queryParameterProvider
    */
   public function testCreateFromQueryParameter($case) {
@@ -72,7 +71,6 @@ class EntityConditionTest extends UnitTestCase {
   }
 
   /**
-   * @covers ::validate
    * @dataProvider validationProvider
    */
   public function testValidation($input, $exception) {

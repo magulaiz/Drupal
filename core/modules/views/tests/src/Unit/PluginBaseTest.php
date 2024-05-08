@@ -4,13 +4,14 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\views\Unit;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use Drupal\Tests\UnitTestCase;
 use Drupal\views\Tests\TestHelperPlugin;
 
 /**
- * @coversDefaultClass \Drupal\views\Plugin\views\PluginBase
  * @group views
  */
+#[CoversClass(\Drupal\views\Plugin\views\PluginBase::class)]
 class PluginBaseTest extends UnitTestCase {
 
   /**
@@ -44,7 +45,6 @@ class PluginBaseTest extends UnitTestCase {
    *   Whether to unpack all options.
    *
    * @dataProvider providerTestUnpackOptions
-   * @covers ::unpackOptions
    */
   public function testUnpackOptions($storage, $options, $definition, $expected, $all = FALSE) {
     $this->testHelperPlugin->unpackOptions($storage, $options, $definition, $all);
@@ -62,7 +62,6 @@ class PluginBaseTest extends UnitTestCase {
    *   The expected array after unpacking
    *
    * @dataProvider providerTestSetOptionDefault
-   * @covers ::setOptionDefaults
    */
   public function testSetOptionDefault($storage, $definition, $expected) {
     $this->testHelperPlugin->testSetOptionDefaults($storage, $definition);
@@ -281,7 +280,6 @@ class PluginBaseTest extends UnitTestCase {
 
   /**
    * @dataProvider providerTestFilterByDefinedOptions
-   * @covers ::filterByDefinedOptions
    */
   public function testFilterByDefinedOptions($storage, $options, $expected_storage) {
     $this->testHelperPlugin->setDefinedOptions($options);

@@ -9,9 +9,9 @@ use Drupal\Tests\UnitTestCase;
 use Drupal\views\Plugin\Block\ViewsBlock;
 
 /**
- * @coversDefaultClass \Drupal\views\Plugin\block\ViewsBlock
  * @group views
  */
+#[\PHPUnit\Framework\Attributes\CoversClass(\Drupal\views\Plugin\block\ViewsBlock::class)]
 class ViewsBlockTest extends UnitTestCase {
 
   /**
@@ -157,8 +157,6 @@ class ViewsBlockTest extends UnitTestCase {
 
   /**
    * Tests the build method.
-   *
-   * @covers ::build
    */
   public function testBuildEmpty() {
     $build = ['view_build' => [], '#view_id' => 'test_view', '#view_display_plugin_class' => '\Drupal\views\Plugin\views\display\Block', '#view_display_show_admin_links' => FALSE, '#view_display_plugin_id' => 'block', '#pre_rendered' => TRUE, '#cache' => ['contexts' => ['user']]];

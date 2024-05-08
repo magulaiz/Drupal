@@ -4,15 +4,18 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\media\Kernel;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Cache\CacheableMetadata;
 use Drupal\Core\Entity\EntityDisplayRepositoryInterface;
 use Drupal\field\Entity\FieldConfig;
 
 /**
- * @coversDefaultClass \Drupal\media\Plugin\Filter\MediaEmbed
  * @group media
  */
+#[CoversClass(\Drupal\media\Plugin\Filter\MediaEmbed::class)]
+#[CoversClass(\Drupal\filter\Plugin\Filter\FilterAlign::class)]
+#[CoversClass(\Drupal\filter\Plugin\Filter\FilterCaption::class)]
 class MediaEmbedFilterTest extends MediaEmbedFilterTestBase {
 
   /**
@@ -200,7 +203,6 @@ class MediaEmbedFilterTest extends MediaEmbedFilterTestBase {
   }
 
   /**
-   * @covers ::applyPerEmbedMediaOverrides
    * @dataProvider providerOverridesAltAndTitle
    */
   public function testOverridesAltAndTitle($title_field_property_enabled, array $expected_title_attributes) {
@@ -394,8 +396,6 @@ class MediaEmbedFilterTest extends MediaEmbedFilterTestBase {
   }
 
   /**
-   * @covers \Drupal\filter\Plugin\Filter\FilterAlign
-   * @covers \Drupal\filter\Plugin\Filter\FilterCaption
    * @dataProvider providerFilterIntegration
    */
   public function testFilterIntegration(array $filter_ids, array $additional_attributes, $verification_selector, $expected_verification_success, array $expected_asset_libraries = [], $prefix = '', $suffix = '') {

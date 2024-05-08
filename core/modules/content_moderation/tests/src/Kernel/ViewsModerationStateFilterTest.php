@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\content_moderation\Kernel;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use Drupal\entity_test\Entity\EntityTestNoBundle;
 use Drupal\language\Entity\ConfigurableLanguage;
 use Drupal\node\Entity\Node;
@@ -17,10 +18,10 @@ use Drupal\workflows\Entity\Workflow;
 /**
  * Tests the views 'moderation_state_filter' filter plugin.
  *
- * @coversDefaultClass \Drupal\content_moderation\Plugin\views\filter\ModerationStateFilter
  *
  * @group content_moderation
  */
+#[CoversClass(\Drupal\content_moderation\Plugin\views\filter\ModerationStateFilter::class)]
 class ViewsModerationStateFilterTest extends ViewsKernelTestBase {
 
   use ContentModerationTestTrait;

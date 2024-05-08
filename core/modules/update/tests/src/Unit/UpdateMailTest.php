@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\update\Unit;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use Drupal\Core\DependencyInjection\ContainerBuilder;
 use Drupal\Tests\UnitTestCase;
 use Drupal\update\UpdateManagerInterface;
@@ -11,10 +12,10 @@ use Drupal\update\UpdateManagerInterface;
 /**
  * Tests text of update email.
  *
- * @covers \update_mail
  *
  * @group update
  */
+#[CoversClass(\update_mail::class)]
 class UpdateMailTest extends UnitTestCase {
 
   /**

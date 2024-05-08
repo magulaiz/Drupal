@@ -4,12 +4,13 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\path\Unit\Field;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use Drupal\Tests\Core\Field\BaseFieldDefinitionTestBase;
 
 /**
- * @coversDefaultClass \Drupal\Core\Field\BaseFieldDefinition
  * @group path
  */
+#[CoversClass(\Drupal\Core\Field\BaseFieldDefinition::class)]
 class PathFieldDefinitionTest extends BaseFieldDefinitionTestBase {
 
   /**
@@ -26,10 +27,6 @@ class PathFieldDefinitionTest extends BaseFieldDefinitionTestBase {
     return ['path', dirname(__DIR__, 4)];
   }
 
-  /**
-   * @covers ::getColumns
-   * @covers ::getSchema
-   */
   public function testGetColumns() {
     $this->assertSame([], $this->definition->getColumns());
   }

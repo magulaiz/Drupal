@@ -4,18 +4,18 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\jsonapi\Kernel\ResourceType;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use Drupal\Core\Cache\Cache;
 use Drupal\jsonapi\ResourceType\ResourceType;
 use Drupal\node\Entity\NodeType;
 use Drupal\Tests\jsonapi\Kernel\JsonapiKernelTestBase;
 
 /**
- * @coversDefaultClass \Drupal\jsonapi\ResourceType\ResourceTypeRepository
  * @group jsonapi
  * @group #slow
- *
  * @internal
  */
+#[CoversClass(\Drupal\jsonapi\ResourceType\ResourceTypeRepository::class)]
 class ResourceTypeRepositoryTest extends JsonapiKernelTestBase {
 
   /**
@@ -65,9 +65,6 @@ class ResourceTypeRepositoryTest extends JsonapiKernelTestBase {
     $this->resourceTypeRepository = $this->container->get('jsonapi.resource_type.repository');
   }
 
-  /**
-   * @covers ::all
-   */
   public function testAll() {
     // Make sure that there are resources being created.
     $all = $this->resourceTypeRepository->all();
@@ -80,7 +77,6 @@ class ResourceTypeRepositoryTest extends JsonapiKernelTestBase {
   }
 
   /**
-   * @covers ::get
    * @dataProvider getProvider
    */
   public function testGet($entity_type_id, $bundle, $entity_class) {
@@ -125,7 +121,6 @@ class ResourceTypeRepositoryTest extends JsonapiKernelTestBase {
   /**
    * Ensures that a naming conflict in mapping causes an exception to be thrown.
    *
-   * @covers ::getFields
    * @dataProvider getFieldsProvider
    */
   public function testMappingNameConflictCheck($field_name_list) {

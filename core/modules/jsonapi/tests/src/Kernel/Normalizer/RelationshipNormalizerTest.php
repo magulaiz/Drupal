@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\jsonapi\Kernel\Normalizer;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
 use Drupal\Core\Url;
 use Drupal\field\Entity\FieldConfig;
@@ -21,12 +22,11 @@ use Drupal\Tests\user\Traits\UserCreationTrait;
 use Drupal\user\Entity\User;
 
 /**
- * @coversDefaultClass \Drupal\jsonapi\Normalizer\RelationshipNormalizer
  * @group jsonapi
  * @group #slow
- *
  * @internal
  */
+#[CoversClass(\Drupal\jsonapi\Normalizer\RelationshipNormalizer::class)]
 class RelationshipNormalizerTest extends JsonapiKernelTestBase {
 
   use UserCreationTrait;
@@ -221,7 +221,6 @@ class RelationshipNormalizerTest extends JsonapiKernelTestBase {
   }
 
   /**
-   * @covers ::normalize
    * @dataProvider normalizeProvider
    */
   public function testNormalize($entity_property_names, $field_name, $expected) {

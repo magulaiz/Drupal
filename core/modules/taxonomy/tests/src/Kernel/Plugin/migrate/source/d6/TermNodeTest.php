@@ -4,16 +4,16 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\taxonomy\Kernel\Plugin\migrate\source\d6;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use Drupal\Tests\migrate\Kernel\MigrateSqlSourceTestBase;
 
 // cspell:ignore tnid
-
 /**
  * Tests d6_term_node source plugin.
  *
- * @covers \Drupal\taxonomy\Plugin\migrate\source\d6\TermNode
  * @group taxonomy
  */
+#[CoversClass(\Drupal\taxonomy\Plugin\migrate\source\d6\TermNode::class)]
 class TermNodeTest extends MigrateSqlSourceTestBase {
 
   /**

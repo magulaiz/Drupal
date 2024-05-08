@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\path_alias\Kernel;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use Drupal\Component\Datetime\TimeInterface;
 use Drupal\Core\Cache\MemoryCounterBackend;
 use Drupal\Core\Language\LanguageInterface;
@@ -15,10 +16,11 @@ use Drupal\Tests\Traits\Core\PathAliasTestTrait;
 /**
  * Tests path alias CRUD and lookup functionality.
  *
- * @coversDefaultClass \Drupal\path_alias\AliasRepository
  *
  * @group path_alias
  */
+#[CoversClass(\Drupal\path_alias\AliasRepository::class)]
+#[CoversClass(\Drupal\path_alias\AliasManager::class)]
 class AliasTest extends KernelTestBase {
 
   use PathAliasTestTrait;
@@ -41,9 +43,6 @@ class AliasTest extends KernelTestBase {
     $this->installEntitySchema('path_alias');
   }
 
-  /**
-   * @covers ::preloadPathAlias
-   */
   public function testPreloadPathAlias() {
     $path_alias_repository = $this->container->get('path_alias.repository');
 
@@ -285,9 +284,6 @@ class AliasTest extends KernelTestBase {
     );
   }
 
-  /**
-   * @covers ::lookupBySystemPath
-   */
   public function testLookupBySystemPath() {
     $this->createPathAlias('/test-source-Case', '/test-alias');
 
@@ -296,9 +292,6 @@ class AliasTest extends KernelTestBase {
     $this->assertEquals('/test-alias', $path_alias_repository->lookupBySystemPath('/test-source-case', LanguageInterface::LANGCODE_NOT_SPECIFIED)['alias']);
   }
 
-  /**
-   * @covers ::lookupByAlias
-   */
   public function testLookupByAlias() {
     $this->createPathAlias('/test-source', '/test-alias-Case');
 
@@ -307,10 +300,6 @@ class AliasTest extends KernelTestBase {
     $this->assertEquals('/test-source', $path_alias_repository->lookupByAlias('/test-alias-case', LanguageInterface::LANGCODE_NOT_SPECIFIED)['path']);
   }
 
-  /**
-   * @covers \Drupal\path_alias\AliasManager::getPathByAlias
-   * @covers \Drupal\path_alias\AliasManager::getAliasByPath
-   */
   public function testLookupPath() {
     // Create AliasManager and Path object.
     $aliasManager = $this->container->get('path_alias.manager');

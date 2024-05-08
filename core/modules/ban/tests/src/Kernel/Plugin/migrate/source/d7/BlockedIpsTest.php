@@ -4,14 +4,15 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\ban\Kernel\Plugin\migrate\source\d7;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use Drupal\Tests\migrate\Kernel\MigrateSqlSourceTestBase;
 
 /**
  * Tests D7 blocked_ip source plugin.
  *
- * @covers \Drupal\ban\Plugin\migrate\source\d7\BlockedIps
  * @group ban
  */
+#[CoversClass(\Drupal\ban\Plugin\migrate\source\d7\BlockedIps::class)]
 class BlockedIpsTest extends MigrateSqlSourceTestBase {
 
   /**
