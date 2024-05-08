@@ -21,10 +21,10 @@ class EnvironmentTest extends TestCase {
    *
    * @covers ::setTimeLimit
    * @runInSeparateProcess
-   * @testWith [0, 1, false]
-   *           [10, 1, true]
-   *           [1, 10, true]
-   *           [10, 0, true]
+   * @testWith [0, 1, 0]
+   *           [10, 1, 11]
+   *           [1, 10, 10]
+   *           [10, 0, 0]
    *
    * @param int $max_execution_time
    *   The max_execution_time to be set in php ini.
@@ -35,9 +35,10 @@ class EnvironmentTest extends TestCase {
    *   The expected return value from
    *   \Drupal\Component\Utility\Environment::setTimeLimit().
    */
-  public function testSetTimeLimit(int $max_execution_time, int $time_limit, bool $expected): void {
+  public function testSetTimeLimit(int $max_execution_time, int $time_limit, int $expected): void {
     ini_set('max_execution_time', $max_execution_time);
-    $actual = Environment::setTimeLimit($time_limit);
+    Environment::setTimeLimit($time_limit);
+    $actual = ini_get('max_execution_time');
     $this->assertEquals($expected, $actual);
   }
 
