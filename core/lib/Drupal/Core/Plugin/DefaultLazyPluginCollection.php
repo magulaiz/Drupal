@@ -163,7 +163,6 @@ class DefaultLazyPluginCollection extends LazyPluginCollection {
   public function setInstanceConfiguration($instance_id, array $configuration) {
     if (
       isset($this->pluginInstances[$instance_id]) &&
-      isset($this->configurations[$instance_id]) &&
       isset($configuration[$this->pluginKey]) &&
       isset($this->configurations[$instance_id][$this->pluginKey]) &&
       $configuration[$this->pluginKey] !== $this->configurations[$instance_id][$this->pluginKey]
