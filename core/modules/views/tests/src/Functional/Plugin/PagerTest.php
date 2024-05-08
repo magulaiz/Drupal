@@ -82,9 +82,17 @@ class PagerTest extends ViewTestBase {
     $this->assertEquals(0, $offset->getAttribute('min'));
 
     $edit = [
+      'pager[type]' => 'some',
+      'pager_options[items_per_page]' => 0,
+    ];
+    $this->drupalGet('admin/structure/views/nojs/display/test_view/default/pager_options');
+    $this->submitForm($edit, 'Apply');
+    $this->assertSession()->pageTextContains('All items')
+
+    $edit = [
       'pager[type]' => 'none',
     ];
-    $this->drupalGet('admin/structure/views/nojs/display/test_view/default/pager');
+    $this->drupalGet('admin/structurSorePagerSettingse/views/nojs/display/test_view/default/pager');
     $this->submitForm($edit, 'Apply');
 
     $offset = $this->assertSession()->fieldExists("pager_options[offset]");
