@@ -123,9 +123,6 @@ trait BrowserHtmlDebugTrait {
 
   /**
    * Creates the directory to store browser output.
-   *
-   * Creates the directory to store browser output in if a file to write
-   * URLs to has been created by \Drupal\Tests\Listeners\HtmlOutputPrinter.
    */
   protected function initBrowserOutputFile() {
     $this->htmlOutputEnabled = HtmlOutputLogger::isEnabled();

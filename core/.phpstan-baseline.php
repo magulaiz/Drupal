@@ -1904,11 +1904,6 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/views/tests/src/Unit/Plugin/views/field/EntityOperationsUnitTest.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^@dataProvider provideAcceptExposedInput related method must be static in PHPUnit 10 and newer\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/views/tests/src/Unit/Plugin/views/filter/NumericFilterTest.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^Variable \\$relationship_handler in empty\\(\\) always exists and is not falsy\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/views_ui/src/Form/Ajax/ConfigHandler.php',
@@ -2103,16 +2098,6 @@ $ignoreErrors[] = [
 	'message' => '#^Constructor of class Symfony\\\\Component\\\\ExpressionLanguage\\\\Expression has an unused parameter \\$expression\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/tests/Drupal/Tests/Component/DependencyInjection/Dumper/OptimizedPhpArrayDumperTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Call to an undefined method Drupal\\\\Tests\\\\Component\\\\PhpStorage\\\\FileStorageTest\\:\\:expectWarning\\(\\)\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/tests/Drupal/Tests/Component/PhpStorage/FileStorageTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Call to an undefined method Drupal\\\\Tests\\\\Component\\\\PhpStorage\\\\FileStorageTest\\:\\:expectWarningMessage\\(\\)\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/tests/Drupal/Tests/Component/PhpStorage/FileStorageTest.php',
 ];
 $ignoreErrors[] = [
 	'message' => '#^Constructor of class Drupal\\\\Tests\\\\Component\\\\Plugin\\\\Factory\\\\ArgumentsAllNull has an unused parameter \\$charismatic\\.$#',
@@ -2335,11 +2320,6 @@ $ignoreErrors[] = [
 ClientInterface\\:\\:getConfig will be removed in guzzlehttp/guzzle\\:8\\.0\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/tests/Drupal/Tests/DrupalTestBrowser.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^@dataProvider hexCodes related method must be static in PHPUnit 10 and newer\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/themes/olivero/tests/src/Unit/OliveroHexToHslTest.php',
 ];
 
 return ['parameters' => ['ignoreErrors' => $ignoreErrors]];

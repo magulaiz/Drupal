@@ -8,6 +8,8 @@ use PHPUnit\Event\TestRunner\Started;
 use PHPUnit\Event\TestRunner\StartedSubscriber;
 
 /**
+ * Event subscriber notifying beginning of test runner to HTML logging.
+ *
  * @internal
  */
 final class TestRunnerStartedSubscriber extends SubscriberBase implements StartedSubscriber {

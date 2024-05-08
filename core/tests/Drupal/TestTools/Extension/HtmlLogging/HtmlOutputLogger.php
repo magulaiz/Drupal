@@ -9,6 +9,11 @@ use PHPUnit\Event\TestRunner\Finished as TestRunnerFinished;
 use PHPUnit\Event\TestRunner\Started as TestRunnerStarted;
 
 /**
+<<<<<<< HEAD
+=======
+ * Drupal's extension for providing HTML output results for functional tests.
+ *
+>>>>>>> 11.x
  * @internal
  */
 final class HtmlOutputLogger {
@@ -19,9 +24,15 @@ final class HtmlOutputLogger {
   private static ?self $instance = NULL;
 
   /**
+<<<<<<< HEAD
    * @todo
    */
   private static array $links = [];
+=======
+   * A file with list of links to HTML pages generated.
+   */
+  private ?string $browserOutputFile = NULL;
+>>>>>>> 11.x
 
   /**
    * @throws \PHPUnit\Event\EventFacadeIsSealedException
@@ -39,7 +50,13 @@ final class HtmlOutputLogger {
   }
 
   /**
-   * @todo
+   * Initializes the extension.
+   *
+   * @param string $outputDirectory
+   *   The directory where the HTML pages should be generated.
+   * @param bool $outputVerbose
+   *   If TRUE, a list of links generated will be output at the end of the test
+   *   run; if FALSE, only a summary with the count of pages generated.
    *
    * @throws \PHPUnit\Event\EventFacadeIsSealedException
    * @throws \PHPUnit\Util\Exception
@@ -48,22 +65,30 @@ final class HtmlOutputLogger {
    */
   public static function init(string $outputDirectory, bool $outputVerbose): void {
     if (self::$instance === NULL) {
-      if (!is_dir($outputDirectory) || !is_writable($outputDirectory)) {
+      $realDirectory = realpath($outputDirectory);
+      if ($realDirectory === FALSE || !is_dir($realDirectory) || !is_writable($realDirectory)) {
         print "HTML output directory {$outputDirectory} is not a writable directory.\n\n";
+        return;
       }
-      self::$instance = new self($outputDirectory, $outputVerbose, Facade::instance());
+      self::$instance = new self($realDirectory, $outputVerbose, Facade::instance());
     }
   }
 
   /**
-   * @todo
+   * Determines if the extension is enabled.
+   *
+   * @return bool
+   *   TRUE if enabled, FALSE if disabled.
    */
   public static function isEnabled(): bool {
     return self::$instance !== NULL;
   }
 
   /**
-   * @todo
+   * Logs a link to a generated HTML page.
+   *
+   * @param string $logEntry
+   *   A link to a generated HTML page.
    *
    * @throws \RuntimeException
    */
@@ -71,32 +96,57 @@ final class HtmlOutputLogger {
     if (!self::isEnabled()) {
       throw new \RuntimeException("HTML output is not enabled");
     }
-    self::$links[] = $logEntry;
+
+    $browserOutputFile = getenv('BROWSERTEST_OUTPUT_FILE');
+    file_put_contents($browserOutputFile, $logEntry . "\n", FILE_APPEND);
   }
 
   /**
    * Empties the list of the HTML output created during the test run.
    */
   public function testRunnerStarted(TestRunnerStarted $event): void {
-    self::$links = [];
+    if (!self::isEnabled()) {
+      throw new \RuntimeException("HTML output is not enabled");
+    }
+
+    // Convert to a canonicalized absolute pathname just in case the current
+    // working directory is changed.
+    $this->browserOutputFile = tempnam($this->outputDirectory, 'browser_output_');
+    if ($this->browserOutputFile) {
+      touch($this->browserOutputFile);
+      putenv('BROWSERTEST_OUTPUT_FILE=' . $this->browserOutputFile);
+    }
+    else {
+      // Remove any environment variable.
+      putenv('BROWSERTEST_OUTPUT_FILE');
+      throw new \RuntimeException("Unable to create a temporary file in {$this->outputDirectory}.");
+    }
   }
 
   /**
    * Prints the list of HTML output generated during the test.
    */
   public function testRunnerFinished(TestRunnerFinished $event): void {
-    if (self::$links) {
+    if (!self::isEnabled()) {
+      throw new \RuntimeException("HTML output is not enabled");
+    }
+
+    $contents = file_get_contents($this->browserOutputFile);
+    if ($contents) {
       print "\n\n";
       if ($this->outputVerbose) {
-        print "HTML output was generated.\n\n";
-        foreach (self::$links as $link) {
-          print $link;
-        }
+        print "HTML output was generated.\n";
+        print $contents;
       }
       else {
-        print "HTML output was generated, " . count(self::$links) . " page(s).\n\n";
+        print "HTML output was generated, " . count(explode("\n", $contents)) . " page(s).\n";
       }
     }
+
+    // No need to keep the file around any more.
+    unlink($this->browserOutputFile);
+    putenv('BROWSERTEST_OUTPUT_FILE');
+    $this->browserOutputFile = NULL;
   }
 
 }

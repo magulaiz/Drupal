@@ -43,7 +43,7 @@ class FunctionalTestDebugHtmlOutputTest extends BrowserTestBase {
       'COMMAND: ' . $process->getCommandLine() . "\n" .
       'OUTPUT: ' . $process->getOutput() . "\n" .
       'ERROR: ' . $process->getErrorOutput() . "\n");
-    $this->assertStringContainsString('HTML output was generated, 1 page(s).', $process->getOutput());
+    $this->assertMatchesRegularExpression('/HTML output was generated, \d+ page\(s\)\./m', $process->getOutput());
 
     // Test with verbose output.
     $process = new Process($command);

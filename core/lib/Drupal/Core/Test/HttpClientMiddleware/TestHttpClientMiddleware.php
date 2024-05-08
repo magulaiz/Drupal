@@ -47,7 +47,7 @@ class TestHttpClientMiddleware {
                     if ($parameters[1] === 'User deprecated function') {
                       // Fire the same deprecation message to allow it to be
                       // collected by
-                      // \Symfony\Bridge\PhpUnit\DeprecationErrorHandler::collectDeprecations().
+                      // \Drupal\TestTools\Extension\DeprecationBridge\DeprecationHandler::collectActualDeprecation().
                       // phpcs:ignore Drupal.Semantics.FunctionTriggerError
                       @trigger_error((string) $parameters[0], E_USER_DEPRECATED);
                     }

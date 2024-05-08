@@ -105,6 +105,14 @@ abstract class KernelTestBase extends TestCase implements ServiceProviderInterfa
 
   /**
    * {@inheritdoc}
+   */
+  public function __construct(string $name) {
+    parent::__construct($name);
+    $this->setRunTestInSeparateProcess(TRUE);
+  }
+
+  /**
+   * {@inheritdoc}
    *
    * Contains a few static class properties for performance.
    */

@@ -29,6 +29,13 @@
     <env name="SIMPLETEST_DB" value=""/>
     <!-- Example BROWSERTEST_OUTPUT_DIRECTORY value: /path/to/webroot/sites/simpletest/browser_output -->
     <env name="BROWSERTEST_OUTPUT_DIRECTORY" value=""/>
+    <!-- To avoid overcrowding the output in CI environments, browser tests
+     will not print the individual links in the test run report by default.
+     The output in Drupal testing environment is saved as an artifact that
+     can be browsed or downloaded from Gitlab. However, if you need to
+     print the individual links locally you can set the
+     BROWSERTEST_OUTPUT_VERBOSE environment variable to "true". -->
+    <!-- <env name="BROWSERTEST_OUTPUT_VERBOSE" value="true"/> -->
     <!-- By default, browser tests will output links that use the base URL set
      in SIMPLETEST_BASE_URL. However, if your SIMPLETEST_BASE_URL is an internal
      path (such as may be the case in a virtual or Docker-based environment),
@@ -36,10 +43,8 @@
      reachable from your host machine here. This will allow you to follow them
      directly and view the output. -->
     <env name="BROWSERTEST_OUTPUT_BASE_URL" value=""/>
-    <!-- Deprecation testing is managed through Symfony's PHPUnit Bridge.
-      The environment variable SYMFONY_DEPRECATIONS_HELPER is used to configure
+    <!-- The environment variable SYMFONY_DEPRECATIONS_HELPER is used to configure
       the behavior of the deprecation tests.
-      See https://symfony.com/doc/current/components/phpunit_bridge.html#configuration
       Drupal core's testing framework is setting this variable to its defaults.
       Projects with their own requirements need to manage this variable
       explicitly.
@@ -48,7 +53,6 @@
     <!-- <env name="SYMFONY_DEPRECATIONS_HELPER" value="disabled"/> -->
     <!-- Deprecation errors can be selectively ignored by specifying a file of
       regular expression patterns for exclusion.
-      See https://symfony.com/doc/current/components/phpunit_bridge.html#ignoring-deprecations
       Uncomment the line below to specify a custom deprecations ignore file.
       NOTE: it may be required to specify the full path to the file to run tests
       correctly.
@@ -65,27 +69,41 @@
     <testsuite name="unit">
       <directory>tests/Drupal/Tests</directory>
       <directory>modules/**/tests/src/Unit</directory>
+      <directory>profiles/**/tests/src/Unit</directory>
+      <directory>themes/**/tests/src/Unit</directory>
       <directory>../modules/**/tests/src/Unit</directory>
+      <directory>../profiles/**/tests/src/Unit</directory>
+      <directory>../themes/**/tests/src/Unit</directory>
     </testsuite>
     <testsuite name="kernel">
       <directory>tests/Drupal/KernelTests</directory>
       <directory>modules/**/tests/src/Kernel</directory>
+      <directory>profiles/**/tests/src/Kernel</directory>
+      <directory>themes/**/tests/src/Kernel</directory>
       <directory>../modules/**/tests/src/Kernel</directory>
+      <directory>../profiles/**/tests/src/Kernel</directory>
+      <directory>../themes/**/tests/src/Kernel</directory>
     </testsuite>
     <testsuite name="functional">
       <directory>tests/Drupal/FunctionalTests</directory>
       <directory>modules/**/tests/src/Functional</directory>
+      <directory>profiles/**/tests/src/Functional</directory>
+      <directory>themes/**/tests/src/Functional</directory>
       <directory>../modules/**/tests/src/Functional</directory>
+      <directory>../profiles/**/tests/src/Functional</directory>
+      <directory>../themes/**/tests/src/Functional</directory>
     </testsuite>
     <testsuite name="functional-javascript">
       <directory>tests/Drupal/FunctionalJavascriptTests</directory>
       <directory>modules/**/tests/src/FunctionalJavascript</directory>
+      <directory>profiles/**/tests/src/FunctionalJavascript</directory>
+      <directory>themes/**/tests/src/FunctionalJavascript</directory>
       <directory>../modules/**/tests/src/FunctionalJavascript</directory>
+      <directory>../profiles/**/tests/src/FunctionalJavascript</directory>
+      <directory>../themes/**/tests/src/FunctionalJavascript</directory>
     </testsuite>
     <testsuite name="build">
       <directory>tests/Drupal/BuildTests</directory>
-      <directory>modules/**/tests/src/Build</directory>
-      <directory>../modules/**/tests/src/Build</directory>
     </testsuite>
   </testsuites>
   <!-- Settings for coverage reports. -->

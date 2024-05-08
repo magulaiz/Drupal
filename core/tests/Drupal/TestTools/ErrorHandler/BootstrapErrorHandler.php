@@ -1,4 +1,4 @@
-<?php
+az<?php
 
 declare(strict_types=1);
 
@@ -27,7 +27,7 @@ final class BootstrapErrorHandler {
   /**
    * @param \PHPUnit\Runner\ErrorHandler $phpUnitErrorHandler
    *   An instance of PHPUnit's runner own error handler. Any error not
-   *   managed here will be falling back to it.
+   *   managed here will fall back to it.
    */
   public function __construct(
     private readonly PhpUnitErrorHandler $phpUnitErrorHandler,

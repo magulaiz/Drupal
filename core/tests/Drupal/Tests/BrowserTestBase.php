@@ -199,6 +199,14 @@ abstract class BrowserTestBase extends TestCase {
   /**
    * {@inheritdoc}
    */
+  public function __construct(string $name) {
+    parent::__construct($name);
+    $this->setRunTestInSeparateProcess(TRUE);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public static function setUpBeforeClass(): void {
     parent::setUpBeforeClass();
     VarDumper::setHandler(TestVarDumper::class . '::cliHandler');

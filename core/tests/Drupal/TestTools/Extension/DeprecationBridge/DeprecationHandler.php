@@ -9,9 +9,9 @@ use PHPUnit\Framework\TestCase;
 /**
  * Drupal's PHPUnit extension to manage code deprecation.
  *
- * This class is a replacement for symfony/phpunit-bridge that is not
- * supporting PHPUnit 10. In the future this extension might be dropped if
- * PHPUnit will support all deprecation management needs.
+ * This class is a replacement for symfony/phpunit-bridge that does not
+ * support PHPUnit 10. In the future this extension might be dropped if
+ * PHPUnit adds support for all deprecation management needs.
  *
  * @internal
  */
