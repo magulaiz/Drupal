@@ -40,7 +40,7 @@ class MenuTreeStorageTest extends KernelTestBase {
   protected function setUp(): void {
     parent::setUp();
 
-    $this->treeStorage = new MenuTreeStorage($this->container->get('database'), $this->container->get('cache.menu'), $this->container->get('cache_tags.invalidator'), 'menu_tree');
+    $this->treeStorage = new MenuTreeStorage($this->container->get('database'), $this->container->get('cache.menu'), $this->container->get('cache_tags.invalidator'), $this->container->get('logger.factory')->get('action'), $this->container->get('database.replica_kill_switch'), 'menu_tree');
     $this->connection = $this->container->get('database');
   }
 
@@ -65,7 +65,7 @@ class MenuTreeStorageTest extends KernelTestBase {
   protected function doTestTable() {
     // Test that we can create a tree storage with an arbitrary table name and
     // that selecting from the storage creates the table.
-    $tree_storage = new MenuTreeStorage($this->container->get('database'), $this->container->get('cache.menu'), $this->container->get('cache_tags.invalidator'), 'test_menu_tree');
+    $tree_storage = new MenuTreeStorage($this->container->get('database'), $this->container->get('cache.menu'), $this->container->get('cache_tags.invalidator'), $this->container->get('logger.factory')->get('action'), $this->container->get('database.replica_kill_switch'), 'test_menu_tree');
     $this->assertFalse($this->connection->schema()->tableExists('test_menu_tree'), 'Test table is not yet created');
     $tree_storage->countMenuLinks();
     $this->assertTrue($this->connection->schema()->tableExists('test_menu_tree'), 'Test table was created');
