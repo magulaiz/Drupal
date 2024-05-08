@@ -44,7 +44,7 @@ class Environment {
    * called, set_time_limit() restarts the timeout counter from zero. In other
    * words, if the timeout is the default 30 seconds, and 25 seconds into script
    * execution a call such as set_time_limit(20) is made, the script will run
-   * for a total of 45 seconds before timing out.
+   * for a total of 75 seconds before timing out.
    *
    * If the current time limit is not unlimited it is possible to decrease the
    * total time limit if the sum of the new time limit and the current time
@@ -65,9 +65,9 @@ class Environment {
   public static function setTimeLimit($time_limit) {
     if (function_exists('set_time_limit')) {
       $current = ini_get('max_execution_time');
-      // Do not set time limit if it is currently unlimited or greater than
-      // the new time limit.
-      if ($current != 0 && $current < $time_limit) {
+      // Do not set time limit if it is currently unlimited.
+      if ($current != 0) {
+        $time_limit = $time_limit === 0 ? 0 : ($current > $time_limit ? $current + $time_limit : $time_limit);
         return set_time_limit($time_limit);
       }
     }

@@ -22,8 +22,9 @@ class EnvironmentTest extends TestCase {
    * @covers ::setTimeLimit
    * @runInSeparateProcess
    * @testWith [0, 1, false]
-   *           [10, 1, false]
+   *           [10, 1, true]
    *           [1, 10, true]
+   *           [10, 0, true]
    *
    * @param int $max_execution_time
    *   The max_execution_time to be set in php ini.
