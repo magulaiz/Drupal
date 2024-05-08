@@ -87,16 +87,16 @@ class MenuTreeStorage implements MenuTreeStorageInterface {
    *   Cache backend instance for the extracted tree data.
    * @param \Drupal\Core\Cache\CacheTagsInvalidatorInterface $cache_tags_invalidator
    *   The cache tags invalidator.
+   * @param string $table
+   *   A database table name to store configuration data in.
    * @param \Psr\Log\LoggerInterface $logger
    *   A logger instance.
    * @param \Drupal\Core\Database\ReplicaKillSwitch $replicaKillSwitch
    *   The replica kill switch.
-   * @param string $table
-   *   A database table name to store configuration data in.
    * @param array $options
    *   (optional) Any additional database connection options to use in queries.
    */
-  public function __construct(Connection $connection, CacheBackendInterface $menu_cache_backend, CacheTagsInvalidatorInterface $cache_tags_invalidator, protected LoggerInterface $logger, protected ReplicaKillSwitch $replicaKillSwitch, $table, array $options = []) {
+  public function __construct(Connection $connection, CacheBackendInterface $menu_cache_backend, CacheTagsInvalidatorInterface $cache_tags_invalidator, $table, protected LoggerInterface $logger, protected ReplicaKillSwitch $replicaKillSwitch, array $options = []) {
     $this->connection = $connection;
     $this->menuCacheBackend = $menu_cache_backend;
     $this->cacheTagsInvalidator = $cache_tags_invalidator;
