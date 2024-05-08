@@ -1,3 +1,2 @@
 services:
-  Drupal\destructable_test\Destructable:
-    class: Drupal\destructable_test\Destructable
+  Drupal\destructable_test\Destructable

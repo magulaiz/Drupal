@@ -19,12 +19,12 @@ use Drupal\Core\DependencyInjection\Compiler\RegisterStreamWrappersPass;
 use Drupal\Core\DependencyInjection\Compiler\StackedKernelPass;
 use Drupal\Core\DependencyInjection\Compiler\StackedSessionHandlerPass;
 use Drupal\Core\DependencyInjection\Compiler\SuperUserAccessPolicyPass;
-use Drupal\Core\DependencyInjection\Compiler\TagDestructableServicesPass;
 use Drupal\Core\DependencyInjection\Compiler\TaggedHandlersPass;
 use Drupal\Core\DependencyInjection\Compiler\TwigExtensionPass;
 use Drupal\Core\DependencyInjection\ContainerBuilder;
 use Drupal\Core\DependencyInjection\ServiceModifierInterface;
 use Drupal\Core\DependencyInjection\ServiceProviderInterface;
+use Drupal\Core\DestructableInterface;
 use Drupal\Core\Plugin\PluginManagerPass;
 use Drupal\Core\Queue\QueueFactoryInterface;
 use Drupal\Core\Render\MainContent\MainContentRenderersPass;
@@ -61,10 +61,12 @@ class CoreServiceProvider implements ServiceProviderInterface, ServiceModifierIn
         ->addTag('stream_wrapper', ['scheme' => 'private']);
     }
 
+
     // Add the compiler pass that lets service providers modify existing
     // service definitions. This pass must come first so that later
     // list-building passes are operating on the post-alter services list.
     $container->addCompilerPass(new ModifyServiceDefinitionsPass());
+
 
     $container->addCompilerPass(new DevelopmentSettingsPass());
 
@@ -93,11 +95,6 @@ class CoreServiceProvider implements ServiceProviderInterface, ServiceModifierIn
 
     $container->addCompilerPass(new RegisterAccessChecksPass());
 
-    // Add a compiler pass for automatically tagging destructable services.
-    $container->addCompilerPass(new TagDestructableServicesPass());
-
-    // Add a compiler pass for registering services needing destruction.
-    $container->addCompilerPass(new RegisterServicesForDestructionPass());
 
     // Add the compiler pass that will process the tagged services.
     $container->addCompilerPass(new ListCacheBinsPass());
@@ -117,6 +114,12 @@ class CoreServiceProvider implements ServiceProviderInterface, ServiceModifierIn
 
     $container->registerForAutoconfiguration(QueueFactoryInterface::class)
       ->addTag('queue_factory');
+
+    $container->registerForAutoconfiguration(DestructableInterface::class)
+      ->addTag('needs_destruction');
+
+    // Add a compiler pass for registering services needing destruction.
+    $container->addCompilerPass(new RegisterServicesForDestructionPass());
   }
 
   /**
