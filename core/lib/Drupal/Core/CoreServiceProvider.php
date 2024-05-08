@@ -67,7 +67,6 @@ class CoreServiceProvider implements ServiceProviderInterface, ServiceModifierIn
     // list-building passes are operating on the post-alter services list.
     $container->addCompilerPass(new ModifyServiceDefinitionsPass());
 
-
     $container->addCompilerPass(new DevelopmentSettingsPass());
 
     $container->addCompilerPass(new SuperUserAccessPolicyPass());
@@ -95,7 +94,6 @@ class CoreServiceProvider implements ServiceProviderInterface, ServiceModifierIn
 
     $container->addCompilerPass(new RegisterAccessChecksPass());
 
-
     // Add the compiler pass that will process the tagged services.
     $container->addCompilerPass(new ListCacheBinsPass());
     $container->addCompilerPass(new CacheContextsPass());
@@ -106,6 +104,7 @@ class CoreServiceProvider implements ServiceProviderInterface, ServiceModifierIn
 
     $container->addCompilerPass(new DeprecatedServicePass());
 
+
     $container->registerForAutoconfiguration(EventSubscriberInterface::class)
       ->addTag('event_subscriber');
 
@@ -114,9 +113,6 @@ class CoreServiceProvider implements ServiceProviderInterface, ServiceModifierIn
 
     $container->registerForAutoconfiguration(QueueFactoryInterface::class)
       ->addTag('queue_factory');
-
-    $container->registerForAutoconfiguration(DestructableInterface::class)
-      ->addTag('needs_destruction');
 
     // Add a compiler pass for registering services needing destruction.
     $container->addCompilerPass(new RegisterServicesForDestructionPass());
