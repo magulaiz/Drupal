@@ -60,6 +60,19 @@
                 newState ? 'expanded' : 'collapsed',
               );
 
+              const toolbarButtonLabels = document.querySelectorAll(
+                '.toolbar-button__label',
+              );
+              if (toolbarButtonLabels.length > 0) {
+                toolbarButtonLabels.forEach((label) => {
+                  if (newState) {
+                    label.classList.remove('visually-hidden');
+                  } else {
+                    label.classList.add('visually-hidden');
+                  }
+                });
+              }
+
               // Set [data-admin-toolbar-body-scroll='locked']
               // See css/components/body-scroll-lock.pcss.css.
 

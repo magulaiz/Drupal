@@ -290,18 +290,6 @@ html:not([data-admin-toolbar="expanded"]) {
   .toolbar-button--collapsible::after {
     display: none;
   }
-
-  /* Visually-hidden labels when collapsed. */
-  .toolbar-button--collapsible .toolbar-button__label {
-    position: absolute;
-    overflow: hidden;
-    clip: rect(0 0 0 0);
-    width: 1px;
-    height: 1px;
-    white-space: nowrap;
-    clip-path: inset(50%);
-    opacity: 0;
-  }
 }
 
 /* Hides button's label while transitioning. */
