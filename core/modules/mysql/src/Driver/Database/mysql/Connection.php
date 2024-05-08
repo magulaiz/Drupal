@@ -77,9 +77,6 @@ class Connection extends DatabaseConnection implements SupportsTemporaryTablesIn
     $ansi_quotes_modes = ['ANSI_QUOTES', 'ANSI'];
     $is_ansi_quotes_mode = FALSE;
     foreach ($ansi_quotes_modes as $mode) {
-      // None of the modes in $ansi_quotes_modes are substrings of other modes
-      // that are not in $ansi_quotes_modes, so a simple stripos() does not
-      // return false positives.
       if (!empty($connection_options['sql_mode_options'][$mode])) {
         $is_ansi_quotes_mode = TRUE;
         break;
