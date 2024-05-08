@@ -6,7 +6,7 @@ function App() {
 
   return (
     <div style={{marginLeft: '150px'}}>
-      <h1>This is a vite app</h1>
+      <h1>I am a heading</h1>
       <div className="card">
         <button onClick={() => setCount((count) => count + 1)}>
           count is {count}
