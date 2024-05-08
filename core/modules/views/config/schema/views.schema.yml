@@ -3,6 +3,8 @@
 views.settings:
   type: config_object
   label: 'Views settings'
+  constraints:
+    FullyValidatable: null
   mapping:
     display_extenders:
       type: sequence
@@ -51,6 +53,10 @@ views.settings:
                 where:
                   type: string
                   label: 'Show SQL query'
+                  constraints:
+                    Choice:
+                      - above
+                      - below
             display_embed:
               type: boolean
               label: 'Allow embedded displays'
@@ -60,11 +66,17 @@ views.settings:
         exposed_filter_any_label:
           type: string
           label: 'Label for "Any" value on non-required single-select exposed filters'
+          constraints:
+            Choice:
+              - old_any
+              - new_any
     field_rewrite_elements:
       type: sequence
       label: 'Field rewrite elements'
+      constraints:
+        FullyValidatable: null
       sequence:
-        type: string
+        type: label
         label: 'Element'
 
 views.view.*:
