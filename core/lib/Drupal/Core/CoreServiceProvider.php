@@ -24,7 +24,6 @@ use Drupal\Core\DependencyInjection\Compiler\TwigExtensionPass;
 use Drupal\Core\DependencyInjection\ContainerBuilder;
 use Drupal\Core\DependencyInjection\ServiceModifierInterface;
 use Drupal\Core\DependencyInjection\ServiceProviderInterface;
-use Drupal\Core\DestructableInterface;
 use Drupal\Core\Plugin\PluginManagerPass;
 use Drupal\Core\Queue\QueueFactoryInterface;
 use Drupal\Core\Render\MainContent\MainContentRenderersPass;
@@ -60,7 +59,6 @@ class CoreServiceProvider implements ServiceProviderInterface, ServiceModifierIn
       $container->register('stream_wrapper.private', 'Drupal\Core\StreamWrapper\PrivateStream')
         ->addTag('stream_wrapper', ['scheme' => 'private']);
     }
-
 
     // Add the compiler pass that lets service providers modify existing
     // service definitions. This pass must come first so that later
@@ -103,7 +101,6 @@ class CoreServiceProvider implements ServiceProviderInterface, ServiceModifierIn
     $container->addCompilerPass(new PluginManagerPass());
 
     $container->addCompilerPass(new DeprecatedServicePass());
-
 
     $container->registerForAutoconfiguration(EventSubscriberInterface::class)
       ->addTag('event_subscriber');
