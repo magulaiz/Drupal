@@ -4,17 +4,17 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\node\Kernel\Plugin\migrate\source\d6;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use Drupal\Tests\migrate\Kernel\MigrateSqlSourceTestBase;
 
 // cspell:ignore tnid
-
 /**
  * Tests D6 node revision source plugin.
  *
- * @covers \Drupal\node\Plugin\migrate\source\d6\NodeRevision
  *
  * @group node
  */
+#[CoversClass(\Drupal\node\Plugin\migrate\source\d6\NodeRevision::class)]
 class NodeRevisionTest extends MigrateSqlSourceTestBase {
 
   /**

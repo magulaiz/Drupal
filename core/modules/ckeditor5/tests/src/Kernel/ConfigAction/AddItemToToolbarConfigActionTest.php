@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\ckeditor5\Kernel\ConfigAction;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use Drupal\Core\Config\Action\ConfigActionException;
 use Drupal\Core\Recipe\InvalidConfigException;
 use Drupal\Core\Recipe\RecipeRunner;
@@ -12,10 +13,10 @@ use Drupal\FunctionalTests\Core\Recipe\RecipeTestTrait;
 use Drupal\KernelTests\KernelTestBase;
 
 /**
- * @covers \Drupal\ckeditor5\Plugin\ConfigAction\AddItemToToolbar
  * @group ckeditor5
  * @group Recipe
  */
+#[CoversClass(\Drupal\ckeditor5\Plugin\ConfigAction\AddItemToToolbar::class)]
 class AddItemToToolbarConfigActionTest extends KernelTestBase {
 
   use RecipeTestTrait;

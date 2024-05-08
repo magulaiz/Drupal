@@ -4,18 +4,17 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\views\Unit\Plugin\filter;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use Drupal\Tests\UnitTestCase;
 use Drupal\views\Plugin\views\filter\FilterPluginBase;
 
 /**
- * @coversDefaultClass \Drupal\views\Plugin\views\filter\FilterPluginBase
  * @group views
  */
+#[CoversClass(\Drupal\views\Plugin\views\filter\FilterPluginBase::class)]
 class FilterPluginBaseTest extends UnitTestCase {
 
   /**
-   * @covers ::acceptExposedInput
-   *
    * @dataProvider acceptExposedInputProvider
    */
   public function testAcceptExposedInput(bool $expected_result, array $options, array $input) {

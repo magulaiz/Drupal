@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\serialization\Unit\Normalizer;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use Drupal\Core\TypedData\DataDefinition;
 use Drupal\Core\TypedData\TypedDataManagerInterface;
 use Drupal\Tests\UnitTestCase;
@@ -12,9 +13,9 @@ use Drupal\Core\TypedData\Plugin\DataType\ItemList;
 use Symfony\Component\Serializer\Serializer;
 
 /**
- * @coversDefaultClass \Drupal\serialization\Normalizer\ListNormalizer
  * @group serialization
  */
+#[CoversClass(\Drupal\serialization\Normalizer\ListNormalizer::class)]
 class ListNormalizerTest extends UnitTestCase {
 
   /**

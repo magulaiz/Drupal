@@ -4,19 +4,17 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\file\Kernel\Plugin\Validation\Constraint;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use Drupal\Tests\file\Kernel\Validation\FileValidatorTestBase;
 
 /**
  * Tests the FileExtensionSecureConstraintValidator.
  *
  * @group file
- * @coversDefaultClass \Drupal\file\Plugin\Validation\Constraint\FileExtensionSecureConstraintValidator
  */
+#[CoversClass(\Drupal\file\Plugin\Validation\Constraint\FileExtensionSecureConstraintValidator::class)]
 class FileExtensionSecureConstraintValidatorTest extends FileValidatorTestBase {
 
-  /**
-   * @covers ::validate
-   */
   public function testValidate(): void {
     // Test success with .txt extension.
     $validators = [

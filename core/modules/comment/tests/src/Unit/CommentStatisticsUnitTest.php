@@ -4,15 +4,16 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\comment\Unit;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use Drupal\comment\CommentStatistics;
 use Drupal\Component\Datetime\TimeInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Tests\UnitTestCase;
 
 /**
- * @coversDefaultClass \Drupal\comment\CommentStatistics
  * @group comment
  */
+#[CoversClass(\Drupal\comment\CommentStatistics::class)]
 class CommentStatisticsUnitTest extends UnitTestCase {
 
   /**

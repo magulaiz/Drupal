@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\field\Unit;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use Drupal\Core\DependencyInjection\ContainerBuilder;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Field\FieldException;
@@ -13,10 +14,9 @@ use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\Tests\UnitTestCase;
 
 /**
- * @coversDefaultClass \Drupal\field\Entity\FieldStorageConfig
- *
  * @group field
  */
+#[CoversClass(\Drupal\field\Entity\FieldStorageConfig::class)]
 class FieldStorageConfigEntityUnitTest extends UnitTestCase {
 
   /**
@@ -64,9 +64,6 @@ class FieldStorageConfigEntityUnitTest extends UnitTestCase {
     \Drupal::setContainer($container);
   }
 
-  /**
-   * @covers ::calculateDependencies
-   */
   public function testCalculateDependencies() {
     // Create a mock entity type for FieldStorageConfig.
     $fieldStorageConfigentityType = $this->createMock('\Drupal\Core\Config\Entity\ConfigEntityTypeInterface');
@@ -113,8 +110,6 @@ class FieldStorageConfigEntityUnitTest extends UnitTestCase {
 
   /**
    * Tests stored cardinality.
-   *
-   * @covers ::getCardinality
    */
   public function testStoredCardinality() {
     $this->fieldTypeManager->expects($this->any())
@@ -140,8 +135,6 @@ class FieldStorageConfigEntityUnitTest extends UnitTestCase {
 
   /**
    * Tests enforced cardinality.
-   *
-   * @covers ::getCardinality
    */
   public function testEnforcedCardinality() {
     $this->fieldTypeManager->expects($this->any())
@@ -169,9 +162,7 @@ class FieldStorageConfigEntityUnitTest extends UnitTestCase {
   /**
    * Tests invalid enforced cardinality.
    *
-   * @covers ::getCardinality
    * @dataProvider providerInvalidEnforcedCardinality
-   *
    * @param mixed $enforced_cardinality
    *   Enforced cardinality
    */

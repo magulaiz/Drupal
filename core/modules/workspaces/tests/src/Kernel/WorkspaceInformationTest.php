@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\workspaces\Kernel;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use Drupal\Core\Entity\EntityStorageException;
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\Tests\user\Traits\UserCreationTrait;
@@ -14,10 +15,10 @@ use Drupal\workspaces_test\EntityTestRevPubWorkspaceHandler;
 /**
  * Tests the workspace information service.
  *
- * @coversDefaultClass \Drupal\workspaces\WorkspaceInformation
  *
  * @group workspaces
  */
+#[CoversClass(\Drupal\workspaces\WorkspaceInformation::class)]
 class WorkspaceInformationTest extends KernelTestBase {
 
   use UserCreationTrait;

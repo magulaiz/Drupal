@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\image\Unit\PageCache;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use Drupal\Core\PageCache\ResponsePolicyInterface;
 use Drupal\image\PageCache\DenyPrivateImageStyleDownload;
 use Drupal\Tests\UnitTestCase;
@@ -11,9 +12,9 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
- * @coversDefaultClass \Drupal\image\PageCache\DenyPrivateImageStyleDownload
  * @group image
  */
+#[CoversClass(\Drupal\image\PageCache\DenyPrivateImageStyleDownload::class)]
 class DenyPrivateImageStyleDownloadTest extends UnitTestCase {
 
   /**
@@ -60,7 +61,6 @@ class DenyPrivateImageStyleDownloadTest extends UnitTestCase {
    * Asserts that caching is denied on the private image style download route.
    *
    * @dataProvider providerPrivateImageStyleDownloadPolicy
-   * @covers ::check
    */
   public function testPrivateImageStyleDownloadPolicy($expected_result, $route_name) {
     $this->routeMatch->expects($this->once())

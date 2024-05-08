@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\file\Unit\Plugin\migrate\field\d7;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use Drupal\migrate\Plugin\MigrationInterface;
 use Drupal\migrate\Row;
 use Drupal\Tests\UnitTestCase;
@@ -11,11 +12,10 @@ use Drupal\file\Plugin\migrate\field\d7\FileField;
 use Prophecy\Argument;
 
 // cspell:ignore filefield imagefield
-
 /**
- * @coversDefaultClass \Drupal\file\Plugin\migrate\field\d7\FileField
  * @group file
  */
+#[CoversClass(\Drupal\file\Plugin\migrate\field\d7\FileField::class)]
 class FileFieldTest extends UnitTestCase {
 
   /**
@@ -49,9 +49,6 @@ class FileFieldTest extends UnitTestCase {
     $this->migration = $migration->reveal();
   }
 
-  /**
-   * @covers ::defineValueProcessPipeline
-   */
   public function testDefineValueProcessPipeline($method = 'defineValueProcessPipeline') {
     $this->plugin->$method($this->migration, 'field_name', []);
 
@@ -79,7 +76,6 @@ class FileFieldTest extends UnitTestCase {
   }
 
   /**
-   * @covers ::getFieldType
    * @dataProvider getFieldTypeProvider
    */
   public function testGetFieldType($expected_type, $widget_type, array $settings = []) {

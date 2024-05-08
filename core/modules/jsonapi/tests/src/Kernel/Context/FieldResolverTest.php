@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\jsonapi\Kernel\Context;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use Drupal\Core\Http\Exception\CacheableBadRequestHttpException;
 use Drupal\entity_test\Entity\EntityTestBundle;
 use Drupal\field\Entity\FieldConfig;
@@ -11,12 +12,11 @@ use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\Tests\jsonapi\Kernel\JsonapiKernelTestBase;
 
 /**
- * @coversDefaultClass \Drupal\jsonapi\Context\FieldResolver
  * @group jsonapi
  * @group #slow
- *
  * @internal
  */
+#[CoversClass(\Drupal\jsonapi\Context\FieldResolver::class)]
 class FieldResolverTest extends JsonapiKernelTestBase {
 
   /**
@@ -86,7 +86,6 @@ class FieldResolverTest extends JsonapiKernelTestBase {
   }
 
   /**
-   * @covers ::resolveInternalEntityQueryPath
    * @dataProvider resolveInternalIncludePathProvider
    */
   public function testResolveInternalIncludePath($expect, $external_path, $entity_type_id = 'entity_test_with_bundle', $bundle = 'bundle1') {
@@ -128,7 +127,6 @@ class FieldResolverTest extends JsonapiKernelTestBase {
    * @param string $expected_message
    *   (optional) An expected exception message.
    *
-   * @covers ::resolveInternalIncludePath
    * @dataProvider resolveInternalIncludePathErrorProvider
    */
   public function testResolveInternalIncludePathError($entity_type, $bundle, $external_path, $expected_message = '') {
@@ -171,7 +169,6 @@ class FieldResolverTest extends JsonapiKernelTestBase {
   }
 
   /**
-   * @covers ::resolveInternalEntityQueryPath
    * @dataProvider resolveInternalEntityQueryPathProvider
    */
   public function testResolveInternalEntityQueryPath($expect, $external_path, $entity_type_id = 'entity_test_with_bundle', $bundle = 'bundle1') {
@@ -252,7 +249,6 @@ class FieldResolverTest extends JsonapiKernelTestBase {
    * @param string $expected_message
    *   (optional) An expected exception message.
    *
-   * @covers ::resolveInternalEntityQueryPath
    * @dataProvider resolveInternalEntityQueryPathErrorProvider
    */
   public function testResolveInternalEntityQueryPathError($entity_type, $bundle, $external_path, $expected_message = '') {

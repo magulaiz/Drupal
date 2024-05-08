@@ -4,15 +4,15 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\migrate\Kernel;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use Drupal\KernelTests\KernelTestBase;
 
 /**
  * Tests the migration plugin.
  *
  * @group migrate
- *
- * @coversDefaultClass \Drupal\migrate\Plugin\Migration
  */
+#[CoversClass(\Drupal\migrate\Plugin\Migration::class)]
 class MigrationTest extends KernelTestBase {
 
   /**
@@ -24,8 +24,6 @@ class MigrationTest extends KernelTestBase {
 
   /**
    * Tests Migration::set().
-   *
-   * @covers ::set
    */
   public function testSetInvalidation() {
     $migration = \Drupal::service('plugin.manager.migration')->createStubMigration([

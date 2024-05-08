@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\user\Unit\Plugin\Validation\Constraint;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use Drupal\Core\DependencyInjection\ContainerBuilder;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Field\FieldDefinitionInterface;
@@ -18,9 +19,9 @@ use Prophecy\Prophet;
 use Symfony\Component\Validator\Context\ExecutionContextInterface;
 
 /**
- * @coversDefaultClass \Drupal\user\Plugin\Validation\Constraint\UserMailRequiredValidator
  * @group user
  */
+#[CoversClass(\Drupal\user\Plugin\Validation\Constraint\UserMailRequiredValidator::class)]
 class UserMailRequiredValidatorTest extends UnitTestCase {
 
   /**
@@ -54,8 +55,6 @@ class UserMailRequiredValidatorTest extends UnitTestCase {
   }
 
   /**
-   * @covers ::validate
-   *
    * @dataProvider providerTestValidate
    */
   public function testValidate($items, $expected_violation, $is_admin = FALSE) {

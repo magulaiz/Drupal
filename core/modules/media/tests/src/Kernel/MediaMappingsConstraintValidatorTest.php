@@ -4,16 +4,16 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\media\Kernel;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\media\Plugin\media\Source\File;
 use Drupal\Tests\media\Traits\MediaTypeCreationTrait;
 use Symfony\Component\Validator\ConstraintViolationListInterface;
 
 /**
- * @coversDefaultClass \Drupal\media\Plugin\Validation\Constraint\MediaMappingsConstraintValidator
- *
  * @group media
  */
+#[CoversClass(\Drupal\media\Plugin\Validation\Constraint\MediaMappingsConstraintValidator::class)]
 class MediaMappingsConstraintValidatorTest extends KernelTestBase {
 
   use MediaTypeCreationTrait;
@@ -32,9 +32,6 @@ class MediaMappingsConstraintValidatorTest extends KernelTestBase {
     $this->installEntitySchema('user');
   }
 
-  /**
-   * @covers ::validate
-   */
   public function testMediaMappingSource() {
     $media_type = $this->createMediaType('image', [
       'id' => 'test',

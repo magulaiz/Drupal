@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\content_moderation\Unit;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use Drupal\content_moderation\Entity\Handler\ModerationHandler;
 use Drupal\Core\Entity\ContentEntityInterface;
 use Drupal\Core\Entity\ContentEntityType;
@@ -18,9 +19,9 @@ use Drupal\workflows\WorkflowInterface;
 use Prophecy\Argument;
 
 /**
- * @coversDefaultClass \Drupal\content_moderation\ModerationInformation
  * @group content_moderation
  */
+#[CoversClass(\Drupal\content_moderation\ModerationInformation::class)]
 class ModerationInformationTest extends UnitTestCase {
 
   /**
@@ -68,9 +69,6 @@ class ModerationInformationTest extends UnitTestCase {
     return $bundle_info->reveal();
   }
 
-  /**
-   * @covers ::isModeratedEntityType
-   */
   public function testIsModeratedEntityType() {
     $moderation_information = new ModerationInformation($this->getEntityTypeManager(), $this->setupModerationBundleInfo('test_bundle', 'workflow'));
 
@@ -86,7 +84,6 @@ class ModerationInformationTest extends UnitTestCase {
 
   /**
    * @dataProvider providerWorkflow
-   * @covers ::isModeratedEntity
    */
   public function testIsModeratedEntity($workflow, $expected) {
     $moderation_information = new ModerationInformation($this->getEntityTypeManager(), $this->setupModerationBundleInfo('test_bundle', $workflow));
@@ -106,7 +103,6 @@ class ModerationInformationTest extends UnitTestCase {
 
   /**
    * @dataProvider providerWorkflow
-   * @covers ::getWorkflowForEntity
    */
   public function testGetWorkflowForEntity($workflow) {
     $entity_type_manager = $this->prophesize(EntityTypeManagerInterface::class);
@@ -129,7 +125,6 @@ class ModerationInformationTest extends UnitTestCase {
 
   /**
    * @dataProvider providerWorkflow
-   * @covers ::shouldModerateEntitiesOfBundle
    */
   public function testShouldModerateEntities($workflow, $expected) {
     $entity_type = new ContentEntityType([

@@ -4,14 +4,15 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\views\Unit\Plugin\pager;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use Drupal\Tests\UnitTestCase;
 use Drupal\Core\Database\StatementInterface;
 use Drupal\Core\Database\Query\Select;
 
 /**
- * @coversDefaultClass \Drupal\views\Plugin\views\pager\PagerPluginBase
  * @group views
  */
+#[CoversClass(\Drupal\views\Plugin\views\pager\PagerPluginBase::class)]
 class PagerPluginBaseTest extends UnitTestCase {
 
   /**

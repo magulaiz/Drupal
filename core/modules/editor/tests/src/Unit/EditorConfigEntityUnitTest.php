@@ -4,15 +4,16 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\editor\Unit;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use Drupal\Core\DependencyInjection\ContainerBuilder;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\editor\Entity\Editor;
 use Drupal\Tests\UnitTestCase;
 
 /**
- * @coversDefaultClass \Drupal\editor\Entity\Editor
  * @group editor
  */
+#[CoversClass(\Drupal\editor\Entity\Editor::class)]
 class EditorConfigEntityUnitTest extends UnitTestCase {
 
   /**
@@ -90,9 +91,6 @@ class EditorConfigEntityUnitTest extends UnitTestCase {
     \Drupal::setContainer($container);
   }
 
-  /**
-   * @covers ::calculateDependencies
-   */
   public function testCalculateDependencies() {
     $format_id = 'filter.format.test';
     $values = ['editor' => $this->editorId, 'format' => $format_id];

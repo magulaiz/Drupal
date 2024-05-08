@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\ckeditor5\FunctionalJavascript;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use Drupal\ckeditor5\HTMLRestrictions;
 use Drupal\editor\Entity\Editor;
 use Drupal\filter\Entity\FilterFormat;
@@ -11,19 +12,16 @@ use Drupal\ckeditor5\Plugin\Editor\CKEditor5;
 use Symfony\Component\Validator\ConstraintViolation;
 
 // cspell:ignore gramma sourceediting
-
 /**
- * @coversDefaultClass \Drupal\ckeditor5\Plugin\CKEditor5Plugin\SourceEditing
- * @covers \Drupal\ckeditor5\Plugin\CKEditor5PluginManager::getCKEditor5PluginConfig
  * @group ckeditor5
  * @group #slow
  * @internal
  */
+#[CoversClass(\Drupal\ckeditor5\Plugin\CKEditor5Plugin\SourceEditing::class)]
+#[CoversClass(\Drupal\ckeditor5\Plugin\CKEditor5PluginManager::getCKEditor5PluginConfig)]
+#[CoversClass(\Drupal\ckeditor5\Plugin\CKEditor5Plugin\SourceEditing::class)]
 class SourceEditingTest extends SourceEditingTestBase {
 
-  /**
-   * @covers \Drupal\ckeditor5\Plugin\CKEditor5Plugin\SourceEditing::buildConfigurationForm
-   */
   public function testSourceEditingSettingsForm() {
     $this->drupalLogin($this->drupalCreateUser(['administer filters']));
 

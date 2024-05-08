@@ -4,18 +4,18 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\migrate_drupal\Unit;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use Drupal\Core\Database\DatabaseExceptionWrapper;
 use Drupal\migrate_drupal\MigrationConfigurationTrait;
 use Drupal\Tests\UnitTestCase;
 
 /**
- * @coversDefaultClass \Drupal\migrate_drupal\MigrationConfigurationTrait
  * @group migrate_drupal
  */
+#[CoversClass(\Drupal\migrate_drupal\MigrationConfigurationTrait::class)]
 class MigrationConfigurationTraitTest extends UnitTestCase {
 
   /**
-   * @covers ::getLegacyDrupalVersion
    * @dataProvider providerTestGetLegacyDrupalVersion
    */
   public function testGetLegacyDrupalVersion($expected_version_string, $schema_version, $exception, $system_table_exists) {

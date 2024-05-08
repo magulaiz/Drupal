@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\field_ui\Kernel;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Database\Database;
 use Drupal\Core\Entity\Display\EntityDisplayInterface;
@@ -22,6 +23,7 @@ use Drupal\user\Entity\Role;
  *
  * @group field_ui
  */
+#[CoversClass(\Drupal\Core\Entity\EntityDisplayRepository::class)]
 class EntityDisplayTest extends KernelTestBase {
 
   /**
@@ -150,9 +152,6 @@ class EntityDisplayTest extends KernelTestBase {
     $this->assertSame($expected, $components);
   }
 
-  /**
-   * @covers \Drupal\Core\Entity\EntityDisplayRepository::getViewDisplay
-   */
   public function testEntityGetDisplay() {
     $display_repository = $this->container->get('entity_display.repository');
 

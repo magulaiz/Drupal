@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\announcements_feed\Unit;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use Drupal\Tests\UnitTestCase;
 use Drupal\announcements_feed\AnnounceFetcher;
 
@@ -12,6 +13,7 @@ use Drupal\announcements_feed\AnnounceFetcher;
  *
  * @group announcements_feed
  */
+#[CoversClass(\Drupal\announcements_feed\AnnounceFetcher::class)]
 class AnnounceFetcherUnitTest extends UnitTestCase {
 
   /**
@@ -46,7 +48,6 @@ class AnnounceFetcherUnitTest extends UnitTestCase {
   /**
    * Test the ValidateUrl() method.
    *
-   * @covers \Drupal\announcements_feed\AnnounceFetcher::validateUrl
    *
    * @dataProvider urlProvider
    */

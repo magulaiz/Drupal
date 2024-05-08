@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\user\Unit;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use Drupal\Core\Session\AccountProxyInterface;
 use Drupal\Tests\UnitTestCase;
 use Drupal\user\ToolbarLinkBuilder;
@@ -11,15 +12,13 @@ use Drupal\user\ToolbarLinkBuilder;
 /**
  * Tests user's ToolbarLinkBuilder.
  *
- * @coversDefaultClass \Drupal\user\ToolbarLinkBuilder
  * @group user
  */
+#[CoversClass(\Drupal\user\ToolbarLinkBuilder::class)]
 class ToolbarLinkBuilderTest extends UnitTestCase {
 
   /**
    * Tests structure of display name render array.
-   *
-   * @covers ::renderDisplayName
    */
   public function testRenderDisplayName() {
     $account = $this->prophesize(AccountProxyInterface::class);

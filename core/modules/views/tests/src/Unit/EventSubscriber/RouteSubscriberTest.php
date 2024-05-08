@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\views\Unit\EventSubscriber;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Routing\RouteBuildEvent;
 use Drupal\Tests\UnitTestCase;
@@ -12,9 +13,9 @@ use Symfony\Component\Routing\Route;
 use Symfony\Component\Routing\RouteCollection;
 
 /**
- * @coversDefaultClass \Drupal\views\EventSubscriber\RouteSubscriber
  * @group views
  */
+#[CoversClass(\Drupal\views\EventSubscriber\RouteSubscriber::class)]
 class RouteSubscriberTest extends UnitTestCase {
 
   /**
@@ -63,9 +64,6 @@ class RouteSubscriberTest extends UnitTestCase {
     $this->routeSubscriber = new TestRouteSubscriber($this->entityTypeManager, $this->state);
   }
 
-  /**
-   * @covers ::routeRebuildFinished
-   */
   public function testRouteRebuildFinished() {
     [$display_1, $display_2] = $this->setupMocks();
 

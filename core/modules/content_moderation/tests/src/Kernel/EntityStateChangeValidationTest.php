@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\content_moderation\Kernel;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\language\Entity\ConfigurableLanguage;
 use Drupal\node\Entity\Node;
@@ -12,9 +13,9 @@ use Drupal\Tests\content_moderation\Traits\ContentModerationTestTrait;
 use Drupal\Tests\user\Traits\UserCreationTrait;
 
 /**
- * @coversDefaultClass \Drupal\content_moderation\Plugin\Validation\Constraint\ModerationStateConstraintValidator
  * @group content_moderation
  */
+#[CoversClass(\Drupal\content_moderation\Plugin\Validation\Constraint\ModerationStateConstraintValidator::class)]
 class EntityStateChangeValidationTest extends KernelTestBase {
 
   use ContentModerationTestTrait;
@@ -65,8 +66,6 @@ class EntityStateChangeValidationTest extends KernelTestBase {
 
   /**
    * Tests valid transitions.
-   *
-   * @covers ::validate
    */
   public function testValidTransition() {
     $this->setCurrentUser($this->adminUser);
@@ -96,8 +95,6 @@ class EntityStateChangeValidationTest extends KernelTestBase {
 
   /**
    * Tests invalid transitions.
-   *
-   * @covers ::validate
    */
   public function testInvalidTransition() {
     $this->setCurrentUser($this->adminUser);

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\content_moderation\Kernel;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\node\Entity\NodeType;
 use Drupal\Tests\content_moderation\Traits\ContentModerationTestTrait;
@@ -15,6 +16,7 @@ use Drupal\Tests\user\Traits\UserCreationTrait;
  *
  * @group content_moderation
  */
+#[CoversClass(\Drupal\content_moderation\ModerationInformation::class)]
 class NodeAccessTest extends KernelTestBase {
 
   use NodeCreationTrait;
@@ -66,9 +68,6 @@ class NodeAccessTest extends KernelTestBase {
     $this->moderationInformation = \Drupal::service('content_moderation.moderation_information');
   }
 
-  /**
-   * @covers \Drupal\content_moderation\ModerationInformation::getDefaultRevisionId
-   */
   public function testGetDefaultRevisionId() {
     // Create an admin user.
     $user = $this->createUser([], NULL, TRUE);

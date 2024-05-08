@@ -4,13 +4,14 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\file\Functional\Formatter;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use Drupal\entity_test\Entity\EntityTest;
 use Drupal\file\Entity\File;
 
 /**
- * @coversDefaultClass \Drupal\file\Plugin\Field\FieldFormatter\FileAudioFormatter
  * @group file
  */
+#[CoversClass(\Drupal\file\Plugin\Field\FieldFormatter\FileAudioFormatter::class)]
 class FileAudioFormatterTest extends FileMediaFormatterTestBase {
 
   /**
@@ -19,8 +20,6 @@ class FileAudioFormatterTest extends FileMediaFormatterTestBase {
   protected $defaultTheme = 'stark';
 
   /**
-   * @covers ::viewElements
-   *
    * @dataProvider dataProvider
    */
   public function testRender($tag_count, $formatter_settings) {

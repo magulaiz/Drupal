@@ -114,8 +114,6 @@ class UpdateCalculateProjectDataTest extends KernelTestBase {
    * Tests the project_status of the project.
    *
    * @dataProvider providerProjectStatus
-   *
-   * @covers update_calculate_project_update_status
    */
   public function testProjectStatus(string $fixture, int $status, string $label, string $expected_error_message): void {
     update_storage_clear();

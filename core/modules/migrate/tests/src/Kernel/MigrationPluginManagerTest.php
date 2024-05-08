@@ -4,13 +4,13 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\migrate\Kernel;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 /**
  * Tests the migration plugin manager.
  *
  * @group migrate
- *
- * @coversDefaultClass \Drupal\migrate\Plugin\MigrationPluginManager
  */
+#[CoversClass(\Drupal\migrate\Plugin\MigrationPluginManager::class)]
 class MigrationPluginManagerTest extends MigrateTestBase {
 
   /**
@@ -36,7 +36,6 @@ class MigrationPluginManagerTest extends MigrateTestBase {
   /**
    * Tests Migration::createInstancesByTag().
    *
-   * @covers ::createInstancesByTag
    *
    * @dataProvider providerCreateInstanceByTag
    */

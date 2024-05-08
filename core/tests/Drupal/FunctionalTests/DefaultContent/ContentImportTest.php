@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\FunctionalTests\DefaultContent;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use ColinODell\PsrTestLogger\TestLogger;
 use Drupal\block_content\BlockContentInterface;
 use Drupal\block_content\Entity\BlockContentType;
@@ -33,10 +34,10 @@ use Drupal\Tests\taxonomy\Traits\TaxonomyTestTrait;
 use Psr\Log\LogLevel;
 
 /**
- * @covers \Drupal\Core\DefaultContent\Importer
  * @group DefaultContent
  * @group Recipe
  */
+#[CoversClass(\Drupal\Core\DefaultContent\Importer::class)]
 class ContentImportTest extends BrowserTestBase {
 
   use EntityReferenceFieldCreationTrait;

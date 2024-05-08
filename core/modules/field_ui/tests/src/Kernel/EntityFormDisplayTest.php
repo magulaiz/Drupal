@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\field_ui\Kernel;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use Drupal\Core\Entity\Entity\EntityFormDisplay;
 use Drupal\Core\Entity\Entity\EntityFormMode;
 use Drupal\field\Entity\FieldConfig;
@@ -15,6 +16,7 @@ use Drupal\KernelTests\KernelTestBase;
  *
  * @group field_ui
  */
+#[CoversClass(\Drupal\Core\Entity\EntityDisplayRepository::class)]
 class EntityFormDisplayTest extends KernelTestBase {
 
   /**
@@ -42,9 +44,6 @@ class EntityFormDisplayTest extends KernelTestBase {
     $this->installEntitySchema('entity_test');
   }
 
-  /**
-   * @covers \Drupal\Core\Entity\EntityDisplayRepository::getFormDisplay
-   */
   public function testEntityGetFromDisplay() {
     /** @var \Drupal\Core\Entity\EntityDisplayRepositoryInterface $display_repository */
     $display_repository = \Drupal::service('entity_display.repository');

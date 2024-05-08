@@ -4,18 +4,16 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\field_ui\Unit;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use Drupal\Tests\UnitTestCase;
 
 /**
- * @coversDefaultClass \Drupal\field_ui\Element\FieldUiTable
- *
  * @group field_ui
  */
+#[CoversClass(\Drupal\field_ui\Element\FieldUiTable::class)]
 class FieldUiTableTest extends UnitTestCase {
 
   /**
-   * @covers ::reduceOrder
-   *
    * @dataProvider providerTestReduceOrder
    */
   public function testReduceOrder($array, $expected) {

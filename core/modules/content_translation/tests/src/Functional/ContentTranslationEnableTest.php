@@ -4,15 +4,17 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\content_translation\Functional;
 
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\CoversFunction;
 use Drupal\Tests\BrowserTestBase;
 
 /**
  * Test enabling content translation module.
  *
- * @covers \Drupal\language\Form\ContentLanguageSettingsForm
- * @covers ::_content_translation_form_language_content_settings_form_alter
  * @group content_translation
  */
+#[CoversClass(\Drupal\language\Form\ContentLanguageSettingsForm::class)]
+#[CoversFunction('_content_translation_form_language_content_settings_form_alter')]
 class ContentTranslationEnableTest extends BrowserTestBase {
 
   /**

@@ -4,15 +4,15 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\rest\Kernel\Entity;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\rest\Entity\RestResourceConfig;
 use Drupal\rest\RestResourceConfigInterface;
 
 /**
- * @coversDefaultClass \Drupal\rest\Entity\RestResourceConfig
- *
  * @group rest
  */
+#[CoversClass(\Drupal\rest\Entity\RestResourceConfig::class)]
 class RestResourceConfigTest extends KernelTestBase {
 
   /**
@@ -26,9 +26,6 @@ class RestResourceConfigTest extends KernelTestBase {
     'user',
   ];
 
-  /**
-   * @covers ::calculateDependencies
-   */
   public function testCalculateDependencies() {
     $rest_config = RestResourceConfig::create([
       'plugin_id' => 'entity:entity_test',

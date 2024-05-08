@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\user\Unit\Views\Argument;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use Drupal\Core\DependencyInjection\ContainerBuilder;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Tests\UnitTestCase;
@@ -11,15 +12,13 @@ use Drupal\user\Entity\Role;
 use Drupal\user\Plugin\views\argument\RolesRid;
 
 /**
- * @coversDefaultClass \Drupal\user\Plugin\views\argument\RolesRid
  * @group user
  */
+#[CoversClass(\Drupal\user\Plugin\views\argument\RolesRid::class)]
 class RolesRidTest extends UnitTestCase {
 
   /**
    * Tests the titleQuery method.
-   *
-   * @covers ::titleQuery
    */
   public function testTitleQuery() {
     $role1 = new Role([

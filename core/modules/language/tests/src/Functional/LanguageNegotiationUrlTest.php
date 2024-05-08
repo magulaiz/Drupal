@@ -4,12 +4,13 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\language\Functional;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use Drupal\Tests\BrowserTestBase;
 
 /**
- * @coversDefaultClass \Drupal\language\Plugin\LanguageNegotiation\LanguageNegotiationUrl
  * @group language
  */
+#[CoversClass(\Drupal\language\Plugin\LanguageNegotiation\LanguageNegotiationUrl::class)]
 class LanguageNegotiationUrlTest extends BrowserTestBase {
 
   /**
@@ -56,9 +57,6 @@ class LanguageNegotiationUrlTest extends BrowserTestBase {
     $this->submitForm(['predefined_langcode' => 'de'], 'Add language');
   }
 
-  /**
-   * @covers ::processInbound
-   */
   public function testDomain() {
     // Check if paths that contain language prefixes can be reached when
     // language is taken from the domain.

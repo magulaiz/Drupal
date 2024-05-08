@@ -4,14 +4,15 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\text\Unit\Plugin\migrate\field\d7;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use Drupal\migrate\Row;
 use Drupal\Tests\UnitTestCase;
 use Drupal\text\Plugin\migrate\field\d7\TextField;
 
 /**
- * @coversDefaultClass \Drupal\text\Plugin\migrate\field\d7\TextField
  * @group text
  */
+#[CoversClass(\Drupal\text\Plugin\migrate\field\d7\TextField::class)]
 class TextFieldTest extends UnitTestCase {
 
   /**
@@ -40,8 +41,6 @@ class TextFieldTest extends UnitTestCase {
   }
 
   /**
-   * @covers ::getFieldFormatterType
-   * @covers ::getFieldType
    * @dataProvider getFieldFormatterTypeProvider
    */
   public function testGetFieldFormatterType($type, $formatter_type, $expected) {

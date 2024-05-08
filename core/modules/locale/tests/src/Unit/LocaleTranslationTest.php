@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\locale\Unit;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Lock\LockBackendInterface;
 use Drupal\locale\LocaleTranslation;
@@ -11,9 +12,9 @@ use Drupal\Tests\UnitTestCase;
 use Symfony\Component\HttpFoundation\RequestStack;
 
 /**
- * @coversDefaultClass \Drupal\locale\LocaleTranslation
  * @group locale
  */
+#[CoversClass(\Drupal\locale\LocaleTranslation::class)]
 class LocaleTranslationTest extends UnitTestCase {
 
   /**

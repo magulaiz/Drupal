@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\layout_builder\Kernel;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use Drupal\Core\Entity\Display\EntityViewDisplayInterface;
 use Drupal\Core\Entity\Entity\EntityViewDisplay;
 use Drupal\Core\Entity\FieldableEntityInterface;
@@ -21,11 +22,11 @@ use Drupal\layout_builder\SectionStorageInterface;
 use Prophecy\Argument;
 
 /**
- * @coversDefaultClass \Drupal\layout_builder\LayoutEntityHelperTrait
  *
  * @group layout_builder
  * @group #slow
  */
+#[CoversClass(\Drupal\layout_builder\LayoutEntityHelperTrait::class)]
 class LayoutEntityHelperTraitTest extends KernelTestBase {
 
   /**
@@ -77,8 +78,6 @@ class LayoutEntityHelperTraitTest extends KernelTestBase {
   }
 
   /**
-   * @covers ::getSectionStorageForEntity
-   *
    * @dataProvider providerTestGetSectionStorageForEntity
    */
   public function testGetSectionStorageForEntity($entity_type_id, $values, $expected_context_keys) {
@@ -181,8 +180,6 @@ class LayoutEntityHelperTraitTest extends KernelTestBase {
   }
 
   /**
-   * @covers ::originalEntityUsesDefaultStorage
-   *
    * @dataProvider providerTestOriginalEntityUsesDefaultStorage
    */
   public function testOriginalEntityUsesDefaultStorage($entity_storages, $is_new, $has_original, $expected) {
@@ -218,9 +215,6 @@ class LayoutEntityHelperTraitTest extends KernelTestBase {
     $this->assertSame($expected, $class->originalEntityUsesDefaultStorage($entity));
   }
 
-  /**
-   * @covers ::getEntitySections
-   */
   public function testGetEntitySections() {
     $entity = EntityTest::create(['name' => 'updated']);
     $section_storage_manager = $this->prophesize(SectionStorageManagerInterface::class);

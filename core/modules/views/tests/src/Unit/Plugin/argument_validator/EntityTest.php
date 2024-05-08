@@ -4,15 +4,16 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\views\Unit\Plugin\argument_validator;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use Drupal\Core\Entity\EntityTypeBundleInfoInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Tests\UnitTestCase;
 use Drupal\views\Plugin\views\argument_validator\Entity;
 
 /**
- * @coversDefaultClass \Drupal\views\Plugin\views\argument_validator\Entity
  * @group views
  */
+#[CoversClass(\Drupal\views\Plugin\views\argument_validator\Entity::class)]
 class EntityTest extends UnitTestCase {
 
   /**
@@ -187,9 +188,6 @@ class EntityTest extends UnitTestCase {
     $this->assertTrue($this->argumentValidator->validateArgument(2));
   }
 
-  /**
-   * @covers ::calculateDependencies
-   */
   public function testCalculateDependencies() {
     // Create an entity type manager, storage, entity type, and entity to mock the
     // loading of entities providing bundles.

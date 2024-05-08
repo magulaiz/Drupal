@@ -4,16 +4,16 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\rest\Kernel\Entity;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\rest\Entity\ConfigDependencies;
 use Drupal\rest\Entity\RestResourceConfig;
 use Drupal\rest\RestResourceConfigInterface;
 
 /**
- * @coversDefaultClass \Drupal\rest\Entity\ConfigDependencies
- *
  * @group rest
  */
+#[CoversClass(\Drupal\rest\Entity\ConfigDependencies::class)]
 class ConfigDependenciesTest extends KernelTestBase {
 
   /**
@@ -22,8 +22,6 @@ class ConfigDependenciesTest extends KernelTestBase {
   protected static $modules = ['rest', 'entity_test', 'serialization'];
 
   /**
-   * @covers ::calculateDependencies
-   *
    * @dataProvider providerBasicDependencies
    */
   public function testCalculateDependencies(array $configuration) {
@@ -38,9 +36,6 @@ class ConfigDependenciesTest extends KernelTestBase {
   }
 
   /**
-   * @covers ::onDependencyRemoval
-   * @covers ::onDependencyRemovalForMethodGranularity
-   * @covers ::onDependencyRemovalForResourceGranularity
    *
    * @dataProvider providerBasicDependencies
    */
@@ -90,10 +85,6 @@ class ConfigDependenciesTest extends KernelTestBase {
     ];
   }
 
-  /**
-   * @covers ::onDependencyRemoval
-   * @covers ::onDependencyRemovalForMethodGranularity
-   */
   public function testOnDependencyRemovalRemoveAuth() {
     $config_dependencies = new ConfigDependencies(['json' => 'serialization'], ['basic_auth' => 'basic_auth']);
 
@@ -127,8 +118,6 @@ class ConfigDependenciesTest extends KernelTestBase {
   }
 
   /**
-   * @covers ::onDependencyRemoval
-   * @covers ::onDependencyRemovalForResourceGranularity
    *
    * @dataProvider providerOnDependencyRemovalForResourceGranularity
    */

@@ -4,20 +4,18 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\migrate\Unit\Event;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use Drupal\migrate\Event\EventBase;
 use Drupal\Tests\UnitTestCase;
 
 /**
- * @coversDefaultClass \Drupal\migrate\Event\EventBase
  * @group migrate
  */
+#[CoversClass(\Drupal\migrate\Event\EventBase::class)]
 class EventBaseTest extends UnitTestCase {
 
   /**
    * Tests getMigration method.
-   *
-   * @covers ::__construct
-   * @covers ::getMigration
    */
   public function testGetMigration() {
     $migration = $this->prophesize('\Drupal\migrate\Plugin\MigrationInterface')->reveal();
@@ -28,9 +26,6 @@ class EventBaseTest extends UnitTestCase {
 
   /**
    * Tests logging a message.
-   *
-   * @covers ::__construct
-   * @covers ::logMessage
    */
   public function testLogMessage() {
     $migration = $this->prophesize('\Drupal\migrate\Plugin\MigrationInterface')->reveal();

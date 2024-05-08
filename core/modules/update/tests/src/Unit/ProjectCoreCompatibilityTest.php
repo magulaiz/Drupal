@@ -4,18 +4,17 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\update\Unit;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use Drupal\Tests\UnitTestCase;
 use Drupal\update\ProjectCoreCompatibility;
 
 /**
- * @coversDefaultClass \Drupal\update\ProjectCoreCompatibility
- *
  * @group update
  */
+#[CoversClass(\Drupal\update\ProjectCoreCompatibility::class)]
 class ProjectCoreCompatibilityTest extends UnitTestCase {
 
   /**
-   * @covers ::setReleaseMessage
    * @dataProvider providerSetProjectCoreCompatibilityRanges
    */
   public function testSetProjectCoreCompatibilityRanges(array $project_data, $core_data, array $supported_branches, array $core_releases, array $expected_releases, array $expected_security_updates) {

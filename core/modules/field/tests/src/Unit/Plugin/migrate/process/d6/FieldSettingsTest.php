@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\field\Unit\Plugin\migrate\process\d6;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use Drupal\field\Plugin\migrate\process\d6\FieldSettings;
 use Drupal\migrate\Plugin\MigrationInterface;
 use Drupal\migrate\MigrateExecutableInterface;
@@ -11,14 +12,12 @@ use Drupal\migrate\Row;
 use Drupal\Tests\UnitTestCase;
 
 /**
- * @coversDefaultClass \Drupal\field\Plugin\migrate\process\d6\FieldSettings
  * @group field
  */
+#[CoversClass(\Drupal\field\Plugin\migrate\process\d6\FieldSettings::class)]
 class FieldSettingsTest extends UnitTestCase {
 
   /**
-   * @covers ::getSettings
-   *
    * @dataProvider getSettingsProvider
    */
   public function testGetSettings($field_type, $field_settings, $allowed_values) {

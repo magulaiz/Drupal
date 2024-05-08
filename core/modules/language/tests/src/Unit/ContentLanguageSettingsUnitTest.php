@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\language\Unit;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use Drupal\Core\Language\LanguageInterface;
 use Drupal\Core\DependencyInjection\ContainerBuilder;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
@@ -13,9 +14,9 @@ use Drupal\Tests\UnitTestCase;
 use Drupal\TestTools\Random;
 
 /**
- * @coversDefaultClass \Drupal\language\Entity\ContentLanguageSettings
  * @group language
  */
+#[CoversClass(\Drupal\language\Entity\ContentLanguageSettings::class)]
 class ContentLanguageSettingsUnitTest extends UnitTestCase {
 
   /**
@@ -85,9 +86,6 @@ class ContentLanguageSettingsUnitTest extends UnitTestCase {
     \Drupal::setContainer($container);
   }
 
-  /**
-   * @covers ::calculateDependencies
-   */
   public function testCalculateDependencies() {
     // Mock the interfaces necessary to create a dependency on a bundle entity.
     $target_entity_type = $this->createMock('\Drupal\Core\Entity\EntityTypeInterface');
@@ -108,9 +106,6 @@ class ContentLanguageSettingsUnitTest extends UnitTestCase {
     $this->assertContains('test.test_entity_type.id', $dependencies['config']);
   }
 
-  /**
-   * @covers ::id
-   */
   public function testId() {
     $config = new ContentLanguageSettings([
       'target_entity_type_id' => 'test_entity_type',
@@ -119,9 +114,6 @@ class ContentLanguageSettingsUnitTest extends UnitTestCase {
     $this->assertSame('test_entity_type.test_bundle', $config->id());
   }
 
-  /**
-   * @covers ::getTargetEntityTypeId
-   */
   public function testTargetEntityTypeId() {
     $config = new ContentLanguageSettings([
       'target_entity_type_id' => 'test_entity_type',
@@ -130,9 +122,6 @@ class ContentLanguageSettingsUnitTest extends UnitTestCase {
     $this->assertSame('test_entity_type', $config->getTargetEntityTypeId());
   }
 
-  /**
-   * @covers ::getTargetBundle
-   */
   public function testTargetBundle() {
     $config = new ContentLanguageSettings([
       'target_entity_type_id' => 'test_entity_type',
@@ -142,8 +131,6 @@ class ContentLanguageSettingsUnitTest extends UnitTestCase {
   }
 
   /**
-   * @covers ::getDefaultLangcode
-   * @covers ::setDefaultLangcode
    *
    * @dataProvider providerDefaultLangcode
    */
@@ -171,8 +158,6 @@ class ContentLanguageSettingsUnitTest extends UnitTestCase {
   }
 
   /**
-   * @covers ::setLanguageAlterable
-   * @covers ::isLanguageAlterable
    *
    * @dataProvider providerLanguageAlterable
    */
@@ -206,8 +191,6 @@ class ContentLanguageSettingsUnitTest extends UnitTestCase {
   }
 
   /**
-   * @covers ::isDefaultConfiguration
-   *
    * @dataProvider providerIsDefaultConfiguration
    */
   public function testIsDefaultConfiguration(ContentLanguageSettings $config, $expected) {
@@ -240,8 +223,6 @@ class ContentLanguageSettingsUnitTest extends UnitTestCase {
   }
 
   /**
-   * @covers ::loadByEntityTypeBundle
-   *
    * @dataProvider providerLoadByEntityTypeBundle
    */
   public function testLoadByEntityTypeBundle($config_id, ContentLanguageSettings $existing_config = NULL, $expected_langcode, $expected_language_alterable) {

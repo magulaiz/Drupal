@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\migrate\Kernel\Plugin;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use Drupal\Core\Database\Database;
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\migrate\Exception\RequirementsException;
@@ -14,9 +15,9 @@ use Drupal\Tests\field\Traits\EntityReferenceFieldCreationTrait;
 /**
  * Tests the migration plugin manager.
  *
- * @coversDefaultClass \Drupal\migrate\Plugin\MigratePluginManager
  * @group migrate
  */
+#[CoversClass(\Drupal\migrate\Plugin\MigratePluginManager::class)]
 class MigrationPluginListTest extends KernelTestBase {
 
   use EntityReferenceFieldCreationTrait;
@@ -64,9 +65,6 @@ class MigrationPluginListTest extends KernelTestBase {
     $this->installEntitySchema('user');
   }
 
-  /**
-   * @covers ::getDefinitions
-   */
   public function testGetDefinitions() {
     // Create an entity reference field to make sure that migrations derived by
     // EntityReferenceTranslationDeriver do not get discovered without

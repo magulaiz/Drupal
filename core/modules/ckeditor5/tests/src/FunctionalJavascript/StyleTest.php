@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Drupal\Tests\ckeditor5\FunctionalJavascript;
 
 // cspell:ignore sourceediting
-
+use PHPUnit\Framework\Attributes\CoversClass;
 use Drupal\ckeditor5\Plugin\Editor\CKEditor5;
 use Drupal\editor\Entity\Editor;
 use Drupal\filter\Entity\FilterFormat;
@@ -13,17 +13,15 @@ use Drupal\Tests\ckeditor5\Traits\CKEditor5TestTrait;
 use Symfony\Component\Validator\ConstraintViolation;
 
 /**
- * @coversDefaultClass \Drupal\ckeditor5\Plugin\CKEditor5Plugin\Style
  * @group ckeditor5
  * @internal
  */
+#[CoversClass(\Drupal\ckeditor5\Plugin\CKEditor5Plugin\Style::class)]
+#[CoversClass(\Drupal\ckeditor5\Plugin\CKEditor5Plugin\Style::class)]
 class StyleTest extends CKEditor5TestBase {
 
   use CKEditor5TestTrait;
 
-  /**
-   * @covers \Drupal\ckeditor5\Plugin\CKEditor5Plugin\Style::buildConfigurationForm
-   */
   public function testStyleSettingsForm() {
     $this->drupalLogin($this->drupalCreateUser(['administer filters']));
 

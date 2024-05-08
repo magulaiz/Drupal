@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\system\Unit\Pager;
 
+use PHPUnit\Framework\Attributes\CoversFunction;
 use Drupal\Core\DependencyInjection\ContainerBuilder;
 use Drupal\Core\Template\AttributeString;
 use Drupal\Tests\UnitTestCase;
@@ -13,6 +14,7 @@ use Drupal\Tests\UnitTestCase;
  *
  * @group system
  */
+#[CoversFunction('template_preprocess_pager')]
 class PreprocessPagerTest extends UnitTestCase {
 
   /**
@@ -49,8 +51,6 @@ class PreprocessPagerTest extends UnitTestCase {
 
   /**
    * Tests template_preprocess_pager() when an empty #quantity is passed.
-   *
-   * @covers ::template_preprocess_pager
    */
   public function testQuantityNotSet() {
     require_once $this->root . '/core/includes/theme.inc';
@@ -70,8 +70,6 @@ class PreprocessPagerTest extends UnitTestCase {
 
   /**
    * Tests template_preprocess_pager() when a #quantity value is passed.
-   *
-   * @covers ::template_preprocess_pager
    */
   public function testQuantitySet() {
     require_once $this->root . '/core/includes/theme.inc';
@@ -95,8 +93,6 @@ class PreprocessPagerTest extends UnitTestCase {
 
   /**
    * Tests template_preprocess_pager() when an empty #pagination_heading_level value is passed.
-   *
-   * @covers ::template_preprocess_pager
    */
   public function testEmptyPaginationHeadingLevelSet() {
     require_once $this->root . '/core/includes/theme.inc';
@@ -117,8 +113,6 @@ class PreprocessPagerTest extends UnitTestCase {
 
   /**
    * Tests template_preprocess_pager() when no #pagination_heading_level is passed.
-   *
-   * @covers ::template_preprocess_pager
    */
   public function testPaginationHeadingLevelNotSet() {
     require_once $this->root . '/core/includes/theme.inc';
@@ -138,8 +132,6 @@ class PreprocessPagerTest extends UnitTestCase {
 
   /**
    * Tests template_preprocess_pager() when a #pagination_heading_level value is passed.
-   *
-   * @covers ::template_preprocess_pager
    */
   public function testPaginationHeadingLevelSet() {
     require_once $this->root . '/core/includes/theme.inc';
@@ -160,8 +152,6 @@ class PreprocessPagerTest extends UnitTestCase {
 
   /**
    * Test template_preprocess_pager() with an invalid #pagination_heading_level.
-   *
-   * @covers ::template_preprocess_pager
    */
   public function testPaginationHeadingLevelInvalid() {
     require_once $this->root . '/core/includes/theme.inc';

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\jsonapi\Unit\Query;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use Drupal\Core\Cache\Context\CacheContextsManager;
 use Drupal\Core\DependencyInjection\Container;
 use Drupal\jsonapi\Query\OffsetPage;
@@ -12,11 +13,10 @@ use Prophecy\Argument;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 
 /**
- * @coversDefaultClass \Drupal\jsonapi\Query\OffsetPage
  * @group jsonapi
- *
  * @internal
  */
+#[CoversClass(\Drupal\jsonapi\Query\OffsetPage::class)]
 class OffsetPageTest extends UnitTestCase {
 
   /**
@@ -34,7 +34,6 @@ class OffsetPageTest extends UnitTestCase {
   }
 
   /**
-   * @covers ::createFromQueryParameter
    * @dataProvider parameterProvider
    */
   public function testCreateFromQueryParameter($original, $expected) {
@@ -56,9 +55,6 @@ class OffsetPageTest extends UnitTestCase {
     ];
   }
 
-  /**
-   * @covers ::createFromQueryParameter
-   */
   public function testCreateFromQueryParameterFail() {
     $this->expectException(BadRequestHttpException::class);
     OffsetPage::createFromQueryParameter('lorem');

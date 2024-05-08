@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\KernelTests\Core\Bootstrap;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use Drupal\Core\Extension\Exception\UnknownExtensionException;
 use Drupal\Core\Extension\Exception\UnknownExtensionTypeException;
 use Drupal\Core\Extension\ExtensionPathResolver;
@@ -16,15 +17,12 @@ use Drupal\KernelTests\KernelTestBase;
 /**
  * Tests that extension path resolver works correctly.
  *
- * @coversDefaultClass \Drupal\Core\Extension\ExtensionPathResolver
  *
  * @group Bootstrap
  */
+#[CoversClass(\Drupal\Core\Extension\ExtensionPathResolver::class)]
 class ExtensionPathResolverTest extends KernelTestBase {
 
-  /**
-   * @covers ::getPathname
-   */
   public function testExtensionPathResolving(): void {
     // Retrieving the location of a module.
     $this->assertSame('core/modules/system/system.info.yml', \Drupal::service('extension.list.module')
@@ -45,17 +43,11 @@ class ExtensionPathResolverTest extends KernelTestBase {
       ->getPathname('testing'));
   }
 
-  /**
-   * @covers ::getPath
-   */
   public function testExtensionPathResolvingPath(): void {
     $this->assertSame('core/modules/system/tests/modules/driver_test', \Drupal::service('extension.list.module')
       ->getPath('driver_test'));
   }
 
-  /**
-   * @covers ::getPathname
-   */
   public function testExtensionPathResolvingWithNonExistingModule(): void {
     $this->expectException(UnknownExtensionException::class);
     $this->expectExceptionMessage('The module there_is_a_module_for_that does not exist.');
@@ -63,9 +55,6 @@ class ExtensionPathResolverTest extends KernelTestBase {
       ->getPathname('there_is_a_module_for_that'), 'Searching for an item that does not exist returns NULL.');
   }
 
-  /**
-   * @covers ::getPathname
-   */
   public function testExtensionPathResolvingWithNonExistingTheme(): void {
     $this->expectException(UnknownExtensionException::class);
     $this->expectExceptionMessage('The theme there_is_a_theme_for_you does not exist.');
@@ -73,9 +62,6 @@ class ExtensionPathResolverTest extends KernelTestBase {
       ->getPathname('there_is_a_theme_for_you'), 'Searching for an item that does not exist returns NULL.');
   }
 
-  /**
-   * @covers ::getPathname
-   */
   public function testExtensionPathResolvingWithNonExistingProfile(): void {
     $this->expectException(UnknownExtensionException::class);
     $this->expectExceptionMessage('The profile there_is_an_install_profile_for_you does not exist.');
@@ -83,9 +69,6 @@ class ExtensionPathResolverTest extends KernelTestBase {
       ->getPathname('there_is_an_install_profile_for_you'), 'Searching for an item that does not exist returns NULL.');
   }
 
-  /**
-   * @covers ::getPathname
-   */
   public function testExtensionPathResolvingWithNonExistingThemeEngine(): void {
     $this->expectException(UnknownExtensionException::class);
     $this->expectExceptionMessage('The theme_engine there_is_an_theme_engine_for_you does not exist');

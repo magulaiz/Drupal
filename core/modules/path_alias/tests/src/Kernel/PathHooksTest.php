@@ -4,16 +4,16 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\path_alias\Kernel;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\path_alias\AliasManagerInterface;
 use Drupal\path_alias\Entity\PathAlias;
 use Prophecy\Argument;
 
 /**
- * @coversDefaultClass \Drupal\path_alias\Entity\PathAlias
- *
  * @group path_alias
  */
+#[CoversClass(\Drupal\path_alias\Entity\PathAlias::class)]
 class PathHooksTest extends KernelTestBase {
 
   /**
@@ -32,9 +32,6 @@ class PathHooksTest extends KernelTestBase {
 
   /**
    * Tests that the PathAlias entity clears caches correctly.
-   *
-   * @covers ::postSave
-   * @covers ::postDelete
    */
   public function testPathHooks() {
     $path_alias = PathAlias::create([

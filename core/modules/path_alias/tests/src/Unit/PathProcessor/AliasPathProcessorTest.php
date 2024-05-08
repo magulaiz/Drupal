@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\path_alias\Unit\PathProcessor;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use Drupal\Core\Cache\Cache;
 use Drupal\path_alias\PathProcessor\AliasPathProcessor;
 use Drupal\Core\Render\BubbleableMetadata;
@@ -11,10 +12,10 @@ use Drupal\Tests\UnitTestCase;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
- * @coversDefaultClass \Drupal\path_alias\PathProcessor\AliasPathProcessor
  * @group PathProcessor
  * @group path_alias
  */
+#[CoversClass(\Drupal\path_alias\PathProcessor\AliasPathProcessor::class)]
 class AliasPathProcessorTest extends UnitTestCase {
 
   /**
@@ -61,8 +62,6 @@ class AliasPathProcessorTest extends UnitTestCase {
   }
 
   /**
-   * @covers ::processOutbound
-   *
    * @dataProvider providerTestProcessOutbound
    */
   public function testProcessOutbound($path, array $options, $expected_path) {

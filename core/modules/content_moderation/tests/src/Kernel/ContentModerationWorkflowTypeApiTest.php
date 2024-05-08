@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\content_moderation\Kernel;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\workflows\Entity\Workflow;
 
@@ -11,9 +12,8 @@ use Drupal\workflows\Entity\Workflow;
  * Tests the API of the ContentModeration workflow type plugin.
  *
  * @group content_moderation
- *
- * @coversDefaultClass \Drupal\content_moderation\Plugin\WorkflowType\ContentModeration
  */
+#[CoversClass(\Drupal\content_moderation\Plugin\WorkflowType\ContentModeration::class)]
 class ContentModerationWorkflowTypeApiTest extends KernelTestBase {
 
   /**
@@ -41,11 +41,6 @@ class ContentModerationWorkflowTypeApiTest extends KernelTestBase {
     $this->workflow = Workflow::create(['id' => 'test', 'type' => 'content_moderation']);
   }
 
-  /**
-   * @covers ::getBundlesForEntityType
-   * @covers ::addEntityTypeAndBundle
-   * @covers ::removeEntityTypeAndBundle
-   */
   public function testGetBundlesForEntityType() {
     /** @var \Drupal\content_moderation\Plugin\WorkflowType\ContentModeration $workflow_plugin */
     $workflow_plugin = $this->workflow->getTypePlugin();
@@ -59,11 +54,6 @@ class ContentModerationWorkflowTypeApiTest extends KernelTestBase {
     $this->assertEquals([], $workflow_plugin->getBundlesForEntityType('fake_node'));
   }
 
-  /**
-   * @covers ::appliesToEntityTypeAndBundle
-   * @covers ::addEntityTypeAndBundle
-   * @covers ::removeEntityTypeAndBundle
-   */
   public function testAppliesToEntityTypeAndBundle() {
     /** @var \Drupal\content_moderation\Plugin\WorkflowType\ContentModeration $workflow_plugin */
     $workflow_plugin = $this->workflow->getTypePlugin();
@@ -77,9 +67,6 @@ class ContentModerationWorkflowTypeApiTest extends KernelTestBase {
     $this->assertFalse($workflow_plugin->appliesToEntityTypeAndBundle('fake_node', 'fake_page'));
   }
 
-  /**
-   * @covers ::addEntityTypeAndBundle
-   */
   public function testAddEntityTypeAndBundle() {
     /** @var \Drupal\content_moderation\Plugin\WorkflowType\ContentModeration $workflow_plugin */
     $workflow_plugin = $this->workflow->getTypePlugin();
@@ -100,10 +87,6 @@ class ContentModerationWorkflowTypeApiTest extends KernelTestBase {
     );
   }
 
-  /**
-   * @covers ::addEntityTypeAndBundle
-   * @covers ::removeEntityTypeAndBundle
-   */
   public function testRemoveEntityTypeAndBundle() {
     /** @var \Drupal\content_moderation\Plugin\WorkflowType\ContentModeration $workflow_plugin */
     $workflow_plugin = $this->workflow->getTypePlugin();

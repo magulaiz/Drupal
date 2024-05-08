@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\content_moderation\Unit;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use Drupal\content_moderation\Routing\ContentModerationRouteSubscriber;
 use Drupal\Core\Entity\EntityBase;
 use Drupal\Core\Entity\EntityTypeInterface;
@@ -14,10 +15,9 @@ use Symfony\Component\Routing\Route;
 use Symfony\Component\Routing\RouteCollection;
 
 /**
- * @coversDefaultClass \Drupal\content_moderation\Routing\ContentModerationRouteSubscriber
- *
  * @group content_moderation
  */
+#[CoversClass(\Drupal\content_moderation\Routing\ContentModerationRouteSubscriber::class)]
 class ContentModerationRouteSubscriberTest extends UnitTestCase {
 
   /**
@@ -225,7 +225,6 @@ class ContentModerationRouteSubscriberTest extends UnitTestCase {
    * @param array|bool $expected_parameters
    *   (optional) The expected route parameters. Defaults to FALSE.
    *
-   * @covers ::setLatestRevisionFlag
    *
    * @dataProvider setLatestRevisionFlagTestCases
    */

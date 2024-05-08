@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\migrate\Kernel\Plugin;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\migrate\MigrateException;
 use Drupal\migrate\MigrateSkipRowException;
@@ -11,9 +12,9 @@ use Drupal\migrate\MigrateSkipRowException;
 /**
  * Tests the migration plugin.
  *
- * @coversDefaultClass \Drupal\migrate\Plugin\Migration
  * @group migrate
  */
+#[CoversClass(\Drupal\migrate\Plugin\Migration::class)]
 class MigrationTest extends KernelTestBase {
 
   /**
@@ -23,8 +24,6 @@ class MigrationTest extends KernelTestBase {
 
   /**
    * Tests Migration::getProcessPlugins()
-   *
-   * @covers ::getProcessPlugins
    */
   public function testGetProcessPlugins() {
     $migration = \Drupal::service('plugin.manager.migration')->createStubMigration([]);
@@ -33,8 +32,6 @@ class MigrationTest extends KernelTestBase {
 
   /**
    * Tests Migration::getProcessPlugins() throws an exception.
-   *
-   * @covers ::getProcessPlugins
    */
   public function testGetProcessPluginsException() {
     $migration = \Drupal::service('plugin.manager.migration')->createStubMigration([]);
@@ -49,7 +46,6 @@ class MigrationTest extends KernelTestBase {
    * @param array $process
    *   The migration process pipeline.
    *
-   * @covers ::getProcessPlugins
    *
    * @dataProvider getProcessPluginsExceptionMessageProvider
    */
@@ -80,8 +76,6 @@ class MigrationTest extends KernelTestBase {
 
   /**
    * Tests Migration::getMigrationDependencies()
-   *
-   * @covers ::getMigrationDependencies
    */
   public function testGetMigrationDependencies() {
     $plugin_manager = \Drupal::service('plugin.manager.migration');
@@ -137,8 +131,6 @@ class MigrationTest extends KernelTestBase {
 
   /**
    * Tests Migration::getDestinationIds()
-   *
-   * @covers ::getDestinationIds
    */
   public function testGetDestinationIds() {
     $migration = \Drupal::service('plugin.manager.migration')->createStubMigration(['destinationIds' => ['foo' => 'bar']]);
@@ -149,8 +141,6 @@ class MigrationTest extends KernelTestBase {
 
   /**
    * Tests Migration::getDestinationPlugin()
-   *
-   * @covers ::getDestinationPlugin
    */
   public function testGetDestinationPlugin() {
     $migration = \Drupal::service('plugin.manager.migration')->createStubMigration(['destination' => ['no_stub' => TRUE]]);

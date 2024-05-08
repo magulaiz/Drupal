@@ -4,16 +4,16 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\comment\Kernel\Plugin\migrate\source\d7;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use Drupal\Tests\migrate\Kernel\MigrateSqlSourceTestBase;
 
 // cspell:ignore tnid
-
 /**
  * Tests D7 comment source plugin.
  *
- * @covers \Drupal\comment\Plugin\migrate\source\d7\Comment
  * @group comment
  */
+#[CoversClass(\Drupal\comment\Plugin\migrate\source\d7\Comment::class)]
 class CommentTest extends MigrateSqlSourceTestBase {
 
   /**

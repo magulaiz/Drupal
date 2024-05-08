@@ -4,15 +4,16 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\views\Unit\Plugin\pager;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use Drupal\Core\DependencyInjection\ContainerBuilder;
 use Drupal\Tests\UnitTestCase;
 use Drupal\views\Plugin\views\query\QueryPluginBase;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
- * @coversDefaultClass \Drupal\views\Plugin\views\pager\SqlBase
  * @group views
  */
+#[CoversClass(\Drupal\views\Plugin\views\pager\SqlBase::class)]
 class SqlBaseTest extends UnitTestCase {
 
   /**

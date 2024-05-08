@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\file\Kernel\Plugin\Validation\Constraint;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use Drupal\file\Entity\File;
 use Drupal\Tests\file\Kernel\Validation\FileValidatorTestBase;
 
@@ -11,8 +12,8 @@ use Drupal\Tests\file\Kernel\Validation\FileValidatorTestBase;
  * Tests the FileExtensionConstraintValidator.
  *
  * @group file
- * @coversDefaultClass \Drupal\file\Plugin\Validation\Constraint\FileExtensionConstraintValidator
  */
+#[CoversClass(\Drupal\file\Plugin\Validation\Constraint\FileExtensionConstraintValidator::class)]
 class FileExtensionConstraintValidatorTest extends FileValidatorTestBase {
 
   /**
@@ -26,7 +27,6 @@ class FileExtensionConstraintValidatorTest extends FileValidatorTestBase {
    *   The expected error messages as string.
    *
    * @dataProvider providerTestFileValidateExtensionsOnUri
-   * @covers ::validate
    */
   public function testFileExtensionOnUri(array $file_properties, array $extensions, array $expected_errors) {
     $file = File::create($file_properties);

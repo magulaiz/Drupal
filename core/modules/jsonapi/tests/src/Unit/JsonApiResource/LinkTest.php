@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\jsonapi\Unit\JsonApiResource;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use Drupal\Core\Cache\CacheableMetadata;
 use Drupal\Core\DependencyInjection\ContainerBuilder;
 use Drupal\Core\GeneratedUrl;
@@ -13,15 +14,13 @@ use Drupal\jsonapi\JsonApiResource\Link;
 use Drupal\Tests\UnitTestCase;
 
 /**
- * @coversDefaultClass \Drupal\jsonapi\JsonApiResource\Link
  * @group jsonapi
- *
  * @internal
  */
+#[CoversClass(\Drupal\jsonapi\JsonApiResource\Link::class)]
 class LinkTest extends UnitTestCase {
 
   /**
-   * @covers ::compare
    * @dataProvider linkComparisonProvider
    */
   public function testLinkComparison(array $a, array $b, bool $expected): void {
@@ -90,7 +89,6 @@ class LinkTest extends UnitTestCase {
   }
 
   /**
-   * @covers ::merge
    * @dataProvider linkMergeProvider
    */
   public function testLinkMerge(array $a, array $b, array $expected): void {
@@ -119,9 +117,6 @@ class LinkTest extends UnitTestCase {
     ];
   }
 
-  /**
-   * @covers ::getLinkRelationType
-   */
   public function testGetLinkRelationType() {
     $this->mockUrlAssembler();
     $link = new Link((new CacheableMetadata())->addCacheTags(['foo']), Url::fromUri('https://jsonapi.org/foo'), 'self');

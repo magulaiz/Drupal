@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\media_library\Kernel;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use Drupal\Core\Field\BaseFieldDefinition;
 use Drupal\Core\Form\FormState;
 use Drupal\Core\Session\AccountInterface;
@@ -17,9 +18,9 @@ use Drupal\Tests\user\Traits\UserCreationTrait;
 /**
  * Tests the media library widget.
  *
- * @coversDefaultClass \Drupal\media_library\Plugin\Field\FieldWidget\MediaLibraryWidget
  * @group media_library
  */
+#[CoversClass(\Drupal\media_library\Plugin\Field\FieldWidget\MediaLibraryWidget::class)]
 class MediaLibraryWidgetTest extends KernelTestBase {
 
   use UserCreationTrait;

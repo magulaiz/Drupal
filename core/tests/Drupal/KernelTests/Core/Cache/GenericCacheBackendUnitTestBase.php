@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\KernelTests\Core\Cache;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\KernelTests\KernelTestBase;
@@ -18,6 +19,12 @@ use Drupal\KernelTests\KernelTestBase;
  * @see DatabaseBackendUnitTestCase
  *   For a full working implementation.
  */
+#[CoversClass(\Drupal\Core\Cache\ApcuBackend::class)]
+#[CoversClass(\Drupal\Core\Cache\BackendChain::class)]
+#[CoversClass(\Drupal\Core\Cache\ChainedFastBackend::class)]
+#[CoversClass(\Drupal\Core\Cache\DatabaseBackend::class)]
+#[CoversClass(\Drupal\Core\Cache\MemoryBackend::class)]
+#[CoversClass(\Drupal\Core\Cache\PhpBackend::class)]
 abstract class GenericCacheBackendUnitTestBase extends KernelTestBase {
 
   /**
@@ -440,20 +447,6 @@ abstract class GenericCacheBackendUnitTestBase extends KernelTestBase {
     }
   }
 
-  /**
-   * @covers \Drupal\Core\Cache\ApcuBackend::deleteMultiple
-   * @covers \Drupal\Core\Cache\BackendChain::deleteMultiple
-   * @covers \Drupal\Core\Cache\ChainedFastBackend::deleteMultiple
-   * @covers \Drupal\Core\Cache\DatabaseBackend::deleteMultiple
-   * @covers \Drupal\Core\Cache\MemoryBackend::deleteMultiple
-   * @covers \Drupal\Core\Cache\PhpBackend::deleteMultiple
-   * @covers \Drupal\Core\Cache\ApcuBackend::deleteMultiple
-   * @covers \Drupal\Core\Cache\BackendChain::deleteMultiple
-   * @covers \Drupal\Core\Cache\ChainedFastBackend::deleteMultiple
-   * @covers \Drupal\Core\Cache\DatabaseBackend::deleteMultiple
-   * @covers \Drupal\Core\Cache\MemoryBackend::deleteMultiple
-   * @covers \Drupal\Core\Cache\PhpBackend::deleteMultiple
-   */
   public function testDeleteMultiple() {
     $backend = $this->getCacheBackend();
 
@@ -517,20 +510,6 @@ abstract class GenericCacheBackendUnitTestBase extends KernelTestBase {
     $this->assertNotEmpty($backend_b->get('test3'), 'Item in other bin is preserved.');
   }
 
-  /**
-   * @covers \Drupal\Core\Cache\ApcuBackend::getMultiple
-   * @covers \Drupal\Core\Cache\BackendChain::getMultiple
-   * @covers \Drupal\Core\Cache\ChainedFastBackend::getMultiple
-   * @covers \Drupal\Core\Cache\DatabaseBackend::getMultiple
-   * @covers \Drupal\Core\Cache\MemoryBackend::getMultiple
-   * @covers \Drupal\Core\Cache\PhpBackend::getMultiple
-   * @covers \Drupal\Core\Cache\ApcuBackend::invalidateMultiple
-   * @covers \Drupal\Core\Cache\BackendChain::invalidateMultiple
-   * @covers \Drupal\Core\Cache\ChainedFastBackend::invalidateMultiple
-   * @covers \Drupal\Core\Cache\DatabaseBackend::invalidateMultiple
-   * @covers \Drupal\Core\Cache\MemoryBackend::invalidateMultiple
-   * @covers \Drupal\Core\Cache\PhpBackend::invalidateMultiple
-   */
   public function testInvalidate() {
     $backend = $this->getCacheBackend();
     $backend->set('test1', 1);

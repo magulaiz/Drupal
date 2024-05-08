@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\system\Unit\Breadcrumbs;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Link;
@@ -21,9 +22,9 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Route;
 
 /**
- * @coversDefaultClass \Drupal\system\PathBasedBreadcrumbBuilder
  * @group system
  */
+#[CoversClass(\Drupal\system\PathBasedBreadcrumbBuilder::class)]
 class PathBasedBreadcrumbBuilderTest extends UnitTestCase {
 
   /**
@@ -91,8 +92,6 @@ class PathBasedBreadcrumbBuilderTest extends UnitTestCase {
 
   /**
    * {@inheritdoc}
-   *
-   * @covers ::__construct
    */
   protected function setUp(): void {
     parent::setUp();
@@ -138,8 +137,6 @@ class PathBasedBreadcrumbBuilderTest extends UnitTestCase {
 
   /**
    * Tests the build method on the frontpage.
-   *
-   * @covers ::build
    */
   public function testBuildOnFrontpage() {
     $this->pathMatcher->expects($this->once())
@@ -155,8 +152,6 @@ class PathBasedBreadcrumbBuilderTest extends UnitTestCase {
 
   /**
    * Tests the build method with one path element.
-   *
-   * @covers ::build
    */
   public function testBuildWithOnePathElement() {
     $this->context->expects($this->once())
@@ -172,9 +167,6 @@ class PathBasedBreadcrumbBuilderTest extends UnitTestCase {
 
   /**
    * Tests the build method with two path elements.
-   *
-   * @covers ::build
-   * @covers ::getRequestForPath
    */
   public function testBuildWithTwoPathElements() {
     $this->context->expects($this->once())
@@ -211,9 +203,6 @@ class PathBasedBreadcrumbBuilderTest extends UnitTestCase {
 
   /**
    * Tests the build method with three path elements.
-   *
-   * @covers ::build
-   * @covers ::getRequestForPath
    */
   public function testBuildWithThreePathElements() {
     $this->context->expects($this->once())
@@ -268,8 +257,6 @@ class PathBasedBreadcrumbBuilderTest extends UnitTestCase {
   /**
    * Tests that exceptions during request matching are caught.
    *
-   * @covers ::build
-   * @covers ::getRequestForPath
    *
    * @dataProvider providerTestBuildWithException
    */
@@ -310,9 +297,6 @@ class PathBasedBreadcrumbBuilderTest extends UnitTestCase {
 
   /**
    * Tests the build method with a non processed path.
-   *
-   * @covers ::build
-   * @covers ::getRequestForPath
    */
   public function testBuildWithNonProcessedPath() {
     $this->context->expects($this->once())
@@ -338,8 +322,6 @@ class PathBasedBreadcrumbBuilderTest extends UnitTestCase {
 
   /**
    * Tests the applied method.
-   *
-   * @covers ::applies
    */
   public function testApplies() {
     $this->assertTrue($this->builder->applies($this->createMock('Drupal\Core\Routing\RouteMatchInterface')));
@@ -347,9 +329,6 @@ class PathBasedBreadcrumbBuilderTest extends UnitTestCase {
 
   /**
    * Tests the breadcrumb for a user path.
-   *
-   * @covers ::build
-   * @covers ::getRequestForPath
    */
   public function testBuildWithUserPath() {
     $this->context->expects($this->once())

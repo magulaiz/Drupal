@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\menu_link_content\Kernel\Plugin\migrate\process;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\menu_link_content\Plugin\migrate\process\LinkUri;
 use Drupal\migrate\MigrateException;
@@ -16,9 +17,8 @@ use Drupal\Tests\user\Traits\UserCreationTrait;
  * Tests \Drupal\menu_link_content\Plugin\migrate\process\LinkUri.
  *
  * @group menu_link_content
- *
- * @coversDefaultClass \Drupal\menu_link_content\Plugin\migrate\process\LinkUri
  */
+#[CoversClass(\Drupal\menu_link_content\Plugin\migrate\process\LinkUri::class)]
 class LinkUriTest extends KernelTestBase {
 
   use UserCreationTrait;
@@ -48,8 +48,6 @@ class LinkUriTest extends KernelTestBase {
    *   The expected return value of LinkUri::transform().
    *
    * @dataProvider providerTestRouted
-   *
-   * @covers ::transform
    */
   public function testRouted($value, $expected) {
     $actual = $this->doTransform($value);
@@ -134,8 +132,6 @@ class LinkUriTest extends KernelTestBase {
    *   The expected return value of LinkUri::transform().
    *
    * @dataProvider providerTestDisablingRouteValidation
-   *
-   * @covers ::transform
    */
   public function testDisablingRouteValidation($value, $expected) {
     // Create a node so we have a valid route.

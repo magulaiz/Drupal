@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\FunctionalTests\Entity;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use Drupal\Component\Render\FormattableMarkup;
 use Drupal\Core\Entity\RevisionLogInterface;
 use Drupal\entity_test\Entity\EntityTestRev;
@@ -16,8 +17,9 @@ use Drupal\Tests\BrowserTestBase;
  *
  * @group Entity
  * @group #slow
- * @coversDefaultClass \Drupal\Core\Entity\Form\RevisionRevertForm
  */
+#[CoversClass(\Drupal\Core\Entity\Form\RevisionRevertForm::class)]
+#[CoversClass(\Drupal\Core\Entity\EntityAccessControlHandler::class)]
 class RevisionRevertFormTest extends BrowserTestBase {
 
   /**
@@ -51,7 +53,6 @@ class RevisionRevertFormTest extends BrowserTestBase {
    * @param string $expectedQuestion
    *   The expected question/page title.
    *
-   * @covers ::getQuestion
    * @dataProvider providerPageTitle
    */
   public function testPageTitle(string $entityTypeId, string $expectedQuestion): void {
@@ -97,8 +98,6 @@ class RevisionRevertFormTest extends BrowserTestBase {
 
   /**
    * Test cannot revert latest default revision.
-   *
-   * @covers \Drupal\Core\Entity\EntityAccessControlHandler::checkAccess
    */
   public function testAccessRevertLatestDefault(): void {
     /** @var \Drupal\entity_test\Entity\EntityTestRev $entity */
@@ -116,8 +115,6 @@ class RevisionRevertFormTest extends BrowserTestBase {
 
   /**
    * Ensures that forward revisions can be reverted.
-   *
-   * @covers \Drupal\Core\Entity\EntityAccessControlHandler::checkAccess
    */
   public function testAccessRevertLatestForwardRevision(): void {
     /** @var \Drupal\entity_test\Entity\EntityTestRev $entity */
@@ -140,8 +137,6 @@ class RevisionRevertFormTest extends BrowserTestBase {
 
   /**
    * Test can revert non-latest revision.
-   *
-   * @covers \Drupal\Core\Entity\EntityAccessControlHandler::checkAccess
    */
   public function testAccessRevertNonLatest(): void {
     /** @var \Drupal\entity_test\Entity\EntityTestRev $entity */
@@ -179,7 +174,6 @@ class RevisionRevertFormTest extends BrowserTestBase {
    * @param string $expectedDestination
    *   Expected destination after deletion.
    *
-   * @covers ::submitForm
    * @dataProvider providerSubmitForm
    */
   public function testSubmitForm(array $permissions, string $entityTypeId, string $entityLabel, string $expectedLog, string $expectedMessage, string $expectedDestination): void {
@@ -273,8 +267,6 @@ class RevisionRevertFormTest extends BrowserTestBase {
 
   /**
    * Tests the revert process.
-   *
-   * @covers ::prepareRevision
    */
   public function testPrepareRevision(): void {
     $user = $this->createUser();

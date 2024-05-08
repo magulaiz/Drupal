@@ -4,13 +4,14 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\filter\Unit;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use Drupal\Tests\UnitTestCase;
 use Drupal\filter\Plugin\Filter\FilterHtml;
 
 /**
- * @coversDefaultClass \Drupal\filter\Plugin\Filter\FilterHtml
  * @group filter
  */
+#[CoversClass(\Drupal\filter\Plugin\Filter\FilterHtml::class)]
 class FilterHtmlTest extends UnitTestCase {
 
   /**
@@ -33,7 +34,6 @@ class FilterHtmlTest extends UnitTestCase {
   }
 
   /**
-   * @covers ::filterAttributes
    *
    * @dataProvider providerFilterAttributes
    *
@@ -79,9 +79,6 @@ class FilterHtmlTest extends UnitTestCase {
     ];
   }
 
-  /**
-   * @covers ::setConfiguration
-   */
   public function testSetConfiguration() {
     $configuration['settings'] = [
       // New lines and spaces are replaced with a single space.

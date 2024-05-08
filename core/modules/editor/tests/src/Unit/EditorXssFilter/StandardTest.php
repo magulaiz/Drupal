@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\editor\Unit\EditorXssFilter;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use Drupal\editor\EditorXssFilter\Standard;
 use Drupal\Tests\UnitTestCase;
 use Drupal\filter\Plugin\FilterInterface;
@@ -11,11 +12,10 @@ use Drupal\filter\Plugin\FilterInterface;
 // cspell:ignore ascript attributename bgsound bscript ckers cript datafld
 // cspell:ignore dataformatas datasrc dynsrc ession livescript msgbox nmouseover
 // cspell:ignore noxss pression ript scri scriptlet unicoded vbscript
-
 /**
- * @coversDefaultClass \Drupal\editor\EditorXssFilter\Standard
  * @group editor
  */
+#[CoversClass(\Drupal\editor\EditorXssFilter\Standard::class)]
 class StandardTest extends UnitTestCase {
 
   /**

@@ -4,14 +4,15 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\views\Unit;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use Drupal\Tests\UnitTestCase;
 use Drupal\views\ViewsDataHelper;
 use Drupal\views\Tests\ViewTestData;
 
 /**
- * @coversDefaultClass \Drupal\views\ViewsDataHelper
  * @group views
  */
+#[CoversClass(\Drupal\views\ViewsDataHelper::class)]
 class ViewsDataHelperTest extends UnitTestCase {
 
   /**

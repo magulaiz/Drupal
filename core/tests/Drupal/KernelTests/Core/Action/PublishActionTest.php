@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\KernelTests\Core\Action;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use Drupal\Core\Action\Plugin\Action\Derivative\EntityPublishedActionDeriver;
 use Drupal\entity_test\Entity\EntityTestMulRevPub;
 use Drupal\KernelTests\KernelTestBase;
@@ -12,6 +13,9 @@ use Drupal\system\Entity\Action;
 /**
  * @group Action
  */
+#[CoversClass(\Drupal\Core\Action\Plugin\Action\Derivative\EntityPublishedActionDeriver::class)]
+#[CoversClass(\Drupal\Core\Action\Plugin\Action\PublishAction::class)]
+#[CoversClass(\Drupal\Core\Action\Plugin\Action\UnpublishAction::class)]
 class PublishActionTest extends KernelTestBase {
 
   /**
@@ -27,9 +31,6 @@ class PublishActionTest extends KernelTestBase {
     $this->installEntitySchema('entity_test_mulrevpub');
   }
 
-  /**
-   * @covers \Drupal\Core\Action\Plugin\Action\Derivative\EntityPublishedActionDeriver::getDerivativeDefinitions
-   */
   public function testGetDerivativeDefinitions() {
     $deriver = new EntityPublishedActionDeriver(\Drupal::entityTypeManager(), \Drupal::translation());
     $definitions = $deriver->getDerivativeDefinitions([
@@ -42,9 +43,6 @@ class PublishActionTest extends KernelTestBase {
     ], $definitions['entity_test_mulrevpub']);
   }
 
-  /**
-   * @covers \Drupal\Core\Action\Plugin\Action\PublishAction::execute
-   */
   public function testPublishAction() {
     $entity = EntityTestMulRevPub::create(['name' => 'test']);
     $entity->setUnpublished()->save();
@@ -60,9 +58,6 @@ class PublishActionTest extends KernelTestBase {
     $this->assertSame(['module' => ['entity_test']], $action->getDependencies());
   }
 
-  /**
-   * @covers \Drupal\Core\Action\Plugin\Action\UnpublishAction::execute
-   */
   public function testUnpublishAction() {
     $entity = EntityTestMulRevPub::create(['name' => 'test']);
     $entity->setPublished()->save();

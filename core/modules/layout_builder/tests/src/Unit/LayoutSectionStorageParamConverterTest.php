@@ -4,21 +4,18 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\layout_builder\Unit;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use Drupal\layout_builder\Routing\LayoutSectionStorageParamConverter;
 use Drupal\layout_builder\SectionStorage\SectionStorageManagerInterface;
 use Drupal\layout_builder\SectionStorageInterface;
 use Drupal\Tests\UnitTestCase;
 
 /**
- * @coversDefaultClass \Drupal\layout_builder\Routing\LayoutSectionStorageParamConverter
- *
  * @group layout_builder
  */
+#[CoversClass(\Drupal\layout_builder\Routing\LayoutSectionStorageParamConverter::class)]
 class LayoutSectionStorageParamConverterTest extends UnitTestCase {
 
-  /**
-   * @covers ::convert
-   */
   public function testConvert() {
     $section_storage_manager = $this->prophesize(SectionStorageManagerInterface::class);
     $converter = new LayoutSectionStorageParamConverter($section_storage_manager->reveal());
@@ -39,9 +36,6 @@ class LayoutSectionStorageParamConverterTest extends UnitTestCase {
     $this->assertSame($section_storage->reveal(), $result);
   }
 
-  /**
-   * @covers ::convert
-   */
   public function testConvertNoType() {
     $section_storage_manager = $this->prophesize(SectionStorageManagerInterface::class);
     $converter = new LayoutSectionStorageParamConverter($section_storage_manager->reveal());
@@ -58,9 +52,6 @@ class LayoutSectionStorageParamConverterTest extends UnitTestCase {
     $this->assertNull($result);
   }
 
-  /**
-   * @covers ::convert
-   */
   public function testConvertInvalidConverter() {
     $section_storage_manager = $this->prophesize(SectionStorageManagerInterface::class);
     $converter = new LayoutSectionStorageParamConverter($section_storage_manager->reveal());

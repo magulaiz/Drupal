@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\block_content\Kernel;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use Drupal\block_content\BlockContentAccessControlHandler;
 use Drupal\block_content\Entity\BlockContent;
 use Drupal\block_content\Entity\BlockContentType;
@@ -20,10 +21,10 @@ use Drupal\user\Entity\User;
 /**
  * Tests the block content entity access handler.
  *
- * @coversDefaultClass \Drupal\block_content\BlockContentAccessControlHandler
  *
  * @group block_content
  */
+#[CoversClass(\Drupal\block_content\BlockContentAccessControlHandler::class)]
 class BlockContentAccessHandlerTest extends KernelTestBase {
 
   use UserCreationTrait;
@@ -129,7 +130,6 @@ class BlockContentAccessHandlerTest extends KernelTestBase {
    * @param string|null $expected_access_message
    *   The expected access message.
    *
-   * @covers ::checkAccess
    *
    * @dataProvider providerTestAccess
    *

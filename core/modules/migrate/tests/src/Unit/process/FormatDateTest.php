@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\migrate\Unit\process;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use Drupal\migrate\MigrateException;
 use Drupal\migrate\Plugin\migrate\process\FormatDate;
 
@@ -11,9 +12,8 @@ use Drupal\migrate\Plugin\migrate\process\FormatDate;
  * Tests the format date process plugin.
  *
  * @group migrate
- *
- * @coversDefaultClass Drupal\migrate\Plugin\migrate\process\FormatDate
  */
+#[CoversClass(Drupal\migrate\Plugin\migrate\process\FormatDate::class)]
 class FormatDateTest extends MigrateProcessTestCase {
 
   /**
@@ -79,7 +79,6 @@ class FormatDateTest extends MigrateProcessTestCase {
   /**
    * Tests transformation.
    *
-   * @covers ::transform
    *
    * @dataProvider datesDataProvider
    *

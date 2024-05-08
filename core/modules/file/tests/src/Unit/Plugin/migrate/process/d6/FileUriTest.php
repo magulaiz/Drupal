@@ -4,15 +4,16 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\file\Unit\Plugin\migrate\process\d6;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use Drupal\file\Plugin\migrate\process\d6\FileUri;
 use Drupal\migrate\MigrateExecutable;
 use Drupal\migrate\Row;
 use Drupal\Tests\migrate\Unit\MigrateTestCase;
 
 /**
- * @coversDefaultClass \Drupal\file\Plugin\migrate\process\d6\FileUri
  * @group file
  */
+#[CoversClass(\Drupal\file\Plugin\migrate\process\d6\FileUri::class)]
 class FileUriTest extends MigrateTestCase {
 
   protected $migrationConfiguration = [

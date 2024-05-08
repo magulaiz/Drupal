@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\serialization\Unit\Normalizer;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Datetime\DrupalDateTime;
 use Drupal\Core\TypedData\Plugin\DataType\IntegerData;
@@ -17,9 +18,9 @@ use Symfony\Component\Serializer\Exception\UnexpectedValueException;
  * Unit test coverage for the "Timestamp" @DataType.
  *
  * @group serialization
- * @coversDefaultClass \Drupal\serialization\Normalizer\TimestampNormalizer
  * @see \Drupal\Core\TypedData\Plugin\DataType\Timestamp
  */
+#[CoversClass(\Drupal\serialization\Normalizer\TimestampNormalizer::class)]
 class TimestampNormalizerTest extends UnitTestCase {
 
   /**
@@ -46,9 +47,6 @@ class TimestampNormalizerTest extends UnitTestCase {
     $this->data = $this->prophesize(Timestamp::class);
   }
 
-  /**
-   * @covers ::supportsNormalization
-   */
   public function testSupportsNormalization() {
     $this->assertTrue($this->normalizer->supportsNormalization($this->data->reveal()));
 
@@ -59,16 +57,10 @@ class TimestampNormalizerTest extends UnitTestCase {
     $this->assertFalse($this->normalizer->supportsNormalization($datetime->reveal()));
   }
 
-  /**
-   * @covers ::supportsDenormalization
-   */
   public function testSupportsDenormalization() {
     $this->assertTrue($this->normalizer->supportsDenormalization($this->data->reveal(), Timestamp::class));
   }
 
-  /**
-   * @covers ::normalize
-   */
   public function testNormalize() {
     $random_rfc_3339_string = $this->randomMachineName();
 
@@ -88,7 +80,6 @@ class TimestampNormalizerTest extends UnitTestCase {
   /**
    * Tests the denormalize function with good data.
    *
-   * @covers ::denormalize
    * @dataProvider providerTestDenormalizeValidFormats
    */
   public function testDenormalizeValidFormats($normalized, $expected) {
@@ -120,8 +111,6 @@ class TimestampNormalizerTest extends UnitTestCase {
 
   /**
    * Tests the denormalize function with bad data.
-   *
-   * @covers ::denormalize
    */
   public function testDenormalizeException() {
     $this->expectException(UnexpectedValueException::class);

@@ -4,15 +4,16 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\views\Unit;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use Drupal\Core\Language\Language;
 use Drupal\Tests\UnitTestCase;
 use Drupal\views\ViewsData;
 use Drupal\views\Tests\ViewTestData;
 
 /**
- * @coversDefaultClass \Drupal\views\ViewsData
  * @group views
  */
+#[CoversClass(\Drupal\views\ViewsData::class)]
 class ViewsDataTest extends UnitTestCase {
 
   /**
@@ -594,8 +595,6 @@ class ViewsDataTest extends UnitTestCase {
 
   /**
    * Tests the cache calls for multiple tables without warm caches.
-   *
-   * @covers ::get
    */
   public function testCacheCallsWithoutWarmCacheAndGetMultipleTables() {
     $expected_views_data = $this->viewsDataWithProvider();
@@ -638,7 +637,6 @@ class ViewsDataTest extends UnitTestCase {
   /**
    * Tests that getting data with an empty key throws an exception.
    *
-   * @covers ::get
    * @dataProvider providerTestGetEmptyKey
    */
   public function testGetEmptyKey($key) {

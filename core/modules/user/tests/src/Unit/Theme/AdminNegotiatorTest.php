@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\user\Unit\Theme;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Routing\AdminContext;
 use Drupal\Core\Routing\RouteMatch;
@@ -15,8 +16,8 @@ use Drupal\user\Theme\AdminNegotiator;
  * Tests AdminNegotiator class.
  *
  * @group user
- * @coversDefaultClass \Drupal\user\Theme\AdminNegotiator
  */
+#[CoversClass(\Drupal\user\Theme\AdminNegotiator::class)]
 class AdminNegotiatorTest extends UnitTestCase {
 
   /**

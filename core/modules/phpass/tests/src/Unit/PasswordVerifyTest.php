@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\phpass\Unit;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use Drupal\phpass\Password\PhpassHashedPassword;
 use Drupal\Core\Password\PasswordInterface;
 use Drupal\Core\Password\PhpPassword;
@@ -12,15 +13,13 @@ use Drupal\Tests\UnitTestCase;
 /**
  * Unit tests for password hashing API.
  *
- * @coversDefaultClass \Drupal\phpass\Password\PhpassHashedPassword
  * @group phpass
  */
+#[CoversClass(\Drupal\phpass\Password\PhpassHashedPassword::class)]
 class PasswordVerifyTest extends UnitTestCase {
 
   /**
    * Tests that hash() is forwarded to corePassword instance.
-   *
-   * @covers ::hash
    */
   public function testPasswordHash() {
     $samplePassword = $this->randomMachineName();
@@ -37,8 +36,6 @@ class PasswordVerifyTest extends UnitTestCase {
 
   /**
    * Tests that needsRehash() is forwarded to corePassword instance.
-   *
-   * @covers ::needsRehash
    */
   public function testPasswordNeedsRehash() {
     $sampleHash = $this->randomMachineName();
@@ -53,8 +50,6 @@ class PasswordVerifyTest extends UnitTestCase {
 
   /**
    * Tests that check() is forwarded to corePassword instance if hash settings are not recognized.
-   *
-   * @covers ::check
    */
   public function testPasswordCheckUnknownHash() {
     $samplePassword = $this->randomMachineName();
@@ -70,12 +65,6 @@ class PasswordVerifyTest extends UnitTestCase {
 
   /**
    * Tests that check() verifies passwords if hash settings are supported.
-   *
-   * @covers ::check
-   * @covers ::crypt
-   * @covers ::getCountLog2
-   * @covers ::enforceLog2Boundaries
-   * @covers ::base64Encode
    */
   public function testPasswordCheckSupported() {
     $validPassword = 'valid password';
@@ -105,8 +94,6 @@ class PasswordVerifyTest extends UnitTestCase {
 
   /**
    * Tests the hash count boundaries are enforced.
-   *
-   * @covers ::enforceLog2Boundaries
    */
   public function testWithinBounds() {
     $hasher = new PhpassHashedPasswordLog2BoundariesDouble();
@@ -117,7 +104,6 @@ class PasswordVerifyTest extends UnitTestCase {
   /**
    * Verifies that passwords longer than 512 bytes are not hashed.
    *
-   * @covers ::crypt
    *
    * @dataProvider providerLongPasswords
    */

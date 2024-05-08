@@ -4,16 +4,16 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\taxonomy\Kernel\Plugin\migrate\source\d7;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use Drupal\Tests\migrate\Kernel\MigrateSqlSourceTestBase;
 
 // cspell:ignore objectid objectindex plid textgroup
-
 /**
  * Tests D7 i18n vocabulary source plugin.
  *
- * @covers \Drupal\taxonomy\Plugin\migrate\source\d7\VocabularyTranslation
  * @group taxonomy
  */
+#[CoversClass(\Drupal\taxonomy\Plugin\migrate\source\d7\VocabularyTranslation::class)]
 class VocabularyTranslationTest extends MigrateSqlSourceTestBase {
 
   /**

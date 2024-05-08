@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\media\Unit;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use Drupal\Core\KeyValueStore\KeyValueMemoryFactory;
 use Drupal\Core\Logger\LoggerChannelFactoryInterface;
 use Drupal\media\OEmbed\ProviderException;
@@ -15,10 +16,9 @@ use GuzzleHttp\HandlerStack;
 use GuzzleHttp\Psr7\Response;
 
 /**
- * @coversDefaultClass \Drupal\media\OEmbed\ProviderRepository
- *
  * @group media
  */
+#[CoversClass(\Drupal\media\OEmbed\ProviderRepository::class)]
 class ProviderRepositoryTest extends UnitTestCase {
 
   /**

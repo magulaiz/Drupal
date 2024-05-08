@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\workspaces\Kernel;
 
+use PHPUnit\Framework\Attributes\CoversFunction;
+use PHPUnit\Framework\Attributes\CoversClass;
 use Drupal\Core\Entity\EntityStorageException;
 use Drupal\Core\Form\FormState;
 use Drupal\Core\Session\AnonymousUserSession;
@@ -26,6 +28,11 @@ use Drupal\workspaces\WorkspacePublishException;
  * @group #slow
  * @group workspaces
  */
+#[CoversFunction('workspaces_entity_presave')]
+#[CoversFunction('workspaces_entity_insert')]
+#[CoversFunction('workspaces_entity_delete')]
+#[CoversFunction('workspaces_entity_revision_delete')]
+#[CoversClass(\Drupal\workspaces\WorkspaceManager::class)]
 class WorkspaceIntegrationTest extends KernelTestBase {
 
   use ContentTypeCreationTrait;
@@ -371,11 +378,6 @@ class WorkspaceIntegrationTest extends KernelTestBase {
 
   /**
    * Tests the workspace association data integrity for entity CRUD operations.
-   *
-   * @covers ::workspaces_entity_presave
-   * @covers ::workspaces_entity_insert
-   * @covers ::workspaces_entity_delete
-   * @covers ::workspaces_entity_revision_delete
    */
   public function testWorkspaceAssociationDataIntegrity() {
     $this->initializeWorkspacesModule();
@@ -775,9 +777,6 @@ class WorkspaceIntegrationTest extends KernelTestBase {
     ];
   }
 
-  /**
-   * @covers \Drupal\workspaces\WorkspaceManager::executeInWorkspace
-   */
   public function testExecuteInWorkspaceContext() {
     $this->initializeWorkspacesModule();
 

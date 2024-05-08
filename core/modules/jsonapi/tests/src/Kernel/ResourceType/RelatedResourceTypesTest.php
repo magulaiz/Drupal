@@ -4,17 +4,18 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\jsonapi\Kernel\ResourceType;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use Drupal\Core\Database\Database;
 use Drupal\Tests\jsonapi\Kernel\JsonapiKernelTestBase;
 use Drupal\node\Entity\NodeType;
 
 /**
- * @coversDefaultClass \Drupal\jsonapi\ResourceType\ResourceType
  * @coversClass \Drupal\jsonapi\ResourceType\ResourceTypeRepository
  * @group jsonapi
- *
  * @internal
  */
+#[CoversClass(\Drupal\jsonapi\ResourceType\ResourceType::class)]
+#[CoversClass(\Drupal\jsonapi\ResourceType\ResourceTypeRepository::class)]
 class RelatedResourceTypesTest extends JsonapiKernelTestBase {
 
   /**
@@ -112,7 +113,6 @@ class RelatedResourceTypesTest extends JsonapiKernelTestBase {
   }
 
   /**
-   * @covers ::getRelatableResourceTypes
    * @dataProvider getRelatableResourceTypesProvider
    */
   public function testGetRelatableResourceTypes($resource_type_name, $relatable_type_names) {
@@ -145,7 +145,6 @@ class RelatedResourceTypesTest extends JsonapiKernelTestBase {
   }
 
   /**
-   * @covers ::getRelatableResourceTypes
    * @dataProvider getRelatableResourceTypesProvider
    */
   public static function getRelatableResourceTypesProvider() {
@@ -163,7 +162,6 @@ class RelatedResourceTypesTest extends JsonapiKernelTestBase {
   }
 
   /**
-   * @covers ::getRelatableResourceTypesByField
    * @dataProvider getRelatableResourceTypesByFieldProvider
    */
   public function testGetRelatableResourceTypesByField($entity_type_id, $bundle, $field) {
@@ -189,9 +187,6 @@ class RelatedResourceTypesTest extends JsonapiKernelTestBase {
   /**
    * Ensure a graceful failure when a field can references a missing bundle.
    *
-   * @covers \Drupal\jsonapi\ResourceType\ResourceTypeRepository::all
-   * @covers \Drupal\jsonapi\ResourceType\ResourceTypeRepository::calculateRelatableResourceTypes
-   * @covers \Drupal\jsonapi\ResourceType\ResourceTypeRepository::getRelatableResourceTypesFromFieldDefinition
    *
    * @link https://www.drupal.org/project/drupal/issues/2996114
    */

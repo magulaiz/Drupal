@@ -4,12 +4,13 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\block_content\Functional;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 /**
  * Block content revision delete form test.
  *
  * @group block_content
- * @coversDefaultClass \Drupal\Core\Entity\Form\RevisionDeleteForm
  */
+#[CoversClass(\Drupal\Core\Entity\Form\RevisionDeleteForm::class)]
 class BlockContentRevisionDeleteTest extends BlockContentTestBase {
 
   /**

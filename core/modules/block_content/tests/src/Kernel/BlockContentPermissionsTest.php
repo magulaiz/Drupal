@@ -4,16 +4,17 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\block_content\Kernel;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\block_content\Entity\BlockContentType;
 
 /**
  * Tests the permissions of content blocks.
  *
- * @coversDefaultClass \Drupal\block_content\BlockContentPermissions
  *
  * @group block_content
  */
+#[CoversClass(\Drupal\block_content\BlockContentPermissions::class)]
 class BlockContentPermissionsTest extends KernelTestBase {
 
   /**
@@ -45,9 +46,6 @@ class BlockContentPermissionsTest extends KernelTestBase {
     $this->permissionHandler = $this->container->get('user.permissions');
   }
 
-  /**
-   * @covers ::blockTypePermissions
-   */
   public function testDynamicPermissions() {
     $permissions = $this->permissionHandler->getPermissions();
     $this->assertArrayNotHasKey('edit any basic block content', $permissions, 'The per-block-type permission does not exist.');

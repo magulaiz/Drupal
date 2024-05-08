@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\user\Unit;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use Drupal\Core\Extension\Extension;
 use Drupal\Core\Extension\ModuleExtensionList;
 use Drupal\Core\StringTranslation\PluralTranslatableMarkup;
@@ -20,9 +21,9 @@ use org\bovigo\vfs\vfsStreamWrapper;
  *
  * @group user
  *
- * @coversDefaultClass \Drupal\user\PermissionHandler
  * @runTestsInSeparateProcesses
  */
+#[CoversClass(\Drupal\user\PermissionHandler::class)]
 class PermissionHandlerTest extends UnitTestCase {
 
   /**
@@ -82,11 +83,6 @@ class PermissionHandlerTest extends UnitTestCase {
 
   /**
    * Tests permissions provided by YML files.
-   *
-   * @covers ::__construct
-   * @covers ::getPermissions
-   * @covers ::buildPermissionsYaml
-   * @covers ::moduleProvidesPermissions
    */
   public function testBuildPermissionsYaml() {
     vfsStreamWrapper::register();
@@ -147,11 +143,6 @@ EOF
 
   /**
    * Tests permissions sort inside a module.
-   *
-   * @covers ::__construct
-   * @covers ::getPermissions
-   * @covers ::buildPermissionsYaml
-   * @covers ::sortPermissions
    */
   public function testBuildPermissionsSortPerModule() {
     vfsStreamWrapper::register();
@@ -204,10 +195,6 @@ EOF
 
   /**
    * Tests dynamic callback permissions provided by YML files.
-   *
-   * @covers ::__construct
-   * @covers ::getPermissions
-   * @covers ::buildPermissionsYaml
    */
   public function testBuildPermissionsYamlCallback() {
     vfsStreamWrapper::register();

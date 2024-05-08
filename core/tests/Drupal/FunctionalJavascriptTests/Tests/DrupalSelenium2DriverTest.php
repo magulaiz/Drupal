@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\FunctionalJavascriptTests\Tests;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use Behat\Mink\Driver\Selenium2Driver;
 use Drupal\entity_test\Entity\EntityTest;
 use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
@@ -13,9 +14,9 @@ use Drupal\Tests\TestFileCreationTrait;
 /**
  * Tests the DrupalSelenium2Driver methods.
  *
- * @coversDefaultClass \Drupal\FunctionalJavascriptTests\DrupalSelenium2Driver
  * @group javascript
  */
+#[CoversClass(\Drupal\FunctionalJavascriptTests\DrupalSelenium2Driver::class)]
 class DrupalSelenium2DriverTest extends WebDriverTestBase {
 
   use TestFileCreationTrait;

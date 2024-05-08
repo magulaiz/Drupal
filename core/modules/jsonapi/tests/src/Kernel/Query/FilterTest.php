@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\jsonapi\Kernel\Query;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
 use Drupal\Core\Http\Exception\CacheableBadRequestHttpException;
 use Drupal\jsonapi\Context\FieldResolver;
@@ -16,13 +17,12 @@ use Drupal\Tests\jsonapi\Kernel\JsonapiKernelTestBase;
 use Prophecy\Argument;
 
 /**
- * @coversDefaultClass \Drupal\jsonapi\Query\Filter
  * @group jsonapi
  * @group jsonapi_query
  * @group #slow
- *
  * @internal
  */
+#[CoversClass(\Drupal\jsonapi\Query\Filter::class)]
 class FilterTest extends JsonapiKernelTestBase {
 
   use ImageFieldCreationTrait;
@@ -86,9 +86,6 @@ class FilterTest extends JsonapiKernelTestBase {
     $this->resourceTypeRepository = $this->container->get('jsonapi.resource_type.repository');
   }
 
-  /**
-   * @covers ::queryCondition
-   */
   public function testInvalidFilterPathDueToMissingPropertyName() {
     $this->expectException(CacheableBadRequestHttpException::class);
     $this->expectExceptionMessage('Invalid nested filtering. The field `colors`, given in the path `colors` is incomplete, it must end with one of the following specifiers: `value`, `format`, `processed`.');
@@ -96,9 +93,6 @@ class FilterTest extends JsonapiKernelTestBase {
     Filter::createFromQueryParameter(['colors' => ''], $resource_type, $this->fieldResolver);
   }
 
-  /**
-   * @covers ::queryCondition
-   */
   public function testInvalidFilterPathDueToMissingPropertyNameReferenceFieldWithMetaProperties() {
     $this->expectException(CacheableBadRequestHttpException::class);
     $this->expectExceptionMessage('Invalid nested filtering. The field `photo`, given in the path `photo` is incomplete, it must end with one of the following specifiers: `id`, `meta.drupal_internal__target_id`, `meta.alt`, `meta.title`, `meta.width`, `meta.height`.');
@@ -106,9 +100,6 @@ class FilterTest extends JsonapiKernelTestBase {
     Filter::createFromQueryParameter(['photo' => ''], $resource_type, $this->fieldResolver);
   }
 
-  /**
-   * @covers ::queryCondition
-   */
   public function testInvalidFilterPathDueMissingMetaPrefixReferenceFieldWithMetaProperties() {
     $this->expectException(CacheableBadRequestHttpException::class);
     $this->expectExceptionMessage('Invalid nested filtering. The property `alt`, given in the path `photo.alt` belongs to the meta object of a relationship and must be preceded by `meta`.');
@@ -116,9 +107,6 @@ class FilterTest extends JsonapiKernelTestBase {
     Filter::createFromQueryParameter(['photo.alt' => ''], $resource_type, $this->fieldResolver);
   }
 
-  /**
-   * @covers ::queryCondition
-   */
   public function testInvalidFilterPathDueToMissingPropertyNameReferenceFieldWithoutMetaProperties() {
     $this->expectException(CacheableBadRequestHttpException::class);
     $this->expectExceptionMessage('Invalid nested filtering. The field `uid`, given in the path `uid` is incomplete, it must end with one of the following specifiers: `id`, `meta.drupal_internal__target_id`.');
@@ -126,9 +114,6 @@ class FilterTest extends JsonapiKernelTestBase {
     Filter::createFromQueryParameter(['uid' => ''], $resource_type, $this->fieldResolver);
   }
 
-  /**
-   * @covers ::queryCondition
-   */
   public function testInvalidFilterPathDueToNonexistentProperty() {
     $this->expectException(CacheableBadRequestHttpException::class);
     $this->expectExceptionMessage('Invalid nested filtering. The property `foobar`, given in the path `colors.foobar`, does not exist. Must be one of the following property names: `value`, `format`, `processed`.');
@@ -136,9 +121,6 @@ class FilterTest extends JsonapiKernelTestBase {
     Filter::createFromQueryParameter(['colors.foobar' => ''], $resource_type, $this->fieldResolver);
   }
 
-  /**
-   * @covers ::queryCondition
-   */
   public function testInvalidFilterPathDueToElidedSoleProperty() {
     $this->expectException(CacheableBadRequestHttpException::class);
     $this->expectExceptionMessage('Invalid nested filtering. The property `value`, given in the path `promote.value`, does not exist. Filter by `promote`, not `promote.value` (the JSON:API module elides property names from single-property fields).');
@@ -146,9 +128,6 @@ class FilterTest extends JsonapiKernelTestBase {
     Filter::createFromQueryParameter(['promote.value' => ''], $resource_type, $this->fieldResolver);
   }
 
-  /**
-   * @covers ::queryCondition
-   */
   public function testQueryCondition() {
     // Can't use a data provider because we need access to the container.
     $data = $this->queryConditionData();
@@ -312,7 +291,6 @@ class FilterTest extends JsonapiKernelTestBase {
   }
 
   /**
-   * @covers ::createFromQueryParameter
    * @dataProvider parameterProvider
    */
   public function testCreateFromQueryParameter($case, $expected) {
@@ -342,9 +320,6 @@ class FilterTest extends JsonapiKernelTestBase {
     ];
   }
 
-  /**
-   * @covers ::createFromQueryParameter
-   */
   public function testCreateFromQueryParameterNested() {
     $parameter = [
       'or-group' => ['group' => ['conjunction' => 'OR']],

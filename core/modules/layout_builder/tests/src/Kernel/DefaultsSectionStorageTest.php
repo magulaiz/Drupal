@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\layout_builder\Kernel;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use Drupal\Core\Plugin\Context\Context;
 use Drupal\Core\Plugin\Context\ContextDefinition;
 use Drupal\Core\Plugin\Context\EntityContext;
@@ -17,11 +18,11 @@ use Drupal\layout_builder\SectionComponent;
 use Drupal\layout_builder\SectionStorage\SectionStorageDefinition;
 
 /**
- * @coversDefaultClass \Drupal\layout_builder\Plugin\SectionStorage\DefaultsSectionStorage
  *
  * @group layout_builder
  * @group #slow
  */
+#[CoversClass(\Drupal\layout_builder\Plugin\SectionStorage\DefaultsSectionStorage::class)]
 class DefaultsSectionStorageTest extends KernelTestBase {
 
   /**
@@ -77,7 +78,6 @@ class DefaultsSectionStorageTest extends KernelTestBase {
   }
 
   /**
-   * @covers ::access
    * @dataProvider providerTestAccess
    *
    * @param bool $expected
@@ -136,9 +136,6 @@ class DefaultsSectionStorageTest extends KernelTestBase {
     return $data;
   }
 
-  /**
-   * @covers ::getContexts
-   */
   public function testGetContexts() {
     $display = LayoutBuilderEntityViewDisplay::create([
       'targetEntityType' => 'entity_test',
@@ -156,9 +153,6 @@ class DefaultsSectionStorageTest extends KernelTestBase {
     $this->assertSame($context, $result['display']);
   }
 
-  /**
-   * @covers ::getContextsDuringPreview
-   */
   public function testGetContextsDuringPreview() {
     $display = LayoutBuilderEntityViewDisplay::create([
       'targetEntityType' => 'entity_test',
@@ -186,9 +180,6 @@ class DefaultsSectionStorageTest extends KernelTestBase {
     $this->assertSame('default', $result_value);
   }
 
-  /**
-   * @covers ::getTempstoreKey
-   */
   public function testGetTempstoreKey() {
     $display = LayoutBuilderEntityViewDisplay::create([
       'targetEntityType' => 'entity_test',

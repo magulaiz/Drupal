@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\migrate_drupal\Unit;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use Drupal\Core\Logger\LoggerChannelInterface;
 use Drupal\migrate\Plugin\MigrationInterface;
 use Drupal\migrate\Plugin\MigrationPluginManagerInterface;
@@ -16,8 +17,8 @@ use Drupal\Tests\UnitTestCase;
  * Tests the FieldDiscovery Class.
  *
  * @group migrate_drupal
- * @coversDefaultClass \Drupal\migrate_drupal\FieldDiscovery
  */
+#[CoversClass(\Drupal\migrate_drupal\FieldDiscovery::class)]
 class FieldDiscoveryTest extends UnitTestCase {
 
   /**
@@ -59,7 +60,6 @@ class FieldDiscoveryTest extends UnitTestCase {
    * @param array $expected_fields
    *   The expected fields.
    *
-   * @covers ::getEntityFields
    * @dataProvider getEntityFieldsData
    */
   public function testGetEntityFields($entity_type_id, array $expected_fields) {
@@ -136,7 +136,6 @@ class FieldDiscoveryTest extends UnitTestCase {
    * @param array $expected_fields
    *   The expected fields.
    *
-   * @covers ::getBundleFields
    * @dataProvider getBundleFieldsData
    */
   public function testGetBundleFields($entity_type_id, $bundle, array $expected_fields) {
@@ -222,7 +221,6 @@ class FieldDiscoveryTest extends UnitTestCase {
    * @param string|bool $expected_result
    *   The expected return value of the method.
    *
-   * @covers ::getCoreVersion
    * @dataProvider getCoreVersionData
    */
   public function testGetCoreVersion(array $tags, $expected_result) {
@@ -312,7 +310,6 @@ class FieldDiscoveryTest extends UnitTestCase {
    * @param array|bool $expected_definition
    *   The expected migration definition, or false if an exception is expected.
    *
-   * @covers ::getFieldInstanceStubMigrationDefinition
    * @dataProvider getFieldInstanceStubMigrationDefinition
    */
   public function testGetFieldInstanceStubMigrationDefinition($core, $expected_definition) {

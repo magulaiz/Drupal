@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\content_translation\Functional;
 
+use PHPUnit\Framework\Attributes\CoversFunction;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
@@ -13,9 +14,9 @@ use Drupal\Tests\TestFileCreationTrait;
 /**
  * Tests the field synchronization behavior for the image field.
  *
- * @covers ::_content_translation_form_language_content_settings_form_alter
  * @group content_translation
  */
+#[CoversFunction('_content_translation_form_language_content_settings_form_alter')]
 class ContentTranslationSyncImageTest extends ContentTranslationTestBase {
 
   use TestFileCreationTrait {

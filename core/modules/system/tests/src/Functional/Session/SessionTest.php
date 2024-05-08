@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\system\Functional\Session;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use Drupal\Core\Database\Database;
 use Drupal\Tests\BrowserTestBase;
 
@@ -13,6 +14,8 @@ use Drupal\Tests\BrowserTestBase;
  * @group Session
  * @group #slow
  */
+#[CoversClass(\Drupal\Core\Session\WriteSafeSessionHandler::class)]
+#[CoversClass(\Drupal\Core\Session\SessionManager::class)]
 class SessionTest extends BrowserTestBase {
 
   /**
@@ -29,10 +32,6 @@ class SessionTest extends BrowserTestBase {
 
   /**
    * Tests session writing and regeneration.
-   *
-   * @covers \Drupal\Core\Session\WriteSafeSessionHandler::setSessionWritable
-   * @covers \Drupal\Core\Session\WriteSafeSessionHandler::isSessionWritable
-   * @covers \Drupal\Core\Session\SessionManager::regenerate
    */
   public function testSessionSaveRegenerate() {
     $session_handler = $this->container->get('session_handler.write_safe');

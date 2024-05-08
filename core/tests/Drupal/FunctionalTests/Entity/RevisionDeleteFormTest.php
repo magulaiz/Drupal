@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\FunctionalTests\Entity;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use Drupal\Component\Render\FormattableMarkup;
 use Drupal\Core\Entity\RevisionLogInterface;
 use Drupal\entity_test\Entity\EntityTestRev;
@@ -15,8 +16,9 @@ use Drupal\Tests\BrowserTestBase;
  *
  * @group Entity
  * @group #slow
- * @coversDefaultClass \Drupal\Core\Entity\Form\RevisionDeleteForm
  */
+#[CoversClass(\Drupal\Core\Entity\Form\RevisionDeleteForm::class)]
+#[CoversClass(\Drupal\Core\Entity\EntityAccessControlHandler::class)]
 class RevisionDeleteFormTest extends BrowserTestBase {
 
   /**
@@ -50,7 +52,6 @@ class RevisionDeleteFormTest extends BrowserTestBase {
    * @param string $expectedQuestion
    *   The expected question/page title.
    *
-   * @covers ::getQuestion
    * @dataProvider providerPageTitle
    */
   public function testPageTitle(string $entityTypeId, string $expectedQuestion): void {
@@ -96,8 +97,6 @@ class RevisionDeleteFormTest extends BrowserTestBase {
 
   /**
    * Test cannot delete latest revision.
-   *
-   * @covers \Drupal\Core\Entity\EntityAccessControlHandler::checkAccess
    */
   public function testAccessDeleteLatestDefault(): void {
     /** @var \Drupal\entity_test\Entity\EntityTestRev $entity */
@@ -114,8 +113,6 @@ class RevisionDeleteFormTest extends BrowserTestBase {
 
   /**
    * Ensure that forward revision can be deleted.
-   *
-   * @covers \Drupal\Core\Entity\EntityAccessControlHandler::checkAccess
    */
   public function testAccessDeleteLatestForwardRevision(): void {
     /** @var \Drupal\entity_test\Entity\EntityTestRevPub $entity */
@@ -140,8 +137,6 @@ class RevisionDeleteFormTest extends BrowserTestBase {
 
   /**
    * Test cannot delete default revision.
-   *
-   * @covers \Drupal\Core\Entity\EntityAccessControlHandler::checkAccess
    */
   public function testAccessDeleteDefault(): void {
     /** @var \Drupal\entity_test\Entity\EntityTestRevPub $entity */
@@ -175,8 +170,6 @@ class RevisionDeleteFormTest extends BrowserTestBase {
 
   /**
    * Test can delete non-latest revision.
-   *
-   * @covers \Drupal\Core\Entity\EntityAccessControlHandler::checkAccess
    */
   public function testAccessDeleteNonLatest(): void {
     /** @var \Drupal\entity_test\Entity\EntityTestRev $entity */
@@ -217,7 +210,6 @@ class RevisionDeleteFormTest extends BrowserTestBase {
    * @param string|int $expectedDestination
    *   Expected destination after deletion.
    *
-   * @covers ::submitForm
    * @dataProvider providerSubmitForm
    */
   public function testSubmitForm(array $permissions, string $entityTypeId, string $entityLabel, int $totalRevisions, string $expectedLog, string $expectedMessage, $expectedDestination): void {

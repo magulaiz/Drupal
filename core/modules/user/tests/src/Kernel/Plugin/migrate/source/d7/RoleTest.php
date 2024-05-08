@@ -4,14 +4,15 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\user\Kernel\Plugin\migrate\source\d7;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use Drupal\Tests\migrate\Kernel\MigrateSqlSourceTestBase;
 
 /**
  * Tests the d7_user_role source plugin.
  *
- * @covers \Drupal\user\Plugin\migrate\source\d7\Role
  * @group user
  */
+#[CoversClass(\Drupal\user\Plugin\migrate\source\d7\Role::class)]
 class RoleTest extends MigrateSqlSourceTestBase {
 
   /**

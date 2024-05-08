@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\migrate\Unit\Plugin\migrate\destination;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use Drupal\Core\Entity\ContentEntityInterface;
 use Drupal\Core\Field\FieldTypePluginManagerInterface;
 use Drupal\Core\Session\AccountSwitcherInterface;
@@ -16,15 +17,13 @@ use Prophecy\Argument;
 /**
  * Tests base entity migration destination functionality.
  *
- * @coversDefaultClass \Drupal\migrate\Plugin\migrate\destination\EntityContentBase
  * @group migrate
  */
+#[CoversClass(\Drupal\migrate\Plugin\migrate\destination\EntityContentBase::class)]
 class EntityContentBaseTest extends EntityTestBase {
 
   /**
    * Tests basic entity save.
-   *
-   * @covers ::import
    */
   public function testImport() {
     $bundles = [];
@@ -57,8 +56,6 @@ class EntityContentBaseTest extends EntityTestBase {
 
   /**
    * Tests row skipping when we can't get an entity to save.
-   *
-   * @covers ::import
    */
   public function testImportEntityLoadFailure() {
     $bundles = [];

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\ckeditor5\Kernel;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use Drupal\ckeditor5\Plugin\Editor\CKEditor5;
 use Drupal\editor\Entity\Editor;
 use Drupal\filter\Entity\FilterFormat;
@@ -11,10 +12,11 @@ use Drupal\KernelTests\KernelTestBase;
 use Symfony\Component\Validator\ConstraintViolation;
 
 /**
- * @covers \Drupal\ckeditor5\Plugin\CKEditor5PluginManager::getCKEditor5PluginConfig
  * @group ckeditor5
  * @internal
  */
+#[CoversClass(\Drupal\ckeditor5\Plugin\CKEditor5PluginManager::getCKEditor5PluginConfig)]
+#[CoversClass(\Drupal\ckeditor5\Plugin\CKEditor5Plugin\SourceEditing::class)]
 class WildcardHtmlSupportTest extends KernelTestBase {
 
   /**
@@ -42,7 +44,6 @@ class WildcardHtmlSupportTest extends KernelTestBase {
   }
 
   /**
-   * @covers \Drupal\ckeditor5\Plugin\CKEditor5Plugin\SourceEditing::getDynamicPluginConfig
    * @dataProvider providerGhsConfiguration
    */
   public function testGhsConfiguration(string $filter_html_allowed, array $source_editing_tags, array $expected_ghs_configuration, ?array $additional_toolbar_items = []): void {

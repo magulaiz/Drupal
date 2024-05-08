@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\workspaces\Unit;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use Drupal\Core\Routing\CacheableRouteProviderInterface;
 use Drupal\Core\Routing\RouteProviderInterface;
 use Drupal\Tests\UnitTestCase;
@@ -13,10 +14,9 @@ use Drupal\workspaces\WorkspaceManagerInterface;
 use Symfony\Component\HttpKernel\Event\RequestEvent;
 
 /**
- * @coversDefaultClass \Drupal\workspaces\EventSubscriber\WorkspaceRequestSubscriber
- *
  * @group workspaces
  */
+#[CoversClass(\Drupal\workspaces\EventSubscriber\WorkspaceRequestSubscriber::class)]
 class WorkspaceRequestSubscriberTest extends UnitTestCase {
 
   /**
@@ -38,9 +38,6 @@ class WorkspaceRequestSubscriberTest extends UnitTestCase {
     $this->workspaceManager->hasActiveWorkspace()->willReturn(TRUE);
   }
 
-  /**
-   * @covers ::onKernelRequest
-   */
   public function testOnKernelRequestWithCacheableRouteProvider() {
     $route_provider = $this->prophesize(CacheableRouteProviderInterface::class);
     $route_provider->addExtraCacheKeyPart('workspace', 'test')->shouldBeCalled();
@@ -53,9 +50,6 @@ class WorkspaceRequestSubscriberTest extends UnitTestCase {
     $this->assertNull($workspace_request_subscriber->onKernelRequest($event));
   }
 
-  /**
-   * @covers ::onKernelRequest
-   */
   public function testOnKernelRequestWithoutCacheableRouteProvider() {
     $route_provider = $this->prophesize(RouteProviderInterface::class);
 

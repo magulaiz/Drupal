@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\layout_builder\Unit;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use Drupal\Component\Plugin\Context\ContextInterface;
 use Drupal\Component\Plugin\Discovery\DiscoveryInterface;
 use Drupal\Component\Plugin\Exception\ContextException;
@@ -21,10 +22,9 @@ use Drupal\layout_builder\SectionStorageInterface;
 use Drupal\Tests\UnitTestCase;
 
 /**
- * @coversDefaultClass \Drupal\layout_builder\SectionStorage\SectionStorageManager
- *
  * @group layout_builder
  */
+#[CoversClass(\Drupal\layout_builder\SectionStorage\SectionStorageManager::class)]
 class SectionStorageManagerTest extends UnitTestCase {
 
   /**
@@ -84,18 +84,12 @@ class SectionStorageManagerTest extends UnitTestCase {
     $reflection_property->setValue($this->manager, $this->factory->reveal());
   }
 
-  /**
-   * @covers ::loadEmpty
-   */
   public function testLoadEmpty() {
     $result = $this->manager->loadEmpty('the_plugin_id');
     $this->assertInstanceOf(SectionStorageInterface::class, $result);
     $this->assertSame($this->plugin->reveal(), $result);
   }
 
-  /**
-   * @covers ::load
-   */
   public function testLoad() {
     $contexts = [
       'the_context' => $this->prophesize(ContextInterface::class)->reveal(),
@@ -107,9 +101,6 @@ class SectionStorageManagerTest extends UnitTestCase {
     $this->assertSame($this->plugin->reveal(), $result);
   }
 
-  /**
-   * @covers ::load
-   */
   public function testLoadNull() {
     $contexts = [
       'the_context' => $this->prophesize(ContextInterface::class)->reveal(),
@@ -121,9 +112,6 @@ class SectionStorageManagerTest extends UnitTestCase {
     $this->assertNull($result);
   }
 
-  /**
-   * @covers ::findDefinitions
-   */
   public function testFindDefinitions() {
     $this->discovery->getDefinitions()->willReturn([
       'plugin1' => (new SectionStorageDefinition())->setClass(SectionStorageInterface::class),
@@ -143,10 +131,8 @@ class SectionStorageManagerTest extends UnitTestCase {
   }
 
   /**
-   * @covers ::findByContext
    *
    * @dataProvider providerTestFindByContext
-   *
    * @param bool $plugin_is_applicable
    *   The result for the plugin's isApplicable() method to return.
    */
@@ -201,9 +187,6 @@ class SectionStorageManagerTest extends UnitTestCase {
     return $data;
   }
 
-  /**
-   * @covers ::findByContext
-   */
   public function testFindByContextCacheableSectionStorage() {
     $cacheability = new CacheableMetadata();
     $contexts = [

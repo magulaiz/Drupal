@@ -4,13 +4,14 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\field_layout\Kernel;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use Drupal\field_layout\Entity\FieldLayoutEntityViewDisplay;
 use Drupal\KernelTests\KernelTestBase;
 
 /**
- * @coversDefaultClass \Drupal\field_layout\Entity\FieldLayoutEntityDisplayTrait
  * @group field_layout
  */
+#[CoversClass(\Drupal\field_layout\Entity\FieldLayoutEntityDisplayTrait::class)]
 class FieldLayoutEntityDisplayTest extends KernelTestBase {
 
   /**
@@ -25,10 +26,6 @@ class FieldLayoutEntityDisplayTest extends KernelTestBase {
     'system',
   ];
 
-  /**
-   * @covers ::preSave
-   * @covers ::calculateDependencies
-   */
   public function testPreSave() {
     // Create an entity display with one hidden and one visible field.
     $entity_display = FieldLayoutEntityViewDisplay::create([

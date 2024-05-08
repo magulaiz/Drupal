@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\system\Unit\Batch;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use Drupal\Core\Batch\BatchStorageInterface;
 use Drupal\system\Controller\BatchController;
 use Drupal\Tests\UnitTestCase;
@@ -12,16 +13,14 @@ use Symfony\Component\HttpFoundation\Request;
 /**
  * Tests for the batch controller class.
  *
- * @coversDefaultClass \Drupal\system\Controller\BatchController
  * @runTestsInSeparateProcesses
  * @group system
  */
+#[CoversClass(\Drupal\system\Controller\BatchController::class)]
 class BatchControllerTest extends UnitTestCase {
 
   /**
    * Tests title callback.
-   *
-   * @covers ::batchPageTitle
    */
   public function testBatchPageTitle() {
     $batch_storage = $this->createMock(BatchStorageInterface::class);

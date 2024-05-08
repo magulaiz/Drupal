@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\media\Functional\FieldFormatter;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use Drupal\Core\Entity\Entity\EntityViewDisplay;
 use Drupal\media\Entity\Media;
 use Drupal\media_test_oembed\Controller\ResourceController;
@@ -12,13 +13,12 @@ use Drupal\Tests\media\Functional\MediaFunctionalTestBase;
 use Drupal\Tests\media\Traits\OEmbedTestTrait;
 
 // cspell:ignore Schipulcon
-
 /**
- * @covers \Drupal\media\Plugin\Field\FieldFormatter\OEmbedFormatter
  *
  * @group media
  * @group #slow
  */
+#[CoversClass(\Drupal\media\Plugin\Field\FieldFormatter\OEmbedFormatter::class)]
 class OEmbedFormatterTest extends MediaFunctionalTestBase {
 
   use OEmbedTestTrait;

@@ -4,15 +4,16 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\link\Unit\Plugin\migrate\field\d6;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use Drupal\migrate\Plugin\MigrationInterface;
 use Drupal\Tests\UnitTestCase;
 use Drupal\link\Plugin\migrate\field\d6\LinkField;
 use Prophecy\Argument;
 
 /**
- * @coversDefaultClass \Drupal\link\Plugin\migrate\field\d6\LinkField
  * @group link
  */
+#[CoversClass(\Drupal\link\Plugin\migrate\field\d6\LinkField::class)]
 class LinkFieldTest extends UnitTestCase {
 
   /**
@@ -47,9 +48,6 @@ class LinkFieldTest extends UnitTestCase {
     $this->migration = $migration->reveal();
   }
 
-  /**
-   * @covers ::defineValueProcessPipeline
-   */
   public function testDefineValueProcessPipeline($method = 'defineValueProcessPipeline') {
     $this->plugin->$method($this->migration, 'field_name', []);
 

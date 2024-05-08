@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\file\Kernel\Upload;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use Drupal\KernelTests\KernelTestBase;
 use org\bovigo\vfs\vfsStream;
 
@@ -11,8 +12,8 @@ use org\bovigo\vfs\vfsStream;
  * Tests the stream file uploader.
  *
  * @group file
- * @coversDefaultClass \Drupal\file\Upload\InputStreamFileWriter
  */
+#[CoversClass(\Drupal\file\Upload\InputStreamFileWriter::class)]
 class StreamFileUploaderTest extends KernelTestBase {
 
   /**
@@ -20,9 +21,6 @@ class StreamFileUploaderTest extends KernelTestBase {
    */
   protected static $modules = ['file'];
 
-  /**
-   * @covers ::writeStreamToFile
-   */
   public function testWriteStreamToFileSuccess(): void {
     vfsStream::newFile('foo.txt')
       ->at($this->vfsRoot)
@@ -36,9 +34,6 @@ class StreamFileUploaderTest extends KernelTestBase {
     $this->assertStringEqualsFile($filename, 'bar');
   }
 
-  /**
-   * @covers ::writeStreamToFile
-   */
   public function testWriteStreamToFileWithSmallerBytes(): void {
     $content = $this->randomString(2048);
     vfsStream::newFile('foo.txt')

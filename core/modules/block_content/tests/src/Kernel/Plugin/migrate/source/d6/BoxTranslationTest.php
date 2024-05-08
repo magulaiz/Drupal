@@ -4,17 +4,17 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\block_content\Kernel\Plugin\migrate\source\d6;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use Drupal\Tests\migrate\Kernel\MigrateSqlSourceTestBase;
 
 // cspell:ignore objectid objectindex plid
-
 /**
  * Tests i18n content block translations source plugin.
  *
- * @covers \Drupal\block_content\Plugin\migrate\source\d6\BoxTranslation
  *
  * @group content_translation
  */
+#[CoversClass(\Drupal\block_content\Plugin\migrate\source\d6\BoxTranslation::class)]
 class BoxTranslationTest extends MigrateSqlSourceTestBase {
 
   /**

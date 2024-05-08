@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\KernelTests\Core\Action;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use Drupal\Core\Action\Plugin\Action\Derivative\EntityChangedActionDeriver;
 use Drupal\entity_test\Entity\EntityTestMulChanged;
 use Drupal\KernelTests\KernelTestBase;
@@ -12,6 +13,8 @@ use Drupal\system\Entity\Action;
 /**
  * @group Action
  */
+#[CoversClass(\Drupal\Core\Action\Plugin\Action\Derivative\EntityChangedActionDeriver::class)]
+#[CoversClass(\Drupal\Core\Action\Plugin\Action\SaveAction::class)]
 class SaveActionTest extends KernelTestBase {
 
   /**
@@ -27,9 +30,6 @@ class SaveActionTest extends KernelTestBase {
     $this->installEntitySchema('entity_test_mul_changed');
   }
 
-  /**
-   * @covers \Drupal\Core\Action\Plugin\Action\Derivative\EntityChangedActionDeriver::getDerivativeDefinitions
-   */
   public function testGetDerivativeDefinitions() {
     $deriver = new EntityChangedActionDeriver(\Drupal::entityTypeManager(), \Drupal::translation());
     $definitions = $deriver->getDerivativeDefinitions([
@@ -42,9 +42,6 @@ class SaveActionTest extends KernelTestBase {
     ], $definitions['entity_test_mul_changed']);
   }
 
-  /**
-   * @covers \Drupal\Core\Action\Plugin\Action\SaveAction::execute
-   */
   public function testSaveAction() {
     $entity = EntityTestMulChanged::create(['name' => 'test']);
     $entity->save();

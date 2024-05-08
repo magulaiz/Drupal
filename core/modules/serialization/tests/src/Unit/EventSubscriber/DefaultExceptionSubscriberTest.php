@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\serialization\Unit\EventSubscriber;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use Drupal\serialization\Encoder\JsonEncoder;
 use Drupal\serialization\EventSubscriber\DefaultExceptionSubscriber;
 use Drupal\Tests\UnitTestCase;
@@ -15,14 +16,11 @@ use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Symfony\Component\Serializer\Serializer;
 
 /**
- * @coversDefaultClass \Drupal\serialization\EventSubscriber\DefaultExceptionSubscriber
  * @group serialization
  */
+#[CoversClass(\Drupal\serialization\EventSubscriber\DefaultExceptionSubscriber::class)]
 class DefaultExceptionSubscriberTest extends UnitTestCase {
 
-  /**
-   * @covers ::on4xx
-   */
   public function testOn4xx() {
     $kernel = $this->prophesize(HttpKernelInterface::class);
     $request = Request::create('/test');

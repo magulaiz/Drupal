@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\ban\Unit;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use Drupal\ban\BanMiddleware;
 use Drupal\Tests\UnitTestCase;
 use Symfony\Component\HttpFoundation\Request;
@@ -11,9 +12,9 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 
 /**
- * @coversDefaultClass \Drupal\ban\BanMiddleware
  * @group ban
  */
+#[CoversClass(\Drupal\ban\BanMiddleware::class)]
 class BanMiddlewareTest extends UnitTestCase {
 
   /**

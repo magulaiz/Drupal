@@ -4,16 +4,16 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\user\Kernel\Plugin\migrate\source\d6;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use Drupal\Tests\user\Kernel\Plugin\migrate\source\ProfileFieldTest;
 
 // cspell:ignore objectid
-
 /**
  * Tests the field option translation source plugin.
  *
- * @covers \Drupal\user\Plugin\migrate\source\d6\ProfileFieldOptionTranslation
  * @group migrate_drupal
  */
+#[CoversClass(\Drupal\user\Plugin\migrate\source\d6\ProfileFieldOptionTranslation::class)]
 class ProfileFieldOptionTranslationTest extends ProfileFieldTest {
 
   /**

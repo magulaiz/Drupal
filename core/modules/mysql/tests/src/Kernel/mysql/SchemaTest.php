@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\mysql\Kernel\mysql;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use Drupal\Component\Utility\Unicode;
 use Drupal\Core\Database\DatabaseExceptionWrapper;
 use Drupal\Core\Database\Exception\SchemaTableColumnSizeTooLargeException;
@@ -18,6 +19,7 @@ use Drupal\KernelTests\Core\Database\DriverSpecificSchemaTestBase;
  *
  * @group Database
  */
+#[CoversClass(\Drupal\mysql\Driver\Database\mysql\Schema::class)]
 class SchemaTest extends DriverSpecificSchemaTestBase {
 
   /**
@@ -195,9 +197,6 @@ class SchemaTest extends DriverSpecificSchemaTestBase {
     $this->assertEquals($column_count, $test_count, 'Number of tests matches expected value.');
   }
 
-  /**
-   * @covers \Drupal\mysql\Driver\Database\mysql\Schema::introspectIndexSchema
-   */
   public function testIntrospectIndexSchema(): void {
     $table_specification = [
       'fields' => [

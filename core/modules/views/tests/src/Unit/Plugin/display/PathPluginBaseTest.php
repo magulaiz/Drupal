@@ -4,15 +4,16 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\views\Unit\Plugin\display;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use Drupal\Core\DependencyInjection\ContainerBuilder;
 use Drupal\Tests\UnitTestCase;
 use Symfony\Component\Routing\Route;
 use Symfony\Component\Routing\RouteCollection;
 
 /**
- * @coversDefaultClass \Drupal\views\Plugin\views\display\PathPluginBase
  * @group views
  */
+#[CoversClass(\Drupal\views\Plugin\views\display\PathPluginBase::class)]
 class PathPluginBaseTest extends UnitTestCase {
 
   /**

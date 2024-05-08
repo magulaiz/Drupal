@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\path\Unit\migrate\process;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use Drupal\path\Plugin\migrate\process\PathSetTranslated;
 use Drupal\Tests\migrate\Unit\process\MigrateProcessTestCase;
 
@@ -11,8 +12,8 @@ use Drupal\Tests\migrate\Unit\process\MigrateProcessTestCase;
  * Tests the path_set_translated process plugin.
  *
  * @group path
- * @coversDefaultClass \Drupal\path\Plugin\migrate\process\PathSetTranslated
  */
+#[CoversClass(\Drupal\path\Plugin\migrate\process\PathSetTranslated::class)]
 class PathSetTranslatedTest extends MigrateProcessTestCase {
 
   /**
@@ -25,7 +26,6 @@ class PathSetTranslatedTest extends MigrateProcessTestCase {
    * @param string $expected_result
    *   The expected result.
    *
-   * @covers ::transform
    *
    * @dataProvider transformDataProvider
    */

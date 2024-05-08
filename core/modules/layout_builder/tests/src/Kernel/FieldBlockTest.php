@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\layout_builder\Kernel;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Entity\EntityFieldManagerInterface;
 use Drupal\Core\Entity\EntityInterface;
@@ -27,9 +28,9 @@ use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
- * @coversDefaultClass \Drupal\layout_builder\Plugin\Block\FieldBlock
  * @group Field
  */
+#[CoversClass(\Drupal\layout_builder\Plugin\Block\FieldBlock::class)]
 class FieldBlockTest extends EntityKernelTestBase {
 
   /**
@@ -59,7 +60,6 @@ class FieldBlockTest extends EntityKernelTestBase {
   /**
    * Tests entity access.
    *
-   * @covers ::blockAccess
    * @dataProvider providerTestBlockAccessNotAllowed
    */
   public function testBlockAccessEntityNotAllowed($expected, $entity_access) {
@@ -92,8 +92,6 @@ class FieldBlockTest extends EntityKernelTestBase {
 
   /**
    * Tests unfieldable entity.
-   *
-   * @covers ::blockAccess
    */
   public function testBlockAccessEntityAllowedNotFieldable() {
     $entity = $this->prophesize(EntityInterface::class);
@@ -108,8 +106,6 @@ class FieldBlockTest extends EntityKernelTestBase {
 
   /**
    * Tests fieldable entity without a particular field.
-   *
-   * @covers ::blockAccess
    */
   public function testBlockAccessEntityAllowedNoField() {
     $entity = $this->prophesize(FieldableEntityInterface::class);
@@ -127,7 +123,6 @@ class FieldBlockTest extends EntityKernelTestBase {
   /**
    * Tests field access.
    *
-   * @covers ::blockAccess
    * @dataProvider providerTestBlockAccessNotAllowed
    */
   public function testBlockAccessEntityAllowedFieldNotAllowed($expected, $field_access) {
@@ -150,8 +145,6 @@ class FieldBlockTest extends EntityKernelTestBase {
   /**
    * Tests populated vs empty build.
    *
-   * @covers ::blockAccess
-   * @covers ::build
    * @dataProvider providerTestBlockAccessEntityAllowedFieldHasValue
    */
   public function testBlockAccessEntityAllowedFieldHasValue($expected, $is_empty, $default_value) {
@@ -245,7 +238,6 @@ class FieldBlockTest extends EntityKernelTestBase {
   }
 
   /**
-   * @covers ::build
    * @dataProvider providerTestBuild
    */
   public function testBuild(PromiseInterface $promise, $expected_markup, $log_message = '', $log_arguments = []) {
@@ -297,9 +289,6 @@ class FieldBlockTest extends EntityKernelTestBase {
     return $data;
   }
 
-  /**
-   * @covers ::build
-   */
   public function testBuildException() {
     // In PHP 7.4 ReflectionClass cannot be serialized so this cannot be part of
     // providerTestBuild().

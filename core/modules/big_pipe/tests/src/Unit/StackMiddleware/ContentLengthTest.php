@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\big_pipe\Unit\StackMiddleware;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use Drupal\big_pipe\Render\BigPipeResponse;
 use Drupal\big_pipe\StackMiddleware\ContentLength;
 use Drupal\Core\Render\HtmlResponse;
@@ -16,12 +17,11 @@ use Symfony\Component\HttpKernel\HttpKernelInterface;
  * Defines a test for ContentLength middleware.
  *
  * @group big_pipe
- * @coversDefaultClass \Drupal\big_pipe\StackMiddleware\ContentLength
  */
+#[CoversClass(\Drupal\big_pipe\StackMiddleware\ContentLength::class)]
 final class ContentLengthTest extends UnitTestCase {
 
   /**
-   * @covers ::handle
    * @dataProvider providerTestSetContentLengthHeader
    */
   public function testHandle(false|int $expected_header, Response $response) {

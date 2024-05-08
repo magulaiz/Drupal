@@ -4,14 +4,15 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\migrate\Unit;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use Drupal\migrate\Plugin\MigrateIdMapInterface;
 use Drupal\migrate\Row;
 use Drupal\Tests\UnitTestCase;
 
 /**
- * @coversDefaultClass \Drupal\migrate\Row
  * @group migrate
  */
+#[CoversClass(\Drupal\migrate\Row::class)]
 class RowTest extends UnitTestCase {
 
   /**
@@ -209,9 +210,6 @@ class RowTest extends UnitTestCase {
 
   /**
    * Tests getting/setting the ID Map.
-   *
-   * @covers ::setIdMap
-   * @covers ::getIdMap
    */
   public function testGetSetIdMap() {
     $row = new Row($this->testValues, $this->testSourceIds);
@@ -267,8 +265,6 @@ class RowTest extends UnitTestCase {
 
   /**
    * Tests getting the source property.
-   *
-   * @covers ::getSourceProperty
    */
   public function testGetSourceProperty() {
     $row = new Row($this->testValues, $this->testSourceIds);
@@ -320,7 +316,6 @@ class RowTest extends UnitTestCase {
    *   The expected value.
    *
    * @dataProvider getDataProvider
-   * @covers ::get
    */
   public function testGet($key, $expected_value) {
     $row = $this->createRowWithDestinationProperties($this->testGetSourceProperties, $this->testGetSourceIds, $this->testGetDestinationProperties);
@@ -363,7 +358,6 @@ class RowTest extends UnitTestCase {
    * @param array $expected_values
    *   An array of expected values.
    *
-   * @covers ::getMultiple
    * @dataProvider getMultipleDataProvider
    */
   public function testGetMultiple(array $keys, array $expected_values) {

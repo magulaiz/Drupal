@@ -4,16 +4,17 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\taxonomy\Kernel;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use Drupal\KernelTests\Core\Entity\EntityKernelTestBase;
 use Drupal\taxonomy\Entity\Vocabulary;
 
 /**
  * Tests handling of pending revisions.
  *
- * @coversDefaultClass \Drupal\taxonomy\Plugin\Validation\Constraint\TaxonomyTermHierarchyConstraintValidator
  *
  * @group taxonomy
  */
+#[CoversClass(\Drupal\taxonomy\Plugin\Validation\Constraint\TaxonomyTermHierarchyConstraintValidator::class)]
 class TermHierarchyValidationTest extends EntityKernelTestBase {
 
   /**

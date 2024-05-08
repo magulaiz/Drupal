@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\jsonapi\Kernel\Normalizer;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use Drupal\Component\Serialization\Json;
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Cache\CacheableMetadata;
@@ -30,12 +31,11 @@ use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
- * @coversDefaultClass \Drupal\jsonapi\Normalizer\JsonApiDocumentTopLevelNormalizer
  * @group jsonapi
  * @group #slow
- *
  * @internal
  */
+#[CoversClass(\Drupal\jsonapi\Normalizer\JsonApiDocumentTopLevelNormalizer::class)]
 class JsonApiDocumentTopLevelNormalizerTest extends JsonapiKernelTestBase {
 
   use ImageFieldCreationTrait;
@@ -258,9 +258,6 @@ class JsonApiDocumentTopLevelNormalizerTest extends JsonapiKernelTestBase {
     parent::tearDown();
   }
 
-  /**
-   * @covers ::normalize
-   */
   public function testNormalize() {
     $resource_type = $this->container->get('jsonapi.resource_type.repository')->get('node', 'article');
 
@@ -359,9 +356,6 @@ class JsonApiDocumentTopLevelNormalizerTest extends JsonapiKernelTestBase {
     );
   }
 
-  /**
-   * @covers ::normalize
-   */
   public function testNormalizeUuid() {
     $resource_type = $this->container->get('jsonapi.resource_type.repository')->get('node', 'article');
     $resource_object = ResourceObject::createFromEntity($resource_type, $this->node);
@@ -400,9 +394,6 @@ class JsonApiDocumentTopLevelNormalizerTest extends JsonapiKernelTestBase {
     );
   }
 
-  /**
-   * @covers ::normalize
-   */
   public function testNormalizeException() {
     $normalized = $this
       ->container
@@ -488,9 +479,6 @@ class JsonApiDocumentTopLevelNormalizerTest extends JsonapiKernelTestBase {
     }
   }
 
-  /**
-   * @covers ::normalize
-   */
   public function testNormalizeConfig() {
     $resource_type = $this->container->get('jsonapi.resource_type.repository')->get('node_type', 'node_type');
     $resource_object = ResourceObject::createFromEntity($resource_type, $this->nodeType);
@@ -519,8 +507,6 @@ class JsonApiDocumentTopLevelNormalizerTest extends JsonapiKernelTestBase {
 
   /**
    * Try to POST a node and check if it exists afterwards.
-   *
-   * @covers ::denormalize
    */
   public function testDenormalize() {
     $payload = '{"data":{"type":"article","attributes":{"title":"Testing article"}}}';
@@ -537,8 +523,6 @@ class JsonApiDocumentTopLevelNormalizerTest extends JsonapiKernelTestBase {
 
   /**
    * Try to POST a node and check if it exists afterwards.
-   *
-   * @covers ::denormalize
    */
   public function testDenormalizeUuid() {
     $configurations = [

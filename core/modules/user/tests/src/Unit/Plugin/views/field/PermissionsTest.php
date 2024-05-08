@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\user\Unit\Plugin\views\field;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\StringTranslation\TranslationInterface;
@@ -16,9 +17,9 @@ use Drupal\views\ResultRow;
 use Drupal\views\ViewExecutable;
 
 /**
- * @coversDefaultClass \Drupal\user\Plugin\views\field\Permissions
  * @group user
  */
+#[CoversClass(\Drupal\user\Plugin\views\field\Permissions::class)]
 class PermissionsTest extends UnitTestCase {
 
   use ViewsLoggerTestTrait;
@@ -37,8 +38,6 @@ class PermissionsTest extends UnitTestCase {
 
   /**
    * Tests the preRender method when getEntity returns NULL.
-   *
-   * @covers ::preRender
    */
   public function testPreRenderNullEntity(): void {
     $values = [new ResultRow()];

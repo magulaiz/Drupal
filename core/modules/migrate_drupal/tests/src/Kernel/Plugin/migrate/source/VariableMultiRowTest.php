@@ -4,17 +4,17 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\migrate_drupal\Kernel\Plugin\migrate\source;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use Drupal\Tests\migrate\Kernel\MigrateSqlSourceTestBase;
 
 // cspell:ignore multirow
-
 /**
  * Tests the variable multirow source plugin.
  *
- * @covers \Drupal\migrate_drupal\Plugin\migrate\source\VariableMultiRow
  *
  * @group migrate_drupal
  */
+#[CoversClass(\Drupal\migrate_drupal\Plugin\migrate\source\VariableMultiRow::class)]
 class VariableMultiRowTest extends MigrateSqlSourceTestBase {
 
   /**

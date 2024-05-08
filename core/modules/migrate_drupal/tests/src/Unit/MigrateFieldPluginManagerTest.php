@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\migrate_drupal\Unit;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use Drupal\Component\Plugin\Exception\PluginNotFoundException;
 use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
@@ -16,16 +17,13 @@ use Drupal\Tests\UnitTestCase;
  * Tests the MigrateFieldPluginManager class.
  *
  * @group migrate_drupal
- * @coversDefaultClass \Drupal\migrate_drupal\Plugin\MigrateFieldPluginManager
  */
+#[CoversClass(\Drupal\migrate_drupal\Plugin\MigrateFieldPluginManager::class)]
 class MigrateFieldPluginManagerTest extends UnitTestCase {
 
   /**
    * Tests the plugin weighting system.
    *
-   * @covers ::getPluginIdFromFieldType
-   * @covers ::sortDefinitions
-   * @covers ::findDefinitions
    * @dataProvider weightsData
    */
   public function testWeights($field_type, $core, $expected_plugin_id) {

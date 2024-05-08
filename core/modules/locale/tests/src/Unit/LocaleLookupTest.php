@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\locale\Unit;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use Drupal\Component\Gettext\PoItem;
 use Drupal\Core\DependencyInjection\ContainerBuilder;
 use Drupal\locale\LocaleLookup;
@@ -12,9 +13,9 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 
 /**
- * @coversDefaultClass \Drupal\locale\LocaleLookup
  * @group locale
  */
+#[CoversClass(\Drupal\locale\LocaleLookup::class)]
 class LocaleLookupTest extends UnitTestCase {
 
   /**
@@ -95,8 +96,6 @@ class LocaleLookupTest extends UnitTestCase {
 
   /**
    * Tests locale lookups without fallback.
-   *
-   * @covers ::resolveCacheMiss
    */
   public function testResolveCacheMissWithoutFallback() {
     $args = [
@@ -132,7 +131,6 @@ class LocaleLookupTest extends UnitTestCase {
    *
    * Note that context is irrelevant here. It is not used but it is required.
    *
-   * @covers ::resolveCacheMiss
    *
    * @dataProvider resolveCacheMissWithFallbackProvider
    */
@@ -216,8 +214,6 @@ class LocaleLookupTest extends UnitTestCase {
 
   /**
    * Tests locale lookups with persistent tracking.
-   *
-   * @covers ::resolveCacheMiss
    */
   public function testResolveCacheMissWithPersist() {
     $args = [
@@ -248,8 +244,6 @@ class LocaleLookupTest extends UnitTestCase {
 
   /**
    * Tests locale lookups without a found translation.
-   *
-   * @covers ::resolveCacheMiss
    */
   public function testResolveCacheMissNoTranslation() {
     $string = $this->createMock('Drupal\locale\StringInterface');
@@ -288,7 +282,6 @@ class LocaleLookupTest extends UnitTestCase {
    * @param bool $is_fix
    *   The flag about expected fix translation.
    *
-   * @covers ::resolveCacheMiss
    * @dataProvider providerFixOldPluralTranslationProvider
    */
   public function testFixOldPluralStyleTranslations($translations, $langcode, $string, $is_fix) {
@@ -345,8 +338,6 @@ class LocaleLookupTest extends UnitTestCase {
   }
 
   /**
-   * @covers ::getCid
-   *
    * @dataProvider getCidProvider
    */
   public function testGetCid(array $roles, $expected) {

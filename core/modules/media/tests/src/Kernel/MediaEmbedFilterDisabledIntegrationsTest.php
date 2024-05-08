@@ -4,12 +4,13 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\media\Kernel;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 /**
  * Tests that media embed disables certain integrations.
  *
- * @coversDefaultClass \Drupal\media\Plugin\Filter\MediaEmbed
  * @group media
  */
+#[CoversClass(\Drupal\media\Plugin\Filter\MediaEmbed::class)]
 class MediaEmbedFilterDisabledIntegrationsTest extends MediaEmbedFilterTestBase {
 
   /**
@@ -34,10 +35,6 @@ class MediaEmbedFilterDisabledIntegrationsTest extends MediaEmbedFilterTestBase 
       ]));
   }
 
-  /**
-   * @covers ::renderMedia
-   * @covers ::disableContextualLinks
-   */
   public function testDisabledIntegrations() {
     $text = $this->createEmbedCode([
       'data-entity-type' => 'media',

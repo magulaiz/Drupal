@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\FunctionalTests;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use Behat\Mink\Exception\ExpectationException;
 use Drupal\Component\Utility\Html;
 use Drupal\Core\Url;
@@ -16,8 +17,8 @@ use PHPUnit\Framework\AssertionFailedError;
  *
  * @group browsertestbase
  * @group #slow
- * @coversDefaultClass \Drupal\Tests\WebAssert
  */
+#[CoversClass(\Drupal\Tests\WebAssert::class)]
 class WebAssertTest extends BrowserTestBase {
 
   /**
@@ -34,8 +35,6 @@ class WebAssertTest extends BrowserTestBase {
 
   /**
    * Tests WebAssert::responseHeaderExists().
-   *
-   * @covers ::responseHeaderExists
    */
   public function testResponseHeaderExists() {
     $this->drupalGet('test-null-header');
@@ -48,8 +47,6 @@ class WebAssertTest extends BrowserTestBase {
 
   /**
    * Tests WebAssert::responseHeaderDoesNotExist().
-   *
-   * @covers ::responseHeaderDoesNotExist
    */
   public function testResponseHeaderDoesNotExist() {
     $this->drupalGet('test-null-header');
@@ -60,9 +57,6 @@ class WebAssertTest extends BrowserTestBase {
     $this->assertSession()->responseHeaderDoesNotExist('Null-Header');
   }
 
-  /**
-   * @covers ::pageTextMatchesCount
-   */
   public function testPageTextMatchesCount() {
     $this->drupalLogin($this->drupalCreateUser());
 
@@ -75,9 +69,6 @@ class WebAssertTest extends BrowserTestBase {
     $this->assertSession()->pageTextMatchesCount(1, '/does-not-exist/');
   }
 
-  /**
-   * @covers ::pageTextContainsOnce
-   */
   public function testPageTextContainsOnce() {
     $this->drupalLogin($this->drupalCreateUser());
 
@@ -90,9 +81,6 @@ class WebAssertTest extends BrowserTestBase {
     $this->assertSession()->pageTextContainsOnce('does-not-exist');
   }
 
-  /**
-   * @covers ::elementTextEquals
-   */
   public function testElementTextEquals(): void {
     $this->drupalGet('test-page');
     $this->assertSession()->elementTextEquals('xpath', '//h1', 'Test page');
@@ -102,9 +90,6 @@ class WebAssertTest extends BrowserTestBase {
     $this->assertSession()->elementTextEquals('xpath', '//h1', 'Foo page');
   }
 
-  /**
-   * @covers ::addressEquals
-   */
   public function testAddressEquals(): void {
     $this->drupalGet('test-page');
     $this->assertSession()->addressEquals('test-page');
@@ -127,9 +112,6 @@ class WebAssertTest extends BrowserTestBase {
     $this->assertSession()->addressEquals('test-page?a=b&c=e');
   }
 
-  /**
-   * @covers ::addressNotEquals
-   */
   public function testAddressNotEqualsException(): void {
     $this->drupalGet('test-page', ['query' => ['a' => 'b', 'c' => 'd']]);
     $this->expectException(ExpectationException::class);
@@ -139,8 +121,6 @@ class WebAssertTest extends BrowserTestBase {
 
   /**
    * Tests linkExists() with pipe character (|) in locator.
-   *
-   * @covers ::linkExists
    */
   public function testPipeCharInLocator() {
     $this->drupalGet('test-pipe-char');
@@ -149,8 +129,6 @@ class WebAssertTest extends BrowserTestBase {
 
   /**
    * Tests linkExistsExact() functionality.
-   *
-   * @covers ::linkExistsExact
    */
   public function testLinkExistsExact() {
     $this->drupalGet('test-pipe-char');
@@ -159,8 +137,6 @@ class WebAssertTest extends BrowserTestBase {
 
   /**
    * Tests linkExistsExact() functionality fail.
-   *
-   * @covers ::linkExistsExact
    */
   public function testInvalidLinkExistsExact() {
     $this->drupalGet('test-pipe-char');
@@ -171,8 +147,6 @@ class WebAssertTest extends BrowserTestBase {
 
   /**
    * Tests linkNotExistsExact() functionality.
-   *
-   * @covers ::linkNotExistsExact
    */
   public function testLinkNotExistsExact() {
     $this->drupalGet('test-pipe-char');
@@ -181,8 +155,6 @@ class WebAssertTest extends BrowserTestBase {
 
   /**
    * Tests linkNotExistsExact() functionality fail.
-   *
-   * @covers ::linkNotExistsExact
    */
   public function testInvalidLinkNotExistsExact() {
     $this->drupalGet('test-pipe-char');
@@ -193,8 +165,6 @@ class WebAssertTest extends BrowserTestBase {
 
   /**
    * Tests linkExistsByHref() functionality.
-   *
-   * @covers ::linkByHrefExists
    */
   public function testLinkByHrefExists(): void {
     $this->drupalGet('test-page');
@@ -206,8 +176,6 @@ class WebAssertTest extends BrowserTestBase {
 
   /**
    * Tests linkExistsByHref() functionality fail.
-   *
-   * @covers ::linkByHrefExists
    */
   public function testInvalidLinkByHrefExists(): void {
     $this->drupalGet('test-page');
@@ -217,8 +185,6 @@ class WebAssertTest extends BrowserTestBase {
 
   /**
    * Tests linkByHrefNotExists() functionality.
-   *
-   * @covers ::linkByHrefNotExists
    */
   public function testLinkByHrefNotExists(): void {
     $this->drupalGet('test-page');
@@ -227,8 +193,6 @@ class WebAssertTest extends BrowserTestBase {
 
   /**
    * Tests LinkByHrefNotExists() functionality fail partial match.
-   *
-   * @covers ::linkByHrefNotExists
    */
   public function testInvalidLinkByHrefNotExistsPartial(): void {
     $this->drupalGet('test-page');
@@ -238,8 +202,6 @@ class WebAssertTest extends BrowserTestBase {
 
   /**
    * Tests LinkByHrefNotExists() functionality fail full match.
-   *
-   * @covers ::linkByHrefNotExists
    */
   public function testInvalidLinkByHrefNotExistsFull(): void {
     $this->drupalGet('test-page');
@@ -249,8 +211,6 @@ class WebAssertTest extends BrowserTestBase {
 
   /**
    * Tests linkExistsByHref() functionality.
-   *
-   * @covers ::linkByHrefExistsExact
    */
   public function testLinkByHrefExistsExact(): void {
     $this->drupalGet('test-page');
@@ -259,8 +219,6 @@ class WebAssertTest extends BrowserTestBase {
 
   /**
    * Tests linkByHrefExistsExact() functionality fail.
-   *
-   * @covers ::linkByHrefExistsExact
    */
   public function testInvalidLinkByHrefExistsExact(): void {
     $this->drupalGet('test-page');
@@ -270,8 +228,6 @@ class WebAssertTest extends BrowserTestBase {
 
   /**
    * Tests linkByHrefNotExistsExact() functionality.
-   *
-   * @covers ::linkByHrefNotExistsExact
    */
   public function testLinkByHrefNotExistsExact(): void {
     $this->drupalGet('test-page');
@@ -280,8 +236,6 @@ class WebAssertTest extends BrowserTestBase {
 
   /**
    * Tests linkByHrefNotExistsExact() functionality fail.
-   *
-   * @covers ::linkByHrefNotExistsExact
    */
   public function testInvalidLinkByHrefNotExistsExact(): void {
     $this->drupalGet('test-page');
@@ -291,9 +245,6 @@ class WebAssertTest extends BrowserTestBase {
 
   /**
    * Tests legacy text asserts.
-   *
-   * @covers ::responseContains
-   * @covers ::responseNotContains
    */
   public function testTextAsserts() {
     $this->drupalGet('test-encoded');
@@ -305,9 +256,6 @@ class WebAssertTest extends BrowserTestBase {
 
   /**
    * Tests legacy field asserts for button field type.
-   *
-   * @covers ::buttonExists
-   * @covers ::buttonNotExists
    */
   public function testFieldAssertsForButton() {
     $this->drupalGet('test-field-xpath');
@@ -343,8 +291,6 @@ class WebAssertTest extends BrowserTestBase {
 
   /**
    * Tests pageContainsNoDuplicateId() functionality.
-   *
-   * @covers ::pageContainsNoDuplicateId
    */
   public function testPageContainsNoDuplicateId() {
     $assert_session = $this->assertSession();
@@ -359,9 +305,6 @@ class WebAssertTest extends BrowserTestBase {
 
   /**
    * Tests assertEscaped() and assertUnescaped().
-   *
-   * @covers ::assertNoEscaped
-   * @covers ::assertEscaped
    */
   public function testEscapingAssertions() {
     $assert = $this->assertSession();

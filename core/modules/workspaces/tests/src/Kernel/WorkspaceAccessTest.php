@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\workspaces\Kernel;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use Drupal\Core\Access\AccessResult;
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\Tests\user\Traits\UserCreationTrait;
@@ -15,6 +16,8 @@ use Drupal\workspaces\Entity\Workspace;
  * @group workspaces
  * @group #slow
  */
+#[CoversClass(\Drupal\workspaces\Plugin\EntityReferenceSelection\WorkspaceSelection::class)]
+#[CoversClass(\Drupal\workspaces\Plugin\Block\WorkspaceSwitcherBlock::class)]
 class WorkspaceAccessTest extends KernelTestBase {
 
   use UserCreationTrait;
@@ -113,9 +116,6 @@ class WorkspaceAccessTest extends KernelTestBase {
     $this->assertFalse($workspace->access('publish'));
   }
 
-  /**
-   * @covers \Drupal\workspaces\Plugin\EntityReferenceSelection\WorkspaceSelection::getReferenceableEntities
-   */
   public function testWorkspaceSelection() {
     $own_permission_user = $this->createUser(['view own workspace']);
     $any_permission_user = $this->createUser(['view any workspace']);
@@ -224,9 +224,6 @@ class WorkspaceAccessTest extends KernelTestBase {
     $this->assertEquals($expected_top, array_keys($selection_handler->getReferenceableEntities('top')['workspace']));
   }
 
-  /**
-   * @covers \Drupal\workspaces\Plugin\Block\WorkspaceSwitcherBlock::blockAccess
-   */
   public function testWorkspaceSwitcherBlock(): void {
     $own_permission_user = $this->createUser(['view own workspace']);
     $any_permission_user = $this->createUser(['view any workspace']);

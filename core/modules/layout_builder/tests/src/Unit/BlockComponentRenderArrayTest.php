@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\layout_builder\Unit;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use Drupal\block_content\Access\RefinableDependentAccessInterface;
 use Drupal\Component\Plugin\Context\ContextInterface;
 use Drupal\Core\Access\AccessResult;
@@ -25,9 +26,9 @@ use Drupal\Tests\UnitTestCase;
 use Prophecy\Argument;
 
 /**
- * @coversDefaultClass \Drupal\layout_builder\EventSubscriber\BlockComponentRenderArray
  * @group layout_builder
  */
+#[CoversClass(\Drupal\layout_builder\EventSubscriber\BlockComponentRenderArray::class)]
 class BlockComponentRenderArrayTest extends UnitTestCase {
 
   /**
@@ -70,8 +71,6 @@ class BlockComponentRenderArrayTest extends UnitTestCase {
   }
 
   /**
-   * @covers ::onBuildRender
-   *
    * @dataProvider providerBlockTypes
    */
   public function testOnBuildRender($refinable_dependent_access) {
@@ -144,8 +143,6 @@ class BlockComponentRenderArrayTest extends UnitTestCase {
   }
 
   /**
-   * @covers ::onBuildRender
-   *
    * @dataProvider providerBlockTypes
    */
   public function testOnBuildRenderWithoutPreviewFallbackString($refinable_dependent_access) {
@@ -217,8 +214,6 @@ class BlockComponentRenderArrayTest extends UnitTestCase {
   }
 
   /**
-   * @covers ::onBuildRender
-   *
    * @dataProvider providerBlockTypes
    */
   public function testOnBuildRenderDenied($refinable_dependent_access) {
@@ -275,8 +270,6 @@ class BlockComponentRenderArrayTest extends UnitTestCase {
   }
 
   /**
-   * @covers ::onBuildRender
-   *
    * @dataProvider providerBlockTypes
    */
   public function testOnBuildRenderInPreview($refinable_dependent_access) {
@@ -347,9 +340,6 @@ class BlockComponentRenderArrayTest extends UnitTestCase {
     $this->assertEquals($expected_cache, $result);
   }
 
-  /**
-   * @covers ::onBuildRender
-   */
   public function testOnBuildRenderInPreviewEmptyBuild() {
     $block = $this->prophesize(BlockPluginInterface::class)->willImplement(PreviewFallbackInterface::class);
 
@@ -409,9 +399,6 @@ class BlockComponentRenderArrayTest extends UnitTestCase {
     $this->assertEquals($expected_cache, $result);
   }
 
-  /**
-   * @covers ::onBuildRender
-   */
   public function testOnBuildRenderEmptyBuild() {
     $block = $this->prophesize(BlockPluginInterface::class);
     $access_result = AccessResult::allowed();
@@ -454,9 +441,6 @@ class BlockComponentRenderArrayTest extends UnitTestCase {
     $this->assertEqualsCanonicalizing($expected_cache, $result);
   }
 
-  /**
-   * @covers ::onBuildRender
-   */
   public function testOnBuildRenderEmptyBuildWithCacheTags() {
     $block = $this->prophesize(BlockPluginInterface::class);
     $access_result = AccessResult::allowed();
@@ -499,9 +483,6 @@ class BlockComponentRenderArrayTest extends UnitTestCase {
     $this->assertEqualsCanonicalizing($expected_cache, $result);
   }
 
-  /**
-   * @covers ::onBuildRender
-   */
   public function testOnBuildRenderNoBlock() {
     $this->blockManager->createInstance('some_block_id', ['id' => 'some_block_id'])->willReturn(NULL);
 

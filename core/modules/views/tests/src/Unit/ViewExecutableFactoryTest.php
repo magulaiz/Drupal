@@ -4,15 +4,16 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\views\Unit;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use Drupal\Tests\UnitTestCase;
 use Drupal\views\ViewExecutableFactory;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 
 /**
- * @coversDefaultClass \Drupal\views\ViewExecutableFactory
  * @group views
  */
+#[CoversClass(\Drupal\views\ViewExecutableFactory::class)]
 class ViewExecutableFactoryTest extends UnitTestCase {
 
   /**
@@ -85,8 +86,6 @@ class ViewExecutableFactoryTest extends UnitTestCase {
 
   /**
    * Tests the get method.
-   *
-   * @covers ::get
    */
   public function testGet() {
     $request_1 = new Request();

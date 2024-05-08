@@ -4,15 +4,16 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\locale\Unit;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use Drupal\Core\KeyValueStore\KeyValueMemoryFactory;
 use Drupal\locale\LocaleProjectStorage;
 use Drupal\Tests\UnitTestCase;
 
 /**
- * @coversDefaultClass \Drupal\locale\LocaleProjectStorage
  * @group locale
  * @runTestsInSeparateProcesses
  */
+#[CoversClass(\Drupal\locale\LocaleProjectStorage::class)]
 class LocaleProjectStorageTest extends UnitTestCase {
 
   /**

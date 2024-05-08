@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\user\Unit;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use Drupal\Core\Config\ImmutableConfig;
 use Drupal\Core\Password\PasswordGeneratorInterface;
 use Drupal\Core\Session\AccountInterface;
@@ -18,9 +19,9 @@ use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 /**
  * Tests User Registration REST resource.
  *
- * @coversDefaultClass \Drupal\user\Plugin\rest\resource\UserRegistrationResource
  * @group user
  */
+#[CoversClass(\Drupal\user\Plugin\rest\resource\UserRegistrationResource::class)]
 class UserRegistrationResourceTest extends UnitTestCase {
 
   const ERROR_MESSAGE = "Unprocessable Entity: validation failed.\nproperty_path: message\nproperty_path_2: message_2\n";

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\block\Unit;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use Drupal\Core\DependencyInjection\ContainerBuilder;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
@@ -12,9 +13,9 @@ use Drupal\Tests\Core\Plugin\Fixtures\TestConfigurablePlugin;
 use Drupal\Tests\UnitTestCase;
 
 /**
- * @coversDefaultClass \Drupal\block\Entity\Block
  * @group block
  */
+#[CoversClass(\Drupal\block\Entity\Block::class)]
 class BlockConfigEntityUnitTest extends UnitTestCase {
 
   /**
@@ -91,9 +92,6 @@ class BlockConfigEntityUnitTest extends UnitTestCase {
     \Drupal::setContainer($container);
   }
 
-  /**
-   * @covers ::calculateDependencies
-   */
   public function testCalculateDependencies() {
     $this->themeHandler->themeExists('stark')->willReturn(TRUE);
     $values = ['theme' => 'stark'];

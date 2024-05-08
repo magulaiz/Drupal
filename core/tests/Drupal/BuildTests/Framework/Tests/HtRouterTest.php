@@ -4,19 +4,17 @@ declare(strict_types=1);
 
 namespace Drupal\BuildTests\Framework\Tests;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use Drupal\BuildTests\QuickStart\QuickStartTestBase;
 use Drupal\sqlite\Driver\Database\sqlite\Install\Tasks;
 
 /**
- * @coversDefaultClass \Drupal\BuildTests\Framework\BuildTestBase
  * @group Build
  * @requires extension pdo_sqlite
  */
+#[CoversClass(\Drupal\BuildTests\Framework\BuildTestBase::class)]
 class HtRouterTest extends QuickStartTestBase {
 
-  /**
-   * @covers ::instantiateServer
-   */
   public function testHtRouter() {
     $sqlite = (new \PDO('sqlite::memory:'))->query('select sqlite_version()')->fetch()[0];
     if (version_compare($sqlite, Tasks::SQLITE_MINIMUM_VERSION) < 0) {

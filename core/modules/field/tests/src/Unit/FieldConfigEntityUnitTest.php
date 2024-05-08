@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\field\Unit;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use Drupal\Core\Entity\EntityType;
 use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Core\DependencyInjection\ContainerBuilder;
@@ -13,9 +14,9 @@ use Drupal\field\Entity\FieldConfig;
 use Drupal\Tests\UnitTestCase;
 
 /**
- * @coversDefaultClass \Drupal\field\Entity\FieldConfig
  * @group field
  */
+#[CoversClass(\Drupal\field\Entity\FieldConfig::class)]
 class FieldConfigEntityUnitTest extends UnitTestCase {
 
   /**
@@ -110,9 +111,6 @@ class FieldConfigEntityUnitTest extends UnitTestCase {
       ]);
   }
 
-  /**
-   * @covers ::calculateDependencies
-   */
   public function testCalculateDependencies() {
     // Mock the interfaces necessary to create a dependency on a bundle entity.
     $target_entity_type = $this->createMock('\Drupal\Core\Entity\EntityTypeInterface');
@@ -191,9 +189,6 @@ class FieldConfigEntityUnitTest extends UnitTestCase {
     $field->calculateDependencies();
   }
 
-  /**
-   * @covers ::onDependencyRemoval
-   */
   public function testOnDependencyRemoval() {
     $this->fieldTypePluginManager->expects($this->any())
       ->method('getDefinition')
@@ -220,9 +215,6 @@ class FieldConfigEntityUnitTest extends UnitTestCase {
     $this->assertTrue($changed);
   }
 
-  /**
-   * @covers ::toArray
-   */
   public function testToArray() {
     $field = new FieldConfig([
       'field_name' => $this->fieldStorage->getName(),
@@ -265,9 +257,6 @@ class FieldConfigEntityUnitTest extends UnitTestCase {
     $this->assertEquals($expected, $export);
   }
 
-  /**
-   * @covers ::getType
-   */
   public function testGetType() {
     // Ensure that FieldConfig::getType() is not delegated to
     // FieldStorage.

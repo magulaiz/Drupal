@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\workspaces\Kernel;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use Drupal\Core\Entity\EntityTypeManager;
 use Drupal\Core\Field\BaseFieldDefinition;
 use Drupal\entity_test\Entity\EntityTest;
@@ -12,9 +13,9 @@ use Drupal\KernelTests\KernelTestBase;
 use Drupal\Tests\user\Traits\UserCreationTrait;
 
 /**
- * @coversDefaultClass \Drupal\workspaces\Plugin\Validation\Constraint\EntityReferenceSupportedNewEntitiesConstraintValidator
  * @group workspaces
  */
+#[CoversClass(\Drupal\workspaces\Plugin\Validation\Constraint\EntityReferenceSupportedNewEntitiesConstraintValidator::class)]
 class EntityReferenceSupportedNewEntitiesConstraintValidatorTest extends KernelTestBase {
 
   use UserCreationTrait;
@@ -54,9 +55,6 @@ class EntityReferenceSupportedNewEntitiesConstraintValidatorTest extends KernelT
     $this->initializeWorkspacesModule();
   }
 
-  /**
-   * @covers ::validate
-   */
   public function testNewEntitiesAllowedInDefaultWorkspace() {
     $entity = EntityTestMulRevPub::create([
       'unsupported_reference' => [
@@ -69,9 +67,6 @@ class EntityReferenceSupportedNewEntitiesConstraintValidatorTest extends KernelT
     $this->assertCount(0, $entity->validate());
   }
 
-  /**
-   * @covers ::validate
-   */
   public function testNewEntitiesForbiddenInNonDefaultWorkspace() {
     $this->switchToWorkspace('stage');
     $entity = EntityTestMulRevPub::create([

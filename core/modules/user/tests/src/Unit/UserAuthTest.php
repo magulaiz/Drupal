@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\user\Unit;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Routing\RequestContext;
 use Drupal\Core\Routing\TrustedRedirectResponse;
@@ -17,9 +18,9 @@ use Symfony\Component\HttpKernel\Event\ResponseEvent;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 
 /**
- * @coversDefaultClass \Drupal\user\UserAuth
  * @group user
  */
+#[CoversClass(\Drupal\user\UserAuth::class)]
 class UserAuthTest extends UnitTestCase {
 
   /**
@@ -92,7 +93,6 @@ class UserAuthTest extends UnitTestCase {
   /**
    * Tests failing authentication with missing credential parameters.
    *
-   * @covers ::authenticate
    *
    * @dataProvider providerTestAuthenticateWithMissingCredentials
    */
@@ -119,8 +119,6 @@ class UserAuthTest extends UnitTestCase {
 
   /**
    * Tests the authenticate method with no account returned.
-   *
-   * @covers ::authenticate
    */
   public function testAuthenticateWithNoAccountReturned() {
     $this->userStorage->expects($this->once())
@@ -133,8 +131,6 @@ class UserAuthTest extends UnitTestCase {
 
   /**
    * Tests the authenticate method with an incorrect password.
-   *
-   * @covers ::authenticate
    */
   public function testAuthenticateWithIncorrectPassword() {
     $this->userStorage->expects($this->once())
@@ -152,8 +148,6 @@ class UserAuthTest extends UnitTestCase {
 
   /**
    * Tests the authenticate method with a correct password.
-   *
-   * @covers ::authenticate
    */
   public function testAuthenticateWithCorrectPassword() {
     $this->testUser->expects($this->once())
@@ -179,8 +173,6 @@ class UserAuthTest extends UnitTestCase {
    * We discovered in https://www.drupal.org/node/2563751 that logging in with a
    * password that is literally "0" was not possible. This test ensures that
    * this regression can't happen again.
-   *
-   * @covers ::authenticate
    */
   public function testAuthenticateWithZeroPassword() {
     $this->testUser->expects($this->once())
@@ -202,8 +194,6 @@ class UserAuthTest extends UnitTestCase {
 
   /**
    * Tests the authenticate method with a correct password & new password hash.
-   *
-   * @covers ::authenticate
    */
   public function testAuthenticateWithCorrectPasswordAndNewPasswordHash() {
     $this->testUser->expects($this->once())

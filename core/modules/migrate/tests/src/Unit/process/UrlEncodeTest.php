@@ -4,15 +4,16 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\migrate\Unit\process;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use Drupal\migrate\Plugin\migrate\process\UrlEncode;
 use Drupal\migrate\MigrateExecutable;
 use Drupal\migrate\Row;
 use Drupal\Tests\migrate\Unit\MigrateTestCase;
 
 /**
- * @coversDefaultClass \Drupal\migrate\Plugin\migrate\process\UrlEncode
  * @group file
  */
+#[CoversClass(\Drupal\migrate\Plugin\migrate\process\UrlEncode::class)]
 class UrlEncodeTest extends MigrateTestCase {
 
   /**

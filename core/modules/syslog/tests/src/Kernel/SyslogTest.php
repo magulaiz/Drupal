@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\syslog\Kernel;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use Drupal\KernelTests\KernelTestBase;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Session\Session;
@@ -13,8 +14,8 @@ use Symfony\Component\HttpFoundation\Session\Storage\MockArraySessionStorage;
  * Test syslog logger functionality.
  *
  * @group syslog
- * @coversDefaultClass \Drupal\syslog\Logger\SysLog
  */
+#[CoversClass(\Drupal\syslog\Logger\SysLog::class)]
 class SyslogTest extends KernelTestBase {
 
   protected static $modules = ['syslog', 'syslog_test'];
@@ -27,9 +28,6 @@ class SyslogTest extends KernelTestBase {
     $this->installConfig(['syslog']);
   }
 
-  /**
-   * @covers ::log
-   */
   public function testSyslogWriting() {
 
     $request = Request::create('/page-not-found', 'GET', [], [], [], ['REMOTE_ADDR' => '1.2.3.4']);
@@ -69,8 +67,6 @@ class SyslogTest extends KernelTestBase {
 
   /**
    * Tests that missing facility prevents writing to the syslog.
-   *
-   * @covers ::openConnection
    */
   public function testSyslogMissingFacility() {
     $config = $this->container->get('config.factory')->getEditable('syslog.settings');
@@ -83,8 +79,6 @@ class SyslogTest extends KernelTestBase {
 
   /**
    * Tests severity level logging.
-   *
-   * @covers ::log
    */
   public function testSyslogSeverity() {
     /** @var \Drupal\Core\Config\Config $config */

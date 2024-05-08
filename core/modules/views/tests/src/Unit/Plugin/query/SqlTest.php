@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\views\Unit\Plugin\query;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\RevisionableStorageInterface;
 use Drupal\Core\Entity\EntityType;
@@ -20,16 +21,11 @@ use Drupal\views\ViewsData;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 
 /**
- * @coversDefaultClass \Drupal\views\Plugin\views\query\Sql
- *
  * @group views
  */
+#[CoversClass(\Drupal\views\Plugin\views\query\Sql::class)]
 class SqlTest extends UnitTestCase {
 
-  /**
-   * @covers ::getCacheTags
-   * @covers ::getAllEntities
-   */
   public function testGetCacheTags() {
     $view = $this->prophesize('Drupal\views\ViewExecutable')->reveal();
     $entity_type_manager = $this->prophesize(EntityTypeManagerInterface::class);
@@ -74,10 +70,6 @@ class SqlTest extends UnitTestCase {
     $this->assertEqualsCanonicalizing(['entity_test:123', 'entity_test:124', 'entity_test:125', 'entity_test:126'], $query->getCacheTags());
   }
 
-  /**
-   * @covers ::getCacheTags
-   * @covers ::getAllEntities
-   */
   public function testGetCacheMaxAge() {
     $view = $this->prophesize('Drupal\views\ViewExecutable')->reveal();
     $entity_type_manager = $this->prophesize(EntityTypeManagerInterface::class);
@@ -244,10 +236,6 @@ class SqlTest extends UnitTestCase {
     return $entity_type_manager;
   }
 
-  /**
-   * @covers ::loadEntities
-   * @covers ::assignEntitiesToResult
-   */
   public function testLoadEntitiesWithEmptyResult() {
     $view = $this->prophesize('Drupal\views\ViewExecutable')->reveal();
     $view_entity = $this->prophesize(ViewEntityInterface::class);
@@ -268,10 +256,6 @@ class SqlTest extends UnitTestCase {
     $this->assertEmpty($result);
   }
 
-  /**
-   * @covers ::loadEntities
-   * @covers ::assignEntitiesToResult
-   */
   public function testLoadEntitiesWithNoRelationshipAndNoRevision() {
     $view = $this->prophesize('Drupal\views\ViewExecutable')->reveal();
     $view_entity = $this->prophesize(ViewEntityInterface::class);
@@ -326,10 +310,6 @@ class SqlTest extends UnitTestCase {
     $view->relationship[$base] = $relationship;
   }
 
-  /**
-   * @covers ::loadEntities
-   * @covers ::assignEntitiesToResult
-   */
   public function testLoadEntitiesWithRelationship() {
     // We don't use prophecy, because prophecy enforces methods.
     $view = $this->getMockBuilder(ViewExecutable::class)->disableOriginalConstructor()->getMock();
@@ -386,10 +366,6 @@ class SqlTest extends UnitTestCase {
     $this->assertSame($entities['second'][12], $result[2]->_relationship_entities['entity_second']);
   }
 
-  /**
-   * @covers ::loadEntities
-   * @covers ::assignEntitiesToResult
-   */
   public function testLoadEntitiesWithNonEntityRelationship() {
     // We don't use prophecy, because prophecy enforces methods.
     $view = $this->getMockBuilder(ViewExecutable::class)->disableOriginalConstructor()->getMock();
@@ -437,10 +413,6 @@ class SqlTest extends UnitTestCase {
     $this->assertNotContains('entity_first_field_data__entity_first_field_data', array_keys($entity_information));
   }
 
-  /**
-   * @covers ::loadEntities
-   * @covers ::assignEntitiesToResult
-   */
   public function testLoadEntitiesWithRevision() {
     // We don't use prophecy, because prophecy enforces methods.
     $view = $this->getMockBuilder(ViewExecutable::class)
@@ -484,10 +456,6 @@ class SqlTest extends UnitTestCase {
     $this->assertSame($entity_revisions['first'][3], $result[2]->_entity);
   }
 
-  /**
-   * @covers ::loadEntities
-   * @covers ::assignEntitiesToResult
-   */
   public function testLoadEntitiesWithRevisionOfSameEntityType() {
     // We don't use prophecy, because prophecy enforces methods.
     $view = $this->getMockBuilder(ViewExecutable::class)
@@ -546,10 +514,6 @@ class SqlTest extends UnitTestCase {
     $this->assertSame($entity_revisions['first'][3], $result[2]->_relationship_entities['entity_first__revision']);
   }
 
-  /**
-   * @covers ::loadEntities
-   * @covers ::assignEntitiesToResult
-   */
   public function testLoadEntitiesWithRelationshipAndRevision() {
     // We don't use prophecy, because prophecy enforces methods.
     $view = $this->getMockBuilder(ViewExecutable::class)->disableOriginalConstructor()->getMock();

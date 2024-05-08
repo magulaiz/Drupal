@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\contact\Unit;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use Drupal\contact\MailHandler;
 use Drupal\contact\MailHandlerException;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
@@ -12,9 +13,9 @@ use Drupal\Tests\UnitTestCase;
 use Drupal\user\Entity\User;
 
 /**
- * @coversDefaultClass \Drupal\contact\MailHandler
  * @group contact
  */
+#[CoversClass(\Drupal\contact\MailHandler::class)]
 class MailHandlerTest extends UnitTestCase {
 
   /**
@@ -96,8 +97,6 @@ class MailHandlerTest extends UnitTestCase {
 
   /**
    * Tests the children() method with an invalid key.
-   *
-   * @covers ::sendMailMessages
    */
   public function testInvalidRecipient() {
     $message = $this->createMock('\Drupal\contact\MessageInterface');
@@ -130,8 +129,6 @@ class MailHandlerTest extends UnitTestCase {
    * Tests the sendMailMessages method.
    *
    * @dataProvider getSendMailMessages
-   *
-   * @covers ::sendMailMessages
    */
   public function testSendMailMessages(bool $anonymous, ?bool $auto_reply, bool $copy_sender, array $results) {
     if ($anonymous) {

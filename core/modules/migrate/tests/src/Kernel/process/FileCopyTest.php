@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\migrate\Kernel\process;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use Drupal\Core\StreamWrapper\StreamWrapperInterface;
 use Drupal\KernelTests\Core\File\FileTestBase;
 use Drupal\migrate\MigrateException;
@@ -16,10 +17,10 @@ use GuzzleHttp\Client;
 /**
  * Tests the file_copy process plugin.
  *
- * @coversDefaultClass \Drupal\migrate\Plugin\migrate\process\FileCopy
  *
  * @group migrate
  */
+#[CoversClass(\Drupal\migrate\Plugin\migrate\process\FileCopy::class)]
 class FileCopyTest extends FileTestBase {
 
   /**
@@ -171,8 +172,6 @@ class FileCopyTest extends FileTestBase {
 
   /**
    * Tests that non-writable destination throw an exception.
-   *
-   * @covers ::transform
    */
   public function testNonWritableDestination() {
     $source = $this->createUri('file.txt', NULL, 'temporary');

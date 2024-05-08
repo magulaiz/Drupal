@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\FunctionalTests\Entity;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use Drupal\Core\Entity\RevisionLogInterface;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
@@ -13,8 +14,8 @@ use Drupal\Tests\BrowserTestBase;
  * Tests revision view page.
  *
  * @group Entity
- * @coversDefaultClass \Drupal\Core\Entity\Controller\EntityRevisionViewController
  */
+#[CoversClass(\Drupal\Core\Entity\Controller\EntityRevisionViewController::class)]
 class RevisionViewTest extends BrowserTestBase {
 
   /**
@@ -48,7 +49,6 @@ class RevisionViewTest extends BrowserTestBase {
    * @param string $expectedPageTitle
    *   Expected page title.
    *
-   * @covers ::__invoke
    *
    * @dataProvider providerRevisionPage
    */

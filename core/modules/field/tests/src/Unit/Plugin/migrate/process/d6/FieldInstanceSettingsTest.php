@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\field\Unit\Plugin\migrate\process\d6;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use Drupal\field\Plugin\migrate\process\d6\FieldInstanceSettings;
 use Drupal\migrate\Plugin\MigrationInterface;
 use Drupal\migrate\MigrateExecutableInterface;
@@ -11,16 +12,14 @@ use Drupal\migrate\Row;
 use Drupal\Tests\UnitTestCase;
 
 // cspell:ignore imagefield
-
 /**
- * @coversDefaultClass \Drupal\field\Plugin\migrate\process\d6\FieldInstanceSettings
  * @group field
  */
+#[CoversClass(\Drupal\field\Plugin\migrate\process\d6\FieldInstanceSettings::class)]
+#[CoversClass(\Drupal\Core\Field\BaseFieldDefinition::class)]
 class FieldInstanceSettingsTest extends UnitTestCase {
 
   /**
-   * @covers \Drupal\Core\Field\BaseFieldDefinition::getSettings
-   *
    * @dataProvider getSettingsProvider
    */
   public function testGetSettings($field_type, $instance_settings, $expected) {

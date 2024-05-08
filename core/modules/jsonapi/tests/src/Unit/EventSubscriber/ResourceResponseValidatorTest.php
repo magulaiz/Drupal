@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\jsonapi\Unit\EventSubscriber;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use Drupal\jsonapi\EventSubscriber\ResourceResponseValidator;
 use Drupal\jsonapi\ResourceType\ResourceType;
 use Drupal\jsonapi\Routing\Routes;
@@ -16,11 +17,10 @@ use Drupal\Core\Routing\RouteObjectInterface;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
- * @coversDefaultClass \Drupal\jsonapi\EventSubscriber\ResourceResponseValidator
  * @group jsonapi
- *
  * @internal
  */
+#[CoversClass(\Drupal\jsonapi\EventSubscriber\ResourceResponseValidator::class)]
 class ResourceResponseValidatorTest extends UnitTestCase {
 
   /**
@@ -55,7 +55,6 @@ class ResourceResponseValidatorTest extends UnitTestCase {
   }
 
   /**
-   * @covers ::validateResponse
    * @dataProvider validateResponseProvider
    */
   public function testValidateResponse($request, $response, $expected, $description) {

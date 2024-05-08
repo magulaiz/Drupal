@@ -4,18 +4,18 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\migrate\Unit\process;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use Drupal\migrate\MigrateException;
 use Drupal\migrate\Plugin\migrate\process\Substr;
 
 // cspell:ignore aptain Janeway
-
 /**
  * Tests the substr plugin.
  *
- * @coversDefaultClass \Drupal\migrate\Plugin\migrate\process\Substr
  *
  * @group migrate
  */
+#[CoversClass(\Drupal\migrate\Plugin\migrate\process\Substr::class)]
 class SubstrTest extends MigrateProcessTestCase {
 
   /**

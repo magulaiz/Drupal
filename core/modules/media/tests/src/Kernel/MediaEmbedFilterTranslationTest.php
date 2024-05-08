@@ -4,14 +4,15 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\media\Kernel;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use Drupal\language\Entity\ConfigurableLanguage;
 
 /**
  * Tests that media embeds are translated based on text (host entity) language.
  *
- * @coversDefaultClass \Drupal\media\Plugin\Filter\MediaEmbed
  * @group media
  */
+#[CoversClass(\Drupal\media\Plugin\Filter\MediaEmbed::class)]
 class MediaEmbedFilterTranslationTest extends MediaEmbedFilterTestBase {
 
   /**

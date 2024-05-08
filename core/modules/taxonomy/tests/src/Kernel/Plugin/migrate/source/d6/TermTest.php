@@ -4,14 +4,15 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\taxonomy\Kernel\Plugin\migrate\source\d6;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use Drupal\Tests\migrate\Kernel\MigrateSqlSourceTestBase;
 
 /**
  * Tests taxonomy term source plugin.
  *
- * @covers \Drupal\taxonomy\Plugin\migrate\source\d6\Term
  * @group taxonomy
  */
+#[CoversClass(\Drupal\taxonomy\Plugin\migrate\source\d6\Term::class)]
 class TermTest extends MigrateSqlSourceTestBase {
 
   /**

@@ -4,13 +4,14 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\views\Unit\Plugin;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use Drupal\Tests\UnitTestCase;
 use Drupal\views\Plugin\views\HandlerBase;
 
 /**
- * @coversDefaultClass \Drupal\views\Plugin\views\HandlerBase
  * @group Views
  */
+#[CoversClass(\Drupal\views\Plugin\views\HandlerBase::class)]
 class HandlerBaseTest extends UnitTestCase {
 
   use HandlerTestTrait;
@@ -26,9 +27,6 @@ class HandlerBaseTest extends UnitTestCase {
     $this->setupDisplay();
   }
 
-  /**
-   * @covers ::getEntityType
-   */
   public function testGetEntityTypeForFieldOnBaseTable() {
     $handler = new TestHandler([], 'test_handler', []);
     $handler->init($this->executable, $this->display);
@@ -48,9 +46,6 @@ class HandlerBaseTest extends UnitTestCase {
     $this->assertEquals('test_entity_type', $handler->getEntityType());
   }
 
-  /**
-   * @covers ::getEntityType
-   */
   public function testGetEntityTypeForFieldWithRelationship() {
     $handler = new TestHandler([], 'test_handler', []);
 

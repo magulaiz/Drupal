@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\views_ui\Unit;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use Drupal\Core\Language\LanguageInterface;
 use Drupal\Core\TempStore\Lock;
 use Drupal\Tests\UnitTestCase;
@@ -12,9 +13,9 @@ use Drupal\views_ui\ViewUI;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 
 /**
- * @coversDefaultClass \Drupal\views_ui\ViewUI
  * @group views_ui
  */
+#[CoversClass(\Drupal\views_ui\ViewUI::class)]
 class ViewUIObjectTest extends UnitTestCase {
 
   /**

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\serialization\Unit\Normalizer;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use Drupal\Core\Config\Entity\ConfigEntityTypeInterface;
 use Drupal\Core\Entity\EntityFieldManagerInterface;
 use Drupal\Core\Entity\EntityStorageInterface;
@@ -13,15 +14,13 @@ use Drupal\serialization\Normalizer\ConfigEntityNormalizer;
 use Drupal\Tests\UnitTestCase;
 
 /**
- * @coversDefaultClass \Drupal\serialization\Normalizer\ConfigEntityNormalizer
  * @group serialization
  */
+#[CoversClass(\Drupal\serialization\Normalizer\ConfigEntityNormalizer::class)]
 class ConfigEntityNormalizerTest extends UnitTestCase {
 
   /**
    * Tests the normalize() method.
-   *
-   * @covers ::normalize
    */
   public function testNormalize() {
     $test_export_properties = [
@@ -49,9 +48,6 @@ class ConfigEntityNormalizerTest extends UnitTestCase {
     $this->assertSame(['test' => 'test'], $normalizer->normalize($config_entity));
   }
 
-  /**
-   * @covers ::denormalize
-   */
   public function testDenormalize() {
     $test_value = $this->randomMachineName();
     $data = [

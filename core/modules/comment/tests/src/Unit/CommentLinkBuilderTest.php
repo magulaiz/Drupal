@@ -12,9 +12,9 @@ use Drupal\Tests\Traits\Core\GeneratePermutationsTrait;
 use Drupal\Tests\UnitTestCase;
 
 /**
- * @coversDefaultClass \Drupal\comment\CommentLinkBuilder
  * @group comment
  */
+#[\PHPUnit\Framework\Attributes\CoversClass(\Drupal\comment\CommentLinkBuilder::class)]
 class CommentLinkBuilderTest extends UnitTestCase {
 
   use GeneratePermutationsTrait;
@@ -112,8 +112,6 @@ class CommentLinkBuilderTest extends UnitTestCase {
    *   title) or array of link properties.
    *
    * @dataProvider getLinkCombinations
-   *
-   * @covers ::buildCommentedEntityLinks
    */
   public function testCommentLinkBuilder(array $node_args, $context, $has_access_comments, $history_exists, $has_post_comments, $is_anonymous, $expected) {
     $node = $this->getMockNode(...$node_args);

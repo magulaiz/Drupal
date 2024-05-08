@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\help\Unit;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use Drupal\Core\Cache\Cache;
 use Drupal\help\HelpTopicTwig;
 use Drupal\Tests\UnitTestCase;
@@ -17,9 +18,9 @@ use Twig\TemplateWrapper;
  * have calls to new Url() and new Link() in them, so they cannot be unit
  * tested.
  *
- * @coversDefaultClass \Drupal\help\HelpTopicTwig
  * @group help
  */
+#[CoversClass(\Drupal\help\HelpTopicTwig::class)]
 class HelpTopicTwigTest extends UnitTestCase {
 
   /**
@@ -55,10 +56,6 @@ class HelpTopicTwigTest extends UnitTestCase {
       $this->getTwigMock());
   }
 
-  /**
-   * @covers ::getBody
-   * @covers ::getLabel
-   */
   public function testText() {
     $this->assertEquals($this->helpTopic->getBody(),
       ['#markup' => self::PLUGIN_INFORMATION['body']]);
@@ -66,11 +63,6 @@ class HelpTopicTwigTest extends UnitTestCase {
       self::PLUGIN_INFORMATION['label']);
   }
 
-  /**
-   * @covers ::getProvider
-   * @covers ::isTopLevel
-   * @covers ::getRelated
-   */
   public function testDefinition() {
     $this->assertEquals($this->helpTopic->getProvider(),
       self::PLUGIN_INFORMATION['provider']);
@@ -80,11 +72,6 @@ class HelpTopicTwigTest extends UnitTestCase {
       self::PLUGIN_INFORMATION['related']);
   }
 
-  /**
-   * @covers ::getCacheContexts
-   * @covers ::getCacheTags
-   * @covers ::getCacheMaxAge
-   */
   public function testCacheInfo() {
     $this->assertEquals([], $this->helpTopic->getCacheContexts());
     $this->assertEquals(['core.extension'], $this->helpTopic->getCacheTags());

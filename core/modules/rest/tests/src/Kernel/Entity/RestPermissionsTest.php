@@ -4,15 +4,15 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\rest\Kernel\Entity;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\rest\Entity\RestResourceConfig;
 use Drupal\rest\RestResourceConfigInterface;
 
 /**
- * @coversDefaultClass \Drupal\rest\RestPermissions
- *
  * @group rest
  */
+#[CoversClass(\Drupal\rest\RestPermissions::class)]
 class RestPermissionsTest extends KernelTestBase {
 
   /**
@@ -26,9 +26,6 @@ class RestPermissionsTest extends KernelTestBase {
     'user',
   ];
 
-  /**
-   * @covers ::permissions
-   */
   public function testPermissions() {
     RestResourceConfig::create([
       'id' => 'dblog',

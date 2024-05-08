@@ -4,15 +4,16 @@ declare(strict_types=1);
 
 namespace Drupal\BuildTests\Framework\Tests;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use Drupal\BuildTests\Framework\BuildTestBase;
 use org\bovigo\vfs\vfsStream;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Finder\Finder;
 
 /**
- * @coversDefaultClass \Drupal\BuildTests\Framework\BuildTestBase
  * @group Build
  */
+#[CoversClass(\Drupal\BuildTests\Framework\BuildTestBase::class)]
 class BuildTestTest extends BuildTestBase {
 
   /**
@@ -33,9 +34,6 @@ class BuildTestTest extends BuildTestBase {
     $this->assertEquals($working_path, $process->getWorkingDirectory());
   }
 
-  /**
-   * @covers ::copyCodebase
-   */
   public function testCopyCodebase() {
     $test_directory = 'copied_codebase';
     $this->copyCodebase(NULL, $test_directory);
@@ -55,8 +53,6 @@ class BuildTestTest extends BuildTestBase {
 
   /**
    * Ensure we're not copying directories we wish to exclude.
-   *
-   * @covers ::copyCodebase
    */
   public function testCopyCodebaseExclude() {
     // Create a virtual file system containing items that should be
@@ -128,8 +124,6 @@ class BuildTestTest extends BuildTestBase {
 
   /**
    * Tests copying codebase when Drupal and Composer roots are different.
-   *
-   * @covers ::copyCodebase
    */
   public function testCopyCodebaseDocRoot() {
     // Create a virtual file system containing items that should be
@@ -205,9 +199,6 @@ class BuildTestTest extends BuildTestBase {
     $base->tearDown();
   }
 
-  /**
-   * @covers ::findAvailablePort
-   */
   public function testPortMany() {
     $iterator = (new Finder())->in($this->getDrupalRoot())
       ->ignoreDotFiles(FALSE)
@@ -233,9 +224,6 @@ class BuildTestTest extends BuildTestBase {
     }
   }
 
-  /**
-   * @covers ::standUpServer
-   */
   public function testStandUpServer() {
     // Stand up a server with working directory 'first'.
     $this->standUpServer('first');

@@ -4,19 +4,16 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\media\Unit;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use Drupal\media\OEmbed\Endpoint;
 use Drupal\Tests\UnitTestCase;
 
 /**
- * @coversDefaultClass \Drupal\media\OEmbed\Endpoint
- *
  * @group media
  */
+#[CoversClass(\Drupal\media\OEmbed\Endpoint::class)]
 class EndpointTest extends UnitTestCase {
 
-  /**
-   * @covers ::matchUrl
-   */
   public function testMatchUrl(): void {
     $endpoint = new Endpoint(
       'https://www.youtube.com/oembed',
@@ -26,9 +23,6 @@ class EndpointTest extends UnitTestCase {
     $this->assertTrue($endpoint->matchUrl('https://www.youtube.com/playlist?list=aBc-EzAs123'));
   }
 
-  /**
-   * @covers ::matchUrl
-   */
   public function testCaseSensitiveMatch(): void {
     $endpoint = new Endpoint(
       'https://www.example.com/oembed',

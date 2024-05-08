@@ -4,19 +4,19 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\ckeditor5\FunctionalJavascript;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use Drupal\ckeditor5\Plugin\Editor\CKEditor5;
 use Drupal\editor\Entity\Editor;
 use Drupal\filter\Entity\FilterFormat;
 use Symfony\Component\Validator\ConstraintViolation;
 
 // cspell:ignore imageresize
-
 /**
- * @coversDefaultClass \Drupal\ckeditor5\Plugin\CKEditor5Plugin\Image
  * @group ckeditor5
  * @group #slow
  * @internal
  */
+#[CoversClass(\Drupal\ckeditor5\Plugin\CKEditor5Plugin\Image::class)]
 class ImageUrlTest extends ImageTestBase {
 
   /**

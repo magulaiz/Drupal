@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\layout_builder\Unit;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use Drupal\Core\Routing\RouteBuildEvent;
 use Drupal\layout_builder\Routing\LayoutBuilderRoutes;
 use Drupal\layout_builder\SectionStorage\SectionStorageDefinition;
@@ -15,10 +16,9 @@ use Symfony\Component\Routing\Route;
 use Symfony\Component\Routing\RouteCollection;
 
 /**
- * @coversDefaultClass \Drupal\layout_builder\Routing\LayoutBuilderRoutes
- *
  * @group layout_builder
  */
+#[CoversClass(\Drupal\layout_builder\Routing\LayoutBuilderRoutes::class)]
 class LayoutBuilderRoutesTest extends UnitTestCase {
 
   /**
@@ -45,9 +45,6 @@ class LayoutBuilderRoutesTest extends UnitTestCase {
     $this->routeBuilder = new LayoutBuilderRoutes($this->sectionStorageManager->reveal());
   }
 
-  /**
-   * @covers ::onAlterRoutes
-   */
   public function testOnAlterRoutes() {
     $expected = [
       'test_route1' => new Route('/test/path1'),

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\workspaces\Kernel;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Form\FormState;
 use Drupal\Core\Logger\RfcLogLevel;
@@ -16,14 +17,11 @@ use Drupal\workspaces\WorkspacePublisherInterface;
 use Psr\Log\LoggerInterface;
 
 /**
- * @coversDefaultClass \Drupal\workspaces\Form\WorkspacePublishForm
  * @group workspaces
  */
+#[CoversClass(\Drupal\workspaces\Form\WorkspacePublishForm::class)]
 class WorkspacePublishFormTest extends KernelTestBase {
 
-  /**
-   * @covers ::submitForm
-   */
   public function testSubmitFormWithException() {
     /** @var \Drupal\Core\Messenger\MessengerInterface $messenger */
     $messenger = \Drupal::service('messenger');

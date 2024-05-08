@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\jsonapi\Unit\Normalizer;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use Drupal\Core\Config\ConfigFactory;
 use Drupal\Core\Config\ImmutableConfig;
 use Drupal\Core\Session\AccountInterface;
@@ -15,16 +16,12 @@ use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 
 /**
- * @coversDefaultClass \Drupal\jsonapi\Normalizer\HttpExceptionNormalizer
  * @group jsonapi
- *
  * @internal
  */
+#[CoversClass(\Drupal\jsonapi\Normalizer\HttpExceptionNormalizer::class)]
 class HttpExceptionNormalizerTest extends UnitTestCase {
 
-  /**
-   * @covers ::normalize
-   */
   public function testNormalize() {
     $request_stack = $this->prophesize(RequestStack::class);
     $request_stack->getCurrentRequest()->willReturn(Request::create('http://localhost/'));

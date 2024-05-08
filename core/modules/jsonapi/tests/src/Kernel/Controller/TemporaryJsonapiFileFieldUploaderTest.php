@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\jsonapi\Kernel\Controller;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
 use Drupal\jsonapi\Controller\TemporaryJsonapiFileFieldUploader;
 use Drupal\node\Entity\Node;
@@ -13,9 +14,9 @@ use Drupal\user\Entity\Role;
 use Drupal\user\Entity\User;
 
 /**
- * @coversDefaultClass \Drupal\jsonapi\Controller\TemporaryJsonapiFileFieldUploader
  * @group jsonapi
  */
+#[CoversClass(\Drupal\jsonapi\Controller\TemporaryJsonapiFileFieldUploader::class)]
 class TemporaryJsonapiFileFieldUploaderTest extends JsonapiKernelTestBase {
 
   /**
@@ -86,9 +87,6 @@ class TemporaryJsonapiFileFieldUploaderTest extends JsonapiKernelTestBase {
     ])->save();
   }
 
-  /**
-   * @covers ::checkFileUploadAccess
-   */
   public function testCheckFileUploadAccessWithBaseField() {
     // Create a set of users for access testing.
     $article_editor = User::create([

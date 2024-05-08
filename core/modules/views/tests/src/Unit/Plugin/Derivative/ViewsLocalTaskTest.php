@@ -4,15 +4,16 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\views\Unit\Plugin\Derivative;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use Drupal\Tests\UnitTestCase;
 use Drupal\views\Plugin\Derivative\ViewsLocalTask;
 use Symfony\Component\Routing\Route;
 use Symfony\Component\Routing\RouteCollection;
 
 /**
- * @coversDefaultClass \Drupal\views\Plugin\Derivative\ViewsLocalTask
  * @group views
  */
+#[CoversClass(\Drupal\views\Plugin\Derivative\ViewsLocalTask::class)]
 class ViewsLocalTaskTest extends UnitTestCase {
 
   /**

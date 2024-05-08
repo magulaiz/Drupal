@@ -4,12 +4,13 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\taxonomy\Kernel\Plugin\migrate\source\d7;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 /**
  * Tests the taxonomy term source with vocabulary filter.
  *
- * @covers \Drupal\taxonomy\Plugin\migrate\source\d7\Term
  * @group taxonomy
  */
+#[CoversClass(\Drupal\taxonomy\Plugin\migrate\source\d7\Term::class)]
 class TermSourceWithVocabularyFilterTest extends TermTest {
 
   /**

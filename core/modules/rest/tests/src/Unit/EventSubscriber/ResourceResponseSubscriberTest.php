@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\rest\Unit\EventSubscriber;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use Drupal\Component\Serialization\Json;
 use Drupal\Core\Cache\CacheableResponseInterface;
 use Drupal\Core\Render\RenderContext;
@@ -26,13 +27,12 @@ use Symfony\Component\Serializer\Serializer;
 use Symfony\Component\Serializer\SerializerInterface;
 
 /**
- * @coversDefaultClass \Drupal\rest\EventSubscriber\ResourceResponseSubscriber
  * @group rest
  */
+#[CoversClass(\Drupal\rest\EventSubscriber\ResourceResponseSubscriber::class)]
 class ResourceResponseSubscriberTest extends UnitTestCase {
 
   /**
-   * @covers ::onResponse
    * @dataProvider providerTestSerialization
    */
   public function testSerialization($data, $expected_response = FALSE) {
@@ -70,12 +70,6 @@ class ResourceResponseSubscriberTest extends UnitTestCase {
   }
 
   /**
-   * @covers ::getResponseFormat
-   *
-   * Note this does *not* need to test formats being requested that are not
-   * accepted by the server, because the routing system would have already
-   * prevented those from reaching the controller.
-   *
    * @dataProvider providerTestResponseFormat
    */
   public function testResponseFormat($methods, array $supported_response_formats, array $supported_request_formats, $request_format, array $request_headers, $request_body, $expected_response_format, $expected_response_content_type, $expected_response_content) {
@@ -108,10 +102,6 @@ class ResourceResponseSubscriberTest extends UnitTestCase {
   }
 
   /**
-   * @covers ::onResponse
-   * @covers ::getResponseFormat
-   * @covers ::renderResponseBody
-   * @covers ::flattenResponse
    *
    * @dataProvider providerTestResponseFormat
    */
@@ -158,10 +148,6 @@ class ResourceResponseSubscriberTest extends UnitTestCase {
   }
 
   /**
-   * @covers ::onResponse
-   * @covers ::getResponseFormat
-   * @covers ::renderResponseBody
-   * @covers ::flattenResponse
    *
    * @dataProvider providerTestResponseFormat
    */

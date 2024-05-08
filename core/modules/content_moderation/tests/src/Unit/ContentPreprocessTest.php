@@ -4,20 +4,19 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\content_moderation\Unit;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use Drupal\content_moderation\ContentPreprocess;
 use Drupal\Core\Routing\CurrentRouteMatch;
 use Drupal\node\Entity\Node;
 use Drupal\Tests\UnitTestCase;
 
 /**
- * @coversDefaultClass \Drupal\content_moderation\ContentPreprocess
- *
  * @group content_moderation
  */
+#[CoversClass(\Drupal\content_moderation\ContentPreprocess::class)]
 class ContentPreprocessTest extends UnitTestCase {
 
   /**
-   * @covers ::isLatestVersionPage
    * @dataProvider routeNodeProvider
    */
   public function testIsLatestVersionPage($route_name, $route_nid, $check_nid, $result, $message) {

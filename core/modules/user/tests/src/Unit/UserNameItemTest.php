@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\user\Unit;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Tests\UnitTestCase;
 use Drupal\user\UserNameItem;
@@ -12,8 +13,8 @@ use Drupal\user\UserNameItem;
  * Defines a test for the UserNameItem field-type.
  *
  * @group Field
- * @coversDefaultClass \Drupal\user\UserNameItem
  */
+#[CoversClass(\Drupal\user\UserNameItem::class)]
 class UserNameItemTest extends UnitTestCase {
 
   /**
@@ -22,7 +23,6 @@ class UserNameItemTest extends UnitTestCase {
    * @param int $max_length
    *   Maximum field length.
    *
-   * @covers ::generateSampleValue
    * @dataProvider providerMaxLength
    */
   public function testGenerateSampleValue(int $max_length): void {

@@ -4,14 +4,15 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\views\Kernel;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use Drupal\Core\Config\FileStorage;
 
 /**
- * @coversDefaultClass \Drupal\views\ViewsConfigUpdater
  *
  * @group Views
  * @group legacy
  */
+#[CoversClass(\Drupal\views\ViewsConfigUpdater::class)]
 class ViewsConfigUpdaterTest extends ViewsKernelTestBase {
 
   /**

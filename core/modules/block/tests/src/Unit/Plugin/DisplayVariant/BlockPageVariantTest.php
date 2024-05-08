@@ -4,15 +4,16 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\block\Unit\Plugin\DisplayVariant;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use Drupal\block\Plugin\DisplayVariant\BlockPageVariant;
 use Drupal\Core\Cache\CacheableMetadata;
 use Drupal\Core\DependencyInjection\Container;
 use Drupal\Tests\UnitTestCase;
 
 /**
- * @coversDefaultClass \Drupal\block\Plugin\DisplayVariant\BlockPageVariant
  * @group block
  */
+#[CoversClass(\Drupal\block\Plugin\DisplayVariant\BlockPageVariant::class)]
 class BlockPageVariantTest extends UnitTestCase {
 
   /**
@@ -197,7 +198,6 @@ class BlockPageVariantTest extends UnitTestCase {
   /**
    * Tests the building of a full page variant.
    *
-   * @covers ::build
    *
    * @dataProvider providerBuild
    */
@@ -233,8 +233,6 @@ class BlockPageVariantTest extends UnitTestCase {
 
   /**
    * Tests the building of a full page variant with no main content set.
-   *
-   * @covers ::build
    */
   public function testBuildWithoutMainContent() {
     $display_variant = $this->setUpDisplayVariant();

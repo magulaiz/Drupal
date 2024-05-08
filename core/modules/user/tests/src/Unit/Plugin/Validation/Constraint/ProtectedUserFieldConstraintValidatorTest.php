@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\user\Unit\Plugin\Validation\Constraint;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use Drupal\Tests\UnitTestCase;
 use Drupal\user\Entity\User;
 use Drupal\user\Plugin\Validation\Constraint\ProtectedUserFieldConstraint;
@@ -11,9 +12,9 @@ use Drupal\user\Plugin\Validation\Constraint\ProtectedUserFieldConstraintValidat
 use Symfony\Component\Validator\Context\ExecutionContextInterface;
 
 /**
- * @coversDefaultClass \Drupal\user\Plugin\Validation\Constraint\ProtectedUserFieldConstraintValidator
  * @group user
  */
+#[CoversClass(\Drupal\user\Plugin\Validation\Constraint\ProtectedUserFieldConstraintValidator::class)]
 class ProtectedUserFieldConstraintValidatorTest extends UnitTestCase {
 
   /**
@@ -66,9 +67,6 @@ class ProtectedUserFieldConstraintValidatorTest extends UnitTestCase {
     $validator->validate($items, $constraint);
   }
 
-  /**
-   * @covers ::validate
-   */
   public function testValidate() {
     // Case 1: Validation context should not be touched if no items are passed.
     $this->validate(NULL);

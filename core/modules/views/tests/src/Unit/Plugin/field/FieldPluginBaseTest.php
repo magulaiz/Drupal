@@ -22,9 +22,9 @@ use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Routing\Route;
 
 /**
- * @coversDefaultClass \Drupal\views\Plugin\views\field\FieldPluginBase
  * @group views
  */
+#[\PHPUnit\Framework\Attributes\CoversClass(\Drupal\views\Plugin\views\field\FieldPluginBase::class)]
 class FieldPluginBaseTest extends UnitTestCase {
 
   /**
@@ -208,8 +208,6 @@ class FieldPluginBaseTest extends UnitTestCase {
 
   /**
    * Tests rendering as a link without a path.
-   *
-   * @covers ::renderAsLink
    */
   public function testRenderAsLinkWithoutPath() {
     $alter = [
@@ -235,7 +233,6 @@ class FieldPluginBaseTest extends UnitTestCase {
    *   The final URL used by the more link.
    *
    * @dataProvider providerTestRenderTrimmedWithMoreLinkAndPath
-   * @covers ::renderText
    */
   public function testRenderTrimmedWithMoreLinkAndPath($path, $url) {
     $alter = [
@@ -294,8 +291,6 @@ class FieldPluginBaseTest extends UnitTestCase {
 
   /**
    * Tests the "No results text" rendering.
-   *
-   * @covers ::renderText
    */
   public function testRenderNoResult() {
     $this->setupDisplayWithEmptyArgumentsAndFields();
@@ -313,7 +308,6 @@ class FieldPluginBaseTest extends UnitTestCase {
    * Tests rendering of a link with a path and options.
    *
    * @dataProvider providerTestRenderAsLinkWithPathAndOptions
-   * @covers ::renderAsLink
    */
   public function testRenderAsLinkWithPathAndOptions($path, $alter, $final_html) {
     $alter += [
@@ -384,7 +378,6 @@ class FieldPluginBaseTest extends UnitTestCase {
    * Tests link rendering with a URL and options.
    *
    * @dataProvider providerTestRenderAsLinkWithUrlAndOptions
-   * @covers ::renderAsLink
    */
   public function testRenderAsLinkWithUrlAndOptions(Url $url, $alter, Url $expected_url, $url_path, Url $expected_link_url, $final_html) {
     $alter += [
@@ -524,7 +517,6 @@ class FieldPluginBaseTest extends UnitTestCase {
    * Tests rendering of a link with a path and options.
    *
    * @dataProvider providerTestRenderAsLinkWithPathAndTokens
-   * @covers ::renderAsLink
    */
   public function testRenderAsLinkWithPathAndTokens($path, $tokens, $link_html) {
     $alter = [
@@ -584,7 +576,6 @@ class FieldPluginBaseTest extends UnitTestCase {
    * Tests rendering of a link with a path and options.
    *
    * @dataProvider providerTestRenderAsExternalLinkWithPathAndTokens
-   * @covers ::renderAsLink
    */
   public function testRenderAsExternalLinkWithPathAndTokens($path, $tokens, $link_html, $context) {
     $alter = [
@@ -649,9 +640,6 @@ class FieldPluginBaseTest extends UnitTestCase {
     return $field;
   }
 
-  /**
-   * @covers ::getRenderTokens
-   */
   public function testGetRenderTokensWithoutFieldsAndArguments() {
     $field = $this->setupTestField();
 
@@ -665,9 +653,6 @@ class FieldPluginBaseTest extends UnitTestCase {
     $this->assertEquals([], $field->getRenderTokens([]));
   }
 
-  /**
-   * @covers ::getRenderTokens
-   */
   public function testGetRenderTokensWithoutArguments() {
     $field = $this->setupTestField(['id' => 'id']);
 
@@ -682,9 +667,6 @@ class FieldPluginBaseTest extends UnitTestCase {
     $this->assertEquals(['{{ id }}' => 'last rendered output'], $field->getRenderTokens([]));
   }
 
-  /**
-   * @covers ::getRenderTokens
-   */
   public function testGetRenderTokensWithArguments() {
     $field = $this->setupTestField(['id' => 'id']);
     $field->view->args = ['argument value'];
@@ -712,8 +694,6 @@ class FieldPluginBaseTest extends UnitTestCase {
 
   /**
    * @dataProvider providerTestGetRenderTokensWithQuery
-   * @covers ::getRenderTokens
-   * @covers ::getTokenValuesRecursive
    */
   public function testGetRenderTokensWithQuery(array $query_params, array $expected): void {
     $request = new Request($query_params);
@@ -812,10 +792,6 @@ class FieldPluginBaseTest extends UnitTestCase {
 
   /**
    * Ensures proper token replacement when generating CSS classes.
-   *
-   * @covers ::elementClasses
-   * @covers ::elementLabelClasses
-   * @covers ::elementWrapperClasses
    */
   public function testElementClassesWithTokens() {
     $functions = [

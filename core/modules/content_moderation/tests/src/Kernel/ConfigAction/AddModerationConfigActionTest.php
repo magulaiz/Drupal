@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\content_moderation\Kernel\ConfigAction;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use Drupal\Component\Plugin\Exception\PluginNotFoundException;
 use Drupal\Core\Config\Action\ConfigActionException;
 use Drupal\Core\Recipe\Recipe;
@@ -15,11 +16,11 @@ use Drupal\Tests\taxonomy\Traits\TaxonomyTestTrait;
 use Drupal\workflows\Entity\Workflow;
 
 /**
- * @covers \Drupal\content_moderation\Plugin\ConfigAction\AddModeration
- * @covers \Drupal\content_moderation\Plugin\ConfigAction\AddModerationDeriver
  * @group content_moderation
  * @group Recipe
  */
+#[CoversClass(\Drupal\content_moderation\Plugin\ConfigAction\AddModeration::class)]
+#[CoversClass(\Drupal\content_moderation\Plugin\ConfigAction\AddModerationDeriver::class)]
 class AddModerationConfigActionTest extends KernelTestBase {
 
   use ContentTypeCreationTrait;

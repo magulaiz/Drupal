@@ -4,14 +4,14 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\media\Functional\FieldWidget;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\Tests\media\Functional\MediaFunctionalTestBase;
 
 /**
- * @covers \Drupal\media\Plugin\Field\FieldWidget\OEmbedWidget
- *
  * @group media
  */
+#[CoversClass(\Drupal\media\Plugin\Field\FieldWidget\OEmbedWidget::class)]
 class OEmbedFieldWidgetTest extends MediaFunctionalTestBase {
 
   /**

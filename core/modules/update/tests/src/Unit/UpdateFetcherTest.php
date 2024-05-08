@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\update\Unit;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use ColinODell\PsrTestLogger\TestLogger;
 use Drupal\Core\Site\Settings;
 use Drupal\Tests\UnitTestCase;
@@ -18,10 +19,10 @@ use Psr\Log\LoggerInterface;
 /**
  * Tests update functionality unrelated to the database.
  *
- * @coversDefaultClass \Drupal\update\UpdateFetcher
  *
  * @group update
  */
+#[CoversClass(\Drupal\update\UpdateFetcher::class)]
 class UpdateFetcherTest extends UnitTestCase {
 
   /**
@@ -172,10 +173,6 @@ class UpdateFetcherTest extends UnitTestCase {
     $this->mockHttpClient = new Client(['handler' => $handler_stack]);
   }
 
-  /**
-   * @covers ::doRequest
-   * @covers ::fetchProjectData
-   */
   public function testUpdateFetcherNoFallback() {
     // First, try without the HTTP fallback setting, and HTTPS mocked to fail.
     $settings = new Settings([]);
@@ -201,10 +198,6 @@ class UpdateFetcherTest extends UnitTestCase {
     }));
   }
 
-  /**
-   * @covers ::doRequest
-   * @covers ::fetchProjectData
-   */
   public function testUpdateFetcherHttpFallback() {
     $settings = new Settings(['update_fetch_with_http_fallback' => TRUE]);
     $this->mockClient(

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\rest\Unit;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use Drupal\Core\Entity\EntityConstraintViolationList;
 use Drupal\node\Entity\Node;
 use Drupal\rest\Plugin\rest\resource\EntityResourceValidationTrait;
@@ -14,13 +15,10 @@ use Symfony\Component\Validator\ConstraintViolationInterface;
 
 /**
  * @group rest
- * @coversDefaultClass \Drupal\rest\Plugin\rest\resource\EntityResourceValidationTrait
  */
+#[CoversClass(\Drupal\rest\Plugin\rest\resource\EntityResourceValidationTrait::class)]
 class EntityResourceValidationTraitTest extends UnitTestCase {
 
-  /**
-   * @covers ::validate
-   */
   public function testValidate() {
     $trait = new EntityResourceValidationTraitTestClass();
 
@@ -36,9 +34,6 @@ class EntityResourceValidationTraitTest extends UnitTestCase {
     $method->invoke($trait, $entity->reveal());
   }
 
-  /**
-   * @covers ::validate
-   */
   public function testFailedValidate() {
     $violation1 = $this->prophesize(ConstraintViolationInterface::class);
     $violation1->getPropertyPath()->willReturn('property_path');

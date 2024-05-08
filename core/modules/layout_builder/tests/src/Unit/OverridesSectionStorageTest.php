@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\layout_builder\Unit;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use Drupal\Core\Entity\EntityFieldManagerInterface;
 use Drupal\Core\Entity\EntityRepositoryInterface;
 use Drupal\Core\Entity\EntityType;
@@ -21,10 +22,10 @@ use Symfony\Component\Routing\Route;
 use Symfony\Component\Routing\RouteCollection;
 
 /**
- * @coversDefaultClass \Drupal\layout_builder\Plugin\SectionStorage\OverridesSectionStorage
- *
  * @group layout_builder
  */
+#[CoversClass(\Drupal\layout_builder\Plugin\SectionStorage\OverridesSectionStorage::class)]
+#[CoversClass(\Drupal\layout_builder\Routing\LayoutBuilderRoutesTrait::class)]
 class OverridesSectionStorageTest extends UnitTestCase {
 
   /**
@@ -75,7 +76,6 @@ class OverridesSectionStorageTest extends UnitTestCase {
   }
 
   /**
-   * @covers ::extractEntityFromRoute
    *
    * @dataProvider providerTestExtractEntityFromRoute
    *
@@ -157,12 +157,6 @@ class OverridesSectionStorageTest extends UnitTestCase {
     return $data;
   }
 
-  /**
-   * @covers ::buildRoutes
-   * @covers ::hasIntegerId
-   * @covers ::getEntityTypes
-   * @covers \Drupal\layout_builder\Routing\LayoutBuilderRoutesTrait::buildLayoutRoutes
-   */
   public function testBuildRoutes() {
     $entity_types = [];
 

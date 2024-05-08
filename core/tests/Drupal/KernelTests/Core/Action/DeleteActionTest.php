@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\KernelTests\Core\Action;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use Drupal\Core\Action\Plugin\Action\Derivative\EntityDeleteActionDeriver;
 use Drupal\entity_test\Entity\EntityTestMulRevPub;
 use Drupal\KernelTests\KernelTestBase;
@@ -13,6 +14,8 @@ use Drupal\user\Entity\User;
 /**
  * @group Action
  */
+#[CoversClass(\Drupal\Core\Action\Plugin\Action\Derivative\EntityDeleteActionDeriver::class)]
+#[CoversClass(\Drupal\Core\Action\Plugin\Action\DeleteAction::class)]
 class DeleteActionTest extends KernelTestBase {
 
   protected $testUser;
@@ -38,9 +41,6 @@ class DeleteActionTest extends KernelTestBase {
     \Drupal::service('current_user')->setAccount($this->testUser);
   }
 
-  /**
-   * @covers \Drupal\Core\Action\Plugin\Action\Derivative\EntityDeleteActionDeriver::getDerivativeDefinitions
-   */
   public function testGetDerivativeDefinitions() {
     $deriver = new EntityDeleteActionDeriver(\Drupal::entityTypeManager(), \Drupal::translation());
     $this->assertEquals([
@@ -67,9 +67,6 @@ class DeleteActionTest extends KernelTestBase {
     ]));
   }
 
-  /**
-   * @covers \Drupal\Core\Action\Plugin\Action\DeleteAction::execute
-   */
   public function testDeleteAction() {
     $entity = EntityTestMulRevPub::create(['name' => 'test']);
     $entity->save();

@@ -4,15 +4,16 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\block\Unit\Plugin\migrate\process;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use Drupal\block\Plugin\migrate\process\BlockRegion;
 use Drupal\migrate\MigrateExecutableInterface;
 use Drupal\migrate\Row;
 use Drupal\Tests\UnitTestCase;
 
 /**
- * @coversDefaultClass \Drupal\block\Plugin\migrate\process\BlockRegion
  * @group block
  */
+#[CoversClass(\Drupal\block\Plugin\migrate\process\BlockRegion::class)]
 class BlockRegionTest extends UnitTestCase {
 
   /**
@@ -54,8 +55,6 @@ class BlockRegionTest extends UnitTestCase {
    *
    * If the source and destination themes are identical, the region should only
    * be passed through if it actually exists in the destination theme.
-   *
-   * @covers ::transform
    */
   public function testTransformSameThemeRegionExists() {
     $this->assertSame('triptych_second', $this->transform(['bartik', 'bartik', 'triptych_middle']));
@@ -66,8 +65,6 @@ class BlockRegionTest extends UnitTestCase {
    *
    * If the source and destination themes are identical, the region should be
    * changed to 'content' if it doesn't exist in the destination theme.
-   *
-   * @covers ::transform
    */
   public function testTransformSameThemeRegionNotExists() {
     $this->assertSame('content', $this->transform(['bartik', 'bartik', 'footer']));

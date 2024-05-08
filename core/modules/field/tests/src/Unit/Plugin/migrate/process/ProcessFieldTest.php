@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\field\Unit\Plugin\migrate\process;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use Drupal\Component\Plugin\Exception\PluginNotFoundException;
 use Drupal\field\Plugin\migrate\process\ProcessField;
 use Drupal\migrate\MigrateException;
@@ -18,9 +19,9 @@ use Prophecy\Prophecy\ObjectProphecy;
 /**
  * Tests the ProcessField migrate process plugin.
  *
- * @coversDefaultClass \Drupal\field\Plugin\migrate\process\ProcessField
  * @group field
  */
+#[CoversClass(\Drupal\field\Plugin\migrate\process\ProcessField::class)]
 class ProcessFieldTest extends MigrateTestCase {
 
   /**
@@ -78,7 +79,6 @@ class ProcessFieldTest extends MigrateTestCase {
    * @param bool $plugin_not_found
    *   Whether the field plugin is not found.
    *
-   * @covers ::transform
    * @dataProvider providerTestTransform
    */
   public function testTransform($method, $value, $expected_value, $migrate_exception = '', $plugin_not_found = FALSE) {

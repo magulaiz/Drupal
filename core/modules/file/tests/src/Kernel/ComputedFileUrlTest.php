@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\file\Kernel;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use Drupal\Core\Field\FieldItemInterface;
 use Drupal\Core\TypedData\DataDefinitionInterface;
 use Drupal\file\FileInterface;
@@ -11,10 +12,9 @@ use Drupal\file\ComputedFileUrl;
 use Drupal\KernelTests\KernelTestBase;
 
 /**
- * @coversDefaultClass \Drupal\file\ComputedFileUrl
- *
  * @group file
  */
+#[CoversClass(\Drupal\file\ComputedFileUrl::class)]
 class ComputedFileUrlTest extends KernelTestBase {
 
   /**
@@ -24,9 +24,6 @@ class ComputedFileUrlTest extends KernelTestBase {
    */
   protected $testUrl = 'public://druplicon.txt';
 
-  /**
-   * @covers ::getValue
-   */
   public function testGetValue() {
     $entity = $this->prophesize(FileInterface::class);
     $entity->getFileUri()
@@ -49,9 +46,6 @@ class ComputedFileUrlTest extends KernelTestBase {
     $this->assertSame($expected, $typed_data->getValue());
   }
 
-  /**
-   * @covers ::setValue
-   */
   public function testSetValue() {
     $name = $this->randomMachineName();
     $parent = $this->prophesize(FieldItemInterface::class);
@@ -71,9 +65,6 @@ class ComputedFileUrlTest extends KernelTestBase {
     $this->assertSame($this->testUrl, $typed_data->getValue());
   }
 
-  /**
-   * @covers ::setValue
-   */
   public function testSetValueNoNotify() {
     $name = $this->randomMachineName();
     $parent = $this->prophesize(FieldItemInterface::class);

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\system\Functional\Menu;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\Url;
 use Drupal\Tests\BrowserTestBase;
@@ -13,6 +14,8 @@ use Drupal\Tests\BrowserTestBase;
  *
  * @group Menu
  */
+#[CoversClass(\Drupal\system\EventSubscriber\AccessRouteAlterSubscriber::class)]
+#[CoversClass(\Drupal\system\Access\SystemAdminMenuBlockAccessCheck::class)]
 class MenuAccessTest extends BrowserTestBase {
 
   /**
@@ -77,9 +80,6 @@ class MenuAccessTest extends BrowserTestBase {
 
   /**
    * Test routes implementing _access_admin_menu_block_page.
-   *
-   * @covers \Drupal\system\EventSubscriber\AccessRouteAlterSubscriber::accessAdminMenuBlockPage
-   * @covers \Drupal\system\Access\SystemAdminMenuBlockAccessCheck::access
    */
   public function testSystemAdminMenuBlockAccessCheck(): void {
     // Create an admin user.

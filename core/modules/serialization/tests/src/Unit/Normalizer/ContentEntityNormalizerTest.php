@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\serialization\Unit\Normalizer;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use Drupal\Core\Entity\EntityFieldManagerInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Entity\EntityTypeRepositoryInterface;
@@ -18,9 +19,9 @@ use Prophecy\Argument;
 use Symfony\Component\Serializer\Serializer;
 
 /**
- * @coversDefaultClass \Drupal\serialization\Normalizer\ContentEntityNormalizer
  * @group serialization
  */
+#[CoversClass(\Drupal\serialization\Normalizer\ContentEntityNormalizer::class)]
 class ContentEntityNormalizerTest extends UnitTestCase {
 
   /**
@@ -53,9 +54,6 @@ class ContentEntityNormalizerTest extends UnitTestCase {
     $this->contentEntityNormalizer->setSerializer($this->serializer->reveal());
   }
 
-  /**
-   * @covers ::supportsNormalization
-   */
   public function testSupportsNormalization() {
     $content_mock = $this->createMock('Drupal\Core\Entity\ContentEntityInterface');
     $config_mock = $this->createMock('Drupal\Core\Config\Entity\ConfigEntityInterface');
@@ -65,8 +63,6 @@ class ContentEntityNormalizerTest extends UnitTestCase {
 
   /**
    * Tests the normalize() method.
-   *
-   * @covers ::normalize
    */
   public function testNormalize() {
     $this->serializer->normalize(Argument::type(FieldItemListInterface::class),
@@ -91,8 +87,6 @@ class ContentEntityNormalizerTest extends UnitTestCase {
 
   /**
    * Tests the normalize() method with account context passed.
-   *
-   * @covers ::normalize
    */
   public function testNormalizeWithAccountContext() {
     $mock_account = $this->createMock('Drupal\Core\Session\AccountInterface');

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\ckeditor5\Kernel;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use Composer\Autoload\ClassLoader;
 use Drupal\ckeditor5\Annotation\CKEditor5AspectsOfCKEditor5Plugin;
 use Drupal\ckeditor5\Annotation\DrupalAspectsOfCKEditor5Plugin;
@@ -23,7 +24,6 @@ use Symfony\Component\DependencyInjection\ParameterBag\FrozenParameterBag;
 use Symfony\Component\Yaml\Yaml;
 
 // cspell:ignore layercake everytextcontainer justheading
-
 /**
  * Tests different ways of enabling CKEditor 5 plugins.
  *
@@ -31,6 +31,8 @@ use Symfony\Component\Yaml\Yaml;
  * @group #slow
  * @internal
  */
+#[CoversClass(\Drupal\ckeditor5\Plugin\CKEditor5PluginManager::class)]
+#[CoversClass(\Drupal\ckeditor5\Plugin\CKEditor5PluginDefinition::class)]
 class CKEditor5PluginManagerTest extends KernelTestBase {
 
   use SchemaCheckTestTrait;
@@ -192,7 +194,6 @@ YAML,
   }
 
   /**
-   * @covers \Drupal\ckeditor5\Plugin\CKEditor5PluginManager::processDefinition
    * @dataProvider providerTestInvalidPluginDefinitions
    */
   public function testInvalidPluginDefinitions(string $yaml, ?string $expected_exception = NULL, ?string $expected_message = NULL, ?array $additional_files = []): void {
@@ -1287,7 +1288,6 @@ PHP,
    *   The expected allowed tags and attributes as a string, typically used
    *   in the filter_html "Allowed tags" field.
    *
-   * @covers \Drupal\ckeditor5\Plugin\CKEditor5PluginManager::getProvidedElements
    * @dataProvider providerTestProvidedElements
    */
   public function testProvidedElements(array $plugins, array $text_editor_settings, array $expected_elements, string $expected_readable_string) {
@@ -1536,7 +1536,6 @@ PHP,
    * When multiple plugins support a given tag, this method decides which plugin
    * to return based on which provides the broadest attribute support.
    *
-   * @covers \Drupal\ckeditor5\Plugin\CKEditor5PluginManager::findPluginSupportingElement
    *
    * @dataProvider providerTestPluginSupportingElement
    */
@@ -1590,9 +1589,6 @@ PHP,
     ];
   }
 
-  /**
-   * @covers \Drupal\ckeditor5\Plugin\CKEditor5PluginDefinition::validateCKEditor5Aspects
-   */
   public function testAutomaticLinkDecoratorsDisallowed(): void {
     $this->expectException(InvalidPluginDefinitionException::class);
     $this->expectExceptionMessage('The "ckeditor5_automatic_link_decorator_test_llamaClass" CKEditor 5 plugin definition specifies an automatic decorator, this is not supported. Use the Drupal filter system instead.');
@@ -1602,9 +1598,6 @@ PHP,
     $this->manager->getDefinitions();
   }
 
-  /**
-   * @covers \Drupal\ckeditor5\Plugin\CKEditor5PluginDefinition::validateCKEditor5Aspects
-   */
   public function testExternalLinkAutomaticLinkDecoratorDisallowed(): void {
     $this->expectException(InvalidPluginDefinitionException::class);
     $this->expectExceptionMessage('The "ckeditor5_automatic_link_decorator_test_2_addTargetToExternalLinks" CKEditor 5 plugin definition specifies an automatic decorator, this is not supported. Use the Drupal filter system instead.');
@@ -1615,7 +1608,6 @@ PHP,
   }
 
   /**
-   * @covers \Drupal\ckeditor5\Plugin\CKEditor5PluginManager::getDiscovery
    * @dataProvider providerTestDerivedPluginDefinitions
    */
   public function testDerivedPluginDefinitions(string $yaml, ?string $expected_exception = NULL, ?string $expected_message = NULL, array $additional_files = [], ?array $expected_derived_plugin_definitions = NULL): void {

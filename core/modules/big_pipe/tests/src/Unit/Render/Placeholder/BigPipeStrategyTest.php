@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\big_pipe\Unit\Render\Placeholder;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use Drupal\big_pipe\Render\Placeholder\BigPipeStrategy;
 use Drupal\big_pipe_test\BigPipePlaceholderTestCases;
 use Drupal\Core\Routing\RouteMatchInterface;
@@ -15,14 +16,12 @@ use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Routing\Route;
 
 /**
- * @coversDefaultClass \Drupal\big_pipe\Render\Placeholder\BigPipeStrategy
  * @group big_pipe
  */
+#[CoversClass(\Drupal\big_pipe\Render\Placeholder\BigPipeStrategy::class)]
 class BigPipeStrategyTest extends UnitTestCase {
 
   /**
-   * @covers ::processPlaceholders
-   *
    * @dataProvider placeholdersProvider
    */
   public function testProcessPlaceholders(array $placeholders, $method, $route_match_has_no_big_pipe_option, $request_has_session, $request_has_big_pipe_nojs_cookie, array $expected_big_pipe_placeholders) {

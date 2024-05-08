@@ -4,16 +4,17 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\ckeditor5\Unit;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use Drupal\ckeditor5\Plugin\CKEditor5Plugin\ListPlugin;
 use Drupal\editor\Entity\Editor;
 use Drupal\Tests\UnitTestCase;
 use Symfony\Component\Yaml\Yaml;
 
 /**
- * @coversDefaultClass \Drupal\ckeditor5\Plugin\CKEditor5Plugin\ListPlugin
  * @group ckeditor5
  * @internal
  */
+#[CoversClass(\Drupal\ckeditor5\Plugin\CKEditor5Plugin\ListPlugin::class)]
 class ListPluginTest extends UnitTestCase {
 
   /**
@@ -101,8 +102,6 @@ class ListPluginTest extends UnitTestCase {
   }
 
   /**
-   * @covers ::getDynamicPluginConfig
-   *
    * @dataProvider providerGetDynamicPluginConfig
    */
   public function testGetDynamicPluginConfig(array $configuration, array $expected_dynamic_config): void {

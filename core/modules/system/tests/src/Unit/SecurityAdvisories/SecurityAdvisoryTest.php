@@ -4,14 +4,14 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\system\Unit\SecurityAdvisories;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use Drupal\Tests\UnitTestCase;
 use Drupal\system\SecurityAdvisories\SecurityAdvisory;
 
 /**
- * @coversDefaultClass \Drupal\system\SecurityAdvisories\SecurityAdvisory
- *
  * @group system
  */
+#[CoversClass(\Drupal\system\SecurityAdvisories\SecurityAdvisory::class)]
 class SecurityAdvisoryTest extends UnitTestCase {
 
   /**
@@ -22,9 +22,6 @@ class SecurityAdvisoryTest extends UnitTestCase {
    * @param mixed[] $expected
    *   The expected changes for the object methods.
    *
-   * @covers ::createFromArray
-   * @covers ::isCoreAdvisory
-   * @covers ::isPsa
    *
    * @dataProvider providerCreateFromArray
    */
@@ -93,7 +90,6 @@ class SecurityAdvisoryTest extends UnitTestCase {
    * @param string $missing_field
    *   The field to test.
    *
-   * @covers ::createFromArray
    *
    * @dataProvider providerCreateFromArrayMissingField
    */
@@ -129,7 +125,6 @@ class SecurityAdvisoryTest extends UnitTestCase {
    * @param string $expected_type_message
    *   The expected message for the field.
    *
-   * @covers ::createFromArray
    *
    * @dataProvider providerCreateFromArrayInvalidField
    */

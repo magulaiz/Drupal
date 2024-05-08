@@ -4,13 +4,14 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\user\Kernel;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\user\Entity\Role;
 
 /**
  * @group user
- * @coversDefaultClass \Drupal\user\Entity\Role
  */
+#[CoversClass(\Drupal\user\Entity\Role::class)]
 class UserRoleEntityTest extends KernelTestBase {
 
   protected static $modules = ['system', 'user', 'user_permissions_test'];

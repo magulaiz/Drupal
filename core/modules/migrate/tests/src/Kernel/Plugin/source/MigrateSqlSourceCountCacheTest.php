@@ -4,17 +4,18 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\migrate\Kernel\Plugin\source;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use Drupal\Tests\migrate\Kernel\MigrateSqlSourceTestBase;
 
 /**
  * Tests SqlBase source count caching.
  *
- * @covers \Drupal\migrate_sql_count_cache_test\Plugin\migrate\source\SqlCountCache
- * @covers \Drupal\migrate\Plugin\migrate\source\SqlBase::doCount
- * @covers \Drupal\migrate\Plugin\migrate\source\SourcePluginBase::count
  *
  * @group migrate
  */
+#[CoversClass(\Drupal\migrate_sql_count_cache_test\Plugin\migrate\source\SqlCountCache::class)]
+#[CoversClass(\Drupal\migrate\Plugin\migrate\source\SqlBase::doCount)]
+#[CoversClass(\Drupal\migrate\Plugin\migrate\source\SourcePluginBase::count)]
 class MigrateSqlSourceCountCacheTest extends MigrateSqlSourceTestBase {
 
   /**

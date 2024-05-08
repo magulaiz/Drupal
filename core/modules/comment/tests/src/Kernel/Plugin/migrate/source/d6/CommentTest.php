@@ -4,14 +4,15 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\comment\Kernel\Plugin\migrate\source\d6;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use Drupal\Tests\migrate\Kernel\MigrateSqlSourceTestBase;
 
 /**
  * Tests D6 comment source plugin.
  *
- * @covers \Drupal\comment\Plugin\migrate\source\d6\Comment
  * @group comment
  */
+#[CoversClass(\Drupal\comment\Plugin\migrate\source\d6\Comment::class)]
 class CommentTest extends MigrateSqlSourceTestBase {
 
   /**

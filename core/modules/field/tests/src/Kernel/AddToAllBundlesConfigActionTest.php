@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\field\Kernel;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use Drupal\Component\Plugin\Exception\PluginNotFoundException;
 use Drupal\Core\Config\Action\ConfigActionException;
 use Drupal\Core\Entity\EntityFieldManagerInterface;
@@ -15,11 +16,11 @@ use Drupal\KernelTests\KernelTestBase;
 use Drupal\node\Entity\NodeType;
 
 /**
- * @covers \Drupal\field\Plugin\ConfigAction\AddToAllBundles
  *
  * @group Recipe
  * @group field
  */
+#[CoversClass(\Drupal\field\Plugin\ConfigAction\AddToAllBundles::class)]
 class AddToAllBundlesConfigActionTest extends KernelTestBase {
 
   use RecipeTestTrait;

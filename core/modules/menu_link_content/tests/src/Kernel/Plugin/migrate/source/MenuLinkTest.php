@@ -4,19 +4,19 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\menu_link_content\Kernel\Plugin\migrate\source;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use Drupal\Component\Utility\Unicode;
 use Drupal\Tests\migrate\Kernel\MigrateSqlSourceTestBase;
 use Drupal\TestTools\Random;
 
 // cspell:ignore mlid plid tsid
-
 /**
  * Tests the menu link source plugin.
  *
- * @covers \Drupal\menu_link_content\Plugin\migrate\source\MenuLink
  *
  * @group menu_link_content
  */
+#[CoversClass(\Drupal\menu_link_content\Plugin\migrate\source\MenuLink::class)]
 class MenuLinkTest extends MigrateSqlSourceTestBase {
 
   /**

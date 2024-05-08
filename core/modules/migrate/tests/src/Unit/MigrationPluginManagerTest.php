@@ -4,15 +4,16 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\migrate\Unit;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\migrate\Plugin\Migration;
 use Drupal\migrate\Plugin\MigrationPluginManager;
 use Drupal\Tests\UnitTestCase;
 
 /**
- * @coversDefaultClass \Drupal\migrate\Plugin\MigrationPluginManager
  * @group migrate
  */
+#[CoversClass(\Drupal\migrate\Plugin\MigrationPluginManager::class)]
 class MigrationPluginManagerTest extends UnitTestCase {
 
   /**

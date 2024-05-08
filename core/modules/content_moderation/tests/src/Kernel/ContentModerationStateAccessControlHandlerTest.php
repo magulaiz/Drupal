@@ -4,13 +4,14 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\content_moderation\Kernel;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use Drupal\content_moderation\Entity\ContentModerationState;
 use Drupal\KernelTests\KernelTestBase;
 
 /**
- * @coversDefaultClass \Drupal\content_moderation\ContentModerationStateAccessControlHandler
  * @group content_moderation
  */
+#[CoversClass(\Drupal\content_moderation\ContentModerationStateAccessControlHandler::class)]
 class ContentModerationStateAccessControlHandlerTest extends KernelTestBase {
 
   /**
@@ -41,10 +42,6 @@ class ContentModerationStateAccessControlHandlerTest extends KernelTestBase {
     $this->accessControlHandler = $this->container->get('entity_type.manager')->getAccessControlHandler('content_moderation_state');
   }
 
-  /**
-   * @covers ::checkAccess
-   * @covers ::checkCreateAccess
-   */
   public function testHandler() {
     $entity = ContentModerationState::create([]);
     $this->assertFalse($this->accessControlHandler->access($entity, 'view'));

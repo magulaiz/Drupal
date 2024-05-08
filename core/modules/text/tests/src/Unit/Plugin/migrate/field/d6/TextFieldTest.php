@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\text\Unit\Plugin\migrate\field\d6;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use Drupal\migrate\Plugin\MigrationInterface;
 use Drupal\migrate\Row;
 use Drupal\Tests\UnitTestCase;
@@ -11,11 +12,10 @@ use Drupal\text\Plugin\migrate\field\d6\TextField;
 use Prophecy\Argument;
 
 // cspell:ignore optionwidgets
-
 /**
- * @coversDefaultClass \Drupal\text\Plugin\migrate\field\d6\TextField
  * @group text
  */
+#[CoversClass(\Drupal\text\Plugin\migrate\field\d6\TextField::class)]
 class TextFieldTest extends UnitTestCase {
 
   /**
@@ -50,9 +50,6 @@ class TextFieldTest extends UnitTestCase {
     $this->migration = $migration->reveal();
   }
 
-  /**
-   * @covers ::defineValueProcessPipeline
-   */
   public function testFilteredTextValueProcessPipeline() {
     $field_info = [
       'widget_type' => 'text_textfield',
@@ -73,9 +70,6 @@ class TextFieldTest extends UnitTestCase {
     $this->assertSame('format', $lookup['source']);
   }
 
-  /**
-   * @covers ::defineValueProcessPipeline
-   */
   public function testBooleanTextImplicitValueProcessPipeline() {
     $info = [
       'widget_type' => 'optionwidgets_onoff',
@@ -98,9 +92,6 @@ class TextFieldTest extends UnitTestCase {
     $this->assertSame($expected, $this->migration->getProcess()['process']);
   }
 
-  /**
-   * @covers ::defineValueProcessPipeline
-   */
   public function testBooleanTextExplicitValueProcessPipeline() {
     $info = [
       'widget_type' => 'optionwidgets_onoff',
@@ -160,7 +151,6 @@ class TextFieldTest extends UnitTestCase {
   }
 
   /**
-   * @covers ::getFieldType
    * @dataProvider getFieldTypeProvider
    */
   public function testGetFieldType($expected_type, $widget_type, array $settings = []) {

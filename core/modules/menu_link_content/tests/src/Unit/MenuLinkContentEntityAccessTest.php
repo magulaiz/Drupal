@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\menu_link_content\Unit;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use Drupal\Core\Access\AccessManagerInterface;
 use Drupal\Core\Access\AccessResultInterface;
 use Drupal\Core\Entity\ContentEntityInterface;
@@ -17,15 +18,13 @@ use Drupal\Tests\UnitTestCase;
 /**
  * Tests menu link content entity access.
  *
- * @coversDefaultClass \Drupal\menu_link_content\MenuLinkContentAccessControlHandler
  * @group menu_link_content
  */
+#[CoversClass(\Drupal\menu_link_content\MenuLinkContentAccessControlHandler::class)]
 class MenuLinkContentEntityAccessTest extends UnitTestCase {
 
   /**
    * Tests an operation not implemented by the access control handler.
-   *
-   * @covers ::checkAccess
    */
   public function testUnrecognizedOperation() {
     $entityType = $this->createMock(EntityTypeInterface::class);

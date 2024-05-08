@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\system\Kernel\SecurityAdvisories;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use Drupal\Core\Extension\Extension;
 use Drupal\Core\Extension\ModuleExtensionList;
 use Drupal\Core\Logger\RfcLoggerTrait;
@@ -19,10 +20,9 @@ use Psr\Http\Client\ClientExceptionInterface;
 use Psr\Log\LoggerInterface;
 
 /**
- * @coversDefaultClass \Drupal\system\SecurityAdvisories\SecurityAdvisoriesFetcher
- *
  * @group system
  */
+#[CoversClass(\Drupal\system\SecurityAdvisories\SecurityAdvisoriesFetcher::class)]
 class SecurityAdvisoriesFetcherTest extends KernelTestBase implements LoggerInterface {
 
   use RfcLoggerTrait;
@@ -621,10 +621,6 @@ class SecurityAdvisoriesFetcherTest extends KernelTestBase implements LoggerInte
     $this->assertServiceAdvisoryLoggedErrors([]);
   }
 
-  /**
-   * @covers ::doRequest
-   * @covers ::getSecurityAdvisories
-   */
   public function testHttpFallback(): void {
     $this->setSetting('update_fetch_with_http_fallback', TRUE);
     $feed_item = [
@@ -663,10 +659,6 @@ class SecurityAdvisoriesFetcherTest extends KernelTestBase implements LoggerInte
     $this->assertSame(["Server error: `GET https://updates.drupal.org/psa.json` resulted in a `500 Internal Server Error` response:\nHTTPS failed\n"], $this->errorMessages);
   }
 
-  /**
-   * @covers ::doRequest
-   * @covers ::getSecurityAdvisories
-   */
   public function testNoHttpFallback(): void {
     $this->setTestFeedResponses([
       new Response(500, [], 'HTTPS failed'),

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\content_moderation\Kernel;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\language\Entity\ConfigurableLanguage;
 use Drupal\node\Entity\Node;
@@ -13,10 +14,9 @@ use Drupal\Tests\user\Traits\UserCreationTrait;
 use Drupal\workflows\Entity\Workflow;
 
 /**
- * @coversDefaultClass \Drupal\content_moderation\Plugin\Field\ModerationStateFieldItemList
- *
  * @group content_moderation
  */
+#[CoversClass(\Drupal\content_moderation\Plugin\Field\ModerationStateFieldItemList::class)]
 class ModerationStateFieldItemListTest extends KernelTestBase {
 
   use ContentModerationTestTrait;
@@ -95,16 +95,10 @@ class ModerationStateFieldItemListTest extends KernelTestBase {
     $this->assertEquals(['draft'], $states);
   }
 
-  /**
-   * @covers ::getValue
-   */
   public function testGetValue() {
     $this->assertEquals([['value' => 'draft']], $this->testNode->moderation_state->getValue());
   }
 
-  /**
-   * @covers ::get
-   */
   public function testGet() {
     $this->assertEquals('draft', $this->testNode->moderation_state->get(0)->value);
     $this->expectException(\InvalidArgumentException::class);

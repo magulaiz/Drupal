@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\user\Unit\Plugin\Derivative;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Tests\UnitTestCase;
@@ -12,9 +13,10 @@ use Drupal\user\Plugin\Derivative\UserLocalTask;
 /**
  * Tests the local tasks deriver class.
  *
- * @coversDefaultClass \Drupal\user\Plugin\Derivative\UserLocalTask
  * @group user
  */
+#[CoversClass(\Drupal\user\Plugin\Derivative\UserLocalTask::class)]
+#[CoversClass(\Drupal\user\Plugin\Derivative\UserLocalTask::class)]
 class UserLocalTaskTest extends UnitTestCase {
 
   /**
@@ -63,8 +65,6 @@ class UserLocalTaskTest extends UnitTestCase {
 
   /**
    * Tests the derivatives generated for local tasks.
-   *
-   * @covers \Drupal\user\Plugin\Derivative\UserLocalTask::getDerivativeDefinitions
    */
   public function testGetDerivativeDefinitions() {
     $expected = [

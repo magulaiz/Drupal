@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\media\Functional\FieldFormatter;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\file\Entity\File;
@@ -12,10 +13,9 @@ use Drupal\Tests\media\Functional\MediaFunctionalTestBase;
 use Drupal\Tests\TestFileCreationTrait;
 
 /**
- * @covers \Drupal\media\Plugin\Field\FieldFormatter\MediaThumbnailFormatter
- *
  * @group media
  */
+#[CoversClass(\Drupal\media\Plugin\Field\FieldFormatter\MediaThumbnailFormatter::class)]
 class MediaThumbnailFormatterTest extends MediaFunctionalTestBase {
 
   use TestFileCreationTrait;

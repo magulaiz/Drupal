@@ -13,9 +13,9 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Route;
 
 /**
- * @coversDefaultClass \Drupal\views\Routing\ViewPageController
  * @group views
  */
+#[\PHPUnit\Framework\Attributes\CoversClass(\Drupal\views\Routing\ViewPageController::class)]
 class ViewPageControllerTest extends UnitTestCase {
 
   /**

@@ -4,14 +4,15 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\system\Kernel\Plugin\migrate\source;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use Drupal\Tests\migrate\Kernel\MigrateSqlSourceTestBase;
 
 /**
  * Tests actions source plugin.
  *
- * @covers \Drupal\system\Plugin\migrate\source\Action
  * @group action
  */
+#[CoversClass(\Drupal\system\Plugin\migrate\source\Action::class)]
 class ActionTest extends MigrateSqlSourceTestBase {
 
   /**

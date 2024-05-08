@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\content_moderation\Functional;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use Drupal\Core\Language\LanguageInterface;
 use Drupal\taxonomy\Entity\Term;
 use Drupal\taxonomy\Entity\Vocabulary;
@@ -13,6 +14,7 @@ use Drupal\taxonomy\Entity\Vocabulary;
  *
  * @group content_moderation
  */
+#[CoversClass(\Drupal\content_moderation\Entity\Handler\TaxonomyTermModerationHandler::class)]
 class ModerationStateTaxonomyTermTest extends ModerationStateTestBase {
 
   /**
@@ -36,9 +38,6 @@ class ModerationStateTaxonomyTermTest extends ModerationStateTestBase {
 
   /**
    * Tests the taxonomy term moderation handler alters the forms as intended.
-   *
-   * @covers \Drupal\content_moderation\Entity\Handler\TaxonomyTermModerationHandler::enforceRevisionsEntityFormAlter
-   * @covers \Drupal\content_moderation\Entity\Handler\TaxonomyTermModerationHandler::enforceRevisionsBundleFormAlter
    */
   public function testEnforceRevisionsEntityFormAlter(): void {
     $this->drupalLogin($this->adminUser);

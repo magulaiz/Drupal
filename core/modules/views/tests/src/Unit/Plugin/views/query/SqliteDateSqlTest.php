@@ -4,19 +4,19 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\views\Unit\Plugin\views\query;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use Drupal\Core\Database\Connection;
 use Drupal\Tests\UnitTestCase;
 use Drupal\views\Plugin\views\query\SqliteDateSql;
 
 // cspell:ignore unixepoch
-
 /**
  * Tests the MySQL-specific date query handler.
  *
- * @coversDefaultClass \Drupal\views\Plugin\views\query\SqliteDateSql
  *
  * @group views
  */
+#[CoversClass(\Drupal\views\Plugin\views\query\SqliteDateSql::class)]
 class SqliteDateSqlTest extends UnitTestCase {
 
   /**
@@ -36,8 +36,6 @@ class SqliteDateSqlTest extends UnitTestCase {
 
   /**
    * Tests the getDateField method.
-   *
-   * @covers ::getDateField
    */
   public function testGetDateField() {
     $date_sql = new SqliteDateSql($this->database);
@@ -52,7 +50,6 @@ class SqliteDateSqlTest extends UnitTestCase {
   /**
    * Tests date formatting replacement.
    *
-   * @covers ::getDateFormat
    *
    * @dataProvider providerTestGetDateFormat
    */
@@ -76,8 +73,6 @@ class SqliteDateSqlTest extends UnitTestCase {
 
   /**
    * Tests timezone offset formatting.
-   *
-   * @covers ::setFieldTimezoneOffset
    */
   public function testSetFieldTimezoneOffset() {
     $date_sql = new SqliteDateSql($this->database);
@@ -89,8 +84,6 @@ class SqliteDateSqlTest extends UnitTestCase {
 
   /**
    * Tests setting the database offset.
-   *
-   * @covers ::setTimezoneOffset
    */
   public function testSetTimezoneOffset() {
     $database = $this->prophesize(Connection::class);

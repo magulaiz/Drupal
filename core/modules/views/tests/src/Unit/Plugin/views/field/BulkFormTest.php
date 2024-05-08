@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\views\Unit\Plugin\views\field;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\StringTranslation\TranslationInterface;
 use Drupal\Tests\UnitTestCase;
@@ -14,9 +15,9 @@ use Drupal\views\ViewExecutable;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 
 /**
- * @coversDefaultClass \Drupal\views\Plugin\views\field\BulkForm
  * @group Views
  */
+#[CoversClass(\Drupal\views\Plugin\views\field\BulkForm::class)]
 class BulkFormTest extends UnitTestCase {
 
   /**
@@ -28,9 +29,6 @@ class BulkFormTest extends UnitTestCase {
     \Drupal::setContainer($container);
   }
 
-  /**
-   * @covers ::viewsForm
-   */
   public function testViewsForm(): void {
     $row = new ResultRow();
 

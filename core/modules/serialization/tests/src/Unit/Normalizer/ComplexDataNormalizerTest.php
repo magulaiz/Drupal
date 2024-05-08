@@ -4,15 +4,16 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\serialization\Unit\Normalizer;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use Drupal\Core\TypedData\ComplexDataInterface;
 use Drupal\serialization\Normalizer\ComplexDataNormalizer;
 use Drupal\Tests\UnitTestCase;
 use Symfony\Component\Serializer\Serializer;
 
 /**
- * @coversDefaultClass \Drupal\serialization\Normalizer\ComplexDataNormalizer
  * @group serialization
  */
+#[CoversClass(\Drupal\serialization\Normalizer\ComplexDataNormalizer::class)]
 class ComplexDataNormalizerTest extends UnitTestCase {
 
   use InternalTypedDataTestTrait;
@@ -40,9 +41,6 @@ class ComplexDataNormalizerTest extends UnitTestCase {
     $this->normalizer = new ComplexDataNormalizer();
   }
 
-  /**
-   * @covers ::supportsNormalization
-   */
   public function testSupportsNormalization() {
     $complex_data = $this->prophesize(ComplexDataInterface::class)->reveal();
     $this->assertTrue($this->normalizer->supportsNormalization($complex_data));
@@ -52,8 +50,6 @@ class ComplexDataNormalizerTest extends UnitTestCase {
 
   /**
    * Tests normalizing complex data.
-   *
-   * @covers ::normalize
    */
   public function testNormalizeComplexData() {
     $serializer_prophecy = $this->prophesize(Serializer::class);
@@ -83,8 +79,6 @@ class ComplexDataNormalizerTest extends UnitTestCase {
    *
    * Normalizers extending ComplexDataNormalizer may have a different supported
    * class.
-   *
-   * @covers ::normalize
    */
   public function testNormalizeNonComplex() {
     $normalizer = new TestExtendedNormalizer();

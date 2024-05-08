@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\jsonapi\Unit\Normalizer;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use Drupal\Core\Entity\EntityFieldManagerInterface;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityRepositoryInterface;
@@ -22,11 +23,10 @@ use Prophecy\Argument;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 
 /**
- * @coversDefaultClass \Drupal\jsonapi\Normalizer\ResourceIdentifierNormalizer
  * @group jsonapi
- *
  * @internal
  */
+#[CoversClass(\Drupal\jsonapi\Normalizer\ResourceIdentifierNormalizer::class)]
 class ResourceIdentifierNormalizerTest extends UnitTestCase {
 
   /**
@@ -108,7 +108,6 @@ class ResourceIdentifierNormalizerTest extends UnitTestCase {
   }
 
   /**
-   * @covers ::denormalize
    * @dataProvider denormalizeProvider
    */
   public function testDenormalize($input, $field_name, $expected) {
@@ -149,7 +148,6 @@ class ResourceIdentifierNormalizerTest extends UnitTestCase {
   }
 
   /**
-   * @covers ::denormalize
    * @dataProvider denormalizeInvalidResourceProvider
    */
   public function testDenormalizeInvalidResource($data, $field_name) {

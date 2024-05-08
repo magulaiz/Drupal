@@ -4,14 +4,15 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\filter\Unit;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use Drupal\filter\FilterProcessResult;
 use Drupal\filter\Plugin\FilterBase;
 use Drupal\Tests\UnitTestCase;
 
 /**
- * @coversDefaultClass \Drupal\filter\FilterUninstallValidator
  * @group filter
  */
+#[CoversClass(\Drupal\filter\FilterUninstallValidator::class)]
 class FilterUninstallValidatorTest extends UnitTestCase {
 
   /**
@@ -31,9 +32,6 @@ class FilterUninstallValidatorTest extends UnitTestCase {
     $this->filterUninstallValidator->setStringTranslation($this->getStringTranslationStub());
   }
 
-  /**
-   * @covers ::validate
-   */
   public function testValidateNoPlugins() {
     $this->filterUninstallValidator->expects($this->once())
       ->method('getFilterDefinitionsByProvider')
@@ -47,9 +45,6 @@ class FilterUninstallValidatorTest extends UnitTestCase {
     $this->assertEquals($expected, $reasons);
   }
 
-  /**
-   * @covers ::validate
-   */
   public function testValidateNoFormats() {
     $this->filterUninstallValidator->expects($this->once())
       ->method('getFilterDefinitionsByProvider')
@@ -69,9 +64,6 @@ class FilterUninstallValidatorTest extends UnitTestCase {
     $this->assertEquals($expected, $reasons);
   }
 
-  /**
-   * @covers ::validate
-   */
   public function testValidateNoMatchingFormats() {
     $this->filterUninstallValidator->expects($this->once())
       ->method('getFilterDefinitionsByProvider')

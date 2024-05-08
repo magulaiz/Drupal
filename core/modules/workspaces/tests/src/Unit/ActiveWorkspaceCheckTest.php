@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\workspaces\Unit;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Cache\Context\CacheContextsManager;
 use Drupal\Tests\UnitTestCase;
@@ -13,11 +14,11 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\Routing\Route;
 
 /**
- * @coversDefaultClass \Drupal\workspaces\Access\ActiveWorkspaceCheck
  *
  * @group workspaces
  * @group Access
  */
+#[CoversClass(\Drupal\workspaces\Access\ActiveWorkspaceCheck::class)]
 class ActiveWorkspaceCheckTest extends UnitTestCase {
 
   /**
@@ -58,7 +59,6 @@ class ActiveWorkspaceCheckTest extends UnitTestCase {
   }
 
   /**
-   * @covers ::access
    * @dataProvider providerTestAccess
    */
   public function testAccess($requirements, $has_active_workspace, $access, array $contexts = []) {

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\KernelTests\Core\Asset;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use Drupal\Component\Datetime\TimeInterface;
 use Drupal\Core\Asset\AssetQueryString;
 use Drupal\KernelTests\KernelTestBase;
@@ -12,14 +13,10 @@ use Drupal\KernelTests\KernelTestBase;
  * Tests the asset query string functionality.
  *
  * @group Asset
- * @coversDefaultClass \Drupal\Core\Asset\AssetQueryString
  */
+#[CoversClass(\Drupal\Core\Asset\AssetQueryString::class)]
 class AssetQueryStringTest extends KernelTestBase {
 
-  /**
-   * @covers ::get
-   * @covers ::reset
-   */
   public function testResetGet(): void {
     $state = $this->container->get('state');
     // Return a fixed timestamp.

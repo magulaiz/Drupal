@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\migrate\Unit\process;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use Drupal\Core\DependencyInjection\ContainerBuilder;
 use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Menu\MenuLinkDefault;
@@ -18,13 +19,12 @@ use Drupal\migrate\Plugin\MigrationInterface;
 use Drupal\migrate\Plugin\migrate\process\MenuLinkParent;
 
 // cspell:ignore plid
-
 /**
  * Tests the menu link parent process plugin.
  *
- * @coversDefaultClass \Drupal\migrate\Plugin\migrate\process\MenuLinkParent
  * @group migrate
  */
+#[CoversClass(\Drupal\migrate\Plugin\migrate\process\MenuLinkParent::class)]
 class MenuLinkParentTest extends MigrateProcessTestCase {
 
   /**

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\migrate\Unit;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use Drupal\Component\Plugin\Exception\PluginNotFoundException;
 use Drupal\Tests\UnitTestCase;
 use Drupal\migrate\MigrateStub;
@@ -19,9 +20,8 @@ use Prophecy\Argument;
  * Tests the migrate stub service.
  *
  * @group migrate
- *
- * @coversDefaultClass \Drupal\migrate\MigrateStub
  */
+#[CoversClass(\Drupal\migrate\MigrateStub::class)]
 class MigrateStubTest extends UnitTestCase {
 
   /**
@@ -41,8 +41,6 @@ class MigrateStubTest extends UnitTestCase {
 
   /**
    * Tests stubbing.
-   *
-   * @covers ::createStub
    */
   public function testCreateStub() {
     $destination_plugin = $this->prophesize(MigrateDestinationInterface::class);

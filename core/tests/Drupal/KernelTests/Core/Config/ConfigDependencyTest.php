@@ -4,16 +4,17 @@ declare(strict_types=1);
 
 namespace Drupal\KernelTests\Core\Config;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use Drupal\entity_test\Entity\EntityTest;
 use Drupal\KernelTests\Core\Entity\EntityKernelTestBase;
 
 /**
  * Tests for configuration dependencies.
  *
- * @coversDefaultClass \Drupal\Core\Config\ConfigManager
  *
  * @group config
  */
+#[CoversClass(\Drupal\Core\Config\ConfigManager::class)]
 class ConfigDependencyTest extends EntityKernelTestBase {
 
   /**
@@ -371,10 +372,6 @@ class ConfigDependencyTest extends EntityKernelTestBase {
     $this->assertNull($storage->load($entity_4->id()), 'Entity 4 deleted');
   }
 
-  /**
-   * @covers ::uninstall
-   * @covers ::getConfigEntitiesToChangeOnDependencyRemoval
-   */
   public function testConfigEntityUninstallThirdParty() {
     /** @var \Drupal\Core\Config\ConfigManagerInterface $config_manager */
     $config_manager = \Drupal::service('config.manager');

@@ -4,15 +4,16 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\language\Kernel\Plugin\migrate\source\d6;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use Drupal\Tests\migrate\Kernel\MigrateSqlSourceTestBase;
 
 /**
  * Tests i18ntaxonomy vocabulary setting source plugin.
  *
- * @covers \Drupal\language\Plugin\migrate\source\d6\LanguageContentSettingsTaxonomyVocabulary
  *
  * @group language
  */
+#[CoversClass(\Drupal\language\Plugin\migrate\source\d6\LanguageContentSettingsTaxonomyVocabulary::class)]
 class LanguageContentTaxonomyVocabularySettingsTest extends MigrateSqlSourceTestBase {
 
   /**

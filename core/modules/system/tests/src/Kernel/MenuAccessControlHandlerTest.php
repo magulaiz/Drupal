@@ -4,15 +4,16 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\system\Kernel;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use Drupal\Core\Access\AccessResult;
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\system\Entity\Menu;
 use Drupal\Tests\user\Traits\UserCreationTrait;
 
 /**
- * @coversDefaultClass \Drupal\system\MenuAccessControlHandler
  * @group system
  */
+#[CoversClass(\Drupal\system\MenuAccessControlHandler::class)]
 class MenuAccessControlHandlerTest extends KernelTestBase {
 
   use UserCreationTrait {
@@ -46,8 +47,6 @@ class MenuAccessControlHandlerTest extends KernelTestBase {
   }
 
   /**
-   * @covers ::checkAccess
-   * @covers ::checkCreateAccess
    * @dataProvider testAccessProvider
    */
   public function testAccess($permissions, $which_entity, $view_label_access_result, $view_access_result, $update_access_result, $delete_access_result, $create_access_result) {

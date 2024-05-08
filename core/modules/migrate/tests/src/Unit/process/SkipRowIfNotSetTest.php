@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\migrate\Unit\process;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use Drupal\migrate\MigrateSkipRowException;
 use Drupal\migrate\Plugin\migrate\process\SkipRowIfNotSet;
 
@@ -11,14 +12,12 @@ use Drupal\migrate\Plugin\migrate\process\SkipRowIfNotSet;
  * Tests the skip row if not set process plugin.
  *
  * @group migrate
- * @coversDefaultClass \Drupal\migrate\Plugin\migrate\process\SkipRowIfNotSet
  */
+#[CoversClass(\Drupal\migrate\Plugin\migrate\process\SkipRowIfNotSet::class)]
 class SkipRowIfNotSetTest extends MigrateProcessTestCase {
 
   /**
    * Tests that a skip row exception without a message is raised.
-   *
-   * @covers ::transform
    */
   public function testRowSkipWithoutMessage() {
     $configuration = [
@@ -31,8 +30,6 @@ class SkipRowIfNotSetTest extends MigrateProcessTestCase {
 
   /**
    * Tests that a skip row exception with a message is raised.
-   *
-   * @covers ::transform
    */
   public function testRowSkipWithMessage() {
     $configuration = [

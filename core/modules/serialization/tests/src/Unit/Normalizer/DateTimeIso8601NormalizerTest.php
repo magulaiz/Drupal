@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\serialization\Unit\Normalizer;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Config\ImmutableConfig;
 use Drupal\Core\Datetime\DrupalDateTime;
@@ -23,11 +24,11 @@ use Symfony\Component\Serializer\Exception\UnexpectedValueException;
 /**
  * Unit test coverage for the "datetime_iso8601" @DataType.
  *
- * @coversDefaultClass \Drupal\serialization\Normalizer\DateTimeIso8601Normalizer
  * @group serialization
  * @see \Drupal\Core\TypedData\Plugin\DataType\DateTimeIso8601
  * @see \Drupal\datetime\Plugin\Field\FieldType\DateTimeItem::DATETIME_TYPE_DATE
  */
+#[CoversClass(\Drupal\serialization\Normalizer\DateTimeIso8601Normalizer::class)]
 class DateTimeIso8601NormalizerTest extends UnitTestCase {
 
   /**
@@ -61,9 +62,6 @@ class DateTimeIso8601NormalizerTest extends UnitTestCase {
     $this->data = $this->prophesize(DateTimeIso8601::class);
   }
 
-  /**
-   * @covers ::supportsNormalization
-   */
   public function testSupportsNormalization() {
     $this->assertTrue($this->normalizer->supportsNormalization($this->data->reveal()));
 
@@ -74,15 +72,11 @@ class DateTimeIso8601NormalizerTest extends UnitTestCase {
     $this->assertFalse($this->normalizer->supportsNormalization($integer->reveal()));
   }
 
-  /**
-   * @covers ::supportsDenormalization
-   */
   public function testSupportsDenormalization() {
     $this->assertTrue($this->normalizer->supportsDenormalization($this->data->reveal(), DateTimeIso8601::class));
   }
 
   /**
-   * @covers ::normalize
    * @dataProvider providerTestNormalize
    */
   public function testNormalize($parent_field_item_class, $datetime_type, $expected_format) {
@@ -119,7 +113,6 @@ class DateTimeIso8601NormalizerTest extends UnitTestCase {
   }
 
   /**
-   * @covers ::normalize
    * @dataProvider providerTestNormalize
    */
   public function testNormalizeWhenNull($parent_field_item_class, $datetime_type, $expected_format) {
@@ -180,7 +173,6 @@ class DateTimeIso8601NormalizerTest extends UnitTestCase {
   /**
    * Tests the denormalize function with good data.
    *
-   * @covers ::denormalize
    * @dataProvider providerTestDenormalizeValidFormats
    */
   public function testDenormalizeValidFormats($type, $normalized, $expected) {
@@ -214,8 +206,6 @@ class DateTimeIso8601NormalizerTest extends UnitTestCase {
 
   /**
    * Tests the denormalize function with bad data for the date-only case.
-   *
-   * @covers ::denormalize
    */
   public function testDenormalizeDateOnlyException() {
     $this->expectException(UnexpectedValueException::class);
@@ -230,8 +220,6 @@ class DateTimeIso8601NormalizerTest extends UnitTestCase {
 
   /**
    * Tests the denormalize function with bad data for the date+time case.
-   *
-   * @covers ::denormalize
    */
   public function testDenormalizeDateAndTimeException() {
     $this->expectException(UnexpectedValueException::class);
@@ -246,8 +234,6 @@ class DateTimeIso8601NormalizerTest extends UnitTestCase {
 
   /**
    * Tests the denormalize function with incomplete serialization context.
-   *
-   * @covers ::denormalize
    */
   public function testDenormalizeNoTargetInstanceOrFieldDefinitionException() {
     $this->expectException(InvalidArgumentException::class);

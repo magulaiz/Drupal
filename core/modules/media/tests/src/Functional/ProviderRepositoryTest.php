@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\media\Functional;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use Drupal\media\OEmbed\ProviderException;
 use GuzzleHttp\Psr7\Utils;
 use Prophecy\PhpUnit\ProphecyTrait;
@@ -11,10 +12,10 @@ use Prophecy\PhpUnit\ProphecyTrait;
 /**
  * Tests the oEmbed provider repository.
  *
- * @covers \Drupal\media\OEmbed\ProviderRepository
  *
  * @group media
  */
+#[CoversClass(\Drupal\media\OEmbed\ProviderRepository::class)]
 class ProviderRepositoryTest extends MediaFunctionalTestBase {
 
   use ProphecyTrait;

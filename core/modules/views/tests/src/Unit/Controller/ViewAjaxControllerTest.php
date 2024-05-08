@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\views\Unit\Controller;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use Drupal\Core\Render\RenderContext;
 use Drupal\Core\Render\Renderer;
 use Drupal\Core\Utility\CallableResolver;
@@ -17,9 +18,9 @@ use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
- * @coversDefaultClass \Drupal\views\Controller\ViewAjaxController
  * @group views
  */
+#[CoversClass(\Drupal\views\Controller\ViewAjaxController::class)]
 class ViewAjaxControllerTest extends UnitTestCase {
 
   const USE_AJAX = TRUE;

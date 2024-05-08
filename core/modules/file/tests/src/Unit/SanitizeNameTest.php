@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\file\Unit;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use Drupal\Component\Transliteration\PhpTransliteration;
 use Drupal\Core\File\Event\FileUploadSanitizeNameEvent;
 use Drupal\Core\Language\Language;
@@ -13,12 +14,13 @@ use Drupal\file\EventSubscriber\FileEventSubscriber;
 use Drupal\Tests\UnitTestCase;
 
 // cSpell:ignore TÉXT äöüåøhello aouaohello aeoeueaohello Pácê
-
 /**
  * Filename sanitization tests.
  *
  * @group file
  */
+#[CoversClass(\Drupal\file\EventSubscriber\FileEventSubscriber::class)]
+#[CoversClass(\Drupal\Core\File\Event\FileUploadSanitizeNameEvent::class)]
 class SanitizeNameTest extends UnitTestCase {
 
   /**
@@ -39,9 +41,6 @@ class SanitizeNameTest extends UnitTestCase {
    *   Optional language code for transliteration. Defaults to 'en'.
    *
    * @dataProvider provideFilenames
-   *
-   * @covers \Drupal\file\EventSubscriber\FileEventSubscriber::sanitizeFilename
-   * @covers \Drupal\Core\File\Event\FileUploadSanitizeNameEvent::__construct
    */
   public function testFileNameTransliteration($original, $expected, array $options, $language_id = 'en') {
     $sanitization_options = [
