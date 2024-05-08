@@ -3,9 +3,8 @@
 # The development.services.yml file, allows the developer to override
 # container parameters for debugging.
 #
-# To activate this feature, please follow the instructions at the
-# top of the 'example.settings.local.php' file, which sits next
-# to this file.
+# To activate this feature, follow the instructions at the top of the
+# 'example.settings.local.php' file, which sits next to this file.
 #
 # Be aware that in Drupal's configuration system, all the files that
 # provide container definitions are merged using a shallow merge approach
