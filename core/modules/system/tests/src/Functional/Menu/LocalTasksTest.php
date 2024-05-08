@@ -268,7 +268,6 @@ class LocalTasksTest extends BrowserTestBase {
 
     // Only the Edit task. The block avoids showing a single tab.
     $this->drupalGet('/admin/config/people/accounts');
-    // Add assertion here to check the page was actually visited.
     $this->assertSession()->statusCodeEquals(200);
     $this->assertNoLocalTasks();
 
