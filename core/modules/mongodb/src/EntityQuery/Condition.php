@@ -35,14 +35,15 @@ class Condition extends CoreCondition {
     // MongoDB query object is only necessary to pass to Query::addField() so it
     // can join tables as necessary. On the other hand, conditions need to be
     // added to the $conditionContainer object to keep grouping.
-    $mongodb_query = $conditionContainer instanceof SelectInterface ? $conditionContainer : $conditionContainer->mongodbQuery;
+    $mongodb_query = $conditionContainer instanceof SelectInterface ? $conditionContainer : $this->mongodbQuery;
     $this->mongodbQuery = $mongodb_query;
 
     foreach ($this->conditions as $condition) {
       if ($condition['field'] instanceof ConditionInterface) {
         $mongodb_condition = $mongodb_query->getConnection()->condition($condition['field']->getConjunction());
         // Add the MongoDB query to the object before calling this method again.
-        $mongodb_condition->mongodbQuery = $mongodb_query;
+        $condition['field']->mongodbQuery = $mongodb_query;
+        $condition['field']->nestedInsideOrCondition = $this->nestedInsideOrCondition || strtoupper($this->conjunction) === 'OR';
         $condition['field']->compile($mongodb_condition);
         $conditionContainer->condition($mongodb_condition);
       }

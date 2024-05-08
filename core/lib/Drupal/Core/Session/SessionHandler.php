@@ -20,6 +20,15 @@ class SessionHandler extends AbstractProxy implements \SessionHandlerInterface {
   use DependencySerializationTrait;
 
   /**
+   * Indicator for the existence of the database table.
+   *
+   * This variable is only used by the database driver for MongoDB.
+   *
+   * @var bool
+   */
+  protected $tableExists = FALSE;
+
+  /**
    * Constructs a new SessionHandler instance.
    *
    * @param \Symfony\Component\HttpFoundation\RequestStack $requestStack
@@ -83,6 +92,12 @@ class SessionHandler extends AbstractProxy implements \SessionHandlerInterface {
    * {@inheritdoc}
    */
   public function write(#[\SensitiveParameter] string $sid, string $value): bool {
+    if ($this->connection->driver() == 'mongodb' && !$this->tableExists) {
+      // For MongoDB the table need to exists. Otherwise MongoDB creates one
+      // without the correct validation.
+      $this->tableExists = $this->ensureTableExists();
+    }
+
     $try_again = FALSE;
     $request = $this->requestStack->getCurrentRequest();
     $fields = [
@@ -127,6 +142,12 @@ class SessionHandler extends AbstractProxy implements \SessionHandlerInterface {
    */
   public function destroy(#[\SensitiveParameter] string $sid): bool {
     try {
+      if ($this->connection->driver() == 'mongodb' && !$this->tableExists) {
+        // For MongoDB the table need to exists. Otherwise MongoDB creates one
+        // without the correct validation.
+        $this->tableExists = $this->ensureTableExists();
+      }
+
       // Delete session data.
       $this->connection->delete('sessions')
         ->condition('sid', Crypt::hashBase64($sid))
@@ -151,6 +172,12 @@ class SessionHandler extends AbstractProxy implements \SessionHandlerInterface {
     $timestamp = $this->time->getRequestTime() - $lifetime;
     if ($this->connection->driver() == 'mongodb') {
       $timestamp = new UTCDateTime($timestamp * 1000);
+
+      if (!$this->tableExists) {
+        // For MongoDB the table need to exists. Otherwise MongoDB creates one
+        // without the correct validation.
+        $this->tableExists = $this->ensureTableExists();
+      }
     }
     try {
       return $this->connection->delete('sessions')

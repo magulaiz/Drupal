@@ -1612,6 +1612,8 @@ function system_schema() {
     ],
     'primary key' => ['value'],
   ];
+
+  return $schema;
 }
 
 /**

@@ -58,7 +58,8 @@ class Merge extends QueryMerge {
       // For MongoDB it is very important that the value part of a condition is
       // of the correct type.
       $field_data = $this->tableInformation->getTableField($this->table, $key);
-      if (isset($field_data['type'])) {
+      // Only cast the value when the value is not NULL.
+      if (isset($field_data['type']) && ($value !== NULL)) {
         switch (mb_strtolower($field_data['type'])) {
           case 'blob':
             if (!($value instanceof Binary)) {

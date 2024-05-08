@@ -32,7 +32,7 @@ class HistoryUserTimestamp extends CoreHistoryUserTimestamp {
 
     $this->ensureMyTable();
     $field = "$this->tableAlias.$this->realField";
-    $time = new UTCDateTime((REQUEST_TIME - $limit) * 1000);
+    $time = new UTCDateTime($limit * 1000);
     $ces = $this->query->ensureTable('comment_entity_statistics', $this->relationship);
     if ($ces) {
       $or_condition1 = $this->query->getConnection()->condition('OR');

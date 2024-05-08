@@ -28,13 +28,8 @@ class ConditionAggregate extends CoreConditionAggregate {
         $mongodb_condition = new MongodbCondition($condition['field']->getConjunction());
         // Add the MongoDB query to the object before calling this method again.
         $condition['field']->mongodbQuery = $mongodb_query;
-//        $mongodb_condition->mongodbQuery = $mongodb_query;
         $condition['field']->compile($mongodb_condition);
-//        $conditionContainer->condition($mongodb_condition);
         $mongodb_query->condition($mongodb_condition);
-//        $condition['field']->sqlQuery = $sql_query;
-//        $condition['field']->compile($sql_condition);
-//        $sql_query->condition($sql_condition);
       }
       else {
         // We could have solved this by directly calling the method
