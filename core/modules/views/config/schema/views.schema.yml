@@ -72,8 +72,10 @@ views.settings:
       type: sequence
       label: 'Field rewrite elements'
       sequence:
-        type: label
+        type: string
         label: 'Element'
+        constraints:
+          NotBlank: {  }
 
 views.view.*:
   type: config_entity
