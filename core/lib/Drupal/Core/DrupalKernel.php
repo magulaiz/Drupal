@@ -688,9 +688,7 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
       foreach ($this->container->getParameter('kernel.destructable_services') as $id) {
         if ($this->container->initialized($id)) {
           $service = $this->container->get($id);
-          if ($service instanceof DestructableInterface) {
-            $service->destruct();
-          }
+          $service->destruct();
         }
       }
     }
