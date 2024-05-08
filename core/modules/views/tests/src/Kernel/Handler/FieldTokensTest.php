@@ -36,6 +36,13 @@ class FieldTokensTest extends ViewsKernelTestBase {
   public static $testViews = ['test_field_tokens'];
 
   /**
+   * The admin user.
+   *
+   * @var \Drupal\user\UserInterface
+   */
+  protected $adminUser;
+
+  /**
    * {@inheritdoc}
    */
   protected function setUp($import_test_views = TRUE): void {
