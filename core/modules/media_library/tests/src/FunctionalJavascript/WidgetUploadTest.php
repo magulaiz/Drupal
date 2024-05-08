@@ -769,7 +769,7 @@ class WidgetUploadTest extends MediaLibraryTestBase {
     $file_system = $this->container->get('file_system');
 
     $image = $this->getTestFiles('image')[0];
-    if (!isset($image)) {
+    if (is_null($image)) {
       $this->fail('Expected test files not present.');
     }
 
