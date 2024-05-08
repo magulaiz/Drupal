@@ -562,26 +562,25 @@ class UpdateContribTest extends UpdateTestBase {
     ]);
     $this->mockDefaultExtensionsInfo(['version' => '8.0.0']);
 
-    // Confirm that messages are displayed for recommended and latest updates.
-    // @todo In https://www.drupal.org/project/drupal/issues/3112962:
-    //   Change the calls to 'refreshUpdateStatus()' to use:
-    //   - '1.1' instead of '1.1-core_compatibility'.
-    //   - '1.1-alpha1' instead of '1.1-alpha1-core_compatibility'.
-    //   Delete the files:
-    //   - core/modules/update/tests/modules/update_test/drupal.8.1.1-alpha1-core_compatibility.xml
-    //   - core/modules/update/tests/modules/update_test/drupal.8.1.1-core_compatibility.xml
-    $this->refreshUpdateStatus(['drupal' => '8.1.1-core_compatibility', 'aaa_update_test' => '8.x-1.2']);
+    $this->refreshUpdateStatus(['drupal' => '8.1.1', 'aaa_update_test' => '8.x-1.2']);
     $this->assertCoreCompatibilityMessage('8.x-1.2', '8.0.0 to 8.1.1', 'Recommended version:');
     $this->assertCoreCompatibilityMessage('8.x-1.3-beta1', '8.0.0, 8.1.1', 'Latest version:');
 
+    // Run the same check as above but with a Drupal core XML test fixture
+    // without '8.1.' in 'supported_branches'. Confirm that messages do not
+    // include releases from the '8.1.' branch.
+    $this->refreshUpdateStatus(['drupal' => '8.1.1-core_compatibility', 'aaa_update_test' => '8.x-1.2']);
+    $this->assertCoreCompatibilityMessage('8.x-1.2', '8.0.0 to 8.0.1', 'Recommended version:');
+    $this->assertCoreCompatibilityMessage('8.x-1.3-beta1', '8.0.0', 'Latest version:');
+
     // Change the available core releases and confirm that the messages change.
-    $this->refreshUpdateStatus(['drupal' => '8.1.1-alpha1-core_compatibility', 'aaa_update_test' => '8.x-1.2']);
+    $this->refreshUpdateStatus(['drupal' => '8.1.1-alpha1', 'aaa_update_test' => '8.x-1.2']);
     $this->assertCoreCompatibilityMessage('8.x-1.2', '8.0.0 to 8.1.0', 'Recommended version:');
     $this->assertCoreCompatibilityMessage('8.x-1.3-beta1', '8.0.0', 'Latest version:');
 
     // Confirm that messages are displayed for security and 'Also available'
     // updates.
-    $this->refreshUpdateStatus(['drupal' => '8.1.1-core_compatibility', 'aaa_update_test' => 'core_compatibility.8.x-1.2_8.x-2.2']);
+    $this->refreshUpdateStatus(['drupal' => '8.1.1', 'aaa_update_test' => 'core_compatibility.8.x-1.2_8.x-2.2']);
     $this->assertCoreCompatibilityMessage('8.x-1.2', '8.1.0 to 8.1.1', 'Security update:', FALSE);
     $this->assertCoreCompatibilityMessage('8.x-2.2', '8.1.1', 'Also available:', FALSE);
   }
@@ -648,7 +647,7 @@ class UpdateContribTest extends UpdateTestBase {
       // Security releases available for module major release 1.
       // No releases for next major.
       '8.x-1.0, 8.x-1.2' => [
-        'module_patch_version' => '8.x-1.0',
+        'module_version' => '8.x-1.0',
         'expected_security_releases' => ['8.x-1.2'],
         'expected_update_message_type' => static::SECURITY_UPDATE_REQUIRED,
         'fixture' => 'sec.8.x-1.2',
@@ -657,7 +656,7 @@ class UpdateContribTest extends UpdateTestBase {
       // 8.x-1.1 security release marked as insecure.
       // No releases for next major.
       '8.x-1.0, 8.x-1.1 8.x-1.2' => [
-        'module_patch_version' => '8.x-1.0',
+        'module_version' => '8.x-1.0',
         'expected_security_releases' => ['8.x-1.2'],
         'expected_update_message_type' => static::SECURITY_UPDATE_REQUIRED,
         'fixture' => 'sec.8.x-1.1_8.x-1.2',
@@ -665,13 +664,13 @@ class UpdateContribTest extends UpdateTestBase {
       // Security release available for module major release 2.
       // No releases for next major.
       '8.x-2.0, 8.x-2.2' => [
-        'module_patch_version' => '8.x-2.0',
+        'module_version' => '8.x-2.0',
         'expected_security_releases' => ['8.x-2.2'],
         'expected_update_message_type' => static::SECURITY_UPDATE_REQUIRED,
         'fixture' => 'sec.8.x-2.2_1.x_secure',
       ],
       '8.x-2.2, 8.x-1.2 8.x-2.2' => [
-        'module_patch_version' => '8.x-2.2',
+        'module_version' => '8.x-2.2',
         'expected_security_releases' => [],
         'expected_update_message_type' => static::UPDATE_NONE,
         'fixture' => 'sec.8.x-1.2_8.x-2.2',
@@ -679,7 +678,7 @@ class UpdateContribTest extends UpdateTestBase {
       // Security release available for module major release 1.
       // Security release also available for next major.
       '8.x-1.0, 8.x-1.2 8.x-2.2' => [
-        'module_patch_version' => '8.x-1.0',
+        'module_version' => '8.x-1.0',
         'expected_security_releases' => ['8.x-1.2'],
         'expected_update_message_type' => static::SECURITY_UPDATE_REQUIRED,
         'fixture' => 'sec.8.x-1.2_8.x-2.2',
@@ -688,7 +687,7 @@ class UpdateContribTest extends UpdateTestBase {
       // releases are not marked as insecure.
       // Security release available for next major.
       '8.x-1.0, 8.x-2.2, not insecure' => [
-        'module_patch_version' => '8.x-1.0',
+        'module_version' => '8.x-1.0',
         'expected_security_releases' => [],
         'expected_update_message_type' => static::UPDATE_AVAILABLE,
         'fixture' => 'sec.8.x-2.2_1.x_secure',
@@ -696,13 +695,13 @@ class UpdateContribTest extends UpdateTestBase {
       // On latest security release for module major release 1.
       // Security release also available for next major.
       '8.x-1.2, 8.x-1.2 8.x-2.2' => [
-        'module_patch_version' => '8.x-1.2',
-        'expected_security_release' => [],
+        'module_version' => '8.x-1.2',
+        'expected_security_releases' => [],
         'expected_update_message_type' => static::UPDATE_NONE,
         'fixture' => 'sec.8.x-1.2_8.x-2.2',
       ],
       '8.x-2.0, 8.x-1.2 8.x-2.2' => [
-        'module_patch_version' => '8.x-2.0',
+        'module_version' => '8.x-2.0',
         'expected_security_releases' => ['8.x-2.2'],
         'expected_update_message_type' => static::SECURITY_UPDATE_REQUIRED,
         'fixture' => 'sec.8.x-1.2_8.x-2.2',
