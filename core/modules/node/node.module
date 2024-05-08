@@ -1221,7 +1221,7 @@ function node_config_translation_info_alter(&$info) {
 /**
  * Implements hook_entity_translation_delete().
  */
-function node_entity_translation_delete(EntityInterface $translation) {
+function node_entity_translation_delete(EntityInterface $translation): void {
   // Ensure that deleted translation is removed from the search index.
   if ($translation->getEntityTypeId() === 'node' && \Drupal::hasService('search.index')) {
     $search_index = \Drupal::service('search.index');
