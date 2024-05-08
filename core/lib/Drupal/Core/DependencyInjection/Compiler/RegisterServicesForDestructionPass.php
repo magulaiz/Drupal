@@ -19,7 +19,7 @@ class RegisterServicesForDestructionPass implements CompilerPassInterface {
    * {@inheritdoc}
    */
   public function process(ContainerBuilder $container): void {
-    foreach ($container->getDefinitions() as $name => $definition) {
+    foreach ($container->getDefinitions() as $definition) {
       if (is_a($definition->getClass(), DestructableInterface::class, TRUE)) {
         $definition->addTag('needs_destruction');
       }
