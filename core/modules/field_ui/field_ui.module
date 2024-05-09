@@ -171,10 +171,6 @@ function field_ui_entity_operation(EntityInterface $entity) {
  * Implements hook_entity_view_mode_presave().
  */
 function field_ui_entity_view_mode_presave(EntityViewModeInterface $view_mode) {
-  if ($view_mode->getDescription() === '') {
-    $view_mode->set('description', NULL);
-  }
-
   \Drupal::service('router.builder')->setRebuildNeeded();
 }
 
