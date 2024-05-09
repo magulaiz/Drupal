@@ -1205,6 +1205,7 @@ final class HTMLRestrictions {
    *   applied hence no resolved wildcards).
    * @param array $supported_wildcard_tags
    *   (optional) Supported wildcard tags. Defaults to an empty array.
+   *
    * @return array
    *   Return all allowed elements in an array.
    *
