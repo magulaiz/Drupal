@@ -188,7 +188,7 @@ class SourceEditingRedundantTagsConstraintValidator extends ConstraintValidator 
     $message_string = '';
 
     foreach ($plugin_definitions as $definition) {
-      if ($definition->hasElements() && $definition->hasToolbarItems()) {
+      if ($definition->hasElements()) {
         $plugin_capabilities = HTMLRestrictions::fromString(implode(' ', $definition->getElements()));
 
         // Intersection in the overlap and the plugin definition,
