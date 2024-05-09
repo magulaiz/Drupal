@@ -8,7 +8,6 @@ use Drupal\Core\Database\ReplicaKillSwitch;
 use Drupal\Core\Lock\LockBackendInterface;
 use Drupal\Core\Menu\MenuLinkManagerInterface;
 use Drupal\Core\Routing\RoutingEvents;
-use Drupal\Core\Utility\Error;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
@@ -56,19 +55,9 @@ class MenuRouterRebuildSubscriber implements EventSubscriberInterface {
    */
   protected function menuLinksRebuild() {
     if ($this->lock->acquire(__FUNCTION__)) {
-      try {
-        $transaction = $this->connection->startTransaction();
-        // Ensure the menu links are up to date.
-        $this->menuLinkManager->rebuild();
-        // Ignore any database replicas temporarily.
-        $this->replicaKillSwitch->trigger();
-      }
-      catch (\Exception $e) {
-        if (isset($transaction)) {
-          $transaction->rollBack();
-        }
-        Error::logException($this->logger, $e);
-      }
+
+      // Ensure the menu links are up to date.
+      $this->menuLinkManager->rebuild();
 
       $this->lock->release(__FUNCTION__);
     }

@@ -10,9 +10,11 @@ use Drupal\Core\Cache\CacheTagsInvalidatorInterface;
 use Drupal\Core\Database\Connection;
 use Drupal\Core\Database\DatabaseException;
 use Drupal\Core\Database\Query\SelectInterface;
+use Drupal\Core\Database\ReplicaKillSwitch;
+use Drupal\Core\Utility\Error;
+use Psr\Log\LoggerInterface;
 
 // cspell:ignore mlid
-
 /**
  * Provides a menu tree storage using the database.
  */
@@ -87,10 +89,14 @@ class MenuTreeStorage implements MenuTreeStorageInterface {
    *   The cache tags invalidator.
    * @param string $table
    *   A database table name to store configuration data in.
+   * @param \Psr\Log\LoggerInterface $logger
+   *   A logger instance.
+   * @param \Drupal\Core\Database\ReplicaKillSwitch $replicaKillSwitch
+   *   The replica kill switch.
    * @param array $options
    *   (optional) Any additional database connection options to use in queries.
    */
-  public function __construct(Connection $connection, CacheBackendInterface $menu_cache_backend, CacheTagsInvalidatorInterface $cache_tags_invalidator, $table, array $options = []) {
+  public function __construct(Connection $connection, CacheBackendInterface $menu_cache_backend, CacheTagsInvalidatorInterface $cache_tags_invalidator, $table, protected LoggerInterface $logger, protected ReplicaKillSwitch $replicaKillSwitch, array $options = []) {
     $this->connection = $connection;
     $this->menuCacheBackend = $menu_cache_backend;
     $this->cacheTagsInvalidator = $cache_tags_invalidator;
@@ -116,6 +122,17 @@ class MenuTreeStorage implements MenuTreeStorageInterface {
    * {@inheritdoc}
    */
   public function rebuild(array $definitions) {
+    $transaction = $this->connection->startTransaction();
+    try {
+      // Ignore any database replicas temporarily.
+      $this->replicaKillSwitch->trigger();
+    }
+    catch (\Exception $e) {
+      if ($transaction) {
+        $transaction->rollback();
+        Error::logException($this->logger, $e);
+      }
+    }
     $links = [];
     $children = [];
     $top_links = [];
