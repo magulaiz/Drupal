@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\system\Functional\Batch;
 
-use Drupal;
 use Drupal\Tests\BrowserTestBase;
 
 /**
