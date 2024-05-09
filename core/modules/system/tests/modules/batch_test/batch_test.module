@@ -248,16 +248,37 @@ function batch_test_stack($data = NULL, $reset = FALSE) {
 }
 
 /**
+ * Logs each call of non progressive batch run to log.
+ *
+ * @param int $id
+ * @return void
+ */
+function batch_test_non_progressive_logger(int $id, string $message): void {
+  \Drupal::logger('batch_test')->info($message);
+}
+
+/**
  * Run a batch in cron for non-progressive test.
  */
-function batch_test_cron() {
+function batch_test_cron(): void {
   batch_test_stack(NULL, TRUE);
+  $num_operations = 100;
+
+  $operations = [];
+  for ($i = 0; $i <= $num_operations; $i++) {
+    $operations[] = [
+      'batch_test_non_progressive_logger',
+      [
+        $i + 1,
+        t('(Non progressive operation @operation)', ['@operation' => $i]),
+      ],
+    ];
+  }
   $batch = [
     'title' => 'Batch Test',
-    'operations' => [
-      ['_batch_test_title_callback', []],
-    ],
+    'operations' => $operations,
     'progressive' => FALSE,
   ];
   batch_set($batch);
+  batch_process();
 }

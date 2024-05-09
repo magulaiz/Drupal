@@ -891,7 +891,7 @@ function batch_process($redirect = NULL, ?Url $url = NULL, $redirect_callback = 
       'current_set' => 0,
       'progressive' => TRUE,
       'url' => $url ?? Url::fromRoute('system.batch_page.html'),
-      'source_url' => Url::fromRouteMatch(\Drupal::routeMatch())->mergeOptions(['query' => \Drupal::request()->query->all()]),
+      'source_url' => \Drupal::routeMatch() ?? Url::fromRouteMatch(\Drupal::routeMatch())->mergeOptions(['query' => \Drupal::request()->query->all()]),
       'batch_redirect' => $redirect,
       'theme' => \Drupal::theme()->getActiveTheme()->getName(),
       'redirect_callback' => $redirect_callback,
