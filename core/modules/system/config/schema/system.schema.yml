@@ -394,8 +394,9 @@ system.mail:
               message: 'The mailer DSN must contain a scheme.'
             Regex:
               # @see RFC 3986 for URIs scheme: https://datatracker.ietf.org/doc/html/rfc3986#section-3.1
+              # Starts with alpha character, can contain any alphanumeric, "+", "-" and ".".
               pattern: '/^[a-zA-Z](?:[-a-zA-Z0-9\+\.])*/'
-              message: "%value is not a valid scheme."
+              message: "The mailer DSN scheme %value is not a valid scheme."
         host:
           type: string
           label: 'Host'
