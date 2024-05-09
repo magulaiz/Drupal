@@ -324,14 +324,14 @@ function _file_save_upload_from_form(array $element, FormStateInterface $form_st
  *   array element contains the file entity if the upload succeeded or FALSE if
  *   there was an error. Function returns NULL if no file was uploaded.
  *
+ * @throws \ValueError
+ *   Thrown if $fileExists is a legacy int and not a valid value.
+ *
  * @deprecated in drupal:10.2.0 and is removed from drupal:11.0.0. Use
  *   \Drupal\file\Upload\FormFileUploadHandler::saveFileUploads() instead.
  *
  * @see https://www.drupal.org/node/3382414
  * @see \Drupal\file\Upload\FormFileUploadHandler::saveFileUploads()
- * @throws \ValueError
- *   Thrown if $fileExists is a legacy int and not a valid value.
- *
  */
 function file_save_upload($form_field_name, $validators = [], $destination = FALSE, $delta = NULL, FileExists|int $fileExists = FileExists::Rename) {
   @trigger_error(__FUNCTION__ . '() is deprecated in drupal:10.2.0 and is removed from drupal:11.0.0. Use \Drupal\file\Upload\FormFileUploadHandler::saveFileUploads() instead. See https://www.drupal.org/node/3382414', E_USER_DEPRECATED);

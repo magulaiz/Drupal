@@ -80,7 +80,7 @@ abstract class BaseErrorHandler implements FileUploadErrorHandlerInterface {
         // @todo Add support for render arrays in
         // \Drupal\Core\Messenger\MessengerInterface::addMessage()?
         // @see https://www.drupal.org/node/2505497.
-        $this->addErrorMessage($this->renderer->renderPlain($message));
+        $this->addErrorMessage($this->renderer->renderInIsolation($message));
         break;
 
       case $e instanceof FileWriteException:
