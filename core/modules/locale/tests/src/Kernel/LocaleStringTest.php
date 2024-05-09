@@ -82,6 +82,11 @@ class LocaleStringTest extends KernelTestBase {
     $translation = $this->storage->findTranslation(['language' => $langcode, 'lid' => $source->lid]);
     $this->assertEquals(LOCALE_CUSTOMIZED, $translation->customized);
 
+    // Tests that we pass the correct type to the setStorage() method.
+    $this->expectException(\InvalidArgumentException::class);
+    $this->expectExceptionMessage('The storage must implement \Drupal\Core\Config\StorageInterface.');
+    $translation->setStorage($this->randomMachineName());
+
     // Delete translation.
     $translation->delete();
     $deleted = $this->storage->findTranslation(['language' => $langcode, 'lid' => $source->lid]);

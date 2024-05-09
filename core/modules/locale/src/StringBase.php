@@ -118,7 +118,7 @@ abstract class StringBase implements StringInterface {
   /**
    * {@inheritdoc}
    */
-  public function setStorage($storage) {
+  public function setStorage(StringStorageInterface $storage) {
     $this->storage = $storage;
     return $this;
   }

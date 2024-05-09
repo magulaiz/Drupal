@@ -98,7 +98,7 @@ interface StringInterface {
    *
    * @return $this
    */
-  public function setStorage($storage);
+  public function setStorage(StringStorageInterface $storage);
 
   /**
    * Checks whether the object is not saved to storage yet.
