@@ -403,7 +403,7 @@ final class HTMLRestrictions {
    * Whether this set of HTML restrictions is unrestricted.
    *
    * @return bool
-   *   Return TRUE if it is unresticted, otherwise return FALSE.
+   *   Return TRUE if it is unrestricted, otherwise return FALSE.
    */
   public function isUnrestricted(): bool {
     return $this->unrestricted;
@@ -1205,7 +1205,6 @@ final class HTMLRestrictions {
    *   applied hence no resolved wildcards).
    * @param array $supported_wildcard_tags
    *   (optional) Supported wildcard tags. Defaults to an empty array.
-   *
    * @return array
    *   Return all allowed elements in an array.
    *
