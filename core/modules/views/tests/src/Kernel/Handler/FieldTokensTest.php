@@ -12,6 +12,7 @@ use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\user\Entity\User;
 use Drupal\views\Tests\ViewTestData;
+use Drupal\user\UserInterface;
 
 /**
  * Tests "Link to the Content" functionality & views integration for tokens.
