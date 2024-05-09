@@ -387,6 +387,9 @@ system.mail:
           type: string
           label: 'Scheme'
           constraints:
+            PluginExists:
+              manager: plugin.manager.mailer_transport
+              interface: 'Drupal\symfony_mailer\TransportPluginInterface'
             NotBlank:
               message: 'The mailer DSN must contain a scheme.'
         host:
