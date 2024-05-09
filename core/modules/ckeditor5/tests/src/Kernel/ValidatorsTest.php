@@ -1049,7 +1049,7 @@ class ValidatorsTest extends KernelTestBase {
               // Tag + attributes; attributes supported by disabled plugin.
               '<code class="language-*">',
               // Tag + attributes; tag already supported by enabled plugin,
-              // attributes supported by disabled plugin
+              // attributes supported by disabled plugin.
               '<h2 class="text-align-center">',
               // Tag + attributes; tag already supported by enabled plugin,
               // attribute not supported by no plugin.
@@ -1577,7 +1577,7 @@ class ValidatorsTest extends KernelTestBase {
       ],
       'expected_violations' => [],
     ];
-     $data['INVALID: SourceEditing plugin configuration: <p class="text-align-center"> must not be allowed because Text Alignment can generate <p class="text-align-center">'] = [
+    $data['INVALID: SourceEditing plugin configuration: <p class="text-align-center"> must not be allowed because Text Alignment can generate <p class="text-align-center">'] = [
       'ckeditor5_settings' => [
         'plugins' => [
           'ckeditor5_sourceEditing' => [
