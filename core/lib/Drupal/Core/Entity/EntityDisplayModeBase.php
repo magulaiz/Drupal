@@ -29,7 +29,7 @@ abstract class EntityDisplayModeBase extends ConfigEntityBase implements EntityD
    *
    * @var string|null
    */
-  protected ?string $description;
+  protected $description = NULL;
 
   /**
    * The entity type this form or view mode is used for.
@@ -129,8 +129,8 @@ abstract class EntityDisplayModeBase extends ConfigEntityBase implements EntityD
   /**
    * {@inheritdoc}
    */
-  public function getDescription(): ?string {
-    return $this->description ?? NULL;
+  public function getDescription(): string {
+    return $this->description ?? '';
   }
 
 }
