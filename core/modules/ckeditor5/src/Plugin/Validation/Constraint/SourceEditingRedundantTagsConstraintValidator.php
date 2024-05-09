@@ -178,7 +178,7 @@ class SourceEditingRedundantTagsConstraintValidator extends ConstraintValidator 
    * @param \Drupal\ckeditor5\Plugin\CKEditor5PluginDefinition[] $plugin_definitions
    *   An array of plugin definitions where overlap was found.
    * @param bool $is_attr_overlap
-   *   Whether is attribute overlaped.
+   *   Whether is attribute overlapped.
    *
    * @return string
    *   A list of plugins that provide the overlapping tags.
@@ -197,22 +197,22 @@ class SourceEditingRedundantTagsConstraintValidator extends ConstraintValidator 
         // Tag and attribute's name of the intersection restrictions.
         // which will be used in the message.
         $intersect_tag_attributes = implode(', ', $intersect->toCKEditor5ElementsArray());
-        // Go throught all allowed elements in the intersection restriction to
+        // Go through all allowed elements in the intersection restriction to
         // check if this plugin should be used.
         foreach ($intersect->getAllowedElements() as $tag_name => $attributes) {
           $plugin_allowed_elements = $plugin_capabilities->getAllowedElements(TRUE, [$tag_name => $attributes]);
-          $plulgin_allowed_attributes = $plugin_allowed_elements[$tag_name] ?? NULL;
+          $plugin_allowed_attributes = $plugin_allowed_elements[$tag_name] ?? NULL;
           // The flag variable if this plugin should be used.
           $plugin_should_be_used = FALSE;
           if (is_array($attributes)) {
-            // Go throught all intersact attributes.
-            // to checkif there is overlap one.
+            // Go through all intersect attributes.
+            // to check if there is overlap one.
             // If so, then this plugin should be used.
-            foreach ($attributes as $attibute_name => $value) {
-              if (isset($plulgin_allowed_attributes[$attibute_name])) {
+            foreach ($attributes as $attribute_name => $value) {
+              if (isset($plugin_allowed_attributes[$attribute_name])) {
                 // In order to compare two nested array,
                 // convert the plugin allowed elements array into a json string.
-                $str_plugin_allowed = json_encode($plulgin_allowed_attributes[$attibute_name]);
+                $str_plugin_allowed = json_encode($plugin_allowed_attributes[$attribute_name]);
                 // Convert the intersect attribute value array
                 // into a json string.
                 $str_value = json_encode($value);
@@ -231,7 +231,7 @@ class SourceEditingRedundantTagsConstraintValidator extends ConstraintValidator 
           else {
             // If plugin's element is same as the intersected element,
             // then this plugin should be used.
-            $plugin_should_be_used = $plulgin_allowed_attributes === $attributes;
+            $plugin_should_be_used = $plugin_allowed_attributes === $attributes;
           }
           if ($plugin_should_be_used) {
             // Add the plugin name, tag and attribute into the message.

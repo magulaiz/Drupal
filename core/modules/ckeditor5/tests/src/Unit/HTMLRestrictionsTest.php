@@ -1205,7 +1205,7 @@ class HTMLRestrictionsTest extends UnitTestCase {
       'a' => new HTMLRestrictions(['p' => ['class' => ['text-align-center' => TRUE, 'text-align-justify' => TRUE]]]),
       'b' => new HTMLRestrictions(['$text-container' => ['class' => ['text-align-center' => TRUE]]]),
       'diff' => new HTMLRestrictions(['p' => ['class' => ['text-align-justify' => TRUE]]]),
-      'intersection' =>  new HTMLRestrictions(['p' => ['class' => ['text-align-center' => TRUE]]]),
+      'intersection' => new HTMLRestrictions(['p' => ['class' => ['text-align-center' => TRUE]]]),
       'union' => new HTMLRestrictions(['p' => ['class' => ['text-align-center' => TRUE, 'text-align-justify' => TRUE]], '$text-container' => ['class' => ['text-align-center' => TRUE]]]),
     ];
     yield 'wildcard + matching tag: attribute value intersection — without possible resolving — vice versa' => [
@@ -1247,7 +1247,7 @@ class HTMLRestrictionsTest extends UnitTestCase {
       'a' => new HTMLRestrictions(['p' => TRUE]),
       'b' => new HTMLRestrictions(['$text-container' => ['class' => ['foo' => TRUE, 'bar' => TRUE]]]),
       'diff' => 'a',
-      'intersection' =>  new HTMLRestrictions(['p' => ['class' => ['foo' => TRUE, 'bar' => TRUE]]]),
+      'intersection' => new HTMLRestrictions(['p' => ['class' => ['foo' => TRUE, 'bar' => TRUE]]]),
       'union' => new HTMLRestrictions(['p' => TRUE, '$text-container' => ['class' => ['foo' => TRUE, 'bar' => TRUE]]]),
     ];
     yield 'wildcard + matching tag: wildcard resolves into matching tag, but matching tag already supports all attributes — vice versa' => [
