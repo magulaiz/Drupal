@@ -246,3 +246,18 @@ function batch_test_stack($data = NULL, $reset = FALSE) {
   $stack[] = $data;
   $state->set('batch_test.stack', $stack);
 }
+
+/**
+ * Run a batch in cron for non-progressive test.
+ */
+function batch_test_cron() {
+  batch_test_stack(NULL, TRUE);
+  $batch = [
+    'title' => 'Batch Test',
+    'operations' => [
+      ['_batch_test_title_callback', []],
+    ],
+    'progressive' => FALSE,
+  ];
+  batch_set($batch);
+}

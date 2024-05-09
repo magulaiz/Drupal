@@ -89,4 +89,16 @@ class PageTest extends BrowserTestBase {
     $this->assertSession()->responseContains('<div class="progress__description">Completed 1 of 1.</div>');
   }
 
+  /**
+   * Tests when progressive is FALSE.
+   */
+  public function testBatchNonProgressive(): void {
+    $this->drupalLogin($this->createUser(['administer site configuration']));
+    // Go to the initial step only.
+    $this->maximumMetaRefreshCount = 0;
+    $this->drupalGet('/admin/config/system/cron');
+    $this->submitForm([], 'Run cron');
+    $this->assertSession()->pageTextNotContains('Initializing.');
+  }
+
 }
