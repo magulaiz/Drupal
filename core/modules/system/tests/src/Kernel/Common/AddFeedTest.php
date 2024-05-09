@@ -109,7 +109,7 @@ class AddFeedTest extends KernelTestBase {
       '#title' => 'testing title',
       '#attributes' => ['title' => 'some title', 'class' => ['some-class']],
     ];
-    $rendered_output =(string) \Drupal::service('renderer')->renderRoot($variables);
+    $rendered_output = (string) \Drupal::service('renderer')->renderRoot($variables);
 
     // Check if the class 'some-class' is present in the rendered output.
     $this->assertStringContainsString('some-class', $rendered_output, "The class 'some-class' should be present in the rendered output.");
