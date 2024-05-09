@@ -33,12 +33,12 @@ class WorkspacesMenuTreeStorage extends CoreMenuTreeStorage {
    *   Cache backend instance for the extracted tree data.
    * @param \Drupal\Core\Cache\CacheTagsInvalidatorInterface $cache_tags_invalidator
    *   The cache tags invalidator.
+   * @param string $table
+   *   A database table name to store configuration data in.
    * @param \Psr\Log\LoggerInterface $logger
    *   A logger instance.
    * @param \Drupal\Core\Database\ReplicaKillSwitch $replicaKillSwitch
    *   The replica kill switch.
-   * @param string $table
-   *   A database table name to store configuration data in.
    * @param array $options
    *   (optional) Any additional database connection options to use in queries.
    */
@@ -49,12 +49,12 @@ class WorkspacesMenuTreeStorage extends CoreMenuTreeStorage {
     Connection $connection,
     CacheBackendInterface $menu_cache_backend,
     CacheTagsInvalidatorInterface $cache_tags_invalidator,
+    string $table,
     protected LoggerInterface $logger,
     protected ReplicaKillSwitch $replicaKillSwitch,
-    string $table,
     array $options = []
   ) {
-    parent::__construct($connection, $menu_cache_backend, $cache_tags_invalidator, $logger, $replicaKillSwitch, $table, $options);
+    parent::__construct($connection, $menu_cache_backend, $cache_tags_invalidator, $table, $logger, $replicaKillSwitch, $options);
   }
 
   /**
