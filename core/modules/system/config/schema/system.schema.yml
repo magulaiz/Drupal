@@ -384,14 +384,18 @@ system.mail:
       label: 'Symfony mailer transport DSN'
       mapping:
         scheme:
+          # Todo: remove me.
+          #requiredKey: false
+          #nullable: true
           type: string
           label: 'Scheme'
           constraints:
-            PluginExists:
-              manager: plugin.manager.mailer_transport
-              interface: 'Drupal\symfony_mailer\TransportPluginInterface'
             NotBlank:
               message: 'The mailer DSN must contain a scheme.'
+            Regex:
+              # @see RFC 3986 for URIs scheme: https://datatracker.ietf.org/doc/html/rfc3986#section-3.1
+              pattern: '/^[a-zA-Z](?:[-a-zA-Z0-9\+\.])*/'
+              message: "%value is not a valid scheme."
         host:
           type: string
           label: 'Host'
