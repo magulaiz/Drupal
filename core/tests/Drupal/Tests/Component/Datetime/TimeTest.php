@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\Component\Datetime;
 
 use Drupal\Component\Datetime\Time;
@@ -141,6 +143,6 @@ function time() {
  *
  * @return float
  */
-function microtime() {
+function microtime(bool $as_float = FALSE) {
   return 1234567.89;
 }

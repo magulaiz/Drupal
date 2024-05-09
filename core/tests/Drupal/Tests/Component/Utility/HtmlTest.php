@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\Component\Utility;
 
 use Drupal\Component\Render\MarkupInterface;
@@ -7,7 +9,8 @@ use Drupal\Component\Render\MarkupTrait;
 use Drupal\Component\Utility\Html;
 use Drupal\Component\Utility\Random;
 use PHPUnit\Framework\TestCase;
-use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
+
+// cspell:ignore répét répété
 
 /**
  * Tests \Drupal\Component\Utility\Html.
@@ -17,8 +20,6 @@ use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
  * @coversDefaultClass \Drupal\Component\Utility\Html
  */
 class HtmlTest extends TestCase {
-
-  use ExpectDeprecationTrait;
 
   /**
    * {@inheritdoc}
@@ -60,7 +61,7 @@ class HtmlTest extends TestCase {
    * @return array
    *   Test data.
    */
-  public function providerTestCleanCssIdentifier() {
+  public static function providerTestCleanCssIdentifier() {
     $id1 = 'abcdefghijklmnopqrstuvwxyz_ABCDEFGHIJKLMNOPQRSTUVWXYZ-0123456789';
     $id2 = '¡¢£¤¥';
     $id3 = 'css__identifier__with__double__underscores';
@@ -73,16 +74,16 @@ class HtmlTest extends TestCase {
       [$id3, $id3],
       // Verify that invalid characters (including non-breaking space) are
       // stripped from the identifier.
-      ['invalididentifier', 'invalid !"#$%&\'()*+,./:;<=>?@[\\]^`{|}~ identifier', []],
+      ['invalid_identifier', 'invalid_ !"#$%&\'()*+,./:;<=>?@[\\]^`{|}~ identifier', []],
       // Verify that an identifier starting with a digit is replaced.
-      ['_cssidentifier', '1cssidentifier', []],
+      ['_css_identifier', '1css_identifier', []],
       // Verify that an identifier starting with a hyphen followed by a digit is
       // replaced.
-      ['__cssidentifier', '-1cssidentifier', []],
+      ['__css_identifier', '-1css_identifier', []],
       // Verify that an identifier starting with two hyphens is replaced.
-      ['__cssidentifier', '--cssidentifier', []],
+      ['__css_identifier', '--css_identifier', []],
       // Verify that passing double underscores as a filter is processed.
-      ['_cssidentifier', '__cssidentifier', ['__' => '_']],
+      ['_css_identifier', '__css_identifier', ['__' => '_']],
     ];
   }
 
@@ -128,7 +129,7 @@ class HtmlTest extends TestCase {
    * @return array
    *   Test data.
    */
-  public function providerTestHtmlGetUniqueId() {
+  public static function providerTestHtmlGetUniqueId() {
     // cSpell:disable
     $id = 'abcdefghijklmnopqrstuvwxyz-0123456789';
     return [
@@ -180,7 +181,7 @@ class HtmlTest extends TestCase {
    * @return array
    *   Test data.
    */
-  public function providerTestHtmlGetUniqueIdWithAjaxIds() {
+  public static function providerTestHtmlGetUniqueIdWithAjaxIds() {
     return [
       ['test-unique-id1--', 'test-unique-id1'],
       // Note, we truncate two hyphens at the end.
@@ -213,7 +214,7 @@ class HtmlTest extends TestCase {
    * @return array
    *   Test data.
    */
-  public function providerTestHtmlGetId() {
+  public static function providerTestHtmlGetId() {
     // cSpell:disable
     $id = 'abcdefghijklmnopqrstuvwxyz-0123456789';
     return [
@@ -245,7 +246,7 @@ class HtmlTest extends TestCase {
    *
    * @see testDecodeEntities()
    */
-  public function providerDecodeEntities() {
+  public static function providerDecodeEntities() {
     return [
       ['Drupal', 'Drupal'],
       ['<script>', '<script>'],
@@ -286,7 +287,7 @@ class HtmlTest extends TestCase {
    *
    * @see testEscape()
    */
-  public function providerEscape() {
+  public static function providerEscape() {
     return [
       ['Drupal', 'Drupal'],
       ['&lt;script&gt;', '<script>'],
@@ -360,7 +361,7 @@ class HtmlTest extends TestCase {
    * @return array
    *   Test data.
    */
-  public function providerTestTransformRootRelativeUrlsToAbsolute() {
+  public static function providerTestTransformRootRelativeUrlsToAbsolute() {
     $data = [];
 
     // Random generator.
@@ -379,6 +380,7 @@ class HtmlTest extends TestCase {
         "$tag_name, srcset, $base_path: root-relative" => ["<$tag_name srcset=\"http://example.com{$base_path}already-absolute 200w, {$base_path}root-relative 300w\">root-relative test</$tag_name>", 'http://example.com', "<$tag_name srcset=\"http://example.com{$base_path}already-absolute 200w, http://example.com{$base_path}root-relative 300w\">root-relative test</$tag_name>"],
         "$tag_name, srcset, $base_path: protocol-relative" => ["<$tag_name srcset=\"http://example.com{$base_path}already-absolute 200w, //example.com{$base_path}protocol-relative 300w\">protocol-relative test</$tag_name>", 'http://example.com', FALSE],
         "$tag_name, srcset, $base_path: absolute" => ["<$tag_name srcset=\"http://example.com{$base_path}already-absolute 200w, http://example.com{$base_path}absolute 300w\">absolute test</$tag_name>", 'http://example.com', FALSE],
+        "$tag_name, empty srcset" => ["<$tag_name srcset>empty test</$tag_name>", 'http://example.com', FALSE],
       ];
 
       foreach (['href', 'poster', 'src', 'cite', 'data', 'action', 'formaction', 'about'] as $attribute) {
@@ -404,26 +406,13 @@ class HtmlTest extends TestCase {
    * @return array
    *   Test data.
    */
-  public function providerTestTransformRootRelativeUrlsToAbsoluteAssertion() {
+  public static function providerTestTransformRootRelativeUrlsToAbsoluteAssertion() {
     return [
       'only relative path' => ['llama'],
       'only root-relative path' => ['/llama'],
       'host and path' => ['example.com/llama'],
       'scheme, host and path' => ['http://example.com/llama'],
     ];
-  }
-
-  /**
-   * Test deprecations.
-   *
-   * @group legacy
-   */
-  public function testDeprecations(): void {
-    $this->expectDeprecation('Passing NULL to Drupal\Component\Utility\Html::decodeEntities is deprecated in drupal:9.5.0 and will trigger a PHP error from drupal:11.0.0. Pass a string instead. See https://www.drupal.org/node/3318826');
-    $this->assertSame('', Html::decodeEntities(NULL));
-
-    $this->expectDeprecation('Passing NULL to Drupal\Component\Utility\Html::escape is deprecated in drupal:9.5.0 and will trigger a PHP error from drupal:11.0.0. Pass a string instead. See https://www.drupal.org/node/3318826');
-    $this->assertSame('', Html::escape(NULL));
   }
 
 }

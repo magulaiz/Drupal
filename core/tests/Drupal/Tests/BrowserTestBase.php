@@ -1,13 +1,17 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests;
 
 use Behat\Mink\Driver\BrowserKitDriver;
 use Behat\Mink\Element\Element;
+use Behat\Mink\Exception\Exception as MinkException;
 use Behat\Mink\Mink;
 use Behat\Mink\Selector\SelectorsHandler;
 use Behat\Mink\Session;
 use Drupal\Component\Serialization\Json;
+use Drupal\Component\Utility\UrlHelper;
 use Drupal\Core\Database\Database;
 use Drupal\Core\Test\FunctionalTestSetupTrait;
 use Drupal\Core\Test\TestSetupTrait;
@@ -16,21 +20,21 @@ use Drupal\Core\Utility\Error;
 use Drupal\Tests\block\Traits\BlockCreationTrait;
 use Drupal\Tests\node\Traits\ContentTypeCreationTrait;
 use Drupal\Tests\node\Traits\NodeCreationTrait;
-use Drupal\Tests\Traits\PhpUnitWarnings;
 use Drupal\Tests\user\Traits\UserCreationTrait;
 use Drupal\TestTools\Comparator\MarkupInterfaceComparator;
+use Drupal\TestTools\Extension\DeprecationBridge\ExpectDeprecationTrait;
 use Drupal\TestTools\TestVarDumper;
 use GuzzleHttp\Cookie\CookieJar;
 use PHPUnit\Framework\TestCase;
-use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
+use Symfony\Component\HttpFoundation\Exception\SessionNotFoundException;
 use Symfony\Component\VarDumper\VarDumper;
 
 /**
  * Provides a test case for functional Drupal tests.
  *
  * Tests extending BrowserTestBase must exist in the
- * Drupal\Tests\yourmodule\Functional namespace and live in the
- * modules/yourmodule/tests/src/Functional directory.
+ * Drupal\Tests\your_module\Functional namespace and live in the
+ * modules/your_module/tests/src/Functional directory.
  *
  * Tests extending this base class should only translate text when testing
  * translation functionality. For example, avoid wrapping test text with t()
@@ -68,7 +72,6 @@ abstract class BrowserTestBase extends TestCase {
     createUser as drupalCreateUser;
   }
   use XdebugRequestTrait;
-  use PhpUnitWarnings;
   use PhpUnitCompatibilityTrait;
   use ExpectDeprecationTrait;
   use ExtensionListTestTrait;
@@ -170,19 +173,6 @@ abstract class BrowserTestBase extends TestCase {
   protected $mink;
 
   /**
-   * {@inheritdoc}
-   *
-   * Browser tests are run in separate processes to prevent collisions between
-   * code that may be loaded by tests.
-   */
-  protected $runTestInSeparateProcess = TRUE;
-
-  /**
-   * {@inheritdoc}
-   */
-  protected $preserveGlobalState = FALSE;
-
-  /**
    * The base URL.
    *
    * @var string
@@ -205,6 +195,14 @@ abstract class BrowserTestBase extends TestCase {
    * @var \Symfony\Component\DependencyInjection\ContainerInterface
    */
   protected $originalContainer;
+
+  /**
+   * {@inheritdoc}
+   */
+  public function __construct(string $name) {
+    parent::__construct($name);
+    $this->setRunTestInSeparateProcess(TRUE);
+  }
 
   /**
    * {@inheritdoc}
@@ -365,7 +363,9 @@ abstract class BrowserTestBase extends TestCase {
     $this->prepareEnvironment();
     $this->installDrupal();
 
-    // Setup Mink.
+    // Setup Mink. Register Mink exceptions to cause test failures instead of
+    // errors.
+    $this->registerFailureType(MinkException::class);
     $this->initMink();
 
     // Set up the browser test output file.
@@ -444,6 +444,19 @@ abstract class BrowserTestBase extends TestCase {
    */
   protected function tearDown(): void {
     parent::tearDown();
+
+    if ($this->container) {
+      // Cleanup mock session started in DrupalKernel::preHandle().
+      try {
+        /** @var \Symfony\Component\HttpFoundation\Session\Session $session */
+        $session = $this->container->get('request_stack')->getSession();
+        $session->clear();
+        $session->save();
+      }
+      catch (SessionNotFoundException) {
+        @trigger_error('Pushing requests without a session onto the request_stack is deprecated in drupal:10.3.0 and an error will be thrown from drupal:11.0.0. See https://www.drupal.org/node/3337193', E_USER_DEPRECATED);
+      }
+    }
 
     // Destroy the testing kernel.
     if (isset($this->kernel)) {
@@ -586,7 +599,7 @@ abstract class BrowserTestBase extends TestCase {
    *
    * @see vendor/phpunit/phpunit/src/Util/PHP/Template/TestCaseMethod.tpl.dist
    */
-  public function __sleep() {
+  public function __sleep(): array {
     return [];
   }
 
@@ -632,7 +645,11 @@ abstract class BrowserTestBase extends TestCase {
   protected function getDrupalSettings() {
     $html = $this->getSession()->getPage()->getContent();
     if (preg_match('@<script type="application/json" data-drupal-selector="drupal-settings-json">([^<]*)</script>@', $html, $matches)) {
-      return Json::decode($matches[1]);
+      $settings = Json::decode($matches[1]);
+      if (isset($settings['ajaxPageState']['libraries'])) {
+        $settings['ajaxPageState']['libraries'] = UrlHelper::uncompressQueryParameter($settings['ajaxPageState']['libraries']);
+      }
+      return $settings;
     }
     return [];
   }

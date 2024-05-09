@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\path_alias\Unit\PathProcessor;
 
 use Drupal\Core\Cache\Cache;
@@ -81,7 +83,7 @@ class AliasPathProcessorTest extends UnitTestCase {
   /**
    * @return array
    */
-  public function providerTestProcessOutbound() {
+  public static function providerTestProcessOutbound() {
     return [
       ['internal-url', [], 'url-alias'],
       ['internal-url', ['alias' => TRUE], 'internal-url'],

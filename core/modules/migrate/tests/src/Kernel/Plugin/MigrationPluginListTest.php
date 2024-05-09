@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\migrate\Kernel\Plugin;
 
 use Drupal\Core\Database\Database;
@@ -7,7 +9,7 @@ use Drupal\KernelTests\KernelTestBase;
 use Drupal\migrate\Exception\RequirementsException;
 use Drupal\migrate\Plugin\migrate\source\SqlBase;
 use Drupal\migrate\Plugin\RequirementsInterface;
-use Drupal\Tests\field\Traits\EntityReferenceTestTrait;
+use Drupal\Tests\field\Traits\EntityReferenceFieldCreationTrait;
 
 /**
  * Tests the migration plugin manager.
@@ -17,7 +19,7 @@ use Drupal\Tests\field\Traits\EntityReferenceTestTrait;
  */
 class MigrationPluginListTest extends KernelTestBase {
 
-  use EntityReferenceTestTrait;
+  use EntityReferenceFieldCreationTrait;
 
   /**
    * {@inheritdoc}
@@ -28,8 +30,6 @@ class MigrationPluginListTest extends KernelTestBase {
     'ban',
     'block',
     'block_content',
-    // @todo Remove book in https://www.drupal.org/project/drupal/issues/3376101
-    'book',
     'comment',
     'contact',
     'content_translation',
@@ -37,8 +37,6 @@ class MigrationPluginListTest extends KernelTestBase {
     'field',
     'file',
     'filter',
-    // @todo Remove forum in https://www.drupal.org/project/drupal/issues/3261653
-    'forum',
     'image',
     'language',
     'locale',
@@ -49,13 +47,10 @@ class MigrationPluginListTest extends KernelTestBase {
     'path',
     'search',
     'shortcut',
-    'statistics',
     'syslog',
     'system',
     'taxonomy',
     'text',
-    // @todo Remove tracker in https://www.drupal.org/project/drupal/issues/3261452
-    'tracker',
     'update',
     'user',
   ];

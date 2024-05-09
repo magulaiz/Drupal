@@ -1,9 +1,9 @@
 services:
+  _defaults:
+    autoconfigure: true
   file.event.subscriber:
     class: Drupal\file\EventSubscriber\FileEventSubscriber
     arguments: ['@config.factory', '@transliteration', '@language_manager']
-    tags:
-      - { name: event_subscriber }
   file.usage:
     class: Drupal\file\FileUsage\DatabaseFileUsageBackend
     arguments: ['@config.factory', '@database', 'file_usage']
@@ -11,7 +11,7 @@ services:
       - { name: backend_overridable }
   file.upload_handler:
     class: Drupal\file\Upload\FileUploadHandler
-    arguments: ['@file_system', '@entity_type.manager', '@stream_wrapper_manager', '@event_dispatcher', '@file.mime_type.guesser', '@current_user', '@request_stack', '@file.repository', '@file.validator']
+    arguments: ['@file_system', '@entity_type.manager', '@stream_wrapper_manager', '@event_dispatcher', '@file.mime_type.guesser', '@current_user', '@request_stack', '@file.repository', '@file.validator', '@lock', '@validation.basic_recursive_validator_factory']
   Drupal\file\Upload\FileUploadHandler: '@file.upload_handler'
   file.repository:
     class: Drupal\file\FileRepository
@@ -28,34 +28,7 @@ services:
     class: Drupal\file\Validation\FileValidator
     arguments: ['@file.recursive_validator', '@validation.constraint', '@event_dispatcher', '@module_handler']
   Drupal\file\Validation\FileValidatorInterface: '@file.validator'
-  file.uploaded_file_validator:
-    class: Drupal\file\Validation\UploadedFileValidator
-    arguments: ['@validation.basic_recursive_validator_factory']
-  Drupal\file\Validation\UploadedFileValidatorInterface: '@file.uploaded_file_validator'
-  file.form_uploaded_file_retriever:
-    class: Drupal\file\Upload\FormUploadedFileRetriever
-    arguments: ['@request_stack']
-  Drupal\file\Upload\FormUploadedFileRetriever: '@file.form_uploaded_file_retriever'
-  file.upload_memory_cache:
-    class: Drupal\Core\Cache\MemoryCache\MemoryCache
-  file.default_error_handler:
-    class: Drupal\file\Upload\MessageErrorHandler
-    arguments: ['@logger.channel.file', '@renderer', '@messenger']
-  Drupal\file\Upload\FileUploadErrorHandlerInterface: '@file.default_error_handler'
-  file.collecting_error_handler_factory:
-    class: Drupal\file\Upload\MessageCollectingErrorHandlerFactory
-    arguments: ['@logger.channel.file', '@renderer']
-  Drupal\file\Upload\MessageCollectingErrorHandlerFactory: '@file.collecting_error_handler_factory'
-  file.form_file_upload_handler:
-    class: Drupal\file\Upload\FormFileUploadHandler
-    arguments: ['@file.upload_memory_cache', '@file.upload_handler', '@file.form_uploaded_file_retriever', '@event_dispatcher', '@file.default_error_handler']
-  Drupal\file\Upload\FormFileUploadHandler: '@file.form_file_upload_handler'
-  file.element_helper:
-    class: Drupal\file\Upload\FileElementHelper
-    arguments: ['@file_system', '@logger.channel.file', '@file.form_file_upload_handler', '@file.form_uploaded_file_retriever', '@file.collecting_error_handler_factory']
-  Drupal\file\Upload\FileElementHelper: '@file.element_helper'
-  file.messenger_uploaded_subscriber:
-    class: Drupal\file\Upload\MessengerFileUploadedSubscriber
-    arguments: ['@messenger']
-    tags:
-      - { name: 'event_subscriber' }
+  file.input_stream_file_writer:
+    class: Drupal\file\Upload\InputStreamFileWriter
+    arguments: ['@file_system']
+  Drupal\file\Upload\InputStreamFileWriterInterface: '@file.input_stream_file_writer'

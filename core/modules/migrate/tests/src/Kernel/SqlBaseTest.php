@@ -1,9 +1,6 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Tests\migrate\Kernel\SqlBaseTest.
- */
+declare(strict_types=1);
 
 namespace Drupal\Tests\migrate\Kernel;
 
@@ -194,7 +191,7 @@ class SqlBaseTest extends MigrateTestBase {
    * @return array
    *   The scenarios to test.
    */
-  public function highWaterDataProvider() {
+  public static function highWaterDataProvider() {
     return [
       'no high-water value set' => [],
       'high-water value set' => [33],

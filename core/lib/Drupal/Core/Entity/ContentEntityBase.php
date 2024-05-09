@@ -469,9 +469,12 @@ abstract class ContentEntityBase extends EntityBase implements \IteratorAggregat
   public function preSave(EntityStorageInterface $storage) {
     // An entity requiring validation should not be saved if it has not been
     // actually validated.
-    assert(!$this->validationRequired || $this->validated, 'Entity validation was skipped.');
-
-    $this->validated = FALSE;
+    if ($this->validationRequired && !$this->validated) {
+      throw new \LogicException('Entity validation is required, but was skipped.');
+    }
+    else {
+      $this->validated = FALSE;
+    }
 
     parent::preSave($storage);
   }
@@ -543,7 +546,7 @@ abstract class ContentEntityBase extends EntityBase implements \IteratorAggregat
   /**
    * {@inheritdoc}
    */
-  public function __sleep() {
+  public function __sleep(): array {
     // Get the values of instantiated field objects, only serialize the values.
     foreach ($this->fields as $name => $fields) {
       foreach ($fields as $langcode => $field) {
@@ -684,8 +687,7 @@ abstract class ContentEntityBase extends EntityBase implements \IteratorAggregat
   /**
    * {@inheritdoc}
    */
-  #[\ReturnTypeWillChange]
-  public function getIterator() {
+  public function getIterator(): \ArrayIterator {
     return new \ArrayIterator($this->getFields());
   }
 
@@ -1448,7 +1450,7 @@ abstract class ContentEntityBase extends EntityBase implements \IteratorAggregat
     $original = $this->original ? $this->original : NULL;
 
     if (!$original) {
-      $id = $this->getOriginalId() !== NULL ? $this->getOriginalId() : $this->id();
+      $id = $this->getOriginalId() ?? $this->id();
       $original = $this->entityTypeManager()->getStorage($this->getEntityTypeId())->loadUnchanged($id);
     }
 

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\migrate\Unit\process;
 
 use Drupal\migrate\MigrateException;
@@ -84,10 +86,10 @@ class SubProcessTest extends MigrateProcessTestCase {
   /**
    * Data provider for testSubProcess().
    */
-  public function providerTestSubProcess() {
+  public static function providerTestSubProcess() {
     return [
       'no source context' => [
-        'process configuration' => [
+        'process_configuration' => [
           'process' => [
             'foo' => 'source_foo',
             'id' => 'source_id',
@@ -96,7 +98,7 @@ class SubProcessTest extends MigrateProcessTestCase {
         ],
       ],
       'default source key' => [
-        'process configuration' => [
+        'process_configuration' => [
           'process' => [
             'foo' => 'source_foo',
             'id' => 'source_id',
@@ -105,12 +107,12 @@ class SubProcessTest extends MigrateProcessTestCase {
           'key' => '@id',
           'include_source' => TRUE,
         ],
-        'source values' => [
+        'source_values' => [
           'baf' => 'source_baz',
         ],
       ],
       'renamed source key' => [
-        'process configuration' => [
+        'process_configuration' => [
           'process' => [
             'foo' => 'source_foo',
             'id' => 'source_id',
@@ -120,7 +122,7 @@ class SubProcessTest extends MigrateProcessTestCase {
           'include_source' => TRUE,
           'source_key' => 'my_source',
         ],
-        'source values' => [
+        'source_values' => [
           'baf' => 'source_baz',
         ],
       ],
@@ -171,10 +173,10 @@ class SubProcessTest extends MigrateProcessTestCase {
   /**
    * Data provider for testNotFoundSubProcess().
    */
-  public function providerTestNotFoundSubProcess() {
+  public static function providerTestNotFoundSubProcess() {
     return [
       'no key' => [
-        'process configuration' => [
+        'process_configuration' => [
           'process' => [
             'foo' => 'source_foo',
           ],
@@ -182,7 +184,7 @@ class SubProcessTest extends MigrateProcessTestCase {
         ],
       ],
       'lookup returns NULL' => [
-        'process configuration' => [
+        'process_configuration' => [
           'process' => [
             'foo' => 'source_foo',
             'id' => 'source_id',
@@ -208,7 +210,7 @@ class SubProcessTest extends MigrateProcessTestCase {
   /**
    * Data provider for testSourceNotArray().
    */
-  public function providerTestSourceNotArray() {
+  public static function providerTestSourceNotArray() {
     return [
       'strings cannot be subprocess items' => [
         ['strings', 'cannot', 'be', 'children'],

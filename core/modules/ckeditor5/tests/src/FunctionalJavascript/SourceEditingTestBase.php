@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\ckeditor5\FunctionalJavascript;
 
 use Drupal\editor\Entity\Editor;
@@ -8,7 +10,7 @@ use Drupal\Tests\ckeditor5\Traits\CKEditor5TestTrait;
 use Drupal\ckeditor5\Plugin\Editor\CKEditor5;
 use Symfony\Component\Validator\ConstraintViolation;
 
-// cspell:ignore gramma sourceediting
+// cspell:ignore sourceediting
 
 /**
  * @internal
@@ -82,8 +84,11 @@ abstract class SourceEditingTestBase extends CKEditor5TestBase {
             'allowed_tags' => ['<div class>'],
           ],
           'ckeditor5_list' => [
-            'reversed' => FALSE,
-            'startIndex' => FALSE,
+            'properties' => [
+              'reversed' => FALSE,
+              'startIndex' => FALSE,
+            ],
+            'multiBlock' => TRUE,
           ],
         ],
       ],

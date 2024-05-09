@@ -1,10 +1,11 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\Composer\Plugin\VendorHardening;
 
 use Composer\Package\RootPackageInterface;
 use Drupal\Composer\Plugin\VendorHardening\Config;
-use Drupal\Tests\Traits\PhpUnitWarnings;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -12,8 +13,6 @@ use PHPUnit\Framework\TestCase;
  * @group VendorHardening
  */
 class ConfigTest extends TestCase {
-
-  use PhpUnitWarnings;
 
   /**
    * @covers ::getPathsForPackage
@@ -36,9 +35,7 @@ class ConfigTest extends TestCase {
    */
   public function testNoRootMergeConfig() {
     // Root package has no extra field.
-    $root = $this->getMockBuilder(RootPackageInterface::class)
-      ->onlyMethods(['getExtra'])
-      ->getMockForAbstractClass();
+    $root = $this->createMock(RootPackageInterface::class);
     $root->expects($this->once())
       ->method('getExtra')
       ->willReturn([]);
@@ -59,9 +56,7 @@ class ConfigTest extends TestCase {
    */
   public function testRootMergeConfig() {
     // Root package has configuration in extra.
-    $root = $this->getMockBuilder(RootPackageInterface::class)
-      ->onlyMethods(['getExtra'])
-      ->getMockForAbstractClass();
+    $root = $this->createMock(RootPackageInterface::class);
     $root->expects($this->once())
       ->method('getExtra')
       ->willReturn([
@@ -83,12 +78,12 @@ class ConfigTest extends TestCase {
 
   /**
    * @covers ::getAllCleanupPaths
+   *
+   * @runInSeparateProcess
    */
   public function testMixedCaseConfigCleanupPackages() {
     // Root package has configuration in extra.
-    $root = $this->getMockBuilder(RootPackageInterface::class)
-      ->onlyMethods(['getExtra'])
-      ->getMockForAbstractClass();
+    $root = $this->createMock(RootPackageInterface::class);
     $root->expects($this->once())
       ->method('getExtra')
       ->willReturn([

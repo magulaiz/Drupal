@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\Core\Test;
 
 use Drupal\Core\Test\PhpUnitTestRunner;
@@ -51,7 +53,7 @@ class PhpUnitTestRunnerTest extends UnitTestCase {
     $runner->expects($this->once())
       ->method('runCommand')
       ->willReturnCallback(
-        function ($unescaped_test_classnames, $phpunit_file, &$status) {
+        function (string $test_class_name, string $log_junit_file_path, int &$status): string {
           $status = TestStatus::EXCEPTION;
           return ' ';
         }
@@ -61,7 +63,7 @@ class PhpUnitTestRunnerTest extends UnitTestCase {
     // to some value we don't expect back.
     $status = -1;
     $test_run = TestRun::createNew($storage);
-    $results = $runner->execute($test_run, ['SomeTest'], $status);
+    $results = $runner->execute($test_run, 'SomeTest', $status);
 
     // Make sure our status code made the round trip.
     $this->assertEquals(TestStatus::EXCEPTION, $status);
@@ -97,7 +99,7 @@ class PhpUnitTestRunnerTest extends UnitTestCase {
     $this->assertStringEndsWith('phpunit-23.xml', $runner->xmlLogFilePath(23));
   }
 
-  public function providerTestSummarizeResults() {
+  public static function providerTestSummarizeResults() {
     return [
       [
         [

@@ -2,9 +2,11 @@
 
 namespace Drupal\file_test\Form;
 
+use Drupal\Core\File\FileExists;
 use Drupal\Core\File\FileSystemInterface;
 use Drupal\Core\Form\FormInterface;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
 
 /**
  * File test form class.
@@ -30,11 +32,11 @@ class FileTestForm implements FormInterface {
       '#type' => 'select',
       '#title' => t('Replace existing image'),
       '#options' => [
-        FileSystemInterface::EXISTS_RENAME => t('Appends number until name is unique'),
-        FileSystemInterface::EXISTS_REPLACE => t('Replace the existing file'),
-        FileSystemInterface::EXISTS_ERROR => t('Fail with an error'),
+        FileExists::Rename->name => new TranslatableMarkup('Appends number until name is unique'),
+        FileExists::Replace->name => new TranslatableMarkup('Replace the existing file'),
+        FileExists::Error->name => new TranslatableMarkup('Fail with an error'),
       ],
-      '#default_value' => FileSystemInterface::EXISTS_RENAME,
+      '#default_value' => FileExists::Rename->name,
     ];
     $form['file_subdir'] = [
       '#type' => 'textfield',
@@ -117,11 +119,12 @@ class FileTestForm implements FormInterface {
 
     /** @var \Drupal\file\Upload\FormFileUploadHandler $uploadHandler */
     $uploadHandler = \Drupal::service('file.form_file_upload_handler');
-    $files = $uploadHandler->saveFileUploads('file_test_upload', $validators, $destination, $form_state->getValue('file_test_replace'));
+    $files = $uploadHandler->saveFileUploads('file_test_upload', $validators, $destination, static::fileExistsFromName($form_state->getValue('file_test_replace')));
     if (count($files) === 0) {
       return;
     }
     $file = reset($files);
+
     if ($file) {
       $form_state->setValue('file_test_upload', $file);
       \Drupal::messenger()->addStatus(t('File @filepath was uploaded.', ['@filepath' => $file->getFileUri()]));
@@ -132,6 +135,17 @@ class FileTestForm implements FormInterface {
     elseif ($file === FALSE) {
       \Drupal::messenger()->addError(t('Epic upload FAIL!'));
     }
+  }
+
+  /**
+   * Get a FileExists enum from its name.
+   */
+  protected static function fileExistsFromName(string $name): FileExists {
+    return match ($name) {
+      FileExists::Replace->name => FileExists::Replace,
+      FileExists::Error->name => FileExists::Error,
+      default => FileExists::Rename,
+    };
   }
 
 }

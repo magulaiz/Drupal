@@ -1,10 +1,12 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\Component\Render;
 
 use Drupal\Component\Render\FormattableMarkup;
+use Drupal\TestTools\Extension\DeprecationBridge\ExpectDeprecationTrait;
 use PHPUnit\Framework\TestCase;
-use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
 
 /**
  * Tests the TranslatableMarkup class.
@@ -53,29 +55,6 @@ class FormattableMarkupTest extends TestCase {
   }
 
   /**
-   * @covers ::__toString
-   * @dataProvider providerTestNullPlaceholder
-   * @group legacy
-   */
-  public function testNullPlaceholder(string $expected, string $string, array $arguments, string $expected_deprecation): void {
-    $this->expectDeprecation($expected_deprecation);
-    $this->assertEquals($expected, (string) new FormattableMarkup($string, $arguments));
-  }
-
-  /**
-   * Data provider for FormattableMarkupTest::testNullPlaceholder().
-   *
-   * @return array
-   */
-  public function providerTestNullPlaceholder() {
-    return [
-      ['', '@empty', ['@empty' => NULL], 'Deprecated NULL placeholder value for key (@empty) in: "@empty". This will throw a PHP error in drupal:11.0.0. See https://www.drupal.org/node/3318826'],
-      ['', ':empty', [':empty' => NULL], 'Deprecated NULL placeholder value for key (:empty) in: ":empty". This will throw a PHP error in drupal:11.0.0. See https://www.drupal.org/node/3318826'],
-      ['<em class="placeholder"></em>', '%empty', ['%empty' => NULL], 'Deprecated NULL placeholder value for key (%%empty) in: "%%empty". This will throw a PHP error in drupal:11.0.0. See https://www.drupal.org/node/3318826'],
-    ];
-  }
-
-  /**
    * Custom error handler that saves the last error.
    *
    * We need this custom error handler because we cannot rely on the error to
@@ -115,9 +94,9 @@ class FormattableMarkupTest extends TestCase {
    *
    * @return array
    */
-  public function providerTestUnexpectedPlaceholder() {
+  public static function providerTestUnexpectedPlaceholder() {
     return [
-      ['Non alpha, non-allowed starting character: ~placeholder', ['~placeholder' => 'replaced'], E_USER_WARNING, 'Invalid placeholder (~placeholder) with string: "Non alpha, non-allowed starting character: ~placeholder"'],
+      ['Non alpha, non-allowed starting character: ~placeholder', ['~placeholder' => 'replaced'], E_USER_WARNING, 'Placeholders must begin with one of the following "@", ":" or "%", invalid placeholder (~placeholder) with string: "Non alpha, non-allowed starting character: ~placeholder"'],
       ['Alpha starting character: placeholder', ['placeholder' => 'replaced'], NULL, ''],
       // Ensure that where the placeholder is located in the string is
       // irrelevant.

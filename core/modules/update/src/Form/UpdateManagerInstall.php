@@ -4,7 +4,7 @@ namespace Drupal\update\Form;
 
 use Drupal\Core\Archiver\ArchiverManager;
 use Drupal\Core\Extension\ModuleHandlerInterface;
-use Drupal\Core\File\FileSystemInterface;
+use Drupal\Core\File\FileExists;
 use Drupal\Core\FileTransfer\Local;
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
@@ -170,7 +170,7 @@ class UpdateManagerInstall extends FormBase {
       $validators = ['FileExtension' => ['extensions' => $this->archiverManager->getExtensions()]];
       /** @var \Drupal\file\Upload\FormFileUploadHandler $fileUploadHandler */
       $fileUploadHandler = \Drupal::service('file.form_file_upload_handler');
-      $files = $fileUploadHandler->saveFileUploads('project_upload', $validators, NULL, FileSystemInterface::EXISTS_REPLACE);
+      $files = $fileUploadHandler->saveFileUploads('project_upload', $validators, NULL, FileExists::Replace);
       $finfo = reset($files);
       if (!$finfo) {
         return;

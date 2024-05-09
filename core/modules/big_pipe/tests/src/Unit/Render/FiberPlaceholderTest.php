@@ -1,11 +1,13 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\big_pipe\Unit\Render;
 
 use Drupal\big_pipe\Render\BigPipe;
 use Drupal\big_pipe\Render\BigPipeResponse;
 use Drupal\Core\Config\ConfigFactoryInterface;
-use Drupal\Core\Controller\ControllerResolverInterface;
+use Drupal\Core\Messenger\MessengerInterface;
 use Drupal\Core\Render\ElementInfoManagerInterface;
 use Drupal\Core\Render\HtmlResponse;
 use Drupal\Core\Render\PlaceholderGeneratorInterface;
@@ -13,7 +15,9 @@ use Drupal\Core\Render\RenderCacheInterface;
 use Drupal\Core\Render\Renderer;
 use Drupal\Core\Security\TrustedCallbackInterface;
 use Drupal\Core\Theme\ThemeManagerInterface;
+use Drupal\Core\Utility\CallableResolver;
 use Drupal\Tests\UnitTestCase;
+use Prophecy\Argument;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
@@ -36,8 +40,11 @@ class FiberPlaceholderTest extends UnitTestCase {
     $request_stack->getCurrentRequest()
       ->willReturn(new Request());
 
+    $callableResolver = $this->prophesize(CallableResolver::class);
+    $callableResolver->getCallableFromDefinition(Argument::any())
+      ->willReturn([TurtleLazyBuilder::class, 'turtle']);
     $renderer = new Renderer(
-      $this->prophesize(ControllerResolverInterface::class)->reveal(),
+      $callableResolver->reveal(),
       $this->prophesize(ThemeManagerInterface::class)->reveal(),
       $this->prophesize(ElementInfoManagerInterface::class)->reveal(),
       $this->prophesize(PlaceholderGeneratorInterface::class)->reveal(),
@@ -48,7 +55,7 @@ class FiberPlaceholderTest extends UnitTestCase {
           'languages:language_interface',
           'theme',
         ],
-      ]
+      ],
     );
 
     $session = $this->prophesize(SessionInterface::class);
@@ -61,6 +68,7 @@ class FiberPlaceholderTest extends UnitTestCase {
       $this->prophesize(HttpKernelInterface::class)->reveal(),
       $this->createMock(EventDispatcherInterface::class),
       $this->prophesize(ConfigFactoryInterface::class)->reveal(),
+      $this->prophesize(MessengerInterface::class)->reveal(),
     );
     $response = new BigPipeResponse(new HtmlResponse());
 

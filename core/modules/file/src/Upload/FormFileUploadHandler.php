@@ -4,7 +4,7 @@ namespace Drupal\file\Upload;
 
 use Drupal\Core\Cache\MemoryCache\MemoryCacheInterface;
 use Drupal\Core\File\Exception\FileException;
-use Drupal\Core\File\FileSystemInterface;
+use Drupal\Core\File\FileExists;
 use Symfony\Component\HttpFoundation\File\Exception\FileException as SymfonyFileException;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
@@ -59,21 +59,16 @@ class FormFileUploadHandler {
    *   to.
    *   This must be a stream wrapper URI. If this value is omitted or set to
    *   NULL, Drupal's temporary files scheme will be used ("temporary://").
-   * @param string $replace
+   * @param \Drupal\Core\File\FileExists $fileExists
    *   (optional) The replace behavior when the destination file already
    *   exists.
-   *   Possible values include:
-   *   - FileSystemInterface::EXISTS_REPLACE: Replace the existing file.
-   *   - FileSystemInterface::EXISTS_RENAME: (default) Append
-   *     _{incrementing number} until the filename is unique.
-   *   - FileSystemInterface::EXISTS_ERROR: Do nothing and return FALSE.
    * @param \Drupal\file\Upload\FileUploadErrorHandlerInterface|null $errorHandler
    *   (optional) The error handler. Defaults to the default error handler.
    *
    * @return \Drupal\file\FileInterface[]
    *   An array of files.
    */
-  public function saveFileUploads(string $uploadName, array $validators, ?string $destination = 'temporary://', string $replace = FileSystemInterface::EXISTS_RENAME, FileUploadErrorHandlerInterface $errorHandler = NULL): array {
+  public function saveFileUploads(string $uploadName, array $validators, ?string $destination = 'temporary://', FileExists $fileExists = FileExists::Rename, FileUploadErrorHandlerInterface $errorHandler = NULL): array {
     // Return cached objects without processing since the file will have
     // already been processed and the paths in $_FILES will be invalid.
     /** @var \Drupal\file\FileInterface[] $files */
@@ -100,7 +95,7 @@ class FormFileUploadHandler {
       // Use a FormUploadedFile adapter to pass to FileUploadHandler.
       $formUploadedFile = new FormUploadedFile($uploadedFile);
       try {
-        $result = $this->fileUploadHandler->handleFileUpload($formUploadedFile, $validators, $destination, $replace);
+        $result = $this->fileUploadHandler->handleFileUpload($formUploadedFile, $validators, $destination, $fileExists);
         $this->eventDispatcher->dispatch(new FileUploadedEvent($result));
         $files[$i] = $result->getFile();
       }
