@@ -1,6 +1,6 @@
 # Local development services.
 #
-# The development.services.yml file, allows the developer to override
+# The development.services.yml file allows the developer to override
 # container parameters for debugging.
 #
 # To activate this feature, follow the instructions at the top of the
