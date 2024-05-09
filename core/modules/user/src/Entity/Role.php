@@ -272,6 +272,9 @@ class Role extends ConfigEntityBase implements RoleInterface {
    *   All possible valid permissions.
    *
    * @see \Drupal\user\PermissionHandler::getPermissions()
+   *
+   * @internal
+   * @todo Revisit in https://www.drupal.org/node/3446364
    */
   public static function getAllValidPermissions(): array {
     return array_keys(\Drupal::service('user.permissions')->getPermissions());
