@@ -40,7 +40,7 @@ class FieldTokensTest extends ViewsKernelTestBase {
    *
    * @var \Drupal\user\UserInterface
    */
-  protected $adminUser;
+  protected UserInterface $adminUser;
 
   /**
    * {@inheritdoc}
@@ -85,7 +85,7 @@ class FieldTokensTest extends ViewsKernelTestBase {
    * content" checkbox is checked and the field is rewritten to ensure that
    * the entire rewritten field is inside a single a tag.
    */
-  public function testViewsTokens() {
+  public function testViewsTokens(): void {
     $test_text = $this->getRandomGenerator()->word(2);
     $test_title = $this->getRandomGenerator()->word(2);
     $node = Node::create([
