@@ -43,6 +43,9 @@
             ).length
           ) {
             const doc = document.documentElement;
+            const toolbarButtonLabels = document.querySelectorAll(
+              '.toolbar-button__label',
+            );
 
             // This is special attribute which added to apply css
             // with animations and avoid layout shift.
@@ -59,6 +62,14 @@
                 'data-admin-toolbar',
                 newState ? 'expanded' : 'collapsed',
               );
+
+              toolbarButtonLabels.forEach((label) => {
+                if (newState) {
+                  label.classList.remove('visually-hidden');
+                } else {
+                  label.classList.add('visually-hidden');
+                }
+              });
 
               // Set [data-admin-toolbar-body-scroll='locked']
               // See css/components/body-scroll-lock.pcss.css.
