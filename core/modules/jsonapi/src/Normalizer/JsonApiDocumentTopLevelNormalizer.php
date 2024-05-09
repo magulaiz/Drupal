@@ -49,7 +49,8 @@ class JsonApiDocumentTopLevelNormalizer extends NormalizerBase implements Denorm
   public function __construct(
     protected EntityTypeManagerInterface $entityTypeManager,
     protected ResourceTypeRepositoryInterface $resourceTypeRepository,
-    protected EntityFieldManagerInterface $entityFieldManager) {}
+    protected EntityFieldManagerInterface $entityFieldManager
+  ) {}
 
   /**
    * {@inheritdoc}
