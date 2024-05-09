@@ -4,7 +4,8 @@
     "stylelint-prettier/recommended"
   ],
   "plugins": [
-    "stylelint-order"
+    "stylelint-order",
+    "stylelint-use-logical-spec"
   ],
   "rules": {
     "alpha-value-notation": "number",
@@ -16,6 +17,44 @@
     "function-url-quotes": null,
     "hue-degree-notation": "number",
     "import-notation": "string",
+    "liberty/use-logical-spec": [
+      "always",
+      {
+        "except": [
+          "float",
+          "top",
+          "right",
+          "bottom",
+          "left",
+          "height",
+          "min-height",
+          "max-height",
+          "width",
+          "min-width",
+          "max-width",
+          "border-top",
+          "border-top-color",
+          "border-top-style",
+          "border-top-width",
+          "border-bottom",
+          "border-bottom-color",
+          "border-bottom-style",
+          "border-bottom-width",
+          "border-left",
+          "border-left-color",
+          "border-left-style",
+          "border-left-width",
+          "border-right",
+          "border-right-color",
+          "border-right-style",
+          "border-right-width",
+          "border-top-left-radius",
+          "border-bottom-left-radius",
+          "border-top-right-radius",
+          "border-bottom-right-radius"
+        ]
+      }
+    ],
     "no-descending-specificity": null,
     "no-duplicate-selectors": null,
     "no-unknown-animations": true,
