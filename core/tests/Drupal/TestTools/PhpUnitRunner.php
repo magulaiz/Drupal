@@ -128,11 +128,6 @@ class PhpUnitRunner implements ContainerInjectionInterface {
       $command[] = '--fail-on-deprecation';
     }
 
-    // Non-Unit tests should be run in isolation.
-    if ($testRun->processIsolation) {
-      $command[] = '--process-isolation';
-    }
-
     // Add to the command the file containing the test class to be run.
     $command[] = $testRun->testFilePath;
 

@@ -29,7 +29,6 @@ class TestRun {
    * @todo
    */
   public readonly bool $failOnDeprecation;
-  public readonly bool $processIsolation;
   public readonly string $testFilePath;
   public readonly string $logFileName;
 
@@ -51,9 +50,6 @@ class TestRun {
     // If the deprecation handler bridge is active, we need to fail when there
     // are deprecations that get reported (i.e. not ignored or expected).
     $this->failOnDeprecation = DeprecationHandler::getConfiguration() !== FALSE ? TRUE : FALSE;
-
-    // Non-Unit tests should be run in isolation.
-    $this->processIsolation = TestDiscovery::getPhpunitTestSuite($this->testClassName) !== 'Unit' ? TRUE : FALSE;
 
     // The file containing the test class to be run.
     $this->testFilePath = (new \ReflectionClass($this->testClassName))->getFileName();

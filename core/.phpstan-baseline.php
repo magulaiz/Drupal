@@ -1514,11 +1514,6 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/system/tests/src/Functional/Theme/ThemeUiTest.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^@dataProvider themeDataProvider related method must be static in PHPUnit 10 and newer\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/system/tests/src/FunctionalJavascript/OffCanvasTest.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\taxonomy\\\\Plugin\\\\migrate\\\\source\\\\d7\\\\TermTranslation\\:\\:prepareRow\\(\\) should return bool but return statement is missing\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/taxonomy/src/Plugin/migrate/source/d7/TermTranslation.php',
@@ -1552,21 +1547,6 @@ $ignoreErrors[] = [
 	'message' => '#^Variable \\$violation_messages might not be defined\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/update/src/ProjectRelease.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^@dataProvider securityUpdateAvailabilityProvider related method must be static in PHPUnit 10 and newer\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/update/tests/src/Functional/UpdateSemverContribSecurityAvailabilityTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^@dataProvider securityUpdateAvailabilityProvider related method must be static in PHPUnit 10 and newer\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/update/tests/src/Functional/UpdateSemverCoreSecurityAvailabilityTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^@dataProvider providerProjectStatus related method must be static in PHPUnit 10 and newer\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/update/tests/src/Kernel/UpdateCalculateProjectDataTest.php',
 ];
 $ignoreErrors[] = [
 	'message' => '#^Variable \\$users might not be defined\\.$#',
@@ -2284,31 +2264,6 @@ $ignoreErrors[] = [
 	'message' => '#^Missing cache backend declaration for performance\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/tests/Drupal/Tests/Core/Plugin/TestPluginManager.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^@dataProvider dataProviderIsRenderArray related method must be static in PHPUnit 10 and newer\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/tests/Drupal/Tests/Core/Render/ElementTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^@dataProvider providerTestRenderBasic related method must be static in PHPUnit 10 and newer\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/tests/Drupal/Tests/Core/Render/RendererTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^@dataProvider alterPermissionsProvider related method must be static in PHPUnit 10 and newer\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/tests/Drupal/Tests/Core/Session/SuperUserAccessPolicyTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^@dataProvider calculatePermissionsProvider related method must be static in PHPUnit 10 and newer\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/tests/Drupal/Tests/Core/Session/SuperUserAccessPolicyTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^@dataProvider calculatePermissionsProvider related method must be static in PHPUnit 10 and newer\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/tests/Drupal/Tests/Core/Session/UserRolesAccessPolicyTest.php',
 ];
 $ignoreErrors[] = [
 	'message' => '#^Variable \\$value in isset\\(\\) always exists and is not nullable\\.$#',
