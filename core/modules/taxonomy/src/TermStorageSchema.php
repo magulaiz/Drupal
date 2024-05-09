@@ -95,7 +95,6 @@ class TermStorageSchema extends SqlContentEntityStorageSchema {
     $schema = parent::getSharedTableFieldSchema($storage_definition, $table_name, $column_mapping);
     $field_name = $storage_definition->getName();
 
-    // For relational databases like MySQL, MariaDB, PostgreSQL and SQLite.
     if ($table_name == 'taxonomy_term_field_data') {
       // Remove unneeded indexes.
       unset($schema['indexes']['taxonomy_term_field__vid__target_id']);

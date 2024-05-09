@@ -352,12 +352,10 @@ class JoinPluginBase extends PluginBase implements JoinPluginInterface {
       if ($extras) {
         if (count($extras) == 1) {
           $extra = array_shift($extras);
-          // Start of BC layer.
           if (is_string($extra)) {
             $condition .= ' AND ' . $extra;
           }
           else {
-            // End of BC layer.
             if (isset($extra['field2'])) {
               $condition->compare($extra['field'], $extra['field2'], $extra['operator']);
             }
@@ -367,12 +365,10 @@ class JoinPluginBase extends PluginBase implements JoinPluginInterface {
           }
         }
         else {
-          // Start of BC layer.
           if (Inspector::assertAllStrings($extras)) {
             $condition .= ' AND (' . implode(' ' . $this->extraOperator . ' ', $extras) . ')';
           }
           else {
-            // End of BC layer.
             $inner_condition = $select_query->getConnection()->condition($this->extraOperator);
             foreach ($extras as $extra) {
               if (isset($extra['field2'])) {
@@ -443,17 +439,13 @@ class JoinPluginBase extends PluginBase implements JoinPluginInterface {
       // of values. Also, note that the 'IN' operator is implicit.
       // @see https://www.drupal.org/node/2401615.
       $operator = !empty($info['operator']) ? $info['operator'] : 'IN';
-      // Start of BC layer.
       $placeholder = ':views_join_condition_' . $select_query->nextPlaceholder() . '[]';
       $placeholder_sql = "( $placeholder )";
-      // End of BC layer.
     }
     else {
       // With a single value, the '=' operator is implicit.
       $operator = !empty($info['operator']) ? $info['operator'] : '=';
-      // Start of BC layer.
       $placeholder = $placeholder_sql = ':views_join_condition_' . $select_query->nextPlaceholder();
-      // End of BC layer.
     }
 
     // Set 'field' as join table field if available or set 'left field' as
@@ -465,11 +457,9 @@ class JoinPluginBase extends PluginBase implements JoinPluginInterface {
       if (isset($info['left_field'])) {
         $field2 = $placeholder_sql = "$left[alias].$info[left_field]";
       }
-      // Start of BC layer.
       elseif ($condition_as_string) {
         $arguments[$placeholder] = $info['value'];
       }
-      // End of BC layer.
       if (isset($info['field2'])) {
         if (isset($left['alias'])) {
           $field2 = "$left[alias].$info[field2]";
@@ -484,12 +474,10 @@ class JoinPluginBase extends PluginBase implements JoinPluginInterface {
       $join_table_field = "$left[alias].$info[left_field]";
     }
 
-    // Start of BC layer.
     if ($condition_as_string) {
       // Render out the SQL fragment with parameters.
       return "$join_table_field $operator $placeholder_sql";
     }
-    // End of BC layer.
     elseif (isset($field2)) {
       return [
         'field' => $join_table_field,

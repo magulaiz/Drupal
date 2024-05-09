@@ -100,13 +100,11 @@ class Tables extends BaseTables {
         [$base_table, $id_field] = explode('.', $field2);
         $condition_parts = [];
       }
-      // Start of BC layer.
       else {
         $condition_parts = explode(' = ', $join_condition);
         $condition_parts_1 = str_replace(['[', ']'], '', $condition_parts[1]);
         [$base_table, $id_field] = explode('.', $condition_parts_1);
       }
-      // End of BC layer.
 
       if (isset($this->baseTablesEntityType[$base_table])) {
         $entity_type_id = $this->baseTablesEntityType[$base_table];
@@ -117,11 +115,9 @@ class Tables extends BaseTables {
           if ($join_condition instanceof ConditionInterface) {
             $join_condition = $this->sqlQuery->joinCondition()->where("$field = COALESCE($workspace_association_table.target_entity_revision_id, $field2)");
           }
-          // Start of BC layer.
           else {
             $join_condition = "{$condition_parts[0]} = COALESCE($workspace_association_table.target_entity_revision_id, {$condition_parts[1]})";
           }
-          // End of BC layer.
         }
       }
     }

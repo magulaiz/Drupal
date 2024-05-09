@@ -441,25 +441,21 @@ class Tables implements TablesInterface {
       if ($join_condition instanceof ConditionInterface) {
         $join_condition->condition('%alias.' . $langcode_key, $langcode);
       }
-      // Start of BC layer.
       else {
         $placeholder = ':langcode' . $this->sqlQuery->nextPlaceholder();
         $join_condition .= ' AND [%alias].[' . $langcode_key . '] = ' . $placeholder;
         $arguments[$placeholder] = $langcode;
       }
-      // End of BC layer.
     }
     if (isset($delta)) {
       if ($join_condition instanceof ConditionInterface) {
         $join_condition->condition('%alias.delta', $delta);
       }
-      // Start of BC layer.
       else {
         $placeholder = ':delta' . $this->sqlQuery->nextPlaceholder();
         $join_condition .= ' AND [%alias].[delta] = ' . $placeholder;
         $arguments[$placeholder] = $delta;
       }
-      // End of BC layer.
     }
     return $this->sqlQuery->addJoin($type, $table, NULL, $join_condition, $arguments);
   }

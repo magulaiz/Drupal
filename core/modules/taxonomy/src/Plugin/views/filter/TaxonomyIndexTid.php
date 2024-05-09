@@ -54,13 +54,6 @@ class TaxonomyIndexTid extends ManyToOne {
   protected $currentUser;
 
   /**
-   * The MongoDB field.
-   *
-   * @var string
-   */
-//  protected $mongodbField;
-
-  /**
    * Constructs a TaxonomyIndexTid object.
    *
    * @param array $configuration
@@ -101,14 +94,7 @@ class TaxonomyIndexTid extends ManyToOne {
    * {@inheritdoc}
    */
   public function init(ViewExecutable $view, DisplayPluginBase $display, array &$options = NULL) {
-//    if ($this->view->getDatabaseDriver() == 'mongodb') {
-//      InOperator::init($view, $display, $options);
-//
-//      $this->helper = new ManyToOneHelper($this);
-//    }
-//    else {
-      parent::init($view, $display, $options);
-//    }
+    parent::init($view, $display, $options);
 
     if (!empty($this->definition['vocabulary'])) {
       $this->options['vid'] = $this->definition['vocabulary'];
@@ -134,19 +120,6 @@ class TaxonomyIndexTid extends ManyToOne {
     $options['vid'] = ['default' => ''];
     $options['hierarchy'] = ['default' => FALSE];
     $options['error_message'] = ['default' => TRUE];
-
-//    if ($this->view->getDatabaseDriver() == 'mongodb') {
-//      $options['operator']['default'] = 'or';
-//      $options['value']['default'] = [];
-//
-//      if (isset($this->helper)) {
-//        $this->helper->defineOptions($options);
-//      }
-//      else {
-//        $helper = new ManyToOneHelper($this);
-//        $helper->defineOptions($options);
-//      }
-//    }
 
     return $options;
   }
@@ -430,70 +403,70 @@ class TaxonomyIndexTid extends ManyToOne {
     return parent::adminSummary();
   }
 
-//  /**
-//   * {@inheritdoc}
-//   */
-//  public function query() {
-//    if ($this->view->getDatabaseDriver() == 'mongodb') {
-//      if ($this->table == $this->view->storage->get('base_table')) {
-//        $this->mongodbField = $this->realField;
-//      }
-//      elseif (!empty($this->relationship)) {
-//        $this->mongodbField = "$this->relationship.$this->realField";
-//      }
-//      else {
-//        // Throw an exception.
-//        $this->mongodbField = $this->realField;
-//      }
-//
-//      $info = $this->operators();
-//      if (!empty($info[$this->operator]['method'])) {
-//        $this->{$info[$this->operator]['method']}();
-//      }
-//    }
-//    else {
-//      parent::query();
-//    }
-//  }
-//
-//  /**
-//   * {@inheritdoc}
-//   */
-//  protected function opSimple() {
-//    if ($this->view->getDatabaseDriver() == 'mongodb') {
-//      if (empty($this->value)) {
-//        return;
-//      }
-//      $this->ensureMyTable();
-//
-//      // We use array_values() because the checkboxes keep keys and that can cause
-//      // array addition problems.
-//      $this->query->addCondition($this->options['group'], $this->mongodbField, array_values($this->value), $this->operator);
-//    }
-//    else {
-//      parent::opSimple();
-//    }
-//  }
-//
-//  /**
-//   * {@inheritdoc}
-//   */
-//  protected function opEmpty() {
-//    if ($this->view->getDatabaseDriver() == 'mongodb') {
-//      $this->ensureMyTable();
-//      if ($this->operator == 'empty') {
-//        $operator = "IS NULL";
-//      }
-//      else {
-//        $operator = "IS NOT NULL";
-//      }
-//
-//      $this->query->addCondition($this->options['group'], $this->mongodbField, NULL, $operator);
-//    }
-//    else {
-//      parent::opSimple();
-//    }
-//  }
+  /**
+   * {@inheritdoc}
+   */
+  public function query() {
+    if ($this->view->getDatabaseDriver() == 'mongodb') {
+      if ($this->table == $this->view->storage->get('base_table')) {
+        $this->mongodbField = $this->realField;
+      }
+      elseif (!empty($this->relationship)) {
+        $this->mongodbField = "$this->relationship.$this->realField";
+      }
+      else {
+        // Throw an exception.
+        $this->mongodbField = $this->realField;
+      }
+
+      $info = $this->operators();
+      if (!empty($info[$this->operator]['method'])) {
+        $this->{$info[$this->operator]['method']}();
+      }
+    }
+    else {
+      parent::query();
+    }
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  protected function opSimple() {
+    if ($this->view->getDatabaseDriver() == 'mongodb') {
+      if (empty($this->value)) {
+        return;
+      }
+      $this->ensureMyTable();
+
+      // We use array_values() because the checkboxes keep keys and that can cause
+      // array addition problems.
+      $this->query->addCondition($this->options['group'], $this->mongodbField, array_values($this->value), $this->operator);
+    }
+    else {
+      parent::opSimple();
+    }
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  protected function opEmpty() {
+    if ($this->view->getDatabaseDriver() == 'mongodb') {
+      $this->ensureMyTable();
+      if ($this->operator == 'empty') {
+        $operator = "IS NULL";
+      }
+      else {
+        $operator = "IS NOT NULL";
+      }
+
+      $this->query->addCondition($this->options['group'], $this->mongodbField, NULL, $operator);
+    }
+    else {
+      parent::opSimple();
+    }
+  }
 
   /**
    * {@inheritdoc}

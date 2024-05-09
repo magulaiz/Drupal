@@ -160,7 +160,6 @@ curlopt
 customrequest
 cweagans
 daffie
-dailymotion
 datelist
 daterange
 datestamp

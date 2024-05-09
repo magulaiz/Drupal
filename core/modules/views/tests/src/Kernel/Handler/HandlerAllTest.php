@@ -127,22 +127,24 @@ class HandlerAllTest extends ViewsKernelTestBase {
         }
       }
 
-// @todo Fix this for MongoDB.
-      // Go through each step individually to see whether some parts are
-      // failing.
-//      $view->build();
-//      $view->preExecute();
-//      $view->execute();
-//      $view->render();
-//
-//      // Make sure all handlers extend the HandlerBase.
-//      foreach ($object_types as $type) {
-//        if (isset($view->{$type})) {
-//          foreach ($view->{$type} as $handler) {
-//            $this->assertInstanceOf(HandlerBase::class, $handler);
-//          }
-//        }
-//      }
+      if (Database::getConnection()->driver() != 'mongodb') {
+        // @TODO Fix this for MongoDB.
+        // Go through each step individually to see whether some parts are
+        // failing.
+        $view->build();
+        $view->preExecute();
+        $view->execute();
+        $view->render();
+
+        // Make sure all handlers extend the HandlerBase.
+        foreach ($object_types as $type) {
+          if (isset($view->{$type})) {
+            foreach ($view->{$type} as $handler) {
+              $this->assertInstanceOf(HandlerBase::class, $handler);
+            }
+          }
+        }
+      }
     }
   }
 

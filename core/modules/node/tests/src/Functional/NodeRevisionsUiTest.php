@@ -175,7 +175,7 @@ class NodeRevisionsUiTest extends NodeTestBase {
 
     $this->drupalGet('node/' . $node_id . '/revisions');
 
-    // @tofo Fix make the next 2 assertion pass for MongoDB.
+    // @TODO Fix make the next 2 assertion pass for MongoDB.
     if (\Drupal::database()->driver() != 'mongodb') {
       // Verify that the latest affected revision having been a default revision
       // is displayed as the current one.
