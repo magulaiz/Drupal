@@ -50,9 +50,7 @@ class FormSubmitter implements FormSubmitterInterface {
       // Store $form_state information in the batch definition.
       $batch['form_state'] = $form_state;
 
-      if (!isset($batch['progressive'])) {
-        $batch['progressive'] = !$form_state->isProgrammed();
-      }
+      $batch['progressive'] = !$form_state->isProgrammed();
       $response = batch_process();
       // If the batch has been completed and _batch_finished() called then
       // $batch will be NULL.

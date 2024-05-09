@@ -97,7 +97,7 @@ class PageTest extends BrowserTestBase {
     // Go to the initial step only.
     $this->maximumMetaRefreshCount = 0;
     $this->drupalGet('/admin/config/system/cron');
-    $this->submitForm([], 'Run cron');
+    $this->click('.system-cron-settings__link');
     $this->assertSession()->pageTextNotContains('Initializing.');
   }
 
