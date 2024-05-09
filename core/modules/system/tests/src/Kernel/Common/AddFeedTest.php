@@ -100,8 +100,8 @@ class AddFeedTest extends KernelTestBase {
   }
 
   /**
- * Tests that the rendered output contains specific attributes.
- */
+   * Tests that the rendered output contains specific attributes.
+   */
   public function testAttributeAdded() {
     $variables = [
       '#theme' => 'feed_icon',
@@ -109,10 +109,10 @@ class AddFeedTest extends KernelTestBase {
       '#title' => 'testing title',
       '#attributes' => ['title' => 'some title', 'class' => ['some-class']],
     ];
-   $rendered_output =(string) \Drupal::service('renderer')->renderRoot($variables);
+    $rendered_output =(string) \Drupal::service('renderer')->renderRoot($variables);
 
-   // Check if the class 'some-class' is present in the rendered output.
-   $this->assertStringContainsString('some-class', $rendered_output, "The class 'some-class' should be present in the rendered output.");
+    // Check if the class 'some-class' is present in the rendered output.
+    $this->assertStringContainsString('some-class', $rendered_output, "The class 'some-class' should be present in the rendered output.");
   }
 
 }
