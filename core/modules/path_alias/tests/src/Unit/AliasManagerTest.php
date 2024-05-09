@@ -478,6 +478,9 @@ class AliasManagerTest extends UnitTestCase {
 
     // Clear non-existent source.
     $this->aliasManager->cacheClear('non-existent');
+
+    // Clear root path.
+    $this->aliasManager->cacheClear('/');
   }
 
   /**

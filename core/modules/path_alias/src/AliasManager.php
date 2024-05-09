@@ -190,10 +190,11 @@ class AliasManager implements AliasManagerInterface {
     // alias matching the URL path.
     $langcode = $langcode ?: $this->languageManager->getCurrentLanguage(LanguageInterface::TYPE_URL)->getId();
 
-    // Check the path whitelist, if the top-level part before the first /
-    // is not in the list, then there is no need to do anything further,
-    // it is not in the database.
-    if ($path === '/' || !$this->whitelist->get(strtok(trim($path, '/'), '/'))) {
+    // Check the path whitelist, if the first segment of the path is not in
+    // the list, then there is no need to do anything further, it is not in
+    // the database.
+    $path_first_segment = strtok($path, '/');
+    if (empty($path_first_segment) || !$this->whitelist->get($path_first_segment)) {
       return $path;
     }
 
@@ -277,12 +278,11 @@ class AliasManager implements AliasManagerInterface {
    *   An optional path for which an alias is being inserted.
    */
   protected function pathAliasWhitelistRebuild($path = NULL) {
-    // When paths are inserted, only rebuild the whitelist if the path has a top
-    // level component which is not already in the whitelist.
-    if (!empty($path)) {
-      if ($this->whitelist->get(strtok($path, '/'))) {
-        return;
-      }
+    // When paths are inserted, only rebuild the whitelist if the first segment
+    // of the path is not already in the whitelist.
+    $path_first_segment = strtok($path, '/');
+    if (!empty($path_first_segment) && $this->whitelist->get($path_first_segment)) {
+      return;
     }
     $this->whitelist->clear();
   }
