@@ -979,28 +979,28 @@ class HTMLRestrictionsTest extends UnitTestCase {
       'a' => new HTMLRestrictions(['a' => FALSE]),
       'b' => new HTMLRestrictions(['b' => ['c' => TRUE]]),
       'expected_diff' => 'a',
-      'intersect' => HTMLRestrictions::emptySet(),
+      'expected_intersection' => HTMLRestrictions::emptySet(),
       'expected_union' => new HTMLRestrictions(['a' => FALSE, 'b' => ['c' => TRUE]]),
     ];
     yield 'tag restrictions are different: <a> vs <b c> — vice versa' => [
       'a' => new HTMLRestrictions(['b' => ['c' => TRUE]]),
       'b' => new HTMLRestrictions(['a' => FALSE]),
       'expected_diff' => 'a',
-      'intersect' => HTMLRestrictions::emptySet(),
+      'expected_intersection' => HTMLRestrictions::emptySet(),
       'expected_union' => new HTMLRestrictions(['a' => FALSE, 'b' => ['c' => TRUE]]),
     ];
     yield 'tag restrictions are different: <a *> vs <b c>' => [
       'a' => new HTMLRestrictions(['a' => TRUE]),
       'b' => new HTMLRestrictions(['b' => ['c' => TRUE]]),
       'expected_diff' => 'a',
-      'intersect' => HTMLRestrictions::emptySet(),
+      'expected_intersection' => HTMLRestrictions::emptySet(),
       'expected_union' => new HTMLRestrictions(['a' => TRUE, 'b' => ['c' => TRUE]]),
     ];
     yield 'tag restrictions are different: <a *> vs <b c> — vice versa' => [
       'a' => new HTMLRestrictions(['b' => ['c' => TRUE]]),
       'b' => new HTMLRestrictions(['a' => TRUE]),
       'expected_diff' => 'a',
-      'intersect' => HTMLRestrictions::emptySet(),
+      'expected_intersection' => HTMLRestrictions::emptySet(),
       'expected_union' => new HTMLRestrictions(['a' => TRUE, 'b' => ['c' => TRUE]]),
     ];
 
@@ -1133,14 +1133,14 @@ class HTMLRestrictionsTest extends UnitTestCase {
       'a' => new HTMLRestrictions(['a' => ['hreflang' => ['en' => TRUE]]]),
       'b' => new HTMLRestrictions(['strong' => TRUE]),
       'expected_diff' => 'a',
-      'intersect' => HTMLRestrictions::emptySet(),
+      'expected_intersection' => HTMLRestrictions::emptySet(),
       'expected_union' => new HTMLRestrictions(['a' => ['hreflang' => ['en' => TRUE]], 'strong' => TRUE]),
     ];
     yield 'attribute restrictions are different: <a hreflang="en"> vs <strong> — vice versa' => [
       'a' => new HTMLRestrictions(['strong' => TRUE]),
       'b' => new HTMLRestrictions(['a' => ['hreflang' => ['en' => TRUE]]]),
       'expected_diff' => 'a',
-      'intersect' => HTMLRestrictions::emptySet(),
+      'expected_intersection' => HTMLRestrictions::emptySet(),
       'expected_union' => new HTMLRestrictions(['a' => ['hreflang' => ['en' => TRUE]], 'strong' => TRUE]),
     ];
     yield 'very restricted tag + slightly restricted tag' => [
