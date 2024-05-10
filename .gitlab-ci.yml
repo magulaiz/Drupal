@@ -222,3 +222,21 @@ stages:
   variables:
    _TARGET_PHP: "8.1"
    _TARGET_DB: "mariadb-10.3.22"
+
+'PHP 8.3 SQLite 3.27.0':
+  <<: *default-stage
+  variables:
+    _TARGET_PHP: "8.3"
+    _TARGET_DB: "sqlite-3"
+
+'PHP 8.3 MySQL 8':
+  <<: *default-stage
+  variables:
+    _TARGET_PHP: "8.3"
+    _TARGET_DB: "mysql-8"
+
+'PHP 8.3 PostgreSQL 14.1':
+  <<: *default-stage
+  variables:
+    _TARGET_PHP: "8.3"
+    _TARGET_DB: "pgsql-14.1"
