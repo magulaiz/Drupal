@@ -102,7 +102,7 @@ class AddFeedTest extends KernelTestBase {
   /**
    * Tests that the rendered output contains specific attributes.
    */
-  public function testAttributeAdded() {
+  public function testAttributeAdded(): void {
     $variables = [
       '#theme' => 'feed_icon',
       '#url' => 'node/add/',
