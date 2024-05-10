@@ -375,6 +375,10 @@ abstract class BrowserTestBase extends TestCase {
     // PHPUnit 6 tests that only make assertions using $this->assertSession()
     // can be marked as risky.
     $this->addToAssertionCount(1);
+
+    // Reset the visit count to detect risky tests that are not really
+    // functional tests.
+    $this->visitCount = 0;
   }
 
   /**
@@ -395,6 +399,13 @@ abstract class BrowserTestBase extends TestCase {
     if ($this->root === NULL) {
       $this->root = dirname(substr(__DIR__, 0, -strlen(__NAMESPACE__)), 2);
     }
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  protected function assertPostConditions(): void {
+    $this->assertGreaterThan(0, $this->visitCount, 'Test should visit at least one URL.');
   }
 
   /**
