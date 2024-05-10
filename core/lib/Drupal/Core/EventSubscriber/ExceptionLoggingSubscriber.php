@@ -4,6 +4,7 @@ namespace Drupal\Core\EventSubscriber;
 
 use Drupal\Core\Logger\LoggerChannelFactoryInterface;
 use Drupal\Core\Utility\Error;
+use Psr\Log\LogLevel;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpKernel\Event\ExceptionEvent;
 use Symfony\Component\HttpKernel\Exception\HttpExceptionInterface;
@@ -29,6 +30,18 @@ class ExceptionLoggingSubscriber implements EventSubscriberInterface {
    */
   public function __construct(LoggerChannelFactoryInterface $logger) {
     $this->logger = $logger;
+  }
+
+  /**
+   * Log 400 errors.
+   *
+   * @param \Symfony\Component\HttpKernel\Event\ExceptionEvent $event
+   *   The event to process.
+   */
+  public function on400(ExceptionEvent $event) {
+    $exception = $event->getThrowable();
+    $error = Error::decodeException($exception);
+    $this->logger->get('bad request')->log(LogLevel::WARNING, '%type: @message in %function (line %line of %file).', $error);
   }
 
   /**
