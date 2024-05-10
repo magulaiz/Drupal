@@ -78,6 +78,7 @@ use Drupal\user\EntityOwnerTrait;
  *     "version-history" = "/node/{node}/revisions",
  *     "revision" = "/node/{node}/revisions/{node_revision}/view",
  *     "create" = "/node",
+ *     "collection" = "/admin/content",
  *   }
  * )
  */
