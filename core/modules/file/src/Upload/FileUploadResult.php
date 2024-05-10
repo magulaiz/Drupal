@@ -2,6 +2,7 @@
 
 namespace Drupal\file\Upload;
 
+use Drupal\Component\Render\MarkupInterface;
 use Drupal\file\FileInterface;
 use Symfony\Component\Validator\ConstraintViolationInterface;
 use Symfony\Component\Validator\ConstraintViolationList;
@@ -39,6 +40,11 @@ class FileUploadResult {
    * @var \Drupal\file\FileInterface
    */
   protected $file;
+
+  /**
+   * The error message.
+   */
+  protected ?MarkupInterface $error = NULL;
 
   /**
    * The constraint violations.
@@ -183,6 +189,28 @@ class FileUploadResult {
    */
   public function hasViolations(): bool {
     return $this->violations->count() > 0;
+  }
+
+  /**
+   * Returns TRUE if there is an error.
+   */
+  public function hasError(): bool {
+    return isset($this->error);
+  }
+
+  /**
+   * Sets the error.
+   */
+  public function setError(MarkupInterface $error): FileUploadResult {
+    $this->error = $error;
+    return $this;
+  }
+
+  /**
+   * Gets the error.
+   */
+  public function getError(): ?MarkupInterface {
+    return $this->error;
   }
 
 }

@@ -13,6 +13,7 @@ use Drupal\Core\File\Exception\FileWriteException;
 use Drupal\Core\File\Exception\InvalidStreamWrapperException;
 use Drupal\Core\File\FileExists;
 use Drupal\Core\Messenger\MessengerInterface;
+use Drupal\Core\Render\RendererInterface;
 use Drupal\Core\StringTranslation\ByteSizeMarkup;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Psr\Log\LoggerInterface;
@@ -23,6 +24,7 @@ use Symfony\Component\HttpFoundation\File\Exception\IniSizeFileException;
 use Symfony\Component\HttpFoundation\File\Exception\NoFileException;
 use Symfony\Component\HttpFoundation\File\Exception\PartialFileException;
 use Symfony\Component\HttpFoundation\RequestStack;
+use Symfony\Component\Validator\ConstraintViolationListInterface;
 
 /**
  * Helper class for multiple form file uploads.
@@ -39,14 +41,12 @@ class FormFileUploader {
 
   use StringTranslationTrait;
 
-  /**
-   * Constructs a FormFileUploader object.
-   */
   public function __construct(
     protected readonly MemoryCacheInterface $memoryCache,
     protected readonly FileUploadHandler $fileUploadHandler,
     protected readonly RequestStack $requestStack,
     protected readonly MessengerInterface $messenger,
+    protected readonly RendererInterface $renderer,
     #[AutowireServiceClosure('logger.channel.file')]
     protected readonly \Closure $logger,
   ) {}
@@ -85,10 +85,10 @@ class FormFileUploader {
    *   (optional) Whether to add error messages to the messenger. Defaults to
    *   TRUE.
    *
-   * @return \Drupal\file\Upload\FileUploadResults|null
+   * @return array<\Drupal\file\Upload\FileUploadResult>
    *   The file upload results, or NULL if none were found.
    */
-  public function saveFormUploadedFiles(string $uploadName, array $validators, string $destination = 'temporary://', FileExists $fileExists = FileExists::Rename, bool $addErrorMessages = TRUE): ?FileUploadResults {
+  public function saveFormUploadedFiles(string $uploadName, array $validators, string $destination = 'temporary://', FileExists $fileExists = FileExists::Rename, bool $addErrorMessages = TRUE): array {
     // Return cached objects without processing since the file will have
     // already been processed and the paths in $_FILES will be invalid.
     /** @var \Drupal\file\Upload\FileUploadResult[] $uploadResults */
@@ -99,37 +99,60 @@ class FormFileUploader {
     $request = $this->requestStack->getCurrentRequest();
     $uploadedFiles = UploadedFilesExtractor::extractUploadedFiles($request, $uploadName);
 
+    $uploadResults = [];
     if (count($uploadedFiles) === 0) {
-      return NULL;
+      return $uploadResults;
     }
 
-    $uploadResults = new FileUploadResults();
-    foreach ($uploadedFiles as $i => $uploadedFile) {
+    foreach ($uploadedFiles as $uploadedFile) {
       // Use a FormUploadedFile adapter to pass to FileUploadHandler.
       $formUploadedFile = new FormUploadedFile($uploadedFile);
       try {
         $result = $this->fileUploadHandler->handleFileUpload($formUploadedFile, $validators, $destination, $fileExists);
         if ($result->isRenamed()) {
-          $this->messenger->addStatus($this->getRenameMessage($result));
+          $this->messenger->addStatus($this->createRenameMessage($result));
         }
-        $uploadResults->setResult($i, $result);
-        $uploadResults->setError($i, FALSE);
+        if ($addErrorMessages && $result->hasViolations()) {
+          $this->messenger->addError($this->createViolationMessage($formUploadedFile->getClientOriginalName(), $result->getViolations()));
+        }
       }
       // Only catch exceptions that we can recover from.
       catch (SymfonyFileException | FileException | FileValidationException $e) {
         $error = $this->createErrorMessage($formUploadedFile, $destination, $e);
-        $uploadResults->setError($i, $error);
-        $uploadResults->setResult($i, FALSE);
+        $result = new FileUploadResult();
+        $result->setOriginalFilename($uploadedFile->getClientOriginalName())
+          ->setError($error);
         if ($addErrorMessages) {
           $this->messenger->addError($error);
         }
       }
+      $uploadResults[] = $result;
     }
 
     // Add uploadResults to the cache.
     $this->memoryCache->set($uploadName, $uploadResults);
 
     return $uploadResults;
+  }
+
+  /**
+   * Creates the violation messages.
+   */
+  protected function createViolationMessage(string $originalName, ConstraintViolationListInterface $violations): MarkupInterface {
+    $items = [];
+    foreach ($violations as $violation) {
+      $items[] = $violation->getMessage();
+    }
+    $message = [
+      'error' => [
+        '#markup' => $this->t('The specified file %name could not be uploaded.', ['%name' => $originalName]),
+      ],
+      'item_list' => [
+        '#theme' => 'item_list',
+        '#items' => $items,
+      ],
+    ];
+    return $this->renderer->renderInIsolation($message);
   }
 
   /**
@@ -179,7 +202,6 @@ class FormFileUploader {
       default:
         return $this->t('The specified file %name could not be uploaded.', ['%name' => $uploadedFile->getClientOriginalName()]);
     }
-
   }
 
   /**
@@ -188,7 +210,7 @@ class FormFileUploader {
    * @param \Drupal\file\Upload\FileUploadResult $result
    *   The result.
    */
-  protected function getRenameMessage(FileUploadResult $result): MarkupInterface {
+  protected function createRenameMessage(FileUploadResult $result): MarkupInterface {
     // If the filename has been modified, let the user know.
     $filename = $result->getFile()->getFilename();
     if ($result->isSecurityRename()) {

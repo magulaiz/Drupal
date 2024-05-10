@@ -39,3 +39,4 @@ services:
   file.element_helper:
     class: Drupal\file\Upload\FileElementHelper
     autowire: true
+  Drupal\file\Upload\FileElementHelper: '@file.element_helper'

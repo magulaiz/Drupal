@@ -23,6 +23,7 @@ use Drupal\Core\Url;
 use Drupal\file\Entity\File;
 use Drupal\file\FileInterface;
 use Drupal\file\IconMimeTypes;
+use Drupal\file\Upload\FileUploadResult;
 use Drupal\file\Upload\FormFileUploader;
 
 // cspell:ignore widthx
@@ -334,7 +335,7 @@ function _file_save_upload_from_form(array $element, FormStateInterface $form_st
  * @see \Drupal\file\Upload\FormFileUploader::saveFormUploadedFiles()
  */
 function file_save_upload($form_field_name, $validators = [], $destination = FALSE, $delta = NULL, FileExists|int $fileExists = FileExists::Rename) {
-  @trigger_error(__FUNCTION__ . '() is deprecated in drupal:10.2.0 and is removed from drupal:11.0.0. Use \Drupal\file\Upload\FormFileUploadHandler::saveFileUploads() instead. See https://www.drupal.org/node/3382414', E_USER_DEPRECATED);
+  @trigger_error(__FUNCTION__ . '() is deprecated in drupal:10.4.0 and is removed from drupal:12.0.0. Use \Drupal\file\Upload\FormFileUploader::saveFormUploadedFiles() instead. See https://www.drupal.org/node/3382414', E_USER_DEPRECATED);
   if (!$fileExists instanceof FileExists) {
     $fileExists = FileExists::fromLegacyInt($fileExists, __METHOD__);
   }
@@ -344,17 +345,17 @@ function file_save_upload($form_field_name, $validators = [], $destination = FAL
     $destination = 'temporary://';
   }
   $results = $uploader->saveFormUploadedFiles($form_field_name, $validators, $destination, $fileExists);
-  if (is_null($results)) {
+  if (count($results) === 0) {
     return NULL;
   }
 
   if (isset($delta)) {
-    return $results->getResult($delta);
+    return $results[$delta]?->getFile() ?? FALSE;
   }
 
   $files = array_map(
-    fn($result) => $result === FALSE ? FALSE : $result->getFile(),
-    $results->getResults()
+    fn(FileUploadResult $result) => $result->getFile() ?? FALSE,
+    $results
   );
 
   return $files;

@@ -75,8 +75,18 @@ class FileElementHelper {
 
     $results = $this->formUploadHandler->saveFormUploadedFiles($uploadName, $validators, $destination, $element['#file_exists'] ?? FileExists::Rename, FALSE);
 
+    $errors = [];
+    foreach ($results as $result) {
+      if ($result->hasError()) {
+        $errors[] = $result->getError();
+      }
+      if ($result->hasViolations()) {
+        foreach ($result->getViolations() as $violation) {
+          $errors[] = $violation->getMessage();
+        }
+      }
+    }
     // Add any collected error messages to the form.
-    $errors = \array_filter($results->getErrors());
     if (count($errors) > 0) {
       if (count($errors) === 1) {
         // Use the first error message as the form error.
@@ -97,7 +107,7 @@ class FileElementHelper {
       $formState->setError($element, $message);
     }
 
-    if (count(\array_filter($results->getResults())) === 0) {
+    if (count($results) === 0) {
       $this->getLogger()->notice('The file upload failed. %upload', [
         '%upload' => $uploadName,
       ]);
@@ -106,8 +116,8 @@ class FileElementHelper {
 
     // Value callback expects FIDs to be keys.
     $files = [];
-    foreach ($results->getResults() as $result) {
-      if ($result === FALSE) {
+    foreach ($results as $result) {
+      if ($result->hasError() || $result->hasViolations()) {
         continue;
       }
       $files[$result->getFile()->id()] = $result->getFile();
