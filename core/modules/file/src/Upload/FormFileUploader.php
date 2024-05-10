@@ -88,7 +88,7 @@ class FormFileUploader {
    * @return array<\Drupal\file\Upload\FileUploadResult>
    *   The file upload results, or NULL if none were found.
    */
-  public function saveFormUploadedFiles(string $uploadName, array $validators, string $destination = 'temporary://', FileExists $fileExists = FileExists::Rename, bool $addErrorMessages = TRUE): array {
+  public function saveFormUploadedFiles(string $uploadName, array $validators, ?string $destination = 'temporary://', FileExists $fileExists = FileExists::Rename, bool $addErrorMessages = TRUE): array {
     // Return cached objects without processing since the file will have
     // already been processed and the paths in $_FILES will be invalid.
     /** @var \Drupal\file\Upload\FileUploadResult[] $uploadResults */
@@ -103,6 +103,8 @@ class FormFileUploader {
     if (count($uploadedFiles) === 0) {
       return $uploadResults;
     }
+
+    $destination ??= 'temporary://';
 
     foreach ($uploadedFiles as $uploadedFile) {
       // Use a FormUploadedFile adapter to pass to FileUploadHandler.
