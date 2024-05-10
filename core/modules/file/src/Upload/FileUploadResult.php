@@ -15,31 +15,23 @@ class FileUploadResult {
 
   /**
    * If the filename was renamed for security reasons.
-   *
-   * @var bool
    */
-  protected $securityRename = FALSE;
+  protected bool $securityRename = FALSE;
 
   /**
    * The sanitized filename.
-   *
-   * @var string
    */
-  protected $sanitizedFilename;
+  protected ?string $sanitizedFilename;
 
   /**
    * The original filename.
-   *
-   * @var string
    */
-  protected $originalFilename;
+  protected ?string $originalFilename;
 
   /**
    * The File entity.
-   *
-   * @var \Drupal\file\FileInterface
    */
-  protected $file;
+  protected ?FileInterface $file = NULL;
 
   /**
    * The error message.
@@ -150,7 +142,7 @@ class FileUploadResult {
    *
    * @return \Drupal\file\FileInterface
    */
-  public function getFile(): FileInterface {
+  public function getFile(): ?FileInterface {
     return $this->file;
   }
 

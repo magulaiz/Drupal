@@ -73,7 +73,7 @@ class LegacyFileUploadTest extends FileManagedUnitTestBase {
    * Tests the file_save_upload() deprecation.
    */
   public function testFileSaveUploadDeprecation(): void {
-    $this->expectDeprecation('file_save_upload() is deprecated in drupal:10.2.0 and is removed from drupal:11.0.0. Use \Drupal\file\Upload\FormFileUploadHandler::saveFileUploads() instead. See https://www.drupal.org/node/3382414');
+    $this->expectDeprecation('file_save_upload() is deprecated in drupal:10.4.0 and is removed from drupal:12.0.0. Use \Drupal\file\Upload\FormFileUploader::saveFormUploadedFiles() instead. See https://www.drupal.org/node/3382414');
     $validators = ['FileExtension' => ['extensions' => 'txt']];
     // We cannot use move_uploaded_files() so this will fail.
     $files = file_save_upload('test_file', $validators, 'public://');
