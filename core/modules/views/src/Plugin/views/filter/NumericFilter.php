@@ -235,7 +235,7 @@ class NumericFilter extends FilterPluginBase {
           $source => ['value' => $operator],
         ];
       }
-      if ($exposed && !isset($user_input[$identifier]['value'])) {
+      if ($exposed && !isset($user_input[$identifier]) && !isset($user_input[$identifier]['value'])) {
         $user_input[$identifier]['value'] = $this->value['value'];
         $form_state->setUserInput($user_input);
       }
@@ -304,11 +304,17 @@ class NumericFilter extends FilterPluginBase {
         $form['value']['min'] += $states;
         $form['value']['max'] += $states;
       }
-      if ($exposed && !isset($user_input[$identifier]['min'])) {
-        $user_input[$identifier]['min'] = $this->value['min'];
-      }
-      if ($exposed && !isset($user_input[$identifier]['max'])) {
-        $user_input[$identifier]['max'] = $this->value['max'];
+
+      if ($exposed) {
+        if (isset($user_input[$identifier]) && !is_array($user_input[$identifier])) {
+          $user_input[$identifier] = [];
+        }
+        if (!isset($user_input[$identifier]['min'])) {
+          $user_input[$identifier]['min'] = $this->value['min'];
+        }
+        if (!isset($user_input[$identifier]['max'])) {
+          $user_input[$identifier]['max'] = $this->value['max'];
+        }
       }
 
       if (!isset($form['value'])) {
