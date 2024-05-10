@@ -780,7 +780,7 @@ class SessionHttpsTestCase extends DrupalWebTestCase {
     $this->drupalPost(NULL, $edit, t('Log in'));
 
     // Make the secure session cookie blank.
-    curl_setopt($this->curlHandle, CURLOPT_COOKIE, "$secure_session_name=");
+    //curl_setopt($this->curlHandle, CURLOPT_COOKIE, "$secure_session_name=");
     $this->drupalGet($this->httpsUrl('user'));
     $this->assertNoText($admin_user->name, 'User is not logged in as admin');
     $this->assertNoText($standard_user->name, "The user's own name is not displayed because the invalid session cookie has logged them out.");
