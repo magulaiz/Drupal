@@ -76,7 +76,7 @@ class FileElementHelper {
     $results = $this->formUploadHandler->saveFormUploadedFiles($uploadName, $validators, $destination, $element['#file_exists'] ?? FileExists::Rename, FALSE);
 
     // Add any collected error messages to the form.
-    $errors = $results->getErrors();
+    $errors = \array_filter($results->getErrors());
     if (count($errors) > 0) {
       if (count($errors) === 1) {
         // Use the first error message as the form error.
@@ -97,7 +97,7 @@ class FileElementHelper {
       $formState->setError($element, $message);
     }
 
-    if (count($results->getResults()) === 0) {
+    if (count(\array_filter($results->getResults())) === 0) {
       $this->getLogger()->notice('The file upload failed. %upload', [
         '%upload' => $uploadName,
       ]);

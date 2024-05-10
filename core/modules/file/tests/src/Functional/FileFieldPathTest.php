@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Drupal\Tests\file\Functional;
 
 use Drupal\file\Entity\File;
+use Drupal\file\FileInterface;
 
 /**
  * Tests that files are uploaded to proper locations.
@@ -38,6 +39,7 @@ class FileFieldPathTest extends FileFieldTestBase {
     $node = $node_storage->load($nid);
     /** @var \Drupal\file\FileInterface $node_file */
     $node_file = $node->{$field_name}->entity;
+    $this->assertInstanceOf(FileInterface::class, $node_file);
     $date_formatter = $this->container->get('date.formatter');
     $expected_filename =
       'public://' .
