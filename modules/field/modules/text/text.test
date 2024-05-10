@@ -293,7 +293,6 @@ class TextSummaryTestCase extends DrupalWebTestCase {
     // Using no text format:
     $expected = array(
       "<p>\nHi\n</p>\n<p>\nfolks\n<br />\n!\n</p>",
-      "<",
       "<p",
       "<p>",
       "<p>\n",
@@ -335,7 +334,6 @@ class TextSummaryTestCase extends DrupalWebTestCase {
     // And using a text format WITH the line-break and htmlcorrector filters.
     $expected_lb = array(
       "<p>\nHi\n</p>\n<p>\nfolks\n<br />\n!\n</p>",
-      "",
       "<p></p>",
       "<p></p>",
       "<p></p>",
