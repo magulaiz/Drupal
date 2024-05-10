@@ -2,10 +2,13 @@
 
 namespace Drupal\file\Upload;
 
+use Drupal\Core\File\FileExists;
 use Drupal\Core\File\FileSystemInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Psr\Log\LoggerInterface;
+use Symfony\Component\DependencyInjection\Attribute\AutowireServiceClosure;
+use Symfony\Component\HttpFoundation\RequestStack;
 
 /**
  * Helper class for ManagedFile element form file uploads.
@@ -15,7 +18,7 @@ use Psr\Log\LoggerInterface;
  * For API-level form file uploading, use
  * \Drupal\file\Upload\FormFileUploadHandler instead.
  *
- * @see \Drupal\file\Upload\FormFileUploadHandler
+ * @see \Drupal\file\Upload\FormFileUploader
  * @see \Drupal\file\Element\ManagedFile::valueCallback()
  */
 class FileElementHelper {
@@ -27,10 +30,10 @@ class FileElementHelper {
    */
   public function __construct(
     protected readonly FileSystemInterface $fileSystem,
-    protected readonly LoggerInterface $logger,
-    protected readonly FormFileUploadHandler $formUploadHandler,
-    protected readonly FormUploadedFileRetriever $uploadedFileRetriever,
-    protected readonly MessageCollectingErrorHandlerFactory $errorHandlerFactory,
+    protected readonly FormFileUploader $formUploadHandler,
+    protected readonly RequestStack $requestStack,
+    #[AutowireServiceClosure('logger.channel.file')]
+    protected readonly \Closure $logger,
   ) {}
 
   /**
@@ -47,7 +50,8 @@ class FileElementHelper {
    */
   public function saveFileUploads(array $element, FormStateInterface $formState): array {
     $uploadName = implode('_', $element['#parents']);
-    $uploadedFiles = $this->uploadedFileRetriever->getUploadedFiles($uploadName);
+    $request = $this->requestStack->getCurrentRequest();
+    $uploadedFiles = UploadedFilesExtractor::extractUploadedFiles($request, $uploadName);
 
     // Check for uploads.
     $hasUploads = $element['#multiple'] && count(array_filter($uploadedFiles)) > 0;
@@ -59,7 +63,7 @@ class FileElementHelper {
 
     $destination = $element['#upload_location'] ?? NULL;
     if (isset($destination) && !$this->fileSystem->prepareDirectory($destination, FileSystemInterface::CREATE_DIRECTORY)) {
-      $this->logger->notice('The upload directory %directory for the file field %name could not be created or is not accessible. A newly uploaded file could not be saved in this directory as a consequence, and the upload was canceled.', [
+      $this->getLogger()->notice('The upload directory %directory for the file field %name could not be created or is not accessible. A newly uploaded file could not be saved in this directory as a consequence, and the upload was canceled.', [
         '%directory' => $destination,
         '%name' => $element['#field_name'],
       ]);
@@ -69,19 +73,10 @@ class FileElementHelper {
 
     $validators = $element['#upload_validators'] ?? [];
 
-    $collectingErrorHandler = $this->errorHandlerFactory->create();
-
-    $files = $this->formUploadHandler->saveFileUploads(
-      uploadName: $uploadName,
-      validators: $validators,
-      destination: $destination,
-      errorHandler: $collectingErrorHandler
-    );
-
-    $files = array_filter($files);
+    $results = $this->formUploadHandler->saveFormUploadedFiles($uploadName, $validators, $destination, $element['#file_exists'] ?? FileExists::Rename, FALSE);
 
     // Add any collected error messages to the form.
-    $errors = $collectingErrorHandler->getErrors();
+    $errors = $results->getErrors();
     if (count($errors) > 0) {
       if (count($errors) === 1) {
         // Use the first error message as the form error.
@@ -102,16 +97,23 @@ class FileElementHelper {
       $formState->setError($element, $message);
     }
 
-    if (count($files) === 0) {
-      $this->logger->notice('The file upload failed. %upload', [
+    if (count($results) === 0) {
+      $this->getLogger()->notice('The file upload failed. %upload', [
         '%upload' => $uploadName,
       ]);
       return [];
     }
 
     // Value callback expects FIDs to be keys.
-    $fids = array_map(fn($file) => $file->id(), $files);
-    return array_combine($fids, $files);
+    $fids = array_map(fn(FileUploadResult $result) => $result->getFile()->id(), $results->getResults());
+    return array_combine($fids, $results->getResults());
+  }
+
+  /**
+   * Gets the logger.
+   */
+  private function getLogger(): LoggerInterface {
+    return ($this->logger)();
   }
 
 }

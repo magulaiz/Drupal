@@ -32,3 +32,10 @@ services:
     class: Drupal\file\Upload\InputStreamFileWriter
     arguments: ['@file_system']
   Drupal\file\Upload\InputStreamFileWriterInterface: '@file.input_stream_file_writer'
+  file.form_file_uploader:
+    class: Drupal\file\Upload\FormFileUploader
+    autowire: true
+  Drupal\file\Upload\FormFileUploader: '@file.form_file_uploader'
+  file.element_helper:
+    class: Drupal\file\Upload\FileElementHelper
+    autowire: true

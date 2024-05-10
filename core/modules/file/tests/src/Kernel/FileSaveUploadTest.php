@@ -16,6 +16,7 @@ use Symfony\Component\HttpFoundation\Session\Storage\MockArraySessionStorage;
  * Tests file_save_upload().
  *
  * @group file
+ * @group legacy
  */
 class FileSaveUploadTest extends KernelTestBase {
 
@@ -59,6 +60,7 @@ class FileSaveUploadTest extends KernelTestBase {
   public function testFileSaveUploadEmptyExtensions(): void {
     // Allow all extensions.
     $validators = ['FileExtension' => []];
+    $this->expectDeprecation("foo");
     $files = file_save_upload('file', $validators);
     $this->assertCount(1, $files);
     $file = $files[0];

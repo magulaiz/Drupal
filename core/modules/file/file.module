@@ -23,6 +23,8 @@ use Drupal\Core\Url;
 use Drupal\file\Entity\File;
 use Drupal\file\FileInterface;
 use Drupal\file\IconMimeTypes;
+use Drupal\file\Upload\FileUploadResult;
+use Drupal\file\Upload\FormFileUploader;
 
 // cspell:ignore widthx
 
@@ -331,7 +333,7 @@ function _file_save_upload_from_form(array $element, FormStateInterface $form_st
  *   \Drupal\file\Upload\FormFileUploadHandler::saveFileUploads() instead.
  *
  * @see https://www.drupal.org/node/3382414
- * @see \Drupal\file\Upload\FormFileUploadHandler::saveFileUploads()
+ * @see \Drupal\file\Upload\FormFileUploader::saveFormUploadedFiles()
  */
 function file_save_upload($form_field_name, $validators = [], $destination = FALSE, $delta = NULL, FileExists|int $fileExists = FileExists::Rename) {
   @trigger_error(__FUNCTION__ . '() is deprecated in drupal:10.2.0 and is removed from drupal:11.0.0. Use \Drupal\file\Upload\FormFileUploadHandler::saveFileUploads() instead. See https://www.drupal.org/node/3382414', E_USER_DEPRECATED);
@@ -339,17 +341,22 @@ function file_save_upload($form_field_name, $validators = [], $destination = FAL
     // @phpstan-ignore-next-line
     $fileExists = FileExists::fromLegacyInt($fileExists, __METHOD__);
   }
-  /** @var \Drupal\file\Upload\FormFileUploadHandler $upload_handler */
-  $upload_handler = \Drupal::service('file.form_file_upload_handler');
+  /** @var \Drupal\file\Upload\FormFileUploader $uploader */
+  $uploader = \Drupal::service(FormFileUploader::class);
   if ($destination === FALSE) {
     $destination = 'temporary://';
   }
-  $files = $upload_handler->saveFileUploads($form_field_name, $validators, $destination, $fileExists);
-  // Return NULL for BC.
-  if (count($files) === 0) {
+  $results = $uploader->saveFormUploadedFiles($form_field_name, $validators, $destination, $fileExists);
+  if (is_null($results)) {
     return NULL;
   }
-  return isset($delta) ? $files[$delta] : $files;
+
+  // Provide BC layer.
+  if (isset($delta)) {
+    return $results->getResultAt($delta)?->getFile() ?? FALSE;
+  }
+
+  return array_map(fn(FileUploadResult $result) => $result->getFile(), $results->getResults());
 }
 
 /**

@@ -117,9 +117,9 @@ class FileTestForm implements FormInterface {
       define('SIMPLETEST_COLLECT_ERRORS', FALSE);
     }
 
-    /** @var \Drupal\file\Upload\FormFileUploadHandler $uploadHandler */
+    /** @var \Drupal\file\Upload\FormFileUploader $uploadHandler */
     $uploadHandler = \Drupal::service('file.form_file_upload_handler');
-    $files = $uploadHandler->saveFileUploads('file_test_upload', $validators, $destination, static::fileExistsFromName($form_state->getValue('file_test_replace')));
+    $files = $uploadHandler->saveFormUploadedFiles('file_test_upload', $validators, $destination, static::fileExistsFromName($form_state->getValue('file_test_replace')));
     if (count($files) === 0) {
       return;
     }

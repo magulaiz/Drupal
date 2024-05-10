@@ -168,10 +168,13 @@ class UpdateManagerInstall extends FormBase {
     }
     elseif (!empty($all_files['project_upload']) && $this->moduleHandler->moduleExists('file')) {
       $validators = ['FileExtension' => ['extensions' => $this->archiverManager->getExtensions()]];
-      /** @var \Drupal\file\Upload\FormFileUploadHandler $fileUploadHandler */
-      $fileUploadHandler = \Drupal::service('file.form_file_upload_handler');
-      $files = $fileUploadHandler->saveFileUploads('project_upload', $validators, NULL, FileExists::Replace);
-      $finfo = reset($files);
+      /** @var \Drupal\file\Upload\FormFileUploader $fileUploadHandler */
+      $fileUploadHandler = \Drupal::service('file.form_file_uploader');
+      $results = $fileUploadHandler->saveFormUploadedFiles('project_upload', $validators, NULL, FileExists::Replace);
+      foreach ($results->getErrors() as $error) {
+        $this->messenger()->addError($error);
+      }
+      $finfo = $results->getResultAt(0)?->getFile();
       if (!$finfo) {
         return;
       }
