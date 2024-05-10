@@ -263,7 +263,7 @@ class LocalTasksTest extends BrowserTestBase {
     $this->drupalLogin($this->drupalCreateUser([
       'administer content types',
       'administer permissions',
-      'administer account settings'
+      'administer account settings',
     ]));
     $this->drupalCreateContentType(['type' => 'page']);
 
