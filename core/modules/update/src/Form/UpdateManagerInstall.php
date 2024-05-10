@@ -174,7 +174,7 @@ class UpdateManagerInstall extends FormBase {
       foreach ($results->getErrors() as $error) {
         $this->messenger()->addError($error);
       }
-      $finfo = $results->getResultAt(0)?->getFile();
+      $finfo = $results->getResult(0)?->getFile();
       if (!$finfo) {
         return;
       }

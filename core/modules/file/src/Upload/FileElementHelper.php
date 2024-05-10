@@ -97,7 +97,7 @@ class FileElementHelper {
       $formState->setError($element, $message);
     }
 
-    if (count($results) === 0) {
+    if (count($results->getResults()) === 0) {
       $this->getLogger()->notice('The file upload failed. %upload', [
         '%upload' => $uploadName,
       ]);
@@ -105,8 +105,15 @@ class FileElementHelper {
     }
 
     // Value callback expects FIDs to be keys.
-    $fids = array_map(fn(FileUploadResult $result) => $result->getFile()->id(), $results->getResults());
-    return array_combine($fids, $results->getResults());
+    $files = [];
+    foreach ($results->getResults() as $result) {
+      if ($result === FALSE) {
+        continue;
+      }
+      $files[$result->getFile()->id()] = $result->getFile();
+    }
+
+    return $files;
   }
 
   /**

@@ -8,6 +8,8 @@ use Drupal\Core\Form\FormState;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
+use Symfony\Component\HttpFoundation\Session\Session;
+use Symfony\Component\HttpFoundation\Session\Storage\MockArraySessionStorage;
 
 /**
  * Tests deprecated file upload functions.
@@ -29,6 +31,7 @@ class LegacyFileUploadTest extends FileManagedUnitTestBase {
       'test_file' => $this->createUploadedFile(UPLOAD_ERR_OK),
     ];
     $request->files->set('files', $files);
+    $request->setSession(new Session(new MockArraySessionStorage()));
     $request_stack->push($request);
     $this->container->set('request_stack', $request_stack);
   }

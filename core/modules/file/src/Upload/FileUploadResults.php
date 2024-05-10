@@ -8,20 +8,23 @@ use Drupal\Component\Render\MarkupInterface;
 
 /**
  * Defines a class for file upload results.
+ *
+ * This class uses the array index of the original uploaded files array to
+ * allow upload results and errors to be associated correctly.
  */
 class FileUploadResults {
 
   /**
-   * The results.
+   * The results, indexed matching the uploaded files array index.
    *
-   * @var \Drupal\file\Upload\FileUploadResult[]
+   * @var array<int,\Drupal\file\Upload\FileUploadResult|false>
    */
   protected array $results = [];
 
   /**
-   * The errors.
+   * The errors, indexed matching the uploaded files array index.
    *
-   * @var \Drupal\Component\Render\MarkupInterface[]
+   * @var array<int,\Drupal\Component\Render\MarkupInterface|false>
    */
   protected array $errors = [];
 
@@ -30,10 +33,10 @@ class FileUploadResults {
    *
    * @param int $index
    *   The array index.
-   * @param \Drupal\file\Upload\FileUploadResult $result
-   *   The result.
+   * @param \Drupal\file\Upload\FileUploadResult|false $result
+   *   The result, or FALSE if no result.
    */
-  public function addResultAt(int $index, FileUploadResult $result): void {
+  public function setResult(int $index, FileUploadResult|false $result): void {
     $this->results[$index] = $result;
   }
 
@@ -43,17 +46,17 @@ class FileUploadResults {
    * @param int $index
    *   The index.
    *
-   * @return \Drupal\file\Upload\FileUploadResult|null
-   *   The result or NULL if not found.
+   * @return \Drupal\file\Upload\FileUploadResult|false
+   *   The result, or FALSE if no result.
    */
-  public function getResultAt(int $index): ?FileUploadResult {
-    return $this->results[$index] ?? NULL;
+  public function getResult(int $index): FileUploadResult|false {
+    return $this->results[$index] ?? FALSE;
   }
 
   /**
    * Gets the file upload results.
    *
-   * @return \Drupal\file\Upload\FileUploadResult[]
+   * @return array<int,\Drupal\file\Upload\FileUploadResult|false>
    *   The file upload results.
    */
   public function getResults(): array {
@@ -65,17 +68,30 @@ class FileUploadResults {
    *
    * @param int $index
    *   The array index.
-   * @param \Drupal\Component\Render\MarkupInterface $error
-   *   The error.
+   * @param \Drupal\Component\Render\MarkupInterface|false $error
+   *   The error, or FALSE if no error.
    */
-  public function addErrorAt(int $index, MarkupInterface $error): void {
+  public function setError(int $index, MarkupInterface|false $error): void {
     $this->errors[$index] = $error;
+  }
+
+  /**
+   * Gets the error at the index.
+   *
+   * @param int $index
+   *   The index.
+   *
+   * @return \Drupal\Component\Render\MarkupInterface|false
+   *   The error, or FALSE if no error.
+   */
+  public function getError(int $index): MarkupInterface|false {
+    return $this->errors[$index] ?? FALSE;
   }
 
   /**
    * Gets the errors.
    *
-   * @return \Drupal\Component\Render\MarkupInterface[]
+   * @return array<int,\Drupal\Component\Render\MarkupInterface|false>
    *   The errors.
    */
   public function getErrors(): array {

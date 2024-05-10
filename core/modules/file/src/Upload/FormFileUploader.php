@@ -112,12 +112,14 @@ class FormFileUploader {
         if ($result->isRenamed()) {
           $this->messenger->addStatus($this->getRenameMessage($result));
         }
-        $uploadResults->addResultAt($i, $result);
+        $uploadResults->setResult($i, $result);
+        $uploadResults->setError($i, FALSE);
       }
       // Only catch exceptions that we can recover from.
       catch (SymfonyFileException | FileException | FileValidationException $e) {
         $error = $this->createErrorMessage($formUploadedFile, $destination, $e);
-        $uploadResults->addErrorAt($i, $error);
+        $uploadResults->setError($i, $error);
+        $uploadResults->setResult($i, FALSE);
         if ($addErrorMessages) {
           $this->messenger->addError($error);
         }
