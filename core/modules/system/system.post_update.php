@@ -82,7 +82,7 @@ function system_post_update_convert_empty_country_and_timezone_settings_to_null(
 }
 
 /**
- * Updates all entity_view_mode configuration entities to set description from empty string to null
+ * Updates all entity_view_mode configuration entities to set description from empty string to null.
  */
 function system_post_update_convert_empty_string_entity_view_modes_to_null(array &$sandbox): void {
   \Drupal::classResolver(ConfigEntityUpdater::class)
