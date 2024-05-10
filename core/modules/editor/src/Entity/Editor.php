@@ -208,18 +208,4 @@ class Editor extends ConfigEntityBase implements EditorInterface {
     return $this;
   }
 
-  /**
-   * Computes all valid choices for the "image_upload.scheme" setting.
-   *
-   * @see editor.schema.yml
-   *
-   * @return string[]
-   *   All valid choices.
-   *
-   * @internal
-   */
-  public static function getValidStreamWrappers(): array {
-    return array_keys(\Drupal::service('stream_wrapper_manager')->getNames(StreamWrapperInterface::WRITE_VISIBLE));
-  }
-
 }

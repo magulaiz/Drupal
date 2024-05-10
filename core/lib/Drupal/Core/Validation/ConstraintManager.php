@@ -112,11 +112,6 @@ class ConstraintManager extends DefaultPluginManager {
       'class' => EmailConstraint::class,
       'type' => ['string'],
     ]);
-    $this->getDiscovery()->setDefinition('Choice', [
-      'label' => new TranslatableMarkup('Choice'),
-      'class' => Choice::class,
-      'type' => FALSE,
-    ]);
     $this->getDiscovery()->setDefinition('Image', [
       'label' => new TranslatableMarkup('Image'),
       'class' => Image::class,
