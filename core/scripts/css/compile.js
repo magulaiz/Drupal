@@ -55,7 +55,12 @@ module.exports = (filePath, callback) => {
           // Prevent converting PX to REM for icon styles. These files have been
           // added to use the `postcssUrl` plugin, but aren't compatible with
           // `postcssPixelsToRem`.
-          exclude: (filePath) => filePath.match(/core\/modules.*\.icons\..*\.pcss\.css$/)
+          exclude: (filePath) => {
+            return (
+              filePath.match(/core\/modules.*\.icons\..*\.pcss\.css$/) ||
+              filePath.match(/core\/modules\/navigation(?:\/.*\.pcss\.css)?$/)
+            );
+          }
 
       }),
       postcssHeader({

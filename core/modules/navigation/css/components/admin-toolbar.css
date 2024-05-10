@@ -20,7 +20,7 @@ body {
 [data-admin-toolbar="expanded"] body {
   --admin-toolbar-sidebar-width: 80vw;
 }
-@media (min-width: 35rem) {
+@media (min-width: 560px) {
   [data-admin-toolbar="expanded"] body {
     --admin-toolbar-sidebar-width: calc(16.5 * var(--admin-toolbar-rem));
   }
@@ -29,7 +29,7 @@ body {
 [data-admin-toolbar-transitions] .admin-toolbar {
   transition: transform var(--admin-toolbar-transition);
 }
-@media (min-width: 64rem) {
+@media (min-width: 1024px) {
   [data-admin-toolbar-transitions] .admin-toolbar {
     transition: width var(--admin-toolbar-transition);
   }
@@ -69,12 +69,12 @@ body {
   right: 0;
   transform: translateX(100%);
 }
-@media (min-width: 64rem) {
+@media (min-width: 1024px) {
   [dir="rtl"] .admin-toolbar {
     transform: none;
   }
 }
-@media (min-width: 64rem) {
+@media (min-width: 1024px) {
   .admin-toolbar ~ .dialog-off-canvas-main-canvas {
     margin-inline-start: var(--drupal-displace-offset-left, var(--admin-toolbar-sidebar-width));
   }
@@ -86,12 +86,12 @@ body {
 [data-admin-toolbar="expanded"] .admin-toolbar {
   transform: none;
 }
-@media (min-width: 64rem) {
+@media (min-width: 1024px) {
   .admin-toolbar {
     transform: none;
   }
 }
-@media only screen and (max-height: 18.75rem) {
+@media only screen and (max-height: 300px) {
   .admin-toolbar {
     min-height: 20rem;
   }
@@ -103,7 +103,7 @@ body {
 .admin-toolbar:has([data-toolbar-popover-control][aria-expanded="true"]) .admin-toolbar__back-button {
   display: flex;
 }
-@media (min-width: 64rem) {
+@media (min-width: 1024px) {
   .admin-toolbar:has([data-toolbar-popover-control][aria-expanded="true"]) .admin-toolbar__back-button {
     display: none;
   }
@@ -111,7 +111,7 @@ body {
 .admin-toolbar:has([data-toolbar-popover-control][aria-expanded="true"]) .admin-toolbar__logo {
   display: none;
 }
-@media (min-width: 64rem) {
+@media (min-width: 1024px) {
   .admin-toolbar:has([data-toolbar-popover-control][aria-expanded="true"]) .admin-toolbar__logo {
     display: inline-flex;
   }
@@ -121,7 +121,7 @@ body {
   justify-self: end;
   margin-inline-start: auto;
 }
-@media (min-width: 64rem) {
+@media (min-width: 1024px) {
   .admin-toolbar__close-button {
     display: none;
   }
@@ -179,7 +179,7 @@ body {
 [dir="rtl"] .admin-toolbar__expand-button[aria-expanded="true"]::before {
   transform: none;
 }
-@media (min-width: 64rem) {
+@media (min-width: 1024px) {
   .admin-toolbar__expand-button {
     display: flex;
   }
@@ -198,17 +198,17 @@ body {
 .admin-toolbar__header + .toolbar-block {
   margin-block-start: calc(var(--admin-toolbar-space-10) * -1);
 }
-@media (min-width: 64rem) {
+@media (min-width: 1024px) {
   .admin-toolbar__header + .toolbar-block {
     margin-block-start: 0;
   }
 }
-@media (min-width: 64rem) {
+@media (min-width: 1024px) {
   .admin-toolbar__header:not(:has(.admin-toolbar__logo)) {
     display: none;
   }
 }
-@media (min-width: 64rem) {
+@media (min-width: 1024px) {
   .admin-toolbar__header {
     position: static;
     align-items: start;
@@ -244,12 +244,12 @@ body {
   background-color: var(--admin-toolbar-color-white);
   background-repeat: no-repeat;
   background-attachment: local, scroll;
-  background-position-y: 3rem;
+  background-position-y: 48px;
   background-size:
-    100% 2.5rem,
-    100% 1rem;
+    100% 40px,
+    100% 16px;
 }
-@media (min-width: 64rem) {
+@media (min-width: 1024px) {
   .admin-toolbar__scroll-wrapper {
     display: contents;
     background: none;
@@ -266,7 +266,7 @@ body {
   padding-inline: var(--admin-toolbar-space-16);
   border-inline-end: 1px solid var(--admin-toolbar-color-gray-100);
 }
-@media (min-width: 64rem) {
+@media (min-width: 1024px) {
   .admin-toolbar__content {
     display: flex;
     overflow-x: hidden;
@@ -283,10 +283,10 @@ body {
     background-repeat: no-repeat;
     background-attachment: local, local, scroll, scroll;
     background-size:
-      100% 2.5rem,
-      100% 2.5rem,
-      100% 1rem,
-      100% 1rem;
+      100% 40px,
+      100% 40px,
+      100% 16px,
+      100% 16px;
   }
 }
 /**
@@ -302,7 +302,7 @@ body {
   border-block-start: 1px solid var(--admin-toolbar-color-gray-200);
   border-inline-end: 1px solid var(--admin-toolbar-color-gray-100);
 }
-@media (min-width: 64rem) {
+@media (min-width: 1024px) {
   .admin-toolbar__footer {
     --admin-toolbar-z-index-footer: -1;
 
@@ -317,7 +317,7 @@ body {
 .admin-toolbar__toggle {
   display: none;
 }
-@media (min-width: 64rem) {
+@media (min-width: 1024px) {
   .admin-toolbar__toggle {
     display: flex;
   }
@@ -343,7 +343,7 @@ body {
 :where([data-admin-toolbar="expanded"]) .admin-toolbar-overlay {
   display: block;
 }
-@media (min-width: 64rem) {
+@media (min-width: 1024px) {
   .admin-toolbar-overlay {
     display: none;
   }

@@ -5,8 +5,8 @@
  * @preserve
  */
 .toolbar-popover {
-  --safe-triangle-cursor-y: 6.25rem;
-  --safe-triangle-cursor-x: 6.25rem;
+  --safe-triangle-cursor-y: 100px;
+  --safe-triangle-cursor-x: 100px;
   --safe-triangle-submenu-start-x: var(--admin-toolbar-sidebar-width);
   --safe-triangle-submenu-start-y: 5vh;
   --safe-triangle-submenu-end-x: var(--admin-toolbar-sidebar-width);
@@ -53,13 +53,13 @@
   clip-path: inset(0 0 0 -10rem);
   transform: translateX(0);
 }
-@media (min-width: 64rem) {
+@media (min-width: 1024px) {
   [data-toolbar-popover-wrapper] {
     --admin-toolbar-z-index-popover: var(--drupal-admin-z-index-popover, -1);
 
     padding-block-start: var(--admin-toolbar-space-16);
     transform: translateX(0);
-    filter: drop-shadow(0 0 4.5rem rgba(0, 0, 0, 0.2)) drop-shadow(0 0 0.5rem rgba(0, 0, 0, 0.04)) drop-shadow(0 0 2.5rem rgba(0, 0, 0, 0.06));
+    filter: drop-shadow(0 0 72px rgba(0, 0, 0, 0.2)) drop-shadow(0 0 8px rgba(0, 0, 0, 0.04)) drop-shadow(0 0 40px rgba(0, 0, 0, 0.06));
     inline-size: var(--admin-toolbar-popover-width);
     inset-block-start: 0;
     inset-inline-start: 1px;
@@ -77,7 +77,7 @@
   transform: translateX(0);
   opacity: 1;
 }
-@media (min-width: 64rem) {
+@media (min-width: 1024px) {
   [data-toolbar-popover-control][aria-expanded="true"] + [data-toolbar-popover-wrapper] {
     transform: translateX(var(--admin-toolbar-sidebar-width));
   }
