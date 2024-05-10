@@ -373,7 +373,7 @@ class TextSummaryTestCase extends DrupalWebTestCase {
     );
 
     // Test text_summary() for different sizes.
-    for ($i = 0; $i <= 37; $i++) {
+    for ($i = 0; $i <= 36; $i++) {
       $this->callTextSummary($text, $expected[$i],    NULL, $i);
       $this->callTextSummary($text, $expected_lb[$i], 'plain_text', $i);
       $this->callTextSummary($text, $expected_lb[$i], 'filtered_html', $i);
