@@ -239,7 +239,6 @@ function file_cron() {
 function _file_save_upload_from_form(array $element, FormStateInterface $form_state, $delta = NULL, FileExists|int $fileExists = FileExists::Rename) {
   @trigger_error(__FUNCTION__ . '() is deprecated in drupal:10.2.0 and is removed from drupal:11.0.0. Use \Drupal\file\Upload\FileElementHelper::saveFileUploads instead. See https://www.drupal.org/node/3382414', E_USER_DEPRECATED);
   if (!$fileExists instanceof FileExists) {
-    // @phpstan-ignore-next-line
     $fileExists = FileExists::fromLegacyInt($fileExists, __METHOD__);
   }
   // Get all errors set before calling this method. This will also clear them
@@ -338,7 +337,6 @@ function _file_save_upload_from_form(array $element, FormStateInterface $form_st
 function file_save_upload($form_field_name, $validators = [], $destination = FALSE, $delta = NULL, FileExists|int $fileExists = FileExists::Rename) {
   @trigger_error(__FUNCTION__ . '() is deprecated in drupal:10.2.0 and is removed from drupal:11.0.0. Use \Drupal\file\Upload\FormFileUploadHandler::saveFileUploads() instead. See https://www.drupal.org/node/3382414', E_USER_DEPRECATED);
   if (!$fileExists instanceof FileExists) {
-    // @phpstan-ignore-next-line
     $fileExists = FileExists::fromLegacyInt($fileExists, __METHOD__);
   }
   /** @var \Drupal\file\Upload\FormFileUploader $uploader */

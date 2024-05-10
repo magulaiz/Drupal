@@ -35,7 +35,7 @@ use Symfony\Component\HttpFoundation\RequestStack;
  *
  * @see \Drupal\file\Upload\FileElementHelper
  */
-readonly class FormFileUploader {
+class FormFileUploader {
 
   use StringTranslationTrait;
 
@@ -43,12 +43,12 @@ readonly class FormFileUploader {
    * Constructs a FormFileUploader object.
    */
   public function __construct(
-    protected MemoryCacheInterface $memoryCache,
-    protected FileUploadHandler $fileUploadHandler,
-    protected RequestStack $requestStack,
-    protected MessengerInterface $messenger,
+    protected readonly MemoryCacheInterface $memoryCache,
+    protected readonly FileUploadHandler $fileUploadHandler,
+    protected readonly RequestStack $requestStack,
+    protected readonly MessengerInterface $messenger,
     #[AutowireServiceClosure('logger.channel.file')]
-    protected \Closure $logger,
+    protected readonly \Closure $logger,
   ) {}
 
   /**
@@ -73,7 +73,7 @@ readonly class FormFileUploader {
    *   ppt pps odt ods odp". To allow all extensions, you must explicitly set
    *   this array to ['file_validate_extensions' => '']. (Beware: this is not
    *   safe and should only be allowed for trusted users, if at all.)
-   * @param string|null $destination
+   * @param string $destination
    *   (optional) A string containing the URI that the file should be copied
    *   to.
    *   This must be a stream wrapper URI. If this value is omitted or set to
@@ -81,6 +81,9 @@ readonly class FormFileUploader {
    * @param \Drupal\Core\File\FileExists $fileExists
    *   (optional) The replace behavior when the destination file already
    *   exists.
+   * @param bool $addErrorMessages
+   *   (optional) Whether to add error messages to the messenger. Defaults to
+   *   TRUE.
    *
    * @return \Drupal\file\Upload\FileUploadResults|null
    *   The file upload results, or NULL if none were found.
