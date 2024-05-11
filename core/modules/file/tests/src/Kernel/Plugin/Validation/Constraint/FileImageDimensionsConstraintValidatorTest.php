@@ -43,7 +43,7 @@ class FileImageDimensionsConstraintValidatorTest extends FileValidatorTestBase {
     $this->image->setFilename($file_system->basename($this->image->getFileUri()));
 
     $this->nonImage = File::create();
-    $this->nonImage->setFileUri('core/assets/scaffold/README.txt');
+    $this->nonImage->setFileUri('core/assets/scaffold/README.md');
     $this->nonImage->setFilename($file_system->basename($this->nonImage->getFileUri()));
   }
 

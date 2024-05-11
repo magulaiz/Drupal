@@ -38,14 +38,14 @@ Disallow: /core/
 Disallow: /profiles/
 # Files
 Disallow: /README.md
-Disallow: /composer/Metapackage/README.txt
+Disallow: /composer/Metapackage/README.md
 Disallow: /composer/Plugin/ProjectMessage/README.md
 Disallow: /composer/Plugin/Scaffold/README.md
-Disallow: /composer/Plugin/VendorHardening/README.txt
-Disallow: /composer/Template/README.txt
-Disallow: /modules/README.txt
-Disallow: /sites/README.txt
-Disallow: /themes/README.txt
+Disallow: /composer/Plugin/VendorHardening/README.md
+Disallow: /composer/Template/README.md
+Disallow: /modules/README.md
+Disallow: /sites/README.md
+Disallow: /themes/README.md
 # Paths (clean URLs)
 Disallow: /admin/
 Disallow: /comment/reply/

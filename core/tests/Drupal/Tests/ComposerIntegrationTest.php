@@ -150,15 +150,15 @@ class ComposerIntegrationTest extends UnitTestCase {
       ['README.md', 'assets/scaffold/files/drupal.README.md'],
       ['robots.txt', 'assets/scaffold/files/robots.txt'],
       ['update.php', 'assets/scaffold/files/update.php'],
-      ['sites/README.txt', 'assets/scaffold/files/sites.README.txt'],
+      ['sites/README.md', 'assets/scaffold/files/sites.README.md'],
       ['sites/development.services.yml', 'assets/scaffold/files/development.services.yml'],
       ['sites/example.settings.local.php', 'assets/scaffold/files/example.settings.local.php'],
       ['sites/example.sites.php', 'assets/scaffold/files/example.sites.php'],
       ['sites/default/default.services.yml', 'assets/scaffold/files/default.services.yml'],
       ['sites/default/default.settings.php', 'assets/scaffold/files/default.settings.php'],
-      ['modules/README.txt', 'assets/scaffold/files/modules.README.txt'],
-      ['profiles/README.txt', 'assets/scaffold/files/profiles.README.txt'],
-      ['themes/README.txt', 'assets/scaffold/files/themes.README.txt'],
+      ['modules/README.md', 'assets/scaffold/files/modules.README.md'],
+      ['profiles/README.md', 'assets/scaffold/files/profiles.README.md'],
+      ['themes/README.md', 'assets/scaffold/files/themes.README.md'],
     ];
   }
 

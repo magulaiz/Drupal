@@ -181,7 +181,7 @@ class Url implements TrustedCallbackInterface {
    *   User input for a link or path. The first character must be one of the
    *   following characters:
    *   - '/': A path within the current site. This path might be to a Drupal
-   *     route (e.g., '/admin'), to a file (e.g., '/README.txt'), or to
+   *     route (e.g., '/admin'), to a file (e.g., '/README.md'), or to
    *     something processed by a non-Drupal script (e.g.,
    *     '/not/a/drupal/page'). If the path matches a Drupal route, then the
    *     URL generation will include Drupal's path processors (e.g.,

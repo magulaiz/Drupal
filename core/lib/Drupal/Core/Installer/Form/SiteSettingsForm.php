@@ -291,12 +291,12 @@ class SiteSettingsForm extends FormBase {
     // This should never fail, it is created here inside the public files
     // directory, which has already been verified to be writable itself.
     if (\Drupal::service('file_system')->prepareDirectory($config_sync_directory, FileSystemInterface::CREATE_DIRECTORY | FileSystemInterface::MODIFY_PERMISSIONS)) {
-      // Put a README.txt into the sync config directory. This is required so
+      // Put a README.md into the sync config directory. This is required so
       // that they can later be added to git. Since this directory is
       // auto-created, we have to write out the README rather than just adding
       // it to the drupal core repo.
       $text = 'This directory contains configuration to be imported into your Drupal site. To make this configuration active, visit admin/config/development/configuration. For information about deploying configuration between servers, see https://www.drupal.org/documentation/administer/config';
-      file_put_contents($config_sync_directory . '/README.txt', $text);
+      file_put_contents($config_sync_directory . '/README.md', $text);
     }
 
     return $config_sync_directory;
