@@ -13,7 +13,7 @@ We need it root to calculate the size of the displace in .dialog-off-canvas-main
    * Color Palette.
    */
   --admin-toolbar-color-focus: var(--drupal-admin-color-focus, var(--admin-toolbar-color-green-300));
-  --admin-toolbar-size-focus: var(--drupal-admin-size-focus, 2px);
+  --admin-toolbar-size-focus: var(--drupal-admin-size-focus, var(--admin-toolbar-space-2));
   /* Blue variations. */
   --admin-toolbar-color-blue-070: var(--drupal-admin-color-blue-070, #dbe8ff);
   --admin-toolbar-color-blue-100: var(--drupal-admin-color-blue-100, #ccdfff);
@@ -83,12 +83,16 @@ We need it root to calculate the size of the displace in .dialog-off-canvas-main
   /**
    * Spaces.
    */
+  --admin-toolbar-space-1: var(--drupal-admin-space-1, calc(0.0625 * var(--admin-toolbar-rem))); /* 0.0625 * 16px = 1px */
+  --admin-toolbar-space-2: var(--drupal-admin-space-2, calc(0.125 * var(--admin-toolbar-rem))); /* 0.125 * 16px = 2px */
   --admin-toolbar-space-4: var(--drupal-admin-space-4, calc(0.25 * var(--admin-toolbar-rem))); /* 0.25 * 16px = 4px */
   --admin-toolbar-space-8: var(--drupal-admin-space-8, calc(0.5 * var(--admin-toolbar-rem))); /* 0.5 * 16px = 8px */
   --admin-toolbar-space-12: var(--drupal-admin-space-12, calc(0.75 * var(--admin-toolbar-rem))); /* 0.75 * 16px = 12px */
+  --admin-toolbar-space-14: var(--drupal-admin-space-14, calc(0.875 * var(--admin-toolbar-rem))); /* 0.875 * 16px = 14px */
   --admin-toolbar-space-16: var(--drupal-admin-space-16, var(--admin-toolbar-rem)); /* 16px = 16px */
   --admin-toolbar-space-20: var(--drupal-admin-space-20, calc(1.25 * var(--admin-toolbar-rem))); /* 1.25 * 16px = 20px */
   --admin-toolbar-space-24: var(--drupal-admin-space-24, calc(1.5 * var(--admin-toolbar-rem))); /* 1.5 * 16px = 24px */
+  --admin-toolbar-space-30: var(--drupal-admin-space-30, calc(1.875 * var(--admin-toolbar-rem))); /* 1.875 * 16px = 30px */
   --admin-toolbar-space-32: var(--drupal-admin-space-32, calc(2 * var(--admin-toolbar-rem))); /* 2 * 16px = 32px */
   --admin-toolbar-space-40: var(--drupal-admin-space-40, calc(2.5 * var(--admin-toolbar-rem))); /* 2.5 * 16px = 40px */
   --admin-toolbar-space-48: var(--drupal-admin-space-48, calc(3 * var(--admin-toolbar-rem))); /* 3 * 16px = 48px */

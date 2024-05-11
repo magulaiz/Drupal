@@ -67,7 +67,7 @@ body {
   transform: translateX(-100%);
   background-color: var(--admin-toolbar-color-white);
   font-family: var(--admin-toolbar-font-family);
-  inline-size: calc(var(--admin-toolbar-sidebar-width) + 1px);
+  inline-size: calc(var(--admin-toolbar-sidebar-width) + var(--admin-toolbar-space-1));
 
   [dir="rtl"] & {
     right: 0;
@@ -143,7 +143,7 @@ body {
   margin-inline-start: calc(0.125 * var(--admin-toolbar-rem));
   cursor: pointer;
   color: var(--admin-toolbar-color-gray-500);
-  border: 1px solid var(--admin-toolbar-color-gray-300);
+  border: var(--admin-toolbar-space-1) solid var(--admin-toolbar-color-gray-300);
   border-radius: 50%;
   background-color: transparent;
 
@@ -260,10 +260,10 @@ body {
   background-color: var(--admin-toolbar-color-white);
   background-repeat: no-repeat;
   background-attachment: local, scroll;
-  background-position-y: 48px;
+  background-position-y: var(--admin-toolbar-space-48);
   background-size:
-    100% 40px,
-    100% 16px;
+    100% var(--admin-toolbar-space-40),
+    100% var(--admin-toolbar-space-16);
 
   @media (--admin-toolbar-desktop) {
     display: contents;
@@ -281,7 +281,7 @@ body {
   gap: var(--admin-toolbar-space-12);
   padding-block: var(--admin-toolbar-sidebar-header) var(--admin-toolbar-space-16);
   padding-inline: var(--admin-toolbar-space-16);
-  border-inline-end: 1px solid var(--admin-toolbar-color-gray-100);
+  border-inline-end: var(--admin-toolbar-space-1) solid var(--admin-toolbar-color-gray-100);
 
   @media (--admin-toolbar-desktop) {
     display: flex;
@@ -299,10 +299,10 @@ body {
     background-repeat: no-repeat;
     background-attachment: local, local, scroll, scroll;
     background-size:
-      100% 40px,
-      100% 40px,
-      100% 16px,
-      100% 16px;
+      100% var(--admin-toolbar-space-40),
+      100% var(--admin-toolbar-space-40),
+      100% var(--admin-toolbar-space-16),
+      100% var(--admin-toolbar-space-16);
   }
 }
 
@@ -316,8 +316,8 @@ body {
   gap: var(--admin-toolbar-space-16);
   margin-block-start: auto;
   padding: var(--admin-toolbar-space-16);
-  border-block-start: 1px solid var(--admin-toolbar-color-gray-200);
-  border-inline-end: 1px solid var(--admin-toolbar-color-gray-100);
+  border-block-start: var(--admin-toolbar-space-1) solid var(--admin-toolbar-color-gray-200);
+  border-inline-end: var(--admin-toolbar-space-1) solid var(--admin-toolbar-color-gray-100);
 
   @media (--admin-toolbar-desktop) {
     --admin-toolbar-z-index-footer: -1;
