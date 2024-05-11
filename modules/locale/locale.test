@@ -282,6 +282,9 @@ class LocaleJavascriptTranslationTest extends DrupalWebTestCase {
       "Context Single Quoted @count plural" => "Context string single quoted",
       "Context Double Quoted plural" => "Context string double quoted",
       "Context Double Quoted @count plural" => "Context string double quoted",
+
+      "No count argument plural - singular" => '',
+      "No count argument plural - plural" => '',
     );
 
     // Assert that all strings were found properly.
