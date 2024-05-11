@@ -137,7 +137,7 @@ class ModuleInstaller implements ModuleInstallerInterface {
       }
 
       // Only process currently uninstalled modules.
-      $installed_modules = $extension_config->get('module') ?: [];
+      $installed_modules = $extension_config->get(ExtensionTypeInterface::MODULE) ?: [];
       if (!$module_list = array_diff_key($module_list, $installed_modules)) {
         // Nothing to do. All modules already installed.
         return TRUE;
@@ -196,13 +196,17 @@ class ModuleInstaller implements ModuleInstallerInterface {
 
         // Check the validity of the default configuration. This will throw
         // exceptions if the configuration is not valid.
-        $config_installer->checkConfigurationToInstall('module', $module);
+        $config_installer->checkConfigurationToInstall(ExtensionTypeInterface::MODULE, $module);
 
         // Save this data without checking schema. This is a performance
         // improvement for module installation.
         $extension_config
           ->set("module.$module", 0)
-          ->set('module', module_config_sort($extension_config->get('module')))
+          ->set(
+            ExtensionTypeInterface::MODULE,
+            module_config_sort(
+              $extension_config->get(ExtensionTypeInterface::MODULE)
+            ))
           ->save(TRUE);
 
         // Prepare the new module list, sorted by weight, including filenames.
@@ -217,7 +221,12 @@ class ModuleInstaller implements ModuleInstallerInterface {
         // weight of 0.
         $current_module_filenames = $this->moduleHandler->getModuleList();
         $current_modules = array_fill_keys(array_keys($current_module_filenames), 0);
-        $current_modules = module_config_sort(array_merge($current_modules, $extension_config->get('module')));
+        $current_modules = module_config_sort(
+          array_merge(
+            $current_modules,
+            $extension_config->get(ExtensionTypeInterface::MODULE)
+          )
+        );
         $module_filenames = [];
         foreach ($current_modules as $name => $weight) {
           if (isset($current_module_filenames[$name])) {
@@ -227,7 +236,12 @@ class ModuleInstaller implements ModuleInstallerInterface {
             $module_path = \Drupal::service('extension.list.module')->getPath($name);
             $pathname = "$module_path/$name.info.yml";
             $filename = file_exists($module_path . "/$name.module") ? "$name.module" : NULL;
-            $module_filenames[$name] = new Extension($this->root, 'module', $pathname, $filename);
+            $module_filenames[$name] = new Extension(
+              $this->root,
+              ExtensionTypeInterface::MODULE,
+              $pathname,
+              $filename
+            );
           }
         }
 
@@ -324,7 +338,10 @@ class ModuleInstaller implements ModuleInstallerInterface {
             ->setSyncing(TRUE)
             ->setSourceStorage($source_storage);
         }
-        \Drupal::service('config.installer')->installDefaultConfig('module', $module);
+        \Drupal::service('config.installer')->installDefaultConfig(
+          ExtensionTypeInterface::MODULE,
+          $module
+        );
 
         // If the module has no current updates, but has some that were
         // previously removed, set the version to the value of
@@ -398,7 +415,7 @@ class ModuleInstaller implements ModuleInstallerInterface {
     }
 
     $extension_config = \Drupal::configFactory()->getEditable('core.extension');
-    $installed_modules = $extension_config->get('module') ?: [];
+    $installed_modules = $extension_config->get(ExtensionTypeInterface::MODULE) ?: [];
     if (!$module_list = array_intersect_key($module_list, $installed_modules)) {
       // Nothing to do. All modules already uninstalled.
       return TRUE;
@@ -467,7 +484,7 @@ class ModuleInstaller implements ModuleInstallerInterface {
       $this->moduleHandler->invoke($module, 'uninstall', [$sync_status]);
 
       // Remove all configuration belonging to the module.
-      \Drupal::service('config.manager')->uninstall('module', $module);
+      \Drupal::service('config.manager')->uninstall(ExtensionTypeInterface::MODULE, $module);
 
       // In order to make uninstalling transactional if anything uses routes.
       \Drupal::getContainer()->set('router.route_provider.old', \Drupal::service('router.route_provider'));

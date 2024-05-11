@@ -67,7 +67,7 @@ class ThemeHandler implements ThemeHandlerInterface {
   public function listInfo() {
     if (!isset($this->list)) {
       $this->list = [];
-      $installed_themes = $this->configFactory->get('core.extension')->get('theme');
+      $installed_themes = $this->configFactory->get('core.extension')->get(ExtensionTypeInterface::THEME);
       if (!empty($installed_themes)) {
         $installed_themes = array_intersect_key($this->themeList->getList(), $installed_themes);
         array_map([$this, 'addTheme'], $installed_themes);
@@ -103,7 +103,7 @@ class ThemeHandler implements ThemeHandlerInterface {
    * {@inheritdoc}
    */
   public function refreshInfo() {
-    $installed = $this->configFactory->get('core.extension')->get('theme');
+    $installed = $this->configFactory->get('core.extension')->get(ExtensionTypeInterface::THEME);
     // Only refresh the info if a theme has been installed. Modules are
     // installed before themes by the installer and this method is called during
     // module installation.

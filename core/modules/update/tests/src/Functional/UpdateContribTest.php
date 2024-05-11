@@ -2,6 +2,7 @@
 
 namespace Drupal\Tests\update\Functional;
 
+use Drupal\Core\Extension\ExtensionTypeInterface;
 use Drupal\Core\Utility\ProjectInfo;
 use Drupal\update\UpdateManagerInterface;
 
@@ -356,7 +357,7 @@ class UpdateContribTest extends UpdateTestBase {
     $update_settings = $this->config('update.settings');
     // Make sure all the update_test_* themes are disabled.
     $extension_config = $this->config('core.extension');
-    foreach ($extension_config->get('theme') as $theme => $weight) {
+    foreach ($extension_config->get(ExtensionTypeInterface::THEME) as $theme => $weight) {
       if (preg_match('/^update_test_/', $theme)) {
         $extension_config->clear("theme.$theme");
       }
@@ -443,7 +444,7 @@ class UpdateContribTest extends UpdateTestBase {
     $projects = \Drupal::service('update.manager')->getProjects();
     $theme_data = \Drupal::service('theme_handler')->rebuildThemeData();
     $project_info = new ProjectInfo();
-    $project_info->processInfoList($projects, $theme_data, 'theme', TRUE);
+    $project_info->processInfoList($projects, $theme_data, ExtensionTypeInterface::THEME, TRUE);
 
     $this->assertNotEmpty($projects['update_test_basetheme'], 'Valid base theme (update_test_basetheme) was found.');
   }

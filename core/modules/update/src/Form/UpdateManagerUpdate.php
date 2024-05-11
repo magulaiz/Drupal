@@ -3,6 +3,7 @@
 namespace Drupal\update\Form;
 
 use Drupal\Core\Batch\BatchBuilder;
+use Drupal\Core\Extension\ExtensionTypeInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
@@ -129,7 +130,7 @@ class UpdateManagerUpdate extends FormBase {
       else {
         $project_name = $name;
       }
-      if ($project['project_type'] == 'theme' || $project['project_type'] == 'theme-disabled') {
+      if ($project['project_type'] === ExtensionTypeInterface::THEME || $project['project_type'] === 'theme-disabled') {
         $project_name .= ' ' . $this->t('(Theme)');
       }
 
@@ -236,8 +237,8 @@ class UpdateManagerUpdate extends FormBase {
         // Based on what kind of project this is, save the entry into the
         // appropriate subarray.
         switch ($project['project_type']) {
-          case 'module':
-          case 'theme':
+          case ExtensionTypeInterface::MODULE:
+          case ExtensionTypeInterface::THEME:
             $projects['enabled'][$name] = $entry;
             break;
 

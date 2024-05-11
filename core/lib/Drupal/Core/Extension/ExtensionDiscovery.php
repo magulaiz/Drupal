@@ -118,7 +118,7 @@ class ExtensionDiscovery {
    * modules:
    * @code
    * $listing = new ExtensionDiscovery(\Drupal::root());
-   * $modules = $listing->scan('module');
+   * $modules = $listing->scan(ExtensionTypeInterface::MODULE);
    * @endcode
    *
    * The following directories will be searched (in the order stated):
@@ -140,8 +140,9 @@ class ExtensionDiscovery {
    * compatible with the current version of Drupal core.
    *
    * @param string $type
-   *   The extension type to search for. One of 'profile', 'module', 'theme', or
-   *   'theme_engine'.
+   *   The extension type to search for. One of ExtensionTypeInterface::PROFILE,
+   *   ExtensionTypeInterface::MODULE, ExtensionTypeInterface::THEME, or
+   *   ExtensionTypeInterface::THEME_ENGINE.
    * @param bool $include_tests
    *   (optional) Whether to explicitly include or exclude test extensions. By
    *   default, test extensions are only discovered when in a test environment.
@@ -153,7 +154,7 @@ class ExtensionDiscovery {
     // Determine the installation profile directories to scan for extensions,
     // unless explicit profile directories have been set. Exclude profiles as we
     // cannot have profiles within profiles.
-    if (!isset($this->profileDirectories) && $type != 'profile') {
+    if (!isset($this->profileDirectories) && $type != ExtensionTypeInterface::PROFILE) {
       $this->setProfileDirectoriesFromSettings();
     }
 
@@ -457,7 +458,7 @@ class ExtensionDiscovery {
 
         // Determine whether the extension has a main extension file.
         // For theme engines, the file extension is .engine.
-        if ($type == 'theme_engine') {
+        if ($type == ExtensionTypeInterface::THEME_ENGINE) {
           $filename = $name . '.engine';
         }
         // For profiles/modules/themes, it is the extension type.

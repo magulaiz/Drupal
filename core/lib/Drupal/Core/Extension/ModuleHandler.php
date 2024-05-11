@@ -190,14 +190,14 @@ class ModuleHandler implements ModuleHandlerInterface {
    * {@inheritdoc}
    */
   public function addModule($name, $path) {
-    $this->add('module', $name, $path);
+    $this->add(ExtensionTypeInterface::MODULE, $name, $path);
   }
 
   /**
    * {@inheritdoc}
    */
   public function addProfile($name, $path) {
-    $this->add('profile', $name, $path);
+    $this->add(ExtensionTypeInterface::PROFILE, $name, $path);
   }
 
   /**

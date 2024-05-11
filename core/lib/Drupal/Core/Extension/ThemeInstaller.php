@@ -127,8 +127,8 @@ class ThemeInstaller implements ThemeInstallerInterface {
     $extension_config = $this->configFactory->getEditable('core.extension');
 
     $theme_data = $this->themeHandler->rebuildThemeData();
-    $installed_themes = $extension_config->get('theme') ?: [];
-    $installed_modules = $extension_config->get('module') ?: [];
+    $installed_themes = $extension_config->get(ExtensionTypeInterface::THEME) ?: [];
+    $installed_modules = $extension_config->get(ExtensionTypeInterface::MODULE) ?: [];
 
     if ($install_dependencies) {
       $theme_list = array_combine($theme_list, $theme_list);
@@ -215,7 +215,7 @@ class ThemeInstaller implements ThemeInstallerInterface {
 
       // Validate default configuration of the theme. If there is existing
       // configuration then stop installing.
-      $this->configInstaller->checkConfigurationToInstall('theme', $key);
+      $this->configInstaller->checkConfigurationToInstall(ExtensionTypeInterface::THEME, $key);
 
       // The value is not used; the weight is ignored for themes currently. Do
       // not check schema when saving the configuration.
@@ -234,7 +234,7 @@ class ThemeInstaller implements ThemeInstallerInterface {
       // already.
       if (!isset($installed_themes[$key])) {
         // Install default configuration of the theme.
-        $this->configInstaller->installDefaultConfig('theme', $key);
+        $this->configInstaller->installDefaultConfig(ExtensionTypeInterface::THEME, $key);
       }
 
       $themes_installed[] = $key;
@@ -289,7 +289,7 @@ class ThemeInstaller implements ThemeInstallerInterface {
       unset($theme_settings[$key]);
 
       // Remove all configuration belonging to the theme.
-      $this->configManager->uninstall('theme', $key);
+      $this->configManager->uninstall(ExtensionTypeInterface::THEME, $key);
     }
     // Don't check schema when uninstalling a theme since we are only clearing
     // keys.

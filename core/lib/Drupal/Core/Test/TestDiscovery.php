@@ -6,6 +6,7 @@ use Drupal\Component\Annotation\Doctrine\StaticReflectionParser;
 use Drupal\Component\Annotation\Reflection\MockFileFinder;
 use Drupal\Component\Utility\NestedArray;
 use Drupal\Core\Extension\ExtensionDiscovery;
+use Drupal\Core\Extension\ExtensionTypeInterface;
 use Drupal\Core\Test\Exception\MissingGroupException;
 use Drupal\TestTools\PhpUnitCompatibility\ClassWriter;
 
@@ -424,9 +425,9 @@ class TestDiscovery {
     $listing = new ExtensionDiscovery($this->root);
     // Ensure that tests in all profiles are discovered.
     $listing->setProfileDirectories([]);
-    $extensions = $listing->scan('module', TRUE);
-    $extensions += $listing->scan('profile', TRUE);
-    $extensions += $listing->scan('theme', TRUE);
+    $extensions = $listing->scan(ExtensionTypeInterface::MODULE, TRUE);
+    $extensions += $listing->scan(ExtensionTypeInterface::PROFILE, TRUE);
+    $extensions += $listing->scan(ExtensionTypeInterface::THEME, TRUE);
     return $extensions;
   }
 

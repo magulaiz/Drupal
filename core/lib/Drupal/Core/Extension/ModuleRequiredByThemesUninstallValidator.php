@@ -70,7 +70,7 @@ class ModuleRequiredByThemesUninstallValidator implements ConfigImportModuleUnin
 
     $themes_depending_on_module = $this->getThemesDependingOnModule($module);
     if (!empty($themes_depending_on_module)) {
-      $installed_themes_after_import = $source_storage->read('core.extension')['theme'];
+      $installed_themes_after_import = $source_storage->read('core.extension')[ExtensionTypeInterface::THEME];
       $themes_depending_on_module_still_installed = array_intersect_key($themes_depending_on_module, $installed_themes_after_import);
       // Ensure that any dependent themes will be uninstalled by the module.
       if (!empty($themes_depending_on_module_still_installed)) {

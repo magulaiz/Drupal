@@ -30,10 +30,10 @@ class ExtensionPathResolver {
    *   The theme engine extension list.
    */
   public function __construct(ModuleExtensionList $module_extension_list, ProfileExtensionList $profile_extension_list, ThemeExtensionList $theme_extension_list, ThemeEngineExtensionList $theme_engine_extension_list) {
-    $this->extensionLists['module'] = $module_extension_list;
-    $this->extensionLists['profile'] = $profile_extension_list;
-    $this->extensionLists['theme'] = $theme_extension_list;
-    $this->extensionLists['theme_engine'] = $theme_engine_extension_list;
+    $this->extensionLists[ExtensionTypeInterface::MODULE] = $module_extension_list;
+    $this->extensionLists[ExtensionTypeInterface::PROFILE] = $profile_extension_list;
+    $this->extensionLists[ExtensionTypeInterface::THEME] = $theme_extension_list;
+    $this->extensionLists[ExtensionTypeInterface::THEME_ENGINE] = $theme_engine_extension_list;
   }
 
   /**

@@ -6,6 +6,7 @@
  */
 
 use Drupal\Core\Database\Database;
+use Drupal\Core\Extension\ExtensionTypeInterface;
 use Drupal\Core\Link;
 use Drupal\Core\Url;
 use Drupal\Core\Utility\UpdateException;
@@ -921,12 +922,12 @@ function hook_update_last_removed() {
  */
 function hook_updater_info() {
   return [
-    'module' => [
+    ExtensionTypeInterface::MODULE => [
       'class' => 'Drupal\Core\Updater\Module',
       'name' => t('Update modules'),
       'weight' => 0,
     ],
-    'theme' => [
+    ExtensionTypeInterface::THEME => [
       'class' => 'Drupal\Core\Updater\Theme',
       'name' => t('Update themes'),
       'weight' => 0,
@@ -953,7 +954,7 @@ function hook_updater_info() {
 function hook_updater_info_alter(&$updaters) {
   // Adjust weight so that the theme Updater gets a chance to handle a given
   // update task before module updaters.
-  $updaters['theme']['weight'] = -1;
+  $updaters[ExtensionTypeInterface::THEME]['weight'] = -1;
 }
 
 /**

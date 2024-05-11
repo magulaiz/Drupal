@@ -5,6 +5,7 @@ declare(strict_types = 1);
 namespace Drupal\Core\Extension\Plugin\Validation\Constraint;
 
 use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
+use Drupal\Core\Extension\ExtensionTypeInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Extension\ThemeHandlerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -60,13 +61,13 @@ class ExtensionExistsConstraintValidator extends ConstraintValidator implements 
     $variables = ['@name' => $extension_name];
 
     switch ($constraint->type) {
-      case 'module':
+      case ExtensionTypeInterface::MODULE:
         if (!$this->moduleHandler->moduleExists($extension_name)) {
           $this->context->addViolation($constraint->moduleMessage, $variables);
         }
         break;
 
-      case 'theme':
+      case ExtensionTypeInterface::THEME:
         if (!$this->themeHandler->themeExists($extension_name)) {
           $this->context->addViolation($constraint->themeMessage, $variables);
         }

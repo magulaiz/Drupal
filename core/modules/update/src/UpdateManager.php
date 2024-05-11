@@ -4,6 +4,7 @@ namespace Drupal\update;
 
 use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\DependencyInjection\DependencySerializationTrait;
+use Drupal\Core\Extension\ExtensionTypeInterface;
 use Drupal\Core\Extension\ModuleExtensionList;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Extension\ThemeHandlerInterface;
@@ -143,11 +144,11 @@ class UpdateManager implements UpdateManagerInterface {
         $module_data = $this->moduleExtensionList->reset()->getList();
         $theme_data = $this->themeHandler->rebuildThemeData();
         $project_info = new ProjectInfo();
-        $project_info->processInfoList($this->projects, $module_data, 'module', TRUE);
-        $project_info->processInfoList($this->projects, $theme_data, 'theme', TRUE);
+        $project_info->processInfoList($this->projects, $module_data, ExtensionTypeInterface::MODULE, TRUE);
+        $project_info->processInfoList($this->projects, $theme_data, ExtensionTypeInterface::THEME, TRUE);
         if ($this->updateSettings->get('check.disabled_extensions')) {
-          $project_info->processInfoList($this->projects, $module_data, 'module', FALSE);
-          $project_info->processInfoList($this->projects, $theme_data, 'theme', FALSE);
+          $project_info->processInfoList($this->projects, $module_data, ExtensionTypeInterface::MODULE, FALSE);
+          $project_info->processInfoList($this->projects, $theme_data, ExtensionTypeInterface::THEME, FALSE);
         }
         // Allow other modules to alter projects before fetching and comparing.
         $this->moduleHandler->alter('update_projects', $this->projects);
