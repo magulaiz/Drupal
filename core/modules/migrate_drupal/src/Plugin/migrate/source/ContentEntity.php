@@ -8,8 +8,10 @@ use Drupal\Core\Entity\ContentEntityTypeInterface;
 use Drupal\Core\Entity\EntityFieldManagerInterface;
 use Drupal\Core\Entity\EntityTypeBundleInfoInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
+use Drupal\Core\Entity\Sql\SqlContentEntityStorage;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\migrate\EntityFieldDefinitionTrait;
+use Drupal\migrate\Plugin\migrate\source\MapJoinTrait;
 use Drupal\migrate\Plugin\migrate\source\SourcePluginBase;
 use Drupal\migrate\Plugin\MigrateSourceInterface;
 use Drupal\migrate\Plugin\MigrationInterface;
@@ -33,6 +35,12 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  *   should be included, defaults to TRUE.
  * - add_revision_id: (optional) Indicates if the revision key is added to the
  *   source IDs, defaults to TRUE.
+ * - batch_size: (optional) Number of entities to fetch from the database during
+ *   each batch. If omitted, all records are fetched in a single query. It is
+ *   highly recommended to set this for large sources.
+ * - ignore_map: (optional) Source data is joined to the map table by default to
+ *   improve migration performance. If set to TRUE, the map table will not be
+ *   joined.
  *
  * Examples:
  *
@@ -70,6 +78,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  */
 class ContentEntity extends SourcePluginBase implements ContainerFactoryPluginInterface {
   use EntityFieldDefinitionTrait;
+  use MapJoinTrait;
 
   /**
    * The entity type manager.
@@ -98,6 +107,15 @@ class ContentEntity extends SourcePluginBase implements ContainerFactoryPluginIn
    * @var \Drupal\Core\Entity\EntityTypeInterface
    */
   protected $entityType;
+
+  /**
+   * Number of records to fetch from the database during each batch.
+   *
+   * A value of zero indicates no batching is to be done.
+   *
+   * @var int
+   */
+  protected $batchSize = 0;
 
   /**
    * The plugin's default configuration.
@@ -165,31 +183,74 @@ class ContentEntity extends SourcePluginBase implements ContainerFactoryPluginIn
    *   A data generator for this source.
    */
   protected function initializeIterator() {
-    $ids = $this->query()->execute();
-    return $this->yieldEntities($ids);
+    // Initialize the batch size if given in configuration.
+    if ($this->batchSize == 0 && isset($this->configuration['batch_size'])) {
+      // Valid batch sizes are integers >= 0.
+      if (is_int($this->configuration['batch_size']) && ($this->configuration['batch_size']) >= 0) {
+        $this->batchSize = $this->configuration['batch_size'];
+      }
+      else {
+        throw new MigrateException("batch_size must be greater than or equal to zero");
+      }
+    }
+
+    return $this->yieldEntities();
   }
 
   /**
    * Loads and yields entities, one at a time.
    *
-   * @param array $ids
-   *   The entity IDs.
-   *
    * @return \Generator
    *   An iterable of the loaded entities.
    */
-  protected function yieldEntities(array $ids) {
+  protected function yieldEntities() {
+    $current_batch = 0;
+
     $storage = $this->entityTypeManager
       ->getStorage($this->entityType->id());
-    foreach ($ids as $id) {
-      /** @var \Drupal\Core\Entity\ContentEntityInterface $entity */
-      $entity = $storage->load($id);
-      yield $this->toArray($entity);
-      if ($this->configuration['include_translations']) {
-        foreach ($entity->getTranslationLanguages(FALSE) as $language) {
-          yield $this->toArray($entity->getTranslation($language->getId()));
+
+    while (TRUE) {
+      $query = $this->query();
+      if ($this->batchSize > 0) {
+        // Run the query in batches, to prevent large source sizes exhausting
+        // memory.
+        $query->range($current_batch * $this->batchSize, $this->batchSize);
+      }
+
+      if ($this->mapJoinable()) {
+        // Get the underlying SQL query from the entity query.
+        $sql_query = $query->toSqlQuery();
+
+        $this->addMapJoin($sql_query);
+
+        $ids = $sql_query->execute()->fetchCol();
+      }
+      else {
+        $ids = $query->execute();
+      }
+
+      // End the loop when we run out of source entities.
+      if (empty($ids)) {
+        break;
+      }
+
+      foreach ($ids as $id) {
+        /** @var \Drupal\Core\Entity\ContentEntityInterface $entity */
+        $entity = $storage->load($id);
+        yield $this->toArray($entity);
+        if ($this->configuration['include_translations']) {
+          foreach ($entity->getTranslationLanguages(FALSE) as $language) {
+            yield $this->toArray($entity->getTranslation($language->getId()));
+          }
         }
       }
+
+      // Forcibly clear the entity memory cache, otherwise it'll keep increasing
+      // in size with the entities already loaded, and eventually exhaust memory
+      // for sources with a large count of entities.
+      \Drupal::service('entity.memory_cache')->deleteAll();
+
+      $current_batch++;
     }
   }
 
@@ -261,6 +322,28 @@ class ContentEntity extends SourcePluginBase implements ContainerFactoryPluginIn
   }
 
   /**
+   * Checks if we can join against the map table.
+   *
+   * @return bool
+   *   TRUE if we can join against the map table; FALSE otherwise.
+   */
+  protected function mapJoinable() {
+    // Do not join map if explicitly configured not to.
+    if (isset($this->configuration['ignore_map']) && $this->configuration['ignore_map']) {
+      return FALSE;
+    }
+
+    // The query can only be joined to the map table if the source entity's
+    // storage uses SQL, as for the join we need to convert the entity query to
+    // an SQL query.
+    if (!is_a($this->entityType->getStorageClass(), SqlContentEntityStorage::class, TRUE)) {
+      return FALSE;
+    }
+
+    return TRUE;
+  }
+
+  /**
    * {@inheritdoc}
    */
   public function fields() {
@@ -285,6 +368,8 @@ class ContentEntity extends SourcePluginBase implements ContainerFactoryPluginIn
   public function getIds() {
     $id_key = $this->entityType->getKey('id');
     $ids[$id_key] = $this->getDefinitionFromEntity($id_key);
+    $ids[$id_key]['alias'] = 'base_table';
+
     if ($this->configuration['add_revision_id'] && $this->entityType->isRevisionable()) {
       $revision_key = $this->entityType->getKey('revision');
       $ids[$revision_key] = $this->getDefinitionFromEntity($revision_key);
