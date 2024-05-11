@@ -37,6 +37,7 @@ class NodeComplete extends NodeRevision {
       ->tableExists('entity_translation_revision')) {
       $query->leftJoin('entity_translation_revision', 'etr', '[nr].[nid] = [etr].[entity_id] AND [nr].[vid] = [etr].[revision_id]');
       $query->fields('etr', [
+        'created',
         'entity_type',
         'entity_id',
         'revision_id',
@@ -54,6 +55,7 @@ class NodeComplete extends NodeRevision {
       $query->addField('etr', 'changed', 'etr_changed');
 
       $query->orderBy('etr.revision_id');
+      $query->orderBy('etr.created');
       $query->orderBy('etr.language');
     }
     return $query;
