@@ -12,6 +12,7 @@ use Drupal\Core\Validation\Plugin\Validation\Constraint\EmailConstraint;
 use Symfony\Component\Validator\Constraints\Blank;
 use Symfony\Component\Validator\Constraints\Callback;
 use Symfony\Component\Validator\Constraints\Choice;
+use Symfony\Component\Validator\Constraints\Hostname;
 use Symfony\Component\Validator\Constraints\Image;
 use Symfony\Component\Validator\Constraints\NotBlank;
 
@@ -120,6 +121,11 @@ class ConstraintManager extends DefaultPluginManager {
     $this->getDiscovery()->setDefinition('Image', [
       'label' => new TranslatableMarkup('Image'),
       'class' => Image::class,
+      'type' => ['string'],
+    ]);
+    $this->getDiscovery()->setDefinition('Hostname', [
+      'label' => new TranslatableMarkup('Hostname'),
+      'class' => Hostname::class,
       'type' => ['string'],
     ]);
   }

@@ -398,6 +398,7 @@ system.mail:
           constraints:
             NotBlank:
               message: 'The mailer DSN must contain a host (use "default" by default).'
+            Hostname: { }
         user:
           type: string
           nullable: true
