@@ -1100,7 +1100,7 @@ mailer_dsn.options.sendmail+smtp:
 
 mailer_dsn.options.smtp:
   type: mapping
-  label: 'SMTP Options'
+  label: 'SMTP options'
   mapping:
     verify_peer:
       type: boolean
@@ -1117,7 +1117,7 @@ mailer_dsn.options.smtp:
     local_domain:
       type: string
       nullable: true
-      label: 'Domain name or IP address to use in HELO command (defaults to 127.0.0.1)'
+      label: 'Domain name or IP address that represents the identity of the client when establishing the SMTP session (defaults to 127.0.0.1)'
       constraints:
         Regex:
           # Forbid any kind of control character.
@@ -1156,4 +1156,4 @@ mailer_dsn.options.smtp:
 
 mailer_dsn.options.smtps:
   type: mailer_dsn.options.smtp
-  label: 'SMTPS Options'
+  label: 'Secure SMTP options'
