@@ -161,16 +161,18 @@ class TestRun {
       $this->results = JUnitConverter::xmlToRows($this->testId, $logJunit);
     }
     else {
-      $this->results = [[
-        'test_id' => $this->testId,
-        'test_class' => $this->testClassName,
-        'status' => TestStatus::label($status),
-        'message' => 'PHPUnit Test failed to complete; Error: ' . $output,
-        'message_group' => 'Other',
-        'function' => $this->testClassName,
-        'line' => '0',
-        'file' => $this->logFileName,
-      ]];
+      $this->results = [
+        [
+          'test_id' => $this->testId,
+          'test_class' => $this->testClassName,
+          'status' => TestStatus::label($status),
+          'message' => 'PHPUnit Test failed to complete; Error: ' . $output,
+          'message_group' => 'Other',
+          'function' => $this->testClassName,
+          'line' => '0',
+          'file' => $this->logFileName,
+        ]
+      ];
     }
 
     // Logs the parsed PHPUnit results into the test run.
@@ -186,11 +188,9 @@ class TestRun {
   /**
    * Tallies test results per test class.
    *
-   * @param string[][] $results
-   *   Array of results in the {simpletest} schema. Can be the return value of
-   *   PhpUnitTestRunner::execute().
+   * Processes the array of results in the {simpletest} schema.
    *
-   * @return int[][]
+   * @return array<string<array<string,int>>
    *   Array of status tallies, keyed by test class name and status type.
    *
    * @internal

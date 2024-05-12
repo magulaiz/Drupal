@@ -32,7 +32,7 @@ class PhpUnitRunner implements ContainerInjectionInterface {
    */
   public function __construct(
     public readonly string $appRoot,
-    public readonly string $workingDirectory
+    public readonly string $workingDirectory,
   ) {
   }
 
@@ -88,7 +88,7 @@ class PhpUnitRunner implements ContainerInjectionInterface {
   /**
    * Executes one single PHPUnit test class and returns the test results.
    *
-   * @param \Drupal\Core\Test\TestRun $test_run
+   * @param \Drupal\Core\Test\TestRun $testRun
    *   The test run object.
    *
    * @return int

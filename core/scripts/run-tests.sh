@@ -64,7 +64,7 @@ if ($args['execute-test']) {
   simpletest_script_setup_database();
   $test_run_results_storage = simpletest_script_setup_test_run_results_storage();
   $test_run = TestRun::get($test_run_results_storage, $args['test-id']);
-  simpletest_script_run_one_test($test_run, $args['execute-test']);
+  simpletest_script_run_one_test($test_run);
   // Sub-process exited already; this is just for clarity.
   exit(SIMPLETEST_SCRIPT_EXIT_SUCCESS);
 }
@@ -827,7 +827,7 @@ function simpletest_script_run_phpunit(TestRun $test_run) {
 /**
  * Run a single test, bootstrapping Drupal if needed.
  */
-function simpletest_script_run_one_test(TestRun $test_run, $test_class) {
+function simpletest_script_run_one_test(TestRun $test_run) {
   global $args;
 
   try {
