@@ -59,19 +59,21 @@ class SimpletestTestRunResultsStorage implements TestRunResultsStorageInterface 
   public function createNew(string $testClassName): int|string {
     return $this->connection->insert('simpletest_test_id')
       ->useDefaults(['test_id'])
-      ->fields(['test_class' => $testClassName])
+      ->fields(['test_configuration' => serialize(['testClassName' => $testClassName])])
       ->execute();
   }
 
   /**
    * @todo
    */
-  public function getTestClassName(int|string $testId): string {
-    return $this->connection->select('simpletest_test_id', 'sttid')
-      ->fields('sttid', ['test_class'])
+  public function getTestConfiguration(int|string $testId): array {
+    $raw = $this->connection->select('simpletest_test_id', 'sttid')
+      ->fields('sttid', ['test_configuration'])
       ->condition('test_id', $testId)
       ->execute()
       ->fetchField();
+
+    return unserialize($raw);
   }
 
   /**
@@ -268,12 +270,13 @@ class SimpletestTestRunResultsStorage implements TestRunResultsStorageInterface 
           'not null' => TRUE,
           'description' => 'Primary Key: Unique simpletest ID used to group test results together. Each time a set of tests are run a new test ID is used.',
         ],
-        'test_class' => [
-          'type' => 'varchar_ascii',
-          'length' => 255,
+        'test_configuration' => [
+          'type' => 'blob',
+          'size' => 'big',
+          'serialize' => TRUE,
           'not null' => TRUE,
           'default' => '',
-          'description' => 'The name of the class being tested.',
+          'description' => 'Configuration of the test run.',
         ],
         'last_prefix' => [
           'type' => 'varchar',

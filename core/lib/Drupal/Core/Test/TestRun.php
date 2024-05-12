@@ -91,8 +91,8 @@ class TestRun {
     TestRunResultsStorageInterface $testRunResultsStorage,
     int|string $test_id,
   ): TestRun {
-    $testClassName = $testRunResultsStorage->getTestClassName($test_id);
-    return new static($testRunResultsStorage, $testClassName, $test_id);
+    $testConfiguration = $testRunResultsStorage->getTestConfiguration($test_id);
+    return new static($testRunResultsStorage, $testConfiguration['testClassName'], $test_id);
   }
 
   /**
