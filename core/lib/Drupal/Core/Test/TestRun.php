@@ -29,7 +29,7 @@ class TestRun {
    * @todo
    */
   public readonly bool $failOnDeprecation;
-  public readonly string $testFilePath;
+  public readonly ?string $testFilePath;
   public readonly string $logFileName;
   private array $results;
   private array $summaries;
@@ -54,7 +54,12 @@ class TestRun {
     $this->failOnDeprecation = DeprecationHandler::getConfiguration() !== FALSE ? TRUE : FALSE;
 
     // The file containing the test class to be run.
-    $this->testFilePath = (new \ReflectionClass($this->testClassName))->getFileName();
+    try {
+      $this->testFilePath = (new \ReflectionClass($this->testClassName))->getFileName();
+    }
+    catch (\ReflectionException $e) {
+      $this->testFilePath = NULL;
+    }
 
     $this->logFileName = 'phpunit-' . $this->testId . '.xml';
   }
@@ -236,7 +241,7 @@ class TestRun {
   }
 
   /**
-   * Returns decoded test results statics.
+   * Returns decoded test results.
    *
    * @internal
    */
@@ -245,7 +250,7 @@ class TestRun {
   }
 
   /**
-   * Returns test results statics.
+   * Returns test results statistics.
    *
    * @internal
    */

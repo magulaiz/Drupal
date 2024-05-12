@@ -271,10 +271,9 @@ class SimpletestTestRunResultsStorage implements TestRunResultsStorageInterface 
           'description' => 'Primary Key: Unique simpletest ID used to group test results together. Each time a set of tests are run a new test ID is used.',
         ],
         'test_configuration' => [
-          'type' => 'blob',
-          'size' => 'big',
-          'serialize' => TRUE,
+          'type' => 'text',
           'not null' => TRUE,
+          'serialize' => TRUE,
           'default' => '',
           'description' => 'Configuration of the test run.',
         ],

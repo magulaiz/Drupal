@@ -81,7 +81,8 @@ class PhpUnitRunnerTest extends UnitTestCase {
    */
   public function testPhpUnitCommand() {
     $runner = new PhpUnitRunner($this->root, sys_get_temp_dir());
-    $this->assertMatchesRegularExpression('/phpunit/', $runner->phpUnitCommand());
+    $invokableMethod = new \ReflectionMethod($runner, 'phpUnitCommand');
+    $this->assertMatchesRegularExpression('/phpunit/', $invokableMethod->invoke($runner));
   }
 
 }
