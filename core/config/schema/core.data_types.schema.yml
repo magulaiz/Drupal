@@ -1086,6 +1086,13 @@ mailer_dsn.options.sendmail:
       type: string
       nullable: true
       label: 'Command to be executed by sendmail transport'
+      constraints:
+        Regex:
+          # Forbid any kind of control character.
+          # @see https://stackoverflow.com/a/66587087
+          pattern: '/([^\PC])/u'
+          match: false
+          message: 'The command option is not allowed to span multiple lines or contain control characters.'
 
 mailer_dsn.options.sendmail+smtp:
   type: mailer_dsn.options.sendmail
@@ -1104,11 +1111,20 @@ mailer_dsn.options.smtp:
       nullable: true
       label: 'TLS Peer Fingerprint (no default)'
       constraints:
-        Regex: '/^[a-fA-F0-9]+$/'
+        Regex:
+          pattern: '/^[a-fA-F0-9]+$/'
+          message: 'The peer_fingerprint option requires an md5, sha1 or sha256 certificate fingerprint in hex with all separators (colons) removed.'
     local_domain:
       type: string
       nullable: true
       label: 'Domain name or IP address to use in HELO command (defaults to 127.0.0.1)'
+      constraints:
+        Regex:
+          # Forbid any kind of control character.
+          # @see https://stackoverflow.com/a/66587087
+          pattern: '/([^\PC])/u'
+          match: false
+          message: 'The local_domain is not allowed to span multiple lines or contain control characters.'
     restart_threshold:
       type: integer
       nullable: true
