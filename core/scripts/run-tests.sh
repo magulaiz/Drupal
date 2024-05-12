@@ -817,15 +817,11 @@ function simpletest_script_execute_batch(TestRunResultsStorageInterface $test_ru
  */
 function simpletest_script_run_phpunit(TestRun $test_run) {
   $runner = PhpUnitRunner::create(\Drupal::getContainer());
-  $testRunResult = $runner->runOneTestClass($test_run);
-  $results = $runner->decodeResults($test_run, $testRunResult);
-  $runner->processPhpUnitResults($test_run, $results);
-
-  $summaries = $runner->summarizeResults($results);
-  foreach ($summaries as $class => $summary) {
+  $status = $runner->runOneTestClass($test_run);
+  foreach ($test_run->getSummaries() as $class => $summary) {
     simpletest_script_reporter_display_summary($class, $summary);
   }
-  return $testRunResult->status;
+  return $status;
 }
 
 /**

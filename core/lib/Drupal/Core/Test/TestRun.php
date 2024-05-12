@@ -31,6 +31,8 @@ class TestRun {
   public readonly bool $failOnDeprecation;
   public readonly string $testFilePath;
   public readonly string $logFileName;
+  private array $results;
+  private array $summaries;
 
   /**
    * TestRun constructor.
@@ -147,6 +149,88 @@ class TestRun {
       $this->testClass = $state['test_class'];
     }
     return $this->testClass;
+  }
+
+  public function processResults(
+    int $status,
+    string $output,
+    string $error,
+    string $logJunit,
+  ): array {
+    if ($status == TestStatus::PASS) {
+      $this->results = JUnitConverter::xmlToRows($this->testId, $logJunit);
+    }
+    else {
+      $this->results = [[
+        'test_id' => $this->testId,
+        'test_class' => $this->testClassName,
+        'status' => TestStatus::label($status),
+        'message' => 'PHPUnit Test failed to complete; Error: ' . $output,
+        'message_group' => 'Other',
+        'function' => $this->testClassName,
+        'line' => '0',
+        'file' => $this->logFileName,
+      ]];
+    }
+
+    // Logs the parsed PHPUnit results into the test run.
+    foreach ($this->results as $result) {
+      $this->insertLogEntry($result);
+    }
+
+    $this->summarizeResults();
+
+    return $this->results;
+  }
+
+  /**
+   * Tallies test results per test class.
+   *
+   * @param string[][] $results
+   *   Array of results in the {simpletest} schema. Can be the return value of
+   *   PhpUnitTestRunner::execute().
+   *
+   * @return int[][]
+   *   Array of status tallies, keyed by test class name and status type.
+   *
+   * @internal
+   */
+  private function summarizeResults(): array {
+    $this->summaries = [];
+    foreach ($this->results as $result) {
+      if (!isset($this->summaries[$result['test_class']])) {
+        $this->summaries[$result['test_class']] = [
+          '#pass' => 0,
+          '#fail' => 0,
+          '#exception' => 0,
+          '#debug' => 0,
+        ];
+      }
+
+      switch ($result['status']) {
+        case 'pass':
+          $this->summaries[$result['test_class']]['#pass']++;
+          break;
+
+        case 'fail':
+          $this->summaries[$result['test_class']]['#fail']++;
+          break;
+
+        case 'exception':
+          $this->summaries[$result['test_class']]['#exception']++;
+          break;
+
+        case 'debug':
+          $this->summaries[$result['test_class']]['#debug']++;
+          break;
+
+      }
+    }
+    return $this->summaries;
+  }
+
+  public function getSummaries(): array {
+    return $this->summaries;
   }
 
   /**
