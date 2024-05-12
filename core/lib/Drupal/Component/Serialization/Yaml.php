@@ -7,12 +7,14 @@ namespace Drupal\Component\Serialization;
  *
  * Proxy implementation that will choose the best library based on availability.
  */
-class Yaml implements SerializationInterface {
+class Yaml implements TaggedSerializationInterface {
+
+  use TaggedSerializationTrait;
 
   /**
    * The YAML implementation to use.
    *
-   * @var \Drupal\Component\Serialization\SerializationInterface
+   * @var \Drupal\Component\Serialization\TaggedSerializationInterface
    */
   protected static $serializer;
 
@@ -57,6 +59,9 @@ class Yaml implements SerializationInterface {
         // Otherwise, fallback to the Symfony implementation.
         static::$serializer = YamlSymfony::class;
       }
+
+      // Merge the tag callbacks from this proxy to the chosen serializer.
+      static::mergeTagCallbacks(static::$serializer);
     }
     return static::$serializer;
   }

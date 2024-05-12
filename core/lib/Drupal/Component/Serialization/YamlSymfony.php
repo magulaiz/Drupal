@@ -5,12 +5,15 @@ namespace Drupal\Component\Serialization;
 use Drupal\Component\Serialization\Exception\InvalidDataTypeException;
 use Symfony\Component\Yaml\Parser;
 use Symfony\Component\Yaml\Dumper;
+use Symfony\Component\Yaml\Tag\TaggedValue;
 use Symfony\Component\Yaml\Yaml as SymfonyYaml;
 
 /**
  * Default serialization for YAML using the Symfony component.
  */
-class YamlSymfony implements SerializationInterface {
+class YamlSymfony implements TaggedSerializationInterface {
+
+  use TaggedSerializationTrait;
 
   /**
    * {@inheritdoc}
@@ -34,7 +37,21 @@ class YamlSymfony implements SerializationInterface {
       $yaml = new Parser();
       // Make sure we have a single trailing newline. A very simple config like
       // 'foo: bar' with no newline will fail to parse otherwise.
-      return $yaml->parse($raw, SymfonyYaml::PARSE_EXCEPTION_ON_INVALID_TYPE);
+      $data = $yaml->parse($raw, SymfonyYaml::PARSE_EXCEPTION_ON_INVALID_TYPE | SymfonyYaml::PARSE_CUSTOM_TAGS);
+
+      $is_array = is_array($data);
+      if (!$is_array) {
+        $data = [$data];
+      }
+
+      // Support Symfony 3.3 TaggedValue objects.
+      array_walk_recursive($data, function (&$item) {
+        if ($item instanceof TaggedValue) {
+          $item = static::executeTagCallback($item->getValue(), $item->getTag());
+        }
+      });
+
+      return $is_array ? $data : reset($data);
     }
     catch (\Exception $e) {
       throw new InvalidDataTypeException($e->getMessage(), $e->getCode(), $e);

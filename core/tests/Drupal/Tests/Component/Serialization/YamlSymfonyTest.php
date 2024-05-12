@@ -78,4 +78,17 @@ class YamlSymfonyTest extends YamlTestBase {
     YamlSymfony::encode([$object]);
   }
 
+  /**
+   * Tests YAML 1.2 tag support (!tag).
+   *
+   * @covers ::addTagCallback
+   * @covers ::getDefaultTagCallbacks
+   * @covers ::getTagCallbacks
+   * @covers ::removeTagCallback
+   * @covers ::setTagCallbacks
+   */
+  public function testTagSupport() {
+    $this->assertYamlTags(YamlSymfony::class);
+  }
+
 }
