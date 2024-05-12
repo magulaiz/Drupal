@@ -236,6 +236,15 @@ class TestRun {
   }
 
   /**
+   * Returns decoded test results statics.
+   *
+   * @internal
+   */
+  public function getResults(): array {
+    return $this->results;
+  }
+
+  /**
    * Returns test results statics.
    *
    * @internal

@@ -5,8 +5,6 @@ declare(strict_types=1);
 namespace Drupal\KernelTests\Core\Test;
 
 use Drupal\Core\Database\Database;
-use Drupal\Core\Test\JUnitConverter;
-use Drupal\Core\Test\PhpUnitTestRunner;
 use Drupal\Core\Test\TestRun;
 use Drupal\Core\Test\SimpletestTestRunResultsStorage;
 use Drupal\KernelTests\KernelTestBase;

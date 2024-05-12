@@ -61,6 +61,7 @@ class PhpUnitRunnerTest extends UnitTestCase {
     $this->assertEquals(TestStatus::EXCEPTION, $status);
 
     // A serious error in runCommand() should give us a fixed set of results.
+    $results = $test_run->getResults();
     $row = reset($results);
     $fail_row = [
       'test_id' => $test_id,
@@ -79,72 +80,8 @@ class PhpUnitRunnerTest extends UnitTestCase {
    * @covers ::phpUnitCommand
    */
   public function testPhpUnitCommand() {
-    $runner = new PhpUnitTestRunner($this->root, sys_get_temp_dir());
+    $runner = new PhpUnitRunner($this->root, sys_get_temp_dir());
     $this->assertMatchesRegularExpression('/phpunit/', $runner->phpUnitCommand());
-  }
-
-  /**
-   * @covers ::xmlLogFilePath
-   */
-  public function testXmlLogFilePath() {
-    $runner = new PhpUnitTestRunner($this->root, sys_get_temp_dir());
-    $this->assertStringEndsWith('phpunit-23.xml', $runner->xmlLogFilePath(23));
-  }
-
-  public static function providerTestSummarizeResults() {
-    return [
-      [
-        [
-          [
-            'test_class' => static::class,
-            'status' => 'pass',
-          ],
-        ],
-        '#pass',
-      ],
-      [
-        [
-          [
-            'test_class' => static::class,
-            'status' => 'fail',
-          ],
-        ],
-        '#fail',
-      ],
-      [
-        [
-          [
-            'test_class' => static::class,
-            'status' => 'exception',
-          ],
-        ],
-        '#exception',
-      ],
-      [
-        [
-          [
-            'test_class' => static::class,
-            'status' => 'debug',
-          ],
-        ],
-        '#debug',
-      ],
-    ];
-  }
-
-  /**
-   * @dataProvider providerTestSummarizeResults
-   * @covers ::summarizeResults
-   */
-  public function testSummarizeResults($results, $has_status) {
-    $runner = new PhpUnitTestRunner($this->root, sys_get_temp_dir());
-    $summary = $runner->summarizeResults($results);
-
-    $this->assertArrayHasKey(static::class, $summary);
-    $this->assertEquals(1, $summary[static::class][$has_status]);
-    foreach (array_diff(['#pass', '#fail', '#exception', '#debug'], [$has_status]) as $should_be_zero) {
-      $this->assertSame(0, $summary[static::class][$should_be_zero]);
-    }
   }
 
 }

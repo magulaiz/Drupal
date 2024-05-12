@@ -7,7 +7,7 @@ namespace Drupal\Core\Test;
  *
  * This is mainly for converting PHPUnit test results.
  *
- * This class is @internal and not considered to be API.
+ * @internal
  */
 class JUnitConverter {
 
@@ -17,7 +17,8 @@ class JUnitConverter {
    * @param int $test_id
    *   The current test ID.
    * @param string|false $junit_xml
-   *   Path to the PHPUnit XML file.
+   *   The content of the PHPUnit JUnit XML file, that contains the results of
+   *   a PHPUnit test run.
    *
    * @return array[]
    *   The results as array of rows in a format that can be inserted into the
