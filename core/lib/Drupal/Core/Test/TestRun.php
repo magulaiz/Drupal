@@ -151,6 +151,11 @@ class TestRun {
     return $this->testClass;
   }
 
+  /**
+   * Processes PHPUnit CLI results.
+   *
+   * @internal
+   */
   public function processResults(
     int $status,
     string $output,
@@ -171,15 +176,16 @@ class TestRun {
           'function' => $this->testClassName,
           'line' => '0',
           'file' => $this->logFileName,
-        ]
+        ],
       ];
     }
 
-    // Logs the parsed PHPUnit results into the test run.
+    // Logs the parsed PHPUnit results.
     foreach ($this->results as $result) {
       $this->insertLogEntry($result);
     }
 
+    // Tallies test results per test class.
     $this->summarizeResults();
 
     return $this->results;
@@ -229,6 +235,11 @@ class TestRun {
     return $this->summaries;
   }
 
+  /**
+   * Returns test results statics.
+   *
+   * @internal
+   */
   public function getSummaries(): array {
     return $this->summaries;
   }

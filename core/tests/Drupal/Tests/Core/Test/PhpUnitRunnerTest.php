@@ -4,26 +4,26 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\Core\Test;
 
-use Drupal\Core\Test\PhpUnitTestRunner;
 use Drupal\Core\Test\SimpletestTestRunResultsStorage;
 use Drupal\Core\Test\TestRun;
 use Drupal\Core\Test\TestStatus;
+use Drupal\TestTools\PhpUnitRunner;
 use Drupal\Tests\UnitTestCase;
 
 /**
- * @coversDefaultClass \Drupal\Core\Test\PhpUnitTestRunner
+ * @coversDefaultClass \Drupal\TestTools\PhpUnitRunner
  * @group Test
  *
  * @see Drupal\Tests\simpletest\Unit\SimpletestPhpunitRunCommandTest
  */
-class PhpUnitTestRunnerTest extends UnitTestCase {
+class PhpUnitRunnerTest extends UnitTestCase {
 
   /**
    * Tests an error in the test running phase.
    *
-   * @covers ::execute
+   * @covers ::runOneTestClass
    */
-  public function testRunTestsError() {
+  public function testRunOneTestClassError() {
     $test_id = 23;
     $log_path = 'test_log_path';
 
@@ -39,31 +39,23 @@ class PhpUnitTestRunnerTest extends UnitTestCase {
       ->willReturn($test_id);
 
     // Create a mock runner.
-    $runner = $this->getMockBuilder(PhpUnitTestRunner::class)
+    $runner = $this->getMockBuilder(PhpUnitRunner::class)
       ->disableOriginalConstructor()
-      ->onlyMethods(['xmlLogFilepath', 'runCommand'])
+      ->onlyMethods(['runPhpUnit'])
       ->getMock();
 
-    // Set some expectations for xmlLogFilepath().
+    // We mark a failure by having runPhpUnit() deliver a serious status code.
     $runner->expects($this->once())
-      ->method('xmlLogFilepath')
-      ->willReturn($log_path);
-
-    // We mark a failure by having runCommand() deliver a serious status code.
-    $runner->expects($this->once())
-      ->method('runCommand')
+      ->method('runPhpUnit')
       ->willReturnCallback(
-        function (string $test_class_name, string $log_junit_file_path, int &$status): string {
-          $status = TestStatus::EXCEPTION;
-          return ' ';
+        function (array $command, array $processEnvironmentVariables, ?string &$output = NULL, ?string &$error = NULL): int {
+          return TestStatus::EXCEPTION;
         }
       );
 
-    // The execute() method expects $status by reference, so we initialize it
-    // to some value we don't expect back.
-    $status = -1;
-    $test_run = TestRun::createNew($storage);
-    $results = $runner->execute($test_run, 'SomeTest', $status);
+    // Actually execute the test in the partially mocked object.
+    $test_run = TestRun::createNew($storage, 'SomeTest');
+    $status = $runner->runOneTestClass($test_run);
 
     // Make sure our status code made the round trip.
     $this->assertEquals(TestStatus::EXCEPTION, $status);
