@@ -274,7 +274,6 @@ class SimpletestTestRunResultsStorage implements TestRunResultsStorageInterface 
           'type' => 'text',
           'not null' => TRUE,
           'serialize' => TRUE,
-          'default' => '',
           'description' => 'Configuration of the test run.',
         ],
         'last_prefix' => [
