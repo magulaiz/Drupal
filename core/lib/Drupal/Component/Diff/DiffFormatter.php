@@ -18,7 +18,7 @@ class DiffFormatter {
   /**
    * Should a block header be shown?
    */
-  public $showHeader = TRUE;
+  public bool $showHeader = TRUE;
 
   /**
    * Number of leading context "lines" to preserve.
@@ -26,7 +26,7 @@ class DiffFormatter {
    * This should be left at zero for this class, but subclasses
    * may want to set this to other values.
    */
-  public $leadingContextLines = 0;
+  public int $leadingContextLines = 0;
 
   /**
    * Number of trailing context "lines" to preserve.
@@ -34,14 +34,14 @@ class DiffFormatter {
    * This should be left at zero for this class, but subclasses
    * may want to set this to other values.
    */
-  public $trailingContextLines = 0;
+  public int $trailingContextLines = 0;
 
   /**
    * The line stats.
    *
    * @var array
    */
-  protected $lineStats = [
+  protected array $lineStats = [
     'counter' => ['x' => 0, 'y' => 0],
     'offset' => ['x' => 0, 'y' => 0],
   ];
@@ -192,6 +192,50 @@ class DiffFormatter {
     $this->_deleted($orig);
     echo "---\n";
     $this->_added($closing);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function __get(string $name) {
+    if ($name === 'show_header') {
+      @trigger_error('Accessing the $show_header property is deprecated in drupal:10.3.0 and is removed from drupal:11.0.0. Use \Drupal\Component\Diff\DiffFormatter::showHeader instead. See https://www.drupal.org/node/3446709', E_USER_DEPRECATED);
+      return $this->showHeader;
+    }
+    if ($name === 'leading_context_lines') {
+      @trigger_error('Accessing the $leading_context_lines property is deprecated in drupal:10.3.0 and is removed from drupal:11.0.0. Use \Drupal\Component\Diff\DiffFormatter::leadingContextLines instead. See https://www.drupal.org/node/3446709', E_USER_DEPRECATED);
+      return $this->leadingContextLines;
+    }
+    if ($name === 'trailing_context_lines') {
+      @trigger_error('Accessing the $trailing_context_lines property is deprecated in drupal:10.3.0 and is removed from drupal:11.0.0. Use \Drupal\Component\Diff\DiffFormatter::trailingContextLines instead. See https://www.drupal.org/node/3446709', E_USER_DEPRECATED);
+      return $this->trailingContextLines;
+    }
+    if ($name === 'line_stats') {
+      @trigger_error('Accessing the $line_stats property is deprecated in drupal:10.3.0 and is removed from drupal:11.0.0. Use \Drupal\Component\Diff\DiffFormatter::lineStats instead. See https://www.drupal.org/node/3446709', E_USER_DEPRECATED);
+      return $this->lineStats;
+    }
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function __set(string $name, $value): void {
+    if ($name === 'show_header') {
+      @trigger_error('Setting the $show_header property is deprecated in drupal:10.3.0 and is removed from drupal:11.0.0. Use \Drupal\Component\Diff\DiffFormatter::showHeader instead. See https://www.drupal.org/node/3446709', E_USER_DEPRECATED);
+      $this->showHeader = $value;
+    }
+    elseif ($name === 'leading_context_lines') {
+      @trigger_error('Setting the $leading_context_lines property is deprecated in drupal:10.3.0 and is removed from drupal:11.0.0. Use \Drupal\Component\Diff\DiffFormatter::leadingContextLines instead. See https://www.drupal.org/node/3446709', E_USER_DEPRECATED);
+      $this->leadingContextLines = $value;
+    }
+    elseif ($name === 'trailing_context_lines') {
+      @trigger_error('Setting the $trailing_context_lines property is deprecated in drupal:10.3.0 and is removed from drupal:11.0.0. Use \Drupal\Component\Diff\DiffFormatter::trailingContextLines instead. See https://www.drupal.org/node/3446709', E_USER_DEPRECATED);
+      $this->trailingContextLines = $value;
+    }
+    elseif ($name === 'line_stats') {
+      @trigger_error('Setting the $line_stats property is deprecated in drupal:10.3.0 and is removed from drupal:11.0.0. Use \Drupal\Component\Diff\DiffFormatter::lineStats instead. See https://www.drupal.org/node/3446709', E_USER_DEPRECATED);
+      $this->lineStats = $value;
+    }
   }
 
 }

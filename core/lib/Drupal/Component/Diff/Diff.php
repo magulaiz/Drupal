@@ -100,7 +100,7 @@ class Diff {
     $lcs = 0;
     foreach ($this->edits as $edit) {
       if ($edit->type == 'copy') {
-        $lcs += sizeof($edit->orig);
+        $lcs += count($edit->orig);
       }
     }
     return $lcs;
@@ -125,7 +125,7 @@ class Diff {
 
     foreach ($this->edits as $edit) {
       if ($edit->orig) {
-        array_splice($lines, sizeof($lines), 0, $edit->orig);
+        array_splice($lines, count($lines), 0, $edit->orig);
       }
     }
     return $lines;
@@ -150,7 +150,7 @@ class Diff {
 
     foreach ($this->edits as $edit) {
       if ($edit->closing) {
-        array_splice($lines, sizeof($lines), 0, $edit->closing);
+        array_splice($lines, count($lines), 0, $edit->closing);
       }
     }
     return $lines;
@@ -185,7 +185,7 @@ class Diff {
 
     $prevtype = 'none';
     foreach ($this->edits as $edit) {
-      if ( $prevtype == $edit->type ) {
+      if ($prevtype == $edit->type) {
         trigger_error("Edit sequence is non-optimal", E_USER_ERROR);
       }
       $prevtype = $edit->type;
