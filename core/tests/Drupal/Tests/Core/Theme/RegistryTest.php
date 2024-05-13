@@ -117,7 +117,7 @@ class RegistryTest extends UnitTestCase {
     $this->moduleList = $this->createMock(ModuleExtensionList::class);
     $this->kernel = $this->createMock(HttpKernelInterface::class);
     $this->settings = new Settings([]);
-    $this->registry = new Registry($this->root, $this->cache, $this->lock, $this->moduleHandler, $this->themeHandler, $this->themeInitialization, $this->runtimeCache, $this->moduleList, NULL, $this->kernel, $this->settings);
+    $this->registry = new Registry($this->root, $this->cache, $this->lock, $this->moduleHandler, $this->themeHandler, $this->themeInitialization, $this->runtimeCache, $this->moduleList, $this->kernel, $this->settings);
     $this->registry->setThemeManager($this->themeManager);
   }
 
