@@ -10,7 +10,10 @@ use Drupal\Core\Extension\ModuleExtensionList;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Extension\ThemeHandlerInterface;
 use Drupal\Core\Lock\LockBackendInterface;
+use Drupal\Core\Site\Settings;
+use Drupal\Core\Update\UpdateKernel;
 use Drupal\Core\Utility\ThemeRegistry;
+use Symfony\Component\HttpKernel\HttpKernelInterface;
 
 /**
  * Defines the theme registry service.
@@ -180,8 +183,12 @@ class Registry implements DestructableInterface {
    *   The module list.
    * @param string $theme_name
    *   (optional) The name of the theme for which to construct the registry.
+   * @param \Symfony\Component\HttpKernel\HttpKernelInterface|null $kernel
+   *   The kernel.
+   * @param \Drupal\Core\Site\Settings|null $settings
+   *   The settings.
    */
-  public function __construct($root, CacheBackendInterface $cache, LockBackendInterface $lock, ModuleHandlerInterface $module_handler, ThemeHandlerInterface $theme_handler, ThemeInitializationInterface $theme_initialization, CacheBackendInterface $runtime_cache, ModuleExtensionList $module_list, $theme_name = NULL) {
+  public function __construct($root, CacheBackendInterface $cache, LockBackendInterface $lock, ModuleHandlerInterface $module_handler, ThemeHandlerInterface $theme_handler, ThemeInitializationInterface $theme_initialization, CacheBackendInterface $runtime_cache, ModuleExtensionList $module_list, $theme_name = NULL, protected ?HttpKernelInterface $kernel = NULL, protected ?Settings $settings = NULL) {
     $this->root = $root;
     $this->cache = $cache;
     $this->lock = $lock;
@@ -191,6 +198,14 @@ class Registry implements DestructableInterface {
     $this->runtimeCache = $runtime_cache;
     $this->moduleList = $module_list;
     $this->themeName = $theme_name;
+    if (!isset($kernel)) {
+      @trigger_error('Calling ' . __METHOD__ . '() without the $kernel argument is deprecated in drupal:10.3.0 and will be required in drupal:11.0.0. See https://www.drupal.org/node/3445054', E_USER_DEPRECATED);
+      $this->kernel = \Drupal::service('kernel');
+    }
+    if (!isset($settings)) {
+      @trigger_error('Calling ' . __METHOD__ . '() without the $settings argument is deprecated in drupal:10.3.0 and will be required in drupal:11.0.0. See https://www.drupal.org/node/3445054', E_USER_DEPRECATED);
+      $this->settings = \Drupal::service('settings');
+    }
   }
 
   /**
@@ -252,11 +267,35 @@ class Registry implements DestructableInterface {
         return $cached;
       }
     }
-    $this->build();
-    // Only persist it if all modules are loaded to ensure it is complete.
-    if ($this->moduleHandler->isLoaded()) {
-      $this->setCache();
+
+    // Some theme hook implementations such as the one in Views request a lot of
+    // information such as field schemas. These might be broken until an update
+    // is run, so we need to build a limited registry while on update.php.
+    $filter_list = $this->settings->get('update_theme_registry_module_filter', ['system']);
+    if ($filter_list !== FALSE && $this->kernel instanceof UpdateKernel) {
+      // Ensure:
+      // - The system module is in the filtered list.
+      // - All the filtered modules are enabled.
+      // - The modules are in the correct order.
+      $module_list = $this->moduleHandler->getModuleList();
+      $filter_list = array_intersect_key($module_list, array_fill_keys($filter_list, TRUE) + ['system' => TRUE]);
+
+      // Call ::build() with only the filtered module list and then revert.
+      $this->moduleHandler->setModuleList($filter_list);
+      $this->build();
+      $this->moduleHandler->setModuleList($module_list);
+
+      // We might have poisoned the cache with only info from 'system'.
+      $this->cache->delete("theme_registry:build:modules");
     }
+    else {
+      $this->build();
+      // Only persist it if all modules are loaded to ensure it is complete.
+      if ($this->moduleHandler->isLoaded()) {
+        $this->setCache();
+      }
+    }
+
     return $this->registry[$this->theme->getName()];
   }
 
