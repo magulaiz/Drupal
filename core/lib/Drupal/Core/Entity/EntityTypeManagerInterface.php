@@ -109,13 +109,16 @@ interface EntityTypeManagerInterface extends PluginManagerInterface, CachedDisco
    *   The entity type ID for this handler.
    * @param string $handler_type
    *   The handler type to create an instance for.
+   * @param string|false $nested
+   *   (optional) The nested handler definition key, or FALSE if the handler
+   *   does not have a nested definition. Defaults to FALSE.
    *
    * @return object
    *   A handler instance.
    *
    * @throws \Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException
    */
-  public function getHandler($entity_type_id, $handler_type);
+  public function getHandler($entity_type_id, $handler_type, $nested = FALSE);
 
   /**
    * Creates new handler instance.
