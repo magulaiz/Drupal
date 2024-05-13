@@ -97,10 +97,6 @@ class PasswordConfirm extends FormElementBase {
       $element['pass1']['#size'] = $element['pass2']['#size'] = $element['#size'];
     }
 
-    if (isset($element['#states'])) {
-      $element['pass1']['#states'] = $element['pass2']['#states'] = $element['#states'];
-    }
-
     return $element;
   }
 
