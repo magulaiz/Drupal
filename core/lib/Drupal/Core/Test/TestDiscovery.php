@@ -7,6 +7,7 @@ use Drupal\Component\Annotation\Reflection\MockFileFinder;
 use Drupal\Component\Utility\NestedArray;
 use Drupal\Core\Extension\ExtensionDiscovery;
 use Drupal\Core\Test\Exception\MissingGroupException;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Discovers available tests.
@@ -303,9 +304,44 @@ class TestDiscovery {
    *     PHPDoc annotations).
    *
    * @throws \Drupal\Core\Test\Exception\MissingGroupException
-   *   If the class does not have a @group annotation.
+   *   If the class does not have a #[Group()] attribute or a @group
+   *   annotation.
    */
   public static function getTestInfo($classname, $doc_comment = NULL) {
+    $reflection = new \ReflectionClass($classname);
+    $groupAttributes = $reflection->getAttributes(Group::class, ReflectionAttribute::IS_INSTANCEOF);
+    if (empty($groupAttributes)) {
+      return $this->getTestInfoFromAnnotation($classname, $doc_comment);
+    }
+  }
+
+  /**
+   * Retrieves information about a test class from docblock annotations.
+   *
+   * @param string $classname
+   *   The test classname.
+   * @param string $doc_comment
+   *   (optional) The class PHPDoc comment. If not passed in reflection will be
+   *   used but this is very expensive when parsing all the test classes.
+   *
+   * @return array
+   *   An associative array containing:
+   *   - name: The test class name.
+   *   - description: The test (PHPDoc) summary.
+   *   - group: The test's first @group (parsed from PHPDoc annotations).
+   *   - groups: All of the test's @group annotations, as an array (parsed from
+   *     PHPDoc annotations).
+   *
+   * @throws \Drupal\Core\Test\Exception\MissingGroupException
+   *   If the class does not have a @group annotation.
+   *
+   * @deprecated in drupal:11.0.0 and is removed from drupal:12.0.0. Make sure
+   *   all tests classes have a #[Group()] attribute.
+   *
+   * @see https://www.drupal.org/node/7654321
+   */
+  protected static function getTestInfoFromAnnotation($classname, $doc_comment = NULL) {
+    @trigger_error(__METHOD__ . '() is deprecated in drupal:11.0.0 and is removed from drupal:12.0.0. Make sure all tests classes have a #[Group()] attribute. See https://www.drupal.org/node/7654321', E_USER_DEPRECATED);
     if ($doc_comment === NULL) {
       $reflection = new \ReflectionClass($classname);
       $doc_comment = $reflection->getDocComment();
