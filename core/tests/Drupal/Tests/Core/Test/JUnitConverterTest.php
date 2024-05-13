@@ -6,7 +6,6 @@ namespace Drupal\Tests\Core\Test;
 
 use Drupal\Core\Test\JUnitConverter;
 use Drupal\Tests\UnitTestCase;
-use org\bovigo\vfs\vfsStream;
 
 /**
  * Tests Drupal\Core\Test\JUnitConverter.
