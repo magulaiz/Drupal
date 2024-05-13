@@ -70,7 +70,7 @@ class JoinTest extends RelationshipJoinTestBase {
     $table = ['alias' => 'users_field_data'];
     if (\Drupal::database()->driver() == 'mongodb') {
       $join->buildMongodbJoin($query, $table, $view->query);
-      $mongodb_joins = $query->getMongodbJoins();
+      $mongodb_joins = $query->getTables();
       $join_info = $mongodb_joins['users_field_data'];
 
       $condition = $join_info['condition'];

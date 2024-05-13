@@ -284,13 +284,6 @@ class Select extends QuerySelect {
   protected $mongodbRandomOrder = FALSE;
 
   /**
-   * The array containing the lookups/joins to be added to the query.
-   *
-   * @var array
-   */
-  protected $mongodbJoins = [];
-
-  /**
    * The array containing the group by operation for the query.
    *
    * @var array
@@ -942,50 +935,39 @@ class Select extends QuerySelect {
     if (!empty($condition) && !$condition instanceof ConditionInterface) {
       throw new MongodbSQLException('Joins without the $condition argument being an instance of ConditionInterface is not supported by MongoDB');
     }
-
-    // If no alias is specified, first try the field name itself.
-    if (empty($alias)) {
-      $alias = $table;
+    if ($table instanceof SelectInterface) {
+      throw new MongodbSQLException('Subqueries are not supported by MongoDB');
     }
 
-    // Copied from Select::addJoin(). Needs to be moved to own helper method.
-    $alias_candidate = $alias;
-    $count = 2;
-    while (!empty($this->tables[$alias_candidate])) {
-      $alias_candidate = $alias . '_' . $count++;
-    }
-    $alias = $alias_candidate;
+    return parent::addJoin($type, $table, $alias, $condition, $arguments);
 
-    if ($condition instanceof ConditionInterface) {
-      $condition->updateAliasPlaceholder('%alias', $alias);
-    }
-
-    // Add the alias to the tables list.
-    $this->tables[$alias] = [
-      'join type' => $type,
-      'table' => $table,
-      'alias' => $alias,
-      'condition' => $condition,
-      'arguments' => $arguments,
-    ];
-
-    $this->mongodbJoins[$alias] = [
-      'join type' => strtoupper($type) == 'INNER' ? 'INNER' : 'LEFT',
-      'table' => $table,
-      'alias' => $alias,
-      'condition' => $condition,
-      'arguments' => $arguments,
-    ];
-
-    return $alias;
-  }
-
-
-  /**
-   * {@inheritdoc}
-   */
-  public function &getMongodbJoins() {
-    return $this->mongodbJoins;
+//    // If no alias is specified, first try the field name itself.
+//    if (empty($alias)) {
+//      $alias = $table;
+//    }
+//
+//    // Copied from Select::addJoin(). Needs to be moved to own helper method.
+//    $alias_candidate = $alias;
+//    $count = 2;
+//    while (!empty($this->tables[$alias_candidate])) {
+//      $alias_candidate = $alias . '_' . $count++;
+//    }
+//    $alias = $alias_candidate;
+//
+//    if ($condition instanceof ConditionInterface) {
+//      $condition->updateAliasPlaceholder('%alias', $alias);
+//    }
+//
+//    // Add the alias to the tables list.
+//    $this->tables[$alias] = [
+//      'join type' => $type,
+//      'table' => $table,
+//      'alias' => $alias,
+//      'condition' => $condition,
+//      'arguments' => $arguments,
+//    ];
+//
+//    return $alias;
   }
 
   /**
@@ -1784,93 +1766,95 @@ class Select extends QuerySelect {
     // The tables
     $this->mongodbLookups = [];
 
-    // Add the mongodb joins to the select query.
-    foreach ($this->mongodbJoins as $mongodbJoin) {
-      $lookup_pipeline = [];
-      $pipeline_unwound_tables = [];
-      $lookup_let = [];
+    // Add the joins to the select query.
+    foreach ($this->tables as $mongodbJoin) {
+      // Only add real table joins to the select query.
+      if (!empty($mongodbJoin['join type'])) {
+        $lookup_pipeline = [];
+        $lookup_let = [];
 
-      if (isset($mongodbJoin['condition']) && ($mongodbJoin['condition'] instanceof Condition)) {
-        $lookup_left_unwind_paths = [];
-        $lookup_right_unwind_paths = [];
+        if (isset($mongodbJoin['condition']) && ($mongodbJoin['condition'] instanceof Condition)) {
+          $lookup_left_unwind_paths = [];
+          $lookup_right_unwind_paths = [];
 
-        // Let the condition know that we are doing a join condition.
-        $mongodbJoin['condition']->setMongodbJoinCondition();
+          // Let the condition know that we are doing a join condition.
+          $mongodbJoin['condition']->setMongodbJoinCondition();
 
-        // Compile the condition and update the alias variable in the condition.
-        $mongodbJoin['condition']->compile($this->connection, $this);
-        $condition_compiled = $mongodbJoin['condition']->toMongoAggregateArray();
-        $this->updateCompiledJoinCondition($condition_compiled, $mongodbJoin['table'], $mongodbJoin['alias'], $lookup_let, $lookup_left_unwind_paths, $lookup_right_unwind_paths);
+          // Compile the condition and update the alias variable in the condition.
+          $mongodbJoin['condition']->compile($this->connection, $this);
+          $condition_compiled = $mongodbJoin['condition']->toMongoAggregateArray();
+          $this->updateCompiledJoinCondition($condition_compiled, $mongodbJoin['table'], $mongodbJoin['alias'], $lookup_let, $lookup_left_unwind_paths, $lookup_right_unwind_paths);
 
-        $lookup_left_unwind_paths = array_unique($lookup_left_unwind_paths);
-        sort($lookup_left_unwind_paths);
-        foreach ($lookup_left_unwind_paths as $lookup_left_unwind_path) {
-          if ($lookup_left_unwind_path && !in_array($lookup_left_unwind_path, $this->mongodbUnwoundPaths, TRUE)) {
-            $this->mongodbLookups[] = [
-              '$unwind' => [
-                'path' => $lookup_left_unwind_path,
-                'preserveNullAndEmptyArrays' => TRUE,
-              ],
-            ];
-            $this->mongodbUnwoundPaths[] = $lookup_left_unwind_path;
+          $lookup_left_unwind_paths = array_unique($lookup_left_unwind_paths);
+          sort($lookup_left_unwind_paths);
+          foreach ($lookup_left_unwind_paths as $lookup_left_unwind_path) {
+            if ($lookup_left_unwind_path && !in_array($lookup_left_unwind_path, $this->mongodbUnwoundPaths, TRUE)) {
+              $this->mongodbLookups[] = [
+                '$unwind' => [
+                  'path' => $lookup_left_unwind_path,
+                  'preserveNullAndEmptyArrays' => TRUE,
+                ],
+              ];
+              $this->mongodbUnwoundPaths[] = $lookup_left_unwind_path;
+            }
           }
+
+          $lookup_right_unwind_paths = array_unique($lookup_right_unwind_paths);
+          sort($lookup_right_unwind_paths);
+          foreach ($lookup_right_unwind_paths as $lookup_right_unwind_path) {
+            if ($lookup_right_unwind_path) {
+              $lookup_pipeline[] = [
+                '$unwind' => [
+                  'path' => $lookup_right_unwind_path,
+                  'preserveNullAndEmptyArrays' => TRUE,
+                ],
+              ];
+            }
+          }
+
+          $lookup_pipeline[] = [
+            '$match' => $condition_compiled,
+          ];
         }
 
-        $lookup_right_unwind_paths = array_unique($lookup_right_unwind_paths);
-        sort($lookup_right_unwind_paths);
-        foreach ($lookup_right_unwind_paths as $lookup_right_unwind_path) {
-          if ($lookup_right_unwind_path) {
-            $lookup_pipeline[] = [
-              '$unwind' => [
-                'path' => $lookup_right_unwind_path,
-                'preserveNullAndEmptyArrays' => TRUE,
-              ],
-            ];
-          }
-        }
-
-        $lookup_pipeline[] = [
-          '$match' => $condition_compiled,
+        $lookup = [
+          '$lookup' => [
+            'from' => $this->connection->getPrefix() . $mongodbJoin['table'],
+            'let' => $lookup_let,
+            'pipeline' => $lookup_pipeline,
+            'as' => $mongodbJoin['alias'],
+          ],
         ];
-      }
+        if (empty($lookup_let)) {
+          unset($lookup['$lookup']['let']);
+        }
+        $this->mongodbLookups[] = $lookup;
 
-      $lookup = [
-        '$lookup' => [
-          'from' => $this->connection->getPrefix() . $mongodbJoin['table'],
-          'let' => $lookup_let,
-          'pipeline' => $lookup_pipeline,
-          'as' => $mongodbJoin['alias'],
-        ],
-      ];
-      if (empty($lookup_let)) {
-        unset($lookup['$lookup']['let']);
-      }
-      $this->mongodbLookups[] = $lookup;
-
-      // Inner join must have a value in the right table. This is a bit of a
-      // hack, because an inner join can result in returning multiple row for
-      // a single left table row. MongoDB is not able to do that.
-      if (strtoupper($mongodbJoin['join type']) == 'INNER') {
-        $this->mongodbLookups[] = [
-          '$match' => [
-            $mongodbJoin['alias'] => [
-              '$ne' => [],
+        // Inner join must have a value in the right table. This is a bit of a
+        // hack, because an inner join can result in returning multiple row for
+        // a single left table row. MongoDB is not able to do that.
+        if (strtoupper($mongodbJoin['join type']) == 'INNER') {
+          $this->mongodbLookups[] = [
+            '$match' => [
+              $mongodbJoin['alias'] => [
+                '$ne' => [],
+              ],
             ],
-          ],
-        ];
-      }
+          ];
+        }
 
-      if (!in_array('$' . $mongodbJoin['alias'], $this->mongodbUnwoundPaths, TRUE)) {
-        $this->mongodbLookups[] = [
-          '$unwind' => [
-            'path' => '$' . $mongodbJoin['alias'],
-            'preserveNullAndEmptyArrays' => TRUE,
-          ],
-        ];
-        $this->mongodbUnwoundPaths[] = '$' . $mongodbJoin['alias'];
-      }
+        if (!in_array('$' . $mongodbJoin['alias'], $this->mongodbUnwoundPaths, TRUE)) {
+          $this->mongodbLookups[] = [
+            '$unwind' => [
+              'path' => '$' . $mongodbJoin['alias'],
+              'preserveNullAndEmptyArrays' => TRUE,
+            ],
+          ];
+          $this->mongodbUnwoundPaths[] = '$' . $mongodbJoin['alias'];
+        }
 
-      $this->mongodbUseAggregate = TRUE;
+        $this->mongodbUseAggregate = TRUE;
+      }
     }
 
     // Add the MongoDB pre join fields.
@@ -2192,8 +2176,8 @@ class Select extends QuerySelect {
     foreach ($this->fields as $field) {
       if (isset($field['table']) && ($field['table'] != $this->mongodbBaseTable) && ($field['table'] != $this->mongodbBaseAlias)) {
         $embedded_table = NULL;
-        if (isset($this->mongodbJoins[$field['table']]['field'])) {
-          $join_field_parts = explode('.', $this->mongodbJoins[$field['table']]['field']);
+        if (isset($this->tables[$field['table']]['field'])) {
+          $join_field_parts = explode('.', $this->tables[$field['table']]['field']);
           if (count($join_field_parts) > 1) {
             array_pop($join_field_parts);
             $embedded_table = implode('.', $join_field_parts);

@@ -80,9 +80,11 @@ trait TaxonomyIndexDepthQueryTrait {
     }
 
     // Add the Node ID's to the main query.
-    $condition = $this->view->getDatabaseCondition('AND');
-    $condition->condition("$this->tableAlias.$this->realField", $nids, 'IN');
-    $this->query->addCondition(3, $condition);
+    if (!empty($nids)) {
+      $condition = $this->view->getDatabaseCondition('AND');
+      $condition->condition("$this->tableAlias.$this->realField", $nids, 'IN');
+      $this->query->addCondition(3, $condition);
+    }
   }
 
 }

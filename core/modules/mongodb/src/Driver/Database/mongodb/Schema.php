@@ -398,9 +398,6 @@ class Schema extends DatabaseSchema {
       'bool:medium' => 'bool',
       'bool:normal' => 'bool',
       'bool:big' => 'bool',
-
-      // This type is only added to make some migration test pass.
-      'datetime:normal' => 'string',
     ];
 
     return $map;
@@ -410,7 +407,6 @@ class Schema extends DatabaseSchema {
    * {@inheritdoc}
    */
   public function tableExists($table, $add_prefix = TRUE) {
-    // @TODO Add the $add_prefix functionality.
     try {
       $prefixed_table = $this->connection->getPrefix() . $table;
       $options = [

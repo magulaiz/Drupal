@@ -37,7 +37,7 @@ class UidRevision extends UserName {
 
     $join = Views::pluginManager('join')->createInstance('standard', $def);
 
-    $this->alias = $this->query->addRelationship('user_revision', $join, 'node', $this->relationship);
+    $this->query->addRelationship('user_revision', $join, 'node', $this->relationship);
 
     $condition = $this->query->getConnection()->condition('OR');
     $condition->condition('user_revision', NULL, 'IS NOT NULL');

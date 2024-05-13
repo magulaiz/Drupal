@@ -185,19 +185,8 @@ class Connection extends DatabaseConnection {
   /**
    * {@inheritdoc}
    */
-  public function prepare($statement, array $driver_options = []) {
-    @trigger_error('Connection::prepare() is deprecated in drupal:9.1.0 and is removed from drupal:10.0.0. Database drivers should instantiate \PDOStatement objects by calling \PDO::prepare in their Connection::prepareStatement method instead. \PDO::prepare should not be called outside of driver code. See https://www.drupal.org/node/3137786', E_USER_DEPRECATED);
-    // MongoDB has no use for this method.
-    return $statement;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
   public function prepareStatement(string $query, array $options, bool $allow_row_count = FALSE): StatementInterface {
-    if (isset($options['return'])) {
-      @trigger_error('Passing "return" option to %AprepareStatement() is deprecated in drupal:9.4.0 and is removed in drupal:11.0.0. For data manipulation operations, use dynamic queries instead. See https://www.drupal.org/node/3185520', E_USER_DEPRECATED);
-    }
+    assert(!isset($options['return']), 'Passing "return" option to prepareStatement() has no effect. See https://www.drupal.org/node/3185520');
 
     // For passing the test DatabaseExceptionWrapperTest.
     if ($query == 'bananas') {
@@ -220,22 +209,10 @@ class Connection extends DatabaseConnection {
   /**
    * {@inheritdoc}
    */
-  public function prepareQuery($query, $quote_identifiers = TRUE) {
-    @trigger_error('Connection::prepareQuery() is deprecated in drupal:9.1.0 and is removed from drupal:10.0.0. Use ::prepareStatement() instead. See https://www.drupal.org/node/3137786', E_USER_DEPRECATED);
-    if ($query == 'bananas') {
-      throw new \PDOException();
-    }
-    return $this->prefixTables($query);
-  }
-
-  /**
-   * {@inheritdoc}
-   */
   public function query($query, array $args = [], $options = []) {
-    if ($query instanceof StatementInterface) {
-      @trigger_error('Passing a StatementInterface object as a $query argument to Drupal\Core\Database\Connection::query is deprecated in drupal:9.2.0 and is removed in drupal:10.0.0. Call the execute method from the StatementInterface object directly instead. See https://www.drupal.org/node/3154439', E_USER_DEPRECATED);
-      return $query;
-    }
+    assert(is_string($query), 'The \'$query\' argument to ' . __METHOD__ . '() must be a string');
+    assert(!isset($options['return']), 'Passing "return" option to query() has no effect. See https://www.drupal.org/node/3185520');
+    assert(!isset($options['target']), 'Passing "target" option to query() has no effect. See https://www.drupal.org/node/2993033');
 
     // MongoDB has no problem querying non existing tables and therefore does
     // not throw an exception.
@@ -260,11 +237,6 @@ class Connection extends DatabaseConnection {
 
     // Use default values if not already set.
     $options += $this->defaultOptions();
-
-    if (isset($options['return'])) {
-      @trigger_error('Passing "return" option to %Aquery() is deprecated in drupal:9.4.0 and is removed in drupal:11.0.0. For data manipulation operations, use dynamic queries instead. See https://www.drupal.org/node/3185520', E_USER_DEPRECATED);
-      @trigger_error('Passing "return" option to %AprepareStatement() is deprecated in drupal:9.4.0 and is removed in drupal:11.0.0. For data manipulation operations, use dynamic queries instead. See https://www.drupal.org/node/3185520', E_USER_DEPRECATED);
-    }
 
     // Adding the target information is needed by the logger.
     if ($this->getTarget() != 'default') {
@@ -417,57 +389,6 @@ class Connection extends DatabaseConnection {
     $return += ['operator' => $operator];
 
     return $return;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function nextId($existing_id = 0) {
-    @trigger_error('Drupal\Core\Database\Connection::nextId() is deprecated in drupal:10.2.0 and is removed from drupal:11.0.0. Modules should use instead the keyvalue storage for the last used id. See https://www.drupal.org/node/3349345', E_USER_DEPRECATED);
-
-    $existing_id = (int) $existing_id;
-    $prefixed_table = $this->getPrefix() . 'sequences';
-
-    // Update the sequence.
-    $result = $this->getConnection()->{$prefixed_table}->findOneAndUpdate(
-      ['_id' => 1],
-      ['$inc' => ['value' => 1]],
-      [
-        'new' => TRUE,
-        'returnDocument' => FindOneAndUpdate::RETURN_DOCUMENT_AFTER,
-      ],
-    );
-
-    if ($result && isset($result->value)) {
-      if ($result->value >= $existing_id) {
-        return $result->value;
-      }
-      else {
-        // Update the sequence to $existing_id + 1.
-        $result = $this->getConnection()->{$prefixed_table}->findOneAndUpdate(
-          ['_id' => 1],
-          ['$set' => ['value' => $existing_id + 1]],
-          ['returnDocument' => FindOneAndUpdate::RETURN_DOCUMENT_AFTER],
-        );
-
-        if ($result && isset($result->value)) {
-          return $result->value;
-        }
-      }
-    }
-    else {
-      $value = $existing_id > 0 ? $existing_id + 1 : 1;
-      // Create a new sequence and the sequences table if it does not exists.
-      $result = $this->getConnection()->{$prefixed_table}->insertOne([
-        '_id' => 1,
-        'value' => $value,
-      ]);
-
-      if ($result && ($result->getInsertedCount() > 0)) {
-        return $value;
-      }
-    }
-    return 1;
   }
 
   /**

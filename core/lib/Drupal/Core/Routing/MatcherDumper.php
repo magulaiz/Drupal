@@ -91,7 +91,11 @@ class MatcherDumper implements MatcherDumperInterface {
     // stale data. The transaction makes it atomic to avoid unstable router
     // states due to random failures.
     try {
-      $transaction = $this->connection->startTransaction();
+      if ($this->connection->driver() != 'mongodb') {
+        // @TODO The Drupal transactions and MongoDB transactions do not work
+        // together.
+        $transaction = $this->connection->startTransaction();
+      }
       // We don't use truncate, because it is not guaranteed to be transaction
       // safe.
       try {
