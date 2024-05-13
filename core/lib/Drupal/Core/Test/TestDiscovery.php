@@ -311,6 +311,7 @@ class TestDiscovery {
     $reflection = new \ReflectionClass($classname);
     $groupAttributes = $reflection->getAttributes(Group::class, \ReflectionAttribute::IS_INSTANCEOF);
     if (empty($groupAttributes)) {
+      // @phpstan-ignore-next-line
       return self::getTestInfoFromAnnotation($classname, $doc_comment);
     }
     return [];
