@@ -7,6 +7,7 @@ use Drupal\Component\Annotation\Reflection\MockFileFinder;
 use Drupal\Component\Utility\NestedArray;
 use Drupal\Core\Extension\ExtensionDiscovery;
 use Drupal\Core\Test\Exception\MissingGroupException;
+use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Group;
 
 /**
@@ -308,13 +309,47 @@ class TestDiscovery {
    *   annotation.
    */
   public static function getTestInfo($classname, $doc_comment = NULL) {
-    $reflection = new \ReflectionClass($classname);
+    try {
+      $reflection = new \ReflectionClass($classname);
+    }
+    catch (\ReflectionException $e) {
+      // Fixture classes end up here, they cannot be reflected.
+      throw new MissingGroupException(sprintf('Failed to reflect %s', $classname));
+    }
+
     $groupAttributes = $reflection->getAttributes(Group::class, \ReflectionAttribute::IS_INSTANCEOF);
+
+    // @todo Remove once all test annotations are removed.
     if (empty($groupAttributes)) {
       // @phpstan-ignore-next-line
       return self::getTestInfoFromAnnotation($classname, $doc_comment);
     }
-    return [];
+
+    // Concrete tests must have a group.
+    if (empty($groupAttributes)) {
+      throw new MissingGroupException(sprintf('Missing #[Group] attribute in %s', $classname));
+    }
+
+    $info = [
+      'name' => $classname,
+      'group' => $groupAttributes[0]->getArguments()[0],
+      'type' => 'PHPUnit-' . static::getPhpunitTestSuite($classname),
+    ];
+
+    foreach ($groupAttributes as $groupAttribute) {
+      $info['groups'][] = $groupAttribute->getArguments()[0];
+    }
+
+    $groupCoversClass = $reflection->getAttributes(CoversClass::class, \ReflectionAttribute::IS_INSTANCEOF);
+
+    if (!empty($groupCoversClass)) {
+      $info['description'] = 'Tests ' . $groupCoversClass[0]->getArguments()[0] . '.';
+    }
+    else {
+      $info['description'] = static::parseTestClassSummary($doc_comment);
+    }
+
+    return $info;
   }
 
   /**
