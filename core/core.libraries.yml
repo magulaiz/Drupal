@@ -547,6 +547,7 @@ drupal.dialog:
     - core/drupalSettings
     - core/drupal.debounce
     - core/drupal.displace
+    - core/internal.floating-ui
     - core/once
     - core/drupal.jquery.position
     - core/tabbable

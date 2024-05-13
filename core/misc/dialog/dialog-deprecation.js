@@ -37,4 +37,19 @@
       'dialog:afterclose',
     ].forEach((e) => window.addEventListener(e, listenDialogEvent));
   }
+
+  // jQuery UI dialog position deprecation.
+  const originalOption = $.ui.dialog.prototype.option;
+
+  $.ui.dialog.prototype.option = function (key, value) {
+    for (var k in key) {
+      if (k === 'position') {
+        Drupal.deprecationError({
+          message: `Using 'position' option in dialog is deprecated and will be removed in future versions. See https://www.drupal.org/node/XXXXXXX`,
+        });
+      }
+    }
+
+    return originalOption.apply(this, arguments);
+  };
 })(jQuery, Drupal, once);
