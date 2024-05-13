@@ -302,9 +302,10 @@ class TestDiscovery {
    */
   public static function getTestInfo($classname, $doc_comment = NULL) {
     $reflection = new \ReflectionClass($classname);
-    $groupAttributes = $reflection->getAttributes(Group::class, ReflectionAttribute::IS_INSTANCEOF);
+    $groupAttributes = $reflection->getAttributes(Group::class, \ReflectionAttribute::IS_INSTANCEOF);
+    return [];
     if (empty($groupAttributes)) {
-      return $this->getTestInfoFromAnnotation($classname, $doc_comment);
+      return self::getTestInfoFromAnnotation($classname, $doc_comment);
     }
   }
 
