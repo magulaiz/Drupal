@@ -8,7 +8,7 @@ use Symfony\Component\Serializer\Exception\UnexpectedValueException;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 
 /**
- * Denormalizes data to Drupal field values.
+ * De-normalizes data to Drupal field values.
  *
  * This class simply calls denormalize() on the individual FieldItems. The
  * FieldItem normalizers are responsible for setting the field values for each
@@ -23,7 +23,7 @@ class FieldNormalizer extends ListNormalizer implements DenormalizerInterface {
    */
   public function denormalize($data, $class, $format = NULL, array $context = []): mixed {
     if (!isset($context['target_instance'])) {
-      throw new InvalidArgumentException('$context[\'target_instance\'] must be set to denormalize with the FieldNormalizer');
+      throw new InvalidArgumentException('$context[\'target_instance\'] must be set to de-normalize with the FieldNormalizer');
     }
 
     if ($context['target_instance']->getParent() == NULL) {

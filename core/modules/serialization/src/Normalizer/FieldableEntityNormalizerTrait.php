@@ -9,7 +9,7 @@ use Drupal\Core\Field\TypedData\FieldItemDataDefinitionInterface;
 use Symfony\Component\Serializer\Exception\UnexpectedValueException;
 
 /**
- * A trait for providing fieldable entity normalization/denormalization methods.
+ * A trait for providing fieldable entity normalization/de-normalization methods.
  *
  * @todo Move this into a FieldableEntityNormalizer in Drupal 9. This is a trait
  *   used in \Drupal\serialization\Normalizer\EntityNormalizer to maintain BC.
@@ -39,10 +39,10 @@ trait FieldableEntityNormalizerTrait {
   protected $entityTypeRepository;
 
   /**
-   * Determines the entity type ID to denormalize as.
+   * Determines the entity type ID to de-normalize as.
    *
    * @param string $class
-   *   The entity type class to be denormalized to.
+   *   The entity type class to be de-normalized to.
    * @param array $context
    *   The serialization context data.
    *
@@ -72,17 +72,17 @@ trait FieldableEntityNormalizerTrait {
 
     // Don't try to create an entity without an entity type id.
     if (!$entity_type_definition) {
-      throw new UnexpectedValueException(sprintf('The specified entity type "%s" does not exist. A valid entity type is required for denormalization', $entity_type_id));
+      throw new UnexpectedValueException(sprintf('The specified entity type "%s" does not exist. A valid entity type is required for de-normalization', $entity_type_id));
     }
 
     return $entity_type_definition;
   }
 
   /**
-   * Denormalizes the bundle property so entity creation can use it.
+   * De-normalizes the bundle property so entity creation can use it.
    *
    * @param array $data
-   *   The data being denormalized. The bundle information will be removed.
+   *   The data being de-normalized. The bundle information will be removed.
    * @param \Drupal\Core\Entity\EntityTypeInterface $entity_type_definition
    *   The entity type definition.
    *
@@ -117,17 +117,17 @@ trait FieldableEntityNormalizerTrait {
 
     // Make sure the submitted bundle is a valid bundle for the entity type.
     if ($bundle_types && !in_array($bundle_value, $bundle_types)) {
-      throw new UnexpectedValueException(sprintf('"%s" is not a valid bundle type for denormalization.', $bundle_value));
+      throw new UnexpectedValueException(sprintf('"%s" is not a valid bundle type for de-normalization.', $bundle_value));
     }
 
     return [$bundle_key => $bundle_value];
   }
 
   /**
-   * Denormalizes entity data by denormalizing each field individually.
+   * De-normalizes entity data by de-normalizing each field individually.
    *
    * @param array $data
-   *   The data to denormalize.
+   *   The data to de-normalize.
    * @param \Drupal\Core\Entity\FieldableEntityInterface $entity
    *   The fieldable entity to set field values for.
    * @param string $format
@@ -147,7 +147,7 @@ trait FieldableEntityNormalizerTrait {
 
       if ($field_data) {
         // The field instance must be passed in the context so that the field
-        // denormalizer can update field values for the parent entity.
+        // de-normalizer can update field values for the parent entity.
         $context['target_instance'] = $field_item_list;
         $this->serializer->denormalize($field_data, $field_item_list_class, $format, $context);
       }
@@ -188,7 +188,7 @@ trait FieldableEntityNormalizerTrait {
    * Build the field item value using the incoming data.
    *
    * Most normalizers that extend this class can simply use this method to
-   * construct the denormalized value without having to override denormalize()
+   * construct the de-normalized value without having to override denormalize()
    * and re-implementing its validation logic or its call to set the field
    * value.
    *

@@ -282,7 +282,7 @@ class EntityResource extends ResourceBase implements DependentPluginInterface {
   protected function checkPatchFieldAccess(FieldItemListInterface $original_field, FieldItemListInterface $received_field) {
     // The user might not have access to edit the field, but still needs to
     // submit the current field value as part of the PATCH request. For
-    // example, the entity keys required by denormalizers. Therefore, if the
+    // example, the entity keys required by de-normalizers. Therefore, if the
     // received value equals the stored value, return FALSE without throwing an
     // exception. But only for fields that the user has access to view, because
     // the user has no legitimate way of knowing the current value of fields

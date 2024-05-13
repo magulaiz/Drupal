@@ -109,16 +109,16 @@ final class Serializer extends SymfonySerializer {
   }
 
   /**
-   * Checks whether this class alone supports denormalization.
+   * Checks whether this class alone supports de-normalization.
    *
    * @param mixed $data
-   *   Data to denormalize from.
+   *   Data to de-normalize from.
    * @param string $type
-   *   The class to which the data should be denormalized.
+   *   The class to which the data should be de-normalized.
    * @param string $format
-   *   The format being deserialized from.
+   *   The format being de-serialized from.
    * @param array $context
-   *   (optional) Options available to the denormalizer.
+   *   (optional) Options available to the de-normalizer.
    *
    * @return bool
    *   Whether this class supports normalization for the given data and type.

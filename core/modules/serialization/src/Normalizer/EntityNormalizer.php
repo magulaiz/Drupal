@@ -10,7 +10,7 @@ use Drupal\Core\Entity\FieldableEntityInterface;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 
 /**
- * Normalizes/denormalizes Drupal entity objects into an array structure.
+ * Normalizes/de-normalizes Drupal entity objects into an array structure.
  */
 class EntityNormalizer extends ComplexDataNormalizer implements DenormalizerInterface {
 
@@ -39,7 +39,7 @@ class EntityNormalizer extends ComplexDataNormalizer implements DenormalizerInte
     $entity_type_id = $this->determineEntityTypeId($class, $context);
     $entity_type_definition = $this->getEntityTypeDefinition($entity_type_id);
 
-    // The bundle property will be required to denormalize a bundleable
+    // The bundle property will be required to de-normalize a bundleable
     // fieldable entity.
     if ($entity_type_definition->entityClassImplements(FieldableEntityInterface::class)) {
       // Extract bundle data to pass into entity creation if the entity type uses

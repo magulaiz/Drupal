@@ -67,7 +67,7 @@ class ConfigEntityNormalizerTest extends UnitTestCase {
     ];
 
     // Mock of the entity storage, to test our expectation that the '_core' key
-    // never makes it to that point, thanks to the denormalizer omitting it.
+    // never makes it to that point, thanks to the de-normalizer omitting it.
     $entity_storage = $this->prophesize(EntityStorageInterface::class);
     $entity_storage->create($expected_storage_data)
       ->shouldBeCalled()
@@ -77,7 +77,7 @@ class ConfigEntityNormalizerTest extends UnitTestCase {
         return $entity;
       });
 
-    // Stubs for the denormalizer going from entity type manager to entity
+    // Stubs for the de-normalizer going from entity type manager to entity
     // storage.
     $entity_type_id = $this->randomMachineName();
     $entity_type_class = $this->randomMachineName();
@@ -92,7 +92,7 @@ class ConfigEntityNormalizerTest extends UnitTestCase {
     $entity_field_manager = $this->prophesize(EntityFieldManagerInterface::class);
     $normalizer = new ConfigEntityNormalizer($entity_type_manager->reveal(), $entity_type_repository->reveal(), $entity_field_manager->reveal());
 
-    // Verify the denormalizer still works correctly: the mock above creates an
+    // Verify the de-normalizer still works correctly: the mock above creates an
     // artificial entity object containing exactly the data it received. It also
     // should still set _restSubmittedFields correctly.
     $expected_denormalization = (object) [

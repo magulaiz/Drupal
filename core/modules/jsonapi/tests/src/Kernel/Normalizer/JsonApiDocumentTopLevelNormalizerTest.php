@@ -632,7 +632,7 @@ class JsonApiDocumentTopLevelNormalizerTest extends JsonapiKernelTestBase {
   }
 
   /**
-   * Tests denormalization for related resources with missing or invalid types.
+   * Tests de-normalization for related resources with missing or invalid types.
    */
   public function testDenormalizeInvalidTypeAndNoType() {
     $payload_data = [

@@ -40,7 +40,7 @@ class UserXmlCookieTest extends UserResourceTestBase {
    * {@inheritdoc}
    */
   public function testPatchDxForSecuritySensitiveBaseFields() {
-    // Deserialization of the XML format is not supported.
+    // De-serialization of the XML format is not supported.
     $this->markTestSkipped();
   }
 
@@ -48,7 +48,7 @@ class UserXmlCookieTest extends UserResourceTestBase {
    * {@inheritdoc}
    */
   public function testPatchSecurityOtherUser() {
-    // Deserialization of the XML format is not supported.
+    // De-serialization of the XML format is not supported.
     $this->markTestSkipped();
   }
 

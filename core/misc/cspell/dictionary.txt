@@ -172,13 +172,9 @@ defgroup
 delayable
 deletedline
 delsp
-denormalizable
 denormalizer
-denormalizers
 derivedfrom
 desaturate
-desaturated
-desaturates
 desaturating
 destructable
 devel

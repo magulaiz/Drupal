@@ -114,7 +114,7 @@ class EntityNormalizerTest extends UnitTestCase {
   }
 
   /**
-   * Tests the denormalize method with a bundle property.
+   * Tests the de-normalize method with a bundle property.
    *
    * @covers ::denormalize
    */
@@ -231,7 +231,7 @@ class EntityNormalizerTest extends UnitTestCase {
   }
 
   /**
-   * Tests the denormalize method with a bundle property.
+   * Tests the de-normalize method with a bundle property.
    *
    * @covers ::denormalize
    */
@@ -313,7 +313,7 @@ class EntityNormalizerTest extends UnitTestCase {
   }
 
   /**
-   * Tests the denormalize method with no bundle defined.
+   * Tests the de-normalize method with no bundle defined.
    *
    * @covers ::denormalize
    */
@@ -381,7 +381,7 @@ class EntityNormalizerTest extends UnitTestCase {
   }
 
   /**
-   * Tests the denormalize method with no bundle defined.
+   * Tests the de-normalize method with no bundle defined.
    *
    * @covers ::denormalize
    */

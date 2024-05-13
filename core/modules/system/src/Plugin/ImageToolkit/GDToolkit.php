@@ -459,7 +459,7 @@ class GDToolkit extends ImageToolkitBase {
     // Check for filter and rotate support.
     if (!function_exists('imagefilter') || !function_exists('imagerotate')) {
       $requirements['version']['severity'] = REQUIREMENT_WARNING;
-      $descriptions[] = $this->t('The GD Library for PHP is enabled, but was compiled without support for functions used by the rotate and desaturate effects. It was probably compiled using the official GD libraries from the <a href="https://libgd.github.io/">gdLibrary site</a> instead of the GD library bundled with PHP. You should recompile PHP --with-gd using the bundled GD library. See <a href="https://www.php.net/manual/book.image.php">the PHP manual</a>.');
+      $descriptions[] = $this->t('The GD Library for PHP is enabled, but was compiled without support for functions used by the rotate and de-saturate effects. It was probably compiled using the official GD libraries from the <a href="https://libgd.github.io/">gdLibrary site</a> instead of the GD library bundled with PHP. You should recompile PHP --with-gd using the bundled GD library. See <a href="https://www.php.net/manual/book.image.php">the PHP manual</a>.');
     }
 
     if (count($descriptions) > 1) {

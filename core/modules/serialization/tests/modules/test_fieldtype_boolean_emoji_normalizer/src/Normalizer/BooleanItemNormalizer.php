@@ -25,7 +25,7 @@ class BooleanItemNormalizer extends FieldItemNormalizer implements DenormalizerI
    */
   protected function constructValue($data, $context) {
     // Just like \Drupal\serialization\Normalizer\FieldItemNormalizer's logic
-    // for denormalization, which uses TypedDataInterface::setValue(), allow the
+    // for de-normalization, which uses TypedDataInterface::setValue(), allow the
     // keying by main property name ("value") to be implied.
     if (!is_array($data)) {
       $data = ['value' => $data];

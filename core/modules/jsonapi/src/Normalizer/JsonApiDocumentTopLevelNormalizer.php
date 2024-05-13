@@ -156,7 +156,7 @@ class JsonApiDocumentTopLevelNormalizer extends NormalizerBase implements Denorm
       // Add the relationship ids.
       $normalized = array_merge($normalized, $relationships);
     }
-    // Override deserialization target class with the one in the ResourceType.
+    // Override de-serialization target class with the one in the ResourceType.
     $class = $context['resource_type']->getDeserializationTargetClass();
 
     return $this

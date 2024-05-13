@@ -73,7 +73,7 @@ interface TableMappingInterface {
   public function getColumnNames($field_name);
 
   /**
-   * Gets a list of extra database columns, which store denormalized data.
+   * Gets a list of extra database columns, which store de-normalized data.
    *
    * These database columns do not belong to any entity fields. Any normalized
    * data that is stored should be associated with an entity field.

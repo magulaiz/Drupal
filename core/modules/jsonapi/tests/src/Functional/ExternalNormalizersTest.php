@@ -107,9 +107,9 @@ class ExternalNormalizersTest extends BrowserTestBase {
    *   - static::VALUE_ORIGINAL (normalizer IS NOT expected to override)
    *   - static::VALUE_OVERRIDDEN (normalizer IS expected to override)
    * @param string $expected_value_jsonapi_denormalization
-   *   The expected JSON:API denormalization of the tested field. Must be either
-   *   - static::VALUE_OVERRIDDEN (denormalizer IS NOT expected to override)
-   *   - static::VALUE_ORIGINAL (denormalizer IS expected to override)
+   *   The expected JSON:API de-normalization of the tested field. Must be either
+   *   - static::VALUE_OVERRIDDEN (de-normalizer IS NOT expected to override)
+   *   - static::VALUE_ORIGINAL (de-normalizer IS expected to override)
    *
    * @dataProvider providerTestFormatAgnosticNormalizers
    */
@@ -125,7 +125,7 @@ class ExternalNormalizersTest extends BrowserTestBase {
     $core_normalization = $this->container->get('serializer')->normalize($this->entity);
     $this->assertSame(static::VALUE_ORIGINAL, $core_normalization['field_test'][0]['value']);
 
-    // Asserts denormalizing the entity using core's 'serializer' service DOES
+    // Asserts de-normalizing the entity using core's 'serializer' service DOES
     // yield the value we set.
     $core_normalization['field_test'][0]['value'] = static::VALUE_OVERRIDDEN;
     $denormalized_entity = $this->container->get('serializer')->denormalize($core_normalization, EntityTest::class, 'json', []);
@@ -141,7 +141,7 @@ class ExternalNormalizersTest extends BrowserTestBase {
     $core_normalization = $this->container->get('serializer')->normalize($this->entity);
     $this->assertSame(static::VALUE_OVERRIDDEN, $core_normalization['field_test'][0]['value']);
 
-    // Asserts denormalizing the entity using core's 'serializer' service DOES
+    // Asserts de-normalizing the entity using core's 'serializer' service DOES
     // NOT ANYMORE yield the value we set.
     $core_normalization = $this->container->get('serializer')->normalize($this->entity);
     $core_normalization['field_test'][0]['value'] = static::VALUE_OVERRIDDEN;

@@ -109,7 +109,7 @@ abstract class EntityDenormalizerBase extends NormalizerBase implements Denormal
    * @param string $format
    *   Format the given data was extracted from.
    * @param array $context
-   *   Options available to the denormalizer.
+   *   Options available to the de-normalizer.
    *
    * @return array
    *   The modified input data.

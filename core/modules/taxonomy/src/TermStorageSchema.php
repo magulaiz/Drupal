@@ -25,7 +25,7 @@ class TermStorageSchema extends SqlContentEntityStorageSchema {
     }
 
     $schema['taxonomy_index'] = [
-      'description' => 'Maintains denormalized information about node/term relationships.',
+      'description' => 'Maintains de-normalized information about node/term relationships.',
       'fields' => [
         'nid' => [
           'description' => 'The {node}.nid this record tracks.',

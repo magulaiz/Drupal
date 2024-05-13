@@ -27,7 +27,7 @@ class LocaleTranslationTest extends KernelTestBase {
     $translation = $this->container->get('string_translator.locale.lookup');
     $this->assertInstanceOf(LocaleTranslation::class, $translation);
 
-    // Prove that serialization and deserialization works without errors.
+    // Prove that serialization and de-serialization works without errors.
     $this->assertNotNull($translation);
     $unserialized = unserialize(serialize($translation));
     $this->assertInstanceOf(LocaleTranslation::class, $unserialized);

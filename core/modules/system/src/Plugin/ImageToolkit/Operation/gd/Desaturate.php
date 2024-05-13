@@ -12,7 +12,7 @@ use Drupal\Core\StringTranslation\TranslatableMarkup;
   id: "gd_desaturate",
   toolkit: "gd",
   operation: "desaturate",
-  label: new TranslatableMarkup("Desaturate"),
+  label: new TranslatableMarkup("De-saturate"),
   description: new TranslatableMarkup("Converts an image to grayscale.")
 )]
 class Desaturate extends GDImageToolkitOperationBase {
@@ -31,7 +31,7 @@ class Desaturate extends GDImageToolkitOperationBase {
   protected function execute(array $arguments) {
     // PHP installations using non-bundled GD do not have imagefilter.
     if (!function_exists('imagefilter')) {
-      $this->logger->notice("The image '@file' could not be desaturated because the imagefilter() function is not available in this PHP installation.", ['@file' => $this->getToolkit()->getSource()]);
+      $this->logger->notice("The image '@file' could not be de-saturated because the imagefilter() function is not available in this PHP installation.", ['@file' => $this->getToolkit()->getSource()]);
       return FALSE;
     }
 

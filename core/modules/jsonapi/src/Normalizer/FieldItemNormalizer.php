@@ -210,7 +210,7 @@ class FieldItemNormalizer extends NormalizerBase implements DenormalizerInterfac
    * Gets a field item instance for use with SerializedColumnNormalizerTrait.
    *
    * @param \Drupal\jsonapi\ResourceType\ResourceType $resource_type
-   *   The JSON:API resource type of the entity being denormalized.
+   *   The JSON:API resource type of the entity being de-normalized.
    * @param \Drupal\Core\Field\TypedData\FieldItemDataDefinitionInterface $item_definition
    *   The field item definition of the instance to get.
    *

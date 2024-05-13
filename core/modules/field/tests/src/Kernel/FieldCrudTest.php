@@ -99,7 +99,7 @@ class FieldCrudTest extends FieldKernelTestBase {
     // Check that default settings are set.
     $this->assertEquals($config['settings'], $field_type_manager->getDefaultFieldSettings($this->fieldStorageDefinition['type']), 'Default field settings have been written.');
 
-    // Check that the denormalized 'field_type' was properly written.
+    // Check that the de-normalized 'field_type' was properly written.
     $this->assertEquals($config['field_type'], $this->fieldStorageDefinition['type']);
 
     // Guarantee that the field/bundle combination is unique.

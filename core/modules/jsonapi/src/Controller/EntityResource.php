@@ -805,7 +805,7 @@ class EntityResource {
   }
 
   /**
-   * Deserializes a request body, if any.
+   * De-serializes a request body, if any.
    *
    * @param \Drupal\jsonapi\ResourceType\ResourceType $resource_type
    *   The JSON:API resource type for the current request.
@@ -825,7 +825,7 @@ class EntityResource {
    *   Thrown if the request body cannot be decoded, or when no request body was
    *   provided with a POST or PATCH request.
    * @throws \Symfony\Component\HttpKernel\Exception\UnprocessableEntityHttpException
-   *   Thrown if the request body cannot be denormalized.
+   *   Thrown if the request body cannot be de-normalized.
    */
   protected function deserialize(ResourceType $resource_type, Request $request, $class, $relationship_field_name = NULL) {
     assert($class === JsonApiDocumentTopLevel::class || $class === ResourceIdentifier::class && !empty($relationship_field_name) && is_string($relationship_field_name));
@@ -1161,7 +1161,7 @@ class EntityResource {
 
     // The user might not have access to edit the field, but still needs to
     // submit the current field value as part of the PATCH request. For
-    // example, the entity keys required by denormalizers. Therefore, if the
+    // example, the entity keys required by de-normalizers. Therefore, if the
     // received value equals the stored value, return FALSE without throwing an
     // exception. But only for fields that the user has access to view, because
     // the user has no legitimate way of knowing the current value of fields

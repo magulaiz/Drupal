@@ -105,7 +105,7 @@ class DateTimeNormalizerTest extends UnitTestCase {
   }
 
   /**
-   * Tests the denormalize function with good data.
+   * Tests the de-normalize function with good data.
    *
    * @covers ::denormalize
    * @dataProvider providerTestDenormalizeValidFormats
@@ -136,7 +136,7 @@ class DateTimeNormalizerTest extends UnitTestCase {
   }
 
   /**
-   * Tests the denormalize function with a user supplied format.
+   * Tests the de-normalize function with a user supplied format.
    *
    * @covers ::denormalize
    * @dataProvider providerTestDenormalizeUserFormats
@@ -163,7 +163,7 @@ class DateTimeNormalizerTest extends UnitTestCase {
   }
 
   /**
-   * Tests the denormalize function with bad data.
+   * Tests the de-normalize function with bad data.
    *
    * @covers ::denormalize
    */

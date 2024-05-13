@@ -178,7 +178,7 @@ class DateTimeIso8601NormalizerTest extends UnitTestCase {
   }
 
   /**
-   * Tests the denormalize function with good data.
+   * Tests the de-normalize function with good data.
    *
    * @covers ::denormalize
    * @dataProvider providerTestDenormalizeValidFormats
@@ -213,7 +213,7 @@ class DateTimeIso8601NormalizerTest extends UnitTestCase {
   }
 
   /**
-   * Tests the denormalize function with bad data for the date-only case.
+   * Tests the de-normalize function with bad data for the date-only case.
    *
    * @covers ::denormalize
    */
@@ -229,7 +229,7 @@ class DateTimeIso8601NormalizerTest extends UnitTestCase {
   }
 
   /**
-   * Tests the denormalize function with bad data for the date+time case.
+   * Tests the de-normalize function with bad data for the date+time case.
    *
    * @covers ::denormalize
    */
@@ -245,13 +245,13 @@ class DateTimeIso8601NormalizerTest extends UnitTestCase {
   }
 
   /**
-   * Tests the denormalize function with incomplete serialization context.
+   * Tests the de-normalize function with incomplete serialization context.
    *
    * @covers ::denormalize
    */
   public function testDenormalizeNoTargetInstanceOrFieldDefinitionException() {
     $this->expectException(InvalidArgumentException::class);
-    $this->expectExceptionMessage('$context[\'target_instance\'] or $context[\'field_definition\'] must be set to denormalize with the DateTimeIso8601Normalizer');
+    $this->expectExceptionMessage('$context[\'target_instance\'] or $context[\'field_definition\'] must be set to de-normalize with the DateTimeIso8601Normalizer');
     $this->normalizer->denormalize('', DateTimeIso8601::class, NULL, []);
   }
 

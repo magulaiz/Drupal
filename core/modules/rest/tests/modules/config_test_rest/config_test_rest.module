@@ -16,7 +16,7 @@ use Drupal\Core\Session\AccountInterface;
 function config_test_rest_entity_type_alter(array &$entity_types) {
   // Undo part of what config_test_entity_type_alter() did: remove this
   // config_test_no_status entity type, because it uses the same entity class as
-  // the config_test entity type, which makes REST deserialization impossible.
+  // the config_test entity type, which makes REST de-serialization impossible.
   unset($entity_types['config_test_no_status']);
 }
 

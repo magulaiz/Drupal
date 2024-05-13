@@ -45,7 +45,7 @@ class CommentXmlBasicAuthTest extends CommentResourceTestBase {
    * {@inheritdoc}
    */
   public function testPostDxWithoutCriticalBaseFields() {
-    // Deserialization of the XML format is not supported.
+    // De-serialization of the XML format is not supported.
     $this->markTestSkipped();
   }
 
@@ -53,7 +53,7 @@ class CommentXmlBasicAuthTest extends CommentResourceTestBase {
    * {@inheritdoc}
    */
   public function testPostSkipCommentApproval() {
-    // Deserialization of the XML format is not supported.
+    // De-serialization of the XML format is not supported.
     $this->markTestSkipped();
   }
 

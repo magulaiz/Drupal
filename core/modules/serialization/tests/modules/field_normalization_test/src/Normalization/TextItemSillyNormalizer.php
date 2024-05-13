@@ -6,7 +6,7 @@ use Drupal\serialization\Normalizer\FieldItemNormalizer;
 use Drupal\text\Plugin\Field\FieldType\TextItemBase;
 
 /**
- * A test TextItem normalizer to test denormalization.
+ * A test TextItem normalizer to test de-normalization.
  */
 class TextItemSillyNormalizer extends FieldItemNormalizer {
 

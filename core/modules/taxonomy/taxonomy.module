@@ -182,7 +182,7 @@ function taxonomy_term_is_page(Term $term) {
  * requires listing all content associated with a term or group of terms
  * sorted by creation date. To avoid slow queries due to joining across
  * multiple node and field tables with various conditions and order by criteria,
- * we maintain a denormalized table with all relationships between terms,
+ * we maintain a de-normalized table with all relationships between terms,
  * published nodes and common sort criteria such as status, sticky and created.
  * When using other field storage engines or alternative methods of
  * denormalizing this data you should set the
@@ -208,7 +208,7 @@ function taxonomy_node_insert(EntityInterface $node) {
  *   The node entity.
  */
 function taxonomy_build_node_index($node) {
-  // We maintain a denormalized table of term/node relationships, containing
+  // We maintain a de-normalized table of term/node relationships, containing
   // only data for current, published nodes.
   if (!\Drupal::config('taxonomy.settings')->get('maintain_index_table') || !(\Drupal::entityTypeManager()->getStorage('node') instanceof SqlContentEntityStorage)) {
     return;

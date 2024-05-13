@@ -236,13 +236,13 @@ class ResourceIdentifier implements ResourceIdentifierInterface {
   }
 
   /**
-   * Deduplicates an array of ResourceIdentifier objects.
+   * De-duplicates an array of ResourceIdentifier objects.
    *
    * @param \Drupal\jsonapi\JsonApiResource\ResourceIdentifier[] $resource_identifiers
    *   The list of ResourceIdentifiers to deduplicate.
    *
    * @return \Drupal\jsonapi\JsonApiResource\ResourceIdentifier[]
-   *   A deduplicated array of ResourceIdentifier objects.
+   *   A de-duplicated array of ResourceIdentifier objects.
    *
    * @see self::isDuplicate()
    */

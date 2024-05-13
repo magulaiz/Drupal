@@ -268,7 +268,7 @@ class UpdatePathTestBaseFilledTest extends UpdatePathTestBase {
     // Make sure our custom image style exists.
     $this->drupalGet('admin/config/media/image-styles/manage/test_image_style');
     $this->assertSession()->pageTextContains('Test image style');
-    $this->assertSession()->pageTextContains('Desaturate');
+    $this->assertSession()->pageTextContains('De-saturate');
     $this->assertSession()->pageTextContains('Convert PNG');
 
     // Make sure our custom responsive image style exists.

@@ -245,13 +245,13 @@ class Filter {
   }
 
   /**
-   * Denormalizes the given filter items into a single EntityConditionGroup.
+   * De-normalizes the given filter items into a single EntityConditionGroup.
    *
    * @param array $items
    *   The normalized entity conditions and groups.
    *
    * @return \Drupal\jsonapi\Query\EntityConditionGroup
-   *   A root group containing all the denormalized conditions and groups.
+   *   A root group containing all the de-normalized conditions and groups.
    */
   protected static function buildEntityConditionGroup(array $items) {
     $root = [
@@ -275,7 +275,7 @@ class Filter {
   protected static function buildTree(array $root, array $items) {
     $id = $root['id'];
 
-    // Recursively build a tree of denormalized conditions and condition groups.
+    // Recursively build a tree of de-normalized conditions and condition groups.
     $members = [];
     foreach ($items as $item) {
       if ($item[static::MEMBER_KEY] == $id) {

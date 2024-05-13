@@ -122,7 +122,7 @@ class FieldItemSerializationTest extends NormalizerTestBase {
   }
 
   /**
-   * Tests normalizing and denormalizing an entity with field item normalizer.
+   * Tests normalizing and de-normalizing an entity with field item normalizer.
    */
   public function testFieldNormalizeDenormalize() {
     $normalized = $this->serializer->normalize($this->entity, 'json');
@@ -131,22 +131,22 @@ class FieldItemSerializationTest extends NormalizerTestBase {
     $this->assertEquals($expected_field_value, $normalized['field_test_text'][0]['value'], 'Text field item normalized');
     $denormalized = $this->serializer->denormalize($normalized, $this->entityClass, 'json');
 
-    $this->assertEquals($denormalized->field_test_text[0]->getValue(), $this->entity->field_test_text[0]->getValue(), 'Text field item denormalized.');
-    $this->assertEquals($denormalized->field_test_text_default[0]->getValue(), $this->entity->field_test_text_default[0]->getValue(), 'Text field item with default denormalized.');
+    $this->assertEquals($denormalized->field_test_text[0]->getValue(), $this->entity->field_test_text[0]->getValue(), 'Text field item de-normalized.');
+    $this->assertEquals($denormalized->field_test_text_default[0]->getValue(), $this->entity->field_test_text_default[0]->getValue(), 'Text field item with default de-normalized.');
 
     // Unset the values for text field that has a default value.
     unset($normalized['field_test_text_default']);
     $denormalized_without_all_fields = $this->serializer->denormalize($normalized, $this->entityClass, 'json');
-    // Check that denormalized entity is still the same even if not all fields
+    // Check that de-normalized entity is still the same even if not all fields
     // are not provided.
-    $this->assertEquals($denormalized_without_all_fields->field_test_text[0]->getValue(), $this->entity->field_test_text[0]->getValue(), 'Text field item denormalized.');
+    $this->assertEquals($denormalized_without_all_fields->field_test_text[0]->getValue(), $this->entity->field_test_text[0]->getValue(), 'Text field item de-normalized.');
     // Even though field_test_text_default value was unset before
-    // denormalization it should still have the default values for the field.
-    $this->assertEquals($denormalized_without_all_fields->field_test_text_default[0]->getValue(), $this->entity->field_test_text_default[0]->getValue(), 'Text field item with default denormalized.');
+    // de-normalization it should still have the default values for the field.
+    $this->assertEquals($denormalized_without_all_fields->field_test_text_default[0]->getValue(), $this->entity->field_test_text_default[0]->getValue(), 'Text field item with default de-normalized.');
   }
 
   /**
-   * Tests denormalizing using a scalar field value.
+   * Tests de-normalizing using a scalar field value.
    */
   public function testFieldDenormalizeWithScalarValue() {
     $this->expectException(UnexpectedValueException::class);
@@ -185,7 +185,7 @@ class FieldItemSerializationTest extends NormalizerTestBase {
       $this->assertTrue($denormalized_entity->field_test_boolean->value);
     };
 
-    // Asserts denormalizing the entity DOES yield the value we set:
+    // Asserts de-normalizing the entity DOES yield the value we set:
     // - when using the detailed representation
     $core_normalization['field_test_boolean'][0]['value'] = TRUE;
     $assert_denormalization($core_normalization);
@@ -200,7 +200,7 @@ class FieldItemSerializationTest extends NormalizerTestBase {
     $core_normalization = $this->container->get('serializer')->normalize($this->entity, $format);
     $this->assertSame('👎', $core_normalization['field_test_boolean'][0]['value']);
 
-    // Asserts denormalizing the entity DOES NOT ANYMORE yield the value we set:
+    // Asserts de-normalizing the entity DOES NOT ANYMORE yield the value we set:
     // - when using the detailed representation
     $core_normalization['field_test_boolean'][0]['value'] = '👍';
     $assert_denormalization($core_normalization);

@@ -134,7 +134,7 @@ class RequestHandler implements ContainerInjectionInterface {
   }
 
   /**
-   * Deserializes request body, if any.
+   * De-serializes request body, if any.
    *
    * @param \Drupal\Core\Routing\RouteMatchInterface $route_match
    *   The route match.
@@ -150,7 +150,7 @@ class RequestHandler implements ContainerInjectionInterface {
    * @throws \Symfony\Component\HttpKernel\Exception\BadRequestHttpException
    *   Thrown if the request body cannot be decoded.
    * @throws \Symfony\Component\HttpKernel\Exception\UnprocessableEntityHttpException
-   *   Thrown if the request body cannot be denormalized.
+   *   Thrown if the request body cannot be de-normalized.
    */
   protected function deserialize(RouteMatchInterface $route_match, Request $request, ResourceInterface $resource) {
     // Deserialize incoming data if available.
@@ -173,7 +173,7 @@ class RequestHandler implements ContainerInjectionInterface {
         throw new BadRequestHttpException($e->getMessage());
       }
 
-      // Then attempt to denormalize if there is a serialization class.
+      // Then attempt to de-normalize if there is a serialization class.
       if (!empty($definition['serialization_class'])) {
         try {
           $unserialized = $this->serializer->denormalize($unserialized, $definition['serialization_class'], $format, ['request_method' => $method]);
