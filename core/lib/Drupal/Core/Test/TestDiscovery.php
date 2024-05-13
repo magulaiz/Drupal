@@ -326,6 +326,7 @@ class TestDiscovery {
     }
 
     // Concrete tests must have a group.
+    // @phpstan-ignore-next-line
     if (empty($groupAttributes)) {
       throw new MissingGroupException(sprintf('Missing #[Group] attribute in %s', $classname));
     }
