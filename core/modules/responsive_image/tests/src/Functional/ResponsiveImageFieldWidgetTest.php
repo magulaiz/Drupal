@@ -35,7 +35,7 @@ class ResponsiveImageFieldWidgetTest extends ImageFieldTestBase {
   public function testWidgetElement() {
     // Check for responsive image widget in add/node/article page
     $field_name = mb_strtolower($this->randomMachineName());
-    $this->createImageField($field_name, 'article');
+    $this->createImageField($field_name, 'node', 'article');
     // Update form display to use responsive image widget.
     \Drupal::service('entity_display.repository')->getFormDisplay('node', 'article')
       ->setComponent($field_name, [
