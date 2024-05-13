@@ -27,7 +27,7 @@ class UpdateReducedThemeRegistryTest extends BrowserTestBase {
   /**
    * Tests that the update page can be accessed.
    */
-  public function testUpdatePageWithFilterOn() {
+  public function testUpdatePageWithFilterOn(): void {
     require_once $this->root . '/core/includes/update.inc';
     $this->writeSettings([
       'settings' => [
@@ -48,7 +48,7 @@ class UpdateReducedThemeRegistryTest extends BrowserTestBase {
   /**
    * Tests that the update page breaks with unstable data.
    */
-  public function testUpdatePageWithFilterOff() {
+  public function testUpdatePageWithFilterOff(): void {
     require_once $this->root . '/core/includes/update.inc';
     $this->writeSettings([
       'settings' => [
