@@ -2,14 +2,13 @@
 
 namespace Drupal\Core\Menu;
 
-use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\Core\Url;
-use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\DependencyInjection\Attribute\Autowire;
 
 /**
  * Provides a default implementation for menu link plugins.
  */
-class MenuLinkDefault extends MenuLinkBase implements ContainerFactoryPluginInterface {
+class MenuLinkDefault extends MenuLinkBase {
 
   /**
    * {@inheritdoc}
@@ -41,22 +40,16 @@ class MenuLinkDefault extends MenuLinkBase implements ContainerFactoryPluginInte
    * @param \Drupal\Core\Menu\StaticMenuLinkOverridesInterface $static_override
    *   The static override storage.
    */
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, StaticMenuLinkOverridesInterface $static_override) {
+  public function __construct(
+    array $configuration,
+    $plugin_id,
+    $plugin_definition,
+    #[Autowire(service: 'menu_link.static.overrides')]
+    StaticMenuLinkOverridesInterface $static_override,
+  ) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
 
     $this->staticOverride = $static_override;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
-    return new static(
-      $configuration,
-      $plugin_id,
-      $plugin_definition,
-      $container->get('menu_link.static.overrides')
-    );
   }
 
   /**

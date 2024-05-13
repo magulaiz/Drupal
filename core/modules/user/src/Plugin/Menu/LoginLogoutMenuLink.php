@@ -5,7 +5,7 @@ namespace Drupal\user\Plugin\Menu;
 use Drupal\Core\Menu\MenuLinkDefault;
 use Drupal\Core\Menu\StaticMenuLinkOverridesInterface;
 use Drupal\Core\Session\AccountInterface;
-use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\DependencyInjection\Attribute\Autowire;
 
 /**
  * A menu link that shows "Log in" or "Log out" as appropriate.
@@ -33,23 +33,17 @@ class LoginLogoutMenuLink extends MenuLinkDefault {
    * @param \Drupal\Core\Session\AccountInterface $current_user
    *   The current user.
    */
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, StaticMenuLinkOverridesInterface $static_override, AccountInterface $current_user) {
+  public function __construct(
+    array $configuration,
+    $plugin_id,
+    $plugin_definition,
+    StaticMenuLinkOverridesInterface $static_override,
+    #[Autowire(service: 'current_user')]
+    AccountInterface $current_user,
+  ) {
     parent::__construct($configuration, $plugin_id, $plugin_definition, $static_override);
 
     $this->currentUser = $current_user;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
-    return new static(
-      $configuration,
-      $plugin_id,
-      $plugin_definition,
-      $container->get('menu_link.static.overrides'),
-      $container->get('current_user')
-    );
   }
 
   /**

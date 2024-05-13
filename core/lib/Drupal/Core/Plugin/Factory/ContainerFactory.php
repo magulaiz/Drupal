@@ -3,9 +3,10 @@
 namespace Drupal\Core\Plugin\Factory;
 
 use Drupal\Component\Plugin\Factory\DefaultFactory;
+use Symfony\Component\DependencyInjection\Attribute\Autowire;
 
 /**
- * Plugin factory which passes a container to a create method.
+ * Plugin factory that creates plugin instances with dependent services.
  */
 class ContainerFactory extends DefaultFactory {
 
@@ -16,13 +17,46 @@ class ContainerFactory extends DefaultFactory {
     $plugin_definition = $this->discovery->getDefinition($plugin_id);
     $plugin_class = static::getPluginClass($plugin_id, $plugin_definition, $this->interface);
 
-    // If the plugin provides a factory method, pass the container to it.
-    if (is_subclass_of($plugin_class, 'Drupal\Core\Plugin\ContainerFactoryPluginInterface')) {
+    // Check if the constructor can be autowired by traversing the hierarchy.
+    $constructor_class = $plugin_class;
+    $args = [$configuration, $plugin_id, $plugin_definition];
+    $parameter_count = NULL;
+    do {
+      try {
+        $constructor = new \ReflectionMethod($constructor_class, '__construct');
+        $parameters = $constructor->getParameters();
+      }
+      catch (\ReflectionException $e) {
+        break;
+      }
+
+      // Store the original number of parameters to check later.
+      if (!isset($parameter_count)) {
+        $parameter_count = count($parameters);
+      }
+
+      // Check each argument that has not yet been filled in.
+      foreach ($parameters as $pos => $parameter) {
+        if (!isset($args[$pos])) {
+          foreach ($parameter->getAttributes() as $attribute) {
+            if ($attribute->getName() === Autowire::class) {
+              $args[$pos] = \Drupal::service((string) $attribute->newInstance()->value);
+            }
+          }
+        }
+      }
+      $constructor_class = get_parent_class($constructor_class);
+    } while ($constructor_class && count($args) !== $parameter_count);
+
+    // If we couldn't autowire the plugin and it provides a factory method,
+    // pass the container to it.
+    if (count($args) !== $parameter_count && method_exists($plugin_class, 'create')) {
       return $plugin_class::create(\Drupal::getContainer(), $configuration, $plugin_id, $plugin_definition);
     }
 
     // Otherwise, create the plugin directly.
-    return new $plugin_class($configuration, $plugin_id, $plugin_definition);
+    ksort($args);
+    return new $plugin_class(...$args);
   }
 
 }
