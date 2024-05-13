@@ -940,34 +940,6 @@ class Select extends QuerySelect {
     }
 
     return parent::addJoin($type, $table, $alias, $condition, $arguments);
-
-//    // If no alias is specified, first try the field name itself.
-//    if (empty($alias)) {
-//      $alias = $table;
-//    }
-//
-//    // Copied from Select::addJoin(). Needs to be moved to own helper method.
-//    $alias_candidate = $alias;
-//    $count = 2;
-//    while (!empty($this->tables[$alias_candidate])) {
-//      $alias_candidate = $alias . '_' . $count++;
-//    }
-//    $alias = $alias_candidate;
-//
-//    if ($condition instanceof ConditionInterface) {
-//      $condition->updateAliasPlaceholder('%alias', $alias);
-//    }
-//
-//    // Add the alias to the tables list.
-//    $this->tables[$alias] = [
-//      'join type' => $type,
-//      'table' => $table,
-//      'alias' => $alias,
-//      'condition' => $condition,
-//      'arguments' => $arguments,
-//    ];
-//
-//    return $alias;
   }
 
   /**
