@@ -22,8 +22,8 @@
 .toolbar-button {
   z-index: 1;
   align-items: center;
-  padding-inline: var(--admin-toolbar-space-16) var(--admin-toolbar-space-12);
-  padding-block: calc(0.625 * var(--admin-toolbar-rem));
+  padding-inline: var(--admin-toolbar-space-16);
+  padding-block: calc(0.75 * var(--admin-toolbar-rem));
   cursor: pointer;
   text-align: start;
   text-decoration: none;
@@ -73,6 +73,10 @@
   font-size: var(--admin-toolbar-font-size-info-lg);
   line-height: var(--admin-toolbar-line-height-info-lg);
 }
+/* Dark color modifier for submenus title */
+.toolbar-button--dark {
+  color: var(--admin-toolbar-color-gray-990);
+}
 
 .toolbar-button--non-interactive {
   &:hover,
@@ -87,17 +91,17 @@
 }
 
 /* Class starts with `toolbar-button--icon`  */
-[class*='toolbar-button--icon'] {
+[class*="toolbar-button--icon"] {
   --icon: url(../../assets/icons/basic.svg); /* Default icon, aka --basic */
 
-  padding-inline: calc(0.625 * var(--admin-toolbar-rem));
+  padding-inline: calc(0.75 * var(--admin-toolbar-rem));
 
   &::before {
     display: block;
     flex-shrink: 0;
     inline-size: var(--admin-toolbar-space-20);
     block-size: var(--admin-toolbar-space-20);
-    content: '';
+    content: "";
     background-color: currentColor;
     mask-repeat: no-repeat;
     mask-position: center center;
@@ -135,12 +139,12 @@
   }
 }
 
-.toolbar-button--secondary--expanded[aria-expanded='true'] {
+.toolbar-button--secondary--expanded[aria-expanded="true"] {
   color: white;
   background-color: var(--admin-toolbar-color-gray-900);
 }
 
-.toolbar-button--tertiary--expanded[aria-expanded='true'] {
+.toolbar-button--tertiary--expanded[aria-expanded="true"] {
   background-color: var(--admin-toolbar-color-gray-050);
 }
 
@@ -154,11 +158,11 @@
   flex-grow: 1;
 }
 
-[class*='toolbar-button--expand'] {
+[class*="toolbar-button--expand"] {
   &::after {
     flex-shrink: 0;
     margin-inline-start: auto;
-    content: '';
+    content: "";
     transition: transform var(--admin-toolbar-transition);
     background-color: currentColor;
     block-size: var(--admin-toolbar-space-16);
@@ -188,9 +192,14 @@
     }
   }
 
-  &[aria-expanded='true'] {
+  &[aria-expanded="true"] {
     &::after {
       transform: rotate(-90deg);
+    }
+    &:focus,
+    &:hover {
+      border-bottom-right-radius: 0;
+      border-bottom-left-radius: 0;
     }
   }
 }
@@ -277,7 +286,7 @@
   --icon: url(../../assets/icons/user.svg);
 }
 
-html:not([data-admin-toolbar='expanded']) {
+html:not([data-admin-toolbar="expanded"]) {
   .toolbar-button--collapsible::after {
     display: none;
   }
