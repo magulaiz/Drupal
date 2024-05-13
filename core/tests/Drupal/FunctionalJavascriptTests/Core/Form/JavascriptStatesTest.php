@@ -263,6 +263,14 @@ class JavascriptStatesTest extends WebDriverTestBase {
     $this->assertFalse($radios_some_disabled_value2->hasAttribute('disabled'));
     // Check if the link is turned back to visible state.
     $this->assertTrue($link->isVisible());
+
+    // Test password confirm field.
+    $trigger = $this->getSession()->getPage()->findField('password_generate');
+    $trigger->uncheck();
+    $this->assertSession()->pageTextContains('Enter password');
+
+    $trigger->check();
+    $this->assertSession()->pageTextNotContains('Enter password');
   }
 
   /**

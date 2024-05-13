@@ -730,6 +730,20 @@ class JavascriptStatesForm extends FormBase {
       '#title' => 'Enable textarea',
     ];
 
+    $form['password_generate'] = [
+      '#type' => 'checkbox',
+      '#title' => $this->t('Generate password'),
+      '#default_value' => 1,
+    ];
+    $form['password_confirm'] = [
+      '#title' => $this->t('Enter password'),
+      '#type' => 'password_confirm',
+      '#states' => [
+        'visible' => [
+          ':input[name="password_generate"]' => ['checked' => FALSE],
+        ],
+      ],
+    ];
     return $form;
   }
 
