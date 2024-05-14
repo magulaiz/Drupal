@@ -322,7 +322,9 @@ class TestDiscovery {
     }
 
     // Concrete tests must have a group.
-    if ($reflection && empty($groupAttributes)) {
+    // @todo Checking $groupAttributes emptiness is redundant here, but once
+    //   the check above is removed, it should be added.
+    if ($reflection) {
       throw new MissingGroupException(sprintf('Missing #[Group] attribute in %s', $classname));
     }
 
