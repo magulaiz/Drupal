@@ -926,6 +926,7 @@ pwprompt
 queryor
 querystring
 questionmark
+quickedit
 quicklinks
 quickstart
 quinlan

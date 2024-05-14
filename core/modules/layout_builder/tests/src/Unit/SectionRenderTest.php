@@ -115,6 +115,7 @@ class SectionRenderTest extends UnitTestCase {
         'tags' => [],
         'max-age' => -1,
       ],
+      '#attributes' => [],
       '#in_preview' => FALSE,
     ];
 
@@ -256,6 +257,7 @@ class SectionRenderTest extends UnitTestCase {
         'tags' => [],
         'max-age' => -1,
       ],
+      '#attributes' => [],
       '#in_preview' => FALSE,
     ];
 

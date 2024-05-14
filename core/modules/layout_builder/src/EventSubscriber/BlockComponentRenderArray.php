@@ -126,6 +126,8 @@ class BlockComponentRenderArray implements EventSubscriberInterface {
         '#derivative_plugin_id' => $block->getDerivativeId(),
         '#in_preview' => $event->inPreview(),
         '#weight' => $event->getComponent()->getWeight(),
+        '#attributes' => $content['#attributes'] ?? [],
+        'content' => $content,
       ];
 
       // Place the $content returned by the block plugin into a 'content' child
@@ -140,7 +142,6 @@ class BlockComponentRenderArray implements EventSubscriberInterface {
       // move these properties from $content and merge them into the top-level
       // element.
       if (isset($content['#attributes'])) {
-        $build['#attributes'] = $content['#attributes'];
         unset($content['#attributes']);
       }
       // Hide contextual links for inline blocks until the UX issues surrounding
