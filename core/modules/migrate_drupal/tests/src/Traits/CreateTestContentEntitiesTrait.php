@@ -34,16 +34,20 @@ trait CreateTestContentEntitiesTrait {
 
   /**
    * Install required entity schemas.
+   *
+   * This method is only useful for kernel tests.
    */
   protected function installEntitySchemas() {
-    $this->installEntitySchema('block_content');
-    $this->installEntitySchema('comment');
-    $this->installEntitySchema('file');
-    $this->installEntitySchema('menu_link_content');
-    $this->installEntitySchema('node');
-    $this->installEntitySchema('path_alias');
-    $this->installEntitySchema('taxonomy_term');
-    $this->installEntitySchema('user');
+    if (method_exists($this, 'installEntitySchema')) {
+      $this->installEntitySchema('block_content');
+      $this->installEntitySchema('comment');
+      $this->installEntitySchema('file');
+      $this->installEntitySchema('menu_link_content');
+      $this->installEntitySchema('node');
+      $this->installEntitySchema('path_alias');
+      $this->installEntitySchema('taxonomy_term');
+      $this->installEntitySchema('user');
+    }
   }
 
   /**
