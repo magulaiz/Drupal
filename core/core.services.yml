@@ -212,7 +212,7 @@ services:
   Drupal\Core\Cache\CacheFactoryInterface: '@cache_factory'
   variation_cache_factory:
     class: Drupal\Core\Cache\VariationCacheFactory
-    arguments: ['@request_stack', '@cache_factory', '@cache_contexts_manager']
+    arguments: ['@request_stack', '@Drupal\Core\Cache\DelegatedCacheFactory', '@cache_contexts_manager']
   Drupal\Core\Cache\VariationCacheFactory: '@variation_cache_factory'
   cache_contexts_manager:
     class: Drupal\Core\Cache\Context\CacheContextsManager
