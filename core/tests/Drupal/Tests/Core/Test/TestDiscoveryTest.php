@@ -362,8 +362,18 @@ EOF;
     ]);
   }
 
-  public function testGetTestClasses() {
-    $this->setupVfsWithTestClasses();
+  /**
+   * @todo 'legacy' group annotation is needed until PHPStan recognizes
+   *   #[IgnoreDeprecations] as a deprecated scope marker.
+   *
+   * @see https://github.com/phpstan/phpstan-deprecation-rules/issues/109
+   *
+   * @group legacy
+   */
+  #[IgnoreDeprecations]
+  public function testGetLegacyTestClasses() {
+    $this->expectDeprecation('Drupal\Core\Test\TestDiscovery::getTestInfoFromAnnotation() is deprecated in drupal:11.0.0 and is removed from drupal:12.0.0. Make sure all tests classes have a #[Group()] attribute. See https://www.drupal.org/node/7654321');
+    $this->setupVfsWithLegacyTestClasses();
     $extensions = [
       'test_module' => new Extension('vfs://drupal', 'module', 'modules/test_module/test_module.info.yml'),
     ];
@@ -428,8 +438,18 @@ EOF;
     return $test_discovery;
   }
 
-  public function testGetTestClassesWithSelectedTypes() {
-    $this->setupVfsWithTestClasses();
+  /**
+   * @todo 'legacy' group annotation is needed until PHPStan recognizes
+   *   #[IgnoreDeprecations] as a deprecated scope marker.
+   *
+   * @see https://github.com/phpstan/phpstan-deprecation-rules/issues/109
+   *
+   * @group legacy
+   */
+  #[IgnoreDeprecations]
+  public function testGetLegacyTestClassesWithSelectedTypes() {
+    $this->expectDeprecation('Drupal\Core\Test\TestDiscovery::getTestInfoFromAnnotation() is deprecated in drupal:11.0.0 and is removed from drupal:12.0.0. Make sure all tests classes have a #[Group()] attribute. See https://www.drupal.org/node/7654321');
+    $this->setupVfsWithLegacyTestClasses();
     $extensions = [
       'test_module' => new Extension('vfs://drupal', 'module', 'modules/test_module/test_module.info.yml'),
       'test_profile_module' => new Extension('vfs://drupal', 'profile', 'profiles/test_profile/modules/test_profile_module/test_profile_module.info.yml'),
