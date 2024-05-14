@@ -2,8 +2,10 @@
 
 namespace Drupal\Core\Cache;
 
+use Symfony\Component\DependencyInjection\Argument\ServiceClosureArgument;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
+use Symfony\Component\DependencyInjection\Reference;
 
 /**
  * Adds cache_bins parameter to the container.
@@ -42,7 +44,7 @@ class ListCacheBinsPass implements CompilerPassInterface {
         $all_bins[] = $bin;
         $cache_info[$section]['bins'][$id] = $bin;
         // Inject cache bin into delegated factory service.
-        $cacheFactory->addMethodCall('offsetSet', [$bin, $id]);
+        $cacheFactory->addMethodCall('offsetSet', [$bin, new ServiceClosureArgument(new Reference($id))]);
         if (isset($attributes[0]['default_backend'])) {
           $cache_info[$section]['default_bin_backends'][$bin] = $attributes[0]['default_backend'];
         }

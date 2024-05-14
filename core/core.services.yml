@@ -217,8 +217,7 @@ services:
   cache_contexts_manager:
     class: Drupal\Core\Cache\Context\CacheContextsManager
     arguments: ['@service_container', '%cache_contexts%' ]
-  Drupal\Core\Cache\DelegatedCacheFactory:
-    arguments: ['@service_container']
+  Drupal\Core\Cache\DelegatedCacheFactory: ~
   Drupal\Core\Cache\Context\CacheContextsManager: '@cache_contexts_manager'
   cache_tags.invalidator:
     class: Drupal\Core\Cache\CacheTagsInvalidator
