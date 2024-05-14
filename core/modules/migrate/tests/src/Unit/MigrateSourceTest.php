@@ -94,7 +94,7 @@ class MigrateSourceTest extends MigrateTestCase {
 
     $cache_factory_delegated = $this->prophesize(DelegatedCacheFactory::class);
     $cache_factory_delegated->get('migrate')->willReturn($this->createMock(CacheBackendInterface::class));
-    $container->set('cache_factory_delegated', $cache_factory_delegated->reveal());
+    $container->set(DelegatedCacheFactory::class, $cache_factory_delegated->reveal());
 
     $this->migrationConfiguration = $this->defaultMigrationConfiguration + $migrate_config;
     $this->migration = parent::getMigration();

@@ -6,6 +6,7 @@ namespace Drupal\KernelTests\Core\Cache;
 
 use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\KernelTests\KernelTestBase;
+use PHPUnit\Framework\Attributes\IgnoreDeprecations;
 
 /**
  * Unit test of the database backend using the generic cache unit test base.
@@ -33,7 +34,10 @@ class DelegatedCacheFactoryTest extends KernelTestBase {
 
   /**
    * Test retrieving a cache defined without a 'cache.' prefixed service ID.
+   *
+   * @todo Remove IgnoreDeprecations annotation in Drupal 12.
    */
+  #[IgnoreDeprecations]
   public function testGetCacheByBinNameOnly(): void {
     $this->enableModules(['module_cache_bin_delegated']);
     $this->assertTrue(\Drupal::cache('module_cache_bin_delegated.my_bin_name') instanceof CacheBackendInterface);
