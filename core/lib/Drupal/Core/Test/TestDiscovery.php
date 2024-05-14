@@ -303,6 +303,8 @@ class TestDiscovery {
    *   - group: The test's first @group (parsed from PHPDoc annotations).
    *   - groups: All of the test's @group annotations, as an array (parsed from
    *     PHPDoc annotations).
+   *   - type: The test's type (for PHPUnit this corresponds to the test suite
+   *     the test is part of).
    *
    * @throws \Drupal\Core\Test\Exception\MissingGroupException
    *   If the class does not have a #[Group()] attribute or a @group
@@ -313,21 +315,21 @@ class TestDiscovery {
       $reflection = new \ReflectionClass($classname);
     }
     catch (\ReflectionException $e) {
-      // Fixture classes end up here, they cannot be reflected.
-      throw new MissingGroupException(sprintf('Failed to reflect %s', $classname));
+      // There are classes that end up here (for example, fixtures), that
+      // cannot be reflected.
+      $reflection = NULL;
     }
 
-    $groupAttributes = $reflection->getAttributes(Group::class, \ReflectionAttribute::IS_INSTANCEOF);
+    $groupAttributes = $reflection ? $reflection->getAttributes(Group::class, \ReflectionAttribute::IS_INSTANCEOF) : [];
 
     // @todo Remove once all test annotations are removed.
     if (empty($groupAttributes)) {
       // @phpstan-ignore-next-line
-      return self::getTestInfoFromAnnotation($classname, $doc_comment);
+      return self::getTestInfoFromAnnotation($classname, $doc_comment, $reflection);
     }
 
     // Concrete tests must have a group.
-    // @phpstan-ignore-next-line
-    if (empty($groupAttributes)) {
+    if ($reflection && empty($groupAttributes)) {
       throw new MissingGroupException(sprintf('Missing #[Group] attribute in %s', $classname));
     }
 
@@ -359,8 +361,10 @@ class TestDiscovery {
    * @param string $classname
    *   The test classname.
    * @param string $doc_comment
-   *   (optional) The class PHPDoc comment. If not passed in reflection will be
-   *   used but this is very expensive when parsing all the test classes.
+   *   (optional) The class PHPDoc comment. If not passed in reflection will
+   *   be used.
+   * @param \ReflectionClass|null $reflection
+   *   (optional) The reflected class.
    *
    * @return array
    *   An associative array containing:
@@ -369,6 +373,8 @@ class TestDiscovery {
    *   - group: The test's first @group (parsed from PHPDoc annotations).
    *   - groups: All of the test's @group annotations, as an array (parsed from
    *     PHPDoc annotations).
+   *   - type: The test's type (for PHPUnit this corresponds to the test suite
+   *     the test is part of).
    *
    * @throws \Drupal\Core\Test\Exception\MissingGroupException
    *   If the class does not have a @group annotation.
@@ -378,11 +384,10 @@ class TestDiscovery {
    *
    * @see https://www.drupal.org/node/7654321
    */
-  protected static function getTestInfoFromAnnotation($classname, $doc_comment = NULL) {
+  protected static function getTestInfoFromAnnotation($classname, $doc_comment = NULL, ?\ReflectionClass $reflection = NULL) {
     @trigger_error(__METHOD__ . '() is deprecated in drupal:11.0.0 and is removed from drupal:12.0.0. Make sure all tests classes have a #[Group()] attribute. See https://www.drupal.org/node/7654321', E_USER_DEPRECATED);
     if ($doc_comment === NULL) {
-      $reflection = new \ReflectionClass($classname);
-      $doc_comment = $reflection->getDocComment();
+      $doc_comment = $reflection ? $reflection->getDocComment() : '';
     }
     $info = [
       'name' => $classname,
