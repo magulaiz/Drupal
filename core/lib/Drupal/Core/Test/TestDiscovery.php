@@ -322,9 +322,10 @@ class TestDiscovery {
     }
 
     // Concrete tests must have a group.
-    // @todo Checking $groupAttributes emptiness is redundant here, but once
-    //   the check above is removed, it should be added.
-    if ($reflection) {
+    // @todo Checking $groupAttributes emptiness is redundant here for PHPStan,
+    //   but once the check above is removed, it will become relevant.
+    // @phpstan-ignore-next-line
+    if (empty($groupAttributes)) {
       throw new MissingGroupException(sprintf('Missing #[Group] attribute in %s', $classname));
     }
 
