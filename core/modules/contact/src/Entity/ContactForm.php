@@ -11,6 +11,7 @@ use Drupal\Core\Config\Entity\ConfigEntityBundleBase;
 use Drupal\Core\Entity\Attribute\ConfigEntityType;
 use Drupal\Core\Entity\EntityDeleteForm;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
+use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Url;
 use Drupal\user\Entity\EntityPermissionsRouteProvider;
 
@@ -203,6 +204,20 @@ class ContactForm extends ConfigEntityBundleBase implements ContactFormInterface
   public function setWeight($weight) {
     $this->weight = $weight;
     return $this;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function preSave(EntityStorageInterface $storage) {
+    parent::preSave($storage);
+
+    if ($this->reply === '') {
+      $this->reply = NULL;
+    }
+    if ($this->message === '') {
+      $this->message = NULL;
+    }
   }
 
 }
