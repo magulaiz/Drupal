@@ -139,7 +139,7 @@ services:
     calls:
       - [appendBackend, ['@cache.jsonapi_memory']]
       - [appendBackend, ['@cache.default']]
-    tags: [{ name: cache.bin.memory }]
+    tags: [{ name: cache.bin.memory, bin: jsonapi_resource_types }]
   cache.jsonapi_normalizations:
     class: Drupal\Core\Cache\CacheBackendInterface
     tags:
