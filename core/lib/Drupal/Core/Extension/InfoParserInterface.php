@@ -43,13 +43,21 @@ interface InfoParserInterface {
    * See node.info.yml for an example of a module .info.yml file.
    *
    * Information stored in a theme .info.yml file:
-   * - screenshot: Path to screenshot relative to the theme's .info.yml file.
-   * - engine: Theme engine; typically twig.
+   * - name: The name of the theme.
+   * - type: The type of the theme; typically 'theme'.
+   * - description: A description of the theme.
+   * - package: The package name to group themes in the admin UI.
+   * - version: The version of the theme.
+   * - core_version_requirement: The required core version.
+   * - screenshot: Path to a screenshot relative to the theme's .info.yml file.
    * - base theme: Name of a base theme, if applicable.
-   * - regions: Listed regions.
-   * - features: Features available.
-   * - stylesheets: Theme stylesheets.
-   * - scripts: Theme scripts.
+   * - engine: Theme engine; typically 'twig'.
+   * - regions: Defined regions for the theme.
+   * - libraries: Libraries defined by the theme.
+   * - libraries-override: Overrides for libraries defined by modules or other themes.
+   * - libraries-extend: Extensions for libraries defined by modules or other themes.
+   * - regions_hidden: Regions that are hidden.
+   * - configure: Route for theme settings.
    *
    * See olivero.info.yml for an example of a theme .info.yml file.
    *
