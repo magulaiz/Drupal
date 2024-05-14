@@ -338,7 +338,7 @@ class Drupal {
    * @ingroup cache
    */
   public static function cache($bin = 'default') {
-    return static::getContainer()->get('cache.' . $bin);
+    return static::getContainer()->get('cache_factory_delegated')->get($bin);
   }
 
   /**

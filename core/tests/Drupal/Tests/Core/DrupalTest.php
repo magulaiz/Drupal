@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\Core;
 
+use Drupal\Core\Cache\CacheBackendInterface;
+use Drupal\Core\Cache\DelegatedCacheFactory;
 use Drupal\Core\DependencyInjection\ClassResolverInterface;
 use Drupal\Core\DependencyInjection\ContainerNotInitializedException;
 use Drupal\Core\Entity\EntityStorageInterface;
@@ -103,7 +105,9 @@ class DrupalTest extends UnitTestCase {
    * @covers ::cache
    */
   public function testCache(): void {
-    $this->setMockContainerService('cache.test');
+    $cache_factory_delegated = $this->prophesize(DelegatedCacheFactory::class);
+    $cache_factory_delegated->get('test')->willReturn($this->createMock(CacheBackendInterface::class));
+    $this->setMockContainerService('cache_factory_delegated', $cache_factory_delegated->reveal());
     $this->assertNotNull(\Drupal::cache('test'));
   }
 
