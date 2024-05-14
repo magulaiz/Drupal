@@ -100,7 +100,9 @@ function callback_batch_operation($multiple_params, &$context) {
  * Callback for batch_set().
  *
  * This callback may be specified in a batch to perform clean-up operations, or
- * to analyze the results of the batch operations.
+ * to analyze the results of the batch operations. If the callback determines
+ * that a redirection should occur at the end of the batch process, it can return
+ * a RedirectResponse object.
  *
  * @param $success
  *   A boolean indicating whether the batch has completed successfully.
@@ -111,6 +113,9 @@ function callback_batch_operation($multiple_params, &$context) {
  * @param string $elapsed
  *   A string representing the elapsed time for the batch process, e.g.,
  *   '1 min 30 secs'.
+ * @return \Drupal\Core\Routing\RedirectResponse|null
+ *   A redirect response if the batch determines a redirection is necessary.
+ *   NULL otherwise.
  */
 function callback_batch_finished($success, $results, $operations, $elapsed) {
   if ($success) {
@@ -125,8 +130,12 @@ function callback_batch_finished($success, $results, $operations, $elapsed) {
     ];
     $message .= \Drupal::service('renderer')->render($list);
     \Drupal::messenger()->addStatus($message);
-  }
-  else {
+
+    // Optionally, redirect if needed.
+    if (shouldRedirect()) {  // Assume shouldRedirect() is a function that determines if a redirect is necessary.
+      return new \Drupal\Core\Routing\RedirectResponse(\Drupal\Core\Url::fromRoute('example.route')->toString());
+    }
+  } else {
     // An error occurred.
     // $operations contains the operations that remained unprocessed.
     $error_operation = reset($operations);
@@ -136,7 +145,11 @@ function callback_batch_finished($success, $results, $operations, $elapsed) {
     ]);
     \Drupal::messenger()->addError($message);
   }
+
+  // Return NULL explicitly if no redirection is performed.
+  return NULL;
 }
+
 
 /**
  * @} End of "addtogroup callbacks".
