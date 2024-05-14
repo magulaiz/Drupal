@@ -34,7 +34,8 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
  * </dl>
  *
  * @deprecated in drupal:10.3.0 and is removed from drupal:11.0.0. Use
- *   \Symfony\Component\EventDispatcher\EventDispatcher instead.
+ *   \Symfony\Component\EventDispatcher\EventDispatcher instead. For type-hints
+ *   use \Symfony\Component\EventDispatcher\EventDispatcherInterface instead.
  *
  * @see https://www.drupal.org/node/3376090
  */
