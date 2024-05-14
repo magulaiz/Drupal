@@ -452,11 +452,13 @@ EOF;
   /**
    * Ensure that classes are not reflected when the docblock is empty.
    *
+   * @todo 'legacy' group annotation is needed until PHPStan recognizes
+   *   #[IgnoreDeprecations] as a deprecated scope marker.
+   *
+   * @see https://github.com/phpstan/phpstan-deprecation-rules/issues/109
+   *
    * @group legacy
    */
-  // @todo 'legacy' group annotation is needed until PHPStan recognizes
-  //   #[IgnoreDeprecations] as a deprecated scope marker
-  // @see https://github.com/phpstan/phpstan-deprecation-rules/issues/109
   #[IgnoreDeprecations]
   public function testGetTestInfoEmptyDocblock() {
     $this->expectDeprecation('Drupal\Core\Test\TestDiscovery::getTestInfoFromAnnotation() is deprecated in drupal:11.0.0 and is removed from drupal:12.0.0. Make sure all tests classes have a #[Group()] attribute. See https://www.drupal.org/node/7654321');
