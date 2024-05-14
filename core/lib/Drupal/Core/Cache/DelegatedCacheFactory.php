@@ -27,7 +27,7 @@ class DelegatedCacheFactory extends \ArrayObject implements CacheFactoryInterfac
   ) {}
 
   /**
-   * {@inheritDoc}
+   * {@inheritdoc}
    */
   public function get($bin) {
     // The corresponding offsetSet() call is in ListCacheBinsPass::process().

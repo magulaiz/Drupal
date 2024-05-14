@@ -272,7 +272,7 @@ services:
   cache.config:
     class: Drupal\Core\Cache\CacheBackendInterface
     tags:
-      - { name: cache.bin, , bin: config, default_backend: cache.backend.chainedfast }
+      - { name: cache.bin, bin: config, default_backend: cache.backend.chainedfast }
     factory: ['@cache_factory', 'get']
     arguments: [config]
   cache.default:
