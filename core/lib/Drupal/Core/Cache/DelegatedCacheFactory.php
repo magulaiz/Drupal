@@ -2,6 +2,8 @@
 
 namespace Drupal\Core\Cache;
 
+use Symfony\Component\DependencyInjection\ContainerInterface;
+
 /**
  * This service allows fetching any cache bin service.
  *
@@ -15,11 +17,21 @@ namespace Drupal\Core\Cache;
 class DelegatedCacheFactory extends \ArrayObject implements CacheFactoryInterface {
 
   /**
+   * Constructor.
+   *
+   * @param \Symfony\Component\DependencyInjection\ContainerInterface $container
+   *   Service container.
+   */
+  public function __construct(
+    protected ContainerInterface $container,
+  ) {}
+
+  /**
    * @inheritDoc
    */
   public function get($bin) {
     // The corresponding offsetSet() call is in ListCacheBinsPass::process().
-    return $this->offsetGet($bin);
+    return $this->container->get($this->offsetGet($bin));
   }
 
 }

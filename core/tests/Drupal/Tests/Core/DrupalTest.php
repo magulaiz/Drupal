@@ -106,9 +106,10 @@ class DrupalTest extends UnitTestCase {
    */
   public function testCache(): void {
     $cache_factory_delegated = $this->prophesize(DelegatedCacheFactory::class);
-    $cache_factory_delegated->get('test')->willReturn($this->createMock(CacheBackendInterface::class));
-    $this->setMockContainerService('cache_factory_delegated', $cache_factory_delegated->reveal());
-    $this->assertNotNull(\Drupal::cache('test'));
+    $cache = $this->createMock(CacheBackendInterface::class);
+    $cache_factory_delegated->get('test')->willReturn($cache);
+    $this->setMockContainerService(DelegatedCacheFactory::class, $cache_factory_delegated->reveal());
+    $this->assertTrue(\Drupal::cache('test') === $cache);
   }
 
   /**

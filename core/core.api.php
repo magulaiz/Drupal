@@ -475,7 +475,7 @@
  * cache.name_of_bin:
  *   class: Drupal\Core\Cache\CacheBackendInterface
  *   tags:
- *     - { name: cache.bin, bin: nameofbin }
+ *     - { name: cache.bin, bin: name_of_bin }
  *   factory: ['@cache_factory', 'get']
  *   arguments: [name_of_bin]
  * @endcode
