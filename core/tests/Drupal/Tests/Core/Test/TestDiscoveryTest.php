@@ -233,6 +233,76 @@ EOT;
     $test_file = <<<EOF
 <?php
 
+use PHPUnit\Framework\Attributes\Group;
+
+/**
+ * Test description
+ */
+#[Group(example)]
+class FunctionalExampleTest {}
+EOF;
+
+    $test_profile_info = <<<EOF
+name: Testing
+type: profile
+core_version_requirement: '*'
+EOF;
+
+    $test_module_info = <<<EOF
+name: Testing
+type: module
+core_version_requirement: '*'
+EOF;
+
+    vfsStream::create([
+      'modules' => [
+        'test_module' => [
+          'test_module.info.yml' => $test_module_info,
+          'tests' => [
+            'src' => [
+              'Functional' => [
+                'FunctionalExampleTest.php' => $test_file,
+                'FunctionalExampleTest2.php' => str_replace(['FunctionalExampleTest', '#[Group(example)]'], ['FunctionalExampleTest2', '#[Group(example2)]'], $test_file),
+              ],
+              'Kernel' => [
+                'KernelExampleTest3.php' => str_replace(['FunctionalExampleTest', '#[Group(example)]'], ['KernelExampleTest3', "#[Group(example2)]\n#[Group(kernel)]"], $test_file),
+                'KernelExampleTestBase.php' => str_replace(['FunctionalExampleTest', '#[Group(example)]'], ['KernelExampleTestBase', '#[Group(example2)]'], $test_file),
+                'KernelExampleTrait.php' => str_replace(['FunctionalExampleTest', '#[Group(example)]'], ['KernelExampleTrait', '#[Group(example2)]'], $test_file),
+                'KernelExampleInterface.php' => str_replace(['FunctionalExampleTest', '#[Group(example)]'], ['KernelExampleInterface', '#[Group(example2)]'], $test_file),
+              ],
+            ],
+          ],
+        ],
+      ],
+      'profiles' => [
+        'test_profile' => [
+          'test_profile.info.yml' => $test_profile_info,
+          'modules' => [
+            'test_profile_module' => [
+              'test_profile_module.info.yml' => $test_module_info,
+              'tests' => [
+                'src' => [
+                  'Kernel' => [
+                    'KernelExampleTest4.php' => str_replace(['FunctionalExampleTest', '#[Group(example)]'], ['KernelExampleTest4', '#[Group(example3)]'], $test_file),
+                  ],
+                ],
+              ],
+            ],
+          ],
+        ],
+      ],
+    ]);
+  }
+
+  /**
+   * @todo remove this method once all annotations are removed.
+   */
+  protected function setupVfsWithLegacyTestClasses() {
+    vfsStream::setup('drupal');
+
+    $test_file = <<<EOF
+<?php
+
 /**
  * Test description
  * @group example

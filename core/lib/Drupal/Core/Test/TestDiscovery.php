@@ -349,7 +349,7 @@ class TestDiscovery {
     $groupCoversClass = $reflection->getAttributes(CoversClass::class, \ReflectionAttribute::IS_INSTANCEOF);
 
     if (!empty($groupCoversClass)) {
-      $info['description'] = 'Tests ' . $groupCoversClass[0]->getArguments()[0] . '.';
+      $info['description'] = 'Tests \\' . $groupCoversClass[0]->getArguments()[0] . '.';
     }
     else {
       $info['description'] = static::parseTestClassSummary($doc_comment);
