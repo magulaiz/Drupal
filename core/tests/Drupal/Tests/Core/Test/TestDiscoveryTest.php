@@ -13,17 +13,19 @@ use Drupal\Core\Test\Exception\MissingGroupException;
 use Drupal\Core\Test\TestDiscovery;
 use Drupal\Tests\UnitTestCase;
 use org\bovigo\vfs\vfsStream;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\IgnoreDeprecations;
 
 /**
- * @coversDefaultClass \Drupal\Core\Test\TestDiscovery
- * @group Test
+ * Tests the TestDiscovery class.
  */
+#[CoversClass(TestDiscovery::class)]
+#[Group('Test')]
 class TestDiscoveryTest extends UnitTestCase {
 
-  /**
-   * @covers ::getTestInfo
-   * @dataProvider infoParserProvider
-   */
+  #[DataProvider('infoParserProvider')]
   public function testTestInfoParser($expected, $classname, $doc_comment = NULL) {
     $info = TestDiscovery::getTestInfo($classname, $doc_comment);
     $this->assertEquals($expected, $info);
@@ -202,9 +204,6 @@ class TestDiscoveryTest extends UnitTestCase {
     return $tests;
   }
 
-  /**
-   * @covers ::getTestInfo
-   */
   public function testTestInfoParserMissingGroup() {
     $classname = 'Drupal\KernelTests\field\BulkDeleteTest';
     $doc_comment = <<<EOT
@@ -217,9 +216,6 @@ EOT;
     TestDiscovery::getTestInfo($classname, $doc_comment);
   }
 
-  /**
-   * @covers ::getTestInfo
-   */
   public function testTestInfoParserMissingSummary() {
     $classname = 'Drupal\KernelTests\field\BulkDeleteTest';
     $doc_comment = <<<EOT
@@ -296,9 +292,6 @@ EOF;
     ]);
   }
 
-  /**
-   * @covers ::getTestClasses
-   */
   public function testGetTestClasses() {
     $this->setupVfsWithTestClasses();
     $extensions = [
@@ -365,9 +358,6 @@ EOF;
     return $test_discovery;
   }
 
-  /**
-   * @covers ::getTestClasses
-   */
   public function testGetTestClassesWithSelectedTypes() {
     $this->setupVfsWithTestClasses();
     $extensions = [
@@ -410,9 +400,6 @@ EOF;
     ], $result);
   }
 
-  /**
-   * @covers ::getTestClasses
-   */
   public function testGetTestsInProfiles() {
     $this->setupVfsWithTestClasses();
     $class_loader = $this->prophesize(ClassLoader::class);
@@ -439,10 +426,7 @@ EOF;
     $this->assertEquals($expected, $result);
   }
 
-  /**
-   * @covers ::getPhpunitTestSuite
-   * @dataProvider providerTestGetPhpunitTestSuite
-   */
+  #[DataProvider('providerTestGetPhpunitTestSuite')]
   public function testGetPhpunitTestSuite($classname, $expected) {
     $this->assertEquals($expected, TestDiscovery::getPhpunitTestSuite($classname));
   }
@@ -468,9 +452,14 @@ EOF;
   /**
    * Ensure that classes are not reflected when the docblock is empty.
    *
-   * @covers ::getTestInfo
+   * @group legacy
    */
+  // @todo 'legacy' group annotation is needed until PHPStan recognizes
+  //   #[IgnoreDeprecations] as a deprecated scope marker
+  // @see https://github.com/phpstan/phpstan-deprecation-rules/issues/109
+  #[IgnoreDeprecations]
   public function testGetTestInfoEmptyDocblock() {
+    $this->expectDeprecation('Drupal\Core\Test\TestDiscovery::getTestInfoFromAnnotation() is deprecated in drupal:11.0.0 and is removed from drupal:12.0.0. Make sure all tests classes have a #[Group()] attribute. See https://www.drupal.org/node/7654321');
     // If getTestInfo() performed reflection, it won't be able to find the
     // class we asked it to analyze, so it will throw a ReflectionException.
     // We want to make sure it didn't do that, because we already did some
@@ -482,8 +471,6 @@ EOF;
 
   /**
    * Ensure TestDiscovery::scanDirectory() ignores certain abstract file types.
-   *
-   * @covers ::scanDirectory
    */
   public function testScanDirectoryNoAbstract() {
     $this->setupVfsWithTestClasses();
