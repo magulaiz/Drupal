@@ -250,8 +250,10 @@
    *   Dialog settings.
    */
   $(window).on('dialog:aftercreate', (e, dialog, $element, settings) => {
-    $element.on('click.dialog', '.dialog-cancel', (e) => {
-      dialog.close('cancel');
+    $element.on('click.dialog', '.dialog-cancel', (e, dialog) => {
+      if (dialog && typeof dialog.close === 'function') {
+        dialog.close('cancel');
+      }
       e.preventDefault();
       e.stopPropagation();
     });
