@@ -352,6 +352,9 @@ class TestDiscovery {
       $info['description'] = 'Tests \\' . $groupCoversClass[0]->getArguments()[0] . '.';
     }
     else {
+      if ($doc_comment === NULL) {
+        $doc_comment = $reflection ? $reflection->getDocComment() : '';
+      }
       $info['description'] = static::parseTestClassSummary($doc_comment);
     }
 
