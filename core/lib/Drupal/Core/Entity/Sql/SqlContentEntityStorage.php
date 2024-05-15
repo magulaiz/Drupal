@@ -470,6 +470,7 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
           $definition_columns = $this->fieldStorageDefinitions[$field_name]->getColumns();
           foreach ($field_columns as $property_name => $column_name) {
             if (property_exists($record, $column_name)) {
+              // @todo See also https://www.drupal.org/project/drupal/issues/2883851 .
               $values[$id][$field_name][LanguageInterface::LANGCODE_DEFAULT][$property_name] = !empty($definition_columns[$property_name]['serialize']) ? unserialize($record->{$column_name} ?? '') : $record->{$column_name};
               unset($record->{$column_name});
             }
@@ -481,6 +482,7 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
           if (property_exists($record, $column_name)) {
             $columns = $this->fieldStorageDefinitions[$field_name]->getColumns();
             $column = reset($columns);
+            // @todo See also https://www.drupal.org/project/drupal/issues/2883851 .
             if (empty($column['serialize']) || isset($record->{$column_name})) {
               $values[$id][$field_name][LanguageInterface::LANGCODE_DEFAULT] = !empty($column['serialize']) ? unserialize($record->{$column_name}) : $record->{$column_name};
             }
