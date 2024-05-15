@@ -706,7 +706,7 @@ class UpdateContribTest extends UpdateTestBase {
         'expected_update_message_type' => static::SECURITY_UPDATE_REQUIRED,
         'fixture' => 'sec.8.x-1.2_8.x-2.2',
       ],
-      //  Ensure the 8.x-2.2 is the only security update.
+      // Ensure the 8.x-2.2 is the only security update.
       "8.x-3.0-beta1" => [
         'module_version' => '8.x-2.0',
         'expected_security_releases' => ['8.x-2.2'],
