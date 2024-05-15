@@ -23,9 +23,10 @@ class EntityKernelTestBaseTest extends EntityKernelTestBase {
    * Tests that the current user is set up correctly.
    */
   public function testSetUpCurrentUser() {
-    $account = $this->setUpCurrentUser();
+    $account = $this->setUpCurrentUser([], ['access content']);
     $current_user = \Drupal::currentUser();
     $this->assertSame($account->id(), $current_user->id());
+    $this->assertTrue($current_user->hasPermission('access content'));
   }
 
 }

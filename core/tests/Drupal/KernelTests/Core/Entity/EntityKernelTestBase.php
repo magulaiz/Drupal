@@ -4,9 +4,12 @@ declare(strict_types=1);
 
 namespace Drupal\KernelTests\Core\Entity;
 
+use Drupal\Core\Database\DatabaseExceptionWrapper;
 use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Entity\EntityStorageException;
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\Tests\user\Traits\UserCreationTrait;
+use Drupal\user\Entity\User;
 
 /**
  * Defines an abstract test base for entity kernel tests.
@@ -19,7 +22,6 @@ abstract class EntityKernelTestBase extends KernelTestBase {
     createUser as drupalCreateUser;
     grantPermissions as drupalGrantPermissions;
     setCurrentUser as drupalSetCurrentUser;
-    setUpCurrentUser as drupalSetUpCurrentUser;
   }
 
   /**
@@ -110,6 +112,80 @@ abstract class EntityKernelTestBase extends KernelTestBase {
    */
   protected function createUser(array $permissions = [], $name = NULL, bool $admin = FALSE, array $values = []) {
     return $this->drupalCreateUser($permissions, $name, $admin, $values);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  protected function setUpCurrentUser(array $values = [], array $permissions = [], $admin = FALSE) {
+    $values += [
+      'name' => $this->randomMachineName(),
+    ];
+
+    // In many cases the anonymous user account is fine for testing purposes,
+    // however, if we need to create a user with a non-empty ID, we need also
+    // the "sequences" table.
+    if (!\Drupal::moduleHandler()->moduleExists('system')) {
+      $values['uid'] = 0;
+    }
+
+    // Creating an administrator or assigning custom permissions would result in
+    // creating and assigning a new role to the user. This is not possible with
+    // the anonymous user account.
+    if (($admin || $permissions) && isset($values['uid']) && is_numeric($values['uid']) && $values['uid'] == 0) {
+      throw new \LogicException('The anonymous user account cannot have additional roles.');
+    }
+
+    $original_permissions = $permissions;
+    $original_values = $values;
+    $autocreate_user_1 = !isset($values['uid']) || $values['uid'] > 1;
+
+    // No need to create user account 1 if it already exists.
+    try {
+      $autocreate_user_1 = $autocreate_user_1 && !User::load(1);
+    }
+    catch (DatabaseExceptionWrapper $e) {
+      // Missing schema, it will be created later on.
+    }
+
+    // Save the user entity object and created its schema if needed.
+    try {
+      if ($autocreate_user_1) {
+        $permissions = [];
+        $values = [];
+      }
+      $user = $this->createUser($permissions, NULL, FALSE, $values);
+    }
+    catch (EntityStorageException $e) {
+      if ($this instanceof KernelTestBase) {
+        $this->installEntitySchema('user');
+        $user = $this->createUser($permissions, NULL, FALSE, $values);
+      }
+      else {
+        throw $e;
+      }
+    }
+
+    // Ensure the anonymous user account exists.
+    if (!User::load(0)) {
+      $values = [
+        'uid' => 0,
+        'status' => 0,
+        'name' => '',
+      ];
+      User::create($values)->save();
+    }
+
+    // If we automatically created user account 1, we need to create a regular
+    // user account before setting up the current user service to avoid
+    // potential false positives caused by access control bypass.
+    if ($autocreate_user_1) {
+      $user = $this->createUser($original_permissions, NULL, TRUE, $original_values);
+    }
+
+    $this->setCurrentUser($user);
+
+    return $user;
   }
 
   /**
