@@ -101,7 +101,10 @@ class DatabaseLockBackend extends CoreDatabaseLockBackend {
       $prefixed_table = $this->database->getPrefix() . 'semaphore';
       $cursor = $this->database->getConnection()->{$prefixed_table}->find(
         ['name' => ['$eq' => $name]],
-        ['projection' => ['expire' => 1, 'value' => 1, '_id' => 0]]
+        [
+          'projection' => ['expire' => 1, 'value' => 1, '_id' => 0],
+          'session' => $this->database->getMongodbSession(),
+        ]
       );
 
       $statement = new Statement($this->database, $cursor, ['expire', 'value']);

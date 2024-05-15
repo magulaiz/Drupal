@@ -48,7 +48,10 @@ class DatabaseStorageExpirable extends DatabaseStorage implements KeyValueStoreE
       $prefixed_table = $this->connection->getPrefix() . $this->table;
       $cursor = $this->connection->getConnection()->{$prefixed_table}->find(
         ['collection' => ['$eq' => $this->collection], 'expire' => ['$gt' => new UTCDateTime($this->time->getRequestTime() * 1000)], 'name' => ['$eq' => (string) $key]],
-        ['projection' => ['_id' => 1]]
+        [
+          'projection' => ['_id' => 1],
+          'session' => $this->connection->getMongodbSession(),
+        ]
       );
 
       if ($cursor && !empty($cursor->toArray())) {
@@ -83,7 +86,10 @@ class DatabaseStorageExpirable extends DatabaseStorage implements KeyValueStoreE
         $prefixed_table = $this->connection->getPrefix() . $this->table;
         $cursor = $this->connection->getConnection()->{$prefixed_table}->find(
           ['collection' => ['$eq' => $this->collection], 'expire' => ['$gt' => new UTCDateTime($this->time->getRequestTime() * 1000)], 'name' => ['$in' => $keys]],
-          ['projection' => ['name' => 1, 'value' => 1, '_id' => 0]]
+          [
+            'projection' => ['name' => 1, 'value' => 1, '_id' => 0],
+            'session' => $this->connection->getMongodbSession(),
+          ]
         );
 
         $statement = new Statement($this->connection, $cursor, ['name', 'value']);
@@ -119,7 +125,10 @@ class DatabaseStorageExpirable extends DatabaseStorage implements KeyValueStoreE
         $prefixed_table = $this->connection->getPrefix() . $this->table;
         $cursor = $this->connection->getConnection()->{$prefixed_table}->find(
           ['collection' => ['$eq' => (string) $this->collection], 'expire' => ['$gt' => new UTCDateTime($this->time->getRequestTime() * 1000)]],
-          ['projection' => ['name' => 1, 'value' => 1, '_id' => 0]]
+          [
+            'projection' => ['name' => 1, 'value' => 1, '_id' => 0],
+            'session' => $this->connection->getMongodbSession(),
+          ]
         );
 
         $statement = new Statement($this->connection, $cursor, ['name', 'value']);

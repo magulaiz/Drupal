@@ -243,6 +243,7 @@ class TranslateSql {
             'sort' => ['id' => -1],
             'limit' => 1,
             'projection' => ['id' => 1, '_id' => 0],
+            'session' => $connection->getMongodbSession(),
           ],
         );
 
@@ -263,6 +264,7 @@ class TranslateSql {
             'sort' => ['nid' => -1],
             'limit' => 1,
             'projection' => ['nid' => 1, '_id' => 0],
+            'session' => $connection->getMongodbSession(),
           ],
         );
 
@@ -283,6 +285,7 @@ class TranslateSql {
             'sort' => ['wid' => -1],
             'limit' => 1,
             'projection' => ['wid' => 1, '_id' => 0],
+            'session' => $connection->getMongodbSession(),
           ],
         );
 
@@ -310,7 +313,10 @@ class TranslateSql {
 
         $cursor = $connection->getConnection()->{$prefixed_table}->find(
           ['age' => ['$gt' => $age]],
-          ['projection' => ['name' => 1, '_id' => 0]],
+          [
+            'projection' => ['name' => 1, '_id' => 0],
+            'session' => $connection->getMongodbSession(),
+          ],
         );
 
         if (isset($startEvent) && $connection->isEventEnabled(StatementExecutionEndEvent::class)) {
@@ -337,7 +343,10 @@ class TranslateSql {
 
         $cursor = $connection->getConnection()->{$prefixed_table}->find(
           ['age' => ['$gt' => $age]],
-          ['projection' => ['name' => 1, 'age' => 1, 'job' => 1, 'id' => 1, '_id' => 0]]
+          [
+            'projection' => ['name' => 1, 'age' => 1, 'job' => 1, 'id' => 1, '_id' => 0],
+            'session' => $connection->getMongodbSession(),
+          ]
         );
 
         $this->endEvent($connection, $startEvent);
@@ -354,7 +363,10 @@ class TranslateSql {
 
         $cursor = $connection->getConnection()->{$prefixed_table}->find(
           ['id' => ['$eq' => $id]],
-          ['projection' => ['id' => 1, 'blob1' => 1, '_id' => 0]]
+          [
+            'projection' => ['id' => 1, 'blob1' => 1, '_id' => 0],
+            'session' => $connection->getMongodbSession(),
+          ]
         );
 
         $this->endEvent($connection, $startEvent);
@@ -371,7 +383,10 @@ class TranslateSql {
 
         $cursor = $connection->getConnection()->{$prefixed_table}->find(
           ['id' => ['$eq' => $id]],
-          ['projection' => ['id' => 1, 'blob1' => 1, 'blob2' => 1, '_id' => 0]]
+          [
+            'projection' => ['id' => 1, 'blob1' => 1, 'blob2' => 1, '_id' => 0],
+            'session' => $connection->getMongodbSession(),
+          ]
         );
 
         $this->endEvent($connection, $startEvent);
@@ -388,7 +403,10 @@ class TranslateSql {
 
         $cursor = $connection->getConnection()->{$prefixed_table}->find(
           ['id' => ['$eq' => $id]],
-          ['projection' => ['id' => 1, 'offset' => 1, 'function' => 1, '_id' => 0]]
+          [
+            'projection' => ['id' => 1, 'offset' => 1, 'function' => 1, '_id' => 0],
+            'session' => $connection->getMongodbSession(),
+          ]
         );
 
         $this->endEvent($connection, $startEvent);
@@ -409,6 +427,7 @@ class TranslateSql {
             'sort' => ['name' => 1],
             'skip' => isset($options['skip']) ? $options['skip'] : 0,
             'limit' => isset($options['limit']) ? $options['limit'] : 0,
+            'session' => $connection->getMongodbSession(),
           ]
         );
 
@@ -431,6 +450,7 @@ class TranslateSql {
             'sort' => ['vid' => 1],
             'skip' => isset($options['skip']) ? $options['skip'] : 0,
             'limit' => isset($options['limit']) ? $options['limit'] : 0,
+            'session' => $connection->getMongodbSession(),
           ]
         );
 
@@ -452,6 +472,7 @@ class TranslateSql {
             'sort' => ['tid' => 1],
             'skip' => isset($options['skip']) ? $options['skip'] : 0,
             'limit' => isset($options['limit']) ? $options['limit'] : 0,
+            'session' => $connection->getMongodbSession(),
           ]
         );
 
@@ -474,6 +495,7 @@ class TranslateSql {
             'sort' => ['created' => 1, 'item_id' => 1],
             'skip' => isset($options['skip']) ? $options['skip'] : 0,
             'limit' => isset($options['limit']) ? $options['limit'] : 0,
+            'session' => $connection->getMongodbSession(),
           ]
         );
 
@@ -495,7 +517,10 @@ class TranslateSql {
               'max' => ['$max' => '$test_serial'],
             ],
           ],
-          ['$project' => ['max' => 1, '_id' => 0]],
+          [
+            '$project' => ['max' => 1, '_id' => 0],
+            'session' => $connection->getMongodbSession(),
+          ],
         ]);
 
         $this->endEvent($connection, $startEvent);
@@ -511,6 +536,7 @@ class TranslateSql {
         $startEvent = $this->startEvent($connection, $query, $args);
 
         // Execute the count query.
+        // @TODO Something is wrong with this query. Can we remove it?
         $query_count = $connection->getConnection()->{$prefixed_table}->count(
           [],
           [
@@ -538,7 +564,10 @@ class TranslateSql {
 
         $cursor = $connection->getConnection()->{$prefixed_table}->find(
           ['collection' => ['$eq' => $collection], 'expire' => ['$gt' => $now]],
-          ['projection' => ['name' => 1, 'value' => 1, '_id' => 0]]
+          [
+            'projection' => ['name' => 1, 'value' => 1, '_id' => 0],
+            'session' => $connection->getMongodbSession(),
+          ]
         );
 
         $this->endEvent($connection, $startEvent);
@@ -568,6 +597,7 @@ class TranslateSql {
             ],
             ['$project' => ['name' => 1, '_id' => 0]],
           ],
+          ['session' => $connection->getMongodbSession()],
         );
 
         $this->endEvent($connection, $startEvent);
@@ -597,6 +627,7 @@ class TranslateSql {
             ],
             ['$project' => ['name' => 1, '_id' => 0]],
           ],
+          ['session' => $connection->getMongodbSession()],
         );
 
         $this->endEvent($connection, $startEvent);
@@ -626,6 +657,7 @@ class TranslateSql {
             ],
             ['$project' => ['name' => 1, '_id' => 0]],
           ],
+          ['session' => $connection->getMongodbSession()]
         );
 
         $this->endEvent($connection, $startEvent);
@@ -655,6 +687,7 @@ class TranslateSql {
             ],
             ['$project' => ['name' => 1, '_id' => 0]],
           ],
+          ['session' => $connection->getMongodbSession()]
         );
 
         $this->endEvent($connection, $startEvent);
@@ -671,7 +704,10 @@ class TranslateSql {
         // Fake the query a bit until MongoDB supports concat_ws.
         $cursor = $connection->getConnection()->{$prefixed_table}->find(
           ['name' => ['$eq' => '[square]']],
-          ['projection' => ['name' => 1, '_id' => 0]],
+          [
+            'projection' => ['name' => 1, '_id' => 0],
+            'session' => $connection->getMongodbSession(),
+          ],
         );
 
         $this->endEvent($connection, $startEvent);
@@ -701,6 +737,9 @@ class TranslateSql {
               ],
             ],
           ],
+          [
+            'session' => $connection->getMongodbSession(),
+          ]
         );
 
         $this->endEvent($connection, $startEvent);
@@ -718,7 +757,10 @@ class TranslateSql {
         $cursor = $connection->getConnection()->{$prefixed_table}->find(
           // There is no record with the age being -1. The same result as 1 = 0.
           ['age' => ['$eq' => -1]],
-          ['projection' => ['id' => 1, '_id' => 0]],
+          [
+            'projection' => ['id' => 1, '_id' => 0],
+            'session' => $connection->getMongodbSession(),
+          ],
         );
 
         $this->endEvent($connection, $startEvent);
@@ -756,6 +798,7 @@ class TranslateSql {
           ],
           [
             'useCursor' => TRUE,
+            'session' => $connection->getMongodbSession(),
           ]
         );
 
@@ -773,6 +816,7 @@ class TranslateSql {
         $result = $connection->getConnection()->{$prefixed_table}->updateMany(
           ['id' => 1],
           ['$set' => ['uid' => 1]],
+          ['session' => $connection->getMongodbSession()],
         );
 
         $this->endEvent($connection, $startEvent);
@@ -790,6 +834,7 @@ class TranslateSql {
         $result = $connection->getConnection()->{$prefixed_table}->updateMany(
           ['id' => ['$ne' => 1]],
           ['$set' => ['uid' => 2]],
+          ['session' => $connection->getMongodbSession()],
         );
 
         $this->endEvent($connection, $startEvent);
@@ -809,6 +854,7 @@ class TranslateSql {
         $result = $connection->getConnection()->{$prefixed_table}->updateMany(
           ['id' => $id],
           ['$set' => ['uid' => $uid]],
+          ['session' => $connection->getMongodbSession()],
         );
 
         $this->endEvent($connection, $startEvent);
@@ -829,6 +875,7 @@ class TranslateSql {
         $result = $connection->getConnection()->{$prefixed_table}->updateMany(
           ['id' => ['$in' => [$first_id, $second_id]]],
           ['$set' => ['uid' => $uid]],
+          ['session' => $connection->getMongodbSession()],
         );
 
         $this->endEvent($connection, $startEvent);

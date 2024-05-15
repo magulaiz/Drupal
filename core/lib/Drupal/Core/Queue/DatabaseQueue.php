@@ -125,7 +125,7 @@ class DatabaseQueue implements ReliableQueueInterface, QueueGarbageCollectionInt
         $prefixed_table = $this->connection->getPrefix() . static::TABLE_NAME;
         return $this->connection->getConnection()->{$prefixed_table}->count(
           ['name' => ['$eq' => $this->name]],
-          []
+          ['session' => $this->connection->getMongodbSession()]
         );
       }
       else {

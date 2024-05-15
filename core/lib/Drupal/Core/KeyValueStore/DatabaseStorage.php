@@ -77,7 +77,10 @@ class DatabaseStorage extends StorageBase {
       $prefixed_table = $this->connection->getPrefix() . $this->table;
       $cursor = $this->connection->getConnection()->{$prefixed_table}->find(
         ['collection' => ['$eq' => (string) $this->collection], 'name' => ['$eq' => (string) $key]],
-        ['projection' => ['_id' => 1]]
+        [
+          'projection' => ['_id' => 1],
+          'session' => $this->connection->getMongodbSession(),
+        ]
       );
 
       if ($cursor && !empty($cursor->toArray())) {
@@ -119,7 +122,10 @@ class DatabaseStorage extends StorageBase {
             'collection' => ['$eq' => (string) $this->collection],
             'name' => ['$in' => $keys],
           ],
-          ['projection' => ['name' => 1, 'value' => 1, '_id' => 0]],
+          [
+            'projection' => ['name' => 1, 'value' => 1, '_id' => 0],
+            'session' => $this->connection->getMongodbSession(),
+          ],
         );
 
         $statement = new Statement($this->connection, $cursor, ['name', 'value']);
@@ -152,7 +158,10 @@ class DatabaseStorage extends StorageBase {
         $prefixed_table = $this->connection->getPrefix() . $this->table;
         $cursor = $this->connection->getConnection()->{$prefixed_table}->find(
           ['collection' => ['$eq' => (string) $this->collection]],
-          ['projection' => ['name' => 1, 'value' => 1, '_id' => 0]]
+          [
+            'projection' => ['name' => 1, 'value' => 1, '_id' => 0],
+            'session' => $this->connection->getMongodbSession(),
+          ]
         );
 
         $statement = new Statement($this->connection, $cursor, ['name', 'value']);

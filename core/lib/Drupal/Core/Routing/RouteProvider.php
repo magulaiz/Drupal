@@ -233,7 +233,10 @@ class RouteProvider implements CacheableRouteProviderInterface, PreloadableRoute
             $prefixed_table = $this->connection->getPrefix() . $this->tableName;
             $cursor = $this->connection->getConnection()->{$prefixed_table}->find(
               ['name' => ['$in' => $routes_to_load]],
-              ['projection' => ['name' => 1, 'route' => 1, '_id' => 0]]
+              [
+                'projection' => ['name' => 1, 'route' => 1, '_id' => 0],
+                'session' => $this->connection->getMongodbSession(),
+              ]
             );
 
             $statement = new Statement($this->connection, $cursor, ['name', 'route']);
@@ -381,7 +384,10 @@ class RouteProvider implements CacheableRouteProviderInterface, PreloadableRoute
         $prefixed_table = $this->connection->getPrefix() . $this->tableName;
         $cursor = $this->connection->getConnection()->{$prefixed_table}->find(
           ['pattern_outline' => ['$in' => $ancestors], 'number_parts' => ['$gte' => count($parts)]],
-          ['projection' => ['name' => 1, 'route' => 1, 'fit' => 1, '_id' => 0]]
+          [
+            'projection' => ['name' => 1, 'route' => 1, 'fit' => 1, '_id' => 0],
+            'session' => $this->connection->getMongodbSession(),
+          ]
         );
 
         $statement = new Statement($this->connection, $cursor, ['name', 'route', 'fit']);

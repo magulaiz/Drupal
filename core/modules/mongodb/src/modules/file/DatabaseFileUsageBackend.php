@@ -28,6 +28,7 @@ class DatabaseFileUsageBackend extends CoreDatabaseFileUsageBackend {
       ],
       [
         'upsert' => TRUE,
+        'session' => $this->connection->getMongodbSession(),
       ]
     );
 
@@ -68,6 +69,7 @@ class DatabaseFileUsageBackend extends CoreDatabaseFileUsageBackend {
         [
           '$inc' => ['count' => ($count * -1)],
         ],
+        ['session' => $this->connection->getMongodbSession()],
       );
     }
 

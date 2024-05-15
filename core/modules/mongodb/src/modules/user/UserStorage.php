@@ -55,6 +55,7 @@ class UserStorage extends CoreUserStorage {
           "login" => new UTCDateTime($account->getLastLoginTime() * 1000),
         ],
       ],
+      ['session' => $this->database->getMongodbSession()],
     );
     // Ensure that the entity cache is cleared.
     $this->resetCache([$account->id()]);
@@ -75,6 +76,7 @@ class UserStorage extends CoreUserStorage {
           "access" => new UTCDateTime($timestamp * 1000),
         ],
       ],
+      ['session' => $this->database->getMongodbSession()],
     );
     // Ensure that the entity cache is cleared.
     $this->resetCache([$account->id()]);
@@ -94,6 +96,7 @@ class UserStorage extends CoreUserStorage {
           ],
         ],
       ],
+      ['session' => $this->database->getMongodbSession()],
     );
     $this->resetCache();
   }

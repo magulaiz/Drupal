@@ -81,7 +81,10 @@ class DatabaseStorage implements StorageInterface {
           'collection' => ['$eq' => $this->collection],
           'name' => ['$eq' => $name]
         ],
-        ['projection' => ['_id' => 1]]
+        [
+          'projection' => ['_id' => 1],
+          'session' => $this->connection->getMongodbSession(),
+        ]
       );
 
       if ($cursor && !empty($cursor->toArray())) {
@@ -154,7 +157,10 @@ class DatabaseStorage implements StorageInterface {
         $prefixed_table = $this->connection->getPrefix() . $this->table;
         $cursor = $this->connection->getConnection()->{$prefixed_table}->find(
           ['collection' => ['$eq' => $this->collection], 'name' => ['$in' => $names]],
-          ['projection' => ['name' => 1, 'data' => 1, '_id' => 0]]
+          [
+            'projection' => ['name' => 1, 'data' => 1, '_id' => 0],
+            'session' => $this->connection->getMongodbSession(),
+          ]
         );
 
         $statement = new Statement($this->connection, $cursor, ['name', 'data']);
@@ -405,6 +411,7 @@ class DatabaseStorage implements StorageInterface {
         $collections = $this->connection->getConnection()->{$prefixed_table}->distinct(
           'collection',
           ['collection' => ['$ne' => StorageInterface::DEFAULT_COLLECTION]],
+          ['session' => $this->connection->getMongodbSession()]
         );
 
         // The distinct query does not allow sorting.

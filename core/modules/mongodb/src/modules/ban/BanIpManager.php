@@ -20,6 +20,7 @@ class BanIpManager extends CoreBanIpManager {
           '$eq' => (string) $ip,
         ],
       ],
+      ['session' => $this->connection->getMongodbSession()],
     );
   }
 

@@ -75,7 +75,10 @@ class DatabaseCacheTagsChecksum implements CacheTagsChecksumInterface, CacheTags
         $prefixed_table = $this->connection->getPrefix() . 'cachetags';
         $cursor = $this->connection->getConnection()->{$prefixed_table}->find(
           ['tag' => ['$in' => array_values($tags)]],
-          ['projection' => ['tag' => 1, 'invalidations' => 1, '_id' => 0]],
+          [
+            'projection' => ['tag' => 1, 'invalidations' => 1, '_id' => 0],
+            'session' => $this->connection->getMongodbSession(),
+          ],
         );
         $statement = new Statement($this->connection, $cursor, ['tag', 'invalidations']);
         return $statement->execute()->fetchAllKeyed();

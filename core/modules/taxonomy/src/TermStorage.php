@@ -393,6 +393,7 @@ class TermStorage extends SqlContentEntityStorage implements TermStorageInterfac
           'arrayFilters' => [
             ["translation.vid" => $vid],
           ],
+          'session' => $this->database->getMongodbSession(),
         ],
       );
     }
