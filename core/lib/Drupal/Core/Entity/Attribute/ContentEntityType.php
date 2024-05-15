@@ -58,7 +58,7 @@ class ContentEntityType extends EntityType {
     public readonly array $list_cache_tags = [],
     public readonly array $constraints = [],
     public readonly array $revision_metadata_keys = [],
-    public readonly array $additional = []
+    public readonly array $additional = [],
   ) {
   }
 
