@@ -19,201 +19,66 @@ use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\Attributes\IgnoreDeprecations;
 
 /**
- * Tests the TestDiscovery class, using legacy annotations.
- *
- * @todo 'legacy' group annotation is needed until PHPStan recognizes
- *   #[IgnoreDeprecations] as a deprecated scope marker.
- *
- * @see https://github.com/phpstan/phpstan-deprecation-rules/issues/109
- *
- * @group legacy
+ * Tests the TestDiscovery class.
  */
 #[CoversClass(TestDiscovery::class)]
 #[Group('Test')]
-#[IgnoreDeprecations]
-class TestDiscoveryTest extends UnitTestCase {
+class AttributeBasedTestDiscoveryTest extends UnitTestCase {
 
   #[DataProvider('infoParserProvider')]
-  public function testTestInfoParser($expected, $classname, $doc_comment = NULL) {
-    $info = TestDiscovery::getTestInfo($classname, $doc_comment);
+  public function testTestInfoParser($expected, $classname) {
+    $info = TestDiscovery::getTestInfo($classname);
     $this->assertEquals($expected, $info);
   }
 
-  public static function infoParserProvider() {
-    // A module provided unit test.
-    $tests[] = [
+  public static function infoParserProvider(): \Generator {
+
+    // A core unit test.
+    yield 'phpunit-unit' => [
       // Expected result.
       [
         'name' => static::class,
         'group' => 'Test',
         'groups' => ['Test'],
-        'description' => 'Tests \Drupal\Core\Test\TestDiscovery.',
+        'description' => 'Tests \Drupal\Core\Test\AttributeBasedTestDiscoveryTest.',
         'type' => 'PHPUnit-Unit',
       ],
       // Classname.
       static::class,
     ];
 
-    // A core unit test.
-    $tests[] = [
+    // Functional test.
+    yield 'phpunit-functional' => [
       // Expected result.
       [
-        'name' => 'Drupal\Tests\Core\DrupalTest',
-        'group' => 'DrupalTest',
-        'groups' => ['DrupalTest'],
-        'description' => 'Tests \Drupal.',
-        'type' => 'PHPUnit-Unit',
-      ],
-      // Classname.
-      'Drupal\Tests\Core\DrupalTest',
-    ];
-
-    // Functional PHPUnit test.
-    $tests[] = [
-      // Expected result.
-      [
-        'name' => 'Drupal\FunctionalTests\BrowserTestBaseTest',
-        'group' => 'browsertestbase',
-        'groups' => ['browsertestbase', '#slow'],
-        'description' => 'Tests BrowserTestBase functionality.',
+        'name' => 'Drupal\Tests\user\Functional\Rest\UserJsonAnonTest',
+        'group' => 'rest',
+        'groups' => ['rest', '#slow'],
+        'description' => '',
         'type' => 'PHPUnit-Functional',
       ],
       // Classname.
-      'Drupal\FunctionalTests\BrowserTestBaseTest',
+      'Drupal\Tests\user\Functional\Rest\UserJsonAnonTest',
     ];
 
-    // kernel PHPUnit test.
-    $tests['phpunit-kernel'] = [
+    // Kernel test.
+    yield 'phpunit-kernel' => [
       // Expected result.
       [
-        'name' => '\Drupal\Tests\file\Kernel\FileItemValidationTest',
-        'group' => 'file',
-        'groups' => ['file'],
-        'description' => 'Tests that files referenced in file and image fields are always validated.',
+        'name' => 'Drupal\KernelTests\Core\Archiver\TarTest',
+        'group' => 'tar',
+        'groups' => ['tar'],
+        'description' => 'Tests \Drupal\Core\Archiver\Tar.',
         'type' => 'PHPUnit-Kernel',
       ],
       // Classname.
-      '\Drupal\Tests\file\Kernel\FileItemValidationTest',
+      'Drupal\KernelTests\Core\Archiver\TarTest',
     ];
 
-    // Test with a different amount of leading spaces.
-    $tests[] = [
-      // Expected result.
-      [
-        'name' => 'Drupal\Tests\ExampleTest',
-        'group' => 'test',
-        'groups' => ['test'],
-        'description' => 'Example test.',
-        'type' => 'PHPUnit-Unit',
-      ],
-      // Classname.
-      'Drupal\Tests\ExampleTest',
-      // Doc block.
-      "/**
-   * Example test.
-   *
-   * @group test
-   */
- ",
-    ];
-
-    // Make sure that a "* @" inside a string does not get parsed as an
-    // annotation.
-    $tests[] = [
-      // Expected result.
-      [
-        'name' => 'Drupal\Tests\ExampleTest',
-        'group' => 'test',
-        'groups' => ['test'],
-        'description' => 'Example test. * @',
-        'type' => 'PHPUnit-Unit',
-      ],
-      // Classname.
-      'Drupal\Tests\ExampleTest',
-      // Doc block.
-      "/**
-   * Example test. * @
-   *
-   * @group test
-   */
- ",
-    ];
-
-    // Multiple @group annotations.
-    $tests[] = [
-      // Expected result.
-      [
-        'name' => 'Drupal\Tests\ExampleTest',
-        'group' => 'test1',
-        'groups' => ['test1', 'test2'],
-        'description' => 'Example test.',
-        'type' => 'PHPUnit-Unit',
-      ],
-      // Classname.
-      'Drupal\Tests\ExampleTest',
-      // Doc block.
-      "/**
- * Example test.
- *
- * @group test1
- * @group test2
- */
- ",
-    ];
-
-    // A great number of @group annotations.
-    $tests['many-group-annotations'] = [
-      // Expected result.
-      [
-        'name' => 'Drupal\Tests\ExampleTest',
-        'group' => 'test1',
-        'groups' => ['test1', 'test2', 'another', 'more', 'many', 'enough', 'whoa'],
-        'description' => 'Example test.',
-        'type' => 'PHPUnit-Unit',
-      ],
-      // Classname.
-      'Drupal\Tests\ExampleTest',
-      // Doc block.
-      "/**
- * Example test.
- *
- * @group test1
- * @group test2
- * @group another
- * @group more
- * @group many
- * @group enough
- * @group whoa
- */
- ",
-    ];
-
-    // Multi-line summary line.
-    $tests[] = [
-      // Expected result.
-      [
-        'name' => 'Drupal\Tests\ExampleTest',
-        'description' => 'Example test. And the summary line continues and there is no gap to the annotation.',
-        'type' => 'PHPUnit-Unit',
-        'group' => 'test',
-        'groups' => ['test'],
-      ],
-      // Classname.
-      'Drupal\Tests\ExampleTest',
-      // Doc block.
-      "/**
- * Example test. And the summary line continues and there is no gap to the
- * annotation.
- *
- * @group test
- */
- ",
-    ];
     return $tests;
   }
 
   public function testTestInfoParserMissingGroup() {
-    $this->expectDeprecation('Drupal\Core\Test\TestDiscovery::getTestInfoFromAnnotation() is deprecated in drupal:11.0.0 and is removed from drupal:12.0.0. Make sure all tests classes have a #[Group()] attribute. See https://www.drupal.org/node/7654321');
     $classname = 'Drupal\KernelTests\field\BulkDeleteTest';
     $doc_comment = <<<EOT
 /**
@@ -302,7 +167,6 @@ EOF;
   }
 
   public function testGetTestClasses() {
-    $this->expectDeprecation('Drupal\Core\Test\TestDiscovery::getTestInfoFromAnnotation() is deprecated in drupal:11.0.0 and is removed from drupal:12.0.0. Make sure all tests classes have a #[Group()] attribute. See https://www.drupal.org/node/7654321');
     $this->setupVfsWithLegacyTestClasses();
     $extensions = [
       'test_module' => new Extension('vfs://drupal', 'module', 'modules/test_module/test_module.info.yml'),
@@ -369,7 +233,6 @@ EOF;
   }
 
   public function testGetTestClassesWithSelectedTypes() {
-    $this->expectDeprecation('Drupal\Core\Test\TestDiscovery::getTestInfoFromAnnotation() is deprecated in drupal:11.0.0 and is removed from drupal:12.0.0. Make sure all tests classes have a #[Group()] attribute. See https://www.drupal.org/node/7654321');
     $this->setupVfsWithLegacyTestClasses();
     $extensions = [
       'test_module' => new Extension('vfs://drupal', 'module', 'modules/test_module/test_module.info.yml'),
@@ -412,7 +275,6 @@ EOF;
   }
 
   public function testGetTestsInProfiles() {
-    $this->expectDeprecation('Drupal\Core\Test\TestDiscovery::getTestInfoFromAnnotation() is deprecated in drupal:11.0.0 and is removed from drupal:12.0.0. Make sure all tests classes have a #[Group()] attribute. See https://www.drupal.org/node/7654321');
     $this->setupVfsWithLegacyTestClasses();
     $class_loader = $this->prophesize(ClassLoader::class);
 
@@ -459,17 +321,6 @@ EOF;
     $data['core-build test'] = ['\Drupal\BuildTests\Framework\Tests\BuildTestTest', 'Build'];
 
     return $data;
-  }
-
-  public function testGetTestInfoEmptyDocblock() {
-    $this->expectDeprecation('Drupal\Core\Test\TestDiscovery::getTestInfoFromAnnotation() is deprecated in drupal:11.0.0 and is removed from drupal:12.0.0. Make sure all tests classes have a #[Group()] attribute. See https://www.drupal.org/node/7654321');
-    // If getTestInfo() performed reflection, it won't be able to find the
-    // class we asked it to analyze, so it will throw a ReflectionException.
-    // We want to make sure it didn't do that, because we already did some
-    // analysis and already have an empty docblock. getTestInfo() will throw
-    // MissingGroupException because the annotation is empty.
-    $this->expectException(MissingGroupException::class);
-    TestDiscovery::getTestInfo('Drupal\Tests\ThisTestDoesNotExistTest', '');
   }
 
   /**
