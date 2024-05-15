@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Drupal\KernelTests\Core\Database;
 
-use Drupal;
 use Drupal\Core\Database\DatabaseExceptionWrapper;
 use Drupal\Core\Database\IntegrityConstraintViolationException;
 
@@ -174,7 +173,7 @@ class UpdateTest extends DatabaseTestBase {
   }
 
   /**
-   * Test the tostring for update query.
+   * Test the to string for update query.
    */
   public function testToString(): void {
     // Prepare query for testing.
@@ -182,7 +181,8 @@ class UpdateTest extends DatabaseTestBase {
       ->fields(['a' => 27, 'b' => 42])
       ->condition('c', [1, 2], 'IN');
 
-    $this->assertStringContainsString(':db_update_placeholder_', (string) $query);
+    $this->assertStringContainsString(':db_update_placeholder_0', (string) $query);
+    $this->assertStringContainsString(':db_update_placeholder_1', (string) $query);
 
     // Test arguments.
     $expected = [
