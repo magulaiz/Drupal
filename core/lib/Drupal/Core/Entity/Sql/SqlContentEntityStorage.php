@@ -481,7 +481,12 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
           if (property_exists($record, $column_name)) {
             $columns = $this->fieldStorageDefinitions[$field_name]->getColumns();
             $column = reset($columns);
-            $values[$id][$field_name][LanguageInterface::LANGCODE_DEFAULT] = !empty($column['serialize']) ? unserialize($record->{$column_name} ?? '') : $record->{$column_name};
+            if (empty($column['serialize']) || isset($record->{$column_name})) {
+              $values[$id][$field_name][LanguageInterface::LANGCODE_DEFAULT] = !empty($column['serialize']) ? unserialize($record->{$column_name}) : $record->{$column_name};
+            }
+            else {
+              $values[$id][$field_name][LanguageInterface::LANGCODE_DEFAULT] = NULL;
+            }
             unset($record->{$column_name});
           }
         }
