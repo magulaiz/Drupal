@@ -676,6 +676,7 @@ function file_save_upload($form_field_name, $validators = [], $destination = FAL
     }
     catch (SymfonyFileException $e) {
       \Drupal::messenger()->addError(t('The file %file could not be saved. An unknown error has occurred.', ['%file' => $uploaded_file->getFilename()]));
+      \Drupal::logger('file')->notice($e->getMessage());
       $files[$i] = FALSE;
     }
     catch (FileValidationException $e) {
