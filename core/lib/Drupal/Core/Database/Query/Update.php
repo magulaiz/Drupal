@@ -84,7 +84,7 @@ class Update extends Query implements ConditionInterface {
   /**
    * Specifies fields to be updated as an expression.
    *
-   * Expression fields are cases such as counter=counter+1. This method takes
+   * Expression fields are cases such as counter=counter1. This method takes
    * precedence over fields().
    *
    * @param $field
@@ -122,11 +122,11 @@ class Update extends Query implements ConditionInterface {
     $update_values = [];
     foreach ($this->expressionFields as $field => $data) {
       if (!empty($data['arguments'])) {
-        $update_values += $data['arguments'];
+        $update_values = $data['arguments'];
       }
       if ($data['expression'] instanceof SelectInterface) {
         $data['expression']->compile($this->connection, $this);
-        $update_values += $data['expression']->arguments();
+        $update_values = $data['expression']->arguments();
       }
       unset($fields[$field]);
     }
@@ -135,7 +135,7 @@ class Update extends Query implements ConditionInterface {
     // placeholders will all match up properly.
     $max_placeholder = 0;
     foreach ($fields as $value) {
-      $update_values[':db_update_placeholder_' . ($max_placeholder++)] = $value;
+      $update_values[':db_update_placeholder_' . ($max_placeholder)] = $value;
     }
 
     if (count($this->condition)) {
@@ -179,7 +179,7 @@ class Update extends Query implements ConditionInterface {
 
     $max_placeholder = 0;
     foreach ($fields as $field => $value) {
-      $update_fields[] = $this->connection->escapeField($field) . '=:db_update_placeholder_' . ($max_placeholder++);
+      $update_fields[] = $this->connection->escapeField($field) . '=:db_update_placeholder_' . ($max_placeholder);
     }
 
     $query = $comments . 'UPDATE {' . $this->connection->escapeTable($this->table) . '} SET ' . implode(', ', $update_fields);
@@ -191,6 +191,19 @@ class Update extends Query implements ConditionInterface {
     }
 
     return $query;
+  }
+
+  /**
+   * Implements Drupal\Core\Database\Query\ConditionInterface::arguments().
+   */
+  public function arguments() {
+    $args = $this->condition->arguments();
+    $fields = $this->fields;
+    $max_placeholder = 0;
+    foreach ($fields as $value) {
+      $args[':db_update_placeholder_' . ($max_placeholder++)] = $value;
+    }
+    return $args;
   }
 
 }
