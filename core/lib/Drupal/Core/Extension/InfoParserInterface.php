@@ -47,17 +47,18 @@ interface InfoParserInterface {
    * - type: The type of the theme; typically 'theme'.
    * - description: A description of the theme.
    * - package: The package name to group themes in the admin UI.
+   * - alt text: Alt text for the screenshot image, providing a description for
+   *   accessibility.
    * - version: The version of the theme.
    * - core_version_requirement: The required core version.
-   * - screenshot: Path to a screenshot relative to the theme's .info.yml file.
    * - base theme: Name of a base theme, if applicable.
    * - engine: Theme engine; typically 'twig'.
-   * - regions: Defined regions for the theme.
-   * - libraries: Libraries defined by the theme.
+   * - regions: Defines regions for the theme.
+   * - libraries: Specifies the names of CSS and JavaScript libraries to be
+   *   loaded globally by the theme.
    * - libraries-override: Overrides for libraries defined by modules or other themes.
    * - libraries-extend: Extensions for libraries defined by modules or other themes.
    * - regions_hidden: Regions that are hidden.
-   * - configure: Route for theme settings.
    *
    * See olivero.info.yml for an example of a theme .info.yml file.
    *

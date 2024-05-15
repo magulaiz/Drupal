@@ -33,35 +33,27 @@ interface AssetResolverInterface {
    * This ensures proper cascading of styles so themes can easily override
    * module styles through CSS selectors.
    *
-   *  Modules and themes must declare their CSS and JS assets in library
-   *  definitions. Themes can override module-defined libraries by using the
-   *  `libraries-override` feature in their theme's .info.yml file. This allows
-   *  themes to override entire CSS or JS files, rather than specific selectors
-   *  or functions, when necessary.
+   * Modules and themes must declare their CSS and JS assets in library
+   * definitions. Themes can override module-defined libraries by using the
+   * `libraries-override` feature in their theme's .info.yml file. This allows
+   * themes to override entire CSS or JS files, rather than specific selectors
+   * or functions, when necessary.
    *
-   *  For example, to override the 'system' module's system-menus library, you
-   *  can add the following to your theme's .info.yml file:
+   * For example, to override the 'system' module's 'system/misc' library, you
+   * can add the following to your theme's .info.yml file:
    *
-   *  Example:
-   *  In your theme's mytheme.info.yml file:
+   * Example:
+   * In your theme's mytheme.info.yml file:
    *
-   *  name: 'My Theme'
-   *  type: theme
-   *  base theme: olivero
-   *  description: 'A custom theme'
-   *  package: Custom
-   *  version: '1.0'
-   *  core_version_requirement: ^8 || ^9
+   * libraries-override:
+   *   system/misc:
+   *     css:
+   *       theme:
+   *         css/system-menus.css: css/overridden-system-menus.css
    *
-   *  libraries-override:
-   *    system/misc:
-   *      css:
-   *        theme:
-   *          css/system-menus.css: css/overridden-system-menus.css
-   *
-   *  In this example, the theme 'mytheme' overrides the 'system/misc' library
-   *  defined by the 'system' module. The 'css/system-menus.css' file from the
-   *  module is replaced with 'css/overridden-system-menus.css' from the theme.
+   * In this example, the theme 'mytheme' overrides the 'system/misc' library
+   * defined by the 'system' module. The 'css/system-menus.css' file from the
+   * module is replaced with 'css/overridden-system-menus.css' from the theme.
    *
    * Also invokes hook_css_alter(), to allow CSS assets to be altered.
    *
