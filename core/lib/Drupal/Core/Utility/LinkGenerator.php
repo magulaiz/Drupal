@@ -125,12 +125,16 @@ class LinkGenerator implements LinkGeneratorInterface {
       // drupal.active-link library know the path in a standardized manner.
       if ($url->isRouted() && !isset($variables['options']['attributes']['data-drupal-link-system-path'])) {
         //   see https://www.drupal.org/project/drupal/issues/3443759.
-        $system_path = $url->getInternalPath();
-
-        // Special case for the front page.
-        if ($url->getRouteName() === '<front>') {
-          $system_path = '<front>';
-        }
+        // Get the route match from the URL.
+        $routeMatch = $url->getRouteMatch();
+        if ($routeMatch) {
+          $internalPath = Url::fromRouteMatch($routeMatch);
+          $system_path = \Drupal::urlGenerator()->getPathFromRoute($internalPath->getRouteName(), $internalPath->getRouteParameters());
+  
+          // Special case for the front page.
+          if ($routeMatch->getRouteName() === '<front>') {
+              $system_path = '<front>';
+          }
 
         if (!empty($system_path)) {
           $variables['options']['attributes']['data-drupal-link-system-path'] = $system_path;
