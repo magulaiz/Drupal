@@ -13,6 +13,7 @@ use Drupal\Core\Test\Exception\MissingGroupException;
 use Drupal\Core\Test\TestDiscovery;
 use Drupal\Tests\UnitTestCase;
 use org\bovigo\vfs\vfsStream;
+use PHPUnit\Framework\Attributes\BeforeClass;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Group;
@@ -24,8 +25,15 @@ use PHPUnit\Framework\Attributes\Group;
 #[Group('Test')]
 class AttributeBasedTestDiscoveryTest extends UnitTestCase {
 
+  #[BeforeClass]
+  public function fixtureClassAutoloading(): void {
+    $class_loader = new ClassLoader();
+    $class_loader->addPsr4("Drupal\\TestDiscoveryFixture\\", __DIR__ . '/../../../../fixtures/test_test_discovery/module/tests/src');
+    $class_loader->register(TRUE);
+  }
+
   #[DataProvider('infoParserProvider')]
-  public function testTestInfoParser($expected, $classname) {
+  public function testTestInfoParser(array $expected, string $classname): void {
     $info = TestDiscovery::getTestInfo($classname);
     $this->assertEquals($expected, $info);
   }
@@ -38,7 +46,7 @@ class AttributeBasedTestDiscoveryTest extends UnitTestCase {
         'name' => static::class,
         'group' => 'Test',
         'groups' => ['Test'],
-        'description' => 'Tests \Drupal\Core\Test\TestDiscoveryTest.',
+        'description' => 'Tests \Drupal\Core\Test\TestDiscovery.',
         'type' => 'PHPUnit-Unit',
       ],
       // Classname.
@@ -74,26 +82,14 @@ class AttributeBasedTestDiscoveryTest extends UnitTestCase {
     ];
   }
 
-  public function testTestInfoParserMissingGroup() {
-    $classname = 'Drupal\KernelTests\field\BulkDeleteTest';
-    $doc_comment = <<<EOT
-/**
- * Bulk delete storages and fields, and clean up afterwards.
- */
-EOT;
+  public function testTestInfoParserMissingGroup(): void {
     $this->expectException(MissingGroupException::class);
     $this->expectExceptionMessage('Missing @group annotation in Drupal\KernelTests\field\BulkDeleteTest');
-    TestDiscovery::getTestInfo($classname, $doc_comment);
+    TestDiscovery::getTestInfo('Drupal\TestDiscoveryFixture\NoGroupAttribute');
   }
 
-  public function testTestInfoParserMissingSummary() {
-    $classname = 'Drupal\KernelTests\field\BulkDeleteTest';
-    $doc_comment = <<<EOT
-/**
- * @group field
- */
-EOT;
-    $info = TestDiscovery::getTestInfo($classname, $doc_comment);
+  public function testTestInfoParserMissingSummary(): void {
+    $info = TestDiscovery::getTestInfo('Drupal\TestDiscoveryFixture\NoDescription');
     $this->assertEmpty($info['description']);
   }
 
