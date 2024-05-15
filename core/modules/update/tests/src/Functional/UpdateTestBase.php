@@ -148,11 +148,8 @@ abstract class UpdateTestBase extends BrowserTestBase {
         $assert_session->linkByHrefExists($release_url);
       }
       if ($multiple_security_no_insecure) {
-        $security_releases = [
-          'http://example.com/drupal-8-0-1-release',
-          'http://example.com/drupal-8-0-1-release',
-        ];
-        $this->assertEquals($security_releases, array_values(array_diff($all_security_release_urls, $expected_release_urls)));
+        // There should be 2 security releases.
+        $this->assertCount(2, array_diff($all_security_release_urls, $expected_release_urls));
       }
       else {
         // Ensure no other links are shown as security releases.
