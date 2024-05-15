@@ -16,7 +16,6 @@ use org\bovigo\vfs\vfsStream;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Group;
-use PHPUnit\Framework\Attributes\IgnoreDeprecations;
 
 /**
  * Tests the TestDiscovery class.
@@ -32,7 +31,6 @@ class AttributeBasedTestDiscoveryTest extends UnitTestCase {
   }
 
   public static function infoParserProvider(): \Generator {
-
     // A core unit test.
     yield 'phpunit-unit' => [
       // Expected result.
@@ -74,8 +72,6 @@ class AttributeBasedTestDiscoveryTest extends UnitTestCase {
       // Classname.
       'Drupal\KernelTests\Core\Archiver\TarTest',
     ];
-
-    return $tests;
   }
 
   public function testTestInfoParserMissingGroup() {
