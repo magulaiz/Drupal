@@ -25,6 +25,15 @@ use PHPUnit\Framework\Attributes\IgnoreDeprecations;
 #[Group('Test')]
 class TestDiscoveryTest extends UnitTestCase {
 
+  /**
+   * @todo 'legacy' group annotation is needed until PHPStan recognizes
+   *   #[IgnoreDeprecations] as a deprecated scope marker.
+   *
+   * @see https://github.com/phpstan/phpstan-deprecation-rules/issues/109
+   *
+   * @group legacy
+   */
+  #[IgnoreDeprecations]
   #[DataProvider('infoParserProvider')]
   public function testTestInfoParser($expected, $classname, $doc_comment = NULL) {
     $info = TestDiscovery::getTestInfo($classname, $doc_comment);
@@ -204,7 +213,17 @@ class TestDiscoveryTest extends UnitTestCase {
     return $tests;
   }
 
+  /**
+   * @todo 'legacy' group annotation is needed until PHPStan recognizes
+   *   #[IgnoreDeprecations] as a deprecated scope marker.
+   *
+   * @see https://github.com/phpstan/phpstan-deprecation-rules/issues/109
+   *
+   * @group legacy
+   */
+  #[IgnoreDeprecations]
   public function testTestInfoParserMissingGroup() {
+    $this->expectDeprecation('Drupal\Core\Test\TestDiscovery::getTestInfoFromAnnotation() is deprecated in drupal:11.0.0 and is removed from drupal:12.0.0. Make sure all tests classes have a #[Group()] attribute. See https://www.drupal.org/node/7654321');
     $classname = 'Drupal\KernelTests\field\BulkDeleteTest';
     $doc_comment = <<<EOT
 /**
@@ -216,6 +235,15 @@ EOT;
     TestDiscovery::getTestInfo($classname, $doc_comment);
   }
 
+  /**
+   * @todo 'legacy' group annotation is needed until PHPStan recognizes
+   *   #[IgnoreDeprecations] as a deprecated scope marker.
+   *
+   * @see https://github.com/phpstan/phpstan-deprecation-rules/issues/109
+   *
+   * @group legacy
+   */
+  #[IgnoreDeprecations]
   public function testTestInfoParserMissingSummary() {
     $classname = 'Drupal\KernelTests\field\BulkDeleteTest';
     $doc_comment = <<<EOT
@@ -227,76 +255,6 @@ EOT;
     $this->assertEmpty($info['description']);
   }
 
-  protected function setupVfsWithTestClasses() {
-    vfsStream::setup('drupal');
-
-    $test_file = <<<EOF
-<?php
-
-use PHPUnit\Framework\Attributes\Group;
-
-/**
- * Test description
- */
-#[Group(example)]
-class FunctionalExampleTest {}
-EOF;
-
-    $test_profile_info = <<<EOF
-name: Testing
-type: profile
-core_version_requirement: '*'
-EOF;
-
-    $test_module_info = <<<EOF
-name: Testing
-type: module
-core_version_requirement: '*'
-EOF;
-
-    vfsStream::create([
-      'modules' => [
-        'test_module' => [
-          'test_module.info.yml' => $test_module_info,
-          'tests' => [
-            'src' => [
-              'Functional' => [
-                'FunctionalExampleTest.php' => $test_file,
-                'FunctionalExampleTest2.php' => str_replace(['FunctionalExampleTest', '#[Group(example)]'], ['FunctionalExampleTest2', '#[Group(example2)]'], $test_file),
-              ],
-              'Kernel' => [
-                'KernelExampleTest3.php' => str_replace(['FunctionalExampleTest', '#[Group(example)]'], ['KernelExampleTest3', "#[Group(example2)]\n#[Group(kernel)]"], $test_file),
-                'KernelExampleTestBase.php' => str_replace(['FunctionalExampleTest', '#[Group(example)]'], ['KernelExampleTestBase', '#[Group(example2)]'], $test_file),
-                'KernelExampleTrait.php' => str_replace(['FunctionalExampleTest', '#[Group(example)]'], ['KernelExampleTrait', '#[Group(example2)]'], $test_file),
-                'KernelExampleInterface.php' => str_replace(['FunctionalExampleTest', '#[Group(example)]'], ['KernelExampleInterface', '#[Group(example2)]'], $test_file),
-              ],
-            ],
-          ],
-        ],
-      ],
-      'profiles' => [
-        'test_profile' => [
-          'test_profile.info.yml' => $test_profile_info,
-          'modules' => [
-            'test_profile_module' => [
-              'test_profile_module.info.yml' => $test_module_info,
-              'tests' => [
-                'src' => [
-                  'Kernel' => [
-                    'KernelExampleTest4.php' => str_replace(['FunctionalExampleTest', '#[Group(example)]'], ['KernelExampleTest4', '#[Group(example3)]'], $test_file),
-                  ],
-                ],
-              ],
-            ],
-          ],
-        ],
-      ],
-    ]);
-  }
-
-  /**
-   * @todo remove this method once all annotations are removed.
-   */
   protected function setupVfsWithLegacyTestClasses() {
     vfsStream::setup('drupal');
 
@@ -371,7 +329,7 @@ EOF;
    * @group legacy
    */
   #[IgnoreDeprecations]
-  public function testGetLegacyTestClasses() {
+  public function testGetTestClasses() {
     $this->expectDeprecation('Drupal\Core\Test\TestDiscovery::getTestInfoFromAnnotation() is deprecated in drupal:11.0.0 and is removed from drupal:12.0.0. Make sure all tests classes have a #[Group()] attribute. See https://www.drupal.org/node/7654321');
     $this->setupVfsWithLegacyTestClasses();
     $extensions = [
@@ -447,7 +405,7 @@ EOF;
    * @group legacy
    */
   #[IgnoreDeprecations]
-  public function testGetLegacyTestClassesWithSelectedTypes() {
+  public function testGetTestClassesWithSelectedTypes() {
     $this->expectDeprecation('Drupal\Core\Test\TestDiscovery::getTestInfoFromAnnotation() is deprecated in drupal:11.0.0 and is removed from drupal:12.0.0. Make sure all tests classes have a #[Group()] attribute. See https://www.drupal.org/node/7654321');
     $this->setupVfsWithLegacyTestClasses();
     $extensions = [
@@ -490,8 +448,18 @@ EOF;
     ], $result);
   }
 
+  /**
+   * @todo 'legacy' group annotation is needed until PHPStan recognizes
+   *   #[IgnoreDeprecations] as a deprecated scope marker.
+   *
+   * @see https://github.com/phpstan/phpstan-deprecation-rules/issues/109
+   *
+   * @group legacy
+   */
+  #[IgnoreDeprecations]
   public function testGetTestsInProfiles() {
-    $this->setupVfsWithTestClasses();
+    $this->expectDeprecation('Drupal\Core\Test\TestDiscovery::getTestInfoFromAnnotation() is deprecated in drupal:11.0.0 and is removed from drupal:12.0.0. Make sure all tests classes have a #[Group()] attribute. See https://www.drupal.org/node/7654321');
+    $this->setupVfsWithLegacyTestClasses();
     $class_loader = $this->prophesize(ClassLoader::class);
 
     $container = new Container();
@@ -565,7 +533,7 @@ EOF;
    * Ensure TestDiscovery::scanDirectory() ignores certain abstract file types.
    */
   public function testScanDirectoryNoAbstract() {
-    $this->setupVfsWithTestClasses();
+    $this->setupVfsWithLegacyTestClasses();
     $files = TestDiscovery::scanDirectory('Drupal\\Tests\\test_module\\Kernel\\', vfsStream::url('drupal/modules/test_module/tests/src/Kernel'));
     $this->assertNotEmpty($files);
     $this->assertArrayNotHasKey('Drupal\Tests\test_module\Kernel\KernelExampleTestBase', $files);
