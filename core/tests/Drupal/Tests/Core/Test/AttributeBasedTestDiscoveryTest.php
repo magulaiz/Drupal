@@ -38,7 +38,7 @@ class AttributeBasedTestDiscoveryTest extends UnitTestCase {
         'name' => static::class,
         'group' => 'Test',
         'groups' => ['Test'],
-        'description' => 'Tests \Drupal\Core\Test\AttributeBasedTestDiscoveryTest.',
+        'description' => 'Tests \Drupal\Core\Test\TestDiscoveryTest.',
         'type' => 'PHPUnit-Unit',
       ],
       // Classname.
