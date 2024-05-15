@@ -84,7 +84,7 @@ class Update extends Query implements ConditionInterface {
   /**
    * Specifies fields to be updated as an expression.
    *
-   * Expression fields are cases such as counter=counter1. This method takes
+   * Expression fields are cases such as counter=counter+1. This method takes
    * precedence over fields().
    *
    * @param $field
