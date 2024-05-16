@@ -531,10 +531,10 @@ class LayoutBuilderTest extends LayoutBuilderTestBase {
     // The original node title is available when viewing the node, but the
     // pending title is visible within the Layout Builder UI.
     $this->drupalGet('node/1');
-    $assert_session->elementTextContains('css', 'body', 'The first node title');
+    $assert_session->pageTextContains('The first node title');
     $page->clickLink('Layout');
-    $assert_session->elementTextNotContains('css', 'body', 'The first node title');
-    $assert_session->elementTextContains('css', 'body', 'The pending title of the first node');
+    $assert_session->pageTextNotContains('The first node title');
+    $assert_session->pageTextContains('The pending title of the first node');
   }
 
   /**
@@ -703,6 +703,10 @@ class LayoutBuilderTest extends LayoutBuilderTestBase {
     // Prepare an object with a pre-existing section.
     $this->container->get('config.factory')->getEditable('layout_builder_test.test_simple_config.existing')
       ->set('sections', [(new Section('layout_twocol'))->toArray()])
+      // `layout_builder_test.test_simple_config.existing.sections.0.layout_settings.label`
+      // contains a translatable label, so a `langcode` is required.
+      // @see \Drupal\Core\Config\Plugin\Validation\Constraint\LangcodeRequiredIfTranslatableValuesConstraint
+      ->set('langcode', 'en')
       ->save();
 
     // The pre-existing section is found.

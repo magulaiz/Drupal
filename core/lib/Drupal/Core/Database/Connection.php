@@ -12,7 +12,6 @@ use Drupal\Core\Database\Query\Merge;
 use Drupal\Core\Database\Query\Select;
 use Drupal\Core\Database\Query\Truncate;
 use Drupal\Core\Database\Query\Update;
-use Drupal\Core\Database\Query\Upsert;
 use Drupal\Core\Database\Transaction\TransactionManagerInterface;
 use Drupal\Core\Pager\PagerManagerInterface;
 
@@ -758,59 +757,7 @@ abstract class Connection {
     };
     if (empty($this->driverClasses[$class])) {
       $driver_class = $this->connectionOptions['namespace'] . '\\' . $class;
-      if (class_exists($driver_class)) {
-        $this->driverClasses[$class] = $driver_class;
-      }
-      else {
-        switch ($class) {
-          case 'Condition':
-            $this->driverClasses[$class] = Condition::class;
-            break;
-
-          case 'Delete':
-            $this->driverClasses[$class] = Delete::class;
-            break;
-
-          case 'ExceptionHandler':
-            $this->driverClasses[$class] = ExceptionHandler::class;
-            break;
-
-          case 'Insert':
-            $this->driverClasses[$class] = Insert::class;
-            break;
-
-          case 'Merge':
-            $this->driverClasses[$class] = Merge::class;
-            break;
-
-          case 'Schema':
-            $this->driverClasses[$class] = Schema::class;
-            break;
-
-          case 'Select':
-            $this->driverClasses[$class] = Select::class;
-            break;
-
-          case 'Transaction':
-            $this->driverClasses[$class] = Transaction::class;
-            break;
-
-          case 'Truncate':
-            $this->driverClasses[$class] = Truncate::class;
-            break;
-
-          case 'Update':
-            $this->driverClasses[$class] = Update::class;
-            break;
-
-          case 'Upsert':
-            $this->driverClasses[$class] = Upsert::class;
-            break;
-
-          default:
-            $this->driverClasses[$class] = $class;
-        }
-      }
+      $this->driverClasses[$class] = class_exists($driver_class) ? $driver_class : $class;
     }
     return $this->driverClasses[$class];
   }
@@ -1346,7 +1293,7 @@ abstract class Connection {
   /**
    * Prevents the database connection from being serialized.
    */
-  public function __sleep() {
+  public function __sleep(): array {
     throw new \LogicException('The database connection is not serializable. This probably means you are serializing an object that has an indirect reference to the database connection. Adjust your code so that is not necessary. Alternatively, look at DependencySerializationTrait as a temporary solution.');
   }
 
