@@ -45,7 +45,7 @@ class MailerDsnConfigValidationTest extends KernelTestBase {
       ->validate();
     $this->assertCount(1, $violations);
     $this->assertSame('mailer_dsn.scheme', $violations[0]->getPropertyPath());
-    $this->assertSame('The mailer DSN must contain a scheme.', (string) $violations[0]->getMessage());
+    $this->assertSame('This value should not be null.', (string) $violations[0]->getMessage());
 
     // If the scheme is blank, it should be an error.
     $data['mailer_dsn']['scheme'] = '';
@@ -101,7 +101,7 @@ class MailerDsnConfigValidationTest extends KernelTestBase {
       ->validate();
     $this->assertCount(1, $violations);
     $this->assertSame('mailer_dsn.host', $violations[0]->getPropertyPath());
-    $this->assertSame('The mailer DSN must contain a host (use "default" by default).', (string) $violations[0]->getMessage());
+    $this->assertSame('This value should not be null.', (string) $violations[0]->getMessage());
 
     // If the host is blank, it should be an error.
     $data['mailer_dsn']['host'] = '';
