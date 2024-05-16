@@ -115,6 +115,7 @@ class BrowserTestBaseTest extends BrowserTestBase {
    * Tests drupalGet().
    */
   public function testDrupalGet() {
+    \Drupal::service('module_installer')->install(['path_alias']);
     $this->drupalGet('test-page');
     $this->assertSession()->statusCodeEquals(200);
     $this->assertSession()->addressEquals('test-page');
