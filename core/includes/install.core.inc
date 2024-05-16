@@ -2085,6 +2085,15 @@ function install_check_translations($langcode, $server_pattern) {
     }
   }
 
+
+  // Give the actual path we're installing into.
+  // See  https://www.drupal.org/project/drupal/issues/3447538.
+  // @todo: validate path?
+  $requirements['document_root'] = [
+    'title'       => t('Document Root'),
+    'value'       => t('Installing into :document_root', [':document_root' => $_SERVER['DOCUMENT_ROOT']]),
+  ];
+
   return $requirements;
 }
 
