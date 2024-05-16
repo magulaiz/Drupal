@@ -22,11 +22,6 @@ use Drupal\Core\State\StateInterface;
 abstract class ExtensionList {
 
   /**
-   * The .info.yml file extension length.
-   */
-  public const INFO_YML_LENGTH = -9;
-
-  /**
    * The type of the extension.
    *
    * Possible values: "module", "theme", "profile" or "database_driver".
