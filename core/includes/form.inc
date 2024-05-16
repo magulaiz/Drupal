@@ -9,7 +9,7 @@ use Drupal\Component\Utility\UrlHelper;
 use Drupal\Core\Batch\BatchStorageInterface;
 use Drupal\Core\Database\IntegrityConstraintViolationException;
 use Drupal\Core\Render\Element;
-use Drupal\Core\Render\Element\RenderElement;
+use Drupal\Core\Render\Element\RenderElementBase;
 use Drupal\Core\Template\Attribute;
 use Drupal\Core\Url;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -33,7 +33,7 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 function template_preprocess_select(&$variables) {
   $element = $variables['element'];
   Element::setAttributes($element, ['id', 'name', 'size']);
-  RenderElement::setAttributes($element, ['form-select']);
+  RenderElementBase::setAttributes($element, ['form-select']);
 
   $variables['attributes'] = $element['#attributes'];
   $variables['options'] = form_select_options($element);
@@ -194,7 +194,7 @@ function form_get_options($element, $key) {
 function template_preprocess_fieldset(&$variables) {
   $element = $variables['element'];
   Element::setAttributes($element, ['id']);
-  RenderElement::setAttributes($element);
+  RenderElementBase::setAttributes($element);
   $variables['attributes'] = $element['#attributes'] ?? [];
   $variables['prefix'] = $element['#field_prefix'] ?? NULL;
   $variables['suffix'] = $element['#field_suffix'] ?? NULL;
@@ -388,7 +388,7 @@ function template_preprocess_textarea(&$variables) {
   $element = $variables['element'];
   $attributes = ['id', 'name', 'rows', 'cols', 'maxlength', 'placeholder'];
   Element::setAttributes($element, $attributes);
-  RenderElement::setAttributes($element, ['form-textarea']);
+  RenderElementBase::setAttributes($element, ['form-textarea']);
   $variables['wrapper_attributes'] = new Attribute();
   $variables['attributes'] = new Attribute($element['#attributes']);
   $variables['value'] = $element['#value'];
@@ -868,7 +868,7 @@ function _batch_append_set(&$batch, $batch_set) {
  *   redirect response was returned by the 'finished' callback, the user will
  *   be redirected to the page that started the batch. Any query arguments will
  *   be automatically persisted.
- * @param \Drupal\Core\Url $url
+ * @param \Drupal\Core\Url|null $url
  *   (optional) URL of the batch processing page. Should only be used for
  *   separate scripts like update.php.
  * @param $redirect_callback
@@ -878,7 +878,7 @@ function _batch_append_set(&$batch, $batch_set) {
  * @return \Symfony\Component\HttpFoundation\RedirectResponse|null
  *   A redirect response if the batch is progressive. No return value otherwise.
  */
-function batch_process($redirect = NULL, Url $url = NULL, $redirect_callback = NULL) {
+function batch_process($redirect = NULL, ?Url $url = NULL, $redirect_callback = NULL) {
   $batch =& batch_get();
 
   if (isset($batch)) {
