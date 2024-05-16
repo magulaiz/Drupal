@@ -2,6 +2,7 @@
 
 namespace Drupal\Core\Extension;
 
+use Composer\InstalledVersions;
 use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Database\DatabaseExceptionWrapper;
 use Drupal\Core\Extension\Exception\UnknownExtensionException;
@@ -19,6 +20,11 @@ use Drupal\Core\State\StateInterface;
  *   https://www.drupal.org/project/drupal/issues/2940481
  */
 abstract class ExtensionList {
+
+  /**
+   * The .info.yml file extension length.
+   */
+  public const INFO_YML_LENGTH = -9;
 
   /**
    * The type of the extension.
@@ -559,6 +565,17 @@ abstract class ExtensionList {
     foreach ($this->defaults as $key => $default_value) {
       if (!isset($info[$key])) {
         $info[$key] = $default_value;
+      }
+    }
+
+    // Try to detect version from Composer.
+    if ($info['version'] == NULL) {
+      $filename = $extension->getPathname();
+      if ($filename) {
+        $package_name = 'drupal/' . basename($filename, '.info.yml');
+        if (InstalledVersions::isInstalled($package_name)) {
+          $info['version'] = InstalledVersions::getPrettyVersion($package_name);
+        }
       }
     }
 
