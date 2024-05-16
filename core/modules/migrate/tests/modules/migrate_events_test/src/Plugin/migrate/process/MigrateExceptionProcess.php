@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\migrate_events_test\Plugin\migrate\process;
 
+use Drupal\migrate\Attribute\MigrateProcess;
 use Drupal\migrate\MigrateException;
 use Drupal\migrate\ProcessPluginBase;
 use Drupal\migrate\MigrateExecutableInterface;
@@ -11,12 +12,11 @@ use Drupal\migrate\Row;
 
 /**
  * Process plugin to throw a MigrateException.
- *
- * @MigrateProcessPlugin(
- *   id = "migrate_exception_process",
- *   handle_multiples = FALSE
- * )
  */
+#[MigrateProcess(
+  id: 'migrate_exception_process',
+  handle_multiples: FALSE,
+)]
 class MigrateExceptionProcess extends ProcessPluginBase {
 
   /**
