@@ -191,7 +191,7 @@ class MailerDsnConfigValidationTest extends KernelTestBase {
     $this->assertSame('mailer_dsn.port', $violations[0]->getPropertyPath());
     $this->assertSame('The mailer DSN port must be between 0 and 65535.', (string) $violations[0]->getMessage());
 
-    // If the password is valid, it should be accepted.
+    // If the port is valid, it should be accepted.
     $data['mailer_dsn']['port'] = 587;
     $violations = $this->configManager->createFromNameAndData($config->getName(), $data)
       ->validate();
@@ -203,7 +203,7 @@ class MailerDsnConfigValidationTest extends KernelTestBase {
     $this->assertFalse($config->isNew());
     $data = $config->get();
 
-    // Set scheme to native.
+    // Set scheme to an unknown schema.
     $data['mailer_dsn']['scheme'] = 'drupal.unknown-scheme+https';
 
     // If there is no more specific type for a scheme, options with any key
@@ -242,7 +242,7 @@ class MailerDsnConfigValidationTest extends KernelTestBase {
     $this->assertFalse($config->isNew());
     $data = $config->get();
 
-    // Set scheme to native.
+    // Set scheme to null.
     $data['mailer_dsn']['scheme'] = 'null';
 
     // If the options contain an invalid key, it should be an error.
@@ -342,7 +342,7 @@ class MailerDsnConfigValidationTest extends KernelTestBase {
     $this->assertSame('mailer_dsn.options.local_domain', $violations[0]->getPropertyPath());
     $this->assertSame('The local_domain is not allowed to span multiple lines or contain control characters.', (string) $violations[0]->getMessage());
 
-    // If the options contain a local_domain with a newline, it should be an error.
+    // If the options contain a local_domain with unexpected characters, it should be an error.
     $data['mailer_dsn']['options'] = ['local_domain' => "host\rwith\tcontrol-chars"];
     $violations = $this->configManager->createFromNameAndData($config->getName(), $data)
       ->validate();
