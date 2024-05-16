@@ -117,7 +117,7 @@ class SqlContentEntityStorageSchemaColumnTest extends KernelTestBase {
   /**
    * Tests that schema changes are updated for fields with data with the flag.
    */
-  public function testColumnUpdateWithFlag() {
+  public function testColumnUpdateWithFlag(): void {
     // Change the field type in the stored schema.
     $schema = \Drupal::keyValue('entity.storage_schema.sql')->get('entity_test_rev.field_schema_data.test');
     $schema['entity_test_rev__test']['fields']['test_value']['type'] = 'varchar_ascii';

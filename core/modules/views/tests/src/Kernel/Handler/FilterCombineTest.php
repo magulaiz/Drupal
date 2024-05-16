@@ -103,7 +103,7 @@ class FilterCombineTest extends ViewsKernelTestBase {
   /**
    * Tests the Combine field filter with the 'regular_expression' operator.
    */
-  public function testFilterCombineRegEx() {
+  public function testFilterCombineRegEx(): void {
     $view = Views::getView('test_view');
     $view->setDisplay();
 

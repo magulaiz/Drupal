@@ -620,7 +620,7 @@ EOS;
   /**
    * @covers ::getPendingUpdateFunctions
    */
-  public function testGetPendingCustomUpdateFunctions() {
+  public function testGetPendingCustomUpdateFunctions(): void {
     // Set up a simplified module structure with custom update hooks.
     $info_a = <<<'EOS'
 type: module

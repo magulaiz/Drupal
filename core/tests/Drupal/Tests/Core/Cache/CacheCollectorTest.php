@@ -300,7 +300,7 @@ class CacheCollectorTest extends UnitTestCase {
   /**
    * Tests a cache miss, then item created by another request.
    */
-  public function testUpdateCacheRace() {
+  public function testUpdateCacheRace(): void {
     $key = $this->randomMachineName();
     $value = $this->randomMachineName();
 

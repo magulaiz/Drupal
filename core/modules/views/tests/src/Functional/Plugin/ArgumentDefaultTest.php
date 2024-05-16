@@ -203,7 +203,7 @@ class ArgumentDefaultTest extends ViewTestBase {
   /**
    * Tests the more line generation if a default argument is provided.
    */
-  public function testArgumentDefaultUrlGeneration() {
+  public function testArgumentDefaultUrlGeneration(): void {
     // Create a user that has permission to place a view block.
     $permissions = [
       'administer views',

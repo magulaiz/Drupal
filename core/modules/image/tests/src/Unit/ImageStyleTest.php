@@ -202,7 +202,7 @@ class ImageStyleTest extends UnitTestCase {
   /**
    * @covers ::flush
    */
-  public function testFlush() {
+  public function testFlush(): void {
     $cache_tag_invalidator = $this->createMock('\Drupal\Core\Cache\CacheTagsInvalidator');
     $file_system = $this->createMock('\Drupal\Core\File\FileSystemInterface');
     $module_handler = $this->createMock('\Drupal\Core\Extension\ModuleHandlerInterface');

@@ -229,7 +229,7 @@ class ElementTest extends UnitTestCase {
    * @covers ::isRenderArray
    * @dataProvider dataProviderIsRenderArray
    */
-  public function testIsRenderArray($build, $expected) {
+  public function testIsRenderArray($build, $expected): void {
     $this->assertSame(
       $expected,
       Element::isRenderArray($build)

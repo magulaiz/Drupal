@@ -141,7 +141,7 @@ class MenuLinkTreeTest extends KernelTestBase {
   /**
    * Tests user/login and user/logout links.
    */
-  public function testUserLoginAndUserLogoutLinks() {
+  public function testUserLoginAndUserLogoutLinks(): void {
     $account_switcher = $this->container->get('account_switcher');
 
     $login_menu_link = MenuLinkMock::create(['id' => 'user_login_example', 'route_name' => 'user.login']);

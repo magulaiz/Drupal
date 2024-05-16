@@ -240,7 +240,7 @@ class NodeAdminTest extends NodeTestBase {
   /**
    * Tests content overview for a multilingual site.
    */
-  public function testContentAdminPageMultilingual() {
+  public function testContentAdminPageMultilingual(): void {
     $this->drupalLogin($this->adminUser);
 
     \Drupal::service('module_installer')->install(['language']);

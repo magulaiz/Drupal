@@ -1239,7 +1239,7 @@ class MenuUiTest extends BrowserTestBase {
   /**
    * Tests the user login/logout links.
    */
-  public function testUserLoginUserLogoutLinks() {
+  public function testUserLoginUserLogoutLinks(): void {
     MenuLinkContent::create([
       'menu' => 'tools',
       'link' => [

@@ -173,7 +173,7 @@ class DefaultLazyPluginCollectionTest extends LazyPluginCollectionTestBase {
    *
    * @covers ::setInstanceConfiguration
    */
-  public function testSetInstanceConfigurationPluginChange() {
+  public function testSetInstanceConfigurationPluginChange(): void {
     $configurable_plugin = $this->prophesize(ConfigurableInterface::class);
     $configurable_config = ['id' => 'configurable', 'foo' => 'bar'];
     $configurable_plugin->getConfiguration()->willReturn($configurable_config);

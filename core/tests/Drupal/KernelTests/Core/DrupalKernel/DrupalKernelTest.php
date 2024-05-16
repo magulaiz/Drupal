@@ -264,7 +264,7 @@ class DrupalKernelTest extends KernelTestBase {
   /**
    * @covers ::resetContainer
    */
-  public function testResetContainer() {
+  public function testResetContainer(): void {
     $modules_enabled = [
       'system' => 'system',
       'user' => 'user',

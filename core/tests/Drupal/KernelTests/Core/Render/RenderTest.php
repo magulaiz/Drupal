@@ -79,7 +79,7 @@ class RenderTest extends KernelTestBase {
    *
    * @group legacy
    */
-  public function testDeprecateRenderPlain() {
+  public function testDeprecateRenderPlain(): void {
     $message = ['#markup' => 'Test'];
     \Drupal::service('renderer')->renderPlain($message);
     $this->expectDeprecation('Renderer::renderPlain() is deprecated in drupal:10.3.0 and is removed from drupal:12.0.0. Instead, you should use ::renderInIsolation(). See https://www.drupal.org/node/3407994');
