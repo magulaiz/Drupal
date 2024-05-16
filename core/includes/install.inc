@@ -10,6 +10,7 @@ use Drupal\Component\Utility\UrlHelper;
 use Drupal\Core\Database\Database;
 use Drupal\Core\Extension\Dependency;
 use Drupal\Core\Extension\ExtensionDiscovery;
+use Drupal\Core\Extension\InfoParserDynamic;
 use Drupal\Core\Installer\InstallerKernel;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 
@@ -761,11 +762,22 @@ function install_profile_info($profile, $langcode = 'en') {
     $dependency_name_function = function ($dependency) {
       return Dependency::createFromString($dependency)->getName();
     };
-    // Convert dependencies in [project:module] format.
-    $info['dependencies'] = array_map($dependency_name_function, $info['dependencies']);
+    if (!empty($info[InfoParserDynamic::COMPOSER_DEPENDENCIES])) {
+      $info['dependencies'] = array_keys($info[InfoParserDynamic::COMPOSER_DEPENDENCIES]);
+    }
+    else {
+      // Convert dependencies in [project:module] format.
+      $info['dependencies'] = array_map($dependency_name_function, $info['dependencies']);
+    }
 
     // Convert install key in [project:module] format.
-    $info['install'] = array_map($dependency_name_function, $info['install']);
+    $info['install'] = array_map(function ($dependency) {
+      if (strpos($dependency, ':') !== FALSE) {
+        list(, $dependency) = explode(':', $dependency);
+      }
+      $parts = explode('(', $dependency, 2);
+      return trim($parts[0]);
+    }, $info['install']);
 
     // Get a list of core's required modules.
     $required = [];

@@ -1,0 +1,5 @@
+name: 'System core version test using composer.json.'
+type: module
+description: 'Support module for testing core using composer.'
+package: Testing
+version: 1.0.0

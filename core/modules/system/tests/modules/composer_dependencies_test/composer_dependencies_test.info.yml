@@ -1,0 +1,5 @@
+name: 'Module composer dependencies test'
+type: module
+description: 'Support module for testing composer dependencies.'
+package: Testing
+version: VERSION

@@ -43,6 +43,7 @@ class DependencyTest extends ModuleTestBase {
    */
   public function testEnableWithoutDependency() {
     // Attempt to enable Content Translation without Language enabled.
+    // @todo Add a composer.json test case.
     $edit = [];
     $edit['modules[content_translation][enable]'] = 'content_translation';
     $this->drupalGet('admin/modules');
@@ -69,6 +70,7 @@ class DependencyTest extends ModuleTestBase {
   public function testMissingModules() {
     // Test that the system_dependencies_test module is marked
     // as missing a dependency.
+    $assert_session = $this->assertSession();
     $this->drupalGet('admin/modules');
     $this->assertSession()->pageTextContains(Unicode::ucfirst('_missing_dependency') . ' (missing)');
     $this->assertSession()->elementTextEquals('xpath', '//tr[@data-drupal-selector="edit-modules-system-dependencies-test"]//span[@class="admin-missing"]', 'missing');

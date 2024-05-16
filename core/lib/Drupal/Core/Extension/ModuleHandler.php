@@ -6,6 +6,7 @@ use Drupal\Component\Graph\Graph;
 use Drupal\Component\Utility\NestedArray;
 use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\DestructableInterface;
+use Drupal\Core\Extension\Dependency\Composer;
 use Drupal\Core\Extension\Exception\UnknownExtensionException;
 
 /**
@@ -224,7 +225,12 @@ class ModuleHandler implements ModuleHandlerInterface, DestructableInterface {
   public function buildModuleDependencies(array $modules) {
     foreach ($modules as $module) {
       $graph[$module->getName()]['edges'] = [];
-      if (isset($module->info['dependencies']) && is_array($module->info['dependencies'])) {
+      if (isset($module->info[InfoParserDynamic::COMPOSER_DEPENDENCIES]) && is_array($module->info[InfoParserDynamic::COMPOSER_DEPENDENCIES])) {
+        foreach ($module->info[InfoParserDynamic::COMPOSER_DEPENDENCIES] as $name => $constraint) {
+          $graph[$module->getName()]['edges'][$name] = new Composer($constraint, $name);
+        }
+      }
+      elseif (isset($module->info['dependencies']) && is_array($module->info['dependencies'])) {
         foreach ($module->info['dependencies'] as $dependency) {
           $dependency_data = Dependency::createFromString($dependency);
           $graph[$module->getName()]['edges'][$dependency_data->getName()] = $dependency_data;

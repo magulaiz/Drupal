@@ -114,27 +114,81 @@ class ModuleInstallerTest extends KernelTestBase {
         'system_core_incompatible_semver_test',
         TRUE,
       ],
+      'no dependencies composer_core_incompatible_test' => [
+        'system_core_incompatible_semver_test',
+        FALSE,
+      ],
+      'install_dependencies composer_core_incompatible_test' => [
+        'system_core_incompatible_semver_test',
+        TRUE,
+      ],
     ];
   }
 
   /**
    * Tests install with a dependency with an invalid core version constraint.
    *
+   * @dataProvider providerDependencyInvalidCoreInstall
    * @covers ::install
    */
-  public function testDependencyInvalidCoreInstall() {
+  public function testDependencyInvalidCoreInstall($module, $dependency) {
     $this->expectException(MissingDependencyException::class);
-    $this->expectExceptionMessage("Unable to install modules: module 'system_incompatible_core_version_dependencies_test'. Its dependency module 'system_core_incompatible_semver_test' is incompatible with this version of Drupal core.");
-    $this->container->get('module_installer')->install(['system_incompatible_core_version_dependencies_test']);
+    $this->expectExceptionMessage("Unable to install modules: module '$module'. Its dependency module '$dependency' is incompatible with this version of Drupal core.");
+    $this->container->get('module_installer')->install([$module]);
   }
 
   /**
-   * Tests no dependencies install with a dependency with invalid core.
+   * Dataprovider for testDependencyInvalidCoreInstall().
+   */
+  public function providerDependencyInvalidCoreInstall() {
+    return [
+      'info with info.yml dependency' => [
+        'system_incompatible_core_version_dependencies_test',
+        'system_core_incompatible_semver_test',
+      ],
+      'composer.json with info.yml dependency' => [
+        'composer_incompatible_core_depend_test',
+        'system_incompatible_core_version_test',
+      ],
+      'composer.json with composer.json dependency' => [
+        'composer_incompatible_core_composer_depend_test',
+        'composer_core_incompatible_test',
+      ],
+      'info with composer.json dependency' => [
+        'composer_incompatible_core_composer_depend_test',
+        'composer_core_incompatible_test',
+      ],
+    ];
+  }
+
+  /**
+   * Tests invalid core install, without installing dependencies.
    *
+   * @dataProvider provideDependencyInvalidCoreInstallNoDependencies
    * @covers ::install
    */
-  public function testDependencyInvalidCoreInstallNoDependencies() {
-    $this->assertTrue($this->container->get('module_installer')->install(['system_incompatible_core_version_dependencies_test'], FALSE));
+  public function testDependencyInvalidCoreInstallNoDependencies($module) {
+    $this->assertTrue($this->container->get('module_installer')->install([$module], FALSE));
+  }
+
+  /**
+   * Dataprovider for testDependencyInvalidCoreInstallNoDependencies().
+   */
+  public function provideDependencyInvalidCoreInstallNoDependencies() {
+    return [
+      'info with info.yml dependency' => [
+        'system_incompatible_core_version_dependencies_test',
+      ],
+      'composer.json with info.yml dependency' => [
+        'composer_incompatible_core_depend_test',
+      ],
+      'composer.json with composer.json dependency' => [
+        'composer_incompatible_core_composer_depend_test',
+      ],
+      'info with composer.json dependency' => [
+        'composer_incompatible_core_composer_depend_test',
+      ],
+    ];
   }
 
   /**

@@ -12,6 +12,18 @@ use Drupal\Core\Serialization\Yaml;
 class InfoParserDynamic implements InfoParserInterface {
 
   /**
+   * The earliest Drupal version that supports 'composer.json' for dependencies.
+   *
+   * @todo unused constant.
+   */
+  const FIRST_COMPOSER_JSON_SUPPORTED_VERSION = '9.1.0';
+
+  /**
+   * The key where you'll find Composer dependencies in *.info.yml files.
+   */
+  const COMPOSER_DEPENDENCIES = 'composer_dependencies';
+
+  /**
    * InfoParserDynamic constructor.
    *
    * @param string $root
@@ -38,21 +50,42 @@ class InfoParserDynamic implements InfoParserInterface {
     if (!empty($missing_keys)) {
       throw new InfoParserException('Missing required keys (' . implode(', ', $missing_keys) . ') in ' . $filename);
     }
-    if (!isset($parsed_info['core_version_requirement'])) {
-      if (str_starts_with($filename, 'core/') || str_starts_with($filename, $this->root . '/core/')) {
-        // Core extensions do not need to specify core compatibility: they are
-        // by definition compatible so a sensible default is used. Core
-        // modules are allowed to provide these for testing purposes.
-        $parsed_info['core_version_requirement'] = \Drupal::VERSION;
+    $composer_filename = dirname($filename) . '/composer.json';
+    $has_composer_file = file_exists($composer_filename);
+    $is_testing_module = isset($parsed_info['package']) && $parsed_info['package'] === 'Testing';
+    if (!isset($parsed_info['core']) && !isset($parsed_info['core_version_requirement'])) {
+      if ((strpos($filename, 'core/') === 0 || strpos($filename, $this->root . '/core/') === 0)) {
+        if (!($has_composer_file && $is_testing_module)) {
+          // Core extensions do not need to specify core compatibility: they
+          // are by definition compatible so a sensible default is used. Core
+          // modules are allowed to provide these for testing purposes.
+          $parsed_info['core_version_requirement'] = \Drupal::VERSION;
+        }
       }
-      elseif (isset($parsed_info['package']) && $parsed_info['package'] === 'Testing') {
+      elseif ($is_testing_module) {
         // Modules in the testing package are exempt as well. This makes it
         // easier for contrib to use test modules.
         $parsed_info['core_version_requirement'] = \Drupal::VERSION;
       }
       else {
+        // @todo recheck the logic here after https://git.drupalcode.org/project/drupal/-/commit/718fa096fd1cab5a05543b67b1cd177d8e9dc769.
         // Non-core extensions must specify core compatibility.
+        if (isset($parsed_info['dependencies'])) {
+          throw new InfoParserException("If the 'dependencies' key is used, the 'core' or 'core_version_requirement' key is required in $filename");
+        }
+        elseif (!$has_composer_file) {
+          throw new InfoParserException("If the 'core' or 'core_version_requirement' key is not provided, a composer.json file is required in $filename");
+        }
         throw new InfoParserException("The 'core_version_requirement' key must be present in " . $filename);
+      }
+
+      // @todo recheck the logic here after https://git.drupalcode.org/project/drupal/-/commit/718fa096fd1cab5a05543b67b1cd177d8e9dc769.
+      if ($has_composer_file) {
+        $parsed_info += $this->parseComposerFile($composer_filename);
+      }
+
+      if (isset($parsed_info['core']) && !preg_match("/^\d\.x$/", $parsed_info['core'])) {
+        throw new InfoParserException("Invalid 'core' value \"{$parsed_info['core']}\" in " . $filename);
       }
     }
 
@@ -98,6 +131,42 @@ class InfoParserDynamic implements InfoParserInterface {
    */
   protected function getRequiredKeys() {
     return ['type', 'name'];
+  }
+
+  /**
+   * Parses a composer.json file and checks for core_version_requirement.
+   *
+   * @param string $file_path
+   *   Full path to the composer.json file.
+   *
+   * @return array
+   *   Parsed composer.json file data.
+   *
+   * @throws \Drupal\Core\Extension\InfoParserException
+   *   Thrown when the file cannot be parsed, or when the parsed require key
+   *   does not include the drupal/core package.
+   */
+  protected function parseComposerFile($file_path) {
+    if (!$parsed_info = json_decode(file_get_contents($file_path), TRUE)) {
+      throw new InfoParserException("Unable to parse $file_path " . json_last_error_msg());
+    }
+
+    $require = $parsed_info['require'];
+    foreach ($require as $project => $constraint) {
+      [$namespace, $name] = explode('/', $project);
+      if ($namespace !== 'drupal') {
+        continue;
+      }
+      if ($name === 'core') {
+        $parsed_info['core_version_requirement'] = $constraint;
+        continue;
+      }
+      $parsed_info[static::COMPOSER_DEPENDENCIES][$name] = $constraint;
+    }
+    if (empty($parsed_info['core_version_requirement'])) {
+      throw new InfoParserException("The 'require' key must at least specify a 'drupal/core' version in $file_path");
+    }
+    return $parsed_info;
   }
 
 }

@@ -5,9 +5,9 @@ namespace Drupal\Core\Extension;
 /**
  * Messages for missing or incompatible dependencies on modules.
  *
- * @internal The trait simply helps core classes that display user messages
- *   regarding missing or incompatible module dependencies share exact same
- *   wording and markup.
+ * @internal This trait helps core classes that display user messages regarding
+ *   missing or incompatible module dependencies share exact same wording and
+ *   markup.
  */
 trait ModuleDependencyMessageTrait {
 
@@ -18,13 +18,13 @@ trait ModuleDependencyMessageTrait {
    *   The list of existing modules.
    * @param string $dependency
    *   The module dependency to check.
-   * @param \Drupal\Core\Extension\Dependency $dependency_object
+   * @param \Drupal\Core\Extension\DependencyInterface $dependency_object
    *   Dependency object used for comparing version requirement data.
    *
    * @return string|null
    *   NULL if compatible, otherwise a string describing the incompatibility.
    */
-  public function checkDependencyMessage(array $modules, $dependency, Dependency $dependency_object) {
+  public function checkDependencyMessage(array $modules, $dependency, DependencyInterface $dependency_object) {
     if (!isset($modules[$dependency])) {
       return $this->t('@module_name (<span class="admin-missing">missing</span>)', ['@module_name' => $dependency]);
     }

@@ -11,6 +11,7 @@ use Drupal\Tests\UnitTestCase;
 /**
  * @coversDefaultClass \Drupal\Core\Extension\Dependency
  * @group Extension
+ * @group legacy
  */
 class DependencyTest extends UnitTestCase {
 

@@ -1,0 +1,10 @@
+{
+    "name": "drupal/system_composer_dependencies_test",
+    "description": "Support module for testing system composer dependencies.",
+    "license": "GPL-2.0-or-later",
+    "type": "drupal-module",
+    "require": {
+        "drupal/core": "^8.8",
+        "drupal/missing_composer_dependency": "^1"
+    }
+}
