@@ -2,7 +2,3 @@
   --ck-z-modal: 1261;
 }
 
-.ck.ck-toolbar-dropdown > .ck-dropdown__panel,
-#drupal-off-canvas [data-drupal-ck-style-fence] .ck.ck-toolbar-dropdown > .ck-dropdown__panel {
-  width: auto !important;
-}
