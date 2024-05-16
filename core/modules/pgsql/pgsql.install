@@ -6,6 +6,8 @@
  */
 
 use Drupal\Core\Database\Database;
+use Drupal\Core\Database\Schema\Index;
+use Drupal\pgsql\Schema\IndexType;
 
 /**
  * Implements hook_requirements().
@@ -46,4 +48,49 @@ function pgsql_requirements() {
  */
 function pgsql_update_last_removed() {
   return 10101;
+}
+
+/**
+ * Change the path_alias and path_alias_revision tables to add GIST indexes.
+ */
+function pgsql_update_10102(&$sandbox) {
+  $connection = \Drupal::database();
+  if ($connection->databaseType() === 'pgsql') {
+    $schema = $connection->schema();
+    // Add GIST indexes to make queries on the columns 'path' and 'alias'
+    // faster.
+    // @see https://www.postgresql.org/docs/12/textsearch-indexes.html
+    if ($schema->tableExists('path_alias') && !$schema->indexExists('path_alias', 'path_alias__path_gist')) {
+      $schema->addIndex('path_alias', 'path_alias__path_gist', new Index(['path'], [
+        'pgsql' => [
+          'type' => IndexType::Gist,
+          'operator' => 'gist_trgm_ops',
+        ],
+      ]), []);
+    }
+    if ($schema->tableExists('path_alias') && !$schema->indexExists('path_alias', 'path_alias__alias_gist')) {
+      $schema->addIndex('path_alias', 'path_alias__alias_gist', new Index(['alias'], [
+        'pgsql' => [
+          'type' => IndexType::Gist,
+          'operator' => 'gist_trgm_ops',
+        ],
+      ]), []);
+    }
+    if ($schema->tableExists('path_alias_revision') && !$schema->indexExists('path_alias_revision', 'path_alias__path_gist')) {
+      $schema->addIndex('path_alias_revision', 'path_alias_revision__path_gist', new Index(['path'], [
+        'pgsql' => [
+          'type' => IndexType::Gist,
+          'operator' => 'gist_trgm_ops',
+        ],
+      ]), []);
+    }
+    if ($schema->tableExists('path_alias_revision') && !$schema->indexExists('path_alias_revision', 'path_alias__alias_gist')) {
+      $schema->addIndex('path_alias_revision', 'path_alias_revision__alias_gist', new Index(['alias'], [
+        'pgsql' => [
+          'type' => IndexType::Gist,
+          'operator' => 'gist_trgm_ops',
+        ],
+      ]), []);
+    }
+  }
 }
