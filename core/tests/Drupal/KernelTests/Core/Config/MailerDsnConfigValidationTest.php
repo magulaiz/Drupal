@@ -208,7 +208,11 @@ class MailerDsnConfigValidationTest extends KernelTestBase {
 
     // If there is no more specific type for a scheme, options with any key
     // should be accepted.
-    $data['mailer_dsn']['options'] = ['any_key' => "any😎thing\ngoes"];
+    $data['mailer_dsn']['options'] = [
+      'any_bool' => TRUE,
+      'any_int' => 42,
+      'any_string' => "any😎thing\ngoes",
+    ];
     $violations = $this->configManager->createFromNameAndData($config->getName(), $data)
       ->validate();
     $this->assertCount(0, $violations);
