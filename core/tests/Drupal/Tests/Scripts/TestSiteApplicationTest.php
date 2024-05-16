@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\Scripts;
 
 use Drupal\Component\FileSystem\FileSystem;
@@ -11,20 +13,21 @@ use GuzzleHttp\Psr7\Request;
 use Symfony\Component\Process\PhpExecutableFinder;
 use Symfony\Component\Process\Process;
 
+// cspell:ignore htkey
+
 /**
  * Tests core/scripts/test-site.php.
- *
- * @group Setup
  *
  * This test uses the Drupal\Core\Database\Database class which has a static.
  * Therefore run in a separate process to avoid side effects.
  *
- * @runTestsInSeparateProcesses
- * @preserveGlobalState disabled
- *
  * @see \Drupal\TestSite\TestSiteApplication
  * @see \Drupal\TestSite\Commands\TestSiteInstallCommand
  * @see \Drupal\TestSite\Commands\TestSiteTearDownCommand
+ *
+ * @group Setup
+ * @runTestsInSeparateProcesses
+ * @preserveGlobalState disabled
  */
 class TestSiteApplicationTest extends UnitTestCase {
 
@@ -42,7 +45,6 @@ class TestSiteApplicationTest extends UnitTestCase {
     parent::setUp();
     $php_executable_finder = new PhpExecutableFinder();
     $this->php = $php_executable_finder->find();
-    $this->root = dirname(substr(__DIR__, 0, -strlen(__NAMESPACE__)), 2);
   }
 
   /**

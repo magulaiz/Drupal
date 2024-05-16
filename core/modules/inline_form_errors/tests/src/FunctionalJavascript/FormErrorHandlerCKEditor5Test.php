@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\inline_form_errors\FunctionalJavascript;
 
 use Drupal\Core\Entity\Entity\EntityFormDisplay;
@@ -47,6 +49,9 @@ class FormErrorHandlerCKEditor5Test extends WebDriverTestBase {
     Editor::create([
       'format' => 'ckeditor5',
       'editor' => 'ckeditor5',
+      'image_upload' => [
+        'status' => FALSE,
+      ],
     ])->save();
 
     // Create a node type for testing.

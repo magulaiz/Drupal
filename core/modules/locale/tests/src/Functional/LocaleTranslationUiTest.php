@@ -1,7 +1,10 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\locale\Functional;
 
+use Drupal\Core\Site\Settings;
 use Drupal\Core\Url;
 use Drupal\Core\Database\Database;
 use Drupal\language\Entity\ConfigurableLanguage;
@@ -12,6 +15,7 @@ use Drupal\Core\Language\LanguageInterface;
  * Tests the validation of translation strings and search results.
  *
  * @group locale
+ * @group #slow
  */
 class LocaleTranslationUiTest extends BrowserTestBase {
 
@@ -59,7 +63,7 @@ class LocaleTranslationUiTest extends BrowserTestBase {
     // Code for the language.
     $langcode = 'xx';
     // The English name for the language. This will be translated.
-    $name = 'cucurbitaceae';
+    $name = 'Foo';
     // This will be the translation of $name.
     $translation = $this->randomMachineName(16);
     $translation_to_en = $this->randomMachineName(16);
@@ -310,6 +314,18 @@ class LocaleTranslationUiTest extends BrowserTestBase {
     $this->assertFileDoesNotExist($js_file);
     _locale_rebuild_js($langcode);
     $this->assertFileExists($js_file);
+
+    // Test if JavaScript translation contains a custom string override.
+    $string_override = $this->randomMachineName();
+    $settings = Settings::getAll();
+    $settings['locale_custom_strings_' . $langcode] = ['' => [$string_override => $string_override]];
+    // Recreate the settings static.
+    new Settings($settings);
+    _locale_rebuild_js($langcode);
+    $locale_javascripts = \Drupal::state()->get('locale.translation.javascript', []);
+    $js_file = 'public://' . $config->get('javascript.directory') . '/' . $langcode . '_' . $locale_javascripts[$langcode] . '.js';
+    $content = file_get_contents($js_file);
+    $this->assertStringContainsString('"' . $string_override . '":"' . $string_override . '"', $content);
   }
 
   /**

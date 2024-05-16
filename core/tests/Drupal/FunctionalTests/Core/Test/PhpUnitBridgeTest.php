@@ -1,12 +1,14 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\FunctionalTests\Core\Test;
 
 use Drupal\Core\Url;
 use Drupal\Tests\BrowserTestBase;
 
 /**
- * Tests Drupal's integration with Symfony PHPUnit Bridge.
+ * Tests Drupal's extension to manage code deprecation.
  *
  * @group Test
  * @group legacy

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests;
 
 use Drupal\Component\FileCache\FileCacheFactory;
@@ -8,12 +10,11 @@ use Drupal\Core\Cache\CacheTagsInvalidatorInterface;
 use Drupal\Core\DependencyInjection\ContainerBuilder;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\Core\StringTranslation\PluralTranslatableMarkup;
-use Drupal\Tests\Traits\PhpUnitWarnings;
+use Drupal\TestTools\Extension\DeprecationBridge\ExpectDeprecationTrait;
 use Drupal\TestTools\TestVarDumper;
 use PHPUnit\Framework\TestCase;
 use Prophecy\PhpUnit\ProphecyTrait;
 use Symfony\Component\VarDumper\VarDumper;
-use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
 
 /**
  * Provides a base class and helpers for Drupal unit tests.
@@ -25,7 +26,6 @@ use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
  */
 abstract class UnitTestCase extends TestCase {
 
-  use PhpUnitWarnings;
   use PhpUnitCompatibilityTrait;
   use ProphecyTrait;
   use ExpectDeprecationTrait;
@@ -86,9 +86,8 @@ abstract class UnitTestCase extends TestCase {
    *   configuration object names and whose values are key => value arrays for
    *   the configuration object in question. Defaults to an empty array.
    *
-   * @return \PHPUnit\Framework\MockObject\MockBuilder
-   *   A MockBuilder object for the ConfigFactory with the desired return
-   *   values.
+   * @return \PHPUnit\Framework\MockObject\MockObject|\Drupal\Core\Config\ConfigFactoryInterface
+   *   A mock configuration factory object.
    */
   public function getConfigFactoryStub(array $configs = []) {
     $config_get_map = [];

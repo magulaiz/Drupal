@@ -1,9 +1,6 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Tests\Core\Access\AccessResultTest.
- */
+declare(strict_types=1);
 
 namespace Drupal\Tests\Core\Access;
 
@@ -235,7 +232,7 @@ class AccessResultTest extends UnitTestCase {
     $this->assertDefaultCacheability($access);
 
     // FORBIDDEN && ALLOWED = FORBIDDEN
-    $access = $forbidden->andif($allowed);
+    $access = $forbidden->andIf($allowed);
     $this->assertFalse($access->isAllowed());
     $this->assertTrue($access->isForbidden());
     $this->assertFalse($access->isNeutral());
@@ -243,7 +240,7 @@ class AccessResultTest extends UnitTestCase {
     $this->assertDefaultCacheability($access);
 
     // FORBIDDEN && NEUTRAL = FORBIDDEN
-    $access = $forbidden->andif($neutral);
+    $access = $forbidden->andIf($neutral);
     $this->assertFalse($access->isAllowed());
     $this->assertTrue($access->isForbidden());
     $this->assertFalse($access->isNeutral());
@@ -251,7 +248,7 @@ class AccessResultTest extends UnitTestCase {
     $this->assertDefaultCacheability($access);
 
     // FORBIDDEN && FORBIDDEN = FORBIDDEN
-    $access = $forbidden->andif($forbidden);
+    $access = $forbidden->andIf($forbidden);
     $this->assertFalse($access->isAllowed());
     $this->assertTrue($access->isForbidden());
     $this->assertFalse($access->isNeutral());
@@ -587,7 +584,7 @@ class AccessResultTest extends UnitTestCase {
    *   does not implement CacheableDependencyInterface, then the result won't
    *   either. This is the case for bullets 3, 6 and 9 in the set above.
    */
-  public function andOrCacheabilityPropagationProvider() {
+  public static function andOrCacheabilityPropagationProvider() {
     // ct: cacheable=true, cf: cacheable=false, un: uncacheable.
     // Note: the test cases that have a "un" access result as the first operand
     // test UncacheableTestAccessResult, not AccessResult. However, we
@@ -877,13 +874,15 @@ class AccessResultTest extends UnitTestCase {
   }
 
   /**
-   * @covers ::orIf
+   * Tests orIf().
    *
    * Tests the special case of ORing non-forbidden access results that are both
    * cacheable but have different cacheability metadata.
    * This is only the case for non-forbidden access results; we still abort the
    * ORing process as soon as a forbidden access result is encountered. This is
    * tested in ::testOrIf().
+   *
+   * @covers ::orIf
    */
   public function testOrIfCacheabilityMerging() {
     $merge_both_directions = function (AccessResult $a, AccessResult $b) {
@@ -943,7 +942,7 @@ class AccessResultTest extends UnitTestCase {
    *
    * @return array
    */
-  public function providerTestAllowedIfHasPermissions() {
+  public static function providerTestAllowedIfHasPermissions() {
     $access_result = AccessResult::allowedIf(FALSE);
     $data[] = [[], 'AND', $access_result];
     $data[] = [[], 'OR', $access_result];

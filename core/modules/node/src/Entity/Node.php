@@ -95,6 +95,7 @@ class Node extends EditorialContentEntityBase implements NodeInterface {
    * @var true|null
    *   TRUE if the node is being previewed and NULL if it is not.
    */
+  // phpcs:ignore Drupal.NamingConventions.ValidVariableName.LowerCamelName
   public $in_preview = NULL;
 
   /**
@@ -312,7 +313,7 @@ class Node extends EditorialContentEntityBase implements NodeInterface {
 
     $fields['created'] = BaseFieldDefinition::create('created')
       ->setLabel(t('Authored on'))
-      ->setDescription(t('The time that the node was created.'))
+      ->setDescription(t('The date and time that the content was created.'))
       ->setRevisionable(TRUE)
       ->setTranslatable(TRUE)
       ->setDisplayOptions('view', [
