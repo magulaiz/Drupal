@@ -162,7 +162,7 @@ class MigrateEventsTest extends KernelTestBase {
   /**
    * Data provider for testImportFailedEvent.
    */
-  public function importFailedDataProvider(): array {
+  public static function importFailedDataProvider(): array {
     return [
       'Import failed migration not idle' => [
         MigrationInterface::STATUS_IMPORTING,
