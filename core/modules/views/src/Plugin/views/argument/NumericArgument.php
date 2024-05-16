@@ -93,9 +93,7 @@ class NumericArgument extends ArgumentPluginBase {
     $this->ensureMyTable();
 
     if (!empty($this->options['break_phrase'])) {
-      $break = static::breakString($this->argument, FALSE);
-      $this->value = $break->value;
-      $this->operator = $break->operator;
+      $this->unpackArgumentValue();
     }
     else {
       $this->value = [$this->argument];
@@ -105,9 +103,26 @@ class NumericArgument extends ArgumentPluginBase {
     $null_check = empty($this->options['not']) ? '' : " OR $this->tableAlias.$this->realField IS NULL";
 
     if (count($this->value) > 1) {
-      $operator = empty($this->options['not']) ? 'IN' : 'NOT IN';
-      $placeholder .= '[]';
-      $this->query->addWhereExpression(0, "$this->tableAlias.$this->realField $operator($placeholder)" . $null_check, [$placeholder => $this->value]);
+      if ($this->operator == 'or') {
+        $operator = empty($this->options['not']) ? 'IN' : 'NOT IN';
+        $placeholder .= '[]';
+        $this->query->addWhereExpression(0, "$this->tableAlias.$this->realField $operator($placeholder)" . $null_check, [$placeholder => $this->value]);
+      }
+      elseif ($this->options['not']) {
+        // @todo Add condition for 'and' operator with 'not' option enabled or
+        // prevent this combination in the plugin settings form validation.
+      }
+      else {
+        $clause = $this->query->getConnection()->condition('AND');
+
+        foreach ($this->value as $item_value) {
+          $alias = empty($main_table_used) ? $this->tableAlias : $this->query->addTable($this->table);
+          $main_table_used = TRUE;
+          $clause->condition("$alias.$this->realField", $item_value);
+        }
+
+        $this->query->addWhere(0, $clause);
+      }
     }
     else {
       $operator = empty($this->options['not']) ? '=' : '!=';
