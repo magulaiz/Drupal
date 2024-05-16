@@ -17,6 +17,7 @@ use PHPUnit\Framework\Attributes\BeforeClass;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\IgnoreDeprecations;
 
 /**
  * Tests the TestDiscovery class.
@@ -29,6 +30,8 @@ class AttributeBasedTestDiscoveryTest extends UnitTestCase {
   public static function fixtureClassAutoloading(): void {
     $class_loader = new ClassLoader();
     $class_loader->addPsr4("Drupal\\TestDiscoveryFixture\\", __DIR__ . '/../../../../fixtures/test_test_discovery');
+    $class_loader->addPsr4("Drupal\\Tests\\test_module\\", 'vfs://drupal/modules/test_module/tests/src');
+    $class_loader->addPsr4("Drupal\\Tests\\test_profile_module\\", 'vfs://drupal/profiles/test_profile/modules/test_profile_module/tests/src');
     $class_loader->register(TRUE);
   }
 
@@ -82,6 +85,12 @@ class AttributeBasedTestDiscoveryTest extends UnitTestCase {
     ];
   }
 
+  /**
+   * @todo Remove the #[IgnoreDeprecations] attribute once all tests have been
+   *   converted to use attributes instead of annotation. Until then, we need
+   *   to accept going through TestDiscovery::getTestInfoFromAnnotation().
+   */
+  #[IgnoreDeprecations]
   public function testTestInfoParserMissingGroup(): void {
     $this->expectException(MissingGroupException::class);
     $this->expectExceptionMessage('Missing @group annotation in Drupal\TestDiscoveryFixture\NoGroupAttribute');
@@ -93,16 +102,22 @@ class AttributeBasedTestDiscoveryTest extends UnitTestCase {
     $this->assertEmpty($info['description']);
   }
 
-  protected function setupVfsWithLegacyTestClasses() {
+  protected function setupVfsWithTestClasses() {
     vfsStream::setup('drupal');
 
     $test_file = <<<EOF
 <?php
 
+declare(strict_types=1);
+
+namespace Drupal\\Tests\\test_module\\Functional;
+
+use PHPUnit\\Framework\\Attributes\\Group;
+
 /**
  * Test description
- * @group example
  */
+#[Group('example')]
 class FunctionalExampleTest {}
 EOF;
 
@@ -126,13 +141,13 @@ EOF;
             'src' => [
               'Functional' => [
                 'FunctionalExampleTest.php' => $test_file,
-                'FunctionalExampleTest2.php' => str_replace(['FunctionalExampleTest', '@group example'], ['FunctionalExampleTest2', '@group example2'], $test_file),
+                'FunctionalExampleTest2.php' => str_replace(['FunctionalExampleTest', '#[Group(\'example\')]'], ['FunctionalExampleTest2', '#[Group(\'example2\')]'], $test_file),
               ],
               'Kernel' => [
-                'KernelExampleTest3.php' => str_replace(['FunctionalExampleTest', '@group example'], ['KernelExampleTest3', "@group example2\n * @group kernel\n"], $test_file),
-                'KernelExampleTestBase.php' => str_replace(['FunctionalExampleTest', '@group example'], ['KernelExampleTestBase', '@group example2'], $test_file),
-                'KernelExampleTrait.php' => str_replace(['FunctionalExampleTest', '@group example'], ['KernelExampleTrait', '@group example2'], $test_file),
-                'KernelExampleInterface.php' => str_replace(['FunctionalExampleTest', '@group example'], ['KernelExampleInterface', '@group example2'], $test_file),
+                'KernelExampleTest3.php' => str_replace(['namespace Drupal\\Tests\\test_module\\Functional', 'FunctionalExampleTest', '#[Group(\'example\')]'], ['namespace Drupal\\Tests\\test_module\\Kernel', 'KernelExampleTest3', "#[Group('example2')]\n#[Group('kernel')]"], $test_file),
+                'KernelExampleTestBase.php' => str_replace(['namespace Drupal\\Tests\\test_module\\Functional', 'FunctionalExampleTest', '#[Group(\'example\')]'], ['namespace Drupal\\Tests\\test_module\\Kernel', 'KernelExampleTestBase', '#[Group(\'example2\')]'], $test_file),
+                'KernelExampleTrait.php' => str_replace(['namespace Drupal\\Tests\\test_module\\Functional', 'FunctionalExampleTest', '#[Group(\'example\')]'], ['namespace Drupal\\Tests\\test_module\\Kernel', 'KernelExampleTrait', '#[Group(\'example2\')]'], $test_file),
+                'KernelExampleInterface.php' => str_replace(['namespace Drupal\\Tests\\test_module\\Functional', 'FunctionalExampleTest', '#[Group(\'example\')]'], ['namespace Drupal\\Tests\\test_module\\Kernel', 'KernelExampleInterface', '#[Group(\'example2\')]'], $test_file),
               ],
             ],
           ],
@@ -147,7 +162,7 @@ EOF;
               'tests' => [
                 'src' => [
                   'Kernel' => [
-                    'KernelExampleTest4.php' => str_replace(['FunctionalExampleTest', '@group example'], ['KernelExampleTest4', '@group example3'], $test_file),
+                    'KernelExampleTest4.php' => str_replace(['namespace Drupal\\Tests\\test_module\\Functional', 'FunctionalExampleTest', '#[Group(\'example\')]'], ['namespace Drupal\\Tests\\test_profile_module\\Kernel', 'KernelExampleTest4', '#[Group(\'example3\')]'], $test_file),
                   ],
                 ],
               ],
@@ -159,7 +174,7 @@ EOF;
   }
 
   public function testGetTestClasses() {
-    $this->setupVfsWithLegacyTestClasses();
+    $this->setupVfsWithTestClasses();
     $extensions = [
       'test_module' => new Extension('vfs://drupal', 'module', 'modules/test_module/test_module.info.yml'),
     ];
@@ -225,7 +240,7 @@ EOF;
   }
 
   public function testGetTestClassesWithSelectedTypes() {
-    $this->setupVfsWithLegacyTestClasses();
+    $this->setupVfsWithTestClasses();
     $extensions = [
       'test_module' => new Extension('vfs://drupal', 'module', 'modules/test_module/test_module.info.yml'),
       'test_profile_module' => new Extension('vfs://drupal', 'profile', 'profiles/test_profile/modules/test_profile_module/test_profile_module.info.yml'),
@@ -267,7 +282,7 @@ EOF;
   }
 
   public function testGetTestsInProfiles() {
-    $this->setupVfsWithLegacyTestClasses();
+    $this->setupVfsWithTestClasses();
     $class_loader = $this->prophesize(ClassLoader::class);
 
     $container = new Container();
@@ -319,7 +334,7 @@ EOF;
    * Ensure TestDiscovery::scanDirectory() ignores certain abstract file types.
    */
   public function testScanDirectoryNoAbstract() {
-    $this->setupVfsWithLegacyTestClasses();
+    $this->setupVfsWithTestClasses();
     $files = TestDiscovery::scanDirectory('Drupal\\Tests\\test_module\\Kernel\\', vfsStream::url('drupal/modules/test_module/tests/src/Kernel'));
     $this->assertNotEmpty($files);
     $this->assertArrayNotHasKey('Drupal\Tests\test_module\Kernel\KernelExampleTestBase', $files);
