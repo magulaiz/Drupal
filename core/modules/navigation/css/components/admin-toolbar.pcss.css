@@ -203,8 +203,15 @@ body {
   align-items: center;
   justify-content: space-between;
   margin-block-start: calc(var(--admin-toolbar-sidebar-header) * -1);
-  padding-block-start: var(--admin-toolbar-space-16);
+  padding-block: var(--admin-toolbar-space-8);
+  padding-inline: var(--admin-toolbar-space-16);
+  border-block-end: 1px solid transparent;
   background-color: var(--admin-toolbar-color-white);
+
+  :where([data-detected-y-overflow="true"]) & {
+    border-color: var(--admin-toolbar-color-gray-100);
+    box-shadow: 0 0 56px 0 rgba(0, 0, 0, 0.14);
+  }
 
   & + .toolbar-block {
     margin-block-start: calc(var(--admin-toolbar-space-10) * -1);
@@ -256,14 +263,6 @@ body {
   overflow-y: auto;
   flex-direction: column;
   height: 100%;
-  background: linear-gradient(var(--admin-toolbar-color-white) 30%, var(--admin-toolbar-color-white)), radial-gradient(farthest-side at 50% 0, var(--admin-toolbar-color-shadow-15), var(--admin-toolbar-color-shadow-0));
-  background-color: var(--admin-toolbar-color-white);
-  background-repeat: no-repeat;
-  background-attachment: local, scroll;
-  background-position-y: 48px;
-  background-size:
-    100% 40px,
-    100% 16px;
 
   @media (--admin-toolbar-desktop) {
     display: contents;
@@ -277,33 +276,7 @@ body {
  * Region where most of the content will be printed.
  */
 .admin-toolbar__content {
-  display: grid;
-  gap: var(--admin-toolbar-space-12);
-  padding-block: var(--admin-toolbar-sidebar-header) var(--admin-toolbar-space-16);
-  padding-inline: var(--admin-toolbar-space-16);
-  border-inline-end: 1px solid var(--admin-toolbar-color-gray-100);
-
-  @media (--admin-toolbar-desktop) {
-    display: flex;
-    overflow-x: hidden;
-    overflow-y: auto;
-    flex-direction: column;
-    flex-grow: 1;
-    padding-block-start: var(--admin-toolbar-space-16);
-    background:
-      linear-gradient(var(--admin-toolbar-color-white) 30%, var(--admin-toolbar-color-white)),
-      linear-gradient(var(--admin-toolbar-color-white), var(--admin-toolbar-color-white) 80%) 0 100%,
-      radial-gradient(farthest-side at 50% 0, var(--admin-toolbar-color-shadow-15), var(--admin-toolbar-color-shadow-0)),
-      radial-gradient(farthest-side at 50% 100%, var(--admin-toolbar-color-shadow-15), var(--admin-toolbar-color-shadow-0)) 0 100%;
-    background-color: var(--admin-toolbar-color-white);
-    background-repeat: no-repeat;
-    background-attachment: local, local, scroll, scroll;
-    background-size:
-      100% 40px,
-      100% 40px,
-      100% 16px,
-      100% 16px;
-  }
+  padding-block-start: calc(var(--admin-toolbar-sidebar-header));
 }
 
 /**
@@ -326,6 +299,11 @@ body {
     bottom: 0;
     background-color: var(--admin-toolbar-color-white);
   }
+}
+
+[data-detected-y-overflow="true"] ~ .admin-toolbar__footer {
+  border-color: var(--admin-toolbar-color-gray-100);
+  box-shadow: 0 0 56px 0 rgba(0, 0, 0, 0.14);
 }
 
 /**
