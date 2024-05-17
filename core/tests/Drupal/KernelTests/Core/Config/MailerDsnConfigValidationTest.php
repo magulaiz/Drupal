@@ -117,7 +117,7 @@ class MailerDsnConfigValidationTest extends KernelTestBase {
       ->validate();
     $this->assertCount(1, $violations);
     $this->assertSame('mailer_dsn.host', $violations[0]->getPropertyPath());
-    $this->assertSame('The mailer DSN host is not allowed to span multiple lines or contain control characters.', (string) $violations[0]->getMessage());
+    $this->assertSame('The mailer DSN host should conform to RFC 3986 URI host component.', (string) $violations[0]->getMessage());
 
     // If the host contains unexpected characters, it should be an error.
     $data['mailer_dsn']['host'] = "host\rwith\tcontrol-chars";
@@ -125,7 +125,7 @@ class MailerDsnConfigValidationTest extends KernelTestBase {
       ->validate();
     $this->assertCount(1, $violations);
     $this->assertSame('mailer_dsn.host', $violations[0]->getPropertyPath());
-    $this->assertSame('The mailer DSN host is not allowed to span multiple lines or contain control characters.', (string) $violations[0]->getMessage());
+    $this->assertSame('The mailer DSN host should conform to RFC 3986 URI host component.', (string) $violations[0]->getMessage());
 
     // If the host is valid, it should be accepted.
     $data['mailer_dsn']['host'] = 'default';
@@ -146,7 +146,7 @@ class MailerDsnConfigValidationTest extends KernelTestBase {
     $this->assertCount(0, $violations);
 
     // If the host is valid, it should be accepted.
-    $data['mailer_dsn']['host'] = '::1';
+    $data['mailer_dsn']['host'] = '[::1]';
     $violations = $this->configManager->createFromNameAndData($config->getName(), $data)
       ->validate();
     $this->assertCount(0, $violations);
