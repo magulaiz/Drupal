@@ -180,7 +180,7 @@ class NavigationShortcutsBlockTest extends PageCacheTagsTestBase {
     $this->verifyDynamicPageCache($test_page_url, 'HIT');
     $this->assertSession()->linkExists('Cron');
     $this->assertSession()->linkExists('New Llama');
-    //    // Confirm that links for user 1 have not been affected.
+    // Confirm that links for user 1 have not been affected.
     $this->drupalLogin($site_configuration_user1);
     $this->verifyDynamicPageCache($test_page_url, 'HIT');
     $this->assertSession()->linkExists('Cron');
@@ -196,7 +196,7 @@ class NavigationShortcutsBlockTest extends PageCacheTagsTestBase {
     $this->verifyDynamicPageCache($test_page_url, 'HIT');
     $this->assertSession()->linkExists('Cron');
     $this->assertSession()->linkNotExists('New Llama');
-    //Confirm that deleting a shortcut set automatically changes the links too.
+    // Confirm that deleting a shortcut set automatically changes the links too.
     \Drupal::entityTypeManager()
       ->getStorage('shortcut_set')
       ->assignUser($new_set, $site_configuration_user2);
