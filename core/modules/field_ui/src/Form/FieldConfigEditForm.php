@@ -428,7 +428,7 @@ class FieldConfigEditForm extends EntityForm {
       $field_storage = $this->tempStore->get($this->entity->getTargetEntityTypeId() . ':' . $this->tempStore->get('temp_name'))['field_storage'];
 
       // Update the field_name.
-      $field_storage = $field_storage->set('field_name', $form_state->getValue('field_name'));
+      $field_storage->set('field_name', $form_state->getValue('field_name'));
 
       // Start building the new entity.
       $new_entity_values = $existing_values;

@@ -90,13 +90,13 @@ class FieldStorageConfigEditForm extends EntityForm {
   public function form(array $form, FormStateInterface $form_state) {
     $form = parent::form($form, $form_state);
 
+    // This will always be set to either the saved field label or 'New field'.
     $field_label = $form_state->get('field_config')->label();
-    if ($this->entity->isNew() && !isset($form_state->getUserInput()['label'])) {
-      $field_label = $this->t('New');
-    }
-    else {
-      $field_label = $this->t('%field', ['%field' => $field_label]);
-    }
+    // The field is empty the first time we load the form and after the label
+    // input we update the message below using ajax callback.
+    $field_label = $this->entity->isNew() && !isset($form_state->getUserInput()['label'])
+      ? $this->t('New')
+      : $form_state->get('field_config')->label();
     $form['#prefix'] = '<p>' . $this->t('These settings apply to the %field field everywhere it is used. Some also impact the way that data is stored and cannot be changed once data has been created.', ['%field' => $field_label]) . '</p>';
 
     // Add the cardinality sub-form.
