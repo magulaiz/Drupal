@@ -579,11 +579,11 @@
    */
   Drupal.ckeditor5 = {
     /**
-     * Variable storing the current dialog's save callback.
+     * Set storing the dialog save callbacks keyed by dialog selector.
      *
-     * @type {?function}
+     * @type {Map}
      */
-    saveCallback: null,
+    saveCallback: new Map(),
 
     /**
      * Open a dialog for a Drupal-based plugin.
@@ -622,7 +622,10 @@
       ckeditorAjaxDialog.execute();
 
       // Store the save callback to be executed when this dialog is closed.
-      Drupal.ckeditor5.saveCallback = saveCallback;
+      Drupal.ckeditor5.saveCallback.set(
+        dialogSettings.selector || '#drupal-modal',
+        saveCallback,
+      );
     },
   };
 
@@ -660,16 +663,18 @@
   });
 
   // Respond to dialogs that are saved, sending data back to CKEditor.
-  $(window).on('editor:dialogsave', (e, values) => {
-    if (Drupal.ckeditor5.saveCallback) {
-      Drupal.ckeditor5.saveCallback(values);
+  $(window).on('editor:dialogsave', (e, values, selector) => {
+    if (Drupal.ckeditor5.saveCallback.has(selector)) {
+      Drupal.ckeditor5.saveCallback.get(selector)(values);
     }
   });
 
   // Respond to dialogs that are closed, removing the current save handler.
-  $(window).on('dialog:afterclose', () => {
-    if (Drupal.ckeditor5.saveCallback) {
-      Drupal.ckeditor5.saveCallback = null;
+  $(window).on('dialog:afterclose', (e, dialog, element, dialogSettings) => {
+    const options = dialogSettings.options || {};
+    const selector = options.selector || '#drupal-modal';
+    if (Drupal.ckeditor5.saveCallback.has(selector)) {
+      Drupal.ckeditor5.saveCallback.delete(selector);
     }
   });
 })(Drupal, Drupal.debounce, CKEditor5, jQuery, once);

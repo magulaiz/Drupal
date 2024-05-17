@@ -84,14 +84,17 @@
     }
 
     function closeDialog(value) {
-      $(window).trigger('dialog:beforeclose', [dialog, $element]);
+      const settings = $element.dialog('instance');
+      $(window).trigger('dialog:beforeclose', [dialog, $element, settings]);
+
       // Unlocks the body when the dialog closes.
       bodyScrollLock.clearBodyLocks();
 
       $element.dialog('close');
       dialog.returnValue = value;
       dialog.open = false;
-      $(window).trigger('dialog:afterclose', [dialog, $element]);
+
+      $(window).trigger('dialog:afterclose', [dialog, $element, settings]);
     }
 
     dialog.show = () => {

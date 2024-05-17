@@ -816,6 +816,7 @@ media_library_mediaLibrary:
         dialogSettings:
           height: 75%
           dialogClass: media-library-widget-modal
+          selector: '#modal-media-library'
   drupal:
     label: Media Library
     elements: false
