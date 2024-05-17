@@ -121,6 +121,25 @@ class CorsIntegrationTest extends BrowserTestBase {
       ],
     ]);
     $this->assertEquals(200, $response->getStatusCode());
+
+    // Test ajaxCrossDomain is not set by default (supportsCredentials is false).
+    $this->drupalGet('/test-page');
+    $settings = $this->getDrupalSettings();
+    $this->assertArrayHasKey('withCredentials', $settings['ajaxCrossDomain'] ?? []);
+    $this->assertFalse($cors_config['supportsCredentials'] ?? FALSE);
+    $this->assertFalse($settings['ajaxCrossDomain']['withCredentials'] ?? FALSE);
+
+    // Test ajaxCrossDomain is set if supportsCredentials is set.
+    $cors_config['supportsCredentials'] = TRUE;
+    $this->setContainerParameter('cors.config', $cors_config);
+    $this->rebuildContainer();
+
+    $this->drupalGet('/test-page');
+    $cors_config = $this->container->getParameter('cors.config');
+    $settings = $this->getDrupalSettings();
+    $this->assertArrayHasKey('withCredentials', $settings['ajaxCrossDomain'] ?? []);
+    $this->assertTrue($cors_config['supportsCredentials'] ?? FALSE);
+    $this->assertTrue($settings['ajaxCrossDomain']['withCredentials'] ?? FALSE);
   }
 
 }
