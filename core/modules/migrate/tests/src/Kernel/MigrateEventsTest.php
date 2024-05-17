@@ -41,6 +41,11 @@ class MigrateEventsTest extends KernelTestBase {
   protected static $modules = ['migrate', 'migrate_events_test'];
 
   /**
+   * Temporary disable to see actual error.
+   */
+  protected $runTestInSeparateProcess = FALSE;
+
+  /**
    * {@inheritdoc}
    */
   protected function setUp(): void {
