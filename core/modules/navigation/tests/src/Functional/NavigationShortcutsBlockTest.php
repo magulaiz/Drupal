@@ -80,7 +80,7 @@ class NavigationShortcutsBlockTest extends PageCacheTagsTestBase {
     // Verify that users without the 'access shortcuts' permission can't see the
     // shortcuts.
     $this->drupalLogin($this->drupalCreateUser(['access navigation']));
-    $this->assertSession()->linkNotExists('Shortcuts');
+    $this->assertSession()->pageTextNotContains('Shortcuts');
     $this->verifyDynamicPageCache($test_page_url, 'MISS');
     $this->verifyDynamicPageCache($test_page_url, 'HIT');
 
@@ -208,6 +208,15 @@ class NavigationShortcutsBlockTest extends PageCacheTagsTestBase {
     $this->verifyDynamicPageCache($test_page_url, 'HIT');
     $this->assertSession()->linkExists('Cron');
     $this->assertSession()->linkNotExists('New Llama');
+
+    // Verify that block disappears gracefully when shortcut module is disabled.
+    // Shortcut entities has to be removed first.
+    $link_storage = \Drupal::entityTypeManager()->getStorage('shortcut');
+    $link_storage->delete($link_storage->loadMultiple());
+    \Drupal::service('module_installer')->uninstall(['shortcut']);
+    $this->verifyDynamicPageCache($test_page_url, 'MISS');
+    $this->assertSession()->statusCodeEquals(200);
+    $this->assertSession()->pageTextNotContains('Shortcuts');
   }
 
 }
