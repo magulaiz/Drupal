@@ -103,6 +103,7 @@ class NavigationShortcutsBlockTest extends PageCacheTagsTestBase {
       'access shortcuts',
       'administer site configuration',
       'access administration pages',
+      'configure any layout',
     ]);
 
     // Create two different users with the same role to assert that the second
@@ -217,6 +218,11 @@ class NavigationShortcutsBlockTest extends PageCacheTagsTestBase {
     $this->verifyDynamicPageCache($test_page_url, 'MISS');
     $this->assertSession()->statusCodeEquals(200);
     $this->assertSession()->pageTextNotContains('Shortcuts');
+
+    // Confirm that Navigation Blocks page is working.
+    // @see https://www.drupal.org/project/drupal/issues/3445184
+    $this->drupalGet('/admin/config/user-interface/navigation-block');
+    $this->assertSession()->statusCodeEquals(200);
   }
 
 }
