@@ -276,7 +276,20 @@ body {
  * Region where most of the content will be printed.
  */
 .admin-toolbar__content {
-  padding-block-start: calc(var(--admin-toolbar-sidebar-header));
+  display: grid;
+  gap: var(--admin-toolbar-space-12);
+  padding-block: var(--admin-toolbar-sidebar-header) var(--admin-toolbar-space-16);
+  padding-inline: var(--admin-toolbar-space-16);
+  border-inline-end: 1px solid var(--admin-toolbar-color-gray-100);
+
+  @media (--admin-toolbar-desktop) {
+    display: flex;
+    overflow-x: hidden;
+    overflow-y: auto;
+    flex-direction: column;
+    flex-grow: 1;
+    padding-block-start: var(--admin-toolbar-space-16);
+  }
 }
 
 /**

@@ -71,15 +71,15 @@
       <div class="admin-toolbar__scroll">
         {{ content.content }}
       </div>
-      <button aria-controls="admin-toolbar" class="admin-toolbar__expand-button">
-        <span class="visually-hidden" data-text>{{ 'Collapse sidebar'|t }}</span>
-      </button>
     </nav>
   </div>
   {% set title_menu_footer = 'admin-toolbar-footer'|clean_unique_id %}
   <nav id="menu-footer" class="admin-toolbar__footer" aria-labelledby="{{ title_menu_footer }}">
     <h3 id="{{ title_menu_footer }}" class="visually-hidden">{{ 'Administrative toolbar footer'|t }}</h3>
     {{ content.footer }}
+    <button aria-controls="admin-toolbar" class="admin-toolbar__expand-button">
+      <span class="visually-hidden" data-text>{{ 'Collapse sidebar'|t }}</span>
+    </button>
   </nav>
 </aside>
 <div class="admin-toolbar-overlay" aria-controls="admin-toolbar" data-drupal-admin-styles></div>
