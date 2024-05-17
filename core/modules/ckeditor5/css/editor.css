@@ -30,9 +30,9 @@
   border: 1px solid var(--ck-color-button-on-color);
 }
 
-/* Make the toolbar dropdown width relative to the toolbar width instead of the 
+/* Make the toolbar dropdown width relative to the editor width instead of the
  * viewport width. */
-.ck.ck-editor__top {
+.ck.ck-editor {
   container-type: inline-size;
   container-name: ck-editor;
 }
