@@ -366,30 +366,27 @@ class LocalTaskManagerTest extends UnitTestCase {
   protected function getLocalTasksCache() {
     $local_task_fixtures = $this->getLocalTaskFixtures();
     $local_tasks = [
-      'base_routes' => [
-        'menu_local_task_test_tasks_view' => 'menu_local_task_test_tasks_view',
+      'active_trail' => [
+        'menu_local_task_test_tasks_view.tab',
       ],
-      'parents' => [
-        'menu_local_task_test_tasks_view.tab' => TRUE,
-      ],
-      'children' => [
-        '> menu_local_task_test_tasks_view' => [
-          'menu_local_task_test_tasks_settings' => $local_task_fixtures['menu_local_task_test_tasks_settings'],
-          'menu_local_task_test_tasks_edit' => $local_task_fixtures['menu_local_task_test_tasks_edit'],
-          'menu_local_task_test_tasks_view.tab' => $local_task_fixtures['menu_local_task_test_tasks_view.tab'],
-        ],
-        'menu_local_task_test_tasks_view.tab' => [
-          // The manager will fill in the base_route before caching.
-          'menu_local_task_test_tasks_view_child1' => ['base_route' => 'menu_local_task_test_tasks_view'] + $local_task_fixtures['menu_local_task_test_tasks_view_child1'],
-          'menu_local_task_test_tasks_view_child2' => ['base_route' => 'menu_local_task_test_tasks_view'] + $local_task_fixtures['menu_local_task_test_tasks_view_child2'],
-        ],
+      'tree' => [
+        'menu_local_task_test_tasks_settings' => $local_task_fixtures['menu_local_task_test_tasks_settings'],
+        'menu_local_task_test_tasks_edit' => $local_task_fixtures['menu_local_task_test_tasks_edit'],
+        'menu_local_task_test_tasks_view.tab' => $local_task_fixtures['menu_local_task_test_tasks_view.tab'],
       ],
     ];
-    $local_tasks['children']['> menu_local_task_test_tasks_view']['menu_local_task_test_tasks_settings']['weight'] = 0;
-    $local_tasks['children']['> menu_local_task_test_tasks_view']['menu_local_task_test_tasks_edit']['weight'] = 20 + 1e-6;
-    $local_tasks['children']['> menu_local_task_test_tasks_view']['menu_local_task_test_tasks_view.tab']['weight'] = 2e-6;
-    $local_tasks['children']['menu_local_task_test_tasks_view.tab']['menu_local_task_test_tasks_view_child1']['weight'] = 3e-6;
-    $local_tasks['children']['menu_local_task_test_tasks_view.tab']['menu_local_task_test_tasks_view_child2']['weight'] = 4e-6;
+    $local_tasks['tree']['menu_local_task_test_tasks_settings']['children'] = [];
+    $local_tasks['tree']['menu_local_task_test_tasks_edit']['children'] = [];
+    $local_tasks['tree']['menu_local_task_test_tasks_view.tab']['children'] = [
+      // The manager will fill in the base_route before caching.
+      'menu_local_task_test_tasks_view_child1' => ['base_route' => 'menu_local_task_test_tasks_view', 'children' => []] + $local_task_fixtures['menu_local_task_test_tasks_view_child1'],
+      'menu_local_task_test_tasks_view_child2' => ['base_route' => 'menu_local_task_test_tasks_view', 'children' => []] + $local_task_fixtures['menu_local_task_test_tasks_view_child2'],
+    ];
+    $local_tasks['tree']['menu_local_task_test_tasks_settings']['weight'] = 0;
+    $local_tasks['tree']['menu_local_task_test_tasks_edit']['weight'] = 20 + 1e-6;
+    $local_tasks['tree']['menu_local_task_test_tasks_view.tab']['weight'] = 2e-6;
+    $local_tasks['tree']['menu_local_task_test_tasks_view.tab']['children']['menu_local_task_test_tasks_view_child1']['weight'] = 3e-6;
+    $local_tasks['tree']['menu_local_task_test_tasks_view.tab']['children']['menu_local_task_test_tasks_view_child2']['weight'] = 4e-6;
     return $local_tasks;
   }
 
