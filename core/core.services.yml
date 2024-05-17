@@ -639,9 +639,12 @@ services:
   default_plugin_manager:
     abstract: true
     arguments: ['@container.namespaces', '@cache.discovery', '@module_handler']
+  hook_event_dispatcher:
+    class: Drupal\Core\Extension\HookEventDispatcher
+    arguments: ['@event_dispatcher', '%hook_implementations%']
   module_handler:
     class: Drupal\Core\Extension\ModuleHandler
-    arguments: ['%app.root%', '%container.modules%', '@cache.bootstrap']
+    arguments: ['%app.root%', '%container.modules%', '@cache.bootstrap', '@hook_event_dispatcher']
     tags:
       - { name: needs_destruction }
   Drupal\Core\Extension\ModuleHandlerInterface: '@module_handler'
