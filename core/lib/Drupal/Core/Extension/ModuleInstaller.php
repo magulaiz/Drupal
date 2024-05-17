@@ -241,7 +241,7 @@ class ModuleInstaller implements ModuleInstallerInterface {
         \Drupal::service('extension.list.module')->reset();
 
         // Update the kernel to include it.
-        $this->updateKernel($module_filenames);
+        $this->updateKernel($module_filenames, $module_data);
 
         // Load the module's .module and .install files.
         $this->moduleHandler->load($module);
@@ -522,7 +522,7 @@ class ModuleInstaller implements ModuleInstallerInterface {
       \Drupal::service('extension.list.module')->reset();
 
       // Update the kernel to exclude the uninstalled modules.
-      $this->updateKernel($module_filenames);
+      $this->updateKernel($module_filenames, $module_data);
 
       // Clear plugin manager caches.
       \Drupal::getContainer()->get('plugin.cache_clearer')->clearCachedDefinitions();
@@ -600,10 +600,15 @@ class ModuleInstaller implements ModuleInstallerInterface {
   /**
    * Updates the kernel module list.
    *
-   * @param string[] $module_filenames
-   *   The list of installed modules.
+   * @param \Drupal\Core\Extension\Extension[] $module_filenames
+   *   An associated array containing the list of installed modules.
+   *   The key is a module name and the value is the relevant Extension
+   *   object.
+   * @param \Drupal\Core\Extension\Extension[] $module_data
+   *   Same structure for all possible modules as returned by
+   *   ExtensionList::getList(). Might contain already uninstalled modules.
    */
-  protected function updateKernel($module_filenames) {
+  protected function updateKernel($module_filenames, $module_data) {
     // Save current state of config installer, so it can be restored after the
     // container is rebuilt.
     /** @var \Drupal\Core\Config\ConfigInstallerInterface $config_installer */
@@ -615,7 +620,11 @@ class ModuleInstaller implements ModuleInstallerInterface {
     // in the service container. The $module_filenames argument is taken over as
     // %container.modules% parameter, which is passed to a fresh ModuleHandler
     // instance upon first retrieval.
-    $this->kernel->updateModules($module_filenames, $module_filenames);
+    $module_list = [];
+    foreach ($module_filenames as $module => $extension) {
+      $module_list[$module] = $module_data[$module]->sort;
+    }
+    $this->kernel->updateModules($module_list, $module_filenames);
     // After rebuilding the container we need to update the injected
     // dependencies.
     $container = $this->kernel->getContainer();
