@@ -11,11 +11,11 @@ use Drupal\Tests\system\Functional\Cache\AssertPageCacheContextsAndTagsTrait;
 use Drupal\Tests\system\Functional\Cache\PageCacheTagsTestBase;
 
 /**
- * Tests for \Drupal\navigation\Plugin\Block\ShortcutsNavigationBlock.
+ * Tests for \Drupal\navigation\Plugin\Block\NavigationShortcutsBlock.
  *
  * @group navigation
  */
-class ShortcutsNavigationBlockTest extends PageCacheTagsTestBase {
+class NavigationShortcutsBlockTest extends PageCacheTagsTestBase {
 
   use AssertPageCacheContextsAndTagsTrait;
 
