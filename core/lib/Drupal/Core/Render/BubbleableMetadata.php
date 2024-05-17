@@ -156,7 +156,7 @@ class BubbleableMetadata extends CacheableMetadata implements AttachmentsInterfa
     }
     // Optimize merging of placeholders: no need for deep merging.
     if (!empty($a['placeholders']) && !empty($b['placeholders'])) {
-      $placeholders = $a['placeholders'] + $b['placeholders'];
+      $placeholders = $b['placeholders'] + $a['placeholders'];
       // No need for re-merging them.
       unset($a['placeholders']);
       unset($b['placeholders']);
