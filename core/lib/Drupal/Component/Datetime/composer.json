@@ -1,4 +1,4 @@
-{
+core/lib/Drupal/Component/Datetime/composer.json{
     "name": "drupal/core-datetime",
     "description": "This class wraps the PHP DateTime class with more flexible initialization parameters, allowing a date to be created from an existing date object, a timestamp, a string with an unknown format, a string with a known format, or an array of date parts. It also adds an errors array and a __toString() method to the date object.",
     "keywords": [
@@ -20,5 +20,5 @@
             "This file was partially generated automatically. See: https://www.drupal.org/node/3293830"
         ]
     },
-    "minimum-stability": "beta"
+    "minimum-stability": "dev"
 }
