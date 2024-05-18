@@ -169,7 +169,7 @@ function template_preprocess_responsive_image(&$variables) {
   // width. For responsive images, we need largest breakpoint widths first, so
   // we need to reverse the order of these breakpoints.
   $breakpoints = array_reverse(\Drupal::service('breakpoint.manager')->getBreakpointsByGroup($responsive_image_style->getBreakpointGroup()));
-  foreach ($responsive_image_style->getKeyedImageStyleMappings() as $breakpoint_id => $multipliers) {
+  foreach (array_reverse($responsive_image_style->getKeyedImageStyleMappings()) as $breakpoint_id => $multipliers) {
     if (isset($breakpoints[$breakpoint_id])) {
       $variables['sources'][] = _responsive_image_build_source_attributes($variables, $breakpoints[$breakpoint_id], $multipliers);
     }
