@@ -74,9 +74,9 @@
 .toolbar-button--dark {
   color: var(--admin-toolbar-color-gray-990);
 }
-.toolbar-button--non-interactive:hover,
-.toolbar-button--non-interactive:focus,
-.toolbar-button--non-interactive:hover:focus {
+:is(span.toolbar-button, .toolbar-button--non-interactive):hover,
+:is(span.toolbar-button, .toolbar-button--non-interactive):focus,
+:is(span.toolbar-button, .toolbar-button--non-interactive):hover:focus {
   z-index: 1;
   cursor: auto;
   color: var(--admin-toolbar-color-gray-800);
@@ -114,7 +114,8 @@
 }
 @media (forced-colors: active) {
   [class*="toolbar-button--icon"]::before,
-  [class*="toolbar-button--icon"]:hover::before {
+  [class*="toolbar-button--icon"]:hover::before,
+  [class*="toolbar-button--icon"]:not(span):hover::before {
     background: canvastext;
   }
   a[class*="toolbar-button--icon"]::before,
