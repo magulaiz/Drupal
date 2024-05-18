@@ -52,7 +52,7 @@ class ConstraintsTest extends KernelTestBase {
     /** @var \Drupal\Core\Config\Schema\TypedConfigInterface $typed_config */
     $typed_config = $typed_config_manager->get('config_test.validation');
 
-    // Test valid hostnames.
+    // Test valid names.
     $typed_config->get('host')->setValue('example.com');
     $this->assertCount(0, $typed_config->validate());
 
@@ -62,7 +62,7 @@ class ConstraintsTest extends KernelTestBase {
     $typed_config->get('host')->setValue('default');
     $this->assertCount(0, $typed_config->validate());
 
-    // Test invalid hostnames.
+    // Test invalid names.
     $typed_config->get('host')->setValue('.example.com');
     $this->assertCount(1, $typed_config->validate());
 
