@@ -564,7 +564,7 @@ abstract class ExtensionList {
     }
 
     // Try to detect version from Composer.
-    if ($info['version'] == NULL) {
+    if (!isset($info['version']) || $info['version'] == NULL || empty($info['version'])) {
       $filename = $extension->getPathname();
       if ($filename) {
         $package_name = 'drupal/' . basename($filename, '.info.yml');
