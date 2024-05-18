@@ -40,10 +40,6 @@ class UriHostConstraintValidator extends ConstraintValidator {
       return TRUE;
     }
 
-    if (filter_var($value, \FILTER_VALIDATE_IP, \FILTER_FLAG_IPV4) !== FALSE) {
-      return TRUE;
-    }
-
     if (str_starts_with($value, '[') && str_ends_with($value, ']')) {
       $address = substr($value, 1, strlen($value) - 2);
       if (filter_var($address, \FILTER_VALIDATE_IP, \FILTER_FLAG_IPV6) !== FALSE) {

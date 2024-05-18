@@ -22,6 +22,6 @@ class UriHostConstraint extends SymfonyConstraint {
    *
    * @var string
    */
-  public string $message = "This value should conform to RFC 3986 URI host component.";
+  public string $message = 'This value should conform to RFC 3986 URI host component.';
 
 }
