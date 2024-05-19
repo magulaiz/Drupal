@@ -299,9 +299,8 @@ class TestDiscovery {
    *
    * @param string $classname
    *   The test classname.
-   * @param string $doc_comment
-   *   (optional) The class PHPDoc comment. If not passed in reflection will be
-   *   used but this is very expensive when parsing all the test classes.
+   * @param \PHPStan\BetterReflection\Reflection\ReflectionClass $reflectionClass
+   *   The reflected class.
    *
    * @return array
    *   An associative array containing:
@@ -336,18 +335,18 @@ class TestDiscovery {
 
     $info = [
       'name' => $classname,
-      'group' => $groupAttributes[0]->getArguments()[0],
+      'group' => $groupAttributes[0]->getArgumentsExpressions()[0],
       'type' => 'PHPUnit-' . static::getPhpunitTestSuite($classname),
     ];
 
     foreach ($groupAttributes as $groupAttribute) {
-      $info['groups'][] = $groupAttribute->getArguments()[0];
+      $info['groups'][] = $groupAttribute->getArgumentsExpressions()[0];
     }
 
     $groupCoversClass = $reflectionClass->getAttributesByName(CoversClass::class);
 
     if (!empty($groupCoversClass)) {
-      $info['description'] = 'Tests \\' . $groupCoversClass[0]->getArguments()[0] . '.';
+      $info['description'] = 'Tests \\' . $groupCoversClass[0]->getArgumentsExpressions()[0] . '.';
     }
     else {
       $info['description'] = static::parseTestClassSummary($reflectionClass->getDocComment() ?: '');
@@ -361,11 +360,8 @@ class TestDiscovery {
    *
    * @param string $classname
    *   The test classname.
-   * @param string $doc_comment
-   *   (optional) The class PHPDoc comment. If not passed in reflection will
-   *   be used.
-   * @param \ReflectionClass|null $reflection
-   *   (optional) The reflected class.
+   * @param \PHPStan\BetterReflection\Reflection\ReflectionClass $reflectionClass
+   *   The reflected class.
    *
    * @return array
    *   An associative array containing:
@@ -379,6 +375,11 @@ class TestDiscovery {
    *
    * @throws \Drupal\Core\Test\Exception\MissingGroupException
    *   If the class does not have a @group annotation.
+   *
+   * @deprecated in drupal:11.0.0 and is removed from drupal:12.0.0. Make sure
+   *   all tests classes have a #[Group()] attribute.
+   *
+   * @see https://www.drupal.org/node/3447698
    */
   protected static function getTestInfoFromAnnotation($classname, ReflectionClass $reflectionClass) {
     @trigger_error(__METHOD__ . '() is deprecated in drupal:11.0.0 and is removed from drupal:12.0.0. Make sure all tests classes have a #[Group()] attribute. See https://www.drupal.org/node/3447698', E_USER_DEPRECATED);
