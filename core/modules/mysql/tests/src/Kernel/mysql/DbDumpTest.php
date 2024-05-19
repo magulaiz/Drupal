@@ -112,6 +112,7 @@ class DbDumpTest extends DriverSpecificKernelTestBase {
     $account->save();
 
     // Create a path alias.
+    // This will create 'cache_data', 'menu_tree' & 'router' tables.
     $this->createPathAlias('/user/' . $account->id(), '/user/example');
 
     // Create a cache table (this will create 'cache_discovery').
@@ -127,6 +128,7 @@ class DbDumpTest extends DriverSpecificKernelTestBase {
       'config',
       'cache_bootstrap',
       'cache_config',
+      'cache_data',
       'cache_discovery',
       'cache_entity',
       'file_managed',
@@ -134,8 +136,10 @@ class DbDumpTest extends DriverSpecificKernelTestBase {
       'menu_link_content_data',
       'menu_link_content_revision',
       'menu_link_content_field_revision',
+      'menu_tree',
       'path_alias',
       'path_alias_revision',
+      'router',
       'user__roles',
       'users',
       'users_field_data',
