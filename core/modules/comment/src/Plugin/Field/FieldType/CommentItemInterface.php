@@ -32,4 +32,19 @@ interface CommentItemInterface {
    */
   const FORM_BELOW = 1;
 
+  /**
+   * Comment preview is disabled.
+   */
+  const PREVIEW_DISABLED = 0;
+
+  /**
+   * Comment preview is optional.
+   */
+  const PREVIEW_OPTIONAL = 1;
+
+  /**
+   * Comment preview is required.
+   */
+  const PREVIEW_REQUIRED = 2;
+
 }

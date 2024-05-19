@@ -7,6 +7,7 @@ namespace Drupal\Tests\comment\Functional;
 use Drupal\comment\CommentInterface;
 use Drupal\comment\CommentManagerInterface;
 use Drupal\comment\Entity\Comment;
+use Drupal\comment\Plugin\Field\FieldType\CommentItemInterface;
 
 /**
  * Tests comment statistics on nodes.
@@ -56,7 +57,7 @@ class CommentStatisticsTest extends CommentTestBase {
   public function testCommentNodeCommentStatistics(): void {
     $node_storage = $this->container->get('entity_type.manager')->getStorage('node');
     // Set comments to have subject and preview disabled.
-    $this->setCommentPreview(DRUPAL_DISABLED);
+    $this->setCommentPreview(CommentItemInterface::PREVIEW_DISABLED);
     $this->setCommentForm(TRUE);
     $this->setCommentSubject(FALSE);
     $this->setCommentSettings('default_mode', CommentManagerInterface::COMMENT_MODE_THREADED, 'Comment paging changed.');

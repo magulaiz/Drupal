@@ -48,7 +48,7 @@ class CommentItem extends FieldItemBase implements CommentItemInterface {
       'per_page' => 50,
       'form_location' => CommentItemInterface::FORM_BELOW,
       'anonymous' => CommentInterface::ANONYMOUS_MAYNOT_CONTACT,
-      'preview' => DRUPAL_OPTIONAL,
+      'preview' => CommentItemInterface::PREVIEW_OPTIONAL,
     ] + parent::defaultFieldSettings();
   }
 
@@ -144,9 +144,9 @@ class CommentItem extends FieldItemBase implements CommentItemInterface {
       '#title' => $this->t('Preview comment'),
       '#default_value' => $settings['preview'],
       '#options' => [
-        DRUPAL_DISABLED => $this->t('Disabled'),
-        DRUPAL_OPTIONAL => $this->t('Optional'),
-        DRUPAL_REQUIRED => $this->t('Required'),
+        CommentItemInterface::PREVIEW_DISABLED => $this->t('Disabled'),
+        CommentItemInterface::PREVIEW_OPTIONAL => $this->t('Optional'),
+        CommentItemInterface::PREVIEW_REQUIRED => $this->t('Required'),
       ],
     ];
 
