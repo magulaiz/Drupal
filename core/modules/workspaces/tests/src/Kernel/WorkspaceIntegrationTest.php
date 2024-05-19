@@ -5,9 +5,13 @@ declare(strict_types=1);
 namespace Drupal\Tests\workspaces\Kernel;
 
 use Drupal\Core\Entity\EntityStorageException;
+use Drupal\Core\Field\FieldStorageDefinitionInterface;
 use Drupal\Core\Form\FormState;
 use Drupal\Core\Session\AnonymousUserSession;
+use Drupal\entity_test\Entity\EntityTest;
 use Drupal\entity_test\Entity\EntityTestMulRevPub;
+use Drupal\field\Entity\FieldConfig;
+use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\language\Entity\ConfigurableLanguage;
 use Drupal\system\Form\SiteInformationForm;
@@ -826,6 +830,33 @@ class WorkspaceIntegrationTest extends KernelTestBase {
     // Check that the 'stage' workspace was not persisted by the workspace
     // manager.
     $this->assertFalse($this->workspaceManager->getActiveWorkspace());
+  }
+
+  /**
+   * Tests creating a sample image item in a non-default workspace.
+   */
+  public function testImageItemSampleValue(): void {
+    \Drupal::service('module_installer')->install(['image']);
+    $this->initializeWorkspacesModule();
+
+    FieldStorageConfig::create([
+      'entity_type' => 'entity_test',
+      'field_name' => 'image_test',
+      'type' => 'image',
+      'cardinality' => FieldStorageDefinitionInterface::CARDINALITY_UNLIMITED,
+    ])->save();
+    FieldConfig::create([
+      'entity_type' => 'entity_test',
+      'field_name' => 'image_test',
+      'bundle' => 'entity_test',
+      'settings' => [
+        'file_extensions' => 'jpg',
+      ],
+    ])->save();
+
+    $this->switchToWorkspace('stage');
+    $entity = EntityTest::create();
+    $entity->image_test->generateSampleItems();
   }
 
   /**
