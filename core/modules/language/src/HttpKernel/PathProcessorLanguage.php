@@ -11,7 +11,6 @@ use Drupal\language\ConfigurableLanguageManagerInterface;
 use Drupal\language\EventSubscriber\ConfigSubscriber;
 use Drupal\language\LanguageNegotiatorInterface;
 use Symfony\Component\HttpFoundation\Request;
-use Drupal\Core\Session\AccountInterface;
 
 /**
  * Processes the inbound path using path alias lookups.
@@ -69,16 +68,13 @@ class PathProcessorLanguage implements InboundPathProcessorInterface, OutboundPa
    *   The configurable language manager.
    * @param \Drupal\language\LanguageNegotiatorInterface $negotiator
    *   The language negotiator.
-   * @param \Drupal\Core\Session\AccountInterface $current_user
-   *   The current active user.
    * @param \Drupal\language\EventSubscriber\ConfigSubscriber $config_subscriber
    *   The language configuration event subscriber.
    */
-  public function __construct(ConfigFactoryInterface $config, ConfigurableLanguageManagerInterface $language_manager, LanguageNegotiatorInterface $negotiator, AccountInterface $current_user, ConfigSubscriber $config_subscriber) {
+  public function __construct(ConfigFactoryInterface $config, ConfigurableLanguageManagerInterface $language_manager, LanguageNegotiatorInterface $negotiator, ConfigSubscriber $config_subscriber) {
     $this->config = $config;
     $this->languageManager = $language_manager;
     $this->negotiator = $negotiator;
-    $this->negotiator->setCurrentUser($current_user);
     $this->configSubscriber = $config_subscriber;
   }
 

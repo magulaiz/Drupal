@@ -3,7 +3,6 @@
 namespace Drupal\language\EventSubscriber;
 
 use Drupal\Core\DrupalKernelInterface;
-use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\StringTranslation\Translator\TranslatorInterface;
 use Drupal\language\ConfigurableLanguageManagerInterface;
 use Drupal\language\LanguageNegotiatorInterface;
@@ -38,13 +37,6 @@ class LanguageRequestSubscriber implements EventSubscriberInterface {
   protected $translation;
 
   /**
-   * The current active user.
-   *
-   * @var \Drupal\Core\Session\AccountInterface
-   */
-  protected $currentUser;
-
-  /**
    * Constructs a LanguageRequestSubscriber object.
    *
    * @param \Drupal\language\ConfigurableLanguageManagerInterface $language_manager
@@ -53,14 +45,11 @@ class LanguageRequestSubscriber implements EventSubscriberInterface {
    *   The language negotiator.
    * @param \Drupal\Core\StringTranslation\Translator\TranslatorInterface $translation
    *   The translation service.
-   * @param \Drupal\Core\Session\AccountInterface $current_user
-   *   The current active user.
    */
-  public function __construct(ConfigurableLanguageManagerInterface $language_manager, LanguageNegotiatorInterface $negotiator, TranslatorInterface $translation, AccountInterface $current_user) {
+  public function __construct(ConfigurableLanguageManagerInterface $language_manager, LanguageNegotiatorInterface $negotiator, TranslatorInterface $translation) {
     $this->languageManager = $language_manager;
     $this->negotiator = $negotiator;
     $this->translation = $translation;
-    $this->currentUser = $current_user;
   }
 
   /**
@@ -86,7 +75,6 @@ class LanguageRequestSubscriber implements EventSubscriberInterface {
    * Sets the language for config overrides on the language manager.
    */
   private function setLanguageOverrides() {
-    $this->negotiator->setCurrentUser($this->currentUser);
     if ($this->languageManager instanceof ConfigurableLanguageManagerInterface) {
       $this->languageManager->setNegotiator($this->negotiator);
       $this->languageManager->setConfigOverrideLanguage($this->languageManager->getCurrentLanguage());
