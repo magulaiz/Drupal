@@ -8,6 +8,13 @@ appear after main classes #}
   ]
 %}
 <{{html_tag|default('button')}}{{ attributes.addClass(classes) }} data-index-text="{{ text|first|lower }}">
+  {% if has_abbreviation %}
+    <span class="toolbar-button__abbreviation" aria-hidden="true">
+      <span class="toolbar-button__abbreviation-inner">
+        {{- text|render|trim|slice(0,2)|join('')|upper -}}
+      </span>
+    </span>
+  {% endif %}
   {% if avatar %}
     <span class="toolbar-button__avatar">{{~ avatar ~}}</span>
   {% endif %}

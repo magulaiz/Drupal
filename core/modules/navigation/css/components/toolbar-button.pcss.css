@@ -37,6 +37,18 @@
   line-height: var(--admin-toolbar-line-height-info-sm);
   gap: calc(0.5 * var(--admin-toolbar-rem));
 
+  &::before {
+    display: block;
+    flex-shrink: 0;
+    width: calc(1.25 * var(--admin-toolbar-rem));
+    height: calc(1.25 * var(--admin-toolbar-rem));
+    background-color: currentColor;
+    mask-repeat: no-repeat;
+    mask-position: center center;
+    mask-size: 100% auto;
+    mask-image: var(--icon);
+  }
+
   &:has(+ .toolbar-popover__wrapper .is-active) {
     color: var(--admin-toolbar-color-gray-950);
     background-color: var(--admin-toolbar-color-gray-050);
@@ -66,6 +78,20 @@
     color: var(--admin-toolbar-color-blue-700);
     background-color: var(--admin-toolbar-color-gray-050);
   }
+
+  @media (--forced-colors) {
+    &::before,
+    &:hover::before {
+      background: canvastext;
+    }
+
+    &a {
+      &::before,
+      &:hover::before {
+        background: linktext;
+      }
+    }
+  }
 }
 
 .toolbar-button--large {
@@ -87,44 +113,6 @@
     color: var(--admin-toolbar-color-gray-800);
     outline: 0;
     background-color: transparent;
-  }
-}
-
-/* Class starts with `toolbar-button--icon`  */
-[class*="toolbar-button--icon"] {
-  --icon: url(../../assets/icons/basic.svg); /* Default icon, aka --basic */
-
-  padding-inline: calc(0.75 * var(--admin-toolbar-rem));
-
-  &::before {
-    display: block;
-    flex-shrink: 0;
-    inline-size: var(--admin-toolbar-space-20);
-    block-size: var(--admin-toolbar-space-20);
-    content: "";
-    background-color: currentColor;
-    mask-repeat: no-repeat;
-    mask-position: center center;
-    mask-size: 100% auto;
-    mask-image: var(--icon);
-  }
-
-  &:hover::before {
-    background-color: var(--admin-toolbar-color-blue-600);
-  }
-
-  @media (--forced-colors) {
-    &::before,
-    &:hover::before {
-      background: canvastext;
-    }
-
-    &a {
-      &::before,
-      &:hover::before {
-        background: linktext;
-      }
-    }
   }
 }
 
@@ -210,6 +198,45 @@
   }
 }
 
+.toolbar-button__abbreviation {
+  display: flex;
+  align-items: center;
+  /* Set the font smaller so it fits when the menu is collapsed. */
+  font-size: calc(0.75 * var(--admin-toolbar-rem));
+  /* Reset the height to the same as the surrounding text,
+  to prevent layout shift on menu collapse. 1.2 is to match the line height. */
+  block-size: calc(1.2 * var(--admin-toolbar-rem));
+}
+
+/* Hide the default two letter abbreviation for items with icons. */
+.toolbar-button--icon--back,
+.toolbar-button--icon--burger,
+.toolbar-button--icon--cross,
+.toolbar-button--icon--system-themes-page,
+.toolbar-button--icon--navigation-blocks,
+.toolbar-button--icon--shortcuts,
+.toolbar-button--icon--system-admin-config,
+.toolbar-button--icon--navigation-content,
+.toolbar-button--icon--navigation-create,
+.toolbar-button--icon--system-modules-list,
+.toolbar-button--icon--navigation-files,
+.toolbar-button--icon--help,
+.toolbar-button--icon--navigation-media,
+.toolbar-button--icon--pencil,
+.toolbar-button--icon--preview,
+.toolbar-button--icon--entity-user-collection,
+.toolbar-button--icon--system-admin-reports,
+.toolbar-button--icon--system-admin-structure,
+.toolbar-button--icon--sidebar-toggle,
+.toolbar-button--icon--user {
+  &::before {
+    content: "";
+  }
+  .toolbar-button__abbreviation {
+    display: none;
+  }
+}
+
 .toolbar-button--icon--back {
   --icon: url(../../assets/icons/arrow-left.svg);
 }
@@ -284,6 +311,28 @@
 
 .toolbar-button--icon--user {
   --icon: url(../../assets/icons/user.svg);
+}
+
+.toolbar-button--icon--sidebar-toggle[aria-expanded="true"],
+.toolbar-button--icon--sidebar-toggle-end[aria-expanded="false"] {
+  --icon: url(../../assets/icons/toggle-left.svg);
+}
+
+/* RTL collapse sidebar */
+[dir="rtl"] .toolbar-button--icon--sidebar-toggle[aria-expanded="true"],
+[dir="rtl"] .toolbar-button--icon--sidebar-toggle-end[aria-expanded="false"] {
+  --icon: url(../../assets/icons/toggle-right.svg);
+}
+
+.toolbar-button--icon--sidebar-toggle[aria-expanded="false"],
+.toolbar-button--icon--sidebar-toggle-end[aria-expanded="true"] {
+  --icon: url(../../assets/icons/toggle-right.svg);
+}
+
+/* RTL expand sidebar */
+[dir="rtl"] .toolbar-button--icon--sidebar-toggle[aria-expanded="false"],
+[dir="rtl"] .toolbar-button--icon--sidebar-toggle-end[aria-expanded="true"] {
+  --icon: url(../../assets/icons/toggle-left.svg);
 }
 
 html:not([data-admin-toolbar="expanded"]) {
