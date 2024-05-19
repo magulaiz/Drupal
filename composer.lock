@@ -495,7 +495,7 @@
             "dist": {
                 "type": "path",
                 "url": "core",
-                "reference": "ff1a97312bafb66b9f39cc05fa161d99956a15be"
+                "reference": "3cde1e69d0bc6b0da613a3ee90df7d37335977fc"
             },
             "require": {
                 "asm89/stack-cors": "^2.1",
