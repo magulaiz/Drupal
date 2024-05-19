@@ -6,6 +6,7 @@ namespace Drupal\Tests\link\Kernel\Plugin\migrate\field\d7;
 
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\migrate\Plugin\MigrationInterface;
+use Drupal\link\LinkItemInterface;
 use Drupal\link\Plugin\migrate\field\d7\LinkField;
 use Prophecy\Argument;
 
@@ -63,9 +64,9 @@ class LinkFieldTest extends KernelTestBase {
       'source' => 'settings/title',
       'bypass' => TRUE,
       'map' => [
-        'disabled' => DRUPAL_DISABLED,
-        'optional' => DRUPAL_OPTIONAL,
-        'required' => DRUPAL_REQUIRED,
+        'disabled' => LinkItemInterface::TITLE_DISABLED,
+        'optional' => LinkItemInterface::TITLE_OPTIONAL,
+        'required' => LinkItemInterface::TITLE_REQUIRED,
       ],
     ];
     $this->assertSame($expected, $this->migration->getProcess());

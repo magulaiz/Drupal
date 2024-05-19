@@ -243,7 +243,7 @@ class LinkWidget extends WidgetBase {
     }
 
     // Make uri required on the front-end when title filled-in.
-    if (!$this->isDefaultValueWidget($form_state) && $this->getFieldSetting('title') !== DRUPAL_DISABLED && !$element['uri']['#required']) {
+    if (!$this->isDefaultValueWidget($form_state) && $this->getFieldSetting('title') !== LinkItemInterface::TITLE_DISABLED && !$element['uri']['#required']) {
       $parents = $element['#field_parents'];
       $parents[] = $this->fieldDefinition->getName();
       $selector = $root = array_shift($parents);
@@ -262,8 +262,8 @@ class LinkWidget extends WidgetBase {
       '#placeholder' => $this->getSetting('placeholder_title'),
       '#default_value' => $items[$delta]->title ?? NULL,
       '#maxlength' => 255,
-      '#access' => $this->getFieldSetting('title') != DRUPAL_DISABLED,
-      '#required' => $this->getFieldSetting('title') === DRUPAL_REQUIRED && $element['#required'],
+      '#access' => $this->getFieldSetting('title') != LinkItemInterface::TITLE_DISABLED,
+      '#required' => $this->getFieldSetting('title') === LinkItemInterface::TITLE_REQUIRED && $element['#required'],
     ];
     // Post-process the title field to make it conditionally required if URL is
     // non-empty. Omit the validation on the field edit form, since the field
@@ -271,7 +271,7 @@ class LinkWidget extends WidgetBase {
     //
     // Validate that title field is filled out (regardless of uri) when it is a
     // required field.
-    if (!$this->isDefaultValueWidget($form_state) && $this->getFieldSetting('title') === DRUPAL_REQUIRED) {
+    if (!$this->isDefaultValueWidget($form_state) && $this->getFieldSetting('title') === LinkItemInterface::TITLE_REQUIRED) {
       $element['#element_validate'][] = [static::class, 'validateTitleElement'];
       $element['#element_validate'][] = [static::class, 'validateTitleNoLink'];
 
@@ -293,7 +293,7 @@ class LinkWidget extends WidgetBase {
 
     // Ensure that a URI is always entered when an optional title field is
     // submitted.
-    if (!$this->isDefaultValueWidget($form_state) && $this->getFieldSetting('title') == DRUPAL_OPTIONAL) {
+    if (!$this->isDefaultValueWidget($form_state) && $this->getFieldSetting('title') == LinkItemInterface::TITLE_OPTIONAL) {
       $element['#element_validate'][] = [static::class, 'validateTitleNoLink'];
     }
 
@@ -310,7 +310,7 @@ class LinkWidget extends WidgetBase {
     if ($this->fieldDefinition->getFieldStorageDefinition()->getCardinality() == 1) {
       // If the link title is disabled, use the field definition label as the
       // title of the 'uri' element.
-      if ($this->getFieldSetting('title') == DRUPAL_DISABLED) {
+      if ($this->getFieldSetting('title') == LinkItemInterface::TITLE_DISABLED) {
         $element['uri']['#title'] = $element['#title'];
         // By default the field description is added to the title field. Since
         // the title field is disabled, we add the description, if given, to the
@@ -390,7 +390,7 @@ class LinkWidget extends WidgetBase {
       '#description' => $this->t('Text that will be shown inside the field until a value is entered. This hint is usually a sample value or a brief description of the expected format.'),
       '#states' => [
         'invisible' => [
-          ':input[name="instance[settings][title]"]' => ['value' => DRUPAL_DISABLED],
+          ':input[name="instance[settings][title]"]' => ['value' => LinkItemInterface::TITLE_DISABLED],
         ],
       ],
     ];

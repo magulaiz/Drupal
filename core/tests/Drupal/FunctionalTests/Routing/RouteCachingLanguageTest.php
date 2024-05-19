@@ -89,7 +89,7 @@ class RouteCachingLanguageTest extends BrowserTestBase {
       'field_storage' => $field_storage,
       'bundle' => 'page',
       'settings' => [
-        'title' => DRUPAL_OPTIONAL,
+        'title' => LinkItemInterface::TITLE_OPTIONAL,
         'link_type' => LinkItemInterface::LINK_GENERIC,
       ],
     ]);

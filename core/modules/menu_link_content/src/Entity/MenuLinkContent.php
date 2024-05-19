@@ -331,7 +331,7 @@ class MenuLinkContent extends EditorialContentEntityBase implements MenuLinkCont
       ->setRequired(TRUE)
       ->setSettings([
         'link_type' => LinkItemInterface::LINK_GENERIC,
-        'title' => DRUPAL_DISABLED,
+        'title' => LinkItemInterface::TITLE_DISABLED,
       ])
       ->setDisplayOptions('form', [
         'type' => 'link_default',

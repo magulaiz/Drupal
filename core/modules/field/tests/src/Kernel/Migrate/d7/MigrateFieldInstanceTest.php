@@ -6,6 +6,7 @@ namespace Drupal\Tests\field\Kernel\Migrate\d7;
 
 use Drupal\field\Entity\FieldConfig;
 use Drupal\field\FieldConfigInterface;
+use Drupal\link\LinkItemInterface;
 use Drupal\Tests\migrate_drupal\Kernel\d7\MigrateDrupal7TestBase;
 
 /**
@@ -147,9 +148,9 @@ class MigrateFieldInstanceTest extends MigrateDrupal7TestBase {
     $this->assertEntity('comment.comment_node_a_thirty_two_char.comment_body', 'Comment', 'text_long', TRUE, FALSE);
     $this->assertEntity('user.user.field_file', 'File', 'file', FALSE, FALSE);
 
-    $this->assertLinkFields('node.test_content_type.field_link', DRUPAL_OPTIONAL);
-    $this->assertLinkFields('node.article.field_link', DRUPAL_DISABLED);
-    $this->assertLinkFields('node.blog.field_link', DRUPAL_REQUIRED);
+    $this->assertLinkFields('node.test_content_type.field_link', LinkItemInterface::TITLE_OPTIONAL);
+    $this->assertLinkFields('node.article.field_link', LinkItemInterface::TITLE_DISABLED);
+    $this->assertLinkFields('node.blog.field_link', LinkItemInterface::TITLE_REQUIRED);
 
     $this->assertEntityReferenceFields('node.article.field_tags', ['tags']);
     $this->assertEntityReferenceFields('node.forum.taxonomy_forums', ['sujet_de_discussion']);
