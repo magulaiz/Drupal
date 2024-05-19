@@ -2,11 +2,16 @@
 
 namespace Drupal\Core\Test;
 
-use Drupal\Component\Annotation\Doctrine\StaticReflectionParser;
-use Drupal\Component\Annotation\Reflection\MockFileFinder;
 use Drupal\Component\Utility\NestedArray;
 use Drupal\Core\Extension\ExtensionDiscovery;
 use Drupal\Core\Test\Exception\MissingGroupException;
+use PHPStan\BetterReflection\BetterReflection;
+use PHPStan\BetterReflection\Reflection\ReflectionClass;
+use PHPStan\BetterReflection\Reflector\DefaultReflector;
+use PHPStan\BetterReflection\Reflector\Exception\IdentifierNotFound;
+use PHPStan\BetterReflection\SourceLocator\Type\SingleFileSourceLocator;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\Group;
 
 /**
  * Discovers available tests.
@@ -153,21 +158,32 @@ class TestDiscovery {
     // path names; a namespace/classname mismatch will throw an exception.
     $this->classLoader->addClassMap($classmap);
 
+    $astLocator = (new BetterReflection())->astLocator();
     foreach ($classmap as $classname => $pathname) {
-      $finder = MockFileFinder::create($pathname);
-      $parser = new StaticReflectionParser($classname, $finder, TRUE);
+      $reflector = new DefaultReflector(new SingleFileSourceLocator($pathname, $astLocator));
+
       try {
-        $info = static::getTestInfo($classname, $parser->getDocComment());
+        $reflectionClass = $reflector->reflectClass($classname);
+      }
+      catch (IdentifierNotFound $e) {
+        // There are classes that end up here (for example, fixtures, traits), that
+        // cannot be reflected. Just skip it.
+        continue;
+      }
+
+      try {
+        $info = static::getTestInfo($classname, $reflectionClass);
       }
       catch (MissingGroupException $e) {
         // If the class name ends in Test and is not a migrate table dump.
         if (str_ends_with($classname, 'Test') && !str_contains($classname, 'migrate_drupal\Tests\Table')) {
           throw $e;
         }
-        // If the class is @group annotation just skip it. Most likely it is an
-        // abstract class, trait or test fixture.
+        // If the class has no group info at this stage (for example abstract
+        // classes), just skip it.
         continue;
       }
+
       foreach ($info['groups'] as $group) {
         $list[$group][$classname] = $info;
       }
@@ -294,15 +310,79 @@ class TestDiscovery {
    *   - group: The test's first @group (parsed from PHPDoc annotations).
    *   - groups: All of the test's @group annotations, as an array (parsed from
    *     PHPDoc annotations).
+   *   - type: The test's type (for PHPUnit this corresponds to the test suite
+   *     the test is part of).
+   *
+   * @throws \Drupal\Core\Test\Exception\MissingGroupException
+   *   If the class does not have a #[Group()] attribute or a @group
+   *   annotation.
+   */
+  public static function getTestInfo(string $classname, ReflectionClass $reflectionClass) {
+    $groupAttributes = $reflectionClass->getAttributesByName(Group::class);
+
+    // @todo Remove once all test annotations are removed.
+    if (empty($groupAttributes)) {
+      // @phpstan-ignore-next-line
+      return self::getTestInfoFromAnnotation($classname, $reflectionClass);
+    }
+
+    // Concrete tests must have a group.
+    // @todo Checking $groupAttributes emptiness is redundant here for PHPStan,
+    //   but once the check above is removed, it will become relevant.
+    // @phpstan-ignore-next-line
+    if (empty($groupAttributes)) {
+      throw new MissingGroupException(sprintf('Missing #[Group] attribute in %s', $classname));
+    }
+
+    $info = [
+      'name' => $classname,
+      'group' => $groupAttributes[0]->getArguments()[0],
+      'type' => 'PHPUnit-' . static::getPhpunitTestSuite($classname),
+    ];
+
+    foreach ($groupAttributes as $groupAttribute) {
+      $info['groups'][] = $groupAttribute->getArguments()[0];
+    }
+
+    $groupCoversClass = $reflectionClass->getAttributesByName(CoversClass::class);
+
+    if (!empty($groupCoversClass)) {
+      $info['description'] = 'Tests \\' . $groupCoversClass[0]->getArguments()[0] . '.';
+    }
+    else {
+      $info['description'] = static::parseTestClassSummary($reflectionClass->getDocComment() ?: '');
+    }
+
+    return $info;
+  }
+
+  /**
+   * Retrieves information about a test class from docblock annotations.
+   *
+   * @param string $classname
+   *   The test classname.
+   * @param string $doc_comment
+   *   (optional) The class PHPDoc comment. If not passed in reflection will
+   *   be used.
+   * @param \ReflectionClass|null $reflection
+   *   (optional) The reflected class.
+   *
+   * @return array
+   *   An associative array containing:
+   *   - name: The test class name.
+   *   - description: The test (PHPDoc) summary.
+   *   - group: The test's first @group (parsed from PHPDoc annotations).
+   *   - groups: All of the test's @group annotations, as an array (parsed from
+   *     PHPDoc annotations).
+   *   - type: The test's type (for PHPUnit this corresponds to the test suite
+   *     the test is part of).
    *
    * @throws \Drupal\Core\Test\Exception\MissingGroupException
    *   If the class does not have a @group annotation.
    */
-  public static function getTestInfo($classname, $doc_comment = NULL) {
-    if ($doc_comment === NULL) {
-      $reflection = new \ReflectionClass($classname);
-      $doc_comment = $reflection->getDocComment();
-    }
+  protected static function getTestInfoFromAnnotation($classname, ReflectionClass $reflectionClass) {
+    @trigger_error(__METHOD__ . '() is deprecated in drupal:11.0.0 and is removed from drupal:12.0.0. Make sure all tests classes have a #[Group()] attribute. See https://www.drupal.org/node/3447698', E_USER_DEPRECATED);
+    $doc_comment = $reflectionClass->getDocComment() ?? '';
     $info = [
       'name' => $classname,
     ];
