@@ -422,7 +422,7 @@ abstract class ResourceTestBase extends BrowserTestBase {
       $this->assertSame($expected_dynamic_page_cache_header_value, $response->getHeader('X-Drupal-Dynamic-Cache')[0]);
     }
     else {
-      $this->assertFalse($response->hasHeader('X-Drupal-Dynamic-Cache'));
+      $this->assertFalse($response->hasHeader('X-Drupal-Dynamic-Cache'), 'The X-Drupal-Dynamic-Cache header was not set.');
     }
   }
 
