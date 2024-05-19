@@ -119,9 +119,9 @@ class NodeTypeForm extends BundleEntityFormBase {
       '#title' => $this->t('Preview before submitting'),
       '#default_value' => $type->getPreviewMode(),
       '#options' => [
-        DRUPAL_DISABLED => $this->t('Disabled'),
-        DRUPAL_OPTIONAL => $this->t('Optional'),
-        DRUPAL_REQUIRED => $this->t('Required'),
+        NodeTypeInterface::PREVIEW_DISABLED => $this->t('Disabled'),
+        NodeTypeInterface::PREVIEW_OPTIONAL => $this->t('Optional'),
+        NodeTypeInterface::PREVIEW_REQUIRED => $this->t('Required'),
       ],
     ];
     $form['submission']['help'] = [

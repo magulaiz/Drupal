@@ -48,8 +48,8 @@ node.type.*:
       type: integer
       label: 'Preview before submitting'
       constraints:
-        # These are the values of the DRUPAL_DISABLED, DRUPAL_OPTIONAL, and
-        # DRUPAL_REQUIRED constants.
+        # These are the values of the PREVIEW_DISABLED, PREVIEW_OPTIONAL, and
+        # PREVIEW_REQUIRED constants in NodeTypeInterface.
         # @see \Drupal\node\NodeTypeForm::form()
         Choice: [0, 1, 2]
     display_submitted:

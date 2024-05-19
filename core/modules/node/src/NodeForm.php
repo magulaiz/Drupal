@@ -224,11 +224,11 @@ class NodeForm extends ContentEntityForm {
     $node = $this->entity;
     $preview_mode = $node->type->entity->getPreviewMode();
 
-    $element['submit']['#access'] = $preview_mode != DRUPAL_REQUIRED || $form_state->get('has_been_previewed');
+    $element['submit']['#access'] = $preview_mode != NodeTypeInterface::PREVIEW_REQUIRED || $form_state->get('has_been_previewed');
 
     $element['preview'] = [
       '#type' => 'submit',
-      '#access' => $preview_mode != DRUPAL_DISABLED && ($node->access('create') || $node->access('update')),
+      '#access' => $preview_mode != NodeTypeInterface::PREVIEW_DISABLED && ($node->access('create') || $node->access('update')),
       '#value' => $this->t('Preview'),
       '#weight' => 20,
       '#submit' => ['::submitForm', '::preview'],

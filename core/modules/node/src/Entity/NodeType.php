@@ -101,7 +101,7 @@ class NodeType extends ConfigEntityBundleBase implements NodeTypeInterface {
    *
    * @var int
    */
-  protected $preview_mode = DRUPAL_OPTIONAL;
+  protected $preview_mode = NodeTypeInterface::PREVIEW_OPTIONAL;
 
   /**
    * Display setting for author and date Submitted by post information.
