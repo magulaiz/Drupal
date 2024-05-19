@@ -310,9 +310,6 @@ class DataDefinition implements DataDefinitionInterface, \ArrayAccess {
 
   /**
    * {@inheritdoc}
-   *
-   * This is for BC support only.
-   * @todo: Remove in https://www.drupal.org/node/1928868.
    */
   public function offsetExists($offset): bool {
     // PHP's array access does not work correctly with isset(), so we have to
@@ -322,9 +319,6 @@ class DataDefinition implements DataDefinitionInterface, \ArrayAccess {
 
   /**
    * {@inheritdoc}
-   *
-   * This is for BC support only.
-   * @todo: Remove in https://www.drupal.org/node/1928868.
    */
   public function &offsetGet($offset): mixed {
     if (!isset($this->definition[$offset])) {
@@ -335,9 +329,6 @@ class DataDefinition implements DataDefinitionInterface, \ArrayAccess {
 
   /**
    * {@inheritdoc}
-   *
-   * This is for BC support only.
-   * @todo: Remove in https://www.drupal.org/node/1928868.
    */
   public function offsetSet($offset, $value): void {
     $this->definition[$offset] = $value;
@@ -345,9 +336,6 @@ class DataDefinition implements DataDefinitionInterface, \ArrayAccess {
 
   /**
    * {@inheritdoc}
-   *
-   * This is for BC support only.
-   * @todo: Remove in https://www.drupal.org/node/1928868.
    */
   public function offsetUnset($offset): void {
     unset($this->definition[$offset]);
