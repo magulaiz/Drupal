@@ -1064,15 +1064,14 @@ mailer_dsn.options.*:
     constraints:
       NotNull: []
 
-mailer_dsn.options.native:
-  type: mapping
-  label: 'Native transport options'
-  mapping: {}
-
 mailer_dsn.options.null:
   type: mapping
   label: 'Null transport options'
   mapping: {}
+
+mailer_dsn.options.native:
+  type: mailer_dsn.options.null
+
 
 mailer_dsn.options.sendmail:
   type: mapping
