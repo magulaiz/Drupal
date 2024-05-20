@@ -9,6 +9,7 @@ use Drupal\Core\EventSubscriber\ExceptionLoggingSubscriberInterface;
 use Drupal\Core\Utility\Error;
 use Drupal\jsonapi\Exception\UnprocessableHttpEntityException;
 use Psr\Log\LoggerInterface;
+use Psr\Log\LogLevel;
 use Symfony\Component\HttpKernel\Event\ExceptionEvent;
 use Symfony\Component\Validator\ConstraintViolation;
 
@@ -37,13 +38,11 @@ final class JsonapiExceptionLoggingSubscriber implements ExceptionLoggingSubscri
    *   The exception.
    */
   protected function on422(UnprocessableHttpEntityException $exception): void {
-    [$message, $context] = Error::decodeExceptionWithMessage($exception);
-    $this->logger->warning(
-      $message,
-      NestedArray::mergeDeep(
-        $context,
-        ['violations' => $this->normalizeValidationConstraintViolations($exception->getViolations())]
-      )
+    Error::logException(
+      $this->logger,
+      $exception,
+      additional_variables: ['violations' => $this->normalizeValidationConstraintViolations($exception->getViolations())],
+      level: LogLevel::WARNING,
     );
   }
 
