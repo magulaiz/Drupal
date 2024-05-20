@@ -448,8 +448,6 @@ class EntityResource {
       // Drop the last result.
       array_pop($results);
     }
-    // Each item of the collection data contains an array with 'entity' and
-    // 'access' elements.
     $collection_data = $this->loadEntitiesWithAccess($storage, $results, $request->get(ResourceVersionRouteEnhancer::WORKING_COPIES_REQUESTED, FALSE));
     $primary_data = new ResourceObjectData($collection_data);
     $primary_data->setHasNextPage($has_next_page);
@@ -1192,7 +1190,6 @@ class EntityResource {
    *   An array of loaded entities and/or an access exceptions.
    */
   protected function loadEntitiesWithAccess(EntityStorageInterface $storage, array $ids, $load_latest_revisions) {
-    $output = [];
     if ($load_latest_revisions) {
       assert($storage instanceof RevisionableStorageInterface);
       $entities = $storage->loadMultipleRevisions(array_keys($ids));
@@ -1200,10 +1197,10 @@ class EntityResource {
     else {
       $entities = $storage->loadMultiple($ids);
     }
-    foreach ($entities as $entity) {
-      $output[$entity->id()] = $this->entityAccessChecker->getAccessCheckedResourceObject($entity);
-    }
-    return array_values($output);
+    return array_map(
+      [$this->entityAccessChecker, 'getAccessCheckedResourceObject'],
+      $entities
+    );
   }
 
   /**
