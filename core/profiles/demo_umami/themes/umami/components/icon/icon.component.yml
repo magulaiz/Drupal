@@ -27,4 +27,3 @@ props:
 # is <module-or-theme-machineName>:<component-machineName>. Note that only themes
 # can override components. This will not work in modules.
 replaces: 'navigation:icon'
-

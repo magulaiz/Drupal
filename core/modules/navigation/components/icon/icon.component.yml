@@ -22,4 +22,3 @@ props:
     icon:
       type: string
       description: Icon Name
-
