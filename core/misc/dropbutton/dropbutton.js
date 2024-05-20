@@ -83,12 +83,14 @@
    */
   function dropbuttonClickHandler(e) {
     e.preventDefault();
-    const $wrapper = $(e.target).closest('.dropbutton-wrapper');
-    $wrapper.toggleClass('open');
-    if ($wrapper.hasClass('open')) {
+    const $buttonToOpen = $(e.target).closest(
+      '.dropbutton-wrapper:not(".open")',
+    );
+    $('.dropbutton-wrapper.open').find('.dropbutton__toggle').attr('aria-expanded', 'false');
+    $('.dropbutton-wrapper.open').removeClass('open');
+    if ($buttonToOpen) {
+      $buttonToOpen.addClass('open');
       $(e.target).attr('aria-expanded', 'true');
-    } else {
-      $(e.target).attr('aria-expanded', 'false');
     }
   }
 
@@ -107,7 +109,7 @@
         // Adds the delegated handler that will toggle dropdowns on click.
         const body = once('dropbutton-click', 'body');
         if (body.length) {
-          $(body).on('click', '.dropbutton-toggle', dropbuttonClickHandler);
+          $(body).on('click', dropbuttonClickHandler);
         }
         // Initialize all buttons.
         dropbuttons.forEach((dropbutton, index) => {
