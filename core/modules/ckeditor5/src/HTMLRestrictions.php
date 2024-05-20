@@ -1115,7 +1115,7 @@ final class HTMLRestrictions {
   }
 
   /**
-   * Extracts the subset of plain tags (attributes omitted)
+   * Extracts the subset of plain tags (attributes omitted) from allowed elements.
    *
    * From allowed elements.
    *
@@ -1335,11 +1335,7 @@ final class HTMLRestrictions {
           $allowed_attribute_value = is_array($value)
             ? ['regexp' => ['pattern' => '/^(' . implode('|', str_replace('*', '.*', $value)) . ')$/']]
             : $value;
-          // If the attribute name is 'class'
-          // or contains a wildcard as 'class*',
-          // then allow all classes.
-          // @see https://www.drupal.org/project/drupal/issues/3410100
-          if ($name === 'class' || $name === 'class*') {
+          if ($name === 'class') {
             $to_allow['classes'] = $allowed_attribute_value;
             continue;
           }
