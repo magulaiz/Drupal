@@ -179,6 +179,24 @@
             toggleTriggers(state);
             localStorage.setItem('Drupal.navigation.sidebarExpanded', state);
           });
+
+          // Add keyup event listener for the 'Esc' key to collapse the sidebar.
+          trigger.addEventListener('keyup', (e) => {
+            if (e.key === 'Escape') {
+              const state = false;
+              trigger.dispatchEvent(
+                new CustomEvent(HTML_TRIGGER_EVENT, {
+                  bubbles: true,
+                  detail: {
+                    state,
+                    manual: true,
+                  },
+                }),
+              );
+              toggleTriggers(state);
+              localStorage.setItem('Drupal.navigation.sidebarExpanded', state);
+            }
+          });
         });
       },
     };
