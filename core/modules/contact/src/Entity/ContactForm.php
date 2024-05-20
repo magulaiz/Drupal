@@ -83,7 +83,7 @@ class ContactForm extends ConfigEntityBundleBase implements ContactFormInterface
    *
    * @var string|null
    */
-  protected $message = NULL;
+  protected ?string $message = NULL;
 
   /**
    * List of recipient email addresses.
@@ -97,14 +97,14 @@ class ContactForm extends ConfigEntityBundleBase implements ContactFormInterface
    *
    * @var string
    */
-  protected $redirect;
+  protected ?string $redirect = NULL;
 
   /**
    * An auto-reply message.
    *
    * @var string|null
    */
-  protected $reply = NULL;
+  protected ?string $reply = NULL;
 
   /**
    * The weight of the category.
