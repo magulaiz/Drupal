@@ -13,7 +13,9 @@
 
     const openMenu = () => {
       $target.toggleClass('is-open');
-      $target.find('button').attr('aria-expanded', $target.hasClass('is-open'));
+      $target
+        .find('button')[0]
+        .setAttribute('aria-expanded', $target.hasClass('is-open'));
     };
 
     const toggleOrder = (reset) => {
@@ -56,11 +58,13 @@
         const isHorizontal =
           tab.getAttribute('data-width') <= $tab.outerWidth();
         $tab.toggleClass('is-horizontal', isHorizontal);
-        $tab.find('button').attr('aria-expanded', null);
+        if ($tab.find('button')[0]) {
+          $tab.find('button')[0].setAttribute('aria-expanded', null);
+        }
         toggleOrder(isHorizontal);
       } else {
         toggleOrder(false);
-        $tab.find('button').attr('aria-expanded', 'false');
+        $tab.find('button')[0].setAttribute('aria-expanded', 'false');
       }
     };
 
