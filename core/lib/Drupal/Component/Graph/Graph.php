@@ -36,7 +36,6 @@ class Graph {
    *     $graph[2]['edges'][4] = 1;
    *     $graph[3]['edges'][4] = 1;
    *   @endcode
-   *
    */
   public function __construct($graph) {
     $this->graph = $graph;
