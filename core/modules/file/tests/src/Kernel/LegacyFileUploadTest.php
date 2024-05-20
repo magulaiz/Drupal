@@ -46,7 +46,7 @@ class LegacyFileUploadTest extends FileManagedUnitTestBase {
     int $error_status,
     int $size = 0,
     string $source_filename = 'upload_test.txt',
-    string $dest_filename = 'upload_test.txt'
+    string $dest_filename = 'upload_test.txt',
   ): UploadedFile {
     $source_filepath = $this->createSourceTestFilePath($source_filename);
     return new UploadedFile($source_filepath, $dest_filename, 'text/plain', $error_status, TRUE);
