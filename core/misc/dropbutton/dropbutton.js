@@ -84,7 +84,6 @@
   function dropbuttonClickHandler(e) {
     e.preventDefault();
     const $wrapper = $(e.target).closest('.dropbutton-wrapper');
-    const $buttonText = $(e.target).find('.visually-hidden');
     $wrapper.toggleClass('open');
     if ($wrapper.hasClass('open')) {
       $(e.target).attr('aria-expanded', 'true');
