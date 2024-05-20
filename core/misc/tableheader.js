@@ -64,6 +64,19 @@
     // Create and display sticky header.
     this.createSticky();
   }
+  // document
+  //   .querySelector('#edit-wrapper')
+  //   .addEventListener('toggle', (event) => {
+  //     const tableHeaderInstance = document.querySelector('#edit-table');
+  //     if ($('#edit-wrapper').attr('open')) {
+  //       // this.recalculateSticky();
+  //       // tableHeaderInstance.recalculateSticky();
+  //       // forTables('recalculateSticky');
+  //       console.log('Opened');
+  //     } else {
+  //       console.log('Closed');
+  //     }
+  //   });
 
   // Helper method to loop through tables and execute a method.
   function forTables(method, arg) {
@@ -331,6 +344,18 @@
       },
     },
   );
+  // Add an event listener to the details element to listen to the toggle event.
+  document
+    .querySelector('#edit-wrapper')
+    .addEventListener('toggle', function (event) {
+      // Check if the details element is being opened.
+      if ($('#edit-wrapper').attr('open')) {
+        const tableHeaderInstance = document.querySelector('#edit-table');
+        if (tableHeaderInstance) {
+          tableHeaderInstance.recalculateSticky();
+        }
+      }
+    });
 
   // Expose constructor in the public space.
   Drupal.TableHeader = TableHeader;
