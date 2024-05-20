@@ -60,8 +60,13 @@ class FieldConfigEditForm extends EntityForm {
     protected EntityDisplayRepositoryInterface $entityDisplayRepository,
     protected PrivateTempStore $tempStore,
     protected ElementInfoManagerInterface $elementInfo,
-    protected ?EntityFieldManagerInterface $entityFieldManager = NULL,
-  ) {}
+    protected ?EntityFieldManagerInterface $entityFieldManager,
+  ) {
+    if ($entityFieldManager === NULL) {
+      @trigger_error('Calling ' . __METHOD__ . ' without the $entityFieldManager argument is deprecated in drupal:11.0.0 and will be required in drupal:11.1.0. See https://www.drupal.org/node/3448198', E_USER_DEPRECATED);
+      $entityFieldManager = \Drupal::service('entity_field.manager');
+    }
+  }
 
   /**
    * {@inheritdoc}
