@@ -27,13 +27,13 @@ final class JsonapiExceptionLoggingSubscriber implements ExceptionLoggingSubscri
    */
   public function __construct(
     protected ExceptionLoggingSubscriberInterface $inner,
-    protected LoggerInterface $logger
+    protected LoggerInterface $logger,
   ) {}
 
   /**
    * Log an HTTP 422 Unprocessable exception.
    *
-   * @param UnprocessableHttpEntityException $exception
+   * @param \Drupal\jsonapi\Exception\UnprocessableHttpEntityException $exception
    *   The exception.
    */
   protected function on422(UnprocessableHttpEntityException $exception): void {
@@ -50,8 +50,9 @@ final class JsonapiExceptionLoggingSubscriber implements ExceptionLoggingSubscri
   /**
    * Normalize validation constraint violations for inclusion in log context.
    *
-   * @param EntityConstraintViolationListInterface $violations
+   * @param \Drupal\Core\Entity\EntityConstraintViolationListInterface $violations
    *   Violations list.
+   *
    * @return array
    *   Array of normalized violations.
    */
@@ -65,7 +66,7 @@ final class JsonapiExceptionLoggingSubscriber implements ExceptionLoggingSubscri
   }
 
   /**
-   * {@inheritDoc}
+   * {@inheritdoc}
    */
   public function onException(ExceptionEvent $event): void {
     if ($event->getThrowable() instanceof UnprocessableHttpEntityException) {
@@ -77,7 +78,7 @@ final class JsonapiExceptionLoggingSubscriber implements ExceptionLoggingSubscri
   }
 
   /**
-   * {@inheritDoc}
+   * {@inheritdoc}
    */
   public static function getSubscribedEvents() {
     return ExceptionLoggingSubscriber::getSubscribedEvents();
