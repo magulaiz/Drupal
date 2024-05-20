@@ -3,7 +3,7 @@
  * Generic base elements.
  */
 
-@import 'media-queries.pcss.css';
+@import "media-queries.pcss.css";
 
 *,
 *::before,
@@ -25,7 +25,7 @@ body {
   hyphens: auto;
   color: var(--color-text-neutral-medium);
   background-color: var(--color--gray-100);
-  background-image: url('../../images/background.svg');
+  background-image: url("../../images/background.svg");
   background-position: top left; /* LTR */
 
   &.is-fixed {
@@ -35,7 +35,7 @@ body {
   }
 }
 
-[dir='rtl'] body {
+[dir="rtl"] body {
   background-position: top right;
 }
 
