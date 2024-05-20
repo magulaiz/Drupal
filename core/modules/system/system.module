@@ -1224,11 +1224,8 @@ function system_archiver_info_alter(&$info) {
 
 /**
  * Implements hook_ENTITY_TYPE_presave() for entity_view_mode entities.
- * @todo Get correct issue link to reference the change from '' to NULL.
  */
 function system_entity_view_mode_presave(EntityInterface $entity) {
-  // View modes `description` field must be stored as NULL at the config level if they are empty.
-  // @see ...
   if (trim($entity->getDescription()) === '') {
     $entity->set('description', NULL);
   }
