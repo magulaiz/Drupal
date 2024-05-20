@@ -21,12 +21,12 @@ class FileUploadResult {
   /**
    * The sanitized filename.
    */
-  protected ?string $sanitizedFilename;
+  protected ?string $sanitizedFilename = NULL;
 
   /**
    * The original filename.
    */
-  protected ?string $originalFilename;
+  protected ?string $originalFilename = NULL;
 
   /**
    * The File entity.
