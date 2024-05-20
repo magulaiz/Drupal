@@ -2,7 +2,6 @@
 
 namespace Drupal\jsonapi\EventSubscriber;
 
-use Drupal\Component\Utility\NestedArray;
 use Drupal\Core\Entity\EntityConstraintViolationListInterface;
 use Drupal\Core\EventSubscriber\ExceptionLoggingSubscriber;
 use Drupal\Core\EventSubscriber\ExceptionLoggingSubscriberInterface;
