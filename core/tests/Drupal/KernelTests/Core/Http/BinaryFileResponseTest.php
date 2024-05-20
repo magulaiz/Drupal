@@ -37,7 +37,7 @@ class BinaryFileResponseTest extends KernelTestBase {
   /**
    * Data provider of file names and expected content-type values.
    */
-  public function providerTestCalculatedContentType(): array {
+  public static function providerTestCalculatedContentType(): array {
     return [
       ['core/misc/print.css', 'text/css'],
       ['core/misc/checkbox.js', 'text/javascript'],
