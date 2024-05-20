@@ -5,9 +5,7 @@ declare(strict_types=1);
 namespace Drupal\Tests\serialization\Unit\EventSubscriber;
 
 use Drupal\Core\Config\Config;
-use Drupal\Core\Config\ConfigFactory;
 use Drupal\Core\Config\ConfigFactoryInterface;
-use Drupal\Core\Config\ImmutableConfig;
 use Drupal\serialization\Encoder\JsonEncoder;
 use Drupal\serialization\EventSubscriber\DefaultExceptionSubscriber;
 use Drupal\Tests\UnitTestCase;

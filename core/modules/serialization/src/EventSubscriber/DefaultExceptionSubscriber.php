@@ -51,7 +51,7 @@ class DefaultExceptionSubscriber extends HttpExceptionSubscriberBase {
   public function __construct(
     SerializerInterface $serializer,
     array $serializer_formats,
-    ?ConfigFactoryInterface $config_factory = NULL
+    ?ConfigFactoryInterface $config_factory = NULL,
   ) {
     $this->serializer = $serializer;
     $this->serializerFormats = $serializer_formats;
@@ -83,7 +83,7 @@ class DefaultExceptionSubscriber extends HttpExceptionSubscriberBase {
   }
 
   /**
-   * {@inheritDoc}
+   * {@inheritdoc}
    */
   public function onException(ExceptionEvent $event) {
     $request = $event->getRequest();
