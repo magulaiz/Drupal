@@ -82,7 +82,7 @@ function _menu_link_content_update_path_alias($path) {
  * @param string $path
  *   The path alias.
  */
-function _menu_link_content_update_entity_path_alias($path) {
+function _menu_link_content_update_entity_path_alias(string $path): void {
   $url = Url::fromUserInput($path);
   if (!$url->isRouted() || !preg_match('/^entity\.(\w+)\.canonical$/', $url->getRouteName(), $matches)) {
     return;

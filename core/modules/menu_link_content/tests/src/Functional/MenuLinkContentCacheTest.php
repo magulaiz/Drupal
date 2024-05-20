@@ -85,7 +85,7 @@ class MenuLinkContentCacheTest extends PageCacheTagsTestBase {
   /**
    * Tests the entity path aliasing changing.
    */
-  public function testMenuLinkContentCache() {
+  public function testMenuLinkContentCache(): void {
     /** @var \Drupal\path_alias\AliasManagerInterface $alias_manager */
     $alias_manager = \Drupal::service('path_alias.manager');
     $test_page_url = Url::fromRoute('test_page_test.test_page');
