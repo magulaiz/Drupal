@@ -97,7 +97,7 @@ class PathItemLanguageFallbackTest extends KernelTestBase {
   protected function assertNodeAlias(
     ?string $expected_alias,
     NodeInterface $node,
-    ?string $translation_langcode = NULL
+    ?string $translation_langcode = NULL,
   ): void {
     if ($translation_langcode !== NULL) {
       $this->assertTrue($node->hasTranslation($translation_langcode));
@@ -123,7 +123,7 @@ class PathItemLanguageFallbackTest extends KernelTestBase {
    */
   protected function createNodeWithTranslations(
     string $default_langcode,
-    array $translation_langcodes
+    array $translation_langcodes,
   ): NodeInterface {
     $node = Node::create([
       'title' => $this->randomString(),
