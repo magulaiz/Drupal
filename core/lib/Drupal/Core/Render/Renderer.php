@@ -316,7 +316,7 @@ class Renderer implements RendererInterface {
 
     // If the default values for this element have not been loaded yet, populate
     // them.
-    if ((isset($elements['#type']) && $elements['#theme'] != 'form_element_label') && empty($elements['#defaults_loaded'])) {
+    if ((isset($elements['#type']) && !isset($elements['#theme'])) && empty($elements['#defaults_loaded'])) {
       $elements += $this->elementInfo->getInfo($elements['#type']);
     }
 
