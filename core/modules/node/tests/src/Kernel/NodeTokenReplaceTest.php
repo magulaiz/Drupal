@@ -223,7 +223,7 @@ class NodeTokenReplaceTest extends TokenReplaceKernelTestBase {
    */
   protected function assertNodeSummaryTokenReplacement(NodeInterface $node, $expected) {
     $output = $this->tokenService->replace('[node:summary]', ['node' => $node], ['langcode' => $this->interfaceLanguage->getId()]);
-    $this->assertEquals($output, $expected, new FormattableMarkup('Node token %token replaced.', ['%token' => '[node:summary]']));
+    $this->assertEquals($output, $expected);
   }
 
 }
