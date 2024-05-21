@@ -1,10 +1,13 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\locale\Functional;
 
 use Drupal\Component\Gettext\PoItem;
 use Drupal\language\Entity\ConfigurableLanguage;
 use Drupal\Tests\BrowserTestBase;
+use Drupal\Tests\WaitTerminateTestTrait;
 
 /**
  * Tests LocaleLookup.
@@ -13,12 +16,15 @@ use Drupal\Tests\BrowserTestBase;
  */
 class LocaleLocaleLookupTest extends BrowserTestBase {
 
+  use WaitTerminateTestTrait;
+
   /**
    * Modules to enable.
    *
    * @var array
    */
   protected static $modules = ['locale', 'locale_test'];
+
 
   /**
    * {@inheritdoc}
@@ -31,11 +37,18 @@ class LocaleLocaleLookupTest extends BrowserTestBase {
   protected function setUp(): void {
     parent::setUp();
 
+    // The \Drupal\locale\LocaleTranslation service stores localization cache
+    // data after the response is flushed to the client. We do not want to race
+    // with any string translations that may be saving from the login below.
+    $this->setWaitForTerminate();
+
     // Change the language default object to different values.
     ConfigurableLanguage::createFromLangcode('fr')->save();
     $this->config('system.site')->set('default_langcode', 'fr')->save();
 
-    $this->drupalLogin($this->rootUser);
+    $this->drupalLogin($this->drupalCreateUser([
+      'administer modules',
+    ]));
   }
 
   /**
@@ -96,7 +109,7 @@ class LocaleLocaleLookupTest extends BrowserTestBase {
    *     - translation value
    *     - expected result
    */
-  public function providerTestFixOldPluralStyle() {
+  public static function providerTestFixOldPluralStyle() {
     return [
       'non-plural translation' => ['@count[2] non-plural test', '@count[2] non-plural test'],
       'plural translation' => ['@count[2] plural test' . PoItem::DELIMITER, '@count plural test'],

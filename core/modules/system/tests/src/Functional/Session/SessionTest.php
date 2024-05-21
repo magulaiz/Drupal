@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\system\Functional\Session;
 
 use Drupal\Core\Database\Database;
@@ -9,6 +11,7 @@ use Drupal\Tests\BrowserTestBase;
  * Drupal session handling tests.
  *
  * @group Session
+ * @group #slow
  */
 class SessionTest extends BrowserTestBase {
 
@@ -359,6 +362,20 @@ class SessionTest extends BrowserTestBase {
   }
 
   /**
+   * Test exception thrown during session write close.
+   */
+  public function testSessionWriteError() {
+    // Login to ensure a session exists.
+    $user = $this->drupalCreateUser([]);
+    $this->drupalLogin($user);
+
+    // Trigger an exception in SessionHandler::write().
+    $this->expectExceptionMessageMatches("/^Drupal\\\\Core\\\\Database\\\\DatabaseExceptionWrapper:/");
+    $this->drupalGet('/session-test/trigger-write-exception');
+    $this->assertSession()->statusCodeEquals(500);
+  }
+
+  /**
    * Reset the cookie file so that it refers to the specified user.
    */
   public function sessionReset() {
@@ -386,7 +403,7 @@ class SessionTest extends BrowserTestBase {
   }
 
   /**
-   * Assert whether $_SESSION is empty at the beginning of the request.
+   * Assert whether the session is empty at the beginning of the request.
    *
    * @internal
    */

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\comment\Kernel\Views;
 
 use Drupal\comment\Entity\Comment;
@@ -57,7 +59,10 @@ class FilterAndArgumentUserUidTest extends KernelTestBase {
     $this->installSchema('comment', ['comment_entity_statistics']);
     $this->installConfig(['filter']);
 
-    NodeType::create(['type' => 'page'])->save();
+    NodeType::create([
+      'type' => 'page',
+      'name' => 'Page',
+    ])->save();
 
     FieldStorageConfig::create([
       'type' => 'text_long',

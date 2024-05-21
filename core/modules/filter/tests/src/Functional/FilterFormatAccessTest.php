@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\filter\Functional;
 
 use Drupal\Core\Access\AccessResult;
@@ -94,7 +96,7 @@ class FilterFormatAccessTest extends BrowserTestBase {
     $formats = [];
     for ($i = 0; $i < 3; $i++) {
       $edit = [
-        'format' => mb_strtolower($this->randomMachineName()),
+        'format' => $this->randomMachineName(),
         'name' => $this->randomMachineName(),
       ];
       $this->drupalGet('admin/config/content/formats/add');

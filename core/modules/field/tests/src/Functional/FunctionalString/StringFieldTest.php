@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\field\Functional\FunctionalString;
 
 use Drupal\Component\Render\FormattableMarkup;
@@ -63,7 +65,7 @@ class StringFieldTest extends BrowserTestBase {
    */
   public function _testTextfieldWidgets($field_type, $widget_type) {
     // Create a field.
-    $field_name = mb_strtolower($this->randomMachineName());
+    $field_name = $this->randomMachineName();
     $field_storage = FieldStorageConfig::create([
       'field_name' => $field_name,
       'entity_type' => 'entity_test',

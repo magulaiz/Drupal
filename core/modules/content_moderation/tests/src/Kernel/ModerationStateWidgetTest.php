@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\content_moderation\Kernel;
 
 use Drupal\content_moderation\Plugin\Field\FieldWidget\ModerationStateWidget;
@@ -43,9 +45,11 @@ class ModerationStateWidgetTest extends KernelTestBase {
 
     NodeType::create([
       'type' => 'moderated',
+      'name' => 'Moderated',
     ])->save();
     NodeType::create([
       'type' => 'unmoderated',
+      'name' => 'Unmoderated',
     ])->save();
 
     $workflow = $this->createEditorialWorkflow();

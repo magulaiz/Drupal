@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\user\Unit\Plugin\Action;
 
 use Drupal\user\Plugin\Action\AddRoleUser;
@@ -15,7 +17,8 @@ class AddRoleUserTest extends RoleUserTestBase {
    */
   public function testExecuteAddExistingRole() {
     $this->account->expects($this->never())
-      ->method('addRole');
+      ->method('addRole')
+      ->willReturn($this->account);
 
     $this->account->expects($this->any())
       ->method('hasRole')
@@ -33,7 +36,8 @@ class AddRoleUserTest extends RoleUserTestBase {
    */
   public function testExecuteAddNonExistingRole() {
     $this->account->expects($this->once())
-      ->method('addRole');
+      ->method('addRole')
+      ->willReturn($this->account);
 
     $this->account->expects($this->any())
       ->method('hasRole')

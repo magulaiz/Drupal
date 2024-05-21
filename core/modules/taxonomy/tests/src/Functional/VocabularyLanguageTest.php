@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\taxonomy\Functional;
 
 use Drupal\language\Entity\ConfigurableLanguage;
@@ -50,7 +52,7 @@ class VocabularyLanguageTest extends TaxonomyTestBase {
     $this->assertSession()->fieldExists('edit-langcode');
 
     // Create the vocabulary.
-    $vid = mb_strtolower($this->randomMachineName());
+    $vid = $this->randomMachineName();
     $edit['name'] = $this->randomMachineName();
     $edit['description'] = $this->randomMachineName();
     $edit['langcode'] = 'aa';
@@ -79,7 +81,7 @@ class VocabularyLanguageTest extends TaxonomyTestBase {
     // the terms are saved.
     $edit = [
       'name' => $this->randomMachineName(),
-      'vid' => mb_strtolower($this->randomMachineName()),
+      'vid' => $this->randomMachineName(),
       'default_language[langcode]' => 'bb',
       'default_language[language_alterable]' => TRUE,
     ];

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\migrate\Kernel;
 
 use Drupal\KernelTests\KernelTestBase;
@@ -156,7 +158,6 @@ class QueryBatchTest extends KernelTestBase {
     // reflection hack to set it in the plugin instance.
     $reflector = new \ReflectionObject($plugin);
     $property = $reflector->getProperty('database');
-    $property->setAccessible(TRUE);
 
     $connection = $this->getDatabase($source_data);
     $property->setValue($plugin, $connection);
@@ -183,7 +184,6 @@ class QueryBatchTest extends KernelTestBase {
       $expected_batch_size = $configuration['batch_size'];
     }
     $property = $reflector->getProperty('batchSize');
-    $property->setAccessible(TRUE);
     self::assertSame($expected_batch_size, $property->getValue($plugin));
 
     // Test the batch count.
@@ -194,7 +194,6 @@ class QueryBatchTest extends KernelTestBase {
       }
     }
     $property = $reflector->getProperty('batch');
-    $property->setAccessible(TRUE);
     self::assertSame($expected_batch_count, $property->getValue($plugin));
   }
 
@@ -241,8 +240,7 @@ class QueryBatchTest extends KernelTestBase {
       // Use the biggest row to build the table schema.
       $counts = array_map('count', $rows);
       asort($counts);
-      end($counts);
-      $pilot = $rows[key($counts)];
+      $pilot = $rows[array_key_last($counts)];
 
       $connection->schema()
         ->createTable($table, [

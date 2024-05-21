@@ -1,9 +1,12 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\views\Unit\Controller;
 
 use Drupal\Core\Render\RenderContext;
 use Drupal\Core\Render\Renderer;
+use Drupal\Core\Utility\CallableResolver;
 use Drupal\Tests\UnitTestCase;
 use Drupal\views\Ajax\ViewAjaxResponse;
 use Drupal\views\Controller\ViewAjaxController;
@@ -102,7 +105,7 @@ class ViewAjaxControllerTest extends UnitTestCase {
     $request_stack = new RequestStack();
     $request_stack->push(new Request());
     $this->renderer = new Renderer(
-      $this->createMock('\Drupal\Core\Controller\ControllerResolverInterface'),
+      $this->createMock(CallableResolver::class),
       $this->createMock('\Drupal\Core\Theme\ThemeManagerInterface'),
       $element_info_manager,
       $this->createMock('\Drupal\Core\Render\PlaceholderGeneratorInterface'),
@@ -206,6 +209,14 @@ class ViewAjaxControllerTest extends UnitTestCase {
     $this->assertSame($response->getView(), $executable);
 
     $this->assertViewResultCommand($response);
+
+    // Test that the ajax controller for Views contains the
+    // Drupal Settings.
+    $this->assertEquals([
+      'drupalSettings' => [
+        'testSetting' => ['Setting'],
+      ],
+    ], $response->getAttachments());
   }
 
   /**
@@ -333,7 +344,7 @@ class ViewAjaxControllerTest extends UnitTestCase {
       ->disableOriginalConstructor()
       ->getMock();
     $display_handler->expects($this->once())
-      ->method('setOption', '0')
+      ->method('setOption')
       ->with($this->equalTo('pager_element'));
 
     $display_collection = $this->getMockBuilder('Drupal\views\DisplayPluginCollection')
@@ -386,7 +397,14 @@ class ViewAjaxControllerTest extends UnitTestCase {
       ->willReturn(TRUE);
     $executable->expects($this->atMost(1))
       ->method('preview')
-      ->willReturn(['#markup' => 'View result']);
+      ->willReturn([
+        '#markup' => 'View result',
+        '#attached' => [
+          'drupalSettings' => [
+            'testSetting' => ['Setting'],
+          ],
+        ],
+      ]);
 
     $this->executableFactory->expects($this->once())
       ->method('get')
@@ -428,7 +446,6 @@ class ViewAjaxControllerTest extends UnitTestCase {
    */
   protected function getCommands(ViewAjaxResponse $response) {
     $reflection_property = new \ReflectionProperty('Drupal\views\Ajax\ViewAjaxResponse', 'commands');
-    $reflection_property->setAccessible(TRUE);
     $commands = $reflection_property->getValue($response);
     return $commands;
   }

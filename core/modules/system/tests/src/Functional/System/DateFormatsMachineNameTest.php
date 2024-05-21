@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\system\Functional\System;
 
 use Drupal\Tests\BrowserTestBase;
@@ -63,7 +65,7 @@ class DateFormatsMachineNameTest extends BrowserTestBase {
     $this->assertSession()->pageTextContains('The machine-readable name is already in use. It must be unique.');
 
     // Create a date format with a machine name distinct from the previous two.
-    $id = mb_strtolower($this->randomMachineName(16));
+    $id = $this->randomMachineName(16);
     $edit = [
       'label' => $this->randomMachineName(16),
       'id' => $id,

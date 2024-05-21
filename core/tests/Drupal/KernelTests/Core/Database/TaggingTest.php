@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\KernelTests\Core\Database;
 
 use Drupal\Core\Database\Query\SelectExtender;
@@ -123,7 +125,7 @@ class TaggingTest extends DatabaseTestBase {
     $return = $query->getMetaData('test');
     $this->assertEquals($data, $return, 'Correct metadata returned.');
 
-    $return = $query->getMetaData('nothere');
+    $return = $query->getMetaData('not_here');
     $this->assertNull($return, 'Non-existent key returned NULL.');
   }
 

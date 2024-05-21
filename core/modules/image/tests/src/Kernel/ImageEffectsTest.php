@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\image\Kernel;
 
 use Drupal\Core\Form\FormState;
@@ -223,7 +225,10 @@ class ImageEffectsTest extends KernelTestBase {
     $form_builder = $this->container->get('form_builder');
 
     /** @var \Drupal\image\ImageStyleInterface $image_style */
-    $image_style = ImageStyle::create(['name' => 'foo']);
+    $image_style = ImageStyle::create([
+      'name' => 'foo',
+      'label' => 'Foo',
+    ]);
     $effect_id = $image_style->addImageEffect(['id' => 'image_scale']);
     $image_style->save();
 

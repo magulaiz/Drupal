@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\Core\Plugin;
 
 use Drupal\Component\Plugin\ConfigurableInterface;
@@ -68,6 +70,27 @@ class DefaultSingleLazyPluginCollectionTest extends LazyPluginCollectionTestBase
 
     $this->defaultPluginCollection->addInstanceId('banana', ['id' => 'banana', 'key' => 'other_value']);
     $this->assertEquals(['banana' => 'banana'], $this->defaultPluginCollection->getInstanceIds());
+  }
+
+  /**
+   * @covers ::setConfiguration
+   */
+  public function testConfigurableSetConfiguration() {
+    $this->setupPluginCollection($this->any());
+
+    $this->defaultPluginCollection->setConfiguration(['apple' => ['value' => 'pineapple', 'id' => 'apple']]);
+    $config = $this->defaultPluginCollection->getConfiguration();
+    $this->assertSame(['apple' => ['value' => 'pineapple', 'id' => 'apple']], $config);
+    $plugin = $this->pluginInstances['apple'];
+    $this->assertSame(['apple' => ['value' => 'pineapple', 'id' => 'apple']], $plugin->getConfiguration());
+
+    $this->defaultPluginCollection->setConfiguration([]);
+    $this->assertSame([], $this->defaultPluginCollection->getConfiguration());
+
+    $this->defaultPluginCollection->setConfiguration(['cherry' => ['value' => 'kiwi', 'id' => 'cherry']]);
+    $expected['cherry'] = ['value' => 'kiwi', 'id' => 'cherry'];
+    $config = $this->defaultPluginCollection->getConfiguration();
+    $this->assertSame($expected, $config);
   }
 
 }

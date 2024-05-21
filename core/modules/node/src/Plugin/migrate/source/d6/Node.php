@@ -11,6 +11,8 @@ use Drupal\migrate\Row;
 use Drupal\migrate_drupal\Plugin\migrate\source\DrupalSqlBase;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
+// cspell:ignore cnfi tnid
+
 /**
  * Drupal 6 node source from database.
  *
@@ -247,7 +249,7 @@ class Node extends DrupalSqlBase {
       foreach ($this->fieldInfo as $type => $fields) {
         foreach ($fields as $field => $info) {
           foreach ($info as $property => $value) {
-            if ($property == 'db_columns' || preg_match('/_settings$/', $property)) {
+            if ($property == 'db_columns' || str_ends_with($property, '_settings')) {
               $this->fieldInfo[$type][$field][$property] = unserialize($value);
             }
           }

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\field_ui\Kernel;
 
 use Drupal\Core\Entity\Entity\EntityFormDisplay;
@@ -25,8 +27,9 @@ class EntityFormDisplayTest extends KernelTestBase {
     'field',
     'entity_test',
     'field_test',
-    'user',
+    'system',
     'text',
+    'user',
   ];
 
   /**
@@ -34,6 +37,8 @@ class EntityFormDisplayTest extends KernelTestBase {
    */
   protected function setUp(): void {
     parent::setUp();
+    $this->installEntitySchema('action');
+    $this->installConfig('user');
     $this->installEntitySchema('entity_test');
   }
 
@@ -206,7 +211,11 @@ class EntityFormDisplayTest extends KernelTestBase {
     $field->save();
 
     // Create default and compact entity display.
-    EntityFormMode::create(['id' => 'entity_test.compact', 'targetEntityType' => 'entity_test'])->save();
+    EntityFormMode::create([
+      'id' => 'entity_test.compact',
+      'label' => 'Compact',
+      'targetEntityType' => 'entity_test',
+    ])->save();
     EntityFormDisplay::create([
       'targetEntityType' => 'entity_test',
       'bundle' => 'entity_test',

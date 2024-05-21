@@ -1,10 +1,11 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\locale\Functional;
 
-use Drupal\locale\Locale;
-use Drupal\Tests\BrowserTestBase;
 use Drupal\language\Entity\ConfigurableLanguage;
+use Drupal\Tests\BrowserTestBase;
 
 /**
  * Tests translation update's effects on configuration translations.
@@ -151,7 +152,7 @@ class LocaleConfigTranslationImportTest extends BrowserTestBase {
     $this->submitForm(['predefined_langcode' => 'af'], 'Add language');
 
     // Add the system branding block to the page.
-    $this->drupalPlaceBlock('system_branding_block', ['region' => 'header', 'id' => 'site-branding']);
+    $this->drupalPlaceBlock('system_branding_block', ['region' => 'header', 'id' => 'site_branding']);
     $this->drupalGet('admin/config/system/site-information');
     $this->submitForm(['site_slogan' => 'Test site slogan'], 'Save configuration');
     $this->drupalGet('admin/config/system/site-information/translate/af/edit');
@@ -176,7 +177,7 @@ class LocaleConfigTranslationImportTest extends BrowserTestBase {
     // Install any module.
     $this->drupalGet('admin/modules');
     $this->submitForm(['modules[dblog][enable]' => 'dblog'], 'Install');
-    $this->assertSession()->pageTextContains('Module Database Logging has been enabled.');
+    $this->assertSession()->pageTextContains('Module Database Logging has been installed.');
 
     // Get the front page and ensure that the translated configuration still
     // appears.
@@ -231,7 +232,7 @@ class LocaleConfigTranslationImportTest extends BrowserTestBase {
     $string = $locale_storage->findString(['source' => 'Locale can translate']);
     \Drupal::service('locale.storage')->delete($string);
     // Force a rebuild of config translations.
-    $count = Locale::config()->updateConfigTranslations(['locale_test_translate.settings'], ['af']);
+    $count = \Drupal::service('locale.config_manager')->updateConfigTranslations(['locale_test_translate.settings'], ['af']);
     $this->assertEquals(1, $count, 'Correct count of updated translations');
 
     $override = \Drupal::languageManager()->getLanguageConfigOverride('af', 'locale_test_translate.settings');

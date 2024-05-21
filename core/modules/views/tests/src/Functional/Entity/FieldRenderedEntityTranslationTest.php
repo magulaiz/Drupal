@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\views\Functional\Entity;
 
 use Drupal\Core\Language\Language;
@@ -50,7 +52,7 @@ class FieldRenderedEntityTranslationTest extends ViewTestBase {
 
     $node_type = $this->entityTypeManager->getStorage('node_type')->create([
       'type' => 'article',
-      'label' => 'Article',
+      'name' => 'Article',
     ]);
     $node_type->save();
 

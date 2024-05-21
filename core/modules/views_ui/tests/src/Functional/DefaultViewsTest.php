@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\views_ui\Functional;
 
 use Drupal\Core\Url;
@@ -107,7 +109,7 @@ class DefaultViewsTest extends UITestBase {
     // Duplicate a view and set a custom name.
     $this->drupalGet('admin/structure/views');
     $this->clickViewsOperationLink('Duplicate', '/glossary');
-    $random_name = strtolower($this->randomMachineName());
+    $random_name = $this->randomMachineName();
     $this->submitForm(['id' => $random_name], 'Duplicate');
     $this->assertSession()->addressEquals("admin/structure/views/view/$random_name");
 

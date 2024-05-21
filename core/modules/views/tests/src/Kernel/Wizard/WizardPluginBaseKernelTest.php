@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\views\Kernel\Wizard;
 
 use Drupal\Core\Form\FormState;
@@ -49,7 +51,7 @@ class WizardPluginBaseKernelTest extends ViewsKernelTestBase {
     $form = [];
     $form_state = new FormState();
     $form = $this->wizard->buildForm($form, $form_state);
-    $random_id = strtolower($this->randomMachineName());
+    $random_id = $this->randomMachineName();
     $random_label = $this->randomMachineName();
     $random_description = $this->randomMachineName();
 

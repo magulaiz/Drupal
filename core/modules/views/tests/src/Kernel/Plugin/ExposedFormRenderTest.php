@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\views\Kernel\Plugin;
 
 use Drupal\Component\Utility\Html;
@@ -57,8 +59,10 @@ class ExposedFormRenderTest extends ViewsKernelTestBase {
    * Tests the exposed form raw input.
    */
   public function testExposedFormRawInput() {
-    $node_type = NodeType::create(['type' => 'article']);
-    $node_type->save();
+    NodeType::create([
+      'type' => 'article',
+      'name' => 'Article',
+    ])->save();
 
     $view = Views::getView('test_exposed_form_buttons');
     $view->setDisplay();

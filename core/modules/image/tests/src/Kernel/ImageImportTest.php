@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\image\Kernel;
 
 use Drupal\image\Entity\ImageStyle;
@@ -23,6 +25,7 @@ class ImageImportTest extends KernelTestBase {
   public function testImport() {
     $style = ImageStyle::create([
       'name' => 'test',
+      'label' => 'Test',
     ]);
 
     $style->addImageEffect(['id' => 'image_module_test_null']);

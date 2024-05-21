@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\content_moderation\Kernel;
 
 use Drupal\KernelTests\KernelTestBase;
@@ -30,6 +32,14 @@ class EntityStateChangeValidationTest extends KernelTestBase {
     'content_translation',
     'workflows',
   ];
+
+  /**
+   * {@inheritdoc}
+   *
+   * @todo Remove and fix test to not rely on super user.
+   * @see https://www.drupal.org/project/drupal/issues/3437620
+   */
+  protected bool $usesSuperUserAccessPolicy = TRUE;
 
   /**
    * An admin user.
@@ -63,6 +73,7 @@ class EntityStateChangeValidationTest extends KernelTestBase {
 
     $node_type = NodeType::create([
       'type' => 'example',
+      'name' => 'Example',
     ]);
     $node_type->save();
     $workflow = $this->createEditorialWorkflow();
@@ -93,6 +104,7 @@ class EntityStateChangeValidationTest extends KernelTestBase {
 
     $node_type = NodeType::create([
       'type' => 'example',
+      'name' => 'Example',
     ]);
     $node_type->save();
     $workflow = $this->createEditorialWorkflow();
@@ -119,6 +131,7 @@ class EntityStateChangeValidationTest extends KernelTestBase {
   public function testInvalidState() {
     $node_type = NodeType::create([
       'type' => 'example',
+      'name' => 'Example',
     ]);
     $node_type->save();
     $workflow = $this->createEditorialWorkflow();
@@ -144,6 +157,7 @@ class EntityStateChangeValidationTest extends KernelTestBase {
     // Create content without moderation enabled for the content type.
     $node_type = NodeType::create([
       'type' => 'example',
+      'name' => 'Example',
     ]);
     $node_type->save();
     $node = Node::create([
@@ -194,6 +208,7 @@ class EntityStateChangeValidationTest extends KernelTestBase {
     ConfigurableLanguage::createFromLangcode('fr')->save();
     $node_type = NodeType::create([
       'type' => 'example',
+      'name' => 'Example',
     ]);
     $node_type->save();
 
@@ -250,6 +265,7 @@ class EntityStateChangeValidationTest extends KernelTestBase {
 
     $node_type = NodeType::create([
       'type' => 'example',
+      'name' => 'Example',
     ]);
     $node_type->save();
     /** @var \Drupal\node\NodeInterface $node */
@@ -289,6 +305,7 @@ class EntityStateChangeValidationTest extends KernelTestBase {
 
     $node_type = NodeType::create([
       'type' => 'example',
+      'name' => 'Example',
     ]);
     $node_type->save();
     /** @var \Drupal\node\NodeInterface $node */
@@ -329,6 +346,7 @@ class EntityStateChangeValidationTest extends KernelTestBase {
   public function testTransitionAccessValidation($permissions, $target_state, $messages) {
     $node_type = NodeType::create([
       'type' => 'example',
+      'name' => 'Example',
     ]);
     $node_type->save();
     $workflow = $this->createEditorialWorkflow();
@@ -356,7 +374,7 @@ class EntityStateChangeValidationTest extends KernelTestBase {
   /**
    * Test cases for ::testTransitionAccessValidation.
    */
-  public function transitionAccessValidationTestCases() {
+  public static function transitionAccessValidationTestCases() {
     return [
       'Invalid transition, no permissions validated' => [
         [],

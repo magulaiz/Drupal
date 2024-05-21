@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\workflows\Kernel;
 
 use Drupal\Core\Access\AccessResult;
@@ -13,6 +15,7 @@ use Prophecy\Prophet;
 /**
  * @coversDefaultClass \Drupal\workflows\WorkflowAccessControlHandler
  * @group workflows
+ * @group #slow
  */
 class WorkflowAccessControlHandlerTest extends KernelTestBase {
 
@@ -102,6 +105,7 @@ class WorkflowAccessControlHandlerTest extends KernelTestBase {
     $workflow = Workflow::create([
       'type' => 'workflow_type_test',
       'id' => 'test_workflow',
+      'label' => 'Test workflow',
     ]);
     $workflow->save();
     $workflow_type = $workflow->getTypePlugin();
@@ -117,7 +121,7 @@ class WorkflowAccessControlHandlerTest extends KernelTestBase {
    *
    * @return array
    */
-  public function checkAccessProvider() {
+  public static function checkAccessProvider() {
     $container = new ContainerBuilder();
     $cache_contexts_manager = (new Prophet())->prophesize(CacheContextsManager::class);
     $cache_contexts_manager->assertValidTokens()->willReturn(TRUE);

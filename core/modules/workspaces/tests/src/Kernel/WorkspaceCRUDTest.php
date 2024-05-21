@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\workspaces\Kernel;
 
 use Drupal\Core\Entity\EntityStorageException;
@@ -53,7 +55,6 @@ class WorkspaceCRUDTest extends KernelTestBase {
     'filter',
     'node',
     'text',
-    'path_alias',
   ];
 
   /**
@@ -69,7 +70,6 @@ class WorkspaceCRUDTest extends KernelTestBase {
     $this->installEntitySchema('workspace');
     $this->installSchema('workspaces', ['workspace_association']);
     $this->installEntitySchema('node');
-    $this->installEntitySchema('path_alias');
 
     $this->installConfig(['filter', 'node', 'system']);
 
@@ -201,6 +201,9 @@ class WorkspaceCRUDTest extends KernelTestBase {
 
     $workspace_deleted = \Drupal::state()->get('workspace.deleted');
     $this->assertCount(0, $workspace_deleted);
+
+    // Check that the deleted workspace is no longer active.
+    $this->assertFalse($this->workspaceManager->hasActiveWorkspace());
   }
 
   /**

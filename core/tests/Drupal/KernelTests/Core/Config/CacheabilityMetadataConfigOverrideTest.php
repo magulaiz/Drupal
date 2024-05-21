@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\KernelTests\Core\Config;
 
 use Drupal\config_override_test\Cache\PirateDayCacheContext;
@@ -30,6 +32,7 @@ class CacheabilityMetadataConfigOverrideTest extends KernelTestBase {
    */
   protected function setUp(): void {
     parent::setUp();
+    $this->container->get('theme_installer')->install(['stark']);
     $this->installEntitySchema('block_content');
     $this->installConfig(['config_override_test']);
   }

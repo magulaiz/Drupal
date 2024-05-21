@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\field\Functional\Email;
 
 use Drupal\entity_test\Entity\EntityTest;
@@ -58,7 +60,7 @@ class EmailFieldTest extends BrowserTestBase {
    */
   public function testEmailField() {
     // Create a field with settings to validate.
-    $field_name = mb_strtolower($this->randomMachineName());
+    $field_name = $this->randomMachineName();
     $this->fieldStorage = FieldStorageConfig::create([
       'field_name' => $field_name,
       'entity_type' => 'entity_test',

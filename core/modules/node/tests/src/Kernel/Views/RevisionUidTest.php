@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\node\Kernel\Views;
 
 use Drupal\node\Entity\Node;
@@ -74,6 +76,7 @@ class RevisionUidTest extends ViewsKernelTestBase {
 
     $node_type = NodeType::create([
       'type' => 'page',
+      'name' => 'Page',
     ]);
     $node_type->save();
     $node = Node::create([

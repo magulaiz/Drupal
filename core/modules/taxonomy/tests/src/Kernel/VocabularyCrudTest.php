@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\taxonomy\Kernel;
 
 use Drupal\field\Entity\FieldConfig;
@@ -128,7 +130,7 @@ class VocabularyCrudTest extends KernelTestBase {
     $vocabulary = $this->createVocabulary();
     // Field storages and fields attached to taxonomy term bundles should be
     // removed when the module is uninstalled.
-    $field_name = mb_strtolower($this->randomMachineName() . '_field_name');
+    $field_name = $this->randomMachineName() . '_field_name';
     $storage_definition = [
       'field_name' => $field_name,
       'entity_type' => 'taxonomy_term',
