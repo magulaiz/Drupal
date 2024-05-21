@@ -86,22 +86,14 @@ class FileElementHelper {
     }
     // Add any collected error messages to the form.
     if (count($errors) > 0) {
-      if (count($errors) === 1) {
+      $message = count($errors) === 1
         // Use the first error message as the form error.
-        $message = reset($errors);
-      }
-      else {
+        ? reset($errors)
         // Combine the error messages into a list.
-        $message = [
-          'error' => [
-            '#markup' => $this->t('One or more files could not be uploaded.'),
-          ],
-          'item_list' => [
-            '#theme' => 'item_list',
-            '#items' => $errors,
-          ],
+        : [
+          'error' => ['#markup' => $this->t('One or more files could not be uploaded.')],
+          'item_list' => ['#theme' => 'item_list', '#items' => $errors],
         ];
-      }
       $formState->setError($element, $message);
     }
 
