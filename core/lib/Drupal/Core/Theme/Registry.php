@@ -10,7 +10,6 @@ use Drupal\Core\Extension\ModuleExtensionList;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Extension\ThemeHandlerInterface;
 use Drupal\Core\Lock\LockBackendInterface;
-use Drupal\Core\Site\Settings;
 use Drupal\Core\Update\UpdateKernel;
 use Drupal\Core\Utility\ThemeRegistry;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
