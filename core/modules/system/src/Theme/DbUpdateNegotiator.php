@@ -51,7 +51,19 @@ class DbUpdateNegotiator implements ThemeNegotiatorInterface {
    * {@inheritdoc}
    */
   public function determineActiveTheme(RouteMatchInterface $route_match) {
-    return Settings::get('maintenance_theme') ?: 'claro';
+    $active_theme = Settings::get('maintenance_theme') ?: 'claro';
+
+    $list_info = $this->themeHandler->listInfo();
+    $theme_info = $list_info[$active_theme]->info;
+    if (!empty($theme_info['dependencies'])) {
+      foreach (array_filter($theme_info['dependencies']) as $dependency) {
+        if (empty($list_info[$dependency])) {
+          throw new \RuntimeException(sprintf('Cannot use %s as the update theme as it depends on %s, which is not a theme.', $active_theme, $dependency));
+        }
+      }
+    }
+
+    return $active_theme;
   }
 
 }
