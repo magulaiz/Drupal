@@ -3,6 +3,7 @@
 namespace Drupal\Core\Messenger;
 
 use Drupal\Component\Render\MarkupInterface;
+use Drupal\Core\EventSubscriber\MainContentViewSubscriber;
 use Drupal\Core\PageCache\ResponsePolicy\KillSwitch;
 use Drupal\Core\Render\Markup;
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -62,7 +63,8 @@ class Messenger implements MessengerInterface {
    */
   public function addMessage($message, $type = self::TYPE_STATUS, $repeat = FALSE) {
     // No-op if the current request format is not HTML.
-    if ($this->requestStack->getCurrentRequest()->getRequestFormat() !== 'html') {
+    $currentRequest = $this->requestStack->getCurrentRequest();
+    if ($currentRequest && $currentRequest->getRequestFormat() !== 'html' && $currentRequest->get(MainContentViewSubscriber::WRAPPER_FORMAT) !== 'ajax') {
       return $this;
     }
     if (!($message instanceof Markup) && $message instanceof MarkupInterface) {
