@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\filter\Kernel;
 
 use Drupal\Core\Form\FormInterface;
@@ -71,8 +73,7 @@ class TextFormatElementFormTest extends KernelTestBase implements FormInterface 
       'name' => 'foobar',
       'mail' => 'foobar@example.com',
     ]);
-    $this->testUser->addRole($role->id());
-    $this->testUser->save();
+    $this->testUser->addRole($role->id())->save();
     \Drupal::service('current_user')->setAccount($this->testUser);
   }
 
