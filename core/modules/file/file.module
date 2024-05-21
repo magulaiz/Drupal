@@ -23,6 +23,7 @@ use Drupal\Core\Url;
 use Drupal\file\Entity\File;
 use Drupal\file\FileInterface;
 use Drupal\file\IconMimeTypes;
+use Drupal\file\Upload\FileElementHelper;
 use Drupal\file\Upload\FileUploadResult;
 use Drupal\file\Upload\FormFileUploader;
 
@@ -607,7 +608,7 @@ function file_managed_file_submit($form, FormStateInterface $form_state) {
 function file_managed_file_save_upload($element, FormStateInterface $form_state) {
   @trigger_error(__FUNCTION__ . '() is deprecated in drupal:10.2.0 and is removed from drupal:11.0.0. Use \Drupal\file\Upload\FileElementHelper::saveFileUploads() instead. See https://www.drupal.org/node/3382414', E_USER_DEPRECATED);
   /** @var \Drupal\file\Upload\FileElementHelper $elementHelper */
-  $elementHelper = \Drupal::service('file.element_helper');
+  $elementHelper = \Drupal::service(FileElementHelper::class);
   return $elementHelper->saveFileUploads($element, $form_state);
 }
 

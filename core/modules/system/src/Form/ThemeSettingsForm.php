@@ -2,8 +2,8 @@
 
 namespace Drupal\system\Form;
 
-use Drupal\Core\Config\TypedConfigManagerInterface;
 use Drupal\Core\Config\ConfigFactoryInterface;
+use Drupal\Core\Config\TypedConfigManagerInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Extension\ThemeHandlerInterface;
 use Drupal\Core\File\Exception\FileException;
@@ -14,6 +14,7 @@ use Drupal\Core\Render\Element;
 use Drupal\Core\StreamWrapper\PublicStream;
 use Drupal\Core\StreamWrapper\StreamWrapperManager;
 use Drupal\Core\Theme\ThemeManagerInterface;
+use Drupal\file\Upload\FileElementHelper;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
@@ -405,7 +406,7 @@ class ThemeSettingsForm extends ConfigFormBase {
 
     if ($this->moduleHandler->moduleExists('file')) {
       /** @var \Drupal\file\Upload\FileElementHelper $fileElementHelper */
-      $fileElementHelper = \Drupal::service('file.element_helper');
+      $fileElementHelper = \Drupal::service(FileElementHelper::class);
 
       // Check for a new uploaded logo.
       if (isset($form['logo'])) {

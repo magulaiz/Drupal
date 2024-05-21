@@ -6,6 +6,7 @@ use Drupal\Component\Utility\Environment;
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\file\Upload\FileElementHelper;
 use Drupal\language\ConfigurableLanguageManagerInterface;
 use Drupal\language\Entity\ConfigurableLanguage;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -160,7 +161,7 @@ class ImportForm extends FormBase {
    */
   public function validateForm(array &$form, FormStateInterface $form_state) {
     /** @var \Drupal\file\Upload\FileElementHelper $fileElementHelper */
-    $fileElementHelper = \Drupal::service('file.element_helper');
+    $fileElementHelper = \Drupal::service(FileElementHelper::class);
     $files = $fileElementHelper->saveFileUploads($form['file'], $form_state);
     $this->file = reset($files);
 
