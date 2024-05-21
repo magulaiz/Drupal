@@ -123,10 +123,10 @@ class NumericArgument extends ArgumentPluginBase {
             /** @var \Drupal\Core\Database\Query\Select $subquery */
             $subquery = $connection->select($main_table);
             $subquery->addField($main_table, $main_field);
+            $count = 0;
 
             foreach ($this->value as $item_value) {
-              $alias = empty($main_table_used) ? $main_table : $subquery->leftJoin($main_table, NULL, "%alias.$main_field = $main_table.$main_field");
-              $main_table_used = TRUE;
+              $alias = !$count++ ? $main_table : $subquery->leftJoin($main_table, NULL, "%alias.$main_field = $main_table.$main_field");
               $subquery_clause->condition("$alias.$this->realField", $item_value);
             }
 
@@ -142,10 +142,10 @@ class NumericArgument extends ArgumentPluginBase {
         }
         else {
           $clause = $connection->condition('AND');
+          $count = 0;
 
           foreach ($this->value as $item_value) {
-            $alias = empty($main_table_used) ? $this->tableAlias : $this->query->addTable($this->table);
-            $main_table_used = TRUE;
+            $alias = !$count++ ? $this->tableAlias : $this->query->addTable($this->table);
             $clause->condition("$alias.$this->realField", $item_value);
           }
 
