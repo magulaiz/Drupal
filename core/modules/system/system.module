@@ -6,6 +6,7 @@
 
 use Drupal\Component\FileSecurity\FileSecurity;
 use Drupal\Core\Extension\Extension;
+use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Url;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -490,5 +491,18 @@ function system_preprocess_toolbar(array &$variables, $hook, $info): void {
   if (_system_is_claro_admin_and_not_active()) {
     require_once DRUPAL_ROOT . '/core/themes/claro/claro.theme';
     claro_preprocess_toolbar($variables, $hook, $info);
+  }
+}
+
+/**
+ * Implements hook_entity_form_mode_presave().
+ *
+ * Transforms empty description into null.
+ *
+ * @see system_post_update_convert_empty_string_entity_form_modes_to_null()
+ */
+function system_entity_form_mode_presave(EntityInterface $entity) {
+  if (trim($entity->getDescription()) === '') {
+    $entity->set('description', NULL);
   }
 }
