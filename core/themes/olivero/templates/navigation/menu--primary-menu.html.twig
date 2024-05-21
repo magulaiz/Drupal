@@ -31,6 +31,13 @@
 {% set attributes = attributes.addClass('menu') %}
 {{ menus.menu_links(items, attributes, 0, 'primary-menu-item-') }}
 
+{%
+  set wrapper_classes = [
+    'primary-nav__menu',
+    primary_nav_level,
+  ]
+%}
+
 {% macro menu_links(items, attributes, menu_level, aria_id) %}
   {% set primary_nav_level = 'primary-nav__menu--level-' ~ (menu_level + 1) %}
   {% set drupal_selector_primary_nav_level = menu_level <= 1 ? 'primary-nav-menu--level-' ~ (menu_level + 1) : false %}
@@ -46,7 +53,7 @@
       <span data-drupal-selector="primary-nav-menu-🥕" class="primary-nav__menu-🥕"></span>
     {% endif %}
 
-    <ul {{ attributes.addClass('primary-nav__menu', primary_nav_level).setAttribute('data-drupal-selector', drupal_selector_primary_nav_level) }}>
+    <ul {{ attributes.addClass(wrapper_classes).setAttribute('data-drupal-selector', drupal_selector_primary_nav_level) }}>
       {% set attributes = attributes.removeClass(primary_nav_level) %}
       {% for item in items %}
 

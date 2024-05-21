@@ -80,6 +80,12 @@
     view_mode ? 'node--view-mode-' ~ view_mode|clean_class,
   ]
 %}
+{%
+  set wrapper_classes = [
+    'node__content',
+    layout,
+  ]
+%}
 <article{{ attributes.addClass(classes) }}>
   <header class="{{ layout }}">
     {{ title_prefix }}
@@ -103,7 +109,7 @@
       </div>
     {% endif %}
   </header>
-  <div{{ content_attributes.addClass('node__content', layout) }}>
+  <div{{ content_attributes.addClass(wrapper_classes) }}>
     {# Comments not part of content, so they won't inherit .text-content styles. #}
     {{ content|without('comment') }}
   </div>

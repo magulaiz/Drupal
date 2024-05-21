@@ -20,6 +20,13 @@
 #}
 {% import _self as book_tree %}
 
+{%
+  set wrapper_classes = [
+    'book-navigation__menu menu',
+    'menu--level-' ~ (menu_level + 1),
+  ]
+%}
+
 {#
   We call a macro which calls itself to render the full tree.
   @see https://twig.symfony.com/doc/3.x/tags/macro.html
@@ -30,7 +37,7 @@
   {% import _self as book_tree %}
   {% if items %}
     {% if menu_level == 0 %}
-      <ul{{ attributes.addClass('book-navigation__menu menu', 'menu--level-' ~ (menu_level + 1)) }}>
+      <ul{{ attributes.addClass(wrapper_classes) }}>
     {% else %}
       <ul class='menu menu--level-{{ menu_level + 1 }}'>
     {% endif %}
