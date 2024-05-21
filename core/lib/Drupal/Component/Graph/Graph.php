@@ -25,9 +25,9 @@ class Graph {
    *   Example:
    *   @code
    *     1────►2────►3
-   *     │     │
-   *     │     ▼
-   *     └───► 4
+   *           │     │
+   *           │     ▼
+   *           └───► 4
    *   @endcode
    *
    *   @code
