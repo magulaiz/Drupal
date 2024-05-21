@@ -14,6 +14,7 @@ use Drupal\Core\Render\Element\FormElementBase;
 use Drupal\Core\Site\Settings;
 use Drupal\Core\Url;
 use Drupal\file\Entity\File;
+use Drupal\file\Upload\FileElementHelper;
 use Symfony\Component\HttpFoundation\Request;
 
 // cspell:ignore filefield
@@ -74,7 +75,7 @@ class ManagedFile extends FormElementBase {
 
       // Uploads take priority over all other values.
       /** @var \Drupal\file\Upload\FileElementHelper $fileElementHelper */
-      $fileElementHelper = \Drupal::service('file.element_helper');
+      $fileElementHelper = \Drupal::service(FileElementHelper::class);
       if ($files = $fileElementHelper->saveFileUploads($element, $form_state)) {
         if ($element['#multiple']) {
           $fids = array_merge($fids, array_keys($files));
