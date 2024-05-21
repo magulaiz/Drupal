@@ -150,7 +150,7 @@ function node_tokens($type, $tokens, array $data, array $options, BubbleableMeta
                 $display_options = \Drupal::service('entity_display.repository')
                   ->getViewDisplay('node', $node->getType(), 'teaser')
                   ->getComponent('body');
-                if (isset($display_options['settings']['trim_length'])) {
+                if (isset($display_options['settings']['trim_length']) && ($display_options['type'] === 'text_trimmed'|| $display_options['type'] === 'text_summary_or_trimmed')) {
                   $length = $display_options['settings']['trim_length'];
                 }
                 else {
