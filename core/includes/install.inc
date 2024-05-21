@@ -658,30 +658,18 @@ function drupal_requirements_severity(&$requirements) {
  *
  * @return bool
  *   TRUE or FALSE, depending on whether the requirements are met.
+ *
+ * @deprecated in drupal:10.3.0 and is removed from drupal:11.0.0. Use
+ *   \Drupal\Core\Extension\RequirementsChecker::checkModuleRequirements()
+ *   instead.
+ *
+ * @see https://www.drupal.org/node/3409874
  */
 function drupal_check_module($module) {
-  /** @var \Drupal\Core\Extension\ModuleExtensionList $module_list */
-  $module_list = \Drupal::service('extension.list.module');
-  $file = DRUPAL_ROOT . '/' . $module_list->getPath($module) . "/$module.install";
-  if (is_file($file)) {
-    require_once $file;
-  }
-  // Check requirements
-  $requirements = \Drupal::moduleHandler()->invoke($module, 'requirements', ['install']);
-  if (is_array($requirements) && drupal_requirements_severity($requirements) == REQUIREMENT_ERROR) {
-    // Print any error messages
-    foreach ($requirements as $requirement) {
-      if (isset($requirement['severity']) && $requirement['severity'] == REQUIREMENT_ERROR) {
-        $message = $requirement['description'];
-        if (isset($requirement['value']) && $requirement['value']) {
-          $message = t('@requirements_message (Currently using @item version @version)', ['@requirements_message' => $requirement['description'], '@item' => $requirement['title'], '@version' => $requirement['value']]);
-        }
-        \Drupal::messenger()->addError($message);
-      }
-    }
-    return FALSE;
-  }
-  return TRUE;
+  @trigger_error(__FUNCTION__ . '() is deprecated in drupal:10.3.0 and is removed from drupal:11.0.0. Use \Drupal\Core\Extension\RequirementsChecker::checkModuleRequirements() instead. See https://www.drupal.org/node/3409874', E_USER_DEPRECATED);
+  /** @var \Drupal\Core\Extension\RequirementsChecker $requirements_checker */
+  $requirements_checker = \Drupal::service('extension.requirements_checker');
+  return $requirements_checker->checkInstallRequirements($module);
 }
 
 /**
