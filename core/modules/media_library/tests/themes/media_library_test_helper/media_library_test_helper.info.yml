@@ -1,0 +1,5 @@
+name: Media Library Test Helper
+type: theme
+description: 'Adds attributes to facilitate testing'
+version: VERSION
+base theme: false

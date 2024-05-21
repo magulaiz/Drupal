@@ -26,7 +26,7 @@ class EntityReferenceWidgetTest extends MediaLibraryTestBase {
    *
    * @var string
    */
-  protected $defaultTheme = 'starterkit_theme';
+  protected $defaultTheme = 'media_library_test_helper';
 
   /**
    * Test media items.
@@ -234,7 +234,8 @@ class EntityReferenceWidgetTest extends MediaLibraryTestBase {
     $session->getPage()->fillField('Name', 'Dog');
     $session->getPage()->pressButton('Apply filters');
     $this->waitForText('Dog');
-    $this->markTestSkipped("Skipped temporarily for random fails.");
+    // This is where the test was marked skipped. For now don't skip to confirm
+    // 3281695 has addressed its theme dependencies.
     $this->waitForNoText('Bear');
     $session->getPage()->fillField('Name', '');
     $session->getPage()->pressButton('Apply filters');
@@ -434,8 +435,7 @@ class EntityReferenceWidgetTest extends MediaLibraryTestBase {
     // This item was never selected.
     $assert_session->pageTextNotContains('Snake');
     // "Turtle" should come after "Dog", since we changed the weight.
-    $assert_session->elementExists('css', '.field--name-field-twin-media > .field__items > .field__item:last-child:contains("Turtle")');
-    // Make sure everything that was selected shows up.
+    $assert_session->elementExists('css', '[data-test-field-name="field_twin_media"] > div > [data-test-field-item]:contains("Turtle")');    // Make sure everything that was selected shows up.
     $assert_session->pageTextContains('Dog');
     $assert_session->pageTextContains('Turtle');
 
@@ -527,7 +527,7 @@ class EntityReferenceWidgetTest extends MediaLibraryTestBase {
     $this->waitForText('Bear has been removed.');
     $page->pressButton('Save');
 
-    $assert_session->elementTextContains('css', '.field--name-field-unlimited-media > .field__items > .field__item:last-child', 'Dog');
+    $assert_session->elementTextContains('css', '[data-test-field-name="field_unlimited_media"] > div > [data-test-field-item]:last-child', 'Dog');
   }
 
   /**
@@ -557,8 +557,8 @@ class EntityReferenceWidgetTest extends MediaLibraryTestBase {
 
     $page->pressButton('Save');
 
-    $assert_session->elementTextContains('css', '.field--name-field-unlimited-media > .field__items > .field__item:first-child', 'Cat');
-    $assert_session->elementTextContains('css', '.field--name-field-unlimited-media > .field__items > .field__item:last-child', 'Bear');
+    $assert_session->elementTextContains('css', '[data-test-field-name="field_unlimited_media"] > div > [data-test-field-item]:first-child', 'Cat');
+    $assert_session->elementTextContains('css', '[data-test-field-name="field_unlimited_media"] > div > [data-test-field-item]:last-child', 'Bear');
   }
 
   /**
