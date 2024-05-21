@@ -13,6 +13,7 @@ use Drupal\Tests\BrowserTestBase;
  * Tests the entity display modes UI.
  *
  * @group field_ui
+ * @group #slow
  */
 class EntityDisplayModeTest extends BrowserTestBase {
 
