@@ -312,18 +312,6 @@ $settings['hash_salt'] = '';
 $settings['update_free_access'] = FALSE;
 
 /**
- * Modules the theme registry will be built for on update.php.
- *
- * Because update.php needs to render things, the theme registry has to be
- * built. Some of the data required to build this may be unstable for a module
- * until the update process has completed. To prevent the update.php page from
- * crashing and therefore leaving a website in limbo, only the system module is
- * used to build the theme registry. More modules can be added, if needed. Set
- * this setting to FALSE to use all modules to build the theme registry.
- */
-# $settings['update_theme_registry_module_filter'] = ['system'];
-
-/**
  * Fallback to HTTP for Update Manager and for fetching security advisories.
  *
  * If your site fails to connect to updates.drupal.org over HTTPS (either when
