@@ -68,7 +68,7 @@ class SaveUploadFormTest extends FileManagedTestBase {
    */
   protected function setUp(): void {
     parent::setUp();
-    $this->expectDeprecation('_file_save_upload_from_form() is deprecated in drupal:10.2.0 and is removed from drupal:11.0.0. Use \Drupal\file\Upload\FileElementHelper::saveFileUploads instead. See https://www.drupal.org/node/3382414');
+    $this->expectDeprecation('_file_save_upload_from_form() is deprecated in drupal:10.4.0 and is removed from drupal:12.0.0. Use \Drupal\file\Upload\FileElementHelper::saveFileUploads instead. See https://www.drupal.org/node/3382414');
     $account = $this->drupalCreateUser(['access site reports']);
     $this->drupalLogin($account);
 

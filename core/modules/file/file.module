@@ -230,7 +230,7 @@ function file_cron() {
  *   Contrib and custom code should not call this function, they should use the
  *   managed file upload widgets in core.
  *
- * @deprecated in drupal:10.2.0 and is removed from drupal:11.0.0. Use
+ * @deprecated in drupal:10.4.0 and is removed from drupal:12.0.0. Use
  *   \Drupal\file\Upload\FileElementHelper::saveFileUploads() instead.
  *
  * @see https://www.drupal.org/node/3382414
@@ -238,7 +238,7 @@ function file_cron() {
  * @see https://www.drupal.org/project/drupal/issues/2482783
  */
 function _file_save_upload_from_form(array $element, FormStateInterface $form_state, $delta = NULL, FileExists|int $fileExists = FileExists::Rename) {
-  @trigger_error(__FUNCTION__ . '() is deprecated in drupal:10.2.0 and is removed from drupal:11.0.0. Use \Drupal\file\Upload\FileElementHelper::saveFileUploads instead. See https://www.drupal.org/node/3382414', E_USER_DEPRECATED);
+  @trigger_error(__FUNCTION__ . '() is deprecated in drupal:10.4.0 and is removed from drupal:12.0.0. Use \Drupal\file\Upload\FileElementHelper::saveFileUploads instead. See https://www.drupal.org/node/3382414', E_USER_DEPRECATED);
   if (!$fileExists instanceof FileExists) {
     $fileExists = FileExists::fromLegacyInt($fileExists, __METHOD__);
   }
@@ -329,7 +329,7 @@ function _file_save_upload_from_form(array $element, FormStateInterface $form_st
  * @throws \ValueError
  *   Thrown if $fileExists is a legacy int and not a valid value.
  *
- * @deprecated in drupal:10.2.0 and is removed from drupal:11.0.0. Use
+ * @deprecated in drupal:10.4.0 and is removed from drupal:12.0.0. Use
  *   \Drupal\file\Upload\FormFileUploadHandler::saveFileUploads() instead.
  *
  * @see https://www.drupal.org/node/3382414
@@ -599,14 +599,14 @@ function file_managed_file_submit($form, FormStateInterface $form_state) {
  *   ID. Each array element contains a file entity. Function returns FALSE if
  *   upload directory could not be created or no files were uploaded.
  *
- * @deprecated in drupal:10.2.0 and is removed from drupal:11.0.0. Use
+ * @deprecated in drupal:10.4.0 and is removed from drupal:12.0.0. Use
  *   \Drupal\file\Upload\FileElementHelper::saveFileUploads instead.
  *
  * @see https://www.drupal.org/node/3382414
  * @see \Drupal\file\Upload\FileElementHelper::saveFileUploads()
  */
 function file_managed_file_save_upload($element, FormStateInterface $form_state) {
-  @trigger_error(__FUNCTION__ . '() is deprecated in drupal:10.2.0 and is removed from drupal:11.0.0. Use \Drupal\file\Upload\FileElementHelper::saveFileUploads() instead. See https://www.drupal.org/node/3382414', E_USER_DEPRECATED);
+  @trigger_error(__FUNCTION__ . '() is deprecated in drupal:10.4.0 and is removed from drupal:12.0.0. Use \Drupal\file\Upload\FileElementHelper::saveFileUploads() instead. See https://www.drupal.org/node/3382414', E_USER_DEPRECATED);
   /** @var \Drupal\file\Upload\FileElementHelper $elementHelper */
   $elementHelper = \Drupal::service(FileElementHelper::class);
   return $elementHelper->saveFileUploads($element, $form_state);

@@ -95,7 +95,7 @@ class LegacyFileUploadTest extends FileManagedUnitTestBase {
     ];
     $formState = new FormState();
 
-    $this->expectDeprecation('file_managed_file_save_upload() is deprecated in drupal:10.2.0 and is removed from drupal:11.0.0. Use \Drupal\file\Upload\FileElementHelper::saveFileUploads() instead. See https://www.drupal.org/node/3382414');
+    $this->expectDeprecation('file_managed_file_save_upload() is deprecated in drupal:10.4.0 and is removed from drupal:12.0.0. Use \Drupal\file\Upload\FileElementHelper::saveFileUploads() instead. See https://www.drupal.org/node/3382414');
     // We cannot use move_uploaded_files() so this will fail.
     $files = file_managed_file_save_upload($element, $formState);
     $this->assertCount(1, $formState->getErrors());
