@@ -15,7 +15,7 @@ function content_moderation_update_last_removed() {
 /**
  * Add database index to make moderation_state computed field lookups faster.
  */
-function content_moderation_update_8701(&$sandbox) {
+function content_moderation_update_10401(&$sandbox) {
   $databaseSchema = \Drupal::database()->schema();
   $entityDefinitionUpdateManager = \Drupal::entityDefinitionUpdateManager();
 
