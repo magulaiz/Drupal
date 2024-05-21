@@ -133,19 +133,18 @@ class NodeTokenReplaceTest extends TokenReplaceKernelTestBase {
     }
 
     // Repeat for a node without a summary.
-    // Length of this text is 843 characters and it's longer than a default
+    // Length of this text is ~660 characters and it's longer than a default
     // trim length setting (600).
-    $text = '<blink>Lorem ipsum</blink> dolor sit amet, consectetur adipiscing elit. '
-      . 'Morbi diam dui, finibus et purus ac, elementum pretium augue. '
-      . 'Fusce lacus nisl, feugiat sit amet blandit sed, mattis eu ligula. Duis laoreet dui non felis maximus fringilla. '
-      . 'Maecenas tempor magna id urna dapibus, in elementum mauris consequat. '
-      . 'Praesent in urna non felis fringilla ullamcorper interdum eu risus. '
-      . 'Vestibulum id erat ultrices, varius est sed, dignissim dui. Vestibulum a dapibus nisl. '
-      . 'Maecenas vestibulum nibh a aliquet mollis. Donec ac justo eget justo interdum faucibus. '
-      . 'Aenean sit amet finibus turpis. Donec viverra vel eros eget varius. Praesent rutrum est diam. '
-      . 'Mauris at odio scelerisque, mattis mi et, tempor eros. '
-      . 'Vestibulum sollicitudin sem quis diam sollicitudin posuere. Nam finibus vestibulum suscipit. '
-      . 'Fusce tempor tincidunt lorem vitae mollis.';
+    $text = '<blink>The Drupal coding standards</blink> apply to code within '
+      . 'Drupal and its contributed modules. These standards are version-independent '
+      . 'and "always-current".' . PHP_EOL
+      . 'All new code should follow the current standards, regardless of (core) version.' . PHP_EOL
+      . 'Existing code in older versions may be updated. For large code-bases (like Drupal core), '
+      . 'updating the code of a previous version for the current standards may be too huge of a task.' . PHP_EOL
+      . 'Comments and names should use US English spelling.' . PHP_EOL
+      . 'Coding standard fixes are done by rule not individual files.' . PHP_EOL
+      . 'The video tutorial, Understanding the Drupal Coding Standards, '
+      . 'explains the standards, why they are important, and how to use them.'
     // Create a node.
     $node = Node::create([
       'type' => 'article',
