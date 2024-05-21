@@ -1,0 +1,19 @@
+{% extends 'umami:card' %}
+
+{% do attributes.addClass('umami-card--common') %}
+
+{% block card %}
+
+  {% block title %}
+    {{ parent() }}
+  {% endblock %}
+
+  {% block read_more %}
+    {{ parent() }}
+  {% endblock %}
+
+  {% block content %}
+    {{ parent() }}
+  {% endblock %}
+
+{% endblock %}

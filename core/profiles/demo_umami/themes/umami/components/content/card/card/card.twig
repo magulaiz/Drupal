@@ -1,0 +1,30 @@
+{% set classes = [
+  'umami-card'
+] %}
+
+<article{{ attributes.addClass(classes) }}>
+  {% block card %}
+    {% block title %}
+      {{ include('umami:card-title', {
+        title,
+        title_attributes,
+        title_prefix,
+        title_suffix
+      }, with_context = false) }}
+    {% endblock %}
+
+    {% block content %}
+      <div{{ content_attributes.addClass('umami-card__content') }}>
+        {{ content }}
+      </div>
+    {% endblock %}
+
+    {% block read_more %}
+      <div class="read-more">
+        <a class="read-more__link" href="{{ url }}">
+          {% trans %}View {{ read_more_label }} {% endtrans %}<span class="visually-hidden"> - {{ read_more_label }}</span>
+        </a>
+      </div>
+    {% endblock %}
+  {% endblock %}
+</article>

@@ -1,0 +1,22 @@
+$schema: https://git.drupalcode.org/project/sdc/-/raw/1.x/src/metadata.schema.json
+name: Card Title
+description: A card title.
+props:
+  type: object
+  properties:
+    title:
+      type: string
+      title: Title
+      description: The title of the node.
+      examples:
+        - A recipe for success!
+    title_attributes:
+      type: string
+      title: Title attributes
+      description: Title attributes object.
+    title_prefix:
+      type: array
+      title: Title prefix
+    title_suffix:
+      type: array
+      title: Title suffix

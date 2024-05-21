@@ -1,0 +1,10 @@
+.umami-card .umami-card__title {
+  flex-grow: 1;
+}
+
+.umami-card .umami-card__title {
+  text-decoration: none;
+  color: #000;
+  font-size: 1.424rem;
+  font-weight: 400;
+}

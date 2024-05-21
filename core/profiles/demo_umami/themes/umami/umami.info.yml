@@ -10,6 +10,9 @@ libraries:
 dependencies:
   - drupal:sdc
 
+dependencies:
+  - drupal:sdc
+
 libraries-override:
   layout_builder/twocol_section:
     css:

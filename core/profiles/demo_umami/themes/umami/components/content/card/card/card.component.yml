@@ -1,0 +1,47 @@
+$schema: https://git.drupalcode.org/project/sdc/-/raw/1.x/src/metadata.schema.json
+name: Card
+description: A card with an image, title, and a link.
+props:
+  type: object
+  properties:
+    title:
+      type: string
+      title: Title
+      description: The title of the node.
+      examples:
+        - A recipe for success!
+    url:
+      type: string
+      title: Url
+      description: Card link URL.
+    attributes:
+      type: Drupal\Core\Template\Attribute
+      title: Attributes
+      description: Wrapper attributes.
+    content_attributes:
+      type: Drupal\Core\Template\Attribute
+      title: Content attributes
+      description: Content wrapper attributes.
+    title_attributes:
+      type: Drupal\Core\Template\Attribute
+      title: Title attributes
+      description: Title attributes object.
+    title_prefix:
+      type: array
+      title: Title prefix
+    title_suffix:
+      type: array
+      title: Title suffix
+    read_more_label:
+      type: string
+      title: View more label
+      description: Label for read more link.
+slots:
+  type: object
+  content:
+    title: Content
+    required: true
+    description: The card content.
+libraryOverrides:
+  dependencies:
+    - umami/more-link
