@@ -136,12 +136,12 @@ class NodeTokenReplaceTest extends TokenReplaceKernelTestBase {
     // trim length setting (600).
     $text = 'The Drupal coding standards apply to code within '
       . 'Drupal and its contributed modules. These standards are version-independent '
-      . 'and "always-current".' . PHP_EOL
-      . 'All new code should follow the current standards, regardless of (core) version.' . PHP_EOL
+      . 'and "always-current". '
+      . 'All new code should follow the current standards, regardless of (core) version. '
       . 'Existing code in older versions may be updated. For large code-bases (like Drupal core), '
-      . 'updating the code of a previous version for the current standards may be too huge of a task.' . PHP_EOL
-      . 'Comments and names should use US English spelling.' . PHP_EOL
-      . 'Coding standard fixes are done by rule not individual files.' . PHP_EOL
+      . 'updating the code of a previous version for the current standards may be too huge of a task. '
+      . 'Comments and names should use US English spelling. '
+      . 'Coding standard fixes are done by rule not individual files. '
       . 'The video tutorial, Understanding the Drupal Coding Standards, '
       . 'explains the standards, why they are important, and how to use them.';
 
@@ -199,11 +199,11 @@ class NodeTokenReplaceTest extends TokenReplaceKernelTestBase {
     $view_display->save();
     $expected_trimmed_to_600 = Html::escape('The Drupal coding standards apply to code within '
     . 'Drupal and its contributed modules. These standards are version-independent '
-    . 'and "always-current".' . PHP_EOL
-    . 'All new code should follow the current standards, regardless of (core) version.' . PHP_EOL
+    . 'and "always-current". '
+    . 'All new code should follow the current standards, regardless of (core) version. '
     . 'Existing code in older versions may be updated. For large code-bases (like Drupal core), '
-    . 'updating the code of a previous version for the current standards may be too huge of a task.' . PHP_EOL
-    . 'Comments and names should use US English spelling.' . PHP_EOL
+    . 'updating the code of a previous version for the current standards may be too huge of a task. '
+    . 'Comments and names should use US English spelling. '
     . 'Coding standard fixes are done by rule not individual files.');
     $this->assertNodeSummaryTokenReplacement($node, $expected_trimmed_to_600);
 
