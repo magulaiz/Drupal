@@ -37,7 +37,9 @@ class UserUpdateRoleMigrateTest extends UpdatePathTestBase {
       ->execute()
       ->fetchField();
     $authenticated = unserialize($authenticated);
-    $authenticated['permissions'][] = 'does_not_exist';
+    // Insert permission into the middle of the array to ensure permissions
+    // are re-keyed.
+    array_splice($authenticated['permissions'], 2, 0, 'does_not_exist');
     $connection->update('config')
       ->fields([
         'data' => serialize($authenticated),
@@ -55,6 +57,9 @@ class UserUpdateRoleMigrateTest extends UpdatePathTestBase {
 
     $authenticated = Role::load('authenticated');
     $this->assertFalse($authenticated->hasPermission('does_not_exist'), 'Authenticated role does not have a permission that does not exist');
+    $permissions = $authenticated->getPermissions();
+    // Ensure permissions have been re-keyed.
+    $this->assertEquals(array_keys(array_values($permissions)), array_keys($permissions));
 
     $this->drupalLogin($this->createUser(['access site reports']));
     $this->drupalGet('admin/reports/dblog', ['query' => ['type[]' => 'update']]);
