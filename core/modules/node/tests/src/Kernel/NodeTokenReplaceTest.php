@@ -181,7 +181,7 @@ class NodeTokenReplaceTest extends TokenReplaceKernelTestBase {
     // formatter of teaser view mode.
     $view_display->setComponent('body', [
       'type' => 'text_trimmed',
-      'settings' => ['trim_length' => 80],
+      'settings' => ['trim_length' => 90],
     ]);
     $view_display->save();
     $expected_trimmed_to_80 = Html::escape('The Drupal coding standards apply to code within '
