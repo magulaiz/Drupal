@@ -51,7 +51,13 @@ class DbUpdateNegotiator implements ThemeNegotiatorInterface {
    * {@inheritdoc}
    */
   public function determineActiveTheme(RouteMatchInterface $route_match) {
-    $active_theme = Settings::get('maintenance_theme') ?: 'claro';
+    $active_theme = Settings::get('maintenance_theme');
+
+    // The information checks below would fail when falling back to the Claro
+    // theme if said theme isn't enabled on the site, so we return early here.
+    if (!$active_theme) {
+      return 'claro';
+    }
 
     $list_info = $this->themeHandler->listInfo();
     $theme_info = $list_info[$active_theme]->info;
