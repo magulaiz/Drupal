@@ -4,10 +4,12 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\node\Kernel;
 
+use Drupal\Component\Render\FormattableMarkup;
 use Drupal\Component\Utility\Html;
 use Drupal\Core\Render\BubbleableMetadata;
 use Drupal\node\Entity\Node;
 use Drupal\node\Entity\NodeType;
+use Drupal\node\NodeInterface;
 use Drupal\Tests\system\Kernel\Token\TokenReplaceKernelTestBase;
 
 /**
@@ -131,25 +133,95 @@ class NodeTokenReplaceTest extends TokenReplaceKernelTestBase {
     }
 
     // Repeat for a node without a summary.
+    // Length of this text is 843 characters and it's longer than a default
+    // trim length setting (600).
+    $text = '<blink>Lorem ipsum</blink> dolor sit amet, consectetur adipiscing elit. '
+      . 'Morbi diam dui, finibus et purus ac, elementum pretium augue. '
+      . 'Fusce lacus nisl, feugiat sit amet blandit sed, mattis eu ligula. Duis laoreet dui non felis maximus fringilla. '
+      . 'Maecenas tempor magna id urna dapibus, in elementum mauris consequat. '
+      . 'Praesent in urna non felis fringilla ullamcorper interdum eu risus. '
+      . 'Vestibulum id erat ultrices, varius est sed, dignissim dui. Vestibulum a dapibus nisl. '
+      . 'Maecenas vestibulum nibh a aliquet mollis. Donec ac justo eget justo interdum faucibus. '
+      . 'Aenean sit amet finibus turpis. Donec viverra vel eros eget varius. Praesent rutrum est diam. '
+      . 'Mauris at odio scelerisque, mattis mi et, tempor eros. '
+      . 'Vestibulum sollicitudin sem quis diam sollicitudin posuere. Nam finibus vestibulum suscipit. '
+      . 'Fusce tempor tincidunt lorem vitae mollis.';
+    // Create a node.
     $node = Node::create([
       'type' => 'article',
       'uid' => $account->id(),
       'title' => '<blink>Blinking Text</blink>',
-      'body' => [['value' => 'A string that looks random like TR5c2I', 'format' => 'plain_text']],
+      'body' => [['value' => $text, 'format' => 'plain_text']],
     ]);
     $node->save();
+    // Get teaser node view display.
+    /** @var \Drupal\Core\ $view_display_storage */
+    $view_display_storage = \Drupal::entityTypeManager()
+      ->getStorage('entity_view_display');
+    $view_display = $view_display_storage->load('node.article.teaser') ?? $view_display_storage->create([
+      'targetEntityType' => 'node',
+      'bundle' => 'article',
+      'mode' => 'teaser',
+      'status' => TRUE,
+    ]);
 
-    // Generate and test token - use full body as expected value.
-    $tests = [];
-    $tests['[node:summary]'] = $node->body->processed;
+    // Token [node:summary] should use trim settings of "Summary or trimmed"
+    // formatter of teaser view mode.
+    $view_display->setComponent('body', [
+      'type' => 'text_summary_or_trimmed',
+      'settings' => ['trim_length' => 160],
+    ]);
+    $view_display->save();
+    $expected_trimmed_to_160 = Html::escape('<blink>Lorem ipsum</blink> dolor sit amet, consectetur adipiscing elit. '
+      . 'Morbi diam dui, finibus et purus ac, elementum pretium augue.');
+    $this->assertNodeSummaryTokenReplacement($node, $expected_trimmed_to_160);
 
-    // Test to make sure that we generated something for each token.
-    $this->assertNotContains(0, array_map('strlen', $tests), 'No empty tokens generated for node without a summary.');
+    // Token [node:summary] should use trim settings of "Trimmed"
+    // formatter of teaser view mode.
+    $view_display->setComponent('body', [
+      'type' => 'text_trimmed',
+      'settings' => ['trim_length' => 80],
+    ]);
+    $view_display->save();
+    $expected_trimmed_to_80 = Html::escape('<blink>Lorem ipsum</blink> dolor sit amet, consectetur adipiscing elit.');
+    $this->assertNodeSummaryTokenReplacement($node, $expected_trimmed_to_80);
 
-    foreach ($tests as $input => $expected) {
-      $output = $this->tokenService->replace($input, ['node' => $node], ['language' => $this->interfaceLanguage]);
-      $this->assertSame((string) $expected, (string) $output, "Failed test case: {$input}");
-    }
+    // Token [node:summary] should not pickup trim length setting of any other
+    // formatter rather than "Summary or trimmed" or "Trimmed", even if setting
+    // name matches.
+    // Fallbacks to default trim length setting (600).
+    $view_display->setComponent('body', [
+      'type' => 'text_default',
+      'settings' => ['trim_length' => 42],
+    ]);
+    $view_display->save();
+    $expected_trimmed_to_600 = Html::escape('<blink>Lorem ipsum</blink> dolor sit amet, consectetur adipiscing elit. '
+      . 'Morbi diam dui, finibus et purus ac, elementum pretium augue. Fusce lacus nisl, feugiat sit amet blandit sed, mattis eu ligula. '
+      . 'Duis laoreet dui non felis maximus fringilla. Maecenas tempor magna id urna dapibus, in elementum mauris consequat. '
+      . 'Praesent in urna non felis fringilla ullamcorper interdum eu risus. '
+      . 'Vestibulum id erat ultrices, varius est sed, dignissim dui. Vestibulum a dapibus nisl. '
+      . 'Maecenas vestibulum nibh a aliquet mollis. Donec ac justo eget justo interdum faucibus. '
+      . 'Aenean sit amet finibus turpis.');
+    $this->assertNodeSummaryTokenReplacement($node, $expected_trimmed_to_600);
+
+    // Token [node:summary] should not pickup trim length setting if teaser
+    // view mode does not exist.
+    // Fallbacks to "Summary or trimmed" default trim length setting (600).
+    $view_display->delete();
+    $this->assertNodeSummaryTokenReplacement($node, $expected_trimmed_to_600);
+  }
+
+  /**
+   * Asserts that [node:summary] token works as expected.
+   *
+   * @param \Drupal\node\NodeInterface $node
+   *   Node to assert against.
+   * @param string $expected
+   *   Expected token replacement output.
+   */
+  protected function assertNodeSummaryTokenReplacement(NodeInterface $node, $expected) {
+    $output = $this->tokenService->replace('[node:summary]', ['node' => $node], ['langcode' => $this->interfaceLanguage->getId()]);
+    $this->assertEquals($output, $expected, new FormattableMarkup('Node token %token replaced.', ['%token' => '[node:summary]']));
   }
 
 }
