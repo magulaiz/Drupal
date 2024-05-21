@@ -133,7 +133,7 @@ class FileTestForm implements FormInterface {
       \Drupal::messenger()->addStatus(t('File MIME type is @mimetype.', ['@mimetype' => $file->getMimeType()]));
       \Drupal::messenger()->addStatus(t('You WIN!'));
     }
-    elseif ($result->hasViolations()) {
+    elseif ($result->hasViolations() || $result->hasError()) {
       \Drupal::messenger()->addError(t('Epic upload FAIL!'));
     }
   }

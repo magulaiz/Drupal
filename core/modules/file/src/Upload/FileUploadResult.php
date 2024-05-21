@@ -19,6 +19,11 @@ class FileUploadResult {
   protected bool $securityRename = FALSE;
 
   /**
+   * If the filename was renamed.
+   */
+  protected bool $renamed = FALSE;
+
+  /**
    * The sanitized filename.
    */
   protected ?string $sanitizedFilename = NULL;
@@ -59,6 +64,7 @@ class FileUploadResult {
    */
   public function setSecurityRename(): FileUploadResult {
     $this->securityRename = TRUE;
+    $this->renamed = TRUE;
     return $this;
   }
 
@@ -72,6 +78,7 @@ class FileUploadResult {
    */
   public function setSanitizedFilename(string $sanitizedFilename): FileUploadResult {
     $this->sanitizedFilename = $sanitizedFilename;
+    $this->renamed = TRUE;
     return $this;
   }
 
@@ -125,7 +132,7 @@ class FileUploadResult {
    * @return bool
    */
   public function isRenamed(): bool {
-    return $this->originalFilename !== $this->sanitizedFilename;
+    return $this->renamed;
   }
 
   /**

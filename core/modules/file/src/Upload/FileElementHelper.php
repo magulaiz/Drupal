@@ -81,9 +81,7 @@ class FileElementHelper {
         $errors[] = $result->getError();
       }
       if ($result->hasViolations()) {
-        foreach ($result->getViolations() as $violation) {
-          $errors[] = $violation->getMessage();
-        }
+        $errors[] = $this->formUploadHandler->createViolationMessage($result->getOriginalFilename(), $result->getViolations());
       }
     }
     // Add any collected error messages to the form.

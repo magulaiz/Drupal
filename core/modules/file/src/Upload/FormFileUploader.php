@@ -140,7 +140,7 @@ class FormFileUploader {
   /**
    * Creates the violation messages.
    */
-  protected function createViolationMessage(string $originalName, ConstraintViolationListInterface $violations): MarkupInterface {
+  public function createViolationMessage(string $originalName, ConstraintViolationListInterface $violations): MarkupInterface {
     $items = [];
     foreach ($violations as $violation) {
       $items[] = $violation->getMessage();

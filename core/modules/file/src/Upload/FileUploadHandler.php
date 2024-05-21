@@ -152,15 +152,19 @@ class FileUploadHandler {
       // @phpstan-ignore-next-line
       $fileExists = FileExists::fromLegacyInt($fileExists, __METHOD__);
     }
-    $result = new FileUploadResult();
+    $originalName = $uploadedFile->getClientOriginalName();
+
+    // Initialize the result.
+    $result = (new FileUploadResult())
+      ->setOriginalFilename($originalName);
 
     $violations = $uploadedFile->validate($this->validatorFactory->createValidator());
+
     if (count($violations) > 0) {
       $result->addViolations($violations);
       return $result;
     }
 
-    $originalName = $uploadedFile->getClientOriginalName();
     $extensions = $this->handleExtensionValidation($validators);
 
     // Assert that the destination contains a valid stream.
