@@ -59,12 +59,16 @@ class DbUpdateNegotiator implements ThemeNegotiatorInterface {
       return 'claro';
     }
 
+    // Check if the maintenance theme relies on any modules and, if it does,
+    // fall back to Claro instead as update.php should be rendered with as few
+    // modules as possible. See Drupal\Core\Theme\Registry::get() on how we only
+    // allow core theme implementations on the update page.
     $list_info = $this->themeHandler->listInfo();
     $theme_info = $list_info[$active_theme]->info;
     if (!empty($theme_info['dependencies'])) {
       foreach (array_filter($theme_info['dependencies']) as $dependency) {
         if (empty($list_info[$dependency])) {
-          throw new \RuntimeException(sprintf('Cannot use %s as the update theme as it depends on %s, which is not a theme.', $active_theme, $dependency));
+          return 'claro';
         }
       }
     }

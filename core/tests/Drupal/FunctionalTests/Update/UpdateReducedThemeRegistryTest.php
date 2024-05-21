@@ -35,10 +35,6 @@ class UpdateReducedThemeRegistryTest extends BrowserTestBase {
           'value' => TRUE,
           'required' => TRUE,
         ],
-        'update_theme_registry_module_filter' => (object) [
-          'value' => ['system'],
-          'required' => TRUE,
-        ],
       ],
     ]);
     $this->drupalGet(Url::fromRoute('system.db_update'));
@@ -54,10 +50,6 @@ class UpdateReducedThemeRegistryTest extends BrowserTestBase {
       'settings' => [
         'update_free_access' => (object) [
           'value' => TRUE,
-          'required' => TRUE,
-        ],
-        'update_theme_registry_module_filter' => (object) [
-          'value' => FALSE,
           'required' => TRUE,
         ],
       ],

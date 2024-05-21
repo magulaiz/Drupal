@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Drupal\Tests\Core\Theme;
 
 use Drupal\Core\Extension\ModuleExtensionList;
-use Drupal\Core\Site\Settings;
 use Drupal\Core\Theme\ActiveTheme;
 use Drupal\Core\Theme\Registry;
 use Drupal\Tests\UnitTestCase;
@@ -88,13 +87,6 @@ class RegistryTest extends UnitTestCase {
   protected $kernel;
 
   /**
-   * The settings.
-   *
-   * @var \Drupal\Core\Site\Settings
-   */
-  protected $settings;
-
-  /**
    * The list of functions that get_defined_functions() should provide.
    *
    * @var array
@@ -116,8 +108,7 @@ class RegistryTest extends UnitTestCase {
     $this->themeManager = $this->createMock('Drupal\Core\Theme\ThemeManagerInterface');
     $this->moduleList = $this->createMock(ModuleExtensionList::class);
     $this->kernel = $this->createMock(HttpKernelInterface::class);
-    $this->settings = new Settings([]);
-    $this->registry = new Registry($this->root, $this->cache, $this->lock, $this->moduleHandler, $this->themeHandler, $this->themeInitialization, $this->runtimeCache, $this->moduleList, $this->kernel, $this->settings);
+    $this->registry = new Registry($this->root, $this->cache, $this->lock, $this->moduleHandler, $this->themeHandler, $this->themeInitialization, $this->runtimeCache, $this->moduleList, $this->kernel);
     $this->registry->setThemeManager($this->themeManager);
   }
 

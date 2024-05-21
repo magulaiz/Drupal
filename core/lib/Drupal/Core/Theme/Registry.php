@@ -181,14 +181,12 @@ class Registry implements DestructableInterface {
    *   The cache backend interface to use for the runtime theme registry data.
    * @param \Drupal\Core\Extension\ModuleExtensionList $module_list
    *   The module list.
-   * @param \Symfony\Component\HttpKernel\HttpKernelInterface|null $kernel
+   * @param \Symfony\Component\HttpKernel\HttpKernelInterface $kernel
    *   The kernel.
-   * @param \Drupal\Core\Site\Settings|null $settings
-   *   The settings.
    * @param string $theme_name
    *   (optional) The name of the theme for which to construct the registry.
    */
-  public function __construct($root, CacheBackendInterface $cache, LockBackendInterface $lock, ModuleHandlerInterface $module_handler, ThemeHandlerInterface $theme_handler, ThemeInitializationInterface $theme_initialization, CacheBackendInterface $runtime_cache, ModuleExtensionList $module_list, protected ?HttpKernelInterface $kernel = NULL, protected ?Settings $settings = NULL, $theme_name = NULL) {
+  public function __construct($root, CacheBackendInterface $cache, LockBackendInterface $lock, ModuleHandlerInterface $module_handler, ThemeHandlerInterface $theme_handler, ThemeInitializationInterface $theme_initialization, CacheBackendInterface $runtime_cache, ModuleExtensionList $module_list, protected HttpKernelInterface $kernel, $theme_name = NULL) {
     $this->root = $root;
     $this->cache = $cache;
     $this->lock = $lock;
@@ -263,16 +261,11 @@ class Registry implements DestructableInterface {
     // Some theme hook implementations such as the one in Views request a lot of
     // information such as field schemas. These might be broken until an update
     // is run, so we need to build a limited registry while on update.php.
-    $filter_list = $this->settings->get('update_theme_registry_module_filter', ['system']);
-    if ($filter_list !== FALSE && $this->kernel instanceof UpdateKernel) {
-      // Ensure:
-      // - The system module is in the filtered list.
-      // - All the filtered modules are enabled.
-      // - The modules are in the correct order.
+    if ($this->kernel instanceof UpdateKernel) {
       $module_list = $this->moduleHandler->getModuleList();
-      $filter_list = array_intersect_key($module_list, array_fill_keys($filter_list, TRUE) + ['system' => TRUE]);
+      $filter_list = array_intersect_key($module_list, ['system' => TRUE]);
 
-      // Call ::build() with only the filtered module list and then revert.
+      // Call ::build() with only the system module and then revert.
       $this->moduleHandler->setModuleList($filter_list);
       $this->build();
       $this->moduleHandler->setModuleList($module_list);
