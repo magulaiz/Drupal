@@ -27,7 +27,7 @@ class UpdateReducedThemeRegistryTest extends BrowserTestBase {
   /**
    * Tests that the update page can be accessed.
    */
-  public function testUpdatePageWithFilterOn(): void {
+  public function testUpdatePageWithBrokenThemeHook(): void {
     require_once $this->root . '/core/includes/update.inc';
     $this->writeSettings([
       'settings' => [
@@ -39,23 +39,6 @@ class UpdateReducedThemeRegistryTest extends BrowserTestBase {
     ]);
     $this->drupalGet(Url::fromRoute('system.db_update'));
     $this->assertSession()->statusCodeEquals(200);
-  }
-
-  /**
-   * Tests that the update page breaks with unstable data.
-   */
-  public function testUpdatePageWithFilterOff(): void {
-    require_once $this->root . '/core/includes/update.inc';
-    $this->writeSettings([
-      'settings' => [
-        'update_free_access' => (object) [
-          'value' => TRUE,
-          'required' => TRUE,
-        ],
-      ],
-    ]);
-    $this->expectExceptionMessage('Exception: This mimics an exception caused by unstable dependencies.');
-    $this->drupalGet(Url::fromRoute('system.db_update'));
   }
 
 }
