@@ -86,6 +86,14 @@ trait LayoutBuilderRoutesTrait {
         ->setRequirements($requirements)
         ->setOptions($options);
       $collection->add("$route_name_prefix.revert", $route);
+
+      $refresh_defaults = $defaults;
+      $refresh_defaults['_form'] = '\Drupal\layout_builder\Form\RefreshOverridesForm';
+      $route = (new Route("$path/refresh"))
+        ->setDefaults($refresh_defaults)
+        ->setRequirements($requirements)
+        ->setOptions($options);
+      $collection->add("$route_name_prefix.refresh", $route);
     }
     elseif (is_subclass_of($definition->getClass(), DefaultsSectionStorageInterface::class)) {
       $disable_defaults = $defaults;
