@@ -144,7 +144,8 @@ class NodeTokenReplaceTest extends TokenReplaceKernelTestBase {
       . 'Comments and names should use US English spelling.' . PHP_EOL
       . 'Coding standard fixes are done by rule not individual files.' . PHP_EOL
       . 'The video tutorial, Understanding the Drupal Coding Standards, '
-      . 'explains the standards, why they are important, and how to use them.'
+      . 'explains the standards, why they are important, and how to use them.';
+
     // Create a node.
     $node = Node::create([
       'type' => 'article',
@@ -153,6 +154,7 @@ class NodeTokenReplaceTest extends TokenReplaceKernelTestBase {
       'body' => [['value' => $text, 'format' => 'plain_text']],
     ]);
     $node->save();
+
     // Get teaser node view display.
     /** @var \Drupal\Core\ $view_display_storage */
     $view_display_storage = \Drupal::entityTypeManager()
@@ -223,7 +225,7 @@ class NodeTokenReplaceTest extends TokenReplaceKernelTestBase {
    */
   protected function assertNodeSummaryTokenReplacement(NodeInterface $node, $expected) {
     $output = $this->tokenService->replace('[node:summary]', ['node' => $node], ['langcode' => $this->interfaceLanguage->getId()]);
-    $this->assertEquals($output, $expected);
+    $this->assertEquals($expected, $output);
   }
 
 }
