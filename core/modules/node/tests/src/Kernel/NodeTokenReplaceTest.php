@@ -171,8 +171,9 @@ class NodeTokenReplaceTest extends TokenReplaceKernelTestBase {
       'settings' => ['trim_length' => 160],
     ]);
     $view_display->save();
-    $expected_trimmed_to_160 = Html::escape('<blink>Lorem ipsum</blink> dolor sit amet, consectetur adipiscing elit. '
-      . 'Morbi diam dui, finibus et purus ac, elementum pretium augue.');
+    $expected_trimmed_to_160 = Html::escape('<blink>The Drupal coding standards</blink> apply to code within '
+      . 'Drupal and its contributed modules. These standards are version-independent '
+      . 'and "always-current".');
     $this->assertNodeSummaryTokenReplacement($node, $expected_trimmed_to_160);
 
     // Token [node:summary] should use trim settings of "Trimmed"
@@ -182,7 +183,8 @@ class NodeTokenReplaceTest extends TokenReplaceKernelTestBase {
       'settings' => ['trim_length' => 80],
     ]);
     $view_display->save();
-    $expected_trimmed_to_80 = Html::escape('<blink>Lorem ipsum</blink> dolor sit amet, consectetur adipiscing elit.');
+    $expected_trimmed_to_80 = Html::escape('<blink>The Drupal coding standards</blink> apply to code within '
+    . 'Drupal and its contributed modules.');
     $this->assertNodeSummaryTokenReplacement($node, $expected_trimmed_to_80);
 
     // Token [node:summary] should not pickup trim length setting of any other
@@ -194,13 +196,14 @@ class NodeTokenReplaceTest extends TokenReplaceKernelTestBase {
       'settings' => ['trim_length' => 42],
     ]);
     $view_display->save();
-    $expected_trimmed_to_600 = Html::escape('<blink>Lorem ipsum</blink> dolor sit amet, consectetur adipiscing elit. '
-      . 'Morbi diam dui, finibus et purus ac, elementum pretium augue. Fusce lacus nisl, feugiat sit amet blandit sed, mattis eu ligula. '
-      . 'Duis laoreet dui non felis maximus fringilla. Maecenas tempor magna id urna dapibus, in elementum mauris consequat. '
-      . 'Praesent in urna non felis fringilla ullamcorper interdum eu risus. '
-      . 'Vestibulum id erat ultrices, varius est sed, dignissim dui. Vestibulum a dapibus nisl. '
-      . 'Maecenas vestibulum nibh a aliquet mollis. Donec ac justo eget justo interdum faucibus. '
-      . 'Aenean sit amet finibus turpis.');
+    $expected_trimmed_to_600 = Html::escape('<blink>The Drupal coding standards</blink> apply to code within '
+    . 'Drupal and its contributed modules. These standards are version-independent '
+    . 'and "always-current".' . PHP_EOL
+    . 'All new code should follow the current standards, regardless of (core) version.' . PHP_EOL
+    . 'Existing code in older versions may be updated. For large code-bases (like Drupal core), '
+    . 'updating the code of a previous version for the current standards may be too huge of a task.' . PHP_EOL
+    . 'Comments and names should use US English spelling.' . PHP_EOL
+    . 'Coding standard fixes are done by rule not individual files.');
     $this->assertNodeSummaryTokenReplacement($node, $expected_trimmed_to_600);
 
     // Token [node:summary] should not pickup trim length setting if teaser
