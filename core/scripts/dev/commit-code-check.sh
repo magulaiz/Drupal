@@ -5,18 +5,6 @@
 # @internal
 #   This script is not covered by Drupal core's backwards compatibility promise.
 #   It exists only for core development purposes.
-#
-# The script makes the following checks:
-# - Spell checking.
-# - File modes.
-# - No changes to core/node_modules directory.
-# - PHPCS checks PHP and YAML files.
-# - PHPStan checks PHP files.
-# - ESLint checks JavaScript and YAML files.
-# - Stylelint checks CSS files.
-# - Checks .pcss.css and .css files are equivalent.
-
-# cSpell:disable
 
 # Searches an array.
 contains_element() {
@@ -26,8 +14,11 @@ contains_element() {
 }
 
 CACHED=0
-DRUPALCI=0
 BRANCH=""
+
+ALL_CHECKS=("phpstan" "phpcs" "js" "css" "cspell" "config" "file")
+SELECTED_CHECKS=("${ALL_CHECKS[@]}")
+
 while test $# -gt 0; do
   case "$1" in
     -h|--help)
@@ -37,7 +28,7 @@ while test $# -gt 0; do
       echo "-h, --help                show brief help"
       echo "--branch BRANCH           creates list of files to check by comparing against a branch"
       echo "--cached                  checks staged files"
-      echo "--drupalci                a special mode for DrupalCI"
+      echo "--check CHECK1,CHECK2     runs specific checks (comma-separated) among phpstan, phpcs, js, css, cspell, config, file"
       echo " "
       echo "Example usage: sh ./core/scripts/dev/commit-code-check.sh --branch 9.2.x"
       exit 0
@@ -50,12 +41,29 @@ while test $# -gt 0; do
       fi
       shift 2
       ;;
+    --check)
+      SELECTED_CHECKS="$2"
+      if [[ "$SELECTED_CHECKS" == "" ]]; then
+        printf "The --check option requires a value. For example: --check phpstan,phpcs\n"
+        exit 1;
+      else
+        IFS=',' read -ra SELECTED_CHECKS <<< "$SELECTED_CHECKS"
+        INVALID_CHECKS=0
+        for i in "${SELECTED_CHECKS[@]}"
+        do
+          if ! contains_element "$i" "${ALL_CHECKS[@]}"; then
+            printf "Check %s is invalid.\n" "$i"
+            INVALID_CHECKS=1
+          fi
+        done
+        if [[ "$INVALID_CHECKS" == 1 ]]; then
+          exit 1;
+        fi
+      fi
+      shift 2
+      ;;
     --cached)
       CACHED=1
-      shift
-      ;;
-    --drupalci)
-      DRUPALCI=1
       shift
       ;;
     *)
@@ -189,8 +197,6 @@ fi;
 
 # This script assumes that composer install and yarn install have already been
 # run and all dependencies are updated.
-FINAL_STATUS=0
-
 DEPENDENCIES_NEED_INSTALLING=0
 # Ensure PHP development dependencies are installed.
 # @todo https://github.com/composer/composer/issues/4497 Improve this to
@@ -202,310 +208,26 @@ if ! [[ -f 'vendor/bin/phpcs' ]]; then
   DEPENDENCIES_NEED_INSTALLING=1;
 fi
 
-cd "$TOP_LEVEL/core"
+# Setup variables.
+source core/scripts/dev/commit-code-check-setup.sh
 
-# Ensure JavaScript development dependencies are installed.
-yarn --version
-yarn >/dev/null
-
-# Check all files for spelling in one go for better performance.
-if [[ $CSPELL_DICTIONARY_FILE_CHANGED == "1" ]] ; then
-  printf "\nRunning spellcheck on *all* files.\n"
-  yarn run spellcheck:core --no-must-find-files --no-progress
-else
-  # Check all files for spelling in one go for better performance. We pipe the
-  # list files in so we obey the globs set on the spellcheck:core command in
-  # core/package.json.
-  echo "${ABS_FILES}" | tr ' ' '\n' | yarn run spellcheck:core --no-must-find-files --file-list stdin
+# Exit early if there are no files.
+if [[ "$ABS_FILES" == "" ]]; then
+  printf "There are no files to check. If you have staged a commit use the --cached option.\n"
+  exit
 fi
 
-if [ "$?" -ne "0" ]; then
-  # If there are failures set the status to a number other than 0.
-  FINAL_STATUS=1
-  printf "\nCSpell: ${red}failed${reset}\n"
-else
-  printf "\nCSpell: ${green}passed${reset}\n"
-fi
-cd "$TOP_LEVEL"
+source core/scripts/dev/commit-code-check-setup.sh
 
-# Add a separator line to make the output easier to read.
-printf "\n"
-printf -- '-%.0s' {1..100}
-printf "\n"
+FINAL_STATUS=0
 
-# Run PHPStan on all files on DrupalCI or when phpstan files are changed.
-# APCu is disabled to ensure that the composer classmap is not corrupted.
-if [[ $PHPSTAN_DIST_FILE_CHANGED == "1" ]] || [[ "$DRUPALCI" == "1" ]]; then
-  printf "\nRunning PHPStan on *all* files.\n"
-  php -d apc.enabled=0 -d apc.enable_cli=0 vendor/bin/phpstan analyze --no-progress --configuration="$TOP_LEVEL/core/phpstan.neon.dist"
-else
-  # Only run PHPStan on changed files locally.
-  printf "\nRunning PHPStan on changed files.\n"
-  php -d apc.enabled=0 -d apc.enable_cli=0 vendor/bin/phpstan analyze --no-progress --configuration="$TOP_LEVEL/core/phpstan-partial.neon" $ABS_FILES
-fi
-
-if [ "$?" -ne "0" ]; then
-  # If there are failures set the status to a number other than 0.
-  FINAL_STATUS=1
-  printf "\nPHPStan: ${red}failed${reset}\n"
-else
-  printf "\nPHPStan: ${green}passed${reset}\n"
-fi
-
-# Add a separator line to make the output easier to read.
-printf "\n"
-printf -- '-%.0s' {1..100}
-printf "\n"
-
-# Run PHPCS on all files on DrupalCI or when phpcs files are changed.
-if [[ $PHPCS_XML_DIST_FILE_CHANGED == "1" ]] || [[ "$DRUPALCI" == "1" ]]; then
-  # Test all files with phpcs rules.
-  vendor/bin/phpcs -ps --parallel="$( (nproc || sysctl -n hw.logicalcpu || echo 4) 2>/dev/null)" --standard="$TOP_LEVEL/core/phpcs.xml.dist"
-  PHPCS=$?
-  if [ "$PHPCS" -ne "0" ]; then
-    # If there are failures set the status to a number other than 0.
+for i in "${SELECTED_CHECKS[@]}"
+do
+  # shellcheck source=/dev/null
+  if ! source "core/scripts/dev/commit-code-check-$i.sh"; then
     FINAL_STATUS=1
-    printf "\nPHPCS: ${red}failed${reset}\n"
-  else
-    printf "\nPHPCS: ${green}passed${reset}\n"
-  fi
-  # Add a separator line to make the output easier to read.
-  printf "\n"
-  printf -- '-%.0s' {1..100}
-  printf "\n"
-fi
-
-# When the eslint config has been changed, then eslint must check all files.
-if [[ $ESLINT_CONFIG_PASSING_FILE_CHANGED == "1" ]]; then
-  cd "$TOP_LEVEL/core"
-  yarn run lint:core-js-passing "$TOP_LEVEL/core"
-  CORRECTJS=$?
-  if [ "$CORRECTJS" -ne "0" ]; then
-    # If there are failures set the status to a number other than 0.
-    FINAL_STATUS=1
-    printf "\neslint: ${red}failed${reset}\n"
-  else
-    printf "\neslint: ${green}passed${reset}\n"
-  fi
-  cd $TOP_LEVEL
-  # Add a separator line to make the output easier to read.
-  printf "\n"
-  printf -- '-%.0s' {1..100}
-  printf "\n"
-fi
-
-# When the stylelint config has been changed, then stylelint must check all files.
-if [[ $STYLELINT_CONFIG_FILE_CHANGED == "1" ]]; then
-  cd "$TOP_LEVEL/core"
-  yarn run lint:css
-  if [ "$?" -ne "0" ]; then
-    # If there are failures set the status to a number other than 0.
-    FINAL_STATUS=1
-    printf "\nstylelint: ${red}failed${reset}\n"
-  else
-    printf "\nstylelint: ${green}passed${reset}\n"
-  fi
-  cd $TOP_LEVEL
-  # Add a separator line to make the output easier to read.
-  printf "\n"
-  printf -- '-%.0s' {1..100}
-  printf "\n"
-fi
-
-# When a Drupal-specific CKEditor 5 plugin changed ensure that it is compiled
-# properly. Only check on DrupalCI, since we're concerned about the build being
-# run with the expected package versions and making sure the result of the build
-# is in sync and conform to expectations.
-if [[ "$DRUPALCI" == "1" ]] && [[ $CKEDITOR5_PLUGINS_CHANGED == "1" ]]; then
-  cd "$TOP_LEVEL/core"
-  yarn run check:ckeditor5
-  if [ "$?" -ne "0" ]; then
-    # If there are failures set the status to a number other than 0.
-    FINAL_STATUS=1
-    printf "\nDrupal-specific CKEditor 5 plugins: ${red}failed${reset}\n"
-  else
-    printf "\nDrupal-specific CKEditor 5 plugins: ${green}passed${reset}\n"
-  fi
-  cd $TOP_LEVEL
-  # Add a separator line to make the output easier to read.
-  printf "\n"
-  printf -- '-%.0s' {1..100}
-  printf "\n"
-fi
-
-# When JavaScript packages change, then rerun all JavaScript style checks.
-if [[ "$JAVASCRIPT_PACKAGES_CHANGED" == "1" ]]; then
-  cd "$TOP_LEVEL/core"
-  yarn run build:css --check
-  CORRECTCSS=$?
-  if [ "$CORRECTCSS" -ne "0" ]; then
-    FINAL_STATUS=1
-    printf "\n${red}ERROR: The compiled CSS from the PCSS files"
-    printf "\n       does not match the current CSS files. Some added"
-    printf "\n       or updated JavaScript package made changes."
-    printf "\n       Recompile the CSS with: yarn run build:css${reset}\n\n"
-  fi
-  cd $TOP_LEVEL
-  # Add a separator line to make the output easier to read.
-  printf "\n"
-  printf -- '-%.0s' {1..100}
-  printf "\n"
-fi
-
-for FILE in $FILES; do
-  STATUS=0;
-  # Print a line to separate spellcheck output from per file output.
-  printf "Checking %s\n" "$FILE"
-  printf "\n"
-
-  # Ensure the file still exists (i.e. is not being deleted).
-  if [ -a $FILE ]; then
-    if [ ${FILE: -3} != ".sh" ]; then
-      if [ -x $FILE ]; then
-        printf "${red}check failed:${reset} file $FILE should not be executable\n"
-        STATUS=1
-      fi
-    fi
   fi
 
-  # Don't commit changes to vendor.
-  if [[ "$FILE" =~ ^vendor/ ]]; then
-    printf "${red}check failed:${reset} file in vendor directory being committed ($FILE)\n"
-    STATUS=1
-  fi
-
-  # Don't commit changes to core/node_modules.
-  if [[ "$FILE" =~ ^core/node_modules/ ]]; then
-    printf "${red}check failed:${reset} file in core/node_modules directory being committed ($FILE)\n"
-    STATUS=1
-  fi
-
-  ############################################################################
-  ### PHP AND YAML FILES
-  ############################################################################
-  if [[ -f "$TOP_LEVEL/$FILE" ]] && [[ $FILE =~ \.(inc|install|module|php|profile|test|theme|yml)$ ]] && [[ $PHPCS_XML_DIST_FILE_CHANGED == "0" ]] && [[ "$DRUPALCI" == "0" ]]; then
-    # Test files with phpcs rules.
-    vendor/bin/phpcs "$TOP_LEVEL/$FILE" --standard="$TOP_LEVEL/core/phpcs.xml.dist"
-    PHPCS=$?
-    if [ "$PHPCS" -ne "0" ]; then
-      # If there are failures set the status to a number other than 0.
-      STATUS=1
-    else
-      printf "PHPCS: $FILE ${green}passed${reset}\n"
-    fi
-  fi
-
-  ############################################################################
-  ### YAML FILES
-  ############################################################################
-  if [[ -f "$TOP_LEVEL/$FILE" ]] && [[ $FILE =~ \.yml$ ]]; then
-    # Test files with ESLint.
-    cd "$TOP_LEVEL/core"
-    node ./node_modules/eslint/bin/eslint.js --quiet --resolve-plugins-relative-to . "$TOP_LEVEL/$FILE"
-    YAMLLINT=$?
-    if [ "$YAMLLINT" -ne "0" ]; then
-      # If there are failures set the status to a number other than 0.
-      STATUS=1
-    else
-      printf "ESLint: $FILE ${green}passed${reset}\n"
-    fi
-    cd $TOP_LEVEL
-  fi
-
-  ############################################################################
-  ### JAVASCRIPT FILES
-  ############################################################################
-  if [[ -f "$TOP_LEVEL/$FILE" ]] && [[ $FILE =~ \.js$ ]]; then
-    cd "$TOP_LEVEL/core"
-    # Check the coding standards.
-    node ./node_modules/eslint/bin/eslint.js --quiet --config=.eslintrc.passing.json "$TOP_LEVEL/$FILE"
-    JSLINT=$?
-    if [ "$JSLINT" -ne "0" ]; then
-      # No need to write any output the node command will do this for us.
-      STATUS=1
-    else
-      printf "ESLint: $FILE ${green}passed${reset}\n"
-    fi
-    cd $TOP_LEVEL
-  fi
-
-  ############################################################################
-  ### CSS FILES
-  ############################################################################
-  if [[ -f "$TOP_LEVEL/$FILE" ]] && [[ $FILE =~ \.css$ ]]; then
-    # Work out the root name of the CSS so we can ensure that the PostCSS
-    # version has been compiled correctly.
-    if [[ $FILE =~ \.pcss\.css$ ]]; then
-      BASENAME=${FILE%.pcss.css}
-      COMPILE_CHECK=1
-    else
-      BASENAME=${FILE%.css}
-      # We only need to compile check if the .pcss.css file is not also
-      # changing. This is because the compile check will occur for the
-      # .pcss.css file. This might occur if the compiled stylesheets have
-      # changed.
-      contains_element "$BASENAME.pcss.css" "${FILES[@]}"
-      HASPOSTCSS=$?
-      if [ "$HASPOSTCSS" -ne "0" ]; then
-        COMPILE_CHECK=1
-      else
-        COMPILE_CHECK=0
-      fi
-    fi
-    # PostCSS
-    if [[ "$COMPILE_CHECK" == "1" ]] && [[ -f "$TOP_LEVEL/$BASENAME.pcss.css" ]]; then
-      cd "$TOP_LEVEL/core"
-      yarn run build:css --check --file "$TOP_LEVEL/$BASENAME.pcss.css"
-      CORRECTCSS=$?
-      if [ "$CORRECTCSS" -ne "0" ]; then
-        # If the CSS does not match the PCSS, set the status to a number other
-        # than 0.
-        STATUS=1
-        printf "\n${red}ERROR: The compiled CSS from"
-        printf "\n       ${BASENAME}.pcss.css"
-        printf "\n       does not match its CSS file. Recompile the CSS with:"
-        printf "\n       yarn run build:css${reset}\n\n"
-      fi
-      cd $TOP_LEVEL
-    fi
-  fi
-  if [[ -f "$TOP_LEVEL/$FILE" ]] && [[ $FILE =~ \.css$ ]] && [[ -f "core/node_modules/.bin/stylelint" ]]; then
-    BASENAME=${FILE%.css}
-    # We only need to use stylelint on the .pcss.css file. So if this CSS file
-    # has a corresponding .pcss don't do stylelint.
-    if [[ $FILE =~ \.pcss\.css$ ]] || [[ ! -f "$TOP_LEVEL/$BASENAME.pcss.css" ]]; then
-      cd "$TOP_LEVEL/core"
-      node_modules/.bin/stylelint --allow-empty-input "$TOP_LEVEL/$FILE"
-      if [ "$?" -ne "0" ]; then
-        STATUS=1
-      else
-        printf "STYLELINT: $FILE ${green}passed${reset}\n"
-      fi
-      cd $TOP_LEVEL
-    fi
-  fi
-
-  if [[ "$STATUS" == "1" ]]; then
-    FINAL_STATUS=1
-    # There is no need to print a failure message. The fail will be described
-    # already.
-  else
-    printf "%s ${green}passed${reset}\n" "$FILE"
-  fi
-
-  # Print a line to separate each file's checks.
-  printf "\n"
-  printf -- '-%.0s' {1..100}
-  printf "\n"
 done
 
-if [[ "$FINAL_STATUS" == "1" ]] && [[ "$DRUPALCI" == "1" ]]; then
-  printf "${red}Drupal code quality checks failed.${reset}\n"
-  printf "To reproduce this output locally:\n"
-  printf "* Apply the change as a patch\n"
-  printf "* Run this command locally: sh ./core/scripts/dev/commit-code-check.sh\n"
-  printf "OR:\n"
-  printf "* From the merge request branch\n"
-  printf "* Run this command locally: sh ./core/scripts/dev/commit-code-check.sh --branch %s\n" "$DRUPAL_VERSION"
-fi
 exit $FINAL_STATUS
