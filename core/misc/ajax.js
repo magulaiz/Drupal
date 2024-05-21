@@ -605,7 +605,7 @@
     if (drupalSettings.ajaxCrossDomain.withCredentials) {
       ajax.options.crossDomain = true;
       ajax.options.xhrFields = {
-        withCredentials: true
+        withCredentials: true,
       };
     }
 
