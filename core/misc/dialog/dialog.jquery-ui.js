@@ -31,10 +31,10 @@
       }
     },
     _createWrapper() {
-      this.uiDialog = $('<div>').hide();
-
-      this.uiDialog[0].setAttribute('tabIndex', '-1');
-      this.uiDialog[0].setAttribute('role', 'dialog');
+      this.uiDialog = $('<div>', {
+        tabIndex: '-1',
+        role: 'dialog',
+      }).hide();
 
       this._appendTo().append(this.uiDialog[0]);
 

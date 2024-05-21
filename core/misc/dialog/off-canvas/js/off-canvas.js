@@ -161,10 +161,7 @@
       $(
         '.ui-dialog-off-canvas, .ui-dialog-off-canvas .ui-dialog-titlebar',
       ).toggleClass('ui-dialog-empty-title', !settings.title);
-      $('.ui-dialog-off-canvas')[0].setAttribute(
-        'id',
-        'drupal-off-canvas-wrapper',
-      );
+      $('.ui-dialog-off-canvas')[0].id = 'drupal-off-canvas-wrapper';
     },
 
     /**

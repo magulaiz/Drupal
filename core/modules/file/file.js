@@ -288,7 +288,7 @@
      */
     openInNewWindow(event) {
       event.preventDefault();
-      $(this)[0].setAttribute('target', '_blank');
+      this.target = '_blank';
       window.open(
         this.href,
         'filePreview',

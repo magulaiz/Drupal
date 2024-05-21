@@ -100,9 +100,8 @@
         const $originalButton = $(this);
         this.style.display = 'none';
         buttons.push({
-          text:
-            $originalButton.html() || $originalButton[0].getAttribute('value'),
-          class: $originalButton[0].getAttribute('class'),
+          text: $originalButton.html() || this.getAttribute('value'),
+          class: this.getAttribute('class'),
           'data-once': $originalButton.data('once'),
           click(e) {
             // If the original button is an anchor tag, triggering the "click"
@@ -152,7 +151,7 @@
     }
     // Set up the wrapper, if there isn't one.
     if (!ajax.wrapper) {
-      ajax.wrapper = $dialog[0].getAttribute('id');
+      ajax.wrapper = $dialog[0].id;
     }
 
     // Use the ajax.js insert command to populate the dialog contents.

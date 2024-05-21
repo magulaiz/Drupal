@@ -73,8 +73,6 @@
             detail.setAttribute('open', true);
             hidePackageDetails(index, detail);
           });
-          // $details.setAttribute('open', true);
-          // hidePackageDetails($details);
 
           Drupal.announce(
             Drupal.formatPlural(

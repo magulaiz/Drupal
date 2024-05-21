@@ -313,7 +313,7 @@
         dialogType: $linkElement.data('dialog-type'),
         dialog: $linkElement.data('dialog-options'),
         dialogRenderer: $linkElement.data('dialog-renderer'),
-        base: $linkElement[0].getAttribute('id'),
+        base: $linkElement[0].id,
         element: ajaxLink,
       };
       const href = $linkElement[0].getAttribute('href');
@@ -467,7 +467,7 @@
     if (!this.url) {
       const $element = $(this.element);
       if (this.element.tagName === 'A') {
-        this.url = $element[0].getAttribute('href');
+        this.url = this.element.href;
       } else if (this.element && element.form) {
         this.url = this.$form.attr('action');
       }
