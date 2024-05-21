@@ -9,6 +9,7 @@ use Drupal\Core\FileTransfer\Local;
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Updater\Updater;
+use Drupal\file\Upload\FormFileUploader;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -168,13 +169,11 @@ class UpdateManagerInstall extends FormBase {
     }
     elseif (!empty($all_files['project_upload']) && $this->moduleHandler->moduleExists('file')) {
       $validators = ['FileExtension' => ['extensions' => $this->archiverManager->getExtensions()]];
-      /** @var \Drupal\file\Upload\FormFileUploader $fileUploadHandler */
-      $fileUploadHandler = \Drupal::service('file.form_file_uploader');
-      $results = $fileUploadHandler->saveFormUploadedFiles('project_upload', $validators, NULL, FileExists::Replace);
-      foreach ($results->getErrors() as $error) {
-        $this->messenger()->addError($error);
-      }
-      $finfo = $results->getResult(0)?->getFile();
+      /** @var \Drupal\file\Upload\FormFileUploader $formFileUploader */
+      $formFileUploader = \Drupal::service(FormFileUploader::class);
+      $results = $formFileUploader->saveFormUploadedFiles('project_upload', $validators, NULL, FileExists::Replace);
+      $result = reset($results);
+      $finfo = $result?->getFile();
       if (!$finfo) {
         return;
       }

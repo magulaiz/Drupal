@@ -78,7 +78,7 @@ class FileUploadResult {
    */
   public function setSanitizedFilename(string $sanitizedFilename): FileUploadResult {
     $this->sanitizedFilename = $sanitizedFilename;
-    $this->renamed = TRUE;
+    $this->renamed = $this->originalFilename !== $sanitizedFilename;
     return $this;
   }
 
