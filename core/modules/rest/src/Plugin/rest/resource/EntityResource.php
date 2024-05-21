@@ -13,9 +13,9 @@ use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityStorageException;
 use Drupal\Core\Field\FieldItemListInterface;
+use Drupal\Core\ResourceResponse\ResourceResponse;
 use Drupal\Core\Routing\AccessAwareRouterInterface;
 use Drupal\rest\Plugin\ResourceBase;
-use Drupal\rest\ResourceResponse;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Drupal\rest\ModifiedResourceResponse;
@@ -118,7 +118,7 @@ class EntityResource extends ResourceBase implements DependentPluginInterface {
    * @param \Symfony\Component\HttpFoundation\Request $request
    *   The incoming request.
    *
-   * @return \Drupal\rest\ResourceResponse
+   * @return \Drupal\Core\ResourceResponse\ResourceResponse
    *   The response containing the entity with its accessible fields.
    *
    * @throws \Symfony\Component\HttpKernel\Exception\HttpException

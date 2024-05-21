@@ -6,12 +6,12 @@ use Drupal\Component\Serialization\Json;
 use Drupal\Core\Cache\CacheableResponseInterface;
 use Drupal\Core\Render\RenderContext;
 use Drupal\Core\Render\RendererInterface;
+use Drupal\Core\ResourceResponse\ResourceResponse;
+use Drupal\Core\ResourceResponse\ResourceResponseInterface;
 use Drupal\Core\Routing\RouteMatch;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\rest\EventSubscriber\ResourceResponseSubscriber;
 use Drupal\rest\ModifiedResourceResponse;
-use Drupal\rest\ResourceResponse;
-use Drupal\rest\ResourceResponseInterface;
 use Drupal\serialization\Encoder\JsonEncoder;
 use Drupal\serialization\Encoder\XmlEncoder;
 use Drupal\Tests\UnitTestCase;
@@ -53,7 +53,7 @@ class ResourceResponseSubscriberTest extends UnitTestCase {
 
   public function providerTestSerialization() {
     return [
-      // The default data for \Drupal\rest\ResourceResponse.
+      // The default data for \Drupal\Core\ResourceResponse\ResourceResponse.
       'default' => [NULL, ''],
       'empty string' => [''],
       'simple string' => ['string'],
