@@ -308,21 +308,6 @@ abstract class TransactionManagerBase implements TransactionManagerInterface {
    * {@inheritdoc}
    */
   public function rollback(string $name, string $id): void {
-    // @todo remove in drupal:11.0.0.
-    // Start of BC layer.
-    if ($id === 'bc-force-rollback') {
-      foreach ($this->stack() as $stackId => $item) {
-        if ($item->name === $name) {
-          $id = $stackId;
-          break;
-        }
-      }
-      if ($id === 'bc-force-rollback') {
-        throw new TransactionOutOfOrderException();
-      }
-    }
-    // End of BC layer.
-
     // Rolled back item should match the last one in stack.
     if ($id != array_key_last($this->stack()) || $name !== $this->stack()[$id]->name) {
       throw new TransactionOutOfOrderException("Error attempting rollback of {$id}\\{$name}. Active stack: " . $this->dumpStackItemsAsString());
@@ -343,9 +328,11 @@ abstract class TransactionManagerBase implements TransactionManagerInterface {
         // If this was the root Drupal transaction, we can rollback the client
         // transaction. The transaction is closed.
         $this->processRootRollback();
-        // The Transaction object remains open, and when it will get destructed
-        // no commit should happen. Void the stack item.
-        $this->voidStackItem($id);
+        if ($this->getConnectionTransactionState() === ClientConnectionTransactionState::RolledBack) {
+          // The Transaction object remains open, and when it will get destructed
+          // no commit should happen. Void the stack item.
+          $this->voidStackItem($id);
+        }
       }
       else {
         // The stack got corrupted.

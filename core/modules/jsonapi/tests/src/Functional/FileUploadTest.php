@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\jsonapi\Functional;
 
 use Drupal\Component\Render\PlainTextOutput;
@@ -16,7 +18,7 @@ use Drupal\user\Entity\User;
 use GuzzleHttp\RequestOptions;
 use Psr\Http\Message\ResponseInterface;
 
-// cspell:ignore èxample
+// cspell:ignore èxample msword
 
 /**
  * Tests binary data file upload route.
@@ -783,6 +785,7 @@ class FileUploadTest extends ResourceTestBase {
   protected function getExpectedDocument($fid = 1, $expected_filename = 'example.txt', $expected_as_filename = FALSE, $expected_status = FALSE) {
     $author = User::load($this->account->id());
     $file = File::load($fid);
+    $this->assertInstanceOf(File::class, $file);
     $self_url = Url::fromUri('base:/jsonapi/file/file/' . $file->uuid())->setAbsolute()->toString(TRUE)->getGeneratedUrl();
 
     return [
@@ -903,7 +906,7 @@ class FileUploadTest extends ResourceTestBase {
    */
   protected function assertResponseData(array $expected, ResponseInterface $response): void {
     static::recursiveKSort($expected);
-    $actual = Json::decode((string) $response->getBody());
+    $actual = $this->getDocumentFromResponse($response);
     static::recursiveKSort($actual);
 
     $this->assertSame($expected, $actual);
