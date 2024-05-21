@@ -134,7 +134,7 @@ class NodeTokenReplaceTest extends TokenReplaceKernelTestBase {
     // Repeat for a node without a summary.
     // Length of this text is ~660 characters and it's longer than a default
     // trim length setting (600).
-    $text = '<blink>The Drupal coding standards</blink> apply to code within '
+    $text = 'The Drupal coding standards apply to code within '
       . 'Drupal and its contributed modules. These standards are version-independent '
       . 'and "always-current".' . PHP_EOL
       . 'All new code should follow the current standards, regardless of (core) version.' . PHP_EOL
@@ -172,7 +172,7 @@ class NodeTokenReplaceTest extends TokenReplaceKernelTestBase {
       'settings' => ['trim_length' => 160],
     ]);
     $view_display->save();
-    $expected_trimmed_to_160 = Html::escape('<blink>The Drupal coding standards</blink> apply to code within '
+    $expected_trimmed_to_160 = Html::escape('The Drupal coding standards apply to code within '
       . 'Drupal and its contributed modules. These standards are version-independent '
       . 'and "always-current".');
     $this->assertNodeSummaryTokenReplacement($node, $expected_trimmed_to_160);
@@ -184,7 +184,7 @@ class NodeTokenReplaceTest extends TokenReplaceKernelTestBase {
       'settings' => ['trim_length' => 80],
     ]);
     $view_display->save();
-    $expected_trimmed_to_80 = Html::escape('<blink>The Drupal coding standards</blink> apply to code within '
+    $expected_trimmed_to_80 = Html::escape('The Drupal coding standards apply to code within '
     . 'Drupal and its contributed modules.');
     $this->assertNodeSummaryTokenReplacement($node, $expected_trimmed_to_80);
 
@@ -197,7 +197,7 @@ class NodeTokenReplaceTest extends TokenReplaceKernelTestBase {
       'settings' => ['trim_length' => 42],
     ]);
     $view_display->save();
-    $expected_trimmed_to_600 = Html::escape('<blink>The Drupal coding standards</blink> apply to code within '
+    $expected_trimmed_to_600 = Html::escape('The Drupal coding standards apply to code within '
     . 'Drupal and its contributed modules. These standards are version-independent '
     . 'and "always-current".' . PHP_EOL
     . 'All new code should follow the current standards, regardless of (core) version.' . PHP_EOL
