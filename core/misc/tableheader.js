@@ -64,19 +64,6 @@
     // Create and display sticky header.
     this.createSticky();
   }
-  // document
-  //   .querySelector('#edit-wrapper')
-  //   .addEventListener('toggle', (event) => {
-  //     const tableHeaderInstance = document.querySelector('#edit-table');
-  //     if ($('#edit-wrapper').attr('open')) {
-  //       // this.recalculateSticky();
-  //       // tableHeaderInstance.recalculateSticky();
-  //       // forTables('recalculateSticky');
-  //       console.log('Opened');
-  //     } else {
-  //       console.log('Closed');
-  //     }
-  //   });
 
   // Helper method to loop through tables and execute a method.
   function forTables(method, arg) {
@@ -344,18 +331,24 @@
       },
     },
   );
+
+  /**
+   * Event listener: Recalculates position of the sticky table header when the details
+   * element is toggled open.
+   */
+  function detailsToggleHandler(event) {
+    if (event.target.open) {
+      const tableHeaderInstance = document.querySelector('#edit-wrapper');
+      if (tableHeaderInstance) {
+        tableHeaderInstance.recalculateSticky();
+      }
+    }
+  }
+
   // Add an event listener to the details element to listen to the toggle event.
   document
     .querySelector('#edit-wrapper')
-    .addEventListener('toggle', function (event) {
-      // Check if the details element is being opened.
-      if ($('#edit-wrapper').attr('open')) {
-        const tableHeaderInstance = document.querySelector('#edit-table');
-        if (tableHeaderInstance) {
-          tableHeaderInstance.recalculateSticky();
-        }
-      }
-    });
+    .addEventListener('toggle', detailsToggleHandler);
 
   // Expose constructor in the public space.
   Drupal.TableHeader = TableHeader;
