@@ -1,0 +1,22 @@
+/**
+ * @file
+ * Table header styles.
+ */
+
+.tableheader-toggle-sticky {
+  float: right; /* LTR */
+}
+[dir="rtl"] .tableheader-toggle-sticky {
+  float: left;
+}
+
+/**
+ * Floating this element is only needed when the tableheader library is
+ * present, so this rule is here and not tables.css.
+ */
+.tableresponsive-toggle-columns {
+  float: left; /* LTR */
+}
+[dir="rtl"] .tableresponsive-toggle-columns {
+  float: right;
+}

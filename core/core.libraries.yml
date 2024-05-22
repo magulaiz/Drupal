@@ -712,6 +712,9 @@ drupal.tableheader:
   version: VERSION
   js:
     misc/tableheader.js: {}
+  css:
+    component:
+      misc/tableheader.css: { }
   dependencies:
     - core/jquery
     - core/drupal

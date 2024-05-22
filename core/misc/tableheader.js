@@ -4,6 +4,10 @@
  */
 
 (function ($, Drupal, displace) {
+  let disableStickyHeader = JSON.parse(
+    localStorage.getItem('Drupal.tableHeader.disableStickyHeader'),
+  );
+
   /**
    * Constructor for the tableHeader object. Provides sticky table headers.
    *
@@ -94,6 +98,24 @@
    */
   Drupal.behaviors.tableHeader = {
     attach(context) {
+      const tableElement = $(context).find('.views-table')[0];
+      if (tableElement) {
+        disableStickyHeader = false;
+        // Create an instance of TableHeader for the identified table.
+        // eslint-disable-next-line no-new
+        new TableHeader(tableElement);
+      }
+      // const viewFilters = document.getElementsByClassName('views-table')[0];
+      // if (viewFilters) {
+      //   console.log('table header.');
+      //   const tempDiv = document.createElement('div');
+      //   tempDiv.innerHTML = Drupal.theme('disableStickyHeaderButton');
+      //   const buttonElement = tempDiv.firstChild;
+      //   if (buttonElement) {
+      //     viewFilters.parentNode.insertBefore(buttonElement, viewFilters);
+      //   }
+      // }
+
       $(window).one(
         'scroll.TableHeaderInit',
         { context },
@@ -206,6 +228,7 @@
        * Create the duplicate header.
        */
       createSticky() {
+        const _this = this;
         // For caching purposes.
         this.$html = $('html');
         // Clone the table header so it inherits original jQuery properties.
@@ -216,6 +239,34 @@
         )
           .append($stickyHeader)
           .insertBefore(this.$originalTable);
+
+        this.$toggleStickyHeader = $(Drupal.theme('disableStickyHeaderButton')).insertBefore(this.$stickyTable);
+
+        if (disableStickyHeader) {
+          this.$stickyTable.css('display', 'none');
+        }
+
+        this.$toggleStickyHeader.on('click', function (e) {
+          e.preventDefault();
+          disableStickyHeader = !disableStickyHeader;
+          localStorage.setItem(
+            'Drupal.tableHeader.disableStickyHeader',
+            disableStickyHeader,
+          );
+          const display = disableStickyHeader ? 'none' : 'table';
+
+          this.$stickyTable[0].classList.remove('position-sticky');
+          // document.getElementsByClassName('views-table')[0].classList.remove('position-sticky');
+
+          _this.$stickyTable.css('display', display);
+
+          $(e.target).text(Drupal.theme('disableStickyHeaderContent'));
+
+          if (!disableStickyHeader) {
+
+            _this.recalculateSticky();
+          }
+        });
 
         this.$stickyHeaderCells = $stickyHeader.find('> tr > th');
 
@@ -332,4 +383,14 @@
 
   // Expose constructor in the public space.
   Drupal.TableHeader = TableHeader;
+
+  Drupal.theme.disableStickyHeaderButton = function () {
+    return "<div class=\"tableheader-toggle-sticky\"><button data-drupal-toggle-sticky-header class=\"link\">".concat(Drupal.theme('disableStickyHeaderContent'), "</button></div>");
+  };
+
+  Drupal.theme.disableStickyHeaderContent = function () {
+    return disableStickyHeader
+      ? Drupal.t('Enable Sticky Header')
+      : Drupal.t('Disable sticky header');
+  };
 })(jQuery, Drupal, window.Drupal.displace);
