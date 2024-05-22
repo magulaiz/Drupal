@@ -9,6 +9,8 @@ use Drupal\Tests\RandomGeneratorTrait;
 
 /**
  * Tests maxlength attribute of confirm_password.
+ *
+ * @group Form
  */
 class ConfirmPasswordTest extends BrowserTestBase {
 
