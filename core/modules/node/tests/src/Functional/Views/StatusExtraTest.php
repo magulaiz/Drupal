@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\node\Functional\Views;
 
+use Drupal\node\Entity\NodeType;
 use Drupal\node\NodeInterface;
 
 /**
@@ -92,6 +93,24 @@ class StatusExtraTest extends NodeTestBase {
     $this->assertSession()->pageTextNotContains($node_unpublished->label());
     $this->assertSession()->pageTextNotContains($node_unpublished2->label());
     $this->assertSession()->pageTextNotContains($node_unpublished3->label());
+
+    // A privileged user must see the published/unpublished content
+    // when access is granted via hook_node_access_grants().
+    \Drupal::service('module_installer')->install(['node_access_test']);
+    NodeType::create(['type' => 'page', 'name' => 'page'])->save();
+    node_access_test_add_field(NodeType::load('page'));
+    node_access_rebuild();
+
+    $node_published_private = $this->drupalCreateNode(['uid' => $admin_user->id(), 'private' => ['value' => 1]]);
+    $node_unpublished_private = $this->drupalCreateNode(['uid' => $admin_user->id(), 'status' => NodeInterface::NOT_PUBLISHED, 'private' => ['value' => 1]]);
+    $this->drupalLogin($this->drupalCreateUser(values: [
+      'roles' => $this->drupalCreateRole([
+        'node test view',
+      ]),
+    ]));
+    $this->drupalGet('test_status_extra');
+    $this->assertSession()->pageTextContains($node_published_private->label());
+    $this->assertSession()->pageTextContains($node_unpublished_private->label());
   }
 
 }
