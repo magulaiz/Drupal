@@ -8,7 +8,7 @@ use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
 
 /**
- * Defines a form for testing #maxlength of confirm_password field..
+ * Defines a form for testing #maxlength of confirm_password field.
  *
  * @internal
  */
