@@ -16,8 +16,6 @@ core.menu.static_menu_link_overrides:
             label: 'Menu name'
             constraints:
               NotNull: []
-              PluginExists:
-                manager: plugin.manager.menu.link
           parent:
             type: string
             label: 'Parent'
