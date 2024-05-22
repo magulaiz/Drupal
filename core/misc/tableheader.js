@@ -287,8 +287,6 @@
         this.$stickyTable[0].style.visibility = this.stickyVisible
           ? 'visible'
           : 'hidden';
-        // Recalculate sticky.
-        this.recalculateSticky();
       },
 
       /**
@@ -338,8 +336,16 @@
    */
   function detailsToggleHandler(event) {
     if (event.target.open) {
-      const tableHeaderInstance = document.querySelector('#edit-wrapper');
-      if (tableHeaderInstance) {
+      const closestTable = event.target.querySelector('table.position-sticky');
+      if (closestTable) {
+        let tableHeaderInstance = TableHeader.tables.find(
+          (table) => table.$originalTable[0] === closestTable,
+        );
+        if (!tableHeaderInstance) {
+          // If no TableHeader instance is found, initialize a new one
+          tableHeaderInstance = new TableHeader(closestTable);
+          TableHeader.tables.push(tableHeaderInstance);
+        }
         tableHeaderInstance.recalculateSticky();
       }
     }
@@ -347,7 +353,7 @@
 
   // Add an event listener to the details element to listen to the toggle event.
   document
-    .querySelector('#edit-wrapper')
+    .querySelector('details:has(table)')
     .addEventListener('toggle', detailsToggleHandler);
 
   // Expose constructor in the public space.
