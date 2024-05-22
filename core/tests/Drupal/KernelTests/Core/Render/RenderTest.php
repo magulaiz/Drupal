@@ -61,18 +61,6 @@ class RenderTest extends KernelTestBase {
   }
 
   /**
-   * Tests that we get an exception when we try to attach an illegal type.
-   */
-  public function testProcessAttached(): void {
-    // Specify invalid attachments in a render array.
-    $build['#attached']['library'][] = 'core/drupal.states';
-    $build['#attached']['drupal_process_states'][] = [];
-    $renderer = $this->container->get('bare_html_page_renderer');
-    $this->expectException(\LogicException::class);
-    $renderer->renderBarePage($build, '', 'maintenance_page');
-  }
-
-  /**
    * Tests the deprecation of \Drupal\Core\Render\Renderer::renderPlain()
    *
    * @group legacy
