@@ -77,9 +77,7 @@
     placeholders.forEach((placeholder) => {
       $placeholder = $(placeholder);
       const timestamp = parseInt(
-        $placeholder[0].getAttribute(
-          'data-history-node-last-comment-timestamp',
-        ),
+        placeholder.getAttribute('data-history-node-last-comment-timestamp'),
         10,
       );
       fieldName = $placeholder[0].getAttribute('data-history-node-field-name');
@@ -168,9 +166,7 @@
       ).filter((placeholder) => {
         const $placeholder = $(placeholder);
         const lastCommentTimestamp = parseInt(
-          $placeholder[0].getAttribute(
-            'data-history-node-last-comment-timestamp',
-          ),
+          placeholder.getAttribute('data-history-node-last-comment-timestamp'),
           10,
         );
         const nodeID = $placeholder

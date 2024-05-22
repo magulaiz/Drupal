@@ -159,8 +159,7 @@
           // Strip the 'display:none' declaration from the style attributes of
           // the table cells that .hide() added.
           this.$revealedCells.each(function (index, element) {
-            const $cell = $(this);
-            const properties = $cell[0].getAttribute('style').split(';');
+            const properties = this.getAttribute('style').split(';');
             const newProps = [];
             // The hide method adds display none to the element. The element
             // should be returned to the same state it was in before the columns
@@ -178,7 +177,7 @@
               newProps.push(prop);
             }
             // Return the rest of the style attribute values to the element.
-            $cell[0].setAttribute('style', newProps.join(';'));
+            this.setAttribute('style', newProps.join(';'));
           });
           this.$link[0].textContent = this.showText;
           this.$link.data('pegged', 0);

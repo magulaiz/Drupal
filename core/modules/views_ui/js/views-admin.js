@@ -220,8 +220,7 @@
         const suffix = this.suffix;
         this.target.each(function (i) {
           // Ensure that the maxlength is not exceeded by prepopulating the field.
-          const maxlength =
-            $(this)[0].getAttribute('maxlength') - suffix.length;
+          const maxlength = this.getAttribute('maxlength') - suffix.length;
           this.value = transliterated.substr(0, maxlength) + suffix;
         });
       },
@@ -397,7 +396,6 @@
         .eq(-1)
         .addClass('last');
       $displayButtons.each(function () {
-        const $this = $(this);
         this.value = this.getAttribute('data-drupal-dropdown-label');
       });
       $addDisplayDropdown.appendTo($menu);
@@ -779,7 +777,7 @@
         let i;
         for (i = 0; i < length; i++) {
           const $removeGroupButton = $(this.removeGroupButtons[i]);
-          const buttonId = $removeGroupButton[0].getAttribute('id');
+          const buttonId = $removeGroupButton[0].id;
           $(
             once(
               'views-rearrange-filter-handler',
@@ -868,7 +866,7 @@
           titleRow = $(titleRows[i]);
           // Make a copy of the operator dropdown and put it in a new table row.
           const fakeOperator = this.operator.clone();
-          fakeOperator[0].setAttribute('id', '');
+          fakeOperator[0].id = '';
           newRow = $(
             '<tr class="filter-group-operator-row"><td colspan="5"></td></tr>',
           );

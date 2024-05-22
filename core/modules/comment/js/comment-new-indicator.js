@@ -21,7 +21,7 @@
     placeholders.forEach((placeholder) => {
       $placeholder = $(placeholder);
       const timestamp = parseInt(
-        $placeholder[0].getAttribute('data-comment-timestamp'),
+        placeholder.getAttribute('data-comment-timestamp'),
         10,
       );
       const $node = $placeholder.closest('[data-history-node-id]');
@@ -76,7 +76,7 @@
       ).filter((placeholder) => {
         const $placeholder = $(placeholder);
         const commentTimestamp = parseInt(
-          $placeholder[0].getAttribute('data-comment-timestamp'),
+          placeholder.getAttribute('data-comment-timestamp'),
           10,
         );
         const nodeID = $placeholder

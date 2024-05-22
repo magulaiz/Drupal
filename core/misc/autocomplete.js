@@ -95,7 +95,7 @@
    *   The function to call with the response.
    */
   function sourceData(request, response) {
-    const elementId = this.element[0].getAttribute('id');
+    const elementId = this.element[0].id;
 
     if (!(elementId in autocomplete.cache)) {
       autocomplete.cache[elementId] = {};
@@ -212,7 +212,7 @@
         (element) => {
           const $autocomplete = $(element);
           // Allow options to be overridden per instance.
-          const blacklist = $autocomplete[0].getAttribute(
+          const blacklist = element.getAttribute(
             'data-autocomplete-first-character-blacklist',
           );
           $.extend(autocomplete.options, {
