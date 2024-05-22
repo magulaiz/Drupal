@@ -50,7 +50,7 @@ class DbUpdateNegotiator implements ThemeNegotiatorInterface {
    * {@inheritdoc}
    */
   public function determineActiveTheme(RouteMatchInterface $route_match) {
-    // We limit update.php to use claro to ensure the stability of in browser updates.
+    // The update page always uses Claro to ensure stability.
     return 'claro';
   }
 
