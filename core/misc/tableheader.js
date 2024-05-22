@@ -338,12 +338,13 @@
     if (event.target.open) {
       const closestTable = event.target.querySelector('table.position-sticky');
       if (closestTable) {
-        const tableHeaderInstance = TableHeader.tables.find(
+        let tableHeaderInstance = TableHeader.tables.find(
           (table) => table.$originalTable[0] === closestTable,
         );
-        if (tableHeaderInstance) {
-          tableHeaderInstance.recalculateSticky();
+        if (!tableHeaderInstance) {
+          tableHeaderInstance = new TableHeader(closestTable);
         }
+        tableHeaderInstance.recalculateSticky();
       }
     }
   }
