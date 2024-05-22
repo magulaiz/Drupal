@@ -11,20 +11,18 @@ use Drupal\Core\Form\FormStateInterface;
  * Defines a form for testing #maxlength of confirm_password field..
  *
  * @internal
- *
- * @see todo
  */
 class FormTestConfirmPasswordForm extends FormBase {
 
   /**
-   * {@inheritDoc}
+   * {@inheritdoc}
    */
   public function getFormId() {
     return 'form_test_confirm_password_form';
   }
 
   /**
-   * {@inheritDoc}
+   * {@inheritdoc}
    */
   public function buildForm(array $form, FormStateInterface $form_state) {
     $form['pass'] = [
@@ -40,7 +38,7 @@ class FormTestConfirmPasswordForm extends FormBase {
   }
 
   /**
-   * {@inheritDoc}
+   * {@inheritdoc}
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
 
