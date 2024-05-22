@@ -338,15 +338,12 @@
     if (event.target.open) {
       const closestTable = event.target.querySelector('table.position-sticky');
       if (closestTable) {
-        let tableHeaderInstance = TableHeader.tables.find(
+        const tableHeaderInstance = TableHeader.tables.find(
           (table) => table.$originalTable[0] === closestTable,
         );
-        if (!tableHeaderInstance) {
-          // If no TableHeader instance is found, initialize a new one
-          tableHeaderInstance = new TableHeader(closestTable);
-          TableHeader.tables.push(tableHeaderInstance);
+        if (tableHeaderInstance) {
+          tableHeaderInstance.recalculateSticky();
         }
-        tableHeaderInstance.recalculateSticky();
       }
     }
   }
