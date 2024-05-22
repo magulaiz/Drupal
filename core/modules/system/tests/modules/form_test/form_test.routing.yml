@@ -564,3 +564,12 @@ form_test.incorrect_config_target:
     _admin_route: TRUE
   requirements:
     _access: 'TRUE'
+
+form_test.confirm_password:
+  path: '/form-test/confirm-password'
+  defaults:
+    _form: '\Drupal\form_test\Form\FormTestConfirmPasswordForm'
+  options:
+    _admin_route: TRUE
+  requirements:
+    _access: 'TRUE'
