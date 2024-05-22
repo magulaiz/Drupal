@@ -313,10 +313,10 @@
         dialogType: $linkElement.data('dialog-type'),
         dialog: $linkElement.data('dialog-options'),
         dialogRenderer: $linkElement.data('dialog-renderer'),
-        base: $linkElement[0].id,
+        base: ajaxLink.id,
         element: ajaxLink,
       };
-      const href = $linkElement[0].getAttribute('href');
+      const href = ajaxLink.getAttribute('href');
       /**
        * For anchor tags, these will go to the target of the anchor rather than
        * the usual location.
