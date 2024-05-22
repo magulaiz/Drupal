@@ -13,6 +13,7 @@ use Drupal\user\RoleInterface;
  * Verifies role permissions can be added and removed via the permissions page.
  *
  * @group user
+ * @group legacy
  */
 class UserPermissionsTest extends BrowserTestBase {
 
