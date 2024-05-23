@@ -26,18 +26,10 @@ trait BlockContentTestTrait {
    */
   public function addBodyField(string $block_type_id, string $label = 'Body'): FieldConfigInterface {
     // Add or remove the body field, as needed.
-    $field = FieldConfig::loadByName('block_content', $block_type_id, 'field_body');
+    $field = FieldConfig::loadByName('block_content', $block_type_id, 'body');
     if (empty($field)) {
-      // Create a telephone field.
-      $field_storage = FieldStorageConfig::create([
-        'field_name' => 'field_body',
-        'entity_type' => 'block_content',
-        'type' => 'text_long',
-      ]);
-      $field_storage->save();
-
       $field = FieldConfig::create([
-        'field_storage' => $field_storage,
+        'field_storage' => FieldStorageConfig::loadByName('block_content', 'body'),
         'bundle' => $block_type_id,
         'label' => $label,
         'settings' => [
