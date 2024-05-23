@@ -2,6 +2,7 @@
 
 namespace Drupal\Core\Update;
 
+use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\KeyValueStore\KeyValueFactoryInterface;
 
 /**
@@ -22,11 +23,18 @@ class UpdateHookRegistry {
   protected $enabledModules;
 
   /**
-   * The key value storage.
+   * The key value storage for system.schema.
    *
    * @var \Drupal\Core\KeyValueStore\KeyValueStoreInterface
    */
-  protected $keyValue;
+  protected $schemaKeyValue;
+
+  /**
+   * The key value storage for system.schema_previously_installed.
+   *
+   * @var \Drupal\Core\KeyValueStore\KeyValueStoreInterface
+   */
+  protected $schemaPreviouslyInstalledKeyValue;
 
   /**
    * A static cache of schema currentVersions per module.
@@ -50,19 +58,30 @@ class UpdateHookRegistry {
   protected $allAvailableSchemaVersions = [];
 
   /**
+   * A static cache of previously installed scheema Versions.
+   *
+   * @var int[][]
+   */
+  protected array $previouslyInstalledSchemaVersions = [];
+
+  /**
    * Constructs a new UpdateHookRegistry.
    *
    * @param array $module_list
    *   An associative array whose keys are the names of installed modules.
    * @param \Drupal\Core\KeyValueStore\KeyValueFactoryInterface $key_value_factory
    *   The key value factory.
+   * @param \Drupal\Core\Extension\ModuleHandlerInterface $moduleHandler
+   *   The module handler.
    */
   public function __construct(
     array $module_list,
     KeyValueFactoryInterface $key_value_factory,
+    protected ModuleHandlerInterface $moduleHandler,
   ) {
     $this->enabledModules = array_keys($module_list);
-    $this->keyValue = $key_value_factory->get('system.schema');
+    $this->schemaKeyValue = $key_value_factory->get('system.schema');
+    $this->schemaPreviouslyInstalledKeyValue = $key_value_factory->get('system.schema_previously_installed');
   }
 
   /**
@@ -113,6 +132,35 @@ class UpdateHookRegistry {
   }
 
   /**
+   * @param string $module
+   *   A module name.
+   *
+   * @return array
+   */
+  public function getPreviouslyInstalledSchemaVersions(string $module): array {
+    if (!isset($this->previouslyInstalledSchemaVersions[$module])) {
+      $this->previouslyInstalledSchemaVersions[$module] = $this->schemaPreviouslyInstalledKeyValue->get($module, FALSE);
+      if ($this->previouslyInstalledSchemaVersions[$module] === FALSE) {
+        $current_version = $this->getInstalledVersion($module);
+        $all_available_versions = $this->getAvailableUpdates($module);
+        $previously_installed_schema_versions = array_filter($all_available_versions, function ($version) use ($current_version) {
+          return $version > $current_version;
+        });
+        $this->setPreviouslyInstalledSchemaVersions($module, $previously_installed_schema_versions);
+      }
+      elseif ($this->previouslyInstalledSchemaVersions[$module] && $last_removed = $this->moduleHandler->invoke($module, 'update_last_removed')) {
+        if (min($this->previouslyInstalledSchemaVersions[$module]) < $last_removed) {
+          $previously_installed_schema_versions = array_filter($this->previouslyInstalledSchemaVersions[$module], function ($version) use ($last_removed) {
+            return $version <= $last_removed;
+          });
+          $this->setPreviouslyInstalledSchemaVersions($module, $previously_installed_schema_versions);
+        }
+      }
+    }
+    return $this->previouslyInstalledSchemaVersions[$module];
+  }
+
+  /**
    * Returns the currently installed schema version for a module.
    *
    * @param string $module
@@ -123,7 +171,7 @@ class UpdateHookRegistry {
    *   module is not installed.
    */
   public function getInstalledVersion(string $module): int {
-    return $this->keyValue->get($module, self::SCHEMA_UNINSTALLED);
+    return $this->schemaKeyValue->get($module, self::SCHEMA_UNINSTALLED);
   }
 
   /**
@@ -138,7 +186,11 @@ class UpdateHookRegistry {
    *   Returns self to support chained method calls.
    */
   public function setInstalledVersion(string $module, int $version): self {
-    $this->keyValue->set($module, $version);
+    $this->schemaKeyValue->set($module, $version);
+    $previously_installed_schema_versions = array_filter($this->getAvailableUpdates($module), function ($available_version) use ($version) {
+      return $available_version > $version;
+    });
+    $this->setPreviouslyInstalledSchemaVersions($module, $previously_installed_schema_versions);
     return $this;
   }
 
@@ -149,7 +201,8 @@ class UpdateHookRegistry {
    *   The module name to delete.
    */
   public function deleteInstalledVersion(string $module): void {
-    $this->keyValue->delete($module);
+    $this->schemaKeyValue->delete($module);
+    $this->schemaPreviouslyInstalledKeyValue->delete($module);
   }
 
   /**
@@ -161,7 +214,51 @@ class UpdateHookRegistry {
    *   module is not installed.
    */
   public function getAllInstalledVersions(): array {
-    return $this->keyValue->getAll();
+    return $this->schemaKeyValue->getAll();
+  }
+
+  /**
+   * @param string $module
+   *   A module name.
+   * @param int[] $versions
+   *   A list of update hooks numbers which have been ran
+   * @return void
+   */
+  public function setPreviouslyInstalledSchemaVersions(string $module, array $versions): void {
+    $this->schemaPreviouslyInstalledKeyValue->set($module, $versions);
+    $this->previouslyInstalledSchemaVersions[$module] = $versions;
+  }
+
+  /**
+   * Returns an organized list of update functions for a set of modules.
+   *
+   * @param string[] $modules
+   *   An array of module names to retrieve updates for.
+   *
+   * @return string[][]
+   *   An array containing all the update functions that should be run for each
+   *   module, including all updates that haven't previously been run. The keys
+   *   of the array contain the module names, and each value is an ordered array
+   *   of update functions, keyed by the update number.
+   *
+   * @see update_resolve_dependencies()
+   */
+  public function getUpdateFunctionList(array $modules): array {
+    // Go through each module and find all updates that we need (including the
+    // first update that was requested and any updates that run after it).
+    $update_functions = [];
+    foreach ($modules as $module) {
+      $update_functions[$module] = [];
+      $available_updates = $this->getAvailableUpdates($module);
+      $previously_installed_updates = $this->getPreviouslyInstalledSchemaVersions($module);
+      $updates = array_diff($available_updates, $previously_installed_updates);
+      if ($updates) {
+        foreach ($updates as $update) {
+          $update_functions[$module][$update] = $module . '_update_' . $update;
+        }
+      }
+    }
+    return $update_functions;
   }
 
 }

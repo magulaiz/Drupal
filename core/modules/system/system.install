@@ -1536,6 +1536,28 @@ function system_requirements($phase) {
         }
       }
     }
+
+    if (empty($missing_updates)) {
+      $modules = \Drupal::moduleHandler()->getModuleList();
+      foreach ($modules as $module => $module_info) {
+        $available_updates = $update_registry->getAvailableUpdates($module);
+        $previous_updates = $update_registry->getPreviouslyInstalledSchemaVersions($module);
+        $missing_updates = array_diff($previous_updates, $available_updates);
+        if ($missing_updates) {
+          foreach ($missing_updates as $missing) {
+            $requirements[$module . '_update_missing'] = [
+              'title' => t('Missing updates for: @module', ['@module' => $module_info->info['name']]),
+              'description' => t('The version of the %module module that you are attempting to update to is missing update @future_update (which has previously been run). Update to a later version.', [
+                '%module' => $module_info->info['name'],
+                '@future_update' => $missing,
+              ]),
+              'severity' => REQUIREMENT_ERROR,
+            ];
+            break;
+          }
+        }
+      }
+    }
   }
 
   // Add warning when twig debug option is enabled.

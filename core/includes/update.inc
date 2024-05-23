@@ -104,6 +104,7 @@ function _update_fix_missing_schema() {
         $last_update = max($last_update, $last_removed);
       }
       $update_registry->setInstalledVersion($module, $last_update);
+      $update_registry->setPreviouslyInstalledSchemaVersions($module, $all_updates);
       $args = ['%module' => $module, '%last_update_hook' => $module . '_update_' . $last_update . '()'];
       \Drupal::messenger()->addWarning(t('Schema information for module %module was missing from the database. You should manually review the module updates and your database to check if any updates have been skipped up to, and including, %last_update_hook.', $args));
       \Drupal::logger('update')->warning('Schema information for module %module was missing from the database. You should manually review the module updates and your database to check if any updates have been skipped up to, and including, %last_update_hook.', $args);
@@ -339,13 +340,14 @@ function update_get_update_list() {
     }
     // Otherwise, get the list of updates defined by this module.
     $updates = $update_registry->getAvailableUpdates($module);
+    $previous_updates = $update_registry->getPreviouslyInstalledSchemaVersions($module);
     if ($updates) {
       foreach ($updates as $update) {
         if ($update == \Drupal::CORE_MINIMUM_SCHEMA_VERSION) {
           $ret[$module]['warning'] = '<em>' . $module . '</em> module cannot be updated. It contains an update numbered as ' . \Drupal::CORE_MINIMUM_SCHEMA_VERSION . ' which is reserved for the earliest installation of a module in Drupal ' . \Drupal::CORE_COMPATIBILITY . ', before any updates. In order to update <em>' . $module . '</em> module, you will need to download a version of the module with valid updates.';
           continue 2;
         }
-        if ($update > $schema_version) {
+        if (!in_array($update, $previous_updates, TRUE)) {
           // The description for an update comes from its Doxygen.
           $func = new ReflectionFunction($module . '_update_' . $update);
           $patterns = [
@@ -469,26 +471,9 @@ function update_resolve_dependencies($starting_updates) {
  * @see update_resolve_dependencies()
  */
 function update_get_update_function_list($starting_updates) {
-  // Go through each module and find all updates that we need (including the
-  // first update that was requested and any updates that run after it).
-  $update_functions = [];
   /** @var \Drupal\Core\Update\UpdateHookRegistry $update_registry */
   $update_registry = \Drupal::service('update.update_hook_registry');
-  foreach ($starting_updates as $module => $version) {
-    $update_functions[$module] = [];
-    $updates = $update_registry->getAvailableUpdates($module);
-    if ($updates) {
-      $max_version = max($updates);
-      if ($version <= $max_version) {
-        foreach ($updates as $update) {
-          if ($update >= $version) {
-            $update_functions[$module][$update] = $module . '_update_' . $update;
-          }
-        }
-      }
-    }
-  }
-  return $update_functions;
+  return $update_registry->getUpdateFunctionList(array_keys($starting_updates));
 }
 
 /**
@@ -606,7 +591,9 @@ function update_is_missing($module, $number, $update_functions) {
  *   performed; FALSE otherwise.
  */
 function update_already_performed($module, $number) {
-  return $number <= \Drupal::service('update.update_hook_registry')->getInstalledVersion($module);
+  /** @var \Drupal\Core\Update\UpdateHookRegistry $update_registry */
+  $update_registry = \Drupal::service('update.update_hook_registry');
+  return in_array($number, $update_registry->getPreviouslyInstalledSchemaVersions($module), TRUE);
 }
 
 /**
