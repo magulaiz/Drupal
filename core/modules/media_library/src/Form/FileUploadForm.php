@@ -176,11 +176,11 @@ class FileUploadForm extends AddFormBase {
     ];
 
     // Add upload resolution validation if file is an image.
-    $fieldSettings = $item->getFieldDefinition()->getSettings();
-    if (isset($fieldSettings['max_resolution']) || isset($fieldSettings['min_resolution'])) {
+    $field_settings = $item->getFieldDefinition()->getSettings();
+    if (isset($field_settings['max_resolution']) || isset($field_settings['min_resolution'])) {
       $form['container']['upload']['#upload_validators']['file_validate_image_resolution'] = [
-        $fieldSettings['max_resolution'] ?? 0,
-        $fieldSettings['min_resolution'] ?? 0,
+        $field_settings['max_resolution'] ?? 0,
+        $field_settings['min_resolution'] ?? 0,
       ];
     }
 
