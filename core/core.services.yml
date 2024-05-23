@@ -1828,7 +1828,7 @@ services:
   Drupal\Component\Utility\EmailValidatorInterface: '@email.validator'
   update.update_hook_registry:
     class: Drupal\Core\Update\UpdateHookRegistry
-    arguments: ['%container.modules%', '@keyvalue', '@module_handler']
+    arguments: ['%container.modules%', '@keyvalue']
   Drupal\Core\Update\UpdateHookRegistry: '@update.update_hook_registry'
   update.post_update_registry:
     class: Drupal\Core\Update\UpdateRegistry

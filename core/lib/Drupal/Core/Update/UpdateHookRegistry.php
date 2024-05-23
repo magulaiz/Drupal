@@ -2,7 +2,6 @@
 
 namespace Drupal\Core\Update;
 
-use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\KeyValueStore\KeyValueFactoryInterface;
 
 /**
@@ -27,7 +26,7 @@ class UpdateHookRegistry {
    *
    * @var \Drupal\Core\KeyValueStore\KeyValueStoreInterface
    */
-  protected $schemaKeyValue;
+  protected $keyValue;
 
   /**
    * The key value storage for system.schema_previously_installed.
@@ -71,16 +70,13 @@ class UpdateHookRegistry {
    *   An associative array whose keys are the names of installed modules.
    * @param \Drupal\Core\KeyValueStore\KeyValueFactoryInterface $key_value_factory
    *   The key value factory.
-   * @param \Drupal\Core\Extension\ModuleHandlerInterface $moduleHandler
-   *   The module handler.
    */
   public function __construct(
     array $module_list,
     KeyValueFactoryInterface $key_value_factory,
-    protected ModuleHandlerInterface $moduleHandler,
   ) {
     $this->enabledModules = array_keys($module_list);
-    $this->schemaKeyValue = $key_value_factory->get('system.schema');
+    $this->keyValue = $key_value_factory->get('system.schema');
     $this->schemaPreviouslyInstalledKeyValue = $key_value_factory->get('system.schema_previously_installed');
   }
 
@@ -148,12 +144,15 @@ class UpdateHookRegistry {
         });
         $this->setPreviouslyInstalledSchemaVersions($module, $previously_installed_schema_versions);
       }
-      elseif ($this->previouslyInstalledSchemaVersions[$module] && $last_removed = $this->moduleHandler->invoke($module, 'update_last_removed')) {
-        if (min($this->previouslyInstalledSchemaVersions[$module]) < $last_removed) {
-          $previously_installed_schema_versions = array_filter($this->previouslyInstalledSchemaVersions[$module], function ($version) use ($last_removed) {
-            return $version <= $last_removed;
-          });
-          $this->setPreviouslyInstalledSchemaVersions($module, $previously_installed_schema_versions);
+      elseif ($this->previouslyInstalledSchemaVersions[$module]) {
+        $last_removed_hook = $module . '_update_last_removed';
+        if (function_exists($last_removed_hook)  && $last_removed = call_user_func($last_removed_hook)) {
+          if (min($this->previouslyInstalledSchemaVersions[$module]) < $last_removed) {
+            $previously_installed_schema_versions = array_filter($this->previouslyInstalledSchemaVersions[$module], function ($version) use ($last_removed) {
+              return $version <= $last_removed;
+            });
+            $this->setPreviouslyInstalledSchemaVersions($module, $previously_installed_schema_versions);
+          }
         }
       }
     }
@@ -171,7 +170,7 @@ class UpdateHookRegistry {
    *   module is not installed.
    */
   public function getInstalledVersion(string $module): int {
-    return $this->schemaKeyValue->get($module, self::SCHEMA_UNINSTALLED);
+    return $this->keyValue->get($module, self::SCHEMA_UNINSTALLED);
   }
 
   /**
@@ -186,7 +185,7 @@ class UpdateHookRegistry {
    *   Returns self to support chained method calls.
    */
   public function setInstalledVersion(string $module, int $version): self {
-    $this->schemaKeyValue->set($module, $version);
+    $this->keyValue->set($module, $version);
     $previously_installed_schema_versions = array_filter($this->getAvailableUpdates($module), function ($available_version) use ($version) {
       return $available_version > $version;
     });
@@ -201,7 +200,7 @@ class UpdateHookRegistry {
    *   The module name to delete.
    */
   public function deleteInstalledVersion(string $module): void {
-    $this->schemaKeyValue->delete($module);
+    $this->keyValue->delete($module);
     $this->schemaPreviouslyInstalledKeyValue->delete($module);
   }
 
@@ -214,7 +213,7 @@ class UpdateHookRegistry {
    *   module is not installed.
    */
   public function getAllInstalledVersions(): array {
-    return $this->schemaKeyValue->getAll();
+    return $this->keyValue->getAll();
   }
 
   /**
