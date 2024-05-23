@@ -4,10 +4,12 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\Core\Update;
 
+use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\KeyValueStore\KeyValueFactoryInterface;
 use Drupal\Core\KeyValueStore\KeyValueStoreInterface;
 use Drupal\Core\Update\UpdateHookRegistry;
 use Drupal\Tests\UnitTestCase;
+use PHPUnit\Framework\MockObject\MockObject;
 
 /**
  * Simulates a hook_update_N function.
@@ -74,13 +76,20 @@ class UpdateHookRegistryTest extends UnitTestCase {
   protected $keyValueFactory;
 
   /**
+   * A module handler mock.
+   *
+   * @var \Drupal\Core\Extension\ModuleHandlerInterface|\PHPUnit\Framework\MockObject\MockObject
+   */
+  protected ModuleHandlerInterface|MockObject $moduleHandler;
+
+  /**
    * {@inheritdoc}
    */
   protected function setUp(): void {
     parent::setUp();
     $this->keyValueFactory = $this->createMock(KeyValueFactoryInterface::class);
     $this->keyValueStore = $this->createMock(KeyValueStoreInterface::class);
-
+    $this->moduleHandler = $this->createMock(ModuleHandlerInterface::class);
     $this->keyValueFactory
       ->method('get')
       ->with('system.schema')
@@ -93,7 +102,7 @@ class UpdateHookRegistryTest extends UnitTestCase {
   public function testGetVersions() {
     $module_name = 'drupal\tests\core\update\under_test';
 
-    $update_registry = new UpdateHookRegistry([], $this->keyValueFactory);
+    $update_registry = new UpdateHookRegistry([], $this->keyValueFactory, $this->moduleHandler);
 
     // Only under_test_update_X - passes through the filter.
     $expected = [1, 20, 3000];
@@ -136,7 +145,7 @@ class UpdateHookRegistryTest extends UnitTestCase {
         $versions[$key] = $value;
       });
 
-    $update_registry = new UpdateHookRegistry([], $this->keyValueFactory);
+    $update_registry = new UpdateHookRegistry([], $this->keyValueFactory, $this->moduleHandler);
 
     $this->assertSame(3000, $update_registry->getInstalledVersion('module3'));
     $update_registry->setInstalledVersion('module3', 3001);
