@@ -286,6 +286,8 @@ system.menu.*:
 system.action.*:
   type: config_entity
   label: 'System action'
+  constraints:
+    FullyValidatable: ~
   mapping:
     id:
       type: machine_name
@@ -302,6 +304,10 @@ system.action.*:
     type:
       type: string
       label: 'Type'
+      constraints:
+        PluginExists:
+          manager: entity_type.manager
+          interface: Drupal\Core\Entity\ContentEntityInterface
     plugin:
       type: string
       label: 'Plugin'
