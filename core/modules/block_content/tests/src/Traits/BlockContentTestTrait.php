@@ -1,9 +1,9 @@
 <?php
 
-namespace  Drupal\Tests\block_content\Traits;
+declare(strict_types=1);
 
-use Drupal\Component\Utility\Unicode;
-use Drupal\comment\Plugin\Field\FieldType\CommentItemInterface;
+namespace Drupal\Tests\block_content\Traits;
+
 use Drupal\Core\Field\FieldConfigInterface;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
@@ -20,7 +20,7 @@ trait BlockContentTestTrait {
    *   ID of the block type.
    * @param string $label
    *   (optional) The label for the body instance. Defaults to 'Body'
- *
+   *
    * @return \Drupal\Core\Field\FieldConfigInterface
    *   A Body field object.
    */

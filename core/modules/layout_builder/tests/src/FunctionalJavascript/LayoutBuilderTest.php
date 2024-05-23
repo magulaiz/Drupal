@@ -8,6 +8,7 @@ use Drupal\block_content\Entity\BlockContent;
 use Drupal\block_content\Entity\BlockContentType;
 use Drupal\Core\Url;
 use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
+use Drupal\Tests\block_content\Traits\BlockContentTestTrait;
 use Drupal\Tests\contextual\FunctionalJavascript\ContextualLinkClickTrait;
 use Drupal\Tests\system\Traits\OffCanvasTestTrait;
 
@@ -18,6 +19,7 @@ use Drupal\Tests\system\Traits\OffCanvasTestTrait;
  */
 class LayoutBuilderTest extends WebDriverTestBase {
 
+  use BlockContentTestTrait;
   use ContextualLinkClickTrait;
   use LayoutBuilderSortTrait;
   use OffCanvasTestTrait;
@@ -68,7 +70,7 @@ class LayoutBuilderTest extends WebDriverTestBase {
       'label' => 'Basic',
     ]);
     $bundle->save();
-    block_content_add_body_field($bundle->id());
+    $this->addBodyField($bundle->id());
     BlockContent::create([
       'info' => 'My content block',
       'type' => 'basic',

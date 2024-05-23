@@ -6,6 +6,7 @@ namespace Drupal\Tests\layout_builder\FunctionalJavascript;
 
 use Drupal\block_content\Entity\BlockContentType;
 use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
+use Drupal\Tests\block_content\Traits\BlockContentTestTrait;
 use Drupal\Tests\contextual\FunctionalJavascript\ContextualLinkClickTrait;
 
 /**
@@ -15,6 +16,7 @@ use Drupal\Tests\contextual\FunctionalJavascript\ContextualLinkClickTrait;
  */
 class LayoutBuilderUiTest extends WebDriverTestBase {
 
+  use BlockContentTestTrait;
   use ContextualLinkClickTrait;
 
   /**
@@ -153,7 +155,7 @@ class LayoutBuilderUiTest extends WebDriverTestBase {
       'revision' => 1,
     ]);
     $bundle->save();
-    block_content_add_body_field($bundle->id());
+    $this->addBodyField($bundle->id());
 
     $this->drupalGet(static::FIELD_UI_PREFIX . '/display/default/layout');
     $assert_session->elementsCount('css', '.layout-builder__add-section', 2);

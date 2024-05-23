@@ -6,6 +6,7 @@ namespace Drupal\Tests\content_moderation\Functional;
 
 use Drupal\block_content\Entity\BlockContentType;
 use Drupal\layout_builder\Entity\LayoutBuilderEntityViewDisplay;
+use Drupal\Tests\block_content\Traits\BlockContentTestTrait;
 use Drupal\Tests\BrowserTestBase;
 use Drupal\Tests\content_moderation\Traits\ContentModerationTestTrait;
 
@@ -17,6 +18,7 @@ use Drupal\Tests\content_moderation\Traits\ContentModerationTestTrait;
  */
 class LayoutBuilderContentModerationIntegrationTest extends BrowserTestBase {
 
+  use BlockContentTestTrait;
   use ContentModerationTestTrait;
 
   /**
@@ -54,7 +56,7 @@ class LayoutBuilderContentModerationIntegrationTest extends BrowserTestBase {
       'label' => 'Basic',
       'revision' => 1,
     ])->save();
-    block_content_add_body_field('basic');
+    $this->addBodyField('basic');
 
     // Enable layout overrides.
     LayoutBuilderEntityViewDisplay::load('node.bundle_with_section_field.default')
