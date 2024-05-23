@@ -58,7 +58,7 @@ class UpdateHookRegistry {
   protected $allAvailableSchemaVersions = [];
 
   /**
-   * A static cache of previously installed scheema Versions.
+   * A static cache of previously installed schema Versions.
    *
    * @var int[][]
    */
