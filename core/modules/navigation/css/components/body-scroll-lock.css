@@ -18,7 +18,7 @@
   overflow: clip;
 }
 
-@media (min-width: 64rem) {
+@media (min-width: 1024px) {
   [data-admin-toolbar-body-scroll="locked"] {
     overflow: initial;
   }

@@ -16,7 +16,7 @@
 :where(.top-bar) {
   --toolbar-button-outline-offset: calc(-1 * var(--admin-toolbar-space-4));
 }
-@media (min-width: 64rem) {
+@media (min-width: 1024px) {
   :where(.top-bar) {
     --toolbar-button-outline-offset: 0px;
   }
