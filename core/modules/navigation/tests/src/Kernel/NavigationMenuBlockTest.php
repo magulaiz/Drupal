@@ -22,7 +22,7 @@ use Symfony\Component\Routing\Route;
 use Symfony\Component\Routing\RouteCollection;
 
 /**
- * Tests \Drupal\navigation\Plugin\Block\SystemMenuNavigationBlock.
+ * Tests \Drupal\navigation\Plugin\Block\NavigationMenuBlock.
  *
  * @group navigation
  * @see \Drupal\navigation\Plugin\Derivative\SystemMenuNavigationBlock
@@ -30,7 +30,7 @@ use Symfony\Component\Routing\RouteCollection;
  * @todo Expand test coverage to all SystemMenuNavigationBlock functionality,
  * including block_menu_delete().
  */
-class SystemMenuNavigationBlockTest extends KernelTestBase {
+class NavigationMenuBlockTest extends KernelTestBase {
 
   /**
    * Modules to enable.
