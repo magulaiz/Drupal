@@ -11,12 +11,6 @@ drupal.user:
     - core/drupal
     - core/once
 
-drupal.user.admin:
-  version: VERSION
-  css:
-    theme:
-      css/user.admin.css: {}
-
 drupal.user.permissions:
   version: VERSION
   js:
