@@ -69,6 +69,11 @@ class UpdateHookRegistryTest extends UnitTestCase {
   protected $keyValueStore;
 
   /**
+   * @var \Drupal\Core\KeyValueStore\KeyValueStoreInterface|\PHPUnit\Framework\MockObject\MockObject
+   */
+  protected $keyValuePreviouslyInstalledStore;
+
+  /**
    * @var \Drupal\Core\KeyValueStore\KeyValueFactoryInterface|\PHPUnit\Framework\MockObject\MockObject
    */
   protected $keyValueFactory;
@@ -80,11 +85,16 @@ class UpdateHookRegistryTest extends UnitTestCase {
     parent::setUp();
     $this->keyValueFactory = $this->createMock(KeyValueFactoryInterface::class);
     $this->keyValueStore = $this->createMock(KeyValueStoreInterface::class);
+    $this->keyValuePreviouslyInstalledStore = $this->createMock(KeyValueStoreInterface::class);
 
     $this->keyValueFactory
       ->method('get')
-      ->with('system.schema')
-      ->willReturn($this->keyValueStore);
+      ->willReturnCallback(function (string $key) {
+        return match ($key) {
+          'system.schema' => $this->keyValueStore,
+          'system.schema_previously_installed' => $this->keyValuePreviouslyInstalledStore,
+        };
+      });
   }
 
   /**

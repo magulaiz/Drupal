@@ -140,7 +140,7 @@ class UpdateHookRegistry {
         $current_version = $this->getInstalledVersion($module);
         $all_available_versions = $this->getAvailableUpdates($module);
         $previously_installed_schema_versions = array_filter($all_available_versions, function ($version) use ($current_version) {
-          return $version > $current_version;
+          return $version <= $current_version;
         });
         $this->setPreviouslyInstalledSchemaVersions($module, $previously_installed_schema_versions);
       }
@@ -149,7 +149,7 @@ class UpdateHookRegistry {
         if (function_exists($last_removed_hook)  && $last_removed = call_user_func($last_removed_hook)) {
           if (min($this->previouslyInstalledSchemaVersions[$module]) < $last_removed) {
             $previously_installed_schema_versions = array_filter($this->previouslyInstalledSchemaVersions[$module], function ($version) use ($last_removed) {
-              return $version <= $last_removed;
+              return $version > $last_removed;
             });
             $this->setPreviouslyInstalledSchemaVersions($module, $previously_installed_schema_versions);
           }
@@ -187,7 +187,7 @@ class UpdateHookRegistry {
   public function setInstalledVersion(string $module, int $version): self {
     $this->keyValue->set($module, $version);
     $previously_installed_schema_versions = array_filter($this->getAvailableUpdates($module), function ($available_version) use ($version) {
-      return $available_version > $version;
+      return $available_version <= $version;
     });
     $this->setPreviouslyInstalledSchemaVersions($module, $previously_installed_schema_versions);
     return $this;
