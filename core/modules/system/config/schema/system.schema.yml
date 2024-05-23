@@ -304,6 +304,7 @@ system.action.*:
     type:
       type: string
       label: 'Type'
+      nullable: true
       constraints:
         PluginExists:
           manager: entity_type.manager
