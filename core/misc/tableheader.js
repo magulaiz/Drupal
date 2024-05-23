@@ -330,6 +330,30 @@
     },
   );
 
+  /**
+   * Event listener: Recalculates position of the sticky table header when the details
+   * element is toggled open.
+   */
+  function detailsToggleHandler(event) {
+    if (event.target.open) {
+      const closestTable = event.target.querySelector('table.position-sticky');
+      if (closestTable) {
+        let tableHeaderInstance = TableHeader.tables.find(
+          (table) => table.$originalTable[0] === closestTable,
+        );
+        if (!tableHeaderInstance) {
+          tableHeaderInstance = new TableHeader(closestTable);
+        }
+        tableHeaderInstance.recalculateSticky();
+      }
+    }
+  }
+
+  // Add an event listener to the details element to listen to the toggle event.
+  document
+    .querySelector('details:has(table)')
+    .addEventListener('toggle', detailsToggleHandler);
+
   // Expose constructor in the public space.
   Drupal.TableHeader = TableHeader;
 })(jQuery, Drupal, window.Drupal.displace);
