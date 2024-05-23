@@ -82,6 +82,7 @@
   function tableHeaderInitHandler(e) {
     once('tableheader', $(e.data.context).find('table.sticky-enabled')).forEach(
       (table) => {
+        console.log('Initialised');
         TableHeader.tables.push(new TableHeader(table));
       },
     );
@@ -98,24 +99,6 @@
    */
   Drupal.behaviors.tableHeader = {
     attach(context) {
-      const tableElement = $(context).find('.views-table')[0];
-      if (tableElement) {
-        disableStickyHeader = false;
-        // Create an instance of TableHeader for the identified table.
-        // eslint-disable-next-line no-new
-        new TableHeader(tableElement);
-      }
-      // const viewFilters = document.getElementsByClassName('views-table')[0];
-      // if (viewFilters) {
-      //   console.log('table header.');
-      //   const tempDiv = document.createElement('div');
-      //   tempDiv.innerHTML = Drupal.theme('disableStickyHeaderButton');
-      //   const buttonElement = tempDiv.firstChild;
-      //   if (buttonElement) {
-      //     viewFilters.parentNode.insertBefore(buttonElement, viewFilters);
-      //   }
-      // }
-
       $(window).one(
         'scroll.TableHeaderInit',
         { context },
@@ -249,21 +232,14 @@
         this.$toggleStickyHeader.on('click', function (e) {
           e.preventDefault();
           disableStickyHeader = !disableStickyHeader;
-          localStorage.setItem(
-            'Drupal.tableHeader.disableStickyHeader',
-            disableStickyHeader,
-          );
-          const display = disableStickyHeader ? 'none' : 'table';
-
-          this.$stickyTable[0].classList.remove('position-sticky');
-          // document.getElementsByClassName('views-table')[0].classList.remove('position-sticky');
+          localStorage.setItem('Drupal.tableHeader.disableStickyHeader', disableStickyHeader);
+          let display = disableStickyHeader ? 'none' : 'table';
 
           _this.$stickyTable.css('display', display);
 
           $(e.target).text(Drupal.theme('disableStickyHeaderContent'));
 
           if (!disableStickyHeader) {
-
             _this.recalculateSticky();
           }
         });
