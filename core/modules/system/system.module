@@ -503,6 +503,7 @@ function system_preprocess_toolbar(array &$variables, $hook, $info): void {
  */
 function system_entity_form_mode_presave(EntityInterface $entity): void {
   if (trim($entity->getDescription()) === '') {
+    @trigger_error("Setting empty 'description' is deprecated in drupal:10.3.0 and is removed from drupal:12.0.0. See https://www.drupal.org/project/drupal/issues/3448457", E_USER_DEPRECATED);
     $entity->set('description', NULL);
   }
 }
