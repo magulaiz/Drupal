@@ -184,6 +184,9 @@ class DefaultSelection extends SelectionPluginBase implements ContainerFactoryPl
         '#size' => 6,
         '#multiple' => TRUE,
         '#element_validate' => [[static::class, 'elementValidateFilter']],
+        // Use a form process callback to build #ajax property properly and also
+        // to avoid code duplication.
+        // @see \Drupal\Core\Field\Plugin\Field\FieldType\EntityReferenceItem::fieldSettingsAjaxProcess()
         '#ajax' => TRUE,
         '#limit_validation_errors' => [],
       ];
@@ -235,6 +238,9 @@ class DefaultSelection extends SelectionPluginBase implements ContainerFactoryPl
         '#type' => 'select',
         '#title' => $this->t('Sort by'),
         '#options' => $fields,
+        // Use a form process callback to build #ajax property properly and also
+        // to avoid code duplication.
+        // @see \Drupal\Core\Field\Plugin\Field\FieldType\EntityReferenceItem::fieldSettingsAjaxProcess()
         '#ajax' => TRUE,
         '#empty_value' => '_none',
         '#sort_options' => TRUE,

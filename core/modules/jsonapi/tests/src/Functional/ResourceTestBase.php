@@ -2200,6 +2200,10 @@ abstract class ResourceTestBase extends BrowserTestBase {
     if ($this->entity instanceof FieldableEntityInterface && $this->entity->hasField('field_jsonapi_test_entity_ref')) {
       $parseable_invalid_request_body_5 = Json::encode(NestedArray::mergeDeep(['data' => ['attributes' => ['field_jsonapi_test_entity_ref' => ['target_id' => $this->randomString()]]]], $this->getPostDocument()));
     }
+    // Invalid PATCH request with missing id key.
+    $parseable_invalid_request_body_6 = $this->getPatchDocument();
+    unset($parseable_invalid_request_body_6['data']['id']);
+    $parseable_invalid_request_body_6 = Json::encode($parseable_invalid_request_body_6);
 
     // The URL and Guzzle request options that will be used in this test. The
     // request options will be modified/expanded throughout this test:
@@ -2303,6 +2307,12 @@ abstract class ResourceTestBase extends BrowserTestBase {
       $response = $this->request('PATCH', $url, $request_options);
       $this->assertResourceErrorResponse(422, "The following relationship fields were provided as attributes: [ field_jsonapi_test_entity_ref ]", $url, $response, FALSE);
     }
+
+    // DX: 400 when request document doesn't contain id.
+    // This also tests that no PHP warnings raised due to non-existent key.
+    $request_options[RequestOptions::BODY] = $parseable_invalid_request_body_6;
+    $response = $this->request('PATCH', $url, $request_options);
+    $this->assertResourceResponse(400, FALSE, $response);
 
     // 200 for well-formed PATCH request that sends all fields (even including
     // read-only ones, but with unchanged values).
@@ -2731,7 +2741,7 @@ abstract class ResourceTestBase extends BrowserTestBase {
       'all' => $relationship_field_names,
     ];
     if (count($relationship_field_names) > 1) {
-      $about_half_the_fields = floor(count($relationship_field_names) / 2);
+      $about_half_the_fields = (int) floor(count($relationship_field_names) / 2);
       $field_sets['some'] = array_slice($relationship_field_names, $about_half_the_fields);
 
       $nested_includes = $this->getNestedIncludePaths();
@@ -3324,7 +3334,7 @@ abstract class ResourceTestBase extends BrowserTestBase {
     $field_names = array_keys($this->entity->toArray());
     $field_sets = [
       'empty' => [],
-      'some' => array_slice($field_names, floor(count($field_names) / 2)),
+      'some' => array_slice($field_names, (int) floor(count($field_names) / 2)),
       'all' => $field_names,
     ];
     if ($this->entity instanceof EntityOwnerInterface) {
