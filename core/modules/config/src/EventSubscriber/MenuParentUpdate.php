@@ -8,7 +8,7 @@ use Drupal\Core\Config\ConfigFactoryInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 /**
- * Fix core.menu.static_menu_link_overrides:definitions.*.parent value to null.
+ * Fix empty core.menu.static_menu_link_overrides:definitions.*.parent value to NULL.
  */
 class MenuParentUpdate implements EventSubscriberInterface {
 
@@ -30,7 +30,7 @@ class MenuParentUpdate implements EventSubscriberInterface {
   }
 
   /**
-   * Fix core.menu.static_menu_link_overrides:definitions.*.parent value to null.
+   * Fix empty core.menu.static_menu_link_overrides:definitions.*.parent value to NULL.
    *
    * @param \Drupal\Core\Config\ConfigCrudEvent $event
    *   The Event to process.
