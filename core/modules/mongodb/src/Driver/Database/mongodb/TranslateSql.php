@@ -510,18 +510,22 @@ class TranslateSql {
 
         $startEvent = $this->startEvent($connection, $query, $args);
 
-        $cursor = $connection->getConnection()->{$prefixed_table}->aggregate([
+        $cursor = $connection->getConnection()->{$prefixed_table}->aggregate(
           [
-            '$group' => [
-              '_id' => NULL,
-              'max' => ['$max' => '$test_serial'],
+            [
+              '$group' => [
+                '_id' => NULL,
+                'max' => ['$max' => '$test_serial'],
+              ],
+            ],
+            [
+              '$project' => ['max' => 1, '_id' => 0],
             ],
           ],
           [
-            '$project' => ['max' => 1, '_id' => 0],
             'session' => $connection->getMongodbSession(),
-          ],
-        ]);
+          ]
+        );
 
         $this->endEvent($connection, $startEvent);
 

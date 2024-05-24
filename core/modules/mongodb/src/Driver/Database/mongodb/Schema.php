@@ -2,12 +2,14 @@
 
 namespace Drupal\mongodb\Driver\Database\mongodb;
 
+use Daffie\SqlLikeToRegularExpression;
 use Drupal\Core\Database\SchemaException;
 use Drupal\Core\Database\SchemaObjectExistsException;
 use Drupal\Core\Database\SchemaObjectDoesNotExistException;
 use Drupal\Core\Database\Schema as DatabaseSchema;
 use MongoDB\BSON\Decimal128;
 use MongoDB\BSON\ObjectID;
+use MongoDB\BSON\Regex;
 use MongoDB\BSON\UTCDateTime;
 use MongoDB\Driver\Exception\CommandException;
 use MongoDB\Driver\Exception\ExecutionTimeoutException;
@@ -452,27 +454,21 @@ class Schema extends DatabaseSchema {
   public function findTables($table_expression) {
     $prefix_length = strlen($this->connection->getPrefix());
     $tables = [];
-    // Normally, we would heartily discourage the use of string
-    // concatenation for conditionals like this however, we
-    // couldn't use db_select() here because it would prefix
-    // information_schema.tables and the query would fail.
-    foreach ($this->connection->getConnection()->listCollections() as $collectionInfo) {
-      // Remove the prefix from the returned tables.
-      $unprefixed_table_name = substr($collectionInfo->getName(), $prefix_length);
 
-      // The pattern can match a table which is the same as the prefix. That
-      // will become an empty string when we remove the prefix, which will
-      // probably surprise the caller, besides not being a prefixed table. So
-      // remove it.
-      if (!empty($unprefixed_table_name)) {
-        $tables[$unprefixed_table_name] = $unprefixed_table_name;
-      }
+    // Add the table prefix to the expression.
+    $table_expression = $this->connection->getPrefix() . $table_expression;
+    $pattern = SqlLikeToRegularExpression::convert($table_expression);
+    $collections = $this->connection->getConnection()->listCollectionNames([
+      'filter' => [
+        'name' => new Regex($pattern, 'i'),
+      ],
+      'session' =>$this->connection->getMongodbSession(),
+    ]);
+    foreach ($collections as $collection) {
+      // Remove the table prefix.
+      $collection = substr($collection, $prefix_length);
+      $tables[$collection] = $collection;
     }
-
-    // Convert the table expression from its SQL LIKE syntax to a regular
-    // expression and escape the delimiter that will be used for matching.
-    $table_expression = str_replace(['%', '_'], ['.*?', '.'], preg_quote($table_expression, '/'));
-    $tables = preg_grep('/^' . $table_expression . '$/i', $tables);
 
     // Hack to set the table_information table as the last table. Therefore in
     // testing will the table be dropped as the last table.
@@ -481,7 +477,7 @@ class Schema extends DatabaseSchema {
       $tables[TableInformation::TABLE_NAME] = TableInformation::TABLE_NAME;
     }
 
-    return $tables;
+    return array_values($tables);
   }
 
   /**
