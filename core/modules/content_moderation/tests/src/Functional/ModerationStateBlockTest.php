@@ -68,7 +68,7 @@ class ModerationStateBlockTest extends ModerationStateTestBase {
       "access content overview",
       "administer nodes",
       "bypass node access",
-      "administer workflows"
+      "administer workflows",
     ];
     $this->adminUser = $this->drupalCreateUser($permissions);
     $this->drupalLogin($this->adminUser);

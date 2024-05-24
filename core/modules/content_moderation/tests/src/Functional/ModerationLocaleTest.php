@@ -63,7 +63,7 @@ class ModerationLocaleTest extends ModerationStateTestBase {
       'administer workflows',
       'view latest version',
       'view own unpublished content',
-  ];
+    ];
     $this->adminUser = $this->drupalCreateUser($permissions);
     $this->drupalLogin($this->adminUser);
     // Enable moderation on Article node type.
