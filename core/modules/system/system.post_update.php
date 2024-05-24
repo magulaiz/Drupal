@@ -82,14 +82,13 @@ function system_post_update_convert_empty_country_and_timezone_settings_to_null(
 }
 
 /**
- * Updates all entity_view_mode configuration entities to set description from empty string to null.
+ * Updates all entity view modes to change empty descriptions to null.
  */
 function system_post_update_convert_empty_string_entity_view_modes_to_null(array &$sandbox): void {
   \Drupal::classResolver(ConfigEntityUpdater::class)
     ->update($sandbox, 'entity_view_mode', function (EntityViewMode $view_mode): bool {
-      // Entity view mode's `description` field must be stored as NULL at the
-      // config level if they are empty.
-      if (trim($view_mode->getDescription()) === '') {
+      // An empty description must be stored as NULL.
+      if (trim($view_mode->get('description')) === '') {
         $view_mode->set('description', NULL);
       }
       return TRUE;

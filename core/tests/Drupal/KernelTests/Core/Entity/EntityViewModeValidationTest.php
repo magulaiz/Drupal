@@ -72,8 +72,7 @@ class EntityViewModeValidationTest extends ConfigEntityValidationTestBase {
   public function testMachineNameLength(string $prefix = ''): void {
     // Machine name(id) of entity view mode is of type
     // 'entity_type.view_mode_type'.
-    $string = 'test.';
-    parent::testMachineNameLength($string);
+    parent::testMachineNameLength('test.');
   }
 
   /**
