@@ -4,6 +4,10 @@
  */
 
 (function ($, Drupal, displace) {
+  let disableStickyHeader = JSON.parse(
+    localStorage.getItem('Drupal.tableHeader.disableStickyHeader'),
+  );
+
   /**
    * Constructor for the tableHeader object. Provides sticky table headers.
    *
@@ -78,6 +82,7 @@
   function tableHeaderInitHandler(e) {
     once('tableheader', $(e.data.context).find('table.sticky-enabled')).forEach(
       (table) => {
+        console.log('Initialised');
         TableHeader.tables.push(new TableHeader(table));
       },
     );
@@ -206,6 +211,7 @@
        * Create the duplicate header.
        */
       createSticky() {
+        const _this = this;
         // For caching purposes.
         this.$html = $('html');
         // Clone the table header so it inherits original jQuery properties.
@@ -216,6 +222,27 @@
         )
           .append($stickyHeader)
           .insertBefore(this.$originalTable);
+
+        this.$toggleStickyHeader = $(Drupal.theme('disableStickyHeaderButton')).insertBefore(this.$stickyTable);
+
+        if (disableStickyHeader) {
+          this.$stickyTable.css('display', 'none');
+        }
+
+        this.$toggleStickyHeader.on('click', function (e) {
+          e.preventDefault();
+          disableStickyHeader = !disableStickyHeader;
+          localStorage.setItem('Drupal.tableHeader.disableStickyHeader', disableStickyHeader);
+          let display = disableStickyHeader ? 'none' : 'table';
+
+          _this.$stickyTable.css('display', display);
+
+          $(e.target).text(Drupal.theme('disableStickyHeaderContent'));
+
+          if (!disableStickyHeader) {
+            _this.recalculateSticky();
+          }
+        });
 
         this.$stickyHeaderCells = $stickyHeader.find('> tr > th');
 
@@ -332,4 +359,14 @@
 
   // Expose constructor in the public space.
   Drupal.TableHeader = TableHeader;
+
+  Drupal.theme.disableStickyHeaderButton = function () {
+    return "<div class=\"tableheader-toggle-sticky\"><button data-drupal-toggle-sticky-header class=\"link\">".concat(Drupal.theme('disableStickyHeaderContent'), "</button></div>");
+  };
+
+  Drupal.theme.disableStickyHeaderContent = function () {
+    return disableStickyHeader
+      ? Drupal.t('Enable Sticky Header')
+      : Drupal.t('Disable sticky header');
+  };
 })(jQuery, Drupal, window.Drupal.displace);

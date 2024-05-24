@@ -100,6 +100,10 @@ libraries-override:
     css:
       component:
         misc/vertical-tabs.css: css/core/vertical-tabs.css
+  core/drupal.tableheader:
+    css:
+      component:
+        misc/tableheader.css: css/core/tableheader.css
 
   # Load version 3.0.3 of normalize.css for backwards compatibility.
   core/normalize: stable9/normalize
