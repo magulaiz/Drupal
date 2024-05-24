@@ -31,3 +31,8 @@ services:
     class: Drupal\navigation\UserLazyBuilder
     arguments: ['@module_handler', '@current_user']
   Drupal\navigation\UserLazyBuilders: '@navigation.user_lazy_builder'
+
+  navigation.page_cache_request_policy.allow_navigation_path:
+    class: Drupal\navigation\PageCache\AllowNavigationPath
+    tags:
+      - { name: page_cache_request_policy }

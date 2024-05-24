@@ -6,8 +6,12 @@
  */
 
 use Drupal\Component\Plugin\PluginBase;
+use Drupal\Component\Utility\Crypt;
 use Drupal\Core\Block\BlockPluginInterface;
+use Drupal\Core\Cache\CacheableMetadata;
+use Drupal\Core\Render\RenderContext;
 use Drupal\Core\Routing\RouteMatchInterface;
+use Drupal\navigation\Controller\NavigationMenuBlockController;
 use Drupal\navigation\NavigationContentLinks;
 use Drupal\navigation\NavigationRenderer;
 use Drupal\navigation\Plugin\SectionStorage\NavigationSectionStorage;
@@ -221,4 +225,51 @@ function navigation_element_info_alter(array &$info) {
   if (array_key_exists('layout_builder', $info)) {
     $info['layout_builder']['#pre_render'][] = [RenderCallbacks::class, 'alterLayoutBuilder'];
   }
+}
+
+/**
+ * Returns the rendered subtree of each top-level toolbar link.
+ *
+ * @return array
+ *   An array with the following key-value pairs:
+ *   - 'subtrees': the rendered subtrees
+ *   - 'cacheability: the associated cacheability.
+ */
+function navigation_get_rendered_subtrees(string $menu_name, int $level, int $depth) {
+  $data = [
+    '#pre_render' => [[NavigationMenuBlockController::class, 'preRenderGetRenderedSubtrees']],
+    '#attributes' => [
+      'data-menu-level' => $level,
+      'data-menu-name' => $menu_name,
+      'data-menu-depth' => $depth,
+    ],
+    '#cache' => [
+      'keys' => [
+        'navigation_rendered_subtrees',
+        implode('|', func_get_args()),
+      ],
+    ],
+    '#cache_properties' => ['#subtrees'],
+  ];
+  /** @var \Drupal\Core\Render\Renderer $renderer */
+  $renderer = \Drupal::service('renderer');
+  // The pre_render process populates $data during the render pipeline.
+  // We need to pass by reference so that populated data can be returned and
+  // used to resolve cacheability.
+  $renderer->executeInRenderContext(new RenderContext(), function () use ($renderer, &$data) {
+    $renderer->render($data);
+  });
+  return [$data['#subtrees'], CacheableMetadata::createFromRenderArray($data)];
+}
+
+/**
+ * Returns the hash of the user-rendered toolbar subtrees and cacheability.
+ *
+ * @return array
+ *   An array with the hash of the toolbar subtrees and cacheability.
+ */
+function _navigation_get_subtrees_hash(string $menu_name, int $level, int $depth) {
+  [$subtrees, $cacheability] = navigation_get_rendered_subtrees($menu_name, $level, $depth);
+  $hash = Crypt::hashBase64(serialize($subtrees));
+  return [$hash, $cacheability];
 }

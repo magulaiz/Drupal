@@ -82,3 +82,11 @@ navigation.layoutBuilder:
   css:
     base:
       css/base/layout-builder.css: {}
+
+menu_block:
+  version: VERSION
+  js:
+    js/menu-block.js: {}
+  dependencies:
+    - core/drupal
+    - core/once
