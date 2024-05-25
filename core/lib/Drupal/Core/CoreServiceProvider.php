@@ -92,9 +92,6 @@ class CoreServiceProvider implements ServiceProviderInterface, ServiceModifierIn
 
     $container->addCompilerPass(new RegisterAccessChecksPass());
 
-    // Add a compiler pass for registering services needing destruction.
-    $container->addCompilerPass(new RegisterServicesForDestructionPass());
-
     // Add the compiler pass that will process the tagged services.
     $container->addCompilerPass(new ListCacheBinsPass());
     $container->addCompilerPass(new CacheContextsPass());
@@ -113,6 +110,9 @@ class CoreServiceProvider implements ServiceProviderInterface, ServiceModifierIn
 
     $container->registerForAutoconfiguration(QueueFactoryInterface::class)
       ->addTag('queue_factory');
+
+    // Add a compiler pass for registering services needing destruction.
+    $container->addCompilerPass(new RegisterServicesForDestructionPass());
   }
 
   /**

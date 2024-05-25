@@ -29,7 +29,6 @@ services:
     arguments: ['@locale.storage', '@cache.default', '@lock', '@config.factory', '@language_manager', '@request_stack']
     tags:
       - { name: string_translator }
-      - { name: needs_destruction }
   stream_wrapper.translations:
     class: Drupal\locale\StreamWrapper\TranslationsStream
     tags:

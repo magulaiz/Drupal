@@ -2508,8 +2508,8 @@ function hook_validation_constraint_alter(array &$definitions) {
  *   for more information.
  * - needs_destruction: Indicates that a destruct() method needs to be called
  *   at the end of a request to finalize operations, if this service was
- *   instantiated. Services should implement \Drupal\Core\DestructableInterface
- *   in this case.
+ *   instantiated. Services that implement \Drupal\Core\DestructableInterface
+ *   will automatically have this tag applied.
  * - context_provider: Indicates a block context provider, used for example
  *   by block conditions. It has to implement
  *   \Drupal\Core\Plugin\Context\ContextProviderInterface.
