@@ -24,14 +24,6 @@ class FieldUIRouteTest extends BrowserTestBase {
 
   /**
    * {@inheritdoc}
-   *
-   * @todo Remove and fix test to not rely on super user.
-   * @see https://www.drupal.org/project/drupal/issues/3437620
-   */
-  protected bool $usesSuperUserAccessPolicy = TRUE;
-
-  /**
-   * {@inheritdoc}
    */
   protected $defaultTheme = 'stark';
 
@@ -41,14 +33,22 @@ class FieldUIRouteTest extends BrowserTestBase {
   protected function setUp(): void {
     parent::setUp();
 
-    $this->drupalLogin($this->rootUser);
+    // Create the admin user.
+    $this->drupalLogin($this->drupalCreateUser([
+      'view the administration theme',
+      'access administration pages',
+      'administer user display',
+      'administer user form display',
+      'administer entity_test fields',
+      'administer account settings',
+    ]));
     $this->drupalPlaceBlock('local_tasks_block');
   }
 
   /**
    * Ensures that entity types with bundles do not break following entity types.
    */
-  public function testFieldUIRoutes() {
+  public function testFieldUiRoutes() {
     $this->drupalGet('entity_test_no_id/structure/entity_test/fields');
     $this->assertSession()->pageTextContains('No fields are present yet.');
 
