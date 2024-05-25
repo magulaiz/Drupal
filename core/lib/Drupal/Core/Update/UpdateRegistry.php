@@ -46,6 +46,16 @@ class UpdateRegistry implements EventSubscriberInterface {
   protected static array $loadedFiles = [];
 
   /**
+   * A static cache of all the extension updates scanned for.
+   *
+   * This array is keyed by Drupal root, site path, extension name and update
+   * type. The value if the extension has been searched for is TRUE.
+   *
+   * @var array
+   */
+  protected static array $loadedFiles = [];
+
+  /**
    * Constructs a new UpdateRegistry.
    *
    * @param string $root
