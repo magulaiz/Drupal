@@ -129,25 +129,63 @@ class UpdateHookRegistry {
   public function getPreviouslyInstalledSchemaVersions(string $module): array {
     $previously_installed_schema_versions = $this->schemaPreviouslyInstalledKeyValue->get($module, FALSE);
     if ($previously_installed_schema_versions === FALSE) {
-      $current_version = $this->getInstalledVersion($module);
-      $all_available_versions = $this->getAvailableUpdates($module);
-      $previously_installed_schema_versions = array_filter($all_available_versions, function ($version) use ($current_version) {
-        return $version <= $current_version;
-      });
+      $previously_installed_schema_versions = $this->calculatePreviouslyInstalledSchemaVersions($module);
       $this->setPreviouslyInstalledSchemaVersions($module, $previously_installed_schema_versions);
+      return $previously_installed_schema_versions;
     }
+    // If the previously installed list is an empty array, don't bother checking
+    // for removed hooks.
     if ($previously_installed_schema_versions) {
-      $last_removed_hook = $module . '_update_last_removed';
-      if (function_exists($last_removed_hook)  && $last_removed = call_user_func($last_removed_hook)) {
-        if (min($previously_installed_schema_versions) < $last_removed) {
-          $previously_installed_schema_versions = array_filter($previously_installed_schema_versions, function ($version) use ($last_removed) {
-            return $version > $last_removed;
-          });
-          $this->setPreviouslyInstalledSchemaVersions($module, $previously_installed_schema_versions);
-        }
+      $previously_installed_schema_versions = $this->clearRemovedPreviouslyInstalledSchemaVersions($module, $previously_installed_schema_versions);
+    }
+    return $previously_installed_schema_versions;
+  }
+
+  /**
+   * Calculates the previously run update hook numbers.
+   *
+   * Calculates based on the current installed version, assuming we have run
+   * all hooks up to and including that version.
+   *
+   * @param string $module
+   *   A module name.
+   *
+   * @return array
+   *   The previously run update hook numbers.
+   */
+  protected function calculatePreviouslyInstalledSchemaVersions(string $module): array {
+    $current_version = $this->getInstalledVersion($module);
+    $all_available_versions = $this->getAvailableUpdates($module);
+    return array_filter($all_available_versions, function ($version) use ($current_version) {
+      return $version <= $current_version;
+    });
+  }
+
+  /**
+   * Removes hooks below the last removed number from the ran updates lists.
+   *
+   * Given a module and a list of previously run update hook numbers, this will
+   * check if any on the list are below the value returned from
+   * hook_update_last_removed and remove them from the list.
+   *
+   * @param string $module
+   *   A module name.
+   * @param array $previously_installed_schema_versions
+   *   A list of previously installed update hook numbers.
+   *
+   * @return array
+   *   The list of update hook numbers with removed updates hooks removed.
+   */
+  protected function clearRemovedPreviouslyInstalledSchemaVersions(string $module, array $previously_installed_schema_versions): array {
+    $last_removed_hook = $module . '_update_last_removed';
+    if (function_exists($last_removed_hook)  && $last_removed = call_user_func($last_removed_hook)) {
+      if (min($previously_installed_schema_versions) < $last_removed) {
+        $previously_installed_schema_versions = array_filter($previously_installed_schema_versions, function ($version) use ($last_removed) {
+          return $version > $last_removed;
+        });
+        $this->setPreviouslyInstalledSchemaVersions($module, $previously_installed_schema_versions);
       }
     }
-
     return $previously_installed_schema_versions;
   }
 
@@ -178,9 +216,10 @@ class UpdateHookRegistry {
    */
   public function setInstalledVersion(string $module, int $version): self {
     $this->keyValue->set($module, $version);
-    $previously_installed_schema_versions = array_filter($this->getAvailableUpdates($module), function ($available_version) use ($version) {
-      return $available_version <= $version;
-    });
+    // If we explicitly set the Installed Version, we know that all update hooks
+    // Below that number have been run, and can reset the previously installed
+    // list.
+    $previously_installed_schema_versions = $this->calculatePreviouslyInstalledSchemaVersions($module)
     $this->setPreviouslyInstalledSchemaVersions($module, $previously_installed_schema_versions);
     return $this;
   }
