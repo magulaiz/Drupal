@@ -3,6 +3,7 @@
 namespace Drupal\Core\Update;
 
 use Drupal\Core\KeyValueStore\KeyValueFactoryInterface;
+use Drupal\Core\KeyValueStore\KeyValueStoreInterface;
 
 /**
  * Provides module updates versions handling.
@@ -33,7 +34,7 @@ class UpdateHookRegistry {
    *
    * @var \Drupal\Core\KeyValueStore\KeyValueStoreInterface
    */
-  protected $schemaPreviouslyInstalledKeyValue;
+  protected KeyValueStoreInterface $schemaPreviouslyInstalledKeyValue;
 
   /**
    * A static cache of schema currentVersions per module.
@@ -219,7 +220,7 @@ class UpdateHookRegistry {
     // If we explicitly set the Installed Version, we know that all update hooks
     // Below that number have been run, and can reset the previously installed
     // list.
-    $previously_installed_schema_versions = $this->calculatePreviouslyInstalledSchemaVersions($module)
+    $previously_installed_schema_versions = $this->calculatePreviouslyInstalledSchemaVersions($module);
     $this->setPreviouslyInstalledSchemaVersions($module, $previously_installed_schema_versions);
     return $this;
   }

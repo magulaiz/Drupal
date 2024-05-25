@@ -37,7 +37,7 @@ class UpdateNewUpdateBelowSchemaTest extends BrowserTestBase {
   }
 
   /**
-   * Tests that updates below the currect schema will be run if new.
+   * Tests that updates below the current schema will be run if new.
    */
   public function testNewUpdate(): void {
     /** @var \Drupal\Core\Update\UpdateHookRegistry $registry */
