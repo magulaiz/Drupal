@@ -92,7 +92,7 @@ class Email extends FormElementBase {
       : [$value];
 
     // Display an error when an email address is empty.
-    if (in_array('', $emails)) {
+    if (in_array('', $emails, TRUE)) {
       $form_state->setError($element, t('All email addresses must be non-empty.'));
       return;
     }
@@ -103,7 +103,6 @@ class Email extends FormElementBase {
     $invalid_emails = [];
     foreach ($emails as $email) {
       if (empty($email)) {
-        // Skip empty email addresses. They are already validated.
         continue;
       }
       if (!$validator->isValid($email)) {
