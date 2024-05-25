@@ -266,6 +266,13 @@ html:not([data-admin-toolbar="expanded"]) .toolbar-button--collapsible .toolbar-
   clip-path: inset(50%);
   opacity: 0;
 }
+.toolbar-button__icon {
+  flex-shrink: 0;
+  color: inherit;
+  inline-size: var(--admin-toolbar-space-20);
+  block-size: var(--admin-toolbar-space-20);
+  font-size: var(--admin-toolbar-space-20);
+}
 /* Hides button's label while transitioning. */
 html[data-admin-toolbar-animating][data-admin-toolbar="expanded"] .toolbar-button--collapsible .toolbar-button__label {
   display: none;
