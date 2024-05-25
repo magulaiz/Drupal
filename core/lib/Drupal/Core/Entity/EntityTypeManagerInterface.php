@@ -19,7 +19,7 @@ interface EntityTypeManagerInterface extends PluginManagerInterface, CachedDisco
    * @return \Drupal\Core\Entity\EntityAccessControlHandlerInterface
    *   An access control handler instance.
    */
-  public function getAccessControlHandler($entity_type_id);
+  public function getAccessControlHandler(string $entity_type_id);
 
   /**
    * Creates a new storage instance.
@@ -35,7 +35,7 @@ interface EntityTypeManagerInterface extends PluginManagerInterface, CachedDisco
    * @throws \Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException
    *   Thrown if the storage handler couldn't be loaded.
    */
-  public function getStorage($entity_type_id);
+  public function getStorage(string $entity_type_id);
 
   /**
    * Creates a new view builder instance.
@@ -46,7 +46,7 @@ interface EntityTypeManagerInterface extends PluginManagerInterface, CachedDisco
    * @return \Drupal\Core\Entity\EntityViewBuilderInterface
    *   A view builder instance.
    */
-  public function getViewBuilder($entity_type_id);
+  public function getViewBuilder(string $entity_type_id);
 
   /**
    * Creates a new entity list builder.
@@ -57,7 +57,7 @@ interface EntityTypeManagerInterface extends PluginManagerInterface, CachedDisco
    * @return \Drupal\Core\Entity\EntityListBuilderInterface
    *   An entity list builder instance.
    */
-  public function getListBuilder($entity_type_id);
+  public function getListBuilder(string $entity_type_id);
 
   /**
    * Creates a new form instance.
@@ -70,7 +70,7 @@ interface EntityTypeManagerInterface extends PluginManagerInterface, CachedDisco
    * @return \Drupal\Core\Entity\EntityFormInterface
    *   A form instance.
    */
-  public function getFormObject($entity_type_id, $operation);
+  public function getFormObject(string $entity_type_id, string $operation);
 
   /**
    * Gets all route provider instances.
@@ -80,7 +80,7 @@ interface EntityTypeManagerInterface extends PluginManagerInterface, CachedDisco
    *
    * @return \Drupal\Core\Entity\Routing\EntityRouteProviderInterface[]
    */
-  public function getRouteProviders($entity_type_id);
+  public function getRouteProviders(string $entity_type_id);
 
   /**
    * Checks whether a certain entity type has a certain handler.
@@ -93,7 +93,7 @@ interface EntityTypeManagerInterface extends PluginManagerInterface, CachedDisco
    * @return bool
    *   Returns TRUE if the entity type has the handler, else FALSE.
    */
-  public function hasHandler($entity_type_id, $handler_type);
+  public function hasHandler(string $entity_type_id, string $handler_type);
 
   /**
    * Returns a handler instance for the given entity type and handler.
@@ -115,7 +115,7 @@ interface EntityTypeManagerInterface extends PluginManagerInterface, CachedDisco
    *
    * @throws \Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException
    */
-  public function getHandler($entity_type_id, $handler_type);
+  public function getHandler(string $entity_type_id, string $handler_type);
 
   /**
    * Creates new handler instance.
@@ -132,14 +132,14 @@ interface EntityTypeManagerInterface extends PluginManagerInterface, CachedDisco
    * @return object
    *   A handler instance.
    */
-  public function createHandlerInstance($class, EntityTypeInterface $definition = NULL);
+  public function createHandlerInstance(string $class, EntityTypeInterface $definition = NULL);
 
   /**
    * {@inheritdoc}
    *
    * @return \Drupal\Core\Entity\EntityTypeInterface|null
    */
-  public function getDefinition($entity_type_id, $exception_on_invalid = TRUE);
+  public function getDefinition(string $entity_type_id, bool $exception_on_invalid = TRUE);
 
   /**
    * {@inheritdoc}
