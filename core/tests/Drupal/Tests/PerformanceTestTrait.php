@@ -76,8 +76,7 @@ trait PerformanceTestTrait {
       'performanceTimeline' => 'ALL',
     ];
     // Support legacy key.
-    $chrome_options_key = isset($driver_args[1]['chromeOptions']) ? 'chromeOptions' : 'goog:chromeOptions';
-    $driver_args[1][$chrome_options_key]['perfLoggingPrefs'] = [
+    $driver_args[1]['goog:chromeOptions']['perfLoggingPrefs'] = [
       'traceCategories' => 'timeline,devtools.timeline,browser',
     ];
 
@@ -242,6 +241,10 @@ trait PerformanceTestTrait {
       if (str_contains($args[':db_condition_placeholder_1'], 'files/css')) {
         $args[':db_condition_placeholder_1'] = 'CSS_FILE';
       }
+    }
+    elseif (str_starts_with($query, 'SELECT "name", "value" FROM "key_value_expire" WHERE "expire" >')) {
+      $args[':now'] = 'NOW';
+      $args[':keys__0'] = 'KEY';
     }
 
     // Inline query arguments and log the query.

@@ -73,6 +73,9 @@ class CKEditor5PluginManagerTest extends KernelTestBase {
     Editor::create([
       'format' => 'basic_html',
       'editor' => 'ckeditor5',
+      'image_upload' => [
+        'status' => FALSE,
+      ],
     ])->save();
     FilterFormat::create(
       Yaml::parseFile('core/profiles/standard/config/install/filter.format.full_html.yml')
@@ -80,6 +83,9 @@ class CKEditor5PluginManagerTest extends KernelTestBase {
     Editor::create([
       'format' => 'full_html',
       'editor' => 'ckeditor5',
+      'image_upload' => [
+        'status' => FALSE,
+      ],
     ])->save();
     $this->manager = $this->container->get('plugin.manager.ckeditor5.plugin');
     $this->typedConfig = $this->container->get('config.typed');
@@ -225,15 +231,16 @@ YAML,
 
     yield 'only plugin ID, nothing else' => [
       <<<YAML
-foo_bar: {}
+ckeditor5_invalid_plugin_foo_bar: {}
 YAML,
       InvalidPluginDefinitionException::class,
-      'The "foo_bar" CKEditor 5 plugin definition must have a plugin ID that starts with "ckeditor5_invalid_plugin_".',
+      'The "ckeditor5_invalid_plugin_foo_bar" CKEditor 5 plugin definition must contain a "drupal" key.',
     ];
 
-    yield 'fixed plugin ID' => [
+    yield 'added drupal' => [
       <<<YAML
-ckeditor5_invalid_plugin_foo_bar: {}
+ckeditor5_invalid_plugin_foo_bar:
+  drupal: {}
 YAML,
       InvalidPluginDefinitionException::class,
       'The "ckeditor5_invalid_plugin_foo_bar" CKEditor 5 plugin definition must contain a "ckeditor5" key.',
@@ -243,22 +250,13 @@ YAML,
       <<<YAML
 ckeditor5_invalid_plugin_foo_bar:
   ckeditor5: {}
+  drupal: {}
 YAML,
-      \ArgumentCountError::class,
-      NULL,
+      InvalidPluginDefinitionException::class,
+      'The "ckeditor5_invalid_plugin_foo_bar" CKEditor 5 plugin definition must contain a "ckeditor5.plugins" key.',
     ];
 
     yield 'added ckeditor5.plugins' => [
-      <<<YAML
-ckeditor5_invalid_plugin_foo_bar:
-  ckeditor5:
-    plugins: {}
-YAML,
-      InvalidPluginDefinitionException::class,
-      'The "ckeditor5_invalid_plugin_foo_bar" CKEditor 5 plugin definition must contain a "drupal" key.',
-    ];
-
-    yield 'added drupal' => [
       <<<YAML
 ckeditor5_invalid_plugin_foo_bar:
   ckeditor5:
@@ -277,7 +275,8 @@ ckeditor5_invalid_plugin_foo_bar:
   drupal:
     label: {}
 YAML,
-      \TypeError::class,
+      InvalidPluginDefinitionException::class,
+      'The "ckeditor5_invalid_plugin_foo_bar" CKEditor 5 plugin definition has a "drupal.label" value that is not a string nor a TranslatableMarkup instance.',
     ];
 
     yield 'fixed drupal.label' => [
@@ -345,6 +344,21 @@ ckeditor5_invalid_plugin_foo_bar:
       - <foo>
       - <bar>
 YAML,
+    ];
+
+    yield 'change plugin ID to something invalid' => [
+      <<<YAML
+foo_bar:
+  ckeditor5:
+    plugins: {}
+  drupal:
+    label: "Foo bar"
+    elements:
+      - <foo>
+      - <bar>
+YAML,
+      InvalidPluginDefinitionException::class,
+      'The "foo_bar" CKEditor 5 plugin definition must have a plugin ID that starts with "ckeditor5_invalid_plugin_".',
     ];
 
     yield 'alternative fix for drupal.elements' => [
@@ -1049,6 +1063,9 @@ PHP,
     $text_editor = Editor::create([
       'format' => 'dummy',
       'editor' => 'ckeditor5',
+      'image_upload' => [
+        'status' => FALSE,
+      ],
       'settings' => [
         'plugins' => [
           $sneaky_plugin_id => ['configured_subset' => $configured_subset],
@@ -1536,39 +1553,39 @@ PHP,
     return [
       'tag that belongs to a superset' => [
         'tag' => 'h2',
-        'expected_plugin' => 'ckeditor5_heading',
+        'expected_plugin_id' => 'ckeditor5_heading',
       ],
       'tag only available as tag' => [
         'tag' => 'nav',
-        'expected_plugin' => 'ckeditor5_definition_supporting_element_just_nav',
+        'expected_plugin_id' => 'ckeditor5_definition_supporting_element_just_nav',
       ],
       'between just tag, full use of class, and constrained use of class, return full use of class' => [
         'tag' => 'article',
-        'expected_plugin' => 'ckeditor5_definition_supporting_element_article_class',
+        'expected_plugin_id' => 'ckeditor5_definition_supporting_element_article_class',
       ],
       'between just tag and full use of class, return full use of class' => [
         'tag' => 'footer',
-        'expected_plugin' => 'ckeditor5_definition_supporting_element_footer_class',
+        'expected_plugin_id' => 'ckeditor5_definition_supporting_element_footer_class',
       ],
       'between just tag and constrained use of class, return constrained use of class' => [
         'tag' => 'aside',
-        'expected_plugin' => 'ckeditor5_definition_supporting_element_aside_class_with_values',
+        'expected_plugin_id' => 'ckeditor5_definition_supporting_element_aside_class_with_values',
       ],
       'between full use of class and constrained use of class, return full use of class' => [
         'tag' => 'main',
-        'expected_plugin' => 'ckeditor5_definition_supporting_element_main_class',
+        'expected_plugin_id' => 'ckeditor5_definition_supporting_element_main_class',
       ],
       'between one plugin allows one attribute, second allows two, return the one that allows two' => [
         'tag' => 'figure',
-        'expected_plugin' => 'ckeditor5_definition_supporting_element_figure_two_attrib',
+        'expected_plugin_id' => 'ckeditor5_definition_supporting_element_figure_two_attrib',
       ],
       'between one plugin allows one attribute, second allows two (but appearing in opposite order), still return the one that allows two' => [
         'tag' => 'dialog',
-        'expected_plugin' => 'ckeditor5_definition_supporting_element_dialog_two_attrib',
+        'expected_plugin_id' => 'ckeditor5_definition_supporting_element_dialog_two_attrib',
       ],
       'tag that belongs to a plugin with conditions' => [
         'tag' => 'drupal-media',
-        'expected_plugin' => NULL,
+        'expected_plugin_id' => NULL,
       ],
     ];
   }
