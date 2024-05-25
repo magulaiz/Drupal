@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\system\Functional\UpdateSystem;
 
+use Drupal\Core\Update\UpdateHookRegistry;
 use Drupal\Tests\BrowserTestBase;
 
 /**
@@ -31,11 +32,20 @@ class DependencyOrderingTest extends BrowserTestBase {
   protected $defaultTheme = 'stark';
 
   /**
+   * The update hook registry.
+   *
+   * @var \Drupal\Core\Update\UpdateHookRegistry
+   */
+  protected UpdateHookRegistry $updateHookRegistry;
+
+  /**
    * {@inheritdoc}
    */
   protected function setUp(): void {
     parent::setUp();
     require_once $this->root . '/core/includes/update.inc';
+    $this->updateHookRegistry = \Drupal::service('update.update_hook_registry');
+
   }
 
   /**
@@ -50,6 +60,7 @@ class DependencyOrderingTest extends BrowserTestBase {
       'update_test_1_update_8002',
       'update_test_1_update_8003',
     ];
+    $this->updateHookRegistry->setPreviouslyInstalledSchemaVersions('update_test_1', []);
     $actual_updates = array_keys(update_resolve_dependencies($starting_updates));
     $this->assertEquals($expected_updates, $actual_updates, 'Updates within a single module run in the correct order.');
   }
@@ -62,6 +73,8 @@ class DependencyOrderingTest extends BrowserTestBase {
       'update_test_2' => 8001,
       'update_test_3' => 8001,
     ];
+    $this->updateHookRegistry->setPreviouslyInstalledSchemaVersions('update_test_2', []);
+    $this->updateHookRegistry->setPreviouslyInstalledSchemaVersions('update_test_3', []);
     $update_order = array_keys(update_resolve_dependencies($starting_updates));
     // Make sure that each dependency is satisfied.
     $first_dependency_satisfied = array_search('update_test_2_update_8001', $update_order) < array_search('update_test_3_update_8001', $update_order);
