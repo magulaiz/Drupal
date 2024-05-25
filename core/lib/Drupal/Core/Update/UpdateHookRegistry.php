@@ -180,7 +180,7 @@ class UpdateHookRegistry {
   protected function clearRemovedPreviouslyInstalledSchemaVersions(string $module, array $previously_installed_schema_versions): array {
     $last_removed_hook = $module . '_update_last_removed';
     if (function_exists($last_removed_hook)  && $last_removed = call_user_func($last_removed_hook)) {
-      if (min($previously_installed_schema_versions) < $last_removed) {
+      if (min($previously_installed_schema_versions) <= $last_removed) {
         $previously_installed_schema_versions = array_filter($previously_installed_schema_versions, function ($version) use ($last_removed) {
           return $version > $last_removed;
         });
