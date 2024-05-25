@@ -24,7 +24,7 @@ class UpdateNewUpdateBelowSchemaTest extends BrowserTestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = ['update_test_0'];
+  protected static $modules = ['update_test_0'];
 
   /**
    * {@inheritdoc}
