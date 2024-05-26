@@ -80,7 +80,7 @@ class SearchBlock extends BlockBase implements ContainerFactoryPluginInterface {
    */
   public function build() {
     $page = $this->configuration['page_id'] ?? NULL;
-    return $this->formBuilder->getForm(SearchBlockForm::class, $page);
+    return $this->formBuilder->getForm(SearchBlockForm::class, $page, $this->getConfiguration());
   }
 
   /**
@@ -89,6 +89,8 @@ class SearchBlock extends BlockBase implements ContainerFactoryPluginInterface {
   public function defaultConfiguration() {
     return [
       'page_id' => '',
+      'title' => $this->t('Enter the terms you wish to search for'),
+      'placeholder' => $this->t('Enter the terms you wish to search for'),
     ];
   }
 
@@ -113,6 +115,18 @@ class SearchBlock extends BlockBase implements ContainerFactoryPluginInterface {
       '#empty_option' => $this->t('Default'),
       '#empty_value' => '',
     ];
+    $form['title'] = [
+      '#type' => 'textfield',
+      '#title' => $this->t('Title attribute'),
+      '#description' => $this->t('The HTML title attribute for the search input field.'),
+      '#default_value' => $this->configuration['title'],
+    ];
+    $form['placeholder'] = [
+      '#type' => 'textfield',
+      '#title' => $this->t('Placeholder'),
+      '#description' => $this->t('The text displayed when the search input field is empty.'),
+      '#default_value' => $this->configuration['placeholder'],
+    ];
 
     return $form;
   }
@@ -122,6 +136,8 @@ class SearchBlock extends BlockBase implements ContainerFactoryPluginInterface {
    */
   public function blockSubmit($form, FormStateInterface $form_state) {
     $this->configuration['page_id'] = $form_state->getValue('page_id');
+    $this->configuration['title'] = $form_state->getValue('title');
+    $this->configuration['placeholder'] = $form_state->getValue('placeholder');
   }
 
 }

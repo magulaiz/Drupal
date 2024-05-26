@@ -76,7 +76,7 @@ class SearchBlockForm extends FormBase implements WorkspaceSafeFormInterface {
   /**
    * {@inheritdoc}
    */
-  public function buildForm(array $form, FormStateInterface $form_state, $entity_id = NULL) {
+  public function buildForm(array $form, FormStateInterface $form_state, $entity_id = NULL, array $block_configuration = []) {
     // Set up the form to submit using GET to the correct search page.
     if (!$entity_id) {
       $entity_id = $this->searchPageRepository->getDefaultSearchPage();
@@ -105,7 +105,10 @@ class SearchBlockForm extends FormBase implements WorkspaceSafeFormInterface {
       '#title_display' => 'invisible',
       '#size' => 15,
       '#default_value' => '',
-      '#attributes' => ['title' => $this->t('Enter the terms you wish to search for.')],
+      '#attributes' => [
+        'title' => $block_configuration['title'] ?: '',
+        'placeholder' => $block_configuration['placeholder'] ?: '',
+      ],
     ];
 
     $form['actions'] = ['#type' => 'actions'];

@@ -139,6 +139,14 @@ class SearchBlockTest extends BrowserTestBase {
     $this->drupalGet('node');
     $this->submitForm(['keys' => $name], 'Search');
     $this->assertSession()->linkExists($name);
+
+    // Test title and placeholder HTML properties.
+    $this->drupalGet('admin/structure/block/manage/' . $block->id());
+    $this->submitForm(['settings[title]' => 'Test title', 'settings[placeholder]' => 'Test placeholder'], 'Save block');
+
+    $this->drupalGet('');
+    $this->assertSession()->statusCodeEquals(200);
+    $this->assertSession()->elementExists('xpath', "//input[@type='search' and @title='Test title' and @placeholder='Test placeholder']");
   }
 
 }
