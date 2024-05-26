@@ -84,6 +84,7 @@ class TestRunnerKernel extends DrupalKernel {
     $this->getContainer()->get('stream_wrapper_manager')->register();
 
     // Create the build/artifacts directory if necessary.
+    $realdir = realpath('public://');
     if (!is_dir('public://simpletest') && !@mkdir('public://simpletest', 0777, TRUE) && !is_dir('public://simpletest')) {
       throw new \RuntimeException('Unable to create directory: public://simpletest');
     }
