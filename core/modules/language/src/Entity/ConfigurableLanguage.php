@@ -226,7 +226,7 @@ class ConfigurableLanguage extends ConfigEntityBase implements ConfigurableLangu
   /**
    * {@inheritdoc}
    */
-  #[ActionMethod(adminLabel: new TranslatableMarkup('Change name'), pluralize: FALSE)]
+  #[ActionMethod(adminLabel: new TranslatableMarkup('Set Language name'), pluralize: FALSE)]
   public function setName($name) {
     $this->label = $name;
 

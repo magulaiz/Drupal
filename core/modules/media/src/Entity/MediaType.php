@@ -170,7 +170,7 @@ class MediaType extends ConfigEntityBundleBase implements MediaTypeInterface, En
   /**
    * {@inheritdoc}
    */
-  #[ActionMethod(adminLabel: new TranslatableMarkup('Change description'), pluralize: FALSE)]
+  #[ActionMethod(adminLabel: new TranslatableMarkup('Set description'), pluralize: FALSE)]
   public function setDescription($description) {
     return $this->set('description', $description);
   }
@@ -240,7 +240,7 @@ class MediaType extends ConfigEntityBundleBase implements MediaTypeInterface, En
   /**
    * {@inheritdoc}
    */
-  #[ActionMethod(adminLabel: new TranslatableMarkup('Change field mapping'), pluralize: FALSE)]
+  #[ActionMethod(adminLabel: new TranslatableMarkup('Set field mapping'), pluralize: FALSE)]
   public function setFieldMap(array $map) {
     return $this->set('field_map', $map);
   }
