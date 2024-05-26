@@ -131,6 +131,10 @@ class UpdateHookRegistry {
     $previously_installed_schema_versions = $this->schemaPreviouslyInstalledKeyValue->get($module, FALSE);
     if ($previously_installed_schema_versions === FALSE) {
       $previously_installed_schema_versions = $this->calculatePreviouslyInstalledSchemaVersions($module);
+      if ($previously_installed_schema_versions === NULL) {
+        // Module is not installed.
+        return [];
+      }
       $this->setPreviouslyInstalledSchemaVersions($module, $previously_installed_schema_versions);
       return $previously_installed_schema_versions;
     }
@@ -151,11 +155,14 @@ class UpdateHookRegistry {
    * @param string $module
    *   A module name.
    *
-   * @return array
+   * @return array|null
    *   The previously run update hook numbers.
    */
-  protected function calculatePreviouslyInstalledSchemaVersions(string $module): array {
+  protected function calculatePreviouslyInstalledSchemaVersions(string $module): ?array {
     $current_version = $this->getInstalledVersion($module);
+    if ($current_version === self::SCHEMA_UNINSTALLED) {
+      return NULL;
+    }
     $all_available_versions = $this->getAvailableUpdates($module);
     return array_filter($all_available_versions, function ($version) use ($current_version) {
       return $version <= $current_version;
