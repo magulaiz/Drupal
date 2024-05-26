@@ -1,24 +1,26 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\router_test;
 
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpKernel\Event\GetResponseEvent;
+use Symfony\Component\HttpKernel\Event\RequestEvent;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 use Symfony\Component\HttpKernel\KernelEvents;
 
 /**
- * Event subscribers for testing routing when exceptions are thrown in early
- * kernel middleware.
+ * Event subscribers for exceptions thrown in early kernel middleware.
  */
 class RouterTestEarlyExceptionSubscriber implements EventSubscriberInterface {
 
   /**
-   * Throw an exception, which will trigger exception-handling subscribers
-   * in core, namely DefaultExceptionHtmlSubscriber.
+   * Throw an exception, which will trigger exception-handling subscribers.
+   *
+   * See DefaultExceptionHtmlSubscriber.
    */
-  public function onKernelRequest(GetResponseEvent $event) {
+  public function onKernelRequest(RequestEvent $event) {
     if ($event->isMainRequest() && $event->getRequest()->headers->get('Authorization') === 'Bearer invalid') {
       throw new HttpException(
         Response::HTTP_UNAUTHORIZED,

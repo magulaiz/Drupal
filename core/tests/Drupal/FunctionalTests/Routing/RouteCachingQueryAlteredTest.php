@@ -1,13 +1,17 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\FunctionalTests\Routing;
 
 use Drupal\Tests\BrowserTestBase;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
- * Tests the route cache when the request's query parameters are altered, either
- * in the normal course of operations or due to an exception.
+ * Tests the route cache when the request's query parameters are altered.
+ *
+ * This happens either in the normal course of operations or due to an
+ * exception.
  *
  * @group routing
  */
