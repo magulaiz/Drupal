@@ -16,8 +16,13 @@ class ChoiceConstraintValidator extends ChoiceValidator {
   /**
    * {@inheritdoc}
    */
-  public function validate(mixed $value, Constraint $constraint) {
+  public function validate(mixed $value, Constraint $constraint): void {
+
+    if (!$constraint instanceof ChoiceConstraint) {
+      throw new UnexpectedTypeException($constraint, ChoiceConstraint::class);
+    }
     assert($constraint instanceof ChoiceConstraint);
+
     if ($constraint->callbackArgs) {
       $callback = function () {
         // @todo;
