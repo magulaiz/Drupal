@@ -1340,18 +1340,33 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
     }
 
     try {
-      // @todo Get transactions to work with MongoDB.
-      if ($this->database->driver() != 'mongodb') {
+      if ($this->database->driver() == 'mongodb') {
+        $session = $this->database->getMongodbSession();
+        $session_started = FALSE;
+        if (!$session->isInTransaction()) {
+          $session->startTransaction();
+          $session_started = TRUE;
+        }
+      }
+      else {
         $transaction = $this->database->startTransaction();
       }
+
       parent::delete($entities);
 
       // Ignore replica server temporarily.
       \Drupal::service('database.replica_kill_switch')->trigger();
+
+      if (isset($session) && $session->isInTransaction() && $session_started) {
+        $session->commitTransaction();
+      }
     }
     catch (\Exception $e) {
       if (isset($transaction)) {
         $transaction->rollBack();
+      }
+      if (isset($session) && $session->isInTransaction() && $session_started) {
+        $session->abortTransaction();
       }
       Error::logException(\Drupal::logger($this->entityTypeId), $e);
       throw new EntityStorageException($e->getMessage(), $e->getCode(), $e);
@@ -1408,16 +1423,35 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
     }
     else {
       try {
-        $transaction = $this->database->startTransaction();
+        if ($this->database->driver() == 'mongodb') {
+          $session = $this->database->getMongodbSession();
+          $session_started = FALSE;
+          if (!$session->isInTransaction()) {
+            $session->startTransaction();
+            $session_started = TRUE;
+          }
+        }
+        else {
+          $transaction = $this->database->startTransaction();
+        }
+
         $return = parent::save($entity);
 
         // Ignore replica server temporarily.
         \Drupal::service('database.replica_kill_switch')->trigger();
+
+        if (isset($session) && $session->isInTransaction() && $session_started) {
+          $session->commitTransaction();
+        }
+
         return $return;
       }
       catch (\Exception $e) {
         if (isset($transaction)) {
           $transaction->rollBack();
+        }
+        if (isset($session) && $session->isInTransaction() && $session_started) {
+          $session->abortTransaction();
         }
         Error::logException(\Drupal::logger($this->entityTypeId), $e);
         throw new EntityStorageException($e->getMessage(), $e->getCode(), $e);
@@ -1430,7 +1464,18 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
    */
   public function restore(EntityInterface $entity) {
     try {
-      $transaction = $this->database->startTransaction();
+      if ($this->database->driver() == 'mongodb') {
+        $session = $this->database->getMongodbSession();
+        $session_started = FALSE;
+        if (!$session->isInTransaction()) {
+          $session->startTransaction();
+          $session_started = TRUE;
+        }
+      }
+      else {
+        $transaction = $this->database->startTransaction();
+      }
+
       // Insert the entity data in the base and data tables only for default
       // revisions.
       /** @var \Drupal\Core\Entity\ContentEntityInterface $entity */
@@ -1464,10 +1509,17 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
 
       // Ignore replica server temporarily.
       \Drupal::service('database.replica_kill_switch')->trigger();
+
+      if (isset($session) && $session->isInTransaction() && $session_started) {
+        $session->commitTransaction();
+      }
     }
     catch (\Exception $e) {
       if (isset($transaction)) {
         $transaction->rollBack();
+      }
+      if (isset($session) && $session->isInTransaction() && $session_started) {
+        $session->abortTransaction();
       }
       Error::logException(\Drupal::logger($this->entityTypeId), $e);
       throw new EntityStorageException($e->getMessage(), $e->getCode(), $e);

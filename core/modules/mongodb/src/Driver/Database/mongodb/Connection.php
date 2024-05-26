@@ -494,9 +494,9 @@ class Connection extends DatabaseConnection {
   public function getMongodbSession() {
     if (!$this->session) {
       $this->session = $this->connection->getManager()->startSession([
-        'readConcern' => new ReadConcern(ReadConcern::LINEARIZABLE),
+        'readConcern' => new ReadConcern(ReadConcern::MAJORITY),
         'readPreference' => new ReadPreference(ReadPreference::PRIMARY),
-        'writeConcern' => new WriteConcern(WriteConcern::MAJORITY, 0, TRUE),
+        'writeConcern' => new WriteConcern(WriteConcern::MAJORITY, 0, FALSE),
       ]);
     }
 
@@ -543,6 +543,10 @@ class Connection extends DatabaseConnection {
    * {@inheritdoc}
    */
   public function destroy() {
+    $session = $this->getMongodbSession();
+    if ($session->isInTransaction()) {
+      $session->commitTransaction();
+    }
     $this->schema = NULL;
   }
 

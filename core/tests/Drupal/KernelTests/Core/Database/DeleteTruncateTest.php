@@ -79,6 +79,10 @@ class DeleteTruncateTest extends DatabaseTestBase {
    * Confirms that we can truncate a whole table while in transaction.
    */
   public function testTruncateInTransaction() {
+    if ($this->connection->driver() == 'mongodb') {
+      $this->markTestSkipped("The MongoDB database driver does not support Drupal's transaction manager.");
+    }
+
     $num_records_before = $this->connection->select('test')->countQuery()->execute()->fetchField();
     $this->assertGreaterThan(0, $num_records_before, 'The table is not empty.');
 
@@ -113,6 +117,10 @@ class DeleteTruncateTest extends DatabaseTestBase {
    * Confirms that transaction rollback voids a truncate operation.
    */
   public function testTruncateTransactionRollback() {
+    if ($this->connection->driver() == 'mongodb') {
+      $this->markTestSkipped("The MongoDB database driver does not support Drupal's transaction manager.");
+    }
+
     $num_records_before = $this->connection->select('test')->countQuery()->execute()->fetchField();
     $this->assertGreaterThan(0, $num_records_before, 'The table is not empty.');
 

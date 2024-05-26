@@ -423,6 +423,15 @@ class DatabaseBackend implements CacheBackendInterface {
   public function invalidateMultiple(array $cids) {
     $cids = array_values(array_map([$this, 'normalizeCid'], $cids));
     try {
+      if ($this->connection->driver() == 'mongodb') {
+        $session = $this->connection->getMongodbSession();
+        $session_started = FALSE;
+        if (!$session->isInTransaction()) {
+          $session->startTransaction();
+          $session_started = TRUE;
+        }
+      }
+
       // Update in chunks when a large array is passed.
       $requestTime = $this->time->getRequestTime();
       foreach (array_chunk($cids, 1000) as $cids_chunk) {
@@ -431,9 +440,18 @@ class DatabaseBackend implements CacheBackendInterface {
           ->condition('cid', $cids_chunk, 'IN')
           ->execute();
       }
+
+      if (isset($session) && $session->isInTransaction() && $session_started) {
+        $session->commitTransaction();
+      }
     }
     catch (\Exception $e) {
-      $this->catchException($e);
+      if (isset($session) && $session->isInTransaction() && $session_started) {
+        $session->abortTransaction();
+      }
+      else {
+        $this->catchException($e);
+      }
     }
   }
 

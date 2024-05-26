@@ -62,7 +62,18 @@ class WorkspaceAssociation implements WorkspaceAssociationInterface, EventSubscr
     }
 
     try {
-      $transaction = $this->database->startTransaction();
+      if ($this->database->driver() == 'mongodb') {
+        $session = $this->database->getMongodbSession();
+        $session_started = FALSE;
+        if (!$session->isInTransaction()) {
+          $session->startTransaction();
+          $session_started = TRUE;
+        }
+      }
+      else {
+        $transaction = $this->database->startTransaction();
+      }
+
       // Update all affected workspaces that were tracking the current revision.
       // This means they are inheriting content and should be updated.
       if ($tracked_revision_id) {
@@ -100,10 +111,17 @@ class WorkspaceAssociation implements WorkspaceAssociationInterface, EventSubscr
         }
         $insert_query->execute();
       }
+
+      if (isset($session) && $session->isInTransaction() && $session_started) {
+        $session->commitTransaction();
+      }
     }
     catch (\Exception $e) {
       if (isset($transaction)) {
         $transaction->rollBack();
+      }
+      if (isset($session) && $session->isInTransaction() && $session_started) {
+        $session->abortTransaction();
       }
       Error::logException($this->logger, $e);
       throw $e;

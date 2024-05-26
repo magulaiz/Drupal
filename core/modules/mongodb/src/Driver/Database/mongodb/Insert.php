@@ -66,7 +66,12 @@ class Insert extends QueryInsert {
 
     $last_insert_id = 0;
 
-    // $transaction = $this->connection->startTransaction();
+    $session = $this->connection->getMongodbSession();
+    $session_started = FALSE;
+    if (!$session->isInTransaction()) {
+      $session->startTransaction();
+      $session_started = TRUE;
+    }
     foreach ($this->insertValues as $insert_values) {
       $insert_document = $this->getInsertDocumentForTable($this->table, $this->insertFields, $insert_values);
 
@@ -86,8 +91,14 @@ class Insert extends QueryInsert {
         );
       }
       catch (\Exception $e) {
+        if ($session->isInTransaction() && $session_started) {
+          $session->abortTransaction();
+        }
         $this->connection->exceptionHandler()->handleExecutionException($e, NULL, $insert_values, $this->queryOptions);
       }
+    }
+    if ($session->isInTransaction() && $session_started) {
+      $session->commitTransaction();
     }
 
     $this->insertValues = [];

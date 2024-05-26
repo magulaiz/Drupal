@@ -285,7 +285,17 @@ class MenuTreeStorage implements MenuTreeStorageInterface {
     }
 
     try {
-      $transaction = $this->connection->startTransaction();
+      if ($this->connection->driver() == 'mongodb') {
+        $session = $this->connection->getMongodbSession();
+        $session_started = FALSE;
+        if (!$session->isInTransaction()) {
+          $session->startTransaction();
+          $session_started = TRUE;
+        }
+      }
+      else {
+        $transaction = $this->connection->startTransaction();
+      }
       if (!$original) {
         // Generate a new mlid.
         $link['mlid'] = $this->connection->insert($this->table, $this->options)
@@ -303,10 +313,17 @@ class MenuTreeStorage implements MenuTreeStorageInterface {
         $this->updateParentalStatus($original);
       }
       $this->updateParentalStatus($link);
+
+      if (isset($session) && $session->isInTransaction() && $session_started) {
+        $session->commitTransaction();
+      }
     }
     catch (\Exception $e) {
       if (isset($transaction)) {
         $transaction->rollBack();
+      }
+      if (isset($session) && $session->isInTransaction() && $session_started) {
+        $session->abortTransaction();
       }
       throw $e;
     }

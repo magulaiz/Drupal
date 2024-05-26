@@ -369,6 +369,10 @@ class SelectComplexTest extends DatabaseTestBase {
    * Tests that we can join on a query.
    */
   public function testJoinSubquery() {
+    if ($this->connection->driver() == 'mongodb') {
+      $this->markTestSkipped('The MongoDB database driver does not support queries with a subquery.');
+    }
+
     $account = User::create([
       'name' => $this->randomMachineName(),
       'mail' => $this->randomMachineName() . '@example.com',
