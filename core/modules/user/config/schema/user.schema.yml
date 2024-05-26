@@ -126,10 +126,7 @@ user.role.*:
       sequence:
         type: string
         label: 'Permission'
-        constraints:
-          Choice:
-            callback: user.permissions:getPermissions
-            transform: array_keys
+
 action.configuration.user_add_role_action:
   type: mapping
   label: 'Configuration for the add role action'
