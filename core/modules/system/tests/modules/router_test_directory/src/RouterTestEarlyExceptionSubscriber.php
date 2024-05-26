@@ -20,7 +20,7 @@ class RouterTestEarlyExceptionSubscriber implements EventSubscriberInterface {
    *
    * See DefaultExceptionHtmlSubscriber.
    */
-  public function onKernelRequest(RequestEvent $event) {
+  public function onKernelRequest(RequestEvent $event): void {
     if ($event->isMainRequest() && $event->getRequest()->headers->get('Authorization') === 'Bearer invalid') {
       throw new HttpException(
         Response::HTTP_UNAUTHORIZED,
@@ -32,7 +32,7 @@ class RouterTestEarlyExceptionSubscriber implements EventSubscriberInterface {
   /**
    * {@inheritdoc}
    */
-  public static function getSubscribedEvents() {
+  public static function getSubscribedEvents(): array {
     // This is the same priority as AuthenticationSubscriber, however
     // exceptions are not restricted to authentication; this is a common,
     // early point to emulate an exception, e.g. when an OAuth token is
