@@ -498,12 +498,15 @@ class RouteProvider implements CacheableRouteProviderInterface, PreloadableRoute
     $recursive_sort($sorted_resolved_parameters);
     $sorted_original_parameters = Request::create('/?' . $request->getQueryString())->query->all();
     $recursive_sort($sorted_original_parameters);
+    // Hash this portion to help shorten the total key length.
+    $resolved_hash = $sorted_resolved_parameters
+      ? sha1(http_build_query($sorted_resolved_parameters))
+      : NULL;
     return implode(
       ',',
       array_filter([
         http_build_query($sorted_original_parameters),
-        // Hash this portion to help shorten the total key length.
-        sha1(http_build_query($sorted_resolved_parameters)),
+        $resolved_hash,
       ])
     );
   }
