@@ -754,7 +754,6 @@ function batch_set($batch_definition) {
       ];
       if (isset($batch_definition['progressive'])) {
         $batch['progressive'] = $batch_definition['progressive'];
-        unset($batch_definition['progressive']);
       }
     }
 

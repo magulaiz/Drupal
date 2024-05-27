@@ -269,7 +269,7 @@ function batch_test_cron(): void {
     $operations[] = [
       'batch_test_non_progressive_logger',
       [
-        t('(Non progressive operation @operation)', ['@operation' => $i]),
+        "Non progressive operation $i",
       ],
     ];
   }
