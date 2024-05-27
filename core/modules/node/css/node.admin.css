@@ -4,13 +4,6 @@
  */
 
 /**
- * Revisions overview screen.
- */
-.revision-current {
-  background: #ffc;
-}
-
-/**
  * Node add/edit form layout
  */
 
@@ -105,3 +98,11 @@
     margin-left: 0;
   }
 }
+
+/**
+ * Revisions overview screen.
+ */
+.revision-current {
+  background: #ffc;
+}
+
