@@ -211,7 +211,7 @@ function navigation_block_alter(&$definitions): void {
  * Implements hook_preprocess_HOOK().
  */
 function template_preprocess_navigation(array &$variables): void {
-  $variables['hide_logo'] = $variables['content']['#hide_logo'] ?? TRUE;
+  $variables['hide_logo'] = $variables['content']['#hide_logo'] ?? FALSE;
 }
 
 /**

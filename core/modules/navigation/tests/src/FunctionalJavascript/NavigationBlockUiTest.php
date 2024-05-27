@@ -75,7 +75,7 @@ class NavigationBlockUiTest extends WebDriverTestBase {
    * Tests navigation block admin page exists and functions correctly.
    */
   public function testNavigationBlockAdminUiPage(): void {
-    $layout_url = '/admin/config/user-interface/navigation-block';
+    $layout_url = '/admin/config/user-interface/navigation/layout';
     $this->drupalGet($layout_url);
     $this->assertSession()->pageTextContains('Access denied');
     // Add at least one shortcut.

@@ -7,6 +7,7 @@ namespace Drupal\navigation\Form;
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
+use Drupal\Core\Url;
 use Drupal\layout_builder\Form\LayoutBuilderEntityFormTrait;
 use Drupal\layout_builder\LayoutTempstoreRepositoryInterface;
 use Drupal\layout_builder\SectionStorageInterface;
@@ -78,6 +79,14 @@ final class LayoutForm extends FormBase {
         '#value' => $this->t('Save'),
       ],
     ] + $this->buildActionsElement([]);
+
+    $form['actions']['return-link'] = [
+      '#type' => 'link',
+      '#weight' => 50,
+      '#title' => t('Return to site'),
+      '#url' => Url::fromRoute('<front>'),
+    ];
+    $form['actions']['preview_toggle']['#weight'] = -10;
     return $form;
   }
 
