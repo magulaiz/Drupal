@@ -71,15 +71,10 @@ class NodeGrantDatabaseStorage implements NodeGrantDatabaseStorageInterface {
       // self::writeDefault().
       if ($operation === 'view') {
         $result = AccessResult::allowedIf($node->isPublished());
-        // As "view own unpublished content" MUST NOT be granted to anonymous
-        // users for security reasons we can eliminate cache per user with this
-        // approach to keep caching as optimal as possible.
-        if ($account->isAnonymous()) {
-          $result = $result->addCacheContexts(['user.roles:authenticated']);
+        if ($node->id()) {
+          $result->addCacheableDependency($node);
         }
-        else {
-          $result->cachePerUser();
-        }
+
         return $result;
       }
 
