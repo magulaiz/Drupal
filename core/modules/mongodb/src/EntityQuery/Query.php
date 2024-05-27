@@ -207,6 +207,9 @@ class Query extends CoreQuery {
       elseif ($field_storage && $field_storage->isRevisionable() && !$this->allRevisions) {
         $data_table = $storage->getJsonStorageCurrentRevisionTable();
       }
+      elseif (!$this->entityType->isRevisionable() && $this->entityType->isTranslatable()) {
+        $data_table = $storage->getJsonStorageTranslationsTable();
+      }
       elseif ($field_storage && $field_storage->isTranslatable()) {
         $data_table = $storage->getJsonStorageTranslationsTable();
       }

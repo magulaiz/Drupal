@@ -55,6 +55,7 @@ class UniqueFieldValueValidator extends ConstraintValidator implements Container
     $property_name = $field_storage_definitions[$field_name]->getMainPropertyName();
 
     $id_key = $entity_type->getKey('id');
+    $id_key_type = $field_storage_definitions[$id_key]->getType();
     $is_multiple = $field_storage_definitions[$field_name]->isMultiple();
     $is_new = $entity->isNew();
     $item_values = array_column($items->getValue(), $property_name);
@@ -67,7 +68,12 @@ class UniqueFieldValueValidator extends ConstraintValidator implements Container
       ->condition($field_name, $item_values, 'IN')
       ->groupBy("$field_name.$property_name");
     if (!$is_new) {
-      $entity_id = $entity->id();
+      if ($id_key_type == 'integer') {
+        $entity_id = (int) $entity->id();
+      }
+      else {
+        $entity_id = $entity->id();
+      }
       $query->condition($id_key, $entity_id, '<>');
     }
     $results = $query->execute();
