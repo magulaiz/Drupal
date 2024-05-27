@@ -76,7 +76,6 @@ class MediaTest extends ResourceTestBase {
 
       case 'PATCH':
         $this->grantPermissionsToTestedRole(['edit any camelids media']);
-        // @todo Remove this in https://www.drupal.org/node/2824851.
         $this->grantPermissionsToTestedRole(['access content']);
         break;
 
@@ -395,8 +394,6 @@ class MediaTest extends ResourceTestBase {
 
   /**
    * {@inheritdoc}
-   *
-   * @todo Remove this in https://www.drupal.org/node/2824851.
    */
   protected function doTestRelationshipMutation(array $request_options) {
     $this->grantPermissionsToTestedRole(['access content']);
