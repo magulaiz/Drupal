@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\comment\Functional;
 
-use Drupal\Core\Database\Database;
 use Drupal\Core\Url;
 use Drupal\comment\Entity\Comment;
 use Drupal\comment\Entity\CommentType;
@@ -59,11 +58,6 @@ class CommentTypeTest extends CommentTestBase {
    * Tests creating a comment type programmatically and via a form.
    */
   public function testCommentTypeCreation() {
-    if (Database::getConnection()->driver() == 'mongodb') {
-      // @TODO Fix this test for MongoDB.
-      $this->markTestSkipped();
-    }
-
     // Create a comment type programmatically.
     $type = $this->createCommentType('other');
 

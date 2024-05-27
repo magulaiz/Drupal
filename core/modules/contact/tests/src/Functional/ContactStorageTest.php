@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Drupal\Tests\contact\Functional;
 
 use Drupal\contact\Entity\Message;
-use Drupal\Core\Database\Database;
 use Drupal\user\RoleInterface;
 
 /**
@@ -43,11 +42,6 @@ class ContactStorageTest extends ContactSitewideTest {
    * Tests configuration options and the site-wide contact form.
    */
   public function testContactStorage() {
-    if (Database::getConnection()->driver() == 'mongodb') {
-      // @TODO Fix this test for MongoDB.
-      $this->markTestSkipped();
-    }
-
     // Create and log in administrative user.
     $admin_user = $this->drupalCreateUser([
       'access site-wide contact form',

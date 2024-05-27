@@ -49,8 +49,10 @@ trait JoinPluginTrait {
       }
     }
 
-    $operator = $this->configuration['operator'] ?? '=';
-    $join_condition = $select_query->joinCondition()->compare($left_table['alias'] . '.' . $left_field, $table['alias'] . '.' . $right_field, $operator);
+    if (isset($left_table['alias'])) {
+      $operator = $this->configuration['operator'] ?? '=';
+      $join_condition = $select_query->joinCondition()->compare($left_table['alias'] . '.' . $left_field, $table['alias'] . '.' . $right_field, $operator);
+    }
 
     if (isset($this->extra) && is_array($this->extra)) {
       $substitutions = \Drupal::moduleHandler()->invokeAll('views_query_substitutions', [$view_query->view]);
@@ -66,7 +68,7 @@ trait JoinPluginTrait {
     }
 
     // Tack on the extra.
-    if (isset($this->extra) && !empty($this->extra)) {
+    if (isset($this->extra) && !empty($this->extra) && isset($join_condition)) {
       $arguments = [];
       $this->joinAddExtra($arguments, $join_condition, $table, $select_query, $left_table);
     }
@@ -74,9 +76,11 @@ trait JoinPluginTrait {
       $this->extra = [];
     }
 
-    $select_query->addJoin($this->type, $right_table, $table['alias'], $join_condition);
-    if (isset($this->configuration['one_to_many']) && $this->configuration['one_to_many']) {
-      $select_query->addFilterUnwindPath($table['alias']);
+    if (isset($join_condition)) {
+      $select_query->addJoin($this->type, $right_table, $table['alias'], $join_condition);
+      if (isset($this->configuration['one_to_many']) && $this->configuration['one_to_many']) {
+        $select_query->addFilterUnwindPath($table['alias']);
+      }
     }
   }
 

@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\views_ui\Functional;
 
-use Drupal\Core\Database\Database;
 use Drupal\Core\Url;
 use Drupal\user\Entity\Role;
 use Drupal\user\RoleInterface;
@@ -41,11 +40,6 @@ class DefaultViewsTest extends UITestBase {
    * Tests default views.
    */
   public function testDefaultViews() {
-    if (Database::getConnection()->driver() == 'mongodb') {
-      // @TODO Fix this test for MongoDB.
-      $this->markTestSkipped();
-    }
-
     // Make sure the view starts off as disabled (does not appear on the listing
     // page).
     $edit_href = 'admin/structure/views/view/glossary';

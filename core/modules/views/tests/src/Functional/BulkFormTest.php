@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\views\Functional;
 
-use Drupal\Core\Database\Database;
 use Drupal\Tests\BrowserTestBase;
 use Drupal\Tests\node\Traits\NodeCreationTrait;
 use Drupal\views\Views;
@@ -250,11 +249,6 @@ class BulkFormTest extends BrowserTestBase {
    * Tests that route parameters are passed to the confirmation form route.
    */
   public function testConfirmRouteWithParameters(): void {
-    if (Database::getConnection()->driver() == 'mongodb') {
-      // @TODO Fix this test for MongoDB.
-      $this->markTestSkipped();
-    }
-
     $session = $this->getSession();
     $page = $session->getPage();
     $assert = $this->assertSession();

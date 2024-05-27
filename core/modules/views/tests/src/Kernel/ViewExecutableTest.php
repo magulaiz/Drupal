@@ -356,11 +356,6 @@ class ViewExecutableTest extends ViewsKernelTestBase {
    * Tests the destructor to be sure that necessary objects are removed.
    */
   public function testDestroy() {
-    if (Database::getConnection()->driver() == 'mongodb') {
-      // @todo Fix this test for MongoDB.
-      $this->markTestSkipped();
-    }
-
     $view = Views::getView('test_destroy');
 
     $view->preview();
