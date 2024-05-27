@@ -251,7 +251,7 @@ class NodeController extends ControllerBase implements ContainerInjectionInterfa
       '#rows' => $rows,
       '#header' => $header,
       '#attached' => [
-        'library' => ['node/drupal.node.admin'],
+        'library' => ['node/drupal.node'],
       ],
       '#attributes' => ['class' => ['node-revision-table']],
     ];
