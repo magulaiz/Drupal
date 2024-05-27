@@ -480,11 +480,32 @@ class RouteProvider implements CacheableRouteProviderInterface, PreloadableRoute
    * @return string
    */
   protected function getQueryParametersCacheIdPart(Request $request) {
-    $request_query_params = [];
-    foreach ($request->query->all() as $key => $val) {
-      $request_query_params[] = $key . '=' . (is_string($val) ? $val : json_encode($val));
-    }
-    return implode(',', array_filter([$request->getQueryString(), implode('&', $request_query_params)]));
+    // @todo Use \Symfony\Component\HttpFoundation\Request::normalizeQueryString
+    //   for recursive key ordering if support is added in the future.
+    $recursive_sort = function (&$array) use (&$recursive_sort) {
+      foreach ($array as &$v) {
+        if (is_array($v)) {
+          $recursive_sort($v);
+        }
+      }
+      ksort($array);
+    };
+    // Recursively normalize the query parameters to ensure maximal cache hits.
+    // If we did not normalize the order, functionally identical query string
+    // sets could be sent in differing order creating a potential DoS vector
+    // and decreasing cache hit rates.
+    $sorted_resolved_parameters = $request->query->all();
+    $recursive_sort($sorted_resolved_parameters);
+    $sorted_original_parameters = Request::create('/?' . $request->getQueryString())->query->all();
+    $recursive_sort($sorted_original_parameters);
+    return implode(
+      ',',
+      array_filter([
+        http_build_query($sorted_original_parameters),
+        // Hash this portion to help shorten the total key length.
+        sha1(http_build_query($sorted_resolved_parameters)),
+      ])
+    );
   }
 
   /**
