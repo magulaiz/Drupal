@@ -17,4 +17,11 @@ class ChoiceConstraint extends Choice {
 
   public $callbackArgs = [];
 
+  /**
+   * The error message..
+   *
+   * @var string
+   */
+  public string $message = "'@choice' is not a valid choice.";
+
 }
