@@ -222,7 +222,10 @@ final class LinksetControllerTest extends LinksetControllerTestBase {
   public function testAccess() {
     $this->enableEndpoint(TRUE);
     $expected_cacheability = new CacheableMetadata();
-    $expected_cacheability->addCacheContexts(['user.permissions']);
+    $expected_cacheability->addCacheContexts([
+      'user.permissions',
+      'user.roles:authenticated',
+    ]);
     $expected_cacheability->addCacheTags([
       'config:system.menu.main',
       'config:user.role.anonymous',

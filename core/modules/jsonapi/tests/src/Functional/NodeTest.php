@@ -361,7 +361,7 @@ class NodeTest extends ResourceTestBase {
       $expected_document,
       $response,
       ['4xx-response', 'http_response', 'node:1'],
-      ['url.query_args:resourceVersion', 'url.site', 'user.permissions'],
+      ['url.query_args:resourceVersion', 'url.site', 'user'],
       'UNCACHEABLE (request policy)',
       'MISS'
     );
@@ -429,6 +429,14 @@ class NodeTest extends ResourceTestBase {
         $cached_fields[$field_name]
       );
     });
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  protected function getExpectedCacheContexts(array $sparse_fieldset = NULL) {
+    $cache_contexts = parent::getExpectedCacheContexts($sparse_fieldset);
+    return Cache::mergeContexts($cache_contexts, ['user']);
   }
 
   /**
