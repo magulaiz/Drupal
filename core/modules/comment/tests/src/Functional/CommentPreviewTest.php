@@ -9,6 +9,7 @@ use Drupal\Component\Render\MarkupInterface;
 use Drupal\Core\Datetime\DrupalDateTime;
 use Drupal\comment\Entity\Comment;
 use Drupal\field\Entity\FieldStorageConfig;
+use Drupal\language\Entity\ConfigurableLanguage;
 use Drupal\Tests\TestFileCreationTrait;
 
 /**
@@ -226,7 +227,7 @@ class CommentPreviewTest extends CommentTestBase {
   }
 
   /**
-   * Test preview on translated node.
+   * Tests preview of a comment on a translated node.
    */
   public function testCommentPreviewOnTranslatedNode(): void {
     \Drupal::service('module_installer')->install(['content_translation', 'language']);
@@ -246,22 +247,11 @@ class CommentPreviewTest extends CommentTestBase {
     $this->drupalLogin($admin_user);
 
     // Add language.
-    $edit = ['predefined_langcode' => 'fr'];
-    $this->drupalGet('admin/config/regional/language/add');
-    $this->submitForm($edit, 'Add language');
+    ConfigurableLanguage::createFromLangcode('fr')->save();
 
     // Enable translation for node and comments.
-    $edit = [
-      'entity_types[node]' => TRUE,
-      'entity_types[comment]' => TRUE,
-      'settings[node][article][translatable]' => TRUE,
-      'settings[comment][comment][translatable]' => TRUE,
-    ];
-    $this->drupalGet('admin/config/regional/content-language');
-    $this->submitForm($edit, 'Save configuration');
-
-    // Enable content language negotiation UI.
-    \Drupal::state()->set('language_test.content_language_type', TRUE);
+    \Drupal::service('content_translation.manager')->setEnabled('node', 'article', TRUE);
+    \Drupal::service('content_translation.manager')->setEnabled('comment', 'comment', TRUE);
 
     // Create comment field on article.
     $this->addDefaultCommentField('node', 'article');
@@ -272,13 +262,12 @@ class CommentPreviewTest extends CommentTestBase {
     $field_storage->save();
     $this->assertTrue($field_storage->isTranslatable(), 'Comment body is translatable.');
 
-    // Add a translation for the node.
-    $url_options = ['language' => \Drupal::languageManager()->getLanguage('fr')];
-    $this->drupalGet('node/' . $this->node->id() . '/translations/add/en/fr', $url_options);
-    $this->getSession()->getPage()->pressButton('Save (this translation)');
+    // Create an article and add a translation.
+    $node = $this->drupalCreateNode(['type' => 'article', 'uid' => $this->webUser->id()]);
+    $node->addTranslation('fr', ['title' => 'French title'])->save();
 
     // Preview a comment on the translated node.
-    $this->drupalGet('fr/node/' . $this->node->id());
+    $this->drupalGet('fr/node/' . $node->id());
     $edit = [
       'subject[0][value]' => $this->randomMachineName(8),
       'comment_body[0][value]' => $this->randomMachineName(16),
