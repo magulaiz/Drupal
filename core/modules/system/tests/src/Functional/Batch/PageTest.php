@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\system\Functional\Batch;
 
+use Drupal\Core\Database\Database;
 use Drupal\Tests\BrowserTestBase;
 
 /**
@@ -94,14 +95,15 @@ class PageTest extends BrowserTestBase {
    */
   public function testBatchNonProgressive(): void {
     \Drupal::service('module_installer')->install(['dblog']);
-    $this->drupalLogin($this->createUser(['administer site configuration', 'access site reports']));
-    // Go to the initial step only.
-    $this->maximumMetaRefreshCount = 0;
-    $this->drupalGet('/admin/config/system/cron');
-    $this->click('.system-cron-settings__link');
-    $this->assertSession()->pageTextNotContains('Initializing.');
-    $this->drupalGet('admin/reports/dblog');
-    $this->assertSession()->pageTextContains('Non progressive operation 100');
+
+    // Run a cron job.
+    $this->container->get('cron')->run();
+
+    $query = Database::getConnection()->select('watchdog', 'watchdog')
+      ->fields('watchdog', ['wid'])
+      ->condition('message', 'Non progressive operation 100');
+    $wid = $query->execute()->fetchField();
+    $this->assertGreaterThan(0, $wid);
   }
 
 }
