@@ -363,7 +363,7 @@ class NodeTest extends ResourceTestBase {
       ['4xx-response', 'http_response', 'node:1'],
       ['url.query_args:resourceVersion', 'url.site', 'user'],
       'UNCACHEABLE (request policy)',
-      'MISS'
+      'UNCACHEABLE'
     );
     /* $this->assertResourceErrorResponse(403, 'The current user is not allowed to GET the selected resource.', $response, '/data'); */
 
@@ -435,8 +435,39 @@ class NodeTest extends ResourceTestBase {
    * {@inheritdoc}
    */
   protected function getExpectedCacheContexts(array $sparse_fieldset = NULL) {
+    // \Drupal\Tests\jsonapi\Functional\ResourceTestBase::testRevisions()
+    // loads different revisions via query parameters, we do our best
+    // here to react to those directly, or indirectly.
     $cache_contexts = parent::getExpectedCacheContexts($sparse_fieldset);
-    return Cache::mergeContexts($cache_contexts, ['user']);
+
+    // This is bubbled up by
+    // \Drupal\node\NodeAccessControlHandler::checkAccess() directly.
+    if (!$this->entity->isPublished()) {
+      return Cache::mergeContexts($cache_contexts, ['user']);
+    }
+
+    foreach ($this->getEditorialPermissions() as $permission) {
+      if (\Drupal::currentUser()->hasPermission($permission)) {
+        // This is also bubbled up by
+        // \Drupal\node\NodeAccessControlHandler::checkAccess()
+        // but only after content_moderation_entity_access() granted access.
+        return Cache::mergeContexts($cache_contexts, ['user']);
+      }
+    }
+
+    return $cache_contexts;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  protected function getExpectedUnauthorizedAccessCacheability(): CacheableMetadata {
+    // In this scenario only \Drupal\node\NodeAccessControlHandler::access() was
+    // called so user.permissions cache context is accurate.
+    if (!\Drupal::currentUser()->hasPermission('bypass node access') && !\Drupal::currentUser()->hasPermission('access content')) {
+      return parent::getExpectedUnauthorizedAccessCacheability();
+    }
+    return parent::getExpectedUnauthorizedAccessCacheability()->addCacheContexts(['user']);
   }
 
   /**
