@@ -3,6 +3,7 @@
 namespace Drupal\node;
 
 use Drupal\Core\Access\AccessResult;
+use Drupal\Core\Access\AccessResultInterface;
 use Drupal\Core\Cache\CacheableMetadata;
 use Drupal\Core\Cache\RefinableCacheableDependencyInterface;
 use Drupal\Core\Entity\EntityHandlerInterface;
@@ -129,7 +130,7 @@ class NodeAccessControlHandler extends EntityAccessControlHandler implements Nod
   protected function checkAccess(EntityInterface $node, $operation, AccountInterface $account) {
     /** @var \Drupal\node\NodeInterface $node */
     if ($operation === 'view' && !$node->isPublished()) {
-      $cacheability = CacheableMetadata::createFromRenderArray([]);
+      $cacheability = new CacheableMetadata();
       $cacheability->addCacheableDependency($node);
       // As "view own unpublished content" MUST NOT be granted to anonymous
       // users for security reasons so we can eliminate cache per user with this
@@ -210,7 +211,7 @@ class NodeAccessControlHandler extends EntityAccessControlHandler implements Nod
    * @return \Drupal\Core\Access\AccessResultInterface
    *   The access result.
    */
-  private function evaluateNodeGrants(NodeInterface $node, string $operation, AccountInterface $account) {
+  private function evaluateNodeGrants(NodeInterface $node, string $operation, AccountInterface $account): AccessResultInterface {
     // Evaluate node grants.
     $access_result = $this->grantStorage->access($node, $operation, $account);
     if ($operation === 'view' && $access_result instanceof RefinableCacheableDependencyInterface) {

@@ -39,7 +39,7 @@ class NodeAccessTestAutoBubblingController extends ControllerBase implements Con
    */
   public function nodeAccessCacheability(NodeInterface $node) {
     $build = [];
-    $cacheability = CacheableMetadata::createFromRenderArray($build);
+    $cacheability = new CacheableMetadata();
     $access = $node->access('view', return_as_object: TRUE);
     $cacheability->addCacheableDependency($access);
     if ($access->isAllowed()) {

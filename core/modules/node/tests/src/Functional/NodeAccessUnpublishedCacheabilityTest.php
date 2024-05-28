@@ -15,9 +15,7 @@ use Drupal\node\NodeInterface;
 class NodeAccessUnpublishedCacheabilityTest extends NodeTestBase {
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = [
     'node_access_test_auto_bubbling',
@@ -31,7 +29,7 @@ class NodeAccessUnpublishedCacheabilityTest extends NodeTestBase {
   /**
    * Tests correct cacheability information bubbles up from node access.
    */
-  public function testNodeAccessCacheabilityBubbleUpOnUnpublishedContent() {
+  public function testNodeAccessCacheabilityBubbleUpOnUnpublishedContent(): void {
     $rid = $this->drupalCreateRole([
       'access content',
       'view own unpublished content',
