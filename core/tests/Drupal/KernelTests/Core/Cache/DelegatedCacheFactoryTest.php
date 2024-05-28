@@ -6,6 +6,7 @@ namespace Drupal\KernelTests\Core\Cache;
 
 use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\KernelTests\KernelTestBase;
+use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
 
 /**
  * Unit test of the database backend using the generic cache unit test base.
@@ -13,6 +14,8 @@ use Drupal\KernelTests\KernelTestBase;
  * @group Cache
  */
 class DelegatedCacheFactoryTest extends KernelTestBase {
+
+  use ExpectDeprecationTrait;
 
   /**
    * Modules to enable.
@@ -33,6 +36,7 @@ class DelegatedCacheFactoryTest extends KernelTestBase {
 
   /**
    * Test retrieving a cache defined without a 'cache.' prefixed service ID.
+   * @group legacy
    */
   public function testGetCacheByBinNameOnly(): void {
     $this->expectDeprecation('Service "cache.deprecated_missing_bin_tag" omits the bin tag from the service definition which is deprecated in drupal:11.0.0 and support will be removed in drupal:12.0.0. See https://www.drupal.org/project/drupal/issues/3272093');
