@@ -62,10 +62,8 @@ class UpsertTest extends DatabaseTestBase {
    * Confirms executing the query without values causes no exception.
    */
   public function testUpsertNoValues(): void {
-    $connection = Database::getConnection();
-
     // Define fields only but no values.
-    $upsert = $connection->upsert('test_people')
+    $upsert = $this->connection->upsert('test_people')
       ->key('job')
       ->fields(['job', 'age', 'name']);
 
