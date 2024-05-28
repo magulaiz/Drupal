@@ -37,7 +37,7 @@ use Symfony\Component\Validator\ConstraintViolationListInterface;
  *
  * @see \Drupal\file\Upload\FileElementHelper
  */
-class FormFileUploader {
+final class FormFileUploader {
 
   use StringTranslationTrait;
 
@@ -66,14 +66,14 @@ class FormFileUploader {
    * @param string $uploadName
    *   The key of the upload form element in the form array.
    * @param array $validators
-   *   (optional) An associative array of callback functions used to validate
-   *   the file. See file_validate() for a full discussion of the array format.
-   *   If the array is empty, it will be set up to validate the extension with
-   *   a safe list of extensions, as follows: "jpg jpeg gif png txt doc xls pdf
+   *   (optional) An associative array of Validation Constraint plugins used to
+   *   validate the file.
+   *   If the array is empty, 'FileExtension' will be used by default with a
+   *   safe list of extensions, as follows: "jpg jpeg gif png txt doc xls pdf
    *   ppt pps odt ods odp". To allow all extensions, you must explicitly set
-   *   this array to ['file_validate_extensions' => '']. (Beware: this is not
-   *   safe and should only be allowed for trusted users, if at all.)
-   * @param string $destination
+   *   this array to ['FileExtension' => []]. (Beware: this is not safe and
+   *   should only be allowed for trusted users, if at all.)
+   * @param string|null $destination
    *   (optional) A string containing the URI that the file should be copied
    *   to.
    *   This must be a stream wrapper URI. If this value is omitted or set to
@@ -220,12 +220,10 @@ class FormFileUploader {
         ['%filename' => $filename]
       );
     }
-    else {
-      return $this->t(
-        'Your upload has been renamed to %filename.',
-        ['%filename' => $filename]
-      );
-    }
+    return $this->t(
+      'Your upload has been renamed to %filename.',
+      ['%filename' => $filename]
+    );
   }
 
   /**

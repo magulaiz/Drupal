@@ -21,7 +21,7 @@ use Symfony\Component\HttpFoundation\RequestStack;
  * @see \Drupal\file\Upload\FormFileUploader
  * @see \Drupal\file\Element\ManagedFile::valueCallback()
  */
-class FileElementHelper {
+final class FileElementHelper {
 
   use StringTranslationTrait;
 
@@ -110,7 +110,8 @@ class FileElementHelper {
       if ($result->hasError() || $result->hasViolations()) {
         continue;
       }
-      $files[$result->getFile()->id()] = $result->getFile();
+      $file = $result->getFile();
+      $files[$file->id()] = $file;
     }
 
     return $files;
