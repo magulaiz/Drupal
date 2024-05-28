@@ -16,13 +16,12 @@ class DisplayModeDragDropTest extends WebDriverTestBase {
   /**
    * {@inheritdoc}
    */
-  protected static $modules = ['node', 'field_ui',];
+  protected static $modules = ['node', 'field_ui'];
 
   /**
    * {@inheritdoc}
    */
   protected $defaultTheme = 'stark';
-
 
   /**
    * {@inheritdoc}
@@ -62,5 +61,3 @@ class DisplayModeDragDropTest extends WebDriverTestBase {
   }
 
 }
-
-
