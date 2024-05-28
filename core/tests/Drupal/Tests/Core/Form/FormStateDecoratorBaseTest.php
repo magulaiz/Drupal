@@ -1354,7 +1354,7 @@ class FormStateDecoratorBaseTest extends UnitTestCase {
     ];
     $message = 'bar';
 
-    $this->decoratedFormState->getError($element)
+    $this->decoratedFormState->getError($element, TRUE)
       ->willReturn($message)
       ->shouldBeCalled();
 
