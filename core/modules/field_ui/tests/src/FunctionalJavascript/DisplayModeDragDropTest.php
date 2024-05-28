@@ -19,6 +19,13 @@ class DisplayModeDragDropTest extends WebDriverTestBase {
   protected static $modules = ['node', 'field_ui'];
 
   /**
+   * A user with permissions to manage display modes.
+   *
+   * @var \Drupal\user\UserInterface
+   */
+  protected $user;
+
+  /**
    * {@inheritdoc}
    */
   protected $defaultTheme = 'stark';
@@ -29,12 +36,12 @@ class DisplayModeDragDropTest extends WebDriverTestBase {
   protected function setUp(): void {
     parent::setUp();
     $this->drupalCreateContentType(['type' => 'article', 'name' => 'Article']);
-    $this->adminUser = $this->drupalCreateUser([
+    $this->user = $this->drupalCreateUser([
       'administer node display',
       'administer display modes',
       'administer nodes',
     ]);
-    $this->drupalLogin($this->adminUser);
+    $this->drupalLogin($this->user);
   }
 
   /**
