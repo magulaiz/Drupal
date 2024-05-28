@@ -576,11 +576,15 @@ interface FormStateInterface {
    *
    * @param array $element
    *   The form element to check for errors.
+   * @param bool $traverse_parents
+   *   If FALSE, an error will only be returned if it was explicitly for this
+   *   element. If TRUE, an error will be returned if this element or any of its
+   *   parents have an error set. Defaults to TRUE.
    *
    * @return string|null
    *   Either the error message for this element or NULL if there are no errors.
    */
-  public function getError(array $element);
+  public function getError(array $element, $traverse_parents = TRUE);
 
   /**
    * Sets the form to be rebuilt after processing.

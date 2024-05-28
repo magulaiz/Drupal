@@ -163,7 +163,7 @@ class FormErrorHandler implements FormErrorHandlerInterface {
     }
 
     // Store the errors for this element on the element directly.
-    $elements['#errors'] = $form_state->getError($elements);
+    $elements['#errors'] = $form_state->getError($elements, FALSE);
   }
 
 }
