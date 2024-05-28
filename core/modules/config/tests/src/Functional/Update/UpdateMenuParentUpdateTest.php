@@ -7,8 +7,7 @@ namespace Drupal\Tests\config\Functional\Update;
 use Drupal\FunctionalTests\Update\UpdatePathTestBase;
 
 /**
- * Tests the update of converting empty
- * core.menu.static_menu_link_overrides:definitions.*.parent to NULL.
+ * Tests the update for converting empty core.menu.static_menu_link_overrides:definitions.*.parent to NULL.
  *
  * @group config
  * @covers \config_post_update_set_menu_parent_value_to_null
@@ -25,10 +24,10 @@ class UpdateMenuParentUpdateTest extends UpdatePathTestBase {
   }
 
   /**
-   * Tests update of core.menu.static_menu_link_overrides:definitions.*.parent.
+   * Tests the update for converting empty core.menu.static_menu_link_overrides:definitions.*.parent to NULL.
    */
   public function testUpdate(): void {
-    $this->assertSame('',$this->config('core.menu.static_menu_link_overrides')->get('definitions.contact__site_page.parent'));
+    $this->assertSame('', $this->config('core.menu.static_menu_link_overrides')->get('definitions.contact__site_page.parent'));
 
     $this->runUpdates();
 
