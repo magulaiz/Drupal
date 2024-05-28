@@ -6,7 +6,7 @@ services:
   cache.migrate:
     class: Drupal\Core\Cache\CacheBackendInterface
     tags:
-      - { name: cache.bin }
+      - { name: cache.bin, bin: migrate }
     factory: ['@cache_factory', 'get']
     arguments: [migrate]
   plugin.manager.migrate.source:
@@ -24,7 +24,7 @@ services:
   cache.discovery_migration:
     class: Drupal\Core\Cache\CacheBackendInterface
     tags:
-      - { name: cache.bin }
+      - { name: cache.bin, bin: discovery_migration }
     factory: ['@cache_factory', 'get']
     arguments: [discovery_migration]
   plugin.manager.migration:
