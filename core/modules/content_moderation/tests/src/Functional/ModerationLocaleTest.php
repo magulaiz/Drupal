@@ -30,12 +30,11 @@ class ModerationLocaleTest extends ModerationStateTestBase {
   ];
 
   /**
-   * {@inheritdoc}
+   * Admin user.
    *
-   * @todo Remove and fix test to not rely on super user.
-   * @see https://www.drupal.org/project/drupal/issues/3437620
+   * @var \Drupal\user\UserInterface
    */
-  protected bool $usesSuperUserAccessPolicy = TRUE;
+  protected $adminUser;
 
   /**
    * {@inheritdoc}
@@ -47,9 +46,26 @@ class ModerationLocaleTest extends ModerationStateTestBase {
    */
   protected function setUp(): void {
     parent::setUp();
-
-    $this->drupalLogin($this->rootUser);
-
+    $permissions = [
+      'administer content types',
+      'administer content translation',
+      'create content translations',
+      'update content translations',
+      'translate any entity',
+      'access content',
+      'administer nodes',
+      'bypass node access',
+      'access administration pages',
+      'administer filters',
+      'use editorial transition archive',
+      'use editorial transition create_new_draft',
+      'use editorial transition publish',
+      'administer workflows',
+      'view latest version',
+      'view own unpublished content',
+    ];
+    $this->adminUser = $this->drupalCreateUser($permissions);
+    $this->drupalLogin($this->adminUser);
     // Enable moderation on Article node type.
     $this->createContentTypeFromUi('Article', 'article', TRUE);
 
