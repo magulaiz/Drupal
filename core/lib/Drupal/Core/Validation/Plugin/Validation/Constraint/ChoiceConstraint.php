@@ -15,13 +15,12 @@ use Symfony\Component\Validator\Constraints\Choice;
 )]
 class ChoiceConstraint extends Choice {
 
-  public $callbackArgs = [];
-
   /**
-   * The error message..
-   *
-   * @var string
+   * {@inheritdoc}
    */
-  public string $message = "'@choice' is not a valid choice.";
+  public function __construct(...$args) {
+    $this->message = "'@choice' is not a valid choice.";
+    parent::__construct(...$args);
+  }
 
 }

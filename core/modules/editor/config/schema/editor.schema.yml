@@ -47,7 +47,8 @@ editor.image_upload_settings.1:
       label: 'File storage'
       constraints:
         Choice:
-          callback: stream_wrapper_manager.getNames
+          # callback: stream_wrapper_manager.getNames
+          callback: \Drupal\editor\Entity\Editor::getValidStreamWrappers
           message: 'The file storage you selected is not a visible, readable and writable stream wrapper. Possible choices: %choices.'
     directory:
       type: string
