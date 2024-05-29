@@ -108,7 +108,7 @@ class DefaultSelection extends SelectionPluginBase implements ContainerFactoryPl
    * @param \Drupal\Core\Entity\EntityRepositoryInterface $entity_repository
    *   The entity repository.
    */
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, EntityTypeManagerInterface $entity_type_manager, ModuleHandlerInterface $module_handler, AccountInterface $current_user, EntityFieldManagerInterface $entity_field_manager, EntityTypeBundleInfoInterface $entity_type_bundle_info = NULL, EntityRepositoryInterface $entity_repository) {
+  public function __construct(array $configuration, $plugin_id, $plugin_definition, EntityTypeManagerInterface $entity_type_manager, ModuleHandlerInterface $module_handler, AccountInterface $current_user, EntityFieldManagerInterface $entity_field_manager, EntityTypeBundleInfoInterface $entity_type_bundle_info, EntityRepositoryInterface $entity_repository) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
 
     $this->entityTypeManager = $entity_type_manager;
@@ -185,6 +185,9 @@ class DefaultSelection extends SelectionPluginBase implements ContainerFactoryPl
         '#size' => 6,
         '#multiple' => TRUE,
         '#element_validate' => [[static::class, 'elementValidateFilter']],
+        // Use a form process callback to build #ajax property properly and also
+        // to avoid code duplication.
+        // @see \Drupal\Core\Field\Plugin\Field\FieldType\EntityReferenceItem::fieldSettingsAjaxProcess()
         '#ajax' => TRUE,
         '#limit_validation_errors' => [],
       ];
@@ -234,6 +237,9 @@ class DefaultSelection extends SelectionPluginBase implements ContainerFactoryPl
         '#type' => 'select',
         '#title' => $this->t('Sort by'),
         '#options' => $fields,
+        // Use a form process callback to build #ajax property properly and also
+        // to avoid code duplication.
+        // @see \Drupal\Core\Field\Plugin\Field\FieldType\EntityReferenceItem::fieldSettingsAjaxProcess()
         '#ajax' => TRUE,
         '#empty_value' => '_none',
         '#sort_options' => TRUE,

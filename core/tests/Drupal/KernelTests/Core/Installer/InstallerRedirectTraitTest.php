@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\KernelTests\Core\Installer;
 
 use Drupal\Core\Database\Connection;
@@ -73,9 +75,9 @@ class InstallerRedirectTraitTest extends KernelTestBase {
     }
     catch (\Exception $e) {
       // Mock the trait.
-      $trait = $this->getMockBuilder(InstallerRedirectTrait::class)
+      $trait = $this->getMockBuilder(InstallerRedirectTraitMockableClass::class)
         ->onlyMethods(['isCli'])
-        ->getMockForTrait();
+        ->getMock();
 
       // Make sure that the method thinks we are not using the cli.
       $trait->expects($this->any())
@@ -123,5 +125,14 @@ class InstallerRedirectTraitTest extends KernelTestBase {
       $this->assertSame($expected, $method_ref->invoke($trait, $e, $connection));
     }
   }
+
+}
+
+/**
+ * A class using the InstallerRedirectTrait for mocking purposes.
+ */
+class InstallerRedirectTraitMockableClass {
+
+  use InstallerRedirectTrait;
 
 }
