@@ -14,8 +14,7 @@ use Drupal\workspaces\Entity\Workspace;
  * @group views
  * @group workspaces
  */
-class WorkspaceViewsBulkFormTest extends BulkFormTest
-{
+class WorkspaceViewsBulkFormTest extends BulkFormTest {
 
   use WorkspaceTestUtilities;
 
@@ -27,8 +26,7 @@ class WorkspaceViewsBulkFormTest extends BulkFormTest
   /**
    * {@inheritdoc}
    */
-  protected function setUp(): void
-  {
+  protected function setUp(): void {
     parent::setUp();
 
     // Override the user created in the parent method to add workspaces access.
@@ -47,11 +45,7 @@ class WorkspaceViewsBulkFormTest extends BulkFormTest
     $this->switchToWorkspace($stage);
   }
 
-  /**
-   * {@inheritdoc}
-   */
-  public function testBulkForm()
-  {
+  public function testBulkForm() {
     if (Database::getConnection()->driver() == 'mongodb') {
       // @TODO Fix this test for MongoDB.
       $this->markTestSkipped();
@@ -67,8 +61,7 @@ class WorkspaceViewsBulkFormTest extends BulkFormTest
   /**
    * {@inheritdoc}
    */
-  public function testConfirmRouteWithParameters(): void
-  {
+  public function testConfirmRouteWithParameters(): void {
     if (Database::getConnection()->driver() == 'mongodb') {
       // @TODO Fix this test for MongoDB.
       $this->markTestSkipped();
