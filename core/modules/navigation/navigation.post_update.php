@@ -20,6 +20,7 @@ function navigation_post_update_update_permissions(array &$sandbox) {
     }
     if ($role->hasPermission('administer navigation_block')) {
       $role->revokePermission('administer navigation_block');
+      $role->grantPermission('configure navigation layout');
       $needs_save = TRUE;
     }
     return $needs_save;
