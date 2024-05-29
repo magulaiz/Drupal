@@ -18,7 +18,7 @@
         "guzzlehttp/guzzle": "~7.8.1",
         "guzzlehttp/promises": "~2.0.2",
         "guzzlehttp/psr7": "~2.6.2",
-        "jean85/pretty-package-versions": "~2.0.5",
+        "jean85/pretty-package-versions": "~2.0.6",
         "masterminds/html5": "~2.9.0",
         "mck89/peast": "~v1.16.2",
         "mongodb/mongodb": "~1.17.1",
