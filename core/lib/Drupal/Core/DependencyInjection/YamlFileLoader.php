@@ -495,7 +495,7 @@ class YamlFileLoader
             }
 
           if ('service_closure' === $value->getTag()) {
-            return new ServiceClosureArgument($argument);
+            return new ServiceClosureArgument($this->resolveServices($argument));
           }
 
         }

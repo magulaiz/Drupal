@@ -11,6 +11,7 @@ use Drupal\Tests\UnitTestCase;
 use org\bovigo\vfs\vfsStream;
 use Symfony\Component\DependencyInjection\Argument\ServiceClosureArgument;
 use Symfony\Component\DependencyInjection\Argument\TaggedIteratorArgument;
+use Symfony\Component\DependencyInjection\Reference;
 
 /**
  * @coversDefaultClass \Drupal\Core\DependencyInjection\YamlFileLoader
@@ -67,7 +68,13 @@ YAML;
     $this->assertTrue($builder->has('Drupal\Core\ExampleClass'));
     $this->assertSame('Drupal\Core\ExampleClass', $builder->getDefinition('Drupal\Core\ExampleClass')->getClass());
     $this->assertInstanceOf(TaggedIteratorArgument::class, $builder->getDefinition('example_tagged_iterator')->getArgument(0));
-    $this->assertInstanceOf(ServiceClosureArgument::class, $builder->getDefinition('example_service_closure')->getArgument(0));
+
+    // Test service closures.
+    $service_closure = $builder->getDefinition('example_service_closure')->getArgument(0);
+    $this->assertInstanceOf(ServiceClosureArgument::class, $service_closure);
+    $ref = $service_closure->getValues()[0];
+    $this->assertInstanceOf(Reference::class, $ref);
+    $this->assertEquals('example_service_1', $ref);
   }
 
   /**
