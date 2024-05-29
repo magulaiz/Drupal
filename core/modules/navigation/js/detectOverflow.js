@@ -17,7 +17,20 @@
         const xOverflow = (element) =>
           element.scrollWidth > element.clientWidth;
         const setAttributes = (element) => {
-          element.setAttribute('data-detected-y-overflow', yOverflow(element));
+          const scrollableNav = element.querySelector(
+            '.admin-toolbar__content',
+          );
+          if (window.matchMedia('(min-width: 64rem)').matches) {
+            element.setAttribute(
+              'data-detected-y-overflow',
+              yOverflow(scrollableNav),
+            );
+          } else {
+            element.setAttribute(
+              'data-detected-y-overflow',
+              yOverflow(element),
+            );
+          }
           element.setAttribute('data-detected-x-overflow', xOverflow(element));
         };
         const elements = once(
