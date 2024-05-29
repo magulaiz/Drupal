@@ -304,11 +304,8 @@ system.action.*:
     type:
       type: string
       label: 'Type'
-      nullable: true
       constraints:
-        PluginExists:
-          manager: entity_type.manager
-          interface: Drupal\Core\Entity\ContentEntityInterface
+        NotBlank: []
     plugin:
       type: string
       label: 'Plugin'
