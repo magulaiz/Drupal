@@ -71,7 +71,7 @@ class TextTrimmedFormatter extends FormatterBase implements TrustedCallbackInter
       // on "end of" paragraph, line or sentence.
       '#states' => [
         'checked' => [
-          'input[name="'. $field_breakpoints_selector . '"]' => ['checked' => FALSE],
+          'input[name="' . $field_breakpoints_selector . '"]' => ['checked' => FALSE],
         ],
       ],
     ];
@@ -85,7 +85,7 @@ class TextTrimmedFormatter extends FormatterBase implements TrustedCallbackInter
       '#description' => $this->t('The minimum acceptable length for truncation, if wordsafe is TRUE.'),
       '#states' => [
         'invisible' => [
-          'input[name="'. $field_wordsafe_selector . '"]' => ['checked' => FALSE],
+          'input[name="' . $field_wordsafe_selector . '"]' => ['checked' => FALSE],
         ],
       ],
     ];
@@ -99,7 +99,7 @@ class TextTrimmedFormatter extends FormatterBase implements TrustedCallbackInter
       // to have it.
       '#states' => [
         'checked' => [
-          'input[name="'. $field_wordsafe_selector . '"]' => ['checked' => FALSE],
+          'input[name="' . $field_wordsafe_selector . '"]' => ['checked' => FALSE],
         ],
       ],
     ];
