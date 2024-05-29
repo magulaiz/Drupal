@@ -95,7 +95,7 @@ class TextTrimmedFormatter extends FormatterBase implements TrustedCallbackInter
       '#default_value' => $this->getSetting('breakpoints'),
       '#description' => $this->t('Trim on breakpoints like end of paragraph, line break or end of a sentence ("&lt;/p&gt;", "&lt;br&gt;", ".", "!", "...").'),
       // The "breakpoints" trim has lower granularity than the "wordsafe".
-      // If the later is choosen for higher granularity then there is no sense
+      // If the later is chosen for higher granularity then there is no sense
       // to have it.
       '#states' => [
         'checked' => [
