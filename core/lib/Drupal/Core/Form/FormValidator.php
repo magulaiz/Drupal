@@ -212,7 +212,7 @@ class FormValidator implements FormValidatorInterface {
   }
 
   /**
-   * Cancels validation.
+   * Halts validation.
    *
    * @param array $form
    *   An associative array containing the structure of the form.
