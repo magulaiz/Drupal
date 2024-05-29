@@ -304,8 +304,10 @@ system.action.*:
     type:
       type: string
       label: 'Type'
+      nullable: true
       constraints:
-        NotBlank: []
+        NotBlank:
+          allowNull: true
     plugin:
       type: string
       label: 'Plugin'
