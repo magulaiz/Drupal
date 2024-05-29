@@ -42,7 +42,7 @@ services:
     arguments: [!tagged_iterator foo.bar]"
   example_service_closure:
     class: \Drupal\Core\ExampleClass
-    arguments: [!service_closure foo.bar]"
+    arguments: [!service_closure '@example_service_1']"
 YAML;
 
     vfsStream::setup('drupal', NULL, [
