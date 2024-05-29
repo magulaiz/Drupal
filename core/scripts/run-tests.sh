@@ -939,7 +939,7 @@ function simpletest_script_get_test_list() {
     // If the tests are not being run in parallel, then ensure slow tests run all
     // together first.
     if ((int) $args['ci-parallel-node-total'] <= 1 && !empty($slow_group)) {
-      $all_tests = array_merge($slow_group, $all_tests);
+      $all_tests = array_merge(array_keys($slow_group), $all_tests);
     }
     $test_list = array_unique($all_tests);
     $test_list = array_diff($test_list, $slow_tests);
