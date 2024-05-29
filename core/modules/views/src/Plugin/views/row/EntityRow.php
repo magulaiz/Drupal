@@ -222,7 +222,7 @@ class EntityRow extends RowPluginBase {
   public function preRender($result) {
     parent::preRender($result);
     if ($result) {
-      $this->getEntityTranslationRenderer()->preRenderByRelationship($result, isset($this->options['relationship']) ? $this->options['relationship'] : 'none');
+      $this->getEntityTranslationRenderer()->preRenderByRelationship($result, $this->options['relationship'] ?? 'none');
     }
   }
 
@@ -230,7 +230,7 @@ class EntityRow extends RowPluginBase {
    * {@inheritdoc}
    */
   public function render($row) {
-    return $this->getEntityTranslationRenderer()->renderByRelationship($row, isset($this->options['relationship']) ? $this->options['relationship'] : 'none');
+    return $this->getEntityTranslationRenderer()->renderByRelationship($row, $this->options['relationship'] ?? 'none');
   }
 
   /**
