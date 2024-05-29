@@ -21,7 +21,7 @@ class CorsIntegrationTest extends BrowserTestBase {
   /**
    * {@inheritdoc}
    */
-  protected static $modules = ['system', 'test_page_test', 'page_cache'];
+  protected static $modules = ['system', 'test_page_test', 'page_cache', 'ajax_test'];
 
   /**
    * {@inheritdoc}
@@ -172,7 +172,7 @@ class CorsIntegrationTest extends BrowserTestBase {
     $this->assertEquals(200, $response->getStatusCode());
 
     // Test ajaxCrossDomain is not set by default (supportsCredentials is false).
-    $this->drupalGet('/test-page', [], ['Origin' => 'https://drupal.org']);
+    $this->drupalGet('ajax-test/dialog', [], ['Origin' => 'https://drupal.org']);
     $settings = $this->getDrupalSettings();
     $this->assertArrayHasKey('withCredentials', $settings['ajaxCrossDomain'] ?? []);
     $this->assertFalse($cors_config['supportsCredentials'] ?? FALSE);
@@ -183,7 +183,7 @@ class CorsIntegrationTest extends BrowserTestBase {
     $this->setContainerParameter('cors.config', $cors_config);
     $this->rebuildContainer();
 
-    $this->drupalGet('/test-page', [], ['Origin' => 'https://drupal.org']);
+    $this->drupalGet('ajax-test/dialog', [], ['Origin' => 'https://drupal.org']);
     $cors_config = $this->container->getParameter('cors.config');
     $settings = $this->getDrupalSettings();
     $this->assertArrayHasKey('withCredentials', $settings['ajaxCrossDomain'] ?? []);
