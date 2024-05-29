@@ -194,7 +194,7 @@ class Update extends Query implements ConditionInterface {
   }
 
   /**
-   * Implements Drupal\Core\Database\Query\ConditionInterface::arguments().
+   * {@inheritdoc}
    */
   public function arguments() {
     $args = $this->condition->arguments();
