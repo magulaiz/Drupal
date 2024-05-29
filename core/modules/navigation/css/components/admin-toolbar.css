@@ -205,6 +205,12 @@ body {
   border-color: var(--admin-toolbar-color-gray-100);
   box-shadow: 0 0 56px 0 rgba(0, 0, 0, 0.14);
 }
+@media (min-width: 64rem) {
+  :where([data-detected-y-overflow="true"]) .admin-toolbar__header {
+    border-color: transparent;
+    box-shadow: none;
+  }
+}
 .admin-toolbar__header + .toolbar-block {
   margin-block-start: calc(var(--admin-toolbar-space-10) * -1);
 }

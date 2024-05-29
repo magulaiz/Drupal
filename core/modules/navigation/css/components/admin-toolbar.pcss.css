@@ -211,6 +211,11 @@ body {
   :where([data-detected-y-overflow="true"]) & {
     border-color: var(--admin-toolbar-color-gray-100);
     box-shadow: 0 0 56px 0 rgba(0, 0, 0, 0.14);
+
+    @media (--admin-toolbar-desktop) {
+      border-color: transparent;
+      box-shadow: none;
+    }
   }
 
   & + .toolbar-block {
