@@ -5,3 +5,15 @@
 #navigation-layout .layout-builder {
   border: none;
 }
+
+.layout-builder .admin-toolbar {
+  .layout-builder-block__content-preview-placeholder-label,
+  .layout-builder__link--add {
+    font-size: var(--admin-toolbar-font-size-heading-xs);
+  }
+
+  /* Expanded sidebar for screens larger than tablet size */
+  @media (--admin-toolbar-tablet) {
+    --admin-toolbar-sidebar-width: calc(16.5 * var(--admin-toolbar-rem));
+  }
+}
