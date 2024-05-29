@@ -87,7 +87,7 @@ function text_summary($text, $format = NULL, $size = NULL, $wordsafe = FALSE, $b
   // If a valid delimiter has been specified, use it to chop off the summary.
   if ($delimiter !== FALSE) {
     $summary = substr($text, 0, $delimiter);
-    if($add_ellipsis) {
+    if ($add_ellipsis) {
       // Find the last closing tag and insert the ellipse before.
       $closing_pos = strrpos($summary, '</');
       if ($closing_pos !== FALSE) {
@@ -161,7 +161,7 @@ function text_summary($text, $format = NULL, $size = NULL, $wordsafe = FALSE, $b
 
     // If trim on breakpoints is used then track if ellipsis have been added and
     // remove it so that to be added after the breakpoints trim.
-    if(($pos_ellipsis = strrpos($summary, 'Ã¢â‚¬Â¦')) !== FALSE) {
+    if (($pos_ellipsis = strrpos($summary, 'Ã¢â‚¬Â¦')) !== FALSE) {
       $summary = substr($summary, 0, $pos_ellipsis);
     }
 
@@ -196,7 +196,7 @@ function text_summary($text, $format = NULL, $size = NULL, $wordsafe = FALSE, $b
   }
 
   // Add ellipsis if it has been added before the breakpoints processing.
-  if($breakpoints && $pos_ellipsis !== FALSE) {
+  if ($breakpoints && $pos_ellipsis !== FALSE) {
     $summary .= 'Ã¢â‚¬Â¦';
   }
 
