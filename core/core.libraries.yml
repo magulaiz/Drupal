@@ -680,6 +680,14 @@ drupal.tabledrag.ajax:
 
 drupal.tableheader:
   version: VERSION
+  js:
+    misc/tableheader.js: { }
+    dependencies:
+      - core/jquery
+      - core/drupal
+      - core/drupalSettings
+      - core/once
+      - core/drupal.displace
   css:
     component:
       misc/components/sticky-header.module.css: { weight: -10 }
@@ -688,6 +696,9 @@ drupal.tableresponsive:
   version: VERSION
   js:
     misc/tableresponsive.js: {}
+  css:
+    component:
+      misc/tableheader.css: { }
   dependencies:
     - core/jquery
     - core/drupal
