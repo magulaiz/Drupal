@@ -84,4 +84,22 @@ class AttributesTest extends UnitTestCase {
     $this->assertSame(' selected id="first"', (string) $attributes, 'Original boolean value used with new name.');
   }
 
+  /**
+   * Tests the count method of the Attribute class.
+   */
+  public function testAttributeCount() {
+    $attributes = new Attribute([
+      'id' => 'test-id',
+      'class' => ['first', 'second'],
+      'alt' => 'Alternate text',
+    ]);
+    $this->assertSame(3, $attributes->count(), 'Count method returns the correct number of attributes.');
+
+    $attributes->setAttribute('title', 'Title text');
+    $this->assertSame(4, $attributes->count(), 'Count method returns the correct number of attributes after adding one.');
+
+    $attributes->removeAttribute('alt');
+    $this->assertSame(3, $attributes->count(), 'Count method returns the correct number of attributes after removing one.');
+  }
+
 }
