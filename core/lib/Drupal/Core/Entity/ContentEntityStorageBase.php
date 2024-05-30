@@ -631,6 +631,11 @@ abstract class ContentEntityStorageBase extends EntityStorageBase implements Con
    * {@inheritdoc}
    */
   public function loadRevision($revision_id) {
+    // If $revision_id is not a valid array key, exit early.
+    if ((!is_int($revision_id)) && (!is_string($revision_id))) {
+      return NULL;
+    }
+
     $revisions = $this->loadMultipleRevisions([$revision_id]);
 
     return $revisions[$revision_id] ?? NULL;
@@ -641,6 +646,11 @@ abstract class ContentEntityStorageBase extends EntityStorageBase implements Con
    */
   public function loadMultipleRevisions(array $revision_ids) {
     $revisions = $this->doLoadMultipleRevisionsFieldItems($revision_ids);
+
+    // If no revisions can be loaded, exit early.
+    if (empty($revisions)) {
+      return $revisions;
+    }
 
     // The hooks are executed with an array of entities keyed by the entity ID.
     // As we could load multiple revisions for the same entity ID at once we
