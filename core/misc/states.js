@@ -580,8 +580,8 @@
             (option) => option.value,
           );
         }
-        // For other cases, return the value of the single element.
-        return element.value;
+        // If the element exists and has a value, return the value of the element.
+        return element && element.value;
       },
       change() {
         // Radio buttons share the same :input[name="key"] selector.
@@ -602,8 +602,8 @@
             (option) => option.value,
           );
         }
-        // For other cases, return the value of the single element.
-        return element.value;
+        // If the element exists and has a value, return the value of the element.
+        return element && element.value;
       },
     },
 
