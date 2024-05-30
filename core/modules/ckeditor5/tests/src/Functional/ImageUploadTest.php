@@ -11,7 +11,6 @@ use Drupal\Tests\BrowserTestBase;
 use Drupal\Tests\ckeditor5\Traits\SynchronizeCsrfTokenSeedTrait;
 use Drupal\Tests\jsonapi\Functional\JsonApiRequestTestTrait;
 use Drupal\Tests\TestFileCreationTrait;
-use Drupal\user\RoleInterface;
 use GuzzleHttp\RequestOptions;
 
 /**
@@ -53,7 +52,17 @@ class ImageUploadTest extends BrowserTestBase {
   protected function setUp(): void {
     parent::setUp();
 
-    $this->user = $this->drupalCreateUser();
+    FilterFormat::create([
+      'format' => 'basic_html',
+      'name' => 'Basic HTML',
+      'weight' => 1,
+      'filters' => [
+        'filter_html_escape' => ['status' => 1],
+      ],
+    ])->save();
+    $this->user = $this->drupalCreateUser([
+      'use text format basic_html',
+    ]);
     $this->drupalLogin($this->user);
   }
 
@@ -61,7 +70,6 @@ class ImageUploadTest extends BrowserTestBase {
    * Tests using the file upload route with a disallowed extension.
    */
   public function testUploadFileExtension() {
-    $this->createBasicFormat();
     $this->createEditorWithUpload([
       'status' => TRUE,
       'scheme' => 'public',
@@ -87,7 +95,6 @@ class ImageUploadTest extends BrowserTestBase {
    * Tests using the file upload route with a file size larger than allowed.
    */
   public function testFileUploadLargerFileSize() {
-    $this->createBasicFormat();
     $this->createEditorWithUpload([
       'status' => TRUE,
       'scheme' => 'public',
@@ -121,7 +128,6 @@ class ImageUploadTest extends BrowserTestBase {
    * @see https://www.drupal.org/project/drupal/issues/3184974
    */
   public function testLockAfterFailedValidation() {
-    $this->createBasicFormat();
     $this->createEditorWithUpload([
       'status' => TRUE,
       'scheme' => 'public',
@@ -185,24 +191,6 @@ class ImageUploadTest extends BrowserTestBase {
   protected function getUploadUrl() {
     $token = $this->container->get('csrf_token')->get('ckeditor5/upload-image/basic_html');
     return Url::fromRoute('ckeditor5.upload_image', ['editor' => 'basic_html'], ['query' => ['token' => $token]]);
-  }
-
-  /**
-   * Create a basic_html text format for the editor to reference.
-   *
-   * @throws \Drupal\Core\Entity\EntityStorageException
-   */
-  protected function createBasicFormat() {
-    $basic_html_format = FilterFormat::create([
-      'format' => 'basic_html',
-      'name' => 'Basic HTML',
-      'weight' => 1,
-      'filters' => [
-        'filter_html_escape' => ['status' => 1],
-      ],
-      'roles' => [RoleInterface::AUTHENTICATED_ID],
-    ]);
-    $basic_html_format->save();
   }
 
   /**

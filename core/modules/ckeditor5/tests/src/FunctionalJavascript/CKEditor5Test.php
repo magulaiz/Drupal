@@ -13,6 +13,7 @@ use Drupal\language\Entity\ConfigurableLanguage;
 use Drupal\node\Entity\Node;
 use Drupal\Tests\ckeditor5\Traits\CKEditor5TestTrait;
 use Drupal\Tests\TestFileCreationTrait;
+use Drupal\user\Entity\Role;
 use Drupal\user\RoleInterface;
 use Symfony\Component\Validator\ConstraintViolation;
 
@@ -79,7 +80,6 @@ class CKEditor5Test extends CKEditor5TestBase {
     FilterFormat::create([
       'format' => 'ckeditor5',
       'name' => 'CKEditor 5 with image upload',
-      'roles' => [RoleInterface::AUTHENTICATED_ID],
     ])->save();
     Editor::create([
       'format' => 'ckeditor5',
@@ -110,6 +110,11 @@ class CKEditor5Test extends CKEditor5TestBase {
         FilterFormat::load('ckeditor5')
       ))
     ));
+
+    $this->grantPermissions(
+      Role::load(RoleInterface::AUTHENTICATED_ID),
+      ['use text format ckeditor5']
+    );
 
     $this->drupalGet('node/add/page');
     $this->waitForEditor();
@@ -287,8 +292,18 @@ JS;
 
     // Confirm there are no longer any warnings.
     $assert_session->waitForElementRemoved('css', '[data-drupal-messages] [role="alert"]');
+    $machine_name = $page->findField('edit-format')->getValue();
+
     $page->pressButton('Save configuration');
     $assert_session->responseContains('Added text format <em class="placeholder">ckeditor5</em>.');
+
+    if ($this->checkPermissions(["use text format $machine_name"])) {
+      // @see core/profiles/standard/config/install/user.role.authenticated.yml
+      $this->grantPermissions(
+        Role::load(RoleInterface::AUTHENTICATED_ID),
+        ["use text format $machine_name"]
+      );
+    }
   }
 
   /**
@@ -632,7 +647,6 @@ JS;
     FilterFormat::create([
       'format' => 'test_format',
       'name' => 'CKEditor 5 with list',
-      'roles' => [RoleInterface::AUTHENTICATED_ID],
     ])->save();
     Editor::create([
       'format' => 'test_format',
@@ -667,6 +681,11 @@ JS;
         FilterFormat::load('test_format')
       ))
     ));
+    $this->grantPermissions(
+      Role::load(RoleInterface::AUTHENTICATED_ID),
+      ['use text format test_format']
+    );
+
     $ordered_list_html = '<ol><li>apple</li><li>banana</li><li>cantaloupe</li></ol>';
     $page = $this->getSession()->getPage();
     $assert_session = $this->assertSession();
@@ -773,7 +792,6 @@ JS;
     FilterFormat::create([
       'format' => 'ckeditor5',
       'name' => 'CKEditor 5 HTML comments test',
-      'roles' => [RoleInterface::AUTHENTICATED_ID],
     ])->save();
     Editor::create([
       'format' => 'ckeditor5',
@@ -791,6 +809,11 @@ JS;
         FilterFormat::load('ckeditor5')
       ))
     ));
+
+    $this->grantPermissions(
+      Role::load(RoleInterface::AUTHENTICATED_ID),
+      ['use text format ckeditor5']
+    );
 
     $this->drupalGet('node/1/edit');
     $page->selectFieldOption('body[0][format]', 'ckeditor5');

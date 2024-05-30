@@ -11,7 +11,6 @@ use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\filter\Entity\FilterFormat;
 use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
 use Drupal\node\Entity\NodeType;
-use Drupal\user\RoleInterface;
 
 /**
  * Tests the inline errors fragment link to a CKEditor5-enabled textarea.
@@ -44,7 +43,6 @@ class FormErrorHandlerCKEditor5Test extends WebDriverTestBase {
     FilterFormat::create([
       'format' => 'ckeditor5',
       'name' => 'CKEditor 5 with image upload',
-      'roles' => [RoleInterface::AUTHENTICATED_ID],
     ])->save();
     Editor::create([
       'format' => 'ckeditor5',
@@ -80,6 +78,7 @@ class FormErrorHandlerCKEditor5Test extends WebDriverTestBase {
     $account = $this->drupalCreateUser([
       'administer nodes',
       'create page content',
+      'use text format ckeditor5',
     ]);
     $this->drupalLogin($account);
   }
