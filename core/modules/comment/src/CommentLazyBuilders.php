@@ -169,12 +169,16 @@ class CommentLazyBuilders implements TrustedCallbackInterface {
     $links = [];
     $status = $commented_entity->get($entity->getFieldName())->status;
 
+    $current_route = Url::fromRoute('<current>')->toString();
     if ($status == CommentItemInterface::OPEN) {
       if ($entity->access('delete')) {
         $links['comment-delete'] = [
           'title' => t('Delete'),
           'url' => $entity->toUrl('delete-form'),
         ];
+        if ($current_route) {
+          $links['comment-delete']['url']->setOptions(['query' => ['destination' => $current_route]]);
+        }
       }
 
       if ($entity->access('update')) {
@@ -182,6 +186,9 @@ class CommentLazyBuilders implements TrustedCallbackInterface {
           'title' => t('Edit'),
           'url' => $entity->toUrl('edit-form'),
         ];
+        if ($current_route) {
+          $links['comment-edit']['url']->setOptions(['query' => ['destination' => $current_route]]);
+        }
       }
       $field_definition = $commented_entity->getFieldDefinition($entity->getFieldName());
       if ($entity->access('create')
@@ -195,12 +202,18 @@ class CommentLazyBuilders implements TrustedCallbackInterface {
             'pid' => $entity->id(),
           ]),
         ];
+        if ($current_route) {
+          $links['comment-reply']['url']->setOptions(['query' => ['destination' => $current_route]]);
+        }
       }
       if (!$entity->isPublished() && $entity->access('approve')) {
         $links['comment-approve'] = [
           'title' => t('Approve'),
           'url' => Url::fromRoute('comment.approve', ['comment' => $entity->id()]),
         ];
+        if ($current_route) {
+          $links['comment-approve']['url']->setOptions(['query' => ['destination' => $current_route]]);
+        }
       }
       if (empty($links) && $this->currentUser->isAnonymous()) {
         $links['comment-forbidden']['title'] = $this->commentManager->forbiddenMessage($commented_entity, $entity->getFieldName());
@@ -213,6 +226,9 @@ class CommentLazyBuilders implements TrustedCallbackInterface {
         'title' => t('Translate'),
         'url' => $entity->toUrl('drupal:content-translation-overview'),
       ];
+      if ($current_route) {
+        $links['comment-translations']['url']->setOptions(['query' => ['destination' => $current_route]]);
+      }
     }
 
     return [
