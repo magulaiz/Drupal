@@ -35,14 +35,13 @@ class CorsIntegrationTest extends WebDriverTestBase {
 
     // Enable CORS with some default options.
     $cors_config['enabled'] = TRUE;
-    $cors_config['allowedOrigins'] = ['https://drupal.org'];
     $cors_config['supportsCredentials'] = FALSE;
 
     $this->setContainerParameter('cors.config', $cors_config);
     $this->rebuildContainer();
 
     // Test ajaxCrossDomain is not set by default (supportsCredentials is false).
-    $this->drupalGet('ajax-test/dialog', [], ['Origin' => 'https://drupal.org']);
+    $this->drupalGet('ajax-test/dialog');
     $settings = $this->getDrupalSettings();
     $this->assertArrayHasKey('withCredentials', $settings['ajaxCrossDomain'] ?? []);
     $this->assertFalse($cors_config['supportsCredentials'] ?? FALSE);
@@ -53,7 +52,7 @@ class CorsIntegrationTest extends WebDriverTestBase {
     $this->setContainerParameter('cors.config', $cors_config);
     $this->rebuildContainer();
 
-    $this->drupalGet('ajax-test/dialog', [], ['Origin' => 'https://drupal.org']);
+    $this->drupalGet('ajax-test/dialog');
     $cors_config = $this->container->getParameter('cors.config');
     $settings = $this->getDrupalSettings();
     $this->assertArrayHasKey('withCredentials', $settings['ajaxCrossDomain'] ?? []);
