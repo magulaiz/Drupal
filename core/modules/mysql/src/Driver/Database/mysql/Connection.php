@@ -6,6 +6,7 @@ use Drupal\Core\Database\Connection as DatabaseConnection;
 use Drupal\Core\Database\Database;
 use Drupal\Core\Database\DatabaseAccessDeniedException;
 use Drupal\Core\Database\DatabaseConnectionRefusedException;
+use Drupal\Core\Database\DatabaseInvalidInitCommand;
 use Drupal\Core\Database\DatabaseNotFoundException;
 use Drupal\Core\Database\StatementWrapperIterator;
 use Drupal\Core\Database\SupportsTemporaryTablesInterface;
@@ -77,6 +78,13 @@ class Connection extends DatabaseConnection implements SupportsTemporaryTablesIn
     $ansi_quotes_modes = ['ANSI_QUOTES', 'ANSI'];
     $is_ansi_quotes_mode = FALSE;
     foreach ($ansi_quotes_modes as $mode) {
+      // None of the modes in $ansi_quotes_modes are substrings of other modes
+      // that are not in $ansi_quotes_modes, so a simple stripos() does not
+      // return false positives.
+      if (isset($connection_options['init_commands']['sql_mode']) && stripos($connection_options['init_commands']['sql_mode'], $mode) !== FALSE) {
+        $is_ansi_quotes_mode = TRUE;
+        break;
+      }
       if (!empty($connection_options['sql_mode_options'][$mode])) {
         $is_ansi_quotes_mode = TRUE;
         break;
@@ -215,8 +223,10 @@ class Connection extends DatabaseConnection implements SupportsTemporaryTablesIn
       ];
     }
 
-    // Ensure sql_mode is not in the init commands.
-    unset($connection_options['init_commands']['sql_mode']);
+    // Emit a deprecation warning if sql_mode is in the init commands.
+    if (isset($connection_options['init_commands']['sql_mode'])) {
+      @trigger_error("The 'sql_mode' database command is deprecated in drupal:11.0.0 and will be removed in drupal:12.0.0. Use an array of options in 'sql_mode_options' instead. See https://www.drupal.org/node/3403416", E_USER_DEPRECATED);
+    }
 
     // Execute initial commands.
     foreach ($connection_options['init_commands'] as $sql) {
