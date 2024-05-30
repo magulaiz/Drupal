@@ -10,7 +10,7 @@ use Drupal\Core\Database\Query\AlterableInterface;
 /**
  * Implements hook_language_fallback_candidates_OPERATION_alter().
  */
-function path_alias_language_fallback_test_language_fallback_candidates_path_alias_alter(array &$candidates, array $context) {
+function path_alias_language_fallback_test_language_fallback_candidates_path_alias_alter(array &$candidates, array $context): void {
   $fallback_language = \Drupal::state()
     ->get('path_alias_language_fallback_test.fallback_path_alias_alter.candidates');
   if ($fallback_language) {
@@ -21,7 +21,7 @@ function path_alias_language_fallback_test_language_fallback_candidates_path_ali
 /**
  * Implements hook_query_TAG_alter().
  */
-function path_alias_language_fallback_test_query_path_alias_language_fallback_alter(AlterableInterface $query) {
+function path_alias_language_fallback_test_query_path_alias_language_fallback_alter(AlterableInterface $query): void {
   /** @var \Drupal\Core\Database\Query\SelectInterface $query */
   // Replace the existing language code ordering.
   $fields = &$query->getOrderBy();
