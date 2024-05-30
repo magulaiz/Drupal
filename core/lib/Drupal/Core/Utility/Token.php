@@ -238,7 +238,7 @@ class Token {
 
     $replacements = [];
     foreach ($text_tokens as $type => $tokens) {
-      $replacements += $this->generate($type, $tokens, $data, $options, $bubbleable_metadata);
+      $replacements += $this->generate((string) $type, $tokens, $data, $options, $bubbleable_metadata);
       if (!empty($options['clear'])) {
         $replacements += array_fill_keys($tokens, '');
       }
