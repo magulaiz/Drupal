@@ -100,7 +100,7 @@ class ContactFileFieldTest extends WebDriverTestBase {
    * {@inheritdoc}
    */
   protected function writeSettings(array $settings) {
-    if ($this->getName() === 'testFileFieldHasPublicSchemeByDefaultWhenPrivateSchemeNotConfigured') {
+    if ($this->name() === 'testFileFieldHasPublicSchemeByDefaultWhenPrivateSchemeNotConfigured') {
       // Disable the private files scheme.
       unset($settings['settings']['file_private_path']);
     }
