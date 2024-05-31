@@ -855,6 +855,16 @@ $settings['migrate_node_migrate_type_classic'] = FALSE;
 # $settings['migrate_file_private_path'] = '';
 
 /**
+ * Enable the update of timestamp fields to work after Year 2038.
+ *
+ * This setting is used to allow the update of all timestamp fields. For sites
+ * with hundreds of thousands of nodes and other entities this update will not
+ * be quick. Sites can disable the update so they can schedule it as needed.
+ * Set this to FALSE to prevent the update from running.
+ */
+$settings['timestamp_field_update_y2038'] = TRUE;
+
+/**
  * Load local development override configuration, if available.
  *
  * Create a settings.local.php file to override variables on secondary (staging,

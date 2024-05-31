@@ -1930,6 +1930,10 @@ function system_update_10201(&$sandbox) {
  * Update TimestampItem field schema size to support dates greater than 2038.
  */
 function system_update_10202(&$sandbox): void {
+  $timestamp_field_update_y2038 = Settings::get('timestamp_field_update_y2038', FALSE);
+  if (!$timestamp_field_update_y2038) {
+    return;
+  }
   if (!isset($sandbox['items'])) {
     $items = _system_update_get_timestamp_fields();
     $sandbox['items'] = $items;
