@@ -98,7 +98,7 @@ class SymfonyMailer implements MailInterface, ContainerFactoryPluginInterface {
   }
 
   public function format(array $message) {
-    // Convert any HTML to plain-text.
+    // Convert any HTML to plain-text and wrap the mail body for sending.
     foreach ($message['body'] as &$part) {
       if ($part instanceof MarkupInterface) {
         $part = MailFormatHelper::htmlToText($part);
