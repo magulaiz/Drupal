@@ -197,6 +197,16 @@ class Connection extends DatabaseConnection implements SupportsTemporaryTablesIn
       'init_commands' => [],
     ];
 
+    // Emit a deprecation warning if sql_mode is in the init commands.
+    if (isset($connection_options['init_commands']['sql_mode'])) {
+      @trigger_error("The 'sql_mode' database command is deprecated in drupal:11.1.0 and will be removed in drupal:12.0.0. Use an array of options in 'sql_mode_options' instead. See https://www.drupal.org/node/3403416", E_USER_DEPRECATED);
+    }
+
+    // If the user has set sql_mode_options, then ignore sql_mode.
+    if (isset($connection_options['sql_mode_options'])) {
+      unset($connection_options['init_commands']['sql_mode']);
+    }
+
     // Set MySQL sql_mode options to defaults.
     $sql_mode_defaults = [
       // An option may be removed by setting it to FALSE in the
@@ -204,6 +214,11 @@ class Connection extends DatabaseConnection implements SupportsTemporaryTablesIn
       'ANSI' => TRUE,
       'TRADITIONAL' => TRUE,
     ];
+
+    // sql_mode replaces the defaults when it is used
+    if (isset($connection_options['init_commands']['sql_mode'])) {
+      $sql_mode_defaults = [];
+    }
 
     $connection_options += [
       'sql_mode_options' => [],
@@ -220,11 +235,6 @@ class Connection extends DatabaseConnection implements SupportsTemporaryTablesIn
       $connection_options['init_commands'] += [
         'isolation_level' => 'SET SESSION TRANSACTION ISOLATION LEVEL ' . strtoupper($connection_options['isolation_level']),
       ];
-    }
-
-    // Emit a deprecation warning if sql_mode is in the init commands.
-    if (isset($connection_options['init_commands']['sql_mode'])) {
-      @trigger_error("The 'sql_mode' database command is deprecated in drupal:11.1.0 and will be removed in drupal:12.0.0. Use an array of options in 'sql_mode_options' instead. See https://www.drupal.org/node/3403416", E_USER_DEPRECATED);
     }
 
     // Execute initial commands.
