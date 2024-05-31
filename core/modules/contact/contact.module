@@ -271,6 +271,6 @@ function contact_form_field_config_edit_form_alter(&$form, FormStateInterface $f
   else {
     // No private scheme, notify the user.
     Drupal::messenger()
-      ->addWarning(t('It is advised to store file uploads for contact forms as private files. Please configure this in settings.php'));
+      ->addWarning(t('It is advised to store file uploads for contact forms as private files. You can configure this in settings.php'));
   }
 }

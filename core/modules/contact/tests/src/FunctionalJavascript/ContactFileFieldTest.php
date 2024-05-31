@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\contact\FunctionalJavascript;
 
 use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
@@ -50,7 +52,7 @@ class ContactFileFieldTest extends WebDriverTestBase {
 
     $this->drupalGet('admin/structure/contact/manage/feedback/fields/add-field');
     $session = $this->getSession();
-    $session->getPage()->fillField('label', 'fileupload');
+    $session->getPage()->fillField('label', 'file upload');
     $session->getPage()
       ->find('xpath', '//input[@value="file_upload"]')
       ->click();
@@ -81,7 +83,7 @@ class ContactFileFieldTest extends WebDriverTestBase {
 
     $this->drupalGet('admin/structure/contact/manage/feedback/fields/add-field');
     $session = $this->getSession();
-    $session->getPage()->fillField('label', 'fileupload');
+    $session->getPage()->fillField('label', 'file_upload');
     $session->getPage()
       ->find('xpath', '//input[@value="file_upload"]')
       ->click();
@@ -91,11 +93,11 @@ class ContactFileFieldTest extends WebDriverTestBase {
     $this->assertTrue($this->assertSession()
       ->elementExists('css', '[name="field_storage[subform][settings][uri_scheme]"][value="public"]')
       ->isSelected());
-    $this->assertSession()->pageTextContains('It is advised to store file uploads for contact forms as private files. Please configure this in settings.php');
+    $this->assertSession()->pageTextContains('It is advised to store file uploads for contact forms as private files. You can configure this in settings.php');
   }
 
   /**
-   * {@inheritDoc}
+   * {@inheritdoc}
    */
   protected function writeSettings(array $settings) {
     if ($this->getName() === 'testFileFieldHasPublicSchemeByDefaultWhenPrivateSchemeNotConfigured') {
