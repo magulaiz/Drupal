@@ -5,6 +5,7 @@
  * Enables the use of personal and site-wide contact forms.
  */
 
+use Drupal\contact\MessageInterface;
 use Drupal\Core\Url;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
@@ -253,4 +254,23 @@ function contact_form_user_admin_settings_submit($form, FormStateInterface $form
  */
 function contact_rest_resource_alter(&$definitions) {
   $definitions['entity:contact_message']['class'] = ContactMessageResource::class;
+}
+
+/**
+ * Implements hook_form_FORM_ID_alter().
+ */
+function contact_form_field_config_edit_form_alter(&$form, FormStateInterface $form_state, $form_id) {
+  if (empty($form['#entity']) || !$form['#entity'] instanceof MessageInterface || $form['#field_storage']->getType() !== 'file' || !$form['#field_storage']->isNew()) {
+    // Only alter the form for Message entities where a file field is added.
+    return;
+  }
+  if (isset($form['field_storage']['subform']['settings']['uri_scheme']['#options']['private'])) {
+    // Set file upload scheme to private by default.
+    $form['field_storage']['subform']['settings']['uri_scheme']['#default_value'] = 'private';
+  }
+  else {
+    // No private scheme, notify the user.
+    Drupal::messenger()
+      ->addWarning(t('It is advised to store file uploads for contact forms as private files. Please configure this in settings.php'));
+  }
 }
