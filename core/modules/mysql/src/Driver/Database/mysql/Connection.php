@@ -224,7 +224,7 @@ class Connection extends DatabaseConnection implements SupportsTemporaryTablesIn
 
     // Emit a deprecation warning if sql_mode is in the init commands.
     if (isset($connection_options['init_commands']['sql_mode'])) {
-      @trigger_error("The 'sql_mode' database command is deprecated in drupal:11.0.0 and will be removed in drupal:12.0.0. Use an array of options in 'sql_mode_options' instead. See https://www.drupal.org/node/3403416", E_USER_DEPRECATED);
+      @trigger_error("The 'sql_mode' database command is deprecated in drupal:11.1.0 and will be removed in drupal:12.0.0. Use an array of options in 'sql_mode_options' instead. See https://www.drupal.org/node/3403416", E_USER_DEPRECATED);
     }
 
     // Execute initial commands.
