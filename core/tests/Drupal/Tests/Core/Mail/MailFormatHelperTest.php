@@ -32,8 +32,9 @@ class MailFormatHelperTest extends UnitTestCase {
     // Check that the body headers were not wrapped even though some exceeded
     // 77 characters.
     $this->assertEquals($headers_in_body, $processed_headers, 'Headers in the body are not wrapped.');
-    // Check that the body text is wrapped.
-    $this->assertEquals(wordwrap($body, 77, " \n"), $processed_body, 'Body text is wrapped.');
+    // Check that the body text is soft-wrapped according to the
+    // "format=flowed; delsp=yes" encoding.
+    $this->assertEquals(wordwrap($body, 77, "  \n"), $processed_body, 'Body text is soft-wrapped.');
   }
 
 }
