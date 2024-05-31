@@ -56,8 +56,8 @@ class ContactFileFieldTest extends WebDriverTestBase {
     $session->getPage()
       ->find('xpath', '//input[@value="file_upload"]')
       ->click();
-    $this->assertSession()->assertWaitOnAjaxRequest();
-    $session->getPage()->fillField('label', 'file upload');
+    $session->getPage()->pressButton('Continue');
+    $session->getPage()->fillField('label', 'file_upload');
     $session->getPage()->find('xpath', '//input[@value="file"]')->click();
     $session->getPage()->pressButton('Continue');
     $this->assertTrue($this->assertSession()
@@ -87,7 +87,7 @@ class ContactFileFieldTest extends WebDriverTestBase {
     $session->getPage()
       ->find('xpath', '//input[@value="file_upload"]')
       ->click();
-    $this->assertSession()->assertWaitOnAjaxRequest();
+    $session->getPage()->pressButton('Continue');
     $session->getPage()->fillField('label', 'file_upload');
     $session->getPage()->find('xpath', '//input[@value="file"]')->click();
     $session->getPage()->pressButton('Continue');
