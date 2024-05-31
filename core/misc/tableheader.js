@@ -15,8 +15,15 @@ Drupal.behaviors.makeStikcyOptional = {
       stickyHeaderElement.insertAdjacentHTML('beforebegin', Drupal.theme.stickyHeaderCheckbox());
       const previousElement = stickyHeaderElement.previousElementSibling;
       const checkbox = previousElement.querySelector('input[type="checkbox"]');
+
+      const isStickyHeaderEnabled = localStorage.getItem('stickyHeaderEnabled') === 'true';
+      checkbox.checked = isStickyHeaderEnabled;
+      stickyHeaderElement.classList.toggle('sticky-header', isStickyHeaderEnabled);
+
       checkbox.addEventListener('change', () => {
-        stickyHeaderElement.classList.toggle('sticky-header', checkbox.checked);
+        const isChecked = checkbox.checked;
+        stickyHeaderElement.classList.toggle('sticky-header', isChecked);
+        localStorage.setItem('stickyHeaderEnabled', isChecked);
       });
     }
   },
