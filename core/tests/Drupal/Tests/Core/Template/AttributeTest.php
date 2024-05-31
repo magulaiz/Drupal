@@ -350,8 +350,8 @@ class AttributeTest extends UnitTestCase {
     $this->assertClass('example-class', $html);
     $this->assertNoClass('example-class2', $html);
 
-    $this->assertID('example-id', $html);
-    $this->assertNoID('example-id2', $html);
+    $this->assertId('example-id', $html);
+    $this->assertNoId('example-id2', $html);
 
     $this->assertStringContainsString('enabled', $html);
   }
@@ -389,7 +389,7 @@ class AttributeTest extends UnitTestCase {
    */
   protected function assertClass(string $class, string $html): void {
     $xpath = "//*[@class='$class']";
-    self::assertTrue((bool) $this->getXPathResultCount($xpath, $html));
+    self::assertTrue((bool) $this->getXpathResultCount($xpath, $html));
   }
 
   /**
@@ -404,7 +404,7 @@ class AttributeTest extends UnitTestCase {
    */
   protected function assertNoClass(string $class, string $html): void {
     $xpath = "//*[@class='$class']";
-    self::assertFalse((bool) $this->getXPathResultCount($xpath, $html));
+    self::assertFalse((bool) $this->getXpathResultCount($xpath, $html));
   }
 
   /**
@@ -417,9 +417,9 @@ class AttributeTest extends UnitTestCase {
    *
    * @internal
    */
-  protected function assertID(string $id, string $html): void {
+  protected function assertId(string $id, string $html): void {
     $xpath = "//*[@id='$id']";
-    self::assertTrue((bool) $this->getXPathResultCount($xpath, $html));
+    self::assertTrue((bool) $this->getXpathResultCount($xpath, $html));
   }
 
   /**
@@ -432,9 +432,9 @@ class AttributeTest extends UnitTestCase {
    *
    * @internal
    */
-  protected function assertNoID(string $id, string $html): void {
+  protected function assertNoId(string $id, string $html): void {
     $xpath = "//*[@id='$id']";
-    self::assertFalse((bool) $this->getXPathResultCount($xpath, $html));
+    self::assertFalse((bool) $this->getXpathResultCount($xpath, $html));
   }
 
   /**
@@ -448,7 +448,7 @@ class AttributeTest extends UnitTestCase {
    * @return int
    *   The number of results that are found.
    */
-  protected function getXPathResultCount($query, $html) {
+  protected function getXpathResultCount($query, $html) {
     $document = Html::load($html);
     $xpath = new \DOMXPath($document);
 

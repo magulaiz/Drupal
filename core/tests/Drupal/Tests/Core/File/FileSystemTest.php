@@ -151,7 +151,7 @@ class FileSystemTest extends UnitTestCase {
    *
    * @covers ::createFilename
    */
-  public function testInvalidUTF8() {
+  public function testInvalidUtf8() {
     vfsStream::setup('dir');
     // cspell:disable-next-line
     $filename = "a\xFFsdf\x80€" . '.txt';

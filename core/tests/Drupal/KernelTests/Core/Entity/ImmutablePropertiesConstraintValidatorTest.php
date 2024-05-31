@@ -29,7 +29,7 @@ class ImmutablePropertiesConstraintValidatorTest extends KernelTestBase {
   /**
    * Tests that only config entities are accepted by the validator.
    */
-  public function testValidatorRequiresAConfigEntity(): void {
+  public function testValidatorRequiresConfigEntity(): void {
     $definition = DataDefinition::createFromDataType('any')
       ->addConstraint('ImmutableProperties', ['read_only']);
     $data = $this->container->get(TypedDataManagerInterface::class)
@@ -42,7 +42,7 @@ class ImmutablePropertiesConstraintValidatorTest extends KernelTestBase {
   /**
    * Tests that the validator throws an exception for non-existent properties.
    */
-  public function testValidatorRejectsANonExistentProperty(): void {
+  public function testValidatorRejectsNonExistentProperty(): void {
     /** @var \Drupal\block_content\BlockContentTypeInterface $entity */
     $entity = BlockContentType::create([
       'id' => 'test',

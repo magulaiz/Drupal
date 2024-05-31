@@ -45,9 +45,9 @@ class FileStorageTest extends PhpStorageTestBase {
    * @covers ::exists
    * @covers ::delete
    */
-  public function testCRUD() {
+  public function testCrud() {
     $php = new FileStorage($this->standardSettings);
-    $this->assertCRUD($php);
+    $this->assertCrud($php);
   }
 
   /**

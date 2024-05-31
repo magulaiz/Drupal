@@ -234,7 +234,7 @@ class AttachedAssetsTest extends KernelTestBase {
   /**
    * Tests JS assets depending on the 'core/<head>' virtual library.
    */
-  public function testHeaderHTML() {
+  public function testHeaderHtml() {
     $build['#attached']['library'][] = 'common_test/js-header';
     $assets = AttachedAssets::createFromRenderArray($build);
 

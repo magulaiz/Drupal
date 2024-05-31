@@ -413,7 +413,7 @@ class LinkGeneratorTest extends UnitTestCase {
     $url = new Url('test_route_4');
     $url->setUrlGenerator($this->urlGenerator);
     $result = $this->linkGenerator->generate("<script>alert('XSS!')</script>", $url);
-    $this->assertNoXPathResults('//a[@href="/test-route-4"]/script', (string) $result);
+    $this->assertNoXpathResults('//a[@href="/test-route-4"]/script', (string) $result);
   }
 
   /**
@@ -501,7 +501,7 @@ class LinkGeneratorTest extends UnitTestCase {
     $url = new Url('test_route_1', [], ['set_active_class' => FALSE]);
     $url->setUrlGenerator($this->urlGenerator);
     $result = $this->linkGenerator->generate('Test', $url);
-    $this->assertNoXPathResults('//a[@data-drupal-link-system-path="test-route-1"]', (string) $result);
+    $this->assertNoXpathResults('//a[@data-drupal-link-system-path="test-route-1"]', (string) $result);
 
     // Render a link with an associated language.
     $url = new Url('test_route_1', [], [
@@ -685,7 +685,7 @@ class LinkGeneratorTest extends UnitTestCase {
    *
    * @internal
    */
-  protected function assertNoXPathResults(string $query, string $html): void {
+  protected function assertNoXpathResults(string $query, string $html): void {
     $document = Html::load($html);
     $xpath = new \DOMXPath($document);
 

@@ -54,7 +54,7 @@ class ConfigEntityUnitTest extends KernelTestBase {
     $expected_id = 'test_id';
     $config_name = $entity_type->getConfigPrefix() . '.' . $expected_id;
     $storage = $this->storage;
-    $this->assertSame($expected_id, $storage::getIDFromConfigName($config_name, $entity_type->getConfigPrefix()));
+    $this->assertSame($expected_id, $storage::getIdFromConfigName($config_name, $entity_type->getConfigPrefix()));
 
     // Create three entities, two with the same style.
     $style = $this->randomMachineName(8);

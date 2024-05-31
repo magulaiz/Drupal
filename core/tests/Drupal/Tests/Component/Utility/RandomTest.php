@@ -19,7 +19,7 @@ class RandomTest extends TestCase {
   /**
    * The first random string passed to the test callback.
    *
-   * @see \Drupal\Tests\Component\Utility\RandomTest::_RandomStringValidate()
+   * @see \Drupal\Tests\Component\Utility\RandomTest::randomStringValidate()
    *
    * @var string
    */
@@ -185,7 +185,7 @@ class RandomTest extends TestCase {
   public function testRandomStringValidator() {
     $random = new Random();
     $this->firstStringGenerated = '';
-    $str = $random->string(1, TRUE, [$this, '_RandomStringValidate']);
+    $str = $random->string(1, TRUE, [$this, 'randomStringValidate']);
     $this->assertNotEquals($this->firstStringGenerated, $str);
   }
 
@@ -211,7 +211,7 @@ class RandomTest extends TestCase {
    * @return bool
    *   TRUE if the random string is valid, FALSE if not.
    */
-  public function _RandomStringValidate($string) {
+  public function randomStringValidate($string) {
     // Return FALSE for the first generated string and any string that is the
     // same, as the test expects a different string to be returned.
     if (empty($this->firstStringGenerated) || $string == $this->firstStringGenerated) {

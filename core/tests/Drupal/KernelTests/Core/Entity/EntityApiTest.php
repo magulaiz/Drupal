@@ -33,10 +33,10 @@ class EntityApiTest extends EntityKernelTestBase {
   /**
    * Tests basic CRUD functionality of the Entity API.
    */
-  public function testCRUD() {
+  public function testCrud() {
     // All entity variations have to have the same results.
     foreach (entity_test_entity_types() as $entity_type) {
-      $this->assertCRUD($entity_type, $this->createUser());
+      $this->assertCrud($entity_type, $this->createUser());
     }
   }
 
@@ -50,7 +50,7 @@ class EntityApiTest extends EntityKernelTestBase {
    *
    * @internal
    */
-  protected function assertCRUD(string $entity_type, UserInterface $user1): void {
+  protected function assertCrud(string $entity_type, UserInterface $user1): void {
     // Create some test entities.
     $entity = $this->container->get('entity_type.manager')
       ->getStorage($entity_type)

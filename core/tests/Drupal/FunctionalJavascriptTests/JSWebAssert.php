@@ -710,13 +710,13 @@ JS;
     }
 
     if ($message) {
-      $js_selector = $this->buildXPathQuery('//div[contains(@class, :class) and contains(., :message)]', [
+      $js_selector = $this->buildXpathQuery('//div[contains(@class, :class) and contains(., :message)]', [
         ':class' => $class,
         ':message' => $message,
       ]);
     }
     else {
-      $js_selector = $this->buildXPathQuery('//div[contains(@class, :class)]', [
+      $js_selector = $this->buildXpathQuery('//div[contains(@class, :class)]', [
         ':class' => $class,
       ]);
     }

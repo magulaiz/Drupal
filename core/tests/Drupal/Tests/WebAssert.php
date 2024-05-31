@@ -395,7 +395,7 @@ class WebAssert extends MinkWebAssert {
    *   Thrown when element doesn't exist, or the link label is a different one.
    */
   public function linkByHrefExists($href, $index = 0, $message = '') {
-    $xpath = $this->buildXPathQuery('//a[contains(@href, :href)]', [':href' => $href]);
+    $xpath = $this->buildXpathQuery('//a[contains(@href, :href)]', [':href' => $href]);
     $message = ($message ? $message : strtr('No link containing href %href found.', ['%href' => $href]));
     $links = $this->session->getPage()->findAll('xpath', $xpath);
     $this->assert(!empty($links[$index]), $message);
@@ -418,7 +418,7 @@ class WebAssert extends MinkWebAssert {
    *   Thrown when element doesn't exist, or the link label is a different one.
    */
   public function linkByHrefExistsExact(string $href, int $index = 0, string $message = ''): void {
-    $xpath = $this->buildXPathQuery('//a[@href=:href]', [':href' => $href]);
+    $xpath = $this->buildXpathQuery('//a[@href=:href]', [':href' => $href]);
     $message = ($message ?: strtr('No link with href %href found.', ['%href' => $href]));
     $links = $this->session->getPage()->findAll('xpath', $xpath);
     $this->assert(!empty($links[$index]), $message);
@@ -439,7 +439,7 @@ class WebAssert extends MinkWebAssert {
    *   Thrown when element doesn't exist, or the link label is a different one.
    */
   public function linkByHrefNotExists($href, $message = '') {
-    $xpath = $this->buildXPathQuery('//a[contains(@href, :href)]', [':href' => $href]);
+    $xpath = $this->buildXpathQuery('//a[contains(@href, :href)]', [':href' => $href]);
     $message = ($message ? $message : strtr('Link containing href %href found.', ['%href' => $href]));
     $links = $this->session->getPage()->findAll('xpath', $xpath);
     $this->assert(empty($links), $message);
@@ -460,7 +460,7 @@ class WebAssert extends MinkWebAssert {
    *   Thrown when element doesn't exist, or the link label is a different one.
    */
   public function linkByHrefNotExistsExact(string $href, string $message = ''): void {
-    $xpath = $this->buildXPathQuery('//a[@href=:href]', [':href' => $href]);
+    $xpath = $this->buildXpathQuery('//a[@href=:href]', [':href' => $href]);
     $message = ($message ?: strtr('Link with href %href found.', ['%href' => $href]));
     $links = $this->session->getPage()->findAll('xpath', $xpath);
     $this->assert(empty($links), $message);
@@ -486,7 +486,7 @@ class WebAssert extends MinkWebAssert {
    * @return string
    *   An XPath query with arguments replaced.
    */
-  public function buildXPathQuery($xpath, array $args = []) {
+  public function buildXpathQuery($xpath, array $args = []) {
     // Replace placeholders.
     foreach ($args as $placeholder => $value) {
       if (is_object($value)) {
@@ -920,7 +920,7 @@ class WebAssert extends MinkWebAssert {
     }
 
     if ($message && $aria_label && $type) {
-      $selector = $this->buildXPathQuery($selector . '//div[(contains(@aria-label, :aria_label) or contains(@aria-labelledby, :type)) and contains(., :message)]', [
+      $selector = $this->buildXpathQuery($selector . '//div[(contains(@aria-label, :aria_label) or contains(@aria-labelledby, :type)) and contains(., :message)]', [
         // Value of the 'aria-label' attribute, used in Stark.
         ':aria_label' => $aria_label,
         // Value of the 'aria-labelledby' attribute, used in Claro and Olivero.
@@ -929,12 +929,12 @@ class WebAssert extends MinkWebAssert {
       ]);
     }
     elseif ($message) {
-      $selector = $this->buildXPathQuery($selector . '//div[contains(., :message)]', [
+      $selector = $this->buildXpathQuery($selector . '//div[contains(., :message)]', [
         ':message' => $message,
       ]);
     }
     elseif ($aria_label) {
-      $selector = $this->buildXPathQuery($selector . '//div[@aria-label=:aria_label]', [
+      $selector = $this->buildXpathQuery($selector . '//div[@aria-label=:aria_label]', [
         ':aria_label' => $aria_label,
       ]);
     }

@@ -211,7 +211,7 @@ class DefaultConfigTest extends KernelTestBase {
           $entity_storage = $config_manager
             ->getEntityTypeManager()
             ->getStorage($entity_type);
-          $id = $entity_storage->getIDFromConfigName($config_name, $entity_storage->getEntityType()
+          $id = $entity_storage->getIdFromConfigName($config_name, $entity_storage->getEntityType()
             ->getConfigPrefix());
           $entity_storage->load($id)->calculateDependencies()->save();
         }

@@ -62,9 +62,9 @@ abstract class MTimeProtectedFileStorageBase extends PhpStorageTestBase {
   /**
    * Tests basic load/save/delete operations.
    */
-  public function testCRUD() {
+  public function testCrud() {
     $php = new $this->storageClass($this->settings);
-    $this->assertCRUD($php);
+    $this->assertCrud($php);
   }
 
   /**

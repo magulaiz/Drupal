@@ -110,7 +110,7 @@ class HookDiscoveryTest extends UnitTestCase {
    *
    * @see \Drupal\Core\Plugin\Discovery::getDefinition()
    */
-  public function testGetDefinitionWithUnknownID() {
+  public function testGetDefinitionWithUnknownId() {
     $this->expectException(PluginNotFoundException::class);
     $this->hookDiscovery->getDefinition('test_non_existent', TRUE);
   }

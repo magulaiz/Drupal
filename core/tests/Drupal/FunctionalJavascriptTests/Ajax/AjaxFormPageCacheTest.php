@@ -46,7 +46,7 @@ class AjaxFormPageCacheTest extends WebDriverTestBase {
   /**
    * Create a simple form, then submit the form via AJAX to change to it.
    */
-  public function testSimpleAJAXFormValue() {
+  public function testSimpleAjaxFormValue() {
     $this->drupalGet('ajax_forms_test_get_form');
     $build_id_initial = $this->getFormBuildId();
 

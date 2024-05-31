@@ -60,7 +60,7 @@ class UpdateTest extends DatabaseTestBase {
   /**
    * Confirms that we can update multiple records with a non-equality condition.
    */
-  public function testMultiGTUpdate() {
+  public function testMultiGtUpdate() {
     $num_updated = $this->connection->update('test')
       ->fields(['job' => 'Musician'])
       ->condition('age', 26, '>')

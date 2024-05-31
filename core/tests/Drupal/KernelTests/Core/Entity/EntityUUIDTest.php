@@ -28,10 +28,10 @@ class EntityUUIDTest extends EntityKernelTestBase {
   /**
    * Tests UUID generation in entity CRUD operations.
    */
-  public function testCRUD() {
+  public function testCrud() {
     // All entity variations have to have the same results.
     foreach (entity_test_entity_types() as $entity_type) {
-      $this->assertCRUD($entity_type);
+      $this->assertCrud($entity_type);
     }
   }
 
@@ -43,7 +43,7 @@ class EntityUUIDTest extends EntityKernelTestBase {
    *
    * @internal
    */
-  protected function assertCRUD(string $entity_type): void {
+  protected function assertCrud(string $entity_type): void {
     // Verify that no UUID is auto-generated when passing one for creation.
     $uuid_service = $this->container->get('uuid');
     $uuid = $uuid_service->generate();

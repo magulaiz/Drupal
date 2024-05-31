@@ -154,7 +154,7 @@ trait AssertContentTrait {
    * @return string
    *   An XPath query with arguments replaced.
    */
-  protected function buildXPathQuery($xpath, array $args = []) {
+  protected function buildXpathQuery($xpath, array $args = []) {
     // Replace placeholders.
     foreach ($args as $placeholder => $value) {
       // Cast MarkupInterface objects to string.
@@ -208,7 +208,7 @@ trait AssertContentTrait {
    */
   protected function xpath($xpath, array $arguments = []) {
     if ($this->parse()) {
-      $xpath = $this->buildXPathQuery($xpath, $arguments);
+      $xpath = $this->buildXpathQuery($xpath, $arguments);
       $result = $this->elements->xpath($xpath);
       // Some combinations of PHP / libxml versions return an empty array
       // instead of the documented FALSE. Forcefully convert any falsish values
@@ -824,7 +824,7 @@ trait AssertContentTrait {
    * @return bool
    *   TRUE on pass, FALSE on fail.
    */
-  protected function assertFieldByXPath($xpath, $value = NULL, $message = '') {
+  protected function assertFieldByXpath($xpath, $value = NULL, $message = '') {
     $fields = $this->xpath($xpath);
 
     return $this->assertFieldsByValue($fields, $value, $message);
@@ -870,7 +870,7 @@ trait AssertContentTrait {
    * @return bool
    *   TRUE on pass.
    */
-  protected function assertNoFieldByXPath($xpath, $value = NULL, $message = '') {
+  protected function assertNoFieldByXpath($xpath, $value = NULL, $message = '') {
     $fields = $this->xpath($xpath);
 
     // If value specified then check array for match.
@@ -1279,7 +1279,7 @@ trait AssertContentTrait {
    */
   protected function constructFieldXpath($attribute, $value) {
     $xpath = '//textarea[@' . $attribute . '=:value]|//input[@' . $attribute . '=:value]|//select[@' . $attribute . '=:value]';
-    return $this->buildXPathQuery($xpath, [':value' => $value]);
+    return $this->buildXpathQuery($xpath, [':value' => $value]);
   }
 
 }

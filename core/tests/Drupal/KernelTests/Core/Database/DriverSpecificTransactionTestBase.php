@@ -362,14 +362,14 @@ class DriverSpecificTransactionTestBase extends DriverSpecificDatabaseTestBase {
     // First, test that a commit works normally, even with DDL statements.
     $transaction = $this->createRootTransaction('', FALSE);
     $this->insertRow('row');
-    $this->executeDDLStatement();
+    $this->executeDdlStatement();
     unset($transaction);
     $this->assertRowPresent('row');
 
     // Even in different order.
     $this->cleanUp();
     $transaction = $this->createRootTransaction('', FALSE);
-    $this->executeDDLStatement();
+    $this->executeDdlStatement();
     $this->insertRow('row');
     unset($transaction);
     $this->assertRowPresent('row');
@@ -378,7 +378,7 @@ class DriverSpecificTransactionTestBase extends DriverSpecificDatabaseTestBase {
     $this->cleanUp();
     $transaction = $this->createRootTransaction('', FALSE);
     $transaction2 = $this->createFirstSavepointTransaction('', FALSE);
-    $this->executeDDLStatement();
+    $this->executeDdlStatement();
     unset($transaction2);
     $transaction3 = $this->connection->startTransaction();
     $this->insertRow('row');
@@ -390,7 +390,7 @@ class DriverSpecificTransactionTestBase extends DriverSpecificDatabaseTestBase {
     $this->cleanUp();
     $transaction = $this->createRootTransaction('', FALSE);
     $transaction2 = $this->createFirstSavepointTransaction('', FALSE);
-    $this->executeDDLStatement();
+    $this->executeDdlStatement();
     unset($transaction2);
     $transaction3 = $this->connection->startTransaction();
     $this->insertRow('row');
@@ -400,13 +400,13 @@ class DriverSpecificTransactionTestBase extends DriverSpecificDatabaseTestBase {
     $this->assertRowAbsent('row');
 
     // The behavior of a rollback depends on the type of database server.
-    if ($this->connection->supportsTransactionalDDL()) {
+    if ($this->connection->supportsTransactionalDdl()) {
       // For database servers that support transactional DDL, a rollback
       // of a transaction including DDL statements should be possible.
       $this->cleanUp();
       $transaction = $this->createRootTransaction('', FALSE);
       $this->insertRow('row');
-      $this->executeDDLStatement();
+      $this->executeDdlStatement();
       $transaction->rollBack();
       unset($transaction);
       $this->assertRowAbsent('row');
@@ -415,7 +415,7 @@ class DriverSpecificTransactionTestBase extends DriverSpecificDatabaseTestBase {
       $this->cleanUp();
       $transaction = $this->createRootTransaction('', FALSE);
       $transaction2 = $this->createFirstSavepointTransaction('', FALSE);
-      $this->executeDDLStatement();
+      $this->executeDdlStatement();
       unset($transaction2);
       $transaction3 = $this->connection->startTransaction();
       $this->insertRow('row');
@@ -430,7 +430,7 @@ class DriverSpecificTransactionTestBase extends DriverSpecificDatabaseTestBase {
       $this->cleanUp();
       $transaction = $this->createRootTransaction('', FALSE);
       $this->insertRow('row');
-      $this->executeDDLStatement();
+      $this->executeDdlStatement();
 
       // Try to rollback the outer transaction. It should fail and void
       // the transaction stack.
@@ -458,7 +458,7 @@ class DriverSpecificTransactionTestBase extends DriverSpecificDatabaseTestBase {
   /**
    * Executes a DDL statement.
    */
-  protected function executeDDLStatement() {
+  protected function executeDdlStatement() {
     static $count = 0;
     $table = [
       'fields' => [

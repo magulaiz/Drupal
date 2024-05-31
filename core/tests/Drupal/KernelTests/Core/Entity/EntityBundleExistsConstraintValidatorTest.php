@@ -39,7 +39,7 @@ class EntityBundleExistsConstraintValidatorTest extends KernelTestBase {
   /**
    * Tests that the constraint validator will only work with strings.
    */
-  public function testValueMustBeAString(): void {
+  public function testValueMustBeString(): void {
     $definition = DataDefinition::create('any')
       ->addConstraint('EntityBundleExists', 'entity_test_with_bundle');
 

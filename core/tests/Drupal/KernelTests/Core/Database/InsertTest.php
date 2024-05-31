@@ -140,7 +140,7 @@ class InsertTest extends DatabaseTestBase {
   /**
    * Tests that inserts return the proper auto-increment ID.
    */
-  public function testInsertLastInsertID() {
+  public function testInsertLastInsertId() {
     $id = $this->connection->insert('test')
       ->fields([
         'name' => 'Larry',

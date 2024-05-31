@@ -233,30 +233,30 @@ class FormSubmitterTest extends UnitTestCase {
     $form_submitter = $this->getFormSubmitter();
     $mock = $this->prophesize(MockFormBase::class);
     $mock
-      ->hash_submit(Argument::type('array'), Argument::type(FormStateInterface::class))
+      ->hashSubmit(Argument::type('array'), Argument::type(FormStateInterface::class))
       ->shouldBeCalledOnce();
     $mock
-      ->submit_handler(Argument::type('array'), Argument::type(FormStateInterface::class))
+      ->submitHandler(Argument::type('array'), Argument::type(FormStateInterface::class))
       ->shouldBeCalledOnce();
     $mock
-      ->simple_string_submit(Argument::type('array'), Argument::type(FormStateInterface::class))
+      ->simpleStringSubmit(Argument::type('array'), Argument::type(FormStateInterface::class))
       ->shouldBeCalledOnce();
 
     $form = [];
     $form_state = new FormState();
     $form_submitter->executeSubmitHandlers($form, $form_state);
 
-    $form['#submit'][] = [$mock->reveal(), 'hash_submit'];
+    $form['#submit'][] = [$mock->reveal(), 'hashSubmit'];
     $form_submitter->executeSubmitHandlers($form, $form_state);
 
     // $form_state submit handlers will supersede $form handlers.
-    $form_state->setSubmitHandlers([[$mock->reveal(), 'submit_handler']]);
+    $form_state->setSubmitHandlers([[$mock->reveal(), 'submitHandler']]);
     $form_submitter->executeSubmitHandlers($form, $form_state);
 
     // Methods directly on the form object can be specified as a string.
     $form_state = (new FormState())
       ->setFormObject($mock->reveal())
-      ->setSubmitHandlers(['::simple_string_submit']);
+      ->setSubmitHandlers(['::simpleStringSubmit']);
     $form_submitter->executeSubmitHandlers($form, $form_state);
   }
 
@@ -282,19 +282,19 @@ abstract class MockFormBase extends FormBase {
   /**
    * Function used in the mocking process of this test.
    */
-  public function submit_handler(array $array, FormStateInterface $form_state): void {
+  public function submitHandler(array $array, FormStateInterface $form_state): void {
   }
 
   /**
    * Function used in the mocking process of this test.
    */
-  public function hash_submit(array $array, FormStateInterface $form_state): void {
+  public function hashSubmit(array $array, FormStateInterface $form_state): void {
   }
 
   /**
    * Function used in the mocking process of this test.
    */
-  public function simple_string_submit(array $array, FormStateInterface $form_state): void {
+  public function simpleStringSubmit(array $array, FormStateInterface $form_state): void {
   }
 
 }

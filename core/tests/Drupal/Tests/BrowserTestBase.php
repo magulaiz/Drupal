@@ -602,7 +602,7 @@ abstract class BrowserTestBase extends TestCase {
    *   The list of elements matching the xpath expression.
    */
   protected function xpath($xpath, array $arguments = []) {
-    $xpath = $this->assertSession()->buildXPathQuery($xpath, $arguments);
+    $xpath = $this->assertSession()->buildXpathQuery($xpath, $arguments);
     return $this->getSession()->getPage()->findAll('xpath', $xpath);
   }
 
