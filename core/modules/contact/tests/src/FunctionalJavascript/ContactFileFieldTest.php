@@ -53,11 +53,11 @@ class ContactFileFieldTest extends WebDriverTestBase {
 
     $this->drupalGet('admin/structure/contact/manage/feedback/fields/add-field');
     $session = $this->getSession();
-    $session->getPage()->fillField('label', 'file upload');
     $session->getPage()
       ->find('xpath', '//input[@value="file_upload"]')
       ->click();
     $this->assertSession()->assertWaitOnAjaxRequest();
+    $session->getPage()->fillField('label', 'file upload');
     $session->getPage()->find('xpath', '//input[@value="file"]')->click();
     $session->getPage()->pressButton('Continue');
     $this->assertTrue($this->assertSession()
@@ -84,11 +84,11 @@ class ContactFileFieldTest extends WebDriverTestBase {
 
     $this->drupalGet('admin/structure/contact/manage/feedback/fields/add-field');
     $session = $this->getSession();
-    $session->getPage()->fillField('label', 'file_upload');
     $session->getPage()
       ->find('xpath', '//input[@value="file_upload"]')
       ->click();
     $this->assertSession()->assertWaitOnAjaxRequest();
+    $session->getPage()->fillField('label', 'file_upload');
     $session->getPage()->find('xpath', '//input[@value="file"]')->click();
     $session->getPage()->pressButton('Continue');
     $this->assertTrue($this->assertSession()
