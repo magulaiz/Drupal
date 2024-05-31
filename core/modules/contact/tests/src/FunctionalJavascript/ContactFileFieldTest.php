@@ -9,7 +9,8 @@ use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
 /**
  * Tests file fields when added to contact forms.
  *
- * @see \Drupal\Tests\contact\Functional\ContactStorageTest
+ * This tests that any file fields which are added to contact forms
+ * initially get their scheme set to 'private' (when available).
  *
  * @group contact
  */
@@ -34,7 +35,7 @@ class ContactFileFieldTest extends WebDriverTestBase {
   protected $defaultTheme = 'stark';
 
   /**
-   * Tests configuration options and the site-wide contact form.
+   * Tests file scheme when private files are configured.
    */
   public function testFileFieldHasPrivateSchemeByDefault(): void {
     // Create and log in administrative user.
@@ -65,7 +66,7 @@ class ContactFileFieldTest extends WebDriverTestBase {
   }
 
   /**
-   * Tests configuration options and the site-wide contact form.
+   * Tests file scheme when private files are not configured.
    */
   public function testFileFieldHasPublicSchemeByDefaultWhenPrivateSchemeNotConfigured(): void {
     // Create and log in administrative user.
@@ -101,7 +102,9 @@ class ContactFileFieldTest extends WebDriverTestBase {
    */
   protected function writeSettings(array $settings) {
     if ($this->name() === 'testFileFieldHasPublicSchemeByDefaultWhenPrivateSchemeNotConfigured') {
-      // Disable the private files scheme.
+      // Disable the private files scheme for the
+      // testFileFieldHasPublicSchemeByDefaultWhenPrivateSchemeNotConfigured
+      // test.
       unset($settings['settings']['file_private_path']);
     }
     parent::writeSettings($settings);
