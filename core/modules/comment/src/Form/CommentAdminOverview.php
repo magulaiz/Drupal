@@ -113,7 +113,7 @@ class CommentAdminOverview extends FormBase {
       '#type' => 'details',
       '#title' => $this->t('Update options'),
       '#open' => TRUE,
-      '#attributes' => ['class' => ['container-inline']],
+      '#attributes' => ['class' => ['form--inline']],
     ];
 
     if ($type == 'approval') {

@@ -91,7 +91,7 @@ class WorkspaceSwitcherForm extends FormBase implements WorkspaceSafeFormInterfa
       '#title' => $this->t('Current workspace'),
       '#markup' => $active_workspace ? $active_workspace->label() : $this->t('None'),
       '#wrapper_attributes' => [
-        'class' => ['container-inline'],
+        'class' => ['form--inline'],
       ],
     ];
 
@@ -101,7 +101,7 @@ class WorkspaceSwitcherForm extends FormBase implements WorkspaceSafeFormInterfa
       '#required' => TRUE,
       '#options' => $workspace_labels,
       '#wrapper_attributes' => [
-        'class' => ['container-inline'],
+        'class' => ['form--inline'],
       ],
       '#access' => !empty($workspace_labels),
     ];

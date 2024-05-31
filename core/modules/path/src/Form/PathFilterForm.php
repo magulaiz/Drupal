@@ -28,7 +28,7 @@ class PathFilterForm extends FormBase {
       '#type' => 'details',
       '#title' => $this->t('Filter aliases'),
       '#open' => TRUE,
-      '#attributes' => ['class' => ['container-inline']],
+      '#attributes' => ['class' => ['form--inline']],
     ];
     $form['basic']['filter'] = [
       '#type' => 'search',

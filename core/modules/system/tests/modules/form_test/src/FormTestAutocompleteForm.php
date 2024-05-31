@@ -38,7 +38,7 @@ class FormTestAutocompleteForm extends FormBase {
       '#type' => 'container',
       '#attributes' => [
         'class' => [
-          'container-inline',
+          'form--inline',
         ],
       ],
       'autocomplete_3' => [

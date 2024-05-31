@@ -277,7 +277,7 @@ abstract class WizardPluginBase extends PluginBase implements WizardInterface {
     $form['displays']['page']['options']['style'] = [
       '#type' => 'fieldset',
       '#title' => $this->t('Page display settings'),
-      '#attributes' => ['class' => ['container-inline', 'fieldset-no-legend']],
+      '#attributes' => ['class' => ['form--inline', 'fieldset-no-legend']],
     ];
 
     // Create the dropdown for choosing the display format.
@@ -407,7 +407,7 @@ abstract class WizardPluginBase extends PluginBase implements WizardInterface {
       $form['displays']['block']['options']['style'] = [
         '#type' => 'fieldset',
         '#title' => $this->t('Block display settings'),
-        '#attributes' => ['class' => ['container-inline', 'fieldset-no-legend']],
+        '#attributes' => ['class' => ['form--inline', 'fieldset-no-legend']],
       ];
 
       // Create the dropdown for choosing the display format.

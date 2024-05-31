@@ -121,7 +121,7 @@ class ViewAddForm extends ViewFormBase {
       '#type' => 'fieldset',
       '#title' => $this->t('View settings'),
       '#tree' => TRUE,
-      '#attributes' => ['class' => ['container-inline']],
+      '#attributes' => ['class' => ['form--inline']],
     ];
 
     // Create the "Show" dropdown, which allows the base table of the view to be

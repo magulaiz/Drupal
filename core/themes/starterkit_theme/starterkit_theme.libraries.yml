@@ -8,7 +8,7 @@ base:
         weight: -10
       css/components/button.css:
         weight: -10
-      css/components/container-inline.css:
+      css/components/form--inline.css:
         weight: -10
       css/components/details.css:
         weight: -10

@@ -627,7 +627,7 @@ class EntityField extends FieldPluginBase implements CacheableDependencyInterfac
       '#field_suffix' => $suffix,
       '#options' => $options,
       '#default_value' => $this->options['delta_limit'],
-      '#prefix' => '<div class="container-inline">',
+      '#prefix' => '<div class="form--inline">',
       '#states' => [
         'visible' => [
           ':input[name="options[group_rows]"]' => ['checked' => TRUE],

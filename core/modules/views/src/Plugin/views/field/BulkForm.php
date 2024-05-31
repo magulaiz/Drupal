@@ -335,7 +335,7 @@ class BulkForm extends FieldPluginBase implements CacheableDependencyInterface, 
       ];
 
       // Build the bulk operations action widget for the header.
-      // Allow themes to apply .container-inline on this separate container.
+      // Allow themes to apply .form--inline on this separate container.
       $form['header'][$this->options['id']] = [
         '#type' => 'container',
       ];

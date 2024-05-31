@@ -275,7 +275,7 @@ class SearchPageListBuilder extends DraggableListBuilder implements FormInterfac
     $form['search_pages']['add_page'] = [
       '#type' => 'container',
       '#attributes' => [
-        'class' => ['container-inline'],
+        'class' => ['form--inline'],
       ],
     ];
     // In order to prevent validation errors for the parent form, this cannot be
