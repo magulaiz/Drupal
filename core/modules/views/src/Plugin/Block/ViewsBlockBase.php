@@ -7,6 +7,7 @@ use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Block\BlockBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
+use Drupal\views\ContextualLinks;
 use Drupal\views\ViewExecutableFactory;
 use Drupal\Core\Entity\EntityStorageInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -60,8 +61,10 @@ abstract class ViewsBlockBase extends BlockBase implements ContainerFactoryPlugi
    *   The views storage.
    * @param \Drupal\Core\Session\AccountInterface $user
    *   The current user.
+   * @param \Drupal\views\ContextualLinks|null $addContextualLinks
+   *   The add contextual links service.
    */
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, ViewExecutableFactory $executable_factory, EntityStorageInterface $storage, AccountInterface $user) {
+  public function __construct(array $configuration, $plugin_id, $plugin_definition, ViewExecutableFactory $executable_factory, EntityStorageInterface $storage, AccountInterface $user, protected ?ContextualLinks $addContextualLinks = NULL) {
     $this->pluginId = $plugin_id;
     $delta = $this->getDerivativeId();
     [$name, $this->displayID] = explode('-', $delta, 2);
@@ -70,6 +73,10 @@ abstract class ViewsBlockBase extends BlockBase implements ContainerFactoryPlugi
     $this->view = $executable_factory->get($view);
     $this->displaySet = $this->view->setDisplay($this->displayID);
     $this->user = $user;
+    if ($this->addContextualLinks === NULL) {
+      @trigger_error('Calling ' . __METHOD__ . '() without the $addContextualLinks argument is deprecated in drupal:10.3.0 and will be required in drupal:11.0.0. See https://www.drupal.org/node/3382344', E_USER_DEPRECATED);
+      $this->addContextualLinks = \Drupal::service('views.contextual_links');
+    }
 
     parent::__construct($configuration, $plugin_id, $plugin_definition);
   }
@@ -82,7 +89,8 @@ abstract class ViewsBlockBase extends BlockBase implements ContainerFactoryPlugi
       $configuration, $plugin_id, $plugin_definition,
       $container->get('views.executable'),
       $container->get('entity_type.manager')->getStorage('view'),
-      $container->get('current_user')
+      $container->get('current_user'),
+      $container->get('views.contextual_links')
     );
   }
 
@@ -210,12 +218,12 @@ abstract class ViewsBlockBase extends BlockBase implements ContainerFactoryPlugi
         $output = ['#markup' => $output];
       }
 
-      // views_add_contextual_links() needs the following information in
-      // order to be attached to the view.
+      // addLinks() needs the following information in order to be attached
+      // to the view.
       $output['#view_id'] = $this->view->storage->id();
       $output['#view_display_show_admin_links'] = $this->view->getShowAdminLinks();
       $output['#view_display_plugin_id'] = $this->view->display_handler->getPluginId();
-      views_add_contextual_links($output, $block_type, $this->displayID);
+      $this->addContextualLinks->addLinks($output, $block_type, $this->displayID);
     }
   }
 

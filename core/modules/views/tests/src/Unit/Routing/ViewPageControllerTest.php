@@ -6,6 +6,7 @@ namespace Drupal\Tests\views\Unit\Routing;
 
 use Drupal\Core\Routing\RouteMatch;
 use Drupal\Tests\UnitTestCase;
+use Drupal\views\ContextualLinks;
 use Drupal\views\Routing\ViewPageController;
 use Drupal\Core\Routing\RouteObjectInterface;
 use Symfony\Component\HttpFoundation\InputBag;
@@ -42,8 +43,8 @@ class ViewPageControllerTest extends UnitTestCase {
    */
   protected function setUp(): void {
     parent::setUp();
-
-    $this->pageController = new ViewPageController();
+    $contextual_links = $this->createMock(ContextualLinks::class);
+    $this->pageController = new ViewPageController($contextual_links);
   }
 
   /**
@@ -180,17 +181,6 @@ class ViewPageControllerTest extends UnitTestCase {
     ] + $this->defaultRenderArray;
 
     $this->assertEquals($build, $result);
-  }
-
-}
-
-// @todo https://www.drupal.org/node/2571679 replace
-//   views_add_contextual_links().
-namespace Drupal\views\Routing;
-
-if (!function_exists('views_add_contextual_links')) {
-
-  function views_add_contextual_links(&$render_element, $location, $display_id, array $view_element = NULL) {
   }
 
 }
