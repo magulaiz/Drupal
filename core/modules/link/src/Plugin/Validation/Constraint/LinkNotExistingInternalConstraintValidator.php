@@ -28,23 +28,19 @@ class LinkNotExistingInternalConstraintValidator extends ConstraintValidator {
       }
 
       if ($url->isRouted()) {
-        $allowed = TRUE;
         try {
           $url->toString(TRUE);
         }
         // The following exceptions are all possible during URL generation, and
         // should be considered as disallowed URLs.
         catch (RouteNotFoundException) {
-          $allowed = FALSE;
+          $this->context->addViolation($constraint->notFoundMessage, ['@uri' => $value->uri]);
         }
         catch (InvalidParameterException) {
-          $allowed = FALSE;
+          $this->context->addViolation($constraint->invalidParameterMessage, ['@uri' => $value->uri]);
         }
         catch (MissingMandatoryParametersException) {
-          $allowed = FALSE;
-        }
-        if (!$allowed) {
-          $this->context->addViolation($constraint->message, ['@uri' => $value->uri]);
+          $this->context->addViolation($constraint->missingParameterMessage, ['@uri' => $value->uri]);
         }
       }
     }
