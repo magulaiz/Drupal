@@ -20,6 +20,7 @@ use Drupal\language\ContentLanguageSettingsInterface;
   label_singular: new TranslatableMarkup('content language setting'),
   label_plural: new TranslatableMarkup('content languages settings'),
   config_prefix: 'content_settings',
+  static_cache: true,
   entity_keys: [
     'id' => 'id',
   ],
