@@ -42,7 +42,9 @@ use Drupal\user\UserInterface;
  *     "form" = {
  *       "default" = "Drupal\user\ProfileForm",
  *       "cancel" = "Drupal\user\Form\UserCancelForm",
- *       "register" = "Drupal\user\RegisterForm"
+ *       "register" = "Drupal\user\RegisterForm",
+ *       "email" = "Drupal\user\Form\EmailChangeForm",
+ *       "pass" = "Drupal\user\Form\PasswordChangeForm",
  *     },
  *     "translation" = "Drupal\user\ProfileTranslationHandler"
  *   },
@@ -60,6 +62,8 @@ use Drupal\user\UserInterface;
  *     "edit-form" = "/user/{user}/edit",
  *     "cancel-form" = "/user/{user}/cancel",
  *     "collection" = "/admin/people",
+ *     "edit-pass" = "/admin/{user}/edit-pass",
+ *     "edit-email" = "/admin/{user}/edit-email",
  *   },
  *   field_ui_base_route = "entity.user.admin_form",
  *   common_reference_target = TRUE

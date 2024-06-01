@@ -94,6 +94,7 @@ class UserLanguageCreationTest extends BrowserTestBase {
     // Test that the admin can use the language selector and if the correct
     // language is saved.
     $user_edit = $langcode . '/user/' . $user->id() . '/edit';
+    $user_edit_pass = $langcode . '/user/' . $user->id() . '/edit-pass';
 
     $this->drupalLogin($admin_user);
     $this->drupalGet($user_edit);
@@ -106,7 +107,7 @@ class UserLanguageCreationTest extends BrowserTestBase {
       'pass[pass2]' => $user->passRaw,
     ];
 
-    $this->drupalGet($user_edit);
+    $this->drupalGet($user_edit_pass);
     $this->submitForm($edit, 'Save');
 
     $this->drupalLogin($user);

@@ -46,6 +46,26 @@ class UserRouteProvider implements EntityRouteProviderInterface {
       ->setRequirement('_entity_access', 'user.delete');
     $route_collection->add('entity.user.cancel_form', $route);
 
+    $route = (new Route('/user/{user}/edit-email'))
+      ->setDefaults([
+        '_title' => 'Change email',
+        '_entity_form' => 'user.email',
+      ])
+      ->setOption('_admin_route', TRUE)
+      ->setRequirement('user', '\d+')
+      ->setRequirement('_entity_access', 'user.update');
+    $route_collection->add('entity.user.edit_email', $route);
+
+    $route = (new Route('/user/{user}/edit-pass'))
+      ->setDefaults([
+        '_title' => 'Change password',
+        '_entity_form' => 'user.pass',
+      ])
+      ->setOption('_admin_route', TRUE)
+      ->setRequirement('user', '\d+')
+      ->setRequirement('_entity_access', 'user.update');
+    $route_collection->add('entity.user.edit_pass', $route);
+
     return $route_collection;
   }
 

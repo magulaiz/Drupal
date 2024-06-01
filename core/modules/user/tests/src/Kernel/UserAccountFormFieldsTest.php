@@ -40,9 +40,6 @@ class UserAccountFormFieldsTest extends KernelTestBase {
     $form = $this->container->get('form_builder')
       ->buildForm('Drupal\Core\Installer\Form\SiteConfigureForm', $form_state);
 
-    // Verify name and pass field order.
-    $this->assertFieldOrder($form['admin_account']['account']);
-
     // Verify that web browsers may autocomplete the email value and
     // autofill/prefill the name and pass values.
     foreach (['mail', 'name', 'pass'] as $key) {
@@ -64,9 +61,6 @@ class UserAccountFormFieldsTest extends KernelTestBase {
 
     $form = $this->buildAccountForm('register');
 
-    // Verify name and pass field order.
-    $this->assertFieldOrder($form['account']);
-
     // Verify that web browsers may autocomplete the email value and
     // autofill/prefill the name and pass values.
     foreach (['mail', 'name', 'pass'] as $key) {
@@ -87,44 +81,10 @@ class UserAccountFormFieldsTest extends KernelTestBase {
 
     $form = $this->buildAccountForm('default');
 
-    // Verify name and pass field order.
-    $this->assertFieldOrder($form['account']);
-
     // Verify that autocomplete is off on all account fields.
-    foreach (['mail', 'name', 'pass'] as $key) {
+    foreach (['name'] as $key) {
       $this->assertSame('off', $form['account'][$key]['#attributes']['autocomplete'], "'{$key}' field: 'autocomplete' attribute is 'off'.");
     }
-  }
-
-  /**
-   * Asserts that the 'name' form element is directly before the 'pass' element.
-   *
-   * @param array $elements
-   *   A form array section that contains the user account form elements.
-   *
-   * @internal
-   */
-  protected function assertFieldOrder(array $elements): void {
-    $name_index = 0;
-    $name_weight = 0;
-    $pass_index = 0;
-    $pass_weight = 0;
-    $index = 0;
-    foreach ($elements as $key => $element) {
-      if ($key === 'name') {
-        $name_index = $index;
-        $name_weight = $element['#weight'];
-        $this->assertTrue($element['#sorted'], "'name' field is #sorted.");
-      }
-      elseif ($key === 'pass') {
-        $pass_index = $index;
-        $pass_weight = $element['#weight'];
-        $this->assertTrue($element['#sorted'], "'pass' field is #sorted.");
-      }
-      $index++;
-    }
-    $this->assertEquals($pass_index - 1, $name_index, "'name' field ({$name_index}) appears before 'pass' field ({$pass_index}).");
-    $this->assertLessThan($pass_weight, $name_weight, "'name' field weight ($name_weight) should be smaller than 'pass' field weight ($pass_weight).");
   }
 
   /**

@@ -22,7 +22,7 @@ class ClaroPasswordConfirmWidgetTest extends PasswordConfirmWidgetTest {
    * Tests that password match message is invisible when widget is initialized.
    */
   public function testPasswordConfirmMessage() {
-    $this->drupalGet($this->testUser->toUrl('edit-form'));
+    $this->drupalGet($this->testUser->toUrl('edit-pass'));
     $password_confirm_widget_selector = '.js-form-type-password-confirm.js-form-item-pass';
     $password_confirm_selector = '.js-form-item-pass-pass2';
     $password_confirm_widget = $this->assert->elementExists('css', $password_confirm_widget_selector);

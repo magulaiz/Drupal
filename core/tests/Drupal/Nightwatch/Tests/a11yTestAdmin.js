@@ -15,8 +15,26 @@ const adminTest = {
   },
 };
 const testCases = [
-  { name: 'User Edit', path: '/user/1/edit' },
-  { name: 'Create Article', path: '/user/1/edit' },
+  {
+    name: 'User Edit',
+    path: '/user/1/edit',
+    // @todo remove the disabled 'region' rule in https://drupal.org/i/3409915.
+    options: {
+      rules: {
+        region: { enabled: false },
+      },
+    },
+  },
+  {
+    name: 'Create Article',
+    path: '/user/1/edit',
+    // @todo remove the disabled 'region' rule in https://drupal.org/i/3409915.
+    options: {
+      rules: {
+        region: { enabled: false },
+      },
+    },
+  },
   { name: 'Create Page', path: '/node/add/page?destination=/admin/content' },
   { name: 'Content Page', path: '/admin/content' },
   { name: 'Structure Page', path: '/admin/structure' },

@@ -49,15 +49,17 @@ class UserEditTest extends BrowserTestBase {
 
     // Check that filling out a single password field does not validate.
     $edit = [];
+    $edit['current_pass'] = $user1->passRaw;
     $edit['pass[pass1]'] = '';
     $edit['pass[pass2]'] = $this->randomMachineName();
-    $this->drupalGet("user/" . $user1->id() . "/edit");
+    $this->drupalGet("user/" . $user1->id() . "/edit-pass");
     $this->submitForm($edit, 'Save');
     $this->assertSession()->pageTextContains("The specified passwords do not match.");
 
     $edit['pass[pass1]'] = $this->randomMachineName();
     $edit['pass[pass2]'] = '';
-    $this->drupalGet("user/" . $user1->id() . "/edit");
+    $edit['current_pass'] = $user1->passRaw;
+    $this->drupalGet("user/" . $user1->id() . "/edit-pass");
     $this->submitForm($edit, 'Save');
     $this->assertSession()->pageTextContains("The specified passwords do not match.");
 
@@ -65,28 +67,23 @@ class UserEditTest extends BrowserTestBase {
     // pass without the current password.
     $edit = [];
     $edit['mail'] = $this->randomMachineName() . '@new.example.com';
-    $this->drupalGet("user/" . $user1->id() . "/edit");
+    $this->drupalGet("user/" . $user1->id() . "/edit-email");
     $this->submitForm($edit, 'Save');
     $this->assertSession()->pageTextContains("Your current password is missing or incorrect; it's required to change the Email.");
-
-    $edit['current_pass'] = $user1->passRaw;
-    $this->drupalGet("user/" . $user1->id() . "/edit");
-    $this->submitForm($edit, 'Save');
-    $this->assertSession()->pageTextContains("The changes have been saved.");
 
     // Test that the user must enter current password before changing passwords.
     $edit = [];
     $edit['pass[pass1]'] = $new_pass = $this->randomMachineName();
     $edit['pass[pass2]'] = $new_pass;
-    $this->drupalGet("user/" . $user1->id() . "/edit");
+    $this->drupalGet("user/" . $user1->id() . "/edit-pass");
     $this->submitForm($edit, 'Save');
-    $this->assertSession()->pageTextContains("Your current password is missing or incorrect; it's required to change the Password.");
+    $this->assertSession()->pageTextContains("Your current password is incorrect.");
 
     // Try again with the current password.
     $edit['current_pass'] = $user1->passRaw;
-    $this->drupalGet("user/" . $user1->id() . "/edit");
+    $this->drupalGet("user/" . $user1->id() . "/edit-pass");
     $this->submitForm($edit, 'Save');
-    $this->assertSession()->pageTextContains("The changes have been saved.");
+    $this->assertSession()->pageTextContains("Password changed successfully.");
 
     // Confirm there's only one session in the database as the existing session
     // has been migrated when the password is changed.
@@ -107,12 +104,12 @@ class UserEditTest extends BrowserTestBase {
     $this->drupalLogin($user1);
 
     $config->set('password_strength', TRUE)->save();
-    $this->drupalGet("user/" . $user1->id() . "/edit");
+    $this->drupalGet("user/" . $user1->id() . "/edit-pass");
     $this->submitForm($edit, 'Save');
     $this->assertSession()->responseContains("Password strength:");
 
     $config->set('password_strength', FALSE)->save();
-    $this->drupalGet("user/" . $user1->id() . "/edit");
+    $this->drupalGet("user/" . $user1->id() . "/edit-pass");
     $this->submitForm($edit, 'Save');
     $this->assertSession()->responseNotContains("Password strength:");
 
@@ -154,9 +151,9 @@ class UserEditTest extends BrowserTestBase {
     $user1 = $this->drupalCreateUser([]);
 
     $edit = ['pass[pass1]' => '0', 'pass[pass2]' => '0'];
-    $this->drupalGet("user/" . $user1->id() . "/edit");
+    $this->drupalGet("user/" . $user1->id() . "/edit-pass");
     $this->submitForm($edit, 'Save');
-    $this->assertSession()->pageTextContains("The changes have been saved.");
+    $this->assertSession()->pageTextContains("Password changed successfully.");
   }
 
   /**
@@ -171,9 +168,10 @@ class UserEditTest extends BrowserTestBase {
     // This user has no email address.
     $user1->mail = '';
     $user1->save();
-    $this->drupalGet("user/" . $user1->id() . "/edit");
-    $this->submitForm(['mail' => ''], 'Save');
-    $this->assertSession()->pageTextContains("The changes have been saved.");
+    $this->drupalGet("user/" . $user1->id() . "/edit-email");
+    $edit = ['mail' => ''];
+    $this->submitForm($edit, 'Save');
+    $this->assertSession()->pageTextContains("Email changed successfully.");
   }
 
   /**

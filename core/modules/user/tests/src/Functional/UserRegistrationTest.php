@@ -133,6 +133,8 @@ class UserRegistrationTest extends BrowserTestBase {
     $this->drupalLogin($admin_user);
     $edit = [
       'status' => 1,
+      'pass[pass1]' => $pass,
+      'pass[pass2]' => $pass,
     ];
     $this->drupalGet('user/' . $new_user->id() . '/edit');
     $this->submitForm($edit, 'Save');

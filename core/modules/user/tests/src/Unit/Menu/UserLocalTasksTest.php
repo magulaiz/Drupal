@@ -81,7 +81,7 @@ class UserLocalTasksTest extends LocalTaskIntegrationTestBase {
    */
   public function testUserPageLocalTasks($route, $subtask = []) {
     $tasks = [
-      0 => ['entity.user.canonical', 'entity.user.edit_form'],
+      0 => ['entity.user.canonical', 'entity.user.edit_collection'],
     ];
     if ($subtask) {
       $tasks[] = $subtask;
@@ -95,7 +95,9 @@ class UserLocalTasksTest extends LocalTaskIntegrationTestBase {
   public static function getUserPageRoutes() {
     return [
       ['entity.user.canonical'],
-      ['entity.user.edit_form'],
+      ['entity.user.edit_form', ['entity.user.edit_form', 'entity.user.edit_pass', 'entity.user.edit_email']],
+      ['entity.user.edit_pass', ['entity.user.edit_form', 'entity.user.edit_pass', 'entity.user.edit_email']],
+      ['entity.user.edit_email', ['entity.user.edit_form', 'entity.user.edit_pass', 'entity.user.edit_email']],
     ];
   }
 

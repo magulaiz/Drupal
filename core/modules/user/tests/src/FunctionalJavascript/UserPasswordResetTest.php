@@ -90,14 +90,6 @@ class UserPasswordResetTest extends WebDriverTestBase {
     // Login
     $this->submitForm([], 'Log in');
 
-    // Generate file.
-    $image_file = current($this->drupalGetTestFiles('image'));
-    $image_path = \Drupal::service('file_system')->realpath($image_file->uri);
-
-    // Upload file.
-    $this->getSession()->getPage()->attachFileToField('Picture', $image_path);
-    $this->assertSession()->waitForButton('Remove');
-
     // Change the forgotten password.
     $password = \Drupal::service('password_generator')->generate();
     $edit = ['pass[pass1]' => $password, 'pass[pass2]' => $password];
@@ -106,7 +98,7 @@ class UserPasswordResetTest extends WebDriverTestBase {
     // Verify that the password reset session has been destroyed.
     $this->submitForm($edit, 'Save');
     // Password needed to make profile changes.
-    $this->assertSession()->pageTextContains("Your current password is missing or incorrect; it's required to change the Password.");
+    $this->assertSession()->pageTextContains("Your current password is incorrect.");
   }
 
   /**

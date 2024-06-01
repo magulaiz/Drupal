@@ -78,7 +78,7 @@ class DrupalDateTimeTest extends BrowserTestBase {
     $this->drupalLogin($test_user);
 
     // Set up the user with a different timezone than the site.
-    $edit = ['mail' => $test_user->getEmail(), 'timezone' => 'Asia/Manila'];
+    $edit = ['timezone' => 'Asia/Manila'];
     $this->drupalGet('user/' . $test_user->id() . '/edit');
     $this->submitForm($edit, 'Save');
 
