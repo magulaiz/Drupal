@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\KernelTests\Core\Database;
 
 /**
@@ -28,7 +30,7 @@ class SelectOrderedTest extends DatabaseTestBase {
       $last_age = $record->age;
     }
 
-    $this->assertEqual(4, $num_records, 'Returned the correct number of rows.');
+    $this->assertEquals(4, $num_records, 'Returned the correct number of rows.');
   }
 
   /**
@@ -59,7 +61,7 @@ class SelectOrderedTest extends DatabaseTestBase {
         }
       }
     }
-    $this->assertEqual(4, $num_records, 'Returned the correct number of rows.');
+    $this->assertEquals(4, $num_records, 'Returned the correct number of rows.');
   }
 
   /**
@@ -81,7 +83,7 @@ class SelectOrderedTest extends DatabaseTestBase {
       $last_age = $record->age;
     }
 
-    $this->assertEqual(4, $num_records, 'Returned the correct number of rows.');
+    $this->assertEquals(4, $num_records, 'Returned the correct number of rows.');
   }
 
 }

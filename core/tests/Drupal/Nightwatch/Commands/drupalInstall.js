@@ -1,6 +1,6 @@
-import { execSync } from 'child_process';
-import { URL } from 'url';
-import { commandAsWebserver } from '../globals';
+const { execSync } = require('child_process');
+const { URL } = require('url');
+const { commandAsWebserver } = require('../globals');
 
 /**
  * Installs a Drupal test site.
@@ -23,6 +23,9 @@ exports.command = function drupalInstall(
   callback,
 ) {
   const self = this;
+
+  // Ensure no session cookie exists anymore; they won't work on this newly installed Drupal site anyway.
+  this.deleteCookies();
 
   try {
     setupFile = setupFile ? `--setup-file "${setupFile}"` : '';

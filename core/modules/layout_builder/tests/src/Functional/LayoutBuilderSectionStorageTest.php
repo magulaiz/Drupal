@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\layout_builder\Functional;
 
 use Drupal\Tests\BrowserTestBase;
@@ -16,6 +18,7 @@ class LayoutBuilderSectionStorageTest extends BrowserTestBase {
    */
   protected static $modules = [
     'layout_builder',
+    'field_ui',
     'node',
     'layout_builder_test',
   ];
@@ -63,7 +66,8 @@ class LayoutBuilderSectionStorageTest extends BrowserTestBase {
     $assert_session->pageTextNotContains('Test block title');
 
     // Enable Layout Builder.
-    $this->drupalPostForm('admin/structure/types/manage/bundle_with_section_field/display/default', ['layout[enabled]' => TRUE], 'Save');
+    $this->drupalGet('admin/structure/types/manage/bundle_with_section_field/display/default');
+    $this->submitForm(['layout[enabled]' => TRUE], 'Save');
 
     // Add a block to the defaults.
     $page->clickLink('Manage layout');
@@ -85,7 +89,9 @@ class LayoutBuilderSectionStorageTest extends BrowserTestBase {
     $assert_session->pageTextContains('Test block title');
 
     // Disabling defaults does not prevent the section storage from running.
-    $this->drupalPostForm('admin/structure/types/manage/bundle_with_section_field/display/default', ['layout[enabled]' => FALSE], 'Save');
+    $this->drupalGet('admin/structure/types/manage/bundle_with_section_field/display/default');
+    $this->submitForm(['layout[enabled]' => FALSE], 'Save');
+    $this->assertSession()->pageTextNotContains('Your settings have been saved');
     $page->pressButton('Confirm');
     $assert_session->pageTextContains('Layout Builder has been disabled');
     $this->drupalGet('node/1');

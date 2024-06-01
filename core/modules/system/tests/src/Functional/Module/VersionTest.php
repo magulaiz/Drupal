@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\system\Functional\Module;
 
 /**
@@ -15,7 +17,7 @@ class VersionTest extends ModuleTestBase {
   protected $defaultTheme = 'stark';
 
   /**
-   * Test version dependencies.
+   * Tests version dependencies.
    */
   public function testModuleVersions() {
     $dependencies = [
@@ -53,8 +55,12 @@ class VersionTest extends ModuleTestBase {
     $n = count($dependencies);
     for ($i = 0; $i < $n; $i++) {
       $this->drupalGet('admin/modules');
-      $checkbox = $this->xpath('//input[@id="edit-modules-module-test-enable"]');
-      $this->assertEqual($i % 2, !empty($checkbox[0]->getAttribute('disabled')), $dependencies[$i]);
+      if ($i % 2 == 0) {
+        $this->assertSession()->fieldEnabled('edit-modules-module-test-enable');
+      }
+      else {
+        $this->assertSession()->fieldDisabled('edit-modules-module-test-enable');
+      }
     }
   }
 

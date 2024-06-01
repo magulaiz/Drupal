@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\views_ui\Functional;
 
 /**
@@ -24,7 +26,7 @@ class ReportTest extends UITestBase {
   /**
    * Stores an admin user used by the different tests.
    *
-   * @var \Drupal\user\User
+   * @var \Drupal\user\Entity\User
    */
   protected $adminUser;
 

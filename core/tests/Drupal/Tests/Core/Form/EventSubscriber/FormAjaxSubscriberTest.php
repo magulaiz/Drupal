@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\Core\Form\EventSubscriber;
 
 use Drupal\Core\DependencyInjection\ContainerBuilder;
@@ -52,6 +54,13 @@ class FormAjaxSubscriberTest extends UnitTestCase {
   protected $messenger;
 
   /**
+   * The event used to derive the response.
+   *
+   * @var \Symfony\Component\HttpKernel\Event\ExceptionEvent
+   */
+  protected $event = NULL;
+
+  /**
    * {@inheritdoc}
    */
   protected function setUp(): void {
@@ -84,9 +93,9 @@ class FormAjaxSubscriberTest extends UnitTestCase {
       ->with($request, $expected_form, $form_state, $commands)
       ->willReturn($response);
 
-    $event = $this->assertResponseFromException($request, $exception, $response);
-    $this->assertTrue($event->isAllowingCustomResponseCode());
-    $this->assertSame(200, $event->getResponse()->getStatusCode());
+    $this->assertResponseFromException($request, $exception, $response);
+    $this->assertTrue($this->event->isAllowingCustomResponseCode());
+    $this->assertSame(200, $this->event->getResponse()->getStatusCode());
   }
 
   /**
@@ -109,9 +118,9 @@ class FormAjaxSubscriberTest extends UnitTestCase {
       ->with($request, $expected_form, $form_state, $commands)
       ->willReturn($response);
 
-    $event = $this->assertResponseFromException($request, $exception, $response);
-    $this->assertTrue($event->isAllowingCustomResponseCode());
-    $this->assertSame(200, $event->getResponse()->getStatusCode());
+    $this->assertResponseFromException($request, $exception, $response);
+    $this->assertTrue($this->event->isAllowingCustomResponseCode());
+    $this->assertSame(200, $this->event->getResponse()->getStatusCode());
   }
 
   /**
@@ -146,8 +155,8 @@ class FormAjaxSubscriberTest extends UnitTestCase {
       ->with($request, $expected_form, $form_state, $commands)
       ->willThrowException($expected_exception);
 
-    $event = $this->assertResponseFromException($request, $exception, NULL);
-    $this->assertSame($expected_exception, $event->getThrowable());
+    $this->assertResponseFromException($request, $exception, NULL);
+    $this->assertSame($expected_exception, $this->event->getThrowable());
   }
 
   /**
@@ -160,19 +169,8 @@ class FormAjaxSubscriberTest extends UnitTestCase {
     $this->messenger->expects($this->once())
       ->method('addError');
 
-    $this->subscriber = $this->getMockBuilder('\Drupal\Core\Form\EventSubscriber\FormAjaxSubscriber')
-      ->setConstructorArgs([
-        $this->formAjaxResponseBuilder,
-        $this->getStringTranslationStub(),
-        $this->messenger,
-      ])
-      ->setMethods(['formatSize'])
-      ->getMock();
+    $this->subscriber = new FormAjaxSubscriber($this->formAjaxResponseBuilder, $this->getStringTranslationStub(), $this->messenger);
 
-    $this->subscriber->expects($this->once())
-      ->method('formatSize')
-      ->with(32 * 1e6)
-      ->willReturn('32M');
     $rendered_output = 'the rendered output';
     // CommandWithAttachedAssetsTrait::getRenderedContent() will call the
     // renderer service via the container.
@@ -188,10 +186,10 @@ class FormAjaxSubscriberTest extends UnitTestCase {
     $container->set('renderer', $renderer);
     \Drupal::setContainer($container);
 
-    $exception = new BrokenPostRequestException(32 * 1e6);
+    $exception = new BrokenPostRequestException((int) (32 * 1e6));
     $request = new Request([FormBuilderInterface::AJAX_FORM_REQUEST => TRUE]);
 
-    $event = new ExceptionEvent($this->httpKernel, $request, HttpKernelInterface::MASTER_REQUEST, $exception);
+    $event = new ExceptionEvent($this->httpKernel, $request, HttpKernelInterface::MAIN_REQUEST, $exception);
     $this->subscriber->onException($event);
     $this->assertTrue($event->isAllowingCustomResponseCode());
     $actual_response = $event->getResponse();
@@ -214,8 +212,8 @@ class FormAjaxSubscriberTest extends UnitTestCase {
   public function testOnExceptionNestedException() {
     $form = ['#type' => 'form', '#build_id' => 'the_build_id'];
     $expected_form = $form + [
-        '#build_id_old' => 'the_build_id',
-      ];
+      '#build_id_old' => 'the_build_id',
+    ];
     $form_state = new FormState();
     $form_exception = new FormAjaxException($form, $form_state);
     $exception = new \Exception('', 0, $form_exception);
@@ -256,15 +254,13 @@ class FormAjaxSubscriberTest extends UnitTestCase {
    * @param \Symfony\Component\HttpFoundation\Response|null $expected_response
    *   The response expected to be set on the event.
    *
-   * @return \Symfony\Component\HttpKernel\Event\ExceptionEvent
-   *   The event used to derive the response.
+   * @internal
    */
-  protected function assertResponseFromException(Request $request, \Exception $exception, $expected_response) {
-    $event = new ExceptionEvent($this->httpKernel, $request, HttpKernelInterface::MASTER_REQUEST, $exception);
-    $this->subscriber->onException($event);
+  protected function assertResponseFromException(Request $request, \Exception $exception, ?Response $expected_response): void {
+    $this->event = new ExceptionEvent($this->httpKernel, $request, HttpKernelInterface::MAIN_REQUEST, $exception);
+    $this->subscriber->onException($this->event);
 
-    $this->assertSame($expected_response, $event->getResponse());
-    return $event;
+    $this->assertSame($expected_response, $this->event->getResponse());
   }
 
 }

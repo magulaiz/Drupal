@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\views\Kernel;
 
 use Drupal\views\Views;
@@ -11,6 +13,13 @@ use Drupal\views\Plugin\views\PluginBase;
  * @group views
  */
 class PluginInstanceTest extends ViewsKernelTestBase {
+
+  /**
+   * {@inheritdoc}
+   */
+  protected static $modules = [
+    'path_alias',
+  ];
 
   /**
    * All views plugin types.
@@ -53,6 +62,9 @@ class PluginInstanceTest extends ViewsKernelTestBase {
    */
   protected $definitions;
 
+  /**
+   * {@inheritdoc}
+   */
   protected function setUp($import_test_views = TRUE): void {
     parent::setUp();
 
@@ -75,7 +87,7 @@ class PluginInstanceTest extends ViewsKernelTestBase {
 
     // Tests that the plugin list has not missed any types.
     $diff = array_diff(array_keys($this->definitions), $this->pluginTypes);
-    $this->assertTrue(empty($diff), 'All plugins were found and matched.');
+    $this->assertEmpty($diff, 'All plugins were found and matched.');
   }
 
   /**
@@ -93,8 +105,10 @@ class PluginInstanceTest extends ViewsKernelTestBase {
    *
    * @param bool $test_deprecated
    *   Indicates if deprecated plugins should be tested or skipped.
+   *
+   * @internal
    */
-  protected function assertPluginInstances($test_deprecated) {
+  protected function assertPluginInstances(bool $test_deprecated): void {
     foreach ($this->definitions as $type => $plugins) {
       // Get a plugin manager for this type.
       $manager = $this->container->get("plugin.manager.views.$type");

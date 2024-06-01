@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\Core\Config;
 
 use Drupal\Tests\UnitTestCase;
@@ -19,7 +21,7 @@ class CachedStorageTest extends UnitTestCase {
   protected $cacheFactory;
 
   /**
-   * Test listAll static cache.
+   * Tests listAll static cache.
    */
   public function testListAllStaticCache() {
     $prefix = __FUNCTION__;
@@ -29,7 +31,7 @@ class CachedStorageTest extends UnitTestCase {
     $storage->expects($this->once())
       ->method('listAll')
       ->with($prefix)
-      ->will($this->returnValue($response));
+      ->willReturn($response);
 
     $cache = new NullBackend(__FUNCTION__);
 

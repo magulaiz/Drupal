@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\views\Kernel\Handler;
 
 use Drupal\Component\Utility\Xss;
@@ -52,7 +54,7 @@ class FieldCustomTest extends ViewsKernelTestBase {
 
     $this->executeView($view);
 
-    $this->assertEqual($random, $view->style_plugin->getField(0, 'name'));
+    $this->assertSame($random, (string) $view->style_plugin->getField(0, 'name'));
   }
 
   /**
@@ -110,7 +112,7 @@ class FieldCustomTest extends ViewsKernelTestBase {
       ],
     ]);
     $this->executeView($view);
-    $this->assertEqual(Xss::filter($text), $view->style_plugin->getField(0, 'name'));
+    $this->assertEquals(Xss::filter($text), $view->style_plugin->getField(0, 'name'));
   }
 
 }

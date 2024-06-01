@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\taxonomy\Functional;
 
 use Drupal\Component\Serialization\Json;
@@ -98,7 +100,7 @@ class TermAutocompleteTest extends TaxonomyTestBase {
 
     // Create a taxonomy_term_reference field on the article Content Type that
     // uses a taxonomy_autocomplete widget.
-    $this->fieldName = mb_strtolower($this->randomMachineName());
+    $this->fieldName = $this->randomMachineName();
     FieldStorageConfig::create([
       'field_name' => $this->fieldName,
       'entity_type' => 'node',
@@ -137,10 +139,10 @@ class TermAutocompleteTest extends TaxonomyTestBase {
     $this->adminUser = $this->drupalCreateUser(['create article content']);
     $this->drupalLogin($this->adminUser);
 
-    // Retrieve the autocomplete url.
+    // Retrieve the autocomplete URL.
     $this->drupalGet('node/add/article');
-    $result = $this->xpath('//input[@name="' . $this->fieldName . '[0][target_id]"]');
-    $this->autocompleteUrl = $this->getAbsoluteUrl($result[0]->getAttribute('data-autocomplete-path'));
+    $field = $this->assertSession()->fieldExists("{$this->fieldName}[0][target_id]");
+    $this->autocompleteUrl = $this->getAbsoluteUrl($field->getAttribute('data-autocomplete-path'));
   }
 
   /**
@@ -149,7 +151,7 @@ class TermAutocompleteTest extends TaxonomyTestBase {
    * @param string|\Drupal\Core\Url $path
    *   Drupal path or URL to load into Mink controlled browser.
    * @param array $options
-   *   (optional) Options to be forwarded to the url generator.
+   *   (optional) Options to be forwarded to the URL generator.
    * @param string[] $headers
    *   (optional) An array containing additional HTTP request headers.
    *
@@ -172,7 +174,7 @@ class TermAutocompleteTest extends TaxonomyTestBase {
       $this->autocompleteUrl,
       ['query' => ['q' => 'zzz']]
     );
-    $this->assertTrue(empty($data), 'Autocomplete returned no results');
+    $this->assertEmpty($data, 'Autocomplete returned no results');
 
     // Test that only one matching term found, when only one matches.
     $data = $this->drupalGetJson(

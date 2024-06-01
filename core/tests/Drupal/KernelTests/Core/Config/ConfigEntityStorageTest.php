@@ -1,13 +1,14 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\KernelTests\Core\Config;
 
 use Drupal\Core\Config\ConfigDuplicateUUIDException;
 use Drupal\KernelTests\KernelTestBase;
 
 /**
- * Tests sync and importing config entities with IDs and UUIDs that match
- * existing config.
+ * Tests configuration entity storage.
  *
  * @group config
  */

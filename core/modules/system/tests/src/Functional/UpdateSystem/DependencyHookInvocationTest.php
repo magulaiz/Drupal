@@ -1,12 +1,13 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\system\Functional\UpdateSystem;
 
 use Drupal\Tests\BrowserTestBase;
 
 /**
- * Tests that the hook invocation for determining update dependencies works
- * correctly.
+ * Tests the hook invocation for determining update dependencies.
  *
  * @group Update
  */
@@ -28,13 +29,16 @@ class DependencyHookInvocationTest extends BrowserTestBase {
    */
   protected $defaultTheme = 'stark';
 
+  /**
+   * {@inheritdoc}
+   */
   protected function setUp(): void {
     parent::setUp();
     require_once $this->root . '/core/includes/update.inc';
   }
 
   /**
-   * Test the structure of the array returned by hook_update_dependencies().
+   * Tests the structure of the array returned by hook_update_dependencies().
    */
   public function testHookUpdateDependencies() {
     $update_dependencies = update_retrieve_dependencies();

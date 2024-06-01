@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\views\Functional\Entity;
 
 use Drupal\language\Entity\ConfigurableLanguage;
@@ -44,8 +46,8 @@ class ViewNonTranslatableEntityTest extends BrowserTestBase {
     // Visit the view page and assert it is displayed properly.
     $this->drupalGet('no-entity-translation-view');
     $this->assertSession()->statusCodeEquals(200);
-    $this->assertText('No Entity Translation View');
-    $this->assertText($no_language_entity->uuid());
+    $this->assertSession()->pageTextContains('No Entity Translation View');
+    $this->assertSession()->pageTextContains($no_language_entity->uuid());
   }
 
 }

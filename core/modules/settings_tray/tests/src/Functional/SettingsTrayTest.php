@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\settings_tray\Functional;
 
 use Drupal\block\Entity\Block;
@@ -34,7 +36,7 @@ class SettingsTrayTest extends BrowserTestBase {
    * @return string
    *   The CSS selector.
    */
-  protected  function getBlockSelector(Block $block) {
+  protected function getBlockSelector(Block $block) {
     return '#block-' . $block->id();
   }
 

@@ -1,8 +1,12 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\system\Functional\DrupalKernel;
 
 use Drupal\Tests\BrowserTestBase;
+
+// cspell:ignore msword
 
 /**
  * Tests content negotiation.
@@ -42,8 +46,8 @@ class ContentNegotiationTest extends BrowserTestBase {
     ];
     foreach ($tests as $case => $header) {
       $this->drupalGet('', [], ['Accept: ' . $header]);
-      $this->assertNoText('Unsupported Media Type');
-      $this->assertText('Log in');
+      $this->assertSession()->pageTextNotContains('Unsupported Media Type');
+      $this->assertSession()->pageTextContains('Log in');
     }
   }
 

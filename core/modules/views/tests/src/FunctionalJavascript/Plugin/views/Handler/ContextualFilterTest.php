@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\views\FunctionalJavascript\Plugin\views\Handler;
 
 use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
@@ -55,7 +57,7 @@ class ContextualFilterTest extends WebDriverTestBase {
   }
 
   /**
-   * Test adding a contextual filter handler through the UI.
+   * Tests adding a contextual filter handler through the UI.
    */
   public function testAddContextualFilterUI() {
     $this->drupalGet('/admin/structure/views/view/test_field_body');

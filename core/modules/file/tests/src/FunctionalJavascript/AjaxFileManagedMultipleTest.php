@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\file\FunctionalJavascript;
 
 use Drupal\Core\Url;
@@ -28,7 +30,7 @@ class AjaxFileManagedMultipleTest extends WebDriverTestBase {
   protected $defaultTheme = 'stark';
 
   /**
-   * Test if managed file form element works well with multiple files upload.
+   * Tests if managed file form element works well with multiple files upload.
    */
   public function testMultipleFilesUpload() {
     $file_system = \Drupal::service('file_system');

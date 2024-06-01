@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\migrate\Kernel;
 
 use Drupal\migrate\Event\MigratePostRowSaveEvent;
@@ -60,10 +62,10 @@ class MigrateInterruptionTest extends KernelTestBase {
     // interruption.
     $result = $executable->import();
 
-    $this->assertEqual(MigrationInterface::RESULT_INCOMPLETE, $result);
+    $this->assertEquals(MigrationInterface::RESULT_INCOMPLETE, $result);
 
     // The status should have been reset to IDLE.
-    $this->assertEqual(MigrationInterface::STATUS_IDLE, $migration->getStatus());
+    $this->assertEquals(MigrationInterface::STATUS_IDLE, $migration->getStatus());
   }
 
   /**

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\Core\Entity;
 
 use Drupal\Core\Entity\EntityForm;
@@ -56,10 +58,10 @@ class EntityFormTest extends UnitTestCase {
 
     $entity->expects($this->any())
       ->method('getEntityType')
-      ->will($this->returnValue($this->entityType));
+      ->willReturn($this->entityType);
     $entity->expects($this->any())
       ->method('bundle')
-      ->will($this->returnValue($definition['bundle']));
+      ->willReturn($definition['bundle']);
 
     $this->entityForm->setEntity($entity);
     $this->entityForm->setOperation($definition['operation']);
@@ -70,33 +72,43 @@ class EntityFormTest extends UnitTestCase {
   /**
    * Provides test data for testFormId().
    */
-  public function providerTestFormIds() {
+  public static function providerTestFormIds() {
     return [
-      ['node_article_form', [
+      [
+        'node_article_form',
+        [
           'entity_type' => 'node',
           'bundle' => 'article',
           'operation' => 'default',
         ],
       ],
-      ['node_article_delete_form', [
+      [
+        'node_article_delete_form',
+        [
           'entity_type' => 'node',
           'bundle' => 'article',
           'operation' => 'delete',
         ],
       ],
-      ['user_user_form', [
+      [
+        'user_user_form',
+        [
           'entity_type' => 'user',
           'bundle' => 'user',
           'operation' => 'default',
         ],
       ],
-      ['user_form', [
+      [
+        'user_form',
+        [
           'entity_type' => 'user',
           'bundle' => '',
           'operation' => 'default',
         ],
       ],
-      ['user_delete_form', [
+      [
+        'user_delete_form',
+        [
           'entity_type' => 'user',
           'bundle' => '',
           'operation' => 'delete',
@@ -113,7 +125,7 @@ class EntityFormTest extends UnitTestCase {
     $values = ['id' => $entity_id];
     $entity = $this->getMockBuilder('\Drupal\Tests\Core\Config\Entity\Fixtures\ConfigEntityBaseWithPluginCollections')
       ->setConstructorArgs([$values, 'test_config_entity'])
-      ->setMethods(['getPluginCollections'])
+      ->onlyMethods(['getPluginCollections'])
       ->getMock();
     $entity->expects($this->atLeastOnce())
       ->method('getPluginCollections')

@@ -1,8 +1,11 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\Core\Config\Entity;
 
 use Drupal\Core\DependencyInjection\ContainerBuilder;
+use Drupal\Core\Entity\EntityDisplayModeBase;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Tests\UnitTestCase;
 
@@ -51,12 +54,14 @@ class EntityDisplayModeBaseUnitTest extends UnitTestCase {
    * {@inheritdoc}
    */
   protected function setUp(): void {
+    parent::setUp();
+
     $this->entityType = $this->randomMachineName();
 
     $this->entityInfo = $this->createMock('\Drupal\Core\Entity\EntityTypeInterface');
     $this->entityInfo->expects($this->any())
       ->method('getProvider')
-      ->will($this->returnValue('entity'));
+      ->willReturn('entity');
 
     $this->entityTypeManager = $this->createMock(EntityTypeManagerInterface::class);
 
@@ -78,23 +83,17 @@ class EntityDisplayModeBaseUnitTest extends UnitTestCase {
     $target_entity_type = $this->createMock('\Drupal\Core\Entity\EntityTypeInterface');
     $target_entity_type->expects($this->any())
       ->method('getProvider')
-      ->will($this->returnValue('test_module'));
+      ->willReturn('test_module');
     $values = ['targetEntityType' => $target_entity_type_id];
 
-    $this->entityTypeManager->expects($this->at(0))
+    $this->entityTypeManager->expects($this->exactly(2))
       ->method('getDefinition')
-      ->with($target_entity_type_id)
-      ->will($this->returnValue($target_entity_type));
-    $this->entityTypeManager->expects($this->at(1))
-      ->method('getDefinition')
-      ->with($this->entityType)
-      ->will($this->returnValue($this->entityInfo));
+      ->willReturnMap([
+        [$target_entity_type_id, TRUE, $target_entity_type],
+        [$this->entityType, TRUE, $this->entityInfo],
+      ]);
 
-    $this->entity = $this->getMockBuilder('\Drupal\Core\Entity\EntityDisplayModeBase')
-      ->setConstructorArgs([$values, $this->entityType])
-      ->setMethods(['getFilterFormat'])
-      ->getMock();
-
+    $this->entity = new EntityDisplayModeBaseTestableClass($values, $this->entityType);
     $dependencies = $this->entity->calculateDependencies()->getDependencies();
     $this->assertContains('test_module', $dependencies['module']);
   }
@@ -105,7 +104,7 @@ class EntityDisplayModeBaseUnitTest extends UnitTestCase {
   public function testSetTargetType() {
     // Generate mock.
     $mock = $this->getMockBuilder('Drupal\Core\Entity\EntityDisplayModeBase')
-      ->setMethods(NULL)
+      ->onlyMethods([])
       ->setConstructorArgs([['something' => 'nothing'], 'test_type'])
       ->getMock();
 
@@ -115,7 +114,6 @@ class EntityDisplayModeBaseUnitTest extends UnitTestCase {
 
     // Gain access to the protected property.
     $property = new \ReflectionProperty($mock, 'targetEntityType');
-    $property->setAccessible(TRUE);
     // Set the property to a known state.
     $property->setValue($mock, $bad_target);
 
@@ -133,7 +131,7 @@ class EntityDisplayModeBaseUnitTest extends UnitTestCase {
   public function testGetTargetType() {
     // Generate mock.
     $mock = $this->getMockBuilder('Drupal\Core\Entity\EntityDisplayModeBase')
-      ->setMethods(NULL)
+      ->onlyMethods([])
       ->setConstructorArgs([['something' => 'nothing'], 'test_type'])
       ->getMock();
 
@@ -142,7 +140,6 @@ class EntityDisplayModeBaseUnitTest extends UnitTestCase {
 
     // Gain access to the protected property.
     $property = new \ReflectionProperty($mock, 'targetEntityType');
-    $property->setAccessible(TRUE);
     // Set the property to a known state.
     $property->setValue($mock, $target);
 
@@ -153,4 +150,10 @@ class EntityDisplayModeBaseUnitTest extends UnitTestCase {
     $this->assertEquals($value, $property->getValue($mock));
   }
 
+}
+
+/**
+ * A class extending EntityDisplayModeBase for testing purposes.
+ */
+class EntityDisplayModeBaseTestableClass extends EntityDisplayModeBase {
 }

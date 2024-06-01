@@ -1,9 +1,6 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Tests\Core\StringTranslation\TranslationManagerTest.
- */
+declare(strict_types=1);
 
 namespace Drupal\Tests\Core\StringTranslation;
 
@@ -28,6 +25,8 @@ class TranslationManagerTest extends UnitTestCase {
    * {@inheritdoc}
    */
   protected function setUp(): void {
+    parent::setUp();
+
     $this->translationManager = new TestTranslationManager();
   }
 
@@ -35,7 +34,7 @@ class TranslationManagerTest extends UnitTestCase {
    * Provides some test data for formatPlural()
    * @return array
    */
-  public function providerTestFormatPlural() {
+  public static function providerTestFormatPlural() {
     return [
       [1, 'Singular', '@count plural', [], [], 'Singular'],
       [2, 'Singular', '@count plural', [], [], '2 plural'],
@@ -56,9 +55,9 @@ class TranslationManagerTest extends UnitTestCase {
     $translator->expects($this->once())
       ->method('getStringTranslation')
       ->with($langcode, $this->anything(), $this->anything())
-      ->will($this->returnCallback(function ($langcode, $string, $context) {
+      ->willReturnCallback(function ($langcode, $string, $context) {
         return $string;
-      }));
+      });
     $this->translationManager->setDefaultLangcode('fr');
     $this->translationManager->addTranslator($translator);
     $result = $this->translationManager->formatPlural($count, $singular, $plural, $args, $options);
@@ -89,7 +88,7 @@ class TranslationManagerTest extends UnitTestCase {
    *
    * @return array
    */
-  public function providerTestTranslatePlaceholder() {
+  public static function providerTestTranslatePlaceholder() {
     return [
       ['foo @bar', ['@bar' => 'bar'], 'foo bar'],
       ['bar %baz', ['%baz' => 'baz'], 'bar <em class="placeholder">baz</em>'],

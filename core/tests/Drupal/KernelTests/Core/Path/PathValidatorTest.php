@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\KernelTests\Core\Path;
 
 use Drupal\Core\Routing\RequestContext;
@@ -48,26 +50,37 @@ class PathValidatorTest extends KernelTestBase {
       'PUT',
       'PATCH',
       'DELETE',
-      // Used in CLI context.
-      NULL,
+      // NULL is used in CLI context which results in a request method of an
+      // empty string.
+      '',
       // If no request was even pushed onto the request stack, and hence.
       FALSE,
     ];
     foreach ($methods as $method) {
+      /** @var \Symfony\Component\HttpFoundation\Request|null $request */
+      $request = NULL;
       if ($method === FALSE) {
         $request_stack = $this->container->get('request_stack');
         while ($request_stack->getCurrentRequest()) {
-          $request_stack->pop();
+          $request = $request_stack->pop();
         }
         $this->container->set('router.request_context', new RequestContext());
       }
+      else {
+        $requestContext->setMethod($method);
+      }
 
-      $requestContext->setMethod($method);
       /** @var \Drupal\Core\Url $url */
       $url = $pathValidator->getUrlIfValidWithoutAccessCheck($entity->toUrl()->toString(TRUE)->getGeneratedUrl());
       $this->assertEquals($method, $requestContext->getMethod());
       $this->assertInstanceOf(Url::class, $url);
       $this->assertSame(['entity_test' => $entity->id()], $url->getRouteParameters());
+
+      if ($method === FALSE) {
+        // Restore main request.
+        $request_stack = $this->container->get('request_stack');
+        $request_stack->push($request);
+      }
     }
   }
 

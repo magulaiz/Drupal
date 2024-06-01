@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\file\Functional;
 
 use Drupal\file\Entity\File;
@@ -28,7 +30,7 @@ class FileFieldRSSContentTest extends FileFieldTestBase {
    */
   public function testFileFieldRSSContent() {
     $node_storage = $this->container->get('entity_type.manager')->getStorage('node');
-    $field_name = strtolower($this->randomMachineName());
+    $field_name = $this->randomMachineName();
     $type_name = 'article';
 
     $this->createFileField($field_name, 'node', $type_name);
@@ -65,7 +67,7 @@ class FileFieldRSSContentTest extends FileFieldTestBase {
     $this->drupalGet('rss.xml');
     $selector = sprintf(
       '//enclosure[@url="%s" and @length="%s" and @type="%s"]',
-      file_create_url($node_file->getFileUri()),
+      $node_file->createFileUrl(FALSE),
       $node_file->getSize(),
       $node_file->getMimeType()
     );

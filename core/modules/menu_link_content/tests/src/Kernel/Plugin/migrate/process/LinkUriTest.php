@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\menu_link_content\Kernel\Plugin\migrate\process;
 
 use Drupal\KernelTests\KernelTestBase;
@@ -31,7 +33,7 @@ class LinkUriTest extends KernelTestBase {
   /**
    * {@inheritdoc}
    */
-  public function setUp(): void {
+  protected function setUp(): void {
     parent::setUp();
     $this->setUpCurrentUser();
     $this->installEntitySchema('node');
@@ -62,7 +64,7 @@ class LinkUriTest extends KernelTestBase {
    *   - The value array to pass to LinkUri::transform().
    *   - The expected path returned by LinkUri::transform().
    */
-  public function providerTestRouted() {
+  public static function providerTestRouted() {
     $tests = [];
 
     $value = 'http://example.com';
@@ -105,7 +107,7 @@ class LinkUriTest extends KernelTestBase {
    *   - The expected path returned by LinkUri::transform().
    *   - (optional) A URL object that the path validator prophecy will return.
    */
-  public function providerTestNotRouted() {
+  public static function providerTestNotRouted() {
     $tests = [];
 
     $message = 'The path "%s" failed validation.';
@@ -155,7 +157,7 @@ class LinkUriTest extends KernelTestBase {
    *   - The value array to pass to LinkUri::transform().
    *   - The expected path returned by LinkUri::transform().
    */
-  public function providerTestDisablingRouteValidation() {
+  public static function providerTestDisablingRouteValidation() {
     $tests = [];
 
     $value = 'node/1';
@@ -182,11 +184,10 @@ class LinkUriTest extends KernelTestBase {
    */
   public function doTransform($value, $configuration = []) {
     $entityTypeManager = $this->container->get('entity_type.manager');
-    $routeBuilder = $this->container->get('router.builder');
     $row = new Row();
     $executable = $this->prophesize(MigrateExecutableInterface::class)->reveal();
 
-    $plugin = new LinkUri($configuration, 'link_uri', [], $entityTypeManager, $routeBuilder);
+    $plugin = new LinkUri($configuration, 'link_uri', [], $entityTypeManager);
     $actual = $plugin->transform($value, $executable, $row, 'destination_property');
 
     return $actual;

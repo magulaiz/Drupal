@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\system\Functional\Render;
 
 use Drupal\Core\Url;
@@ -43,7 +45,7 @@ class UrlBubbleableMetadataBubblingTest extends BrowserTestBase {
     $url = Url::fromRoute('cache_test.url_bubbling');
     $this->drupalGet($url);
     $this->assertCacheContext('url.site');
-    $this->assertRaw($url->setAbsolute()->toString());
+    $this->assertSession()->responseContains($url->setAbsolute()->toString());
   }
 
 }

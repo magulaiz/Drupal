@@ -74,7 +74,6 @@
     'node',
     'node--type-' ~ node.bundle|clean_class,
     layout ? 'grid-full',
-    layout ? 'ie11-autorow',
     node.isPromoted() ? 'node--promoted',
     node.isSticky() ? 'node--sticky',
     not node.isPublished() ? 'node--unpublished',
@@ -92,7 +91,11 @@
     {{ title_suffix }}
     {% if display_submitted %}
       <div class="node__meta">
-        {{ author_picture }}
+      {% if author_picture %}
+        <div class="node__author-image">
+          {{ author_picture }}
+        </div>
+      {% endif %}
         <span{{ author_attributes }}>
           {{ 'By'|t }} {% apply spaceless %}{{ author_name }}{% endapply %}, {{ date }}
         </span>

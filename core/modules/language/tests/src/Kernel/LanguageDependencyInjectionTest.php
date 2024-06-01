@@ -1,20 +1,21 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\language\Kernel;
 
 use Drupal\language\Entity\ConfigurableLanguage;
 use Drupal\language\Exception\DeleteDefaultLanguageException;
 
 /**
- * Compares the default language from $GLOBALS against the dependency injected
- * language object.
+ * Tests that a language object can be injected.
  *
  * @group language
  */
 class LanguageDependencyInjectionTest extends LanguageTestBase {
 
   /**
-   * Test dependency injected languages against a new Language object.
+   * Tests dependency injected languages against a new Language object.
    *
    * @see \Drupal\Core\Language\LanguageInterface
    */
@@ -25,8 +26,7 @@ class LanguageDependencyInjectionTest extends LanguageTestBase {
   }
 
   /**
-   * Test dependency injected Language object against a new default language
-   * object.
+   * Tests dependency injected Language object.
    *
    * @see \Drupal\Core\Language\Language
    */

@@ -1,7 +1,10 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\Core\Config\Entity;
 
+use Drupal\Component\Datetime\Time;
 use Drupal\Component\Uuid\UuidInterface;
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Cache\CacheTagsInvalidatorInterface;
@@ -137,7 +140,7 @@ class ConfigEntityStorageTest extends UnitTestCase {
     $entity_query_factory = $this->prophesize(QueryFactoryInterface::class);
     $entity_query_factory->get($entity_type, 'AND')->willReturn($this->entityQuery->reveal());
 
-    $this->entityStorage = new ConfigEntityStorage($entity_type, $this->configFactory->reveal(), $this->uuidService->reveal(), $this->languageManager->reveal(), new MemoryCache());
+    $this->entityStorage = new ConfigEntityStorage($entity_type, $this->configFactory->reveal(), $this->uuidService->reveal(), $this->languageManager->reveal(), new MemoryCache(new Time()));
     $this->entityStorage->setModuleHandler($this->moduleHandler->reveal());
 
     $entity_type_manager = $this->prophesize(EntityTypeManagerInterface::class);
@@ -247,6 +250,7 @@ class ConfigEntityStorageTest extends UnitTestCase {
    * @covers ::doSave
    *
    * @param \Drupal\Core\Entity\EntityInterface $entity
+   *   The entity to test.
    *
    * @return \Drupal\Core\Entity\EntityInterface
    *
@@ -299,6 +303,7 @@ class ConfigEntityStorageTest extends UnitTestCase {
    * @covers ::doSave
    *
    * @param \Drupal\Core\Entity\EntityInterface $entity
+   *   The entity to test.
    *
    * @return \Drupal\Core\Entity\EntityInterface
    *
@@ -524,9 +529,6 @@ class ConfigEntityStorageTest extends UnitTestCase {
       ->willReturn($config_object->reveal());
     $this->configFactory->rename(Argument::cetera())->shouldNotBeCalled();
 
-    $this->moduleHandler->getImplementations('entity_load')->willReturn([]);
-    $this->moduleHandler->getImplementations('test_entity_type_load')->willReturn([]);
-
     $this->entityQuery->condition('uuid', 'baz')->willReturn($this->entityQuery);
     $this->entityQuery->execute()->willReturn(['foo']);
 
@@ -555,9 +557,6 @@ class ConfigEntityStorageTest extends UnitTestCase {
 
     $this->configFactory->loadMultiple(['the_provider.the_config_prefix.foo'])
       ->willReturn([$config_object->reveal()]);
-
-    $this->moduleHandler->getImplementations('entity_load')->willReturn([]);
-    $this->moduleHandler->getImplementations('test_entity_type_load')->willReturn([]);
 
     $entity = $this->entityStorage->load('foo');
     $this->assertInstanceOf(EntityInterface::class, $entity);
@@ -596,9 +595,6 @@ class ConfigEntityStorageTest extends UnitTestCase {
     $this->configFactory->loadMultiple(['the_provider.the_config_prefix.foo', 'the_provider.the_config_prefix.bar'])
       ->willReturn([$foo_config_object->reveal(), $bar_config_object->reveal()]);
 
-    $this->moduleHandler->getImplementations('entity_load')->willReturn([]);
-    $this->moduleHandler->getImplementations('test_entity_type_load')->willReturn([]);
-
     $entities = $this->entityStorage->loadMultiple();
     $expected['foo'] = 'foo';
     $expected['bar'] = 'bar';
@@ -627,31 +623,11 @@ class ConfigEntityStorageTest extends UnitTestCase {
     $this->configFactory->loadMultiple(['the_provider.the_config_prefix.foo'])
       ->willReturn([$config_object->reveal()]);
 
-    $this->moduleHandler->getImplementations('entity_load')->willReturn([]);
-    $this->moduleHandler->getImplementations('test_entity_type_load')->willReturn([]);
-
     $entities = $this->entityStorage->loadMultiple(['foo']);
     $this->assertContainsOnlyInstancesOf(EntityInterface::class, $entities);
     foreach ($entities as $id => $entity) {
       $this->assertSame($id, $entity->id());
     }
-  }
-
-  /**
-   * @covers ::loadRevision
-   */
-  public function testLoadRevision() {
-    $this->assertSame(NULL, $this->entityStorage->loadRevision(1));
-  }
-
-  /**
-   * @covers ::deleteRevision
-   */
-  public function testDeleteRevision() {
-    $this->cacheTagsInvalidator->invalidateTags(Argument::cetera())
-      ->shouldNotBeCalled();
-
-    $this->assertSame(NULL, $this->entityStorage->deleteRevision(1));
   }
 
   /**
@@ -701,7 +677,6 @@ class ConfigEntityStorageTest extends UnitTestCase {
    * @covers ::doDelete
    */
   public function testDeleteNothing() {
-    $this->moduleHandler->getImplementations(Argument::cetera())->shouldNotBeCalled();
     $this->moduleHandler->invokeAll(Argument::cetera())->shouldNotBeCalled();
 
     $this->configFactory->get(Argument::cetera())->shouldNotBeCalled();

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\KernelTests\Core\Entity;
 
 use Drupal\entity_test\Entity\EntityTestMulRev;
@@ -36,7 +38,7 @@ class EntityRevisionsTest extends EntityKernelTestBase {
   }
 
   /**
-   * Test getLoadedRevisionId() returns the correct ID throughout the process.
+   * Tests getLoadedRevisionId() returns the correct ID throughout the process.
    */
   public function testLoadedRevisionId() {
     // Create a basic EntityTestMulRev entity and save it.
@@ -52,13 +54,13 @@ class EntityRevisionsTest extends EntityKernelTestBase {
     // ID yet).
     $this->assertEquals($entity->getRevisionId(), $loaded->getLoadedRevisionId());
     $this->assertNotEquals($loaded->getRevisionId(), $loaded->getLoadedRevisionId());
-    $this->assertSame(NULL, $loaded->getRevisionId());
+    $this->assertNull($loaded->getRevisionId());
 
     // After updating the loaded Revision ID the result should be the same.
     $loaded->updateLoadedRevisionId();
     $this->assertEquals($entity->getRevisionId(), $loaded->getLoadedRevisionId());
     $this->assertNotEquals($loaded->getRevisionId(), $loaded->getLoadedRevisionId());
-    $this->assertSame(NULL, $loaded->getRevisionId());
+    $this->assertNull($loaded->getRevisionId());
 
     $loaded->save();
 
@@ -112,7 +114,7 @@ class EntityRevisionsTest extends EntityKernelTestBase {
 
     // Creating a duplicate should set a NULL loaded Revision ID.
     $duplicate = $loaded->createDuplicate();
-    $this->assertSame(NULL, $duplicate->getLoadedRevisionId());
+    $this->assertNull($duplicate->getLoadedRevisionId());
   }
 
   /**
@@ -259,6 +261,34 @@ class EntityRevisionsTest extends EntityKernelTestBase {
     $this->assertTrue($it_revision->isLatestTranslationAffectedRevision());
     $this->assertFalse($en_revision->isLatestRevision());
     $this->assertTrue($en_revision->isLatestTranslationAffectedRevision());
+  }
+
+  /**
+   * Tests the automatic handling of the "revision_default" flag.
+   *
+   * @covers \Drupal\Core\Entity\ContentEntityStorageBase::doSave
+   */
+  public function testDefaultRevisionFlag() {
+    // Create a basic EntityTestMulRev entity and save it.
+    $entity = EntityTestMulRev::create();
+    $entity->save();
+    $this->assertTrue($entity->wasDefaultRevision());
+
+    // Create a new default revision.
+    $entity->setNewRevision(TRUE);
+    $entity->save();
+    $this->assertTrue($entity->wasDefaultRevision());
+
+    // Create a new non-default revision.
+    $entity->setNewRevision(TRUE);
+    $entity->isDefaultRevision(FALSE);
+    $entity->save();
+    $this->assertFalse($entity->wasDefaultRevision());
+
+    // Turn the previous non-default revision into a default revision.
+    $entity->isDefaultRevision(TRUE);
+    $entity->save();
+    $this->assertTrue($entity->wasDefaultRevision());
   }
 
 }

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\migrate_drupal\Kernel\d6;
 
 use Drupal\migrate\Exception\RequirementsException;
@@ -19,7 +21,7 @@ class VariableTranslationCheckRequirementsTest extends MigrateDrupal6TestBase {
   /**
    * {@inheritdoc}
    */
-  public function setUp(): void {
+  protected function setUp(): void {
     parent::setUp();
     $this->sourceDatabase->schema()->dropTable('i18n_variable');
   }

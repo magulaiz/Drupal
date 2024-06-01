@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\migrate_drupal\Kernel\d7;
 
 use Drupal\KernelTests\FileSystemModuleDiscoveryDataProviderTrait;
@@ -33,18 +35,17 @@ class MigrateDrupal7AuditIdsTest extends MigrateDrupal7TestBase {
     $this->installEntitySchemas();
 
     // Install required schemas.
-    $this->installSchema('book', ['book']);
     $this->installSchema('dblog', ['watchdog']);
-    $this->installSchema('forum', ['forum_index']);
     $this->installSchema('node', ['node_access']);
     $this->installSchema('search', ['search_dataset']);
-    $this->installSchema('system', ['sequences']);
-    $this->installSchema('tracker', ['tracker_node', 'tracker_user']);
 
     // Enable content moderation for nodes of type page.
     $this->installEntitySchema('content_moderation_state');
     $this->installConfig('content_moderation');
-    NodeType::create(['type' => 'page'])->save();
+    NodeType::create([
+      'type' => 'page',
+      'name' => 'Page',
+    ])->save();
     $workflow = $this->createEditorialWorkflow();
     $workflow->getTypePlugin()->addEntityTypeAndBundle('node', 'page');
     $workflow->save();
@@ -127,8 +128,6 @@ class MigrateDrupal7AuditIdsTest extends MigrateDrupal7TestBase {
     );
 
     $expected = [
-      'd7_aggregator_feed',
-      'd7_aggregator_item',
       'd7_comment',
       'd7_custom_block',
       'd7_file',

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\views\Kernel\Handler;
 
 use Drupal\Component\Render\FormattableMarkup;
@@ -104,7 +106,7 @@ class SortDateTest extends ViewsKernelTestBase {
             ['name' => 'Meredith'],
             ['name' => 'Paul'],
             ['name' => 'John'],
-           ];
+          ];
           break;
 
         case 'hour':

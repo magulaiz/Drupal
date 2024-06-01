@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\workflows\Functional;
 
 use Drupal\Core\Url;
@@ -10,6 +12,7 @@ use Drupal\workflows\Entity\Workflow;
  * Tests workflow creation UI.
  *
  * @group workflows
+ * @group #slow
  */
 class WorkflowUiTest extends BrowserTestBase {
 
@@ -39,7 +42,7 @@ class WorkflowUiTest extends BrowserTestBase {
    */
   public function testAccess() {
     // Create a minimal workflow for testing.
-    $workflow = Workflow::create(['id' => 'test', 'type' => 'workflow_type_test']);
+    $workflow = Workflow::create(['id' => 'test', 'type' => 'workflow_type_test', 'label' => 'Test']);
     $workflow
       ->getTypePlugin()
       ->addState('draft', 'Draft')
@@ -86,24 +89,27 @@ class WorkflowUiTest extends BrowserTestBase {
   }
 
   /**
-   * Test the machine name validation of the state add form.
+   * Tests the machine name validation of the state add form.
    */
   public function testStateMachineNameValidation() {
     Workflow::create([
       'id' => 'test_workflow',
+      'label' => 'Test workflow',
       'type' => 'workflow_type_test',
     ])->save();
 
     $this->drupalLogin($this->createUser(['administer workflows']));
 
-    $this->drupalPostForm('admin/config/workflow/workflows/manage/test_workflow/add_state', [
+    $this->drupalGet('admin/config/workflow/workflows/manage/test_workflow/add_state');
+    $this->submitForm([
       'label' => 'Test State',
       'id' => 'Invalid ID',
     ], 'Save');
     $this->assertSession()->statusCodeEquals(200);
     $this->assertSession()->pageTextContains('The machine-readable name must contain only lowercase letters, numbers, and underscores.');
 
-    $this->drupalPostForm('admin/config/workflow/workflows/manage/test_workflow/add_transition', [
+    $this->drupalGet('admin/config/workflow/workflows/manage/test_workflow/add_transition');
+    $this->submitForm([
       'label' => 'Test Transition',
       'id' => 'Invalid ID',
     ], 'Save');
@@ -283,7 +289,7 @@ class WorkflowUiTest extends BrowserTestBase {
   }
 
   /**
-   * Test the workflow configuration form.
+   * Tests the workflow configuration form.
    */
   public function testWorkflowConfigurationForm() {
     $workflow = Workflow::create(['id' => 'test', 'type' => 'workflow_type_complex_test', 'label' => 'Test']);
@@ -306,7 +312,7 @@ class WorkflowUiTest extends BrowserTestBase {
   }
 
   /**
-   * Test a workflow, state, and transition can have a numeric ID and label.
+   * Tests a workflow, state, and transition can have a numeric ID and label.
    */
   public function testNumericIds() {
     $this->drupalLogin($this->createUser(['administer workflows']));
@@ -335,7 +341,7 @@ class WorkflowUiTest extends BrowserTestBase {
   }
 
   /**
-   * Test the sorting of states and transitions by weight and label.
+   * Tests the sorting of states and transitions by weight and label.
    */
   public function testSorting() {
     $workflow = Workflow::create(['id' => 'test', 'type' => 'workflow_type_complex_test', 'label' => 'Test']);

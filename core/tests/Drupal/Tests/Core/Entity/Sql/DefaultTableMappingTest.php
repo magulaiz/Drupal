@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\Core\Entity\Sql;
 
 use Drupal\Core\Entity\Sql\DefaultTableMapping;
@@ -321,7 +323,7 @@ class DefaultTableMappingTest extends UnitTestCase {
    *   field name, base field status, list of field columns, name of the column
    *   to be retrieved, expected result, whether an exception is expected.
    */
-  public function providerTestGetFieldColumnName() {
+  public static function providerTestGetFieldColumnName() {
     $data = [];
     // Base field with single column.
     $data[] = [TRUE, ['foo'], 'foo', 'test'];
@@ -362,21 +364,24 @@ class DefaultTableMappingTest extends UnitTestCase {
       ->expects($this->any())
       ->method('getColumns')
       ->willReturn($columns);
+    $definition->expects($this->any())
+      ->method('getTargetEntityTypeId')
+      ->willReturn('entity_test');
 
     $this->entityType
       ->expects($this->any())
       ->method('getBaseTable')
-      ->willReturn(isset($table_names['base']) ? $table_names['base'] : 'entity_test');
+      ->willReturn($table_names['base'] ?? 'entity_test');
 
     $this->entityType
       ->expects($this->any())
       ->method('getDataTable')
-      ->willReturn(isset($table_names['data']) ? $table_names['data'] : FALSE);
+      ->willReturn($table_names['data'] ?? FALSE);
 
     $this->entityType
       ->expects($this->any())
       ->method('getRevisionTable')
-      ->willReturn(isset($table_names['revision']) ? $table_names['revision'] : FALSE);
+      ->willReturn($table_names['revision'] ?? FALSE);
 
     $this->entityType
       ->expects($this->any())
@@ -411,7 +416,7 @@ class DefaultTableMappingTest extends UnitTestCase {
    *   A nested array where each inner array has the following values: a list of
    *   table names and the expected table name.
    */
-  public function providerTestGetFieldTableName() {
+  public static function providerTestGetFieldTableName() {
     $data = [];
 
     $data[] = [['data' => 'data_table', 'base' => 'base_table', 'revision' => 'revision_table'], 'data_table'];
@@ -459,10 +464,10 @@ class DefaultTableMappingTest extends UnitTestCase {
     $definition = $this->setUpDefinition($field_name, []);
     $definition->expects($this->any())
       ->method('getTargetEntityTypeId')
-      ->will($this->returnValue($entity_type_id));
+      ->willReturn($entity_type_id);
     $definition->expects($this->any())
       ->method('getUniqueStorageIdentifier')
-      ->will($this->returnValue($entity_type_id . '-' . $field_name));
+      ->willReturn($entity_type_id . '-' . $field_name);
 
     $this->entityType
       ->expects($this->any())
@@ -491,7 +496,7 @@ class DefaultTableMappingTest extends UnitTestCase {
    *   consisting of the entity type ID, field name and a table prefix, followed
    *   by the expected data table name and the revision table name.
    */
-  public function providerTestGetDedicatedTableName() {
+  public static function providerTestGetDedicatedTableName() {
     $data = [];
 
     $data['short entity type; short field name; no prefix'] = [
@@ -514,21 +519,21 @@ class DefaultTableMappingTest extends UnitTestCase {
     ];
     $data['long entity type; short field name; no prefix'] = [
       [
-        'entity_type_id' => 'long_entity_type_abcdefghijklmnopqrstuvwxyz',
+        'entity_type_id' => 'long_entity_type_all_forty_three_characters',
         'field_name' => 'short_field_name',
         'prefix' => '',
       ],
-      'long_entity_type_abcdefghijklmno__a526e4e042',
-      'long_entity_type_abcdefghijklmno_r__a526e4e042',
+      'long_entity_type_all_forty_three__d52fc85045',
+      'long_entity_type_all_forty_three_r__d52fc85045',
     ];
     $data['long entity type; long field name; no prefix'] = [
       [
-        'entity_type_id' => 'long_entity_type_abcdefghijklmnopqrstuvwxyz',
-        'field_name' => 'long_field_name_abcdefghijklmnopqrstuvwxyz',
+        'entity_type_id' => 'long_entity_type_all_forty_three_characters',
+        'field_name' => 'long_field_name_using_forty_two_characters',
         'prefix' => '',
       ],
-      'long_entity_type_abcdefghijklmno__7705d52d75',
-      'long_entity_type_abcdefghijklmno_r__7705d52d75',
+      'long_entity_type_all_forty_three__7f5744e4fd',
+      'long_entity_type_all_forty_three_r__7f5744e4fd',
     ];
 
     $data['short entity type; short field name; with prefix'] = [
@@ -578,6 +583,9 @@ class DefaultTableMappingTest extends UnitTestCase {
    *   The field name.
    * @param array $column_names
    *   An array of column names for the storage definition.
+   * @param bool $base_field
+   *   Flag indicating whether the field should be treated as a base or bundle
+   *   field.
    *
    * @return \Drupal\Core\Field\FieldStorageDefinitionInterface|\PHPUnit\Framework\MockObject\MockObject
    */
@@ -588,10 +596,10 @@ class DefaultTableMappingTest extends UnitTestCase {
       ->willReturn($base_field);
     $definition->expects($this->any())
       ->method('getName')
-      ->will($this->returnValue($name));
+      ->willReturn($name);
     $definition->expects($this->any())
       ->method('getColumns')
-      ->will($this->returnValue(array_fill_keys($column_names, [])));
+      ->willReturn(array_fill_keys($column_names, []));
     return $definition;
   }
 

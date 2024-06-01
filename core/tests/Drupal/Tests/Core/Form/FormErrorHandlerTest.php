@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\Core\Form;
 
 use Drupal\Core\Form\FormState;
@@ -35,7 +37,7 @@ class FormErrorHandlerTest extends UnitTestCase {
     $this->messenger = $this->createMock(MessengerInterface::class);
 
     $this->formErrorHandler = $this->getMockBuilder('Drupal\Core\Form\FormErrorHandler')
-      ->setMethods(['messenger'])
+      ->onlyMethods(['messenger'])
       ->getMock();
 
     $this->formErrorHandler->expects($this->atLeastOnce())
@@ -48,24 +50,23 @@ class FormErrorHandlerTest extends UnitTestCase {
    * @covers ::displayErrorMessages
    */
   public function testDisplayErrorMessages() {
-    $this->messenger->expects($this->at(0))
+    $messages = [
+      'invalid',
+      'invalid',
+      'invalid',
+      'no title given',
+      'element is invisible',
+      'this missing element is invalid',
+    ];
+
+    $this->messenger->expects($this->exactly(count($messages)))
       ->method('addMessage')
-      ->with('invalid', 'error');
-    $this->messenger->expects($this->at(1))
-      ->method('addMessage')
-      ->with('invalid', 'error');
-    $this->messenger->expects($this->at(2))
-      ->method('addMessage')
-      ->with('invalid', 'error');
-    $this->messenger->expects($this->at(3))
-      ->method('addMessage')
-      ->with('no title given', 'error');
-    $this->messenger->expects($this->at(4))
-      ->method('addMessage')
-      ->with('element is invisible', 'error');
-    $this->messenger->expects($this->at(5))
-      ->method('addMessage')
-      ->with('this missing element is invalid', 'error');
+      ->with(
+        $this->callback(function (string $message) use (&$messages): bool {
+          return array_shift($messages) === $message;
+        }),
+        'error',
+      );
 
     $form = [
       '#parents' => [],

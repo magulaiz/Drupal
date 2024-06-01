@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\media\Kernel;
 
 use Drupal\KernelTests\KernelTestBase;
@@ -103,6 +105,8 @@ class OEmbedResourceConstraintValidatorTest extends KernelTestBase {
    */
   protected function getValue(Media $media) {
     return new class ($media) {
+
+      private $entity;
 
       public function __construct($entity) {
         $this->entity = $entity;

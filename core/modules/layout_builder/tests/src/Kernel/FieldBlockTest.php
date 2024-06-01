@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\layout_builder\Kernel;
 
 use Drupal\Core\Access\AccessResult;
@@ -75,7 +77,7 @@ class FieldBlockTest extends EntityKernelTestBase {
   /**
    * Provides test data for ::testBlockAccessEntityNotAllowed().
    */
-  public function providerTestBlockAccessNotAllowed() {
+  public static function providerTestBlockAccessNotAllowed() {
     $data = [];
     $data['entity_forbidden'] = [
       FALSE,
@@ -152,7 +154,7 @@ class FieldBlockTest extends EntityKernelTestBase {
    * @covers ::build
    * @dataProvider providerTestBlockAccessEntityAllowedFieldHasValue
    */
-  public function testBlockAccessEntityAllowedFieldHasValue($expected, $is_empty) {
+  public function testBlockAccessEntityAllowedFieldHasValue($expected, $is_empty, $default_value) {
     $entity = $this->prophesize(FieldableEntityInterface::class);
     $block = $this->getTestBlock($entity);
 
@@ -160,6 +162,10 @@ class FieldBlockTest extends EntityKernelTestBase {
     $entity->access('view', $account->reveal(), TRUE)->willReturn(AccessResult::allowed());
     $entity->hasField('the_field_name')->willReturn(TRUE);
     $field = $this->prophesize(FieldItemListInterface::class);
+    $field_definition = $this->prophesize(FieldDefinitionInterface::class);
+    $field->getFieldDefinition()->willReturn($field_definition->reveal());
+    $field_definition->getDefaultValue($entity->reveal())->willReturn($default_value);
+    $field_definition->getType()->willReturn('not_an_image');
     $entity->get('the_field_name')->willReturn($field->reveal());
 
     $field->access('view', $account->reveal(), TRUE)->willReturn(AccessResult::allowed());
@@ -172,15 +178,22 @@ class FieldBlockTest extends EntityKernelTestBase {
   /**
    * Provides test data for ::testBlockAccessEntityAllowedFieldHasValue().
    */
-  public function providerTestBlockAccessEntityAllowedFieldHasValue() {
+  public static function providerTestBlockAccessEntityAllowedFieldHasValue() {
     $data = [];
     $data['empty'] = [
       FALSE,
       TRUE,
+      FALSE,
     ];
     $data['populated'] = [
       TRUE,
       FALSE,
+      FALSE,
+    ];
+    $data['empty, with default'] = [
+      TRUE,
+      TRUE,
+      TRUE,
     ];
     return $data;
   }
@@ -261,7 +274,7 @@ class FieldBlockTest extends EntityKernelTestBase {
       ],
     ];
     if ($expected_markup) {
-      $expected['content']['#markup'] = $expected_markup;
+      $expected[0]['content']['#markup'] = $expected_markup;
     }
 
     $actual = $block->build();
@@ -271,7 +284,7 @@ class FieldBlockTest extends EntityKernelTestBase {
   /**
    * Provides test data for ::testBuild().
    */
-  public function providerTestBuild() {
+  public static function providerTestBuild() {
     $data = [];
     $data['array'] = [
       new ReturnPromise([['content' => ['#markup' => 'The field value']]]),

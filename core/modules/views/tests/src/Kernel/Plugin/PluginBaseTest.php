@@ -1,9 +1,6 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\views\Tests\Plugin\PluginBaseTest.
- */
+declare(strict_types=1);
 
 namespace Drupal\Tests\views\Kernel\Plugin;
 
@@ -24,13 +21,16 @@ class PluginBaseTest extends KernelTestBase {
    */
   protected $testPluginBase;
 
+  /**
+   * {@inheritdoc}
+   */
   protected function setUp(): void {
     parent::setUp();
     $this->testPluginBase = new TestPluginBase();
   }
 
   /**
-   * Test that the token replacement in views works correctly.
+   * Tests that the token replacement in views works correctly.
    */
   public function testViewsTokenReplace() {
     $text = '{{ langcode__value }} means {{ langcode }}';
@@ -44,7 +44,7 @@ class PluginBaseTest extends KernelTestBase {
   }
 
   /**
-   * Test that the token replacement in views works correctly with dots.
+   * Tests that the token replacement in views works correctly with dots.
    */
   public function testViewsTokenReplaceWithDots() {
     $text = '{{ argument.first }} comes before {{ argument.second }}';

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\block_content\Functional\Views;
 
 use Drupal\Tests\block_content\Functional\BlockContentTestBase;
@@ -27,7 +29,6 @@ class BlockContentWizardTest extends BlockContentTestBase {
   protected function setUp(): void {
     parent::setUp();
     $this->drupalLogin($this->drupalCreateUser(['administer views']));
-    $this->createBlockContentType('Basic block');
   }
 
   /**
@@ -36,11 +37,12 @@ class BlockContentWizardTest extends BlockContentTestBase {
   public function testViewAddBlockContent() {
     $view = [];
     $view['label'] = $this->randomMachineName(16);
-    $view['id'] = strtolower($this->randomMachineName(16));
+    $view['id'] = $this->randomMachineName(16);
     $view['description'] = $this->randomMachineName(16);
     $view['page[create]'] = FALSE;
     $view['show[wizard_key]'] = 'block_content';
-    $this->drupalPostForm('admin/structure/views/add', $view, 'Save and edit');
+    $this->drupalGet('admin/structure/views/add');
+    $this->submitForm($view, 'Save and edit');
 
     $view_storage_controller = $this->container->get('entity_type.manager')->getStorage('view');
     /** @var \Drupal\views\Entity\View $view */

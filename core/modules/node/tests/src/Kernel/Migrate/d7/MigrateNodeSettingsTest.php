@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\node\Kernel\Migrate\d7;
 
 use Drupal\Tests\SchemaCheckTestTrait;
@@ -34,7 +36,7 @@ class MigrateNodeSettingsTest extends MigrateDrupal7TestBase {
    */
   public function testAggregatorSettings() {
     $config = $this->config('node.settings');
-    $this->assertEqual(1, $config->get('use_admin_theme'));
+    $this->assertEquals(1, $config->get('use_admin_theme'));
   }
 
 }

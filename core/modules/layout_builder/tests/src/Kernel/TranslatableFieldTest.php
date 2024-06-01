@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\layout_builder\Kernel;
 
 use Drupal\entity_test\Entity\EntityTest;
@@ -67,7 +69,7 @@ class TranslatableFieldTest extends KernelTestBase {
   public function testSectionsClearedOnCreateTranslation() {
     $section_data = [
       new Section('layout_onecol', [], [
-        'first-uuid' => new SectionComponent('first-uuid', 'content', ['id' => 'foo']),
+        '10000000-0000-1000-a000-000000000000' => new SectionComponent('10000000-0000-1000-a000-000000000000', 'content', ['id' => 'foo']),
       ]),
     ];
     $entity = EntityTest::create([OverridesSectionStorage::FIELD_NAME => $section_data]);

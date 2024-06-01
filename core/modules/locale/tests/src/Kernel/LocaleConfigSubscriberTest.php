@@ -1,12 +1,13 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\locale\Kernel;
 
+use Drupal\KernelTests\KernelTestBase;
 use Drupal\language\Entity\ConfigurableLanguage;
-use Drupal\locale\Locale;
 use Drupal\locale\StringInterface;
 use Drupal\locale\TranslationString;
-use Drupal\KernelTests\KernelTestBase;
 
 /**
  * Tests that shipped configuration translations are updated correctly.
@@ -67,8 +68,9 @@ class LocaleConfigSubscriberTest extends KernelTestBase {
     // @see locale_system_update()
     locale_system_set_config_langcodes();
     $langcodes = array_keys(\Drupal::languageManager()->getLanguages());
-    $names = Locale::config()->getComponentNames();
-    Locale::config()->updateConfigTranslations($names, $langcodes);
+    $locale_config_manager = \Drupal::service('locale.config_manager');
+    $names = $locale_config_manager->getComponentNames();
+    $locale_config_manager->updateConfigTranslations($names, $langcodes);
 
     $this->configFactory = $this->container->get('config.factory');
     $this->stringStorage = $this->container->get('locale.storage');
@@ -201,7 +203,7 @@ class LocaleConfigSubscriberTest extends KernelTestBase {
    */
   protected function setUpNoTranslation($config_name, $key, $source, $langcode) {
     $this->localeConfigManager->updateConfigTranslations([$config_name], [$langcode]);
-    $this->assertNoConfigOverride($config_name, $key, $source, $langcode);
+    $this->assertNoConfigOverride($config_name, $key);
     $this->assertNoTranslation($config_name, $langcode);
   }
 
@@ -346,7 +348,7 @@ class LocaleConfigSubscriberTest extends KernelTestBase {
       ->save();
     $this->configFactory->reset($config_name);
 
-    $this->assertNoConfigOverride($config_name, $key, $source_value, $langcode);
+    $this->assertNoConfigOverride($config_name, $key);
   }
 
   /**
@@ -376,7 +378,7 @@ class LocaleConfigSubscriberTest extends KernelTestBase {
     $this->localeConfigManager->updateConfigTranslations([$config_name], [$langcode]);
     $this->configFactory->reset($config_name);
 
-    $this->assertNoConfigOverride($config_name, $key, $source_value, $langcode);
+    $this->assertNoConfigOverride($config_name, $key);
   }
 
   /**
@@ -386,8 +388,10 @@ class LocaleConfigSubscriberTest extends KernelTestBase {
    *   The configuration name.
    * @param string $langcode
    *   The language code.
+   *
+   * @internal
    */
-  protected function assertNoConfigOverride($config_name, $langcode) {
+  protected function assertNoConfigOverride(string $config_name, string $langcode): void {
     $config_langcode = $this->configFactory->getEditable($config_name)->get('langcode');
     $override = $this->languageManager->getLanguageConfigOverride($langcode, $config_name);
     $this->assertNotEquals($langcode, $config_langcode);
@@ -401,16 +405,18 @@ class LocaleConfigSubscriberTest extends KernelTestBase {
    *   The configuration name.
    * @param string $key
    *   The configuration key.
-   * @param string $value
+   * @param string|array $value
    *   The configuration value.
    * @param string $langcode
    *   The language code.
+   *
+   * @internal
    */
-  protected function assertConfigOverride($config_name, $key, $value, $langcode) {
+  protected function assertConfigOverride(string $config_name, string $key, $value, string $langcode): void {
     $config_langcode = $this->configFactory->getEditable($config_name)->get('langcode');
     $override = $this->languageManager->getLanguageConfigOverride($langcode, $config_name);
     $this->assertNotEquals($langcode, $config_langcode);
-    $this->assertEqual($value, $override->get($key));
+    $this->assertEquals($value, $override->get($key));
   }
 
   /**
@@ -424,10 +430,12 @@ class LocaleConfigSubscriberTest extends KernelTestBase {
    *   The configuration value.
    * @param string $langcode
    *   The language code.
+   *
+   * @internal
    */
-  protected function assertActiveConfig($config_name, $key, $value, $langcode) {
+  protected function assertActiveConfig(string $config_name, string $key, string $value, string $langcode): void {
     $config = $this->configFactory->getEditable($config_name);
-    $this->assertEqual($langcode, $config->get('langcode'));
+    $this->assertEquals($langcode, $config->get('langcode'));
     $this->assertSame($value, $config->get($key));
   }
 
@@ -438,8 +446,10 @@ class LocaleConfigSubscriberTest extends KernelTestBase {
    *   The configuration name.
    * @param string $langcode
    *   The language code.
+   *
+   * @internal
    */
-  protected function assertNoTranslation($config_name, $langcode) {
+  protected function assertNoTranslation(string $config_name, string $langcode): void {
     $strings = $this->stringStorage->getTranslations([
       'type' => 'configuration',
       'name' => $config_name,
@@ -450,7 +460,7 @@ class LocaleConfigSubscriberTest extends KernelTestBase {
   }
 
   /**
-   * Ensures a translation exists and is marked as customized.
+   * Asserts if a specific translation exists and its customization status.
    *
    * @param string $config_name
    *   The configuration name.
@@ -459,10 +469,11 @@ class LocaleConfigSubscriberTest extends KernelTestBase {
    * @param string $langcode
    *   The language code.
    * @param bool $customized
-   *   Whether or not the string should be asserted to be customized or not
-   *   customized.
+   *   (optional) Asserts if the translation is customized or not.
+   *
+   * @internal
    */
-  protected function assertTranslation($config_name, $translation, $langcode, $customized = TRUE) {
+  protected function assertTranslation(string $config_name, $translation, string $langcode, bool $customized = TRUE): void {
     // Make sure a string exists.
     $strings = $this->stringStorage->getTranslations([
       'type' => 'configuration',

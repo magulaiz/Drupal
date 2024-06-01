@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\user\Kernel\Views;
 
 use Drupal\KernelTests\KernelTestBase;
@@ -38,7 +40,6 @@ class ArgumentDefaultTest extends KernelTestBase {
    * Tests the current user with argument default.
    */
   public function testPluginArgumentDefaultCurrentUser() {
-    $this->installSchema('system', ['sequences']);
     $this->installEntitySchema('user');
     ViewTestData::createTestViews(static::class, ['user_test_views']);
 

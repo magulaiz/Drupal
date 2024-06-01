@@ -3,6 +3,7 @@
 namespace Drupal\Core\Render\Element;
 
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Render\Attribute\FormElement;
 use Drupal\Core\Render\Element;
 use Drupal\Component\Utility\Number as NumberUtility;
 
@@ -27,10 +28,9 @@ use Drupal\Component\Utility\Number as NumberUtility;
  *
  * @see \Drupal\Core\Render\Element\Range
  * @see \Drupal\Core\Render\Element\Textfield
- *
- * @FormElement("number")
  */
-class Number extends FormElement {
+#[FormElement('number')]
+class Number extends FormElementBase {
 
   /**
    * {@inheritdoc}
@@ -86,7 +86,7 @@ class Number extends FormElement {
     if (isset($element['#step']) && strtolower($element['#step']) != 'any') {
       // Check that the input is an allowed multiple of #step (offset by #min if
       // #min is set).
-      $offset = isset($element['#min']) ? $element['#min'] : 0.0;
+      $offset = $element['#min'] ?? 0.0;
 
       if (!NumberUtility::validStep($value, $element['#step'], $offset)) {
         $form_state->setError($element, t('%name is not a valid number.', ['%name' => $name]));

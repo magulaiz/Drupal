@@ -1,8 +1,12 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\KernelTests\Core\Entity;
 
-use Drupal\Component\Render\FormattableMarkup;
+use Drupal\Core\Entity\EntityFieldManagerInterface;
+use Drupal\Core\Entity\EntityDefinitionUpdateManagerInterface;
+use Drupal\Core\Entity\ContentEntityTypeInterface;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Field\BaseFieldDefinition;
 use Drupal\Tests\system\Functional\Entity\Traits\EntityDefinitionTestTrait;
@@ -29,6 +33,20 @@ class EntitySchemaTest extends EntityKernelTestBase {
    * @var \Drupal\Core\Database\Connection
    */
   protected $database;
+
+  /**
+   * The entity field manager.
+   *
+   * @var \Drupal\Core\Entity\EntityFieldManagerInterface
+   */
+  protected EntityFieldManagerInterface $entityFieldManager;
+
+  /**
+   * The entity definition update manager.
+   *
+   * @var \Drupal\Core\Entity\EntityDefinitionUpdateManagerInterface
+   */
+  protected EntityDefinitionUpdateManagerInterface $entityDefinitionUpdateManager;
 
   /**
    * {@inheritdoc}
@@ -96,27 +114,27 @@ class EntitySchemaTest extends EntityKernelTestBase {
     // Initially only the base table and the dedicated field data table should
     // exist.
     foreach ($tables as $index => $table) {
-      $this->assertEqual(!$index, $schema_handler->tableExists($table), new FormattableMarkup('Entity schema correct for the @table table.', ['@table' => $table]));
+      $this->assertEquals(!$index, $schema_handler->tableExists($table), "Entity schema correct for the $table table.");
     }
-    $this->assertTrue($schema_handler->tableExists($dedicated_tables[0]), new FormattableMarkup('Field schema correct for the @table table.', ['@table' => $table]));
+    $this->assertTrue($schema_handler->tableExists($dedicated_tables[0]), "Field schema correct for the $table table.");
 
     // Update the entity type definition and check that the entity schema now
     // supports translations and revisions.
     $this->updateEntityType(TRUE);
     foreach ($tables as $table) {
-      $this->assertTrue($schema_handler->tableExists($table), new FormattableMarkup('Entity schema correct for the @table table.', ['@table' => $table]));
+      $this->assertTrue($schema_handler->tableExists($table), "Entity schema correct for the $table table.");
     }
     foreach ($dedicated_tables as $table) {
-      $this->assertTrue($schema_handler->tableExists($table), new FormattableMarkup('Field schema correct for the @table table.', ['@table' => $table]));
+      $this->assertTrue($schema_handler->tableExists($table), "Field schema correct for the $table table.");
     }
 
     // Revert changes and check that the entity schema now does not support
     // neither translations nor revisions.
     $this->updateEntityType(FALSE);
     foreach ($tables as $index => $table) {
-      $this->assertEqual(!$index, $schema_handler->tableExists($table), new FormattableMarkup('Entity schema correct for the @table table.', ['@table' => $table]));
+      $this->assertEquals(!$index, $schema_handler->tableExists($table), "Entity schema correct for the $table table.");
     }
-    $this->assertTrue($schema_handler->tableExists($dedicated_tables[0]), new FormattableMarkup('Field schema correct for the @table table.', ['@table' => $table]));
+    $this->assertTrue($schema_handler->tableExists($dedicated_tables[0]), "Field schema correct for the $table table.");
   }
 
   /**
@@ -136,37 +154,25 @@ class EntitySchemaTest extends EntityKernelTestBase {
       $this->installEntitySchema($entity_type_id);
     }
 
-    /* @var \Drupal\Core\Entity\EntityDefinitionUpdateManagerInterface $update_manager */
+    /** @var \Drupal\Core\Entity\EntityDefinitionUpdateManagerInterface $update_manager */
     $update_manager = $this->container->get('entity.definition_update_manager');
     $entity_type = $update_manager->getEntityType($entity_type_id);
 
     /* @see \Drupal\Core\Entity\ContentEntityBase::baseFieldDefinitions() */
-    switch ($field_name) {
-      case 'id':
-        $field = BaseFieldDefinition::create('integer')
-          ->setLabel('ID')
-          ->setReadOnly(TRUE)
-          ->setSetting('unsigned', TRUE);
-        break;
-
-      case 'revision_id':
-        $field = BaseFieldDefinition::create('integer')
-          ->setLabel('Revision ID')
-          ->setReadOnly(TRUE)
-          ->setSetting('unsigned', TRUE);
-        break;
-
-      case 'langcode':
-        $field = BaseFieldDefinition::create('language')
-          ->setLabel('Language');
-        if ($entity_type->isRevisionable()) {
-          $field->setRevisionable(TRUE);
-        }
-        if ($entity_type->isTranslatable()) {
-          $field->setTranslatable(TRUE);
-        }
-        break;
-    }
+    $field = match ($field_name) {
+      'id' => BaseFieldDefinition::create('integer')
+        ->setLabel('ID')
+        ->setReadOnly(TRUE)
+        ->setSetting('unsigned', TRUE),
+      'revision_id' => BaseFieldDefinition::create('integer')
+        ->setLabel('Revision ID')
+        ->setReadOnly(TRUE)
+        ->setSetting('unsigned', TRUE),
+      'langcode' => BaseFieldDefinition::create('language')
+        ->setLabel('Language')
+        ->setRevisionable($entity_type->isRevisionable())
+        ->setTranslatable($entity_type->isTranslatable()),
+    };
 
     $field
       ->setName($field_name)
@@ -214,12 +220,9 @@ class EntitySchemaTest extends EntityKernelTestBase {
     $this->assertSame($expected, $this->findPrimaryKeys($entity_type));
 
     // Now test updating a field with data.
-    /* @var \Drupal\Core\Entity\FieldableEntityStorageInterface $storage */
+    /** @var \Drupal\Core\Entity\FieldableEntityStorageInterface $storage */
     $storage = $this->entityTypeManager->getStorage($entity_type_id);
-    // The schema of ID fields is incorrectly recreated as 'int' instead of
-    // 'serial', so we manually have to specify an ID.
-    // @todo Remove this in https://www.drupal.org/project/drupal/issues/2928906
-    $storage->create(['id' => 1, 'revision_id' => 1])->save();
+    $storage->create()->save();
     $this->assertTrue($storage->countFieldData($field, TRUE));
     $update_manager->updateFieldStorageDefinition($field);
     $this->assertSame($expected, $this->findPrimaryKeys($entity_type));
@@ -244,7 +247,6 @@ class EntitySchemaTest extends EntityKernelTestBase {
 
     $schema = $this->database->schema();
     $find_primary_key_columns = new \ReflectionMethod(get_class($schema), 'findPrimaryKeyColumns');
-    $find_primary_key_columns->setAccessible(TRUE);
 
     // Build up a map of primary keys depending on the entity type
     // configuration. If the field that is being removed is part of a table's
@@ -270,7 +272,7 @@ class EntitySchemaTest extends EntityKernelTestBase {
    * @return array
    *   An array of test cases consisting of an entity type ID and a field name.
    */
-  public function providerTestPrimaryKeyUpdate() {
+  public static function providerTestPrimaryKeyUpdate() {
     // Build up test cases for all possible entity type configurations.
     // For each entity type we test reinstalling each field that is part of
     // any table's primary key.
@@ -325,7 +327,7 @@ class EntitySchemaTest extends EntityKernelTestBase {
     $entity_type_ids = [];
     $entities = \Drupal::entityTypeManager()->getDefinitions();
     foreach ($entities as $entity_type_id => $definition) {
-      if ($definition->getProvider() == 'entity_test') {
+      if ($definition instanceof ContentEntityTypeInterface && $definition->getProvider() == 'entity_test') {
         $this->installEntitySchema($entity_type_id);
         $entity_type_ids[] = $entity_type_id;
       }
@@ -340,7 +342,7 @@ class EntitySchemaTest extends EntityKernelTestBase {
     $entity_type_id_count = 0;
 
     foreach (array_keys($schema) as $storage_definition_name) {
-      list($entity_type_id, ,) = explode('.', $storage_definition_name);
+      [$entity_type_id] = explode('.', $storage_definition_name);
       if (in_array($entity_type_id, $entity_type_ids)) {
         $entity_type_id_count++;
       }
@@ -361,14 +363,14 @@ class EntitySchemaTest extends EntityKernelTestBase {
     $entity_type_id_count = 0;
 
     foreach (array_keys($schema) as $storage_definition_name) {
-      list($entity_type_id, ,) = explode('.', $storage_definition_name);
+      [$entity_type_id] = explode('.', $storage_definition_name);
       if (in_array($entity_type_id, $entity_type_ids)) {
         $entity_type_id_count++;
       }
     }
 
     // Ensure that all storage definitions have been removed from the schema.
-    $this->assertEqual(0, $entity_type_id_count, 'After uninstalling entity_test module the schema should not contains fields from entities provided by the module.');
+    $this->assertEquals(0, $entity_type_id_count, 'After uninstalling entity_test module the schema should not contains fields from entities provided by the module.');
   }
 
   /**

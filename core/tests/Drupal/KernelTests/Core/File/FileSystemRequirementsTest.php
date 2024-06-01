@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\KernelTests\Core\File;
 
 use Drupal\KernelTests\KernelTestBase;
@@ -45,7 +47,7 @@ class FileSystemRequirementsTest extends KernelTestBase {
    *   An array of system requirements.
    */
   protected function checkSystemRequirements() {
-    module_load_install('system');
+    $this->container->get('module_handler')->loadInclude('system', 'install');
     return system_requirements('runtime');
   }
 

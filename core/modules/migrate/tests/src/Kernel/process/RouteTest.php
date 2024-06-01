@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\migrate\Kernel\process;
 
 use Drupal\KernelTests\KernelTestBase;
@@ -8,6 +10,8 @@ use Drupal\migrate\Plugin\migrate\process\Route;
 use Drupal\migrate\Plugin\MigrationInterface;
 use Drupal\migrate\Row;
 use Drupal\Tests\user\Traits\UserCreationTrait;
+
+// cspell:ignore nzdt
 
 /**
  * Tests the route process plugin.
@@ -47,7 +51,7 @@ class RouteTest extends KernelTestBase {
    *   An array of arrays, where the first element is the input to the Route
    *   process plugin, and the second is the expected results.
    */
-  public function providerTestRoute() {
+  public static function providerTestRoute() {
     // Internal link tests.
     // Valid link path and options.
     $values[0] = [
@@ -212,7 +216,7 @@ class RouteTest extends KernelTestBase {
    *   An array of arrays, where the first element is the input to the Route
    *   process plugin, and the second is the expected results.
    */
-  public function providerTestRouteWithParamQuery() {
+  public static function providerTestRouteWithParamQuery() {
     $values = [];
     $expected = [];
     // Valid link path with query options and parameters.

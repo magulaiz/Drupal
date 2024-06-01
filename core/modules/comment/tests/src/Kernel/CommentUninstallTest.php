@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\comment\Kernel;
 
 use Drupal\comment\Tests\CommentTestTrait;
@@ -39,7 +41,10 @@ class CommentUninstallTest extends KernelTestBase {
     $this->installConfig(['comment']);
     $this->installSchema('user', ['users_data']);
 
-    NodeType::create(['type' => 'article'])->save();
+    NodeType::create([
+      'type' => 'article',
+      'name' => 'Article',
+    ])->save();
 
     // Create comment field on article so that it adds 'comment_body' field.
     FieldStorageConfig::create([

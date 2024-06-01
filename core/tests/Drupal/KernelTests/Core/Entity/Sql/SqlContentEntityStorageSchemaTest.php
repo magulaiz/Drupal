@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\KernelTests\Core\Entity\Sql;
 
 use Drupal\Core\Field\BaseFieldDefinition;
@@ -30,7 +32,7 @@ class SqlContentEntityStorageSchemaTest extends EntityKernelTestBase {
   protected function setUp(): void {
     parent::setUp();
 
-    /* @var \Drupal\Core\KeyValueStore\KeyValueFactoryInterface $key_value_factory */
+    /** @var \Drupal\Core\KeyValueStore\KeyValueFactoryInterface $key_value_factory */
     $key_value_factory = $this->container->get('keyvalue');
     $this->installedStorageSchema = $key_value_factory->get('entity.storage_schema.sql');
     $this->entityDefinitionUpdateManager = $this->container->get('entity.definition_update_manager');

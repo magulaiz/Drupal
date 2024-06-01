@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\Core\Ajax;
 
 use Drupal\Core\Ajax\AnnounceCommand;
@@ -37,15 +39,89 @@ use Drupal\Core\Ajax\OpenDialogCommand;
 class AjaxCommandsTest extends UnitTestCase {
 
   /**
-   * @covers \Drupal\Core\Ajax\AddCssCommand
+   * @return array
+   *   - Array of css elements
+   *   - Expected value
    */
-  public function testAddCssCommand() {
-    $command = new AddCssCommand('p{ text-decoration:blink; }');
-
-    $expected = [
-      'command' => 'add_css',
-      'data' => 'p{ text-decoration:blink; }',
+  public static function providerCss() {
+    return [
+      'empty' => [
+        [],
+        [
+          'command' => 'add_css',
+          'data' => [],
+        ],
+      ],
+      'single' => [
+        [
+          [
+            'href' => 'core/misc/example.css',
+            'media' => 'all',
+          ],
+        ],
+        [
+          'command' => 'add_css',
+          'data' => [
+            [
+              'href' => 'core/misc/example.css',
+              'media' => 'all',
+            ],
+          ],
+        ],
+      ],
+      'single-data-property' => [
+        [
+          [
+            'href' => 'core/misc/example.css',
+            'media' => 'all',
+            'data-test' => 'test',
+          ],
+        ],
+        [
+          'command' => 'add_css',
+          'data' => [
+            [
+              'href' => 'core/misc/example.css',
+              'media' => 'all',
+              'data-test' => 'test',
+            ],
+          ],
+        ],
+      ],
+      'multiple' => [
+        [
+          [
+            'href' => 'core/misc/example1.css',
+            'media' => 'all',
+          ],
+          [
+            'href' => 'core/misc/example2.css',
+            'media' => 'all',
+          ],
+        ],
+        [
+          'command' => 'add_css',
+          'data' => [
+            [
+              'href' => 'core/misc/example1.css',
+              'media' => 'all',
+            ],
+            [
+              'href' => 'core/misc/example2.css',
+              'media' => 'all',
+            ],
+          ],
+        ],
+      ],
     ];
+  }
+
+  /**
+   * @covers \Drupal\Core\Ajax\AddCssCommand
+   * @dataProvider providerCss
+   */
+  public function testAddCssCommand($css, $expected) {
+    $command = new AddCssCommand($css);
 
     $this->assertEquals($expected, $command->render());
   }
@@ -103,7 +179,7 @@ class AjaxCommandsTest extends UnitTestCase {
   /**
    * Data provider for testAnnounceCommand().
    */
-  public function announceCommandProvider() {
+  public static function announceCommandProvider() {
     return [
       'no priority' => [
         'Things are going to change!',
@@ -386,7 +462,7 @@ class AjaxCommandsTest extends UnitTestCase {
           'width' => 500,
         ],
       ])
-      ->setMethods(['getRenderedContent'])
+      ->onlyMethods(['getRenderedContent'])
       ->getMock();
 
     // This method calls the render service, which isn't available. We want it
@@ -485,7 +561,7 @@ class AjaxCommandsTest extends UnitTestCase {
    * @covers \Drupal\Core\Ajax\UpdateBuildIdCommand
    */
   public function testUpdateBuildIdCommand() {
-    $old = 'ThisStringisOld';
+    $old = 'ThisStringIsOld';
     $new = 'ThisStringIsNew';
     $command = new UpdateBuildIdCommand($old, $new);
     $expected = [

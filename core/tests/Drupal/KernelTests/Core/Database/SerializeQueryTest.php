@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\KernelTests\Core\Database;
 
 /**
@@ -20,7 +22,7 @@ class SerializeQueryTest extends DatabaseTestBase {
     // assertion.
     $query = unserialize(serialize($query));
     $results = $query->execute()->fetchCol();
-    $this->assertEqual(28, $results[0], 'Query properly executed after unserialization.');
+    $this->assertEquals(28, $results[0], 'Query properly executed after unserialization.');
   }
 
 }

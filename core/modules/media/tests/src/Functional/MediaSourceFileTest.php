@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\media\Functional;
 
 use Drupal\field\Entity\FieldConfig;
@@ -17,7 +19,7 @@ class MediaSourceFileTest extends MediaFunctionalTestBase {
   protected $defaultTheme = 'stark';
 
   /**
-   * Test that it's possible to change the allowed file extensions.
+   * Tests that it's possible to change the allowed file extensions.
    */
   public function testSourceFieldSettingsEditing() {
     $session = $this->getSession();

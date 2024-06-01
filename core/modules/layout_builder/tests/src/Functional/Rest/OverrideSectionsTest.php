@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\layout_builder\Functional\Rest;
 
 use Drupal\Core\Url;
@@ -28,7 +30,7 @@ class OverrideSectionsTest extends LayoutRestTestBase {
   /**
    * {@inheritdoc}
    */
-  public function setUp(): void {
+  protected function setUp(): void {
     parent::setUp();
     // @todo Figure why field definitions have to cleared in
     //   https://www.drupal.org/project/drupal/issues/2985882.

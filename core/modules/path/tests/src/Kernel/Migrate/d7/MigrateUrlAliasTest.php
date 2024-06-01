@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\path\Kernel\Migrate\d7;
 
 /**
@@ -15,7 +17,6 @@ class MigrateUrlAliasTest extends MigrateUrlAliasTestBase {
   protected static $modules = [
     'path_alias',
     'content_translation',
-    'migrate_drupal_multilingual',
   ];
 
   /**
@@ -30,7 +31,7 @@ class MigrateUrlAliasTest extends MigrateUrlAliasTestBase {
   }
 
   /**
-   * Test the URL alias migration with translated nodes.
+   * Tests the URL alias migration with translated nodes.
    */
   public function testUrlAliasWithTranslatedNodes() {
     // Alias for the 'The thing about Deep Space 9' node in English.

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\Component\FrontMatter;
 
 use Drupal\Component\FrontMatter\Exception\FrontMatterParseException;
@@ -92,7 +94,7 @@ class FrontMatterTest extends TestCase {
     $source = static::createFrontMatterSource($yaml, $content);
     $frontMatter = FrontMatter::create($source);
     $this->assertEquals($content, $frontMatter->getContent());
-    $this->assertEquals($yaml === NULL ? [] : $yaml, $frontMatter->getData());
+    $this->assertEquals($yaml ?? [], $frontMatter->getData());
     $this->assertEquals($line, $frontMatter->getLine());
   }
 

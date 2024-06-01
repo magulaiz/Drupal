@@ -1,7 +1,10 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\migrate\Kernel;
 
+use Drupal\field\Entity\FieldConfig;
 use Drupal\Tests\node\Traits\ContentTypeCreationTrait;
 
 /**
@@ -21,6 +24,7 @@ class MigrateStubTest extends MigrateTestBase {
     'field',
     'user',
     'text',
+    'filter',
     'migrate_stub_test',
   ];
 
@@ -100,7 +104,25 @@ class MigrateStubTest extends MigrateTestBase {
   }
 
   /**
-   * Test invalid source id count.
+   * Tests stub creation with bundle fields.
+   */
+  public function testStubWithBundleFields() {
+    $this->createContentType(['type' => 'node_stub']);
+    // Make "Body" field required to make stubbing populate field value.
+    $body_field = FieldConfig::loadByName('node', 'node_stub', 'body');
+    $body_field->setRequired(TRUE)->save();
+
+    $this->assertSame([], $this->migrateLookup->lookup('sample_stubbing_migration', [33]));
+    $ids = $this->migrateStub->createStub('sample_stubbing_migration', [33], []);
+    $this->assertSame([$ids], $this->migrateLookup->lookup('sample_stubbing_migration', [33]));
+    $node = \Drupal::entityTypeManager()->getStorage('node')->load($ids['nid']);
+    $this->assertNotNull($node);
+    // Make sure the "Body" field value was populated.
+    $this->assertNotEmpty($node->get('body')->value);
+  }
+
+  /**
+   * Tests invalid source id count.
    */
   public function testInvalidSourceIdCount() {
     $this->expectException(\InvalidArgumentException::class);

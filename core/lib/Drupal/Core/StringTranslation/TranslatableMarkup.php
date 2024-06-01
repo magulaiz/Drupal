@@ -126,7 +126,7 @@ class TranslatableMarkup extends FormattableMarkup {
    *
    * @ingroup sanitization
    */
-  public function __construct($string, array $arguments = [], array $options = [], TranslationInterface $string_translation = NULL) {
+  public function __construct($string, array $arguments = [], array $options = [], ?TranslationInterface $string_translation = NULL) {
     if (!is_string($string)) {
       $message = $string instanceof TranslatableMarkup ? '$string ("' . $string->getUntranslatedString() . '") must be a string.' : '$string ("' . (string) $string . '") must be a string.';
       throw new \InvalidArgumentException($message);
@@ -156,7 +156,7 @@ class TranslatableMarkup extends FormattableMarkup {
    *   The value of this option or empty string of option is not set.
    */
   public function getOption($name) {
-    return isset($this->options[$name]) ? $this->options[$name] : '';
+    return $this->options[$name] ?? '';
   }
 
   /**
@@ -200,7 +200,7 @@ class TranslatableMarkup extends FormattableMarkup {
   /**
    * Magic __sleep() method to avoid serializing the string translator.
    */
-  public function __sleep() {
+  public function __sleep(): array {
     return ['string', 'arguments', 'options'];
   }
 
@@ -224,7 +224,7 @@ class TranslatableMarkup extends FormattableMarkup {
    * @return int
    *   The length of the string.
    */
-  public function count() {
+  public function count(): int {
     return mb_strlen($this->render());
   }
 

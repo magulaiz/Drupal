@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\migrate\Unit;
 
 use Drupal\migrate\Plugin\MigrateIdMapInterface;
@@ -105,7 +107,7 @@ class RowTest extends UnitTestCase {
     $multi_source_ids = $this->testSourceIds + ['vid' => 'Node revision'];
     $multi_source_ids_values = $this->testValues + ['vid' => 1];
     $row = new Row($multi_source_ids_values, $multi_source_ids);
-    $this->assertSame($multi_source_ids_values, $row->getSource(), 'Row with data, multifield id.');
+    $this->assertSame($multi_source_ids_values, $row->getSource(), 'Row with data, multiple source id.');
   }
 
   /**
@@ -236,29 +238,29 @@ class RowTest extends UnitTestCase {
   public function testMultipleSourceIdValues() {
     // Set values in same order as ids.
     $multi_source_ids = $this->testSourceIds + [
-        'vid' => 'Node revision',
-        'type' => 'Node type',
-        'langcode' => 'Node language',
-      ];
+      'vid' => 'Node revision',
+      'type' => 'Node type',
+      'langcode' => 'Node language',
+    ];
     $multi_source_ids_values = $this->testValues + [
-        'vid' => 1,
-        'type' => 'page',
-        'langcode' => 'en',
-      ];
+      'vid' => 1,
+      'type' => 'page',
+      'langcode' => 'en',
+    ];
     $row = new Row($multi_source_ids_values, $multi_source_ids);
     $this->assertSame(array_keys($multi_source_ids), array_keys($row->getSourceIdValues()));
 
     // Set values in different order.
     $multi_source_ids = $this->testSourceIds + [
-        'vid' => 'Node revision',
-        'type' => 'Node type',
-        'langcode' => 'Node language',
-      ];
+      'vid' => 'Node revision',
+      'type' => 'Node type',
+      'langcode' => 'Node language',
+    ];
     $multi_source_ids_values = $this->testValues + [
-        'langcode' => 'en',
-        'type' => 'page',
-        'vid' => 1,
-      ];
+      'langcode' => 'en',
+      'type' => 'page',
+      'vid' => 1,
+    ];
     $row = new Row($multi_source_ids_values, $multi_source_ids);
     $this->assertSame(array_keys($multi_source_ids), array_keys($row->getSourceIdValues()));
   }
@@ -310,7 +312,7 @@ class RowTest extends UnitTestCase {
   }
 
   /**
-   * Test getting source and destination properties.
+   * Tests getting source and destination properties.
    *
    * @param string $key
    *   The key to look up.
@@ -331,7 +333,7 @@ class RowTest extends UnitTestCase {
    * @return array
    *   The keys and expected values.
    */
-  public function getDataProvider() {
+  public static function getDataProvider() {
     return [
       ['source_key_1', 'source_value_1'],
       ['source_key_2', 'source_value_2'],
@@ -354,14 +356,14 @@ class RowTest extends UnitTestCase {
   }
 
   /**
-   * Test getting multiple source and destination properties.
+   * Tests getting multiple source and destination properties.
    *
    * @param array $keys
    *   An array of keys to look up.
    * @param array $expected_values
    *   An array of expected values.
    *
-   * @covers::getMultiple
+   * @covers ::getMultiple
    * @dataProvider getMultipleDataProvider
    */
   public function testGetMultiple(array $keys, array $expected_values) {
@@ -375,11 +377,11 @@ class RowTest extends UnitTestCase {
    * @return array
    *   The keys and expected values.
    */
-  public function getMultipleDataProvider() {
+  public static function getMultipleDataProvider() {
     return [
       'Single Key' => [
         'keys' => ['source_key_1'],
-        'values' => ['source_value_1'],
+        'expected_values' => ['source_value_1'],
       ],
       'All Source Keys' => [
         'keys' => [
@@ -387,7 +389,7 @@ class RowTest extends UnitTestCase {
           'source_key_2',
           '@@source_key_3',
         ],
-        'values' => [
+        'expected_values' => [
           'source_value_1',
           'source_value_2',
           'source_value_3',
@@ -399,7 +401,7 @@ class RowTest extends UnitTestCase {
           '@destination_key_2',
           '@@@destination_key_3',
         ],
-        'values' => [
+        'expected_values' => [
           'destination_value_1',
           'destination_value_2',
           'destination_value_3',
@@ -415,7 +417,7 @@ class RowTest extends UnitTestCase {
           'non_existent_source_key',
           '@non_existent_destination_key',
         ],
-        'values' => [
+        'expected_values' => [
           'source_shared_value_1',
           'destination_shared_value_1',
           'source_shared_value_2',

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\field\Kernel;
 
 use Drupal\Core\Entity\EntityStorageException;
@@ -38,11 +40,14 @@ class FieldCrudTest extends FieldKernelTestBase {
    */
   protected $fieldDefinition;
 
-  public function setUp(): void {
+  /**
+   * {@inheritdoc}
+   */
+  protected function setUp(): void {
     parent::setUp();
 
     $this->fieldStorageDefinition = [
-      'field_name' => mb_strtolower($this->randomMachineName()),
+      'field_name' => $this->randomMachineName(),
       'entity_type' => 'entity_test',
       'type' => 'test_field',
     ];
@@ -62,7 +67,7 @@ class FieldCrudTest extends FieldKernelTestBase {
   // and for testUpdateField
 
   /**
-   * Test the creation of a field.
+   * Tests the creation of a field.
    */
   public function testCreateField() {
     $field = FieldConfig::create($this->fieldDefinition);
@@ -92,10 +97,10 @@ class FieldCrudTest extends FieldKernelTestBase {
     $this->assertSame('', $config['description'], 'Description defaults to empty string.');
 
     // Check that default settings are set.
-    $this->assertEqual($config['settings'], $field_type_manager->getDefaultFieldSettings($this->fieldStorageDefinition['type']), 'Default field settings have been written.');
+    $this->assertEquals($config['settings'], $field_type_manager->getDefaultFieldSettings($this->fieldStorageDefinition['type']), 'Default field settings have been written.');
 
     // Check that the denormalized 'field_type' was properly written.
-    $this->assertEqual($config['field_type'], $this->fieldStorageDefinition['type']);
+    $this->assertEquals($config['field_type'], $this->fieldStorageDefinition['type']);
 
     // Guarantee that the field/bundle combination is unique.
     try {
@@ -180,10 +185,10 @@ class FieldCrudTest extends FieldKernelTestBase {
     $this->assertCount(2, $violations, 'Two violations found when using a null and outside the range value.');
 
     $this->assertEquals($field_name . '.0.value', $violations[0]->getPropertyPath());
-    $this->assertEquals(t('%name does not accept the value @value.', ['%name' => $field_name, '@value' => -2]), $violations[0]->getMessage());
+    $this->assertEquals(sprintf('%s does not accept the value -2.', $field_name), $violations[0]->getMessage());
 
     $this->assertEquals($field_name . '.0.value', $violations[1]->getPropertyPath());
-    $this->assertEquals(t('This value should be %limit or more.', ['%limit' => 0]), $violations[1]->getMessage());
+    $this->assertEquals('This value should be between 0 and 32.', $violations[1]->getMessage());
 
     // Check that a value that is not specifically restricted but outside the
     // range triggers the expected violation.
@@ -191,14 +196,14 @@ class FieldCrudTest extends FieldKernelTestBase {
     $violations = $entity->validate();
     $this->assertCount(1, $violations, 'Violations found when using value outside the range.');
     $this->assertEquals($field_name . '.0.value', $violations[0]->getPropertyPath());
-    $this->assertEquals(t('This value should be %limit or less.', ['%limit' => 32]), $violations[0]->getMessage());
+    $this->assertEquals('This value should be between 0 and 32.', $violations[0]->getMessage());
   }
 
   /**
-   * Test creating a field with custom storage set.
+   * Tests creating a field with custom storage set.
    */
   public function testCreateFieldCustomStorage() {
-    $field_name = mb_strtolower($this->randomMachineName());
+    $field_name = $this->randomMachineName();
     \Drupal::state()->set('field_test_custom_storage', $field_name);
 
     $field_storage = FieldStorageConfig::create([
@@ -233,7 +238,7 @@ class FieldCrudTest extends FieldKernelTestBase {
   }
 
   /**
-   * Test reading back a field definition.
+   * Tests reading back a field definition.
    */
   public function testReadField() {
     FieldConfig::create($this->fieldDefinition)->save();
@@ -246,7 +251,7 @@ class FieldCrudTest extends FieldKernelTestBase {
   }
 
   /**
-   * Test the update of a field.
+   * Tests the update of a field.
    */
   public function testUpdateField() {
     FieldConfig::create($this->fieldDefinition)->save();
@@ -260,15 +265,15 @@ class FieldCrudTest extends FieldKernelTestBase {
     $field->save();
 
     $field_new = FieldConfig::load('entity_test.' . $this->fieldDefinition['bundle'] . '.' . $this->fieldDefinition['field_name']);
-    $this->assertEqual($field->isRequired(), $field_new->isRequired(), '"required" change is saved');
-    $this->assertEqual($field->getLabel(), $field_new->getLabel(), '"label" change is saved');
-    $this->assertEqual($field->getDescription(), $field_new->getDescription(), '"description" change is saved');
+    $this->assertEquals($field->isRequired(), $field_new->isRequired(), '"required" change is saved');
+    $this->assertEquals($field->getLabel(), $field_new->getLabel(), '"label" change is saved');
+    $this->assertEquals($field->getDescription(), $field_new->getDescription(), '"description" change is saved');
 
     // TODO: test failures.
   }
 
   /**
-   * Test the deletion of a field with no data.
+   * Tests the deletion of a field with no data.
    */
   public function testDeleteFieldNoData() {
     // Deleting and purging fields with data is tested in

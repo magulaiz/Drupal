@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\file\FunctionalJavascript;
 
 use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
@@ -76,7 +78,7 @@ class FileManagedFileElementTest extends WebDriverTestBase {
           $this->submitForm([], 'Save');
 
           // Remove, then Submit.
-          $remove_button_title = $multiple ? t('Remove selected') : t('Remove');
+          $remove_button_title = $multiple ? 'Remove selected' : 'Remove';
           $this->drupalGet($path . '/' . $last_fid);
           if ($multiple) {
             $selected_checkbox = ($tree ? 'nested[file]' : 'file') . '[file_' . $last_fid . '][selected]';
@@ -85,7 +87,7 @@ class FileManagedFileElementTest extends WebDriverTestBase {
           $this->getSession()->getPage()->pressButton($remove_button_title);
           $this->assertSession()->assertWaitOnAjaxRequest();
           $this->submitForm([], 'Save');
-          $this->assertSession()->responseContains(t('The file ids are %fids.', ['%fids' => '']));
+          $this->assertSession()->pageTextContains('The file ids are .');
 
           // Upload, then Remove, then Submit.
           $this->drupalGet($path);
@@ -100,7 +102,7 @@ class FileManagedFileElementTest extends WebDriverTestBase {
           $this->assertSession()->assertWaitOnAjaxRequest();
 
           $this->submitForm([], 'Save');
-          $this->assertSession()->responseContains(t('The file ids are %fids.', ['%fids' => '']));
+          $this->assertSession()->pageTextContains('The file ids are .');
         }
       }
     }
@@ -110,7 +112,10 @@ class FileManagedFileElementTest extends WebDriverTestBase {
    * Retrieves the fid of the last inserted file.
    */
   protected function getLastFileId() {
-    return (int) \Drupal::entityQueryAggregate('file')->aggregate('fid', 'max')->execute()[0]['fid_max'];
+    return (int) \Drupal::entityQueryAggregate('file')
+      ->accessCheck(FALSE)
+      ->aggregate('fid', 'max')
+      ->execute()[0]['fid_max'];
   }
 
 }

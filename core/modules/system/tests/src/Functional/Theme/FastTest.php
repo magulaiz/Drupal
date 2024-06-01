@@ -1,8 +1,11 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\system\Functional\Theme;
 
 use Drupal\Tests\BrowserTestBase;
+use Drupal\user\Entity\User;
 
 /**
  * Tests autocompletion not loading registry.
@@ -23,6 +26,16 @@ class FastTest extends BrowserTestBase {
    */
   protected $defaultTheme = 'stark';
 
+  /**
+   * User allowed to access use profiles.
+   *
+   * @var \Drupal\user\Entity\User
+   */
+  protected User $account;
+
+  /**
+   * {@inheritdoc}
+   */
   protected function setUp(): void {
     parent::setUp();
     $this->account = $this->drupalCreateUser(['access user profiles']);
@@ -34,8 +47,8 @@ class FastTest extends BrowserTestBase {
   public function testUserAutocomplete() {
     $this->drupalLogin($this->account);
     $this->drupalGet('user/autocomplete', ['query' => ['q' => $this->account->getAccountName()]]);
-    $this->assertRaw($this->account->getAccountName());
-    $this->assertNoText('registry initialized');
+    $this->assertSession()->responseContains($this->account->getAccountName());
+    $this->assertSession()->pageTextNotContains('registry initialized');
   }
 
 }

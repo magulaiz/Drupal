@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\Core\Access;
 
 use Drupal\Core\Site\Settings;
@@ -44,7 +46,7 @@ class CsrfTokenGeneratorTest extends UnitTestCase {
 
     $this->privateKey = $this->getMockBuilder('Drupal\Core\PrivateKey')
       ->disableOriginalConstructor()
-      ->setMethods(['get'])
+      ->onlyMethods(['get'])
       ->getMock();
 
     $this->sessionMetadata = $this->getMockBuilder('Drupal\Core\Session\MetadataBag')
@@ -67,12 +69,12 @@ class CsrfTokenGeneratorTest extends UnitTestCase {
     $key = Crypt::randomBytesBase64();
     $this->privateKey->expects($this->any())
       ->method('get')
-      ->will($this->returnValue($key));
+      ->willReturn($key);
 
     $seed = Crypt::randomBytesBase64();
     $this->sessionMetadata->expects($this->any())
       ->method('getCsrfTokenSeed')
-      ->will($this->returnValue($seed));
+      ->willReturn($seed);
   }
 
   /**
@@ -97,11 +99,11 @@ class CsrfTokenGeneratorTest extends UnitTestCase {
     $key = Crypt::randomBytesBase64();
     $this->privateKey->expects($this->any())
       ->method('get')
-      ->will($this->returnValue($key));
+      ->willReturn($key);
 
     $this->sessionMetadata->expects($this->once())
       ->method('getCsrfTokenSeed')
-      ->will($this->returnValue(NULL));
+      ->willReturn(NULL);
 
     $this->sessionMetadata->expects($this->once())
       ->method('setCsrfTokenSeed')
@@ -140,8 +142,8 @@ class CsrfTokenGeneratorTest extends UnitTestCase {
   public function testValidateParameterTypes($token, $value) {
     $this->setupDefaultExpectations();
 
-    // The following check might throw PHP fatals and notices, so we disable
-    // error assertions.
+    // The following check might throw PHP fatal errors and notices, so we
+    // disable error assertions.
     set_error_handler(function () {
       return TRUE;
     });
@@ -155,7 +157,7 @@ class CsrfTokenGeneratorTest extends UnitTestCase {
    * @return array
    *   An array of data used by the test.
    */
-  public function providerTestValidateParameterTypes() {
+  public static function providerTestValidateParameterTypes() {
     return [
       [[], ''],
       [TRUE, 'foo'],
@@ -187,7 +189,7 @@ class CsrfTokenGeneratorTest extends UnitTestCase {
    * @return array
    *   An array of data used by the test.
    */
-  public function providerTestInvalidParameterTypes() {
+  public static function providerTestInvalidParameterTypes() {
     return [
       [NULL, new \stdClass()],
       [0, []],

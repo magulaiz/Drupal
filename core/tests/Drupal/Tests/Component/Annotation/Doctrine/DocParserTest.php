@@ -1,19 +1,19 @@
 <?php
-// @codingStandardsIgnoreFile
+
+declare(strict_types=1);
 
 namespace Drupal\Tests\Component\Annotation\Doctrine;
 
 use Drupal\Component\Annotation\Doctrine\DocParser;
 use Doctrine\Common\Annotations\AnnotationRegistry;
 use Doctrine\Common\Annotations\Annotation\Target;
+use Drupal\Tests\Component\Annotation\Doctrine\Fixtures\Annotation\Autoload;
 use Drupal\Tests\Component\Annotation\Doctrine\Fixtures\AnnotationWithConstants;
 use Drupal\Tests\Component\Annotation\Doctrine\Fixtures\ClassWithConstants;
 use Drupal\Tests\Component\Annotation\Doctrine\Fixtures\IntefaceWithConstants;
 use PHPUnit\Framework\TestCase;
 
 /**
- * @coversDefaultClass \Drupal\Component\Annotation\Doctrine\DocParser
- *
  * This class is a near-copy of
  * Doctrine\Tests\Common\Annotations\DocParserTest, which is part of the
  * Doctrine project: <http://www.doctrine-project.org>.  It was copied from
@@ -23,6 +23,7 @@ use PHPUnit\Framework\TestCase;
  * core/tests/Drupal/Tests/Component/Annotation/Doctrine/Fixtures were also
  * copied from version 1.2.7.
  *
+ * @coversDefaultClass \Drupal\Component\Annotation\Doctrine\DocParser
  * @group Annotation
  */
 class DocParserTest extends TestCase
@@ -212,7 +213,7 @@ DOCBLOCK;
 
         $this->assertNull($annot->name);
         $this->assertNotNull($annot->data);
-        $this->assertEquals($annot->data, "Some data");
+        $this->assertEquals("Some data", $annot->data);
 
 
 
@@ -231,8 +232,8 @@ DOCBLOCK;
         $this->assertNotNull($annot);
         $this->assertInstanceOf(SomeAnnotationClassNameWithoutConstructor::class, $annot);
 
-        $this->assertEquals($annot->name, "Some Name");
-        $this->assertEquals($annot->data, "Some data");
+        $this->assertEquals("Some Name", $annot->name);
+        $this->assertEquals("Some data", $annot->data);
 
 
 
@@ -247,7 +248,7 @@ DOCBLOCK;
         $this->assertCount(1, $result);
         $annot      = $result[0];
 
-        $this->assertEquals($annot->data, "Some data");
+        $this->assertEquals("Some data", $annot->data);
         $this->assertNull($annot->name);
 
 
@@ -261,7 +262,7 @@ DOCBLOCK;
         $this->assertCount(1, $result);
         $annot      = $result[0];
 
-        $this->assertEquals($annot->name, "Some name");
+        $this->assertEquals("Some name", $annot->name);
         $this->assertNull($annot->data);
 
         $docblock = <<<DOCBLOCK
@@ -274,7 +275,7 @@ DOCBLOCK;
         $this->assertCount(1, $result);
         $annot      = $result[0];
 
-        $this->assertEquals($annot->data, "Some data");
+        $this->assertEquals("Some data", $annot->data);
         $this->assertNull($annot->name);
 
 
@@ -289,8 +290,8 @@ DOCBLOCK;
         $this->assertCount(1, $result);
         $annot      = $result[0];
 
-        $this->assertEquals($annot->name, "Some name");
-        $this->assertEquals($annot->data, "Some data");
+        $this->assertEquals("Some name", $annot->name);
+        $this->assertEquals("Some data", $annot->data);
 
 
         $docblock = <<<DOCBLOCK
@@ -303,8 +304,8 @@ DOCBLOCK;
         $this->assertCount(1, $result);
         $annot      = $result[0];
 
-        $this->assertEquals($annot->name, "Some name");
-        $this->assertEquals($annot->data, "Some data");
+        $this->assertEquals("Some name", $annot->name);
+        $this->assertEquals("Some data", $annot->data);
 
         $docblock = <<<DOCBLOCK
 /**
@@ -397,7 +398,7 @@ DOCBLOCK;
 
     }
 
-    public function getAnnotationVarTypeProviderValid()
+    public static function getAnnotationVarTypeProviderValid()
     {
         //({attribute name}, {attribute value})
          return array(
@@ -450,7 +451,7 @@ DOCBLOCK;
         );
     }
 
-    public function getAnnotationVarTypeProviderInvalid()
+    public static function getAnnotationVarTypeProviderInvalid()
     {
          //({attribute name}, {type declared type}, {attribute value} , {given type or class})
          return array(
@@ -503,7 +504,7 @@ DOCBLOCK;
         );
     }
 
-    public function getAnnotationVarTypeArrayProviderInvalid()
+    public static function getAnnotationVarTypeArrayProviderInvalid()
     {
          //({attribute name}, {type declared type}, {attribute value} , {given type or class})
          return array(
@@ -759,11 +760,15 @@ DOCBLOCK;
         $parser->parse($docblock);
     }
 
-    public function getConstantsProvider()
+    public static function getConstantsProvider()
     {
         $provider[] = array(
             '@AnnotationWithConstants(PHP_EOL)',
             PHP_EOL
+        );
+        $provider[] = array(
+            '@AnnotationWithConstants(\SimpleXMLElement::class)',
+            \SimpleXMLElement::class
         );
         $provider[] = array(
             '@AnnotationWithConstants(AnnotationWithConstants::INTEGER)',
@@ -831,6 +836,10 @@ DOCBLOCK;
              })',
             array(
                 AnnotationWithConstants::STRING => AnnotationWithConstants::INTEGER,
+                // Since this class is a near-copy of
+                // Doctrine\Tests\Common\Annotations\DocParserTest, we don't fix
+                // PHPStan errors here.
+                // @phpstan-ignore-next-line
                 ClassWithConstants::SOME_KEY    => ClassWithConstants::SOME_VALUE,
                 ClassWithConstants::SOME_KEY    => IntefaceWithConstants::SOME_VALUE
             )
@@ -924,7 +933,7 @@ DOCBLOCK;
     public function testAnnotationWithInvalidTargetDeclarationError()
     {
         $this->expectException('\InvalidArgumentException');
-        $this->expectExceptionMessage('Invalid Target "Foo". Available targets: [ALL, CLASS, METHOD, PROPERTY, ANNOTATION]');
+        $this->expectExceptionMessage('Invalid Target "Foo". Available targets: [ALL, CLASS, METHOD, PROPERTY, FUNCTION, ANNOTATION]');
 
         $parser     = $this->createTestParser();
         $context    = 'class ' . 'SomeClassName';
@@ -1049,19 +1058,20 @@ DOCBLOCK;
      */
     public function testAutoloadAnnotation()
     {
-        $this->assertFalse(class_exists('Drupal\Tests\Component\Annotation\Doctrine\Fixture\Annotation\Autoload', false), 'Pre-condition: Drupal\Tests\Component\Annotation\Doctrine\Fixture\Annotation\Autoload not allowed to be loaded.');
+        self::assertFalse(
+          class_exists('Drupal\Tests\Component\Annotation\Doctrine\Fixture\Annotation\Autoload', false),
+          'Pre-condition: Drupal\Tests\Component\Annotation\Doctrine\Fixture\Annotation\Autoload not allowed to be loaded.'
+        );
 
         $parser = new DocParser();
 
-        AnnotationRegistry::registerAutoloadNamespace('Drupal\Tests\Component\Annotation\Doctrine\Fixtures\Annotation', __DIR__ . '/../../../../');
-
-        $parser->setImports(array(
-            'autoload' => 'Drupal\Tests\Component\Annotation\Doctrine\Fixtures\Annotation\Autoload',
-        ));
+        $parser->setImports([
+          'autoload' => Autoload::class,
+        ]);
         $annotations = $parser->parse('@Autoload');
 
-        $this->assertCount(1, $annotations);
-        $this->assertInstanceOf('Drupal\Tests\Component\Annotation\Doctrine\Fixtures\Annotation\Autoload', $annotations[0]);
+        self::assertCount(1, $annotations);
+        self::assertInstanceOf(Autoload::class, $annotations[0]);
     }
 
     public function createTestParser()
@@ -1188,30 +1198,6 @@ DOCBLOCK;
         $result = $parser->parse("@Marker(-1234.345)");
         $annot = $result[0];
         $this->assertIsFloat($annot->value);
-    }
-
-    public function testReservedKeywordsInAnnotations()
-    {
-        if (PHP_VERSION_ID >= 70000) {
-            $this->markTestSkipped('This test requires PHP 5.6 or lower.');
-        }
-        require 'ReservedKeywordsClasses.php';
-
-        $parser = $this->createTestParser();
-
-        $result = $parser->parse('@Drupal\Tests\Component\Annotation\Doctrine\True');
-        $this->assertInstanceOf(True::class, $result[0]);
-        $result = $parser->parse('@Drupal\Tests\Component\Annotation\Doctrine\False');
-        $this->assertInstanceOf(False::class, $result[0]);
-        $result = $parser->parse('@Drupal\Tests\Component\Annotation\Doctrine\Null');
-        $this->assertInstanceOf(Null::class, $result[0]);
-
-        $result = $parser->parse('@True');
-        $this->assertInstanceOf(True::class, $result[0]);
-        $result = $parser->parse('@False');
-        $this->assertInstanceOf(False::class, $result[0]);
-        $result = $parser->parse('@Null');
-        $this->assertInstanceOf(Null::class, $result[0]);
     }
 
     public function testSetValuesException()

@@ -1,8 +1,12 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\media\Functional;
 
 use Drupal\media\OEmbed\ProviderException;
+use GuzzleHttp\Psr7\Utils;
+use Prophecy\PhpUnit\ProphecyTrait;
 
 /**
  * Tests the oEmbed provider repository.
@@ -12,6 +16,8 @@ use Drupal\media\OEmbed\ProviderException;
  * @group media
  */
 class ProviderRepositoryTest extends MediaFunctionalTestBase {
+
+  use ProphecyTrait;
 
   /**
    * {@inheritdoc}
@@ -28,7 +34,7 @@ class ProviderRepositoryTest extends MediaFunctionalTestBase {
    */
   public function testEmptyProviderList($content) {
     $response = $this->prophesize('\GuzzleHttp\Psr7\Response');
-    $response->getBody()->willReturn($content);
+    $response->getBody()->willReturn(Utils::streamFor($content));
 
     $client = $this->createMock('\GuzzleHttp\Client');
     $client->method('request')->withAnyParameters()->willReturn($response->reveal());
@@ -46,7 +52,7 @@ class ProviderRepositoryTest extends MediaFunctionalTestBase {
    *
    * @return array
    */
-  public function providerEmptyProviderList() {
+  public static function providerEmptyProviderList() {
     return [
       'empty array' => ['[]'],
       'empty string' => [''],
@@ -80,7 +86,7 @@ class ProviderRepositoryTest extends MediaFunctionalTestBase {
    *
    * @return array
    */
-  public function providerNonExistingProviderDatabase() {
+  public static function providerNonExistingProviderDatabase() {
     return [
       [
         'http://oembed1.com/providers.json',

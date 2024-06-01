@@ -3,6 +3,7 @@
 namespace Drupal\taxonomy\Plugin\views\field;
 
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\views\Attribute\ViewsField;
 use Drupal\views\ViewExecutable;
 use Drupal\views\Plugin\views\display\DisplayPluginBase;
 use Drupal\views\Plugin\views\field\PrerenderList;
@@ -13,9 +14,8 @@ use Drupal\taxonomy\VocabularyStorageInterface;
  * Field handler to display all taxonomy terms of a node.
  *
  * @ingroup views_field_handlers
- *
- * @ViewsField("taxonomy_index_tid")
  */
+#[ViewsField("taxonomy_index_tid")]
 class TaxonomyIndexTid extends PrerenderList {
 
   /**
@@ -57,7 +57,7 @@ class TaxonomyIndexTid extends PrerenderList {
   /**
    * {@inheritdoc}
    */
-  public function init(ViewExecutable $view, DisplayPluginBase $display, array &$options = NULL) {
+  public function init(ViewExecutable $view, DisplayPluginBase $display, ?array &$options = NULL) {
     parent::init($view, $display, $options);
 
     // @todo: Wouldn't it be possible to use $this->base_table and no if here?
@@ -135,11 +135,11 @@ class TaxonomyIndexTid extends PrerenderList {
     }
 
     if ($nids) {
-      $vocabs = array_filter($this->options['vids']);
+      $vids = array_filter($this->options['vids']);
       if (empty($this->options['limit'])) {
-        $vocabs = [];
+        $vids = [];
       }
-      $result = \Drupal::entityTypeManager()->getStorage('taxonomy_term')->getNodeTerms($nids, $vocabs);
+      $result = \Drupal::entityTypeManager()->getStorage('taxonomy_term')->getNodeTerms($nids, $vids);
 
       foreach ($result as $node_nid => $data) {
         foreach ($data as $tid => $term) {
@@ -170,7 +170,7 @@ class TaxonomyIndexTid extends PrerenderList {
 
   protected function addSelfTokens(&$tokens, $item) {
     foreach (['tid', 'name', 'vocabulary_vid', 'vocabulary'] as $token) {
-      $tokens['{{ ' . $this->options['id'] . '__' . $token . ' }}'] = isset($item[$token]) ? $item[$token] : '';
+      $tokens['{{ ' . $this->options['id'] . '__' . $token . ' }}'] = $item[$token] ?? '';
     }
   }
 

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\block\Unit\Plugin\migrate\process;
 
 use Drupal\block\Plugin\migrate\process\BlockVisibility;
@@ -7,6 +9,8 @@ use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\migrate\MigrateLookupInterface;
 use Drupal\migrate\MigrateSkipRowException;
 use Drupal\Tests\migrate\Unit\process\MigrateProcessTestCase;
+
+// cspell:ignore rbaz
 
 /**
  * Tests the block_visibility process plugin.
@@ -89,7 +93,7 @@ class BlockVisibilityTest extends MigrateProcessTestCase {
     $migrate_lookup = $this->prophesize(MigrateLookupInterface::class);
     $this->row = $this->getMockBuilder('Drupal\migrate\Row')
       ->disableOriginalConstructor()
-      ->setMethods(['getSourceProperty'])
+      ->onlyMethods(['getSourceProperty'])
       ->getMock();
     $this->row->expects($this->exactly(2))
       ->method('getSourceProperty')

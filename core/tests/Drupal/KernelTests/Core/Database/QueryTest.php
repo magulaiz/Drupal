@@ -1,10 +1,15 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\KernelTests\Core\Database;
 
+use Drupal\Core\Database\InvalidQueryException;
+
 /**
- * Tests Drupal's extended prepared statement syntax..
+ * Tests Drupal's extended prepared statement syntax.
  *
+ * @coversDefaultClass \Drupal\Core\Database\Connection
  * @group Database
  */
 class QueryTest extends DatabaseTestBase {
@@ -67,16 +72,6 @@ class QueryTest extends DatabaseTestBase {
   public function testConditionOperatorArgumentsSQLInjection() {
     $injection = "IS NOT NULL) ;INSERT INTO {test} (name) VALUES ('test12345678'); -- ";
 
-    $previous_error_handler = set_error_handler(function ($severity, $message, $filename, $lineno) use (&$previous_error_handler) {
-      // Normalize the filename to use UNIX directory separators.
-      if (preg_match('@core/lib/Drupal/Core/Database/Query/Condition.php$@', str_replace(DIRECTORY_SEPARATOR, '/', $filename))) {
-        // Convert errors to exceptions for testing purposes below.
-        throw new \ErrorException($message, 0, $severity, $filename, $lineno);
-      }
-      if ($previous_error_handler) {
-        return $previous_error_handler($severity, $message, $filename, $lineno);
-      }
-    });
     try {
       $result = $this->connection->select('test', 't')
         ->fields('t')
@@ -84,7 +79,8 @@ class QueryTest extends DatabaseTestBase {
         ->execute();
       $this->fail('Should not be able to attempt SQL injection via condition operator.');
     }
-    catch (\ErrorException $e) {
+    catch (InvalidQueryException $e) {
+      $this->assertSame("Invalid characters in query operator: $injection", $e->getMessage());
       // Expected exception; just continue testing.
     }
 
@@ -112,7 +108,8 @@ class QueryTest extends DatabaseTestBase {
         ->execute();
       $this->fail('Should not be able to attempt SQL injection via operator.');
     }
-    catch (\ErrorException $e) {
+    catch (InvalidQueryException $e) {
+      $this->assertSame("Invalid characters in query operator: $injection", $e->getMessage());
       // Expected exception; just continue testing.
     }
 
@@ -129,16 +126,16 @@ class QueryTest extends DatabaseTestBase {
         ->execute();
       $this->fail('Should not be able to attempt SQL injection via operator.');
     }
-    catch (\ErrorException $e) {
+    catch (InvalidQueryException $e) {
+      $this->assertSame("Invalid characters in query operator: $injection", $e->getMessage());
       // Expected exception; just continue testing.
     }
-    restore_error_handler();
   }
 
   /**
    * Tests numeric query parameter expansion in expressions.
    *
-   * @see \Drupal\Core\Database\Driver\sqlite\Statement::getStatement()
+   * @see \Drupal\sqlite\Driver\Database\sqlite\Statement::getStatement()
    * @see http://bugs.php.net/bug.php?id=45259
    */
   public function testNumericExpressionSubstitution() {
@@ -147,7 +144,7 @@ class QueryTest extends DatabaseTestBase {
     $count = $this->connection->query('SELECT COUNT(*) + :count FROM {test}', [
       ':count' => 3,
     ])->fetchField();
-    $this->assertEqual($count_expected, $count);
+    $this->assertEquals($count_expected, $count);
   }
 
   /**

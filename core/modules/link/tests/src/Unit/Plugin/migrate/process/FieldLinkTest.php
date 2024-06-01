@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\link\Unit\Plugin\migrate\process;
 
 use Drupal\link\Plugin\migrate\process\FieldLink;
@@ -14,7 +16,7 @@ use Drupal\Tests\UnitTestCase;
 class FieldLinkTest extends UnitTestCase {
 
   /**
-   * Test the url transformations in the FieldLink process plugin.
+   * Tests the URL transformations in the FieldLink process plugin.
    *
    * @dataProvider canonicalizeUriDataProvider
    */
@@ -31,7 +33,7 @@ class FieldLinkTest extends UnitTestCase {
   /**
    * Data provider for testCanonicalizeUri.
    */
-  public function canonicalizeUriDataProvider() {
+  public static function canonicalizeUriDataProvider() {
     return [
       'Simple front-page' => [
         '<front>',
@@ -65,6 +67,10 @@ class FieldLinkTest extends UnitTestCase {
         'yahoo.com',
         'https://yahoo.com',
         ['uri_scheme' => 'https://'],
+      ],
+      'Absolute URL without explicit protocol (protocol-relative)' => [
+        '//example.com',
+        'http://example.com',
       ],
       'Absolute URL with non-standard characters' => [
         'http://www.ßÀÑÐ¥ƒå¢ë.com',
@@ -102,7 +108,7 @@ class FieldLinkTest extends UnitTestCase {
   }
 
   /**
-   * Test the attributes that are deeply serialized are discarded.
+   * Tests the attributes that are deeply serialized are discarded.
    */
   public function testCanonicalizeUriSerialized() {
     $link_plugin = new FieldLink([], '', [], $this->createMock(MigrationInterface::class));

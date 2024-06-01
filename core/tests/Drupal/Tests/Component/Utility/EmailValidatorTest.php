@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\Component\Utility;
 
 use Drupal\Component\Utility\EmailValidator;
@@ -25,6 +27,7 @@ class EmailValidatorTest extends TestCase {
     $validator = new EmailValidator();
     $this->assertTrue($validator->isValid('example@example.com'));
     $this->assertFalse($validator->isValid('example@example.com@'));
+    $this->assertFalse($validator->isValid('example@example .com'));
   }
 
   /**

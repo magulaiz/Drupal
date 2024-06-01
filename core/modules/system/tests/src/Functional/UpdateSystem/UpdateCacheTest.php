@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\system\Functional\UpdateSystem;
 
 use Drupal\Core\Url;
@@ -41,7 +43,7 @@ class UpdateCacheTest extends BrowserTestBase {
     // Clicking continue should clear the caches.
     $this->drupalGet(Url::fromRoute('system.db_update', [], ['path_processing' => FALSE]));
     $this->updateRequirementsProblem();
-    $this->clickLink(t('Continue'));
+    $this->clickLink('Continue');
 
     $this->assertFalse(\Drupal::cache()->get('will_not_exist_after_update', FALSE));
   }

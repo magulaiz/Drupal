@@ -1,9 +1,6 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Tests\migrate\Unit\process\ConcatTest.
- */
+declare(strict_types=1);
 
 namespace Drupal\Tests\migrate\Unit\process;
 
@@ -26,7 +23,7 @@ class ConcatTest extends MigrateProcessTestCase {
   }
 
   /**
-   * Test concat works without a delimiter.
+   * Tests concat works without a delimiter.
    */
   public function testConcatWithoutDelimiter() {
     $value = $this->plugin->transform(['foo', 'bar'], $this->migrateExecutable, $this->row, 'destination_property');
@@ -34,7 +31,7 @@ class ConcatTest extends MigrateProcessTestCase {
   }
 
   /**
-   * Test concat fails properly on non-arrays.
+   * Tests concat fails properly on non-arrays.
    */
   public function testConcatWithNonArray() {
     $this->expectException(MigrateException::class);
@@ -42,7 +39,7 @@ class ConcatTest extends MigrateProcessTestCase {
   }
 
   /**
-   * Test concat works without a delimiter.
+   * Tests concat works without a delimiter.
    */
   public function testConcatWithDelimiter() {
     $this->plugin->setDelimiter('_');

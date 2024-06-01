@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\migrate\Kernel;
 
 use Drupal\KernelTests\KernelTestBase;
@@ -94,7 +96,8 @@ class MigrateMessageTest extends KernelTestBase implements MigrateMessageInterfa
     $executable = new MigrateExecutable($this->migration, $this);
     $executable->import();
     $this->assertCount(1, $this->messages);
-    $this->assertSame("source_message: 'a message' is not an array", reset($this->messages));
+    $id = $this->migration->getPluginId();
+    $this->assertSame("source_message: $id:message:concat: 'a message' is not an array", reset($this->messages));
   }
 
   /**
@@ -104,22 +107,23 @@ class MigrateMessageTest extends KernelTestBase implements MigrateMessageInterfa
    * objects have the expected keys.
    */
   public function testGetMessages() {
+    $id = $this->migration->getPluginId();
     $expected_message = (object) [
       'src_name' => 'source_message',
       'dest_config_name' => NULL,
       'msgid' => '1',
       Sql::SOURCE_IDS_HASH => '170cde81762e22552d1b1578cf3804c89afefe9efbc7cc835185d7141060b032',
       'level' => '1',
-      'message' => "'a message' is not an array",
+      'message' => "$id:message:concat: 'a message' is not an array",
     ];
     $executable = new MigrateExecutable($this->migration, $this);
     $executable->import();
     $count = 0;
     foreach ($this->migration->getIdMap()->getMessages() as $message) {
       ++$count;
-      $this->assertEqual($expected_message, $message);
+      $this->assertEquals($expected_message, $message);
     }
-    $this->assertEqual(1, $count);
+    $this->assertEquals(1, $count);
   }
 
   /**

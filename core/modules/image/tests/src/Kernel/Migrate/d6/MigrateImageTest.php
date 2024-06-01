@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\image\Kernel\Migrate\d6;
 
 use Drupal\node\Entity\Node;
@@ -36,7 +38,7 @@ class MigrateImageTest extends MigrateNodeTestBase {
   }
 
   /**
-   * Test image migration from Drupal 6 to 8.
+   * Tests image migration from Drupal 6 to 8.
    */
   public function testNode() {
     $node = Node::load(9);

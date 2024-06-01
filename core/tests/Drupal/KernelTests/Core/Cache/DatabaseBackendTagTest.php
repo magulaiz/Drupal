@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\KernelTests\Core\Cache;
 
 use Drupal\Core\Cache\Cache;
@@ -56,7 +58,7 @@ class DatabaseBackendTagTest extends KernelTestBase {
 
     // Test that only one tag invalidation has occurred.
     $invalidations_after = intval($connection->select('cachetags')->fields('cachetags', ['invalidations'])->condition('tag', 'test_tag:2')->execute()->fetchField());
-    $this->assertEqual($invalidations_before + 1, $invalidations_after, 'Only one addition cache tag invalidation has occurred after invalidating a tag used in multiple bins.');
+    $this->assertEquals($invalidations_before + 1, $invalidations_after, 'Only one addition cache tag invalidation has occurred after invalidating a tag used in multiple bins.');
   }
 
 }

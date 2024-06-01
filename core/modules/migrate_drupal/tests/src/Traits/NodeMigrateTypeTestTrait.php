@@ -1,8 +1,12 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\migrate_drupal\Traits;
 
 use Drupal\migrate_drupal\NodeMigrateType;
+
+// cspell:ignore destid sourceid
 
 /**
  * Helper functions to test complete and classic node migrations.
@@ -180,7 +184,7 @@ trait NodeMigrateTypeTestTrait {
       foreach ($keys as $key) {
         unset($fields[$key]);
         unset($values[$key]);
-        if (strstr($key, 'sourceid')) {
+        if (str_contains($key, 'sourceid')) {
           $index_key = substr($key, -1) - 1;
           unset($indexes['source'][$index_key]);
         }

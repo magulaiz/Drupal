@@ -1,9 +1,6 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Tests\system\Kernel\Scripts\DbCommandBaseTest.
- */
+declare(strict_types=1);
 
 namespace Drupal\Tests\system\Kernel\Scripts;
 
@@ -26,7 +23,7 @@ use Symfony\Component\Console\Tester\CommandTester;
 class DbCommandBaseTest extends KernelTestBase {
 
   /**
-   * Test specifying a database key.
+   * Tests specifying a database key.
    */
   public function testSpecifyDatabaseKey() {
     $command = new DbCommandBaseTester();
@@ -55,7 +52,7 @@ class DbCommandBaseTest extends KernelTestBase {
   }
 
   /**
-   * Test supplying database connection as a url.
+   * Tests supplying database connection as a URL.
    */
   public function testSpecifyDbUrl() {
     $command = new DbCommandBaseTester();
@@ -73,7 +70,7 @@ class DbCommandBaseTest extends KernelTestBase {
   }
 
   /**
-   * Test specifying a prefix for different connections.
+   * Tests specifying a prefix for different connections.
    */
   public function testPrefix() {
     if (Database::getConnection()->driver() == 'sqlite') {
@@ -87,19 +84,21 @@ class DbCommandBaseTest extends KernelTestBase {
       '--database' => 'magic_db',
       '--prefix' => 'extra',
     ]);
-    $this->assertEquals('extra', $command->getDatabaseConnection($command_tester->getInput())->tablePrefix());
+    $this->assertEquals('extra', $command->getDatabaseConnection($command_tester->getInput())->getPrefix());
 
     $command_tester->execute([
       '-db-url' => Database::getConnectionInfoAsUrl(),
       '--prefix' => 'extra2',
     ]);
-    $this->assertEquals('extra2', $command->getDatabaseConnection($command_tester->getInput())->tablePrefix());
+    $this->assertEquals('extra2', $command->getDatabaseConnection($command_tester->getInput())->getPrefix());
 
-    // This breaks simpletest cleanup.
+    // This breaks test cleanup.
+    // @code
     //    $command_tester->execute([
     //      '--prefix' => 'notsimpletest',
     //    ]);
     //    $this->assertEquals('notsimpletest', $command->getDatabaseConnection($command_tester->getInput())->tablePrefix());
+    // @endcode
   }
 
 }
@@ -112,7 +111,7 @@ class DbCommandBaseTester extends DbCommandBase {
   /**
    * {@inheritdoc}
    */
-  public function configure() {
+  public function configure(): void {
     parent::configure();
     $this->setName('test');
   }
@@ -127,7 +126,7 @@ class DbCommandBaseTester extends DbCommandBase {
   /**
    * {@inheritdoc}
    */
-  protected function execute(InputInterface $input, OutputInterface $output) {
+  protected function execute(InputInterface $input, OutputInterface $output): int {
     // Empty implementation for testing.
     return 0;
   }

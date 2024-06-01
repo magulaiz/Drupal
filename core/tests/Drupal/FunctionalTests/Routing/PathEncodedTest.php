@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\FunctionalTests\Routing;
 
 use Drupal\Core\Url;
@@ -7,7 +9,7 @@ use Drupal\Tests\BrowserTestBase;
 use Drupal\Tests\Traits\Core\PathAliasTestTrait;
 
 /**
- * Tests url generation and routing for route paths with encoded characters.
+ * Tests URL generation and routing for route paths with encoded characters.
  *
  * @group path
  * @group routing
@@ -28,9 +30,9 @@ class PathEncodedTest extends BrowserTestBase {
 
   public function testGetEncoded() {
     $route_paths = [
-      'path_encoded_test.colon' => '/hi/llamma:party',
-      'path_encoded_test.atsign' => '/bloggy/@Dries',
-      'path_encoded_test.parens' => '/cat(box)',
+      'path_encoded_test.colon' => '/hi/llama:party',
+      'path_encoded_test.at_sign' => '/blog/@Dries',
+      'path_encoded_test.parentheses' => '/cat(box)',
     ];
     foreach ($route_paths as $route_name => $path) {
       $this->drupalGet(Url::fromRoute($route_name));
@@ -40,9 +42,9 @@ class PathEncodedTest extends BrowserTestBase {
 
   public function testAliasToEncoded() {
     $route_paths = [
-      'path_encoded_test.colon' => '/hi/llamma:party',
-      'path_encoded_test.atsign' => '/bloggy/@Dries',
-      'path_encoded_test.parens' => '/cat(box)',
+      'path_encoded_test.colon' => '/hi/llama:party',
+      'path_encoded_test.at_sign' => '/blog/@Dries',
+      'path_encoded_test.parentheses' => '/cat(box)',
     ];
     $aliases = [];
     foreach ($route_paths as $route_name => $path) {
@@ -52,7 +54,7 @@ class PathEncodedTest extends BrowserTestBase {
     foreach ($route_paths as $route_name => $path) {
       // The alias may be only a suffix of the generated path when the test is
       // run with Drupal installed in a subdirectory.
-      $this->assertRegExp('@/' . rawurlencode($aliases[$route_name]) . '$@', Url::fromRoute($route_name)->toString());
+      $this->assertMatchesRegularExpression('@/' . rawurlencode($aliases[$route_name]) . '$@', Url::fromRoute($route_name)->toString());
       $this->drupalGet(Url::fromRoute($route_name));
       $this->assertSession()->pageTextContains('PathEncodedTestController works');
     }

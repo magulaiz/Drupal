@@ -41,14 +41,14 @@ class HtmlEscapedText implements MarkupInterface, \Countable {
   /**
    * {@inheritdoc}
    */
-  public function count() {
+  public function count(): int {
     return mb_strlen($this->string);
   }
 
   /**
    * {@inheritdoc}
    */
-  public function jsonSerialize() {
+  public function jsonSerialize(): string {
     return $this->__toString();
   }
 

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\KernelTests\Core\Entity;
 
 use Drupal\entity_test\Entity\EntityTest;
@@ -20,7 +22,7 @@ use Drupal\entity_test\Entity\EntityTest;
 class EntityViewHookTest extends EntityKernelTestBase {
 
   /**
-   * Test hook_entity_display_build_alter().
+   * Tests hook_entity_display_build_alter().
    */
   public function testHookEntityDisplayBuildAlter() {
     entity_test_create_bundle('display_build_alter_bundle');

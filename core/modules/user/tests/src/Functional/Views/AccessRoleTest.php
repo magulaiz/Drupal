@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\user\Functional\Views;
 
 use Drupal\Core\Cache\Cache;
@@ -29,6 +31,13 @@ class AccessRoleTest extends AccessTestBase {
    * {@inheritdoc}
    */
   protected $defaultTheme = 'stark';
+
+  /**
+   * {@inheritdoc}
+   */
+  protected function setUp($import_test_views = TRUE, $modules = ['user_test_views']): void {
+    parent::setUp($import_test_views, $modules);
+  }
 
   /**
    * Tests role access plugin.
@@ -123,23 +132,23 @@ class AccessRoleTest extends AccessTestBase {
     // First access as user with access.
     $build = DisplayPluginBase::buildBasicRenderable('test_access_role', 'default');
     $account_switcher->switchTo($this->normalUser);
-    $result = $renderer->renderPlain($build);
+    $result = $renderer->renderInIsolation($build);
     $this->assertContains('user.roles', $build['#cache']['contexts']);
-    $this->assertEqual(['config:views.view.test_access_role'], $build['#cache']['tags']);
-    $this->assertEqual(Cache::PERMANENT, $build['#cache']['max-age']);
+    $this->assertEquals(['config:views.view.test_access_role'], $build['#cache']['tags']);
+    $this->assertEquals(Cache::PERMANENT, $build['#cache']['max-age']);
     $this->assertNotSame('', $result);
 
     // Then without access.
     $build = DisplayPluginBase::buildBasicRenderable('test_access_role', 'default');
     $account_switcher->switchTo($this->webUser);
-    $result = $renderer->renderPlain($build);
+    $result = $renderer->renderInIsolation($build);
     // @todo Fix this in https://www.drupal.org/node/2551037,
     // DisplayPluginBase::applyDisplayCacheabilityMetadata() is not invoked when
     // using buildBasicRenderable() and a Views access plugin returns FALSE.
     // $this->assertContains('user.roles', $build['#cache']['contexts']);
-    // $this->assertEqual([], $build['#cache']['tags']);
-    $this->assertEqual(Cache::PERMANENT, $build['#cache']['max-age']);
-    $this->assertEqual('', $result);
+    // $this->assertEquals([], $build['#cache']['tags']);
+    $this->assertEquals(Cache::PERMANENT, $build['#cache']['max-age']);
+    $this->assertEquals('', $result);
   }
 
 }

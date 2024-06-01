@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\search\Functional;
 
 use Drupal\language\Entity\ConfigurableLanguage;
@@ -27,6 +29,9 @@ class SearchDateIntervalTest extends BrowserTestBase {
    */
   protected $defaultTheme = 'stark';
 
+  /**
+   * {@inheritdoc}
+   */
   protected function setUp(): void {
     parent::setUp();
 
@@ -82,7 +87,8 @@ class SearchDateIntervalTest extends BrowserTestBase {
   public function testDateIntervalQueryAlter() {
     // Search for keyword node.
     $edit = ['keys' => 'node'];
-    $this->drupalPostForm('search/node', $edit, 'Search');
+    $this->drupalGet('search/node');
+    $this->submitForm($edit, 'Search');
 
     // The nodes must have the same node ID but the created date is different.
     // So only the Spanish translation must appear.

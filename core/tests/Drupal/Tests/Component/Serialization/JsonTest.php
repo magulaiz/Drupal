@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\Component\Serialization;
 
 use Drupal\Component\Serialization\Json;
@@ -95,7 +97,7 @@ class JsonTest extends TestCase {
   }
 
   /**
-   * Test the reversibility of structured data.
+   * Tests the reversibility of structured data.
    */
   public function testStructuredReversibility() {
     // Verify reversibility for structured data. Also verify that necessary

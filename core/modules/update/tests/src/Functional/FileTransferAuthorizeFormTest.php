@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\update\Functional;
 
 /**
@@ -7,26 +9,21 @@ namespace Drupal\Tests\update\Functional;
  *
  * @group update
  */
-class FileTransferAuthorizeFormTest extends UpdateTestBase {
-
-  /**
-   * Modules to enable.
-   *
-   * @var array
-   */
-  protected static $modules = ['update', 'update_test'];
+class FileTransferAuthorizeFormTest extends UpdateUploaderTestBase {
 
   /**
    * {@inheritdoc}
    */
   protected $defaultTheme = 'stark';
 
+  /**
+   * {@inheritdoc}
+   */
   protected function setUp(): void {
     parent::setUp();
     $admin_user = $this->drupalCreateUser([
       'administer modules',
       'administer software updates',
-      'administer site configuration',
     ]);
     $this->drupalLogin($admin_user);
 
@@ -52,22 +49,23 @@ class FileTransferAuthorizeFormTest extends UpdateTestBase {
 
     // Ensure the module does not already exist.
     $this->drupalGet('admin/modules');
-    $this->assertNoText('Update test new module');
+    $this->assertSession()->pageTextNotContains('Update test new module');
 
     $edit = [
       'project_url' => $url,
     ];
-    $this->drupalPostForm('admin/modules/install', $edit, 'Continue');
+    $this->drupalGet('admin/modules/install');
+    $this->submitForm($edit, 'Continue');
     $edit = [
       'connection_settings[authorize_filetransfer_default]' => 'system_test',
       'connection_settings[system_test][update_test_username]' => $this->randomMachineName(),
     ];
     $this->submitForm($edit, 'Continue');
-    $this->assertText('Files were added successfully.');
+    $this->assertSession()->pageTextContains('Files were added successfully.');
 
     // Ensure the module is available to install.
     $this->drupalGet('admin/modules');
-    $this->assertText('Update test new module');
+    $this->assertSession()->pageTextContains('Update test new module');
   }
 
   /**
@@ -75,7 +73,7 @@ class FileTransferAuthorizeFormTest extends UpdateTestBase {
    *
    * Each of these release URLs has been cached in the setUp() method.
    */
-  public function archiveFileUrlProvider() {
+  public static function archiveFileUrlProvider() {
     return [
       'tar.gz' => [
         'url' => 'https://ftp.drupal.org/files/projects/update_test_new_module.tar.gz',

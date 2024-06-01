@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\field\Kernel\Migrate\d6;
 
 use Drupal\Tests\migrate_drupal\Kernel\d6\MigrateDrupal6TestBase;
@@ -15,11 +17,11 @@ class MigrateFieldInstanceOptionTranslationTest extends MigrateDrupal6TestBase {
    * {@inheritdoc}
    */
   protected static $modules = [
-      'config_translation',
-      'language',
-      'locale',
-      'menu_ui',
-    ];
+    'config_translation',
+    'language',
+    'locale',
+    'menu_ui',
+  ];
 
   /**
    * {@inheritdoc}

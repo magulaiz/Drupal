@@ -1,8 +1,12 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\FunctionalTests\Installer;
 
 use Drupal\Core\Language\LanguageManager;
+
+// cspell:ignore xoxo
 
 /**
  * Verifies that the installer language list combines local and remote languages.
@@ -28,12 +32,12 @@ class InstallerLanguagePageTest extends InstallerTestBase {
     $this->visitInstaller();
     foreach (LanguageManager::getStandardLanguageList() as $langcode => $names) {
       $this->assertSession()->optionExists('edit-langcode', $langcode);
-      $this->assertRaw('>' . $names[1] . '<');
+      $this->assertSession()->responseContains('>' . $names[1] . '<');
     }
 
     // Check that our custom one shows up with the file name indicated language.
     $this->assertSession()->optionExists('edit-langcode', 'xoxo');
-    $this->assertRaw('>xoxo<');
+    $this->assertSession()->responseContains('>xoxo<');
 
     parent::setUpLanguage();
   }

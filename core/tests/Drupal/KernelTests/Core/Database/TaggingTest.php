@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\KernelTests\Core\Database;
 
 use Drupal\Core\Database\Query\SelectExtender;
@@ -89,7 +91,7 @@ class TaggingTest extends DatabaseTestBase {
   }
 
   /**
-   * Tests extended query tagging "has at least one of these tags" functionality.
+   * Tests extended query tagging for "has at least one of these tags".
    */
   public function testExtenderHasAnyTag() {
     $query = $this->connection->select('test')
@@ -121,9 +123,9 @@ class TaggingTest extends DatabaseTestBase {
     $query->addMetaData('test', $data);
 
     $return = $query->getMetaData('test');
-    $this->assertEqual($data, $return, 'Correct metadata returned.');
+    $this->assertEquals($data, $return, 'Correct metadata returned.');
 
-    $return = $query->getMetaData('nothere');
+    $return = $query->getMetaData('not_here');
     $this->assertNull($return, 'Non-existent key returned NULL.');
   }
 

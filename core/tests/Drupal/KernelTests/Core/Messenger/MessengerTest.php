@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\KernelTests\Core\Messenger;
 
 use Drupal\Core\Messenger\MessengerInterface;
@@ -37,7 +39,7 @@ class MessengerTest extends KernelTestBase {
 
     // Set two messages.
     $this->messenger->addStatus('First message (removed).');
-    $this->messenger->addStatus(t('Second message with <em>markup!</em> (not removed).'));
+    $this->messenger->addStatus('Second message with <em>markup!</em> (not removed).');
     $messages = $this->messenger->deleteByType(MessengerInterface::TYPE_STATUS);
     // Remove the first.
     unset($messages[0]);
@@ -124,7 +126,7 @@ class MessengerTest extends KernelTestBase {
   }
 
   /**
-   * Test adding markup.
+   * Tests adding markup.
    *
    * @covers ::addStatus
    * @covers ::deleteByType

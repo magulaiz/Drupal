@@ -14,7 +14,7 @@ class LinkExternalProtocolsConstraintValidator extends ConstraintValidator {
   /**
    * {@inheritdoc}
    */
-  public function validate($value, Constraint $constraint) {
+  public function validate($value, Constraint $constraint): void {
     if (isset($value)) {
       try {
         /** @var \Drupal\Core\Url $url */

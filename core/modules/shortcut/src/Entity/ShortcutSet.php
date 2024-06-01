@@ -73,7 +73,7 @@ class ShortcutSet extends ConfigEntityBundleBase implements ShortcutSetInterface
 
     if (!$update && !$this->isSyncing()) {
       // Save a new shortcut set with links copied from the user's default set.
-      $default_set = shortcut_default_set();
+      $default_set = $storage->getDefaultSet(\Drupal::currentUser());
       // This is the default set, do not copy shortcuts.
       if ($default_set->id() != $this->id()) {
         foreach ($default_set->getShortcuts() as $shortcut) {
@@ -97,6 +97,7 @@ class ShortcutSet extends ConfigEntityBundleBase implements ShortcutSetInterface
 
       // Next, delete the shortcuts for this set.
       $shortcut_ids = \Drupal::entityQuery('shortcut')
+        ->accessCheck(FALSE)
         ->condition('shortcut_set', $entity->id(), '=')
         ->execute();
 

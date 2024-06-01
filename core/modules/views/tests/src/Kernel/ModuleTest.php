@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\views\Kernel;
 
 use Drupal\Component\Render\FormattableMarkup;
@@ -8,6 +10,7 @@ use Drupal\views\Plugin\views\area\Broken as BrokenArea;
 use Drupal\views\Plugin\views\field\Broken as BrokenField;
 use Drupal\views\Plugin\views\filter\Broken as BrokenFilter;
 use Drupal\views\Plugin\views\filter\Standard;
+use Drupal\views\Plugin\views\ViewsHandlerInterface;
 use Drupal\views\Views;
 
 /**
@@ -64,7 +67,7 @@ class ModuleTest extends ViewsKernelTestBase {
     ];
     $form_state = new FormState();
     $description_top = '<p>The handler for this item is broken or missing. The following details are available:</p>';
-    $description_bottom = '<p>Enabling the appropriate module may solve this issue. Otherwise, check to see if there is a module update available.</p>';
+    $description_bottom = '<p>Installing the appropriate module may solve this issue. Otherwise, check to see if there is a module update available.</p>';
     foreach ($types as $type => $class) {
       foreach ($items as $item) {
         $handler = $this->container->get('plugin.manager.views.' . $type)
@@ -175,7 +178,7 @@ class ModuleTest extends ViewsKernelTestBase {
     $expected_opt_groups = [];
     foreach ($all_views as $view) {
       foreach ($view->get('display') as $display) {
-        $expected_opt_groups[$view->id()][$view->id() . ':' . $display['id']] = (string) t('@view : @display', ['@view' => $view->id(), '@display' => $display['id']]);
+        $expected_opt_groups[$view->id()][$view->id() . ':' . $display['id']] = $view->id() . ' : ' . $display['id'];
       }
     }
     $this->assertEquals($expected_opt_groups, Views::getViewsAsOptions(FALSE, 'all', NULL, TRUE), 'Expected option array for an option group returned.');
@@ -191,11 +194,11 @@ class ModuleTest extends ViewsKernelTestBase {
 
     views_enable_view($view);
     $this->assertTrue($view->status(), 'A view has been enabled.');
-    $this->assertEqual(views_view_is_enabled($view), $view->status(), 'views_view_is_enabled is correct.');
+    $this->assertEquals(views_view_is_enabled($view), $view->status(), 'views_view_is_enabled is correct.');
 
     views_disable_view($view);
     $this->assertFalse($view->status(), 'A view has been disabled.');
-    $this->assertEqual(views_view_is_disabled($view), !$view->status(), 'views_view_is_disabled is correct.');
+    $this->assertEquals(views_view_is_disabled($view), !$view->status(), 'views_view_is_disabled is correct.');
   }
 
   /**
@@ -229,15 +232,15 @@ class ModuleTest extends ViewsKernelTestBase {
     $plugin_list = Views::pluginList();
     // Only plugins used by 'test_view' should be in the plugin list.
     foreach (['display:default', 'pager:none'] as $key) {
-      list($plugin_type, $plugin_id) = explode(':', $key);
+      [$plugin_type, $plugin_id] = explode(':', $key);
       $plugin_def = $this->container->get("plugin.manager.views.$plugin_type")->getDefinition($plugin_id);
 
-      $this->assertTrue(isset($plugin_list[$key]), new FormattableMarkup('The expected @key plugin list key was found.', ['@key' => $key]));
+      $this->assertTrue(isset($plugin_list[$key]), "The expected $key plugin list key was found.");
       $plugin_details = $plugin_list[$key];
 
-      $this->assertEqual($plugin_type, $plugin_details['type'], 'The expected plugin type was found.');
-      $this->assertEqual($plugin_def['title'], $plugin_details['title'], 'The expected plugin title was found.');
-      $this->assertEqual($plugin_def['provider'], $plugin_details['provider'], 'The expected plugin provider was found.');
+      $this->assertEquals($plugin_type, $plugin_details['type'], 'The expected plugin type was found.');
+      $this->assertEquals($plugin_def['title'], $plugin_details['title'], 'The expected plugin title was found.');
+      $this->assertEquals($plugin_def['provider'], $plugin_details['provider'], 'The expected plugin provider was found.');
       $this->assertContains('test_view', $plugin_details['views'], 'The test_view View was found in the list of views using this plugin.');
     }
   }
@@ -250,23 +253,23 @@ class ModuleTest extends ViewsKernelTestBase {
     $renderer = \Drupal::service('renderer');
 
     $result = views_embed_view('test_argument');
-    $renderer->renderPlain($result);
+    $renderer->renderInIsolation($result);
     $this->assertCount(5, $result['view_build']['#view']->result);
 
     $result = views_embed_view('test_argument', 'default', 1);
-    $renderer->renderPlain($result);
+    $renderer->renderInIsolation($result);
     $this->assertCount(1, $result['view_build']['#view']->result);
 
     $result = views_embed_view('test_argument', 'default', '1,2');
-    $renderer->renderPlain($result);
+    $renderer->renderInIsolation($result);
     $this->assertCount(2, $result['view_build']['#view']->result);
 
     $result = views_embed_view('test_argument', 'default', '1,2', 'John');
-    $renderer->renderPlain($result);
+    $renderer->renderInIsolation($result);
     $this->assertCount(1, $result['view_build']['#view']->result);
 
     $result = views_embed_view('test_argument', 'default', '1,2', 'John,George');
-    $renderer->renderPlain($result);
+    $renderer->renderInIsolation($result);
     $this->assertCount(2, $result['view_build']['#view']->result);
   }
 
@@ -325,8 +328,7 @@ class ModuleTest extends ViewsKernelTestBase {
     $expected_options = [];
     foreach ($views as $view) {
       foreach ($view->get('display') as $display) {
-        $expected_options[$view->id() . ':' . $display['id']] = (string) t('View: @view - Display: @display',
-          ['@view' => $view->id(), '@display' => $display['id']]);
+        $expected_options[$view->id() . ':' . $display['id']] = "View: {$view->id()} - Display: {$display['id']}";
       }
     }
 
@@ -335,12 +337,14 @@ class ModuleTest extends ViewsKernelTestBase {
 
   /**
    * Ensure that a certain handler is an instance of a certain table/field.
+   *
+   * @internal
    */
-  public function assertInstanceHandler($handler, $table, $field, $id) {
+  public function assertInstanceHandler(ViewsHandlerInterface $handler, string $table, string $field, string $id): void {
     $table_data = $this->container->get('views.views_data')->get($table);
     $field_data = $table_data[$field][$id];
 
-    $this->assertEqual($handler->getPluginId(), $field_data['id']);
+    $this->assertEquals($handler->getPluginId(), $field_data['id']);
   }
 
 }

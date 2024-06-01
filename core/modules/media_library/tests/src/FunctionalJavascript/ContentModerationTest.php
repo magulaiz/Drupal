@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\media_library\FunctionalJavascript;
 
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
@@ -7,9 +9,11 @@ use Drupal\file\Entity\File;
 use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
 use Drupal\media\Entity\Media;
 use Drupal\Tests\content_moderation\Traits\ContentModerationTestTrait;
-use Drupal\Tests\field\Traits\EntityReferenceTestTrait;
+use Drupal\Tests\field\Traits\EntityReferenceFieldCreationTrait;
 use Drupal\Tests\media\Traits\MediaTypeCreationTrait;
 use Drupal\Tests\TestFileCreationTrait;
+
+// cspell:ignore hoglet
 
 /**
  * Tests media library integration with content moderation.
@@ -19,7 +23,7 @@ use Drupal\Tests\TestFileCreationTrait;
 class ContentModerationTest extends WebDriverTestBase {
 
   use ContentModerationTestTrait;
-  use EntityReferenceTestTrait;
+  use EntityReferenceFieldCreationTrait;
   use MediaTypeCreationTrait;
   use TestFileCreationTrait;
 
@@ -37,8 +41,16 @@ class ContentModerationTest extends WebDriverTestBase {
 
   /**
    * {@inheritdoc}
+   *
+   * @todo Remove and fix test to not rely on super user.
+   * @see https://www.drupal.org/project/drupal/issues/3437620
    */
-  protected $defaultTheme = 'classy';
+  protected bool $usesSuperUserAccessPolicy = TRUE;
+
+  /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
 
   /**
    * User with the 'administer media' permission.
@@ -312,8 +324,10 @@ class ContentModerationTest extends WebDriverTestBase {
 
   /**
    * Asserts all media items are visible.
+   *
+   * @internal
    */
-  protected function assertAllMedia() {
+  protected function assertAllMedia(): void {
     $assert_session = $this->assertSession();
     $assert_session->pageTextContains('Hoglet');
     $assert_session->pageTextContains('Panda');
@@ -322,8 +336,10 @@ class ContentModerationTest extends WebDriverTestBase {
 
   /**
    * Asserts only published media items are visible.
+   *
+   * @internal
    */
-  protected function assertOnlyPublishedMedia() {
+  protected function assertOnlyPublishedMedia(): void {
     $assert_session = $this->assertSession();
     $assert_session->pageTextNotContains('Hoglet');
     $assert_session->pageTextContains('Panda');

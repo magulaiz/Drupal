@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\system\Functional\Form;
 
 use Drupal\Component\Serialization\Json;
@@ -32,7 +34,8 @@ class ResponseTest extends BrowserTestBase {
       'content' => $this->randomString(),
       'status' => 200,
     ];
-    $this->drupalPostForm('form-test/response', $edit, 'Submit');
+    $this->drupalGet('form-test/response');
+    $this->submitForm($edit, 'Submit');
     $content = Json::decode($this->getSession()->getPage()->getContent());
     $this->assertSession()->statusCodeEquals(200);
     $this->assertSame($edit['content'], $content, 'Response content matches');
@@ -45,7 +48,8 @@ class ResponseTest extends BrowserTestBase {
       'content' => $this->randomString(),
       'status' => 418,
     ];
-    $this->drupalPostForm('form-test/response', $edit, 'Submit');
+    $this->drupalGet('form-test/response');
+    $this->submitForm($edit, 'Submit');
     $content = Json::decode($this->getSession()->getPage()->getContent());
     $this->assertSession()->statusCodeEquals(418);
     $this->assertSame($edit['content'], $content, 'Response content matches');

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\system\FunctionalJavascript\Form;
 
 use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
@@ -95,7 +97,7 @@ class TriggeringElementTest extends WebDriverTestBase {
 
     // Submit the form with 'button1=button1' in the POST data, which someone
     // trying to get around security safeguards could easily do. We have to do
-    // a little trickery here, to work around the safeguards in drupalPostForm()
+    // a little trickery here, to work around the safeguards in submitForm()
     // by renaming the text field and value that is in the form to 'button1',
     // we can get the data we want into \Drupal::request()->request.
     $page = $this->getSession()->getPage();

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\content_translation\Kernel\Migrate\d7;
 
 use Drupal\Core\Language\LanguageInterface;
@@ -46,6 +48,7 @@ class MigrateEntityTranslationSettingsTest extends MigrateDrupal7TestBase {
     $this->installEntitySchema('user');
 
     $this->executeMigrations([
+      'language',
       'd7_comment_type',
       'd7_node_type',
       'd7_taxonomy_vocabulary',

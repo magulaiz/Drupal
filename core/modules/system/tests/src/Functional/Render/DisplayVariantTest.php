@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\system\Functional\Render;
 
 use Drupal\Tests\BrowserTestBase;
@@ -31,8 +33,8 @@ class DisplayVariantTest extends BrowserTestBase {
     // was passed correctly. If the configuration wasn't passed, we'd get an
     // error page here.
     $this->drupalGet('<front>');
-    $this->assertRaw('A very important, required value.');
-    $this->assertRaw('Explicitly passed in context.');
+    $this->assertSession()->pageTextContains('A very important, required value.');
+    $this->assertSession()->pageTextContains('Explicitly passed in context.');
     $this->assertSession()->responseHeaderContains('X-Drupal-Cache-Tags', 'custom_cache_tag');
   }
 

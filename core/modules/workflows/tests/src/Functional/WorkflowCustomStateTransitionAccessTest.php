@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\workflows\Functional;
 
 use Drupal\Tests\BrowserTestBase;
@@ -54,7 +56,7 @@ class WorkflowCustomStateTransitionAccessTest extends BrowserTestBase {
   }
 
   /**
-   * Test the custom state/transition operation access rules.
+   * Tests the custom state/transition operation access rules.
    */
   public function testCustomWorkflowAccessOperations() {
     $this->drupalLogin($this->adminUser);

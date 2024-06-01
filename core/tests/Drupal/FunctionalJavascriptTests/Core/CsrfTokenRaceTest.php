@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\FunctionalJavascriptTests\Core;
 
 use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
@@ -22,7 +24,7 @@ class CsrfTokenRaceTest extends WebDriverTestBase {
   protected $defaultTheme = 'stark';
 
   /**
-   * Test race condition for CSRF tokens for simultaneous requests.
+   * Tests race condition for CSRF tokens for simultaneous requests.
    */
   public function testCsrfRace() {
     $user = $this->createUser(['access content']);
@@ -55,7 +57,7 @@ EOT;
     $token1 = $this->assertSession()->waitForElement('css', '.csrf1')->getHtml();
     $this->assertNotNull($token0);
     $this->assertNotNull($token1);
-    $this->assertEqual($token0, $token1);
+    $this->assertEquals($token0, $token1);
   }
 
 }

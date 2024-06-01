@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\FunctionalTests\Theme;
 
 use Drupal\Tests\BrowserTestBase;
@@ -24,6 +26,7 @@ class ClaroLayoutBuilderTest extends BrowserTestBase {
     'layout_builder',
     'layout_builder_views_test',
     'layout_test',
+    'field_ui',
     'block',
     'block_test',
     'node',

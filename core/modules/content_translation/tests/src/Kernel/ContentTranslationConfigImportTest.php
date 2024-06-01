@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\content_translation\Kernel;
 
 use Drupal\Core\Config\ConfigImporter;
@@ -58,7 +60,8 @@ class ContentTranslationConfigImportTest extends KernelTestBase {
       $this->container->get('module_installer'),
       $this->container->get('theme_handler'),
       $this->container->get('string_translation'),
-      $this->container->get('extension.list.module')
+      $this->container->get('extension.list.module'),
+      $this->container->get('extension.list.theme')
     );
   }
 

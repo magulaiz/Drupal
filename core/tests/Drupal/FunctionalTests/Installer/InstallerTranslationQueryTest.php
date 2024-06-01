@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\FunctionalTests\Installer;
 
 /**
@@ -41,16 +43,15 @@ class InstallerTranslationQueryTest extends InstallerTestBase {
     $this->translations['Save and continue'] = 'Save and continue de';
 
     // Check the language direction.
-    $direction = current($this->xpath('/@dir'))->getText();
-    $this->assertEqual('ltr', $direction);
+    $this->assertSession()->elementTextEquals('xpath', '/@dir', 'ltr');
   }
 
   /**
    * {@inheritdoc}
    */
   protected function setUpLanguage() {
-    // The language was was preset by passing a query parameter in the URL, so
-    // no explicit language selection is necessary.
+    // The language was preset by passing a query parameter in the URL, so no
+    // explicit language selection is necessary.
   }
 
   /**
@@ -62,8 +63,8 @@ class InstallerTranslationQueryTest extends InstallerTestBase {
 
     // Verify German was configured but not English.
     $this->drupalGet('admin/config/regional/language');
-    $this->assertText('German');
-    $this->assertNoText('English');
+    $this->assertSession()->pageTextContains('German');
+    $this->assertSession()->pageTextNotContains('English');
   }
 
   /**
@@ -76,13 +77,13 @@ class InstallerTranslationQueryTest extends InstallerTestBase {
    *   Contents for the test .po file.
    */
   protected function getPo($langcode) {
-    return <<<ENDPO
+    return <<<PO
 msgid ""
 msgstr ""
 
 msgid "Save and continue"
 msgstr "Save and continue $langcode"
-ENDPO;
+PO;
   }
 
 }

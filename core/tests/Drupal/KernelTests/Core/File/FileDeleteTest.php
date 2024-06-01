@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\KernelTests\Core\File;
 
 use Drupal\Core\File\Exception\NotRegularFileException;
@@ -20,7 +22,7 @@ class FileDeleteTest extends FileTestBase {
 
     // Delete a regular file
     $this->assertTrue(\Drupal::service('file_system')->delete($uri), 'Deleted worked.');
-    $this->assertFileNotExists($uri);
+    $this->assertFileDoesNotExist($uri);
   }
 
   /**

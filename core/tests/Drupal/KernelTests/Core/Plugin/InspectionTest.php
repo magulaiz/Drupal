@@ -1,9 +1,11 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\KernelTests\Core\Plugin;
 
 /**
- * Tests that plugins implementing PluginInspectionInterface are inspectable.
+ * Tests that plugins implementing PluginInspectionInterface can be inspected.
  *
  * @group Plugin
  */

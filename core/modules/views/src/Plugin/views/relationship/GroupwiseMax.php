@@ -4,11 +4,14 @@ namespace Drupal\views\Plugin\views\relationship;
 
 use Drupal\Core\Database\Query\AlterableInterface;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\views\Attribute\ViewsRelationship;
 use Drupal\views\Views;
 use Drupal\views\Entity\View;
 
 /**
- * Relationship handler that allows a groupwise maximum of the linked in table.
+ * The relationship handler for groupwise maximum queries.
+ *
+ * It allows a groupwise maximum of the linked in table.
  * For a definition, see:
  * http://dev.mysql.com/doc/refman/5.0/en/example-maximum-column-group-row.html
  * In lay terms, instead of joining to get all matching records in the linked
@@ -54,10 +57,15 @@ use Drupal\views\Entity\View;
  * in the same way as node_comment_statistics.
  *
  * @ingroup views_relationship_handlers
- *
- * @ViewsRelationship("groupwise_max")
  */
+#[ViewsRelationship("groupwise_max")]
 class GroupwiseMax extends RelationshipPluginBase {
+
+  /**
+   * The namespace of the subquery.
+   */
+  // phpcs:ignore Drupal.NamingConventions.ValidVariableName.LowerCamelName
+  public string $subquery_namespace;
 
   /**
    * {@inheritdoc}
@@ -196,7 +204,7 @@ class GroupwiseMax extends RelationshipPluginBase {
       // select field. See https://www.drupal.org/node/844910.
       // We work around this further down.
       $sort = $options['subquery_sort'];
-      list($sort_table, $sort_field) = explode('.', $sort);
+      [$sort_table, $sort_field] = explode('.', $sort);
       $sort_options = ['order' => $options['subquery_order']];
       $temp_view->addHandler('default', 'sort', $sort_table, $sort_field, $sort_options);
     }
@@ -215,7 +223,7 @@ class GroupwiseMax extends RelationshipPluginBase {
     $relationship_id = NULL;
     // Add the used relationship for the subjoin, if defined.
     if (isset($this->definition['relationship'])) {
-      list($relationship_table, $relationship_field) = explode(':', $this->definition['relationship']);
+      [$relationship_table, $relationship_field] = explode(':', $this->definition['relationship']);
       $relationship_id = $temp_view->addHandler('default', 'relationship', $relationship_table, $relationship_field);
     }
     $temp_item_options = ['relationship' => $relationship_id];
@@ -269,7 +277,7 @@ class GroupwiseMax extends RelationshipPluginBase {
     foreach ($orders as $order_key => $order) {
       // But if we're using a whole view, we don't know what we have!
       if ($options['subquery_view']) {
-        list($sort_table, $sort_field) = explode('.', $order_key);
+        [$sort_table, $sort_field] = explode('.', $order_key);
       }
       $orders[$sort_table . $this->subquery_namespace . '.' . $sort_field] = $order;
       unset($orders[$order_key]);
@@ -324,7 +332,7 @@ class GroupwiseMax extends RelationshipPluginBase {
   protected function conditionNamespace($string) {
     $parts = explode(' = ', $string);
     foreach ($parts as &$part) {
-      if (strpos($part, '.') !== FALSE) {
+      if (str_contains($part, '.')) {
         $part = '"' . str_replace('.', $this->subquery_namespace . '".', $part);
       }
     }

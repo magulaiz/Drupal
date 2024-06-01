@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\entity_test\Functional\Rest;
 
 use Drupal\Core\Cache\Cache;
@@ -7,8 +9,11 @@ use Drupal\Core\Language\LanguageInterface;
 use Drupal\filter\Entity\FilterFormat;
 use Drupal\Tests\rest\Functional\AnonResourceTestTrait;
 
+// cspell:ignore cádiz
+
 /**
  * @group rest
+ * @group #slow
  */
 class EntityTestTextItemNormalizerTest extends EntityTestResourceTestBase {
 
@@ -177,10 +182,10 @@ class EntityTestTextItemNormalizerTest extends EntityTestResourceTestBase {
     $this->setUpAuthorization('GET');
     $response = $this->request('GET', $url, $request_options);
     $expected_cache_tags = Cache::mergeTags($expected_cache_tags, parent::getExpectedCacheTags());
-    $this->assertSame($expected_cache_tags, explode(' ', $response->getHeader('X-Drupal-Cache-Tags')[0]));
+    $this->assertEqualsCanonicalizing($expected_cache_tags, explode(' ', $response->getHeader('X-Drupal-Cache-Tags')[0]));
   }
 
-  public function providerTestGetWithFormat() {
+  public static function providerTestGetWithFormat() {
     return [
       'format specified (different from fallback format)' => [
         'pablo',

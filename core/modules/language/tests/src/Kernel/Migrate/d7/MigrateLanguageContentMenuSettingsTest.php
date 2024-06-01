@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\language\Kernel\Migrate\d7;
 
 use Drupal\language\Entity\ContentLanguageSettings;
@@ -45,7 +47,7 @@ class MigrateLanguageContentMenuSettingsTest extends MigrateDrupal7TestBase {
     $this->assertSame('menu_link_content', $config->getTargetEntityTypeId());
     $this->assertSame('menu_link_content', $config->getTargetBundle());
     $this->assertSame(LanguageInterface::LANGCODE_SITE_DEFAULT, $config->getDefaultLangcode());
-    $this->assertSame(TRUE, $config->isLanguageAlterable());
+    $this->assertTrue($config->isLanguageAlterable());
     $settings = [
       'enabled' => TRUE,
       'bundle_settings' => [

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\FunctionalTests\Menu;
 
 use Drupal\Core\Url;
@@ -49,7 +51,7 @@ class MenuActiveTrail403Test extends BrowserTestBase {
     $this->drupalPlaceBlock(
       'system_menu_block:' . $this->menu,
       [
-       'level' => 2,
+        'level' => 2,
       ]
     );
 

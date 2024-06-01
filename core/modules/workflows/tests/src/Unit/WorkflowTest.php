@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\workflows\Unit;
 
 use Drupal\Core\DependencyInjection\ContainerBuilder;
@@ -120,7 +122,7 @@ class WorkflowTest extends UnitTestCase {
   }
 
   /**
-   * Test numeric IDs when added to a workflow.
+   * Tests numeric IDs when added to a workflow.
    */
   public function testNumericIdSorting() {
     $workflow = new Workflow(['id' => 'test', 'type' => 'test_type'], 'workflow');

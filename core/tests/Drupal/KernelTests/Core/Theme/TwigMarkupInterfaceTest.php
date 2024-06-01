@@ -1,9 +1,6 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\KernelTests\Core\Theme\TwigMarkupInterfaceTest.
- */
+declare(strict_types=1);
 
 namespace Drupal\KernelTests\Core\Theme;
 
@@ -37,19 +34,18 @@ class TwigMarkupInterfaceTest extends KernelTestBase {
    * @dataProvider providerTestMarkupInterfaceEmpty
    */
   public function testMarkupInterfaceEmpty($expected, $variable) {
-    $this->assertEquals($expected, $this->renderObjectWithTwig($variable));
+    $this->assertSame($expected, (string) $this->renderObjectWithTwig($variable));
   }
 
   /**
    * Provide test examples.
    */
-  public function providerTestMarkupInterfaceEmpty() {
+  public static function providerTestMarkupInterfaceEmpty() {
     return [
-      // @codingStandardsIgnoreStart
       // The first argument to \Drupal\Core\StringTranslation\TranslatableMarkup
       // is not supposed to be an empty string.
+      // phpcs:ignore Drupal.Semantics.FunctionT.EmptyString
       'empty TranslatableMarkup' => ['', new TranslatableMarkup('')],
-      // @codingStandardsIgnoreEnd
       'non-empty TranslatableMarkup' => ['<span>test</span>', new TranslatableMarkup('test')],
       'empty FormattableMarkup' => ['', new FormattableMarkup('', ['@foo' => 'bar'])],
       'non-empty FormattableMarkup' => ['<span>bar</span>', new FormattableMarkup('@foo', ['@foo' => 'bar'])],
@@ -72,10 +68,10 @@ class TwigMarkupInterfaceTest extends KernelTestBase {
     new Settings($settings);
 
     $variable = new TranslatableMarkup('test');
-    $this->assertEquals('', $this->renderObjectWithTwig($variable));
+    $this->assertEquals('', (string) $this->renderObjectWithTwig($variable));
 
     $variable = new TranslatableMarkup('test', [], ['langcode' => 'de']);
-    $this->assertEquals('<span>test</span>', $this->renderObjectWithTwig($variable));
+    $this->assertEquals('<span>test</span>', (string) $this->renderObjectWithTwig($variable));
   }
 
   /**

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\views\Kernel\Entity;
 
 use Drupal\node\Entity\Node;
@@ -88,7 +90,7 @@ class FilterEntityBundleTest extends ViewsKernelTestBase {
       $view->display_handler->setOption('filters', $filters);
       $this->executeView($view);
 
-      $this->assertCount(count($entities[$key]), $view->result);
+      $this->assertSameSize($entities[$key], $view->result);
 
       $view->destroy();
     }

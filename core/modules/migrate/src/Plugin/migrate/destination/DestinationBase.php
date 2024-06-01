@@ -9,6 +9,8 @@ use Drupal\migrate\Plugin\MigrateDestinationInterface;
 use Drupal\migrate\Plugin\MigrateIdMapInterface;
 use Drupal\migrate\Plugin\RequirementsInterface;
 
+// cspell:ignore sourceid
+
 /**
  * Base class for migrate destination classes.
  *
@@ -19,7 +21,7 @@ use Drupal\migrate\Plugin\RequirementsInterface;
  * information, refer to \Drupal\migrate\Plugin\MigrateDestinationInterface.
  *
  * @see \Drupal\migrate\Plugin\MigrateDestinationPluginManager
- * @see \Drupal\migrate\Annotation\MigrateDestination
+ * @see \Drupal\migrate\Attribute\MigrateDestination
  * @see plugin_api
  *
  * @ingroup migration

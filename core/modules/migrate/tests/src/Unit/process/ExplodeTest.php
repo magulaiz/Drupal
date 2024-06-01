@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\migrate\Unit\process;
 
 use Drupal\migrate\MigrateException;
@@ -25,7 +27,7 @@ class ExplodeTest extends MigrateProcessTestCase {
   }
 
   /**
-   * Test explode transform process works.
+   * Tests explode transform process works.
    */
   public function testTransform() {
     $value = $this->plugin->transform('foo,bar,tik', $this->migrateExecutable, $this->row, 'destination_property');
@@ -33,7 +35,7 @@ class ExplodeTest extends MigrateProcessTestCase {
   }
 
   /**
-   * Test explode transform process works with a limit.
+   * Tests explode transform process works with a limit.
    */
   public function testTransformLimit() {
     $plugin = new Explode(['delimiter' => '_', 'limit' => 2], 'map', []);
@@ -42,18 +44,18 @@ class ExplodeTest extends MigrateProcessTestCase {
   }
 
   /**
-   * Test if the explode process can be chained with a handles_multiple process.
+   * Tests if the explode process can be chained with handles_multiple process.
    */
   public function testChainedTransform() {
-    $exploded = $this->plugin->transform('foo,bar,tik', $this->migrateExecutable, $this->row, 'destination_property');
+    $exploded = $this->plugin->transform('One,Two,Three', $this->migrateExecutable, $this->row, 'destination_property');
 
     $concat = new Concat([], 'map', []);
     $concatenated = $concat->transform($exploded, $this->migrateExecutable, $this->row, 'destination_property');
-    $this->assertSame('foobartik', $concatenated);
+    $this->assertSame('OneTwoThree', $concatenated);
   }
 
   /**
-   * Test explode fails properly on non-strings.
+   * Tests explode fails properly on non-strings.
    */
   public function testExplodeWithNonString() {
     $this->expectException(MigrateException::class);
@@ -76,7 +78,7 @@ class ExplodeTest extends MigrateProcessTestCase {
   /**
    * Data provider for ::testExplodeWithNonStrictAndEmptySource().
    */
-  public function providerExplodeWithNonStrictAndEmptySource() {
+  public static function providerExplodeWithNonStrictAndEmptySource() {
     return [
       'normal_string' => ['a|b|c', ['a', 'b', 'c']],
       'integer_cast_to_string' => [123, ['123']],
@@ -89,8 +91,7 @@ class ExplodeTest extends MigrateProcessTestCase {
   }
 
   /**
-   * Tests that explode raises an exception when the value cannot be casted to
-   * string.
+   * Tests Explode exception handling when string-cast fails.
    */
   public function testExplodeWithNonStrictAndNonCastable() {
     $plugin = new Explode(['delimiter' => '|', 'strict' => FALSE], 'map', []);
@@ -101,8 +102,7 @@ class ExplodeTest extends MigrateProcessTestCase {
   }
 
   /**
-   * Tests that explode with an empty string and strict check returns a
-   * non-empty array.
+   * Tests Explode return values with an empty string and strict check.
    */
   public function testExplodeWithStrictAndEmptyString() {
     $plugin = new Explode(['delimiter' => '|'], 'map', []);
@@ -111,7 +111,7 @@ class ExplodeTest extends MigrateProcessTestCase {
   }
 
   /**
-   * Test explode fails with empty delimiter.
+   * Tests explode fails with empty delimiter.
    */
   public function testExplodeWithEmptyDelimiter() {
     $this->expectException(MigrateException::class);

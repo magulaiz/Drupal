@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\FunctionalTests\Installer;
 
 /**
@@ -28,13 +30,13 @@ class InstallerPostInstallTest extends InstallerTestBase {
     $this->resetAll();
     // Confirm that the install_profile is correct.
     $this->drupalGet('/system-test/get-install-profile');
-    $this->assertText('minimal');
+    $this->assertSession()->pageTextContains('minimal');
     // Make an anonymous visit to the installer
     $this->drupalLogout();
     $this->visitInstaller();
     // Ensure that the install profile is still correct.
     $this->drupalGet('/system-test/get-install-profile');
-    $this->assertText('minimal');
+    $this->assertSession()->pageTextContains('minimal');
   }
 
 }

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\rest\Functional;
 
 use Behat\Mink\Driver\BrowserKitDriver;
@@ -98,7 +100,7 @@ abstract class ResourceTestBase extends BrowserTestBase {
   /**
    * {@inheritdoc}
    */
-  public function setUp() {
+  protected function setUp(): void {
     parent::setUp();
 
     $this->serializer = $this->container->get('serializer');
@@ -143,6 +145,8 @@ abstract class ResourceTestBase extends BrowserTestBase {
    *   The allowed formats for this resource.
    * @param string[] $authentication
    *   The allowed authentication providers for this resource.
+   * @param string[] $methods
+   *   The allowed methods for this resource.
    */
   protected function provisionResource($formats = [], $authentication = [], array $methods = ['GET', 'POST', 'PATCH', 'DELETE']) {
     $this->resourceConfigStorage->create([
@@ -396,13 +400,13 @@ abstract class ResourceTestBase extends BrowserTestBase {
     // Expected cache tags: X-Drupal-Cache-Tags header.
     $this->assertSame($expected_cache_tags !== FALSE, $response->hasHeader('X-Drupal-Cache-Tags'));
     if (is_array($expected_cache_tags)) {
-      $this->assertSame($expected_cache_tags, explode(' ', $response->getHeader('X-Drupal-Cache-Tags')[0]));
+      $this->assertEqualsCanonicalizing($expected_cache_tags, explode(' ', $response->getHeader('X-Drupal-Cache-Tags')[0]));
     }
 
     // Expected cache contexts: X-Drupal-Cache-Contexts header.
     $this->assertSame($expected_cache_contexts !== FALSE, $response->hasHeader('X-Drupal-Cache-Contexts'));
     if (is_array($expected_cache_contexts)) {
-      $this->assertSame($expected_cache_contexts, explode(' ', $response->getHeader('X-Drupal-Cache-Contexts')[0]));
+      $this->assertEqualsCanonicalizing($expected_cache_contexts, explode(' ', $response->getHeader('X-Drupal-Cache-Contexts')[0]));
     }
 
     // Expected Page Cache header value: X-Drupal-Cache header.
@@ -485,9 +489,6 @@ abstract class ResourceTestBase extends BrowserTestBase {
    *
    * @param array $array
    *   An array to sort.
-   *
-   * @return array
-   *   The sorted array.
    */
   protected static function recursiveKSort(array &$array) {
     // First, sort the main array.

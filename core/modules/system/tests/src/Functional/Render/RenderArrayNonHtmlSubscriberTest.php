@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\system\Functional\Render;
 
 use Drupal\Core\Url;
@@ -33,17 +35,17 @@ class RenderArrayNonHtmlSubscriberTest extends BrowserTestBase {
 
     $this->drupalGet($url);
     $this->assertSession()->statusCodeEquals(200);
-    $this->assertRaw(t('Controller response successfully rendered.'));
+    $this->assertSession()->pageTextContains("Controller response successfully rendered.");
 
     // Test that correct response code is returned for any non-HTML format.
-    foreach (['json', 'hal+json', 'xml', 'foo'] as $format) {
+    foreach (['json', 'xml', 'foo'] as $format) {
       $url = Url::fromRoute('render_array_non_html_subscriber_test.render_array', [
         '_format' => $format,
       ]);
 
       $this->drupalGet($url);
       $this->assertSession()->statusCodeEquals(406);
-      $this->assertNoRaw(t('Controller response successfully rendered.'));
+      $this->assertSession()->pageTextNotContains("Controller response successfully rendered.");
     }
 
     // Test that event subscriber does not interfere with raw string responses.
@@ -53,7 +55,7 @@ class RenderArrayNonHtmlSubscriberTest extends BrowserTestBase {
 
     $this->drupalGet($url);
     $this->assertSession()->statusCodeEquals(200);
-    $this->assertRaw(t('Raw controller response.'));
+    $this->assertSession()->responseContains("Raw controller response.");
   }
 
 }

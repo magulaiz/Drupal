@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\file\Kernel;
 
 use Drupal\file\Entity\File;
@@ -26,8 +28,8 @@ class FileUriItemTest extends FileManagedUnitTestBase {
       'filename' => 'druplicon.txt',
       'uri' => $uri,
       'filemime' => 'text/plain',
-      'status' => FILE_STATUS_PERMANENT,
     ]);
+    $file->setPermanent();
     file_put_contents($file->getFileUri(), 'hello world');
 
     $file->save();

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\FunctionalTests\Installer;
 
 /**
@@ -36,8 +38,7 @@ class InstallerLanguageDirectionTest extends InstallerTestBase {
     $this->translations['Save and continue'] = 'Save and continue Arabic';
 
     // Verify that language direction is right-to-left.
-    $direction = current($this->xpath('/@dir'))->getText();
-    $this->assertEqual('rtl', $direction);
+    $this->assertSession()->elementTextEquals('xpath', '/@dir', 'rtl');
   }
 
   /**

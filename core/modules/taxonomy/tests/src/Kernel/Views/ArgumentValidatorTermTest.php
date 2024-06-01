@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\taxonomy\Kernel\Views;
 
 use Drupal\views\Views;
@@ -8,8 +10,6 @@ use Drupal\views\Views;
  * Tests the plugin of the taxonomy: term argument validator.
  *
  * @group taxonomy
- *
- * @see \Drupal\taxonomy\Plugin\views\argument_validator\Term
  */
 class ArgumentValidatorTermTest extends TaxonomyTestBase {
 

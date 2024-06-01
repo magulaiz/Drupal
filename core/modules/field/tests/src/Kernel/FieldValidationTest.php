@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\field\Kernel;
 
 /**
@@ -24,6 +26,9 @@ class FieldValidationTest extends FieldKernelTestBase {
    */
   private $entity;
 
+  /**
+   * {@inheritdoc}
+   */
   protected function setUp(): void {
     parent::setUp();
 
@@ -55,8 +60,8 @@ class FieldValidationTest extends FieldKernelTestBase {
 
     // Check that the expected constraint violations are reported.
     $this->assertCount(1, $violations);
-    $this->assertEqual('', $violations[0]->getPropertyPath());
-    $this->assertEqual(t('%name: this field cannot hold more than @count values.', ['%name' => $this->fieldTestData->field->getLabel(), '@count' => $cardinality]), $violations[0]->getMessage());
+    $this->assertEquals('', $violations[0]->getPropertyPath());
+    $this->assertEquals(sprintf('%s: this field cannot hold more than %s values.', $this->fieldTestData->field->getLabel(), $cardinality), $violations[0]->getMessage());
   }
 
   /**
@@ -91,7 +96,7 @@ class FieldValidationTest extends FieldKernelTestBase {
     foreach ($violations as $violation) {
       $violations_by_path[$violation->getPropertyPath()][] = $violation->getMessage();
     }
-    $this->assertEqual($expected_violations, $violations_by_path);
+    $this->assertEquals($expected_violations, $violations_by_path);
   }
 
 }

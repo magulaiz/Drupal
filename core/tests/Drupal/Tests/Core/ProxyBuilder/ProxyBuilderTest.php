@@ -1,9 +1,6 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Tests\Core\ProxyBuilder\ProxyBuilderTest.
- */
+declare(strict_types=1);
 
 namespace Drupal\Tests\Core\ProxyBuilder;
 
@@ -62,8 +59,12 @@ EOS;
   /**
    * Constructs the expected class output.
    *
+   * @param string $class
+   *   The class name that is being built.
    * @param string $expected_methods_body
    *   The expected body of decorated methods.
+   * @param string $interface_string
+   *   (optional) The expected "implements" clause of the class definition.
    *
    * @return string
    *   The code of the entire proxy.
@@ -166,7 +167,7 @@ class TestServiceNoMethod {
 
 class TestServiceComplexMethod {
 
-  public function complexMethod($parameter, callable $function, TestServiceNoMethod $test_service = NULL, array &$elements = []) {
+  public function complexMethod($parameter, callable $function, ?TestServiceNoMethod $test_service = NULL, array &$elements = []) {
 
   }
 

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\taxonomy\Functional;
 
 /**
@@ -28,6 +30,9 @@ class TaxonomyTermIndentationTest extends TaxonomyTestBase {
    */
   protected $vocabulary;
 
+  /**
+   * {@inheritdoc}
+   */
   protected function setUp(): void {
     parent::setUp();
     $this->drupalLogin($this->drupalCreateUser([
@@ -72,7 +77,7 @@ class TaxonomyTermIndentationTest extends TaxonomyTestBase {
 
     // Check explicitly that term 2's parent is term 1.
     $parents = $taxonomy_storage->loadParents($term2->id());
-    $this->assertEqual(1, key($parents), 'Term 1 is the term 2\'s parent');
+    $this->assertEquals(1, key($parents), 'Term 1 is the term 2\'s parent');
 
     // Move the second term back out to the root level.
     $this->drupalGet('admin/structure/taxonomy/manage/' . $this->vocabulary->get('vid') . '/overview');
@@ -97,7 +102,7 @@ class TaxonomyTermIndentationTest extends TaxonomyTestBase {
     // Check explicitly that term 2 has no parents.
     \Drupal::entityTypeManager()->getStorage('taxonomy_term')->resetCache();
     $parents = $taxonomy_storage->loadParents($term2->id());
-    $this->assertTrue(empty($parents), 'Term 2 has no parents now');
+    $this->assertEmpty($parents, 'Term 2 has no parents now');
   }
 
 }

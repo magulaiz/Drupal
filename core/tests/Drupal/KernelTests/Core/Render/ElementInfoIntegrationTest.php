@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\KernelTests\Core\Render;
 
 use Drupal\KernelTests\KernelTestBase;
@@ -17,7 +19,7 @@ class ElementInfoIntegrationTest extends KernelTestBase {
   protected function setUp(): void {
     parent::setUp();
 
-    $this->container->get('theme_installer')->install(['test_theme', 'classy']);
+    $this->container->get('theme_installer')->install(['test_theme', 'starterkit_theme']);
   }
 
   /**
@@ -33,11 +35,11 @@ class ElementInfoIntegrationTest extends KernelTestBase {
     /** @var \Drupal\Core\Render\ElementInfoManagerInterface $element_info */
     $element_info = $this->container->get('plugin.manager.element_info');
 
-    $theme_manager->setActiveTheme($theme_initializer->getActiveThemeByName('classy'));
-    $this->assertEqual(60, $element_info->getInfo('textfield')['#size']);
+    $theme_manager->setActiveTheme($theme_initializer->getActiveThemeByName('starterkit_theme'));
+    $this->assertEquals(60, $element_info->getInfo('textfield')['#size']);
 
     $theme_manager->setActiveTheme($theme_initializer->getActiveThemeByName('test_theme'));
-    $this->assertEqual(40, $element_info->getInfo('textfield')['#size']);
+    $this->assertEquals(40, $element_info->getInfo('textfield')['#size']);
   }
 
 }

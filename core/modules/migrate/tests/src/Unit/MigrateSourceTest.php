@@ -1,9 +1,6 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Tests\migrate\Unit\MigrateSourceTest.
- */
+declare(strict_types=1);
 
 namespace Drupal\Tests\migrate\Unit;
 
@@ -17,6 +14,7 @@ use Drupal\migrate\MigrateExecutable;
 use Drupal\migrate\MigrateSkipRowException;
 use Drupal\migrate\Plugin\migrate\source\SourcePluginBase;
 use Drupal\migrate\Plugin\MigrateIdMapInterface;
+use Drupal\migrate\Plugin\MigrateSourceInterface;
 use Drupal\migrate\Row;
 
 /**
@@ -74,6 +72,8 @@ class MigrateSourceTest extends MigrateTestCase {
    * @param int $status
    *   (optional) The default status for the new rows to be imported. Defaults
    *   to MigrateIdMapInterface::STATUS_NEEDS_UPDATE.
+   * @param int $high_water_value
+   *   (optional) The high water mark to start from, if set.
    *
    * @return \Drupal\migrate\Plugin\MigrateSourceInterface
    *   A mocked source plugin.
@@ -109,7 +109,7 @@ class MigrateSourceTest extends MigrateTestCase {
     $constructor_args = [$configuration, 'd6_action', [], $this->migration];
     $methods = ['getModuleHandler', 'fields', 'getIds', '__toString', 'prepareRow', 'initializeIterator'];
     $source_plugin = $this->getMockBuilder(SourcePluginBase::class)
-      ->setMethods($methods)
+      ->onlyMethods($methods)
       ->setConstructorArgs($constructor_args)
       ->getMock();
 
@@ -161,7 +161,7 @@ class MigrateSourceTest extends MigrateTestCase {
   }
 
   /**
-   * Test that the source count is correct.
+   * Tests that the source count is correct.
    *
    * @covers ::count
    */
@@ -184,14 +184,14 @@ class MigrateSourceTest extends MigrateTestCase {
 
     // Test the skip argument.
     $source = $this->getSource(['skip_count' => TRUE]);
-    $this->assertEquals(-1, $source->count());
+    $this->assertEquals(MigrateSourceInterface::NOT_COUNTABLE, $source->count());
 
     $this->migrationConfiguration['id'] = 'test_migration';
     $migration = $this->getMigration();
     $source = new StubSourceGeneratorPlugin([], '', [], $migration);
 
     // Test the skipCount property's default value.
-    $this->assertEquals(-1, $source->count());
+    $this->assertEquals(MigrateSourceInterface::NOT_COUNTABLE, $source->count());
 
     // Test the count value using a generator.
     $source = new StubSourceGeneratorPlugin(['skip_count' => FALSE], '', [], $migration);
@@ -199,7 +199,7 @@ class MigrateSourceTest extends MigrateTestCase {
   }
 
   /**
-   * Test that the key can be set for the count cache.
+   * Tests that the key can be set for the count cache.
    *
    * @covers ::count
    */
@@ -218,7 +218,7 @@ class MigrateSourceTest extends MigrateTestCase {
   }
 
   /**
-   * Test that we don't get a row if prepareRow() is false.
+   * Tests that we don't get a row if prepareRow() is false.
    */
   public function testPrepareRowFalse() {
     $source = $this->getSource([], ['prepare_row_false' => TRUE]);
@@ -228,7 +228,7 @@ class MigrateSourceTest extends MigrateTestCase {
   }
 
   /**
-   * Test that $row->needsUpdate() works as expected.
+   * Tests that $row->needsUpdate() works as expected.
    */
   public function testNextNeedsUpdate() {
     $source = $this->getSource();
@@ -244,7 +244,7 @@ class MigrateSourceTest extends MigrateTestCase {
   }
 
   /**
-   * Test that an outdated highwater mark does not cause a row to be imported.
+   * Tests that an outdated highwater mark does not cause a row to be imported.
    */
   public function testOutdatedHighwater() {
     $configuration = [
@@ -261,7 +261,7 @@ class MigrateSourceTest extends MigrateTestCase {
   }
 
   /**
-   * Test that a highwater mark newer than our saved one imports a row.
+   * Tests that a highwater mark newer than our saved one imports a row.
    *
    * @throws \Exception
    */
@@ -280,7 +280,7 @@ class MigrateSourceTest extends MigrateTestCase {
   }
 
   /**
-   * Test basic row preparation.
+   * Tests basic row preparation.
    *
    * @covers ::prepareRow
    */
@@ -323,7 +323,7 @@ class MigrateSourceTest extends MigrateTestCase {
   }
 
   /**
-   * Test that global prepare hooks can skip rows.
+   * Tests that global prepare hooks can skip rows.
    *
    * @covers ::prepareRow
    */
@@ -352,7 +352,7 @@ class MigrateSourceTest extends MigrateTestCase {
   }
 
   /**
-   * Test that migrate specific prepare hooks can skip rows.
+   * Tests that migrate specific prepare hooks can skip rows.
    *
    * @covers ::prepareRow
    */
@@ -381,7 +381,7 @@ class MigrateSourceTest extends MigrateTestCase {
   }
 
   /**
-   * Test that a skip exception during prepare hooks correctly skips.
+   * Tests that a skip exception during prepare hooks correctly skips.
    *
    * @covers ::prepareRow
    */
@@ -418,8 +418,7 @@ class MigrateSourceTest extends MigrateTestCase {
   }
 
   /**
-   * Test that cacheCounts, skipCount, trackChanges preserve their default
-   * values.
+   * Tests that default values are preserved for several source methods.
    */
   public function testDefaultPropertiesValues() {
     $this->migrationConfiguration['id'] = 'test_migration';
@@ -444,8 +443,8 @@ class MigrateSourceTest extends MigrateTestCase {
   protected function getMigrateExecutable($migration) {
     /** @var \Drupal\migrate\MigrateMessageInterface $message */
     $message = $this->createMock('Drupal\migrate\MigrateMessageInterface');
-    /** @var \Symfony\Component\EventDispatcher\EventDispatcherInterface $event_dispatcher */
-    $event_dispatcher = $this->createMock('Symfony\Component\EventDispatcher\EventDispatcherInterface');
+    /** @var \Symfony\Contracts\EventDispatcher\EventDispatcherInterface $event_dispatcher */
+    $event_dispatcher = $this->createMock('Symfony\Contracts\EventDispatcher\EventDispatcherInterface');
     return new MigrateExecutable($migration, $message, $event_dispatcher);
   }
 
@@ -497,8 +496,10 @@ class StubSourcePlugin extends SourcePluginBase {
 }
 
 /**
- * Stubbed source plugin with a generator as iterator. Also it overwrites the
- * $skipCount, $cacheCounts and $trackChanges properties.
+ * Defines a stubbed source plugin with a generator as iterator.
+ *
+ * This stub overwrites the $skipCount, $cacheCounts, and $trackChanges
+ * properties.
  */
 class StubSourceGeneratorPlugin extends StubSourcePlugin {
 

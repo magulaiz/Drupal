@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\language\Functional;
 
 use Drupal\language\Entity\ConfigurableLanguage;
@@ -19,6 +21,9 @@ class AdminPathEntityConverterLanguageTest extends BrowserTestBase {
    */
   protected $defaultTheme = 'stark';
 
+  /**
+   * {@inheritdoc}
+   */
   protected function setUp(): void {
     parent::setUp();
     $permissions = [
@@ -39,12 +44,12 @@ class AdminPathEntityConverterLanguageTest extends BrowserTestBase {
       ->save();
 
     $this->drupalGet('es/admin/language_test/entity_using_current_language/es');
-    $this->assertNoRaw(t('Loaded %label.', ['%label' => 'Spanish']));
-    $this->assertRaw(t('Loaded %label.', ['%label' => 'Español']));
+    $this->assertSession()->pageTextNotContains('Loaded Spanish.');
+    $this->assertSession()->pageTextContains('Loaded Español.');
 
     $this->drupalGet('es/admin/language_test/entity_using_original_language/es');
-    $this->assertRaw(t('Loaded %label.', ['%label' => 'Spanish']));
-    $this->assertNoRaw(t('Loaded %label.', ['%label' => 'Español']));
+    $this->assertSession()->pageTextContains('Loaded Spanish.');
+    $this->assertSession()->pageTextNotContains('Loaded Español.');
   }
 
 }

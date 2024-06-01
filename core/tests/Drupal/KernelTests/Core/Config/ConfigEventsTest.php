@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\KernelTests\Core\Config;
 
 use Drupal\Core\Config\Config;
@@ -68,7 +70,7 @@ class ConfigEventsTest extends KernelTestBase {
     $this->assertSame(['key' => 'initial'], $event['current_config_data']);
 
     // Override applies when getting runtime config.
-    $this->assertEqual($GLOBALS['config'][$name], \Drupal::config($name)->get());
+    $this->assertEquals($GLOBALS['config'][$name], \Drupal::config($name)->get());
 
     \Drupal::configFactory()->rename($name, $new_name);
     $event = \Drupal::state()->get('config_events_test.event', []);

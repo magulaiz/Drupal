@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\FunctionalTests\Bootstrap;
 
 use Drupal\Component\Render\FormattableMarkup;
@@ -9,6 +11,7 @@ use Drupal\Tests\BrowserTestBase;
  * Tests kernel panic when things are really messed up.
  *
  * @group system
+ * @group #slow
  */
 class UncaughtExceptionTest extends BrowserTestBase {
 
@@ -71,7 +74,7 @@ class UncaughtExceptionTest extends BrowserTestBase {
 
     $this->drupalGet('');
     $this->assertSession()->statusCodeEquals(500);
-    $this->assertSession()->pageTextContains('The website encountered an unexpected error. Please try again later.');
+    $this->assertSession()->pageTextContains('The website encountered an unexpected error. Try again later.');
     $this->assertSession()->pageTextNotContains($this->expectedExceptionMessage);
 
     $settings = [];
@@ -83,7 +86,7 @@ class UncaughtExceptionTest extends BrowserTestBase {
 
     $this->drupalGet('');
     $this->assertSession()->statusCodeEquals(500);
-    $this->assertSession()->pageTextContains('The website encountered an unexpected error. Please try again later.');
+    $this->assertSession()->pageTextContains('The website encountered an unexpected error. Try again later.');
     $this->assertSession()->pageTextContains($this->expectedExceptionMessage);
     $this->assertErrorLogged($this->expectedExceptionMessage);
   }
@@ -94,19 +97,17 @@ class UncaughtExceptionTest extends BrowserTestBase {
   public function testUncaughtFatalError() {
     $fatal_error = [
       '%type' => 'TypeError',
-      '@message' => PHP_VERSION_ID >= 80000 ?
-        'Drupal\error_test\Controller\ErrorTestController::Drupal\error_test\Controller\{closure}(): Argument #1 ($test) must be of type array, string given, called in ' . \Drupal::root() . '/core/modules/system/tests/modules/error_test/src/Controller/ErrorTestController.php on line 65' :
-        'Argument 1 passed to Drupal\error_test\Controller\ErrorTestController::Drupal\error_test\Controller\{closure}() must be of the type array, string given, called in ' . \Drupal::root() . '/core/modules/system/tests/modules/error_test/src/Controller/ErrorTestController.php on line 65',
+      '@message' => 'Drupal\error_test\Controller\ErrorTestController::Drupal\error_test\Controller\{closure}(): Argument #1 ($test) must be of type array, string given, called in ' . \Drupal::root() . '/core/modules/system/tests/modules/error_test/src/Controller/ErrorTestController.php on line 65',
       '%function' => 'Drupal\error_test\Controller\ErrorTestController->Drupal\error_test\Controller\{closure}()',
     ];
-    $this->drupalGet('error-test/generate-fatals');
+    $this->drupalGet('error-test/generate-fatal-errors');
     $this->assertSession()->statusCodeEquals(500);
     $message = new FormattableMarkup('%type: @message in %function (line ', $fatal_error);
     $this->assertSession()->responseContains((string) $message);
     $this->assertSession()->responseContains('<pre class="backtrace">');
     // Ensure we are escaping but not double escaping.
-    $this->assertSession()->responseContains('&#039;');
-    $this->assertSession()->responseNotContains('&amp;#039;');
+    $this->assertSession()->responseContains('&gt;');
+    $this->assertSession()->responseNotContains('&amp;gt;');
   }
 
   /**
@@ -127,7 +128,7 @@ class UncaughtExceptionTest extends BrowserTestBase {
 
     $this->drupalGet('');
     $this->assertSession()->statusCodeEquals(418);
-    $this->assertSession()->pageTextNotContains('The website encountered an unexpected error. Please try again later.');
+    $this->assertSession()->pageTextNotContains('The website encountered an unexpected error. Try again later.');
     $this->assertSession()->pageTextNotContains('Oh oh, bananas in the instruments');
     $this->assertSession()->pageTextContains('Oh oh, flying teapots');
   }
@@ -146,27 +147,6 @@ class UncaughtExceptionTest extends BrowserTestBase {
   }
 
   /**
-   * Tests a missing dependency on a service with a custom error handler.
-   */
-  public function testMissingDependencyCustomErrorHandler() {
-    $settings_filename = $this->siteDirectory . '/settings.php';
-    chmod($settings_filename, 0777);
-    $settings_php = file_get_contents($settings_filename);
-    $settings_php .= "\n";
-    $settings_php .= "set_error_handler(function() {\n";
-    $settings_php .= "  header('HTTP/1.1 418 I\'m a teapot');\n";
-    $settings_php .= "  print('Oh oh, flying teapots');\n";
-    $settings_php .= "  exit();\n";
-    $settings_php .= "});\n";
-    $settings_php .= "\$settings['teapots'] = TRUE;\n";
-    file_put_contents($settings_filename, $settings_php);
-
-    $this->drupalGet('broken-service-class');
-    $this->assertSession()->statusCodeEquals(418);
-    $this->assertSession()->responseContains('Oh oh, flying teapots');
-  }
-
-  /**
    * Tests a container which has an error.
    */
   public function testErrorContainer() {
@@ -178,9 +158,7 @@ class UncaughtExceptionTest extends BrowserTestBase {
     $this->writeSettings($settings);
     \Drupal::service('kernel')->invalidateContainer();
 
-    $this->expectedExceptionMessage = PHP_VERSION_ID >= 80000 ?
-      'Drupal\FunctionalTests\Bootstrap\ErrorContainer::Drupal\FunctionalTests\Bootstrap\{closure}(): Argument #1 ($container) must be of type Drupal\FunctionalTests\Bootstrap\ErrorContainer' :
-      'Argument 1 passed to Drupal\FunctionalTests\Bootstrap\ErrorContainer::Drupal\FunctionalTests\Bootstrap\{closur';
+    $this->expectedExceptionMessage = 'Drupal\FunctionalTests\Bootstrap\ErrorContainer::Drupal\FunctionalTests\Bootstrap\{closure}(): Argument #1 ($container) must be of type Drupal\FunctionalTests\Bootstrap\ErrorContainer';
     $this->drupalGet('');
     $this->assertSession()->statusCodeEquals(500);
 
@@ -256,17 +234,17 @@ class UncaughtExceptionTest extends BrowserTestBase {
 
     $this->drupalGet('');
     $this->assertSession()->statusCodeEquals(500);
-    $this->assertSession()->pageTextContains('The website encountered an unexpected error. Please try again later.');
+    $this->assertSession()->pageTextContains('The website encountered an unexpected error. Try again later.');
     $this->assertSession()->pageTextContains($this->expectedExceptionMessage);
 
     // Find fatal error logged to the error.log
     $errors = file(\Drupal::root() . '/' . $this->siteDirectory . '/error.log');
-    $this->assertCount(8, $errors, 'The error + the error that the logging service is broken has been written to the error log.');
+    $this->assertCount(10, $errors, 'The error + the error that the logging service is broken has been written to the error log.');
     $this->assertStringContainsString('Failed to log error', $errors[0], 'The error handling logs when an error could not be logged to the logger.');
 
     $expected_path = \Drupal::root() . '/core/modules/system/tests/modules/error_service_test/src/MonkeysInTheControlRoom.php';
-    $expected_line = 59;
-    $expected_entry = "Failed to log error: Exception: Deforestation in Drupal\\error_service_test\\MonkeysInTheControlRoom->handle() (line ${expected_line} of ${expected_path})";
+    $expected_line = 67;
+    $expected_entry = "Failed to log error: Exception: Deforestation in Drupal\\error_service_test\\MonkeysInTheControlRoom->handle() (line {$expected_line} of {$expected_path})";
     $this->assertStringContainsString($expected_entry, $errors[0], 'Original error logged to the PHP error log when an exception is thrown by a logger');
 
     // The exception is expected. Do not interpret it as a test failure. Not
@@ -280,10 +258,12 @@ class UncaughtExceptionTest extends BrowserTestBase {
    * @param string $error_message
    *   The expected error message.
    *
-   * @see \Drupal\simpletest\TestBase::prepareEnvironment()
+   * @see \Drupal\Core\Test\FunctionalTestSetupTrait::prepareEnvironment()
    * @see \Drupal\Core\DrupalKernel::bootConfiguration()
+   *
+   * @internal
    */
-  protected function assertErrorLogged($error_message) {
+  protected function assertErrorLogged(string $error_message): void {
     $error_log_filename = DRUPAL_ROOT . '/' . $this->siteDirectory . '/error.log';
     $this->assertFileExists($error_log_filename);
 
@@ -294,7 +274,7 @@ class UncaughtExceptionTest extends BrowserTestBase {
     // afterwards.
     $found = FALSE;
     foreach ($rows as $row_index => $row) {
-      if (strpos($content, $error_message) !== FALSE) {
+      if (str_contains($content, $error_message)) {
         $found = TRUE;
         unset($rows[$row_index]);
       }
@@ -308,13 +288,15 @@ class UncaughtExceptionTest extends BrowserTestBase {
   /**
    * Asserts that no errors have been logged to the PHP error.log thus far.
    *
-   * @see \Drupal\simpletest\TestBase::prepareEnvironment()
+   * @see \Drupal\Core\Test\FunctionalTestSetupTrait::prepareEnvironment()
    * @see \Drupal\Core\DrupalKernel::bootConfiguration()
+   *
+   * @internal
    */
-  protected function assertNoErrorsLogged() {
+  protected function assertNoErrorsLogged(): void {
     // Since PHP only creates the error.log file when an actual error is
     // triggered, it is sufficient to check whether the file exists.
-    $this->assertFileNotExists(DRUPAL_ROOT . '/' . $this->siteDirectory . '/error.log');
+    $this->assertFileDoesNotExist(DRUPAL_ROOT . '/' . $this->siteDirectory . '/error.log');
   }
 
 }

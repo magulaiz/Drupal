@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\user\Kernel\ContextProvider;
 
 use Drupal\Core\Session\AccountInterface;
@@ -24,7 +26,6 @@ class CurrentUserContextTest extends KernelTestBase {
   protected function setUp(): void {
     parent::setUp();
 
-    $this->installSchema('system', ['sequences']);
     $this->installEntitySchema('user');
   }
 

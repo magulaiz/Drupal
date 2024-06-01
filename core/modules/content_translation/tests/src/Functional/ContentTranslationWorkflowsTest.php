@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\content_translation\Functional;
 
 use Drupal\Component\Render\FormattableMarkup;
@@ -69,8 +71,12 @@ class ContentTranslationWorkflowsTest extends ContentTranslationTestBase {
    */
   protected $defaultTheme = 'stark';
 
+  /**
+   * {@inheritdoc}
+   */
   protected function setUp(): void {
     parent::setUp();
+    $this->doSetup();
 
     $field_storage = FieldStorageConfig::create([
       'field_name' => 'field_reference',
@@ -148,10 +154,10 @@ class ContentTranslationWorkflowsTest extends ContentTranslationTestBase {
   /**
    * Creates a test entity and translate it.
    *
-   * @param Drupal\User\UserInterface|null $user
+   * @param \Drupal\User\UserInterface|null $user
    *   (optional) The entity owner.
    */
-  protected function setupEntity(UserInterface $user = NULL) {
+  protected function setupEntity(?UserInterface $user = NULL) {
     $default_langcode = $this->langcodes[0];
 
     // Create a test entity.
@@ -172,7 +178,8 @@ class ContentTranslationWorkflowsTest extends ContentTranslationTestBase {
       'name[0][value]' => 'translation name',
       'content_translation[status]' => FALSE,
     ];
-    $this->drupalPostForm($add_translation_url, $edit, 'Save');
+    $this->drupalGet($add_translation_url);
+    $this->submitForm($edit, 'Save');
 
     $storage->resetCache([$id]);
     $this->entity = $storage->load($id);
@@ -181,7 +188,7 @@ class ContentTranslationWorkflowsTest extends ContentTranslationTestBase {
   }
 
   /**
-   * Test simple and editorial translation workflows.
+   * Tests simple and editorial translation workflows.
    */
   public function testWorkflows() {
     // Test workflows for the editor.
@@ -224,7 +231,7 @@ class ContentTranslationWorkflowsTest extends ContentTranslationTestBase {
     $this->doTestWorkflows($this->administrator, $expected_status);
 
     // Check that translation permissions allow the associated operations.
-    $ops = ['create' => t('Add'), 'update' => t('Edit'), 'delete' => t('Delete')];
+    $ops = ['create' => 'Add', 'update' => 'Edit', 'delete' => 'Delete'];
     $translations_url = $this->entity->toUrl('drupal:content-translation-overview');
     foreach ($ops as $current_op => $item) {
       $user = $this->drupalCreateUser([
@@ -413,10 +420,12 @@ class ContentTranslationWorkflowsTest extends ContentTranslationTestBase {
 
   /**
    * Assert that the current page does not contain shared form elements.
+   *
+   * @internal
    */
-  protected function assertNoSharedElements() {
+  protected function assertNoSharedElements(): void {
     $language_none = LanguageInterface::LANGCODE_NOT_SPECIFIED;
-    return $this->assertSession()->fieldNotExists("field_test_text[$language_none][0][value]");
+    $this->assertSession()->fieldNotExists("field_test_text[$language_none][0][value]");
   }
 
 }

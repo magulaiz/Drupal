@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\locale\Kernel;
 
 use Drupal\KernelTests\KernelTestBase;
@@ -32,8 +34,8 @@ class LocaleStringIsSafeTest extends KernelTestBase {
     $result = locale_string_is_safe($string);
     $this->assertTrue($result);
 
-    // Check an untranslatable string which includes untrustable HTML (according
-    // to the locale_string_is_safe() function definition).
+    // Check an untranslatable string which includes unsafe HTML (according to
+    // the locale_string_is_safe() function definition).
     $string = 'Hello <img src="world.png" alt="world" />!';
     $result = locale_string_is_safe($string);
     $this->assertFalse($result);
@@ -54,11 +56,11 @@ class LocaleStringIsSafeTest extends KernelTestBase {
     $tests_to_do = [
       1 => [
         'original' => 'Go to the <a href="[locale_test:security_test1]">frontpage</a>',
-        'replaced' => 'Go to the &lt;a href=&quot;javascript:alert(&amp;#039;Mooooh!&amp;#039;);&quot;&gt;frontpage&lt;/a&gt;',
+        'replaced' => 'Go to the &lt;a href=&quot;javascript:alert(&amp;#039;Hello!&amp;#039;);&quot;&gt;frontpage&lt;/a&gt;',
       ],
       2 => [
         'original' => 'Hello <strong>[locale_test:security_test2]</strong>!',
-        'replaced' => 'Hello &lt;strong&gt;&amp;lt;script&amp;gt;alert(&amp;#039;Mooooh!&amp;#039;);&amp;lt;/script&amp;gt;&lt;/strong&gt;!',
+        'replaced' => 'Hello &lt;strong&gt;&amp;lt;script&amp;gt;alert(&amp;#039;Hello!&amp;#039;);&amp;lt;/script&amp;gt;&lt;/strong&gt;!',
       ],
     ];
 
@@ -78,7 +80,7 @@ class LocaleStringIsSafeTest extends KernelTestBase {
       $rendered_safe_string = \Drupal::theme()->render('locale_test_tokenized', ['content' => $safe_string]);
       // t() function always marks the string as safe so it won't be escaped,
       // and should be the same as the original.
-      $this->assertEqual($original_string . "\n", $rendered_safe_string, 'Security test ' . $i . ' after translation before token replacement');
+      $this->assertSame($original_string . "\n", (string) $rendered_safe_string, 'Security test ' . $i . ' after translation before token replacement');
 
       // Replace tokens in the safe string to inject it with dangerous content.
       // @see locale_test_tokens().
@@ -86,7 +88,7 @@ class LocaleStringIsSafeTest extends KernelTestBase {
       $rendered_unsafe_string = \Drupal::theme()->render('locale_test_tokenized', ['content' => $unsafe_string]);
       // Token replacement changes the string so it is not marked as safe
       // anymore. Check it is escaped the way we expect.
-      $this->assertEqual($test['replaced'] . "\n", $rendered_unsafe_string, 'Security test ' . $i . ' after translation  after token replacement');
+      $this->assertEquals($test['replaced'] . "\n", $rendered_unsafe_string, 'Security test ' . $i . ' after translation  after token replacement');
     }
   }
 

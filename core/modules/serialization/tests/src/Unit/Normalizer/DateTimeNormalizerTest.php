@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\serialization\Unit\Normalizer;
 
 use Drupal\Core\Config\ConfigFactoryInterface;
@@ -119,7 +121,7 @@ class DateTimeNormalizerTest extends UnitTestCase {
    *
    * @return array
    */
-  public function providerTestDenormalizeValidFormats() {
+  public static function providerTestDenormalizeValidFormats() {
     $data = [];
 
     $data['RFC3339'] = ['2016-11-06T09:02:00+00:00', new \DateTimeImmutable('2016-11-06T09:02:00+00:00')];
@@ -150,7 +152,7 @@ class DateTimeNormalizerTest extends UnitTestCase {
    *
    * @return array
    */
-  public function providerTestDenormalizeUserFormats() {
+  public static function providerTestDenormalizeUserFormats() {
     $data = [];
 
     $data['Y/m/d H:i:s P'] = ['2016/11/06 09:02:00 +00:00', 'Y/m/d H:i:s P', new \DateTimeImmutable('2016-11-06T09:02:00+00:00')];
@@ -178,6 +180,8 @@ class DateTimeNormalizerTest extends UnitTestCase {
 
 
 /**
+ * Provides a test class for testing DrupalDateTime.
+ *
  * Note: Prophecy does not support magic methods. By subclassing and specifying
  * an explicit method, Prophecy works.
  * @see https://github.com/phpspec/prophecy/issues/338

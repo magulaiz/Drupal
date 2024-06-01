@@ -1,9 +1,6 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Tests\migrate\Unit\destination\PerComponentEntityFormDisplayTest.
- */
+declare(strict_types=1);
 
 namespace Drupal\Tests\migrate\Unit\destination;
 
@@ -39,7 +36,7 @@ class PerComponentEntityFormDisplayTest extends MigrateTestCase {
     $entity->expects($this->once())
       ->method('setComponent')
       ->with('field_name_test', ['test setting'])
-      ->will($this->returnSelf());
+      ->willReturnSelf();
     $entity->expects($this->once())
       ->method('save')
       ->with();
@@ -53,6 +50,7 @@ class PerComponentEntityFormDisplayTest extends MigrateTestCase {
 class TestPerComponentEntityFormDisplay extends PerComponentEntityFormDisplay {
   const MODE_NAME = 'form_mode';
   protected $testValues;
+  protected $entity;
 
   public function __construct($entity) {
     $this->entity = $entity;

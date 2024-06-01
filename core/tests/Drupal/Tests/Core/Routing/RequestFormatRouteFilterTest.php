@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\Core\Routing;
 
 use Drupal\Core\DependencyInjection\ContainerBuilder;
@@ -29,11 +31,11 @@ class RequestFormatRouteFilterTest extends UnitTestCase {
     $request->setRequestFormat($request_format);
     $collection = $route_filter->filter($collection, $request);
 
-    $this->assertCount(count($expected_filtered_collection), $collection);
+    $this->assertSameSize($expected_filtered_collection, $collection);
     $this->assertSame($expected_filtered_collection, array_keys($collection->all()));
   }
 
-  public function filterProvider() {
+  public static function filterProvider() {
     $route_without_format = new Route('/test');
     $route_with_format = new Route('/test');
     $route_with_format->setRequirement('_format', 'json');

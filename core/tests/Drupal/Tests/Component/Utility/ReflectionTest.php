@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\Component\Utility;
 
 use Drupal\Component\Utility\Reflection;
@@ -13,7 +15,9 @@ class ReflectionTest extends TestCase {
 
   /**
    * @param string|null $expected
+   *   The expected value of the parameter.
    * @param \ReflectionParameter $parameter
+   *   The reflection parameter.
    *
    * @covers ::getParameterClassName
    * @dataProvider providerGetParameterClassName
@@ -27,7 +31,7 @@ class ReflectionTest extends TestCase {
    *
    * @return array[]
    */
-  public function providerGetParameterClassName() {
+  public static function providerGetParameterClassName() {
     $reflection_method = new \ReflectionMethod(static::class, 'existsForTesting');
     $parameters = $reflection_method->getParameters();
     return [

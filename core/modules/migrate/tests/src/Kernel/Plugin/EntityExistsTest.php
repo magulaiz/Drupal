@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\migrate\Kernel\Plugin;
 
 use Drupal\KernelTests\KernelTestBase;
@@ -24,12 +26,11 @@ class EntityExistsTest extends KernelTestBase {
    */
   protected function setUp(): void {
     parent::setUp();
-    $this->installSchema('system', ['sequences']);
     $this->installEntitySchema('user');
   }
 
   /**
-   * Test the EntityExists plugin.
+   * Tests the EntityExists plugin.
    */
   public function testEntityExists() {
     $user = User::create([

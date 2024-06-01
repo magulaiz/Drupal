@@ -1,9 +1,6 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Tests\Core\Plugin\Context\ContextTest.
- */
+declare(strict_types=1);
 
 namespace Drupal\Tests\Core\Plugin\Context;
 
@@ -88,9 +85,7 @@ class ContextTest extends UnitTestCase {
    */
   public function testSetContextValueTypedData() {
 
-    $this->contextDefinition = $this->getMockBuilder('Drupal\Core\Plugin\Context\ContextDefinitionInterface')
-      ->setMethods(['getDefaultValue', 'getDataDefinition'])
-      ->getMockForAbstractClass();
+    $this->contextDefinition = $this->createMock('Drupal\Core\Plugin\Context\ContextDefinitionInterface');
 
     $typed_data = $this->createMock('Drupal\Core\TypedData\TypedDataInterface');
     $context = new Context($this->contextDefinition, $typed_data);
@@ -102,9 +97,9 @@ class ContextTest extends UnitTestCase {
    */
   public function testSetContextValueCacheableDependency() {
     $container = new Container();
-    $cache_context_manager = $this->getMockBuilder('Drupal\Core\Cache\CacheContextsManager')
+    $cache_context_manager = $this->getMockBuilder('Drupal\Core\Cache\Context\CacheContextsManager')
       ->disableOriginalConstructor()
-      ->setMethods(['validateTokens'])
+      ->onlyMethods(['validateTokens'])
       ->getMock();
     $container->set('cache_contexts_manager', $cache_context_manager);
     $cache_context_manager->expects($this->any())
@@ -144,9 +139,7 @@ class ContextTest extends UnitTestCase {
   protected function setUpDefaultValue($default_value = NULL) {
     $mock_data_definition = $this->createMock('Drupal\Core\TypedData\DataDefinitionInterface');
 
-    $this->contextDefinition = $this->getMockBuilder('Drupal\Core\Plugin\Context\ContextDefinitionInterface')
-      ->setMethods(['getDefaultValue', 'getDataDefinition'])
-      ->getMockForAbstractClass();
+    $this->contextDefinition = $this->createMock('Drupal\Core\Plugin\Context\ContextDefinitionInterface');
 
     $this->contextDefinition->expects($this->once())
       ->method('getDefaultValue')

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\config_translation\Kernel\Migrate\d6;
 
 use Drupal\Tests\migrate_drupal\Kernel\d6\MigrateDrupal6TestBase;
@@ -21,7 +23,11 @@ class MigrateSystemSiteTranslationTest extends MigrateDrupal6TestBase {
    */
   protected function setUp(): void {
     parent::setUp();
-    $this->executeMigration('d6_system_site_translation');
+    $this->executeMigrations([
+      'language',
+      'system_site',
+      'd6_system_site_translation',
+    ]);
   }
 
   /**

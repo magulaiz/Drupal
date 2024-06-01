@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\Core\File;
 
 use Drupal\Core\File\Exception\FileException;
@@ -31,7 +33,7 @@ class FileSystemTest extends UnitTestCase {
   /**
    * The stream wrapper manager.
    *
-   * @var \Drupal\Core\StreamWrapper\StreamWrapperInterface|\PHPUnit\Framework\MockObject\MockObject
+   * @var \Drupal\Core\StreamWrapper\StreamWrapperManagerInterface|\PHPUnit\Framework\MockObject\MockObject
    */
   protected $streamWrapperManager;
 
@@ -43,8 +45,7 @@ class FileSystemTest extends UnitTestCase {
 
     $settings = new Settings([]);
     $this->streamWrapperManager = $this->createMock(StreamWrapperManagerInterface::class);
-    $this->logger = $this->createMock('Psr\Log\LoggerInterface');
-    $this->fileSystem = new FileSystem($this->streamWrapperManager, $settings, $this->logger);
+    $this->fileSystem = new FileSystem($this->streamWrapperManager, $settings);
   }
 
   /**
@@ -80,8 +81,6 @@ class FileSystemTest extends UnitTestCase {
    */
   public function testChmodUnsuccessful() {
     vfsStream::setup('dir');
-    $this->logger->expects($this->once())
-      ->method('error');
     $this->assertFalse($this->fileSystem->chmod('vfs://dir/test.txt'));
   }
 
@@ -99,7 +98,7 @@ class FileSystemTest extends UnitTestCase {
 
     $this->assertFileExists($uri);
     $this->fileSystem->unlink($uri);
-    $this->assertFileNotExists($uri);
+    $this->assertFileDoesNotExist($uri);
   }
 
   /**
@@ -111,7 +110,7 @@ class FileSystemTest extends UnitTestCase {
     $this->assertSame($expected, $this->fileSystem->basename($uri, $suffix));
   }
 
-  public function providerTestBasename() {
+  public static function providerTestBasename() {
     $data = [];
     $data[] = [
       'public://nested/dir',
@@ -133,24 +132,17 @@ class FileSystemTest extends UnitTestCase {
    * Asserts that the file permissions of a given URI matches.
    *
    * @param int $expected_mode
+   *   The expected file mode.
    * @param string $uri
+   *   The URI to test.
    * @param string $message
+   *   An optional error message.
+   *
+   * @internal
    */
-  protected function assertFilePermissions($expected_mode, $uri, $message = '') {
+  protected function assertFilePermissions(int $expected_mode, string $uri, string $message = ''): void {
     // Mask out all but the last three octets.
     $actual_mode = fileperms($uri) & 0777;
-
-    // PHP on Windows has limited support for file permissions. Usually each of
-    // "user", "group" and "other" use one octal digit (3 bits) to represent the
-    // read/write/execute bits. On Windows, chmod() ignores the "group" and
-    // "other" bits, and fileperms() returns the "user" bits in all three
-    // positions. $expected_mode is updated to reflect this.
-    if (substr(PHP_OS, 0, 3) == 'WIN') {
-      // Reset the "group" and "other" bits.
-      $expected_mode = $expected_mode & 0700;
-      // Shift the "user" bits to the "group" and "other" positions also.
-      $expected_mode = $expected_mode | $expected_mode >> 3 | $expected_mode >> 6;
-    }
     $this->assertSame($expected_mode, $actual_mode, $message);
   }
 
@@ -161,6 +153,7 @@ class FileSystemTest extends UnitTestCase {
    */
   public function testInvalidUTF8() {
     vfsStream::setup('dir');
+    // cspell:disable-next-line
     $filename = "a\xFFsdf\x80€" . '.txt';
     $this->expectException(FileException::class);
     $this->expectExceptionMessage("Invalid filename '$filename'");

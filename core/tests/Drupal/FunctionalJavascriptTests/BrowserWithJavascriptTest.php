@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\FunctionalJavascriptTests;
 
 use PHPUnit\Framework\AssertionFailedError;
@@ -37,7 +39,7 @@ class BrowserWithJavascriptTest extends WebDriverTestBase {
         x = w.innerWidth || e.clientWidth || g.clientWidth,
         y = w.innerHeight || e.clientHeight|| g.clientHeight;
         return x == 400 && y == 300;
-    }());
+    }())
 JS;
     $this->assertJsCondition($javascript);
 
@@ -60,7 +62,7 @@ JS;
         x = w.innerWidth || e.clientWidth || g.clientWidth,
         y = w.innerHeight || e.clientHeight|| g.clientHeight;
         return x == 400 && y == 300;
-    }());
+    }())
 JS;
 
     // We expected the following assertion to fail because the window has been
@@ -110,7 +112,7 @@ JS;
    * @param string|\Drupal\Core\Url $path
    *   Drupal path or URL to load into Mink controlled browser.
    * @param array $options
-   *   (optional) Options to be forwarded to the url generator.
+   *   (optional) Options to be forwarded to the URL generator.
    * @param string[] $headers
    *   An array containing additional HTTP request headers, the array keys are
    *   the header names and the array values the header values. This is useful

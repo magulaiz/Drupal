@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\config_translation\Kernel\Migrate\d6;
 
 use Drupal\Tests\migrate_drupal\Kernel\d6\MigrateDrupal6TestBase;
@@ -26,6 +28,7 @@ class MigrateUserProfileFieldInstanceTranslationTest extends MigrateDrupal6TestB
    */
   public function testUserProfileFields() {
     $this->executeMigrations([
+      'language',
       'user_profile_field',
       'user_profile_field_instance',
       'd6_user_profile_field_instance_translation',

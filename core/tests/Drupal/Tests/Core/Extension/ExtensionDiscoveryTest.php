@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\Core\Extension;
 
 use Drupal\Component\FileCache\FileCacheFactory;
@@ -99,9 +101,21 @@ class ExtensionDiscoveryTest extends UnitTestCase {
   }
 
   /**
+   * Tests finding modules that have a trailing comment on the type property.
+   *
+   * @covers ::scan
+   */
+  public function testExtensionDiscoveryTypeComment(): void {
+    $extension_discovery = new ExtensionDiscovery($this->root, TRUE, [], 'sites/default');
+    $modules = $extension_discovery->scan('module', TRUE);
+    $this->assertArrayHasKey('module_info_type_comment', $modules);
+  }
+
+  /**
    * Adds example files to the filesystem structure.
    *
    * @param array $filesystem_structure
+   *   An associative array where each key represents a directory.
    *
    * @return string[][]
    *   Format: $[$type][$name] = $yml_file
@@ -114,6 +128,13 @@ class ExtensionDiscoveryTest extends UnitTestCase {
       ],
       'core/profiles/minimal/minimal.info.yml' => [
         'type' => 'profile',
+      ],
+      'core/themes/test_theme/test_theme.info.yml' => [
+        'type' => 'theme',
+      ],
+      // Override the core instance of the 'test_theme' theme.
+      'sites/default/themes/test_theme/test_theme.info.yml' => [
+        'type' => 'theme',
       ],
       // Override the core instance of the 'minimal' profile.
       'sites/default/profiles/minimal/minimal.info.yml' => [
@@ -129,13 +150,6 @@ class ExtensionDiscoveryTest extends UnitTestCase {
       'core/modules/user/user.info.yml' => [],
       'profiles/other_profile/modules/other_profile_nested_module/other_profile_nested_module.info.yml' => [],
       'core/modules/system/system.info.yml' => [],
-      'core/themes/seven/seven.info.yml' => [
-        'type' => 'theme',
-      ],
-      // Override the core instance of the 'seven' theme.
-      'sites/default/themes/seven/seven.info.yml' => [
-        'type' => 'theme',
-      ],
       'modules/devel/devel.info.yml' => [],
       'modules/poorly_placed_theme/poorly_placed_theme.info.yml' => [
         'type' => 'theme',
@@ -174,9 +188,11 @@ class ExtensionDiscoveryTest extends UnitTestCase {
 
   /**
    * @param array $filesystem_structure
+   *   An associative array where each key represents a directory.
    * @param string[] $pieces
    *   Fragments of the file path.
    * @param string $content
+   *   The contents of the file.
    */
   protected function addFileToFilesystemStructure(array &$filesystem_structure, array $pieces, $content) {
     $piece = array_shift($pieces);

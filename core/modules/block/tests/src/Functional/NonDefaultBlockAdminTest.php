@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\block\Functional;
 
 use Drupal\Tests\BrowserTestBase;
@@ -33,7 +35,7 @@ class NonDefaultBlockAdminTest extends BrowserTestBase {
   }
 
   /**
-   * Test non-default theme admin.
+   * Tests non-default theme admin.
    */
   public function testNonDefaultBlockAdmin() {
     $admin_user = $this->drupalCreateUser([
@@ -41,11 +43,11 @@ class NonDefaultBlockAdminTest extends BrowserTestBase {
       'administer themes',
     ]);
     $this->drupalLogin($admin_user);
-    $new_theme = 'bartik';
+    $new_theme = 'olivero';
     \Drupal::service('theme_installer')->install([$new_theme]);
-    // Ensure that the Bartik tab is shown.
+    // Ensure that the Olivero tab is shown.
     $this->drupalGet('admin/structure/block/list/' . $new_theme);
-    $this->assertSession()->pageTextContains('Bartik(active tab)');
+    $this->assertSession()->pageTextContains('Olivero');
   }
 
 }

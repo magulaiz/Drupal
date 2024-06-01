@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\file\Unit\Plugin\migrate\process\d6;
 
 use Drupal\file\Plugin\migrate\process\d6\FieldFile;
@@ -28,7 +30,7 @@ class FieldFileTest extends UnitTestCase {
     $plugin = new FieldFile([], 'd6_file', [], $migration, $migrate_lookup->reveal());
 
     $options = [
-      'alt' => 'Foobaz',
+      'alt' => 'Foo',
       'title' => 'Bar',
     ];
     $value = [
@@ -42,7 +44,7 @@ class FieldFileTest extends UnitTestCase {
       'target_id' => 1,
       'display' => TRUE,
       'description' => '',
-      'alt' => 'Foobaz',
+      'alt' => 'Foo',
       'title' => 'Bar',
     ];
     $this->assertSame($expected, $transformed);

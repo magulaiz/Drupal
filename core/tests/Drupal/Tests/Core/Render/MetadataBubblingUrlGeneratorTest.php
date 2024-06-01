@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\Core\Render;
 
 use Drupal\Core\Render\MetadataBubblingUrlGenerator;
@@ -55,8 +57,8 @@ class MetadataBubblingUrlGeneratorTest extends UrlGeneratorTest {
 
     $this->renderer->expects($this->exactly($invocations))
       ->method('render')
-      ->willReturnCallback(function ($build) use ($self) {
-        $self->assertTrue(!empty($build['#cache']));
+      ->willReturnCallback(function ($build) {
+        $this->assertArrayHasKey('#cache', $build);
       });
 
     $url = new Url('test_1', [], $options);
@@ -67,7 +69,7 @@ class MetadataBubblingUrlGeneratorTest extends UrlGeneratorTest {
   /**
    * Data provider for ::testUrlBubbleableMetadataBubbling().
    */
-  public function providerUrlBubbleableMetadataBubbling() {
+  public static function providerUrlBubbleableMetadataBubbling() {
     return [
       // No bubbling when bubbleable metadata is collected.
       [TRUE, 0, []],

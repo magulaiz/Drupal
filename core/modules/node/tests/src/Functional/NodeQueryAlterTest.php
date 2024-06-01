@@ -1,13 +1,17 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\node\Functional;
 
 use Drupal\Core\Database\Database;
+use Drupal\user\Entity\User;
 
 /**
  * Tests that node access queries are properly altered by the node module.
  *
  * @group node
+ * @group #slow
  */
 class NodeQueryAlterTest extends NodeTestBase {
 
@@ -33,6 +37,16 @@ class NodeQueryAlterTest extends NodeTestBase {
    */
   protected $noAccessUser;
 
+  /**
+   * User without permission to view content.
+   *
+   * @var \Drupal\user\Entity\User
+   */
+  protected User $noAccessUser2;
+
+  /**
+   * {@inheritdoc}
+   */
   protected function setUp(): void {
     parent::setUp();
 
@@ -92,6 +106,7 @@ class NodeQueryAlterTest extends NodeTestBase {
     try {
       $query = \Drupal::entityTypeManager()->getStorage('node')->getQuery();
       $result = $query
+        ->accessCheck(TRUE)
         ->allRevisions()
         ->execute();
 

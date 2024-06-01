@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\Core\Form;
 
 use Drupal\Core\Form\FormCache;
@@ -43,7 +45,7 @@ class FormCacheTest extends UnitTestCase {
   /**
    * The mocked module handler.
    *
-   * @var \Drupal\Core\Extension\ModuleHandlerInterface|\PHPUnit\Framework\MockObject\MockObject
+   * @var \Prophecy\Prophecy\ObjectProphecy
    */
   protected $moduleHandler;
 
@@ -85,30 +87,20 @@ class FormCacheTest extends UnitTestCase {
   /**
    * {@inheritdoc}
    */
-  protected $runTestInSeparateProcess = TRUE;
-
-  /**
-   * {@inheritdoc}
-   */
-  protected $preserveGlobalState = FALSE;
-
-  /**
-   * {@inheritdoc}
-   */
   protected function setUp(): void {
     parent::setUp();
 
-    $this->moduleHandler = $this->createMock('Drupal\Core\Extension\ModuleHandlerInterface');
+    $this->moduleHandler = $this->prophesize('Drupal\Core\Extension\ModuleHandlerInterface');
 
     $this->formCacheStore = $this->createMock('Drupal\Core\KeyValueStore\KeyValueStoreExpirableInterface');
     $this->formStateCacheStore = $this->createMock('Drupal\Core\KeyValueStore\KeyValueStoreExpirableInterface');
     $this->keyValueExpirableFactory = $this->createMock('Drupal\Core\KeyValueStore\KeyValueExpirableFactoryInterface');
     $this->keyValueExpirableFactory->expects($this->any())
       ->method('get')
-      ->will($this->returnValueMap([
+      ->willReturnMap([
         ['form', $this->formCacheStore],
         ['form_state', $this->formStateCacheStore],
-      ]));
+      ]);
 
     $this->csrfToken = $this->getMockBuilder('Drupal\Core\Access\CsrfTokenGenerator')
       ->disableOriginalConstructor()
@@ -119,7 +111,7 @@ class FormCacheTest extends UnitTestCase {
     $this->requestStack = $this->createMock('\Symfony\Component\HttpFoundation\RequestStack');
     $this->requestPolicy = $this->createMock('\Drupal\Core\PageCache\RequestPolicyInterface');
 
-    $this->formCache = new FormCache($this->root, $this->keyValueExpirableFactory, $this->moduleHandler, $this->account, $this->csrfToken, $this->logger, $this->requestStack, $this->requestPolicy);
+    $this->formCache = new FormCache($this->root, $this->keyValueExpirableFactory, $this->moduleHandler->reveal(), $this->account, $this->csrfToken, $this->logger, $this->requestStack, $this->requestPolicy);
   }
 
   /**
@@ -311,12 +303,10 @@ class FormCacheTest extends UnitTestCase {
         ],
       ],
     ];
-    $this->moduleHandler->expects($this->at(0))
-      ->method('loadInclude')
-      ->with('a_module', 'the_type', 'some_name');
-    $this->moduleHandler->expects($this->at(1))
-      ->method('loadInclude')
-      ->with('another_module', 'inc', 'another_module');
+    $this->moduleHandler->loadInclude('a_module', 'the_type', 'some_name')
+      ->shouldBeCalledOnce();
+    $this->moduleHandler->loadInclude('another_module', 'inc', 'another_module')
+      ->shouldBeCalledOnce();
     $this->formStateCacheStore->expects($this->once())
       ->method('get')
       ->with($form_build_id)

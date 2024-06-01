@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\media\Kernel;
 
 use Drupal\media\Entity\Media;
@@ -32,6 +34,16 @@ class MediaTest extends MediaKernelTestBase {
     $this->assertTrue($field_definitions['name']->isDisplayConfigurable('view'));
     // Ensure it is not visible by default.
     $this->assertSame($field_definitions['name']->getDisplayOptions('view'), ['region' => 'hidden']);
+  }
+
+  /**
+   * Tests permissions based on a media type have the correct permissions.
+   */
+  public function testPermissions() {
+    $permissions = $this->container->get('user.permissions')->getPermissions();
+    $name = "create {$this->testMediaType->id()} media";
+    $this->assertArrayHasKey($name, $permissions);
+    $this->assertSame(['config' => [$this->testMediaType->getConfigDependencyName()]], $permissions[$name]['dependencies']);
   }
 
 }

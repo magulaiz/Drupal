@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\Component\Utility;
 
 use Drupal\Component\Utility\SortArray;
@@ -42,7 +44,7 @@ class SortArrayTest extends TestCase {
    *
    * @see \Drupal\Tests\Component\Utility\SortArrayTest::testSortByWeightElement()
    */
-  public function providerSortByWeightElement() {
+  public static function providerSortByWeightElement() {
     $tests = [];
 
     // Weights set and equal.
@@ -118,7 +120,7 @@ class SortArrayTest extends TestCase {
    *
    * @see \Drupal\Tests\Component\Utility\SortArrayTest::testSortByWeightProperty()
    */
-  public function providerSortByWeightProperty() {
+  public static function providerSortByWeightProperty() {
     $tests = [];
 
     // Weights set and equal.
@@ -194,7 +196,7 @@ class SortArrayTest extends TestCase {
    *
    * @see \Drupal\Tests\Component\Utility\SortArrayTest::testSortByTitleElement()
    */
-  public function providerSortByTitleElement() {
+  public static function providerSortByTitleElement() {
     $tests = [];
 
     // Titles set and equal.
@@ -263,7 +265,7 @@ class SortArrayTest extends TestCase {
    *
    * @see \Drupal\Tests\Component\Utility\SortArrayTest::testSortByTitleProperty()
    */
-  public function providerSortByTitleProperty() {
+  public static function providerSortByTitleProperty() {
     $tests = [];
 
     // Titles set and equal.
@@ -314,8 +316,10 @@ class SortArrayTest extends TestCase {
    *   Expected comparison function return value.
    * @param int $result
    *   Actual comparison function return value.
+   *
+   * @internal
    */
-  protected function assertBothNegativePositiveOrZero($expected, $result) {
+  protected function assertBothNegativePositiveOrZero(int $expected, int $result): void {
     $this->assertIsNumeric($expected);
     $this->assertIsNumeric($result);
     $message = "Numbers should be both negative, both positive or both zero. Expected: $expected, actual: $result";

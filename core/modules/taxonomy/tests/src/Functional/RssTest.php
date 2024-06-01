@@ -1,13 +1,14 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\taxonomy\Functional;
 
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
 use Drupal\views\Views;
 
 /**
- * Ensure that data added as terms appears in RSS feeds if "RSS Category" format
- * is selected.
+ * Tests the taxonomy RSS display.
  *
  * @group taxonomy
  */
@@ -39,6 +40,9 @@ class RssTest extends TaxonomyTestBase {
    */
   protected $fieldName;
 
+  /**
+   * {@inheritdoc}
+   */
   protected function setUp(): void {
     parent::setUp();
 
@@ -83,26 +87,23 @@ class RssTest extends TaxonomyTestBase {
     // Create two taxonomy terms.
     $term1 = $this->createTerm($this->vocabulary);
 
-    // RSS display must be added manually.
-    $this->drupalGet("admin/structure/types/manage/article/display");
-    $edit = [
-      "display_modes_custom[rss]" => '1',
-    ];
-    $this->submitForm($edit, 'Save');
+    // Add the RSS display.
+    $default_display = $this->container->get('entity_display.repository')->getViewDisplay('node', 'article');
+    $rss_display = $default_display->createCopy('rss');
+    $rss_display->save();
 
     // Change the format to 'RSS category'.
-    $this->drupalGet("admin/structure/types/manage/article/display/rss");
-    $edit = [
-      "fields[taxonomy_" . $this->vocabulary->id() . "][type]" => 'entity_reference_rss_category',
-      "fields[taxonomy_" . $this->vocabulary->id() . "][region]" => 'content',
-    ];
-    $this->submitForm($edit, 'Save');
+    $rss_display->setComponent('taxonomy_' . $this->vocabulary->id(), [
+      'type' => 'entity_reference_rss_category',
+      'region' => 'content',
+    ]);
+    $rss_display->save();
 
-    // Post an article.
-    $edit = [];
-    $edit['title[0][value]'] = $this->randomMachineName();
-    $edit[$this->fieldName . '[]'] = $term1->id();
-    $this->drupalPostForm('node/add/article', $edit, 'Save');
+    // Create an article.
+    $node = $this->drupalCreateNode([
+      'type' => 'article',
+      $this->fieldName => $term1->id(),
+    ]);
 
     // Check that the term is displayed when the RSS feed is viewed.
     $this->drupalGet('rss.xml');
@@ -111,7 +112,7 @@ class RssTest extends TaxonomyTestBase {
       'domain="' . $term1->toUrl('canonical', ['absolute' => TRUE])->toString() . '"',
       $term1->getName()
     );
-    $this->assertRaw($test_element);
+    $this->assertSession()->responseContains($test_element);
 
     // Test that the feed icon exists for the term.
     $this->drupalGet("taxonomy/term/{$term1->id()}");
@@ -135,14 +136,13 @@ class RssTest extends TaxonomyTestBase {
     $view->getDisplay()->overrideOption('arguments', $arguments);
     $view->storage->save();
     // Check the article is shown in the feed.
-    $node = $this->drupalGetNodeByTitle($edit['title[0][value]']);
     $raw_xml = '<title>' . $node->label() . '</title>';
     $this->drupalGet('taxonomy/term/all/feed');
-    $this->assertRaw($raw_xml);
+    $this->assertSession()->responseContains($raw_xml);
     // Unpublish the article and check that it is not shown in the feed.
     $node->setUnpublished()->save();
     $this->drupalGet('taxonomy/term/all/feed');
-    $this->assertNoRaw($raw_xml);
+    $this->assertSession()->responseNotContains($raw_xml);
   }
 
 }

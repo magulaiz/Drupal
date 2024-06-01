@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\language\Kernel\Views;
 
 use Drupal\views\Views;
@@ -34,8 +36,8 @@ class FieldLanguageTest extends LanguageTestBase {
     ]);
     $this->executeView($view);
 
-    $this->assertEqual('English', $view->field['langcode']->advancedRender($view->result[0]));
-    $this->assertEqual('Lolspeak', $view->field['langcode']->advancedRender($view->result[1]));
+    $this->assertEquals('English', $view->field['langcode']->advancedRender($view->result[0]));
+    $this->assertEquals('Lolspeak', $view->field['langcode']->advancedRender($view->result[1]));
   }
 
 }

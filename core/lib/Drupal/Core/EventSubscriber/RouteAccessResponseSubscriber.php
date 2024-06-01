@@ -30,7 +30,7 @@ class RouteAccessResponseSubscriber implements EventSubscriberInterface {
    *   The event to process.
    */
   public function onRespond(ResponseEvent $event) {
-    if (!$event->isMasterRequest()) {
+    if (!$event->isMainRequest()) {
       return;
     }
 
@@ -47,7 +47,7 @@ class RouteAccessResponseSubscriber implements EventSubscriberInterface {
   /**
    * {@inheritdoc}
    */
-  public static function getSubscribedEvents() {
+  public static function getSubscribedEvents(): array {
     // Priority 10, so that it runs before FinishResponseSubscriber, which will
     // expose the cacheability metadata in the form of headers.
     $events[KernelEvents::RESPONSE][] = ['onRespond', 10];

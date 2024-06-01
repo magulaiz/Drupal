@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\rest\Functional\Views;
 
 use Drupal\Tests\views\Functional\ViewTestBase;
@@ -25,8 +27,8 @@ class RestExportAuthTest extends ViewTestBase {
   /**
    * {@inheritdoc}
    */
-  public function setUp($import_test_views = TRUE): void {
-    parent::setUp($import_test_views);
+  protected function setUp($import_test_views = TRUE, $modules = []): void {
+    parent::setUp($import_test_views, $modules);
 
     $this->drupalLogin($this->drupalCreateUser(['administer views']));
   }
@@ -43,7 +45,8 @@ class RestExportAuthTest extends ViewTestBase {
     $view_rest_path = 'test-view/rest-export';
 
     // Create new view.
-    $this->drupalPostForm('admin/structure/views/add', [
+    $this->drupalGet('admin/structure/views/add');
+    $this->submitForm([
       'id' => $view_id,
       'label' => $view_label,
       'show[wizard_key]' => 'users',

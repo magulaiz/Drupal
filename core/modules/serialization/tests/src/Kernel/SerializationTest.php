@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\serialization\Kernel;
 
 use Drupal\KernelTests\KernelTestBase;
@@ -26,6 +28,9 @@ class SerializationTest extends KernelTestBase {
    */
   protected $serializer;
 
+  /**
+   * {@inheritdoc}
+   */
   protected function setUp(): void {
     parent::setUp();
     $this->serializer = $this->container->get('serializer');

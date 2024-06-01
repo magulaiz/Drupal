@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\system\Functional\System;
 
 use Drupal\Tests\BrowserTestBase;
@@ -38,8 +40,8 @@ class TrustedHostsTest extends BrowserTestBase {
     $this->drupalGet('admin/reports/status');
     $this->assertSession()->statusCodeEquals(200);
 
-    $this->assertRaw(t('Trusted Host Settings'));
-    $this->assertRaw(t('The trusted_host_patterns setting is not configured in settings.php.'));
+    $this->assertSession()->pageTextContains("Trusted Host Settings");
+    $this->assertSession()->pageTextContains("The trusted_host_patterns setting is not configured in settings.php.");
   }
 
   /**
@@ -56,8 +58,8 @@ class TrustedHostsTest extends BrowserTestBase {
     $this->drupalGet('admin/reports/status');
     $this->assertSession()->statusCodeEquals(200);
 
-    $this->assertRaw(t('Trusted Host Settings'));
-    $this->assertRaw(t('The trusted_host_patterns setting is set to allow'));
+    $this->assertSession()->pageTextContains("Trusted Host Settings");
+    $this->assertSession()->pageTextContains("The trusted_host_patterns setting is set to allow");
   }
 
   /**
@@ -77,7 +79,7 @@ class TrustedHostsTest extends BrowserTestBase {
     $this->writeSettings($settings);
 
     $this->drupalGet('trusted-hosts-test/fake-request');
-    $this->assertText('Host: ' . $host);
+    $this->assertSession()->pageTextContains('Host: ' . $host);
   }
 
   /**
@@ -109,6 +111,30 @@ class TrustedHostsTest extends BrowserTestBase {
 
     $this->drupalGet('');
     $this->assertSession()->linkExists($shortcut->label());
+  }
+
+  /**
+   * Tests that the request bags have the correct classes.
+   *
+   * @todo Remove this when Symfony 4 is no longer supported.
+   *
+   * @see \Drupal\Core\Http\TrustedHostsRequestFactory
+   */
+  public function testRequestBags() {
+    $this->container->get('module_installer')->install(['trusted_hosts_test']);
+
+    $host = $this->container->get('request_stack')->getCurrentRequest()->getHost();
+    $settings['settings']['trusted_host_patterns'] = (object) [
+      'value' => ['^' . preg_quote($host) . '$'],
+      'required' => TRUE,
+    ];
+
+    $this->writeSettings($settings);
+
+    foreach (['request', 'query', 'cookies'] as $bag) {
+      $this->drupalGet('trusted-hosts-test/bag-type/' . $bag);
+      $this->assertSession()->pageTextContains('InputBag');
+    }
   }
 
 }

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\demo_umami_content\Functional;
 
 use Drupal\Core\Entity\EntityStorageInterface;
@@ -32,6 +34,7 @@ class UninstallDefaultContentTest extends BrowserTestBase {
     $this->assertRecipesImported($node_storage);
 
     $count = $node_storage->getQuery()
+      ->accessCheck(FALSE)
       ->condition('type', 'article')
       ->count()
       ->execute();
@@ -47,6 +50,7 @@ class UninstallDefaultContentTest extends BrowserTestBase {
     // Assert the removal of blocks on uninstall.
     foreach ($this->expectedBlocks() as $block_info) {
       $count = $block_storage->getQuery()
+        ->accessCheck(FALSE)
         ->condition('type', $block_info['type'])
         ->count()
         ->execute();
@@ -57,12 +61,14 @@ class UninstallDefaultContentTest extends BrowserTestBase {
 
     // Assert the removal of nodes on uninstall.
     $count = $node_storage->getQuery()
+      ->accessCheck(FALSE)
       ->condition('type', 'article')
       ->count()
       ->execute();
     $this->assertEquals(0, $count);
 
     $count = $node_storage->getQuery()
+      ->accessCheck(FALSE)
       ->condition('type', 'recipe')
       ->count()
       ->execute();
@@ -81,8 +87,9 @@ class UninstallDefaultContentTest extends BrowserTestBase {
    * @param \Drupal\Core\Entity\EntityStorageInterface $node_storage
    *   Node storage.
    */
-  protected function assertRecipesImported(EntityStorageInterface $node_storage) {
+  protected function assertRecipesImported(EntityStorageInterface $node_storage): void {
     $count = $node_storage->getQuery()
+      ->accessCheck(FALSE)
       ->condition('type', 'recipe')
       ->count()
       ->execute();
@@ -99,8 +106,9 @@ class UninstallDefaultContentTest extends BrowserTestBase {
    * @param \Drupal\Core\Entity\EntityStorageInterface $node_storage
    *   Node storage.
    */
-  protected function assertArticlesImported(EntityStorageInterface $node_storage) {
+  protected function assertArticlesImported(EntityStorageInterface $node_storage): void {
     $count = $node_storage->getQuery()
+      ->accessCheck(FALSE)
       ->condition('type', 'article')
       ->count()
       ->execute();
@@ -117,7 +125,7 @@ class UninstallDefaultContentTest extends BrowserTestBase {
    * @param \Drupal\Core\Entity\EntityStorageInterface $block_storage
    *   Block storage.
    */
-  protected function assertImportedCustomBlock(EntityStorageInterface $block_storage) {
+  protected function assertImportedCustomBlock(EntityStorageInterface $block_storage): void {
     $assert = $this->assertSession();
     foreach ($this->expectedBlocks() as $block_info) {
       $this->drupalGet($block_info['path']);
@@ -134,6 +142,7 @@ class UninstallDefaultContentTest extends BrowserTestBase {
 
       // Verify that the block can be loaded.
       $count = $block_storage->getQuery()
+        ->accessCheck(FALSE)
         ->condition('type', $block_info['type'])
         ->count()
         ->execute();
@@ -144,7 +153,7 @@ class UninstallDefaultContentTest extends BrowserTestBase {
   }
 
   /**
-   * Returns the expected properties of this profile's custom blocks.
+   * Returns the expected properties of this profile's content blocks.
    */
   protected function expectedBlocks() {
     return [

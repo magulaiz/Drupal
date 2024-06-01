@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\node\Functional;
 
 use Drupal\field\Entity\FieldConfig;
@@ -45,6 +47,9 @@ class NodeAccessFieldTest extends NodeTestBase {
    */
   protected $fieldName;
 
+  /**
+   * {@inheritdoc}
+   */
   protected function setUp(): void {
     parent::setUp();
 
@@ -62,7 +67,7 @@ class NodeAccessFieldTest extends NodeTestBase {
     ]);
 
     // Add a custom field to the page content type.
-    $this->fieldName = mb_strtolower($this->randomMachineName() . '_field_name');
+    $this->fieldName = $this->randomMachineName() . '_field_name';
     FieldStorageConfig::create([
       'field_name' => $this->fieldName,
       'entity_type' => 'node',
@@ -95,33 +100,32 @@ class NodeAccessFieldTest extends NodeTestBase {
     // Log in as the administrator and confirm that the field value is present.
     $this->drupalLogin($this->adminUser);
     $this->drupalGet('node/' . $node->id());
-    $this->assertText($value);
+    $this->assertSession()->pageTextContains($value);
 
     // Log in as the content admin and try to view the node.
     $this->drupalLogin($this->contentAdminUser);
     $this->drupalGet('node/' . $node->id());
-    $this->assertText('Access denied');
+    $this->assertSession()->pageTextContains('Access denied');
 
     // Modify the field default as the content admin.
-    $edit = [];
+    $edit = [
+      'set_default_value' => '1',
+    ];
     $default = 'Sometimes words have two meanings';
     $edit["default_value_input[{$this->fieldName}][0][value]"] = $default;
-    $this->drupalPostForm(
-      "admin/structure/types/manage/page/fields/node.page.{$this->fieldName}",
-      $edit,
-      'Save settings'
-    );
+    $this->drupalGet("admin/structure/types/manage/page/fields/node.page.{$this->fieldName}");
+    $this->submitForm($edit, 'Save settings');
 
     // Log in as the administrator.
     $this->drupalLogin($this->adminUser);
 
     // Confirm that the existing node still has the correct field value.
     $this->drupalGet('node/' . $node->id());
-    $this->assertText($value);
+    $this->assertSession()->pageTextContains($value);
 
     // Confirm that the new default value appears when creating a new node.
     $this->drupalGet('node/add/page');
-    $this->assertRaw($default);
+    $this->assertSession()->responseContains($default);
   }
 
 }

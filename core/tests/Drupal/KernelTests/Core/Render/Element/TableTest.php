@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\KernelTests\Core\Render\Element;
 
 use Drupal\KernelTests\KernelTestBase;
@@ -19,7 +21,7 @@ class TableTest extends KernelTestBase {
   protected static $modules = ['system', 'form_test'];
 
   /**
-   * Tableheader.js provides 'sticky' table headers, and is included by default.
+   * If $sticky is TRUE, `sticky-header` class should be included.
    */
   public function testThemeTableStickyHeaders() {
     $header = ['one', 'two', 'three'];
@@ -31,14 +33,11 @@ class TableTest extends KernelTestBase {
       '#sticky' => TRUE,
     ];
     $this->render($table);
-    // Make sure tableheader.js was attached.
-    $tableheader = $this->xpath("//script[contains(@src, 'tableheader.js')]");
-    $this->assertCount(1, $tableheader);
-    $this->assertRaw('sticky-enabled');
+    $this->assertRaw('sticky-header');
   }
 
   /**
-   * If $sticky is FALSE, no tableheader.js should be included.
+   * If $sticky is FALSE, `sticky-header` class should not be included.
    */
   public function testThemeTableNoStickyHeaders() {
     $header = ['one', 'two', 'three'];
@@ -56,15 +55,14 @@ class TableTest extends KernelTestBase {
       '#sticky' => FALSE,
     ];
     $this->render($table);
-    // Make sure tableheader.js was not attached.
-    $tableheader = $this->xpath("//script[contains(@src, 'tableheader.js')]");
-    $this->assertCount(0, $tableheader);
-    $this->assertNoRaw('sticky-enabled');
+    $this->assertNoRaw('sticky-header');
   }
 
   /**
-   * Tests that the table header is printed correctly even if there are no rows,
-   * and that the empty text is displayed correctly.
+   * Tests the display of the table header.
+   *
+   * Tests are performed when the there are no rows and that the empty text is
+   * displayed correctly.
    */
   public function testThemeTableWithEmptyMessage() {
     $header = [
@@ -81,9 +79,9 @@ class TableTest extends KernelTestBase {
       '#empty' => 'Empty row.',
     ];
 
-    // Enable the Classy theme.
-    \Drupal::service('theme_installer')->install(['classy']);
-    $this->config('system.theme')->set('default', 'classy')->save();
+    // Enable the Starterkit theme.
+    \Drupal::service('theme_installer')->install(['starterkit_theme']);
+    $this->config('system.theme')->set('default', 'starterkit_theme')->save();
 
     $this->render($table);
     $this->removeWhiteSpace();
@@ -111,7 +109,7 @@ class TableTest extends KernelTestBase {
   }
 
   /**
-   * Test that the 'footer' option works correctly.
+   * Tests that the 'footer' option works correctly.
    */
   public function testThemeTableFooter() {
     $footer = [

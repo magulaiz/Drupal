@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\language\Functional;
 
 use Drupal\Core\Cache\Cache;
@@ -11,6 +13,9 @@ use Drupal\language\Entity\ContentLanguageSettings;
 use Drupal\node\Entity\Node;
 use Drupal\node\Entity\NodeType;
 use Drupal\Tests\BrowserTestBase;
+use Drupal\Tests\WaitTerminateTestTrait;
+
+// cspell:ignore funciona
 
 /**
  * Tests Language Negotiation.
@@ -20,6 +25,8 @@ use Drupal\Tests\BrowserTestBase;
  * @group language
  */
 class ConfigurableLanguageManagerTest extends BrowserTestBase {
+
+  use WaitTerminateTestTrait;
 
   /**
    * {@inheritdoc}
@@ -45,6 +52,11 @@ class ConfigurableLanguageManagerTest extends BrowserTestBase {
   protected function setUp(): void {
     parent::setUp();
 
+    // The \Drupal\locale\LocaleTranslation service clears caches after the
+    // response is flushed to the client. We use WaitTerminateTestTrait to wait
+    // for Drupal to perform its termination work before continuing.
+    $this->setWaitForTerminate();
+
     /** @var \Drupal\user\UserInterface $user */
     $user = $this->createUser([], '', TRUE);
     $this->drupalLogin($user);
@@ -53,7 +65,7 @@ class ConfigurableLanguageManagerTest extends BrowserTestBase {
     // Create a page node type and make it translatable.
     NodeType::create([
       'type' => 'page',
-      'name' => t('Page'),
+      'name' => 'Page',
     ])->save();
 
     $config = ContentLanguageSettings::loadByEntityTypeBundle('node', 'page');
@@ -103,7 +115,7 @@ class ConfigurableLanguageManagerTest extends BrowserTestBase {
   }
 
   /**
-   * Test translation with URL and Preferred Admin Language negotiators.
+   * Tests translation with URL and Preferred Admin Language negotiators.
    *
    * The interface language uses the preferred language for admin pages of the
    * user and after that the URL. The Content uses just the URL.
@@ -147,7 +159,7 @@ class ConfigurableLanguageManagerTest extends BrowserTestBase {
   }
 
   /**
-   * Test translation with URL and Session Language Negotiators.
+   * Tests translation with URL and Session Language Negotiators.
    */
   public function testUrlContentTranslationWithSessionLanguage() {
     $assert_session = $this->assertSession();
@@ -212,8 +224,8 @@ class ConfigurableLanguageManagerTest extends BrowserTestBase {
     ]);
 
     // Create a field on the user entity.
-    $field_name = mb_strtolower($this->randomMachineName());
-    $label = mb_strtolower($this->randomMachineName());
+    $field_name = $this->randomMachineName();
+    $label = $this->randomMachineName();
     $field_label_en = "English $label";
     $field_label_es = "Español $label";
 

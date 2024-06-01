@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\Core\Image;
 
 use Drupal\Core\File\FileSystemInterface;
@@ -47,6 +49,8 @@ class ImageTest extends UnitTestCase {
    * {@inheritdoc}
    */
   protected function setUp(): void {
+    parent::setUp();
+
     // Use the Druplicon image.
     $this->source = __DIR__ . '/../../../../../misc/druplicon.png';
   }
@@ -64,7 +68,7 @@ class ImageTest extends UnitTestCase {
     $stubs = array_merge(['getPluginId', 'save'], $stubs);
     return $mock_builder
       ->disableOriginalConstructor()
-      ->setMethods($stubs)
+      ->onlyMethods($stubs)
       ->getMock();
   }
 
@@ -73,7 +77,7 @@ class ImageTest extends UnitTestCase {
    *
    * @param string $class_name
    *   The name of the GD toolkit operation class to be mocked.
-   * @param \Drupal\Core\Image\ImageToolkitInterface $toolkit
+   * @param \Drupal\Core\ImageToolkit\ImageToolkitInterface $toolkit
    *   The image toolkit object.
    *
    * @return \PHPUnit\Framework\MockObject\MockObject
@@ -82,7 +86,7 @@ class ImageTest extends UnitTestCase {
     $mock_builder = $this->getMockBuilder('Drupal\system\Plugin\ImageToolkit\Operation\gd\\' . $class_name);
     $logger = $this->createMock('Psr\Log\LoggerInterface');
     return $mock_builder
-      ->setMethods(['execute'])
+      ->onlyMethods(['execute'])
       ->setConstructorArgs([[], '', [], $toolkit, $logger])
       ->getMock();
   }
@@ -108,7 +112,7 @@ class ImageTest extends UnitTestCase {
 
     $this->toolkit->expects($this->any())
       ->method('getPluginId')
-      ->will($this->returnValue('gd'));
+      ->willReturn('gd');
 
     if (!$load_expected) {
       $this->toolkit->expects($this->never())
@@ -116,6 +120,8 @@ class ImageTest extends UnitTestCase {
     }
 
     $this->image = new Image($this->toolkit, $this->source);
+
+    return $this->image;
   }
 
   /**
@@ -133,13 +139,15 @@ class ImageTest extends UnitTestCase {
 
     $this->toolkit->expects($this->any())
       ->method('getPluginId')
-      ->will($this->returnValue('gd'));
+      ->willReturn('gd');
 
     $this->toolkit->expects($this->any())
       ->method('getToolkitOperation')
-      ->will($this->returnValue($this->toolkitOperation));
+      ->willReturn($this->toolkitOperation);
 
     $this->image = new Image($this->toolkit, $this->source);
+
+    return $this->image;
   }
 
   /**
@@ -208,19 +216,16 @@ class ImageTest extends UnitTestCase {
     $toolkit = $this->getToolkitMock();
     $toolkit->expects($this->once())
       ->method('save')
-      ->will($this->returnValue(TRUE));
+      ->willReturn(TRUE);
 
-    $image = $this->getMockBuilder('Drupal\Core\Image\Image')
-      ->setMethods(['chmod'])
-      ->setConstructorArgs([$toolkit, $this->image->getSource()])
-      ->getMock();
+    $image = new Image($toolkit, $this->image->getSource());
 
     $file_system = $this->prophesize(FileSystemInterface::class);
     $file_system->chmod($this->image->getSource())
       ->willReturn(TRUE);
 
     $container = $this->getMockBuilder('Symfony\Component\DependencyInjection\ContainerBuilder')
-      ->setMethods(['get'])
+      ->onlyMethods(['get'])
       ->getMock();
     $container->expects($this->once())
       ->method('get')
@@ -239,7 +244,7 @@ class ImageTest extends UnitTestCase {
     // This will fail if save() method isn't called on the toolkit.
     $this->toolkit->expects($this->once())
       ->method('save')
-      ->will($this->returnValue(FALSE));
+      ->willReturn(FALSE);
 
     $this->assertFalse($this->image->save());
   }
@@ -253,19 +258,16 @@ class ImageTest extends UnitTestCase {
     $toolkit = $this->getToolkitMock();
     $toolkit->expects($this->once())
       ->method('save')
-      ->will($this->returnValue(TRUE));
+      ->willReturn(TRUE);
 
-    $image = $this->getMockBuilder('Drupal\Core\Image\Image')
-      ->setMethods(['chmod'])
-      ->setConstructorArgs([$toolkit, $this->image->getSource()])
-      ->getMock();
+    $image = new Image($toolkit, $this->image->getSource());
 
     $file_system = $this->prophesize(FileSystemInterface::class);
     $file_system->chmod($this->image->getSource())
       ->willReturn(FALSE);
 
     $container = $this->getMockBuilder('Symfony\Component\DependencyInjection\ContainerBuilder')
-      ->setMethods(['get'])
+      ->onlyMethods(['get'])
       ->getMock();
     $container->expects($this->once())
       ->method('get')
@@ -281,7 +283,7 @@ class ImageTest extends UnitTestCase {
    */
   public function testParseFileFails() {
     $toolkit = $this->getToolkitMock();
-    $image = new Image($toolkit, 'magic-foobars.png');
+    $image = new Image($toolkit, 'magic-foobar.png');
 
     $this->assertFalse($image->isValid());
     $this->assertFalse($image->save());
@@ -294,7 +296,7 @@ class ImageTest extends UnitTestCase {
     $this->getTestImageForOperation('Scale');
     $this->toolkitOperation->expects($this->once())
       ->method('execute')
-      ->will($this->returnArgument(0));
+      ->willReturnArgument(0);
 
     $ret = $this->image->scale(44, NULL, FALSE);
     $this->assertEquals(50, $ret['height']);
@@ -307,7 +309,7 @@ class ImageTest extends UnitTestCase {
     $this->getTestImageForOperation('Scale');
     $this->toolkitOperation->expects($this->once())
       ->method('execute')
-      ->will($this->returnArgument(0));
+      ->willReturnArgument(0);
 
     $ret = $this->image->scale(NULL, 50, FALSE);
     $this->assertEquals(44, $ret['width']);
@@ -321,7 +323,7 @@ class ImageTest extends UnitTestCase {
     // Dimensions are the same, resize should not be called.
     $this->toolkitOperation->expects($this->once())
       ->method('execute')
-      ->will($this->returnArgument(0));
+      ->willReturnArgument(0);
 
     $ret = $this->image->scale(88, 100, FALSE);
     $this->assertEquals(88, $ret['width']);
@@ -335,9 +337,9 @@ class ImageTest extends UnitTestCase {
     $this->getTestImageForOperation('ScaleAndCrop');
     $this->toolkitOperation->expects($this->once())
       ->method('execute')
-      ->will($this->returnArgument(0));
+      ->willReturnArgument(0);
 
-    $ret = $this->image->scaleAndCrop(34, 50, FALSE);
+    $ret = $this->image->scaleAndCrop(34, 50);
     $this->assertEquals(5, $ret['x']);
   }
 
@@ -348,7 +350,7 @@ class ImageTest extends UnitTestCase {
     $this->getTestImageForOperation('ScaleAndCrop');
     $this->toolkitOperation->expects($this->once())
       ->method('execute')
-      ->will($this->returnArgument(0));
+      ->willReturnArgument(0);
 
     $ret = $this->image->scaleAndCrop(44, 40);
     $this->assertEquals(5, $ret['y']);
@@ -361,7 +363,7 @@ class ImageTest extends UnitTestCase {
     $this->getTestImageForOperation('ScaleAndCrop');
     $this->toolkitOperation->expects($this->once())
       ->method('execute')
-      ->will($this->returnArgument(0));
+      ->willReturnArgument(0);
 
     $ret = $this->image->scaleAndCrop(44, 40);
     $this->assertEquals(0, $ret['x']);
@@ -377,7 +379,7 @@ class ImageTest extends UnitTestCase {
     $this->getTestImageForOperation('Crop');
     $this->toolkitOperation->expects($this->once())
       ->method('execute')
-      ->will($this->returnArgument(0));
+      ->willReturnArgument(0);
 
     // Cropping with width only should preserve the aspect ratio.
     $ret = $this->image->crop(0, 0, 44);
@@ -391,7 +393,7 @@ class ImageTest extends UnitTestCase {
     $this->getTestImageForOperation('Crop');
     $this->toolkitOperation->expects($this->once())
       ->method('execute')
-      ->will($this->returnArgument(0));
+      ->willReturnArgument(0);
 
     // Cropping with height only should preserve the aspect ratio.
     $ret = $this->image->crop(0, 0, NULL, 50);
@@ -405,7 +407,7 @@ class ImageTest extends UnitTestCase {
     $this->getTestImageForOperation('Crop');
     $this->toolkitOperation->expects($this->once())
       ->method('execute')
-      ->will($this->returnArgument(0));
+      ->willReturnArgument(0);
 
     $ret = $this->image->crop(0, 0, 44, 50);
     $this->assertEquals(44, $ret['width']);
@@ -418,7 +420,7 @@ class ImageTest extends UnitTestCase {
     $this->getTestImageForOperation('Convert');
     $this->toolkitOperation->expects($this->once())
       ->method('execute')
-      ->will($this->returnArgument(0));
+      ->willReturnArgument(0);
 
     $ret = $this->image->convert('png');
     $this->assertEquals('png', $ret['extension']);
@@ -431,7 +433,7 @@ class ImageTest extends UnitTestCase {
     $this->getTestImageForOperation('Resize');
     $this->toolkitOperation->expects($this->once())
       ->method('execute')
-      ->will($this->returnArgument(0));
+      ->willReturnArgument(0);
 
     // Resize with integer for width and height.
     $ret = $this->image->resize(30, 40);
@@ -446,7 +448,7 @@ class ImageTest extends UnitTestCase {
     $this->getTestImageForOperation('Resize');
     $this->toolkitOperation->expects($this->once())
       ->method('execute')
-      ->will($this->returnArgument(0));
+      ->willReturnArgument(0);
 
     // Pass a float for width.
     $ret = $this->image->resize(30.4, 40);
@@ -461,7 +463,7 @@ class ImageTest extends UnitTestCase {
     $this->getTestImageForOperation('Desaturate');
     $this->toolkitOperation->expects($this->once())
       ->method('execute')
-      ->will($this->returnArgument(0));
+      ->willReturnArgument(0);
 
     $this->image->desaturate();
   }
@@ -473,7 +475,7 @@ class ImageTest extends UnitTestCase {
     $this->getTestImageForOperation('Rotate');
     $this->toolkitOperation->expects($this->once())
       ->method('execute')
-      ->will($this->returnArgument(0));
+      ->willReturnArgument(0);
 
     $ret = $this->image->rotate(90);
     $this->assertEquals(90, $ret['degrees']);

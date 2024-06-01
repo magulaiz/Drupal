@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\serialization\Kernel;
 
 use Drupal\entity_test\Entity\EntityTestMulRev;
@@ -213,7 +215,7 @@ class FieldItemSerializationTest extends NormalizerTestBase {
    * @return array
    *   Test cases.
    */
-  public function providerTestCustomBooleanNormalization() {
+  public static function providerTestCustomBooleanNormalization() {
     return [
       'Format-agnostic @FieldType-level normalizers SHOULD be able to affect the format-agnostic normalization' => [
         ['test_fieldtype_boolean_emoji_normalizer'],
@@ -231,20 +233,8 @@ class FieldItemSerializationTest extends NormalizerTestBase {
         ['test_datatype_boolean_emoji_normalizer'],
         'json',
       ],
-      'Format-agnostic @FieldType-level normalizers SHOULD be able to affect the HAL+JSON normalization' => [
-        ['test_fieldtype_boolean_emoji_normalizer'],
-        'hal_json',
-      ],
-      'Format-agnostic @DataType-level normalizers SHOULD be able to affect the HAL+JSON normalization' => [
-        ['test_datatype_boolean_emoji_normalizer', 'hal'],
-        'hal_json',
-      ],
       'Format-agnostic @FieldType-level normalizers SHOULD be able to affect the XML normalization' => [
         ['test_fieldtype_boolean_emoji_normalizer'],
-        'xml',
-      ],
-      'Format-agnostic @DataType-level normalizers SHOULD be able to affect the XML normalization' => [
-        ['test_datatype_boolean_emoji_normalizer', 'hal'],
         'xml',
       ],
     ];

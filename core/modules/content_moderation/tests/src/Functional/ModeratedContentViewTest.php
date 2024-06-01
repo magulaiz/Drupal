@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\content_moderation\Functional;
 
 use Drupal\language\Entity\ConfigurableLanguage;
@@ -42,7 +44,7 @@ class ModeratedContentViewTest extends BrowserTestBase {
   /**
    * {@inheritdoc}
    */
-  public function setUp(): void {
+  protected function setUp(): void {
     parent::setUp();
 
     $this->drupalCreateContentType(['type' => 'page', 'name' => 'Basic page'])->save();
@@ -147,7 +149,7 @@ class ModeratedContentViewTest extends BrowserTestBase {
   }
 
   /**
-   * Test the moderated content page with multilingual content.
+   * Tests the moderated content page with multilingual content.
    */
   public function testModeratedContentPageMultilingual() {
     ConfigurableLanguage::createFromLangcode('fr')->save();

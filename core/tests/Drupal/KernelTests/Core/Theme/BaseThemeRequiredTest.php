@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\KernelTests\Core\Theme;
 
 use Drupal\KernelTests\KernelTestBase;
@@ -41,7 +43,7 @@ class BaseThemeRequiredTest extends KernelTestBase {
   }
 
   /**
-   * Tests opting out of Stable by setting the base theme to false.
+   * Tests opting out of Stable 9 by setting the base theme to false.
    */
   public function testWildWest() {
     $this->themeInstaller->install(['test_wild_west']);
@@ -49,7 +51,7 @@ class BaseThemeRequiredTest extends KernelTestBase {
     $theme = $this->themeManager->getActiveTheme();
     /** @var \Drupal\Core\Theme\ActiveTheme $base_theme */
     $base_themes = $theme->getBaseThemeExtensions();
-    $this->assertTrue(empty($base_themes), 'No base theme is set when a theme has opted out of using Stable.');
+    $this->assertEmpty($base_themes, 'No base theme is set when a theme has opted out of using Stable 9.');
   }
 
 }

@@ -2,7 +2,6 @@
 
 namespace Drupal\Core\Database\Query;
 
-use Drupal\Core\Database\Database;
 use Drupal\Core\Database\Connection;
 
 /**
@@ -61,7 +60,6 @@ class Update extends Query implements ConditionInterface {
    *   Array of database options.
    */
   public function __construct(Connection $connection, $table, array $options = []) {
-    $options['return'] = Database::RETURN_AFFECTED;
     parent::__construct($connection, $options);
     $this->table = $table;
 
@@ -101,7 +99,7 @@ class Update extends Query implements ConditionInterface {
    * @return $this
    *   The called object.
    */
-  public function expression($field, $expression, array $arguments = NULL) {
+  public function expression($field, $expression, ?array $arguments = NULL) {
     $this->expressionFields[$field] = [
       'expression' => $expression,
       'arguments' => $arguments,
@@ -113,7 +111,7 @@ class Update extends Query implements ConditionInterface {
   /**
    * Executes the UPDATE query.
    *
-   * @return
+   * @return int|null
    *   The number of rows matched by the update query. This includes rows that
    *   actually didn't have to be updated because the values didn't change.
    */
@@ -145,7 +143,14 @@ class Update extends Query implements ConditionInterface {
       $update_values = array_merge($update_values, $this->condition->arguments());
     }
 
-    return $this->connection->query((string) $this, $update_values, $this->queryOptions);
+    $stmt = $this->connection->prepareStatement((string) $this, $this->queryOptions, TRUE);
+    try {
+      $stmt->execute($update_values, $this->queryOptions);
+      return $stmt->rowCount();
+    }
+    catch (\Exception $e) {
+      $this->connection->exceptionHandler()->handleExecutionException($e, $stmt, $update_values, $this->queryOptions);
+    }
   }
 
   /**

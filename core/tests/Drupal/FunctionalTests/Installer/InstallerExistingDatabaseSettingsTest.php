@@ -1,12 +1,13 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\FunctionalTests\Installer;
 
 use Drupal\Core\Database\Database;
 
 /**
- * Tests the installer with an existing settings file with database connection
- * info.
+ * Tests installation with database information in an existing settings file.
  *
  * @group Installer
  */

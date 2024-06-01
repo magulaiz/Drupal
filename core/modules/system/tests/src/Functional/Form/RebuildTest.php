@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\system\Functional\Form;
 
 use Drupal\Tests\BrowserTestBase;
@@ -30,6 +32,9 @@ class RebuildTest extends BrowserTestBase {
    */
   protected $webUser;
 
+  /**
+   * {@inheritdoc}
+   */
   protected function setUp(): void {
     parent::setUp();
 
@@ -48,7 +53,8 @@ class RebuildTest extends BrowserTestBase {
       'checkbox_1_default_on' => FALSE,
       'text_1' => 'foo',
     ];
-    $this->drupalPostForm('form-test/form-rebuild-preserve-values', $edit, 'Add more');
+    $this->drupalGet('form-test/form-rebuild-preserve-values');
+    $this->submitForm($edit, 'Add more');
 
     $assert_session = $this->assertSession();
 

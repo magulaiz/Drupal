@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\Core\Plugin;
 
 use Drupal\Component\Plugin\Definition\PluginDefinition;
@@ -37,6 +39,8 @@ class DefaultPluginManagerTest extends UnitTestCase {
    * {@inheritdoc}
    */
   protected function setUp(): void {
+    parent::setUp();
+
     $this->expectedDefinitions = [
       'apple' => [
         'id' => 'apple',
@@ -100,7 +104,7 @@ class DefaultPluginManagerTest extends UnitTestCase {
     $module_handler->expects($this->once())
       ->method('moduleExists')
       ->with('disabled_module')
-      ->will($this->returnValue(FALSE));
+      ->willReturn(FALSE);
 
     $plugin_manager = new TestPluginManager($this->namespaces, $definitions, $module_handler, 'test_alter_hook', '\Drupal\plugin_test\Plugin\plugin_test\fruit\FruitInterface');
 
@@ -125,7 +129,7 @@ class DefaultPluginManagerTest extends UnitTestCase {
     $module_handler->expects($this->once())
       ->method('moduleExists')
       ->with('disabled_module')
-      ->will($this->returnValue(FALSE));
+      ->willReturn(FALSE);
 
     $plugin_manager = new TestPluginManager($this->namespaces, $definitions, $module_handler, 'test_alter_hook', '\Drupal\plugin_test\Plugin\plugin_test\fruit\FruitInterface');
 
@@ -184,7 +188,7 @@ class DefaultPluginManagerTest extends UnitTestCase {
       ->expects($this->once())
       ->method('get')
       ->with($cid)
-      ->will($this->returnValue(FALSE));
+      ->willReturn(FALSE);
     $cache_backend
       ->expects($this->once())
       ->method('set')
@@ -209,7 +213,7 @@ class DefaultPluginManagerTest extends UnitTestCase {
       ->expects($this->once())
       ->method('get')
       ->with($cid)
-      ->will($this->returnValue((object) ['data' => $this->expectedDefinitions]));
+      ->willReturn((object) ['data' => $this->expectedDefinitions]);
     $cache_backend
       ->expects($this->never())
       ->method('set');
@@ -380,14 +384,14 @@ class DefaultPluginManagerTest extends UnitTestCase {
     $definitions = [];
     $definitions['array_based_found'] = ['provider' => 'module_found'];
     $definitions['array_based_missing'] = ['provider' => 'module_missing'];
-    $definitions['stdclass_based_found'] = (object) ['provider' => 'module_found'];
-    $definitions['stdclass_based_missing'] = (object) ['provider' => 'module_missing'];
+    $definitions['stdClass_based_found'] = (object) ['provider' => 'module_found'];
+    $definitions['stdClass_based_missing'] = (object) ['provider' => 'module_missing'];
     $definitions['classed_object_found'] = new ObjectDefinition(['provider' => 'module_found']);
     $definitions['classed_object_missing'] = new ObjectDefinition(['provider' => 'module_missing']);
 
     $expected = [];
     $expected['array_based_found'] = $definitions['array_based_found'];
-    $expected['stdclass_based_found'] = $definitions['stdclass_based_found'];
+    $expected['stdClass_based_found'] = $definitions['stdClass_based_found'];
     $expected['classed_object_found'] = $definitions['classed_object_found'];
 
     $module_handler = $this->prophesize(ModuleHandlerInterface::class);
@@ -410,7 +414,7 @@ class DefaultPluginManagerTest extends UnitTestCase {
     $this->assertEquals($expected, $definition);
   }
 
-  public function providerTestProcessDefinition() {
+  public static function providerTestProcessDefinition() {
     $data = [];
 
     $data['merge'][] = [
@@ -509,8 +513,11 @@ class ObjectDefinition extends PluginDefinition {
    * ObjectDefinition constructor.
    *
    * @param array $definition
+   *   An associative array defining the plugin.
    */
   public function __construct(array $definition) {
+    // This class does not exist but plugin definitions must provide a class.
+    $this->class = 'PluginObject';
     foreach ($definition as $property => $value) {
       $this->{$property} = $value;
     }

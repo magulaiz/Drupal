@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\layout_builder\Functional;
 
 use Drupal\layout_builder\Entity\LayoutBuilderEntityViewDisplay;
@@ -28,7 +30,7 @@ class LayoutSectionTest extends BrowserTestBase {
   /**
    * {@inheritdoc}
    */
-  protected $defaultTheme = 'classy';
+  protected $defaultTheme = 'starterkit_theme';
 
   /**
    * {@inheritdoc}
@@ -59,7 +61,7 @@ class LayoutSectionTest extends BrowserTestBase {
   /**
    * Provides test data for ::testLayoutSectionFormatter().
    */
-  public function providerTestLayoutSectionFormatter() {
+  public static function providerTestLayoutSectionFormatter() {
     $data = [];
     $data['block_with_global_context'] = [
       [
@@ -236,7 +238,7 @@ class LayoutSectionTest extends BrowserTestBase {
     $node->save();
 
     $this->drupalGet($node->toUrl('canonical')->toString() . '/layout');
-    $this->assertSession()->statusCodeEquals(404);
+    $this->assertSession()->statusCodeEquals(403);
   }
 
   /**
@@ -272,7 +274,8 @@ class LayoutSectionTest extends BrowserTestBase {
     $display = LayoutBuilderEntityViewDisplay::load('node.bundle_with_section_field.default');
     $this->assertInstanceOf(LayoutBuilderEntityViewDisplay::class, $display);
 
-    $this->drupalPostForm('/admin/structure/types/manage/bundle_with_section_field/delete', [], 'Delete');
+    $this->drupalGet('/admin/structure/types/manage/bundle_with_section_field/delete');
+    $this->submitForm([], 'Delete');
     $assert_session->statusCodeEquals(200);
 
     $display = LayoutBuilderEntityViewDisplay::load('node.bundle_with_section_field.default');
@@ -292,8 +295,10 @@ class LayoutSectionTest extends BrowserTestBase {
    *   A string of cache tags to be found in the header.
    * @param string $expected_dynamic_cache
    *   The expected dynamic cache header. Either 'HIT', 'MISS' or 'UNCACHEABLE'.
+   *
+   * @internal
    */
-  protected function assertLayoutSection($expected_selector, $expected_content, $expected_cache_contexts = '', $expected_cache_tags = '', $expected_dynamic_cache = 'MISS') {
+  protected function assertLayoutSection($expected_selector, $expected_content, string $expected_cache_contexts = '', string $expected_cache_tags = '', string $expected_dynamic_cache = 'MISS'): void {
     $assert_session = $this->assertSession();
     // Find the given selector.
     foreach ((array) $expected_selector as $selector) {

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\jsonapi\Unit\Normalizer;
 
 use Drupal\Core\Entity\EntityFieldManagerInterface;
@@ -44,7 +46,9 @@ class ResourceIdentifierNormalizerTest extends UnitTestCase {
   /**
    * {@inheritdoc}
    */
-  public function setUp(): void {
+  protected function setUp(): void {
+    parent::setUp();
+
     $target_resource_type = new ResourceType('lorem', 'dummy_bundle', NULL);
     $relationship_fields = [
       'field_dummy' => new ResourceTypeRelationship('field_dummy'),
@@ -124,7 +128,7 @@ class ResourceIdentifierNormalizerTest extends UnitTestCase {
    * @return array
    *   The data for the test method.
    */
-  public function denormalizeProvider() {
+  public static function denormalizeProvider() {
     return [
       [
         ['data' => [['type' => 'lorem--dummy_bundle', 'id' => '4e6cb61d-4f04-437f-99fe-42c002393658']]],
@@ -164,7 +168,7 @@ class ResourceIdentifierNormalizerTest extends UnitTestCase {
    * @return array
    *   The input data for the test method.
    */
-  public function denormalizeInvalidResourceProvider() {
+  public static function denormalizeInvalidResourceProvider() {
     return [
       [
         [

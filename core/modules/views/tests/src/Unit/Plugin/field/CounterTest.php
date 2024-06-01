@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\views\Unit\Plugin\field;
 
 use Drupal\Tests\UnitTestCase;
@@ -27,7 +29,7 @@ class CounterTest extends UnitTestCase {
    *
    * @var \Drupal\views\ViewExecutable
    */
-  protected  $view;
+  protected $view;
 
   /**
    * The display plugin instance.
@@ -71,7 +73,10 @@ class CounterTest extends UnitTestCase {
       ->disableOriginalConstructor()
       ->getMock();
     $route_provider = $this->createMock('Drupal\Core\Routing\RouteProviderInterface');
-    $this->view = new ViewExecutable($storage, $user, $views_data, $route_provider);
+    $display_plugin_manager = $this->getMockBuilder('\Drupal\views\Plugin\ViewsPluginManager')
+      ->disableOriginalConstructor()
+      ->getMock();
+    $this->view = new ViewExecutable($storage, $user, $views_data, $route_provider, $display_plugin_manager);
 
     $this->display = $this->getMockBuilder('Drupal\views\Plugin\views\display\DisplayPluginBase')
       ->disableOriginalConstructor()
@@ -79,7 +84,7 @@ class CounterTest extends UnitTestCase {
 
     $this->pager = $this->getMockBuilder('Drupal\views\Plugin\views\pager\Full')
       ->disableOriginalConstructor()
-      ->setMethods(NULL)
+      ->onlyMethods([])
       ->getMock();
 
     $this->view->display_handler = $this->display;
@@ -98,7 +103,7 @@ class CounterTest extends UnitTestCase {
    * @return array
    *   Returns an array of row index to test.
    */
-  public function providerRowIndexes() {
+  public static function providerRowIndexes() {
     return [
       [0],
       [1],

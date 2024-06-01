@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\KernelTests\Core\Config\Storage;
 
 use Drupal\Core\Config\MemoryStorage;
@@ -17,8 +19,6 @@ class MemoryStorageTest extends ConfigStorageTestBase {
   protected function setUp(): void {
     parent::setUp();
     $this->storage = new MemoryStorage();
-    // ::listAll() verifications require other configuration data to exist.
-    $this->storage->write('system.performance', []);
   }
 
   /**

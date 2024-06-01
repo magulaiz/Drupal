@@ -69,7 +69,7 @@ class NestedArray {
   public static function &getValue(array &$array, array $parents, &$key_exists = NULL) {
     $ref = &$array;
     foreach ($parents as $parent) {
-      if (is_array($ref) && (isset($ref[$parent]) || array_key_exists($parent, $ref))) {
+      if (is_array($ref) && \array_key_exists($parent, $ref)) {
         $ref = &$ref[$parent];
       }
       else {
@@ -138,7 +138,7 @@ class NestedArray {
    * @param bool $force
    *   (optional) If TRUE, the value is forced into the structure even if it
    *   requires the deletion of an already existing non-array parent value. If
-   *   FALSE, PHP throws an error if trying to add into a value that is not an
+   *   FALSE, throws an exception if trying to add into a value that is not an
    *   array. Defaults to FALSE.
    *
    * @see NestedArray::unsetValue()
@@ -149,7 +149,10 @@ class NestedArray {
     foreach ($parents as $parent) {
       // PHP auto-creates container arrays and NULL entries without error if $ref
       // is NULL, but throws an error if $ref is set, but not an array.
-      if ($force && isset($ref) && !is_array($ref)) {
+      if (isset($ref) && !is_array($ref)) {
+        if (!$force) {
+          throw new \LogicException('Cannot create key "' . $parent . '" on non-array value.');
+        }
         $ref = [];
       }
       $ref = &$ref[$parent];
@@ -194,7 +197,7 @@ class NestedArray {
    *
    * Instead, use this helper function:
    * @code
-   * NestedArray::unset_nested_value($form, $parents, $element);
+   * NestedArray::unsetValue($form, $parents, $element);
    * @endcode
    *
    * However if the number of array parent keys is static, the value should
@@ -219,7 +222,7 @@ class NestedArray {
   public static function unsetValue(array &$array, array $parents, &$key_existed = NULL) {
     $unset_key = array_pop($parents);
     $ref = &self::getValue($array, $parents, $key_existed);
-    if ($key_existed && is_array($ref) && (isset($ref[$unset_key]) || array_key_exists($unset_key, $ref))) {
+    if ($key_existed && is_array($ref) && \array_key_exists($unset_key, $ref)) {
       $key_existed = TRUE;
       unset($ref[$unset_key]);
     }
@@ -355,7 +358,7 @@ class NestedArray {
    * @return array
    *   The filtered array.
    */
-  public static function filter(array $array, callable $callable = NULL) {
+  public static function filter(array $array, ?callable $callable = NULL) {
     $array = is_callable($callable) ? array_filter($array, $callable) : array_filter($array);
     foreach ($array as &$element) {
       if (is_array($element)) {

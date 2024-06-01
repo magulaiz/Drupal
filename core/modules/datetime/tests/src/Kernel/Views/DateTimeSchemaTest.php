@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\datetime\Kernel\Views;
 
 use Drupal\Tests\SchemaCheckTestTrait;
@@ -20,7 +22,7 @@ class DateTimeSchemaTest extends DateTimeHandlerTestBase {
   public static $testViews = ['test_argument_datetime', 'test_filter_datetime', 'test_sort_datetime'];
 
   /**
-   * Test argument plugin schema.
+   * Tests argument plugin schema.
    */
   public function testDateTimeSchema() {
     // Test argument schema.

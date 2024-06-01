@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\jsonapi\Kernel\Query;
 
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
@@ -17,6 +19,7 @@ use Prophecy\Argument;
  * @coversDefaultClass \Drupal\jsonapi\Query\Filter
  * @group jsonapi
  * @group jsonapi_query
+ * @group #slow
  *
  * @internal
  */
@@ -54,9 +57,14 @@ class FilterTest extends JsonapiKernelTestBase {
   protected $resourceTypeRepository;
 
   /**
+   * @var \Drupal\jsonapi\Context\FieldResolver
+   */
+  protected FieldResolver $fieldResolver;
+
+  /**
    * {@inheritdoc}
    */
-  public function setUp(): void {
+  protected function setUp(): void {
     parent::setUp();
 
     $this->setUpSchemas();
@@ -93,7 +101,7 @@ class FilterTest extends JsonapiKernelTestBase {
    */
   public function testInvalidFilterPathDueToMissingPropertyNameReferenceFieldWithMetaProperties() {
     $this->expectException(CacheableBadRequestHttpException::class);
-    $this->expectExceptionMessage('Invalid nested filtering. The field `photo`, given in the path `photo` is incomplete, it must end with one of the following specifiers: `id`, `meta.alt`, `meta.title`, `meta.width`, `meta.height`.');
+    $this->expectExceptionMessage('Invalid nested filtering. The field `photo`, given in the path `photo` is incomplete, it must end with one of the following specifiers: `id`, `meta.drupal_internal__target_id`, `meta.alt`, `meta.title`, `meta.width`, `meta.height`.');
     $resource_type = $this->resourceTypeRepository->get('node', 'painting');
     Filter::createFromQueryParameter(['photo' => ''], $resource_type, $this->fieldResolver);
   }
@@ -113,7 +121,7 @@ class FilterTest extends JsonapiKernelTestBase {
    */
   public function testInvalidFilterPathDueToMissingPropertyNameReferenceFieldWithoutMetaProperties() {
     $this->expectException(CacheableBadRequestHttpException::class);
-    $this->expectExceptionMessage('Invalid nested filtering. The field `uid`, given in the path `uid` is incomplete, it must end with one of the following specifiers: `id`.');
+    $this->expectExceptionMessage('Invalid nested filtering. The field `uid`, given in the path `uid` is incomplete, it must end with one of the following specifiers: `id`, `meta.drupal_internal__target_id`.');
     $resource_type = $this->resourceTypeRepository->get('node', 'painting');
     Filter::createFromQueryParameter(['uid' => ''], $resource_type, $this->fieldResolver);
   }
@@ -149,14 +157,11 @@ class FilterTest extends JsonapiKernelTestBase {
       // Expose parts of \Drupal\Core\Entity\Query\Sql\Query::execute().
       $o = new \ReflectionObject($entity_query);
       $m1 = $o->getMethod('prepare');
-      $m1->setAccessible(TRUE);
       $m2 = $o->getMethod('compile');
-      $m2->setAccessible(TRUE);
 
       // The private property computed by the two previous private calls, whose
       // value we need to inspect.
       $p = $o->getProperty('sqlQuery');
-      $p->setAccessible(TRUE);
 
       $m1->invoke($entity_query);
       $m2->invoke($entity_query);
@@ -169,7 +174,7 @@ class FilterTest extends JsonapiKernelTestBase {
       $expected_query = $case[1];
       $filter = Filter::createFromQueryParameter($parameter, $resource_type, $this->fieldResolver);
 
-      $query = $this->nodeStorage->getQuery();
+      $query = $this->nodeStorage->getQuery()->accessCheck(FALSE);
 
       // Get the query condition parsed from the input.
       $condition = $filter->queryCondition($query);
@@ -192,7 +197,7 @@ class FilterTest extends JsonapiKernelTestBase {
    */
   protected function queryConditionData() {
     // ((RED or CIRCLE) or (YELLOW and SQUARE))
-    $query = $this->nodeStorage->getQuery();
+    $query = $this->nodeStorage->getQuery()->accessCheck(FALSE);
 
     $or_group = $query->orConditionGroup();
 
@@ -265,7 +270,6 @@ class FilterTest extends JsonapiKernelTestBase {
    * Sets up the schemas.
    */
   protected function setUpSchemas() {
-    $this->installSchema('system', ['sequences']);
     $this->installSchema('node', ['node_access']);
     $this->installSchema('user', ['users_data']);
 
@@ -281,6 +285,7 @@ class FilterTest extends JsonapiKernelTestBase {
   protected function savePaintingType() {
     NodeType::create([
       'type' => 'painting',
+      'name' => 'Painting',
     ])->save();
     $this->createTextField(
       'node', 'painting',
@@ -292,7 +297,7 @@ class FilterTest extends JsonapiKernelTestBase {
       'shapes', 'Shapes',
       FieldStorageDefinitionInterface::CARDINALITY_UNLIMITED
     );
-    $this->createImageField('photo', 'painting');
+    $this->createImageField('photo', 'node', 'painting');
   }
 
   /**
@@ -324,7 +329,7 @@ class FilterTest extends JsonapiKernelTestBase {
   /**
    * Data provider for testCreateFromQueryParameter.
    */
-  public function parameterProvider() {
+  public static function parameterProvider() {
     return [
       'shorthand' => [
         ['uid' => ['value' => 1]],
@@ -383,29 +388,29 @@ class FilterTest extends JsonapiKernelTestBase {
     $root = $filter->root();
 
     // Make sure the implicit root group was added.
-    $this->assertEquals($root->conjunction(), 'AND');
+    $this->assertEquals('AND', $root->conjunction());
 
     // Ensure the or-group and the and-group were added correctly.
     $members = $root->members();
 
     // Ensure the OR group was added.
     $or_group = $members[0];
-    $this->assertEquals($or_group->conjunction(), 'OR');
+    $this->assertEquals('OR', $or_group->conjunction());
     $or_group_members = $or_group->members();
 
     // Make sure the nested OR group was added with the right conditions.
     $nested_or_group = $or_group_members[0];
-    $this->assertEquals($nested_or_group->conjunction(), 'OR');
+    $this->assertEquals('OR', $nested_or_group->conjunction());
     $nested_or_group_members = $nested_or_group->members();
-    $this->assertEquals($nested_or_group_members[0]->field(), 'field0');
-    $this->assertEquals($nested_or_group_members[1]->field(), 'field1');
+    $this->assertEquals('field0', $nested_or_group_members[0]->field());
+    $this->assertEquals('field1', $nested_or_group_members[1]->field());
 
     // Make sure the nested AND group was added with the right conditions.
     $nested_and_group = $or_group_members[1];
-    $this->assertEquals($nested_and_group->conjunction(), 'AND');
+    $this->assertEquals('AND', $nested_and_group->conjunction());
     $nested_and_group_members = $nested_and_group->members();
-    $this->assertEquals($nested_and_group_members[0]->field(), 'field2');
-    $this->assertEquals($nested_and_group_members[1]->field(), 'field3');
+    $this->assertEquals('field2', $nested_and_group_members[0]->field());
+    $this->assertEquals('field3', $nested_and_group_members[1]->field());
   }
 
   /**

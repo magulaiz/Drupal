@@ -205,10 +205,10 @@ class ImageStyle extends ConfigEntityBase implements ImageStyleInterface, Entity
    * {@inheritdoc}
    */
   public function buildUrl($path, $clean_urls = NULL) {
-    $uri = $this->buildUri($path);
-
     /** @var \Drupal\Core\StreamWrapper\StreamWrapperManagerInterface $stream_wrapper_manager */
     $stream_wrapper_manager = \Drupal::service('stream_wrapper_manager');
+
+    $uri = $stream_wrapper_manager->normalizeUri($this->buildUri($path));
 
     // The token query is added even if the
     // 'image.settings:allow_insecure_derivatives' configuration is TRUE, so
@@ -222,7 +222,10 @@ class ImageStyle extends ConfigEntityBase implements ImageStyleInterface, Entity
     $token_query = [];
     if (!\Drupal::config('image.settings')->get('suppress_itok_output')) {
       // The passed $path variable can be either a relative path or a full URI.
-      $original_uri = $stream_wrapper_manager::getScheme($path) ? $stream_wrapper_manager->normalizeUri($path) : file_build_uri($path);
+      if (!$stream_wrapper_manager::getScheme($path)) {
+        $path = \Drupal::config('system.file')->get('default_scheme') . '://' . $path;
+      }
+      $original_uri = $stream_wrapper_manager->normalizeUri($path);
       $token_query = [IMAGE_DERIVATIVE_TOKEN => $this->getPathToken($original_uri)];
     }
 
@@ -247,10 +250,12 @@ class ImageStyle extends ConfigEntityBase implements ImageStyleInterface, Entity
       return Url::fromUri('base:' . $directory_path . '/' . $stream_wrapper_manager::getTarget($uri), ['absolute' => TRUE, 'query' => $token_query])->toString();
     }
 
-    $file_url = file_create_url($uri);
+    /** @var \Drupal\Core\File\FileUrlGeneratorInterface $file_url_generator */
+    $file_url_generator = \Drupal::service('file_url_generator');
+    $file_url = $file_url_generator->generateAbsoluteString($uri);
     // Append the query string with the token, if necessary.
     if ($token_query) {
-      $file_url .= (strpos($file_url, '?') !== FALSE ? '&' : '?') . UrlHelper::buildQuery($token_query);
+      $file_url .= (str_contains($file_url, '?') ? '&' : '?') . UrlHelper::buildQuery($token_query);
     }
 
     return $file_url;
@@ -273,30 +278,32 @@ class ImageStyle extends ConfigEntityBase implements ImageStyleInterface, Entity
           // Ignore failed deletes.
         }
       }
-      return $this;
     }
-
-    // Delete the style directory in each registered wrapper.
-    $wrappers = $this->getStreamWrapperManager()->getWrappers(StreamWrapperInterface::WRITE_VISIBLE);
-    foreach ($wrappers as $wrapper => $wrapper_data) {
-      if (file_exists($directory = $wrapper . '://styles/' . $this->id())) {
-        try {
-          $file_system->deleteRecursive($directory);
-        }
-        catch (FileException $e) {
-          // Ignore failed deletes.
+    else {
+      // Delete the style directory in each registered wrapper.
+      $wrappers = $this->getStreamWrapperManager()->getWrappers(StreamWrapperInterface::WRITE_VISIBLE);
+      foreach ($wrappers as $wrapper => $wrapper_data) {
+        if (file_exists($directory = $wrapper . '://styles/' . $this->id())) {
+          try {
+            $file_system->deleteRecursive($directory);
+          }
+          catch (FileException $e) {
+            // Ignore failed deletes.
+          }
         }
       }
     }
 
     // Let other modules update as necessary on flush.
     $module_handler = \Drupal::moduleHandler();
-    $module_handler->invokeAll('image_style_flush', [$this]);
+    $module_handler->invokeAll('image_style_flush', [$this, $path]);
 
-    // Clear caches so that formatters may be added for this style.
-    drupal_theme_rebuild();
-
-    Cache::invalidateTags($this->getCacheTagsToInvalidate());
+    // Clear caches when the complete image style is flushed,
+    // so that field formatters may be added for this style.
+    if (!isset($path)) {
+      \Drupal::service('theme.registry')->reset();
+      Cache::invalidateTags($this->getCacheTagsToInvalidate());
+    }
 
     return $this;
   }

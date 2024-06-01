@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\field\Kernel\Migrate\d6;
 
 use Drupal\field\Entity\FieldConfig;
@@ -33,7 +35,7 @@ class MigrateFieldInstanceTest extends MigrateDrupal6TestBase {
     $field = FieldConfig::load('node.story.field_test');
     $this->assertSame('Text Field', $field->label());
     // field_test is a text_long field, which have no settings.
-    $this->assertSame([], $field->getSettings());
+    $this->assertSame(['allowed_formats' => []], $field->getSettings());
     $this->assertSame('text for default value', $entity->field_test->value);
 
     // Test a number field.
@@ -101,7 +103,7 @@ class MigrateFieldInstanceTest extends MigrateDrupal6TestBase {
     $expected = ['title' => 2, 'link_type' => LinkItemInterface::LINK_GENERIC];
     $this->assertSame($expected, $field->getSettings());
     $this->assertSame('default link title', $entity->field_test_link->title, 'Field field_test_link default title is correct.');
-    $this->assertSame('https://www.drupal.org', $entity->field_test_link->url, 'Field field_test_link default title is correct.');
+    $this->assertSame('https://www.drupal.org', $entity->field_test_link->uri);
     $this->assertSame([], $entity->field_test_link->options['attributes']);
 
     // Test date field.

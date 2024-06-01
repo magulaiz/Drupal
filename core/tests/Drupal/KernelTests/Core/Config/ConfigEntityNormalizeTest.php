@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\KernelTests\Core\Config;
 
 use Drupal\KernelTests\KernelTestBase;
@@ -18,6 +20,9 @@ class ConfigEntityNormalizeTest extends KernelTestBase {
    */
   protected static $modules = ['config_test'];
 
+  /**
+   * {@inheritdoc}
+   */
   protected function setUp(): void {
     parent::setUp();
     $this->installConfig(static::$modules);

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\comment\Functional;
 
 use Drupal\Component\Render\FormattableMarkup;
@@ -54,7 +56,10 @@ abstract class CommentTestBase extends BrowserTestBase {
    */
   protected $node;
 
-  protected function setUp() {
+  /**
+   * {@inheritdoc}
+   */
+  protected function setUp(): void {
     parent::setUp();
 
     // Create an article content type only if it does not yet exist, so that
@@ -78,7 +83,7 @@ abstract class CommentTestBase extends BrowserTestBase {
       // permission is granted.
       'access user profiles',
       'access content',
-     ]);
+    ]);
     $this->webUser = $this->drupalCreateUser([
       'access comments',
       'post comments',
@@ -148,19 +153,19 @@ abstract class CommentTestBase extends BrowserTestBase {
     switch ($preview_mode) {
       case DRUPAL_REQUIRED:
         // Preview required so no save button should be found.
-        $this->assertSession()->buttonNotExists(t('Save'));
+        $this->assertSession()->buttonNotExists('Save');
         $this->submitForm($edit, 'Preview');
         // Don't break here so that we can test post-preview field presence and
         // function below.
       case DRUPAL_OPTIONAL:
-        $this->assertSession()->buttonExists(t('Preview'));
-        $this->assertSession()->buttonExists(t('Save'));
+        $this->assertSession()->buttonExists('Preview');
+        $this->assertSession()->buttonExists('Save');
         $this->submitForm($edit, 'Save');
         break;
 
       case DRUPAL_DISABLED:
-        $this->assertSession()->buttonNotExists(t('Preview'));
-        $this->assertSession()->buttonExists(t('Save'));
+        $this->assertSession()->buttonNotExists('Preview');
+        $this->assertSession()->buttonExists('Save');
         $this->submitForm($edit, 'Save');
         break;
     }
@@ -172,9 +177,9 @@ abstract class CommentTestBase extends BrowserTestBase {
     if ($contact !== TRUE) {
       // If true then attempting to find error message.
       if ($subject) {
-        $this->assertText($subject);
+        $this->assertSession()->pageTextContains($subject);
       }
-      $this->assertText($comment);
+      $this->assertSession()->pageTextContains($comment);
       // Check the comment ID was extracted.
       $this->assertArrayHasKey(1, $match);
     }
@@ -196,9 +201,9 @@ abstract class CommentTestBase extends BrowserTestBase {
    * @return bool
    *   Boolean indicating whether the comment was found.
    */
-  public function commentExists(CommentInterface $comment = NULL, $reply = FALSE) {
+  public function commentExists(?CommentInterface $comment = NULL, $reply = FALSE) {
     if ($comment) {
-      $comment_element = $this->cssSelect('.comment-wrapper ' . ($reply ? '.indented ' : '') . 'article#comment-' . $comment->id());
+      $comment_element = $this->cssSelect(($reply ? '.indented ' : '') . 'article#comment-' . $comment->id());
       if (empty($comment_element)) {
         return FALSE;
       }
@@ -227,8 +232,9 @@ abstract class CommentTestBase extends BrowserTestBase {
    *   Comment to delete.
    */
   public function deleteComment(CommentInterface $comment) {
-    $this->drupalPostForm('comment/' . $comment->id() . '/delete', [], 'Delete');
-    $this->assertText('The comment and all its replies have been deleted.');
+    $this->drupalGet('comment/' . $comment->id() . '/delete');
+    $this->submitForm([], 'Delete');
+    $this->assertSession()->pageTextContains('The comment and all its replies have been deleted.');
   }
 
   /**
@@ -361,14 +367,15 @@ abstract class CommentTestBase extends BrowserTestBase {
     $edit = [];
     $edit['operation'] = $operation;
     $edit['comments[' . $comment->id() . ']'] = TRUE;
-    $this->drupalPostForm('admin/content/comment' . ($approval ? '/approval' : ''), $edit, 'Update');
+    $this->drupalGet('admin/content/comment' . ($approval ? '/approval' : ''));
+    $this->submitForm($edit, 'Update');
 
     if ($operation == 'delete') {
       $this->submitForm([], 'Delete');
-      $this->assertRaw(\Drupal::translation()->formatPlural(1, 'Deleted 1 comment.', 'Deleted @count comments.'));
+      $this->assertSession()->pageTextContains('Deleted 1 comment.');
     }
     else {
-      $this->assertText('The update has been performed.');
+      $this->assertSession()->pageTextContains('The update has been performed.');
     }
   }
 
@@ -389,7 +396,7 @@ abstract class CommentTestBase extends BrowserTestBase {
   }
 
   /**
-   * Creates a comment comment type (bundle).
+   * Creates a comment type (bundle).
    *
    * @param string $label
    *   The comment type label.

@@ -1,11 +1,13 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\KernelTests\Core\Render;
 
 use Drupal\KernelTests\KernelTestBase;
 
 /**
- * Performs functional tests on drupal_render().
+ * Performs functional tests on \Drupal::service('renderer')->render().
  *
  * @group Common
  */
@@ -38,7 +40,7 @@ class RenderTest extends KernelTestBase {
         'test/specific_preprocess',
       ],
     ];
-    $this->assertEqual($expected_attached, $test_element['#attached'], 'All expected assets from theme preprocess hooks attached.');
+    $this->assertEquals($expected_attached, $test_element['#attached'], 'All expected assets from theme preprocess hooks attached.');
 
     \Drupal::state()->set('theme_preprocess_attached_test', FALSE);
   }
@@ -70,6 +72,17 @@ class RenderTest extends KernelTestBase {
     $renderer = $this->container->get('bare_html_page_renderer');
     $this->expectException(\LogicException::class);
     $renderer->renderBarePage($build, '', 'maintenance_page');
+  }
+
+  /**
+   * Tests the deprecation of \Drupal\Core\Render\Renderer::renderPlain()
+   *
+   * @group legacy
+   */
+  public function testDeprecateRenderPlain() {
+    $message = ['#markup' => 'Test'];
+    \Drupal::service('renderer')->renderPlain($message);
+    $this->expectDeprecation('Renderer::renderPlain() is deprecated in drupal:10.3.0 and is removed from drupal:12.0.0. Instead, you should use ::renderInIsolation(). See https://www.drupal.org/node/3407994');
   }
 
 }

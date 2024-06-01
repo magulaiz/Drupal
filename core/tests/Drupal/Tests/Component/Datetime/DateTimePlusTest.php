@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\Component\Datetime;
 
 use Drupal\Component\Datetime\DateTimePlus;
@@ -12,7 +14,7 @@ use PHPUnit\Framework\TestCase;
 class DateTimePlusTest extends TestCase {
 
   /**
-   * Test creating dates from string and array input.
+   * Tests creating dates from string and array input.
    *
    * @param mixed $input
    *   Input argument for DateTimePlus.
@@ -34,7 +36,7 @@ class DateTimePlusTest extends TestCase {
   }
 
   /**
-   * Test creating dates from string and array input.
+   * Tests creating dates from string and array input.
    *
    * @param mixed $input
    *   Input argument for DateTimePlus.
@@ -56,7 +58,7 @@ class DateTimePlusTest extends TestCase {
   }
 
   /**
-   * Test date diffs.
+   * Tests date diffs.
    *
    * @param mixed $input1
    *   A DateTimePlus object.
@@ -75,7 +77,7 @@ class DateTimePlusTest extends TestCase {
   }
 
   /**
-   * Test date diff exception caused by invalid input.
+   * Tests date diff exception caused by invalid input.
    *
    * @param mixed $input1
    *   A DateTimePlus object.
@@ -93,7 +95,7 @@ class DateTimePlusTest extends TestCase {
   }
 
   /**
-   * Test creating dates from invalid array input.
+   * Tests creating dates from invalid array input.
    *
    * @param mixed $input
    *   Input argument for DateTimePlus.
@@ -115,7 +117,7 @@ class DateTimePlusTest extends TestCase {
   /**
    * Tests DateTimePlus::checkArray().
    *
-   * @param mixed $array
+   * @param array $array
    *   Input argument for DateTimePlus::checkArray().
    * @param bool $expected
    *   The expected result of DateTimePlus::checkArray().
@@ -130,7 +132,7 @@ class DateTimePlusTest extends TestCase {
   }
 
   /**
-   * Test creating dates from timestamps, and manipulating timezones.
+   * Tests creating dates from timestamps, and manipulating timezones.
    *
    * @param int $input
    *   Input argument for DateTimePlus::createFromTimestamp().
@@ -164,7 +166,7 @@ class DateTimePlusTest extends TestCase {
   }
 
   /**
-   * Test creating dates from datetime strings.
+   * Tests creating dates from datetime strings.
    *
    * @param string $input
    *   Input argument for DateTimePlus().
@@ -182,20 +184,20 @@ class DateTimePlusTest extends TestCase {
   }
 
   /**
-   * Assertion helper for testTimestamp and testDateTimestamp since they need
-   * different dataProviders.
+   * Asserts a DateTimePlus value.
    *
    * @param \Drupal\Component\Datetime\DateTimePlus $date
    *   DateTimePlus to test.
-   *
-   * @input mixed $input
+   * @param string|int $input
    *   The original input passed to the test method.
    * @param array $initial
    *   @see testTimestamp()
    * @param array $transform
    *   @see testTimestamp()
+   *
+   * @internal
    */
-  public function assertDateTimestamp($date, $input, $initial, $transform) {
+  public function assertDateTimestamp(DateTimePlus $date, string|int $input, array $initial, array $transform): void {
     // Check format.
     $value = $date->format($initial['format']);
     $this->assertEquals($initial['expected_date'], $value, sprintf("Test new DateTimePlus(%s, %s): should be %s, found %s.", $input, $initial['timezone'], $initial['expected_date'], $value));
@@ -225,12 +227,14 @@ class DateTimePlusTest extends TestCase {
   }
 
   /**
-   * Test creating dates from format strings.
+   * Tests creating dates from format strings.
    *
    * @param string $input
    *   Input argument for DateTimePlus.
    * @param string $timezone
    *   Timezone argument for DateTimePlus.
+   * @param string $format
+   *   PHP date() type format for parsing the input.
    * @param string $format_date
    *   Format argument for DateTimePlus::format().
    * @param string $expected
@@ -245,7 +249,7 @@ class DateTimePlusTest extends TestCase {
   }
 
   /**
-   * Test invalid date handling.
+   * Tests invalid date handling.
    *
    * @param mixed $input
    *   Input argument for DateTimePlus.
@@ -267,6 +271,7 @@ class DateTimePlusTest extends TestCase {
 
   /**
    * Tests that DrupalDateTime can detect the right timezone to use.
+   *
    * When specified or not.
    *
    * @param mixed $input
@@ -287,8 +292,9 @@ class DateTimePlusTest extends TestCase {
   }
 
   /**
-   * Test that DrupalDateTime can detect the right timezone to use when
-   * constructed from a datetime object.
+   * Tests that DrupalDateTime can detect the correct timezone to use.
+   *
+   * But only when the DrupalDateTime is constructed from a datetime object.
    */
   public function testDateTimezoneWithDateTimeObject() {
     // Create a date object with another date object.
@@ -311,7 +317,7 @@ class DateTimePlusTest extends TestCase {
    *
    * @see DateTimePlusTest::testDates()
    */
-  public function providerTestDates() {
+  public static function providerTestDates() {
     $dates = [
       // String input.
       // Create date object from datetime string.
@@ -351,7 +357,7 @@ class DateTimePlusTest extends TestCase {
    *
    * @see DateTimePlusTest::testDates()
    */
-  public function providerTestDateArrays() {
+  public static function providerTestDateArrays() {
     $dates = [
       // Array input.
       // Create date object from date array, date only.
@@ -391,7 +397,7 @@ class DateTimePlusTest extends TestCase {
    *
    * @see testDateFormats()
    */
-  public function providerTestDateFormat() {
+  public static function providerTestDateFormat() {
     return [
       // Create a year-only date.
       ['2009', NULL, 'Y', 'Y', '2009'],
@@ -416,7 +422,7 @@ class DateTimePlusTest extends TestCase {
    *
    * @see testInvalidDates
    */
-  public function providerTestInvalidDates() {
+  public static function providerTestInvalidDates() {
     return [
       // Test for invalid month names when we are using a short version
       // of the month.
@@ -443,7 +449,7 @@ class DateTimePlusTest extends TestCase {
    *
    * @see testInvalidDateArrays
    */
-  public function providerTestInvalidDateArrays() {
+  public static function providerTestInvalidDateArrays() {
     return [
       // One year larger than the documented upper limit of checkdate().
       [['year' => 32768, 'month' => 1, 'day' => 8, 'hour' => 8, 'minute' => 0, 'second' => 0], 'America/Chicago', \InvalidArgumentException::class],
@@ -470,7 +476,7 @@ class DateTimePlusTest extends TestCase {
    *
    * @see testCheckArray
    */
-  public function providerTestCheckArray() {
+  public static function providerTestCheckArray() {
     return [
       'Date array, date only' => [['year' => 2010, 'month' => 2, 'day' => 28], TRUE],
       'Date array with hour' => [['year' => 2010, 'month' => 2, 'day' => 28, 'hour' => 10], TRUE],
@@ -496,7 +502,7 @@ class DateTimePlusTest extends TestCase {
    *
    * @see testDateTimezone
    */
-  public function providerTestDateTimezone() {
+  public static function providerTestDateTimezone() {
     // Use a common date for most of the tests.
     $date_string = '2007-01-31 21:00:00';
 
@@ -525,7 +531,7 @@ class DateTimePlusTest extends TestCase {
    *
    * @see testTimestamp()
    */
-  public function providerTestTimestamp() {
+  public static function providerTestTimestamp() {
     return [
       // Create date object from a unix timestamp and display it in
       // local time.
@@ -577,7 +583,7 @@ class DateTimePlusTest extends TestCase {
    *
    * @see testDateTimestamp()
    */
-  public function providerTestDateTimestamp() {
+  public static function providerTestDateTimestamp() {
     return [
       // Create date object from datetime string in UTC, and convert
       // it to a local date.
@@ -646,7 +652,7 @@ class DateTimePlusTest extends TestCase {
    *
    * @see DateTimePlusTest::testDateDiff()
    */
-  public function providerTestDateDiff() {
+  public static function providerTestDateDiff() {
 
     $empty_interval = new \DateInterval('PT0S');
 
@@ -690,7 +696,7 @@ class DateTimePlusTest extends TestCase {
       ],
       [
         'input1' => DateTimePlus::createFromFormat('U', 3600),
-        'input2' => \DateTime::createFromFormat('U', 0),
+        'input2' => \DateTime::createFromFormat('U', '0'),
         'absolute' => FALSE,
         'expected' => $negative_1_hour,
       ],
@@ -702,7 +708,7 @@ class DateTimePlusTest extends TestCase {
       ],
       [
         'input1' => DateTimePlus::createFromFormat('U', 3600),
-        'input2' => \DateTime::createFromFormat('U', 0),
+        'input2' => \DateTime::createFromFormat('U', '0'),
         'absolute' => TRUE,
         'expected' => $positive_1_hour,
       ],
@@ -724,7 +730,7 @@ class DateTimePlusTest extends TestCase {
    *
    * @see DateTimePlusTest::testInvalidDateDiff()
    */
-  public function providerTestInvalidDateDiff() {
+  public static function providerTestInvalidDateDiff() {
     return [
       [
         'input1' => DateTimePlus::createFromFormat('U', 3600),
@@ -764,7 +770,7 @@ class DateTimePlusTest extends TestCase {
    * @return array
    *   An array of invalid date/time strings, and corresponding error messages.
    */
-  public function providerTestInvalidConstructor() {
+  public static function providerTestInvalidConstructor() {
     return [
       [
         'YYYY-MM-DD',
@@ -819,7 +825,7 @@ class DateTimePlusTest extends TestCase {
         ],
       ],
       [
-        'lorem ipsum dolor sit amet',
+        'invalid time string',
         [
           'The timezone could not be found in the database',
           'Double timezone specification',

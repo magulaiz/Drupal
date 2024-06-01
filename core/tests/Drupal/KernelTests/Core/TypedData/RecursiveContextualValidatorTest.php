@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\KernelTests\Core\TypedData;
 
 use Drupal\Core\Entity\Plugin\DataType\EntityAdapter;
@@ -24,7 +26,7 @@ class RecursiveContextualValidatorTest extends KernelTestBase {
   /**
    * {@inheritdoc}
    */
-  public function setUp(): void {
+  protected function setUp(): void {
     parent::setUp();
     $this->installEntitySchema('user');
     $this->installEntitySchema('entity_test');
@@ -43,7 +45,7 @@ class RecursiveContextualValidatorTest extends KernelTestBase {
   }
 
   /**
-   * Test recursive propagation of violations.
+   * Tests recursive propagation of violations.
    */
   public function testRecursiveViolationPropagation() {
     // We create an entity reference field with a constraint which will
@@ -58,7 +60,7 @@ class RecursiveContextualValidatorTest extends KernelTestBase {
       ->setLabel('Required string')
       ->setRequired(TRUE);
     $this->container->get('state')->set('entity_test.additional_base_field_definitions', $definitions);
-    drupal_flush_all_caches();
+
     $this->installEntitySchema('entity_test');
     $child = EntityTest::create([
       'name' => 'test2',

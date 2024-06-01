@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\views\Functional\Handler;
 
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
@@ -64,8 +66,8 @@ class FieldGroupRowsWebTest extends ViewTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp($import_test_views = TRUE): void {
-    parent::setUp($import_test_views);
+  protected function setUp($import_test_views = TRUE, $modules = ['views_test_config']): void {
+    parent::setUp($import_test_views, $modules);
 
     // Create content type with unlimited text field.
     $this->nodeType = $this->drupalCreateContentType(['type' => 'page', 'name' => 'Basic page']);
@@ -105,7 +107,7 @@ class FieldGroupRowsWebTest extends ViewTestBase {
     foreach ($result as $row) {
       $rendered_value[] = $row->getText();
     }
-    $this->assertEqual(['a, b, c'], $rendered_value);
+    $this->assertEquals(['a, b, c'], $rendered_value);
   }
 
   /**
@@ -118,7 +120,7 @@ class FieldGroupRowsWebTest extends ViewTestBase {
     foreach ($result as $row) {
       $rendered_value[] = $row->getText();
     }
-    $this->assertEqual(['a', 'b', 'c'], $rendered_value);
+    $this->assertEquals(['a', 'b', 'c'], $rendered_value);
   }
 
 }

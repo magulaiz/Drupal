@@ -1,11 +1,12 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\user\Kernel;
 
 use Drupal\Core\Test\AssertMailTrait;
 use Drupal\KernelTests\Core\Entity\EntityKernelTestBase;
 use Drupal\language\Entity\ConfigurableLanguage;
-use Drupal\locale\Locale;
 
 /**
  * Tests _user_mail_notify() use of user.settings.notify.*.
@@ -33,7 +34,7 @@ class UserMailNotifyTest extends EntityKernelTestBase {
    *
    * @return array
    */
-  public function userMailsProvider() {
+  public static function userMailsProvider() {
     return [
       'cancel confirm notification' => [
         'cancel_confirm',
@@ -81,6 +82,8 @@ class UserMailNotifyTest extends EntityKernelTestBase {
    * @dataProvider userMailsProvider
    */
   public function testUserMailsSent($op, array $mail_keys) {
+    $this->installConfig('user');
+    $this->config('system.site')->set('mail', 'test@example.com')->save();
     $this->config('user.settings')->set('notify.' . $op, TRUE)->save();
     $return = _user_mail_notify($op, $this->createUser());
     $this->assertTrue($return);
@@ -88,7 +91,7 @@ class UserMailNotifyTest extends EntityKernelTestBase {
       $filter = ['key' => $key];
       $this->assertNotEmpty($this->getMails($filter));
     }
-    $this->assertCount(count($mail_keys), $this->getMails());
+    $this->assertSameSize($mail_keys, $this->getMails());
   }
 
   /**
@@ -104,17 +107,6 @@ class UserMailNotifyTest extends EntityKernelTestBase {
     $return = _user_mail_notify($op, $this->createUser());
     $this->assertNull($return);
     $this->assertEmpty($this->getMails());
-  }
-
-  /**
-   * Tests the deprecated $langcode argument to _user_mail_notify().
-   *
-   * @group legacy
-   */
-  public function testUserMailNotifyLangcodeDeprecation() {
-    $account = $this->createUser();
-    $this->expectDeprecation('Specifying the notification language using the $langcode parameter is deprecated in drupal:9.2.0 and is removed from drupal:10.0.0. Omit the parameter. See https://www.drupal.org/node/3187082');
-    _user_mail_notify('password_reset', $account, $account->getPreferredLangcode());
   }
 
   /**
@@ -138,8 +130,9 @@ class UserMailNotifyTest extends EntityKernelTestBase {
 
     locale_system_set_config_langcodes();
     $langcodes = array_keys(\Drupal::languageManager()->getLanguages());
-    $names = Locale::config()->getComponentNames();
-    Locale::config()->updateConfigTranslations($names, $langcodes);
+    $locale_config_manager = \Drupal::service('locale.config_manager');
+    $names = $locale_config_manager->getComponentNames();
+    $locale_config_manager->updateConfigTranslations($names, $langcodes);
 
     $this->config('user.settings')->set('notify.password_reset', TRUE)->save();
 
@@ -172,6 +165,7 @@ class UserMailNotifyTest extends EntityKernelTestBase {
 
     // Recovery email should respect user preferred langcode by default if
     // langcode not set.
+    $this->config('system.site')->set('mail', 'test@example.com')->save();
     $params['account'] = $user;
     $default_email = \Drupal::service('plugin.manager.mail')->mail('user', 'password_reset', $user->getEmail(), $preferredLangcode, $params);
     $this->assertTrue($default_email['result']);

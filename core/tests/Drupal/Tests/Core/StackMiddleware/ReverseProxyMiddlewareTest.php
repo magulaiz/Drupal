@@ -1,11 +1,15 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\Core\StackMiddleware;
 
 use Drupal\Core\Site\Settings;
 use Drupal\Core\StackMiddleware\ReverseProxyMiddleware;
 use Drupal\Tests\UnitTestCase;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\HttpKernelInterface;
 
 /**
  * Unit test the reverse proxy stack middleware.
@@ -23,7 +27,12 @@ class ReverseProxyMiddlewareTest extends UnitTestCase {
    * {@inheritdoc}
    */
   protected function setUp(): void {
-    $this->mockHttpKernel = $this->createMock('Symfony\Component\HttpKernel\HttpKernelInterface');
+    parent::setUp();
+
+    $responseMock = $this->createMock(Response::class);
+    $this->mockHttpKernel = $this->createMock(HttpKernelInterface::class);
+    $this->mockHttpKernel->method('handle')
+      ->willReturn($responseMock);
   }
 
   /**
@@ -36,7 +45,7 @@ class ReverseProxyMiddlewareTest extends UnitTestCase {
     $middleware = new ReverseProxyMiddleware($this->mockHttpKernel, $settings);
     // Mock a request object.
     $request = $this->getMockBuilder('Symfony\Component\HttpFoundation\Request')
-      ->setMethods(['setTrustedProxies'])
+      ->onlyMethods(['setTrustedProxies'])
       ->getMock();
     // setTrustedProxies() should never fire.
     $request->expects($this->never())
@@ -59,7 +68,7 @@ class ReverseProxyMiddlewareTest extends UnitTestCase {
   /**
    * Data provider for testReverseProxyEnabled.
    */
-  public function reverseProxyEnabledProvider() {
+  public static function reverseProxyEnabledProvider() {
     return [
       'Proxy with default trusted headers' => [
         ['reverse_proxy_addresses' => ['127.0.0.2', '127.0.0.3']],

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\search\Kernel;
 
 use Drupal\KernelTests\KernelTestBase;
@@ -32,23 +34,23 @@ class SearchExcerptTest extends KernelTestBase {
     $text = 'The <strong>quick</strong> <a href="#">brown</a> fox &amp; jumps <h2>over</h2> the lazy dog';
     $expected = 'The quick brown fox &amp; jumps over the lazy dog';
     $result = $this->doSearchExcerpt('nothing', $text);
-    $this->assertEqual($expected, preg_replace('| +|', ' ', $result), 'Entire string, stripped of HTML tags, is returned when keyword is not found in short string');
+    $this->assertEquals($expected, preg_replace('| +|', ' ', $result), 'Entire string, stripped of HTML tags, is returned when keyword is not found in short string');
 
     $result = $this->doSearchExcerpt('fox', $text);
-    $this->assertEqual('The quick brown <strong>fox</strong> &amp; jumps over the lazy dog', $result, 'Found keyword is highlighted');
+    $this->assertEquals('The quick brown <strong>fox</strong> &amp; jumps over the lazy dog', $result, 'Found keyword is highlighted');
 
     $expected = '<strong>The</strong> quick brown fox &amp; jumps over <strong>the</strong> lazy dog';
     $result = $this->doSearchExcerpt('The', $text);
-    $this->assertEqual($expected, preg_replace('| +|', ' ', $result), 'Keyword is highlighted at beginning of short string');
+    $this->assertEquals($expected, preg_replace('| +|', ' ', $result), 'Keyword is highlighted at beginning of short string');
 
     $expected = 'The quick brown fox &amp; jumps over the lazy <strong>dog</strong>';
     $result = $this->doSearchExcerpt('dog', $text);
-    $this->assertEqual($expected, preg_replace('| +|', ' ', $result), 'Keyword is highlighted at end of short string');
+    $this->assertEquals($expected, preg_replace('| +|', ' ', $result), 'Keyword is highlighted at end of short string');
 
     $longtext = str_repeat(str_replace('brown', 'silver', $text) . ' ', 10) . $text . str_repeat(' ' . str_replace('brown', 'pink', $text), 10);
     $result = $this->doSearchExcerpt('brown', $longtext);
     $expected = '… silver fox &amp; jumps over the lazy dog The quick <strong>brown</strong> fox &amp; jumps over the lazy dog The quick …';
-    $this->assertEqual($expected, $result, 'Snippet around keyword in long text is correctly capped');
+    $this->assertEquals($expected, $result, 'Snippet around keyword in long text is correctly capped');
 
     $longtext = str_repeat($text . ' ', 10);
     $result = $this->doSearchExcerpt('nothing', $longtext);
@@ -64,7 +66,7 @@ class SearchExcerptTest extends KernelTestBase {
     // 123456789 HTMLTest +123456789+&lsquo;  +&lsquo;  +&lsquo;  +&lsquo;  +12345678  &nbsp;&nbsp;  +&lsquo;  +&lsquo;  +&lsquo;   &lsquo;
     $text = "<div class=\"field field--name-body field--type-text-with-summary field--label-hidden\"><div class=\"field__items\"><div class=\"field__item even\" property=\"content:encoded\"><p>123456789 HTMLTest +123456789+‘  +‘  +‘  +‘  +12345678      +‘  +‘  +‘   ‘</p>\n</div></div></div> ";
     $result = $this->doSearchExcerpt('HTMLTest', $text);
-    $this->assertFalse(empty($result), 'Rendered Multi-byte HTML encodings are not corrupted in search excerpts');
+    $this->assertNotEmpty($result, 'Rendered Multi-byte HTML encodings are not corrupted in search excerpts');
   }
 
   /**
@@ -72,7 +74,8 @@ class SearchExcerptTest extends KernelTestBase {
    *
    * Excerpting should handle keywords that are matched only after going through
    * text analysis. This test passes keywords that match simplified words
-   * and compares them with strings that contain the original unsimplified word.
+   * and compares them with strings that contain the original un-simplified
+   * word.
    */
   public function testSearchExcerptSimplified() {
     $start_time = microtime(TRUE);
@@ -159,6 +162,7 @@ class SearchExcerptTest extends KernelTestBase {
     // Test with accents and caps in a longer piece of text with the target
     // near the end.
     $text = str_repeat($lorem2, 20) . ' ' . $lorem1;
+    // cspell:ignore Lìbêró
     $result = $this->doSearchExcerpt('Lìbêró', $text);
     $this->assertStringContainsString('<strong>libero</strong>', $result, 'Search excerpt works with caps and accents in longer text');
 
@@ -173,8 +177,6 @@ class SearchExcerptTest extends KernelTestBase {
     $text = str_repeat($lorem3, 20) . ' ' . $lorem1;
     $result = $this->doSearchExcerpt('Lìbêró', $text);
     $this->assertStringContainsString('<strong>libero</strong>', $result, 'Search excerpt works with caps and accents in longer text with whitespace');
-
-    $this->verbose('Elapsed time: ' . (microtime(TRUE) - $start_time));
   }
 
   /**
@@ -192,7 +194,7 @@ class SearchExcerptTest extends KernelTestBase {
    */
   protected function doSearchExcerpt($keys, $render_array, $langcode = NULL) {
     $render_array = search_excerpt($keys, $render_array, $langcode);
-    $text = \Drupal::service('renderer')->renderPlain($render_array);
+    $text = (string) \Drupal::service('renderer')->renderInIsolation($render_array);
     // The search_excerpt() function adds some extra spaces -- not
     // important for HTML formatting or this test. Remove these for comparison.
     return preg_replace('| +|', ' ', $text);

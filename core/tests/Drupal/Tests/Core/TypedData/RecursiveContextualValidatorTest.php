@@ -1,9 +1,6 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Tests\Core\TypedData\RecursiveContextualValidatorTest.
- */
+declare(strict_types=1);
 
 namespace Drupal\Tests\Core\TypedData;
 
@@ -11,17 +8,18 @@ use Drupal\Core\Cache\NullBackend;
 use Drupal\Core\DependencyInjection\ContainerBuilder;
 use Drupal\Core\TypedData\DataDefinition;
 use Drupal\Core\TypedData\MapDataDefinition;
+use Drupal\Core\TypedData\TypedData as TypedDataBase;
 use Drupal\Core\TypedData\TypedDataManager;
-use Drupal\Core\TypedData\Validation\ExecutionContextFactory;
 use Drupal\Core\TypedData\Validation\RecursiveValidator;
 use Drupal\Core\Validation\ConstraintManager;
+use Drupal\Core\Validation\ExecutionContextFactory;
 use Drupal\Tests\UnitTestCase;
 use Symfony\Component\Validator\ConstraintValidatorFactory;
 use Symfony\Component\Validator\Context\ExecutionContextInterface;
 
 /**
  * @coversDefaultClass \Drupal\Core\TypedData\Validation\RecursiveContextualValidator
- * @group typedData
+ * @group TypedData
  */
 class RecursiveContextualValidatorTest extends UnitTestCase {
 
@@ -49,7 +47,7 @@ class RecursiveContextualValidatorTest extends UnitTestCase {
   /**
    * The execution context factory.
    *
-   * @var \Drupal\Core\TypedData\Validation\ExecutionContextFactory
+   * @var \Drupal\Core\Validation\ExecutionContextFactory
    */
   protected $contextFactory;
 
@@ -188,6 +186,8 @@ class RecursiveContextualValidatorTest extends UnitTestCase {
    *
    * @param array $tree
    *   An array of value, constraints and properties.
+   * @param string $name
+   *   The name to use for the object.
    *
    * @return \Drupal\Core\TypedData\TypedDataInterface|\PHPUnit\Framework\MockObject\MockObject
    */
@@ -251,16 +251,13 @@ class RecursiveContextualValidatorTest extends UnitTestCase {
 
   /**
    * Provides data for testValidatePropertyWithInvalidObjects.
-   * @return array
    */
-  public function providerTestValidatePropertyWithInvalidObjects() {
-    $data = [];
-    $data[] = [new \stdClass()];
-    $data[] = [new TestClass()];
+  public static function providerTestValidatePropertyWithInvalidObjects(): \Generator {
+    $dataDefinition = new DataDefinition();
 
-    $data[] = [$this->createMock('Drupal\Core\TypedData\TypedDataInterface')];
-
-    return $data;
+    yield [new \stdClass()];
+    yield [new class() {}];
+    yield [new class($dataDefinition) extends TypedDataBase {}];
   }
 
   /**
@@ -332,16 +329,12 @@ class RecursiveContextualValidatorTest extends UnitTestCase {
       ],
       'key_with_properties' => [
         'value' => $subkey_value ?: ['subkey1' => 'subvalue1', 'subkey2' => 'subvalue2'],
-        ],
+      ],
     ];
     $tree['properties']['key_with_properties']['properties']['subkey1'] = ['value' => $tree['properties']['key_with_properties']['value']['subkey1']];
     $tree['properties']['key_with_properties']['properties']['subkey2'] = ['value' => $tree['properties']['key_with_properties']['value']['subkey2']];
 
     return $this->setupTypedData($tree, 'test_name');
   }
-
-}
-
-class TestClass {
 
 }

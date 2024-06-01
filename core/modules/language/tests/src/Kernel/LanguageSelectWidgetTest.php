@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\language\Kernel;
 
 use Drupal\entity_test\Entity\EntityTest;
@@ -61,7 +63,7 @@ class LanguageSelectWidgetTest extends KernelTestBase {
   }
 
   /**
-   * Test the widget without the locked languages.
+   * Tests the widget without the locked languages.
    */
   public function testWithoutIncludedLockedLanguage() {
     $this->entityFormDisplay->setComponent('langcode', [

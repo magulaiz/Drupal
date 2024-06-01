@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\node\Kernel;
 
 use Drupal\Core\Database\Database;
@@ -10,8 +12,7 @@ use Drupal\user\Entity\User;
 use Drupal\field\Entity\FieldStorageConfig;
 
 /**
- * Tests node_access and select queries with node_access tag functionality with
- * multiple languages with node_access_test_language which is language-aware.
+ * Tests multilingual node access with a language-aware module.
  *
  * @group node
  */
@@ -23,6 +24,14 @@ class NodeAccessLanguageAwareTest extends NodeAccessTestBase {
    * @var array
    */
   protected static $modules = ['language', 'node_access_test_language'];
+
+  /**
+   * {@inheritdoc}
+   *
+   * @todo Remove and fix test to not rely on super user.
+   * @see https://www.drupal.org/project/drupal/issues/3437620
+   */
+  protected bool $usesSuperUserAccessPolicy = TRUE;
 
   /**
    * A set of nodes to use in testing.
@@ -45,6 +54,9 @@ class NodeAccessLanguageAwareTest extends NodeAccessTestBase {
    */
   protected $webUser;
 
+  /**
+   * {@inheritdoc}
+   */
   protected function setUp(): void {
     parent::setUp();
 
@@ -89,13 +101,13 @@ class NodeAccessLanguageAwareTest extends NodeAccessTestBase {
 
     // Create six nodes:
     // 1. Four Hungarian nodes with Catalan translations
-    //   - One with neither language marked as private.
-    //   - One with only the Hungarian translation private.
-    //   - One with only the Catalan translation private.
-    //   - One with both the Hungarian and Catalan translations private.
+    //    - One with neither language marked as private.
+    //    - One with only the Hungarian translation private.
+    //    - One with only the Catalan translation private.
+    //    - One with both the Hungarian and Catalan translations private.
     // 2. Two nodes with no language specified.
-    //   - One public.
-    //   - One private.
+    //    - One public.
+    //    - One private.
     $this->nodes['both_public'] = $node = $this->drupalCreateNode([
       'body' => [[]],
       'langcode' => 'hu',
@@ -247,7 +259,7 @@ class NodeAccessLanguageAwareTest extends NodeAccessTestBase {
     $nids = $select->execute()->fetchAllAssoc('nid');
 
     // There are no nodes with German translations, so no results are returned.
-    $this->assertTrue(empty($nids), 'Query returns an empty result when the de langcode is specified.');
+    $this->assertEmpty($nids, 'Query returns an empty result when the de langcode is specified.');
 
     // Query the nodes table as admin user (full access) with the node access
     // tag and no specific langcode.

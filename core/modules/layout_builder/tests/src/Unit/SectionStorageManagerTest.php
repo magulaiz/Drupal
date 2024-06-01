@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\layout_builder\Unit;
 
 use Drupal\Component\Plugin\Context\ContextInterface;
@@ -73,14 +75,12 @@ class SectionStorageManagerTest extends UnitTestCase {
 
     $this->discovery = $this->prophesize(DiscoveryInterface::class);
     $reflection_property = new \ReflectionProperty($this->manager, 'discovery');
-    $reflection_property->setAccessible(TRUE);
     $reflection_property->setValue($this->manager, $this->discovery->reveal());
 
     $this->plugin = $this->prophesize(SectionStorageInterface::class);
     $this->factory = $this->prophesize(FactoryInterface::class);
     $this->factory->createInstance('the_plugin_id', [])->willReturn($this->plugin->reveal());
     $reflection_property = new \ReflectionProperty($this->manager, 'factory');
-    $reflection_property->setAccessible(TRUE);
     $reflection_property->setValue($this->manager, $this->factory->reveal());
   }
 
@@ -126,10 +126,10 @@ class SectionStorageManagerTest extends UnitTestCase {
    */
   public function testFindDefinitions() {
     $this->discovery->getDefinitions()->willReturn([
-      'plugin1' => new SectionStorageDefinition(),
-      'plugin2' => new SectionStorageDefinition(['weight' => -5]),
-      'plugin3' => new SectionStorageDefinition(['weight' => -5]),
-      'plugin4' => new SectionStorageDefinition(['weight' => 10]),
+      'plugin1' => (new SectionStorageDefinition())->setClass(SectionStorageInterface::class),
+      'plugin2' => (new SectionStorageDefinition(['weight' => -5]))->setClass(SectionStorageInterface::class),
+      'plugin3' => (new SectionStorageDefinition(['weight' => -5]))->setClass(SectionStorageInterface::class),
+      'plugin4' => (new SectionStorageDefinition(['weight' => 10]))->setClass(SectionStorageInterface::class),
     ]);
 
     $expected = [
@@ -156,9 +156,9 @@ class SectionStorageManagerTest extends UnitTestCase {
       'foo' => new Context(new ContextDefinition('foo')),
     ];
     $definitions = [
-      'no_access' => new SectionStorageDefinition(),
-      'missing_contexts' => new SectionStorageDefinition(),
-      'provider_access' => new SectionStorageDefinition(),
+      'no_access' => (new SectionStorageDefinition())->setClass(SectionStorageInterface::class),
+      'missing_contexts' => (new SectionStorageDefinition())->setClass(SectionStorageInterface::class),
+      'provider_access' => (new SectionStorageDefinition())->setClass(SectionStorageInterface::class),
     ];
     $this->discovery->getDefinitions()->willReturn($definitions);
 
@@ -192,7 +192,7 @@ class SectionStorageManagerTest extends UnitTestCase {
   /**
    * Provides test data for ::testFindByContext().
    */
-  public function providerTestFindByContext() {
+  public static function providerTestFindByContext() {
     // Data provider values are:
     // - the result for the plugin's isApplicable() method to return.
     $data = [];
@@ -211,8 +211,8 @@ class SectionStorageManagerTest extends UnitTestCase {
     ];
 
     $definitions = [
-      'first' => new SectionStorageDefinition(),
-      'second' => new SectionStorageDefinition(),
+      'first' => (new SectionStorageDefinition())->setClass(SectionStorageInterface::class),
+      'second' => (new SectionStorageDefinition())->setClass(SectionStorageInterface::class),
     ];
     $this->discovery->getDefinitions()->willReturn($definitions);
 

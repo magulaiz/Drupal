@@ -2,7 +2,6 @@
 
 namespace Drupal\Core\Utility;
 
-use Drupal\Core\Link;
 use Drupal\Core\Url;
 
 /**
@@ -72,21 +71,5 @@ interface LinkGeneratorInterface {
    *   Should not be used in user code. Use \Drupal\Core\Link instead.
    */
   public function generate($text, Url $url);
-
-  /**
-   * Renders a link from a link object.
-   *
-   * @param \Drupal\Core\Link $link
-   *   A link object to convert to a string.
-   *
-   * @return \Drupal\Core\GeneratedLink
-   *   A GeneratedLink object containing a link to the given route and
-   *   parameters and bubbleable metadata.
-   *
-   * @internal
-   *   Should not be used in user code.
-   *   Use \Drupal\Core\Link instead.
-   */
-  public function generateFromLink(Link $link);
 
 }

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\taxonomy\Kernel\Migrate\d6;
 
 use Drupal\Tests\migrate_drupal\Kernel\d6\MigrateDrupal6TestBase;
@@ -26,6 +28,7 @@ class MigrateTaxonomyVocabularyTranslationTest extends MigrateDrupal6TestBase {
   protected function setUp(): void {
     parent::setUp();
     $this->executeMigrations([
+      'language',
       'd6_taxonomy_vocabulary',
       'd6_taxonomy_vocabulary_translation',
     ]);

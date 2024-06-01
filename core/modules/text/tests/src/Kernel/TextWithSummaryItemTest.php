@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\text\Kernel;
 
 use Drupal\Core\Field\FieldItemListInterface;
@@ -37,6 +39,9 @@ class TextWithSummaryItemTest extends FieldKernelTestBase {
    */
   protected $field;
 
+  /**
+   * {@inheritdoc}
+   */
   protected function setUp(): void {
     parent::setUp();
 
@@ -46,6 +51,7 @@ class TextWithSummaryItemTest extends FieldKernelTestBase {
     $this->installConfig(['filter']);
     FilterFormat::create([
       'format' => 'no_filters',
+      'name' => 'No filters',
       'filters' => [],
     ])->save();
   }
@@ -70,18 +76,18 @@ class TextWithSummaryItemTest extends FieldKernelTestBase {
     $entity = $storage->load($entity->id());
     $this->assertInstanceOf(FieldItemListInterface::class, $entity->summary_field);
     $this->assertInstanceOf(FieldItemInterface::class, $entity->summary_field[0]);
-    $this->assertEqual($value, $entity->summary_field->value);
-    $this->assertEqual($summary, $entity->summary_field->summary);
+    $this->assertEquals($value, $entity->summary_field->value);
+    $this->assertEquals($summary, $entity->summary_field->summary);
     $this->assertNull($entity->summary_field->format);
     // Even if no format is given, if text processing is enabled, the default
     // format is used.
-    $this->assertEqual("<p>{$value}</p>\n", $entity->summary_field->processed);
-    $this->assertEqual("<p>{$summary}</p>\n", $entity->summary_field->summary_processed);
+    $this->assertSame("<p>{$value}</p>\n", (string) $entity->summary_field->processed);
+    $this->assertSame("<p>{$summary}</p>\n", (string) $entity->summary_field->summary_processed);
 
     // Change the format, this should update the processed properties.
     $entity->summary_field->format = 'no_filters';
-    $this->assertEqual($value, $entity->summary_field->processed);
-    $this->assertEqual($summary, $entity->summary_field->summary_processed);
+    $this->assertSame($value, (string) $entity->summary_field->processed);
+    $this->assertSame($summary, (string) $entity->summary_field->summary_processed);
 
     // Test the generateSampleValue() method.
     $entity = $this->container->get('entity_type.manager')

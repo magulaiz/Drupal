@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\language\Kernel\Migrate\d6;
 
 use Drupal\language\Entity\ConfigurableLanguage;
@@ -31,7 +33,10 @@ class MigrateLanguageContentMenuSettingsTest extends MigrateDrupal6TestBase {
     // Create some languages.
     ConfigurableLanguage::createFromLangcode('en')->save();
     ConfigurableLanguage::createFromLangcode('fr')->save();
-    $this->executeMigrations(['d6_language_content_menu_settings']);
+    $this->executeMigrations([
+      'language',
+      'd6_language_content_menu_settings',
+    ]);
   }
 
   /**

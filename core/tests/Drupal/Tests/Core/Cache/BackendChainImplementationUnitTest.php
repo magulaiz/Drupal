@@ -1,7 +1,10 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\Core\Cache;
 
+use Drupal\Component\Datetime\Time;
 use Drupal\Core\Cache\BackendChain;
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Cache\MemoryBackend;
@@ -43,13 +46,17 @@ class BackendChainImplementationUnitTest extends UnitTestCase {
    */
   protected $thirdBackend;
 
+  /**
+   * {@inheritdoc}
+   */
   protected function setUp(): void {
     parent::setUp();
 
     // Set up three memory backends to be used in the chain.
-    $this->firstBackend = new MemoryBackend();
-    $this->secondBackend = new MemoryBackend();
-    $this->thirdBackend = new MemoryBackend();
+    $time = new Time();
+    $this->firstBackend = new MemoryBackend($time);
+    $this->secondBackend = new MemoryBackend($time);
+    $this->thirdBackend = new MemoryBackend($time);
 
     // Set an initial fixed dataset for all testing. The next three data
     // collections will test two edge cases (last backend has the data, and
@@ -81,7 +88,7 @@ class BackendChainImplementationUnitTest extends UnitTestCase {
   }
 
   /**
-   * Test the get feature.
+   * Tests the get feature.
    */
   public function testGet() {
     $cached = $this->chain->get('t123');
@@ -98,7 +105,7 @@ class BackendChainImplementationUnitTest extends UnitTestCase {
   }
 
   /**
-   * Test the get multiple feature.
+   * Tests the get multiple feature.
    */
   public function testGetMultiple() {
     $cids = ['t123', 't23', 't3', 't4'];
@@ -116,7 +123,7 @@ class BackendChainImplementationUnitTest extends UnitTestCase {
   }
 
   /**
-   * Test that set will propagate.
+   * Tests that set will propagate.
    */
   public function testSet() {
     $this->chain->set('test', 123);
@@ -135,7 +142,7 @@ class BackendChainImplementationUnitTest extends UnitTestCase {
   }
 
   /**
-   * Test that delete will propagate.
+   * Tests that delete will propagate.
    */
   public function testDelete() {
     $this->chain->set('test', 5);
@@ -192,7 +199,7 @@ class BackendChainImplementationUnitTest extends UnitTestCase {
   }
 
   /**
-   * Test that the delete all operation is propagated to all backends in the chain.
+   * Tests that the delete all operation is propagated to all chained backends.
    */
   public function testDeleteAllPropagation() {
     // Set both expiring and permanent keys.
@@ -209,8 +216,7 @@ class BackendChainImplementationUnitTest extends UnitTestCase {
   }
 
   /**
-   * Test that the delete tags operation is propagated to all backends
-   * in the chain.
+   * Tests that the delete tags operation is propagated to all chained backends.
    */
   public function testDeleteTagsPropagation() {
     // Create two cache entries with the same tag and tag value.
@@ -286,7 +292,7 @@ class BackendChainImplementationUnitTest extends UnitTestCase {
   }
 
   /**
-   * Test that removing bin propagates to all backends.
+   * Tests that removing bin propagates to all backends.
    */
   public function testRemoveBin() {
     $chain = new BackendChain();

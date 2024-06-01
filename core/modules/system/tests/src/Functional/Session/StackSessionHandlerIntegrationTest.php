@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\system\Functional\Session;
 
 use Drupal\Core\EventSubscriber\MainContentViewSubscriber;
@@ -48,7 +50,7 @@ class StackSessionHandlerIntegrationTest extends BrowserTestBase {
       ['END', NULL, 'close'],
       ['END', 'test_argument', 'close'],
     ];
-    $this->assertEqual($expect_trace, $actual_trace);
+    $this->assertEquals($expect_trace, $actual_trace);
   }
 
 }

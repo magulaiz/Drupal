@@ -1,9 +1,14 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\KernelTests\Core\Extension;
 
 use Drupal\Core\Database\Database;
 use Drupal\Core\Extension\MissingDependencyException;
+use Drupal\Core\Extension\Exception\ObsoleteExtensionException;
+use Drupal\Core\Extension\ModuleInstaller;
+use Drupal\Core\Extension\ModuleUninstallValidatorInterface;
 use Drupal\KernelTests\KernelTestBase;
 use Symfony\Component\Routing\Exception\RouteNotFoundException;
 
@@ -59,21 +64,21 @@ class ModuleInstallerTest extends KernelTestBase {
    */
   public function testCacheBinCleanup() {
     $schema = $this->container->get('database')->schema();
-    $table = 'cache_module_cachebin';
+    $table = 'cache_module_cache_bin';
 
     $module_installer = $this->container->get('module_installer');
-    $module_installer->install(['module_cachebin']);
+    $module_installer->install(['module_cache_bin']);
 
     // Prime the bin.
     /** @var \Drupal\Core\Cache\CacheBackendInterface $cache_bin */
-    $cache_bin = $this->container->get('module_cachebin.cache_bin');
+    $cache_bin = $this->container->get('module_cache_bin.cache_bin');
     $cache_bin->set('foo', 'bar');
 
     // A database backend is used so there is a convenient way check whether the
     // backend is uninstalled.
     $this->assertTrue($schema->tableExists($table));
 
-    $module_installer->uninstall(['module_cachebin']);
+    $module_installer->uninstall(['module_cache_bin']);
     $this->assertFalse($schema->tableExists($table));
   }
 
@@ -101,7 +106,7 @@ class ModuleInstallerTest extends KernelTestBase {
   /**
    * Data provider for testInvalidCoreInstall().
    */
-  public function providerTestInvalidCoreInstall() {
+  public static function providerTestInvalidCoreInstall() {
     return [
       'no dependencies system_core_incompatible_semver_test' => [
         'system_core_incompatible_semver_test',
@@ -132,6 +137,53 @@ class ModuleInstallerTest extends KernelTestBase {
    */
   public function testDependencyInvalidCoreInstallNoDependencies() {
     $this->assertTrue($this->container->get('module_installer')->install(['system_incompatible_core_version_dependencies_test'], FALSE));
+  }
+
+  /**
+   * Tests trying to install an obsolete module.
+   *
+   * @covers ::install
+   */
+  public function testObsoleteInstall() {
+    $this->expectException(ObsoleteExtensionException::class);
+    $this->expectExceptionMessage("Unable to install modules: module 'system_status_obsolete_test' is obsolete.");
+    $this->container->get('module_installer')->install(['system_status_obsolete_test']);
+  }
+
+  /**
+   * Tests trying to install a deprecated module.
+   *
+   * @covers ::install
+   *
+   * @group legacy
+   */
+  public function testDeprecatedInstall() {
+    $this->expectDeprecation("The module 'deprecated_module' is deprecated. See http://example.com/deprecated");
+    \Drupal::service('module_installer')->install(['deprecated_module']);
+    $this->assertTrue(\Drupal::service('module_handler')->moduleExists('deprecated_module'));
+  }
+
+  /**
+   * Tests the BC layer for uninstall validators.
+   *
+   * @covers ::__construct
+   * @covers ::addUninstallValidator
+   *
+   * @group legacy
+   */
+  public function testUninstallValidatorsBC() {
+    $this->expectDeprecation('The "module_installer.uninstall_validators" service is deprecated in drupal:11.1.0 and is removed from drupal:12.0.0. Inject "!tagged_iterator module_install.uninstall_validator" instead. See https://www.drupal.org/node/3432595');
+    $module_installer = new ModuleInstaller(
+      $this->container->getParameter('app.root'),
+      $this->container->get('module_handler'),
+      $this->container->get('kernel'),
+      $this->container->get('database'),
+      $this->container->get('update.update_hook_registry'),
+      $this->container->get('logger.channel.default'),
+    );
+
+    $this->expectDeprecation('Drupal\Core\Extension\ModuleInstaller::addUninstallValidator is deprecated in drupal:11.1.0 and is removed from drupal:12.0.0. Inject the uninstall validators into the constructor instead. See https://www.drupal.org/node/3432595');
+    $module_installer->addUninstallValidator($this->createMock(ModuleUninstallValidatorInterface::class));
   }
 
 }

@@ -8,11 +8,9 @@
  * a cached page are instead located in bootstrap.inc.
  */
 
-use Drupal\Component\Utility\Bytes;
-use Drupal\Component\Utility\Html;
 use Drupal\Component\Utility\SortArray;
 use Drupal\Core\Cache\Cache;
-use Drupal\Core\StringTranslation\TranslatableMarkup;
+use Drupal\Core\DrupalKernel;
 
 /**
  * @defgroup php_wrappers PHP wrapper functions
@@ -116,71 +114,6 @@ const JS_DEFAULT = 0;
 const JS_THEME = 100;
 
 /**
- * @defgroup format Formatting
- * @{
- * Functions to format numbers, strings, dates, etc.
- */
-
-/**
- * Generates a string representation for the given byte count.
- *
- * @param $size
- *   A size in bytes.
- * @param $langcode
- *   Optional language code to translate to a language other than what is used
- *   to display the page.
- *
- * @return \Drupal\Core\StringTranslation\TranslatableMarkup
- *   A translated string representation of the size.
- */
-function format_size($size, $langcode = NULL) {
-  $absolute_size = abs($size);
-  if ($absolute_size < Bytes::KILOBYTE) {
-    return \Drupal::translation()->formatPlural($size, '1 byte', '@count bytes', [], ['langcode' => $langcode]);
-  }
-  // Create a multiplier to preserve the sign of $size.
-  $sign = $absolute_size / $size;
-  foreach (['KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'] as $unit) {
-    $absolute_size /= Bytes::KILOBYTE;
-    $rounded_size = round($absolute_size, 2);
-    if ($rounded_size < Bytes::KILOBYTE) {
-      break;
-    }
-  }
-  $args = ['@size' => $rounded_size * $sign];
-  $options = ['langcode' => $langcode];
-  switch ($unit) {
-    case 'KB':
-      return new TranslatableMarkup('@size KB', $args, $options);
-
-    case 'MB':
-      return new TranslatableMarkup('@size MB', $args, $options);
-
-    case 'GB':
-      return new TranslatableMarkup('@size GB', $args, $options);
-
-    case 'TB':
-      return new TranslatableMarkup('@size TB', $args, $options);
-
-    case 'PB':
-      return new TranslatableMarkup('@size PB', $args, $options);
-
-    case 'EB':
-      return new TranslatableMarkup('@size EB', $args, $options);
-
-    case 'ZB':
-      return new TranslatableMarkup('@size ZB', $args, $options);
-
-    case 'YB':
-      return new TranslatableMarkup('@size YB', $args, $options);
-  }
-}
-
-/**
- * @} End of "defgroup format".
- */
-
-/**
  * Returns the base URL path (i.e., directory) of the Drupal installation.
  *
  * Function base_path() adds a "/" to the beginning and end of the returned path
@@ -192,29 +125,6 @@ function format_size($size, $langcode = NULL) {
  */
 function base_path() {
   return $GLOBALS['base_path'];
-}
-
-/**
- * Constructs an array of the defaults that are used for JavaScript assets.
- *
- * @param $data
- *   (optional) The default data parameter for the JavaScript asset array.
- *
- * @see hook_js_alter()
- */
-function drupal_js_defaults($data = NULL) {
-  return [
-    'type' => 'file',
-    'group' => JS_DEFAULT,
-    'weight' => 0,
-    'scope' => 'header',
-    'cache' => TRUE,
-    'preprocess' => TRUE,
-    'attributes' => [],
-    'version' => NULL,
-    'data' => $data,
-    'browsers' => [],
-  ];
 }
 
 /**
@@ -354,8 +264,8 @@ function drupal_attach_tabledrag(&$element, array $options) {
   $tabledrag_id = (!isset($tabledrag_id)) ? 0 : $tabledrag_id + 1;
 
   // If a subgroup or source isn't set, assume it is the same as the group.
-  $target = isset($options['subgroup']) ? $options['subgroup'] : $group;
-  $source = isset($options['source']) ? $options['source'] : $target;
+  $target = $options['subgroup'] ?? $group;
+  $source = $options['source'] ?? $target;
   $element['#attached']['drupalSettings']['tableDrag'][$options['table_id']][$group][$tabledrag_id] = [
     'target' => $target,
     'source' => $source,
@@ -369,59 +279,24 @@ function drupal_attach_tabledrag(&$element, array $options) {
 }
 
 /**
- * Renders an element.
- *
- * This function renders an element. The top level element is shown with show()
- * before rendering, so it will always be rendered even if hide() had been
- * previously used on it.
- *
- * @param $element
- *   The element to be rendered.
- *
- * @return
- *   The rendered element.
- *
- * @see \Drupal\Core\Render\RendererInterface
- * @see show()
- * @see hide()
- */
-function render(&$element) {
-  if (!$element && $element !== 0) {
-    return NULL;
-  }
-  if (is_array($element)) {
-    // Early return if this element was pre-rendered (no need to re-render).
-    if (isset($element['#printed']) && $element['#printed'] == TRUE && isset($element['#markup']) && strlen($element['#markup']) > 0) {
-      return $element['#markup'];
-    }
-    show($element);
-    return \Drupal::service('renderer')->render($element);
-  }
-  else {
-    // Safe-guard for inappropriate use of render() on flat variables: return
-    // the variable as-is.
-    return $element;
-  }
-}
-
-/**
  * Hides an element from later rendering.
  *
- * The first time render() or drupal_render() is called on an element tree,
- * as each element in the tree is rendered, it is marked with a #printed flag
- * and the rendered children of the element are cached. Subsequent calls to
- * render() or drupal_render() will not traverse the child tree of this element
- * again: they will just use the cached children. So if you want to hide an
- * element, be sure to call hide() on the element before its parent tree is
- * rendered for the first time, as it will have no effect on subsequent
+ * The first time render() or RenderInterface::render() is called on an element
+ * tree, as each element in the tree is rendered, it is marked with a #printed
+ * flag and the rendered children of the element are cached. Subsequent calls to
+ * render() or RenderInterface::render() will not traverse the child tree of
+ * this element again: they will just use the cached children. So if you want to
+ * hide an element, be sure to call hide() on the element before its parent tree
+ * is rendered for the first time, as it will have no effect on subsequent
  * renderings of the parent tree.
  *
  * @param $element
  *   The element to be hidden.
  *
- * @return
+ * @return array
  *   The element.
  *
+ * @see \Drupal\Core\Render\RendererInterface
  * @see render()
  * @see show()
  */
@@ -436,21 +311,22 @@ function hide(&$element) {
  * You can also use render($element), which shows the element while rendering
  * it.
  *
- * The first time render() or drupal_render() is called on an element tree,
- * as each element in the tree is rendered, it is marked with a #printed flag
- * and the rendered children of the element are cached. Subsequent calls to
- * render() or drupal_render() will not traverse the child tree of this element
- * again: they will just use the cached children. So if you want to show an
- * element, be sure to call show() on the element before its parent tree is
- * rendered for the first time, as it will have no effect on subsequent
+ * The first time render() or RenderInterface::render() is called on an element
+ * tree, as each element in the tree is rendered, it is marked with a #printed
+ * flag and the rendered children of the element are cached. Subsequent calls to
+ * render() or RenderInterface::render() will not traverse the child tree of
+ * this element again: they will just use the cached children. So if you want to
+ * show an element, be sure to call show() on the element before its parent tree
+ * is rendered for the first time, as it will have no effect on subsequent
  * renderings of the parent tree.
  *
  * @param $element
  *   The element to be shown.
  *
- * @return
+ * @return array
  *   The element.
  *
+ * @see \Drupal\Core\Render\RendererInterface
  * @see render()
  * @see hide()
  */
@@ -460,10 +336,11 @@ function show(&$element) {
 }
 
 /**
- * Flushes all persistent caches, resets all variables, and rebuilds all data structures.
+ * Rebuilds the container, flushes all persistent caches, resets all variables, and rebuilds all data structures.
  *
  * At times, it is necessary to re-initialize the entire system to account for
  * changed or new code. This function:
+ * - Rebuilds the container if $kernel is not passed in.
  * - Clears all persistent caches:
  *   - The bootstrap cache bin containing base system, module system, and theme
  *     system information.
@@ -482,6 +359,10 @@ function show(&$element) {
  *     database
  *   - The 'active' status of fields is refreshed.
  * - Rebuilds the menu router.
+ *
+ * It's discouraged to call this during a regular page request.
+ * If you call this function in tests, every code afterwards should use the new
+ * container.
  *
  * This means the entire system is reset so all caches and static variables are
  * effectively empty. After that is guaranteed, information about the currently
@@ -512,62 +393,54 @@ function show(&$element) {
  *   cache though.)
  * @todo Add a global lock to ensure that caches are not primed in concurrent
  *   requests.
+ *
+ * @param \Drupal\Core\DrupalKernel|array $kernel
+ *   (optional) The Drupal Kernel. It is the caller's responsibility to rebuild
+ *   the container if this is passed in. Sometimes drupal_flush_all_caches is
+ *   used as a batch operation so $kernel will be an array, in this instance it
+ *   will be treated as if it is NULL.
  */
-function drupal_flush_all_caches() {
+function drupal_flush_all_caches($kernel = NULL) {
+  // This is executed based on old/previously known information if $kernel is
+  // not passed in, which is sufficient, since new extensions cannot have any
+  // primed caches yet.
   $module_handler = \Drupal::moduleHandler();
   // Flush all persistent caches.
-  // This is executed based on old/previously known information, which is
-  // sufficient, since new extensions cannot have any primed caches yet.
   $module_handler->invokeAll('cache_flush');
-  foreach (Cache::getBins() as $service_id => $cache_backend) {
+  foreach (Cache::getBins() as $cache_backend) {
     $cache_backend->deleteAll();
   }
 
   // Flush asset file caches.
   \Drupal::service('asset.css.collection_optimizer')->deleteAll();
   \Drupal::service('asset.js.collection_optimizer')->deleteAll();
-  _drupal_flush_css_js();
+  \Drupal::service('asset.query_string')->reset();
 
   // Reset all static caches.
   drupal_static_reset();
 
-  // Invalidate the container.
-  \Drupal::service('kernel')->invalidateContainer();
-
   // Wipe the Twig PHP Storage cache.
   \Drupal::service('twig')->invalidate();
 
-  // Rebuild module and theme data.
-  $module_data = \Drupal::service('extension.list.module')->reset()->getList();
-  /** @var \Drupal\Core\Extension\ThemeHandlerInterface $theme_handler */
-  $theme_handler = \Drupal::service('theme_handler');
-  $theme_handler->refreshInfo();
+  // Rebuild profile, profile, theme_engine and theme data.
+  \Drupal::service('extension.list.profile')->reset();
+  \Drupal::service('extension.list.theme_engine')->reset();
+  \Drupal::service('theme_handler')->refreshInfo();
   // In case the active theme gets requested later in the same request we need
   // to reset the theme manager.
   \Drupal::theme()->resetActiveTheme();
 
-  // Rebuild and reboot a new kernel. A simple DrupalKernel reboot is not
-  // sufficient, since the list of enabled modules might have been adjusted
-  // above due to changed code.
-  $files = [];
-  $modules = [];
-  foreach ($module_data as $name => $extension) {
-    if ($extension->status) {
-      $files[$name] = $extension;
-      $modules[$name] = $extension->weight;
-    }
+  if (!$kernel instanceof DrupalKernel) {
+    $kernel = \Drupal::service('kernel');
+    $kernel->invalidateContainer();
+    $kernel->rebuildContainer();
   }
-  $modules = module_config_sort($modules);
-  \Drupal::service('kernel')->updateModules($modules, $files);
-  // New container, new module handler.
-  $module_handler = \Drupal::moduleHandler();
 
-  // Ensure that all modules that are currently supposed to be enabled are
-  // actually loaded.
-  $module_handler->loadAll();
+  // Rebuild module data that is stored in state.
+  \Drupal::service('extension.list.module')->reset();
 
   // Rebuild all information based on new module data.
-  $module_handler->invokeAll('rebuild');
+  \Drupal::moduleHandler()->invokeAll('rebuild');
 
   // Clear all plugin caches.
   \Drupal::service('plugin.cache_clearer')->clearCachedDefinitions();
@@ -584,42 +457,6 @@ function drupal_flush_all_caches() {
     \Drupal::theme()->resetActiveTheme();
     drupal_maintenance_theme();
   }
-}
-
-/**
- * Changes the dummy query string added to all CSS and JavaScript files.
- *
- * Changing the dummy query string appended to CSS and JavaScript files forces
- * all browsers to reload fresh files.
- */
-function _drupal_flush_css_js() {
-  // The timestamp is converted to base 36 in order to make it more compact.
-  Drupal::state()->set('system.css_js_query_string', base_convert(REQUEST_TIME, 10, 36));
-}
-
-/**
- * Outputs debug information.
- *
- * The debug information is passed on to trigger_error() after being converted
- * to a string using _drupal_debug_message().
- *
- * @param $data
- *   Data to be output.
- * @param $label
- *   Label to prefix the data.
- * @param $print_r
- *   Flag to switch between print_r() and var_export() for data conversion to
- *   string. Set $print_r to FALSE to use var_export() instead of print_r().
- *   Passing recursive data structures to var_export() will generate an error.
- */
-function debug($data, $label = NULL, $print_r = TRUE) {
-  // Print $data contents to string.
-  $string = Html::escape($print_r ? print_r($data, TRUE) : var_export($data, TRUE));
-
-  // Display values with pre-formatting to increase readability.
-  $string = '<pre>' . $string . '</pre>';
-
-  trigger_error(trim($label ? "$label: $string" : $string));
 }
 
 /**
@@ -649,7 +486,7 @@ function drupal_get_updaters() {
 /**
  * Assembles the Drupal FileTransfer registry.
  *
- * @return
+ * @return array
  *   The Drupal FileTransfer class registry.
  *
  * @see \Drupal\Core\FileTransfer\FileTransfer

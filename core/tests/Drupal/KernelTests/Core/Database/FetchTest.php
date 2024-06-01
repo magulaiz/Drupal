@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\KernelTests\Core\Database;
 
 use Drupal\Core\Database\RowCountException;
@@ -82,38 +84,37 @@ class FetchTest extends DatabaseTestBase {
   /**
    * Confirms that we can fetch a record into a class using fetchObject.
    *
-   * @see \Drupal\system\Tests\Database\FakeRecord
+   * @see \Drupal\Tests\system\Functional\Database\FakeRecord
    * @see \Drupal\Core\Database\StatementPrefetch::fetchObject
    */
   public function testQueryFetchObjectClass() {
     $records = 0;
     $query = $this->connection->query('SELECT [name] FROM {test} WHERE [age] = :age', [':age' => 25]);
-    while ($result = $query->fetchObject(FakeRecord::class)) {
+    while ($result = $query->fetchObject(FakeRecord::class, [1])) {
       $records += 1;
       $this->assertInstanceOf(FakeRecord::class, $result);
       $this->assertSame('John', $result->name, '25 year old is John.');
+      $this->assertSame(1, $result->fakeArg, 'The record has received an argument through its constructor.');
     }
     $this->assertSame(1, $records, 'There is only one record.');
   }
 
   /**
-   * Confirms that we can fetch a record into a new instance of a custom class.
-   * The name of the class is determined from a value of the first column.
+   * Confirms that we can fetch a record into a class without constructor args.
    *
    * @see \Drupal\Tests\system\Functional\Database\FakeRecord
+   * @see \Drupal\Core\Database\StatementPrefetch::fetchObject
    */
-  public function testQueryFetchClasstype() {
-    $records = [];
-    $result = $this->connection->query('SELECT [classname], [name], [job] FROM {test_classtype} WHERE [age] = :age', [':age' => 26], ['fetch' => \PDO::FETCH_CLASS | \PDO::FETCH_CLASSTYPE]);
-    foreach ($result as $record) {
-      $records[] = $record;
-      $this->assertInstanceOf(FakeRecord::class, $record);
-      $this->assertSame('Kay', $record->name);
-      $this->assertSame('Web Developer', $record->job);
-      $this->assertFalse(isset($record->classname), 'Classname field not found, as intended.');
+  public function testQueryFetchObjectClassNoConstructorArgs(): void {
+    $records = 0;
+    $query = $this->connection->query('SELECT [name] FROM {test} WHERE [age] = :age', [':age' => 25]);
+    while ($result = $query->fetchObject(FakeRecord::class)) {
+      $records += 1;
+      $this->assertInstanceOf(FakeRecord::class, $result);
+      $this->assertSame('John', $result->name);
+      $this->assertSame(0, $result->fakeArg);
     }
-
-    $this->assertCount(1, $records, 'There is only one record.');
+    $this->assertSame(1, $records);
   }
 
   /**
@@ -133,24 +134,6 @@ class FetchTest extends DatabaseTestBase {
   }
 
   /**
-   * Confirms that we can fetch a record into a doubly-keyed array explicitly.
-   */
-  public function testQueryFetchBoth() {
-    $records = [];
-    $result = $this->connection->query('SELECT [name] FROM {test} WHERE [age] = :age', [':age' => 25], ['fetch' => \PDO::FETCH_BOTH]);
-    foreach ($result as $record) {
-      $records[] = $record;
-      $this->assertIsArray($record);
-      $this->assertArrayHasKey(0, $record);
-      $this->assertSame('John', $record[0]);
-      $this->assertArrayHasKey('name', $record);
-      $this->assertSame('John', $record['name']);
-    }
-
-    $this->assertCount(1, $records, 'There is only one record.');
-  }
-
-  /**
    * Confirms that we can fetch all records into an array explicitly.
    */
   public function testQueryFetchAllColumn() {
@@ -160,7 +143,7 @@ class FetchTest extends DatabaseTestBase {
     $query_result = $query->execute()->fetchAll(\PDO::FETCH_COLUMN);
 
     $expected_result = ['George', 'John', 'Paul', 'Ringo'];
-    $this->assertEqual($expected_result, $query_result, 'Returned the correct result.');
+    $this->assertEquals($expected_result, $query_result, 'Returned the correct result.');
   }
 
   /**
@@ -176,6 +159,75 @@ class FetchTest extends DatabaseTestBase {
     foreach ($result as $record) {
       $this->assertSame($column[$i++], $record->name, 'Column matches direct access.');
     }
+  }
+
+  /**
+   * Tests ::fetchAllAssoc().
+   */
+  public function testQueryFetchAllAssoc(): void {
+    $expected_result = [
+      "Singer" => [
+        "id" => "2",
+        "name" => "George",
+        "age" => "27",
+        "job" => "Singer",
+      ],
+      "Drummer" => [
+        "id" => "3",
+        "name" => "Ringo",
+        "age" => "28",
+        "job" => "Drummer",
+      ],
+    ];
+
+    $statement = $this->connection->query('SELECT * FROM {test} WHERE [age] > :age', [':age' => 26]);
+    $result = $statement->fetchAllAssoc('job', \PDO::FETCH_ASSOC);
+    $this->assertSame($expected_result, $result);
+
+    $statement = $this->connection->query('SELECT * FROM {test} WHERE [age] > :age', [':age' => 26]);
+    $result = $statement->fetchAllAssoc('job', \PDO::FETCH_OBJ);
+    $this->assertEquals((object) $expected_result['Singer'], $result['Singer']);
+    $this->assertEquals((object) $expected_result['Drummer'], $result['Drummer']);
+  }
+
+  /**
+   * Tests ::fetchField().
+   */
+  public function testQueryFetchField(): void {
+    $this->connection->insert('test')
+      ->fields([
+        'name' => 'Foo',
+        'age' => 0,
+        'job' => 'Dummy',
+      ])
+      ->execute();
+
+    $this->connection->insert('test')
+      ->fields([
+        'name' => 'Kurt',
+        'age' => 27,
+        'job' => 'Singer',
+      ])
+      ->execute();
+
+    $expectedResults = ['25', '27', '28', '26', '0', '27'];
+
+    $statement = $this->connection->select('test')
+      ->fields('test', ['age'])
+      ->orderBy('id')
+      ->execute();
+
+    $actualResults = [];
+    while (TRUE) {
+      $result = $statement->fetchField();
+      if ($result === FALSE) {
+        break;
+      }
+      $this->assertIsNumeric($result);
+      $actualResults[] = $result;
+    }
+
+    $this->assertSame($expectedResults, $actualResults);
   }
 
   /**

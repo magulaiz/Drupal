@@ -1,7 +1,11 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\media_library\Kernel;
 
+use Drupal\Core\Cache\Cache;
+use Drupal\Core\Cache\CacheableDependencyInterface;
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\media_library\MediaLibraryState;
 use Drupal\Tests\media\Traits\MediaTypeCreationTrait;
@@ -42,7 +46,6 @@ class MediaLibraryStateTest extends KernelTestBase {
     $this->installEntitySchema('user');
     $this->installEntitySchema('file');
     $this->installSchema('file', 'file_usage');
-    $this->installSchema('system', 'sequences');
     $this->installEntitySchema('media');
     $this->installConfig([
       'field',
@@ -104,6 +107,11 @@ class MediaLibraryStateTest extends KernelTestBase {
     }
     $state = MediaLibraryState::create($opener_id, $allowed_media_type_ids, $selected_type_id, $remaining_slots);
     $this->assertInstanceOf(MediaLibraryState::class, $state);
+
+    // Ensure that the state object carries cache metadata.
+    $this->assertInstanceOf(CacheableDependencyInterface::class, $state);
+    $this->assertSame(['url.query_args'], $state->getCacheContexts());
+    $this->assertSame(Cache::PERMANENT, $state->getCacheMaxAge());
   }
 
   /**
@@ -112,7 +120,7 @@ class MediaLibraryStateTest extends KernelTestBase {
    * @return array
    *   The data sets to test.
    */
-  public function providerCreate() {
+  public static function providerCreate() {
     $test_data = [];
 
     // Assert no exception is thrown when we add the parameters as expected.
@@ -279,6 +287,7 @@ class MediaLibraryStateTest extends KernelTestBase {
       $this->expectException(BadRequestHttpException::class);
       $this->expectExceptionMessage("Invalid media library parameters specified.");
     }
+
     $state = MediaLibraryState::fromRequest(new Request($query));
     $this->assertInstanceOf(MediaLibraryState::class, $state);
   }
@@ -299,7 +308,7 @@ class MediaLibraryStateTest extends KernelTestBase {
    * @return array
    *   The data sets to test.
    */
-  public function providerFromRequest() {
+  public static function providerFromRequest() {
     $test_data = [];
 
     // Assert no exception is thrown when we use valid state parameters.
@@ -365,7 +374,7 @@ class MediaLibraryStateTest extends KernelTestBase {
   }
 
   /**
-   * Test that hash is unaffected by allowed media type order.
+   * Tests that hash is unaffected by allowed media type order.
    */
   public function testHashUnaffectedByMediaTypeOrder() {
     $state1 = MediaLibraryState::create('test', ['file', 'image'], 'image', 2);
@@ -374,7 +383,7 @@ class MediaLibraryStateTest extends KernelTestBase {
   }
 
   /**
-   * Test that hash is unaffected by opener parameter order.
+   * Tests that hash is unaffected by opener parameter order.
    */
   public function testHashUnaffectedByOpenerParamOrder() {
     $state1 = MediaLibraryState::create('test', ['file'], 'file', -1, [

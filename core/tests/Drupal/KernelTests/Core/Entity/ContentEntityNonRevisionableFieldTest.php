@@ -1,7 +1,11 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\KernelTests\Core\Entity;
 
+use Drupal\Core\Entity\EntityFieldManagerInterface;
+use Drupal\Core\Entity\EntityDefinitionUpdateManagerInterface;
 use Drupal\entity_test\Entity\EntityTestMulRev;
 use Drupal\entity_test\Entity\EntityTestRev;
 use Drupal\language\Entity\ConfigurableLanguage;
@@ -36,6 +40,20 @@ class ContentEntityNonRevisionableFieldTest extends EntityKernelTestBase {
    * @var \Drupal\Core\Entity\EntityStorageInterface
    */
   protected $rev;
+
+  /**
+   * The entity field manager.
+   *
+   * @var \Drupal\Core\Entity\EntityFieldManagerInterface
+   */
+  protected EntityFieldManagerInterface $entityFieldManager;
+
+  /**
+   * The entity definition update manager.
+   *
+   * @var \Drupal\Core\Entity\EntityDefinitionUpdateManagerInterface
+   */
+  protected EntityDefinitionUpdateManagerInterface $entityDefinitionUpdateManager;
 
   /**
    * {@inheritdoc}
@@ -101,6 +119,7 @@ class ContentEntityNonRevisionableFieldTest extends EntityKernelTestBase {
       1 => 1,
     ];
     $revision_ids = $this->mulRev->getQuery()
+      ->accessCheck(FALSE)
       ->allRevisions()
       ->sort('revision_id', 'DESC')
       ->execute();
@@ -111,6 +130,7 @@ class ContentEntityNonRevisionableFieldTest extends EntityKernelTestBase {
       1 => 1,
     ];
     $non_rev_field_revision_ids = $this->mulRev->getQuery()
+      ->accessCheck(FALSE)
       ->allRevisions()
       ->condition('non_rev_field', 'Huron')
       ->sort('revision_id', 'DESC')
@@ -160,6 +180,7 @@ class ContentEntityNonRevisionableFieldTest extends EntityKernelTestBase {
       1 => 1,
     ];
     $revision_ids = $this->rev->getQuery()
+      ->accessCheck(FALSE)
       ->allRevisions()
       ->sort('revision_id', 'DESC')
       ->execute();
@@ -170,6 +191,7 @@ class ContentEntityNonRevisionableFieldTest extends EntityKernelTestBase {
       1 => 1,
     ];
     $non_rev_field_revision_ids = $this->rev->getQuery()
+      ->accessCheck(FALSE)
       ->allRevisions()
       ->condition('non_rev_field', 'Superior')
       ->sort('revision_id', 'DESC')

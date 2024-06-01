@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\KernelTests\Core\Lock;
 
 use Drupal\Core\Lock\DatabaseLockBackend;
@@ -19,6 +21,9 @@ class LockTest extends KernelTestBase {
    */
   protected $lock;
 
+  /**
+   * {@inheritdoc}
+   */
   protected function setUp(): void {
     parent::setUp();
     $this->lock = new DatabaseLockBackend($this->container->get('database'));

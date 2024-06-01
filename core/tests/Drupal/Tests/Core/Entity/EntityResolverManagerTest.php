@@ -1,9 +1,6 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Tests\Core\Entity\EntityResolverManagerTest.
- */
+declare(strict_types=1);
 
 namespace Drupal\Tests\Core\Entity;
 
@@ -56,6 +53,8 @@ class EntityResolverManagerTest extends UnitTestCase {
    * @covers ::__construct
    */
   protected function setUp(): void {
+    parent::setUp();
+
     $this->entityTypeManager = $this->createMock('Drupal\Core\Entity\EntityTypeManagerInterface');
     $this->container = $this->createMock('Symfony\Component\DependencyInjection\ContainerInterface');
     $this->classResolver = $this->getClassResolverStub();
@@ -87,7 +86,7 @@ class EntityResolverManagerTest extends UnitTestCase {
   /**
    * Data provider for testSetRouteOptionsWithStandardRoute.
    */
-  public function providerTestSetRouteOptionsWithStandardRoute() {
+  public static function providerTestSetRouteOptionsWithStandardRoute() {
     return [
       ['Drupal\Tests\Core\Entity\BasicControllerClass::exampleControllerMethod'],
       ['Drupal\Tests\Core\Entity\test_function_controller'],
@@ -117,7 +116,7 @@ class EntityResolverManagerTest extends UnitTestCase {
   /**
    * Data provider for testSetRouteOptionsWithStandardRouteWithArgument.
    */
-  public function providerTestSetRouteOptionsWithStandardRouteWithArgument() {
+  public static function providerTestSetRouteOptionsWithStandardRouteWithArgument() {
     return [
       ['Drupal\Tests\Core\Entity\BasicControllerClass::exampleControllerMethodWithArgument'],
       ['Drupal\Tests\Core\Entity\test_function_controller_with_argument'],
@@ -147,7 +146,7 @@ class EntityResolverManagerTest extends UnitTestCase {
   /**
    * Data provider for testSetRouteOptionsWithContentController.
    */
-  public function providerTestSetRouteOptionsWithContentController() {
+  public static function providerTestSetRouteOptionsWithContentController() {
     return [
       ['Drupal\Tests\Core\Entity\BasicControllerClass::exampleControllerMethodWithArgument'],
       ['Drupal\Tests\Core\Entity\test_function_controller_with_argument'],
@@ -180,7 +179,7 @@ class EntityResolverManagerTest extends UnitTestCase {
   /**
    * Data provider for testSetRouteOptionsWithEntityTypeNoUpcasting.
    */
-  public function providerTestSetRouteOptionsWithEntityTypeNoUpcasting() {
+  public static function providerTestSetRouteOptionsWithEntityTypeNoUpcasting() {
     return [
       ['Drupal\Tests\Core\Entity\BasicControllerClass::exampleControllerWithEntityNoUpcasting'],
       ['Drupal\Tests\Core\Entity\test_function_controller_no_upcasting'],
@@ -214,7 +213,7 @@ class EntityResolverManagerTest extends UnitTestCase {
   /**
    * Data provider for testSetRouteOptionsWithEntityTypeUpcasting.
    */
-  public function providerTestSetRouteOptionsWithEntityTypeUpcasting() {
+  public static function providerTestSetRouteOptionsWithEntityTypeUpcasting() {
     return [
       ['Drupal\Tests\Core\Entity\BasicControllerClass::exampleControllerWithEntityUpcasting'],
       ['Drupal\Tests\Core\Entity\test_function_controller_entity_upcasting'],
@@ -444,26 +443,26 @@ class EntityResolverManagerTest extends UnitTestCase {
     $definition = $this->createMock('Drupal\Core\Entity\EntityTypeInterface');
     $definition->expects($this->any())
       ->method('getClass')
-      ->will($this->returnValue('Drupal\Tests\Core\Entity\SimpleTestEntity'));
+      ->willReturn('Drupal\Tests\Core\Entity\TestEntity');
     $definition->expects($this->any())
       ->method('isRevisionable')
       ->willReturn(FALSE);
     $revisionable_definition = $this->createMock('Drupal\Core\Entity\EntityTypeInterface');
     $revisionable_definition->expects($this->any())
       ->method('getClass')
-      ->will($this->returnValue('Drupal\Tests\Core\Entity\SimpleTestEntity'));
+      ->willReturn('Drupal\Tests\Core\Entity\TestEntity');
     $revisionable_definition->expects($this->any())
       ->method('isRevisionable')
       ->willReturn(TRUE);
     $this->entityTypeManager->expects($this->any())
       ->method('getDefinitions')
-      ->will($this->returnValue([
+      ->willReturn([
         'entity_test' => $definition,
         'entity_test_rev' => $revisionable_definition,
-      ]));
+      ]);
     $this->entityTypeManager->expects($this->any())
       ->method('getDefinition')
-      ->will($this->returnCallback(function ($entity_type) use ($definition, $revisionable_definition) {
+      ->willReturnCallback(function ($entity_type) use ($definition, $revisionable_definition) {
         if ($entity_type == 'entity_test') {
           return $definition;
         }
@@ -473,7 +472,7 @@ class EntityResolverManagerTest extends UnitTestCase {
         else {
           return NULL;
         }
-      }));
+      });
   }
 
 }
@@ -500,7 +499,7 @@ class BasicControllerClass {
 /**
  * A concrete entity.
  */
-class SimpleTestEntity extends EntityBase {
+class TestEntity extends EntityBase {
 
 }
 
@@ -515,12 +514,14 @@ class BasicForm extends FormBase {
    * {@inheritdoc}
    */
   public function getFormId() {
+    return '';
   }
 
   /**
    * {@inheritdoc}
    */
-  public function buildForm(array $form, FormStateInterface $form_state, EntityInterface $entity_test = NULL) {
+  public function buildForm(array $form, FormStateInterface $form_state, ?EntityInterface $entity_test = NULL) {
+    return [];
   }
 
   /**
@@ -540,12 +541,14 @@ class BasicFormNoUpcasting extends FormBase {
    * {@inheritdoc}
    */
   public function getFormId() {
+    return '';
   }
 
   /**
    * {@inheritdoc}
    */
   public function buildForm(array $form, FormStateInterface $form_state, $entity_test = NULL) {
+    return [];
   }
 
   /**
@@ -562,12 +565,14 @@ class BasicFormNoContainerInjectionInterface implements FormInterface {
    * {@inheritdoc}
    */
   public function getFormId() {
+    return '';
   }
 
   /**
    * {@inheritdoc}
    */
-  public function buildForm(array $form, FormStateInterface $form_state, EntityInterface $entity_test = NULL) {
+  public function buildForm(array $form, FormStateInterface $form_state, ?EntityInterface $entity_test = NULL) {
+    return [];
   }
 
   /**

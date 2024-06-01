@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\jsonapi\Functional;
 
 use Drupal\Component\Serialization\Json;
@@ -123,7 +125,7 @@ trait ResourceResponseTestTrait {
     $resource_type = $this->resourceType;
     $resource_data = array_reduce($include_paths, function ($data, $path) use ($request_options, $resource_type) {
       $field_names = explode('.', $path);
-      /* @var \Drupal\Core\Entity\EntityInterface $entity */
+      /** @var \Drupal\Core\Entity\EntityInterface $entity */
       $entity = $this->entity;
       $collected_responses = [];
       foreach ($field_names as $public_field_name) {
@@ -430,7 +432,7 @@ trait ResourceResponseTestTrait {
    *
    * @see \GuzzleHttp\ClientInterface::request()
    */
-  protected function getRelatedResponses(array $relationship_field_names, array $request_options, EntityInterface $entity = NULL) {
+  protected function getRelatedResponses(array $relationship_field_names, array $request_options, ?EntityInterface $entity = NULL) {
     $entity = $entity ?: $this->entity;
     $links = array_map(function ($relationship_field_name) use ($entity) {
       return static::getRelatedLink(static::toResourceIdentifier($entity), $relationship_field_name);

@@ -1,12 +1,14 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\Core\Security;
 
+use Drupal\Core\Security\Attribute\TrustedCallback;
 use Drupal\Core\Security\TrustedCallbackInterface;
 use Drupal\Core\Security\DoTrustedCallbackTrait;
 use Drupal\Core\Security\UntrustedCallbackException;
 use Drupal\Tests\UnitTestCase;
-use PHPUnit\Framework\Error\Warning;
 
 /**
  * @coversDefaultClass \Drupal\Core\Security\DoTrustedCallbackTrait
@@ -27,15 +29,17 @@ class DoTrustedCallbackTraitTest extends UnitTestCase {
   /**
    * Data provider for ::testTrustedCallbacks().
    */
-  public function providerTestTrustedCallbacks() {
+  public static function providerTestTrustedCallbacks() {
     $closure = function () {
       return 'test';
     };
 
     $tests['closure'] = [$closure];
     $tests['TrustedCallbackInterface_object'] = [[new TrustedMethods(), 'callback'], TrustedInterface::class];
+    $tests['TrustedCallbackInterface_object_attribute'] = [[new TrustedMethods(), 'attributeCallback'], TrustedInterface::class];
     $tests['TrustedCallbackInterface_static_string'] = ['\Drupal\Tests\Core\Security\TrustedMethods::callback', TrustedInterface::class];
     $tests['TrustedCallbackInterface_static_array'] = [[TrustedMethods::class, 'callback'], TrustedInterface::class];
+    $tests['TrustedCallbackInterface_static_array_attribute'] = [[TrustedMethods::class, 'attributeCallback'], TrustedInterface::class];
     $tests['extra_trusted_interface_object'] = [[new TrustedObject(), 'callback'], TrustedInterface::class];
     $tests['extra_trusted_interface_static_string'] = ['\Drupal\Tests\Core\Security\TrustedObject::callback', TrustedInterface::class];
     $tests['extra_trusted_interface_static_array'] = [[TrustedObject::class, 'callback'], TrustedInterface::class];
@@ -54,7 +58,7 @@ class DoTrustedCallbackTraitTest extends UnitTestCase {
   /**
    * Data provider for ::testUntrustedCallbacks().
    */
-  public function providerTestUntrustedCallbacks() {
+  public static function providerTestUntrustedCallbacks() {
     $tests['TrustedCallbackInterface_object'] = [[new TrustedMethods(), 'unTrustedCallback'], TrustedInterface::class];
     $tests['TrustedCallbackInterface_static_string'] = ['\Drupal\Tests\Core\Security\TrustedMethods::unTrustedCallback', TrustedInterface::class];
     $tests['TrustedCallbackInterface_static_array'] = [[TrustedMethods::class, 'unTrustedCallback'], TrustedInterface::class];
@@ -84,17 +88,9 @@ class DoTrustedCallbackTraitTest extends UnitTestCase {
   }
 
   /**
-   * @dataProvider errorTypeProvider
-   */
-  public function testWarning($callback) {
-    $this->expectException(Warning::class, 'Drupal\Tests\Core\Security\UntrustedObject::callback is not trusted');
-    $this->doTrustedCallback($callback, [], '%s is not trusted', TrustedCallbackInterface::TRIGGER_WARNING);
-  }
-
-  /**
    * Data provider for tests of ::doTrustedCallback $error_type argument.
    */
-  public function errorTypeProvider() {
+  public static function errorTypeProvider() {
     $tests['untrusted_object'] = [[new UntrustedObject(), 'callback']];
     $tests['untrusted_object_static_string'] = ['Drupal\Tests\Core\Security\UntrustedObject::callback'];
     $tests['untrusted_object_static_array'] = [[UntrustedObject::class, 'callback']];
@@ -137,6 +133,11 @@ class TrustedMethods implements TrustedCallbackInterface {
   }
 
   public static function callback() {
+    return 'test';
+  }
+
+  #[TrustedCallback]
+  public static function attributeCallback() {
     return 'test';
   }
 

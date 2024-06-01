@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\KernelTests\Core\Theme;
 
 use Drupal\KernelTests\KernelTestBase;
@@ -20,9 +22,9 @@ class MessageTest extends KernelTestBase {
    * Tests setting messages output.
    */
   public function testMessages() {
-    // Enable the Classy theme.
-    \Drupal::service('theme_installer')->install(['classy']);
-    $this->config('system.theme')->set('default', 'classy')->save();
+    // Enable the Starterkit theme.
+    \Drupal::service('theme_installer')->install(['starterkit_theme']);
+    $this->config('system.theme')->set('default', 'starterkit_theme')->save();
 
     \Drupal::messenger()->addError('An error occurred');
     \Drupal::messenger()->addStatus('But then something nice happened');

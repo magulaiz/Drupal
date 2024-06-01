@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\Core\Render;
 
 /**
@@ -33,7 +35,7 @@ class RendererRecursionTest extends RendererTestBase {
    * @covers ::doRender
    */
   public function testRenderRecursionWithNestedRenderRoot() {
-    list($complex_child_markup, $parent_markup, $complex_child_template) = $this->setUpRenderRecursionComplexElements();
+    [$complex_child_markup, $parent_markup, $complex_child_template] = $this->setUpRenderRecursionComplexElements();
     $renderer = $this->renderer;
     $this->setUpRequest();
 
@@ -65,12 +67,12 @@ class RendererRecursionTest extends RendererTestBase {
    * @covers ::doRender
    */
   public function testRenderRecursionWithNestedRender() {
-    list($complex_child_markup, $parent_markup, $complex_child_template) = $this->setUpRenderRecursionComplexElements();
+    [$complex_child_markup, $parent_markup, $complex_child_template] = $this->setUpRenderRecursionComplexElements();
     $renderer = $this->renderer;
     $this->setUpRequest();
 
-    $callable = function ($markup) use ($renderer, $complex_child_template) {
-      $this->assertStringStartsWith('<drupal-render-placeholder', $markup, 'Rendered complex child output as expected, without the placeholder replaced, i.e. with just the placeholder.');
+    $callable = function ($markup) {
+      $this->assertStringStartsWith('<drupal-render-placeholder', (string) $markup, 'Rendered complex child output as expected, without the placeholder replaced, i.e. with just the placeholder.');
       return $markup;
     };
 
@@ -91,22 +93,22 @@ class RendererRecursionTest extends RendererTestBase {
   }
 
   /**
-   * ::renderPlain() may be called from anywhere.
+   * ::renderInIsolation() may be called from anywhere.
    *
    * Including from inside of another ::renderRoot() call.
    *
    * @covers ::renderRoot
-   * @covers ::renderPlain
+   * @covers ::renderInIsolation
    */
-  public function testRenderRecursionWithNestedRenderPlain() {
-    list($complex_child_markup, $parent_markup, $complex_child_template) = $this->setUpRenderRecursionComplexElements();
+  public function testRenderRecursionWithNestedRenderInIsolation() {
+    [$complex_child_markup, $parent_markup, $complex_child_template] = $this->setUpRenderRecursionComplexElements();
     $renderer = $this->renderer;
     $this->setUpRequest();
 
     $complex_child = $complex_child_template;
 
-    $callable = function ($elements) use ($renderer, $complex_child, $parent_markup) {
-      $elements['#markup'] = $renderer->renderPlain($complex_child);
+    $callable = function ($elements) use ($renderer, $complex_child) {
+      $elements['#markup'] = $renderer->renderInIsolation($complex_child);
       $this->assertEquals('<p>This is a rendered placeholder!</p>', $elements['#markup'], 'Rendered complex child output as expected, with the placeholder replaced.');
       return $elements;
     };
@@ -122,7 +124,7 @@ class RendererRecursionTest extends RendererTestBase {
     $output = $renderer->renderRoot($page);
     $this->assertEquals('<p>This is a rendered placeholder!</p>' . $parent_markup, $output, 'Rendered output as expected, with the placeholder replaced.');
     $this->assertNotContains('test:complex_child', $page['#cache']['tags'], 'Cache tag bubbling not performed.');
-    $this->assertTrue(empty($page['#attached']), 'Asset bubbling not performed.');
+    $this->assertEmpty($page['#attached'], 'Asset bubbling not performed.');
   }
 
 }

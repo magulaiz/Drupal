@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\config_translation\Kernel\Migrate\d7;
 
 use Drupal\Tests\SchemaCheckTestTrait;
@@ -34,6 +36,9 @@ class MigrateUserConfigsTranslationTest extends MigrateDrupal7TestBase {
       'locales_location',
     ]);
     $this->executeMigrations([
+      'language',
+      'd7_user_mail',
+      'd7_user_settings',
       'd7_user_mail_translation',
       'd7_user_settings_translation',
     ]);

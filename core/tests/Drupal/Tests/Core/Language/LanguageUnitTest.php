@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\Core\Language;
 
 use Drupal\Core\Language\Language;
@@ -63,7 +65,7 @@ class LanguageUnitTest extends UnitTestCase {
     $container->expects($this->any())
       ->method('get')
       ->with('language.default')
-      ->will($this->returnValue($language_default));
+      ->willReturn($language_default);
     \Drupal::setContainer($container);
 
     $language = new Language(['id' => $this->randomMachineName(2)]);
@@ -103,7 +105,7 @@ class LanguageUnitTest extends UnitTestCase {
    * @return array
    *   An array of test data.
    */
-  public function providerTestSortArrayOfLanguages() {
+  public static function providerTestSortArrayOfLanguages() {
     $language9A = new Language(['id' => 'dd', 'name' => 'A', 'weight' => 9]);
     $language10A = new Language(['id' => 'ee', 'name' => 'A', 'weight' => 10]);
     $language10B = new Language(['id' => 'ff', 'name' => 'B', 'weight' => 10]);

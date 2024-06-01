@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\FunctionalTests\Core\Test;
 
 use Drupal\entity_test\Entity\EntityTest;
@@ -13,8 +15,6 @@ use Drupal\Tests\BrowserTestBase;
  *
  * @group Test
  * @group FunctionalTestSetupTrait
- *
- * @see \Drupal\simpletest\Tests\SimpleTestInstallBatchTest
  */
 class ModuleInstallBatchTest extends BrowserTestBase {
 

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\KernelTests\Core\Updater;
 
 use Drupal\Core\Updater\Updater;
@@ -26,7 +28,7 @@ class UpdaterTest extends KernelTestBase {
     // it will choose the first project title in the directory.
     $directory = $this->root . '/core/modules/system/tests/modules/module_handler_test_multiple';
     $title = Updater::getProjectTitle($directory);
-    $this->assertEqual('module handler test multiple', $title);
+    $this->assertEquals('module handler test multiple', $title);
   }
 
 }

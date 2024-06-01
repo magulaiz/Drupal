@@ -1,15 +1,13 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Tests\Component\DependencyInjection\ContainerTest.
- */
+declare(strict_types=1);
 
 namespace Drupal\Tests\Component\DependencyInjection;
 
 use Drupal\Component\Utility\Crypt;
-use Drupal\Tests\PhpUnitCompatibilityTrait;
+use Drupal\TestTools\Extension\DeprecationBridge\ExpectDeprecationTrait;
 use PHPUnit\Framework\TestCase;
+use Prophecy\PhpUnit\ProphecyTrait;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\DependencyInjection\Exception\InvalidArgumentException;
 use Symfony\Component\DependencyInjection\Exception\LogicException;
@@ -24,13 +22,13 @@ use Prophecy\Argument;
  * @group DependencyInjection
  */
 class ContainerTest extends TestCase {
-
-  use PhpUnitCompatibilityTrait;
+  use ExpectDeprecationTrait;
+  use ProphecyTrait;
 
   /**
    * The tested container.
    *
-   * @var \Symfony\Component\DependencyInjection\ContainerInterface
+   * @var \Drupal\Component\DependencyInjection\ContainerInterface
    */
   protected $container;
 
@@ -88,8 +86,7 @@ class ContainerTest extends TestCase {
   }
 
   /**
-   * Tests that Container::getParameter() works properly for non-existing
-   * parameters.
+   * Tests that Container::getParameter() works for non-existing parameters.
    *
    * @covers ::getParameter
    * @covers ::getParameterAlternatives
@@ -168,7 +165,7 @@ class ContainerTest extends TestCase {
     $this->assertEquals($some_parameter, $service->getSomeParameter(), '%some_config% was injected via constructor.');
     $this->assertEquals($this->container, $service->getContainer(), 'Container was injected via setter injection.');
     $this->assertEquals($some_other_parameter, $service->getSomeOtherParameter(), '%some_other_config% was injected via setter injection.');
-    $this->assertEquals($service->_someProperty, 'foo', 'Service has added properties.');
+    $this->assertEquals('foo', $service->someProperty, 'Service has added properties.');
   }
 
   /**
@@ -540,13 +537,13 @@ class ContainerTest extends TestCase {
   public function testResolveServicesAndParametersForPrivateService() {
     $service = $this->container->get('service_using_private');
     $private_service = $service->getSomeOtherService();
-    $this->assertEquals($private_service->getSomeParameter(), 'really_private_lama', 'Private was found successfully.');
+    $this->assertEquals('really_private_lama', $private_service->getSomeParameter(), 'Private was found successfully.');
 
     // Test that sharing the same private services works.
     $service = $this->container->get('another_service_using_private');
     $another_private_service = $service->getSomeOtherService();
     $this->assertNotSame($private_service, $another_private_service, 'Private service is not shared.');
-    $this->assertEquals($private_service->getSomeParameter(), 'really_private_lama', 'Private was found successfully.');
+    $this->assertEquals('really_private_lama', $private_service->getSomeParameter(), 'Private was found successfully.');
   }
 
   /**
@@ -559,13 +556,13 @@ class ContainerTest extends TestCase {
   public function testResolveServicesAndParametersForSharedPrivateService() {
     $service = $this->container->get('service_using_shared_private');
     $private_service = $service->getSomeOtherService();
-    $this->assertEquals($private_service->getSomeParameter(), 'really_private_lama', 'Private was found successfully.');
+    $this->assertEquals('really_private_lama', $private_service->getSomeParameter(), 'Private was found successfully.');
 
     // Test that sharing the same private services works.
     $service = $this->container->get('another_service_using_shared_private');
     $same_private_service = $service->getSomeOtherService();
     $this->assertSame($private_service, $same_private_service, 'Private service is shared.');
-    $this->assertEquals($private_service->getSomeParameter(), 'really_private_lama', 'Private was found successfully.');
+    $this->assertEquals('really_private_lama', $private_service->getSomeParameter(), 'Private was found successfully.');
   }
 
   /**
@@ -591,6 +588,21 @@ class ContainerTest extends TestCase {
   public function testResolveServicesAndParametersForOptionalServiceDependencies() {
     $service = $this->container->get('service_with_optional_dependency');
     $this->assertNull($service->getSomeOtherService(), 'other service was NULL was expected.');
+  }
+
+  /**
+   * Tests that services wrapped in a closure work correctly.
+   *
+   * @covers ::get
+   * @covers ::createService
+   * @covers ::resolveServicesAndParameters
+   */
+  public function testResolveServicesAndParametersForServiceReferencedViaServiceClosure() {
+    $service = $this->container->get('service_within_service_closure');
+    $other_service = $this->container->get('other.service');
+    $factory_function = $service->getSomeOtherService();
+    $this->assertInstanceOf(\Closure::class, $factory_function);
+    $this->assertEquals($other_service, call_user_func($factory_function));
   }
 
   /**
@@ -663,7 +675,7 @@ class ContainerTest extends TestCase {
    * @covers ::getServiceIds
    */
   public function testGetServiceIds() {
-    $service_definition_keys = array_keys($this->containerDefinition['services']);
+    $service_definition_keys = array_merge(['service_container'], array_keys($this->containerDefinition['services']));
     $this->assertEquals($service_definition_keys, $this->container->getServiceIds(), 'Retrieved service IDs match definition.');
 
     $mock_service = new MockService();
@@ -686,6 +698,38 @@ class ContainerTest extends TestCase {
   }
 
   /**
+   * Tests that service iterators are lazily instantiated.
+   */
+  public function testIterator() {
+    $iterator = $this->container->get('service_iterator')->getArguments()[0];
+    $this->assertIsIterable($iterator);
+    $this->assertFalse($this->container->initialized('other.service'));
+    foreach ($iterator as $service) {
+      $this->assertIsObject($service);
+    }
+    $this->assertTrue($this->container->initialized('other.service'));
+  }
+
+  /**
+   * Tests Container::reset().
+   *
+   * @covers ::reset
+   */
+  public function testReset() {
+    $this->assertFalse($this->container->initialized('late.service'), 'Late service is not initialized.');
+    $this->container->get('late.service');
+    $this->assertTrue($this->container->initialized('late.service'), 'Late service is initialized after it was retrieved once.');
+
+    // Reset the container. All initialized services will be reset.
+    $this->container->reset();
+
+    $this->assertFalse($this->container->initialized('late.service'), 'Late service is not initialized.');
+    $this->container->get('late.service');
+    $this->assertTrue($this->container->initialized('late.service'), 'Late service is initialized after it was retrieved once.');
+    $this->assertSame($this->container, $this->container->get('service_container'));
+  }
+
+  /**
    * Gets a mock container definition.
    *
    * @return array
@@ -703,9 +747,6 @@ class ContainerTest extends TestCase {
     $parameters['service_from_parameter'] = $this->getServiceCall('service.provider_alias');
 
     $services = [];
-    $services['service_container'] = [
-      'class' => '\Drupal\service_container\DependencyInjection\Container',
-    ];
     $services['other.service'] = [
       'class' => get_class($fake_service),
     ];
@@ -727,7 +768,7 @@ class ContainerTest extends TestCase {
         $this->getServiceCall('other.service'),
         $this->getParameterCall('some_config'),
       ]),
-      'properties' => $this->getCollection(['_someProperty' => 'foo']),
+      'properties' => $this->getCollection(['someProperty' => 'foo']),
       'calls' => [
         [
           'setContainer',
@@ -827,6 +868,14 @@ class ContainerTest extends TestCase {
 
     ];
 
+    $services['service_within_service_closure'] = [
+      'class' => '\Drupal\Tests\Component\DependencyInjection\MockService',
+      'arguments' => $this->getCollection([
+        $this->getServiceClosureCall('other.service', ContainerInterface::EXCEPTION_ON_INVALID_REFERENCE),
+        $this->getParameterCall('some_private_config'),
+      ]),
+    ];
+
     $services['factory_service'] = [
       'class' => '\Drupal\service_container\ServiceContainer\ControllerInterface',
       'factory' => [
@@ -868,12 +917,9 @@ class ContainerTest extends TestCase {
     $services['synthetic'] = [
       'synthetic' => TRUE,
     ];
-    // The file could have been named as a .php file. The reason it is a .data
-    // file is that SimpleTest tries to load it. SimpleTest does not like such
-    // fixtures and hence we use a neutral name like .data.
     $services['container_test_file_service_test'] = [
       'class' => '\stdClass',
-      'file' => __DIR__ . '/Fixture/container_test_file_service_test_service_function.data',
+      'file' => __DIR__ . '/Fixture/container_test_file_service_test_service_function.php',
     ];
 
     // Test multiple arguments.
@@ -942,6 +988,16 @@ class ContainerTest extends TestCase {
       'arguments' => $this->getCollection([$this->getRaw('ccc')]),
     ];
 
+    // Iterator argument.
+    $services['service_iterator'] = [
+      'class' => '\Drupal\Tests\Component\DependencyInjection\MockInstantiationService',
+      'arguments' => $this->getCollection([
+        $this->getIterator([
+          $this->getServiceCall('other.service'),
+        ]),
+      ]),
+    ];
+
     $aliases = [];
     $aliases['service.provider_alias'] = 'service.provider';
     $aliases['late.service_alias'] = 'late.service';
@@ -963,6 +1019,27 @@ class ContainerTest extends TestCase {
       'type' => 'service',
       'id' => $id,
       'invalidBehavior' => $invalid_behavior,
+    ];
+  }
+
+  /**
+   * Helper function to return a service closure definition.
+   */
+  protected function getServiceClosureCall($id, $invalid_behavior = ContainerInterface::EXCEPTION_ON_INVALID_REFERENCE) {
+    return (object) [
+      'type' => 'service_closure',
+      'id' => $id,
+      'invalidBehavior' => $invalid_behavior,
+    ];
+  }
+
+  /**
+   * Helper function to return a service iterator.
+   */
+  protected function getIterator($iterator) {
+    return (object) [
+      'type' => 'iterator',
+      'value' => $iterator,
     ];
   }
 
@@ -1091,6 +1168,11 @@ class MockService {
    * @var string
    */
   protected $someOtherParameter;
+
+  /**
+   * @var string
+   */
+  public string $someProperty;
 
   /**
    * Constructs a MockService object.

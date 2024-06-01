@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\comment\Functional;
 
 use Drupal\comment\Entity\CommentType;
@@ -41,6 +43,9 @@ class CommentEntityTest extends CommentTestBase {
   protected $vocab;
   protected $commentType;
 
+  /**
+   * {@inheritdoc}
+   */
   protected function setUp(): void {
     parent::setUp();
 

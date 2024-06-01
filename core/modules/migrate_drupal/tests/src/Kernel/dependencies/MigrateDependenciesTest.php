@@ -1,10 +1,10 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\migrate_drupal\Kernel\dependencies;
 
-use Drupal\Component\Render\FormattableMarkup;
 use Drupal\migrate\Exception\RequirementsException;
-use Drupal\migrate\MigrateExecutable;
 use Drupal\Tests\migrate_drupal\Kernel\d6\MigrateDrupal6TestBase;
 
 /**
@@ -17,7 +17,7 @@ class MigrateDependenciesTest extends MigrateDrupal6TestBase {
   /**
    * {@inheritdoc}
    */
-  protected static $modules = ['aggregator', 'comment'];
+  protected static $modules = ['comment'];
 
   /**
    * Tests that the order is correct when loading several migrations.
@@ -43,19 +43,6 @@ class MigrateDependenciesTest extends MigrateDrupal6TestBase {
     catch (\Exception $e) {
       $this->fail("The requirements check threw an exception, but it was not the expected RequirementsException");
     }
-  }
-
-  /**
-   * Tests dependencies on the migration of aggregator feeds & items.
-   */
-  public function testAggregatorMigrateDependencies() {
-    /** @var \Drupal\migrate\Plugin\Migration $migration */
-    $migration = $this->getMigration('d6_aggregator_item');
-    $executable = new MigrateExecutable($migration, $this);
-    $this->startCollectingMessages();
-    $executable->import();
-    $this->assertEqual([new FormattableMarkup('Migration @id did not meet the requirements. Missing migrations d6_aggregator_feed. requirements: d6_aggregator_feed.', ['@id' => $migration->id()])], $this->migrateMessages['error']);
-    $this->collectMessages = FALSE;
   }
 
 }

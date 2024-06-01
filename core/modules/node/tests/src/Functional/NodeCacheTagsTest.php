@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\node\Functional;
 
 use Drupal\Core\Entity\EntityInterface;
@@ -41,17 +43,6 @@ class NodeCacheTagsTest extends EntityWithUriCacheTagsTestBase {
       ->save();
 
     return $node;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  protected function getDefaultCacheContexts() {
-    $defaults = parent::getDefaultCacheContexts();
-    // @see \Drupal\node\Controller\NodeViewController::view()
-    $defaults[] = 'url.site';
-    $defaults[] = 'user.roles:anonymous';
-    return $defaults;
   }
 
   /**

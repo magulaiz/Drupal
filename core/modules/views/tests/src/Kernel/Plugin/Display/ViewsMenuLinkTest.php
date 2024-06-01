@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\views\Kernel\Plugin\Display;
 
 use Drupal\Tests\views\Kernel\ViewsKernelTestBase;
@@ -15,7 +17,6 @@ class ViewsMenuLinkTest extends ViewsKernelTestBase {
    * {@inheritdoc}
    */
   protected static $modules = [
-    'menu_ui',
     'user',
     'views',
   ];
@@ -50,7 +51,7 @@ class ViewsMenuLinkTest extends ViewsKernelTestBase {
   }
 
   /**
-   * Test views internal menu link options.
+   * Tests views internal menu link options.
    */
   public function testMenuLinkOverrides() {
     // Link from views module.

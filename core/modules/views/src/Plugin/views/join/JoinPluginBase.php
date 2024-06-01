@@ -14,7 +14,7 @@ use Drupal\Core\Plugin\PluginBase;
  * handle table joins.
  *
  * Views join handlers extend \Drupal\views\Plugin\views\join\JoinPluginBase.
- * They must be annotated with \Drupal\views\Annotation\ViewsJoin annotation,
+ * They must be attributed with \Drupal\views\Attribute\ViewsJoin attribute,
  * and they must be in namespace directory Plugin\views\join.
  *
  * Here are some examples of configuration for the join plugins.
@@ -258,6 +258,7 @@ class JoinPluginBase extends PluginBase implements JoinPluginInterface {
     $configuration += [
       'type' => 'LEFT',
       'extra_operator' => 'AND',
+      'operator' => '=',
     ];
     $this->configuration = $configuration;
 
@@ -266,7 +267,11 @@ class JoinPluginBase extends PluginBase implements JoinPluginInterface {
     }
 
     $this->leftTable = $configuration['left_table'];
-    $this->leftField = $configuration['left_field'];
+
+    if (!empty($configuration['left_field'])) {
+      $this->leftField = $configuration['left_field'];
+    }
+
     $this->field = $configuration['field'];
 
     if (!empty($configuration['left_formula'])) {
@@ -306,7 +311,7 @@ class JoinPluginBase extends PluginBase implements JoinPluginInterface {
       $left_table = NULL;
     }
 
-    $condition = "$left_field = $table[alias].$this->field";
+    $condition = "$left_field " . $this->configuration['operator'] . " $table[alias].$this->field";
     $arguments = [];
 
     // Tack on the extra.

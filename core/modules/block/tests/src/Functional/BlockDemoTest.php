@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\block\Functional;
 
 use Drupal\Tests\BrowserTestBase;
@@ -21,7 +23,7 @@ class BlockDemoTest extends BrowserTestBase {
   /**
    * {@inheritdoc}
    */
-  protected $defaultTheme = 'classy';
+  protected $defaultTheme = 'stark';
 
   /**
    * Check for the accessibility of the admin block demo page.
@@ -44,9 +46,8 @@ class BlockDemoTest extends BrowserTestBase {
 
     // All available themes in core.
     $available_themes = [
-      'bartik',
-      'classy',
-      'seven',
+      'olivero',
+      'claro',
       'stark',
     ];
 

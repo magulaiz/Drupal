@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\views\Kernel\Plugin;
 
 use Drupal\Core\Database\Database;
@@ -13,6 +15,7 @@ use Drupal\views_test_data\Plugin\views\filter\FilterTest as FilterPlugin;
  * Tests pluggable caching for views.
  *
  * @group views
+ * @group #slow
  * @see views_plugin_cache
  */
 class CacheTest extends ViewsKernelTestBase {
@@ -42,7 +45,7 @@ class CacheTest extends ViewsKernelTestBase {
     $this->installEntitySchema('user');
 
     // Setup the current time properly.
-    \Drupal::request()->server->set('REQUEST_TIME', time());
+    \Drupal::request()->server->set('REQUEST_TIME', \Drupal::time()->getCurrentTime());
   }
 
   /**
@@ -292,11 +295,11 @@ class CacheTest extends ViewsKernelTestBase {
     });
 
     $this->assertContains('views_test_data/test', $output['#attached']['library'], 'Make sure libraries are added for cached views.');
-    $this->assertEqual(['foo' => 'bar'], $output['#attached']['drupalSettings'], 'Make sure drupalSettings are added for cached views.');
+    $this->assertEquals(['foo' => 'bar'], $output['#attached']['drupalSettings'], 'Make sure drupalSettings are added for cached views.');
     // Note: views_test_data_views_pre_render() adds some cache tags.
-    $this->assertEqual(['config:views.view.test_cache_header_storage', 'views_test_data:1'], $output['#cache']['tags']);
-    $this->assertEqual(['non-existing-placeholder-just-for-testing-purposes' => ['#lazy_builder' => ['Drupal\views_test_data\Controller\ViewsTestDataController::placeholderLazyBuilder', ['bar']]]], $output['#attached']['placeholders']);
-    $this->assertFalse(!empty($view->build_info['pre_render_called']), 'Make sure hook_views_pre_render is not called for the cached view.');
+    $this->assertEquals(['config:views.view.test_cache_header_storage', 'views_test_data:1'], $output['#cache']['tags']);
+    $this->assertEquals(['non-existing-placeholder-just-for-testing-purposes' => ['#lazy_builder' => ['Drupal\views_test_data\Controller\ViewsTestDataController::placeholderLazyBuilder', ['bar']]]], $output['#attached']['placeholders']);
+    $this->assertArrayNotHasKey('pre_render_called', $view->build_info, 'Make sure hook_views_pre_render is not called for the cached view.');
   }
 
   /**
@@ -310,7 +313,7 @@ class CacheTest extends ViewsKernelTestBase {
     // Request for the cache.
     $cid = 'views_relationship_groupwise_max:test_groupwise_term_ui:default:tid_representative';
     $cache = \Drupal::cache('data')->get($cid);
-    $this->assertEqual($cid, $cache->cid, 'Subquery String cached as expected.');
+    $this->assertEquals($cid, $cache->cid, 'Subquery String cached as expected.');
   }
 
   /**
@@ -366,7 +369,7 @@ class CacheTest extends ViewsKernelTestBase {
     // Update the entry in the DB to ensure that result caching works.
     \Drupal::database()->update('views_test_data')
       ->condition('name', 'George')
-      ->fields(['name' => 'egroeG'])
+      ->fields(['name' => 'notGeorge'])
       ->execute();
 
     $view = Views::getView('test_cache');
@@ -405,7 +408,7 @@ class CacheTest extends ViewsKernelTestBase {
     /** @var \Drupal\Core\Render\RendererInterface $renderer */
     $renderer = \Drupal::service('renderer');
 
-    $renderer->renderPlain($output);
+    $renderer->renderInIsolation($output);
     $this->assertEquals(['config:views.view.test_view', 'example_tag'], $output['#cache']['tags']);
   }
 

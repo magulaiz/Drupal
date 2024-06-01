@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\jsonapi\Kernel\Context;
 
 use Drupal\Core\Http\Exception\CacheableBadRequestHttpException;
@@ -11,17 +13,22 @@ use Drupal\Tests\jsonapi\Kernel\JsonapiKernelTestBase;
 /**
  * @coversDefaultClass \Drupal\jsonapi\Context\FieldResolver
  * @group jsonapi
+ * @group #slow
  *
  * @internal
  */
 class FieldResolverTest extends JsonapiKernelTestBase {
 
+  /**
+   * {@inheritdoc}
+   */
   protected static $modules = [
     'entity_test',
+    'field',
+    'file',
     'jsonapi_test_field_aliasing',
     'jsonapi_test_field_filter_access',
     'serialization',
-    'field',
     'text',
     'user',
   ];
@@ -91,7 +98,7 @@ class FieldResolverTest extends JsonapiKernelTestBase {
   /**
    * Provides test cases for resolveInternalEntityQueryPath.
    */
-  public function resolveInternalIncludePathProvider() {
+  public static function resolveInternalIncludePathProvider() {
     return [
       'entity reference' => [[['field_test_ref2']], 'field_test_ref2'],
       'entity reference with multi target bundles' => [[['field_test_ref1']], 'field_test_ref1'],
@@ -137,7 +144,7 @@ class FieldResolverTest extends JsonapiKernelTestBase {
   /**
    * Provides test cases for ::testResolveInternalIncludePathError.
    */
-  public function resolveInternalIncludePathErrorProvider() {
+  public static function resolveInternalIncludePathErrorProvider() {
     return [
       // Should fail because none of these bundles have these fields.
       ['entity_test_with_bundle', 'bundle1', 'host.fail!!.deep'],
@@ -175,7 +182,7 @@ class FieldResolverTest extends JsonapiKernelTestBase {
   /**
    * Provides test cases for ::testResolveInternalEntityQueryPath.
    */
-  public function resolveInternalEntityQueryPathProvider() {
+  public static function resolveInternalEntityQueryPathProvider() {
     return [
       'config entity as base' => [
         'uuid', 'id', 'entity_test_bundle', 'entity_test_bundle',
@@ -260,7 +267,7 @@ class FieldResolverTest extends JsonapiKernelTestBase {
   /**
    * Provides test cases for ::testResolveInternalEntityQueryPathError.
    */
-  public function resolveInternalEntityQueryPathErrorProvider() {
+  public static function resolveInternalEntityQueryPathErrorProvider() {
     return [
       'nested fields' => [
         'entity_test_with_bundle', 'bundle1', 'none.of.these.exist',
@@ -308,17 +315,17 @@ class FieldResolverTest extends JsonapiKernelTestBase {
       'entity reference then no delta with property specifier `target_id`' => [
         'entity_test_with_bundle', 'bundle1',
         'field_test_ref1.target_id',
-        'Invalid nested filtering. The property `target_id`, given in the path `field_test_ref1.target_id`, does not exist. Filter by `field_test_ref1`, not `field_test_ref1.target_id` (the JSON:API module elides property names from single-property fields).',
+        'Invalid nested filtering. The field `target_id`, given in the path `field_test_ref1.target_id`, does not exist.',
       ],
       'entity reference then delta 0 with property specifier `target_id`' => [
         'entity_test_with_bundle', 'bundle1',
         'field_test_ref1.0.target_id',
-        'Invalid nested filtering. The property `target_id`, given in the path `field_test_ref1.0.target_id`, does not exist. Filter by `field_test_ref1.0`, not `field_test_ref1.0.target_id` (the JSON:API module elides property names from single-property fields).',
+        'Invalid nested filtering. The field `target_id`, given in the path `field_test_ref1.0.target_id`, does not exist.',
       ],
       'entity reference then delta 1 with property specifier `target_id`' => [
         'entity_test_with_bundle', 'bundle1',
         'field_test_ref1.1.target_id',
-        'Invalid nested filtering. The property `target_id`, given in the path `field_test_ref1.1.target_id`, does not exist. Filter by `field_test_ref1.1`, not `field_test_ref1.1.target_id` (the JSON:API module elides property names from single-property fields).',
+        'Invalid nested filtering. The field `target_id`, given in the path `field_test_ref1.1.target_id`, does not exist.',
       ],
 
       'entity reference then no reference property then a complex field' => [

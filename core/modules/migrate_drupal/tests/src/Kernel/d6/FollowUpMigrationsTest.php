@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\migrate_drupal\Kernel\d6;
 
 use Drupal\node\Entity\Node;
@@ -19,8 +21,6 @@ class FollowUpMigrationsTest extends MigrateNodeTestBase {
     'content_translation',
     'language',
     'menu_ui',
-    // A requirement for d6_node_translation.
-    'migrate_drupal_multilingual',
   ];
 
   /**
@@ -37,7 +37,7 @@ class FollowUpMigrationsTest extends MigrateNodeTestBase {
   }
 
   /**
-   * Test entity reference translations.
+   * Tests entity reference translations.
    */
   public function testEntityReferenceTranslations() {
     // Test the entity reference field before the follow-up migrations.

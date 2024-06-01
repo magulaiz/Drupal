@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\system\Functional\Entity;
 
 use Drupal\Core\Language\LanguageInterface;
@@ -30,14 +32,13 @@ class EntityListBuilderTest extends BrowserTestBase {
     parent::setUp();
 
     // Create and log in user.
-    $this->webUser = $this->drupalCreateUser([
+    $this->drupalLogin($this->drupalCreateUser([
       'administer entity_test content',
-    ]);
-    $this->drupalLogin($this->webUser);
+    ]));
   }
 
   /**
-   * Test paging.
+   * Tests paging.
    */
   public function testPager() {
     // Create 51 test entities.
@@ -49,13 +50,13 @@ class EntityListBuilderTest extends BrowserTestBase {
     $this->drupalGet('entity_test/list');
 
     // Item 51 should not be present.
-    $this->assertRaw('Test entity 50');
-    $this->assertNoRaw('Test entity 51');
+    $this->assertSession()->pageTextContains('Test entity 50');
+    $this->assertSession()->responseNotContains('Test entity 51');
 
     // Browse to the next page, test entity 51 is shown.
-    $this->clickLink(t('Page 2'));
-    $this->assertNoRaw('Test entity 50');
-    $this->assertRaw('Test entity 51');
+    $this->clickLink('Page 2');
+    $this->assertSession()->responseNotContains('Test entity 50');
+    $this->assertSession()->pageTextContains('Test entity 51');
   }
 
   /**
@@ -68,7 +69,7 @@ class EntityListBuilderTest extends BrowserTestBase {
     $build = $list_builder->render();
     $this->container->get('renderer')->renderRoot($build);
 
-    $this->assertEqual(['entity_test_view_grants', 'languages:' . LanguageInterface::TYPE_INTERFACE, 'theme', 'url.query_args.pagers:0', 'user.permissions'], $build['#cache']['contexts']);
+    $this->assertEqualsCanonicalizing(['entity_test_view_grants', 'languages:' . LanguageInterface::TYPE_INTERFACE, 'theme', 'url.query_args.pagers:0', 'user.permissions'], $build['#cache']['contexts']);
   }
 
   /**

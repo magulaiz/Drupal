@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\content_moderation\Kernel;
 
 use Drupal\KernelTests\KernelTestBase;
@@ -47,7 +49,7 @@ class EntityOperationsTest extends KernelTestBase {
   protected function createNodeType() {
     $node_type = NodeType::create([
       'type' => 'page',
-      'label' => 'Page',
+      'name' => 'Page',
     ]);
     $node_type->save();
     $workflow = $this->createEditorialWorkflow();

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\system\Kernel\Theme;
 
 use Drupal\KernelTests\KernelTestBase;
@@ -19,7 +21,7 @@ class TwigFilterTest extends KernelTestBase {
   protected static $modules = ['twig_theme_test'];
 
   /**
-   * Test Twig "without" filter.
+   * Tests Twig "without" filter.
    */
   public function testTwigWithoutFilter() {
     $filter_test = [

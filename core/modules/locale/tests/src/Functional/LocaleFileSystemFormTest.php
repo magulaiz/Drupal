@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\locale\Functional;
 
 use Drupal\Tests\BrowserTestBase;
@@ -55,7 +57,7 @@ class LocaleFileSystemFormTest extends BrowserTestBase {
     $this->submitForm($fields, 'Save configuration');
     $this->drupalGet('admin/config/media/file-system');
     $this->assertSession()->fieldValueEquals('translation_path', $translation_path);
-    $this->assertEqual($this->config('locale.settings')->get('translation.path'), $translation_path);
+    $this->assertEquals($this->config('locale.settings')->get('translation.path'), $translation_path);
   }
 
 }

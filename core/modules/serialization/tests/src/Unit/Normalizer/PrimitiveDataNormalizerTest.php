@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\serialization\Unit\Normalizer;
 
 use Drupal\Core\TypedData\DataDefinition;
@@ -26,6 +28,8 @@ class PrimitiveDataNormalizerTest extends UnitTestCase {
    * {@inheritdoc}
    */
   protected function setUp(): void {
+    parent::setUp();
+
     $this->normalizer = new PrimitiveDataNormalizer();
   }
 
@@ -56,7 +60,7 @@ class PrimitiveDataNormalizerTest extends UnitTestCase {
   /**
    * Data provider for testNormalize().
    */
-  public function dataProviderPrimitiveData() {
+  public static function dataProviderPrimitiveData() {
     $data = [];
 
     $definition = DataDefinition::createFromDataType('string');

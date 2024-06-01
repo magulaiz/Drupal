@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\KernelTests\Core\Entity;
 
 use Drupal\Component\Render\FormattableMarkup;
@@ -28,7 +30,7 @@ class EntityAccessControlHandlerTest extends EntityLanguageTestBase {
   /**
    * {@inheritdoc}
    */
-  public function setUp(): void {
+  protected function setUp(): void {
     parent::setUp();
 
     $this->installEntitySchema('entity_test_no_uuid');
@@ -38,15 +40,17 @@ class EntityAccessControlHandlerTest extends EntityLanguageTestBase {
 
   /**
    * Asserts entity access correctly grants or denies access.
+   *
+   * @internal
    */
-  public function assertEntityAccess($ops, AccessibleInterface $object, AccountInterface $account = NULL) {
+  public function assertEntityAccess(array $ops, AccessibleInterface $object, ?AccountInterface $account = NULL): void {
     foreach ($ops as $op => $result) {
       $message = new FormattableMarkup("Entity access returns @result with operation '@op'.", [
         '@result' => !isset($result) ? 'null' : ($result ? 'true' : 'false'),
         '@op' => $op,
       ]);
 
-      $this->assertEqual($object->access($op, $account), $result, $message);
+      $this->assertEquals($object->access($op, $account), $result, (string) $message);
     }
   }
 
@@ -55,7 +59,7 @@ class EntityAccessControlHandlerTest extends EntityLanguageTestBase {
    */
   public function testUserLabelAccess() {
     // Set up a non-admin user.
-    \Drupal::currentUser()->setAccount($this->createUser(['uid' => 2]));
+    \Drupal::currentUser()->setAccount($this->createUser([], NULL, FALSE, ['uid' => 2]));
 
     $anonymous_user = User::getAnonymousUser();
     $user = $this->createUser();
@@ -109,7 +113,7 @@ class EntityAccessControlHandlerTest extends EntityLanguageTestBase {
    */
   public function testEntityAccess() {
     // Set up a non-admin user that is allowed to view test entities.
-    \Drupal::currentUser()->setAccount($this->createUser(['uid' => 2], ['view test entity']));
+    \Drupal::currentUser()->setAccount($this->createUser(['view test entity'], NULL, FALSE, ['uid' => 2]));
 
     // Use the 'entity_test_label' entity type in order to test the 'view label'
     // access operation.
@@ -152,18 +156,18 @@ class EntityAccessControlHandlerTest extends EntityLanguageTestBase {
    */
   public function testDefaultEntityAccess() {
     // Set up a non-admin user that is allowed to view test entities.
-    \Drupal::currentUser()->setAccount($this->createUser(['uid' => 2], ['view test entity']));
+    \Drupal::currentUser()->setAccount($this->createUser(['view test entity'], NULL, FALSE, ['uid' => 2]));
     $entity = EntityTest::create([
-        'name' => 'forbid_access',
-      ]);
+      'name' => 'forbid_access',
+    ]);
 
     // The user is denied access to the entity.
     $this->assertEntityAccess([
-        'create' => FALSE,
-        'update' => FALSE,
-        'delete' => FALSE,
-        'view' => FALSE,
-      ], $entity);
+      'create' => FALSE,
+      'update' => FALSE,
+      'delete' => FALSE,
+      'view' => FALSE,
+    ], $entity);
   }
 
   /**
@@ -171,7 +175,7 @@ class EntityAccessControlHandlerTest extends EntityLanguageTestBase {
    */
   public function testEntityAccessDefaultController() {
     // The implementation requires that the global user id can be loaded.
-    \Drupal::currentUser()->setAccount($this->createUser(['uid' => 2]));
+    \Drupal::currentUser()->setAccount($this->createUser([], NULL, FALSE, ['uid' => 2]));
 
     // Check that the default access control handler is used for entities that don't
     // have a specific access control handler defined.
@@ -193,7 +197,7 @@ class EntityAccessControlHandlerTest extends EntityLanguageTestBase {
   public function testEntityTranslationAccess() {
 
     // Set up a non-admin user that is allowed to view test entity translations.
-    \Drupal::currentUser()->setAccount($this->createUser(['uid' => 2], ['view test entity translations']));
+    \Drupal::currentUser()->setAccount($this->createUser(['view test entity translations'], NULL, FALSE, ['uid' => 2]));
 
     // Create two test languages.
     foreach (['foo', 'bar'] as $langcode) {
@@ -286,7 +290,7 @@ class EntityAccessControlHandlerTest extends EntityLanguageTestBase {
     $entity->access('create');
     $this->assertTrue($state->get('entity_test_entity_create_access'));
     $this->assertSame(['entity_type_id' => 'entity_test', 'langcode' => LanguageInterface::LANGCODE_DEFAULT], $state->get('entity_test_entity_create_access_context'));
-    $this->assertEqual(TRUE, $state->get('entity_test_entity_test_create_access'));
+    $this->assertEquals(TRUE, $state->get('entity_test_entity_test_create_access'));
 
     // Test hook_entity_access() and hook_ENTITY_TYPE_access().
     $entity->access('view');
@@ -303,7 +307,7 @@ class EntityAccessControlHandlerTest extends EntityLanguageTestBase {
   public function testFieldAccess($entity_class, array $entity_create_values, $expected_id_create_access) {
     // Set up a non-admin user that is allowed to create and update test
     // entities.
-    \Drupal::currentUser()->setAccount($this->createUser(['uid' => 2], ['administer entity_test content']));
+    \Drupal::currentUser()->setAccount($this->createUser(['administer entity_test content'], NULL, FALSE, ['uid' => 2]));
 
     // Create the entity to test field access with.
     $entity = $entity_class::create($entity_create_values);
@@ -341,7 +345,7 @@ class EntityAccessControlHandlerTest extends EntityLanguageTestBase {
     $this->assertEquals('The entity ID cannot be changed.', $access_result->getReason());
   }
 
-  public function providerTestFieldAccess() {
+  public static function providerTestFieldAccess() {
     return [
       'serial ID entity' => [
         EntityTest::class,

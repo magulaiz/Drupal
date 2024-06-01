@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\KernelTests\Core\Plugin;
 
 use Drupal\Core\Plugin\Context\Context;
@@ -58,6 +60,37 @@ class ContextTypedDataTest extends KernelTestBase {
     $context = new Context($definition, $typed_data);
     $value = $context->getContextValue();
     $this->assertSame($value, $typed_data->getValue());
+  }
+
+  /**
+   * Data provider for testHasContextValue.
+   */
+  public static function providerHasContextValue() {
+    return [
+      [TRUE, FALSE],
+      [TRUE, 0],
+      [TRUE, -0],
+      [TRUE, 0.0],
+      [TRUE, -0.0],
+      [TRUE, ''],
+      [TRUE, '0'],
+      [TRUE, []],
+      [FALSE, NULL],
+    ];
+  }
+
+  /**
+   * @covers ::hasContextValue
+   * @dataProvider providerHasContextValue
+   */
+  public function testHasContextValue($has_context_value, $default_value): void {
+    $definition = new ContextDefinition('any');
+    $definition->setDefaultValue($default_value);
+
+    $context = new Context($definition);
+
+    $this->assertSame($has_context_value, $context->hasContextValue());
+    $this->assertSame($default_value, $context->getContextValue());
   }
 
 }

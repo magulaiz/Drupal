@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\config\Functional;
 
 use Drupal\Core\Archiver\Tar;
@@ -52,7 +54,8 @@ class ConfigExportUITest extends BrowserTestBase {
 
     // Submit the export form and verify response. This will create a file in
     // temporary directory with the default name config.tar.gz.
-    $this->drupalPostForm('admin/config/development/configuration/full/export', [], 'Export');
+    $this->drupalGet('admin/config/development/configuration/full/export');
+    $this->submitForm([], 'Export');
     $this->assertSession()->statusCodeEquals(200);
 
     // Test if header contains file name with hostname and timestamp.
@@ -89,7 +92,7 @@ class ConfigExportUITest extends BrowserTestBase {
 
     // Check the single export form doesn't have "form-required" elements.
     $this->drupalGet('admin/config/development/configuration/single/export');
-    $this->assertNoRaw('js-form-required form-required');
+    $this->assertSession()->responseNotContains('js-form-required form-required');
 
     // Ensure the temporary file is not available to users without the
     // permission.

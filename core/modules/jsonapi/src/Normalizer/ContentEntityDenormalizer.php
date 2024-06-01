@@ -18,11 +18,6 @@ use Symfony\Component\HttpKernel\Exception\UnprocessableEntityHttpException;
 final class ContentEntityDenormalizer extends EntityDenormalizerBase {
 
   /**
-   * {@inheritdoc}
-   */
-  protected $supportedInterfaceOrClass = ContentEntityInterface::class;
-
-  /**
    * Prepares the input data to create the entity.
    *
    * @param array $data
@@ -86,6 +81,15 @@ final class ContentEntityDenormalizer extends EntityDenormalizerBase {
     }
 
     return $data_internal;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getSupportedTypes(?string $format): array {
+    return [
+      ContentEntityInterface::class => TRUE,
+    ];
   }
 
 }

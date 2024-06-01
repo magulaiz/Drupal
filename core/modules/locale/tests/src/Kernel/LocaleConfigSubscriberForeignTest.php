@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\locale\Kernel;
 
 use Drupal\Core\DependencyInjection\ContainerBuilder;
@@ -45,9 +47,9 @@ class LocaleConfigSubscriberForeignTest extends LocaleConfigSubscriberTest {
    * Tests that the language of default configuration was updated.
    */
   public function testDefaultConfigLanguage() {
-    $this->assertEqual('hu', $this->configFactory->getEditable('locale_test.no_translation')->get('langcode'));
-    $this->assertEqual('hu', $this->configFactory->getEditable('locale_test.translation')->get('langcode'));
-    $this->assertEqual('Hungarian test', $this->configFactory->getEditable('locale_test.translation')->get('test'));
+    $this->assertEquals('hu', $this->configFactory->getEditable('locale_test.no_translation')->get('langcode'));
+    $this->assertEquals('hu', $this->configFactory->getEditable('locale_test.translation')->get('langcode'));
+    $this->assertEquals('Hungarian test', $this->configFactory->getEditable('locale_test.translation')->get('test'));
   }
 
   /**
@@ -114,7 +116,7 @@ class LocaleConfigSubscriberForeignTest extends LocaleConfigSubscriberTest {
     $config_name = 'locale_test.translation';
     $this->deleteLocaleTranslationData($config_name, 'test', 'English test', 'hu');
     // Deleting the locale translation should not change active config.
-    $this->assertEqual('Hungarian test', $this->configFactory->getEditable($config_name)->get('test'));
+    $this->assertEquals('Hungarian test', $this->configFactory->getEditable($config_name)->get('test'));
   }
 
   /**

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\taxonomy\Kernel\Migrate\d6;
 
 use Drupal\taxonomy\Entity\Term;
@@ -15,7 +17,7 @@ class MigrateTaxonomyTermTest extends MigrateDrupal6TestBase {
   /**
    * {@inheritdoc}
    */
-  protected static $modules = ['taxonomy'];
+  protected static $modules = ['comment', 'taxonomy'];
 
   /**
    * {@inheritdoc}

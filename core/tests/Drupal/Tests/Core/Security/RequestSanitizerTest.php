@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\Core\Security;
 
 use Drupal\Core\Security\RequestSanitizer;
@@ -33,6 +35,14 @@ class RequestSanitizerTest extends UnitTestCase {
   }
 
   /**
+   * {@inheritdoc}
+   */
+  protected function tearDown(): void {
+    restore_error_handler();
+    parent::tearDown();
+  }
+
+  /**
    * Tests RequestSanitizer class.
    *
    * @param \Symfony\Component\HttpFoundation\Request $request
@@ -50,7 +60,7 @@ class RequestSanitizerTest extends UnitTestCase {
    *
    * @dataProvider providerTestRequestSanitization
    */
-  public function testRequestSanitization(Request $request, array $expected = [], array $expected_errors = NULL, array $whitelist = []) {
+  public function testRequestSanitization(Request $request, array $expected = [], ?array $expected_errors = NULL, array $whitelist = []) {
     // Set up globals.
     $_GET = $request->query->all();
     $_POST = $request->request->all();
@@ -97,7 +107,7 @@ class RequestSanitizerTest extends UnitTestCase {
    *
    * @return array
    */
-  public function providerTestRequestSanitization() {
+  public static function providerTestRequestSanitization() {
     $tests = [];
 
     $request = new Request(['q' => 'index.php']);
@@ -312,7 +322,7 @@ class RequestSanitizerTest extends UnitTestCase {
   /**
    * Data provider for testing acceptable destinations.
    */
-  public function providerTestAcceptableDestinations() {
+  public static function providerTestAcceptableDestinations() {
     $data = [];
     // Standard internal example node path is present in the 'destination'
     // parameter.
@@ -329,7 +339,7 @@ class RequestSanitizerTest extends UnitTestCase {
   /**
    * Data provider for testing sanitized destinations.
    */
-  public function providerTestSanitizedDestinations() {
+  public static function providerTestSanitizedDestinations() {
     $data = [];
     // External URL without scheme is not allowed.
     $data[] = ['//example.com/test'];
@@ -357,8 +367,10 @@ class RequestSanitizerTest extends UnitTestCase {
    *   The error message.
    * @param int $errno
    *   The severity level of the error.
+   *
+   * @internal
    */
-  protected function assertError($errstr, $errno) {
+  protected function assertError(string $errstr, int $errno): void {
     foreach ($this->errors as $error) {
       if ($error['errstr'] === $errstr && $error['errno'] === $errno) {
         return;

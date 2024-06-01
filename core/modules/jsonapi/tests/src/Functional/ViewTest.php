@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\jsonapi\Functional;
 
 use Drupal\Core\Url;
@@ -9,13 +11,14 @@ use Drupal\views\Entity\View;
  * JSON:API integration test for the "View" config entity type.
  *
  * @group jsonapi
+ * @group #slow
  */
-class ViewTest extends ResourceTestBase {
+class ViewTest extends ConfigEntityResourceTestBase {
 
   /**
    * {@inheritdoc}
    */
-  protected static $modules = ['views'];
+  protected static $modules = ['views', 'views_ui'];
 
   /**
    * {@inheritdoc}
@@ -121,6 +124,7 @@ class ViewTest extends ResourceTestBase {
    */
   protected function getPostDocument() {
     // @todo Update in https://www.drupal.org/node/2300677.
+    return [];
   }
 
 }

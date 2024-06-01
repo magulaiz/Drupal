@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\node\Kernel;
 
 use Drupal\field\Entity\FieldConfig;
@@ -28,9 +30,11 @@ class NodeBodyFieldStorageTest extends KernelTestBase {
     'filter',
   ];
 
+  /**
+   * {@inheritdoc}
+   */
   protected function setUp(): void {
     parent::setUp();
-    $this->installSchema('system', 'sequences');
     // Necessary for module uninstall.
     $this->installSchema('user', 'users_data');
     $this->installEntitySchema('user');

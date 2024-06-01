@@ -14,15 +14,22 @@ use Drupal\Core\Database\Query\SelectInterface;
  *
  * @section sec_intro Overview
  * Drupal's database abstraction layer provides a unified database query API
- * that can query different underlying databases. It is built upon PHP's
- * PDO (PHP Data Objects) database API, and inherits much of its syntax and
- * semantics. Besides providing a unified API for database queries, the
+ * that can query different underlying databases. It is generally built upon
+ * PHP's PDO (PHP Data Objects) database API, and inherits much of its syntax
+ * and semantics. Besides providing a unified API for database queries, the
  * database abstraction layer also provides a structured way to construct
  * complex queries, and it protects the database by using good security
  * practices.
  *
+ * Drupal provides 'database drivers', in the form of Drupal modules, for the
+ * concrete implementation of its API towards a specific database engine.
+ * MySql, PostgreSQL and SQLite are core implementations, built on PDO. Other
+ * modules can provide implementations for additional database engines, like
+ * MSSql or Oracle; or alternative low-level database connection clients like
+ * mysqli or oci8.
+ *
  * For more detailed information on the database abstraction layer, see
- * https://www.drupal.org/docs/8/api/database-api/database-api-overview.
+ * https://www.drupal.org/docs/drupal-apis/database-api/database-api-overview.
  *
  * @section sec_entity Querying entities
  * Any query on Drupal entities or fields should use the Entity Query API. See
@@ -112,7 +119,7 @@ use Drupal\Core\Database\Query\SelectInterface;
  *
  * There are also methods to join to other tables, add fields with aliases,
  * isNull() to query for NULL values, etc. See
- * https://www.drupal.org/developing/api/database for many more details.
+ * https://www.drupal.org/docs/drupal-apis/database-api for many more details.
  *
  * One note on chaining: It is common in the dynamic database API to chain
  * method calls (as illustrated here), because most of the query methods modify
@@ -162,17 +169,18 @@ use Drupal\Core\Database\Query\SelectInterface;
  * remains in scope; when $transaction is destroyed, the transaction will be
  * committed. If your transaction is nested inside of another then Drupal will
  * track each transaction and only commit the outer-most transaction when the
- * last transaction object goes out out of scope (when all relevant queries have
+ * last transaction object goes out of scope (when all relevant queries have
  * completed successfully).
  *
  * Example:
  * @code
  * function my_transaction_function() {
  *   $connection = \Drupal::database();
- *   // The transaction opens here.
- *   $transaction = $connection->startTransaction();
  *
  *   try {
+ *     // The transaction opens here.
+ *     $transaction = $connection->startTransaction();
+ *
  *     $id = $connection->insert('example')
  *       ->fields(array(
  *         'field1' => 'string',
@@ -185,13 +193,19 @@ use Drupal\Core\Database\Query\SelectInterface;
  *     return $id;
  *   }
  *   catch (Exception $e) {
- *     // Something went wrong somewhere, so roll back now.
- *     $transaction->rollBack();
- *     // Log the exception to watchdog.
- *     watchdog_exception('type', $e);
+ *     // Something went wrong somewhere. If the exception was thrown during
+ *     // startTransaction(), then $transaction is NULL and there's nothing to
+ *     // roll back. If the exception was thrown after a transaction was
+ *     // successfully started, then it must be rolled back.
+ *     if (isset($transaction)) {
+ *       $transaction->rollBack();
+ *     }
+ *
+ *     // Log the exception.
+ *     Error::logException(\Drupal::logger('type'), $e);
  *   }
  *
- *   // $transaction goes out of scope here.  Unless the transaction was rolled
+ *   // $transaction goes out of scope here. Unless the transaction was rolled
  *   // back, it gets automatically committed here.
  * }
  *
@@ -226,7 +240,7 @@ use Drupal\Core\Database\Query\SelectInterface;
  * if you had a connection object variable $connection available to use. See
  * also the @link container Services and Dependency Injection topic. @endlink
  *
- * @see https://www.drupal.org/developing/api/database
+ * @see https://www.drupal.org/docs/drupal-apis/database-api
  * @see entity_api
  * @see schemaapi
  *
@@ -310,7 +324,7 @@ use Drupal\Core\Database\Query\SelectInterface;
  *     'varchar' must specify the 'length' parameter.
  *  - 'primary key': An array of one or more key column specifiers (see below)
  *    that form the primary key.
- *  - 'unique keys': An associative array of unique keys ('keyname' =>
+ *  - 'unique keys': An associative array of unique keys ('key_name' =>
  *    specification). Each specification is an array of one or more
  *    key column specifiers (see below) that form a unique key on the table.
  *  - 'foreign keys': An associative array of relations ('my_relation' =>
@@ -326,6 +340,9 @@ use Drupal\Core\Database\Query\SelectInterface;
  *
  * A key column specifier is either a string naming a column or an array of two
  * elements, column name and length, specifying a prefix of the named column.
+ * Note that some DBMS drivers may opt to ignore the prefix length configuration
+ * and still use the whole field value for the key. Code should therefore not
+ * rely on this functionality.
  *
  * As an example, this is the schema definition for the 'users_data' table. It
  * shows five fields ('uid', 'module', 'name', 'value', and 'serialized'), the
@@ -390,7 +407,9 @@ use Drupal\Core\Database\Query\SelectInterface;
  * ];
  * @endcode
  *
- * @see drupal_install_schema()
+ * @see \Drupal\Core\Extension\ModuleInstaller::installSchema()
+ * @see \Drupal\Core\Extension\ModuleInstaller::uninstallSchema()
+ * @see \Drupal\TestTools\Extension\SchemaInspector::getTablesSpecification()
  *
  * @}
  */

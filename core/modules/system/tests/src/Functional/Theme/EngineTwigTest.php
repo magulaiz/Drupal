@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\system\Functional\Theme;
 
 use Drupal\Core\Render\Markup;
@@ -28,6 +30,9 @@ class EngineTwigTest extends BrowserTestBase {
    */
   protected $defaultTheme = 'stark';
 
+  /**
+   * {@inheritdoc}
+   */
   protected function setUp(): void {
     parent::setUp();
     \Drupal::service('theme_installer')->install(['test_theme']);
@@ -42,7 +47,7 @@ class EngineTwigTest extends BrowserTestBase {
       ->save();
     $this->drupalGet('twig-theme-test/php-variables');
     foreach (_test_theme_twig_php_values() as $type => $value) {
-      $this->assertRaw('<li>' . $type . ': ' . $value['expected'] . '</li>');
+      $this->assertSession()->responseContains('<li>' . $type . ': ' . $value['expected'] . '</li>');
     }
   }
 
@@ -69,9 +74,9 @@ class EngineTwigTest extends BrowserTestBase {
 
     // Make sure we got something.
     $content = $this->getSession()->getPage()->getContent();
-    $this->assertFalse(empty($content), 'Page content is not empty');
+    $this->assertNotEmpty($content, 'Page content is not empty');
     foreach ($expected as $string) {
-      $this->assertRaw('<div>' . $string . '</div>');
+      $this->assertSession()->responseContains('<div>' . $string . '</div>');
     }
   }
 
@@ -103,9 +108,9 @@ class EngineTwigTest extends BrowserTestBase {
     $this->assertCacheContext('url.site');
 
     $content = $this->getSession()->getPage()->getContent();
-    $this->assertFalse(empty($content), 'Page content is not empty');
+    $this->assertNotEmpty($content, 'Page content is not empty');
     foreach ($expected as $string) {
-      $this->assertRaw('<div>' . $string . '</div>');
+      $this->assertSession()->responseContains('<div>' . $string . '</div>');
     }
   }
 
@@ -122,9 +127,9 @@ class EngineTwigTest extends BrowserTestBase {
     ];
 
     $content = $this->getSession()->getPage()->getContent();
-    $this->assertFalse(empty($content), 'Page content is not empty');
+    $this->assertNotEmpty($content, 'Page content is not empty');
     foreach ($expected as $string) {
-      $this->assertRaw('<div>' . $string . '</div>');
+      $this->assertSession()->responseContains('<div>' . $string . '</div>');
     }
   }
 
@@ -133,8 +138,10 @@ class EngineTwigTest extends BrowserTestBase {
    */
   public function testTwigFileUrls() {
     $this->drupalGet('/twig-theme-test/file-url');
-    $filepath = file_url_transform_relative(file_create_url('core/modules/system/tests/modules/twig_theme_test/twig_theme_test.js'));
-    $this->assertRaw('<div>file_url: ' . $filepath . '</div>');
+    /** @var \Drupal\Core\File\FileUrlGeneratorInterface $file_url_generator */
+    $file_url_generator = \Drupal::service('file_url_generator');
+    $filepath = $file_url_generator->generateString('core/modules/system/tests/modules/twig_theme_test/twig_theme_test.js');
+    $this->assertSession()->responseContains('<div>file_url: ' . $filepath . '</div>');
   }
 
   /**
@@ -142,7 +149,7 @@ class EngineTwigTest extends BrowserTestBase {
    */
   public function testTwigAttachLibrary() {
     $this->drupalGet('/twig-theme-test/attach-library');
-    $this->assertRaw('ckeditor.js');
+    $this->assertSession()->responseContains('ckeditor5-dll.js');
   }
 
   /**
@@ -150,7 +157,7 @@ class EngineTwigTest extends BrowserTestBase {
    */
   public function testRenderable() {
     $this->drupalGet('/twig-theme-test/renderable');
-    $this->assertRaw('<div>Example markup</div>');
+    $this->assertSession()->responseContains('<div>Example markup</div>');
   }
 
 }

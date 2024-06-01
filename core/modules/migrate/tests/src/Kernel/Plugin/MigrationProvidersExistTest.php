@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\migrate\Kernel\Plugin;
 
 use Drupal\KernelTests\FileSystemModuleDiscoveryDataProviderTrait;
@@ -7,7 +9,8 @@ use Drupal\migrate\Plugin\Exception\BadPluginDefinitionException;
 use Drupal\migrate_drupal\Plugin\MigrateFieldPluginManager;
 use Drupal\Tests\migrate_drupal\Kernel\MigrateDrupalTestBase;
 
-// cspell:ignore imagefield optionwidgets
+// cspell:ignore entityreference filefield imagefield nodereference
+// cspell:ignore optionwidgets userreference
 
 /**
  * Tests that modules exist for all source and destination plugins.
@@ -100,6 +103,10 @@ class MigrationProvidersExistTest extends MigrateDrupalTestBase {
         'source_module' => 'phone',
         'destination_module' => 'telephone',
       ],
+      'telephone' => [
+        'source_module' => 'telephone',
+        'destination_module' => 'telephone',
+      ],
       'link' => [
         'source_module' => 'link',
         'destination_module' => 'link',
@@ -160,7 +167,7 @@ class MigrationProvidersExistTest extends MigrateDrupalTestBase {
   }
 
   /**
-   * Test a missing required definition.
+   * Tests a missing required definition.
    *
    * @param array $definitions
    *   A field plugin definition.
@@ -172,14 +179,14 @@ class MigrationProvidersExistTest extends MigrateDrupalTestBase {
   public function testFieldProviderMissingRequiredProperty(array $definitions, $missing_property) {
     $discovery = $this->getMockBuilder(MigrateFieldPluginManager::class)
       ->disableOriginalConstructor()
-      ->setMethods(['getDefinitions'])
+      ->onlyMethods(['getDefinitions'])
       ->getMock();
     $discovery->method('getDefinitions')
       ->willReturn($definitions);
 
     $plugin_manager = $this->getMockBuilder(MigrateFieldPluginManager::class)
       ->disableOriginalConstructor()
-      ->setMethods(['getDiscovery'])
+      ->onlyMethods(['getDiscovery'])
       ->getMock();
     $plugin_manager->method('getDiscovery')
       ->willReturn($discovery);
@@ -195,7 +202,7 @@ class MigrationProvidersExistTest extends MigrateDrupalTestBase {
    * @return array
    *   Array of plugin definitions.
    */
-  public function fieldPluginDefinitionsProvider() {
+  public static function fieldPluginDefinitionsProvider() {
     return [
       'missing_core_scenario' => [
         'definitions' => [

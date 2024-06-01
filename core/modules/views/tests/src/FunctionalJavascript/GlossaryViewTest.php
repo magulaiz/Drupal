@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\views\FunctionalJavascript;
 
 use Drupal\Core\Url;
@@ -32,7 +34,7 @@ class GlossaryViewTest extends WebDriverTestBase {
   /**
    * {@inheritdoc}
    */
-  protected $defaultTheme = 'classy';
+  protected $defaultTheme = 'starterkit_theme';
 
   /**
    * @var array
@@ -100,7 +102,7 @@ class GlossaryViewTest extends WebDriverTestBase {
   }
 
   /**
-   * Test that the glossary also works on a language prefixed URL.
+   * Tests that the glossary also works on a language prefixed URL.
    */
   public function testGlossaryLanguagePrefix() {
     ConfigurableLanguage::createFromLangcode('nl')->save();

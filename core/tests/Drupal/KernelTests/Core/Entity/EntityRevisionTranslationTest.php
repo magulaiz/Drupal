@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\KernelTests\Core\Entity;
 
 use Drupal\entity_test\Entity\EntityTestMul;
@@ -63,6 +65,7 @@ class EntityRevisionTranslationTest extends EntityKernelTestBase {
    */
   public function testRevertRevisionAfterTranslation() {
     $user = $this->createUser();
+    /** @var \Drupal\Core\Entity\RevisionableStorageInterface $storage */
     $storage = $this->entityTypeManager->getStorage('entity_test_mulrev');
 
     // Create a test entity.
@@ -98,6 +101,7 @@ class EntityRevisionTranslationTest extends EntityKernelTestBase {
    */
   public function testTranslationValuesWhenSavingPendingRevisions() {
     $user = $this->createUser();
+    /** @var \Drupal\Core\Entity\RevisionableStorageInterface $storage */
     $storage = $this->entityTypeManager->getStorage('entity_test_mulrev');
 
     // Create a test entity and a translation for it.
@@ -134,8 +138,8 @@ class EntityRevisionTranslationTest extends EntityKernelTestBase {
 
     $pending_revision = $storage->loadRevision($pending_revision_id);
 
-    $this->assertEquals($pending_revision->name->value, 'updated pending revision - en');
-    $this->assertEquals($pending_revision->getTranslation('de')->name->value, 'pending revision - de');
+    $this->assertEquals('updated pending revision - en', $pending_revision->name->value);
+    $this->assertEquals('pending revision - de', $pending_revision->getTranslation('de')->name->value);
   }
 
   /**
@@ -202,7 +206,6 @@ class EntityRevisionTranslationTest extends EntityKernelTestBase {
     /** @var \Drupal\Core\Entity\ContentEntityStorageInterface $storage */
     $storage = $this->entityTypeManager->getStorage('entity_test_mul');
     $method = new \ReflectionMethod(get_class($storage), 'isAnyStoredRevisionTranslated');
-    $method->setAccessible(TRUE);
 
     // Check that a non-revisionable new entity is handled correctly.
     $entity = EntityTestMul::create();

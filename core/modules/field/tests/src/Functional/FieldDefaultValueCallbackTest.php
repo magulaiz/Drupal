@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\field\Functional;
 
 use Drupal\field\Entity\FieldConfig;
@@ -19,6 +21,14 @@ class FieldDefaultValueCallbackTest extends BrowserTestBase {
    * @var array
    */
   protected static $modules = ['node', 'field_test', 'field_ui'];
+
+  /**
+   * {@inheritdoc}
+   *
+   * @todo Remove and fix test to not rely on super user.
+   * @see https://www.drupal.org/project/drupal/issues/3437620
+   */
+  protected bool $usesSuperUserAccessPolicy = TRUE;
 
   /**
    * {@inheritdoc}
@@ -70,7 +80,7 @@ class FieldDefaultValueCallbackTest extends BrowserTestBase {
 
     // Check that the default field form is visible when no callback is set.
     $this->drupalGet('/admin/structure/types/manage/article/fields/node.article.field_test');
-    $this->assertSession()->fieldValueEquals('default_value_input[field_test][0][value]', NULL);
+    $this->assertSession()->fieldValueEquals('default_value_input[field_test][0][value]', '');
 
     // Set a different field value, it should be on the field.
     $default_value = $this->randomString();

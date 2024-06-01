@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\content_translation\Kernel;
 
 use Drupal\content_translation\FieldTranslationSynchronizer;
@@ -56,6 +58,9 @@ class ContentTranslationSyncUnitTest extends KernelTestBase {
 
   protected static $modules = ['language', 'content_translation'];
 
+  /**
+   * {@inheritdoc}
+   */
   protected function setUp(): void {
     parent::setUp();
 
@@ -222,7 +227,7 @@ class ContentTranslationSyncUnitTest extends KernelTestBase {
             // depending on the logic implemented by the delta callback and
             // whether it is a sync column or not.
             $value = $delta > 0 && $delta_callback($delta) && in_array($column, $this->synchronized) ? $changed_items[0][$column] : $unchanged_items[$delta][$column];
-            $this->assertEqual($field_values[$langcode][$delta][$column], $value, "Item $delta column $column for langcode $langcode synced correctly");
+            $this->assertEquals($field_values[$langcode][$delta][$column], $value, "Item $delta column $column for langcode $langcode synced correctly");
           }
         }
       }
@@ -249,9 +254,9 @@ class ContentTranslationSyncUnitTest extends KernelTestBase {
       for ($delta = 0; $delta < $this->cardinality; $delta++) {
         foreach ($this->columns as $column) {
           // If the column is synchronized, the value should have been synced,
-          // for unsynchronized columns, the value must not change.
+          // for columns that are not synchronized, the value must not change.
           $expected_value = in_array($column, $this->synchronized) ? $changed_items[$delta][$column] : $this->unchangedFieldValues[$langcode][$delta][$column];
-          $this->assertEqual($expected_value, $field_values[$langcode][$delta][$column], "Differing Item {$delta} column {$column} for langcode {$langcode} synced correctly");
+          $this->assertEquals($expected_value, $field_values[$langcode][$delta][$column], "Differing Item {$delta} column {$column} for langcode {$langcode} synced correctly");
         }
       }
     }

@@ -3,7 +3,7 @@
 namespace Drupal\Core\Session;
 
 use Drupal\Core\DependencyInjection\DependencySerializationTrait;
-use Symfony\Component\EventDispatcher\EventDispatcherInterface;
+use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
 /**
  * A proxied implementation of AccountInterface.
@@ -37,14 +37,14 @@ class AccountProxy implements AccountProxyInterface {
   /**
    * Event dispatcher.
    *
-   * @var \Symfony\Component\EventDispatcher\EventDispatcherInterface
+   * @var \Symfony\Contracts\EventDispatcher\EventDispatcherInterface
    */
   protected $eventDispatcher;
 
   /**
    * AccountProxy constructor.
    *
-   * @param \Symfony\Component\EventDispatcher\EventDispatcherInterface $eventDispatcher
+   * @param \Symfony\Contracts\EventDispatcher\EventDispatcherInterface $eventDispatcher
    *   Event dispatcher.
    */
   public function __construct(EventDispatcherInterface $eventDispatcher) {
@@ -96,6 +96,22 @@ class AccountProxy implements AccountProxyInterface {
    */
   public function getRoles($exclude_locked_roles = FALSE) {
     return $this->getAccount()->getRoles($exclude_locked_roles);
+  }
+
+  /**
+   * Whether a user has a certain role.
+   *
+   * @param string $rid
+   *   The role ID to check.
+   *
+   * @return bool
+   *   Returns TRUE if the user has the role, otherwise FALSE.
+   *
+   * @todo in Drupal 11, add method to Drupal\Core\Session\AccountInterface.
+   * @see https://www.drupal.org/node/3228209
+   */
+  public function hasRole(string $rid): bool {
+    return $this->getAccount()->hasRole($rid);
   }
 
   /**

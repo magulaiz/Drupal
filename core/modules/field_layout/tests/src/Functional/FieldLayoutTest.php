@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\field_layout\Functional;
 
 use Drupal\Tests\BrowserTestBase;
@@ -24,7 +26,7 @@ class FieldLayoutTest extends BrowserTestBase {
   /**
    * {@inheritdoc}
    */
-  protected $defaultTheme = 'classy';
+  protected $defaultTheme = 'stark';
 
   /**
    * {@inheritdoc}
@@ -60,7 +62,7 @@ class FieldLayoutTest extends BrowserTestBase {
     // By default, the one-column layout is used.
     $this->drupalGet('node/1');
     $this->assertSession()->elementExists('css', '.layout--onecol');
-    $this->assertSession()->elementExists('css', '.layout__region--content .field--name-body');
+    $this->assertSession()->elementTextContains('css', '.layout__region--content', 'The node body');
 
     $this->drupalGet('admin/structure/types/manage/article/display');
     $this->assertEquals(['Content', 'Disabled'], $this->getRegionTitles());

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\Core\Extension;
 
 use Drupal\Component\Serialization\Yaml;
@@ -25,7 +27,7 @@ class ExtensionListTest extends UnitTestCase {
    * @covers ::getName
    */
   public function testGetNameWithNonExistingExtension() {
-    list($cache, $info_parser, $module_handler, $state) = $this->getMocks();
+    [$cache, $info_parser, $module_handler, $state] = $this->getMocks();
     $test_extension_list = new TestExtension($this->randomMachineName(), 'test_extension', $cache->reveal(), $info_parser->reveal(), $module_handler->reveal(), $state->reveal(), 'testing');
 
     $extension_discovery = $this->prophesize(ExtensionDiscovery::class);
@@ -49,7 +51,7 @@ class ExtensionListTest extends UnitTestCase {
    * @covers ::get
    */
   public function testGetWithNonExistingExtension() {
-    list($cache, $info_parser, $module_handler, $state) = $this->getMocks();
+    [$cache, $info_parser, $module_handler, $state] = $this->getMocks();
     $test_extension_list = new TestExtension($this->randomMachineName(), 'test_extension', $cache->reveal(), $info_parser->reveal(), $module_handler->reveal(), $state->reveal(), 'testing');
 
     $extension_discovery = $this->prophesize(ExtensionDiscovery::class);
@@ -135,12 +137,12 @@ class ExtensionListTest extends UnitTestCase {
   }
 
   /**
-   * @covers ::getPathnames
+   * @covers ::getPathNames
    */
-  public function testGetPathnames() {
+  public function testGetPathNames() {
     $test_extension_list = $this->setupTestExtensionList();
 
-    $filenames = $test_extension_list->getPathnames();
+    $filenames = $test_extension_list->getPathNames();
     $this->assertEquals([
       'test_name' => 'example/test_name/test_name.info.yml',
     ], $filenames);
@@ -187,7 +189,7 @@ class ExtensionListTest extends UnitTestCase {
     $this->assertEquals('example/test_name', $path);
     $pathname = $test_extension_list->getPathname('test_name');
     $this->assertEquals('example/test_name/test_name.info.yml', $pathname);
-    $filenames = $test_extension_list->getPathnames();
+    $filenames = $test_extension_list->getPathNames();
     $this->assertEquals([
       'test_name' => 'example/test_name/test_name.info.yml',
     ], $filenames);
@@ -199,7 +201,7 @@ class ExtensionListTest extends UnitTestCase {
     $this->assertEquals('example/test_name', $path);
     $pathname = $test_extension_list->getPathname('test_name');
     $this->assertEquals('example/test_name/test_name.info.yml', $pathname);
-    $filenames = $test_extension_list->getPathnames();
+    $filenames = $test_extension_list->getPathNames();
     $this->assertEquals([
       'test_name' => 'example/test_name/test_name.info.yml',
     ], $filenames);
@@ -218,7 +220,7 @@ class ExtensionListTest extends UnitTestCase {
   /**
    * DataProvider for testCheckIncompatibility().
    */
-  public function providerCheckIncompatibility() {
+  public static function providerCheckIncompatibility() {
     return [
       'core_incompatible true' => [
         [
@@ -292,7 +294,7 @@ class ExtensionListTest extends UnitTestCase {
       touch("vfs://drupal_root/example/$extension_name/$extension_name.info.yml", 123456789);
     }
 
-    list($cache, $info_parser, $module_handler, $state) = $this->getMocks();
+    [$cache, $info_parser, $module_handler, $state] = $this->getMocks();
     $info_parser->parse(Argument::any())->will(function ($args) {
       return Yaml::decode(file_get_contents('vfs://drupal_root/' . $args[0]));
     });
@@ -333,6 +335,7 @@ class TestExtension extends ExtensionList {
 
   /**
    * @param \Drupal\Core\Extension\ExtensionDiscovery $extension_discovery
+   *   The extension discovery class.
    */
   public function setExtensionDiscovery(ExtensionDiscovery $extension_discovery) {
     $this->extensionDiscovery = $extension_discovery;

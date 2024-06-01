@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\views\Kernel\Handler;
 
 use Drupal\Tests\views\Kernel\ViewsKernelTestBase;
@@ -29,6 +31,9 @@ class AreaResultTest extends ViewsKernelTestBase {
     $output = \Drupal::service('renderer')->renderRoot($output);
     $this->setRawContent($output);
     $this->assertText('start: 1 | end: 5 | total: 5 | label: test_area_result | per page: 0 | current page: 1 | current record count: 5 | page count: 1');
+
+    // Make sure that potentially dangerous content was stripped.
+    $this->assertNoRaw('<script />');
   }
 
   /**

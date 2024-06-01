@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\datetime\Kernel\Views;
 
 use Drupal\node\Entity\Node;
@@ -46,7 +48,7 @@ class ArgumentDateTimeTest extends DateTimeHandlerTestBase {
   }
 
   /**
-   * Test year argument.
+   * Tests year argument.
    *
    * @see \Drupal\datetime\Plugin\views\argument\YearDate
    */
@@ -89,7 +91,7 @@ class ArgumentDateTimeTest extends DateTimeHandlerTestBase {
   }
 
   /**
-   * Test month argument.
+   * Tests month argument.
    *
    * @see \Drupal\datetime\Plugin\views\argument\MonthDate
    */
@@ -115,7 +117,7 @@ class ArgumentDateTimeTest extends DateTimeHandlerTestBase {
   }
 
   /**
-   * Test day argument.
+   * Tests day argument.
    *
    * @see \Drupal\datetime\Plugin\views\argument\DayDate
    */
@@ -141,7 +143,7 @@ class ArgumentDateTimeTest extends DateTimeHandlerTestBase {
   }
 
   /**
-   * Test year, month, and day arguments combined.
+   * Tests year, month, and day arguments combined.
    */
   public function testDatetimeArgumentAll() {
     $view = Views::getView('test_argument_datetime');
@@ -163,7 +165,7 @@ class ArgumentDateTimeTest extends DateTimeHandlerTestBase {
   }
 
   /**
-   * Test week WW argument.
+   * Tests week WW argument.
    */
   public function testDatetimeArgumentWeek() {
     $view = Views::getView('test_argument_datetime');
@@ -187,7 +189,7 @@ class ArgumentDateTimeTest extends DateTimeHandlerTestBase {
   }
 
   /**
-   * Test full_date CCYYMMDD argument.
+   * Tests full_date CCYYMMDD argument.
    */
   public function testDatetimeArgumentFullDate() {
     $view = Views::getView('test_argument_datetime');
@@ -209,7 +211,7 @@ class ArgumentDateTimeTest extends DateTimeHandlerTestBase {
   }
 
   /**
-   * Test year_month CCYYMM argument.
+   * Tests year_month CCYYMM argument.
    */
   public function testDatetimeArgumentYearMonth() {
     $view = Views::getView('test_argument_datetime');

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\migrate\Kernel;
 
 use Drupal\migrate\MigrateExecutable;
@@ -26,7 +28,6 @@ class MigrateBundleTest extends MigrateTestBase {
   protected function setUp(): void {
     parent::setUp();
     $this->installEntitySchema('user');
-    $this->installEntitySchema('taxonomy_vocabulary');
     $this->installEntitySchema('taxonomy_term');
     $this->installConfig(['taxonomy']);
     // Set up two vocabularies (taxonomy bundles).
@@ -68,7 +69,7 @@ class MigrateBundleTest extends MigrateTestBase {
     $term_executable->import();
     /** @var \Drupal\taxonomy\Entity\Term $term */
     $term = Term::load(1);
-    $this->assertEquals($term->bundle(), 'categories');
+    $this->assertEquals('categories', $term->bundle());
   }
 
   /**
@@ -106,9 +107,9 @@ class MigrateBundleTest extends MigrateTestBase {
     $term_executable->import();
     /** @var \Drupal\taxonomy\Entity\Term $term */
     $term = Term::load(1);
-    $this->assertEquals($term->bundle(), 'categories');
+    $this->assertEquals('categories', $term->bundle());
     $term = Term::load(2);
-    $this->assertEquals($term->bundle(), 'tags');
+    $this->assertEquals('tags', $term->bundle());
   }
 
   /**
@@ -148,9 +149,9 @@ class MigrateBundleTest extends MigrateTestBase {
     $term_executable->import();
     /** @var \Drupal\taxonomy\Entity\Term $term */
     $term = Term::load(1);
-    $this->assertEquals($term->bundle(), 'categories');
+    $this->assertEquals('categories', $term->bundle());
     $term = Term::load(2);
-    $this->assertEquals($term->bundle(), 'tags');
+    $this->assertEquals('tags', $term->bundle());
   }
 
 }

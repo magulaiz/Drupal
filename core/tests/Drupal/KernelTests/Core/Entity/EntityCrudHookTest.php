@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\KernelTests\Core\Entity;
 
 use Drupal\comment\Entity\Comment;
@@ -16,6 +18,8 @@ use Drupal\user\Entity\User;
 use Drupal\file\Entity\File;
 
 /**
+ * Tests entity CRUD via hooks.
+ *
  * Tests the invocation of hooks when creating, inserting, loading, updating or
  * deleting an entity.
  *
@@ -52,6 +56,9 @@ class EntityCrudHookTest extends EntityKernelTestBase {
 
   protected $ids = [];
 
+  /**
+   * {@inheritdoc}
+   */
   protected function setUp(): void {
     parent::setUp();
 
@@ -60,6 +67,7 @@ class EntityCrudHookTest extends EntityKernelTestBase {
     $this->installSchema('node', ['node_access']);
     $this->installSchema('comment', ['comment_entity_statistics']);
     $this->installConfig(['node', 'comment']);
+    $this->container->get('theme_installer')->install(['stark']);
   }
 
   /**
@@ -68,10 +76,12 @@ class EntityCrudHookTest extends EntityKernelTestBase {
    * Module entity_crud_hook_test implements all core entity CRUD hooks and
    * stores a message for each in $GLOBALS['entity_crud_hook_test'].
    *
-   * @param $messages
+   * @param array $messages
    *   An array of plain-text messages in the order they should appear.
+   *
+   * @internal
    */
-  protected function assertHookMessageOrder($messages) {
+  protected function assertHookMessageOrder(array $messages): void {
     $positions = [];
     foreach ($messages as $message) {
       // Verify that each message is found and record its position.
@@ -160,8 +170,8 @@ class EntityCrudHookTest extends EntityKernelTestBase {
       'promote' => 0,
       'sticky' => 0,
       'langcode' => LanguageInterface::LANGCODE_NOT_SPECIFIED,
-      'created' => REQUEST_TIME,
-      'changed' => REQUEST_TIME,
+      'created' => \Drupal::time()->getRequestTime(),
+      'changed' => \Drupal::time()->getRequestTime(),
     ]);
     $node->save();
     $nid = $node->id();
@@ -175,8 +185,8 @@ class EntityCrudHookTest extends EntityKernelTestBase {
       'field_name' => 'comment',
       'uid' => $account->id(),
       'subject' => 'Test comment',
-      'created' => REQUEST_TIME,
-      'changed' => REQUEST_TIME,
+      'created' => \Drupal::time()->getRequestTime(),
+      'changed' => \Drupal::time()->getRequestTime(),
       'status' => 1,
       'langcode' => LanguageInterface::LANGCODE_NOT_SPECIFIED,
     ]);
@@ -242,8 +252,8 @@ class EntityCrudHookTest extends EntityKernelTestBase {
       'filemime' => 'text/plain',
       'filesize' => filesize($url),
       'status' => 1,
-      'created' => REQUEST_TIME,
-      'changed' => REQUEST_TIME,
+      'created' => \Drupal::time()->getRequestTime(),
+      'changed' => \Drupal::time()->getRequestTime(),
     ]);
 
     $this->assertHookMessageOrder([
@@ -305,8 +315,8 @@ class EntityCrudHookTest extends EntityKernelTestBase {
       'promote' => 0,
       'sticky' => 0,
       'langcode' => LanguageInterface::LANGCODE_NOT_SPECIFIED,
-      'created' => REQUEST_TIME,
-      'changed' => REQUEST_TIME,
+      'created' => \Drupal::time()->getRequestTime(),
+      'changed' => \Drupal::time()->getRequestTime(),
     ]);
 
     $this->assertHookMessageOrder([
@@ -490,7 +500,7 @@ class EntityCrudHookTest extends EntityKernelTestBase {
     $account = User::create([
       'name' => 'Test user',
       'mail' => 'test@example.com',
-      'created' => REQUEST_TIME,
+      'created' => \Drupal::time()->getRequestTime(),
       'status' => 1,
       'language' => 'en',
     ]);
@@ -554,7 +564,10 @@ class EntityCrudHookTest extends EntityKernelTestBase {
     }
 
     // Check that the block does not exist in the database.
-    $ids = \Drupal::entityQuery('entity_test')->condition('name', 'fail_insert')->execute();
+    $ids = \Drupal::entityQuery('entity_test')
+      ->accessCheck(FALSE)
+      ->condition('name', 'fail_insert')
+      ->execute();
     $this->assertEmpty($ids);
   }
 

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\comment\Kernel\Migrate\d7;
 
 use Drupal\Core\Entity\Entity\EntityFormDisplay;
@@ -39,8 +41,10 @@ class MigrateCommentEntityFormDisplayTest extends MigrateDrupal7TestBase {
    *   The entity ID.
    * @param string $component_id
    *   The ID of the form component.
+   *
+   * @internal
    */
-  protected function assertDisplay($id, $component_id) {
+  protected function assertDisplay(string $id, string $component_id): void {
     $component = EntityFormDisplay::load($id)->getComponent($component_id);
     $this->assertIsArray($component);
     $this->assertSame('comment_default', $component['type']);

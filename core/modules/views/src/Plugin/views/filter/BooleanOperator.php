@@ -3,6 +3,7 @@
 namespace Drupal\views\Plugin\views\filter;
 
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\views\Attribute\ViewsFilter;
 use Drupal\views\Plugin\views\display\DisplayPluginBase;
 use Drupal\views\ViewExecutable;
 
@@ -21,10 +22,9 @@ use Drupal\views\ViewExecutable;
  *   This might be helpful for performance reasons.
  *
  * @ingroup views_filter_handlers
- *
- * @ViewsFilter("boolean")
  */
-class BooleanOperator extends FilterPluginBase {
+#[ViewsFilter("boolean")]
+class BooleanOperator extends FilterPluginBase implements FilterOperatorsInterface {
 
   /**
    * The equal query operator.
@@ -40,10 +40,31 @@ class BooleanOperator extends FilterPluginBase {
    */
   const NOT_EQUAL = '<>';
 
-  // exposed filter options
+  /**
+   * Exposed filter options.
+   *
+   * @var bool
+   */
   protected $alwaysMultiple = TRUE;
-  // Whether to accept NULL as a false value or not
+
+  /**
+   * Whether to accept NULL as a false value or not.
+   *
+   * @var bool
+   */
+  // phpcs:ignore Drupal.NamingConventions.ValidVariableName.LowerCamelName
   public $accept_null = FALSE;
+
+  /**
+   * The value title.
+   */
+  // phpcs:ignore Drupal.NamingConventions.ValidVariableName.LowerCamelName
+  public string $value_value;
+
+  /**
+   * The value options.
+   */
+  public ?array $valueOptions;
 
   /**
    * {@inheritdoc}
@@ -58,11 +79,9 @@ class BooleanOperator extends FilterPluginBase {
   }
 
   /**
-   * Returns an array of operator information.
-   *
-   * @return array
+   * {@inheritdoc}
    */
-  protected function operators() {
+  public function operators() {
     return [
       '=' => [
         'title' => $this->t('Is equal to'),
@@ -84,7 +103,7 @@ class BooleanOperator extends FilterPluginBase {
   /**
    * {@inheritdoc}
    */
-  public function init(ViewExecutable $view, DisplayPluginBase $display, array &$options = NULL) {
+  public function init(ViewExecutable $view, DisplayPluginBase $display, ?array &$options = NULL) {
     parent::init($view, $display, $options);
 
     $this->value_value = $this->t('True');
@@ -134,6 +153,8 @@ class BooleanOperator extends FilterPluginBase {
     if (!isset($this->valueOptions)) {
       $this->valueOptions = [1 => $this->t('True'), 0 => $this->t('False')];
     }
+
+    return $this->valueOptions;
   }
 
   protected function defineOptions() {
