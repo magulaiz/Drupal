@@ -87,7 +87,8 @@ class ContentTranslationMetadataWrapper implements ContentTranslationMetadataWra
    * {@inheritdoc}
    */
   public function isPublished() {
-    $field_name = $this->translation->hasField('content_translation_status') ? 'content_translation_status' : 'status';
+    $published_field_name = $this->translation->getEntityType()->hasKey('published') ? $this->translation->getEntityType()->getKey('published') : 'status';
+    $field_name = $this->translation->hasField('content_translation_status') ? 'content_translation_status' : $published_field_name;
     return (bool) $this->translation->get($field_name)->value;
   }
 
@@ -95,7 +96,8 @@ class ContentTranslationMetadataWrapper implements ContentTranslationMetadataWra
    * {@inheritdoc}
    */
   public function setPublished($published) {
-    $field_name = $this->translation->hasField('content_translation_status') ? 'content_translation_status' : 'status';
+    $published_field_name = $this->translation->getEntityType()->hasKey('published') ? $this->translation->getEntityType()->getKey('published') : 'status';
+    $field_name = $this->translation->hasField('content_translation_status') ? 'content_translation_status' : $published_field_name;
     $this->setFieldOnlyIfTranslatable($field_name, $published);
     return $this;
   }
