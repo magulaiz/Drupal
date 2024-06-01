@@ -409,5 +409,5 @@ default:
       else
         echo "HEAD is $(git rev-parse HEAD). \$CI_MERGE_REQUEST_DIFF_BASE_SHA is ${CI_MERGE_REQUEST_DIFF_BASE_SHA}";
       fi;
-    - git diff ${CI_MERGE_REQUEST_TARGET_BRANCH_SHA:-$CI_MERGE_REQUEST_DIFF_BASE_SHA} --name-only || echo ">>> warning, cannot find changed files!"
+    - git diff ${CI_MERGE_REQUEST_TARGET_BRANCH_SHA:-$CI_MERGE_REQUEST_DIFF_BASE_SHA} --name-only 2>1 > /dev/null || echo "Warning, cannot find changed files pulling full repo." & git fetch --all
     - git diff ${CI_MERGE_REQUEST_TARGET_BRANCH_SHA:-$CI_MERGE_REQUEST_DIFF_BASE_SHA} --name-only | sed "s_^_../_" | yarn --cwd=./core run -s spellcheck:core --no-must-find-files --file-list stdin
