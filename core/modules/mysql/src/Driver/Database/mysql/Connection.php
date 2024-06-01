@@ -104,7 +104,6 @@ class Connection extends DatabaseConnection implements SupportsTemporaryTablesIn
       if (!empty($connection_options['sql_mode_options'][$mode])) {
         $is_ansi_quotes_mode = TRUE;
         break;
-        }
       }
     }
 
@@ -215,7 +214,7 @@ class Connection extends DatabaseConnection implements SupportsTemporaryTablesIn
       'init_commands' => [],
     ];
 
-    // If the user has set sql_mode_options, then ignore sql_mode.
+    // If the user has set sql_mode_options, ignore sql_mode in init_commands.
     if (isset($connection_options['sql_mode_options'])) {
       unset($connection_options['init_commands']['sql_mode']);
     }
@@ -228,7 +227,8 @@ class Connection extends DatabaseConnection implements SupportsTemporaryTablesIn
       'TRADITIONAL' => TRUE,
     ];
 
-    // sql_mode replaces the defaults when it is used
+    // If sql_mode exists in init_commands, then we will use it instead
+    // of the default values.
     if (isset($connection_options['init_commands']['sql_mode'])) {
       $sql_mode_defaults = [];
     }
@@ -255,7 +255,7 @@ class Connection extends DatabaseConnection implements SupportsTemporaryTablesIn
       $pdo->exec($sql);
     }
     $pdo->exec($sql_mode_command);
-    
+
     return $pdo;
   }
 
