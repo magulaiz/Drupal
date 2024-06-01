@@ -33,7 +33,7 @@ class ModeratedNodeXmlAnonTest extends ModeratedNodeResourceTestBase {
   /**
    * {@inheritdoc}
    */
-  public function testPatchPath(): void {
+  public function testPatchPath() {
     // Deserialization of the XML format is not supported.
     $this->markTestSkipped();
   }
