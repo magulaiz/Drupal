@@ -476,7 +476,7 @@ class CommentTest extends ResourceTestBase {
       'type' => 'bar',
     ])->save();
 
-    return parent::testPatchIndividual();
+    parent::testPatchIndividual();
   }
 
 }

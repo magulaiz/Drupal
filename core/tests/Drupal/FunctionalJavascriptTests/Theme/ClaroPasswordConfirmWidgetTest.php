@@ -36,7 +36,7 @@ class ClaroPasswordConfirmWidgetTest extends PasswordConfirmWidgetTest {
   /**
    * {@inheritdoc}
    */
-  public function testFillConfirmOnly() {
+  public function testFillConfirmOnly(): void {
     // This test is not applicable to Claro because confirm field is hidden
     // until the password has been filled in the main field.
   }

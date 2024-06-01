@@ -1,0 +1,6 @@
+.idea/
+sites/default/files/
+sites/simpletest/
+vendor/
+sites/default/settings.php
+rector.php
