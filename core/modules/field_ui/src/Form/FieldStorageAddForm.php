@@ -2,8 +2,14 @@
 
 namespace Drupal\field_ui\Form;
 
+use Drupal\Component\Serialization\Json;
 use Drupal\Component\Utility\Html;
 use Drupal\Component\Utility\SortArray;
+use Drupal\Core\Ajax\AjaxHelperTrait;
+use Drupal\Core\Ajax\AjaxResponse;
+use Drupal\Core\Ajax\OpenModalDialogCommand;
+use Drupal\Core\Ajax\RedirectCommand;
+use Drupal\Core\Ajax\ReplaceCommand;
 use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Entity\EntityFieldManagerInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
@@ -13,6 +19,7 @@ use Drupal\Core\Field\FieldTypePluginManagerInterface;
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\TempStore\PrivateTempStore;
+use Drupal\Core\Url;
 use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\field_ui\FieldUI;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -23,6 +30,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  * @internal
  */
 class FieldStorageAddForm extends FormBase {
+  use AjaxHelperTrait;
 
   /**
    * The name of the entity type.
@@ -66,12 +74,15 @@ class FieldStorageAddForm extends FormBase {
   /**
    * {@inheritdoc}
    */
-  public function buildForm(array $form, FormStateInterface $form_state, $entity_type_id = NULL, $bundle = NULL) {
+  public function buildForm(array $form, FormStateInterface $form_state, $entity_type_id = NULL, $bundle = NULL, $new_storage_type = NULL) {
     if (!$form_state->get('entity_type_id')) {
       $form_state->set('entity_type_id', $entity_type_id);
     }
     if (!$form_state->get('bundle')) {
       $form_state->set('bundle', $bundle);
+    }
+    if (!$form_state->getValue('new_storage_type')) {
+      $form_state->setValue('new_storage_type', $new_storage_type);
     }
     $this->entityTypeId = $form_state->get('entity_type_id');
     $this->bundle = $form_state->get('bundle');
@@ -94,14 +105,25 @@ class FieldStorageAddForm extends FormBase {
       '#type' => 'submit',
       '#value' => $this->t('Continue'),
       '#button_type' => 'primary',
+      '#attributes' => [
+        'class' => ['button', 'button--primary'],
+        'data-dialog-type' => 'modal',
+        'data-dialog-options' => Json::encode([
+          'width' => '1100',
+        ]),
+      ],
     ];
+
+    if ($this->isAjax()) {
+      $form['actions']['submit']['#ajax']['callback'] = '::ajaxSubmit';
+    }
 
     $form['#attached']['library'] = [
       'field_ui/drupal.field_ui',
       'field_ui/drupal.field_ui.manage_fields',
       'core/drupal.ajax',
     ];
-
+    // The group info is stored in new_storage_type.
     if ($form_state->hasValue('new_storage_type')) {
       // A group is already selected. Show field types for that group.
       $this->addFieldOptionsForGroup($form, $form_state);
@@ -109,8 +131,11 @@ class FieldStorageAddForm extends FormBase {
     else {
       // Show options for groups and ungrouped field types.
       $this->addGroupFieldOptions($form, $form_state);
+      $form['actions'] = NULL;
     }
 
+    $form['#prefix'] = '<div id="modal-wrapper">';
+    $form['#suffix'] = '</div>';
     return $form;
   }
 
@@ -166,10 +191,20 @@ class FieldStorageAddForm extends FormBase {
         ->createInstance($field_type['category'], $field_type);
       $display_as_group = $field_type['display_as_group'];
       $cleaned_class_name = Html::getClass($field_type['unique_identifier']);
+      $route_parameters = [
+        'bundle' => $this->bundle,
+        'new_storage_type' => $category_info->getPluginId(),
+      ] + FieldUI::getRouteBundleParameter($this->entityTypeManager->getDefinition($this->entityTypeId), $this->bundle);
       $field_type_options_radios[$id] = [
-        '#type' => 'container',
+        '#type' => 'html_tag',
+        '#tag' => 'a',
         '#attributes' => [
-          'class' => ['field-option', 'js-click-to-select'],
+          'href' => Url::fromRoute("field_ui.field_storage_config_add_sub_{$this->entityTypeId}", $route_parameters)->toString(),
+          'class' => ['use-ajax', 'field-option', 'js-click-to-select'],
+          'data-dialog-type' => 'modal',
+          'data-dialog-options' => Json::encode([
+            'width' => '1100',
+          ]),
         ],
         '#weight' => $category_info->getWeight(),
         'thumb' => [
@@ -187,27 +222,26 @@ class FieldStorageAddForm extends FormBase {
             ],
           ],
         ],
-        'radio' => [
-          '#type' => 'radio',
-          '#title' => $category_info->getLabel(),
-          '#parents' => ['new_storage_type'],
-          '#title_display' => 'before',
-          '#description_display' => 'before',
-          '#theme_wrappers' => ['form_element__new_storage_type'],
-          // If it is a category, set return value as the category label.
-          // Otherwise, set it as the field type id.
-          '#return_value' => $display_as_group ? $field_type['category'] : $field_type['unique_identifier'],
+        'description_container' => [
+          '#type' => 'container',
           '#attributes' => [
-            'class' => ['field-option-radio'],
+            'class' => ['field-option__words'],
           ],
-          '#description' => [
+          'label' => [
+            '#attributes' => [
+              'class' => ['field-option__label'],
+            ],
+            '#type' => 'html_tag',
+            '#tag' => 'span',
+            '#value' => $category_info->getLabel(),
+          ],
+          'description' => [
             '#type' => 'container',
             '#attributes' => [
               'class' => ['field-option__description'],
             ],
             '#markup' => $category_info->getDescription(),
           ],
-          '#variant' => 'field-option',
         ],
       ];
 
@@ -231,7 +265,6 @@ class FieldStorageAddForm extends FormBase {
     ];
     $form['add']['new_storage_type'] = $field_type_options_radios;
 
-    $form['actions']['submit']['#validate'][] = '::validateGroupOrField';
     $form['actions']['submit']['#submit'][] = '::rebuildWithOptions';
   }
 
@@ -244,6 +277,9 @@ class FieldStorageAddForm extends FormBase {
    *   The current state of the form.
    */
   protected function addFieldOptionsForGroup(array &$form, FormStateInterface $form_state): void {
+    // Set title.
+    $title = ucfirst(str_replace('_', ' ', $form_state->getValue('new_storage_type')));
+    $form['#title'] = "Add ($title)";
     // Field label and field_name.
     $form['new_storage_wrapper'] = [
       '#type' => 'container',
@@ -255,6 +291,7 @@ class FieldStorageAddForm extends FormBase {
       '#type' => 'textfield',
       '#title' => $this->t('Label'),
       '#size' => 30,
+      '#required' => TRUE,
     ];
     $field_prefix = $this->config('field_ui.settings')->get('field_prefix');
     $form['new_storage_wrapper']['field_name'] = [
@@ -272,12 +309,19 @@ class FieldStorageAddForm extends FormBase {
       '#required' => FALSE,
     ];
 
-    $form['actions']['submit']['#validate'][] = '::validateFieldType';
-
+    $entity_type = $this->entityTypeManager->getDefinition($this->entityTypeId);
+    $route_parameters_back = [] + FieldUI::getRouteBundleParameter($entity_type, $this->bundle);
     $form['actions']['back'] = [
-      '#type' => 'submit',
-      '#value' => $this->t('Back'),
-      '#submit' => ['::startOver'],
+      '#type' => 'link',
+      '#title' => $this->t('Back'),
+      '#url' => Url::fromRoute("field_ui.field_storage_config_add_$this->entityTypeId", $route_parameters_back),
+      '#attributes' => [
+        'class' => ['button', 'use-ajax'],
+        'data-dialog-type' => 'modal',
+        'data-dialog-options' => Json::encode([
+          'width' => '1100',
+        ]),
+      ],
     ];
 
     $field_type_options = $form_state->get('field_type_options');
@@ -347,29 +391,11 @@ class FieldStorageAddForm extends FormBase {
   }
 
   /**
-   * Validates the first step of the form.
-   *
-   * @param array $form
-   *   An associative array containing the structure of the form.
-   * @param \Drupal\Core\Form\FormStateInterface $form_state
-   *   The current state of the form.
+   * {@inheritdoc}
    */
-  public function validateGroupOrField(array &$form, FormStateInterface $form_state) {
-    if (!$form_state->getValue('new_storage_type')) {
-      $form_state->setErrorByName('add', $this->t('You need to select a field type.'));
-    }
-  }
-
-  /**
-   * Validates the second step (field storage selection and label) of the form.
-   *
-   * @param array $form
-   *   An associative array containing the structure of the form.
-   * @param \Drupal\Core\Form\FormStateInterface $form_state
-   *   The current state of the form.
-   */
-  public function validateFieldType(array $form, FormStateInterface $form_state) {
+  public function validateForm(array &$form, FormStateInterface $form_state) {
     // Missing label.
+    parent::validateForm($form, $form_state);
     if (!$form_state->getValue('label')) {
       $form_state->setErrorByName('label', $this->t('Add new field: you need to provide a label.'));
     }
@@ -555,11 +581,81 @@ class FieldStorageAddForm extends FormBase {
   }
 
   /**
-   * Submit handler for resetting the form.
+   * Submit form #ajax callback.
+   *
+   * @param array $form
+   *   An associative array containing the structure of the form.
+   * @param \Drupal\Core\Form\FormStateInterface $form_state
+   *   The current state of the form.
+   *
+   * @return \Drupal\Core\Ajax\AjaxResponse
+   *   An AJAX response that display validation error messages or represents a
+   *   successful submission.
+   *
+   * @see \Drupal\Core\Ajax\AjaxFormHelperTrait
    */
-  public static function startOver($form, FormStateInterface &$form_state) {
-    $form_state->unsetValue('new_storage_type');
-    $form_state->setRebuild();
+  public function ajaxSubmit(array &$form, FormStateInterface $form_state) {
+    if ($form_state->hasAnyErrors()) {
+      $form['status_messages'] = [
+        '#type' => 'status_messages',
+        '#weight' => -1000,
+      ];
+      $form['#sorted'] = FALSE;
+      $response = new AjaxResponse();
+      $response->addCommand(new ReplaceCommand('#modal-wrapper', $form));
+    }
+    else {
+      if (!empty($form_state->getValue('label'))) {
+        /** @var \Drupal\Core\Controller\ControllerResolverInterface $controller_resolver */
+        $controller_resolver = \Drupal::service('controller_resolver');
+        $callback = $controller_resolver->getControllerFromDefinition('\Drupal\field_ui\Controller\FieldConfigAddController::fieldConfigAddConfigureForm');
+        $form = call_user_func_array($callback,
+        [$this->entityTypeId, $form_state->getValue('field_name')]);
+      }
+      $response = $this->successfulAjaxSubmit($form, $form_state);
+    }
+    return $response;
+  }
+
+  /**
+   * Respond to a successful AJAX submission.
+   *
+   * @param array $form
+   *   An associative array containing the structure of the form.
+   * @param \Drupal\Core\Form\FormStateInterface $form_state
+   *   The current state of the form.
+   *
+   * @return \Drupal\Core\Ajax\AjaxResponse
+   *   An AJAX response.
+   */
+  protected function successfulAjaxSubmit(array $form, FormStateInterface $form_state): AjaxResponse {
+    $response = new AjaxResponse();
+    if ($form_state->hasValue('new_storage_type')) {
+      $response->addCommand(new RedirectCommand($this->getRedirectUrl($form_state->getValue('field_name'))->toString()));
+    }
+    else {
+      $response->addCommand(new OpenModalDialogCommand('title', $form));
+    }
+    return $response;
+  }
+
+  /**
+   * Gets the redirect URL.
+   *
+   * @param string $field_name
+   *   The field name.
+   *
+   * @return \Drupal\Core\Url
+   *   The URL to redirect to.
+   *
+   * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
+   */
+  private function getRedirectUrl(string $field_name): Url {
+    $route_parameters = [
+      'field_name' => $field_name,
+      'entity_type' => $this->entityTypeId,
+    ] + FieldUI::getRouteBundleParameter($this->entityTypeManager->getDefinition($this->entityTypeId), $this->bundle);
+    return Url::fromRoute("field_ui.field_add_{$this->entityTypeId}", $route_parameters);
   }
 
 }

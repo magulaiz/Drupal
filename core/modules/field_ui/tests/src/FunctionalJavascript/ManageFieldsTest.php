@@ -7,7 +7,9 @@ namespace Drupal\Tests\field_ui\FunctionalJavascript;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
+use Drupal\Tests\contextual\FunctionalJavascript\ContextualLinkClickTrait;
 use Drupal\Tests\field_ui\Traits\FieldUiJSTestTrait;
+use Drupal\Tests\field_ui\Traits\FieldUiTestTrait;
 
 // cspell:ignore horserad
 
@@ -20,6 +22,9 @@ use Drupal\Tests\field_ui\Traits\FieldUiJSTestTrait;
 class ManageFieldsTest extends WebDriverTestBase {
 
   use FieldUiJSTestTrait;
+  use FieldUiTestTrait;
+  use ContextualLinkClickTrait;
+
 
   /**
    * {@inheritdoc}
@@ -60,6 +65,7 @@ class ManageFieldsTest extends WebDriverTestBase {
     $this->drupalPlaceBlock('system_breadcrumb_block');
     $this->drupalPlaceBlock('local_tasks_block');
     $this->drupalPlaceBlock('local_actions_block');
+    $this->getSession()->resizeWindow(1200, 800);
 
     // Create a test user.
     $admin_user = $this->drupalCreateUser([
@@ -179,47 +185,61 @@ class ManageFieldsTest extends WebDriverTestBase {
     $page = $this->getSession()->getPage();
     $assert_session = $this->assertSession();
 
-    $this->drupalGet('admin/structure/types/manage/article/fields/add-field');
+    $this->drupalGet('admin/structure/types/manage/article/fields');
+    $this->clickLink('Create a new field');
+    $this->assertSession()->assertWaitOnAjaxRequest();
+    $field_name = 'test_field_1';
 
     // Test validation.
-    $page->pressButton('Continue');
-    $assert_session->pageTextContains('You need to select a field type.');
-    $assert_session->pageTextNotContains('Choose an option below');
+    $this->clickLink('Number');
+    $assert_session->assertWaitOnAjaxRequest();
+    $assert_session->waitForText('Add field: Number');
+    $buttons = $this->assertSession()->elementExists('css', '.ui-dialog-buttonpane');
+    $buttons->pressButton('Continue');
+    $assert_session->assertWaitOnAjaxRequest();
 
-    $this->assertNotEmpty($number_field = $page->find('xpath', '//*[text() = "Number"]')->getParent());
-    $number_field->click();
-    $this->assertTrue($assert_session->elementExists('css', '[name="new_storage_type"][value="number"]')->isSelected());
-    $page->pressButton('Continue');
-    $assert_session->pageTextContains('Choose an option below');
-    $field_name = 'test_field_1';
-    $page->fillField('label', $field_name);
-    $page->pressButton('Continue');
+    $assert_session->pageTextContains('Label field is required.');
     $assert_session->pageTextContains('You need to choose an option.');
-    $assert_session->elementNotExists('css', '[name="new_storage_type"].error');
+    $assert_session->pageTextContains('Add new field: you need to provide a machine name for the field.');
+    $assert_session->elementExists('css', '[name="label"].error');
     $assert_session->elementExists('css', '[name="group_field_options_wrapper"].error');
-    $page->pressButton('Back');
+    $page->fillField('label', $field_name);
+    $buttons = $this->assertSession()->elementExists('css', '.ui-dialog-buttonpane');
+    $buttons->pressButton('Continue');
+    $assert_session->assertWaitOnAjaxRequest();
+
+    $assert_session->pageTextContains('You need to choose an option.');
+    $assert_session->elementNotExists('css', '[name="label"].error');
+    $assert_session->elementExists('css', '[name="group_field_options_wrapper"].error');
+    $buttons = $this->assertSession()->elementExists('css', '.ui-dialog-buttonpane');
+    $buttons->pressButton('Back');
+    $this->assertSession()->assertWaitOnAjaxRequest();
 
     // Try adding a field using a grouped field type.
-    $this->assertNotEmpty($email_field = $page->find('xpath', '//*[text() = "Email"]')->getParent());
+    $this->assertNotEmpty($email_field = $page->find('xpath', '//*[text() = "Email"]'));
     $email_field->click();
-    $this->assertTrue($assert_session->elementExists('css', '[name="new_storage_type"][value="email"]')->isSelected());
-    $page->pressButton('Continue');
+    $assert_session->assertWaitOnAjaxRequest();
     $assert_session->pageTextNotContains('Choose an option below');
-    $page->pressButton('Back');
+    $assert_session->elementExists('css', '[name="label"]');
+    $buttons = $this->assertSession()->elementExists('css', '.ui-dialog-buttonpane');
+    $buttons->pressButton('Back');
+    $assert_session->assertWaitOnAjaxRequest();
 
-    $this->assertNotEmpty($text = $page->find('xpath', '//*[text() = "Plain text"]')->getParent());
+    $this->assertNotEmpty($text = $page->find('xpath', '//*[text() = "Plain text"]'));
     $text->click();
-    $this->assertTrue($assert_session->elementExists('css', '[name="new_storage_type"][value="plain_text"]')->isSelected());
-    $page->pressButton('Continue');
+    $assert_session->assertWaitOnAjaxRequest();
+    $buttons = $this->assertSession()->elementExists('css', '.ui-dialog-buttonpane');
+    $buttons->pressButton('Continue');
+    $assert_session->assertWaitOnAjaxRequest();
     $assert_session->pageTextContains('Choose an option below');
 
     $page->fillField('label', $field_name);
-    $this->assertNotEmpty($text_plain = $page->find('xpath', '//*[text() = "Text (plain)"]')->getParent());
+    $this->assertNotEmpty($text_plain = $page->find('xpath', '//*[text() = "Text (plain)"]'));
     $text_plain->click();
     $this->assertTrue($assert_session->elementExists('css', '[name="group_field_options_wrapper"][value="string"]')->isSelected());
-    $page->pressButton('Continue');
-
-    $this->assertMatchesRegularExpression('/.*article\/add-field\/node\/field_test_field_1.*/', $this->getUrl());
+    $buttons = $this->assertSession()->elementExists('css', '.ui-dialog-buttonpane');
+    $buttons->pressButton('Continue');
+    $assert_session->waitForText("These settings apply to the $field_name field everywhere it is used.");
 
     // Ensure the default value is reloaded when the field storage settings
     // are changed.
@@ -237,7 +257,7 @@ class ManageFieldsTest extends WebDriverTestBase {
     $cardinality->setValue(2);
     $default_input_2 = $assert_session->waitForField($default_input_2_name);
     // Ensure the default value for first input is retained.
-    $assert_session->fieldValueEquals($default_input_1_name, 'There can be only one!');
+    $this->assertEquals('There can be only one!', $page->findField($default_input_1_name)->getValue());
     $page->findField($default_input_2_name)->setValue('But maybe also two?');
     $cardinality->setValue('1');
     $assert_session->assertWaitOnAjaxRequest();
@@ -269,26 +289,28 @@ class ManageFieldsTest extends WebDriverTestBase {
     // Try adding a field using a non-grouped field type.
     $this->drupalGet('admin/structure/types/manage/article/fields/add-field');
 
-    $this->assertNotEmpty($number_field = $page->find('xpath', '//*[text() = "Number"]')->getParent());
+    $this->assertNotEmpty($number_field = $page->find('xpath', '//*[text() = "Number"]'));
     $number_field->click();
-    $this->assertTrue($assert_session->elementExists('css', '[name="new_storage_type"][value="number"]')->isSelected());
-    $page->pressButton('Continue');
+    $assert_session->assertWaitOnAjaxRequest();
     $assert_session->pageTextContains('Choose an option below');
-    $this->assertNotEmpty($number_integer = $page->find('xpath', '//*[text() = "Number (integer)"]')->getParent());
+    $this->assertNotEmpty($number_integer = $page->find('xpath', '//*[text() = "Number (integer)"]'));
     $number_integer->click();
     $this->assertTrue($assert_session->elementExists('css', '[name="group_field_options_wrapper"][value="integer"]')->isSelected());
 
     $page->pressButton('Back');
-    $this->assertNotEmpty($test_field = $page->find('xpath', '//*[text() = "Test field"]')->getParent());
-    $test_field->click();
-    $this->assertTrue($assert_session->elementExists('css', '[name="new_storage_type"][value="test_field"]')->isSelected());
-    $page->pressButton('Continue');
+    $assert_session->assertWaitOnAjaxRequest();
+    $this->assertTrue($assert_session->waitForText('Choose a type of field'));
+    $modal = $this->getSession()->getPage()->find('css', '.ui-dialog-content');
+    $modal->clickLink('Test field');
+    $assert_session->assertWaitOnAjaxRequest();
     $field_name = 'test_field_2';
+    $this->assertNotNull($assert_session->waitForField('label'));
     $page->fillField('label', $field_name);
     $assert_session->pageTextNotContains('Choose an option below');
 
-    $page->pressButton('Continue');
-    $this->assertMatchesRegularExpression('/.*article\/add-field\/node\/field_test_field_2.*/', $this->getUrl());
+    $buttons = $this->assertSession()->elementExists('css', '.ui-dialog-buttonpane');
+    $buttons->pressButton('Continue');
+    $this->assertTrue($assert_session->waitForText("These settings apply to the $field_name field everywhere it is used."));
     $page->pressButton('Save settings');
     $assert_session->pageTextContains('Saved ' . $field_name . ' configuration.');
     $this->assertNotNull($field_storage = FieldStorageConfig::loadByName('node', "field_$field_name"));
@@ -299,32 +321,31 @@ class ManageFieldsTest extends WebDriverTestBase {
    * Tests the order in which the field types appear in the form.
    */
   public function testFieldTypeOrder() {
-    $this->drupalGet('admin/structure/types/manage/article/fields/add-field');
-    $page = $this->getSession()->getPage();
     $field_type_categories = [
-      'selection_list',
-      'number',
+      'Selection list',
+      'Number',
     ];
     foreach ($field_type_categories as $field_type_category) {
+      $this->drupalGet('admin/structure/types/manage/article/fields/add-field');
+      $page = $this->getSession()->getPage();
       // Select the group card.
-      $group_field_card = $page->find('css', "[name='new_storage_type'][value='$field_type_category']")->getParent();
-      $group_field_card->click();
-      $page->pressButton('Continue');
-      $field_types = $page->findAll('css', '.subfield-option .option');
+      $this->clickLink($field_type_category);
+      $this->assertSession()->assertWaitOnAjaxRequest();
+      $field_types = $page->findAll('css', '.subfield-option');
       $field_type_labels = [];
       foreach ($field_types as $field_type) {
         $field_type_labels[] = $field_type->getText();
       }
       $expected_field_types = match ($field_type_category) {
-        'selection_list' => [
-          'List (text)',
-          'List (integer)',
-          'List (float)',
+        'Selection list' => [
+          "List (text) Values stored are text values For example, 'US States': IL => Illinois, IA => Iowa, IN => Indiana",
+          "List (integer) Values stored are numbers without decimals For example, 'Lifetime in days': 1 => 1 day, 7 => 1 week, 31 => 1 month",
+          "List (float) Values stored are floating-point numbers For example, 'Fraction': 0 => 0, .25 => 1/4, .75 => 3/4, 1 => 1",
         ],
-        'number' => [
-          'Number (integer)',
-          'Number (decimal)',
-          'Number (float)',
+        'Number' => [
+          "Number (integer) Number without decimals For example, 123",
+          "Number (decimal) Ideal for exact counts and measures (prices, temperatures, distances, volumes, etc.) Stores a number in the database in a fixed decimal format For example, 12.34 km or € when used for further detailed calculations (such as summing many of these)",
+          "Number (float) In most instances, it is best to use Number (decimal) instead, as decimal numbers stored as floats may contain errors in precision This type of field offers faster processing and more compact storage, but the differences are typically negligible on modern sites For example, 123.4 km when used in imprecise contexts such as a walking trail distance",
         ],
       };
       // Assert that the field type options are displayed as per their weights.
@@ -360,17 +381,19 @@ class ManageFieldsTest extends WebDriverTestBase {
    * Tests the form validation for label field.
    */
   public function testLabelFieldFormValidation() {
-    $this->drupalGet('/admin/structure/types/manage/article/fields/add-field');
+    $this->drupalGet('/admin/structure/types/manage/article/fields');
     $page = $this->getSession()->getPage();
 
-    $page->findButton('Continue')->click();
-    $this->assertSession()->pageTextContains('You need to select a field type.');
-
-    $this->assertNotEmpty($boolean_field = $page->find('xpath', '//*[text() = "Boolean (overridden by alter)"]')->getParent());
-    $boolean_field->click();
-    $page->findButton('Continue')->click();
-    $page->findButton('Continue')->click();
-    $this->assertSession()->pageTextContains('Add new field: you need to provide a label.');
+    $page->clickLink('Create a new field');
+    $this->assertSession()->assertWaitOnAjaxRequest();
+    $this->clickLink('Plain text');
+    $this->assertSession()->assertWaitOnAjaxRequest();
+    $buttons = $this->assertSession()->elementExists('css', '.ui-dialog-buttonpane');
+    $buttons->pressButton('Continue');
+    $this->assertSession()->assertWaitOnAjaxRequest();
+    $this->assertSession()->pageTextContains('You need to choose an option.');
+    $this->assertSession()->pageTextContains('Label field is required.');
+    $this->assertSession()->pageTextContains('Add new field: you need to provide a machine name for the field.');
   }
 
 }

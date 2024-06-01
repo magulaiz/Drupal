@@ -7,6 +7,7 @@ namespace Drupal\Tests\responsive_image\FunctionalJavascript;
 use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
 use Drupal\responsive_image\Entity\ResponsiveImageStyle;
 use Drupal\Tests\field_ui\Traits\FieldUiJSTestTrait;
+use Drupal\Tests\field_ui\Traits\FieldUiTestTrait;
 
 /**
  * Tests the responsive image field UI.
@@ -16,6 +17,7 @@ use Drupal\Tests\field_ui\Traits\FieldUiJSTestTrait;
 class ResponsiveImageFieldUiTest extends WebDriverTestBase {
 
   use FieldUiJSTestTrait;
+  use FieldUiTestTrait;
 
   /**
    * {@inheritdoc}
@@ -49,6 +51,8 @@ class ResponsiveImageFieldUiTest extends WebDriverTestBase {
   protected function setUp(): void {
     parent::setUp();
     $this->drupalPlaceBlock('system_breadcrumb_block');
+    $this->drupalPlaceBlock('local_actions_block');
+    $this->getSession()->resizeWindow(1200, 800);
     // Create a test user.
     $admin_user = $this->drupalCreateUser([
       'access content',

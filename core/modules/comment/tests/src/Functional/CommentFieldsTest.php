@@ -153,11 +153,8 @@ class CommentFieldsTest extends CommentTestBase {
     $this->drupalLogin($user);
 
     // Create comment field in account settings.
-    $edit = [
-      'new_storage_type' => 'comment',
-    ];
     $this->drupalGet('admin/config/people/accounts/fields/add-field');
-    $this->submitForm($edit, 'Continue');
+    $this->clickLink('Comment');
     $edit = [
       'label' => 'User comment',
       'field_name' => 'user_comment',
