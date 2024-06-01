@@ -1213,7 +1213,7 @@ abstract class ResourceTestBase extends BrowserTestBase {
       $expected_document = $expected_response->getResponseData();
       $response = $this->request('GET', $filtered_collection_include_url, $request_options);
       $requires_include_only_permissions = !empty($flattened_permissions);
-      $is_uncacheable = $this->generateDynamicPageCacheExpectedHeaderValue($expected_cacheability->getCacheContexts(), $expected_cacheability->getCacheMaxAge()) === 'UNCACHEABLE';
+      $is_uncacheable = $this->generateDynamicPageCacheExpectedHeaderValue($expected_cacheability->getCacheContexts(), $expected_cacheability->getCacheMaxAge()) === 'UNCACHEABLE (poor cacheability)';
       $dynamic_cache = !$is_uncacheable ? $requires_include_only_permissions ? 'MISS' : 'HIT' : 'UNCACHEABLE (poor cacheability)';
       $this->assertResourceResponse(200, $expected_document, $response, $expected_cacheability->getCacheTags(), $expected_cacheability->getCacheContexts(), 'UNCACHEABLE (request policy)', $dynamic_cache);
     }
@@ -3019,7 +3019,7 @@ abstract class ResourceTestBase extends BrowserTestBase {
       'url.query_args:resourceVersion',
       'url.site',
     ];
-    $this->assertResourceErrorResponse(501, 'JSON:API does not support filtering on revisions other than the latest version because a secure Drupal core API does not yet exist to do so.', $rel_working_copy_collection_url_filtered, $actual_response, FALSE, ['http_response'], $filtered_collection_expected_cache_contexts, FALSE, 'UNCACHEABLE');
+    $this->assertResourceErrorResponse(501, 'JSON:API does not support filtering on revisions other than the latest version because a secure Drupal core API does not yet exist to do so.', $rel_working_copy_collection_url_filtered, $actual_response, FALSE, ['http_response'], $filtered_collection_expected_cache_contexts, FALSE, 'UNCACHEABLE (poor cacheability)');
     // Fetch the collection URL using an invalid version identifier.
     $actual_response = $this->request('GET', $rel_invalid_collection_url, $request_options);
     $invalid_version_expected_cache_contexts = [
@@ -3027,7 +3027,7 @@ abstract class ResourceTestBase extends BrowserTestBase {
       'url.query_args:resourceVersion',
       'url.site',
     ];
-    $this->assertResourceErrorResponse(400, 'Collection resources only support the following resource version identifiers: rel:latest-version, rel:working-copy', $rel_invalid_collection_url, $actual_response, FALSE, ['4xx-response', 'http_response'], $invalid_version_expected_cache_contexts, FALSE, 'UNCACHEABLE');
+    $this->assertResourceErrorResponse(400, 'Collection resources only support the following resource version identifiers: rel:latest-version, rel:working-copy', $rel_invalid_collection_url, $actual_response, FALSE, ['4xx-response', 'http_response'], $invalid_version_expected_cache_contexts, FALSE, 'UNCACHEABLE (poor cacheability)');
 
     // Move the entity to its draft moderation state.
     $entity->set('field_revisionable_number', 42);

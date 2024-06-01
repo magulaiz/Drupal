@@ -363,7 +363,7 @@ class NodeTest extends ResourceTestBase {
       ['4xx-response', 'http_response', 'node:1'],
       ['url.query_args:resourceVersion', 'url.site', 'user'],
       'UNCACHEABLE (request policy)',
-      'UNCACHEABLE'
+      'UNCACHEABLE (poor cacheability)'
     );
     /* $this->assertResourceErrorResponse(403, 'The current user is not allowed to GET the selected resource.', $response, '/data'); */
 
@@ -434,7 +434,7 @@ class NodeTest extends ResourceTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function getExpectedCacheContexts(array $sparse_fieldset = NULL) {
+  protected function getExpectedCacheContexts(?array $sparse_fieldset = NULL) {
     // \Drupal\Tests\jsonapi\Functional\ResourceTestBase::testRevisions()
     // loads different revisions via query parameters, we do our best
     // here to react to those directly, or indirectly.
