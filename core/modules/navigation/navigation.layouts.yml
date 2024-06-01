@@ -1,9 +1,8 @@
 navigation_layout:
-  label: 'Navigation layout'
   path: layouts
   template: navigation
   library: navigation/navigation.layout
-  category: 'Navigation'
+  category: 'Navigation layout'
   class: \Drupal\navigation\NavigationLayout
   default_region: first
   icon_map:

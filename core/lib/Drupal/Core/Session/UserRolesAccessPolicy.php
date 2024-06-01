@@ -9,7 +9,7 @@ use Drupal\Core\Entity\EntityTypeManagerInterface;
 /**
  * Grants permissions based on a user's roles.
  */
-final class UserRolesAccessPolicy extends AccessPolicyBase {
+class UserRolesAccessPolicy extends AccessPolicyBase {
 
   public function __construct(protected EntityTypeManagerInterface $entityTypeManager) {}
 

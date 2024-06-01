@@ -7,7 +7,7 @@ namespace Drupal\Core\Session;
 /**
  * Grants user 1 an all access pass.
  */
-final class SuperUserAccessPolicy extends AccessPolicyBase {
+class SuperUserAccessPolicy extends AccessPolicyBase {
 
   /**
    * {@inheritdoc}

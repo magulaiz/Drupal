@@ -227,10 +227,7 @@ class ConfigSchemaTest extends KernelTestBase {
     $expected['mapping']['_core']['type'] = '_core_config_info';
     $expected['mapping']['_core']['requiredKey'] = FALSE;
     $expected['type'] = 'image.style.*';
-    $expected['constraints'] = [
-      'ValidKeys' => '<infer>',
-      'FullyValidatable' => NULL,
-    ];
+    $expected['constraints'] = ['ValidKeys' => '<infer>'];
 
     $this->assertEquals($expected, $definition);
 
@@ -244,19 +241,12 @@ class ConfigSchemaTest extends KernelTestBase {
     $expected['unwrap_for_canonical_representation'] = TRUE;
     $expected['mapping']['width']['type'] = 'integer';
     $expected['mapping']['width']['label'] = 'Width';
-    $expected['mapping']['width']['nullable'] = TRUE;
-    $expected['mapping']['width']['constraints'] = ['NotBlank' => ['allowNull' => TRUE]];
     $expected['mapping']['height']['type'] = 'integer';
     $expected['mapping']['height']['label'] = 'Height';
-    $expected['mapping']['height']['nullable'] = TRUE;
-    $expected['mapping']['height']['constraints'] = ['NotBlank' => ['allowNull' => TRUE]];
     $expected['mapping']['upscale']['type'] = 'boolean';
     $expected['mapping']['upscale']['label'] = 'Upscale';
     $expected['type'] = 'image.effect.image_scale';
-    $expected['constraints'] = [
-      'ValidKeys' => '<infer>',
-      'FullyValidatable' => NULL,
-    ];
+    $expected['constraints'] = ['ValidKeys' => '<infer>'];
 
     $this->assertEquals($expected, $definition, 'Retrieved the right metadata for image.effect.image_scale');
 
@@ -269,7 +259,6 @@ class ConfigSchemaTest extends KernelTestBase {
     $expected['mapping']['height']['requiredKey'] = TRUE;
     $expected['mapping']['upscale']['requiredKey'] = TRUE;
     $expected['requiredKey'] = TRUE;
-    $expected['required'] = TRUE;
 
     $this->assertEquals($expected, $definition, 'Retrieved the right metadata for the first effect of image.style.medium');
 

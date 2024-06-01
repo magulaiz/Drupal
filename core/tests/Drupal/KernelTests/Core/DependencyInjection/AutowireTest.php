@@ -70,6 +70,7 @@ class AutowireTest extends KernelTestBase {
                 'cache.context',
                 'context_provider',
                 'event_subscriber',
+                'module_install.uninstall_validator',
               ])) {
                 continue 2;
               }
