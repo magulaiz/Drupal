@@ -48,7 +48,7 @@ class DatabaseBackendTest extends GenericCacheBackendUnitTestBase {
   /**
    * {@inheritdoc}
    */
-  public function testSetGet(): void {
+  public function testSetGet() {
     parent::testSetGet();
     $backend = $this->getCacheBackend();
 

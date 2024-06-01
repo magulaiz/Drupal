@@ -60,7 +60,7 @@ class RequestSanitizerTest extends UnitTestCase {
    *
    * @dataProvider providerTestRequestSanitization
    */
-  public function testRequestSanitization(Request $request, array $expected = [], array $expected_errors = NULL, array $whitelist = []): void {
+  public function testRequestSanitization(Request $request, array $expected = [], ?array $expected_errors = NULL, array $whitelist = []): void {
     // Set up globals.
     $_GET = $request->query->all();
     $_POST = $request->request->all();

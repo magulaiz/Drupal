@@ -41,7 +41,7 @@ class RendererTest extends RendererTestBase {
    *
    * @dataProvider providerTestRenderBasic
    */
-  public function testRenderBasic($build, $expected, callable $setup_code = NULL): void {
+  public function testRenderBasic($build, $expected, ?callable $setup_code = NULL): void {
     if (isset($setup_code)) {
       $setup_code = $setup_code->bindTo($this);
       $setup_code($this->themeManager);

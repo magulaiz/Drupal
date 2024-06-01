@@ -91,7 +91,7 @@ class EntityTestComputedFieldNormalizerTest extends EntityTestResourceTestBase {
   /**
    * {@inheritdoc}
    */
-  public function testPost(): void {
+  public function testPost() {
     // Post test not required.
     $this->markTestSkipped();
   }
@@ -99,7 +99,7 @@ class EntityTestComputedFieldNormalizerTest extends EntityTestResourceTestBase {
   /**
    * {@inheritdoc}
    */
-  public function testPatch(): void {
+  public function testPatch() {
     // Patch test not required.
     $this->markTestSkipped();
   }
@@ -107,7 +107,7 @@ class EntityTestComputedFieldNormalizerTest extends EntityTestResourceTestBase {
   /**
    * {@inheritdoc}
    */
-  public function testDelete(): void {
+  public function testDelete() {
     // Delete test not required.
     $this->markTestSkipped();
   }

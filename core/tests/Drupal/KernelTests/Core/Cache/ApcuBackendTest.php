@@ -35,7 +35,7 @@ class ApcuBackendTest extends GenericCacheBackendUnitTestBase {
   /**
    * {@inheritdoc}
    */
-  public function testSetGet(): void {
+  public function testSetGet() {
     parent::testSetGet();
 
     // Make sure entries are permanent (i.e. no TTL).

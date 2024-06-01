@@ -191,7 +191,7 @@ class WorkspacesContentModerationStateTest extends ContentModerationStateTest {
   /**
    * {@inheritdoc}
    */
-  public function testModerationWithFieldConfigOverride(): void {
+  public function testModerationWithFieldConfigOverride() {
     // This test does not assert anything that can be workspace-specific.
     $this->markTestSkipped();
   }
@@ -199,7 +199,7 @@ class WorkspacesContentModerationStateTest extends ContentModerationStateTest {
   /**
    * {@inheritdoc}
    */
-  public function testWorkflowDependencies(): void {
+  public function testWorkflowDependencies() {
     // This test does not assert anything that can be workspace-specific.
     $this->markTestSkipped();
   }
@@ -207,7 +207,7 @@ class WorkspacesContentModerationStateTest extends ContentModerationStateTest {
   /**
    * {@inheritdoc}
    */
-  public function testWorkflowNonConfigBundleDependencies(): void {
+  public function testWorkflowNonConfigBundleDependencies() {
     // This test does not assert anything that can be workspace-specific.
     $this->markTestSkipped();
   }
