@@ -3,6 +3,7 @@
 namespace Drupal\content_translation;
 
 use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Entity\EntityPublishedInterface;
 use Drupal\user\UserInterface;
 
 /**
@@ -87,8 +88,15 @@ class ContentTranslationMetadataWrapper implements ContentTranslationMetadataWra
    * {@inheritdoc}
    */
   public function isPublished() {
-    $published_field_name = $this->translation->getEntityType()->hasKey('published') ? $this->translation->getEntityType()->getKey('published') : 'status';
-    $field_name = $this->translation->hasField('content_translation_status') ? 'content_translation_status' : $published_field_name;
+    if ($this->translation->hasField('content_translation_status')) {
+      return (bool) $this->translation->get('content_translation_status')->value;
+    }
+
+    if ($this->translation instanceof EntityPublishedInterface) {
+      return (bool) $this->translation->isPublished();
+    }
+
+    $field_name = $this->translation->getEntityType()->hasKey('published') ? $this->translation->getEntityType()->getKey('published') : 'status';
     return (bool) $this->translation->get($field_name)->value;
   }
 
