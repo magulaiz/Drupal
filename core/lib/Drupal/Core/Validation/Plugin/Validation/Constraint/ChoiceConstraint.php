@@ -16,6 +16,20 @@ use Symfony\Component\Validator\Constraints\Choice;
 class ChoiceConstraint extends Choice {
 
   /**
+   * Optional arguments for the callback.
+   *
+   * @var array|null
+   */
+  public ?array $callbackArgs = NULL;
+
+  /**
+   * Optional arguments for the callback args.
+   *
+   * @var array|null
+   */
+  public ?array $transform = NULL;
+
+  /**
    * {@inheritdoc}
    */
   public function __construct(...$args) {
