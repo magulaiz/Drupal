@@ -65,7 +65,6 @@ trait InsertTrait {
    *   must be specified in the same order as the $fields array.
    *
    * @return $this
-   *   The called object.
    */
   public function fields(array $fields, array $values = []) {
     if (empty($this->insertFields)) {
@@ -96,7 +95,6 @@ trait InsertTrait {
    *   An array of values to add to the query.
    *
    * @return $this
-   *   The called object.
    */
   public function values(array $values) {
     if (is_numeric(key($values))) {
@@ -130,7 +128,6 @@ trait InsertTrait {
    *   specified in the table definition.
    *
    * @return $this
-   *   The called object.
    */
   public function useDefaults(array $fields) {
     $this->defaultFields = $fields;

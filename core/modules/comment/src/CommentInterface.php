@@ -85,7 +85,6 @@ interface CommentInterface extends ContentEntityInterface, EntityChangedInterfac
    *   The field name through which the comment was added.
    *
    * @return $this
-   *   The class instance that this method is called on.
    */
   public function setFieldName($field_name);
 
@@ -112,7 +111,6 @@ interface CommentInterface extends ContentEntityInterface, EntityChangedInterfac
    *   The subject of the comment.
    *
    * @return $this
-   *   The class instance that this method is called on.
    */
   public function setSubject($subject);
 
@@ -133,7 +131,6 @@ interface CommentInterface extends ContentEntityInterface, EntityChangedInterfac
    *   A string containing the name of the author.
    *
    * @return $this
-   *   The class instance that this method is called on.
    */
   public function setAuthorName($name);
 
@@ -166,7 +163,6 @@ interface CommentInterface extends ContentEntityInterface, EntityChangedInterfac
    *   The homepage address of the author of the comment.
    *
    * @return $this
-   *   The class instance that this method is called on.
    */
   public function setHomepage($homepage);
 
@@ -185,7 +181,6 @@ interface CommentInterface extends ContentEntityInterface, EntityChangedInterfac
    *   The hostname of the author of the comment.
    *
    * @return $this
-   *   The class instance that this method is called on.
    */
   public function setHostname($hostname);
 
@@ -204,7 +199,6 @@ interface CommentInterface extends ContentEntityInterface, EntityChangedInterfac
    *   The timestamp of when the comment was created.
    *
    * @return $this
-   *   The class instance that this method is called on.
    */
   public function setCreatedTime($created);
 
@@ -224,7 +218,6 @@ interface CommentInterface extends ContentEntityInterface, EntityChangedInterfac
    *   The alphadecimal representation of the comment's place in a thread.
    *
    * @return $this
-   *   The class instance that this method is called on.
    */
   public function setThread($thread);
 

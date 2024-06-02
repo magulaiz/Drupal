@@ -104,7 +104,6 @@ interface ContextAwarePluginInterface extends PluginInspectionInterface {
    *   provided context definition.
    *
    * @return $this
-   *   A context aware plugin object for chaining.
    *
    * @throws \Drupal\Component\Plugin\Exception\ContextException
    *   If the value does not pass validation.

@@ -19,7 +19,6 @@ interface ArchiverInterface {
    *   and directories are supported.
    *
    * @return $this
-   *   The called object.
    */
   public function add($file_path);
 
@@ -30,7 +29,6 @@ interface ArchiverInterface {
    *   The file name relative to the root of the archive to remove.
    *
    * @return $this
-   *   The called object.
    */
   public function remove($path);
 
@@ -45,7 +43,6 @@ interface ArchiverInterface {
    *   in the archive will be extracted.
    *
    * @return $this
-   *   The called object.
    */
   public function extract($path, array $files = []);
 

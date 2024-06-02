@@ -222,7 +222,6 @@ class BaseFieldDefinition extends ListDataDefinition implements FieldDefinitionI
    *   Whether the field is translatable.
    *
    * @return $this
-   *   The object itself for chaining.
    */
   public function setTranslatable($translatable) {
     $this->definition['translatable'] = $translatable;
@@ -245,7 +244,6 @@ class BaseFieldDefinition extends ListDataDefinition implements FieldDefinitionI
    *   Whether the field is revisionable.
    *
    * @return $this
-   *   The object itself for chaining.
    */
   public function setRevisionable($revisionable) {
     $this->definition['revisionable'] = $revisionable;

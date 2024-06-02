@@ -59,7 +59,6 @@ interface LanguageManagerInterface {
    *   Defaults to NULL.
    *
    * @return $this
-   *   The language manager that has been reset.
    */
   public function reset($type = NULL);
 

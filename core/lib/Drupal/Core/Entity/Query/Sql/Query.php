@@ -88,7 +88,6 @@ class Query extends QueryBase implements QueryInterface {
    * Prepares the basic query with proper metadata/tags and base fields.
    *
    * @return $this
-   *   Returns the called object.
    *
    * @throws \Drupal\Core\Entity\Query\QueryException
    *   Thrown if the base table does not exist.
@@ -170,7 +169,6 @@ class Query extends QueryBase implements QueryInterface {
    * Compiles the conditions.
    *
    * @return $this
-   *   Returns the called object.
    */
   protected function compile() {
     $this->condition->compile($this->sqlQuery);
@@ -181,7 +179,6 @@ class Query extends QueryBase implements QueryInterface {
    * Adds the sort to the build query.
    *
    * @return $this
-   *   Returns the called object.
    */
   protected function addSort() {
     if ($this->count) {
@@ -239,7 +236,6 @@ class Query extends QueryBase implements QueryInterface {
    * Finish the query by adding fields, GROUP BY and range.
    *
    * @return $this
-   *   Returns the called object.
    */
   protected function finish() {
     $this->initializePager();

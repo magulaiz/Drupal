@@ -53,7 +53,6 @@ interface ImageToolkitInterface extends ContainerFactoryPluginInterface, PluginI
    *   The source path of the image file.
    *
    * @return $this
-   *   An instance of the current toolkit object.
    *
    * @throws \BadMethodCallException
    *   After being set initially, the source image cannot be changed.

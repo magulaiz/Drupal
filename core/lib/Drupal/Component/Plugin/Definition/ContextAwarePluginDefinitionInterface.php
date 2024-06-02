@@ -53,7 +53,6 @@ interface ContextAwarePluginDefinitionInterface extends PluginDefinitionInterfac
    *   The context definition.
    *
    * @return $this
-   *   The called object.
    */
   public function addContextDefinition($name, ContextDefinitionInterface $definition);
 
@@ -64,7 +63,6 @@ interface ContextAwarePluginDefinitionInterface extends PluginDefinitionInterfac
    *   The context name.
    *
    * @return $this
-   *   The called object.
    */
   public function removeContextDefinition($name);
 

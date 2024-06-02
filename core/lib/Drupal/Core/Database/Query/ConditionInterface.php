@@ -59,7 +59,6 @@ interface ConditionInterface {
    *   Other operators (e.g. LIKE, BINARY) may or may not work. Defaults to =.
    *
    * @return $this
-   *   The called object.
    *
    * @throws \Drupal\Core\Database\InvalidQueryException
    *   If passed invalid arguments, such as an empty array as $value.
@@ -84,7 +83,6 @@ interface ConditionInterface {
    *   An associative array of arguments keyed by the named placeholders.
    *
    * @return $this
-   *   The called object.
    */
   public function where($snippet, $args = []);
 
@@ -95,7 +93,6 @@ interface ConditionInterface {
    *   The name of the field or a subquery to check.
    *
    * @return $this
-   *   The called object.
    */
   public function isNull($field);
 
@@ -106,7 +103,6 @@ interface ConditionInterface {
    *   The name of the field or a subquery to check.
    *
    * @return $this
-   *   The called object.
    */
   public function isNotNull($field);
 
@@ -117,7 +113,6 @@ interface ConditionInterface {
    *   The subquery that must contain results.
    *
    * @return $this
-   *   The called object.
    */
   public function exists(SelectInterface $select);
 
@@ -128,7 +123,6 @@ interface ConditionInterface {
    *   The subquery that must not contain results.
    *
    * @return $this
-   *   The called object.
    */
   public function notExists(SelectInterface $select);
 

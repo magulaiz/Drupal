@@ -31,7 +31,6 @@ interface ConditionAggregateInterface extends \Countable {
    *   the current content language.
    *
    * @return $this
-   *   The called object.
    *
    * @see \Drupal\Core\Entity\Query\QueryInterface::condition()
    */

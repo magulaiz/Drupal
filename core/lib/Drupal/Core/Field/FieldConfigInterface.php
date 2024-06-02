@@ -106,7 +106,6 @@ interface FieldConfigInterface extends FieldDefinitionInterface, ConfigEntityInt
    *   TRUE if the field is required. FALSE otherwise.
    *
    * @return $this
-   *   The current object, for a fluent interface.
    */
   public function setRequired($required);
 

@@ -257,7 +257,6 @@ class ConfigImporter {
    * Resets the storage comparer and processed list.
    *
    * @return $this
-   *   The ConfigImporter instance.
    */
   public function reset() {
     $this->storageComparer->reset();
@@ -523,7 +522,6 @@ class ConfigImporter {
    * Imports the changelist to the target storage.
    *
    * @return $this
-   *   The ConfigImporter instance.
    *
    * @throws \Drupal\Core\Config\ConfigException
    */

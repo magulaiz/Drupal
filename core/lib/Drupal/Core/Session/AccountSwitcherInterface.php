@@ -20,7 +20,6 @@ interface AccountSwitcherInterface {
    *   The account to switch to.
    *
    * @return $this
-   *   $this.
    */
   public function switchTo(AccountInterface $account);
 
@@ -28,7 +27,6 @@ interface AccountSwitcherInterface {
    * Reverts to a previous account after switching.
    *
    * @return $this
-   *   $this.
    *
    * @throws \RuntimeException
    *   When there are no more account switches to revert.

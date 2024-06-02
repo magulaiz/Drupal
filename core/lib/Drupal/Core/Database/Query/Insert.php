@@ -47,7 +47,6 @@ class Insert extends Query implements \Countable {
    *   The query to fetch the rows that should be inserted.
    *
    * @return $this
-   *   The called object.
    */
   public function from(SelectInterface $query) {
     $this->fromQuery = $query;

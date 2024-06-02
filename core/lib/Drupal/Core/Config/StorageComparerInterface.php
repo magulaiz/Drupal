@@ -58,7 +58,6 @@ interface StorageComparerInterface {
    * Recalculates the differences.
    *
    * @return $this
-   *   An object which implements the StorageComparerInterface.
    */
   public function reset();
 

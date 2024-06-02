@@ -67,7 +67,6 @@ interface NodeInterface extends ContentEntityInterface, EntityChangedInterface, 
    *   The node title.
    *
    * @return $this
-   *   The called node entity.
    */
   public function setTitle($title);
 
@@ -86,7 +85,6 @@ interface NodeInterface extends ContentEntityInterface, EntityChangedInterface, 
    *   The node creation timestamp.
    *
    * @return $this
-   *   The called node entity.
    */
   public function setCreatedTime($timestamp);
 
@@ -105,7 +103,6 @@ interface NodeInterface extends ContentEntityInterface, EntityChangedInterface, 
    *   TRUE to set this node to promoted, FALSE to set it to not promoted.
    *
    * @return $this
-   *   The called node entity.
    */
   public function setPromoted($promoted);
 
@@ -124,7 +121,6 @@ interface NodeInterface extends ContentEntityInterface, EntityChangedInterface, 
    *   TRUE to set this node to sticky, FALSE to set it to not sticky.
    *
    * @return $this
-   *   The called node entity.
    */
   public function setSticky($sticky);
 
@@ -143,7 +139,6 @@ interface NodeInterface extends ContentEntityInterface, EntityChangedInterface, 
    *   The UNIX timestamp of when this revision was created.
    *
    * @return $this
-   *   The called node entity.
    */
   public function setRevisionCreationTime($timestamp);
 

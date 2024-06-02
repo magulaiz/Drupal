@@ -100,7 +100,6 @@ interface TypedDataInterface {
    *   avoid being notified again.
    *
    * @return $this
-   *   Returns itself to allow for chaining.
    */
   public function applyDefaultValue($notify = TRUE);
 

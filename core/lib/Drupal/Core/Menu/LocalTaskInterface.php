@@ -71,7 +71,6 @@ interface LocalTaskInterface {
    *   Sets whether this tab is active (e.g. a parent of the current tab).
    *
    * @return $this
-   *   The called object for chaining.
    */
   public function setActive($active = TRUE);
 

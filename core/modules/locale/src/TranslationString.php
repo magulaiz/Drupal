@@ -59,7 +59,6 @@ class TranslationString extends StringBase {
    *   (optional) Whether the string is customized or not. Defaults to TRUE.
    *
    * @return $this
-   *   The called object.
    */
   public function setCustomized($customized = TRUE) {
     $this->customized = $customized ? LOCALE_CUSTOMIZED : LOCALE_NOT_CUSTOMIZED;

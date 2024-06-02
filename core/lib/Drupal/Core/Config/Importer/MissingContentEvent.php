@@ -47,7 +47,6 @@ class MissingContentEvent extends Event {
    *   The UUID of the content entity to mark resolved.
    *
    * @return $this
-   *   The MissingContentEvent object.
    */
   public function resolveMissingContent($uuid) {
     if (isset($this->missingContent[$uuid])) {

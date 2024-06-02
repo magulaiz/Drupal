@@ -174,7 +174,6 @@ interface StorageInterface {
    *   particular collection.
    *
    * @return $this
-   *   A new instance of the storage backend with the collection set.
    */
   public function createCollection($collection);
 

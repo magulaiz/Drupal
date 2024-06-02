@@ -118,7 +118,6 @@ class Config extends StorableConfigBase {
    *   The overridden values of the configuration data.
    *
    * @return $this
-   *   The configuration object.
    */
   public function setSettingsOverride(array $data) {
     $this->settingsOverrides = $data;
@@ -133,7 +132,6 @@ class Config extends StorableConfigBase {
    *   The overridden values of the configuration data.
    *
    * @return $this
-   *   The configuration object.
    */
   public function setModuleOverride(array $data) {
     $this->moduleOverrides = $data;
@@ -150,7 +148,6 @@ class Config extends StorableConfigBase {
    * determined by the priority of the config.factory.override tagged services.
    *
    * @return $this
-   *   The configuration object.
    */
   protected function setOverriddenData() {
     $this->overriddenData = $this->data;
@@ -170,7 +167,6 @@ class Config extends StorableConfigBase {
    * has been changed.
    *
    * @return $this
-   *   The configuration object.
    */
   protected function resetOverriddenData() {
     unset($this->overriddenData);
@@ -235,7 +231,6 @@ class Config extends StorableConfigBase {
    * Deletes the configuration object.
    *
    * @return $this
-   *   The configuration object.
    */
   public function delete() {
     $this->data = [];

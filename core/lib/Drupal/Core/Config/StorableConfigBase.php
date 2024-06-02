@@ -92,7 +92,6 @@ abstract class StorableConfigBase extends ConfigBase {
    *   Array of loaded data for this configuration object.
    *
    * @return $this
-   *   The configuration object.
    */
   public function initWithData(array $data) {
     $this->isNew = FALSE;
