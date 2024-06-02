@@ -19,7 +19,7 @@ class ChoiceConstraint extends Choice {
    * {@inheritdoc}
    */
   public function __construct(...$args) {
-    $this->message = "'@choice' is not a valid choice.";
+    $this->message = "%value is not a valid choice.";
     parent::__construct(...$args);
   }
 
