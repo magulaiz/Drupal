@@ -14,6 +14,7 @@ namespace Drupal\mysql\Driver\Database\mysql;
  * @link https://mariadb.com/kb/en/sql-mode/
  */
 class SqlMode {
+
   /**
    * ANSI changes the SQL syntax to be closer to ANSI SQL.
    *
@@ -23,17 +24,17 @@ class SqlMode {
    *
    *   ANSI_QUOTES
    *   IGNORE_SPACE
-   *   ONLY_FULL_GROUP_BY (Mysql only)
+   *   ONLY_FULL_GROUP_BY (Included by Mysql, but not Mariadb.)
    *   PIPES_AS_CONCAT
    *   REAL_AS_FLOAT
    */
   const ANSI = "ANSI";
 
   /**
-   * TRADITIONAL make MySQL behave like a “traditional” SQL database system.
+   * TRADITIONAL makes MySQL behave like a “traditional” SQL database system.
    *
    * This is a meta-mode that sets a certain set of other SQL modes
-   * When selected. Drupal enables TRADITIONAL mode by default. The
+   * when selected. Drupal enables TRADITIONAL mode by default. The
    * following modes are set when TRADITIONAL is selected:
    *
    *   ERROR_FOR_DIVISION_BY_ZERO
