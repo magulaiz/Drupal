@@ -18,11 +18,11 @@ class SqlMode {
    * ANSI changes the SQL syntax to be closer to ANSI SQL.
    *
    * This is a meta-mode that sets a certain set of other SQL modes
-   * When selected. Drupal enables ANSI mode by default. The 
+   * When selected. Drupal enables ANSI mode by default. The
    * following modes are set when ANSI is selected:
    *
    *   ANSI_QUOTES
-   *   IGNORE_SPACE 
+   *   IGNORE_SPACE
    *   ONLY_FULL_GROUP_BY (Mysql only)
    *   PIPES_AS_CONCAT
    *   REAL_AS_FLOAT
@@ -33,7 +33,7 @@ class SqlMode {
    * TRADITIONAL make MySQL behave like a “traditional” SQL database system.
    *
    * This is a meta-mode that sets a certain set of other SQL modes
-   * When selected. Drupal enables TRADITIONAL mode by default. The 
+   * When selected. Drupal enables TRADITIONAL mode by default. The
    * following modes are set when TRADITIONAL is selected:
    *
    *   ERROR_FOR_DIVISION_BY_ZERO
