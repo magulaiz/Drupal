@@ -44,8 +44,10 @@ class RequestPathTest extends KernelTestBase {
    * Modules to enable.
    *
    * @var array
+   *
+   * @todo split path_alias to a separate test.
    */
-  protected static $modules = ['system', 'user', 'field', 'path'];
+  protected static $modules = ['system', 'user', 'field', 'path', 'path_alias'];
 
   /**
    * The current path.

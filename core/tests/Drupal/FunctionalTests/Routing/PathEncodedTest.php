@@ -21,7 +21,7 @@ class PathEncodedTest extends BrowserTestBase {
   /**
    * {@inheritdoc}
    */
-  protected static $modules = ['system', 'path_encoded_test'];
+  protected static $modules = ['system', 'path_alias', 'path_encoded_test'];
 
   /**
    * {@inheritdoc}

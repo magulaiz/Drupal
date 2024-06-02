@@ -38,6 +38,10 @@ class DistributionProfileTest extends InstallerTestBase {
           'finish_url' => '/root-user',
         ],
       ],
+      // @todo determine why we're adding a path alias in this test and if this can be removed.
+      'install' => [
+        'path_alias',
+      ],
     ];
     // File API functions are not available yet.
     $path = $this->siteDirectory . '/profiles/my_distribution';

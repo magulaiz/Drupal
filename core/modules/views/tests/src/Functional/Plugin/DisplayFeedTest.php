@@ -31,7 +31,7 @@ class DisplayFeedTest extends ViewTestBase {
    *
    * @var array
    */
-  protected static $modules = ['block', 'node', 'views', 'views_test_rss'];
+  protected static $modules = ['block', 'node', 'views', 'views_test_rss', 'path_alias'];
 
   /**
    * {@inheritdoc}

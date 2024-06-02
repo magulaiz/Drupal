@@ -25,6 +25,7 @@ install:
   - menu_ui
   - options
   - path
+  - path_alias
   - page_cache
   - dynamic_page_cache
   - taxonomy
