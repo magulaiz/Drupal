@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Drupal\Tests\mysql\Kernel\mysql;
 
 use Drupal\KernelTests\Core\Database\DriverSpecificDatabaseTestBase;
+use Drupal\mysql\Driver\Database\mysql\SqlMode;
 
 /**
  * Tests compatibility of the MySQL driver when disabling the ANSI_QUOTES sql_mode option.
@@ -51,10 +52,10 @@ class SqlModeTest extends DriverSpecificDatabaseTestBase {
       // In order to disable ANSI_QUOTES, we must disable the ANSI meta-mode,
       // which is enabled by default in Connection::open(), as setting ANSI
       // also sets ANSI_QUOTES.
-      $info['default']['sql_mode_options']['ANSI'] = FALSE;
+      $info['default']['sql_mode_options'][SqlMode::ANSI] = FALSE;
       // We disable TRADITIONAL as well, simply to ensure that the driver does
       // not set any modes for this test.
-      $info['default']['sql_mode_options']['TRADITIONAL'] = FALSE;
+      $info['default']['sql_mode_options'][SqlMode::TRADITIONAL] = FALSE;
     }
 
     return $info;

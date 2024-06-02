@@ -211,8 +211,8 @@ class Connection extends DatabaseConnection implements SupportsTemporaryTablesIn
     $sql_mode_defaults = [
       // An option may be removed by setting it to FALSE in the
       // sql_mode_options array.
-      'ANSI' => TRUE,
-      'TRADITIONAL' => TRUE,
+      SqlMode::ANSI => TRUE,
+      SqlMode::TRADITIONAL => TRUE,
     ];
 
     // sql_mode replaces the defaults when it is used
