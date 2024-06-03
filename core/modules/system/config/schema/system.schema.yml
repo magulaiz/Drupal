@@ -304,6 +304,8 @@ system.action.*:
     type:
       type: string
       label: 'Type'
+      # Action can be specified without type.
+      # @see \Drupal\action_test\Plugin\Action\NoType
       nullable: true
       constraints:
         NotBlank:
