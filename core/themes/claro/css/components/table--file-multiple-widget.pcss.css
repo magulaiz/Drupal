@@ -53,6 +53,13 @@
   }
 }
 
+[dir="rtl"] .table-file-multiple-widget {
+  & .tabledrag-handle,
+  & .tabledrag-changed {
+    float: inline-end;
+  }
+}
+
 .no-touchevents .table-file-multiple-widget .checkbox .form-type--boolean {
   line-height: var(--line-height);
 }

@@ -66,6 +66,11 @@
   line-height: calc(var(--space-m) * 3);
 }
 
+[dir="rtl"] .table-file-multiple-widget .tabledrag-handle,
+[dir="rtl"] .table-file-multiple-widget .tabledrag-changed {
+  float: right;
+}
+
 .no-touchevents .table-file-multiple-widget .checkbox .form-type--boolean {
   line-height: var(--line-height);
 }
