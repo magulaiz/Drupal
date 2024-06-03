@@ -21,7 +21,7 @@ class CorsIntegrationTest extends BrowserTestBase {
   /**
    * {@inheritdoc}
    */
-  protected static $modules = ['system', 'test_page_test', 'page_cache', 'ajax_test'];
+  protected static $modules = ['system', 'test_page_test', 'page_cache'];
 
   /**
    * {@inheritdoc}

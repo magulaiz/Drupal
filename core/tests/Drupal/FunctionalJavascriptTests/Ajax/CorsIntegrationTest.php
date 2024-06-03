@@ -47,11 +47,15 @@ class CorsIntegrationTest extends WebDriverTestBase {
     $this->assertFalse($cors_config['supportsCredentials'] ?? FALSE);
     $this->assertFalse($settings['ajaxCrossDomain']['withCredentials'] ?? FALSE);
 
+    // Reset page cache
+    $this->resetAll();
+
     // Test ajaxCrossDomain is set if supportsCredentials is set.
     $cors_config['supportsCredentials'] = TRUE;
     $this->setContainerParameter('cors.config', $cors_config);
     $this->rebuildContainer();
 
+    // Cache bust the request, reload the test page.
     $this->drupalGet('ajax-test/dialog');
     $cors_config = $this->container->getParameter('cors.config');
     $settings = $this->getDrupalSettings();
