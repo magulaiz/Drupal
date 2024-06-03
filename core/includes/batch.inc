@@ -20,8 +20,8 @@ use Drupal\Core\Batch\Percentage;
 use Drupal\Core\Form\FormState;
 use Drupal\Core\Url;
 use Symfony\Component\HttpFoundation\JsonResponse;
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Renders the batch processing page based on the current state of the batch.
@@ -161,7 +161,6 @@ function _batch_progress_page() {
   }
   else {
     // This is one of the later requests; do some processing first.
-
     // Error handling: if PHP dies due to a fatal error (e.g. a nonexistent
     // function), it will output whatever is in the output buffer, followed by
     // the error message.
@@ -336,7 +335,6 @@ function _batch_process() {
 
   if ($batch['progressive']) {
     // Gather progress information.
-
     // Reporting 100% progress will cause the whole batch to be considered
     // processed. If processing was paused right after moving to a new set,
     // we have to use the info from the new (unprocessed) set.

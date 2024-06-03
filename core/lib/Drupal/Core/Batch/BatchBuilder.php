@@ -317,7 +317,7 @@ class BatchBuilder {
     $this->operations[] = [
       // Use callable resolver service to allow callbacks in service notation.
       \Drupal::service('callable_resolver')->getCallableFromDefinition($callback),
-      $arguments
+      $arguments,
     ];
     return $this;
   }
