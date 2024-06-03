@@ -1016,4 +1016,55 @@ class DriverSpecificTransactionTestBase extends DriverSpecificDatabaseTestBase {
     Database::closeConnection('test_fail');
   }
 
+  /**
+   * Test that different connections to not share a transaction.
+   */
+  public function testTransactionMultipleConnections() {
+    \Drupal::database()->truncate('test')->execute();
+    // Setup a secondary database connection.
+    $connection_info = Database::getConnectionInfo('default');
+    Database::addConnectionInfo('default', 'nontransactional', $connection_info['default']);
+
+    /** @var \Drupal\Core\Database\Connection $connection_default */
+    $connection_default = \Drupal::service('database');
+    /** @var \Drupal\Core\Database\Connection $connection_nontransactional */
+    $connection_nontransactional = \Drupal::service('database.nontransactional');
+    // Ensure that the new connection is a different one.
+    $this->assertNotEquals(spl_object_hash($connection_nontransactional), spl_object_hash($connection_default));
+
+    // Open up a transaction in the first connection, add an entry in a table.
+    // Ensure that it can be access in the first connection, but not access in
+    // the non-transactional database connection.
+    $transaction = $connection_default->startTransaction();
+    $connection_default
+      ->insert('test')
+      ->fields(['name' => 'Tim', 'age' => '30'])
+      ->execute();
+    $connection_default
+      ->insert('test')
+      ->fields(['name' => 'Damian', 'age' => '30'])
+      ->execute();
+
+    $this->assertEquals(2, count($connection_default->select('test')
+      ->fields('test')
+      ->execute()
+      ->fetchAllAssoc('name')));
+    $this->assertEquals(0, count($connection_nontransactional->select('test')
+      ->fields('test')
+      ->execute()
+      ->fetchAllAssoc('name')));
+
+    // Unset the transaction to commit it.
+    unset($transaction);
+
+    $this->assertEquals(2, count($connection_default->select('test')
+      ->fields('test')
+      ->execute()
+      ->fetchAllAssoc('name')));
+    $this->assertEquals(2, count($connection_nontransactional->select('test')
+      ->fields('test')
+      ->execute()
+      ->fetchAllAssoc('name')));
+  }
+
 }

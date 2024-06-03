@@ -181,4 +181,78 @@ class ConnectionTest extends DatabaseTestBase {
     $this->assertTrue($this->connection->hasJson());
   }
 
+  /**
+   * Tests wrapping an existing connection as non-transactional.
+   */
+  public function testNonTransactionalWrappedConnection(): void {
+    $nonTransactionalConnection = Database::getConnection('default', 'default', TRUE);
+
+    // Start a transaction on the default database, but don't commit.
+    $transaction = $this->connection->startTransaction();
+    $this->connection->insert('test')
+      ->fields([
+        'name' => 'Brad',
+        'age' => 40,
+        'job' => 'More Cowbell',
+      ])
+      ->execute();
+    $cowbellPlayers = (int) $nonTransactionalConnection
+      ->select('test')
+      ->condition('job', 'More Cowbell')
+      ->countQuery()
+      ->execute()
+      ->fetchField();
+    // The non-transactional connection doesn't see the inserted data, yet.
+    $this->assertEquals(0, $cowbellPlayers);
+    $cowbellPlayers = (int) $this->connection
+      ->select('test')
+      ->condition('job', 'More Cowbell')
+      ->countQuery()
+      ->execute()
+      ->fetchField();
+    // The transactional connection already has more cowbell.
+    // Note, this is due to the default being READ COMMITTED.
+    $this->assertEquals(1, $cowbellPlayers);
+    // Insert another cowbell player on the non-transactional connection.
+    $nonTransactionalConnection->insert('test')
+      ->fields([
+        'name' => 'Gianna',
+        'age' => 32,
+        'job' => 'More Cowbell',
+      ])
+      ->execute();
+    $cowbellPlayers = (int) $nonTransactionalConnection
+      ->select('test')
+      ->condition('job', 'More Cowbell')
+      ->countQuery()
+      ->execute()
+      ->fetchField();
+    $this->assertEquals(1, $cowbellPlayers);
+    $cowbellPlayers = (int) $this->connection
+      ->select('test')
+      ->condition('job', 'More Cowbell')
+      ->countQuery()
+      ->execute()
+      ->fetchField();
+    $this->assertEquals(1, $cowbellPlayers);
+    // Commit the transaction on destroy.
+    unset($transaction);
+    $cowbellPlayers = (int) $nonTransactionalConnection
+      ->select('test')
+      ->condition('job', 'More Cowbell')
+      ->countQuery()
+      ->execute()
+      ->fetchField();
+    // The non-transactional connection sees both players.
+    $this->assertEquals(2, $cowbellPlayers);
+    $cowbellPlayers = (int) $this->connection
+      ->select('test')
+      ->condition('job', 'More Cowbell')
+      ->countQuery()
+      ->execute()
+      ->fetchField();
+    // The transactional connection sees both players.
+    $this->assertEquals(2, $cowbellPlayers);
+  }
+
 }

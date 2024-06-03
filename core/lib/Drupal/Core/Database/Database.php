@@ -58,6 +58,8 @@ abstract class Database {
    */
   protected static $logs = [];
 
+  protected static array $nonTransactionalConnections = [];
+
   /**
    * Starts logging a given logging key on the specified connection.
    *
@@ -129,7 +131,7 @@ abstract class Database {
    * @return \Drupal\Core\Database\Connection
    *   The corresponding connection object.
    */
-  final public static function getConnection($target = 'default', $key = NULL) {
+  final public static function getConnection($target = 'default', $key = NULL, bool $nonTransactional = FALSE) {
     if (!isset($key)) {
       // By default, we want the active connection, set in setActiveConnection.
       $key = self::$activeKey;
@@ -147,7 +149,34 @@ abstract class Database {
       // If necessary, a new connection is opened.
       self::$connections[$key][$target] = self::openConnection($key, $target);
     }
+    if ($nonTransactional) {
+      if (!(self::$nonTransactionalConnections[$key][$target] ?? NULL)) {
+        $nonTransactionalTarget = self::getUniqueTargetForKey($key, 'auto_nontransactional');
+        self::addConnectionInfo(
+          $key,
+          $nonTransactionalTarget,
+          self::getConnectionInfo($key)[$target],
+        );
+        self::$nonTransactionalConnections[$key][$target] = new NonTransactionalConnection(self::getConnection($nonTransactionalTarget, $key));
+      }
+      return self::$nonTransactionalConnections[$key][$target];
+    }
     return self::$connections[$key][$target];
+  }
+
+  protected static function getUniqueTargetForKey(string $key, string $target): string {
+    $uniqueTarget = '';
+    $attempts = 0;
+    while ($uniqueTarget === '') {
+      $candidate = $target . ($attempts > 0 ? "_$attempts" : '');
+      if (empty(self::$connections[$key][$candidate])) {
+        $uniqueTarget = $candidate;
+      }
+      else {
+        $attempts++;
+      }
+    }
+    return $uniqueTarget;
   }
 
   /**

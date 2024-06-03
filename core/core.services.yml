@@ -239,7 +239,7 @@ services:
       - [setContainer, ['@service_container']]
   cache.backend.database:
     class: Drupal\Core\Cache\DatabaseBackendFactory
-    arguments: ['@database', '@cache_tags.invalidator.checksum', '@settings', '@serialization.phpserialize', '@datetime.time']
+    arguments: ['@database.nontransactional', '@cache_tags.invalidator.checksum', '@settings', '@serialization.phpserialize', '@datetime.time']
     tags:
       - { name: backend_overridable }
   cache.backend.apcu:
@@ -459,6 +459,10 @@ services:
     factory: Drupal\Core\Database\Database::getConnection
     arguments: [default]
   Drupal\Core\Database\Connection: '@database'
+  database.nontransactional:
+    class: Drupal\Core\Database\Connection
+    factory: Drupal\Core\Database\Database::getConnection
+    arguments: [default, null, true]
   database.replica:
     class: Drupal\Core\Database\Connection
     factory: Drupal\Core\Database\Database::getConnection
@@ -581,7 +585,7 @@ services:
   Drupal\Core\Queue\QueueFactory: '@queue'
   queue.database:
     class: Drupal\Core\Queue\QueueDatabaseFactory
-    arguments: ['@database']
+    arguments: ['@database.nontransactional']
   Drupal\Core\Queue\QueueDatabaseFactory: '@queue.database'
   path.current:
     class: Drupal\Core\Path\CurrentPathStack
@@ -1026,13 +1030,13 @@ services:
   Drupal\Core\Validation\BasicRecursiveValidatorFactory: '@validation.basic_recursive_validator_factory'
   lock:
     class: Drupal\Core\Lock\DatabaseLockBackend
-    arguments: ['@database']
+    arguments: ['@database.nontransactional']
     tags:
       - { name: backend_overridable }
     lazy: true
   lock.persistent:
     class: Drupal\Core\Lock\PersistentDatabaseLockBackend
-    arguments: ['@database']
+    arguments: ['@database.nontransactional']
     tags:
       - { name: backend_overridable }
     lazy: true
@@ -1627,7 +1631,7 @@ services:
     alias: session_handler.storage
   session_handler.storage:
     class: Drupal\Core\Session\SessionHandler
-    arguments: ['@request_stack', '@database', '@datetime.time']
+    arguments: ['@request_stack', '@database.nontransactional', '@datetime.time']
     tags:
       - { name: backend_overridable }
   session_handler.write_safe:

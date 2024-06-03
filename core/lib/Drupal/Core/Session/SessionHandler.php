@@ -6,6 +6,7 @@ use Drupal\Component\Datetime\TimeInterface;
 use Drupal\Component\Utility\Crypt;
 use Drupal\Core\Database\Connection;
 use Drupal\Core\Database\DatabaseException;
+use Drupal\Core\Database\NonTransactionalConnection;
 use Drupal\Core\DependencyInjection\DependencySerializationTrait;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Session\Storage\Proxy\AbstractProxy;
@@ -32,6 +33,9 @@ class SessionHandler extends AbstractProxy implements \SessionHandlerInterface {
     protected Connection $connection,
     protected TimeInterface $time,
   ) {
+    if (!($connection instanceof NonTransactionalConnection)) {
+      @trigger_error('Calling ' . __METHOD__ . '() without an explicitly non-transactional database connection in drupal:10.3.0 and will be required in drupal:12.0.0. See https://www.drupal.org/node/3310017', E_USER_DEPRECATED);
+    }
   }
 
   /**
