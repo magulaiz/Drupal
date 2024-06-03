@@ -16,7 +16,8 @@ Drupal.behaviors.makeStikcyOptional = {
       const previousElement = stickyHeaderElement.previousElementSibling;
       const checkbox = previousElement.querySelector('input[type="checkbox"]');
 
-      const isStickyHeaderEnabled = localStorage.getItem('stickyHeaderEnabled') === 'true';
+      const storedValue = localStorage.getItem('stickyHeaderEnabled');
+      const isStickyHeaderEnabled = storedValue === null ? true : storedValue === 'true';
       checkbox.checked = isStickyHeaderEnabled;
       stickyHeaderElement.classList.toggle('sticky-header', isStickyHeaderEnabled);
 
