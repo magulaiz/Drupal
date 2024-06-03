@@ -3178,8 +3178,7 @@ abstract class ResourceTestBase extends BrowserTestBase {
       $expected_document['errors'][0]['links']['via']['href'] = $relationship_url->toString();
       // Only add node type check tags for non-default revisions.
       $expected_cache_tags = !in_array($relationship_type, $default_revision_types, TRUE) ? Cache::mergeTags($expected_cacheability->getCacheTags(), $this->getExtraRevisionCacheTags()) : $expected_cacheability->getCacheTags();
-      // @todo How to fix this? https://drupal.slack.com/archives/C1BMUQ9U6/p1716897593880139
-      //   $this->assertResourceResponse(403, $expected_document, $actual_response, $expected_cache_tags, $expected_cacheability->getCacheContexts());
+      $this->assertResourceResponse(403, $expected_document, $actual_response, $expected_cache_tags, $expected_cacheability->getCacheContexts());
       // Request the related route.
       $actual_response = $this->request('GET', $related_url, $request_options);
       // @todo: refactor self::getExpectedRelatedResponses() into a function which returns a single response.
@@ -3187,8 +3186,7 @@ abstract class ResourceTestBase extends BrowserTestBase {
       $expected_document = $expected_response->getResponseData();
       $expected_cacheability = $expected_response->getCacheableMetadata();
       $expected_document['errors'][0]['links']['via']['href'] = $related_url->toString();
-      // @todo How to fix this? https://drupal.slack.com/archives/C1BMUQ9U6/p1716897593880139
-      // $this->assertResourceResponse(403, $expected_document, $actual_response, $expected_cache_tags, $expected_cacheability->getCacheContexts());
+      $this->assertResourceResponse(403, $expected_document, $actual_response, $expected_cache_tags, $expected_cacheability->getCacheContexts());
     }
     $this->grantPermissionsToTestedRole(['field_jsonapi_test_entity_ref view access']);
     foreach ($test_relationship_urls as $relationship_type => $revision_case) {

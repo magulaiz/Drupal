@@ -48,12 +48,9 @@ class RouteAccessResponseSubscriber implements EventSubscriberInterface {
    * {@inheritdoc}
    */
   public static function getSubscribedEvents(): array {
-    // Priority 110, so that it runs before DynamicPageCacheSubscriber,
-    // because access related cacheability information MUST BE considered
-    // when cache-or-not is decided.
-    // This also should run before FinishResponseSubscriber, which will
+    // Priority 10, so that it runs before FinishResponseSubscriber, which will
     // expose the cacheability metadata in the form of headers.
-    $events[KernelEvents::RESPONSE][] = ['onRespond', 110];
+    $events[KernelEvents::RESPONSE][] = ['onRespond', 10];
     return $events;
   }
 
