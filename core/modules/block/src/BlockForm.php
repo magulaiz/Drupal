@@ -267,7 +267,6 @@ class BlockForm extends EntityForm {
       'entity_bundle:node',
       'language',
       'response_status',
-      'user_role',
     ];
     foreach ($disable_negation as $condition) {
       if (isset($form[$condition])) {
