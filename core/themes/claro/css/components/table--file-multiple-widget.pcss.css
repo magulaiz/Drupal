@@ -21,7 +21,7 @@
   }
   & .tabledrag-handle,
   & .tabledrag-changed {
-    float: inline-start;
+    float: left;
   }
   & .tabledrag-changed {
     line-height: calc(
@@ -56,7 +56,7 @@
 [dir="rtl"] .table-file-multiple-widget {
   & .tabledrag-handle,
   & .tabledrag-changed {
-    float: inline-end;
+    float: right;
   }
 }
 
