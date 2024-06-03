@@ -8,10 +8,10 @@
           </div>`;
   };
 
-  Drupal.behaviors.makeStikcyOptional = {
+  Drupal.behaviors.makeStickyOptional = {
     attach(context) {
       const stickyHeaderElement = once(
-        'makeStikcyOptional',
+        'makeStickyOptional',
         '.views-table',
         context,
       ).shift();
