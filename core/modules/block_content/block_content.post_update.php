@@ -13,153 +13,19 @@ use Drupal\user\Entity\Role;
 use Drupal\views\Entity\View;
 use Drupal\views\ViewExecutable;
 
+
 /**
  * Implements hook_removed_post_updates().
  */
 function block_content_removed_post_updates() {
   return [
     'block_content_post_update_add_views_reusable_filter' => '9.0.0',
+    'block_content_post_update_entity_changed_constraint' => '11.0.0',
+    'block_content_post_update_move_custom_block_library' => '11.0.0',
+    'block_content_post_update_block_library_view_permission' => '11.0.0',
+    'block_content_post_update_sort_permissions' => '11.0.0',
+    'block_content_post_update_revision_type' => '11.0.0',
   ];
-}
-
-/**
- * Clear the entity type cache.
- */
-function block_content_post_update_entity_changed_constraint() {
-  // Empty post_update hook.
-}
-
-/**
- * Moves the custom block library to Content.
- */
-function block_content_post_update_move_custom_block_library() {
-
-  if (!\Drupal::service('module_handler')->moduleExists('views')) {
-    return;
-  }
-  if (!$view = View::load('block_content')) {
-    return;
-  }
-
-  $display =& $view->getDisplay('page_1');
-  if (empty($display) || $display['display_options']['path'] !== 'admin/structure/block/block-content') {
-    return;
-  }
-
-  $display['display_options']['path'] = 'admin/content/block';
-  $menu =& $display['display_options']['menu'];
-  $menu['title'] = 'Blocks';
-  $menu['description'] = 'Create and edit block content.';
-  $menu['expanded'] = FALSE;
-  $menu['parent'] = 'system.admin_content';
-  $view->set('label', 'Content blocks');
-
-  $view->save();
-}
-
-/**
- * Update block_content 'block library' view permission.
- */
-function block_content_post_update_block_library_view_permission() {
-  $config_factory = \Drupal::configFactory();
-  $config = $config_factory->getEditable('views.view.block_content');
-  $current_perm = $config->get('display.default.display_options.access.options.perm');
-  if ($current_perm === 'administer blocks') {
-    $config->set('display.default.display_options.access.options.perm', 'access block library')
-      ->save(TRUE);
-  }
-}
-
-/**
- * Update permissions for users with "administer blocks" permission.
- */
-function block_content_post_update_sort_permissions(&$sandbox = NULL) {
-  \Drupal::classResolver(ConfigEntityUpdater::class)->update($sandbox, 'user_role', function (Role $role) {
-    if ($role->hasPermission('administer blocks')) {
-      $role->grantPermission('administer block content');
-      $role->grantPermission('access block library');
-      $role->grantPermission('administer block types');
-      return TRUE;
-    }
-    return FALSE;
-  });
-}
-
-/**
- * Add status with settings to all form displays for block_content entities.
- */
-function block_content_post_update_configure_status_field_widget(&$sandbox = NULL): void {
-  \Drupal::classResolver(ConfigEntityUpdater::class)->update($sandbox, 'entity_form_display', function (EntityDisplayInterface $entity_form_display) {
-    if ($entity_form_display->getTargetEntityTypeId() === 'block_content' && empty($entity_form_display->getComponent('status'))) {
-      $entity_form_display->setComponent('status', [
-        'type' => 'boolean_checkbox',
-        'settings' => [
-          'display_label' => TRUE,
-        ],
-        'weight' => 10,
-      ]);
-      return TRUE;
-    }
-    return FALSE;
-  });
-}
-
-/**
- * Add publish and unpublish actions for block content.
- */
-function block_content_post_update_status_actions_update(&$sandbox = NULL): void {
-  // Add publish action.
-  /** @var \Drupal\Core\Config\Config $publish_action */
-  $publish_action = \Drupal::service('config.factory')
-    ->getEditable('system.action.block_content_publish_action');
-  $config_data_publish = [
-    "langcode" => "en",
-    "status" => TRUE,
-    "dependencies" => [
-      "module" => [
-        "block_content",
-      ],
-    ],
-    "id" => "block_content_publish_action",
-    "label" => "Publish block content",
-    "type" => "block_content",
-    "plugin" => "entity:publish_action:block_content",
-    "configuration" => [],
-  ];
-  $publish_action->setData($config_data_publish);
-  $publish_action->save(TRUE);
-
-  // Add unpublish action.
-  /** @var \Drupal\Core\Config\Config $unpublish_action */
-  $unpublish_action = \Drupal::service('config.factory')
-    ->getEditable('system.action.block_content_unpublish_action');
-  $config_data_unpublish = [
-    "langcode" => "en",
-    "status" => TRUE,
-    "dependencies" => [
-      "module" => [
-        "block_content",
-      ],
-    ],
-    "id" => "block_content_unpublish_action",
-    "label" => "Unpublish block content",
-    "type" => "block_content",
-    "plugin" => "entity:unpublish_action:block_content",
-    "configuration" => [],
-  ];
-  $unpublish_action->setData($config_data_unpublish);
-  $unpublish_action->save(TRUE);
-}
-
-/**
- * Update configuration for revision type.
- */
-function block_content_post_update_revision_type(&$sandbox = NULL) {
-  \Drupal::classResolver(ConfigEntityUpdater::class)
-    ->update($sandbox, 'block_content_type', function (BlockContentTypeInterface $block_content_type) {
-      $block_content_type->set('revision', (bool) $block_content_type->get('revision'));
-      return TRUE;
-    });
 }
 
 function block_content_post_update_add_status_view_updates(&$sandbox = NULL) {

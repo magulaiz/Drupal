@@ -17,6 +17,7 @@ use Drupal\Core\DependencyInjection\ServiceProviderInterface;
 use Drupal\Core\DependencyInjection\YamlFileLoader;
 use Drupal\Core\Extension\Extension;
 use Drupal\Core\Extension\ExtensionDiscovery;
+use Drupal\Core\File\MimeType\MimeTypeGuesser;
 use Drupal\Core\Http\TrustedHostsRequestFactory;
 use Drupal\Core\Installer\InstallerKernel;
 use Drupal\Core\Installer\InstallerRedirectTrait;
@@ -596,6 +597,9 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
     // Set the allowed protocols.
     UrlHelper::setAllowedProtocols($this->container->getParameter('filter_protocols'));
 
+    // Override of Symfony's MIME type guesser singleton.
+    MimeTypeGuesser::registerWithSymfonyGuesser($this->container);
+
     $this->prepared = TRUE;
   }
 
@@ -1001,7 +1005,7 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
 
     // Set sane locale settings, to ensure consistent string, dates, times and
     // numbers handling.
-    setlocale(LC_ALL, 'C');
+    setlocale(LC_ALL, 'C.UTF-8', 'C');
 
     // Set appropriate configuration for multi-byte strings.
     mb_internal_encoding('utf-8');

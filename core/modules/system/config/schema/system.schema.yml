@@ -325,11 +325,6 @@ system.file:
     path:
       type: mapping
       label: 'Path settings'
-      mapping:
-        temporary:
-          deprecated: "The 'system.file:path.temporary' config property path is deprecated in drupal:8.8.0 and is removed from drupal 11.0.0. Use settings.php instead. See https://www.drupal.org/node/3039255."
-          type: string
-          label: 'Temporary directory'
     temporary_maximum_age:
       type: integer
       label: 'Maximum age for temporary files'
@@ -425,6 +420,8 @@ system.theme.global:
 system.advisories:
   type: config_object
   label: 'Security advisory settings'
+  constraints:
+    FullyValidatable: ~
   mapping:
     enabled:
       type: boolean
@@ -432,6 +429,11 @@ system.advisories:
     interval_hours:
       type: integer
       label: 'How often to check for security advisories, in hours'
+      # Minimum can be set to 0 as it just means the advisories will be retrieved on every call.
+      # @see \Drupal\system\SecurityAdvisories\SecurityAdvisoriesFetcher::getSecurityAdvisories
+      constraints:
+        Range:
+          min: 0
 
 block.settings.system_branding_block:
   type: block_settings
