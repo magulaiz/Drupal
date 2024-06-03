@@ -39,6 +39,7 @@ class StickyHeaderToggleTest extends WebDriverTestBase {
     $this->getSession()->evaluateScript('scroll(0, document.documentElement.scrollTop - 1500);');
     $checkbox->uncheck();
     $this->assertFalse($checkbox->isChecked());
+    $this->getSession()->evaluateScript('scroll(0, document.documentElement.scrollTop + 1500);');
     $assert_session->assertNotVisibleInViewport('css', '.views-table thead');
   }
 

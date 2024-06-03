@@ -687,14 +687,12 @@ drupal.tableheader:
   css:
     component:
       misc/components/sticky-header.module.css: { weight: -10 }
+      misc/stickyheadertoggle.css: { }
 
 drupal.tableresponsive:
   version: VERSION
   js:
     misc/tableresponsive.js: {}
-  css:
-    component:
-      misc/stickyheadertoggle.css: { }
   dependencies:
     - core/jquery
     - core/drupal
