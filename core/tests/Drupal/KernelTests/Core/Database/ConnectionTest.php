@@ -7,6 +7,8 @@ namespace Drupal\KernelTests\Core\Database;
 use Drupal\Core\Database\Database;
 use Drupal\Core\Database\Query\Condition;
 
+// cspell:ignore gianna
+
 /**
  * Tests of the core database system.
  *

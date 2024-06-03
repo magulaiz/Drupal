@@ -127,6 +127,8 @@ abstract class Database {
    *   The database target name.
    * @param string $key
    *   The database connection key. Defaults to NULL which means the active key.
+   * @param bool $nonTransactional
+   *   Whether the connection should be a non-transactional version.
    *
    * @return \Drupal\Core\Database\Connection
    *   The corresponding connection object.

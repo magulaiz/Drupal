@@ -34,7 +34,7 @@ class SessionHandler extends AbstractProxy implements \SessionHandlerInterface {
     protected TimeInterface $time,
   ) {
     if (!($connection instanceof NonTransactionalConnection)) {
-      @trigger_error('Calling ' . __METHOD__ . '() without an explicitly non-transactional database connection in drupal:10.3.0 and will be required in drupal:12.0.0. See https://www.drupal.org/node/3310017', E_USER_DEPRECATED);
+      @trigger_error('Calling ' . __METHOD__ . '() without an explicitly non-transactional database connection is deprecated in drupal:10.3.0 and will be required in drupal:12.0.0. See https://www.drupal.org/node/3310017', E_USER_DEPRECATED);
     }
   }
 
