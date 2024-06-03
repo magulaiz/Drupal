@@ -427,12 +427,12 @@ function _batch_next_set() {
   if (isset($set_indexes[$current_set_index_key + 1])) {
     $batch['current_set'] = $set_indexes[$current_set_index_key + 1];
     $current_set = &_batch_current_set();
-    if (isset($current_set['form_submit']) && ($callback = $current_set['form_submit']) && is_callable($callback)) {
+    if (isset($current_set['form_submit'])) {
+      // Use callable resolver service to allow callbacks in service notation.
+      $callable = \Drupal::service('callable_resolver')->getCallableFromDefinition($current_set['form_submit']);
       // We use our stored copies of $form and $form_state to account for
       // possible alterations by previous form submit handlers.
       $complete_form = &$batch['form_state']->getCompleteForm();
-      // Use callable resolver service to allow callbacks in service notation.
-      $callable = \Drupal::service('callable_resolver')->getCallableFromDefinition($callback);
       call_user_func_array($callable, [&$complete_form, &$batch['form_state']]);
     }
     return TRUE;

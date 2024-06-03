@@ -144,7 +144,8 @@ class BatchBuilder {
    * @return $this
    */
   public function setFinishCallback(callable $callback) {
-    $this->finished = $callback;
+    // Use callable resolver service to allow callbacks in service notation.
+    $this->finished = \Drupal::service('callable_resolver')->getCallableFromDefinition($callback);
     return $this;
   }
 
@@ -313,7 +314,11 @@ class BatchBuilder {
    * @return $this
    */
   public function addOperation(callable $callback, array $arguments = []) {
-    $this->operations[] = [$callback, $arguments];
+    $this->operations[] = [
+      // Use callable resolver service to allow callbacks in service notation.
+      \Drupal::service('callable_resolver')->getCallableFromDefinition($callback),
+      $arguments
+    ];
     return $this;
   }
 
