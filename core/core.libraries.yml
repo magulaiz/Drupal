@@ -682,7 +682,7 @@ drupal.tableheader:
   version: VERSION
   js:
     misc/StickyHeaderToggle.js: { }
-    dependencies:
+  dependencies:
       - core/drupal
   css:
     component:
