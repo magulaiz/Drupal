@@ -37,3 +37,9 @@
 [data-drupal-calibrate-width] td:not([data-drupal-ckeditor5-cell]) {
   display: inline-block
 }
+
+@media screen and (max-width: 90rem) {
+  .ck .ck-editor__top .ck.ck-toolbar.ck-toolbar_grouping > .ck-toolbar__items {
+    flex-wrap: wrap;
+  }
+}
