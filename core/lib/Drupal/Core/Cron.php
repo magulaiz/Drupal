@@ -126,15 +126,18 @@ class Cron implements CronInterface {
 
   /**
    * Processes cron queues.
+   *
+   * @param array $queues_to_process
+   *   Queue and the number of items in the queue to be processed.
    */
-  protected function processQueues() {
+  protected function processQueues(array $queues_to_process = []) {
     $max_wait = (float) $this->queueConfig['suspendMaximumWait'];
 
     // Build a stack of queues to work on.
     /** @var array<array{process_from: int<0, max>, queue: \Drupal\Core\Queue\QueueInterface, worker: \Drupal\Core\Queue\QueueWorkerInterface}> $queues */
     $queues = [];
     foreach ($this->queueManager->getDefinitions() as $queue_name => $queue_info) {
-      if (!isset($queue_info['cron'])) {
+      if (!isset($queue_info['cron']) || (!empty($queues_to_process) && !isset($queues_to_process[$queue_name]))) {
         continue;
       }
       $queue = $this->queueFactory->get($queue_name);
@@ -149,6 +152,7 @@ class Cron implements CronInterface {
         'process_from' => 0,
         'queue' => $queue,
         'worker' => $worker,
+        'max_items' => $queues_to_process[$queue_name] ?? 0,
       ];
     }
 
@@ -159,6 +163,7 @@ class Cron implements CronInterface {
         'queue' => $queue,
         'worker' => $worker,
         'process_from' => $process_from,
+        'max_items' => $max_items,
       ] = $item;
 
       // Each queue will be processed immediately when it is reached for the
@@ -168,7 +173,7 @@ class Cron implements CronInterface {
       }
 
       try {
-        $this->processQueue($queue, $worker);
+        $this->processQueue($queue, $worker, $max_items);
       }
       catch (SuspendQueueException $e) {
         // Return to this queue after processing other queues if the delay is
@@ -194,14 +199,17 @@ class Cron implements CronInterface {
    *   The queue.
    * @param \Drupal\Core\Queue\QueueWorkerInterface $worker
    *   The queue worker.
+   * @param int $max_items
+   *   Maximum number of items to be processed.
    *
    * @throws \Drupal\Core\Queue\SuspendQueueException
    *   If the queue was suspended.
    */
-  protected function processQueue(QueueInterface $queue, QueueWorkerInterface $worker) {
+  protected function processQueue(QueueInterface $queue, QueueWorkerInterface $worker, int $max_items = 0) {
     $lease_time = $worker->getPluginDefinition()['cron']['time'];
     $end = $this->time->getCurrentTime() + $lease_time;
-    while ($this->time->getCurrentTime() < $end && ($item = $queue->claimItem($lease_time))) {
+    $no_items = 0;
+    while (($max_items === 0 || $no_items++ < $max_items) && $this->time->getCurrentTime() < $end && ($item = $queue->claimItem($lease_time))) {
       try {
         $worker->processItem($item->data);
         $queue->deleteItem($item);

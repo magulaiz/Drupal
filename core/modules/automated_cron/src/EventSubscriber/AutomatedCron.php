@@ -65,6 +65,14 @@ class AutomatedCron implements EventSubscriberInterface {
         $this->cron->run();
       }
     }
+
+    $queues_to_process = &drupal_static('__automated_cron_instant_queue__', []);
+    if (!empty($queues_to_process)) {
+      $max_items_process = $this->config->get('max_items_to_process');
+      if ($max_items_process > 0) {
+        $this->cron->instantProcessQueues($queues_to_process, $max_items_process);
+      }
+    }
   }
 
   /**

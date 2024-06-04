@@ -4,3 +4,10 @@ services:
   automated_cron.subscriber:
     class: Drupal\automated_cron\EventSubscriber\AutomatedCron
     arguments: ['@cron', '@config.factory', '@state']
+  queue.database:
+    class: Drupal\automated_cron\lib\QueueDatabaseFactory
+    arguments: ['@database']
+  cron:
+    class: Drupal\automated_cron\lib\Cron
+    arguments: ['@module_handler', '@lock', '@queue', '@state', '@account_switcher', '@logger.channel.cron', '@plugin.manager.queue_worker', '@config.factory', '@database', '@datetime.time', '%queue.config%']
+    lazy: true
