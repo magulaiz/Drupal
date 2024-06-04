@@ -193,6 +193,9 @@ $databases = [];
  * - \Drupal\pgsql\Driver\Database\pgsql\Connection::__construct()
  * - \Drupal\sqlite\Driver\Database\sqlite\Connection::__construct()
  *
+ * More information on SQL Modes (mysql driver only) can be found in
+ * \Drupal\mysql\Driver\Database\mysql\SqlMode.
+ *
  * Sample Database configuration format for PostgreSQL (pgsql):
  * @code
  *   $databases['default']['default'] = [

@@ -27,6 +27,18 @@ class SqlMode {
    *   ONLY_FULL_GROUP_BY (Included by Mysql, but not Mariadb.)
    *   PIPES_AS_CONCAT
    *   REAL_AS_FLOAT
+   *
+   * In order to disable one of these modes, it is necessary to
+   * set ANSI mode to FALSE, and then re-enable the desired modes.
+   * For example, to disable REAL_AS_FLOAT:
+   *
+   *   $databases['default']['default']['sql_mode_options'] = [
+   *     SqlMode::ANSI => FALSE,
+   *     'ANSI_QUOTES' => TRUE,
+   *     'IGNORE_SPACE' => TRUE,
+   *     'ONLY_FULL_GROUP_BY' => TRUE,
+   *     'PIPES_AS_CONCAT' => TRUE,
+   *   ];
    */
   const ANSI = "ANSI";
 
@@ -43,6 +55,10 @@ class SqlMode {
    *   NO_ZERO_IN_DATE
    *   STRICT_ALL_TABLES
    *   STRICT_TRANS_TABLES
+   *
+   * As is the case with the ANSI mode, in order to disable just one of
+   * these modes, it is necessary to set TRADITIONAL to FALSE, and then
+   * re-enable the desired modes.
    */
   const TRADITIONAL = "TRADITIONAL";
 
