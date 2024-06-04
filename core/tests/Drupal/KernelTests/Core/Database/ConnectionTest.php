@@ -142,7 +142,7 @@ class ConnectionTest extends DatabaseTestBase {
     $new_connection_info['prefix'] = [
       'default' => $connection_info[Database::DEFAULT_TARGET]['prefix'],
     ];
-    Database::addConnectionInfo(Database::DEFAULT_KEY, Database::DEFAULT_TARGET, $new_connection_info);
+    Database::addConnectionInfo(Database::DEFAULT_KEY, 'foo', $new_connection_info);
     $this->expectException(\AssertionError::class);
     Database::getConnection('foo', Database::DEFAULT_KEY);
   }
