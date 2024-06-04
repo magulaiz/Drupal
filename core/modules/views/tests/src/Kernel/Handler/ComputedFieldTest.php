@@ -43,6 +43,7 @@ class ComputedFieldTest extends ViewsKernelTestBase {
    * Tests the computed field handler.
    */
   public function testComputedFieldHandler() {
+    // Set the value returned by the computed fields on the entity type.
     \Drupal::state()->set('entity_test_computed_field_item_list_value', ['computed string']);
 
     $entity = EntityTestComputedField::create([]);
