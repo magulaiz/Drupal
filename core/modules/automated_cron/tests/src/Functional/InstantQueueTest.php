@@ -103,7 +103,7 @@ class InstantQueueTest extends BrowserTestBase {
     $result = $this->drupalGet('/instant-queue-test/500');
     $result = $this->drupalGet('/instant-queue-test/100');
 
-    sleep(1);
+    sleep(2);
 
     $query = Database::getConnection()->select('watchdog', 'w');
     $query->addExpression('count(*)', 'item_count');
