@@ -180,8 +180,9 @@
   .tabs-wrapper--secondary {
     position: relative;
   }
-  .is-horizontal .tabs {
+  .is-horizontal .tabs__link {
     flex-direction: row;
+    align-items: end;
     width: auto;
     margin: 0;
     border: 0;
@@ -215,6 +216,7 @@
   }
   .is-horizontal .tabs__tab {
     display: block;
+    height: 100%;
     border-top: none;
     border-bottom: none;
     background: none;
@@ -232,6 +234,7 @@
     border-radius: 0;
   }
   .is-horizontal .tabs__link {
+    height: 100%;
     padding-right: 2rem;
     padding-left: 2rem;
     border-radius: var(--tabs-border-radius-size) var(--tabs-border-radius-size) 0 0;
