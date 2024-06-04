@@ -675,7 +675,7 @@ class ContainerTest extends TestCase {
    * @covers ::getServiceIds
    */
   public function testGetServiceIds() {
-    $service_definition_keys = array_merge(['service_container'], array_keys($this->containerDefinition['services']));
+    $service_definition_keys = array_merge(array_keys($this->containerDefinition['services']), ['service_container']);
     $this->assertEquals($service_definition_keys, $this->container->getServiceIds(), 'Retrieved service IDs match definition.');
 
     $mock_service = new MockService();

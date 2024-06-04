@@ -39,6 +39,8 @@ class PhpArrayContainer extends Container {
     $this->parameters = $container_definition['parameters'] ?? [];
     $this->serviceDefinitions = $container_definition['services'] ?? [];
     $this->frozen = $container_definition['frozen'] ?? FALSE;
+
+    $this->reset();
   }
 
   /**

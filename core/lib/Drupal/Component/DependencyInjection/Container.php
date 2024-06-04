@@ -119,28 +119,23 @@ class Container implements ContainerInterface, ResetInterface {
     $this->parameters = $container_definition['parameters'] ?? [];
     $this->serviceDefinitions = $container_definition['services'] ?? [];
     $this->frozen = $container_definition['frozen'] ?? FALSE;
+
+    $this->reset();
   }
 
   /**
    * {@inheritdoc}
    */
   public function get($id, $invalid_behavior = ContainerInterface::EXCEPTION_ON_INVALID_REFERENCE): ?object {
-    if ($this->hasParameter('_deprecated_service_list')) {
-      if ($deprecation = $this->getParameter('_deprecated_service_list')[$id] ?? '') {
-        @trigger_error($deprecation, E_USER_DEPRECATED);
-      }
+    if (isset($this->parameters['_deprecated_service_list'][$id])) {
+      @trigger_error($this->parameters['_deprecated_service_list'][$id], E_USER_DEPRECATED);
     }
-    if (isset($this->aliases[$id])) {
-      $id = $this->aliases[$id];
-    }
+
+    $id = $this->aliases[$id] ?? $id;
 
     // Re-use shared service instance if it exists.
     if (isset($this->services[$id]) || ($invalid_behavior === ContainerInterface::NULL_ON_INVALID_REFERENCE && array_key_exists($id, $this->services))) {
       return $this->services[$id];
-    }
-
-    if ($id === 'service_container') {
-      return $this;
     }
 
     if (isset($this->loading[$id])) {
@@ -202,6 +197,7 @@ class Container implements ContainerInterface, ResetInterface {
    */
   public function reset(): void {
     $this->services = [];
+    $this->services['service_container'] = $this;
   }
 
   /**
@@ -313,7 +309,7 @@ class Container implements ContainerInterface, ResetInterface {
    * {@inheritdoc}
    */
   public function has($id): bool {
-    return isset($this->aliases[$id]) || isset($this->services[$id]) || isset($this->serviceDefinitions[$id]) || $id === 'service_container';
+    return isset($this->aliases[$id]) || isset($this->services[$id]) || isset($this->serviceDefinitions[$id]);
   }
 
   /**
@@ -541,7 +537,7 @@ class Container implements ContainerInterface, ResetInterface {
    * {@inheritdoc}
    */
   public function getServiceIds() {
-    return array_merge(['service_container'], array_keys($this->serviceDefinitions + $this->services));
+    return array_keys($this->serviceDefinitions + $this->services);
   }
 
   /**
