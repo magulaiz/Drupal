@@ -354,7 +354,7 @@ class Token {
    * @see hook_tokens()
    * @see hook_tokens_alter()
    */
-  public function generate($type, array $tokens, array $data, array $options, BubbleableMetadata $bubbleable_metadata) {
+  public function generate(string $type, array $tokens, array $data, array $options, BubbleableMetadata $bubbleable_metadata) {
     foreach ($data as $object) {
       if ($object instanceof CacheableDependencyInterface || $object instanceof AttachmentsInterface) {
         $bubbleable_metadata->addCacheableDependency($object);
