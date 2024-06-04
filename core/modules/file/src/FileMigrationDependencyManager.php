@@ -54,7 +54,7 @@ class FileMigrationDependencyManager implements FileMigrationDependencyManagerIn
   }
 
   /**
-   * {@inheritDoc}
+   * @inheritDoc
    */
   public function addFileMigrationDependencies(array &$migrations, array $field_migration_plugin_ids) {
     if (!$this->migrateFieldPluginManager) {
@@ -171,8 +171,7 @@ class FileMigrationDependencyManager implements FileMigrationDependencyManagerIn
             return $dependencies;
           }
 
-          $file_field_scheme = isset($field_storage_data['settings']['uri_scheme']) ?
-            $field_storage_data['settings']['uri_scheme'] : NULL;
+          $file_field_scheme = $field_storage_data['settings']['uri_scheme'] ?? NULL;
 
           // Add migration dependency metadata for public files.
           if ($file_field_scheme === 'public') {
