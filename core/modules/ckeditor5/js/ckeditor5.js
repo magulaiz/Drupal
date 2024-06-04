@@ -521,7 +521,7 @@
      *   Callback called with the value of the editor.
      */
     onChange(element, callback) {
-      callbacks.set(getElementId(element), debounce(callback, 400, true));
+      callbacks.set(getElementId(element), debounce(callback, 400));
     },
 
     /**
