@@ -164,7 +164,7 @@ class YamlFileLoader
             return $defaults;
         }
         if (!\is_array($content['services']['_defaults'])) {
-            throw new InvalidArgumentException(sprintf('Service "_defaults" key must be an array, "%s" given in "%s".', \gettype($defaults), $file));
+            throw new InvalidArgumentException(sprintf('Service "_defaults" key must be an array, "%s" given in "%s".', \gettype($content['services']['_defaults']), $file));
         }
         // Defaults from *.services.yml are taking precedence.
         $defaults = $content['services']['_defaults'] + $defaults;
