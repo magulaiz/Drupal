@@ -67,7 +67,13 @@ class Environment {
       $current = ini_get('max_execution_time');
       // Do not set time limit if it is currently unlimited.
       if ($current != 0) {
-        $time_limit = $time_limit === 0 ? 0 : ($current > $time_limit ? $current + $time_limit : $time_limit);
+        // If new time_limit = 0, then set it. It is unlimited time.
+        // If new limit is less than current limit, then add the new limit
+        // to the current limit so that additional time is allocated.
+        // https://www.drupal.org/project/drupal/issues/174617#comment-15554722
+        if ($time_limit > 0 && $current > $time_limit) {
+          $time_limit = $current + $time_limit;
+        }
         return set_time_limit($time_limit);
       }
     }
