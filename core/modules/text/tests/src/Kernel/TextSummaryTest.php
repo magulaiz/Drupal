@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\text\Kernel;
 
 use Drupal\Core\Entity\Entity\EntityFormDisplay;
@@ -242,7 +244,7 @@ class TextSummaryTest extends KernelTestBase {
    *
    * @internal
    */
-  public function assertTextSummary(string $text, string $expected, ?string $format = NULL, int $size = NULL): void {
+  public function assertTextSummary(string $text, string $expected, ?string $format = NULL, ?int $size = NULL): void {
     $summary = text_summary($text, $format, $size);
     $this->assertSame($expected, $summary, '<pre style="white-space: pre-wrap">' . $summary . '</pre> is identical to <pre style="white-space: pre-wrap">' . $expected . '</pre>');
   }

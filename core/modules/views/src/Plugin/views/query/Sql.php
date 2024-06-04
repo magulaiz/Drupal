@@ -139,6 +139,7 @@ class Sql extends QueryPluginBase {
   /**
    * The count field definition.
    */
+  // phpcs:ignore Drupal.NamingConventions.ValidVariableName.LowerCamelName
   public array $count_field;
 
   /**
@@ -185,7 +186,7 @@ class Sql extends QueryPluginBase {
   /**
    * {@inheritdoc}
    */
-  public function init(ViewExecutable $view, DisplayPluginBase $display, array &$options = NULL) {
+  public function init(ViewExecutable $view, DisplayPluginBase $display, ?array &$options = NULL) {
     parent::init($view, $display, $options);
 
     $base_table = $this->view->storage->get('base_table');
@@ -353,10 +354,10 @@ class Sql extends QueryPluginBase {
    * relationship.
    *
    * An example of a relationship would be a node reference table.
-   * If you have a node reference named 'book_parent' which links to a
-   * parent node, you could set up a relationship 'node_book_parent'
+   * If you have a node reference named 'content_parent' which links to a
+   * parent node, you could set up a relationship 'node_content_parent'
    * to 'node'. Then, anything that links to 'node' can link to
-   * 'node_book_parent' instead, thus allowing all properties of
+   * 'node_content_parent' instead, thus allowing all properties of
    * both nodes to be available in the query.
    *
    * @param $alias
@@ -448,7 +449,7 @@ class Sql extends QueryPluginBase {
    *   adding parts to the query. Or FALSE if the table was not able to be
    *   added.
    */
-  public function addTable($table, $relationship = NULL, JoinPluginBase $join = NULL, $alias = NULL) {
+  public function addTable($table, $relationship = NULL, ?JoinPluginBase $join = NULL, $alias = NULL) {
     if (!$this->ensurePath($table, $relationship, $join)) {
       return FALSE;
     }
@@ -487,7 +488,7 @@ class Sql extends QueryPluginBase {
    *   adding parts to the query. Or FALSE if the table was not able to be
    *   added.
    */
-  public function queueTable($table, $relationship = NULL, JoinPluginBase $join = NULL, $alias = NULL) {
+  public function queueTable($table, $relationship = NULL, ?JoinPluginBase $join = NULL, $alias = NULL) {
     // If the alias is set, make sure it doesn't already exist.
     if (isset($this->tableQueue[$alias])) {
       return $alias;
@@ -594,7 +595,7 @@ class Sql extends QueryPluginBase {
    *   The alias used to refer to this specific table, or NULL if the table
    *   cannot be ensured.
    */
-  public function ensureTable($table, $relationship = NULL, JoinPluginBase $join = NULL) {
+  public function ensureTable($table, $relationship = NULL, ?JoinPluginBase $join = NULL) {
     // ensure a relationship
     if (empty($relationship)) {
       $relationship = $this->view->storage->get('base_table');

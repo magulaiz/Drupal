@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\KernelTests\Core\DrupalKernel;
 
 use Drupal\Core\Site\Settings;
@@ -36,6 +38,7 @@ services:
   # Add a new service.
   site.service.yml:
     class: $class
+    arguments: ['test']
   # Swap out a core service.
   cache.backend.database:
     class: Drupal\Core\Cache\MemoryBackendFactory

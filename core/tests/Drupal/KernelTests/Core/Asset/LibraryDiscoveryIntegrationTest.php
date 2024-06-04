@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\KernelTests\Core\Asset;
 
 use Drupal\Core\Asset\Exception\InvalidLibrariesExtendSpecificationException;
@@ -304,7 +306,7 @@ class LibraryDiscoveryIntegrationTest extends KernelTestBase {
    *
    * @internal
    */
-  protected function assertAssetInLibrary(string $asset, string $extension, string $library_name, string $sub_key, string $message = NULL): void {
+  protected function assertAssetInLibrary(string $asset, string $extension, string $library_name, string $sub_key, ?string $message = NULL): void {
     if (!isset($message)) {
       $message = sprintf('Asset %s found in library "%s/%s"', $asset, $extension, $library_name);
     }
@@ -333,7 +335,7 @@ class LibraryDiscoveryIntegrationTest extends KernelTestBase {
    *
    * @internal
    */
-  protected function assertNoAssetInLibrary(string $asset, string $extension, string $library_name, string $sub_key, string $message = NULL): void {
+  protected function assertNoAssetInLibrary(string $asset, string $extension, string $library_name, string $sub_key, ?string $message = NULL): void {
     if (!isset($message)) {
       $message = sprintf('Asset %s not found in library "%s/%s"', $asset, $extension, $library_name);
     }
