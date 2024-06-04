@@ -488,6 +488,7 @@ abstract class Database {
         self::$connections[$key][$target]->commitAll();
       }
       unset(self::$connections[$key][$target]);
+      unset(self::$nonTransactionalConnections[$key][$target]);
     }
     elseif (isset(self::$connections[$key])) {
       foreach (self::$connections[$key] as $connection) {
@@ -496,6 +497,7 @@ abstract class Database {
         }
       }
       unset(self::$connections[$key]);
+      unset(self::$nonTransactionalConnections[$key]);
     }
 
     // When last connection for $key is closed, we also stop any active

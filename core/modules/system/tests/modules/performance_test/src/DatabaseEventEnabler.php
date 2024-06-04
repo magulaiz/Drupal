@@ -6,13 +6,18 @@ namespace Drupal\performance_test;
 
 use Drupal\Core\Database\Connection;
 use Drupal\Core\Database\Event\StatementEvent;
+use Drupal\Core\Database\NonTransactionalConnection;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 class DatabaseEventEnabler implements HttpKernelInterface {
 
-  public function __construct(protected readonly HttpKernelInterface $httpKernel, protected readonly Connection $connection) {}
+  public function __construct(
+    protected readonly HttpKernelInterface $httpKernel,
+    protected readonly Connection $connection,
+    protected readonly NonTransactionalConnection $nonTransactionalConnection,
+  ) {}
 
   /**
    * {@inheritdoc}
@@ -20,6 +25,7 @@ class DatabaseEventEnabler implements HttpKernelInterface {
   public function handle(Request $request, $type = self::MAIN_REQUEST, $catch = TRUE): Response {
     if ($type === static::MAIN_REQUEST) {
       $this->connection->enableEvents(StatementEvent::all());
+      $this->nonTransactionalConnection->enableEvents(StatementEvent::all());
     }
     return $this->httpKernel->handle($request, $type, $catch);
   }
