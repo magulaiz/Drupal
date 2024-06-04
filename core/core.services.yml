@@ -460,7 +460,7 @@ services:
     arguments: [default]
   Drupal\Core\Database\Connection: '@database'
   database.nontransactional:
-    class: Drupal\Core\Database\Connection
+    class: Drupal\Core\Database\NonTransactionalConnection
     factory: Drupal\Core\Database\Database::getConnection
     arguments: [default, null, true]
   database.replica:

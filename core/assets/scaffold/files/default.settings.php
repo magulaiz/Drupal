@@ -125,10 +125,10 @@ $databases = [];
  *
  * The general format for the $databases array is as follows:
  * @code
- * $databases['default']['default'] = $info_array;
- * $databases['default']['replica'][] = $info_array;
- * $databases['default']['replica'][] = $info_array;
- * $databases['extra']['default'] = $info_array;
+ * $databases[\Drupal\Core\Database\Database::DEFAULT_KEY][\Drupal\Core\Database\Database::DEFAULT_TARGET] = $info_array;
+ * $databases[\Drupal\Core\Database\Database::DEFAULT_KEY][\Drupal\Core\Database\Database::REPLICA_TARGET][] = $info_array;
+ * $databases[\Drupal\Core\Database\Database::DEFAULT_KEY][\Drupal\Core\Database\Database::REPLICA_TARGET][] = $info_array;
+ * $databases['extra'][\Drupal\Core\Database\Database::DEFAULT_TARGET] = $info_array;
  * @endcode
  *
  * In the above example, $info_array is an array of settings described above.

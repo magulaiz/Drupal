@@ -16,6 +16,12 @@ use Drupal\Core\Cache\NullBackend;
  */
 abstract class Database {
 
+  public const DEFAULT_KEY = 'default';
+
+  public const DEFAULT_TARGET = 'default';
+
+  public const REPLICA_TARGET = 'replica';
+
   /**
    * A nested array of active connections, keyed by database name and target.
    *
@@ -153,7 +159,7 @@ abstract class Database {
     }
     if ($nonTransactional) {
       if (!(self::$nonTransactionalConnections[$key][$target] ?? NULL)) {
-        $nonTransactionalTarget = self::getUniqueTargetForKey($key, 'auto_nontransactional');
+        $nonTransactionalTarget = self::getUniqueTargetForKey($key, "auto_nontransactional_$target");
         self::addConnectionInfo(
           $key,
           $nonTransactionalTarget,
