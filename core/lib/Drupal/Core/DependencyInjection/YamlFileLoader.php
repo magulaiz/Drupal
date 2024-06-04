@@ -154,10 +154,10 @@ class YamlFileLoader
     {
         // Site-wide defaults.
         try {
-          $defaults = $this->container->getParameter('service_defaults');
+            $defaults = $this->container->getParameter('service_defaults');
         }
         catch (ParameterNotFoundException) {
-          $defaults = [];
+            $defaults = [];
         }
 
         if (!\array_key_exists('_defaults', $content['services'])) {
