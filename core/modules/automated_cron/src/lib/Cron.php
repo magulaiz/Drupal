@@ -64,7 +64,7 @@ class Cron extends BaseCron {
    * @param mixed[]|null $queue_config
    *   Queue configuration from the service container.
    */
-  public function __construct(ModuleHandlerInterface $module_handler, LockBackendInterface $lock, QueueFactory $queue_factory, StateInterface $state, AccountSwitcherInterface $account_switcher, LoggerInterface $logger, QueueWorkerManagerInterface $queue_manager, ConfigFactoryInterface $config_factory, Connection $connection, TimeInterface $time = NULL, ?array $queue_config = NULL) {
+  public function __construct(ModuleHandlerInterface $module_handler, LockBackendInterface $lock, QueueFactory $queue_factory, StateInterface $state, AccountSwitcherInterface $account_switcher, LoggerInterface $logger, QueueWorkerManagerInterface $queue_manager, ConfigFactoryInterface $config_factory, Connection $connection, TimeInterface $time, array $queue_config) {
     parent::__construct($module_handler, $lock, $queue_factory, $state, $account_switcher, $logger, $queue_manager, $time, $queue_config);
     $this->config = $config_factory->get('automated_cron.settings');
     $this->connection = $connection;
