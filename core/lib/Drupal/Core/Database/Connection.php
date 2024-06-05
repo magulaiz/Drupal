@@ -1485,12 +1485,18 @@ abstract class Connection {
   /**
    * Enables database API events dispatching.
    *
+   * The return type might appear counter-intuitive but is a BC layer for
+   * connections which only typehint a return type of static. With the
+   * introduction of connection decorators (e.g., for non-transactional
+   * connections) the return type must be covariant, but can be narrowed on
+   * implementing classes.
+   *
    * @param string[] $eventNames
    *   A list of database events to be enabled.
    *
-   * @return static
+   * @return \Drupal\Core\Database\Connection|static
    */
-  public function enableEvents(array $eventNames): static {
+  public function enableEvents(array $eventNames): Connection|static {
     foreach ($eventNames as $eventName) {
       assert(class_exists($eventName), "Event class {$eventName} does not exist");
       $this->enabledEvents[$eventName] = TRUE;
@@ -1501,12 +1507,18 @@ abstract class Connection {
   /**
    * Disables database API events dispatching.
    *
+   *  The return type might appear counter-intuitive but is a BC layer for
+   *  connections which only typehint a return type of static. With the
+   *  introduction of connection decorators (e.g., for non-transactional
+   *  connections) the return type must be covariant, but can be narrowed on
+   *  implementing classes.
+   *
    * @param string[] $eventNames
    *   A list of database events to be disabled.
    *
-   * @return static
+   * @return \Drupal\Core\Database\Connection|static
    */
-  public function disableEvents(array $eventNames): static {
+  public function disableEvents(array $eventNames): Connection|static {
     foreach ($eventNames as $eventName) {
       assert(class_exists($eventName), "Event class {$eventName} does not exist");
       $this->enabledEvents[$eventName] = FALSE;

@@ -391,7 +391,7 @@ final class NonTransactionalConnection extends Connection {
   /**
    * {@inheritdoc}
    */
-  public function enableEvents(array $eventNames): static {
+  public function enableEvents(array $eventNames): Connection {
     return $this->wrappedConnection->{__FUNCTION__}(...func_get_args());
   }
 
