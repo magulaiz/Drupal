@@ -74,6 +74,7 @@ class FilePathTest extends MigrateUpgradeTestBase {
     parent::setUp();
     $this->fs = \Drupal::service('file_system');
     $this->loadFixture($this->getModulePath('migrate_drupal') . '/tests/fixtures/drupal7.php');
+    $this->drupalLogin($this->createUser(['access drupal migration']));
   }
 
   /**
@@ -156,6 +157,7 @@ class FilePathTest extends MigrateUpgradeTestBase {
     $store->set('migrations', $migration_array);
 
     // Perform the migrations.
+    $this->submitForm([], 'I acknowledge I may lose data. Continue anyway.');
     $this->submitForm([], 'Perform upgrade');
     $this->resetAll();
     $this->assertFileMigrations();
