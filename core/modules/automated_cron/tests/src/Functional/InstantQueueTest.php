@@ -77,26 +77,9 @@ class InstantQueueTest extends BrowserTestBase {
   }
 
   /**
-   * Tests max concurrent processes is one.
+   * Tests max concurrent processes.
    */
-  public function testInstantQueueMaxConcurrentProcessesOne(): void {
-    \Drupal::configFactory()->getEditable('automated_cron.settings')
-      ->set('max_items_to_process', 500)
-      ->set('max_concurrent_queue_process', 1)
-      ->save();
-    $this->drupalGet('/instant-queue-test/500');
-    $this->drupalGet('/instant-queue-test/1');
-
-    sleep(2);
-
-    $this->assertEquals(500, $this->getWatchdogCount());
-    $this->assertEquals(1, $this->getQueueCount());
-  }
-
-  /**
-   * Tests max concurrent processes is one.
-   */
-  public function testInstantQueueMaxConcurrentProcessesTwo(): void {
+  public function testInstantQueueMaxConcurrentProcesses(): void {
     \Drupal::configFactory()->getEditable('automated_cron.settings')
       ->set('max_items_to_process', 500)
       ->set('max_concurrent_queue_process', 2)
