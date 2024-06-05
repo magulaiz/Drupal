@@ -46,11 +46,8 @@ class InstantQueueTest extends BrowserTestBase {
     $result = $this->drupalGet('/instant-queue-test/10');
     $this->assertEquals(['status' => TRUE], json_decode($result, TRUE));
     sleep(1);
-    $query = Database::getConnection()->select('watchdog', 's');
-    $query->addExpression('count(*)', 'item_count');
-    $query->condition('type', 'instant_queue');
-    $result = $query->execute()->fetchField();
-    $this->assertEquals(10, $result);
+    $this->assertEquals(10, $this->getWatchdogCount());
+    $this->assertEquals(0, $this->getQueueCount());
   }
 
   /**
@@ -63,16 +60,8 @@ class InstantQueueTest extends BrowserTestBase {
     $this->assertEquals(['status' => TRUE], json_decode($result, TRUE));
     sleep(1);
 
-    $query = Database::getConnection()->select('watchdog', 'w');
-    $query->addExpression('count(*)', 'item_count');
-    $query->condition('type', 'instant_queue');
-    $result = $query->execute()->fetchField();
-    $this->assertEquals(10, $result);
-
-    $query = Database::getConnection()->select('queue', 'q');
-    $query->addExpression('count(*)', 'item_count');
-    $foo_items = $query->execute()->fetchField();
-    $this->assertEquals(1, $foo_items);
+    $this->assertEquals(10, $this->getWatchdogCount());
+    $this->assertEquals(1, $this->getQueueCount());
   }
 
   /**
@@ -83,16 +72,8 @@ class InstantQueueTest extends BrowserTestBase {
     $this->assertEquals(['status' => TRUE], json_decode($result, TRUE));
     sleep(1);
 
-    $query = Database::getConnection()->select('watchdog', 'w');
-    $query->addExpression('count(*)', 'item_count');
-    $query->condition('type', 'instant_queue');
-    $result = $query->execute()->fetchField();
-    $this->assertEquals(10, $result);
-
-    $query = Database::getConnection()->select('queue', 'q');
-    $query->addExpression('count(*)', 'item_count');
-    $foo_items = $query->execute()->fetchField();
-    $this->assertEquals(11, $foo_items);
+    $this->assertEquals(10, $this->getWatchdogCount());
+    $this->assertEquals(11, $this->getQueueCount());
   }
 
   /**
@@ -103,21 +84,13 @@ class InstantQueueTest extends BrowserTestBase {
       ->set('max_items_to_process', 500)
       ->set('max_concurrent_queue_process', 1)
       ->save();
-    $result = $this->drupalGet('/instant-queue-test/500');
-    $result = $this->drupalGet('/instant-queue-test/1');
+    $this->drupalGet('/instant-queue-test/500');
+    $this->drupalGet('/instant-queue-test/1');
 
-    sleep(1);
+    sleep(2);
 
-    $query = Database::getConnection()->select('watchdog', 'w');
-    $query->addExpression('count(*)', 'item_count');
-    $query->condition('type', 'instant_queue');
-    $result = $query->execute()->fetchField();
-    $this->assertEquals(500, $result);
-
-    $query = Database::getConnection()->select('queue', 'q');
-    $query->addExpression('count(*)', 'item_count');
-    $foo_items = $query->execute()->fetchField();
-    $this->assertEquals(1, $foo_items);
+    $this->assertEquals(500, $this->getWatchdogCount());
+    $this->assertEquals(1, $this->getQueueCount());
   }
 
   /**
@@ -129,21 +102,13 @@ class InstantQueueTest extends BrowserTestBase {
       ->set('max_concurrent_queue_process', 2)
       ->save();
 
-    $result = $this->drupalGet('/instant-queue-test/500');
-    $result = $this->drupalGet('/instant-queue-test/500');
+    $this->drupalGet('/instant-queue-test/500');
+    $this->drupalGet('/instant-queue-test/500');
 
     sleep(1);
 
-    $query = Database::getConnection()->select('watchdog', 'w');
-    $query->addExpression('count(*)', 'item_count');
-    $query->condition('type', 'instant_queue');
-    $result = $query->execute()->fetchField();
-    $this->assertEquals(1000, $result);
-
-    $query = Database::getConnection()->select('queue', 'q');
-    $query->addExpression('count(*)', 'item_count');
-    $foo_items = $query->execute()->fetchField();
-    $this->assertEquals(0, $foo_items);
+    $this->assertEquals(1000, $this->getWatchdogCount());
+    $this->assertEquals(0, $this->getQueueCount());
   }
 
   /**
@@ -159,29 +124,41 @@ class InstantQueueTest extends BrowserTestBase {
 
     sleep(1);
 
-    $query = Database::getConnection()->select('watchdog', 'w');
-    $query->addExpression('count(*)', 'item_count');
-    $query->condition('type', 'instant_queue');
-    $result = $query->execute()->fetchField();
-    $this->assertEquals(0, $result);
-
-    $query = Database::getConnection()->select('queue', 'q');
-    $query->addExpression('count(*)', 'item_count');
-    $foo_items = $query->execute()->fetchField();
-    $this->assertEquals(500, $foo_items);
+    $this->assertEquals(0, $this->getWatchdogCount());
+    $this->assertEquals(500, $this->getQueueCount());
 
     // Run cron. All items should be processed.
     $this->cronRun();
-    $query = Database::getConnection()->select('watchdog', 'w');
+
+    $this->assertEquals(500, $this->getWatchdogCount());
+    $this->assertEquals(0, $this->getQueueCount());
+  }
+
+  /**
+   * Returns watchdog count.
+   *
+   * @return int
+   *   Number of entries in watchdog.
+   */
+  protected function getWatchdogCount(): int {
+    $query = Database::getConnection()->select('watchdog', 's');
     $query->addExpression('count(*)', 'item_count');
     $query->condition('type', 'instant_queue');
     $result = $query->execute()->fetchField();
-    $this->assertEquals(500, $result);
+    return empty($result) ? 0 : (int) $result;
+  }
 
+  /**
+   * Returns queue count.
+   *
+   * @return int
+   *   Number of entries in queue.
+   */
+  protected function getQueueCount(): int {
     $query = Database::getConnection()->select('queue', 'q');
     $query->addExpression('count(*)', 'item_count');
-    $foo_items = $query->execute()->fetchField();
-    $this->assertEquals(0, $foo_items);
+    $result = $query->execute()->fetchField();
+    return empty($result) ? 0 : (int) $result;
   }
 
 }
