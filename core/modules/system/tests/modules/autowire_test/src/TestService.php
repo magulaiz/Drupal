@@ -4,6 +4,7 @@ namespace Drupal\autowire_test;
 
 use Drupal\Core\Database\Connection;
 use Drupal\Core\DrupalKernelInterface;
+use Drupal\Core\Session\AccountProxyInterface;
 
 class TestService {
 
@@ -27,11 +28,17 @@ class TestService {
    */
   protected $kernel;
 
-  public function __construct(TestInjectionInterface $test_injection, TestInjection2 $test_injection2, Connection $database, DrupalKernelInterface $kernel, protected TestInjectionInterface $testInjection3) {
+  /**
+   * Current user.
+   */
+  protected AccountProxyInterface $currentUser;
+
+  public function __construct(TestInjectionInterface $test_injection, TestInjection2 $test_injection2, Connection $database, DrupalKernelInterface $kernel, protected TestInjectionInterface $testInjection3, AccountProxyInterface $currentUser) {
     $this->testInjection = $test_injection;
     $this->testInjection2 = $test_injection2;
     $this->database = $database;
     $this->kernel = $kernel;
+    $this->currentUser = $currentUser;
   }
 
   public function getTestInjection(): TestInjectionInterface {
@@ -52,6 +59,10 @@ class TestService {
 
   public function getKernel(): DrupalKernelInterface {
     return $this->kernel;
+  }
+
+  public function getCurrentUser(): AccountProxyInterface {
+    return $this->currentUser;
   }
 
 }
