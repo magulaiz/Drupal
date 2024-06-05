@@ -100,10 +100,10 @@ class InstantQueueTest extends BrowserTestBase {
    */
   public function testInstantQueueMaxConcurrentProcessesOne(): void {
     \Drupal::configFactory()->getEditable('automated_cron.settings')
-      ->set('max_items_to_process', 1500)
+      ->set('max_items_to_process', 500)
       ->set('max_concurrent_queue_process', 1)
       ->save();
-    $result = $this->drupalGet('/instant-queue-test/1500');
+    $result = $this->drupalGet('/instant-queue-test/500');
     $result = $this->drupalGet('/instant-queue-test/1');
 
     sleep(1);
@@ -112,7 +112,7 @@ class InstantQueueTest extends BrowserTestBase {
     $query->addExpression('count(*)', 'item_count');
     $query->condition('type', 'instant_queue');
     $result = $query->execute()->fetchField();
-    $this->assertEquals(1500, $result);
+    $this->assertEquals(500, $result);
 
     $query = Database::getConnection()->select('queue', 'q');
     $query->addExpression('count(*)', 'item_count');
