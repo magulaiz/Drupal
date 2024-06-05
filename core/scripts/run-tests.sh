@@ -934,7 +934,7 @@ function simpletest_script_get_test_list() {
         $parts = explode('\\', $class);
         return implode('\\', array_slice($parts, 3));
       };
-      return $slice($a) > $slice($b);
+      return (int) $slice($a) > $slice($b);
     });
     // If the tests are not being run in parallel, then ensure slow tests run all
     // together first.
