@@ -259,7 +259,7 @@ class FormValidator implements FormValidatorInterface {
         $is_countable = is_array($elements['#value']) || $elements['#value'] instanceof \Countable;
         $is_empty_multiple = $is_countable && count($elements['#value']) == 0;
         $is_empty_string = (is_string($elements['#value']) && mb_strlen(trim($elements['#value'])) == 0);
-        $is_empty_value = ($elements['#value'] === 0);
+        $is_empty_value = empty($elements['#value']) && ($elements['#value'] !== 0);
         $is_empty_null = is_null($elements['#value']);
         if ($is_empty_multiple || $is_empty_string || $is_empty_value || $is_empty_null) {
           // Flag this element as #required_but_empty to allow #element_validate
