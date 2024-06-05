@@ -181,6 +181,7 @@ abstract class Database {
    *   Database connection key.
    * @param string $target
    *   Database connection target.
+   *
    * @return string
    *   Unique target name.
    */
