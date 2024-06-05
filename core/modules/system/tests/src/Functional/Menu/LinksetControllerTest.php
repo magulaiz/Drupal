@@ -14,7 +14,7 @@ use Drupal\node\NodeInterface;
 /**
  * Tests the behavior of the linkset controller.
  *
- * The purpose of this test is to validate that the a typical menu can be
+ * The purpose of this test is to validate that a typical menu can be
  * correctly serialized as using the application/linkset+json media type.
  *
  * @group decoupled_menus
@@ -222,7 +222,9 @@ final class LinksetControllerTest extends LinksetControllerTestBase {
   public function testAccess() {
     $this->enableEndpoint(TRUE);
     $expected_cacheability = new CacheableMetadata();
-    $expected_cacheability->addCacheContexts(['user.permissions']);
+    $expected_cacheability->addCacheContexts([
+      'user.permissions',
+    ]);
     $expected_cacheability->addCacheTags([
       'config:system.menu.main',
       'config:user.role.anonymous',
@@ -246,7 +248,7 @@ final class LinksetControllerTest extends LinksetControllerTestBase {
     // Redo the request.
     $response = $this->doRequest('GET', Url::fromUri('base:/system/menu/main/linkset'));
     // Assert that the cache was invalidated.
-    $this->assertDrupalResponseCacheability('MISS', $expected_cacheability, $response);
+    $this->assertDrupalResponseCacheability('MISS', $expected_cacheability->addCacheContexts(['user.roles:authenticated']), $response);
     // Ensure the "Our name" menu link is no longer visible.
     $link_items = Json::decode((string) $response->getBody())['linkset'][0]['item'];
     $titles = array_column($link_items, 'title');

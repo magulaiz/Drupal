@@ -70,11 +70,15 @@ class NodeGrantDatabaseStorage implements NodeGrantDatabaseStorageInterface {
       // Return the equivalent of the default grant, defined by
       // self::writeDefault().
       if ($operation === 'view') {
-        return AccessResult::allowedIf($node->isPublished());
+        $result = AccessResult::allowedIf($node->isPublished());
+        if ($node->id()) {
+          $result->addCacheableDependency($node);
+        }
+
+        return $result;
       }
-      else {
-        return AccessResult::neutral();
-      }
+
+      return AccessResult::neutral();
     }
 
     // Check the database for potential access grants.

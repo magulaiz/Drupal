@@ -494,7 +494,12 @@ abstract class EntityResourceTestBase extends ResourceTestBase {
     $response = $this->request('GET', $url, $request_options);
     if ($has_canonical_url) {
       $this->assertSame(403, $response->getStatusCode());
-      $this->assertSame(['HIT'], $response->getHeader('X-Drupal-Dynamic-Cache'));
+      if (str_starts_with($response->getHeader('X-Drupal-Cache-Max-Age')[0], '0')) {
+        $this->assertSame(['UNCACHEABLE'], $response->getHeader('X-Drupal-Dynamic-Cache'));
+      }
+      else {
+        $this->assertSame(['MISS'], $response->getHeader('X-Drupal-Dynamic-Cache'));
+      }
     }
     else {
       $this->assertSame(406, $response->getStatusCode());

@@ -3,6 +3,8 @@
 namespace Drupal\node;
 
 use Drupal\Core\Access\AccessResult;
+use Drupal\Core\Access\AccessResultInterface;
+use Drupal\Core\Cache\CacheableMetadata;
 use Drupal\Core\Cache\RefinableCacheableDependencyInterface;
 use Drupal\Core\Entity\EntityHandlerInterface;
 use Drupal\Core\Entity\EntityTypeInterface;
@@ -127,14 +129,30 @@ class NodeAccessControlHandler extends EntityAccessControlHandler implements Nod
    */
   protected function checkAccess(EntityInterface $node, $operation, AccountInterface $account) {
     /** @var \Drupal\node\NodeInterface $node */
+    if ($operation === 'view' && !$node->isPublished()) {
+      $cacheability = new CacheableMetadata();
+      $cacheability->addCacheableDependency($node);
+      // As "view own unpublished content" MUST NOT be granted to anonymous
+      // users for security reasons so we can eliminate cache per user with this
+      // approach to keep caching as optimal as possible.
+      if ($account->isAnonymous()) {
+        return AccessResult::neutral()->addCacheableDependency($cacheability)->addCacheContexts(['user.roles:authenticated']);
+      }
 
-    // Fetch information from the node object if possible.
-    $status = $node->isPublished();
-    $uid = $node->getOwnerId();
+      $result = AccessResult::allowedIf($account->id() == $node->getOwnerId() && $account->hasPermission('view own unpublished content'))
+        ->cachePerPermissions()
+        ->addCacheableDependency($cacheability);
 
-    // Check if authors can view their own unpublished nodes.
-    if ($operation === 'view' && !$status && $account->hasPermission('view own unpublished content') && $account->isAuthenticated() && $account->id() == $uid) {
-      return AccessResult::allowed()->cachePerPermissions()->cachePerUser()->addCacheableDependency($node);
+      // When node_grants are in use we can avoid bubbling up cacheability
+      // metadata that potentially makes the render result uncacheable.
+      if (!$result->isAllowed() && $this->moduleHandler->hasImplementations('node_grants')) {
+        $result = $result->orIf($this->evaluateNodeGrants($node, $operation, $account));
+      }
+      else {
+        $result->cachePerUser();
+      }
+
+      return $result;
     }
 
     [$revision_permission_operation, $entity_operation] = static::REVISION_OPERATION_MAP[$operation] ?? [
@@ -176,6 +194,24 @@ class NodeAccessControlHandler extends EntityAccessControlHandler implements Nod
       return $access->cachePerPermissions()->addCacheableDependency($node);
     }
 
+    return $this->evaluateNodeGrants($node, $operation, $account);
+  }
+
+  /**
+   * Evaluate node grants.
+   *
+   * @param \Drupal\node\NodeInterface $node
+   *   The entity for which to check access.
+   * @param string $operation
+   *   The entity operation. Usually one of 'view', 'view label', 'update' or
+   *   'delete'.
+   * @param \Drupal\Core\Session\AccountInterface $account
+   *   The user for which to check access.
+   *
+   * @return \Drupal\Core\Access\AccessResultInterface
+   *   The access result.
+   */
+  private function evaluateNodeGrants(NodeInterface $node, string $operation, AccountInterface $account): AccessResultInterface {
     // Evaluate node grants.
     $access_result = $this->grantStorage->access($node, $operation, $account);
     if ($operation === 'view' && $access_result instanceof RefinableCacheableDependencyInterface) {
