@@ -54,7 +54,7 @@ class FileMigrationDependencyManager implements FileMigrationDependencyManagerIn
   }
 
   /**
-   * {@inheritDoc}
+   * {@inheritdoc}
    */
   public function addFileMigrationDependencies(array &$migrations, array $field_migration_plugin_ids) {
     if (!$this->migrateFieldPluginManager) {
