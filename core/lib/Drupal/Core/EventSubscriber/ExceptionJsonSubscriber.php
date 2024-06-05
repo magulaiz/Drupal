@@ -44,7 +44,7 @@ class ExceptionJsonSubscriber extends HttpExceptionSubscriberBase {
    * @param \Drupal\Core\Config\ConfigFactoryInterface|null $config_factory
    *   Config factory.
    */
-  public function __construct(ConfigFactoryInterface $config_factory = NULL) {
+  public function __construct(?ConfigFactoryInterface $config_factory = NULL) {
     if (!$config_factory) {
       @trigger_error(sprintf('Calling %s without the config factory is deprecated in drupal:11.1.0 and disallowed in drupal:12.0.0. See https://www.drupal.org/project/drupal/issues/3304981', __FUNCTION__), E_USER_DEPRECATED);
       $config_factory = \Drupal::configFactory();
