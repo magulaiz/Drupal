@@ -10,6 +10,7 @@ use Drupal\Core\Field\FieldItemInterface;
 use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\Core\Language\LanguageManagerInterface;
 use Drupal\Core\Render\Element;
+use Drupal\Core\Entity\RevisionableInterface;
 use Drupal\Core\Security\TrustedCallbackInterface;
 use Drupal\Core\Theme\Registry;
 use Drupal\Core\TypedData\TranslatableInterface as TranslatableDataInterface;
@@ -197,7 +198,7 @@ class EntityViewBuilder extends EntityHandlerBase implements EntityHandlerInterf
 
     // Cache the rendered output if permitted by the view mode and global entity
     // type configuration.
-    if ($this->isViewModeCacheable($view_mode) && !$entity->isNew() && $entity->isDefaultRevision() && $this->entityType->isRenderCacheable()) {
+    if ($this->isViewModeCacheable($view_mode) && !$entity->isNew() && $this->entityType->isRenderCacheable() && (!($entity instanceof RevisionableInterface) || $entity->isDefaultRevision())) {
       $build['#cache'] += [
         'keys' => [
           'entity_view',
