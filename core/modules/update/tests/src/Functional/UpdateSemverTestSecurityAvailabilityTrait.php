@@ -182,7 +182,6 @@ trait UpdateSemverTestSecurityAvailabilityTrait {
         'expected_security_releases' => ['1.2'],
         'expected_update_message_type' => static::UPDATE_AVAILABLE,
         'fixture' => 'sec.8.1.2',
-        'fixture' => 'sec.1.2',
         'recommended_security_release' => '',
       ],
       '0.2, 1.2, secure' => [
@@ -240,6 +239,9 @@ trait UpdateSemverTestSecurityAvailabilityTrait {
         'recommended_security_release' => '2.0-rc2',
       ];
     }
+    // In fixture 'sec.8.2.0-rc2' the security version is 2.0-rc2. When that is
+    // the same as the installed version it will not be recommended.
+    $test_cases["Pre-release:2.0-rc2, security update"]['recommended_security_release'] = '';
     return $test_cases;
   }
 
