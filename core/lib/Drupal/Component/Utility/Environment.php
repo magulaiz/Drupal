@@ -70,7 +70,6 @@ class Environment {
         // If new time_limit = 0, then set it. It is unlimited time.
         // If new limit is less than current limit, then add the new limit
         // to the current limit so that additional time is allocated.
-        // https://www.drupal.org/project/drupal/issues/174617#comment-15554722
         if ($time_limit > 0 && $current > $time_limit) {
           $time_limit = $current + $time_limit;
         }
