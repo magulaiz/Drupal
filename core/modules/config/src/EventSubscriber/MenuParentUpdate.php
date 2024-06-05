@@ -6,6 +6,7 @@ use Drupal\Core\Config\ConfigCrudEvent;
 use Drupal\Core\Config\ConfigEvents;
 use Drupal\Core\Config\ConfigFactoryInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
+use Symfony\Component\HttpFoundation\RequestStack;
 
 /**
  * Fix empty core.menu.static_menu_link_overrides:definitions.*.parent value to NULL.
@@ -13,20 +14,9 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 class MenuParentUpdate implements EventSubscriberInterface {
 
   /**
-   * The config.
-   *
-   * @var \Drupal\Core\Config\ConfigFactoryInterface
-   */
-  protected ConfigFactoryInterface $configFactory;
-
-  /**
    * Constructs a MenuParentUpdate object.
-   *
-   * @param \Drupal\Core\Config\ConfigFactoryInterface $config_factory
-   *   The config factory.
    */
-  public function __construct(ConfigFactoryInterface $config_factory) {
-    $this->configFactory = $config_factory;
+  public function __construct(protected readonly ConfigFactoryInterface $configFactory, protected readonly RequestStack $requestStack) {
   }
 
   /**
@@ -42,6 +32,9 @@ class MenuParentUpdate implements EventSubscriberInterface {
       foreach ($all_overrides as $definition_key => $definition_value) {
         if ($definition_value['parent'] === '') {
           $saved_config->set('definitions.' . $definition_key . '.parent', NULL)->save();
+          if (!str_contains($this->requestStack->getMainRequest()->getBaseUrl(), 'update.php')) {
+            @trigger_error("Setting empty 'parent' key is deprecated in drupal:11.0.0 and will not be allowed in drupal:12.x. See https://www.drupal.org/project/drupal/issues/3441434", E_USER_DEPRECATED);
+          }
         }
       }
     }
