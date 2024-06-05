@@ -10,6 +10,7 @@ use Drupal\block\BlockInterface;
 use Drupal\Core\Config\Entity\ConfigEntityInterface;
 use Drupal\Core\Entity\EntityWithPluginCollectionInterface;
 use Drupal\Core\Entity\EntityStorageInterface;
+use Symfony\Component\Validator\Context\ExecutionContextInterface;
 
 /**
  * Defines a Block configuration entity class.
@@ -351,6 +352,26 @@ class Block extends ConfigEntityBase implements BlockInterface, EntityWithPlugin
       $this
         ->setRegion(system_default_region($this->theme))
         ->disable();
+    }
+  }
+
+  /**
+   * Validates that a region exists in the active theme.
+   *
+   * @param null|string $region
+   *   The region to validate.
+   * @param \Symfony\Component\Validator\Context\ExecutionContextInterface $context
+   *   The validation context.
+   */
+  public static function validateRegion(?string $region, ExecutionContextInterface $context): void {
+    if ($theme = $context->getRoot()->get('theme')->getValue()) {
+      $regions = array_keys(system_region_list($theme));
+      if (!in_array($region, $regions)) {
+        $context->addViolation('This is not a valid region for %theme.', ['%theme' => $theme]);
+      }
+    }
+    else {
+      $context->addViolation('Theme not defined in configuration.');
     }
   }
 

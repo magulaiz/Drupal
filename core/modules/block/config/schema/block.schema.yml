@@ -28,7 +28,7 @@ block.block.*:
       label: 'Region'
       constraints:
         NotNull: [ ]
-        Callback: ['\Drupal\Core\Theme\ThemeManager', validateRegion]
+        Callback: ['\Drupal\block\Entity\Block', validateRegion]
     weight:
       type: weight
       label: 'Weight'
