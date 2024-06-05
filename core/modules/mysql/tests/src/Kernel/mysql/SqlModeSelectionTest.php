@@ -8,10 +8,10 @@ use Drupal\KernelTests\Core\Database\DriverSpecificDatabaseTestBase;
 
 /**
  * Tests our ability to select a set of Sql modes.
- * 
+ *
  * This test sets some mode values to TRUE, and some to FALSE,
  * and then checks to see if the result comes out as expected,
- * taking into acount things such as Drupal default modes and
+ * taking into account things such as Drupal default modes and
  * combination modes.
  *
  * @group Database
