@@ -121,6 +121,9 @@ abstract class UpdateTestBase extends BrowserTestBase {
     $all_security_release_urls = array_map(function ($link) {
       return $link->getAttribute('href');
     }, $page->findAll('css', "$update_element_css_locator .version-security a[href$='-release']"));
+    if ($recommended_security_release) {
+      $assert_session->elementTextContains('css', $update_element_css_locator, 'Recommended security update');
+    }
     if ($expected_security_releases) {
       $expected_release_urls = [];
       if ($expected_update_message_type === static::SECURITY_UPDATE_REQUIRED) {

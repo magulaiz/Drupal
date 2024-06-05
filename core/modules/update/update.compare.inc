@@ -358,7 +358,6 @@ function update_calculate_project_update_status(&$project_data, $available) {
   $recommended_version_without_extra = '';
   $recommended_release = NULL;
   $release_is_supported = FALSE;
-  $release_module_version = NULL;
   foreach ($available['releases'] as $version => $release_info) {
     try {
       $release = ProjectRelease::createFromArray($release_info);
@@ -515,7 +514,7 @@ function update_calculate_project_update_status(&$project_data, $available) {
   // If there is a later security release for this minor then use it as the
   // recommended version.
   if (isset($project_data['security updates'])) {
-    update_recommended($project_data, $release_module_version);
+    update_recommended($project_data);
   }
 
   // If we were unable to find a recommended version, then make the latest
@@ -586,11 +585,10 @@ function update_calculate_project_update_status(&$project_data, $available) {
  *
  * @param $project_data
  *   An array containing information about a specific project.
- * @param \Drupal\Core\Extension\ExtensionVersion $installed_version
- *   The current release extension object.
  */
-function update_recommended(array &$project_data, ExtensionVersion $installed_version): void {
-  $release_minor_version = $installed_version->getMinorVersion();
+function update_recommended(array &$project_data): void {
+  $installed_version = ExtensionVersion::createFromVersionString($project_data['existing_version']);
+  $installed_minor_version = $installed_version->getMinorVersion();
   foreach ($project_data['security updates'] as $security_update) {
     try {
       $security_release = ProjectRelease::createFromArray($security_update);
@@ -613,7 +611,7 @@ function update_recommended(array &$project_data, ExtensionVersion $installed_ve
       continue;
     }
 
-    if ($release_minor_version == $security_version->getMinorVersion()) {
+    if ($installed_minor_version == $security_version->getMinorVersion()) {
       // Set the security release as the recommended version.
       $project_data['recommended'] = $security_update['version'];
       $project_data['releases'][$security_update['version']] = $security_update;
