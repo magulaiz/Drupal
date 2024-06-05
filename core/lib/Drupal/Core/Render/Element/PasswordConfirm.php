@@ -20,6 +20,7 @@ use Drupal\Core\Render\Attribute\FormElement;
  *   '#type' => 'password_confirm',
  *   '#title' => $this->t('Password'),
  *   '#size' => 25,
+ *   '#maxlength' => 15,
  * );
  * @endcode
  *
@@ -97,6 +98,11 @@ class PasswordConfirm extends FormElementBase {
       $element['pass1']['#size'] = $element['pass2']['#size'] = $element['#size'];
     }
 
+    if (isset($element['#maxlength'])) {
+      $element['pass1']['#maxlength'] = $element['#maxlength'];
+      unset($element['#maxlength']);
+    }
+
     return $element;
   }
 
@@ -113,6 +119,18 @@ class PasswordConfirm extends FormElementBase {
     }
     elseif ($element['#required'] && $form_state->getUserInput()) {
       $form_state->setError($element, t('Password field is required.'));
+    }
+
+    // Password confirm field must perform its own maxlength validation because
+    // core validation runs before validation callbacks, and at that point the
+    // field is an array of values.
+    $maxlength = $element['pass1']['#maxlength'] ?? FALSE;
+    if ($maxlength && mb_strlen($pass1) > $maxlength) {
+      $form_state->setError($element, t('@name cannot be longer than %max characters but is currently %length characters long.', [
+        '@name' => $element['#title'],
+        '%max' => $maxlength,
+        '%length' => mb_strlen($pass1),
+      ]));
     }
 
     // Password field must be converted from a two-element array into a single
