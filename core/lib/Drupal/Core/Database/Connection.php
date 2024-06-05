@@ -1486,7 +1486,7 @@ abstract class Connection {
    * Enables database API events dispatching.
    *
    * The return type might appear counter-intuitive but is a BC layer for
-   * connections which only typehint a return type of static. With the
+   * connections which only type hint a return type of static. With the
    * introduction of connection decorators (e.g., for non-transactional
    * connections) the return type must be covariant, but can be narrowed on
    * implementing classes.
@@ -1508,7 +1508,7 @@ abstract class Connection {
    * Disables database API events dispatching.
    *
    *  The return type might appear counter-intuitive but is a BC layer for
-   *  connections which only typehint a return type of static. With the
+   *  connections which only type hint a return type of static. With the
    *  introduction of connection decorators (e.g., for non-transactional
    *  connections) the return type must be covariant, but can be narrowed on
    *  implementing classes.
