@@ -611,7 +611,7 @@ function update_recommended(array &$project_data): void {
       continue;
     }
 
-    if ($installed_minor_version == $security_version->getMinorVersion()) {
+    if ($installed_minor_version === $security_version->getMinorVersion()) {
       // Set the security release as the recommended version.
       $project_data['recommended'] = $security_update['version'];
       $project_data['releases'][$security_update['version']] = $security_update;
