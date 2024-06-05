@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\search\Kernel\Migrate\d7;
 
 use Drupal\Core\Database\Database;
@@ -34,7 +36,7 @@ class MigrateSearchPageTest extends MigrateDrupal7TestBase {
    *
    * @internal
    */
-  protected function assertEntity(string $id, string $path, bool $status = FALSE, array $expected_config = NULL): void {
+  protected function assertEntity(string $id, string $path, bool $status = FALSE, ?array $expected_config = NULL): void {
     /** @var \Drupal\search\Entity\SearchPage $search_page */
     $search_page = SearchPage::load($id);
     $this->assertSame($id, $search_page->id());

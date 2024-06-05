@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\KernelTests\Core\Routing;
 
 use ColinODell\PsrTestLogger\TestLogger;
@@ -7,6 +9,7 @@ use Drupal\Component\Datetime\TimeInterface;
 use Drupal\Core\Cache\MemoryBackend;
 use Drupal\Core\Database\Database;
 use Drupal\Core\KeyValueStore\KeyValueMemoryFactory;
+use Drupal\Core\Lock\NullLockBackend;
 use Drupal\Core\Path\CurrentPathStack;
 use Drupal\Core\Routing\MatcherDumper;
 use Drupal\Core\Routing\RouteProvider;
@@ -96,9 +99,10 @@ class RouteProviderTest extends KernelTestBase {
   protected function setUp(): void {
     parent::setUp();
     $this->fixtures = new RoutingFixtures();
-    $this->state = new State(new KeyValueMemoryFactory());
+    $time = \Drupal::service(TimeInterface::class);
+    $this->state = new State(new KeyValueMemoryFactory(), new MemoryBackend($time), new NullLockBackend());
     $this->currentPath = new CurrentPathStack(new RequestStack());
-    $this->cache = new MemoryBackend(\Drupal::service(TimeInterface::class));
+    $this->cache = new MemoryBackend($time);
     $this->pathProcessor = \Drupal::service('path_processor_manager');
     $this->cacheTagsInvalidator = \Drupal::service('cache_tags.invalidator');
     $this->installEntitySchema('path_alias');
@@ -580,7 +584,7 @@ class RouteProviderTest extends KernelTestBase {
     $request = Request::create($path, 'GET');
     $provider->getRouteCollectionForRequest($request);
 
-    $cache = $this->cache->get('route:[language]=en:/path/add/one:');
+    $cache = $this->cache->get('route:[language]=en:[query_parameters]=:/path/add/one');
     $this->assertEquals('/path/add/one', $cache->data['path']);
     $this->assertEquals([], $cache->data['query']);
     $this->assertCount(3, $cache->data['routes']);
@@ -590,9 +594,25 @@ class RouteProviderTest extends KernelTestBase {
     $request = Request::create($path, 'GET');
     $provider->getRouteCollectionForRequest($request);
 
-    $cache = $this->cache->get('route:[language]=en:/path/add/one:foo=bar');
+    $cache = $this->cache->get('route:[language]=en:[query_parameters]=foo=bar,2fb8f40115dd1e695cbe23d4f97ce5b1fb697eee:/path/add/one');
     $this->assertEquals('/path/add/one', $cache->data['path']);
     $this->assertEquals(['foo' => 'bar'], $cache->data['query']);
+    $this->assertCount(3, $cache->data['routes']);
+
+    // A path with multivalued query parameters.
+    $path = '/path/add/one?foo=bar&foo2[]=bar2&foo2[]=bar3';
+    $request = Request::create($path, 'GET');
+    $provider->getRouteCollectionForRequest($request);
+
+    $cache = $this->cache->get('route:[language]=en:[query_parameters]=foo=bar&foo2%5B0%5D=bar2&foo2%5B1%5D=bar3,2d3a0851c4970a16be1c851a0e9946e6d10a3fe2:/path/add/one');
+    $this->assertEquals('/path/add/one', $cache->data['path']);
+    $this->assertEquals(
+      [
+        'foo' => 'bar',
+        'foo2' => ['bar2', 'bar3'],
+      ],
+      $cache->data['query']
+    );
     $this->assertCount(3, $cache->data['routes']);
 
     // A path with placeholders.
@@ -600,7 +620,7 @@ class RouteProviderTest extends KernelTestBase {
     $request = Request::create($path, 'GET');
     $provider->getRouteCollectionForRequest($request);
 
-    $cache = $this->cache->get('route:[language]=en:/path/1/one:');
+    $cache = $this->cache->get('route:[language]=en:[query_parameters]=:/path/1/one');
     $this->assertEquals('/path/1/one', $cache->data['path']);
     $this->assertEquals([], $cache->data['query']);
     $this->assertCount(2, $cache->data['routes']);
@@ -615,7 +635,7 @@ class RouteProviderTest extends KernelTestBase {
     $request = Request::create($path, 'GET');
     $provider->getRouteCollectionForRequest($request);
 
-    $cache = $this->cache->get('route:[language]=en:/path/add-one:');
+    $cache = $this->cache->get('route:[language]=en:[query_parameters]=:/path/add-one');
     $this->assertEquals('/path/add/one', $cache->data['path']);
     $this->assertEquals([], $cache->data['query']);
     $this->assertCount(3, $cache->data['routes']);
@@ -630,7 +650,7 @@ class RouteProviderTest extends KernelTestBase {
     $request = Request::create($path, 'GET');
     $provider->getRouteCollectionForRequest($request);
 
-    $cache = $this->cache->get('route:[language]=gsw-berne:/path/add-one:');
+    $cache = $this->cache->get('route:[language]=gsw-berne:[query_parameters]=:/path/add-one');
     $this->assertEquals('/path/add/one', $cache->data['path']);
     $this->assertEquals([], $cache->data['query']);
     $this->assertCount(3, $cache->data['routes']);

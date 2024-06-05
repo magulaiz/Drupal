@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\KernelTests\Core\Datetime;
 
 use Drupal\Component\Utility\Variable;
@@ -42,7 +44,7 @@ class DatetimeElementFormTest extends KernelTestBase implements FormInterface, T
   /**
    * {@inheritdoc}
    */
-  public function datetimeDateCallbackTrusted(array &$element, FormStateInterface $form_state, DrupalDateTime $date = NULL) {
+  public function datetimeDateCallbackTrusted(array &$element, FormStateInterface $form_state, ?DrupalDateTime $date = NULL) {
     $element['datetimeDateCallbackExecuted'] = [
       '#value' => TRUE,
     ];
@@ -52,7 +54,7 @@ class DatetimeElementFormTest extends KernelTestBase implements FormInterface, T
   /**
    * {@inheritdoc}
    */
-  public static function datetimeDateCallback(array &$element, FormStateInterface $form_state, DrupalDateTime $date = NULL) {
+  public static function datetimeDateCallback(array &$element, FormStateInterface $form_state, ?DrupalDateTime $date = NULL) {
     $element['datetimeDateCallbackExecuted'] = [
       '#value' => TRUE,
     ];
@@ -62,7 +64,7 @@ class DatetimeElementFormTest extends KernelTestBase implements FormInterface, T
   /**
    * {@inheritdoc}
    */
-  public function datetimeTimeCallbackTrusted(array &$element, FormStateInterface $form_state, DrupalDateTime $date = NULL) {
+  public function datetimeTimeCallbackTrusted(array &$element, FormStateInterface $form_state, ?DrupalDateTime $date = NULL) {
     $element['timeCallbackExecuted'] = [
       '#value' => TRUE,
     ];
@@ -72,7 +74,7 @@ class DatetimeElementFormTest extends KernelTestBase implements FormInterface, T
   /**
    * {@inheritdoc}
    */
-  public static function datetimeTimeCallback(array &$element, FormStateInterface $form_state, DrupalDateTime $date = NULL) {
+  public static function datetimeTimeCallback(array &$element, FormStateInterface $form_state, ?DrupalDateTime $date = NULL) {
     $element['timeCallbackExecuted'] = [
       '#value' => TRUE,
     ];
@@ -157,7 +159,7 @@ class DatetimeElementFormTest extends KernelTestBase implements FormInterface, T
    * @dataProvider providerUntrusted
    * @group legacy
    */
-  public function testDatetimeElementUntrustedCallbacks(string $date_callback = 'datetimeDateCallbackTrusted', string $time_callback = 'datetimeTimeCallbackTrusted', string $expected_exception = NULL) : void {
+  public function testDatetimeElementUntrustedCallbacks(string $date_callback = 'datetimeDateCallbackTrusted', string $time_callback = 'datetimeTimeCallbackTrusted', ?string $expected_exception = NULL) : void {
     if ($expected_exception) {
       $this->expectException(UntrustedCallbackException::class);
       $this->expectExceptionMessage($expected_exception);

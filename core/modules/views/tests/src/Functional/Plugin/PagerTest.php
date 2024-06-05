@@ -336,7 +336,7 @@ class PagerTest extends ViewTestBase {
 
     $this->assertCount(11, $view->result, 'All items are return');
 
-    // TODO test number of pages.
+    // @todo Test number of pages.
 
     // Test items per page = 0.
     // Setup and test an offset.
@@ -373,7 +373,10 @@ class PagerTest extends ViewTestBase {
     $view->display_handler->setOption('pager', $pager);
     $view->save();
     $this->drupalGet('test_pager_full', ['query' => ['page' => 2]]);
-    $this->assertEquals('Current page 3', $this->assertSession()->elementExists('css', '.pager__items li.is-active')->getText());
+    $this->assertEquals('Page 3', $this->assertSession()->elementExists('css', '.pager__items li.is-active')->getText());
+    $link = $this->assertSession()->elementExists('css', '.pager__items li.is-active a');
+    $this->assertSame('page', $link->getAttribute('aria-current'));
+    $this->assertSame('Current page', $link->getAttribute('title'));
   }
 
   /**
@@ -400,8 +403,7 @@ class PagerTest extends ViewTestBase {
     $view->display_handler->setOption('pager', $pager);
     $view->save();
 
-    // Stable9 will be addressed in https://www.drupal.org/project/drupal/issues/3333418
-    $themes = ['stark', 'olivero', 'claro', 'starterkit_theme'];
+    $themes = ['stark', 'olivero', 'claro', 'starterkit_theme', 'stable9'];
     $this->container->get('theme_installer')->install($themes);
 
     foreach ($themes as $theme) {

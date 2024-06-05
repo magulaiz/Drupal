@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\field\Kernel;
 
 use Drupal\Core\Form\FormState;
@@ -129,8 +131,7 @@ class FieldAttachOtherTest extends FieldKernelTestBase {
       $this->assertRaw($expected, "Value $delta is displayed, formatter settings are applied.");
     }
 
-    // TODO:
-    // - check display order with several fields
+    // @todo Check display order with several fields.
   }
 
   /**

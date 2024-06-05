@@ -48,7 +48,7 @@ class ImageWidget extends FileWidget {
    * @param \Drupal\Core\Image\ImageFactory $image_factory
    *   The image factory service.
    */
-  public function __construct($plugin_id, $plugin_definition, FieldDefinitionInterface $field_definition, array $settings, array $third_party_settings, ElementInfoManagerInterface $element_info, ImageFactory $image_factory = NULL) {
+  public function __construct($plugin_id, $plugin_definition, FieldDefinitionInterface $field_definition, array $settings, array $third_party_settings, ElementInfoManagerInterface $element_info, ?ImageFactory $image_factory = NULL) {
     parent::__construct($plugin_id, $plugin_definition, $field_definition, $settings, $third_party_settings, $element_info);
     $this->imageFactory = $image_factory ?: \Drupal::service('image.factory');
   }
@@ -125,7 +125,7 @@ class ImageWidget extends FileWidget {
       // If there's only one field, return it as delta 0.
       if (empty($elements[0]['#default_value']['fids'])) {
         $file_upload_help['#description'] = $this->getFilteredDescription();
-        $elements[0]['#description'] = \Drupal::service('renderer')->renderPlain($file_upload_help);
+        $elements[0]['#description'] = \Drupal::service('renderer')->renderInIsolation($file_upload_help);
       }
     }
     else {

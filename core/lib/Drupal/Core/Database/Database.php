@@ -457,6 +457,13 @@ abstract class Database {
       }
       unset(self::$connections[$key]);
     }
+
+    // When last connection for $key is closed, we also stop any active
+    // logging.
+    if (empty(self::$connections[$key])) {
+      unset(self::$logs[$key]);
+    }
+
     // Force garbage collection to run. This ensures that client connection
     // objects and results in the connection being closed are destroyed.
     gc_collect_cycles();
@@ -535,6 +542,7 @@ abstract class Database {
     // called during regular runtime.
     $additional_class_loader = new ClassLoader();
     $additional_class_loader->addPsr4($driverNamespace . '\\', $driver->getPath());
+    $additional_class_loader->register();
     $connection_class = $driverNamespace . '\\Connection';
     if (!class_exists($connection_class)) {
       throw new \InvalidArgumentException("Can not convert '$url' to a database connection, class '$connection_class' does not exist");

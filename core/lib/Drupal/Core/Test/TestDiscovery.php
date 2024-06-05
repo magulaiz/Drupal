@@ -7,7 +7,6 @@ use Drupal\Component\Annotation\Reflection\MockFileFinder;
 use Drupal\Component\Utility\NestedArray;
 use Drupal\Core\Extension\ExtensionDiscovery;
 use Drupal\Core\Test\Exception\MissingGroupException;
-use Drupal\TestTools\PhpUnitCompatibility\ClassWriter;
 
 /**
  * Discovers available tests.
@@ -81,12 +80,15 @@ class TestDiscovery {
 
     $existing = $this->classLoader->getPrefixesPsr4();
 
-    // Add PHPUnit test namespaces of Drupal core.
-    $this->testNamespaces['Drupal\\Tests\\'] = [$this->root . '/core/tests/Drupal/Tests'];
-    $this->testNamespaces['Drupal\\BuildTests\\'] = [$this->root . '/core/tests/Drupal/BuildTests'];
-    $this->testNamespaces['Drupal\\KernelTests\\'] = [$this->root . '/core/tests/Drupal/KernelTests'];
-    $this->testNamespaces['Drupal\\FunctionalTests\\'] = [$this->root . '/core/tests/Drupal/FunctionalTests'];
+    // Add PHPUnit test namespaces of Drupal core. Order the namespaces by the
+    // test types that tend to be slowest first, to optimize overall test times
+    // when multiple different test types are run concurrently by the same test
+    // runner.
     $this->testNamespaces['Drupal\\FunctionalJavascriptTests\\'] = [$this->root . '/core/tests/Drupal/FunctionalJavascriptTests'];
+    $this->testNamespaces['Drupal\\FunctionalTests\\'] = [$this->root . '/core/tests/Drupal/FunctionalTests'];
+    $this->testNamespaces['Drupal\\BuildTests\\'] = [$this->root . '/core/tests/Drupal/BuildTests'];
+    $this->testNamespaces['Drupal\\Tests\\'] = [$this->root . '/core/tests/Drupal/Tests'];
+    $this->testNamespaces['Drupal\\KernelTests\\'] = [$this->root . '/core/tests/Drupal/KernelTests'];
     $this->testNamespaces['Drupal\\TestTools\\'] = [$this->root . '/core/tests/Drupal/TestTools'];
 
     $this->availableExtensions = [];
@@ -101,24 +103,12 @@ class TestDiscovery {
       }
 
       // Add PHPUnit test namespaces.
-      $this->testNamespaces["Drupal\\Tests\\$name\\Unit\\"][] = "$base_path/tests/src/Unit";
-      $this->testNamespaces["Drupal\\Tests\\$name\\Kernel\\"][] = "$base_path/tests/src/Kernel";
-      $this->testNamespaces["Drupal\\Tests\\$name\\Functional\\"][] = "$base_path/tests/src/Functional";
-      $this->testNamespaces["Drupal\\Tests\\$name\\Build\\"][] = "$base_path/tests/src/Build";
-      $this->testNamespaces["Drupal\\Tests\\$name\\FunctionalJavascript\\"][] = "$base_path/tests/src/FunctionalJavascript";
-
-      // Add discovery for traits which are shared between different test
-      // suites.
-      $this->testNamespaces["Drupal\\Tests\\$name\\Traits\\"][] = "$base_path/tests/src/Traits";
+      $this->testNamespaces["Drupal\\Tests\\$name\\"][] = "$base_path/tests/src";
     }
 
     foreach ($this->testNamespaces as $prefix => $paths) {
       $this->classLoader->addPsr4($prefix, $paths);
     }
-
-    $loader = require __DIR__ . '/../../../../../autoload.php';
-    // Ensure we have a valid TestCase class.
-    ClassWriter::mutateTestBase($loader);
 
     return $this->testNamespaces;
   }
@@ -256,7 +246,7 @@ class TestDiscovery {
    * @see https://www.drupal.org/node/2296635
    */
   public static function scanDirectory($namespace_prefix, $path) {
-    if (substr($namespace_prefix, -1) !== '\\') {
+    if (!str_ends_with($namespace_prefix, '\\')) {
       throw new \InvalidArgumentException("Namespace prefix for $path must contain a trailing namespace separator.");
     }
     $flags = \FilesystemIterator::UNIX_PATHS;

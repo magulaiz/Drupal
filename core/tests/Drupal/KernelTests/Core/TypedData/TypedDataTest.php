@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\KernelTests\Core\TypedData;
 
 use Drupal\Core\Datetime\DrupalDateTime;
@@ -268,7 +270,7 @@ class TypedDataTest extends KernelTestBase {
     $typed_data = $this->createTypedData(['type' => 'duration_iso8601'], 'PT20S');
     $this->assertInstanceOf(\DateInterval::class, $typed_data->getDuration());
     $typed_data->setDuration(new \DateInterval('P40D'));
-    // @todo: Should we make this "nicer"?
+    // @todo Should we make this "nicer"?
     $this->assertEquals('P0Y0M40DT0H0M0S', $typed_data->getValue());
     $typed_data->setValue(NULL);
     $this->assertNull($typed_data->getDuration());

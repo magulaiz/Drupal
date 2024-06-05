@@ -77,9 +77,9 @@ class LayoutBuilderOverridesTest extends LayoutBuilderTestBase {
     $assert_session = $this->assertSession();
     $page = $this->getSession()->getPage();
 
-    // @todo In https://www.drupal.org/node/540008 switch this to logging in as
-    //   a user with the 'configure any layout' permission.
-    $this->drupalLogin($this->rootUser);
+    $this->drupalLogin($this->drupalCreateUser([
+      'configure any layout',
+    ]));
 
     LayoutBuilderEntityViewDisplay::load('node.bundle_with_section_field.default')
       ->enableLayoutBuilder()
@@ -129,8 +129,7 @@ class LayoutBuilderOverridesTest extends LayoutBuilderTestBase {
 
     // Get the UUID of the component.
     $components = Node::load(1)->get('layout_builder__layout')->getSection(0)->getComponents();
-    end($components);
-    $uuid = key($components);
+    $uuid = array_key_last($components);
 
     $this->drupalGet('layout_builder/update/block/overrides/node.1/0/content/' . $uuid);
     $page->uncheckField('settings[label_display]');
