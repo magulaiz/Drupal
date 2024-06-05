@@ -929,15 +929,13 @@ function simpletest_script_get_test_list() {
     // so that unit tests run last. This takes advantage of the fact that Build,
     // Functional, Functional JavaScript, Kernel, Unit roughly corresponds to
     // test time.
-    if (!$types_processed) {
-      usort($all_tests, function ($a, $b) {
-        $slice = function ($class) {
-          $parts = explode('\\', $class);
-          return implode('\\', array_slice($parts, 3));
-        };
-        return $slice($a) > $slice($b);
-      });
-    }
+    usort($all_tests, function ($a, $b) {
+      $slice = function ($class) {
+        $parts = explode('\\', $class);
+        return implode('\\', array_slice($parts, 3));
+      };
+      return $slice($a) > $slice($b);
+    });
     // If the tests are not being run in parallel, then ensure slow tests run all
     // together first.
     if ((int) $args['ci-parallel-node-total'] <= 1 && !empty($slow_group)) {
