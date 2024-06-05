@@ -1,0 +1,5 @@
+name: 'Claro Views Alter'
+type: module
+description: 'Custom module to alter views bulk operations form.'
+core_version_requirement: '*'
+package: Testing

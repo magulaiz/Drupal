@@ -20,7 +20,7 @@ class ClaroViewsBulkOperationsTest extends WebDriverTestBase {
   /**
    * {@inheritdoc}
    */
-  protected static $modules = ['node', 'views'];
+  protected static $modules = ['node', 'views', 'claro_bulk_view_operation_test'];
 
   /**
    * {@inheritdoc}
@@ -99,6 +99,20 @@ class ClaroViewsBulkOperationsTest extends WebDriverTestBase {
     $this->assertNotNull($assert_session->waitForElementVisible('css', ".js-views-bulk-actions-status:contains(\"$no_items_selected\")"));
     $this->assertNotNull($assert_session->waitForElement('css', "#drupal-live-announce:contains(\"$no_items_selected\")"));
     $assert_session->pageTextNotContains($vbo_available_message);
+  }
+
+  /**
+   * Tests the dynamic Bulk Operations form.
+   */
+  public function testBulkOperationsUiAlter() {
+    $this->drupalGet('admin/content');
+
+    $page = $this->getSession()->getPage();
+    $assert_session = $this->assertSession();
+    $select_all = $page->find('css', '.select-all > input');
+    $select_all->check();
+    $this->getSession()->executeScript('document.body.style.backgroundColor = "yellow"');
+    $this->assertSession()->waitForElementVisible('css', ".test-go", 50000000);
   }
 
 }
