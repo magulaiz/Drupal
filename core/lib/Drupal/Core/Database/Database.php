@@ -172,6 +172,18 @@ abstract class Database {
     return self::$connections[$key][$target];
   }
 
+  /**
+   * Generate a unique target name for a given key and target combination.
+   *
+   * This method helps avoid conflicts with userspace targets.
+   *
+   * @param string $key
+   *   Database connection key.
+   * @param string $target
+   *   Database connection target.
+   * @return string
+   *   Unique target name.
+   */
   protected static function getUniqueTargetForKey(string $key, string $target): string {
     $uniqueTarget = '';
     $attempts = 0;
