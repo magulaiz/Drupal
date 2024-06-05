@@ -156,11 +156,16 @@ trait UiHelperTrait {
       $this->drupalLogout();
     }
 
-    $this->drupalGet(Url::fromRoute('user.login'));
-    $this->submitForm([
-      'name' => $account->getAccountName(),
-      'pass' => $account->passRaw,
-    ], 'Log in');
+    $loginPage = $this->drupalGet(Url::fromRoute('user.login'));
+    try {
+      $this->submitForm([
+        'name' => $account->getAccountName(),
+        'pass' => $account->passRaw,
+      ], 'Log in');
+    }
+    catch (\Throwable $e) {
+      $this->assertTrue(FALSE, sprintf("Could not log in. Error: %s\n\nLogin page contents: %s", $e->getMessage(), $loginPage));
+    }
 
     // @see ::drupalUserIsLoggedIn()
     $account->sessionId = $this->getSession()->getCookie(\Drupal::service('session_configuration')->getOptions(\Drupal::request())['name']);
