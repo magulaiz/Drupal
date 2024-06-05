@@ -7,6 +7,7 @@ namespace Drupal\Tests\automated_cron\Functional;
 use Drupal\Core\Database\Database;
 use Drupal\cron_queue_test\Plugin\QueueWorker\CronQueueTestDeriverQueue;
 use Drupal\Tests\BrowserTestBase;
+use Drupal\Tests\Traits\Core\CronRunTrait;
 
 /**
  * Generic module test for automated_cron.
@@ -14,6 +15,8 @@ use Drupal\Tests\BrowserTestBase;
  * @group automated_cron
  */
 class InstantQueueTest extends BrowserTestBase {
+
+  use CronRunTrait;
 
   /**
    * {@inheritdoc}
@@ -97,24 +100,24 @@ class InstantQueueTest extends BrowserTestBase {
    */
   public function testInstantQueueMaxConcurrentProcessesOne(): void {
     \Drupal::configFactory()->getEditable('automated_cron.settings')
-      ->set('max_items_to_process', 500)
+      ->set('max_items_to_process', 1500)
       ->set('max_concurrent_queue_process', 1)
       ->save();
-    $result = $this->drupalGet('/instant-queue-test/500');
-    $result = $this->drupalGet('/instant-queue-test/100');
+    $result = $this->drupalGet('/instant-queue-test/1500');
+    $result = $this->drupalGet('/instant-queue-test/1');
 
-    sleep(2);
+    sleep(1);
 
     $query = Database::getConnection()->select('watchdog', 'w');
     $query->addExpression('count(*)', 'item_count');
     $query->condition('type', 'instant_queue');
     $result = $query->execute()->fetchField();
-    $this->assertEquals(500, $result);
+    $this->assertEquals(1500, $result);
 
     $query = Database::getConnection()->select('queue', 'q');
     $query->addExpression('count(*)', 'item_count');
     $foo_items = $query->execute()->fetchField();
-    $this->assertEquals(100, $foo_items);
+    $this->assertEquals(1, $foo_items);
   }
 
   /**
@@ -136,6 +139,44 @@ class InstantQueueTest extends BrowserTestBase {
     $query->condition('type', 'instant_queue');
     $result = $query->execute()->fetchField();
     $this->assertEquals(1000, $result);
+
+    $query = Database::getConnection()->select('queue', 'q');
+    $query->addExpression('count(*)', 'item_count');
+    $foo_items = $query->execute()->fetchField();
+    $this->assertEquals(0, $foo_items);
+  }
+
+  /**
+   * Tests instant queue does not process when max_items_to_process is zero.
+   */
+  public function testInstantQueueDoesNotProcess(): void {
+    \Drupal::configFactory()->getEditable('automated_cron.settings')
+      ->set('max_items_to_process', 0)
+      ->set('max_concurrent_queue_process', 1)
+      ->save();
+
+    $result = $this->drupalGet('/instant-queue-test/500');
+
+    sleep(1);
+
+    $query = Database::getConnection()->select('watchdog', 'w');
+    $query->addExpression('count(*)', 'item_count');
+    $query->condition('type', 'instant_queue');
+    $result = $query->execute()->fetchField();
+    $this->assertEquals(0, $result);
+
+    $query = Database::getConnection()->select('queue', 'q');
+    $query->addExpression('count(*)', 'item_count');
+    $foo_items = $query->execute()->fetchField();
+    $this->assertEquals(500, $foo_items);
+
+    // Run cron. All items should be processed.
+    $this->cronRun();
+    $query = Database::getConnection()->select('watchdog', 'w');
+    $query->addExpression('count(*)', 'item_count');
+    $query->condition('type', 'instant_queue');
+    $result = $query->execute()->fetchField();
+    $this->assertEquals(500, $result);
 
     $query = Database::getConnection()->select('queue', 'q');
     $query->addExpression('count(*)', 'item_count');
