@@ -5,11 +5,14 @@ declare(strict_types=1);
 namespace Drupal\Tests\mysql\Kernel\mysql;
 
 use Drupal\KernelTests\Core\Database\DriverSpecificDatabaseTestBase;
-use Drupal\Core\Database\DatabaseExceptionWrapper;
 
 /**
- * Tests our ability to select a set of Sql modes, by setting some mode
- * values to TRUE, and some to FALSE.
+ * Tests our ability to select a set of Sql modes.
+ * 
+ * This test sets some mode values to TRUE, and some to FALSE,
+ * and then checks to see if the result comes out as expected,
+ * taking into acount things such as Drupal default modes and
+ * combination modes.
  *
  * @group Database
  */
@@ -22,7 +25,7 @@ class SqlModeSelectionTest extends DriverSpecificDatabaseTestBase {
     // Assert that we successfully added ONLY_FULL_GROUP_BY to the SQL mode.
     $query = $this->connection->query('SELECT @@SESSION.sql_mode session;');
     $modes = $query->fetchObject()->session;
-    // We explicitly removed the Drupal default mode TRADITIONAL, 
+    // We explicitly removed the Drupal default mode TRADITIONAL,
     // so it should not be set.
     $this->assertStringNotContainsString('TRADITIONAL', $modes);
     // We explicitly added the modes ERROR_FOR_DIVISION_BY_ZERO and
