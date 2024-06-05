@@ -17,7 +17,7 @@
             icon: item.class|clean_class,
             text: item.title,
             href: item.url,
-            menu_link: true,
+            is_link: true,
             extra_classes: 'toolbar-button--collapsible',
           } only %}
         </li>
@@ -51,7 +51,7 @@
             attributes: create_attribute(),
             text: item.title,
             href: item.url,
-            menu_link: true,
+            is_link: true,
           } only %}
         {% else %}
           <button
