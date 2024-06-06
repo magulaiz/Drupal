@@ -36,7 +36,7 @@ class SqlModeSelectionTest extends DriverSpecificDatabaseTestBase {
     // but since we did not set TRADITIONAL, we expect that STRICT_ALL_TABLES
     // should not be set either.
     $this->assertStringNotContainsString('STRICT_ALL_TABLES', $modes);
-    // We did not set or remove the mode ANSI_QUOTES, but since the
+    // We attempted to remove the mode ANSI_QUOTES, but since the
     // Drupal default mode ANSI is still set, we expect that ANSI_QUOTES
     // should also be set.
     $this->assertStringContainsString('ANSI_QUOTES', $modes);
@@ -53,11 +53,18 @@ class SqlModeSelectionTest extends DriverSpecificDatabaseTestBase {
     // based on databaseType() rather than 'driver', but here all we have to go
     // on is 'driver'.
     if ($info['default']['driver'] === 'mysql') {
-      // Set ONLY_FULL_GROUP_BY and confirm that doing so changes the query parsing behavior.
       $info['default']['sql_mode_options'] = [
-        'TRADITIONAL' => FALSE,
+        // Disable the mode TRADITIONAL, that Drupal enables by default.
+        SqlMode::TRADITIONAL => FALSE,
+        // Turn back on two of the modes usually implicitly enabled by TRADITIONAL.
         'ERROR_FOR_DIVISION_BY_ZERO' => TRUE,
         'NO_ENGINE_SUBSTITUTION' => TRUE,
+        // The line below is a mistake. We are trying to disable
+        // the mode ANSI_QUOTES, but this mode is not implicitly set
+        // by Drupal; instead, Drupal sets the mode ANSI, which in
+        // turn sets ANSI_QUOTES. It would be necessary to disable
+        // the ANSI mode, if disabling ANSI_QUOTES was desired.
+        'ANSI_QUOTES' => FALSE,
       ];
     }
 
