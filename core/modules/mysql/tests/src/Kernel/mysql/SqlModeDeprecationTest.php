@@ -29,7 +29,7 @@ class SqlModeDeprecationTest extends KernelTestBase {
 
     // We expect that getConnection() should trigger a deprecation warning
     // when called, if 'sql_mode' is in use.
-    $this->expectDeprecation('there should be a deprecation message hee');
+    $this->expectDeprecation("The 'sql_mode' database command is deprecated in drupal:11.1.0 and will be removed in drupal:12.0.0. Use an array of options in 'sql_mode_options' instead. See https://www.drupal.org/node/3403416");
     $connection = Database::getConnection();
   }
 
