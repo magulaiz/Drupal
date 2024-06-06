@@ -3,16 +3,15 @@
 declare(strict_types = 1);
 
 use Drupal\Core\Form\FormStateInterface;
+
 /**
  * Implements hook_form_alter().
  */
-function claro_bulk_view_operation_test_form_alter(array &$form, FormStateInterface $form_state) {
-
-  if ($form['#action'] = 'en/admin/content') {
-    // Add a custom action to the actions array.
+function claro_bulk_view_operation_test_form_alter(array &$form, FormStateInterface $form_state, $form_id) {
+  if ($form_id == 'views_form_content_page_1'){
     $form['actions']['custom_action'] = [
       '#type' => 'submit',
-      '#value' => t('Custom Button '),
+      '#value' => t('Custom button'),
     ];
   }
 }

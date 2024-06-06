@@ -20,7 +20,7 @@ class ClaroViewsBulkOperationsTest extends WebDriverTestBase {
   /**
    * {@inheritdoc}
    */
-  protected static $modules = ['node', 'views', 'claro_bulk_view_operation_test'];
+  protected static $modules = ['node', 'views'];
 
   /**
    * {@inheritdoc}
@@ -104,15 +104,24 @@ class ClaroViewsBulkOperationsTest extends WebDriverTestBase {
   /**
    * Tests the dynamic Bulk Operations form.
    */
-  public function testBulkOperationsUiAlter() {
+  public function testViewBulkOperationAlter() {
     $this->drupalGet('admin/content');
 
     $page = $this->getSession()->getPage();
     $assert_session = $this->assertSession();
     $select_all = $page->find('css', '.select-all > input');
     $select_all->check();
-    $this->getSession()->executeScript('document.body.style.backgroundColor = "yellow"');
-    $this->assertSession()->waitForElementVisible('css', ".test-go", 50000000);
+    //Assert that the button does not exist.
+    $custom_button = $page->find('css', '#edit-custom-action');
+    $this->assertEmpty($custom_button);
+
+    \Drupal::service('module_installer')->install(['claro_bulk_view_operation_test']);
+    drupal_flush_all_caches();
+    $this->drupalGet('admin/content');
+    $select_all = $page->find('css', '.select-all > input');
+    $select_all->check();
+    //Assert the button exist after the module is installed.
+    $assert_session->buttonExists('Custom button');
   }
 
 }
