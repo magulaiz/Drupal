@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\mysql\Kernel\mysql;
 
+use Drupal\Core\Database\Database;
 use Drupal\KernelTests\KernelTestBase;
 
 /**
