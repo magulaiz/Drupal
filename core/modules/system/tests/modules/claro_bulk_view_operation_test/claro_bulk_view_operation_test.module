@@ -1,6 +1,9 @@
 <?php
 
-declare(strict_types = 1);
+/**
+ * @file
+ * Alter views bulk operations form and add an item to $form['actions'].
+ */
 
 use Drupal\Core\Form\FormStateInterface;
 
@@ -8,7 +11,7 @@ use Drupal\Core\Form\FormStateInterface;
  * Implements hook_form_alter().
  */
 function claro_bulk_view_operation_test_form_alter(array &$form, FormStateInterface $form_state, $form_id) {
-  if ($form_id == 'views_form_content_page_1'){
+  if ($form_id == 'views_form_content_page_1') {
     $form['actions']['custom_action'] = [
       '#type' => 'submit',
       '#value' => t('Custom button'),

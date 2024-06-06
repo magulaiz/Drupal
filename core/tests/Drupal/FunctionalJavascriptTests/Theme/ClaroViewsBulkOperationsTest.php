@@ -111,7 +111,7 @@ class ClaroViewsBulkOperationsTest extends WebDriverTestBase {
     $assert_session = $this->assertSession();
     $select_all = $page->find('css', '.select-all > input');
     $select_all->check();
-    //Assert that the button does not exist.
+    // Assert that the button does not exist.
     $custom_button = $page->find('css', '#edit-custom-action');
     $this->assertEmpty($custom_button);
 
@@ -120,7 +120,7 @@ class ClaroViewsBulkOperationsTest extends WebDriverTestBase {
     $this->drupalGet('admin/content');
     $select_all = $page->find('css', '.select-all > input');
     $select_all->check();
-    //Assert the button exist after the module is installed.
+    // Assert the button exist after the module is installed.
     $assert_session->buttonExists('Custom button');
   }
 
