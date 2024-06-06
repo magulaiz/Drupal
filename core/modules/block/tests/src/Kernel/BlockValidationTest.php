@@ -160,8 +160,8 @@ class BlockValidationTest extends ConfigEntityValidationTestBase {
       'region' => 'This is not a valid region for <em class="placeholder">stark</em>.',
     ]);
     // Set a valid region and assert it is saved properly.
-    $this->entity->set('region', 'header')->save();
-    self::assertSame('header', Block::load($this->entity->id())->get('region'));
+    $this->entity->set('region', 'header');
+    $this->assertValidationErrors([]);
   }
 
   /**
@@ -172,7 +172,7 @@ class BlockValidationTest extends ConfigEntityValidationTestBase {
     $this->assertNull($this->entity->getWeight());
     $this->assertValidationErrors([]);
 
-    $this->entity->set('weight', '');
+    $this->entity->set('weight', $this->randomString());
     $this->assertValidationErrors([
       'weight' => [
         'This value should be a valid number.',

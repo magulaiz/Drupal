@@ -125,9 +125,10 @@ class SearchBlock extends BlockBase implements ContainerFactoryPluginInterface {
     // Handle the #empty_value: using the default requires specifying `null` in
     // the config.
     // @see search.schema.yml
-    $this->configuration['page_id'] = $page_id === ''
-      ? $this->searchPageRepository->getDefaultSearchPage()
-      : $page_id;
+    if ($page_id === '') {
+      $page_id = $this->searchPageRepository->getDefaultSearchPage();
+    }
+    $this->configuration['page_id'] = $page_id;
   }
 
 }
