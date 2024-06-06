@@ -40,7 +40,7 @@ class GenerateTheme extends Command {
    * GenerateTheme constructor.
    *
    * @param string|null $name 
-   *   The event name
+   *   The event name.
    * @param string|null $root 
    *   The path for the Drupal root.
    */
