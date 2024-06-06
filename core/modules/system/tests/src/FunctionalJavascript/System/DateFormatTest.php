@@ -67,6 +67,12 @@ class DateFormatTest extends WebDriverTestBase {
     $page->pressButton('Add format');
     $assert->pageTextContains('Custom date format added.');
     $assert->assertEscaped('<em>' . date("Y") . '</em>');
+
+    $label = 'åäöÅÄÖš';
+    $this->drupalGet('admin/config/regional/date-time/formats/add');
+    $page->fillField('label', $label);
+    $assert->waitForLink('Edit');
+    $assert->pageTextContains('Machine name: aaoaaos');
   }
 
 }
