@@ -31,8 +31,6 @@ class BlockContentDeletionTest extends KernelTestBase {
     parent::setUp();
     $this->installEntitySchema('user');
     $this->installEntitySchema('block_content');
-    $this->installEntitySchema('field_storage_config');
-    // @see core/modules/block_content/config/install/core.entity_view_mode.block_content.full.yml
     $this->installConfig(['block_content']);
     $this->container->get('theme_installer')->install(['stark']);
   }
