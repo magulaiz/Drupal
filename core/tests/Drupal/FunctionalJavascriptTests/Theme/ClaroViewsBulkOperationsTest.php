@@ -102,7 +102,7 @@ class ClaroViewsBulkOperationsTest extends WebDriverTestBase {
   }
 
   /**
-   * Tests the dynamic Bulk Operations form.
+   * Tests the view bulk operation alter.
    */
   public function testViewBulkOperationAlter() {
     $this->drupalGet('admin/content');
