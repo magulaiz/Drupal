@@ -312,6 +312,15 @@ class LocalTasksTest extends BrowserTestBase {
     // Install the necessary modules for the test.
     \Drupal::service('module_installer')->install(['path', 'taxonomy']);
     $this->drupalCreateContentType(['type' => 'article']);
+    $vocab = $this->createVocabulary(['name' => 'tags']);
+
+    $web_user = $this->drupalCreateUser([
+      'create article content',
+      'edit own article content',
+      'create url aliases',
+      'create terms in ' . $vocab->id(),
+      'edit terms in ' . $vocab->id(),
+    ]);
 
     // Create node and taxonomy term entities with path aliases.
     $entities = [
@@ -320,15 +329,17 @@ class LocalTasksTest extends BrowserTestBase {
         'path' => [
           'alias' => '/original-node-alias',
         ],
+        'uid' => $web_user->id(),
       ]),
-      'term' => $this->createTerm($this->createVocabulary(['name' => 'tags']), [
+      'term' => $this->createTerm($vocab, [
         'path' => [
           'alias' => '/original-term-alias',
         ],
+        'uid' => $web_user->id(),
       ]),
     ];
 
-    $this->drupalLogin($this->rootUser);
+    $this->drupalLogin($web_user);
     // Test the local task block URLs for both node and term entities.
     foreach ($entities as $entity_type => $entity) {
       $this->drupalGet($entity->toUrl());
