@@ -89,7 +89,7 @@ final class StringFormatterTest extends UnitTestCase {
    * @return \Generator
    *   Test scenarios.
    */
-  public function providerAccessLinkToEntity(): \Generator {
+  public static function providerAccessLinkToEntity(): \Generator {
     yield 'entity with no URL' => [
       FALSE,
       NULL,
