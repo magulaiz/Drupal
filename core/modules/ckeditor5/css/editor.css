@@ -35,7 +35,7 @@
 }
 
 [data-drupal-calibrate-width] td:not([data-drupal-ckeditor5-cell]) {
-  display: inline-block
+  display: inline-block;
 }
 
 @media screen and (max-width: 90rem) {
