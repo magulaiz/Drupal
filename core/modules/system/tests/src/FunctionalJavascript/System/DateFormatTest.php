@@ -68,11 +68,13 @@ class DateFormatTest extends WebDriverTestBase {
     $assert->pageTextContains('Custom date format added.');
     $assert->assertEscaped('<em>' . date("Y") . '</em>');
 
-    $label = 'åäöÅÄÖš';
+    // cspell:ignore Låbêl Wïth Spèciäl chÅrÄcters
+    $label = 'Låbêl Wïth Spèciäl chÅrÄcters';
     $this->drupalGet('admin/config/regional/date-time/formats/add');
     $page->fillField('label', $label);
     $assert->waitForLink('Edit');
-    $assert->pageTextContains('Machine name: aaoaaos');
+    // cspell:ignore aaoaaos
+    $assert->pageTextContains('Machine name: label_with_special_characters');
   }
 
 }
