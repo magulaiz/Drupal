@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Drupal\Tests\mysql\Kernel\mysql;
 
 use Drupal\KernelTests\Core\Database\DriverSpecificDatabaseTestBase;
+use Drupal\mysql\Driver\Database\mysql\SqlMode;
 
 /**
  * Tests our ability to select a set of Sql modes.
