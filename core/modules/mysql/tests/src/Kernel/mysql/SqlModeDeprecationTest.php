@@ -10,7 +10,7 @@ use Drupal\KernelTests\KernelTestBase;
 /**
  * Tests whether a deprecation warning is thrown when sql_mode is used.
  *
- * @group Database
+ * @group legacy
  */
 class SqlModeDeprecationTest extends KernelTestBase {
 
