@@ -13,7 +13,6 @@ use Drupal\Core\Session\AccountInterface;
 use Drupal\Tests\UnitTestCase;
 use Psr\Log\LoggerInterface;
 use Drupal\Core\DependencyInjection\ContainerBuilder;
-use Drupal\Core\StringTranslation\StringTranslationTrait;
 
 /**
  * @coversDefaultClass \Drupal\Core\Block\BlockManager
