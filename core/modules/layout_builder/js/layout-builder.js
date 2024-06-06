@@ -335,6 +335,11 @@
     attach(context) {
       const $layoutBuilder = $('#layout-builder');
 
+      // Toolbar title tooltip.
+      const tooltip = $layoutBuilder.find(
+        '.admin-toolbar__content .toolbar-block__title-tooltip',
+      );
+
       // The content preview toggle.
       const $layoutBuilderContentPreview = $('#layout-builder-content-preview');
 
@@ -361,6 +366,7 @@
        */
       const disableContentPreview = () => {
         $layoutBuilder.addClass('layout-builder--content-preview-disabled');
+        tooltip.removeAttr('data-hidden-by-layout-builder');
 
         /**
          * Iterate over all Layout Builder blocks to hide their content and add
@@ -398,6 +404,7 @@
        */
       const enableContentPreview = () => {
         $layoutBuilder.removeClass('layout-builder--content-preview-disabled');
+        tooltip.attr('data-hidden-by-layout-builder', 'true');
 
         // Remove all placeholder labels.
         $('.js-layout-builder-content-preview-placeholder-label').remove();
@@ -406,6 +413,10 @@
         $('[data-layout-content-preview-placeholder-label]').each(
           (i, element) => {
             $(element).children().show();
+
+            if (tooltip.length) {
+              tooltip.hide();
+            }
           },
         );
       };
