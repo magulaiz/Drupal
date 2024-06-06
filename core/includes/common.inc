@@ -121,7 +121,7 @@ const JS_THEME = 100;
  *
  * Examples:
  * - http://example.com returns "/" because the path is empty.
- * - http://example.com/drupal/folder returns "/drupal/folder/".
+ * - http://example.com/drupal/directory returns "/drupal/directory/".
  */
 function base_path() {
   return $GLOBALS['base_path'];

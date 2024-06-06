@@ -3,7 +3,7 @@
   <arg name="extensions" value="engine,inc,install,module,php,profile,test,theme,yml"/>
   <description>Default PHP CodeSniffer configuration for Drupal core.</description>
 
-  <!--Exclude folders used by common frontend tools. These folders match the file_scan_ignore_directories setting in default.settings.php-->
+  <!--Exclude directories used by common frontend tools. These directories match the file_scan_ignore_directories setting in default.settings.php-->
   <exclude-pattern>*/bower_components/*</exclude-pattern>
   <exclude-pattern>*/node_modules/*</exclude-pattern>
   <!--Exclude third party code.-->

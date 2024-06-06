@@ -484,9 +484,9 @@ function ckeditor5_library_info_alter(&$libraries, $extension) {
       if (!empty($options['type']) && $options['type'] === 'external') {
         continue;
       }
-      // Path relative to the current extension folder.
+      // Path relative to the current extension directory.
       $dirname = dirname($file);
-      // Path of the folder in the filesystem relative to the Drupal root.
+      // Path of the directory in the filesystem relative to the Drupal root.
       $dir = $path . '/' . $dirname;
       // Exclude protocol-free URI.
       if (str_starts_with($dirname, '//')) {
@@ -494,7 +494,7 @@ function ckeditor5_library_info_alter(&$libraries, $extension) {
       }
       // CKEditor 5 plugins are most likely added through composer and
       // installed in the module exposing it. Suppose the file path is
-      // relative to the module and not in the /libraries/ folder.
+      // relative to the module and not in the /libraries/ directory.
       // Collect translations based on filename, and add all existing
       // translations files to the plugin library. Unnecessary translations
       // will be filtered in ckeditor5_js_alter() hook.

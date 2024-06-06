@@ -116,7 +116,7 @@ class CssOptimizerUnitTest extends UnitTestCase {
         ],
         file_get_contents($absolute_path . 'comment_hacks.css.optimized.css'),
       ],
-      // File in subfolder. Tests:
+      // File in subdirectory. Tests:
       // - CSS import path is properly interpreted.
       //   (https://www.drupal.org/node/1198904)
       // - Don't adjust data URIs (https://www.drupal.org/node/2142441)

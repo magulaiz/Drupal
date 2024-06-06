@@ -168,7 +168,7 @@ class MTimeProtectedFastFileStorage extends FileStorage {
       $directory_mtime = filemtime($directory);
       foreach ($dir_iterator as $fileinfo) {
         if ($directory_mtime > $fileinfo->getMTime()) {
-          // Ensure the folder is writable.
+          // Ensure the directory is writable.
           @chmod($directory, 0777);
           @unlink($fileinfo->getPathName());
         }

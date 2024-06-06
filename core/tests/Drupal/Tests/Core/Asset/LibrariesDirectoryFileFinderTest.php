@@ -62,7 +62,7 @@ class LibrariesDirectoryFileFinderTest extends UnitTestCase {
     $path = $finder->find('third_party_library/css/example.css');
     $this->assertEquals('sites/example.com/libraries/third_party_library/css/example.css', $path);
 
-    // After removing the site specific location the root libraries folder
+    // After removing the site specific location the root libraries directory
     // should be used.
     unlink('vfs://root/sites/example.com/libraries/third_party_library/css/example.css');
     $path = $finder->find('third_party_library/css/example.css');

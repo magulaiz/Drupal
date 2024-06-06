@@ -76,7 +76,7 @@ interface DrupalKernelInterface extends HttpKernelInterface {
   /**
    * Set the current site path directory.
    *
-   * Format: "folder-name/child-folder" usually uses "sites/default".
+   * Format: "directory-name/child-directory" usually uses "sites/default".
    *
    * @param string $path
    *   The current site path.

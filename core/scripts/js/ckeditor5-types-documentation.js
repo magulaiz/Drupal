@@ -108,7 +108,7 @@ const existingDefinitions = definitions.filter((e) => !!e);
 
 // Write the file in the ckeditor module, use the JSDoc extension to make sure
 // the JSDoc extension is associated with the JavaScript file type and it
-// prevents core JavaScript lint rules to be run. Add it to the build folder to
+// prevents core JavaScript lint rules to be run. Add it to the build directory to
 // prevent cspell checks on this file.
 fs.writeFile(`./modules/ckeditor5/js/build/ckeditor5.types.jsdoc`, existingDefinitions.join('\n'), () => {
   log(`CKEditor 5 types have been generated: ${existingDefinitions.length} declarations aliased, ${definitions.length - existingDefinitions.length} files ignored`);

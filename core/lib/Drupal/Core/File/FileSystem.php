@@ -716,7 +716,7 @@ class FileSystem implements FileSystemInterface {
       closedir($handle);
     }
 
-    // Give priority to files in this folder by merging them after
+    // Give priority to files in this directory by merging them after
     // any subdirectory files.
     return array_merge(array_merge(...$files_in_sub_dirs), $files_in_this_directory);
   }

@@ -168,7 +168,7 @@ class FileStorage implements PhpStorageInterface {
   protected function unlink($path) {
     if (file_exists($path)) {
       if (is_dir($path)) {
-        // Ensure the folder is writable.
+        // Ensure the directory is writable.
         @chmod($path, 0777);
         foreach (new \DirectoryIterator($path) as $fileinfo) {
           if (!$fileinfo->isDot()) {

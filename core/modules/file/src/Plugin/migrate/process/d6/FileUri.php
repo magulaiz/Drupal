@@ -31,7 +31,7 @@ class FileUri extends ProcessPluginBase {
     }
 
     // Strip the files path from the uri instead of using basename
-    // so any additional folders in the path are preserved.
+    // so any additional directories in the path are preserved.
     $uri = preg_replace('/^' . preg_quote($file_directory_path, '/') . '/', '', $filepath);
 
     return ($is_public ? 'public' : 'private') . '://' . ltrim($uri, '/');

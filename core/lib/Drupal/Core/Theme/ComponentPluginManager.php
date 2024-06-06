@@ -23,7 +23,7 @@ use Drupal\Core\Plugin\Discovery\DirectoryWithMetadataPluginDiscovery;
 /**
  * Defines a plugin manager to deal with components.
  *
- * Modules and themes can create components by adding a folder under
+ * Modules and themes can create components by adding a directory under
  * MODULENAME/components/my-component/my-component.component.yml.
  *
  * @see plugin_api
@@ -434,10 +434,10 @@ class ComponentPluginManager extends DefaultPluginManager {
    * @param string $file_extension
    *   The file extension to detect.
    * @param bool $make_relative
-   *   TRUE to make the filename relative to the core folder.
+   *   TRUE to make the filename relative to the core directory.
    *
    * @return string|null
-   *   Filenames, maybe relative to the core folder.
+   *   Filenames, maybe relative to the core directory.
    */
   private function findAsset(string $component_directory, string $machine_name, string $file_extension, bool $make_relative = FALSE): ?string {
     $absolute_path = sprintf('%s%s%s.%s', $component_directory, DIRECTORY_SEPARATOR, $machine_name, $file_extension);

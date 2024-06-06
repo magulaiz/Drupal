@@ -25,7 +25,7 @@
  * properties to inform Locale module to load and import the translations.
  *
  * Example .info.yml file properties for a custom module with a po file located
- * in the module's folder.
+ * in the module's directory.
  * @code
  * 'interface translation project': example_module
  * 'interface translation server pattern': modules/custom/example_module/%project-%version.%language.po

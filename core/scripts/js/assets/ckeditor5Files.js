@@ -15,7 +15,7 @@ const ckeditor5PluginMapping = {
  * Build the list of assets to be copied based on what exists in the filesystem.
  *
  * @param {string} packageFolder
- *   The path to node_modules folder.
+ *   The path to node_modules directory.
  *
  * @return {DrupalLibraryAsset[]}
  *  List of libraries and files to process.
@@ -36,7 +36,7 @@ module.exports = (packageFolder) => {
       // Use the package name to generate the plugin name. There are some
       // exceptions that needs to be handled. Ideally remove the special cases.
       let pluginName = pack.replace('@ckeditor/ckeditor5-', '');
-      // Target folder in the vendor/assets folder.
+      // Target directory in the vendor/assets directory.
       let folder = `ckeditor5/${pluginName.replace('@ckeditor/ckeditor5-', '')}`;
       // Transform kebab-case to CamelCase.
       let library = pluginName.replace(/-./g, (match) => match[1].toUpperCase());
