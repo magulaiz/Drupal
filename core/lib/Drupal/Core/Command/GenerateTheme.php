@@ -39,8 +39,10 @@ class GenerateTheme extends Command {
   /**
    * GenerateTheme constructor.
    *
-   * @param string|null $name The event name
-   * @param string|numm $root The path for the Drupal root.
+   * @param string|null $name 
+   *   The event name
+   * @param string|null $root 
+   *   The path for the Drupal root.
    */
   public function __construct(?string $name = NULL, ?string $root = NULL) {
     parent::__construct($name);
