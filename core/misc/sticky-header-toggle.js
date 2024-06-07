@@ -12,7 +12,7 @@
     attach(context) {
       const stickyHeaderElement = once(
         'makeStickyOptional',
-        '.views-table',
+        'table',
         context,
       ).shift();
       if (stickyHeaderElement) {
