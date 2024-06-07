@@ -9,6 +9,8 @@ use Drupal\views\Views;
 
 /**
  * Tests the plugin unfiltered text handler.
+ *
+ * @group views
  */
 class UnFilteredTextTokenTest extends ViewTestBase {
 
