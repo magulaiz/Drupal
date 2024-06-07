@@ -10,7 +10,6 @@ use Drupal\Core\Field\FieldItemInterface;
 use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\Core\Language\LanguageManagerInterface;
 use Drupal\Core\Render\Element;
-use Drupal\Core\Entity\RevisionableInterface;
 use Drupal\Core\Security\TrustedCallbackInterface;
 use Drupal\Core\Theme\Registry;
 use Drupal\Core\TypedData\TranslatableInterface as TranslatableDataInterface;
@@ -174,6 +173,7 @@ class EntityViewBuilder extends EntityHandlerBase implements EntityHandlerInterf
    *   The view mode that should be used.
    *
    * @return array
+   *   The updated renderable array.
    */
   protected function getBuildDefaults(EntityInterface $entity, $view_mode) {
     // Allow modules to change the view mode.
@@ -502,6 +502,7 @@ class EntityViewBuilder extends EntityHandlerBase implements EntityHandlerInterf
    *   The display options passed to the viewField() method.
    *
    * @return \Drupal\Core\Entity\Display\EntityViewDisplayInterface
+   *   Return entity view display for the field.
    */
   protected function getSingleFieldDisplay($entity, $field_name, $display_options) {
     if (is_string($display_options)) {
