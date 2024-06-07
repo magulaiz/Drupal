@@ -40,7 +40,7 @@ class GenerateTheme extends Command {
    * GenerateTheme constructor.
    *
    * @param string|null $name
-   *   The event name.
+   *   The name of the command; passing null means it must be set in configure().
    * @param string|null $root
    *   The path for the Drupal root.
    */
