@@ -8,7 +8,7 @@ use Drupal\Tests\views\Functional\ViewTestBase;
 use Drupal\views\Views;
 
 /**
- * Tests the plugin Unfilterted text handler.
+ * Tests the plugin unfiltered text handler.
  */
 class UnFilteredTextTokenTest extends ViewTestBase {
 
@@ -59,7 +59,7 @@ class UnFilteredTextTokenTest extends ViewTestBase {
 
     $this->drupalGet('/archive');
 
-    // Check if the href attribute's value matches the site_url renndered token.
+    // Check if the href attribute's value matches the site_url token.
     $href = \Drupal::token()->replace('[site:url]');
     $this->assertSession()->elementExists('xpath', '//a[@href="' . $href . '"]');
 
