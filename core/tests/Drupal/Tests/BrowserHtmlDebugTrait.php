@@ -113,12 +113,21 @@ trait BrowserHtmlDebugTrait {
     $message = $message ?: $this->getSession()->getPage()->getContent();
     $message = '<hr />ID #' . $this->htmlOutputCounter . ' (<a href="' . $this->htmlOutputClassName . '-' . ($this->htmlOutputCounter - 1) . '-' . $this->htmlOutputTestId . '.html">Previous</a> | <a href="' . $this->htmlOutputClassName . '-' . ($this->htmlOutputCounter + 1) . '-' . $this->htmlOutputTestId . '.html">Next</a>)<hr />' . $message;
     $html_output_filename = $this->htmlOutputClassName . '-' . $this->htmlOutputCounter . '-' . $this->htmlOutputTestId . '.html';
-    file_put_contents($this->htmlOutputDirectory . '/' . $html_output_filename, $message);
+    
+    // Convert the relative directory path to an absolute URL if needed.
+    $outputUrl = $this->htmlOutputDirectory;
+    if (strpos($outputUrl, 'http') !== 0) {
+      // If the directory path is not an absolute URL, construct one.
+      $baseUrl = rtrim($this->htmlOutputBaseUrl, '/');
+      $outputUrl = $baseUrl . '/' . $outputUrl;
+    }
+    
+    // Write the HTML output file.
+    file_put_contents($outputUrl . '/' . $html_output_filename, $message);
     file_put_contents($this->htmlOutputCounterStorage, $this->htmlOutputCounter++);
-    // Do not use the file_url_generator service as the module_handler service
-    // might not be available.
-    $uri = $this->htmlOutputBaseUrl . '/sites/simpletest/browser_output/' . $html_output_filename;
-    HtmlOutputLogger::log($uri . "\n");
+    
+    // Log the URL to the HTML output file.
+    HtmlOutputLogger::log($outputUrl . '/' . $html_output_filename . "\n");
   }
 
   /**
@@ -127,22 +136,39 @@ trait BrowserHtmlDebugTrait {
   protected function initBrowserOutputFile() {
     $this->htmlOutputEnabled = HtmlOutputLogger::isEnabled();
     $this->htmlOutputBaseUrl = getenv('BROWSERTEST_OUTPUT_BASE_URL') ?: $GLOBALS['base_url'];
+
     if ($this->htmlOutputEnabled) {
       $this->htmlOutputClassName = str_replace("\\", "_", static::class);
-      $this->htmlOutputDirectory = DRUPAL_ROOT . '/sites/simpletest/browser_output';
+      
+      // Construct the relative directory path.
+      $this->htmlOutputDirectory = 'sites/simpletest/browser_output';
+
+      // Convert the relative directory path to an absolute URL if needed.
+      $outputUrl = $this->htmlOutputDirectory;
+      if (strpos($outputUrl, 'http') !== 0) {
+        // If the directory path is not an absolute URL, construct one.
+        $baseUrl = rtrim($this->htmlOutputBaseUrl, '/');
+        $outputUrl = $baseUrl . '/' . $outputUrl;
+      }
+
       // Do not use the file_system service so this method can be called before
       // it is available. Checks !is_dir() twice around mkdir() because a
       // concurrent test might have made the directory and caused mkdir() to
       // fail. In this case we can still use the directory even though we failed
       // to make it.
-      if (!is_dir($this->htmlOutputDirectory) && !@mkdir($this->htmlOutputDirectory, 0775, TRUE) && !is_dir($this->htmlOutputDirectory)) {
-        throw new \RuntimeException(sprintf('Unable to create directory: %s', $this->htmlOutputDirectory));
+      if (!is_dir($outputUrl) && !@mkdir($outputUrl, 0775, TRUE) && !is_dir($outputUrl)) {
+        throw new \RuntimeException(sprintf('Unable to create directory: %s', $outputUrl));
       }
-      if (!file_exists($this->htmlOutputDirectory . '/.htaccess')) {
-        file_put_contents($this->htmlOutputDirectory . '/.htaccess', "<IfModule mod_expires.c>\nExpiresActive Off\n</IfModule>\n");
+
+      if (!file_exists($outputUrl . '/.htaccess')) {
+        file_put_contents($outputUrl . '/.htaccess', "<IfModule mod_expires.c>\nExpiresActive Off\n</IfModule>\n");
       }
-      $this->htmlOutputCounterStorage = $this->htmlOutputDirectory . '/' . $this->htmlOutputClassName . '.counter';
-      $this->htmlOutputTestId = str_replace('sites/simpletest/', '', $this->siteDirectory);
+      
+      $this->htmlOutputCounterStorage = $outputUrl . '/' . $this->htmlOutputClassName . '.counter';
+      
+      // Construct the test ID based on the relative directory path.
+      $this->htmlOutputTestId = $this->htmlOutputDirectory;
+
       if (is_file($this->htmlOutputCounterStorage)) {
         $this->htmlOutputCounter = max(1, (int) file_get_contents($this->htmlOutputCounterStorage)) + 1;
       }
