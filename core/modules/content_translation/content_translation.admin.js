@@ -94,7 +94,7 @@
         const $bundleSettings = $(closestBundle);
         const translatableInput = $bundleSettings
           .nextUntil('.bundle-settings', '.field-settings')
-          .find('.translatable :input:not(:checked)')[0];
+          .find('.translatable :input:not(:checked)');
         const closestField = translatableInput.closest('.field-settings');
         if (input.checked) {
           $bundleSettings.nextUntil('.bundle-settings').hide();
