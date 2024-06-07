@@ -15,16 +15,6 @@ use Drupal\Core\Entity\EntityForm;
 abstract class DateFormatFormBase extends EntityForm {
 
   /**
-   * Pattern used for preg_replace when generating machine name.
-   *
-   * Replaces capital characters & accented chars (à, â, å etc.) & reserved
-   * keyword custom.
-   *
-   * @var string
-   */
-  public const REPLACE_PATTERN = '[^A-Za-zÀ-ÖØ-öø-ÿ0-9_]+|^custom$';
-
-  /**
    * The date formatter service.
    *
    * @var \Drupal\Core\Datetime\DateFormatterInterface
@@ -98,7 +88,7 @@ abstract class DateFormatFormBase extends EntityForm {
       '#default_value' => $this->entity->id(),
       '#machine_name' => [
         'exists' => [$this, 'exists'],
-        'replace_pattern' => self::REPLACE_PATTERN,
+        'replace_pattern' => '[^A-Za-zÀ-ÖØ-öø-ÿ0-9_]+|^custom$',
         'error' => $this->t('The machine-readable name must be unique, and can only contain lowercase letters, numbers, and underscores. Additionally, it can not be the reserved word "custom".'),
       ],
     ];
