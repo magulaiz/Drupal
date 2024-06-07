@@ -113,7 +113,7 @@ trait BrowserHtmlDebugTrait {
     $message = $message ?: $this->getSession()->getPage()->getContent();
     $message = '<hr />ID #' . $this->htmlOutputCounter . ' (<a href="' . $this->htmlOutputClassName . '-' . ($this->htmlOutputCounter - 1) . '-' . $this->htmlOutputTestId . '.html">Previous</a> | <a href="' . $this->htmlOutputClassName . '-' . ($this->htmlOutputCounter + 1) . '-' . $this->htmlOutputTestId . '.html">Next</a>)<hr />' . $message;
     $html_output_filename = $this->htmlOutputClassName . '-' . $this->htmlOutputCounter . '-' . $this->htmlOutputTestId . '.html';
-    
+
     // Convert the relative directory path to an absolute URL if needed.
     $outputUrl = $this->htmlOutputDirectory;
     if (strpos($outputUrl, 'http') !== 0) {
@@ -121,11 +121,11 @@ trait BrowserHtmlDebugTrait {
       $baseUrl = rtrim($this->htmlOutputBaseUrl, '/');
       $outputUrl = $baseUrl . '/' . $outputUrl;
     }
-    
+
     // Write the HTML output file.
     file_put_contents($outputUrl . '/' . $html_output_filename, $message);
     file_put_contents($this->htmlOutputCounterStorage, $this->htmlOutputCounter++);
-    
+
     // Log the URL to the HTML output file.
     HtmlOutputLogger::log($outputUrl . '/' . $html_output_filename . "\n");
   }
@@ -139,7 +139,7 @@ trait BrowserHtmlDebugTrait {
 
     if ($this->htmlOutputEnabled) {
       $this->htmlOutputClassName = str_replace("\\", "_", static::class);
-      
+
       // Construct the relative directory path.
       $this->htmlOutputDirectory = 'sites/simpletest/browser_output';
 
@@ -163,9 +163,9 @@ trait BrowserHtmlDebugTrait {
       if (!file_exists($outputUrl . '/.htaccess')) {
         file_put_contents($outputUrl . '/.htaccess', "<IfModule mod_expires.c>\nExpiresActive Off\n</IfModule>\n");
       }
-      
+
       $this->htmlOutputCounterStorage = $outputUrl . '/' . $this->htmlOutputClassName . '.counter';
-      
+
       // Construct the test ID based on the relative directory path.
       $this->htmlOutputTestId = $this->htmlOutputDirectory;
 
