@@ -1127,16 +1127,6 @@ function claro_preprocess_field_multiple_value_form(&$variables) {
     if (!empty($variables['button'])) {
       $variables['button']['#attributes']['class'][] = 'button--small';
     }
-
-    // Change the value of the delete button.
-    if (isset($variables['element'][0]['_actions']['delete'])) {
-      foreach ($variables['element'] as &$element) {
-        if (isset($element['_actions']['delete'])) {
-          $element['_actions']['delete']['#value'] = 'knjdsnj';
-          $element['_actions']['delete']['#attributes']['class'][] = 'abcd';
-        }
-      }
-    }
   }
 }
 
