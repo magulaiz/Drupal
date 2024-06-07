@@ -1,5 +1,5 @@
-name: 'Claro Views Alter'
+name: 'Custom Views Alterations'
 type: module
-description: 'Custom module to alter views bulk operations form.'
+description: 'Custom module for testing Claro theme compatibility with Views alterations.'
 core_version_requirement: '*'
 package: Testing

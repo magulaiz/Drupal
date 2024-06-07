@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Alter views bulk operations form and add an item to $form['actions'].
+ * Implements custom alterations and additions to Views bulk operations forms.
  */
 
 use Drupal\Core\Form\FormStateInterface;
