@@ -251,34 +251,20 @@ class LocalTaskManager extends DefaultPluginManager implements LocalTaskManagerI
       }
       // Create a plugin instance for each element of the hierarchy.
       foreach ($base_routes as $base_route) {
-        // Convert the tree keyed by plugin IDs into a simple one with
-        // integer depth.  Create instances for each plugin along the way.
         $level = 0;
-        // We used this above as the top-level parent array key.
-        $next_parent = '> ' . $base_route;
-        do {
-          $parent = $next_parent;
-          $next_parent = FALSE;
-          foreach ($children[$parent] as $plugin_id => $task_info) {
+        foreach ($children as $key_children => $child) {
+          foreach($child as $plugin_id => $task_info){
             $plugin = $this->createInstance($plugin_id);
             $this->instances[$route_name][$level][$plugin_id] = $plugin;
-            // Normally, the link generator compares the href of every link with
-            // the current path and sets the active class accordingly. But the
-            // parents of the current local task may be on a different route in
-            // which case we have to set the class manually by flagging it
-            // active.
-            if (!empty($parents[$plugin_id]) && $route_name != $task_info['route_name']) {
+            $current_parameters = $this->routeMatch->getRawParameters()->all();
+            $plugin_parameters = $plugin->getPluginDefinition()['route_parameters'];
+            if (!empty($parents[$plugin_id]) && $route_name != $task_info['route_name'] && $current_parameters == $plugin_parameters) {
               $plugin->setActive();
-            }
-            if (isset($children[$plugin_id])) {
-              // This tab has visible children.
-              $next_parent = $plugin_id;
             }
           }
           $level++;
-        } while ($next_parent);
+        }
       }
-
     }
     return $this->instances[$route_name];
   }
@@ -398,7 +384,11 @@ class LocalTaskManager extends DefaultPluginManager implements LocalTaskManagerI
   protected function isRouteActive($current_route_name, $route_name, $route_parameters) {
     // Flag the list element as active if this tab's route and parameters match
     // the current request's route and route variables.
-    $active = $current_route_name == $route_name;
+    $current_parameters = ['parameters' => $this->routeMatch->getRawParameters()->all()];
+    $active = false;
+    if($current_route_name == $route_name && $current_parameters == $route_parameters){
+      $active = true;
+    }
     if ($active) {
       // The request is injected, so we need to verify that we have the expected
       // _raw_variables attribute.

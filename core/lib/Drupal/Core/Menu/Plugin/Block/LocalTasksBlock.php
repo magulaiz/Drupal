@@ -12,6 +12,7 @@ use Drupal\Core\Render\Element;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Drupal\Core\Url;
 
 /**
  * Provides a "Tabs" block to display the local tasks.
@@ -101,7 +102,22 @@ class LocalTasksBlock extends BlockBase implements ContainerFactoryPluginInterfa
       ];
     }
     if ($config['secondary']) {
-      $links = $this->localTaskManager->getLocalTasks($this->routeMatch->getRouteName(), 1);
+      $level = 1;
+      $instances = $this->localTaskManager->getLocalTasksForRoute($this->routeMatch->getRouteName());
+      foreach($instances as $key_instance => $instance){
+        if($key_instance != 0){
+          foreach($instance as $local_task){
+            $pluginDefinition = $local_task->getPluginDefinition();
+            $instance_url = Url::fromRoute($pluginDefinition['route_name'], $pluginDefinition['route_parameters'])->toString();
+            $current_url = Url::fromRoute($this->routeMatch->getRouteName(), $this->routeMatch->getRawParameters()->all())->toString();
+            if($instance_url == $current_url){
+              $level = $key_instance;
+            }
+          }
+        }
+      }
+
+      $links = $this->localTaskManager->getLocalTasks($this->routeMatch->getRouteName(), $level);
       $cacheability = $cacheability->merge($links['cacheability']);
       // Do not display single tabs.
       $tabs += [
