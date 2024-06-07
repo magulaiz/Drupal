@@ -1003,7 +1003,8 @@
     this.progress.element = $(
       Drupal.theme('ajaxProgressThrobber', this.progress.message),
     );
-    const ajaxContainer = this.element.closest('[data-drupal-ajax-container]');
+    const $element = $(this.element);
+    const ajaxContainer = $element.closest('[data-drupal-ajax-container]');
     if (ajaxContainer) {
       $(ajaxContainer).after(this.progress.element);
     } else {
