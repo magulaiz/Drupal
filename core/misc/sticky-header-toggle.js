@@ -25,14 +25,11 @@
           'input[type="checkbox"]',
         );
 
-        const storedValue = localStorage.getItem('stickyHeaderEnabled');
-        const isStickyHeaderEnabled =
-          storedValue === null ? true : storedValue === 'true';
-        checkbox.checked = isStickyHeaderEnabled;
-        stickyHeaderElement.classList.toggle(
-          'sticky-header',
-          isStickyHeaderEnabled,
-        );
+        const stickyEnabled =
+          !localStorage.getItem('stickyHeaderEnabled') ||
+          localStorage.getItem('stickyHeaderEnabled') === 'true';
+        checkbox.checked = stickyEnabled;
+        stickyHeaderElement.classList.toggle('sticky-header', stickyEnabled);
 
         checkbox.addEventListener('change', () => {
           const isChecked = checkbox.checked;

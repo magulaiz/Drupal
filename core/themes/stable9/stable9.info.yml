@@ -100,7 +100,6 @@ libraries-override:
     css:
       component:
         misc/components/sticky-header.module.css: css/core/components/sticky-header.module.css
-        misc/stickyheadertoggle.css: css/core/stickyheadertoggle.css
 
   core/drupal.vertical-tabs:
     css:

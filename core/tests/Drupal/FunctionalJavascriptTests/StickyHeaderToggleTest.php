@@ -14,7 +14,7 @@ class StickyHeaderToggleTest extends WebDriverTestBase {
   /**
    * {@inheritdoc}
    */
-  protected $profile = 'demo_umami';
+  protected static $modules = ['node', 'views'];
 
   /**
    * {@inheritdoc}
@@ -22,11 +22,30 @@ class StickyHeaderToggleTest extends WebDriverTestBase {
   protected $defaultTheme = 'claro';
 
   /**
+   * {@inheritdoc}
+   */
+  protected function setUp(): void {
+    parent::setUp();
+
+    $this->createContentType(['type' => 'page']);
+    for ($i = 0; $i < 20; $i++) {
+      $this->createNode(['title' => 'Test page']);
+    }
+
+    $user = $this->drupalCreateUser([
+      'administer site configuration',
+      'access content',
+      'access content overview',
+      'edit any page content',
+    ]);
+    $this->drupalLogin($user);
+  }
+
+  /**
    * Tests the checkbox for enabling/disabling table sticky header.
    */
   public function testStickyDisabled(): void {
-    $this->drupalLogin($this->rootUser);
-    $this->drupalGet('/admin/content');
+    $this->drupalGet('admin/content');
     $assert_session = $this->assertSession();
     $checkbox = $assert_session->elementExists('css', '.tableheader-toggle-sticky input[type="checkbox"]');
 
