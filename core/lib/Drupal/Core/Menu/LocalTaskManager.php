@@ -262,7 +262,7 @@ class LocalTaskManager extends DefaultPluginManager implements LocalTaskManagerI
           }
         }
         $level++;
-      }      
+      }
     }
     return $this->instances[$route_name];
   }
