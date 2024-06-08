@@ -104,13 +104,13 @@ class LocalTasksBlock extends BlockBase implements ContainerFactoryPluginInterfa
     if ($config['secondary']) {
       $level = 1;
       $instances = $this->localTaskManager->getLocalTasksForRoute($this->routeMatch->getRouteName());
-      foreach($instances as $key_instance => $instance){
-        if($key_instance != 0){
-          foreach($instance as $local_task){
+      foreach ($instances as $key_instance => $instance) {
+        if ($key_instance != 0) {
+          foreach ($instance as $local_task) {
             $pluginDefinition = $local_task->getPluginDefinition();
             $instance_url = Url::fromRoute($pluginDefinition['route_name'], $pluginDefinition['route_parameters'])->toString();
             $current_url = Url::fromRoute($this->routeMatch->getRouteName(), $this->routeMatch->getRawParameters()->all())->toString();
-            if($instance_url == $current_url){
+            if ($instance_url == $current_url) {
               $level = $key_instance;
             }
           }
