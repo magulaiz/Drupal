@@ -470,8 +470,7 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
           $definition_columns = $this->fieldStorageDefinitions[$field_name]->getColumns();
           foreach ($field_columns as $property_name => $column_name) {
             if (property_exists($record, $column_name)) {
-              // @todo See also https://www.drupal.org/project/drupal/issues/2883851 .
-              $values[$id][$field_name][LanguageInterface::LANGCODE_DEFAULT][$property_name] = !empty($definition_columns[$property_name]['serialize']) ? unserialize($record->{$column_name} ?? '') : $record->{$column_name};
+              $values[$id][$field_name][LanguageInterface::LANGCODE_DEFAULT][$property_name] = !empty($definition_columns[$property_name]['serialize']) ? SqlContentEntityStorage::safeUnserialize($record->{$column_name}) : $record->{$column_name};
               unset($record->{$column_name});
             }
           }
@@ -482,13 +481,7 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
           if (property_exists($record, $column_name)) {
             $columns = $this->fieldStorageDefinitions[$field_name]->getColumns();
             $column = reset($columns);
-            // @todo See also https://www.drupal.org/project/drupal/issues/2883851 .
-            if (empty($column['serialize']) || isset($record->{$column_name})) {
-              $values[$id][$field_name][LanguageInterface::LANGCODE_DEFAULT] = !empty($column['serialize']) ? unserialize($record->{$column_name}) : $record->{$column_name};
-            }
-            else {
-              $values[$id][$field_name][LanguageInterface::LANGCODE_DEFAULT] = NULL;
-            }
+            $values[$id][$field_name][LanguageInterface::LANGCODE_DEFAULT] = !empty($column['serialize']) ? SqlContentEntityStorage::safeUnserialize($record->{$column_name}) : $record->{$column_name};
             unset($record->{$column_name});
           }
         }
@@ -602,12 +595,12 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
           if (count($columns) == 1) {
             $column_name = reset($columns);
             $column_attributes = $definition_columns[key($columns)];
-            $values[$id][$field_name][$langcode] = (!empty($column_attributes['serialize'])) ? unserialize($row[$column_name] ?? '') : $row[$column_name];
+            $values[$id][$field_name][$langcode] = (!empty($column_attributes['serialize'])) ? SqlContentEntityStorage::safeUnserialize($row[$column_name]) : $row[$column_name];
           }
           else {
             foreach ($columns as $property_name => $column_name) {
               $column_attributes = $definition_columns[$property_name];
-              $values[$id][$field_name][$langcode][$property_name] = (!empty($column_attributes['serialize'])) ? unserialize($row[$column_name] ?? '') : $row[$column_name];
+              $values[$id][$field_name][$langcode][$property_name] = (!empty($column_attributes['serialize'])) ? SqlContentEntityStorage::safeUnserialize($row[$column_name]) : $row[$column_name];
             }
           }
         }
@@ -1268,7 +1261,7 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
             foreach ($storage_definition->getColumns() as $column => $attributes) {
               $column_name = $table_mapping->getFieldColumnName($storage_definition, $column);
               // Unserialize the value if specified in the column schema.
-              $item[$column] = (!empty($attributes['serialize'])) ? unserialize($row->$column_name ?? '') : $row->$column_name;
+              $item[$column] = (!empty($attributes['serialize'])) ? SqlContentEntityStorage::safeUnserialize($row->$column_name) : $row->$column_name;
             }
 
             // Add the item to the field values for the entity.
@@ -1791,6 +1784,34 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
       $count = $query->execute()->fetchField();
     }
     return $as_bool ? (bool) $count : (int) $count;
+  }
+
+  /**
+   * Safely unserializes data.
+   *
+   * @param string|null $value
+   *   The serialized string.
+   *
+   * @return mixed|null
+   *   The unserialized data, or null if the data is invalid.
+   */
+  public static function safeUnserialize($value) {
+    // Return null if the value is an empty string or null.
+    if ($value === '' || $value === NULL) {
+      return NULL;
+    }
+
+    // Attempt to unserialize the value.
+    $result = @unserialize($value);
+
+    // Check if unserialize resulted in false, indicating failure.
+    // Also ensure the input value wasn't the serialized form of false itself.
+    if ($result === FALSE && $value !== serialize(FALSE)) {
+      return NULL;
+    }
+
+    // Return the unserialized result.
+    return $result;
   }
 
 }
