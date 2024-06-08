@@ -249,22 +249,20 @@ class LocalTaskManager extends DefaultPluginManager implements LocalTaskManagerI
         ];
         $this->cacheBackend->set($this->cacheKey . ':' . $route_name, $data, Cache::PERMANENT, $this->cacheTags);
       }
-      // Create a plugin instance for each element of the hierarchy.
-      foreach ($base_routes as $base_route) {
-        $level = 0;
-        foreach ($children as $key_children => $child) {
-          foreach($child as $plugin_id => $task_info){
-            $plugin = $this->createInstance($plugin_id);
-            $this->instances[$route_name][$level][$plugin_id] = $plugin;
-            $current_parameters = $this->routeMatch->getRawParameters()->all();
-            $plugin_parameters = $plugin->getPluginDefinition()['route_parameters'];
-            if (!empty($parents[$plugin_id]) && $route_name != $task_info['route_name'] && $current_parameters == $plugin_parameters) {
-              $plugin->setActive();
-            }
+
+      $level = 0;
+      foreach ($children as $child) {
+        foreach ($child as $plugin_id => $task_info) {
+          $plugin = $this->createInstance($plugin_id);
+          $this->instances[$route_name][$level][$plugin_id] = $plugin;
+          $current_parameters = $this->routeMatch->getRawParameters()->all();
+          $plugin_parameters = $plugin->getPluginDefinition()['route_parameters'];
+          if (!empty($parents[$plugin_id]) && $route_name != $task_info['route_name'] && $current_parameters == $plugin_parameters) {
+            $plugin->setActive();
           }
-          $level++;
         }
-      }
+        $level++;
+      }      
     }
     return $this->instances[$route_name];
   }
@@ -385,9 +383,9 @@ class LocalTaskManager extends DefaultPluginManager implements LocalTaskManagerI
     // Flag the list element as active if this tab's route and parameters match
     // the current request's route and route variables.
     $current_parameters = ['parameters' => $this->routeMatch->getRawParameters()->all()];
-    $active = false;
-    if($current_route_name == $route_name && $current_parameters == $route_parameters){
-      $active = true;
+    $active = FALSE;
+    if ($current_route_name == $route_name && $current_parameters == $route_parameters) {
+      $active = FALSE;
     }
     if ($active) {
       // The request is injected, so we need to verify that we have the expected
