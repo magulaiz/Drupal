@@ -2,7 +2,6 @@
 
 namespace Drupal\Core\Validation\Plugin\Validation\Constraint;
 
-use InvalidArgumentException;
 use Drupal\Core\TypedData\Validation\TypedDataAwareValidatorTrait;
 use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\Constraints\ChoiceValidator;
@@ -52,16 +51,19 @@ class ChoiceConstraintValidator extends ChoiceValidator {
    *   The name of the service and method passed in as a callback.
    *
    * @return callable
-   *   The callback.
+   *   A callable.
+   *
+   * @throws \InvalidArgumentException
+   *   Thrown when no valid callable could be resolved from the definition.
    */
   private function parseCallback($callback): array {
     [$service, $method] = explode(':', $callback, 2);
     if (!\Drupal::hasService($service)) {
-      throw new InvalidArgumentException(sprintf('The service "%s" does not exist.', $service));
+      throw new \InvalidArgumentException(sprintf('The service "%s" does not exist.', $service));
     }
     $serviceInstance = \Drupal::service($service);
     if (!method_exists($serviceInstance, $method)) {
-      throw new InvalidArgumentException(sprintf('The method "%s" does not exist on service "%s".', $method, $service));
+      throw new \InvalidArgumentException(sprintf('The method "%s" does not exist on service "%s".', $method, $service));
     }
     return [$serviceInstance, $method];
   }
