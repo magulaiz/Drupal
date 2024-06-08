@@ -24,12 +24,23 @@ class ChoiceConstraintValidator extends ChoiceValidator {
       throw new UnexpectedTypeException($constraint, ChoiceConstraint::class);
     }
 
-    if ($constraint->callback && $constraint->callbackArgs) {
-      list($service, $method) = $this->parseCallback($constraint->callback);
-      $arguments = $this->resolveArguments($constraint->callbackArgs);
-      $choices = call_user_func_array([$service, $method], $arguments);
-      $constraint->choices = $choices;
-      $constraint->callback = NULL;
+    // By default, callback names follow the class::method notation. This class
+    // adds the possibility to use a service from the container as a controller
+    // by using a service:method notation.
+    if ($constraint->callback && $count = substr_count($constraint->callback, ':')) {
+      if ($count == 1) {
+        list($service, $method) = $this->parseCallback($constraint->callback);
+        $args = [];
+        if (isset($constraint->callbackArgs)) {
+          $args = $this->resolveArguments($constraint->callbackArgs);
+        }
+        $choices = call_user_func_array([$service, $method], $args);
+        if (isset($constraint->transform)) {
+          $choices = call_user_func($constraint->transform, $choices);
+        }
+        $constraint->choices = $choices;
+        $constraint->callback = NULL;
+      }
     }
     parent::validate($value, $constraint);
   }
@@ -44,20 +55,15 @@ class ChoiceConstraintValidator extends ChoiceValidator {
    *   The callback.
    */
   private function parseCallback($callback): array {
-    if ($count = substr_count($callback, ':')) {
-      if ($count == 1) {
-        [$service, $method] = explode(':', $callback, 2);
-      }
-      if (!\Drupal::hasService($service)) {
-        throw new InvalidArgumentException(sprintf('The service "%s" does not exist.', $service));
-      }
-      $serviceInstance = \Drupal::service($service);
-      if (!method_exists($serviceInstance, $method)) {
-        throw new InvalidArgumentException(sprintf('The method "%s" does not exist on service "%s".', $method, $service));
-      }
-      return [$serviceInstance, $method];
+    [$service, $method] = explode(':', $callback, 2);
+    if (!\Drupal::hasService($service)) {
+      throw new InvalidArgumentException(sprintf('The service "%s" does not exist.', $service));
     }
-    return $callback;
+    $serviceInstance = \Drupal::service($service);
+    if (!method_exists($serviceInstance, $method)) {
+      throw new InvalidArgumentException(sprintf('The method "%s" does not exist on service "%s".', $method, $service));
+    }
+    return [$serviceInstance, $method];
   }
 
   /**
@@ -72,8 +78,8 @@ class ChoiceConstraintValidator extends ChoiceValidator {
   private function resolveArguments($arguments): array {
     $resolvedArguments = [];
     foreach ($arguments as $key => $value) {
-      if (is_string($value) && strpos($value, 'array_keys') !== FALSE) {
-        $resolvedArguments[$key] = array_keys($value);
+      if (is_string($value)) {
+        $resolvedArguments[$key] = $value;
       }
       else {
         $resolvedArguments[$key] = $value;

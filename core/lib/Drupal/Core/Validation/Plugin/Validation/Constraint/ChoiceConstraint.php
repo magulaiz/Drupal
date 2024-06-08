@@ -25,9 +25,9 @@ class ChoiceConstraint extends Choice {
   /**
    * Optional arguments for the callback args.
    *
-   * @var array|null
+   * @var string|null
    */
-  public ?array $transform = NULL;
+  public ?string $transform = NULL;
 
   /**
    * {@inheritdoc}
