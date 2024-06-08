@@ -37,8 +37,11 @@ class ChoiceConstraintValidator extends ChoiceValidator {
         if (isset($constraint->transform)) {
           $choices = call_user_func($constraint->transform, $choices);
         }
-        $constraint->choices = $choices;
-        $constraint->callback = NULL;
+        if (is_array($constraint->choices)) {
+          $constraint->choices = $choices;
+          // We no longer need the callback.
+          $constraint->callback = NULL;
+        }
       }
     }
     parent::validate($value, $constraint);
