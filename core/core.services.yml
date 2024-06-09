@@ -1774,7 +1774,7 @@ services:
     tags:
       - { name: twig.loader, priority: -100 }
   # Service holding the commands made available to the `dex` command.
-  # The service is completed with SystemCompilerPass.
+  # The service is completed with DexCompilerPass.
   console.command_loader:
     class: Symfony\Component\Console\CommandLoader\CommandLoaderInterface
     public: true

@@ -13,6 +13,11 @@ use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Tester\ApplicationTester;
 use Symfony\Component\Console\Tester\CommandTester;
 
+/**
+ * Tests integration with Symfony Console.
+ *
+ * @group Dex
+ */
 final class DexConsoleTest extends KernelTestBase {
 
   /**
