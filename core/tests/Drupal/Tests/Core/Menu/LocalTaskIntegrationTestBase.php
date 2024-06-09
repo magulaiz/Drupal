@@ -67,10 +67,20 @@ abstract class LocalTaskIntegrationTestBase extends UnitTestCase {
     $property = new \ReflectionProperty('Drupal\Core\Menu\LocalTaskManager', 'argumentResolver');
     $property->setValue($manager, $argumentResolver);
 
-    // @todo Mock a request with a route.
+    // todo mock a request with a route.
     $request_stack = new RequestStack();
     $property = new \ReflectionProperty('Drupal\Core\Menu\LocalTaskManager', 'requestStack');
     $property->setValue($manager, $request_stack);
+
+//    $route_match = new routeMatch();
+    $route_match = $this->createMock('Drupal\Core\Routing\RouteMatchInterface');
+    $property = new \ReflectionProperty('Drupal\Core\Menu\LocalTaskManager', 'routeMatch');
+    $property->setValue($manager, $route_match);
+    $route_match->expects($this->any())
+      ->method('getRawParameters')
+      ->willReturnCallback(function () {
+        return new \Symfony\Component\HttpFoundation\InputBag([]);
+      });
 
     $accessManager = $this->createMock('Drupal\Core\Access\AccessManagerInterface');
     $property = new \ReflectionProperty('Drupal\Core\Menu\LocalTaskManager', 'accessManager');
@@ -101,6 +111,11 @@ abstract class LocalTaskIntegrationTestBase extends UnitTestCase {
     $method->invoke($manager, 'local_tasks');
 
     $plugin_stub = $this->createMock('Drupal\Core\Menu\LocalTaskInterface');
+    $plugin_stub->expects($this->any())
+      ->method('getRouteParameters')
+      ->willReturnCallback(function () {
+        return [];
+      });
     $factory = $this->createMock('Drupal\Component\Plugin\Factory\FactoryInterface');
     $factory->expects($this->any())
       ->method('createInstance')
