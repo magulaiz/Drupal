@@ -127,6 +127,12 @@ class LocalTaskManagerTest extends UnitTestCase {
       ->method('getDefinitions')
       ->willReturn($definitions);
 
+    $this->routeMatch->expects($this->any())
+      ->method('getRawParameters')
+      ->willReturnCallback(function () {
+        return new InputBag([]);
+      });
+
     $mock_plugin = $this->createMock('Drupal\Core\Menu\LocalTaskInterface');
 
     $this->setupFactory($mock_plugin);
@@ -151,6 +157,12 @@ class LocalTaskManagerTest extends UnitTestCase {
       ->method('getDefinitions')
       ->willReturn($definitions);
 
+    $this->routeMatch->expects($this->any())
+      ->method('getRawParameters')
+      ->willReturnCallback(function () {
+        return new InputBag([]);
+      });
+
     $mock_plugin = $this->createMock('Drupal\Core\Menu\LocalTaskInterface');
 
     $this->setupFactory($mock_plugin);
@@ -172,6 +184,12 @@ class LocalTaskManagerTest extends UnitTestCase {
     $this->pluginDiscovery->expects($this->once())
       ->method('getDefinitions')
       ->willReturn($definitions);
+
+    $this->routeMatch->expects($this->any())
+      ->method('getRawParameters')
+      ->willReturnCallback(function () {
+        return new InputBag([]);
+      });
 
     $mock_plugin = $this->createMock('Drupal\Core\Menu\LocalTaskInterface');
     $this->setupFactory($mock_plugin);
@@ -203,6 +221,12 @@ class LocalTaskManagerTest extends UnitTestCase {
 
     $mock_plugin = $this->createMock('Drupal\Core\Menu\LocalTaskInterface');
     $this->setupFactory($mock_plugin);
+
+    $this->routeMatch->expects($this->any())
+      ->method('getRawParameters')
+      ->willReturnCallback(function () {
+        return new InputBag([]);
+      });
 
     $this->setupLocalTaskManager();
 
