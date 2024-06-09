@@ -9,6 +9,7 @@ use Drupal\Core\Plugin\Discovery\YamlDiscovery;
 use Drupal\Tests\UnitTestCase;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpFoundation\RequestStack;
+use Symfony\Component\HttpFoundation\InputBag;
 
 /**
  * Defines a base unit test for testing existence of local tasks.
@@ -78,7 +79,7 @@ abstract class LocalTaskIntegrationTestBase extends UnitTestCase {
     $route_match->expects($this->any())
       ->method('getRawParameters')
       ->willReturnCallback(function () {
-        return new \Symfony\Component\HttpFoundation\InputBag([]);
+        return new InputBag([]);
       });
 
     $accessManager = $this->createMock('Drupal\Core\Access\AccessManagerInterface');
