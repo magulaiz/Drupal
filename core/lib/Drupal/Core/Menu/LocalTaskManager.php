@@ -382,10 +382,10 @@ class LocalTaskManager extends DefaultPluginManager implements LocalTaskManagerI
   protected function isRouteActive($current_route_name, $route_name, $route_parameters) {
     // Flag the list element as active if this tab's route and parameters match
     // the current request's route and route variables.
-    $current_parameters = ['parameters' => $this->routeMatch->getRawParameters()->all()];
+    $current_parameters = $this->routeMatch->getRawParameters()->all();
     $active = FALSE;
     if ($current_route_name == $route_name && $current_parameters == $route_parameters) {
-      $active = FALSE;
+      $active = TRUE;
     }
     if ($active) {
       // The request is injected, so we need to verify that we have the expected
