@@ -15,7 +15,7 @@ use Symfony\Component\Validator\Exception\UnexpectedTypeException;
 class ChoiceConstraintValidator extends ChoiceValidator implements ContainerInjectionInterface {
 
   /**
-   * Constructs a CustomAccessCheck instance.
+   * Constructs a CallableResolver instance.
    *
    * @param \Drupal\Core\Utility\CallableResolver $callableResolver
    *   The callable resolver.
