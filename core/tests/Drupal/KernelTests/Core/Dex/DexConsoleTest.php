@@ -92,7 +92,7 @@ final class DexConsoleTest extends KernelTestBase {
    * @covers \Drupal\dex_test\Command\DexExampleCommand
    */
   public function testConsoleCommand(): void {
-    /** @var DexExampleCommand $command */
+    /** @var \Drupal\dex_test\Command\DexExampleCommand $command */
     $command = \Drupal::service(DexExampleCommand::class);
     $tester = new CommandTester($command);
     $code = $tester->execute(['argument-test' => 'Foo', '--option-test' => TRUE]);
@@ -106,7 +106,7 @@ final class DexConsoleTest extends KernelTestBase {
   private function applicationTester(array $context = []): ApplicationTester {
     $application = include __DIR__ . '/../../../../../../vendor/bin/dex';
     $application = $application($context);
-    $application->setAutoExit(false);
+    $application->setAutoExit(FALSE);
     return new ApplicationTester($application);
   }
 
