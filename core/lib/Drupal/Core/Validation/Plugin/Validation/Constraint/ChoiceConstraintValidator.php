@@ -2,7 +2,10 @@
 
 namespace Drupal\Core\Validation\Plugin\Validation\Constraint;
 
+use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
 use Drupal\Core\TypedData\Validation\TypedDataAwareValidatorTrait;
+use Drupal\Core\Utility\CallableResolver;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\Constraints\ChoiceValidator;
 use Symfony\Component\Validator\Exception\UnexpectedTypeException;
@@ -10,9 +13,27 @@ use Symfony\Component\Validator\Exception\UnexpectedTypeException;
 /**
  * Validates complex data.
  */
-class ChoiceConstraintValidator extends ChoiceValidator {
+class ChoiceConstraintValidator extends ChoiceValidator implements ContainerInjectionInterface {
 
   use TypedDataAwareValidatorTrait;
+
+  /**
+   * Constructs a CustomAccessCheck instance.
+   *
+   * @param \Drupal\Core\Utility\CallableResolver $callableResolver
+   *   The callable resolver.
+   */
+  public function __construct(protected CallableResolver $callableResolver) {
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function create(ContainerInterface $container): static {
+    return new static(
+      $container->get('callable_resolver')
+    );
+  }
 
   /**
    * {@inheritdoc}
@@ -28,47 +49,24 @@ class ChoiceConstraintValidator extends ChoiceValidator {
     // by using a service:method notation.
     if ($constraint->callback && $count = substr_count($constraint->callback, ':')) {
       if ($count == 1) {
-        list($service, $method) = $this->parseCallback($constraint->callback);
-        $args = [];
-        if (isset($constraint->callbackArgs)) {
-          $args = $this->resolveArguments($constraint->callbackArgs);
-        }
-        $choices = call_user_func_array([$service, $method], $args);
-        if (isset($constraint->transform)) {
-          $choices = call_user_func($constraint->transform, $choices);
-        }
-        if (is_array($constraint->choices)) {
-          $constraint->choices = $choices;
-          // We no longer need the callback.
-          $constraint->callback = NULL;
+        if ($callback = $this->callableResolver->getCallableFromDefinition($constraint->callback)) {
+          $args = [];
+          if (isset($constraint->callbackArgs)) {
+            $args = $this->resolveArguments($constraint->callbackArgs);
+          }
+          $choices = call_user_func_array($callback, $args);
+          if (isset($constraint->transform)) {
+            $choices = call_user_func($constraint->transform, $choices);
+          }
+          if (is_array($choices)) {
+            $constraint->choices = $choices;
+            // We no longer need the callback.
+            $constraint->callback = NULL;
+          }
         }
       }
+      parent::validate($value, $constraint);
     }
-    parent::validate($value, $constraint);
-  }
-
-  /**
-   * Handle service callbacks in the form of service:method.
-   *
-   * @param string $callback
-   *   The name of the service and method passed in as a callback.
-   *
-   * @return callable
-   *   A callable.
-   *
-   * @throws \InvalidArgumentException
-   *   Thrown when no valid callable could be resolved from the definition.
-   */
-  private function parseCallback($callback): array {
-    [$service, $method] = explode(':', $callback, 2);
-    if (!\Drupal::hasService($service)) {
-      throw new \InvalidArgumentException(sprintf('The service "%s" does not exist.', $service));
-    }
-    $serviceInstance = \Drupal::service($service);
-    if (!method_exists($serviceInstance, $method)) {
-      throw new \InvalidArgumentException(sprintf('The method "%s" does not exist on service "%s".', $method, $service));
-    }
-    return [$serviceInstance, $method];
   }
 
   /**
