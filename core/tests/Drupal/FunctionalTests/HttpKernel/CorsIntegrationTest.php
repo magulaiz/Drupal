@@ -28,6 +28,18 @@ class CorsIntegrationTest extends BrowserTestBase {
    */
   protected $defaultTheme = 'stark';
 
+  /**
+   * {@inheritdoc}
+   */
+  protected function setUp(): void {
+    parent::setUp();
+
+    // Enable page caching.
+    $config = $this->config('system.performance');
+    $config->set('cache.page.max_age', 3600);
+    $config->save();
+  }
+
   public function testCrossSiteRequest() {
     // Test default parameters.
     $cors_config = $this->container->getParameter('cors.config');
@@ -46,16 +58,25 @@ class CorsIntegrationTest extends BrowserTestBase {
     $this->setContainerParameter('cors.config', $cors_config);
     $this->rebuildContainer();
 
+    // Fire off a request without 'Origin' request header.
+    $this->drupalGet('/test-page');
+    $this->assertSession()->statusCodeEquals(200);
+    $this->assertContains('origin', explode(',', strtolower($this->getSession()->getResponseHeader('Vary'))), 'Vary header contains origin.');
+    $this->assertSession()->responseHeaderEquals('X-Drupal-Cache', 'MISS');
+    $this->assertNull($this->getSession()->getResponseHeader('Access-Control-Allow-Origin'));
+
     // Fire off a request.
     $this->drupalGet('/test-page', [], ['Origin' => 'http://example.com']);
     $this->assertSession()->statusCodeEquals(200);
-    $this->assertSession()->responseHeaderEquals('X-Drupal-Cache', 'MISS');
+    $this->assertContains('origin', explode(',', strtolower($this->getSession()->getResponseHeader('Vary'))), 'Vary header contains origin.');
+    $this->assertSession()->responseHeaderEquals('X-Drupal-Cache', 'HIT');
     $this->assertSession()->responseHeaderEquals('Access-Control-Allow-Origin', '*');
     $this->assertSession()->responseHeaderNotContains('Vary', 'Origin');
 
     // Fire the same exact request. This time it should be cached.
     $this->drupalGet('/test-page', [], ['Origin' => 'http://example.com']);
     $this->assertSession()->statusCodeEquals(200);
+    $this->assertContains('origin', explode(',', strtolower($this->getSession()->getResponseHeader('Vary'))), 'Vary header contains origin.');
     $this->assertSession()->responseHeaderEquals('X-Drupal-Cache', 'HIT');
     $this->assertSession()->responseHeaderEquals('Access-Control-Allow-Origin', '*');
     $this->assertSession()->responseHeaderNotContains('Vary', 'Origin');
@@ -63,6 +84,7 @@ class CorsIntegrationTest extends BrowserTestBase {
     // Fire a request for a different origin. Verify the CORS header.
     $this->drupalGet('/test-page', [], ['Origin' => 'http://example.org']);
     $this->assertSession()->statusCodeEquals(200);
+    $this->assertContains('origin', explode(',', strtolower($this->getSession()->getResponseHeader('Vary'))), 'Vary header contains origin.');
     $this->assertSession()->responseHeaderEquals('X-Drupal-Cache', 'HIT');
     $this->assertSession()->responseHeaderEquals('Access-Control-Allow-Origin', '*');
     $this->assertSession()->responseHeaderNotContains('Vary', 'Origin');
@@ -149,12 +171,14 @@ class CorsIntegrationTest extends BrowserTestBase {
     // Specify a valid origin.
     $this->drupalGet('/test-page', [], ['Origin' => 'http://example.com']);
     $this->assertSession()->statusCodeEquals(200);
+    $this->assertNull($this->getSession()->getResponseHeader('Vary'));
     $this->assertSession()->responseHeaderEquals('Access-Control-Allow-Origin', 'http://example.com');
     $this->assertSession()->responseHeaderContains('Vary', 'Origin');
 
     // Specify a valid origin.
     $this->drupalGet('/test-page', [], ['Origin' => 'https://drupal.org']);
     $this->assertSession()->statusCodeEquals(200);
+    $this->assertContains('origin', explode(',', strtolower($this->getSession()->getResponseHeader('Vary'))), 'Vary header contains origin.');
     $this->assertSession()->responseHeaderEquals('Access-Control-Allow-Origin', 'https://drupal.org');
     $this->assertSession()->responseHeaderContains('Vary', 'Origin');
 
