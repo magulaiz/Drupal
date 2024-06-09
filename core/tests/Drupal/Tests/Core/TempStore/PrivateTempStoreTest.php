@@ -67,6 +67,13 @@ class PrivateTempStoreTest extends UnitTestCase {
   protected $otherObject;
 
   /**
+   * Default entry expiration TTL.
+   *
+   * @var int
+   */
+  protected int $defaultExpire = 604800;
+
+  /**
    * {@inheritdoc}
    */
   protected function setUp(): void {
@@ -83,7 +90,7 @@ class PrivateTempStoreTest extends UnitTestCase {
     $request = Request::createFromGlobals();
     $this->requestStack->push($request);
 
-    $this->tempStore = new PrivateTempStore($this->keyValue, $this->lock, $this->currentUser, $this->requestStack, 604800);
+    $this->tempStore = new PrivateTempStore($this->keyValue, $this->lock, $this->currentUser, $this->requestStack, $this->defaultExpire);
 
     $this->ownObject = (object) [
       'data' => 'test_data',
@@ -143,9 +150,11 @@ class PrivateTempStoreTest extends UnitTestCase {
   /**
    * Tests a successful set() call.
    *
+   * @dataProvider providerTestSetExpire
+   *
    * @covers ::set
    */
-  public function testSet() {
+  public function testSet(?int $expire, int $expected_expire): void {
     $this->lock->expects($this->once())
       ->method('acquire')
       ->with('1:test')
@@ -158,9 +167,23 @@ class PrivateTempStoreTest extends UnitTestCase {
 
     $this->keyValue->expects($this->once())
       ->method('setWithExpire')
-      ->with('1:test', $this->ownObject, 604800);
+      ->with('1:test', $this->ownObject, $expected_expire);
 
-    $this->tempStore->set('test', 'test_data');
+    $this->tempStore->set('test', 'test_data', $expire);
+  }
+
+  /**
+   * Provide test data for ::testSet.
+   *
+   * @return array
+   *   Test data.
+   */
+  public function providerTestSetExpire(): array {
+    return [
+      // A NULL expire value falls back to the default value.
+      [NULL, $this->defaultExpire],
+      [123456, 123456],
+    ];
   }
 
   /**
