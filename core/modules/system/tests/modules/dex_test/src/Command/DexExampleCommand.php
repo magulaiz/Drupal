@@ -4,10 +4,13 @@ declare(strict_types=1);
 
 namespace Drupal\dex_test\Command;
 
-use Drupal\Component\Datetime\TimeInterface;
+use Drupal\autowire_test\TestService;
+use Drupal\Core\Url;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
+use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 
@@ -21,9 +24,19 @@ final class DexExampleCommand extends Command {
    * Constructs a command with autowiring.
    */
   public function __construct(
-    private readonly TimeInterface $dateTime,
+    private readonly TestService $testService,
   ) {
     parent::__construct();
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  protected function configure(): void {
+    $this
+      ->addArgument('argument-test', mode: InputArgument::OPTIONAL)
+      ->addArgument('scenario', mode: InputArgument::OPTIONAL)
+      ->addOption('option-test', mode: InputOption::VALUE_NONE);
   }
 
   /**
@@ -32,8 +45,17 @@ final class DexExampleCommand extends Command {
   protected function execute(InputInterface $input, OutputInterface $output): int {
     $io = new SymfonyStyle($input, $output);
 
-    $now = new \DateTimeImmutable('@' . $this->dateTime->getRequestTime());
-    $io->note('The current time is ' . $now->format('r'));
+    $scenario = $input->getArgument('scenario');
+    if ('absolute_url' === $scenario) {
+      $io->note('Base Url test: ' . Url::fromUserInput('/abc')->setAbsolute()->toString());
+
+      return static::SUCCESS;
+    }
+
+    $io->note('Option test: ' . ($input->getOption('option-test') ? 'Yes' : 'No'));
+    $io->note('Argument test: ' . ($input->getArgument('argument-test') ? 'Yes' : 'No'));
+    $io->note('Dependency injection test: ' . $this->testService->getTestInjection()::class);
+    $io->success('Done.');
 
     return static::SUCCESS;
   }

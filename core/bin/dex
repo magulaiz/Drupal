@@ -38,9 +38,7 @@ return static function (array $context): Application {
   $basePort = $context['PORT'] ?? NULL;
   if ($baseDomain !== NULL) {
     $request->server->set('SERVER_NAME', $baseDomain);
-    if ($basePort !== NULL) {
-      $request->server->set('SERVER_PORT', $basePort);
-    }
+    $request->server->set('SERVER_PORT', $basePort ?? 80);
   }
   $kernel->getContainer()
     ->get('request_stack')
