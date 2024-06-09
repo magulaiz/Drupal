@@ -721,13 +721,16 @@ function _user_cancel_session_regenerate() {
  *
  * See documentation of hook_user_cancel_methods_alter().
  *
+ * @param bool $getKeys
+ *   Get keys for schema callback.
+ *
  * @return array
  *   An array containing all account cancellation methods as form elements.
  *
  * @see hook_user_cancel_methods_alter()
  * @see user_admin_settings()
  */
-function user_cancel_methods() {
+function user_cancel_methods(bool $getKeys = FALSE) {
   $user_settings = \Drupal::config('user.settings');
   $anonymous_name = $user_settings->get('anonymous');
   $methods = [
@@ -752,6 +755,9 @@ function user_cancel_methods() {
   // Allow modules to customize account cancellation methods.
   \Drupal::moduleHandler()->alter('user_cancel_methods', $methods);
 
+  if ($getKeys) {
+    return array_keys($methods);
+  }
   // Turn all methods into real form elements.
   $form = [
     '#options' => [],
