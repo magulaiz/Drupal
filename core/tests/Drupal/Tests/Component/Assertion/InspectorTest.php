@@ -58,7 +58,7 @@ class InspectorTest extends TestCase {
    * @covers ::assertAllStringable
    */
   public function testAssertAllStringable() {
-    $this->assertTrue(Inspector::assertAllStringable([]));
+    $this->assertFalse(Inspector::assertAllStringable([]));
     $this->assertTrue(Inspector::assertAllStringable(['foo', 'bar']));
     $this->assertFalse(Inspector::assertAllStringable('foo'));
     $this->assertTrue(Inspector::assertAllStringable(['foo', new StringObject()]));
