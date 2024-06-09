@@ -3,7 +3,6 @@
 namespace Drupal\Core\Validation\Plugin\Validation\Constraint;
 
 use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
-use Drupal\Core\TypedData\Validation\TypedDataAwareValidatorTrait;
 use Drupal\Core\Utility\CallableResolver;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Validator\Constraint;
@@ -14,8 +13,6 @@ use Symfony\Component\Validator\Exception\UnexpectedTypeException;
  * Validates complex data.
  */
 class ChoiceConstraintValidator extends ChoiceValidator implements ContainerInjectionInterface {
-
-  use TypedDataAwareValidatorTrait;
 
   /**
    * Constructs a CustomAccessCheck instance.
@@ -50,17 +47,19 @@ class ChoiceConstraintValidator extends ChoiceValidator implements ContainerInje
     if ($constraint->callback && $count = substr_count($constraint->callback, ':')) {
       if ($count == 1) {
         if ($callback = $this->callableResolver->getCallableFromDefinition($constraint->callback)) {
+          // Process any callback arguments.
           $args = [];
-          if (isset($constraint->callbackArgs)) {
+          if (isset($constraint->callbackArgs) && is_array($constraint->callbackArgs)) {
             $args = $this->resolveArguments($constraint->callbackArgs);
           }
           $choices = call_user_func_array($callback, $args);
+          // Allow callback results to be transformed.
           if (isset($constraint->transform)) {
             $choices = call_user_func($constraint->transform, $choices);
           }
           if (is_array($choices)) {
             $constraint->choices = $choices;
-            // We no longer need the callback.
+            // The callback is no longer needed..
             $constraint->callback = NULL;
           }
         }
@@ -81,9 +80,7 @@ class ChoiceConstraintValidator extends ChoiceValidator implements ContainerInje
   private function resolveArguments($arguments): array {
     $resolvedArguments = [];
     foreach ($arguments as $key => $value) {
-      if (is_string($value)) {
-        $resolvedArguments[$key] = $value;
-      }
+      $resolvedArguments[$key] = $value;
     }
     return $resolvedArguments;
   }
