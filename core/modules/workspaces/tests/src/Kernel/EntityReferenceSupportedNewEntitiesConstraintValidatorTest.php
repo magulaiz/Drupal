@@ -63,7 +63,7 @@ class EntityReferenceSupportedNewEntitiesConstraintValidatorTest extends KernelT
         'entity' => EntityTest::create([]),
       ],
       'supported_reference' => [
-        'entity' => EntityTest::create([]),
+        'entity' => EntityTestMulRevPub::create([]),
       ],
     ]);
     $this->assertCount(0, $entity->validate());

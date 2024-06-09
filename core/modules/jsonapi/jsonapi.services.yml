@@ -66,7 +66,7 @@ services:
       - { name: jsonapi_normalizer }
   serializer.normalizer.jsonapi_document_toplevel.jsonapi:
     class: Drupal\jsonapi\Normalizer\JsonApiDocumentTopLevelNormalizer
-    arguments: ['@entity_type.manager', '@jsonapi.resource_type.repository']
+    arguments: ['@entity_type.manager', '@jsonapi.resource_type.repository', '@entity_field.manager']
     tags:
       - { name: jsonapi_normalizer }
   serializer.normalizer.link_collection.jsonapi:
