@@ -59,6 +59,8 @@ final class DexConsoleTest extends KernelTestBase {
     $tester = $this->applicationTester();
     $this->assertEquals(Command::SUCCESS, $tester->run(['command' => 'example:command-private']));
     $this->assertStringContainsString('Done with private command.', $tester->getDisplay());
+
+    restore_error_handler();
   }
 
   /**
