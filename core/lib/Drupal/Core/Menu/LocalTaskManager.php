@@ -256,7 +256,7 @@ class LocalTaskManager extends DefaultPluginManager implements LocalTaskManagerI
           $plugin = $this->createInstance($plugin_id);
           $this->instances[$route_name][$level][$plugin_id] = $plugin;
           $current_parameters = $this->routeMatch->getRawParameters()->all();
-          $plugin_parameters = $plugin->getPluginDefinition()['route_parameters'];
+          $plugin_parameters = $plugin->getRouteParameters($this->routeMatch);
           if (!empty($parents[$plugin_id]) && $route_name != $task_info['route_name'] && $current_parameters == $plugin_parameters) {
             $plugin->setActive();
           }
