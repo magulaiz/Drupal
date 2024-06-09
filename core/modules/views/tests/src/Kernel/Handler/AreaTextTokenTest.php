@@ -37,7 +37,7 @@ class AreaTextTokenTest extends ViewsKernelTestBase {
   /**
    * Tests the token into text area plugin within header.
    */
-  public function testAreaTextToken() {
+  public function testAreaTextToken(): void {
     /** @var \Drupal\Core\Render\RendererInterface $renderer */
     $renderer = $this->container->get('renderer');
     $view = Views::getView('test_view');
