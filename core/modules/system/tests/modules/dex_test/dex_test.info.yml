@@ -1,0 +1,4 @@
+name: Dex Console tests
+type: module
+package: Testing
+version: VERSION
