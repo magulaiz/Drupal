@@ -47,25 +47,25 @@ class ChoiceConstraintValidator extends ChoiceValidator implements ContainerInje
     // By default, callback names follow the class::method notation. This class
     // adds the possibility to use a service from the container as a controller
     // by using a service:method notation.
-    if ($constraint->callback && $count = substr_count($constraint->callback, ':')) {
-      if ($count == 1) {
-        if ($callback = $this->callableResolver->getCallableFromDefinition($constraint->callback)) {
-          $args = [];
-          if (isset($constraint->callbackArgs)) {
-            $args = $this->resolveArguments($constraint->callbackArgs);
-          }
-          $choices = call_user_func_array($callback, $args);
-          if (isset($constraint->transform)) {
-            $choices = call_user_func($constraint->transform, $choices);
-          }
-          if (is_array($choices)) {
-            $constraint->choices = $choices;
-            // We no longer need the callback.
-            $constraint->callback = NULL;
-          }
-        }
-      }
-    }
+    // if ($constraint->callback && $count = substr_count($constraint->callback, ':')) {
+    //   if ($count == 1) {
+    //     if ($callback = $this->callableResolver->getCallableFromDefinition($constraint->callback)) {
+    //       $args = [];
+    //       if (isset($constraint->callbackArgs)) {
+    //         $args = $this->resolveArguments($constraint->callbackArgs);
+    //       }
+    //       $choices = call_user_func_array($callback, $args);
+    //       if (isset($constraint->transform)) {
+    //         $choices = call_user_func($constraint->transform, $choices);
+    //       }
+    //       if (is_array($choices)) {
+    //         $constraint->choices = $choices;
+    //         // We no longer need the callback.
+    //         $constraint->callback = NULL;
+    //       }
+    //     }
+    //   }
+    // }
     parent::validate($value, $constraint);
   }
 
@@ -82,9 +82,6 @@ class ChoiceConstraintValidator extends ChoiceValidator implements ContainerInje
     $resolvedArguments = [];
     foreach ($arguments as $key => $value) {
       if (is_string($value)) {
-        $resolvedArguments[$key] = $value;
-      }
-      else {
         $resolvedArguments[$key] = $value;
       }
     }
