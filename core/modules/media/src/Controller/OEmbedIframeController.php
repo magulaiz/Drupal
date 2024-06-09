@@ -122,7 +122,7 @@ class OEmbedIframeController implements ContainerInjectionInterface {
    *   - the iframe_domain is set in media.settings and does not match the host
    *     in the request.
    */
-  public function render(Request $request) {
+  public function __invoke(Request $request) {
     // @todo Move domain check logic to a separate method.
     $allowed_domain = \Drupal::config('media.settings')->get('iframe_domain');
     if ($allowed_domain) {
@@ -220,6 +220,17 @@ class OEmbedIframeController implements ContainerInjectionInterface {
     }
 
     return $response;
+  }
+
+  /**
+   * Renders an oEmbed resource.
+   *
+   * @deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. Use
+   *   \Drupal\media\Controller\OEmbedIframeController instead.
+   */
+  public function render(Request $request) {
+    @trigger_error(__METHOD__ . ' is deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. Use ' . __CLASS__ . ' instead. See https://www.drupal.org/node/123456.', E_USER_DEPRECATED);
+    return $this($request);
   }
 
 }
