@@ -65,8 +65,8 @@ class ChoiceConstraintValidator extends ChoiceValidator implements ContainerInje
           }
         }
       }
-      parent::validate($value, $constraint);
     }
+    parent::validate($value, $constraint);
   }
 
   /**
