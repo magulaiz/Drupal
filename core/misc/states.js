@@ -696,9 +696,14 @@
       $(e.target)
         .closest('.js-form-item, .js-form-submit, .js-form-wrapper')
         .toggleClass('form-disabled', e.value)
-        .find('select, input, textarea')
+        .find(tagsSupportDisable)
+        .addBack(tagsSupportDisable)
         .each(function () {
-          this.disabled = e.value;
+          if (e.value) {
+            this.setAttribute('disabled', 'disabled');
+          } else {
+            this.removeAttribute('disabled');
+          }
         });
     }
   });
