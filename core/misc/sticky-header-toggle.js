@@ -20,9 +20,12 @@
           'beforebegin',
           Drupal.theme.stickyHeaderCheckbox(),
         );
-        const previousElement = stickyHeaderElement.previousElementSibling;
-        const checkbox = previousElement.querySelector(
-          'input[type="checkbox"]',
+        // const previousElement = stickyHeaderElement.previousElementSibling;
+        // const checkbox = previousElement.querySelector(
+        //   'input[type="checkbox"]',
+        // );
+        const checkbox = document.querySelector(
+          '[data-drupal-toggle-sticky-header]',
         );
 
         const stickyEnabled =
