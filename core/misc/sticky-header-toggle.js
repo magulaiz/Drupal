@@ -1,6 +1,6 @@
 (function (Drupal, once) {
   Drupal.theme.stickyHeaderCheckbox = function () {
-    return `<div id="sticky-header-toggle" class="tableheader-toggle-sticky">
+    return `<div class="tableheader-toggle-sticky">
             <label>
               <input type="checkbox" data-drupal-toggle-sticky-header checked/>
               ${Drupal.t('Sticky Header')}
@@ -20,11 +20,10 @@
           'beforebegin',
           Drupal.theme.stickyHeaderCheckbox(),
         );
-        // const previousElement = stickyHeaderElement.previousElementSibling;
-        // const checkbox = previousElement.querySelector(
-        //   'input[type="checkbox"]',
-        // );
-        const checkbox = document.querySelector('#sticky-header-toggle');
+        const previousElement = stickyHeaderElement.previousElementSibling;
+        const checkbox = previousElement.querySelector(
+          'input[type="checkbox"]',
+        );
 
         const stickyEnabled =
           !localStorage.getItem('stickyHeaderEnabled') ||
@@ -34,13 +33,8 @@
 
         checkbox.addEventListener('change', () => {
           const isChecked = checkbox.checked;
-          if (isChecked) {
-            checkbox.setAttribute('checked', '');
-          } else {
-            checkbox.removeAttribute('checked');
-          }
           stickyHeaderElement.classList.toggle('sticky-header', isChecked);
-          localStorage.setItem('stickyHeaderEnabled', isChecked);
+          localStorage.setItem('stickyHeaderEnabled', isChecked.toString());
         });
       }
     },
