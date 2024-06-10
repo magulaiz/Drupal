@@ -29,7 +29,7 @@ class StickyHeaderToggleTest extends WebDriverTestBase {
 
     $this->createContentType(['type' => 'page']);
     for ($i = 0; $i < 20; $i++) {
-      $this->createNode(['title' => 'Test page']);
+      $this->createNode(['title' => "Test page {$i}"]);
     }
 
     $user = $this->drupalCreateUser([
