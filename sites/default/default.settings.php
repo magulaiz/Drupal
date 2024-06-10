@@ -874,7 +874,6 @@ $settings['migrate_node_migrate_type_classic'] = FALSE;
  */
 $settings['timestamp_field_update_y2038'] = TRUE;
 $settings['timestamp_field_update_y2038_timeout'] = 0;
-$settings['timestamp_field_update_y2038_timeout'] = 1;
 
 /**
  * Load local development override configuration, if available.
