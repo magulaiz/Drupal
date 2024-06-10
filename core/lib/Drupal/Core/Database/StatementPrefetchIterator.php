@@ -107,7 +107,9 @@ class StatementPrefetchIterator implements \Iterator, StatementInterface {
         $this->connection->getTarget(),
         $this->getQueryString(),
         $args ?? [],
-        $this->connection->findCallerFromDebugBacktrace()
+        $this->connection->findCallerFromDebugBacktrace(),
+        $this->connection->transactionManager()->currentTransactionId(),
+        $this->connection->transactionManager()->currentTransactionName(),
       );
       $this->connection->dispatchEvent($startEvent);
     }
@@ -130,6 +132,8 @@ class StatementPrefetchIterator implements \Iterator, StatementInterface {
           get_class($e),
           $e->getCode(),
           $e->getMessage(),
+          $startEvent->transactionId,
+          $startEvent->transactionName,
         ));
       }
       throw $e;
@@ -154,7 +158,9 @@ class StatementPrefetchIterator implements \Iterator, StatementInterface {
         $startEvent->queryString,
         $startEvent->args,
         $startEvent->caller,
-        $startEvent->time
+        $startEvent->time,
+        $startEvent->transactionId,
+        $startEvent->transactionName,
       ));
     }
 

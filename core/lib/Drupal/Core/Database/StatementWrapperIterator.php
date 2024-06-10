@@ -104,7 +104,9 @@ class StatementWrapperIterator implements \Iterator, StatementInterface {
         $this->connection->getTarget(),
         $this->getQueryString(),
         $args ?? [],
-        $this->connection->findCallerFromDebugBacktrace()
+        $this->connection->findCallerFromDebugBacktrace(),
+        $this->connection->transactionManager()->currentTransactionId(),
+        $this->connection->transactionManager()->currentTransactionName(),
       );
       $this->connection->dispatchEvent($startEvent);
     }
@@ -126,6 +128,8 @@ class StatementWrapperIterator implements \Iterator, StatementInterface {
           get_class($e),
           $e->getCode(),
           $e->getMessage(),
+          $startEvent->transactionId,
+          $startEvent->transactionName,
         ));
       }
       throw $e;
@@ -139,7 +143,9 @@ class StatementWrapperIterator implements \Iterator, StatementInterface {
         $startEvent->queryString,
         $startEvent->args,
         $startEvent->caller,
-        $startEvent->time
+        $startEvent->time,
+        $startEvent->transactionId,
+        $startEvent->transactionName,
       ));
     }
 

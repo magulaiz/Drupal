@@ -5,6 +5,9 @@ declare(strict_types=1);
 namespace Drupal\Core\Database\Transaction;
 
 use Drupal\Core\Database\Connection;
+use Drupal\Core\Database\Event\TransactionBeginEvent;
+use Drupal\Core\Database\Event\TransactionCommitEvent;
+use Drupal\Core\Database\Event\TransactionSavepointEvent;
 use Drupal\Core\Database\Transaction;
 use Drupal\Core\Database\TransactionCommitFailedException;
 use Drupal\Core\Database\TransactionNameNonUniqueException;
@@ -200,12 +203,23 @@ abstract class TransactionManagerBase implements TransactionManagerInterface {
     if ($this->stack() === []) {
       return '*** empty ***';
     }
+    return implode(' > ', $this->stackItemsAsArray());
+  }
 
-    $temp = [];
-    foreach ($this->stack() as $id => $item) {
-      $temp[] = $id . '\\' . $item->name;
-    }
-    return implode(' > ', $temp);
+  /**
+   * Produces an array representation of the stack items.
+   *
+   * Drivers should not override this method unless they also override the
+   * $stack property.
+   *
+   * @return list<string>
+   *   The array of stack items represented like id\name.
+   */
+  protected function stackItemsAsArray(): array {
+    return array_map(fn(string $id, StackItem $item): string => $id . '\\' . $item->name,
+      array_keys($this->stack()),
+      array_values($this->stack()),
+    );
   }
 
   /**
@@ -213,6 +227,36 @@ abstract class TransactionManagerBase implements TransactionManagerInterface {
    */
   public function inTransaction(): bool {
     return (bool) $this->stackDepth() && $this->getConnectionTransactionState() === ClientConnectionTransactionState::Active;
+  }
+
+  /**
+   * Gets the current transaction id.
+   *
+   * @return string|null
+   *   The current transaction id.
+   *
+   * @todo add method to TransactionManagerInterface in a major.
+   */
+  public function currentTransactionId(): ?string {
+    if (!$this->inTransaction()) {
+      return NULL;
+    }
+    return array_key_last($this->stack);
+  }
+
+  /**
+   * Gets the current transaction name.
+   *
+   * @return string|null
+   *   The current transaction name.
+   *
+   * @todo add method to TransactionManagerInterface in a major.
+   */
+  public function currentTransactionName(): ?string {
+    if (!$this->inTransaction()) {
+      return NULL;
+    }
+    return end($this->stack)->name;
   }
 
   /**
@@ -234,8 +278,20 @@ abstract class TransactionManagerBase implements TransactionManagerInterface {
       throw new TransactionNameNonUniqueException("A transaction named {$name} is already in use. Active stack: " . $this->dumpStackItemsAsString());
     }
 
+    // Define an unique id for the transaction.
+    $id = uniqid('', TRUE);
+
     // Do the client-level processing.
     if ($this->stackDepth() === 0) {
+      if ($this->connection->isEventEnabled(TransactionBeginEvent::class)) {
+        $this->connection->dispatchEvent(new TransactionBeginEvent(
+          $this->connection->getKey(),
+          $this->connection->getTarget(),
+          $id,
+          $name,
+          $this->stackItemsAsArray(),
+        ));
+      }
       $this->beginClientTransaction();
       $type = StackItemType::Root;
       $this->setConnectionTransactionState(ClientConnectionTransactionState::Active);
@@ -244,12 +300,18 @@ abstract class TransactionManagerBase implements TransactionManagerInterface {
       // If we're already in a Drupal transaction then we want to create a
       // database savepoint, rather than try to begin another database
       // transaction.
+      if ($this->connection->isEventEnabled(TransactionSavepointEvent::class)) {
+        $this->connection->dispatchEvent(new TransactionSavepointEvent(
+          $this->connection->getKey(),
+          $this->connection->getTarget(),
+          $id,
+          $name,
+          $this->stackItemsAsArray(),
+        ));
+      }
       $this->addClientSavepoint($name);
       $type = StackItemType::Savepoint;
     }
-
-    // Define an unique id for the transaction.
-    $id = uniqid('', TRUE);
 
     // Add an item on the stack, increasing its depth.
     $this->addStackItem($id, new StackItem($name, $type));
@@ -288,6 +350,15 @@ abstract class TransactionManagerBase implements TransactionManagerInterface {
       elseif ($this->stackDepth() === 1 && $this->stack()[$id]->type === StackItemType::Root) {
         // If this was the root Drupal transaction, we can commit the client
         // transaction.
+        if ($this->connection->isEventEnabled(TransactionCommitEvent::class)) {
+          $this->connection->dispatchEvent(new TransactionCommitEvent(
+            $this->connection->getKey(),
+            $this->connection->getTarget(),
+            $id,
+            $name,
+            $this->stackItemsAsArray(),
+          ));
+        }
         $this->processRootCommit();
       }
       else {

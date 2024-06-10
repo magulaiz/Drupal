@@ -5,6 +5,9 @@ namespace Drupal\database_test\EventSubscriber;
 use Drupal\Core\Database\Event\StatementExecutionEndEvent;
 use Drupal\Core\Database\Event\StatementExecutionFailureEvent;
 use Drupal\Core\Database\Event\StatementExecutionStartEvent;
+use Drupal\Core\Database\Event\TransactionBeginEvent;
+use Drupal\Core\Database\Event\TransactionCommitEvent;
+use Drupal\Core\Database\Event\TransactionSavepointEvent;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 /**
@@ -40,6 +43,9 @@ class DatabaseEventSubscriber implements EventSubscriberInterface {
       StatementExecutionStartEvent::class => 'onStatementExecutionStart',
       StatementExecutionEndEvent::class => 'onStatementExecutionEnd',
       StatementExecutionFailureEvent::class => 'onStatementExecutionFailure',
+      TransactionBeginEvent::class => 'onTransactionBegin',
+      TransactionSavepointEvent::class => 'onTransactionSavepoint',
+      TransactionCommitEvent::class => 'onTransactionCommit',
     ];
   }
 
@@ -74,6 +80,36 @@ class DatabaseEventSubscriber implements EventSubscriberInterface {
   public function onStatementExecutionFailure(StatementExecutionFailureEvent $event): void {
     unset($this->statementIdsInExecution[$event->statementObjectId]);
     $this->countStatementFailures++;
+  }
+
+  /**
+   * Subscribes to a TransactionBeginEvent.
+   *
+   * @param \Drupal\Core\Database\Event\TransactionBeginEvent $event
+   *   The transaction event.
+   */
+  public function onTransactionBegin(TransactionBeginEvent $event): void {
+    throw new \RuntimeException($event->key . ' ' . $event->target . ' ' . $event->id . '\\' . $event->name);
+  }
+
+  /**
+   * Subscribes to a TransactionSavepointEvent.
+   *
+   * @param \Drupal\Core\Database\Event\TransactionSavepointEvent $event
+   *   The transaction event.
+   */
+  public function onTransactionSavepoint(TransactionSavepointEvent $event): void {
+    throw new \RuntimeException($event->key . ' ' . $event->target . ' ' . $event->id . '\\' . $event->name . ' stack: ' . implode(' > ', $event->stackItems));
+  }
+
+  /**
+   * Subscribes to a TransactionCommitEvent.
+   *
+   * @param \Drupal\Core\Database\Event\TransactionCommitEvent $event
+   *   The transaction event.
+   */
+  public function onTransactionCommit(TransactionCommitEvent $event): void {
+    throw new \RuntimeException($event->key . ' ' . $event->target . ' ' . $event->id . '\\' . $event->name . ' stack: ' . implode(' > ', $event->stackItems));
   }
 
 }
