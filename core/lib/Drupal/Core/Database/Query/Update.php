@@ -133,10 +133,7 @@ class Update extends Query implements ConditionInterface {
 
     // Because we filter $fields the same way here and in __toString(), the
     // placeholders will all match up properly.
-    $max_placeholder = 0;
-    foreach ($fields as $value) {
-      $update_values[':db_update_placeholder_' . ($max_placeholder++)] = $value;
-    }
+    $update_values += $this->getQueryArguments();
 
     if (count($this->condition)) {
       $this->condition->compile($this->connection, $this);
@@ -178,8 +175,9 @@ class Update extends Query implements ConditionInterface {
     }
 
     $max_placeholder = 0;
+    $placeholders = array_keys($this->getQueryArguments());
     foreach ($fields as $field => $value) {
-      $update_fields[] = $this->connection->escapeField($field) . '=:db_update_placeholder_' . ($max_placeholder++);
+      $update_fields[] = $this->connection->escapeField($field) . '=' . $placeholders[$max_placeholder++];
     }
 
     $query = $comments . 'UPDATE {' . $this->connection->escapeTable($this->table) . '} SET ' . implode(', ', $update_fields);
@@ -197,9 +195,19 @@ class Update extends Query implements ConditionInterface {
    * {@inheritdoc}
    */
   public function arguments() {
-    $args = $this->condition->arguments();
+    return $this->condition->arguments() + $this->getQueryArguments();
+  }
+
+  /**
+   * Returns the query arguments with placeholders mapped to values.
+   *
+   * @return array
+   *   Array indexed on placeholders with value.
+   */
+  protected function getQueryArguments(): array {
     $fields = $this->fields;
     $max_placeholder = 0;
+    $args = [];
     foreach ($fields as $value) {
       $args[':db_update_placeholder_' . ($max_placeholder++)] = $value;
     }
