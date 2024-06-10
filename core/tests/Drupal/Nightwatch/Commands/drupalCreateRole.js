@@ -38,6 +38,10 @@ exports.command = function drupalCreateRole(
 
     this.drupalRelativeURL('/admin/people/permissions');
 
+    this.execute(() => {
+      window.scrollTo(0, 0);
+    });
+
     await Promise.all(
       permissions.map(async (permission) =>
         this.click(`input[name="${machineName}[${permission}]"]`),
