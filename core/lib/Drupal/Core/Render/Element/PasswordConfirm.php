@@ -48,19 +48,14 @@ class PasswordConfirm extends FormElementBase {
    */
   public static function valueCallback(&$element, $input, FormStateInterface $form_state) {
     if ($input === FALSE) {
-      $element += ['#default_value' => []];
-      return $element['#default_value'] + ['pass1' => '', 'pass2' => ''];
+      return '';
     }
-    $value = ['pass1' => '', 'pass2' => ''];
-    // Throw out all invalid array keys; we only allow pass1 and pass2.
-    foreach ($value as $allowed_key => $default) {
-      // These should be strings, but allow other scalars since they might be
-      // valid input in programmatic form submissions. Any nested array values
-      // are ignored.
-      if (isset($input[$allowed_key]) && is_scalar($input[$allowed_key])) {
-        $value[$allowed_key] = (string) $input[$allowed_key];
-      }
+
+    $value = '';
+    if (isset($input['pass1']) && is_scalar($input['pass1'])) {
+      $value = (string) $input['pass1'];
     }
+
     return $value;
   }
 
@@ -68,10 +63,10 @@ class PasswordConfirm extends FormElementBase {
    * Expand a password_confirm field into two text boxes.
    */
   public static function processPasswordConfirm(&$element, FormStateInterface $form_state, &$complete_form) {
+
     $element['pass1'] = [
       '#type' => 'password',
       '#title' => t('Password'),
-      '#value' => empty($element['#value']) ? NULL : $element['#value']['pass1'],
       '#required' => $element['#required'],
       '#attributes' => [
         'class' => ['password-field', 'js-password-field'],
@@ -82,7 +77,6 @@ class PasswordConfirm extends FormElementBase {
     $element['pass2'] = [
       '#type' => 'password',
       '#title' => t('Confirm password'),
-      '#value' => empty($element['#value']) ? NULL : $element['#value']['pass2'],
       '#required' => $element['#required'],
       '#attributes' => [
         'class' => ['password-confirm', 'js-password-confirm'],
@@ -95,6 +89,10 @@ class PasswordConfirm extends FormElementBase {
 
     if (isset($element['#size'])) {
       $element['pass1']['#size'] = $element['pass2']['#size'] = $element['#size'];
+    }
+
+    if (isset($element['#maxlength'])) {
+      $element['pass1']['#maxlength'] = $element['pass2']['#maxlength'] = $element['#maxlength'];
     }
 
     return $element;

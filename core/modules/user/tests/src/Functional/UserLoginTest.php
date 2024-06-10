@@ -196,7 +196,7 @@ class UserLoginTest extends BrowserTestBase {
     $this->assertSession()->pageTextNotContains('Password cannot be longer than');
     $this->assertSession()->pageTextContains('Member for');
 
-    $this->doPasswordLengthLogin($account, $current_password, $length + 1);
+    $this->doPasswordLengthLogin($account, $current_password, $length + 1, TRUE);
     $this->assertSession()->pageTextContains('Password cannot be longer than ' . $length . ' characters but is currently ' . ($length + 1) . ' characters long.');
     $this->assertSession()->pageTextNotContains('Member for');
   }
@@ -210,11 +210,13 @@ class UserLoginTest extends BrowserTestBase {
    *   The current password associated with the user.
    * @param int $length
    *   The length of the password.
+   * @param bool $error_length
+   *   Check error on length.
    *
    * @return string
    *   The new password associated with the user.
    */
-  public function doPasswordLengthLogin(UserInterface $account, string $current_password, int $length) {
+  public function doPasswordLengthLogin(UserInterface $account, string $current_password, int $length, bool $error_length = FALSE) {
     $new_password = \Drupal::service('password_generator')->generate($length);
     $uid = $account->id();
     $edit = [
@@ -227,8 +229,15 @@ class UserLoginTest extends BrowserTestBase {
     // Change the password.
     $this->drupalGet("user/$uid/edit");
     $this->submitForm($edit, 'Save');
-    $this->assertSession()->pageTextContains('The changes have been saved.');
-    $this->drupalLogout();
+    if (!$error_length) {
+      $this->assertSession()->pageTextContains('The changes have been saved.');
+      $this->drupalLogout();
+    }
+    else {
+      $this->assertSession()->pageTextContains('Password cannot be longer than 128 characters but is currently ' . $length . ' characters long.');
+      $this->assertSession()->pageTextNotContains('Member for');
+      $this->drupalLogout();
+    }
 
     // Login with new password.
     $this->drupalGet('user/login');

@@ -43,6 +43,16 @@ class FormElementMaxlengthTest extends KernelTestBase implements FormInterface {
       '#maxlength' => 255,
     ];
 
+    $form['pass1'] = [
+      '#type' => 'password',
+      '#maxlength' => 12,
+    ];
+
+    $form['pass2'] = [
+      '#type' => 'password',
+      '#maxlength' => 12,
+    ];
+
     $form['submit'] = [
       '#type' => 'submit',
       '#value' => 'Submit',
@@ -77,6 +87,10 @@ class FormElementMaxlengthTest extends KernelTestBase implements FormInterface {
     $this->assertCount(1, $elements, 'Text field has correct maxlength in form.');
     $elements = $this->xpath($css_selector_converter->toXPath('textarea[name=description][maxlength=255]'));
     $this->assertCount(1, $elements, 'Textarea field has correct maxlength in form.');
+    $elements = $this->xpath($css_selector_converter->toXPath('input[name=pass1][maxlength=12]'));
+    $this->assertCount(1, $elements, 'First password field has correct maxlength in form.');
+    $elements = $this->xpath($css_selector_converter->toXPath('input[name=pass2][maxlength=12]'));
+    $this->assertCount(1, $elements, 'Second password field has correct maxlength in form.');
   }
 
 }
