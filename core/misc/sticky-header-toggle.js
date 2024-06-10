@@ -12,7 +12,7 @@
     attach(context) {
       const stickyHeaderElement = once(
         'makeStickyOptional',
-        'table.sticky-header',
+        '.views-table',
         context,
       ).shift();
       if (stickyHeaderElement) {
@@ -20,12 +20,9 @@
           'beforebegin',
           Drupal.theme.stickyHeaderCheckbox(),
         );
-        // const previousElement = stickyHeaderElement.previousElementSibling;
-        // const checkbox = previousElement.querySelector(
-        //   'input[type="checkbox"]',
-        // );
-        const checkbox = document.querySelector(
-          '[data-drupal-toggle-sticky-header]',
+        const previousElement = stickyHeaderElement.previousElementSibling;
+        const checkbox = previousElement.querySelector(
+          'input[type="checkbox"]',
         );
 
         const stickyEnabled =
