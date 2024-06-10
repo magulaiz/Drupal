@@ -25,6 +25,24 @@
           'input[type="checkbox"]',
         );
 
+        // Ensure the checkbox is in view and not overlapped by other elements.
+        const scrollIntoViewIfNeeded = (element) => {
+          const rect = element.getBoundingClientRect();
+          if (
+            rect.top < 0 ||
+            rect.left < 0 ||
+            rect.bottom >
+              (window.innerHeight || document.documentElement.clientHeight) ||
+            rect.right >
+              (window.innerWidth || document.documentElement.clientWidth)
+          ) {
+            element.scrollIntoView({
+              behavior: 'smooth',
+              block: 'center',
+              inline: 'center',
+            });
+          }
+        };
         const stickyEnabled =
           !localStorage.getItem('stickyHeaderEnabled') ||
           localStorage.getItem('stickyHeaderEnabled') === 'true';
@@ -36,6 +54,14 @@
           stickyHeaderElement.classList.toggle('sticky-header', isChecked);
           localStorage.setItem('stickyHeaderEnabled', isChecked.toString());
         });
+
+        // Ensure checkbox is clickable and in view
+        scrollIntoViewIfNeeded(checkbox);
+
+        // Add a slight delay to ensure the checkbox is rendered properly
+        setTimeout(() => {
+          scrollIntoViewIfNeeded(checkbox);
+        }, 200);
       }
     },
   };
