@@ -19,7 +19,7 @@ class StickyHeaderToggleTest extends WebDriverTestBase {
   /**
    * {@inheritdoc}
    */
-  protected $defaultTheme = 'claro';
+  protected $defaultTheme = 'stark';
 
   /**
    * {@inheritdoc}
