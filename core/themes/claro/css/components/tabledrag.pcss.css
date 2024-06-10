@@ -233,7 +233,7 @@ body.drag-y {
 
 .tabledrag-cell-content > * {
   display: table-cell;
-  vertical-align: text-top;
+  vertical-align: top;
 }
 
 .tabledrag-cell-content__item {
@@ -274,7 +274,7 @@ body.drag-y {
 }
 
 .tabledrag-cell-content .tabledrag-handle::after {
-  vertical-align: text-top;
+  vertical-align: top;
 }
 
 /**
