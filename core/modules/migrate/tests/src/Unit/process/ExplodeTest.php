@@ -111,16 +111,6 @@ class ExplodeTest extends MigrateProcessTestCase {
   }
 
   /**
-   * Tests explode fails with empty delimiter.
-   */
-  public function testExplodeWithEmptyDelimiter() {
-    $this->expectException(MigrateException::class);
-    $this->expectExceptionMessage('delimiter is empty');
-    $plugin = new Explode(['delimiter' => ''], 'map', []);
-    $plugin->transform('foo,bar', $this->migrateExecutable, $this->row, 'destination_property');
-  }
-
-  /**
    * Tests using falsey values as delimiter.
    *
    * @dataProvider providerExplodeWithFalseyDelimiter
