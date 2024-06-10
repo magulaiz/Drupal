@@ -120,4 +120,49 @@ class ExplodeTest extends MigrateProcessTestCase {
     $plugin->transform('foo,bar', $this->migrateExecutable, $this->row, 'destination_property');
   }
 
+  /**
+   * Tests using falsey values as delimiter.
+   *
+   * @dataProvider providerExplodeWithFalseyDelimiter
+   */
+  public function testExplodeWithFalseyDelimiter($delimiter, $expect_exception, $expected = []) {
+    $plugin = new Explode(['delimiter' => $delimiter], 'map', []);
+    if ($expect_exception) {
+      $this->expectException(MigrateException::class);
+      $this->expectExceptionMessage('delimiter is empty');
+    }
+    $processed = $plugin->transform('Migrate 101', $this->migrateExecutable, $this->row, 'destination_property');
+    $this->assertSame($processed, $expected);
+  }
+
+  /**
+   * Data provider for ::testExplodeWithNonStrictAndEmptySource().
+   */
+  public static function providerExplodeWithFalseyDelimiter() {
+    return [
+      'false' => [
+        'delimiter' => FALSE,
+        'expect_exception' => TRUE,
+      ],
+      'null' => [
+        'delimiter' => NULL,
+        'expect_exception' => TRUE,
+      ],
+      'empty string' => [
+        'delimiter' => '',
+        'expect_exception' => TRUE,
+      ],
+      'zero (int)' => [
+        'delimiter' => 0,
+        'expect_exception' => FALSE,
+        'expected' => ['Migrate 1', '1']
+      ],
+      'zero (string)' => [
+        'delimiter' => '0',
+        'expect_exception' => FALSE,
+        'expected' => ['Migrate 1', '1']
+      ],
+    ];
+  }
+
 }
