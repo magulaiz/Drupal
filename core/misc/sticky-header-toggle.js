@@ -33,6 +33,11 @@
 
         checkbox.addEventListener('change', () => {
           const isChecked = checkbox.checked;
+          if (isChecked) {
+            checkbox.setAttribute('checked', '');
+          } else {
+            checkbox.removeAttribute('checked');
+          }
           stickyHeaderElement.classList.toggle('sticky-header', isChecked);
           localStorage.setItem('stickyHeaderEnabled', isChecked);
         });
