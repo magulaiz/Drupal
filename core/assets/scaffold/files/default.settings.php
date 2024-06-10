@@ -855,14 +855,25 @@ $settings['migrate_node_migrate_type_classic'] = FALSE;
 # $settings['migrate_file_private_path'] = '';
 
 /**
- * Enable the update of timestamp fields to work after Year 2038.
+ * Manage the update of timestamp fields so they work after the year 2038.
  *
- * This setting is used to allow the update of all timestamp fields. For sites
- * with hundreds of thousands of nodes and other entities this update will not
- * be quick. Sites can disable the update so they can schedule it as needed.
- * Set this to FALSE to prevent the update from running.
+ * For sites with hundreds of thousands of nodes and other entities this update
+ * will not be quick. Two settings are provided to help manage this update.
+ *
+ * The first setting is used to enable or disable the running of the update. Set
+ * it to FALSE to skip the update. The default value is TRUE.
+ *
+ * The second settings allows sites to set a limit on the time the update runs.
+ * Set it the number of seconds the update should run. The following example
+ * allows the update to run for 2 minutes. The default value is 0, which allows
+ * the update to run to completion.
+ *
+ * @code
+ * $settings['timestamp_field_update_y2038_timeout'] = 2 * 60;
+ * @endcode
  */
 $settings['timestamp_field_update_y2038'] = TRUE;
+$settings['timestamp_field_update_y2038_timeout'] = 0;
 
 /**
  * Load local development override configuration, if available.
