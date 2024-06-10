@@ -232,9 +232,10 @@ class MenuForm extends EntityForm {
     $this->getRequest()->attributes->set('_menu_admin', TRUE);
     $manipulators = [
       // Use a dedicated menu tree access check manipulator as users editing
-      // this form, granted with 'administer menu' permission, should be able to
-      // access menu links with inaccessible routes. The default menu tree
-      // manipulator only allows the access to menu links with accessible routes.
+      // this form, granted with 'administer menu' permission, should be able
+      // to access menu links with inaccessible routes. The default menu tree
+      // manipulator only allows the access to menu links with accessible
+      // routes.
       // @see \Drupal\Core\Menu\DefaultMenuLinkTreeManipulators::checkAccess()
       // @see \Drupal\menu_ui\Menu\MenuUiMenuTreeManipulators::checkAccess()
       ['callable' => 'menu_ui.menu_tree_manipulators:checkAccess'],
@@ -339,7 +340,8 @@ class MenuForm extends EntityForm {
           $form['links'][$id]['#attributes']['class'][] = 'menu-link-content--pending-revision';
         }
 
-        // TableDrag: Sort the table row according to its existing/configured weight.
+        // TableDrag: Sort the table row according to its existing/configured
+        // weight.
         $form['links'][$id]['#weight'] = $element['#item']->link->getWeight();
 
         // Add special classes to be used for tabledrag.js.
@@ -387,6 +389,8 @@ class MenuForm extends EntityForm {
    *   The tree retrieved by \Drupal\Core\Menu\MenuLinkTreeInterface::load().
    * @param int $delta
    *   The default number of menu items used in the menu weight selector is 50.
+   * @param bool $parent_enabled
+   *   Whether or not the parent menu item is enabled. Defaults to TRUE.
    *
    * @return array
    *   The overview tree form.
