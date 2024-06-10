@@ -73,7 +73,7 @@ class RssResponseCdata implements EventSubscriberInterface {
   public static function getSubscribedEvents(): array {
     // Should run after any other response subscriber that modifies the markup.
     // @see \Drupal\Core\EventSubscriber\RssResponseRelativeUrlFilter
-    $events[KernelEvents::RESPONSE][] = ['onResponse', -512];
+    $events[KernelEvents::RESPONSE][] = ['onResponse', -513];
 
     return $events;
   }
