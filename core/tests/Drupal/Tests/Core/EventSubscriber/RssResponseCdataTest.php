@@ -17,7 +17,13 @@ use Symfony\Component\HttpKernel\HttpKernelInterface;
  */
 class RssResponseCdataTest extends UnitTestCase {
 
-  public static function providerTestOnResponse() {
+  /**
+   * Provides known rss feeds to compare.
+   *
+   * @return array
+   *   An array of valid and invalid rss feeds.
+   */
+  public static function providerTestOnResponse(): array {
     $data = [];
 
     $valid_feed = <<<RSS
