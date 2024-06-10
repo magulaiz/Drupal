@@ -14,6 +14,7 @@ use Drupal\migrate\Event\MigrateRollbackEvent;
 use Drupal\migrate\Event\MigrateRowDeleteEvent;
 use Drupal\migrate\Exception\RequirementsException;
 use Drupal\migrate\Plugin\MigrateIdMapInterface;
+use Drupal\migrate\Plugin\MigrateProcessInterface;
 use Drupal\migrate\Plugin\MigrationInterface;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
@@ -81,6 +82,12 @@ class MigrateExecutable implements MigrateExecutableInterface {
    * @var \Symfony\Contracts\EventDispatcher\EventDispatcherInterface
    */
   protected $eventDispatcher;
+
+  /**
+   * A flag indicating the pipeline should be stopped.
+   * @var bool
+   */
+  protected bool $stopPipeline = FALSE;
 
   /**
    * Migration message service.
@@ -215,12 +222,22 @@ class MigrateExecutable implements MigrateExecutableInterface {
       while ($source->valid()) {
         $row = $source->current();
         $this->sourceIdValues = $row->getSourceIdValues();
-
+        $save = TRUE;
         try {
           foreach ($pipeline as $destination_property_name => $plugins) {
             $this->processPipeline($row, $destination_property_name, $plugins, NULL);
+            if ($row->getSkip()) {
+              if ($row->getSaveToMap()) {
+                $id_map->saveIdMapping($row, [], MigrateIdMapInterface::STATUS_IGNORED);
+              }
+              if ($message = trim($row->getSkipMessage())) {
+                $msg = sprintf("%s:%s: %s", $this->migration->getPluginId(), $destination_property_name, $message);
+                $this->saveMessage($msg, MigrationInterface::MESSAGE_INFORMATIONAL);
+              }
+              $save = FALSE;
+              break;
+            }
           }
-          $save = TRUE;
         }
         catch (MigrateException $e) {
           $this->getIdMap()->saveIdMapping($row, [], $e->getStatus());
@@ -389,6 +406,9 @@ class MigrateExecutable implements MigrateExecutableInterface {
    */
   public function processRow(Row $row, ?array $process = NULL, $value = NULL) {
     foreach ($this->migration->getProcessPlugins($process) as $destination => $plugins) {
+      if ($row->getSkip()) {
+        return;
+      }
       $this->processPipeline($row, $destination, $plugins, $value);
     }
   }
@@ -410,7 +430,11 @@ class MigrateExecutable implements MigrateExecutableInterface {
    * @throws \Drupal\migrate\MigrateException
    */
   protected function processPipeline(Row $row, string $destination, array $plugins, $value) {
+    if (empty($plugins)) {
+      return;
+    }
     $multiple = FALSE;
+    $this->stopPipeline = FALSE;
     /** @var \Drupal\migrate\Plugin\MigrateProcessInterface $plugin */
     foreach ($plugins as $plugin) {
       $definition = $plugin->getPluginDefinition();
@@ -419,63 +443,94 @@ class MigrateExecutable implements MigrateExecutableInterface {
       // and in this case the current value needs to be iterated and each scalar
       // separately transformed.
       if ($multiple && !$definition['handle_multiples']) {
-        $new_value = [];
         if (!is_array($value)) {
           throw new MigrateException(sprintf('Pipeline failed at %s plugin for destination %s: %s received instead of an array,', $plugin->getPluginId(), $destination, $value));
         }
-        $break = FALSE;
-        foreach ($value as $scalar_value) {
-          $plugin->reset();
-          try {
-            $new_value[] = $plugin->transform($scalar_value, $this, $row, $destination);
-          }
-          catch (MigrateSkipProcessException $e) {
-            $new_value[] = NULL;
-            $break = TRUE;
-          }
-          catch (MigrateException $e) {
-            // Prepend the process plugin id to the message.
-            $message = sprintf("%s: %s", $plugin->getPluginId(), $e->getMessage());
-            throw new MigrateException($message);
-          }
-          if ($plugin->isPipelineStopped()) {
-            $break = TRUE;
-          }
-        }
-        $value = $new_value;
-        if ($break) {
-          break;
-        }
+        $value = $this->processMultiple($row, $destination, $plugin, $value);
       }
       else {
-        $plugin->reset();
-        try {
-          $value = $plugin->transform($value, $this, $row, $destination);
-        }
-        catch (MigrateSkipProcessException $e) {
-          $value = NULL;
-          break;
-        }
-        catch (MigrateException $e) {
-          // Prepend the process plugin id to the message.
-          $message = sprintf("%s: %s", $plugin->getPluginId(), $e->getMessage());
-          throw new MigrateException($message);
-        }
-        if ($plugin->isPipelineStopped()) {
-          break;
-        }
+        $value = $this->processSingle($row, $destination, $plugin, $value);
         $multiple = $plugin->multiple();
       }
+      if ($row->getSkip()) {
+        return;
+      }
+      if ($this->stopPipeline) {
+        break;
+      }
+
     }
     // Ensure all values, including nulls, are migrated.
-    if ($plugins) {
-      if (isset($value)) {
-        $row->setDestinationProperty($destination, $value);
-      }
-      else {
-        $row->setEmptyDestinationProperty($destination);
+    if (isset($value)) {
+      $row->setDestinationProperty($destination, $value);
+    }
+    else {
+      $row->setEmptyDestinationProperty($destination);
+    }
+  }
+
+  /**
+   * Runs a process plugin.
+   *
+   * @param \Drupal\migrate\Row $row
+   *   The $row to be processed.
+   * @param string $destination
+   *   The destination property name.
+   * @param \Drupal\migrate\Plugin\MigrateProcessInterface $plugin
+   *   The process plugin.
+   * @param mixed $value
+   *   Initial value to transform.
+   *
+   * @return mixed|null
+   *   The processed value.
+   *
+   * @throws \Drupal\migrate\MigrateException
+   */
+  protected function processSingle(Row $row, string $destination, MigrateProcessInterface $plugin, mixed $value): mixed {
+    $plugin->reset();
+    try {
+      $new_value = $plugin->transform($value, $this, $row, $destination);
+    }
+    catch (MigrateSkipProcessException $e) {
+      $this->stopPipeline = TRUE;
+      return NULL;
+    }
+    catch (MigrateException $e) {
+      // Prepend the process plugin id to the message.
+      $message = sprintf("%s: %s", $plugin->getPluginId(), $e->getMessage());
+      throw new MigrateException($message);
+    }
+    $this->stopPipeline = $this->stopPipeline || $plugin->isPipelineStopped();
+    return $new_value;
+  }
+
+  /**
+   * @param \Drupal\migrate\Row $row
+   *   The $row to be processed.
+   *
+   * @param string $destination
+   *   The destination property name.
+   * @param \Drupal\migrate\Plugin\MigrateProcessInterface $plugin
+   *   The process plugin.
+   * @param mixed $value
+   *   Initial value to transform.
+   *
+   * @return array
+   *   The processed values.
+   *
+   * @throws \Drupal\migrate\MigrateException
+   * @throws \ReflectionException
+   */
+  protected function processMultiple(Row $row, string $destination, MigrateProcessInterface $plugin, array $value): array {
+    $new_value = [];
+    foreach ($value as $element_value) {
+      $plugin->reset();
+      $new_value[] = $this->processSingle($row, $destination, $plugin, $element_value);
+      if ($row->getSkip()) {
+        return [];
       }
     }
+    return $new_value;
   }
 
   /**

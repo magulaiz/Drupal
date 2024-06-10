@@ -32,6 +32,27 @@ class Row {
   protected $destination = [];
 
   /**
+   * Indicates whether the row should be skipped.
+   *
+   * @var bool
+   */
+  protected bool $skip = FALSE;
+
+  /**
+   * Message indicating why the row is being skipped.
+   *
+   * @var string
+   */
+  protected string $skipMessage = '';
+
+  /**
+   * Indicates if the skipped row should be saved to the map.
+   *
+   * @var bool
+   */
+  protected bool $saveToMap = TRUE;
+
+  /**
    * Level separator of destination and source properties.
    */
   const PROPERTY_SEPARATOR = '/';
@@ -430,6 +451,54 @@ class Row {
    */
   public function isStub() {
     return $this->isStub;
+  }
+
+  /**
+   * Sets the row to be skipped.
+   *
+   * @param string $message
+   *   The message to save.
+   * @param bool $save_to_map
+   *   Whether the row should be saved to the migrate map.
+   *
+   * @return $this
+   *   The called Row object.
+   */
+  public function skip(string $message = '', bool $save_to_map = TRUE): self {
+    $this->skip = TRUE;
+    $this->skipMessage = $message;
+    $this->saveToMap = $save_to_map;
+    return $this;
+  }
+
+  /**
+   * Indicates whether the row should be skipped.
+   *
+   * @return bool
+   *   TRUE if the row should be skipped.
+   */
+  public function getSkip(): bool {
+    return $this->skip;
+  }
+
+  /**
+   * Retrieves the skip message.
+   *
+   * @return string
+   *   The skip message.
+   */
+  public function getSkipMessage(): string {
+    return $this->skipMessage;
+  }
+
+  /**
+   * Indicates whether the skipped row should be saved to the map.
+   *
+   * @return bool
+   *   TRUE if the skipped row should be saved.
+   */
+  public function getSaveToMap(): bool {
+    return $this->saveToMap;
   }
 
 }

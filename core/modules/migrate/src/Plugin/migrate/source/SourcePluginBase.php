@@ -290,41 +290,61 @@ abstract class SourcePluginBase extends PluginBase implements MigrateSourceInter
    * {@inheritdoc}
    */
   public function prepareRow(Row $row) {
-    $result = TRUE;
+    $skipRemainingHooks = FALSE;
+    $hook_return_values = [];
+    $args = [$row, $this, $this->migration];
+    $closure = function (callable $hook, string $module) use ($args, &$hook_return_values, &$skipRemainingHooks) {
+      if ($skipRemainingHooks) {
+        return;
+      }
+      $hook_result = call_user_func_array($hook, $args);
+      if ($args[0]->getSkip()) {
+        $skipRemainingHooks = TRUE;
+        return;
+      }
+      if (isset($hook_result)) {
+        $hook_return_values[] = $hook_result;
+      }
+    };
+
     try {
-      $result_hook = $this->getModuleHandler()->invokeAll('migrate_prepare_row', [$row, $this, $this->migration]);
-      $result_named_hook = $this->getModuleHandler()->invokeAll('migrate_' . $this->migration->id() . '_prepare_row', [$row, $this, $this->migration]);
+      $this->getModuleHandler()
+        ->invokeAllWith('migrate_prepare_row', $closure);
+      $this->getModuleHandler()
+        ->invokeAllWith('migrate_' . $this->migration->id() . '_prepare_row', $closure);
+
       // We will skip if any hook returned FALSE.
-      $skip = ($result_hook && in_array(FALSE, $result_hook)) || ($result_named_hook && in_array(FALSE, $result_named_hook));
-      $save_to_map = TRUE;
+      if (!$row->getSkip() && in_array(FALSE, $hook_return_values)) {
+        $row->skip();
+      }
     }
     catch (MigrateSkipRowException $e) {
-      $skip = TRUE;
-      $save_to_map = $e->getSaveToMap();
-      if ($message = trim($e->getMessage())) {
-        $this->idMap->saveMessage($row->getSourceIdValues(), $message, MigrationInterface::MESSAGE_INFORMATIONAL);
-      }
+      $row->skip(trim($e->getMessage()), $e->getSaveToMap());
     }
 
     // We're explicitly skipping this row - keep track in the map table.
-    if ($skip) {
+    if ($row->getSkip()) {
       // Make sure we replace any previous messages for this item with any
       // new ones.
-      if ($save_to_map) {
+      if ($row->getSkipMessage()) {
+        $this->idMap->saveMessage($row->getSourceIdValues(), $row->getSkipMessage(), MigrationInterface::MESSAGE_INFORMATIONAL);
+      }
+      if ($row->getSaveToMap()) {
         $this->idMap->saveIdMapping($row, [], MigrateIdMapInterface::STATUS_IGNORED);
         $this->currentRow = NULL;
         $this->currentSourceIds = NULL;
       }
-      $result = FALSE;
+
+      return FALSE;
     }
-    elseif ($this->trackChanges) {
+    if ($this->trackChanges) {
       // When tracking changed data, We want to quietly skip (rather than
       // "ignore") rows with changes. The caller needs to make that decision,
       // so we need to provide them with the necessary information (before and
       // after hashes).
       $row->rehash();
     }
-    return $result;
+    return TRUE;
   }
 
   /**

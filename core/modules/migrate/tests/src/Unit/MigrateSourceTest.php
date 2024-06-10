@@ -16,6 +16,7 @@ use Drupal\migrate\Plugin\migrate\source\SourcePluginBase;
 use Drupal\migrate\Plugin\MigrateIdMapInterface;
 use Drupal\migrate\Plugin\MigrateSourceInterface;
 use Drupal\migrate\Row;
+use Prophecy\Argument;
 
 /**
  * @coversDefaultClass \Drupal\migrate\Plugin\migrate\source\SourcePluginBase
@@ -293,11 +294,11 @@ class MigrateSourceTest extends MigrateTestCase {
     $row = new Row();
 
     $module_handler = $this->prophesize(ModuleHandlerInterface::class);
-    $module_handler->invokeAll('migrate_prepare_row', [$row, $source, $migration])
-      ->willReturn([TRUE, TRUE])
+    $module_handler->invokeAllWith('migrate_prepare_row', Argument::type('Closure'))
+      ->will([__CLASS__, 'noSkipCallback'])
       ->shouldBeCalled();
-    $module_handler->invokeAll('migrate_' . $migration->id() . '_prepare_row', [$row, $source, $migration])
-      ->willReturn([TRUE, TRUE])
+    $module_handler->invokeAllWith('migrate_' . $migration->id() . '_prepare_row', Argument::type('Closure'))
+      ->will([__CLASS__, 'noSkipCallback'])
       ->shouldBeCalled();
     $source->setModuleHandler($module_handler->reveal());
 
@@ -312,11 +313,8 @@ class MigrateSourceTest extends MigrateTestCase {
     $row2 = $this->prophesize(Row::class);
     $row2->rehash()
       ->shouldBeCalled();
-    $module_handler->invokeAll('migrate_prepare_row', [$row2, $source, $migration])
-      ->willReturn([TRUE, TRUE])
-      ->shouldBeCalled();
-    $module_handler->invokeAll('migrate_' . $migration->id() . '_prepare_row', [$row2, $source, $migration])
-      ->willReturn([TRUE, TRUE])
+    $row2->getSkip()
+      ->willReturn(FALSE)
       ->shouldBeCalled();
     $source->setModuleHandler($module_handler->reveal());
     $this->assertTrue($source->prepareRow($row2->reveal()));
@@ -336,11 +334,11 @@ class MigrateSourceTest extends MigrateTestCase {
 
     $module_handler = $this->prophesize(ModuleHandlerInterface::class);
     // Return a failure from a prepare row hook.
-    $module_handler->invokeAll('migrate_prepare_row', [$row, $source, $migration])
-      ->willReturn([TRUE, FALSE, TRUE])
+    $module_handler->invokeAllWith('migrate_prepare_row', Argument::type('Closure'))
+      ->will([__CLASS__, 'skipCallback'])
       ->shouldBeCalled();
-    $module_handler->invokeAll('migrate_' . $migration->id() . '_prepare_row', [$row, $source, $migration])
-      ->willReturn([TRUE, TRUE])
+    $module_handler->invokeAllWith('migrate_' . $migration->id() . '_prepare_row', Argument::type('Closure'))
+      ->will([__CLASS__, 'noSkipCallback'])
       ->shouldBeCalled();
     $source->setModuleHandler($module_handler->reveal());
 
@@ -364,12 +362,14 @@ class MigrateSourceTest extends MigrateTestCase {
     $row = new Row();
 
     $module_handler = $this->prophesize(ModuleHandlerInterface::class);
-    // Return a failure from a prepare row hook.
-    $module_handler->invokeAll('migrate_prepare_row', [$row, $source, $migration])
-      ->willReturn([TRUE, TRUE])
+
+    $module_handler->invokeAllWith('migrate_prepare_row', Argument::type('Closure'))
+      ->will([__CLASS__, 'noSkipCallback'])
       ->shouldBeCalled();
-    $module_handler->invokeAll('migrate_' . $migration->id() . '_prepare_row', [$row, $source, $migration])
-      ->willReturn([TRUE, FALSE, TRUE])
+
+    // Return a failure from a prepare row hook.
+    $module_handler->invokeAllWith('migrate_' . $migration->id() . '_prepare_row', Argument::type('Closure'))
+      ->will([__CLASS__, 'skipCallback'])
       ->shouldBeCalled();
     $source->setModuleHandler($module_handler->reveal());
 
@@ -394,10 +394,9 @@ class MigrateSourceTest extends MigrateTestCase {
 
     $module_handler = $this->prophesize(ModuleHandlerInterface::class);
     // Return a failure from a prepare row hook.
-    $module_handler->invokeAll('migrate_prepare_row', [$row, $source, $migration])
-      ->willReturn([TRUE, TRUE])
+    $module_handler->invokeAllWith('migrate_prepare_row', Argument::type('Closure'))
       ->shouldBeCalled();
-    $module_handler->invokeAll('migrate_' . $migration->id() . '_prepare_row', [$row, $source, $migration])
+    $module_handler->invokeAllWith('migrate_' . $migration->id() . '_prepare_row', Argument::type('Closure'))
       ->willThrow(new MigrateSkipRowException())
       ->shouldBeCalled();
     $source->setModuleHandler($module_handler->reveal());
@@ -411,7 +410,7 @@ class MigrateSourceTest extends MigrateTestCase {
 
     // Throw an exception the second time that avoids mapping.
     $e = new MigrateSkipRowException('', FALSE);
-    $module_handler->invokeAll('migrate_' . $migration->id() . '_prepare_row', [$row, $source, $migration])
+    $module_handler->invokeAllWith('migrate_' . $migration->id() . '_prepare_row', Argument::type('Closure'))
       ->willThrow($e)
       ->shouldBeCalled();
     $this->assertFalse($source->prepareRow($row));
@@ -446,6 +445,52 @@ class MigrateSourceTest extends MigrateTestCase {
     /** @var \Symfony\Contracts\EventDispatcher\EventDispatcherInterface $event_dispatcher */
     $event_dispatcher = $this->createMock('Symfony\Contracts\EventDispatcher\EventDispatcherInterface');
     return new MigrateExecutable($migration, $message, $event_dispatcher);
+  }
+
+  /**
+   * Simulates a prepare_row hook returning false.
+   *
+   * @param $args
+   *   The prophecy method arguments
+   */
+  public static function skipCallback($args): void {
+    $calls = ['true', 'false', 'true'];
+    foreach ($calls as $fn) {
+      $args[1]([__CLASS__, $fn], "");
+    }
+  }
+
+  /**
+   * Simulates a prepare_row hooks not returning false.
+   *
+   * @param $args
+   *   The prophecy method arguments
+   */
+  public static function noSkipCallback($args): void {
+    $calls = ['true', 'true'];
+    foreach ($calls as $fn) {
+      $args[1]([__CLASS__, $fn], "");
+    }
+  }
+
+  /**
+   * Returns true.
+   *
+   * @return bool
+   *   True.
+   */
+  public static function true(): bool {
+    return TRUE;
+  }
+
+  /**
+   * Returns false.
+   *
+   * @return bool
+   *   False.
+   */
+  public static function false(): bool {
+    return FALSE;
   }
 
 }

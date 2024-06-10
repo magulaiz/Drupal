@@ -431,6 +431,52 @@ class RowTest extends UnitTestCase {
   }
 
   /**
+   * Tests row skipping.
+   *
+   * @covers ::skip
+   * @covers ::getSkip
+   * @covers ::getSkipMessage
+   */
+  public function testRowSkipWithoutMessage() {
+    $row = new Row();
+    $row->skip();
+    $this->assertTrue($row->getSkip());
+    $this->assertEmpty($row->getSkipMessage());
+    $this->assertTrue($row->getSaveToMap());
+  }
+
+  /**
+   * Tests row skipping with a message.
+   *
+   * @covers ::skip
+   * @covers ::getSkip
+   * @covers ::getSkipMessage
+   */
+  public function testRowSkipWithMessage() {
+    $row = new Row();
+    $message = "This row should be skipped.";
+    $row->skip($message);
+    $this->assertTrue($row->getSkip());
+    $this->assertEquals($message, $row->getSkipMessage());
+    $this->assertTrue($row->getSaveToMap());
+  }
+
+  /**
+   * Tests row skipping without saving to the map.
+   *
+   * @covers ::skip
+   * @covers ::getSkip
+   * @covers ::getSkipMessage
+   */
+  public function testRowSkipWithoutSave() {
+    $row = new Row();
+    $row->skip('', FALSE);
+    $this->assertTrue($row->getSkip());
+    $this->assertEmpty($row->getSkipMessage());
+    $this->assertFalse($row->getSaveToMap());
+  }
+
+  /**
    * Create a row and load it with destination properties.
    *
    * @param array $source_properties
