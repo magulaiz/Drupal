@@ -261,6 +261,7 @@ class MenuForm extends EntityForm {
           'data' => $this->t('Enabled'),
           'class' => ['checkbox'],
         ],
+        $this->t('Visible'),
         $this->t('Weight'),
         [
           'data' => $this->t('Operations'),
@@ -294,7 +295,6 @@ class MenuForm extends EntityForm {
       ])->toString(),
     ]);
     $links = $this->buildOverviewTreeForm($tree, $delta);
-
     // Get the menu links which have pending revisions, and disable the
     // tabledrag if there are any.
     $edited_ids = array_filter(array_map(function ($element) {
@@ -325,7 +325,6 @@ class MenuForm extends EntityForm {
     foreach (Element::children($links) as $id) {
       if (isset($links[$id]['#item'])) {
         $element = $links[$id];
-
         $is_pending_menu_link = isset($element['#item']->link->getMetaData()['entity_id'])
           && in_array($element['#item']->link->getMetaData()['entity_id'], $pending_menu_link_ids);
 
@@ -362,11 +361,14 @@ class MenuForm extends EntityForm {
         if ($is_pending_menu_link) {
           $form['links'][$id]['enabled']['#access'] = FALSE;
         }
-
+        // Visible (Yes/No) column.
+        $form['links'][$id]['visible'] = $element['visible'];
+        if ($element['visible']['#markup']->__toString() == 'No') {
+          $form['links'][$id]['#attributes']['class'][] = 'not-visible';
+        }
         if (!$pending_menu_link_ids) {
           $form['links'][$id]['weight'] = $element['weight'];
         }
-
         // Operations (dropbutton) column.
         $form['links'][$id]['operations'] = $element['operations'];
 
@@ -389,7 +391,7 @@ class MenuForm extends EntityForm {
    * @return array
    *   The overview tree form.
    */
-  protected function buildOverviewTreeForm($tree, $delta) {
+  protected function buildOverviewTreeForm($tree, $delta, $parent_enabled = TRUE) {
     $form = &$this->overviewTreeForm;
     $tree_access_cacheability = new CacheableMetadata();
     foreach ($tree as $element) {
@@ -407,8 +409,16 @@ class MenuForm extends EntityForm {
         $form[$id]['#item'] = $element;
         $form[$id]['#attributes'] = $link->isEnabled() ? ['class' => ['menu-enabled']] : ['class' => ['menu-disabled']];
         $form[$id]['title'] = Link::fromTextAndUrl($link->getTitle(), $link->getUrlObject())->toRenderable();
+        $form[$id]['visible'] = [
+          '#type' => 'item',
+          '#markup' => t('Yes'),
+        ];
         if (!$link->isEnabled()) {
           $form[$id]['title']['#suffix'] = ' (' . $this->t('disabled') . ')';
+          $form[$id]['visible']['#markup'] = $this->t('No');
+        }
+        elseif (!$parent_enabled) {
+          $form[$id]['visible']['#markup'] = $this->t('No');
         }
         // @todo Remove this in https://www.drupal.org/node/2568785.
         elseif ($id === 'menu_plugin_id:user.logout') {
@@ -425,6 +435,7 @@ class MenuForm extends EntityForm {
           '#title_display' => 'invisible',
           '#default_value' => $link->isEnabled(),
         ];
+
         $form[$id]['weight'] = [
           '#type' => 'weight',
           '#delta' => $delta,
@@ -469,7 +480,7 @@ class MenuForm extends EntityForm {
       }
 
       if ($element->subtree) {
-        $this->buildOverviewTreeForm($element->subtree, $delta);
+        $this->buildOverviewTreeForm($element->subtree, $delta, $link->isEnabled() && $parent_enabled);
       }
     }
 
