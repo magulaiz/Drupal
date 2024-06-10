@@ -145,12 +145,12 @@ class ExplodeTest extends MigrateProcessTestCase {
       'zero (int)' => [
         'delimiter' => 0,
         'expect_exception' => FALSE,
-        'expected' => ['Migrate 1', '1']
+        'expected' => ['Migrate 1', '1'],
       ],
       'zero (string)' => [
         'delimiter' => '0',
         'expect_exception' => FALSE,
-        'expected' => ['Migrate 1', '1']
+        'expected' => ['Migrate 1', '1'],
       ],
     ];
   }
