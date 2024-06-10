@@ -700,7 +700,7 @@
         .addBack(tagsSupportDisable)
         .each(function () {
           if (e.value) {
-            this.setAttribute('disabled', 'disabled');
+            this.setAttribute('disabled', '');
           } else {
             this.removeAttribute('disabled');
           }
