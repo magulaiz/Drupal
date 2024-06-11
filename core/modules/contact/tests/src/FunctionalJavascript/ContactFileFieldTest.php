@@ -56,15 +56,18 @@ class ContactFileFieldTest extends WebDriverTestBase {
     $assert_session = $this->assertSession();
     $page->find('xpath', '//input[@value="file_upload"]')
       ->click();
-    $this->assertNotEmpty($file_field = $page->find('xpath', '//*[text() = "File upload"]')
+    $this->assertNotEmpty($file_field = $page->find('css', '[name="new_storage_type"][value="file_upload"]')
       ->getParent());
     $file_field->click();
     $this->assertTrue($assert_session->elementExists('css', '[name="new_storage_type"][value="file_upload"]')
       ->isSelected());
     $page->pressButton('Continue');
     $page->fillField('label', 'file_upload');
-    $page->find('xpath', '//input[@value="file"]')->click();
+    $this->assertNotEmpty($file_field = $page->find('css', '[name="group_field_options_wrapper"][value="file"]')
+      ->getParent());
+    $file_field->click();
     $page->pressButton('Continue');
+
     $this->assertTrue($assert_session->elementExists('css', '[name="field_storage[subform][settings][uri_scheme]"][value="private"]')
       ->isSelected());
   }
@@ -91,15 +94,18 @@ class ContactFileFieldTest extends WebDriverTestBase {
     $assert_session = $this->assertSession();
     $page->find('xpath', '//input[@value="file_upload"]')
       ->click();
-    $this->assertNotEmpty($file_field = $page->find('xpath', '//*[text() = "File upload"]')
+    $this->assertNotEmpty($file_field = $page->find('css', '[name="new_storage_type"][value="file_upload"]')
       ->getParent());
     $file_field->click();
     $this->assertTrue($assert_session->elementExists('css', '[name="new_storage_type"][value="file_upload"]')
       ->isSelected());
     $page->pressButton('Continue');
     $page->fillField('label', 'file_upload');
-    $page->find('xpath', '//input[@value="file"]')->click();
+    $this->assertNotEmpty($file_field = $page->find('css', '[name="group_field_options_wrapper"][value="file"]')
+      ->getParent());
+    $file_field->click();
     $page->pressButton('Continue');
+
     $this->assertTrue($this->assertSession()
       ->elementExists('css', '[name="field_storage[subform][settings][uri_scheme]"][value="public"]')
       ->isSelected());
