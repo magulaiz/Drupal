@@ -5,18 +5,18 @@
  * @see autocomplete.js
  */
 
-input.form-autocomplete {
+.js input.form-autocomplete {
   background-image: url(../../../../../misc/throbber-inactive.png);
   background-repeat: no-repeat;
   background-position: 100% center; /* LTR */
 }
-[dir="rtl"] input.form-autocomplete {
+.js[dir="rtl"] input.form-autocomplete {
   background-position: 0% center;
 }
-input.form-autocomplete.ui-autocomplete-loading {
+.js input.form-autocomplete.ui-autocomplete-loading {
   background-image: url(../../../../../misc/throbber-active.gif);
   background-position: 100% center; /* LTR */
 }
-[dir="rtl"] input.form-autocomplete.ui-autocomplete-loading {
+.js[dir="rtl"] input.form-autocomplete.ui-autocomplete-loading {
   background-position: 0% center;
 }

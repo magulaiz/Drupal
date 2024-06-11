@@ -14,7 +14,7 @@
 [dir="rtl"] .views-live-preview .contextual {
   left: auto;
 }
-.views-live-preview .contextual {
+.js .views-live-preview .contextual {
   display: inline;
 }
 .views-live-preview .contextual-links-trigger {

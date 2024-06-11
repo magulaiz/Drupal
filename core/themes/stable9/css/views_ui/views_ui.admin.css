@@ -198,12 +198,12 @@
 .js-only {
   display: none;
 }
-html.js-only {
+html.js .js-only {
   display: inherit;
 }
-html span.js-only {
+html.js span.js-only {
   display: inline;
 }
-.views-edit-view .dropbutton-wrapper {
+.js .views-edit-view .dropbutton-wrapper {
   width: auto;
 }

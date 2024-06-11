@@ -104,7 +104,7 @@
   -webkit-hyphens: auto;
   hyphens: auto;
 }
-.locale-translation-update__wrapper {
+.js .locale-translation-update__wrapper {
   height: 20px;
 }
 .expanded .locale-translation-update__wrapper {

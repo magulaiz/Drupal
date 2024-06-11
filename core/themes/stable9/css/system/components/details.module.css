@@ -5,6 +5,6 @@
  * @see collapse.js
  */
 
-details:not([open]) .details-wrapper {
+.js details:not([open]) .details-wrapper {
   display: none;
 }

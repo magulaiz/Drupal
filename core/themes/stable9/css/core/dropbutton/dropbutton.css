@@ -10,14 +10,14 @@
 .dropbutton-wrapper div {
   box-sizing: border-box;
 }
-.dropbutton-wrapper,
-.dropbutton-widget {
+.js .dropbutton-wrapper,
+.js .dropbutton-widget {
   position: relative;
   display: block;
 }
 
 @media screen and (max-width: 600px) {
-  .dropbutton-wrapper {
+  .js .dropbutton-wrapper {
     width: 100%;
   }
 }
@@ -31,50 +31,50 @@
     float: right;
   }
 }
-.form-actions .dropbutton-widget {
+.js .form-actions .dropbutton-widget {
   position: static;
 }
-td .dropbutton-widget {
+.js td .dropbutton-widget {
   position: absolute;
 }
-td .dropbutton-wrapper {
+.js td .dropbutton-wrapper {
   min-height: 2em;
 }
-td .dropbutton-multiple {
+.js td .dropbutton-multiple {
   max-width: 100%;
   margin-right: 2em; /* LTR */
   padding-right: 10em; /* LTR */
 }
-[dir="rtl"]td .dropbutton-multiple {
+[dir="rtl"].js td .dropbutton-multiple {
   margin-right: 0;
   margin-left: 2em;
   padding-right: 0;
   padding-left: 10em;
 }
-td .dropbutton-multiple .dropbutton-action a,
-td .dropbutton-multiple .dropbutton-action input,
-td .dropbutton-multiple .dropbutton-action button {
+.js td .dropbutton-multiple .dropbutton-action a,
+.js td .dropbutton-multiple .dropbutton-action input,
+.js td .dropbutton-multiple .dropbutton-action button {
   width: auto;
 }
 
 /* UL styles are over-scoped in core, so this selector needs weight parity. */
-.dropbutton-widget .dropbutton {
+.js .dropbutton-widget .dropbutton {
   overflow: hidden;
   margin: 0;
   padding: 0;
   list-style-type: none;
   list-style-image: none;
 }
-.dropbutton li,
-.dropbutton a {
+.js .dropbutton li,
+.js .dropbutton a {
   display: block;
   outline: none;
 }
 
-.dropbutton li:hover,
-.dropbutton li:focus,
-.dropbutton a:hover,
-.dropbutton a:focus {
+.js .dropbutton li:hover,
+.js .dropbutton li:focus,
+.js .dropbutton a:hover,
+.js .dropbutton a:focus {
   outline: initial;
 }
 
@@ -88,10 +88,10 @@ td .dropbutton-multiple .dropbutton-action button {
  * The arrow is created using border on a zero-width, zero-height span.
  * The arrow inherits the link color, but can be overridden with border colors.
  */
-.dropbutton-multiple .dropbutton-widget {
+.js .dropbutton-multiple .dropbutton-widget {
   padding-right: 2em; /* LTR */
 }
-[dir="rtl"] .dropbutton-multiple .dropbutton-widget {
+.js[dir="rtl"] .dropbutton-multiple .dropbutton-widget {
   padding-right: 0;
   padding-left: 2em;
 }

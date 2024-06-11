@@ -7,7 +7,7 @@
  * For anything you want to hide on page load when JS is enabled, so
  * that you can use the JS to control visibility and avoid flicker.
  */
-.js-hide {
+.js .js-hide {
   display: none;
 }
 
@@ -17,6 +17,6 @@
 .js-show {
   display: none;
 }
-.js-show {
+.js .js-show {
   display: block;
 }
