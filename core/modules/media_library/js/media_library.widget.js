@@ -52,7 +52,7 @@
       $(mediaLibraryToggle).on('click', (e) => {
         e.preventDefault();
         const $target = $(e.currentTarget);
-        e.currentTarget.textContent = $target.hasClass('active')
+        e.currentTarget.textContent = $target[0].classList.contains('active')
           ? strings.show
           : strings.hide;
         $target

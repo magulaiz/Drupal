@@ -62,7 +62,9 @@
         .children('.toolbar-box')
         .children('.toolbar-handle');
       switcher =
-        typeof switcher !== 'undefined' ? switcher : !$item.hasClass('open');
+        typeof switcher !== 'undefined'
+          ? switcher
+          : !$item[0].classList.contains('open');
       // Toggle the item open state.
       $item.toggleClass('open', switcher);
       // Twist the toggle.

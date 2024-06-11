@@ -130,7 +130,9 @@
    *   State of the settings-tray edit mode.
    */
   function isInEditMode() {
-    return $('#toolbar-bar').hasClass('js-settings-tray-edit-mode');
+    return $('#toolbar-bar')[0].classList.contains(
+      'js-settings-tray-edit-mode',
+    );
   }
 
   /**

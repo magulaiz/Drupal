@@ -40,9 +40,12 @@
       }
     };
 
-    const toggleCollapsed = ({ matches }) => {
-      if (matches) {
-        if ($tab.hasClass('is-horizontal') && !$tab.attr('data-width')) {
+    const toggleCollapsed = () => {
+      if (window.matchMedia('(min-width: 48em)').matches) {
+        if (
+          $tab[0].classList.contains('is-horizontal') &&
+          !$tab.attr('data-width')
+        ) {
           let width = 0;
 
           $target.find('.js-tabs-link').each((index, value) => {

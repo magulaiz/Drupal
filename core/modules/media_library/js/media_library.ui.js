@@ -146,7 +146,7 @@
    */
   Drupal.behaviors.MediaLibraryViewsDisplay = {
     attach(context) {
-      const $view = $(context).hasClass('.js-media-library-view')
+      const $view = context.classList.contains('js-media-library-view')
         ? $(context)
         : $('.js-media-library-view', context);
 
@@ -180,11 +180,13 @@
         let loadingAnnouncement = '';
         let displayAnnouncement = '';
         let focusSelector = '';
-        if ($link.hasClass('views-display-link-widget')) {
+        if ($link[0].classList.contains('views-display-link-widget')) {
           loadingAnnouncement = Drupal.t('Loading grid view.');
           displayAnnouncement = Drupal.t('Changed to grid view.');
           focusSelector = '.views-display-link-widget';
-        } else if ($link.hasClass('views-display-link-widget_table')) {
+        } else if (
+          $link[0].classList.contains('views-display-link-widget_table')
+        ) {
           loadingAnnouncement = Drupal.t('Loading table view.');
           displayAnnouncement = Drupal.t('Changed to table view.');
           focusSelector = '.views-display-link-widget_table';

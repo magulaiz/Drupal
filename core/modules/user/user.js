@@ -167,7 +167,7 @@
 
           // Update the success message and set the class if needed.
           if (
-            !$passwordMatchStatus.hasClass(confirmClass) ||
+            !$passwordMatchStatus[0].classList.contains(confirmClass) ||
             !$passwordMatchStatus.html() === confirmMessage
           ) {
             if (confirmTextWrapperClassesToRemove) {

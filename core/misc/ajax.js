@@ -1431,7 +1431,7 @@
      */
     changed(ajax, response, status) {
       const $element = $(response.selector);
-      if (!$element.hasClass('ajax-changed')) {
+      if (!$element[0].classList.contains('ajax-changed')) {
         $element[0].classList.add('ajax-changed');
         if (response.asterisk) {
           $element

@@ -585,7 +585,7 @@
             found = words.every(hasWord);
           }
           if (found && group !== 'all') {
-            found = option.$div.hasClass(group);
+            found = option.$div[0].classList.contains(group);
           }
 
           option.$div.toggle(found);
@@ -938,8 +938,8 @@
             const previousRow = thisRow.prev('tr');
             if (
               previousRow.length &&
-              !previousRow.hasClass('group-message') &&
-              !previousRow.hasClass('draggable')
+              !previousRow[0].classList.contains('group-message') &&
+              !previousRow[0].classList.contains('draggable')
             ) {
               // Move the dragged row down one.
               const next = thisRow.next();
@@ -1027,7 +1027,7 @@
             const $existingOperatorLabel = $firstCell.find(
               '.views-operator-label',
             );
-            if ($nextRow.hasClass('draggable')) {
+            if ($nextRow[0].classList.contains('draggable')) {
               // If an operator label was already there, replace it with the new
               // one.
               if ($existingOperatorLabel.length) {
@@ -1064,7 +1064,7 @@
         const length = rows.length;
         for (let i = 0; i < length; i++) {
           $row = $(rows[i]);
-          if ($row.hasClass('views-group-title')) {
+          if ($row[0].classList.contains('views-group-title')) {
             // This row is a title row.
             // Keep a reference to the cell containing the dropdown operator.
             $operatorCell = $row.find('td.group-operator');
@@ -1077,7 +1077,7 @@
             // the "this group is empty" row.
             $operatorCell.attr('rowspan', 2);
           } else if (
-            $row.hasClass('draggable') &&
+            $row[0].classList.contains('draggable') &&
             Drupal.elementIsVisible(rows[i])
           ) {
             // We've found a visible filter row, so we now know the group isn't

@@ -82,7 +82,7 @@
           const $localePrefix = $tr.find('.locale-translation-update__prefix');
           if ($localePrefix.length) {
             // Change screen reader text.
-            $localePrefix[0].textContent = $tr.hasClass('expanded')
+            $localePrefix[0].textContent = $tr[0].classList.contains('expanded')
               ? Drupal.t('Hide description')
               : Drupal.t('Show description');
           }
