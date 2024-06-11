@@ -697,7 +697,12 @@
       // eslint-disable-next-line jquery/no-class
       $(e.target)
         .closest('.js-form-item, .js-form-submit, .js-form-wrapper')
-        .toggleClass('form-disabled', e.value)
+        .toArray()
+        .forEach((element) => {
+          element.classList.toggle('form-readonly', e.value);
+        });
+      $(e.target)
+        .closest('.js-form-item, .js-form-submit, .js-form-wrapper')
         .find(tagsSupportDisable)
         .addBack(tagsSupportDisable)
         .prop('disabled', e.value);
