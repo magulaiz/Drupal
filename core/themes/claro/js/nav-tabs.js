@@ -13,7 +13,7 @@
 
     const openMenu = () => {
       $target[0].classList.toggle('is-open');
-      $target.find('button').attr('aria-expanded', $target.hasClass('is-open'));
+      $target.find('button').attr('aria-expanded', $target[0].classList.contains('is-open'));
     };
 
     const toggleOrder = (reset) => {
