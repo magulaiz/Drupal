@@ -11,3 +11,38 @@
 function language_update_last_removed() {
   return 8001;
 }
+
+/**
+ * Set language form display component as plain text and with label above.
+ */
+function language_update_10100() {
+  $entity_display_repository = \Drupal::service('entity_display.repository');
+  $entity_view_display = \Drupal::entityTypeManager()->getStorage('entity_view_display');
+  $entity_type_id = 'node';
+  // Get all content types.
+  $content_types = \Drupal::entityTypeManager()
+    ->getStorage('node_type')
+    ->loadMultiple();
+  // Iterate through content types.
+  foreach ($content_types as $content_type_id => $content_type) {
+    // Get content type view modes.
+    $view_modes = $entity_display_repository->getViewModeOptionsByBundle($entity_type_id, $content_type_id);
+    foreach ($view_modes as $view_mode => $view_mode_info) {
+      /** @var \Drupal\Core\Entity\Display\EntityViewDisplayInterface $view_display */
+      $view_display = $entity_view_display->load("$entity_type_id.$content_type_id.$view_mode");
+      if ($view_display) {
+        if ($langcode = $view_display->getComponent('langcode')) {
+          // Set label above as it was.
+          $langcode['label'] = 'above';
+          // Set to show it as plain text.
+          $langcode['settings'] = [
+            'link_to_entity' => FALSE,
+            'native_language' => FALSE,
+          ];
+          $view_display->setComponent('langcode', $langcode);
+          $view_display->save();
+        }
+      }
+    }
+  }
+}

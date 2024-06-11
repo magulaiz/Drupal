@@ -119,7 +119,7 @@ class NodeTypeInitialLanguageTest extends NodeTestBase {
 
     // Loads node page and check if Language field is hidden by default.
     $this->drupalGet('node/' . $node->id());
-    $this->assertSession()->elementNotExists('xpath', '//div[@id="field-language-display"]/div');
+    $this->assertSession()->pageTextNotContains('English');
 
     // Configures Language field formatter and check if it is saved.
     $edit = [
@@ -133,7 +133,17 @@ class NodeTypeInitialLanguageTest extends NodeTestBase {
 
     // Loads node page and check if Language field is shown.
     $this->drupalGet('node/' . $node->id());
-    $this->assertSession()->elementExists('xpath', '//div[@id="field-language-display"]/div');
+    $this->assertSession()->pageTextContains('English');
+
+    // Configure the Language field formatter to be displayed as a link.
+    $this->drupalGet('admin/structure/types/manage/article/display');
+    $this->submitForm([], 'langcode_settings_edit');
+    $edit = ['fields[langcode][settings_edit_form][settings][link_to_entity]' => TRUE];
+    $this->submitForm($edit, 'langcode_plugin_settings_update');
+    $this->submitForm([], t('Save'));
+    // Loads node page and check if Language field is shown as a link.
+    $this->drupalGet('node/' . $node->id());
+    $this->assertSession()->linkExists('English', 0);
   }
 
 }
