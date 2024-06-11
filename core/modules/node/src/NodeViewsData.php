@@ -38,7 +38,7 @@ class NodeViewsData extends EntityViewsData {
 
     $data['node_field_data']['status_extra'] = [
       'title' => $this->t('Published status or admin user'),
-      'help' => $this->t('Filters out unpublished content if the current user cannot view it.'),
+      'help' => $this->t('Filters out unpublished content if the current user cannot view it. <strong>Does nothing when node access is in use.</strong>'),
       'filter' => [
         'field' => 'status',
         'id' => 'node_status',

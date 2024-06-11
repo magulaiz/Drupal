@@ -23,8 +23,11 @@ class Status extends FilterPluginBase {
   }
 
   public function query() {
+    if (\Drupal::moduleHandler()->hasImplementations('node_grants')) {
+      return;
+    }
     $table = $this->ensureMyTable();
-    $snippet = "$table.status = 1 OR ($table.uid = ***CURRENT_USER*** AND ***CURRENT_USER*** <> 0 AND ***VIEW_OWN_UNPUBLISHED_NODES*** = 1) OR ***BYPASS_NODE_ACCESS*** = 1 OR $table.nid IN (***UNPUBLISHED_NIDS_ACCESS_GRANTED_BY_NODE_ACCESS***)";
+    $snippet = "$table.status = 1 OR ($table.uid = ***CURRENT_USER*** AND ***CURRENT_USER*** <> 0 AND ***VIEW_OWN_UNPUBLISHED_NODES*** = 1) OR ***BYPASS_NODE_ACCESS*** = 1";
     if ($this->moduleHandler->moduleExists('content_moderation')) {
       $snippet .= ' OR ***VIEW_ANY_UNPUBLISHED_NODES*** = 1';
     }
