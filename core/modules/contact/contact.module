@@ -260,7 +260,18 @@ function contact_rest_resource_alter(&$definitions) {
  * Implements hook_form_FORM_ID_alter().
  */
 function contact_form_field_config_edit_form_alter(&$form, FormStateInterface $form_state, $form_id) {
-  if (empty($form['#entity']) || !$form['#entity'] instanceof MessageInterface || !isset($form['#field_storage']) || $form['#field_storage']->getType() !== 'file' || !$form['#field_storage']->isNew()) {
+  /**
+   * @var \Drupal\field_ui\Form\FieldConfigEditForm $form_object
+   */
+  $form_object = $form_state->getFormObject();
+  $field_type = $form_object->getEntity()->get('field_type');
+
+  if (
+    empty($form['#entity']) ||
+    !$form['#entity'] instanceof MessageInterface ||
+    $field_type !== 'file' ||
+    !$form_object->getEntity()->isNew()
+  ) {
     // Only alter the form for Message entities where a file field is added.
     return;
   }
