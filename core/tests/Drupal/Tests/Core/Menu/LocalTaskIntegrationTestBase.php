@@ -55,7 +55,7 @@ abstract class LocalTaskIntegrationTestBase extends UnitTestCase {
     $metadataBubblingUrlGenerator = $this->getMockBuilder('Drupal\Core\Render\MetadataBubblingUrlGenerator')
       ->disableOriginalConstructor()
       ->getMock();
-      $metadataBubblingUrlGenerator->expects($this->any())
+    $metadataBubblingUrlGenerator->expects($this->any())
       ->method('generateFromRoute')
       ->willReturnCallback(function ($name, $parameters = []) {
         return '/';
