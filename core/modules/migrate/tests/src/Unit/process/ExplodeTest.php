@@ -134,6 +134,11 @@ class ExplodeTest extends MigrateProcessTestCase {
         'delimiter' => FALSE,
         'expected_exception' => 'delimiter is invalid',
       ],
+      'true' => [
+        'delimiter' => TRUE,
+        'expected_exception' => '',
+        'expected' => ['Migrate ', '0', ''],
+      ],
       'null' => [
         'delimiter' => NULL,
         'expected_exception' => 'delimiter is empty',
