@@ -94,11 +94,24 @@ class Explode extends ProcessPluginBase {
   /**
    * {@inheritdoc}
    */
-  public function transform($value, MigrateExecutableInterface $migrate_executable, Row $row, $destination_property) {
-    if (!isset($this->configuration['delimiter']) || $this->configuration['delimiter'] === '') {
+  public function __construct(array $configuration, $plugin_id, $plugin_definition) {
+    if (!isset($configuration['delimiter'])) {
       throw new MigrateException('delimiter is empty');
     }
+    try {
+      // Validate that the delimiter is legal by exploding a test string.
+      explode($configuration['delimiter'], '');
+    }
+    catch (\Throwable $t) {
+      throw new MigrateException('delimiter is invalid');
+    }
+    parent::__construct($configuration, $plugin_id, $plugin_definition);
+  }
 
+  /**
+   * {@inheritdoc}
+   */
+  public function transform($value, MigrateExecutableInterface $migrate_executable, Row $row, $destination_property) {
     $strict = array_key_exists('strict', $this->configuration) ? $this->configuration['strict'] : TRUE;
     if ($strict && !is_string($value)) {
       throw new MigrateException(sprintf('%s is not a string', var_export($value, TRUE)));
