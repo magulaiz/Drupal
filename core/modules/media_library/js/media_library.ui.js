@@ -104,14 +104,13 @@
           // Set the selected tab.
           $menu.find('.active-tab').remove();
           $menu.find('a').removeClass('active');
-          $(e.currentTarget)
-            .addClass('active')
-            .html(
-              Drupal.t(
-                '<span class="visually-hidden">Show </span>@title<span class="visually-hidden"> media</span><span class="active-tab visually-hidden"> (selected)</span>',
-                { '@title': $(e.currentTarget).data('title') },
-              ),
-            );
+          e.currentTarget.classList.add('active');
+          $(e.currentTarget).html(
+            Drupal.t(
+              '<span class="visually-hidden">Show </span>@title<span class="visually-hidden"> media</span><span class="active-tab visually-hidden"> (selected)</span>',
+              { '@title': $(e.currentTarget).data('title') },
+            ),
+          );
 
           // Announce the updated content.
           Drupal.announce(
@@ -263,7 +262,10 @@
         $items
           .prop('disabled', true)
           .closest('.js-media-library-item')
-          .addClass('media-library-item--disabled');
+          .toArray()
+          .forEach((element) => {
+            element.classList.add('media-library-item--disabled');
+          });
       }
 
       /**

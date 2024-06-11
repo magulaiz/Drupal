@@ -68,7 +68,7 @@
       // class must be temporarily removed to the calculate the height.
       $trigger.removeClass('visually-hidden');
       height = $nestedContextual.height();
-      $trigger.addClass('visually-hidden');
+      $trigger[0].classList.add('visually-hidden');
 
       // Adjust nested contextual link's position.
       $nestedContextual[0].style.top =
@@ -88,15 +88,14 @@
   function initContextual($contextual, html) {
     const $region = $contextual.closest('.contextual-region');
     const contextual = Drupal.contextual;
-
     $contextual
       // Update the placeholder to contain its rendered contextual links.
       .html(html)
-      // Use the placeholder as a wrapper with a specific class to provide
-      // positioning and behavior attachment context.
-      .addClass('contextual')
       // Ensure a trigger element exists before the actual contextual links.
       .prepend(Drupal.theme('contextualTrigger'));
+    // Use the placeholder as a wrapper with a specific class to provide
+    // positioning and behavior attachment context.
+    $contextual[0].classList.add('contextual');
 
     // Set the destination parameter on each of the contextual links.
     const destination = `destination=${Drupal.encodePath(

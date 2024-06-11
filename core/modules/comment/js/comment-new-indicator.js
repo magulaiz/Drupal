@@ -33,9 +33,8 @@
         placeholder.textContent = newCommentString;
         $placeholder
           .removeClass('hidden')
-          .closest('.js-comment')
-          // Add 'new' class to the comment, so it can be styled.
-          .addClass('new');
+          .closest('.js-comment')[0] // Add 'new' class to the comment, so it can be styled.
+          .classList.add('new');
 
         // Insert "new" anchor just before the "comment-<cid>" anchor if
         // this is the first new comment in the DOM.

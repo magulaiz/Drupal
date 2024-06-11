@@ -24,7 +24,8 @@
           const $marker = $(
             Drupal.theme('localeTranslateChangedWarning'),
           ).hide();
-          $(this).addClass('changed').before($marker);
+          $(this).before($marker);
+          this.classList.add('changed');
           $marker.fadeIn('slow');
         });
         // Highlight changed row.
@@ -32,8 +33,7 @@
           const $row = $(this);
           const rowToMark = once('localemark', $row);
           const marker = Drupal.theme('localeTranslateChangedMarker');
-
-          $row.addClass('changed');
+          $row[0].classList.add('changed');
           // Add an asterisk only once if row changed.
           if (rowToMark.length) {
             $(rowToMark).find('td:first-child .js-form-item').append(marker);

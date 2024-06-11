@@ -240,9 +240,9 @@
         .find('[data-layout-builder-target-highlight-id]')
         .attr('data-layout-builder-target-highlight-id');
       if (id) {
-        $(`[data-layout-builder-highlight-id="${id}"]`).addClass(
-          'is-layout-builder-highlighted',
-        );
+        document
+          .querySelector(`[data-layout-builder-highlight-id="${id}"]`)
+          .classList.add('is-layout-builder-highlighted');
       }
 
       // Remove wrapper class added by move block form.
@@ -260,7 +260,9 @@
         .find('[data-add-layout-builder-wrapper]')
         .attr('data-add-layout-builder-wrapper');
       if (layoutBuilderWrapperValue) {
-        $('#layout-builder').addClass(layoutBuilderWrapperValue);
+        document
+          .querySelector('#layout-builder')
+          .classList.add(layoutBuilderWrapperValue);
       }
     }
   });
@@ -360,7 +362,9 @@
        *   possible to remove all but the first line of this function.
        */
       const disableContentPreview = () => {
-        $layoutBuilder.addClass('layout-builder--content-preview-disabled');
+        $layoutBuilder[0].classList.add(
+          'layout-builder--content-preview-disabled',
+        );
 
         /**
          * Iterate over all Layout Builder blocks to hide their content and add

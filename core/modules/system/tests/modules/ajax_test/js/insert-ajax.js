@@ -35,7 +35,7 @@
         myAjaxObject.execute();
       });
 
-      $(context).addClass('processed');
+      context.classList.add('processed');
     },
   };
 })(jQuery, window, Drupal);

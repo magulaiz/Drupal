@@ -30,7 +30,10 @@
               '.js-form-item-field-name label,' +
               '.js-form-item-existing-storage-label label',
           )
-          .addClass('js-form-required form-required');
+          .toArray()
+          .forEach((element) => {
+            element.classList.add('js-form-required form-required');
+          });
       }
     },
   };
@@ -242,11 +245,13 @@
             $this.next('tr').length === 0 ||
             !$this.next('tr')[0].matches('.draggable')
           ) {
-            $this.removeClass('region-populated').addClass('region-empty');
+            $this.removeClass('region-populated');
+            $this[0].classList.add('region-empty');
           }
           // This region has become populated.
           else if (this.matches('.region-empty')) {
-            $this.removeClass('region-empty').addClass('region-populated');
+            $this.removeClass('region-empty');
+            $this[0].classList.add('region-populated');
           }
         });
     },

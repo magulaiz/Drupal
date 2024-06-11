@@ -248,6 +248,19 @@
       }
     }
   });
+  $(window).on({
+    'dialog:beforecreate': (event, dialog, $element, settings) => {
+      if ($element[0].id === 'drupal-off-canvas') {
+        $('body .settings-tray-active-editable').removeClass(
+          'settings-tray-active-editable',
+        );
+        const $activeElement = $(`#${settings.settingsTrayActiveEditableId}`);
+        if ($activeElement.length) {
+          $activeElement[0].classList.add('settings-tray-active-editable');
+        }
+      }
+    },
+  });
   window.addEventListener('dialog:beforeclose', (e) => {
     if (e.target.id === 'drupal-off-canvas') {
       $('body .settings-tray-active-editable').removeClass(
