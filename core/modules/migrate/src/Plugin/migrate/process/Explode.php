@@ -95,7 +95,7 @@ class Explode extends ProcessPluginBase {
    * {@inheritdoc}
    */
   public function transform($value, MigrateExecutableInterface $migrate_executable, Row $row, $destination_property) {
-    if (!isset($this->configuration['delimiter']) || $this->configuration['delimiter'] == '') {
+    if (!isset($this->configuration['delimiter']) || $this->configuration['delimiter'] === '') {
       throw new MigrateException('delimiter is empty');
     }
 
