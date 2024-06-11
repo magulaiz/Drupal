@@ -52,15 +52,15 @@ abstract class LocalTaskIntegrationTestBase extends UnitTestCase {
     $container->set('config.factory', $config_factory);
     $container->setParameter('app.root', $this->root);
 
-    $MetadataBubblingUrlGenerator = $this->getMockBuilder('Drupal\Core\Render\MetadataBubblingUrlGenerator')
+    $metadataBubblingUrlGenerator = $this->getMockBuilder('Drupal\Core\Render\MetadataBubblingUrlGenerator')
       ->disableOriginalConstructor()
       ->getMock();
-    $MetadataBubblingUrlGenerator->expects($this->any())
+      $metadataBubblingUrlGenerator->expects($this->any())
       ->method('generateFromRoute')
       ->willReturnCallback(function ($name, $parameters = []) {
         return '/';
       });
-    $container->set('url_generator', $MetadataBubblingUrlGenerator);
+    $container->set('url_generator', $metadataBubblingUrlGenerator);
 
     \Drupal::setContainer($container);
     $this->container = $container;
