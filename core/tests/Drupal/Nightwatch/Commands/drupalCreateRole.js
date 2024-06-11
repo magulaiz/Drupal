@@ -37,6 +37,7 @@ exports.command = function drupalCreateRole(
     this.submitForm('#user-role-form');
 
     this.drupalRelativeURL('/admin/people/permissions');
+
     await Promise.all(
       permissions.map(async (permission) =>
         this.click(`input[name="${machineName}[${permission}]"]`),
