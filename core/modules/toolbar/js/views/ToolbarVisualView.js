@@ -111,7 +111,7 @@
         this.updateBarAttributes();
 
         $('[data-toolbar-anti-flicker-loading]').remove();
-        $('html')[0].classList.remove([
+        $('html')[0].classList.remove(
           'toolbar-loading',
           'toolbar-horizontal',
           'toolbar-vertical',
@@ -119,7 +119,8 @@
           'toolbar-fixed',
           'toolbar-oriented',
           'toolbar-anti-flicker',
-        ]);
+        );
+
         $('body')[0].classList.remove('toolbar-loading');
 
         // Load the subtrees if the orientation of the toolbar is changed to

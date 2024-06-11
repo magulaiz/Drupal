@@ -66,7 +66,7 @@
       const $trigger = $nestedContextual.find('.trigger');
       // Elements with the .visually-hidden class have no dimensions, so this
       // class must be temporarily removed to the calculate the height.
-      $trigger.removeClass('visually-hidden');
+      $trigger[0].classList.remove('visually-hidden');
       height = $nestedContextual.height();
       $trigger[0].classList.add('visually-hidden');
 

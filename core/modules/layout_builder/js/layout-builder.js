@@ -223,7 +223,7 @@
     const $element = $(e.target);
     if (Drupal.offCanvas.isOffCanvas($element)) {
       // Start by removing any existing highlighted elements.
-      $('.is-layout-builder-highlighted').removeClass(
+      $('.is-layout-builder-highlighted')[0]?.classList.remove(
         'is-layout-builder-highlighted',
       );
 
@@ -246,7 +246,9 @@
       }
 
       // Remove wrapper class added by move block form.
-      $('#layout-builder').removeClass('layout-builder--move-blocks-active');
+      $('#layout-builder')[0]?.classList.remove(
+        'layout-builder--move-blocks-active',
+      );
 
       /**
        * If dialog has a data-add-layout-builder-wrapper attribute, get the
@@ -316,12 +318,14 @@
     const $element = $(e.target);
     if (Drupal.offCanvas.isOffCanvas($element)) {
       // Remove the highlight from all elements.
-      $('.is-layout-builder-highlighted').removeClass(
+      $('.is-layout-builder-highlighted')[0]?.classList.remove(
         'is-layout-builder-highlighted',
       );
 
       // Remove wrapper class added by move block form.
-      $('#layout-builder').removeClass('layout-builder--move-blocks-active');
+      $('#layout-builder')[0]?.classList.remove(
+        'layout-builder--move-blocks-active',
+      );
     }
   });
 
@@ -401,7 +405,9 @@
        *   possible to remove all but the first line of this function.
        */
       const enableContentPreview = () => {
-        $layoutBuilder.removeClass('layout-builder--content-preview-disabled');
+        $layoutBuilder[0]?.classList.remove(
+          'layout-builder--content-preview-disabled',
+        );
 
         // Remove all placeholder labels.
         $('.js-layout-builder-content-preview-placeholder-label').remove();

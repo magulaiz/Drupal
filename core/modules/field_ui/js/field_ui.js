@@ -245,12 +245,12 @@
             $this.next('tr').length === 0 ||
             !$this.next('tr')[0].matches('.draggable')
           ) {
-            $this.removeClass('region-populated');
+            this[0].classList.remove('region-populated');
             $this[0].classList.add('region-empty');
           }
           // This region has become populated.
           else if (this.matches('.region-empty')) {
-            $this.removeClass('region-empty');
+            this[0].classList.remove('region-empty');
             $this[0].classList.add('region-populated');
           }
         });

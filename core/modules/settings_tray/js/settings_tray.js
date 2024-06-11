@@ -251,12 +251,12 @@
   $(window).on({
     'dialog:beforecreate': (event, dialog, $element, settings) => {
       if ($element[0].id === 'drupal-off-canvas') {
-        $('body .settings-tray-active-editable').removeClass(
+        $('body .settings-tray-active-editable')[0]?.classList.remove(
           'settings-tray-active-editable',
         );
         const $activeElement = $(`#${settings.settingsTrayActiveEditableId}`);
         if ($activeElement.length) {
-          $activeElement[0].classList.add('settings-tray-active-editable');
+          $activeElement[0]?.classList.add('settings-tray-active-editable');
         }
       }
     },

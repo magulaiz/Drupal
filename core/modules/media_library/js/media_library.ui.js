@@ -103,7 +103,12 @@
 
           // Set the selected tab.
           $menu.find('.active-tab').remove();
-          $menu.find('a').removeClass('active');
+          $menu
+            .find('a')
+            .toArray()
+            .forEach((element) => {
+              element.classList.remove('active');
+            });
           e.currentTarget.classList.add('active');
           $(e.currentTarget).html(
             Drupal.t(
@@ -278,7 +283,10 @@
         $items
           .prop('disabled', false)
           .closest('.js-media-library-item')
-          .removeClass('media-library-item--disabled');
+          .toArray()
+          .forEach((element) => {
+            element.classList.remove('media-library-item--disabled');
+          });
       }
 
       /**

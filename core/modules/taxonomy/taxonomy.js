@@ -28,13 +28,13 @@
       tableDrag.row.prototype.onSwap = function (swappedRow) {
         $table
           .find('tr.taxonomy-term-preview')[0]
-          .classList.remove('taxonomy-term-preview');
+          ?.classList.remove('taxonomy-term-preview');
         $table
           .find('tr.taxonomy-term-divider-top')[0]
-          .classList.remove('taxonomy-term-divider-top');
+          ?.classList.remove('taxonomy-term-divider-top');
         $table
           .find('tr.taxonomy-term-divider-bottom')[0]
-          .classList.remove('taxonomy-term-divider-bottom');
+          ?.classList.remove('taxonomy-term-divider-bottom');
 
         const tableBody = $table[0].tBodies[0];
         if (backStep) {
