@@ -24,7 +24,7 @@
       $('[data-drupal-selector="edit-query-options-disable-sql-rewrite"]').on(
         'click',
         () => {
-          $('.sql-rewrite-warning').toggleClass('js-hide');
+          $('.sql-rewrite-warning')[0].classList.toggle('js-hide');
         },
       );
     },
@@ -386,15 +386,15 @@
         )}</a><ul class="action-list" style="display:none;"></ul></li>`,
       );
       const $displayButtons = $menu.nextAll('input.add-display').detach();
-      $displayButtons
-        .appendTo($addDisplayDropdown.find('.action-list'))
-        .wrap('<li>')
-        .parent()
-        .eq(0)
-        .addClass('first')
-        .end()
-        .eq(-1)
-        .addClass('last');
+      const actionList = $addDisplayDropdown[0].querySelector('.action-list');
+      $displayButtons.toArray().forEach((button) => {
+        const li = document.createElement('li');
+        actionList.appendChild(li);
+        li.appendChild(button);
+      });
+      actionList.firstChild.classList.add('first');
+      actionList.lastChild.classList.add('last');
+
       $displayButtons.each(function () {
         const $this = $(this);
         this.value = $this.attr('data-drupal-dropdown-label');
@@ -436,7 +436,7 @@
    *   where to put it.
    */
   Drupal.behaviors.viewsUiRenderAddViewButton.toggleMenu = function ($trigger) {
-    $trigger.parent().toggleClass('open');
+    $trigger.parent()[0].classList.toggle('open');
     $trigger.next().slideToggle('fast');
   };
 

@@ -263,7 +263,7 @@
         }
         // Toggle between a basic vertical view and a more sophisticated
         // horizontal and vertical display of the toolbar bar and trays.
-        this.$el.toggleClass('toolbar-oriented', isOriented);
+        this.$el[0].classList.toggle('toolbar-oriented', isOriented);
       },
 
       /**
@@ -279,9 +279,14 @@
 
         // Toggle toolbar's parent classes before other toolbar classes to avoid
         // potential flicker and re-rendering.
-        $('body')
-          .toggleClass('toolbar-vertical', orientation === 'vertical')
-          .toggleClass('toolbar-horizontal', orientation === 'horizontal');
+        document.body.classList.toggle(
+          'toolbar-vertical',
+          orientation === 'vertical',
+        );
+        document.body.classList.toggle(
+          'toolbar-horizontal',
+          orientation === 'horizontal',
+        );
 
         const removeClass =
           antiOrientation === 'horizontal'

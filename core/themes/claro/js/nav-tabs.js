@@ -12,8 +12,7 @@
     const $active = $target.find('.js-active-tab');
 
     const openMenu = () => {
-      $target.toggleClass('is-open');
-      $target.find('button').attr('aria-expanded', $target.hasClass('is-open'));
+      $target[0].classList.toggle('is-open');
     };
 
     const toggleOrder = (reset) => {
@@ -57,8 +56,8 @@
         // Collapse the tabs if the combined width of the tabs is greater than
         // the width of the parent container.
         const isHorizontal = $tab.attr('data-width') <= $tab.outerWidth();
-        $tab.toggleClass('is-horizontal', isHorizontal);
-        $tab.find('button').attr('aria-expanded', null);
+
+        $tab[0].classList.toggle('is-horizontal', isHorizontal);
         toggleOrder(isHorizontal);
       } else {
         toggleOrder(false);
