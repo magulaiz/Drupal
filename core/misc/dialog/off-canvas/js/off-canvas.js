@@ -79,7 +79,7 @@
       // Clean up previous dialog event handlers.
       Drupal.offCanvas.removeOffCanvasEvents($element);
 
-      $('body')[0].classList.add('js-off-canvas-dialog-open');
+      document.body.classList.add('js-off-canvas-dialog-open');
       // @see http://api.jqueryui.com/position/
       settings.position = {
         my: 'left top',
@@ -104,7 +104,7 @@
      * @return {undefined}
      */
     beforeClose({ $element }) {
-      $('body')[0].classList.remove('js-off-canvas-dialog-open');
+      document.body.classList.remove('js-off-canvas-dialog-open');
       // Remove all *.off-canvas events
       Drupal.offCanvas.removeOffCanvasEvents($element);
       Drupal.offCanvas.resetPadding();

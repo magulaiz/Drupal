@@ -778,7 +778,7 @@
     item.classList.add('drag');
 
     // Set the document to use the move cursor during drag.
-    $('body')[0].classList.add(this.dragOrientation);
+    document.body.classList.add(this.dragOrientation);
     if (self.oldRowElement) {
       $(self.oldRowElement)[0].classList.remove('drag-previous');
     }
@@ -911,7 +911,7 @@
     // Functionality specific only to pointerup events.
     if (self.dragObject !== null) {
       self.dragObject = null;
-      $('body')[0].classList.remove(self.dragOrientation);
+      document.body.classList.remove(self.dragOrientation);
       clearInterval(self.scrollInterval);
     }
   };
