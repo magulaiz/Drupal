@@ -3,11 +3,12 @@
 namespace Drupal\Core\Extension;
 
 use Drupal\Component\Version\Constraint;
+use Drupal\Core\Extension\Dependency\DependencyInterface;
 
 /**
  * A value object representing dependency information.
  */
-class Dependency {
+class Dependency implements DependencyInterface {
 
   /**
    * The name of the dependency.
@@ -54,10 +55,7 @@ class Dependency {
   }
 
   /**
-   * Gets the dependency's name.
-   *
-   * @return string
-   *   The dependency's name.
+   * {@inheritdoc}
    */
   public function getName() {
     return $this->name;
@@ -97,13 +95,7 @@ class Dependency {
   }
 
   /**
-   * Determines if the provided version is compatible with this dependency.
-   *
-   * @param string $version
-   *   The version to check, for example '4.2'.
-   *
-   * @return bool
-   *   TRUE if compatible with the provided version, FALSE if not.
+   * {@inheritdoc}
    */
   public function isCompatible($version) {
     return $this->getConstraint()->isCompatible($version);

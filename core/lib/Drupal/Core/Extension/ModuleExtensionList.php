@@ -208,8 +208,20 @@ class ModuleExtensionList extends ExtensionList {
    */
   protected function ensureRequiredDependencies(Extension $module, array $modules = []) {
     if (!empty($module->info['required'])) {
-      foreach ($module->info['dependencies'] as $dependency) {
-        $dependency_name = Dependency::createFromString($dependency)->getName();
+      if (!empty($module->info[InfoParserDynamic::COMPOSER_DEPENDENCIES])) {
+        // Composer-based dependencies.
+        $dependencies = array_keys($module->info[InfoParserDynamic::COMPOSER_DEPENDENCIES]);
+      }
+      else {
+        // Legacy .info.yml files.
+        $dependencies = array_map(function ($dependency) {
+          return Dependency::createFromString($dependency)->getName();
+        }, $module->info['dependencies']);
+      }
+      foreach ($dependencies as $dependency_name) {
+        if ($dependency_name === 'core') {
+          continue;
+        }
         if (!isset($modules[$dependency_name]->info['required'])) {
           $modules[$dependency_name]->info['required'] = TRUE;
           $modules[$dependency_name]->info['explanation'] = $this->t('Dependency of required module @module', ['@module' => $module->info['name']]);

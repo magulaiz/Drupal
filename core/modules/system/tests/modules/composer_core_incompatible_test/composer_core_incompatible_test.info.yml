@@ -1,0 +1,5 @@
+name: 'System core incompatible composer.json test'
+type: module
+description: 'Support module for testing core incompatible using composer.json.'
+package: Testing
+version: 1.0.0
