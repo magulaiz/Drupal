@@ -195,7 +195,7 @@
     text-decoration: none;
   }
 
-  html.js .system-status-report__status-title::-webkit-details-marker {
+  html.system-status-report__status-title::-webkit-details-marker {
     display: none;
   }
   .system-status-report__entry__value {

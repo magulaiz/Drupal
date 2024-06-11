@@ -79,7 +79,7 @@
   display: none;
 }
 
-html.js {
+html {
   & .js-only {
     display: inherit;
   }

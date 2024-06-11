@@ -412,7 +412,7 @@ td .claro-details {
     margin: 0;
   }
 
-  .js .claro-details__wrapper--vertical-tabs-item {
+  .claro-details__wrapper--vertical-tabs-item {
     margin: 0;
     border-top: 0;
     background-color: transparent;

@@ -55,7 +55,7 @@
   flex: 1 1 auto;
 }
 
-.js .dropbutton-wrapper.open .dropbutton-widget {
+.dropbutton-wrapper.open .dropbutton-widget {
   z-index: var(--dropbutton-widget-z-index);
 }
 

@@ -64,7 +64,7 @@
  * Only apply transition styles when JS is loaded. This
  * works around https://bugs.chromium.org/p/chromium/issues/detail?id=332189
  */
-html.js .header-nav {
+html.header-nav {
   transition:
     visibility 0.2s,
     transform 0.2s;

@@ -278,17 +278,17 @@
   border-bottom-left-radius: var(--details-accordion-border-size-radius);
 }
 
-.js .vertical-tabs .vertical-tabs__item {
+.vertical-tabs .vertical-tabs__item {
   overflow: hidden;
   margin: 0;
   border: 0;
 }
 
-.js .vertical-tabs .vertical-tabs__item.first,
-.js .vertical-tabs .vertical-tabs__item.last {
+.vertical-tabs .vertical-tabs__item.first,
+.vertical-tabs .vertical-tabs__item.last {
   border-radius: 0;
 }
 
-.js .vertical-tabs .vertical-tabs__item > summary {
+.vertical-tabs .vertical-tabs__item > summary {
   display: none;
 }
