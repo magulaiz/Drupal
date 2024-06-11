@@ -301,18 +301,17 @@ JS;
    * Tests ajax focus handling.
    */
   public function testAjaxFocus() {
-    $this->markTestSkipped("Skipped due to frequent random test failures. See https://www.drupal.org/project/drupal/issues/3396536");
     $this->drupalGet('/ajax_forms_test_get_form');
 
     $this->assertNotNull($select = $this->assertSession()->elementExists('css', '#edit-select'));
     $select->setValue('green');
-    $this->assertSession()->assertWaitOnAjaxRequest();
+    $this->assertSession()->assertExpectedAjaxRequest(1);
     $has_focus_id = $this->getSession()->evaluateScript('document.activeElement.id');
     $this->assertEquals('edit-select', $has_focus_id);
 
     $this->assertNotNull($checkbox = $this->assertSession()->elementExists('css', '#edit-checkbox'));
     $checkbox->check();
-    $this->assertSession()->assertWaitOnAjaxRequest();
+    $this->assertSession()->assertExpectedAjaxRequest(2);
     $has_focus_id = $this->getSession()->evaluateScript('document.activeElement.id');
     $this->assertEquals('edit-checkbox', $has_focus_id);
 
@@ -323,7 +322,7 @@ JS;
     // Test textfield with 'blur' event listener.
     $textfield1->setValue('Kittens say purr');
     $textfield2->focus();
-    $this->assertSession()->assertWaitOnAjaxRequest();
+    $this->assertSession()->assertExpectedAjaxRequest(3);
     $has_focus_id = $this->getSession()->evaluateScript('document.activeElement.id');
     $this->assertEquals('edit-textfield-2', $has_focus_id);
 
@@ -331,7 +330,11 @@ JS;
     // FALSE.
     $textfield2->setValue('Llamas say hi');
     $textfield3->focus();
-    $this->assertSession()->assertWaitOnAjaxRequest();
+    $this->assertSession()->assertExpectedAjaxRequest(4);
+    // refocus-blur relies on Drupal.Ajax.prototype.success which runs after
+    // a successful AJAX request. So waiting for the AJAX request to complete is
+    // insufficient, give it an extra second.
+    sleep(1);
     $has_focus_id = $this->getSession()->evaluateScript('document.activeElement.id');
     $this->assertEquals('edit-textfield-2', $has_focus_id);
 
@@ -339,7 +342,7 @@ JS;
     $textfield3->focus();
     $textfield3->setValue('Wasps buzz');
     $textfield3->blur();
-    $this->assertSession()->assertWaitOnAjaxRequest();
+    $this->assertSession()->assertExpectedAjaxRequest(5);
     $has_focus_id = $this->getSession()->evaluateScript('document.activeElement.id');
     $this->assertEquals('edit-textfield-3', $has_focus_id);
   }
