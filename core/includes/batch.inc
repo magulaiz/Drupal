@@ -430,10 +430,10 @@ function _batch_next_set() {
       $callable_resolver = \Drupal::service('callable_resolver');
       // Callable method in the ::method notation.
       if (str_contains($current_set['form_submit'], '::')) {
-        [$class_name, $method] = explode('::', $current_set['form_submit'], 2);
+        [$class_name, $method_name] = explode('::', $current_set['form_submit'], 2);
       }
       // Check if classname not exist, then get classname.
-      if (empty($class_name)) {
+      if (empty($class_name) && !empty($method_name)) {
         $form_obj = $batch['form_state']->getFormObject();
         $callable = $callable_resolver->getCallableFromDefinition($form_obj::class . $current_set['form_submit']);
       }
