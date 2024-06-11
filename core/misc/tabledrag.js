@@ -699,7 +699,7 @@
       if (self.rowObject && self.rowObject.changed === true) {
         item.classList.add('drag');
         if (self.oldRowElement) {
-          $(self.oldRowElement)[0].classList.remove('drag-previous');
+          self.oldRowElement.classList.remove('drag-previous');
         }
         self.oldRowElement = item;
         if (self.striping === true) {
@@ -780,7 +780,7 @@
     // Set the document to use the move cursor during drag.
     document.body.classList.add(this.dragOrientation);
     if (self.oldRowElement) {
-      $(self.oldRowElement)[0].classList.remove('drag-previous');
+      self.oldRowElement.classList.remove('drag-previous');
     }
 
     // Set the initial y coordinate so the direction can be calculated in
@@ -899,7 +899,7 @@
         self.rowObject.removeIndentClasses();
       }
       if (self.oldRowElement) {
-        $(self.oldRowElement)[0].classList.remove('drag-previous');
+        self.oldRowElement.classList.remove('drag-previous');
       }
       $droppedRow[0].classList.remove('drag');
       $droppedRow[0].classList.add('drag-previous');
