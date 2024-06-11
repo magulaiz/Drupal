@@ -260,7 +260,7 @@ class LocalTaskManager extends DefaultPluginManager implements LocalTaskManagerI
           if ($plugin_uri == $current_uri) {
             $plugin->setActive();
             $plugin_definition = $plugin->getPluginDefinition();
-            if ($plugin_definition['parent_id'] != NULL) {
+            if (isset($plugin_definition['parent_id']) && $plugin_definition['parent_id'] != NULL) {
               $this->instances[$route_name][0][$plugin_definition['parent_id']]->setActive();
             }
           }

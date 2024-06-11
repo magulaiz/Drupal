@@ -10,6 +10,7 @@ use Drupal\Tests\UnitTestCase;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\InputBag;
+use Drupal\Core\Menu\LocalTaskInterface;
 
 /**
  * Defines a base unit test for testing existence of local tasks.
@@ -50,6 +51,17 @@ abstract class LocalTaskIntegrationTestBase extends UnitTestCase {
     $config_factory = $this->getConfigFactoryStub([]);
     $container->set('config.factory', $config_factory);
     $container->setParameter('app.root', $this->root);
+
+    $MetadataBubblingUrlGenerator = $this->getMockBuilder('Drupal\Core\Render\MetadataBubblingUrlGenerator')
+      ->disableOriginalConstructor()
+      ->getMock();
+    $MetadataBubblingUrlGenerator->expects($this->any())
+      ->method('generateFromRoute')
+      ->willReturnCallback(function ($name, $parameters = []) {
+        return '/';
+      });
+    $container->set('url_generator', $MetadataBubblingUrlGenerator);
+
     \Drupal::setContainer($container);
     $this->container = $container;
   }
@@ -110,16 +122,22 @@ abstract class LocalTaskIntegrationTestBase extends UnitTestCase {
     $method = new \ReflectionMethod('Drupal\Core\Menu\LocalTaskManager', 'alterInfo');
     $method->invoke($manager, 'local_tasks');
 
-    $plugin_stub = $this->createMock('Drupal\Core\Menu\LocalTaskInterface');
+    $plugin_stub = $this->createMock(LocalTaskInterface::class);
     $plugin_stub->expects($this->any())
       ->method('getRouteParameters')
-      ->willReturnCallback(function () {
+      ->willReturn(function () {
         return [];
       });
+
+    $plugin_stub->expects($this->any())
+      ->method('getPluginDefinition')
+      ->willReturn([]);
+
     $factory = $this->createMock('Drupal\Component\Plugin\Factory\FactoryInterface');
     $factory->expects($this->any())
       ->method('createInstance')
       ->willReturn($plugin_stub);
+
     $property = new \ReflectionProperty('Drupal\Core\Menu\LocalTaskManager', 'factory');
     $property->setValue($manager, $factory);
 
