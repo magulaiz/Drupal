@@ -111,46 +111,54 @@ class ExplodeTest extends MigrateProcessTestCase {
   }
 
   /**
-   * Tests using falsey values as delimiter.
+   * Tests using various invalid or potentially problematic delimiters.
    *
-   * @dataProvider providerExplodeWithFalseyDelimiter
+   * @dataProvider providerExplodeWithVariousDelimiters
    */
-  public function testExplodeWithFalseyDelimiter($delimiter, $expect_exception, $expected = []) {
-    $plugin = new Explode(['delimiter' => $delimiter], 'map', []);
-    if ($expect_exception) {
+  public function testExplodeWithVariousDelimiters($delimiter, $expected_exception, $expected = []) {
+    if ($expected_exception) {
       $this->expectException(MigrateException::class);
-      $this->expectExceptionMessage('delimiter is empty');
+      $this->expectExceptionMessage($expected_exception);
     }
+    $plugin = new Explode(['delimiter' => $delimiter], 'map', []);
     $processed = $plugin->transform('Migrate 101', $this->migrateExecutable, $this->row, 'destination_property');
     $this->assertSame($processed, $expected);
   }
 
   /**
-   * Data provider for ::testExplodeWithNonStrictAndEmptySource().
+   * Data provider for ::testExplodeWithVariousDelimiters().
    */
-  public static function providerExplodeWithFalseyDelimiter() {
+  public static function providerExplodeWithVariousDelimiters() {
     return [
       'false' => [
         'delimiter' => FALSE,
-        'expect_exception' => TRUE,
+        'expected_exception' => 'delimiter is invalid',
       ],
       'null' => [
         'delimiter' => NULL,
-        'expect_exception' => TRUE,
+        'expected_exception' => 'delimiter is empty',
       ],
       'empty string' => [
         'delimiter' => '',
-        'expect_exception' => TRUE,
+        'expected_exception' => 'delimiter is invalid',
       ],
       'zero (int)' => [
         'delimiter' => 0,
-        'expect_exception' => FALSE,
+        'expected_exception' => '',
         'expected' => ['Migrate 1', '1'],
       ],
       'zero (string)' => [
         'delimiter' => '0',
-        'expect_exception' => FALSE,
+        'expected_exception' => '',
         'expected' => ['Migrate 1', '1'],
+      ],
+      'empty array' => [
+        'delimiter' => [],
+        'expected_exception' => 'delimiter is invalid',
+      ],
+      'array of valid delimiters' => [
+        'delimiter' => [',', '|'],
+        'expected_exception' => 'delimiter is invalid',
       ],
     ];
   }
