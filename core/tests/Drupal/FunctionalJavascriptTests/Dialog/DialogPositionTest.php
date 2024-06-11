@@ -16,7 +16,13 @@ class DialogPositionTest extends WebDriverTestBase {
   /**
    * {@inheritdoc}
    */
-  protected static $modules = ['block'];
+  protected static $modules = [
+    'block',
+    'entity_test',
+    'node',
+    'field',
+    'field_ui',
+  ];
 
   /**
    * {@inheritdoc}
@@ -24,11 +30,26 @@ class DialogPositionTest extends WebDriverTestBase {
   protected $defaultTheme = 'stark';
 
   /**
+   * {@inheritdoc}
+   */
+  protected $adminUser;
+
+  /**
+   * {@inheritdoc}
+   */
+  public function setUp(): void {
+    parent::setUp();
+    $this->adminUser = $this->drupalCreateUser([
+      'administer blocks',
+      'administer entity_test fields',
+    ]);
+    $this->drupalLogin($this->adminUser);
+  }
+
+  /**
    * Tests if the dialog UI works properly with block layout page.
    */
   public function testDialogOpenAndClose() {
-    $admin_user = $this->drupalCreateUser(['administer blocks']);
-    $this->drupalLogin($admin_user);
     $this->drupalGet('admin/structure/block');
     $session = $this->getSession();
     $assert_session = $this->assertSession();
@@ -53,6 +74,32 @@ class DialogPositionTest extends WebDriverTestBase {
     // javascript errors the test will fail on that.
     $session->resizeWindow(625, 625);
     usleep(5000);
+  }
+
+  /**
+   * Tests dialog resizing on window resize.
+   */
+  public function testModalWidthResizing() {
+    $this->drupalGet('entity_test/structure/entity_test/fields');
+    $page = $this->getSession()->getPage();
+
+    $page->pressButton('List additional actions');
+    $page->findLink('Delete')->click();
+    $this->assertSession()->assertWaitOnAjaxRequest();
+
+    // Resize the window.
+    $this->getSession()->resizeWindow(785, 805);
+    $dialog = $page->find('css', '[role="dialog"]');
+    $dialog_style = $dialog->getAttribute('style');
+    // Assert that the width has been adjusted on window resize.
+    $this->assertStringContainsString('width: 745', $dialog_style);
+
+    // Resize the window.
+    $this->getSession()->resizeWindow(1300, 1300);
+    $dialog = $page->find('css', '[role="dialog"]');
+    $dialog_style = $dialog->getAttribute('style');
+    // Assert that the width is restored to full size.
+    $this->assertStringContainsString('width: 880', $dialog_style);
   }
 
 }
