@@ -52,16 +52,20 @@ class ContactFileFieldTest extends WebDriverTestBase {
     $this->drupalLogin($admin_user);
 
     $this->drupalGet('admin/structure/contact/manage/feedback/fields/add-field');
-    $session = $this->getSession();
-    $session->getPage()
-      ->find('xpath', '//input[@value="file_upload"]')
+    $page = $this->getSession()->getPage();
+    $assert_session = $this->assertSession();
+    $page->find('xpath', '//input[@value="file_upload"]')
       ->click();
-    $session->getPage()->pressButton('Continue');
-    $session->getPage()->fillField('label', 'file_upload');
-    $session->getPage()->find('xpath', '//input[@value="file"]')->click();
-    $session->getPage()->pressButton('Continue');
-    $this->assertTrue($this->assertSession()
-      ->elementExists('css', '[name="field_storage[subform][settings][uri_scheme]"][value="private"]')
+    $this->assertNotEmpty($file_field = $page->find('xpath', '//*[text() = "File upload"]')
+      ->getParent());
+    $file_field->click();
+    $this->assertTrue($assert_session->elementExists('css', '[name="new_storage_type"][value="file_upload"]')
+      ->isSelected());
+    $page->pressButton('Continue');
+    $page->fillField('label', 'file_upload');
+    $page->find('xpath', '//input[@value="file"]')->click();
+    $page->pressButton('Continue');
+    $this->assertTrue($assert_session->elementExists('css', '[name="field_storage[subform][settings][uri_scheme]"][value="private"]')
       ->isSelected());
   }
 
@@ -83,18 +87,24 @@ class ContactFileFieldTest extends WebDriverTestBase {
     $this->drupalLogin($admin_user);
 
     $this->drupalGet('admin/structure/contact/manage/feedback/fields/add-field');
-    $session = $this->getSession();
-    $session->getPage()
-      ->find('xpath', '//input[@value="file_upload"]')
+    $page = $this->getSession()->getPage();
+    $assert_session = $this->assertSession();
+    $page->find('xpath', '//input[@value="file_upload"]')
       ->click();
-    $session->getPage()->pressButton('Continue');
-    $session->getPage()->fillField('label', 'file_upload');
-    $session->getPage()->find('xpath', '//input[@value="file"]')->click();
-    $session->getPage()->pressButton('Continue');
+    $this->assertNotEmpty($file_field = $page->find('xpath', '//*[text() = "File upload"]')
+      ->getParent());
+    $file_field->click();
+    $this->assertTrue($assert_session->elementExists('css', '[name="new_storage_type"][value="file_upload"]')
+      ->isSelected());
+    $page->pressButton('Continue');
+    $page->fillField('label', 'file_upload');
+    $page->find('xpath', '//input[@value="file"]')->click();
+    $page->pressButton('Continue');
     $this->assertTrue($this->assertSession()
       ->elementExists('css', '[name="field_storage[subform][settings][uri_scheme]"][value="public"]')
       ->isSelected());
-    $this->assertSession()->pageTextContains('It is advised to store file uploads for contact forms as private files. You can configure this in settings.php');
+    $this->assertSession()
+      ->pageTextContains('It is advised to store file uploads for contact forms as private files. You can configure this in settings.php');
   }
 
   /**
