@@ -114,11 +114,16 @@ class ExplodeTest extends MigrateProcessTestCase {
    * Tests using various invalid or potentially problematic delimiters.
    *
    * @dataProvider providerExplodeWithVariousDelimiters
+   *
+   * @group legacy
    */
-  public function testExplodeWithVariousDelimiters($delimiter, $expected_exception, $expected = []) {
+  public function testExplodeWithVariousDelimiters($delimiter, $expected_exception, $expect_deprecation = FALSE, $expected = []) {
     if ($expected_exception) {
       $this->expectException(MigrateException::class);
       $this->expectExceptionMessage($expected_exception);
+    }
+    if ($expect_deprecation) {
+      $this->expectDeprecation('Unsilenced deprecation: Using a non-string as a delimiter in the explode plugin is deprecated in 11.1.0 and will throw a MigrateException in 12.0.0. Ensure your value is quoted in your migration yaml if necessary. See https://www.drupal.org/node/3454260');
     }
     $plugin = new Explode(['delimiter' => $delimiter], 'map', []);
     $processed = $plugin->transform('Migrate 101', $this->migrateExecutable, $this->row, 'destination_property');
@@ -132,38 +137,45 @@ class ExplodeTest extends MigrateProcessTestCase {
     return [
       'false' => [
         'delimiter' => FALSE,
-        'expected_exception' => 'delimiter is invalid',
+        'expected_exception' => 'Delimiter must be a non-empty string.',
+        'expect_deprecation' => TRUE,
       ],
+      // The 'true' case will throw an exception in Drupal 12.x.
       'true' => [
         'delimiter' => TRUE,
         'expected_exception' => '',
+        'expect_deprecation' => TRUE,
         'expected' => ['Migrate ', '0', ''],
       ],
       'null' => [
         'delimiter' => NULL,
-        'expected_exception' => 'delimiter is empty',
+        'expected_exception' => 'Delimiter must be a non-empty string.',
+        'expect_deprecation' => TRUE,
       ],
       'empty string' => [
         'delimiter' => '',
-        'expected_exception' => 'delimiter is invalid',
+        'expected_exception' => 'Delimiter must be a non-empty string.',
       ],
+      // The 'zero (int)' case will throw an exception in Drupal 12.x.
       'zero (int)' => [
         'delimiter' => 0,
         'expected_exception' => '',
+        'expect_deprecation' => TRUE,
         'expected' => ['Migrate 1', '1'],
       ],
       'zero (string)' => [
         'delimiter' => '0',
         'expected_exception' => '',
+        'expect_deprecation' => FALSE,
         'expected' => ['Migrate 1', '1'],
       ],
       'empty array' => [
         'delimiter' => [],
-        'expected_exception' => 'delimiter is invalid',
+        'expected_exception' => 'Delimiter must be a non-empty string.',
       ],
       'array of valid delimiters' => [
         'delimiter' => [',', '|'],
-        'expected_exception' => 'delimiter is invalid',
+        'expected_exception' => 'Delimiter must be a non-empty string.',
       ],
     ];
   }

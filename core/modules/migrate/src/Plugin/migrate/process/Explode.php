@@ -95,15 +95,15 @@ class Explode extends ProcessPluginBase {
    * {@inheritdoc}
    */
   public function __construct(array $configuration, $plugin_id, $plugin_definition) {
-    if (!isset($configuration['delimiter'])) {
-      throw new MigrateException('delimiter is empty');
+    if (!is_string($configuration['delimiter'])) {
+      trigger_error('Using a non-string as a delimiter in the explode plugin is deprecated in 11.1.0 and will throw a MigrateException in 12.0.0. Ensure your value is quoted in your migration yaml if necessary. See https://www.drupal.org/node/3454260', E_USER_DEPRECATED);
+      if (is_array($configuration['delimiter'])) {
+        $configuration['delimiter'] = '';
+      }
+      $configuration['delimiter'] = (string) $configuration['delimiter'];
     }
-    try {
-      // Validate that the delimiter is legal by exploding a test string.
-      explode($configuration['delimiter'], '');
-    }
-    catch (\Throwable $t) {
-      throw new MigrateException('delimiter is invalid');
+    if ($configuration['delimiter'] === '') {
+      throw new MigrateException('Delimiter must be a non-empty string.');
     }
     parent::__construct($configuration, $plugin_id, $plugin_definition);
   }
