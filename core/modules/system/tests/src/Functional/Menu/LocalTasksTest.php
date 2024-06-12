@@ -312,7 +312,7 @@ class LocalTasksTest extends BrowserTestBase {
     // Install the necessary modules for the test.
     \Drupal::service('module_installer')->install(['path', 'taxonomy']);
     $this->drupalCreateContentType(['type' => 'article']);
-    $vocab = $this->createVocabulary(['name' => 'tags']);
+    $vocab = $this->createVocabulary(['vid' => 'tags']);
 
     $web_user = $this->drupalCreateUser([
       'create article content',
