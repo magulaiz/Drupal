@@ -18,7 +18,7 @@ class SyncFactory {
     protected Settings $settings,
     protected StorageInterface $activeConfig,
     protected ModuleExtensionList $moduleExtensionList,
-    protected ThemeExtensionList $themeExtensionList
+    protected ThemeExtensionList $themeExtensionList,
   ) {
   }
 
