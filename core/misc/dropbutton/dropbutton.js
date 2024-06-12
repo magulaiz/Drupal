@@ -86,7 +86,8 @@
     const $buttonToOpen = $(e.target).closest(
       '.dropbutton-wrapper:not(".open")',
     );
-    $('.dropbutton-wrapper.open').find('.dropbutton__toggle')
+    $('.dropbutton-wrapper.open')
+      .find('.dropbutton__toggle')
       .attr('aria-expanded', 'false');
     $('.dropbutton-wrapper.open').removeClass('open');
     if ($buttonToOpen) {
