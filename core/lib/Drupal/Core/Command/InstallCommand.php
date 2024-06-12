@@ -131,7 +131,7 @@ class InstallCommand extends Command {
       $connection_info['port'] = $input->getOption('database-port');
     }
 
-    return $this->install($this->classLoader, $io, $install_profile, $input->getOption('langcode'), $this->getSitePath(), $input->getOption('site-name'), $recipe ?? '', $connection_info);
+    return $this->install($this->classLoader, $io, $install_profile ?? '', $input->getOption('langcode'), $this->getSitePath(), $input->getOption('site-name'), $recipe ?? '', $connection_info);
   }
 
   /**
@@ -200,8 +200,8 @@ class InstallCommand extends Command {
             'password' => $connection_options['password'],
             'database' => $connection_options['database'],
             'host' => $connection_options['host'],
-            'port' => isset($connection_options['port']) ? $connection_options['port'] : '',
-            'prefix' => isset($connection_options['prefix']) ? $connection_options['prefix'] : '',
+            'port' => $connection_options['port'] ?? '',
+            'prefix' => $connection_options['prefix'] ?? '',
           ],
         ],
         'install_configure_form' => [

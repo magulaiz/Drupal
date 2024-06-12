@@ -1,10 +1,13 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\BuildTests\Core\Command;
 
 use Drupal\BuildTests\QuickStart\QuickStartTestBase;
 use Drupal\Core\Database\Database;
 use Drupal\Core\Test\TestDatabase;
+use Drupal\Core\Utility\PhpRequirements;
 use Symfony\Component\Process\PhpExecutableFinder;
 use Symfony\Component\Process\Process;
 
@@ -68,7 +71,7 @@ class InstallCommandTest extends QuickStartTestBase {
    * Tests the install command.
    */
   public function testInstallCommand() {
-    if (version_compare(phpversion(), \Drupal::MINIMUM_SUPPORTED_PHP) < 0) {
+    if (version_compare(phpversion(), PhpRequirements::getMinimumSupportedPhp()) < 0) {
       $this->markTestSkipped();
     }
 
@@ -106,7 +109,7 @@ class InstallCommandTest extends QuickStartTestBase {
    * Tests the install command with a provided language.
    */
   public function testInstallWithLangcode() {
-    if (version_compare(phpversion(), \Drupal::MINIMUM_SUPPORTED_PHP) < 0) {
+    if (version_compare(phpversion(), PhpRequirements::getMinimumSupportedPhp()) < 0) {
       $this->markTestSkipped();
     }
 
@@ -146,7 +149,7 @@ class InstallCommandTest extends QuickStartTestBase {
    * Tests that an error is returned if Drupal is already installed.
    */
   public function testAlreadyInstalledError() {
-    if (version_compare(phpversion(), \Drupal::MINIMUM_SUPPORTED_PHP) < 0) {
+    if (version_compare(phpversion(), PhpRequirements::getMinimumSupportedPhp()) < 0) {
       $this->markTestSkipped();
     }
 
