@@ -100,7 +100,6 @@ EOD;
     // https://www.drupal.org/node/3421393, replace generateAlphanumericStr()
     // with $this->randomMachineName(), remove generateAlphanumericStr()
     $long_function_name = self::generateAlphanumericStr(220);
-    // $long_function_name = $this->randomMachineName(220);
     return [
       [
         <<<EOD
