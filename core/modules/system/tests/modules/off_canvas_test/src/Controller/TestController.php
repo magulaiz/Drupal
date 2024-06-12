@@ -85,7 +85,7 @@ class TestController {
           'data-dialog-renderer' => 'off_canvas',
           'data-dialog-options' => Json::encode([
             'width' => '50%',
-            'resizable' => false,
+            'resizable' => FALSE,
             'classes' => [
               "ui-dialog" => "ui-corner-all side-2",
             ],
