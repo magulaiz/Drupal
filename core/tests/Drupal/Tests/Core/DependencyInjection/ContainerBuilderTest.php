@@ -67,10 +67,18 @@ class ContainerBuilderTest extends UnitTestCase {
    * @covers ::setAlias
    */
   public function testSetAlias() {
+    // Test a service with public set to true (default).
     $container = new ContainerBuilder();
     $container->register('bar');
     $alias = $container->setAlias('foo', 'bar');
     $this->assertTrue($alias->isPublic());
+
+    // Test a service with public set to false.
+    $definition = new Definition();
+    $definition->setPublic(FALSE);
+    $container->setDefinition('bar', $definition);
+    $alias = $container->setAlias('foo', 'bar');
+    $this->assertFalse($alias->isPublic());
   }
 
   /**
