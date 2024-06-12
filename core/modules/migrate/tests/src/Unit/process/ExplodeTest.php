@@ -123,7 +123,7 @@ class ExplodeTest extends MigrateProcessTestCase {
       $this->expectExceptionMessage($expected_exception);
     }
     if ($expect_deprecation) {
-      $this->expectDeprecation('Unsilenced deprecation: Using a non-string as a delimiter in the explode plugin is deprecated in 11.1.0 and will throw a MigrateException in 12.0.0. Ensure your value is quoted in your migration yaml if necessary. See https://www.drupal.org/node/3454260');
+      $this->expectDeprecation('Unsilenced deprecation: Using a non-string as a delimiter in the explode plugin is deprecated in drupal:11.1.0 and will throw a MigrateException in drupal:12.0.0. Ensure your value is quoted in your migration yaml if necessary. See https://www.drupal.org/node/3454260');
     }
     $plugin = new Explode(['delimiter' => $delimiter], 'map', []);
     $processed = $plugin->transform('Migrate 101', $this->migrateExecutable, $this->row, 'destination_property');
