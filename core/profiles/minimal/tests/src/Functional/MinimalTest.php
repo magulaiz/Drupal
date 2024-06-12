@@ -32,7 +32,7 @@ class MinimalTest extends BrowserTestBase {
   public function testMinimal() {
     $this->drupalGet('');
     // Check the login block is present.
-    $this->assertSession()->linkExists('Log in');
+    $this->assertSession()->buttonExists('Log in');
     // Confirm anonymous users cannot create an account.
     $this->assertSession()->linkNotExists('Create new account');
     $this->assertSession()->statusCodeEquals(200);
