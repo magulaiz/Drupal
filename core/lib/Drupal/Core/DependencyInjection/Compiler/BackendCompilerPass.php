@@ -65,22 +65,12 @@ class BackendCompilerPass implements CompilerPassInterface {
         continue;
       }
       // Ensure the backend service has the same visibility as the original.
-      $public = $container->getDefinition($id)->isPublic();
-      if ($container->hasDefinition("$driver_backend.$id")) {
-        $container->setAlias($id, new Alias("$driver_backend.$id"));
-        $container->getDefinition("$driver_backend.$id")->setPublic($public);
+      $is_public = $container->getDefinition($id)->isPublic();
+      if ($container->hasDefinition("$driver_backend.$id") || $container->hasAlias("$driver_backend.$id")) {
+        $container->setAlias($id, (new Alias("$driver_backend.$id"))->setPublic($is_public));
       }
-      elseif ($container->hasAlias("$driver_backend.$id")) {
-        $container->setAlias($id, new Alias("$driver_backend.$id"));
-        $container->getAlias("$driver_backend.$id")->setPublic($public);
-      }
-      elseif ($container->hasDefinition("$default_backend.$id")) {
-        $container->setAlias($id, new Alias("$default_backend.$id"));
-        $container->getDefinition("$default_backend.$id")->setPublic($public);
-      }
-      elseif ($container->hasAlias("$default_backend.$id")) {
-        $container->setAlias($id, new Alias("$default_backend.$id"));
-        $container->getAlias("$default_backend.$id")->setPublic($public);
+      elseif ($container->hasDefinition("$default_backend.$id") || $container->hasAlias("$default_backend.$id")) {
+        $container->setAlias($id, (new Alias("$default_backend.$id"))->setPublic($is_public));
       }
     }
   }
