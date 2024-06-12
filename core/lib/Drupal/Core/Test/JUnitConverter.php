@@ -2,6 +2,8 @@
 
 namespace Drupal\Core\Test;
 
+use Drupal\Component\Utility\Unicode;
+
 /**
  * Converts JUnit XML to Drupal's {simpletest} schema.
  *
@@ -122,6 +124,8 @@ class JUnitConverter {
     }
 
     $attributes = $test_case->attributes();
+    $function = Unicode::convertToUtf8($attributes->class . '->' . $attributes->name . '()', 'UTF-8');
+    $function = mb_strlen($function) > 255 ? mb_substr($function, 0, 255) : $function;
 
     $record = [
       'test_id' => $test_id,
@@ -129,7 +133,7 @@ class JUnitConverter {
       'status' => $pass ? 'pass' : 'fail',
       'message' => $message,
       'message_group' => 'Other',
-      'function' => $attributes->class . '->' . $attributes->name . '()',
+      'function' => $function,
       'line' => (int) $attributes->line ?: 0,
       'file' => (string) $attributes->file,
     ];
