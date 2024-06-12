@@ -318,8 +318,8 @@ class LocalTasksTest extends BrowserTestBase {
       'create article content',
       'edit own article content',
       'create url aliases',
-      'create terms in ' . $vocab->id(),
-      'edit terms in ' . $vocab->id(),
+      'create terms in tags',
+      'edit terms in tags',
     ]);
 
     // Create node and taxonomy term entities with path aliases.
