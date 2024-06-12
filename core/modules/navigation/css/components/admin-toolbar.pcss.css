@@ -253,10 +253,7 @@ body {
   }
 
   :where([data-admin-toolbar="collapsed"]) & {
-    > img {
-      max-width: 40px;
-      height: auto;
-    }
+    max-width: var(--admin-toolbar-space-40);
   }
 }
 
