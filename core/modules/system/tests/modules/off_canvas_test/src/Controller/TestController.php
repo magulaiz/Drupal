@@ -75,7 +75,7 @@ class TestController {
           ]),
         ],
       ],
-      'off_canvas_link_21' => [
+      'off_canvas_link_3' => [
         '#title' => 'Open side panel resize test',
         '#type' => 'link',
         '#url' => Url::fromRoute('off_canvas_test.thing2'),
