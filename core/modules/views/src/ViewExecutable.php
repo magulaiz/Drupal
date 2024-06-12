@@ -40,18 +40,18 @@ class ViewExecutable {
   /**
    * Whether or not the view has been built.
    *
+   * @var bool
    * @todo Group with other static properties.
    *
-   * @var bool
    */
   public $built = FALSE;
 
   /**
    * Whether the view has been executed/query has been run.
    *
+   * @var bool
    * @todo Group with other static properties.
    *
-   * @var bool
    */
   public $executed = FALSE;
 
@@ -285,7 +285,6 @@ class ViewExecutable {
   // phpcs:ignore Drupal.NamingConventions.ValidVariableName.LowerCamelName
   public $override_url;
 
-
   /**
    * Allow to override the path used for generated URLs.
    *
@@ -354,7 +353,8 @@ class ViewExecutable {
   public $footer;
 
   /**
-   * Stores the area handlers for the empty text which are initialized on this view.
+   * Stores the area handlers for the empty text which are initialized on this
+   * view.
    *
    * An array containing Drupal\views\Plugin\views\area\AreaPluginBase objects.
    *
@@ -379,9 +379,9 @@ class ViewExecutable {
   /**
    * Does this view already have loaded its handlers.
    *
+   * @var bool
    * @todo Group with other static properties.
    *
-   * @var bool
    */
   public $inited;
 
@@ -406,9 +406,9 @@ class ViewExecutable {
   /**
    * Force the query to calculate the total number of results.
    *
+   * @var bool
    * @todo Move to the query.
    *
-   * @var bool
    */
   // phpcs:ignore Drupal.NamingConventions.ValidVariableName.LowerCamelName
   public $get_total_rows;
@@ -416,9 +416,9 @@ class ViewExecutable {
   /**
    * Indicates if the sorts have been built.
    *
+   * @var bool
    * @todo Group with other static properties.
    *
-   * @var bool
    */
   // phpcs:ignore Drupal.NamingConventions.ValidVariableName.LowerCamelName
   public $build_sort;
@@ -525,7 +525,6 @@ class ViewExecutable {
       @trigger_error('Calling ' . __METHOD__ . ' without the $displayPluginManager argument is deprecated in drupal:10.3.0 and it will be required in drupal:12.0.0. See https://www.drupal.org/node/3410349', E_USER_DEPRECATED);
       $this->displayPluginManager = \Drupal::service('plugin.manager.views.display');
     }
-
   }
 
   /**
@@ -724,14 +723,15 @@ class ViewExecutable {
   /**
    * Sets options where AJAX should be used.
    *
-   * If AJAX is used, users can select if using with paging, table sorting, or exposed filters will be fetched
-   * via an AJAX call rather than a page refresh.
+   * If AJAX is used, users can select if using with paging, table sorting, or
+   * exposed filters will be fetched via an AJAX call rather than a page
+   * refresh.
    *
    * @param bool $ajax_options
    *   list of options where activating AJAX.
    */
   public function setAjaxOptions($ajax_options): void {
-    if($this->ajaxEnabled) {
+    if ($this->ajaxEnabled) {
       $this->ajaxOptions = $ajax_options;
     }
   }
@@ -1075,7 +1075,8 @@ class ViewExecutable {
       $views_data = $this->viewsData->get($view_base_table);
       if (!empty($views_data['table']['entity type'])) {
         $entity_type_id = $views_data['table']['entity type'];
-        $this->baseEntityType = \Drupal::entityTypeManager()->getDefinition($entity_type_id);
+        $this->baseEntityType = \Drupal::entityTypeManager()
+          ->getDefinition($entity_type_id);
       }
       else {
         $this->baseEntityType = FALSE;
@@ -1423,16 +1424,16 @@ class ViewExecutable {
    *
    * This is an internal method.
    *
-   * @todo Some filter needs this function, even it is internal.
-   *
    * @param string $key
    *   The type of handlers (filter etc.) which should be iterated over to build
    *   the relationship and query information.
+   *
+   * @todo Some filter needs this function, even it is internal.
+   *
    */
   public function _build($key) {
     $handlers = &$this->$key;
     foreach ($handlers as $id => $data) {
-
       if (!empty($handlers[$id]) && is_object($handlers[$id])) {
         $multiple_exposed_input = [0 => NULL];
         if ($handlers[$id]->multipleExposedInput()) {
@@ -1622,7 +1623,11 @@ class ViewExecutable {
     $cache->postRender($this->display_handler->output);
 
     // Let modules modify the view output after it is rendered.
-    $module_handler->invokeAll('views_post_render', [$this, &$this->display_handler->output, $cache]);
+    $module_handler->invokeAll('views_post_render', [
+      $this,
+      &$this->display_handler->output,
+      $cache,
+    ]);
 
     // Let the themes play too, because post render is a very themey thing.
     foreach ($themes as $theme_name) {
@@ -1768,10 +1773,15 @@ class ViewExecutable {
     }
 
     // Let modules modify the view just prior to executing it.
-    \Drupal::moduleHandler()->invokeAll('views_pre_view', [$this, $display_id, &$this->args]);
+    \Drupal::moduleHandler()->invokeAll('views_pre_view', [
+      $this,
+      $display_id,
+      &$this->args,
+    ]);
 
     // Allow hook_views_pre_view() to set the dom_id, then ensure it is set.
-    $this->dom_id = !empty($this->dom_id) ? $this->dom_id : hash('sha256', $this->storage->id() . \Drupal::time()->getRequestTime() . mt_rand());
+    $this->dom_id = !empty($this->dom_id) ? $this->dom_id : hash('sha256', $this->storage->id() . \Drupal::time()
+        ->getRequestTime() . mt_rand());
 
     // Allow the display handler to set up for execution
     $this->display_handler->preExecute();
@@ -1979,7 +1989,8 @@ class ViewExecutable {
 
     // If the display has a valid route available (either its own or for a
     // linked display), then we can provide a URL for it.
-    $display_handler = $this->displayHandlers->get($display_id ?: $this->current_display)->getRoutedDisplay();
+    $display_handler = $this->displayHandlers->get($display_id ?: $this->current_display)
+      ->getRoutedDisplay();
     if (!$display_handler instanceof DisplayRouterInterface) {
       return FALSE;
     }
@@ -2018,7 +2029,8 @@ class ViewExecutable {
       return $this->override_url;
     }
 
-    $display_handler = $this->displayHandlers->get($display_id ?: $this->current_display)->getRoutedDisplay();
+    $display_handler = $this->displayHandlers->get($display_id ?: $this->current_display)
+      ->getRoutedDisplay();
     if (!$display_handler instanceof DisplayRouterInterface) {
       throw new \InvalidArgumentException('You cannot create a URL to a display without routes.');
     }
@@ -2251,7 +2263,8 @@ class ViewExecutable {
     $this->setDisplay($display_id);
 
     $data = $this->viewsData->get($table);
-    $fields = $this->displayHandlers->get($display_id)->getOption($types[$type]['plural']);
+    $fields = $this->displayHandlers->get($display_id)
+      ->getOption($types[$type]['plural']);
 
     if (empty($id)) {
       $id = $this->generateHandlerId($field, $fields);
@@ -2261,10 +2274,10 @@ class ViewExecutable {
     $handler_type = !empty($types[$type]['type']) ? $types[$type]['type'] : $type;
 
     $fields[$id] = [
-        'id' => $id,
-        'table' => $table,
-        'field' => $field,
-      ] + $options;
+      'id' => $id,
+      'table' => $table,
+      'field' => $field,
+    ] + $options;
 
     if (isset($data['table']['entity type'])) {
       $fields[$id]['entity_type'] = $data['table']['entity type'];
@@ -2278,7 +2291,8 @@ class ViewExecutable {
       $fields[$id]['plugin_id'] = $data[$field][$handler_type]['id'];
     }
 
-    $this->displayHandlers->get($display_id)->setOption($types[$type]['plural'], $fields);
+    $this->displayHandlers->get($display_id)
+      ->setOption($types[$type]['plural'], $fields);
 
     return $id;
   }
@@ -2333,7 +2347,8 @@ class ViewExecutable {
     // Get info about the types so we can get the right data.
     $types = static::getHandlerTypes();
 
-    $handlers = $this->displayHandlers->get($display_id)->getOption($types[$type]['plural']);
+    $handlers = $this->displayHandlers->get($display_id)
+      ->getOption($types[$type]['plural']);
 
     // Restore initial display id (if any) or set to 'default'.
     if ($display_id != $old_display_id) {
@@ -2363,7 +2378,8 @@ class ViewExecutable {
     $this->setDisplay($display_id);
 
     // Get the existing configuration
-    $fields = $this->displayHandlers->get($display_id)->getOption($types[$type]['plural']);
+    $fields = $this->displayHandlers->get($display_id)
+      ->getOption($types[$type]['plural']);
 
     return $fields[$id] ?? NULL;
   }
@@ -2389,13 +2405,15 @@ class ViewExecutable {
     $this->setDisplay($display_id);
 
     // Get the existing configuration.
-    $fields = $this->displayHandlers->get($display_id)->getOption($types[$type]['plural']);
+    $fields = $this->displayHandlers->get($display_id)
+      ->getOption($types[$type]['plural']);
     if (isset($item)) {
       $fields[$id] = $item;
     }
 
     // Store.
-    $this->displayHandlers->get($display_id)->setOption($types[$type]['plural'], $fields);
+    $this->displayHandlers->get($display_id)
+      ->setOption($types[$type]['plural'], $fields);
   }
 
   /**
@@ -2415,12 +2433,14 @@ class ViewExecutable {
     $this->setDisplay($display_id);
 
     // Get the existing configuration.
-    $fields = $this->displayHandlers->get($display_id)->getOption($types[$type]['plural']);
+    $fields = $this->displayHandlers->get($display_id)
+      ->getOption($types[$type]['plural']);
     // Unset the item.
     unset($fields[$id]);
 
     // Store.
-    $this->displayHandlers->get($display_id)->setOption($types[$type]['plural'], $fields);
+    $this->displayHandlers->get($display_id)
+      ->setOption($types[$type]['plural'], $fields);
   }
 
   /**
@@ -2545,11 +2565,11 @@ class ViewExecutable {
   /**
    * Gets dependencies for the view.
    *
-   * @see \Drupal\views\Entity\View::calculateDependencies()
-   * @see \Drupal\views\Entity\View::getDependencies()
-   *
    * @return array
    *   An array of dependencies grouped by type (module, theme, entity).
+   * @see \Drupal\views\Entity\View::getDependencies()
+   *
+   * @see \Drupal\views\Entity\View::calculateDependencies()
    */
   public function getDependencies() {
     return $this->storage->calculateDependencies()->getDependencies();
