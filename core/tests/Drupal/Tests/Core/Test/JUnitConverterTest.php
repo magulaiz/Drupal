@@ -1,143 +1,135 @@
 <?php
 
-namespace Drupal\Core\Test;
+declare(strict_types=1);
 
-use Drupal\Component\Utility\Unicode;
+namespace Drupal\Tests\Core\Test;
+
+use Drupal\Core\Test\JUnitConverter;
+use Drupal\Tests\UnitTestCase;
+use org\bovigo\vfs\vfsStream;
 
 /**
- * Converts JUnit XML to Drupal's {simpletest} schema.
+ * Tests Drupal\Core\Test\JUnitConverter.
  *
- * This is mainly for converting PHPUnit test results.
+ * This test class has significant overlap with
+ * Drupal\Tests\simpletest\Kernel\PhpUnitErrorTest.
  *
- * This class is @internal and not considered to be API.
+ * @coversDefaultClass \Drupal\Core\Test\JUnitConverter
+ *
+ * @group Test
+ * @group simpletest
+ *
+ * @see \Drupal\Tests\simpletest\Kernel\PhpUnitErrorTest
  */
-class JUnitConverter {
+class JUnitConverterTest extends UnitTestCase {
 
   /**
-   * Converts PHPUnit's JUnit XML output file to {simpletest} schema.
+   * Tests errors reported.
    *
-   * @param int $test_id
-   *   The current test ID.
-   * @param string $phpunit_xml_file
-   *   Path to the PHPUnit XML file.
-   *
-   * @return array[]
-   *   The results as array of rows in a format that can be inserted into the
-   *   {simpletest} table of the results database.
-   *
-   * @internal
+   * @covers ::xmlToRows
    */
-  public static function xmlToRows($test_id, $phpunit_xml_file) {
-    $contents = @file_get_contents($phpunit_xml_file);
-    if (!$contents) {
-      return [];
+  public function testXmlToRowsWithErrors() {
+    $phpunit_error_xml = __DIR__ . '/fixtures/phpunit_error.xml';
+
+    $res = JUnitConverter::xmlToRows(1, $phpunit_error_xml);
+    $this->assertCount(4, $res, 'All test cases got extracted');
+    $this->assertNotEquals('pass', $res[0]['status']);
+    $this->assertEquals('fail', $res[0]['status']);
+
+    // Test nested testsuites, which appear when you use @dataProvider.
+    for ($i = 0; $i < 3; $i++) {
+      $this->assertNotEquals('pass', $res[$i + 1]['status']);
+      $this->assertEquals('fail', $res[$i + 1]['status']);
     }
-    return static::xmlElementToRows($test_id, new \SimpleXMLElement($contents));
+
+    // Make sure xmlToRows() does not balk if there are no test results.
+    $this->assertSame([], JUnitConverter::xmlToRows(1, 'does_not_exist'));
   }
 
   /**
-   * Parse test cases from XML to {simpletest} schema.
-   *
-   * @param int $test_id
-   *   The current test ID.
-   * @param \SimpleXMLElement $element
-   *   The XML data from the JUnit file.
-   *
-   * @return array[]
-   *   The results as array of rows in a format that can be inserted into the
-   *   {simpletest} table of the results database.
-   *
-   * @internal
+   * @covers ::xmlToRows
    */
-  public static function xmlElementToRows($test_id, \SimpleXMLElement $element) {
-    $records = [];
-    $test_cases = static::findTestCases($element);
-    foreach ($test_cases as $test_case) {
-      $records[] = static::convertTestCaseToSimpletestRow($test_id, $test_case);
-    }
-    return $records;
+  public function testXmlToRowsEmptyFile() {
+    // File system with an empty XML file.
+    vfsStream::setup('junit_test', NULL, ['empty.xml' => '']);
+    $this->assertSame([], JUnitConverter::xmlToRows(23, vfsStream::url('junit_test/empty.xml')));
   }
 
   /**
-   * Finds all test cases recursively from a test suite list.
-   *
-   * @param \SimpleXMLElement $element
-   *   The PHPUnit xml to search for test cases.
-   * @param \SimpleXMLElement $parent
-   *   (Optional) The parent of the current element. Defaults to NULL.
-   *
-   * @return array
-   *   A list of all test cases.
-   *
-   * @internal
+   * @covers ::xmlElementToRows
    */
-  public static function findTestCases(\SimpleXMLElement $element, ?\SimpleXMLElement $parent = NULL) {
-    if (!isset($parent)) {
-      $parent = $element;
-    }
-
-    if ($element->getName() === 'testcase' && (int) $parent->attributes()->tests > 0) {
-      // Add the class attribute if the test case does not have one. This is the
-      // case for tests using a data provider. The name of the parent testsuite
-      // will be in the format class::method.
-      if (!$element->attributes()->class) {
-        $name = explode('::', $parent->attributes()->name, 2);
-        $element->addAttribute('class', $name[0]);
-      }
-      return [$element];
-    }
-    $test_cases = [];
-    foreach ($element as $child) {
-      $file = (string) $parent->attributes()->file;
-      if ($file && !$child->attributes()->file) {
-        $child->addAttribute('file', $file);
-      }
-      $test_cases[] = static::findTestCases($child, $element);
-    }
-    return array_merge(...$test_cases);
-  }
-
-  /**
-   * Converts a PHPUnit test case result to a {simpletest} result row.
-   *
-   * @param int $test_id
-   *   The current test ID.
-   * @param \SimpleXMLElement $test_case
-   *   The PHPUnit test case represented as XML element.
-   *
-   * @return array
-   *   An array containing the {simpletest} result row.
-   *
-   * @internal
-   */
-  public static function convertTestCaseToSimpletestRow($test_id, \SimpleXMLElement $test_case) {
-    $message = '';
-    $pass = TRUE;
-    if ($test_case->failure) {
-      $lines = explode("\n", $test_case->failure);
-      $message = $lines[2];
-      $pass = FALSE;
-    }
-    if ($test_case->error) {
-      $message = $test_case->error;
-      $pass = FALSE;
-    }
-
-    $attributes = $test_case->attributes();
-    $function = Unicode::convertToUtf8($attributes->class . '->' . $attributes->name . '()', 'UTF-8');
-    $function = mb_strlen($function) > 255 ? mb_substr($function, 0, 255) : $function;
-
-    $record = [
-      'test_id' => $test_id,
-      'test_class' => (string) $attributes->class,
-      'status' => $pass ? 'pass' : 'fail',
-      'message' => $message,
-      'message_group' => 'Other',
-      'function' => $function,
-      'line' => (int) $attributes->line ?: 0,
-      'file' => (string) $attributes->file,
+  public function testXmlElementToRows() {
+    $junit = <<<EOD
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuites>
+  <testsuite name="Drupal\Tests\simpletest\Unit\TestDiscoveryTest" file="/Users/paul/projects/drupal/core/modules/simpletest/tests/src/Unit/TestDiscoveryTest.php" tests="3" assertions="5" errors="0" failures="0" skipped="0" time="0.215539">
+    <testcase name="testGetTestClasses" class="Drupal\Tests\simpletest\Unit\TestDiscoveryTest" classname="Drupal.Tests.simpletest.Unit.TestDiscoveryTest" file="/Users/paul/projects/drupal/core/modules/simpletest/tests/src/Unit/TestDiscoveryTest.php" line="108" assertions="2" time="0.100787"/>
+  </testsuite>
+</testsuites>
+EOD;
+    $simpletest = [
+      [
+        'test_id' => 23,
+        'test_class' => 'Drupal\Tests\simpletest\Unit\TestDiscoveryTest',
+        'status' => 'pass',
+        'message' => '',
+        'message_group' => 'Other',
+        'function' => 'Drupal\Tests\simpletest\Unit\TestDiscoveryTest->testGetTestClasses()',
+        'line' => 108,
+        'file' => '/Users/paul/projects/drupal/core/modules/simpletest/tests/src/Unit/TestDiscoveryTest.php',
+      ],
     ];
-    return $record;
+    $this->assertEquals($simpletest, JUnitConverter::xmlElementToRows(23, new \SimpleXMLElement($junit)));
+  }
+
+  /**
+   * @covers ::convertTestCaseToSimpletestRow
+   *
+   * @dataProvider simpletestDataProvider
+   */
+  public function testConvertTestCaseToSimpletestRow($junit, $simpletest) {
+    $this->assertEquals($simpletest, JUnitConverter::convertTestCaseToSimpletestRow($simpletest['test_id'], new \SimpleXMLElement($junit)));
+    $this->assertLessThanOrEqual(255, strlen($simpletest['function']), 'Function value is less than or equal to 255');
+  }
+
+  /**
+   * See testConvertTestCaseToSimpletestRow method for test cases.
+   */
+  public function simpletestDataProvider() {
+    $long_function_name = $this->randomMachineName(220);
+    return [
+      [
+        <<<EOD
+        <testcase name="testGetTestClasses" class="Drupal\Tests\simpletest\Unit\TestDiscoveryTest" classname="Drupal.Tests.simpletest.Unit.TestDiscoveryTest" file="/Users/paul/projects/drupal/core/modules/simpletest/tests/src/Unit/TestDiscoveryTest.php" line="108" assertions="2" time="0.100787"/>
+        EOD,
+        [
+          'test_id' => 23,
+          'test_class' => 'Drupal\Tests\simpletest\Unit\TestDiscoveryTest',
+          'status' => 'pass',
+          'message' => '',
+          'message_group' => 'Other',
+          'function' => 'Drupal\Tests\simpletest\Unit\TestDiscoveryTest->testGetTestClasses()',
+          'line' => 108,
+          'file' => '/Users/paul/projects/drupal/core/modules/simpletest/tests/src/Unit/TestDiscoveryTest.php',
+        ],
+      ],
+      [
+        <<<EOD
+        <testcase name="{$long_function_name}" class="Drupal\Tests\big_pipe\Unit\Render\BigPipeResponseAttachmentsProcessorTest" classname="Drupal.Tests.big_pipe.Unit.Render.BigPipeResponseAttachmentsProcessorTest" file="/Users/paul/projects/drupal/core/modules/big_pipe/tests/src/Unit/Render/BigPipeResponseAttachmentsProcessorTest.php" line="83" assertions="4" time="0.100787"/>
+        EOD,
+        [
+          'test_id' => 24,
+          'test_class' => 'Drupal\Tests\big_pipe\Unit\Render\BigPipeResponseAttachmentsProcessorTest',
+          'status' => 'pass',
+          'message' => '',
+          'message_group' => 'Other',
+          'function' => mb_substr("Drupal\Tests\big_pipe\Unit\Render\BigPipeResponseAttachmentsProcessorTest->{$long_function_name}()", 0, 255),
+          'line' => 83,
+          'file' => '/Users/paul/projects/drupal/core/modules/big_pipe/tests/src/Unit/Render/BigPipeResponseAttachmentsProcessorTest.php',
+        ],
+      ],
+    ];
+
   }
 
 }
