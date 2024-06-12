@@ -205,15 +205,20 @@
           });
         }
 
+        let offCanvasSettingsPosition;
         window.addEventListener('dialog:aftercreate', (e) => {
           const $element = $(e.target);
-          const { settings } = e;
           const toolbarBar = document.getElementById('toolbar-bar');
+          once('OffCanvasPosition', toolbarBar, context).forEach((element) => {
+            const { settings } = e;
+            offCanvasSettingsPosition = settings.drupalOffCanvasPosition;
+          });
+
           if (toolbarBar) {
             toolbarBar.style.marginTop = '0';
 
             // When off-canvas is positioned in top, toolbar has to be moved down.
-            if (settings.drupalOffCanvasPosition === 'top') {
+            if (offCanvasSettingsPosition === 'top') {
               const height = Drupal.offCanvas
                 .getContainer($element)
                 .outerHeight();
