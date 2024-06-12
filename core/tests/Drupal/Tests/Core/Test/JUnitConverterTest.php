@@ -95,8 +95,12 @@ EOD;
   /**
    * See testConvertTestCaseToSimpletestRow method for test cases.
    */
-  public function simpletestDataProvider() {
-    $long_function_name = $this->randomMachineName(220);
+  public static function simpletestDataProvider() {
+    // @todo once $this obj accessible in data provider static method
+    // https://www.drupal.org/node/3421393, replace generateAlphanumericStr()
+    // with $this->randomMachineName(), remove generateAlphanumericStr()
+    $long_function_name = self::generateAlphanumericStr(220);
+    // $long_function_name = $this->randomMachineName(220);
     return [
       [
         <<<EOD
@@ -130,6 +134,19 @@ EOD;
       ],
     ];
 
+  }
+
+  /**
+   * Generates a string consisting of alphanumeric characters.
+   */
+  private static function generateAlphanumericStr($length = 220) {
+    $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+    $charLength = strlen($characters);
+    $randomString = '';
+    for ($i = 0; $i < $length; $i++) {
+      $randomString .= $characters[rand(0, $charLength - 1)];
+    }
+    return $randomString;
   }
 
 }
