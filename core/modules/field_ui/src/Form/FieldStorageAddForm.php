@@ -3,6 +3,7 @@
 namespace Drupal\field_ui\Form;
 
 use Drupal\Component\Utility\Html;
+use Drupal\Component\Utility\Random;
 use Drupal\Component\Utility\SortArray;
 use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Entity\EntityFieldManagerInterface;
@@ -13,7 +14,6 @@ use Drupal\Core\Field\FieldTypePluginManagerInterface;
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\TempStore\PrivateTempStore;
-use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\field_ui\FieldUI;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -197,6 +197,8 @@ class FieldStorageAddForm extends FormBase {
           // If it is a category, set return value as the category label.
           // Otherwise, set it as the field type id.
           '#return_value' => $display_as_group ? $field_type['category'] : $field_type['unique_identifier'],
+          // Set this now to decide whether to skip the step later.
+          '#display_as_group' => (bool) $display_as_group,
           '#attributes' => [
             'class' => ['field-option-radio'],
           ],
@@ -231,7 +233,6 @@ class FieldStorageAddForm extends FormBase {
     ];
     $form['add']['new_storage_type'] = $field_type_options_radios;
 
-    $form['actions']['submit']['#validate'][] = '::validateGroupOrField';
     $form['actions']['submit']['#submit'][] = '::rebuildWithOptions';
   }
 
@@ -244,42 +245,14 @@ class FieldStorageAddForm extends FormBase {
    *   The current state of the form.
    */
   protected function addFieldOptionsForGroup(array &$form, FormStateInterface $form_state): void {
-    // Field label and field_name.
-    $form['new_storage_wrapper'] = [
-      '#type' => 'container',
-      '#attributes' => [
-        'class' => ['field-ui-new-storage-wrapper'],
-      ],
-    ];
-    $form['new_storage_wrapper']['label'] = [
-      '#type' => 'textfield',
-      '#title' => $this->t('Label'),
-      '#size' => 30,
-    ];
-    $field_prefix = $this->config('field_ui.settings')->get('field_prefix');
-    $form['new_storage_wrapper']['field_name'] = [
-      '#type' => 'machine_name',
-      '#field_prefix' => $field_prefix,
-      '#size' => 15,
-      '#description' => $this->t('A unique machine-readable name containing letters, numbers, and underscores.'),
-      // Calculate characters depending on the length of the field prefix
-      // setting. Maximum length is 32.
-      '#maxlength' => FieldStorageConfig::NAME_MAX_LENGTH - strlen($field_prefix),
-      '#machine_name' => [
-        'source' => ['new_storage_wrapper', 'label'],
-        'exists' => [$this, 'fieldNameExists'],
-      ],
-      '#required' => FALSE,
-    ];
-
-    $form['actions']['submit']['#validate'][] = '::validateFieldType';
-
     $form['actions']['back'] = [
       '#type' => 'submit',
       '#value' => $this->t('Back'),
       '#submit' => ['::startOver'],
     ];
 
+    // Using the validate method to run this before submit.
+    $form['actions']['back']['#validate'][] = '::unsetStorageType';
     $field_type_options = $form_state->get('field_type_options');
     $new_storage_type = $form_state->getValue('new_storage_type');
     $form['new_storage_type'] = [
@@ -347,48 +320,24 @@ class FieldStorageAddForm extends FormBase {
   }
 
   /**
-   * Validates the first step of the form.
-   *
-   * @param array $form
-   *   An associative array containing the structure of the form.
-   * @param \Drupal\Core\Form\FormStateInterface $form_state
-   *   The current state of the form.
+   * {@inheritdoc}
    */
-  public function validateGroupOrField(array &$form, FormStateInterface $form_state) {
+  public function validateForm(array &$form, FormStateInterface $form_state) {
     if (!$form_state->getValue('new_storage_type')) {
       $form_state->setErrorByName('add', $this->t('You need to select a field type.'));
+    }
+    if (isset($form['group_field_options_wrapper']['fields']) && !$form_state->getValue('group_field_options_wrapper') && $form_state->getValue('new_storage_type')) {
+      $form_state->setErrorByName('group_field_options_wrapper', $this->t('You need to choose an option.'));
     }
   }
 
   /**
-   * Validates the second step (field storage selection and label) of the form.
+   * Unsets the storage type to let the form rebuild as new.
    *
-   * @param array $form
-   *   An associative array containing the structure of the form.
-   * @param \Drupal\Core\Form\FormStateInterface $form_state
-   *   The current state of the form.
+   * @see \Drupal\field_ui\Form\FieldStorageAddForm::startOver
    */
-  public function validateFieldType(array $form, FormStateInterface $form_state) {
-    // Missing label.
-    if (!$form_state->getValue('label')) {
-      $form_state->setErrorByName('label', $this->t('Add new field: you need to provide a label.'));
-    }
-    // Missing field name.
-    if (!$form_state->getValue('field_name')) {
-      $form_state->setErrorByName('field_name', $this->t('Add new field: you need to provide a machine name for the field.'));
-    }
-    // Field name validation.
-    else {
-      $field_name = $form_state->getValue('field_name');
-
-      // Add the field prefix.
-      $field_name = $this->configFactory->get('field_ui.settings')->get('field_prefix') . $field_name;
-      $form_state->setValueForElement($form['new_storage_wrapper']['field_name'], $field_name);
-    }
-
-    if (isset($form['group_field_options_wrapper']['fields']) && !$form_state->getValue('group_field_options_wrapper')) {
-      $form_state->setErrorByName('group_field_options_wrapper', $this->t('You need to choose an option.'));
-    }
+  public static function unsetStorageType(array &$form, FormStateInterface $form_state): void {
+    $form_state->unsetValue('new_storage_type');
   }
 
   /**
@@ -396,6 +345,11 @@ class FieldStorageAddForm extends FormBase {
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
     $values = $form_state->getValues();
+    $values['label'] = 'New field';
+    // We just don't need the temp field_name to clash with other saved field
+    // entities so just adding a prefix 'temp_field_' instead of default machine
+    // name prefix 'field_'.
+    $values['field_name'] = "temp_field_" . (new Random)->machineName(16, TRUE);
     $entity_type = $this->entityTypeManager->getDefinition($this->entityTypeId);
 
     $field_storage_type = $values['group_field_options_wrapper'] ?? $values['new_storage_type'];
@@ -447,6 +401,7 @@ class FieldStorageAddForm extends FormBase {
       'default_options' => $default_options,
     ]);
 
+    $this->tempStore->set('temp_name', $field_name);
     // Configure next steps in the multi-part form.
     $destinations = [];
     $route_parameters = [
@@ -527,38 +482,25 @@ class FieldStorageAddForm extends FormBase {
   }
 
   /**
-   * Checks if a field machine name is taken.
-   *
-   * @param string $value
-   *   The machine name, not prefixed.
-   * @param array $element
-   *   An array containing the structure of the 'field_name' element.
-   * @param \Drupal\Core\Form\FormStateInterface $form_state
-   *   The current state of the form.
-   *
-   * @return bool
-   *   Whether or not the field machine name is taken.
-   */
-  public function fieldNameExists($value, $element, FormStateInterface $form_state) {
-    // Add the field prefix.
-    $field_name = $this->configFactory->get('field_ui.settings')->get('field_prefix') . $value;
-
-    $field_storage_definitions = $this->entityFieldManager->getFieldStorageDefinitions($this->entityTypeId);
-    return isset($field_storage_definitions[$field_name]);
-  }
-
-  /**
    * Submit handler for displaying fields after a group is selected.
    */
-  public static function rebuildWithOptions($form, FormStateInterface &$form_state) {
-    $form_state->setRebuild();
+  public function rebuildWithOptions($form, FormStateInterface &$form_state) {
+    $storage_type = $form_state->getValue('new_storage_type');
+    $storage_type_list = $form['add']['new_storage_type'];
+    // Skip rebuilding for field types with no storage type options (for
+    // example, Boolean or Email fields).
+    if (array_key_exists($storage_type, $storage_type_list) &&  !$storage_type_list[$storage_type]['radio']['#display_as_group']) {
+      $this->submitForm($form, $form_state);
+    }
+    else {
+      $form_state->setRebuild();
+    }
   }
 
   /**
    * Submit handler for resetting the form.
    */
   public static function startOver($form, FormStateInterface &$form_state) {
-    $form_state->unsetValue('new_storage_type');
     $form_state->setRebuild();
   }
 

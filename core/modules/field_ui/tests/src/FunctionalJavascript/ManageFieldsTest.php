@@ -192,7 +192,6 @@ class ManageFieldsTest extends WebDriverTestBase {
     $page->pressButton('Continue');
     $assert_session->pageTextContains('Choose an option below');
     $field_name = 'test_field_1';
-    $page->fillField('label', $field_name);
     $page->pressButton('Continue');
     $assert_session->pageTextContains('You need to choose an option.');
     $assert_session->elementNotExists('css', '[name="new_storage_type"].error');
@@ -204,26 +203,22 @@ class ManageFieldsTest extends WebDriverTestBase {
     $email_field->click();
     $this->assertTrue($assert_session->elementExists('css', '[name="new_storage_type"][value="email"]')->isSelected());
     $page->pressButton('Continue');
-    $assert_session->pageTextNotContains('Choose an option below');
-    $page->pressButton('Back');
+    $this->drupalGet('admin/structure/types/manage/article/fields/add-field');
 
     $this->assertNotEmpty($text = $page->find('xpath', '//*[text() = "Plain text"]')->getParent());
     $text->click();
     $this->assertTrue($assert_session->elementExists('css', '[name="new_storage_type"][value="plain_text"]')->isSelected());
     $page->pressButton('Continue');
     $assert_session->pageTextContains('Choose an option below');
-
-    $page->fillField('label', $field_name);
     $this->assertNotEmpty($text_plain = $page->find('xpath', '//*[text() = "Text (plain)"]')->getParent());
     $text_plain->click();
     $this->assertTrue($assert_session->elementExists('css', '[name="group_field_options_wrapper"][value="string"]')->isSelected());
     $page->pressButton('Continue');
-
-    $this->assertMatchesRegularExpression('/.*article\/add-field\/node\/field_test_field_1.*/', $this->getUrl());
-
     // Ensure the default value is reloaded when the field storage settings
     // are changed.
-    $default_input_1_name = 'default_value_input[field_test_field_1][0][value]';
+    $page->fillField('label', $field_name);
+    $this->assertSession()->assertNoElementAfterWait('css', '.ajax-progress-throbber');
+    $default_input_1_name = "default_value_input[field_test_field_1][0][value]";
     $default_input_1 = $assert_session->fieldExists($default_input_1_name);
     $this->assertFalse($default_input_1->isVisible());
 
@@ -237,6 +232,7 @@ class ManageFieldsTest extends WebDriverTestBase {
     $cardinality->setValue(2);
     $default_input_2 = $assert_session->waitForField($default_input_2_name);
     // Ensure the default value for first input is retained.
+    $this->assertNotEmpty($assert_session->waitForField($default_input_1_name));
     $assert_session->fieldValueEquals($default_input_1_name, 'There can be only one!');
     $page->findField($default_input_2_name)->setValue('But maybe also two?');
     $cardinality->setValue('1');
@@ -286,9 +282,7 @@ class ManageFieldsTest extends WebDriverTestBase {
     $field_name = 'test_field_2';
     $page->fillField('label', $field_name);
     $assert_session->pageTextNotContains('Choose an option below');
-
-    $page->pressButton('Continue');
-    $this->assertMatchesRegularExpression('/.*article\/add-field\/node\/field_test_field_2.*/', $this->getUrl());
+    $this->assertSession()->assertNoElementAfterWait('css', '.ajax-progress-throbber');
     $page->pressButton('Save settings');
     $assert_session->pageTextContains('Saved ' . $field_name . ' configuration.');
     $this->assertNotNull($field_storage = FieldStorageConfig::loadByName('node', "field_$field_name"));
@@ -365,12 +359,6 @@ class ManageFieldsTest extends WebDriverTestBase {
 
     $page->findButton('Continue')->click();
     $this->assertSession()->pageTextContains('You need to select a field type.');
-
-    $this->assertNotEmpty($boolean_field = $page->find('xpath', '//*[text() = "Boolean (overridden by alter)"]')->getParent());
-    $boolean_field->click();
-    $page->findButton('Continue')->click();
-    $page->findButton('Continue')->click();
-    $this->assertSession()->pageTextContains('Add new field: you need to provide a label.');
   }
 
 }

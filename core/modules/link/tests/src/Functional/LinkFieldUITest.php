@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\link\Functional;
 
-use Drupal\Core\Url;
 use Drupal\Component\Utility\Html;
 use Drupal\Core\Entity\Entity\EntityFormDisplay;
+use Drupal\Core\Url;
 use Drupal\link\LinkItemInterface;
 use Drupal\Tests\BrowserTestBase;
 use Drupal\Tests\field_ui\Traits\FieldUiTestTrait;
@@ -169,7 +169,7 @@ class LinkFieldUITest extends BrowserTestBase {
     $storage_edit = [
       'cardinality_number' => $cardinality,
     ];
-    $this->fieldUIAddNewField($type_path, $field_name, $label, 'link', $storage_edit, $field_edit);
+    $this->fieldUIAddNewField($type_path, $field_name, $label, 'link', $storage_edit, $field_edit, TRUE, $this->contentType->id());
 
     // Load the formatter page to check that the settings summary does not
     // generate warnings.

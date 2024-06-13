@@ -52,6 +52,8 @@ trait FieldUiJSTestTrait {
     }
     $field_card?->click();
     $page->findButton('Continue')->click();
+
+    $this->assertNotEmpty($this->assertSession()->waitForField('edit-label'));
     $field_label = $page->findField('edit-label');
     $this->assertTrue($field_label->isVisible());
     $field_label = $page->find('css', 'input[data-drupal-selector="edit-label"]');
@@ -59,13 +61,10 @@ trait FieldUiJSTestTrait {
     $machine_name = $assert_session->waitForElementVisible('css', '[data-drupal-selector="edit-label"] + * .machine-name-value');
     $this->assertNotEmpty($machine_name);
     $page->findButton('Edit')->press();
-
     $field_field_name = $page->findField('field_name');
     $this->assertTrue($field_field_name->isVisible());
     $field_field_name->setValue($field_name);
-
-    $page->findButton('Continue')->click();
-    $assert_session->waitForText("These settings apply to the $label field everywhere it is used.");
+    $this->assertSession()->assertNoElementAfterWait('css', '.ajax-progress-throbber');
     if ($save_settings) {
       // Second step: Save field settings.
       $page->findButton('Save settings')->click();
@@ -112,8 +111,13 @@ trait FieldUiJSTestTrait {
     $this->assertSession()->responseNotContains('&amp;lt;');
 
     // Second step: 'Field settings' form.
-    $this->submitForm($field_edit, 'Save settings');
-    $this->assertSession()->pageTextContains("Saved $label configuration.");
+    $page = $this->getSession()->getPage();
+    $assert_session = $this->assertSession();
+    $page->fillField('edit-label', $label);
+    $page->findField('description')->focus();
+    $this->assertSession()->assertNoElementAfterWait('css', '.ajax-progress-throbber');
+    $page->pressButton('Save settings');
+    $this->assertTrue($assert_session->waitForText("Saved $label configuration."));
 
     // Check that the field appears in the overview form.
     $xpath = $this->assertSession()->buildXPathQuery("//table[@id=\"field-overview\"]//tr/td[1 and text() = :label]", [
@@ -146,6 +150,7 @@ trait FieldUiJSTestTrait {
       if ($field_card) {
         break;
       }
+      $this->assertNotEmpty($this->assertSession()->waitForButton('Back'));
       $this->getSession()->getPage()->pressButton('Back');
     }
     return $field_card->getParent();
