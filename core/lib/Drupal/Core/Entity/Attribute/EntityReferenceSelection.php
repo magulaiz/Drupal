@@ -31,11 +31,11 @@ class EntityReferenceSelection extends Plugin {
    * @param \Drupal\Core\StringTranslation\TranslatableMarkup $label
    *   The human-readable name of the selection plugin.
    * @param string $group
-   *   The selection plugin group. This property is used to allow selection
-   *   plugins to target a specific entity type while also inheriting the code
-   *   of an existing selection plugin. For example, if we want to override the
-   *   NodeSelection from the 'default' selection type, we can define the
-   *   attribute as follows:
+   *   Deprecated in 11.1.0. The selection plugin group. This property is used
+   *   to allow selection plugins to target a specific entity type while also
+   *   inheriting the code of an existing selection plugin. For example, if we
+   *   want to override the NodeSelection from the 'default' selection type, we
+   *   can define the attribute as follows:
    *   @code
    *   #[EntityReferenceSelection(
    *     id: "default:node_advanced",
@@ -56,7 +56,7 @@ class EntityReferenceSelection extends Plugin {
   public function __construct(
     public readonly string $id,
     public readonly TranslatableMarkup $label,
-    public readonly string $group,
+    public readonly string $group = '',
     public readonly int $weight,
     public readonly array $entity_types = [],
     public readonly ?string $deriver = NULL,
