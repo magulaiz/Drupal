@@ -62,6 +62,7 @@ class ContactFileFieldTest extends WebDriverTestBase {
     $this->assertTrue($assert_session->elementExists('css', '[name="new_storage_type"][value="file_upload"]')
       ->isSelected());
     $page->pressButton('Continue');
+
     $page->fillField('label', 'file_upload');
     $this->assertNotEmpty($file_field = $page->find('css', '[name="group_field_options_wrapper"][value="file"]')
       ->getParent());
@@ -100,6 +101,7 @@ class ContactFileFieldTest extends WebDriverTestBase {
     $this->assertTrue($assert_session->elementExists('css', '[name="new_storage_type"][value="file_upload"]')
       ->isSelected());
     $page->pressButton('Continue');
+
     $page->fillField('label', 'file_upload');
     $this->assertNotEmpty($file_field = $page->find('css', '[name="group_field_options_wrapper"][value="file"]')
       ->getParent());
