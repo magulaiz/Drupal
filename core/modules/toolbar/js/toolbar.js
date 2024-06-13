@@ -206,12 +206,16 @@
         }
 
         let offCanvasSettingsPosition;
+        let height;
+        let newHeight;
         window.addEventListener('dialog:aftercreate', (e) => {
           const $element = $(e.target);
           const toolbarBar = document.getElementById('toolbar-bar');
           once('OffCanvasPosition', toolbarBar, context).forEach((element) => {
             const { settings } = e;
             offCanvasSettingsPosition = settings.drupalOffCanvasPosition;
+            height = Drupal.offCanvas.getContainer($element).outerHeight();
+            newHeight = Drupal.offCanvas.getContainer($element).outerHeight();
           });
 
           if (toolbarBar) {
@@ -219,15 +223,9 @@
 
             // When off-canvas is positioned in top, toolbar has to be moved down.
             if (offCanvasSettingsPosition === 'top') {
-              const height = Drupal.offCanvas
-                .getContainer($element)
-                .outerHeight();
               toolbarBar.style.marginTop = `${height}px`;
 
               $element.on('dialogContentResize.off-canvas', () => {
-                const newHeight = Drupal.offCanvas
-                  .getContainer($element)
-                  .outerHeight();
                 toolbarBar.style.marginTop = `${newHeight}px`;
               });
             }
@@ -237,7 +235,7 @@
         window.addEventListener('dialog:beforeclose', () => {
           const toolbarBar = document.getElementById('toolbar-bar');
           if (toolbarBar) {
-            toolbarBar.style.marginTop = '0';
+            toolbarBar.style.marginTop = `${height}px`;
           }
         });
       });
