@@ -104,7 +104,7 @@ class ClaroViewsBulkOperationsTest extends WebDriverTestBase {
   /**
    * Tests the presence of a custom button added by the view bulk operation alteration.
    */
-  public function testViewBulkOperationAlter() {
+  public function testViewBulkOperationAlter(): void {
     $this->drupalGet('admin/content');
 
     $page = $this->getSession()->getPage();
