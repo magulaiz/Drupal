@@ -435,7 +435,7 @@ class LayoutBuilderEntityViewDisplay extends BaseEntityViewDisplay implements La
     $section = $this->getDefaultSection();
 
     // Only continue if new fields should be added to the layout.
-    if ($this->shouldAddNewFieldsToLayout()) {
+    if (!$this->shouldAddNewFieldsToLayout()) {
       return $this;
     }
 
