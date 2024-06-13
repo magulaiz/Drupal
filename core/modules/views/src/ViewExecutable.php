@@ -42,7 +42,6 @@ class ViewExecutable {
    *
    * @var bool
    * @todo Group with other static properties.
-   *
    */
   public $built = FALSE;
 
@@ -51,7 +50,6 @@ class ViewExecutable {
    *
    * @var bool
    * @todo Group with other static properties.
-   *
    */
   public $executed = FALSE;
 
@@ -353,8 +351,7 @@ class ViewExecutable {
   public $footer;
 
   /**
-   * Stores the area handlers for the empty text which are initialized on this
-   * view.
+   * Stores the area handlers for the empty text which are initialized on this view.
    *
    * An array containing Drupal\views\Plugin\views\area\AreaPluginBase objects.
    *
@@ -381,7 +378,6 @@ class ViewExecutable {
    *
    * @var bool
    * @todo Group with other static properties.
-   *
    */
   public $inited;
 
@@ -408,7 +404,6 @@ class ViewExecutable {
    *
    * @var bool
    * @todo Move to the query.
-   *
    */
   // phpcs:ignore Drupal.NamingConventions.ValidVariableName.LowerCamelName
   public $get_total_rows;
@@ -418,7 +413,6 @@ class ViewExecutable {
    *
    * @var bool
    * @todo Group with other static properties.
-   *
    */
   // phpcs:ignore Drupal.NamingConventions.ValidVariableName.LowerCamelName
   public $build_sort;
@@ -1429,7 +1423,6 @@ class ViewExecutable {
    *   the relationship and query information.
    *
    * @todo Some filter needs this function, even it is internal.
-   *
    */
   public function _build($key) {
     $handlers = &$this->$key;
@@ -1781,7 +1774,7 @@ class ViewExecutable {
 
     // Allow hook_views_pre_view() to set the dom_id, then ensure it is set.
     $this->dom_id = !empty($this->dom_id) ? $this->dom_id : hash('sha256', $this->storage->id() . \Drupal::time()
-        ->getRequestTime() . mt_rand());
+      ->getRequestTime() . mt_rand());
 
     // Allow the display handler to set up for execution
     $this->display_handler->preExecute();
@@ -2567,6 +2560,7 @@ class ViewExecutable {
    *
    * @return array
    *   An array of dependencies grouped by type (module, theme, entity).
+   *
    * @see \Drupal\views\Entity\View::getDependencies()
    *
    * @see \Drupal\views\Entity\View::calculateDependencies()
