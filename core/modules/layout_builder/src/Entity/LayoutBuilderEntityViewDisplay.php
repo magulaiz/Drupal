@@ -424,7 +424,8 @@ class LayoutBuilderEntityViewDisplay extends BaseEntityViewDisplay implements La
   public function setComponent($name, array $options = []) {
     parent::setComponent($name, $options);
 
-    // Only continue if Layout Builder is enabled.
+    // Only continue if Layout Builder is enabled and new fields should be
+    // added to the layout.
     if (!$this->isLayoutBuilderEnabled() || !$this->shouldAddNewFieldsToLayout()) {
       return $this;
     }
