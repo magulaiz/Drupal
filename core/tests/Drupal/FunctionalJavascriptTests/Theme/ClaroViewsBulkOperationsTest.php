@@ -114,6 +114,14 @@ class ClaroViewsBulkOperationsTest extends WebDriverTestBase {
     // Assert that the button does not exist.
     $custom_button = $page->find('css', '#edit-custom-action');
     $this->assertEmpty($custom_button);
+
+    \Drupal::service('module_installer')->install(['claro_bulk_view_operation_test']);
+    drupal_flush_all_caches();
+    $this->drupalGet('admin/content');
+    $select_all = $page->find('css', '.select-all > input');
+    $select_all->check();
+    // Confirm the button exists after the module is installed.
+    $assert_session->buttonExists('Custom button');
   }
 
 }
