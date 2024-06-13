@@ -424,9 +424,18 @@ class LayoutBuilderEntityViewDisplay extends BaseEntityViewDisplay implements La
   public function setComponent($name, array $options = []) {
     parent::setComponent($name, $options);
 
-    // Only continue if Layout Builder is enabled and new fields should be
-    // added to the layout.
-    if (!$this->isLayoutBuilderEnabled() || !$this->shouldAddNewFieldsToLayout()) {
+    // Only continue if Layout Builder is enabled.
+    if (!$this->isLayoutBuilderEnabled()) {
+      return $this;
+    }
+
+    // We always need a new section, even if we're not adding fields, and this
+    // getting the default section has a side effect of creating one if it
+    // doesn't exist.
+    $section = $this->getDefaultSection();
+
+    // Only continue if new fields should be added to the layout.
+    if ($this->shouldAddNewFieldsToLayout()) {
       return $this;
     }
 
@@ -450,7 +459,6 @@ class LayoutBuilderEntityViewDisplay extends BaseEntityViewDisplay implements La
         $configuration['id'] = 'extra_field_block:' . $this->getTargetEntityTypeId() . ':' . $this->getTargetBundle() . ':' . $name;
       }
 
-      $section = $this->getDefaultSection();
       $region = $options['region'] ?? $section->getDefaultRegion();
       $new_component = (new SectionComponent(\Drupal::service('uuid')->generate(), $region, $configuration));
       $section->appendComponent($new_component);
