@@ -32,31 +32,6 @@
   };
 
   /**
-   * Constructs a password strength message.
-   *
-   * @param {object} passwordSettings
-   *   An object containing password related settings and translated text to
-   *   display.
-   * @param {string} passwordSettings.strengthTitle
-   *   The title that precedes the strength text.
-   *
-   * @return {string}
-   *   Markup for the password strength indicator.
-   */
-  Drupal.theme.passwordStrength = ({ strengthTitle }) => {
-    const strengthBar =
-      '<div class="password-strength__bar" data-drupal-selector="password-strength-indicator"></div>';
-    const strengthText =
-      '<span class="password-strength__text" data-drupal-selector="password-strength-text"></span>';
-    return `
-      <div class="password-strength">
-        <div class="password-strength__track" data-drupal-selector="password-strength-meter">${strengthBar}</div>
-        <div aria-live="polite" aria-atomic="true" class="password-strength__title">${strengthTitle} ${strengthText}</div>
-      </div>
-    `;
-  };
-
-  /**
    * Constructs password suggestions tips.
    *
    * @param {object} passwordSettings
