@@ -64,13 +64,11 @@ class BackendCompilerPass implements CompilerPassInterface {
       if ($container->hasAlias($id)) {
         continue;
       }
-      // Ensure the backend service has the same visibility as the original.
-      $is_public = $container->getDefinition($id)->isPublic();
       if ($container->hasDefinition("$driver_backend.$id") || $container->hasAlias("$driver_backend.$id")) {
-        $container->setAlias($id, new Alias("$driver_backend.$id", $is_public));
+        $container->setAlias($id, new Alias("$driver_backend.$id"));
       }
       elseif ($container->hasDefinition("$default_backend.$id") || $container->hasAlias("$default_backend.$id")) {
-        $container->setAlias($id, new Alias("$default_backend.$id", $is_public));
+        $container->setAlias($id, new Alias("$default_backend.$id"));
       }
     }
   }

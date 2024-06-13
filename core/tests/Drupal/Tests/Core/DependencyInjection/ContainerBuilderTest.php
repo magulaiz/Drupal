@@ -70,33 +70,44 @@ class ContainerBuilderTest extends UnitTestCase {
   public function testSetAlias() {
     // Test a service with public set to true (default).
     $container = new ContainerBuilder();
-    $container->register('bar');
-    $alias = $container->setAlias('foo', 'bar');
+    $container->register('public');
+    $alias = $container->setAlias('foo', 'public');
     $this->assertTrue($alias->isPublic());
 
     // Test a service with public set to false.
     $definition = new Definition();
     $definition->setPublic(FALSE);
-    $container->setDefinition('bar', $definition);
-    $alias = $container->setAlias('foo', 'bar');
+    $container->setDefinition('private', $definition);
+    $alias = $container->setAlias('foo', 'private');
     $this->assertFalse($alias->isPublic());
 
     // Test an alias to a public alias that links to a private service.
-    $alias = new Alias('bar', TRUE);
+    $alias = new Alias('private', TRUE);
     $alias = $container->setAlias('foo', $alias);
     $this->assertTrue($alias->isPublic());
 
     // Test a alias to a private alias to a private service.
-    $alias = new Alias('bar');
+    $alias = new Alias('private');
     $alias = $container->setAlias('foo', $alias);
     $this->assertFalse($alias->isPublic());
 
-    // Make bar public.
-    $container->register('bar');
     // Test a alias to a private alias to a public service.
-    $alias = new Alias('bar');
+    $alias = new Alias('public');
     $alias = $container->setAlias('foo', $alias);
     $this->assertTrue($alias->isPublic());
+
+    // Test alias replacing a service inherits the visibility from the service
+    // it is replacing and not from the aliased service.
+    foreach (['public', 'private'] as $service_to_alias_to) {
+      $definition->setPublic(FALSE);
+      $container->setDefinition('foo', $definition);
+      $alias = $container->setAlias('foo', $service_to_alias_to);
+      $this->assertFalse($alias->isPublic());
+      $definition->setPublic(TRUE);
+      $container->setDefinition('foo', $definition);
+      $alias = $container->setAlias('foo', $service_to_alias_to);
+      $this->assertTrue($alias->isPublic());
+    }
   }
 
   /**

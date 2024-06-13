@@ -56,12 +56,23 @@ class ContainerBuilder extends SymfonyContainerBuilder implements ContainerInter
    * {@inheritdoc}
    */
   public function setAlias($alias, $id): Alias {
-    $alias = parent::setAlias($alias, $id);
-    if ($id instanceof Alias && $id->isPublic()) {
-      $alias->setPublic(TRUE);
+    // If the alias is overriding an existing service preserve its visibility.
+    if ($this->hasDefinition($alias)) {
+      $visibility = $this->getDefinition($alias)->isPublic();
     }
+    // If $id is a public alias then the new alias to should be public too.
+    elseif ($id instanceof Alias && $id->isPublic()) {
+      $visibility = TRUE;
+    }
+    // Otherwise inherit visibility from the service.
     elseif ($this->hasDefinition($id)) {
-      $alias->setPublic($this->getDefinition($id)->isPublic());
+      $visibility = $this->getDefinition($id)->isPublic();
+    }
+
+    $alias = parent::setAlias($alias, $id);
+
+    if (isset($visibility)) {
+      $alias->setPublic($visibility);
     }
     else {
       // As of Symfony 3.4 all aliases are private by default.
