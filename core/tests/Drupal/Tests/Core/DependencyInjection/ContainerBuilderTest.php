@@ -7,6 +7,7 @@ namespace Drupal\Tests\Core\DependencyInjection;
 use Drupal\Core\DependencyInjection\ContainerBuilder;
 use Drupal\Tests\UnitTestCase;
 use Drupal\Tests\Core\DependencyInjection\Fixture\BarClass;
+use Symfony\Component\DependencyInjection\Alias;
 use Symfony\Component\DependencyInjection\Definition;
 
 /**
@@ -79,6 +80,23 @@ class ContainerBuilderTest extends UnitTestCase {
     $container->setDefinition('bar', $definition);
     $alias = $container->setAlias('foo', 'bar');
     $this->assertFalse($alias->isPublic());
+
+    // Test an alias to a public alias that links to a private service.
+    $alias = new Alias('bar', TRUE);
+    $alias = $container->setAlias('foo', $alias);
+    $this->assertTrue($alias->isPublic());
+
+    // Test a alias to a private alias to a private service.
+    $alias = new Alias('bar');
+    $alias = $container->setAlias('foo', $alias);
+    $this->assertFalse($alias->isPublic());
+
+    // Make bar public.
+    $container->register('bar');
+    // Test a alias to a private alias to a public service.
+    $alias = new Alias('bar');
+    $alias = $container->setAlias('foo', $alias);
+    $this->assertTrue($alias->isPublic());
   }
 
   /**
