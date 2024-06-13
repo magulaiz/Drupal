@@ -274,7 +274,7 @@ class ModulesListForm extends FormBase {
         )->toString();
     }
     $row['description']['#markup'] = Xss::filter($this->t($module->info['description']));
-    $row['version']['#markup'] = Xss::filter($module->info['version']);
+    $row['version']['#markup'] = isset($module->info['version']) ?? Xss::filter($module->info['version']);
 
     // Generate link for module's help page. Assume that if a hook_help()
     // implementation exists then the module provides an overview page, rather
