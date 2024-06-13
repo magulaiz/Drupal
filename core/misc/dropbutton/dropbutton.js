@@ -94,6 +94,9 @@
       $buttonToOpen.addClass('open');
       $(e.target).attr('aria-expanded', 'true');
     }
+    $('.dropbutton-wrapper:not(".open")')
+      .find('.dropbutton__toggle')
+      .attr('aria-expanded', 'false');
   }
 
   /**
