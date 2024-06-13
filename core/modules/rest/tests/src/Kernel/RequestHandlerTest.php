@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\rest\Kernel;
 
 use Drupal\Component\Serialization\Json;
@@ -100,7 +102,7 @@ class RequestHandlerTest extends KernelTestBase {
  */
 class StubRequestHandlerResourcePlugin extends ResourceBase {
 
-  public function get($example = NULL, Request $request = NULL) {}
+  public function get($example = NULL, ?Request $request = NULL) {}
 
   public function post() {}
 

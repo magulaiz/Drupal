@@ -11,6 +11,7 @@ use Drupal\FunctionalJavascriptTests\PerformanceTestBase;
  *
  * @group OpenTelemetry
  * @group #slow
+ * @requires extension apcu
  */
 class OpenTelemetryNodePagePerformanceTest extends PerformanceTestBase {
 
@@ -23,13 +24,13 @@ class OpenTelemetryNodePagePerformanceTest extends PerformanceTestBase {
    * Logs node page tracing data with a cold cache.
    */
   public function testNodePageColdCache() {
-    // @todo: Chromedriver doesn't collect tracing performance logs for the very
-    // first request in a test, so warm it up.
-    // See https://www.drupal.org/project/drupal/issues/3379750
+    // @todo Chromedriver doesn't collect tracing performance logs for the very
+    //   first request in a test, so warm it up.
+    //   https://www.drupal.org/project/drupal/issues/3379750
     $this->drupalGet('user/login');
     $this->rebuildAll();
     $this->collectPerformanceData(function () {
-      $this->drupalGet('/node/1');
+      $this->drupalGet('node/1');
     }, 'umamiNodePageColdCache');
     $this->assertSession()->pageTextContains('quiche');
   }
@@ -44,10 +45,17 @@ class OpenTelemetryNodePagePerformanceTest extends PerformanceTestBase {
     // the browser cache.
     $this->drupalGet('node/1');
     $this->drupalGet('node/1');
-    $this->collectPerformanceData(function () {
-      $this->drupalGet('/node/1');
+
+    $performance_data = $this->collectPerformanceData(function () {
+      $this->drupalGet('node/1');
     }, 'umamiNodePageHotCache');
     $this->assertSession()->pageTextContains('quiche');
+    $this->assertSame($performance_data->getQueryCount(), 0);
+    $this->assertSame($performance_data->getCacheGetCount(), 1);
+    $this->assertSame($performance_data->getCacheSetCount(), 0);
+    $this->assertSame($performance_data->getCacheDeleteCount(), 0);
+    $this->assertSame(0, $performance_data->getCacheTagChecksumCount());
+    $this->assertSame(1, $performance_data->getCacheTagIsValidCount());
   }
 
   /**
@@ -61,9 +69,9 @@ class OpenTelemetryNodePagePerformanceTest extends PerformanceTestBase {
     $this->drupalGet('node/1');
     $this->rebuildAll();
     // Now visit a non-node page to warm non-route-specific caches.
-    $this->drupalGet('/user/login');
+    $this->drupalGet('user/login');
     $this->collectPerformanceData(function () {
-      $this->drupalGet('/node/1');
+      $this->drupalGet('node/1');
     }, 'umamiNodePageCoolCache');
     $this->assertSession()->pageTextContains('quiche');
   }
@@ -79,9 +87,9 @@ class OpenTelemetryNodePagePerformanceTest extends PerformanceTestBase {
     $this->drupalGet('node/1');
     $this->rebuildAll();
     // Now visit a different node page to warm non-path-specific caches.
-    $this->drupalGet('/node/2');
+    $this->drupalGet('node/2');
     $this->collectPerformanceData(function () {
-      $this->drupalGet('/node/1');
+      $this->drupalGet('node/1');
     }, 'umamiNodePageWarmCache');
     $this->assertSession()->pageTextContains('quiche');
   }

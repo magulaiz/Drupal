@@ -244,7 +244,7 @@ class ContentLanguageSettingsUnitTest extends UnitTestCase {
    *
    * @dataProvider providerLoadByEntityTypeBundle
    */
-  public function testLoadByEntityTypeBundle($config_id, ContentLanguageSettings $existing_config = NULL, $expected_langcode, $expected_language_alterable) {
+  public function testLoadByEntityTypeBundle($config_id, ?ContentLanguageSettings $existing_config, $expected_langcode, $expected_language_alterable) {
     [$type, $bundle] = explode('.', $config_id);
 
     $nullConfig = new ContentLanguageSettings([
@@ -267,7 +267,7 @@ class ContentLanguageSettingsUnitTest extends UnitTestCase {
       ->with('language_content_settings')
       ->willReturn($this->configEntityStorageInterface);
 
-    $entity_type_repository = $this->getMockForAbstractClass(EntityTypeRepositoryInterface::class);
+    $entity_type_repository = $this->createMock(EntityTypeRepositoryInterface::class);
     $entity_type_repository->expects($this->any())
       ->method('getEntityTypeFromClass')
       ->with(ContentLanguageSettings::class)

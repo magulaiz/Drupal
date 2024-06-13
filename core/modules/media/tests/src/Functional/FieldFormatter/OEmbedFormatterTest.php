@@ -72,19 +72,22 @@ class OEmbedFormatterTest extends MediaFunctionalTestBase {
             'height' => '360',
             'title' => 'Drupal Rap Video - Schipulcon09',
             'loading' => 'lazy',
+            // cSpell:disable-next-line
+            'allowtransparency' => NULL,
+            'frameborder' => NULL,
           ],
         ],
         'self_closing' => TRUE,
       ],
       'Vimeo video, resized' => [
         'https://vimeo.com/7073899',
-        'video_vimeo.json?maxwidth=100&maxheight=100',
+        'video_vimeo-resized.json',
         ['max_width' => '100', 'max_height' => '100'],
         [
           'iframe' => [
-            'src' => '/media/oembed?url=https%3A//vimeo.com/7073899',
+            'src' => '/media/oembed?url=https%3A//vimeo.com/7073899&max_width=100&max_height=100',
             'width' => '100',
-            'height' => '100',
+            'height' => '67',
             'title' => 'Drupal Rap Video - Schipulcon09',
             'loading' => 'lazy',
           ],

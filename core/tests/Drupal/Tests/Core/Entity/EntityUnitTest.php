@@ -104,7 +104,7 @@ class EntityUnitTest extends UnitTestCase {
       ->method('getListCacheTags')
       ->willReturn([$this->entityTypeId . '_list']);
 
-    $this->entityTypeManager = $this->getMockForAbstractClass(EntityTypeManagerInterface::class);
+    $this->entityTypeManager = $this->createMock(EntityTypeManagerInterface::class);
     $this->entityTypeManager->expects($this->any())
       ->method('getDefinition')
       ->with($this->entityTypeId)
@@ -247,16 +247,18 @@ class EntityUnitTest extends UnitTestCase {
   }
 
   /**
-   * @covers ::load
+   * Tests Entity::load().
    *
-   * Tests Entity::load() when called statically on a subclass of Entity.
+   * When called statically on a subclass of Entity.
+   *
+   * @covers ::load
    */
   public function testLoad() {
     $this->setupTestLoad();
 
     $class_name = get_class($this->entity);
 
-    $entity_type_repository = $this->getMockForAbstractClass(EntityTypeRepositoryInterface::class);
+    $entity_type_repository = $this->createMock(EntityTypeRepositoryInterface::class);
     $entity_type_repository->expects($this->once())
       ->method('getEntityTypeFromClass')
       ->with($class_name)
@@ -280,17 +282,18 @@ class EntityUnitTest extends UnitTestCase {
   }
 
   /**
-   * @covers ::loadMultiple
+   * Tests Entity::loadMultiple().
    *
-   * Tests Entity::loadMultiple() when called statically on a subclass of
-   * Entity.
+   * When called statically on a subclass of Entity.
+   *
+   * @covers ::loadMultiple
    */
   public function testLoadMultiple() {
     $this->setupTestLoad();
 
     $class_name = get_class($this->entity);
 
-    $entity_type_repository = $this->getMockForAbstractClass(EntityTypeRepositoryInterface::class);
+    $entity_type_repository = $this->createMock(EntityTypeRepositoryInterface::class);
     $entity_type_repository->expects($this->once())
       ->method('getEntityTypeFromClass')
       ->with($class_name)
@@ -322,7 +325,7 @@ class EntityUnitTest extends UnitTestCase {
 
     $class_name = get_class($this->entity);
 
-    $entity_type_repository = $this->getMockForAbstractClass(EntityTypeRepositoryInterface::class);
+    $entity_type_repository = $this->createMock(EntityTypeRepositoryInterface::class);
     $entity_type_repository->expects($this->once())
       ->method('getEntityTypeFromClass')
       ->with($class_name)

@@ -5,9 +5,9 @@ declare(strict_types=1);
 namespace Drupal\Tests\Component\DependencyInjection;
 
 use Drupal\Component\Utility\Crypt;
+use Drupal\TestTools\Extension\DeprecationBridge\ExpectDeprecationTrait;
 use PHPUnit\Framework\TestCase;
 use Prophecy\PhpUnit\ProphecyTrait;
-use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\DependencyInjection\Exception\InvalidArgumentException;
 use Symfony\Component\DependencyInjection\Exception\LogicException;
@@ -698,6 +698,19 @@ class ContainerTest extends TestCase {
   }
 
   /**
+   * Tests that service iterators are lazily instantiated.
+   */
+  public function testIterator() {
+    $iterator = $this->container->get('service_iterator')->getArguments()[0];
+    $this->assertIsIterable($iterator);
+    $this->assertFalse($this->container->initialized('other.service'));
+    foreach ($iterator as $service) {
+      $this->assertIsObject($service);
+    }
+    $this->assertTrue($this->container->initialized('other.service'));
+  }
+
+  /**
    * Tests Container::reset().
    *
    * @covers ::reset
@@ -975,6 +988,16 @@ class ContainerTest extends TestCase {
       'arguments' => $this->getCollection([$this->getRaw('ccc')]),
     ];
 
+    // Iterator argument.
+    $services['service_iterator'] = [
+      'class' => '\Drupal\Tests\Component\DependencyInjection\MockInstantiationService',
+      'arguments' => $this->getCollection([
+        $this->getIterator([
+          $this->getServiceCall('other.service'),
+        ]),
+      ]),
+    ];
+
     $aliases = [];
     $aliases['service.provider_alias'] = 'service.provider';
     $aliases['late.service_alias'] = 'late.service';
@@ -1007,6 +1030,16 @@ class ContainerTest extends TestCase {
       'type' => 'service_closure',
       'id' => $id,
       'invalidBehavior' => $invalid_behavior,
+    ];
+  }
+
+  /**
+   * Helper function to return a service iterator.
+   */
+  protected function getIterator($iterator) {
+    return (object) [
+      'type' => 'iterator',
+      'value' => $iterator,
     ];
   }
 
