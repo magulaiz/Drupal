@@ -13,7 +13,7 @@ use Symfony\Component\HttpKernel\Event\ResponseEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
 
 /**
- * Request subscriber that validates a JSON:API request.
+ * Subscriber that validates the query parameter names on a JSON:API request.
  *
  * @internal JSON:API maintains no PHP API. The API is the HTTP API. This class
  *   may change at any time and could break any dependencies on it.
@@ -21,7 +21,7 @@ use Symfony\Component\HttpKernel\KernelEvents;
  * @see https://www.drupal.org/project/drupal/issues/3032787
  * @see jsonapi.api.php
  */
-class JsonApiRequestValidator implements EventSubscriberInterface {
+class JsonApiQueryParamValidator implements EventSubscriberInterface {
 
   /**
    * Validates JSON:API requests.
