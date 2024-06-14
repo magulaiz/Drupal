@@ -647,8 +647,8 @@ function _field_write_instance($instance, $update = FALSE) {
       $formatter_type = field_info_formatter_types($display['type']);
       if ($formatter_type) {
         $display['module'] = $formatter_type['module'];
+        $display['settings'] += field_info_formatter_settings($display['type']);
       }
-      $display['settings'] += field_info_formatter_settings($display['type']);
     }
     // If no weight specified, make sure the field sinks at the bottom.
     if (!isset($display['weight'])) {
