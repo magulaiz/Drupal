@@ -65,14 +65,14 @@ class DrupalApplication extends Application {
       chdir(\DRUPAL_ROOT);
       $kernel = new DrupalKernel('prod', $this->classloader, FALSE);
       $kernel::bootEnvironment();
-      $kernel->setSitePath($context['DRUPAL_DEV_SITE_PATH'] ?? 'sites/default');
+      $kernel->setSitePath($this->context['DRUPAL_DEV_SITE_PATH'] ?? 'sites/default');
       Settings::initialize($kernel->getAppRoot(), $kernel->getSitePath(), $this->classloader);
       $kernel->boot();
 
       // Drupal is highly dependent on a Request:
       $request = Request::createFromGlobals();
-      $baseDomain = $context['HOST'] ?? NULL;
-      $basePort = $context['PORT'] ?? NULL;
+      $baseDomain = $this->context['HOST'] ?? NULL;
+      $basePort = $this->context['PORT'] ?? NULL;
       if ($baseDomain !== NULL) {
         $request->server->set('SERVER_NAME', $baseDomain);
         $request->server->set('SERVER_PORT', $basePort ?? 80);
