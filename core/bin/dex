@@ -47,12 +47,6 @@ return static function (array $context): Application {
   $kernel->preHandle($request);
 
   $app = new Application('dex', \Drupal::VERSION);
-  $app->setCommandLoader($kernel->getContainer()->get('console.command_loader'));
-  // Add commands which did not use an attribute, relying solely on configure().
-  if ($kernel->getContainer()->hasParameter('console.command.ids')) {
-    foreach ($kernel->getContainer()->getParameter('console.command.ids') as $id) {
-      $app->add($kernel->getContainer()->get($id));
-    }
-  }
+  DrupalModuleCommandDiscovery::addCommands($app, $kernel);
   return $app;
 };

@@ -495,7 +495,7 @@
             "dist": {
                 "type": "path",
                 "url": "core",
-                "reference": "677857e8cef5ac2a02d65559f7514ecd5404df05"
+                "reference": "bdda4c81aabe572ac9da620a39368f347e302f9a"
             },
             "require": {
                 "asm89/stack-cors": "^2.1",
@@ -578,7 +578,8 @@
                 "ext-zip": "Needed to extend the plugin.manager.archiver service capability with the handling of files in the ZIP format."
             },
             "bin": [
-                "bin/dex"
+                "bin/dex",
+                "scripts/drupal"
             ],
             "type": "drupal-core",
             "extra": {
@@ -9415,5 +9416,5 @@
     "platform-overrides": {
         "php": "8.3.0"
     },
-    "plugin-api-version": "2.3.0"
+    "plugin-api-version": "2.6.0"
 }

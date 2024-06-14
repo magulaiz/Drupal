@@ -6,14 +6,28 @@
  * Provides CLI commands for Drupal.
  */
 
-use Drupal\Core\Command\DrupalApplication;
+declare(strict_types = 1);
 
-if (PHP_SAPI !== 'cli') {
-  return;
+use Composer\Autoload\ClassLoader;
+use Drupal\Core\Command\DrupalApplication;
+use Drupal\Core\DrupalKernel;
+use Drupal\Core\Site\Settings;
+use Symfony\Component\Console\Application;
+use Symfony\Component\HttpFoundation\Request;
+
+// We have the luxury of using this global.
+# https://getcomposer.org/doc/articles/vendor-binaries.md#finding-the-composer-autoloader-from-a-binary
+require_once dirname($GLOBALS['_composer_autoload_path']) . '/autoload_runtime.php';
+
+if ('cli' !== \PHP_SAPI) {
+  throw new Exception('This script must be run from the command line.');
 }
 
-$classloader = require_once __DIR__ . '/../../autoload.php';
-
-$application = new DrupalApplication($classloader);
-
-$application->run();
+// Utilizes the https://symfony.com/doc/current/components/runtime.html component
+// to encapsulate the application cleanly.
+return static function (array $context): Application {
+  $loaders = ClassLoader::getRegisteredLoaders();
+  $classLoader = reset($loaders);
+  $app = new DrupalApplication($classLoader, $context);
+  return $app;
+};
