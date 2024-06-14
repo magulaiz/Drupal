@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Drupal\system\Command;
@@ -12,7 +13,7 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 
 /**
  * Example module command.
- * 
+ *
  * Ultimately, I think we should remove this from the MR, but it is
  * useful to have an example command to test with during development.
  */

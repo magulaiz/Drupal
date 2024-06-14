@@ -40,7 +40,7 @@ class DrupalApplication extends Application {
   }
 
   /**
-   * @inheritdoc
+   * {@inheritdoc}
    */
   public function find($name): Command {
     try {
@@ -49,7 +49,8 @@ class DrupalApplication extends Application {
         $this->bootstrap();
       }
       return $command;
-    } catch (CommandNotFoundException $e) {
+    }
+    catch (CommandNotFoundException $e) {
       if (!$this->bootstrap()) {
         throw $e;
       }
@@ -83,9 +84,11 @@ class DrupalApplication extends Application {
       $kernel->preHandle($request);
 
       DrupalModuleCommandDiscovery::addCommands($this, $kernel);
-    } catch(\Exception $e) {
-      return false;
     }
-    return true;
+    catch (\Exception $e) {
+      return FALSE;
+    }
+    return TRUE;
   }
+
 }
