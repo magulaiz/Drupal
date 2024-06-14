@@ -6,6 +6,7 @@ namespace Drupal\KernelTests\Core\Config;
 
 use Drupal\Component\Utility\Html;
 use Drupal\Component\Render\FormattableMarkup;
+use Drupal\Component\Uuid\Php;
 use Drupal\Core\Config\ConfigCollectionEvents;
 use Drupal\Core\Config\ConfigEvents;
 use Drupal\Core\Config\ConfigImporter;
@@ -71,32 +72,51 @@ class ConfigImporterTest extends KernelTestBase {
 
   /**
    * Tests verification of site UUID before importing configuration.
+   *
+   * @dataProvider providerSiteUuidValidate
    */
-  public function testSiteUuidValidate() {
+  public function testSiteUuidValidate($uuid, $expected_error_logs) {
     $sync = \Drupal::service('config.storage.sync');
     // Create updated configuration object.
     $config_data = $this->config('system.site')->get();
-    // Generate a new site UUID.
-    $config_data['uuid'] = \Drupal::service('uuid')->generate();
+    if ($uuid) {
+      $config_data['uuid'] = $uuid;
+    }
+    else {
+      unset($config_data['uuid']);
+    }
+
     $sync->write('system.site', $config_data);
     $config_importer = $this->configImporter();
+
     try {
       $config_importer->import();
-      $this->fail('ConfigImporterException not thrown, invalid import was not stopped due to mis-matching site UUID.');
+      $actual_error_logs = $config_importer->getErrors();
     }
     catch (ConfigImporterException $e) {
-      $actual_message = $e->getMessage();
-
-      $actual_error_log = $config_importer->getErrors();
-      $expected_error_log = ['Site UUID in source storage does not match the target storage.'];
-      $this->assertEquals($expected_error_log, $actual_error_log);
-
-      $expected = static::FAIL_MESSAGE . PHP_EOL . 'Site UUID in source storage does not match the target storage.';
-      $this->assertEquals($expected, $actual_message);
-      foreach ($expected_error_log as $log_row) {
-        $this->assertMatchesRegularExpression("/$log_row/", $actual_message);
-      }
+      $actual_error_logs = $config_importer->getErrors();
     }
+
+    foreach ($actual_error_logs as $index => $actual_error_log) {
+      $this->assertEquals($expected_error_logs[$index], $actual_error_log);
+    }
+    $this->assertCount(count($expected_error_logs), $actual_error_logs);
+  }
+
+  /**
+   * Data provider for ::testSiteUuidValidate.
+   */
+  public function providerSiteUuidValidate() {
+    return [
+      'bad site uuid' => [
+        (new Php())->generate(),
+        ['Site UUID in source storage does not match the target storage.'],
+      ],
+      'empty site uuid' => [
+        NULL,
+        [],
+      ],
+    ];
   }
 
   /**
