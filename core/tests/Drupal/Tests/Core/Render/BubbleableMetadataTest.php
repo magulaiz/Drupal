@@ -179,7 +179,7 @@ class BubbleableMetadataTest extends UnitTestCase {
 
     $expected_when_empty_metadata_and_nonempty_render_array = [
       '#cache' => [
-        'contexts' => ['qux', 'baz'],
+        'contexts' => ['qux', 'waldo'],
         'tags' => ['llamas:are:awesome:but:kittens:too'],
         'max-age' => 60,
       ],
@@ -191,7 +191,7 @@ class BubbleableMetadataTest extends UnitTestCase {
       '#cache' => [
         'contexts' => ['qux'],
         'tags' => ['foo:bar'],
-        'max-age' => Cache::PERMANENT,
+        'max-age' => 60,
       ],
       '#attached' => [
         'settings' => [

@@ -139,7 +139,7 @@ class CacheableMetadata implements RefinableCacheableDependencyInterface {
       // it uses an assertion that depends on the cache contexts manager service
       // being available, which might not always be the case. This can be during
       // the installation process or in tests.
-      ? array_unique(array_merge($this->cacheContexts, $build['#cache']['contexts']))
+      ? array_values(array_unique(array_merge($this->cacheContexts, $build['#cache']['contexts'])))
       : $this->cacheContexts;
     $build['#cache']['tags'] = isset($build['#cache']['tags'])
       ? Cache::mergeTags($this->cacheTags, $build['#cache']['tags'])
