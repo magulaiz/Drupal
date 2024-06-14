@@ -15,9 +15,12 @@ use Drupal\Core\Site\Settings;
 use Symfony\Component\Console\Application;
 use Symfony\Component\HttpFoundation\Request;
 
-// We have the luxury of using this global.
-# https://getcomposer.org/doc/articles/vendor-binaries.md#finding-the-composer-autoloader-from-a-binary
-require_once dirname($GLOBALS['_composer_autoload_path']) . '/autoload_runtime.php';
+// We must check $_composer_autoload_path before we use it, because legacy
+// callers that invoke this script directly, rather than using vendor/bin/drupal,
+// won't get it.
+// https://getcomposer.org/doc/articles/vendor-binaries.md#finding-the-composer-autoloader-from-a-binary
+$autoload_path = $GLOBALS['_composer_autoload_path'] ?? __DIR__ . '/../../vendor/autoload.php';
+require_once dirname($autoload_path) . '/autoload_runtime.php';
 
 if ('cli' !== \PHP_SAPI) {
   throw new Exception('This script must be run from the command line.');
