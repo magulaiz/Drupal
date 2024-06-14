@@ -111,9 +111,8 @@ class ClaroViewsBulkOperationsTest extends WebDriverTestBase {
     $assert_session = $this->assertSession();
     $select_all = $page->find('css', '.select-all > input');
     $select_all->check();
-    // Assert that the button does not exist.
-    $custom_button = $page->find('css', '#edit-custom-action');
-    $this->assertEmpty($custom_button);
+    // Assertion must fail because button does not exists.
+    $assert_session->buttonExists('Custom button');
   }
 
 }
