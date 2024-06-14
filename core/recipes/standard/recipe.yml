@@ -73,6 +73,7 @@ config:
       grantPermission: 'delete own files'
     user.role.content_editor:
       grantPermissions:
+        - 'access content overview'
         - 'access contextual links'
         - 'access files overview'
         - 'access toolbar'
@@ -84,6 +85,7 @@ config:
         - 'delete own files'
         - 'revert all revisions'
         - 'view all revisions'
+        - 'view the administration theme'
       grantPermissionsForEachNodeType:
         - 'create %bundle content'
         - 'delete %bundle revisions'
