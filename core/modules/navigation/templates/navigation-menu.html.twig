@@ -8,16 +8,24 @@
 
 {% macro menu_items(items, attributes, menu_level) %}
   {% for item in items %}
+
+    {% if item.url.isRouted and item.url.routeName == '<nolink>' %}
+      {% set menu_item_tag = 'span' %}
+    {% elseif item.url.isRouted and item.url.routeName == '<button>' %}
+      {% set menu_item_tag = 'button' %}
+    {% else %}
+      {% set menu_item_tag = 'a' %}
+    {% endif %}
+
     {% set item_id = ('navigation-link--' ~ item.original_link.pluginId)|clean_unique_id %}
     {% if menu_level == 0 %}
       {% if item.below is empty  %}
         <li id="{{ item_id }}" class="toolbar-block__list-item">
           {% include '@navigation/toolbar-button.html.twig' with {
-            attributes: create_attribute({ 'data-drupal-tooltip': item.title, 'data-drupal-tooltip-class': 'admin-toolbar__tooltip' }),
+            attributes: create_attribute({ 'href': item.url|render|default(null), 'data-drupal-tooltip': item.title, 'data-drupal-tooltip-class': 'admin-toolbar__tooltip' }),
             icon: item.class|clean_class,
+            html_tag: menu_item_tag,
             text: item.title,
-            href: item.url,
-            is_link: true,
             extra_classes: 'toolbar-button--collapsible',
           } only %}
         </li>
@@ -48,10 +56,9 @@
       <li class="toolbar-menu__item toolbar-menu__item--level-{{ menu_level }}">
         {% if item.below is empty  %}
           {% include '@navigation/toolbar-button.html.twig' with {
-            attributes: create_attribute(),
+            attributes: create_attribute({ 'href': item.url|render|default(null) }),
             text: item.title,
-            href: item.url,
-            is_link: true,
+            html_tag: menu_item_tag,
           } only %}
         {% else %}
           <button
