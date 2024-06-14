@@ -76,7 +76,6 @@ class MediaTest extends ResourceTestBase {
 
       case 'PATCH':
         $this->grantPermissionsToTestedRole(['edit any camelids media']);
-        $this->grantPermissionsToTestedRole(['access content']);
         break;
 
       case 'DELETE':
@@ -395,15 +394,7 @@ class MediaTest extends ResourceTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function doTestRelationshipMutation(array $request_options) {
-    $this->grantPermissionsToTestedRole(['access content']);
-    parent::doTestRelationshipMutation($request_options);
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function testCollectionFilterAccess(): void {
+  public function testCollectionFilterAccess() {
     $this->doTestCollectionFilterAccessForPublishableEntities('name', 'view media', 'administer media');
   }
 
