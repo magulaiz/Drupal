@@ -36,7 +36,7 @@ class CommentBreadcrumbBuilder implements BreadcrumbBuilderInterface {
   /**
    * {@inheritdoc}
    */
-  public function applies(RouteMatchInterface $route_match, CacheableMetadata $cacheable_metadata = NULL) {
+  public function applies(RouteMatchInterface $route_match, ?CacheableMetadata $cacheable_metadata = NULL) {
     $cacheable_metadata->addCacheContexts(['route']);
     return $route_match->getRouteName() == 'comment.reply' && $route_match->getParameter('entity');
   }
