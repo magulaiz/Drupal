@@ -9,14 +9,6 @@
 {% macro menu_items(items, attributes, menu_level) %}
   {% for item in items %}
 
-    {% if item.url.isRouted and item.url.routeName == '<nolink>' %}
-      {% set menu_item_tag = 'span' %}
-    {% elseif item.url.isRouted and item.url.routeName == '<button>' %}
-      {% set menu_item_tag = 'button' %}
-    {% else %}
-      {% set menu_item_tag = 'a' %}
-    {% endif %}
-
     {% set item_id = ('navigation-link--' ~ item.original_link.pluginId)|clean_unique_id %}
     {% if menu_level == 0 %}
       {% if item.below is empty  %}
@@ -24,7 +16,7 @@
           {% include '@navigation/toolbar-button.html.twig' with {
             attributes: create_attribute({ 'href': item.url|render|default(null), 'data-drupal-tooltip': item.title, 'data-drupal-tooltip-class': 'admin-toolbar__tooltip' }),
             icon: item.class|clean_class,
-            html_tag: menu_item_tag,
+            html_tag: link_tag(item.url),
             text: item.title,
             extra_classes: 'toolbar-button--collapsible',
           } only %}
@@ -58,7 +50,7 @@
           {% include '@navigation/toolbar-button.html.twig' with {
             attributes: create_attribute({ 'href': item.url|render|default(null) }),
             text: item.title,
-            html_tag: menu_item_tag,
+            html_tag: link_tag(item.url),
           } only %}
         {% else %}
           <button

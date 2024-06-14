@@ -15,6 +15,7 @@ use Drupal\Core\Render\RendererInterface;
 use Drupal\Core\Routing\UrlGeneratorInterface;
 use Drupal\Core\Theme\ThemeManagerInterface;
 use Drupal\Core\Url;
+use Drupal\Core\Utility\LinkGeneratorInterface;
 use Twig\Environment;
 use Twig\Extension\AbstractExtension;
 use Twig\Markup as TwigMarkup;
@@ -70,6 +71,13 @@ class TwigExtension extends AbstractExtension {
   protected $fileUrlGenerator;
 
   /**
+   * The link generator.
+   *
+   * @var \Drupal\Core\Utility\LinkGeneratorInterface
+   */
+  protected LinkGeneratorInterface $linkGenerator;
+
+  /**
    * Constructs \Drupal\Core\Template\TwigExtension.
    *
    * @param \Drupal\Core\Render\RendererInterface $renderer
@@ -82,13 +90,16 @@ class TwigExtension extends AbstractExtension {
    *   The date formatter.
    * @param \Drupal\Core\File\FileUrlGeneratorInterface $file_url_generator
    *   The file URL generator.
+   * @param \Drupal\Core\Utility\LinkGeneratorInterface $link_generator
+   *   The link generator.
    */
-  public function __construct(RendererInterface $renderer, UrlGeneratorInterface $url_generator, ThemeManagerInterface $theme_manager, DateFormatterInterface $date_formatter, FileUrlGeneratorInterface $file_url_generator) {
+  public function __construct(RendererInterface $renderer, UrlGeneratorInterface $url_generator, ThemeManagerInterface $theme_manager, DateFormatterInterface $date_formatter, FileUrlGeneratorInterface $file_url_generator, LinkGeneratorInterface $link_generator) {
     $this->renderer = $renderer;
     $this->urlGenerator = $url_generator;
     $this->themeManager = $theme_manager;
     $this->dateFormatter = $date_formatter;
     $this->fileUrlGenerator = $file_url_generator;
+    $this->linkGenerator = $link_generator;
   }
 
   /**
@@ -103,6 +114,7 @@ class TwigExtension extends AbstractExtension {
       new TwigFunction('url', [$this, 'getUrl'], ['is_safe_callback' => [$this, 'isUrlGenerationSafe']]),
       new TwigFunction('path', [$this, 'getPath'], ['is_safe_callback' => [$this, 'isUrlGenerationSafe']]),
       new TwigFunction('link', [$this, 'getLink']),
+      new TwigFunction('link_tag', [$this, 'getLinkTag']),
       new TwigFunction('file_url', [$this, 'getFileUrl']),
       new TwigFunction('attach_library', [$this, 'attachLibrary']),
       new TwigFunction('active_theme_path', [$this, 'getActiveThemePath']),
@@ -272,6 +284,24 @@ class TwigExtension extends AbstractExtension {
       '#url' => $url,
     ];
     return $build;
+  }
+
+  /**
+   * Gets the tag type for the generated link of the given URL.
+   *
+   * @param \Drupal\Core\Url|string $url
+   *  The URL object or string used for the link.
+   *
+   * @return string
+   *   The HTML tag of the generated link of the given URL.
+   */
+  public function getLinkTag($url) {
+    assert(is_string($url) || $url instanceof Url, '$url must be a string or object of type \Drupal\Core\Url');
+    if (!$url instanceof Url) {
+      $url = Url::fromUri($url);
+    }
+    $generated_url = $this->linkGenerator->generate('', $url);
+    return $generated_url::TAG;
   }
 
   /**
