@@ -109,6 +109,7 @@ class JsonApiRequestValidator implements EventSubscriberInterface {
    */
   public static function getSubscribedEvents(): array {
     $events[KernelEvents::REQUEST][] = ['onRequest'];
+
     // Run before the resource response subscriber (priority 128), so that said
     // subscriber gets the cacheable metadata from this one.
     $events[KernelEvents::RESPONSE][] = ['onResponse', 129];
