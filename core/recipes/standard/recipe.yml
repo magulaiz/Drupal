@@ -19,6 +19,7 @@ recipes:
   - user_picture
   # Provides a fallback text format which is available to all users.
   - restricted_html_format
+  - standard_roles
 install:
   - image
   - help
