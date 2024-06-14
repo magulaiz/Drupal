@@ -149,16 +149,17 @@ class BubbleableMetadataTest extends UnitTestCase {
 
     $empty_metadata = new BubbleableMetadata();
     $nonempty_metadata = new BubbleableMetadata();
-    $nonempty_metadata->setCacheContexts(['qux'])
+    $nonempty_metadata->setCacheContexts(['qux', 'baz'])
       ->setCacheTags(['foo:bar'])
+      ->setCacheMaxAge(60)
       ->setAttachments(['settings' => ['foo' => 'bar']]);
 
     $empty_render_array = [];
     $nonempty_render_array = [
       '#cache' => [
-        'contexts' => ['qux'],
+        'contexts' => ['qux', 'corge'],
         'tags' => ['llamas:are:awesome:but:kittens:too'],
-        'max-age' => Cache::PERMANENT,
+        'max-age' => 60,
       ],
       '#attached' => [
         'library' => [
@@ -175,8 +176,17 @@ class BubbleableMetadataTest extends UnitTestCase {
       ],
       '#attached' => [],
     ];
+
+    $expected_when_empty_metadata_and_nonempty_render_array = [
+      '#cache' => [
+        'contexts' => ['qux', 'baz'],
+        'tags' => ['llamas:are:awesome:but:kittens:too'],
+        'max-age' => 60,
+      ],
+      '#attached' => [],
+    ];
     $data[] = [$empty_metadata, $empty_render_array, $expected_when_empty_metadata];
-    $data[] = [$empty_metadata, $nonempty_render_array, $expected_when_empty_metadata];
+    $data[] = [$empty_metadata, $nonempty_render_array, $expected_when_empty_metadata_and_nonempty_render_array];
     $expected_when_nonempty_metadata = [
       '#cache' => [
         'contexts' => ['qux'],
@@ -189,8 +199,21 @@ class BubbleableMetadataTest extends UnitTestCase {
         ],
       ],
     ];
+    $expected_when_nonempty_metadata_and_nonempty_render_array = [
+      '#cache' => [
+        'contexts' => ['qux', 'baz', 'corge'],
+        'tags' => ['foo:bar', 'llamas:are:awesome:but:kittens:too'],
+        'max-age' => 60,
+      ],
+      '#attached' => [
+        'settings' => [
+          'foo' => 'bar',
+        ],
+      ],
+    ];
+
     $data[] = [$nonempty_metadata, $empty_render_array, $expected_when_nonempty_metadata];
-    $data[] = [$nonempty_metadata, $nonempty_render_array, $expected_when_nonempty_metadata];
+    $data[] = [$nonempty_metadata, $nonempty_render_array, $expected_when_nonempty_metadata_and_nonempty_render_array];
 
     return $data;
   }
