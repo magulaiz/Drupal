@@ -171,7 +171,7 @@ class StandardPerformanceTest extends PerformanceTestBase {
     $recorded_queries = $performance_data->getQueries();
     $this->assertSame($expected_queries, $recorded_queries);
     $this->assertSame(12, $performance_data->getQueryCount());
-    $this->assertSame(76, $performance_data->getCacheGetCount());
+    $this->assertSame(78, $performance_data->getCacheGetCount());
     $this->assertSame(15, $performance_data->getCacheSetCount());
     $this->assertSame(0, $performance_data->getCacheDeleteCount());
     $this->assertSame(21, $performance_data->getCacheTagChecksumCount());
