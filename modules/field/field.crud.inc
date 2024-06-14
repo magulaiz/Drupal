@@ -645,7 +645,7 @@ function _field_write_instance($instance, $update = FALSE) {
     );
     if ($display['type'] != 'hidden') {
       $formatter_type = field_info_formatter_types($display['type']);
-      if ($formatter) {
+      if ($formatter_type) {
         $display['module'] = $formatter_type['module'];
       }
       $display['settings'] += field_info_formatter_settings($display['type']);
