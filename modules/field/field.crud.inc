@@ -645,7 +645,9 @@ function _field_write_instance($instance, $update = FALSE) {
     );
     if ($display['type'] != 'hidden') {
       $formatter_type = field_info_formatter_types($display['type']);
-      $display['module'] = $formatter_type['module'];
+      if ($formatter) {
+        $display['module'] = $formatter_type['module'];
+      }
       $display['settings'] += field_info_formatter_settings($display['type']);
     }
     // If no weight specified, make sure the field sinks at the bottom.
