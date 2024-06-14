@@ -1,3 +1,7 @@
 name: 'Standard roles'
 description: 'Provides Administrator and Content editor roles.'
 type: 'User roles'
+recipes:
+  - administrator_role
+  - content_editor_role
+  

@@ -1,0 +1,3 @@
+name: 'Administrator role'
+description: 'Provides the Administrator role.'
+type: 'User role'
