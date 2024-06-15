@@ -179,7 +179,7 @@ class ApcuBackend implements CacheBackendInterface {
     $cache->expire = $expire;
     $cache->tags = implode(' ', $tags);
     $cache->checksum = $this->checksumProvider->getCurrentChecksum($tags);
-    // APCu serializes/unserializes any structure itself.
+    // APCu serializes/un-serializes any structure itself.
     $cache->serialized = 0;
     $cache->data = $data;
 

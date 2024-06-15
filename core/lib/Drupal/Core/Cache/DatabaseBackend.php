@@ -149,7 +149,7 @@ class DatabaseBackend implements CacheBackendInterface {
   /**
    * Prepares a cached item.
    *
-   * Checks that items are either permanent or did not expire, and unserializes
+   * Checks that items are either permanent or did not expire, and un-serializes
    * data as appropriate.
    *
    * @param object $cache
