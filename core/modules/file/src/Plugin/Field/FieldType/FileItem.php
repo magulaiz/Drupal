@@ -306,7 +306,7 @@ class FileItem extends EntityReferenceItem {
    *   An array of token objects to pass to Token::replace().
    *
    * @return string
-   *   An unsanitized file directory URI with tokens replaced. The result of
+   *   An un-sanitized file directory URI with tokens replaced. The result of
    *   the token replacement is then converted to plain text and returned.
    *
    * @see \Drupal\Core\Utility\Token::replace()
@@ -324,7 +324,7 @@ class FileItem extends EntityReferenceItem {
    *   An array of token objects to pass to Token::replace().
    *
    * @return string
-   *   An unsanitized file directory URI with tokens replaced. The result of
+   *   An un-sanitized file directory URI with tokens replaced. The result of
    *   the token replacement is then converted to plain text and returned.
    *
    * @see \Drupal\Core\Utility\Token::replace()
