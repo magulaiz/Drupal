@@ -83,8 +83,8 @@ class Email extends FormElementBase {
       return;
     }
 
-    // If the field is multiple, validate each address individually.
-    // Email addresses could be only comma-separated.
+    // Create an array of email addresses so each one can be validated
+    // individually. Email addresses can be only comma-separated.
     // @see https://developer.mozilla.org/en-US/docs/Web/HTML/Attributes/multiple#email_input
     $multiple = $element['#multiple'];
     $emails = $multiple

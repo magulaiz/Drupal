@@ -37,9 +37,9 @@ class FormTestEmailForm extends FormBase {
     ];
     $form['email_multiple'] = [
       '#type' => 'email',
-      '#title' => 'Address',
+      '#title' => 'Addresses',
       '#multiple' => TRUE,
-      '#description' => 'Email addresses.',
+      '#description' => 'A comma-separated list of email addresses.',
     ];
     $form['submit'] = [
       '#type' => 'submit',
