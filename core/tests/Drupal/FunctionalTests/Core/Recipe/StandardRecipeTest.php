@@ -130,7 +130,7 @@ class StandardRecipeTest extends StandardTest {
     $expected_list = $comparer->getEmptyChangelist();
     // We expect core.extension to be different because standard is no longer
     // installed.
-    $expected_list['update'] = ['core.extension','user.role.content_editor'];
+    $expected_list['update'] = ['core.extension', 'user.role.content_editor'];
     $this->assertSame($expected_list, $comparer->getChangelist());
 
     // Standard ships two shortcuts; ensure they exist.
