@@ -69,8 +69,12 @@ config:
     system.site:
       simple_config_update:
         page.front: /node
+    user.role.anonymous:
+      grantPermission: 'access content'
     user.role.authenticated:
-      grantPermission: 'delete own files'
+      grantPermissions:
+        - 'access content'
+        - 'delete own files'
     user.role.content_editor:
       grantPermissions:
         - 'access content overview'
@@ -91,9 +95,6 @@ config:
         - 'delete %bundle revisions'
         - 'delete own %bundle content'
         - 'edit own %bundle content'
-    user.role.anonymous:
-      # This recipe assumes all published content should be publicly accessible.
-      grantPermission: 'access content'
     user.settings:
       simple_config_update:
         verify_mail: true

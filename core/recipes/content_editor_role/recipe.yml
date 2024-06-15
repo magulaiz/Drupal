@@ -12,5 +12,4 @@ config:
         is_admin: false
         permissions:
           - 'access administration pages'
-          - 'access content'
           - 'view own unpublished content'
