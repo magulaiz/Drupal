@@ -606,7 +606,7 @@ class MenuTreeStorage implements MenuTreeStorageInterface {
   }
 
   /**
-   * Prepares a link by unserializing values and saving the definition.
+   * Prepares a link by un-serializing values and saving the definition.
    *
    * @param array $link
    *   The data loaded in the query.

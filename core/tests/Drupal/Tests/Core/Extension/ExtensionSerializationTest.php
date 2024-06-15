@@ -56,7 +56,7 @@ class ExtensionSerializationTest extends UnitTestCase {
     $reflected_root = new \ReflectionProperty($extension, 'root');
     $this->assertEquals('vfs://dummy_app_root', $reflected_root->getValue($extension));
 
-    // Change the app root and test serializing and unserializing again.
+    // Change the app root and test serializing and un-serializing again.
     $container->setParameter('app.root', 'vfs://dummy_app_root2');
     \Drupal::setContainer($container);
     $extension = unserialize(serialize($extension));

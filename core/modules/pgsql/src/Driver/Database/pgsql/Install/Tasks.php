@@ -145,7 +145,7 @@ class Tasks extends InstallTasks {
   /**
    * Check Binary Output.
    *
-   * Unserializing does not work on Postgresql 9 when bytea_output is 'hex'.
+   * Un-serializing does not work on Postgresql 9 when bytea_output is 'hex'.
    */
   public function checkBinaryOutput() {
     $database_connection = Database::getConnection();
