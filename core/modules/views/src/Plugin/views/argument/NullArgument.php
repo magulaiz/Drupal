@@ -13,7 +13,7 @@ use Drupal\views\Attribute\ViewsArgument;
 #[ViewsArgument(
   id: 'null',
 )]
-class NullArgument extends ArgumentPluginBase {
+class NullArgument extends ArgumentPluginBase implements SkipFromRouteParamsInterface {
 
   protected function defineOptions() {
     $options = parent::defineOptions();

@@ -10,6 +10,7 @@ use Drupal\Core\State\StateInterface;
 use Drupal\Core\Routing\RouteCompiler;
 use Drupal\Core\Routing\RouteProviderInterface;
 use Drupal\Core\Url;
+use Drupal\views\Plugin\views\argument\SkipFromRouteParamsInterface;
 use Drupal\views\Views;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
@@ -141,7 +142,18 @@ abstract class PathPluginBase extends DisplayPluginBase implements DisplayRouter
     // page arguments so the argument actually comes through.
     $arg_counter = 0;
 
-    $argument_ids = array_keys((array) $this->getOption('arguments'));
+    // Build arguments of the view display before using them as
+    // $this->view->argument is NULL by default.
+    $this->view->setDisplay($display_id);
+    $this->view->buildTitle();
+
+    // Filter view arguments to skip those who implement the
+    // SkipFromRouteParamsInterface interface.
+    $arguments = array_filter(
+      $this->view->argument ?? [],
+      fn($argument) => !($argument instanceof SkipFromRouteParamsInterface)
+    );
+    $argument_ids = array_keys($arguments);
     $total_arguments = count($argument_ids);
 
     $argument_map = [];
