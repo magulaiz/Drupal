@@ -12,6 +12,10 @@ use Drupal\Core\Extension\Extension;
  * Implements hook_theme().
  */
 function theme_test_theme($existing, $type, $theme, $path) {
+  if (Drupal::state()->get('theme_test_theme_null')) {
+    return;
+  }
+
   $items['theme_test'] = [
     'file' => 'theme_test.inc',
     'variables' => ['foo' => ''],
@@ -120,7 +124,7 @@ function theme_test_preprocess_theme_test_preprocess_suggestions__monkey(&$varia
  *   An associative array containing:
  *   - elements: An associative array containing the properties of the element.
  */
-function template_preprocess_theme_test_render_element(&$variables) {
+function template_preprocess_theme_test_render_element(array &$variables) {
   $variables['attributes']['data-variables-are-preprocessed'] = TRUE;
 }
 

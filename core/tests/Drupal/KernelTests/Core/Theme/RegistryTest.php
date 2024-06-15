@@ -62,6 +62,13 @@ class RegistryTest extends KernelTestBase {
     $registry = new ThemeRegistry($cid, $cache, $lock_backend, ['theme_registry'], $this->container->get('module_handler')->isLoaded());
     $this->assertNotEmpty($registry->get('theme_test_template_test'), 'Offset was returned correctly from the theme registry');
     $this->assertNotEmpty($registry->get('theme_test_template_test_2'), 'Offset was returned correctly from the theme registry');
+
+    // Set the hook_theme() result to NULL, to ensure that it does not break.
+    $this->container->get('state')->set('theme_test_theme_null', NULL);
+    $registry->clear();
+    $theme_test_template = $registry->get('theme_test_template_test');
+    $isset_template = isset($theme_test_template);
+    $this->assertFalse($isset_template);
   }
 
   /**
@@ -69,7 +76,11 @@ class RegistryTest extends KernelTestBase {
    */
   public function testMultipleSubThemes() {
     $theme_handler = \Drupal::service('theme_handler');
-    \Drupal::service('theme_installer')->install(['test_basetheme', 'test_subtheme', 'test_subsubtheme']);
+    \Drupal::service('theme_installer')->install([
+      'test_basetheme',
+      'test_subtheme',
+      'test_subsubtheme',
+    ]);
 
     $module_list = $this->container->get('extension.list.module');
     assert($module_list instanceof ModuleExtensionList);
