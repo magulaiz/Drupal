@@ -135,7 +135,7 @@ class ChainedFastBackend implements CacheBackendInterface, CacheTagsInvalidatorI
       // Most cache backend implementations should not wrap their internal
       // get() implementations with a try/catch, because they have no reason to
       // assume that their data is invalid, and doing so would mask
-      // unserialization errors of valid data. We do so here, only because the
+      // un-serialization errors of valid data. We do so here, only because the
       // fast backend is non-authoritative, and after discarding its
       // exceptions, we proceed to check the consistent (authoritative) backend
       // and allow exceptions from that to bubble up.

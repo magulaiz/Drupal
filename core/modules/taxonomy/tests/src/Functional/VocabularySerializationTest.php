@@ -14,7 +14,7 @@ use Drupal\Tests\BrowserTestBase;
  * (which happens in the KernelPreHandle Stack middleware), then the constants
  * that the Vocabulary entity uses are not yet available because they are set in
  * taxonomy.module. This means that for example the PageCache middleware cannot
- * load any cached Vocabulary entity, because unserialization will fail.
+ * load any cached Vocabulary entity, because unserialize will fail.
  *
  * @group taxonomy
  */

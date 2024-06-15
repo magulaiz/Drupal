@@ -43,7 +43,7 @@ trait DependencySerializationTrait {
         if ($value instanceof EntityStorageInterface) {
           // If a class member is an entity storage, only store the entity type
           // ID the storage is for, so it can be used to get a fresh object on
-          // unserialization. By doing this we prevent possible memory leaks
+          // un-serialization. By doing this we prevent possible memory leaks
           // when the storage is serialized and it contains a static cache of
           // entity objects. Additionally we ensure that we'll not have multiple
           // storage objects for the same entity type and therefore prevent
@@ -53,8 +53,8 @@ trait DependencySerializationTrait {
         }
         elseif ($service_id = $reverse_container->getId($value)) {
           // If a class member was instantiated by the dependency injection
-          // container, only store its ID so it can be used to get a fresh object
-          // on unserialization.
+          // container, only store its ID so it can be used to get a fresh
+          // object on un-serialization.
           $this->_serviceIds[$key] = $service_id;
           unset($vars[$key]);
         }
