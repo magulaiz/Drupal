@@ -78,7 +78,6 @@
   color: var(--admin-toolbar-color-gray-990);
 }
 
-span.toolbar-button,
 .toolbar-button--non-interactive {
   &:hover,
   &:focus,
@@ -121,8 +120,7 @@ span.toolbar-button,
 
   @media (--forced-colors) {
     &::before,
-    &:hover::before,
-    &:not(span):hover::before {
+    &:hover::before {
       background: canvastext;
     }
 
