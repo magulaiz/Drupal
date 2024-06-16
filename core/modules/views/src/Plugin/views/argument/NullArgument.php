@@ -58,4 +58,11 @@ class NullArgument extends ArgumentPluginBase implements SkipFromRouteParamsInte
    */
   public function query($group_by = FALSE) {}
 
+  /**
+   * {@inheritdoc}
+   */
+  public function skipFromRouteParams(): bool {
+    return TRUE;
+  }
+
 }

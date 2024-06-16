@@ -151,7 +151,7 @@ abstract class PathPluginBase extends DisplayPluginBase implements DisplayRouter
     // SkipFromRouteParamsInterface interface.
     $arguments = array_filter(
       $this->view->argument ?? [],
-      fn($argument) => !($argument instanceof SkipFromRouteParamsInterface)
+      fn($argument) => !($argument instanceof SkipFromRouteParamsInterface && $argument->skipFromRouteParams())
     );
     $argument_ids = array_keys($arguments);
     $total_arguments = count($argument_ids);
