@@ -77,6 +77,13 @@ class TwigExtensionTest extends UnitTestCase {
   protected $fileUrlGenerator;
 
   /**
+   * The mocked link generator.
+   *
+   * @var \Drupal\Core\Utility\LinkGeneratorInterface|\PHPUnit\Framework\MockObject\MockObject
+   */
+  protected $linkGenerator;
+
+  /**
    * {@inheritdoc}
    */
   protected function setUp(): void {
@@ -87,8 +94,9 @@ class TwigExtensionTest extends UnitTestCase {
     $this->themeManager = $this->createMock('\Drupal\Core\Theme\ThemeManagerInterface');
     $this->dateFormatter = $this->createMock('\Drupal\Core\Datetime\DateFormatterInterface');
     $this->fileUrlGenerator = $this->createMock(FileUrlGeneratorInterface::class);
+    $this->linkGenerator = $this->createMock('Drupal\Core\Utility\LinkGeneratorInterface');
 
-    $this->systemUnderTest = new TwigExtension($this->renderer, $this->urlGenerator, $this->themeManager, $this->dateFormatter, $this->fileUrlGenerator);
+    $this->systemUnderTest = new TwigExtension($this->renderer, $this->urlGenerator, $this->themeManager, $this->dateFormatter, $this->fileUrlGenerator, $this->linkGenerator);
   }
 
   /**
