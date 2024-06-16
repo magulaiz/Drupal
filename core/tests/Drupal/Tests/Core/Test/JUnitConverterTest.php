@@ -83,22 +83,25 @@ EOD;
   }
 
   /**
-   * @covers ::convertTestCaseToSimpletestRow
+   * Tests the conversion of JUnit XML to SimpleTest row.
    *
+   * @param string $junitXmlString
+   *   The JUnit XML string to test.
+   * @param array $expectedSimpletestRow
+   *   The expected simple test row.
+   *
+   * @covers ::convertTestCaseToSimpletestRow
    * @dataProvider simpletestDataProvider
    */
-  public function testConvertTestCaseToSimpletestRow($junit, $simpletest): void {
-    $this->assertEquals($simpletest, JUnitConverter::convertTestCaseToSimpletestRow($simpletest['test_id'], new \SimpleXMLElement($junit)));
-    $this->assertLessThanOrEqual(255, strlen($simpletest['function']), 'Function value is less than or equal to 255');
+  public function testConvertTestCaseToSimpletestRow(string $junitXmlString, array $expectedSimpletestRow): void {
+    $this->assertEquals($expectedSimpletestRow, JUnitConverter::convertTestCaseToSimpletestRow($expectedSimpletestRow['test_id'], new \SimpleXMLElement($junitXmlString)));
+    $this->assertLessThanOrEqual(255, strlen($expectedSimpletestRow['function']), 'Function value is less than or equal to 255');
   }
 
   /**
    * See testConvertTestCaseToSimpletestRow method for test cases.
    */
   public static function simpletestDataProvider(): array {
-    // @todo once $this obj accessible in data provider static method
-    // https://www.drupal.org/node/3421393, replace generateAlphanumericStr()
-    // with $this->randomMachineName(), remove generateAlphanumericStr()
     $long_function_name = self::generateAlphanumericStr(220);
     return [
       [
@@ -138,7 +141,7 @@ EOD;
   /**
    * Generates a string consisting of alphanumeric characters.
    */
-  private static function generateAlphanumericStr($length = 220) {
+  private static function generateAlphanumericStr(int $length = 220): string {
     $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
     $charLength = strlen($characters);
     $randomString = '';
