@@ -290,7 +290,7 @@ class TwigExtension extends AbstractExtension {
    * Gets the tag type for the generated link of the given URL.
    *
    * @param \Drupal\Core\Url|string $url
-   *  The URL object or string used for the link.
+   *   The URL object or string used for the link.
    *
    * @return string
    *   The HTML tag of the generated link of the given URL.
