@@ -1719,35 +1719,25 @@ function _system_advisories_requirements(array &$requirements): void {
 /**
  * Update TimestampItem field schema size to support dates greater than 2038.
  */
-function system_update_10202(&$sandbox): void {
+function system_update_10202(&$sandbox) {
   // Execute only if allowed setting, 'timestamp_field_update_y2038', is true.
   if (!Settings::get('timestamp_field_update_y2038', FALSE)) {
-    \Drupal::logger('update')
-      ->notice("Update '10202 - Update TimestampItem field schema size to support dates greater than 2038' skipped due to setting of 'timestamp_field_update_y2038' in settings.php");
-    return;
+    return t("Update '10202 - Update TimestampItem field schema size to support dates greater than 2038' skipped due to setting of 'timestamp_field_update_y2038' in settings.php");
   }
-  // If the timeout for this update is set then save the value on the first
-  // batch. On subsequent runs check if the timeout is exceeded. If it is
-  // exceeded then throw an UpdateException with a helpful message. The
-  // exception is used to ensure that the update is not marked complete.
   $timeout = Settings::get('timestamp_field_update_y2038_timeout', 0);
-  if ($timeout > 0) {
-    // Use key value expirable to save the timeout.
-    $key_value_expirable = \Drupal::service('keyvalue.expirable')->get('update');
-    if (!isset($sandbox['items'])) {
-      $key_value_expirable->setWithExpire('timestamp_field_update_y2038_timeout', '', $timeout);
-    }
-    if (!$key_value_expirable->has('timestamp_field_update_y2038_timeout')) {
-      $key_value_expirable->delete('timestamp_field_update_y2038_timeout');
-      throw new UpdateException(sprintf("Update 10202 failed to complete, stopped after %d seconds", Settings::get('timestamp_field_update_y2038_timeout')));
-    }
-  }
   if (!isset($sandbox['items'])) {
     $items = _system_update_get_timestamp_fields();
     $sandbox['items'] = $items;
     $sandbox['current'] = 0;
     $sandbox['num_processed'] = 0;
     $sandbox['max'] = count($items);
+    $sandbox['start_time'] = \Drupal::time()->getCurrentTime();
+  }
+  elseif ($timeout > 0 && \Drupal::time()->getCurrentTime() > ($sandbox['start_time'] + $timeout)) {
+    // On subsequent runs check if the timeout is exceeded. If it is exceeded
+    // then throw an UpdateException with a helpful message. The exception is
+    // used to ensure that the update is not marked complete.
+    throw new UpdateException(sprintf("Update 10202 failed to complete, stopped after %d seconds", Settings::get('timestamp_field_update_y2038_timeout')));
   }
 
   [$entity_type_id, $field_name] = $sandbox['items'][$sandbox['current']] ?? [NULL, NULL];
