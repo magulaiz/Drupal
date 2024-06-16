@@ -18,7 +18,7 @@
             icon: item.class|clean_class,
             html_tag: link_tag(item.url),
             text: item.title,
-            extra_classes: 'toolbar-button--collapsible',
+            extra_classes: 'toolbar-button--collapsible ' ~ (link_tag(item.url) == 'span' ? 'toolbar-button--non-interactive'),
           } only %}
         </li>
       {% else %}
@@ -51,6 +51,7 @@
             attributes: create_attribute({ 'href': item.url|render|default(null) }),
             text: item.title,
             html_tag: link_tag(item.url),
+            extra_classes: link_tag(item.url) == 'span' ? 'toolbar-button--non-interactive',
           } only %}
         {% else %}
           <button
