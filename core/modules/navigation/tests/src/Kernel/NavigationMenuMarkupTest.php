@@ -152,7 +152,7 @@ class NavigationMenuMarkupTest extends KernelTestBase {
       "//li[contains(@class,'toolbar-block__list-item')]/button[@data-index-text='a']",
       "//li[contains(@class,'toolbar-block__list-item')]/button[@data-icon-text='An']",
       "//li[contains(@class,'toolbar-menu__item--level-1')]/a[@data-index-text='a']",
-      "//li[contains(@class,'toolbar-menu__item--level-1')]/a[not(@data-icon-text)]",
+      "//li[contains(@class,'toolbar-menu__item--level-1')]/a[@data-icon-text='A']",
     ];
     foreach ($items_query as $query) {
       $span = $xpath->query($query);
