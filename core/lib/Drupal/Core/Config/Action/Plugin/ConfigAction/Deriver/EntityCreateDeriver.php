@@ -25,10 +25,6 @@ final class EntityCreateDeriver extends DeriverBase {
     $this->derivatives['ensureExists'] = $base_plugin_definition + ['constructor_args' => ['exists' => Exists::ReturnEarlyIfExists]];
     $this->derivatives['ensureExists']['admin_label'] = $this->t('Ensure entity exists');
 
-    // Create BC and deprecation notice for the old ID.
-    $this->derivatives['ensure_exists'] = $this->derivatives['ensureExists'];
-    $this->derivatives['ensure_exists']['deprecation_message'] = $this->t('The "ensure_exists" plugin ID is deprecated. Use "entityExists" instead.');
-
     $this->derivatives['create'] = $base_plugin_definition + ['constructor_args' => ['exists' => Exists::ErrorIfExists]];
     $this->derivatives['create']['admin_label'] = $this->t('Entity create');
 

@@ -92,6 +92,27 @@ class ConfigActionManager extends DefaultPluginManager {
   }
 
   /**
+   * {@inheritdoc}
+   */
+  public function getDefinitions() {
+    $definitions = parent::getDefinitions();
+
+    // Adds backwards compatibility for plugins that have been renamed.
+    // @see https://www.drupal.org/i/3455113
+    if (isset($definitions['simpleConfigUpdate'])) {
+      $definitions['simple_config_update'] = $definitions['simpleConfigUpdate'];
+      $definitions['simple_config_update']['deprecation_message'] = 'The "simpleConfigUpdate" plugin ID is deprecated. Use "simple_config_update" instead.';
+    }
+
+    if (isset($definitions['ensureExists'])) {
+      $definitions['ensure_exists'] = $definitions['ensureExists'];
+      $definitions['ensure_exists']['deprecation_message'] = 'The "ensureExists" plugin ID is deprecated. Use "ensure_exists" instead.';
+    }
+
+    return $definitions;
+  }
+
+  /**
    * Applies a config action.
    *
    * @param string $action_id
