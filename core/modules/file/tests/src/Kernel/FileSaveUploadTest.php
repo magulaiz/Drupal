@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\file\Kernel;
 
+use Drupal\Component\FileSystem\FileSystem as FileSystemComponent;
 use Drupal\Core\Messenger\MessengerInterface;
 use Drupal\KernelTests\KernelTestBase;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
@@ -34,12 +35,14 @@ class FileSaveUploadTest extends KernelTestBase {
    */
   protected function setUp(): void {
     parent::setUp();
-    \file_put_contents('test.bbb', 'test');
+    $filename = 'test.bbb';
+    $path = FileSystemComponent::getOsTemporaryDirectory() . DIRECTORY_SEPARATOR . $filename;
+    \file_put_contents($path, 'test');
     $request = new Request();
     $request->files->set('files', [
       'file' => new UploadedFile(
-        path: 'test.bbb',
-        originalName: 'test.bbb',
+        path: $path,
+        originalName: $filename,
         mimeType: 'text/plain',
         error: \UPLOAD_ERR_OK,
         test: TRUE
