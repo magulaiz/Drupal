@@ -208,7 +208,7 @@ install:
 config:
   actions:
     config_test.dynamic.recipe:
-      ensure_exists:
+      ensureExists:
         label: 'Created by recipe'
       setBody: 'Description set by recipe'
 YAML;
