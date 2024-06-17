@@ -56,14 +56,6 @@ class FileSaveUploadTest extends KernelTestBase {
   }
 
   /**
-   * {@inheritdoc}
-   */
-  protected function tearDown(): void {
-    \unlink('test.bbb');
-    parent::tearDown();
-  }
-
-  /**
    * Tests file_save_upload() with empty extensions.
    */
   public function testFileSaveUploadEmptyExtensions(): void {
