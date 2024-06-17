@@ -47,7 +47,7 @@ class EntityLinks extends FilterBase implements ContainerFactoryPluginInterface 
     $plugin_id,
     $plugin_definition,
     protected readonly EntityRepositoryInterface $entityRepository,
-    protected readonly LoggerInterface $logger
+    protected readonly LoggerInterface $logger,
   ) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
   }

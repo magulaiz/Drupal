@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace Drupal\Tests\ckeditor5\Kernel;
 
@@ -179,7 +179,7 @@ class EntityLinkSuggestionTest extends KernelTestBase {
    * @return \Generator
    *   Test scenarios.
    */
-  public function providerEntityLinkSuggestions(): \Generator {
+  public static function providerEntityLinkSuggestions(): \Generator {
     $suggestion_node_1_en = [
       'description' => 'by sofie on Tue, 09/19/2023 - 03:31',
       'entity_type_id' => 'node',
