@@ -237,7 +237,6 @@ trait UiHelperTrait {
    * @see \Drupal\Tests\BrowserTestBase::getHttpClient()
    */
   protected function drupalGet($path, array $options = [], array $headers = []) {
-    $headers = ['X-Requested-With' => 'XMLHttpRequest'];
     $options['absolute'] = TRUE;
     $url = $this->buildUrl($path, $options);
 
