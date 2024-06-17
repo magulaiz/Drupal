@@ -7,6 +7,7 @@ namespace Drupal\Core\Config\Action\Plugin\ConfigAction;
 use Drupal\Core\Config\Action\Attribute\ConfigAction;
 use Drupal\Core\Config\Action\ConfigActionException;
 use Drupal\Core\Config\Action\ConfigActionPluginInterface;
+use Drupal\Core\Config\Action\Plugin\ConfigAction\Deriver\SimpleConfigUpdateDeriver;
 use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
@@ -19,6 +20,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 #[ConfigAction(
   id: 'simpleConfigUpdate',
   admin_label: new TranslatableMarkup('Simple configuration update'),
+  deriver: SimpleConfigUpdateDeriver::class,
 )]
 final class SimpleConfigUpdate implements ConfigActionPluginInterface, ContainerFactoryPluginInterface {
 
