@@ -245,13 +245,14 @@ trait UiHelperTrait {
     $this->prepareRequest();
     foreach ($headers as $header_name => $header_value) {
       if (is_int($header_name)) {
-        // @todo Trigger deprecation in
-        //   https://www.drupal.org/project/drupal/issues/3421105.
+        $name_deprecation_msg = 'Passing an integer as header name to drupalGet() is deprecated; use a string instead.';
+        // Trigger a deprecation notice.
+        @trigger_error($name_deprecation_msg, E_USER_DEPRECATED);
         [$header_name, $header_value] = explode(':', $header_value);
       }
       if (is_null($header_value)) {
-        // @todo Trigger deprecation in
-        //   https://www.drupal.org/project/drupal/issues/3421105.
+        $value_deprecation_msg = 'Using null as a header value to drupalGet() is deprecated; use an empty string instead.';
+        @trigger_error($value_deprecation_msg, E_USER_DEPRECATED);
         $header_value = '';
       }
       $session->setRequestHeader($header_name, $header_value);
