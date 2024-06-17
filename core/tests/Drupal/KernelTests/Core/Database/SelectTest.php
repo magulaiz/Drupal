@@ -635,7 +635,7 @@ class SelectTest extends DatabaseTestBase {
    * @return array[]
    *   Test cases.
    */
-  public function providerJsonConditionOperators(): array {
+  public static function providerJsonConditionOperators(): array {
     return [
       'LTE with matching' => ['$.number', 5, '<=', 1],
       'LTE with no matching' => ['$.number', 5, '<=', 1],

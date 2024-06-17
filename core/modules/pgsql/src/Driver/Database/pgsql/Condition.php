@@ -22,7 +22,7 @@ class Condition extends QueryCondition {
     if ($op === '=') {
       $op = '==';
     }
-    // @todo - Security - is this sufficient escaping?
+    // @todo Security - determine if this is sufficient escaping.
     $value = in_array(gettype($condition['value']), ['string', 'boolean'])
       ? json_encode($condition['value'], JSON_THROW_ON_ERROR)
       : $condition['value'];
