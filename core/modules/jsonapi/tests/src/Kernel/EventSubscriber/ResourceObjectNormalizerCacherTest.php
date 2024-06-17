@@ -108,4 +108,50 @@ class ResourceObjectNormalizerCacherTest extends KernelTestBase {
     $this->assertFalse((bool) $this->cacher->get($resource_object));
   }
 
+  /**
+   * Tests that normalization max-age is corrected.
+   */
+  public function testMaxAgeCorrection() {
+    $this->installEntitySchema('entity_test_computed_field');
+
+    // Use EntityTestComputedField since ComputedTestCacheableStringItemList has a max age of 800
+    $baseMaxAge = 800;
+    $entity = EntityTestComputedField::create([]);
+    $entity->save();
+    $resource_type = $this->resourceTypeRepository->get($entity->getEntityTypeId(), $entity->bundle());
+    $resource_object = ResourceObject::createFromEntity($resource_type, $entity);
+
+    $resource_normalization = $this->serializer
+      ->normalize($resource_object, 'api_json', ['account' => NULL]);
+    $this->assertEquals($baseMaxAge, $resource_normalization->getCacheMaxAge());
+
+    // Save the normalization to cache, this is done at TerminateEvent.
+    $http_kernel = $this->prophesize(HttpKernelInterface::class);
+    $request = $this->prophesize(Request::class);
+    $response = $this->prophesize(Response::class);
+    $event = new TerminateEvent($http_kernel->reveal(), $request->reveal(), $response->reveal());
+    $this->cacher->onTerminate($event);
+
+    // Change request time to 500 seconds later
+    $current_request = \Drupal::requestStack()->getCurrentRequest();
+    $current_request->server->set('REQUEST_TIME', $current_request->server->get('REQUEST_TIME') + 500);
+    $resource_normalization = $this->serializer
+      ->normalize($resource_object, 'api_json', ['account' => NULL]);
+    $this->assertEquals($baseMaxAge - 500, $resource_normalization->getCacheMaxAge(), 'Max age should be 300 since 500 seconds has passed');
+
+    // Change request time to 800 seconds later, this would mean uncacheable
+    // since it just expired
+    $current_request->server->set('REQUEST_TIME', $current_request->server->get('REQUEST_TIME') + 800);
+    $resource_normalization = $this->serializer
+      ->normalize($resource_object, 'api_json', ['account' => NULL]);
+    $this->assertEquals(0, $resource_normalization->getCacheMaxAge(), 'Max age should be 0 since max-age has passed');
+
+    // Change request time to 1600 seconds later, this would mean uncacheable.
+    $current_request->server->set('REQUEST_TIME', $current_request->server->get('REQUEST_TIME') + 1600);
+    $resource_normalization = $this->serializer
+      ->normalize($resource_object, 'api_json', ['account' => NULL]);
+    $this->assertEquals(0, $resource_normalization->getCacheMaxAge(), 'Max age should be 0 since max-age has passed');
+
+  }
+
 }
