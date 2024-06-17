@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\KernelTests\Core\Action;
 
 use Drupal\Core\Action\Plugin\Action\Derivative\EntityDeleteActionDeriver;
@@ -27,7 +29,6 @@ class DeleteActionTest extends KernelTestBase {
     parent::setUp();
     $this->installEntitySchema('entity_test_mulrevpub');
     $this->installEntitySchema('user');
-    $this->installSchema('system', ['sequences']);
 
     $this->testUser = User::create([
       'name' => 'foobar',

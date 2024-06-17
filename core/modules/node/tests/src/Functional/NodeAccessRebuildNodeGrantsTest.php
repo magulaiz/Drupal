@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\node\Functional;
 
 use Drupal\node\Entity\NodeType;
@@ -40,6 +42,7 @@ class NodeAccessRebuildNodeGrantsTest extends NodeTestBase {
       'administer site configuration',
       'access administration pages',
       'access site reports',
+      'administer nodes',
     ]);
     $this->drupalLogin($this->adminUser);
 

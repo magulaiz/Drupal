@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\migrate_drupal\Kernel\d6;
 
 use Drupal\field\Plugin\migrate\source\d6\FieldInstance;
@@ -7,7 +9,8 @@ use Drupal\field_discovery_test\FieldDiscoveryTestClass;
 use Drupal\migrate_drupal\FieldDiscoveryInterface;
 use Drupal\Tests\migrate_drupal\Traits\FieldDiscoveryTestTrait;
 
-// cspell:ignore filefield imagefield imagelink nodelink selectlist spamspan
+// cspell:ignore filefield imagefield imagelink nodelink nodereference
+// cspell:ignore selectlist spamspan userreference
 
 /**
  * Tests FieldDiscovery service against Drupal 6.
@@ -135,7 +138,7 @@ class FieldDiscoveryTest extends MigrateDrupal6TestBase {
    * @return array
    *   The data.
    */
-  public function addAllFieldProcessesAltersData() {
+  public static function addAllFieldProcessesAltersData() {
     return [
       'Field Formatter' => [
         'field_plugin_method' => 'alterFieldFormatterMigration',

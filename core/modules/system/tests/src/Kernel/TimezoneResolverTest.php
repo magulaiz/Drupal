@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\system\Kernel;
 
 use Drupal\KernelTests\KernelTestBase;
@@ -29,7 +31,6 @@ class TimezoneResolverTest extends KernelTestBase {
    */
   public function testGetTimeZone() {
     $this->installEntitySchema('user');
-    $this->installSchema('system', ['sequences']);
     $this->installConfig(['system']);
 
     // Check the default test timezone.

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\node\Functional;
 
 use Drupal\field\Entity\FieldStorageConfig;
@@ -59,7 +61,7 @@ class NodeFieldMultilingualTest extends BrowserTestBase {
       'language_configuration[language_alterable]' => TRUE,
     ];
     $this->drupalGet('admin/structure/types/manage/page');
-    $this->submitForm($edit, 'Save content type');
+    $this->submitForm($edit, 'Save');
     $this->assertSession()->pageTextContains("The content type Basic page has been updated.");
 
     // Make node body translatable.

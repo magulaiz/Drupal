@@ -1,9 +1,6 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Tests\Core\ProxyBuilder\ProxyBuilderTest.
- */
+declare(strict_types=1);
 
 namespace Drupal\Tests\Core\ProxyBuilder;
 
@@ -170,7 +167,7 @@ class TestServiceNoMethod {
 
 class TestServiceComplexMethod {
 
-  public function complexMethod($parameter, callable $function, TestServiceNoMethod $test_service = NULL, array &$elements = []) {
+  public function complexMethod($parameter, callable $function, ?TestServiceNoMethod $test_service = NULL, array &$elements = []) {
 
   }
 

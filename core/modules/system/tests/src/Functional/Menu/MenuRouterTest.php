@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\system\Functional\Menu;
 
 use Drupal\Core\Url;
@@ -82,8 +84,8 @@ class MenuRouterTest extends BrowserTestBase {
    */
   protected function doTestTitleCallbackFalse() {
     $this->drupalGet('test-page');
-    $this->assertSession()->pageTextContains('A title with @placeholder', 'Raw text found on the page');
-    $this->assertSession()->pageTextNotContains('A title with some other text', 'Text with placeholder substitutions not found.');
+    $this->assertSession()->pageTextContains('A title with @placeholder');
+    $this->assertSession()->pageTextNotContains('A title with some other text');
   }
 
   /**
@@ -203,7 +205,7 @@ class MenuRouterTest extends BrowserTestBase {
       "éøïвβ中國書۞";
     $this->drupalGet($path);
     $this->assertSession()->pageTextContains('This is the menuTestCallback content.');
-    $this->assertSession()->pageTextNotContains('The website encountered an unexpected error. Please try again later.');
+    $this->assertSession()->pageTextNotContains('The website encountered an unexpected error. Try again later.');
   }
 
   /**

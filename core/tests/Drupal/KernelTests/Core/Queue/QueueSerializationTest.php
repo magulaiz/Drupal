@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\KernelTests\Core\Queue;
 
 use Drupal\Core\DependencyInjection\DependencySerializationTrait;
@@ -76,7 +78,6 @@ class QueueSerializationTest extends KernelTestBase implements FormInterface {
    */
   protected function setUp(): void {
     parent::setUp();
-    $this->installSchema('system', ['sequences']);
     $this->installEntitySchema('user');
     // We only need a valid \Drupal\Core\Queue\DatabaseQueue object here, not
     // an actual valid queue.

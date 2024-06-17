@@ -1,8 +1,9 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\jsonapi\Functional;
 
-use Drupal\Component\Serialization\Json;
 use Drupal\Component\Utility\NestedArray;
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Url;
@@ -13,6 +14,7 @@ use GuzzleHttp\RequestOptions;
  * JSON:API integration test for the "ConfigurableLanguage" config entity type.
  *
  * @group jsonapi
+ * @group #slow
  */
 class ConfigurableLanguageTest extends ConfigEntityResourceTestBase {
 
@@ -111,7 +113,7 @@ class ConfigurableLanguageTest extends ConfigEntityResourceTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function getExpectedCacheContexts(array $sparse_fieldset = NULL) {
+  protected function getExpectedCacheContexts(?array $sparse_fieldset = NULL) {
     return Cache::mergeContexts(parent::getExpectedCacheContexts(), ['languages:language_interface']);
   }
 
@@ -131,7 +133,7 @@ class ConfigurableLanguageTest extends ConfigEntityResourceTestBase {
     $this->setUpAuthorization('GET');
     $response = $this->request('GET', $url, $request_options);
 
-    $normalization = Json::decode((string) $response->getBody());
+    $normalization = $this->getDocumentFromResponse($response);
     $this->assertArrayNotHasKey('_core', $normalization['data']['attributes']);
   }
 

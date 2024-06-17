@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\Core\Cache;
 
 use Drupal\Core\Cache\Cache;
@@ -15,8 +17,7 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
 class CacheableMetadataTest extends UnitTestCase {
 
   /**
-   * @covers ::merge
-   * @dataProvider providerTestMerge
+   * Tests merge().
    *
    * This only tests at a high level, because it reuses existing logic. Detailed
    * tests exist for the existing logic:
@@ -24,6 +25,9 @@ class CacheableMetadataTest extends UnitTestCase {
    * @see \Drupal\Tests\Core\Cache\CacheTest::testMergeTags()
    * @see \Drupal\Tests\Core\Cache\CacheTest::testMergeMaxAges()
    * @see \Drupal\Tests\Core\Cache\CacheContextsTest
+   *
+   * @covers ::merge
+   * @dataProvider providerTestMerge
    */
   public function testMerge(CacheableMetadata $a, CacheableMetadata $b, CacheableMetadata $expected) {
     $cache_contexts_manager = $this->getMockBuilder('Drupal\Core\Cache\Context\CacheContextsManager')
@@ -39,8 +43,7 @@ class CacheableMetadataTest extends UnitTestCase {
   }
 
   /**
-   * @covers ::addCacheableDependency
-   * @dataProvider providerTestMerge
+   * Tests addCacheableDependency().
    *
    * This only tests at a high level, because it reuses existing logic. Detailed
    * tests exist for the existing logic:
@@ -48,6 +51,9 @@ class CacheableMetadataTest extends UnitTestCase {
    * @see \Drupal\Tests\Core\Cache\CacheTest::testMergeTags()
    * @see \Drupal\Tests\Core\Cache\CacheTest::testMergeMaxAges()
    * @see \Drupal\Tests\Core\Cache\CacheContextsTest
+   *
+   * @covers ::addCacheableDependency
+   * @dataProvider providerTestMerge
    */
   public function testAddCacheableDependency(CacheableMetadata $a, CacheableMetadata $b, CacheableMetadata $expected) {
     $cache_contexts_manager = $this->getMockBuilder('Drupal\Core\Cache\Context\CacheContextsManager')
@@ -66,7 +72,7 @@ class CacheableMetadataTest extends UnitTestCase {
    *
    * @return array
    */
-  public function providerTestMerge() {
+  public static function providerTestMerge() {
     return [
       // All empty.
       [(new CacheableMetadata()), (new CacheableMetadata()), (new CacheableMetadata())],
@@ -120,7 +126,7 @@ class CacheableMetadataTest extends UnitTestCase {
   /**
    * Data provider for testSetCacheMaxAge.
    */
-  public function providerSetCacheMaxAge() {
+  public static function providerSetCacheMaxAge() {
     return [
       [0 , FALSE],
       ['http', TRUE],
@@ -145,7 +151,7 @@ class CacheableMetadataTest extends UnitTestCase {
    *
    * @return array
    */
-  public function providerTestCreateFromRenderArray() {
+  public static function providerTestCreateFromRenderArray() {
     $data = [];
 
     $empty_metadata = new CacheableMetadata();
@@ -181,7 +187,7 @@ class CacheableMetadataTest extends UnitTestCase {
    *
    * @return array
    */
-  public function providerTestCreateFromObject() {
+  public static function providerTestCreateFromObject() {
     $data = [];
 
     $empty_metadata = new CacheableMetadata();

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\Component\Utility;
 
 use Drupal\Component\Utility\Rectangle;
@@ -77,13 +79,10 @@ class RectangleTest extends TestCase {
    *   protected function rotateResults($width, $height, $angle, &$new_width, &$new_height) {
    *     $image = \Drupal::service('image.factory')->get(NULL, 'gd');
    *     $image->createNew($width, $height);
-   *     $old_res = $image->getToolkit()->getResource();
+   *     $old = $image->getToolkit()->getGdImage();
    *     $image->rotate($angle);
    *     $new_width = $image->getWidth();
    *     $new_height = $image->getHeight();
-   *     if (is_resource($old_res)) {
-   *       imagedestroy($old_res);
-   *     }
    *   }
    * @endcode
    *
@@ -97,7 +96,7 @@ class RectangleTest extends TestCase {
    *
    * @see testRotateDimensions()
    */
-  public function providerPhp55RotateDimensions() {
+  public static function providerPhp55RotateDimensions() {
     // The dataset is stored in a .json file because it is very large and causes
     // problems for PHPCS.
     return json_decode(file_get_contents(__DIR__ . '/fixtures/RectangleTest.json'));

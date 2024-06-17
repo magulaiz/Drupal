@@ -1,9 +1,6 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\Tests\Component\ProxyBuilder\ProxyBuilderTest.
- */
+declare(strict_types=1);
 
 namespace Drupal\Tests\Component\ProxyBuilder;
 
@@ -288,8 +285,8 @@ EOS;
    * @covers ::buildParameter
    * @covers ::buildMethodBody
    */
-  public function testBuildWithNullableSelfTypehint() {
-    $class = 'Drupal\Tests\Component\ProxyBuilder\TestServiceNullableTypehintSelf';
+  public function testBuildWithNullableSelfTypeHint() {
+    $class = 'Drupal\Tests\Component\ProxyBuilder\TestServiceNullableTypeHintSelf';
 
     $result = $this->proxyBuilder->build($class);
 
@@ -299,9 +296,9 @@ EOS;
 /**
  * {@inheritdoc}
  */
-public function typehintSelf(?\Drupal\Tests\Component\ProxyBuilder\TestServiceNullableTypehintSelf $parameter): ?\Drupal\Tests\Component\ProxyBuilder\TestServiceNullableTypehintSelf
+public function typeHintSelf(?\Drupal\Tests\Component\ProxyBuilder\TestServiceNullableTypeHintSelf $parameter): ?\Drupal\Tests\Component\ProxyBuilder\TestServiceNullableTypeHintSelf
 {
-    return $this->lazyLoadItself()->typehintSelf($parameter);
+    return $this->lazyLoadItself()->typeHintSelf($parameter);
 }
 
 EOS;
@@ -435,15 +432,15 @@ class TestServiceMethodWithParameter {
 
 class TestServiceComplexMethod {
 
-  public function complexMethod(string $parameter, callable $function, TestServiceNoMethod $test_service = NULL, array &$elements = []): array {
+  public function complexMethod(string $parameter, callable $function, ?TestServiceNoMethod $test_service = NULL, array &$elements = []): array {
     return [];
   }
 
 }
 
-class TestServiceNullableTypehintSelf {
+class TestServiceNullableTypeHintSelf {
 
-  public function typehintSelf(?self $parameter): ?self {
+  public function typeHintSelf(?self $parameter): ?self {
     return NULL;
   }
 

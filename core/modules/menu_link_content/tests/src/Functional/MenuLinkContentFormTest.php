@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\menu_link_content\Functional;
 
 use Drupal\menu_link_content\Entity\MenuLinkContent;
@@ -72,6 +74,9 @@ class MenuLinkContentFormTest extends BrowserTestBase {
     $this->drupalGet('/admin/structure/menu/item/' . $menu_link->id() . '/edit');
     $this->assertSession()->statusCodeEquals(200);
 
+    // Test that other menus are available when editing existing menu link.
+    $this->assertSession()->optionExists('edit-menu-parent', 'main:');
+
     $this->drupalLogin($this->basicUser);
 
     $this->drupalGet('/admin/structure/menu/item/' . $menu_link->id() . '/edit');
@@ -83,6 +88,8 @@ class MenuLinkContentFormTest extends BrowserTestBase {
    */
   public function testMenuLinkContentForm() {
     $this->drupalGet('admin/structure/menu/manage/admin/add');
+    // Test that other menus are not available when creating a new menu link.
+    $this->assertSession()->optionNotExists('edit-menu-parent', 'main:');
     $option = $this->assertSession()->optionExists('edit-menu-parent', 'admin:');
     $this->assertTrue($option->isSelected());
     // Test that the field description is present.

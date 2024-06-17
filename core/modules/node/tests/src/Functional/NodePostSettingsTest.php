@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\node\Functional;
 
 /**
@@ -37,7 +39,7 @@ class NodePostSettingsTest extends NodeTestBase {
     $edit = [];
     $edit['display_submitted'] = TRUE;
     $this->drupalGet('admin/structure/types/manage/page');
-    $this->submitForm($edit, 'Save content type');
+    $this->submitForm($edit, 'Save');
 
     // Create a node.
     $edit = [];
@@ -55,7 +57,7 @@ class NodePostSettingsTest extends NodeTestBase {
     $edit = [];
     $edit['display_submitted'] = FALSE;
     $this->drupalGet('admin/structure/types/manage/page');
-    $this->submitForm($edit, 'Save content type');
+    $this->submitForm($edit, 'Save');
 
     // Create a node.
     $edit = [];

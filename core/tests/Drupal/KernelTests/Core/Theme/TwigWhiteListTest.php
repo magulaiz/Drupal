@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\KernelTests\Core\Theme;
 
 use Drupal\Core\Language\LanguageInterface;
@@ -50,7 +52,6 @@ class TwigWhiteListTest extends KernelTestBase {
   protected function setUp(): void {
     parent::setUp();
     \Drupal::service('theme_installer')->install(['test_theme']);
-    $this->installSchema('system', ['sequences']);
     $this->installEntitySchema('node');
     $this->installEntitySchema('user');
     $this->installEntitySchema('taxonomy_term');

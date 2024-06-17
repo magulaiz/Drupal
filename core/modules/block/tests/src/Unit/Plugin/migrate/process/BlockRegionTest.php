@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\block\Unit\Plugin\migrate\process;
 
 use Drupal\block\Plugin\migrate\process\BlockRegion;
@@ -24,7 +26,7 @@ class BlockRegionTest extends UnitTestCase {
    * @return array|string
    *   The transformed value.
    */
-  protected function transform(array $value, Row $row = NULL) {
+  protected function transform(array $value, ?Row $row = NULL) {
     $executable = $this->prophesize(MigrateExecutableInterface::class)->reveal();
     if (empty($row)) {
       $row = $this->prophesize(Row::class)->reveal();

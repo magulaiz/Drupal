@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\media\Kernel;
 
 use Drupal\Core\Render\HtmlResponse;
@@ -56,7 +58,7 @@ class OEmbedIframeControllerTest extends MediaKernelTestBase {
 
     $this->assertIsCallable($controller);
 
-    $this->expectException('\Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException');
+    $this->expectException('\Symfony\Component\HttpKernel\Exception\BadRequestHttpException');
     $this->expectExceptionMessage('This resource is not available');
     $request = new Request([
       'url' => 'https://example.com/path/to/resource',

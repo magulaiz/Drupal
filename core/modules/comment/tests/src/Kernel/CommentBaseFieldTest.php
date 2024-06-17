@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\comment\Kernel;
 
 use Drupal\comment\CommentInterface;
@@ -33,7 +35,6 @@ class CommentBaseFieldTest extends KernelTestBase {
     parent::setUp();
     $this->installEntitySchema('comment_test_base_field');
     $this->installEntitySchema('comment');
-    $this->installSchema('system', ['sequences']);
     $this->installEntitySchema('user');
   }
 

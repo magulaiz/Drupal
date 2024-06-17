@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\datetime\Kernel;
 
 use Drupal\Core\Datetime\DrupalDateTime;
@@ -31,14 +33,6 @@ class DateTimeFormInjectionTest extends KernelTestBase implements FormInterface 
    * @var array
    */
   protected static $modules = ['system', 'datetime'];
-
-  /**
-   * {@inheritdoc}
-   */
-  protected function setUp(): void {
-    parent::setUp();
-    $this->installSchema('system', ['sequences']);
-  }
 
   /**
    * {@inheritdoc}

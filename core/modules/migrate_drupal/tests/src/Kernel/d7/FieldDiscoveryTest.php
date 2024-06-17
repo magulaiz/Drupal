@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\migrate_drupal\Kernel\d7;
 
 use Drupal\comment\Entity\CommentType;
@@ -86,7 +88,7 @@ class FieldDiscoveryTest extends MigrateDrupal7TestBase {
     foreach ($node_types as $node_type => $comment_type) {
       NodeType::create([
         'type' => $node_type,
-        'label' => $this->randomString(),
+        'name' => $this->randomString(),
       ])->save();
 
       CommentType::create([
@@ -96,7 +98,7 @@ class FieldDiscoveryTest extends MigrateDrupal7TestBase {
       ])->save();
     }
 
-    Vocabulary::create(['vid' => 'test_vocabulary'])->save();
+    Vocabulary::create(['vid' => 'test_vocabulary', 'name' => 'Test'])->save();
     $this->executeMigrations([
       'd7_field',
       'd7_comment_type',
@@ -180,7 +182,7 @@ class FieldDiscoveryTest extends MigrateDrupal7TestBase {
    * @return array
    *   The data.
    */
-  public function addAllFieldProcessesAltersData() {
+  public static function addAllFieldProcessesAltersData() {
     return [
       'Field Instance' => [
         'field_plugin_method' => 'alterFieldInstanceMigration',

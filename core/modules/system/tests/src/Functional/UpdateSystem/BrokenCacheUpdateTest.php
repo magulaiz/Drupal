@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\system\Functional\UpdateSystem;
 
 use Drupal\Core\Database\Database;
@@ -47,7 +49,6 @@ class BrokenCacheUpdateTest extends BrowserTestBase {
     ];
     $insert->fields($fields);
     $fields['cid'] = 'element_info_build:claro';
-    $fields['tags'] = 'element_info_build';
     $insert->values(array_values($fields));
     $fields['cid'] = 'element_info_build:stark';
     $insert->values(array_values($fields));

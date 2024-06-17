@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\node\Functional\Views;
 
 use Drupal\node\Entity\Node;
@@ -43,7 +45,6 @@ class NodeFieldTokensTest extends NodeTestBase {
     /** @var \Drupal\node\NodeInterface $node */
     $node = Node::create([
       'type' => 'article',
-      'tnid' => 0,
       'uid' => $account->id(),
       'title' => 'Testing Views tokens',
       'body' => [['value' => $body, 'summary' => $summary, 'format' => 'plain_text']],

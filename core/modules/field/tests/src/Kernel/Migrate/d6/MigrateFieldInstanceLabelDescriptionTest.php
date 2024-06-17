@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\field\Kernel\Migrate\d6;
 
 use Drupal\KernelTests\KernelTestBase;
@@ -36,7 +38,6 @@ class MigrateFieldInstanceLabelDescriptionTest extends MigrateDrupal6TestBase im
     $this->installEntitySchema('node');
     $this->installConfig(['node']);
     $this->installSchema('node', ['node_access']);
-    $this->installSchema('system', ['sequences']);
     $this->executeMigration('language');
     $this->executeMigration('d6_field_instance_label_description_translation');
   }

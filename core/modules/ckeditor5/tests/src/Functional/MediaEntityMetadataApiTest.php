@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\ckeditor5\Functional;
 
 use Drupal\ckeditor5\Plugin\Editor\CKEditor5;
@@ -137,6 +139,9 @@ class MediaEntityMetadataApiTest extends BrowserTestBase {
     $this->editor = Editor::create([
       'format' => 'filtered_html',
       'editor' => 'ckeditor5',
+      'image_upload' => [
+        'status' => FALSE,
+      ],
       'settings' => [
         'toolbar' => [
           'items' => [],
@@ -279,7 +284,7 @@ class MediaEntityMetadataApiTest extends BrowserTestBase {
   public function testApiTranslation(): void {
     $this->container->get('module_installer')->install(['language', 'content_translation']);
     $this->resetAll();
-    ConfigurableLanguage::create(['id' => 'fi'])->save();
+    ConfigurableLanguage::createFromLangcode('fi')->save();
     $this->container->get('config.factory')->getEditable('language.negotiation')
       ->set('url.source', 'path_prefix')
       ->set('url.prefixes.fi', 'fi')

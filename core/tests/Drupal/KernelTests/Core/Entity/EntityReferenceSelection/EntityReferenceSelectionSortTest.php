@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\KernelTests\Core\Entity\EntityReferenceSelection;
 
 use Drupal\Component\Utility\Html;
@@ -32,6 +34,7 @@ class EntityReferenceSelectionSortTest extends EntityKernelTestBase {
     // Create an Article node type.
     $article = NodeType::create([
       'type' => 'article',
+      'name' => 'Article',
     ]);
     $article->save();
 

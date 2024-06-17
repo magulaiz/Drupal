@@ -1,8 +1,9 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\jsonapi\Functional;
 
-use Drupal\Component\Serialization\Json;
 use Drupal\Component\Utility\NestedArray;
 use Drupal\Core\Url;
 use Drupal\file\Entity\File;
@@ -15,6 +16,7 @@ use GuzzleHttp\RequestOptions;
  * JSON:API integration test for the "File" content entity type.
  *
  * @group jsonapi
+ * @group #slow
  */
 class FileTest extends ResourceTestBase {
 
@@ -238,7 +240,7 @@ class FileTest extends ResourceTestBase {
     $this->entity->setOwner($this->account);
     $this->entity->save();
     $response = $this->request('GET', $collection_filter_url, $request_options);
-    $doc = Json::decode((string) $response->getBody());
+    $doc = $this->getDocumentFromResponse($response);
     $this->assertCount(1, $doc['data']);
 
     // 0 results because the current user is no longer the file owner and the
@@ -246,7 +248,7 @@ class FileTest extends ResourceTestBase {
     $this->entity->setOwner(User::load(0));
     $this->entity->save();
     $response = $this->request('GET', $collection_filter_url, $request_options);
-    $doc = Json::decode((string) $response->getBody());
+    $doc = $this->getDocumentFromResponse($response);
     $this->assertCount(0, $doc['data']);
   }
 

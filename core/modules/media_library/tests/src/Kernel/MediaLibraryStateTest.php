@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\media_library\Kernel;
 
 use Drupal\Core\Cache\Cache;
@@ -44,7 +46,6 @@ class MediaLibraryStateTest extends KernelTestBase {
     $this->installEntitySchema('user');
     $this->installEntitySchema('file');
     $this->installSchema('file', 'file_usage');
-    $this->installSchema('system', 'sequences');
     $this->installEntitySchema('media');
     $this->installConfig([
       'field',
@@ -119,7 +120,7 @@ class MediaLibraryStateTest extends KernelTestBase {
    * @return array
    *   The data sets to test.
    */
-  public function providerCreate() {
+  public static function providerCreate() {
     $test_data = [];
 
     // Assert no exception is thrown when we add the parameters as expected.
@@ -307,7 +308,7 @@ class MediaLibraryStateTest extends KernelTestBase {
    * @return array
    *   The data sets to test.
    */
-  public function providerFromRequest() {
+  public static function providerFromRequest() {
     $test_data = [];
 
     // Assert no exception is thrown when we use valid state parameters.

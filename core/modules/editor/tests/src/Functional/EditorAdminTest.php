@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\editor\Functional;
 
 use Drupal\Component\Render\FormattableMarkup;
@@ -116,7 +118,7 @@ class EditorAdminTest extends BrowserTestBase {
     $this->container->get('module_installer')->install(['node']);
     $this->resetAll();
     // Create a new node type and attach the 'body' field to it.
-    $node_type = NodeType::create(['type' => mb_strtolower($this->randomMachineName()), 'name' => $this->randomString()]);
+    $node_type = NodeType::create(['type' => $this->randomMachineName(), 'name' => $this->randomString()]);
     $node_type->save();
     node_add_body_field($node_type, $this->randomString());
 

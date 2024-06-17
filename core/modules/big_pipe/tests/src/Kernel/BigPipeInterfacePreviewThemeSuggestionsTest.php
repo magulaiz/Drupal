@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\big_pipe\Kernel;
 
 use Drupal\KernelTests\KernelTestBase;
@@ -51,6 +53,8 @@ class BigPipeInterfacePreviewThemeSuggestionsTest extends KernelTestBase {
     $this->blockViewBuilder = $this->container
       ->get('entity_type.manager')
       ->getViewBuilder('block');
+
+    $this->container->get('theme_installer')->install(['stark']);
   }
 
   /**
@@ -60,7 +64,7 @@ class BigPipeInterfacePreviewThemeSuggestionsTest extends KernelTestBase {
     $entity = $this->controller->create([
       'id' => 'test_block1',
       'theme' => 'stark',
-      'plugin' => 'test_html',
+      'plugin' => 'system_powered_by_block',
     ]);
     $entity->save();
 

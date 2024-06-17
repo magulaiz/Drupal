@@ -1,12 +1,14 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\Component\Annotation;
 
 use Drupal\Component\Annotation\PluginID;
 use PHPUnit\Framework\TestCase;
 
 /**
- * @coversDefaultClass \Drupal\Component\Annotation\PluginId
+ * @coversDefaultClass \Drupal\Component\Annotation\PluginID
  * @group Annotation
  */
 class PluginIdTest extends TestCase {

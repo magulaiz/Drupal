@@ -8,11 +8,9 @@
  * a cached page are instead located in bootstrap.inc.
  */
 
-use Drupal\Component\Utility\Bytes;
 use Drupal\Component\Utility\SortArray;
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\DrupalKernel;
-use Drupal\Core\StringTranslation\TranslatableMarkup;
 
 /**
  * @defgroup php_wrappers PHP wrapper functions
@@ -114,71 +112,6 @@ const JS_DEFAULT = 0;
  * The default group for theme JavaScript code added to the page.
  */
 const JS_THEME = 100;
-
-/**
- * @defgroup format Formatting
- * @{
- * Functions to format numbers, strings, dates, etc.
- */
-
-/**
- * Generates a string representation for the given byte count.
- *
- * @param $size
- *   A size in bytes.
- * @param $langcode
- *   Optional language code to translate to a language other than what is used
- *   to display the page.
- *
- * @return \Drupal\Core\StringTranslation\TranslatableMarkup
- *   A translated string representation of the size.
- */
-function format_size($size, $langcode = NULL) {
-  $absolute_size = abs($size);
-  if ($absolute_size < Bytes::KILOBYTE) {
-    return \Drupal::translation()->formatPlural($size, '1 byte', '@count bytes', [], ['langcode' => $langcode]);
-  }
-  // Create a multiplier to preserve the sign of $size.
-  $sign = $absolute_size / $size;
-  foreach (['KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'] as $unit) {
-    $absolute_size /= Bytes::KILOBYTE;
-    $rounded_size = round($absolute_size, 2);
-    if ($rounded_size < Bytes::KILOBYTE) {
-      break;
-    }
-  }
-  $args = ['@size' => $rounded_size * $sign];
-  $options = ['langcode' => $langcode];
-  switch ($unit) {
-    case 'KB':
-      return new TranslatableMarkup('@size KB', $args, $options);
-
-    case 'MB':
-      return new TranslatableMarkup('@size MB', $args, $options);
-
-    case 'GB':
-      return new TranslatableMarkup('@size GB', $args, $options);
-
-    case 'TB':
-      return new TranslatableMarkup('@size TB', $args, $options);
-
-    case 'PB':
-      return new TranslatableMarkup('@size PB', $args, $options);
-
-    case 'EB':
-      return new TranslatableMarkup('@size EB', $args, $options);
-
-    case 'ZB':
-      return new TranslatableMarkup('@size ZB', $args, $options);
-
-    case 'YB':
-      return new TranslatableMarkup('@size YB', $args, $options);
-  }
-}
-
-/**
- * @} End of "defgroup format".
- */
 
 /**
  * Returns the base URL path (i.e., directory) of the Drupal installation.
@@ -481,7 +414,7 @@ function drupal_flush_all_caches($kernel = NULL) {
   // Flush asset file caches.
   \Drupal::service('asset.css.collection_optimizer')->deleteAll();
   \Drupal::service('asset.js.collection_optimizer')->deleteAll();
-  _drupal_flush_css_js();
+  \Drupal::service('asset.query_string')->reset();
 
   // Reset all static caches.
   drupal_static_reset();
@@ -524,17 +457,6 @@ function drupal_flush_all_caches($kernel = NULL) {
     \Drupal::theme()->resetActiveTheme();
     drupal_maintenance_theme();
   }
-}
-
-/**
- * Changes the dummy query string added to all CSS and JavaScript files.
- *
- * Changing the dummy query string appended to CSS and JavaScript files forces
- * all browsers to reload fresh files.
- */
-function _drupal_flush_css_js() {
-  // The timestamp is converted to base 36 in order to make it more compact.
-  Drupal::state()->set('system.css_js_query_string', base_convert(\Drupal::time()->getRequestTime(), 10, 36));
 }
 
 /**

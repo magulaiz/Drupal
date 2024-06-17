@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\content_translation\Functional;
 
 use Drupal\Tests\BrowserTestBase;
@@ -7,6 +9,8 @@ use Drupal\Tests\BrowserTestBase;
 /**
  * Test enabling content translation module.
  *
+ * @covers \Drupal\language\Form\ContentLanguageSettingsForm
+ * @covers ::_content_translation_form_language_content_settings_form_alter
  * @group content_translation
  */
 class ContentTranslationEnableTest extends BrowserTestBase {
@@ -15,6 +19,14 @@ class ContentTranslationEnableTest extends BrowserTestBase {
    * {@inheritdoc}
    */
   protected static $modules = ['entity_test', 'menu_link_content', 'node'];
+
+  /**
+   * {@inheritdoc}
+   *
+   * @todo Remove and fix test to not rely on super user.
+   * @see https://www.drupal.org/project/drupal/issues/3437620
+   */
+  protected bool $usesSuperUserAccessPolicy = TRUE;
 
   /**
    * {@inheritdoc}
@@ -68,7 +80,7 @@ class ContentTranslationEnableTest extends BrowserTestBase {
       'type' => 'foo',
     ];
     $this->drupalGet('admin/structure/types/add');
-    $this->submitForm($edit, 'Save content type');
+    $this->submitForm($edit, 'Save');
     $this->drupalGet('admin/config/regional/content-language');
     $this->assertSession()->responseContains('entity_types[node]');
   }

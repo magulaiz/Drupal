@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\text\Functional;
 
 use Drupal\Component\Utility\Html;
@@ -8,13 +10,14 @@ use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\filter\Entity\FilterFormat;
 use Drupal\filter\Render\FilteredMarkup;
-use Drupal\Tests\field\Functional\String\StringFieldTest;
+use Drupal\Tests\field\Functional\FunctionalString\StringFieldTest;
 use Drupal\Tests\TestFileCreationTrait;
 
 /**
  * Tests the creation of text fields.
  *
  * @group text
+ * @group #slow
  */
 class TextFieldTest extends StringFieldTest {
 
@@ -59,7 +62,7 @@ class TextFieldTest extends StringFieldTest {
   public function testTextFieldValidation() {
     // Create a field with settings to validate.
     $max_length = 3;
-    $field_name = mb_strtolower($this->randomMachineName());
+    $field_name = $this->randomMachineName();
     $field_storage = FieldStorageConfig::create([
       'field_name' => $field_name,
       'entity_type' => 'entity_test',
@@ -173,14 +176,14 @@ class TextFieldTest extends StringFieldTest {
     // Create one text format.
     $this->drupalLogin($this->adminUser);
     $format1 = FilterFormat::create([
-      'format' => mb_strtolower($this->randomMachineName()),
+      'format' => $this->randomMachineName(),
       'name' => '1_' . $this->randomMachineName(),
     ]);
     $format1->save();
 
     // Create a second text format.
     $format2 = FilterFormat::create([
-      'format' => mb_strtolower($this->randomMachineName()),
+      'format' => $this->randomMachineName(),
       'name' => '2_' . $this->randomMachineName(),
       'filters' => [
         'filter_html' => [
@@ -195,7 +198,7 @@ class TextFieldTest extends StringFieldTest {
 
     // Create a third text format.
     $format3 = FilterFormat::create([
-      'format' => mb_strtolower($this->randomMachineName()),
+      'format' => $this->randomMachineName(),
       'name' => '3_' . $this->randomMachineName(),
     ]);
     $format3->save();
@@ -210,7 +213,7 @@ class TextFieldTest extends StringFieldTest {
     ]);
 
     // Create a field with multiple formats allowed.
-    $field_name = mb_strtolower($this->randomMachineName());
+    $field_name = $this->randomMachineName();
     $field_storage = FieldStorageConfig::create([
       'field_name' => $field_name,
       'entity_type' => 'entity_test',
@@ -307,7 +310,7 @@ class TextFieldTest extends StringFieldTest {
    */
   public function _testTextfieldWidgetsFormatted($field_type, $widget_type) {
     // Create a field.
-    $field_name = mb_strtolower($this->randomMachineName());
+    $field_name = $this->randomMachineName();
     $field_storage = FieldStorageConfig::create([
       'field_name' => $field_name,
       'entity_type' => 'entity_test',
@@ -368,7 +371,7 @@ class TextFieldTest extends StringFieldTest {
     // access to it.
     $this->drupalLogin($this->adminUser);
     $edit = [
-      'format' => mb_strtolower($this->randomMachineName()),
+      'format' => $this->randomMachineName(),
       'name' => $this->randomMachineName(),
     ];
     $this->drupalGet('admin/config/content/formats/add');

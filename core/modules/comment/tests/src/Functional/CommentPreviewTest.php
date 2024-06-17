@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\comment\Functional;
 
 use Drupal\comment\CommentManagerInterface;
@@ -35,13 +37,10 @@ class CommentPreviewTest extends CommentTestBase {
    * Tests comment preview.
    */
   public function testCommentPreview() {
-    // As admin user, configure comment settings.
-    $this->drupalLogin($this->adminUser);
     $this->setCommentPreview(DRUPAL_OPTIONAL);
     $this->setCommentForm(TRUE);
     $this->setCommentSubject(TRUE);
     $this->setCommentSettings('default_mode', CommentManagerInterface::COMMENT_MODE_THREADED, 'Comment paging changed.');
-    $this->drupalLogout();
 
     // Log in as web user.
     $this->drupalLogin($this->webUser);
@@ -94,13 +93,10 @@ class CommentPreviewTest extends CommentTestBase {
    * Tests comment preview.
    */
   public function testCommentPreviewDuplicateSubmission() {
-    // As admin user, configure comment settings.
-    $this->drupalLogin($this->adminUser);
     $this->setCommentPreview(DRUPAL_OPTIONAL);
     $this->setCommentForm(TRUE);
     $this->setCommentSubject(TRUE);
     $this->setCommentSettings('default_mode', CommentManagerInterface::COMMENT_MODE_THREADED, 'Comment paging changed.');
-    $this->drupalLogout();
 
     // Log in as web user.
     $this->drupalLogin($this->webUser);
@@ -182,7 +178,7 @@ class CommentPreviewTest extends CommentTestBase {
     // Check that saving a comment produces a success message.
     $this->drupalGet('comment/' . $comment->id() . '/edit');
     $this->submitForm($edit, 'Save');
-    $this->assertSession()->pageTextContains('Your comment has been posted.');
+    $this->assertSession()->pageTextContains('Your comment has been updated.');
 
     // Check that the comment fields are correct after loading the saved comment.
     $this->drupalGet('comment/' . $comment->id() . '/edit');

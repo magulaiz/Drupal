@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\KernelTests\Core\Entity;
 
 use Drupal\Component\Render\FormattableMarkup;
@@ -41,14 +43,14 @@ class EntityAccessControlHandlerTest extends EntityLanguageTestBase {
    *
    * @internal
    */
-  public function assertEntityAccess(array $ops, AccessibleInterface $object, AccountInterface $account = NULL): void {
+  public function assertEntityAccess(array $ops, AccessibleInterface $object, ?AccountInterface $account = NULL): void {
     foreach ($ops as $op => $result) {
       $message = new FormattableMarkup("Entity access returns @result with operation '@op'.", [
         '@result' => !isset($result) ? 'null' : ($result ? 'true' : 'false'),
         '@op' => $op,
       ]);
 
-      $this->assertEquals($object->access($op, $account), $result, $message);
+      $this->assertEquals($object->access($op, $account), $result, (string) $message);
     }
   }
 
@@ -343,7 +345,7 @@ class EntityAccessControlHandlerTest extends EntityLanguageTestBase {
     $this->assertEquals('The entity ID cannot be changed.', $access_result->getReason());
   }
 
-  public function providerTestFieldAccess() {
+  public static function providerTestFieldAccess() {
     return [
       'serial ID entity' => [
         EntityTest::class,

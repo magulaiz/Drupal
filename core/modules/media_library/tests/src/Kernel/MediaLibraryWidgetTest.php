@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\media_library\Kernel;
 
 use Drupal\Core\Field\BaseFieldDefinition;
@@ -29,6 +31,7 @@ class MediaLibraryWidgetTest extends KernelTestBase {
     'media',
     'media_library',
     'field',
+    'filter',
     'image',
     'system',
     'views',
@@ -70,7 +73,6 @@ class MediaLibraryWidgetTest extends KernelTestBase {
     $this->installEntitySchema('entity_test');
     $this->installEntitySchema('entity_test_rev');
     $this->installEntitySchema('user');
-    $this->installSchema('system', ['sequences']);
     $this->installConfig([
       'system',
       'image',

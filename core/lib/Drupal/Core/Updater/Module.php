@@ -77,32 +77,6 @@ class Module extends Updater implements UpdaterInterface {
   }
 
   /**
-   * Returns available database schema updates once a new version is installed.
-   *
-   * @return array
-   */
-  public function getSchemaUpdates() {
-    require_once DRUPAL_ROOT . '/core/includes/install.inc';
-    require_once DRUPAL_ROOT . '/core/includes/update.inc';
-
-    if (!self::canUpdate($this->name)) {
-      return [];
-    }
-    \Drupal::moduleHandler()->loadInclude($this->name, 'install');
-
-    if (!\Drupal::service('update.update_hook_registry')->getAvailableUpdates($this->name)) {
-      return [];
-    }
-    $modules_with_updates = update_get_update_list();
-    if ($updates = $modules_with_updates[$this->name]) {
-      if ($updates['start']) {
-        return $updates['pending'];
-      }
-    }
-    return [];
-  }
-
-  /**
    * {@inheritdoc}
    */
   public function postInstallTasks() {
@@ -124,7 +98,7 @@ class Module extends Updater implements UpdaterInterface {
       ],
       $default_options + [
         '#url' => Url::fromRoute('system.modules_list'),
-        '#title' => t('Enable newly added modules'),
+        '#title' => t('Install newly added modules'),
       ],
       $default_options + [
         '#url' => Url::fromRoute('system.admin'),

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\jsonapi\Kernel\Revisions;
 
 use Drupal\Core\Http\Exception\CacheableBadRequestHttpException;
@@ -57,7 +59,11 @@ class VersionNegotiatorTest extends JsonapiKernelTestBase {
    */
   protected $node2;
 
+  /**
+   * {@inheritdoc}
+   */
   protected static $modules = [
+    'file',
     'node',
     'field',
     'jsonapi',
@@ -75,11 +81,11 @@ class VersionNegotiatorTest extends JsonapiKernelTestBase {
     $this->installEntitySchema('node');
     $this->installEntitySchema('user');
     // Add the additional table schemas.
-    $this->installSchema('system', ['sequences']);
     $this->installSchema('node', ['node_access']);
     $this->installSchema('user', ['users_data']);
     $type = NodeType::create([
       'type' => 'dummy',
+      'name' => 'Dummy',
       'new_revision' => TRUE,
     ]);
     $type->save();

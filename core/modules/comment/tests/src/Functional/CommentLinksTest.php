@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\comment\Functional;
 
 use Drupal\comment\Plugin\Field\FieldType\CommentItemInterface;
@@ -83,7 +85,6 @@ class CommentLinksTest extends CommentTestBase {
 
     // Change comment settings.
     $this->setCommentSettings('form_location', CommentItemInterface::FORM_BELOW, 'Set comment form location');
-    $this->setCommentAnonymous(TRUE);
     $this->node->comment = CommentItemInterface::OPEN;
     $this->node->save();
 

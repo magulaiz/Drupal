@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\serialization\Kernel;
 
 use Drupal\Core\TypedData\DataDefinition;
@@ -7,7 +9,7 @@ use Drupal\Core\TypedData\MapDataDefinition;
 use Drupal\KernelTests\KernelTestBase;
 
 /**
- * @group typedData
+ * @group TypedData
  */
 class MapDataNormalizerTest extends KernelTestBase {
 

@@ -1,11 +1,14 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\content_moderation\Functional;
 
 /**
  * Tests moderation state node type integration.
  *
  * @group content_moderation
+ * @group #slow
  */
 class ModerationStateNodeTypeTest extends ModerationStateTestBase {
 
@@ -112,7 +115,7 @@ class ModerationStateNodeTypeTest extends ModerationStateTestBase {
     // Ensure checkboxes in the 'workflow' section can be altered, even when
     // 'revision' is enforced and disabled.
     $this->drupalGet('admin/structure/types/manage/moderated');
-    $this->submitForm(['options[promote]' => TRUE], 'Save content type');
+    $this->submitForm(['options[promote]' => TRUE], 'Save');
     $this->drupalGet('admin/structure/types/manage/moderated');
     $this->assertSession()->checkboxChecked('options[promote]');
   }

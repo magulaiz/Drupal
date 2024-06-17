@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\file\Kernel;
 
 use Drupal\file\Entity\File;
@@ -34,7 +36,6 @@ class AccessTest extends KernelTestBase {
     $this->installEntitySchema('file');
     $this->installEntitySchema('user');
     $this->installSchema('file', ['file_usage']);
-    $this->installSchema('system', 'sequences');
   }
 
   /**

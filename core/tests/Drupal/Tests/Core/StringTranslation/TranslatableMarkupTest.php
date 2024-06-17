@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\Core\StringTranslation;
 
 use Drupal\Component\Render\FormattableMarkup;
@@ -54,7 +56,7 @@ class TranslatableMarkupTest extends UnitTestCase {
   public function testToString() {
     $translation = $this->createMock(TranslationInterface::class);
 
-    $string = 'May I have an exception please?';
+    $string = 'May I have an exception?';
     $text = $this->getMockBuilder(TranslatableMarkup::class)
       ->setConstructorArgs([$string, [], [], $translation])
       ->onlyMethods(['_die'])
@@ -78,7 +80,7 @@ class TranslatableMarkupTest extends UnitTestCase {
     restore_error_handler();
 
     $this->assertEquals(E_USER_ERROR, $this->lastErrorNumber);
-    $this->assertMatchesRegularExpression('/Exception thrown while calling __toString on a .*Mock_TranslatableMarkup_.* object in .*TranslatableMarkupTest.php on line [0-9]+: Yes you may./', $this->lastErrorMessage);
+    $this->assertMatchesRegularExpression('/Exception thrown while calling __toString on a .*MockObject_TranslatableMarkup_.* object in .*TranslatableMarkupTest.php on line [0-9]+: Yes you may./', $this->lastErrorMessage);
   }
 
   /**

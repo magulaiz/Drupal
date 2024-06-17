@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\node\Functional;
 
 use Drupal\block\Entity\Block;
@@ -148,7 +150,7 @@ class NodeBlockFunctionalTest extends NodeTestBase {
     $this->drupalGet("admin/structure/block/add/system_powered_by_block/{$theme}");
     $this->assertSession()->pageTextContains('Content type');
     $edit = [
-      'id' => strtolower($this->randomMachineName()),
+      'id' => $this->randomMachineName(),
       'region' => 'sidebar_first',
       'visibility[entity_bundle:node][bundles][article]' => 'article',
     ];

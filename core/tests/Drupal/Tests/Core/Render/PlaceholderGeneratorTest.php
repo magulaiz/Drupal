@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\Core\Render;
 
 use Drupal\Component\Utility\Html;
@@ -19,14 +21,16 @@ class PlaceholderGeneratorTest extends RendererTestBase {
   protected $placeholderGenerator;
 
   /**
+   * Ensure that the generated placeholder markup is valid.
+   *
+   * If it is not, then simply using DOMDocument on HTML that contains
+   * placeholders may modify the placeholders' markup, which would make it
+   * impossible to replace the placeholders: the placeholder markup in
+   * #attached versus that in the HTML processed by DOMDocument would no longer
+   * match.
+   *
    * @covers ::createPlaceholder
    * @dataProvider providerCreatePlaceholderGeneratesValidHtmlMarkup
-   *
-   * Ensure that the generated placeholder markup is valid. If it is not, then
-   * simply using DOMDocument on HTML that contains placeholders may modify the
-   * placeholders' markup, which would make it impossible to replace the
-   * placeholders: the placeholder markup in #attached versus that in the HTML
-   * processed by DOMDocument would no longer match.
    */
   public function testCreatePlaceholderGeneratesValidHtmlMarkup(array $element) {
     $build = $this->placeholderGenerator->createPlaceholder($element);
@@ -83,7 +87,7 @@ class PlaceholderGeneratorTest extends RendererTestBase {
   /**
    * @return array
    */
-  public function providerCreatePlaceholderGeneratesValidHtmlMarkup() {
+  public static function providerCreatePlaceholderGeneratesValidHtmlMarkup() {
     return [
       'multiple-arguments' => [['#lazy_builder' => ['Drupal\Tests\Core\Render\PlaceholdersTest::callback', ['foo', 'bar']]]],
       'special-character-&' => [['#lazy_builder' => ['Drupal\Tests\Core\Render\PlaceholdersTest::callback', ['foo&bar']]]],

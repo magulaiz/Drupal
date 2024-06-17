@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\KernelTests\Core\Database;
 
 use Drupal\Core\Database\DatabaseExceptionWrapper;
@@ -130,7 +132,7 @@ class DeleteTruncateTest extends DatabaseTestBase {
 
     // Roll back the transaction, and check that we are back to status before
     // insert and truncate.
-    $this->connection->rollBack();
+    $transaction->rollBack();
     $this->assertFalse($this->connection->inTransaction());
     $num_records_after = $this->connection->select('test')->countQuery()->execute()->fetchField();
     $this->assertEquals($num_records_before, $num_records_after);

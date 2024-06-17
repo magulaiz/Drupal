@@ -1,9 +1,12 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\comment\Functional\Rest;
 
 use Drupal\comment\Entity\Comment;
 use Drupal\comment\Entity\CommentType;
+use Drupal\comment\Plugin\Field\FieldType\CommentItemInterface;
 use Drupal\comment\Tests\CommentTestTrait;
 use Drupal\Core\Cache\Cache;
 use Drupal\entity_test\Entity\EntityTest;
@@ -94,6 +97,7 @@ abstract class CommentResourceTestBase extends EntityResourceTestBase {
     $commented_entity = EntityTest::create([
       'name' => 'Camelids',
       'type' => 'bar',
+      'comment' => CommentItemInterface::OPEN,
     ]);
     $commented_entity->save();
 
@@ -239,7 +243,7 @@ abstract class CommentResourceTestBase extends EntityResourceTestBase {
       ],
       'subject' => [
         [
-          'value' => 'Dramallama',
+          'value' => 'Drama llama',
         ],
       ],
       'comment_body' => [
@@ -356,6 +360,9 @@ abstract class CommentResourceTestBase extends EntityResourceTestBase {
     $unserialized = $this->serializer->deserialize((string) $response->getBody(), get_class($this->entity), static::$format);
     $this->assertResourceResponse(201, FALSE, $response);
     $this->assertFalse($unserialized->isPublished());
+
+    // Make sure the role save below properly invalidates cache tags.
+    $this->refreshVariables();
 
     // Grant anonymous permission to skip comment approval.
     $this->grantPermissionsToTestedRole(['skip comment approval']);

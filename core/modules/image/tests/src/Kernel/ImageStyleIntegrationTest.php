@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\image\Kernel;
 
 use Drupal\Core\Entity\Entity\EntityFormDisplay;
@@ -43,15 +45,22 @@ class ImageStyleIntegrationTest extends KernelTestBase {
   public function testEntityDisplayDependency() {
     // Create two image styles.
     /** @var \Drupal\image\ImageStyleInterface $style */
-    $style = ImageStyle::create(['name' => 'main_style']);
+    $style = ImageStyle::create([
+      'name' => 'main_style',
+      'label' => 'Main',
+    ]);
     $style->save();
     /** @var \Drupal\image\ImageStyleInterface $replacement */
-    $replacement = ImageStyle::create(['name' => 'replacement_style']);
+    $replacement = ImageStyle::create([
+      'name' => 'replacement_style',
+      'label' => 'Replacement',
+    ]);
     $replacement->save();
 
-    // Create a node-type, named 'note'.
-    $node_type = NodeType::create(['type' => 'note']);
-    $node_type->save();
+    NodeType::create([
+      'type' => 'note',
+      'name' => 'Note',
+    ])->save();
 
     // Create an image field and attach it to the 'note' node-type.
     FieldStorageConfig::create([
@@ -130,12 +139,16 @@ class ImageStyleIntegrationTest extends KernelTestBase {
   public function testEntityDisplayDependencyRename() {
     // Create an image style.
     /** @var \Drupal\image\ImageStyleInterface $style */
-    $style = ImageStyle::create(['name' => 'main_style']);
+    $style = ImageStyle::create([
+      'name' => 'main_style',
+      'label' => 'Main',
+    ]);
     $style->save();
 
-    // Create a node-type, named 'note'.
-    $node_type = NodeType::create(['type' => 'note']);
-    $node_type->save();
+    NodeType::create([
+      'type' => 'note',
+      'name' => 'Note',
+    ])->save();
 
     // Create an image field and attach it to the 'note' node-type.
     FieldStorageConfig::create([

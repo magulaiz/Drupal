@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\serialization\Kernel;
 
 use Drupal\Core\Cache\CacheableDependencyInterface;
@@ -75,9 +77,6 @@ class EntitySerializationTest extends NormalizerTestBase {
    */
   protected function setUp(): void {
     parent::setUp();
-
-    // User create needs sequence table.
-    $this->installSchema('system', ['sequences']);
 
     FilterFormat::create([
       'format' => 'my_text_format',

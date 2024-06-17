@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\views\Kernel\Entity;
 
 use Drupal\Core\Cache\CacheBackendInterface;
@@ -180,7 +182,7 @@ class EntityViewsDataTest extends KernelTestBase {
     $this->assertEquals(['entity_test_list_cache_context'], $data['entity_test']['table']['base']['cache_contexts']);
     $this->assertEquals('Entity test', $data['entity_test']['table']['base']['title']);
 
-    // TODO: change these to assertArrayNotHasKey().
+    // @todo Change these to assertArrayNotHasKey().
     $this->assertFalse(isset($data['entity_test']['table']['defaults']));
 
     $this->assertFalse(isset($data['entity_test_mul_property_data']));
@@ -202,8 +204,8 @@ class EntityViewsDataTest extends KernelTestBase {
 
     // Tests the join definition between the base and the data table.
     $data = $this->entityTypeManager->getHandler('entity_test_mul', 'views_data')->getViewsData();
-    // TODO: change the base table in the entity type definition to match the
-    // changed entity ID.
+    // @todo Change the base table in the entity type definition to match the
+    //   changed entity ID.
     $base_views_data = $data['entity_test'];
 
     // Ensure that the base table is set to the data table.
@@ -284,6 +286,7 @@ class EntityViewsDataTest extends KernelTestBase {
 
     $this->assertEquals('entity_test_mulrev', $data['entity_test_mulrev_property_revision']['table']['entity type']);
     $this->assertEquals('Entity test revision', $data['entity_test_mulrev_revision']['table']['group']);
+    $this->assertTrue($data['entity_test_mulrev_revision']['table']['entity revision']);
     $this->assertEquals('entity_test', $data['entity_test']['table']['provider']);
 
     // Ensure the join information is set up properly.
@@ -340,6 +343,7 @@ class EntityViewsDataTest extends KernelTestBase {
 
     $this->assertEquals('entity_test_mulrev', $data['entity_test_mulrev_property_revision']['table']['entity type']);
     $this->assertEquals('Entity test revision', $data['entity_test_mulrev_revision']['table']['group']);
+    $this->assertTrue($data['entity_test_mulrev_revision']['table']['entity revision']);
     $this->assertEquals('entity_test', $data['entity_test']['table']['provider']);
 
     // Ensure the join information is set up properly.
@@ -769,7 +773,7 @@ class EntityViewsDataTest extends KernelTestBase {
    * @internal
    */
   protected function assertLanguageField(array $data): void {
-    $this->assertEquals('field', $data['field']['id']);
+    $this->assertEquals('field_language', $data['field']['id']);
     $this->assertEquals('language', $data['filter']['id']);
     $this->assertEquals('language', $data['argument']['id']);
     $this->assertEquals('standard', $data['sort']['id']);
@@ -783,7 +787,8 @@ class EntityViewsDataTest extends KernelTestBase {
   protected function assertEntityReferenceField(array $data): void {
     $this->assertEquals('field', $data['field']['id']);
     $this->assertEquals('numeric', $data['filter']['id']);
-    $this->assertEquals('numeric', $data['argument']['id']);
+    $this->assertEquals('entity_target_id', $data['argument']['id']);
+    $this->assertEquals('user', $data['argument']['target_entity_type_id']);
     $this->assertEquals('standard', $data['sort']['id']);
   }
 

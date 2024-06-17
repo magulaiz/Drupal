@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\block\Functional;
 
 use Drupal\Tests\BrowserTestBase;
@@ -44,7 +46,7 @@ class BlockHookOperationTest extends BrowserTestBase {
   public function testBlockOperationAlter() {
     // Add a test block, any block will do.
     // Set the machine name so the test_operation link can be built later.
-    $block_id = mb_strtolower($this->randomMachineName(16));
+    $block_id = $this->randomMachineName(16);
     $this->drupalPlaceBlock('system_powered_by_block', ['id' => $block_id]);
 
     // Get the Block listing.
