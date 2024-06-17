@@ -210,7 +210,7 @@ class BundleClassTest extends EntityKernelTestBase {
     $this->container->get('state')->set('entity_test_bundle_class_enable_user_class', TRUE);
     $this->container->get('kernel')->rebuildContainer();
     $this->entityTypeManager->clearCachedDefinitions();
-    $this->drupalSetUpCurrentUser();
+    $this->setUpCurrentUser();
     $entity = User::load(1);
     $this->assertInstanceOf(EntityTestUserClass::class, $entity);
   }
