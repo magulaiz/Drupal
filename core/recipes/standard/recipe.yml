@@ -62,10 +62,10 @@ config:
       - views.view.who_s_online
   actions:
     node.settings:
-      simple_config_update:
+      simpleConfigUpdate:
         use_admin_theme: true
     system.site:
-      simple_config_update:
+      simpleConfigUpdate:
         page.front: /node
     user.role.authenticated:
       grantPermission: 'delete own files'
@@ -79,7 +79,7 @@ config:
       # This recipe assumes all published content should be publicly accessible.
       grantPermission: 'access content'
     user.settings:
-      simple_config_update:
+      simpleConfigUpdate:
         verify_mail: true
         register: visitors_admin_approval
         cancel_method: user_cancel_block

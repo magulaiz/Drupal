@@ -244,11 +244,11 @@ class ConfigActionTest extends KernelTestBase {
     /** @var \Drupal\Core\Config\Action\ConfigActionManager $manager */
     $manager = $this->container->get('plugin.manager.config_action');
     // Call the simple config update action.
-    $manager->applyAction('simple_config_update', 'config_test.system', ['foo' => 'Yay!']);
+    $manager->applyAction('simpleConfigUpdate', 'config_test.system', ['foo' => 'Yay!']);
     $this->assertSame('Yay!', $this->config('config_test.system')->get('foo'));
 
     try {
-      $manager->applyAction('simple_config_update', 'config_test.system', 'Test');
+      $manager->applyAction('simpleConfigUpdate', 'config_test.system', 'Test');
       $this->fail('Expected exception not thrown');
     }
     catch (ConfigActionException $e) {
@@ -257,7 +257,7 @@ class ConfigActionTest extends KernelTestBase {
 
     $this->config('config_test.system')->delete();
     try {
-      $manager->applyAction('simple_config_update', 'config_test.system', ['foo' => 'Yay!']);
+      $manager->applyAction('simpleConfigUpdate', 'config_test.system', ['foo' => 'Yay!']);
       $this->fail('Expected exception not thrown');
     }
     catch (ConfigActionException $e) {
