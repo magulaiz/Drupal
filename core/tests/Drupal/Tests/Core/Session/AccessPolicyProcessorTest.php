@@ -377,7 +377,7 @@ class AccessPolicyProcessorTest extends UnitTestCase {
     ?CacheBackendInterface $cache_static = NULL,
     ?AccountProxyInterface $current_user = NULL,
     ?AccountSwitcherInterface $account_switcher = NULL,
-    TimeInterface $time = NULL,
+    ?TimeInterface $time = NULL,
   ) {
     // Prophecy does not accept a willReturn call on a mocked method if said
     // method has a return type of void. However, without willReturn() or any
