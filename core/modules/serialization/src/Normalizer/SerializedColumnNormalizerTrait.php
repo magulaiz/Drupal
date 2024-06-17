@@ -14,14 +14,14 @@ trait SerializedColumnNormalizerTrait {
    * Checks if there is a serialized string for a column.
    *
    * @param mixed $data
-   *   The field item data to denormalize.
+   *   The field item data to de-normalize.
    * @param string $class
    *   The expected class to instantiate.
    * @param \Drupal\Core\Field\FieldItemInterface $field_item
    *   The field item.
    */
   protected function checkForSerializedStrings($data, $class, FieldItemInterface $field_item) {
-    // Require specialized denormalizers for fields with 'serialize' columns.
+    // Require specialized de-normalizers for fields with 'serialize' columns.
     // Note: this cannot be checked in ::supportsDenormalization() because at
     // that time we only have the field item class. ::hasSerializeColumn()
     // must be able to call $field_item->schema(), which requires a field
@@ -33,7 +33,7 @@ trait SerializedColumnNormalizerTrait {
     }
     if ($this->dataHasStringForSerializeColumn($field_item, $data)) {
       $field_name = $field_item->getParent() ? $field_item->getParent()->getName() : $field_item->getName();
-      throw new \LogicException(sprintf('The generic FieldItemNormalizer cannot denormalize string values for "%s" properties of the "%s" field (field item class: %s).', implode('", "', $this->getSerializedPropertyNames($field_item)), $field_name, $class));
+      throw new \LogicException(sprintf('The generic FieldItemNormalizer cannot de-normalize string values for "%s" properties of the "%s" field (field item class: %s).', implode('", "', $this->getSerializedPropertyNames($field_item)), $field_name, $class));
     }
   }
 
@@ -43,7 +43,7 @@ trait SerializedColumnNormalizerTrait {
    * @param \Drupal\Core\Field\FieldItemInterface $field_item
    *   The field item.
    * @param array $data
-   *   The data being denormalized.
+   *   The data being de-normalized.
    *
    * @return bool
    *   TRUE if there is a string value for serialize column, otherwise FALSE.

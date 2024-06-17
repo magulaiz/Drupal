@@ -74,7 +74,7 @@ class DefaultTableMapping implements TableMappingInterface {
   protected $fieldNames = [];
 
   /**
-   * A list of database columns which store denormalized data per table.
+   * A list of database columns which store de-normalized data per table.
    *
    * This corresponds to the return value of
    * TableMappingInterface::getExtraColumns() except that this variable is
@@ -194,7 +194,7 @@ class DefaultTableMapping implements TableMappingInterface {
     elseif ($revisionable && !$translatable) {
       // The revisionable layout stores all the base field values in the base
       // table, except for revision metadata fields. Revisionable fields
-      // denormalized in the base table but also stored in the revision table
+      // de-normalized in the base table but also stored in the revision table
       // together with the entity ID and the revision ID as identifiers.
       $table_mapping->setFieldNames($table_mapping->baseTable, array_diff($all_fields, $revision_metadata_fields));
       $revision_key_fields = [$id_key, $revision_key];
@@ -204,7 +204,7 @@ class DefaultTableMapping implements TableMappingInterface {
       // Multilingual layouts store key field values in the base table. The
       // other base field values are stored in the data table, no matter
       // whether they are translatable or not. The data table holds also a
-      // denormalized copy of the bundle field value to allow for more
+      // de-normalized copy of the bundle field value to allow for more
       // performant queries. This means that only the UUID is not stored on
       // the data table.
       $table_mapping
@@ -217,7 +217,7 @@ class DefaultTableMapping implements TableMappingInterface {
       // langcode ID along with revision metadata. The revision data table holds
       // data field values for all the revisionable fields and the data table
       // holds the data field values for all non-revisionable fields. The data
-      // field values of revisionable fields are denormalized in the data
+      // field values of revisionable fields are de-normalized in the data
       // table, as well.
       $table_mapping->setFieldNames($table_mapping->baseTable, $key_fields);
 

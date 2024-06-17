@@ -682,7 +682,7 @@ class JsonApiFunctionalTest extends JsonApiFunctionalTestBase {
     $this->assertEquals(400, $response->getStatusCode());
     $this->assertNotEmpty($document['errors']);
     $this->assertEquals('Bad Request', $document['errors'][0]['title']);
-    // 6.1 Denormalizing error.
+    // 6.1 De-normalizing error.
     $response = $this->request('POST', $collection_url, [
       'body' => '{"data":{"type":"something"},"valid yet nonsensical json":[]}',
       'auth' => [$this->user->getAccountName(), $this->user->pass_raw],

@@ -138,10 +138,10 @@ class ResourceType {
   }
 
   /**
-   * Gets the deserialization target class.
+   * Gets the de-serialization target class.
    *
    * @return string
-   *   The deserialization target class.
+   *   The de-serialization target class.
    */
   public function getDeserializationTargetClass() {
     return $this->deserializationTargetClass;

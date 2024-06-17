@@ -152,7 +152,7 @@ trait XmlEntityNormalizationQuirksTrait {
    * {@inheritdoc}
    */
   public function testPost() {
-    // Deserialization of the XML format is not supported.
+    // De-serialization of the XML format is not supported.
     $this->markTestSkipped();
   }
 
@@ -160,7 +160,7 @@ trait XmlEntityNormalizationQuirksTrait {
    * {@inheritdoc}
    */
   public function testPatch() {
-    // Deserialization of the XML format is not supported.
+    // De-serialization of the XML format is not supported.
     $this->markTestSkipped();
   }
 

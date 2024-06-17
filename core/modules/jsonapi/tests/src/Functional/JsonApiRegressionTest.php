@@ -375,7 +375,7 @@ class JsonApiRegressionTest extends JsonApiFunctionalTestBase {
   }
 
   /**
-   * Ensures denormalizing relationships with aliased field names works.
+   * Ensures de-normalizing relationships with aliased field names works.
    *
    * @see https://www.drupal.org/project/drupal/issues/3007113
    * @see https://www.drupal.org/project/jsonapi_extras/issues/3004582#comment-12817261
@@ -684,7 +684,7 @@ class JsonApiRegressionTest extends JsonApiFunctionalTestBase {
   }
 
   /**
-   * Ensure optional `@FieldType=map` fields are denormalized correctly.
+   * Ensure optional `@FieldType=map` fields are de-normalized correctly.
    */
   public function testEmptyMapFieldTypeDenormalization() {
     $this->config('jsonapi.settings')->set('read_only', FALSE)->save(TRUE);

@@ -120,7 +120,7 @@ class TimestampItemNormalizerTest extends UnitTestCase {
     $timestamp_data_denormalization = $this->randomMachineName();
 
     $timestamp_item = $this->createTimestampItemProphecy();
-    // The field item should get the Timestamp @DataType denormalization set as
+    // The field item should get the Timestamp @DataType de-normalization set as
     // a value, in FieldItemNormalizer::denormalize().
     $timestamp_item->setValue(['value' => $timestamp_data_denormalization])
       ->shouldBeCalled();
@@ -154,7 +154,7 @@ class TimestampItemNormalizerTest extends UnitTestCase {
     ];
 
     // Mock Serializer service, to assert that the Timestamp @DataType
-    // denormalizer would be called.
+    // de-normalizer would be called.
     $serializer_prophecy = $this->prophesize(Serializer::class);
     // This is where \Drupal\serialization\Normalizer\TimestampNormalizer would
     // be called.

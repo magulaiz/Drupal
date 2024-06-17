@@ -78,7 +78,7 @@ image.effect.image_scale:
       type: boolean
       label: 'Upscale'
 
-# The image desaturate effect has no settings.
+# The image de-saturate effect has no settings.
 image.effect.image_desaturate:
   type: sequence
 

@@ -575,9 +575,9 @@ abstract class EntityResourceTestBase extends ResourceTestBase {
     static::recursiveKSort($actual);
     $this->assertEqualsCanonicalizing($expected, $actual);
 
-    // Not only assert the normalization, also assert deserialization of the
+    // Not only assert the normalization, also assert de-serialization of the
     // response results in the expected object.
-    // Note: deserialization of the XML format is not supported, so only test
+    // Note: de-serialization of the XML format is not supported, so only test
     // this for other formats.
     if (static::$format !== 'xml') {
       $unserialized = $this->serializer->deserialize((string) $response->getBody(), get_class($this->entity), static::$format);
@@ -1182,7 +1182,7 @@ abstract class EntityResourceTestBase extends ResourceTestBase {
    */
   protected function assertNormalizationEdgeCases($method, Url $url, array $request_options) {
     // \Drupal\serialization\Normalizer\EntityNormalizer::denormalize(): entity
-    // types with bundles MUST send their bundle field to be denormalizable.
+    // types with bundles MUST send their bundle field to be de-normalizable.
     $entity_type = $this->entity->getEntityType();
     if ($entity_type->hasKey('bundle')) {
       $bundle_field_name = $this->entity->getEntityType()->getKey('bundle');
@@ -1196,7 +1196,7 @@ abstract class EntityResourceTestBase extends ResourceTestBase {
 
         // DX: 422 when incorrect entity type bundle is specified.
         $response = $this->request($method, $url, $request_options);
-        $this->assertResourceErrorResponse(422, '"bad_bundle_name" is not a valid bundle type for denormalization.', $response);
+        $this->assertResourceErrorResponse(422, '"bad_bundle_name" is not a valid bundle type for de-normalization.', $response);
       }
 
       unset($normalization[$bundle_field_name]);
@@ -1406,12 +1406,12 @@ abstract class EntityResourceTestBase extends ResourceTestBase {
         $property_definitions = $field_definition->getItemDefinition()->getPropertyDefinitions();
         $expected_stored_data = [];
         // Some fields don't have any property definitions, so there's nothing
-        // to denormalize.
+        // to de-normalize.
         if (empty($property_definitions)) {
           $expected_stored_data = $field_normalization;
         }
         else {
-          // Denormalize every sent field item property to make it possible to
+          // De-normalize every sent field item property to make it possible to
           // compare against the stored value.
           $denormalization_context = ['field_definition' => $field_definition];
           foreach ($field_normalization as $delta => $expected_field_item_normalization) {

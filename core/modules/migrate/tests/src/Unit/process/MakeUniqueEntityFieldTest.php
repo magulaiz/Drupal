@@ -216,7 +216,7 @@ class MakeUniqueEntityFieldTest extends MigrateProcessTestCase {
 
     // Entity 'test_vocab' was migrated, value should be unique.
     $actual = $plugin->transform('test_vocab', $this->migrateExecutable, $this->row, 'foo');
-    $this->assertEquals('test_vocab1', $actual, 'Migrated name is deduplicated');
+    $this->assertEquals('test_vocab1', $actual, 'Migrated name is de-duplicated');
   }
 
 }

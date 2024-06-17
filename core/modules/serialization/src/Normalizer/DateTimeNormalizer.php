@@ -15,7 +15,7 @@ use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 class DateTimeNormalizer extends NormalizerBase implements DenormalizerInterface {
 
   /**
-   * Allowed datetime formats for the denormalizer.
+   * Allowed datetime formats for the de-normalizer.
    *
    * The list is chosen to be unambiguous and language neutral, but also common
    * for data interchange.

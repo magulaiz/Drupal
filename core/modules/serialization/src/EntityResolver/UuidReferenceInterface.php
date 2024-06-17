@@ -5,7 +5,7 @@ namespace Drupal\serialization\EntityResolver;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 
 /**
- * Interface for extracting UUID from entity reference data when denormalizing.
+ * Interface for extracting UUID from entity reference data when de-normalizing.
  */
 interface UuidReferenceInterface extends NormalizerInterface {
 

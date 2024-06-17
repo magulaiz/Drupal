@@ -7,7 +7,7 @@ use Symfony\Component\Serializer\Exception\InvalidArgumentException;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 
 /**
- * Denormalizes field item object structure by updating the entity field values.
+ * De-normalizes field item object structure by updating the entity field values.
  */
 class FieldItemNormalizer extends ComplexDataNormalizer implements DenormalizerInterface {
 
@@ -19,7 +19,7 @@ class FieldItemNormalizer extends ComplexDataNormalizer implements DenormalizerI
    */
   public function denormalize($data, $class, $format = NULL, array $context = []): mixed {
     if (!isset($context['target_instance'])) {
-      throw new InvalidArgumentException('$context[\'target_instance\'] must be set to denormalize with the FieldItemNormalizer');
+      throw new InvalidArgumentException('$context[\'target_instance\'] must be set to de-normalize with the FieldItemNormalizer');
     }
 
     if ($context['target_instance']->getParent() == NULL) {

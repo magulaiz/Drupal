@@ -12,7 +12,7 @@ use Drupal\Core\TypedData\Plugin\DataType\Timestamp;
  *
  * Overrides FieldItemNormalizer to
  * - during normalization, add the 'format' key to assist consumers
- * - during denormalization, use \Drupal\serialization\Normalizer\TimestampNormalizer
+ * - during de-normalization, use \Drupal\serialization\Normalizer\TimestampNormalizer
  */
 class TimestampItemNormalizer extends FieldItemNormalizer {
 

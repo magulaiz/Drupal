@@ -156,7 +156,7 @@ abstract class Data implements \IteratorAggregate, \Countable {
   }
 
   /**
-   * Returns a new, deduplicated Data object.
+   * Returns a new, de-duplicated Data object.
    *
    * @param \Drupal\jsonapi\JsonApiResource\Data $collection
    *   The Data object to deduplicate.
