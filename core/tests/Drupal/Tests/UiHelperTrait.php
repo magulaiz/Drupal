@@ -237,6 +237,7 @@ trait UiHelperTrait {
    * @see \Drupal\Tests\BrowserTestBase::getHttpClient()
    */
   protected function drupalGet($path, array $options = [], array $headers = []) {
+    $headers = ['X-Requested-With' => 'XMLHttpRequest'];
     $options['absolute'] = TRUE;
     $url = $this->buildUrl($path, $options);
 
@@ -245,14 +246,11 @@ trait UiHelperTrait {
     $this->prepareRequest();
     foreach ($headers as $header_name => $header_value) {
       if (is_int($header_name)) {
-        $name_deprecation_msg = 'Passing an integer as header name to drupalGet() is deprecated; use a string instead.';
-        // Trigger a deprecation notice.
-        @trigger_error($name_deprecation_msg, E_USER_DEPRECATED);
+        @trigger_error('Passing an integer as header name to ' . __METHOD__ . '() is deprecated in drupal:11.1.0 and is removed from drupal:12.0.0. Update the calling code to pass the header name as a key. See https://www.drupal.org/node/3421105', E_USER_DEPRECATED);
         [$header_name, $header_value] = explode(':', $header_value);
       }
       if (is_null($header_value)) {
-        $value_deprecation_msg = 'Using null as a header value to drupalGet() is deprecated; use an empty string instead.';
-        @trigger_error($value_deprecation_msg, E_USER_DEPRECATED);
+        @trigger_error('Using null as a header value to ' . __METHOD__ . '() is deprecated in drupal:11.1.0 and is removed from drupal:12.0.0. Use an empty string instead. See https://www.drupal.org/node/3421105', E_USER_DEPRECATED);
         $header_value = '';
       }
       $session->setRequestHeader($header_name, $header_value);
