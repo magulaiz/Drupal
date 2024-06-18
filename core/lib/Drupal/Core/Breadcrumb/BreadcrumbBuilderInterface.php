@@ -20,8 +20,8 @@ interface BreadcrumbBuilderInterface {
    *
    * @param \Drupal\Core\Cache\CacheableMetadata $cacheable_metadata
    *   The cacheable metadata to add to if your check varies by or depends
-   *   on something. Anything you specified here does not have to be repeated
-   *   in the build() method as it will be merged in automatically.
+   *   on something. Anything you specify here does not have to be repeated in
+   *   the build() method as it will be merged in automatically.
    * phpcs:enable
    *
    * @return bool
