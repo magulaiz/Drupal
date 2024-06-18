@@ -5,6 +5,7 @@ namespace Drupal\views\Plugin\views\display;
 use Drupal\Core\Database\Connection;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\views\Attribute\ViewsDisplay;
+use Drupal\views\Views;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -167,13 +168,12 @@ class EntityReference extends DisplayPluginBase {
     // Drupal\views\Plugin\EntityReferenceSelection\ViewsSelection::initializeView().
     // If any entity_reference_options are not yet set, we apply the same
     // default values that would typically be added by that method.
-    $default_options = [
+    $options += [
       'match' => NULL,
       'match_operator' => 'CONTAINS',
       'limit' => 0,
       'ids' => NULL,
     ];
-    $options += $default_options;
 
     // Restrict the autocomplete options based on what's been typed already.
     if (isset($options['match'])) {
@@ -210,6 +210,11 @@ class EntityReference extends DisplayPluginBase {
       $this->view->query->addWhere(0, $id_table . '.' . $id_field, $options['ids'], 'IN');
     }
 
+    // Override the pager plugin if it's not 'some' for limiting the results.
+    if ($this->view->getPager()->getPluginId() !== 'some') {
+      $this->view->pager = Views::pluginManager('pager')->createInstance('some');
+      $this->view->pager->init($this->view, $this->view->getDisplay());
+    }
     $this->view->setItemsPerPage($options['limit']);
   }
 
