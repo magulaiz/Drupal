@@ -905,7 +905,7 @@ class ExtensionMimeTypeGuesser implements MimeTypeGuesserInterface {
   public function __construct(ModuleHandlerInterface $module_handler, bool $return_null = FALSE) {
     $this->moduleHandler = $module_handler;
     if (!$return_null) {
-      @trigger_error('Passing $return_null as FALSE to ' . __METHOD__ . ' is deprecated in drupal:10.4.0 and will be default to TRUE in drupal:11.0.0. The parameter will be removed. See https://www.drupal.org/node/3455333', E_USER_DEPRECATED);
+      @trigger_error('Passing $return_null as FALSE to ' . __METHOD__ . ' is deprecated in drupal:10.4.0 and will be default to TRUE in drupal:12.0.0. The parameter will be removed. See https://www.drupal.org/node/3455333', E_USER_DEPRECATED);
       $this->returnNull = $return_null;
     }
   }
