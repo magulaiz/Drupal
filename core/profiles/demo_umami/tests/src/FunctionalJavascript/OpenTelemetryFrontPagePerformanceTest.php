@@ -24,9 +24,9 @@ class OpenTelemetryFrontPagePerformanceTest extends PerformanceTestBase {
    * Logs front page tracing data with a cold cache.
    */
   public function testFrontPageColdCache() {
-    // @todo: Chromedriver doesn't collect tracing performance logs for the very
-    // first request in a test, so warm it up.
-    // See https://www.drupal.org/project/drupal/issues/3379750
+    // @todo Chromedriver doesn't collect tracing performance logs for the very
+    //   first request in a test, so warm it up.
+    //   https://www.drupal.org/project/drupal/issues/3379750
     $this->drupalGet('user/login');
     $this->rebuildAll();
     $this->collectPerformanceData(function () {
@@ -67,7 +67,7 @@ class OpenTelemetryFrontPagePerformanceTest extends PerformanceTestBase {
     $this->assertSame(1, $performance_data->getScriptCount());
     $this->assertLessThan(7500, $performance_data->getScriptBytes());
     $this->assertSame(2, $performance_data->getStylesheetCount());
-    $this->assertLessThan(42000, $performance_data->getStylesheetBytes());
+    $this->assertLessThan(40400, $performance_data->getStylesheetBytes());
   }
 
   /**

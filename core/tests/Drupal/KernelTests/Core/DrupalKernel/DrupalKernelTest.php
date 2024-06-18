@@ -56,7 +56,7 @@ class DrupalKernelTest extends KernelTestBase {
    * @return \Drupal\Core\DrupalKernel
    *   New kernel for testing.
    */
-  protected function getTestKernel(Request $request, array $modules_enabled = NULL) {
+  protected function getTestKernel(Request $request, ?array $modules_enabled = NULL) {
     // Manually create kernel to avoid replacing settings.
     $class_loader = require $this->root . '/autoload.php';
     $kernel = DrupalKernel::createFromRequest($request, $class_loader, 'testing');
@@ -74,7 +74,7 @@ class DrupalKernelTest extends KernelTestBase {
    * Tests DIC compilation.
    */
   public function testCompileDIC() {
-    // @todo: write a memory based storage backend for testing.
+    // @todo Write a memory based storage backend for testing.
     $modules_enabled = [
       'system' => 'system',
       'user' => 'user',
@@ -178,7 +178,7 @@ class DrupalKernelTest extends KernelTestBase {
    * Tests setting of site path after kernel boot.
    */
   public function testPreventChangeOfSitePath() {
-    // @todo: write a memory based storage backend for testing.
+    // @todo Write a memory based storage backend for testing.
     $modules_enabled = [
       'system' => 'system',
       'user' => 'user',
