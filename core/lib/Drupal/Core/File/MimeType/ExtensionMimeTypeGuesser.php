@@ -888,13 +888,26 @@ class ExtensionMimeTypeGuesser implements MimeTypeGuesserInterface {
   protected $moduleHandler;
 
   /**
+   * Whether to return NULL if not mime type could be matched.
+   */
+  protected bool $returnNull = TRUE;
+
+  /**
    * Constructs a new ExtensionMimeTypeGuesser.
    *
    * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
    *   The module handler.
+   * @param bool $return_null
+   *   Whether ::guessMimeType() should return a default value or NULL.
+   *
+   * @see https://www.drupal.org/node/3455333
    */
-  public function __construct(ModuleHandlerInterface $module_handler) {
+  public function __construct(ModuleHandlerInterface $module_handler, bool $return_null = FALSE) {
     $this->moduleHandler = $module_handler;
+    if (!$return_null) {
+      @trigger_error('Passing $return_null as FALSE to ' . __METHOD__ . ' is deprecated in drupal:10.4.0 and will be default to TRUE in drupal:11.0.0. The parameter will be removed. See https://www.drupal.org/node/3455333', E_USER_DEPRECATED);
+      $this->returnNull = $return_null;
+    }
   }
 
   /**
@@ -926,7 +939,7 @@ class ExtensionMimeTypeGuesser implements MimeTypeGuesserInterface {
       }
     }
 
-    return NULL;
+    return $this->returnNull ? NULL : 'application/octet-stream';
   }
 
   /**

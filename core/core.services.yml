@@ -1772,7 +1772,7 @@ services:
     lazy: true
   file.mime_type.guesser.extension:
     class: Drupal\Core\File\MimeType\ExtensionMimeTypeGuesser
-    arguments: ['@module_handler']
+    arguments: ['@module_handler', true]
     tags:
       - { name: mime_type_guesser }
     lazy: true
