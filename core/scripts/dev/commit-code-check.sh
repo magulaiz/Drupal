@@ -396,6 +396,21 @@ for FILE in $FILES; do
   fi
 
   ############################################################################
+  ### TWIG FILES
+  ############################################################################
+  if [[ -f "$TOP_LEVEL/$FILE" ]] && [[ $FILE =~ \.twig$ ]]; then
+    # Test files with twig-cs-fixer rules.
+    vendor/bin/twig-cs-fixer lint "$TOP_LEVEL/$FILE"
+    TWIGCS=$?
+    if [ "$TWIGCS" -ne "0" ]; then
+      # If there are failures set the status to a number other than 0.
+      STATUS=1
+    else
+      printf "TWIGCS: $FILE ${green}passed${reset}\n"
+    fi
+  fi
+
+  ############################################################################
   ### YAML FILES
   ############################################################################
   if [[ -f "$TOP_LEVEL/$FILE" ]] && [[ $FILE =~ \.yml$ ]]; then

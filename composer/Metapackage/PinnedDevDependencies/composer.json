@@ -84,7 +84,6 @@
         "symfony/dom-crawler": "v7.1.0",
         "symfony/lock": "v7.1.0",
         "theseer/tokenizer": "1.2.3",
-        "webflo/drupal-finder": "1.3.0",
-        "webmozart/assert": "1.11.0"
+        "webflo/drupal-finder": "1.3.0"
     }
 }

@@ -60,6 +60,8 @@
         "symfony/var-dumper": "~v7.1.0",
         "symfony/var-exporter": "~v7.1.0",
         "symfony/yaml": "~v7.1.0",
-        "twig/twig": "~v3.10.2"
+        "twig/twig": "~v3.10.2",
+        "vincentlanglet/twig-cs-fixer": "~2.11.0",
+        "webmozart/assert": "~1.11.0"
     }
 }

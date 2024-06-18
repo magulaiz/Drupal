@@ -463,3 +463,14 @@ default:
          $impact = array_map(fn (float $h, float $m) => $m-$h, $head, $mr);
          exit((int) (min($impact) < 0));
       '
+
+'🧹 Twig Coding Standard (twig-cs-fixer)':
+  <<: [ *with-composer, *default-job-settings-lint ]
+  stage: 🪄 Lint
+  variables:
+    KUBERNETES_CPU_REQUEST: "16"
+  script:
+    - php vendor/bin/twig-cs-fixer lint > twig-cs-quality-report.json
+  artifacts:
+    reports:
+      codequality: twig-cs-quality-report.json
