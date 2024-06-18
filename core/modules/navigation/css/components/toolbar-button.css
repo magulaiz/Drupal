@@ -47,7 +47,7 @@
 .toolbar-button:hover {
   z-index: 20;
   color: var(--admin-toolbar-color-gray-990);
-  outline: 2px solid var(--admin-toolbar-color-blue-200);
+  outline: 2px solid var(--admin-toolbar-color-blue-600);
   outline-offset: var(--toolbar-button-outline-offset);
   background-color: var(--admin-toolbar-color-gray-050);
 }
