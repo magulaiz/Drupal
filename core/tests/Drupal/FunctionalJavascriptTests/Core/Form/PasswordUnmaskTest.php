@@ -72,7 +72,7 @@ class PasswordUnmaskTest extends WebDriverTestBase {
   /**
    * Data provider for testPasswordRevealFormElement().
    */
-  public function providerPasswordFieldSelector() {
+  public static function providerPasswordFieldSelector() {
     return [
       'password_one_field' => ['password_one_field', '.form-item-password-one button', 'edit-password-one', '[data-drupal-selector="edit-password-one"]'],
     ];
