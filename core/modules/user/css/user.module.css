@@ -32,9 +32,9 @@
     font-weight: bold;
 
     &:hover {
-       text-decoration: none;
-       color: #0036b1;
-       background-color: #e5edff;
-     }
+      text-decoration: none;
+      color: #0036b1;
+      background-color: #e5edff;
+    }
   }
 }
