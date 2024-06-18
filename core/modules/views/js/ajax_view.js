@@ -133,7 +133,11 @@
 
     // Add the ajax to exposed forms.
     this.$exposed_form = [];
-    if (this.settings.ajaxOptions.hasOwnProperty('use_ajax_exposed_filters')) {
+    if (
+      drupalSettings.views.ajaxOptions.hasOwnProperty(
+        'use_ajax_exposed_filters',
+      )
+    ) {
       this.$exposed_form = $(
         `form#views-exposed-form-${settings.view_name.replace(
           /_/g,
@@ -146,7 +150,7 @@
     );
 
     // Add the ajax to pagers.
-    if (this.settings.ajaxOptions.hasOwnProperty('use_ajax_paging')) {
+    if (drupalSettings.views.ajaxOptions.hasOwnProperty('use_ajax_paging')) {
       once(
         'ajax-pager',
         this.$view
