@@ -19,9 +19,9 @@ interface BreadcrumbBuilderInterface {
    * @see https://www.drupal.org/project/drupal/issues/7654321
    *
    * @param \Drupal\Core\Cache\CacheableMetadata $cacheable_metadata
-   *   The cacheable metadata to add to. If your result varies by something, you
-   *   must specify the cache contexts that represent said variability. This
-   *   will automatically be added to the outcome of build().
+   *   The cacheable metadata to add to if your check varies by or depends
+   *   on something. Anything you specified here does not have to be repeated
+   *   in the build() method as it will be merged in automatically.
    * phpcs:enable
    *
    * @return bool
