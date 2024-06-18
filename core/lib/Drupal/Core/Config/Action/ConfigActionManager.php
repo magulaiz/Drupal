@@ -245,6 +245,7 @@ class ConfigActionManager extends DefaultPluginManager {
       'entity_create:ensure_exists' => 'entity_create:ensureExists',
     ];
     if (isset($renamed[$plugin_id])) {
+      // phpcs:ignore Drupal.Semantics.FunctionTriggerError
       trigger_error(sprintf('The plugin ID "%s" is deprecated. Use "%s" instead.', $plugin_id, $renamed[$plugin_id]), E_USER_DEPRECATED);
     }
     return $instance;
