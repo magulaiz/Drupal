@@ -182,10 +182,6 @@ class ModuleInstaller implements ModuleInstallerInterface {
     if ($sync_status) {
       $source_storage = $config_installer->getSourceStorage();
     }
-
-    /** @var \Drupal\Core\Entity\EntityFieldManagerInterface $entity_field_manager */
-    $entity_field_manager = \Drupal::service('entity_field.manager');
-
     $modules_installed = [];
     foreach ($module_list as $module) {
       $enabled = $extension_config->get("module.$module") !== NULL;
@@ -295,6 +291,8 @@ class ModuleInstaller implements ModuleInstallerInterface {
         // @todo Clean this up in https://www.drupal.org/node/2350111.
         $entity_type_manager = \Drupal::entityTypeManager();
         $update_manager = \Drupal::entityDefinitionUpdateManager();
+        /** @var \Drupal\Core\Entity\EntityFieldManagerInterface $entity_field_manager */
+        $entity_field_manager = \Drupal::service('entity_field.manager');
         foreach ($entity_type_manager->getDefinitions() as $entity_type) {
           $is_fieldable_entity_type = $entity_type->entityClassImplements(FieldableEntityInterface::class);
 
@@ -375,9 +373,11 @@ class ModuleInstaller implements ModuleInstallerInterface {
         \Drupal::logger('system')->info('%module module installed.', ['%module' => $module]);
       }
     }
-    // Turn entity field caches back on now that we're done calculating and
-    // installing them.
-    $entity_field_manager->useCaches(TRUE);
+    if (!empty($entity_field_manager)) {
+      // Turn entity field caches back on now that we're done calculating and
+      // installing them.
+      $entity_field_manager->useCaches(TRUE);
+    }
 
     // If any modules were newly installed, invoke hook_modules_installed().
     if (!empty($modules_installed)) {
