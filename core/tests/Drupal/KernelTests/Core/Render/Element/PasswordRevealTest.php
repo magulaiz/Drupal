@@ -26,7 +26,7 @@ class PasswordRevealTest extends UnitTestCase {
   }
 
   /**
-   * Data provider for testValueCallback().
+   * Data provider for the testValueCallback().
    */
   public static function providerTestValueCallback() {
     $data = [];
