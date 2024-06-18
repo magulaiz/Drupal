@@ -660,8 +660,8 @@ abstract class FormStateDecoratorBase implements FormStateInterface {
   /**
    * {@inheritdoc}
    */
-  public function getError(array $element) {
-    return $this->decoratedFormState->getError($element);
+  public function getError(array $element, $traverse_parents = TRUE) {
+    return $this->decoratedFormState->getError($element, $traverse_parents);
   }
 
   /**

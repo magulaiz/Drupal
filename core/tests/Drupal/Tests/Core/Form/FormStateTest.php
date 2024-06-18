@@ -72,27 +72,45 @@ class FormStateTest extends UnitTestCase {
    *
    * @dataProvider providerTestGetError
    */
-  public function testGetError($errors, $parents, $error = NULL) {
+  public function testGetError($errors, $parents, $error = NULL, $element_only_error = NULL) {
     $element['#parents'] = $parents;
     $form_state = (new FormState())->setFormState([
       'errors' => $errors,
     ]);
-    $this->assertSame($error, $form_state->getError($element));
+    $this->assertSame($element_only_error, $form_state->getError($element, FALSE));
   }
 
   public static function providerTestGetError() {
-    return [
-      [[], ['foo']],
-      [['foo][bar' => 'Fail'], []],
-      [['foo][bar' => 'Fail'], ['foo']],
-      [['foo][bar' => 'Fail'], ['bar']],
-      [['foo][bar' => 'Fail'], ['baz']],
-      [['foo][bar' => 'Fail'], ['foo', 'bar'], 'Fail'],
-      [['foo][bar' => 'Fail'], ['foo', 'bar', 'baz'], 'Fail'],
-      [['foo][bar' => 'Fail 2'], ['foo']],
-      [['foo' => 'Fail 1', 'foo][bar' => 'Fail 2'], ['foo'], 'Fail 1'],
-      [['foo' => 'Fail 1', 'foo][bar' => 'Fail 2'], ['foo', 'bar'], 'Fail 1'],
+    $data = [];
+    $data['no_errors'] = [
+      [], ['foo'],
     ];
+    $data['no_parents'] = [
+      ['foo][bar' => 'Fail'], [],
+    ];
+    $data['top_parent_error'] = [
+      ['foo][bar' => 'Fail'], ['foo'],
+    ];
+    $data['child_error'] = [
+      ['foo][bar' => 'Fail'], ['bar'],
+    ];
+    $data['unknown_top_parent'] = [
+      ['foo][bar' => 'Fail'], ['baz'],
+    ];
+    $data['full_parent_match'] = [
+      ['foo][bar' => 'Fail'], ['foo', 'bar'], 'Fail', 'Fail',
+    ];
+    $data['unknown_deep_parent'] = [
+      ['foo][bar' => 'Fail'], ['foo', 'bar', 'baz'], 'Fail',
+    ];
+    $data['parent_error_precedence'] = [
+      ['foo' => 'Fail 1', 'foo][bar' => 'Fail 2'], ['foo'], 'Fail 1', 'Fail 1',
+    ];
+    $data['parent_error_precedence_deep'] = [
+      ['foo' => 'Fail 1', 'foo][bar' => 'Fail 2'], ['foo', 'bar'], 'Fail 1', 'Fail 2',
+    ];
+
+    return $data;
   }
 
   /**
