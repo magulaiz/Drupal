@@ -22,8 +22,8 @@ final class EntityCreateDeriver extends DeriverBase {
     // These derivatives apply to all entity types.
     $base_plugin_definition['entity_types'] = ['*'];
 
-    $this->derivatives['ensure_exists'] = $base_plugin_definition + ['constructor_args' => ['exists' => Exists::ReturnEarlyIfExists]];
-    $this->derivatives['ensure_exists']['admin_label'] = $this->t('Ensure entity exists');
+    $this->derivatives['ensureExists'] = $base_plugin_definition + ['constructor_args' => ['exists' => Exists::ReturnEarlyIfExists]];
+    $this->derivatives['ensureExists']['admin_label'] = $this->t('Ensure entity exists');
 
     $this->derivatives['create'] = $base_plugin_definition + ['constructor_args' => ['exists' => Exists::ErrorIfExists]];
     $this->derivatives['create']['admin_label'] = $this->t('Entity create');

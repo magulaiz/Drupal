@@ -92,6 +92,21 @@ class ConfigActionManager extends DefaultPluginManager {
   }
 
   /**
+   * {@inheritdoc}
+   */
+  public function getDefinitions() {
+    $definitions = parent::getDefinitions();
+    // Adds backwards compatibility for plugins that have been renamed.
+    // @see https://www.drupal.org/i/3455113
+    if (!isset($definitions['ensure_exists']) && !isset($definitions['simple_config_update'])) {
+      $definitions['entity_create:ensure_exists'] = $definitions['entity_create:ensureExists'];
+      $definitions['simple_config_update'] = $definitions['simpleConfigUpdate'];
+      $this->setCachedDefinitions($definitions);
+    }
+    return $definitions;
+  }
+
+  /**
    * Applies a config action.
    *
    * @param string $action_id
@@ -216,6 +231,24 @@ class ConfigActionManager extends DefaultPluginManager {
       }
     }
     return $map;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function createInstance($plugin_id, array $configuration = []) {
+    $instance = parent::createInstance($plugin_id, $configuration);
+    // Trigger deprecation notices for renamed plugins.
+    // @see https://www.drupal.org/i/3455113
+    $renamed = [
+      'simple_config_update' => 'simpleConfigUpdate',
+      'entity_create:ensure_exists' => 'entity_create:ensureExists',
+    ];
+    if (isset($renamed[$plugin_id])) {
+      // phpcs:ignore Drupal.Semantics.FunctionTriggerError
+      trigger_error(sprintf('The plugin ID "%s" is deprecated. Use "%s" instead.', $plugin_id, $renamed[$plugin_id]), E_USER_DEPRECATED);
+    }
+    return $instance;
   }
 
 }
