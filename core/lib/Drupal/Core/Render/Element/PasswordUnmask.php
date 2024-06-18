@@ -11,11 +11,11 @@ use Drupal\Core\Form\FormStateInterface;
  *
  * Usage example:
  * @code
- * $form['pass'] = array(
+ * $form['pass'] = [
  *   '#type' => 'password_unmask',
  *   '#title' => t('Password'),
  *   '#size' => 25,
- * );
+ * ];
  * @endcode
  *
  * @see \Drupal\Core\Render\Element\Password
