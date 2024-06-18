@@ -888,7 +888,7 @@ class ExtensionMimeTypeGuesser implements MimeTypeGuesserInterface {
   protected $moduleHandler;
 
   /**
-   * Whether to return NULL if not mime type could be matched.
+   * Whether to return NULL if no mime type could be matched.
    */
   protected bool $returnNull = TRUE;
 
