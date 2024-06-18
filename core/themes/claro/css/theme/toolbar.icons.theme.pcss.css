@@ -235,13 +235,11 @@
 }
 .toolbar .toolbar-icon.toolbar-handle::before {
   left: 1.6667em; /* LTR */
+  background-image: url(../../../../misc/icons/5181c6/chevron-disc-down.svg);
 }
 [dir="rtl"] .toolbar .toolbar-icon.toolbar-handle::before {
   right: 1.6667em;
   left: auto;
-}
-.toolbar .toolbar-icon.toolbar-handle::before {
-  background-image: url(../../../../misc/icons/5181c6/chevron-disc-down.svg);
 }
 .toolbar .toolbar-icon.toolbar-handle.open::before {
   background-image: url(../../../../misc/icons/787878/chevron-disc-up.svg);

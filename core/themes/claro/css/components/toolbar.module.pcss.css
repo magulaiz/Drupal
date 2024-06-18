@@ -86,13 +86,11 @@
     position: absolute;
     inset-block-start: 0;
     inset-inline: 0;
+    z-index: 502; /* Layer the bar just above the trays and above contextual link triggers. */
   }
   & .toolbar-tray {
     position: absolute;
     inset-inline: 0;
-  }
-  & .toolbar-bar {
-    z-index: 502; /* Layer the bar just above the trays and above contextual link triggers. */
   }
   & .toolbar-tray-vertical {
     position: absolute;
@@ -165,6 +163,7 @@
 .toolbar-oriented .toolbar-tray-horizontal li {
   float: left; /* LTR */
 }
+
 [dir="rtl"] {
   & .toolbar-oriented .toolbar-bar .toolbar-tab,
   & .toolbar-oriented .toolbar-tray-horizontal li {
@@ -230,6 +229,7 @@
     }
   }
 }
+
 /* Show the orientation toggle when the configured narrow breakpoint is
  * active. */
 .toolbar-oriented {
@@ -238,7 +238,8 @@
       display: block;
     }
   }
-  & .toolbar-tray-horizontal {
+
+  & .toolbar-tray-vertical {
     & .toolbar-toggle-orientation {
       position: absolute;
       inset-block-start: auto;
@@ -246,11 +247,20 @@
       inset-block-end: 0;
     }
   }
+
   & .toolbar-tray-vertical {
     & .toolbar-toggle-orientation {
       float: right; /* LTR */
       width: 100%;
     }
+  }
+}
+
+
+[dir="rtl"] {
+  & .toolbar-oriented .toolbar-tray-vertical .toolbar-toggle-orientation {
+    float: right; /* LTR */
+    width: 100%;
   }
 }
 [dir="rtl"] {
@@ -262,12 +272,8 @@
 /**
  * Toolbar home button toggle.
  */
-.toolbar {
-  & .toolbar-bar {
-    & .home-toolbar-tab {
-      display: none;
-    }
-  }
+.toolbar .toolbar-bar .home-toolbar-tab {
+  display: none;
 }
 
 .path-admin {

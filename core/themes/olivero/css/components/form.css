@@ -22,13 +22,6 @@
   margin-block: var(--sp1);
 }
 
-.form-item__label--multiple-value-form {
-  margin-block: 0;
-  font-size: inherit;
-  font-weight: inherit;
-  line-height: inherit;
-}
-
 /**
  * When a table row or a container-inline has a single form item, prevent it
  * from adding unnecessary extra spacing.

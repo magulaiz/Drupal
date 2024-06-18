@@ -72,14 +72,22 @@
   vertical-align: top;
 }
 .locale-translation-update__wrapper {
+  overflow: hidden;
   margin-inline-start: -12px;
   padding-inline-start: 12px;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  color: #5c5c5b;
   background: transparent url(../../../misc/menu-collapsed.png) left 0.6em no-repeat; /* LTR */
+  line-height: 20px;
 }
 [dir="rtl"] .locale-translation-update__wrapper {
   background: transparent url(../../../misc/menu-collapsed-rtl.png) right 0.6em no-repeat; /* LTR */
 }
 .expanded .locale-translation-update__wrapper {
+  overflow: visible;
+  height: auto;
+  white-space: normal;
   background: transparent url(../../../misc/menu-expanded.png) left 0.6em no-repeat;
 }
 [dir="rtl"] .expanded .locale-translation-update__wrapper {
@@ -88,29 +96,12 @@
 #locale-translation-status-form .description {
   cursor: pointer;
 }
-.locale-translation-update__wrapper {
-  overflow: hidden;
-  white-space: nowrap;
-  text-overflow: ellipsis;
-  color: #5c5c5b;
-  line-height: 20px;
-}
-.expanded .locale-translation-update__wrapper {
-  overflow: visible;
-  height: auto;
-  white-space: normal;
-}
 .expanded .locale-translation-update__message {
   -webkit-hyphens: auto;
   hyphens: auto;
 }
 .js .locale-translation-update__wrapper {
   height: 20px;
-}
-.expanded .locale-translation-update__wrapper {
-  overflow: visible;
-  height: auto;
-  white-space: normal;
 }
 .locale-translation-update__details {
   max-width: 490px;

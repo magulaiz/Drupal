@@ -46,6 +46,9 @@
 .dropbutton-widget {
   position: relative;
   flex: 1 1 auto;
+  border-radius: var(--button-border-radius-size);
+  background-color: var(--button-bg-color);
+
   .js .dropbutton-wrapper.open & {
     z-index: var(--dropbutton-widget-z-index);
   }
@@ -61,11 +64,6 @@
   height: var(--dropbutton-toggle-size);
   margin: 0;
   list-style: none;
-}
-
-.dropbutton-widget {
-  border-radius: var(--button-border-radius-size);
-  background-color: var(--button-bg-color);
 }
 
 /* Variants. */
@@ -208,10 +206,10 @@
     height: 0.4375rem;
     margin-top: calc(0.4375rem / (2 * -1.41429));
   }
+}
 
-  .dropbutton-wrapper.open .dropbutton__toggle::before {
-    margin-top: calc(0.4375rem / (2 * 1.41429));
-  }
+.no-touchevents .dropbutton-wrapper.open .dropbutton__toggle::before {
+  margin-top: calc(0.4375rem / (2 * 1.41429));
 }
 
 /**
@@ -239,6 +237,9 @@
   }
 
   .dropbutton--multiple & > * {
+    position: relative;
+    z-index: 3;
+    border-radius: var(--button-border-radius-size) 0 0 var(--button-border-radius-size); /* LTR */
     padding-inline: calc(var(--dropbutton-spacing-size) - var(--dropbutton-border-size));
   }
 
@@ -280,18 +281,10 @@
     background-color: var(--button--active-bg-color);
   }
 
-  .dropbutton--multiple & > * {
-    position: relative;
-    z-index: 3;
-  }
-
   .dropbutton--multiple & > *:focus {
     z-index: 2;
   }
 
-  .dropbutton--multiple & > * {
-    border-radius: var(--button-border-radius-size) 0 0 var(--button-border-radius-size); /* LTR */
-  }
   [dir="rtl"] .dropbutton--multiple & > * {
     border-radius: 0 var(--button-border-radius-size) var(--button-border-radius-size) 0;
   }
@@ -323,6 +316,7 @@
  * Non-first dropbutton list elements.
  */
 .dropbutton__item:first-of-type ~ .dropbutton__item {
+  max-width: var(--dropbutton-item-max-width);
   border: var(--dropbutton-border-size) solid var(--color-gray-200);
   border-bottom: 0;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.15);
@@ -339,9 +333,6 @@
 /**
  * Dropbutton items of non-first dropbutton list elements.
  */
-.dropbutton__item:first-of-type ~ .dropbutton__item {
-  max-width: var(--dropbutton-item-max-width);
-}
 
 .dropbutton__item:first-of-type ~ .dropbutton__item > a,
 .dropbutton__item:first-of-type ~ .dropbutton__item > .button {

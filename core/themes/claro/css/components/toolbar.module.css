@@ -80,13 +80,11 @@
   position: absolute;
   inset-block-start: 0;
   inset-inline: 0;
+  z-index: 502; /* Layer the bar just above the trays and above contextual link triggers. */
 }
 .toolbar-oriented .toolbar-tray {
   position: absolute;
   inset-inline: 0;
-}
-.toolbar-oriented .toolbar-bar {
-  z-index: 502; /* Layer the bar just above the trays and above contextual link triggers. */
 }
 .toolbar-oriented .toolbar-tray-vertical {
   position: absolute;
@@ -209,13 +207,17 @@
 .toolbar-oriented .toolbar-tray .toolbar-toggle-orientation {
   display: block;
 }
-.toolbar-oriented .toolbar-tray-horizontal .toolbar-toggle-orientation {
+.toolbar-oriented .toolbar-tray-vertical .toolbar-toggle-orientation {
   position: absolute;
   inset-block-start: auto;
   inset-inline-end: 0;
   inset-block-end: 0;
 }
 .toolbar-oriented .toolbar-tray-vertical .toolbar-toggle-orientation {
+  float: right; /* LTR */
+  width: 100%;
+}
+[dir="rtl"] .toolbar-oriented .toolbar-tray-vertical .toolbar-toggle-orientation {
   float: right; /* LTR */
   width: 100%;
 }

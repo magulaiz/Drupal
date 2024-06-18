@@ -39,6 +39,10 @@
   box-shadow: var(--tabs-base-shadow);
 }
 
+.tabs.is-open .tabs__tab.is-active::before {
+  border-bottom-left-radius: 0;
+}
+
 .tabs__tab {
   position: relative;
   border-bottom: var(--tabs-base-border);
@@ -140,10 +144,6 @@
   position: absolute;
   display: block;
   content: "";
-}
-
-.tabs.is-open .tabs__tab.is-active::before {
-  border-bottom-left-radius: 0;
 }
 
 .tabs--secondary .tabs__tab:not(.is-active) {

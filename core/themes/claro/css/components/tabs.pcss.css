@@ -31,6 +31,12 @@
   border: var(--tabs-base-border);
   border-radius: var(--tabs-border-radius-size);
   box-shadow: var(--tabs-base-shadow);
+
+  &.is-open {
+    & .tabs__tab.is-active::before {
+      border-bottom-left-radius: 0;
+    }
+  }
 }
 
 .tabs__tab {
@@ -118,13 +124,6 @@
   position: absolute;
   display: block;
   content: "";
-}
-.tabs {
-  &.is-open {
-    & .tabs__tab.is-active::before {
-      border-bottom-left-radius: 0;
-    }
-  }
 }
 .tabs--secondary {
   & .tabs__tab:not(.is-active) {

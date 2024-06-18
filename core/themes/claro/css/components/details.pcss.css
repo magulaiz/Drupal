@@ -358,6 +358,8 @@
 .claro-details__wrapper--accordion-item,
 .claro-details__wrapper--vertical-tabs-item {
   margin: 0;
+  border-top: var(--details-border-size) solid var(--details-border-color);
+  background-color: var(--color-gray-050-o-40);
 }
 .claro-details__wrapper--accordion::before,
 .claro-details__wrapper--accordion::after,
@@ -368,13 +370,6 @@
   display: table;
   clear: both;
   content: "";
-}
-
-.claro-details__wrapper--accordion,
-.claro-details__wrapper--accordion-item,
-.claro-details__wrapper--vertical-tabs-item {
-  border-top: var(--details-border-size) solid var(--details-border-color);
-  background-color: var(--color-gray-050-o-40);
 }
 
 /* @see Drupal.behaviors.verticalTabs */
