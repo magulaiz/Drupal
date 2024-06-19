@@ -27,6 +27,7 @@ We need it root to calculate the size of the displace in .dialog-off-canvas-main
   --admin-toolbar-color-blue-500: var(--drupal-admin-color-blue-500, #004bcc);
   --admin-toolbar-color-blue-600: var(--drupal-admin-color-blue-600, #0041b1);
   --admin-toolbar-color-blue-650: var(--drupal-admin-color-blue-650, #00389a);
+  --admin-toolbar-color-blue-670: var(--drupal-admin-color-blue-670, #002e9a);
   --admin-toolbar-color-blue-700: var(--drupal-admin-color-blue-700, #002566);
   --admin-toolbar-color-blue-800: var(--drupal-admin-color-blue-800, #001333);
   /* Gray variations. */
