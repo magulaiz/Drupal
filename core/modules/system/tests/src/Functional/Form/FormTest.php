@@ -773,7 +773,8 @@ class FormTest extends BrowserTestBase {
     // the disabled container.
     $actual_count = count($disabled_elements);
     $expected_count = 44;
-    $this->assertEquals($expected_count, $actual_count, sprintf('Found %s elements with disabled property (expected %s).', count($disabled_elements), $expected_count));
+    $message = new FormattableMarkup('Found @actual elements with disabled property (expected @expected).', ['@actual' => count($disabled_elements), '@expected' => $expected_count]);
+    $this->assertEquals($expected_count, $actual_count, (string) $message);
 
     // Mink does not "see" hidden elements, so we need to set the value of the
     // hidden element directly.

@@ -10,7 +10,7 @@ use Drupal\Tests\UnitTestCase;
 
 /**
  * @coversDefaultClass \Drupal\Core\Render\Element\PasswordConfirm
- * @group Render
+ * @group legacy
  */
 class PasswordConfirmTest extends UnitTestCase {
 

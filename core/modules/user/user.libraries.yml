@@ -3,13 +3,11 @@ drupal.user:
   js:
     user.js: {}
     user.theme.js: {}
-  css:
-    component:
-      css/user.module.css: {}
   dependencies:
     - core/jquery
     - core/drupal
     - core/once
+    - user/drupal.user.css
 
 drupal.user.admin:
   version: VERSION
@@ -36,3 +34,8 @@ drupal.user.icons:
   css:
     theme:
       css/user.icons.admin.css: {}
+
+drupal.user.css:
+  css:
+    component:
+      css/user.module.css: {}
