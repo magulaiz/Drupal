@@ -365,9 +365,8 @@ class Block extends ConfigEntityBase implements BlockInterface, EntityWithPlugin
    */
   public static function validateRegion(?string $region, ExecutionContextInterface $context): void {
     if ($theme = $context->getRoot()->get('theme')->getValue()) {
-      $regions = array_keys(system_region_list($theme));
-      if (!in_array($region, $regions)) {
-        $context->addViolation('This is not a valid region for %theme.', ['%theme' => $theme]);
+      if (!array_key_exists($region, system_region_list($theme))) {
+        $context->addViolation('This is not a valid region of the %theme theme.', ['%theme' => $theme]);
       }
     }
     else {

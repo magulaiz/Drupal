@@ -152,7 +152,7 @@ class BlockValidationTest extends ConfigEntityValidationTestBase {
   }
 
   /**
-   * Tests validating a region in block.
+   * Tests validating a block's region in a theme.
    */
   public function testRegionValidation(): void {
     $this->entity->set('region', 'non_existent');
