@@ -39,6 +39,9 @@ class DependencyMissingTest extends BrowserTestBase {
     $starting_updates = [
       'update_test_2' => 8001,
     ];
+    /** @var \Drupal\Core\Update\UpdateHookRegistry $update_hook_registry */
+    $update_hook_registry = \Drupal::service('update.update_hook_registry');
+    $update_hook_registry->setPreviouslyInstalledSchemaVersions('update_test_2', []);
     $update_graph = update_resolve_dependencies($starting_updates);
     $this->assertTrue($update_graph['update_test_2_update_8001']['allowed'], "The module's first update function is allowed to run, since it does not have any missing dependencies.");
     $this->assertFalse($update_graph['update_test_2_update_8002']['allowed'], "The module's second update function is not allowed to run, since it has a direct dependency on a missing update.");

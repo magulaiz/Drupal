@@ -69,6 +69,11 @@ class UpdateHookRegistryTest extends UnitTestCase {
   protected $keyValueStore;
 
   /**
+   * @var \Drupal\Core\KeyValueStore\KeyValueStoreInterface|\PHPUnit\Framework\MockObject\MockObject
+   */
+  protected $keyValuePreviouslyInstalledStore;
+
+  /**
    * @var \Drupal\Core\KeyValueStore\KeyValueFactoryInterface|\PHPUnit\Framework\MockObject\MockObject
    */
   protected $keyValueFactory;
@@ -80,11 +85,16 @@ class UpdateHookRegistryTest extends UnitTestCase {
     parent::setUp();
     $this->keyValueFactory = $this->createMock(KeyValueFactoryInterface::class);
     $this->keyValueStore = $this->createMock(KeyValueStoreInterface::class);
+    $this->keyValuePreviouslyInstalledStore = $this->createMock(KeyValueStoreInterface::class);
 
     $this->keyValueFactory
       ->method('get')
-      ->with('system.schema')
-      ->willReturn($this->keyValueStore);
+      ->willReturnCallback(function (string $key) {
+        return match ($key) {
+          'system.schema' => $this->keyValueStore,
+          'system.schema_previously_installed' => $this->keyValuePreviouslyInstalledStore,
+        };
+      });
   }
 
   /**
@@ -109,6 +119,8 @@ class UpdateHookRegistryTest extends UnitTestCase {
    * @covers ::deleteInstalledVersion
    */
   public function testGetInstalledVersion() {
+    require_once 'update_functions.inc';
+
     $versions = [
       'module1' => 1,
       'module2' => 20,
@@ -135,15 +147,22 @@ class UpdateHookRegistryTest extends UnitTestCase {
       ->willReturnCallback(static function ($key, $value) use (&$versions) {
         $versions[$key] = $value;
       });
+    $this->keyValuePreviouslyInstalledStore
+      ->method('get')
+      ->withAnyParameters()
+      ->willReturn(FALSE);
 
     $update_registry = new UpdateHookRegistry([], $this->keyValueFactory);
 
     $this->assertSame(3000, $update_registry->getInstalledVersion('module3'));
+    $this->assertSame([3000], $update_registry->getPreviouslyInstalledSchemaVersions('module3'));
     $update_registry->setInstalledVersion('module3', 3001);
     $this->assertSame(3001, $update_registry->getInstalledVersion('module3'));
     $this->assertSame($versions, $update_registry->getAllInstalledVersions());
+    $this->assertSame([3000, 3001], $update_registry->getPreviouslyInstalledSchemaVersions('module3'));
     $update_registry->deleteInstalledVersion('module3');
     $this->assertSame(UpdateHookRegistry::SCHEMA_UNINSTALLED, $update_registry->getInstalledVersion('module3'));
+    $this->assertSame([], $update_registry->getPreviouslyInstalledSchemaVersions('module3'));
   }
 
 }
