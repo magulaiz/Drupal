@@ -39,7 +39,8 @@ abstract class InstallerExistingConfigTestBase extends InstallerTestBase {
         $destinationFile = $destination . '/' . $file;
         if (is_dir($sourceFile)) {
           $this->copyDirectory($sourceFile, $destinationFile);
-        } else {
+        }
+        else {
           copy($sourceFile, $destinationFile);
         }
       }
@@ -74,7 +75,8 @@ abstract class InstallerExistingConfigTestBase extends InstallerTestBase {
 
       mkdir($path, 0777, TRUE);
       file_put_contents("$path/{$this->profile}.info.yml", Yaml::encode($info));
-    } else {
+    }
+    else {
       // If we have no profile we must use an existing sync directory.
       $this->existingSyncDirectory = TRUE;
       $config_sync_directory = $this->siteDirectory . '/config/sync';
@@ -168,7 +170,8 @@ abstract class InstallerExistingConfigTestBase extends InstallerTestBase {
         'profile' => SelectProfileForm::CONFIG_INSTALL_PROFILE_KEY,
       ];
       $this->submitForm($edit, $this->translations['Save and continue']);
-    } else {
+    }
+    else {
       parent::setUpProfile();
     }
   }
