@@ -13,21 +13,12 @@ use Drupal\Core\Session\AccountProxyInterface;
 class AccountAdminLanguageCacheContext implements CacheContextInterface {
 
   /**
-   * The current user.
-   *
-   * @var \Drupal\Core\Session\AccountProxyInterface
-   */
-  protected AccountProxyInterface $currentUser;
-
-  /**
    * Constructs a new AccountAdminLanguageCacheContext service.
    *
-   * @param \Drupal\Core\Session\AccountProxyInterface $current_user
+   * @param \Drupal\Core\Session\AccountProxyInterface $currentUser
    *   The current user.
    */
-  public function __construct(AccountProxyInterface $current_user) {
-    $this->currentUser = $current_user;
-  }
+  public function __construct(protected AccountProxyInterface $currentUser) {}
 
   /**
    * {@inheritdoc}

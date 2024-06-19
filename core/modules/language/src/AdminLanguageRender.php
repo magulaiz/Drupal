@@ -4,32 +4,15 @@ namespace Drupal\language;
 
 use Drupal\Core\Cache\CacheableMetadata;
 use Drupal\Core\Language\LanguageManagerInterface;
-use Drupal\Core\Security\TrustedCallbackInterface;
+use Drupal\Core\Render\Markup;
+use Drupal\Core\Security\Attribute\TrustedCallback;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\StringTranslation\TranslationManager;
 
-class AdminLanguageRender implements TrustedCallbackInterface {
-
-  /**
-   * The language manager.
-   *
-   * @var \Drupal\Core\Language\LanguageManagerInterface
-   */
-  protected $languageManager;
-
-  /**
-   * The string translation service.
-   *
-   * @var \Drupal\Core\StringTranslation\TranslationManager
-   */
-  protected $translationManager;
-
-  /**
-   * The current user.
-   *
-   * @var \Drupal\Core\Session\AccountInterface
-   */
-  protected $currentUser;
+/**
+ * Provides a render element in the user's preferred admin language.
+ */
+class AdminLanguageRender {
 
   /**
    * Constructs an AdminLanguageRender object.
@@ -41,11 +24,11 @@ class AdminLanguageRender implements TrustedCallbackInterface {
    * @param \Drupal\Core\Session\AccountInterface $currentUser
    *   The current user.
    */
-  public function __construct(LanguageManagerInterface $languageManager, TranslationManager $translationManager, AccountInterface $currentUser) {
-    $this->languageManager = $languageManager;
-    $this->translationManager = $translationManager;
-    $this->currentUser = $currentUser;
-  }
+  public function __construct(
+    protected LanguageManagerInterface $languageManager,
+    protected TranslationManager $translationManager,
+    protected AccountInterface $currentUser,
+  ) {}
 
   /**
    * Adds the render callbacks to a render element.
@@ -80,7 +63,8 @@ class AdminLanguageRender implements TrustedCallbackInterface {
    * @return array
    *   A renderable array.
    */
-  public function switchToUserAdminLanguage(array $element) {
+  #[TrustedCallback]
+  public function switchToUserAdminLanguage(array $element): array {
     $userAdminLangcode = $this->currentUser->getPreferredAdminLangcode(FALSE);
 
     if ($userAdminLangcode && ($this->currentUser->hasPermission('access administration pages') || $this->currentUser->hasPermission('view the administration theme'))) {
@@ -109,7 +93,8 @@ class AdminLanguageRender implements TrustedCallbackInterface {
    * @return \Drupal\Core\Render\Markup
    *   Rendered markup.
    */
-  public function restoreLanguage($content, $element) {
+  #[TrustedCallback]
+  public function restoreLanguage(Markup $content, array $element): Markup {
     if (isset($element['#original_langcode'])) {
       $langcode = $element['#original_langcode'];
       $language = $this->languageManager->getLanguage($langcode);
@@ -119,13 +104,6 @@ class AdminLanguageRender implements TrustedCallbackInterface {
     }
 
     return $content;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function trustedCallbacks() {
-    return ['switchToUserAdminLanguage', 'restoreLanguage'];
   }
 
 }

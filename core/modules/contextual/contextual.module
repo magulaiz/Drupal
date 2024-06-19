@@ -173,7 +173,9 @@ function contextual_contextual_links_view_alter(&$element, $items) {
  */
 function _contextual_links_to_id($contextual_links) {
   $ids = [];
-  $langcode = \Drupal::languageManager()->getCurrentLanguage(LanguageInterface::TYPE_URL)->getId();
+  $langcode = \Drupal::languageManager()
+    ->getCurrentLanguage(LanguageInterface::TYPE_URL)
+    ->getId();
   $admin_langcode = \Drupal::currentUser()->getPreferredAdminLangcode();
   foreach ($contextual_links as $group => $args) {
     $route_parameters = UrlHelper::buildQuery($args['route_parameters']);
