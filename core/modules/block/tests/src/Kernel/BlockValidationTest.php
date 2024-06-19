@@ -119,7 +119,7 @@ class BlockValidationTest extends ConfigEntityValidationTestBase {
   public function testThemeValidation(): void {
     $this->entity->set('theme', 'non_existent');
     $this->assertValidationErrors([
-      'region' => 'This is not a valid region for <em class="placeholder">non_existent</em>.',
+      'region' => 'This is not a valid region of the <em class="placeholder">non_existent</em> theme.',
       'theme' => "Theme 'non_existent' is not installed.",
     ]);
 
@@ -141,8 +141,8 @@ class BlockValidationTest extends ConfigEntityValidationTestBase {
     parent::testRequiredPropertyValuesMissing([
       'region' => [
         'region' => [
+          'This is not a valid region of the <em class="placeholder">stark</em> theme.',
           'This value should not be null.',
-          'This is not a valid region for <em class="placeholder">stark</em>.',
         ],
       ],
       'theme' => [
@@ -157,7 +157,7 @@ class BlockValidationTest extends ConfigEntityValidationTestBase {
   public function testRegionValidation(): void {
     $this->entity->set('region', 'non_existent');
     $this->assertValidationErrors([
-      'region' => 'This is not a valid region for <em class="placeholder">stark</em>.',
+      'region' => 'This is not a valid region of the <em class="placeholder">stark</em> theme.',
     ]);
     // Set a valid region and assert it is saved properly.
     $this->entity->set('region', 'header');

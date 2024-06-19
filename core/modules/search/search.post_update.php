@@ -26,6 +26,9 @@ function search_post_update_block_with_empty_page_id(&$sandbox = []) {
   $config_entity_updater->update($sandbox, 'block', function (BlockInterface $block): bool {
     // Only update blocks using the search block plugin.
     // @see search_block_presave()
-    return $block->getPluginId() === 'search_form_block';
+    if ($block->getPluginId() === 'search_form_block' && $block->get('settings')['page_id'] === '') {
+      return TRUE;
+    }
+    return FALSE;
   });
 }
