@@ -176,6 +176,7 @@ services:
     arguments: ['@current_user']
     tags:
       - { name: cache.context}
+  Drupal\language\AdminLanguageRender: '@language.admin_language_render'
   cache_context.user.admin_language:
     class: Drupal\Core\Cache\Context\AccountAdminLanguageCacheContext
     arguments: [ '@current_user' ]
