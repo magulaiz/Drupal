@@ -32,10 +32,12 @@ namespace Drupal\Core\Render;
  * same safeguards aren't present (precisely because this is intended to be used
  * in a limited environment).
  *
- * Currently, there are two types of bare pages available:
+ * Currently, there are three types of bare pages available:
  * - Install (hook_preprocess_install_page(), install-page.html.twig).
  * - Maintenance (hook_preprocess_maintenance_page(),
  *   maintenance-page.html.twig).
+ * - Failed Login (hook_preprocess_failed_login_page(),
+ *   failed-login-page.html.twig).
  *
  * @see \Drupal\Core\Render\MainContent\HtmlRenderer
  */

@@ -1384,6 +1384,21 @@ function template_preprocess_install_page(&$variables) {
 }
 
 /**
+ * Prepares variables for failed login page templates.
+ *
+ * Default template: failed-login-page.html.twig.
+ *
+ * @param array $variables
+ *   An associative array containing:
+ *   - content - An array of page content.
+ *
+ * @see template_preprocess_maintenance_page()
+ */
+function template_preprocess_failed_login_page(&$variables) {
+  template_preprocess_maintenance_page($variables);
+}
+
+/**
  * Prepares variables for region templates.
  *
  * Default template: region.html.twig.
@@ -1903,6 +1918,9 @@ function drupal_common_theme() {
       'render element' => 'page',
     ],
     'install_page' => [
+      'render element' => 'page',
+    ],
+    'failed_login_page' => [
       'render element' => 'page',
     ],
     'maintenance_task_list' => [
