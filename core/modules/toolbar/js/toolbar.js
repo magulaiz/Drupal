@@ -234,8 +234,9 @@
 
         window.addEventListener('dialog:beforeclose', () => {
           const toolbarBar = document.getElementById('toolbar-bar');
+          const activeDialog = document.activeElement.closest('.ui-dialog');
           if (toolbarBar) {
-            toolbarBar.style.marginTop = `${height}px`;
+            toolbarBar.style.marginTop = activeDialog ? `${height}px` : '0';
           }
         });
       });
