@@ -30,7 +30,7 @@ abstract class InstallerExistingConfigTestBase extends InstallerTestBase {
    */
   protected function copyDirectory($source, $destination) {
     if (!is_dir($destination)) {
-      mkdir($destination, 0755, true);
+      mkdir($destination, 0755, TRUE);
     }
     $files = scandir($source);
     foreach ($files as $file) {
@@ -126,6 +126,14 @@ abstract class InstallerExistingConfigTestBase extends InstallerTestBase {
    * @return string
    *   The filepath to the configuration tarball.
    */
+  abstract protected function getConfigTarball();
+
+  /**
+   * Gets the filepath to the configuration directory.
+   *
+   * @return string
+   *   The filepath to the configuration.
+   */
   abstract protected function getConfigLocation();
 
   /**
@@ -175,4 +183,5 @@ abstract class InstallerExistingConfigTestBase extends InstallerTestBase {
       parent::setUpProfile();
     }
   }
+
 }
