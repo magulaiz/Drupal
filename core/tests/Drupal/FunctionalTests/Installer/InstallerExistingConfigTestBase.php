@@ -54,7 +54,8 @@ abstract class InstallerExistingConfigTestBase extends InstallerTestBase {
     parent::prepareEnvironment();
 
     if ($this->profile === NULL) {
-      $core_extension = Yaml::decode($this->getConfigLocation() . '/core.extension.yml');
+      $core_extension_location = $this->getConfigLocation() . '/core.extension.yml';
+      $core_extension = Yaml::decode(file_get_contents($core_extension_location));
       $this->profile = $core_extension['profile'];
     }
 
