@@ -133,7 +133,8 @@ function callback_batch_finished($success, $results, $operations, $elapsed) {
     \Drupal::messenger()->addStatus($message);
 
     // Optionally, redirect if needed.
-    if (shouldRedirect()) {  // Assume shouldRedirect() is a function that determines if a redirect is necessary.
+    // Assume shouldRedirect() is a function that determines if a redirect is necessary.
+    if (shouldRedirect()) {
       return new \Drupal\Core\Routing\RedirectResponse(\Drupal\Core\Url::fromRoute('example.route')->toString());
     }
   }
