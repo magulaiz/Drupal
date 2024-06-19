@@ -37,8 +37,8 @@ class InstallerExistingConfigTest extends InstallerExistingConfigTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function getConfigTarball() {
-    return __DIR__ . '/../../../fixtures/config_install/testing_config_install.tar.gz';
+  protected function getConfigLocation() {
+    return __DIR__ . '/../../../fixtures/config_install/testing_config_install';
   }
 
 }

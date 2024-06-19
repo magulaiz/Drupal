@@ -118,17 +118,6 @@ abstract class InstallerExistingConfigTestBase extends InstallerTestBase {
   }
 
   /**
-   * Gets the filepath to the configuration tarball.
-   *
-   * The tarball will be extracted to the install profile's config/sync
-   * directory for testing.
-   *
-   * @return string
-   *   The filepath to the configuration tarball.
-   */
-  abstract protected function getConfigTarball();
-
-  /**
    * Gets the filepath to the configuration directory.
    *
    * @return string
