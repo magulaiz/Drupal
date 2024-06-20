@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\Component\Plugin\Attribute;
 
 use Drupal\Component\Plugin\Discovery\AttributeClassDiscovery;
@@ -34,7 +36,7 @@ class AttributeClassDiscoveryCachedTest extends TestCase {
    *
    * @covers ::getDefinitions
    */
-  public function testGetDefinitions() {
+  public function testGetDefinitions(): void {
     // Path to the classes which we'll discover and parse annotation.
     $discovery_path = __DIR__ . '/Fixtures/Plugins';
     // File path that should be discovered within that directory.

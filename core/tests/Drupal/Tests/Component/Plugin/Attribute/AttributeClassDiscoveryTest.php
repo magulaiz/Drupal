@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\Component\Plugin\Attribute;
 
 use Drupal\Component\Plugin\Discovery\AttributeClassDiscovery;
@@ -34,7 +36,7 @@ class AttributeClassDiscoveryTest extends TestCase {
    * @covers ::__construct
    * @covers ::getPluginNamespaces
    */
-  public function testGetPluginNamespaces() {
+  public function testGetPluginNamespaces(): void {
     // Path to the classes which we'll discover and parse annotation.
     $discovery = new AttributeClassDiscovery(['com/example' => [__DIR__]]);
 
@@ -49,7 +51,7 @@ class AttributeClassDiscoveryTest extends TestCase {
    * @covers ::getDefinitions
    * @covers ::prepareAttributeDefinition
    */
-  public function testGetDefinitions() {
+  public function testGetDefinitions(): void {
     $discovery = new AttributeClassDiscovery(['com\example' => [__DIR__ . '/Fixtures/Plugins']]);
     $this->assertEquals([
       'discovery_test_1' => [

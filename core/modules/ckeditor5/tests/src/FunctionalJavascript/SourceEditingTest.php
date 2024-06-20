@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\ckeditor5\FunctionalJavascript;
 
 use Drupal\ckeditor5\HTMLRestrictions;
@@ -22,7 +24,7 @@ class SourceEditingTest extends SourceEditingTestBase {
   /**
    * @covers \Drupal\ckeditor5\Plugin\CKEditor5Plugin\SourceEditing::buildConfigurationForm
    */
-  public function testSourceEditingSettingsForm() {
+  public function testSourceEditingSettingsForm(): void {
     $this->drupalLogin($this->drupalCreateUser(['administer filters']));
 
     $page = $this->getSession()->getPage();
@@ -69,7 +71,7 @@ JS;
    *
    * @dataProvider providerAllowingExtraAttributes
    */
-  public function testAllowingExtraAttributes(string $original_markup, string $expected_markup, ?string $allowed_elements_string = NULL) {
+  public function testAllowingExtraAttributes(string $original_markup, string $expected_markup, ?string $allowed_elements_string = NULL): void {
     $this->host->body->value = $original_markup;
     $this->host->save();
 
@@ -116,7 +118,7 @@ JS;
    * @return array
    *   The test cases.
    */
-  public function providerAllowingExtraAttributes(): array {
+  public static function providerAllowingExtraAttributes(): array {
     $general_test_case_markup = '<div class="llama" data-llama="🦙"><p data-llama="🦙">The <a href="https://example.com/pirate" class="button" data-grammar="subject">pirate</a> is <a href="https://example.com/irate" class="use-ajax" data-grammar="adjective">irate</a>.</p></div>';
     return [
       'no extra attributes allowed' => [
