@@ -220,8 +220,10 @@
           });
           // Use jQuery UI Autocomplete on the textfield.
           $autocomplete.autocomplete(autocomplete.options).each(function () {
-            this.getAttribute('ui-autocomplete')._renderItem =
-              autocomplete.options.renderItem;
+            if (this.dataset.uiAutocomplete) {
+              this.dataset.uiAutocomplete.renderItem =
+                autocomplete.options.renderItem;
+            }
           });
 
           // Use CompositionEvent to handle IME inputs. It requests remote server on "compositionend" event only.
