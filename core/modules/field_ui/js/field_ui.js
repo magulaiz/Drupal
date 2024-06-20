@@ -224,7 +224,6 @@
         .toArray()
         .forEach((ele) => {
           const $this = $(ele);
-          console.log(ele);
           // If the dragged row is in this region, but above the message row, swap
           // it down one space.
           if (
@@ -237,7 +236,7 @@
               rowObject.method !== 'keyboard' ||
               rowObject.direction === 'down'
             ) {
-              rowObject.swap('after', this);
+              rowObject.swap('after', ele);
             }
           }
           // This region has become empty.

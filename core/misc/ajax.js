@@ -1390,18 +1390,17 @@
         $newContent[effect.showEffect](effect.showSpeed);
       }
 
-      // Attach behaviors to all element nodes.
-      $newContent.each((index, element) => {
-        if (
-          element.nodeType === Node.ELEMENT_NODE &&
-          // Attach all JavaScript behaviors to the new content, if it was
-          // successfully added to the page, this condition allows
-          // `#ajax['wrapper']` to be optional.
-          document.documentElement.contains(element)
-        ) {
-          Drupal.attachBehaviors(element, settings);
-        }
-      });
+      // Attach all JavaScript behaviors to the new content, if it was
+      // successfully added to the page, this if statement allows
+      // `#ajax['wrapper']` to be optional.
+      if ($newContent.parents('html').length) {
+        // Attach behaviors to all element nodes.
+        $newContent.toArray().forEach((element, index) => {
+          if (element.nodeType === Node.ELEMENT_NODE) {
+            Drupal.attachBehaviors(element, settings);
+          }
+        });
+      }
     },
 
     /**
@@ -1421,8 +1420,9 @@
     remove(ajax, response, status) {
       const settings = response.settings || ajax.settings || drupalSettings;
       $(response.selector)
-        .each(function () {
-          Drupal.detachBehaviors(this, settings);
+        .toArray()
+        .forEach((ele) => {
+          Drupal.detachBehaviors(ele, settings);
         })
         .remove();
     },
