@@ -1,9 +1,5 @@
 @import "../base/media-queries.pcss.css";
 
-:root {
-  --admin-toolbar-top-bar-height: var(--admin-toolbar-space-64);
-}
-
 .admin-toolbar-control-bar {
   position: relative;
   z-index: var(--admin-toolbar-z-index-admin-toolbar-control-bar);

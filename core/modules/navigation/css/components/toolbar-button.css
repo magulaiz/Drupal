@@ -13,11 +13,11 @@
   --toolbar-button-outline-offset: 0;
 }
 /* In top bar mobile we need small outline offset. */
-:where(.top-bar) {
+:where(.admin-toolbar-control-bar) {
   --toolbar-button-outline-offset: calc(-1 * var(--admin-toolbar-space-4));
 }
 @media (min-width: 64rem) {
-  :where(.top-bar) {
+  :where(.admin-toolbar-control-bar) {
     --toolbar-button-outline-offset: 0px;
   }
 }

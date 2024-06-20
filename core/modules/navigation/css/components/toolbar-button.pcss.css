@@ -11,7 +11,7 @@
 }
 
 /* In top bar mobile we need small outline offset. */
-:where(.top-bar) {
+:where(.admin-toolbar-control-bar) {
   --toolbar-button-outline-offset: calc(-1 * var(--admin-toolbar-space-4));
 
   @media (--admin-toolbar-desktop) {
