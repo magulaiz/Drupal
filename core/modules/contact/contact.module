@@ -259,10 +259,8 @@ function contact_rest_resource_alter(&$definitions) {
 /**
  * Implements hook_form_FORM_ID_alter().
  */
-function contact_form_field_config_edit_form_alter(&$form, FormStateInterface $form_state, $form_id) {
-  /**
-   * @var \Drupal\field_ui\Form\FieldConfigEditForm $form_object
-   */
+function contact_form_field_config_edit_form_alter(&$form, FormStateInterface $form_state, $form_id): void {
+  /** @var \Drupal\field_ui\Form\FieldConfigEditForm $form_object */
   $form_object = $form_state->getFormObject();
   $field_type = $form_object->getEntity()->get('field_type');
 
@@ -281,7 +279,6 @@ function contact_form_field_config_edit_form_alter(&$form, FormStateInterface $f
   }
   else {
     // No private scheme, notify the user.
-    Drupal::messenger()
-      ->addWarning(t('It is advised to store file uploads for contact forms as private files. You can configure this in settings.php'));
+    Drupal::messenger()->addWarning(t('It is advised to store file uploads for contact forms as private files. You can configure this in settings.php'));
   }
 }
