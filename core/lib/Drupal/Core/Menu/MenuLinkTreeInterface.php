@@ -70,11 +70,19 @@ interface MenuLinkTreeInterface {
    *   - callable: a callable or a string that can be resolved to a callable
    *     by Drupal\Core\Utility\CallableResolver::getCallableFromDefinition()
    *   - args: optional array of arguments to pass to the callable after $tree.
+   * phpcs:disable Drupal.Commenting
+   * @todo Uncomment new method parameters before drupal:12.0.0.
+   * @see https://www.drupal.org/project/drupal/issues/3354672
+   *
+   * @param mixed $context
+   *   Context related to the current transformation. This is usually the object
+   *   triggering the menu link tree transformation.
+   * phpcs:enable
    *
    * @return \Drupal\Core\Menu\MenuLinkTreeElement[]
    *   The manipulated menu link tree.
    */
-  public function transform(array $tree, array $manipulators);
+  public function transform(array $tree, array $manipulators /* , mixed $context */);
 
   /**
    * Builds a renderable array from a menu tree.
