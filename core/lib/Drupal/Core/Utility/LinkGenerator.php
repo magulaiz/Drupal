@@ -124,7 +124,7 @@ class LinkGenerator implements LinkGeneratorInterface {
       // Add a "data-drupal-link-system-path" attribute to let the
       // drupal.active-link library know the path in a standardized manner.
       if ($url->isRouted() && !isset($variables['options']['attributes']['data-drupal-link-system-path'])) {
-        //   see https://www.drupal.org/project/drupal/issues/3443759.
+       
         // Get the route match from the URL.
         $routeMatch = $url->getRouteMatch();
         if ($routeMatch) {
