@@ -168,12 +168,13 @@ class EntityReference extends DisplayPluginBase {
     // Drupal\views\Plugin\EntityReferenceSelection\ViewsSelection::initializeView().
     // If any entity_reference_options are not yet set, we apply the same
     // default values that would typically be added by that method.
-    $options += [
+    $default_options = [
       'match' => NULL,
       'match_operator' => 'CONTAINS',
       'limit' => 0,
       'ids' => NULL,
     ];
+    $options += $default_options;
 
     // Restrict the autocomplete options based on what's been typed already.
     if (isset($options['match'])) {
