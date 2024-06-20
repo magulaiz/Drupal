@@ -372,6 +372,7 @@ pickable
 pingback
 placeholdered
 placeholdering
+playsinline
 plusthick
 porterstemmer
 postcondition
