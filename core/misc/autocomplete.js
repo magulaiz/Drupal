@@ -220,7 +220,7 @@
           });
           // Use jQuery UI Autocomplete on the textfield.
           $autocomplete.autocomplete(autocomplete.options).each(function () {
-            $(this).data('ui-autocomplete')._renderItem =
+            this.getAttribute('ui-autocomplete')._renderItem =
               autocomplete.options.renderItem;
           });
 
