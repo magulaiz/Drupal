@@ -68,7 +68,7 @@
           // Open all categories so every block is available to filtering.
           $categories.find('.js-layout-builder-category').attr('open', '');
           // Toggle visibility of links based on query.
-          $filterLinks.toArray().forEach(toggleBlockEntry);
+          $filterLinks.get().forEach(toggleBlockEntry);
 
           // Only display categories containing visible links.
           $categories
@@ -367,7 +367,7 @@
          * placeholder labels.
          */
         $('[data-layout-content-preview-placeholder-label]', context)
-          .toArray()
+          .get()
           .forEach((element) => {
             const $element = $(element);
 
@@ -404,7 +404,7 @@
 
         // Iterate over all blocks.
         $('[data-layout-content-preview-placeholder-label]')
-          .toArray()
+          .get()
           .forEach((element) => {
             $(element).children().show();
           });

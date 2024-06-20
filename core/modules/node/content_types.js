@@ -29,7 +29,7 @@
         $(context)
           .find('input[name^="options"]:checked')
           .next('label')
-          .toArray()
+          .get()
           .forEach((element) => {
             values.push(Drupal.checkPlain(element.textContent));
           });
@@ -50,7 +50,7 @@
 
         $('input:checked', context)
           .next('label')
-          .toArray()
+          .get()
           .forEach((element) => {
             values.push(Drupal.checkPlain(element.textContent));
           });
@@ -63,7 +63,7 @@
         $editContext
           .find('input:checked')
           .next('label')
-          .toArray()
+          .get()
           .forEach((element) => {
             values.push(Drupal.checkPlain(element.textContent));
           });

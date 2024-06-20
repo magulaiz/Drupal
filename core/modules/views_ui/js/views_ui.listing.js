@@ -42,7 +42,7 @@
 
         // Filter if the length of the query is at least 2 characters.
         if (query.length >= 2) {
-          $rows.toArray().forEach(showViewRow);
+          $rows.get().forEach(showViewRow);
         } else {
           $rows.show();
         }

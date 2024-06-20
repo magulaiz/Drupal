@@ -147,7 +147,7 @@
       this.$exposed_form,
     )
       .not('[data-drupal-selector=edit-reset]')
-      .toArray()
+      .get()
       .forEach((element, index) => {
         const selfSettings = $.extend({}, that.element_settings, {
           base: element.getAttribute('id'),

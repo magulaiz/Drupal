@@ -40,7 +40,7 @@
 
         // Update the view of the trigger.
         const $trigger = this.$el.find('.trigger');
-        $trigger.toArray().forEach((element) => {
+        $trigger.get().forEach((element) => {
           element.textContent = Drupal.t(
             '@action @title configuration options',
             {

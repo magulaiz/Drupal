@@ -458,8 +458,8 @@
     // Force my and at to have valid horizontal and vertical positions
     // if a value is missing or invalid, it will be converted to center
     // eslint-disable-next-line func-names
-    ['my', 'at'].forEach(function (element) {
-      let pos = (options[element] || '').split(' ');
+    ['my', 'at'].forEach((str) => {
+      let pos = (options[str] || '').split(' ');
 
       if (pos.length === 1) {
         // eslint-disable-next-line no-nested-ternary
@@ -475,13 +475,13 @@
       // Calculate offsets
       const horizontalOffset = regexOffset.exec(pos[0]);
       const verticalOffset = regexOffset.exec(pos[1]);
-      offsets[element] = [
+      offsets[str] = [
         horizontalOffset ? horizontalOffset[0] : 0,
         verticalOffset ? verticalOffset[0] : 0,
       ];
 
       // Reduce to just the positions without the offsets
-      options[element] = [
+      options[str] = [
         regexPosition.exec(pos[0])[0],
         regexPosition.exec(pos[1])[0],
       ];

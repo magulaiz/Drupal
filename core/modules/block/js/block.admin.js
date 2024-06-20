@@ -60,7 +60,7 @@
             ),
           );
         } else {
-          $filterRows.toArray().forEach((element) => {
+          $filterRows.get().forEach((element) => {
             $(element).parent().parent().show();
           });
         }

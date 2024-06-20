@@ -47,7 +47,7 @@
 
           $target
             .find('.js-tabs-link')
-            .toArray()
+            .get()
             .forEach((value) => {
               width += $(value).outerWidth();
             });
@@ -70,7 +70,7 @@
 
     $target
       .find('.js-tab')
-      .toArray()
+      .get()
       .forEach((element) => {
         const $item = $(element);
         $item.attr('data-original-order', $item.index());

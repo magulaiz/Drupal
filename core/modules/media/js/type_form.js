@@ -21,7 +21,7 @@
         $(context)
           .find('input[name^="options"]:checked')
           .parent()
-          .toArray()
+          .get()
           .forEach((element) => {
             values.push(
               Drupal.checkPlain($(element).find('label')[0].textContent),
@@ -46,7 +46,7 @@
           $(context)
             .find('input:checked')
             .next('label')
-            .toArray()
+            .get()
             .forEach((element) => {
               values.push(Drupal.checkPlain(element.textContent));
             });

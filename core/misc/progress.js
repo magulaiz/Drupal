@@ -77,7 +77,7 @@
         if (percentage >= 0 && percentage <= 100) {
           $(this.element)
             .find('div.progress__bar')
-            .toArray()
+            .get()
             .forEach(({ style }) => {
               style.width = `${percentage}%`;
             });

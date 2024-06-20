@@ -396,7 +396,7 @@
         .eq(-1)
         .addClass('last');
 
-      $displayButtons.toArray().forEach(function (button) {
+      $displayButtons.get().forEach((button) => {
         button.value = button.getAttribute('data-drupal-dropdown-label');
       });
       $addDisplayDropdown.appendTo($menu);
@@ -905,7 +905,7 @@
         const operators = this.dropdowns.find('select').not($target);
 
         // Change the other operators to match this new value.
-        operators.toArray().forEach((item) => {
+        operators.get().forEach((item) => {
           item.value = $target[0].value;
         });
       },

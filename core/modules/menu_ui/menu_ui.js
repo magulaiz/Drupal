@@ -45,7 +45,7 @@
       const $context = $(context);
       $context
         .find('.menu-link-form')
-        .toArray()
+        .get()
         .forEach((element) => {
           const $this = $(element);
           // Try to find menu settings widget elements as well as a 'title' field

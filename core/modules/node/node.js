@@ -44,7 +44,7 @@
           $optionsContext
             .find('input:checked')
             .next('label')
-            .toArray()
+            .get()
             .forEach((element) => {
               values.push(Drupal.checkPlain(element.textContent.trim()));
             });

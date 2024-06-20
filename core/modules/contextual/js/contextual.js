@@ -104,7 +104,7 @@
     )}`;
     $contextual
       .find('.contextual-links a')
-      .toArray()
+      .get()
       .forEach((element) => {
         const url = element.getAttribute('href');
         const glue = url.includes('?') ? '&' : '?';

@@ -113,7 +113,7 @@
       // Create row handlers.
       $(table)
         .find('tr.draggable')
-        .toArray()
+        .get()
         .forEach((element) => {
           // Extract server-side data for the row.
           const row = element;
@@ -221,7 +221,7 @@
       const rowObject = this;
       $(rowObject.table)
         .find('tr.region-message')
-        .toArray()
+        .get()
         .forEach((element) => {
           const $this = $(element);
           // If the dragged row is in this region, but above the message row, swap
@@ -471,7 +471,7 @@
         // Filter if the length of the query is at least 1 character.
         if (query.length > 0) {
           searching = true;
-          $rows.toArray().forEach(showRow);
+          $rows.get().forEach(showRow);
         } else if (searching) {
           searching = false;
           $rows.show();

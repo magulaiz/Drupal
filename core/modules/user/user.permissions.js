@@ -62,7 +62,7 @@
           .on('click.permissions', this.toggle)
           // .triggerHandler() cannot be used here, as it only affects the first
           // element.
-          .toArray()
+          .get()
           .forEach(this.toggle);
         // Re-insert the table into the DOM.
         $ancestor[method]($table);
@@ -83,13 +83,13 @@
       // permissions. Therefore, we toggle visibility directly.
       $row
         .find('.js-real-checkbox')
-        .toArray()
+        .get()
         .forEach((element) => {
           element.style.display = authCheckbox.checked ? 'none' : '';
         });
       $row
         .find('.js-dummy-checkbox')
-        .toArray()
+        .get()
         .forEach((element) => {
           element.style.display = authCheckbox.checked ? '' : 'none';
         });
@@ -171,7 +171,7 @@
 
         // Filter if the length of the query is at least 2 characters.
         if (query.length >= 2) {
-          $rows.toArray().forEach(showPermissionRow);
+          $rows.get().forEach(showPermissionRow);
 
           // Hide the empty header if they don't have any visible rows.
           const visibleRows = $table.find('tbody tr:visible');

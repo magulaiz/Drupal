@@ -32,7 +32,7 @@
 
     $menu
       .find('input:checked')
-      .toArray()
+      .get()
       .forEach((element) => {
         // Get the names of all checked menus.
         values.push(Drupal.checkPlain(element.value));

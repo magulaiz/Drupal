@@ -70,7 +70,7 @@
       // Adjust the toggle text.
       $toggle
         .find('.action')
-        .toArray()
+        .get()
         .forEach((element) => {
           // Expand Structure, Collapse Structure.
           element.textContent = switcher ? ui.handleClose : ui.handleOpen;
@@ -135,7 +135,7 @@
       // Add a handle to each list item if it has a menu.
       $menu
         .find('li')
-        .toArray()
+        .get()
         .forEach((element) => {
           const $item = $(element);
           if ($item.children('ul.toolbar-menu').length) {

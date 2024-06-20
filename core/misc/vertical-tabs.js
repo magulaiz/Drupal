@@ -27,7 +27,7 @@
   const handleFragmentLinkClickOrHashChange = (e, $target) => {
     $target
       .parents('.vertical-tabs__pane')
-      .toArray()
+      .get()
       .forEach((pane) => {
         $(pane).data('verticalTab').focus();
       });
@@ -85,7 +85,7 @@
             .before(tabList);
 
           // Transform each details into a tab.
-          $details.toArray().forEach((element) => {
+          $details.get().forEach((element) => {
             const $that = $(element);
             const $summary = $that.find('> summary');
             const verticalTab = new Drupal.verticalTab({

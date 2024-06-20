@@ -240,7 +240,7 @@
     // Match immediate children of the parent element to allow nesting.
     $table
       .find('> tr.draggable, > tbody > tr.draggable')
-      .toArray()
+      .get()
       .forEach((element) => self.makeDraggable(element));
 
     const $toggleWeightWrapper = $(Drupal.theme('tableDragToggle'));
@@ -338,7 +338,7 @@
         columnIndex = cell.parent().find('> td').index(cell.get(0)) + 1;
         $table
           .find('> thead > tr, > tbody > tr, > tr')
-          .toArray()
+          .get()
           .forEach((element) => this.addColspanClass(element, columnIndex));
       }
     });
@@ -437,21 +437,21 @@
     // Hide weight/parent cells and headers.
     $tables
       .find('.tabledrag-hide')
-      .toArray()
+      .get()
       .forEach((element) => {
         element.style.display = 'none';
       });
     // Show TableDrag handles.
     $tables
       .find('.tabledrag-handle')
-      .toArray()
+      .get()
       .forEach((element) => {
         element.style.display = '';
       });
     // Reduce the colspan of any effected multi-span columns.
     $tables
       .find('.tabledrag-has-colspan')
-      .toArray()
+      .get()
       .forEach((element) => {
         element.colSpan -= 1;
       });
@@ -467,21 +467,21 @@
     // Show weight/parent cells and headers.
     $tables
       .find('.tabledrag-hide')
-      .toArray()
+      .get()
       .forEach((element) => {
         element.style.display = '';
       });
     // Hide TableDrag handles.
     $tables
       .find('.tabledrag-handle')
-      .toArray()
+      .get()
       .forEach((element) => {
         element.style.display = 'none';
       });
     // Increase the colspan for any columns where it was previously reduced.
     $tables
       .find('.tabledrag-has-colspan')
-      .toArray()
+      .get()
       .forEach((element) => {
         element.colSpan += 1;
       });
@@ -688,7 +688,7 @@
               );
               if (nextGroup) {
                 $(nextGroup.group)
-                  .toArray()
+                  .get()
                   .forEach((element) => {
                     groupHeight += Drupal.elementIsHidden(element)
                       ? 0
@@ -1188,7 +1188,7 @@
             const values = [];
             $(targetElement)
               .find('option')
-              .toArray()
+              .get()
               .forEach((element) => {
                 values.push(element.value);
               });
@@ -1196,7 +1196,7 @@
             // Populate the values in the siblings.
             $(siblings)
               .find(targetClass)
-              .toArray()
+              .get()
               .forEach((element) => {
                 // If there are more items than possible values, assign the
                 // maximum value to the row.
@@ -1215,7 +1215,7 @@
             }
             $(siblings)
               .find(targetClass)
-              .toArray()
+              .get()
               .forEach((element) => {
                 element.value = weight;
                 weight++;

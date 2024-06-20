@@ -48,7 +48,7 @@
         .prev('table.sticky-header')
         .addBack()
         .find('th.select-all input[type="checkbox"]')
-        .toArray()
+        .get()
         .forEach((element) => {
           const $checkbox = $(element);
           const stateChanged = $checkbox.prop('checked') !== state;
@@ -75,7 +75,7 @@
         if (event.target.matches('input[type="checkbox"]')) {
           // Loop through all checkboxes and set their state to the select all
           // checkbox' state.
-          checkboxes.toArray().forEach((element) => {
+          checkboxes.get().forEach((element) => {
             const $checkbox = $(element);
             const stateChanged =
               $checkbox.prop('checked') !== event.target.checked;
