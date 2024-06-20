@@ -1722,4 +1722,3 @@ function system_update_10202(&$sandbox) {
   $config->set('ignored_deprecations', '');
   $config->save();
 }
-
