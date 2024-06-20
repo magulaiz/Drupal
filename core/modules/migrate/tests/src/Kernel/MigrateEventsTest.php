@@ -473,6 +473,7 @@ class MigrateEventsTest extends KernelTestBase {
    *   The event name.
    */
   public function rowSkippedEventRecorder(MigrateRowSkippedEvent $event, $name): void {
+    var_dump($event->getException());
     $this->state->set('migrate_events_test.row_skipped_event', [
       'event_name' => $name,
       'migration' => $event->getMigration(),
