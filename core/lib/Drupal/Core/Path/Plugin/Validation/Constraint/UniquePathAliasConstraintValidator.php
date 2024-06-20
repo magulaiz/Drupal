@@ -60,13 +60,7 @@ class UniquePathAliasConstraintValidator extends ConstraintValidator implements 
     $alias = $entity->getAlias();
 
     // If the language selector field is available, use the selected language.
-    if ($this->currentRequest->request->all()['langcode']) {
-      $langcode = $this->currentRequest->request->all()['langcode'][0]['value'];
-    }
-    else {
-      $langcode = $entity->language()->getId();
-    }
-
+    $langcode = $this->currentRequest->request->all()['langcode'][0]['value'] ?? $entity->language()->getId();
     $storage = $this->entityTypeManager->getStorage('path_alias');
     $query = $storage->getQuery()
       ->accessCheck(FALSE)
