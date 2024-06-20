@@ -99,7 +99,7 @@ class ConfigActionManager extends DefaultPluginManager {
     // Adds backwards compatibility for plugins that have been renamed.
     // @see https://www.drupal.org/i/3455113
     if (!isset($definitions['ensure_exists']) && !isset($definitions['simple_config_update'])) {
-      $definitions['entity_create:ensure_exists'] = $definitions['entity_create:ensureExists'];
+      $definitions['entity_create:ensure_exists'] = $definitions['entity_create:createIfNotExists'];
       $definitions['simple_config_update'] = $definitions['simpleConfigUpdate'];
       $this->setCachedDefinitions($definitions);
     }
@@ -242,7 +242,7 @@ class ConfigActionManager extends DefaultPluginManager {
     // @see https://www.drupal.org/i/3455113
     $renamed = [
       'simple_config_update' => 'simpleConfigUpdate',
-      'entity_create:ensure_exists' => 'entity_create:ensureExists',
+      'entity_create:ensure_exists' => 'entity_create:createIfNotExists',
     ];
     if (isset($renamed[$plugin_id])) {
       // phpcs:ignore Drupal.Semantics.FunctionTriggerError

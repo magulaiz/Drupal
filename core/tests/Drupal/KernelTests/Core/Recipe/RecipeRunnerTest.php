@@ -208,7 +208,7 @@ install:
 config:
   actions:
     config_test.dynamic.recipe:
-      ensureExists:
+      createIfNotExists:
         label: 'Created by recipe'
       setBody: 'Description set by recipe'
 YAML;
@@ -236,7 +236,7 @@ config:
         label: 'Created by recipe'
 YAML;
     $recipe = $this->createRecipe($recipe_data);
-    $this->expectDeprecation('Unsilenced deprecation: The plugin ID "entity_create:ensure_exists" is deprecated. Use "entity_create:ensureExists" instead.');
+    $this->expectDeprecation('Unsilenced deprecation: The plugin ID "entity_create:ensure_exists" is deprecated. Use "entity_create:createIfNotExists" instead.');
     RecipeRunner::processRecipe($recipe);
   }
 
