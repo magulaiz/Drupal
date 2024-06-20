@@ -88,7 +88,9 @@
       once(
         'translation-entity-admin-hide',
         // Keep jQuery because of the use of `:input`.
-        context.querySelectorAll('table .bundle-settings .translatable input, select, textarea, button'),
+        context.querySelectorAll(
+          'table .bundle-settings .translatable input, select, textarea, button',
+        ),
       ).forEach((input) => {
         const $input = $(input);
         const $bundleSettings = $input.closest('.bundle-settings');
@@ -97,7 +99,9 @@
         } else {
           $bundleSettings
             .nextUntil('.bundle-settings', '.field-settings')
-            .find('.translatable :checkbox:not(:checked), .translatable :radio:not(:checked)')
+            .find(
+              '.translatable :checkbox:not(:checked), .translatable :radio:not(:checked)',
+            )
             .closest('.field-settings')
             .nextUntil(':not(.column-settings)')
             .hide();
@@ -112,12 +116,14 @@
           const $target = $(e.target);
           const $bundleSettings = $target.closest('.bundle-settings');
           const $settings = $bundleSettings.nextUntil('.bundle-settings');
-          const $fieldSettings = $settings.filter('.field-settings');          
-          if (e.target.checked) {           
+          const $fieldSettings = $settings.filter('.field-settings');
+          if (e.target.checked) {
             $bundleSettings
               .find('.operations [name$="[language_alterable]"]')
               .prop('checked', true);
-            $fieldSettings.find('.translatable :checkbox, :radio').prop('checked', true);
+            $fieldSettings
+              .find('.translatable :checkbox, :radio')
+              .prop('checked', true);
           } else {
             $settings.hide();
           }
