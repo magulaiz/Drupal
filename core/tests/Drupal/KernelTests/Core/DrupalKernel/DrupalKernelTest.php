@@ -7,6 +7,7 @@ namespace Drupal\KernelTests\Core\DrupalKernel;
 use Composer\Autoload\ClassLoader;
 use Drupal\Core\DrupalKernel;
 use Drupal\Core\DrupalKernelInterface;
+use Drupal\Core\Utility\Error;
 use Drupal\KernelTests\KernelTestBase;
 use org\bovigo\vfs\vfsStream;
 use Prophecy\Argument;
@@ -21,6 +22,17 @@ use Symfony\Component\HttpFoundation\Request;
  * @coversDefaultClass \Drupal\Core\DrupalKernel
  */
 class DrupalKernelTest extends KernelTestBase {
+
+  /**
+   * {@inheritdoc}
+   */
+  protected function tearDown(): void {
+    $currentErrorHandler = Error::currentErrorHandler();
+    if (is_string($currentErrorHandler) && $currentErrorHandler === '_drupal_error_handler') {
+      restore_error_handler();
+    }
+    parent::tearDown();
+  }
 
   /**
    * {@inheritdoc}
@@ -44,7 +56,7 @@ class DrupalKernelTest extends KernelTestBase {
    * @return \Drupal\Core\DrupalKernel
    *   New kernel for testing.
    */
-  protected function getTestKernel(Request $request, array $modules_enabled = NULL) {
+  protected function getTestKernel(Request $request, ?array $modules_enabled = NULL) {
     // Manually create kernel to avoid replacing settings.
     $class_loader = require $this->root . '/autoload.php';
     $kernel = DrupalKernel::createFromRequest($request, $class_loader, 'testing');
@@ -61,8 +73,8 @@ class DrupalKernelTest extends KernelTestBase {
   /**
    * Tests DIC compilation.
    */
-  public function testCompileDIC() {
-    // @todo: write a memory based storage backend for testing.
+  public function testCompileDIC(): void {
+    // @todo Write a memory based storage backend for testing.
     $modules_enabled = [
       'system' => 'system',
       'user' => 'user',
@@ -143,7 +155,7 @@ class DrupalKernelTest extends KernelTestBase {
   /**
    * Tests repeated loading of compiled DIC with different environment.
    */
-  public function testRepeatedBootWithDifferentEnvironment() {
+  public function testRepeatedBootWithDifferentEnvironment(): void {
     $request = Request::createFromGlobals();
     $class_loader = require $this->root . '/autoload.php';
 
@@ -165,8 +177,8 @@ class DrupalKernelTest extends KernelTestBase {
   /**
    * Tests setting of site path after kernel boot.
    */
-  public function testPreventChangeOfSitePath() {
-    // @todo: write a memory based storage backend for testing.
+  public function testPreventChangeOfSitePath(): void {
+    // @todo Write a memory based storage backend for testing.
     $modules_enabled = [
       'system' => 'system',
       'user' => 'user',
@@ -214,7 +226,7 @@ class DrupalKernelTest extends KernelTestBase {
    * @param bool $value
    *   The value to set class_loader_auto_detect to.
    */
-  public function testClassLoaderAutoDetect($value) {
+  public function testClassLoaderAutoDetect($value): void {
     // Create a virtual file system containing items that should be
     // excluded. Exception being modules directory.
     vfsStream::setup('root', NULL, [
@@ -252,7 +264,7 @@ class DrupalKernelTest extends KernelTestBase {
   /**
    * @covers ::resetContainer
    */
-  public function testResetContainer() {
+  public function testResetContainer(): void {
     $modules_enabled = [
       'system' => 'system',
       'user' => 'user',
