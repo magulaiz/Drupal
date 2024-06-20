@@ -361,6 +361,8 @@ system.image.gd:
 system.mail:
   type: config_object
   label: 'Mail system'
+  constraints:
+    FullyValidatable: ~
   mapping:
     interface:
       type: sequence
@@ -377,25 +379,40 @@ system.mail:
       label: 'Symfony mailer transport DSN'
       mapping:
         scheme:
+          # Todo: remove me.
+          #requiredKey: false
+          #nullable: true
           type: string
           label: 'Scheme'
           constraints:
             NotBlank:
               message: 'The mailer DSN must contain a scheme.'
+            Regex:
+              # @see RFC 3986 for URIs scheme: https://datatracker.ietf.org/doc/html/rfc3986#section-3.1
+              # Starts with alpha character, can contain any alphanumeric, "+", "-" and ".".
+              pattern: '/^[a-zA-Z](?:[-a-zA-Z0-9\+\.])*/'
+              message: "The mailer DSN scheme %value is not a valid scheme."
         host:
           type: string
           label: 'Host'
           constraints:
             NotBlank:
               message: 'The mailer DSN must contain a host (use "default" by default).'
+            Hostname: { }
         user:
           type: string
           nullable: true
           label: 'User'
+          constraints:
+            NotBlank:
+              allowNull: true
         password:
           type: string
           nullable: true
           label: 'Password'
+          constraints:
+            NotBlank:
+              allowNull: true
         port:
           type: integer
           nullable: true
