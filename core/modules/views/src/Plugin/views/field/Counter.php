@@ -19,6 +19,13 @@ class Counter extends FieldPluginBase {
   /**
    * {@inheritdoc}
    */
+  public function render(ResultRow $row) {
+    return parent::render($row);
+  }
+  
+  /**
+   * {@inheritdoc}
+   */
   public function usesGroupBy() {
     return FALSE;
   }
