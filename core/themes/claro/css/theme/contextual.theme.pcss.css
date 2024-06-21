@@ -97,7 +97,9 @@
 }
 .contextual-links li a:focus {
   z-index: 2;
-  box-shadow: inset 0 0 0 1px var(--color-focus), 0 0 0 1px var(--color-focus);
+  box-shadow:
+    inset 0 0 0 1px var(--color-focus),
+    0 0 0 1px var(--color-focus);
 }
 .contextual-links li a:active,
 .contextual-links li [aria-pressed="true"] {
