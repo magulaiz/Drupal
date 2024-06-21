@@ -40,7 +40,7 @@ class ConfigActionTest extends KernelTestBase {
     $this->assertSame('Action test', $config_test_entities['action_test']->label());
     $this->assertTrue(Uuid::isValid((string) $config_test_entities['action_test']->uuid()), 'Config entity assigned a valid UUID');
 
-    // Calling ensure exists action again will not error.
+    // Calling createIfNotExists action again will not error.
     $manager->applyAction('entity_create:createIfNotExists', 'config_test.dynamic.action_test', ['label' => 'Action test']);
 
     try {
