@@ -442,6 +442,23 @@ class TwigExtensionTest extends UnitTestCase {
   }
 
   /**
+   * @covers ::getLinkTag
+   */
+  public function testLinkTag() {
+    $url = Url::fromRoute('<button>');
+    $link_tag = $this->systemUnderTest->getLinkTag($url);
+    $this->assertEquals('button', $link_tag);
+
+    $url = Url::fromRoute('<nolink>');
+    $link_tag = $this->systemUnderTest->getLinkTag($url);
+    $this->assertEquals('span', $link_tag);
+
+    $url = Url::fromRoute('<front>');
+    $link_tag = $this->systemUnderTest->getLinkTag($url);
+    $this->assertEquals('a', $link_tag);
+  }
+
+  /**
    * Tests Twig 'add_suggestion' filter.
    *
    * @covers ::suggestThemeHook
