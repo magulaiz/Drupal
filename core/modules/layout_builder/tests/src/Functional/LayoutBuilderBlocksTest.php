@@ -240,6 +240,9 @@ class LayoutBuilderBlocksTest extends LayoutBuilderTestBase {
     $this->clickLink('Add block');
     $this->clickLink('Body');
 
+    // Validate the admin label on the layout-builder-add-block form.
+    $this->assertEquals('Block type', $this->cssSelect('label[for=edit-settings-admin-label]')[0]->getText());
+
     // Enable the Label Display and set the Label to a modified field
     // block label.
     $modified_field_block_label = 'Modified Field Block Label';

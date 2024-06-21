@@ -171,6 +171,11 @@ abstract class ConfigureBlockFormBase extends FormBase implements BaseFormIdInte
     $subform_state = SubformState::createForSubform($form['settings'], $form, $form_state);
     $form['settings'] = $this->getPluginForm($this->block)->buildConfigurationForm($form['settings'], $subform_state);
 
+    // Change layout builder "Block description" label to "Block type", since
+    // Drupal\Core\Block\BlockPluginTrait::buildConfigurationForm()
+    // sets admin_label to the plugin's admin_label which in fact is the block's type.
+    $form['settings']['admin_label']['#title'] = $this->t('Block type');
+
     $form['actions']['submit'] = [
       '#type' => 'submit',
       '#value' => $this->submitLabel(),
