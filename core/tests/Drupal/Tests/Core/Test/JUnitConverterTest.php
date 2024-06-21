@@ -25,10 +25,9 @@ class JUnitConverterTest extends UnitTestCase {
 
   /**
    * Tests errors reported.
-   *
    * @covers ::xmlToRows
    */
-  public function testXmlToRowsWithErrors() {
+  public function testXmlToRowsWithErrors(): void {
     $phpunit_error_xml = __DIR__ . '/fixtures/phpunit_error.xml';
 
     $res = JUnitConverter::xmlToRows(1, $phpunit_error_xml);
@@ -49,7 +48,7 @@ class JUnitConverterTest extends UnitTestCase {
   /**
    * @covers ::xmlToRows
    */
-  public function testXmlToRowsEmptyFile() {
+  public function testXmlToRowsEmptyFile(): void {
     // File system with an empty XML file.
     vfsStream::setup('junit_test', NULL, ['empty.xml' => '']);
     $this->assertSame([], JUnitConverter::xmlToRows(23, vfsStream::url('junit_test/empty.xml')));
@@ -58,7 +57,7 @@ class JUnitConverterTest extends UnitTestCase {
   /**
    * @covers ::xmlElementToRows
    */
-  public function testXmlElementToRows() {
+  public function testXmlElementToRows(): void {
     $junit = <<<EOD
 <?xml version="1.0" encoding="UTF-8"?>
 <testsuites>
