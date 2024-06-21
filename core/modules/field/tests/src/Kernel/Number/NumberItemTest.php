@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\field\Kernel\Number;
 
 use Drupal\Core\Field\FieldItemInterface;
@@ -50,7 +52,7 @@ class NumberItemTest extends FieldKernelTestBase {
   /**
    * Tests using entity fields of the number field type.
    */
-  public function testNumberItem() {
+  public function testNumberItem(): void {
     // Verify entity creation.
     $entity = EntityTest::create();
     $integer = rand(0, 10);
@@ -146,7 +148,7 @@ class NumberItemTest extends FieldKernelTestBase {
    *
    * @throws \Drupal\Core\Entity\EntityStorageException
    */
-  public function testConstraints($type, $min, $max, $value, $expect_constraints, $expected_constraint_message = '') {
+  public function testConstraints($type, $min, $max, $value, $expect_constraints, $expected_constraint_message = ''): void {
     $field = FieldConfig::loadByName('entity_test', 'entity_test', 'field_' . $type);
     $field->setSetting('min', $min);
     $field->setSetting('max', $max);

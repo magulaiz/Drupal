@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\views\Kernel\Handler;
 
 use Drupal\entity_test\Entity\EntityTestComputedBundleField;
@@ -74,7 +76,7 @@ class ComputedBundleFieldTest extends ViewsKernelTestBase {
   /**
    * Tests the computed field handler.
    */
-  public function testComputedFieldHandler() {
+  public function testComputedFieldHandler(): void {
     \Drupal::state()->set('entity_test_computed_field_item_list_value', ['computed string']);
     \Drupal::state()->set('entity_test_comp_bund_fld_item_list_value', ['some other string that is also computed']);
 

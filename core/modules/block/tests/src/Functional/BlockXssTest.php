@@ -27,21 +27,13 @@ class BlockXssTest extends BrowserTestBase {
 
   /**
    * {@inheritdoc}
-   *
-   * @todo Remove and fix test to not rely on super user.
-   * @see https://www.drupal.org/project/drupal/issues/3437620
-   */
-  protected bool $usesSuperUserAccessPolicy = TRUE;
-
-  /**
-   * {@inheritdoc}
    */
   protected $defaultTheme = 'stark';
 
   /**
    * Tests that nothing is escaped other than the blocks explicitly tested.
    */
-  public function testNoUnexpectedEscaping() {
+  public function testNoUnexpectedEscaping(): void {
     $this->drupalLogin($this->drupalCreateUser([
       'administer blocks',
       'access administration pages',
@@ -54,7 +46,7 @@ class BlockXssTest extends BrowserTestBase {
   /**
    * Tests XSS in title.
    */
-  public function testXssInTitle() {
+  public function testXssInTitle(): void {
     $this->container->get('module_installer')->install(['block_test']);
     $this->drupalPlaceBlock('test_xss_title', ['label' => '<script>alert("XSS label");</script>']);
 
@@ -77,7 +69,7 @@ class BlockXssTest extends BrowserTestBase {
   /**
    * Tests XSS in category.
    */
-  public function testXssInCategory() {
+  public function testXssInCategory(): void {
     $this->container->get('module_installer')->install(['block_test']);
     $this->drupalPlaceBlock('test_xss_title');
     $this->drupalLogin($this->drupalCreateUser([
@@ -92,8 +84,11 @@ class BlockXssTest extends BrowserTestBase {
   /**
    * Tests various modules that provide blocks for XSS.
    */
-  public function testBlockXss() {
-    $this->drupalLogin($this->rootUser);
+  public function testBlockXss(): void {
+    $this->drupalLogin($this->drupalCreateUser([
+      'administer blocks',
+      'access administration pages',
+    ]));
 
     $this->doViewTest();
     $this->doMenuTest();

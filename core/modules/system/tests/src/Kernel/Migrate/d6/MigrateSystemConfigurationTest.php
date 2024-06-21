@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\system\Kernel\Migrate\d6;
 
 use Drupal\Tests\migrate_drupal\Kernel\d6\MigrateDrupal6TestBase;
@@ -29,7 +31,7 @@ class MigrateSystemConfigurationTest extends MigrateDrupal6TestBase {
       'first_day' => 4,
       // country is not handled by the migration.
       'country' => [
-        'default' => '',
+        'default' => NULL,
       ],
       // timezone is not handled by the migration.
       'timezone' => [
@@ -143,7 +145,7 @@ class MigrateSystemConfigurationTest extends MigrateDrupal6TestBase {
   /**
    * Tests that all expected configuration gets migrated.
    */
-  public function testConfigurationMigration() {
+  public function testConfigurationMigration(): void {
     foreach ($this->expectedConfig as $config_id => $values) {
       $actual = \Drupal::config($config_id)->get();
       unset($actual['_core']);

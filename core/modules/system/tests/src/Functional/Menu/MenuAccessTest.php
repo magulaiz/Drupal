@@ -41,7 +41,7 @@ class MenuAccessTest extends BrowserTestBase {
    *
    * @see \Drupal\menu_test\Access\AccessCheck::access()
    */
-  public function testMenuBlockLinksAccessCheck() {
+  public function testMenuBlockLinksAccessCheck(): void {
     $this->container->get('module_installer')->install(['menu_test']);
     $this->drupalPlaceBlock('system_menu_block:account');
     // Test that there's link rendered on the route.
@@ -393,7 +393,8 @@ class MenuAccessTest extends BrowserTestBase {
     $actualInaccessibleRoutes = [];
     foreach ($allRoutes as $route) {
       $this->drupalGet(Url::fromRoute($route));
-      switch ($this->getSession()->getStatusCode()) {
+      $requestStatus = $this->getSession()->getStatusCode();
+      switch ($requestStatus) {
         case 200:
           $actualAccessibleRoutes[] = $route;
           break;
@@ -403,7 +404,7 @@ class MenuAccessTest extends BrowserTestBase {
           break;
 
         default:
-          throw new \UnexpectedValueException("Unexpected status code {$this->getStatus()} for route $route");
+          throw new \UnexpectedValueException("Unexpected status code {$requestStatus} for route {$route}");
 
       }
     }

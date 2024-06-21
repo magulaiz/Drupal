@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\KernelTests\Core\Path;
 
 use Drupal\Core\Routing\RequestContext;
@@ -33,7 +35,7 @@ class PathValidatorTest extends KernelTestBase {
     $this->installEntitySchema('entity_test');
   }
 
-  public function testGetUrlIfValidWithoutAccessCheck() {
+  public function testGetUrlIfValidWithoutAccessCheck(): void {
     $requestContext = \Drupal::service('router.request_context');
     $pathValidator = \Drupal::service('path.validator');
 

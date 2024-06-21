@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\node\Kernel\Views;
 
 use Drupal\language\Entity\ConfigurableLanguage;
@@ -42,7 +44,7 @@ class NodeViewsFieldAccessTest extends FieldFieldAccessTestBase {
   /**
    * Check access for node fields.
    */
-  public function testNodeFields() {
+  public function testNodeFields(): void {
     $user = User::create([
       'name' => 'test user',
     ]);

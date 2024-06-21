@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\file\Kernel;
 
 use Drupal\file\Entity\File;
@@ -19,7 +21,7 @@ class SaveTest extends FileManagedUnitTestBase {
    */
   protected bool $usesSuperUserAccessPolicy = TRUE;
 
-  public function testFileSave() {
+  public function testFileSave(): void {
     // Create a new file entity.
     $file = File::create([
       'uid' => 1,
