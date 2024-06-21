@@ -138,6 +138,18 @@ class OverridesSectionStorageTest extends UnitTestCase {
       'my_entity_type.entity_without_layout',
       [],
     ];
+    $data['with value, with layout, fr'] = [
+      TRUE,
+      'my_entity_type',
+      'my_entity_type.entity_with_layout.fr',
+      [],
+    ];
+    $data['with value, without layout, fr'] = [
+      FALSE,
+      'my_entity_type',
+      'my_entity_type.entity_without_layout.fr',
+      [],
+    ];
     $data['empty value, populated defaults'] = [
       TRUE,
       'my_entity_type',
@@ -146,6 +158,18 @@ class OverridesSectionStorageTest extends UnitTestCase {
         'entity_type_id' => 'my_entity_type',
         'my_entity_type' => 'entity_with_layout',
       ],
+    ];
+    $data['with value, with layout, fr'] = [
+      TRUE,
+      'my_entity_type',
+      'my_entity_type.entity_with_layout.fr',
+      [],
+    ];
+    $data['with value, without layout, fr'] = [
+      FALSE,
+      'my_entity_type',
+      'my_entity_type.entity_without_layout.fr',
+      [],
     ];
     $data['empty value, empty defaults'] = [
       FALSE,
