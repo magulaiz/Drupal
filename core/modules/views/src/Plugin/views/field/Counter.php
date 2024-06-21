@@ -22,7 +22,7 @@ class Counter extends FieldPluginBase {
   public function render(ResultRow $row) {
     return parent::render($row);
   }
-  
+
   /**
    * {@inheritdoc}
    */
