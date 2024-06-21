@@ -67,7 +67,7 @@ class ComposerProjectTemplatesTest extends ComposerBuildTestBase {
     return $data;
   }
 
-  public function provideTemplateCreateProject() {
+  public static function provideTemplateCreateProject() {
     return [
       'recommended-project' => [
         'drupal/recommended-project',
@@ -85,7 +85,7 @@ class ComposerProjectTemplatesTest extends ComposerBuildTestBase {
   /**
    * Make sure that static::MINIMUM_STABILITY is sufficiently strict.
    */
-  public function testMinimumStabilityStrictness() {
+  public function testMinimumStabilityStrictness(): void {
     // Ensure that static::MINIMUM_STABILITY is not less stable than the
     // current core stability. For example, if we've already released a beta on
     // the branch, ensure that we no longer allow alpha dependencies.
@@ -146,7 +146,7 @@ class ComposerProjectTemplatesTest extends ComposerBuildTestBase {
   /**
    * Make sure we've accounted for all the templates.
    */
-  public function testVerifyTemplateTestProviderIsAccurate() {
+  public function testVerifyTemplateTestProviderIsAccurate(): void {
     $root = $this->getDrupalRoot();
     $data = $this->provideTemplateCreateProject();
 
@@ -174,7 +174,7 @@ class ComposerProjectTemplatesTest extends ComposerBuildTestBase {
   /**
    * @dataProvider provideTemplateCreateProject
    */
-  public function testTemplateCreateProject($project, $package_dir, $docroot_dir) {
+  public function testTemplateCreateProject($project, $package_dir, $docroot_dir): void {
     // Make a working COMPOSER_HOME directory for setting global composer config
     $composer_home = $this->getWorkspaceDirectory() . '/composer-home';
     mkdir($composer_home);
@@ -251,7 +251,7 @@ class ComposerProjectTemplatesTest extends ComposerBuildTestBase {
     $this->assertCommandSuccessful();
     // Check the output of the project creation for the absence of warnings
     // about any non-allowed composer plugins.
-    // Note: There are different warnings for unallowed composer plugins
+    // Note: There are different warnings for disallowed composer plugins
     // depending on running in non-interactive mode or not. It seems the Drupal
     // CI environment always forces composer commands to run in the
     // non-interactive mode. The only thing these messages have in common is the
