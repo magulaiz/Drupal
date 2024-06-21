@@ -348,7 +348,7 @@ class FormValidator implements FormValidatorInterface {
           if (!is_scalar($v)) {
             $message_arguments['%type'] = gettype($v);
             $form_state->setError($elements, $this->t('The submitted value type %type in the %name element is not allowed.', $message_arguments));
-            $this->logger->error('The submitted value type %choice in the %name element is not allowed.', $message_arguments);
+            $this->logger->error('The submitted value type %type in the %name element is not allowed.', $message_arguments);
             continue;
           }
           if (!isset($options[$v])) {
