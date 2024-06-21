@@ -82,7 +82,7 @@ class ContextualTranslationTest extends WebDriverTestBase {
   /**
    * Tests that contextual links are shown in the preferred admin language.
    */
-  public function testContextualLinksPreferredAdminLanguage() {
+  public function testContextualLinksPreferredAdminLanguage(): void {
     // Create a node and visit the translated page so new translation labels
     // are added.
     $nl_language = $this->languageManager->getLanguage('nl');
