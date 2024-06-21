@@ -249,7 +249,7 @@ trait UiHelperTrait {
         [$header_name, $header_value] = explode(':', $header_value);
       }
       if (is_null($header_value)) {
-        @trigger_error('Using null as a header value to ' . __METHOD__ . '() is deprecated in drupal:11.1.0 and is removed from drupal:12.0.0. Use an empty string instead. See https://www.drupal.org/node/3408184', E_USER_DEPRECATED);
+        @trigger_error('Using null as a header value to ' . __METHOD__ . '() is deprecated in drupal:11.1.0 and is removed from drupal:12.0.0. Use an empty string instead. See https://www.drupal.org/node/3456233', E_USER_DEPRECATED);
         $header_value = '';
       }
       $session->setRequestHeader($header_name, $header_value);
