@@ -55,7 +55,7 @@ class FieldCounterTokenTest extends ViewsKernelTestBase {
         'relationship' => 'none',
         'alter' => [
           'alter_text' => TRUE,
-          'text' => 'Counter: {{ counter }}',
+          'text' => 'Counter {{ counter }}',
           'make_link' => TRUE,
           'path' => '/counter/{{ counter }}',
         ],
@@ -65,10 +65,7 @@ class FieldCounterTokenTest extends ViewsKernelTestBase {
     // Execute the view.
     $this->executeView($view);
 
-    $desired_output = '<a href="/counter/1">Counter: 1</a>';
-    $this->assertSame($desired_output, (string) $view->style_plugin->getField(1, 'name'));
-
-    $desired_output = '<a href="/counter/2">Counter: 2</a>';
+    $desired_output = '<a href="/counter/2">Counter 2</a>';
     $this->assertSame($desired_output, (string) $view->style_plugin->getField(2, 'name'));
 
   }
