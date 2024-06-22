@@ -6,8 +6,6 @@ namespace Drupal\Tests\Core\Render\Element;
 
 use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
 
-// cspell:ignore toggletip popovertarget
-
 /**
  * Tests for the toggletip element.
  *
@@ -74,7 +72,7 @@ class ToggletipTest extends WebDriverTestBase {
    * @return array
    *   Array of selectors and text content.
    */
-  public function toggletipContent() {
+  public static function toggletipContent() {
     return [
       ['div[data-drupal-selector="edit-a-div"]',
         "CONTAINER: A movie like this is a deep mystery. It asks the question: What went wrong? \"Clifford\" is not bad on the acting, directing or even writing levels. It fails on a deeper level still, the level of the underlying conception. Something about the material itself is profoundly not funny. Irredeemably not funny, so that it doesn't matter what the actors do, because they are in a movie that should never have been made. The story opens in the year 2050, when a kindly old priest is trying to reason with a rebellious kid in a home for troubled kids. The priest (Short) tells the kid that he was once a troubled kid, himself. That sets up three flashbacks that make up most of the movie. To deal with the 2050 scenes right up front: They are completely unnecessary. Their only apparent function is to show Martin Short made up as an old man.",
