@@ -68,7 +68,7 @@ class MigrateEventsTest extends KernelTestBase {
   /**
    * Tests migration events.
    */
-  public function testMigrateEvents() {
+  public function testMigrateEvents(): void {
     // Run a simple little migration, which should trigger one of each event
     // other than map_delete.
     $definition = [
