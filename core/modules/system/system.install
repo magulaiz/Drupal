@@ -1770,19 +1770,22 @@ function _system_update_get_timestamp_fields(): array {
   $entity_field_manager = \Drupal::service('entity_field.manager');
 
   // Build a list of all the timestamp fields.
+  $entities = [];
   foreach ($field_types as $field_type) {
     $entity_field_map = $entity_field_manager->getFieldMapByFieldType($field_type);
     foreach ($entity_field_map as $entity_type_id => $fields) {
+      $entities[] = $entity_type_id;
       $storage = \Drupal::entityTypeManager()->getStorage($entity_type_id);
       if ($storage instanceof SqlContentEntityStorage) {
         foreach (array_keys($fields) as $field_name) {
           $items[] = [$entity_type_id, $field_name];
         }
-        $storage->resetCache();
       }
     }
   }
 
+  // Clear the cache for the affected entities.
+  \Drupal::entityTypeManager()->getStorage($entity_type_id)->resetCache(array_unique($entities));
   return $items;
 }
 
@@ -1803,7 +1806,6 @@ function _system_update_process_timestamp_field(string $entity_type_id, string $
   $logger = \Drupal::logger('update');
 
   $entity_type_manager = \Drupal::entityTypeManager();
-  $entity_type_manager->useCaches(FALSE);
   $entity_storage = $entity_type_manager->getStorage($entity_type_id);
 
   // Get the table mappings for this field.
