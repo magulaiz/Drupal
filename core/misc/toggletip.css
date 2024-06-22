@@ -1,4 +1,4 @@
-.toggletip__toggle {
+.toggletip {
   display: inline-flex;
   width: 1.5rem;
   height: 1.5rem;
@@ -13,10 +13,10 @@
   padding-block: 3px;
 }
 
-.toggletip__toggle:hover {
+.toggletip:hover {
   cursor: pointer;
 }
 
-.form-item__label:has(+ .toggletip__toggle) {
+.form-item__label:has(+ .toggletip) {
   display: inline-block;
 }

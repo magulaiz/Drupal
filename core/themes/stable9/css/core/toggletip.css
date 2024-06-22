@@ -26,7 +26,7 @@
   color: #ffd23f;
 }
 
-.toggletip__toggle {
+.toggletip {
   width: 24px;
   height: 24px;
   color: #55565b;
@@ -40,6 +40,6 @@
   padding-block: 3px;
 }
 
-.toggletip__toggle:hover {
+.toggletip:hover {
   cursor: pointer;
 }

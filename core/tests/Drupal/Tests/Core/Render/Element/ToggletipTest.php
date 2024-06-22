@@ -47,7 +47,7 @@ class ToggletipTest extends WebDriverTestBase {
    */
   public function testToggletip(string $element_selector, string $text, string $at_description = 'This tests the atDescription property') {
     $page = $this->getSession()->getPage();
-    $toggle_button = $page->find('css', "$element_selector > button.toggletip__toggle");
+    $toggle_button = $page->find('css', "$element_selector > button.toggletip");
     $at_description_span = $toggle_button->find('css', 'span');
     $this->assertEquals($at_description, $at_description_span->getText());
     // Get tip id from button.

@@ -10,6 +10,6 @@
  * Toggletips
  */
 
-.form-item-textarea > label > .toggletip__toggle {
+.form-item-textarea > label > .toggletip {
   top: unset !important; /* Override for olivero specific styling. */
 }
