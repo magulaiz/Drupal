@@ -24,7 +24,7 @@ use Symfony\Component\Routing\Route;
  *
  * @coversDefaultClass \Drupal\user\Form\EntityPermissionsForm
  * @group user
- * @gropu legacy
+ * @group legacy
  */
 class EntityPermissionsFormTest extends UnitTestCase {
 
