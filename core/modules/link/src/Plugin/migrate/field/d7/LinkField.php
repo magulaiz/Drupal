@@ -2,6 +2,7 @@
 
 namespace Drupal\link\Plugin\migrate\field\d7;
 
+use Drupal\link\LinkItemInterface;
 use Drupal\link\Plugin\migrate\field\d6\LinkField as D6LinkField;
 use Drupal\migrate\Plugin\MigrationInterface;
 use Drupal\migrate_drupal\Attribute\MigrateField;
@@ -60,9 +61,9 @@ class LinkField extends D6LinkField {
       'source' => 'settings/title',
       'bypass' => TRUE,
       'map' => [
-        'disabled' => DRUPAL_DISABLED,
-        'optional' => DRUPAL_OPTIONAL,
-        'required' => DRUPAL_REQUIRED,
+        'disabled' => LinkItemInterface::TITLE_DISABLED,
+        'optional' => LinkItemInterface::TITLE_OPTIONAL,
+        'required' => LinkItemInterface::TITLE_REQUIRED,
       ],
     ];
     $migration->mergeProcessOfProperty('settings/title', $process);

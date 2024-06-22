@@ -116,7 +116,7 @@ class SearchCommentTest extends BrowserTestBase {
 
     // Make preview optional.
     $field = FieldConfig::loadByName('node', 'article', 'comment');
-    $field->setSetting('preview', DRUPAL_OPTIONAL);
+    $field->setSetting('preview', CommentItemInterface::PREVIEW_OPTIONAL);
     $field->save();
 
     // Allow anonymous users to search content.
@@ -249,7 +249,7 @@ class SearchCommentTest extends BrowserTestBase {
     // Create a node.
     // Make preview optional.
     $field = FieldConfig::loadByName('node', 'article', 'comment');
-    $field->setSetting('preview', DRUPAL_OPTIONAL);
+    $field->setSetting('preview', CommentItemInterface::PREVIEW_OPTIONAL);
     $field->save();
     $this->node = $this->drupalCreateNode(['type' => 'article']);
 

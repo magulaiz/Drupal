@@ -100,7 +100,7 @@ class LinkFieldTest extends BrowserTestBase {
       'field_storage' => $this->fieldStorage,
       'bundle' => 'entity_test',
       'settings' => [
-        'title' => DRUPAL_DISABLED,
+        'title' => LinkItemInterface::TITLE_DISABLED,
         'link_type' => LinkItemInterface::LINK_GENERIC,
       ],
     ]);
@@ -288,7 +288,7 @@ class LinkFieldTest extends BrowserTestBase {
       'bundle' => 'entity_test',
       'label' => 'Read more about this entity',
       'settings' => [
-        'title' => DRUPAL_OPTIONAL,
+        'title' => LinkItemInterface::TITLE_OPTIONAL,
         'link_type' => LinkItemInterface::LINK_GENERIC,
       ],
     ]);
@@ -312,7 +312,7 @@ class LinkFieldTest extends BrowserTestBase {
       ->save();
 
     // Verify that the link text field works according to the field setting.
-    foreach ([DRUPAL_DISABLED, DRUPAL_REQUIRED, DRUPAL_OPTIONAL] as $title_setting) {
+    foreach ([LinkItemInterface::TITLE_DISABLED, LinkItemInterface::TITLE_REQUIRED, LinkItemInterface::TITLE_OPTIONAL] as $title_setting) {
       // Update the link title field setting.
       $this->field->setSetting('title', $title_setting);
       $this->field->save();
@@ -324,7 +324,7 @@ class LinkFieldTest extends BrowserTestBase {
       $this->assertSession()->fieldValueEquals("{$field_name}[0][uri]", '');
       $this->assertSession()->responseContains('placeholder="http://example.com"');
 
-      if ($title_setting === DRUPAL_DISABLED) {
+      if ($title_setting === LinkItemInterface::TITLE_DISABLED) {
         $this->assertSession()->fieldNotExists("{$field_name}[0][title]");
         $this->assertSession()->responseNotContains('placeholder="Enter the text for this link"');
       }
@@ -332,7 +332,7 @@ class LinkFieldTest extends BrowserTestBase {
         $this->assertSession()->responseContains('placeholder="Enter the text for this link"');
 
         $this->assertSession()->fieldValueEquals("{$field_name}[0][title]", '');
-        if ($title_setting === DRUPAL_OPTIONAL) {
+        if ($title_setting === LinkItemInterface::TITLE_OPTIONAL) {
           // Verify that the URL is required, if the link text is non-empty.
           $edit = [
             "{$field_name}[0][title]" => 'Example',
@@ -340,7 +340,7 @@ class LinkFieldTest extends BrowserTestBase {
           $this->submitForm($edit, 'Save');
           $this->assertSession()->statusMessageContains('The URL field is required when the Link text field is specified.', 'error');
         }
-        if ($title_setting === DRUPAL_REQUIRED) {
+        if ($title_setting === LinkItemInterface::TITLE_REQUIRED) {
           // Verify that the link text is required, if the URL is non-empty.
           $edit = [
             "{$field_name}[0][uri]" => 'http://www.example.com',
@@ -414,7 +414,7 @@ class LinkFieldTest extends BrowserTestBase {
       'label' => 'Read more about this entity',
       'bundle' => 'entity_test',
       'settings' => [
-        'title' => DRUPAL_OPTIONAL,
+        'title' => LinkItemInterface::TITLE_OPTIONAL,
         'link_type' => LinkItemInterface::LINK_GENERIC,
       ],
     ])->save();
@@ -569,7 +569,7 @@ class LinkFieldTest extends BrowserTestBase {
       'label' => 'Read more about this entity',
       'bundle' => 'entity_test',
       'settings' => [
-        'title' => DRUPAL_OPTIONAL,
+        'title' => LinkItemInterface::TITLE_OPTIONAL,
         'link_type' => LinkItemInterface::LINK_GENERIC,
       ],
     ])->save();
@@ -749,7 +749,7 @@ class LinkFieldTest extends BrowserTestBase {
       'field_storage' => $this->fieldStorage,
       'bundle' => 'entity_test',
       'settings' => [
-        'title' => DRUPAL_OPTIONAL,
+        'title' => LinkItemInterface::TITLE_OPTIONAL,
         'link_type' => LinkItemInterface::LINK_GENERIC,
       ],
     ])->save();
@@ -880,7 +880,7 @@ class LinkFieldTest extends BrowserTestBase {
       'label' => 'Read more about this entity',
       'bundle' => 'entity_test',
       'settings' => [
-        'title' => DRUPAL_OPTIONAL,
+        'title' => LinkItemInterface::TITLE_OPTIONAL,
         'link_type' => $link_type,
       ],
     ])->save();
@@ -918,7 +918,7 @@ class LinkFieldTest extends BrowserTestBase {
       'label' => 'Read more about this entity',
       'bundle' => 'entity_test',
       'settings' => [
-        'title' => DRUPAL_OPTIONAL,
+        'title' => LinkItemInterface::TITLE_OPTIONAL,
       ],
     ])->save();
 
@@ -976,7 +976,7 @@ class LinkFieldTest extends BrowserTestBase {
       'label' => 'Read more about this entity',
       'bundle' => 'entity_test',
       'settings' => [
-        'title' => DRUPAL_OPTIONAL,
+        'title' => LinkItemInterface::TITLE_OPTIONAL,
         'link_type' => LinkItemInterface::LINK_INTERNAL,
       ],
     ])->save();
@@ -1085,7 +1085,7 @@ class LinkFieldTest extends BrowserTestBase {
       'label' => 'Link',
       'bundle' => 'entity_test',
       'settings' => [
-        'title' => DRUPAL_OPTIONAL,
+        'title' => LinkItemInterface::TITLE_OPTIONAL,
         'link_type' => LinkItemInterface::LINK_GENERIC,
       ],
     ])->save();

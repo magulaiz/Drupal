@@ -37,7 +37,7 @@ class LinkItem extends FieldItemBase implements LinkItemInterface {
    */
   public static function defaultFieldSettings() {
     return [
-      'title' => DRUPAL_OPTIONAL,
+      'title' => LinkItemInterface::TITLE_OPTIONAL,
       'link_type' => LinkItemInterface::LINK_GENERIC,
     ] + parent::defaultFieldSettings();
   }
@@ -109,9 +109,9 @@ class LinkItem extends FieldItemBase implements LinkItemInterface {
       '#title' => $this->t('Allow link text'),
       '#default_value' => $this->getSetting('title'),
       '#options' => [
-        DRUPAL_DISABLED => $this->t('Disabled'),
-        DRUPAL_OPTIONAL => $this->t('Optional'),
-        DRUPAL_REQUIRED => $this->t('Required'),
+        LinkItemInterface::TITLE_DISABLED => $this->t('Disabled'),
+        LinkItemInterface::TITLE_OPTIONAL => $this->t('Optional'),
+        LinkItemInterface::TITLE_REQUIRED => $this->t('Required'),
       ],
     ];
 
@@ -130,15 +130,15 @@ class LinkItem extends FieldItemBase implements LinkItemInterface {
       $domain_length = mt_rand(7, 15);
 
       switch ($field_definition->getSetting('title')) {
-        case DRUPAL_DISABLED:
+        case LinkItemInterface::TITLE_DISABLED:
           $values['title'] = '';
           break;
 
-        case DRUPAL_REQUIRED:
+        case LinkItemInterface::TITLE_REQUIRED:
           $values['title'] = $random->sentences(4);
           break;
 
-        case DRUPAL_OPTIONAL:
+        case LinkItemInterface::TITLE_OPTIONAL:
           // In case of optional title, randomize its generation.
           $values['title'] = mt_rand(0, 1) ? $random->sentences(4) : '';
           break;

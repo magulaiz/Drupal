@@ -148,7 +148,7 @@ class Shortcut extends ContentEntityBase implements ShortcutInterface {
       ->setRequired(TRUE)
       ->setSettings([
         'link_type' => LinkItemInterface::LINK_INTERNAL,
-        'title' => DRUPAL_DISABLED,
+        'title' => LinkItemInterface::TITLE_DISABLED,
       ])
       ->setDisplayOptions('form', [
         'type' => 'link_default',

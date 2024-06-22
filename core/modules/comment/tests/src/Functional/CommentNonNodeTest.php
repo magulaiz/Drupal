@@ -148,19 +148,19 @@ class CommentNonNodeTest extends BrowserTestBase {
       $edit += $contact;
     }
     switch ($preview_mode) {
-      case DRUPAL_REQUIRED:
+      case CommentItemInterface::PREVIEW_REQUIRED:
         // Preview required so no save button should be found.
         $this->assertSession()->buttonNotExists('Save');
         $this->submitForm($edit, 'Preview');
         // Don't break here so that we can test post-preview field presence and
         // function below.
-      case DRUPAL_OPTIONAL:
+      case CommentItemInterface::PREVIEW_OPTIONAL:
         $this->assertSession()->buttonExists('Preview');
         $this->assertSession()->buttonExists('Save');
         $this->submitForm($edit, 'Save');
         break;
 
-      case DRUPAL_DISABLED:
+      case CommentItemInterface::PREVIEW_DISABLED:
         $this->assertSession()->buttonNotExists('Preview');
         $this->assertSession()->buttonExists('Save');
         $this->submitForm($edit, 'Save');

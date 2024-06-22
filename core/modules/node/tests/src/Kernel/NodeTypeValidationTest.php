@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\node\Kernel;
 
+use Drupal\node\NodeTypeInterface;
 use Drupal\KernelTests\Core\Config\ConfigEntityValidationTestBase;
 use Drupal\Tests\node\Traits\ContentTypeCreationTrait;
 
@@ -49,9 +50,9 @@ class NodeTypeValidationTest extends ConfigEntityValidationTestBase {
     $this->assertValidationErrors(['preview_mode' => 'The value you selected is not a valid choice.']);
 
     $allowed_values = [
-      DRUPAL_DISABLED,
-      DRUPAL_OPTIONAL,
-      DRUPAL_REQUIRED,
+      NodeTypeInterface::PREVIEW_DISABLED,
+      NodeTypeInterface::PREVIEW_OPTIONAL,
+      NodeTypeInterface::PREVIEW_REQUIRED,
     ];
     foreach ($allowed_values as $allowed_value) {
       $this->entity->setPreviewMode($allowed_value);

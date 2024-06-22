@@ -25,6 +25,21 @@ interface LinkItemInterface extends FieldItemInterface {
   const LINK_GENERIC = 0x11;
 
   /**
+   * Specifies whether the title field is disabled.
+   */
+  const TITLE_DISABLED = 0;
+
+  /**
+   * Specifies whether the title field is optional.
+   */
+  const TITLE_OPTIONAL = 1;
+
+  /**
+   * Specifies whether the title field is required.
+   */
+  const TITLE_REQUIRED = 2;
+
+  /**
    * Determines if a link is external.
    *
    * @return bool

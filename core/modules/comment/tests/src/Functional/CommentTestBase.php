@@ -151,19 +151,19 @@ abstract class CommentTestBase extends BrowserTestBase {
       $edit += $contact;
     }
     switch ($preview_mode) {
-      case DRUPAL_REQUIRED:
+      case CommentItemInterface::PREVIEW_REQUIRED:
         // Preview required so no save button should be found.
         $this->assertSession()->buttonNotExists('Save');
         $this->submitForm($edit, 'Preview');
         // Don't break here so that we can test post-preview field presence and
         // function below.
-      case DRUPAL_OPTIONAL:
+      case CommentItemInterface::PREVIEW_OPTIONAL:
         $this->assertSession()->buttonExists('Preview');
         $this->assertSession()->buttonExists('Save');
         $this->submitForm($edit, 'Save');
         break;
 
-      case DRUPAL_DISABLED:
+      case CommentItemInterface::PREVIEW_DISABLED:
         $this->assertSession()->buttonNotExists('Preview');
         $this->assertSession()->buttonExists('Save');
         $this->submitForm($edit, 'Save');
@@ -262,22 +262,22 @@ abstract class CommentTestBase extends BrowserTestBase {
    * Sets the value governing the previewing mode for the comment form.
    *
    * @param int $mode
-   *   The preview mode: DRUPAL_DISABLED, DRUPAL_OPTIONAL or DRUPAL_REQUIRED.
+   *   The preview mode: CommentItemInterface::PREVIEW_DISABLED, CommentItemInterface::PREVIEW_OPTIONAL or CommentItemInterface::PREVIEW_REQUIRED.
    * @param string $field_name
    *   (optional) Field name through which the comment should be posted.
    *   Defaults to 'comment'.
    */
   public function setCommentPreview($mode, $field_name = 'comment') {
     switch ($mode) {
-      case DRUPAL_DISABLED:
+      case CommentItemInterface::PREVIEW_DISABLED:
         $mode_text = 'disabled';
         break;
 
-      case DRUPAL_OPTIONAL:
+      case CommentItemInterface::PREVIEW_OPTIONAL:
         $mode_text = 'optional';
         break;
 
-      case DRUPAL_REQUIRED:
+      case CommentItemInterface::PREVIEW_REQUIRED:
         $mode_text = 'required';
         break;
     }

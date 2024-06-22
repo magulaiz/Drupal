@@ -92,8 +92,8 @@ class LinkFieldUITest extends BrowserTestBase {
     // text.
     $cardinalities = [1, 2];
     $title_settings = [
-      DRUPAL_DISABLED,
-      DRUPAL_OPTIONAL,
+      LinkItemInterface::TITLE_DISABLED,
+      LinkItemInterface::TITLE_OPTIONAL,
     ];
     $link_types = [
       LinkItemInterface::LINK_EXTERNAL => 'https://example.com',

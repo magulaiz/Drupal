@@ -11,6 +11,21 @@ use Drupal\Core\Entity\RevisionableEntityBundleInterface;
 interface NodeTypeInterface extends ConfigEntityInterface, RevisionableEntityBundleInterface {
 
   /**
+   * Sets preview mode to disabled.
+   */
+  const PREVIEW_DISABLED = 0;
+
+  /**
+   * Sets preview mode to optional.
+   */
+  const PREVIEW_OPTIONAL = 1;
+
+  /**
+   * Sets preview mode to required.
+   */
+  const PREVIEW_REQUIRED = 2;
+
+  /**
    * Determines whether the node type is locked.
    *
    * @return string|false
@@ -46,7 +61,7 @@ interface NodeTypeInterface extends ConfigEntityInterface, RevisionableEntityBun
    * Gets the preview mode.
    *
    * @return int
-   *   DRUPAL_DISABLED, DRUPAL_OPTIONAL or DRUPAL_REQUIRED.
+   *   NodeTypeInterface::PREVIEW_DISABLED, NodeTypeInterface::PREVIEW_OPTIONAL or NodeTypeInterface::PREVIEW_REQUIRED.
    */
   public function getPreviewMode();
 
@@ -54,7 +69,7 @@ interface NodeTypeInterface extends ConfigEntityInterface, RevisionableEntityBun
    * Sets the preview mode.
    *
    * @param int $preview_mode
-   *   DRUPAL_DISABLED, DRUPAL_OPTIONAL or DRUPAL_REQUIRED.
+   *   NodeTypeInterface::PREVIEW_DISABLED, NodeTypeInterface::PREVIEW_OPTIONAL or NodeTypeInterface::PREVIEW_REQUIRED.
    */
   public function setPreviewMode($preview_mode);
 

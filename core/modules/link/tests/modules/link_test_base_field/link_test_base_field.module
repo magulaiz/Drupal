@@ -24,7 +24,7 @@ function link_test_base_field_entity_base_field_info(EntityTypeInterface $entity
       ->setRequired(FALSE)
       ->setSettings([
         'link_type' => LinkItemInterface::LINK_GENERIC,
-        'title' => DRUPAL_REQUIRED,
+        'title' => LinkItemInterface::TITLE_REQUIRED,
       ])
       ->setDisplayOptions('form', [
         'type' => 'link_default',

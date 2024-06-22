@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Drupal\Tests\comment\Functional;
 
 use Drupal\comment\CommentManagerInterface;
+use Drupal\comment\Plugin\Field\FieldType\CommentItemInterface;
 
 /**
  * Tests comments with node access.
@@ -55,7 +56,7 @@ class CommentNodeAccessTest extends CommentTestBase {
    */
   public function testThreadedCommentView(): void {
     // Set comments to have subject required and preview disabled.
-    $this->setCommentPreview(DRUPAL_DISABLED);
+    $this->setCommentPreview(CommentItemInterface::PREVIEW_DISABLED);
     $this->setCommentForm(TRUE);
     $this->setCommentSubject(TRUE);
     $this->setCommentSettings('default_mode', CommentManagerInterface::COMMENT_MODE_THREADED, 'Comment paging changed.');

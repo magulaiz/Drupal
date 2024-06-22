@@ -37,7 +37,7 @@ class CommentInterfaceTest extends CommentTestBase {
     $this->assertSession()->responseNotMatches('@<h2[^>]*>Comments</h2>@');
 
     // Set comments to have subject and preview disabled.
-    $this->setCommentPreview(DRUPAL_DISABLED);
+    $this->setCommentPreview(CommentItemInterface::PREVIEW_DISABLED);
     $this->setCommentForm(TRUE);
     $this->setCommentSubject(FALSE);
     $this->setCommentSettings('default_mode', CommentManagerInterface::COMMENT_MODE_THREADED, 'Comment paging changed.');
@@ -65,7 +65,7 @@ class CommentInterfaceTest extends CommentTestBase {
     // Set comments to have subject and preview to required.
     $this->drupalLogout();
     $this->setCommentSubject(TRUE);
-    $this->setCommentPreview(DRUPAL_REQUIRED);
+    $this->setCommentPreview(CommentItemInterface::PREVIEW_REQUIRED);
 
     // Create comment #2 that allows subject and requires preview.
     $this->drupalLogin($this->webUser);
@@ -92,7 +92,7 @@ class CommentInterfaceTest extends CommentTestBase {
     $this->drupalLogout();
     $this->drupalLogin($this->adminUser);
     $this->setCommentSubject(TRUE);
-    $this->setCommentPreview(DRUPAL_OPTIONAL);
+    $this->setCommentPreview(CommentItemInterface::PREVIEW_OPTIONAL);
 
     $this->drupalGet('comment/' . $comment->id() . '/edit');
     $this->assertSession()->titleEquals('Edit comment ' . $comment->getSubject() . ' | Drupal');
