@@ -944,4 +944,4 @@ popover.polyfill:
     url: https://raw.githubusercontent.com/oddbird/popover-polyfill/v0.2.2/LICENSE
     gpl-compatible: true
   js:
-    assets/vendor/oddbird/popover-polyfill/popover.iife.min.js: {}
+    assets/vendor/@oddbird/popover-polyfill/popover.iife.min.js: {}
