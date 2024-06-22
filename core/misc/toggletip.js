@@ -5,16 +5,13 @@
  */
 // cspell:ignore UIDOM Wolfson
 
-((Drupal) => {
+((Drupal, { computePosition }) => {
   // Keeps track of generated ids to ensure no duplicates are created.
   const toggletipIds = new Set();
   Drupal.toggletip = {
     defaultConfig: {
       atDescription: '',
       offset: 24,
-      positionOffsetPrimary: 0,
-      positionOffsetSecondary: 0,
-      shiftPadding: 5,
     },
   };
 
@@ -82,48 +79,15 @@
     return lineHeight;
   };
 
-  const placeButton = (button, config) => {
-    const { offsetHeight, offsetWidth } = button;
-    const places = config.place.split('-');
-
-    const mainPosition = {
-      left: {
-        style: 'inset-inline-start',
-        offset: 0 - offsetWidth * 1.5 - config.offset / 4,
-      },
-      right: {
-        style: 'inset-inline-end',
-        offset: 0 - offsetWidth * 1.5 - config.offset / 4,
-      },
-      top: { style: 'inset-block-start', offset: 0 - offsetHeight },
-      bottom: { style: 'inset-block-end', offset: 0 - offsetHeight },
-    }[places[0]];
-
-    button.style[mainPosition.style] = `${mainPosition.offset}px`;
-
-    if (places[1]) {
-      const secondaryPosition = {
-        start: ['left', 'right'].includes(places[0])
-          ? { style: 'inset-block-start', offset: 0 }
-          : {
-              style: 'inset-inline-start',
-              offset: 0 - offsetWidth / 2,
-            },
-        end: ['left', 'right'].includes(places[0])
-          ? { style: 'inset-block-end', offset: 0 }
-          : { style: 'inset-inline-end', offset: 0 - offsetWidth / 2 },
-      }[places[1]];
-      button.style[secondaryPosition.style] = `${secondaryPosition.offset}px`;
-    } else {
-      const properties = ['left', 'right'].includes(places[0])
-        ? { start: 'top', end: 'bottom' }
-        : { start: 'left', end: 'right' };
-
-      button.style[`margin-${properties.start}`] = 'auto';
-      button.style[`margin-${properties.end}`] = 'auto';
-      button.style[properties.start] = '0';
-      button.style[properties.end] = '0';
-    }
+  const placeButton = (button, tipElement) => {
+    computePosition(tipElement, button, {
+      placement: button.dataset.drupalToggletipPositioned,
+    }).then(({x, y}) => {
+      Object.assign(button.style, {
+        left: `${x}px`,
+        top: `${y}px`,
+      });
+    });
   };
 
   /**
@@ -241,7 +205,11 @@
               'data-drupal-toggletip-position',
               config.place,
             );
-            placeButton(button, config);
+            button.setAttribute(
+              'data-drupal-toggletip-positioned',
+              config.place,
+            );
+            placeButton(button, tipElement, config);
           }
 
           Drupal.behaviors.tip.attach(tipElement);
@@ -276,4 +244,4 @@
     button.setAttribute('popovertarget', tipId);
     return button;
   };
-})(Drupal);
+})(Drupal, window.FloatingUIDOM);

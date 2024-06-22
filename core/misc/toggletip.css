@@ -2,7 +2,11 @@
   position: relative;
 }
 
-:where([data-drupal-toggletip-position] [data-drupal-tip-toggle-button]) {
+[data-drupal-tip-toggle-button]:not([data-drupal-toggletip-positioned]) {
+  margin-inline: 0.75rem;
+}
+
+[data-drupal-toggletip-positioned] {
   position: absolute;
 }
 
@@ -16,7 +20,6 @@
   background: #fff;
   box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.1);
   font-size: 1rem;
-  margin-inline: 0.75rem;
   padding-inline: 3.5px;
   padding-block: 3px;
 }
