@@ -6,9 +6,9 @@
   border: 1px solid #d3d4d9;
   border-radius: 100%;
   background: #fff;
-  box-shadow: 0 .125rem .25rem rgba(0, 0, 0, 0.1);
+  box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.1);
   font-size: 1rem;
-  margin-inline: .75rem;
+  margin-inline: 0.75rem;
   padding-inline: 3.5px;
   padding-block: 3px;
 }
@@ -31,5 +31,5 @@
   }
 }
 .js-form-item-textarea .toggletip__toggle {
-  top: auto!important;
+  top: auto !important;
 }

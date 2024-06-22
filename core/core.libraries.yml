@@ -906,17 +906,6 @@ drupal.tip:
     - core/internal.floating-ui
     - core/popover.polyfill
 
-internal.floating-ui:
-  remote: https://github.com/floating-ui/floating-ui
-  version: "1.1.1"
-  license:
-    name: MIT
-    url: https://github.com/floating-ui/floating-ui/blob/v2.11.6/LICENSE
-    gpl-compatible: true
-  js:
-    assets/vendor/floating-ui/floating-ui.core.umd.js: { minified: true }
-    assets/vendor/floating-ui/floating-ui.dom.umd.js: { minified: true }
-
 js-cookie:
   remote: https://github.com/js-cookie/js-cookie
   version: "3.0.5"
