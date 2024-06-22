@@ -184,6 +184,10 @@
             config,
           );
 
+          const isFormElement = tipElement.hasAttribute(
+            'data-drupal-toggletip-form-element',
+          );
+
           // When a toggletip option is directly added to a details element, the
           // button is appended to its summary. To add a toggletip inside a
           // details element, add it to a child render array.
@@ -193,9 +197,7 @@
           ) {
             const summary = tipElement.querySelector('summary');
             summary.append(button);
-          } else if (
-            tipElement.hasAttribute('data-drupal-toggletip-form-element')
-          ) {
+          } else if (isFormElement) {
             // If a toggletip is attached to a form element, the button should
             // append to that element's label.
             const label = tipElement
@@ -214,7 +216,7 @@
           // centered.
           const elementLineHeight = getLineHeight(tipElement);
 
-          if (elementLineHeight > button.offsetHeight && !config.place) {
+          if (!isFormElement && elementLineHeight > button.offsetHeight && !config.place) {
             // If the element receiving the toggle button has a larger line
             // height than the toggle button, vertically position the button
             // based on the element's line height. This ensures vertical

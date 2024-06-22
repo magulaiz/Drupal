@@ -1,5 +1,4 @@
 .tip {
-  display: inline-flex;
   width: max-content;
   max-width: 50rem;
   margin: 0;
@@ -25,8 +24,8 @@
 .tip__arrow {
   position: absolute;
   z-index: 1;
-  width: 8px;
-  height: 8px;
+  width: 0.5rem;
+  height: 0.5rem;
   transform: rotate(45deg);
   background: #222;
 }

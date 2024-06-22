@@ -17,19 +17,6 @@
   cursor: pointer;
 }
 
-.form-item__label[for] {
+.form-item__label:has(+ .toggletip__toggle) {
   display: inline-block;
-}
-@media (min-width: 31.25rem) {
-  [type="text"] {
-    display: flex;
-    width: auto;
-  }
-  [type="textarea"] {
-    display: flex;
-    width: auto;
-  }
-}
-.js-form-item-textarea .toggletip__toggle {
-  top: auto !important;
 }
