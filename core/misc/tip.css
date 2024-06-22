@@ -1,3 +1,8 @@
+/**
+ * @file
+ * Tips
+ */
+
 .tip {
   position: fixed;
   right: auto;
@@ -5,23 +10,11 @@
   width: max-content;
   max-width: min(50rem, calc(100vw - var(--drupal-displace-offset-left, 0px) - var(--drupal-displace-offset-right, 0px)));
   margin: 0;
-  padding: 0.25rem 1rem 0.375rem;
-  opacity: 0.9;
-  color: white;
-  border-radius: 0.125rem;
-  background: #232429;
-  font-size: 0.875rem;
-  font-weight: 400;
+  background-color: #fff;
 }
 
 [data-drupal-tip][popover] {
   overflow: visible;
-  border: none;
-}
-
-.tip a,
-.tip .link {
-  color: #ffd23f;
 }
 
 .tip__arrow {
@@ -30,5 +23,4 @@
   width: 0.5rem;
   height: 0.5rem;
   transform: rotate(45deg);
-  background: #222;
 }

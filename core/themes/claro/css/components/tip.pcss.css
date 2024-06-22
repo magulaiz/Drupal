@@ -1,6 +1,10 @@
 /**
  * @file
- * Tip
+ * Replacement styles for tip.
+ *
+ * Replaces core's tip.css.
+ *
+ * @see tip.js
  */
 
 .tip {
@@ -12,7 +16,6 @@
   background: #232429;
   font-size: 0.875rem;
   font-weight: 400;
-  line-height: var(--line-height-base); /* Override for olivero specific styling. */
 
   a,
   .link {

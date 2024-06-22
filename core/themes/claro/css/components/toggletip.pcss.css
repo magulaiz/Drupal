@@ -1,6 +1,10 @@
 /**
  * @file
- * Toggletips
+ * Replacement styles for toggletip.
+ *
+ * Replaces core's toggletip.css.
+ *
+ * @see toggletip.js
  */
 
 .toggletip {

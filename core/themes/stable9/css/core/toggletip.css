@@ -3,43 +3,27 @@
  * Toggletips
  */
 
-.toggletip__tip {
-  width: max-content;
-  max-width: 800px;
-  margin: 0;
-  padding: 4px 16px 6px;
-  opacity: 0.9;
-  color: white;
-  border-radius: 2px;
-  background: #232429;
-  font-size: 14px;
-  font-weight: 400;
+[data-drupal-toggletip-position] {
+  position: relative;
 }
 
-[data-drupal-toggletip-tip][popover] {
-  overflow: visible;
-  border: none;
+[data-drupal-tip-toggle-button]:not([data-drupal-toggletip-positioned]) {
+  margin-inline: 0.75rem;
 }
 
-.toggletip__tip a,
-.toggletip__tip .link {
-  color: #ffd23f;
+[data-drupal-toggletip-positioned] {
+  position: absolute;
 }
 
 .toggletip {
-  width: 24px;
-  height: 24px;
-  color: #55565b;
-  border: 1px solid #d3d4d9;
-  border-radius: 100%;
-  background: #fff;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  display: inline-flex;
   font-size: 1rem;
-  margin-inline: 12px;
-  padding-inline: 3.5px;
-  padding-block: 3px;
 }
 
 .toggletip:hover {
   cursor: pointer;
+}
+
+.form-item__label:has(+ .toggletip) {
+  display: inline-block;
 }

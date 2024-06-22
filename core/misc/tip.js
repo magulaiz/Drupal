@@ -8,7 +8,7 @@
 ((
   Drupal,
   displace,
-  { computePosition, flip, shift, offset, autoUpdate, arrow, size },
+  { computePosition, flip, shift, offset, autoUpdate, arrow },
 ) => {
   Drupal.tip = {
     defaultConfig: {
