@@ -23,6 +23,7 @@ use Drupal\migrate\Plugin\MigrationInterface;
  * Tests events fired on migrations.
  *
  * @group migrate
+ * @runTestsInSeparateProcesses
  */
 class MigrateEventsTest extends KernelTestBase {
 
@@ -156,7 +157,7 @@ class MigrateEventsTest extends KernelTestBase {
 
     $event = $this->state->get('migrate_events_test.import_failed_event', []);
     $this->assertSame(MigrateEvents::IMPORT_FAILED, $event['event_name']);
-    $this->assertSame($exception, ($event['exception']) ? get_class($event['exception']) : $event['exception']);
+    $this->assertSame($exception, $event['exception']);
   }
 
   /**
@@ -350,7 +351,7 @@ class MigrateEventsTest extends KernelTestBase {
 
     $event = $this->state->get('migrate_events_test.row_skipped_event', []);
     $this->assertSame($event['event_name'], MigrateEvents::ROW_SKIPPED);
-    $this->assertSame(MigrateSkipRowException::class, get_class($event['exception']));
+    $this->assertSame(MigrateSkipRowException::class, $event['exception']);
   }
 
   /**
@@ -460,7 +461,7 @@ class MigrateEventsTest extends KernelTestBase {
     $this->state->set('migrate_events_test.import_failed_event', [
       'event_name' => $name,
       'migration' => $event->getMigration(),
-      'exception' => $event->getException(),
+      'exception' => $event->getException() ? get_class($event->getException()) : $event->getException(),
     ]);
   }
 
@@ -476,7 +477,7 @@ class MigrateEventsTest extends KernelTestBase {
     $this->state->set('migrate_events_test.row_skipped_event', [
       'event_name' => $name,
       'migration' => $event->getMigration(),
-      'exception' => $event->getException(),
+      'exception' => get_class($event->getException()),
       'row' => $event->getRow(),
     ]);
   }
