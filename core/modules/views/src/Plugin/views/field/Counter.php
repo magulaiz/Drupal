@@ -20,7 +20,7 @@ class Counter extends FieldPluginBase {
    * {@inheritdoc}
    */
   public function render(ResultRow $row) {
-    return parent::render($row);
+    return $this->getValue($row);
   }
 
   /**
