@@ -146,6 +146,7 @@ const assetsFolder = `${coreFolder}/assets/vendor`;
           to: 'popover.iife.min.js.map',
         },
       ],
+      folder: 'oddbird/popover-polyfill',
     },
     {
       pack: 'jquery-ui',
