@@ -1780,12 +1780,12 @@ function _system_update_get_timestamp_fields(): array {
         foreach (array_keys($fields) as $field_name) {
           $items[] = [$entity_type_id, $field_name];
         }
+        // Clear the cache for this entity.
+        $storage->resetCache();
       }
     }
   }
 
-  // Clear the cache for the affected entities.
-  \Drupal::entityTypeManager()->getStorage($entity_type_id)->resetCache(array_unique($entities));
   return $items;
 }
 
