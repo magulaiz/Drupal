@@ -336,5 +336,4 @@ class MediaLibraryTest extends WebDriverTestBase {
     $this->assertNotEmpty($element);
   }
 
-
 }
