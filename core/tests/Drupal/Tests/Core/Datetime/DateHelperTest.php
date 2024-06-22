@@ -31,6 +31,7 @@ class DateHelperTest extends UnitTestCase {
     $container = new ContainerBuilder();
     $config = ['system.date' => ['first_day' => 'Sunday']];
     $container->set('config.factory', $this->getConfigFactoryStub($config));
+    $container->set('string_translation', $this->getStringTranslationStub());
 
     $this->languageManager = $this->createMock('\Drupal\Core\Language\LanguageManagerInterface');
     $language = new Language(['langcode' => 'en']);
