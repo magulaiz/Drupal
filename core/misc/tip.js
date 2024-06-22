@@ -8,10 +8,11 @@
 ((
   Drupal,
   displace,
-  { computePosition, flip, shift, offset, autoUpdate, arrow },
+  { computePosition, flip, shift, offset, autoUpdate, arrow, size },
 ) => {
   Drupal.tip = {
     defaultConfig: {
+      arrowPadding: 5,
       placement: 'top-end',
       offset: 24,
       shiftPadding: 5,
@@ -54,8 +55,17 @@
         tipTrigger.after(tip);
 
         const updatePosition = () => {
-          displace();
+          // This is kind of Virtual Element for shift middleware.
+          const adjustedOffsets = Object.entries(displace.offsets).reduce(
+            (acc, [key, value]) => {
+              acc[key] = value + config.shiftPadding;
+              return acc;
+            },
+            {},
+          );
+
           computePosition(tipTrigger, tip, {
+            strategy: 'fixed',
             placement: config.placement,
             middleware: [
               offset(config.offset),
@@ -63,37 +73,16 @@
               // under the toolbar.
               flip({
                 padding: {
-                  top: displace.offsets.top
-                    ? displace.offsets.top + config.offset
-                    : 0,
+                  top: displace.offsets.top,
                 },
-                crossAxis: false,
               }),
-              shift({ padding: config.shiftPadding }),
-              arrow({ element: tipArrow }),
+              shift({ padding: { ...adjustedOffsets } }),
+              arrow({ element: tipArrow, padding: config.arrowPadding }),
             ],
-            // eslint-disable-next-line max-nested-callbacks
           }).then(({ x, y, placement, middlewareData }) => {
-            // Position the tip.
-            const { left } = displace.offsets;
-
-            // If the default X position is less than the left offset, the x position
-            // should begin at the left offset.
-            let offsetX = x < left ? left : x;
-
-            // If the default X position is less than 0, then just add the
-            // offset.
-            if (x < 0) {
-              offsetX = left + x;
-            }
-            const { marginLeft, marginRight } = getComputedStyle(tip);
-            const marginOffset =
-              parseInt(marginLeft.replace(/\D/g, ''), 10) +
-              parseInt(marginRight.replace(/\D/g, ''), 10);
             Object.assign(tip.style, {
-              left: `${offsetX}px`,
+              left: `${x}px`,
               top: `${y}px`,
-              position: 'absolute',
             });
 
             // Use middleware to dynamically position the arrow.
@@ -107,18 +96,9 @@
               left: 'right',
             }[placement.split('-')[0]];
 
-            let offsetArrowX = arrowX - marginOffset / 2;
-
-            if (offsetX !== x) {
-              const addToOffset = x > 0 && arrowX > left ? x : 0;
-              offsetArrowX = Math.abs(arrowX - left) + addToOffset;
-            }
-
             Object.assign(tipArrow.style, {
-              left: arrowX != null ? `${offsetArrowX}px` : '',
+              left: arrowX != null ? `${arrowX}px` : '',
               top: arrowY != null ? `${arrowY}px` : '',
-              right: '',
-              bottom: '',
               [staticSide]: '-4px',
             });
           });

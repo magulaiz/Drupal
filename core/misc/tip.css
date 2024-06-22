@@ -1,4 +1,6 @@
 .tip {
+  position: fixed;
+  right: auto;
   box-sizing: border-box;
   width: max-content;
   max-width: min(50rem, calc(100vw - var(--drupal-displace-offset-left, 0px) - var(--drupal-displace-offset-right, 0px)));

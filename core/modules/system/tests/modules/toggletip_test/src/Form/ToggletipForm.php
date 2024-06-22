@@ -257,10 +257,15 @@ class ToggletipForm extends FormBase {
         '#allowed_tags' => ['button'],
         '#markup' => '<button data-drupal-tip-toggle-button="Tooltip Text" data-drupal-tip-placement="bottom" type="button" popoverTarget="very_very_unique_id">And this places tooltip on bottom</button>',
       ],
+      'a_trigger_with_placement_right_end' => [
+        '#type' => 'container',
+        '#allowed_tags' => ['button'],
+        '#markup' => '<button data-drupal-tip-toggle-button="Tooltip Text" data-drupal-tip-placement="right-end" type="button" popoverTarget="very_very_very_unique_id">And this places tooltip on right-end</button>',
+      ],
       'a_trigger_with_hover' => [
         '#type' => 'container',
         '#allowed_tags' => ['button'],
-        '#markup' => '<button data-drupal-tip-toggle-button="Tooltip Text" data-drupal-tip-on-hover="true" type="button" popoverTarget="very_very_very_unique_id">And this one also works on hover</button>',
+        '#markup' => '<button data-drupal-tip-toggle-button="Tooltip Text" data-drupal-tip-on-hover="true" type="button" popoverTarget="very_very_very_very_unique_id">And this one also works on hover</button>',
       ],
     ];
   }

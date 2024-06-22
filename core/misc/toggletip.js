@@ -207,8 +207,6 @@
             tipElement.append(button);
           }
 
-          Drupal.behaviors.tip.attach(tipElement);
-
           // Determine the line height so the toggle button can be vertically
           // centered.
           const elementLineHeight = getLineHeight(tipElement);
@@ -245,6 +243,8 @@
             );
             placeButton(button, config);
           }
+
+          Drupal.behaviors.tip.attach(tipElement);
         },
       );
     },
