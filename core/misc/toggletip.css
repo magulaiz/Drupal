@@ -1,3 +1,11 @@
+[data-drupal-toggletip-position] {
+  position: relative;
+}
+
+:where([data-drupal-toggletip-position] [data-drupal-tip-toggle-button]) {
+  position: absolute;
+}
+
 .toggletip {
   display: inline-flex;
   width: 1.5rem;

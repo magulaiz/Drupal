@@ -82,10 +82,8 @@
     return lineHeight;
   };
 
-  const placeButton = (button, tipElement, config) => {
+  const placeButton = (button, config) => {
     const { offsetHeight, offsetWidth } = button;
-    tipElement.style.position = 'relative';
-    button.style.position = 'absolute';
     const places = config.place.split('-');
 
     const mainPosition = {
@@ -241,7 +239,11 @@
           // string into styles that place the toggle button in the expected
           // position.
           if (config.place) {
-            placeButton(button, tipElement, config);
+            tipElement.setAttribute(
+              'data-drupal-toggletip-position',
+              config.place,
+            );
+            placeButton(button, config);
           }
         },
       );

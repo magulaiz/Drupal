@@ -53,8 +53,7 @@
 
         tipTrigger.after(tip);
 
-        // Position the toggletip.
-        autoUpdate(tipTrigger, tip, () => {
+        const updatePosition = () => {
           displace();
           computePosition(tipTrigger, tip, {
             placement: config.placement,
@@ -76,7 +75,7 @@
             // eslint-disable-next-line max-nested-callbacks
           }).then(({ x, y, placement, middlewareData }) => {
             // Position the tip.
-            const { left, right } = displace.offsets;
+            const { left } = displace.offsets;
 
             // If the default X position is less than the left offset, the x position
             // should begin at the left offset.
@@ -95,18 +94,6 @@
               left: `${offsetX}px`,
               top: `${y}px`,
               position: 'absolute',
-              width:
-                left || right
-                  ? `${
-                      document.body.offsetWidth -
-                      // Subtract right because right offset does not change
-                      // the body offset width.
-                      right -
-                      config.offset -
-                      config.shiftPadding -
-                      marginOffset
-                    }px`
-                  : 'auto',
             });
 
             // Use middleware to dynamically position the arrow.
@@ -135,7 +122,18 @@
               [staticSide]: '-4px',
             });
           });
+        };
+
+        updatePosition();
+
+        // Position the toggletip.
+        autoUpdate(tipTrigger, tip, updatePosition, {
+          elementResize: false,
         });
+
+        // We better will update position on popover toggle
+        // instead of resize tip resize observer.
+        tip.addEventListener('toggle', updatePosition);
       });
     },
   };
