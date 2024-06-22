@@ -38,8 +38,8 @@
           config.placement = tipTrigger.dataset.drupalTipPlacement;
         }
 
-        // [data-drupal-tooltip-on-hover]
-        if (tipTrigger?.dataset?.drupalTooltipOnHover) {
+        // [data-drupal-tip-on-hover]
+        if (tipTrigger?.dataset?.drupalTipOnHover) {
           tipTrigger.addEventListener('mouseenter', () => {
             tip.showPopover();
           });

@@ -260,7 +260,7 @@ class ToggletipForm extends FormBase {
       'a_trigger_with_hover' => [
         '#type' => 'container',
         '#allowed_tags' => ['button'],
-        '#markup' => '<button data-drupal-tip-toggle-button="Tooltip Text" data-drupal-tip-on-hover="true" type="button" popoverTarget="very_very_very_unique_id">And this one works on hover</button>',
+        '#markup' => '<button data-drupal-tip-toggle-button="Tooltip Text" data-drupal-tip-on-hover="true" type="button" popoverTarget="very_very_very_unique_id">And this one also works on hover</button>',
       ],
     ];
   }
