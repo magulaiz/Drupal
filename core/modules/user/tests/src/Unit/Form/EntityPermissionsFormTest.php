@@ -24,6 +24,7 @@ use Symfony\Component\Routing\Route;
  *
  * @coversDefaultClass \Drupal\user\Form\EntityPermissionsForm
  * @group user
+ * @gropu legacy
  */
 class EntityPermissionsFormTest extends UnitTestCase {
 
@@ -91,6 +92,7 @@ class EntityPermissionsFormTest extends UnitTestCase {
       ->willReturn('node.type.article');
     $bundle = $prophecy->reveal();
 
+    // @phpstan-ignore-next-line
     $access_actual = $bundle_form->access($route, $route_match, $bundle);
     $this->assertEquals($found ? AccessResult::allowed() : AccessResult::neutral(), $access_actual);
   }
