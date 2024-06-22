@@ -945,6 +945,3 @@ popover.polyfill:
     gpl-compatible: true
   js:
     assets/vendor/oddbird/popover-polyfill/popover.iife.min.js: {}
-  css:
-    component:
-      assets/vendor/oddbird/popover-polyfill/popover.css: {}

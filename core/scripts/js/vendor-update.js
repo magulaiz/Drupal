@@ -145,7 +145,6 @@ const assetsFolder = `${coreFolder}/assets/vendor`;
           from: 'dist/popover.iife.min.js.map',
           to: 'popover.iife.min.js.map',
         },
-        { from: 'dist/popover.css', to: 'popover.css' },
       ],
     },
     {
