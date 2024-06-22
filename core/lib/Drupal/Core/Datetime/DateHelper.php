@@ -533,7 +533,7 @@ class DateHelper {
     if (!$date->hasErrors()) {
       $dow = self::dayOfWeek($date);
       $days = $abbr ? self::weekDaysAbbr() : self::weekDays();
-      return $days[$dow]->getUntranslatedString();
+      return $days[$dow];
     }
     return NULL;
   }
