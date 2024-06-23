@@ -24,7 +24,7 @@ use Drupal\user\UserInterface;
         "NotNull" => [],
       ]
     ),
-  ]
+  ],
 )]
 class TestContextAwareBlock extends BlockBase {
 
