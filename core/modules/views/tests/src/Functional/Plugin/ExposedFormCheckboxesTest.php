@@ -83,8 +83,11 @@ class ExposedFormCheckboxesTest extends ViewTestBase {
 
   /**
    * Tests overriding the default render option with checkboxes.
+   *
+   * @group legacy
    */
   public function testExposedFormRenderCheckboxes(): void {
+    $this->expectDeprecation("The 'vid' key in 'views.filter.taxonomy_index_tid' config schema is deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. Update your view to use the 'vids' key instead. See https://www.drupal.org/node/3162414");
     // Use a test theme to convert multi-select elements into checkboxes.
     \Drupal::service('theme_installer')->install(['views_test_checkboxes_theme']);
     $this->config('system.theme')
@@ -116,8 +119,11 @@ class ExposedFormCheckboxesTest extends ViewTestBase {
 
   /**
    * Tests that "is all of" filters work with checkboxes.
+   *
+   * @group legacy
    */
   public function testExposedIsAllOfFilter(): void {
+    $this->expectDeprecation("The 'vid' key in 'views.filter.taxonomy_index_tid' config schema is deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. Update your view to use the 'vids' key instead. See https://www.drupal.org/node/3162414");
     foreach (['Term 1', 'Term 2', 'Term 3'] as $term_name) {
       // Add a few terms to the new vocabulary.
       $term = Term::create([
