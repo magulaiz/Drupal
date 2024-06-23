@@ -29,7 +29,7 @@ class OEmbedIframeControllerTest extends MediaKernelTestBase {
    *
    * @return array
    */
-  public static function providerBadHashParameter() {
+  public static function providerBadHashParameter(): array {
     return [
       'no hash' => [
         '',

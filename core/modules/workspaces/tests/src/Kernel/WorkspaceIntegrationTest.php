@@ -758,7 +758,7 @@ class WorkspaceIntegrationTest extends KernelTestBase {
   /**
    * Data provider for allowed entity CRUD operations.
    */
-  public static function providerTestAllowedEntityCrudInNonDefaultWorkspace() {
+  public static function providerTestAllowedEntityCrudInNonDefaultWorkspace(): array {
     return [
       'workspace-provided non-internal entity type' => [
         'entity_type_id' => 'workspace',

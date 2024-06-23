@@ -52,7 +52,7 @@ class FormattableMarkupKernelTest extends KernelTestBase {
   /**
    * @return array
    */
-  public static function providerTestFormattableMarkupUri() {
+  public static function providerTestFormattableMarkupUri(): array {
     $data = [];
     $data['routed-url'] = [
       'Hey giraffe <a href=":url">MUUUH</a>',
@@ -114,7 +114,7 @@ class FormattableMarkupKernelTest extends KernelTestBase {
   /**
    * @return array
    */
-  public static function providerTestFormattableMarkupUriWithException() {
+  public static function providerTestFormattableMarkupUriWithException(): array {
     $data = [];
     $data['js-protocol'] = [
       'Hey giraffe <a href=":url">MUUUH</a>',

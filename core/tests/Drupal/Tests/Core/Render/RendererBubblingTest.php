@@ -148,7 +148,7 @@ class RendererBubblingTest extends RendererTestBase {
     $this->assertRenderCacheItem($element['#cache']['keys'], $expected_cache_item);
   }
 
-  public static function providerTestContextBubblingEdgeCases() {
+  public static function providerTestContextBubblingEdgeCases(): array {
     $data = [];
 
     // Cache contexts of inaccessible children aren't bubbled (because those
@@ -501,7 +501,7 @@ class RendererBubblingTest extends RendererTestBase {
    *
    * @return array
    */
-  public static function providerTestBubblingWithPrerender() {
+  public static function providerTestBubblingWithPrerender(): array {
     $data = [];
 
     // Test element without theme.

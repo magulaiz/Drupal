@@ -53,7 +53,7 @@ class NodeMigrationTypePluginAlterTest extends MigrateTestBase {
   /**
    * Data provider for testMigrationPluginAlter().
    */
-  public static function providerMigrationPluginAlter() {
+  public static function providerMigrationPluginAlter(): array {
     $tests = [];
 
     $migrations = [

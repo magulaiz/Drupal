@@ -79,7 +79,7 @@ class QueryBatchTest extends KernelTestBase {
   /**
    * {@inheritdoc}
    */
-  public static function queryDataProvider() {
+  public static function queryDataProvider(): array {
     // Define the parameters for building the data array. The first element is
     // the number of source data rows, the second is the batch size to set on
     // the plugin configuration.

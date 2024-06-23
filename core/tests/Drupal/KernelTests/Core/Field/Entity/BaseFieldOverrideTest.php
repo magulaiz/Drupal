@@ -54,7 +54,7 @@ class BaseFieldOverrideTest extends KernelTestBase {
   /**
    * Test cases for ::testGetClass.
    */
-  public static function getClassTestCases() {
+  public static function getClassTestCases(): array {
     return [
       'String (default class)' => [
         'string',

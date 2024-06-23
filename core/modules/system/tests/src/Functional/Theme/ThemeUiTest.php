@@ -213,7 +213,7 @@ class ThemeUiTest extends BrowserTestBase {
    *   An array of arrays. Details on the specific elements can be found in the
    *   function body.
    */
-  public static function providerTestThemeInstallWithModuleDependencies() {
+  public static function providerTestThemeInstallWithModuleDependencies(): array {
     // Data provider values with the following keys:
     // -'theme_name': The name of the theme being tested.
     // -'first_modules': Array of module machine names to enable first.

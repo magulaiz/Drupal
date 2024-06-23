@@ -86,7 +86,7 @@ class SubProcessTest extends MigrateProcessTestCase {
   /**
    * Data provider for testSubProcess().
    */
-  public static function providerTestSubProcess() {
+  public static function providerTestSubProcess(): array {
     return [
       'no source context' => [
         'process_configuration' => [
@@ -173,7 +173,7 @@ class SubProcessTest extends MigrateProcessTestCase {
   /**
    * Data provider for testNotFoundSubProcess().
    */
-  public static function providerTestNotFoundSubProcess() {
+  public static function providerTestNotFoundSubProcess(): array {
     return [
       'no key' => [
         'process_configuration' => [
@@ -210,7 +210,7 @@ class SubProcessTest extends MigrateProcessTestCase {
   /**
    * Data provider for testSourceNotArray().
    */
-  public static function providerTestSourceNotArray() {
+  public static function providerTestSourceNotArray(): array {
     return [
       'strings cannot be subprocess items' => [
         ['strings', 'cannot', 'be', 'children'],

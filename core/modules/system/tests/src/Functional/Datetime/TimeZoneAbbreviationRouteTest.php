@@ -66,7 +66,7 @@ class TimeZoneAbbreviationRouteTest extends BrowserTestBase {
    * @return array
    *   Test scenarios.
    */
-  public static function providerAbbreviationConversion() {
+  public static function providerAbbreviationConversion(): array {
     return [
       'valid, default offset' => [
         'CST/0/0',

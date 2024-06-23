@@ -39,7 +39,7 @@ class TaxonomyLocalTasksTest extends LocalTaskIntegrationTestBase {
   /**
    * Provides a list of routes to test.
    */
-  public static function getTaxonomyPageRoutes() {
+  public static function getTaxonomyPageRoutes(): array {
     return [
       ['entity.taxonomy_term.canonical'],
       ['entity.taxonomy_term.edit_form'],

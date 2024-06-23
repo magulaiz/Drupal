@@ -103,7 +103,7 @@ class CounterTest extends UnitTestCase {
    * @return array
    *   Returns an array of row index to test.
    */
-  public static function providerRowIndexes() {
+  public static function providerRowIndexes(): array {
     return [
       [0],
       [1],

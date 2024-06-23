@@ -77,7 +77,7 @@ class OffCanvasDialogTest extends BrowserTestBase {
    *
    * @return array
    */
-  public static function dialogPosition() {
+  public static function dialogPosition(): array {
     return [
       [NULL],
       ['side'],

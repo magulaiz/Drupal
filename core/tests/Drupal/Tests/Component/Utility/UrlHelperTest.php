@@ -19,7 +19,7 @@ class UrlHelperTest extends TestCase {
    *
    * @return array
    */
-  public static function providerTestBuildQuery() {
+  public static function providerTestBuildQuery(): array {
     return [
       [['a' => ' &#//+%20@۞'], 'a=%20%26%23//%2B%2520%40%DB%9E', 'Value was properly encoded.'],
       [[' &#//+%20@۞' => 'a'], '%20%26%23%2F%2F%2B%2520%40%DB%9E=a', 'Key was properly encoded.'],
@@ -240,7 +240,7 @@ class UrlHelperTest extends TestCase {
    *
    * @return array
    */
-  public static function providerTestFilterQueryParameters() {
+  public static function providerTestFilterQueryParameters(): array {
     return [
       // Test without an exclude filter.
       [
@@ -278,7 +278,7 @@ class UrlHelperTest extends TestCase {
    *
    * @return array
    */
-  public static function providerTestParse() {
+  public static function providerTestParse(): array {
     return [
       [
         'http://www.example.com/my/path',
@@ -400,7 +400,7 @@ class UrlHelperTest extends TestCase {
    *
    * @return array
    */
-  public static function providerTestEncodePath() {
+  public static function providerTestEncodePath(): array {
     return [
       ['unencoded path with spaces', 'unencoded%20path%20with%20spaces'],
       ['slashes/should/be/preserved', 'slashes/should/be/preserved'],
@@ -428,7 +428,7 @@ class UrlHelperTest extends TestCase {
    *
    * @return array
    */
-  public static function providerTestIsExternal() {
+  public static function providerTestIsExternal(): array {
     return [
       ['/internal/path', FALSE],
       ['https://example.com/external/path', TRUE],
@@ -493,7 +493,7 @@ class UrlHelperTest extends TestCase {
    *
    * @return array
    */
-  public static function providerTestFilterBadProtocol() {
+  public static function providerTestFilterBadProtocol(): array {
     return [
       ['javascript://example.com?foo&bar', '//example.com?foo&amp;bar', ['http', 'https']],
       // Test custom protocols.
@@ -532,7 +532,7 @@ class UrlHelperTest extends TestCase {
    *
    * @return array
    */
-  public static function providerTestStripDangerousProtocols() {
+  public static function providerTestStripDangerousProtocols(): array {
     return [
       ['javascript://example.com', '//example.com', ['http', 'https']],
       // Test custom protocols.
@@ -607,7 +607,7 @@ class UrlHelperTest extends TestCase {
    *
    * @see \Drupal\Tests\Component\Utility\UrlHelperTest::testExternalIsLocal()
    */
-  public static function providerTestExternalIsLocal() {
+  public static function providerTestExternalIsLocal(): array {
     return [
       // Different mixes of trailing slash.
       ['http://example.com', 'http://example.com', TRUE],
@@ -660,7 +660,7 @@ class UrlHelperTest extends TestCase {
    *
    * @see \Drupal\Tests\Component\Utility\UrlHelperTest::testExternalIsLocalInvalid()
    */
-  public static function providerTestExternalIsLocalInvalid() {
+  public static function providerTestExternalIsLocalInvalid(): array {
     return [
       ['http://example.com/foo', ''],
       ['http://example.com/foo', 'bar'],

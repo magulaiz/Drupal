@@ -49,7 +49,7 @@ class CommentTypeRequirementsTest extends MigrateDrupal7TestBase {
   /**
    * Test cases for ::testCheckCommentTypeRequirements().
    */
-  public static function providerTestCheckCommentTypeRequirements() {
+  public static function providerTestCheckCommentTypeRequirements(): array {
     return [
       'D6 comment is disabled on source' => [
         'disabled_source_modules' => ['comment'],

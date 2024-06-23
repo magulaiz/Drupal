@@ -142,7 +142,7 @@ class DependentAccessTest extends UnitTestCase {
    * mergeAccessDependency() first. A call to either should behave the same on a
    * new RefinableDependentAccessInterface object.
    */
-  public static function providerTestSetFirst() {
+  public static function providerTestSetFirst(): array {
     return [
       [TRUE],
       [FALSE],

@@ -88,7 +88,7 @@ class TranslationManagerTest extends UnitTestCase {
    *
    * @return array
    */
-  public static function providerTestTranslatePlaceholder() {
+  public static function providerTestTranslatePlaceholder(): array {
     return [
       ['foo @bar', ['@bar' => 'bar'], 'foo bar'],
       ['bar %baz', ['%baz' => 'baz'], 'bar <em class="placeholder">baz</em>'],

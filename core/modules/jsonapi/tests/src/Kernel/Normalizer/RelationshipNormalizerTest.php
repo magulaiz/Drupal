@@ -264,7 +264,7 @@ class RelationshipNormalizerTest extends JsonapiKernelTestBase {
   /**
    * Data provider for testNormalize.
    */
-  public static function normalizeProvider() {
+  public static function normalizeProvider(): array {
     return [
       'single cardinality' => [
         ['user1'],

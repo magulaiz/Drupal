@@ -31,7 +31,7 @@ class PluginBaseTest extends TestCase {
    *
    * @return array
    */
-  public static function providerTestGetPluginId() {
+  public static function providerTestGetPluginId(): array {
     return [
       ['base_id', 'base_id'],
       ['base_id:derivative', 'base_id:derivative'],
@@ -58,7 +58,7 @@ class PluginBaseTest extends TestCase {
    *
    * @return array
    */
-  public static function providerTestGetBaseId() {
+  public static function providerTestGetBaseId(): array {
     return [
       ['base_id', 'base_id'],
       ['base_id:derivative', 'base_id'],
@@ -85,7 +85,7 @@ class PluginBaseTest extends TestCase {
    *
    * @return array
    */
-  public static function providerTestGetDerivativeId() {
+  public static function providerTestGetDerivativeId(): array {
     return [
       ['base_id', NULL],
       ['base_id:derivative', 'derivative'],

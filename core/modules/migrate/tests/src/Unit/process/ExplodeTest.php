@@ -78,7 +78,7 @@ class ExplodeTest extends MigrateProcessTestCase {
   /**
    * Data provider for ::testExplodeWithNonStrictAndEmptySource().
    */
-  public static function providerExplodeWithNonStrictAndEmptySource() {
+  public static function providerExplodeWithNonStrictAndEmptySource(): array {
     return [
       'normal_string' => ['a|b|c', ['a', 'b', 'c']],
       'integer_cast_to_string' => [123, ['123']],

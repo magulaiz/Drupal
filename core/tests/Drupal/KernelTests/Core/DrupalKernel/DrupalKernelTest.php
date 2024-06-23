@@ -205,7 +205,7 @@ class DrupalKernelTest extends KernelTestBase {
    * Data provider for self::testClassLoaderAutoDetect.
    * @return array
    */
-  public static function providerClassLoaderAutoDetect() {
+  public static function providerClassLoaderAutoDetect(): array {
     return [
       'TRUE' => [TRUE],
       'FALSE' => [FALSE],

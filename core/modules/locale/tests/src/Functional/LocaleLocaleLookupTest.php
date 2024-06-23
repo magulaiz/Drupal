@@ -109,7 +109,7 @@ class LocaleLocaleLookupTest extends BrowserTestBase {
    *     - translation value
    *     - expected result
    */
-  public static function providerTestFixOldPluralStyle() {
+  public static function providerTestFixOldPluralStyle(): array {
     return [
       'non-plural translation' => ['@count[2] non-plural test', '@count[2] non-plural test'],
       'plural translation' => ['@count[2] plural test' . PoItem::DELIMITER, '@count plural test'],

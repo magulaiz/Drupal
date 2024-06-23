@@ -198,7 +198,7 @@ class RoutesTest extends UnitTestCase {
   /**
    * Lists routes which should have been created.
    */
-  public static function expectedRoutes() {
+  public static function expectedRoutes(): array {
     return [
       ['jsonapi.entity_type_1--bundle_1_1.individual'],
       ['jsonapi.entity_type_1--bundle_1_1.collection'],
@@ -232,7 +232,7 @@ class RoutesTest extends UnitTestCase {
   /**
    * Lists routes which should have been created.
    */
-  public static function notExpectedRoutes() {
+  public static function notExpectedRoutes(): array {
     return [
       ['jsonapi.entity_type_2--bundle_2_1.individual'],
       ['jsonapi.entity_type_2--bundle_2_1.collection'],

@@ -49,7 +49,7 @@ class EntityConditionTest extends UnitTestCase {
   /**
    * Data provider for testDenormalize.
    */
-  public static function queryParameterProvider() {
+  public static function queryParameterProvider(): array {
     return [
       [['path' => 'some_field', 'value' => NULL, 'operator' => '=']],
       [['path' => 'some_field', 'operator' => '=', 'value' => 'some_string']],
@@ -87,7 +87,7 @@ class EntityConditionTest extends UnitTestCase {
   /**
    * Data provider for testValidation.
    */
-  public static function validationProvider() {
+  public static function validationProvider(): array {
     return [
       [['path' => 'some_field', 'value' => 'some_value'], NULL],
       [

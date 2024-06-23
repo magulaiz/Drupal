@@ -50,7 +50,7 @@ class WorkflowStateTransitionOperationsAccessCheckTest extends UnitTestCase {
   /**
    * Test cases for ::testAccess.
    */
-  public static function accessTestCases() {
+  public static function accessTestCases(): array {
     return [
       'Transition add' => [
         'add-transition',
@@ -140,7 +140,7 @@ class WorkflowStateTransitionOperationsAccessCheckTest extends UnitTestCase {
   /**
    * Test cases for ::testInvalidOperationName.
    */
-  public static function invalidOperationNameTestCases() {
+  public static function invalidOperationNameTestCases(): array {
     return [
       ['invalid-op'],
       ['foo-add-transition'],

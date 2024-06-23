@@ -1561,7 +1561,7 @@ class SqlContentEntityStorageSchemaTest extends UnitTestCase {
   /**
    * Provides data for testCastValue().
    */
-  public static function providerSchemaCastValue() {
+  public static function providerSchemaCastValue(): array {
     $cases = [];
     // Tests NULL values.
     $cases[] = [

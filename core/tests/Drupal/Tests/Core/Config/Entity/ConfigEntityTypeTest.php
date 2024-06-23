@@ -140,7 +140,7 @@ class ConfigEntityTypeTest extends UnitTestCase {
   /**
    * Provides test data.
    */
-  public static function providerTestGetConfigPrefix() {
+  public static function providerTestGetConfigPrefix(): array {
     return [
       [['provider' => 'node', 'id' => 'node_type', 'config_prefix' => 'type'], 'node.type'],
       [['provider' => 'views', 'id' => 'view'], 'views.view'],
@@ -162,7 +162,7 @@ class ConfigEntityTypeTest extends UnitTestCase {
     $this->assertSame($expected, $properties_to_export);
   }
 
-  public static function providerGetPropertiesToExport() {
+  public static function providerGetPropertiesToExport(): array {
     $data = [];
     $data[] = [
       [

@@ -107,7 +107,7 @@ class RequestSanitizerTest extends UnitTestCase {
    *
    * @return array
    */
-  public static function providerTestRequestSanitization() {
+  public static function providerTestRequestSanitization(): array {
     $tests = [];
 
     $request = new Request(['q' => 'index.php']);
@@ -322,7 +322,7 @@ class RequestSanitizerTest extends UnitTestCase {
   /**
    * Data provider for testing acceptable destinations.
    */
-  public static function providerTestAcceptableDestinations() {
+  public static function providerTestAcceptableDestinations(): array {
     $data = [];
     // Standard internal example node path is present in the 'destination'
     // parameter.
@@ -339,7 +339,7 @@ class RequestSanitizerTest extends UnitTestCase {
   /**
    * Data provider for testing sanitized destinations.
    */
-  public static function providerTestSanitizedDestinations() {
+  public static function providerTestSanitizedDestinations(): array {
     $data = [];
     // External URL without scheme is not allowed.
     $data[] = ['//example.com/test'];

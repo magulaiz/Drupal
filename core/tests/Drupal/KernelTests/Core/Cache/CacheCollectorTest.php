@@ -52,7 +52,7 @@ class CacheCollectorTest extends KernelTestBase {
   /**
    * Data provider for ::testCacheCollector().
    */
-  public static function providerTestInvalidCharacters() {
+  public static function providerTestInvalidCharacters(): array {
     return [
       // Nothing special.
       ['foo', 'bar', 'baz'],

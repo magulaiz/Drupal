@@ -20,7 +20,7 @@ class BuilderTest extends TestCase {
   /**
    * Provides test data for testBuilder.
    */
-  public static function builderTestData() {
+  public static function builderTestData(): array {
     return [
       [
         DrupalCoreRecommendedBuilder::class,

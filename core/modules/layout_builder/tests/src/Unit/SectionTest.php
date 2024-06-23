@@ -286,7 +286,7 @@ class SectionTest extends UnitTestCase {
   /**
    * Provides test data for ::testSetThirdPartySettings().
    */
-  public static function providerTestSetThirdPartySetting() {
+  public static function providerTestSetThirdPartySetting(): array {
     $data = [];
     $data[] = [
       'bad_judgement',
@@ -330,7 +330,7 @@ class SectionTest extends UnitTestCase {
   /**
    * Provides test data for ::testUnsetThirdPartySetting().
    */
-  public static function providerTestUnsetThirdPartySetting() {
+  public static function providerTestUnsetThirdPartySetting(): array {
     $data = [];
     $data['Key with values'] = [
       'bad_judgement',
@@ -399,7 +399,7 @@ class SectionTest extends UnitTestCase {
   /**
    * Provides test data for ::testGetLayout().
    */
-  public static function providerTestGetLayout() {
+  public static function providerTestGetLayout(): array {
     $data = [];
     $data['contexts'] = [['foo' => 'bar'], TRUE];
     $data['no contexts'] = [[], FALSE];

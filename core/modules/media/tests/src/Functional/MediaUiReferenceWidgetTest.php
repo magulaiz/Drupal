@@ -52,7 +52,7 @@ class MediaUiReferenceWidgetTest extends MediaFunctionalTestBase {
    * @return array[]
    *   Test data. See testMediaReferenceWidget() for the child array structure.
    */
-  public static function providerTestMediaReferenceWidget() {
+  public static function providerTestMediaReferenceWidget(): array {
     return [
       // Single-value fields with a single media type and the default widget:
       // - The user can create and list the media.

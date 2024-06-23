@@ -52,7 +52,7 @@ class LayoutDefaultTest extends UnitTestCase {
   /**
    * Provides test data for ::testBuild().
    */
-  public static function providerTestBuild() {
+  public static function providerTestBuild(): array {
     $data = [];
     // Empty regions are not added.
     $data['right_only'] = [

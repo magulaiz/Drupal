@@ -111,7 +111,7 @@ class RedirectResponseSubscriberTest extends UnitTestCase {
    *
    * @see \Drupal\Tests\Core\EventSubscriber\RedirectResponseSubscriberTest::testDestinationRedirect()
    */
-  public static function providerTestDestinationRedirect() {
+  public static function providerTestDestinationRedirect(): array {
     return [
       [new Request(), FALSE],
       [new Request(['destination' => 'test']), 'http://example.com/drupal/test'],
@@ -161,7 +161,7 @@ class RedirectResponseSubscriberTest extends UnitTestCase {
   /**
    * Data provider for testDestinationRedirectToExternalUrl().
    */
-  public static function providerTestDestinationRedirectToExternalUrl() {
+  public static function providerTestDestinationRedirectToExternalUrl(): array {
     return [
       'absolute external url' => [new Request(['destination' => 'http://example.com']), 'http://example.com'],
       'absolute external url with folder' => [new Request(['destination' => 'http://example.com/foobar']), 'http://example.com/foobar'],
@@ -190,7 +190,7 @@ class RedirectResponseSubscriberTest extends UnitTestCase {
   /**
    * Data provider for testDestinationRedirectWithInvalidUrl().
    */
-  public static function providerTestDestinationRedirectWithInvalidUrl() {
+  public static function providerTestDestinationRedirectWithInvalidUrl(): array {
     $data = [];
     $data[] = [new Request(['destination' => '//example:com'])];
     $data[] = [new Request(['destination' => '//example:com/test'])];

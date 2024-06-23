@@ -96,7 +96,7 @@ class MenuActiveTrailTest extends UnitTestCase {
    *     - menu_name: The active menu name.
    *     - expected_link: The expected active link for the given menu.
    */
-  public static function provider() {
+  public static function provider(): array {
     $data = [];
 
     $mock_route = new Route('');

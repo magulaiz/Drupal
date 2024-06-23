@@ -52,7 +52,7 @@ class OpenOffCanvasDialogCommandTest extends UnitTestCase {
    *
    * @return array
    */
-  public static function dialogPosition() {
+  public static function dialogPosition(): array {
     return [
       ['side'],
       ['top'],

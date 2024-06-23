@@ -35,7 +35,7 @@ class ChainedPlaceholderStrategyTest extends UnitTestCase {
    *
    * @return array
    */
-  public static function providerProcessPlaceholders() {
+  public static function providerProcessPlaceholders(): array {
     $prophet = new Prophet();
     $data = [];
 

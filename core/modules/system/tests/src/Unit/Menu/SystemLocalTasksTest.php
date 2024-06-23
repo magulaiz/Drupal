@@ -76,7 +76,7 @@ class SystemLocalTasksTest extends LocalTaskIntegrationTestBase {
   /**
    * Provides a list of routes to test.
    */
-  public static function getSystemAdminRoutes() {
+  public static function getSystemAdminRoutes(): array {
     return [
       ['system.admin_content', [['system.admin_content']]],
       [

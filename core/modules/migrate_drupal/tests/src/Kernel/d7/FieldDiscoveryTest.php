@@ -182,7 +182,7 @@ class FieldDiscoveryTest extends MigrateDrupal7TestBase {
    * @return array
    *   The data.
    */
-  public static function addAllFieldProcessesAltersData() {
+  public static function addAllFieldProcessesAltersData(): array {
     return [
       'Field Instance' => [
         'field_plugin_method' => 'alterFieldInstanceMigration',

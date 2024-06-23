@@ -175,7 +175,7 @@ class MailHandlerTest extends UnitTestCase {
   /**
    * Data provider for ::testSendMailMessages.
    */
-  public static function getSendMailMessages() {
+  public static function getSendMailMessages(): \Generator {
     $default_result = [
       'module' => 'contact',
       'key' => 'page_mail',

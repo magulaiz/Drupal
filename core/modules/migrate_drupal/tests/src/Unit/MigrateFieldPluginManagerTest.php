@@ -51,7 +51,7 @@ class MigrateFieldPluginManagerTest extends UnitTestCase {
    * @return array
    *   The data.
    */
-  public static function weightsData() {
+  public static function weightsData(): array {
     return [
       'Field 1, D6' => [
         'field_type' => 'field_1',

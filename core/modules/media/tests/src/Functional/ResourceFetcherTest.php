@@ -39,7 +39,7 @@ class ResourceFetcherTest extends MediaFunctionalTestBase {
    *
    * @return array
    */
-  public static function providerFetchResource() {
+  public static function providerFetchResource(): array {
     return [
       'JSON resource' => [
         'video_vimeo.json',

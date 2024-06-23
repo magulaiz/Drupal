@@ -91,7 +91,7 @@ class ConfigMapperManagerTest extends UnitTestCase {
    *   to test as the first key and the expected result of
    *   ConfigMapperManager::hasTranslatable() as the second key.
    */
-  public static function providerTestHasTranslatable() {
+  public static function providerTestHasTranslatable(): array {
     return [
       [static::getElement([]), FALSE],
       [static::getElement(['aaa' => 'bbb']), FALSE],

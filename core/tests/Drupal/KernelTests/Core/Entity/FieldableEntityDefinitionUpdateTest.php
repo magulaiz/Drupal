@@ -187,7 +187,7 @@ class FieldableEntityDefinitionUpdateTest extends EntityKernelTestBase {
   /**
    * Data provider for testFieldableEntityTypeUpdates().
    */
-  public static function providerTestFieldableEntityTypeUpdates() {
+  public static function providerTestFieldableEntityTypeUpdates(): array {
     return [
       'no change' => [
         'initial_rev' => FALSE,

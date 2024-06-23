@@ -401,7 +401,7 @@ class ConfigTest extends UnitTestCase {
    *
    * @see \Drupal\Tests\Core\Config\ConfigTest::testMerge()
    */
-  public static function mergeDataProvider() {
+  public static function mergeDataProvider(): array {
     return [
       [
         // Data.
@@ -436,7 +436,7 @@ class ConfigTest extends UnitTestCase {
    *
    * @see \Drupal\Tests\Core\Config\ConfigTest::testValidateNameException()
    */
-  public static function validateNameProvider() {
+  public static function validateNameProvider(): array {
     $return = [
       // Name missing namespace (dot).
       [
@@ -466,7 +466,7 @@ class ConfigTest extends UnitTestCase {
    * @see \Drupal\Tests\Core\Config\ConfigTest::testOverrideData()
    * @see \Drupal\Tests\Core\Config\ConfigTest::testDelete()
    */
-  public static function overrideDataProvider() {
+  public static function overrideDataProvider(): array {
     $test_cases = [
       [
         // Original data.
@@ -540,7 +540,7 @@ class ConfigTest extends UnitTestCase {
    *
    * @see \Drupal\Tests\Core\Config\ConfigTest::testClear()
    */
-  public static function simpleDataProvider() {
+  public static function simpleDataProvider(): array {
     return [
       [
         [
@@ -561,7 +561,7 @@ class ConfigTest extends UnitTestCase {
    * @see \Drupal\Tests\Core\Config\ConfigTest::testInitWithData()
    * @see \Drupal\Tests\Core\Config\ConfigTest::testNestedClear()
    */
-  public static function nestedDataProvider() {
+  public static function nestedDataProvider(): array {
     return [
       [
         [

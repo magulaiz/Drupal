@@ -46,7 +46,7 @@ class MediaEmbedFilterTest extends MediaEmbedFilterTestBase {
   /**
    * Data provider for testBasics().
    */
-  public static function providerTestBasics() {
+  public static function providerTestBasics(): array {
     $default_cacheability = (new CacheableMetadata())
       ->setCacheTags([
         '_media_test_embed_filter_access:media:1',
@@ -164,7 +164,7 @@ class MediaEmbedFilterTest extends MediaEmbedFilterTestBase {
   /**
    * Data provider for testAccessUnpublished().
    */
-  public static function providerAccessUnpublished() {
+  public static function providerAccessUnpublished(): array {
     return [
       'user cannot access embedded media' => [
         FALSE,
@@ -262,7 +262,7 @@ class MediaEmbedFilterTest extends MediaEmbedFilterTestBase {
   /**
    * Data provider for testOverridesAltAndTitle().
    */
-  public static function providerOverridesAltAndTitle() {
+  public static function providerOverridesAltAndTitle(): array {
     return [
       '`title` field property disabled ⇒ `title` is not overridable' => [
         FALSE,
@@ -308,7 +308,7 @@ class MediaEmbedFilterTest extends MediaEmbedFilterTestBase {
   /**
    * Data provider for testMissingEntityIndicator().
    */
-  public static function providerMissingEntityIndicator() {
+  public static function providerMissingEntityIndicator(): array {
     return [
       'invalid UUID' => [
         'uuid' => 'invalidUUID',
@@ -427,7 +427,7 @@ class MediaEmbedFilterTest extends MediaEmbedFilterTestBase {
   /**
    * Data provider for testFilterIntegration().
    */
-  public static function providerFilterIntegration() {
+  public static function providerFilterIntegration(): array {
     $default_asset_libraries = ['media/filter.caption'];
 
     $caption_additional_attributes = ['data-caption' => 'Yo.'];

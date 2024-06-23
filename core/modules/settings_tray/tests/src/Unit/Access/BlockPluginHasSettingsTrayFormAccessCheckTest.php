@@ -47,7 +47,7 @@ class BlockPluginHasSettingsTrayFormAccessCheckTest extends UnitTestCase {
   /**
    * Provides test data for ::testAccess().
    */
-  public static function providerTestAccess() {
+  public static function providerTestAccess(): array {
     $annotation_forms_settings_tray_class = [
       'forms' => [
         'settings_tray' => Random::machineName(),

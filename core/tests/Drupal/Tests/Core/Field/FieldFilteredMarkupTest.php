@@ -31,7 +31,7 @@ class FieldFilteredMarkupTest extends UnitTestCase {
   /**
    * Provides data for testCreate().
    */
-  public static function providerTestCreate() {
+  public static function providerTestCreate(): array {
     $data = [];
     $data[] = ['', '', FALSE];
     // Certain tags are filtered.

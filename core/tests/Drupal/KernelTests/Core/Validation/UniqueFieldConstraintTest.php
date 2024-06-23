@@ -105,7 +105,7 @@ class UniqueFieldConstraintTest extends KernelTestBase {
    *
    * @see self::testEntityWithStringIdWithViolation()
    */
-  public static function providerTestEntityWithStringIdWithViolation() {
+  public static function providerTestEntityWithStringIdWithViolation(): array {
     return [
       'without an id' => [NULL],
       'zero as integer' => [0],

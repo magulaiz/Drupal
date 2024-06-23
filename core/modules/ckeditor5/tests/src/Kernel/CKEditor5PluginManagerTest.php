@@ -1549,7 +1549,7 @@ PHP,
   /**
    * Provides use cases for findPluginSupportingElement().
    */
-  public static function providerTestPluginSupportingElement() {
+  public static function providerTestPluginSupportingElement(): array {
     return [
       'tag that belongs to a superset' => [
         'tag' => 'h2',

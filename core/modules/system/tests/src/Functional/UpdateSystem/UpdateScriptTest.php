@@ -284,7 +284,7 @@ class UpdateScriptTest extends BrowserTestBase {
   /**
    * Date provider for testExtensionCompatibilityChange().
    */
-  public static function providerExtensionCompatibilityChange() {
+  public static function providerExtensionCompatibilityChange(): array {
     $incompatible_module_message = "The following module is installed, but it is incompatible with Drupal " . \Drupal::VERSION . ":";
     $incompatible_theme_message = "The following theme is installed, but it is incompatible with Drupal " . \Drupal::VERSION . ":";
     return [

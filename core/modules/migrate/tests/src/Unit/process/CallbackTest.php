@@ -29,7 +29,7 @@ class CallbackTest extends MigrateProcessTestCase {
   /**
    * Data provider for ::testCallback().
    */
-  public static function providerCallback() {
+  public static function providerCallback(): array {
     return [
       'function' => ['strtolower'],
       'class method' => [[self::class, 'strtolower']],
@@ -51,7 +51,7 @@ class CallbackTest extends MigrateProcessTestCase {
   /**
    * Data provider for ::testCallbackArray().
    */
-  public static function providerCallbackArray() {
+  public static function providerCallbackArray(): array {
     return [
       'date format' => [
         'date',
@@ -100,7 +100,7 @@ class CallbackTest extends MigrateProcessTestCase {
   /**
    * Data provider for ::testCallbackExceptions().
    */
-  public static function providerCallbackExceptions() {
+  public static function providerCallbackExceptions(): array {
     return [
       'not set' => [
         'message' => 'The "callable" must be set.',

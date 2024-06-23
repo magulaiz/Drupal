@@ -82,7 +82,7 @@ class ContextDefinitionIsSatisfiedTest extends UnitTestCase {
   /**
    * Provides test data for ::testIsSatisfiedBy().
    */
-  public static function providerTestIsSatisfiedBy() {
+  public static function providerTestIsSatisfiedBy(): array {
     $data = [];
 
     // Simple data types.

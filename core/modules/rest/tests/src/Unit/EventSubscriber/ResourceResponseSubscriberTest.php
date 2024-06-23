@@ -53,7 +53,7 @@ class ResourceResponseSubscriberTest extends UnitTestCase {
     $this->assertEquals($expected_response !== FALSE ? $expected_response : Json::encode($data), $event->getResponse()->getContent());
   }
 
-  public static function providerTestSerialization() {
+  public static function providerTestSerialization(): array {
     return [
       // The default data for \Drupal\rest\ResourceResponse.
       'default' => [NULL, ''],
@@ -219,7 +219,7 @@ class ResourceResponseSubscriberTest extends UnitTestCase {
    *   6. expected response content type
    *   7. expected response body
    */
-  public static function providerTestResponseFormat() {
+  public static function providerTestResponseFormat(): array {
     $json_encoded = Json::encode(['REST' => 'Drupal']);
     $xml_encoded = "<?xml version=\"1.0\"?>\n<response><REST>Drupal</REST></response>\n";
 

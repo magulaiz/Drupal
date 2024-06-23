@@ -191,7 +191,7 @@ class SqlBaseTest extends MigrateTestBase {
    * @return array
    *   The scenarios to test.
    */
-  public static function highWaterDataProvider() {
+  public static function highWaterDataProvider(): array {
     return [
       'no high-water value set' => [],
       'high-water value set' => [33],

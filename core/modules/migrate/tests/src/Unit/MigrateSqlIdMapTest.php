@@ -385,7 +385,7 @@ class MigrateSqlIdMapTest extends MigrateTestCase {
    * @return array
    *   An array of data values.
    */
-  public static function lookupDestinationIdMappingDataProvider() {
+  public static function lookupDestinationIdMappingDataProvider(): array {
     return [
       [1, 1],
       [2, 2],
@@ -603,7 +603,7 @@ class MigrateSqlIdMapTest extends MigrateTestCase {
    * @return array
    *   An array of data values.
    */
-  public static function lookupSourceIdMappingDataProvider() {
+  public static function lookupSourceIdMappingDataProvider(): array {
     return [
       [1, 1],
       [2, 2],
@@ -796,7 +796,7 @@ class MigrateSqlIdMapTest extends MigrateTestCase {
    * @return array
    *   An array of data values.
    */
-  public static function updateCountDataProvider() {
+  public static function updateCountDataProvider(): array {
     return [
       [0],
       [1],
@@ -844,7 +844,7 @@ class MigrateSqlIdMapTest extends MigrateTestCase {
    * @return array
    *   An array of data values.
    */
-  public static function errorCountDataProvider() {
+  public static function errorCountDataProvider(): array {
     return [
       [0],
       [1],
@@ -1130,7 +1130,7 @@ class MigrateSqlIdMapTest extends MigrateTestCase {
    * @return array
    *   An array of data values.
    */
-  public static function getHighestIdDataProvider() {
+  public static function getHighestIdDataProvider(): array {
     return [
       'Destination ID type integer' => [
         'destination_ids' => [
@@ -1195,7 +1195,7 @@ class MigrateSqlIdMapTest extends MigrateTestCase {
    * @return array
    *   An array of data values.
    */
-  public static function getHighestIdInvalidDataProvider() {
+  public static function getHighestIdInvalidDataProvider(): array {
     return [
       'Destination ID type string' => [
         'destination_ids' => [

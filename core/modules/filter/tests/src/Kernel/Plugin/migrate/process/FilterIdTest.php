@@ -101,7 +101,7 @@ class FilterIdTest extends KernelTestBase {
    *   When $invalid_id is provided the transformation should fail with the
    *   supplied id.
    */
-  public static function provideFilters() {
+  public static function provideFilters(): array {
     return [
       'filter ID mapped to plugin that exists' => [
         'foo',

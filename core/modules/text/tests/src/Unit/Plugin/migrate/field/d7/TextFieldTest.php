@@ -31,7 +31,7 @@ class TextFieldTest extends UnitTestCase {
   /**
    * Data provider for testGetFieldFormatterType().
    */
-  public static function getFieldFormatterTypeProvider() {
+  public static function getFieldFormatterTypeProvider(): array {
     return [
       ['text', 'text_plain', 'string'],
       ['text_long', 'text_default', 'basic_string'],

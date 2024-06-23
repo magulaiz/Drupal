@@ -64,7 +64,7 @@ class DefaultLazyPluginCollectionTest extends LazyPluginCollectionTestBase {
    * @return array
    *   The test data.
    */
-  public static function providerTestSortHelper() {
+  public static function providerTestSortHelper(): array {
     return [
       ['apple', 'apple', 0],
       ['apple', 'cherry', -1],

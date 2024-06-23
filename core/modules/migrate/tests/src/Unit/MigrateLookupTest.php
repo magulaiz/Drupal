@@ -66,7 +66,7 @@ class MigrateLookupTest extends MigrateTestCase {
   /**
    * Provides data for testExceptionOnMigrationNotFound.
    */
-  public static function providerExceptionOnMigrationNotFound() {
+  public static function providerExceptionOnMigrationNotFound(): array {
     return [
       'string' => [
         'bad_plugin',
@@ -96,7 +96,7 @@ class MigrateLookupTest extends MigrateTestCase {
   /**
    * Provides data for testExceptionOnMultipleMigrationsNotFound.
    */
-  public static function providerExceptionOnMultipleMigrationsNotFound() {
+  public static function providerExceptionOnMultipleMigrationsNotFound(): array {
     return [
       'array two items' => [
         ['foo', 'bar'],

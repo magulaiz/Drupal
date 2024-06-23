@@ -64,7 +64,7 @@ class LinkUriTest extends KernelTestBase {
    *   - The value array to pass to LinkUri::transform().
    *   - The expected path returned by LinkUri::transform().
    */
-  public static function providerTestRouted() {
+  public static function providerTestRouted(): array {
     $tests = [];
 
     $value = 'http://example.com';
@@ -107,7 +107,7 @@ class LinkUriTest extends KernelTestBase {
    *   - The expected path returned by LinkUri::transform().
    *   - (optional) A URL object that the path validator prophecy will return.
    */
-  public static function providerTestNotRouted() {
+  public static function providerTestNotRouted(): array {
     $tests = [];
 
     $message = 'The path "%s" failed validation.';
@@ -157,7 +157,7 @@ class LinkUriTest extends KernelTestBase {
    *   - The value array to pass to LinkUri::transform().
    *   - The expected path returned by LinkUri::transform().
    */
-  public static function providerTestDisablingRouteValidation() {
+  public static function providerTestDisablingRouteValidation(): array {
     $tests = [];
 
     $value = 'node/1';

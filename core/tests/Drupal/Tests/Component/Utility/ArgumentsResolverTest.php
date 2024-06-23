@@ -33,7 +33,7 @@ class ArgumentsResolverTest extends TestCase {
   /**
    * Provides test data to testGetArgument().
    */
-  public static function providerTestGetArgument() {
+  public static function providerTestGetArgument(): array {
     $data = [];
 
     // Test an optional parameter with no provided value.
@@ -183,7 +183,7 @@ class ArgumentsResolverTest extends TestCase {
   /**
    * Provides test data to testHandleUnresolvedArgument().
    */
-  public static function providerTestHandleUnresolvedArgument() {
+  public static function providerTestHandleUnresolvedArgument(): array {
     $data = [];
     $data[] = [function ($foo) {}];
     $data[] = [[new TestClass(), 'access']];

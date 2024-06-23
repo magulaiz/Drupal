@@ -146,9 +146,8 @@ class RelatedResourceTypesTest extends JsonapiKernelTestBase {
 
   /**
    * @covers ::getRelatableResourceTypes
-   * @dataProvider getRelatableResourceTypesProvider
    */
-  public static function getRelatableResourceTypesProvider() {
+  public static function getRelatableResourceTypesProvider(): array {
     return [
       [
         'node--foo',
@@ -178,7 +177,7 @@ class RelatedResourceTypesTest extends JsonapiKernelTestBase {
   /**
    * Provides cases to test getRelatableTypesByField.
    */
-  public static function getRelatableResourceTypesByFieldProvider() {
+  public static function getRelatableResourceTypesByFieldProvider(): array {
     return [
       ['node', 'foo', 'field_ref_foo'],
       ['node', 'foo', 'field_ref_bar'],

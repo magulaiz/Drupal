@@ -82,7 +82,7 @@ class ExtractTest extends KernelTestBase {
   /**
    * Provides multiple source data for "extract" process plugin test.
    */
-  public static function multipleValueProviderSource() {
+  public static function multipleValueProviderSource(): array {
     $tests = [
       [
         'source_data' => [

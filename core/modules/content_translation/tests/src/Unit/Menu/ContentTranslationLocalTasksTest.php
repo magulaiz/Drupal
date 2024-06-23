@@ -55,7 +55,7 @@ class ContentTranslationLocalTasksTest extends LocalTaskIntegrationTestBase {
   /**
    * Provides a list of routes to test.
    */
-  public static function providerTestBlockAdminDisplay() {
+  public static function providerTestBlockAdminDisplay(): array {
     return [
       [
         'entity.node.canonical',

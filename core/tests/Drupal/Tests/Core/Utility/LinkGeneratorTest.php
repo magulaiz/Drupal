@@ -91,7 +91,7 @@ class LinkGeneratorTest extends UnitTestCase {
    * @return array
    *   Returns some test data.
    */
-  public static function providerTestGenerateHrefs() {
+  public static function providerTestGenerateHrefs(): array {
     return [
       // Test that the URL returned by the URL generator is used.
       ['test_route_1', [], FALSE, '/test-route-1'],

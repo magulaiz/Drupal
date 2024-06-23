@@ -144,7 +144,7 @@ class EntityReferenceSelectionReferenceableTest extends KernelTestBase {
    *
    * @return array[]
    */
-  public static function providerTestCases() {
+  public static function providerTestCases(): array {
     return [
       // All referenceables, no limit. Expecting 9 items.
       [NULL, 'CONTAINS', 0, 9, static::$labels, 9],

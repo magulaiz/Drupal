@@ -41,7 +41,7 @@ class UrlResolverTest extends MediaFunctionalTestBase {
    *
    * @return array
    */
-  public static function providerEndpointMatching() {
+  public static function providerEndpointMatching(): array {
     return [
       'match by endpoint: Twitter' => [
         'https://twitter.com/Dries/status/999985431595880448',
@@ -103,7 +103,7 @@ class UrlResolverTest extends MediaFunctionalTestBase {
    *
    * @return array
    */
-  public static function providerUrlDiscovery() {
+  public static function providerUrlDiscovery(): array {
     return [
       'JSON resource' => [
         'video_vimeo.html',

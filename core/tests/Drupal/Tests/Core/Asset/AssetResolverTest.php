@@ -183,7 +183,7 @@ class AssetResolverTest extends UnitTestCase {
     $this->assertCount($expected_css_cache_item_count, $this->cache->getAllCids());
   }
 
-  public static function providerAttachedCssAssets() {
+  public static function providerAttachedCssAssets(): array {
     $time = time();
     return [
       'one js only library and one css only library' => [
@@ -223,7 +223,7 @@ class AssetResolverTest extends UnitTestCase {
     $this->assertCount($expected_multilingual_js_cache_item_count, $this->cache->getAllCids());
   }
 
-  public static function providerAttachedJsAssets() {
+  public static function providerAttachedJsAssets(): array {
     $time = time();
     return [
       'same libraries, different timestamps' => [

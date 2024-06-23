@@ -98,7 +98,7 @@ class SqlTest extends MigrateTestBase {
   /**
    * Provides data for testEnsureTables.
    */
-  public static function providerTestEnsureTables() {
+  public static function providerTestEnsureTables(): array {
     return [
       'no ids' => [
         [],
@@ -158,7 +158,7 @@ class SqlTest extends MigrateTestBase {
   /**
    * Provides data for testFailEnsureTables.
    */
-  public static function providerTestFailEnsureTables() {
+  public static function providerTestFailEnsureTables(): array {
     return [
       'one id' => [
         [

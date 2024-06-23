@@ -167,7 +167,7 @@ class FilePathTest extends MigrateUpgradeTestBase {
    * @return string[][]
    *   An array of test data.
    */
-  public static function providerTestFilePath() {
+  public static function providerTestFilePath(): array {
     return [
       'All source base paths are at temporary' => [
         'sites/default/private',

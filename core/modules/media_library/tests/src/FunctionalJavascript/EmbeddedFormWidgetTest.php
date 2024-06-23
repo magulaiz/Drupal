@@ -154,7 +154,7 @@ class EmbeddedFormWidgetTest extends WebDriverTestBase {
    * @return array
    *   Test data.
    */
-  public static function insertionReselectionProvider() {
+  public static function insertionReselectionProvider(): array {
     return [
       'using media_library_widget' => [
         'widget' => 'media_library_widget',

@@ -61,7 +61,7 @@ class ControllerResolverTest extends UnitTestCase {
   /**
    * Provides test data for testCreateController().
    */
-  public static function providerTestCreateController() {
+  public static function providerTestCreateController(): array {
     return [
       // Tests class::method.
       ['Drupal\Tests\Core\Controller\MockController::getResult', 'Drupal\Tests\Core\Controller\MockController', 'This is a regular controller.'],
@@ -107,7 +107,7 @@ class ControllerResolverTest extends UnitTestCase {
   /**
    * Provides test data for testGetController().
    */
-  public static function providerTestGetController() {
+  public static function providerTestGetController(): array {
     return [
       // Tests passing a controller via the request.
       [
@@ -134,7 +134,7 @@ class ControllerResolverTest extends UnitTestCase {
   /**
    * Provides test data for testGetControllerFromDefinition().
    */
-  public static function providerTestGetControllerFromDefinition() {
+  public static function providerTestGetControllerFromDefinition(): array {
     return [
       // Tests a method on an object.
       [[new MockController(), 'getResult'], 'This is a regular controller.'],

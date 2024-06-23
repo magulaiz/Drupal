@@ -88,7 +88,7 @@ class CredentialFormTest extends MigrateUpgradeTestBase {
   /**
    * Data provider for testCredentialForm.
    */
-  public static function providerCredentialForm() {
+  public static function providerCredentialForm(): array {
     return [
       [
         'path_to_database' => '/tests/fixtures/drupal6.php',

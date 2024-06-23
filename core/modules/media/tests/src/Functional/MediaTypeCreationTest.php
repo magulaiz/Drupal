@@ -50,7 +50,7 @@ class MediaTypeCreationTest extends MediaFunctionalTestBase {
   /**
    * Data provider for testMediaTypeCreationForm().
    */
-  public static function providerMediaTypeCreationForm() {
+  public static function providerMediaTypeCreationForm(): array {
     $machine_name = Random::machineName();
     return [
       [

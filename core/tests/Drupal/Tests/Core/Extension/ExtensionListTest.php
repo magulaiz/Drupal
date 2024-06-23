@@ -220,7 +220,7 @@ class ExtensionListTest extends UnitTestCase {
   /**
    * DataProvider for testCheckIncompatibility().
    */
-  public static function providerCheckIncompatibility() {
+  public static function providerCheckIncompatibility(): array {
     return [
       'core_incompatible true' => [
         [

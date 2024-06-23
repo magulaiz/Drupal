@@ -94,7 +94,7 @@ class FormattableMarkupTest extends TestCase {
    *
    * @return array
    */
-  public static function providerTestUnexpectedPlaceholder() {
+  public static function providerTestUnexpectedPlaceholder(): array {
     return [
       ['Non alpha, non-allowed starting character: ~placeholder', ['~placeholder' => 'replaced'], E_USER_WARNING, 'Placeholders must begin with one of the following "@", ":" or "%", invalid placeholder (~placeholder) with string: "Non alpha, non-allowed starting character: ~placeholder"'],
       ['Alpha starting character: placeholder', ['placeholder' => 'replaced'], NULL, ''],

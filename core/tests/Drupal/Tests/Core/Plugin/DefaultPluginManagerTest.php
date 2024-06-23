@@ -414,7 +414,7 @@ class DefaultPluginManagerTest extends UnitTestCase {
     $this->assertEquals($expected, $definition);
   }
 
-  public static function providerTestProcessDefinition() {
+  public static function providerTestProcessDefinition(): array {
     $data = [];
 
     $data['merge'][] = [

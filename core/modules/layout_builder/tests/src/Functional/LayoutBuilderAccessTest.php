@@ -143,7 +143,7 @@ class LayoutBuilderAccessTest extends BrowserTestBase {
   /**
    * Provides test data for ::testAccessWithBundles().
    */
-  public static function providerTestAccessWithBundles() {
+  public static function providerTestAccessWithBundles(): array {
     // Data provider values are:
     // - the permissions to grant to the user
     // - whether access is expected for the defaults
@@ -237,7 +237,7 @@ class LayoutBuilderAccessTest extends BrowserTestBase {
   /**
    * Provides test data for ::testAccessWithoutBundles().
    */
-  public static function providerTestAccessWithoutBundles() {
+  public static function providerTestAccessWithoutBundles(): array {
     // Data provider values are:
     // - the permissions to grant to the user
     // - whether access is expected for the defaults

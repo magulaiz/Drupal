@@ -46,7 +46,7 @@ class CKEditor5StylesheetsTest extends KernelTestBase {
    * @return array
    *   An array of test cases.
    */
-  public static function externalStylesheetsProvider() {
+  public static function externalStylesheetsProvider(): array {
     return [
       'Install theme which has an absolute external CSS URL' => [
         'test_ckeditor_stylesheets_external',

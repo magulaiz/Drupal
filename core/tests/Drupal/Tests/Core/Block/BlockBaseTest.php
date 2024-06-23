@@ -47,7 +47,7 @@ class BlockBaseTest extends UnitTestCase {
   /**
    * Provides data for testGetMachineNameSuggestion().
    */
-  public static function providerTestGetMachineNameSuggestion() {
+  public static function providerTestGetMachineNameSuggestion(): array {
     return [
       ['Admin label', 'adminlabel'],
       // cspell:disable-next-line

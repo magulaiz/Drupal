@@ -49,7 +49,7 @@ class FieldNumericTest extends ViewsKernelTestBase {
    *   The data set containing field settings, values to set and expected
    *   values.
    */
-  public static function providerTestFieldNumeric() {
+  public static function providerTestFieldNumeric(): array {
     return [
       'no-formatting' => [
         [],

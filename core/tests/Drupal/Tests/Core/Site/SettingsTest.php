@@ -101,7 +101,7 @@ class SettingsTest extends UnitTestCase {
    *
    * @return array
    */
-  public static function providerTestGetHashSaltEmpty() {
+  public static function providerTestGetHashSaltEmpty(): array {
     return [
       [[]],
       [['hash_salt' => '']],

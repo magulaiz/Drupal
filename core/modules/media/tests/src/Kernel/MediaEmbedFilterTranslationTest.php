@@ -70,7 +70,7 @@ class MediaEmbedFilterTranslationTest extends MediaEmbedFilterTestBase {
   /**
    * Data provider for testTranslationSelection().
    */
-  public static function providerTranslationSituations() {
+  public static function providerTranslationSituations(): \Generator {
     $embedded_entity_translation_languages = ['en', 'pt-br'];
 
     foreach (['en', 'pt-br', 'nl'] as $text_langcode) {

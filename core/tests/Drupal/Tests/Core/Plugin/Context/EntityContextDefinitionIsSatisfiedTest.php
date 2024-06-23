@@ -136,7 +136,7 @@ class EntityContextDefinitionIsSatisfiedTest extends UnitTestCase {
   /**
    * Provides test data for ::testIsSatisfiedBy().
    */
-  public static function providerTestIsSatisfiedBy() {
+  public static function providerTestIsSatisfiedBy(): array {
     $data = [];
 
     $content = new EntityType(['id' => 'test_content']);
@@ -244,7 +244,7 @@ class EntityContextDefinitionIsSatisfiedTest extends UnitTestCase {
   /**
    * Provides test data for ::testIsSatisfiedByGenerateBundledEntity().
    */
-  public static function providerTestIsSatisfiedByGenerateBundledEntity() {
+  public static function providerTestIsSatisfiedByGenerateBundledEntity(): array {
     $data = [];
     $data['no requirement'] = [
       TRUE,
@@ -322,7 +322,7 @@ class EntityContextDefinitionIsSatisfiedTest extends UnitTestCase {
   /**
    * Provides test data for ::testIsSatisfiedByPassBundledEntity().
    */
-  public static function providerTestIsSatisfiedByPassBundledEntity() {
+  public static function providerTestIsSatisfiedByPassBundledEntity(): array {
     $data = [];
     $data[] = [TRUE, []];
     $data[] = [FALSE, ['first_bundle']];
