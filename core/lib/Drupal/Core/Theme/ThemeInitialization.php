@@ -283,7 +283,7 @@ class ThemeInitialization implements ThemeInitializationInterface {
    */
   protected function resolveStyleSheetPlaceholders($css_file) {
     $token_candidate = explode('/', $css_file)[0];
-    if (!preg_match('/@[A-z0-9_-]+/', $token_candidate)) {
+    if (!preg_match('/@[A-Za-z0-9_-]+/', $token_candidate)) {
       return $css_file;
     }
 
