@@ -497,7 +497,7 @@ class AttributeTest extends UnitTestCase {
    *   An array of test data each containing an initial Attribute object, an
    *   Attribute object or array to be merged, and the expected result.
    */
-  public static function providerTestMerge(): arary {
+  public static function providerTestMerge(): array {
     return [
       [new Attribute([]), new Attribute(['class' => ['class1']]), new Attribute(['class' => ['class1']])],
       [new Attribute(['class' => ['example-class']]), new Attribute(['class' => ['class1']]), new Attribute(['class' => ['example-class', 'class1']])],
