@@ -16,7 +16,7 @@ class UserConfigValidationTest extends KernelTestBase {
   /**
    * {@inheritdoc}
    */
-  protected static $modules = ['system','user'];
+  protected static $modules = ['system', 'user'];
 
   /**
    * {@inheritdoc}
