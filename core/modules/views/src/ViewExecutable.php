@@ -744,9 +744,12 @@ class ViewExecutable {
       // Ensure that we can call the method at any point in time.
       $this->initDisplay();
 
-      $request = \Drupal::request();
-      $triggered = $request->request->get('_triggering_element_name');
-      $this->exposed_input = $request->isMethod('post') && $triggered ? $request->request->all() : $request->query->all();
+      if ($this->request->isMethod('post') && $this->request->request->get('_triggering_element_name')) {
+        $this->exposed_input = $this->request->request->all();
+      }
+      else {
+        $this->exposed_input = $this->request->query->all();
+      }
 
       // Unset items that are definitely not our input:
       foreach (['page', 'q'] as $key) {
