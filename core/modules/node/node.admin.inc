@@ -121,10 +121,12 @@ function _node_mass_update_batch_process(array $nodes, array $updates, $langcode
   }
 
   // Process nodes by groups of 5.
+  /** @var \Drupal\node\NodeStorageInterface $storage */
   $storage = \Drupal::entityTypeManager()->getStorage('node');
   $count = min(5, count($context['sandbox']['nodes']));
   for ($i = 1; $i <= $count; $i++) {
     // For each nid, load the node, reset the values, and save it.
+    /** @var \Drupal\node\NodeInterface $node */
     $node = array_shift($context['sandbox']['nodes']);
     if ($load) {
       $node = $revisions ?
