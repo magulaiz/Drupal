@@ -54,13 +54,19 @@ use Drupal\Core\Validation\Plugin\Validation\Constraint\FullyValidatableConstrai
 class ConfigActionManager extends DefaultPluginManager {
 
   /**
-   * Information about all deprecated plugin's Id.
+   * Information about all deprecated plugin IDs.
    *
    * @var array
    */
-  private static $deprecatedPluginIds = [
-    'entity_create:ensure_exists' => 'The plugin ID "entity_create:ensure_exists" is deprecated in Drupal 10.3.x and will be removed in Drupal 12.0.0. Use "entity_create:createIfNotExists" instead. See https://www.drupal.org/i/3455113.',
-    'simple_config_update' => 'The plugin ID "simple_config_update" is deprecated in Drupal 10.3.x and will be removed in Drupal 12.0.0. Use "simpleConfigUpdate" instead. See https://www.drupal.org/i/3455113.',
+  private static array $deprecatedPluginIds = [
+    'entity_create:ensure_exists' => [
+      'replacement' => 'entity_create:createIfNotExists',
+      'message' => 'The plugin ID "entity_create:ensure_exists" is deprecated in drupal:10.3.1 and will be removed in drupal:12.0.0. Use "entity_create:createIfNotExists" instead. See https://www.drupal.org/i/3455113.',
+    ],
+    'simple_config_update' => [
+      'replacement' => 'simpleConfigUpdate',
+      'message' => 'The plugin ID "simple_config_update" is deprecated in drupal:10.3.1 and will be removed in drupal:12.0.0. Use "simpleConfigUpdate" instead. See https://www.drupal.org/i/3455113.',
+    ],
   ];
 
   /**
@@ -108,11 +114,13 @@ class ConfigActionManager extends DefaultPluginManager {
     $definitions = parent::getDefinitions();
     // Adds backwards compatibility for plugins that have been renamed.
     // @see https://www.drupal.org/i/3455113
-    if (!isset($definitions['ensure_exists']) && !isset($definitions['simple_config_update'])) {
-      $definitions['entity_create:ensure_exists'] = $definitions['entity_create:createIfNotExists'];
-      $definitions['simple_config_update'] = $definitions['simpleConfigUpdate'];
-      $this->setCachedDefinitions($definitions);
+    foreach (self::$deprecatedPluginIds as $legacy => $new_plugin_id) {
+      if (!isset($definitions[$legacy])) {
+        $definitions[$legacy] = $definitions[$new_plugin_id['replacement']];
+      }
     }
+    $this->setCachedDefinitions($definitions);
+
     return $definitions;
   }
 
@@ -251,7 +259,7 @@ class ConfigActionManager extends DefaultPluginManager {
     // Trigger deprecation notices for renamed plugins.
     if (isset(self::$deprecatedPluginIds[$plugin_id])) {
       // phpcs:ignore Drupal.Semantics.FunctionTriggerError
-      @trigger_error(self::$deprecatedPluginIds[$plugin_id], E_USER_DEPRECATED);
+      @trigger_error(self::$deprecatedPluginIds[$plugin_id]['message'], E_USER_DEPRECATED);
     }
     return $instance;
   }
