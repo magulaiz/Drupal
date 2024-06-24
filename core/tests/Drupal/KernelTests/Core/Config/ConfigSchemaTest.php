@@ -671,6 +671,8 @@ class ConfigSchemaTest extends KernelTestBase {
           $item1,
         ],
       ],
+      // Sort by ascii code, uppercase comes first, numbers are not sorted
+      // naturally
       'name sort' => [
         'data' => $sort_data,
         'schema' => 'name_sort_regular',
@@ -681,6 +683,9 @@ class ConfigSchemaTest extends KernelTestBase {
           $item1,
         ],
       ],
+      // Because name sort is not deterministic between item 1 and item 2, this
+      // is not exactly reverse order from the case above. item 2 will always be
+      // above item 1 unless a sort is requested that can differentiate them.
       'name sort descending' => [
         'data' => $sort_data,
         'schema' => 'name_sort_desc',
@@ -691,6 +696,8 @@ class ConfigSchemaTest extends KernelTestBase {
           $item4,
         ],
       ],
+      // Numbers are sorted naturally, but uppercase letters are still sorted
+      // before lower case letters.
       'name sort natural' => [
         'data' => $sort_data,
         'schema' => 'name_sort_nat',
@@ -701,6 +708,7 @@ class ConfigSchemaTest extends KernelTestBase {
           $item1,
         ],
       ],
+      // Full case-insensitive natural sort, as a human would sort things.
       'name sort natural - case insensitive' => [
         'data' => $sort_data,
         'schema' => 'name_sort_nat_no_case',
@@ -711,6 +719,7 @@ class ConfigSchemaTest extends KernelTestBase {
           $item4,
         ],
       ],
+      // Sort by multiple facets in order.
       'multi sort name then weight' => [
         'data' => $sort_data,
         'schema' => 'multisort_name_then_weight',
@@ -731,6 +740,7 @@ class ConfigSchemaTest extends KernelTestBase {
           $item2,
         ],
       ],
+      // Sort by deeper items in the array
       'subkey sort string' => [
         'data' => $sort_data,
         'schema' => 'subkey_sort_string',
@@ -751,6 +761,7 @@ class ConfigSchemaTest extends KernelTestBase {
           $item3,
         ],
       ],
+      // Multifacet sort with deeper subkeys.
       'subkey sort int then natural string' => [
         'data' => $sort_data,
         'schema' => 'subkey_sort_int_then_nat_string',
@@ -761,6 +772,7 @@ class ConfigSchemaTest extends KernelTestBase {
           $item3,
         ],
       ],
+      // Preserve string keys.
       'sort weight and preserve keys' => [
         'data' => [
           'item1' => $item1,
