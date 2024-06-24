@@ -27,7 +27,7 @@ class UserConfigValidationTest extends KernelTestBase {
   }
 
   /**
-   * Data provider testUserSettings().
+   * Data provider for testUserSettings().
    *
    * @return array
    */
