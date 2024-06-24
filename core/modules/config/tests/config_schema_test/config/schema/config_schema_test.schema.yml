@@ -369,17 +369,14 @@ config_schema_test.schema_sequence_sort:
     multisort_name_then_weight:
       type: sequence
       orderby:
-        -
-          sort_by: name
-        -
-          sort_by: weight
+        - name
+        - weight
       sequence:
         type: sort_test_item
     multisort_name_then_weight_desc:
       type: sequence
       orderby:
-        -
-          sort_by: name
+        - name
         -
           sort_by: weight
           sort_order: SORT_DESC
