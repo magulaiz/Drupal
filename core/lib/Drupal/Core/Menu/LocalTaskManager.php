@@ -251,18 +251,14 @@ class LocalTaskManager extends DefaultPluginManager implements LocalTaskManagerI
       }
 
       $level = 0;
-      $current_uri = Url::fromRoute($route_name, $this->routeMatch->getRawParameters()->all())->toString();
+      $current_uri = Url::fromRoute($route_name,  $this->routeMatch->getRawParameters()->all())->toString();
       foreach ($children as $child) {
         foreach ($child as $plugin_id => $task_info) {
           $plugin = $this->createInstance($plugin_id);
           $this->instances[$route_name][$level][$plugin_id] = $plugin;
-          $plugin_uri = Url::fromRoute($task_info['route_name'], $plugin->getRouteParameters($this->routeMatch))->toString();
+          $plugin_uri = Url::fromRoute($task_info['route_name'],  $plugin->getRouteParameters($this->routeMatch))->toString();
           if ($plugin_uri == $current_uri) {
             $plugin->setActive();
-            $plugin_definition = $plugin->getPluginDefinition();
-            if (isset($plugin_definition['parent_id']) && $plugin_definition['parent_id'] != NULL) {
-              $this->instances[$route_name][0][$plugin_definition['parent_id']]->setActive();
-            }
           }
         }
         $level++;
