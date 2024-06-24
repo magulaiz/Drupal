@@ -121,7 +121,7 @@ class SelectionPluginManager extends DefaultPluginManager implements SelectionPl
 
     // Derive the group from the plugin ID.
     if (str_contains($plugin_id, PluginBase::DERIVATIVE_SEPARATOR)) {
-      [$group, ] = explode(PluginBase::DERIVATIVE_SEPARATOR, $plugin_id);
+      [$group] = explode(PluginBase::DERIVATIVE_SEPARATOR, $plugin_id);
     }
     else {
       $group = $plugin_id;
