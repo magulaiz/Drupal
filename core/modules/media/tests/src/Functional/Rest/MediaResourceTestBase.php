@@ -82,8 +82,6 @@ abstract class MediaResourceTestBase extends EntityResourceTestBase {
 
       case 'PATCH':
         $this->grantPermissionsToTestedRole(['edit any camelids media']);
-        // @todo Remove this in https://www.drupal.org/node/2824851.
-        $this->grantPermissionsToTestedRole(['access content']);
         break;
 
       case 'DELETE':
