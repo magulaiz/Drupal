@@ -104,7 +104,6 @@ class LocalTasksBlock extends BlockBase implements ContainerFactoryPluginInterfa
 
     if ($config['secondary']) {
       $level = 1;
-      $cacheability = new CacheableMetadata();
       $cacheability->addCacheContexts(['route']);
       $instances = $this->localTaskManager->getTasksBuild($this->routeMatch->getRouteName(), $cacheability);
       $current_url = Url::fromRoute($this->routeMatch->getRouteName(), $this->routeMatch->getRawParameters()->all())->toString();
@@ -122,7 +121,6 @@ class LocalTasksBlock extends BlockBase implements ContainerFactoryPluginInterfa
           break;
         }
       }
-
       $links = $this->localTaskManager->getLocalTasks($this->routeMatch->getRouteName(), $level);
       $cacheability = $cacheability->merge($links['cacheability']);
       // Do not display single tabs.
