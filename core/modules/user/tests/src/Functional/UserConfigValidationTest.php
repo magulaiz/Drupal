@@ -7,7 +7,7 @@ namespace Drupal\Tests\user\Functional;
 use Drupal\Tests\BrowserTestBase;
 
 /**
- * @group system
+ * @group user
  */
 class UserConfigValidationTest extends BrowserTestBase {
 
@@ -17,7 +17,7 @@ class UserConfigValidationTest extends BrowserTestBase {
   protected $defaultTheme = 'stark';
 
   /**
-   * Tests invalid register key config.
+   * Tests invalid value for `register` key.
    */
   public function testRegisterKey(): void {
     $this->expectExceptionMessage('Schema errors for user.settings with the following errors: 0 [register] The value you selected is not a valid choice.');
@@ -25,7 +25,7 @@ class UserConfigValidationTest extends BrowserTestBase {
   }
 
   /**
-   * Tests invalid cancel_method key config.
+   * Tests invalid value for `cancel_method` key.
    */
   public function testCancelMethodsKey(): void {
     $this->expectExceptionMessage('Schema errors for user.settings with the following errors: 0 [cancel_method] The value you selected is not a valid choice.');
@@ -33,7 +33,7 @@ class UserConfigValidationTest extends BrowserTestBase {
   }
 
   /**
-   * Tests invalid password_reset_timeout key config.
+   * Tests invalid value for `invalid password_reset_timeout` key.
    */
   public function testPasswordResetTimeoutKey(): void {
     $this->expectExceptionMessage('Schema errors for user.settings with the following errors: 0 [password_reset_timeout] This value should be &lt;em class=&quot;placeholder&quot;&gt;1&lt;/em&gt; or more.');

@@ -45,6 +45,7 @@ user.settings:
       label: 'Who can register accounts?'
       # Choices are derived from the constants.
       # @see \Drupal\user\UserInterface::REGISTER_*
+      # @todo Convert to use Enum in https://www.drupal.org/project/drupal/issues/3450782
       constraints:
         Choice:
           choices:
@@ -59,8 +60,7 @@ user.settings:
     password_reset_timeout:
       type: integer
       label: 'Password reset timeout'
-      # Increase min in a followup.
-      # @see https://www.drupal.org/i/3441772
+      # @todo Increase min in https://www.drupal.org/i/3441772
       constraints:
         Range:
           min: 1
