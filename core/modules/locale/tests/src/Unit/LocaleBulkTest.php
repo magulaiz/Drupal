@@ -8,12 +8,12 @@ use Drupal\Tests\UnitTestCase;
 
 /**
  * Tests locale.bulk.inc.
+ *
  * @group locale
  */
 class LocaleBulkTest extends UnitTestCase {
 
-  protected function setUp(): void
-  {
+  protected function setUp(): void {
     parent::setUp();
 
     include_once DRUPAL_ROOT . '/core/modules/locale/locale.bulk.inc';
