@@ -744,6 +744,7 @@ class ViewExecutable {
       // Ensure that we can call the method at any point in time.
       $this->initDisplay();
 
+      // Allow Ajax requests on exposed filters.
       if ($this->request->isMethod('post') && $this->request->request->get('_triggering_element_name')) {
         $this->exposed_input = $this->request->request->all();
       }
