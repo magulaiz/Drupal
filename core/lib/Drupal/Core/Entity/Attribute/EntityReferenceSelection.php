@@ -30,6 +30,9 @@ class EntityReferenceSelection extends Plugin {
    *   the ID must be either "foo" or "foo:bar".
    * @param \Drupal\Core\StringTranslation\TranslatableMarkup $label
    *   The human-readable name of the selection plugin.
+   * @param int $weight
+   *   The weight of the plugin in its group. This property is used to select
+   *   the "best" plugin within a group.
    * @param string $group
    *   Deprecated in 11.1.0. The selection plugin group. This property is used
    *   to allow selection plugins to target a specific entity type while also
@@ -44,9 +47,6 @@ class EntityReferenceSelection extends Plugin {
    *     weight: 5
    *   )]
    *   @endcode
-   * @param int $weight
-   *   The weight of the plugin in its group. This property is used to select
-   *   the "best" plugin within a group.
    * @param string[] $entity_types
    *   (optional) An array of entity types that can be referenced by this
    *   plugin. Defaults to all entity types.
@@ -56,8 +56,8 @@ class EntityReferenceSelection extends Plugin {
   public function __construct(
     public readonly string $id,
     public readonly TranslatableMarkup $label,
-    public readonly string $group = '',
     public readonly int $weight,
+    public readonly string $group = '',
     public readonly array $entity_types = [],
     public readonly ?string $deriver = NULL,
   ) {}
