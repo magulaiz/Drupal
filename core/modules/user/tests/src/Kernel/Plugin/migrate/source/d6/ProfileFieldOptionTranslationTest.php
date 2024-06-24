@@ -24,7 +24,7 @@ class ProfileFieldOptionTranslationTest extends ProfileFieldTest {
   /**
    * {@inheritdoc}
    */
-  public static function providerSource() {
+  public static function providerSource(): array {
 
     $test = parent::providerSource();
     // The source data.

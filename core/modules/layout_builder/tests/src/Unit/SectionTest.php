@@ -210,7 +210,7 @@ class SectionTest extends UnitTestCase {
   /**
    * Provides test data for ::testGetThirdPartySettings().
    */
-  public static function providerTestGetThirdPartySettings() {
+  public static function providerTestGetThirdPartySettings(): array {
     $data = [];
     $data[] = [
       'bad_judgement',

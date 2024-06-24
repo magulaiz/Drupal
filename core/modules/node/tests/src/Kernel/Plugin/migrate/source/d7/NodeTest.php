@@ -25,7 +25,7 @@ class NodeTest extends MigrateSqlSourceTestBase {
   /**
    * {@inheritdoc}
    */
-  public static function providerSource() {
+  public static function providerSource(): array {
     $tests = [];
 
     // Test retrieval of article and page content types when configuration

@@ -24,7 +24,7 @@ class FieldOptionTranslationTest extends MigrateSqlSourceTestBase {
   /**
    * {@inheritdoc}
    */
-  public static function providerSource() {
+  public static function providerSource(): array {
     $test = [];
 
     // The source data.

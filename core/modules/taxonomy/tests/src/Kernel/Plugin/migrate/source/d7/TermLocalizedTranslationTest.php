@@ -22,7 +22,7 @@ class TermLocalizedTranslationTest extends TermTest {
   /**
    * {@inheritdoc}
    */
-  public static function providerSource() {
+  public static function providerSource(): array {
     $tests = parent::providerSource();
 
     for ($i = 1; $i < 4; $i++) {

@@ -20,7 +20,7 @@ class TermSourceWithVocabularyFilterTest extends TermTest {
   /**
    * {@inheritdoc}
    */
-  public static function providerSource() {
+  public static function providerSource(): array {
     // Get the source data from parent.
     $tests = parent::providerSource();
 

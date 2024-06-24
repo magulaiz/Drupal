@@ -22,7 +22,7 @@ class BlockedIpsTest extends MigrateSqlSourceTestBase {
   /**
    * {@inheritdoc}
    */
-  public static function providerSource() {
+  public static function providerSource(): array {
     $tests = [];
 
     $tests[0]['source_data']['blocked_ips'] = [
