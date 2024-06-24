@@ -116,7 +116,6 @@ class LocalTaskManagerTest extends UnitTestCase {
     $this->setupLocalTaskManager();
     $this->setupNullCacheabilityMetadataValidation($container);
 
-
     $metadataBubblingUrlGenerator = $this->getMockBuilder('Drupal\Core\Render\MetadataBubblingUrlGenerator')
       ->disableOriginalConstructor()
       ->getMock();

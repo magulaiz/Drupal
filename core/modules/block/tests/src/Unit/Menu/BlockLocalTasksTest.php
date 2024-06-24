@@ -6,7 +6,6 @@ namespace Drupal\Tests\block\Unit\Menu;
 
 use Drupal\Tests\Core\Menu\LocalTaskIntegrationTestBase;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
-use Symfony\Component\HttpFoundation\InputBag;
 
 /**
  * Tests block local tasks.
