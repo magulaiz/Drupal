@@ -16,14 +16,34 @@ use Drupal\Core\StringTranslation\PluralTranslatableMarkup;
  * - #pattern: A string for the native HTML5 pattern attribute.
  * - #multiple: (optional) If TRUE, the element accepts multiple email addresses
  *   separated by commas. Defaults to FALSE.
+ * - #maxlength: (optional) The maximum length of the element in characters.
+ *   Defaults to 254 for one email according to RFC 3696 and Erratum 1690.
  *
  * Example usage:
  * @code
  * $form['email'] = [
  *   '#type' => 'email',
  *   '#title' => $this->t('Email'),
- *   '#pattern' => '*@example.com',
  * ];
+ * @endcode
+ *
+ * Element might use a native HTML5 pattern attribute:
+ * @code
+ *  $form['email'] = [
+ *    '#type' => 'email',
+ *    '#title' => $this->t('Email'),
+ *    '#pattern' => '*@example.com',
+ *  ];
+ * @endcode
+ *
+ * Element might use a native HTML5 multiple attribute:
+ * @code
+ *  $form['emails'] = [
+ *    '#type' => 'email',
+ *    '#title' => $this->t('Emails'),
+ *    '#multiple' => TRUE,
+ *    '#maxlength' => 1024,
+ *  ];
  * @endcode
  *
  * @see \Drupal\Core\Render\Element\Textfield
