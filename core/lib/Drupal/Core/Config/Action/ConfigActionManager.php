@@ -59,8 +59,8 @@ class ConfigActionManager extends DefaultPluginManager {
    * @var array
    */
   private static $deprecatedPluginIds = [
-    'entity_create:ensure_exists' => 'The "entity_create:ensure_exists" plugin ID is deprecated. Use "entity_create:createIfNotExists" instead. See https://www.drupal.org/i/3455113.',
-    'simple_config_update' => 'The "simple_config_update" plugin ID is deprecated. Use "simpleConfigUpdate" instead. See  https://www.drupal.org/i/3455113.',
+    'entity_create:ensure_exists' => 'The plugin ID "entity_create:ensure_exists" is deprecated. Use "entity_create:createIfNotExists" instead. See https://www.drupal.org/i/3455113.',
+    'simple_config_update' => 'The plugin ID "simple_config_update" is deprecated. Use "simpleConfigUpdate" instead. See https://www.drupal.org/i/3455113.',
   ];
 
   /**
