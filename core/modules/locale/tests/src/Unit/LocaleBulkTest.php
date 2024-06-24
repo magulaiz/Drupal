@@ -19,11 +19,11 @@ class LocaleBulkTest extends UnitTestCase {
 
     $container = new ContainerBuilder();
     $container->set('locale.config_manager', $this->createMock('Drupal\locale\LocaleConfigManager'));
-    $this->languageManager = $this->createMock('Drupal\Core\Language\LanguageManagerInterface');
-    $this->languageManager->expects($this->any())
+    $language_manager = $this->createMock('Drupal\Core\Language\LanguageManagerInterface');
+    $language_manager->expects($this->any())
       ->method('getDefaultLanguage')
       ->willReturn($this->createMock('Drupal\Core\Language\LanguageInterface'));
-    $container->set('language_manager', $this->languageManager);
+    $container->set('language_manager', $language_manager);
 
     \Drupal::setContainer($container);
 
