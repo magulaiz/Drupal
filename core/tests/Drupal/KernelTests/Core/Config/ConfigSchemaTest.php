@@ -761,7 +761,7 @@ class ConfigSchemaTest extends KernelTestBase {
           $item3,
         ],
       ],
-      // Multifacet sort with deeper subkeys.
+      // Multi-facet sort with deeper subkeys.
       'subkey sort int then natural string' => [
         'data' => $sort_data,
         'schema' => 'subkey_sort_int_then_nat_string',
