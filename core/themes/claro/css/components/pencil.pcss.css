@@ -1,0 +1,9 @@
+.pencil {
+  fill: #545560;
+}
+
+@media (forced-colors: active), (-ms-high-contrast: active) {
+  .pencil {
+    fill: LinkText;
+  }
+}

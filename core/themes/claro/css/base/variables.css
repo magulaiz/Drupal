@@ -309,4 +309,22 @@
   --vertical-tabs-menu-link--active-border-size: 0.25rem;
   --vertical-tabs-menu-link--active-border-color: var(--color-absolutezero);
   --vertical-tabs-menu--z-index: 0;
+  /**
+   * Contextual icons.
+   */
+  --contextual-trigger-width: 2rem;
+  --contextual-trigger-height: 2rem;
+  --contextual-icon-width: calc(var(--contextual-trigger-width) / 2);
+  --contextual-icon-height: calc(var(--contextual-trigger-height) / 2);
+  /**
+   * Contextual theme.
+   */
+  --contextual-z-index: 500;
+  --contextual-icon-spacing-size: 0.25rem; /* 4px */
+  --contextual-outline-bg-color: var(--color-grayblue);
+  --contextual-links-spacing-size: var(--dropbutton-spacing-size);
+  --contextual-links-border-size: var(--dropbutton-border-size);
+  --contextual-links-border-radius-size: var(--dropbutton-border-radius-size);
+  --contextual-links-font-size: var(--dropbutton-font-size);
+  --contextual-links-line-height: var(--dropbutton-line-height);
 }

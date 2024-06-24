@@ -5,13 +5,6 @@
 
 @import "../base/variables.pcss.css";
 
-:root {
-  --contextual-trigger-width: 2rem;
-  --contextual-trigger-height: 2rem;
-  --contextual-icon-width: calc(var(--contextual-trigger-width) / 2);
-  --contextual-icon-height: calc(var(--contextual-trigger-height) / 2);
-}
-
 .contextual__trigger,
 .contextual__trigger:focus,
 .contextual__trigger.visually-hidden:focus {

@@ -5,17 +5,6 @@
 
 @import "../base/variables.pcss.css";
 
-:root {
-  --contextual-z-index: 500;
-  --contextual-icon-spacing-size: 0.25rem; /* 4px */
-  --contextual-outline-bg-color: var(--color-grayblue);
-  --contextual-links-spacing-size: var(--dropbutton-spacing-size);
-  --contextual-links-border-size: var(--dropbutton-border-size);
-  --contextual-links-border-radius-size: var(--dropbutton-border-radius-size);
-  --contextual-links-font-size: var(--dropbutton-font-size);
-  --contextual-links-line-height: var(--dropbutton-line-height);
-}
-
 .contextual {
   position: absolute;
   z-index: var(--contextual-z-index);

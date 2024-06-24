@@ -182,6 +182,9 @@ contextual-trigger:
   version: VERSION
   js:
     js/contextual.js: {}
+  css:
+    component:
+      css/components/pencil.css: { }
   dependencies:
     - claro/icon-link
 

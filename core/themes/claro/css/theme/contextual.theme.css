@@ -249,11 +249,12 @@
   --vertical-tabs-menu-link--active-border-size: 0.25rem;
   --vertical-tabs-menu-link--active-border-color: var(--color-absolutezero);
   --vertical-tabs-menu--z-index: 0;
-}
-
-:root {
+  --contextual-trigger-width: 2rem;
+  --contextual-trigger-height: 2rem;
+  --contextual-icon-width: calc(var(--contextual-trigger-width) / 2);
+  --contextual-icon-height: calc(var(--contextual-trigger-height) / 2);
   --contextual-z-index: 500;
-  --contextual-icon-spacing-size: 0.25rem; /* 4px */
+  --contextual-icon-spacing-size: 0.25rem;
   --contextual-outline-bg-color: var(--color-grayblue);
   --contextual-links-spacing-size: var(--dropbutton-spacing-size);
   --contextual-links-border-size: var(--dropbutton-border-size);
