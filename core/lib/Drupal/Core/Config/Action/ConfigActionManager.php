@@ -52,7 +52,6 @@ use Drupal\Core\Validation\Plugin\Validation\Constraint\FullyValidatableConstrai
  *   This API is experimental.
  */
 class ConfigActionManager extends DefaultPluginManager {
-
    
   /**
    * Information about all deprecated plugin's Id.
