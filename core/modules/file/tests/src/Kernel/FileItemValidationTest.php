@@ -101,12 +101,14 @@ class FileItemValidationTest extends KernelTestBase {
       ],
     ]);
     $result = $entity_test->validate();
-    $this->assertCount(2, $result);
+    $this->assertCount(3, $result);
 
     $this->assertEquals('field_test_file.0', $result->get(0)->getPropertyPath());
-    $this->assertStringEndsWith('exceeding the maximum file size of <em class="placeholder">2 KB</em>.', (string) $result->get(0)->getMessage());
+    $this->assertEquals('You do not have access to the referenced entity (<em class="placeholder">file</em>: <em class="placeholder">1</em>).', (string) $result->get(0)->getMessage());
     $this->assertEquals('field_test_file.0', $result->get(1)->getPropertyPath());
-    $this->assertEquals('Only files with the following extensions are allowed: <em class="placeholder">jpg</em>.', (string) $result->get(1)->getMessage());
+    $this->assertStringEndsWith('exceeding the maximum file size of <em class="placeholder">2 KB</em>.', (string) $result->get(1)->getMessage());
+    $this->assertEquals('field_test_file.0', $result->get(2)->getPropertyPath());
+    $this->assertEquals('Only files with the following extensions are allowed: <em class="placeholder">jpg</em>.', (string) $result->get(2)->getMessage());
 
     // Refer to a file that does not exist.
     $entity_test = EntityTest::create([
