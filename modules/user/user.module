@@ -3504,11 +3504,11 @@ function user_filters() {
     );
   }
 
-  $module_info = system_get_info('module');
   $options = array();
   foreach (module_implements('permission') as $module) {
     $function = $module . '_permission';
-    $module_group = t('@module module', array('@module' => $module_info[$module]['name']));
+    $info = system_get_info('module', $module);
+    $module_group = t('@module module', array('@module' => $info['name']));
     if ($permissions = $function()) {
       asort($permissions);
       foreach ($permissions as $permission => $description) {
