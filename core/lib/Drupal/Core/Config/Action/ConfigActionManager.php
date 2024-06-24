@@ -53,6 +53,17 @@ use Drupal\Core\Validation\Plugin\Validation\Constraint\FullyValidatableConstrai
  */
 class ConfigActionManager extends DefaultPluginManager {
 
+   
+  /**
+   * Information about all deprecated plugin's Id.
+   *
+   * @var array
+   */
+  private static $deprecatedPluginIds = [
+    'entity_create:ensure_exists' => 'The "entity_create:ensure_exists" plugin ID is deprecated. Use "entity_create:createIfNotExists" instead. See https://www.drupal.org/i/3455113.',
+    'simple_config_update' => 'The "simple_config_update" plugin ID is deprecated. Use "simpleConfigUpdate" instead. See  https://www.drupal.org/i/3455113.',
+  ];
+
   /**
    * Constructs a new \Drupal\Core\Config\Action\ConfigActionManager object.
    *
@@ -239,14 +250,9 @@ class ConfigActionManager extends DefaultPluginManager {
   public function createInstance($plugin_id, array $configuration = []) {
     $instance = parent::createInstance($plugin_id, $configuration);
     // Trigger deprecation notices for renamed plugins.
-    // @see https://www.drupal.org/i/3455113
-    $renamed = [
-      'simple_config_update' => 'simpleConfigUpdate',
-      'entity_create:ensure_exists' => 'entity_create:createIfNotExists',
-    ];
-    if (isset($renamed[$plugin_id])) {
+    if (isset(self::$deprecatedPluginIds[$plugin_id])) {
       // phpcs:ignore Drupal.Semantics.FunctionTriggerError
-      trigger_error(sprintf('The plugin ID "%s" is deprecated. Use "%s" instead.', $plugin_id, $renamed[$plugin_id]), E_USER_DEPRECATED);
+      @trigger_error(self::$deprecatedPluginIds[$plugin_id], E_USER_DEPRECATED);
     }
     return $instance;
   }
