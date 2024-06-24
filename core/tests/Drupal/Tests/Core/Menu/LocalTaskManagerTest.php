@@ -492,6 +492,7 @@ class LocalTaskManagerTest extends UnitTestCase {
       $mock->getOptions(Argument::cetera())->willReturn([]);
       $mock->getActive()->willReturn($plugin_id === $active_plugin_id);
       $mock->setActive()->willReturn($mock);
+      $mock->getPluginDefinition()->willReturn($info);
       $mock->getWeight()->willReturn($info['weight'] ?? 0);
       $mock->getCacheContexts()->willReturn($info['cache_contexts'] ?? []);
       $mock->getCacheTags()->willReturn($info['cache_tags'] ?? []);
