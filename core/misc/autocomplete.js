@@ -79,10 +79,7 @@
 
     const term = autocomplete.extractLastTerm(event.target.value);
     // Abort search if the first character is in firstCharacterBlacklist.
-    if (
-      term.length > 0 &&
-      options.firstCharacterBlacklist.indexOf(term[0]) !== -1
-    ) {
+    if (term.length > 0 && options.firstCharacterBlacklist.includes(term[0])) {
       return false;
     }
     // Only search when the term is at least the minimum length.
@@ -115,9 +112,8 @@
       const tagged = autocomplete.splitValues(request.term);
       const il = tagged.length;
       for (let i = 0; i < il; i++) {
-        const index = suggestions.indexOf(tagged[i]);
-        if (index >= 0) {
-          suggestions.splice(index, 1);
+        if (suggestions.includes(tagged[i])) {
+          suggestions.splice(suggestions.indexOf(tagged[i]), 1);
         }
       }
       response(suggestions);

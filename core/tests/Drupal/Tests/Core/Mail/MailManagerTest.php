@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\Core\Mail;
 
 use Drupal\Core\DependencyInjection\ContainerBuilder;
@@ -152,7 +154,7 @@ class MailManagerTest extends UnitTestCase {
    *
    * @covers ::getInstance
    */
-  public function testGetInstance() {
+  public function testGetInstance(): void {
     $interface = [
       'default' => 'php_mail',
       'example_testkey' => 'test_mail_collector',
@@ -175,7 +177,7 @@ class MailManagerTest extends UnitTestCase {
    *
    * @covers ::mail
    */
-  public function testMailInRenderContext() {
+  public function testMailInRenderContext(): void {
     $interface = [
       'default' => 'php_mail',
       'example_testkey' => 'test_mail_collector',

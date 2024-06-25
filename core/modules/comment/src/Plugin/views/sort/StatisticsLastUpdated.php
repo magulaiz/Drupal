@@ -12,14 +12,14 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  * Sort handler for the newer of last comment / entity updated.
  *
  * @ingroup views_sort_handlers
- *
- * @ViewsSort("comment_ces_last_updated")
  */
+#[ViewsSort("comment_ces_last_updated")]
 class StatisticsLastUpdated extends Date {
 
   /**
    * The node table.
    */
+  // phpcs:ignore Drupal.NamingConventions.ValidVariableName.LowerCamelName
   protected ?string $node_table;
 
   /**

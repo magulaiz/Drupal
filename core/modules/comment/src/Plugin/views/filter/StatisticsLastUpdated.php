@@ -12,14 +12,14 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  * Filter handler for the newer of last comment / node updated.
  *
  * @ingroup views_filter_handlers
- *
- * @ViewsFilter("comment_ces_last_updated")
  */
+#[ViewsFilter("comment_ces_last_updated")]
 class StatisticsLastUpdated extends Date {
 
   /**
    * The node table.
    */
+  // phpcs:ignore Drupal.NamingConventions.ValidVariableName.LowerCamelName
   protected ?string $node_table;
 
   /**
