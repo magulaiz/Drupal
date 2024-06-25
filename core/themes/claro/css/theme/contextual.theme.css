@@ -266,8 +266,8 @@
 .contextual {
   position: absolute;
   z-index: var(--contextual-z-index);
-  inset-inline-start: var(--contextual-icon-spacing-size);
-  inset-block-end: var(--contextual-icon-spacing-size);
+  top: var(--contextual-icon-spacing-size);
+  right: var(--contextual-icon-spacing-size);
 }
 
 .contextual.open {
