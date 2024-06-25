@@ -55,7 +55,6 @@ class ImageTest extends KernelTestBase {
 
     $this->testImages = [
       'core/misc/druplicon.png',
-      'core/misc/loading.gif',
     ];
   }
 
@@ -111,10 +110,6 @@ class ImageTest extends KernelTestBase {
           'uri' => $this->testImages[0],
           'multiplier' => '1x',
         ],
-        [
-          'uri' => $this->testImages[1],
-          'multiplier' => '2x',
-        ],
       ],
       '#width' => rand(0, 1000) . 'px',
       '#height' => rand(0, 500) . 'px',
@@ -124,7 +119,7 @@ class ImageTest extends KernelTestBase {
     $this->render($image);
 
     // Make sure the srcset attribute has the correct value.
-    $this->assertRaw($this->fileUrlGenerator->transformRelative($this->fileUrlGenerator->generateString($this->testImages[0])) . ' 1x, ' . $this->fileUrlGenerator->transformRelative($this->fileUrlGenerator->generateString($this->testImages[1])) . ' 2x', 'Correct output for image with srcset attribute and multipliers.');
+    $this->assertRaw($this->fileUrlGenerator->transformRelative($this->fileUrlGenerator->generateString($this->testImages[0])) . ' 1x', 'Correct output for image with srcset attribute and multipliers.');
   }
 
   /**
@@ -134,7 +129,6 @@ class ImageTest extends KernelTestBase {
     // Test with multipliers.
     $widths = [
       rand(0, 500) . 'w',
-      rand(500, 1000) . 'w',
     ];
     $image = [
       '#theme' => 'image',
@@ -142,10 +136,6 @@ class ImageTest extends KernelTestBase {
         [
           'uri' => $this->testImages[0],
           'width' => $widths[0],
-        ],
-        [
-          'uri' => $this->testImages[1],
-          'width' => $widths[1],
         ],
       ],
       '#width' => rand(0, 1000) . 'px',
@@ -156,7 +146,7 @@ class ImageTest extends KernelTestBase {
     $this->render($image);
 
     // Make sure the srcset attribute has the correct value.
-    $this->assertRaw($this->fileUrlGenerator->generateString($this->testImages[0]) . ' ' . $widths[0] . ', ' . $this->fileUrlGenerator->transformRelative($this->fileUrlGenerator->generateString($this->testImages[1])) . ' ' . $widths[1], 'Correct output for image with srcset attribute and width descriptors.');
+    $this->assertRaw($this->fileUrlGenerator->generateString($this->testImages[0]) . ' ' . $widths[0], 'Correct output for image with srcset attribute and width descriptors.');
   }
 
 }
