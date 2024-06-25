@@ -6,7 +6,7 @@ use Drupal\Core\Config\Config;
 use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Config\TypedConfigManagerInterface;
 use Drupal\Core\Render\Element;
-use Drupal\Core\StringTranslation\TranslatableMarkup;
+use Drupal\Component\Render\FormattableMarkup;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -274,9 +274,9 @@ abstract class ConfigFormBase extends FormBase {
    * @param \Symfony\Component\Validator\ConstraintViolationListInterface $violations
    *   The list of constraint violations that apply to this form element.
    *
-   * @return \Drupal\Core\StringTranslation\TranslatableMarkup
+   * @return \Drupal\Component\Render\FormattableMarkup
    */
-  protected function formatMultipleViolationsMessage(string $form_element_name, array $violations): TranslatableMarkup {
+  protected function formatMultipleViolationsMessage(string $form_element_name, array $violations): FormattableMarkup {
     $transformed_message_parts = [];
     foreach ($violations as $index => $violation) {
       // Note that `@validation_error_message` (should) already contain a
@@ -289,7 +289,10 @@ abstract class ConfigFormBase extends FormBase {
         '@validation_error_message' => $violation->getMessage(),
       ]);
     }
-    return $this->t(implode("\n", $transformed_message_parts));
+    $transformed_message = implode("\n", $transformed_message_parts);
+    // We use \Drupal\Component\Render\FormattableMarkup directly here,
+    // rather than use t() as we don't want t() to cause further errors.
+    return new FormattableMarkup('%transformed_message', ['%transformed_message' => $transformed_message]);
   }
 
   /**
