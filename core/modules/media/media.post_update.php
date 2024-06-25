@@ -5,9 +5,6 @@
  * Post update functions for Media.
  */
 
-use Drupal\Core\Config\Entity\ConfigEntityUpdater;
-use Drupal\Core\Entity\Display\EntityViewDisplayInterface;
-use Drupal\media\MediaConfigUpdater;
 use Drupal\system\Entity\Action;
 
 /**
@@ -24,18 +21,6 @@ function media_removed_post_updates() {
     'media_post_update_set_blank_iframe_domain_to_null' => '11.0.0',
     'media_post_update_remove_mappings_targeting_source_field' => '11.0.0',
   ];
-}
-
-/**
- * Add the oEmbed loading attribute setting to field formatter instances.
- */
-function media_post_update_oembed_loading_attribute(?array &$sandbox = NULL): void {
-  $media_config_updater = \Drupal::classResolver(MediaConfigUpdater::class);
-  assert($media_config_updater instanceof MediaConfigUpdater);
-  $media_config_updater->setDeprecationsEnabled(TRUE);
-  \Drupal::classResolver(ConfigEntityUpdater::class)->update($sandbox, 'entity_view_display', function (EntityViewDisplayInterface $view_display) use ($media_config_updater): bool {
-    return $media_config_updater->processOembedEagerLoadField($view_display);
-  });
 }
 
 /**
