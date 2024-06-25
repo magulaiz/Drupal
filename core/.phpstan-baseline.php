@@ -398,6 +398,11 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/lib/Drupal/Core/Extension/ExtensionVersion.php',
 ];
 $ignoreErrors[] = [
+	'message' => '#^The "module_installer\\.uninstall_validators" service is deprecated in drupal:11.1.0 and is removed from drupal:12.0.0\\. Inject "\\!tagged_iterator module_install\\.uninstall_validator" instead\\. See https\\://www\\.drupal\\.org/node/3432595$#',
+	'count' => 1,
+	'path' => __DIR__ . '/lib/Drupal/Core/Extension/ModuleInstaller.php',
+];
+$ignoreErrors[] = [
 	// identifier: isset.variable
 	'message' => '#^Variable \\$callback in isset\\(\\) always exists and is not nullable\\.$#',
 	'count' => 1,
@@ -628,12 +633,6 @@ $ignoreErrors[] = [
 	'message' => '#^Constructor of class Drupal\\\\Core\\\\Test\\\\TestRunnerKernel has an unused parameter \\$allow_dumping\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/lib/Drupal/Core/Test/TestRunnerKernel.php',
-];
-$ignoreErrors[] = [
-	// identifier: return.missing
-	'message' => '#^Method Drupal\\\\Core\\\\Theme\\\\ThemeInitialization\\:\\:resolveStyleSheetPlaceholders\\(\\) should return string but return statement is missing\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/lib/Drupal/Core/Theme/ThemeInitialization.php',
 ];
 $ignoreErrors[] = [
 	// identifier: variable.undefined

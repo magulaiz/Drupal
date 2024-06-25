@@ -268,7 +268,11 @@ abstract class EntityDisplayFormBase extends EntityForm {
         // spinners will be added manually by the client-side script.
         'progress' => 'none',
       ],
-      '#attributes' => ['class' => ['visually-hidden']],
+      '#attributes' => [
+        'class' => ['visually-hidden'],
+        // Ensure the button is not focusable via keyboard navigation.
+        'tabindex' => '-1',
+      ],
     ];
 
     $form['actions'] = ['#type' => 'actions'];
@@ -318,6 +322,10 @@ abstract class EntityDisplayFormBase extends EntityForm {
       ],
       'human_name' => [
         '#plain_text' => $label,
+      ],
+      'machine_name' => [
+        '#markup' => $field_name,
+        '#attributes' => ['class' => ['machine-name']],
       ],
       'weight' => [
         '#type' => 'textfield',
@@ -491,6 +499,10 @@ abstract class EntityDisplayFormBase extends EntityForm {
       '#js_settings' => ['rowHandler' => 'field'],
       'human_name' => [
         '#markup' => $extra_field['label'],
+      ],
+      'machine_name' => [
+        '#markup' => $field_id,
+        '#attributes' => ['class' => ['machine-name']],
       ],
       'weight' => [
         '#type' => 'textfield',
