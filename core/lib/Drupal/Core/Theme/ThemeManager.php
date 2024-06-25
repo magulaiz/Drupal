@@ -3,6 +3,7 @@
 namespace Drupal\Core\Theme;
 
 use Drupal\Component\Render\MarkupInterface;
+use Drupal\Component\Utility\NestedArray;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Routing\StackedRouteMatchInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
@@ -140,9 +141,14 @@ class ThemeManager implements ThemeManagerInterface {
 
     $theme_registry = $this->themeRegistry->getRuntime();
 
+    // While we search for templates, we begin to create a full list of theme
+    // suggestions for context.
+    $theme_suggestions = [$hook];
+
     // If an array of hook candidates were passed, use the first one that has an
     // implementation.
     if (is_array($hook)) {
+      $theme_suggestions = array_values($hook);
       foreach ($hook as $candidate) {
         if ($theme_registry->has($candidate)) {
           break;
@@ -162,6 +168,7 @@ class ThemeManager implements ThemeManagerInterface {
       // implementation is found.
       while ($pos = strrpos($hook, '__')) {
         $hook = substr($hook, 0, $pos);
+        $theme_suggestions[] = $hook;
         if ($theme_registry->has($hook)) {
           break;
         }
@@ -186,11 +193,31 @@ class ThemeManager implements ThemeManagerInterface {
       @trigger_error($info['deprecated'], E_USER_DEPRECATED);
     }
 
+    // For context, we need to know about all possible $theme_suggestions, so we
+    // grab the last element and expand it.
+    $hook_name = $theme_suggestions[array_key_last($theme_suggestions)];
+    while ($pos = strrpos($hook_name, '__')) {
+      $hook_name = substr($hook_name, 0, $pos);
+      $theme_suggestions[] = $hook_name;
+    }
+
+    // Use any predefined context provided by the theme hook.
+    // @todo Use a type based object for this.
+    // @see https://www.drupal.org/project/drupal/issues/2972143
+    $context = $info['context'];
+
     // If a renderable array is passed as $variables, then set $variables to
     // the arguments expected by the theme function.
     if (isset($variables['#theme']) || isset($variables['#theme_wrappers'])) {
       $element = $variables;
       $variables = [];
+
+      // Merge any element #context that was passed.
+      if (!empty($element['#context'])) {
+        $context = NestedArray::mergeDeep($context, $element['#context']);
+      }
+
+      // Merge matching variables from the element.
       if (isset($info['variables'])) {
         foreach (array_keys($info['variables']) as $name) {
           if (\array_key_exists("#$name", $element)) {
@@ -212,10 +239,30 @@ class ThemeManager implements ThemeManagerInterface {
     elseif (!empty($info['render element'])) {
       $variables += [$info['render element'] => []];
     }
-    // Supply original caller info.
+    // Supply BC support for previous contextual data. As of 9.2.x, usage of
+    // this variable is highly discouraged. Because this is a passive feature
+    // and detecting when this key is being used is currently not an ability
+    // core has, it cannot yet be properly deprecated.
+    // @todo Officially deprecate this key in a future release.
+    // @see https://www.drupal.org/project/drupal/issues/3051608
+    // @todo Remove the deprecated key in 10.0.x.
+    // @see https://www.drupal.org/project/drupal/issues/3051609
     $variables += [
       'theme_hook_original' => $original_hook,
     ];
+
+    // Supply default context about the theme hook. Be sure to do this after
+    // any render array context has been merged in.
+    $base_theme_hook = $info['base hook'] ?? $hook;
+    $context['theme_hook'] = $hook;
+    $context['theme_base_hook'] = $base_theme_hook;
+    $context['theme_suggestions'] = array_reverse($theme_suggestions);
+    $context['theme_hook_info'] = $info;
+
+    // Supply the context, for BC and alter parameter limitation reasons.
+    // @todo Create an immutable array object.
+    // @see https://www.drupal.org/project/drupal/issues/2972143
+    $variables['context'] = $context;
 
     $suggestions = $this->buildThemeHookSuggestions($hook, $info['base hook'] ?? '', $variables);
 
@@ -227,9 +274,14 @@ class ThemeManager implements ThemeManagerInterface {
     foreach (array_reverse($suggestions) as $suggestion) {
       if ($theme_registry->has($suggestion)) {
         $info = $theme_registry->get($suggestion);
+        $context['theme_hook'] = $suggestion;
+        $context['theme_hook_info'] = $info;
         break;
       }
     }
+
+    // Add the new suggestions to the context.
+    $context['theme_suggestions'] = $suggestions;
 
     // Include a file if the variable preprocessor is held elsewhere.
     if (!empty($info['includes'])) {
@@ -258,6 +310,10 @@ class ThemeManager implements ThemeManagerInterface {
     if (isset($info['preprocess functions'])) {
       foreach ($info['preprocess functions'] as $preprocessor_function) {
         if (is_callable($preprocessor_function)) {
+          // Replace the context each time in case the callback altered it.
+          // @todo Remove this when context is an immutable array object.
+          // @see https://www.drupal.org/project/drupal/issues/2972143
+          $variables['context'] = $context;
           call_user_func_array($preprocessor_function, [&$variables, $hook, $info]);
         }
       }
@@ -279,6 +335,18 @@ class ThemeManager implements ThemeManagerInterface {
         // @todo Inject the Renderer in https://www.drupal.org/node/2529438.
         \Drupal::service('renderer')->render($preprocess_bubbleable);
       }
+    }
+
+    // Remove the context from the variables to prevent any potentially
+    // sensitive information from leaking into the templating engine.
+    unset($variables['context']);
+    // For backwards compatibility with stable9, allow item_list's context
+    // variable. @see https://www.drupal.org/project/drupal/issues/3051609
+    if ($base_theme_hook === 'item_list') {
+      $variables['context'] = array_intersect_key(
+        $context,
+        ['list_style' => TRUE, 'plugin' => TRUE]
+      );
     }
 
     // Generate the output using a template.
@@ -335,9 +403,19 @@ class ThemeManager implements ThemeManagerInterface {
     if (isset($info['path'])) {
       $template_file = $info['path'] . '/' . $template_file;
     }
+    // Supply BC support for previous contextual data. As of 9.2.x, usage of
+    // this variable is highly discouraged. Because this is a passive feature
+    // and detecting when this key is being used is currently not an ability
+    // core has, it cannot yet be properly deprecated.
+    // @todo Officially deprecate this key in a future release.
+    // @see https://www.drupal.org/project/drupal/issues/3051608
+    // @todo Remove the deprecated key in 10.0.x.
+    // @see https://www.drupal.org/project/drupal/issues/3051609
+    //
     // Add the theme suggestions to the variables array just before rendering
     // the template for backwards compatibility with template engines.
     $variables['theme_hook_suggestions'] = $suggestions;
+
     // For backwards compatibility, pass 'theme_hook_suggestion' on to the
     // template engine. This is only set when calling a direct suggestion like
     // '#theme' => 'menu__shortcut_default' when the template exists in the
@@ -345,7 +423,7 @@ class ThemeManager implements ThemeManagerInterface {
     if (isset($theme_hook_suggestion)) {
       $variables['theme_hook_suggestion'] = $theme_hook_suggestion;
     }
-    $output = $render_function($template_file, $variables);
+    $output = $render_function($template_file, $variables, $context);
     return ($output instanceof MarkupInterface) ? $output : (string) $output;
   }
 
@@ -375,8 +453,13 @@ class ThemeManager implements ThemeManagerInterface {
     // hook as the last parameter to the suggestions alter hooks.
     $base_theme_hook = $info_base_hook ?: $hook;
 
+    // Clone the variables so they cannot be modified by suggestion hooks.
+    // @todo Create an immutable array object.
+    // @see https://www.drupal.org/project/drupal/issues/2972143
+    $variables_clone = $variables;
+
     // Invoke hook_theme_suggestions_HOOK().
-    $suggestions = $this->moduleHandler->invokeAll('theme_suggestions_' . $base_theme_hook, [$variables]);
+    $suggestions = $this->moduleHandler->invokeAll('theme_suggestions_' . $base_theme_hook, [$variables_clone]);
     // If the theme implementation was invoked with a direct theme suggestion
     // like '#theme' => 'node__article', add it to the suggestions array before
     // invoking suggestion alter hooks.
@@ -390,8 +473,8 @@ class ThemeManager implements ThemeManagerInterface {
       'theme_suggestions',
       'theme_suggestions_' . $base_theme_hook,
     ];
-    $this->moduleHandler->alter($hooks, $suggestions, $variables, $base_theme_hook);
-    $this->alter($hooks, $suggestions, $variables, $base_theme_hook);
+    $this->moduleHandler->alter($hooks, $suggestions, $variables_clone, $base_theme_hook);
+    $this->alter($hooks, $suggestions, $variables_clone, $base_theme_hook);
 
     return $suggestions;
   }
