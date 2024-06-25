@@ -35,7 +35,11 @@ class BlockContextualLinksTest extends WebDriverTestBase {
    */
   protected function setUp(): void {
     parent::setUp();
-
+    $this->drupalLogin($this->drupalCreateUser([
+      'administer blocks',
+      'access administration pages',
+      'access contextual links',
+    ]));
     $this->blockId = $this->defaultTheme . '_powered';
     $this->placeBlock('system_powered_by_block', [
       'id' => $this->blockId,
@@ -48,7 +52,6 @@ class BlockContextualLinksTest extends WebDriverTestBase {
    */
   public function testBlockContextualLinks() {
     // Ensure that contextual filter links are visible on the page.
-    $this->drupalLogin($this->rootUser);
     $this->drupalGet('<front>');
     $contextual_id = "[data-contextual-id^='block:block=$this->blockId:langcode=en']";
     $this->assertSession()->waitForElement('css', "$contextual_id .contextual-links");

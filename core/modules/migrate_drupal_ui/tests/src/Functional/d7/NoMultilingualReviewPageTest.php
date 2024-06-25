@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\migrate_drupal_ui\Functional\d7;
 
 use Drupal\Tests\migrate_drupal_ui\Functional\NoMultilingualReviewPageTestBase;
@@ -25,7 +27,6 @@ class NoMultilingualReviewPageTest extends NoMultilingualReviewPageTestBase {
     'file',
     'language',
     'migrate_drupal_ui',
-    'statistics',
     'telephone',
   ];
 
@@ -102,7 +103,6 @@ class NoMultilingualReviewPageTest extends NoMultilingualReviewPageTestBase {
       'Search',
       'Search embedded form',
       'Shortcut',
-      'Statistics',
       'String translation',
       'Stylizer',
       'Synchronize translations',
@@ -165,6 +165,7 @@ class NoMultilingualReviewPageTest extends NoMultilingualReviewPageTestBase {
       'RDF',
       'References',
       'References UUID',
+      'Statistics',
       'Translation redirect',
       'Translation sets',
       'User mail translation',
@@ -178,7 +179,6 @@ class NoMultilingualReviewPageTest extends NoMultilingualReviewPageTestBase {
       // These modules are in the missing path list because they are installed
       // on the source site but they are not installed on the destination site.
       'Syslog',
-      // @todo Remove tracker in https://www.drupal.org/project/drupal/issues/3261452
       'Tracker',
       'Update manager',
     ];

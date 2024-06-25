@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace Drupal\KernelTests\Config\Schema;
 
@@ -142,14 +142,14 @@ class MappingTest extends KernelTestBase {
         ])->save();
         break;
 
-      case 'field.field.node.forum.comment_forum':
-        $this->enableModules(['field', 'node', 'comment', 'taxonomy', 'forum']);
-        $this->assertNull(FieldConfig::load('node.forum.comment_forum'));
+      case 'field.field.node.config_mapping_test.comment_config_mapping_test':
+        $this->enableModules(['field', 'node', 'comment', 'taxonomy', 'config_mapping_test']);
+        $this->assertNull(FieldConfig::load('node.config_mapping_test.comment_config_mapping_test'));
         // TRICKY: \Drupal\node\Entity\NodeType::$preview_mode uses
         // DRUPAL_OPTIONAL, which is defined in system.module.
         require_once 'core/modules/system/system.module';
-        $this->installConfig(['forum']);
-        $this->assertNotNull(FieldConfig::load('node.forum.comment_forum'));
+        $this->installConfig(['config_mapping_test']);
+        $this->assertNotNull(FieldConfig::load('node.config_mapping_test.comment_config_mapping_test'));
         break;
     }
 
@@ -175,7 +175,7 @@ class MappingTest extends KernelTestBase {
    *
    * @return \Generator
    */
-  public function providerMappingInterpretation(): \Generator {
+  public static function providerMappingInterpretation(): \Generator {
     $available_block_settings_types = [
       'block.settings.field_block:*:*:*' => [
         'formatter',
@@ -214,7 +214,11 @@ class MappingTest extends KernelTestBase {
         'theme',
         'profile',
       ],
-      ['_core'],
+      [
+        '_core',
+        'langcode',
+        'profile',
+      ],
       [],
     ];
 
@@ -234,7 +238,7 @@ class MappingTest extends KernelTestBase {
         // @see core/modules/config/tests/config_schema_deprecated_test/config/schema/config_schema_deprecated_test.schema.yml
         'complex_structure_deprecated',
       ],
-      ['_core', 'complex_structure_deprecated'],
+      ['_core', 'langcode', 'complex_structure_deprecated'],
       [],
     ];
     yield 'No dynamic type: config_schema_deprecated_test.settings:complex_structure_deprecated' => [
@@ -351,8 +355,8 @@ class MappingTest extends KernelTestBase {
       [],
       $available_block_settings_types,
     ];
-    yield 'Dynamic type with [%parent.%parent]: field.field.node.forum.comment_forum:default_value.0' => [
-      'field.field.node.forum.comment_forum',
+    yield 'Dynamic type with [%parent.%parent]: field.field.node.config_mapping_test.comment_config_mapping_test:default_value.0' => [
+      'field.field.node.config_mapping_test.comment_config_mapping_test',
       'default_value.0',
       [
         // Keys defined locally, in `type: field.value.comment`.
