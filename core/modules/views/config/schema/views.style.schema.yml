@@ -121,6 +121,15 @@ views.style.table:
     caption:
       type: label
       label: 'Caption for the table'
+    remember:
+      type: boolean
+      label: 'Remember the last selection'
+    remember_roles:
+      type: sequence
+      label: 'User roles'
+      sequence:
+        type: string
+        label: 'Role'
     description:
       type: text
       label: 'Table description'
