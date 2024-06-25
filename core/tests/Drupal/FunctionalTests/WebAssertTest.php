@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\FunctionalTests;
 
 use Behat\Mink\Exception\ExpectationException;
@@ -13,6 +15,7 @@ use PHPUnit\Framework\AssertionFailedError;
  * Tests WebAssert functionality.
  *
  * @group browsertestbase
+ * @group #slow
  * @coversDefaultClass \Drupal\Tests\WebAssert
  */
 class WebAssertTest extends BrowserTestBase {
@@ -34,7 +37,7 @@ class WebAssertTest extends BrowserTestBase {
    *
    * @covers ::responseHeaderExists
    */
-  public function testResponseHeaderExists() {
+  public function testResponseHeaderExists(): void {
     $this->drupalGet('test-null-header');
     $this->assertSession()->responseHeaderExists('Null-Header');
 
@@ -48,7 +51,7 @@ class WebAssertTest extends BrowserTestBase {
    *
    * @covers ::responseHeaderDoesNotExist
    */
-  public function testResponseHeaderDoesNotExist() {
+  public function testResponseHeaderDoesNotExist(): void {
     $this->drupalGet('test-null-header');
     $this->assertSession()->responseHeaderDoesNotExist('does-not-exist');
 
@@ -60,7 +63,7 @@ class WebAssertTest extends BrowserTestBase {
   /**
    * @covers ::pageTextMatchesCount
    */
-  public function testPageTextMatchesCount() {
+  public function testPageTextMatchesCount(): void {
     $this->drupalLogin($this->drupalCreateUser());
 
     // Visit a Drupal page that requires login.
@@ -75,7 +78,7 @@ class WebAssertTest extends BrowserTestBase {
   /**
    * @covers ::pageTextContainsOnce
    */
-  public function testPageTextContainsOnce() {
+  public function testPageTextContainsOnce(): void {
     $this->drupalLogin($this->drupalCreateUser());
 
     // Visit a Drupal page that requires login.
@@ -139,7 +142,7 @@ class WebAssertTest extends BrowserTestBase {
    *
    * @covers ::linkExists
    */
-  public function testPipeCharInLocator() {
+  public function testPipeCharInLocator(): void {
     $this->drupalGet('test-pipe-char');
     $this->assertSession()->linkExists('foo|bar|baz');
   }
@@ -149,7 +152,7 @@ class WebAssertTest extends BrowserTestBase {
    *
    * @covers ::linkExistsExact
    */
-  public function testLinkExistsExact() {
+  public function testLinkExistsExact(): void {
     $this->drupalGet('test-pipe-char');
     $this->assertSession()->linkExistsExact('foo|bar|baz');
   }
@@ -159,7 +162,7 @@ class WebAssertTest extends BrowserTestBase {
    *
    * @covers ::linkExistsExact
    */
-  public function testInvalidLinkExistsExact() {
+  public function testInvalidLinkExistsExact(): void {
     $this->drupalGet('test-pipe-char');
     $this->expectException(ExpectationException::class);
     $this->expectExceptionMessage('Link with label foo|bar not found');
@@ -171,7 +174,7 @@ class WebAssertTest extends BrowserTestBase {
    *
    * @covers ::linkNotExistsExact
    */
-  public function testLinkNotExistsExact() {
+  public function testLinkNotExistsExact(): void {
     $this->drupalGet('test-pipe-char');
     $this->assertSession()->linkNotExistsExact('foo|bar');
   }
@@ -181,11 +184,109 @@ class WebAssertTest extends BrowserTestBase {
    *
    * @covers ::linkNotExistsExact
    */
-  public function testInvalidLinkNotExistsExact() {
+  public function testInvalidLinkNotExistsExact(): void {
     $this->drupalGet('test-pipe-char');
     $this->expectException(ExpectationException::class);
     $this->expectExceptionMessage('Link with label foo|bar|baz found');
     $this->assertSession()->linkNotExistsExact('foo|bar|baz');
+  }
+
+  /**
+   * Tests linkExistsByHref() functionality.
+   *
+   * @covers ::linkByHrefExists
+   */
+  public function testLinkByHrefExists(): void {
+    $this->drupalGet('test-page');
+    // Partial matching.
+    $this->assertSession()->linkByHrefExists('/user');
+    // Full matching.
+    $this->assertSession()->linkByHrefExists('/user/login');
+  }
+
+  /**
+   * Tests linkExistsByHref() functionality fail.
+   *
+   * @covers ::linkByHrefExists
+   */
+  public function testInvalidLinkByHrefExists(): void {
+    $this->drupalGet('test-page');
+    $this->expectException(ExpectationException::class);
+    $this->assertSession()->linkByHrefExists('/foo');
+  }
+
+  /**
+   * Tests linkByHrefNotExists() functionality.
+   *
+   * @covers ::linkByHrefNotExists
+   */
+  public function testLinkByHrefNotExists(): void {
+    $this->drupalGet('test-page');
+    $this->assertSession()->linkByHrefNotExists('/foo');
+  }
+
+  /**
+   * Tests LinkByHrefNotExists() functionality fail partial match.
+   *
+   * @covers ::linkByHrefNotExists
+   */
+  public function testInvalidLinkByHrefNotExistsPartial(): void {
+    $this->drupalGet('test-page');
+    $this->expectException(ExpectationException::class);
+    $this->assertSession()->linkByHrefNotExists('/user');
+  }
+
+  /**
+   * Tests LinkByHrefNotExists() functionality fail full match.
+   *
+   * @covers ::linkByHrefNotExists
+   */
+  public function testInvalidLinkByHrefNotExistsFull(): void {
+    $this->drupalGet('test-page');
+    $this->expectException(ExpectationException::class);
+    $this->assertSession()->linkByHrefNotExists('/user/login');
+  }
+
+  /**
+   * Tests linkExistsByHref() functionality.
+   *
+   * @covers ::linkByHrefExistsExact
+   */
+  public function testLinkByHrefExistsExact(): void {
+    $this->drupalGet('test-page');
+    $this->assertSession()->linkByHrefExistsExact('/user/login');
+  }
+
+  /**
+   * Tests linkByHrefExistsExact() functionality fail.
+   *
+   * @covers ::linkByHrefExistsExact
+   */
+  public function testInvalidLinkByHrefExistsExact(): void {
+    $this->drupalGet('test-page');
+    $this->expectException(ExpectationException::class);
+    $this->assertSession()->linkByHrefExistsExact('/foo');
+  }
+
+  /**
+   * Tests linkByHrefNotExistsExact() functionality.
+   *
+   * @covers ::linkByHrefNotExistsExact
+   */
+  public function testLinkByHrefNotExistsExact(): void {
+    $this->drupalGet('test-page');
+    $this->assertSession()->linkByHrefNotExistsExact('/foo');
+  }
+
+  /**
+   * Tests linkByHrefNotExistsExact() functionality fail.
+   *
+   * @covers ::linkByHrefNotExistsExact
+   */
+  public function testInvalidLinkByHrefNotExistsExact(): void {
+    $this->drupalGet('test-page');
+    $this->expectException(ExpectationException::class);
+    $this->assertSession()->linkByHrefNotExistsExact('/user/login');
   }
 
   /**
@@ -194,7 +295,7 @@ class WebAssertTest extends BrowserTestBase {
    * @covers ::responseContains
    * @covers ::responseNotContains
    */
-  public function testTextAsserts() {
+  public function testTextAsserts(): void {
     $this->drupalGet('test-encoded');
     $dangerous = 'Bad html <script>alert(123);</script>';
     $sanitized = Html::escape($dangerous);
@@ -208,7 +309,7 @@ class WebAssertTest extends BrowserTestBase {
    * @covers ::buttonExists
    * @covers ::buttonNotExists
    */
-  public function testFieldAssertsForButton() {
+  public function testFieldAssertsForButton(): void {
     $this->drupalGet('test-field-xpath');
 
     // Verify if the test passes with button ID.
@@ -245,7 +346,7 @@ class WebAssertTest extends BrowserTestBase {
    *
    * @covers ::pageContainsNoDuplicateId
    */
-  public function testPageContainsNoDuplicateId() {
+  public function testPageContainsNoDuplicateId(): void {
     $assert_session = $this->assertSession();
     $this->drupalGet(Url::fromRoute('test_page_test.page_without_duplicate_ids'));
     $assert_session->pageContainsNoDuplicateId();
@@ -262,7 +363,7 @@ class WebAssertTest extends BrowserTestBase {
    * @covers ::assertNoEscaped
    * @covers ::assertEscaped
    */
-  public function testEscapingAssertions() {
+  public function testEscapingAssertions(): void {
     $assert = $this->assertSession();
 
     $this->drupalGet('test-escaped-characters');

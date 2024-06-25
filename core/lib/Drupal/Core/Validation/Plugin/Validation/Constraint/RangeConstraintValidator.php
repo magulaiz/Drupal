@@ -18,7 +18,7 @@ class RangeConstraintValidator extends ConstraintValidator {
    * phpcs:ignore Drupal.Commenting.FunctionComment.VoidReturn
    * @return void
    */
-  public function validate($value, Constraint $constraint) {
+  public function validate($value, Constraint $constraint): void {
     if (!$constraint instanceof Range) {
       throw new UnexpectedTypeException($constraint, __NAMESPACE__ . '\Range');
     }
