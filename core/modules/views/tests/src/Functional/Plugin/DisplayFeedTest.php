@@ -80,9 +80,8 @@ class DisplayFeedTest extends ViewTestBase {
     $this->assertEquals('Copyright 2019 Dries Buytaert', $this->getSession()->getDriver()->getText('//channel/copyright'));
     $this->assertEquals($node_title, $this->getSession()->getDriver()->getText('//item/title'));
     $this->assertEquals($node_link, $this->getSession()->getDriver()->getText('//item/link'));
-    // HTML ahould no longer be escaped since it is CDATA. Confirm it is
+    // HTML should no longer be escaped since it is CDATA. Confirm it is
     // wrapped in CDATA.
-    // See https://www.drupal.org/node/3440505
     $this->assertSession()->responseContains('<description><![CDATA[');
     // Confirm that the view is still displaying the content.
     $this->assertSession()->responseContains('<p>A paragraph</p>');
@@ -147,8 +146,8 @@ class DisplayFeedTest extends ViewTestBase {
     $this->drupalGet('test-feed-display-fields.xml');
     $this->assertEquals($node_title, $this->getSession()->getDriver()->getText('//item/title'));
     $this->assertEquals($node_link, $this->getSession()->getDriver()->getText('//item/link'));
-    // HTML ahould no longer be escaped since it is CDATA. Confirm it is
-    // wrapped in CDATA.
+    // HTML should no longer be escaped since it is CDATA. Confirm it is wrapped
+    // in CDATA.
     $this->assertSession()->responseContains('<description><![CDATA[');
     // Confirm that the view is still displaying the content.
     $this->assertSession()->responseContains('<p>A paragraph</p>');
