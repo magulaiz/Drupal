@@ -111,12 +111,6 @@ final class PlaceBlock implements ConfigActionPluginInterface, ContainerFactoryP
       }
     }
 
-    // Check if the block already exists.
-    $block = $this->configManager->loadConfigEntityByName($configName);
-    if ($block) {
-      throw new ConfigActionException(sprintf('Block %s already exists and cannot be created', $configName));
-    }
-
     // Validate that the specified region exist, and use fallback if needed.
     $available_regions = system_region_list($value['theme']);
     $specified_region = $value['region'] ?? '';
@@ -143,6 +137,16 @@ final class PlaceBlock implements ConfigActionPluginInterface, ContainerFactoryP
     }
     if (!$valid_region) {
       throw new ConfigActionException(sprintf('Block %s could not identify a valid region', $configName));
+    }
+
+    // Check if the block already exists.
+    $block = $this->configManager->loadConfigEntityByName($configName);
+    if ($block) {
+      if ($block->getRegion() !== $value['region']) {
+        $block->setRegion($value['region']);
+        $block->save();
+      }
+      return;
     }
 
     // A plugin value is required.

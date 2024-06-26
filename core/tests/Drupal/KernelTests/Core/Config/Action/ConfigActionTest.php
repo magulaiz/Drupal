@@ -506,13 +506,12 @@ class ConfigActionTest extends KernelTestBase {
       $this->fail('Unexpected exception while placing block');
     }
 
-    // Placing the same block again should fail.
+    // Placing the same block again should not fail.
     try {
       $manager->applyAction('placeBlock', 'block.block.config_action_test', $valid_block);
-      $this->fail('Expected exception not thrown');
     }
     catch (ConfigActionException $e) {
-      $this->assertSame('Block block.block.config_action_test already exists and cannot be created', $e->getMessage());
+      $this->fail('Unexpected exception while placing block again');
     }
 
     // Validate that placing blocks first and last works as expected.
