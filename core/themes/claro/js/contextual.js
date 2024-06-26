@@ -2,25 +2,26 @@
   Drupal.contextual.AuralView = Drupal.contextual.AuralView.extend({
     render: function render() {
       const isOpen = this.model.get('isOpen');
-      this.$el.find('.contextual-links').prop('hidden', !isOpen);
+      this.el.querySelector('.contextual-links').hidden = !isOpen;
       const triggerText = Drupal.t('@action @title configuration options', {
         '@action': !isOpen
           ? this.options.strings.open
           : this.options.strings.close,
         '@title': this.model.get('title'),
       });
-      this.$el
-        .find('.trigger')
-        .html(Drupal.theme('contextualTriggerText', triggerText))
-        .attr('aria-pressed', isOpen);
+      this.el.querySelector('.trigger').innerHTML = Drupal.theme(
+        'contextualTriggerText',
+        triggerText,
+      );
+      this.el.querySelector('.trigger').setAttribute('aria-pressed', isOpen);
     },
   });
 
-  Drupal.theme.contextualTrigger = function () {
+  Drupal.theme.contextualTrigger = () => {
     return '<button class="contextual__trigger trigger visually-hidden focusable icon-link icon-link--small" type="button"></button>';
   };
 
-  Drupal.theme.contextualTriggerText = function (text) {
+  Drupal.theme.contextualTriggerText = (text) => {
     return '<span class="visually-hidden">'.concat(text, '</span>');
   };
-})(Drupal, Backbone);
+})(window.Drupal);
