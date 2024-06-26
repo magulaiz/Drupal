@@ -15,14 +15,23 @@
   Drupal.behaviors.filterGuidelines = {
     attach(context) {
       function updateFilterGuidelines(event) {
-        const $this = $(event.target);
         const { value } = event.target;
-        $this
-          .closest('.js-filter-wrapper')
-          .find('[data-drupal-format-id]')
-          .hide()
-          .filter(`[data-drupal-format-id="${value}"]`)
-          .show();
+        const element = event.target;
+        const filterWrapper = element.closest('.js-filter-wrapper');
+        const formatElements = filterWrapper.querySelectorAll(
+          '[data-drupal-format-id]',
+        );
+
+        Array.from(formatElements).forEach((element) => {
+          element.style.display = 'none';
+        });
+
+        const filteredElement = filterWrapper.querySelector(
+          `[data-drupal-format-id="${value}"]`,
+        );
+        if (filteredElement) {
+          filteredElement.style.display = 'block';
+        }
       }
 
       $(once('filter-guidelines', '.js-filter-guidelines', context))

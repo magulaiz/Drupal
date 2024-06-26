@@ -472,7 +472,7 @@
           $rows.each(showRow);
         } else if (searching) {
           searching = false;
-          $rows.show();
+          $rows[0].style.display = 'block';
         }
       }
 

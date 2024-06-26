@@ -1207,7 +1207,10 @@
       this.progress.object.stopMonitoring();
     }
     // Undo hide.
-    $(this.wrapper).show();
+    const $wrapperContainer = $(this.wrapper);
+    Array.from($wrapperContainer).forEach((wrap) => {
+      wrap.style.display = 'block';
+    });
     // Re-enable the element.
     $(this.element).prop('disabled', false);
     // Reattach behaviors, if they were detached in beforeSerialize(), and the
@@ -1384,7 +1387,7 @@
       const $ajaxNewContent = $newContent.find('.ajax-new-content');
       if ($ajaxNewContent.length) {
         $ajaxNewContent.hide();
-        $newContent.show();
+        $newContent[0].style.display = 'block';
         $ajaxNewContent[effect.showEffect](effect.showSpeed);
       } else if (effect.showEffect !== 'show') {
         $newContent[effect.showEffect](effect.showSpeed);

@@ -52,7 +52,13 @@
               $link.closest('.js-layout-builder-category')[0],
             )
           ) {
-            $link.closest('.js-layout-builder-category').show();
+            const closestLayoutBuilderCategory = link.closest(
+              '.js-layout-builder-category',
+            );
+
+            if (closestLayoutBuilderCategory) {
+              closestLayoutBuilderCategory.style.display = 'block';
+            }
           }
           // Toggle the li tag of the matching link.
           $link.parent().toggle(textMatch);
@@ -93,9 +99,16 @@
             .removeAttr('open')
             .removeAttr('remember-closed');
           // Show all categories since filter is turned off.
-          $categories.find('.js-layout-builder-category').show();
+          const builderCategory = $categories.find(
+            '.js-layout-builder-category',
+          );
+          Array.from(builderCategory).forEach((el) => {
+            el.style.display = 'block';
+          });
           // Show all li tags since filter is turned off.
-          $filterLinks.parent().show();
+          Array.from($filterLinks).forEach((el) => {
+            el.parentNode.style.display = 'block';
+          });
           announce(Drupal.t('All available blocks are listed.'));
         }
       };
@@ -405,7 +418,9 @@
         // Iterate over all blocks.
         $('[data-layout-content-preview-placeholder-label]').each(
           (i, element) => {
-            $(element).children().show();
+            Array.from(element.children).forEach((child) => {
+              child.style.display = 'block';
+            });
           },
         );
       };

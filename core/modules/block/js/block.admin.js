@@ -61,7 +61,10 @@
           );
         } else {
           $filterRows.each(function (index) {
-            $(this).parent().parent().show();
+            const element = this;
+            if (element.parentNode && element.parentNode.parentNode) {
+              element.parentNode.parentNode.style.display = 'block';
+            }
           });
         }
       }

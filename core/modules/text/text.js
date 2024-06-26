@@ -54,7 +54,9 @@
               $button.html(Drupal.t('Edit summary'));
               $link.appendTo($fullLabel);
             } else {
-              $summary.show();
+              Array.from($summary).forEach((el) => {
+                el.style.display = 'block';
+              });
               $button.html(Drupal.t('Hide summary'));
               $link.appendTo($summaryLabel);
             }

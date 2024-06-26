@@ -318,7 +318,6 @@
     const label = $target.closest('td').next().html().trim();
     // Add/remove the checked item to the list.
     if (event.target.checked) {
-      this.$selected_div.show();
       this.$selected_div[0].style.display = 'block';
       this.checkedItems.push(label);
     } else {
@@ -624,7 +623,13 @@
         '.views-display-setting a',
       );
       if ($contextualFilters.length) {
-        $('#preview-args').parent().show();
+        const previewArgs = document.querySelector('#preview-args');
+        if (previewArgs) {
+          const parentEl = previewArgs.parentElement;
+          if (parentEl) {
+            parentEl.style.display = 'block';
+          }
+        }
       } else {
         $('#preview-args').parent().hide();
       }
@@ -1120,7 +1125,9 @@
             '.js-form-type-checkbox:not(.js-form-item-options-value-all) input[type="checkbox"]',
           );
         // Show the select all checkbox.
-        $selectAll.show();
+        Array.from($selectAll).forEach((element) => {
+          element.style.display = 'block';
+        });
         $selectAllCheckbox.on('click', function () {
           // Update all checkbox beside the select all checkbox.
           $checkboxes.prop('checked', this.checked);
@@ -1186,11 +1193,26 @@
         if ($(event.target).prop('checked')) {
           $context.find('input.default-radios').parent().hide();
           $context.find('td.any-default-radios-row').parent().hide();
-          $context.find('input.default-checkboxes').parent().show();
+          const checkboxes = context.querySelectorAll(
+            'input.default-checkboxes',
+          );
+          checkboxes.forEach(function (input) {
+            input.parentNode.style.display = 'block';
+          });
         } else {
           $context.find('input.default-checkboxes').parent().hide();
-          $context.find('td.any-default-radios-row').parent().show();
-          $context.find('input.default-radios').parent().show();
+          const defaultRadios = context.querySelectorAll(
+            'td.any-default-radios-row',
+          );
+          const inoutDefaultRadios = context.querySelectorAll(
+            'input.default-radios',
+          );
+          defaultRadios.forEach(function (defaultRadio) {
+            defaultRadio.parentNode.style.display = 'block';
+          });
+          inoutDefaultRadios.forEach(function (inoutDefaultRadio) {
+            inoutDefaultRadio.parentNode.style.display = 'block';
+          });
         }
       }
 
