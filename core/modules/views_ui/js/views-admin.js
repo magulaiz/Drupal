@@ -300,8 +300,8 @@
 
     this.$selected_div = this.$form.find(
       '.views-selected-options',
-    ).parentElement;
-    this.$selected_div.hide();
+    )[0].parentElement;
+    this.$selected_div.style.display = 'none';
 
     this.$selected_div.hide();
     /**
@@ -322,8 +322,7 @@
     const label = $target.closest('td').next().html().trim();
     // Add/remove the checked item to the list.
     if (event.target.checked) {
-      this.$selected_div.show();
-      this.$selected_div[0].style.display = 'block';
+      this.$selected_div.style.display = 'block';
       this.checkedItems.push(label);
     } else {
       const position = $.inArray(label, this.checkedItems);
@@ -338,7 +337,7 @@
       }
       // Hide it again if none item is selected.
       if (this.checkedItems.length === 0) {
-        this.$selected_div.hide();
+        this.$selected_div.style.display = 'none';
       }
     }
     this.refreshCheckedItems();
@@ -349,10 +348,13 @@
    */
   Drupal.viewsUi.AddItemForm.prototype.refreshCheckedItems = function () {
     // Perhaps we should precache the text div, too.
-    this.$selected_div
-      .find('.views-selected-options')
-      .html(this.checkedItems.join(', '))
-      .trigger('dialogContentResize');
+    var viewsSelectedOptions = this.$selected_div.querySelector(
+      '.views-selected-options',
+    );
+
+    viewsSelectedOptions.innerHTML = this.checkedItems.join(', ');
+    var event = new Event('dialogContentResize');
+    viewsSelectedOptions.dispatchEvent(event);
   };
 
   /**
@@ -385,14 +387,16 @@
         )}</a><ul class="action-list" style="display:none;"></ul></li>`,
       );
       const $displayButtons = $menu.nextAll('input.add-display').detach();
-      $displayButtons
-        .appendTo($addDisplayDropdown.find('.action-list'))
-        .wrap('<li>')
-        .parentElement.eq(0)
-        .addClass('first')
-        .end()
-        .eq(-1)
-        .addClass('last');
+
+      const actionList = $addDisplayDropdown[0].querySelector('.action-list');
+      $displayButtons.toArray().forEach((button) => {
+        const li = document.createElement('li');
+        actionList.appendChild(li);
+        li.appendChild(button);
+      });
+      actionList.firstChild.classList.add('first');
+      actionList.lastChild.classList.add('last');
+
       $displayButtons.each(function () {
         const $this = $(this);
         this.value = $this.attr('data-drupal-dropdown-label');
@@ -434,7 +438,7 @@
    *   where to put it.
    */
   Drupal.behaviors.viewsUiRenderAddViewButton.toggleMenu = function ($trigger) {
-    $trigger.parentElement.toggleClass('open');
+    $trigger[0].parentElement.classList.toggle('open');
     $trigger.next().slideToggle('fast');
   };
 
@@ -623,9 +627,9 @@
       );
       const previewArgs = document.getElementById('preview-args');
       if ($contextualFilters.length) {
-        $('#preview-args').parentElement.show();
+        $('#preview-args')[0].parentElement.style.display = '';
       } else {
-        $('#preview-args').parentElement.hide();
+        $('#preview-args')[0].parentElement.style.display = 'none';
       }
 
       // Executes an initial preview.
@@ -763,7 +767,7 @@
             $(
               `<ul class="action-links"><li><a id="views-add-group-link" href="#">${this.addGroupButton[0].value}</a></li></ul>`,
 
-            ).prependTo(this.table.parentElement),
+            ).prependTo(this.table[0].parentElement),
           ),
         )
           .find('#views-add-group-link')
@@ -1187,13 +1191,23 @@
         const radiosRow = context.querySelector('td.any-default-radios-row');
         const defCheckboxes = context.querySelector('input.default-checkboxes');
         if ($(event.target).prop('checked')) {
-          $context.find('input.default-radios').parentElement.hide();
-          $context.find('td.any-default-radios-row').parentElement.hide();
-          $context.find('input.default-checkboxes').parentElement.show();
+          $context.find('input.default-radios')[0].parentElement.style.display =
+            'none';
+          $context.find(
+            'td.any-default-radios-row',
+          )[0].parentElement.style.display = 'none';
+          $context.find(
+            'input.default-checkboxes',
+          )[0].parentElement.style.display = '';
         } else {
-          $context.find('input.default-checkboxes').parentElement.hide();
-          $context.find('td.any-default-radios-row').parentElement.show();
-          $context.find('input.default-radios').parentElement.show();
+          $context.find('input.default-radios')[0].parentElement.style.display =
+            '';
+          $context.find(
+            'td.any-default-radios-row',
+          )[0].parentElement.style.display = '';
+          $context.find(
+            'input.default-checkboxes',
+          )[0].parentElement.style.display = 'none';
         }
       }
 
