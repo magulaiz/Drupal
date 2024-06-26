@@ -19,7 +19,7 @@ class RssResponseCdata implements EventSubscriberInterface {
    * @param \Symfony\Component\HttpKernel\Event\ResponseEvent $event
    *   The response event.
    */
-  public function onResponse(ResponseEvent $event) {
+  public function onResponse(ResponseEvent $event): void {
     // Skip responses that are not RSS.
     if (stripos($event->getResponse()->headers->get('Content-Type', ''), 'application/rss+xml') === FALSE) {
       return;
@@ -37,10 +37,10 @@ class RssResponseCdata implements EventSubscriberInterface {
    * @param \Symfony\Component\HttpFoundation\Request $request
    *   The current request.
    *
-   * @return string
+   * @return string|false
    *   The updated RSS XML.
    */
-  protected function wrapDescriptionCdata($rss_markup, Request $request) {
+  protected function wrapDescriptionCdata($rss_markup, Request $request): string|false {
     $rss_dom = new \DOMDocument();
 
     // Load the RSS, if there are parsing errors, abort and return the unchanged
