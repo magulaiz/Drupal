@@ -34,6 +34,8 @@ class BlockValidationTest extends ConfigEntityValidationTestBase {
 
   /**
    * {@inheritdoc}
+   *
+   * @todo Remove weight in https://drupal.org/node/3426279.
    */
   protected static array $propertiesWithOptionalValues = [
     'provider',
@@ -168,6 +170,8 @@ class BlockValidationTest extends ConfigEntityValidationTestBase {
    * Tests validating weight.
    */
   public function testWeightValidation(): void {
+    // @todo Revisit in https://drupal.org/node/3426279 when
+    // setting weight to null is not allowed.
     $this->entity->set('weight', NULL);
     $this->assertNull($this->entity->getWeight());
     $this->assertValidationErrors([]);
