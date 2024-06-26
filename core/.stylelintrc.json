@@ -4,8 +4,7 @@
     "stylelint-prettier/recommended"
   ],
   "plugins": [
-    "stylelint-order",
-    "stylelint-use-logical-spec"
+    "stylelint-order"
   ],
   "rules": {
     "alpha-value-notation": "number",
@@ -20,7 +19,6 @@
     "no-descending-specificity": null,
     "no-duplicate-selectors": null,
     "no-unknown-animations": true,
-    "liberty/use-logical-spec": true,
     "media-feature-name-no-unknown": [true, {
       "ignoreMediaFeatureNames": [
         "prefers-reduced-motion"
