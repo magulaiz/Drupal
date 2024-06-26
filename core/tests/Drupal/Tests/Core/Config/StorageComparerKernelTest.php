@@ -21,16 +21,27 @@ class StorageComparerKernelTest extends KernelTestBase {
   public function testSerialization() {
     $active = $this->container->get('config.storage');
     $active->createCollection('test')->write('test.test', ['label' => 'new collection']);
+
     // The export storage contains the same data as the active storage but is
     // decorated with a class which does not use DependencySerializationTrait.
     $export = $this->container->get('config.storage.export');
     $target = new MemoryStorage();
+
     $comparer = new StorageComparer($export, $target);
     $comparer->createChangelist();
+
+    // Access collections to ensure sourceStorages and targetStorages are populated.
+    $comparer->getSourceStorage('test');
+    $comparer->getTargetStorage('test');
+
+    // Serialize the comparer.
     $serialized = serialize($comparer);
+
     // Unserialize the comparer and check if the data is still the same.
     /** @var \Drupal\Core\Config\StorageComparer $unserialized */
     $unserialized = unserialize($serialized);
+
+    // Check the data.
     $this->assertEquals($comparer->getChangelist(), $unserialized->getChangelist());
     $this->assertEquals($comparer->getAllCollectionNames(), $unserialized->getAllCollectionNames());
     $this->assertEquals($comparer->getEmptyChangelist(), $unserialized->getEmptyChangelist());
