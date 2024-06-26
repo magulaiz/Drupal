@@ -16,7 +16,7 @@ use Drupal\Tests\system\Functional\Entity\EntityWithUriCacheTagsTestBase;
 use Drupal\user\Entity\Role;
 use Drupal\user\RoleInterface;
 
-// cspell:ignore amphibius
+// cspell:ignore amphibius Hippopotamidae
 
 /**
  * Tests the Comment entity's cache tags.
@@ -103,7 +103,7 @@ class CommentCacheTagsTest extends EntityWithUriCacheTagsTestBase {
   /**
    * Tests that comments invalidate the cache tag of their host entity.
    */
-  public function testCommentEntity() {
+  public function testCommentEntity(): void {
     $this->verifyPageCache($this->entityTestCamelid->toUrl(), 'MISS');
     $this->verifyPageCache($this->entityTestCamelid->toUrl(), 'HIT');
 
