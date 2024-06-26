@@ -190,35 +190,35 @@ class FileUploadForm extends AddFormBase {
   }
 
   /**
- * Validates the upload element.
- *
- * @param array $element
- *   The upload element.
- * @param \Drupal\Core\Form\FormStateInterface $form_state
- *   The form state.
- *
- * @return array
- *   The processed upload element.
- */
-public function validateUploadElement(array $element, FormStateInterface $form_state) {
-  if ($form_state::hasAnyErrors()) {
-    // When an error occurs during uploading files, remove all files so the
-    // user can re-upload the files.
-    $element['#value'] = [];
-  }
-  $values = $form_state->getValue('upload', []);
-  // Ensure $values['fids'] is an array before counting
-  if (isset($values['fids']) && is_array($values['fids'])) {
-    if (count($values['fids']) > $element['#cardinality'] && $element['#cardinality'] !== FieldStorageDefinitionInterface::CARDINALITY_UNLIMITED) {
-      $form_state->setError($element, $this->t('A maximum of @count files can be uploaded.', [
-        '@count' => $element['#cardinality'],
-      ]));
-      $form_state->setValue('upload', []);
+   * Validates the upload element.
+   *
+   * @param array $element
+   *   The upload element.
+   * @param \Drupal\Core\Form\FormStateInterface $form_state
+   *   The form state.
+   *
+   * @return array
+   *   The processed upload element.
+   */
+  public function validateUploadElement(array $element, FormStateInterface $form_state) {
+    if ($form_state::hasAnyErrors()) {
+      // When an error occurs during uploading files, remove all files so the
+      // user can re-upload the files.
       $element['#value'] = [];
     }
+    $values = $form_state->getValue('upload', []);
+    // Ensure $values['fids'] is an array before counting
+    if (isset($values['fids']) && is_array($values['fids'])) {
+      if (count($values['fids']) > $element['#cardinality'] && $element['#cardinality'] !== FieldStorageDefinitionInterface::CARDINALITY_UNLIMITED) {
+        $form_state->setError($element, $this->t('A maximum of @count files can be uploaded.', [
+          '@count' => $element['#cardinality'],
+        ]));
+        $form_state->setValue('upload', []);
+        $element['#value'] = [];
+      }
+    }
+    return $element;
   }
-  return $element;
-}
 
   /**
    * Processes an upload (managed_file) element.
