@@ -204,7 +204,7 @@ class BooleanOperator extends FilterPluginBase implements FilterOperatorsInterfa
     $display_options = 'all';
     $source = ':input[name="options[operator]"]';
     if ($exposed) {
-           $identifier = $this->options['expose']['identifier'];
+      $identifier = $this->options['expose']['identifier'];
       if (empty($this->options['expose']['use_operator']) || empty($this->options['expose']['operator_id'])) {
         $display_options = in_array($this->operator, $this->operatorValues(1)) ? 'value' : 'none';
       }
