@@ -77,3 +77,14 @@ function system_post_update_convert_empty_country_and_timezone_settings_to_null(
     $system_date_settings->save();
   }
 }
+
+/**
+ * Fix system.cron:logging values to boolean.
+ */
+function system_post_update_set_cron_logging_setting_to_boolean(): void {
+  $config = \Drupal::configFactory()->getEditable('system.cron');
+  $logging = $config->get('logging');
+  if (!is_bool($logging)) {
+    $config->set('logging', (bool) $logging)->save();
+  }
+}
