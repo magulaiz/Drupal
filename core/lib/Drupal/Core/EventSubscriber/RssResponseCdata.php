@@ -14,13 +14,13 @@ use Symfony\Component\HttpKernel\KernelEvents;
 class RssResponseCdata implements EventSubscriberInterface {
 
   /**
-   * Wraps rss descriptions in CDATA.
+   * Wraps RSS descriptions in CDATA.
    *
    * @param \Symfony\Component\HttpKernel\Event\ResponseEvent $event
    *   The response event.
    */
   public function onResponse(ResponseEvent $event) {
-    // Only care about RSS responses.
+    // Skip responses that are not RSS.
     if (stripos($event->getResponse()->headers->get('Content-Type', ''), 'application/rss+xml') === FALSE) {
       return;
     }
@@ -38,7 +38,7 @@ class RssResponseCdata implements EventSubscriberInterface {
    *   The current request.
    *
    * @return string
-   *   The updated RSS xml.
+   *   The updated RSS XML.
    */
   protected function wrapDescriptionCdata($rss_markup, Request $request) {
     $rss_dom = new \DOMDocument();
@@ -71,7 +71,8 @@ class RssResponseCdata implements EventSubscriberInterface {
    * {@inheritdoc}
    */
   public static function getSubscribedEvents(): array {
-    // Should run after any other response subscriber that modifies the markup.
+    // This should run after any other response subscriber that modifies the
+    // markup.
     // @see \Drupal\Core\EventSubscriber\RssResponseRelativeUrlFilter
     $events[KernelEvents::RESPONSE][] = ['onResponse', -513];
 

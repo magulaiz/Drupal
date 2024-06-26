@@ -18,10 +18,10 @@ use Symfony\Component\HttpKernel\HttpKernelInterface;
 class RssResponseCdataTest extends UnitTestCase {
 
   /**
-   * Provides known rss feeds to compare.
+   * Provides known RSS feeds to compare.
    *
    * @return array
-   *   An array of valid and invalid rss feeds.
+   *   An array of valid and invalid RSS feeds.
    */
   public static function providerTestOnResponse(): array {
     $data = [];
