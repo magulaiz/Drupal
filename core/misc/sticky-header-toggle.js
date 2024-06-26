@@ -25,15 +25,16 @@
           'input[type="checkbox"]',
         );
 
-        const localStorageKey = `stickyHeaderEnabled_${stickyHeaderElement.id}`;
-        const stickyEnabled = localStorage.getItem(localStorageKey) !== 'false';
+        const stickyEnabled =
+          !localStorage.getItem('stickyHeaderEnabled') ||
+          localStorage.getItem('stickyHeaderEnabled') === 'true';
         checkbox.checked = stickyEnabled;
         stickyHeaderElement.classList.toggle('sticky-header', stickyEnabled);
 
         checkbox.addEventListener('change', () => {
           const isChecked = checkbox.checked;
           stickyHeaderElement.classList.toggle('sticky-header', isChecked);
-          localStorage.setItem(localStorageKey, isChecked.toString());
+          localStorage.setItem('stickyHeaderEnabled', isChecked.toString());
         });
       });
     },
