@@ -10,12 +10,12 @@
 
   Drupal.behaviors.makeStickyOptional = {
     attach(context) {
-      const stickyHeaderElement = once(
-        'makeStickyOptional',
-        'table.sticky-header',
-        context,
-      ).shift();
-      if (stickyHeaderElement) {
+      // Find all elements with the 'table.sticky-header' class within the context.
+      const stickyHeaderElements = Array.from(
+        context.querySelectorAll('table.sticky-header'),
+      );
+
+      stickyHeaderElements.forEach((stickyHeaderElement) => {
         stickyHeaderElement.insertAdjacentHTML(
           'beforebegin',
           Drupal.theme.stickyHeaderCheckbox(),
@@ -25,18 +25,17 @@
           'input[type="checkbox"]',
         );
 
-        const stickyEnabled =
-          !localStorage.getItem('stickyHeaderEnabled') ||
-          localStorage.getItem('stickyHeaderEnabled') === 'true';
+        const localStorageKey = `stickyHeaderEnabled_${stickyHeaderElement.id}`;
+        const stickyEnabled = localStorage.getItem(localStorageKey) !== 'false';
         checkbox.checked = stickyEnabled;
         stickyHeaderElement.classList.toggle('sticky-header', stickyEnabled);
 
         checkbox.addEventListener('change', () => {
           const isChecked = checkbox.checked;
           stickyHeaderElement.classList.toggle('sticky-header', isChecked);
-          localStorage.setItem('stickyHeaderEnabled', isChecked.toString());
+          localStorage.setItem(localStorageKey, isChecked.toString());
         });
-      }
+      });
     },
   };
 })(Drupal, once);

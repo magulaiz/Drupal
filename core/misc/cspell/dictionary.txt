@@ -591,7 +591,6 @@ starterkit
 statuscode
 stddev
 stickied
-stickyheadertoggle
 stitle
 streamwrapper
 streamwrappers
