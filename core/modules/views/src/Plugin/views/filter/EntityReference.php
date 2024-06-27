@@ -74,7 +74,7 @@ class EntityReference extends ManyToOne {
   /**
    * {@inheritdoc}
    */
-  public function init(ViewExecutable $view, DisplayPluginBase $display, array &$options = NULL): void {
+  public function init(ViewExecutable $view, DisplayPluginBase $display, ?array &$options = NULL): void {
     parent::init($view, $display, $options);
     if (empty($this->definition['field_name'])) {
       $this->definition['field_name'] = $options['field'];
