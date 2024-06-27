@@ -1346,8 +1346,6 @@ abstract class FieldPluginBase extends HandlerBase implements FieldHandlerInterf
           $more_link_path = mb_substr($more_link_path, mb_strlen($base_path));
         }
 
-        // @todo Views should expect and store a leading /. See
-        //   https://www.drupal.org/node/2423913.
         $options = [
           'attributes' => [
             'class' => [
@@ -1484,8 +1482,6 @@ abstract class FieldPluginBase extends HandlerBase implements FieldHandlerInterf
 
     if (empty($alter['url'])) {
       if (!parse_url($path, PHP_URL_SCHEME)) {
-        // @todo Views should expect and store a leading /. See
-        //   https://www.drupal.org/node/2423913.
         $alter['url'] = CoreUrl::fromUserInput('/' . ltrim($path, '/'));
       }
       else {
