@@ -42,7 +42,7 @@
     "jquery/no-serialize": 2,
     "jquery/no-show": 0,
     "jquery/no-size": 2,
-    "jquery/no-sizzle": 2,
+    "jquery/no-sizzle": [2, {"allowPositional":false,"allowOther":true}],
     "jquery/no-slide": 0,
     "jquery/no-submit": 2,
     "jquery/no-text": 2,
