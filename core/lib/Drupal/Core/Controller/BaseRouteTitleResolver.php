@@ -6,7 +6,7 @@ use Drupal\Core\Menu\LocalTaskManager;
 use Drupal\Core\Routing\RouteMatch;
 use Drupal\Core\Routing\RouteProviderInterface;
 use Drupal\Core\Routing\UrlGeneratorInterface;
-use Drupal\Core\Utility\RequestGenerator;
+use Drupal\Core\Routing\RequestGenerator;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Exception\InvalidParameterException;
 use Symfony\Component\Routing\Exception\RouteNotFoundException;
@@ -18,7 +18,7 @@ use Symfony\Component\Routing\Route;
 class BaseRouteTitleResolver implements TitleResolverInterface {
 
   /**
-   * Constructs a RequestGenerator object.
+   * Constructs a BaseRouteTitleResolver object.
    *
    * @param \Drupal\Core\Routing\UrlGeneratorInterface $urlGenerator
    *   The url generator.
@@ -28,7 +28,7 @@ class BaseRouteTitleResolver implements TitleResolverInterface {
    *   The local task manager.
    * @param \Drupal\Core\Routing\RouteProviderInterface $routeProvider
    *   The route provider.
-   * @param \Drupal\Core\Utility\RequestGenerator $requestGenerator
+   * @param \Drupal\Core\Routing\RequestGenerator $requestGenerator
    *   The request generator.
    */
   public function __construct(

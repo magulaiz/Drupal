@@ -17,7 +17,7 @@ use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\StringTranslation\TranslationInterface;
 use Drupal\Core\Url;
 use Drupal\Core\Utility\LinkGeneratorInterface;
-use Drupal\Core\Utility\RequestGenerator;
+use Drupal\Core\Routing\RequestGenerator;
 use Drupal\system\PathBasedBreadcrumbBuilder;
 use Drupal\Tests\UnitTestCase;
 use Drupal\Core\Routing\RouteObjectInterface;
@@ -93,7 +93,7 @@ class PathBasedBreadcrumbBuilderTest extends UnitTestCase {
   /**
    * The request generator service.
    *
-   * @var \Drupal\Core\Utility\RequestGenerator|\PHPUnit\Framework\MockObject\MockObject
+   * @var \Drupal\Core\Routing\RequestGenerator|\PHPUnit\Framework\MockObject\MockObject
    */
   protected RequestGenerator|MockObject $requestGenerator;
 

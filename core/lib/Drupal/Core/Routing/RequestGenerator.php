@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\Core\Utility;
+namespace Drupal\Core\Routing;
 
 use Drupal\Core\ParamConverter\ParamNotConvertedException;
 use Drupal\Core\Path\CurrentPathStack;

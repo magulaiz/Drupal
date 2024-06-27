@@ -8,7 +8,7 @@ use Drupal\Core\ParamConverter\ParamNotConvertedException;
 use Drupal\Core\Path\CurrentPathStack;
 use Drupal\Core\PathProcessor\InboundPathProcessorInterface;
 use Drupal\Core\Routing\RouteObjectInterface;
-use Drupal\Core\Utility\RequestGenerator;
+use Drupal\Core\Routing\RequestGenerator;
 use Drupal\Tests\UnitTestCase;
 use Prophecy\Argument;
 use Prophecy\Prophecy\ObjectProphecy;
@@ -22,7 +22,7 @@ use Symfony\Component\Routing\Matcher\RequestMatcherInterface;
 use Symfony\Component\Routing\Route;
 
 /**
- * @coversDefaultClass \Drupal\Core\Utility\RequestGenerator
+ * @coversDefaultClass \Drupal\Core\Routing\RequestGenerator
  * @group Utility
  */
 class RequestGeneratorTest extends UnitTestCase {
@@ -30,7 +30,7 @@ class RequestGeneratorTest extends UnitTestCase {
   /**
    * The request generator.
    *
-   * @var \Drupal\Core\Utility\RequestGenerator
+   * @var \Drupal\Core\Routing\RequestGenerator
    */
   protected RequestGenerator $requestGenerator;
 

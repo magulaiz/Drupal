@@ -1089,7 +1089,7 @@ services:
     arguments: ['@url_generator', '@module_handler', '@renderer']
   Drupal\Core\Utility\LinkGeneratorInterface: '@link_generator'
   request_generator:
-    class: Drupal\Core\Utility\RequestGenerator
+    class: Drupal\Core\Routing\RequestGenerator
     arguments: ['@path_processor_manager', '@path.current', '@router']
   Drupal\Core\Utility\RequestGenerator: '@request_generator'
   base_route_title_resolver:

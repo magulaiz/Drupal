@@ -18,7 +18,7 @@ use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\Core\Url;
-use Drupal\Core\Utility\RequestGenerator;
+use Drupal\Core\Routing\RequestGenerator;
 use Symfony\Component\Routing\Matcher\RequestMatcherInterface;
 
 /**
@@ -87,7 +87,7 @@ class PathBasedBreadcrumbBuilder implements BreadcrumbBuilderInterface {
   /**
    * The request generator.
    *
-   * @var \Drupal\Core\Utility\RequestGenerator
+   * @var \Drupal\Core\Routing\RequestGenerator
    */
   protected $requestGenerator;
 
@@ -106,7 +106,7 @@ class PathBasedBreadcrumbBuilder implements BreadcrumbBuilderInterface {
    *   The current user object.
    * @param \Drupal\Core\Path\PathMatcherInterface|\Drupal\Core\Controller\TitleResolverInterface $path_matcher
    *   The path matcher service.
-   * @param \Drupal\Core\Utility\RequestGenerator|\Drupal\Core\Session\AccountInterface $request_generator
+   * @param \Drupal\Core\Routing\RequestGenerator|\Drupal\Core\Session\AccountInterface $request_generator
    *   The request generator.
    */
   public function __construct(
