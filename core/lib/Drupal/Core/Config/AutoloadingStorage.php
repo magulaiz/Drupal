@@ -106,7 +106,7 @@ class AutoloadingStorage implements StorageInterface, StorageCacheInterface {
    * {@inheritdoc}
    */
   public function listAll($prefix = '') {
-    return $this->storage->listAll();
+    return $this->storage->listAll($prefix);
   }
 
   /**
