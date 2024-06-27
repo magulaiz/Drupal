@@ -1,6 +1,5 @@
 name: <script>alert('evil name');</script>
 type: module
 description: <script>alert('evil desc');</script>
-package: Custom
-core: 8.x
+package: Testing
 core_version_requirement: ^8 || ^9 || ^10 || ^11
