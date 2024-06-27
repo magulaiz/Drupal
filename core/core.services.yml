@@ -1498,6 +1498,10 @@ services:
     class: Drupal\Core\StreamWrapper\TemporaryStream
     tags:
       - { name: stream_wrapper, scheme: temporary }
+  image.field_manager:
+    class: Drupal\image\ImageFieldManager
+    arguments: ['@cache.default', '@entity_type.manager', '@entity.repository']
+  Drupal\image\ImageFieldManager: '@image.field_manager'
   image.toolkit.manager:
     class: Drupal\Core\ImageToolkit\ImageToolkitManager
     arguments: ['@config.factory']
