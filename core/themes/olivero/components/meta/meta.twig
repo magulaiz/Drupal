@@ -2,7 +2,9 @@
   <div class="meta__content">
     {% if avatar %}
       <div class="meta__avatar">
-        {{ avatar }}
+        {% block avatar %}
+          {{ avatar }}
+        {% endblock %}
       </div>
     {% endif %}
     <span class="meta__text">

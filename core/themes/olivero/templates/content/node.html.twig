@@ -83,25 +83,17 @@
     {% endif %}
     {{ title_suffix }}
     {% if display_submitted %}
-      {% if author_picture %}
-        {%  set meta_props = {
-          avatar: author_picture,
-          author: author_name,
-          date,
-          metadata,
-          attributes: create_attribute({class: 'node__meta'}),
-          author_attributes,
-        } %}
-      {% else %}
-        {%  set meta_props = {
-          author: author_name,
-          date,
-          metadata,
-          attributes: create_attribute({class: 'node__meta'}),
-          author_attributes,
-        } %}
-      {% endif %}
-      {% embed "olivero:meta" with meta_props only %}
+      {% embed "olivero:meta" with {
+        avatar: author_picture,
+        author: author_name,
+        date,
+        metadata,
+        attributes: create_attribute({class: 'node__meta'}),
+        author_attributes,
+      } only %}
+        {% block avatar %}
+          {{ avatar }}
+        {% endblock %}
         {% block metadata %}
           {{ metadata }}
         {% endblock %}
