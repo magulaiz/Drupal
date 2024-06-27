@@ -144,7 +144,7 @@ class MediaLinkabilityTest extends MediaTestBase {
     // exists, then assert the link exists. Then assert the expected DOM
     // structure in detail.
     $assert_session->elementExists('css', '.ck-content a[href="http://linking-embedded-media.com"]');
-    $assert_session->elementExists('css', '.ck-content .drupal-media.ck-widget > a[href="http://linking-embedded-media.com"] > div[aria-label] > article > div > div > img[src*="image-test.png"]');
+    $assert_session->elementExists('css', '.ck-content .drupal-media.ck-widget > a[href="http://linking-embedded-media.com"] > div[aria-label] > article > div > div > div > img[src*="image-test.png"]');
 
     // Assert the "dataDowncast" HTML after making changes.
     $xpath = new \DOMXPath($this->getEditorDataAsDom());
