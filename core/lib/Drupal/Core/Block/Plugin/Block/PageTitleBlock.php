@@ -163,22 +163,24 @@ class PageTitleBlock extends BlockBase implements TitleBlockPluginInterface, Con
       $controller_title = NULL;
     }
 
+    $rendered_title = $this->renderTitle($this->title);
     // Controller render arrays using `#title` take precedent over the title
     // resolvers.
-    if ((string) $this->titleToString($controller_title) !== (string) $this->titleToString($this->title)) {
+    if ((string) $this->renderTitle($controller_title) !== (string) $rendered_title) {
       return $this->title;
     }
 
     $base_route_title = $this->baseRouteTitleResolver->getTitle($this->requestStack->getCurrentRequest(), $this->routeMatch->getRouteObject());
     if (!is_null($base_route_title)) {
+      $rendered_base_route_title = $this->renderTitle($base_route_title);
       // If the titles are equal, return the original title.
-      if ((string) $this->titleToString($base_route_title) === (string) $this->titleToString($this->title)) {
+      if ((string) $rendered_base_route_title === (string) $rendered_title) {
         return $this->title;
       }
 
       return $this->t('@section_title<span class="visually-hidden">: @current_title</span>', [
-        '@section_title' => $this->titleToString($base_route_title),
-        '@current_title' => $this->titleToString($this->title),
+        '@section_title' => $rendered_base_route_title,
+        '@current_title' => $rendered_title,
       ]);
     }
 
@@ -186,14 +188,14 @@ class PageTitleBlock extends BlockBase implements TitleBlockPluginInterface, Con
   }
 
   /**
-   * Converts title to string.
+   * Renders the title.
    *
    * @param array|string|null|\Stringable $title
    *   A title that could be an array, string or stringable object.
    *
    * @return string|\Stringable
    */
-  private function titleToString(array|string|null|\Stringable $title): string|\Stringable {
+  private function renderTitle(array|string|null|\Stringable $title): string|\Stringable {
     if (is_array($title)) {
       $title = \Drupal::service('renderer')->render($title);
     }
