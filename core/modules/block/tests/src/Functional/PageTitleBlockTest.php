@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Drupal\Tests\block\Functional;
 
 use Drupal\Tests\BrowserTestBase;
+use Drupal\TestTools\Random;
 
 /**
  * Tests page title block.
@@ -119,9 +120,9 @@ class PageTitleBlockTest extends BrowserTestBase {
    * @return array[][]
    *   The test cases.
    */
-  public function providerTestContextualizeTitleOnNodeOperationPages() : array {
+  public static function providerTestContextualizeTitleOnNodeOperationPages() : array {
     return [
-      'node with random title' => [$this->randomMachineName(8)],
+      'node with random title' => [Random::machineName()],
       'node with title set to 0' => ['0'],
     ];
   }

@@ -19,29 +19,16 @@ class BlockTitleUpdateTest extends UpdatePathTestBase {
    */
   protected function setDatabaseDumpFiles() {
     $this->databaseDumpFiles = [
-      __DIR__ . '/../../../../../system/tests/fixtures/update/drupal-9.4.0.filled.standard.php.gz',
-    ];
-  }
-
-  /**
-   * Data provider for testPostUpdateAddContextualizePageTitle().
-   *
-   * @return array[][]
-   *   The test cases.
-   */
-  public function providerTestPostUpdateAddContextualizePageTitle() : array {
-    return [
-      'Stark theme' => ['stark', FALSE],
-      // For claro the 'base_route_title' configuration is enabled by default.
-      'Claro theme' => ['claro', TRUE],
-      'Olivero theme' => ['olivero', FALSE],
+      __DIR__ . '/../../../../../system/tests/fixtures/update/drupal-10.3.0.filled.standard.php.gz',
     ];
   }
 
   /**
    * Tests that title block is configured properly after update.
    *
-   * @dataProvider providerTestPostUpdateAddContextualizePageTitle
+   * @testWith ["stark", false]
+   *           ["claro", true]
+   *           ["olivero", false]
    */
   public function testPostUpdateAddContextualizePageTitle(string $theme, bool $contextual_title_enabled): void {
     $block_settings = $this->config('block.block.' . $theme . '_page_title')->get('settings');

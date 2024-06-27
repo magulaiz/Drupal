@@ -77,7 +77,7 @@ class RequestGeneratorTest extends UnitTestCase {
    * @return \Generator
    *   The test cases.
    */
-  public function providerTestGenerateRequestForPath(): \Generator {
+  public static function providerTestGenerateRequestForPath(): \Generator {
     $path = '/any/path';
 
     yield 'request for a path with no paths to skip' => [
@@ -137,7 +137,7 @@ class RequestGeneratorTest extends UnitTestCase {
    * @return \Generator
    *   The test cases.
    */
-  public function providerTestGenerateRequestForPathWithException(): \Generator {
+  public static function providerTestGenerateRequestForPathWithException(): \Generator {
     yield 'ParamNotConvertedException' => [ParamNotConvertedException::class, ''];
     yield 'ResourceNotFoundException' => [ResourceNotFoundException::class, ''];
     yield 'MethodNotAllowedException' => [MethodNotAllowedException::class, []];
