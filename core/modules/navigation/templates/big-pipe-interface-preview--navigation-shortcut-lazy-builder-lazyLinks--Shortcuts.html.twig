@@ -6,9 +6,9 @@
  */
 #}
 
-{% include '@navigation/toolbar-button.html.twig' with {
+{{ include('@navigation/toolbar-button.html.twig', {
   attributes: create_attribute(),
   extra_classes: 'invisible toolbar-button--icon--shortcuts toolbar-button--expand--side toolbar-button--collapsible toolbar-popover__control',
   icon: 'shortcuts',
   text: 'Shortcuts'|t,
-} only %}
+}, false) }}
