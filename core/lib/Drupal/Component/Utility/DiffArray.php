@@ -47,4 +47,38 @@ class DiffArray {
     return $difference;
   }
 
+  /**
+   * Computes the difference of arrays.
+   *
+   * The main difference from the array_diff() is that this method does not
+   * remove duplicates. For example:
+   * @code
+   *   array_diff([1, 1, 1], [1]); // []
+   *   \Drupal\Component\Utility\DiffArray::diffOnce([1, 1, 1], [1]); // [1, 1]
+   * @endcode
+   *
+   * Keys are maintained from the $array1.
+   *
+   * The comparison of items is always performed in the strict (===) mode.
+   *
+   * @param array $array1
+   *   The array to compare from.
+   * @param array $array2
+   *   The array to compare to.
+   *
+   * @return array
+   *   Returns the difference between the two arrays.
+   */
+  public static function diffOnce(array $array1, array $array2) {
+    foreach ($array2 as $item) {
+      // Always use strict mode because otherwise there could be fatal errors on
+      // object conversions.
+      $key = array_search($item, $array1, TRUE);
+      if ($key !== FALSE) {
+        unset($array1[$key]);
+      }
+    }
+    return $array1;
+  }
+
 }
