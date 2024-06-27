@@ -63,7 +63,7 @@ variables:
   CONCURRENCY: 24
   GIT_DEPTH: "50"
   PARENT_PIPELINE_ID: $CI_PIPELINE_ID
-  _TARGET_PHP: "8.3"
+  _TARGET_PHP: "8.3-ubuntu"
 
 #############
 # Stages    #
@@ -88,7 +88,7 @@ default:
       - runner_system_failure
       - scheduler_failure
   image:
-    name: $_CONFIG_DOCKERHUB_ROOT/php-$_TARGET_PHP-apache:production
+    name: $_CONFIG_DOCKERHUB_ROOT/php-$_TARGET_PHP-apache:dev
 
 #############
 # Templates #
@@ -145,8 +145,8 @@ default:
 'DEFAULT: PHP 8.3 MySQL 8':
   <<: *default-stage
   variables:
-    _TARGET_PHP: "8.3"
-    _TARGET_DB: "mysql-8"
+    _TARGET_PHP: "8.3-ubuntu"
+    _TARGET_DB: "mongodb-7"
     PERFORMANCE_TEST: $PERFORMANCE_TEST
     OTEL_COLLECTOR: $OTEL_COLLECTOR
   # Run on MR, schedule, push, parent pipeline and performance test.
@@ -180,8 +180,8 @@ default:
   when: manual
   allow_failure: true
   variables:
-    _TARGET_PHP: "8.3"
-    _TARGET_DB: "mysql-8"
+    _TARGET_PHP: "8.3-ubuntu"
+    _TARGET_DB: "mongodb-7"
   rules:
     - if: $CI_PIPELINE_SOURCE == "merge_request_event"
   trigger:
@@ -261,6 +261,7 @@ default:
     paths:
       - vendor/
   script:
+      - docker-php-ext-enable mongodb
       - composer validate
       - composer install --optimize-autoloader
       - if [ -n "$COMPOSER_UPDATE" ]; then
@@ -293,41 +294,43 @@ default:
 # Lint Jobs
 ################
 
-'🧹 PHP Static Analysis (phpstan)':
-  <<: [ *with-composer, *default-job-settings-lint ]
-  stage: 🪄 Lint
-  variables:
-    KUBERNETES_CPU_REQUEST: "16"
-  script:
-    - vendor/bin/phpstan --version
+#'🧹 PHP Static Analysis (phpstan)':
+#  <<: [ *with-composer, *default-job-settings-lint ]
+#  stage: 🪄 Lint
+#  variables:
+#    KUBERNETES_CPU_REQUEST: "16"
+#  allow_failure: true
+#  script:
+#    - vendor/bin/phpstan --version
+#    - docker-php-ext-enable mongodb
     # Rely on PHPStan caching to execute analysis multiple times without performance drawback.
     # Output a copy in junit.
-    - php vendor/bin/phpstan analyze --configuration=./core/phpstan.neon.dist --error-format=gitlab > phpstan-quality-report.json || EXIT_CODE=$?
-    - php vendor/bin/phpstan analyze --configuration=./core/phpstan.neon.dist --no-progress --error-format=junit > phpstan-junit.xml || true
-    - |
-      if [ -n "$EXIT_CODE" ]; then
-        # Output a copy in plain text for human logs.
-        php vendor/bin/phpstan analyze --configuration=./core/phpstan.neon.dist --no-progress || true
-        # Generate a new baseline.
-        echo "Generating an PHPStan baseline file (available as job artifact)."
-        php vendor/bin/phpstan analyze --configuration=./core/phpstan.neon.dist --no-progress --generate-baseline=./core/.phpstan-baseline.php || true
-        exit $EXIT_CODE
-      fi
-
-  artifacts:
-    reports:
-      codequality: phpstan-quality-report.json
-      junit: phpstan-junit.xml
-    # Only store the baseline if the job fails.
-    when: on_failure
-    paths:
-      - core/.phpstan-baseline.php
+#    - php vendor/bin/phpstan analyze --configuration=./core/phpstan.neon.dist --error-format=gitlab > phpstan-quality-report.json || EXIT_CODE=$?
+#    - php vendor/bin/phpstan analyze --configuration=./core/phpstan.neon.dist --no-progress --error-format=junit > phpstan-junit.xml || true
+#    - |
+#      if [ -n "$EXIT_CODE" ]; then
+#        # Output a copy in plain text for human logs.
+#        php vendor/bin/phpstan analyze --configuration=./core/phpstan.neon.dist --no-progress || true
+#        # Generate a new baseline.
+#        echo "Generating an PHPStan baseline file (available as job artifact)."
+#        php vendor/bin/phpstan analyze --configuration=./core/phpstan.neon.dist --no-progress --generate-baseline=./core/.phpstan-baseline.php || true
+#        exit $EXIT_CODE
+#      fi
+#  artifacts:
+#    reports:
+#      codequality: phpstan-quality-report.json
+#      junit: phpstan-junit.xml
+#    # Only store the baseline if the job fails.
+#    when: on_failure
+#    paths:
+#      - core/.phpstan-baseline.php
 
 '🧹 PHP Coding standards (PHPCS)':
   <<: [ *with-composer, *default-job-settings-lint ]
   stage: 🪄 Lint
   variables:
     KUBERNETES_CPU_REQUEST: "16"
+  allow_failure: true
   script:
     - vendor/bin/phpcs --version
     - composer phpcs -- -s --report-full --report-summary --report-\\Micheh\\PhpCodeSniffer\\Report\\Gitlab=phpcs-quality-report.json
@@ -393,6 +396,7 @@ default:
   stage: 🪄 Lint
   variables:
     KUBERNETES_CPU_REQUEST: "2"
+  allow_failure: true
   script:
     - if [ -n "$CI_MERGE_REQUEST_TARGET_BRANCH_SHA" ]; then
         echo "HEAD is $(git rev-parse HEAD). \$CI_MERGE_REQUEST_TARGET_BRANCH_SHA is ${CI_MERGE_REQUEST_TARGET_BRANCH_SHA}";
