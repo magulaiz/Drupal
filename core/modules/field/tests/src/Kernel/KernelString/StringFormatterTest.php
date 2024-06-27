@@ -7,7 +7,7 @@ use Drupal\Core\Entity\Display\EntityViewDisplayInterface;
 use Drupal\Core\Entity\FieldableEntityInterface;
 use Drupal\entity_test\Entity\EntityTestLabel;
 use Drupal\entity_test\Entity\EntityTestRev;
-use Drupal\entity_test\Entity\EntityTestWithCanonical;
+use Drupal\entity_test\Entity\EntityTest;
 use Drupal\entity_test\Entity\EntityTestWithoutCanonical;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
@@ -71,7 +71,7 @@ class StringFormatterTest extends KernelTestBase {
     $this->installConfig(['system', 'field']);
     $this->installEntitySchema('entity_test_rev');
     $this->installEntitySchema('entity_test_label');
-    $this->installEntitySchema('entity_test_with_canonical');
+    $this->installEntitySchema('entity_test');
     $this->installEntitySchema('entity_test_without_canonical');
 
     $this->entityType = 'entity_test_rev';
@@ -240,7 +240,7 @@ class StringFormatterTest extends KernelTestBase {
    */
   public function testLinkEntitiesWithCanonical(): void {
     $field_name = 'test_field_name';
-    $entity_type = $bundle = 'entity_test_with_canonical';
+    $entity_type = $bundle = 'entity_test';
 
     $field_storage = FieldStorageConfig::create([
       'field_name' => $field_name,
@@ -257,7 +257,7 @@ class StringFormatterTest extends KernelTestBase {
     $instance->save();
 
     $value = $this->randomMachineName();
-    $entity_with_canonical = EntityTestWithCanonical::create();
+    $entity_with_canonical = EntityTest::create();
     $entity_with_canonical->{$field_name}->value = $value;
     $entity_with_canonical->save();
     $this->assertTrue($entity_with_canonical->hasLinkTemplate('canonical'));
