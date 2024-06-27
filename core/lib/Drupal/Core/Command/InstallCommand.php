@@ -155,7 +155,7 @@ class InstallCommand extends Command {
    *   The site name.
    * @param string $recipe
    *   The recipe to use for installing.
-   * @param boolean $show_progress
+   * @param bool $show_progress
    *   Whether to show progress during installation.
    *
    * @throws \Exception
@@ -228,7 +228,7 @@ class InstallCommand extends Command {
     $progress_callback = NULL;
     if ($show_progress) {
       $progress_bar = $io->createProgressBar();
-      $progress_callback = function($install_state) use ($progress_bar) {
+      $progress_callback = function ($install_state) use ($progress_bar) {
         static $started = FALSE;
         if (!$started) {
           $started = TRUE;
