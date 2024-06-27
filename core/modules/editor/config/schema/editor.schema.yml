@@ -48,9 +48,8 @@ editor.image_upload_settings.1:
       constraints:
         Choice:
           callback: stream_wrapper_manager:getNames
-          # @see \Drupal\Core\StreamWrapper\StreamWrapperInterface::WRITE_VISIBLE
           callbackArgs:
-            filter: 0x001C
+            filter: !php/const \Drupal\Core\StreamWrapper\StreamWrapperInterface::WRITE_VISIBLE
           transform: array_keys
           message: 'The file storage you selected is not a visible, readable and writable stream wrapper. Possible choices: %choices.'
     directory:
