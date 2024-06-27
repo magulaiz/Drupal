@@ -43,6 +43,7 @@ use Drupal\jsonapi\ResourceResponse;
 use Drupal\path\Plugin\Field\FieldType\PathItem;
 use Drupal\Tests\BrowserTestBase;
 use Drupal\Tests\content_moderation\Traits\ContentModerationTestTrait;
+use Drupal\Tests\jsonapi\Traits\GetDocumentFromResponseTrait;
 use Drupal\user\Entity\Role;
 use Drupal\user\EntityOwnerInterface;
 use Drupal\user\RoleInterface;
@@ -58,6 +59,7 @@ abstract class ResourceTestBase extends BrowserTestBase {
 
   use ResourceResponseTestTrait;
   use ContentModerationTestTrait;
+  use GetDocumentFromResponseTrait;
   use JsonApiRequestTestTrait;
 
   /**
@@ -512,7 +514,7 @@ abstract class ResourceTestBase extends BrowserTestBase {
    *
    * @see ::testGetIndividual()
    */
-  protected function getExpectedCacheTags(array $sparse_fieldset = NULL) {
+  protected function getExpectedCacheTags(?array $sparse_fieldset = NULL) {
     $expected_cache_tags = [
       'http_response',
     ];
@@ -541,7 +543,7 @@ abstract class ResourceTestBase extends BrowserTestBase {
    *
    * @see ::testGetIndividual()
    */
-  protected function getExpectedCacheContexts(array $sparse_fieldset = NULL) {
+  protected function getExpectedCacheContexts(?array $sparse_fieldset = NULL) {
     $cache_contexts = [
       // Cache contexts for JSON:API URL query parameters.
       'url.query_args:fields',
@@ -572,7 +574,7 @@ abstract class ResourceTestBase extends BrowserTestBase {
    * @return \Drupal\Core\Cache\CacheableMetadata
    *   The expected cacheability for the given entity collection.
    */
-  protected static function getExpectedCollectionCacheability(AccountInterface $account, array $collection, array $sparse_fieldset = NULL, $filtered = FALSE) {
+  protected static function getExpectedCollectionCacheability(AccountInterface $account, array $collection, ?array $sparse_fieldset = NULL, $filtered = FALSE) {
     $cacheability = array_reduce($collection, function (CacheableMetadata $cacheability, EntityInterface $entity) use ($sparse_fieldset, $account) {
       $access_result = static::entityAccess($entity, 'view', $account);
       if (!$access_result->isAllowed()) {
@@ -728,7 +730,7 @@ abstract class ResourceTestBase extends BrowserTestBase {
     else {
       $this->assertSame(['application/vnd.api+json'], $response->getHeader('Content-Type'));
       if ($expected_document !== FALSE) {
-        $response_document = Json::decode((string) $response->getBody());
+        $response_document = $this->getDocumentFromResponse($response, FALSE);
         if ($expected_document === NULL) {
           $this->assertNull($response_document);
         }
@@ -1269,7 +1271,7 @@ abstract class ResourceTestBase extends BrowserTestBase {
    *
    * @see \GuzzleHttp\ClientInterface::request()
    */
-  protected function getExpectedCollectionResponse(array $collection, $self_link, array $request_options, array $included_paths = NULL, $filtered = FALSE) {
+  protected function getExpectedCollectionResponse(array $collection, $self_link, array $request_options, ?array $included_paths = NULL, $filtered = FALSE) {
     $resource_identifiers = array_map([static::class, 'toResourceIdentifier'], $collection);
     $individual_responses = static::toResourceResponses($this->getResponses(static::getResourceLinks($resource_identifiers), $request_options));
     $merged_response = static::toCollectionResourceResponse($individual_responses, $self_link, TRUE);
@@ -1627,7 +1629,8 @@ abstract class ResourceTestBase extends BrowserTestBase {
       $resource->set($relationship_field_name, [$target_resource]);
       $expected_document = $this->getExpectedGetRelationshipDocument($relationship_field_name, $resource);
       $response = $this->request('GET', $url, $request_options);
-      $this->assertSameDocument($expected_document, Json::decode((string) $response->getBody()));
+      $document = $this->getDocumentFromResponse($response);
+      $this->assertSameDocument($expected_document, $document);
 
       // Test DELETE: one existing relationship, removed.
       $request_options[RequestOptions::BODY] = Json::encode(['data' => [$target_identifier]]);
@@ -1636,7 +1639,8 @@ abstract class ResourceTestBase extends BrowserTestBase {
       $this->assertResourceResponse(204, NULL, $response);
       $expected_document = $this->getExpectedGetRelationshipDocument($relationship_field_name, $resource);
       $response = $this->request('GET', $url, $request_options);
-      $this->assertSameDocument($expected_document, Json::decode((string) $response->getBody()));
+      $document = $this->getDocumentFromResponse($response);
+      $this->assertSameDocument($expected_document, $document);
 
       // Test DELETE: no existing relationships, no op, success.
       $request_options[RequestOptions::BODY] = Json::encode(['data' => [$target_identifier]]);
@@ -1644,7 +1648,8 @@ abstract class ResourceTestBase extends BrowserTestBase {
       $this->assertResourceResponse(204, NULL, $response);
       $expected_document = $this->getExpectedGetRelationshipDocument($relationship_field_name, $resource);
       $response = $this->request('GET', $url, $request_options);
-      $this->assertSameDocument($expected_document, Json::decode((string) $response->getBody()));
+      $document = $this->getDocumentFromResponse($response);
+      $this->assertSameDocument($expected_document, $document);
 
       // Test PATCH: success, new value is different than existing value.
       $request_options[RequestOptions::BODY] = Json::encode([
@@ -1672,7 +1677,8 @@ abstract class ResourceTestBase extends BrowserTestBase {
       $resource->set($relationship_field_name, []);
       $expected_document = $this->getExpectedGetRelationshipDocument($relationship_field_name, $resource);
       $response = $this->request('GET', $url, $request_options);
-      $this->assertSameDocument($expected_document, Json::decode((string) $response->getBody()));
+      $document = $this->getDocumentFromResponse($response);
+      $this->assertSameDocument($expected_document, $document);
     }
     else {
       $request_options[RequestOptions::BODY] = Json::encode(['data' => [$target_identifier]]);
@@ -1702,7 +1708,7 @@ abstract class ResourceTestBase extends BrowserTestBase {
    * @return \Drupal\jsonapi\CacheableResourceResponse
    *   The expected ResourceResponse.
    */
-  protected function getExpectedGetRelationshipResponse($relationship_field_name, EntityInterface $entity = NULL) {
+  protected function getExpectedGetRelationshipResponse($relationship_field_name, ?EntityInterface $entity = NULL) {
     $entity = $entity ?: $this->entity;
     $access = AccessResult::neutral()->addCacheContexts($entity->getEntityType()->isRevisionable() ? ['url.query_args:resourceVersion'] : []);
     $access = $access->orIf(static::entityFieldAccess($entity, $this->resourceType->getInternalName($relationship_field_name), 'view', $this->account));
@@ -1740,7 +1746,7 @@ abstract class ResourceTestBase extends BrowserTestBase {
    * @return array
    *   The expected document array.
    */
-  protected function getExpectedGetRelationshipDocument($relationship_field_name, EntityInterface $entity = NULL) {
+  protected function getExpectedGetRelationshipDocument($relationship_field_name, ?EntityInterface $entity = NULL) {
     $entity = $entity ?: $this->entity;
     $entity_type_id = $entity->getEntityTypeId();
     $bundle = $entity->bundle();
@@ -1774,7 +1780,7 @@ abstract class ResourceTestBase extends BrowserTestBase {
    * @return mixed
    *   The expected document data.
    */
-  protected function getExpectedGetRelationshipDocumentData($relationship_field_name, EntityInterface $entity = NULL) {
+  protected function getExpectedGetRelationshipDocumentData($relationship_field_name, ?EntityInterface $entity = NULL) {
     $entity = $entity ?: $this->entity;
     $internal_field_name = $this->resourceType->getInternalName($relationship_field_name);
     /** @var \Drupal\Core\Field\FieldItemListInterface $field */
@@ -1888,7 +1894,7 @@ abstract class ResourceTestBase extends BrowserTestBase {
    *
    * @see \GuzzleHttp\ClientInterface::request()
    */
-  protected function getExpectedRelatedResponses(array $relationship_field_names, array $request_options, EntityInterface $entity = NULL) {
+  protected function getExpectedRelatedResponses(array $relationship_field_names, array $request_options, ?EntityInterface $entity = NULL) {
     $entity = $entity ?: $this->entity;
     return array_map(function ($relationship_field_name) use ($entity, $request_options) {
       return $this->getExpectedRelatedResponse($relationship_field_name, $request_options, $entity);
@@ -2106,7 +2112,7 @@ abstract class ResourceTestBase extends BrowserTestBase {
       // Assert that the entity was indeed created, and that the response body
       // contains the serialized created entity.
       $created_entity_document = $this->normalize($created_entity, $url);
-      $decoded_response_body = Json::decode((string) $response->getBody());
+      $decoded_response_body = $this->getDocumentFromResponse($response);
       $this->assertEquals($created_entity_document, $decoded_response_body);
       // Assert that the entity was indeed created using the POSTed values.
       foreach ($this->getPostDocument()['data']['attributes'] as $field_name => $field_normalization) {
@@ -2370,7 +2376,8 @@ abstract class ResourceTestBase extends BrowserTestBase {
       }
     }
     $updated_entity_document = $this->normalize($updated_entity, $url);
-    $this->assertSame($updated_entity_document, Json::decode((string) $response->getBody()));
+    $document = $this->getDocumentFromResponse($response);
+    $this->assertSame($updated_entity_document, $document);
     $prior_revision_id = (int) $updated_entity->getRevisionId();
     // Assert that the entity was indeed created using the PATCHed values.
     foreach ($this->getPatchDocument()['data']['attributes'] as $field_name => $field_normalization) {
@@ -3028,7 +3035,7 @@ abstract class ResourceTestBase extends BrowserTestBase {
     $actual_response = $this->request('GET', $rel_working_copy_collection_url, $request_options);
     $expected_collection_document['links']['self']['href'] = $rel_working_copy_collection_url->toString();
     $this->assertResourceResponse(200, $expected_collection_document, $actual_response, $expected_cacheability->getCacheTags(), $expected_cacheability->getCacheContexts(), FALSE, 'MISS');
-    // @todo: remove the next assertion when Drupal core supports entity query access control on revisions.
+    // @todo Remove the next assertion when Drupal core supports entity query access control on revisions.
     $rel_working_copy_collection_url_filtered = clone $rel_working_copy_collection_url;
     $rel_working_copy_collection_url_filtered->setOption('query', ['filter[foo]' => 'bar'] + $rel_working_copy_collection_url->getOption('query'));
     $actual_response = $this->request('GET', $rel_working_copy_collection_url_filtered, $request_options);
@@ -3199,7 +3206,7 @@ abstract class ResourceTestBase extends BrowserTestBase {
       $this->assertResourceResponse(403, $expected_document, $actual_response, $expected_cache_tags, $expected_cacheability->getCacheContexts());
       // Request the related route.
       $actual_response = $this->request('GET', $related_url, $request_options);
-      // @todo: refactor self::getExpectedRelatedResponses() into a function which returns a single response.
+      // @todo Refactor self::getExpectedRelatedResponses() into a function which returns a single response.
       $expected_response = $this->getExpectedRelatedResponses(['field_jsonapi_test_entity_ref'], $request_options, $revision)['field_jsonapi_test_entity_ref'];
       $expected_document = $expected_response->getResponseData();
       $expected_cacheability = $expected_response->getCacheableMetadata();
@@ -3377,7 +3384,7 @@ abstract class ResourceTestBase extends BrowserTestBase {
    * @return array
    *   An array of relationship field names.
    */
-  protected function getRelationshipFieldNames(EntityInterface $entity = NULL) {
+  protected function getRelationshipFieldNames(?EntityInterface $entity = NULL) {
     $entity = $entity ?: $this->entity;
     // Only content entity types can have relationships.
     $fields = $entity instanceof ContentEntityInterface

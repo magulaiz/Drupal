@@ -7,10 +7,13 @@ namespace Drupal\KernelTests\Core\DrupalKernel;
 use Composer\Autoload\ClassLoader;
 use Drupal\Core\DrupalKernel;
 use Drupal\Core\DrupalKernelInterface;
+use Drupal\Core\Utility\Error;
 use Drupal\KernelTests\KernelTestBase;
 use org\bovigo\vfs\vfsStream;
 use Prophecy\Argument;
 use Symfony\Component\HttpFoundation\Request;
+
+// cspell:ignore äöüßαβγδεζηθικλμνξοσὠ
 
 /**
  * Tests DIC compilation to disk.
@@ -19,6 +22,17 @@ use Symfony\Component\HttpFoundation\Request;
  * @coversDefaultClass \Drupal\Core\DrupalKernel
  */
 class DrupalKernelTest extends KernelTestBase {
+
+  /**
+   * {@inheritdoc}
+   */
+  protected function tearDown(): void {
+    $currentErrorHandler = Error::currentErrorHandler();
+    if (is_string($currentErrorHandler) && $currentErrorHandler === '_drupal_error_handler') {
+      restore_error_handler();
+    }
+    parent::tearDown();
+  }
 
   /**
    * {@inheritdoc}
@@ -42,7 +56,7 @@ class DrupalKernelTest extends KernelTestBase {
    * @return \Drupal\Core\DrupalKernel
    *   New kernel for testing.
    */
-  protected function getTestKernel(Request $request, array $modules_enabled = NULL) {
+  protected function getTestKernel(Request $request, ?array $modules_enabled = NULL) {
     // Manually create kernel to avoid replacing settings.
     $class_loader = require $this->root . '/autoload.php';
     $kernel = DrupalKernel::createFromRequest($request, $class_loader, 'testing');
@@ -60,7 +74,7 @@ class DrupalKernelTest extends KernelTestBase {
    * Tests DIC compilation.
    */
   public function testCompileDIC() {
-    // @todo: write a memory based storage backend for testing.
+    // @todo Write a memory based storage backend for testing.
     $modules_enabled = [
       'system' => 'system',
       'user' => 'user',
@@ -164,7 +178,7 @@ class DrupalKernelTest extends KernelTestBase {
    * Tests setting of site path after kernel boot.
    */
   public function testPreventChangeOfSitePath() {
-    // @todo: write a memory based storage backend for testing.
+    // @todo Write a memory based storage backend for testing.
     $modules_enabled = [
       'system' => 'system',
       'user' => 'user',
@@ -293,6 +307,19 @@ class DrupalKernelTest extends KernelTestBase {
 
     // Ensure persisted services are persisted.
     $this->assertSame($request_stack, $container->get('request_stack'));
+  }
+
+  /**
+   * Tests system locale.
+   */
+  public function testLocale(): void {
+    $utf8_string = 'äöüßαβγδεζηθικλμνξοσὠ';
+    // Test environment locale should be UTF-8.
+    $this->assertSame($utf8_string, escapeshellcmd($utf8_string));
+    $request = Request::createFromGlobals();
+    $kernel = $this->getTestKernel($request);
+    // Kernel environment locale should be UTF-8.
+    $this->assertSame($utf8_string, escapeshellcmd($utf8_string));
   }
 
 }
