@@ -78,7 +78,7 @@ class PathBasedBreadcrumbBuilder implements BreadcrumbBuilderInterface {
   protected $currentUser;
 
   /**
-   * The patch matcher service.
+   * The path matcher service.
    *
    * @var \Drupal\Core\Path\PathMatcherInterface
    */

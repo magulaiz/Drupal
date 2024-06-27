@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Drupal\Tests\Core\Utility;
+namespace Drupal\Tests\Core\Request;
 
 use Drupal\Core\ParamConverter\ParamNotConvertedException;
 use Drupal\Core\Path\CurrentPathStack;
@@ -23,7 +23,7 @@ use Symfony\Component\Routing\Route;
 
 /**
  * @coversDefaultClass \Drupal\Core\Routing\RequestGenerator
- * @group Utility
+ * @group Routing
  */
 class RequestGeneratorTest extends UnitTestCase {
 

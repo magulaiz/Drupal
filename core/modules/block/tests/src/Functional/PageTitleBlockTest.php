@@ -13,10 +13,9 @@ use Drupal\TestTools\Random;
  * @group Block
  */
 class PageTitleBlockTest extends BrowserTestBase {
+
   /**
-   * Modules to install.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = ['block', 'update', 'node'];
 
