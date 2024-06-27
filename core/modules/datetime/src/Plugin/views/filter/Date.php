@@ -134,7 +134,7 @@ class Date extends NumericDate implements ContainerFactoryPluginInterface {
       try {
         (new DrupalDateTime($value))->getTimestamp();
       }
-      catch (\Exception $e) {
+      catch (\Throwable $e) {
         if (isset($form[$identifier])) {
           $field = &$form[$identifier];
         }
