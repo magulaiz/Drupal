@@ -768,10 +768,12 @@ function views_field_default_views_data(FieldStorageConfigInterface $field_stora
 /**
  * Implements hook_field_views_data().
  *
- * The function implements the hook in behalf of 'core' because it updates
- * filters to use the entity_reference handler, adds a relationship and a
- * reverse relationship to entity_reference field type, which is provided by
- * core.
+ * The function implements the hook on behalf of 'core' because it adds a
+ * relationship and a reverse relationship to entity_reference field type, which
+ * is provided by core. This function also provides an argument plugin for
+ * entity_reference fields that handles title token replacement. Lastly, it
+ * updates entity_reference fields to use the entity_reference handler for
+ * filtering.
  */
 function core_field_views_data(FieldStorageConfigInterface $field_storage) {
   $data = views_field_default_views_data($field_storage);
@@ -849,6 +851,11 @@ function core_field_views_data(FieldStorageConfigInterface $field_storage) {
         ],
       ];
     }
+
+    // Provide an argument plugin that has a meaningful titleQuery()
+    // implementation getting the entity label.
+    $data[$table_name][$field_name . '_target_id']['argument']['id'] = 'entity_target_id';
+    $data[$table_name][$field_name . '_target_id']['argument']['target_entity_type_id'] = $target_entity_type_id;
   }
 
   return $data;

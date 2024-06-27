@@ -392,6 +392,11 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/lib/Drupal/Core/Extension/ExtensionVersion.php',
 ];
 $ignoreErrors[] = [
+	'message' => '#^The "module_installer\\.uninstall_validators" service is deprecated in drupal:11.1.0 and is removed from drupal:12.0.0\\. Inject "\\!tagged_iterator module_install\\.uninstall_validator" instead\\. See https\\://www\\.drupal\\.org/node/3432595$#',
+	'count' => 1,
+	'path' => __DIR__ . '/lib/Drupal/Core/Extension/ModuleInstaller.php',
+];
+$ignoreErrors[] = [
 	// identifier: isset.variable
 	'message' => '#^Variable \\$callback in isset\\(\\) always exists and is not nullable\\.$#',
 	'count' => 1,
@@ -446,28 +451,10 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/lib/Drupal/Core/Field/Plugin/Field/FieldType/NumericItemBase.php',
 ];
 $ignoreErrors[] = [
-	// identifier: property.notFound
-	'message' => '#^Access to an undefined property Drupal\\\\Core\\\\FileTransfer\\\\FTPExtension\\:\\:\\$connection\\.$#',
-	'count' => 19,
-	'path' => __DIR__ . '/lib/Drupal/Core/FileTransfer/FTPExtension.php',
-];
-$ignoreErrors[] = [
-	// identifier: property.notFound
-	'message' => '#^Access to an undefined property Drupal\\\\Core\\\\FileTransfer\\\\FileTransfer\\:\\:\\$chroot\\.$#',
-	'count' => 3,
-	'path' => __DIR__ . '/lib/Drupal/Core/FileTransfer/FileTransfer.php',
-];
-$ignoreErrors[] = [
 	// identifier: return.missing
 	'message' => '#^Method Drupal\\\\Core\\\\FileTransfer\\\\FileTransfer\\:\\:__get\\(\\) should return bool\\|string but return statement is missing\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/lib/Drupal/Core/FileTransfer/FileTransfer.php',
-];
-$ignoreErrors[] = [
-	// identifier: property.notFound
-	'message' => '#^Access to an undefined property Drupal\\\\Core\\\\FileTransfer\\\\SSH\\:\\:\\$connection\\.$#',
-	'count' => 9,
-	'path' => __DIR__ . '/lib/Drupal/Core/FileTransfer/SSH.php',
 ];
 $ignoreErrors[] = [
 	// identifier: return.missing
@@ -640,12 +627,6 @@ $ignoreErrors[] = [
 	'message' => '#^Constructor of class Drupal\\\\Core\\\\Test\\\\TestRunnerKernel has an unused parameter \\$allow_dumping\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/lib/Drupal/Core/Test/TestRunnerKernel.php',
-];
-$ignoreErrors[] = [
-	// identifier: return.missing
-	'message' => '#^Method Drupal\\\\Core\\\\Theme\\\\ThemeInitialization\\:\\:resolveStyleSheetPlaceholders\\(\\) should return string but return statement is missing\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/lib/Drupal/Core/Theme/ThemeInitialization.php',
 ];
 $ignoreErrors[] = [
 	// identifier: variable.undefined
@@ -1767,12 +1748,6 @@ $ignoreErrors[] = [
 	'message' => '#^Missing cache backend declaration for performance\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/system/tests/modules/plugin_test/src/Plugin/TestPluginManager.php',
-];
-$ignoreErrors[] = [
-	// identifier: property.notFound
-	'message' => '#^Access to an undefined property Drupal\\\\Tests\\\\system\\\\Functional\\\\FileTransfer\\\\TestFileTransfer\\:\\:\\$connection\\.$#',
-	'count' => 5,
-	'path' => __DIR__ . '/modules/system/tests/src/Functional/FileTransfer/TestFileTransfer.php',
 ];
 $ignoreErrors[] = [
 	// identifier: empty.variable
