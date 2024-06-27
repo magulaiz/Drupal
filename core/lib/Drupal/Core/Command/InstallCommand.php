@@ -51,6 +51,7 @@ class InstallCommand extends Command {
       ->addArgument('install-profile-or-recipe', InputArgument::OPTIONAL, 'Install profile or recipe directory from which to install the site.')
       ->addOption('langcode', NULL, InputOption::VALUE_OPTIONAL, 'The language to install the site in.', 'en')
       ->addOption('site-name', NULL, InputOption::VALUE_OPTIONAL, 'Set the site name.', 'Drupal')
+      ->addOption('no-progress', NULL, InputOption::VALUE_NONE, 'Do not show progress during installation.')
       ->addUsage('demo_umami --langcode fr')
       ->addUsage('standard --site-name QuickInstall')
       ->addUsage('core/recipes/standard --site-name RecipeBuiltSite');
@@ -115,7 +116,7 @@ class InstallCommand extends Command {
       return 1;
     }
 
-    return $this->install($this->classLoader, $io, $install_profile ?? '', $input->getOption('langcode'), $this->getSitePath(), $input->getOption('site-name'), $recipe ?? '');
+    return $this->install($this->classLoader, $io, $install_profile ?? '', $input->getOption('langcode'), $this->getSitePath(), $input->getOption('site-name'), $recipe ?? '', !$input->getOption('no-progress'));
   }
 
   /**
@@ -154,6 +155,8 @@ class InstallCommand extends Command {
    *   The site name.
    * @param string $recipe
    *   The recipe to use for installing.
+   * @param boolean $show_progress
+   *   Whether to show progress during installation.
    *
    * @throws \Exception
    *   Thrown when failing to create the $site_path directory or settings.php.
@@ -161,7 +164,7 @@ class InstallCommand extends Command {
    * @return int
    *   The command exit status.
    */
-  protected function install($class_loader, SymfonyStyle $io, $profile, $langcode, $site_path, $site_name, string $recipe) {
+  protected function install($class_loader, SymfonyStyle $io, $profile, $langcode, $site_path, $site_name, string $recipe, bool $show_progress = TRUE) {
     $sqliteDriverNamespace = 'Drupal\\sqlite\\Driver\\Database\\sqlite';
     $password = Crypt::randomBytesBase64(12);
     $parameters = [
@@ -222,32 +225,38 @@ class InstallCommand extends Command {
 
     require_once 'core/includes/install.core.inc';
 
-    $progress_bar = $io->createProgressBar();
-    install_drupal($class_loader, $parameters, function ($install_state) use ($progress_bar) {
-      static $started = FALSE;
-      if (!$started) {
-        $started = TRUE;
-        // We've already done 1.
-        $progress_bar->setFormat("%current%/%max% [%bar%]\n%message%\n");
-        $progress_bar->setMessage(t('Installing @drupal', ['@drupal' => drupal_install_profile_distribution_name()]));
-        $tasks = install_tasks($install_state);
-        $progress_bar->start(count($tasks) + 1);
-      }
-      $tasks_to_perform = install_tasks_to_perform($install_state);
-      $task = current($tasks_to_perform);
-      if (isset($task['display_name'])) {
-        $progress_bar->setMessage($task['display_name']);
-      }
-      $progress_bar->advance();
-    });
+    $progress_callback = NULL;
+    if ($show_progress) {
+      $progress_bar = $io->createProgressBar();
+      $progress_callback = function($install_state) use ($progress_bar) {
+        static $started = FALSE;
+        if (!$started) {
+          $started = TRUE;
+          // We've already done 1.
+          $progress_bar->setFormat("%current%/%max% [%bar%]\n%message%\n");
+          $progress_bar->setMessage(t('Installing @drupal', ['@drupal' => drupal_install_profile_distribution_name()]));
+          $tasks = install_tasks($install_state);
+          $progress_bar->start(count($tasks) + 1);
+        }
+        $tasks_to_perform = install_tasks_to_perform($install_state);
+        $task = current($tasks_to_perform);
+        if (isset($task['display_name'])) {
+          $progress_bar->setMessage($task['display_name']);
+        }
+        $progress_bar->advance();
+      };
+    }
+    install_drupal($class_loader, $parameters, $progress_callback);
     $success_message = t('Congratulations, you installed @drupal!', [
       '@drupal' => drupal_install_profile_distribution_name(),
       '@name' => 'admin',
       '@pass' => $password,
     ], ['langcode' => $langcode]);
-    $progress_bar->setMessage('<info>' . $success_message . '</info>');
-    $progress_bar->display();
-    $progress_bar->finish();
+    if ($show_progress) {
+      $progress_bar->setMessage('<info>' . $success_message . '</info>');
+      $progress_bar->display();
+      $progress_bar->finish();
+    }
     $io->writeln('<info>Username:</info> admin');
     $io->writeln("<info>Password:</info> $password");
 
