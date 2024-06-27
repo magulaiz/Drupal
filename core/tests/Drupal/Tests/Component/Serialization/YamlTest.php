@@ -130,27 +130,33 @@ class YamlTest extends YamlTestBase {
     ];
     $yaml = Yaml::encode($data);
 
-    // TRICKY: Symfony encodes enums as constants (`!php/const`) but supports
-    // decoding enums (`!php/enum`).
     $this->assertSame(<<<YAML
-foo: !php/const Drupal\Tests\Component\Serialization\EnumValue::Yes
-bar: !php/const Drupal\Tests\Component\Serialization\BackedEnumValue::Maybe
+foo: !php/enum Drupal\Tests\Component\Serialization\EnumValue::Yes
+bar: !php/enum Drupal\Tests\Component\Serialization\BackedEnumValue::Maybe
 
 YAML, $yaml);
 
-    // Test decoding of `!php/const`-encoded enums.
+    // Test decoding of `!php/enum`-encoded enums.
     $decoded = Yaml::decode($yaml);
     $this->assertSame($decoded['foo'], EnumValue::Yes);
     $this->assertSame($decoded['bar'], BackedEnumValue::Maybe);
 
-    // Test decoding of `!php/enum`-encoded enums.
+    // Test decoding of `!php/const`-encoded enums.
     $yaml_alternative = <<<YAML
-foo: !php/enum Drupal\Tests\Component\Serialization\EnumValue::Yes
-bar: !php/enum Drupal\Tests\Component\Serialization\BackedEnumValue::Maybe->value
+foo: !php/const Drupal\Tests\Component\Serialization\EnumValue::Yes
+bar: !php/const Drupal\Tests\Component\Serialization\BackedEnumValue::Maybe
 
 YAML;
     $decoded = Yaml::decode($yaml_alternative);
     $this->assertSame($decoded['foo'], EnumValue::Yes);
+    $this->assertSame($decoded['bar'], BackedEnumValue::Maybe);
+
+    // Test decoding of `!php/enum`-encoded arrow values.
+    $yaml_alternative = <<<YAML
+bar: !php/enum Drupal\Tests\Component\Serialization\BackedEnumValue::Maybe->value
+
+YAML;
+    $decoded = Yaml::decode($yaml_alternative);
     $this->assertSame($decoded['bar'], BackedEnumValue::Maybe->value);
   }
 
