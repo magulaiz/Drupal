@@ -61,7 +61,7 @@ class DbImportCommandTest extends KernelTestBase {
    *
    * @requires extension pdo_sqlite
    */
-  public function testDbImportCommand() {
+  public function testDbImportCommand(): void {
     $connection_info = [
       'driver' => 'sqlite',
       'database' => ':memory:',
@@ -71,7 +71,7 @@ class DbImportCommandTest extends KernelTestBase {
     $command = new DbImportCommand();
     $command_tester = new CommandTester($command);
     $command_tester->execute([
-      'script' => __DIR__ . '/../../../fixtures/update/drupal-9.4.0.bare.standard.php.gz',
+      'script' => __DIR__ . '/../../../fixtures/update/drupal-10.3.0.bare.standard.php.gz',
       '--database' => $this->databasePrefix,
     ]);
 
