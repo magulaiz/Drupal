@@ -74,7 +74,7 @@ class Role extends ConfigEntityBase implements RoleInterface {
    *
    * @var int
    */
-  protected $weight = 0;
+  protected $weight;
 
   /**
    * The permissions belonging to this role.
@@ -181,12 +181,11 @@ class Role extends ConfigEntityBase implements RoleInterface {
   public function preSave(EntityStorageInterface $storage) {
     parent::preSave($storage);
 
-    if (!isset($this->weight) && ($roles = $storage->loadMultiple())) {
+    if (!isset($this->weight)) {
       // Set a role weight to make this new role last.
-      $max = array_reduce($roles, function ($max, $role) {
-        return $max > $role->weight ? $max : $role->weight;
-      });
-      $this->weight = $max + 1;
+      $this->weight = array_reduce($storage->loadMultiple(), function ($max, $role) {
+        return $max > $role->weight ? $max : $role->weight + 1;
+      }, 0);
     }
 
     if (!$this->isSyncing() && $this->hasTrustedData()) {
