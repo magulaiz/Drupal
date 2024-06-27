@@ -571,7 +571,7 @@ class ConfigImportUITest extends BrowserTestBase {
     $assert_session->responseNotContains('&amp;nbsp;');
     $assert_session->titleEquals("View changes of $config_name | Drupal");
     $assert_session->elementsCount('xpath', '//table[contains(@class, "diff")]', 1);
-    $assert_session->pageTextContains("foo: !php/const Drupal\config_enum_test\EnumValue::No");
+    $assert_session->pageTextContains("foo: !php/enum Drupal\config_enum_test\EnumValue::No");
 
     $this->drupalGet('admin/config/development/configuration');
     $assert_session->responseContains('<td>config_enum_test.settings');
