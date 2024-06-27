@@ -44,9 +44,6 @@ class AutoloadingStorage implements StorageInterface, StorageCacheInterface {
    * {@inheritdoc}
    */
   public function exists($name) {
-    // The cache would read in the entire data (instead of only checking whether
-    // any data exists), and on a potential cache miss, an additional storage
-    // lookup would have to happen, so check the storage directly.
     return $this->storage->exists($name);
   }
 
