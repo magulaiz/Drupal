@@ -473,7 +473,7 @@ class ViewsConfigUpdater implements ContainerInjectionInterface {
    *   default_argument_skip_url removed.
    */
   public function needsDefaultArgumentSkipUrlUpdate(ViewEntityInterface $view) {
-    return $this->processDisplayHandlers($view, TRUE, function (&$handler, $handler_type)  use ($view)  {
+    return $this->processDisplayHandlers($view, TRUE, function (&$handler, $handler_type) use ($view)  {
       return $this->processDefaultArgumentSkipUrlUpdate($handler, $handler_type, $view);
     });
   }
@@ -485,6 +485,8 @@ class ViewsConfigUpdater implements ContainerInjectionInterface {
    *   A display handler.
    * @param string $handler_type
    *   The handler type.
+   * @param \Drupal\views\ViewEntityInterface $view
+   *   The view entity.
    *
    * @return bool
    *   Whether the handler was updated.

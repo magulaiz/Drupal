@@ -14,7 +14,6 @@ use Drupal\views\Entity\View;
  *
  * @group Update
  * @group legacy
- * @group lendude
  */
 class ViewsRemoveDefaultArgumentSkipUrlTest extends UpdatePathTestBase {
 
