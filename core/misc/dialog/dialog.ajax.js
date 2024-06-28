@@ -102,9 +102,13 @@
         const $originalButton = $(this);
         this.style.display = 'none';
         const originalButtonData = new WeakMap();
-        const originalButtonOnce = originalButtonData.get($originalButton[0])
+        const originalButtonOnce = originalButtonData.has($originalButton[0])
           ? originalButtonData.get($originalButton[0]).once
-          : null;
+          : $originalButton.data('once');
+
+        originalButtonData.set($originalButton[0], {
+          once: originalButtonOnce,
+        });
 
         buttons.push({
           text: $originalButton.html() || $originalButton.attr('value'),
