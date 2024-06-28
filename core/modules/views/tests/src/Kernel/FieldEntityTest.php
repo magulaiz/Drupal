@@ -4,14 +4,16 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\views\Kernel;
 
-use Drupal\KernelTests\KernelTestBase;
+use Drupal\comment\Tests\CommentTestTrait;
 use Drupal\Core\Logger\LoggerChannelFactoryInterface;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\node\Entity\Node;
 use Drupal\node\NodeInterface;
+use Drupal\Tests\node\Traits\ContentTypeCreationTrait;
+use Drupal\Tests\UiHelperTrait;
+use Drupal\Tests\user\Traits\UserCreationTrait;
 use Drupal\user\Entity\User;
-use Drupal\Tests\views\Functional\ViewTestBase;
 use Drupal\views\Tests\ViewTestData;
 use Drupal\views\Views;
 use Drupal\comment\Entity\Comment;
@@ -21,14 +23,20 @@ use Drupal\comment\Entity\Comment;
  *
  * @group views
  */
-class FieldEntityTest extends KernelTestBase {
+class FieldEntityTest extends ViewsKernelTestBase {
 
-  /**
-   * Modules to enable.
-   *
-   * @var array
-   */
-  protected static $modules = ['node', 'comment'];
+  use CommentTestTrait;
+
+  use ContentTypeCreationTrait {
+    createContentType as drupalCreateContentType;
+  }
+
+  use UiHelperTrait;
+
+  use UserCreationTrait {
+    createRole as drupalCreateRole;
+    createUser as drupalCreateUser;
+  }
 
   /**
    * {@inheritdoc}
@@ -38,8 +46,8 @@ class FieldEntityTest extends KernelTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp($import_test_views = TRUE, $modules = ['views_test_config']): void {
-    parent::setUp(FALSE, $modules);
+  protected function setUp($import_test_views = TRUE): void {
+    parent::setUp(FALSE);
 
     $this->drupalCreateContentType(['type' => 'page']);
     $this->addDefaultCommentField('node', 'page');
@@ -68,7 +76,9 @@ class FieldEntityTest extends KernelTestBase {
         ],
       ],
     ])->save();
-    ViewTestData::createTestViews(static::class, $modules);
+
+    //Modules to enable.
+    ViewTestData::createTestViews(static::class, ['node', 'comment']);
   }
 
   /**
