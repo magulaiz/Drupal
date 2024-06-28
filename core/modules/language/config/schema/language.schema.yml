@@ -95,6 +95,10 @@ language.entity.*:
       label: 'ID'
       constraints:
         NotBlank: []
+        Regex:
+          # @see \Drupal\Core\Language\LanguageInterface::VALID_LANGCODE_REGEX
+          pattern: '/[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*/'
+          message: 'This is not a valid language code.'
     label:
       type: required_label
       label: 'Label'
