@@ -24,21 +24,13 @@ class DrupalMessengerServiceTest extends BrowserTestBase {
 
   /**
    * {@inheritdoc}
-   *
-   * @todo Remove and fix test to not rely on super user.
-   * @see https://www.drupal.org/project/drupal/issues/3437620
-   */
-  protected bool $usesSuperUserAccessPolicy = TRUE;
-
-  /**
-   * {@inheritdoc}
    */
   protected $defaultTheme = 'stark';
 
   /**
    * Tests Messenger service.
    */
-  public function testDrupalMessengerService() {
+  public function testDrupalMessengerService(): void {
     // The page at system_test.messenger_service route sets two messages and
     // then removes the first before it is displayed.
     $this->drupalGet(Url::fromRoute('system_test.messenger_service'));
@@ -63,7 +55,8 @@ class DrupalMessengerServiceTest extends BrowserTestBase {
 
     // Ensure messages survive a container rebuild.
     $assert = $this->assertSession();
-    $this->drupalLogin($this->rootUser);
+    $this->drupalLogin($this->drupalCreateUser(['administer modules']));
+
     $edit = [];
     $edit["modules[help][enable]"] = TRUE;
     $this->drupalGet('admin/modules');

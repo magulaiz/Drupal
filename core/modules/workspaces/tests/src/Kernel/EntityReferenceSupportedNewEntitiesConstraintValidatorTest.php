@@ -28,7 +28,6 @@ class EntityReferenceSupportedNewEntitiesConstraintValidatorTest extends KernelT
     'user',
     'workspaces',
     'entity_test',
-    'path_alias',
   ];
 
   /**
@@ -58,7 +57,7 @@ class EntityReferenceSupportedNewEntitiesConstraintValidatorTest extends KernelT
   /**
    * @covers ::validate
    */
-  public function testNewEntitiesAllowedInDefaultWorkspace() {
+  public function testNewEntitiesAllowedInDefaultWorkspace(): void {
     $entity = EntityTestMulRevPub::create([
       'unsupported_reference' => [
         'entity' => EntityTest::create([]),
@@ -73,7 +72,7 @@ class EntityReferenceSupportedNewEntitiesConstraintValidatorTest extends KernelT
   /**
    * @covers ::validate
    */
-  public function testNewEntitiesForbiddenInNonDefaultWorkspace() {
+  public function testNewEntitiesForbiddenInNonDefaultWorkspace(): void {
     $this->switchToWorkspace('stage');
     $entity = EntityTestMulRevPub::create([
       'unsupported_reference' => [

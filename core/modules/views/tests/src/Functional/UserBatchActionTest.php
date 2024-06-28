@@ -25,13 +25,6 @@ class UserBatchActionTest extends BrowserTestBase {
     'views',
   ];
 
-  /**
-   * {@inheritdoc}
-   *
-   * @todo Remove and fix test to not rely on super user.
-   * @see https://www.drupal.org/project/drupal/issues/3437620
-   */
-  protected bool $usesSuperUserAccessPolicy = TRUE;
 
   /**
    * {@inheritdoc}
@@ -41,11 +34,11 @@ class UserBatchActionTest extends BrowserTestBase {
   /**
    * Tests user admin batch.
    */
-  public function testUserAction() {
+  public function testUserAction(): void {
     $themes = ['stark', 'olivero', 'claro'];
     $this->container->get('theme_installer')->install($themes);
 
-    $this->drupalLogin($this->rootUser);
+    $this->drupalLogin($this->createUser(['administer users']));
 
     foreach ($themes as $theme) {
       $this->config('system.theme')->set('default', $theme)->save();
