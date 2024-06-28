@@ -116,7 +116,7 @@ class MediaLinkabilityTest extends MediaTestBase {
     $this->assertEmpty($xpath->query('//a'));
 
     // Assert the link button is present and not pressed.
-    $link_button = $this->getEditorButton('Link');
+    $link_button = $this->getEditorButton('Link (Ctrl+K)');
     $this->assertSame('false', $link_button->getAttribute('aria-pressed'));
 
     // Wait for the preview to load.
@@ -126,7 +126,7 @@ class MediaLinkabilityTest extends MediaTestBase {
     // Tests linking Drupal media.
     $drupalmedia->click();
     $this->assertTrue($drupalmedia->hasClass('ck-widget_selected'));
-    $this->assertEditorButtonEnabled('Link');
+    $this->assertEditorButtonEnabled('Link (Ctrl+K)');
     // Assert structure of image toolbar balloon.
     $this->assertVisibleBalloon('.ck-toolbar[aria-label="Drupal Media toolbar"]');
     $link_media_button = $this->getBalloonButton('Link media');
@@ -191,8 +191,8 @@ class MediaLinkabilityTest extends MediaTestBase {
 
     // Tests unlinking media.
     $drupalmedia->click();
-    $this->assertEditorButtonEnabled('Link');
-    $this->assertSame('true', $this->getEditorButton('Link')->getAttribute('aria-pressed'));
+    $this->assertEditorButtonEnabled('Link (Ctrl+K)');
+    $this->assertSame('true', $this->getEditorButton('Link (Ctrl+K)')->getAttribute('aria-pressed'));
     // Assert structure of Drupal media toolbar balloon.
     $this->assertVisibleBalloon('.ck-toolbar[aria-label="Drupal Media toolbar"]');
     $link_media_button = $this->getBalloonButton('Link media');
@@ -203,7 +203,7 @@ class MediaLinkabilityTest extends MediaTestBase {
     $unlink_image_button = $this->getBalloonButton('Unlink');
     // Click the "Unlink" button.
     $unlink_image_button->click();
-    $this->assertSame('false', $this->getEditorButton('Link')->getAttribute('aria-pressed'));
+    $this->assertSame('false', $this->getEditorButton('Link (Ctrl+K)')->getAttribute('aria-pressed'));
 
     // Assert the "editingDowncast" HTML after making changes. Assert the link
     // exists, then assert no link exists. Then assert the expected DOM

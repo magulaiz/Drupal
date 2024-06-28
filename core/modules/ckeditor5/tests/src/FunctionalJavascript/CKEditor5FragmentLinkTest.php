@@ -11,6 +11,7 @@ use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\filter\Entity\FilterFormat;
 use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
 use Drupal\node\Entity\NodeType;
+use Drupal\Tests\ckeditor5\Traits\CKEditor5TestTrait;
 use Drupal\Tests\TestFileCreationTrait;
 use Drupal\user\Entity\User;
 use Drupal\user\RoleInterface;
@@ -24,6 +25,7 @@ use Drupal\user\RoleInterface;
 class CKEditor5FragmentLinkTest extends WebDriverTestBase {
 
   use TestFileCreationTrait;
+  use CKEditor5TestTrait;
 
   /**
    * {@inheritdoc}
@@ -98,7 +100,7 @@ class CKEditor5FragmentLinkTest extends WebDriverTestBase {
   public function testFragmentLink(): void {
     $session = $this->getSession();
     $web_assert = $this->assertSession();
-    $ckeditor_class = '.ck-editor';
+    $ckeditor_class = self::$bodyValueFieldSelector . '.ck-editor';
     $ckeditor_id = '#cke_edit-body-0-value';
 
     $this->drupalGet('node/add/page');

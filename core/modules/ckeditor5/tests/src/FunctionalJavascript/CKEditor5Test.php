@@ -115,10 +115,10 @@ class CKEditor5Test extends CKEditor5TestBase {
     $this->waitForEditor();
     $page->fillField('title[0][value]', 'My test content');
 
-    // Ensure that CKEditor 5 is focused.
-    $this->click('.ck-content');
+    // Ensure that the body value CKEditor 5 is focused.
+    $this->click(self::$bodyValueFieldSelector . '.ck-content');
 
-    $this->assertNotEmpty($image_upload_field = $page->find('css', '.ck-file-dialog-button input[type="file"]'));
+    $this->assertNotEmpty($image_upload_field = $page->find('css', self::$bodyValueFieldSelector . '.ck-file-dialog-button input[type="file"]'));
     $image = $this->getTestFiles('image')[0];
     $image_upload_field->attachFile($this->container->get('file_system')->realpath($image->uri));
     $assert_session->waitForElementVisible('css', '.ck-widget.image');
@@ -158,10 +158,10 @@ class CKEditor5Test extends CKEditor5TestBase {
     $this->drupalGet('node/add/page');
     $this->assertNotEmpty($assert_session->waitForElement('css', '.ck-heading-dropdown button'));
 
-    $page->find('css', '.ck-heading-dropdown button')->click();
+    $page->find('css', self::$bodyValueFieldSelector . '.ck-heading-dropdown button')->click();
 
     // Get all the headings available in dropdown.
-    $headings_dropdown = $page->findAll('css', '.ck-heading-dropdown li .ck-button__label');
+    $headings_dropdown = $page->findAll('css', self::$bodyValueFieldSelector . '.ck-heading-dropdown li .ck-button__label');
 
     // Create array of available headings.
     $available_headings = [];
@@ -196,13 +196,16 @@ class CKEditor5Test extends CKEditor5TestBase {
 
     $page->pressButton('Save configuration');
 
+    $this->drupalGet('node/add');
+    $this->assertNotEmpty($assert_session->waitForElement('css', self::$bodyValueFieldSelector . '.ck-heading-dropdown button'));
+
     $this->drupalGet('node/add/page');
     $this->assertNotEmpty($assert_session->waitForElement('css', '.ck-heading-dropdown button'));
 
-    $page->find('css', '.ck-heading-dropdown button')->click();
+    $page->find('css', self::$bodyValueFieldSelector . '.ck-heading-dropdown button')->click();
 
     // Get all the headings available in dropdown.
-    $headings_dropdown = $page->findAll('css', '.ck-heading-dropdown li .ck-button__label');
+    $headings_dropdown = $page->findAll('css', self::$bodyValueFieldSelector . '.ck-heading-dropdown li .ck-button__label');
 
     // Create array of available headings.
     $available_headings = [];
@@ -318,10 +321,10 @@ JS;
     $this->assertNotEmpty($assert_session->waitForText('Choose language'));
 
     // Click on the dropdown button.
-    $page->find('css', '.ck-text-fragment-language-dropdown button')->click();
+    $page->find('css', self::$bodyValueFieldSelector . '.ck-text-fragment-language-dropdown button')->click();
 
     // Get all the languages available in dropdown.
-    $current_languages = $page->findAll('css', '.ck-text-fragment-language-dropdown li .ck-button__label');
+    $current_languages = $page->findAll('css', self::$bodyValueFieldSelector . '.ck-text-fragment-language-dropdown li .ck-button__label');
 
     // Remove "Remove language" element from current languages.
     array_shift($current_languages);
@@ -562,15 +565,15 @@ JS;
     $page->fillField('title[0][value]', 'My test content');
 
     // Ensure that CKEditor 5 is focused.
-    $this->click('.ck-content');
+    $this->click(self::$bodyValueFieldSelector . '.ck-content');
 
-    $this->assertNotEmpty($image_upload_field = $page->find('css', '.ck-file-dialog-button input[type="file"]'));
+    $this->assertNotEmpty($image_upload_field = $page->find('css', self::$bodyValueFieldSelector . '.ck-file-dialog-button input[type="file"]'));
     $image = $this->getTestFiles('image')[0];
     $image_upload_field->attachFile($this->container->get('file_system')->realpath($image->uri));
     // Wait until preview for the image has rendered to ensure that the image
     // upload has completed and the image has been downcast.
     // @see https://www.drupal.org/project/drupal/issues/3250587
-    $this->assertNotEmpty($assert_session->waitForElement('css', '.ck-content img[data-entity-uuid]'));
+    $this->assertNotEmpty($assert_session->waitForElement('css', self::$bodyValueFieldSelector . '.ck-content img[data-entity-uuid]'));
 
     // Add alt text to the image.
     $this->assertNotEmpty($assert_session->waitForElementVisible('css', '.image.ck-widget > img'));
@@ -678,7 +681,7 @@ JS;
     // Click source again to make source inactive and have the numbered list
     // splitbutton active.
     $this->pressEditorButton('Source');
-    $numbered_list_dropdown_selector = '.ck-splitbutton__arrow';
+    $numbered_list_dropdown_selector = self::$bodyValueFieldSelector . '.ck-splitbutton__arrow';
 
     // Check that there is no dropdown available for the numbered list because
     // both reversed and startIndex are FALSE.
@@ -1020,7 +1023,7 @@ JS;
     $this->drupalGet('node/1/edit');
     $page = $this->getSession()->getPage();
     $this->waitForEditor();
-    $editor = $page->find('css', '.ck-content');
+    $editor = $page->find('css', self::$bodyValueFieldSelector . '.ck-content');
     $editor->setValue('Very important information');
     $page->pressButton('Save');
     $this->assertSession()->responseContains('Very important information');
@@ -1030,7 +1033,7 @@ JS;
     $page = $this->getSession()->getPage();
     $this->waitForEditor();
     $this->pressEditorButton('Source');
-    $editor = $page->find('css', '.ck-source-editing-area textarea');
+    $editor = $page->find('css', self::$bodyValueFieldSelector . '.ck-source-editing-area textarea');
     $editor->setValue('Text hidden in the source');
     $page->pressButton('Save');
     $this->assertSession()->responseContains('Text hidden in the source');

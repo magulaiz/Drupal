@@ -16,6 +16,8 @@ module.exports = {
   },
   'Ensure CKEditor respects field widget row value': (browser) => {
     browser.drupalLoginAsAdmin(() => {
+      // Selectors prefix selector for text_with_summary value editor elements.
+      const bodyValueFieldSelector = '.form-item-body-0-value';
       browser
         // Create new input format.
         .drupalRelativeURL('/admin/config/content/formats/add')
@@ -54,12 +56,12 @@ module.exports = {
         )
         // Navigate to the create content page and measure height of the editor.
         .drupalRelativeURL('/node/add/test')
-        .waitForElementVisible('.ck-editor__editable')
+        .waitForElementVisible(`${bodyValueFieldSelector} .ck-editor__editable`)
         .execute(
           // eslint-disable-next-line func-names, prefer-arrow-callback, no-shadow
           function () {
             const height = document.querySelector(
-              '.ck-editor__editable',
+              '.form-item-body-0-value .ck-editor__editable',
             ).clientHeight;
 
             // We expect height to be 320, but test to ensure that it's greater
@@ -76,13 +78,15 @@ module.exports = {
             );
           },
         )
-        .click('.ck-source-editing-button')
-        .waitForElementVisible('.ck-source-editing-area')
+        .click(`${bodyValueFieldSelector} .ck-source-editing-button`)
+        .waitForElementVisible(
+          `${bodyValueFieldSelector} .ck-source-editing-area`,
+        )
         .execute(
           // eslint-disable-next-line func-names, prefer-arrow-callback, no-shadow
           function () {
             const height = document.querySelector(
-              '.ck-source-editing-area',
+              '.form-item-body-0-value .ck-source-editing-area',
             ).clientHeight;
 
             // We expect height to be 320, but test to ensure that it's greater
@@ -110,7 +114,7 @@ module.exports = {
             });
 
             const height = document.querySelector(
-              '.ck-editor__editable',
+              '.form-item-body-0-value .ck-editor__editable',
             ).clientHeight;
 
             return height < window.innerHeight;
@@ -124,8 +128,10 @@ module.exports = {
           },
         )
         // Source Editor textarea should have vertical scrollbar when needed.
-        .click('.ck-source-editing-button')
-        .waitForElementVisible('.ck-source-editing-area')
+        .click(`${bodyValueFieldSelector} .ck-source-editing-button`)
+        .waitForElementVisible(
+          `${bodyValueFieldSelector} .ck-source-editing-area`,
+        )
         .execute(
           // eslint-disable-next-line func-names, prefer-arrow-callback, no-shadow
           function () {
@@ -152,7 +158,9 @@ module.exports = {
             }
 
             return isScrollableY(
-              document.querySelector('.ck-source-editing-area textarea'),
+              document.querySelector(
+                '.form-item-body-0-value .ck-source-editing-area textarea',
+              ),
             );
           },
           [],
@@ -198,7 +206,7 @@ module.exports = {
           // eslint-disable-next-line func-names, prefer-arrow-callback, no-shadow
           function () {
             const height = document.querySelector(
-              '.ck-editor__editable',
+              '.form-item-body-0-value .ck-editor__editable',
             ).clientHeight;
 
             // We expect height to be 640, but test to ensure that it's greater
@@ -212,13 +220,15 @@ module.exports = {
             browser.assert.ok(result.value, 'Editor height is set to 18 rows.');
           },
         )
-        .click('.ck-source-editing-button')
-        .waitForElementVisible('.ck-source-editing-area')
+        .click(`${bodyValueFieldSelector} .ck-source-editing-button`)
+        .waitForElementVisible(
+          `${bodyValueFieldSelector} .ck-source-editing-area`,
+        )
         .execute(
           // eslint-disable-next-line func-names, prefer-arrow-callback, no-shadow
           function () {
             const height = document.querySelector(
-              '.ck-source-editing-area',
+              '.form-item-body-0-value .ck-source-editing-area',
             ).clientHeight;
 
             // We expect height to be 640, but test to ensure that it's greater

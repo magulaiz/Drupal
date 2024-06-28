@@ -127,7 +127,7 @@ class EmphasisTest extends WebDriverTestBase {
     $this->drupalGet($this->host->toUrl('edit-form'));
     $this->waitForEditor();
 
-    $emphasis_element = $assert_session->waitForElementVisible('css', '.ck-content p em');
+    $emphasis_element = $assert_session->waitForElementVisible('css', self::$bodyValueFieldSelector . '.ck-content p em');
     $this->assertEquals('test!', $emphasis_element->getText());
 
     $xpath = new \DOMXPath($this->getEditorDataAsDom());
@@ -159,7 +159,7 @@ class EmphasisTest extends WebDriverTestBase {
     $this->drupalGet($this->host->toUrl('edit-form'));
     $this->waitForEditor();
 
-    $emphasis_element = $assert_session->waitForElementVisible('css', '.ck-content p em');
+    $emphasis_element = $assert_session->waitForElementVisible('css', self::$bodyValueFieldSelector . '.ck-content p em');
     $this->assertEquals('bar', $emphasis_element->getAttribute('data-foo'));
 
     $xpath = new \DOMXPath($this->getEditorDataAsDom());
