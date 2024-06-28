@@ -202,7 +202,8 @@ class WorkspaceAssociation implements WorkspaceAssociationInterface, EventSubscr
     if (isset($this->associatedRevisions[$workspace_id][$entity_type_id])) {
       if ($entity_ids) {
         return array_intersect($this->associatedRevisions[$workspace_id][$entity_type_id], $entity_ids);
-      } else {
+      }
+      else {
         return $this->associatedRevisions[$workspace_id][$entity_type_id];
       }
     }
@@ -243,7 +244,7 @@ class WorkspaceAssociation implements WorkspaceAssociationInterface, EventSubscr
       // Restrict the result to a set of entity ID's if provided.
       if ($entity_ids) {
         foreach ($entity_ids as & $entity_id) {
-          $entity_id = (int)$entity_id;
+          $entity_id = (int) $entity_id;
         }
         $query->condition($id_field, $entity_ids, 'IN');
       }
@@ -298,7 +299,8 @@ class WorkspaceAssociation implements WorkspaceAssociationInterface, EventSubscr
     if (isset($this->associatedInitialRevisions[$workspace_id][$entity_type_id])) {
       if ($entity_ids) {
         return array_intersect($this->associatedInitialRevisions[$workspace_id][$entity_type_id], $entity_ids);
-      } else {
+      }
+      else {
         return $this->associatedInitialRevisions[$workspace_id][$entity_type_id];
       }
     }
@@ -331,7 +333,7 @@ class WorkspaceAssociation implements WorkspaceAssociationInterface, EventSubscr
       // Restrict the result to a set of entity ID's if provided.
       if ($entity_ids) {
         foreach ($entity_ids as & $entity_id) {
-          $entity_id = (int)$entity_id;
+          $entity_id = (int) $entity_id;
         }
         $query->condition("$current_revision_table.$id_field", $entity_ids, 'IN');
       }

@@ -77,7 +77,7 @@ class Formula extends ArgumentPluginBase {
       $values = [
         'format' => $this->getDateFormat($this->argFormat),
         'value' => $this->argument,
-        'timezone' => $this->query->setupTimezone()
+        'timezone' => $this->query->setupTimezone(),
       ];
 
       $this->query->addCondition(0, $field, $values, $this->mongodbOperator);

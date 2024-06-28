@@ -2,7 +2,6 @@
 
 namespace Drupal\mongodb\Driver\Database\mongodb;
 
-use Drupal\Core\Database\Database;
 use Drupal\Core\Database\Connection as DatabaseConnection;
 use Drupal\Core\Database\Event\StatementExecutionEndEvent;
 use Drupal\Core\Database\Event\StatementExecutionStartEvent;
@@ -346,7 +345,7 @@ class Select extends QuerySelect {
     $this->connectionTarget = $this->connection->getTarget();
     $this->queryOptions = $options;
 
-    $conjunction = isset($options['conjunction']) ? $options['conjunction'] : 'AND';
+    $conjunction = $options['conjunction'] ?? 'AND';
     $this->condition = $this->connection->condition($conjunction);
     $this->having = $this->connection->condition($conjunction);
     parent::addJoin(NULL, $table, $alias);
@@ -1591,7 +1590,7 @@ class Select extends QuerySelect {
    * @param array $lookup_left_unwind_paths
    *   The embedded table left paths to be unwound.
    * @param array $lookup_right_unwind_paths
-   *    The embedded table right paths to be unwound.
+   *   The embedded table right paths to be unwound.
    */
   protected function updateCompiledJoinCondition(array &$condition, string $right_table, string $right_alias, array &$lookup_let, array &$lookup_left_unwind_paths, array &$lookup_right_unwind_paths): void {
     foreach ($condition as $key => &$value) {

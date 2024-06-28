@@ -229,11 +229,11 @@ class NodeViewsData extends EntityViewsData {
       //   tables. It would be neat if this could be encoded in the base field
       //   definition.
       $data['node_field_revision']['vid'] = [
-          'argument' => [
-            'id' => 'node_vid',
-            'numeric' => TRUE,
-          ],
-        ] + $data['node_field_revision']['vid'];
+        'argument' => [
+          'id' => 'node_vid',
+          'numeric' => TRUE,
+        ],
+      ] + $data['node_field_revision']['vid'];
 
       $data['node_field_revision']['langcode']['help'] = $this->t('The language the original content is in.');
 

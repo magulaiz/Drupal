@@ -21,7 +21,7 @@ class LayoutBuilderOverridesTest extends LayoutBuilderTestBase {
    */
   public function testDeleteField() {
     if (Database::getConnection()->driver() == 'mongodb') {
-      //@TODO Fix this test for MongoDB.
+      // @todo Fix this test for MongoDB.
       $this->markTestSkipped();
     }
 

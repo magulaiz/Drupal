@@ -48,7 +48,7 @@ class StatementCountQuery implements \Iterator, StatementInterface {
     $this->count = (int) $count;
 
     // This is only needed by the database query logger.
-    $this->queryString = isset($options['query_string']) ? $options['query_string'] : '';
+    $this->queryString = $options['query_string'] ?? '';
 
     // Change the database connection for the database query logger.
     if (isset($options['target']) && $options['target'] != $this->connection->getTarget()) {

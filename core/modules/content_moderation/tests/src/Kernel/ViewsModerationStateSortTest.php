@@ -163,7 +163,7 @@ class ViewsModerationStateSortTest extends ViewsKernelTestBase {
       $skip = FALSE;
     }
 
-      $this->assertSortResults('test_content_moderation_state_sort_revision_table', 'vid', 'ASC', [
+    $this->assertSortResults('test_content_moderation_state_sort_revision_table', 'vid', 'ASC', [
       ['vid' => $aa_draft_revision_id],
       ['vid' => $second_aa_draft_revision_id],
       ['vid' => $draft_revision_id],

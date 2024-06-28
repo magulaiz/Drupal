@@ -129,7 +129,6 @@ class HelpSearch extends CoreHelpSearch {
     }
   }
 
-
   /**
    * {@inheritdoc}
    */

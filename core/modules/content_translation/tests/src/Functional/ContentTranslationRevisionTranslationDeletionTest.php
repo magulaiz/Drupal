@@ -50,7 +50,7 @@ class ContentTranslationRevisionTranslationDeletionTest extends ContentTranslati
    */
   public function testOverview() {
     $index = 1;
-      $accounts = [
+    $accounts = [
       $this->rootUser,
       $this->editor,
       $this->translator,

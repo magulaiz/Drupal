@@ -275,7 +275,7 @@ class BulkDeleteTest extends FieldKernelTestBase {
       ->getStorage('field_storage_config')
       ->loadByProperties([
         'uuid' => $deleted_field_storage->uuid(),
-        'include_deleted' => TRUE
+        'include_deleted' => TRUE,
       ]);
     $deleted_field_storage = reset($field_storages);
 
@@ -297,7 +297,7 @@ class BulkDeleteTest extends FieldKernelTestBase {
       ->getStorage('field_config')
       ->loadByProperties([
         'uuid' => $deleted_field_uuid,
-        'include_deleted' => TRUE
+        'include_deleted' => TRUE,
       ]);
     $this->assertArrayHasKey($deleted_field_uuid, $fields);
     $this->assertTrue($fields[$deleted_field_uuid]->isDeleted());
@@ -342,7 +342,7 @@ class BulkDeleteTest extends FieldKernelTestBase {
       ->loadByProperties([
         'field_storage_uuid' => $deleted_field_storage->uuid(),
         'deleted' => TRUE,
-        'include_deleted' => TRUE
+        'include_deleted' => TRUE,
       ]);
     $this->assertCount(0, $fields, 'The field is gone');
 

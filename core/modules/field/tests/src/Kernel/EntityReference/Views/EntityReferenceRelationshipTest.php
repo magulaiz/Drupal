@@ -145,7 +145,7 @@ class EntityReferenceRelationshipTest extends ViewsKernelTestBase {
       $this->assertEquals([
         'field' => 'deleted',
         'value' => 0,
-        'numeric' => TRUE
+        'numeric' => TRUE,
       ], $views_data['reverse__entity_test__field_test_data']['relationship']['join_extra'][0]);
     }
 
@@ -249,7 +249,7 @@ class EntityReferenceRelationshipTest extends ViewsKernelTestBase {
       $this->assertEquals([
         'field' => 'deleted',
         'value' => 0,
-        'numeric' => TRUE
+        'numeric' => TRUE,
       ], $views_data['reverse__entity_test_mul__field_data_test']['relationship']['join_extra'][0]);
     }
 

@@ -266,7 +266,7 @@ class Statement extends StatementPrefetchIterator {
         if (is_array($table_fields)) {
           foreach ($table_fields as $field_name => $field_data) {
             if (!in_array($field_name, array_keys($row), TRUE)) {
-              $rows[$id][$field_name] = isset($field_data['default']) ? $field_data['default'] : NULL;
+              $rows[$id][$field_name] = $field_data['default'] ?? NULL;
             }
           }
         }

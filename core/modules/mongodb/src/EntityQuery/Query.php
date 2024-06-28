@@ -728,10 +728,10 @@ class Query extends CoreQuery {
     }
 
     if ($conjunction == 'AND' && in_array(FALSE, $results, TRUE) === FALSE) {
-      return isset($revision[$revision_field]) ? $revision[$revision_field] : NULL;
+      return $revision[$revision_field] ?? NULL;
     }
     if ($conjunction == 'OR' && !(in_array(TRUE, $results, TRUE) === FALSE)) {
-      return isset($revision[$revision_field]) ? $revision[$revision_field] : NULL;
+      return $revision[$revision_field] ?? NULL;
     }
   }
 

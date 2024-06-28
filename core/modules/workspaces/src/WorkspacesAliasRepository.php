@@ -54,7 +54,7 @@ class WorkspacesAliasRepository extends AliasRepository {
         '$ifNull' => [
           '$' . $this->connection->escapeField('wa.target_entity_revision_id'),
           '$' . $this->connection->escapeField('base_table_2.revision_id'),
-        ]
+        ],
       ];
 
       $query->innerJoin('path_alias', 'base_table',

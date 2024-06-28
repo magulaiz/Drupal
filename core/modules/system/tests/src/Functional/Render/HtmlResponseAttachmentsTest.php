@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\system\Functional\Render;
 
-use Drupal\Core\Database\Database;
 use Drupal\Tests\BrowserTestBase;
 
 /**
@@ -70,9 +69,6 @@ class HtmlResponseAttachmentsTest extends BrowserTestBase {
       '</foo/bar>; hreflang="nl"; rel="alternate"',
       '</foo/bar>; hreflang="de"; rel="alternate"',
     ];
-//    if (Database::getConnection()->driver() == 'mongodb') {
-//      $expected_link_headers = [implode(', ', $expected_link_headers)];
-//    }
     $this->assertEquals($expected_link_headers, $this->getSession()->getResponseHeaders()['Link']);
 
     // Check that duplicate alternate URLs with different hreflang attributes
@@ -114,7 +110,7 @@ class HtmlResponseAttachmentsTest extends BrowserTestBase {
     $this->assertSession()->responseHeaderEquals('X-Test-Teapot', 'Teapot Mode Active');
     $this->assertSession()->responseHeaderEquals('X-Test-Teapot-Replace', 'Teapot replaced');
     $this->assertSession()->responseHeaderEquals('X-Test-Teapot-No-Replace', 'This value is not replaced');
-//    $this->assertSession()->responseHeaderEquals('X-Test-Teapot-No-Replace', 'This value is not replaced, This one is added');
+    // $this->assertSession()->responseHeaderEquals('X-Test-Teapot-No-Replace', 'This value is not replaced, This one is added');
   }
 
   /**

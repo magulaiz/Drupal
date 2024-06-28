@@ -100,7 +100,6 @@ class DefaultConfigTest extends KernelTestBase {
     'views.view.taxonomy_term',
   ];
 
-
   /**
    * Tests if installed config is equal to the exported config.
    *

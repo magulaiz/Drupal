@@ -648,7 +648,7 @@ function views_field_default_views_data(FieldStorageConfigInterface $field_stora
         'field_name' => $field_alias,
         'entity field' => $field_alias,
         // Provide a real field for group by.
-        //Testing to see if we can remove the real field here.
+        // Testing to see if we can remove the real field here.
         'real field' => $real_field,
         'additional fields' => $add_fields,
         // Default the element type to div, let the UI change it if necessary.
@@ -714,7 +714,7 @@ function views_field_default_views_data(FieldStorageConfigInterface $field_stora
     if (count($field_columns) == 1 || $column == 'value') {
       $title = t('@label (@name)', [
         '@label' => $label,
-        '@name' => $field_name
+        '@name' => $field_name,
       ]);
       $title_short = $label;
     }
@@ -722,11 +722,11 @@ function views_field_default_views_data(FieldStorageConfigInterface $field_stora
       $title = t('@label (@name:@column)', [
         '@label' => $label,
         '@name' => $field_name,
-        '@column' => $column
+        '@column' => $column,
       ]);
       $title_short = t('@label:@column', [
         '@label' => $label,
-        '@column' => $column
+        '@column' => $column,
       ]);
     }
 
@@ -750,7 +750,6 @@ function views_field_default_views_data(FieldStorageConfigInterface $field_stora
         else {
           $real_field = $table_mapping->getJsonStorageDedicatedTableName($field_storage, $base_table) . '.' . $column_real_name;
         }
-
 
         $data[$base_table][$column_real_name] = [
           'field' => ['id' => 'field'],
@@ -793,14 +792,14 @@ function views_field_default_views_data(FieldStorageConfigInterface $field_stora
           if (count($field_columns) == 1 || $column == 'value') {
             $alias_title = t('@label (@name)', [
               '@label' => $label_name,
-              '@name' => $field_name
+              '@name' => $field_name,
             ]);
           }
           else {
             $alias_title = t('@label (@name:@column)', [
               '@label' => $label_name,
               '@name' => $field_name,
-              '@column' => $column
+              '@column' => $column,
             ]);
           }
           $aliases[] = [
@@ -808,12 +807,12 @@ function views_field_default_views_data(FieldStorageConfigInterface $field_stora
             'title' => $alias_title,
             'help' => t('This is an alias of @group: @field.', [
               '@group' => $group_name,
-              '@field' => $title
+              '@field' => $title,
             ]),
           ];
           $also_known[] = t('@group: @field', [
             '@group' => $group_name,
-            '@field' => $title
+            '@field' => $title,
           ]);
         }
       }
@@ -902,7 +901,7 @@ function views_field_default_views_data(FieldStorageConfigInterface $field_stora
         if ($field_storage->isMultiple()) {
           $title_delta = t('@label (@name:delta)', [
             '@label' => $label,
-            '@name' => $field_name
+            '@name' => $field_name,
           ]);
           $title_short_delta = t('@label:delta', ['@label' => $label]);
 

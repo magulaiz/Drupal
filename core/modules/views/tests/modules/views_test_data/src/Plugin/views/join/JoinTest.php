@@ -60,8 +60,8 @@ class JoinTest extends JoinPluginBase {
       [
         'left_field' => 'uid',
         'value' => $this->getJoinValue(),
-        'operator' => '='
-      ]
+        'operator' => '=',
+      ],
     ];
     parent::buildMongodbJoin($select_query, $table, $view_query);
   }

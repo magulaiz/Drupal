@@ -227,7 +227,7 @@ abstract class TermResourceTestBase extends EntityResourceTestBase {
       'revision_user' => [],
       'revision_translation_affected' => [
         [
-          'value' =>  ($connection->driver() == 'mongodb' && static::$format == 'xml' ? '1' : TRUE),
+          'value' => ($connection->driver() == 'mongodb' && static::$format == 'xml' ? '1' : TRUE),
         ],
       ],
     ];

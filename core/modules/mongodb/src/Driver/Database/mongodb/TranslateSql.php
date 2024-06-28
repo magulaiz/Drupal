@@ -425,8 +425,8 @@ class TranslateSql {
           [
             'projection' => ['name' => 1, '_id' => 0],
             'sort' => ['name' => 1],
-            'skip' => isset($options['skip']) ? $options['skip'] : 0,
-            'limit' => isset($options['limit']) ? $options['limit'] : 0,
+            'skip' => $options['skip'] ?? 0,
+            'limit' => $options['limit'] ?? 0,
             'session' => $connection->getMongodbSession(),
           ]
         );
@@ -448,8 +448,8 @@ class TranslateSql {
           [
             'projection' => ['vid' => 1, '_id' => 0],
             'sort' => ['vid' => 1],
-            'skip' => isset($options['skip']) ? $options['skip'] : 0,
-            'limit' => isset($options['limit']) ? $options['limit'] : 0,
+            'skip' => $options['skip'] ?? 0,
+            'limit' => $options['limit'] ?? 0,
             'session' => $connection->getMongodbSession(),
           ]
         );
@@ -470,8 +470,8 @@ class TranslateSql {
           [
             'projection' => ['tid' => 1, '_id' => 0],
             'sort' => ['tid' => 1],
-            'skip' => isset($options['skip']) ? $options['skip'] : 0,
-            'limit' => isset($options['limit']) ? $options['limit'] : 0,
+            'skip' => $options['skip'] ?? 0,
+            'limit' => $options['limit'] ?? 0,
             'session' => $connection->getMongodbSession(),
           ]
         );
@@ -493,8 +493,8 @@ class TranslateSql {
           [
             'projection' => ['data' => 1, 'created' => 1, 'item_id' => 1, '_id' => 0],
             'sort' => ['created' => 1, 'item_id' => 1],
-            'skip' => isset($options['skip']) ? $options['skip'] : 0,
-            'limit' => isset($options['limit']) ? $options['limit'] : 0,
+            'skip' => $options['skip'] ?? 0,
+            'limit' => $options['limit'] ?? 0,
             'session' => $connection->getMongodbSession(),
           ]
         );
@@ -790,8 +790,8 @@ class TranslateSql {
             [
               '$match' => [
                 '$expr' => [
-                  '$ne' => [ '$collection', $collection ],
-                ]
+                  '$ne' => [ '$collection', $collection],
+                ],
               ],
             ],
             [
