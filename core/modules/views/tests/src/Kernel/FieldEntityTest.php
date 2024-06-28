@@ -11,8 +11,6 @@ use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\node\Entity\Node;
 use Drupal\node\NodeInterface;
 use Drupal\Tests\node\Traits\ContentTypeCreationTrait;
-use Drupal\Tests\UiHelperTrait;
-use Drupal\Tests\user\Traits\UserCreationTrait;
 use Drupal\user\Entity\User;
 use Drupal\views\Tests\ViewTestData;
 use Drupal\views\Views;
@@ -29,13 +27,6 @@ class FieldEntityTest extends ViewsKernelTestBase {
 
   use ContentTypeCreationTrait {
     createContentType as drupalCreateContentType;
-  }
-
-  use UiHelperTrait;
-
-  use UserCreationTrait {
-    createRole as drupalCreateRole;
-    createUser as drupalCreateUser;
   }
 
   /**
@@ -105,9 +96,6 @@ class FieldEntityTest extends ViewsKernelTestBase {
     ]);
     $comment->save();
 
-    $user = $this->drupalCreateUser(['access comments']);
-    $this->drupalLogin($user);
-
     $view = Views::getView('test_field_get_entity');
     $this->executeView($view);
     $row = $view->result[0];
@@ -143,7 +131,6 @@ class FieldEntityTest extends ViewsKernelTestBase {
     ]);
     $node->save();
 
-    $this->drupalLogin($this->drupalCreateUser(['access content']));
     $view = Views::getView('test_field_get_entity_null');
     $this->executeView($view);
     // Second row will be $node.
