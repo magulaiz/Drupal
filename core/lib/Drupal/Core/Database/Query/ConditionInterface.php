@@ -94,7 +94,7 @@ interface ConditionInterface {
    */
   public function compare(string $field, string $field2, ?string $operator = '=');
 
-    /**
+  /**
    * Adds an arbitrary WHERE clause to the query.
    *
    * @param string $snippet

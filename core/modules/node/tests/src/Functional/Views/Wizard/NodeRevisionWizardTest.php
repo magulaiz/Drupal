@@ -79,7 +79,7 @@ class NodeRevisionWizardTest extends WizardTestBase {
       $expected = [
         'node_field_revision' => TRUE,
         '#global' => TRUE,
-        'node_field_data' => TRUE
+        'node_field_data' => TRUE,
       ];
       $node_field_revision = 'node_field_revision';
       $node_field_data = 'node_field_data';

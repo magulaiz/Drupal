@@ -163,7 +163,7 @@ class FieldOrLanguageJoinTest extends RelationshipJoinTestBase {
       $this->assertStringContainsString('"users3"."name" <> :db_condition_placeholder_1', $condition->__toString());
       $this->assertSame(array_values($condition->arguments()), [
         $random_name_1,
-        $random_name_2
+        $random_name_2,
       ]);
     }
 
@@ -232,7 +232,7 @@ class FieldOrLanguageJoinTest extends RelationshipJoinTestBase {
         $random_name_1,
         $random_name_2,
         $random_name_3,
-        $random_name_4
+        $random_name_4,
       ]);
     }
   }

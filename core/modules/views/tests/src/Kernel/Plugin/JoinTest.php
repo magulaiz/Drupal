@@ -6,7 +6,6 @@ namespace Drupal\Tests\views\Kernel\Plugin;
 
 use Drupal\Core\Database\Database;
 use Drupal\views_test_data\Plugin\views\join\JoinTest as JoinTestPlugin;
-use Drupal\mongodb\Plugin\views\join\JoinTest as MongodbJoinTestPlugin;
 use Drupal\views\Plugin\views\join\JoinPluginBase;
 use Drupal\views\Views;
 
@@ -264,7 +263,7 @@ class JoinTest extends RelationshipJoinTestBase {
       $this->assertStringContainsString('"users3"."name" <> :db_condition_placeholder_3', $condition->__toString(), 'Make sure the second extra join condition appears in the query and uses the second placeholder.');
       $this->assertEquals([
         $random_name_1,
-        $random_name_2
+        $random_name_2,
       ], array_values($condition->arguments()), 'Make sure the arguments are in the right order');
     }
 

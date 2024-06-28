@@ -273,9 +273,9 @@ class JsonApiFunctionalTest extends JsonApiFunctionalTestBase {
       ];
       $single_output = Json::decode($this->drupalGet('/jsonapi/node/article', [
         'query' => [
-            'filter' => $filter,
-            'include' => 'field_tags',
-          ] + $default_sort,
+          'filter' => $filter,
+          'include' => 'field_tags',
+        ] + $default_sort,
       ]));
       $this->assertSession()->statusCodeEquals(200);
       $this->assertGreaterThanOrEqual(2, count($single_output['included']));

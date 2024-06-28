@@ -103,20 +103,20 @@ class NodeBlockFunctionalTest extends NodeTestBase {
       $prefixed_table = $connection->getPrefix() . 'node';
       $connection->getConnection()->{$prefixed_table}->updateMany(
         [],
-        [ '$set' => [
-          "node_current_revision.$[revision].changed" => new UTCDateTime(($node1->getChangedTime() + 100) * 1000)
+        ['$set' => [
+          "node_current_revision.$[revision].changed" => new UTCDateTime(($node1->getChangedTime() + 100) * 1000),
         ]],
-        [ 'arrayFilters' => [
-          [ "revision.nid" => (int) $node2->id() ]
+        ['arrayFilters' => [
+          ["revision.nid" => (int) $node2->id()],
         ]]
       );
       $connection->getConnection()->{$prefixed_table}->updateMany(
         [],
-        [ '$set' => [
-          "node_current_revision.$[revision].changed" => new UTCDateTime(($node1->getChangedTime() + 200) * 1000)
+        ['$set' => [
+          "node_current_revision.$[revision].changed" => new UTCDateTime(($node1->getChangedTime() + 200) * 1000),
         ]],
-        [ 'arrayFilters' => [
-          [ "revision.nid" => (int) $node3->id() ]
+        ['arrayFilters' => [
+          ["revision.nid" => (int) $node3->id()],
         ]]
       );
     }

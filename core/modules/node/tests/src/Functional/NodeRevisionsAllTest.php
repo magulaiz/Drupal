@@ -189,10 +189,10 @@ class NodeRevisionsAllTest extends NodeTestBase {
       $prefixed_table = $connection->getPrefix() . 'node';
       $connection->getConnection()->{$prefixed_table}->updateMany(
         [],
-        [ '$set' => [
+        ['$set' => [
           'node_all_revisions.$[revision].revision_timestamp' => (int) $old_revision_date,
         ]],
-        [ 'arrayFilters' => [[ 'revision.vid' => (int) $nodes[2]->getRevisionId()]]]
+        ['arrayFilters' => [['revision.vid' => (int) $nodes[2]->getRevisionId()]]],
       );
     }
     else {

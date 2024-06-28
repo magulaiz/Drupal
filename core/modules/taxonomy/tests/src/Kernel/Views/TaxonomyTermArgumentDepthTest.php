@@ -50,7 +50,7 @@ class TaxonomyTermArgumentDepthTest extends TaxonomyTestBase {
    *
    * @var array
    */
-  protected $column_map;
+  protected $columnMap;
 
   /**
    * {@inheritdoc}
@@ -97,10 +97,10 @@ class TaxonomyTermArgumentDepthTest extends TaxonomyTestBase {
     }
 
     if (Database::getConnection()->driver() == 'mongodb') {
-      $this->column_map = ['node_vid' => 'nid'];
+      $this->columnMap = ['node_vid' => 'nid'];
     }
     else {
-      $this->column_map = ['nid' => 'nid'];
+      $this->columnMap = ['nid' => 'nid'];
     }
   }
 
@@ -119,7 +119,7 @@ class TaxonomyTermArgumentDepthTest extends TaxonomyTestBase {
       ['nid' => 6],
     ];
     $this->executeView($this->view);
-    $this->assertIdenticalResultsetHelper($this->view, $expected, $this->column_map, 'assertIdentical');
+    $this->assertIdenticalResultsetHelper($this->view, $expected, $this->columnMap, 'assertIdentical');
 
     // Set filter to search on top-level term, with depth 0.
     $expected = [['nid' => 4]];
@@ -206,7 +206,7 @@ class TaxonomyTermArgumentDepthTest extends TaxonomyTestBase {
     $arguments['term_node_tid_depth']['break_phrase'] = $break_phrase;
     $this->view->displayHandlers->get('default')->setOption('arguments', $arguments);
     $this->executeView($this->view, [$tid]);
-    $this->assertIdenticalResultsetHelper($this->view, $expected, $this->column_map, 'assertIdentical');
+    $this->assertIdenticalResultsetHelper($this->view, $expected, $this->columnMap, 'assertIdentical');
   }
 
 }

@@ -772,7 +772,7 @@ class EntityDefinitionUpdateTest extends EntityKernelTestBase {
     entity_test_create_bundle('custom');
     $entity = $storage->create([
       'type' => 'test_bundle',
-      'new_bundle_field' => 'foo'
+      'new_bundle_field' => 'foo',
     ]);
     $entity->save();
 

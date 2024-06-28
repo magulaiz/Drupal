@@ -1,8 +1,8 @@
 <?php
 
-namespace Drupal\Tests\mongodb\Kernel;
+declare(strict_types=1);
 
-use Drupal\Core\Database\Database;
+namespace Drupal\Tests\mongodb\Kernel;
 
 /**
  * Tests MongoDB other method via the schema API.

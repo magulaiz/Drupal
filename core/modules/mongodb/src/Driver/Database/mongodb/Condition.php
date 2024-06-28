@@ -984,7 +984,7 @@ class Condition extends QueryCondition {
       // }
 
       $number_of_expr_condition_aggregate_fragments = count($expr_condition_aggregate_fragments);
-      //foreach ($expr_condition_aggregate_fragments as $expr_condition_aggregate_fragment) {
+      // foreach ($expr_condition_aggregate_fragments as $expr_condition_aggregate_fragment) {
       if (($conjunction == 'OR') && ($number_of_expr_condition_aggregate_fragments > 1)) {
         $this->mongodbAggregateVersion['$expr']['$or'] = $expr_condition_aggregate_fragments;
       }
@@ -994,7 +994,7 @@ class Condition extends QueryCondition {
       else {
         $this->mongodbAggregateVersion['$expr'] = reset($expr_condition_aggregate_fragments);
       }
-      //}
+      // }
 
       $this->arguments = $arguments;
     }
