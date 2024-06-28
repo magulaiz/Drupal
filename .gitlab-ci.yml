@@ -396,7 +396,6 @@ default:
   stage: 🪄 Lint
   variables:
     KUBERNETES_CPU_REQUEST: "2"
-  allow_failure: true
   script:
     - if [ -n "$CI_MERGE_REQUEST_TARGET_BRANCH_SHA" ]; then
         echo "HEAD is $(git rev-parse HEAD). \$CI_MERGE_REQUEST_TARGET_BRANCH_SHA is ${CI_MERGE_REQUEST_TARGET_BRANCH_SHA}";
