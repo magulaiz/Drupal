@@ -395,7 +395,7 @@ class ConfigActionTest extends KernelTestBase {
     }
 
     // Tests below require a theme installed.
-    \Drupal::service('theme_installer')->install(['olivero']);
+    \Drupal::service('theme_installer')->install(['olivero', 'claro']);
     $config = \Drupal::configFactory()->getEditable('system.theme');
     $config->set('default', 'olivero')->save();
 
