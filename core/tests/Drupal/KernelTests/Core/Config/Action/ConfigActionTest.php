@@ -518,8 +518,8 @@ class ConfigActionTest extends KernelTestBase {
     $different_theme = $valid_block;
     $different_theme['theme'] = 'claro';
     try {
-      $manager->applyAction('placeBlock', 'block.block.config_action_test', $valid_block);
-      $this->fail('Expected exception not thrown');
+      $manager->applyAction('placeBlock', 'block.block.config_action_test', $different_theme);
+      $this->fail('Expected theme exception not thrown');
     }
     catch (ConfigActionException $e) {
       $this->assertSame('Unable to place block block.block.config_action_test because a block with this name has been placed in a different theme', $e->getMessage());
@@ -530,7 +530,7 @@ class ConfigActionTest extends KernelTestBase {
     $different_plugin['plugin'] = 'some_other_plugin';
     try {
       $manager->applyAction('placeBlock', 'block.block.config_action_test', $different_plugin);
-      $this->fail('Expected exception not thrown');
+      $this->fail('Expected plugin exception not thrown');
     }
     catch (ConfigActionException $e) {
       $this->assertSame('Unable to place block block.block.config_action_test because a block with this name has been placed but uses a different plugin', $e->getMessage());
