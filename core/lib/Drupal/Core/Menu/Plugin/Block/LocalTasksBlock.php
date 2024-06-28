@@ -101,22 +101,26 @@ class LocalTasksBlock extends BlockBase implements ContainerFactoryPluginInterfa
         '#primary' => count(Element::getVisibleChildren($links['tabs'])) > 1 ? $links['tabs'] : [],
       ];
     }
+
     if ($config['secondary']) {
       $level = 1;
-      $instances = $this->localTaskManager->getLocalTasksForRoute($this->routeMatch->getRouteName());
+      $cacheability->addCacheContexts(['route']);
+      $instances = $this->localTaskManager->getTasksBuild($this->routeMatch->getRouteName(), $cacheability);
+      $current_url = Url::fromRoute($this->routeMatch->getRouteName(), $this->routeMatch->getRawParameters()->all())->toString();
       foreach ($instances as $key_instance => $instance) {
         if ($key_instance != 0) {
           foreach ($instance as $local_task) {
-            $pluginDefinition = $local_task->getPluginDefinition();
-            $instance_url = Url::fromRoute($pluginDefinition['route_name'], $pluginDefinition['route_parameters'])->toString();
-            $current_url = Url::fromRoute($this->routeMatch->getRouteName(), $this->routeMatch->getRawParameters()->all())->toString();
+            $instance_url = Url::fromRoute($local_task["#link"]["url"]->getRouteName(), $local_task["#link"]["url"]->getRouteParameters())->toString();
             if ($instance_url == $current_url) {
               $level = $key_instance;
+              break;
             }
           }
         }
+        if ($level != 1) {
+          break;
+        }
       }
-
       $links = $this->localTaskManager->getLocalTasks($this->routeMatch->getRouteName(), $level);
       $cacheability = $cacheability->merge($links['cacheability']);
       // Do not display single tabs.

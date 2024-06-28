@@ -223,8 +223,8 @@ class LocalTaskManager extends DefaultPluginManager implements LocalTaskManagerI
             }
             // Tabs that link to the current route are viable parents
             // and their parent and children should be visible also.
-            // @todo This only works for 2 levels of tabs instead
-            //   need to iterate up.
+            // @todo - this only works for 2 levels of tabs.
+            // instead need to iterate up.
             $parents[$plugin_id] = TRUE;
             if (!empty($task_info['parent_id'])) {
               $parents[$task_info['parent_id']] = TRUE;
@@ -251,14 +251,18 @@ class LocalTaskManager extends DefaultPluginManager implements LocalTaskManagerI
       }
 
       $level = 0;
+      $current_uri = Url::fromRoute($route_name, $this->routeMatch->getRawParameters()->all())->toString();
       foreach ($children as $child) {
         foreach ($child as $plugin_id => $task_info) {
           $plugin = $this->createInstance($plugin_id);
           $this->instances[$route_name][$level][$plugin_id] = $plugin;
-          $current_parameters = $this->routeMatch->getRawParameters()->all();
-          $plugin_parameters = $plugin->getRouteParameters($this->routeMatch);
-          if (!empty($parents[$plugin_id]) && $route_name != $task_info['route_name'] && $current_parameters == $plugin_parameters) {
+          $plugin_uri = Url::fromRoute($task_info['route_name'], $plugin->getRouteParameters($this->routeMatch))->toString();
+          if ($plugin_uri == $current_uri) {
             $plugin->setActive();
+            $pluginDefinition = $plugin->getPluginDefinition();
+            if (!empty($pluginDefinition['parent_id']) && isset($this->instances[$route_name][$level - 1][$pluginDefinition['parent_id']])) {
+              $this->instances[$route_name][$level - 1][$pluginDefinition['parent_id']]->setActive();
+            }
           }
         }
         $level++;
