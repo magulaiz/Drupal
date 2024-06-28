@@ -180,7 +180,7 @@
 
       // Collect the IDs for all contextual links placeholders.
       const ids = [];
-      $placeholders.toArray().forEach((element) => {
+      $placeholders.get().forEach((element) => {
         ids.push({
           id: $(element).attr('data-contextual-id'),
           token: $(element).attr('data-contextual-token'),

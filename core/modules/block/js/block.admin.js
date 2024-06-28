@@ -51,7 +51,7 @@
 
         // Filter if the length of the query is at least 2 characters.
         if (query.length >= 2) {
-          $filterRows.toArray().forEach(toggleBlockEntry);
+          $filterRows.get().forEach(toggleBlockEntry);
           Drupal.announce(
             Drupal.formatPlural(
               $table.find('tr:visible').length - 1,

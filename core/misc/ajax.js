@@ -1420,7 +1420,7 @@
     remove(ajax, response, status) {
       const settings = response.settings || ajax.settings || drupalSettings;
       $(response.selector)
-        .toArray()
+        .get()
         .forEach((element) => {
           Drupal.detachBehaviors(element, settings);
           element.remove();
