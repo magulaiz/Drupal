@@ -514,6 +514,28 @@ class ConfigActionTest extends KernelTestBase {
       $this->fail('Unexpected exception while placing block again');
     }
 
+    // Placing the same block again with a different theme should fail.
+    $different_theme = $valid_block;
+    $different_theme['theme'] = 'claro';
+    try {
+      $manager->applyAction('placeBlock', 'block.block.config_action_test', $valid_block);
+      $this->fail('Expected exception not thrown');
+    }
+    catch (ConfigActionException $e) {
+      $this->assertSame('Unable to place block block.block.config_action_test because a block with this name has been placed in a different theme', $e->getMessage());
+    }
+
+    // Placing the same block again with a different plugin should fail.
+    $different_plugin = $valid_block;
+    $different_plugin['plugin'] = 'some_other_plugin';
+    try {
+      $manager->applyAction('placeBlock', 'block.block.config_action_test', $different_plugin);
+      $this->fail('Expected exception not thrown');
+    }
+    catch (ConfigActionException $e) {
+      $this->assertSame('Unable to place block block.block.config_action_test because a block with this name has been placed but uses a different plugin', $e->getMessage());
+    }
+
     // Validate that placing blocks first and last works as expected.
     try {
       $first_block = $last_block = $valid_block;

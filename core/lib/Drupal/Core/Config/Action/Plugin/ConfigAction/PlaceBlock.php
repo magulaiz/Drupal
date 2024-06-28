@@ -142,6 +142,12 @@ final class PlaceBlock implements ConfigActionPluginInterface, ContainerFactoryP
     // Check if the block already exists.
     $block = $this->configManager->loadConfigEntityByName($configName);
     if ($block) {
+      if ($block->getTheme() !== $value['theme']) {
+        throw new ConfigActionException(sprintf('Unable to place block %s because a block with this name has been placed in a different theme', $configName));
+      }
+      if ($block->getPluginId() !== $value['plugin']) {
+        throw new ConfigActionException(sprintf('Unable to place block %s because a block with this name has been placed but uses a different plugin', $configName));
+      }
       if ($block->getRegion() !== $value['region']) {
         $block->setRegion($value['region']);
         $block->save();
