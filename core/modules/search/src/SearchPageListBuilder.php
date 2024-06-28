@@ -354,7 +354,7 @@ class SearchPageListBuilder extends DraggableListBuilder implements FormInterfac
     if (($search_settings->get('index.minimum_word_size') != $form_state->getValue('minimum_word_size')) || ($search_settings->get('index.overlap_cjk') != $form_state->getValue('overlap_cjk'))) {
       $search_settings->set('index.minimum_word_size', $form_state->getValue('minimum_word_size'));
       $search_settings->set('index.overlap_cjk', $form_state->getValue('overlap_cjk'));
-      // Specifically mark items in the default index for reindexing, since
+      // Specifically mark items in the default index for re-indexing, since
       // these settings are used in the SearchIndex::index() function.
       $this->messenger->addStatus($this->t('The default search index will be rebuilt.'));
       $this->searchIndex->markForReindex();

@@ -291,7 +291,7 @@ class DatabaseQueue implements ReliableQueueInterface, QueueGarbageCollectionInt
    *   The exception.
    *
    * @throws \Exception
-   *   If the table exists the exception passed in is rethrown.
+   *   If the table exists the exception passed in is re-thrown.
    */
   protected function catchException(\Exception $e) {
     if ($this->connection->schema()->tableExists(static::TABLE_NAME)) {

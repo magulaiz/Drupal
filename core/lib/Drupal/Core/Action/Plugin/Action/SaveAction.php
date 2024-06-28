@@ -71,7 +71,7 @@ class SaveAction extends EntityActionBase {
     // It's not necessary to check the changed field access here, because
     // Drupal\Core\Field\ChangedFieldItemList would anyway return 'not allowed'.
     // Also changing the changed field value is only a workaround to trigger an
-    // entity resave. Without a field change, this would not be possible.
+    // entity re-save. Without a field change, this would not be possible.
     /** @var \Drupal\Core\Entity\EntityInterface $object */
     return $object->access('update', $account, $return_as_object);
   }

@@ -15,7 +15,7 @@ function search_removed_post_updates() {
 }
 
 /**
- * Mark everything for reindexing after diacritics removal rule change.
+ * Mark everything for re-indexing after diacritics removal rule change.
  */
 function search_post_update_reindex_after_diacritics_rule_change() {
   $search_page_repository = \Drupal::service('search.search_page_repository');

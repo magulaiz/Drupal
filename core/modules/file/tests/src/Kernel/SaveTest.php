@@ -38,7 +38,7 @@ class SaveTest extends FileManagedUnitTestBase {
     $this->assertGreaterThan(1, $file->getChangedTime());
     $this->assertEquals('en', $loaded_file->langcode->value, 'Langcode was defaulted correctly.');
 
-    // Resave the file, updating the existing record.
+    // Re-save the file, updating the existing record.
     file_test_reset();
     $file->status->value = 7;
     $file->save();

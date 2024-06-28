@@ -708,7 +708,7 @@ abstract class ContentEntityStorageBase extends EntityStorageBase implements Con
 
     $this->populateAffectedRevisionTranslations($entity);
 
-    // Populate the "revision_default" flag. Skip this when we are resaving
+    // Populate the "revision_default" flag. Skip this when we are re-saving
     // the revision, and the flag is set to FALSE, since it is not possible to
     // set a previously default revision to non-default. However, setting a
     // previously non-default revision to default is allowed for advanced
@@ -761,7 +761,7 @@ abstract class ContentEntityStorageBase extends EntityStorageBase implements Con
       if (empty($entity->original) || $entity->id() != $entity->original->id()) {
         throw new EntityStorageException("Update existing '{$this->entityTypeId}' entity while changing the ID is not supported.");
       }
-      // Do not allow changing the revision ID when resaving the current
+      // Do not allow changing the revision ID when re-saving the current
       // revision.
       if (!$entity->isNewRevision() && $entity->getRevisionId() != $entity->getLoadedRevisionId()) {
         throw new EntityStorageException("Update existing '{$this->entityTypeId}' entity revision while changing the revision ID is not supported.");
@@ -967,8 +967,8 @@ abstract class ContentEntityStorageBase extends EntityStorageBase implements Con
    *   Specifies whether the entity is being updated or created.
    */
   protected function invokeFieldPostSave(ContentEntityInterface $entity, $update) {
-    // For each entity translation this returns an array of resave flags keyed
-    // by field name, thus we merge them to obtain a list of fields to resave.
+    // For each entity translation this returns an array of re-save flags keyed
+    // by field name, thus we merge them to obtain a list of fields to re-save.
     $resave = [];
     foreach ($this->invokeFieldMethod('postSave', $entity, $update) as $translation_results) {
       $resave += array_filter($translation_results);

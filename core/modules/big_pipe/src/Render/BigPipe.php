@@ -384,7 +384,7 @@ class BigPipe {
    * @throws \Exception
    *   If an exception is thrown during the rendering of a placeholder, it is
    *   caught to allow the other placeholders to still be replaced. But when
-   *   error logging is configured to be verbose, the exception is rethrown to
+   *   error logging is configured to be verbose, the exception is re-thrown to
    *   simplify debugging.
    */
   protected function sendNoJsPlaceholders($html, $no_js_placeholders, AttachedAssetsInterface $cumulative_assets) {
@@ -514,7 +514,7 @@ class BigPipe {
    * @throws \Exception
    *   If an exception is thrown during the rendering of a placeholder, it is
    *   caught to allow the other placeholders to still be replaced. But when
-   *   error logging is configured to be verbose, the exception is rethrown to
+   *   error logging is configured to be verbose, the exception is re-thrown to
    *   simplify debugging.
    */
   protected function sendPlaceholders(array $placeholders, array $placeholder_order, AttachedAssetsInterface $cumulative_assets) {

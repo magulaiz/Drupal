@@ -1719,7 +1719,7 @@ class SqlContentEntityStorageSchema implements DynamicallyFieldableEntityStorage
    * @throws \Drupal\Core\Entity\Exception\FieldStorageDefinitionUpdateForbiddenException
    *   Thrown when the update to the field is forbidden.
    * @throws \Exception
-   *   Rethrown exception if the table recreation fails.
+   *   Re-thrown exception if the table recreation fails.
    */
   protected function updateDedicatedTableSchema(FieldStorageDefinitionInterface $storage_definition, FieldStorageDefinitionInterface $original) {
     if (!$this->storage->countFieldData($original, TRUE)) {
@@ -1811,7 +1811,7 @@ class SqlContentEntityStorageSchema implements DynamicallyFieldableEntityStorage
    * @throws \Drupal\Core\Entity\Exception\FieldStorageDefinitionUpdateForbiddenException
    *   Thrown when the update to the field is forbidden.
    * @throws \Exception
-   *   Rethrown exception if the table recreation fails.
+   *   Re-thrown exception if the table recreation fails.
    */
   protected function updateSharedTableSchema(FieldStorageDefinitionInterface $storage_definition, FieldStorageDefinitionInterface $original) {
     if (!$this->storage->countFieldData($original, TRUE)) {

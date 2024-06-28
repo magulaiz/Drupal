@@ -189,7 +189,7 @@ interface LanguageNegotiatorInterface {
   public function saveConfiguration($type, $enabled_methods);
 
   /**
-   * Resave the configuration to purge missing negotiation methods.
+   * Re-save the configuration to purge missing negotiation methods.
    */
   public function purgeConfiguration();
 

@@ -157,7 +157,7 @@ class NodeTypeTest extends NodeTestBase {
     // Remove the body field.
     $this->drupalGet('admin/structure/types/manage/page/fields/node.page.body/delete');
     $this->submitForm([], 'Delete');
-    // Resave the settings for this type.
+    // Re-save the settings for this type.
     $this->drupalGet('admin/structure/types/manage/page');
     $this->submitForm([], 'Save content type');
     $front_page_path = Url::fromRoute('<front>')->toString();

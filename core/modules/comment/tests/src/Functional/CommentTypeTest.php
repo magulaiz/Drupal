@@ -123,7 +123,7 @@ class CommentTypeTest extends CommentTestBase {
     // Remove the body field.
     $this->drupalGet('admin/structure/comment/manage/comment/fields/comment.comment.comment_body/delete');
     $this->submitForm([], 'Delete');
-    // Resave the settings for this type.
+    // Re-save the settings for this type.
     $this->drupalGet('admin/structure/comment/manage/comment');
     $this->submitForm([], 'Save');
     // Check that the body field doesn't exist.

@@ -812,7 +812,7 @@ class ConfigImporter {
       ->setSourceStorage($this->storageComparer->getSourceStorage());
     if ($type == 'module') {
       $this->moduleInstaller->$op([$name], FALSE);
-      // Installing a module can cause a kernel boot therefore reinject all the
+      // Installing a module can cause a kernel boot therefore re-inject all the
       // services.
       $this->reInjectMe();
       // During a module install or uninstall the container is rebuilt and the

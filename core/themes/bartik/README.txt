@@ -1,7 +1,7 @@
 ABOUT BARTIK
 ------------
 
-Bartik is the default theme for Drupal 8.  It is a flexible, recolorable theme
+Bartik is the default theme for Drupal 8.  It is a flexible, re-colorable theme
 with a responsive and mobile-first layout, supporting 16 regions.
 
 The Bartik theme is named after Jean Bartik, one of the original programmers

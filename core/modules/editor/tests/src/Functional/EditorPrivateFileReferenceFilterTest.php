@@ -70,7 +70,7 @@ class EditorPrivateFileReferenceFilterTest extends BrowserTestBase {
     $this->drupalGet($src);
     $this->assertSession()->statusCodeEquals(403);
 
-    // Resave the file to be permanent.
+    // Re-save the file to be permanent.
     $file->setPermanent();
     $file->save();
 

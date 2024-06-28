@@ -207,7 +207,7 @@ class MenuLinksTest extends KernelTestBase {
   }
 
   /**
-   * Tests automatic reparenting of menu links.
+   * Tests automatic re-parenting of menu links.
    */
   public function testMenuLinkReparenting($module = 'menu_test') {
     // Check the initial hierarchy.

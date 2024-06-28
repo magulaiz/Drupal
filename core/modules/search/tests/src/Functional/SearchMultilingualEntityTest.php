@@ -164,12 +164,12 @@ class SearchMultilingualEntityTest extends BrowserTestBase {
     $this->assertIndexCounts(0, 8, 'after updating fully');
     $this->assertDatabaseCounts(8, 0, 'after updating fully');
 
-    // Click the reindex button on the admin page, verify counts, and reindex.
+    // Click the re-index button on the admin page, verify counts, and re-index.
     $this->drupalGet('admin/config/search/pages');
     $this->submitForm([], 'Re-index site');
     $this->submitForm([], 'Re-index site');
-    $this->assertIndexCounts(8, 8, 'after reindex');
-    $this->assertDatabaseCounts(8, 0, 'after reindex');
+    $this->assertIndexCounts(8, 8, 'after re-index');
+    $this->assertDatabaseCounts(8, 0, 'after re-index');
     $this->plugin->updateIndex();
 
     // Test search results.
@@ -208,7 +208,7 @@ class SearchMultilingualEntityTest extends BrowserTestBase {
       $this->assertEquals('hu', $result['langcode'], 'The search found the correct Hungarian result');
     }
 
-    // Mark one of the nodes for reindexing, using the API function, and
+    // Mark one of the nodes for re-indexing, using the API function, and
     // verify indexing status.
     $search_index->markForReindex('node_search', $this->searchableNodes[0]->id());
     $this->assertIndexCounts(1, 8, 'after marking one node to reindex via API function');
@@ -218,7 +218,7 @@ class SearchMultilingualEntityTest extends BrowserTestBase {
     $this->plugin->updateIndex();
     $this->assertIndexCounts(0, 8, 'after indexing again');
 
-    // Mark one node for reindexing by saving it, and verify indexing status.
+    // Mark one node for re-indexing by saving it, and verify indexing status.
     $this->searchableNodes[1]->save();
     $this->assertIndexCounts(1, 8, 'after marking one node to reindex via save');
 
@@ -241,7 +241,7 @@ class SearchMultilingualEntityTest extends BrowserTestBase {
       ->condition('sid', $this->searchableNodes[1]->id())
       ->execute()
       ->fetchField();
-    $this->assertEquals($old, $result, 'Reindex time was not updated if node was already marked');
+    $this->assertEquals($old, $result, 'Re-index time was not updated if node was already marked');
 
     // Add a bogus entry to the search index table using a different search
     // type. This will not appear in the index status, because it is not
@@ -249,13 +249,13 @@ class SearchMultilingualEntityTest extends BrowserTestBase {
     $search_index->index('foo', $this->searchableNodes[0]->id(), 'en', 'some text');
     $this->assertIndexCounts(1, 8, 'after adding a different index item');
 
-    // Mark just this "foo" index for reindexing.
+    // Mark just this "foo" index for re-indexing.
     $search_index->markForReindex('foo');
-    $this->assertIndexCounts(1, 8, 'after reindexing the other search type');
+    $this->assertIndexCounts(1, 8, 'after re-indexing the other search type');
 
-    // Mark everything for reindexing.
+    // Mark everything for re-indexing.
     $search_index->markForReindex();
-    $this->assertIndexCounts(8, 8, 'after reindexing everything');
+    $this->assertIndexCounts(8, 8, 'after re-indexing everything');
 
     // Clear one item from the index, but with wrong language.
     $this->assertDatabaseCounts(8, 1, 'before clear');

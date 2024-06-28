@@ -123,7 +123,7 @@ class LayoutBuilderNestedFormUiTest extends WebDriverTestBase {
   /**
    * Adds a form block specified by label layout and checks it can be saved.
    *
-   * Need to test saving and resaving, because nested forms can cause issues
+   * Need to test saving and re-saving, because nested forms can cause issues
    * on the second save.
    *
    * @param string $label

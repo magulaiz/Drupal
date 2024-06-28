@@ -81,7 +81,7 @@ class StatisticsLoggingTest extends WebDriverTestBase {
     $this->drupalGet($path);
     // Wait while statistics module send ajax request.
     $this->assertSession()->assertWaitOnAjaxRequest();
-    // Resaving the node to call the hook_node_links_alter(), which is used to
+    // Re-saving the node to call the hook_node_links_alter(), which is used to
     // update information on the page. See statistics_node_links_alter().
     $this->node->save();
 

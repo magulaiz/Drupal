@@ -26,7 +26,7 @@ function editor_test_entity_update(EntityInterface $entity) {
     return;
   }
 
-  // Set flag for whether or not the entity needs to be resaved.
+  // Set flag for whether or not the entity needs to be re-saved.
   $needs_update = FALSE;
 
   // Perform our post save logic.
@@ -39,7 +39,7 @@ function editor_test_entity_update(EntityInterface $entity) {
   if ($needs_update) {
     // Set flag on entity that our logic was already executed.
     $entity->editor_test_updating = TRUE;
-    // And resave entity.
+    // And re-save entity.
     $entity->save();
   }
 }

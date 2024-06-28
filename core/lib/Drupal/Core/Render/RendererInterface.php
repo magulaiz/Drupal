@@ -324,7 +324,7 @@ interface RendererInterface {
    * @throws \Exception
    *   If a #pre_render callback throws an exception, it is caught to mark the
    *   renderer as no longer being in a root render call, if any. Then the
-   *   exception is rethrown.
+   *   exception is re-thrown.
    *
    * @see \Drupal\Core\Render\ElementInfoManagerInterface::getInfo()
    * @see \Drupal\Core\Theme\ThemeManagerInterface::render()

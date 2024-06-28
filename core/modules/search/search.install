@@ -43,7 +43,7 @@ function search_schema() {
         'unsigned' => TRUE,
         'not null' => TRUE,
         'default' => 0,
-        'description' => 'Set to force node reindexing.',
+        'description' => 'Set to force node re-indexing.',
       ],
     ],
     'primary key' => ['sid', 'langcode', 'type'],

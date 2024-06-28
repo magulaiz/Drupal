@@ -503,7 +503,7 @@ class SearchQuery extends SelectExtender {
     if ($multiply) {
       $i = count($this->multiply);
       // Modify the score expression so it is multiplied by the multiplier,
-      // with a divisor to renormalize. Note that the ROUND here is necessary
+      // with a divisor to re-normalize. Note that the ROUND here is necessary
       // for PostgreSQL and SQLite in order to ensure that the :multiply_* and
       // :total_* arguments are treated as a numeric type, because the
       // PostgreSQL PDO driver sometimes puts values in as strings instead of

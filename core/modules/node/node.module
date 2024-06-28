@@ -1242,7 +1242,7 @@ function node_configurable_language_delete(ConfigurableLanguageInterface $langua
  */
 function node_reindex_node_search($nid) {
   if (\Drupal::moduleHandler()->moduleExists('search')) {
-    // Reindex node context indexed by the node module search plugin.
+    // Re-index node context indexed by the node module search plugin.
     \Drupal::service('search.index')->markForReindex('node_search', $nid);
   }
 }
@@ -1251,7 +1251,7 @@ function node_reindex_node_search($nid) {
  * Implements hook_ENTITY_TYPE_insert() for comment entities.
  */
 function node_comment_insert($comment) {
-  // Reindex the node when comments are added.
+  // Re-index the node when comments are added.
   if ($comment->getCommentedEntityTypeId() == 'node') {
     node_reindex_node_search($comment->getCommentedEntityId());
   }

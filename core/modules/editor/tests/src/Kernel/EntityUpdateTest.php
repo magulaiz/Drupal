@@ -56,7 +56,7 @@ class EntityUpdateTest extends EntityKernelTestBase {
     // What happens is the following:
     // 1. \Drupal\Core\Entity\EntityStorageBase::doPostSave() gets called.
     // 2. editor_test_entity_update() gets called.
-    // 3. A resave of the updated entity gets triggered (second save call).
+    // 3. A re-save of the updated entity gets triggered (second save call).
     // 4. \Drupal\Core\Entity\EntityStorageBase::doPostSave() gets called.
     // 5. editor_test_entity_update() gets called.
     // 6. editor_entity_update() gets called (caused by the second save call).

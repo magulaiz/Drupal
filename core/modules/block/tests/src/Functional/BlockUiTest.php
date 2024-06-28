@@ -329,7 +329,7 @@ class BlockUiTest extends BrowserTestBase {
     $this->submitForm($block, 'Save block');
     $this->assertSession()->addressEquals('admin/structure/block/list/stark?block-placement=' . Html::getClass($block['id']));
 
-    // Resaving the block page will remove the block placement indicator.
+    // Re-saving the block page will remove the block placement indicator.
     $this->submitForm([], 'Save blocks');
     $this->assertSession()->addressEquals('admin/structure/block/list/stark');
 

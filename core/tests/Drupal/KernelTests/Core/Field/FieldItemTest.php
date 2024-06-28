@@ -65,15 +65,15 @@ class FieldItemTest extends EntityKernelTestBase {
     ]);
 
     // Save a new entity and verify that the initial field value is overwritten
-    // with a value containing the entity id, which implies a resave. Check that
+    // with a value containing the entity id, which implies a re-save. Check that
     // the entity data structure and the stored values match.
     $this->assertSavedFieldItemValue($entity, "field_test:{$this->fieldName}:1:1");
 
     // Update the entity and verify that the field value is overwritten on
-    // presave if it is not resaved.
+    // presave if it is not re-saved.
     $this->assertSavedFieldItemValue($entity, 'overwritten');
 
-    // Flag the field value as needing to be resaved and verify it actually is.
+    // Flag the field value as needing to be re-saved and verify it actually is.
     $entity->field_test_item->value = $entity->{$this->fieldName}->value = 'resave';
     $this->assertSavedFieldItemValue($entity, "field_test:{$this->fieldName}:1:3");
   }

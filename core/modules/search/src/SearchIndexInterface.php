@@ -61,15 +61,15 @@ interface SearchIndexInterface {
   public function clear($type = NULL, $sid = NULL, $langcode = NULL);
 
   /**
-   * Changes the timestamp on indexed items to 'now' to force reindexing.
+   * Changes the timestamp on indexed items to 'now' to force re-indexing.
    *
    * This function is meant for use by search page plugins, or for building a
    * user interface that lets users mark all or parts of the search index for
-   * reindexing.
+   * re-indexing.
    *
    * @param string $type
    *   (optional) The plugin ID or other machine-readable type of this item. If
-   *   omitted, the entire search index is marked for reindexing, and $sid and
+   *   omitted, the entire search index is marked for re-indexing, and $sid and
    *   $langcode are ignored.
    * @param int $sid
    *   (optional) An ID number identifying this particular item (e.g., node ID).

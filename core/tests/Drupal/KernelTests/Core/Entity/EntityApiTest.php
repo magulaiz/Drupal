@@ -246,7 +246,7 @@ class EntityApiTest extends EntityKernelTestBase {
   }
 
   /**
-   * Tests that resaving a revision with a different revision ID throws an exception.
+   * Tests that re-saving a revision with a different revision ID throws an exception.
    */
   public function testUpdateWithRevisionId() {
     $storage = \Drupal::entityTypeManager()->getStorage('entity_test_mulrev');
@@ -264,7 +264,7 @@ class EntityApiTest extends EntityKernelTestBase {
   }
 
   /**
-   * Tests that resaving an entity with a different entity ID throws an exception.
+   * Tests that re-saving an entity with a different entity ID throws an exception.
    */
   public function testUpdateWithId() {
     $storage = \Drupal::entityTypeManager()->getStorage('entity_test_mulrev');

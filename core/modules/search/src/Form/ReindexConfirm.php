@@ -7,7 +7,7 @@ use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Url;
 
 /**
- * Provides the search reindex confirmation form.
+ * Provides the search re-index confirmation form.
  *
  * @internal
  */

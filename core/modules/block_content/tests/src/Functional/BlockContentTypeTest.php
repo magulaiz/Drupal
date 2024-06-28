@@ -151,7 +151,7 @@ class BlockContentTypeTest extends BlockContentTestBase {
     // Remove the body field.
     $this->drupalGet('admin/structure/block/block-content/manage/basic/fields/block_content.basic.body/delete');
     $this->submitForm([], 'Delete');
-    // Resave the settings for this type.
+    // Re-save the settings for this type.
     $this->drupalGet('admin/structure/block/block-content/manage/basic');
     $this->submitForm([], 'Save');
     // Check that the body field doesn't exist.

@@ -483,7 +483,7 @@ class CKEditorTest extends KernelTestBase {
     $this->config('system.site')->set('default_langcode', 'fr')->save();
 
     // Reset the language manager so new negotiations attempts will fall back on
-    // French. Reinject the language manager CKEditor to use the current one.
+    // French. Re-inject the language manager CKEditor to use the current one.
     $this->container->get('language_manager')->reset();
     $this->ckeditor = $this->container->get('plugin.manager.editor')->createInstance('ckeditor');
 

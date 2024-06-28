@@ -57,13 +57,13 @@ interface SearchIndexingInterface {
   public function indexClear();
 
   /**
-   * Marks the search index for reindexing for this plugin.
+   * Marks the search index for re-indexing for this plugin.
    *
    * When a request is made to mark all items from the search index related to
-   * this plugin for reindexing, this method will be called. If this plugin uses
+   * this plugin for re-indexing, this method will be called. If this plugin uses
    * the default search index, this method can call markForReindex($type) method
    * on the search.index service class to mark the items in the search database
-   * for reindexing.
+   * for re-indexing.
    *
    * @see \Drupal\search\SearchIndexInterface::markForReindex()
    */

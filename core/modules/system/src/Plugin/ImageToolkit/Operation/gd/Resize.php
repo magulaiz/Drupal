@@ -53,7 +53,7 @@ class Resize extends GDImageToolkitOperationBase {
    */
   protected function execute(array $arguments = []) {
     // Create a new resource of the required dimensions, and copy and resize
-    // the original resource on it with resampling. Destroy the original
+    // the original resource on it with re-sampling. Destroy the original
     // resource upon success.
     $original_resource = $this->getToolkit()->getResource();
     $data = [

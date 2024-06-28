@@ -75,7 +75,7 @@ class ModerationStateAccessTest extends BrowserTestBase {
     $node_2->moderation_state->value = 'published';
     $node_2->save();
 
-    // Resave the node with a new state.
+    // Re-save the node with a new state.
     $node_2->setTitle('Archived node');
     $node_2->moderation_state->value = 'archived';
     $node_2->save();
