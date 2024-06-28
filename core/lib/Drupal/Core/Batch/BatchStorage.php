@@ -5,7 +5,8 @@ namespace Drupal\Core\Batch;
 use Drupal\Component\Datetime\TimeInterface;
 use Drupal\Core\Access\CsrfTokenGenerator;
 use Drupal\Core\Database\Connection;
-use Drupal\Core\Database\DatabaseException;
+use Drupal\Core\Database\SchemaObjectDoesNotExistException;
+use Drupal\Core\Database\SchemaObjectExistsException;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 
 class BatchStorage implements BatchStorageInterface {
@@ -47,8 +48,8 @@ class BatchStorage implements BatchStorageInterface {
         ':token' => $this->csrfToken->get($id),
       ])->fetchField();
     }
-    catch (\Exception $e) {
-      $this->catchException($e);
+    catch (SchemaObjectDoesNotExistException) {
+      // It's fine if the table doesn't exist yet.
       $batch = FALSE;
     }
     if ($batch) {
@@ -66,8 +67,8 @@ class BatchStorage implements BatchStorageInterface {
         ->condition('bid', $id)
         ->execute();
     }
-    catch (\Exception $e) {
-      $this->catchException($e);
+    catch (SchemaObjectDoesNotExistException) {
+      // There's nothing to do if the table doesn't exist.
     }
   }
 
@@ -81,8 +82,8 @@ class BatchStorage implements BatchStorageInterface {
         ->condition('bid', $batch['id'])
         ->execute();
     }
-    catch (\Exception $e) {
-      $this->catchException($e);
+    catch (SchemaObjectDoesNotExistException) {
+      // There's nothing to do if the table doesn't exist.
     }
   }
 
@@ -96,8 +97,8 @@ class BatchStorage implements BatchStorageInterface {
         ->condition('timestamp', $this->time->getRequestTime() - 864000, '<')
         ->execute();
     }
-    catch (\Exception $e) {
-      $this->catchException($e);
+    catch (SchemaObjectDoesNotExistException) {
+      // There's nothing to do if the table doesn't exist.
     }
   }
 
@@ -171,7 +172,7 @@ class BatchStorage implements BatchStorageInterface {
     // If another process has already created the batch table, attempting to
     // recreate it will throw an exception. In this case just catch the
     // exception and do nothing.
-    catch (DatabaseException $e) {
+    catch (SchemaObjectExistsException) {
     }
     catch (\Exception $e) {
       return FALSE;
@@ -192,6 +193,7 @@ class BatchStorage implements BatchStorageInterface {
    * @throws \Exception
    */
   protected function catchException(\Exception $e) {
+    // @todo Deprecate this method.
     if ($this->connection->schema()->tableExists(static::TABLE_NAME)) {
       throw $e;
     }

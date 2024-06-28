@@ -3,7 +3,8 @@
 namespace Drupal\Core\Config;
 
 use Drupal\Core\Database\Connection;
-use Drupal\Core\Database\DatabaseException;
+use Drupal\Core\Database\SchemaObjectDoesNotExistException;
+use Drupal\Core\Database\SchemaObjectExistsException;
 use Drupal\Core\DependencyInjection\DependencySerializationTrait;
 
 /**
@@ -70,10 +71,7 @@ class DatabaseStorage implements StorageInterface {
         ':name' => $name,
       ], $this->options)->fetchField();
     }
-    catch (\Exception $e) {
-      if ($this->connection->schema()->tableExists($this->table)) {
-        throw $e;
-      }
+    catch (SchemaObjectDoesNotExistException) {
       // If we attempt a read without actually having the table available,
       // return false so the caller can handle it.
       return FALSE;
@@ -91,10 +89,7 @@ class DatabaseStorage implements StorageInterface {
         $data = $this->decode($raw);
       }
     }
-    catch (\Exception $e) {
-      if ($this->connection->schema()->tableExists($this->table)) {
-        throw $e;
-      }
+    catch (SchemaObjectDoesNotExistException) {
       // If we attempt a read without actually having the table available,
       // return false so the caller can handle it.
     }
@@ -112,10 +107,7 @@ class DatabaseStorage implements StorageInterface {
         $data = $this->decode($data);
       }
     }
-    catch (\Exception $e) {
-      if ($this->connection->schema()->tableExists($this->table)) {
-        throw $e;
-      }
+    catch (SchemaObjectDoesNotExistException) {
       // If we attempt a read without actually having the table available,
       // return an empty array so the caller can handle it.
     }
@@ -173,7 +165,7 @@ class DatabaseStorage implements StorageInterface {
     // If another process has already created the config table, attempting to
     // recreate it will throw an exception. In this case just catch the
     // exception and do nothing.
-    catch (DatabaseException $e) {
+    catch (SchemaObjectExistsException) {
       return TRUE;
     }
     catch (\Exception $e) {
@@ -275,10 +267,7 @@ class DatabaseStorage implements StorageInterface {
       $query->orderBy('collection')->orderBy('name');
       return $query->execute()->fetchCol();
     }
-    catch (\Exception $e) {
-      if ($this->connection->schema()->tableExists($this->table)) {
-        throw $e;
-      }
+    catch (SchemaObjectDoesNotExistException) {
       // If we attempt a read without actually having the table available,
       // return an empty array so the caller can handle it.
       return [];
@@ -295,10 +284,7 @@ class DatabaseStorage implements StorageInterface {
         ->condition('collection', $this->collection)
         ->execute();
     }
-    catch (\Exception $e) {
-      if ($this->connection->schema()->tableExists($this->table)) {
-        throw $e;
-      }
+    catch (SchemaObjectDoesNotExistException) {
       // If we attempt a delete without actually having the table available,
       // return false so the caller can handle it.
       return FALSE;
@@ -333,10 +319,7 @@ class DatabaseStorage implements StorageInterface {
         ':collection' => StorageInterface::DEFAULT_COLLECTION,
       ])->fetchCol();
     }
-    catch (\Exception $e) {
-      if ($this->connection->schema()->tableExists($this->table)) {
-        throw $e;
-      }
+    catch (SchemaObjectDoesNotExistException) {
       // If we attempt a read without actually having the table available,
       // return an empty array so the caller can handle it.
       return [];
