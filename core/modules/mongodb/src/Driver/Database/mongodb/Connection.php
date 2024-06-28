@@ -14,7 +14,6 @@ use MongoDB\Driver\Exception\ConnectionException;
 use MongoDB\Driver\ReadConcern;
 use MongoDB\Driver\ReadPreference;
 use MongoDB\Driver\WriteConcern;
-use MongoDB\Operation\FindOneAndUpdate;
 
 // cspell:ignore linearizable aprepare aquery replicaset
 
@@ -383,7 +382,7 @@ class Connection extends DatabaseConnection {
       // We need to upper case because PHP index matches are case sensitive but
       // do not need the more expensive Unicode::strtoupper() because SQL statements are ASCII.
       $operator = strtoupper($operator);
-      $return = isset(static::$mongodbConditionOperatorMap[$operator]) ? static::$mongodbConditionOperatorMap[$operator] : [];
+      $return = static::$mongodbConditionOperatorMap[$operator] ?? [];
     }
 
     $return += ['operator' => $operator];
@@ -537,7 +536,6 @@ class Connection extends DatabaseConnection {
 
     return FALSE;
   }
-
 
   /**
    * {@inheritdoc}

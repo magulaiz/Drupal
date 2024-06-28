@@ -790,7 +790,7 @@ class TranslateSql {
             [
               '$match' => [
                 '$expr' => [
-                  '$ne' => [ '$collection', $collection],
+                  '$ne' => ['$collection', $collection],
                 ],
               ],
             ],

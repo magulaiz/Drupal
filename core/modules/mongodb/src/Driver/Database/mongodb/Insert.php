@@ -3,7 +3,6 @@
 namespace Drupal\mongodb\Driver\Database\mongodb;
 
 use Drupal\Core\Database\Query\Insert as QueryInsert;
-use MongoDB\Driver\Exception\CommandException;
 
 /**
  * MongoDB implementation of \Drupal\Core\Database\Query\Insert.

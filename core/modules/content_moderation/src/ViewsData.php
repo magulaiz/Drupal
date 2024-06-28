@@ -88,7 +88,7 @@ class ViewsData {
           ],
           'filter' => [
             'id' => 'moderation_state_filter',
-            'allow empty' => TRUE
+            'allow empty' => TRUE,
           ],
           'sort' => ['id' => 'moderation_state_sort'],
         ];

@@ -462,7 +462,7 @@ class Schema extends DatabaseSchema {
       'filter' => [
         'name' => new Regex($pattern, 'i'),
       ],
-      'session' =>$this->connection->getMongodbSession(),
+      'session' => $this->connection->getMongodbSession(),
     ]);
     foreach ($collections as $collection) {
       // Remove the table prefix.

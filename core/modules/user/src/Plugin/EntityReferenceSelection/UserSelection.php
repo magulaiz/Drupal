@@ -265,7 +265,7 @@ class UserSelection extends DefaultSelection {
             $value_part->compile($this->connection, $query);
             $or->condition(($this->connection->condition('AND'))
               ->where(str_replace($query->escapeField('anonymous_name'), ':anonymous_name', (string) $value_part), $value_part->arguments() + [
-                  ':anonymous_name' => \Drupal::config('user.settings')->get('anonymous')
+                  ':anonymous_name' => \Drupal::config('user.settings')->get('anonymous'),
                 ])
               ->condition('base_table.uid', 0)
             );
