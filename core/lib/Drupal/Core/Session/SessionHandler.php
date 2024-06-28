@@ -78,7 +78,7 @@ class SessionHandler extends AbstractProxy implements \SessionHandlerInterface {
         try {
           $query = $this->connection
             ->queryRange('SELECT [session] FROM {sessions} WHERE [sid] = :sid', 0, 1, [':sid' => Crypt::hashBase64($sid)]);
-          $data = (string)$query->fetchField();
+          $data = (string) $query->fetchField();
         }
         // Swallow the error if the table hasn't been created yet.
         catch (\Exception) {
@@ -250,7 +250,6 @@ class SessionHandler extends AbstractProxy implements \SessionHandlerInterface {
     if ($this->connection->driver() == 'mongodb') {
       $schema['fields']['timestamp']['type'] = 'date';
     }
-
 
     return $schema;
   }

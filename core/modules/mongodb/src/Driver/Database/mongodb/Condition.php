@@ -133,7 +133,7 @@ class Condition extends QueryCondition {
   }
 
   /**
-   * Sets the variable join condition
+   * Sets the variable join condition.
    *
    * @param bool $join
    *   (optional) The boolean value to set. Defaults to TRUE.
@@ -160,7 +160,7 @@ class Condition extends QueryCondition {
    * Enable/disable the use of $elemMatch in the condition.
    *
    * @param bool $set
-   *
+   *   The boolean value to be set.
    *
    * @return void
    */
@@ -278,7 +278,7 @@ class Condition extends QueryCondition {
                 // or the base table alias.
                 if (in_array($embedded_table, [
                   $this->mongodbBaseTable,
-                  $this->mongodbBaseAlias
+                  $this->mongodbBaseAlias,
                 ])) {
                   $condition['field'] = substr($condition['field'], $last_dot + 1);
                 }
@@ -971,30 +971,30 @@ class Condition extends QueryCondition {
       }
 
       $number_of_expr_condition_fragments = count($expr_condition_fragments);
-      foreach ($expr_condition_fragments as $expr_condition_fragment) {
-        if (($conjunction == 'OR') && ($number_of_expr_condition_fragments > 1)) {
-          $this->mongodbVersion['$expr']['$or'] = $expr_condition_fragments;
-        }
-        elseif (($conjunction == 'AND') && ($number_of_expr_condition_fragments > 1)) {
-          $this->mongodbVersion['$expr']['$and'] = $expr_condition_fragments;
-        }
-        else {
-          $this->mongodbVersion['$expr'] = reset($expr_condition_fragments);
-        }
+      // foreach ($expr_condition_fragments as $expr_condition_fragment) {
+      if (($conjunction == 'OR') && ($number_of_expr_condition_fragments > 1)) {
+        $this->mongodbVersion['$expr']['$or'] = $expr_condition_fragments;
       }
+      elseif (($conjunction == 'AND') && ($number_of_expr_condition_fragments > 1)) {
+        $this->mongodbVersion['$expr']['$and'] = $expr_condition_fragments;
+      }
+      else {
+        $this->mongodbVersion['$expr'] = reset($expr_condition_fragments);
+      }
+      // }
 
       $number_of_expr_condition_aggregate_fragments = count($expr_condition_aggregate_fragments);
-      foreach ($expr_condition_aggregate_fragments as $expr_condition_aggregate_fragment) {
-        if (($conjunction == 'OR') && ($number_of_expr_condition_aggregate_fragments > 1)) {
-          $this->mongodbAggregateVersion['$expr']['$or'] = $expr_condition_aggregate_fragments;
-        }
-        elseif (($conjunction == 'AND') && ($number_of_expr_condition_aggregate_fragments > 1)) {
-          $this->mongodbAggregateVersion['$expr']['$and'] = $expr_condition_aggregate_fragments;
-        }
-        else {
-          $this->mongodbAggregateVersion['$expr'] = reset($expr_condition_aggregate_fragments);
-        }
+      //foreach ($expr_condition_aggregate_fragments as $expr_condition_aggregate_fragment) {
+      if (($conjunction == 'OR') && ($number_of_expr_condition_aggregate_fragments > 1)) {
+        $this->mongodbAggregateVersion['$expr']['$or'] = $expr_condition_aggregate_fragments;
       }
+      elseif (($conjunction == 'AND') && ($number_of_expr_condition_aggregate_fragments > 1)) {
+        $this->mongodbAggregateVersion['$expr']['$and'] = $expr_condition_aggregate_fragments;
+      }
+      else {
+        $this->mongodbAggregateVersion['$expr'] = reset($expr_condition_aggregate_fragments);
+      }
+      //}
 
       $this->arguments = $arguments;
     }
