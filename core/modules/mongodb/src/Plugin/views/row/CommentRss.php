@@ -14,6 +14,7 @@ class CommentRss extends Rss {
    *
    * @var string
    */
+  // phpcs:ignore Drupal.NamingConventions.ValidVariableName.LowerCamelName
   public $base_table = 'comment';
 
 }

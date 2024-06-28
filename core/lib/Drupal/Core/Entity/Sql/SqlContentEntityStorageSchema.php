@@ -912,7 +912,7 @@ class SqlContentEntityStorageSchema implements DynamicallyFieldableEntityStorage
               'projection' => [
                 $id_key => 1,
                 $translations_table => 1,
-                '_id' => 0
+                '_id' => 0,
               ],
               'session' => $this->database->getMongodbSession(),
             ],
@@ -1799,8 +1799,6 @@ class SqlContentEntityStorageSchema implements DynamicallyFieldableEntityStorage
 
     return $schema;
   }
-
-
 
   /**
    * Adds defaults to a table schema definition.

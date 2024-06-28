@@ -465,8 +465,8 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
    *   (optional) A prefix to be used by all the tables of this mapping.
    *   Defaults to an empty string.
    * @param bool $json_storage
-   *    (optional) Flag to indicate that we are storing entity data in JSON
-   *    documents. Defaults to FALSE.
+   *   (optional) Flag to indicate that we are storing entity data in JSON
+   *   documents. Defaults to FALSE.
    *
    * @return \Drupal\Core\Entity\Sql\TableMappingInterface
    *   A table mapping object for the entity's tables.
@@ -1630,7 +1630,7 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
               }
             }
           }
-          $fields[$dedicated_table_name] = isset($record_baseTable[$dedicated_table_name]) ? $record_baseTable[$dedicated_table_name] : NULL;
+          $fields[$dedicated_table_name] = $record_baseTable[$dedicated_table_name] ?? NULL;
         }
 
         // Dedicated fields with no values set must be set to NULL.
@@ -1691,7 +1691,7 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
               $data_embeddedTable->values($record_embeddedTable);
             }
           }
-          $fields[$embedded_table_name] = isset($data_embeddedTable) ? $data_embeddedTable : NULL;
+          $fields[$embedded_table_name] = $data_embeddedTable ?? NULL;
         }
       }
 

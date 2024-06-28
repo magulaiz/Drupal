@@ -2,8 +2,6 @@
 
 namespace Drupal\mongodb\modules\taxonomy;
 
-use Drupal\views\Views;
-
 /**
  * Builds a performant depth subquery and adds it as a join to the query.
  */

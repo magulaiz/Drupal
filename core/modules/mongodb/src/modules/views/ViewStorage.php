@@ -173,10 +173,6 @@ class ViewStorage extends ConfigEntityStorage {
       }
     }
 
-//    if ($values['id'] == 'test_serializer_display_entity_translated') {
-//      dump($values);
-//    }
-
     return $values;
   }
 

@@ -16,7 +16,6 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 /**
  * Overrides the views filter plugin "taxonomy_index_tid".
  */
-
 class TaxonomyIndexTid extends ManyToOne {
 
   /**
@@ -24,7 +23,7 @@ class TaxonomyIndexTid extends ManyToOne {
    *
    * @var array|null
    */
-  public $validated_exposed_input = NULL;
+  public $validatedExposedInput = NULL;
 
   /**
    * The vocabulary storage.
@@ -310,7 +309,7 @@ class TaxonomyIndexTid extends ManyToOne {
     // If view is an attachment and is inheriting exposed filters, then assume
     // exposed input has already been validated
     if (!empty($this->view->is_attachment) && $this->view->display_handler->usesExposed()) {
-      $this->validated_exposed_input = (array) $this->view->exposed_raw_input[$this->options['expose']['identifier']];
+      $this->validatedExposedInput = (array) $this->view->exposed_raw_input[$this->options['expose']['identifier']];
     }
 
     // If we're checking for EMPTY or NOT, we don't need any input, and we can
@@ -320,15 +319,15 @@ class TaxonomyIndexTid extends ManyToOne {
     }
 
     // If it's non-required and there's no value don't bother filtering.
-    if (!$this->options['expose']['required'] && empty($this->validated_exposed_input)) {
+    if (!$this->options['expose']['required'] && empty($this->validatedExposedInput)) {
       return FALSE;
     }
 
     $rc = parent::acceptExposedInput($input);
     if ($rc) {
       // If we have previously validated input, override.
-      if (isset($this->validated_exposed_input)) {
-        $this->value = $this->validated_exposed_input;
+      if (isset($this->validatedExposedInput)) {
+        $this->value = $this->validatedExposedInput;
       }
     }
 
@@ -344,14 +343,14 @@ class TaxonomyIndexTid extends ManyToOne {
     $input = $form_state->getValue($identifier);
 
     if ($this->options['is_grouped'] && isset($this->options['group_info']['group_items'][$input])) {
-      $this->validated_exposed_input = $this->options['group_info']['group_items'][$input]['value'];
+      $this->validatedExposedInput = $this->options['group_info']['group_items'][$input]['value'];
       return;
     }
 
     // We only validate if they've chosen the text field style.
     if ($this->options['type'] != 'textfield') {
       if ($form_state->getValue($identifier) != 'All') {
-        $this->validated_exposed_input = (array) $form_state->getValue($identifier);
+        $this->validatedExposedInput = (array) $form_state->getValue($identifier);
       }
       return;
     }
@@ -362,7 +361,7 @@ class TaxonomyIndexTid extends ManyToOne {
 
     if ($values = $form_state->getValue($identifier)) {
       foreach ($values as $value) {
-        $this->validated_exposed_input[] = $value['target_id'];
+        $this->validatedExposedInput[] = $value['target_id'];
       }
     }
   }

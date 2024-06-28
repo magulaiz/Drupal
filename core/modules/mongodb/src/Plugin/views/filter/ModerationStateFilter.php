@@ -122,7 +122,6 @@ class ModerationStateFilter extends CoreModerationStateFilter {
     $this->query->addCondition($this->options['group'], 'content_moderation_state.content_moderation_state_current_revision.' . $this->mongodbField, NULL, $operator);
   }
 
-
   /**
    * Gets the list of Workflow IDs configured for this filter.
    *

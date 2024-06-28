@@ -86,8 +86,8 @@ class SelectComplexTest extends DatabaseTestBase {
 
     // MongoDB does not support SQL.
     if ($this->connection->driver() != 'mongodb') {
-      $this->assertMatchesRegularExpression("/ORDER BY .*[^\w\s]num[^\w\s]/", (string)$query);
-      $this->assertMatchesRegularExpression("/GROUP BY .*[^\w\s]task[^\w\s]/", (string)$query);
+      $this->assertMatchesRegularExpression("/ORDER BY .*[^\w\s]num[^\w\s]/", (string) $query);
+      $this->assertMatchesRegularExpression("/GROUP BY .*[^\w\s]task[^\w\s]/", (string) $query);
     }
 
     $result = $query->execute();
@@ -426,8 +426,7 @@ class SelectComplexTest extends DatabaseTestBase {
   /**
    * Tests that join conditions can use Condition objects.
    */
-  public function testJoinConditionObject()
-  {
+  public function testJoinConditionObject() {
     // Same test as testDefaultJoin, but with a Condition object.
     $query = $this->connection->select('test_task', 't');
     $join_cond = ($query->joinCondition())->compare('t.pid', 'p.id');

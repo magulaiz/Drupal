@@ -212,8 +212,8 @@ class DefaultViewsTest extends ViewTestBase {
     $columns = ['nid', 'created_year_month', 'num_records'];
     $column_map = array_combine($columns, $columns);
     if (Database::getConnection()->driver() == 'mongodb') {
-       unset($column_map['nid']);
-       $column_map['vid'] = 'nid';
+      unset($column_map['nid']);
+      $column_map['vid'] = 'nid';
     }
     // Create time of additional nodes created in the setup method.
     $created_year_month = date('Ym', \Drupal::time()->getRequestTime() - 3600);

@@ -6,7 +6,6 @@ use Drupal\Core\Entity\Sql\SqlContentEntityStorage;
 use Drupal\Core\Language\LanguageInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\node\NodeInterface;
-use Drupal\node\NodeStorage as CoreNodeStorage;
 use Drupal\node\NodeStorageInterface;
 
 /**

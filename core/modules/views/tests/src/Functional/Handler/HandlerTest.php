@@ -260,7 +260,7 @@ class HandlerTest extends ViewTestBase {
       }
     }
     if ($connection->driver() == 'mongodb') {
-      $expected_options = ['none','comment_cid', 'nid'];
+      $expected_options = ['none', 'comment_cid', 'nid'];
     }
     else {
       $expected_options = ['none', 'nid'];

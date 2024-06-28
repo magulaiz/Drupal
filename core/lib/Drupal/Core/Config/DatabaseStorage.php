@@ -79,7 +79,7 @@ class DatabaseStorage implements StorageInterface {
       $cursor = $this->connection->getConnection()->{$prefixed_table}->find(
         [
           'collection' => ['$eq' => $this->collection],
-          'name' => ['$eq' => $name]
+          'name' => ['$eq' => $name],
         ],
         [
           'projection' => ['_id' => 1],
@@ -119,7 +119,7 @@ class DatabaseStorage implements StorageInterface {
     try {
       if ($this->connection->driver() == 'mongodb') {
         $prefixed_table = $this->connection->getPrefix() . $this->table;
-        $cursor = $this->connection->getConnection()-> {$prefixed_table}->find(
+        $cursor = $this->connection->getConnection()->{$prefixed_table}->find(
           ['collection' => ['$eq' => $this->collection], 'name' => ['$eq' => $name]],
           ['projection' => ['data' => 1, '_id' => 0]]
         );
@@ -130,7 +130,7 @@ class DatabaseStorage implements StorageInterface {
       else {
         $raw = $this->connection->query('SELECT [data] FROM {' . $this->connection->escapeTable($this->table) . '} WHERE [collection] = :collection AND [name] = :name', [
           ':collection' => $this->collection,
-          ':name' => $name
+          ':name' => $name,
         ], $this->options)->fetchField();
       }
       if ($raw !== FALSE) {

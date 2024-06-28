@@ -109,7 +109,7 @@ class ViewEntityDependenciesTest extends ViewsKernelTestBase {
       'module' => [
         'comment',
         'mongodb',
-//        'node',
+        // 'node',
         'user',
       ],
     ];

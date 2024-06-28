@@ -212,6 +212,9 @@ class DefaultTableMapping implements TableMappingInterface {
    * @param string $prefix
    *   (optional) A prefix to be used by all the tables of this mapping.
    *   Defaults to an empty string.
+   * @param bool $json_storage
+   *   (optional) Flag to indicate that we are storing entity data in JSON
+   *   documents. Defaults to FALSE.
    *
    * @return static
    *
@@ -291,7 +294,7 @@ class DefaultTableMapping implements TableMappingInterface {
         $revision_base_fields = array_merge([
           $id_key,
           $revision_key,
-          $langcode_key
+          $langcode_key,
         ], $revision_metadata_fields);
         $table_mapping->setFieldNames($table_mapping->revisionTable, $revision_base_fields);
 

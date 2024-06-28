@@ -119,7 +119,8 @@ class EntityBundleFieldTest extends EntityKernelTestBase {
         ->condition($table . '.entity_id', (int) $entity->id())
         ->condition($table . '.deleted', TRUE)
         ->countQuery()
-        ->execute();    }
+        ->execute();
+    }
     else {
       $table = $table_mapping->getDedicatedDataTableName(
         $entity->getFieldDefinition('custom_bundle_field')->getFieldStorageDefinition(),

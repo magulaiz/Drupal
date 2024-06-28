@@ -353,8 +353,7 @@ class FilterDateTest extends ViewTestBase {
   /**
    * Tests that the exposed date filter is displayed without errors.
    */
-  public function testExposedFilter()
-  {
+  public function testExposedFilter() {
     $this->drupalLogin($this->drupalCreateUser(['administer views']));
     $this->drupalGet('admin/structure/views/nojs/handler/test_filter_date_between/default/filter/created');
     $this->submitForm([], 'Expose filter');
