@@ -295,12 +295,12 @@
        */
 
       recordTabindex($el, level) {
-        const tabInfo = $el.dataset.drupalOriginalTabIndices || {};
+        const tabInfo = $el[0].dataset.drupalOriginalTabIndices || {};
         tabInfo[level] = {
           tabindex: $el[0].getAttribute('tabindex'),
           autofocus: $el[0].hasAttribute('autofocus'),
         };
-        $el.dataset.drupalOriginalTabIndices = tabInfo;
+        $el[0].dataset.drupalOriginalTabIndices = tabInfo;
       },
 
       /**
