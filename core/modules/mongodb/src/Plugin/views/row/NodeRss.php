@@ -14,6 +14,7 @@ class NodeRss extends Rss {
    *
    * @var string
    */
+  // phpcs:ignore Drupal.NamingConventions.ValidVariableName.LowerCamelName
   public $base_table = 'node';
 
 }
