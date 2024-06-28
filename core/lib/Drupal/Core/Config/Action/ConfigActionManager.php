@@ -108,23 +108,6 @@ class ConfigActionManager extends DefaultPluginManager {
   }
 
   /**
-   * {@inheritdoc}
-   */
-  public function getDefinitions() {
-    $definitions = parent::getDefinitions();
-    // Adds backwards compatibility for plugins that have been renamed.
-    // @see https://www.drupal.org/i/3455113
-    foreach (self::$deprecatedPluginIds as $legacy => $new_plugin_id) {
-      if (!isset($definitions[$legacy])) {
-        $definitions[$legacy] = $definitions[$new_plugin_id['replacement']];
-      }
-    }
-    $this->setCachedDefinitions($definitions);
-
-    return $definitions;
-  }
-
-  /**
    * Applies a config action.
    *
    * @param string $action_id
@@ -249,6 +232,20 @@ class ConfigActionManager extends DefaultPluginManager {
       }
     }
     return $map;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function alterDefinitions(&$definitions) {
+    // Adds backwards compatibility for plugins that have been renamed.
+    // @see https://www.drupal.org/i/3455113
+    foreach (self::$deprecatedPluginIds as $legacy => $new_plugin_id) {
+      if (!isset($definitions[$legacy])) {
+        $definitions[$legacy] = $definitions[$new_plugin_id['replacement']];
+      }
+    }
+    parent::alterDefinitions($definitions);
   }
 
   /**
