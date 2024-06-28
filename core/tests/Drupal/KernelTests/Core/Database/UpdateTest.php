@@ -173,7 +173,7 @@ class UpdateTest extends DatabaseTestBase {
   }
 
   /**
-   * Test the to string for update query.
+   * Tests the Update::__toString() method.
    */
   public function testToString(): void {
     // Prepare query for testing.
@@ -181,8 +181,12 @@ class UpdateTest extends DatabaseTestBase {
       ->fields(['a' => 27, 'b' => 42])
       ->condition('c', [1, 2], 'IN');
 
-    $this->assertStringContainsString(':db_update_placeholder_0', (string) $query);
-    $this->assertStringContainsString(':db_update_placeholder_1', (string) $query);
+    // Confirm placeholders are present.
+    $query_string = (string) $query;
+    $this->assertStringContainsString(':db_update_placeholder_0', $query_string);
+    $this->assertStringContainsString(':db_update_placeholder_1', $query_string);
+    $this->assertStringContainsString(':db_condition_placeholder_0', $query_string);
+    $this->assertStringContainsString(':db_condition_placeholder_1', $query_string);
 
     // Test arguments.
     $expected = [

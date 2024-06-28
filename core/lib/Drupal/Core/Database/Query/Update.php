@@ -186,10 +186,11 @@ class Update extends Query implements ConditionInterface {
   }
 
   /**
-   * Returns the query arguments with placeholders mapped to values.
+   * Returns the query arguments with placeholders mapped to their values.
    *
    * @return array
-   *   Array indexed on placeholders with value.
+   *   An associative array where the keys are the placeholder names and the
+   *   values are the placeholder values.
    */
   protected function getQueryArguments(): array {
     // Expressions take priority over literal fields, so we process those first
