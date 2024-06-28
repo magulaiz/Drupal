@@ -101,14 +101,11 @@
       $buttons.each(function () {
         const $originalButton = $(this);
         this.style.display = 'none';
+        const originalButton = this;
+        originalButton.style.display = 'none';
+        const originalButtonOnce = originalButton.getAttribute('data-once');
         const originalButtonData = new WeakMap();
-        const originalButtonOnce = originalButtonData.has($originalButton[0])
-          ? originalButtonData.get($originalButton[0]).once
-          : $originalButton.data('once');
-
-        originalButtonData.set($originalButton[0], {
-          once: originalButtonOnce,
-        });
+        originalButtonData.set(originalButton, { once: originalButtonOnce });
 
         buttons.push({
           text: $originalButton.html() || $originalButton.attr('value'),
