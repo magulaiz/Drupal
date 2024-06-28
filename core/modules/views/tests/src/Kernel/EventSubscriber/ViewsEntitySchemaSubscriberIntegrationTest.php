@@ -170,7 +170,7 @@ class ViewsEntitySchemaSubscriberIntegrationTest extends ViewsKernelTestBase {
    */
   public function testDataTableRename() {
     if (Database::getConnection()->driver() == 'mongodb') {
-      // Please read the explanation by the method: testBaseTableRename().
+      // Read the explanation by the method: testBaseTableRename().
       $this->markTestSkipped();
     }
 
@@ -209,7 +209,7 @@ class ViewsEntitySchemaSubscriberIntegrationTest extends ViewsKernelTestBase {
    */
   public function testRevisionBaseTableRename() {
     if (Database::getConnection()->driver() == 'mongodb') {
-      // Please read the explanation by the method: testBaseTableRename().
+      // Read the explanation by the method: testBaseTableRename().
       $this->markTestSkipped();
     }
 
@@ -247,7 +247,7 @@ class ViewsEntitySchemaSubscriberIntegrationTest extends ViewsKernelTestBase {
    */
   public function testRevisionDataTableRename() {
     if (Database::getConnection()->driver() == 'mongodb') {
-      // Please read the explanation by the method: testBaseTableRename().
+      // Read the explanation by the method: testBaseTableRename().
       $this->markTestSkipped();
     }
 
@@ -286,7 +286,7 @@ class ViewsEntitySchemaSubscriberIntegrationTest extends ViewsKernelTestBase {
    */
   public function testDataTableAddition() {
     if (Database::getConnection()->driver() == 'mongodb') {
-      // Please read the explanation by the method: testBaseTableRename().
+      // Read the explanation by the method: testBaseTableRename().
       $this->markTestSkipped();
     }
 
@@ -313,7 +313,7 @@ class ViewsEntitySchemaSubscriberIntegrationTest extends ViewsKernelTestBase {
    */
   public function testRevisionEnabling() {
     if (Database::getConnection()->driver() == 'mongodb') {
-      // Please read the explanation by the method: testBaseTableRename().
+      // Read the explanation by the method: testBaseTableRename().
       $this->markTestSkipped();
     }
 
@@ -338,7 +338,7 @@ class ViewsEntitySchemaSubscriberIntegrationTest extends ViewsKernelTestBase {
    */
   public function testRevisionDisabling() {
     if (Database::getConnection()->driver() == 'mongodb') {
-      // Please read the explanation by the method: testBaseTableRename().
+      // Read the explanation by the method: testBaseTableRename().
       $this->markTestSkipped();
     }
 
@@ -362,7 +362,7 @@ class ViewsEntitySchemaSubscriberIntegrationTest extends ViewsKernelTestBase {
    */
   public function testVariousTableUpdates() {
     if (Database::getConnection()->driver() == 'mongodb') {
-      // Please read the explanation by the method: testBaseTableRename().
+      // Read the explanation by the method: testBaseTableRename().
       $this->markTestSkipped();
     }
 
@@ -485,7 +485,7 @@ class ViewsEntitySchemaSubscriberIntegrationTest extends ViewsKernelTestBase {
    */
   public function testVariousTableUpdatesForRevisionView() {
     if (Database::getConnection()->driver() == 'mongodb') {
-      // Please read the explanation by the method: testBaseTableRename().
+      // Read the explanation by the method: testBaseTableRename().
       $this->markTestSkipped();
     }
 
@@ -525,7 +525,7 @@ class ViewsEntitySchemaSubscriberIntegrationTest extends ViewsKernelTestBase {
    */
   public function testViewSaveException() {
     if (Database::getConnection()->driver() == 'mongodb') {
-      // Please read the explanation by the method: testBaseTableRename().
+      // Read the explanation by the method: testBaseTableRename().
       $this->markTestSkipped();
     }
 
@@ -569,7 +569,7 @@ class ViewsEntitySchemaSubscriberIntegrationTest extends ViewsKernelTestBase {
    */
   public function testBrokenView() {
     if (Database::getConnection()->driver() == 'mongodb') {
-      // Please read the explanation by the method: testBaseTableRename().
+      // Read the explanation by the method: testBaseTableRename().
       $this->markTestSkipped();
     }
 

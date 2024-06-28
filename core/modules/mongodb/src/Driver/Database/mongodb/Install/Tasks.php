@@ -5,6 +5,8 @@ namespace Drupal\mongodb\Driver\Database\mongodb\Install;
 use Drupal\Core\Database\Database;
 use Drupal\Core\Database\Install\Tasks as InstallTasks;
 
+// cspell:ignore replicaset
+
 /**
  * Specifies installation tasks for MongoDB databases.
  */

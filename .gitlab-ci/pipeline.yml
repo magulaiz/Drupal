@@ -1,4 +1,4 @@
-# cspell:ignore cobertura drupaltestbot drupaltestbotpw
+# cspell:ignore cobertura drupaltestbot drupaltestbotpw dbrs
 
 stages:
   - 🗜️ Test

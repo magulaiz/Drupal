@@ -26,6 +26,8 @@ use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\HttpFoundation\Session\Storage\MockArraySessionStorage;
 use Symfony\Component\Routing\Route;
 
+// cspell:ignore replicaset
+
 /**
  * Defines a trait for shared functional test setup functionality.
  */

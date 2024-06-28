@@ -6,6 +6,8 @@ use Drupal\Core\Entity\ContentEntityTypeInterface;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
 
+// cspell:ignore sharded unsharded
+
 /**
  * Defines a default table mapping class.
  */
