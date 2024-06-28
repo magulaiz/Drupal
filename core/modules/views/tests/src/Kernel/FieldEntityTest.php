@@ -68,7 +68,7 @@ class FieldEntityTest extends ViewsKernelTestBase {
       ],
     ])->save();
 
-    //Modules to enable.
+    // Modules to enable.
     ViewTestData::createTestViews(static::class, ['node', 'comment']);
   }
 
