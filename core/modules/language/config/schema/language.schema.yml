@@ -87,9 +87,11 @@ language.mappings:
 language.entity.*:
   type: config_entity
   label: 'Language'
+  constraints:
+    FullyValidatable: ~
   mapping:
     id:
-      type: string
+      type: langcode
       label: 'ID'
     label:
       type: required_label
@@ -97,6 +99,10 @@ language.entity.*:
     direction:
       type: string
       label: 'Direction'
+      constraints:
+        # @see \Drupal\Core\Language\LanguageInterface::DIRECTION_LTR and
+        # \Drupal\Core\Language\LanguageInterface::DIRECTION_RTL
+        Choice: [ 'ltr', 'rtl' ]
     weight:
       type: weight
       label: 'Weight'
