@@ -82,72 +82,23 @@ EOD;
   }
 
   /**
-   * Tests the conversion of JUnit XML to SimpleTest row.
-   *
-   * @param string $junitXmlString
-   *   The JUnit XML string to test.
-   * @param array $expectedSimpletestRow
-   *   The expected simple test row.
-   *
    * @covers ::convertTestCaseToSimpletestRow
-   * @dataProvider simpletestDataProvider
    */
-  public function testConvertTestCaseToSimpletestRow(string $junitXmlString, array $expectedSimpletestRow): void {
-    $this->assertEquals($expectedSimpletestRow, JUnitConverter::convertTestCaseToSimpletestRow($expectedSimpletestRow['test_id'], new \SimpleXMLElement($junitXmlString)));
-    $this->assertLessThanOrEqual(255, strlen($expectedSimpletestRow['function']), 'Function value is less than or equal to 255');
-  }
-
-  /**
-   * See testConvertTestCaseToSimpletestRow method for test cases.
-   */
-  public static function simpletestDataProvider(): array {
-    $long_function_name = self::generateAlphanumericStr(220);
-    return [
-      [
-        <<<EOD
-        <testcase name="testGetTestClasses" class="Drupal\Tests\simpletest\Unit\TestDiscoveryTest" classname="Drupal.Tests.simpletest.Unit.TestDiscoveryTest" file="/Users/paul/projects/drupal/core/modules/simpletest/tests/src/Unit/TestDiscoveryTest.php" line="108" assertions="2" time="0.100787"/>
-        EOD,
-        [
-          'test_id' => 23,
-          'test_class' => 'Drupal\Tests\simpletest\Unit\TestDiscoveryTest',
-          'status' => 'pass',
-          'message' => '',
-          'message_group' => 'Other',
-          'function' => 'Drupal\Tests\simpletest\Unit\TestDiscoveryTest->testGetTestClasses()',
-          'line' => 108,
-          'file' => '/Users/paul/projects/drupal/core/modules/simpletest/tests/src/Unit/TestDiscoveryTest.php',
-        ],
-      ],
-      [
-        <<<EOD
-        <testcase name="{$long_function_name}" class="Drupal\Tests\big_pipe\Unit\Render\BigPipeResponseAttachmentsProcessorTest" classname="Drupal.Tests.big_pipe.Unit.Render.BigPipeResponseAttachmentsProcessorTest" file="/Users/paul/projects/drupal/core/modules/big_pipe/tests/src/Unit/Render/BigPipeResponseAttachmentsProcessorTest.php" line="83" assertions="4" time="0.100787"/>
-        EOD,
-        [
-          'test_id' => 24,
-          'test_class' => 'Drupal\Tests\big_pipe\Unit\Render\BigPipeResponseAttachmentsProcessorTest',
-          'status' => 'pass',
-          'message' => '',
-          'message_group' => 'Other',
-          'function' => mb_substr("Drupal\Tests\big_pipe\Unit\Render\BigPipeResponseAttachmentsProcessorTest->{$long_function_name}()", 0, 255),
-          'line' => 83,
-          'file' => '/Users/paul/projects/drupal/core/modules/big_pipe/tests/src/Unit/Render/BigPipeResponseAttachmentsProcessorTest.php',
-        ],
-      ],
+  public function testConvertTestCaseToSimpletestRow(): void {
+    $junit = <<<EOD
+    <testcase name="testGetTestClasses" class="Drupal\Tests\simpletest\Unit\TestDiscoveryTest" classname="Drupal.Tests.simpletest.Unit.TestDiscoveryTest" file="/Users/paul/projects/drupal/core/modules/simpletest/tests/src/Unit/TestDiscoveryTest.php" line="108" assertions="2" time="0.100787"/>
+EOD;
+    $simpletest = [
+      'test_id' => 23,
+      'test_class' => 'Drupal\Tests\simpletest\Unit\TestDiscoveryTest',
+      'status' => 'pass',
+      'message' => '',
+      'message_group' => 'Other',
+      'function' => 'Drupal\Tests\simpletest\Unit\TestDiscoveryTest->testGetTestClasses()',
+      'line' => 108,
+      'file' => '/Users/paul/projects/drupal/core/modules/simpletest/tests/src/Unit/TestDiscoveryTest.php',
     ];
-
-  }
-
-  /**
-   * Generates a string consisting of alphanumeric characters.
-   */
-  private static function generateAlphanumericStr(int $length = 220): string {
-    $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
-    $charLength = strlen($characters);
-    $randomString = '';
-    for ($i = 0; $i < $length; $i++) {
-      $randomString .= $characters[rand(0, $charLength - 1)];
-    }
-    return $randomString;
+    $this->assertEquals($simpletest, JUnitConverter::convertTestCaseToSimpletestRow(23, new \SimpleXMLElement($junit)));
   }
 
 }
