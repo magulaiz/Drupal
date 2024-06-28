@@ -209,13 +209,15 @@ class NodeRevisionsTest extends NodeTestBase {
       $prefixed_table = $connection->getPrefix() . 'node';
       $connection->getConnection()->{$prefixed_table}->updateMany(
         [],
-        ['$set' =>
-          ["node_all_revisions.$[revision].revision_timestamp" => new UTCDateTime($old_revision_date * 1000)],
+        [
+          '$set' =>
+            ["node_all_revisions.$[revision].revision_timestamp" => new UTCDateTime($old_revision_date * 1000)],
         ],
-        ['arrayFilters' =>
-          [
-            ["revision.vid" => (int) $nodes[2]->getRevisionId()],
-          ],
+        [
+          'arrayFilters' =>
+            [
+              ["revision.vid" => (int) $nodes[2]->getRevisionId()],
+            ],
         ],
       );
     }
