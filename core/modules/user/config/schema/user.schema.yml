@@ -41,12 +41,28 @@ user.settings:
     register:
       type: string
       label: 'Who can register accounts?'
+      constraints:
+        Choice:
+          choices:
+            - 'admin_only'
+            - 'visitors'
+            - 'visitors_admin_approval'
     cancel_method:
       type: string
       label: 'When cancelling a user account'
+      constraints:
+        Choice:
+          choices:
+            - 'user_cancel_block'
+            - 'user_cancel_delete'
+            - 'user_cancel_block_unpublish'
+            - 'user_cancel_reassign'
     password_reset_timeout:
       type: integer
       label: 'Password reset timeout'
+      constraints:
+        Range:
+          min: 0
     password_strength:
       type: boolean
       label: 'Enable password strength indicator'
