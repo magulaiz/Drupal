@@ -213,7 +213,7 @@ class LocalTaskManagerTest extends UnitTestCase {
     $mock_plugin = $this->createMock('Drupal\Core\Menu\LocalTaskInterface');
     $mock_plugin->expects($this->any())
       ->method('getRouteParameters')
-      ->willReturn([]);    
+      ->willReturn([]);
     $this->setupFactory($mock_plugin);
     $this->setupLocalTaskManager();
 
