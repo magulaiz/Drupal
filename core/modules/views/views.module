@@ -855,3 +855,19 @@ function _views_add_entity_reference_filter_data(string $field_name, array &$fie
     $field_table_data[$field_name . '_reference'] = $entity_reference;
   }
 }
+
+/**
+ * Implements hook_module_implements_alter().
+ */
+function views_module_implements_alter(&$implementations, $hook) {
+  if ($hook == 'hook_views_data_alter') {
+
+    // Move hook_views_data_alter implementation to the end of
+    // the list to add the entity_reference filter to reference
+    // fields where no other alternative is provided.
+    // @todo Remove once
+    $implementation = $implementations['views'];
+    unset($implementations['views']);
+    $implementations['views'] = $implementation;
+  }
+}

@@ -229,6 +229,38 @@ function views_views_data_alter(&$data) {
       }
     }
   }
+
+  // Get a list of filter handlers for each module
+  /** @var \Drupal\views\Plugin\ViewsHandlerManager $handler_manager */
+  $handler_manager = \Drupal::service('plugin.manager.views.filter');
+  foreach ($handler_manager->getDefinitions() as $plugin_id => $definition) {
+    if (!isset($filter_handlers[$definition['provider']])) {
+      $filter_handlers[$definition['provider']] = [];
+    }
+    $filter_handlers[$definition['provider']][] = $plugin_id;
+  }
+
+  foreach ($data as $table_name => $table_data) {
+    foreach ($table_data as $table_field_name => $table_field_data) {
+      if (
+        str_ends_with($table_field_name, '_reference')
+        && isset($table_field_data['filter']['id'])
+        && $table_field_data['filter']['id'] === 'entity_reference'
+      ) {
+        $original_field_name = substr($table_field_name, '_reference');
+
+        // If the original filter is not 'numeric' any more, a viable
+        // alternative has been provided.
+        // @todo remove only only if provided by the module that the entity provides.
+        if (
+          isset($table_data[$original_field_name]['filter']['id'])
+          && $table_data[$original_field_name]['filter']['id'] != 'numeric'
+        ) {
+          unset($data[$table_name][$table_field_name]);
+        }
+      }
+    }
+  }
 }
 
 /**
