@@ -19,13 +19,6 @@ class Counter extends FieldPluginBase {
   /**
    * {@inheritdoc}
    */
-  public function render(ResultRow $row) {
-    return $this->getValue($row);
-  }
-
-  /**
-   * {@inheritdoc}
-   */
   public function usesGroupBy() {
     return FALSE;
   }
@@ -59,6 +52,18 @@ class Counter extends FieldPluginBase {
    */
   public function query() {
     // Do nothing -- to override the parent query.
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function renderText($alter) {
+    $value = parent::renderText($alter);
+    if ($value == '{{ counter }}') {
+      $row_key = $this->view->row_index;
+      return $this->getValue($this->view->result[$row_key]);
+    }
+    return $value;
   }
 
   /**
