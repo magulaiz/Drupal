@@ -208,7 +208,7 @@ install:
 config:
   actions:
     config_test.dynamic.recipe:
-      ensure_exists:
+      ensureExists:
         label: 'Created by recipe'
       setBody: 'Description set by recipe'
 YAML;
@@ -216,6 +216,27 @@ YAML;
     $recipe = $this->createRecipe($recipe_data);
     $this->expectException(PluginNotFoundException::class);
     $this->expectExceptionMessage('The "setBody" plugin does not exist.');
+    RecipeRunner::processRecipe($recipe);
+  }
+
+  /**
+   * Tests that renamed plugins are marked as deprecated.
+   *
+   * @group legacy
+   */
+  public function testRenamedConfigAction(): void {
+    $recipe_data = <<<YAML
+name: Renamed config action
+install:
+  - config_test
+config:
+  actions:
+    config_test.dynamic.recipe:
+      ensure_exists:
+        label: 'Created by recipe'
+YAML;
+    $recipe = $this->createRecipe($recipe_data);
+    $this->expectDeprecation('Unsilenced deprecation: The plugin ID "entity_create:ensure_exists" is deprecated. Use "entity_create:ensureExists" instead.');
     RecipeRunner::processRecipe($recipe);
   }
 
