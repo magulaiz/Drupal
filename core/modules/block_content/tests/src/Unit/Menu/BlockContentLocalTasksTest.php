@@ -56,10 +56,20 @@ class BlockContentLocalTasksTest extends LocalTaskIntegrationTestBase {
       ->method('getDefinitions')
       ->willReturn([]);
 
+    $metadataBubblingUrlGenerator = $this->getMockBuilder('Drupal\Core\Render\MetadataBubblingUrlGenerator')
+      ->disableOriginalConstructor()
+      ->getMock();
+    $metadataBubblingUrlGenerator->expects($this->any())
+      ->method('generateFromRoute')
+      ->willReturnCallback(function ($name, $parameters = []) {
+        return '/';
+      });
+
     $container = new ContainerBuilder();
     $container->set('config.factory', $config_factory);
     $container->set('theme_handler', $theme_handler);
     $container->set('entity_type.manager', $entity_type_manager);
+    $container->set('url_generator', $metadataBubblingUrlGenerator);
     \Drupal::setContainer($container);
   }
 
@@ -80,7 +90,7 @@ class BlockContentLocalTasksTest extends LocalTaskIntegrationTestBase {
   /**
    * Provides a list of routes to test.
    */
-  public static function getBlockContentListingRoutes() {
+  public function getBlockContentListingRoutes() {
     return [
       ['entity.block_content.collection', 'system.admin_content'],
     ];
