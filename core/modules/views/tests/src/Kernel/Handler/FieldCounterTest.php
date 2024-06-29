@@ -133,10 +133,8 @@ class FieldCounterTest extends ViewsKernelTestBase {
     $this->assertEquals('3', $counter);
 
     $view->destroy();
+    $view->storage->invalidateCaches();
 
-    \Drupal::service('cache_tags.invalidator')->invalidateTags([
-      'config:views.view.test_view',
-    ]);
     // Test using the counter start option.
     $counter_start = 1000000;
     $view->setDisplay();
