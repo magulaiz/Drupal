@@ -247,7 +247,7 @@ function views_views_data_alter(&$data) {
         && isset($table_field_data['filter']['id'])
         && $table_field_data['filter']['id'] === 'entity_reference'
       ) {
-        $original_field_name = substr($table_field_name, '_reference');
+        $original_field_name = substr($table_field_name, 0, strlen('_reference'));
 
         // If the original filter is not 'numeric' any more, a viable
         // alternative has been provided.
