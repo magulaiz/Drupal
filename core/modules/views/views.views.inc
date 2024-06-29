@@ -799,16 +799,8 @@ function core_field_views_data(FieldStorageConfigInterface $field_storage) {
 
     if ($target_entity_type instanceof EntityTypeInterface) {
       foreach ($table_data as $table_field_name => $table_field_data) {
-        if (
-          isset($table_field_data['filter'])
-          && $table_field_name != 'delta'
-          && !$field_storage->isBaseField()
-        ) {
-          // Add "entity_reference" filter to non-base fields. Most
-          // base fields already have a viable reference-like filter
-          // alternative like user ID. Contributed modules
-          // wishing to support usage of entity_reference for their
-          // own base field can use alter the views data to add this.
+        if (isset($table_field_data['filter']) && $table_field_name != 'delta') {
+          // Add "entity_reference" filter.
           _views_add_entity_reference_filter_data($table_field_name, $data[$table_name]);
         }
       }
