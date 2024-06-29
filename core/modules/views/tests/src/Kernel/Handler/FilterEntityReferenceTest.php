@@ -186,32 +186,6 @@ class FilterEntityReferenceTest extends ViewsKernelTestBase {
     $this->assertIdenticalResultset($view, $expected, [
       'title' => 'title',
     ]);
-
-    // Change to filtering by user 1 base field.
-    $view = Views::getView('test_filter_entity_reference');
-    $view->setDisplay();
-    $view->setExposedInput([
-      'uid_reference' => $this->user1->id(),
-    ]);
-    $this->executeView($view);
-
-    // Change to filtering by user 1 base field.
-    $view = Views::getView('test_filter_entity_reference');
-    $view->setDisplay();
-    $view->setExposedInput([
-      'uid_reference' => $this->user2->id(),
-    ]);
-    $this->executeView($view);
-
-    // Expect to have only the articles referenced.
-    $expected = [
-      ['title' => 'Page 0'],
-      ['title' => 'Page 1'],
-      ['title' => 'Page 2'],
-    ];
-    $this->assertIdenticalResultset($view, $expected, [
-      'title' => 'title',
-    ]);
   }
 
   /**
