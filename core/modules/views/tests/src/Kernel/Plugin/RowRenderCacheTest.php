@@ -106,9 +106,6 @@ class RowRenderCacheTest extends ViewsKernelTestBase {
     $node = Node::load(6);
     $node->setTitle('a' . $this->randomMachineName());
     $node->save();
-    \Drupal::service('cache_tags.invalidator')->invalidateTags([
-      'config:views.view.test_row_render_cache',
-    ]);
     $this->doTestRenderedOutput($this->editorUser);
   }
 
