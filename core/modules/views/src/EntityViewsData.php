@@ -436,7 +436,8 @@ class EntityViewsData implements EntityHandlerInterface, EntityViewsDataInterfac
   protected function mapFieldDefinition($table, $field_name, FieldDefinitionInterface $field_definition, TableMappingInterface $table_mapping, &$table_data) {
     // Create a dummy instance to retrieve property definitions.
     $field_column_mapping = $table_mapping->getColumnNames($field_name);
-    $field_schema = $this->getFieldStorageDefinitions()[$field_name]->getSchema();
+    $field_storage_definition = $this->getFieldStorageDefinitions()[$field_name];
+    $field_schema = $field_storage_definition->getSchema();
 
     $field_definition_type = $field_definition->getType();
     // Add all properties to views table data. We need an entry for each
@@ -453,8 +454,12 @@ class EntityViewsData implements EntityHandlerInterface, EntityViewsDataInterfac
       $table_data[$schema_field_name]['entity field'] = $field_name;
       $first = FALSE;
 
-      if ($field_definition_type === 'entity_reference') {
-        // Add "entity_reference" filter.
+      if ($field_definition_type === 'entity_reference' && !$field_storage_definition->isBaseField()) {
+        // Add "entity_reference" filter to non-base fields. Most
+        // base fields already have a viable reference-like filter
+        // alternative like user ID. Contributed modules
+        // wishing to support usage of entity_reference for their
+        // own base field can use alter the views data to add this.
         _views_add_entity_reference_filter_data($schema_field_name, $table_data);
       }
     }
