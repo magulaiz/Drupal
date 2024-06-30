@@ -24,7 +24,7 @@ class ConfigActionTest extends KernelTestBase {
   /**
    * {@inheritdoc}
    */
-  protected static $modules = ['config_test', 'block', 'system'];
+  protected static $modules = ['config_test', 'block', 'system', 'path_alias'];
 
   /**
    * @see \Drupal\Core\Config\Action\Plugin\ConfigAction\EntityCreate
