@@ -168,6 +168,7 @@ final class PlaceBlock implements ConfigActionPluginInterface, ContainerFactoryP
         foreach ($value_settings as $key => $setting) {
           $block_settings[$key] = $setting;
         }
+        $block->set('settings', $block_settings);
         $block_changed = TRUE;
       }
       if ($block_changed) {
