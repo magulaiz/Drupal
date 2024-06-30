@@ -536,6 +536,33 @@ class ConfigActionTest extends KernelTestBase {
       $this->assertSame('Unable to place block block.block.config_action_test because a block with this name has been placed but uses a different plugin', $e->getMessage());
     }
 
+    // Placing the same block again with new visibility or settings should
+    // update the block.
+    $updated_block = $valid_block;
+    $updated_block['visibility'] = ['request_path' => [
+      'id' => 'request_path',
+      'negate' => FALSE,
+      'pages' => '<front>',
+    ]];
+    $updated_block['settings']['primary'] = TRUE;
+    $updated_block['settings']['secondary'] = FALSE;
+    try {
+      $manager->applyAction('placeBlock', 'block.block.config_action_test', $updated_block);
+      $placed_blocks = \Drupal::entityTypeManager()->getStorage('block')->loadByProperties([
+        'id' => 'config_action_test',
+      ]);
+      $this->assertCount(1, $placed_blocks, 'There is 1 matching block entity');
+      $block = array_pop($placed_blocks);
+      $block_visibility = $block->getVisibility();
+      $this->assertSame('<front>', $block_visibility['request_path']['pages'], 'Block has the modified visibility');
+      $block_settings = $block->get('settings');
+      $this->assertSame(TRUE, $block_settings['primary'], 'Block has modified settings');
+    }
+    catch (ConfigActionException $e) {
+      $this->fail('Unexpected exception while placing block again, modified');
+    }
+
+
     // Validate that placing blocks first and last works as expected.
     try {
       $first_block = $last_block = $valid_block;
