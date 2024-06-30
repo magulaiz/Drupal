@@ -143,9 +143,9 @@ class EntityType extends PluginDefinition implements EntityTypeInterface {
   /**
    * The name of the entity type's revision data table.
    *
-   * The revision data table is required for translatable entity types if the
-   * entity type also supports revisions. The revision data table stores
-   * base field revision data per language for revisionable fields.
+   * The revision data table stores the revision data for each base field that
+   * supports revisions per language. The table is required for translatable
+   * entity types that support revisions.
    *
    * @var string|null
    */
