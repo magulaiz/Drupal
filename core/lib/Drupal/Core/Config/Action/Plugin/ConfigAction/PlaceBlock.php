@@ -155,8 +155,10 @@ final class PlaceBlock implements ConfigActionPluginInterface, ContainerFactoryP
         $block_changed = TRUE;
       }
       // Override the block's visibility.
-      if (isset($value['visibility'])) {
-        $block->setVisibility($value['visibility']);
+      if (isset($value['visibility']) && is_array($value['visibility'])) {
+        foreach ($value['visibility'] as $config_id => $visibility) {
+          $block->setVisibilityConfig($config_id, $visibility);
+        }
         $block_changed = TRUE;
       }
       // Override the block's settings with anything from the action values.
