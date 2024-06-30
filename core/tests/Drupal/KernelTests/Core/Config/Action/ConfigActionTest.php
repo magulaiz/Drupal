@@ -539,11 +539,13 @@ class ConfigActionTest extends KernelTestBase {
     // Placing the same block again with new visibility or settings should
     // update the block.
     $updated_block = $valid_block;
-    $updated_block['visibility'] = ['request_path' => [
-      'id' => 'request_path',
-      'negate' => FALSE,
-      'pages' => '<front>',
-    ]];
+    $updated_block['visibility'] = [
+      'request_path' => [
+        'id' => 'request_path',
+        'negate' => FALSE,
+        'pages' => '<front>',
+      ],
+    ];
     $updated_block['settings']['primary'] = TRUE;
     $updated_block['settings']['secondary'] = FALSE;
     try {
@@ -556,12 +558,11 @@ class ConfigActionTest extends KernelTestBase {
       $block_visibility = $block->getVisibility();
       $this->assertSame('<front>', $block_visibility['request_path']['pages'], 'Block has the modified visibility');
       $block_settings = $block->get('settings');
-      $this->assertSame(TRUE, $block_settings['primary'], 'Block has modified settings');
+      $this->assertTrue($block_settings['primary'], 'Block has modified settings');
     }
     catch (ConfigActionException $e) {
       $this->fail('Unexpected exception while placing block again, modified');
     }
-
 
     // Validate that placing blocks first and last works as expected.
     try {
