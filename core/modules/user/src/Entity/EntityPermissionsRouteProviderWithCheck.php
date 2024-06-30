@@ -15,7 +15,7 @@ use Symfony\Component\Routing\Route;
  * entity has permissions, or if the check is too expensive, then use
  * EntityPermissionsRouteProvider instead of this class.
  *
- * @deprecated in drupal:10.2.0 and is removed from drupal:11.0.0. Use
+ * @deprecated in drupal:10.4.0 and is removed from drupal:12.0.0. Use
  * EntityPermissionsRouteProvider instead.
  * @see https://www.drupal.org/node/3384745
  */
@@ -25,7 +25,7 @@ class EntityPermissionsRouteProviderWithCheck extends EntityPermissionsRouteProv
    * {@inheritdoc}
    */
   protected function getEntityPermissionsRoute(EntityTypeInterface $entity_type): ?Route {
-    trigger_error(__CLASS__ . ' is deprecated in drupal:10.2.0 and is removed from drupal:11.0.0. Use EntityPermissionsRouteProvider instead. See https://www.drupal.org/node/3384745', E_USER_DEPRECATED);
+    @trigger_error(__CLASS__ . ' is deprecated in drupal:10.4.0 and is removed from drupal:12.0.0. Use EntityPermissionsRouteProvider instead. See https://www.drupal.org/node/3384745', E_USER_DEPRECATED);
     $route = parent::getEntityPermissionsRoute($entity_type);
     if ($route) {
       $route->setRequirement('_custom_access', '\Drupal\user\Form\EntityPermissionsForm::access');
