@@ -772,14 +772,14 @@ td.group-title {
   line-height: 1.4555;
 }
 
-.js .dropbutton-wrapper .dropbutton .dropbutton-action > .ajax-progress-throbber {
+.dropbutton-wrapper .dropbutton .dropbutton-action > .ajax-progress-throbber {
   position: absolute;
   z-index: 2;
   top: -1px;
   right: -0.3125rem; /* LTR */
 }
 
-[dir="rtl"].js .dropbutton-wrapper .dropbutton .dropbutton-action > .ajax-progress-throbber {
+[dir="rtl"].dropbutton-wrapper .dropbutton .dropbutton-action > .ajax-progress-throbber {
   right: auto;
   left: -0.3125rem;
 }

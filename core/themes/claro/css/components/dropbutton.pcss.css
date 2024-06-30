@@ -46,7 +46,7 @@
 .dropbutton-widget {
   position: relative;
   flex: 1 1 auto;
-  .js .dropbutton-wrapper.open & {
+  .dropbutton-wrapper.open & {
     z-index: var(--dropbutton-widget-z-index);
   }
 }

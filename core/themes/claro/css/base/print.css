@@ -63,14 +63,14 @@
   .dropbutton-multiple .dropbutton .secondary-action {
     display: block;
   }
-  .js .dropbutton-widget,
-  .js td .dropbutton-widget /* Splitbuttons */ {
+  .dropbutton-widget,
+  td .dropbutton-widget /* Splitbuttons */ {
     position: relative;
   }
-  .js .dropbutton .dropbutton-toggle {
+  .dropbutton .dropbutton-toggle {
     display: none;
   }
-  .js .dropbutton-multiple .dropbutton-widget {
+  .dropbutton-multiple .dropbutton-widget {
     border-radius: 0.25rem;
     background: none;
   }

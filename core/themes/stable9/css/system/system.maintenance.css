@@ -33,10 +33,10 @@
   display: none;
   clear: both;
 }
-.js #edit-submit-connection {
+#edit-submit-connection {
   display: none;
 }
-.js #edit-submit-process {
+#edit-submit-process {
   display: block;
 }
 
