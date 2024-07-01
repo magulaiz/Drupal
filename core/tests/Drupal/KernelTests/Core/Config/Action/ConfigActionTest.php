@@ -506,8 +506,9 @@ class ConfigActionTest extends KernelTestBase {
     $default_theme_block['id'] = 'default_theme_block';
     try {
       $manager->applyAction('placeBlock', 'block.block.default_theme_block', $default_theme_block);
+      // ID will be automatically updated based on the default theme name.
       $placed_blocks = \Drupal::entityTypeManager()->getStorage('block')->loadByProperties([
-        'id' => 'default_theme_block',
+        'id' => 'olivero_theme_block',
       ]);
       $this->assertCount(1, $placed_blocks, 'There is 1 matching block entity');
       $found_block = array_pop($placed_blocks);
