@@ -96,9 +96,9 @@ class LinkItemTest extends FieldKernelTestBase {
     // Test the toLink method.
     /** @var \Drupal\Core\Link $link */
     $link = $entity->field_test[0]->toLink();
-    $this->assertInstanceOf(Link::class, $link, 'Link implements interface.');
-    $this->assertEquals($url, $link->getUrl()->toString(), 'Link has expected url.');
-    $this->assertEquals($title, $link->getText(), 'Link has expected title.');
+    $this->assertInstanceOf(Link::class, $link);
+    $this->assertEquals($url, $link->getUrl()->toString());
+    $this->assertEquals($title, $link->getText());
 
     // Verify that the field value is changed.
     $id = $entity->id();

@@ -14,7 +14,6 @@ use Drupal\Core\TypedData\MapDataDefinition;
 use Drupal\Core\Link;
 use Drupal\Core\Url;
 use Drupal\link\LinkItemInterface;
-use OpenTelemetry\SDK\Trace\LinkInterface;
 
 /**
  * Plugin implementation of the 'link' field type.
