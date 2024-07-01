@@ -127,7 +127,7 @@ class StaticMenuLinkOverrides implements StaticMenuLinkOverridesInterface {
     // Only allow to override a specific subset of the keys.
     $expected = [
       'menu_name' => '',
-      'parent' => '',
+      'parent' => NULL,
       'weight' => 0,
       'expanded' => FALSE,
       'enabled' => FALSE,
@@ -142,7 +142,7 @@ class StaticMenuLinkOverrides implements StaticMenuLinkOverridesInterface {
       // Map `''` to `NULL`. The inverse operation is handled by the menu link manager.
       // @see core/config/schema/core.menu.schema.yml
       // @see \Drupal\Core\Menu\MenuLinkManager::processDefinition()
-      $definition['parent'] = empty($definition['parent']) ? NULL : (string) $definition['parent'];
+      $definition['parent'] = $definition['parent'] === '' ? NULL : (string) $definition['parent'];
       $definition['weight'] = (int) $definition['weight'];
       $definition['expanded'] = (bool) $definition['expanded'];
       $definition['enabled'] = (bool) $definition['enabled'];

@@ -29,16 +29,22 @@ class MenuParentUpdate implements EventSubscriberInterface {
     $saved_config = $event->getConfig();
     if ($saved_config->getName() === 'core.menu.static_menu_link_overrides') {
       $all_overrides = $saved_config->get('definitions') ?: [];
+      $changed = FALSE;
       foreach ($all_overrides as $definition_key => $definition_value) {
         if ($definition_value['parent'] === '') {
-          $saved_config->set('definitions.' . $definition_key . '.parent', NULL)->save();
-          if (!str_contains($this->requestStack->getMainRequest()->getBaseUrl(), 'update.php')) {
-            @trigger_error("Setting empty 'parent' key is deprecated in drupal:11.1.0 and will not be allowed in drupal:12.0.0. See https://www.drupal.org/project/drupal/issues/3441434", E_USER_DEPRECATED);
-          }
+          $saved_config->set('definitions.' . $definition_key . '.parent', NULL);
+          $changed = TRUE;
+        }
+      }
+      if ($changed) {
+        $saved_config->save();
+        if (!str_contains($this->requestStack->getMainRequest()->getBaseUrl(), 'update.php')) {
+          @trigger_error("Setting empty 'parent' key is deprecated in drupal:11.1.0 and will not be allowed in drupal:12.0.0. See https://www.drupal.org/project/drupal/issues/3441434", E_USER_DEPRECATED);
         }
       }
     }
   }
+
 
   /**
    * {@inheritdoc}
