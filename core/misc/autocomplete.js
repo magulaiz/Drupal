@@ -222,8 +222,8 @@
           $autocomplete
             .autocomplete(autocomplete.options)
             .get()
-            .forEach((element) => {
-              $(element).data('ui-autocomplete')._renderItem =
+            .forEach((autocompletionElement) => {
+              $(autocompletionElement).data('ui-autocomplete')._renderItem =
                 autocomplete.options.renderItem;
             });
 

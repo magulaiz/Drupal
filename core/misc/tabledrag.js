@@ -438,22 +438,22 @@
     $tables
       .find('.tabledrag-hide')
       .get()
-      .forEach((element) => {
-        element.style.display = 'none';
+      .forEach(({ style }) => {
+        style.display = '';
       });
     // Show TableDrag handles.
     $tables
       .find('.tabledrag-handle')
       .get()
-      .forEach((element) => {
-        element.style.display = '';
+      .forEach(({ style }) => {
+        style.display = '';
       });
     // Reduce the colspan of any effected multi-span columns.
     $tables
       .find('.tabledrag-has-colspan')
       .get()
-      .forEach((element) => {
-        element.colSpan -= 1;
+      .forEach(({ colSpan }) => {
+        colSpan -= 1;
       });
   };
 
@@ -468,22 +468,22 @@
     $tables
       .find('.tabledrag-hide')
       .get()
-      .forEach((element) => {
-        element.style.display = '';
+      .forEach(({ style }) => {
+        style.display = '';
       });
     // Hide TableDrag handles.
     $tables
       .find('.tabledrag-handle')
       .get()
-      .forEach((element) => {
-        element.style.display = 'none';
+      .forEach(({ style }) => {
+        style.display = '';
       });
     // Increase the colspan for any columns where it was previously reduced.
     $tables
       .find('.tabledrag-has-colspan')
       .get()
-      .forEach((element) => {
-        element.colSpan += 1;
+      .forEach(({ colSpan }) => {
+        colSpan += 1;
       });
   };
 
