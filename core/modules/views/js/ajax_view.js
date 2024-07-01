@@ -97,7 +97,7 @@
 
     // If there are multiple views this might've ended up showing up multiple
     // times.
-    if (ajaxPath.constructor.toString().indexOf('Array') !== -1) {
+    if (ajaxPath.constructor.toString().includes('Array')) {
       ajaxPath = ajaxPath[0];
     }
 
@@ -135,7 +135,7 @@
       )}-${settings.view_display_id.replace(/_/g, '-')}`,
     );
     once('exposed-form', this.$exposed_form).forEach(
-      $.proxy(this.attachExposedFormAjax, this),
+      this.attachExposedFormAjax.bind(this),
     );
 
     // Add the ajax to pagers.
@@ -143,7 +143,7 @@
       'ul.js-pager__items > li > a, th.views-field a, .attachment .views-summary a',
     );
     once('ajax-pager', this.$pager_links).forEach((linkElement) => {
-      $.proxy(this.attachPagerLinkAjax(linkElement), this);
+      this.attachPagerLinkAjax.bind(this, linkElement);
     });
 
     // Add a trigger to update this view specifically. In order to trigger a
@@ -215,24 +215,5 @@
     // Remove unwanted parameter.
     delete selfSettings.selector;
     this.pagerAjax = Drupal.ajax(selfSettings);
-  };
-
-  /**
-   * Views scroll to top ajax command.
-   *
-   * @param {Drupal.Ajax} [ajax]
-   *   A {@link Drupal.ajax} object.
-   * @param {object} response
-   *   Ajax response.
-   * @param {string} response.selector
-   *   Selector to use.
-   *
-   * @deprecated in drupal:10.1.0 and is removed from drupal:11.0.0.
-   *   Use Drupal.AjaxCommands.prototype.scrollTop().
-   *
-   * @see https://www.drupal.org/node/3344141
-   */
-  Drupal.AjaxCommands.prototype.viewsScrollTop = function (ajax, response) {
-    Drupal.AjaxCommands.prototype.scrollTop(ajax, response);
   };
 })(jQuery, Drupal, drupalSettings);

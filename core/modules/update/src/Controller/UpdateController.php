@@ -7,7 +7,6 @@ use Drupal\Core\Controller\ControllerBase;
 use Drupal\Core\Render\RendererInterface;
 use Drupal\update\UpdateFetcherInterface;
 use Drupal\update\UpdateManagerInterface;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Controller routines for update routes.
@@ -42,16 +41,6 @@ class UpdateController extends ControllerBase {
   }
 
   /**
-   * {@inheritdoc}
-   */
-  public static function create(ContainerInterface $container) {
-    return new static(
-      $container->get('update.manager'),
-      $container->get('renderer')
-    );
-  }
-
-  /**
    * Returns a page about the update status of projects.
    *
    * @return array
@@ -76,7 +65,7 @@ class UpdateController extends ControllerBase {
       }
       if ($fetch_failed) {
         $message = ['#theme' => 'update_fetch_error_message'];
-        $this->messenger()->addError($this->renderer->renderPlain($message));
+        $this->messenger()->addError($this->renderer->renderInIsolation($message));
       }
     }
     return $build;
