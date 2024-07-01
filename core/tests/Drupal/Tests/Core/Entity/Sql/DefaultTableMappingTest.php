@@ -188,9 +188,7 @@ class DefaultTableMappingTest extends UnitTestCase {
     $this->assertSame($expected, $table_mapping->getFieldNames('foo'));
     $this->assertSame([], $table_mapping->getFieldNames('bar'));
 
-    $return = $table_mapping
-      ->removeFieldNames('bar', ['id', 'name', 'type'])
-      ->addFieldNames('bar', ['description', 'owner']);
+    $return = $table_mapping->addFieldNames('bar', ['description', 'owner']);
     $this->assertSame($table_mapping, $return);
     $expected = ['description', 'owner'];
     $this->assertSame($expected, $table_mapping->getFieldNames('bar'));
