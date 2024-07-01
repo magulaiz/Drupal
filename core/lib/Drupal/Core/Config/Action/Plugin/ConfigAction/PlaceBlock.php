@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\Core\Config\Action\Plugin\ConfigAction;
 
+use Drupal\block\BlockInterface;
 use Drupal\block\Entity\Block;
 use Drupal\Core\Config\Action\Attribute\ConfigAction;
 use Drupal\Core\Config\Action\ConfigActionException;
@@ -142,38 +143,7 @@ final class PlaceBlock implements ConfigActionPluginInterface, ContainerFactoryP
     // Check if the block already exists.
     $block = $this->configManager->loadConfigEntityByName($configName);
     if ($block) {
-      $block_changed = FALSE;
-      if ($block->getTheme() !== $value['theme']) {
-        throw new ConfigActionException(sprintf('Unable to place block %s because a block with this name has been placed in a different theme', $configName));
-      }
-      if ($block->getPluginId() !== $value['plugin']) {
-        throw new ConfigActionException(sprintf('Unable to place block %s because a block with this name has been placed but uses a different plugin', $configName));
-      }
-      // Override the block's region.
-      if ($block->getRegion() !== $value['region']) {
-        $block->setRegion($value['region']);
-        $block_changed = TRUE;
-      }
-      // Override the block's visibility.
-      if (isset($value['visibility']) && is_array($value['visibility'])) {
-        foreach ($value['visibility'] as $config_id => $visibility) {
-          $block->setVisibilityConfig($config_id, $visibility);
-        }
-        $block_changed = TRUE;
-      }
-      // Override the block's settings with anything from the action values.
-      $value_settings = $value['settings'] ?? [];
-      if ($value_settings) {
-        $block_settings = $block->get('settings');
-        foreach ($value_settings as $key => $setting) {
-          $block_settings[$key] = $setting;
-        }
-        $block->set('settings', $block_settings);
-        $block_changed = TRUE;
-      }
-      if ($block_changed) {
-        $block->save();
-      }
+      $this->updateExistingBlock($block, $value);
       return;
     }
 
@@ -200,25 +170,7 @@ final class PlaceBlock implements ConfigActionPluginInterface, ContainerFactoryP
 
     // Replace weight keywords with appropriate values.
     if (in_array($value['weight'], ['first', 'last'])) {
-      $region_blocks = $this->entityTypeManager->getStorage('block')->loadByProperties([
-        'theme' => $value['theme'],
-        'region' => $value['region'],
-      ]);
-      if ($region_blocks) {
-        uasort($region_blocks, 'Drupal\block\Entity\Block::sort');
-        if ($value['weight'] === 'first') {
-          $ref_block = array_shift($region_blocks);
-          $value['weight'] = $ref_block->getWeight() - 1;
-        }
-        else {
-          $ref_block = array_pop($region_blocks);
-          $value['weight'] = $ref_block->getWeight() + 1;
-        }
-      }
-      else {
-        // No existing blocks, so default to zero.
-        $value['weight'] = 0;
-      }
+      $this->setWeight($value);
     }
 
     // If no id in the settings, populate with the plugin value.
@@ -229,6 +181,77 @@ final class PlaceBlock implements ConfigActionPluginInterface, ContainerFactoryP
     // Create and save the block entity.
     $block = Block::create($value);
     $block->save();
+  }
+
+  /**
+   * Programmatically determine the weight for the block.
+   *
+   * @param array $value
+   *   The configuration passed to the config action.
+   */
+  protected function setWeight(&$value) {
+    $region_blocks = $this->entityTypeManager->getStorage('block')->loadByProperties([
+      'theme' => $value['theme'],
+      'region' => $value['region'],
+    ]);
+    if ($region_blocks) {
+      uasort($region_blocks, 'Drupal\block\Entity\Block::sort');
+      if ($value['weight'] === 'first') {
+        $ref_block = array_shift($region_blocks);
+        $value['weight'] = $ref_block->getWeight() - 1;
+      }
+      else {
+        $ref_block = array_pop($region_blocks);
+        $value['weight'] = $ref_block->getWeight() + 1;
+      }
+    }
+    else {
+      // No existing blocks, so default to zero.
+      $value['weight'] = 0;
+    }
+  }
+
+  /**
+   * Updates an existing block based on the provided values.
+   *
+   * @param \Drupal\block\BlockInterfac $block
+   *   The block to update.
+   * @param array $value
+   *   The configuration passed to the config action.
+   */
+  protected function updateExistingBlock(BlockInterface $block, $value) {
+    $block_changed = FALSE;
+    if ($block->getTheme() !== $value['theme']) {
+      throw new ConfigActionException(sprintf('Unable to place block %s because a block with this name has been placed in a different theme', $configName));
+    }
+    if ($block->getPluginId() !== $value['plugin']) {
+      throw new ConfigActionException(sprintf('Unable to place block %s because a block with this name has been placed but uses a different plugin', $configName));
+    }
+    // Override the block's region.
+    if ($block->getRegion() !== $value['region']) {
+      $block->setRegion($value['region']);
+      $block_changed = TRUE;
+    }
+    // Override the block's visibility.
+    if (isset($value['visibility']) && is_array($value['visibility'])) {
+      foreach ($value['visibility'] as $config_id => $visibility) {
+        $block->setVisibilityConfig($config_id, $visibility);
+      }
+      $block_changed = TRUE;
+    }
+    // Override the block's settings with anything from the action values.
+    $value_settings = $value['settings'] ?? [];
+    if ($value_settings) {
+      $block_settings = $block->get('settings');
+      foreach ($value_settings as $key => $setting) {
+        $block_settings[$key] = $setting;
+      }
+      $block->set('settings', $block_settings);
+      $block_changed = TRUE;
+    }
+    if ($block_changed) {
+      $block->save();
+    }
   }
 
 }
