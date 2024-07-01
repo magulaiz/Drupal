@@ -45,7 +45,6 @@ class MenuParentUpdate implements EventSubscriberInterface {
     }
   }
 
-
   /**
    * {@inheritdoc}
    */
