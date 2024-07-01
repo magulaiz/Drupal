@@ -1391,7 +1391,7 @@
       }
 
       // Attach behaviors to all element nodes.
-      $newContent.get().forEach((index, element) => {
+      $newContent.get().forEach((element) => {
         if (
           element.nodeType === Node.ELEMENT_NODE &&
           // Attach all JavaScript behaviors to the new content, if it was
