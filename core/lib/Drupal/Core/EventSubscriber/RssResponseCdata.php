@@ -38,7 +38,7 @@ class RssResponseCdata implements EventSubscriberInterface {
    *   The current request.
    *
    * @return string|false
-   *   The updated RSS XML.
+   *   The updated RSS XML or FALSE if there is an error saving the xml.
    */
   protected function wrapDescriptionCdata(string $rss_markup, Request $request): string|false {
     $rss_dom = new \DOMDocument();
