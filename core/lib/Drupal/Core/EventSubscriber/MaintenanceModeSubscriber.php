@@ -104,7 +104,7 @@ class MaintenanceModeSubscriber implements EventSubscriberInterface {
    * @param \Psr\Log\LoggerInterface $logger
    *   The logger interface.
    */
-  public function __construct(MaintenanceModeInterface $maintenance_mode, ConfigFactoryInterface $config_factory, TranslationInterface $translation, UrlGeneratorInterface $url_generator, AccountInterface $account, BareHtmlPageRendererInterface $bare_html_page_renderer, MessengerInterface $messenger, EventDispatcherInterface $event_dispatcher, LoggerChannelInterface $logger) {
+  public function __construct(MaintenanceModeInterface $maintenance_mode, ConfigFactoryInterface $config_factory, TranslationInterface $translation, UrlGeneratorInterface $url_generator, AccountInterface $account, BareHtmlPageRendererInterface $bare_html_page_renderer, MessengerInterface $messenger, EventDispatcherInterface $event_dispatcher, LoggerInterface $logger) {
     $this->maintenanceMode = $maintenance_mode;
     $this->config = $config_factory;
     $this->stringTranslation = $translation;
