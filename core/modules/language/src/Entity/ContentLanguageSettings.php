@@ -7,6 +7,7 @@ use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Language\LanguageInterface;
 use Drupal\language\ContentLanguageSettingsException;
 use Drupal\language\ContentLanguageSettingsInterface;
+use Symfony\Component\Validator\Context\ExecutionContextInterface;
 
 /**
  * Defines the ContentLanguageSettings entity.
@@ -238,4 +239,27 @@ class ContentLanguageSettings extends ConfigEntityBase implements ContentLanguag
     ]);
   }
 
+  /**
+   * Validates id of language.content_settings.*.* schema.
+   *
+   * To be used with the `Callback` constraint.
+   *
+   * @param string $value
+   *   The string to validate.
+   * @param \Symfony\Component\Validator\Context\ExecutionContextInterface $context
+   *   The validation execution context.
+   *
+   * @see \Symfony\Component\Validator\Constraints\CallbackValidator
+   * @see core/modules/language/config/schema/language.schema.yml
+   */
+  public static function validateId(string $value, ExecutionContextInterface $context): void {
+    $config_being_validated = $context->getRoot();
+    $target_entity_type_id = $config_being_validated->get('target_entity_type_id')->getValue();
+    $target_bundle = $config_being_validated->get('target_bundle')->getValue();
+    if ($target_entity_type_id . '.' . $target_bundle !== $value) {
+      $context->addViolation('The id %value must be a combination of $target_entity_type_id.$target_bundle.', [
+        '%value' => $value,
+      ]);
+    }
+  }
 }
