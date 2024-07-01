@@ -40,7 +40,7 @@ class RssResponseCdata implements EventSubscriberInterface {
    * @return string|false
    *   The updated RSS XML.
    */
-  protected function wrapDescriptionCdata($rss_markup, Request $request): string|false {
+  protected function wrapDescriptionCdata(string $rss_markup, Request $request): string|false {
     $rss_dom = new \DOMDocument();
 
     // Load the RSS, if there are parsing errors, abort and return the unchanged
