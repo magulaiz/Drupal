@@ -83,9 +83,6 @@ class ViewsHandlerManager extends DefaultPluginManager implements FallbackPlugin
    *   An instance of a handler object. May be a broken handler instance.
    */
   public function getHandler($item, $override = NULL) {
-    if (!is_null($override)) {
-      throw new \Exception();
-    }
     $table = $item['table'];
     $field = $item['field'];
     // Get the plugin manager for this type.
