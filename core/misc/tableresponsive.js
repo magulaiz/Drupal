@@ -138,7 +138,7 @@
         // Reveal hidden columns.
         if ($hiddenHeaders.length > 0) {
           $hiddenHeaders.get().forEach((element) => {
-            const $header = $(this);
+            const $header = $(element);
             const position = $header.prevAll('th').length;
             self.$table
               .find('tbody tr')
