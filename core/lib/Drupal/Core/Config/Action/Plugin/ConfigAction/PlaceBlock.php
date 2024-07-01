@@ -72,6 +72,11 @@ final class PlaceBlock implements ConfigActionPluginInterface, ContainerFactoryP
       throw new ConfigActionException(sprintf('Block %s cannot be created because provided configuration is not an array', $configName));
     }
 
+    // A plugin value is required.
+    if (empty($value['plugin'])) {
+      throw new ConfigActionException(sprintf('Block %s requires a plugin value', $configName));
+    }
+
     $entity_type_id = $this->configManager->getEntityTypeIdByName($configName);
     if ($entity_type_id !== 'block') {
       throw new ConfigActionException(sprintf("Provided config entity %s is not a block", $configName));
@@ -145,11 +150,6 @@ final class PlaceBlock implements ConfigActionPluginInterface, ContainerFactoryP
     if ($block) {
       $this->updateExistingBlock($configName, $block, $value);
       return;
-    }
-
-    // A plugin value is required.
-    if (empty($value['plugin'])) {
-      throw new ConfigActionException(sprintf('Block %s requires a plugin value', $configName));
     }
 
     // Clean up a potential value not meant for import.

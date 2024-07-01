@@ -429,6 +429,24 @@ class ConfigActionTest extends KernelTestBase {
   /**
    * @see \Drupal\Core\Config\Action\Plugin\ConfigAction\PlaceBlock
    */
+  public function testPlaceMissingPlugin(): void {
+    /** @var \Drupal\Core\Config\Action\ConfigActionManager $manager */
+    $manager = $this->container->get('plugin.manager.config_action');
+    // Block configuration with no plugin specified should trigger an error.
+    $no_plugin = $this->validBlock;
+    unset($no_plugin['plugin']);
+    try {
+      $manager->applyAction('placeBlock', 'block.block.no_plugin', $no_plugin);
+      $this->fail('Expected exception not thrown');
+    }
+    catch (ConfigActionException $e) {
+      $this->assertSame('Block block.block.no_plugin requires a plugin value', $e->getMessage());
+    }
+  }
+
+  /**
+   * @see \Drupal\Core\Config\Action\Plugin\ConfigAction\PlaceBlock
+   */
   public function testPlaceBlockThemes(): void {
     /** @var \Drupal\Core\Config\Action\ConfigActionManager $manager */
     $manager = $this->container->get('plugin.manager.config_action');
@@ -500,7 +518,7 @@ class ConfigActionTest extends KernelTestBase {
     }
 
     // Placing the same block again with a different theme should fail.
-    $different_theme = $this->validBlock;
+    $different_theme = $default_theme_block;
     $different_theme['theme'] = 'claro';
     try {
       $manager->applyAction('placeBlock', 'block.block.default_theme_block', $different_theme);
@@ -530,32 +548,6 @@ class ConfigActionTest extends KernelTestBase {
     catch (ConfigActionException $e) {
       $this->fail('Unexpected exception while placing first and last blocks');
     }
-  }
-
-  /**
-   * @see \Drupal\Core\Config\Action\Plugin\ConfigAction\PlaceBlock
-   */
-  public function testPlaceMissingPlugin(): void {
-    /** @var \Drupal\Core\Config\Action\ConfigActionManager $manager */
-    $manager = $this->container->get('plugin.manager.config_action');
-    // Block configuration with no plugin specified should trigger an error.
-    $no_plugin = $this->validBlock;
-    unset($no_plugin['plugin']);
-    try {
-      $manager->applyAction('placeBlock', 'block.block.no_plugin', $no_plugin);
-      $this->fail('Expected exception not thrown');
-    }
-    catch (ConfigActionException $e) {
-      $this->assertSame('Block block.block.no_plugin requires a plugin value', $e->getMessage());
-    }
-  }
-
-  /**
-   * @see \Drupal\Core\Config\Action\Plugin\ConfigAction\PlaceBlock
-   */
-  public function testPlaceBlocks(): void {
-    /** @var \Drupal\Core\Config\Action\ConfigActionManager $manager */
-    $manager = $this->container->get('plugin.manager.config_action');
 
     // Validate that the block can be placed.
     try {
