@@ -29,7 +29,7 @@ class ConfigActionTest extends KernelTestBase {
   /**
    * Reference valid configuration for placing a block.
    */
-  protected static $validBlock = [
+  protected $validBlock = [
     'theme' => 'olivero',
     'region' => 'content',
     'weight' => 0,
