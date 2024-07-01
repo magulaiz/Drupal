@@ -291,7 +291,8 @@ abstract class ConfigFormBase extends FormBase {
     }
     $transformed_message = implode("\n", $transformed_message_parts);
     // We use \Drupal\Component\Render\FormattableMarkup directly here,
-    // rather than use t() as we don't want t() to cause further errors.
+    // rather than use t() to ensure proper handling of content and
+    // prevent unintended translation.
     return new FormattableMarkup('%transformed_message', ['%transformed_message' => $transformed_message]);
   }
 
