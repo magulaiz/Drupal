@@ -240,9 +240,7 @@ class ConfigActionManager extends DefaultPluginManager {
   public function alterDefinitions(&$definitions): void {
     // Adds backwards compatibility for plugins that have been renamed.
     foreach (self::$deprecatedPluginIds as $legacy => $new_plugin_id) {
-      if (!isset($definitions[$legacy])) {
-        $definitions[$legacy] = $definitions[$new_plugin_id['replacement']];
-      }
+      $definitions[$legacy] = $definitions[$new_plugin_id['replacement']];
     }
     parent::alterDefinitions($definitions);
   }
