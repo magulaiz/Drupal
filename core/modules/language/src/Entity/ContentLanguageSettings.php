@@ -262,4 +262,5 @@ class ContentLanguageSettings extends ConfigEntityBase implements ContentLanguag
       ]);
     }
   }
+
 }
