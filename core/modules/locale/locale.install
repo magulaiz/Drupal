@@ -319,7 +319,7 @@ function locale_requirements($phase) {
 /**
  * Add an index on locales_location on type and name.
  */
-function locale_update_11000() {
+function locale_update_10101() {
   $spec = locale_schema();
   \Drupal::database()->schema()->addIndex('locales_location', 'type_name', ['type', 'name'], $spec['locales_location']);
 }

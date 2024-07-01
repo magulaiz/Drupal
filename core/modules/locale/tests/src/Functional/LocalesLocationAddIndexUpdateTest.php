@@ -24,7 +24,9 @@ class LocalesLocationAddIndexUpdateTest extends UpdatePathTestBase {
   }
 
   /**
-   * Tests locale_update_11000().
+   * Tests locale_update_10101().
+   *
+   * @see locale_update_10101
    */
   public function testIndex(): void {
     $this->assertFalse(\Drupal::database()
