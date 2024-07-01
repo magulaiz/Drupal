@@ -879,7 +879,6 @@ abstract class DisplayPluginBase extends PluginBase implements DisplayPluginInte
           if (empty($this->view->query)) {
             $this->view->initQuery();
           }
-          $aggregate = $this->view->query->getAggregationInfo();
         }
 
         if (!empty($types[$type]['type'])) {
