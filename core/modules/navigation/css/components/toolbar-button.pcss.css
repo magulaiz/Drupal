@@ -38,7 +38,7 @@
   gap: calc(0.5 * var(--admin-toolbar-rem));
 
   &:has(+ .toolbar-popover__wrapper .is-active) {
-    color: var(--admin-toolbar-color-gray-950);
+    color: var(--admin-toolbar-color-blue-670);
     background-color: var(--admin-toolbar-color-gray-050);
   }
 

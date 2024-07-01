@@ -98,6 +98,9 @@
   inline-size: var(--admin-toolbar-space-8);
   block-size: 100%;
 }
+.toolbar-menu__link:hover::after {
+  content: none;
+}
 .toolbar-menu__link[aria-expanded]::after {
   flex-shrink: 0;
   margin-inline-start: auto;
