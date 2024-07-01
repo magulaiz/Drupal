@@ -439,7 +439,7 @@
       .find('.tabledrag-hide')
       .get()
       .forEach(({ style }) => {
-        style.display = '';
+        style.display = 'none';
       });
     // Show TableDrag handles.
     $tables
@@ -476,7 +476,7 @@
       .find('.tabledrag-handle')
       .get()
       .forEach(({ style }) => {
-        style.display = '';
+        style.display = 'none';
       });
     // Increase the colspan for any columns where it was previously reduced.
     $tables
