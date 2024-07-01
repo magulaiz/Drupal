@@ -11,8 +11,10 @@ use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\Core\TypedData\DataDefinition;
 use Drupal\Core\TypedData\MapDataDefinition;
+use Drupal\Core\Link;
 use Drupal\Core\Url;
 use Drupal\link\LinkItemInterface;
+use OpenTelemetry\SDK\Trace\LinkInterface;
 
 /**
  * Plugin implementation of the 'link' field type.
@@ -171,6 +173,13 @@ class LinkItem extends FieldItemBase implements LinkItemInterface {
    */
   public static function mainPropertyName() {
     return 'uri';
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function toLink(): Link {
+    return Link::fromTextAndUrl($this->get('title')->getValue(), $this->getUrl());
   }
 
   /**
