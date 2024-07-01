@@ -143,7 +143,7 @@ final class PlaceBlock implements ConfigActionPluginInterface, ContainerFactoryP
     // Check if the block already exists.
     $block = $this->configManager->loadConfigEntityByName($configName);
     if ($block) {
-      $this->updateExistingBlock($block, $value);
+      $this->updateExistingBlock($configName, $block, $value);
       return;
     }
 
@@ -214,12 +214,14 @@ final class PlaceBlock implements ConfigActionPluginInterface, ContainerFactoryP
   /**
    * Updates an existing block based on the provided values.
    *
-   * @param \Drupal\block\BlockInterfac $block
+   * @param string $configName
+   *   The name of the block configuration entity.
+   * @param \Drupal\block\BlockInterface $block
    *   The block to update.
    * @param array $value
    *   The configuration passed to the config action.
    */
-  protected function updateExistingBlock(BlockInterface $block, $value) {
+  protected function updateExistingBlock(string $configName, BlockInterface $block, $value) {
     $block_changed = FALSE;
     if ($block->getTheme() !== $value['theme']) {
       throw new ConfigActionException(sprintf('Unable to place block %s because a block with this name has been placed in a different theme', $configName));
