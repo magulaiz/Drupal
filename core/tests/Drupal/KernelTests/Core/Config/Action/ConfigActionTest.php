@@ -507,7 +507,7 @@ class ConfigActionTest extends KernelTestBase {
     try {
       $manager->applyAction('placeBlock', 'block.block.default_theme_block', $default_theme_block);
       $placed_blocks = \Drupal::entityTypeManager()->getStorage('block')->loadByProperties([
-        'id' => 'olivero_theme_block',
+        'id' => 'default_theme_block',
       ]);
       $this->assertCount(1, $placed_blocks, 'There is 1 matching block entity');
       $found_block = array_pop($placed_blocks);
@@ -517,16 +517,18 @@ class ConfigActionTest extends KernelTestBase {
       $this->fail('Unexpected exception while placing block: ' . $e->getMessage());
     }
 
-    // Placing the same block again with a different theme should fail.
-    $different_theme = $default_theme_block;
-    $different_theme['theme'] = 'claro';
+    // Validate that the block can be placed.
     try {
-      $manager->applyAction('placeBlock', 'block.block.default_theme_block', $different_theme);
-      $this->fail('Expected theme exception not thrown');
+      $manager->applyAction('placeBlock', 'block.block.config_action_test', $this->validBlock);
+      $placed_blocks = \Drupal::entityTypeManager()->getStorage('block')->loadByProperties([
+        'id' => 'config_action_test',
+      ]);
+      $this->assertCount(1, $placed_blocks, 'There is 1 matching block entity');
     }
     catch (ConfigActionException $e) {
-      $this->assertSame('Unable to place block block.block.default_theme_block because a block with this name has been placed in a different theme', $e->getMessage());
+      $this->fail('Unexpected exception while placing block');
     }
+
     // Validate that placing blocks first and last works as expected.
     try {
       $first_block = $last_block = $this->validBlock;
@@ -547,18 +549,6 @@ class ConfigActionTest extends KernelTestBase {
     }
     catch (ConfigActionException $e) {
       $this->fail('Unexpected exception while placing first and last blocks');
-    }
-
-    // Validate that the block can be placed.
-    try {
-      $manager->applyAction('placeBlock', 'block.block.config_action_test', $this->validBlock);
-      $placed_blocks = \Drupal::entityTypeManager()->getStorage('block')->loadByProperties([
-        'id' => 'config_action_test',
-      ]);
-      $this->assertCount(1, $placed_blocks, 'There is 1 matching block entity');
-    }
-    catch (ConfigActionException $e) {
-      $this->fail('Unexpected exception while placing block');
     }
 
     // Validate that the block can be placed without an id, with a valid name.
@@ -591,6 +581,17 @@ class ConfigActionTest extends KernelTestBase {
       $this->fail('Unexpected exception while placing block again');
     }
 
+    // Placing the same block again with a different theme should fail.
+    $different_theme = $this->validBlock;
+    $different_theme['theme'] = 'claro';
+    try {
+      $manager->applyAction('placeBlock', 'block.block.config_action_test', $different_theme);
+      $this->fail('Expected theme exception not thrown');
+    }
+    catch (ConfigActionException $e) {
+      $this->assertSame('Unable to place block block.block.config_action_test because a block with this name has been placed in a different theme', $e->getMessage());
+    }
+    
     // Placing the same block again with a different plugin should fail.
     $different_plugin = $this->validBlock;
     $different_plugin['plugin'] = 'some_other_plugin';
