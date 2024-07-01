@@ -370,7 +370,7 @@ class Block extends ConfigEntityBase implements BlockInterface, EntityWithPlugin
       }
     }
     else {
-      $context->addViolation('Theme not defined in configuration.');
+      $context->addViolation('This block does not say which theme it appears in.');
     }
   }
 

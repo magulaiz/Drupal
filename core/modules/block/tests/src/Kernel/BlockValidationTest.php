@@ -116,7 +116,7 @@ class BlockValidationTest extends ConfigEntityValidationTestBase {
   }
 
   /**
-   * Tests validating an editor with a non-existent and an uninstalled theme.
+   * Tests validating a block with a non-existent theme.
    */
   public function testThemeValidation(): void {
     $this->entity->set('theme', 'non_existent');
