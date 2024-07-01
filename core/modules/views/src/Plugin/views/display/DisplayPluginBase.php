@@ -892,11 +892,7 @@ abstract class DisplayPluginBase extends PluginBase implements DisplayPluginInte
         else {
           $handler_type = $type;
         }
-        if ($override) {
-          throw new \Exception($override);
-        }
-
-        if ($handler = Views::handlerManager($handler_type)->getHandler($info, $override)) {
+        if ($handler = Views::handlerManager($handler_type)->getHandler($info)) {
           // Special override for area types so they know where they come from.
           if ($handler instanceof AreaPluginBase) {
             $handler->areaType = $type;
