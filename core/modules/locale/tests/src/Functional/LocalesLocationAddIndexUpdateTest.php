@@ -8,6 +8,8 @@ use Drupal\FunctionalTests\Update\UpdatePathTestBase;
 
 /**
  * Tests Locale update functions.
+ *
+ * @group locale
  */
 class LocalesLocationAddIndexUpdateTest extends UpdatePathTestBase {
 
