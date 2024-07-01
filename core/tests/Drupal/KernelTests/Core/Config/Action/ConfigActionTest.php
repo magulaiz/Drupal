@@ -591,7 +591,7 @@ class ConfigActionTest extends KernelTestBase {
     catch (ConfigActionException $e) {
       $this->assertSame('Unable to place block block.block.config_action_test because a block with this name has been placed in a different theme', $e->getMessage());
     }
-    
+
     // Placing the same block again with a different plugin should fail.
     $different_plugin = $this->validBlock;
     $different_plugin['plugin'] = 'some_other_plugin';
