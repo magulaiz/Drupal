@@ -23,7 +23,7 @@ final class EntityCreateDeriver extends DeriverBase {
     $base_plugin_definition['entity_types'] = ['*'];
 
     $this->derivatives['createIfNotExists'] = $base_plugin_definition + ['constructor_args' => ['exists' => Exists::ReturnEarlyIfExists]];
-    $this->derivatives['createIfNotExists']['admin_label'] = $this->t('Create entity if not exists');
+    $this->derivatives['createIfNotExists']['admin_label'] = $this->t('Create entity if it does not exist');
 
     $this->derivatives['create'] = $base_plugin_definition + ['constructor_args' => ['exists' => Exists::ErrorIfExists]];
     $this->derivatives['create']['admin_label'] = $this->t('Entity create');

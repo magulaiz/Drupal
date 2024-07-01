@@ -224,7 +224,7 @@ YAML;
    *
    * @group legacy
    */
-  public function testRenamedConfigAction(): void {
+  public function testRenamedConfigActions(): void {
     $recipe_data = <<<YAML
 name: Renamed config action
 install:

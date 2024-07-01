@@ -56,7 +56,7 @@ class ConfigActionManager extends DefaultPluginManager {
   /**
    * Information about all deprecated plugin IDs.
    *
-   * @var array
+   * @var string[]
    */
   private static array $deprecatedPluginIds = [
     'entity_create:ensure_exists' => [
@@ -237,7 +237,7 @@ class ConfigActionManager extends DefaultPluginManager {
   /**
    * {@inheritdoc}
    */
-  public function alterDefinitions(&$definitions) {
+  public function alterDefinitions(&$definitions): void {
     // Adds backwards compatibility for plugins that have been renamed.
     // @see https://www.drupal.org/i/3455113
     foreach (self::$deprecatedPluginIds as $legacy => $new_plugin_id) {
@@ -254,7 +254,7 @@ class ConfigActionManager extends DefaultPluginManager {
   public function createInstance($plugin_id, array $configuration = []) {
     $instance = parent::createInstance($plugin_id, $configuration);
     // Trigger deprecation notices for renamed plugins.
-    if (isset(self::$deprecatedPluginIds[$plugin_id])) {
+    if (array_key_exists($plugin_id, self::$deprecatedPluginIds)) {
       // phpcs:ignore Drupal.Semantics.FunctionTriggerError
       @trigger_error(self::$deprecatedPluginIds[$plugin_id]['message'], E_USER_DEPRECATED);
     }
