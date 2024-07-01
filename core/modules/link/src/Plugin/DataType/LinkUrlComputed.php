@@ -87,4 +87,5 @@ class LinkUrlComputed extends Uri implements CacheableDependencyInterface {
     $this->getValue();
     return $this->processed->getCacheMaxAge();
   }
+
 }
