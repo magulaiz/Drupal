@@ -29,22 +29,22 @@ class ConfigActionTest extends KernelTestBase {
   /**
    * Reference valid configuration for placing a block.
    */
-  protected static $valid_block = [
-      'theme' => 'olivero',
-      'region' => 'content',
-      'weight' => 0,
-      'provider' => NULL,
-      'id' => 'config_action_test',
-      'plugin' => 'local_tasks_block',
-      'settings' => [
-        'id' => 'local_tasks_block',
-        'label' => 'Additional tabs',
-        'provider' => 'core',
-        'primary' => FALSE,
-        'secondary' => TRUE,
-      ],
-      'visibility' => [],
-    ];
+  protected static $validBlock = [
+    'theme' => 'olivero',
+    'region' => 'content',
+    'weight' => 0,
+    'provider' => NULL,
+    'id' => 'config_action_test',
+    'plugin' => 'local_tasks_block',
+    'settings' => [
+      'id' => 'local_tasks_block',
+      'label' => 'Additional tabs',
+      'provider' => 'core',
+      'primary' => FALSE,
+      'secondary' => TRUE,
+    ],
+    'visibility' => [],
+  ];
 
   /**
    * @see \Drupal\Core\Config\Action\Plugin\ConfigAction\EntityCreate
@@ -397,7 +397,7 @@ class ConfigActionTest extends KernelTestBase {
     $manager = $this->container->get('plugin.manager.config_action');
 
     // Block configuration with no theme specified should trigger an error.
-    $no_theme = $this->valid_block;
+    $no_theme = $this->validBlock;
     unset($no_theme['theme']);
     try {
       $manager->applyAction('placeBlock', 'block.block.no_theme', $no_theme);
@@ -415,7 +415,7 @@ class ConfigActionTest extends KernelTestBase {
     /** @var \Drupal\Core\Config\Action\ConfigActionManager $manager */
     $manager = $this->container->get('plugin.manager.config_action');
     // Block configuration with invalid theme specified should trigger an error.
-    $bad_theme = $this->valid_block;
+    $bad_theme = $this->validBlock;
     $bad_theme['theme'] = 'mongoose';
     try {
       $manager->applyAction('placeBlock', 'block.block.bad_theme', $bad_theme);
@@ -438,7 +438,7 @@ class ConfigActionTest extends KernelTestBase {
     $config->set('default', 'olivero')->save();
 
     // Block configuration with no region specified should trigger an error.
-    $no_region = $this->valid_block;
+    $no_region = $this->validBlock;
     unset($no_region['region']);
     try {
       $manager->applyAction('placeBlock', 'block.block.no_region', $no_region);
@@ -449,7 +449,7 @@ class ConfigActionTest extends KernelTestBase {
     }
 
     // Block configuration with invalid region specified must trigger an error.
-    $bad_region = $this->valid_block;
+    $bad_region = $this->validBlock;
     $bad_region['id'] = 'bad_region';
     $bad_region['region'] = 'platypus';
     try {
@@ -483,7 +483,7 @@ class ConfigActionTest extends KernelTestBase {
     }
 
     // Validate that the block can be placed with 'default' theme specified.
-    $default_theme_block = $this->valid_block;
+    $default_theme_block = $this->validBlock;
     $default_theme_block['theme'] = 'default';
     $default_theme_block['id'] = 'default_theme_block';
     try {
@@ -499,9 +499,8 @@ class ConfigActionTest extends KernelTestBase {
       $this->fail('Unexpected exception while placing block: ' . $e->getMessage());
     }
 
-
     // Placing the same block again with a different theme should fail.
-    $different_theme = $this->valid_block;
+    $different_theme = $this->validBlock;
     $different_theme['theme'] = 'claro';
     try {
       $manager->applyAction('placeBlock', 'block.block.default_theme_block', $different_theme);
@@ -512,7 +511,7 @@ class ConfigActionTest extends KernelTestBase {
     }
     // Validate that placing blocks first and last works as expected.
     try {
-      $first_block = $last_block = $this->valid_block;
+      $first_block = $last_block = $this->validBlock;
       $last_block['weight'] = 'last';
       $last_block['id'] = 'config_action_last';
       $manager->applyAction('placeBlock', 'block.block.config_action_last', $last_block);
@@ -540,7 +539,7 @@ class ConfigActionTest extends KernelTestBase {
     /** @var \Drupal\Core\Config\Action\ConfigActionManager $manager */
     $manager = $this->container->get('plugin.manager.config_action');
     // Block configuration with no plugin specified should trigger an error.
-    $no_plugin = $this->valid_block;
+    $no_plugin = $this->validBlock;
     unset($no_plugin['plugin']);
     try {
       $manager->applyAction('placeBlock', 'block.block.no_plugin', $no_plugin);
@@ -560,7 +559,7 @@ class ConfigActionTest extends KernelTestBase {
 
     // Validate that the block can be placed.
     try {
-      $manager->applyAction('placeBlock', 'block.block.config_action_test', $this->valid_block);
+      $manager->applyAction('placeBlock', 'block.block.config_action_test', $this->validBlock);
       $placed_blocks = \Drupal::entityTypeManager()->getStorage('block')->loadByProperties([
         'id' => 'config_action_test',
       ]);
@@ -571,7 +570,7 @@ class ConfigActionTest extends KernelTestBase {
     }
 
     // Validate that the block can be placed without an id, with a valid name.
-    $no_id = $this->valid_block;
+    $no_id = $this->validBlock;
     unset($no_id['id']);
     // First, verify that it fails without an available fallback.
     try {
@@ -594,14 +593,14 @@ class ConfigActionTest extends KernelTestBase {
 
     // Placing the same block again should not fail.
     try {
-      $manager->applyAction('placeBlock', 'block.block.config_action_test', $this->valid_block);
+      $manager->applyAction('placeBlock', 'block.block.config_action_test', $this->validBlock);
     }
     catch (ConfigActionException $e) {
       $this->fail('Unexpected exception while placing block again');
     }
 
     // Placing the same block again with a different plugin should fail.
-    $different_plugin = $this->valid_block;
+    $different_plugin = $this->validBlock;
     $different_plugin['plugin'] = 'some_other_plugin';
     try {
       $manager->applyAction('placeBlock', 'block.block.config_action_test', $different_plugin);
@@ -613,7 +612,7 @@ class ConfigActionTest extends KernelTestBase {
 
     // Placing the same block again with new visibility or settings should
     // update the block.
-    $updated_block = $this->valid_block;
+    $updated_block = $this->validBlock;
     $updated_block['visibility'] = [
       'request_path' => [
         'id' => 'request_path',
