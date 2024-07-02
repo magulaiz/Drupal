@@ -12,6 +12,7 @@ trait EntityBundleWithPluralLabelsTrait {
    *
    * @var string|null
    */
+  // phpcs:ignore Drupal.NamingConventions.ValidVariableName.LowerCamelName
   protected $label_singular;
 
   /**
@@ -19,6 +20,7 @@ trait EntityBundleWithPluralLabelsTrait {
    *
    * @var string|null
    */
+  // phpcs:ignore Drupal.NamingConventions.ValidVariableName.LowerCamelName
   protected $label_plural;
 
   /**
@@ -52,6 +54,7 @@ trait EntityBundleWithPluralLabelsTrait {
    *
    * @see \Drupal\Component\Gettext\PoItem::DELIMITER
    */
+  // phpcs:ignore Drupal.NamingConventions.ValidVariableName.LowerCamelName
   protected $label_count;
 
   /**
