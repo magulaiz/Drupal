@@ -51,7 +51,7 @@ use Drupal\node\Entity\NodeType;
  * - The entity-type-specific hooks are represented in the list below as
  *   hook_ENTITY_TYPE_... (hook_ENTITY_TYPE_create() in this example). To
  *   implement one of these hooks for an entity whose machine name is "foo",
- *   define a function called mymodule_foo_create(), for instance. Also note
+ *   define a function called my_module_foo_create(), for instance. Also note
  *   that the entity or array of entities that are passed into a specific-type
  *   hook are of the specific entity class, not the generic Entity class, so in
  *   your implementation, you can make the $entity argument something like $node
@@ -821,7 +821,7 @@ function hook_entity_type_build(array &$entity_types) {
   /** @var \Drupal\Core\Entity\EntityTypeInterface[] $entity_types */
   // Add a form for a custom node form without overriding the default
   // node form. To override the default node form, use hook_entity_type_alter().
-  $entity_types['node']->setFormClass('mymodule_foo', 'Drupal\mymodule\NodeFooForm');
+  $entity_types['node']->setFormClass('my_module_foo', 'Drupal\my_module\NodeFooForm');
 }
 
 /**
@@ -850,7 +850,7 @@ function hook_entity_type_alter(array &$entity_types) {
   /** @var \Drupal\Core\Entity\EntityTypeInterface[] $entity_types */
   // Set the controller class for nodes to an alternate implementation of the
   // Drupal\Core\Entity\EntityStorageInterface interface.
-  $entity_types['node']->setStorageClass('Drupal\mymodule\MyCustomNodeStorage');
+  $entity_types['node']->setStorageClass('Drupal\my_module\MyCustomNodeStorage');
 }
 
 /**
@@ -942,7 +942,7 @@ function hook_entity_bundle_info() {
 function hook_entity_bundle_info_alter(&$bundles) {
   $bundles['user']['user']['label'] = t('Full account');
   // Override the bundle class for the "article" node type in a custom module.
-  $bundles['node']['article']['class'] = 'Drupal\mymodule\Entity\Article';
+  $bundles['node']['article']['class'] = 'Drupal\my_module\Entity\Article';
   // Override the count label.
   $bundles['user']['user']['label_count']['search results'] = t('1 user is registered\x03@count users are registered');
 }
@@ -1085,7 +1085,7 @@ function hook_entity_preload(array $ids, $entity_type_id) {
   $entities = [];
 
   foreach ($ids as $id) {
-    $entities[] = mymodule_swap_revision($id);
+    $entities[] = my_module_swap_revision($id);
   }
 
   return $entities;
@@ -1110,7 +1110,7 @@ function hook_entity_preload(array $ids, $entity_type_id) {
  */
 function hook_entity_load(array $entities, $entity_type_id) {
   foreach ($entities as $entity) {
-    $entity->foo = mymodule_add_something($entity);
+    $entity->foo = my_module_add_something($entity);
   }
 }
 
@@ -1125,7 +1125,7 @@ function hook_entity_load(array $entities, $entity_type_id) {
  */
 function hook_ENTITY_TYPE_load($entities) {
   foreach ($entities as $entity) {
-    $entity->foo = mymodule_add_something($entity);
+    $entity->foo = my_module_add_something($entity);
   }
 }
 
