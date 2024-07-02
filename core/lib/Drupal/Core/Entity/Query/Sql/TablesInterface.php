@@ -26,7 +26,8 @@ interface TablesInterface {
    *   of this in a query for a condition or sort.
    *
    * @throws \Drupal\Core\Entity\Query\QueryException
-   *   If $field specifies an invalid relationship.
+   *   Throws an exception if $field specifies an invalid field name, property,
+   *   or relationship.
    */
   public function addField($field, $join_type, $langcode);
 
