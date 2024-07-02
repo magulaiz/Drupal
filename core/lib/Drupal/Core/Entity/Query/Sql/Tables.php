@@ -65,13 +65,6 @@ class Tables implements TablesInterface {
   protected $caseSensitiveFields = [];
 
   /**
-   * The join type.
-   *
-   * @var string
-   */
-  protected $joinType = '';
-
-  /**
    * @param \Drupal\Core\Database\Query\SelectInterface $sql_query
    *   The SQL query.
    */
@@ -85,7 +78,6 @@ class Tables implements TablesInterface {
    * {@inheritdoc}
    */
   public function addField($field, $join_type, $langcode) {
-    $this->joinType = $join_type;
     $entity_type_id = $this->sqlQuery->getMetaData('entity_type');
     // This variable ensures grouping works correctly. For example:
     // ->condition('tags', 2, '>')
@@ -207,7 +199,7 @@ class Tables implements TablesInterface {
       }
       $sql_column = $table_mapping->getFieldColumnName($field_storage_definition, $property_name);
       // We have the SQL column, add the relevant table.
-      $table = $this->addTable($field_storage_definition, $entity_type, $index_prefix, $langcode, $base_table, $delta, $sql_column);
+      $table = $this->addTable($field_storage_definition, $entity_type, $join_type, $index_prefix, $langcode, $base_table, $delta, $sql_column);
 
       $this->collectCaseSensitivity($field_storage_definition, $property_name);
 
@@ -266,6 +258,8 @@ class Tables implements TablesInterface {
    *   this will be 'entity:taxonomy_term.target_id.'.
    * @param string $property
    *   The field property/column.
+   * @param $join_type
+   *   The join type.
    * @param string $langcode
    *   The langcode we use on the join.
    * @param string $base_table
@@ -286,7 +280,7 @@ class Tables implements TablesInterface {
    * @throws \Drupal\Core\Entity\Query\QueryException
    *   When an invalid property has been passed.
    */
-  protected function ensureEntityTable($index_prefix, $property, $langcode, $base_table, $id_field, $entity_tables) {
+  protected function ensureEntityTable($index_prefix, $property, $join_type, $langcode, $base_table, $id_field, $entity_tables) {
     foreach ($entity_tables as $table => $mapping) {
       if (isset($mapping[$property])) {
         // Ensure a table joined multiple times through different index prefixes
@@ -296,7 +290,7 @@ class Tables implements TablesInterface {
         // each join gets a separate alias.
         $key = $index_prefix . ($base_table === 'base_table' ? $table : $base_table);
         if (!isset($this->entityTables[$key])) {
-          $this->entityTables[$key] = $this->addJoin($this->joinType, $table, "[%alias].[$id_field] = [$base_table].[$id_field]", $langcode);
+          $this->entityTables[$key] = $this->addJoin($join_type, $table, "[%alias].[$id_field] = [$base_table].[$id_field]", $langcode);
         }
         return $this->entityTables[$key];
       }
@@ -313,6 +307,8 @@ class Tables implements TablesInterface {
    *   this will be 'entity:taxonomy_term.target_id.'.
    * @param \Drupal\Core\Field\FieldStorageDefinitionInterface &$field
    *   The field storage definition for the field being joined.
+   * @param $join_type
+   *   The join type.
    * @param string $langcode
    *   The langcode we use on the join.
    * @param string $base_table
@@ -330,7 +326,7 @@ class Tables implements TablesInterface {
    * @return string
    *   The alias of the joined table.
    */
-  protected function ensureFieldTable($index_prefix, &$field, $langcode, $base_table, $entity_id_field, $field_id_field, $delta) {
+  protected function ensureFieldTable($index_prefix, &$field, $join_type, $langcode, $base_table, $entity_id_field, $field_id_field, $delta) {
     $field_name = $field->getName();
     if (!isset($this->fieldTables[$index_prefix . $field_name])) {
       $entity_type_id = $this->sqlQuery->getMetaData('entity_type');
@@ -340,7 +336,7 @@ class Tables implements TablesInterface {
       if ($field->getCardinality() != 1) {
         $this->sqlQuery->addMetaData('simple_query', FALSE);
       }
-      $this->fieldTables[$index_prefix . $field_name] = $this->addJoin($this->joinType, $table, "[%alias].[$field_id_field] = [$base_table].[$entity_id_field]", $langcode, $delta);
+      $this->fieldTables[$index_prefix . $field_name] = $this->addJoin($join_type, $table, "[%alias].[$field_id_field] = [$base_table].[$entity_id_field]", $langcode, $delta);
     }
     return $this->fieldTables[$index_prefix . $field_name];
   }
@@ -440,6 +436,8 @@ class Tables implements TablesInterface {
    *   The field storage definition.
    * @param \Drupal\Core\Entity\EntityTypeInterface $entity_type
    *   The entity type.
+   * @param $join_type
+   *   The join type.
    * @param string $index_prefix
    *   The table array index prefix. For a base table this will be empty,
    *   for a target entity reference like 'field_tags.entity:taxonomy_term.name'
@@ -457,7 +455,7 @@ class Tables implements TablesInterface {
    * @return string
    *   The alias of the table added.
    */
-  protected function addTable($field_storage_definition, EntityTypeInterface $entity_type, $index_prefix, $langcode, $base_table, $delta, $sql_column) {
+  protected function addTable($field_storage_definition, EntityTypeInterface $entity_type, $join_type, $index_prefix, $langcode, $base_table, $delta, $sql_column) {
     $entity_type_id = $entity_type->id();
     $all_revisions = $this->sqlQuery->getMetaData('all_revisions');
     /** @var \Drupal\Core\Entity\Sql\DefaultTableMapping $table_mapping */
@@ -480,7 +478,7 @@ class Tables implements TablesInterface {
     }
 
     if ($table_mapping->requiresDedicatedTableStorage($field_storage_definition)) {
-      $table = $this->ensureFieldTable($index_prefix, $field_storage_definition, $langcode, $base_table, $entity_id_field, $field_id_field, $delta);
+      $table = $this->ensureFieldTable($index_prefix, $field_storage_definition, $join_type, $langcode, $base_table, $entity_id_field, $field_id_field, $delta);
     }
     // The field is stored in a shared table.
     else {
@@ -510,7 +508,7 @@ class Tables implements TablesInterface {
         $entity_tables[$revision_table] = $this->getTableMapping($revision_table, $entity_type_id);
       }
       $entity_tables[$entity_base_table] = $this->getTableMapping($entity_base_table, $entity_type_id);
-      $table = $this->ensureEntityTable($index_prefix, $sql_column, $langcode, $base_table, $entity_id_field, $entity_tables);
+      $table = $this->ensureEntityTable($index_prefix, $sql_column, $join_type, $langcode, $base_table, $entity_id_field, $entity_tables);
     }
     return $table;
   }
