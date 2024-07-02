@@ -570,24 +570,22 @@ class ConfigActionTest extends KernelTestBase {
     // Tests below require a theme installed.
     \Drupal::service('theme_installer')->install(['olivero']);
     // Validate that placing blocks first and last works as expected.
-    try {
-      $first_block = $last_block = $this->validBlock;
-      $last_block['weight'] = 'last';
-      $last_block['id'] = 'config_action_last';
-      $manager->applyAction('placeBlock', 'block.block.config_action_last', $last_block);
-      $first_block['weight'] = 'first';
-      $first_block['id'] = 'config_action_first';
-      $manager->applyAction('placeBlock', 'block.block.config_action_first', $first_block);
-      $placed_blocks = \Drupal::entityTypeManager()->getStorage('block')->loadByProperties([
-        'theme' => 'olivero',
-        'region' => 'content',
-      ]);
-      // These would be out of order if not for the weight keywords.
-      uasort($placed_blocks, 'Drupal\block\Entity\Block::sort');
-      $this->assertSame('config_action_first', array_key_first($placed_blocks));
-      $this->assertSame('config_action_last', array_key_last($placed_blocks));
-    }
-  }
+    $first_block = $last_block = $this->validBlock;
+    $last_block['weight'] = 'last';
+    $last_block['id'] = 'config_action_last';
+    $manager->applyAction('placeBlock', 'block.block.config_action_last', $last_block);
+    $first_block['weight'] = 'first';
+    $first_block['id'] = 'config_action_first';
+    $manager->applyAction('placeBlock', 'block.block.config_action_first', $first_block);
+    $placed_blocks = \Drupal::entityTypeManager()->getStorage('block')->loadByProperties([
+      'theme' => 'olivero',
+      'region' => 'content',
+    ]);
+    // These would be out of order if not for the weight keywords.
+    uasort($placed_blocks, 'Drupal\block\Entity\Block::sort');
+    $this->assertSame('config_action_first', array_key_first($placed_blocks));
+    $this->assertSame('config_action_last', array_key_last($placed_blocks));
+}
 
   /**
    * @see \Drupal\Core\Config\Action\Plugin\ConfigAction\PlaceBlock
