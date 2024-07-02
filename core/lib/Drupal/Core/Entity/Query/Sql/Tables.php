@@ -126,6 +126,7 @@ class Tables implements TablesInterface {
       if (!$field_storage_definition) {
         throw new QueryException("Field $specifier not found");
       }
+
       // Next, figure out what column we are dealing with.
       /** @var \Drupal\Core\Entity\Sql\DefaultTableMapping $table_mapping */
       $table_mapping = $this->entityTypeManager->getStorage($entity_type_id)->getTableMapping();
@@ -183,6 +184,7 @@ class Tables implements TablesInterface {
       if (is_numeric($specifier) || ($specifier === TableMappingInterface::DELTA && $specifiers)) {
         $specifier = array_shift($specifiers);
       }
+
       // With the special fields done, we now have either a property name or
       // a relationship specifier (if anything at all).
       $potential_columns = $field_storage_definition->getColumns();
