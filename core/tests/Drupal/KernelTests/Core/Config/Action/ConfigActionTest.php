@@ -447,13 +447,11 @@ class ConfigActionTest extends KernelTestBase {
   /**
    * @see \Drupal\Core\Config\Action\Plugin\ConfigAction\PlaceBlock
    */
-  public function testPlaceBlockThemes(): void {
+  public function testPlaceBlockRegion(): void {
     /** @var \Drupal\Core\Config\Action\ConfigActionManager $manager */
     $manager = $this->container->get('plugin.manager.config_action');
     // Tests below require a theme installed.
-    \Drupal::service('theme_installer')->install(['olivero', 'claro']);
-    $config = \Drupal::configFactory()->getEditable('system.theme');
-    $config->set('default', 'olivero')->save();
+    \Drupal::service('theme_installer')->install(['olivero']);
 
     // Block configuration with no region specified should trigger an error.
     $no_region = $this->validBlock;
@@ -500,6 +498,19 @@ class ConfigActionTest extends KernelTestBase {
       $this->fail('Unexpected exception while placing block');
     }
 
+  }
+
+  /**
+   * @see \Drupal\Core\Config\Action\Plugin\ConfigAction\PlaceBlock
+   */
+  public function testPlaceBlockThemes(): void {
+    /** @var \Drupal\Core\Config\Action\ConfigActionManager $manager */
+    $manager = $this->container->get('plugin.manager.config_action');
+    // Tests below require a theme installed.
+    \Drupal::service('theme_installer')->install(['olivero', 'claro']);
+    $config = \Drupal::configFactory()->getEditable('system.theme');
+    $config->set('default', 'olivero')->save();
+
     // Validate that the block can be placed with 'default' theme specified.
     $default_theme_block = $this->validBlock;
     $default_theme_block['theme'] = 'default';
@@ -530,50 +541,6 @@ class ConfigActionTest extends KernelTestBase {
       $this->fail('Unexpected exception while placing block');
     }
 
-    // Validate that placing blocks first and last works as expected.
-    try {
-      $first_block = $last_block = $this->validBlock;
-      $last_block['weight'] = 'last';
-      $last_block['id'] = 'config_action_last';
-      $manager->applyAction('placeBlock', 'block.block.config_action_last', $last_block);
-      $first_block['weight'] = 'first';
-      $first_block['id'] = 'config_action_first';
-      $manager->applyAction('placeBlock', 'block.block.config_action_first', $first_block);
-      $placed_blocks = \Drupal::entityTypeManager()->getStorage('block')->loadByProperties([
-        'theme' => 'olivero',
-        'region' => 'content',
-      ]);
-      // These would be out of order if not for the weight keywords.
-      uasort($placed_blocks, 'Drupal\block\Entity\Block::sort');
-      $this->assertSame('config_action_first', array_key_first($placed_blocks));
-      $this->assertSame('config_action_last', array_key_last($placed_blocks));
-    }
-    catch (ConfigActionException $e) {
-      $this->fail('Unexpected exception while placing first and last blocks');
-    }
-
-    // Validate that the block can be placed without an id, with a valid name.
-    $no_id = $this->validBlock;
-    unset($no_id['id']);
-    // First, verify that it fails without an available fallback.
-    try {
-      $manager->applyAction('placeBlock', 'block.block.', $no_id);
-      $this->fail('Expected exception not thrown');
-    }
-    catch (ConfigActionException $e) {
-      $this->assertSame('Unable to determine a valid id for block block.block.', $e->getMessage());
-    }
-    try {
-      $manager->applyAction('placeBlock', 'block.block.no_id', $no_id);
-      $placed_blocks = \Drupal::entityTypeManager()->getStorage('block')->loadByProperties([
-        'id' => 'no_id',
-      ]);
-      $this->assertCount(1, $placed_blocks, 'There is 1 matching block entity');
-    }
-    catch (ConfigActionException $e) {
-      $this->fail('Unexpected exception while placing block');
-    }
-
     // Placing the same block again should not fail.
     try {
       $manager->applyAction('placeBlock', 'block.block.config_action_test', $this->validBlock);
@@ -592,6 +559,81 @@ class ConfigActionTest extends KernelTestBase {
     catch (ConfigActionException $e) {
       $this->assertSame('Unable to place block block.block.config_action_test because a block with this name has been placed in a different theme', $e->getMessage());
     }
+  }
+
+  /**
+   * @see \Drupal\Core\Config\Action\Plugin\ConfigAction\PlaceBlock
+   */
+  public function testPlaceBlockOrder(): void {
+    /** @var \Drupal\Core\Config\Action\ConfigActionManager $manager */
+    $manager = $this->container->get('plugin.manager.config_action');
+    // Tests below require a theme installed.
+    \Drupal::service('theme_installer')->install(['olivero']);
+    // Validate that placing blocks first and last works as expected.
+    try {
+      $first_block = $last_block = $this->validBlock;
+      $last_block['weight'] = 'last';
+      $last_block['id'] = 'config_action_last';
+      $manager->applyAction('placeBlock', 'block.block.config_action_last', $last_block);
+      $first_block['weight'] = 'first';
+      $first_block['id'] = 'config_action_first';
+      $manager->applyAction('placeBlock', 'block.block.config_action_first', $first_block);
+      $placed_blocks = \Drupal::entityTypeManager()->getStorage('block')->loadByProperties([
+        'theme' => 'olivero',
+        'region' => 'content',
+      ]);
+      // These would be out of order if not for the weight keywords.
+      uasort($placed_blocks, 'Drupal\block\Entity\Block::sort');
+      $this->assertSame('config_action_first', array_key_first($placed_blocks));
+      $this->assertSame('config_action_last', array_key_last($placed_blocks));
+    }
+  }
+
+  /**
+   * @see \Drupal\Core\Config\Action\Plugin\ConfigAction\PlaceBlock
+   */
+  public function testPlaceBlockIds(): void {
+    /** @var \Drupal\Core\Config\Action\ConfigActionManager $manager */
+    $manager = $this->container->get('plugin.manager.config_action');
+    // Tests below require a theme installed.
+    \Drupal::service('theme_installer')->install(['olivero']);
+
+    // Validate that the block can be placed without an id, with a valid name.
+    $no_id = $this->validBlock;
+    unset($no_id['id']);
+    // First, verify that it fails without an available fallback.
+    try {
+      $manager->applyAction('placeBlock', 'block.block.', $no_id);
+      $this->fail('Expected exception not thrown');
+    }
+    catch (ConfigActionException $e) {
+      $this->assertSame('Unable to determine a valid id for block block.block.', $e->getMessage());
+    }
+    // Next, verify that it can extract an id from the config name.
+    try {
+      $manager->applyAction('placeBlock', 'block.block.no_id', $no_id);
+      $placed_blocks = \Drupal::entityTypeManager()->getStorage('block')->loadByProperties([
+        'id' => 'no_id',
+      ]);
+      $this->assertCount(1, $placed_blocks, 'There is 1 matching block entity');
+    }
+    catch (ConfigActionException $e) {
+      $this->fail('Unexpected exception while placing block');
+    }
+
+  }
+
+  /**
+   * @see \Drupal\Core\Config\Action\Plugin\ConfigAction\PlaceBlock
+   */
+  public function testPlaceBlockExisting(): void {
+    /** @var \Drupal\Core\Config\Action\ConfigActionManager $manager */
+    $manager = $this->container->get('plugin.manager.config_action');
+    // Tests below require a theme installed.
+    \Drupal::service('theme_installer')->install(['olivero']);
+
+    // The following tests require the block to be placed already.
+    $manager->applyAction('placeBlock', 'block.block.config_action_test', $this->validBlock);
 
     // Placing the same block again with a different plugin should fail.
     $different_plugin = $this->validBlock;
