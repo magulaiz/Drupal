@@ -17,6 +17,9 @@ use Drupal\Core\TypedData\DataDefinition;
  */
 class EntityReferenceWithTextItem extends EntityReferenceItem {
 
+  /**
+   * {@inheritdoc}
+   */
   public static function propertyDefinitions(FieldStorageDefinitionInterface $field_definition) {
     $properties = parent::propertyDefinitions($field_definition);
     $properties['test'] = DataDefinition::create('string');

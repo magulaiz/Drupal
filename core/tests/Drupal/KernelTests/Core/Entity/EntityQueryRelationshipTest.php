@@ -112,6 +112,12 @@ class EntityQueryRelationshipTest extends EntityKernelTestBase {
     }
   }
 
+  /**
+   * Creates the reference field to be tested.
+   *
+   * @param array $selection_handler_settings
+   *   An array of field settings.
+   */
   protected function createField($selection_handler_settings) {
     $this->createEntityReferenceField('entity_test', 'test_bundle', $this->fieldName, NULL, 'taxonomy_term', 'default', $selection_handler_settings);
   }

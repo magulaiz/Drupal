@@ -11,8 +11,14 @@ use Drupal\Core\Field\BaseFieldDefinition;
  */
 class EntityQueryRelationshipMultiplePropertyBaseFieldTest extends EntityQueryRelationshipTest {
 
+  /**
+   * {@inheritdoc}
+   */
   protected static $modules = ['field_test'];
 
+  /**
+   * {@inheritdoc}
+   */
   protected function createField($selection_handler_settings) {
     /** @var \Drupal\Core\Entity\EntityDefinitionUpdateManager $manager */
     $manager = \Drupal::service('entity.definition_update_manager');
