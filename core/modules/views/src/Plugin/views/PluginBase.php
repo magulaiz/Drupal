@@ -137,7 +137,7 @@ abstract class PluginBase extends ComponentPluginBase implements ContainerFactor
   /**
    * {@inheritdoc}
    */
-  public function init(ViewExecutable $view, DisplayPluginBase $display, array &$options = NULL) {
+  public function init(ViewExecutable $view, DisplayPluginBase $display, ?array &$options = NULL) {
     $this->view = $view;
     $this->options = $this->options ?? [];
     $this->setOptionDefaults($this->options, $this->defineOptions());
@@ -368,7 +368,7 @@ abstract class PluginBase extends ComponentPluginBase implements ContainerFactor
     foreach ($tokens as $token => $replacement) {
       // Twig wants a token replacement array stripped of curly-brackets.
       // Some Views tokens come with curly-braces, others do not.
-      // @todo: https://www.drupal.org/node/2544392
+      // @todo https://www.drupal.org/node/2544392
       if (str_contains($token, '{{')) {
         // Twig wants a token replacement array stripped of curly-brackets.
         $token = trim(str_replace(['{{', '}}'], '', $token));
@@ -420,7 +420,7 @@ abstract class PluginBase extends ComponentPluginBase implements ContainerFactor
       // Currently you cannot attach assets to tokens with
       // Renderer::renderInIsolation(). This may be unnecessarily limiting. Consider
       // using Renderer::executeInRenderContext() instead.
-      // @todo: https://www.drupal.org/node/2566621
+      // @todo https://www.drupal.org/node/2566621
       return (string) $this->getRenderer()->renderInIsolation($build);
     }
     else {
@@ -560,7 +560,7 @@ abstract class PluginBase extends ComponentPluginBase implements ContainerFactor
    *   Only configurable languages and languages that are in $current_values are
    *   included in the list.
    */
-  protected function listLanguages($flags = LanguageInterface::STATE_ALL, array $current_values = NULL) {
+  protected function listLanguages($flags = LanguageInterface::STATE_ALL, ?array $current_values = NULL) {
     $manager = \Drupal::languageManager();
     $languages = $manager->getLanguages($flags);
     $list = [];

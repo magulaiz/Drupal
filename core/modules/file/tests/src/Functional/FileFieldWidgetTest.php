@@ -56,7 +56,7 @@ class FileFieldWidgetTest extends FileFieldTestBase {
    * @return \Drupal\file\FileInterface
    *   A file object, or FALSE on error.
    */
-  protected function createTemporaryFile($data, UserInterface $user = NULL) {
+  protected function createTemporaryFile($data, ?UserInterface $user = NULL) {
     /** @var \Drupal\file\FileRepositoryInterface $file_repository */
     $file_repository = \Drupal::service('file.repository');
     $file = $file_repository->writeData($data, "public://");
@@ -214,7 +214,7 @@ class FileFieldWidgetTest extends FileFieldTestBase {
       $edit['files[test_file_field_1_0][' . $i . ']'] = \Drupal::service('file_system')->realpath($test_file->getFileUri());
     }
 
-    // @todo: Replace after https://www.drupal.org/project/drupal/issues/2917885
+    // @todo Replace after https://www.drupal.org/project/drupal/issues/2917885
     $this->drupalGet('node/' . $node->id() . '/edit');
     $this->assertSession()->fieldExists('files[test_file_field_1_0][]');
     $submit_xpath = $this->assertSession()->buttonExists('Save')->getXpath();
