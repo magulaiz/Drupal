@@ -434,6 +434,8 @@ class Tables implements TablesInterface {
   }
 
   /**
+   * Adds the table for a given field.
+   *
    * @param $field_storage_definition
    *   The field storage definition.
    * @param \Drupal\Core\Entity\EntityTypeInterface $entity_type
@@ -451,6 +453,7 @@ class Tables implements TablesInterface {
    *   A delta which should be used as additional condition.
    * @param string $sql_column
    *   The SQL column in the existing table being joined to.
+   *
    * @return string
    *   The alias of the table added.
    */
