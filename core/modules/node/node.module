@@ -340,6 +340,9 @@ function node_entity_extra_field_info() {
 /**
  * Checks whether the current page is the full page view of the passed-in node.
  *
+ * @deprecated in drupal:11.1.0 for removal in drupal:12.0.0. Check the view
+ * mode of the route, or the current route match instead. See https://www.drupal.org/node/3458593
+ *
  * @param \Drupal\node\NodeInterface $node
  *   A node entity.
  *
@@ -481,6 +484,13 @@ function template_preprocess_node(&$variables) {
   $variables['deprecations']['teaser'] = "'teaser' is deprecated in drupal:11.1.0 and is removed in drupal:12.0.0. Use 'view_mode' instead. See https://www.drupal.org/node/3458185";
   $variables['teaser'] = $variables['view_mode'] == 'teaser';
 
+  // The page variable is deprecated.
+  $variables['deprecations']['page'] = "'page' is deprecated in drupal:11.1.0 and is removed in drupal:12.0.0. Use 'view_mode' instead. See https://www.drupal.org/node/3458185";
+  // The 'page' variable is set to TRUE in two occasions:
+  // - The view mode is 'full' and we are on the 'node.view' route.
+  // - The node is in preview and view mode is either 'full' or 'default'.
+  $variables['page'] = ($variables['view_mode'] == 'full' && (node_is_page($node)) || (isset($node->in_preview) && in_array($node->preview_view_mode, ['full', 'default'])));
+
   $variables['node'] = $variables['elements']['#node'];
   /** @var \Drupal\node\NodeInterface $node */
   $node = $variables['node'];
@@ -507,10 +517,6 @@ function template_preprocess_node(&$variables) {
 
   $variables['url'] = !$node->isNew() ? $node->toUrl('canonical')->toString() : NULL;
 
-  // The 'page' variable is set to TRUE in two occasions:
-  // - The view mode is 'full' and we are on the 'node.view' route.
-  // - The node is in preview and view mode is either 'full' or 'default'.
-  $variables['page'] = ($variables['view_mode'] == 'full' && (node_is_page($node)) || (isset($node->in_preview) && in_array($node->preview_view_mode, ['full', 'default'])));
 
   // Helpful $content variable for templates.
   $variables += ['content' => []];
