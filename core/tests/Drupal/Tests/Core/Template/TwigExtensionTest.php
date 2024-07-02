@@ -8,7 +8,9 @@ namespace Drupal\Tests\Core\Template;
 
 use Drupal\Component\Serialization\Json;
 use Drupal\Core\File\FileUrlGeneratorInterface;
+use Drupal\Core\GeneratedButton;
 use Drupal\Core\GeneratedLink;
+use Drupal\Core\GeneratedNoLink;
 use Drupal\Core\Render\Markup;
 use Drupal\Core\Render\RenderableInterface;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
@@ -445,6 +447,21 @@ class TwigExtensionTest extends UnitTestCase {
    * @covers ::getLinkTag
    */
   public function testLinkTag() {
+    $this->renderer->expects($this->any())
+      ->method('render')
+      ->with(['#markup' => '<strong>will be rendered</strong>', '#printed' => FALSE])
+      ->willReturn('<strong>will be rendered</strong>');
+
+    $this->linkGenerator->expects($this->any())
+      ->method('generate')
+      ->willReturnCallback(function ($text, Url $url) {
+        return match ($url->getRouteName()) {
+          '<button>' => $this->createMock(GeneratedButton::class),
+          '<nolink>' => $this->createMock(GeneratedNoLink::class),
+          default => $this->createMock(GeneratedLink::class),
+        };
+      });
+
     $url = Url::fromRoute('<button>');
     $link_tag = $this->systemUnderTest->getLinkTag($url);
     $this->assertEquals('button', $link_tag);
