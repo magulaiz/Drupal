@@ -269,6 +269,5 @@ function batch_test_cron(): void {
   }
 
   batch_set($batch_builder->toArray());
-
   batch_process();
 }
