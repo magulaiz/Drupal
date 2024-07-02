@@ -145,7 +145,7 @@ class Tables implements TablesInterface {
         }
         elseif ($specifier > 0) {
           // In a shared table only delta 0 values exist.
-          // @TODO this is a bug because this shortcut is only valid when the
+          // @todo This is a bug because this shortcut is only valid when the
           // operator of the condition is =.
           // https://www.drupal.org/project/drupal/issues/3256162
           $this->sqlQuery->alwaysFalse();
@@ -155,7 +155,7 @@ class Tables implements TablesInterface {
       }
       elseif ($specifier === TableMappingInterface::DELTA) {
         if ($table_mapping->requiresDedicatedTableStorage($field_storage_definition)) {
-          // @TODO is this distinction necessary? Should $index_prefix include
+          // @todo Is this distinction necessary? Should $index_prefix include
           // TableMappingInterface::DELTA for shared tables too?
           // https://www.drupal.org/project/drupal/issues/2971116 is probably
           // related.
