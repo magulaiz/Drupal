@@ -148,7 +148,7 @@ class BlockValidationTest extends ConfigEntityValidationTestBase {
         ],
       ],
       'theme' => [
-        'region' => 'Theme not defined in configuration.',
+        'region' => 'This block does not say which theme it appears in.',
       ],
     ]);
   }
