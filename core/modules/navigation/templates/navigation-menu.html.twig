@@ -9,16 +9,20 @@
 {% macro menu_items(items, attributes, menu_level) %}
   {% for item in items %}
 
+    {% if item.url is not empty %}
+      {% set item_link_tag = link_tag(item.url) %}
+    {% endif %}
+
     {% set item_id = ('navigation-link--' ~ item.original_link.pluginId)|clean_unique_id %}
     {% if menu_level == 0 %}
-      {% if item.below is empty  %}
+      {% if item.below is empty %}
         <li id="{{ item_id }}" class="toolbar-block__list-item">
           {% include '@navigation/toolbar-button.html.twig' with {
             attributes: create_attribute({ 'href': item.url|render|default(null), 'data-drupal-tooltip': item.title, 'data-drupal-tooltip-class': 'admin-toolbar__tooltip' }),
             icon: item.class|clean_class,
-            html_tag: link_tag(item.url),
+            html_tag: item_link_tag,
             text: item.title,
-            extra_classes: 'toolbar-button--collapsible ' ~ (link_tag(item.url) == 'span' ? 'toolbar-button--non-interactive'),
+            extra_classes: 'toolbar-button--collapsible ' ~ (item_link_tag == 'span' ? 'toolbar-button--non-interactive'),
           } only %}
         </li>
       {% else %}
@@ -50,8 +54,8 @@
           {% include '@navigation/toolbar-button.html.twig' with {
             attributes: create_attribute({ 'href': item.url|render|default(null) }),
             text: item.title,
-            html_tag: link_tag(item.url),
-            extra_classes: link_tag(item.url) == 'span' ? 'toolbar-button--non-interactive',
+            html_tag: item_link_tag,
+            extra_classes: item_link_tag == 'span' ? 'toolbar-button--non-interactive',
           } only %}
         {% else %}
           <button
