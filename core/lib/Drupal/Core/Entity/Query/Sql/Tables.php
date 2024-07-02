@@ -100,6 +100,11 @@ class Tables implements TablesInterface {
     $entity_type = $this->entityTypeManager->getActiveDefinition($entity_type_id);
 
     $field_storage_definitions = $this->entityFieldManager->getActiveFieldStorageDefinitions($entity_type_id);
+    // This loop consumes all specifiers. Each iteration consumes a
+    // fieldname.delta.propertyname condition. However, fieldname alone and
+    // fieldname.propertyname are also all valid combinations, it's not
+    // possible to tell ahead of the time how many specifiers will be consumed
+    // in one iteration so foreach() and similar doesn't work well here.
     while ($specifiers) {
       $delta = NULL;
       $relationship_specifier = FALSE;
@@ -129,38 +134,37 @@ class Tables implements TablesInterface {
       /** @var \Drupal\Core\Entity\Sql\DefaultTableMapping $table_mapping */
       $table_mapping = $this->entityTypeManager->getStorage($entity_type_id)->getTableMapping();
       $specifier = array_shift($specifiers);
-      // This $specifier normally is a property name. If it is not, then it
-      // is a relationship specifier (typically "entity").
-      // Two further edge cases exist which require different handling for
-      // fields stored in dedicated and shared table: $specifier also can be
-      // a numeric delta for example ->condition('field_name.1.property_name')
-      // or TableMappingInterface::DELTA for example
+      // $specifier also can be a numeric delta for example
+      // ->condition('field_name.1.property_name') or
+      // TableMappingInterface::DELTA for example
       // ->condition('field_name.%delta.property_name').
-      if ($table_mapping->requiresDedicatedTableStorage($field_storage_definition)) {
-        if (is_numeric($specifier)) {
+      // Both of these require different handling for dedicated and shared
+      // table storage.
+      if (is_numeric($specifier)) {
+        if ($table_mapping->requiresDedicatedTableStorage($field_storage_definition)) {
           // This is a delta condition.
           $delta = $specifier;
           $index_prefix .= ".$delta";
         }
-        // @TODO is this distinction necessary? Should $index_prefix include
-        // TableMappingInterface::DELTA for shared tables too?
-        // https://www.drupal.org/project/drupal/issues/2971116 is probably
-        // related.
-        elseif ($specifier === TableMappingInterface::DELTA) {
+        elseif ($specifier > 0) {
+          // In a shared table only delta 0 values exist.
+          // @TODO this is a bug because this shortcut is only valid when the
+          // operator of the condition is =.
+          // https://www.drupal.org/project/drupal/issues/3256162
+          $this->sqlQuery->alwaysFalse();
+        }
+        // Always skip to the next specifier.
+        $specifier = array_shift($specifiers);
+      }
+      elseif ($specifier === TableMappingInterface::DELTA) {
+        if ($table_mapping->requiresDedicatedTableStorage($field_storage_definition)) {
+          // @TODO is this distinction necessary? Should $index_prefix include
+          // TableMappingInterface::DELTA for shared tables too?
+          // https://www.drupal.org/project/drupal/issues/2971116 is probably
+          // related.
           $index_prefix .= TableMappingInterface::DELTA;
         }
-      }
-      else {
-        if (is_numeric($specifier)) {
-          if ($specifier > 0) {
-            // In a shared table only delta 0 values exist.
-            // @TODO this is a bug because this shortcut is only valid when the
-            // operator of the condition is =.
-            // https://www.drupal.org/project/drupal/issues/3256162
-            $this->sqlQuery->alwaysFalse();
-          }
-        }
-        elseif ($specifier === TableMappingInterface::DELTA && !$specifiers) {
+        elseif (!$specifiers) {
           // Field values in shared tables always have a delta of 0. Abort
           // further processing of ->condition('field_name.%delta') in this
           // case as there's no point.
@@ -168,6 +172,12 @@ class Tables implements TablesInterface {
           // Condition only handles this properly when the operator is =.
           // https://www.drupal.org/project/drupal/issues/3256162
           return 0;
+        }
+
+        // Note: for ->condition('field_name.%delta') %delta needs to be mapped, only skip to the next if there are
+        // additional specifiers.
+        if ($specifiers) {
+          $specifier = array_shift($specifiers);
         }
       }
       // For both ->condition('field_name.1.property_name') and
