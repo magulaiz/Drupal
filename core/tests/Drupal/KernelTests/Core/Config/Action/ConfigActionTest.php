@@ -585,7 +585,7 @@ class ConfigActionTest extends KernelTestBase {
     uasort($placed_blocks, 'Drupal\block\Entity\Block::sort');
     $this->assertSame('config_action_first', array_key_first($placed_blocks));
     $this->assertSame('config_action_last', array_key_last($placed_blocks));
-}
+  }
 
   /**
    * @see \Drupal\Core\Config\Action\Plugin\ConfigAction\PlaceBlock
