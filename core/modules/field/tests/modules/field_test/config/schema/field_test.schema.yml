@@ -149,3 +149,11 @@ field.formatter.third_party.field_test:
     foo:
       type: string
       label: 'Test setting'
+
+field.storage_settings.entity_reference_with_text:
+  type: field.storage_settings.entity_reference
+  label: 'test'
+
+field.field_settings.entity_reference_with_text:
+  type: field.field_settings.entity_reference
+  label: 'test'

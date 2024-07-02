@@ -15,7 +15,7 @@ interface TablesInterface {
    *   contains a dot, then either field name dot field column or field name dot
    *   delta dot field column. Delta can be a numeric value or a "%delta" for
    *   any value.
-   * @param string $type
+   * @param string $join_type
    *   Join type, can either be INNER or LEFT.
    * @param string $langcode
    *   The language code the field values are to be queried in.
@@ -28,7 +28,7 @@ interface TablesInterface {
    * @throws \Drupal\Core\Entity\Query\QueryException
    *   If $field specifies an invalid relationship.
    */
-  public function addField($field, $type, $langcode);
+  public function addField($field, $join_type, $langcode);
 
   /**
    * Determines whether the given field is case sensitive.
