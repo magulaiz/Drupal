@@ -149,8 +149,8 @@ class Connection extends DatabaseConnection {
   /**
    * {@inheritdoc}
    */
-  public static function createConnectionOptionsFromUrl($url, $root) {
-    $options = parent::createConnectionOptionsFromUrl($url, $root);
+  public static function createConnectionOptionsFromUrl($url, $root, $hosts = '') {
+    $options = parent::createConnectionOptionsFromUrl($url, $root, $hosts);
 
     $url_components = parse_url($url);
     $url_component_query = $url_components['query'] ?? '';
@@ -168,7 +168,97 @@ class Connection extends DatabaseConnection {
       unset($options['replicaSet']);
     }
 
+    // Replace the placeholder host with the real host.
+    if ($options['host'] === 'placeholder_host' && !empty($hosts)) {
+      $options['host'] = $hosts;
+    }
+
+    if (isset($options['port'])) {
+      $hosts = explode(',', $options['host'] . ':' . $options['port']);
+    }
+    else {
+      $hosts = explode(',', $options['host']);
+    }
+
+    $options['hosts'] = [];
+    foreach ($hosts as $host) {
+      $host_components = explode(':', $host);
+      if (count($host_components) == 1) {
+        $options['hosts'][] = [
+          'host' => $host_components[0],
+        ];
+      }
+      else {
+        $options['hosts'][] = [
+          'host' => $host_components[0],
+          'port' => (int) $host_components[1],
+        ];
+      }
+    }
+
+    // The single database server settings do not apply for MongoDB.
+    unset($options['host']);
+    unset($options['port']);
+
     return $options;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function createUrlFromConnectionOptions(array $connection_options) {
+    if (!isset($connection_options['driver'], $connection_options['database'])) {
+      throw new \InvalidArgumentException("As a minimum, the connection options array must contain at least the 'driver' and 'database' keys");
+    }
+
+    $user = '';
+    if (isset($connection_options['username'])) {
+      $user = $connection_options['username'];
+      if (isset($connection_options['password'])) {
+        $user .= ':' . $connection_options['password'];
+      }
+      $user .= '@';
+    }
+
+    if (isset($connection_options['hosts']) && is_array($connection_options['hosts'])) {
+      $hosts = [];
+      foreach ($connection_options['hosts'] as $host) {
+        if (isset($host['port'])) {
+          $hosts[] = $host['host'] . ':' . $host['port'];
+        }
+        else {
+          $hosts[] = $host['host'];
+        }
+      }
+      $hosts = implode(',', $hosts);
+    }
+    else {
+      $hosts = 'localhost';
+    }
+
+    $db_url = $connection_options['driver'] . '://' . $user . $hosts;
+
+    $db_url .= '/' . $connection_options['database'];
+
+    // Add the module when the driver is provided by a module.
+    if (isset($connection_options['module'])) {
+      $db_url .= '?module=' . $connection_options['module'];
+    }
+
+    // Add the replica set.
+    if (isset($connection_options['replicaset'])) {
+      $connection_options['replicaSet'] = $connection_options['replicaset'];
+    }
+    if (isset($connection_options['replicaSet'])) {
+      $separator = isset($connection_options['module']) ? '&' : '?';
+      $db_url .= $separator . 'replicaSet=' . $connection_options['replicaSet'];
+    }
+
+    if (isset($connection_options['prefix']) && $connection_options['prefix'] !== '') {
+      $db_url .= '#' . $connection_options['prefix'];
+    }
+
+    return $db_url;
   }
 
   /**
