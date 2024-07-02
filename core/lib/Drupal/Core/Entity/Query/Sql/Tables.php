@@ -434,7 +434,7 @@ class Tables implements TablesInterface {
   /**
    * Adds the table for a given field.
    *
-   * @param $field_storage_definition
+   * @param \Drupal\Core\Field\FieldStorageDefinitionInterface $field_storage_definition
    *   The field storage definition.
    * @param \Drupal\Core\Entity\EntityTypeInterface $entity_type
    *   The entity type.
@@ -457,7 +457,7 @@ class Tables implements TablesInterface {
    * @return string
    *   The alias of the table added.
    */
-  protected function addTable($field_storage_definition, EntityTypeInterface $entity_type, $join_type, $index_prefix, $langcode, $base_table, $delta, $sql_column) {
+  protected function addTable(FieldStorageDefinitionInterface $field_storage_definition, EntityTypeInterface $entity_type, $join_type, $index_prefix, $langcode, $base_table, $delta, $sql_column) {
     $entity_type_id = $entity_type->id();
     $all_revisions = $this->sqlQuery->getMetaData('all_revisions');
     /** @var \Drupal\Core\Entity\Sql\DefaultTableMapping $table_mapping */
