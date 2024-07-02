@@ -261,23 +261,16 @@ function batch_test_non_progressive_logger(string $message): void {
  * Run a batch in cron for non-progressive test.
  */
 function batch_test_cron(): void {
-  batch_test_stack(NULL, TRUE);
   $num_operations = 100;
 
-  $operations = [];
-  for ($i = 0; $i <= $num_operations; $i++) {
-    $operations[] = [
-      'batch_test_non_progressive_logger',
-      [
-        "Non progressive operation $i",
-      ],
-    ];
+  $batch_builder = (new BatchBuilder())->setTitle('Batch Test')->setProgressive(FALSE);
+  for ($i = 0; $i <= 100; $i++) {
+    $batch_builder->addOperation('batch_test_non_progressive_logger', [
+      "Non progressive operation $i",
+    ]);
   }
-  $batch = [
-    'title' => 'Batch Test',
-    'operations' => $operations,
-    'progressive' => FALSE,
-  ];
-  batch_set($batch);
+
+  batch_set($batch_builder->toArray());
+
   batch_process();
 }
