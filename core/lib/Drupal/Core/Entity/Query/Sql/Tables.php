@@ -201,7 +201,7 @@ class Tables implements TablesInterface {
       }
       $sql_column = $table_mapping->getFieldColumnName($field_storage_definition, $property_name);
       // We have the SQL column, add the relevant table.
-      $table = $this->addTable($field_storage_definition, $entity_type, $join_type, $index_prefix, $langcode, $base_table, $delta, $sql_column);
+      $table = $this->addTable($field_storage_definition, $join_type, $index_prefix, $langcode, $base_table, $delta, $sql_column);
 
       $this->collectCaseSensitivity($field_storage_definition, $property_name);
 
@@ -436,8 +436,6 @@ class Tables implements TablesInterface {
    *
    * @param \Drupal\Core\Field\FieldStorageDefinitionInterface $field_storage_definition
    *   The field storage definition.
-   * @param \Drupal\Core\Entity\EntityTypeInterface $entity_type
-   *   The entity type.
    * @param $join_type
    *   The join type.
    * @param string $index_prefix
@@ -457,8 +455,9 @@ class Tables implements TablesInterface {
    * @return string
    *   The alias of the table added.
    */
-  protected function addTable(FieldStorageDefinitionInterface $field_storage_definition, EntityTypeInterface $entity_type, $join_type, $index_prefix, $langcode, $base_table, $delta, $sql_column) {
-    $entity_type_id = $entity_type->id();
+  protected function addTable(FieldStorageDefinitionInterface $field_storage_definition, $join_type, $index_prefix, $langcode, $base_table, $delta, $sql_column) {
+    $entity_type_id = $field_storage_definition->getTargetEntityTypeId();
+    $entity_type = $this->entityTypeManager->getDefinition($entity_type_id);
     $all_revisions = $this->sqlQuery->getMetaData('all_revisions');
     /** @var \Drupal\Core\Entity\Sql\DefaultTableMapping $table_mapping */
     $table_mapping = $this->entityTypeManager->getStorage($entity_type_id)->getTableMapping();
