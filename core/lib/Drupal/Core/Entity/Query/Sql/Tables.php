@@ -91,6 +91,7 @@ class Tables implements TablesInterface {
     $base_table = 'base_table';
     $entity_type = $this->entityTypeManager->getActiveDefinition($entity_type_id);
 
+    /** @var \Drupal\Core\Field\FieldStorageDefinitionInterface[] $field_storage_definitions */
     $field_storage_definitions = $this->entityFieldManager->getActiveFieldStorageDefinitions($entity_type_id);
     // This loop consumes all specifiers. Each iteration consumes a
     // fieldname.delta.propertyname condition. However, fieldname alone and
