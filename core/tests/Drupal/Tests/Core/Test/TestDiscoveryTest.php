@@ -34,7 +34,7 @@ use PHPUnit\Framework\Attributes\IgnoreDeprecations;
 class TestDiscoveryTest extends UnitTestCase {
 
   #[DataProvider('infoParserProvider')]
-  public function testTestInfoParser($expected, $classname, $doc_comment = NULL) {
+  public function testTestInfoParser($expected, $classname, $doc_comment = NULL): void {
     $info = TestDiscovery::getTestInfo($classname, $doc_comment);
     $this->assertEquals($expected, $info);
   }
@@ -212,7 +212,7 @@ class TestDiscoveryTest extends UnitTestCase {
     return $tests;
   }
 
-  public function testTestInfoParserMissingGroup() {
+  public function testTestInfoParserMissingGroup(): void {
     $this->expectDeprecation('Drupal\Core\Test\TestDiscovery::getTestInfoFromAnnotation() is deprecated in drupal:11.0.0 and is removed from drupal:12.0.0. Make sure all tests classes have a #[Group()] attribute. See https://www.drupal.org/node/3447698');
     $classname = 'Drupal\KernelTests\field\BulkDeleteTest';
     $doc_comment = <<<EOT
@@ -225,7 +225,7 @@ EOT;
     TestDiscovery::getTestInfo($classname, $doc_comment);
   }
 
-  public function testTestInfoParserMissingSummary() {
+  public function testTestInfoParserMissingSummary(): void {
     $classname = 'Drupal\KernelTests\field\BulkDeleteTest';
     $doc_comment = <<<EOT
 /**
@@ -301,7 +301,7 @@ EOF;
     ]);
   }
 
-  public function testGetTestClasses() {
+  public function testGetTestClasses(): void {
     $this->expectDeprecation('Drupal\Core\Test\TestDiscovery::getTestInfoFromAnnotation() is deprecated in drupal:11.0.0 and is removed from drupal:12.0.0. Make sure all tests classes have a #[Group()] attribute. See https://www.drupal.org/node/3447698');
     $this->setupVfsWithLegacyTestClasses();
     $extensions = [
@@ -368,7 +368,7 @@ EOF;
     return $test_discovery;
   }
 
-  public function testGetTestClassesWithSelectedTypes() {
+  public function testGetTestClassesWithSelectedTypes(): void {
     $this->expectDeprecation('Drupal\Core\Test\TestDiscovery::getTestInfoFromAnnotation() is deprecated in drupal:11.0.0 and is removed from drupal:12.0.0. Make sure all tests classes have a #[Group()] attribute. See https://www.drupal.org/node/3447698');
     $this->setupVfsWithLegacyTestClasses();
     $extensions = [
@@ -411,7 +411,7 @@ EOF;
     ], $result);
   }
 
-  public function testGetTestsInProfiles() {
+  public function testGetTestsInProfiles(): void {
     $this->expectDeprecation('Drupal\Core\Test\TestDiscovery::getTestInfoFromAnnotation() is deprecated in drupal:11.0.0 and is removed from drupal:12.0.0. Make sure all tests classes have a #[Group()] attribute. See https://www.drupal.org/node/3447698');
     $this->setupVfsWithLegacyTestClasses();
     $class_loader = $this->prophesize(ClassLoader::class);
@@ -439,7 +439,7 @@ EOF;
   }
 
   #[DataProvider('providerTestGetPhpunitTestSuite')]
-  public function testGetPhpunitTestSuite($classname, $expected) {
+  public function testGetPhpunitTestSuite($classname, $expected): void {
     $this->assertEquals($expected, TestDiscovery::getPhpunitTestSuite($classname));
   }
 
@@ -461,7 +461,7 @@ EOF;
     return $data;
   }
 
-  public function testGetTestInfoEmptyDocblock() {
+  public function testGetTestInfoEmptyDocblock(): void {
     $this->expectDeprecation('Drupal\Core\Test\TestDiscovery::getTestInfoFromAnnotation() is deprecated in drupal:11.0.0 and is removed from drupal:12.0.0. Make sure all tests classes have a #[Group()] attribute. See https://www.drupal.org/node/3447698');
     // If getTestInfo() performed reflection, it won't be able to find the
     // class we asked it to analyze, so it will throw a ReflectionException.
@@ -475,8 +475,8 @@ EOF;
   /**
    * Ensure TestDiscovery::scanDirectory() ignores certain abstract file types.
    */
-  public function testScanDirectoryNoAbstract() {
-    $this->setupVfsWithLegacyTestClasses();
+  public function testScanDirectoryNoAbstract(): void {
+    $this-: void>setupVfsWithLegacyTestClasses();
     $files = TestDiscovery::scanDirectory('Drupal\\Tests\\test_module\\Kernel\\', vfsStream::url('drupal/modules/test_module/tests/src/Kernel'));
     $this->assertNotEmpty($files);
     $this->assertArrayNotHasKey('Drupal\Tests\test_module\Kernel\KernelExampleTestBase', $files);
