@@ -476,7 +476,7 @@ EOF;
    * Ensure TestDiscovery::scanDirectory() ignores certain abstract file types.
    */
   public function testScanDirectoryNoAbstract(): void {
-    $this-: void>setupVfsWithLegacyTestClasses();
+    $this->setupVfsWithLegacyTestClasses();
     $files = TestDiscovery::scanDirectory('Drupal\\Tests\\test_module\\Kernel\\', vfsStream::url('drupal/modules/test_module/tests/src/Kernel'));
     $this->assertNotEmpty($files);
     $this->assertArrayNotHasKey('Drupal\Tests\test_module\Kernel\KernelExampleTestBase', $files);
