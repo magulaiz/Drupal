@@ -108,6 +108,8 @@ class Tables implements TablesInterface {
         $field_storage_definition = $field_storage_definitions[$specifier];
       }
       else {
+        // If the specifier is not a field name, check for the deprecated
+        // 'fieldname__propertyname' specifier format.
         $bc_parts = explode('__', $specifier);
         if (count($bc_parts) === 2) {
           // cSpell:disable-next-line
