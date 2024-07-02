@@ -353,8 +353,8 @@ function locale_update_10100(&$sandbox = NULL) {
  * Add an index on locales_location on type and name.
  */
 function locale_update_10300() {
-  $schema = [];
-  $schema['locales_location'] = [
+  $spec = [];
+  $spec['locales_location'] = [
     'description' => 'Location information for source strings.',
     'fields' => [
       'lid' => [
@@ -401,5 +401,11 @@ function locale_update_10300() {
       'type_name' => ['type', 'name'],
     ],
   ];
-  \Drupal::database()->schema()->addIndex('locales_location', 'type_name', ['type', 'name'], $schema['locales_location']);
+  $schema = \Drupal::database()->schema();
+  // If the update has been manually applied, recreate the index using the
+  // current schema.
+  if ($schema->indexExists('locales_location', 'type_name')) {
+    $schema->dropIndex('locales_location', 'type_name');
+  }
+  $schema->addIndex('locales_location', 'type_name', ['type', 'name'], $spec['locales_location']);
 }
