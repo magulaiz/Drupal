@@ -440,7 +440,7 @@ class Tables implements TablesInterface {
    *
    * @param \Drupal\Core\Field\FieldStorageDefinitionInterface $field_storage_definition
    *   The field storage definition.
-   * @param $join_type
+   * @param string $join_type
    *   The join type.
    * @param string $index_prefix
    *   The table array index prefix. For a base table this will be empty,
@@ -459,7 +459,7 @@ class Tables implements TablesInterface {
    * @return string
    *   The alias of the table added.
    */
-  protected function addTable(FieldStorageDefinitionInterface $field_storage_definition, $join_type, $index_prefix, $langcode, $base_table, $delta, $sql_column) {
+  protected function addTable(FieldStorageDefinitionInterface $field_storage_definition, string $join_type, string $index_prefix, $langcode, string $base_table, $delta, string $sql_column): string {
     $entity_type_id = $field_storage_definition->getTargetEntityTypeId();
     $entity_type = $this->entityTypeManager->getDefinition($entity_type_id);
     $all_revisions = $this->sqlQuery->getMetaData('all_revisions');
