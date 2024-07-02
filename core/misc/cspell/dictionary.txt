@@ -185,6 +185,7 @@ chien
 chiens
 childlist
 chocolatiers
+christoforou
 chromedriver
 chtext
 chumillas
@@ -1432,6 +1433,7 @@ yowser
 yqpr
 yuqk
 yygroup
+za'atar
 zartan
 zendframework
 zettabyte
