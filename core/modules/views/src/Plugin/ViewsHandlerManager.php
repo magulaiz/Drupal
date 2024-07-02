@@ -109,7 +109,7 @@ class ViewsHandlerManager extends DefaultPluginManager implements FallbackPlugin
       // replaced in order to override the query with a query that
       // can run the aggregate counts, sums, or averages for example.
       // @see Drupal\views\Plugin\views\query\Sql::getAggregationInfo()
-      // for example which aggressively overrides any the filter used
+      // for example which aggressively overrides any filter used
       // by a number of mathematical-type queries regardless of the
       // original filter.
       $plugin_id = $override_plugin_id ?: $definition['id'];
