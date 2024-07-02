@@ -337,7 +337,7 @@ abstract class WidgetBase extends PluginSettingsBase implements WidgetInterface,
     $element = NestedArray::getValue($form, array_slice($button['#array_parents'], 0, -1));
 
     // Ensure the widget allows adding additional items.
-    if ($element['#cardinality'] != FieldStorageDefinitionInterface::CARDINALITY_UNLIMITED && $element['#delta'] >= $element['#cardinality']) {
+    if ($element['#cardinality'] != FieldStorageDefinitionInterface::CARDINALITY_UNLIMITED && $element['#max_delta'] >= $element['#cardinality']) {
       return;
     }
 
