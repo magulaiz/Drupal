@@ -487,17 +487,11 @@ class ConfigActionTest extends KernelTestBase {
 
     // Validate that the block can be placed with a valid backup region.
     $bad_region['regions'][] = 'content';
-    try {
-      $manager->applyAction('placeBlock', 'block.block.bad_region', $bad_region);
-      $placed_blocks = \Drupal::entityTypeManager()->getStorage('block')->loadByProperties([
-        'id' => 'bad_region',
-      ]);
-      $this->assertCount(1, $placed_blocks, 'There is 1 matching block entity');
-    }
-    catch (ConfigActionException $e) {
-      $this->fail('Unexpected exception while placing block');
-    }
-
+    $manager->applyAction('placeBlock', 'block.block.bad_region', $bad_region);
+    $placed_blocks = \Drupal::entityTypeManager()->getStorage('block')->loadByProperties([
+      'id' => 'bad_region',
+    ]);
+    $this->assertCount(1, $placed_blocks, 'There is 1 matching block entity');
   }
 
   /**
@@ -515,39 +509,24 @@ class ConfigActionTest extends KernelTestBase {
     $default_theme_block = $this->validBlock;
     $default_theme_block['theme'] = 'default';
     $default_theme_block['id'] = 'default_theme_block';
-    try {
-      $manager->applyAction('placeBlock', 'block.block.default_theme_block', $default_theme_block);
-      // ID will be automatically updated based on the default theme name.
-      $placed_blocks = \Drupal::entityTypeManager()->getStorage('block')->loadByProperties([
-        'id' => 'olivero_theme_block',
-      ]);
-      $this->assertCount(1, $placed_blocks, 'There is 1 matching block entity');
-      $found_block = array_pop($placed_blocks);
-      $this->assertSame('olivero', $found_block->get('theme'));
-    }
-    catch (ConfigActionException $e) {
-      $this->fail('Unexpected exception while placing block: ' . $e->getMessage());
-    }
+    $manager->applyAction('placeBlock', 'block.block.default_theme_block', $default_theme_block);
+    // ID will be automatically updated based on the default theme name.
+    $placed_blocks = \Drupal::entityTypeManager()->getStorage('block')->loadByProperties([
+      'id' => 'olivero_theme_block',
+    ]);
+    $this->assertCount(1, $placed_blocks, 'There is 1 matching block entity');
+    $found_block = array_pop($placed_blocks);
+    $this->assertSame('olivero', $found_block->get('theme'));
 
     // Validate that the block can be placed.
-    try {
-      $manager->applyAction('placeBlock', 'block.block.config_action_test', $this->validBlock);
-      $placed_blocks = \Drupal::entityTypeManager()->getStorage('block')->loadByProperties([
-        'id' => 'config_action_test',
-      ]);
-      $this->assertCount(1, $placed_blocks, 'There is 1 matching block entity');
-    }
-    catch (ConfigActionException $e) {
-      $this->fail('Unexpected exception while placing block');
-    }
+    $manager->applyAction('placeBlock', 'block.block.config_action_test', $this->validBlock);
+    $placed_blocks = \Drupal::entityTypeManager()->getStorage('block')->loadByProperties([
+      'id' => 'config_action_test',
+    ]);
+    $this->assertCount(1, $placed_blocks, 'There is 1 matching block entity');
 
     // Placing the same block again should not fail.
-    try {
-      $manager->applyAction('placeBlock', 'block.block.config_action_test', $this->validBlock);
-    }
-    catch (ConfigActionException $e) {
-      $this->fail('Unexpected exception while placing block again');
-    }
+    $manager->applyAction('placeBlock', 'block.block.config_action_test', $this->validBlock);
 
     // Placing the same block again with a different theme should fail.
     $different_theme = $this->validBlock;
@@ -608,17 +587,11 @@ class ConfigActionTest extends KernelTestBase {
       $this->assertSame('Unable to determine a valid id for block block.block.', $e->getMessage());
     }
     // Next, verify that it can extract an id from the config name.
-    try {
-      $manager->applyAction('placeBlock', 'block.block.no_id', $no_id);
-      $placed_blocks = \Drupal::entityTypeManager()->getStorage('block')->loadByProperties([
-        'id' => 'no_id',
-      ]);
-      $this->assertCount(1, $placed_blocks, 'There is 1 matching block entity');
-    }
-    catch (ConfigActionException $e) {
-      $this->fail('Unexpected exception while placing block');
-    }
-
+    $manager->applyAction('placeBlock', 'block.block.no_id', $no_id);
+    $placed_blocks = \Drupal::entityTypeManager()->getStorage('block')->loadByProperties([
+      'id' => 'no_id',
+    ]);
+    $this->assertCount(1, $placed_blocks, 'There is 1 matching block entity');
   }
 
   /**
@@ -656,21 +629,16 @@ class ConfigActionTest extends KernelTestBase {
     ];
     $updated_block['settings']['primary'] = TRUE;
     $updated_block['settings']['secondary'] = FALSE;
-    try {
-      $manager->applyAction('placeBlock', 'block.block.config_action_test', $updated_block);
-      $placed_blocks = \Drupal::entityTypeManager()->getStorage('block')->loadByProperties([
-        'id' => 'config_action_test',
-      ]);
-      $this->assertCount(1, $placed_blocks, 'There is 1 matching block entity');
-      $block = array_pop($placed_blocks);
-      $block_visibility = $block->getVisibility();
-      $this->assertSame('<front>', $block_visibility['request_path']['pages'], 'Block has the modified visibility');
-      $block_settings = $block->get('settings');
-      $this->assertTrue($block_settings['primary'], 'Block has modified settings');
-    }
-    catch (ConfigActionException $e) {
-      $this->fail('Unexpected exception while placing block again, modified');
-    }
+    $manager->applyAction('placeBlock', 'block.block.config_action_test', $updated_block);
+    $placed_blocks = \Drupal::entityTypeManager()->getStorage('block')->loadByProperties([
+      'id' => 'config_action_test',
+    ]);
+    $this->assertCount(1, $placed_blocks, 'There is 1 matching block entity');
+    $block = array_pop($placed_blocks);
+    $block_visibility = $block->getVisibility();
+    $this->assertSame('<front>', $block_visibility['request_path']['pages'], 'Block has the modified visibility');
+    $block_settings = $block->get('settings');
+    $this->assertTrue($block_settings['primary'], 'Block has modified settings');
   }
 
 }
