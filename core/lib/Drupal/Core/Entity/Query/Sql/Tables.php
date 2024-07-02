@@ -114,7 +114,8 @@ class Tables implements TablesInterface {
         $bc_parts = explode('__', $specifier);
         if (count($bc_parts) === 2) {
           // cSpell:disable-next-line
-          // trigger_error("Entity query on fieldname__propertyname specifiers is deprecated in drupal:9.4.0 and is removed from drupal:10.0.0. Invalid specifier: $specifier. See https://www.drupal.org/project/drupal/issues/3278083", E_USER_DEPRECATED);
+          @trigger_error("Using entity query specifiers of the form 'fieldname__propertyname' is deprecated in drupal:11.1.0 and is removed from drupal:12.0.0. Use the 'fieldname.propertyname' instead. See https://www.drupal.org/project/drupal/issues/3278083", E_USER_DEPRECATED);
+
           $specifier = $bc_parts[0];
           if (isset($field_storage_definitions[$specifier])) {
             $field_storage_definition = $field_storage_definitions[$specifier];
