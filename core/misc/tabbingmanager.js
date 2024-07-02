@@ -312,7 +312,7 @@
        *   The stack level for which the tabindex attribute should be restored.
        */
       restoreTabindex($el, level) {
-        const tabInfo = $el.dataset.drupalOriginalTabIndices;
+        const tabInfo = $el[0].dataset.drupalOriginalTabIndices;
         if (tabInfo && tabInfo[level]) {
           const data = tabInfo[level];
           if (data.tabindex) {
@@ -330,7 +330,7 @@
           // Clean up $.data.
           if (level === 0) {
             // Remove all data.
-            delete $el.dataset.drupalOriginalTabIndices;
+            delete $el[0].dataset.drupalOriginalTabIndices;
           } else {
             // Remove the data for this stack level and higher.
             let levelToDelete = level;
@@ -338,7 +338,7 @@
               delete tabInfo[levelToDelete];
               levelToDelete++;
             }
-            $el.dataset.drupalOriginalTabIndices = tabInfo;
+            $el[0].dataset.drupalOriginalTabIndices = tabInfo;
           }
         }
       },
