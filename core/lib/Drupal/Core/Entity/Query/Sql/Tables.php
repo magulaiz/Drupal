@@ -169,8 +169,8 @@ class Tables implements TablesInterface {
           return 0;
         }
 
-        // Note: for ->condition('field_name.%delta') %delta needs to be mapped, only skip to the next if there are
-        // additional specifiers.
+        // Note: for ->condition('field_name.%delta') %delta needs to be mapped,
+        // only skip to the next if there are additional specifiers.
         if ($specifiers) {
           $specifier = array_shift($specifiers);
         }
