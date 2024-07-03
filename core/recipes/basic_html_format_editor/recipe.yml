@@ -2,6 +2,7 @@ name: 'Basic HTML editor'
 description: 'Provides "Basic HTML" text format along with WYSIWYG editor and related configuration.'
 type: 'Text format editor'
 install:
+  - editor
   - ckeditor5
 config:
   actions:
