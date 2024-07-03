@@ -3,6 +3,7 @@ description: 'Allows commenting on content.'
 type: 'Comment type'
 install:
   - comment
+  - field
   - node
   - views
 config:
