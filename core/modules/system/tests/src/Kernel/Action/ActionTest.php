@@ -110,7 +110,6 @@ class ActionTest extends KernelTestBase {
       'id' => 'action_test_no_type_action',
       'label' => 'Test Action with No Type',
       'plugin' => 'action_test_no_type',
-      'type' => NULL,
     ]);
     $action->save();
 
@@ -121,7 +120,7 @@ class ActionTest extends KernelTestBase {
     $this->assertNotNull($action, 'The action config entity was saved and loaded correctly.');
     $this->assertSame('action_test_no_type_action', $action->id(), 'The action ID is correct.');
     $this->assertSame('Test Action with No Type', $action->label(), 'The action label is correct.');
-    $this->assertNull($action->get('type'), 'The action type is correctly set to NULL.');
+    $this->assertNull($action->getType(), 'The action type is correctly set to NULL.');
   }
 
 }
