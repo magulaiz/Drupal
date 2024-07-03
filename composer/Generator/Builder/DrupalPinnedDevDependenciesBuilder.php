@@ -32,6 +32,11 @@ class DrupalPinnedDevDependenciesBuilder extends DrupalPackageBuilder {
         $composer['require'][$package['name']] = $package['version'];
       }
     }
+    // Ensure that drupal/core-dev-pinned's version matches drupal/core's
+    // version. This will also ensure it indirectly matches
+    // drupal/core-recommended's version.
+    $composer['require']['drupal/core'] = 'self.version';
+
     return $composer;
   }
 

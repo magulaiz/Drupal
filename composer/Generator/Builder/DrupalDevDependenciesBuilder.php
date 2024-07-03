@@ -23,6 +23,10 @@ class DrupalDevDependenciesBuilder extends DrupalPackageBuilder {
 
     // Put everything from Drupal's "require-dev" into our "require" section.
     $composer['require'] = $this->drupalCoreInfo->getRequireDev();
+    // Ensure that drupal/core-dev's version matches drupal/core's version.
+    // This will also ensure it indirectly matches drupal/core-recommended's
+    // version.
+    $composer['require']['drupal/core'] = 'self.version';
 
     // Sort our required packages by key.
     ksort($composer['require']);
