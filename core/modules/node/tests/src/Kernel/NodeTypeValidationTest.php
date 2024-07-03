@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\node\Kernel;
 
 use Drupal\KernelTests\Core\Config\ConfigEntityValidationTestBase;
@@ -74,6 +76,27 @@ class NodeTypeValidationTest extends ConfigEntityValidationTestBase {
       'description' => 'This value should not be blank.',
       'help' => 'This value should not be blank.',
     ]);
+  }
+
+  /**
+   * @testWith [true, {"third_party_settings.menu_ui": "'parent' is a required key."}]
+   *           [false, {}]
+   */
+  public function testThirdPartySettingsMenuUi(bool $third_party_settings_menu_ui_fully_validatable, array $expected_validation_errors): void {
+    $this->enableModules(['menu_ui']);
+
+    // Set or unset the `FullyValidatable` constraint on
+    // `node.type.*.third_party.menu_ui`.
+    $this->enableModules(['config_schema_test']);
+    \Drupal::state()->set('config_schema_test_menu_ui_third_party_settings_fully_validatable', $third_party_settings_menu_ui_fully_validatable);
+    $this->container->get('kernel')->rebuildContainer();
+    $this->entity = $this->createContentType();
+
+    // @see system.menu.main.yml
+    $this->installConfig(['system']);
+    $this->entity->setThirdPartySetting('menu_ui', 'available_menus', ['main']);
+
+    $this->assertValidationErrors($expected_validation_errors);
   }
 
 }

@@ -41,10 +41,8 @@ field.widget.settings.link_default:
       type: integer
       label: 'Maximum number of autocomplete suggestions.'
 
-field.storage_settings.link:
-  type: mapping
-  label: 'Link settings'
-
+# This field type has no field storage settings, so no specific config schema type.
+# @see `type: field.storage_settings.*`
 field.field_settings.link:
   type: mapping
   label: 'Link settings'
