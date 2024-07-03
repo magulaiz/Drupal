@@ -72,7 +72,7 @@ class WebDriverTestBaseTest extends UnitTestCase {
     $object = new class('test') extends WebDriverTestBase {
     };
     $method = new \ReflectionMethod($object, 'getMinkDriverArgs');
-    $this->assertSame('["chrome",{"browserName":"chrome","goog:chromeOptions":{"args":["--headless"],"w3c":false}},"http:\\/\\/localhost:4444"]', $method->invoke($object));
+    $this->assertSame('["chrome",{"browserName":"chrome","goog:chromeOptions":{"args":["--headless"],"w3c":false},"w3c":false},"http:\\/\\/localhost:4444"]', $method->invoke($object));
   }
 
 }
