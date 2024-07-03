@@ -6,6 +6,7 @@ install:
   # The moderated_content view depends on Node.
   - node
   - views
+  - workflows
 config:
   import:
     content_moderation:
