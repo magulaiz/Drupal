@@ -326,7 +326,7 @@
   border: var(--dropbutton-border-size) solid var(--color-gray-200);
   border-bottom: 0;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.15);
-& ~ .dropbutton__item {
+  & ~ .dropbutton__item {
     border-top: 0;
   }
 }
