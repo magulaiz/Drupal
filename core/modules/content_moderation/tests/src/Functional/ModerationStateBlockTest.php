@@ -16,14 +16,6 @@ class ModerationStateBlockTest extends ModerationStateTestBase {
 
   /**
    * {@inheritdoc}
-   *
-   * @todo Remove and fix test to not rely on super user.
-   * @see https://www.drupal.org/project/drupal/issues/3437620
-   */
-  protected bool $usesSuperUserAccessPolicy = TRUE;
-
-  /**
-   * {@inheritdoc}
    */
   protected $defaultTheme = 'stark';
 
@@ -64,7 +56,19 @@ class ModerationStateBlockTest extends ModerationStateTestBase {
    * @see \Drupal\content_moderation\Tests\ModerationFormTest::testModerationForm
    */
   public function testCustomBlockModeration(): void {
-    $this->drupalLogin($this->rootUser);
+    $this->drupalLogin($this->drupalCreateUser([
+      "administer blocks",
+      "edit any basic block content",
+      "administer block content",
+      "use editorial transition create_new_draft",
+      "use editorial transition publish",
+      "view any unpublished content",
+      "view latest version",
+      "access content overview",
+      "administer nodes",
+      "bypass node access",
+      "administer workflows",
+    ]));
 
     // Enable moderation for content blocks.
     $edit['bundles[basic]'] = TRUE;

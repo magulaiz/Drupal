@@ -34,14 +34,6 @@ class EntityStateChangeValidationTest extends KernelTestBase {
   ];
 
   /**
-   * {@inheritdoc}
-   *
-   * @todo Remove and fix test to not rely on super user.
-   * @see https://www.drupal.org/project/drupal/issues/3437620
-   */
-  protected bool $usesSuperUserAccessPolicy = TRUE;
-
-  /**
    * An admin user.
    *
    * @var \Drupal\Core\Session\AccountInterface
@@ -87,6 +79,7 @@ class EntityStateChangeValidationTest extends KernelTestBase {
     $node->moderation_state->value = 'draft';
     $node->save();
 
+    $this->adminUser->addRole($this->createRole(['use editorial transition publish']))->save();
     $node->moderation_state->value = 'published';
     $this->assertCount(0, $node->validate());
     $node->save();
@@ -173,6 +166,7 @@ class EntityStateChangeValidationTest extends KernelTestBase {
     $workflow->getTypePlugin()->addEntityTypeAndBundle('node', 'example');
     $workflow->save();
 
+    $this->adminUser->addRole($this->createRole(['use editorial transition create_new_draft']))->save();
     // Validate the invalid state.
     $node = Node::load($node->id());
     $node->moderation_state->value = 'invalid_state';
@@ -216,6 +210,7 @@ class EntityStateChangeValidationTest extends KernelTestBase {
     $workflow->getTypePlugin()->addEntityTypeAndBundle('node', 'example');
     $workflow->save();
 
+    $this->adminUser->addRole($this->createRole(['use editorial transition archive']))->save();
     $node = Node::create([
       'type' => 'example',
       'title' => 'English Published Node',
@@ -282,6 +277,7 @@ class EntityStateChangeValidationTest extends KernelTestBase {
     $workflow->getTypePlugin()->addEntityTypeAndBundle('node', 'example');
     $workflow->save();
 
+    $this->adminUser->addRole($this->createRole(['use editorial transition publish']))->save();
     $node = Node::load($nid);
 
     // Having no previous state should not break validation.
