@@ -17,6 +17,7 @@ use Drupal\Core\Entity\Query\QueryFactoryInterface;
 use Drupal\Core\Entity\Sql\DefaultTableMapping;
 use Drupal\Core\Entity\Sql\SqlContentEntityStorage;
 use Drupal\Core\Language\Language;
+use Drupal\Tests\Core\Entity\ContentEntityBaseMockableClass;
 use Drupal\Tests\UnitTestCase;
 use Prophecy\Argument;
 
@@ -168,7 +169,7 @@ class SqlContentEntityStorageTest extends UnitTestCase {
    *
    * @dataProvider providerTestGetBaseTable
    */
-  public function testGetBaseTable($base_table, $expected) {
+  public function testGetBaseTable($base_table, $expected): void {
     $this->entityType->expects($this->once())
       ->method('getBaseTable')
       ->willReturn($base_table);
@@ -210,7 +211,7 @@ class SqlContentEntityStorageTest extends UnitTestCase {
    *
    * @dataProvider providerTestGetRevisionTable
    */
-  public function testGetRevisionTable($revision_table, $expected) {
+  public function testGetRevisionTable($revision_table, $expected): void {
     $this->entityType->expects($this->any())
       ->method('isRevisionable')
       ->willReturn(TRUE);
@@ -251,7 +252,7 @@ class SqlContentEntityStorageTest extends UnitTestCase {
    * @covers ::__construct
    * @covers ::getDataTable
    */
-  public function testGetDataTable() {
+  public function testGetDataTable(): void {
     $this->entityType->expects($this->any())
       ->method('isTranslatable')
       ->willReturn(TRUE);
@@ -281,7 +282,7 @@ class SqlContentEntityStorageTest extends UnitTestCase {
    *
    * @dataProvider providerTestGetRevisionDataTable
    */
-  public function testGetRevisionDataTable($revision_data_table, $expected) {
+  public function testGetRevisionDataTable($revision_data_table, $expected): void {
     $this->entityType->expects($this->any())
       ->method('isRevisionable')
       ->willReturn(TRUE);
@@ -328,7 +329,7 @@ class SqlContentEntityStorageTest extends UnitTestCase {
    *
    * @covers ::setTableMapping
    */
-  public function testSetTableMapping() {
+  public function testSetTableMapping(): void {
     $this->entityType->expects($this->any())
       ->method('isRevisionable')
       ->willReturn(FALSE);
@@ -375,7 +376,7 @@ class SqlContentEntityStorageTest extends UnitTestCase {
    * @covers ::onEntityTypeCreate
    * @covers ::getTableMapping
    */
-  public function testOnEntityTypeCreate() {
+  public function testOnEntityTypeCreate(): void {
     $columns = [
       'value' => [
         'type' => 'int',
@@ -469,7 +470,7 @@ class SqlContentEntityStorageTest extends UnitTestCase {
    * @covers ::__construct
    * @covers ::getTableMapping
    */
-  public function testGetTableMappingEmpty() {
+  public function testGetTableMappingEmpty(): void {
     $this->setUpEntityStorage();
 
     $mapping = $this->entityStorage->getTableMapping();
@@ -489,7 +490,7 @@ class SqlContentEntityStorageTest extends UnitTestCase {
    *
    * @dataProvider providerTestGetTableMappingSimple
    */
-  public function testGetTableMappingSimple(array $entity_keys) {
+  public function testGetTableMappingSimple(array $entity_keys): void {
     $this->entityType->expects($this->any())
       ->method('getKey')
       ->willReturnMap([
@@ -521,7 +522,7 @@ class SqlContentEntityStorageTest extends UnitTestCase {
    *
    * @dataProvider providerTestGetTableMappingSimple
    */
-  public function testGetTableMappingSimpleWithFields(array $entity_keys) {
+  public function testGetTableMappingSimpleWithFields(array $entity_keys): void {
     $base_field_names = ['title', 'description', 'owner'];
     $field_names = array_merge(array_values(array_filter($entity_keys)), $base_field_names);
     $this->fieldDefinitions = $this->mockFieldDefinitions($field_names);
@@ -555,7 +556,7 @@ class SqlContentEntityStorageTest extends UnitTestCase {
    * @covers ::__construct
    * @covers ::getTableMapping
    */
-  public function testGetTableMappingSimpleWithDedicatedStorageFields() {
+  public function testGetTableMappingSimpleWithDedicatedStorageFields(): void {
     $base_field_names = ['multi_valued_base_field'];
 
     // Set up one entity key in order to have a base table.
@@ -596,7 +597,7 @@ class SqlContentEntityStorageTest extends UnitTestCase {
    *
    * @dataProvider providerTestGetTableMappingSimple
    */
-  public function testGetTableMappingRevisionable(array $entity_keys) {
+  public function testGetTableMappingRevisionable(array $entity_keys): void {
     // This allows to re-use the data provider.
     $entity_keys = [
       'id' => $entity_keys['id'],
@@ -647,7 +648,7 @@ class SqlContentEntityStorageTest extends UnitTestCase {
    *
    * @dataProvider providerTestGetTableMappingSimple
    */
-  public function testGetTableMappingRevisionableWithFields(array $entity_keys) {
+  public function testGetTableMappingRevisionableWithFields(array $entity_keys): void {
     // This allows to re-use the data provider.
     $entity_keys = [
       'id' => $entity_keys['id'],
@@ -725,7 +726,7 @@ class SqlContentEntityStorageTest extends UnitTestCase {
    *
    * @dataProvider providerTestGetTableMappingSimple
    */
-  public function testGetTableMappingTranslatable(array $entity_keys) {
+  public function testGetTableMappingTranslatable(array $entity_keys): void {
     // This allows to re-use the data provider.
     $entity_keys['langcode'] = 'langcode';
 
@@ -781,7 +782,7 @@ class SqlContentEntityStorageTest extends UnitTestCase {
    *
    * @dataProvider providerTestGetTableMappingSimple
    */
-  public function testGetTableMappingTranslatableWithFields(array $entity_keys) {
+  public function testGetTableMappingTranslatableWithFields(array $entity_keys): void {
     // This allows to re-use the data provider.
     $entity_keys['langcode'] = 'langcode';
 
@@ -841,7 +842,7 @@ class SqlContentEntityStorageTest extends UnitTestCase {
    *
    * @dataProvider providerTestGetTableMappingSimple
    */
-  public function testGetTableMappingRevisionableTranslatable(array $entity_keys) {
+  public function testGetTableMappingRevisionableTranslatable(array $entity_keys): void {
     // This allows to re-use the data provider.
     $entity_keys = [
       'id' => $entity_keys['id'],
@@ -952,7 +953,7 @@ class SqlContentEntityStorageTest extends UnitTestCase {
    *
    * @dataProvider providerTestGetTableMappingSimple
    */
-  public function testGetTableMappingRevisionableTranslatableWithFields(array $entity_keys) {
+  public function testGetTableMappingRevisionableTranslatableWithFields(array $entity_keys): void {
     // This allows to re-use the data provider.
     $entity_keys = [
       'id' => $entity_keys['id'],
@@ -1077,7 +1078,7 @@ class SqlContentEntityStorageTest extends UnitTestCase {
   /**
    * @covers ::create
    */
-  public function testCreate() {
+  public function testCreate(): void {
     $language_manager = $this->createMock('Drupal\Core\Language\LanguageManagerInterface');
 
     $language = new Language(['id' => 'en']);
@@ -1085,10 +1086,10 @@ class SqlContentEntityStorageTest extends UnitTestCase {
       ->method('getCurrentLanguage')
       ->willReturn($language);
 
-    $entity = $this->getMockBuilder('Drupal\Core\Entity\ContentEntityBase')
+    $entity = $this->getMockBuilder(ContentEntityBaseMockableClass::class)
       ->disableOriginalConstructor()
       ->onlyMethods(['id'])
-      ->getMockForAbstractClass();
+      ->getMock();
 
     $this->entityType->expects($this->atLeastOnce())
       ->method('id')
@@ -1199,7 +1200,7 @@ class SqlContentEntityStorageTest extends UnitTestCase {
    * @covers ::buildCacheId
    * @covers ::getFromPersistentCache
    */
-  public function testLoadMultiplePersistentCached() {
+  public function testLoadMultiplePersistentCached(): void {
     $this->setUpModuleHandlerNoImplementations();
 
     $key = 'values:' . $this->entityTypeId . ':1';
@@ -1235,7 +1236,7 @@ class SqlContentEntityStorageTest extends UnitTestCase {
    * @covers ::getFromPersistentCache
    * @covers ::setPersistentCache
    */
-  public function testLoadMultipleNoPersistentCache() {
+  public function testLoadMultipleNoPersistentCache(): void {
     $this->setUpModuleHandlerNoImplementations();
 
     $id = 1;
@@ -1286,7 +1287,7 @@ class SqlContentEntityStorageTest extends UnitTestCase {
    * @covers ::getFromPersistentCache
    * @covers ::setPersistentCache
    */
-  public function testLoadMultiplePersistentCacheMiss() {
+  public function testLoadMultiplePersistentCacheMiss(): void {
     $this->setUpModuleHandlerNoImplementations();
 
     $id = 1;
@@ -1343,7 +1344,7 @@ class SqlContentEntityStorageTest extends UnitTestCase {
   /**
    * @covers ::hasData
    */
-  public function testHasData() {
+  public function testHasData(): void {
     $query = $this->createMock('Drupal\Core\Entity\Query\QueryInterface');
     $query->expects(($this->once()))
       ->method('accessCheck')
@@ -1395,7 +1396,7 @@ class SqlContentEntityStorageTest extends UnitTestCase {
   /**
    * Tests entity ID sanitization.
    */
-  public function testCleanIds() {
+  public function testCleanIds(): void {
     $valid_ids = [
       -1,
       0,

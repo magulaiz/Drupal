@@ -170,7 +170,7 @@ class ConfigEntityStorageTest extends UnitTestCase {
    * @covers ::create
    * @covers ::doCreate
    */
-  public function testCreateWithPredefinedUuid() {
+  public function testCreateWithPredefinedUuid(): void {
     $this->cacheTagsInvalidator->invalidateTags(Argument::cetera())->shouldNotBeCalled();
 
     $entity = $this->getMockEntity();
@@ -227,7 +227,7 @@ class ConfigEntityStorageTest extends UnitTestCase {
    * @covers ::create
    * @covers ::doCreate
    */
-  public function testCreateWithCurrentLanguage() {
+  public function testCreateWithCurrentLanguage(): void {
     $this->languageManager->getLanguage('hu')->willReturn(new Language(['id' => 'hu']));
 
     $entity = $this->entityStorage->create(['id' => 'foo']);
@@ -238,7 +238,7 @@ class ConfigEntityStorageTest extends UnitTestCase {
    * @covers ::create
    * @covers ::doCreate
    */
-  public function testCreateWithExplicitLanguage() {
+  public function testCreateWithExplicitLanguage(): void {
     $this->languageManager->getLanguage('en')->willReturn(new Language(['id' => 'en']));
 
     $entity = $this->entityStorage->create(['id' => 'foo', 'langcode' => 'en']);
@@ -397,7 +397,7 @@ class ConfigEntityStorageTest extends UnitTestCase {
    *
    * @depends testSaveInsert
    */
-  public function testSaveRename(ConfigEntityInterface $entity) {
+  public function testSaveRename(ConfigEntityInterface $entity): void {
     $immutable_config_object = $this->prophesize(ImmutableConfig::class);
     $immutable_config_object->isNew()->willReturn(FALSE);
 
@@ -443,7 +443,7 @@ class ConfigEntityStorageTest extends UnitTestCase {
   /**
    * @covers ::save
    */
-  public function testSaveInvalid() {
+  public function testSaveInvalid(): void {
     $this->cacheTagsInvalidator->invalidateTags(Argument::cetera())
       ->shouldNotBeCalled();
 
@@ -457,7 +457,7 @@ class ConfigEntityStorageTest extends UnitTestCase {
    * @covers ::save
    * @covers ::doSave
    */
-  public function testSaveDuplicate() {
+  public function testSaveDuplicate(): void {
     $config_object = $this->prophesize(ImmutableConfig::class);
     $config_object->isNew()->willReturn(FALSE);
 
@@ -478,7 +478,7 @@ class ConfigEntityStorageTest extends UnitTestCase {
    * @covers ::save
    * @covers ::doSave
    */
-  public function testSaveMismatch() {
+  public function testSaveMismatch(): void {
     $config_object = $this->prophesize(ImmutableConfig::class);
     $config_object->isNew()->willReturn(TRUE);
 
@@ -501,7 +501,7 @@ class ConfigEntityStorageTest extends UnitTestCase {
    * @covers ::save
    * @covers ::doSave
    */
-  public function testSaveNoMismatch() {
+  public function testSaveNoMismatch(): void {
     $immutable_config_object = $this->prophesize(ImmutableConfig::class);
     $immutable_config_object->isNew()->willReturn(TRUE);
 
@@ -543,7 +543,7 @@ class ConfigEntityStorageTest extends UnitTestCase {
    * @covers ::save
    * @covers ::doSave
    */
-  public function testSaveChangedUuid() {
+  public function testSaveChangedUuid(): void {
     $config_object = $this->prophesize(ImmutableConfig::class);
     $config_object->get()->willReturn(['id' => 'foo']);
     $config_object->get('id')->willReturn('foo');
@@ -579,7 +579,7 @@ class ConfigEntityStorageTest extends UnitTestCase {
    * @covers ::mapFromStorageRecords
    * @covers ::doLoadMultiple
    */
-  public function testLoad() {
+  public function testLoad(): void {
     $config_object = $this->prophesize(ImmutableConfig::class);
     $config_object->get()->willReturn(['id' => 'foo']);
     $config_object->get('id')->willReturn('foo');
@@ -606,7 +606,7 @@ class ConfigEntityStorageTest extends UnitTestCase {
    * @covers ::mapFromStorageRecords
    * @covers ::doLoadMultiple
    */
-  public function testLoadMultipleAll() {
+  public function testLoadMultipleAll(): void {
     $foo_config_object = $this->prophesize(ImmutableConfig::class);
     $foo_config_object->get()->willReturn(['id' => 'foo']);
     $foo_config_object->get('id')->willReturn('foo');
@@ -644,7 +644,7 @@ class ConfigEntityStorageTest extends UnitTestCase {
    * @covers ::mapFromStorageRecords
    * @covers ::doLoadMultiple
    */
-  public function testLoadMultipleIds() {
+  public function testLoadMultipleIds(): void {
     $config_object = $this->prophesize(ImmutableConfig::class);
     $config_object->get()->willReturn(['id' => 'foo']);
     $config_object->get('id')->willReturn('foo');
@@ -664,32 +664,10 @@ class ConfigEntityStorageTest extends UnitTestCase {
   }
 
   /**
-   * @covers ::loadRevision
-   * @group legacy
-   */
-  public function testLoadRevision() {
-    $this->expectDeprecation('Drupal\Core\Config\Entity\ConfigEntityStorage::loadRevision() is deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. Use \Drupal\Core\Entity\RevisionableStorageInterface::loadRevision instead. See https://www.drupal.org/node/3294237');
-    $this->assertNull($this->entityStorage->loadRevision(1));
-  }
-
-  /**
-   * @covers ::deleteRevision
-   * @group legacy
-   */
-  public function testDeleteRevision() {
-    $this->expectDeprecation('Drupal\Core\Config\Entity\ConfigEntityStorage::deleteRevision() is deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. Use \Drupal\Core\Entity\RevisionableStorageInterface::deleteRevision instead. See https://www.drupal.org/node/3294237');
-
-    $this->cacheTagsInvalidator->invalidateTags(Argument::cetera())
-      ->shouldNotBeCalled();
-
-    $this->assertNull($this->entityStorage->deleteRevision(1));
-  }
-
-  /**
    * @covers ::delete
    * @covers ::doDelete
    */
-  public function testDelete() {
+  public function testDelete(): void {
     // Dependencies are tested in
     // \Drupal\Tests\config\Kernel\ConfigDependencyTest.
     $this->configManager
@@ -731,7 +709,7 @@ class ConfigEntityStorageTest extends UnitTestCase {
    * @covers ::delete
    * @covers ::doDelete
    */
-  public function testDeleteNothing() {
+  public function testDeleteNothing(): void {
     $this->moduleHandler->invokeAll(Argument::cetera())->shouldNotBeCalled();
 
     $this->configFactory->get(Argument::cetera())->shouldNotBeCalled();

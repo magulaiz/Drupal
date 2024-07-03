@@ -325,7 +325,7 @@ abstract class EntityBase implements EntityInterface, EntityDuplicateInterface {
   /**
    * {@inheritdoc}
    */
-  public function access($operation, AccountInterface $account = NULL, $return_as_object = FALSE) {
+  public function access($operation, ?AccountInterface $account = NULL, $return_as_object = FALSE) {
     if ($operation == 'create') {
       return $this->entityTypeManager()
         ->getAccessControlHandler($this->entityTypeId)
@@ -542,7 +542,7 @@ abstract class EntityBase implements EntityInterface, EntityDuplicateInterface {
   /**
    * {@inheritdoc}
    */
-  public static function loadMultiple(array $ids = NULL) {
+  public static function loadMultiple(?array $ids = NULL) {
     $entity_type_repository = \Drupal::service('entity_type.repository');
     $entity_type_manager = \Drupal::entityTypeManager();
     $storage = $entity_type_manager->getStorage($entity_type_repository->getEntityTypeFromClass(static::class));
@@ -673,7 +673,7 @@ abstract class EntityBase implements EntityInterface, EntityDuplicateInterface {
   /**
    * {@inheritdoc}
    */
-  public function __sleep() {
+  public function __sleep(): array {
     $this->typedData = NULL;
     return $this->traitSleep();
   }

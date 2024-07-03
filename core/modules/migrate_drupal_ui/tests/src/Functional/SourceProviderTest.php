@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\migrate_drupal_ui\Functional;
 
 /**
@@ -24,7 +26,7 @@ class SourceProviderTest extends MigrateUpgradeTestBase {
    *
    * @dataProvider providerSourceProvider
    */
-  public function testSourceProvider($path_to_database) {
+  public function testSourceProvider($path_to_database): void {
     $this->loadFixture($this->getModulePath('migrate_drupal') . $path_to_database);
 
     $session = $this->assertSession();
