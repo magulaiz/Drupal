@@ -60,6 +60,7 @@ class ViewsData {
 
       $data[$table]['moderation_state'] = [
         'title' => t('Moderation state'),
+        'argument' => ['id' => 'moderation_state_argument'],
         'field' => [
           'id' => 'moderation_state_field',
           'default_formatter' => 'content_moderation_state',
@@ -72,6 +73,7 @@ class ViewsData {
       $revision_table = $entity_type->getRevisionDataTable() ?: $entity_type->getRevisionTable();
       $data[$revision_table]['moderation_state'] = [
         'title' => t('Moderation state'),
+        'argument' => ['id' => 'moderation_state_argument'],
         'field' => [
           'id' => 'moderation_state_field',
           'default_formatter' => 'content_moderation_state',
