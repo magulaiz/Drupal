@@ -96,11 +96,6 @@ class Connection extends DatabaseConnection {
    *   A \MongoDB\Database object.
    */
   public static function open(array &$connection_options = []) {
-    // Default to TCP connection on port 27017.
-    if (empty($connection_options['port'])) {
-      $connection_options['port'] = 27017;
-    }
-
     // Default database is test.
     if (empty($connection_options['database'])) {
       $connection_options['database'] = 'test';
@@ -118,8 +113,20 @@ class Connection extends DatabaseConnection {
       $uri = 'mongodb://';
     }
 
-    if (!empty($connection_options['host'])) {
-      $uri .= $connection_options['host'] . ':' . $connection_options['port'];
+    // MongoDB uses multiple hosts when connection to a replica set. Therefor
+    // the hosts are stored in an array of hosts.
+    if (!empty($connection_options['hosts']) && is_array($connection_options['hosts'])) {
+      $hosts = [];
+      foreach ($connection_options['hosts'] as $host) {
+        if (isset($host['port'])) {
+          $hosts[] = $host['host'] . ':' . $host['port'];
+        }
+        else {
+          // Default to TCP connection on port 27017.
+          $hosts[] = $host['host'] . ':27017';
+        }
+      }
+      $uri .= implode(',', $hosts);
     }
 
     // Add the module to the connection string
