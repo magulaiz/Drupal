@@ -100,7 +100,7 @@ abstract class EntityStorageBase extends EntityHandlerBase implements EntityStor
    * @param \Drupal\Component\Uuid\UuidInterface $uuid_service
    *   The UUID service.
    */
-  public function __construct(EntityTypeInterface $entity_type, MemoryCacheInterface $memory_cache, UuidInterface $uuid_service = NULL) {
+  public function __construct(EntityTypeInterface $entity_type, MemoryCacheInterface $memory_cache, ?UuidInterface $uuid_service = NULL) {
     $this->entityTypeId = $entity_type->id();
     $this->entityType = $entity_type;
     $this->baseEntityClass = $entity_type->getClass();
