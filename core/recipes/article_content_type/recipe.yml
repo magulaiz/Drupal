@@ -2,6 +2,7 @@ name: 'Article content type'
 description: 'Provides Article content type and related configuration. Use <em>articles</em> for time-sensitive content like news, press releases or blog posts.'
 type: 'Content type'
 install:
+  - field
   - image
   - node
   - path
