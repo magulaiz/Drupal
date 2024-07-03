@@ -3,3 +3,140 @@ description: 'Provides "Full HTML" text format along with WYSIWYG editor and rel
 type: 'Text format editor'
 install:
   - ckeditor5
+config:
+  actions:
+    filter.format.full_html:
+      createIfNotExists:
+        name: 'Full HTML'
+        format: full_html
+        weight: 2
+        roles:
+          - administrator
+        filters:
+          editor_file_reference:
+            id: editor_file_reference
+            provider: editor
+            status: true
+            weight: 11
+            settings: {  }
+          filter_align:
+            id: filter_align
+            provider: filter
+            status: true
+            weight: 8
+            settings: {  }
+          filter_caption:
+            id: filter_caption
+            provider: filter
+            status: true
+            weight: 9
+            settings: {  }
+          filter_htmlcorrector:
+            id: filter_htmlcorrector
+            provider: filter
+            status: true
+            weight: 10
+            settings: {  }
+          filter_image_lazy_load:
+            id: filter_image_lazy_load
+            provider: filter
+            status: true
+            weight: 15
+            settings: {  }
+    editor.editor.full_html:
+      createIfNotExists:
+        format: full_html
+        editor: ckeditor5
+        settings:
+          toolbar:
+            items:
+              - bold
+              - italic
+              - strikethrough
+              - superscript
+              - subscript
+              - removeFormat
+              - '|'
+              - link
+              - '|'
+              - bulletedList
+              - numberedList
+              - '|'
+              - blockQuote
+              - drupalInsertImage
+              - insertTable
+              - horizontalLine
+              - '|'
+              - heading
+              - codeBlock
+              - '|'
+              - sourceEditing
+          plugins:
+            ckeditor5_codeBlock:
+              languages:
+                -
+                  label: 'Plain text'
+                  language: plaintext
+                -
+                  label: C
+                  language: c
+                -
+                  label: 'C#'
+                  language: cs
+                -
+                  label: C++
+                  language: cpp
+                -
+                  label: CSS
+                  language: css
+                -
+                  label: Diff
+                  language: diff
+                -
+                  label: HTML
+                  language: html
+                -
+                  label: Java
+                  language: java
+                -
+                  label: JavaScript
+                  language: javascript
+                -
+                  label: PHP
+                  language: php
+                -
+                  label: Python
+                  language: python
+                -
+                  label: Ruby
+                  language: ruby
+                -
+                  label: TypeScript
+                  language: typescript
+                -
+                  label: XML
+                  language: xml
+            ckeditor5_heading:
+              enabled_headings:
+                - heading2
+                - heading3
+                - heading4
+                - heading5
+                - heading6
+            ckeditor5_imageResize:
+              allow_resize: true
+            ckeditor5_list:
+              properties:
+                reversed: true
+                startIndex: true
+              multiBlock: true
+            ckeditor5_sourceEditing:
+              allowed_tags: {  }
+        image_upload:
+          status: true
+          scheme: public
+          directory: inline-images
+          max_size: null
+          max_dimensions:
+            width: null
+            height: null

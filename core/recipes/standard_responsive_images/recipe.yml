@@ -6,3 +6,115 @@ install:
 config:
   import:
     image: '*'
+  actions:
+    image.style.max_325x325:
+      createIfNotExists:
+        name: max_325x325
+        label: 'Max 325x325'
+        effects:
+          cb842cc8-682f-42a6-bd05-5a1ac726f0d8:
+            uuid: cb842cc8-682f-42a6-bd05-5a1ac726f0d8
+            id: image_scale
+            weight: 1
+            data:
+              width: 325
+              height: 325
+              upscale: false
+          f2b6c795-26ae-4130-aa18-aa120ea3ba98:
+            uuid: f2b6c795-26ae-4130-aa18-aa120ea3ba98
+            id: image_convert
+            weight: 2
+            data:
+              extension: webp
+    image.style.max_650x650:
+      createIfNotExists:
+        name: max_650x650
+        label: 'Max 650x650'
+        effects:
+          949c201a-77f5-48f6-ba00-be91eb1aad47:
+            uuid: 949c201a-77f5-48f6-ba00-be91eb1aad47
+            id: image_scale
+            weight: 1
+            data:
+              width: 650
+              height: 650
+              upscale: false
+          4a2a7af8-8ea3-419d-b5f8-256d57016102:
+            uuid: 4a2a7af8-8ea3-419d-b5f8-256d57016102
+            id: image_convert
+            weight: 2
+            data:
+              extension: webp
+    image.style.max_1300x1300:
+      createIfNotExists:
+        name: max_1300x1300
+        label: 'Max 1300x1300'
+        effects:
+          04caae9a-fa3e-4ea6-ae09-9c26aec7d308:
+            uuid: 04caae9a-fa3e-4ea6-ae09-9c26aec7d308
+            id: image_scale
+            weight: 1
+            data:
+              width: 1300
+              height: 1300
+              upscale: false
+          e8c9d6ba-a017-4a87-9999-7ce52e138e1d:
+            uuid: e8c9d6ba-a017-4a87-9999-7ce52e138e1d
+            id: image_convert
+            weight: 2
+            data:
+              extension: webp
+    image.style.max_2600x2600:
+      createIfNotExists:
+        name: max_2600x2600
+        label: 'Max 2600x2600'
+        effects:
+          9b311dd1-0351-45a1-9500-cd069e4670cb:
+            uuid: 9b311dd1-0351-45a1-9500-cd069e4670cb
+            id: image_scale
+            weight: 1
+            data:
+              width: 2600
+              height: 2600
+              upscale: false
+          3c42f186-7beb-4dbf-b720-bff9dfeaa677:
+            uuid: 3c42f186-7beb-4dbf-b720-bff9dfeaa677
+            id: image_convert
+            weight: 2
+            data:
+              extension: webp
+    responsive_image.styles.narrow:
+      createIfNotExists:
+        id: narrow
+        label: Narrow
+        image_style_mappings:
+          -
+            image_mapping_type: sizes
+            image_mapping:
+              sizes: '(min-width: 1290px) 325px, (min-width: 851px) 25vw, (min-width: 560px) 50vw, 100vw'
+              sizes_image_styles:
+                - max_1300x1300
+                - max_650x650
+                - max_325x325
+            breakpoint_id: responsive_image.viewport_sizing
+            multiplier: 1x
+        breakpoint_group: responsive_image
+        fallback_image_style: max_325x325
+    responsive_image.styles.wide:
+      createIfNotExists:
+        id: wide
+        label: Wide
+        image_style_mappings:
+          -
+            image_mapping_type: sizes
+            image_mapping:
+              sizes: '(min-width: 1290px) 1290px, 100vw'
+              sizes_image_styles:
+                - max_2600x2600
+                - max_1300x1300
+                - max_650x650
+                - max_325x325
+            breakpoint_id: responsive_image.viewport_sizing
+            multiplier: 1x
+        breakpoint_group: responsive_image
+        fallback_image_style: max_325x325

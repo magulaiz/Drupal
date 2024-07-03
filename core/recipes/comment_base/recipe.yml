@@ -17,6 +17,86 @@ config:
       - views.view.comment
       - views.view.comments_recent
   actions:
+    comment.type.comment:
+      createIfNotExists:
+        id: comment
+        label: 'Default comments'
+        target_entity_type_id: node
+        description: 'Allows commenting on content'
+    field.storage.node.comment:
+      createIfNotExists:
+        id: node.comment
+        field_name: comment
+        entity_type: node
+        type: comment
+        settings:
+          comment_type: comment
+        module: comment
+        locked: false
+        cardinality: 1
+        translatable: true
+        indexes: {  }
+        persist_with_no_fields: false
+        custom_storage: false
+    field.field.comment.comment.comment_body:
+      createIfNotExists:
+        id: comment.comment.comment_body
+        field_name: comment_body
+        entity_type: comment
+        bundle: comment
+        label: Comment
+        description: ''
+        required: true
+        translatable: true
+        default_value: {  }
+        default_value_callback: ''
+        settings: {  }
+        field_type: text_long
+    core.entity_form_display.comment.comment.default:
+      createIfNotExists:
+        id: comment.comment.default
+        targetEntityType: comment
+        bundle: comment
+        mode: default
+        content:
+          author:
+            weight: -2
+            region: content
+          comment_body:
+            type: text_textarea
+            weight: 11
+            region: content
+            settings:
+              rows: 5
+              placeholder: ''
+            third_party_settings: {  }
+          subject:
+            type: string_textfield
+            weight: 10
+            region: content
+            settings:
+              size: 60
+              placeholder: ''
+            third_party_settings: {  }
+        hidden: {  }
+    core.entity_view_display.comment.comment.default:
+      createIfNotExists:
+        id: comment.comment.default
+        targetEntityType: comment
+        bundle: comment
+        mode: default
+        content:
+          comment_body:
+            type: text_default
+            label: hidden
+            settings: {  }
+            third_party_settings: {  }
+            weight: 0
+            region: content
+          links:
+            weight: 100
+            region: content
+        hidden: {  }
     user.role.authenticated:
       grantPermissions:
         - 'access comments'

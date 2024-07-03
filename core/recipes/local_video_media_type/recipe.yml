@@ -23,3 +23,162 @@ config:
       - views.view.media
     image:
       - image.style.thumbnail
+  actions:
+    media.type.video:
+      createIfNotExists:
+        id: video
+        label: Video
+        description: 'A locally hosted video file.'
+        source: video_file
+        queue_thumbnail_downloads: false
+        new_revision: true
+        source_configuration:
+          source_field: field_media_video_file
+        field_map:
+          name: name
+    field.storage.media.field_media_video_file:
+      createIfNotExists:
+        id: media.field_media_video_file
+        field_name: field_media_video_file
+        entity_type: media
+        type: file
+        settings:
+          target_type: file
+          display_field: false
+          display_default: false
+          uri_scheme: public
+        module: file
+        locked: false
+        cardinality: 1
+        translatable: true
+        indexes: {  }
+        persist_with_no_fields: false
+        custom_storage: false
+    field.field.media.video.field_media_video_file:
+      createIfNotExists:
+        id: media.video.field_media_video_file
+        field_name: field_media_video_file
+        entity_type: media
+        bundle: video
+        label: 'Video file'
+        description: ''
+        required: true
+        translatable: true
+        default_value: {  }
+        default_value_callback: ''
+        settings:
+          handler: 'default:file'
+          handler_settings: {  }
+          file_directory: '[date:custom:Y]-[date:custom:m]'
+          file_extensions: mp4
+          max_filesize: ''
+          description_field: false
+        field_type: file
+    core.entity_form_display.media.video.default:
+      createIfNotExists:
+        id: media.video.default
+        targetEntityType: media
+        bundle: video
+        mode: default
+        content:
+          created:
+            type: datetime_timestamp
+            weight: 10
+            region: content
+            settings: {  }
+            third_party_settings: {  }
+          field_media_video_file:
+            type: file_generic
+            weight: 0
+            region: content
+            settings:
+              progress_indicator: throbber
+            third_party_settings: {  }
+          path:
+            type: path
+            weight: 30
+            region: content
+            settings: {  }
+            third_party_settings: {  }
+          status:
+            type: boolean_checkbox
+            weight: 100
+            region: content
+            settings:
+              display_label: true
+            third_party_settings: {  }
+          uid:
+            type: entity_reference_autocomplete
+            weight: 5
+            region: content
+            settings:
+              match_operator: CONTAINS
+              match_limit: 10
+              size: 60
+              placeholder: ''
+            third_party_settings: {  }
+        hidden:
+          name: true
+    core.entity_form_display.media.video.media_library:
+      createIfNotExists:
+        id: media.video.media_library
+        targetEntityType: media
+        bundle: video
+        mode: media_library
+        content: {  }
+        hidden:
+          created: true
+          field_media_video_file: true
+          name: true
+          path: true
+          status: true
+          uid: true
+    core.entity_view_display.media.video.default:
+      createIfNotExists:
+        id: media.video.default
+        targetEntityType: media
+        bundle: video
+        mode: default
+        content:
+          field_media_video_file:
+            type: file_video
+            label: visually_hidden
+            settings:
+              controls: true
+              autoplay: false
+              loop: false
+              multiple_file_display_type: tags
+              muted: false
+              width: 640
+              height: 480
+            third_party_settings: {  }
+            weight: 0
+            region: content
+        hidden:
+          created: true
+          name: true
+          thumbnail: true
+          uid: true
+    core.entity_view_display.media.video.media_library:
+      createIfNotExists:
+        id: media.video.media_library
+        targetEntityType: media
+        bundle: video
+        mode: media_library
+        content:
+          thumbnail:
+            type: image
+            label: hidden
+            settings:
+              image_style: thumbnail
+              image_link: ''
+              image_loading:
+                attribute: lazy
+            third_party_settings: {  }
+            weight: 0
+            region: content
+        hidden:
+          created: true
+          field_media_video_file: true
+          name: true
+          uid: true

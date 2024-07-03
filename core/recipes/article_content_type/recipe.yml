@@ -26,3 +26,237 @@ config:
       - image.style.medium
       - image.style.thumbnail
       - image.style.wide
+  actions:
+    node.type.article:
+      createIfNotExists:
+        name: Article
+        type: article
+        description: 'Use <em>articles</em> for time-sensitive content like news, press releases or blog posts.'
+        help: null
+        new_revision: true
+        preview_mode: 1
+        display_submitted: true
+    field.storage.node.field_image:
+      createIfNotExists:
+        id: node.field_image
+        field_name: field_image
+        entity_type: node
+        type: image
+        settings:
+          target_type: file
+          display_field: false
+          display_default: false
+          uri_scheme: public
+          default_image:
+            uuid: null
+            alt: ''
+            title: ''
+            width: null
+            height: null
+        module: image
+        locked: false
+        cardinality: 1
+        translatable: true
+        indexes:
+          target_id:
+            - target_id
+        persist_with_no_fields: false
+        custom_storage: false
+    field.field.node.article.body:
+      createIfNotExists:
+        id: node.article.body
+        field_name: body
+        entity_type: node
+        bundle: article
+        label: Body
+        description: ''
+        required: false
+        translatable: true
+        default_value: {  }
+        default_value_callback: ''
+        settings:
+          display_summary: true
+          required_summary: false
+        field_type: text_with_summary
+    field.field.node.article.field_image:
+      createIfNotExists:
+        id: node.article.field_image
+        field_name: field_image
+        entity_type: node
+        bundle: article
+        label: Image
+        description: ''
+        required: false
+        translatable: true
+        default_value: {  }
+        default_value_callback: ''
+        settings:
+          handler: 'default:file'
+          handler_settings: {  }
+          file_directory: '[date:custom:Y]-[date:custom:m]'
+          file_extensions: 'png gif jpg jpeg webp'
+          max_filesize: ''
+          max_resolution: ''
+          min_resolution: ''
+          alt_field: true
+          alt_field_required: true
+          title_field: false
+          title_field_required: false
+          default_image:
+            uuid: null
+            alt: ''
+            title: ''
+            width: null
+            height: null
+        field_type: image
+    core.entity_form_display.node.article.default:
+      createIfNotExists:
+        id: node.article.default
+        targetEntityType: node
+        bundle: article
+        mode: default
+        content:
+          body:
+            type: text_textarea_with_summary
+            weight: 2
+            region: content
+            settings:
+              rows: 9
+              summary_rows: 3
+              placeholder: ''
+              show_summary: false
+            third_party_settings: {  }
+          created:
+            type: datetime_timestamp
+            weight: 10
+            region: content
+            settings: {  }
+            third_party_settings: {  }
+          field_image:
+            type: image_image
+            weight: 1
+            region: content
+            settings:
+              progress_indicator: throbber
+              preview_image_style: thumbnail
+            third_party_settings: {  }
+          path:
+            type: path
+            weight: 30
+            region: content
+            settings: {  }
+            third_party_settings: {  }
+          promote:
+            type: boolean_checkbox
+            weight: 15
+            region: content
+            settings:
+              display_label: true
+            third_party_settings: {  }
+          status:
+            type: boolean_checkbox
+            weight: 120
+            region: content
+            settings:
+              display_label: true
+            third_party_settings: {  }
+          sticky:
+            type: boolean_checkbox
+            weight: 16
+            region: content
+            settings:
+              display_label: true
+            third_party_settings: {  }
+          title:
+            type: string_textfield
+            weight: 0
+            region: content
+            settings:
+              size: 60
+              placeholder: ''
+            third_party_settings: {  }
+          uid:
+            type: entity_reference_autocomplete
+            weight: 5
+            region: content
+            settings:
+              match_operator: CONTAINS
+              match_limit: 10
+              size: 60
+              placeholder: ''
+            third_party_settings: {  }
+        hidden: {  }
+    core.entity_view_display.node.article.default:
+      createIfNotExists:
+        id: node.article.default
+        targetEntityType: node
+        bundle: article
+        mode: default
+        content:
+          body:
+            type: text_default
+            label: hidden
+            settings: {  }
+            third_party_settings: {  }
+            weight: 0
+            region: content
+          field_image:
+            type: image
+            label: hidden
+            settings:
+              image_style: wide
+              image_link: ''
+              image_loading:
+                attribute: eager
+            third_party_settings: {  }
+            weight: -1
+            region: content
+          links:
+            settings: {  }
+            third_party_settings: {  }
+            weight: 100
+            region: content
+        hidden: {  }
+    core.entity_view_display.node.article.rss:
+      createIfNotExists:
+        id: node.article.rss
+        targetEntityType: node
+        bundle: article
+        mode: rss
+        content:
+          links:
+            weight: 100
+            region: content
+        hidden:
+          body: true
+          field_image: true
+    core.entity_view_display.node.article.teaser:
+      createIfNotExists:
+        id: node.article.teaser
+        targetEntityType: node
+        bundle: article
+        mode: teaser
+        content:
+          body:
+            type: text_summary_or_trimmed
+            label: hidden
+            settings:
+              trim_length: 600
+            third_party_settings: {  }
+            weight: 0
+            region: content
+          field_image:
+            type: image
+            label: hidden
+            settings:
+              image_style: medium
+              image_link: content
+              image_loading:
+                attribute: lazy
+            third_party_settings: {  }
+            weight: -1
+            region: content
+          links:
+            weight: 100
+            region: content
+        hidden: {  }
