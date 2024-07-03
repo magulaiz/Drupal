@@ -148,15 +148,19 @@ abstract class WebDriverTestBase extends BrowserTestBase {
       $json = getenv('MINK_DRIVER_ARGS_WEBDRIVER') ?: parent::getMinkDriverArgs();
       if (!($json === FALSE || $json === '')) {
         $args = json_decode($json, TRUE);
-        if (isset($args[1]['chromeOptions'])) {
-          @trigger_error('The "chromeOptions" array key is deprecated in drupal:10.3.0 and is removed from drupal:11.0.0. Use "goog:chromeOptions instead. See https://www.drupal.org/node/3422624', E_USER_DEPRECATED);
-          $args[1]['goog:chromeOptions'] = $args[1]['chromeOptions'];
-          unset($args[1]['chromeOptions']);
-        }
-        if (isset($args[0]) && $args[0] === 'chrome' && !isset($args[1]['goog:chromeOptions']['w3c'])) {
+        if (isset($args[0]) && $args[0] === 'chrome') {
           // @todo https://www.drupal.org/project/drupal/issues/3421202
           //   Deprecate defaulting behavior and require w3c to be set.
-          $args[1]['goog:chromeOptions']['w3c'] = FALSE;
+          if (isset($args[1]['w3c'])) {
+            $args[1]['goog:chromeOptions']['w3c'] = $args[1]['w3c'];
+          }
+          elseif (isset($args[1]['goog:chromeOptions']['w3c'])) {
+            $args[1]['w3c'] = $args[1]['goog:chromeOptions']['w3c'];
+          }
+          else {
+            $args[1]['goog:chromeOptions']['w3c'] = FALSE;
+            $args[1]['w3c'] = FALSE;
+          }
         }
         $json = json_encode($args);
       }
