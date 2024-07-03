@@ -3,6 +3,7 @@ description: 'Provides "Audio" media type and related configuration. A locally h
 type: 'Media type'
 install:
   - image
+  - media
   - media_library
   - path
   - views
