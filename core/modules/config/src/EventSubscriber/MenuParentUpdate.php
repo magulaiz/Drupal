@@ -39,7 +39,8 @@ class MenuParentUpdate implements EventSubscriberInterface {
       if ($changed) {
         $saved_config->save();
         if (!str_contains($this->requestStack->getMainRequest()->getBaseUrl(), 'update.php')) {
-          @trigger_error("Using an empty 'parent' key is deprecated in drupal:11.1.0 and will be removed in drupal:12.0.0. See https://www.drupal.org/node/3458722", E_USER_DEPRECATED);        }
+          @trigger_error("Using an empty 'parent' key is deprecated in drupal:11.1.0 and will be removed in drupal:12.0.0. See https://www.drupal.org/node/3458722", E_USER_DEPRECATED);
+        }
       }
     }
   }
