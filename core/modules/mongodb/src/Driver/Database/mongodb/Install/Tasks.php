@@ -137,9 +137,82 @@ class Tasks extends InstallTasks {
       '#required' => TRUE,
     ];
 
-    if (empty($form['advanced_options']['port']['#default_value'])) {
-      $form['advanced_options']['port']['#default_value'] = '27017';
-    }
+
+    // The primary host of the replica set.
+    $form['host1'] = [
+      '#type' => 'fieldset',
+      '#title' => t('Host #1'),
+      '#weight' => 10,
+    ];
+    $form['host1']['host'] = [
+      '#type' => 'textfield',
+      '#title' => t('Host'),
+      '#default_value' => empty($database['host']) ? '' : $database['host'],
+      '#size' => 45,
+      // Host names can be 255 characters long.
+      '#maxlength' => 255,
+      '#required' => TRUE,
+    ];
+    $form['host1']['port'] = [
+      '#type' => 'number',
+      '#title' => t('Port number'),
+      '#default_value' => empty($database['port']) ? '27017' : $database['port'],
+      '#min' => 0,
+      '#max' => 65535,
+    ];
+
+    // The secondary host of the replica set.
+    $form['host2'] = [
+      '#type' => 'fieldset',
+      '#title' => t('Host #2'),
+      '#weight' => 11,
+    ];
+    $form['host2']['host'] = [
+      '#type' => 'textfield',
+      '#title' => t('Host'),
+      '#default_value' => empty($database['host']) ? '' : $database['host'],
+      '#size' => 45,
+      // Host names can be 255 characters long.
+      '#maxlength' => 255,
+      '#required' => TRUE,
+    ];
+    $form['host2']['port'] = [
+      '#type' => 'number',
+      '#title' => t('Port number'),
+      '#default_value' => empty($database['port']) ? '27017' : $database['port'],
+      '#min' => 0,
+      '#max' => 65535,
+    ];
+
+    // The tertiary host of the replica set.
+    $form['host3'] = [
+      '#type' => 'fieldset',
+      '#title' => t('Host #3'),
+      '#weight' => 12,
+    ];
+    $form['host3']['host'] = [
+      '#type' => 'textfield',
+      '#title' => t('Host'),
+      '#default_value' => empty($database['host']) ? '' : $database['host'],
+      '#size' => 45,
+      // Host names can be 255 characters long.
+      '#maxlength' => 255,
+      '#required' => TRUE,
+    ];
+    $form['host3']['port'] = [
+      '#type' => 'number',
+      '#title' => t('Port number'),
+      '#default_value' => empty($database['port']) ? '27017' : $database['port'],
+      '#min' => 0,
+      '#max' => 65535,
+    ];
+
+    // Move the advanced options to the bottom.
+    $form['advanced_options']['#weight'] = 20;
+    // Remove the single host and port options.
+    unset($form['advanced_options']['host']);
+    unset($form['advanced_options']['port']);
+
     return $form;
   }
 
