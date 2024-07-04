@@ -120,10 +120,7 @@ class Inspector {
    * @see http://php.net/manual/language.types.array.php
    */
   public static function assertStrictArray($array) {
-    if (!is_array($array)) {
-      return FALSE;
-    }
-    return array_is_list($array);
+    return is_array($array) && array_is_list($array);
   }
 
   /**
