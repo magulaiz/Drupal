@@ -80,6 +80,8 @@
   text-decoration: none;
   color: var(--color-text-primary-loud);
   background-color: var(--color--gray-95);
+  padding-top: 18px;
+  padding-bottom: 18px;
 }
 
 .vertical-tabs__menu-item a:focus,
