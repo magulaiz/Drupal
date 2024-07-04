@@ -323,7 +323,7 @@ class Inspector {
     $args = func_get_args();
     unset($args[0]);
 
-    return static::assertAll(function($member) use ($args) {
+    return static::assertAll(function ($member) use ($args) {
       if (count($args) > 0) {
         return array_any($args, fn($instance) => $member instanceof $instance);
       }
