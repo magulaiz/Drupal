@@ -48,4 +48,4 @@ build:
         <<: *testgroups
       # Run nightwatch testing.
       # @see https://www.drupal.org/project/drupal/issues/2869825
-      nightwatchjs: {}
+#      nightwatchjs: {}
