@@ -3,8 +3,6 @@
  * Styling for contextual module.
  */
 
-@import "../base/variables.pcss.css";
-
 .contextual {
   position: absolute;
   z-index: var(--contextual-z-index);
