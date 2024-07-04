@@ -295,6 +295,7 @@ hwldf
 icann
 iconwrap
 idekey
+idont-like-formatting-but-core-accepts-it
 iframes
 iframeupload
 imagecache
