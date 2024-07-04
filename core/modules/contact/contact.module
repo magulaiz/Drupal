@@ -270,7 +270,7 @@ function contact_form_field_config_edit_form_alter(&$form, FormStateInterface $f
   if (
     empty($form['#entity']) ||
     !$form['#entity'] instanceof MessageInterface ||
-    is_a($field_config->getItemDefinition()->getClass(),FileItem::class)
+    is_a($field_config->getItemDefinition()->getClass(), FileItem::class)
   ) {
     // Only alter the form for Message entities where a file field is added.
     return;
