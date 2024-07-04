@@ -39,12 +39,7 @@ class Inspector {
    */
   public static function assertAll(callable $callable, $traversable) {
     if (is_iterable($traversable)) {
-      foreach ($traversable as $member) {
-        if (!$callable($member)) {
-          return FALSE;
-        }
-      }
-      return TRUE;
+      return array_all($traversable, fn ($value) => $callable($value));
     }
     return FALSE;
   }
@@ -76,15 +71,7 @@ class Inspector {
    *   objects with __toString().
    */
   public static function assertAllStringable($traversable) {
-    if (is_iterable($traversable)) {
-      foreach ($traversable as $member) {
-        if (!static::assertStringable($member)) {
-          return FALSE;
-        }
-      }
-      return TRUE;
-    }
-    return FALSE;
+    return static::assertAll(static::assertStringable(...), $traversable);
   }
 
   /**
@@ -136,15 +123,7 @@ class Inspector {
     if (!is_array($array)) {
       return FALSE;
     }
-    $i = 0;
-
-    foreach (array_keys($array) as $key) {
-      if ($i !== $key) {
-        return FALSE;
-      }
-      $i++;
-    }
-    return TRUE;
+    return array_is_list($array);
   }
 
   /**
@@ -194,17 +173,13 @@ class Inspector {
     $args = func_get_args();
     unset($args[0]);
 
-    if (is_iterable($traversable)) {
-      foreach ($traversable as $member) {
-        foreach ($args as $key) {
-          if (!array_key_exists($key, $member)) {
-            return FALSE;
-          }
-        }
-      }
-      return TRUE;
-    }
-    return FALSE;
+    return static::assertAll(
+      fn ($member) => array_all(
+        $args,
+        fn ($key) => array_key_exists($key, $member),
+      ),
+      $traversable,
+    );
   }
 
   /**
@@ -258,12 +233,7 @@ class Inspector {
    */
   public static function assertAllNotEmpty($traversable) {
     if (is_iterable($traversable)) {
-      foreach ($traversable as $member) {
-        if (empty($member)) {
-          return FALSE;
-        }
-      }
-      return TRUE;
+      return !array_any($traversable, fn ($value) => empty($value));
     }
     return FALSE;
   }
