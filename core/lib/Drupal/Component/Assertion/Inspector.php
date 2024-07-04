@@ -232,10 +232,7 @@ class Inspector {
    *   TRUE if $traversable can be traversed and all members not empty.
    */
   public static function assertAllNotEmpty($traversable) {
-    if (is_iterable($traversable)) {
-      return !array_any($traversable, fn ($value) => empty($value));
-    }
-    return FALSE;
+    return static::assertAll(fn ($value) => !empty($value), $traversable);
   }
 
   /**
