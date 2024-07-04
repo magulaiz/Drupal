@@ -2,6 +2,7 @@
 
 namespace Drupal\content_translation;
 
+use Drupal\Component\Datetime\TimeInterface;
 use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Datetime\DateFormatterInterface;
 use Drupal\Core\DependencyInjection\DependencySerializationTrait;
@@ -45,41 +46,6 @@ class ContentTranslationHandler implements ContentTranslationHandlerInterface, E
   protected $entityTypeId;
 
   /**
-   * Information about the entity type.
-   *
-   * @var \Drupal\Core\Entity\EntityTypeInterface
-   */
-  protected $entityType;
-
-  /**
-   * The language manager.
-   *
-   * @var \Drupal\Core\Language\LanguageManagerInterface
-   */
-  protected $languageManager;
-
-  /**
-   * The content translation manager.
-   *
-   * @var \Drupal\content_translation\ContentTranslationManagerInterface
-   */
-  protected $manager;
-
-  /**
-   * The entity type manager.
-   *
-   * @var \Drupal\Core\Entity\EntityTypeManagerInterface
-   */
-  protected $entityTypeManager;
-
-  /**
-   * The current user.
-   *
-   * @var \Drupal\Core\Session\AccountInterface
-   */
-  protected $currentUser;
-
-  /**
    * Installed field storage definitions for the entity type.
    *
    * Keyed by field name.
@@ -89,55 +55,43 @@ class ContentTranslationHandler implements ContentTranslationHandlerInterface, E
   protected $fieldStorageDefinitions;
 
   /**
-   * The messenger service.
-   *
-   * @var \Drupal\Core\Messenger\MessengerInterface
-   */
-  protected $messenger;
-
-  /**
-   * The date formatter service.
-   *
-   * @var \Drupal\Core\Datetime\DateFormatterInterface
-   */
-  protected $dateFormatter;
-
-  /**
    * Initializes an instance of the content translation controller.
    *
-   * @param \Drupal\Core\Entity\EntityTypeInterface $entity_type
+   * @param \Drupal\Core\Entity\EntityTypeInterface $entityType
    *   The info array of the given entity type.
-   * @param \Drupal\Core\Language\LanguageManagerInterface $language_manager
+   * @param \Drupal\Core\Language\LanguageManagerInterface $languageManager
    *   The language manager.
    * @param \Drupal\content_translation\ContentTranslationManagerInterface $manager
    *   The content translation manager service.
-   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
+   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entityTypeManager
    *   The entity type manager.
-   * @param \Drupal\Core\Session\AccountInterface $current_user
+   * @param \Drupal\Core\Session\AccountInterface $currentUser
    *   The current user.
    * @param \Drupal\Core\Messenger\MessengerInterface $messenger
    *   The messenger service.
-   * @param \Drupal\Core\Datetime\DateFormatterInterface $date_formatter
+   * @param \Drupal\Core\Datetime\DateFormatterInterface $dateFormatter
    *   The date formatter service.
    * @param \Drupal\Core\Entity\EntityLastInstalledSchemaRepositoryInterface $entity_last_installed_schema_repository
    *   The installed entity definition repository service.
-   * @param \Drupal\Core\Routing\RedirectDestinationInterface|null $redirectDestination
+   * @param \Drupal\Core\Routing\RedirectDestinationInterface $redirectDestination
    *   The request stack.
+   * @param \Drupal\Component\Datetime\TimeInterface $time
+   *   The time service.
    */
-  public function __construct(EntityTypeInterface $entity_type, LanguageManagerInterface $language_manager, ContentTranslationManagerInterface $manager, EntityTypeManagerInterface $entity_type_manager, AccountInterface $current_user, MessengerInterface $messenger, DateFormatterInterface $date_formatter, EntityLastInstalledSchemaRepositoryInterface $entity_last_installed_schema_repository, protected ?RedirectDestinationInterface $redirectDestination = NULL) {
-    $this->entityTypeId = $entity_type->id();
-    $this->entityType = $entity_type;
-    $this->languageManager = $language_manager;
-    $this->manager = $manager;
-    $this->entityTypeManager = $entity_type_manager;
-    $this->currentUser = $current_user;
+  public function __construct(
+    protected EntityTypeInterface $entityType,
+    protected LanguageManagerInterface $languageManager,
+    protected ContentTranslationManagerInterface $manager,
+    protected EntityTypeManagerInterface $entityTypeManager,
+    protected AccountInterface $currentUser,
+    protected MessengerInterface $messenger,
+    protected DateFormatterInterface $dateFormatter,
+    protected EntityLastInstalledSchemaRepositoryInterface $entity_last_installed_schema_repository,
+    protected RedirectDestinationInterface $redirectDestination,
+    protected TimeInterface $time,
+  ) {
+    $this->entityTypeId = $entityType->id();
     $this->fieldStorageDefinitions = $entity_last_installed_schema_repository->getLastInstalledFieldStorageDefinitions($this->entityTypeId);
-    $this->messenger = $messenger;
-    $this->dateFormatter = $date_formatter;
-    if ($this->redirectDestination === NULL) {
-      @trigger_error('Calling ContentTranslationHandler::__construct() without the $redirectDestination argument is deprecated in drupal:10.2.0 and will be required in drupal:11.0.0. See https://www.drupal.org/node/3375487', E_USER_DEPRECATED);
-      $this->redirectDestination = \Drupal::service('redirect.destination');
-    }
   }
 
   /**
@@ -153,7 +107,8 @@ class ContentTranslationHandler implements ContentTranslationHandlerInterface, E
       $container->get('messenger'),
       $container->get('date.formatter'),
       $container->get('entity.last_installed_schema.repository'),
-      $container->get('redirect.destination')
+      $container->get('redirect.destination'),
+      $container->get('datetime.time'),
     );
   }
 
@@ -536,15 +491,12 @@ class ContentTranslationHandler implements ContentTranslationHandlerInterface, E
         '#description' => t('Leave blank for %anonymous.', ['%anonymous' => \Drupal::config('user.settings')->get('anonymous')]),
       ];
 
-      $date = $new_translation ? REQUEST_TIME : $metadata->getCreatedTime();
+      $date = $new_translation ? $this->time->getRequestTime() : $metadata->getCreatedTime();
       $form['content_translation']['created'] = [
         '#type' => 'textfield',
         '#title' => t('Authored on'),
         '#maxlength' => 25,
-        '#description' => t('Format: %time. The date format is YYYY-MM-DD and %timezone is the time zone offset from UTC. Leave blank to use the time of form submission.', [
-          '%time' => $this->dateFormatter->format(REQUEST_TIME, 'custom', 'Y-m-d H:i:s O'),
-          '%timezone' => $this->dateFormatter->format(REQUEST_TIME, 'custom', 'O'),
-        ]),
+        '#description' => t('Leave blank to use the time of form submission.'),
         '#default_value' => $new_translation || !$date ? '' : $this->dateFormatter->format($date, 'custom', 'Y-m-d H:i:s O'),
       ];
 
@@ -709,7 +661,7 @@ class ContentTranslationHandler implements ContentTranslationHandlerInterface, E
     $metadata = $this->manager->getTranslationMetadata($entity);
     $metadata->setAuthor(!empty($values['uid']) ? User::load($values['uid']) : User::load(0));
     $metadata->setPublished(!empty($values['status']));
-    $metadata->setCreatedTime(!empty($values['created']) ? strtotime($values['created']) : REQUEST_TIME);
+    $metadata->setCreatedTime(!empty($values['created']) ? strtotime($values['created']) : $this->time->getRequestTime());
 
     $metadata->setOutdated(!empty($values['outdated']));
     if (!empty($values['retranslate'])) {
@@ -756,7 +708,7 @@ class ContentTranslationHandler implements ContentTranslationHandlerInterface, E
     // handler as well and have the same logic like in the Form API.
     if ($entity->hasField('content_translation_changed')) {
       $metadata = $this->manager->getTranslationMetadata($entity);
-      $metadata->setChangedTime(REQUEST_TIME);
+      $metadata->setChangedTime($this->time->getRequestTime());
     }
   }
 
@@ -811,30 +763,6 @@ class ContentTranslationHandler implements ContentTranslationHandlerInterface, E
       $entity_type_id => $entity->id(),
       'language' => $form_langcode,
     ], $options);
-  }
-
-  /**
-   * Form submission handler for ContentTranslationHandler::entityFormAlter().
-   *
-   * Takes care of content translation deletion.
-   */
-  public function entityFormDeleteTranslation($form, FormStateInterface $form_state) {
-    @trigger_error('Calling ContentTranslationHandler::entityFormDeleteTranslation() is deprecated in drupal:10.2.0 and will be removed in drupal:11.0.0. See https://www.drupal.org/node/3375492', E_USER_DEPRECATED);
-
-    /** @var \Drupal\Core\Entity\ContentEntityFormInterface $form_object */
-    $form_object = $form_state->getFormObject();
-    /** @var \Drupal\Core\Entity\ContentEntityInterface $entity */
-    $entity = $form_object->getEntity();
-    $entity_type_id = $entity->getEntityTypeId();
-    if ($entity->access('delete') && $this->entityType->hasLinkTemplate('delete-form')) {
-      $form_state->setRedirectUrl($entity->toUrl('delete-form'));
-    }
-    else {
-      $form_state->setRedirect("entity.$entity_type_id.content_translation_delete", [
-        $entity_type_id => $entity->id(),
-        'language' => $form_object->getFormLangcode($form_state),
-      ]);
-    }
   }
 
   /**
