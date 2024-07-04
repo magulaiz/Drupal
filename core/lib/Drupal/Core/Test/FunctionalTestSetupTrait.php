@@ -570,13 +570,13 @@ trait FunctionalTestSetupTrait {
       if (isset($formInput['hosts']) && is_array($formInput['hosts'])) {
         foreach ($formInput['hosts'] as $key => $value) {
           if (isset($value['port'])) {
-            $formInput['host' . ($key+1)] = [
+            $formInput['host' . ($key + 1)] = [
               'host' => $value['host'],
               'port' => $value['port'],
             ];
           }
           else {
-            $formInput['host' . ($key+1)] = [
+            $formInput['host' . ($key + 1)] = [
               'host' => $value['host'],
             ];
           }

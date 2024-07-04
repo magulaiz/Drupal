@@ -137,7 +137,6 @@ class Tasks extends InstallTasks {
       '#required' => TRUE,
     ];
 
-
     // The primary host of the replica set.
     $form['host1'] = [
       '#type' => 'fieldset',

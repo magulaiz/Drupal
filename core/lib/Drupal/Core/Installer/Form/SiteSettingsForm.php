@@ -166,7 +166,7 @@ class SiteSettingsForm extends FormBase {
     // to the hosts array for the settings.php file.
     if ($driver == 'Drupal\mongodb\Driver\Database\mongodb') {
       $hosts = [];
-      foreach ([1,2,3] as $i) {
+      foreach ([1, 2, 3] as $i) {
         if (isset($database['host' . $i]['host'])) {
           // Add the port setting when it is given and it is not the default
           // port.
