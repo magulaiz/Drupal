@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Drupal\Tests\locale\Functional;
 
 use Drupal\FunctionalTests\Update\UpdatePathTestBase;
+use Drupal\pgsql\Driver\Database\pgsql\Schema as PgsqlSchema;
 
 /**
  * Tests Locale update functions.
@@ -105,10 +106,18 @@ class LocalesLocationAddIndexUpdateTest extends UpdatePathTestBase {
     $schema = \Drupal::database()->schema();
     $this->assertTrue($schema->indexExists('locales_location', 'type_name'));
 
-    // Ensure that index specification matches our expectations.
-    $introspect_index_schema = new \ReflectionMethod(get_class($schema), 'introspectIndexSchema');
-    $index_schema = $introspect_index_schema->invoke($schema, 'locales_location');
-    $this->assertSame(['type', 'name'], $index_schema['indexes']['type_name']);
+    // Ensure that index specification matches our expectations. Note that index
+    // names on Postgres are manipulated by
+    // \Drupal\pgsql\Driver\Database\pgsql\Schema::ensureIdentifiersLength() and
+    // the order of the columns returned by Schema::introspectIndexSchema() is
+    // not correct making this test hard on Postgres so skip the following
+    // assertions.
+    if (!$schema instanceof PgsqlSchema) {
+      $introspect_index_schema = new \ReflectionMethod(get_class($schema), 'introspectIndexSchema');
+      $index_schema = $introspect_index_schema->invoke($schema, 'locales_location');
+      $this->assertSame(['type', 'name'], $index_schema['indexes']['type_name']);
+    }
+
   }
 
 }
