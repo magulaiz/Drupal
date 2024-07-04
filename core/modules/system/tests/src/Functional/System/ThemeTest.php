@@ -91,17 +91,17 @@ class ThemeTest extends BrowserTestBase {
       // Raw stream wrapper URI.
       $file->uri => [
         'form' => StreamWrapperManager::getTarget($file->uri),
-        'src' => $file_url_generator->generateString($file->uri),
+        'src' => $file_url_generator->generate($file->uri)->toString(),
       ],
       // Relative path within the public filesystem.
       StreamWrapperManager::getTarget($file->uri) => [
         'form' => StreamWrapperManager::getTarget($file->uri),
-        'src' => $file_url_generator->generateString($file->uri),
+        'src' => $file_url_generator->generate($file->uri)->toString(),
       ],
       // Relative path to a public file.
       $file_relative => [
         'form' => $file_relative,
-        'src' => $file_url_generator->generateString($file->uri),
+        'src' => $file_url_generator->generate($file->uri)->toString(),
       ],
       // Relative path to an arbitrary file.
       'core/misc/druplicon.png' => [
@@ -202,7 +202,7 @@ class ThemeTest extends BrowserTestBase {
 
     $this->drupalPlaceBlock('system_branding_block', ['region' => 'header']);
     $this->drupalGet('');
-    $this->assertSession()->elementAttributeContains('xpath', '//header//a[@rel="home"]/img', 'src', $file_url_generator->generateString($uploaded_filename));
+    $this->assertSession()->elementAttributeContains('xpath', '//header//a[@rel="home"]/img', 'src', $file_url_generator->generate($uploaded_filename)->toString());
 
     $this->container->get('theme_installer')->install(['olivero']);
 
