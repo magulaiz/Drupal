@@ -103,7 +103,7 @@ class ContactFileFieldTest extends WebDriverTestBase {
     $file_field->click();
     $page->pressButton('Continue');
 
-    $this->assertNotEmpty($uri_scheme_public_field = $page->find('css','input[type="radio"][name="field_storage[subform][settings][uri_scheme]"][value="public"]'));
+    $this->assertNotEmpty($uri_scheme_public_field = $page->find('css', 'input[type="radio"][name="field_storage[subform][settings][uri_scheme]"][value="public"]'));
     $uri_scheme_public_field->click();
     $assert_session->assertWaitOnAjaxRequest();
 
