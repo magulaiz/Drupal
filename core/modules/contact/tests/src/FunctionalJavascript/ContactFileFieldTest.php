@@ -108,7 +108,6 @@ class ContactFileFieldTest extends WebDriverTestBase {
 
     $page->pressButton('Save settings');
     $this->drupalGet('admin/structure/contact/manage/feedback/fields/contact_message.feedback.field_file_upload');
-    $this->assertSession()->statusCodeEquals(200);
     $this->assertSession()->pageTextContains('It is advised to store file uploads for contact forms as private files');
   }
 
