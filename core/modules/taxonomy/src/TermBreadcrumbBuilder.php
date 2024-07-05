@@ -77,6 +77,9 @@ class TermBreadcrumbBuilder implements BreadcrumbBuilderInterface {
       $breadcrumb->addLink(Link::createFromRoute($term->getName(), 'entity.taxonomy_term.canonical', ['taxonomy_term' => $term->id()]));
     }
 
+    // @todo Remove in Drupal 12.0.0, will be added from ::applies().
+    $breadcrumb->addCacheContexts(['route']);
+
     return $breadcrumb;
   }
 
