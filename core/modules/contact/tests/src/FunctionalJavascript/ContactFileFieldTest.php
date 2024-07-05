@@ -103,7 +103,9 @@ class ContactFileFieldTest extends WebDriverTestBase {
     $file_field->click();
     $page->pressButton('Continue');
 
-    $page->find('xpath', '//input[@name="field_storage[subform][settings][uri_scheme]"][@value="public"]')->click();
+    $this->assertNotEmpty($uri_scheme_public_field = $page->find('css','input[type="radio"][name="field_storage[subform][settings][uri_scheme]"][value="public"]'));
+    $uri_scheme_public_field->click();
+    $assert_session->assertWaitOnAjaxRequest();
 
     $page->pressButton('Save settings');
     $this->drupalGet('admin/structure/contact/manage/feedback/fields/contact_message.feedback.field_file_upload');
