@@ -72,7 +72,10 @@
 }
 
 .vertical-tabs__menu-item a {
-  display: block;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  min-height: 5.125rem;
   padding-block: var(--sp0-5);
   padding-inline-start: var(--sp0-75);
   padding-inline-end: var(--sp0-75);
@@ -80,10 +83,6 @@
   text-decoration: none;
   color: var(--color-text-primary-loud);
   background-color: var(--color--gray-95);
-  min-height: 82px;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
 }
 
 .vertical-tabs__menu-item a:focus,
