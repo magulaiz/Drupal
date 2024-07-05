@@ -126,7 +126,7 @@ language.content_settings.*.*:
       type: string
       label: 'ID'
       constraints:
-        Callback: ['\Drupal\language\Entity\ContentLanguageSettings', 'validateId']
+        NotBlank: []
     target_entity_type_id:
       type: string
       label: 'Entity Type ID'
