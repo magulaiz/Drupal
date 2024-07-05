@@ -16,7 +16,7 @@ interface BreadcrumbBuilderInterface {
    *   The current route match.
    * phpcs:disable Drupal.Commenting
    * @todo Uncomment new method parameters before drupal:12.0.0.
-   * @see https://www.drupal.org/project/drupal/issues/7654321
+   * @see https://www.drupal.org/project/drupal/issues/3459274
    *
    * @param \Drupal\Core\Cache\CacheableMetadata $cacheable_metadata
    *   The cacheable metadata to add to if your check varies by or depends
