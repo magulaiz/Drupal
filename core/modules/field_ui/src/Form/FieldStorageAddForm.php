@@ -223,6 +223,15 @@ class FieldStorageAddForm extends FormBase {
       '#required' => TRUE,
     ];
 
+    $form['filter'] = [
+      '#type' => 'textfield',
+      '#title' => $this->t('Filter by field name or description'),
+      '#attributes' => [
+        'class' => ['js-add-field-filter-text'],
+        'data-container' => '.add-field-container'
+      ]
+    ];
+
     $form['add'] = [
       '#type' => 'container',
       '#attributes' => [
