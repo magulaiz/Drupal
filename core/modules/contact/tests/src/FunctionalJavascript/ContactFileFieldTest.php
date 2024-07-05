@@ -66,6 +66,50 @@ class ContactFileFieldTest extends WebDriverTestBase {
     $page->pressButton('Continue');
 
     $this->assertTrue($assert_session->elementExists('css', '[name="field_storage[subform][settings][uri_scheme]"][value="private"]')->isSelected());
+
+    $page->pressButton('Save settings');
+    $this->drupalGet('admin/structure/contact/manage/feedback/fields/contact_message.feedback.field_file_upload');
+    $this->assertSession()->statusCodeEquals(200);
+    $this->assertSession()->pageTextNotContains('It is advised to store file uploads for contact forms as private files');
+  }
+
+  /**
+   * Tests that a warning is shown when the public scheme is selected on edit.
+   */
+  public function testFileFieldHasWarningForPublicSchemeOnEdit(): void {
+    // Create and log in administrative user.
+    $admin_user = $this->drupalCreateUser([
+      'access site-wide contact form',
+      'administer contact forms',
+      'administer permissions',
+      'administer users',
+      'access site reports',
+      'administer contact_message display',
+      'administer contact_message fields',
+      'administer contact_message form display',
+    ]);
+    $this->drupalLogin($admin_user);
+
+    $this->drupalGet('admin/structure/contact/manage/feedback/fields/add-field');
+    $page = $this->getSession()->getPage();
+    $assert_session = $this->assertSession();
+    $page->find('xpath', '//input[@value="file_upload"]')->click();
+    $this->assertNotEmpty($file_field = $page->find('css', '[name="new_storage_type"][value="file_upload"]')->getParent());
+    $file_field->click();
+    $this->assertTrue($assert_session->elementExists('css', '[name="new_storage_type"][value="file_upload"]')->isSelected());
+    $page->pressButton('Continue');
+
+    $page->fillField('label', 'file_upload');
+    $this->assertNotEmpty($file_field = $page->find('css', '[name="group_field_options_wrapper"][value="file"]')->getParent());
+    $file_field->click();
+    $page->pressButton('Continue');
+
+    $page->find('xpath', '//input[@name="field_storage[subform][settings][uri_scheme]"][@value="public"]')->click();
+
+    $page->pressButton('Save settings');
+    $this->drupalGet('admin/structure/contact/manage/feedback/fields/contact_message.feedback.field_file_upload');
+    $this->assertSession()->statusCodeEquals(200);
+    $this->assertSession()->pageTextContains('It is advised to store file uploads for contact forms as private files');
   }
 
   /**

@@ -280,7 +280,7 @@ function contact_form_field_config_edit_form_alter(&$form, FormStateInterface $f
     $form['field_storage']['subform']['settings']['uri_scheme']['#default_value'] = 'private';
   }
 
-  if ($form['field_storage']['subform']['settings']['uri_scheme']['#default_value'] !== 'private') {
+  if (!$form_state->getUserInput() && $form['field_storage']['subform']['settings']['uri_scheme']['#default_value'] !== 'private') {
     if (!isset($form['field_storage']['subform']['settings']['uri_scheme']['#options']['private'])) {
       // Private files are not configured.
       Drupal::messenger()->addWarning(t('It is advised to store file uploads for contact forms as private files. You can configure this in settings.php'));
