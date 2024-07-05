@@ -21,7 +21,8 @@ class HelpBreadcrumbBuilder implements BreadcrumbBuilderInterface {
    * {@inheritdoc}
    */
   public function applies(RouteMatchInterface $route_match, ?CacheableMetadata $cacheable_metadata = NULL) {
-    $cacheable_metadata->addCacheContexts(['route']);
+    // @todo Remove null safe operator in Drupal 12.0.0.
+    $cacheable_metadata?->addCacheContexts(['route']);
     return $route_match->getRouteName() == 'help.help_topic';
   }
 
