@@ -7,7 +7,6 @@ use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Language\LanguageInterface;
 use Drupal\language\ContentLanguageSettingsException;
 use Drupal\language\ContentLanguageSettingsInterface;
-use Symfony\Component\Validator\Context\ExecutionContextInterface;
 
 /**
  * Defines the ContentLanguageSettings entity.
