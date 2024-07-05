@@ -228,8 +228,8 @@ class FieldStorageAddForm extends FormBase {
       '#title' => $this->t('Filter by field name or description'),
       '#attributes' => [
         'class' => ['js-add-field-filter-text'],
-        'data-container' => '.add-field-container'
-      ]
+        'data-container' => '.add-field-container',
+      ],
     ];
 
     $form['add'] = [

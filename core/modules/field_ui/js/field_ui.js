@@ -515,7 +515,9 @@
       function filterRows(e) {
         const query = e.target.value;
         function showRow(index, row) {
-          const sources = row.querySelectorAll('label, .field-option__description');
+          const sources = row.querySelectorAll(
+            'label, .field-option__description',
+          );
           let sourcesConcat = '';
           // Concatenate the textContent of the elements in the row, with a
           // space in between.
