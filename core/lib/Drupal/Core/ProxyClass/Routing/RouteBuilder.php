@@ -12,7 +12,7 @@ namespace Drupal\Core\ProxyClass\Routing {
      *
      * @see \Drupal\Component\ProxyBuilder
      */
-    class RouteBuilder implements \Drupal\Core\Routing\RouteBuilderInterface, \Drupal\Core\DestructableInterface
+    class RouteBuilder implements \Drupal\Core\Routing\RouteBuilderInterface, \Drupal\Core\DestructibleInterface
     {
 
         use \Drupal\Core\DependencyInjection\DependencySerializationTrait;

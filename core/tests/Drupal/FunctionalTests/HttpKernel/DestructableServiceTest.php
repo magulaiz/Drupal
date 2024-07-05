@@ -11,7 +11,7 @@ use Drupal\Tests\BrowserTestBase;
 /**
  * Tests invocation of services performing deferred tasks after response flush.
  *
- * @see \Drupal\Core\DestructableInterface
+ * @see \Drupal\Core\DestructibleInterface
  *
  * @group Http
  */

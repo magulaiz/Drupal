@@ -5,7 +5,7 @@ namespace Drupal\Core\Theme;
 use Drupal\Component\Utility\NestedArray;
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Cache\CacheBackendInterface;
-use Drupal\Core\DestructableInterface;
+use Drupal\Core\DestructibleInterface;
 use Drupal\Core\Extension\ModuleExtensionList;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Extension\ThemeHandlerInterface;
@@ -26,7 +26,7 @@ use Symfony\Component\HttpKernel\HttpKernelInterface;
  *
  * @todo Replace local $registry variables in methods with $this->registry.
  */
-class Registry implements DestructableInterface {
+class Registry implements DestructibleInterface {
 
   /**
    * The theme object representing the active theme for this registry.

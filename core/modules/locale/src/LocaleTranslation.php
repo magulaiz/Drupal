@@ -5,7 +5,7 @@ namespace Drupal\locale;
 use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\DependencyInjection\DependencySerializationTrait;
-use Drupal\Core\DestructableInterface;
+use Drupal\Core\DestructibleInterface;
 use Drupal\Core\Language\LanguageInterface;
 use Drupal\Core\Language\LanguageManagerInterface;
 use Drupal\Core\Lock\LockBackendInterface;
@@ -18,7 +18,7 @@ use Symfony\Component\HttpFoundation\RequestStack;
  * Full featured translation system using locale's string storage and
  * database caching.
  */
-class LocaleTranslation implements TranslatorInterface, DestructableInterface {
+class LocaleTranslation implements TranslatorInterface, DestructibleInterface {
 
   use DependencySerializationTrait;
 
@@ -154,7 +154,7 @@ class LocaleTranslation implements TranslatorInterface, DestructableInterface {
   public function destruct() {
     foreach ($this->translations as $context) {
       foreach ($context as $lookup) {
-        if ($lookup instanceof DestructableInterface) {
+        if ($lookup instanceof DestructibleInterface) {
           $lookup->destruct();
         }
       }

@@ -3,7 +3,7 @@
 namespace Drupal\Core\Cache;
 
 use Drupal\Component\Assertion\Inspector;
-use Drupal\Core\DestructableInterface;
+use Drupal\Core\DestructibleInterface;
 use Drupal\Core\Lock\LockBackendInterface;
 
 /**
@@ -21,7 +21,7 @@ use Drupal\Core\Lock\LockBackendInterface;
  *
  * @ingroup cache
  */
-abstract class CacheCollector implements CacheCollectorInterface, DestructableInterface {
+abstract class CacheCollector implements CacheCollectorInterface, DestructibleInterface {
 
   /**
    * The cache id that is used for the cache entry.
