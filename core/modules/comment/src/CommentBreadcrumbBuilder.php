@@ -48,7 +48,8 @@ class CommentBreadcrumbBuilder implements BreadcrumbBuilderInterface {
    */
   public function build(RouteMatchInterface $route_match) {
     $breadcrumb = new Breadcrumb();
-    // @todo Remove in Drupal 12.0.0, will be added from ::applies().
+    // @todo Remove in Drupal 12.0.0, will be added from ::applies(). See
+    //   https://www.drupal.org/project/drupal/issues/3459277
     $breadcrumb->addCacheContexts(['route']);
     $breadcrumb->addLink(Link::createFromRoute($this->t('Home'), '<front>'));
 
