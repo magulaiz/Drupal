@@ -10,6 +10,8 @@ use PHPUnit\Framework\TestCase;
 /**
  * Tests ConfigurablePluginBase.
  *
+ * @group Plugin
+ *
  * @coversDefaultClass \Drupal\Core\Plugin\ConfigurablePluginBase
  */
 class ConfigurablePluginBaseTest extends TestCase {

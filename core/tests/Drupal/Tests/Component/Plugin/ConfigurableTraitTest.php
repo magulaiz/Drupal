@@ -12,9 +12,9 @@ use PHPUnit\Framework\TestCase;
 /**
  * Tests for ConfigurableTrait.
  *
- * @coversDefaultClass \Drupal\Component\Plugin\ConfigurableTrait
- *
  * @group Plugin
+ *
+ * @coversDefaultClass \Drupal\Component\Plugin\ConfigurableTrait
  */
 class ConfigurableTraitTest extends TestCase {
 
