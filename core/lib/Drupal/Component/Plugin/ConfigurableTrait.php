@@ -14,12 +14,6 @@ use Drupal\Component\Utility\NestedArray;
  * configuration. This trait provides the appropriate getters and setters to
  * handle this logic, removing the need for excess boilerplate.
  *
- * It is recommended to extend \Drupal\Core\Plugin\ConfigurablePluginBase
- * rather than using this trait, however if you are using this component outside
- * of Drupal, or if your plugin class must extend a different child class of
- * PluginBase you may use this trait in your plugin class to get the boilerplate
- * configurable functionality.
- *
  * If you use this trait, you must also implement ConfigurableInterface in your
  * class and call setConfiguration() in your constructor after calling the
  * parent constructor in order to merge the default configuration into the
