@@ -7,12 +7,23 @@ namespace Drupal\Component\Plugin;
 use Drupal\Component\Utility\NestedArray;
 
 /**
- * Implements \Drupal\Component\Plugin\ConfigurableInterface.
+ * Implementation class for \Drupal\Component\Plugin\ConfigurableInterface.
  *
  * In order for configurable plugins to maintain their configuration, the
  * default configuration must be merged into any explicitly defined
  * configuration. This trait provides the appropriate getters and setters to
  * handle this logic, removing the need for excess boilerplate.
+ *
+ * It is recommended to extend \Drupal\Core\Plugin\ConfigurablePluginBase
+ * rather than using this trait, however if you are using this component outside
+ * of Drupal, or if your plugin class must extend a different child class of
+ * PluginBase you may use this trait in your plugin class to get the boilerplate
+ * configurable functionality.
+ *
+ * If you use this trait, you must also implement ConfigurableInterface in your
+ * class and call setConfiguration() in your constructor after calling the
+ * parent constructor in order to merge the default configuration into the
+ * plugin's provided configuration.
  *
  * @ingroup Plugin
  */
@@ -20,6 +31,12 @@ trait ConfigurableTrait {
 
   /**
    * Configuration information passed into the plugin.
+   *
+   * This property is declared in \Drupal\Component\Plugin\PluginBase as well,
+   * which most classes using this trait will ultimately be extending. It is
+   * re-declared here to make the trait self-contained and to permit use of the
+   * trait in classes that do not extend PluginBase. Re-declaring a class
+   * property in a trait is permitted since php 7.
    *
    * @var array
    */
@@ -33,12 +50,16 @@ trait ConfigurableTrait {
    *
    * @see \Drupal\Component\Plugin\ConfigurableInterface::getConfiguration()
    */
-  public function getConfiguration() {
+  public function getConfiguration(): array {
     return $this->configuration;
   }
 
   /**
    * Sets the configuration for this plugin instance.
+   *
+   * The provided configuration is merged with the default configuration and
+   * stored in the plugin's $configuration member. If a configuration key exists
+   * in both, then the provided configuration will override the default.
    *
    * @param array $configuration
    *   An associative array containing the plugin's configuration. Provided
@@ -48,7 +69,7 @@ trait ConfigurableTrait {
    *
    * @see \Drupal\Component\Plugin\ConfigurableInterface::setConfiguration()
    */
-  public function setConfiguration(array $configuration) {
+  public function setConfiguration(array $configuration): self {
     $this->configuration = NestedArray::mergeDeepArray([$this->defaultConfiguration(), $configuration], TRUE);
     return $this;
   }
@@ -61,7 +82,7 @@ trait ConfigurableTrait {
    *
    * @see \Drupal\Component\Plugin\ConfigurableInterface::defaultConfiguration()
    */
-  public function defaultConfiguration() {
+  public function defaultConfiguration(): array {
     return [];
   }
 
