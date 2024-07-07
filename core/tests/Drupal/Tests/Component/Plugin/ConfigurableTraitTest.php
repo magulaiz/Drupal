@@ -1,10 +1,13 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\Component\Plugin;
 
 use Drupal\Component\Plugin\ConfigurableInterface;
 use Drupal\Component\Plugin\ConfigurableTrait;
 use Drupal\Component\Plugin\PluginBase;
+use Drupal\Core\Plugin\ConfigurablePluginBase;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -23,7 +26,7 @@ class ConfigurableTraitTest extends TestCase {
    */
   public function testDefaultConfiguration() {
     /** @var \Drupal\Component\Plugin\ConfigurableInterface $configurable_plugin */
-    $configurable_plugin = $this->getMockForTrait(ConfigurableTrait::class);
+    $configurable_plugin = $this->getMockForAbstractClass(ConfigurablePluginBase::class, [], '', FALSE);
     $this->assertSame([], $configurable_plugin->defaultConfiguration());
   }
 
