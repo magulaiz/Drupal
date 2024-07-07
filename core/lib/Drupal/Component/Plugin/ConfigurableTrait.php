@@ -44,7 +44,7 @@ trait ConfigurableTrait {
    *
    * @see \Drupal\Component\Plugin\ConfigurableInterface::getConfiguration()
    */
-  public function getConfiguration(): array {
+  public function getConfiguration() {
     return $this->configuration;
   }
 
