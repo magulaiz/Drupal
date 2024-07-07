@@ -69,7 +69,7 @@ trait ConfigurableTrait {
    *
    * @see \Drupal\Component\Plugin\ConfigurableInterface::setConfiguration()
    */
-  public function setConfiguration(array $configuration): self {
+  public function setConfiguration(array $configuration) {
     $this->configuration = NestedArray::mergeDeepArray([$this->defaultConfiguration(), $configuration], TRUE);
     return $this;
   }
@@ -82,7 +82,7 @@ trait ConfigurableTrait {
    *
    * @see \Drupal\Component\Plugin\ConfigurableInterface::defaultConfiguration()
    */
-  public function defaultConfiguration(): array {
+  public function defaultConfiguration() {
     return [];
   }
 
