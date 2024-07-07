@@ -602,6 +602,7 @@ skiptags
 slatkin
 smacss
 smalldatetime
+smtps
 somecompany
 sortablejs
 specialchars
