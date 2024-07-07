@@ -7,6 +7,7 @@ use Drupal\Component\Utility\Html;
 /**
  * Defines the base class for an attribute type.
  *
+ * @see https://html.spec.whatwg.org/#attributes-2
  * @see \Drupal\Core\Template\Attribute
  */
 abstract class AttributeValueBase {
@@ -51,9 +52,14 @@ abstract class AttributeValueBase {
    */
   public function render() {
     $value = (string) $this;
+    $singleQuote = str_contains($value, '"');
     if (isset($this->value) && static::RENDER_EMPTY_ATTRIBUTE || !empty($value)) {
-      return Html::escape($this->name) . '="' . $value . '"';
+      // Flips the attribute quotes between single and double-quoted syntax.
+      $rendered = Html::escape($this->name);
+      $rendered .= $singleQuote ? "='" . $value . "'" : '="' . $value . '"';
+      return $rendered;
     }
+    return '';
   }
 
   /**

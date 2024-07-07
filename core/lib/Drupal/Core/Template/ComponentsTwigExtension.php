@@ -83,7 +83,7 @@ final class ComponentsTwigExtension extends AbstractExtension {
     }
     // If there is an "attributes" property, merge the additional attributes
     // into it if possible.
-    elseif ($context['attributes'] instanceof Attribute) {
+    elseif ($context['attributes'] instanceof HtmlAttributeInterface) {
       $context['attributes']->merge(new Attribute($component_attributes));
     }
     return $context;

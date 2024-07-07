@@ -9,6 +9,7 @@ use Drupal\Component\Utility\Html;
 use Drupal\Core\Render\Markup;
 use Drupal\Core\Template\Attribute;
 use Drupal\Core\Template\AttributeArray;
+use Drupal\Core\Template\HtmlAttributeInterface;
 use Drupal\Core\Template\AttributeString;
 use Drupal\Core\Template\Loader\StringLoader;
 use Drupal\Tests\UnitTestCase;

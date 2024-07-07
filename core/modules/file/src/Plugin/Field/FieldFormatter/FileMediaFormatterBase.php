@@ -8,6 +8,7 @@ use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Template\Attribute;
+use Drupal\Core\Template\HtmlAttributeInterface;
 
 /**
  * Base class for media file formatter.
@@ -145,7 +146,7 @@ abstract class FileMediaFormatterBase extends FileFormatterBase implements FileM
    *   Additional attributes to be applied to the HTML element. Attribute names
    *   will be used as key and value in the HTML element.
    *
-   * @return \Drupal\Core\Template\Attribute
+   * @return HtmlAttributeInterface
    *   Container with all the attributes for the HTML tag.
    */
   protected function prepareAttributes(array $additional_attributes = []) {

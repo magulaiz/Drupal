@@ -7,6 +7,7 @@ use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Plugin\PluginBase;
 use Drupal\Core\Render\BubbleableMetadata;
 use Drupal\Core\Render\Element;
+use Drupal\Core\Template\AttributeHelper;
 use Drupal\Core\Url;
 
 /**
@@ -49,8 +50,8 @@ use Drupal\Core\Url;
  *   See the "Attaching libraries in render arrays" section of the
  *   @link theme_render Render API topic @endlink for an overview, and
  *   \Drupal\Core\Render\AttachmentsResponseProcessorInterface::processAttachments
- *   for a list of what this can contain. Besides this list, it may also contain
- *   a 'placeholders' element; see the Placeholders section of the
+ *   for a list of what this can contain. Besides this list, it may also
+ *   contain a 'placeholders' element; see the Placeholders section of the
  *   @link theme_render Render API topic @endlink for an overview.
  * - #attributes: (array) HTML attributes for the element. The first-level
  *   keys are the attribute names, such as 'class', and the attributes are
@@ -429,6 +430,38 @@ abstract class RenderElementBase extends PluginBase implements ElementInterface 
       // Indicate that Ajax processing was successful.
       $element['#ajax_processed'] = TRUE;
     }
+    return $element;
+  }
+
+  /**
+   * @param mixed[] $element
+   *   The render array for the element.
+   *
+   * @return mixed[]
+   *   The modified array with HTMX library attachments, if appropriate.
+   */
+  public static function preProcessHtmxElement(array $element): array {
+    $processed = $element['#htmx_processed'] ?? FALSE;
+    // Skip already processed elements.
+    if ($processed) {
+      return $element;
+    }
+    // Initialize #htmx_processed, so we do not process this element again.
+    $element['#htmx_processed'] = FALSE;
+
+    // Nothing to do if there are no Ajax settings.
+    if (empty($element['#htmx'])) {
+      return $element;
+    }
+
+    // Attach HTMX and integration javascript.
+    $element['#attached']['library'][] = 'core/drupal.htmx';
+    $element['#attributes'] = $element['#attributes'] ?? [];
+    $element['#attributes'] = AttributeHelper::mergeCollections($element['#attributes'], $element['#htmx']);
+
+
+    // Indicate that HTMX processing was successful.
+    $element['#htmx_processed'] = TRUE;
     return $element;
   }
 

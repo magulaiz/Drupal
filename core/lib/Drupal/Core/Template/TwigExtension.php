@@ -247,7 +247,7 @@ class TwigExtension extends AbstractExtension {
    *   The link text for the anchor tag as a translated string.
    * @param \Drupal\Core\Url|string $url
    *   The URL object or string used for the link.
-   * @param array|\Drupal\Core\Template\Attribute $attributes
+   * @param array|HtmlAttributeInterface $attributes
    *   An optional array or Attribute object of link attributes.
    *
    * @return array
@@ -255,7 +255,7 @@ class TwigExtension extends AbstractExtension {
    */
   public function getLink($text, $url, $attributes = []) {
     assert(is_string($url) || $url instanceof Url, '$url must be a string or object of type \Drupal\Core\Url');
-    assert(is_array($attributes) || $attributes instanceof Attribute, '$attributes, if set, must be an array or object of type \Drupal\Core\Template\Attribute');
+    assert(is_array($attributes) || $attributes instanceof HtmlAttributeInterface, '$attributes, if set, must be an array or object implementing HtmlAttributeInterface');
 
     if (!$url instanceof Url) {
       $url = Url::fromUri($url);
@@ -265,7 +265,7 @@ class TwigExtension extends AbstractExtension {
     // @see https://www.drupal.org/node/2842399
     $url = clone $url;
     if ($attributes) {
-      if ($attributes instanceof Attribute) {
+      if ($attributes instanceof HtmlAttributeInterface) {
         $attributes = $attributes->toArray();
       }
       $url->mergeOptions(['attributes' => $attributes]);
@@ -615,14 +615,14 @@ class TwigExtension extends AbstractExtension {
   /**
    * Creates an Attribute object.
    *
-   * @param Attribute|array $attributes
+   * @param HtmlAttributeInterface|array $attributes
    *   (optional) An existing attribute object or an associative array of
    *   key-value pairs to be converted to HTML attributes.
    *
-   * @return \Drupal\Core\Template\Attribute
+   * @return HtmlAttributeInterface
    *   An attributes object that has the given attributes.
    */
-  public function createAttribute(Attribute|array $attributes = []) {
+  public function createAttribute(HtmlAttributeInterface|array $attributes = []) {
     if (\is_array($attributes)) {
       return new Attribute($attributes);
     }

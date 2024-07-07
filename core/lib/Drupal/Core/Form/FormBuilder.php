@@ -16,7 +16,9 @@ use Drupal\Core\Form\Exception\BrokenPostRequestException;
 use Drupal\Core\Render\Element;
 use Drupal\Core\Render\ElementInfoManagerInterface;
 use Drupal\Core\Security\TrustedCallbackInterface;
+use Drupal\Core\Template\HtmxAttribute;
 use Drupal\Core\Theme\ThemeManagerInterface;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\FileBag;
 use Symfony\Component\HttpFoundation\InputBag;
@@ -302,8 +304,10 @@ class FormBuilder implements FormBuilderInterface, FormValidatorInterface, FormS
       }
     }
 
-    // If this form is an AJAX request, disable all form redirects.
-    if ($ajax_form_request = $request->query->has(static::AJAX_FORM_REQUEST)) {
+    // If this form is a jQuery AJAX request, or an HTMX request disable all
+    // form redirects.
+    $ajax_form_request = $request->query->has(static::AJAX_FORM_REQUEST);
+    if ($ajax_form_request || $this->isHtmxRequest($request)) {
       $form_state->disableRedirect();
     }
 
@@ -600,6 +604,19 @@ class FormBuilder implements FormBuilderInterface, FormValidatorInterface, FormS
       // Don't rebuild or cache form submissions invoked via self::submitForm().
       if ($form_state->isProgrammed()) {
         return;
+      }
+
+      // If a form from an HTMX request is still processing at this point it
+      // was not submitted.  The form_build_id value needs to be restored if
+      // the form rebuilds.
+      // @see \Drupal\Core\Form\EventSubscriber\FormAjaxSubscriber::onException
+      // @see Drupal.AjaxCommands.update_build_id
+      if ($this->isHtmxRequest()) {
+        // Restore the build id that was sent with the request. It will be used
+        // after the rebuild to cache the rebuilt form.
+        $form_state->addRebuildInfo('copy', ['#build_id' => TRUE]);
+        $input = $form_state->getUserInput();
+        $form['#build_id'] = $input['form_build_id'];
       }
 
       // If $form_state->isRebuilding() has been set and input has been
@@ -1290,7 +1307,7 @@ class FormBuilder implements FormBuilderInterface, FormValidatorInterface, FormS
     // \Drupal\Core\Form\FormState::cleanValues(). Enforce the same input
     // processing restrictions as above.
     if ($process_input) {
-      // Detect if the element triggered the submission via Ajax.
+      // Detect if the element triggered the submission via Ajax or HTMX.
       if ($this->elementTriggeredScriptedSubmission($element, $form_state)) {
         $form_state->setTriggeringElement($element);
       }
@@ -1333,6 +1350,12 @@ class FormBuilder implements FormBuilderInterface, FormValidatorInterface, FormS
    */
   protected function elementTriggeredScriptedSubmission($element, FormStateInterface &$form_state) {
     $input = $form_state->getUserInput();
+    if ($this->isHtmxRequest()) {
+      if (isset($element['#attributes']['data-drupal-selector']) && $element['#attributes']['data-drupal-selector'] === $this->getHtmxTrigger()) {
+        // @see htmxDrupalData() in core/misc/htmx.js.
+        return TRUE;
+      }
+    }
     if (!empty($input['_triggering_element_name']) && $element['#name'] == $input['_triggering_element_name']) {
       if (empty($input['_triggering_element_value']) || $input['_triggering_element_value'] == $element['#value']) {
         return TRUE;
@@ -1408,6 +1431,38 @@ class FormBuilder implements FormBuilderInterface, FormValidatorInterface, FormS
       $this->currentUser = \Drupal::currentUser();
     }
     return $this->currentUser;
+  }
+
+  /**
+   * True if the HX-Request header was present on the request.
+   *
+   * @param \Symfony\Component\HttpFoundation\Request|null $request
+   *   A Request to use.  If omitted, the current request on the stack is used.
+   *
+   * @return bool
+   *   Is this an HTMX request?
+   */
+  public function isHtmxRequest(?Request $request = NULL): bool {
+    if (!($request instanceof Request)) {
+      $request = $this->requestStack->getCurrentRequest();
+    }
+    return $request->headers->has('HX-Request');
+  }
+
+  /**
+   * Returns the HTMX trigger value stored from the request.
+   *
+   * @param \Symfony\Component\HttpFoundation\Request|null $request
+   *   A Request to use.  If omitted, the current request on the stack is used.
+   *
+   * @return string
+   *   The trigger name or empty string if the header is not present.
+   */
+  public function getHtmxTrigger(?Request $request = NULL): string {
+    if (!($request instanceof Request)) {
+      $request = $this->requestStack->getCurrentRequest();
+    }
+    return $request->headers->get('HX-Trigger', '');
   }
 
   /**

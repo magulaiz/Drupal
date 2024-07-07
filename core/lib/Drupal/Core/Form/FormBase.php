@@ -193,6 +193,28 @@ abstract class FormBase implements FormInterface, ContainerInjectionInterface {
   }
 
   /**
+   * True if the HX-Request header was present on the request.
+   *
+   * @return bool
+   *   Is this an HTMX request?
+   */
+  public function isHtmxRequest(): bool {
+    $request = $this->getRequest();
+    return $request->headers->has('HX-Request');
+  }
+
+  /**
+   * Returns the HTMX trigger value stored from the request.
+   *
+   * @return string
+   *   The trigger name or empty string if the header is not present.
+   */
+  public function getHtmxTrigger(): string {
+    $request = $this->getRequest();
+    return $request->headers->get('HX-Trigger', '');
+  }
+
+  /**
    * Returns a redirect response object for the specified route.
    *
    * @param string $route_name

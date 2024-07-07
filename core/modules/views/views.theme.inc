@@ -7,6 +7,7 @@
 use Drupal\Component\Utility\Html;
 use Drupal\Component\Utility\Xss;
 use Drupal\Core\Template\Attribute;
+use Drupal\Core\Template\HtmlAttributeInterface;
 use Drupal\Core\Url;
 use Drupal\Core\Utility\TableSort;
 
@@ -556,7 +557,7 @@ function template_preprocess_views_view_table(&$variables): void {
       if (!isset($column_reference['attributes'])) {
         $column_reference['attributes'] = new Attribute();
       }
-      elseif (!($column_reference['attributes'] instanceof Attribute)) {
+      elseif (!($column_reference['attributes'] instanceof HtmlAttributeInterface)) {
         $column_reference['attributes'] = new Attribute($column_reference['attributes']);
       }
 

@@ -7,6 +7,7 @@ use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Routing\StackedRouteMatchInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Template\Attribute;
+use Drupal\Core\Template\HtmlAttributeInterface;
 
 /**
  * Provides the default implementation of a theme manager.
@@ -319,7 +320,7 @@ class ThemeManager implements ThemeManagerInterface {
       $default_attributes = new Attribute();
     }
     foreach (['attributes', 'title_attributes', 'content_attributes'] as $key) {
-      if (isset($variables[$key]) && !($variables[$key] instanceof Attribute)) {
+      if (isset($variables[$key]) && !($variables[$key] instanceof HtmlAttributeInterface)) {
         if ($variables[$key]) {
           $variables[$key] = new Attribute($variables[$key]);
         }

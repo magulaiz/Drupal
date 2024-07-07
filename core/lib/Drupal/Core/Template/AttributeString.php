@@ -2,7 +2,7 @@
 
 namespace Drupal\Core\Template;
 
-use Drupal\Component\Utility\Html;
+use Drupal\Component\Utility\Xss;
 
 /**
  * A class that represents most standard HTML attributes.
@@ -25,7 +25,7 @@ class AttributeString extends AttributeValueBase {
    * Implements the magic __toString() method.
    */
   public function __toString() {
-    return Html::escape((string) $this->value);
+    return Xss::filter((string) $this->value);
   }
 
 }
