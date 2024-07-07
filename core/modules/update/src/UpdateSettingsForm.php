@@ -96,7 +96,7 @@ class UpdateSettingsForm extends ConfigFormBase {
     if (!empty($emails)) {
       $emails = static::multiLineStringToArray($emails);
       $emailsCount = array_count_values($emails);
-      foreach ($emailsCount as $email => $count) {
+      foreach ($emailsCount as $count) {
         if ($count > 1) {
           $form_state->setErrorByName('update_notify_emails', $this->t('Add an unique email per line.'));
         }
