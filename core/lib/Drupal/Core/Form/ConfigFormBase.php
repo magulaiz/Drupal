@@ -7,6 +7,7 @@ use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Config\TypedConfigManagerInterface;
 use Drupal\Core\Render\Element;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
+use Drupal\Core\Validation\Plugin\Validation\Constraint\RegexConstraint;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -108,6 +109,17 @@ abstract class ConfigFormBase extends FormBase {
 
       $config = $this->configFactory()->getEditable($target->configName);
       $element['#default_value'] = $target->getValue($config);
+      if ($element['#type'] === 'textfield') {
+        foreach ($target->propertyPaths as $property_path) {
+          $definition = $this->typedConfigManager->getDefinition($target->configName)['mapping'][$property_path]['type'];
+          $constraints = $this->typedConfigManager->getDefinition($definition)['constraints'];
+          foreach ($constraints as $constraint) {
+            if ($constraint instanceof RegexConstraint) {
+              $element['#attributes']['pattern'] = $constraint->pattern;
+            }
+          }
+        }
+      }
     }
 
     foreach (Element::children($element) as $key) {
