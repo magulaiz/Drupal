@@ -29,7 +29,7 @@ variables:
   services:
     - name: $_CONFIG_DOCKERHUB_ROOT/$_TARGET_DB:production
       alias: database
-    - name: $_CONFIG_DOCKERHUB_ROOT/chromedriver:production
+    - name: $_CONFIG_DOCKERHUB_ROOT/chromedriver:dev
       alias: chrome
       entrypoint:
         - chromedriver
