@@ -7,7 +7,6 @@ namespace Drupal\Tests\Component\Plugin;
 use Drupal\Component\Plugin\ConfigurableInterface;
 use Drupal\Component\Plugin\ConfigurableTrait;
 use Drupal\Component\Plugin\PluginBase;
-use Drupal\Core\Plugin\ConfigurablePluginBase;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -26,7 +25,7 @@ class ConfigurableTraitTest extends TestCase {
    */
   public function testDefaultConfiguration() {
     /** @var \Drupal\Component\Plugin\ConfigurableInterface $configurable_plugin */
-    $configurable_plugin = $this->getMockForAbstractClass(ConfigurablePluginBase::class, [], '', FALSE);
+    $configurable_plugin = new ConfigurableTestClass();
     $this->assertSame([], $configurable_plugin->defaultConfiguration());
   }
 
@@ -64,7 +63,8 @@ class ConfigurableTraitTest extends TestCase {
    * @dataProvider setConfigurationDataProvider
    */
   public function testSetConfiguration(array $default_configuration, array $test_configuration, array $final_configuration) {
-    $test_object = new ConfigurableTestClass($default_configuration);
+    $test_object = new ConfigurableTestClass();
+    $test_object->setDefaultConfiguration($default_configuration);
     $test_object->setConfiguration($test_configuration);
     $this->assertSame($final_configuration, $test_object->getConfiguration());
   }
@@ -163,38 +163,43 @@ class ConfigurableTraitTest extends TestCase {
 }
 
 /**
- * A test class using ConfigurablePluginTrait.
+ * A test class using ConfigurablePluginTrait that can modify the de.
  */
 class ConfigurableTestClass extends PluginBase implements ConfigurableInterface {
-  use ConfigurableTrait;
+  use ConfigurableTrait {
+    defaultConfiguration as traitDefaultConfiguration;
+  }
 
   /**
    * A default configuration for the test class to return.
    *
    * @var array
    */
-  protected $defaultConfiguration;
+  protected ?array $defaultConfiguration = NULL;
 
   /**
-   * Constructs a ConfigurablePluginTestClass object.
-   *
-   * @param array $default_configuration
-   *   The default configuration to return.
+   * {@inheritdoc}
    */
-  public function __construct(array $default_configuration) {
-    $this->defaultConfiguration = $default_configuration;
-    parent::__construct([], '', []);
-    $this->setConfiguration([]);
+  public function __construct(array $configuration = [], string $plugin_id = '', array $plugin_definition = []) {
+    parent::__construct($configuration, $plugin_id, $plugin_definition);
+    $this->setConfiguration($configuration);
   }
 
   /**
-   * Returns the provided test defaults.
+   * Sets the default configuration this test will return.
    *
-   * @return array
-   *   The default configuration.
+   * @param array $default_configuration
+   *   The default configuration to use.
+   */
+  public function setDefaultConfiguration(array $default_configuration) {
+    $this->defaultConfiguration = $default_configuration;
+  }
+
+  /**
+   * {@inheritdoc}
    */
   public function defaultConfiguration() {
-    return $this->defaultConfiguration;
+    return $this->defaultConfiguration ?? $this->traitDefaultConfiguration();
   }
 
 }
