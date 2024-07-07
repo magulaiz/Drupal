@@ -72,7 +72,7 @@ class ConfigurableTraitTest extends TestCase {
    * @return array
    *   The data.
    */
-  public function setConfigurationDataProvider() {
+  public static function setConfigurationDataProvider() {
     return [
       'Direct Override' => [
         'default_configuration' => [
