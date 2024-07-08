@@ -37,6 +37,7 @@ class EntityMethodConfigActionsTest extends KernelTestBase {
   protected function setUp(): void {
     parent::setUp();
 
+    $this->installEntitySchema('node');
     $this->installConfig('node');
     $this->createContentType(['type' => 'test']);
 
