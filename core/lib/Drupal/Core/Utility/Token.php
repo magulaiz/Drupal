@@ -260,6 +260,8 @@ class Token {
       $unaliased_tokens = [];
 
       foreach ($text_token_alias as $alias => $tokens) {
+        $alias_tokens_mapping = [];
+
         foreach ($tokens as $token => $unaliased_token_name) {
           $unaliased_tokens[$token] = "[{$unaliased_token_name}]";
           $alias_tokens_mapping["[{$unaliased_token_name}]"] = "{$type}{{$alias}}:$token";
@@ -270,8 +272,10 @@ class Token {
           $replacements_unaliased = $this->generate($type, $unaliased_tokens, $data_for_current_token, $options, $bubbleable_metadata);
 
           foreach ($replacements_unaliased as $unaliased_token_name => $value) {
-            $aliased_token_name = $alias_tokens_mapping[$unaliased_token_name];
-            $replacements["[{$aliased_token_name}]"] = $value;
+            if (isset($alias_tokens_mapping[$unaliased_token_name])) {
+              $aliased_token_name = $alias_tokens_mapping[$unaliased_token_name];
+              $replacements["[{$aliased_token_name}]"] = $value;
+            }
           }
         }
       }
