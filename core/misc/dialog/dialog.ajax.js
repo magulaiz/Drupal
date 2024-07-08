@@ -56,13 +56,13 @@
         originalClose.apply(settings.dialog, [event, ...args]);
         // Check if the opener element is inside an AJAX container.
         const $element = $(event.target);
-        const dialogData = new WeakMap();
-        const ajaxContainer =
-          (dialogData.get($element[0]) &&
-            dialogData
-              .get($element[0])
-              .opener.closest('[data-drupal-ajax-container]')) ||
-          [];
+        // eslint-disable-next-line jquery/no-data
+        const ajaxContainer = $element.data('uiDialog')
+          ? $element
+            // eslint-disable-next-line jquery/no-data
+              .data('uiDialog')
+              .opener.closest('[data-drupal-ajax-container]')
+          : [];
 
         // If the opener element was in an ajax container, and focus is on the
         // body element, we can assume focus was lost. To recover, focus is
