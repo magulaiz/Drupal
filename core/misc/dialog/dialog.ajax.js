@@ -59,7 +59,7 @@
         // eslint-disable-next-line jquery/no-data
         const ajaxContainer = $element.data('uiDialog')
           ? $element
-            // eslint-disable-next-line jquery/no-data
+              // eslint-disable-next-line jquery/no-data
               .data('uiDialog')
               .opener.closest('[data-drupal-ajax-container]')
           : [];
