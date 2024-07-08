@@ -124,12 +124,12 @@ class ConstraintManager extends DefaultPluginManager {
       'class' => Image::class,
       'type' => ['string'],
     ]);
-    $this->getDiscovery()->setDefinition('AtLeastOneOf',[
+    $this->getDiscovery()->setDefinition('AtLeastOneOf', [
       'label' => new TranslatableMarkup('AtLeastOneOf'),
       'class' => AtLeastOneOf::class,
       'type' => FALSE,
     ]);
-    $this->getDiscovery()->setDefinition('IdenticalTo',[
+    $this->getDiscovery()->setDefinition('IdenticalTo', [
       'label' => new TranslatableMarkup('IdenticalTo'),
       'class' => IdenticalTo::class,
       'type' => FALSE,
