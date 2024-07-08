@@ -2,20 +2,18 @@
 
 namespace Drupal\Core\Database;
 
-// cSpell:ignore mydriver
-
 /**
  * Represents a prepared statement.
  *
- * Child implementations should either extend StatementWrapper:
+ * Child implementations should either extend StatementWrapperIterator:
  * @code
- * class Drupal\mymodule\Driver\Database\mydriver\Statement extends Drupal\Core\Database\StatementWrapper {}
+ * class Drupal\my_module\Driver\Database\my_driver\Statement extends Drupal\Core\Database\StatementWrapperIterator {}
  * @endcode
  * or define their own class. If defining their own class, they will also have
- * to implement either the Iterator or IteratorAggregate interface before
+ * to implement either the \Iterator or \IteratorAggregate interface before
  * Drupal\Core\Database\StatementInterface:
  * @code
- * class Drupal\mymodule\Driver\Database\mydriver\Statement implements Iterator, Drupal\Core\Database\StatementInterface {}
+ * class Drupal\my_module\Driver\Database\my_driver\Statement implements Iterator, Drupal\Core\Database\StatementInterface {}
  * @endcode
  *
  * @ingroup database
@@ -53,10 +51,10 @@ interface StatementInterface extends \Traversable {
   public function getConnectionTarget(): string;
 
   /**
-   * Returns the number of rows affected by the last SQL statement.
+   * Returns the number of rows matched by the last SQL statement.
    *
    * @return int
-   *   The number of rows affected by the last DELETE, INSERT, or UPDATE
+   *   The number of rows matched by the last DELETE, INSERT, or UPDATE
    *   statement executed or throws \Drupal\Core\Database\RowCountException
    *   if the last executed statement was SELECT.
    *
@@ -120,11 +118,12 @@ interface StatementInterface extends \Traversable {
    * or stdClass if not specified.
    *
    * phpcs:disable Drupal.Commenting
-   * @todo Remove PHPCS overrides https://www.drupal.org/node/3194677.
+   * @todo Uncomment new method parameters before drupal:11.0.0.
+   * @see https://www.drupal.org/project/drupal/issues/3354672
    *
    * @param string|null $class_name
    *   Name of the created class.
-   * @param array|null $constructor_arguments
+   * @param array $constructor_arguments
    *   Elements of this array are passed to the constructor.
    * phpcs:enable
    *
@@ -132,7 +131,7 @@ interface StatementInterface extends \Traversable {
    *   The object of specified class or \stdClass if not specified. Returns
    *   FALSE or NULL if there is no next row.
    */
-  public function fetchObject(/* string $class_name = NULL, array $constructor_arguments = NULL */);
+  public function fetchObject(/* ?string $class_name = NULL, array $constructor_arguments = [] */);
 
   /**
    * Fetches the next row and returns it as an associative array.
@@ -203,7 +202,7 @@ interface StatementInterface extends \Traversable {
    * @param $key
    *   The name of the field on which to index the array.
    * @param $fetch
-   *   The fetchmode to use. If set to \PDO::FETCH_ASSOC, \PDO::FETCH_NUM, or
+   *   The fetch mode to use. If set to \PDO::FETCH_ASSOC, \PDO::FETCH_NUM, or
    *   \PDO::FETCH_BOTH the returned value with be an array of arrays. For any
    *   other value it will be an array of objects. By default, the fetch mode
    *   set for the query will be used.

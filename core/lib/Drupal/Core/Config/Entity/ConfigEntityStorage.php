@@ -159,7 +159,7 @@ class ConfigEntityStorage extends EntityStorageBase implements ConfigEntityStora
   /**
    * {@inheritdoc}
    */
-  protected function doLoadMultiple(array $ids = NULL) {
+  protected function doLoadMultiple(?array $ids = NULL) {
     $prefix = $this->getPrefix();
 
     // Get the names of the configuration entities we are going to load.
@@ -410,7 +410,7 @@ class ConfigEntityStorage extends EntityStorageBase implements ConfigEntityStora
    * @param bool $is_syncing
    *   Is the configuration entity being created as part of a config sync.
    *
-   * @return \Drupal\Core\Config\ConfigEntityInterface
+   * @return \Drupal\Core\Config\Entity\ConfigEntityInterface
    *   The configuration entity.
    *
    * @see \Drupal\Core\Config\Entity\ConfigEntityStorageInterface::createFromStorageRecord()
@@ -422,6 +422,7 @@ class ConfigEntityStorage extends EntityStorageBase implements ConfigEntityStora
       $values[$this->uuidKey] = $this->uuidService->generate();
     }
     $data = $this->mapFromStorageRecords([$values]);
+    /** @var \Drupal\Core\Config\Entity\ConfigEntityInterface $entity */
     $entity = current($data);
     $entity->original = clone $entity;
     $entity->setSyncing($is_syncing);
@@ -481,7 +482,7 @@ class ConfigEntityStorage extends EntityStorageBase implements ConfigEntityStora
   /**
    * {@inheritdoc}
    */
-  public function loadMultipleOverrideFree(array $ids = NULL) {
+  public function loadMultipleOverrideFree(?array $ids = NULL) {
     $this->overrideFree = TRUE;
     $entities = $this->loadMultiple($ids);
     $this->overrideFree = FALSE;

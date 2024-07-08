@@ -78,7 +78,7 @@ class TermStorage extends SqlContentEntityStorage implements TermStorageInterfac
   /**
    * {@inheritdoc}
    */
-  public function resetCache(array $ids = NULL) {
+  public function resetCache(?array $ids = NULL) {
     $this->ancestors = [];
     $this->treeChildren = [];
     $this->treeParents = [];
@@ -343,7 +343,7 @@ class TermStorage extends SqlContentEntityStorage implements TermStorageInterfac
   /**
    * {@inheritdoc}
    */
-  public function getNodeTerms(array $nids, array $vocabs = [], $langcode = NULL) {
+  public function getNodeTerms(array $nids, array $vids = [], $langcode = NULL) {
     $query = $this->database->select($this->getDataTable(), 'td');
     $query->innerJoin('taxonomy_index', 'tn', '[td].[tid] = [tn].[tid]');
     $query->fields('td', ['tid']);
@@ -352,8 +352,8 @@ class TermStorage extends SqlContentEntityStorage implements TermStorageInterfac
     $query->orderby('td.name');
     $query->condition('tn.nid', $nids, 'IN');
     $query->addTag('taxonomy_term_access');
-    if (!empty($vocabs)) {
-      $query->condition('td.vid', $vocabs, 'IN');
+    if (!empty($vids)) {
+      $query->condition('td.vid', $vids, 'IN');
     }
     if (!empty($langcode)) {
       $query->condition('td.langcode', $langcode);
@@ -449,6 +449,7 @@ class TermStorage extends SqlContentEntityStorage implements TermStorageInterfac
    * {@inheritdoc}
    */
   public function __sleep() {
+    /** @var string[] $vars */
     $vars = parent::__sleep();
     // Do not serialize static cache.
     unset($vars['ancestors'], $vars['treeChildren'], $vars['treeParents'], $vars['treeTerms'], $vars['trees'], $vars['vocabularyHierarchyType']);

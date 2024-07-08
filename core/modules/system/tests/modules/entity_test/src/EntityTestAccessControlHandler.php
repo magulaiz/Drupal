@@ -55,6 +55,9 @@ class EntityTestAccessControlHandler extends EntityAccessControlHandler {
           return AccessResult::allowedIfHasPermission($account, 'view test entity translations');
         }
       }
+      if ($entity instanceof EntityPublishedInterface && !$entity->isPublished()) {
+        return AccessResult::neutral('Unpublished entity');
+      }
       return AccessResult::allowedIfHasPermission($account, 'view test entity');
     }
     elseif (in_array($operation, ['update', 'delete'])) {
@@ -76,12 +79,10 @@ class EntityTestAccessControlHandler extends EntityAccessControlHandler {
       return AccessResult::allowedIf(in_array($operation, $labels, TRUE));
     }
     elseif ($operation === 'revert') {
-      // Disallow reverting to latest.
-      return AccessResult::allowedIf(!$entity->isDefaultRevision() && !$entity->isLatestRevision() && in_array('revert', $labels, TRUE));
+      return AccessResult::allowedIf(in_array('revert', $labels, TRUE));
     }
     elseif ($operation === 'delete revision') {
-      // Disallow deleting latest and current revision.
-      return AccessResult::allowedIf(!$entity->isLatestRevision() && in_array('delete revision', $labels, TRUE));
+      return AccessResult::allowedIf(in_array('delete revision', $labels, TRUE));
     }
 
     // No opinion.

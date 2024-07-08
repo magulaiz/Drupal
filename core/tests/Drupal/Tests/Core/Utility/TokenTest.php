@@ -151,74 +151,6 @@ class TokenTest extends UnitTestCase {
   }
 
   /**
-   * @convers ::alias_scan
-   */
-  public function testAliasScan(): void {
-    $result = $this->token->alias_scan('[node{alias1}:title] is the first title. ID is [node{alias1}:nid]. [node{alias2}:title] is the second title.');
-
-    $this->assertEquals($result, [
-      'node' => [
-        'alias1' => [
-          'title' => 'node:title',
-          'nid' => 'node:nid',
-        ],
-        'alias2' => [
-          'title' => 'node:title',
-        ],
-      ],
-    ]);
-  }
-
-  /**
-   * @covers ::replace
-   */
-  public function testAliasReplacement(): void {
-
-    $node1 = $this->prophesize('Drupal\node\NodeInterface');
-    $node1->id()->willReturn(1);
-    $node1->getCacheTags()->willReturn(['node:1']);
-    $node1->getCacheContexts()->willReturn(['custom_context']);
-    $node1->getCacheMaxAge()->willReturn(10);
-    $node1 = $node1->reveal();
-
-    $node2 = $this->prophesize('Drupal\node\NodeInterface');
-    $node2->id()->willReturn(2);
-    $node2->getCacheTags()->willReturn(['node:2']);
-    $node2->getCacheContexts()->willReturn(['custom_context']);
-    $node2->getCacheMaxAge()->willReturn(10);
-    $node2 = $node2->reveal();
-
-    $data = ['node{alias1}' => $node1, 'node{alias2}' => $node2];
-
-    $this->moduleHandler->expects($this->any())
-      ->method('invokeAll')
-      ->willReturnCallback(function($alterHook, $args) {
-        // Data is the third argument in the arguments passed to the invokeAll method.
-        // web/core/lib/Drupal/Core/Utility/Token.php:458
-        $entity = $args[2]['node'];
-
-        if ($entity->id() == 1) {
-          return [
-            '[node:title]' => 'Episode IV – A New Hope',
-            '[node:nid]' => '1',
-          ];
-        }
-        else if ($entity->id() == 2) {
-          return [
-            '[node:title]' => 'Episode V – The Empire Strikes Back',
-            '[node:nid]' => '2',
-          ];
-        }
-        else {
-          return [];
-        }
-      });
-
-    $replacedString = $this->token->replace('"[node{alias1}:title]" is the first film. Its ID is "[node{alias1}:nid]". "[node{alias2}:title]" is the second film.', $data);
-    $this->assertEquals('"Episode IV – A New Hope" is the first film. Its ID is "1". "Episode V – The Empire Strikes Back" is the second film.', $replacedString);
-  }
-
-  /**
    * @covers ::replace
    */
   public function testReplaceWithBubbleableMetadataObject(): void {
@@ -253,7 +185,7 @@ class TokenTest extends UnitTestCase {
   public function testReplaceWithHookTokensWithBubbleableMetadata(): void {
     $this->moduleHandler->expects($this->any())
       ->method('invokeAll')
-      ->willReturnCallback(function($hook_name, $args) {
+      ->willReturnCallback(function ($hook_name, $args) {
         $cacheable_metadata = $args[4];
         $cacheable_metadata->addCacheContexts(['custom_context']);
         $cacheable_metadata->addCacheTags(['node:1']);
@@ -284,6 +216,7 @@ class TokenTest extends UnitTestCase {
 
   /**
    * @covers ::replace
+   * @covers ::replace
    */
   public function testReplaceWithHookTokensAlterWithBubbleableMetadata(): void {
     $this->moduleHandler->expects($this->any())
@@ -292,7 +225,7 @@ class TokenTest extends UnitTestCase {
 
     $this->moduleHandler->expects($this->any())
       ->method('alter')
-      ->willReturnCallback(function($hook_name, array &$replacements, array $context, BubbleableMetadata $bubbleable_metadata) {
+      ->willReturnCallback(function ($hook_name, array &$replacements, array $context, BubbleableMetadata $bubbleable_metadata) {
         $replacements['[node:title]'] = 'hello world';
         $bubbleable_metadata->addCacheContexts(['custom_context']);
         $bubbleable_metadata->addCacheTags(['node:1']);
@@ -337,7 +270,7 @@ class TokenTest extends UnitTestCase {
   public function testReplaceEscaping($string, array $tokens, $expected): void {
     $this->moduleHandler->expects($this->any())
       ->method('invokeAll')
-      ->willReturnCallback(function($type, $args) {
+      ->willReturnCallback(function ($type, $args) {
         return $args[2]['tokens'];
       });
 
@@ -352,17 +285,9 @@ class TokenTest extends UnitTestCase {
     // No tokens. The first argument to Token::replace() should not be escaped.
     $data['no-tokens'] = ['muh', [], 'muh'];
     $data['html-in-string'] = ['<h1>Giraffe</h1>', [], '<h1>Giraffe</h1>'];
-    $data['html-in-string-quote'] = [
-      '<h1>Giraffe"</h1>',
-      [],
-      '<h1>Giraffe"</h1>',
-    ];
+    $data['html-in-string-quote'] = ['<h1>Giraffe"</h1>', [], '<h1>Giraffe"</h1>'];
 
-    $data['simple-placeholder-with-plain-text'] = [
-      '<h1>[token:meh]</h1>',
-      ['[token:meh]' => 'Giraffe"'],
-      '<h1>' . Html::escape('Giraffe"') . '</h1>',
-    ];
+    $data['simple-placeholder-with-plain-text'] = ['<h1>[token:meh]</h1>', ['[token:meh]' => 'Giraffe"'], '<h1>' . Html::escape('Giraffe"') . '</h1>'];
 
     $data['simple-placeholder-with-safe-html'] = [
       '<h1>[token:meh]</h1>',

@@ -106,7 +106,7 @@ interface MigrationInterface extends PluginInspectionInterface, DerivativeInspec
   /**
    * Get a list of required plugin IDs.
    *
-   * @returns string[]
+   * @return string[]
    */
   public function getRequirements(): array;
 
@@ -128,7 +128,7 @@ interface MigrationInterface extends PluginInspectionInterface, DerivativeInspec
    *   An associative array. The keys are the destination property names. Values
    *   are process pipelines. Each pipeline contains an array of plugins.
    */
-  public function getProcessPlugins(array $process = NULL);
+  public function getProcessPlugins(?array $process = NULL);
 
   /**
    * Returns the initialized destination plugin.
@@ -195,8 +195,7 @@ interface MigrationInterface extends PluginInspectionInterface, DerivativeInspec
   public function clearInterruptionResult();
 
   /**
-   * Signal that the migration should be interrupted with the specified result
-   * code.
+   * Sets the migration status as interrupted with a given result code.
    *
    * @param int $result
    *   One of the MigrationInterface::RESULT_* constants.
@@ -204,8 +203,7 @@ interface MigrationInterface extends PluginInspectionInterface, DerivativeInspec
   public function interruptMigration($result);
 
   /**
-   * Get the normalized process pipeline configuration describing the process
-   * plugins.
+   * Gets the normalized process plugin configuration.
    *
    * The process configuration is always normalized. All shorthand processing
    * will be expanded into their full representations.

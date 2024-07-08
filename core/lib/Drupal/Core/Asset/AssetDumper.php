@@ -4,6 +4,7 @@ namespace Drupal\Core\Asset;
 
 use Drupal\Component\Utility\Crypt;
 use Drupal\Core\File\Exception\FileException;
+use Drupal\Core\File\FileExists;
 use Drupal\Core\File\FileSystemInterface;
 
 /**
@@ -36,7 +37,7 @@ class AssetDumper implements AssetDumperUriInterface {
    * browsers to download new CSS when the CSS changes.
    */
   public function dump($data, $file_extension) {
-    $path = 'public://' . $file_extension;
+    $path = 'assets://' . $file_extension;
     // Prefix filename to prevent blocking by firewalls which reject files
     // starting with "ad*".
     $filename = $file_extension . '_' . Crypt::hashBase64($data) . '.' . $file_extension;
@@ -48,11 +49,11 @@ class AssetDumper implements AssetDumperUriInterface {
    * {@inheritdoc}
    */
   public function dumpToUri(string $data, string $file_extension, string $uri): string {
-    $path = 'public://' . $file_extension;
+    $path = 'assets://' . $file_extension;
     // Create the CSS or JS file.
     $this->fileSystem->prepareDirectory($path, FileSystemInterface::CREATE_DIRECTORY);
     try {
-      if (!file_exists($uri) && !$this->fileSystem->saveData($data, $uri, FileSystemInterface::EXISTS_REPLACE)) {
+      if (!file_exists($uri) && !$this->fileSystem->saveData($data, $uri, FileExists::Replace)) {
         return FALSE;
       }
     }
@@ -69,7 +70,7 @@ class AssetDumper implements AssetDumperUriInterface {
     // generating a file that won't be used.
     if (extension_loaded('zlib') && \Drupal::config('system.performance')->get($file_extension . '.gzip')) {
       try {
-        if (!file_exists($uri . '.gz') && !$this->fileSystem->saveData(gzencode($data, 9, FORCE_GZIP), $uri . '.gz', FileSystemInterface::EXISTS_REPLACE)) {
+        if (!file_exists($uri . '.gz') && !$this->fileSystem->saveData(gzencode($data, 9, FORCE_GZIP), $uri . '.gz', FileExists::Replace)) {
           return FALSE;
         }
       }
