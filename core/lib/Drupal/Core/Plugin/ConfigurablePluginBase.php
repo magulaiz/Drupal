@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Drupal\Core\Plugin;
 
 use Drupal\Component\Plugin\ConfigurableInterface;
-use Drupal\Component\Plugin\ConfigurableTrait;
 
 /**
  * Base class for plugins that are configurable.

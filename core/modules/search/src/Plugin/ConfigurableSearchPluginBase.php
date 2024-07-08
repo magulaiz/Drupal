@@ -2,8 +2,8 @@
 
 namespace Drupal\search\Plugin;
 
-use Drupal\Component\Plugin\ConfigurableTrait;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Plugin\ConfigurableTrait;
 
 /**
  * Provides a base implementation for a configurable Search plugin.

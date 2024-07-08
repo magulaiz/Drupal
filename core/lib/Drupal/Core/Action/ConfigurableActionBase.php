@@ -5,7 +5,7 @@ namespace Drupal\Core\Action;
 use Drupal\Component\Plugin\ConfigurableInterface;
 use Drupal\Component\Plugin\DependentPluginInterface;
 use Drupal\Core\Form\FormStateInterface;
-use Drupal\Component\Plugin\ConfigurableTrait;
+use Drupal\Core\Plugin\ConfigurableTrait;
 use Drupal\Core\Plugin\PluginFormInterface;
 
 /**

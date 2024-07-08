@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace Drupal\Tests\Component\Plugin;
+namespace Drupal\Tests\Core\Plugin;
 
 use Drupal\Component\Plugin\ConfigurableInterface;
-use Drupal\Component\Plugin\ConfigurableTrait;
 use Drupal\Component\Plugin\PluginBase;
+use Drupal\Core\Plugin\ConfigurableTrait;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -14,7 +14,7 @@ use PHPUnit\Framework\TestCase;
  *
  * @group Plugin
  *
- * @coversDefaultClass \Drupal\Component\Plugin\ConfigurableTrait
+ * @coversDefaultClass \Drupal\Core\Plugin\ConfigurableTrait
  */
 class ConfigurableTraitTest extends TestCase {
 

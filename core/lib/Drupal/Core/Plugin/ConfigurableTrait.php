@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Drupal\Component\Plugin;
+namespace Drupal\Core\Plugin;
 
 use Drupal\Component\Utility\NestedArray;
 
