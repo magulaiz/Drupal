@@ -192,7 +192,7 @@ class TokenTest extends UnitTestCase {
 
     $this->moduleHandler->expects($this->any())
       ->method('invokeAll')
-      ->willReturnCallback(function($alterHook, $args) {
+      ->willReturnCallback(function ($alterHook, $args) {
         // Data is the third argument in the arguments passed to the invokeAll method.
         // web/core/lib/Drupal/Core/Utility/Token.php:458
         $entity = $args[2]['node'];
@@ -203,7 +203,7 @@ class TokenTest extends UnitTestCase {
             '[node:nid]' => '1',
           ];
         }
-        else if ($entity->id() == 2) {
+        elseif ($entity->id() == 2) {
           return [
             '[node:title]' => 'Episode V – The Empire Strikes Back',
             '[node:nid]' => '2',
