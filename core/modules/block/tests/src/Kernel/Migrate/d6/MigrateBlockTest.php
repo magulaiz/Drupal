@@ -103,8 +103,8 @@ class MigrateBlockTest extends MigrateDrupal6TestBase {
     $visibility = [
       'request_path' => [
         'id' => 'request_path',
-        'pages' => "<front>\n/node/1\n/blog/*",
         'negate' => TRUE,
+        'pages' => "<front>\n/node/1\n/blog/*",
       ],
     ];
     $settings = [
@@ -173,8 +173,8 @@ class MigrateBlockTest extends MigrateDrupal6TestBase {
     $visibility = [
       'request_path' => [
         'id' => 'request_path',
-        'pages' => '/node/1',
         'negate' => TRUE,
+        'pages' => '/node/1',
       ],
     ];
     $settings = [
@@ -250,8 +250,8 @@ class MigrateBlockTest extends MigrateDrupal6TestBase {
     $visibility = [
       'request_path' => [
         'id' => 'request_path',
-        'pages' => '<front>',
         'negate' => FALSE,
+        'pages' => '<front>',
       ],
     ];
     $settings = [
@@ -268,8 +268,8 @@ class MigrateBlockTest extends MigrateDrupal6TestBase {
     $visibility = [
       'request_path' => [
         'id' => 'request_path',
-        'pages' => '/node',
         'negate' => FALSE,
+        'pages' => '/node',
       ],
     ];
     $settings = [
