@@ -257,23 +257,23 @@ class Token {
     // replacement array.
     foreach ($text_token_aliases as $type => $text_token_alias) {
       $data_for_current_token = [];
-      $unaliased_tokens = [];
+      $not_aliased_tokens = [];
 
       foreach ($text_token_alias as $alias => $tokens) {
         $alias_tokens_mapping = [];
 
-        foreach ($tokens as $token => $unaliased_token_name) {
-          $unaliased_tokens[$token] = "[{$unaliased_token_name}]";
-          $alias_tokens_mapping["[{$unaliased_token_name}]"] = "{$type}{{$alias}}:$token";
+        foreach ($tokens as $token => $not_aliased_token_name) {
+          $not_aliased_tokens[$token] = "[{$not_aliased_token_name}]";
+          $alias_tokens_mapping["[{$not_aliased_token_name}]"] = "{$type}{{$alias}}:$token";
         }
         // @todo Check if need to add else condition ?
         if (isset($data["{$type}{{$alias}}"])) {
           $data_for_current_token[$type] = $data["{$type}{{$alias}}"];
-          $replacements_unaliased = $this->generate($type, $unaliased_tokens, $data_for_current_token, $options, $bubbleable_metadata);
+          $replacements_not_aliased = $this->generate($type, $not_aliased_tokens, $data_for_current_token, $options, $bubbleable_metadata);
 
-          foreach ($replacements_unaliased as $unaliased_token_name => $value) {
-            if (isset($alias_tokens_mapping[$unaliased_token_name])) {
-              $aliased_token_name = $alias_tokens_mapping[$unaliased_token_name];
+          foreach ($replacements_not_aliased as $not_aliased_token_name => $value) {
+            if (isset($alias_tokens_mapping[$not_aliased_token_name])) {
+              $aliased_token_name = $alias_tokens_mapping[$not_aliased_token_name];
               $replacements["[{$aliased_token_name}]"] = $value;
             }
           }
