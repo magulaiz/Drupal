@@ -1,0 +1,14 @@
+services:
+  _defaults:
+    autowire: true
+    autoconfigure: true
+    public: false
+
+  Drupal\dex_test\Command\DexExampleConfigureCommand:
+    tags:
+      - { name: 'console.command' }
+    public: true
+
+  Drupal\dex_test\Command\DexExamplePrivateCommand:
+    tags:
+      - { name: 'console.command' }

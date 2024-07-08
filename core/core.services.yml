@@ -1773,6 +1773,13 @@ services:
     class: Drupal\Core\Template\Loader\StringLoader
     tags:
       - { name: twig.loader, priority: -100 }
+  # Service holding the commands made available to the `dex` command.
+  # The service is completed with DexCompilerPass.
+  console.command_loader:
+    class: Symfony\Component\Console\CommandLoader\CommandLoaderInterface
+    public: true
+    arguments:
+      - "!abstract 'service locator added by container pass'"
   element_info:
     alias: plugin.manager.element_info
   file.htaccess_writer:
