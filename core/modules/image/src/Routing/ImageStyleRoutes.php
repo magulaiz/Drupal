@@ -53,7 +53,7 @@ class ImageStyleRoutes implements ContainerInjectionInterface {
     // will be bypassed.
     $directory_path = NULL;
     $files_base_url = Settings::get('file_public_base_url', '');
-    if ($files_base_url) { 
+    if ($files_base_url) {
       $url_parts = parse_url($files_base_url);
       if (isset($url_parts['path'])) {
         $directory_path = $url_parts['path'];
