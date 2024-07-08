@@ -29,6 +29,7 @@
         "symfony/mailer": "^7.1",
         "symfony/mime": "^7.1",
         "symfony/routing": "^7.1",
+        "symfony/runtime": "^7.1",
         "symfony/serializer": "^7.1",
         "symfony/validator": "^7.1",
         "symfony/process": "^7.1",
@@ -114,6 +115,10 @@
             "includes/bootstrap.inc"
         ]
     },
+    "bin": [
+        "bin/dex",
+        "scripts/drupal"
+    ],
     "config": {
         "preferred-install": "dist"
     },

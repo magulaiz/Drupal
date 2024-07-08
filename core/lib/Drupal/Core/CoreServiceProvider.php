@@ -9,6 +9,7 @@ use Drupal\Core\DependencyInjection\Compiler\BackendCompilerPass;
 use Drupal\Core\DependencyInjection\Compiler\CorsCompilerPass;
 use Drupal\Core\DependencyInjection\Compiler\DeprecatedServicePass;
 use Drupal\Core\DependencyInjection\Compiler\DevelopmentSettingsPass;
+use Drupal\Core\DependencyInjection\Compiler\DexCompilerPass;
 use Drupal\Core\DependencyInjection\Compiler\LoggerAwarePass;
 use Drupal\Core\DependencyInjection\Compiler\ModifyServiceDefinitionsPass;
 use Drupal\Core\DependencyInjection\Compiler\ProxyServicesPass;
@@ -80,6 +81,9 @@ class CoreServiceProvider implements ServiceProviderInterface, ServiceModifierIn
     $container->addCompilerPass(new StackedSessionHandlerPass());
 
     $container->addCompilerPass(new MainContentRenderersPass());
+
+    // Collect and register Commands.
+    $container->addCompilerPass(new DexCompilerPass());
 
     // Collect tagged handler services as method calls on consumer services.
     $container->addCompilerPass(new TaggedHandlersPass());
