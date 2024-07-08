@@ -151,7 +151,7 @@ class TokenTest extends UnitTestCase {
   }
 
   /**
-   * @convers ::alias_scan
+   * @covers ::alias_scan
    */
   public function testAliasScan(): void {
     $result = $this->token->alias_scan('[node{alias1}:title] is the first title. ID is [node{alias1}:nid]. [node{alias2}:title] is the second title.');
