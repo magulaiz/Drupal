@@ -392,7 +392,7 @@ trait AssertContentTrait {
    */
   protected function assertRaw($raw, $message = ''): void {
     if (!$message) {
-      $message = 'Raw "' . Html::escape($raw) . '" found';
+      $message = 'Raw "' . Html::escape((string) $raw) . '" found';
     }
     $this->assertStringContainsString((string) $raw, $this->getRawContent(), $message);
   }
@@ -412,7 +412,7 @@ trait AssertContentTrait {
    */
   protected function assertNoRaw($raw, $message = ''): void {
     if (!$message) {
-      $message = 'Raw "' . Html::escape($raw) . '" not found';
+      $message = 'Raw "' . Html::escape((string) $raw) . '" not found';
     }
     $this->assertStringNotContainsString((string) $raw, $this->getRawContent(), $message);
   }
@@ -432,9 +432,9 @@ trait AssertContentTrait {
    */
   protected function assertEscaped($raw, $message = ''): void {
     if (!$message) {
-      $message = 'Escaped "' . Html::escape($raw) . '" found';
+      $message = 'Escaped "' . Html::escape((string) $raw) . '" found';
     }
-    $this->assertStringContainsString(Html::escape($raw), $this->getRawContent(), $message);
+    $this->assertStringContainsString(Html::escape((string) $raw), $this->getRawContent(), $message);
   }
 
   /**
@@ -452,9 +452,9 @@ trait AssertContentTrait {
    */
   protected function assertNoEscaped($raw, $message = ''): void {
     if (!$message) {
-      $message = 'Escaped "' . Html::escape($raw) . '" not found';
+      $message = 'Escaped "' . Html::escape((string) $raw) . '" not found';
     }
-    $this->assertStringNotContainsString(Html::escape($raw), $this->getRawContent(), $message);
+    $this->assertStringNotContainsString(Html::escape((string) $raw), $this->getRawContent(), $message);
   }
 
   /**
