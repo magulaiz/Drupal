@@ -1776,10 +1776,6 @@ services:
     tags:
       - { name: mime_type_guesser }
     lazy: true
-  file.mime_type.guesser.fallback:
-    class: Drupal\Core\File\MimeType\FallbackMimeTypeGuesser
-    tags:
-      - { name: mime_type_guesser, priority: -100 }
   # Currently needs to be public as it is called by
   # \Drupal\Core\Render\Element\StatusMessages.
   # @todo Consider making this service private again after
