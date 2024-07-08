@@ -169,6 +169,9 @@ class TokenTest extends UnitTestCase {
     ]);
   }
 
+  /**
+   * @covers ::replace
+   */
   public function testAliasReplacement(): void {
 
     $node1 = $this->prophesize('Drupal\node\NodeInterface');
