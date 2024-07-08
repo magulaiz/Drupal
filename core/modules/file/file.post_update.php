@@ -9,7 +9,7 @@ use Drupal\Core\Config\Entity\ConfigEntityUpdater;
 use Drupal\Core\Entity\Display\EntityViewDisplayInterface;
 use Drupal\Core\Entity\Entity\EntityViewDisplay;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
-use Drupal\user\RoleInterface;
+use Drupal\file\Plugin\Field\FieldFormatter\FileFormatterBase;
 
 /**
  * Implements hook_removed_post_updates().
@@ -56,7 +56,7 @@ function file_post_update_set_default_absolute_url(): void {
         switch ($settings['type']) {
           case 'file_url_plain':
           case 'image_url':
-            $fields_settings[$field_name]['settings']['absolute_url'] = FALSE;
+            $fields_settings[$field_name]['settings']['show_link_as'] = FileFormatterBase::RELATIVE_URL;
             $changed = TRUE;
             break;
 
