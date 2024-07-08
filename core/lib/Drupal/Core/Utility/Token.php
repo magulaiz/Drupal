@@ -32,6 +32,8 @@ use Drupal\Core\Render\RendererInterface;
  * Tokens follow the form: [$type:$name], where $type is a general class of
  * tokens like 'node', 'user', or 'comment' and $name is the name of a given
  * placeholder. For example, [node:title] or [node:created:since].
+ * When multiple token data sources of the same type should be offered, they
+ * can be referred to using aliases in the form of [$type{$alias}:$name].
  *
  * In addition to raw text containing placeholders, modules may pass in an array
  * of objects to be used when performing the replacement. The objects should be
@@ -44,8 +46,10 @@ use Drupal\Core\Render\RendererInterface;
  * $user = User::load(1);
  *
  * // [date:...] tokens use the current date automatically.
- * $data = array('node' => $node, 'user' => $user);
- * return Token::replace($text, $data);
+ * $token_service = \Drupal::token();
+ * $data = ['node' => $node, 'user' => $user];
+ * $result = $token_service->replace($text, $data);
+ * return $result
  * @endcode
  *
  * Some tokens may be chained in the form of [$type:$pointer:$name], where $type
@@ -185,7 +189,7 @@ class Token {
    *
    * @see static::replacePlain()
    */
-  public function replace($markup, array $data = [], array $options = [], BubbleableMetadata $bubbleable_metadata = NULL) {
+  public function replace($markup, array $data = [], array $options = [], ?BubbleableMetadata $bubbleable_metadata = NULL) {
     return $this->doReplace(TRUE, (string) $markup, $data, $options, $bubbleable_metadata);
   }
 
@@ -204,7 +208,7 @@ class Token {
    * @return string
    *   The entered plain text with tokens replaced.
    */
-  public function replacePlain(string $plain, array $data = [], array $options = [], BubbleableMetadata $bubbleable_metadata = NULL): string {
+  public function replacePlain(string $plain, array $data = [], array $options = [], ?BubbleableMetadata $bubbleable_metadata = NULL): string {
     return $this->doReplace(FALSE, $plain, $data, $options, $bubbleable_metadata);
   }
 
@@ -225,9 +229,11 @@ class Token {
    * @return string
    *   The token result is the entered string with tokens replaced.
    */
-  protected function doReplace(bool $markup, string $text, array $data, array $options, BubbleableMetadata $bubbleable_metadata = NULL): string {
+  protected function doReplace(bool $markup, string $text, array $data, array $options, ?BubbleableMetadata $bubbleable_metadata = NULL): string {
     $text_tokens = $this->scan($text);
-    if (empty($text_tokens)) {
+    $text_token_aliases = $this->alias_scan($text);
+
+    if (empty($text_tokens) && empty($text_token_aliases)) {
       return $text;
     }
 
@@ -235,6 +241,8 @@ class Token {
     $bubbleable_metadata = $bubbleable_metadata ?: new BubbleableMetadata();
 
     $replacements = [];
+
+    // Standard token replacements.
     foreach ($text_tokens as $type => $tokens) {
       $replacements += $this->generate($type, $tokens, $data, $options, $bubbleable_metadata);
       if (!empty($options['clear'])) {
@@ -242,6 +250,34 @@ class Token {
       }
     }
 
+    // Token aliases replacements.
+    // Aliased token are treated as normal tokens. We simply strip the
+    // alias chunk and call generate. We need a mapping between the aliased
+    // tokens and stripped tokens to add the aliased token value to the
+    // replacement array.
+    foreach ($text_token_aliases as $type => $text_token_alias) {
+      $data_for_current_token = [];
+      $unaliased_tokens = [];
+
+      foreach ($text_token_alias as $alias => $tokens) {
+        foreach ($tokens as $token => $unaliased_token_name) {
+          $unaliased_tokens[$token] = "[{$unaliased_token_name}]";
+          $alias_tokens_mapping["[{$unaliased_token_name}]"] = "{$type}{{$alias}}:$token";
+        }
+        // @todo Check if need to add else condition ?
+        if (isset($data["{$type}{{$alias}}"])) {
+          $data_for_current_token[$type] = $data["{$type}{{$alias}}"];
+          $replacements_unaliased = $this->generate($type, $unaliased_tokens, $data_for_current_token, $options, $bubbleable_metadata);
+
+          foreach ($replacements_unaliased as $unaliased_token_name => $value) {
+            $aliased_token_name = $alias_tokens_mapping[$unaliased_token_name];
+            $replacements["[{$aliased_token_name}]"] = $value;
+          }
+        }
+      }
+    }
+
+    // Escape the tokens, unless they are explicitly markup.
     // Each token value is markup if it implements MarkupInterface otherwise it
     // is plain text. Convert them, but only if needed. It can cause corruption
     // to render a string that's already plain text or to escape a string
@@ -287,15 +323,20 @@ class Token {
    *   An associative array of discovered tokens, grouped by type.
    */
   public function scan($text) {
+    if (!is_string($text)) {
+      @trigger_error('Calling ' . __METHOD__ . '() with a $text parameter of type other than string is deprecated in drupal:10.1.0 and will cause an error in drupal:11.0.0. See https://www.drupal.org/node/3334317', E_USER_DEPRECATED);
+      $text = (string) $text;
+    }
+
     // Matches tokens with the following pattern: [$type:$name]
     // $type and $name may not contain [ ] characters.
     // $type may not contain : or whitespace characters, but $name may.
     preg_match_all('/
-      \[             # [ - pattern start
-      ([^\s\[\]:]+)  # match $type not containing whitespace : [ or ]
-      :              # : - separator
-      ([^\[\]]+)     # match $name not containing [ or ]
-      \]             # ] - pattern end
+      \[               # [ - pattern start
+      ([^\s\[\]:{}]+)  # match $type not containing whitespace : [ ] { or }
+      :                # : - separator
+      ([^\[\]]+)       # match $name not containing [ or ]
+      \]               # ] - pattern end
       /x', $text, $matches);
 
     $types = $matches[1];
@@ -307,6 +348,67 @@ class Token {
     $results = [];
     for ($i = 0; $i < count($tokens); $i++) {
       $results[$types[$i]][$tokens[$i]] = $matches[0][$i];
+    }
+
+    return $results;
+  }
+
+  /**
+   * Builds a list of all token-alias-like patterns that appear in the text.
+   *
+   * @param $text
+   *   The text to be scanned for possible token alias.
+   *
+   * @return array
+   *   An associative array of discovered aliased tokens (without alias), grouped
+   *   by type and alias.
+   *
+   *   Example:
+   *   @code
+   *     [
+   *       'node' => [
+   *         'alias1' => [
+   *           'title' => '[node:title]',
+   *           'field1' => '[node:field1]',
+   *         ],
+   *         alias2 => [
+   *           'title' => '[node:title]',
+   *           'field1' => '[node:field1]',
+   *       ],
+   *       'term' => [
+   *         'alias1' => [
+   *           'name' => '[term:name]',
+   *         ],
+   *         alias2 => [
+   *           'name' => '[term:name]',
+   *       ],
+   *     ]
+   *   @endcode
+   */
+  public function alias_scan($text) {
+    // Matches token alias with the following pattern: [$type{$alias}:$name]
+    // $type, $alias and $name may not contain  [ ] characters.
+    // $type may not contain : or whitespace characters, but $name and $alias may.
+    preg_match_all('/
+      \[             # [ - pattern start
+      ([^\s\[\]:]*)  # match $type not containing whitespace : [ or ]
+      {([^\[\]]*)}   # match $alias name
+      :              # : - separator
+      ([^\[\]]+)     # match $name not containing [ or ]
+      \]             # ] - pattern end
+      /x', $text, $matches);
+
+    $types = $matches[1];
+    $alias = $matches[2];
+    $tokens = $matches[3];
+
+    // Iterate through the matches, building an associative array containing
+    // $alias grouped by $types, and those $alias contains pairs of $tokens keys
+    // and the complete token found in the source text. For example,
+    // $results['node']['alias1']['title'] = '[node{alias1}:title]';
+    $results = [];
+    for ($i = 0; $i < count($tokens); $i++) {
+      $results[$types[$i]][$alias[$i]][$tokens[$i]] = "{$matches[1][$i]}:{$matches[3][$i]}";
     }
 
     return $results;
@@ -374,13 +476,13 @@ class Token {
    * Used to extract a group of 'chained' tokens (such as [node:author:name])
    * from the full list of tokens found in text. For example:
    * @code
-   *   $data = array(
+   *   $data = [
    *     'author:name' => '[node:author:name]',
    *     'title'       => '[node:title]',
    *     'created'     => '[node:created]',
-   *   );
+   *   ];
    *   $results = Token::findWithPrefix($data, 'author');
-   *   $results == array('name' => '[node:author:name]');
+   *   $results == ['name' => '[node:author:name]'];
    * @endcode
    *
    * @param array $tokens

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\Core\Utility;
 
 use Drupal\Component\Utility\Html;
@@ -77,6 +79,8 @@ class TokenTest extends UnitTestCase {
    * {@inheritdoc}
    */
   protected function setUp(): void {
+    parent::setUp();
+
     $this->cache = $this->createMock('\Drupal\Core\Cache\CacheBackendInterface');
 
     $this->languageManager = $this->createMock('Drupal\Core\Language\LanguageManagerInterface');
@@ -103,7 +107,7 @@ class TokenTest extends UnitTestCase {
   /**
    * @covers ::getInfo
    */
-  public function testGetInfo() {
+  public function testGetInfo(): void {
     $token_info = [
       'types' => [
         'foo' => [
@@ -147,9 +151,74 @@ class TokenTest extends UnitTestCase {
   }
 
   /**
+   * @convers ::alias_scan
+   */
+  public function testAliasScan(): void {
+    $result = $this->token->alias_scan('[node{alias1}:title] is the first title. ID is [node{alias1}:nid]. [node{alias2}:title] is the second title.');
+
+    $this->assertEquals($result, [
+      'node' => [
+        'alias1' => [
+          'title' => 'node:title',
+          'nid' => 'node:nid',
+        ],
+        'alias2' => [
+          'title' => 'node:title',
+        ],
+      ],
+    ]);
+  }
+
+  public function testAliasReplacement(): void {
+
+    $node1 = $this->prophesize('Drupal\node\NodeInterface');
+    $node1->id()->willReturn(1);
+    $node1->getCacheTags()->willReturn(['node:1']);
+    $node1->getCacheContexts()->willReturn(['custom_context']);
+    $node1->getCacheMaxAge()->willReturn(10);
+    $node1 = $node1->reveal();
+
+    $node2 = $this->prophesize('Drupal\node\NodeInterface');
+    $node2->id()->willReturn(2);
+    $node2->getCacheTags()->willReturn(['node:2']);
+    $node2->getCacheContexts()->willReturn(['custom_context']);
+    $node2->getCacheMaxAge()->willReturn(10);
+    $node2 = $node2->reveal();
+
+    $data = ['node{alias1}' => $node1, 'node{alias2}' => $node2];
+
+    $this->moduleHandler->expects($this->any())
+      ->method('invokeAll')
+      ->willReturnCallback(function($alterHook, $args) {
+        // Data is the third argument in the arguments passed to the invokeAll method.
+        // web/core/lib/Drupal/Core/Utility/Token.php:458
+        $entity = $args[2]['node'];
+
+        if ($entity->id() == 1) {
+          return [
+            '[node:title]' => 'Episode IV – A New Hope',
+            '[node:nid]' => '1',
+          ];
+        }
+        else if ($entity->id() == 2) {
+          return [
+            '[node:title]' => 'Episode V – The Empire Strikes Back',
+            '[node:nid]' => '2',
+          ];
+        }
+        else {
+          return [];
+        }
+      });
+
+    $replacedString = $this->token->replace('"[node{alias1}:title]" is the first film. Its ID is "[node{alias1}:nid]". "[node{alias2}:title]" is the second film.', $data);
+    $this->assertEquals('"Episode IV – A New Hope" is the first film. Its ID is "1". "Episode V – The Empire Strikes Back" is the second film.', $replacedString);
+  }
+
+  /**
    * @covers ::replace
    */
-  public function testReplaceWithBubbleableMetadataObject() {
+  public function testReplaceWithBubbleableMetadataObject(): void {
     $this->moduleHandler->expects($this->any())
       ->method('invokeAll')
       ->willReturn(['[node:title]' => 'hello world']);
@@ -178,10 +247,10 @@ class TokenTest extends UnitTestCase {
   /**
    * @covers ::replace
    */
-  public function testReplaceWithHookTokensWithBubbleableMetadata() {
+  public function testReplaceWithHookTokensWithBubbleableMetadata(): void {
     $this->moduleHandler->expects($this->any())
       ->method('invokeAll')
-      ->willReturnCallback(function ($hook_name, $args) {
+      ->willReturnCallback(function($hook_name, $args) {
         $cacheable_metadata = $args[4];
         $cacheable_metadata->addCacheContexts(['custom_context']);
         $cacheable_metadata->addCacheTags(['node:1']);
@@ -212,16 +281,15 @@ class TokenTest extends UnitTestCase {
 
   /**
    * @covers ::replace
-   * @covers ::replace
    */
-  public function testReplaceWithHookTokensAlterWithBubbleableMetadata() {
+  public function testReplaceWithHookTokensAlterWithBubbleableMetadata(): void {
     $this->moduleHandler->expects($this->any())
       ->method('invokeAll')
       ->willReturn([]);
 
     $this->moduleHandler->expects($this->any())
       ->method('alter')
-      ->willReturnCallback(function ($hook_name, array &$replacements, array $context, BubbleableMetadata $bubbleable_metadata) {
+      ->willReturnCallback(function($hook_name, array &$replacements, array $context, BubbleableMetadata $bubbleable_metadata) {
         $replacements['[node:title]'] = 'hello world';
         $bubbleable_metadata->addCacheContexts(['custom_context']);
         $bubbleable_metadata->addCacheTags(['node:1']);
@@ -251,7 +319,7 @@ class TokenTest extends UnitTestCase {
   /**
    * @covers ::resetInfo
    */
-  public function testResetInfo() {
+  public function testResetInfo(): void {
     $this->cacheTagsInvalidator->expects($this->once())
       ->method('invalidateTags')
       ->with(['token_info']);
@@ -263,10 +331,10 @@ class TokenTest extends UnitTestCase {
    * @covers ::replace
    * @dataProvider providerTestReplaceEscaping
    */
-  public function testReplaceEscaping($string, array $tokens, $expected) {
+  public function testReplaceEscaping($string, array $tokens, $expected): void {
     $this->moduleHandler->expects($this->any())
       ->method('invokeAll')
-      ->willReturnCallback(function ($type, $args) {
+      ->willReturnCallback(function($type, $args) {
         return $args[2]['tokens'];
       });
 
@@ -275,15 +343,23 @@ class TokenTest extends UnitTestCase {
     $this->assertEquals($expected, $result);
   }
 
-  public function providerTestReplaceEscaping() {
+  public static function providerTestReplaceEscaping() {
     $data = [];
 
     // No tokens. The first argument to Token::replace() should not be escaped.
     $data['no-tokens'] = ['muh', [], 'muh'];
     $data['html-in-string'] = ['<h1>Giraffe</h1>', [], '<h1>Giraffe</h1>'];
-    $data['html-in-string-quote'] = ['<h1>Giraffe"</h1>', [], '<h1>Giraffe"</h1>'];
+    $data['html-in-string-quote'] = [
+      '<h1>Giraffe"</h1>',
+      [],
+      '<h1>Giraffe"</h1>',
+    ];
 
-    $data['simple-placeholder-with-plain-text'] = ['<h1>[token:meh]</h1>', ['[token:meh]' => 'Giraffe"'], '<h1>' . Html::escape('Giraffe"') . '</h1>'];
+    $data['simple-placeholder-with-plain-text'] = [
+      '<h1>[token:meh]</h1>',
+      ['[token:meh]' => 'Giraffe"'],
+      '<h1>' . Html::escape('Giraffe"') . '</h1>',
+    ];
 
     $data['simple-placeholder-with-safe-html'] = [
       '<h1>[token:meh]</h1>',
@@ -297,11 +373,44 @@ class TokenTest extends UnitTestCase {
   /**
    * @covers ::replacePlain
    */
-  public function testReplacePlain() {
+  public function testReplacePlain(): void {
     $this->setupSiteTokens();
     $base = 'Wow, great "[site:name]" has a slogan "[site:slogan]"';
     $plain = $this->token->replacePlain($base);
     $this->assertEquals($plain, 'Wow, great "Your <best> buys" has a slogan "We are best"');
+  }
+
+  /**
+   * Scans dummy text, then tests the output.
+   */
+  public function testScan(): void {
+    // Define text with valid and not valid, fake and existing token-like
+    // strings.
+    $text = 'First a [valid:simple], but dummy token, and a dummy [valid:token with: spaces].';
+    $text .= 'Then a [not valid:token].';
+    $text .= 'Then an [:empty token type].';
+    $text .= 'Then an [empty token:].';
+    $text .= 'Then a totally empty token: [:].';
+    $text .= 'Last an existing token: [node:author:name].';
+    $token_wannabes = $this->token->scan($text);
+
+    $this->assertTrue(isset($token_wannabes['valid']['simple']), 'A simple valid token has been matched.');
+    $this->assertTrue(isset($token_wannabes['valid']['token with: spaces']), 'A valid token with space characters in the token name has been matched.');
+    $this->assertFalse(isset($token_wannabes['not valid']), 'An invalid token with spaces in the token type has not been matched.');
+    $this->assertFalse(isset($token_wannabes['empty token']), 'An empty token has not been matched.');
+    $this->assertFalse(isset($token_wannabes['']['empty token type']), 'An empty token type has not been matched.');
+    $this->assertFalse(isset($token_wannabes['']['']), 'An empty token and type has not been matched.');
+    $this->assertTrue(isset($token_wannabes['node']), 'An existing valid token has been matched.');
+  }
+
+  /**
+   * Tests passing a non-string value to Token::scan().
+   *
+   * @group legacy
+   */
+  public function testScanDeprecation(): void {
+    $this->expectDeprecation('Calling Drupal\Core\Utility\Token::scan() with a $text parameter of type other than string is deprecated in drupal:10.1.0 and will cause an error in drupal:11.0.0. See https://www.drupal.org/node/3334317');
+    $this->assertSame([], $this->token->scan(NULL));
   }
 
   /**
