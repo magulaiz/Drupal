@@ -26,12 +26,12 @@ core.menu.static_menu_link_overrides:
             # @see \Drupal\Core\Menu\MenuLinkInterface::getParent()
             constraints:
               AtLeastOneOf:
-                  constraints:
-                    - PluginExists:
-                        manager: plugin.manager.menu.link
-                        interface: 'Drupal\Core\Menu\MenuLinkInterface'
-                    - IdenticalTo:
-                        value: ''
+                constraints:
+                  - PluginExists:
+                      manager: plugin.manager.menu.link
+                      interface: 'Drupal\Core\Menu\MenuLinkInterface'
+                  - IdenticalTo:
+                      value: ''
           weight:
             type: weight
             label: 'Weight'
