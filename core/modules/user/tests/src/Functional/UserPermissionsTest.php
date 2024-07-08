@@ -272,7 +272,8 @@ class UserPermissionsTest extends BrowserTestBase {
     $this->submitForm($edit, 'Save');
     $this->assertSession()->pageTextContains('Contact form ' . $edit['label'] . ' has been added.');
     $this->drupalGet('admin/structure/contact/manage/test_contact_type/permissions');
-    $this->assertSession()->statusCodeEquals(403);
+    $this->assertSession()->statusCodeEquals(200);
+    $this->assertSession()->pageTextContains('No permissions found.');
 
     // Permissions can be changed using the bundle-specific pages.
     $edit = [];
