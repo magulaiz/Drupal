@@ -1196,8 +1196,7 @@
                 // use its weight for the next siblings.
                 if (this.disabled) {
                   weight = this.value;
-                }
-                else {
+                } else {
                   this.value = weight;
                 }
                 weight++;
