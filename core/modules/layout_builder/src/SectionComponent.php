@@ -71,6 +71,13 @@ class SectionComponent implements ThirdPartySettingsInterface {
   protected $thirdPartySettings = [];
 
   /**
+   * The legacy additional module key created dinamically.
+   *
+   * @var mixed
+   */
+  protected $legacyAdditionalModuleKey;
+
+  /**
    * Constructs a new SectionComponent.
    *
    * @param string $uuid
