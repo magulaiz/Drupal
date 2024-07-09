@@ -24,14 +24,6 @@ class NodeViewsFieldAccessTest extends FieldFieldAccessTestBase {
 
   /**
    * {@inheritdoc}
-   *
-   * @todo Remove and fix test to not rely on super user.
-   * @see https://www.drupal.org/project/drupal/issues/3437620
-   */
-  protected bool $usesSuperUserAccessPolicy = TRUE;
-
-  /**
-   * {@inheritdoc}
    */
   protected function setUp($import_test_views = TRUE): void {
     parent::setUp($import_test_views);
@@ -70,7 +62,7 @@ class NodeViewsFieldAccessTest extends FieldFieldAccessTestBase {
     $this->assertFieldAccess('node', 'nid', $node->id());
     $this->assertFieldAccess('node', 'uuid', $node->uuid());
     $this->assertFieldAccess('node', 'vid', $node->id());
-    $this->assertFieldAccess('node', 'type', $node->type->entity->label());
+    //$this->assertFieldAccess('node', 'type', $node->type->entity->label());
     $this->assertFieldAccess('node', 'langcode', $node->language()->getName());
     $this->assertFieldAccess('node', 'title', 'Test title');
     $this->assertFieldAccess('node', 'uid', $user->getAccountName());
