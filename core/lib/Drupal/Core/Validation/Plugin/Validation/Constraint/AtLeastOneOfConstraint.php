@@ -19,7 +19,8 @@ class AtLeastOneOfConstraint extends AtLeastOneOf implements ContainerFactoryPlu
    * Constructs a AtLeastOfConstraint.
    */
   public function __construct(mixed $constraints = null) {
-    parent::__construct($constraints);
+    //@TODO Setting [] for $groups as RecursiveContextualValidator doesn't allow groups. Figure out a better solution for this.
+    parent::__construct($constraints, []);
   }
 
   /**
@@ -31,11 +32,10 @@ class AtLeastOneOfConstraint extends AtLeastOneOf implements ContainerFactoryPlu
     $constraints = $configuration['constraints'];
     foreach ($constraints as $constraint_id => $constraint) {
       foreach ($constraint as $constraint_name => $constraint_options) {
-        unset($constraints[$constraint_id]);
-        $constraints[] = $constraint_manager->create($constraint_name, $constraint_options);
+        $constraints[$constraint_id] = $constraint_manager->create($constraint_name, $constraint_options);
       }
     }
-    return new static(array_values($constraints));
+    return new static($constraints);
   }
 
 }
