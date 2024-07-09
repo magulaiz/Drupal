@@ -114,7 +114,7 @@ class UserPermissionsForm extends FormBase {
    *   inner arrays are permission names keyed by their machine names.
    */
   protected function permissionsByProvider(): array {
-    $permissions = $this->permissionHandler->getFilteredPermissions();
+    $permissions = $this->permissionHandler->getPermissions();
     $event = new PermissionsListFilterEvent($permissions);
     $this->eventDispatcher->dispatch($event);
     $permissions = $event->getPermissions();
