@@ -38,7 +38,7 @@ class TaxonomyController extends ControllerBase {
    * @return array
    *   The term label as a render array.
    */
-  public function termTitle(TermInterface $taxonomy_term, CacheableMetadata $cacheable_metadata = NULL) {
+  public function termTitle(TermInterface $taxonomy_term, ?CacheableMetadata $cacheable_metadata = NULL) {
     if ($cacheable_metadata) {
       $cacheable_metadata->addCacheableDependency($taxonomy_term);
     }

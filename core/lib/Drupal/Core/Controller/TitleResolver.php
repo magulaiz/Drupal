@@ -80,7 +80,7 @@ class TitleResolver implements TitleResolverInterface, CacheableTitleResolverInt
    * @see \Drupal\Core\Controller\CacheableTitleResolverInterface::getCacheableTitle()
    * @see \Drupal\Core\Controller\TitleResolverInterface::getTitle()
    */
-  protected function doGetTitle(Request $request, Route $route, CacheableTitle $cacheable_title = NULL) {
+  protected function doGetTitle(Request $request, Route $route, ?CacheableTitle $cacheable_title = NULL) {
     $route_title = NULL;
     // A dynamic title takes priority. Route::getDefault() returns NULL if the
     // named default is not set.  By testing the value directly, we also avoid

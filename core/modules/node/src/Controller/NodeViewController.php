@@ -78,7 +78,7 @@ class NodeViewController extends EntityViewController {
    * @return string
    *   The page title.
    */
-  public function title(EntityInterface $node, CacheableMetadata $cacheable_metadata = NULL) {
+  public function title(EntityInterface $node, ?CacheableMetadata $cacheable_metadata = NULL) {
     $node = $this->entityRepository->getTranslationFromContext($node)->label();
     if ($cacheable_metadata) {
       $cacheable_metadata->addCacheableDependency($node);
