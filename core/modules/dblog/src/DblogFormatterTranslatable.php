@@ -32,6 +32,13 @@ class DblogFormatterTranslatable implements DblogFormatterInterface {
         sprintf('<pre class="backtrace">@%s</pre>', $backtrace_string), $variables
       );
     }
+
+    // Sometimes, there is a backtrace string but nowhere to insert it.
+    // Add it to the bottom of the message.
+    if (!str_contains($message, '@backtrace_string') && !empty($variables[$backtrace_string])) {
+      $message = $message . sprintf('<pre class="backtrace">%s</pre>', $backtrace_string);
+    }
+
     return $this->t(Xss::filterAdmin($message), $variables);
   }
 

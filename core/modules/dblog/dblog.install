@@ -108,7 +108,7 @@ function dblog_update_last_removed() {
 /**
  * Install the 'dblog entry' entity type.
  */
-function dblog_update_10101() {
+function dblog_update_11000() {
   $entity_definition_update_manager = \Drupal::entityDefinitionUpdateManager();
   if (!$entity_definition_update_manager->getEntityType('dblog')) {
     $entity_type = new ContentEntityType([
@@ -134,7 +134,7 @@ function dblog_update_10101() {
 /**
  * Changes class used by dblog to indicate severity icons.
  */
-function dblog_update_10102() {
+function dblog_update_11001() {
   $view = \Drupal::configFactory()->getEditable('views.view.watchdog');
   if ($view->isNew()) {
     return;

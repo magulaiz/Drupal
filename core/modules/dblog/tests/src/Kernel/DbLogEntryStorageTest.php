@@ -41,7 +41,6 @@ class DbLogEntryStorageTest extends KernelTestBase {
     parent::setUp();
 
     $this->installSchema('dblog', ['watchdog']);
-    $this->installSchema('system', ['sequences']);
     $this->installConfig(['system']);
     $this->storage = \Drupal::entityTypeManager()->getStorage('dblog');
     $this->dblogFormatter = \Drupal::service('dblog.formatter');

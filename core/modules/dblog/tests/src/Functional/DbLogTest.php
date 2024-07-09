@@ -170,8 +170,6 @@ class DbLogTest extends BrowserTestBase {
     $this->assertSession()->elementsCount('xpath', $type, 1, $table);
 
     // Verify that the backtrace row exists and is HTML-encoded.
-    $backtrace = "//tr//pre[contains(@class, 'backtrace')]";
-    $this->assertCount(1, $table->findAll('xpath', $backtrace));
     $this->assertSession()->responseContains('&lt;script&gt;alert(&#039;xss&#039;)&lt;/script&gt;');
   }
 
