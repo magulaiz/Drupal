@@ -202,7 +202,7 @@ class PathBasedBreadcrumbBuilderTest extends UnitTestCase {
     $this->titleResolver->expects($this->once())
       ->method('getCacheableTitle')
       ->with($this->anything(), $route_1)
-      ->will($this->returnValue($cacheable_title));
+      ->willReturn($cacheable_title);
 
     $breadcrumb = $this->builder->build($this->createMock('Drupal\Core\Routing\RouteMatchInterface'));
     $this->assertEquals([0 => new Link('Home', new Url('<front>')), 1 => new Link('Example', new Url('example'))], $breadcrumb->getLinks());
@@ -258,7 +258,7 @@ class PathBasedBreadcrumbBuilderTest extends UnitTestCase {
     $cacheable_title = new CacheableTitle();
     $this->titleResolver
       ->method('getCacheableTitle')
-      ->will($this->returnValue($cacheable_title));
+      ->willReturn($cacheable_title);
     $breadcrumb = $this->builder->build($this->createMock('Drupal\Core\Routing\RouteMatchInterface'));
     $this->assertEquals([
       new Link('Home', new Url('<front>')),
@@ -387,7 +387,7 @@ class PathBasedBreadcrumbBuilderTest extends UnitTestCase {
     $this->titleResolver->expects($this->once())
       ->method('getCacheableTitle')
       ->with($this->anything(), $route_1)
-      ->will($this->returnValue($cacheable_title));
+      ->willReturn($cacheable_title);
 
     $breadcrumb = $this->builder->build($this->createMock('Drupal\Core\Routing\RouteMatchInterface'));
     $this->assertEquals([0 => new Link('Home', new Url('<front>')), 1 => new Link('Admin', new Url('user_page'))], $breadcrumb->getLinks());
