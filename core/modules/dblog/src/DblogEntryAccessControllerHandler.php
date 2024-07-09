@@ -24,7 +24,7 @@ class DblogEntryAccessControllerHandler extends EntityAccessControlHandler {
   /**
    * {@inheritdoc}
    */
-  public function createAccess($entity_bundle = NULL, AccountInterface $account = NULL, array $context = [], $return_as_object = FALSE) {
+  public function createAccess($entity_bundle = NULL, ?AccountInterface $account = NULL, array $context = [], $return_as_object = FALSE) {
     $result = AccessResult::neutral();
     return $return_as_object ? $result : $result->isAllowed();
   }

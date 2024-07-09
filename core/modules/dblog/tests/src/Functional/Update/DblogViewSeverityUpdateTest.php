@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\dblog\Functional\Update;
 
 use Drupal\FunctionalTests\Update\UpdatePathTestBase;

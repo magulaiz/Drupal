@@ -150,7 +150,7 @@ class DblogEntryViewBuilder extends EntityViewBuilder {
   /**
    * {@inheritdoc}
    */
-  public function resetCache(array $entities = NULL) {
+  public function resetCache(?array $entities = NULL) {
     // Intentionally empty.
   }
 
