@@ -408,6 +408,14 @@ system.advisories:
         Range:
           min: 0
 
+block.settings.page_title_block:
+  type: block_settings
+  label: 'Page title block'
+  mapping:
+    base_route_title:
+      type: boolean
+      label: 'Display section title instead of current title'
+
 block.settings.system_branding_block:
   type: block_settings
   label: 'Branding block'
