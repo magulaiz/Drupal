@@ -59,12 +59,4 @@ interface ContentEntityTypeInterface extends EntityTypeInterface {
    */
   public function setRevisionMetadataKey($key, $field_name);
 
-  /**
-   * Require delete content before uninstall the module owner of the content.
-   *
-   * @return bool
-   *   TRUE if content needs to be deleted before allowing module uninstall.
-   */
-  public function requireDeleteContentBeforeUninstall() : bool;
-
 }

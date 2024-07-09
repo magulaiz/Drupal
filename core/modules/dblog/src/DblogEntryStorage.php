@@ -117,4 +117,17 @@ class DblogEntryStorage extends SqlContentEntityStorage implements DblogEntrySto
     return $this->load(reset($ids));
   }
 
+  /**
+   * {@inheritdoc}
+   */
+  public function hasData() {
+    // Avoid validating dblog entries in ContentUninstallValidator to prevent
+    // blocking module uninstallation based on non-user-generated log data.
+    $backtrace = debug_backtrace(!DEBUG_BACKTRACE_PROVIDE_OBJECT|DEBUG_BACKTRACE_IGNORE_ARGS, 2);
+    if (!empty($backtrace[1]['class']) && strpos($backtrace[1]['class'], 'ContentUninstallValidator') !== FALSE) {
+      return FALSE;
+    }
+    return parent::hasData();
+  }
+
 }
