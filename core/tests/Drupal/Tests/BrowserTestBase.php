@@ -180,6 +180,9 @@ abstract class BrowserTestBase extends TestCase {
    * When this is set to TRUE, the password of the admin user in the test site
    * is set to 'admin' to allow logging in.
    *
+   * This behavior can also be controlled with the BROWSERTEST_PRESERVE_SITE
+   * environment variable.
+   *
    * @see sites/example.sites.php
    * @see \Drupal\Core\DrupalKernel::findSitePath()
    */
@@ -463,7 +466,7 @@ abstract class BrowserTestBase extends TestCase {
 
     // Destroy the testing kernel.
     if (isset($this->kernel)) {
-      if (!$this->preserveSiteInTearDown) {
+      if (!($this->preserveSiteInTearDown || getenv('BROWSERTEST_PRESERVE_SITE'))) {
         $this->cleanupEnvironment();
       }
       $this->kernel->shutdown();
