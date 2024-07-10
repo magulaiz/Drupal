@@ -19,28 +19,28 @@ use Drupal\Core\Url;
  */
 class LinkGenerator implements LinkGeneratorInterface {
 
-/**
+  /**
    * The URL generator.
    *
    * @var \Drupal\Core\Routing\UrlGeneratorInterface
    */
-protected $urlGenerator;
+  protected $urlGenerator;
 
-/**
+  /**
    * The module handler firing the route_link alter hook.
    *
    * @var \Drupal\Core\Extension\ModuleHandlerInterface
    */
-protected $moduleHandler;
+  protected $moduleHandler;
 
-/**
+  /**
    * The renderer service.
    *
    * @var \Drupal\Core\Render\RendererInterface
    */
-protected $renderer;
+  protected $renderer;
 
-/**
+  /**
    * Constructs a LinkGenerator instance.
    *
    * @param \Drupal\Core\Routing\UrlGeneratorInterface $url_generator
@@ -50,13 +50,13 @@ protected $renderer;
    * @param \Drupal\Core\Render\RendererInterface $renderer
    *   The renderer service.
    */
-public function __construct(UrlGeneratorInterface $url_generator, ModuleHandlerInterface $module_handler, RendererInterface $renderer) {
-  $this->urlGenerator = $url_generator;
-  $this->moduleHandler = $module_handler;
-  $this->renderer = $renderer;
-}
+  public function __construct(UrlGeneratorInterface $url_generator, ModuleHandlerInterface $module_handler, RendererInterface $renderer) {
+    $this->urlGenerator = $url_generator;
+    $this->moduleHandler = $module_handler;
+    $this->renderer = $renderer;
+  }
 
-/**
+  /**
    * {@inheritdoc}
    *
    * For anonymous users, the "active" class will be calculated on the server,
@@ -68,29 +68,29 @@ public function __construct(UrlGeneratorInterface $url_generator, ModuleHandlerI
    *
    * @see system_page_attachments()
    */
-public function generate($text, Url $url) {
-  // The link generator should not modify the original URL object, this
-  // ensures consistent rendering.
-  // @see https://www.drupal.org/node/2842399
-  $url = clone $url;
+  public function generate($text, Url $url) {
+    // The link generator should not modify the original URL object, this
+    // ensures consistent rendering.
+    // @see https://www.drupal.org/node/2842399
+    $url = clone $url;
 
-  // Performance: avoid Url::toString() needing to retrieve the URL generator
-  // service from the container.
-  $url->setUrlGenerator($this->urlGenerator);
+    // Performance: avoid Url::toString() needing to retrieve the URL generator
+    // service from the container.
+    $url->setUrlGenerator($this->urlGenerator);
 
-  if (is_array($text)) {
-    $text = $this->renderer->render($text);
-  }
+    if (is_array($text)) {
+      $text = $this->renderer->render($text);
+    }
 
-  // Start building a structured representation of our link to be altered later.
-  $variables = [
+    // Start building a structured representation of our link to be altered later.
+    $variables = [
       'text' => $text,
       'url' => $url,
       'options' => $url->getOptions(),
     ];
 
-  // Merge in default options.
-  $variables['options'] += [
+    // Merge in default options.
+    $variables['options'] += [
       'attributes' => [],
       'query' => [],
       'language' => NULL,
@@ -98,54 +98,54 @@ public function generate($text, Url $url) {
       'absolute' => FALSE,
     ];
 
-  // Add a hreflang attribute if we know the language of this link's URL and
-  // hreflang has not already been set.
-  if (!empty($variables['options']['language']) && !isset($variables['options']['attributes']['hreflang'])) {
-    $variables['options']['attributes']['hreflang'] = $variables['options']['language']->getId();
-  }
+    // Add a hreflang attribute if we know the language of this link's URL and
+    // hreflang has not already been set.
+    if (!empty($variables['options']['language']) && !isset($variables['options']['attributes']['hreflang'])) {
+      $variables['options']['attributes']['hreflang'] = $variables['options']['language']->getId();
+    }
 
-  // Ensure that query values are strings.
-  array_walk($variables['options']['query'], function (&$value) {
-    if ($value instanceof MarkupInterface) {
+    // Ensure that query values are strings.
+    array_walk($variables['options']['query'], function (&$value) {
+      if ($value instanceof MarkupInterface) {
         $value = (string) $value;
-    }
-  });
+      }
+    });
 
-  // Set the "active" class if the 'set_active_class' option is not empty.
-  if (!empty($variables['options']['set_active_class']) && !$url->isExternal()) {
-    // Add a "data-drupal-link-query" attribute to let the
-    // drupal.active-link library know the query in a standardized manner.
-    if (!empty($variables['options']['query'])) {
-      $query = $variables['options']['query'];
-      ksort($query);
-      $variables['options']['attributes']['data-drupal-link-query'] = Json::encode($query);
-    }
+    // Set the "active" class if the 'set_active_class' option is not empty.
+    if (!empty($variables['options']['set_active_class']) && !$url->isExternal()) {
+      // Add a "data-drupal-link-query" attribute to let the
+      // drupal.active-link library know the query in a standardized manner.
+      if (!empty($variables['options']['query'])) {
+        $query = $variables['options']['query'];
+        ksort($query);
+        $variables['options']['attributes']['data-drupal-link-query'] = Json::encode($query);
+      }
 
-    // Add a "data-drupal-link-system-path" attribute to let the
-    // drupal.active-link library know the path in a standardized manner.
-    if ($url->isRouted() && !isset($variables['options']['attributes']['data-drupal-link-system-path'])) {
+      // Add a "data-drupal-link-system-path" attribute to let the
+      // drupal.active-link library know the path in a standardized manner.
+      if ($url->isRouted() && !isset($variables['options']['attributes']['data-drupal-link-system-path'])) {
+        // Get the route match from the URL.
+        $routeMatch = $url->getRouteMatch();
+        if ($routeMatch) {
+          $internalPath = Url::fromRouteMatch($routeMatch);
+          $system_path = \Drupal::urlGenerator()->getPathFromRoute($internalPath->getRouteName(), $internalPath->getRouteParameters());
 
-      // Get the route match from the URL.
-      $routeMatch = $url->getRouteMatch();
-      if ($routeMatch) {
-        $internalPath = Url::fromRouteMatch($routeMatch);
-        $system_path = \Drupal::urlGenerator()->getPathFromRoute($internalPath->getRouteName(), $internalPath->getRouteParameters());
-  
-        // Special case for the front page.
-        if ($routeMatch->getRouteName() === '<front>') {
-          $system_path = '<front>';
-        }
+          // Special case for the front page.
+          if ($routeMatch->getRouteName() === '<front>') {
+            $system_path = '<front>';
+          }
 
-        if (!empty($system_path)) {
-          $variables['options']['attributes']['data-drupal-link-system-path'] = $system_path;
+          if (!empty($system_path)) {
+            $variables['options']['attributes']['data-drupal-link-system-path'] = $system_path;
+          }
         }
       }
-    }
 
-    // Remove all HTML PHP tags from a tooltip, calling expensive strip_tags()
-    // only when a quick strpos() gives suspicion tags are present.
-    if (isset($variables['options']['attributes']['title']) && str_contains($variables['options']['attributes']['title'], '<')) {
-      $variables['options']['attributes']['title'] = strip_tags($variables['options']['attributes']['title']);
+      // Remove all HTML PHP tags from a tooltip, calling expensive strip_tags()
+      // only when a quick strpos() gives suspicion tags are present.
+      if (isset($variables['options']['attributes']['title']) && str_contains($variables['options']['attributes']['title'], '<')) {
+        $variables['options']['attributes']['title'] = strip_tags($variables['options']['attributes']['title']);
+      }
     }
 
     // Allow other modules to modify the structure of the link.
