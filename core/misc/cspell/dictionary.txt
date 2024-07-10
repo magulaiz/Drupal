@@ -772,6 +772,7 @@ versionable
 versionless
 vfsstream
 viewports
+vincentlanglet
 vocabs
 wcag
 webassert
@@ -805,4 +806,3 @@ zoneinfo
 zoomin
 zoomout
 zxvf
-vincentlanglet
