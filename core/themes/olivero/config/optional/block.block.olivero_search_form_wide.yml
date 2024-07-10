@@ -17,4 +17,6 @@ settings:
   label_display: '0'
   provider: search
   page_id: ''
+  title: 'Enter the terms you wish to search for.'
+  placeholder: 'Search by keyword or phrase.'
 visibility: {  }

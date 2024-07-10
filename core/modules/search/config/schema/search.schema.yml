@@ -121,3 +121,9 @@ block.settings.search_form_block:
     page_id:
       type: string
       label: 'Search page'
+    title:
+      type: string
+      label: 'Value for title property'
+    placeholder:
+      type: string
+      label: 'Value for placeholder property'

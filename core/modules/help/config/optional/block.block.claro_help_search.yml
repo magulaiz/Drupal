@@ -21,6 +21,8 @@ settings:
   label_display: visible
   provider: search
   page_id: help_search
+  title: 'Enter the terms you wish to search for'
+  placeholder: 'Enter the terms you wish to search for'
 visibility:
   request_path:
     id: request_path

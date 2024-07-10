@@ -126,13 +126,6 @@ function umami_preprocess_menu_local_task(&$variables) {
 }
 
 /**
- * Implements hook_form_FORM_ID_alter().
- */
-function umami_form_search_block_form_alter(&$form, FormStateInterface $form_state) {
-  $form['keys']['#attributes']['placeholder'] = t('Search by keyword, ingredient, dish');
-}
-
-/**
  * Implements hook_preprocess_links__media_library_menu().
  *
  * This targets the menu of available media types in the media library's modal

@@ -199,9 +199,6 @@ function olivero_form_alter(&$form, FormStateInterface $form_state, $form_id) {
 
   switch ($form_id) {
     case 'search_block_form':
-      // Add placeholder text to keys input.
-      $form['keys']['#attributes']['placeholder'] = t('Search by keyword or phrase.');
-
       // Add classes to the search form submit input.
       $form['actions']['submit']['#attributes']['class'][] = 'search-form__submit';
       break;
