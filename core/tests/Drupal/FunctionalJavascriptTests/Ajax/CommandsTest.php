@@ -26,7 +26,7 @@ class CommandsTest extends WebDriverTestBase {
   /**
    * Tests the various Ajax Commands.
    */
-  public function testAjaxCommands() {
+  public function testAjaxCommands(): void {
     $session = $this->getSession();
     $page = $this->getSession()->getPage();
 
@@ -102,7 +102,7 @@ class CommandsTest extends WebDriverTestBase {
     // Tests the 'data' command.
     $page->pressButton("AJAX data command: Issue command.");
     $this->assertTrue($page->waitFor(10, function () use ($session) {
-      return 'test_value' === $session->evaluateScript('window.jQuery("#data_div").data("testkey")');
+      return 'test_value' === $session->evaluateScript('window.jQuery("#data_div").data("test_key")');
     }));
 
     // Tests the 'html' command.
