@@ -14,7 +14,7 @@ config:
       simple_config_update:
         definitions.contact__site_page:
           menu_name: footer
-          parent: null
+          parent: ''
           weight: 0
           expanded: false
           enabled: true
