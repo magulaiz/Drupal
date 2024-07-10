@@ -48,7 +48,6 @@ class FieldGroupRowsTest extends ViewsKernelTestBase {
     $this->installConfig(['filter']);
     $this->installEntitySchema('node');
     $this->installEntitySchema('user');
-    $this->setUpCurrentUser(['uid' => 0]);
     NodeType::create([
       'type' => 'page',
       'name' => 'Page',
