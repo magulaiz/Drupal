@@ -61,11 +61,6 @@ recipe-collections:
     theme:
       css/components/blocks/recipe-collections/recipe-collections.css: {}
 
-two-columns:
-  css:
-    layout:
-      css/layout/layout-2-col.css: {}
-
 user:
   version: VERSION
   css:
