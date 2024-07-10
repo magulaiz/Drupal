@@ -10,6 +10,11 @@
 
 .field--label-inline .field__label,
 .field--label-inline .field__items {
-  /* Undo use of floats by base styles, switch to flexbox */
   float: none;
+}
+
+.field--label-inline .field__items {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
 }

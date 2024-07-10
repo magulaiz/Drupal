@@ -6,3 +6,8 @@
 .node--type-recipe.node--view-mode-full .block-views-blockrelated-recipes-related-recipes-block {
   margin-top: 2rem;
 }
+
+.node--type-recipe.node--view-mode-full > .node__content .layout--onecol > .layout__region--content {
+  display: grid;
+  gap: 1.2rem;
+}

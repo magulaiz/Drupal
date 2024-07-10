@@ -3,10 +3,12 @@
  * This file is used to style the 'Articles Aside' view.
  */
 
-.block-views-blockarticles-aside-block-1 > .block__title {
-  margin: 0 0 1.562rem;
+.block-views-blockarticles-aside-block-1 {
+  display: grid;
+  gap: 1.562rem;
 }
 
-.block-views-blockarticles-aside-block-1 .views-row {
-  margin-bottom: 1.562rem;
+.block-views-blockarticles-aside-block-1 .view-content {
+  display: grid;
+  gap: 1.562rem;
 }

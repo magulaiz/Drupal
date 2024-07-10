@@ -13,14 +13,15 @@
 
 /* Add responsive side gutters to the outer layout container 'main' at smaller sizes */
 .main {
-  padding-inline: 4%;
+  display: grid;
+  gap: 14px;
   padding-block: 0 2.37rem;
 }
-/* Extra large + side margins */
-@media screen and (min-width: 80rem) {
-  /* 1200px (large) + 80px (side margins) = 1280px */
-  .main {
-    padding-inline: 0;
+
+@media screen and (min-width: 60rem) {
+  .main:has(> .layout-sidebar) {
+    grid-template-columns: 72% 1fr;
+    gap: 3%;
   }
 }
 
