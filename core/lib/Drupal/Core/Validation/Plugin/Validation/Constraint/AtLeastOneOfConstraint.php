@@ -31,7 +31,7 @@ class AtLeastOneOfConstraint extends AtLeastOneOf implements ContainerFactoryPlu
       }
     }
     // @todo Setting [] for $groups as RecursiveContextualValidator doesn't allow groups. Figure out a better solution for this.
-    return new static($constraints,[]);
+    return new static($constraints, []);
   }
 
 }
