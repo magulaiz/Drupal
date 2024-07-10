@@ -177,6 +177,9 @@ abstract class BrowserTestBase extends TestCase {
    * for debugging and development. To access the site, set up sites.php
    * to return the test site folder.
    *
+   * When this is set to TRUE, the password of the admin user in the test site
+   * is set to 'admin' to allow logging in.
+   *
    * @see sites/example.sites.php
    * @see \Drupal\Core\DrupalKernel::findSitePath()
    */
