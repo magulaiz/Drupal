@@ -165,9 +165,11 @@ class AttributeClassDiscovery implements DiscoveryInterface {
           if (property_exists($content, $name)) {
             throw new InvalidPluginDefinitionException("May not reuse $name.");
           }
-        }
 
-        // TODO: decide how to add property $name to $content plugin definition.
+          // TODO: decide how to add property $name to $content plugin
+          // definition -- should they live in their own sub-array?
+          $content[$name] = $value;
+        }
       }
     }
 
