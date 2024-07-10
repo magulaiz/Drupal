@@ -3,7 +3,7 @@
   color: #fff;
   background: #767775;
 }
-.block-views-blockrecipe-collections-block .block__title {
+.block-views-blockrecipe-collections-block > h2 {
   margin-bottom: 1.5rem;
   text-align: center;
 }
