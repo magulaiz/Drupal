@@ -7,6 +7,7 @@ use Drupal\Component\Plugin\Attribute\Plugin;
 use Drupal\Component\FileCache\FileCacheFactory;
 use Drupal\Component\FileCache\FileCacheInterface;
 use Drupal\Component\Plugin\Attribute\PluginExtender;
+use Drupal\Component\Plugin\Attribute\PluginDeprecatedProperty;
 use Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException;
 
 /**
@@ -160,10 +161,19 @@ class AttributeClassDiscovery implements DiscoveryInterface {
           continue;
         }
 
+        // Ensure that none of the properties in the 3rd party attribute
+        // overwrite a non-deprecated property in the base plugin attribute.
         $attribute_properties = $attribute->getArguments();
         foreach ($attribute_properties as $name => $value) {
-          if (property_exists($content, $name)) {
-            throw new InvalidPluginDefinitionException("May not reuse $name.");
+          if (array_key_exists($name, $content)) {
+            // If the property is deprecated on the plugin attribute, we allow
+            // it in the third-party attribute. This allows legacy annotation
+            // properties to be gradually moved to third-party attributes.
+            $reflection_attribute_class = new \ReflectionClass($plugin_attribute::class);
+            $reflection_property_on_plugin_attribute_class = $reflection_attribute_class->getProperty($name);
+            if (empty($reflection_property_on_plugin_attribute_class->getAttributes(PluginDeprecatedProperty::class))) {
+              throw new InvalidPluginDefinitionException("May not reuse $name.");
+            }
           }
 
           // TODO: decide how to add property $name to $content plugin
