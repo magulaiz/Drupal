@@ -143,11 +143,11 @@ class AttributeClassDiscovery implements DiscoveryInterface {
     $id = $content = NULL;
     if ($attributes = $reflection_class->getAttributes($this->pluginDefinitionAttributeName, \ReflectionAttribute::IS_INSTANCEOF)) {
       /** @var \Drupal\Component\Plugin\Attribute\AttributeInterface $attribute */
-      $attribute = $attributes[0]->newInstance();
-      $this->prepareAttributeDefinition($attribute, $class);
+      $plugin_attribute = $attributes[0]->newInstance();
+      $this->prepareAttributeDefinition($plugin_attribute, $class);
 
-      $id = $attribute->getId();
-      $content = $attribute->get();
+      $id = $plugin_attribute->getId();
+      $content = $plugin_attribute->get();
     }
 
     // Get plugin extension attributes.
