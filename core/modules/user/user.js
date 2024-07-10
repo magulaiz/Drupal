@@ -221,7 +221,7 @@
   };
 
   Drupal.strengthTests = {
-    addLowerCase:  {
+    addLowerCase: {
       test: (password) => /[a-z]/.test(password),
       message: (settings) => settings.addLowerCase,
     },
@@ -236,7 +236,7 @@
     addPunctuation: {
       test: (password) => /[^a-zA-Z0-9]/.test(password),
       message: (settings) => settings.addPunctuation,
-    }
+    },
   };
 
   /**
@@ -256,7 +256,7 @@
   Drupal.evaluatePasswordStrength = (password, passwordSettings) => {
     password = password.trim();
     let weaknesses = 0;
-    let messageTips = [];
+    const messageTips = [];
 
     // If there is a username edit box on the page, compare password to that,
     // otherwise use value from the database.
@@ -274,14 +274,14 @@
     }
 
     // Count weaknesses.
-    Object.values(Drupal.strengthTests).forEach(test => {
+    Object.values(Drupal.strengthTests).forEach((test) => {
       if (!test.test(password)) {
         messageTips.push(test.message(passwordSettings));
         weaknesses += 1;
       }
     });
 
-    let strength = (weaknesses / Drupal.strengthTests.length + 1 ) * 100;
+    let strength = (weaknesses / Drupal.strengthTests.length + 1) * 100;
 
     // Check if password is the same as the username.
     if (password !== '' && password.toLowerCase() === username.toLowerCase()) {
