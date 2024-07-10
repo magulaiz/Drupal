@@ -2,7 +2,8 @@
 
 namespace Drupal\Core\Validation\Plugin\Validation\Constraint;
 
-class AtLeastOneOfConstraintValidator extends \Symfony\Component\Validator\Constraints\AtLeastOneOfValidator
-{
+use Symfony\Component\Validator\Constraints\AtLeastOneOfValidator;
+
+class AtLeastOneOfConstraintValidator extends AtLeastOneOfValidator {
 
 }

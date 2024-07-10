@@ -8,26 +8,21 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Symfony\Component\Validator\Constraints\AtLeastOneOf;
 
+/**
+ * Checks that at least one of the given constraint is satisfied.
+ *
+ * Overrides the symfony constraint to convert the array of constraints to array of constraint objects and use them.
+ */
 #[Constraint(
   id: 'AtLeastOneOf',
   label: new TranslatableMarkup('At Least One Of', [], ['context' => 'Validation'])
 )]
-class AtLeastOneOfConstraint extends AtLeastOneOf implements ContainerFactoryPluginInterface
-{
+class AtLeastOneOfConstraint extends AtLeastOneOf implements ContainerFactoryPluginInterface {
 
   /**
-   * Constructs a AtLeastOfConstraint.
+   * {@inheritdoc}
    */
-  public function __construct(mixed $constraints = null) {
-    //@TODO Setting [] for $groups as RecursiveContextualValidator doesn't allow groups. Figure out a better solution for this.
-    parent::__construct($constraints, []);
-  }
-
-  /**
-   * @inheritDoc
-   */
-  public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition)
-  {
+  public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
     $constraint_manager = $container->get('validation.constraint');
     $constraints = $configuration['constraints'];
     foreach ($constraints as $constraint_id => $constraint) {
@@ -35,7 +30,8 @@ class AtLeastOneOfConstraint extends AtLeastOneOf implements ContainerFactoryPlu
         $constraints[$constraint_id] = $constraint_manager->create($constraint_name, $constraint_options);
       }
     }
-    return new static($constraints);
+    // @todo Setting [] for $groups as RecursiveContextualValidator doesn't allow groups. Figure out a better solution for this.
+    return new static($constraints,[]);
   }
 
 }
