@@ -542,6 +542,9 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
 
   /**
    * {@inheritdoc}
+   *
+   * phpcs:ignore Drupal.Commenting.FunctionComment.VoidReturn
+   * @return void
    */
   public function getCachedContainerDefinition() {
     $cache = $this->bootstrapContainer->get('cache.container')->get($this->getContainerCacheKey());
@@ -674,6 +677,9 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
 
   /**
    * {@inheritdoc}
+   *
+   * phpcs:ignore Drupal.Commenting.FunctionComment.VoidReturn
+   * @return void
    */
   public function terminate(Request $request, Response $response): void {
     if ($this->booted && $this->getHttpKernel() instanceof TerminableInterface) {

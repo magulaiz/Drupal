@@ -126,7 +126,7 @@ class Rearrange extends ViewsFormBase {
         '#title' => $this->t('Remove @title', ['@title' => $name]),
         '#title_display' => 'invisible',
         '#id' => 'views-removed-' . $id,
-        '#attributes' => ['class' => ['views-remove-checkbox']],
+        '#attributes' => ['class' => ['views-remove-checkbox', 'js-hide']],
         '#default_value' => 0,
         '#prefix' => '<div class="js-hide">',
         '#suffix' => Markup::create('</div>' . Link::fromTextAndUrl(new FormattableMarkup('<span>@text</span>', ['@text' => $this->t('Remove')]),

@@ -75,6 +75,9 @@ class DependencySerializationTestDummy {
 
   /**
    * {@inheritdoc}
+   *
+   * phpcs:ignore Drupal.Commenting.FunctionComment.VoidReturn
+   * @return void
    */
   public function setContainer(?ContainerInterface $container): void {
     $this->container = $container;

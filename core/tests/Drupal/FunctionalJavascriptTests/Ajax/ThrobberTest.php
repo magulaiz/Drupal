@@ -100,4 +100,21 @@ JS;
     $web_assert->assertNoElementAfterWait('css', '.ajax-progress-throbber');
   }
 
+  /**
+   * Tests progress throbber element position.
+   */
+  public function testProgressThrobberPosition() {
+    $this->drupalLogin($this->rootUser);
+
+    $this->drupalGet('/admin/structure/block');
+    $this->clickLink('Place block');
+    hold_test_response(FALSE);
+    $this->assertSession()->waitForText('Place Block');
+    $this->clickLink('Place block');
+    hold_test_response(TRUE);
+    $this->assertSession()->elementExists('xpath', '//div[contains(@class, "dropbutton-wrapper")]/following-sibling::div[contains(@class, "ajax-progress-throbber")]');
+    hold_test_response(FALSE);
+    $this->assertSession()->assertNoElementAfterWait('css', '.ajax-progress-throbber');
+  }
+
 }

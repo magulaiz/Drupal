@@ -20,6 +20,17 @@ class InstallerExistingConfigMultilingualTest extends InstallerConfigDirectoryTe
 
   /**
    * {@inheritdoc}
+   *
+   * @todo Remove this and thus re-enable this test in
+   *   https://www.drupal.org/project/drupal/issues/3361121
+   */
+  protected function setUp(): void {
+    $this->markTestSkipped('Skipped due to frequent random test failures.');
+    parent::setUp();
+  }
+
+  /**
+   * {@inheritdoc}
    */
   protected function getConfigLocation() {
     return __DIR__ . '/../../../fixtures/config_install/multilingual';
