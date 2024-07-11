@@ -7,7 +7,7 @@ use Drupal\Core\Config\Config;
 use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Config\TypedConfigManagerInterface;
 use Drupal\Core\Render\Element;
-use Drupal\Core\StringTranslation\TranslatableMarkup;
+use Drupal\Component\Render\FormattableMarkup;
 use Drupal\Core\Url;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
