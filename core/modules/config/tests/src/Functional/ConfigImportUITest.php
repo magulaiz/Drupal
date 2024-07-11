@@ -582,6 +582,8 @@ class ConfigImportUITest extends BrowserTestBase {
 
     // Ensure the value returned from config is an enum.
     $this->assertSame(EnumValue::No, $this->config('config_enum_test.settings')->get('foo'));
+    $this->assertSame(1, $this->config('config_enum_test.settings')->get('bar'));
+
   }
 
 }

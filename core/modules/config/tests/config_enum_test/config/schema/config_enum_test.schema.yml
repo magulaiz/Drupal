@@ -8,3 +8,6 @@ config_enum_test.settings:
       type: enum
       enum_class: '\Drupal\config_enum_test\EnumValue'
       label: 'Foo'
+    bar:
+      type: integer
+      label: 'Bar'
