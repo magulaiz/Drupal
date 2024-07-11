@@ -96,6 +96,9 @@ class BlockContentPermissions implements ContainerInjectionInterface {
     if ($operation === 'create') {
       return 'create ' . $block_bundle . ' block content';
     }
+    elseif ($operation === 'update') {
+      $operation = 'edit';
+    }
     return $operation . ' any ' . $block_bundle . ' block content';
   }
 
