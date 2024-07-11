@@ -8,6 +8,8 @@ use Drupal\block_content\BlockContentInterface;
 use Drupal\block_content\Entity\BlockContent;
 use Drupal\Core\Database\Database;
 
+// cspell:ignore testblock
+
 /**
  * Create a block and test saving it.
  *
@@ -72,6 +74,13 @@ class BlockContentCreationTest extends BlockContentTestBase {
     // Check that the block exists in the database.
     $block = $this->getBlockByLabel($edit['info[0][value]']);
     $this->assertNotEmpty($block, 'Content Block found in database.');
+
+    // Ensure a user with just the create permission can access the page.
+    $this->drupalLogin($this->drupalCreateUser([
+      'create basic block content',
+    ]));
+    $this->drupalGet('block/add/basic');
+    $this->assertSession()->statusCodeEquals(200);
   }
 
   /**
