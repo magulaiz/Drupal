@@ -11,14 +11,14 @@
   Drupal.behaviors.makeStickyOptional = {
     attach(context) {
       // Find all elements with the 'table.sticky-header' class within the context.
-      const stickyHeaderElements = Array.from(
-        context.querySelectorAll('table.sticky-header'),
+      const stickyHeaderElements = context.querySelectorAll(
+        'table.sticky-header',
       );
 
       stickyHeaderElements.forEach((stickyHeaderElement) => {
         stickyHeaderElement.insertAdjacentHTML(
           'beforebegin',
-          Drupal.theme.stickyHeaderCheckbox(),
+          Drupal.theme('stickyHeaderCheckbox'),
         );
         const previousElement = stickyHeaderElement.previousElementSibling;
         const checkbox = previousElement.querySelector(
