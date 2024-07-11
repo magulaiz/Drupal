@@ -359,8 +359,12 @@ class ModuleInstaller implements ModuleInstallerInterface {
         // @see https://www.drupal.org/node/2208429
         \Drupal::service('theme_handler')->refreshInfo();
 
-        // Allow the module to perform install tasks.
-        $this->moduleHandler->invoke($module, 'install', [$sync_status]);
+        // During config import the hook invocation is delayed until all of its
+        // dependent configuration is made available.
+        if (!$sync_status) {
+          // Allow the module to perform install tasks.
+          $this->moduleHandler->invoke($module, 'install', [$sync_status]);
+        }
 
         // Record the fact that it was installed.
         \Drupal::logger('system')->info('%module module installed.', ['%module' => $module]);
@@ -368,7 +372,9 @@ class ModuleInstaller implements ModuleInstallerInterface {
     }
 
     // If any modules were newly installed, invoke hook_modules_installed().
-    if (!empty($modules_installed)) {
+    // During config import the hook invocation is delayed until all of its
+    // dependent configuration is made available.
+    if (!$sync_status && !empty($modules_installed)) {
       if (!InstallerKernel::installationAttempted()) {
         // If the container was rebuilt during hook_install() it might not have
         // the 'router.route_provider.old' service.

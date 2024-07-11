@@ -11,6 +11,7 @@ use Drupal\Core\Extension\ThemeHandlerInterface;
 use Drupal\Core\Config\Entity\ImportableEntityStorageInterface;
 use Drupal\Core\DependencyInjection\DependencySerializationTrait;
 use Drupal\Core\Entity\EntityStorageException;
+use Drupal\Core\Installer\InstallerKernel;
 use Drupal\Core\Lock\LockBackendInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\Core\StringTranslation\TranslationInterface;
@@ -610,6 +611,7 @@ class ConfigImporter {
       $sync_steps[] = 'processExtensions';
     }
     $sync_steps[] = 'processConfigurations';
+    $sync_steps[] = 'processHookInstall';
     $sync_steps[] = 'processMissingContent';
     // Allow modules to add new steps to configuration synchronization.
     $this->moduleHandler->alter('config_import_steps', $sync_steps, $this);
@@ -715,6 +717,61 @@ class ConfigImporter {
     }
     else {
       $context['finished'] = 1;
+    }
+  }
+
+  /**
+   * Handles processing of hook_install.
+   *
+   * The config installer imports only the module's simple config when a module
+   * is installed during config import. Therefore the module's installation
+   * hooks are delayed to after the config import is complete so that each
+   * module can rely on all of its dependent (third-party) configuration to be
+   * present when the hooks are invoked.
+   *
+   * @param array|\ArrayAccess $context
+   *   Standard batch context.
+   */
+  protected function processHookInstall(&$context) {
+    $sandbox = &$context['sandbox']['hook_install'];
+    if (!isset($sandbox['extensions'])) {
+      $sandbox['extensions'] = array_values($this->getExtensionChangelist('module', 'install'));
+      $sandbox['total'] = count($sandbox['extensions']);
+      $sandbox['next'] = 0;
+    }
+
+    if (empty($sandbox['extensions'])) {
+      $context['finished'] = 1;
+      return;
+    }
+
+    $next = &$sandbox['next'];
+    if (isset($sandbox['extensions'][$next])) {
+      $extension = $sandbox['extensions'][$next];
+      $this->moduleHandler->invoke($extension, 'install', [TRUE]);
+      $next++;
+
+      if (!InstallerKernel::installationAttempted()) {
+        // If the container was rebuilt during hook_install() it might not have
+        // the 'router.route_provider.old' service.
+        if (\Drupal::hasService('router.route_provider.old')) {
+          \Drupal::getContainer()->set('router.route_provider', \Drupal::service('router.route_provider.old'));
+        }
+        if (!\Drupal::service('router.route_provider.lazy_builder')->hasRebuilt()) {
+          // Rebuild routes after installing module. This is done here on top of
+          // \Drupal\Core\Routing\RouteBuilder::destruct to not run into errors on
+          // fastCGI which executes ::destruct() after the module installation
+          // page was sent already.
+          \Drupal::service('router.builder')->rebuild();
+        }
+      }
+    }
+    $context['finished'] = $next / $sandbox['total'];
+
+    // Before finishing invoke the modules_installed hook by passing it all the
+    // modules that have been installed.
+    if ($context['finished'] === 1) {
+      $this->moduleHandler->invokeAll('modules_installed', [$sandbox['extensions'], TRUE]);
     }
   }
 
