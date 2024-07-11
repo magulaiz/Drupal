@@ -73,4 +73,5 @@ class BreadcrumbLayoutBuilderPreviewTest extends BrowserTestBase {
     $this->assertSession()->linkExists('Home');
     $this->assertSession()->pageTextNotContains('"Breadcrumbs" block');
   }
+
 }
