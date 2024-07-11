@@ -277,10 +277,10 @@ abstract class ConfigFormBase extends FormBase {
    * @param \Symfony\Component\Validator\ConstraintViolationListInterface $violations
    *   The list of constraint violations that apply to this form element.
    *
-   * @return \Drupal\Component\Render\MarkupInterface|string
+   * @return \Drupal\Component\Render\MarkupInterface
    *   The rendered HTML.
    */
-  protected function formatMultipleViolationsMessage(string $form_element_name, array $violations): MarkupInterface|string {
+  protected function formatMultipleViolationsMessage(string $form_element_name, array $violations): MarkupInterface {
     $transformed_message_parts = [];
     foreach ($violations as $index => $violation) {
       // Note that `@validation_error_message` (should) already contain a
