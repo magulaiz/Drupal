@@ -205,27 +205,33 @@
           });
         }
 
-        let offCanvasSettingsPosition;
         let height;
-        let newHeight;
         window.addEventListener('dialog:aftercreate', (e) => {
           const $element = $(e.target);
+          const { settings } = e;
           const toolbarBar = document.getElementById('toolbar-bar');
-          once('OffCanvasPosition', toolbarBar, context).forEach((element) => {
-            const { settings } = e;
-            offCanvasSettingsPosition = settings.drupalOffCanvasPosition;
-            height = Drupal.offCanvas.getContainer($element).outerHeight();
-            newHeight = Drupal.offCanvas.getContainer($element).outerHeight();
-          });
 
           if (toolbarBar) {
-            toolbarBar.style.marginTop = '0';
+            if (
+              Drupal.offCanvas
+                .getContainer($element)[0]
+                .classList.contains('ui-dialog-off-canvas') &&
+              Drupal.offCanvas
+                .getContainer($element)[0]
+                .classList.contains('ui-dialog-position-top')
+            ) {
+              toolbarBar.style.marginTop = '0';
+            }
 
             // When off-canvas is positioned in top, toolbar has to be moved down.
-            if (offCanvasSettingsPosition === 'top') {
+            if (settings.drupalOffCanvasPosition === 'top') {
+              height = Drupal.offCanvas.getContainer($element).outerHeight();
               toolbarBar.style.marginTop = `${height}px`;
 
               $element.on('dialogContentResize.off-canvas', () => {
+                const newHeight = Drupal.offCanvas
+                  .getContainer($element)
+                  .outerHeight();
                 toolbarBar.style.marginTop = `${newHeight}px`;
               });
             }
