@@ -31,6 +31,7 @@ class AjaxTestForm extends FormBase {
 
     $form['description'] = [
       '#markup' => '<p>' . $this->t("Ajax Form contents description.") . '</p>',
+      '#id' => 'ajax-form-description',
     ];
 
     $form['actions'] = [
@@ -54,9 +55,22 @@ class AjaxTestForm extends FormBase {
       '#value' => $this->t('Hello world'),
       // No regular submit-handler. This form only works via JavaScript.
       '#submit' => [],
+      '#attributes' => [
+        'aria-description' => $this->t('Example description'),
+        'aria-details' => $form['description']['#id'],
+        'aria-label' => $this->t('Example label'),
+        'title' => $this->t('Example hover text'),
+      ],
       '#ajax' => [
         'callback' => '::helloWorld',
         'event' => 'click',
+      ],
+    ];
+    $form['actions']['disabled_action'] = [
+      '#type' => 'submit',
+      '#value' => $this->t('Disabled action'),
+      '#attributes' => [
+        'disabled' => TRUE,
       ],
     ];
     return $form;
