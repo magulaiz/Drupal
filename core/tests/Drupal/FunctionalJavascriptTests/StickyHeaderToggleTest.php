@@ -46,7 +46,7 @@ class StickyHeaderToggleTest extends WebDriverTestBase {
    */
   public function testStickyDisabled(): void {
     $this->drupalGet('admin/content');
-    $this->getSession()->resizeWindow(1024,  1024);
+    $this->getSession()->resizeWindow(1024, 1024);
     $assert_session = $this->assertSession();
     $checkbox = $assert_session->elementExists('css', '.tableheader-toggle-sticky input[type="checkbox"]');
 
