@@ -30,8 +30,7 @@ class AjaxTestForm extends FormBase {
     $form['#action'] = Url::fromRoute('ajax_test.dialog')->toString();
 
     $form['description'] = [
-      '#markup' => '<p>' . $this->t("Ajax Form contents description.") . '</p>',
-      '#id' => 'ajax-form-description',
+      '#markup' => '<p id="ajax-form-description">' . $this->t("Ajax Form contents description.") . '</p>',
     ];
 
     $form['actions'] = [
@@ -57,7 +56,7 @@ class AjaxTestForm extends FormBase {
       '#submit' => [],
       '#attributes' => [
         'aria-description' => $this->t('Example description'),
-        'aria-details' => $form['description']['#id'],
+        'aria-details' => 'ajax-form-description',
         'aria-label' => $this->t('Example label'),
         'title' => $this->t('Example hover text'),
       ],

@@ -158,7 +158,7 @@ class DialogTest extends WebDriverTestBase {
     $form_dialog = $this->getSession()->getPage()->find('css', 'div.ui-dialog');
     $this->assertNotNull($form_dialog, 'Form dialog is visible');
 
-    $form_contents = $form_dialog->find('css', "p:contains('Ajax Form contents description.')");
+    $form_contents = $form_dialog->find('css', 'p#ajax-form-description');
     $this->assertNotNull($form_contents, 'For has the expected text.');
     $do_it = $form_dialog->findButton('Do it');
     $this->assertNotNull($do_it, 'The dialog has a "Do it" button.');
