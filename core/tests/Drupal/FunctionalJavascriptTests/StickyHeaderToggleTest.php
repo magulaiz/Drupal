@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Drupal\FunctionalJavascriptTests;
 
 /**
- * Tests that sticky header can be toggled.
+ * Tests that the sticky header can be toggled.
  *
  * @group javascript
  */
@@ -45,7 +45,8 @@ class StickyHeaderToggleTest extends WebDriverTestBase {
    * Tests the checkbox for enabling/disabling table sticky header.
    */
   public function testStickyDisabled(): void {
-    $this->drupalGet('admin/content', ['query' => ['width' => '1024']]);
+    $this->drupalGet('admin/content');
+    $this->getSession()->resizeWindow(1024,  1024);
     $assert_session = $this->assertSession();
     $checkbox = $assert_session->elementExists('css', '.tableheader-toggle-sticky input[type="checkbox"]');
 
