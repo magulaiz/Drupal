@@ -177,6 +177,7 @@ system.logging:
       type: string
       label: 'Error messages to display'
       # @see core/includes/bootstrap.inc
+      # @todo Update this to use enum in https://www.drupal.org/project/drupal/issues/2951046
       constraints:
         Choice:
           choices:
