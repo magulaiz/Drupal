@@ -10,7 +10,7 @@ namespace Drupal\Component\Utility;
 class SortArray {
 
   /**
-   * Sorts a structured array by the 'weight' element.
+   * Sorts a structured array by the 'weight' element in numeric ascending order.
    *
    * Note that the sorting is by the 'weight' array element, not by the render
    * element property '#weight'.
@@ -32,13 +32,14 @@ class SortArray {
   }
 
   /**
-   * Sorts a structured array by '#weight' property.
+   * Sorts a structured array by the '#weight' property in numeric ascending order.
    *
    * Callback for uasort().
    *
    * @param array $a
    *   First item for comparison. The compared items should be associative
-   *   arrays that optionally include a '#weight' key.
+   *   arrays that optionally include a '#weight' key. For items without a
+   *   '#weight' key, a default value of 0 will be used.
    * @param array $b
    *   Second item for comparison.
    *
@@ -50,13 +51,14 @@ class SortArray {
   }
 
   /**
-   * Sorts a structured array by 'title' key (no # prefix).
+   * Sorts a structured array by the 'title' key (no # prefix) using natural case insensitive string sorting.
    *
    * Callback for uasort().
    *
    * @param array $a
    *   First item for comparison. The compared items should be associative arrays
-   *   that optionally include a 'title' key.
+   *   that optionally include a 'title' key. For items without a 'title' key,
+   *   an empty string will be used.
    * @param array $b
    *   Second item for comparison.
    *
@@ -68,13 +70,14 @@ class SortArray {
   }
 
   /**
-   * Sorts a structured array by '#title' property.
+   * Sorts a structured array by the '#title' property using natural case insensitive string sorting.
    *
    * Callback for uasort().
    *
    * @param array $a
    *   First item for comparison. The compared items should be associative arrays
-   *   that optionally include a '#title' key.
+   *   that optionally include a '#title' key. For items without a '#title' key,
+   *   an empty string will be used.
    * @param array $b
    *   Second item for comparison.
    *
@@ -86,7 +89,7 @@ class SortArray {
   }
 
   /**
-   * Sorts a string array item by an arbitrary key.
+   * Sorts a string array item by an arbitrary key using natural case insensitive string sorting.
    *
    * @param array $a
    *   First item for comparison.
@@ -106,7 +109,7 @@ class SortArray {
   }
 
   /**
-   * Sorts an integer array item by an arbitrary key.
+   * Sorts an integer array item by an arbitrary key in numeric ascending order.
    *
    * @param array $a
    *   First item for comparison.
