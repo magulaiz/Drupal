@@ -211,6 +211,13 @@ class Table extends StylePluginBase implements CacheableDependencyInterface {
       return;
     }
 
+    $form['class'] = [
+      '#title' => $this->t('CSS classes'),
+      '#type' => 'textfield',
+      '#description' => $this->t('Add CSS classes to the table; multiple classes may be separated by spaces.'),
+      '#default_value' => $this->options['class'],
+    ];
+
     $form['override'] = [
       '#type' => 'checkbox',
       '#title' => $this->t('Override normal sorting if click sorting is used'),
@@ -242,13 +249,6 @@ class Table extends StylePluginBase implements CacheableDependencyInterface {
       '#type' => 'textfield',
       '#default_value' => $this->options['summary'],
       '#fieldset' => 'accessibility_details',
-    ];
-
-    $form['class'] = [
-      '#title' => $this->t('CSS classes'),
-      '#type' => 'textfield',
-      '#description' => $this->t('Add CSS classes to the table; multiple classes may be separated by spaces.'),
-      '#default_value' => $this->options['class'],
     ];
 
     $form['description'] = [
