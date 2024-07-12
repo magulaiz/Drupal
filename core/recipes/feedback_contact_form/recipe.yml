@@ -10,6 +10,16 @@ config:
     system:
       - system.menu.footer
   actions:
+    contact.form.feedback:
+      createIfNotExists:
+        id: feedback
+        label: 'Website feedback'
+        recipients:
+          - admin@example.com
+        reply: ''
+        weight: 0
+        message: 'Your message has been sent.'
+        redirect: ''
     core.menu.static_menu_link_overrides:
       simpleConfigUpdate:
         definitions.contact__site_page:

@@ -6,3 +6,132 @@ install:
   - file
   - image
   - user
+config:
+  actions:
+    field.storage.user.user_picture:
+      createIfNotExists:
+        id: user.user_picture
+        field_name: user_picture
+        entity_type: user
+        type: image
+        settings:
+          target_type: file
+          display_field: false
+          display_default: false
+          uri_scheme: public
+          default_image:
+            uuid: null
+            alt: ''
+            title: ''
+            width: null
+            height: null
+        module: image
+        locked: false
+        cardinality: 1
+        translatable: true
+        indexes:
+          target_id:
+            - target_id
+        persist_with_no_fields: false
+        custom_storage: false
+    field.field.user.user.user_picture:
+      createIfNotExists:
+        id: user.user.user_picture
+        field_name: user_picture
+        entity_type: user
+        bundle: user
+        label: Picture
+        description: 'Your virtual face or picture.'
+        required: false
+        translatable: true
+        default_value: {  }
+        default_value_callback: ''
+        settings:
+          handler: 'default:file'
+          handler_settings: {  }
+          file_directory: 'pictures/[date:custom:Y]-[date:custom:m]'
+          file_extensions: 'png gif jpg jpeg webp'
+          max_filesize: ''
+          max_resolution: ''
+          min_resolution: ''
+          alt_field: false
+          alt_field_required: false
+          title_field: false
+          title_field_required: false
+          default_image:
+            uuid: null
+            alt: ''
+            title: ''
+            width: null
+            height: null
+        field_type: image
+    core.entity_form_display.user.user.default:
+      createIfNotExists:
+        id: user.user.default
+        targetEntityType: user
+        bundle: user
+        mode: default
+        content:
+          account:
+            weight: -10
+            region: content
+          contact:
+            weight: 5
+            region: content
+          language:
+            weight: 0
+            region: content
+          timezone:
+            weight: 6
+            region: content
+          user_picture:
+            type: image_image
+            weight: -1
+            region: content
+            settings:
+              progress_indicator: throbber
+              preview_image_style: thumbnail
+            third_party_settings: {  }
+        hidden: {  }
+    core.entity_view_display.user.user.compact:
+      createIfNotExists:
+        id: user.user.compact
+        targetEntityType: user
+        bundle: user
+        mode: compact
+        content:
+          user_picture:
+            type: image
+            label: hidden
+            settings:
+              image_style: thumbnail
+              image_link: content
+              image_loading:
+                attribute: lazy
+            third_party_settings: {  }
+            weight: 0
+            region: content
+        hidden:
+          member_for: true
+    core.entity_view_display.user.user.default:
+      createIfNotExists:
+        id: user.user.default
+        targetEntityType: user
+        bundle: user
+        mode: default
+        content:
+          member_for:
+            weight: 5
+            region: content
+          user_picture:
+            type: image
+            label: hidden
+            settings:
+              image_style: thumbnail
+              image_link: content
+              image_loading:
+                attribute: lazy
+            third_party_settings: {  }
+            weight: 0
+            region: content
+        hidden: {  }

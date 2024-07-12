@@ -6,10 +6,6 @@ install:
   - block
 config:
   import:
-    system:
-      - system.menu.account
-      - system.menu.main
-      - system.theme
     olivero:
       - block.block.olivero_account_menu
       - block.block.olivero_breadcrumbs

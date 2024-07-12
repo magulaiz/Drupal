@@ -9,3 +9,10 @@ config:
       - core.entity_view_mode.taxonomy_term.full
       - system.action.taxonomy_term_publish_action
       - system.action.taxonomy_term_unpublish_action
+  actions:
+    taxonomy.vocabulary.tags:
+      createIfNotExists:
+        name: Tags
+        vid: tags
+        description: 'Use tags to group articles on similar topics into categories.'
+        weight: 0

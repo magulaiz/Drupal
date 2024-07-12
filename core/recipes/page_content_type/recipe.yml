@@ -2,6 +2,7 @@ name: 'Basic page'
 description: "Provides Basic page content type and related configuration. Use <em>basic pages</em> for your static content, such as an 'About us' page."
 type: 'Content type'
 install:
+  - field
   - node
   - path
 config:
@@ -19,3 +20,153 @@ config:
       - system.action.node_save_action
       - system.action.node_unpromote_action
       - system.action.node_unpublish_action
+  actions:
+    node.type.page:
+      createIfNotExists:
+        name: 'Basic page'
+        type: page
+        description: "Use <em>basic pages</em> for your static content, such as an 'About us' page."
+        help: null
+        new_revision: true
+        preview_mode: 1
+        display_submitted: false
+    field.field.node.page.body:
+      createIfNotExists:
+        id: node.page.body
+        field_name: body
+        entity_type: node
+        bundle: page
+        label: Body
+        description: ''
+        required: false
+        translatable: true
+        default_value: {  }
+        default_value_callback: ''
+        settings:
+          display_summary: true
+          required_summary: false
+        field_type: text_with_summary
+    core.base_field_override.node.page.promote:
+      createIfNotExists:
+        id: node.page.promote
+        field_name: promote
+        entity_type: node
+        bundle: page
+        label: 'Promoted to front page'
+        description: ''
+        required: false
+        translatable: false
+        default_value:
+          -
+            value: 0
+        default_value_callback: ''
+        settings:
+          on_label: 'On'
+          off_label: 'Off'
+        field_type: boolean
+    core.entity_form_display.node.page.default:
+      createIfNotExists:
+        id: node.page.default
+        targetEntityType: node
+        bundle: page
+        mode: default
+        content:
+          body:
+            type: text_textarea_with_summary
+            weight: 31
+            region: content
+            settings:
+              rows: 9
+              summary_rows: 3
+              placeholder: ''
+              show_summary: false
+            third_party_settings: {  }
+          created:
+            type: datetime_timestamp
+            weight: 10
+            region: content
+            settings: {  }
+            third_party_settings: {  }
+          path:
+            type: path
+            weight: 30
+            region: content
+            settings: {  }
+            third_party_settings: {  }
+          promote:
+            type: boolean_checkbox
+            weight: 15
+            region: content
+            settings:
+              display_label: true
+            third_party_settings: {  }
+          status:
+            type: boolean_checkbox
+            weight: 120
+            region: content
+            settings:
+              display_label: true
+            third_party_settings: {  }
+          sticky:
+            type: boolean_checkbox
+            weight: 16
+            region: content
+            settings:
+              display_label: true
+            third_party_settings: {  }
+          title:
+            type: string_textfield
+            weight: -5
+            region: content
+            settings:
+              size: 60
+              placeholder: ''
+            third_party_settings: {  }
+          uid:
+            type: entity_reference_autocomplete
+            weight: 5
+            region: content
+            settings:
+              match_operator: CONTAINS
+              match_limit: 10
+              size: 60
+              placeholder: ''
+            third_party_settings: {  }
+        hidden: {  }
+    core.entity_view_display.node.page.default:
+      createIfNotExists:
+        id: node.page.default
+        targetEntityType: node
+        bundle: page
+        mode: default
+        content:
+          body:
+            type: text_default
+            label: hidden
+            settings: {  }
+            third_party_settings: {  }
+            weight: 100
+            region: content
+          links:
+            weight: 101
+            region: content
+        hidden: {  }
+    core.entity_view_display.node.page.teaser:
+      createIfNotExists:
+        id: node.page.teaser
+        targetEntityType: node
+        bundle: page
+        mode: teaser
+        content:
+          body:
+            type: text_summary_or_trimmed
+            label: hidden
+            settings:
+              trim_length: 600
+            third_party_settings: {  }
+            weight: 100
+            region: content
+          links:
+            weight: 101
+            region: content
+        hidden: {  }

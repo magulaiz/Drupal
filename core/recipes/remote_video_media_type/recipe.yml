@@ -2,6 +2,7 @@ name: 'Remote video media'
 description: 'Provides a media type for videos hosted on YouTube and Vimeo.'
 type: 'Media type'
 install:
+  - media
   - media_library
   - path
   - views
@@ -21,3 +22,157 @@ config:
       - views.view.media
     image:
       - image.style.medium
+  actions:
+    media.type.remote_video:
+      createIfNotExists:
+        id: remote_video
+        label: 'Remote video'
+        description: 'A remotely hosted video from YouTube or Vimeo.'
+        source: 'oembed:video'
+        queue_thumbnail_downloads: false
+        new_revision: true
+        source_configuration:
+          source_field: field_media_oembed_video
+          thumbnails_directory: 'public://oembed_thumbnails/[date:custom:Y-m]'
+          providers:
+            - YouTube
+            - Vimeo
+        field_map:
+          title: name
+    field.storage.media.field_media_oembed_video:
+      createIfNotExists:
+        id: media.field_media_oembed_video
+        field_name: field_media_oembed_video
+        entity_type: media
+        type: string
+        settings:
+          max_length: 255
+          case_sensitive: false
+          is_ascii: false
+        module: core
+        locked: false
+        cardinality: 1
+        translatable: true
+        indexes: {  }
+        persist_with_no_fields: false
+        custom_storage: false
+    field.field.media.remote_video.field_media_oembed_video:
+      createIfNotExists:
+        id: media.remote_video.field_media_oembed_video
+        field_name: field_media_oembed_video
+        entity_type: media
+        bundle: remote_video
+        label: 'Video URL'
+        description: ''
+        required: true
+        translatable: true
+        default_value: {  }
+        default_value_callback: ''
+        settings: {  }
+        field_type: string
+    core.entity_form_display.media.remote_video.default:
+      createIfNotExists:
+        id: media.remote_video.default
+        targetEntityType: media
+        bundle: remote_video
+        mode: default
+        content:
+          created:
+            type: datetime_timestamp
+            weight: 10
+            region: content
+            settings: {  }
+            third_party_settings: {  }
+          field_media_oembed_video:
+            type: oembed_textfield
+            weight: 0
+            region: content
+            settings:
+              size: 60
+              placeholder: ''
+            third_party_settings: {  }
+          path:
+            type: path
+            weight: 30
+            region: content
+            settings: {  }
+            third_party_settings: {  }
+          status:
+            type: boolean_checkbox
+            weight: 100
+            region: content
+            settings:
+              display_label: true
+            third_party_settings: {  }
+          uid:
+            type: entity_reference_autocomplete
+            weight: 5
+            region: content
+            settings:
+              match_operator: CONTAINS
+              match_limit: 10
+              size: 60
+              placeholder: ''
+            third_party_settings: {  }
+        hidden:
+          name: true
+    core.entity_form_display.media.remote_video.media_library:
+      createIfNotExists:
+        id: media.remote_video.media_library
+        targetEntityType: media
+        bundle: remote_video
+        mode: media_library
+        content: {  }
+        hidden:
+          created: true
+          field_media_oembed_video: true
+          name: true
+          path: true
+          status: true
+          uid: true
+    core.entity_view_display.media.remote_video.default:
+      createIfNotExists:
+        id: media.remote_video.default
+        targetEntityType: media
+        bundle: remote_video
+        mode: default
+        content:
+          field_media_oembed_video:
+            type: oembed
+            label: hidden
+            settings:
+              max_width: 0
+              max_height: 0
+              loading:
+                attribute: lazy
+            third_party_settings: {  }
+            weight: 0
+            region: content
+        hidden:
+          created: true
+          name: true
+          thumbnail: true
+          uid: true
+    core.entity_view_display.media.remote_video.media_library:
+      createIfNotExists:
+        id: media.remote_video.media_library
+        targetEntityType: media
+        bundle: remote_video
+        mode: media_library
+        content:
+          thumbnail:
+            type: image
+            label: hidden
+            settings:
+              image_style: medium
+              image_link: ''
+              image_loading:
+                attribute: lazy
+            third_party_settings: {  }
+            weight: 0
+            region: content
+        hidden:
+          created: true
+          field_media_oembed_video: true
+          name: true
+          uid: true

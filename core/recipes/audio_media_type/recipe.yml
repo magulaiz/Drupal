@@ -3,6 +3,7 @@ description: 'Provides "Audio" media type and related configuration. A locally h
 type: 'Media type'
 install:
   - image
+  - media
   - media_library
   - path
   - views
@@ -25,3 +26,159 @@ config:
       - views.view.media
     image:
       - image.style.thumbnail
+  actions:
+    media.type.audio:
+      createIfNotExists:
+        id: audio
+        label: Audio
+        description: 'A locally hosted audio file.'
+        source: audio_file
+        queue_thumbnail_downloads: false
+        new_revision: true
+        source_configuration:
+          source_field: field_media_audio_file
+        field_map:
+          name: name
+    field.storage.media.field_media_audio_file:
+      createIfNotExists:
+        id: media.field_media_audio_file
+        field_name: field_media_audio_file
+        entity_type: media
+        type: file
+        settings:
+          target_type: file
+          display_field: false
+          display_default: false
+          uri_scheme: public
+        module: file
+        locked: false
+        cardinality: 1
+        translatable: true
+        indexes: {  }
+        persist_with_no_fields: false
+        custom_storage: false
+    field.field.media.audio.field_media_audio_file:
+      createIfNotExists:
+        id: media.audio.field_media_audio_file
+        field_name: field_media_audio_file
+        entity_type: media
+        bundle: audio
+        label: 'Audio file'
+        description: ''
+        required: true
+        translatable: true
+        default_value: {  }
+        default_value_callback: ''
+        settings:
+          handler: 'default:file'
+          handler_settings: {  }
+          file_directory: '[date:custom:Y]-[date:custom:m]'
+          file_extensions: 'mp3 wav aac'
+          max_filesize: ''
+          description_field: false
+        field_type: file
+    core.entity_form_display.media.audio.default:
+      createIfNotExists:
+        id: media.audio.default
+        targetEntityType: media
+        bundle: audio
+        mode: default
+        content:
+          created:
+            type: datetime_timestamp
+            weight: 10
+            region: content
+            settings: {  }
+            third_party_settings: {  }
+          field_media_audio_file:
+            type: file_generic
+            weight: 0
+            region: content
+            settings:
+              progress_indicator: throbber
+            third_party_settings: {  }
+          path:
+            type: path
+            weight: 30
+            region: content
+            settings: {  }
+            third_party_settings: {  }
+          status:
+            type: boolean_checkbox
+            weight: 100
+            region: content
+            settings:
+              display_label: true
+            third_party_settings: {  }
+          uid:
+            type: entity_reference_autocomplete
+            weight: 5
+            region: content
+            settings:
+              match_operator: CONTAINS
+              match_limit: 10
+              size: 60
+              placeholder: ''
+            third_party_settings: {  }
+        hidden:
+          name: true
+    core.entity_form_display.media.audio.media_library:
+      createIfNotExists:
+        id: media.audio.media_library
+        targetEntityType: media
+        bundle: audio
+        mode: media_library
+        content: {  }
+        hidden:
+          created: true
+          field_media_audio_file: true
+          name: true
+          path: true
+          status: true
+          uid: true
+    core.entity_view_display.media.audio.default:
+      createIfNotExists:
+        id: media.audio.default
+        targetEntityType: media
+        bundle: audio
+        mode: default
+        content:
+          field_media_audio_file:
+            type: file_audio
+            label: visually_hidden
+            settings:
+              controls: true
+              autoplay: false
+              loop: false
+              multiple_file_display_type: tags
+            third_party_settings: {  }
+            weight: 0
+            region: content
+        hidden:
+          created: true
+          name: true
+          thumbnail: true
+          uid: true
+    core.entity_view_display.media.audio.media_library:
+      createIfNotExists:
+        id: media.audio.media_library
+        targetEntityType: media
+        bundle: audio
+        mode: media_library
+        content:
+          thumbnail:
+            type: image
+            label: hidden
+            settings:
+              image_style: thumbnail
+              image_link: ''
+              image_loading:
+                attribute: lazy
+            third_party_settings: {  }
+            weight: 0
+            region: content
+        hidden:
+          created: true
+          field_media_audio_file: true
+          name: true
+          uid: true
