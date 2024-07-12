@@ -5,6 +5,7 @@ namespace Drupal\file\Controller;
 use Drupal\Core\StringTranslation\ByteSizeMarkup;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Response;
 
 /**
  * Defines a controller to respond to file widget AJAX requests.
@@ -22,20 +23,24 @@ class FileWidgetAjaxController {
    *   A JsonResponse object.
    */
   public function progress($key) {
+    if (!extension_loaded('uploadprogress')) {
+      return new JsonResponse([
+        'message' => $this->t("Upload progress not available"),
+      ], Response::HTTP_FORBIDDEN);
+    }
+
     $progress = [
       'message' => $this->t('Starting upload...'),
       'percentage' => -1,
     ];
 
-    if (extension_loaded('uploadprogress')) {
-      $status = uploadprogress_get_info($key);
-      if (isset($status['bytes_uploaded']) && !empty($status['bytes_total'])) {
-        $progress['message'] = t('Uploading... (@current of @total)', [
-          '@current' => ByteSizeMarkup::create($status['bytes_uploaded']),
-          '@total' => ByteSizeMarkup::create($status['bytes_total']),
-        ]);
-        $progress['percentage'] = round(100 * $status['bytes_uploaded'] / $status['bytes_total']);
-      }
+    $status = uploadprogress_get_info($key);
+    if (isset($status['bytes_uploaded']) && !empty($status['bytes_total'])) {
+      $progress['message'] = t('Uploading... (@current of @total)', [
+        '@current' => ByteSizeMarkup::create($status['bytes_uploaded']),
+        '@total' => ByteSizeMarkup::create($status['bytes_total']),
+      ]);
+      $progress['percentage'] = round(100 * $status['bytes_uploaded'] / $status['bytes_total']);
     }
 
     return new JsonResponse($progress);
