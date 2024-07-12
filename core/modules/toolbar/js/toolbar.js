@@ -212,14 +212,7 @@
           const toolbarBar = document.getElementById('toolbar-bar');
 
           if (toolbarBar) {
-            if (
-              Drupal.offCanvas
-                .getContainer($element)[0]
-                .classList.contains('ui-dialog-off-canvas') &&
-              Drupal.offCanvas
-                .getContainer($element)[0]
-                .classList.contains('ui-dialog-position-top')
-            ) {
+            if ($element[0].classList.contains('ui-dialog-position-top')) {
               toolbarBar.style.marginTop = '0';
             }
 
