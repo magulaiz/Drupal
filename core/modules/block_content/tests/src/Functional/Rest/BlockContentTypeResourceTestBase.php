@@ -12,7 +12,7 @@ abstract class BlockContentTypeResourceTestBase extends ConfigEntityResourceTest
   /**
    * {@inheritdoc}
    */
-  protected static $modules = ['block_content'];
+  protected static $modules = ['block', 'block_content'];
 
   /**
    * {@inheritdoc}
