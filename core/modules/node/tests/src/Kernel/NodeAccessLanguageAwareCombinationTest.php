@@ -90,7 +90,8 @@ class NodeAccessLanguageAwareCombinationTest extends NodeAccessTestBase {
     // Create a normal authenticated user.
     $this->webUser = $this->drupalCreateUser(['access content']);
 
-    // Create a user with permission bypass node access to see everything.
+    // Create a user as an admin user with permission bypass node access
+    // to see everything.
     $this->adminUser = $this->drupalCreateUser([
       'bypass node access',
     ]);
