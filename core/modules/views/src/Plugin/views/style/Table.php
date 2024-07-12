@@ -66,6 +66,7 @@ class Table extends StylePluginBase implements CacheableDependencyInterface {
     $options = parent::defineOptions();
 
     $options['columns'] = ['default' => []];
+    $options['class'] = ['default' => []];
     $options['default'] = ['default' => ''];
     $options['info'] = ['default' => []];
     $options['override'] = ['default' => TRUE];
@@ -241,6 +242,13 @@ class Table extends StylePluginBase implements CacheableDependencyInterface {
       '#type' => 'textfield',
       '#default_value' => $this->options['summary'],
       '#fieldset' => 'accessibility_details',
+    ];
+
+    $form['class'] = [
+      '#title' => $this->t('CSS classes'),
+      '#type' => 'textfield',
+      '#description' => $this->t('Add CSS classes to the table; multiple classes may be separated by spaces.'),
+      '#default_value' => $this->options['class'],
     ];
 
     $form['description'] = [
