@@ -5,7 +5,6 @@
 
 @import "../../css/base/media-queries.pcss.css";
 
-<<<<<<<< HEAD:core/themes/olivero/components/comment/comment.pcss.css
 :root {
   --comment-indentation: var(--sp2);
   --comment-indentation--md: var(--sp4);
@@ -58,8 +57,6 @@
   }
 }
 
-.comment__picture {
-========
 .comments__title {
   display: flex;
   align-items: center;
@@ -104,12 +101,11 @@
   padding-inline-start: 0;
 }
 
-.add-comment__picture-wrapper {
+.comment__picture-wrapper {
   inset-block-start: calc(var(--line-height-base) + var(--sp0-5));
 }
 
-.add-comment__picture {
->>>>>>>> 757cf4d9cc (including styles and js as part of the comment component):core/themes/olivero/css/components/comments.pcss.css
+.comment__picture {
   position: absolute;
   inset-inline-start: 0;
   overflow: hidden;

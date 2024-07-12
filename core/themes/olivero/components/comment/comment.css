@@ -10,7 +10,6 @@
  * Comment section and individual comments.
  */
 
-<<<<<<<< HEAD:core/themes/olivero/components/comment/comment.css
 :root {
   --comment-indentation: var(--sp2);
   --comment-indentation--md: var(--sp4);
@@ -68,8 +67,6 @@
   text-decoration: underline;
 }
 
-.comment__picture {
-========
 .comments__title {
   display: flex;
   align-items: center;
@@ -114,12 +111,11 @@
   padding-inline-start: 0;
 }
 
-.add-comment__picture-wrapper {
+.comment__picture-wrapper {
   inset-block-start: calc(var(--line-height-base) + var(--sp0-5));
 }
 
-.add-comment__picture {
->>>>>>>> 757cf4d9cc (including styles and js as part of the comment component):core/themes/olivero/css/components/comments.css
+.comment__picture {
   position: absolute;
   inset-inline-start: 0;
   overflow: hidden;
@@ -129,21 +125,13 @@
   background-color: var(--color--gray-95);
 }
 
-<<<<<<<< HEAD:core/themes/olivero/components/comment/comment.css
 .comment__picture *:not(img) {
-========
-.add-comment__picture *:not(img) {
->>>>>>>> 757cf4d9cc (including styles and js as part of the comment component):core/themes/olivero/css/components/comments.css
   display: inherit;
   width: inherit;
   height: inherit;
 }
 
-<<<<<<<< HEAD:core/themes/olivero/components/comment/comment.css
 .comment__picture img {
-========
-.add-comment__picture img {
->>>>>>>> 757cf4d9cc (including styles and js as part of the comment component):core/themes/olivero/css/components/comments.css
   width: 100%;
   height: 100%;
   object-fit: cover;
@@ -152,11 +140,7 @@
 }
 
 @media all and (-ms-high-contrast: active), (-ms-high-contrast: none) {
-<<<<<<<< HEAD:core/themes/olivero/components/comment/comment.css
   .comment__picture img {
-========
-  .add-comment__picture img {
->>>>>>>> 757cf4d9cc (including styles and js as part of the comment component):core/themes/olivero/css/components/comments.css
     position: absolute;
     /* stylelint-disable csstools/use-logical */
     top: 50%;
@@ -169,11 +153,7 @@
 }
 
 @media (min-width: 43.75rem) {
-<<<<<<<< HEAD:core/themes/olivero/components/comment/comment.css
   .comment__picture {
-========
-  .add-comment__picture {
->>>>>>>> 757cf4d9cc (including styles and js as part of the comment component):core/themes/olivero/css/components/comments.css
     inset-inline-start: calc(-1 * var(--sp5));
     width: var(--sp3);
     height: var(--sp3);
