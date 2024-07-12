@@ -111,6 +111,9 @@ views.filter_value.numeric:
     value:
       type: string
       label: 'Value'
+    append_time:
+      type: string
+      label: 'Value'
 
 views.filter_value.*:
   type: string
