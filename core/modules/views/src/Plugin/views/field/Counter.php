@@ -59,7 +59,7 @@ class Counter extends FieldPluginBase {
    */
   public function renderText($alter) {
     $value = parent::renderText($alter);
-    if ($value == '{{ counter }}') {
+    if ($value == $this->getFieldTokenPlaceholder()) {
       $row_key = $this->view->row_index;
       return $this->getValue($this->view->result[$row_key]);
     }
