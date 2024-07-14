@@ -135,13 +135,6 @@ class AccessPolicyProcessor implements AccessPolicyProcessorInterface {
       // able to ask for its cache contexts.
       $cacheability = CacheableMetadata::createFromObject($calculated_permissions);
 
-      // If the cacheability metadata contains the 'user.permissions' cache context,
-      // remove it. This cache key invokes PermissionsHashGenerator::getCacheableMetadata(),
-      // which in turn invokes this method, creating an infinite loop.
-      if (in_array('user.permissions', $cacheability->getCacheContexts(), TRUE)) {
-        $cacheability->setCacheContexts(array_diff($cacheability->getCacheContexts(), ['user.permissions']));
-      }
-
       $this->variationCache->set($cache_keys, $calculated_permissions, $cacheability, $initial_cacheability);
 
       // Then convert the calculated permissions to an immutable value object
