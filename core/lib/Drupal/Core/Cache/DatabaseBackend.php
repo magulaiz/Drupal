@@ -7,6 +7,7 @@ use Drupal\Component\Assertion\Inspector;
 use Drupal\Component\Datetime\TimeInterface;
 use Drupal\Component\Utility\Crypt;
 use Drupal\Core\Database\Connection;
+use Drupal\Core\Database\DatabaseConnectionInterface;
 use Drupal\Core\Database\DatabaseException;
 
 /**
@@ -57,7 +58,7 @@ class DatabaseBackend implements CacheBackendInterface {
   /**
    * The database connection.
    *
-   * @var \Drupal\Core\Database\Connection
+   * @var \Drupal\Core\Database\DatabaseConnectionInterface
    */
   protected $connection;
 
@@ -71,7 +72,7 @@ class DatabaseBackend implements CacheBackendInterface {
   /**
    * Constructs a DatabaseBackend object.
    *
-   * @param \Drupal\Core\Database\Connection $connection
+   * @param \Drupal\Core\Database\Connection|\Drupal\Core\Database\DatabaseConnectionInterface $connection
    *   The database connection.
    * @param \Drupal\Core\Cache\CacheTagsChecksumInterface $checksum_provider
    *   The cache tags checksum provider.
@@ -86,7 +87,7 @@ class DatabaseBackend implements CacheBackendInterface {
    *   table.
    */
   public function __construct(
-    Connection $connection,
+    Connection|DatabaseConnectionInterface $connection,
     CacheTagsChecksumInterface $checksum_provider,
     $bin,
     protected ObjectAwareSerializationInterface $serializer,
