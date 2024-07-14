@@ -25,7 +25,7 @@ use Drupal\Core\Pager\PagerManagerInterface;
  *
  * @see http://php.net/manual/book.pdo.php
  */
-abstract class Connection {
+abstract class Connection implements DatabaseConnectionInterface {
 
   /**
    * The database target this connection is for.
@@ -195,13 +195,7 @@ abstract class Connection {
   }
 
   /**
-   * Opens a client connection.
-   *
-   * @param array $connection_options
-   *   The database connection settings array.
-   *
-   * @return object
-   *   A client connection object.
+   * {@inheritdoc}
    */
   abstract public static function open(array &$connection_options = []);
 

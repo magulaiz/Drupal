@@ -40,7 +40,7 @@ class ExistingDrupal8StyleDatabaseConnectionInSettingsPhpTest extends BrowserTes
     $contents = str_replace($namespace_search, $namespace_replace, $contents);
 
     // Add a replica connection to the database settings.
-    $contents .= "\$databases['default']['replica'][] = array (\n";
+    $contents .= "\$databases[\Drupal\Core\Database\Database::DEFAULT_KEY][\Drupal\Core\Database\Database::REPLICA_TARGET][] = array (\n";
     $contents .= "  'database' => 'db',\n";
     $contents .= "  'username' => 'db',\n";
     $contents .= "  'password' => 'db',\n";
@@ -78,7 +78,7 @@ class ExistingDrupal8StyleDatabaseConnectionInSettingsPhpTest extends BrowserTes
   public function testReplicaDrupal8StyleDatabaseConnectionInSettingsPhp(): void {
     $this->drupalLogin($this->drupalCreateUser());
 
-    $replica = Database::getConnection('replica', 'default');
+    $replica = Database::getConnection(Database::REPLICA_TARGET, Database::DEFAULT_KEY);
     $this->assertInstanceOf(Connection::class, $replica);
   }
 

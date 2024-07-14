@@ -27,7 +27,7 @@ class ReplicaKillSwitchTest extends KernelTestBase {
     // Note this will result in two independent connection objects that happen
     // to point to the same place.
     $connection_info = Database::getConnectionInfo('default');
-    Database::addConnectionInfo('default', 'replica', $connection_info['default']);
+    Database::addConnectionInfo(Database::DEFAULT_KEY, Database::REPLICA_TARGET, $connection_info[Database::DEFAULT_TARGET]);
 
     /** @var \Drupal\Core\Database\ReplicaKillSwitch $service */
     $service = \Drupal::service('database.replica_kill_switch');
@@ -37,8 +37,8 @@ class ReplicaKillSwitchTest extends KernelTestBase {
     $event = new RequestEvent($kernel, Request::create('http://example.com'), HttpKernelInterface::MAIN_REQUEST);
     $service->checkReplicaServer($event);
 
-    $db1 = Database::getConnection('default', 'default');
-    $db2 = Database::getConnection('replica', 'default');
+    $db1 = Database::getConnection(Database::DEFAULT_TARGET, Database::DEFAULT_KEY);
+    $db2 = Database::getConnection(Database::REPLICA_TARGET, Database::DEFAULT_KEY);
 
     $this->assertSame($db1, $db2, 'System Init ignores secondaries when requested.');
 

@@ -58,9 +58,8 @@ class ReplicaKillSwitch implements EventSubscriberInterface {
    */
   public function trigger() {
     $connection_info = Database::getConnectionInfo();
-    // Only set ignore_replica_server if there are replica servers being used,
-    // which is assumed if there are more than one.
-    if (count($connection_info) > 1) {
+    // Only set ignore_replica_server if there are replica servers being used.
+    if (!empty($connection_info[Database::REPLICA_TARGET])) {
       // Five minutes is long enough to allow the replica to break and resume
       // interrupted replication without causing problems on the Drupal site
       // from the old data.
@@ -94,7 +93,7 @@ class ReplicaKillSwitch implements EventSubscriberInterface {
     // replica can be re-enabled.
     if ($this->session->has('ignore_replica_server')) {
       if ($this->session->get('ignore_replica_server') >= $this->time->getRequestTime()) {
-        Database::ignoreTarget('default', 'replica');
+        Database::ignoreTarget('default', Database::REPLICA_TARGET);
       }
       else {
         $this->session->remove('ignore_replica_server');

@@ -4,7 +4,7 @@ services:
       - { name: event_subscriber }
       - { name: needs_destruction, priority: -1000 }
   Drupal\performance_test\DatabaseEventEnabler:
-    arguments: ['@database']
+    arguments: ['@database', '@database.nontransactional']
     tags:
       - { name: http_middleware, priority: 1000, responder: true }
   performance_test.cache_factory:

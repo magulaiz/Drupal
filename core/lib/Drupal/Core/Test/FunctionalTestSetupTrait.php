@@ -311,7 +311,7 @@ trait FunctionalTestSetupTrait {
     $parameters = $this->installParameters();
     // Simulate a real install which does not start with the any connections set
     // in \Drupal\Core\Database\Database::$connections.
-    Database::removeConnection('default');
+    Database::removeConnection(Database::DEFAULT_KEY);
     install_drupal($this->classLoader, $parameters);
   }
 
@@ -538,7 +538,7 @@ trait FunctionalTestSetupTrait {
    *   Array of parameters for use in install_drupal().
    */
   protected function installParameters() {
-    $formInput = Database::getConnectionInfo()['default'];
+    $formInput = Database::getConnectionInfo()[Database::DEFAULT_TARGET];
     $driverName = $formInput['driver'];
     $driverNamespace = $formInput['namespace'];
 

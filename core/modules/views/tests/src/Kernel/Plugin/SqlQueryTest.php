@@ -98,35 +98,35 @@ class SqlQueryTest extends ViewsKernelTestBase {
     // Add 3 database connections for the different options that the method
     // getConnection() supports.
     $connection_info = Database::getConnectionInfo('default');
-    Database::addConnectionInfo('default', 'replica', $connection_info['default']);
-    Database::addConnectionInfo('core_fake', 'default', $connection_info['default']);
-    Database::addConnectionInfo('core_fake', 'replica', $connection_info['default']);
+    Database::addConnectionInfo(Database::DEFAULT_KEY, Database::REPLICA_TARGET, $connection_info['default']);
+    Database::addConnectionInfo('core_fake', Database::DEFAULT_TARGET, $connection_info['default']);
+    Database::addConnectionInfo('core_fake', Database::REPLICA_TARGET, $connection_info['default']);
 
     // Test the database connection with no special options set.
-    $this->assertSame('default', $view->getQuery()->getConnection()->getKey());
-    $this->assertSame('default', $view->getQuery()->getConnection()->getTarget());
+    $this->assertSame(Database::DEFAULT_KEY, $view->getQuery()->getConnection()->getKey());
+    $this->assertSame(Database::DEFAULT_TARGET, $view->getQuery()->getConnection()->getTarget());
 
     // Test the database connection with the option 'replica' set to TRUE;
     $view->getQuery()->options['replica'] = TRUE;
-    $this->assertSame('default', $view->getQuery()->getConnection()->getKey());
-    $this->assertSame('replica', $view->getQuery()->getConnection()->getTarget());
+    $this->assertSame(Database::DEFAULT_KEY, $view->getQuery()->getConnection()->getKey());
+    $this->assertSame(Database::REPLICA_TARGET, $view->getQuery()->getConnection()->getTarget());
 
     // Test the database connection with the view 'base_database' set.
     $view->getQuery()->options['replica'] = FALSE;
     $view->base_database = 'core_fake';
     $this->assertSame('core_fake', $view->getQuery()->getConnection()->getKey());
-    $this->assertSame('default', $view->getQuery()->getConnection()->getTarget());
+    $this->assertSame(Database::DEFAULT_TARGET, $view->getQuery()->getConnection()->getTarget());
 
     // Test the database connection with the view 'base_database' set and the
     // option 'replica' set to TRUE.
     $view->getQuery()->options['replica'] = TRUE;
     $this->assertSame('core_fake', $view->getQuery()->getConnection()->getKey());
-    $this->assertSame('replica', $view->getQuery()->getConnection()->getTarget());
+    $this->assertSame(Database::REPLICA_TARGET, $view->getQuery()->getConnection()->getTarget());
 
     // Clean up the created database connections.
-    Database::closeConnection('replica', 'default');
-    Database::closeConnection('default', 'core_fake');
-    Database::closeConnection('replica', 'core_fake');
+    Database::closeConnection(Database::REPLICA_TARGET, Database::DEFAULT_KEY);
+    Database::closeConnection(Database::DEFAULT_TARGET, 'core_fake');
+    Database::closeConnection(Database::REPLICA_TARGET, 'core_fake');
   }
 
 }
