@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Drupal\Core\Database;
 
-use Drupal\Core\Database\Event\DatabaseEvent;
 use Drupal\Core\Database\Exception\TransactionsNotAllowedException;
 use Drupal\Core\Database\Transaction\TransactionManagerInterface;
 
