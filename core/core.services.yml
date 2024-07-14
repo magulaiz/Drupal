@@ -587,6 +587,8 @@ services:
   queue.database:
     class: Drupal\Core\Queue\QueueDatabaseFactory
     arguments: ['@database.nontransactional']
+    tags:
+      - { name: backend_overridable }
   Drupal\Core\Queue\QueueDatabaseFactory: '@queue.database'
   path.current:
     class: Drupal\Core\Path\CurrentPathStack

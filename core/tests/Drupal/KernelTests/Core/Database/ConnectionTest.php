@@ -6,6 +6,7 @@ namespace Drupal\KernelTests\Core\Database;
 
 use Drupal\Core\Database\Database;
 use Drupal\Core\Database\Query\Condition;
+use Drupal\sqlite\Driver\Database\sqlite\Connection;
 
 // cspell:ignore gianna
 
@@ -187,6 +188,9 @@ class ConnectionTest extends DatabaseTestBase {
    * Tests wrapping an existing connection as non-transactional.
    */
   public function testNonTransactionalWrappedConnection(): void {
+    if ($this->connection instanceof Connection) {
+      $this->markTestSkipped('SQLite non-transactional connections are not usable for most purposes in core.');
+    }
     $nonTransactionalConnection = Database::getConnection(Database::DEFAULT_TARGET, Database::DEFAULT_KEY, TRUE);
 
     // Start a transaction on the default database, but don't commit.
@@ -213,7 +217,8 @@ class ConnectionTest extends DatabaseTestBase {
       ->execute()
       ->fetchField();
     // The transactional connection already has more cowbell.
-    // Note, this is due to the default being READ COMMITTED.
+    // Note, this is consistent across MySQL and PgSQL because Drupal explicitly
+    // sets READ COMMITTED in MySQL, and this is the default in PgSQL.
     $this->assertEquals(1, $cowbellPlayers);
     // Insert another cowbell player on the non-transactional connection.
     $nonTransactionalConnection->insert('test')
@@ -236,7 +241,16 @@ class ConnectionTest extends DatabaseTestBase {
       ->countQuery()
       ->execute()
       ->fetchField();
-    $this->assertEquals(1, $cowbellPlayers);
+    // READ COMMITTED acts slightly differently between PgSQL and MySQL.
+    // In MySQL, a transaction reads and writes on its own snapshot.
+    // In PgSQL, SELECT queries inside a transaction will immediately see
+    // committed changes (e.g., those made outside a transaction).
+    // @see https://dev.mysql.com/doc/refman/8.0/en/innodb-transaction-isolation-levels.html#isolevel_read-committed
+    // @see https://www.postgresql.org/docs/current/transaction-iso.html#XACT-READ-COMMITTED
+    // This behavior does not change the underlying requirement for a
+    // non-transactional connection, and only demonstrates differences between
+    // supported database drivers' transaction implementations.
+    $this->assertContains($cowbellPlayers, [1, 2]);
     // Commit the transaction on destroy.
     unset($transaction);
     $cowbellPlayers = (int) $nonTransactionalConnection
