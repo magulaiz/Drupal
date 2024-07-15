@@ -25,14 +25,6 @@ class ContextualFiltersStringTest extends ViewTestBase {
 
   /**
    * {@inheritdoc}
-   *
-   * @todo Remove and fix test to not rely on super user.
-   * @see https://www.drupal.org/project/drupal/issues/3437620
-   */
-  protected bool $usesSuperUserAccessPolicy = TRUE;
-
-  /**
-   * {@inheritdoc}
    */
   protected $defaultTheme = 'starterkit_theme';
 
@@ -73,13 +65,13 @@ class ContextualFiltersStringTest extends ViewTestBase {
     $this->createUser([], 'user4', FALSE, ['roles' => [$this->role2]]);
     $this->createUser([], 'user5', FALSE, ['roles' => [$this->role1, $this->role2]]);
 
-    $this->drupalLogin($this->rootUser);
+    $this->drupalLogin($this->createUser(['administer views']));
   }
 
   /**
    * Tests contextual filter for the user roles.
    */
-  public function testUserRoleContextualFilter() {
+  public function testUserRoleContextualFilter(): void {
     $this->drupalGet('admin/structure/views/view/test_user_role_contextual_filter');
     $edit = [
       'view_args' => $this->role1,
