@@ -7,7 +7,6 @@ use Drupal\Component\Utility\Crypt;
 use Drupal\Core\Database\Connection;
 use Drupal\Core\Database\DatabaseConnectionInterface;
 use Drupal\Core\Database\DatabaseException;
-use Drupal\Core\Database\NonTransactionalConnection;
 use Drupal\Core\DependencyInjection\DependencySerializationTrait;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Session\Storage\Proxy\AbstractProxy;
