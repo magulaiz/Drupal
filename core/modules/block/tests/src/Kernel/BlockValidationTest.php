@@ -34,7 +34,6 @@ class BlockValidationTest extends ConfigEntityValidationTestBase {
 
   /**
    * {@inheritdoc}
-   *
    */
   protected static array $propertiesWithOptionalValues = [
     'provider',
