@@ -14,10 +14,9 @@
   position: absolute;
   z-index: var(--contextual-z-index);
   top: var(--contextual-icon-spacing-size);
-  inset-inline-end: var(--contextual-icon-spacing-size); /* Logical property for end spacing */
+  inset-inline-end: var(--contextual-icon-spacing-size);
   display: flex;
   justify-content: flex-end;
-  align-items: flex-start;
 }
 
 .contextual.open {
@@ -46,7 +45,6 @@
   border-radius: var(--dropbutton-border-radius-size);
   background: var(--color-white);
   box-shadow: var(--shadow-z1);
-  top: 100%;
 }
 
 .contextual .contextual-links a {
@@ -71,7 +69,7 @@
 }
 
 .touchevents .contextual-links a {
-  font-size: large;
+  font-size: 1.125rem;
 }
 
 .contextual-links li {
