@@ -17,8 +17,8 @@ trait TestSetupTrait {
   protected static $configSchemaCheckerExclusions = [
     // Following are used to test lack of or partial schema. Where partial
     // schema is provided, that is explicitly tested in specific tests.
-    'config_schema_test.noschema',
-    'config_schema_test.someschema',
+    'config_schema_test.no_schema',
+    'config_schema_test.some_schema',
     'config_schema_test.schema_data_types',
     'config_schema_test.no_schema_data_types',
     // Used to test application of schema to filtering of configuration.
@@ -115,16 +115,6 @@ trait TestSetupTrait {
   protected $testId;
 
   /**
-   * Returns the database connection to the site under test.
-   *
-   * @return \Drupal\Core\Database\Connection
-   *   The database connection to use for inserting assertions.
-   */
-  public static function getDatabaseConnection() {
-    return TestDatabase::getConnection();
-  }
-
-  /**
    * Generates a database prefix for running tests.
    *
    * The database prefix is used by prepareEnvironment() to setup a public files
@@ -180,6 +170,7 @@ trait TestSetupTrait {
         // prefixes of the test runner leak into the test.
         $connection_info[$target]['prefix'] = $value['prefix'] . $this->databasePrefix;
       }
+      Database::removeConnection('default');
       Database::addConnectionInfo('default', 'default', $connection_info['default']);
     }
   }
@@ -195,12 +186,12 @@ trait TestSetupTrait {
     $exceptions = [];
     while ($class) {
       if (property_exists($class, 'configSchemaCheckerExclusions')) {
-        $exceptions = array_merge($exceptions, $class::$configSchemaCheckerExclusions);
+        $exceptions[] = $class::$configSchemaCheckerExclusions;
       }
       $class = get_parent_class($class);
     }
     // Filter out any duplicates.
-    return array_unique($exceptions);
+    return array_unique(array_merge(...$exceptions));
   }
 
 }

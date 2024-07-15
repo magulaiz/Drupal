@@ -17,6 +17,11 @@ class MenuListBuilder extends ConfigEntityListBuilder {
   /**
    * {@inheritdoc}
    */
+  protected const SORT_KEY = 'label';
+
+  /**
+   * {@inheritdoc}
+   */
   public function buildHeader() {
     $header['title'] = t('Title');
     $header['description'] = [

@@ -18,6 +18,7 @@ class LinkAccessConstraintValidator extends ConstraintValidator implements Conta
    *
    * @var \Drupal\Core\Session\AccountProxyInterface
    */
+  // phpcs:ignore Drupal.NamingConventions.ValidVariableName.LowerCamelName
   protected $current_user;
 
   /**
@@ -42,7 +43,7 @@ class LinkAccessConstraintValidator extends ConstraintValidator implements Conta
   /**
    * {@inheritdoc}
    */
-  public function validate($value, Constraint $constraint) {
+  public function validate($value, Constraint $constraint): void {
     if (isset($value)) {
       try {
         $url = $value->getUrl();

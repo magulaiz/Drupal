@@ -122,14 +122,12 @@ trait AssertContentTrait {
    */
   protected function parse() {
     if (!isset($this->elements)) {
-      // DOM can load HTML soup. But, HTML soup can throw warnings, suppress
-      // them.
-      $html_dom = new \DOMDocument();
-      @$html_dom->loadHTML('<?xml encoding="UTF-8">' . $this->getRawContent(), LIBXML_NOBLANKS);
-      if ($html_dom) {
+      $content = $this->getRawContent();
+      $dom = Html::load($content);
+      if ($dom) {
         // It's much easier to work with simplexml than DOM, luckily enough
         // we can just simply import our DOM tree.
-        $this->elements = simplexml_import_dom($html_dom);
+        $this->elements = @simplexml_import_dom($dom);
       }
     }
     $this->assertNotFalse($this->elements, 'The current HTML page should be available for DOM navigation.');
@@ -213,7 +211,7 @@ trait AssertContentTrait {
       $xpath = $this->buildXPathQuery($xpath, $arguments);
       $result = $this->elements->xpath($xpath);
       // Some combinations of PHP / libxml versions return an empty array
-      // instead of the documented FALSE. Forcefully convert any falsish values
+      // instead of the documented FALSE. Forcefully convert any falsy values
       // to an empty array to allow foreach(...) constructions.
       return $result ?: [];
     }
@@ -438,8 +436,7 @@ trait AssertContentTrait {
   }
 
   /**
-   * Passes if the raw text IS NOT found escaped on the loaded page, fail
-   * otherwise.
+   * Passes if raw text IS NOT found escaped on loaded page, fail otherwise.
    *
    * Raw text refers to the raw HTML that the page generated.
    *

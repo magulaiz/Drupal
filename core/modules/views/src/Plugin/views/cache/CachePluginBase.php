@@ -62,8 +62,7 @@ abstract class CachePluginBase extends PluginBase {
   }
 
   /**
-   * Return a string to display as the clickable title for the
-   * access control.
+   * Returns a string to display as the clickable title for the access control.
    */
   public function summaryTitle() {
     return $this->t('Unknown');
@@ -147,7 +146,7 @@ abstract class CachePluginBase extends PluginBase {
             // Load entities for each result.
             $this->view->query->loadEntities($this->view->result);
             $this->view->total_rows = $cache->data['total_rows'];
-            $this->view->setCurrentPage($cache->data['current_page'], TRUE);
+            $this->view->setCurrentPage($cache->data['current_page']);
             $this->view->execute_time = 0;
             return TRUE;
           }
@@ -180,7 +179,7 @@ abstract class CachePluginBase extends PluginBase {
    * go there:
    *
    * @code
-   *   strtr($output, array('<!--post-FIELD-1-->', 'output for FIELD of nid 1');
+   *   strtr($output, ['<!--post-FIELD-1-->', 'output for FIELD of nid 1']);
    * @endcode
    *
    * All of the cached result data will be available in $view->result, as well,

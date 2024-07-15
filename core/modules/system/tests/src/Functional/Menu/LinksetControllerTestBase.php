@@ -69,7 +69,7 @@ abstract class LinksetControllerTestBase extends BrowserTestBase {
    * @return \GuzzleHttp\Psr7\Response
    *   The response object.
    */
-  protected function doRequest(string $method, Url $url, $expected_status = 200, UserInterface $account = NULL): Response {
+  protected function doRequest(string $method, Url $url, $expected_status = 200, ?UserInterface $account = NULL): Response {
     $request_options = [];
     if (!is_null($account)) {
       $credentials = $account->name->value . ':' . $account->passRaw;
@@ -151,7 +151,7 @@ abstract class LinksetControllerTestBase extends BrowserTestBase {
   }
 
   /**
-   * Retrieve reference linkset controller output adjusted for proper base url.
+   * Retrieve reference linkset controller output adjusted for proper base URL.
    *
    * @param string $filename
    *   Name of the file to read.

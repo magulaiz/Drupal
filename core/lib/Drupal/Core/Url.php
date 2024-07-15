@@ -766,23 +766,6 @@ class Url implements TrustedCallbackInterface {
   }
 
   /**
-   * Returns the route information for a render array.
-   *
-   * @return array
-   *   An associative array suitable for a render array.
-   */
-  public function toRenderArray() {
-    $render_array = [
-      '#url' => $this,
-      '#options' => $this->getOptions(),
-    ];
-    if (!$this->unrouted) {
-      $render_array['#access_callback'] = [get_class(), 'renderAccess'];
-    }
-    return $render_array;
-  }
-
-  /**
    * Returns the internal path (system path) for this route.
    *
    * This path will not include any prefixes, fragments, or query strings.
@@ -821,24 +804,11 @@ class Url implements TrustedCallbackInterface {
    *   returned, i.e. TRUE means access is explicitly allowed, FALSE means
    *   access is either explicitly forbidden or "no opinion".
    */
-  public function access(AccountInterface $account = NULL, $return_as_object = FALSE) {
+  public function access(?AccountInterface $account = NULL, $return_as_object = FALSE) {
     if ($this->isRouted()) {
       return $this->accessManager()->checkNamedRoute($this->getRouteName(), $this->getRouteParameters(), $account, $return_as_object);
     }
     return $return_as_object ? AccessResult::allowed() : TRUE;
-  }
-
-  /**
-   * Checks a URL render element against applicable access check services.
-   *
-   * @param array $element
-   *   A render element as returned from \Drupal\Core\Url::toRenderArray().
-   *
-   * @return bool
-   *   Returns TRUE if the current user has access to the URL, otherwise FALSE.
-   */
-  public static function renderAccess(array $element) {
-    return $element['#url']->access();
   }
 
   /**
@@ -885,7 +855,7 @@ class Url implements TrustedCallbackInterface {
    *
    * @return $this
    */
-  public function setUrlGenerator(UrlGeneratorInterface $url_generator = NULL) {
+  public function setUrlGenerator(?UrlGeneratorInterface $url_generator = NULL) {
     $this->urlGenerator = $url_generator;
     $this->internalPath = NULL;
     return $this;
@@ -908,7 +878,7 @@ class Url implements TrustedCallbackInterface {
    * {@inheritdoc}
    */
   public static function trustedCallbacks() {
-    return ['renderAccess'];
+    return [];
   }
 
 }

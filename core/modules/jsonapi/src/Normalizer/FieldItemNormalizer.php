@@ -30,13 +30,6 @@ class FieldItemNormalizer extends NormalizerBase implements DenormalizerInterfac
   use SerializedColumnNormalizerTrait;
 
   /**
-   * The interface or class that this Normalizer supports.
-   *
-   * @var string
-   */
-  protected $supportedInterfaceOrClass = FieldItemInterface::class;
-
-  /**
    * The entity type manager.
    *
    * @var \Drupal\Core\Entity\EntityTypeManagerInterface
@@ -205,7 +198,7 @@ class FieldItemNormalizer extends NormalizerBase implements DenormalizerInterfac
     $alternatives = [];
     foreach ($keys as $key) {
       $lev = levenshtein($search_key, $key);
-      if ($lev <= strlen($search_key) / 3 || strpos($key, $search_key) !== FALSE) {
+      if ($lev <= strlen($search_key) / 3 || str_contains($key, $search_key)) {
         $alternatives[] = $key;
       }
     }
@@ -243,8 +236,10 @@ class FieldItemNormalizer extends NormalizerBase implements DenormalizerInterfac
   /**
    * {@inheritdoc}
    */
-  public function hasCacheableSupportsMethod(): bool {
-    return TRUE;
+  public function getSupportedTypes(?string $format): array {
+    return [
+      FieldItemInterface::class => TRUE,
+    ];
   }
 
 }

@@ -13,7 +13,7 @@ class SupernovaGenerator implements UrlGeneratorInterface {
   /**
    * {@inheritdoc}
    */
-  public function setContext(RequestContext $context) {
+  public function setContext(RequestContext $context): void {
     throw new \Exception();
   }
 
@@ -42,20 +42,6 @@ class SupernovaGenerator implements UrlGeneratorInterface {
    * {@inheritdoc}
    */
   public function generateFromRoute($name, $parameters = [], $options = [], $collect_bubbleable_metadata = FALSE) {
-    throw new \Exception();
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function supports($name) {
-    throw new \Exception();
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function getRouteDebugMessage($name, array $parameters = []) {
     throw new \Exception();
   }
 
