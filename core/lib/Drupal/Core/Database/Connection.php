@@ -1216,6 +1216,17 @@ abstract class Connection implements DatabaseConnectionInterface {
   }
 
   /**
+   * Allows opening a concurrent non-transactional connection.
+   *
+   * @return bool
+   *   TRUE if this connection allows a concurrent non-transactional
+   *   connection, FALSE otherwise.
+   */
+  public function allowsConcurrentNonTransactionalConnection(): bool {
+    return FALSE;
+  }
+
+  /**
    * Returns the name of the database engine accessed by this driver.
    *
    * @return string

@@ -136,7 +136,7 @@ abstract class Database {
    * @param bool $nonTransactional
    *   Whether the connection should be a non-transactional version.
    *
-   * @return \Drupal\Core\Database\Connection
+   * @return \Drupal\Core\Database\DatabaseConnectionInterface
    *   The corresponding connection object.
    */
   final public static function getConnection($target = 'default', $key = NULL, bool $nonTransactional = FALSE) {
@@ -157,7 +157,7 @@ abstract class Database {
       // If necessary, a new connection is opened.
       self::$connections[$key][$target] = self::openConnection($key, $target);
     }
-    if ($nonTransactional) {
+    if ($nonTransactional && self::$connections[$key][$target]->allowsConcurrentNonTransactionalConnection()) {
       if (!(self::$nonTransactionalConnections[$key][$target] ?? NULL)) {
         $nonTransactionalTarget = self::getUniqueTargetForKey($key, "auto_nontransactional_$target");
         self::addConnectionInfo(
