@@ -149,34 +149,34 @@ class AttributeClassDiscovery implements DiscoveryInterface {
 
       $id = $plugin_attribute->getId();
       $content = $plugin_attribute->get();
-    }
 
-    // Get plugin extension attributes.
-    if ($extending_attributes = $reflection_class->getAttributes(PluginExtender::class, \ReflectionAttribute::IS_INSTANCEOF)) {
-      foreach ($extending_attributes as $attribute) {
-        $attribute_class = $attribute->getName();
-        // Attribute classes may come from modules which are not enabled, so
-        // skip these.
-        if (!class_exists($attribute_class)) {
-          continue;
-        }
-
-        // Ensure that none of the properties in the 3rd party attribute
-        // overwrite a non-deprecated property in the base plugin attribute.
-        $attribute_properties = $attribute->getArguments();
-        foreach ($attribute_properties as $name => $value) {
-          if (array_key_exists($name, $content)) {
-            // If the property is deprecated on the plugin attribute, we allow
-            // it in the third-party attribute. This allows legacy annotation
-            // properties to be gradually moved to third-party attributes.
-            $reflection_attribute_class = new \ReflectionClass($plugin_attribute::class);
-            $reflection_property_on_plugin_attribute_class = $reflection_attribute_class->getProperty($name);
-            if (empty($reflection_property_on_plugin_attribute_class->getAttributes(PluginDeprecatedProperty::class))) {
-              throw new InvalidPluginDefinitionException("May not reuse $name.");
-            }
+      // Get plugin extension attributes.
+      if ($extending_attributes = $reflection_class->getAttributes(PluginExtender::class, \ReflectionAttribute::IS_INSTANCEOF)) {
+        foreach ($extending_attributes as $attribute) {
+          $attribute_class = $attribute->getName();
+          // Attribute classes may come from modules which are not enabled, so
+          // skip these.
+          if (!class_exists($attribute_class)) {
+            continue;
           }
 
-          $content[$name] = $value;
+          // Ensure that none of the properties in the 3rd party attribute
+          // overwrite a non-deprecated property in the base plugin attribute.
+          $attribute_properties = $attribute->getArguments();
+          foreach ($attribute_properties as $name => $value) {
+            if (array_key_exists($name, $content)) {
+              // If the property is deprecated on the plugin attribute, we allow
+              // it in the third-party attribute. This allows legacy annotation
+              // properties to be gradually moved to third-party attributes.
+              $reflection_attribute_class = new \ReflectionClass($plugin_attribute::class);
+              $reflection_property_on_plugin_attribute_class = $reflection_attribute_class->getProperty($name);
+              if (empty($reflection_property_on_plugin_attribute_class->getAttributes(PluginDeprecatedProperty::class))) {
+                throw new InvalidPluginDefinitionException("May not reuse $name.");
+              }
+            }
+
+            $content[$name] = $value;
+          }
         }
       }
     }
