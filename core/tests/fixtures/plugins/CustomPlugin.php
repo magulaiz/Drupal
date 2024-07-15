@@ -47,7 +47,7 @@ class CustomPluginThirdParty extends PluginExtender {
    * Constructs a CustomPluginThirdParty attribute object.
    *
    * @param string $third_party_property
-   *   A property which overriddes one on the main attribute.
+   *   A property which overrides one on the main attribute.
    */
   public function __construct(
     // This will be allowed to override the property with the same name on
