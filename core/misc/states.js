@@ -535,11 +535,15 @@
       keyup() {
         // The function associated with that trigger returns the new value for
         // the state.
-        return this.val().trim() === '';
+        return (
+          this.val().replace(/^[\t\n\v\f\r ]+|[\t\n\v\f\r ]+$/g, '') === ''
+        );
       },
       // Listen to 'change' for number native "spinner" widgets.
       change() {
-        return this.val().trim() === '';
+        return (
+          this.val().replace(/^[\t\n\v\f\r ]+|[\t\n\v\f\r ]+$/g, '') === ''
+        );
       },
     },
 
