@@ -150,9 +150,9 @@ class AttributeClassDiscovery implements DiscoveryInterface {
       $id = $plugin_attribute->getId();
       $content = $plugin_attribute->get();
 
-      // Get plugin extension attributes.
-      if ($extending_attributes = $reflection_class->getAttributes(PluginExtender::class, \ReflectionAttribute::IS_INSTANCEOF)) {
-        foreach ($extending_attributes as $attribute) {
+      // Get third-party plugin attributes.
+      if ($third_party_attributes = $reflection_class->getAttributes(PluginExtender::class, \ReflectionAttribute::IS_INSTANCEOF)) {
+        foreach ($third_party_attributes as $attribute) {
           $attribute_class = $attribute->getName();
           // Attribute classes may come from modules which are not enabled, so
           // skip these.
