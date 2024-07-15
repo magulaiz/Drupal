@@ -86,7 +86,7 @@ class ImageConfigUpdater implements ContainerInjectionInterface {
       $deprecations_triggered = &$this->triggeredDeprecations['3325551'][$field->id()];
       if ($this->deprecationsEnabled && !$deprecations_triggered) {
         $deprecations_triggered = TRUE;
-        @trigger_error('Image fields now have a new "resize_policy" setting, which has a "resize_larger_images" value as default. Profile, module and theme provided configuration should be updated. See https://www.drupal.org/node/3325551', E_USER_DEPRECATED);
+        @trigger_error('Image fields without "resize_policy" setting is deprecated in Drupal 10.3.0 and will be removed in Drupal 11.0.0. This new setting default value is "resize_larger_images". Profile, module and theme provided configuration should be updated. See https://www.drupal.org/node/3325551', E_USER_DEPRECATED);
       }
     }
 
