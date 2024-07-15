@@ -222,12 +222,12 @@
   --dropbutton-extrasmall-line-height: var(--space-s);
   --dropbutton-extrasmall-toggle-size: calc((2 * var(--dropbutton-extrasmall-spacing-size)) + var(--dropbutton-extrasmall-line-height));
   --icon-link-bg-color: var(--color-white);
-  --icon-link-border-color: var(--color-lightgray);
+  --icon-link-border-color: var(--color-gray-200);
   --icon-link-border-size: var(--base-border-size);
   --icon-link--active-bg-color: var(--color-absolutezero);
   --icon-link--active-border-color: var(--color-absolutezero);
   --icon-link--hover-bg-color: var(--color-bgblue-hover);
-  --icon-link--hover-border-color: var(--color-lightgray-o-80);
+  --icon-link--hover-border-color: var(--color-gray-200-o-80);
   --layout-region-edit-width: min(60rem, 100%);
   --layout-region-edit-extended-width: min(68rem, 100%);
   --vertical-tabs-margin-vertical: var(--space-s);
@@ -255,7 +255,7 @@
   --contextual-icon-height: calc(var(--contextual-trigger-height) / 2);
   --contextual-z-index: 500;
   --contextual-icon-spacing-size: 0.25rem;
-  --contextual-outline-bg-color: var(--color-grayblue);
+  --contextual-outline-bg-color: var(--color-gray-500);
   --contextual-links-spacing-size: var(--dropbutton-spacing-size);
   --contextual-links-border-size: var(--dropbutton-border-size);
   --contextual-links-border-radius-size: var(--dropbutton-border-radius-size);
@@ -303,7 +303,7 @@
   margin: 0;
   padding: 0;
   white-space: nowrap;
-  border: var(--contextual-links-border-size) solid var(--color-lightgray);
+  border: var(--contextual-links-border-size) solid var(--color-gray-200);
   border-radius: var(--dropbutton-border-radius-size);
   background: var(--color-white);
   box-shadow: var(--shadow-z1);
@@ -319,7 +319,7 @@
   box-sizing: border-box;
   width: 100%;
   padding: calc(var(--contextual-links-spacing-size) - var(--contextual-links-border-size));
-  color: var(--color-davysgray) !important;
+  color: var(--color-gray-800) !important;
   border-radius: var(--contextual-links-border-radius-size);
   background: var(--color-white);
   font-size: var(--contextual-links-font-size);
@@ -347,7 +347,7 @@
 
 .contextual-links li a:hover {
   color: var(--color-text) !important;
-  background: var(--color-whitesmoke);
+  background: var(--color-gray-050);
 }
 
 .contextual-links li a:focus {
@@ -359,5 +359,5 @@
 
 .contextual-links li a:active,
 .contextual-links li [aria-pressed="true"] {
-  color: var(--color-davysgray) !important;
+  color: var(--color-gray-800) !important;
 }

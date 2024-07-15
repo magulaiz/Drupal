@@ -43,7 +43,7 @@
   margin: 0;
   padding: 0;
   white-space: nowrap;
-  border: var(--contextual-links-border-size) solid var(--color-lightgray);
+  border: var(--contextual-links-border-size) solid var(--color-gray-200);
   border-radius: var(--dropbutton-border-radius-size);
   background: var(--color-white);
   box-shadow: var(--shadow-z1);
@@ -58,7 +58,7 @@
   box-sizing: border-box;
   width: 100%;
   padding: calc(var(--contextual-links-spacing-size) - var(--contextual-links-border-size));
-  color: var(--color-davysgray) !important;
+  color: var(--color-gray-800) !important;
   border-radius: var(--contextual-links-border-radius-size);
   background: var(--color-white);
   font-size: var(--contextual-links-font-size);
@@ -82,7 +82,7 @@
 
 .contextual-links li a:hover {
   color: var(--color-text) !important;
-  background: var(--color-whitesmoke);
+  background: var(--color-gray-050);
 }
 .contextual-links li a:focus {
   z-index: 2;
@@ -92,5 +92,5 @@
 }
 .contextual-links li a:active,
 .contextual-links li [aria-pressed="true"] {
-  color: var(--color-davysgray) !important;
+  color: var(--color-gray-800) !important;
 }

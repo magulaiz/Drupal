@@ -272,12 +272,12 @@
    * Icon links.
    */
   --icon-link-bg-color: var(--color-white);
-  --icon-link-border-color: var(--color-lightgray);
+  --icon-link-border-color: var(--color-gray-200);
   --icon-link-border-size: var(--base-border-size);
   --icon-link--active-bg-color: var(--color-absolutezero);
   --icon-link--active-border-color: var(--color-absolutezero);
   --icon-link--hover-bg-color: var(--color-bgblue-hover);
-  --icon-link--hover-border-color: var(--color-lightgray-o-80);
+  --icon-link--hover-border-color: var(--color-gray-200-o-80);
   /**
    * Layout.
    */
@@ -321,7 +321,7 @@
    */
   --contextual-z-index: 500;
   --contextual-icon-spacing-size: 0.25rem; /* 4px */
-  --contextual-outline-bg-color: var(--color-grayblue);
+  --contextual-outline-bg-color: var(--color-gray-500);
   --contextual-links-spacing-size: var(--dropbutton-spacing-size);
   --contextual-links-border-size: var(--dropbutton-border-size);
   --contextual-links-border-radius-size: var(--dropbutton-border-radius-size);
