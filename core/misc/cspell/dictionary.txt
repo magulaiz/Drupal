@@ -264,8 +264,6 @@ funic
 gabilondo
 gids
 gloop
-googleapis
-grayblue
 greeking
 gripsmall
 groupable
