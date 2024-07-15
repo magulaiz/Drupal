@@ -26,11 +26,13 @@ class ProxyServicesPass implements CompilerPassInterface {
           // Copy the existing definition to a new entry.
           $definition->setLazy(FALSE);
           // Ensure that the service is accessible.
+          $originally_public = $definition->isPublic();
           $definition->setPublic(TRUE);
           $new_service_id = 'drupal.proxy_original_service.' . $service_id;
           $container->setDefinition($new_service_id, $definition);
 
           $proxy_definition = (new Definition($proxy_class))
+            ->setPublic($originally_public)
             ->setArguments([new Reference('service_container'), $new_service_id]);
           // Backend-overridable services are special-cased, as their tags
           // are processed based on the original service ID in
