@@ -62,7 +62,7 @@ class ImageConfigUpdater implements ContainerInjectionInterface {
    */
   public function updateField(FieldConfigInterface $field) {
     $changed = FALSE;
-    if ($this->needsEntityArgumentUpdate($field)) {
+    if ($this->needsEntitySettingUpdate($field)) {
       $field->setSetting('resize_policy', ImageResizePolicy::ResizeLargerImages->value);
       $changed = TRUE;
     }
@@ -78,7 +78,7 @@ class ImageConfigUpdater implements ContainerInjectionInterface {
    * @return bool
    *   TRUE if the field has not the new setting.
    */
-  public function needsEntityArgumentUpdate(FieldConfigInterface $field): bool {
+  public function needsEntitySettingUpdate(FieldConfigInterface $field): bool {
     $needs_update = FALSE;
     if ($field->getType() === 'image' && $field->getSetting('resize_policy') === NULL) {
       $needs_update = TRUE;
