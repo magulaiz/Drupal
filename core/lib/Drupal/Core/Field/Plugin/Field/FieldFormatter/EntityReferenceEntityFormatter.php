@@ -160,7 +160,7 @@ class EntityReferenceEntityFormatter extends EntityReferenceFormatterBase {
     $entities = [];
 
     foreach (parent::getEntitiesToView($items, $langcode) as $delta => $entity) {
-      // Cloning the entity, because $entity->_referingItem is "sticky".
+      // Cloning the entity, because $entity->_referringItem is "sticky".
       // It is set for rendering an entity but it survives past that as the
       // object and it's properties remain in memory. With this fix, we unset
       // it and not rely on an 'old' version if the same $node is rendered
@@ -172,7 +172,6 @@ class EntityReferenceEntityFormatter extends EntityReferenceFormatterBase {
 
     return $entities;
   }
-
 
   /**
    * {@inheritdoc}
