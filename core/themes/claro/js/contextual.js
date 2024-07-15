@@ -22,6 +22,6 @@
   };
 
   Drupal.theme.contextualTriggerText = (text) => {
-    return '<span class="visually-hidden">'.concat(text, '</span>');
+    return `<span class="visually-hidden">${text}</span>`;
   };
 })(window.Drupal);
