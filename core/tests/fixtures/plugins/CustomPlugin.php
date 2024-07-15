@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace com\example\PluginNamespace;
 
 use Drupal\Component\Plugin\Attribute\Plugin;
+use Drupal\Component\Plugin\Attribute\PluginExtender;
+use Drupal\Component\Plugin\Attribute\PluginDeprecatedProperty;
 
 /**
  * Custom plugin attribute.
@@ -23,6 +25,8 @@ class CustomPlugin extends Plugin {
   public function __construct(
     public readonly string $id,
     public readonly string $title,
+    #[PluginDeprecatedProperty]
+    public readonly string $third_party_property = 'default',
   ) {}
 
 }
@@ -32,3 +36,16 @@ class CustomPlugin extends Plugin {
  */
 #[\Attribute(\Attribute::TARGET_CLASS)]
 class CustomPlugin2 extends Plugin {}
+
+#[\Attribute(\Attribute::TARGET_CLASS)]
+class CustomPluginThirdParty extends PluginExtender {
+  public function __construct(
+    // This will be allowed to override the property with the same name on
+    // CustomPlugin, because on that attribute class the property is marked as
+    // deprecated.
+    public readonly string $third_party_property,
+  ) {
+
+  }
+
+}
