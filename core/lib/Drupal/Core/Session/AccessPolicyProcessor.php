@@ -85,6 +85,7 @@ class AccessPolicyProcessor implements AccessPolicyProcessorInterface {
       if ($cache = $this->variationCache->get($cache_keys, $initial_cacheability)) {
         $calculated_permissions = $cache->data;
         $cacheability = CacheableMetadata::createFromObject($calculated_permissions);
+
         // Convert the calculated permissions into an immutable value object and
         // store it in the static cache so that we don't have to do the same
         // conversion every time we call for the calculated permissions from a
@@ -133,7 +134,6 @@ class AccessPolicyProcessor implements AccessPolicyProcessorInterface {
       // we had stored a CalculatedPermissions object, we would no longer be
       // able to ask for its cache contexts.
       $cacheability = CacheableMetadata::createFromObject($calculated_permissions);
-
       $this->variationCache->set($cache_keys, $calculated_permissions, $cacheability, $initial_cacheability);
 
       // Then convert the calculated permissions to an immutable value object
