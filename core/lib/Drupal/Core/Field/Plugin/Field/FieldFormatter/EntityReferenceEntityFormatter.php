@@ -5,6 +5,7 @@ namespace Drupal\Core\Field\Plugin\Field\FieldFormatter;
 use Drupal\Core\Entity\EntityDisplayRepositoryInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Field\Attribute\FieldFormatter;
+use Drupal\Core\Field\EntityReferenceFieldItemListInterface;
 use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\Core\Form\FormStateInterface;
@@ -151,6 +152,27 @@ class EntityReferenceEntityFormatter extends EntityReferenceFormatterBase {
 
     return $summary;
   }
+
+  /**
+   * {@inheritdoc}
+   */
+  protected function getEntitiesToView(EntityReferenceFieldItemListInterface $items, $langcode) {
+    $entities = [];
+
+    foreach (parent::getEntitiesToView($items, $langcode) as $delta => $entity) {
+      // Cloning the entity, because $entity->_referingItem is "sticky".
+      // It is set for rendering an entity but it survives past that as the
+      // object and it's properties remain in memory. With this fix, we unset
+      // it and not rely on an 'old' version if the same $node is rendered
+      // again.
+      $clone = clone $entity;
+      unset($entity->_referringItem);
+      $entities[$delta] = $clone;
+    }
+
+    return $entities;
+  }
+
 
   /**
    * {@inheritdoc}
