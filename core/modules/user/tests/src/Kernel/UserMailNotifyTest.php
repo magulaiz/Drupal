@@ -7,7 +7,6 @@ namespace Drupal\Tests\user\Kernel;
 use Drupal\Core\Test\AssertMailTrait;
 use Drupal\KernelTests\Core\Entity\EntityKernelTestBase;
 use Drupal\language\Entity\ConfigurableLanguage;
-use Drupal\locale\Locale;
 
 /**
  * Tests _user_mail_notify() use of user.settings.notify.*.
@@ -82,7 +81,7 @@ class UserMailNotifyTest extends EntityKernelTestBase {
    *
    * @dataProvider userMailsProvider
    */
-  public function testUserMailsSent($op, array $mail_keys) {
+  public function testUserMailsSent($op, array $mail_keys): void {
     $this->installConfig('user');
     $this->config('system.site')->set('mail', 'test@example.com')->save();
     $this->config('user.settings')->set('notify.' . $op, TRUE)->save();
@@ -103,7 +102,8 @@ class UserMailNotifyTest extends EntityKernelTestBase {
    *
    * @dataProvider userMailsProvider
    */
-  public function testUserMailsNotSent($op) {
+  public function testUserMailsNotSent($op): void {
+    $this->installConfig('user');
     $this->config('user.settings')->set('notify.' . $op, FALSE)->save();
     $return = _user_mail_notify($op, $this->createUser());
     $this->assertNull($return);
@@ -113,7 +113,7 @@ class UserMailNotifyTest extends EntityKernelTestBase {
   /**
    * Tests recovery email content and token langcode is aligned.
    */
-  public function testUserRecoveryMailLanguage() {
+  public function testUserRecoveryMailLanguage(): void {
 
     // Install locale schema.
     $this->installSchema('locale', [
@@ -131,8 +131,9 @@ class UserMailNotifyTest extends EntityKernelTestBase {
 
     locale_system_set_config_langcodes();
     $langcodes = array_keys(\Drupal::languageManager()->getLanguages());
-    $names = Locale::config()->getComponentNames();
-    Locale::config()->updateConfigTranslations($names, $langcodes);
+    $locale_config_manager = \Drupal::service('locale.config_manager');
+    $names = $locale_config_manager->getComponentNames();
+    $locale_config_manager->updateConfigTranslations($names, $langcodes);
 
     $this->config('user.settings')->set('notify.password_reset', TRUE)->save();
 
