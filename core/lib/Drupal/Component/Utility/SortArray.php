@@ -126,9 +126,9 @@ class SortArray {
    * @return int
    *   The comparison result for uasort().
    *
-   * Since this method will return zero if the value is not defined for the given
-   * key, it ensures that items without the specified key are treated as having
-   * a weight of zero.
+   *   Since this method will return zero if the value is not defined for the given
+   *   key, it ensures that items without the specified key are treated as having
+   *   a weight of zero.
    */
   public static function sortByKeyInt($a, $b, $key) {
     $a_weight = (is_array($a) && isset($a[$key])) ? $a[$key] : 0;
