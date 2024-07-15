@@ -1,0 +1,96 @@
+<?php
+
+namespace Drupal\image;
+
+use Drupal\Core\Image\ImageResizePolicy;
+use Drupal\field\FieldConfigInterface;
+use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
+use Symfony\Component\DependencyInjection\ContainerInterface;
+
+/**
+ * Provides a BC layer for modules providing old configurations.
+ *
+ * @internal
+ */
+class ImageConfigUpdater implements ContainerInjectionInterface {
+
+  /**
+   * Flag determining whether deprecations should be triggered.
+   *
+   * @var bool
+   */
+  protected $deprecationsEnabled = TRUE;
+
+  /**
+   * Stores which deprecations were triggered.
+   *
+   * @var bool
+   */
+  protected $triggeredDeprecations = [];
+
+  /**
+   * ImageConfigUpdater constructor.
+   */
+  public function __construct() {
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function create(ContainerInterface $container) {
+    return new static();
+  }
+
+  /**
+   * Sets the deprecations enabling status.
+   *
+   * @param bool $enabled
+   *   Whether deprecations should be enabled.
+   */
+  public function setDeprecationsEnabled($enabled) {
+    $this->deprecationsEnabled = $enabled;
+  }
+
+  /**
+   * Performs the required update.
+   *
+   * @param \Drupal\field\FieldConfigInterface $field
+   *   The field to update.
+   *
+   * @return bool
+   *   Whether the field was updated.
+   */
+  public function updateField(FieldConfigInterface $field) {
+    $changed = FALSE;
+    if ($this->needsEntityArgumentUpdate($field)) {
+      $field->setSetting('resize_policy', ImageResizePolicy::ResizeLargerImages->value);
+      $changed = TRUE;
+    }
+    return $changed;
+  }
+
+  /**
+   * Checks if the field still misses 'resize_policy' setting.
+   *
+   * @param \Drupal\field\FieldConfigInterface $field
+   *   The field to update.
+   *
+   * @return bool
+   *   TRUE if the field has not the new setting.
+   */
+  public function needsEntityArgumentUpdate(FieldConfigInterface $field): bool {
+    $needs_update = FALSE;
+    if ($field->getType() === 'image' && $field->getSetting('resize_policy') === NULL) {
+      $needs_update = TRUE;
+
+      $deprecations_triggered = &$this->triggeredDeprecations['3325551'][$field->id()];
+      if ($this->deprecationsEnabled && !$deprecations_triggered) {
+        $deprecations_triggered = TRUE;
+        @trigger_error(sprintf('Image fields now have a new "resize_policy" setting, which has a "resize_larger_images" value as default. Profile, module and theme provided configuration should be updated. See https://www.drupal.org/node/3325551'), E_USER_DEPRECATED);
+      }
+    }
+
+    return $needs_update;
+  }
+
+}

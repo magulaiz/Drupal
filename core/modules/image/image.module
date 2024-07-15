@@ -9,7 +9,7 @@ use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\File\FileSystemInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\StreamWrapper\StreamWrapperManager;
-use Drupal\Core\Image\ImageResizePolicy;
+use Drupal\image\ImageConfigUpdater;
 use Drupal\Core\Url;
 use Drupal\field\FieldConfigInterface;
 use Drupal\field\FieldStorageConfigInterface;
@@ -513,7 +513,6 @@ function image_field_config_delete(FieldConfigInterface $field) {
  * Implements hook_ENTITY_TYPE_presave() for 'field_config'.
  */
 function image_field_config_presave(FieldConfigInterface $field) {
-  if ($field->getType() === 'image' && $field->getSetting('resize_policy') === NULL) {
-    $field->setSetting('resize_policy', ImageResizePolicy::ResizeLargerImages->value);
-  }
+  $config_updater = \Drupal::classResolver(ImageConfigUpdater::class);
+  $config_updater->updateField($field);
 }

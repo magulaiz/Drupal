@@ -7,6 +7,7 @@
 
 use Drupal\Core\Config\Entity\ConfigEntityUpdater;
 use Drupal\Core\Field\FieldConfigInterface;
+use Drupal\image\ImageConfigUpdater;
 
 /**
  * Implements hook_removed_post_updates().
@@ -23,8 +24,10 @@ function image_removed_post_updates() {
  * Adds new resize_policy setting to existing image fields.
  */
 function image_post_update_add_resize_policy(&$sandbox = []) {
+  $field_config_updater = \Drupal::classResolver(ImageConfigUpdater::class);
+  $field_config_updater->setDeprecationsEnabled(FALSE);
   $config_entity_updater = \Drupal::classResolver(ConfigEntityUpdater::class);
-  $config_entity_updater->update($sandbox, 'field_config', function (FieldConfigInterface $field): bool {
-    return $field->getType() === 'image';
+  $config_entity_updater->update($sandbox, 'field_config', function (FieldConfigInterface $field) use ($field_config_updater): bool {
+    return $field_config_updater->needsEntityArgumentUpdate($field);
   });
 }
