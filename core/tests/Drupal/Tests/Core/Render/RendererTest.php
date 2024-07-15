@@ -63,7 +63,7 @@ class RendererTest extends RendererTestBase {
    *
    * @return array
    */
-  public static function providerTestRenderBasic() {
+  public static function providerTestRenderBasic(): array {
     $data = [];
 
     // Part 1: the most simplistic render arrays possible, none using #theme.
@@ -666,7 +666,7 @@ class RendererTest extends RendererTestBase {
    *
    * @return array
    */
-  public static function providerRenderTwice() {
+  public static function providerRenderTwice(): array {
     return [
       [
         [
@@ -720,7 +720,7 @@ class RendererTest extends RendererTestBase {
    *
    * @return array
    */
-  public static function providerAccessValues() {
+  public static function providerAccessValues(): array {
     return [
       [FALSE],
       [TRUE],
@@ -795,7 +795,7 @@ class RendererTest extends RendererTestBase {
    *
    * @return array
    */
-  public static function providerRenderCache() {
+  public static function providerRenderCache(): array {
     return [
       'full access' => [
         NULL,
@@ -903,7 +903,7 @@ class RendererTest extends RendererTestBase {
     }
   }
 
-  public static function providerTestRenderCacheMaxAge() {
+  public static function providerTestRenderCacheMaxAge(): array {
     return [
       [0, FALSE, NULL],
       [60, TRUE, (int) $_SERVER['REQUEST_TIME'] + 60],
@@ -973,7 +973,7 @@ class RendererTest extends RendererTestBase {
    *   An array of associative arrays of expected results keyed by property
    *   name.
    */
-  public static function providerTestRenderCacheProperties() {
+  public static function providerTestRenderCacheProperties(): array {
     return [
       [[]],
       [['child1' => 0, 'child2' => 0, '#custom_property' => 0, '#custom_property_array' => 0]],
@@ -998,7 +998,7 @@ class RendererTest extends RendererTestBase {
     $this->assertEquals($build, $expected);
   }
 
-  public static function providerTestAddCacheableDependency() {
+  public static function providerTestAddCacheableDependency(): array {
     return [
       // Empty render array, typical default cacheability.
       [

@@ -52,7 +52,7 @@ class FilterHtmlTest extends UnitTestCase {
    * @return array
    *   An array of test data.
    */
-  public static function providerFilterAttributes() {
+  public static function providerFilterAttributes(): array {
     return [
       ['<a href="/blog" title="Blog">Blog</a>', '<a href="/blog">Blog</a>'],
       ['<p dir="rtl" />', '<p dir="rtl"></p>'],

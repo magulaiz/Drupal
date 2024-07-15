@@ -66,7 +66,7 @@ class DateFieldTest extends UnitTestCase {
   /**
    * Provides data for testDefineValueProcessPipeline().
    */
-  public static function providerTestDefineValueProcessPipeline() {
+  public static function providerTestDefineValueProcessPipeline(): array {
     return [
       [['type' => 'date'], 'Y-m-d\TH:i:s', 'Y-m-d\TH:i:s'],
       [['type' => 'datestamp'], 'U', 'U'],

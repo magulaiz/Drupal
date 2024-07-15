@@ -263,7 +263,7 @@ class ViewsModerationStateFilterTest extends ViewTestBase {
    * @return string[]
    *   An array of view IDs.
    */
-  public static function providerTestWorkflowChanges() {
+  public static function providerTestWorkflowChanges(): array {
     return [
       'view on base table, filter on base table' => [
         'test_content_moderation_state_filter_base_table',

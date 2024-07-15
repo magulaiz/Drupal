@@ -98,7 +98,7 @@ class FieldResolverTest extends JsonapiKernelTestBase {
   /**
    * Provides test cases for resolveInternalEntityQueryPath.
    */
-  public static function resolveInternalIncludePathProvider() {
+  public static function resolveInternalIncludePathProvider(): array {
     return [
       'entity reference' => [[['field_test_ref2']], 'field_test_ref2'],
       'entity reference with multi target bundles' => [[['field_test_ref1']], 'field_test_ref1'],
@@ -144,7 +144,7 @@ class FieldResolverTest extends JsonapiKernelTestBase {
   /**
    * Provides test cases for ::testResolveInternalIncludePathError.
    */
-  public static function resolveInternalIncludePathErrorProvider() {
+  public static function resolveInternalIncludePathErrorProvider(): array {
     return [
       // Should fail because none of these bundles have these fields.
       ['entity_test_with_bundle', 'bundle1', 'host.fail!!.deep'],
@@ -182,7 +182,7 @@ class FieldResolverTest extends JsonapiKernelTestBase {
   /**
    * Provides test cases for ::testResolveInternalEntityQueryPath.
    */
-  public static function resolveInternalEntityQueryPathProvider() {
+  public static function resolveInternalEntityQueryPathProvider(): array {
     return [
       'config entity as base' => [
         'uuid', 'id', 'entity_test_bundle', 'entity_test_bundle',
@@ -267,7 +267,7 @@ class FieldResolverTest extends JsonapiKernelTestBase {
   /**
    * Provides test cases for ::testResolveInternalEntityQueryPathError.
    */
-  public static function resolveInternalEntityQueryPathErrorProvider() {
+  public static function resolveInternalEntityQueryPathErrorProvider(): array {
     return [
       'nested fields' => [
         'entity_test_with_bundle', 'bundle1', 'none.of.these.exist',

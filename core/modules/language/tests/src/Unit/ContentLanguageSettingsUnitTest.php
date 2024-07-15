@@ -151,7 +151,7 @@ class ContentLanguageSettingsUnitTest extends UnitTestCase {
     $this->assertSame($expected, $config->getDefaultLangcode());
   }
 
-  public static function providerDefaultLangcode() {
+  public static function providerDefaultLangcode(): array {
     $langcode = Random::machineName();
     $config = new ContentLanguageSettings([
       'target_entity_type_id' => 'test_entity_type',
@@ -180,7 +180,7 @@ class ContentLanguageSettingsUnitTest extends UnitTestCase {
     $this->assertSame($expected, $config->isLanguageAlterable());
   }
 
-  public static function providerLanguageAlterable() {
+  public static function providerLanguageAlterable(): array {
     $alterableConfig = new ContentLanguageSettings([
       'target_entity_type_id' => 'test_entity_type',
       'target_bundle' => 'test_bundle',
@@ -214,7 +214,7 @@ class ContentLanguageSettingsUnitTest extends UnitTestCase {
     $this->assertSame($expected, $config->isDefaultConfiguration());
   }
 
-  public static function providerIsDefaultConfiguration() {
+  public static function providerIsDefaultConfiguration(): array {
     $alteredLanguage = new ContentLanguageSettings([
       'target_entity_type_id' => 'test_entity_type',
       'target_bundle' => 'test_bundle',
@@ -281,7 +281,7 @@ class ContentLanguageSettingsUnitTest extends UnitTestCase {
     $this->assertSame($expected_language_alterable, $config->isLanguageAlterable());
   }
 
-  public static function providerLoadByEntityTypeBundle() {
+  public static function providerLoadByEntityTypeBundle(): array {
     $alteredLanguage = new ContentLanguageSettings([
       'target_entity_type_id' => 'test_entity_type',
       'target_bundle' => 'test_bundle',

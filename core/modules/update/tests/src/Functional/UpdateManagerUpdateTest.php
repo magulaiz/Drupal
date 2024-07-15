@@ -85,7 +85,7 @@ class UpdateManagerUpdateTest extends UpdateTestBase {
    * @return array[]
    *   Test data.
    */
-  public static function incompatibleUpdatesTableProvider() {
+  public static function incompatibleUpdatesTableProvider(): array {
     return [
       'only one compatible' => [
         'core_fixture' => '8.1.1',

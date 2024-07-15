@@ -76,7 +76,7 @@ class SanitizeNameTest extends UnitTestCase {
    * @return array
    *   Arrays with original name, expected name, and sanitization options.
    */
-  public static function provideFilenames() {
+  public static function provideFilenames(): array {
     return [
       'Test default options' => [
         'TÉXT-œ.txt',

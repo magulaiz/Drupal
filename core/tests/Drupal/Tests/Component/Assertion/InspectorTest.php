@@ -26,7 +26,7 @@ class InspectorTest extends TestCase {
     $this->assertSame($expected, Inspector::assertAllStrings($input));
   }
 
-  public static function providerTestAssertAllStrings() {
+  public static function providerTestAssertAllStrings(): array {
     $data = [
       'empty-array' => [[], TRUE],
       'array-with-strings' => [['foo', 'bar'], TRUE],

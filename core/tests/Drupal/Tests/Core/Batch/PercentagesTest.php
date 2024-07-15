@@ -33,7 +33,7 @@ class PercentagesTest extends UnitTestCase {
    * @return array
    *   An array of data used by the test.
    */
-  public static function providerTestPercentages() {
+  public static function providerTestPercentages(): array {
     // Set up an array of test cases.
     return [
       // array(total, current, expected).

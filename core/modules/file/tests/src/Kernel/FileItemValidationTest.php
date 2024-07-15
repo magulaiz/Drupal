@@ -130,7 +130,7 @@ class FileItemValidationTest extends KernelTestBase {
   /**
    * Provides a list of file types to test.
    */
-  public static function getFileTypes() {
+  public static function getFileTypes(): array {
     return [['file'], ['image']];
   }
 

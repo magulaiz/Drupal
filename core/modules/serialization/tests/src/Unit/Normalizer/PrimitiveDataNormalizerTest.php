@@ -60,7 +60,7 @@ class PrimitiveDataNormalizerTest extends UnitTestCase {
   /**
    * Data provider for testNormalize().
    */
-  public static function dataProviderPrimitiveData() {
+  public static function dataProviderPrimitiveData(): array {
     $data = [];
 
     $definition = DataDefinition::createFromDataType('string');

@@ -104,7 +104,7 @@ class ModerationActionsTest extends BrowserTestBase {
    * @return array
    *   An array of test cases.
    */
-  public static function nodeStatusActionsTestCases() {
+  public static function nodeStatusActionsTestCases(): array {
     return [
       'Moderated bundle shows warning (publish action)' => [
         'node_publish_action',

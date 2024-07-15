@@ -138,7 +138,7 @@ class HandleMultiplesTest extends KernelTestBase {
    *
    * @return array
    */
-  public static function scalarAndMultipleValuesProviderSource() {
+  public static function scalarAndMultipleValuesProviderSource(): array {
     return [
       [
         'source_data' => [

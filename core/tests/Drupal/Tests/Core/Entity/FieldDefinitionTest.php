@@ -344,7 +344,7 @@ class FieldDefinitionTest extends UnitTestCase {
   /**
    * A data provider for all the types of factories that can create definitions.
    */
-  public static function factoryTypeProvider() {
+  public static function factoryTypeProvider(): array {
     return [
       '::createFromFieldStorageDefinition factory' => [
         'createFromFieldStorageDefinition',

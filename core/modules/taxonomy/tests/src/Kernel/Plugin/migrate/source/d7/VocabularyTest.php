@@ -22,7 +22,7 @@ class VocabularyTest extends MigrateSqlSourceTestBase {
   /**
    * {@inheritdoc}
    */
-  public static function providerSource() {
+  public static function providerSource(): array {
     $tests = [];
 
     // The source data.

@@ -77,7 +77,7 @@ class FieldBlockTest extends EntityKernelTestBase {
   /**
    * Provides test data for ::testBlockAccessEntityNotAllowed().
    */
-  public static function providerTestBlockAccessNotAllowed() {
+  public static function providerTestBlockAccessNotAllowed(): array {
     $data = [];
     $data['entity_forbidden'] = [
       FALSE,
@@ -178,7 +178,7 @@ class FieldBlockTest extends EntityKernelTestBase {
   /**
    * Provides test data for ::testBlockAccessEntityAllowedFieldHasValue().
    */
-  public static function providerTestBlockAccessEntityAllowedFieldHasValue() {
+  public static function providerTestBlockAccessEntityAllowedFieldHasValue(): array {
     $data = [];
     $data['empty'] = [
       FALSE,
@@ -284,7 +284,7 @@ class FieldBlockTest extends EntityKernelTestBase {
   /**
    * Provides test data for ::testBuild().
    */
-  public static function providerTestBuild() {
+  public static function providerTestBuild(): array {
     $data = [];
     $data['array'] = [
       new ReturnPromise([['content' => ['#markup' => 'The field value']]]),

@@ -177,7 +177,7 @@ class FormBuilderTest extends FormTestBase {
   /**
    * Provides test data for testHandleFormStateResponse().
    */
-  public static function formStateResponseProvider() {
+  public static function formStateResponseProvider(): array {
     return [
       ['Symfony\Component\HttpFoundation\Response', 'response'],
       ['Symfony\Component\HttpFoundation\RedirectResponse', 'redirect'],
@@ -337,7 +337,7 @@ class FormBuilderTest extends FormTestBase {
   /**
    * Data provider for ::testBuildFormWithTriggeringElement().
    */
-  public static function providerTestBuildFormWithTriggeringElement() {
+  public static function providerTestBuildFormWithTriggeringElement(): array {
     $plain_text = 'Other submit value';
     $markup = 'Other submit <input> value';
     return [
@@ -678,7 +678,7 @@ class FormBuilderTest extends FormTestBase {
    *
    * @return array
    */
-  public static function providerTestChildAccessInheritance() {
+  public static function providerTestChildAccessInheritance(): array {
     $data = [];
 
     $element = [
@@ -818,7 +818,7 @@ class FormBuilderTest extends FormTestBase {
     $this->assertSame($expected, $is_safe);
   }
 
-  public static function providerTestValueCallableIsSafe() {
+  public static function providerTestValueCallableIsSafe(): array {
     $data = [];
     $data['string_no_slash'] = [
       'Drupal\Core\Render\Element\Token::valueCallback',
@@ -895,7 +895,7 @@ class FormBuilderTest extends FormTestBase {
     }
   }
 
-  public static function providerTestInvalidToken() {
+  public static function providerTestInvalidToken(): array {
     $data = [];
     $data['authenticated_invalid'] = [TRUE, FALSE, TRUE];
     $data['authenticated_valid'] = [FALSE, TRUE, TRUE];
@@ -955,7 +955,7 @@ class FormBuilderTest extends FormTestBase {
    *
    * @return array
    */
-  public static function providerTestFormTokenCacheability() {
+  public static function providerTestFormTokenCacheability(): array {
     return [
       'token:none,authenticated:true' => [NULL, TRUE, ['contexts' => ['user.roles:authenticated'], 'tags' => ['CACHE_MISS_IF_UNCACHEABLE_HTTP_METHOD:form']], ['max-age' => 0], 'post'],
       'token:none,authenticated:false' => [NULL, FALSE, ['contexts' => ['user.roles:authenticated'], 'tags' => ['CACHE_MISS_IF_UNCACHEABLE_HTTP_METHOD:form']], NULL, 'post'],

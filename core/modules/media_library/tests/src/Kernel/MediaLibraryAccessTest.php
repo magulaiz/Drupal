@@ -165,7 +165,7 @@ class MediaLibraryAccessTest extends KernelTestBase {
   /**
    * Data provider for ::testEditorOpenerAccess.
    */
-  public static function editorOpenerAccessProvider() {
+  public static function editorOpenerAccessProvider(): array {
     return [
       'media_embed filter enabled' => [
         TRUE,

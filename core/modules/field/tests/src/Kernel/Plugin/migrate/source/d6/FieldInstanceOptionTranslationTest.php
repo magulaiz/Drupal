@@ -20,7 +20,7 @@ class FieldInstanceOptionTranslationTest extends FieldOptionTranslationTest {
   /**
    * {@inheritdoc}
    */
-  public static function providerSource() {
+  public static function providerSource(): array {
     $test = parent::providerSource();
 
     // FieldInstanceOptionTranslation extends FieldOptionTranslation so the

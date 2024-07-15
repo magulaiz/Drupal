@@ -195,7 +195,7 @@ class LocaleLookupTest extends UnitTestCase {
   /**
    * Provides test data for testResolveCacheMissWithFallback().
    */
-  public static function resolveCacheMissWithFallbackProvider() {
+  public static function resolveCacheMissWithFallbackProvider(): array {
     // cSpell:disable
     return [
       ['cs', 'test', 'irrelevant', 'test v české'],
@@ -325,7 +325,7 @@ class LocaleLookupTest extends UnitTestCase {
   /**
    * Provides test data for testResolveCacheMissWithFallback().
    */
-  public static function providerFixOldPluralTranslationProvider() {
+  public static function providerFixOldPluralTranslationProvider(): array {
     $translations = [
       'by' => [
         'word1' => '@count[2] word-by',
@@ -373,7 +373,7 @@ class LocaleLookupTest extends UnitTestCase {
   /**
    * Provides test data for testGetCid().
    */
-  public static function getCidProvider() {
+  public static function getCidProvider(): array {
     return [
       [
         ['a'], 'locale:en:irrelevant:a',

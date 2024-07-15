@@ -170,7 +170,7 @@ class NumberItemTest extends FieldKernelTestBase {
    * @return \Generator
    *   The test data.
    */
-  public static function dataNumberFieldSettingsProvider() {
+  public static function dataNumberFieldSettingsProvider(): \Generator {
     yield ['integer', NULL, NULL, -100, FALSE];
     yield ['integer', 0, NULL, -100, TRUE, 'field_integer: the value may be no less than 0.'];
     yield ['integer', 10, NULL, 100, FALSE];
@@ -246,7 +246,7 @@ class NumberItemTest extends FieldKernelTestBase {
    * @return \Generator
    *   The test data.
    */
-  public static function dataTestMinMaxValue() {
+  public static function dataTestMinMaxValue(): \Generator {
     yield [1, 10, 5, FALSE, ''];
     yield [10, 5, 6, TRUE, 'The minimum value must be less than or equal to 5.'];
     yield [1, 0, 6, TRUE, 'The minimum value must be less than or equal to 0.'];

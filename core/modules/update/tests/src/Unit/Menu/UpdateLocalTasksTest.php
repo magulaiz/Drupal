@@ -35,7 +35,7 @@ class UpdateLocalTasksTest extends LocalTaskIntegrationTestBase {
   /**
    * Provides a list of report routes to test.
    */
-  public static function getUpdateReportRoutes() {
+  public static function getUpdateReportRoutes(): array {
     return [
       ['update.status'],
       ['update.settings'],
@@ -57,7 +57,7 @@ class UpdateLocalTasksTest extends LocalTaskIntegrationTestBase {
   /**
    * Provides a list of module routes to test.
    */
-  public static function getUpdateModuleRoutes() {
+  public static function getUpdateModuleRoutes(): array {
     return [
       ['update.module_update'],
     ];
@@ -77,7 +77,7 @@ class UpdateLocalTasksTest extends LocalTaskIntegrationTestBase {
   /**
    * Provides a list of theme routes to test.
    */
-  public static function getUpdateThemeRoutes() {
+  public static function getUpdateThemeRoutes(): array {
     return [
       ['update.theme_update'],
     ];

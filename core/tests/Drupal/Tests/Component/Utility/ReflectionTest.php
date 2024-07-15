@@ -31,7 +31,7 @@ class ReflectionTest extends TestCase {
    *
    * @return array[]
    */
-  public static function providerGetParameterClassName() {
+  public static function providerGetParameterClassName(): array {
     $reflection_method = new \ReflectionMethod(static::class, 'existsForTesting');
     $parameters = $reflection_method->getParameters();
     return [

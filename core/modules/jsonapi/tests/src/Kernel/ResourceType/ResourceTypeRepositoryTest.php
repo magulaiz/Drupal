@@ -99,7 +99,7 @@ class ResourceTypeRepositoryTest extends JsonapiKernelTestBase {
    * @return array
    *   The data for the test method.
    */
-  public static function getProvider() {
+  public static function getProvider(): array {
     return [
       ['node', 'article', 'Drupal\node\Entity\Node'],
       ['node', '42', 'Drupal\node\Entity\Node'],
@@ -149,7 +149,7 @@ class ResourceTypeRepositoryTest extends JsonapiKernelTestBase {
    * @return array
    *   The data for the test method.
    */
-  public static function getFieldsProvider() {
+  public static function getFieldsProvider(): array {
     return [
       [['type', 'node_type']],
       [['id', 'node_id']],

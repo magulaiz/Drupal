@@ -207,7 +207,7 @@ class MigrationTest extends UnitTestCase {
   /**
    * Provides data for valid migration configuration test.
    */
-  public static function getValidMigrationDependenciesProvider() {
+  public static function getValidMigrationDependenciesProvider(): array {
     return [
       [
         'source' => NULL,
@@ -235,7 +235,7 @@ class MigrationTest extends UnitTestCase {
   /**
    * Provides invalid migration dependencies.
    */
-  public static function getInvalidMigrationDependenciesProvider() {
+  public static function getInvalidMigrationDependenciesProvider(): array {
     return [
       'invalid key' => [
         'dependencies' => ['bogus' => []],

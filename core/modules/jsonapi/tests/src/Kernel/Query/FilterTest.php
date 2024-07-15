@@ -329,7 +329,7 @@ class FilterTest extends JsonapiKernelTestBase {
   /**
    * Data provider for testCreateFromQueryParameter.
    */
-  public static function parameterProvider() {
+  public static function parameterProvider(): array {
     return [
       'shorthand' => [
         ['uid' => ['value' => 1]],

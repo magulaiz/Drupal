@@ -135,7 +135,7 @@ class ScaffoldTest extends TestCase {
   /**
    * Data provider for testScaffoldWithExpectedException.
    */
-  public static function scaffoldExpectedExceptionTestValues() {
+  public static function scaffoldExpectedExceptionTestValues(): array {
     return [
       [
         'drupal-drupal-missing-scaffold-file',
@@ -198,7 +198,7 @@ class ScaffoldTest extends TestCase {
     $this->assertAutoloadFileCorrect($result->docroot());
   }
 
-  public static function scaffoldOverridingSettingsExcludingHtaccessValues() {
+  public static function scaffoldOverridingSettingsExcludingHtaccessValues(): array {
     return [
       [
         'drupal-composer-drupal-project',

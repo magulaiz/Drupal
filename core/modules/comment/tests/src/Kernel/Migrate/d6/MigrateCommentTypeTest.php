@@ -115,7 +115,7 @@ class MigrateCommentTypeTest extends MigrateDrupal6TestBase {
   /**
    * Provides test cases for ::testNoCommentTypeMigration().
    */
-  public static function providerTestNoCommentTypeMigration() {
+  public static function providerTestNoCommentTypeMigration(): array {
     return [
       'Node module is disabled in source' => [
         'disabled_source_modules' => ['node'],

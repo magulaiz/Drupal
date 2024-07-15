@@ -37,7 +37,7 @@ class FieldSettingsTest extends UnitTestCase {
   /**
    * Provides field settings for testGetSettings().
    */
-  public static function getSettingsProvider() {
+  public static function getSettingsProvider(): array {
     return [
       [
         'list_integer',

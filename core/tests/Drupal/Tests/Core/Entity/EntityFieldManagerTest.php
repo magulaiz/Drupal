@@ -361,7 +361,7 @@ class EntityFieldManagerTest extends UnitTestCase {
    * @return array
    *   Test data.
    */
-  public static function providerTestGetBaseFieldDefinitionsTranslatableEntityTypeDefaultLangcode() {
+  public static function providerTestGetBaseFieldDefinitionsTranslatableEntityTypeDefaultLangcode(): array {
     return [
       ['default_langcode'],
       ['custom_default_langcode_key'],
@@ -405,7 +405,7 @@ class EntityFieldManagerTest extends UnitTestCase {
    * @return array
    *   Test data.
    */
-  public static function providerTestGetBaseFieldDefinitionsTranslatableEntityTypeLangcode() {
+  public static function providerTestGetBaseFieldDefinitionsTranslatableEntityTypeLangcode(): array {
     return [
       [FALSE, TRUE, TRUE],
       [TRUE, FALSE, TRUE],

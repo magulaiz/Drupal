@@ -193,7 +193,7 @@ class LocalActionManagerTest extends UnitTestCase {
     $this->assertEquals($expected_actions, $this->localActionManager->getActionsForRoute($route_appears));
   }
 
-  public static function getActionsForRouteProvider() {
+  public static function getActionsForRouteProvider(): array {
     $cache_contexts_manager = (new Prophet())->prophesize(CacheContextsManager::class);
     $cache_contexts_manager->assertValidTokens(Argument::any())
       ->willReturn(TRUE);

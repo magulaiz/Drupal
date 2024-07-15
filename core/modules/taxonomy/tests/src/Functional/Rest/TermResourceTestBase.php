@@ -358,7 +358,7 @@ abstract class TermResourceTestBase extends EntityResourceTestBase {
     $this->assertSame($expected, $actual);
   }
 
-  public static function providerTestGetTermWithParent() {
+  public static function providerTestGetTermWithParent(): array {
     return [
       'root parent: [0] (= no parent)' => [
         [0],

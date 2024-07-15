@@ -186,7 +186,7 @@ class InlineBlockTest extends InlineBlockTestBase {
   /**
    * Provides test data for ::testNoLayoutSave().
    */
-  public static function layoutNoSaveProvider() {
+  public static function layoutNoSaveProvider(): array {
     return [
       'discard_changes' => [
         'discard_changes',

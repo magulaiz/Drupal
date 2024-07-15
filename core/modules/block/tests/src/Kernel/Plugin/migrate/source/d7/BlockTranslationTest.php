@@ -25,7 +25,7 @@ class BlockTranslationTest extends MigrateSqlSourceTestBase {
   /**
    * {@inheritdoc}
    */
-  public static function providerSource() {
+  public static function providerSource(): array {
 
     // The source data.
     $tests[0]['source_data']['block'] = [

@@ -184,7 +184,7 @@ class EntityUrlTest extends UnitTestCase {
    * @return array
    *   An array of test cases for testToUrlLinkTemplates().
    */
-  public static function providerTestToUrlLinkTemplates() {
+  public static function providerTestToUrlLinkTemplates(): array {
     $test_cases = [];
 
     $test_cases['canonical'] = ['canonical', 'entity.test_entity.canonical'];
@@ -279,7 +279,7 @@ class EntityUrlTest extends UnitTestCase {
    * @return array
    *   An array of test cases for testToUrlLinkTemplateNoId().
    */
-  public static function providerTestToUrlLinkTemplateNoId() {
+  public static function providerTestToUrlLinkTemplateNoId(): array {
     $test_cases = [];
 
     $test_cases['collection'] = ['collection', 'entity.test_entity.collection'];
@@ -372,7 +372,7 @@ class EntityUrlTest extends UnitTestCase {
    * @return array
    *   An array of test cases for testToUrlUriCallbackUndefined().
    */
-  public static function providerTestToUrlUriCallbackUndefined() {
+  public static function providerTestToUrlUriCallbackUndefined(): array {
     $test_cases = [];
 
     $test_cases['no_callback'] = [[], NULL];

@@ -28,7 +28,7 @@ class FieldInstanceLabelDescriptionTranslationTest extends MigrateSqlSourceTestB
   /**
    * {@inheritdoc}
    */
-  public static function providerSource() {
+  public static function providerSource(): array {
     $test = [];
 
     // The source data.

@@ -35,7 +35,7 @@ class RequirementsExceptionTest extends UnitTestCase {
   /**
    * Provides a list of requirements to test.
    */
-  public static function getRequirementsProvider() {
+  public static function getRequirementsProvider(): array {
     return [
       [
         'requirements: random_jackson_pivot.',

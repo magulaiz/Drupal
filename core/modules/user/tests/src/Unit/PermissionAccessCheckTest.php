@@ -53,7 +53,7 @@ class PermissionAccessCheckTest extends UnitTestCase {
    *
    * @return array
    */
-  public static function providerTestAccess() {
+  public static function providerTestAccess(): array {
     return [
       [[], FALSE],
       [['_permission' => 'allowed'], TRUE, ['user.permissions']],

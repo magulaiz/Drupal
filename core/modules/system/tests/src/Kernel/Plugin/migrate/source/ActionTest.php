@@ -22,7 +22,7 @@ class ActionTest extends MigrateSqlSourceTestBase {
   /**
    * {@inheritdoc}
    */
-  public static function providerSource() {
+  public static function providerSource(): array {
     $tests = [];
 
     $tests[0][0]['actions'] = [

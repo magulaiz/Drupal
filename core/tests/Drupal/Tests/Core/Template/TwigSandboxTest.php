@@ -58,7 +58,7 @@ class TwigSandboxTest extends UnitTestCase {
    *
    * @return array
    */
-  public static function getTwigEntityDangerousMethods() {
+  public static function getTwigEntityDangerousMethods(): array {
     return [
       ['{{ entity.delete }}'],
       ['{{ entity.save }}'],

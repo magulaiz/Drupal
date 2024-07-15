@@ -316,7 +316,7 @@ class SystemMenuBlockTest extends KernelTestBase {
   /**
    * @return array
    */
-  public static function configExpandedTestCases() {
+  public static function configExpandedTestCases(): array {
     return [
       'All levels' => [
         'example5',

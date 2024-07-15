@@ -528,7 +528,7 @@ abstract class ImageTestBase extends CKEditor5TestBase {
     $this->assertFalse($drupal_media_element->hasAttribute('data-align'));
   }
 
-  public static function providerAlignment() {
+  public static function providerAlignment(): array {
     return [
       'Block image' => ['block'],
       'Inline image' => ['inline'],

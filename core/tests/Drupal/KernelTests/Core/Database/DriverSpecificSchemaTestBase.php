@@ -651,7 +651,7 @@ abstract class DriverSpecificSchemaTestBase extends DriverSpecificKernelTestBase
    * @return array
    *   An array of test cases for SchemaTest::testSchemaCreateTablePrimaryKey().
    */
-  public static function providerTestSchemaCreateTablePrimaryKey() {
+  public static function providerTestSchemaCreateTablePrimaryKey(): array {
     $tests = [];
 
     $tests['simple_primary_key'] = [

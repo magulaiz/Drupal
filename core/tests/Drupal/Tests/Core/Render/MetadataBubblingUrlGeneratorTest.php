@@ -69,7 +69,7 @@ class MetadataBubblingUrlGeneratorTest extends UrlGeneratorTest {
   /**
    * Data provider for ::testUrlBubbleableMetadataBubbling().
    */
-  public static function providerUrlBubbleableMetadataBubbling() {
+  public static function providerUrlBubbleableMetadataBubbling(): array {
     return [
       // No bubbling when bubbleable metadata is collected.
       [TRUE, 0, []],

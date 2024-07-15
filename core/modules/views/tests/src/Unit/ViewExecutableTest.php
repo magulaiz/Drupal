@@ -454,7 +454,7 @@ class ViewExecutableTest extends UnitTestCase {
    * @return array[]
    *   Test data set.
    */
-  public static function addHandlerProvider() {
+  public static function addHandlerProvider(): array {
     return [
       'field' => ['fields', 'field'],
       'filter' => ['filters', 'filter'],
@@ -529,7 +529,7 @@ class ViewExecutableTest extends UnitTestCase {
    *   An array of arrays containing the display state, a user's access to the
    *   display and whether it is expected or not that the display gets attached.
    */
-  public static function providerAttachDisplays() {
+  public static function providerAttachDisplays(): array {
     return [
       'enabled-granted' => [static::DISPLAY_ENABLED, static::ACCESS_GRANTED, TRUE],
       'enabled-revoked' => [static::DISPLAY_ENABLED, static::ACCESS_REVOKED, FALSE],
@@ -752,7 +752,7 @@ class ViewExecutableTest extends UnitTestCase {
    * @return array[]
    *   An array of arrays containing the display state and expected value.
    */
-  public static function providerExecuteReturn() {
+  public static function providerExecuteReturn(): array {
     return [
       'enabled' => [static::DISPLAY_ENABLED, TRUE],
       'disabled' => [static::DISPLAY_DISABLED, FALSE],

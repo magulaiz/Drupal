@@ -53,7 +53,7 @@ class DrupalKernelTest extends UnitTestCase {
   /**
    * Provides test data for testTrustedHosts().
    */
-  public static function providerTestTrustedHosts() {
+  public static function providerTestTrustedHosts(): array {
     $data = [];
 
     // Tests canonical URL.

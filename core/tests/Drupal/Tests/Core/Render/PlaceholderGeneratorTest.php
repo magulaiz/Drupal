@@ -87,7 +87,7 @@ class PlaceholderGeneratorTest extends RendererTestBase {
   /**
    * @return array
    */
-  public static function providerCreatePlaceholderGeneratesValidHtmlMarkup() {
+  public static function providerCreatePlaceholderGeneratesValidHtmlMarkup(): array {
     return [
       'multiple-arguments' => [['#lazy_builder' => ['Drupal\Tests\Core\Render\PlaceholdersTest::callback', ['foo', 'bar']]]],
       'special-character-&' => [['#lazy_builder' => ['Drupal\Tests\Core\Render\PlaceholdersTest::callback', ['foo&bar']]]],

@@ -114,7 +114,7 @@ class ElementInfoManagerTest extends UnitTestCase {
    *
    * @return array
    */
-  public static function providerTestGetInfoElementPlugin() {
+  public static function providerTestGetInfoElementPlugin(): array {
     $data = [];
     $data[] = [
       'Drupal\Core\Render\Element\ElementInterface',

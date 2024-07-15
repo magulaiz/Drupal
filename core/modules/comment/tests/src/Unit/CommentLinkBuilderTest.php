@@ -161,7 +161,7 @@ class CommentLinkBuilderTest extends UnitTestCase {
   /**
    * Data provider for ::testCommentLinkBuilder.
    */
-  public static function getLinkCombinations() {
+  public static function getLinkCombinations(): array {
     $cases = [];
     // No links should be created if the entity doesn't have the field.
     $cases[] = [

@@ -111,7 +111,7 @@ class EntityDecoupledTranslationRevisionsTest extends EntityKernelTestBase {
   /**
    * Data provider for ::testDecoupledDefaultRevisions.
    */
-  public static function dataTestDecoupledPendingRevisions() {
+  public static function dataTestDecoupledPendingRevisions(): array {
     $sets = [];
 
     $sets['Intermixed languages - No initial default translation'][] = [
@@ -213,7 +213,7 @@ class EntityDecoupledTranslationRevisionsTest extends EntityKernelTestBase {
   /**
    * Data provider for ::testUntranslatableFields.
    */
-  public static function dataTestUntranslatableFields() {
+  public static function dataTestUntranslatableFields(): array {
     $sets = [];
 
     $sets['Default behavior - Untranslatable fields affect all revisions'] = [

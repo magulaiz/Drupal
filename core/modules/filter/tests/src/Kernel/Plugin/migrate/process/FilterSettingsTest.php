@@ -46,7 +46,7 @@ class FilterSettingsTest extends MigrateTestCase {
    *
    * @return array
    */
-  public static function dataProvider() {
+  public static function dataProvider(): array {
     return [
       // Tests that the transformed value is identical to the input value when
       // destination is not the filter_html.

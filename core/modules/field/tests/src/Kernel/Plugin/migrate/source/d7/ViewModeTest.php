@@ -22,7 +22,7 @@ class ViewModeTest extends MigrateSqlSourceTestBase {
   /**
    * {@inheritdoc}
    */
-  public static function providerSource() {
+  public static function providerSource(): array {
     $tests = [
       [
         'source_data' => [],

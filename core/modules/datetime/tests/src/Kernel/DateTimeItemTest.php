@@ -275,7 +275,7 @@ class DateTimeItemTest extends FieldKernelTestBase {
   /**
    * Provider for testDatetimeValidation().
    */
-  public static function datetimeValidationProvider() {
+  public static function datetimeValidationProvider(): array {
     return [
       // Valid ISO 8601 dates, but unsupported by DateTimeItem.
       ['2014-01-01T20:00:00Z'],

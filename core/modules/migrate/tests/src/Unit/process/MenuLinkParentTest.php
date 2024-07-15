@@ -103,7 +103,7 @@ class MenuLinkParentTest extends MigrateProcessTestCase {
   /**
    * Provides data for testTransformException().
    */
-  public static function providerTransformException() {
+  public static function providerTransformException(): array {
     // The parent ID does not for the following tests.
     return [
       'parent link external and could not be loaded' => [
@@ -161,7 +161,7 @@ class MenuLinkParentTest extends MigrateProcessTestCase {
   /**
    * Provides data for testMenuLinkParent().
    */
-  public static function providerMenuLinkParent() {
+  public static function providerMenuLinkParent(): array {
     return [
       'menu link is route item' => [
         'source_value' => [0, NULL, NULL],

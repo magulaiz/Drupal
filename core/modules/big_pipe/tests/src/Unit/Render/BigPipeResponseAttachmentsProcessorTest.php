@@ -42,7 +42,7 @@ class BigPipeResponseAttachmentsProcessorTest extends UnitTestCase {
     $big_pipe_response_attachments_processor->processAttachments($non_html_response);
   }
 
-  public static function nonHtmlResponseProvider() {
+  public static function nonHtmlResponseProvider(): array {
     return [
       'AjaxResponse, which implements AttachmentsInterface' => [AjaxResponse::class],
       'A dummy that implements AttachmentsInterface' => [get_class((new Prophet())->prophesize(AttachmentsInterface::class)->reveal())],
@@ -88,7 +88,7 @@ class BigPipeResponseAttachmentsProcessorTest extends UnitTestCase {
     $this->assertEquals('processed', $processed_big_pipe_response->getContent(), 'Content of returned (processed) response object MUST be changed.');
   }
 
-  public static function attachmentsProvider() {
+  public static function attachmentsProvider(): array {
     $typical_cases = [
       'no attachments' => [[]],
       'libraries' => [['library' => ['core/drupal']]],

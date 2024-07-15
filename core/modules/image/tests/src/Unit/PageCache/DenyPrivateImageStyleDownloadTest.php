@@ -77,7 +77,7 @@ class DenyPrivateImageStyleDownloadTest extends UnitTestCase {
    * @return array
    *   Data and expected results.
    */
-  public static function providerPrivateImageStyleDownloadPolicy() {
+  public static function providerPrivateImageStyleDownloadPolicy(): array {
     return [
       [ResponsePolicyInterface::DENY, 'image.style_private'],
       [NULL, 'some.other.route'],

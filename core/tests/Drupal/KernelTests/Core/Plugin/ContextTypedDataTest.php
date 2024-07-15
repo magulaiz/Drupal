@@ -65,7 +65,7 @@ class ContextTypedDataTest extends KernelTestBase {
   /**
    * Data provider for testHasContextValue.
    */
-  public static function providerHasContextValue() {
+  public static function providerHasContextValue(): array {
     return [
       [TRUE, FALSE],
       [TRUE, 0],

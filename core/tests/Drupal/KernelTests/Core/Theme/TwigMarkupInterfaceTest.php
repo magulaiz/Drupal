@@ -40,7 +40,7 @@ class TwigMarkupInterfaceTest extends KernelTestBase {
   /**
    * Provide test examples.
    */
-  public static function providerTestMarkupInterfaceEmpty() {
+  public static function providerTestMarkupInterfaceEmpty(): array {
     return [
       // The first argument to \Drupal\Core\StringTranslation\TranslatableMarkup
       // is not supposed to be an empty string.

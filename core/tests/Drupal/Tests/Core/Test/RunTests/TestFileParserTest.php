@@ -14,7 +14,7 @@ use Drupal\Tests\UnitTestCase;
  */
 class TestFileParserTest extends UnitTestCase {
 
-  public static function provideTestFileContents() {
+  public static function provideTestFileContents(): array {
     return [
       'empty' => [[], ''],
       'no-namespace' => [['ConcreteClass'],

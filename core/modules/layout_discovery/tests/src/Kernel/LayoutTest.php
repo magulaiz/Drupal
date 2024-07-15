@@ -93,7 +93,7 @@ class LayoutTest extends KernelTestBase {
   /**
    * Data provider for testRenderLayout().
    */
-  public static function renderLayoutData() {
+  public static function renderLayoutData(): array {
     $html = [];
     $html[] = '<div data-drupal-selector="edit-layout" class="layout layout--onecol">';
     $html[] = '<div data-drupal-selector="edit-content" class="layout__region layout__region--content">';

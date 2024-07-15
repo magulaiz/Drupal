@@ -50,7 +50,7 @@ class CacheTest extends UnitTestCase {
    *
    * @return array
    */
-  public static function mergeTagsProvider() {
+  public static function mergeTagsProvider(): array {
     return [
       [[], [], []],
       [['bar', 'foo'], ['bar'], ['foo']],
@@ -77,7 +77,7 @@ class CacheTest extends UnitTestCase {
    *
    * @return array
    */
-  public static function mergeMaxAgesProvider() {
+  public static function mergeMaxAgesProvider(): array {
     return [
       [Cache::PERMANENT, Cache::PERMANENT, Cache::PERMANENT],
       [60, 60, 60],
@@ -116,7 +116,7 @@ class CacheTest extends UnitTestCase {
    *
    * @return array
    */
-  public static function mergeCacheContextsProvide() {
+  public static function mergeCacheContextsProvide(): array {
     return [
       [[], [], []],
       [['foo'], [], ['foo']],
@@ -155,7 +155,7 @@ class CacheTest extends UnitTestCase {
    *
    * @return array
    */
-  public static function buildTagsProvider() {
+  public static function buildTagsProvider(): array {
     return [
       ['node', [1], ['node:1']],
       ['node', [1, 2, 3], ['node:1', 'node:2', 'node:3']],

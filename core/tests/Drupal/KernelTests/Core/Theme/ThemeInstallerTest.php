@@ -195,7 +195,7 @@ class ThemeInstallerTest extends KernelTestBase {
   /**
    * Data provider for testInstallThemeWithUnmetModuleDependencies().
    */
-  public static function providerTestInstallThemeWithUnmetModuleDependencies() {
+  public static function providerTestInstallThemeWithUnmetModuleDependencies(): array {
     return [
       'theme with uninstalled module dependencies' => [
         'test_theme_depending_on_modules',

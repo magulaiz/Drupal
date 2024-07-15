@@ -50,7 +50,7 @@ class ConditionAccessResolverTraitTest extends UnitTestCase {
     $this->assertEquals($expected, $trait_object->resolveConditions($conditions, $logic));
   }
 
-  public static function providerTestResolveConditions() {
+  public static function providerTestResolveConditions(): \Generator {
     yield [[], 'and', TRUE];
     yield [[], 'or', FALSE];
     yield [['false'], 'or', FALSE];

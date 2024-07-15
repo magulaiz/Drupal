@@ -143,7 +143,7 @@ class DisplayModeBundleSelectionTest extends WebDriverTestBase {
   /**
    * Data provider for testBundleSelection().
    */
-  public static function providerBundleSelection() {
+  public static function providerBundleSelection(): array {
     return [
       'view display' => ['view', 'display', 'full'],
       'form display' => ['form', 'form-display', 'foobar'],

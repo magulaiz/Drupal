@@ -61,7 +61,7 @@ class LayoutSectionTest extends BrowserTestBase {
   /**
    * Provides test data for ::testLayoutSectionFormatter().
    */
-  public static function providerTestLayoutSectionFormatter() {
+  public static function providerTestLayoutSectionFormatter(): array {
     $data = [];
     $data['block_with_global_context'] = [
       [

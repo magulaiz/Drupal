@@ -215,7 +215,7 @@ class ModerationStateFieldItemListTest extends KernelTestBase {
   /**
    * Data provider for ::testModerationStateChanges.
    */
-  public static function moderationStateChangesTestCases() {
+  public static function moderationStateChangesTestCases(): array {
     return [
       'Draft to draft' => [
         'draft',
@@ -300,7 +300,7 @@ class ModerationStateFieldItemListTest extends KernelTestBase {
   /**
    * Test cases for ::testEntityUnserialize.
    */
-  public static function entityUnserializeTestCases() {
+  public static function entityUnserializeTestCases(): array {
     return [
       'Default draft state' => [
         'draft',
@@ -334,7 +334,7 @@ class ModerationStateFieldItemListTest extends KernelTestBase {
   /**
    * Tests cases for ::testModeratedEntityWithExistingId.
    */
-  public static function moderatedEntityWithExistingIdTestCases() {
+  public static function moderatedEntityWithExistingIdTestCases(): array {
     return [
       'Draft non-default state' => [
         'draft',

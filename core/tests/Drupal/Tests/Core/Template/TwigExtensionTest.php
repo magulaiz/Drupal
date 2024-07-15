@@ -121,7 +121,7 @@ class TwigExtensionTest extends UnitTestCase {
    *   An array of test data each containing of a twig template string and
    *   a boolean expecting whether the path will be safe.
    */
-  public static function providerTestEscaping() {
+  public static function providerTestEscaping(): array {
     return [
       ['{{ path("foo") }}', FALSE],
       ['{{ path("foo", {}) }}', FALSE],
@@ -297,7 +297,7 @@ class TwigExtensionTest extends UnitTestCase {
     $this->assertEquals('Rendered output', $this->systemUnderTest->renderVar($input));
   }
 
-  public static function providerTestRenderVar() {
+  public static function providerTestRenderVar(): array {
     $data = [];
 
     $renderable = (new Prophet())->prophesize(RenderableInterface::class);
@@ -377,7 +377,7 @@ class TwigExtensionTest extends UnitTestCase {
   /**
    * Data provider for ::testRenderVarEarlyReturn().
    */
-  public static function providerTestRenderVarEarlyReturn() {
+  public static function providerTestRenderVarEarlyReturn(): array {
     return [
       'null' => ['', NULL],
       'empty array' => ['', []],

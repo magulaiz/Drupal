@@ -50,7 +50,7 @@ class WorkspaceAccessTest extends KernelTestBase {
    * @return array
    *   An array of operations and permissions to test with.
    */
-  public static function operationCases() {
+  public static function operationCases(): array {
     return [
       ['create', 'administer workspaces'],
       ['create', 'create workspace'],

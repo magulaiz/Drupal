@@ -132,7 +132,7 @@ class FilterNumericTest extends ViewsKernelTestBase {
    *   An array of arrays, each containing the parameters for
    *   self::testFilterNumericBetween().
    */
-  public static function providerTestFilterNumericBetween() {
+  public static function providerTestFilterNumericBetween(): array {
     $all_result = [
       ['name' => 'John', 'age' => 25],
       ['name' => 'George', 'age' => 27],

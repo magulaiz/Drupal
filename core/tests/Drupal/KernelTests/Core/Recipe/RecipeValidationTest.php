@@ -19,7 +19,7 @@ class RecipeValidationTest extends KernelTestBase {
    * @return \Generator
    *   The test cases.
    */
-  public static function providerRecipeValidation(): iterable {
+  public static function providerRecipeValidation(): \Generator {
     yield 'name is correct' => [
       'name: Correct name',
       NULL,

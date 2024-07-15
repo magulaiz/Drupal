@@ -27,7 +27,7 @@ class EntityTranslationSettingsTest extends MigrateSqlSourceTestBase {
   /**
    * {@inheritdoc}
    */
-  public static function providerSource() {
+  public static function providerSource(): array {
     $tests = [];
 
     // Source data when there's no entity type that uses entity translation.

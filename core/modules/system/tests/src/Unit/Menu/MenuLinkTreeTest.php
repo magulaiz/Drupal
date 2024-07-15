@@ -116,7 +116,7 @@ class MenuLinkTreeTest extends UnitTestCase {
    *
    * @see testBuildCacheability
    */
-  public static function providerTestBuildCacheability() {
+  public static function providerTestBuildCacheability(): array {
     $base_expected_build_empty = [
       '#cache' => [
         'contexts' => [],

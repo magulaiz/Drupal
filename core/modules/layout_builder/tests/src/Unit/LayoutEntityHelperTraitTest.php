@@ -23,7 +23,7 @@ class LayoutEntityHelperTraitTest extends UnitTestCase {
   /**
    * Data provider method for tests that need sections with inline blocks.
    */
-  public static function providerSectionsWithInlineComponents() {
+  public static function providerSectionsWithInlineComponents(): array {
     $prophet = new Prophet();
     $components = [];
 

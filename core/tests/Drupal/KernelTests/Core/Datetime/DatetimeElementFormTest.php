@@ -177,7 +177,7 @@ class DatetimeElementFormTest extends KernelTestBase implements FormInterface, T
    * @return string[][]
    *   Test cases.
    */
-  public static function providerUntrusted() : array {
+  public static function providerUntrusted(): array {
     return [
       'untrusted date' => [
         'datetimeDateCallback',

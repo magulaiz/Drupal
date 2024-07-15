@@ -19,7 +19,7 @@ class MenuTreeParametersTest extends UnitTestCase {
   /**
    * Provides test data for testSetMinDepth().
    */
-  public static function providerTestSetMinDepth() {
+  public static function providerTestSetMinDepth(): array {
     $data = [];
 
     // Valid values at the extremes and in the middle.

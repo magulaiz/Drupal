@@ -398,7 +398,7 @@ DOCBLOCK;
 
     }
 
-    public static function getAnnotationVarTypeProviderValid()
+    public static function getAnnotationVarTypeProviderValid(): array
     {
         //({attribute name}, {attribute value})
          return array(
@@ -451,7 +451,7 @@ DOCBLOCK;
         );
     }
 
-    public static function getAnnotationVarTypeProviderInvalid()
+    public static function getAnnotationVarTypeProviderInvalid(): array
     {
          //({attribute name}, {type declared type}, {attribute value} , {given type or class})
          return array(
@@ -504,7 +504,7 @@ DOCBLOCK;
         );
     }
 
-    public static function getAnnotationVarTypeArrayProviderInvalid()
+    public static function getAnnotationVarTypeArrayProviderInvalid(): array
     {
          //({attribute name}, {type declared type}, {attribute value} , {given type or class})
          return array(
@@ -760,7 +760,7 @@ DOCBLOCK;
         $parser->parse($docblock);
     }
 
-    public static function getConstantsProvider()
+    public static function getConstantsProvider(): array
     {
         $provider[] = array(
             '@AnnotationWithConstants(PHP_EOL)',

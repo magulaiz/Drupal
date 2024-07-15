@@ -44,7 +44,7 @@ class ProviderRepositoryTest extends MediaKernelTestBase {
    *
    * @return array
    */
-  public static function providerEmptyProviderList() {
+  public static function providerEmptyProviderList(): array {
     return [
       'empty array' => ['[]'],
       'empty string' => [''],
@@ -78,7 +78,7 @@ class ProviderRepositoryTest extends MediaKernelTestBase {
    *
    * @return array
    */
-  public static function providerNonExistingProviderDatabase() {
+  public static function providerNonExistingProviderDatabase(): array {
     return [
       [
         'http://oembed1.com/providers.json',

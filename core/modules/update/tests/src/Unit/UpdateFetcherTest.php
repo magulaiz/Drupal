@@ -117,7 +117,7 @@ class UpdateFetcherTest extends UnitTestCase {
    *   - 'site_key' - An arbitrary site key.
    *   - 'expected' - The expected URL from UpdateFetcher::buildFetchUrl().
    */
-  public static function providerTestUpdateBuildFetchUrl() {
+  public static function providerTestUpdateBuildFetchUrl(): array {
     $data = [];
 
     // First test that we didn't break the trivial case.

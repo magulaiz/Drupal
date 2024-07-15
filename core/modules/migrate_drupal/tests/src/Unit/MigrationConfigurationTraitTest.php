@@ -57,7 +57,7 @@ class MigrationConfigurationTraitTest extends UnitTestCase {
   /**
    * Provides data for testGetLegacyDrupalVersion.
    */
-  public static function providerTestGetLegacyDrupalVersion() {
+  public static function providerTestGetLegacyDrupalVersion(): array {
     return [
       'D5' => [
         'expected_version_string' => '5',

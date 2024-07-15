@@ -30,7 +30,7 @@ class AdminRouteSubscriberTest extends UnitTestCase {
     $this->assertSame($is_admin, $route->getOption('_admin_route'));
   }
 
-  public static function providerTestAlterRoutes() {
+  public static function providerTestAlterRoutes(): array {
     $data = [];
     $data['non-admin'] = [
       new Route('/foo'),

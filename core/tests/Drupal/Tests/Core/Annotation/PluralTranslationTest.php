@@ -31,7 +31,7 @@ class PluralTranslationTest extends UnitTestCase {
   /**
    * Provides data to self::testGet().
    */
-  public static function providerTestGet() {
+  public static function providerTestGet(): array {
     $data = [];
     $data[] = [
       [
@@ -58,7 +58,7 @@ class PluralTranslationTest extends UnitTestCase {
     new PluralTranslation($data);
   }
 
-  public static function providerTestMissingData() {
+  public static function providerTestMissingData(): array {
     $data = [];
     $data['all-missing'] = [[]];
     $data['singular-missing'] = [['plural' => 'muh']];

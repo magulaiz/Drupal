@@ -49,7 +49,7 @@ class SchemaTest extends UnitTestCase {
   /**
    * Data provider for ::testComputedConstraintName().
    */
-  public static function providerComputedConstraintName() {
+  public static function providerComputedConstraintName(): array {
     return [
       ['user_field_data', 'pkey', 'user_field_data____pkey'],
       ['user_field_data', 'name__key', 'user_field_data__name__key'],

@@ -126,7 +126,7 @@ class CommentOrphanTest extends EntityKernelTestBase {
   /**
    * Provides test data for testOrphan.
    */
-  public static function providerTestOrphan() {
+  public static function providerTestOrphan(): array {
     return [
       ['entity_id'],
       ['uid'],

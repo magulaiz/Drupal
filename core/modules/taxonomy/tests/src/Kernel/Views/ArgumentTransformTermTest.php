@@ -50,7 +50,7 @@ class ArgumentTransformTermTest extends TaxonomyTestBase {
    * @return array[]
    *   Test data.
    */
-  public static function termArgumentTransformationProvider() {
+  public static function termArgumentTransformationProvider(): array {
     return [
       'space in the middle' => [
         'name' => Random::machineName() . ' ' . Random::machineName(),

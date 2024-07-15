@@ -80,7 +80,7 @@ class UserMailRequiredValidatorTest extends UnitTestCase {
   /**
    * Data provider for ::testValidate().
    */
-  public static function providerTestValidate() {
+  public static function providerTestValidate(): array {
     $prophet = new Prophet();
     $cases = [];
 

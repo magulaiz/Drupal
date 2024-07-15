@@ -281,7 +281,7 @@ class UserPasswordResetTest extends BrowserTestBase {
    *
    * @return array
    */
-  public static function languagePrefixTestProvider() {
+  public static function languagePrefixTestProvider(): array {
     return [
       'Test language prefix set as \'\', visiting default with preferred language as en' => [
         'setPreferredLangcode' => 'en',

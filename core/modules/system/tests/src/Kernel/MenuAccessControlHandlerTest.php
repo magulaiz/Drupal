@@ -67,7 +67,7 @@ class MenuAccessControlHandlerTest extends KernelTestBase {
     static::assertEquals($create_access_result, $this->accessControlHandler->createAccess(NULL, $user, [], TRUE));
   }
 
-  public static function testAccessProvider() {
+  public static function testAccessProvider(): array {
     // RefinableCacheableDependencyTrait::addCacheContexts() only needs the
     // container to perform an assertion, but we can't use the container here,
     // so disable assertions for the purposes of this test.

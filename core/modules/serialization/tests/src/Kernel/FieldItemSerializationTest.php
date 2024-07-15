@@ -215,7 +215,7 @@ class FieldItemSerializationTest extends NormalizerTestBase {
    * @return array
    *   Test cases.
    */
-  public static function providerTestCustomBooleanNormalization() {
+  public static function providerTestCustomBooleanNormalization(): array {
     return [
       'Format-agnostic @FieldType-level normalizers SHOULD be able to affect the format-agnostic normalization' => [
         ['test_fieldtype_boolean_emoji_normalizer'],

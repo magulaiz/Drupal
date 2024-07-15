@@ -778,7 +778,7 @@ class JsonApiDocumentTopLevelNormalizerTest extends JsonapiKernelTestBase {
   /**
    * Provides test cases for asserting cacheable metadata behavior.
    */
-  public static function testCacheableMetadataProvider() {
+  public static function testCacheableMetadataProvider(): array {
     $cacheable_metadata = function ($metadata) {
       return CacheableMetadata::createFromRenderArray(['#cache' => $metadata]);
     };

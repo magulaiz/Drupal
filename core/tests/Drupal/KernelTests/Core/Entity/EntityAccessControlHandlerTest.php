@@ -345,7 +345,7 @@ class EntityAccessControlHandlerTest extends EntityLanguageTestBase {
     $this->assertEquals('The entity ID cannot be changed.', $access_result->getReason());
   }
 
-  public static function providerTestFieldAccess() {
+  public static function providerTestFieldAccess(): array {
     return [
       'serial ID entity' => [
         EntityTest::class,
