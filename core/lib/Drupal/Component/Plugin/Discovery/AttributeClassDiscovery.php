@@ -171,7 +171,7 @@ class AttributeClassDiscovery implements DiscoveryInterface {
               $reflection_attribute_class = new \ReflectionClass($plugin_attribute::class);
               $reflection_property_on_plugin_attribute_class = $reflection_attribute_class->getProperty($name);
               if (empty($reflection_property_on_plugin_attribute_class->getAttributes(PluginDeprecatedProperty::class))) {
-                throw new InvalidPluginDefinitionException("May not reuse $name.");
+                throw new InvalidPluginDefinitionException($id, "May not reuse plugin property $name in third-party attribute class '$attribute_class', as the main plugin attribute class '$plugin_attribute::class' already uses it.");
               }
             }
 
