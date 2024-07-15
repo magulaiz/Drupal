@@ -176,8 +176,6 @@ class AttributeClassDiscovery implements DiscoveryInterface {
             }
           }
 
-          // TODO: decide how to add property $name to $content plugin
-          // definition -- should they live in their own sub-array?
           $content[$name] = $value;
         }
       }
