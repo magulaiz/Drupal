@@ -62,20 +62,20 @@ class ConfigImportAllTest extends ModuleTestBase {
 
     // Get a list of modules to install.
     $all_modules = $this->container->get('extension.list.module')->getList();
-    $all_modules = array_filter($all_modules, function ($module, $name) {
+    $all_modules = array_filter($all_modules, function ($module) {
       // Filter out contrib, hidden, testing, experimental, and deprecated
       // modules. We also don't need to enable modules that are already enabled.
       if ($module->origin !== 'core'
         || !empty($module->info['hidden'])
         || $module->status == TRUE
         || $module->info['package'] == 'Testing'
-        || in_array($name, ['mysql', 'pgsql', 'sqlite'])
         || $module->info[ExtensionLifecycle::LIFECYCLE_IDENTIFIER] === ExtensionLifecycle::DEPRECATED) {
         return FALSE;
       }
       return TRUE;
-    }, ARRAY_FILTER_USE_BOTH);
+    });
 
+    // Install every module possible.
     \Drupal::service('module_installer')->install(array_keys($all_modules));
 
     $this->assertModules(array_keys($all_modules), TRUE);
