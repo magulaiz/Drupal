@@ -7,7 +7,9 @@
   position: absolute;
   z-index: var(--contextual-z-index);
   top: var(--contextual-icon-spacing-size);
-  right: var(--contextual-icon-spacing-size);
+  inset-inline-end: var(--contextual-icon-spacing-size);
+  display: flex;
+  justify-content: flex-end;
 }
 
 .contextual.open {
@@ -21,23 +23,14 @@
 
 .contextual__trigger {
   position: relative;
-  float: right; /* LTR */
   overflow: hidden;
   cursor: pointer;
-}
-[dir="rtl"] .contextual__trigger {
-  float: left;
-}
-.open > .contextual__trigger {
-  z-index: 2;
 }
 
 .contextual-links {
   position: relative;
   inset-inline-start: 0.125rem; /* 2px */
   inset-block-end: 0;
-  float: right; /* LTR */
-  clear: both;
   margin: 0;
   padding: 0;
   white-space: nowrap;
@@ -45,9 +38,6 @@
   border-radius: var(--dropbutton-border-radius-size);
   background: var(--color-white);
   box-shadow: var(--shadow-z1);
-}
-[dir="rtl"] .contextual-links {
-  float: left;
 }
 
 .contextual .contextual-links a {
@@ -62,10 +52,9 @@
   font-size: var(--contextual-links-font-size);
   line-height: var(--contextual-links-line-height);
   -webkit-font-smoothing: antialiased;
+  text-align: start;
 }
-[dir="rtl"] .contextual-links a {
-  text-align: right;
-}
+
 .contextual-links a,
 .contextual-links a:hover {
   text-decoration: none;
