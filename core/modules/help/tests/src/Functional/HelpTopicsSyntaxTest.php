@@ -45,7 +45,12 @@ class HelpTopicsSyntaxTest extends BrowserTestBase {
 
     // Enable all modules and themes, so that all routes mentioned in topics
     // will be defined.
-    $module_directories = $this->listDirectories('module');
+    // Exclude non-active database drivers, as enabling them in a test
+    // environment may lead to errors on page requests.
+    $module_directories = array_diff_key(
+      $this->listDirectories('module'),
+      array_flip(array_diff(['mysql', 'pgsql', 'sqlite'], [\Drupal::database()->getProvider()]))
+    );
     $modules_to_install = array_keys($module_directories);
     \Drupal::service('module_installer')->install($modules_to_install);
     $theme_directories = $this->listDirectories('theme');

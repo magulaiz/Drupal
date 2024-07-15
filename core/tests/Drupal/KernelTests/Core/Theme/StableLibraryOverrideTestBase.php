@@ -54,19 +54,20 @@ abstract class StableLibraryOverrideTestBase extends KernelTestBase {
    */
   protected function enableVisibleAndStableCoreModules(): void {
     $all_modules = $this->container->get('extension.list.module')->getList();
-    $all_modules = array_filter($all_modules, function ($module) {
+    $all_modules = array_filter($all_modules, function ($module, $name) {
       // Filter contrib, hidden, experimental, deprecated, and already enabled
       // modules, and modules in the Testing package.
       if ($module->origin !== 'core'
         || !empty($module->info['hidden'])
         || $module->status == TRUE
         || $module->info['package'] == 'Testing'
+        || in_array($name, ['pgsql', 'mysql', 'sqlite'])
         || $module->info[ExtensionLifecycle::LIFECYCLE_IDENTIFIER] === ExtensionLifecycle::EXPERIMENTAL
         || $module->info[ExtensionLifecycle::LIFECYCLE_IDENTIFIER] === ExtensionLifecycle::DEPRECATED) {
         return FALSE;
       }
       return TRUE;
-    });
+    }, ARRAY_FILTER_USE_BOTH);
     $this->allModules = array_keys($all_modules);
     $this->allModules[] = 'system';
     $this->allModules[] = 'user';

@@ -101,19 +101,21 @@ class ResolvedLibraryDefinitionsFilesMatchTest extends KernelTestBase {
 
     // Enable all core modules.
     $all_modules = $this->container->get('extension.list.module')->getList();
-    $all_modules = array_filter($all_modules, function ($module) {
+    $all_modules = array_filter($all_modules, function ($module, $name) {
       // Filter contrib, hidden, already enabled modules and modules in the
       // Testing package.
       if ($module->origin !== 'core'
         || !empty($module->info['hidden'])
         || $module->status == TRUE
         || $module->info['package'] == 'Testing'
+        // The active database driver is added back in, below.
+        || in_array($name, ['pgsql', 'mysql', 'sqlite'])
         || $module->info[ExtensionLifecycle::LIFECYCLE_IDENTIFIER] === ExtensionLifecycle::EXPERIMENTAL
         || $module->info[ExtensionLifecycle::LIFECYCLE_IDENTIFIER] === ExtensionLifecycle::DEPRECATED) {
         return FALSE;
       }
       return TRUE;
-    });
+    }, ARRAY_FILTER_USE_BOTH);
 
     // Install the 'user' entity schema because the workspaces module's install
     // hook creates a workspace with default uid of 1. Then the layout_builder

@@ -39,20 +39,23 @@ abstract class GenericModuleTestBase extends BrowserTestBase {
    */
   public function testModuleGenericIssues(): void {
     $module = $this->getModule();
+    $isDatabaseProvider = $module === Database::getConnection()->getProvider();
+    if (in_array($module, ['pgsql', 'sqlite', 'mysql']) && !$isDatabaseProvider) {
+      $this->markTestSkipped('Skipping test for non-active database driver.');
+    }
     \Drupal::service('module_installer')->install([$module]);
     $info = \Drupal::service('extension.list.module')->getExtensionInfo($module);
     if (!empty($info['required']) && !empty($info['hidden'])) {
       $this->markTestSkipped('Nothing to assert for hidden, required modules.');
     }
+    \Drupal::service('module_installer')->install([$module]);
     $this->drupalLogin($this->createUser(['access help pages']));
     $this->assertHookHelp($module);
 
     if (empty($info['required'])) {
-      $connection = Database::getConnection();
-
       // When the database driver is provided by a module, then that module
       // cannot be uninstalled.
-      if ($module !== $connection->getProvider()) {
+      if (!$isDatabaseProvider) {
         // Check that the module can be uninstalled and then re-installed again.
         $this->preUnInstallSteps();
         $this->assertTrue(\Drupal::service('module_installer')->uninstall([$module]), "Failed to uninstall '$module' module");

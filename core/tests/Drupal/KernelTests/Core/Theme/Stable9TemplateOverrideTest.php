@@ -67,19 +67,20 @@ class Stable9TemplateOverrideTest extends KernelTestBase {
   protected function installAllModules(): void {
     // Enable all core modules.
     $all_modules = $this->container->get('extension.list.module')->getList();
-    $all_modules = array_filter($all_modules, function ($module) {
+    $all_modules = array_filter($all_modules, function ($module, $name) {
       // Filter contrib, hidden, experimental, already enabled modules, and
       // modules in the Testing package.
       if ($module->origin !== 'core'
         || !empty($module->info['hidden'])
         || $module->status == TRUE
         || $module->info['package'] == 'Testing'
+        || in_array($name, ['mysql', 'pgsql', 'sqlite'])
         || $module->info[ExtensionLifecycle::LIFECYCLE_IDENTIFIER] === ExtensionLifecycle::EXPERIMENTAL
         || $module->info[ExtensionLifecycle::LIFECYCLE_IDENTIFIER] === ExtensionLifecycle::DEPRECATED) {
         return FALSE;
       }
       return TRUE;
-    });
+    }, ARRAY_FILTER_USE_BOTH);
     $this->allModules = array_keys($all_modules);
     sort($this->allModules);
 

@@ -37,16 +37,17 @@ class TestCoverageTest extends KernelTestBase {
     parent::setUp();
 
     $all_modules = \Drupal::service('extension.list.module')->getList();
-    $stable_core_modules = array_filter($all_modules, function ($module) {
+    $stable_core_modules = array_filter($all_modules, function ($module, $name) {
       // Filter out contrib, hidden, testing, experimental, and deprecated
       // modules. We also don't need to enable modules that are already enabled.
       return $module->origin === 'core'
         && empty($module->info['hidden'])
         && $module->status == FALSE
         && $module->info['package'] !== 'Testing'
+        && !in_array($name, ['pgsql', 'mysql', 'sqlite'])
         && $module->info[ExtensionLifecycle::LIFECYCLE_IDENTIFIER] !== ExtensionLifecycle::EXPERIMENTAL
         && $module->info[ExtensionLifecycle::LIFECYCLE_IDENTIFIER] !== ExtensionLifecycle::DEPRECATED;
-    });
+    }, ARRAY_FILTER_USE_BOTH);
 
     $this->container->get('module_installer')->install(array_keys($stable_core_modules));
 
