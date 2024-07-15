@@ -30,6 +30,7 @@ class ProxyServicesPass implements CompilerPassInterface {
           $container->setDefinition($new_service_id, $definition);
 
           $container->register($service_id, $proxy_class)
+            ->setTags($definition->getTags())
             ->setArguments([new Reference('service_container'), $new_service_id]);
         }
         else {

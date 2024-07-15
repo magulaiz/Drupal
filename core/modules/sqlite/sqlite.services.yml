@@ -1,3 +1,7 @@
+# By default, Drupal uses a non-transactional database connection in
+# circumstances where waiting for a transaction to commit would result in
+# data inconsistency or race conditions. SQLite initiates an exclusive lock
+# for transactions, which precludes the use of the non-transactional connection.
 services:
   sqlite.queue.database:
     class: Drupal\Core\Queue\QueueDatabaseFactory
@@ -7,21 +11,16 @@ services:
     class: Drupal\Core\Lock\DatabaseLockBackend
     arguments: ['@database']
     public: false
+    lazy: true
   sqlite.lock.persistent:
     class: Drupal\Core\Lock\PersistentDatabaseLockBackend
     arguments: ['@database']
     public: false
   sqlite.session_handler.storage:
     class: Drupal\Core\Session\SessionHandler
-    arguments: [ '@request_stack', '@database', '@datetime.time' ]
+    arguments: ['@request_stack', '@database', '@datetime.time']
     public: false
   sqlite.cache.backend.database:
     class: Drupal\Core\Cache\DatabaseBackendFactory
     arguments: ['@database', '@cache_tags.invalidator.checksum', '@settings', '@serialization.phpserialize', '@datetime.time']
     public: false
-  sqlite.logger.dblog:
-    class: Drupal\dblog\Logger\DbLog
-    arguments: ['@database', '@logger.log_message_parser']
-    public: false
-    tags:
-      - { name: logger }
