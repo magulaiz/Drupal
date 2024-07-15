@@ -35,10 +35,10 @@ class BlockValidationTest extends ConfigEntityValidationTestBase {
   /**
    * {@inheritdoc}
    *
-   * @todo Remove weight in https://drupal.org/node/3426279.
    */
   protected static array $propertiesWithOptionalValues = [
     'provider',
+    // @todo Remove weight in https://drupal.org/node/3426279.
     'weight',
   ];
 
@@ -125,7 +125,7 @@ class BlockValidationTest extends ConfigEntityValidationTestBase {
       'theme' => "Theme 'non_existent' is not installed.",
     ]);
 
-    // Install another theme, make it the default, so we can uninstall Stark.
+    // Install another theme and make it the default, so we can uninstall Stark.
     $this->container->get('theme_installer')->install(['olivero']);
     $this->config('system.theme')->set('default', 'olivero')->save();
     $this->container->get('theme_installer')->uninstall(['stark']);
