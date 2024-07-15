@@ -213,6 +213,7 @@ endtrans
 enoki
 entityviewedit
 errmode
+errormessages
 etag
 eurozone
 evenodd
