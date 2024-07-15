@@ -1,7 +1,7 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16">
   <style type="text/css" >
     <![CDATA[
-    .pencil {fill: #545560;}
+    .pencil {fill: #fff;}
 
     @media (forced-colors: active), (-ms-high-contrast: active) {
       .pencil {fill: LinkText}

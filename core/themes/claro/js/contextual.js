@@ -1,0 +1,26 @@
+(function (Drupal) {
+  Drupal.contextual.AuralView = Drupal.contextual.AuralView.extend({
+    render: function render() {
+      let isOpen = this.model.get('isOpen');
+      this.$el.find('.contextual-links').prop('hidden', !isOpen);
+      let triggerText = Drupal.t('@action @title configuration options', {
+        '@action': !isOpen
+          ? this.options.strings.open
+          : this.options.strings.close,
+        '@title': this.model.get('title'),
+      });
+      this.$el
+        .find('.trigger')
+        .html(Drupal.theme('contextualTriggerText', triggerText))
+        .attr('aria-pressed', isOpen);
+    },
+  });
+
+  Drupal.theme.contextualTrigger = function () {
+    return '<button class="contextual__trigger trigger visually-hidden focusable icon-link icon-link--small" type="button"></button>';
+  };
+
+  Drupal.theme.contextualTriggerText = function (text) {
+    return '<span class="visually-hidden">'.concat(text, '</span>');
+  };
+})(Drupal, Backbone);

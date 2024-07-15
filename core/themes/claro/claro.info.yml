@@ -64,6 +64,12 @@ libraries-override:
       theme:
         assets/vendor/jquery.ui/themes/base/theme.css: false
 
+  contextual/drupal.contextual-links:
+    css:
+      theme:
+        css/contextual.theme.css: css/theme/contextual.theme.css
+        css/contextual.icons.theme.css: css/theme/contextual.icons.theme.css
+
   core/drupal.dialog:
     css:
       component:
@@ -130,6 +136,8 @@ libraries-extend:
     - claro/tableselect
   core/drupal.vertical-tabs:
     - claro/vertical-tabs
+  contextual/drupal.contextual-links:
+    - claro/contextual-trigger
   file/drupal.file:
     - claro/file
   filter/drupal.filter.admin:
