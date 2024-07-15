@@ -21,6 +21,9 @@ class CustomPlugin extends Plugin {
    *   The attribute class ID.
    * @param string $title
    *   The title.
+   * @param string $third_party_property
+   *   (optional) A deprecated property to be overridden by the third-party
+   *   attribute.
    */
   public function __construct(
     public readonly string $id,
@@ -39,6 +42,13 @@ class CustomPlugin2 extends Plugin {}
 
 #[\Attribute(\Attribute::TARGET_CLASS)]
 class CustomPluginThirdParty extends PluginExtender {
+
+  /**
+   * Constructs a CustomPluginThirdParty attribute object.
+   *
+   * @param string $third_party_property
+   *   A property which overriddes one on the main attribute.
+   */
   public function __construct(
     // This will be allowed to override the property with the same name on
     // CustomPlugin, because on that attribute class the property is marked as
