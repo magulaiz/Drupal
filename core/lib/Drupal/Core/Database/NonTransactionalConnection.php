@@ -44,7 +44,13 @@ final class NonTransactionalConnection implements DatabaseConnectionInterface {
   }
 
   /**
-   * {@inheritdoc}
+   * Opens a client connection.
+   *
+   * @param array $connection_options
+   *   The database connection settings array.
+   *
+   * @return object
+   *   A client connection object.
    */
   public static function open(array &$connection_options = []) {
     throw new \RuntimeException(sprintf('%s is a wrapper only around existing connection objects.', __CLASS__));

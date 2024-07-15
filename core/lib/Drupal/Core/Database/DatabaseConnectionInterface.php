@@ -9,15 +9,4 @@ namespace Drupal\Core\Database;
  */
 interface DatabaseConnectionInterface {
 
-  /**
-   * Opens a client connection.
-   *
-   * @param array $connection_options
-   *   The database connection settings array.
-   *
-   * @return object
-   *   A client connection object.
-   */
-  public static function open(array &$connection_options = []);
-
 }

@@ -195,7 +195,13 @@ abstract class Connection implements DatabaseConnectionInterface {
   }
 
   /**
-   * {@inheritdoc}
+   * Opens a client connection.
+   *
+   * @param array $connection_options
+   *   The database connection settings array.
+   *
+   * @return object
+   *   A client connection object.
    */
   abstract public static function open(array &$connection_options = []);
 
