@@ -204,8 +204,13 @@ class ConnectionTest extends DatabaseTestBase {
       ->countQuery()
       ->execute()
       ->fetchField();
-    // The non-transactional connection doesn't see the inserted data, yet.
-    $this->assertEquals(0, $cowbellPlayers);
+    if ($this->connection->allowsConcurrentNonTransactionalConnection()) {
+      // The non-transactional connection doesn't see the inserted data, yet.
+      $this->assertEquals(0, $cowbellPlayers);
+    }
+    else {
+      $this->assertEquals(1, $cowbellPlayers);
+    }
     $cowbellPlayers = (int) $this->connection
       ->select('test')
       ->condition('job', 'More Cowbell')
@@ -229,14 +234,24 @@ class ConnectionTest extends DatabaseTestBase {
       ->countQuery()
       ->execute()
       ->fetchField();
-    $this->assertEquals(1, $cowbellPlayers);
+    if ($this->connection->allowsConcurrentNonTransactionalConnection()) {
+      $this->assertEquals(1, $cowbellPlayers);
+    }
+    else {
+      $this->assertEquals(2, $cowbellPlayers);
+    }
     $cowbellPlayers = (int) $this->connection
       ->select('test')
       ->condition('job', 'More Cowbell')
       ->countQuery()
       ->execute()
       ->fetchField();
-    $this->assertEquals(1, $cowbellPlayers);
+    if ($this->connection->allowsConcurrentNonTransactionalConnection()) {
+      $this->assertEquals(1, $cowbellPlayers);
+    }
+    else {
+      $this->assertEquals(2, $cowbellPlayers);
+    }
     // Commit the transaction on destroy.
     unset($transaction);
     $cowbellPlayers = (int) $nonTransactionalConnection
