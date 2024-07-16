@@ -65,7 +65,7 @@ class BackendCompilerPass implements CompilerPassInterface {
       // Previously, overrides were registered as aliases. If a container has
       // a registered alias for the overridden service, assume that's
       // purposeful and do not kludge the alias. We also avoid re-processing
-      // an override by matching a tag indicating overriding service.
+      // an override by matching a tag indicating the overriding service.
       if ($container->getDefinition($id)->hasTag(self::BACKEND_OVERRIDE_SERVICE_TAG) || $container->hasAlias($id)) {
         continue;
       }

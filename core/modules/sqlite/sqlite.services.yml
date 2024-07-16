@@ -11,6 +11,7 @@ services:
     class: Drupal\Core\Lock\DatabaseLockBackend
     arguments: ['@database']
     public: false
+    lazy: true
   sqlite.lock.persistent:
     class: Drupal\Core\Lock\PersistentDatabaseLockBackend
     arguments: ['@database']
