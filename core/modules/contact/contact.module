@@ -238,8 +238,10 @@ function contact_form_user_admin_settings_alter(&$form, FormStateInterface $form
 }
 
 /**
- * Form submission handler for user_admin_settings().
- *
+ * Form submission handler for AccountSettingsForm.
+ * 
+ * @see \Drupal\user\AccountSettingsForm
+ * 
  * @see contact_form_user_admin_settings_alter()
  */
 function contact_form_user_admin_settings_submit($form, FormStateInterface $form_state) {
