@@ -580,6 +580,8 @@ drupal.dropbutton:
   css:
     component:
       misc/dropbutton/dropbutton.css: {}
+  dependencies:
+    - core/drupal
 
 drupal.entity-form:
   version: VERSION
