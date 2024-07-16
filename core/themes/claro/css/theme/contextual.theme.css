@@ -57,9 +57,9 @@
   border-radius: var(--contextual-links-border-radius-size);
   background: var(--color-white);
   font-size: var(--contextual-links-font-size);
+  text-align: start;
   line-height: var(--contextual-links-line-height);
   -webkit-font-smoothing: antialiased;
-  text-align: start;
 }
 
 .contextual-links a,
