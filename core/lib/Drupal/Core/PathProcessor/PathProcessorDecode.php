@@ -17,7 +17,7 @@ use Symfony\Component\HttpFoundation\Request;
  *   controllers should be required to implement this logic themselves. If we
  *   decide to keep this code, remove this TODO.
  *
- * @deprecated in drupal:10.4.0 and is removed in drupal:12.0.0. There is no
+ * @deprecated in drupal:10.4.0 and is removed from drupal:12.0.0. There is no
  *   replacement.
  */
 class PathProcessorDecode implements InboundPathProcessorInterface {
@@ -26,7 +26,7 @@ class PathProcessorDecode implements InboundPathProcessorInterface {
    * {@inheritdoc}
    */
   public function processInbound($path, Request $request) {
-    trigger_error('Deprecated in drupal:10.4.0 and is removed in drupal:12.0.0. There is no replacement.', E_USER_DEPRECATED);
+    trigger_error('Deprecated in drupal:10.4.0 and is removed from drupal:12.0.0. There is no replacement.', E_USER_DEPRECATED);
     return urldecode($path);
   }
 
