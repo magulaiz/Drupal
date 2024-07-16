@@ -626,13 +626,13 @@ function locale_config_batch_update_default_config_langcodes(&$context) {
  * @param array|\ArrayAccess $context
  *   The batch context.
  *
- * @deprecated in drupal:10.2.3 and is removed from drupal:11.0.0. Use
+ * @deprecated in drupal:10.4.0 and is removed from drupal:12.0.0. Use
  * locale_config_batch_update_default_config_langcodes(&$context) instead.
  *
  * @see https://www.drupal.org/project/drupal/issues/3422977
  */
-function locale_config_batch_set_config_langcodes(&$context) {
-  @trigger_error(__METHOD__ . '() is deprecated in drupal:10.2.3 and is removed from drupal:11.0.0. Use locale_config_batch_update_default_config_langcodes() instead. See https://www.drupal.org/project/drupal/issues/3422977', E_USER_DEPRECATED);
+function locale_config_batch_set_config_langcodes(&$context): void {
+  @trigger_error(__METHOD__ . '() is deprecated in drupal:10.4.0 and is removed from drupal:12.0.0. Use locale_config_batch_update_default_config_langcodes() instead. See https://www.drupal.org/project/drupal/issues/3422977', E_USER_DEPRECATED);
   locale_config_batch_update_default_config_langcodes($context);
 }
 
@@ -675,13 +675,13 @@ function locale_config_batch_update_config_translations(array $names, array $lan
  * @param array|\ArrayAccess $context
  *   Contains a list of files imported.
  *
- * @deprecated in drupal:10.2.3 and is removed from drupal:11.0.0. Use
+ * @deprecated in drupal:10.4.0 and is removed from drupal:12.0.0. Use
  * locale_config_batch_update_config_translations($names, $langcodes, $context) instead.
  *
  * @see https://www.drupal.org/project/drupal/issues/3422977
  */
-function locale_config_batch_refresh_name(array $names, array $langcodes, &$context) {
-  @trigger_error(__METHOD__ . '() is deprecated in drupal:10.2.3 and is removed from drupal:11.0.0. Use locale_config_batch_update_config_translations() instead. See https://www.drupal.org/project/drupal/issues/3422977', E_USER_DEPRECATED);
+function locale_config_batch_refresh_name(array $names, array $langcodes, &$context): void {
+  @trigger_error(__METHOD__ . '() is deprecated in drupal:10.4.0 and is removed from drupal:12.0.0. Use locale_config_batch_update_config_translations() instead. See https://www.drupal.org/project/drupal/issues/3422977', E_USER_DEPRECATED);
   locale_config_batch_update_config_translations($names, $langcodes, $context);
 }
 

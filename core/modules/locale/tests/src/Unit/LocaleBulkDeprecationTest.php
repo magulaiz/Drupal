@@ -12,7 +12,7 @@ use Drupal\Tests\UnitTestCase;
  *
  * @group locale
  */
-class LocaleBulkTest extends UnitTestCase {
+class LocaleBulkDeprecationTest extends UnitTestCase {
 
   protected function setUp(): void {
     parent::setUp();
@@ -37,8 +37,8 @@ class LocaleBulkTest extends UnitTestCase {
    *
    * @see locale_config_batch_refresh_name()
    */
-  public function testDeprecatedLocaleConfigBatchRefreshName() {
-    $this->expectDeprecation('locale_config_batch_refresh_name() is deprecated in drupal:10.2.3 and is removed from drupal:11.0.0. Use locale_config_batch_update_config_translations() instead. See https://www.drupal.org/project/drupal/issues/3422977');
+  public function testDeprecatedLocaleConfigBatchRefreshName(): void {
+    $this->expectDeprecation('locale_config_batch_refresh_name() is deprecated in drupal:10.4.0 and is removed from drupal:12.0.0. Use locale_config_batch_update_config_translations() instead. See https://www.drupal.org/project/drupal/issues/3422977');
     $names = ['English', 'German'];
     $langcodes = ['en', 'de'];
     locale_config_batch_refresh_name($names, $langcodes, $context);
@@ -51,8 +51,8 @@ class LocaleBulkTest extends UnitTestCase {
    *
    * @see locale_config_batch_set_config_langcodes()
    */
-  public function testDeprecatedLocaleConfigBatchSetConfigLangcodes() {
-    $this->expectDeprecation('locale_config_batch_set_config_langcodes() is deprecated in drupal:10.2.3 and is removed from drupal:11.0.0. Use locale_config_batch_update_default_config_langcodes() instead. See https://www.drupal.org/project/drupal/issues/3422977');
+  public function testDeprecatedLocaleConfigBatchSetConfigLangcodes(): void {
+    $this->expectDeprecation('locale_config_batch_set_config_langcodes() is deprecated in drupal:10.4.0 and is removed from drupal:12.0.0. Use locale_config_batch_update_default_config_langcodes() instead. See https://www.drupal.org/project/drupal/issues/3422977');
     $context = [];
     locale_config_batch_set_config_langcodes($context);
   }
