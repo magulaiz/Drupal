@@ -62,12 +62,16 @@ class BackendCompilerPass implements CompilerPassInterface {
     }
 
     foreach ($container->findTaggedServiceIds('backend_overridable') as $id => $attributes) {
-      if ($container->getDefinition($id)->hasTag(self::BACKEND_OVERRIDE_SERVICE_TAG)) {
+      // Previously, overrides were registered as aliases. If a container has
+      // a registered alias for the overridden service, assume that's
+      // purposeful and do not kludge the alias. We also avoid re-processing
+      // an override by matching a tag indicating overriding service.
+      if ($container->getDefinition($id)->hasTag(self::BACKEND_OVERRIDE_SERVICE_TAG) || $container->hasAlias($id)) {
         continue;
       }
       foreach (["$driver_backend.$id", "$default_backend.$id"] as $candidateOverride) {
         if ($container->hasDefinition($candidateOverride) || $container->hasAlias($candidateOverride)) {
-          $this->overrideService($container, $id, "$driver_backend.$id");
+          $this->overrideService($container, $id, $candidateOverride);
           break;
         }
       }
