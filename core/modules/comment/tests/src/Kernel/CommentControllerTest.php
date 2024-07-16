@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace Drupal\Tests\comment\Kernel;
 
@@ -144,7 +144,7 @@ class CommentControllerTest extends KernelTestBase {
    *
    * @see self::testReplyFormAccess()
    */
-  public function providerTestReplyFormAccess(): array {
+  public static function providerTestReplyFormAccess(): array {
     return [
       'commenter' => [
         ['access content', 'access comments', 'post comments'], TRUE,

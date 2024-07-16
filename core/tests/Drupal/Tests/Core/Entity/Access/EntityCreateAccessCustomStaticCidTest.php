@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace Drupal\Tests\Core\Entity\Access;
 
@@ -75,7 +75,7 @@ class EntityCreateAccessCustomStaticCidTest extends TestCase {
    * @return array[]
    *   A list of test cases.
    */
-  public function providerTestCustomCid(): array {
+  public static function providerTestCustomCid(): array {
     $language_ids = array_keys(LanguageManager::getStandardLanguageList());
     return [
       'one context var' => [
