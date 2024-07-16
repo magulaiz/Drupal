@@ -70,7 +70,7 @@ class ConfigTranslationUiTest extends WebDriverTestBase {
     $this->getSession()->getPage()->find('css', '.ui-dialog-buttonset')->pressButton('Save translation');
     $this->assertSession()->pageTextContains('Successfully updated Finnish translation.');
 
-    $page->find('css', '.dropbutton-toggle button')->click();
+    $this->getSession()->executeScript('document.querySelector(".dropbutton-toggle button").click()');
     $this->clickLink('Delete');
     $this->assertEquals('Are you sure you want to delete the Finnish translation of Content view?', $this->assertSession()->waitForElement('css', '.ui-dialog-title')->getText());
     $page->find('css', '.ui-dialog-buttonset')->pressButton('Delete');
