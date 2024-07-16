@@ -286,14 +286,14 @@ class CommentLinkBuilderTest extends UnitTestCase {
       ->getMock();
     $field_item->expects($this->any())
       ->method('__get')
-      ->will($this->returnValueMap([
+      ->willReturnMap([
         ['status', $comment_status],
         ['comment_count', $comment_count],
         ['last_comment_timestamp', $this->timestamp],
-      ]));
+      ]);
     $field_item->expects($this->any())
       ->method('access')
-      ->will($this->returnCallback(function ($operation, $account) {
+      ->willReturnCallback(function ($operation, $account) {
         switch ($operation) {
           case 'view only':
             return $account->hasPermission('access comments');
@@ -307,7 +307,7 @@ class CommentLinkBuilderTest extends UnitTestCase {
           default:
             return FALSE;
         }
-      }));
+      });
     $node->expects($this->any())
       ->method('get')
       ->with('comment')
