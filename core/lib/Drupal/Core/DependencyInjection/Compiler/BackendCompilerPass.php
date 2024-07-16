@@ -81,7 +81,7 @@ class BackendCompilerPass implements CompilerPassInterface {
    * Services injected lazily (e.g. with a service locator) might depend on tag
    * matching, and some factories request services by their original name.
    *
-   * @param ContainerBuilder $container
+   * @param \Symfony\Component\DependencyInjection\ContainerBuilder $container
    *   Container builder.
    * @param string $id
    *   ID of service to replace.
