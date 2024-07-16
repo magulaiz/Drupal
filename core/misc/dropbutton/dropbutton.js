@@ -113,7 +113,7 @@ customElements.define(
       if (Drupal?.theme?.dropbuttonToggle) {
         return Drupal.theme.dropbuttonToggle(options);
       }
-      return `<li class="dropbutton-toggle" data-drupal-dropbutton-toggle><button type="button"><span class="dropbutton-arrow"><span class="visually-hidden">${options.title}</span></span></button></li>`;
+      return `<li class="dropbutton-toggle"><button type="button" data-drupal-dropbutton-toggle><span class="dropbutton-arrow"><span class="visually-hidden">${options.title}</span></span></button></li>`;
     }
   },
 );
