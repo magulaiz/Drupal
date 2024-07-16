@@ -5,6 +5,7 @@ namespace Drupal\Core\DependencyInjection\Compiler;
 use Symfony\Component\DependencyInjection\Alias;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
+use Symfony\Component\DependencyInjection\Definition;
 
 /**
  * Defines a compiler pass to allow automatic override per backend.
@@ -33,6 +34,8 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
  */
 class BackendCompilerPass implements CompilerPassInterface {
 
+  public const string BACKEND_OVERRIDE_SERVICE_TAG = '_backend_override_service';
+
   /**
    * {@inheritdoc}
    */
@@ -59,18 +62,48 @@ class BackendCompilerPass implements CompilerPassInterface {
     }
 
     foreach ($container->findTaggedServiceIds('backend_overridable') as $id => $attributes) {
-      // If the service is already an alias it is not the original backend, so
-      // we don't want to fallback to other storages any longer.
-      if ($container->hasAlias($id)) {
+      if ($container->getDefinition($id)->hasTag(self::BACKEND_OVERRIDE_SERVICE_TAG)) {
         continue;
       }
-      if ($container->hasDefinition("$driver_backend.$id") || $container->hasAlias("$driver_backend.$id")) {
-        $container->setAlias($id, new Alias("$driver_backend.$id"));
-      }
-      elseif ($container->hasDefinition("$default_backend.$id") || $container->hasAlias("$default_backend.$id")) {
-        $container->setAlias($id, new Alias("$default_backend.$id"));
+      foreach (["$driver_backend.$id", "$default_backend.$id"] as $candidateOverride) {
+        if ($container->hasDefinition($candidateOverride) || $container->hasAlias($candidateOverride)) {
+          $this->overrideService($container, $id, "$driver_backend.$id");
+          break;
+        }
       }
     }
+  }
+
+  /**
+   * Override a service by replacement.
+   *
+   * Backend-overridden services cannot be aliases, as they cannot be tagged.
+   * Services injected lazily (e.g. with a service locator) might depend on tag
+   * matching, and some factories request services by their original name.
+   *
+   * @param ContainerBuilder $container
+   *   Container builder.
+   * @param string $id
+   *   ID of service to replace.
+   * @param string $overrideId
+   *   ID of service definition or alias to use for replacement.
+   */
+  protected function overrideService(ContainerBuilder $container, string $id, string $overrideId): void {
+    $override = $container->hasDefinition($overrideId)
+      ? $container->getDefinition($overrideId)
+      : $container->getAlias($overrideId);
+    if ($override instanceof Alias) {
+      $override = $container->getDefinition((string) $override);
+    }
+    assert($override instanceof Definition);
+    $override->addTag(self::BACKEND_OVERRIDE_SERVICE_TAG, ['service' => $overrideId]);
+    foreach ($container->getDefinition($id)->getTags() as $tag => $attributes) {
+      if (!in_array($tag, ['backend_overridable', '_provider'])) {
+        $override->addTag($tag, $attributes);
+      }
+    }
+    $override->setPublic(TRUE);
+    $container->setDefinition($id, $override);
   }
 
 }
