@@ -104,8 +104,6 @@
           });
         };
 
-        updatePosition();
-
         // Position the toggletip.
         autoUpdate(tipTrigger, tip, updatePosition, {
           elementResize: false,
@@ -113,7 +111,17 @@
 
         // We better will update position on popover toggle
         // instead of resize tip resize observer.
-        tip.addEventListener('toggle', updatePosition);
+        tip.addEventListener('beforetoggle', (e) => {
+          if (e?.newState === 'open') {
+            tip.style.visibility = 'hidden';
+          }
+        });
+        tip.addEventListener('toggle', (e) => {
+          if (e?.newState === 'open') {
+            updatePosition();
+            tip.style.visibility = 'visible';
+          }
+        });
       });
     },
   };

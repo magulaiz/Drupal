@@ -927,10 +927,10 @@ drupal.fieldListKeyboardNavigation:
 
 popover.polyfill:
   remote: https://github.com/oddbird/popover-polyfill
-  version: "0.2.2"
+  version: "0.4.3"
   license:
     name: BSD 3-Clause
-    url: https://raw.githubusercontent.com/oddbird/popover-polyfill/v0.2.2/LICENSE
+    url: https://raw.githubusercontent.com/oddbird/popover-polyfill/v0.4.3/LICENSE
     gpl-compatible: true
   js:
     assets/vendor/oddbird/popover-polyfill/popover.iife.min.js: {}
