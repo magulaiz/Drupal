@@ -6,6 +6,7 @@ namespace Drupal\Tests\block\Kernel;
 
 use Drupal\block\Entity\Block;
 use Drupal\Component\Plugin\Exception\PluginNotFoundException;
+use Drupal\Core\Config\Action\ConfigActionException;
 use Drupal\Core\Extension\ThemeInstallerInterface;
 use Drupal\Core\Recipe\RecipeRunner;
 use Drupal\FunctionalTests\Core\Recipe\RecipeTestTrait;
@@ -55,6 +56,20 @@ YAML
     );
     $this->expectException(PluginNotFoundException::class);
     $this->expectExceptionMessage("The \"$action\" plugin does not exist.");
+    RecipeRunner::processRecipe($recipe);
+  }
+
+  public function testBlockCannotAlreadyExist(): void {
+    $recipe = $this->createRecipe(<<<YAML
+name: Placing a block that already exists
+config:
+  actions:
+    block.block.olivero_powered:
+      placeBlockInDefaultTheme: {}
+YAML
+    );
+    $this->expectException(ConfigActionException::class);
+    $this->expectExceptionMessage('Entity block.block.olivero_powered exists');
     RecipeRunner::processRecipe($recipe);
   }
 
