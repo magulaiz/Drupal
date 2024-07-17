@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Drupal\block\Kernel;
+namespace Drupal\Tests\block\Kernel;
 
 // cspell:ignore inflector
 use Drupal\Core\Config\Action\ConfigActionException;
