@@ -63,6 +63,13 @@ class CoreServiceProvider implements ServiceProviderInterface, ServiceModifierIn
     }
 
     $container->addCompilerPass(new HookCollectorPass());
+    // If there are database backend overrides, they must be performed before
+    // other alterations to services. This runs before ::alter() in service
+    // provider classes, but any definition changes made by this pass set a
+    // tag that can be used to identify it has been changed, and for which
+    // override service.
+    $container->addCompilerPass(new BackendCompilerPass());
+
     // Add the compiler pass that lets service providers modify existing
     // service definitions. This pass must come before all passes operating on
     // services so that later list-building passes are operating on the
@@ -74,8 +81,6 @@ class CoreServiceProvider implements ServiceProviderInterface, ServiceModifierIn
     $container->addCompilerPass(new SuperUserAccessPolicyPass());
 
     $container->addCompilerPass(new ProxyServicesPass());
-
-    $container->addCompilerPass(new BackendCompilerPass());
 
     $container->addCompilerPass(new CorsCompilerPass());
 
