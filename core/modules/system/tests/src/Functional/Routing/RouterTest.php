@@ -298,7 +298,7 @@ class RouterTest extends BrowserTestBase {
     // This will fail with a JSON parse error if the request is not routed to
     // The correct controller.
     $options['query'][MainContentViewSubscriber::WRAPPER_FORMAT] = 'drupal_ajax';
-    $headers[] = 'X-Requested-With: XMLHttpRequest';
+    $headers = ['X-Requested-With' => 'XMLHttpRequest'];
     $this->drupalGet('/router_test/test10', $options, $headers);
 
     $this->assertSession()->responseHeaderEquals('Content-Type', 'application/json');
@@ -315,7 +315,7 @@ class RouterTest extends BrowserTestBase {
       \Drupal::service('router.route_provider')->getRouteByName('router_test.1');
       $this->fail('Route was delete on uninstall.');
     }
-    catch (RouteNotFoundException $e) {
+    catch (RouteNotFoundException) {
       // Expected exception; just continue testing.
     }
     // Install the module again.
