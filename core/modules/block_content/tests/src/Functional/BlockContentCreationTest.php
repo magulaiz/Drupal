@@ -106,7 +106,7 @@ class BlockContentCreationTest extends BlockContentTestBase {
     $this->drupalGet('block/add/basic');
     $this->submitForm($edit, 'Save and configure');
 
-    // Save our block permanently
+    // Save our block permanently.
     $this->submitForm(['region' => 'content'], 'Save block');
 
     // Set test_view_mode as a custom display to be available on the list.
@@ -179,7 +179,7 @@ class BlockContentCreationTest extends BlockContentTestBase {
     $this->submitForm($edit, 'Save');
     // Check that the Basic block has been created.
     $this->assertSession()->pageTextContains('basic ' . $edit['info[0][value]'] . ' has been created.');
-    $this->assertSession()->addressEquals('/admin/content/block');
+    $this->assertSession()->addressEquals($url);
 
     // Check that the user is redirected to the block library on edit.
     $block = $this->getBlockByLabel($edit['info[0][value]']);
@@ -187,7 +187,7 @@ class BlockContentCreationTest extends BlockContentTestBase {
     $this->submitForm([
       'info[0][value]' => 'Test Block Updated',
     ], 'Save');
-    $this->assertSession()->addressEquals('admin/content/block');
+    $this->assertSession()->addressEquals($url);
 
     // Test with user who doesn't have permission to place a block.
     $this->drupalLogin($this->drupalCreateUser(['administer block content']));
