@@ -42,7 +42,6 @@ final class PlaceBlock implements ConfigActionPluginInterface, ContainerFactoryP
    */
   public function apply(string $configName, mixed $value): void {
     assert(is_array($value));
-    assert(str_starts_with($configName, 'block.block.'));
 
     $value['theme'] = $this->configFactory->get('system.theme')->get($this->whichTheme);
     $this->entityCreate->apply($configName, $value);
