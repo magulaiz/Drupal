@@ -26,6 +26,7 @@ class StateFormatterTest extends KernelTestBase {
     'content_moderation',
     'entity_test',
     'user',
+    'system',
   ];
 
   /**
