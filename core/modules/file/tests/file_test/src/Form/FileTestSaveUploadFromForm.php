@@ -168,6 +168,7 @@ class FileTestSaveUploadFromForm extends FormBase {
     $form['file_test_upload']['#upload_location'] = $destination;
 
     $this->messenger->addStatus($this->t('Number of error messages before _file_save_upload_from_form(): @count.', ['@count' => count($this->messenger->messagesByType(MessengerInterface::TYPE_ERROR))]));
+    /* @phpstan-ignore function.deprecated */
     $file = _file_save_upload_from_form($form['file_test_upload'], $form_state, 0, static::fileExistsFromName($form_state->getValue('file_test_replace')));
     $this->messenger->addStatus($this->t('Number of error messages after _file_save_upload_from_form(): @count.', ['@count' => count($this->messenger->messagesByType(MessengerInterface::TYPE_ERROR))]));
 

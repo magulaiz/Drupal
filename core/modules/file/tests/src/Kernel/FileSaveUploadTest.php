@@ -17,6 +17,7 @@ use Symfony\Component\HttpFoundation\Session\Storage\MockArraySessionStorage;
  * Tests file_save_upload().
  *
  * @group file
+ * @group legacy
  */
 class FileSaveUploadTest extends KernelTestBase {
 
@@ -63,6 +64,7 @@ class FileSaveUploadTest extends KernelTestBase {
   public function testFileSaveUploadEmptyExtensions(): void {
     // Allow all extensions.
     $validators = ['FileExtension' => []];
+    $this->expectDeprecation('file_save_upload() is deprecated in drupal:10.4.0 and is removed from drupal:12.0.0. Use \Drupal\file\Upload\FormFileUploader::saveFormUploadedFiles() instead. See https://www.drupal.org/node/3382414');
     $files = file_save_upload('file', $validators);
     $this->assertCount(1, $files);
     $file = $files[0];

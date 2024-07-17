@@ -2,6 +2,7 @@
 
 namespace Drupal\file\Upload;
 
+use Drupal\Component\Render\MarkupInterface;
 use Drupal\file\FileInterface;
 use Symfony\Component\Validator\ConstraintViolationInterface;
 use Symfony\Component\Validator\ConstraintViolationList;
@@ -14,31 +15,33 @@ class FileUploadResult {
 
   /**
    * If the filename was renamed for security reasons.
-   *
-   * @var bool
    */
-  protected $securityRename = FALSE;
+  protected bool $securityRename = FALSE;
+
+  /**
+   * If the filename was renamed.
+   */
+  protected bool $renamed = FALSE;
 
   /**
    * The sanitized filename.
-   *
-   * @var string
    */
-  protected $sanitizedFilename;
+  protected ?string $sanitizedFilename = NULL;
 
   /**
    * The original filename.
-   *
-   * @var string
    */
-  protected $originalFilename;
+  protected ?string $originalFilename = NULL;
 
   /**
    * The File entity.
-   *
-   * @var \Drupal\file\FileInterface
    */
-  protected $file;
+  protected ?FileInterface $file = NULL;
+
+  /**
+   * The error message.
+   */
+  protected ?MarkupInterface $error = NULL;
 
   /**
    * The constraint violations.
@@ -61,6 +64,7 @@ class FileUploadResult {
    */
   public function setSecurityRename(): FileUploadResult {
     $this->securityRename = TRUE;
+    $this->renamed = TRUE;
     return $this;
   }
 
@@ -74,6 +78,7 @@ class FileUploadResult {
    */
   public function setSanitizedFilename(string $sanitizedFilename): FileUploadResult {
     $this->sanitizedFilename = $sanitizedFilename;
+    $this->renamed = $this->originalFilename !== $sanitizedFilename;
     return $this;
   }
 
@@ -127,7 +132,7 @@ class FileUploadResult {
    * @return bool
    */
   public function isRenamed(): bool {
-    return $this->originalFilename !== $this->sanitizedFilename;
+    return $this->renamed;
   }
 
   /**
@@ -144,7 +149,7 @@ class FileUploadResult {
    *
    * @return \Drupal\file\FileInterface
    */
-  public function getFile(): FileInterface {
+  public function getFile(): ?FileInterface {
     return $this->file;
   }
 
@@ -183,6 +188,28 @@ class FileUploadResult {
    */
   public function hasViolations(): bool {
     return $this->violations->count() > 0;
+  }
+
+  /**
+   * Returns TRUE if there is an error.
+   */
+  public function hasError(): bool {
+    return isset($this->error);
+  }
+
+  /**
+   * Sets the error.
+   */
+  public function setError(MarkupInterface $error): FileUploadResult {
+    $this->error = $error;
+    return $this;
+  }
+
+  /**
+   * Gets the error.
+   */
+  public function getError(): ?MarkupInterface {
+    return $this->error;
   }
 
 }

@@ -441,6 +441,8 @@ class SaveUploadTest extends FileManagedTestBase {
 
   /**
    * Tests file munge handling.
+   *
+   * @group legacy
    */
   public function testHandleFileMunge(): void {
     // Ensure insecure uploads are disabled for this test.
@@ -585,6 +587,9 @@ class SaveUploadTest extends FileManagedTestBase {
       'files[file_test_upload][]' => \Drupal::service('file_system')->realpath($this->image->getFileUri()),
       'allow_all_extensions' => 'empty_string',
     ];
+
+    // @todo Remove this once the deprecated function is removed.
+    $this->expectDeprecation('_file_save_upload_from_form() is deprecated in drupal:10.4.0 and is removed from drupal:12.0.0. Use \Drupal\file\Upload\FileElementHelper::saveFileUploads instead. See https://www.drupal.org/node/3382414');
 
     $this->drupalGet('file-test/save_upload_from_form_test');
     $this->submitForm($edit, 'Submit');

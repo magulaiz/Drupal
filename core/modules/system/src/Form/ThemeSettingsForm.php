@@ -2,20 +2,21 @@
 
 namespace Drupal\system\Form;
 
+use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Config\TypedConfigManagerInterface;
+use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Extension\ThemeHandlerInterface;
 use Drupal\Core\File\Exception\FileException;
 use Drupal\Core\File\FileSystemInterface;
+use Drupal\Core\Form\ConfigFormBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Render\Element;
 use Drupal\Core\StreamWrapper\PublicStream;
 use Drupal\Core\StreamWrapper\StreamWrapperManager;
+use Drupal\Core\Theme\ThemeManagerInterface;
+use Drupal\file\Upload\FileElementHelper;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
-use Drupal\Core\Config\ConfigFactoryInterface;
-use Drupal\Core\Extension\ModuleHandlerInterface;
-use Drupal\Core\Form\ConfigFormBase;
-use Drupal\Core\Theme\ThemeManagerInterface;
 
 // cspell:ignore apng
 
@@ -404,10 +405,13 @@ class ThemeSettingsForm extends ConfigFormBase {
     parent::validateForm($form, $form_state);
 
     if ($this->moduleHandler->moduleExists('file')) {
+      /** @var \Drupal\file\Upload\FileElementHelper $fileElementHelper */
+      $fileElementHelper = \Drupal::service(FileElementHelper::class);
 
       // Check for a new uploaded logo.
       if (isset($form['logo'])) {
-        $file = _file_save_upload_from_form($form['logo']['settings']['logo_upload'], $form_state, 0);
+        $files = $fileElementHelper->saveFileUploads($form['logo']['settings']['logo_upload'], $form_state);
+        $file = reset($files);
         if ($file) {
           // Put the temporary file in form_values so we can save it on submit.
           $form_state->setValue('logo_upload', $file);
@@ -416,7 +420,8 @@ class ThemeSettingsForm extends ConfigFormBase {
 
       // Check for a new uploaded favicon.
       if (isset($form['favicon'])) {
-        $file = _file_save_upload_from_form($form['favicon']['settings']['favicon_upload'], $form_state, 0);
+        $files = $fileElementHelper->saveFileUploads($form['favicon']['settings']['favicon_upload'], $form_state);
+        $file = reset($files);
         if ($file) {
           // Put the temporary file in form_values so we can save it on submit.
           $form_state->setValue('favicon_upload', $file);

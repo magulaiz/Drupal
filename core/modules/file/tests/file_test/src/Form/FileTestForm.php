@@ -7,6 +7,7 @@ use Drupal\Core\File\FileSystemInterface;
 use Drupal\Core\Form\FormInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
+use Drupal\file\Upload\FormFileUploader;
 
 /**
  * File test form class.
@@ -90,7 +91,7 @@ class FileTestForm implements FormInterface {
       \Drupal::service('file_system')->prepareDirectory($destination, FileSystemInterface::CREATE_DIRECTORY);
     }
     else {
-      $destination = FALSE;
+      $destination = NULL;
     }
 
     // Setup validators.
@@ -117,7 +118,14 @@ class FileTestForm implements FormInterface {
       define('SIMPLETEST_COLLECT_ERRORS', FALSE);
     }
 
-    $file = file_save_upload('file_test_upload', $validators, $destination, 0, static::fileExistsFromName($form_state->getValue('file_test_replace')));
+    /** @var \Drupal\file\Upload\FormFileUploader $uploadHandler */
+    $uploadHandler = \Drupal::service(FormFileUploader::class);
+    $results = $uploadHandler->saveFormUploadedFiles('file_test_upload', $validators, $destination, static::fileExistsFromName($form_state->getValue('file_test_replace')));
+    if (count($results) === 0) {
+      return;
+    }
+    $result = reset($results);
+    $file = $result->getFile();
     if ($file) {
       $form_state->setValue('file_test_upload', $file);
       \Drupal::messenger()->addStatus(t('File @filepath was uploaded.', ['@filepath' => $file->getFileUri()]));
@@ -125,7 +133,7 @@ class FileTestForm implements FormInterface {
       \Drupal::messenger()->addStatus(t('File MIME type is @mimetype.', ['@mimetype' => $file->getMimeType()]));
       \Drupal::messenger()->addStatus(t('You WIN!'));
     }
-    elseif ($file === FALSE) {
+    elseif ($result->hasViolations() || $result->hasError()) {
       \Drupal::messenger()->addError(t('Epic upload FAIL!'));
     }
   }

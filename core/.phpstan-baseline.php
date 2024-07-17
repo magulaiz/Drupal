@@ -935,13 +935,6 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/field_ui/src/Form/FieldStorageConfigEditForm.php',
 ];
 $ignoreErrors[] = [
-	// identifier: empty.variable
-	'message' => '#^Variable \\$file_upload in empty\\(\\) always exists and is not falsy\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/file/file.module',
-];
-$ignoreErrors[] = [
-	// identifier: empty.variable
 	'message' => '#^Variable \\$rows in empty\\(\\) always exists and is not falsy\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/file/src/Plugin/Field/FieldFormatter/TableFormatter.php',
