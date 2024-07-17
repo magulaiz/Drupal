@@ -39,6 +39,7 @@ use Drupal\user\EntityOwnerTrait;
  *     "route_provider" = {
  *       "html" = "Drupal\node\Entity\NodeRouteProvider",
  *     },
+ *     "link_provider" = "Drupal\node\Menu\NodeLinksProvider",
  *     "list_builder" = "Drupal\node\NodeListBuilder",
  *     "translation" = "Drupal\node\NodeTranslationHandler"
  *   },

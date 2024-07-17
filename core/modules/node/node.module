@@ -207,6 +207,18 @@ function node_local_tasks_alter(&$local_tasks): void {
 
   $local_tasks['entity.node_type.edit_form'] = $local_tasks['system.entity:entity.node_type.edit_form'];
   unset($local_tasks['system.entity:entity.node_type.edit_form']);
+
+  $local_tasks['entity.node.canonical'] = $local_tasks['system.entity:entity.node.canonical'];
+  unset($local_tasks['system.entity:entity.node.canonical']);
+
+  $local_tasks['entity.node.edit_form'] = $local_tasks['system.entity:entity.node.edit_form'];
+  unset($local_tasks['system.entity:entity.node.edit_form']);
+
+  $local_tasks['entity.node.version_history'] = $local_tasks['system.entity:entity.node.version_history'];
+  unset($local_tasks['system.entity:entity.node.version_history']);
+
+  $local_tasks['entity.node.delete_form'] = $local_tasks['system.entity:entity.node.delete_form'];
+  unset($local_tasks['system.entity:entity.node.delete_form']);
 }
 
 /**
@@ -218,6 +230,9 @@ function node_menu_local_actions_alter(&$local_actions) {
   // @todo Remove this when the old plugin IDs can be deprecated.
   $local_actions['node.type_add'] = $local_actions['system.entity:entity.node_type.add'];
   unset($local_actions['system.entity:entity.node_type.add']);
+
+  $local_actions['node.add_page'] = $local_actions['system.entity:entity.node.add'];
+  unset($local_actions['system.entity:entity.node.add']);
 }
 
 /**
