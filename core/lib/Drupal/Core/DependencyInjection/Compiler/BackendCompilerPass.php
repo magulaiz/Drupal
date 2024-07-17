@@ -94,10 +94,10 @@ class BackendCompilerPass implements CompilerPassInterface {
    */
   protected function overrideService(ContainerBuilder $container, string $id, string $overrideId): void {
     $override = $container->hasDefinition($overrideId)
-      ? $container->getDefinition($overrideId)
+      ? clone $container->getDefinition($overrideId)
       : $container->getAlias($overrideId);
     if ($override instanceof Alias) {
-      $override = $container->getDefinition((string) $override);
+      $override = clone $container->getDefinition((string) $override);
     }
     assert($override instanceof Definition);
     $override->addTag(self::BACKEND_OVERRIDE_SERVICE_TAG, ['service' => $overrideId]);

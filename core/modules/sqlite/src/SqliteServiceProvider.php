@@ -20,8 +20,9 @@ final class SqliteServiceProvider extends ServiceProviderBase {
     if ($container->hasDefinition('logger.dblog')) {
       $container->setDefinition(
         'sqlite.logger.dblog',
-        $container->getDefinition('logger.dblog')
+        (clone $container->getDefinition('logger.dblog'))
           ->setArgument(0, new Reference('database'))
+          ->setTags([])
           ->setPublic(FALSE)
       );
     }
