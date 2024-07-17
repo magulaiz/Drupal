@@ -49,29 +49,39 @@ class ConfigActionsTest extends KernelTestBase {
   public function testActionOnlyWorksOnBlocks(string $action): void {
     $this->expectException(PluginNotFoundException::class);
     $this->expectExceptionMessage("The \"$action\" plugin does not exist.");
-    $this->configActionManager->applyAction($action, 'user.role.anonymous', []);
+    $this->configActionManager->applyAction($action, 'user.role.anonymous', [
+      'region' => [],
+    ]);
   }
 
   public function testBlockCannotAlreadyExist(): void {
     $this->expectException(ConfigActionException::class);
     $this->expectExceptionMessage('Entity block.block.olivero_powered exists');
-    $this->configActionManager->applyAction('placeBlockInDefaultTheme', 'block.block.olivero_powered', []);
+    $this->configActionManager->applyAction('placeBlockInDefaultTheme', 'block.block.olivero_powered', [
+      'region' => [],
+      'default_region' => 'content',
+    ]);
   }
 
   /**
-   * @testWith ["placeBlockInDefaultTheme", "olivero"]
-   *   ["placeBlockInAdminTheme", "claro"]
+   * @testWith ["placeBlockInDefaultTheme", "olivero", "header]
+   *   ["placeBlockInAdminTheme", "claro", "page_bottom"]
    */
-  public function testPlaceBlockInTheme(string $action, string $expected_theme): void {
+  public function testPlaceBlockInTheme(string $action, string $expected_theme, string $expected_region): void {
     $this->configActionManager->applyAction($action, 'block.block.test_block', [
       'plugin' => 'system_powered_by_block',
-      'region' => 'header',
+      'region' => [
+        'olivero' => 'header',
+        'claro' => 'page_bottom',
+      ],
+      'default_region' => 'content',
     ]);
 
     $block = Block::load('test_block');
     $this->assertInstanceOf(Block::class, $block);
     $this->assertSame('system_powered_by_block', $block->getPluginId());
     $this->assertSame($expected_theme, $block->getTheme());
+    $this->assertSame($expected_region, $block->getRegion());
   }
 
 }

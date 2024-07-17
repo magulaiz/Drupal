@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Drupal\block\Plugin\ConfigAction;
 
 use Drupal\Core\Config\Action\Attribute\ConfigAction;
+use Drupal\Core\Config\Action\ConfigActionException;
 use Drupal\Core\Config\Action\ConfigActionPluginInterface;
 use Drupal\Core\Config\Action\Plugin\ConfigAction\EntityCreate;
 use Drupal\Core\Config\ConfigFactoryInterface;
@@ -43,7 +44,13 @@ final class PlaceBlock implements ConfigActionPluginInterface, ContainerFactoryP
   public function apply(string $configName, mixed $value): void {
     assert(is_array($value));
 
-    $value['theme'] = $this->configFactory->get('system.theme')->get($this->whichTheme);
+    $theme = $this->configFactory->get('system.theme')->get($this->whichTheme);
+    $value['theme'] = $theme;
+
+    assert(is_array($value['region']));
+    $value['region'] = $value['region'][$theme] ?? $value['default_region'] ?? throw new ConfigActionException("Cannot determine which region to place this block into, because no default region was provided.");
+    unset($value['default_region']);
+
     $this->entityCreate->apply($configName, $value);
   }
 
