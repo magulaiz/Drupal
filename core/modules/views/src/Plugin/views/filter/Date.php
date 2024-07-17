@@ -15,15 +15,15 @@ class Date extends NumericFilter {
 
   protected function defineOptions() {
     $options = parent::defineOptions();
-
     // value is already set up properly, we're just adding our new field to it.
     $options['value']['contains']['type']['default'] = 'date';
+    $options['value']['contains']['append_time']['default'] = '';
 
     return $options;
   }
 
   /**
-   * Add a type selector to the value form.
+   * Add a type selector to the value form and a textfield for append time settings
    */
   protected function valueForm(&$form, FormStateInterface $form_state) {
     if (!$form_state->get('exposed')) {
@@ -36,12 +36,34 @@ class Date extends NumericFilter {
         ],
         '#default_value' => !empty($this->value['type']) ? $this->value['type'] : 'date',
       ];
+
+      $form['value']['append_time'] = [
+        '#type' => 'textfield',
+        '#title' => $this->t('Append time'),
+        '#default_value' => !empty($this->value['append_time']) ? $this->value['append_time'] : '',
+        '#description' => $this->t('Will add Time to the value. HH:MM:SS is preferred.'),
+        '#states' => [
+          'visible' => [
+            ':input[name="options[expose_button][checkbox][checkbox]"]' => array('checked' => TRUE),
+          ],
+        ],
+      ];
     }
     parent::valueForm($form, $form_state);
   }
 
   public function validateOptionsForm(&$form, FormStateInterface $form_state) {
     parent::validateOptionsForm($form, $form_state);
+    // Append time only affects to exposed filters
+    if ($this->isExposed() && !$form_state->isValueEmpty(array('options', 'value', 'append_time'))) {
+
+      $this->validateValidAppendTime(
+        $form['value'], 
+        $form_state, 
+        $form_state->getValue(array('options', 'operator')), 
+        $form_state->getValue(array('options', 'value'))
+      );
+    }
 
     if (!empty($this->options['exposed']) && $form_state->isValueEmpty(['options', 'expose', 'required'])) {
       // Who cares what the value is if it's exposed and non-required.
@@ -71,6 +93,35 @@ class Date extends NumericFilter {
 
     $this->validateValidTime($this->options['expose']['identifier'], $form_state, $operator, $value);
 
+  }
+
+    /**
+     * Validate that the append_time value converts to something usable.
+     */
+    public function validateValidAppendTime(&$form, FormStateInterface $form_state, $operator, $value) {
+
+      $operators = $this->operators();
+
+      if ($operators[$operator]['values'] == 1) {
+        $convert = strtotime($value['append_time']);
+        if (!empty($form['value']) && ($convert == -1 || $convert === FALSE)) {
+          $form_state->setError($form['append_time'], $this->t('Invalid time format.'));
+        }
+      }
+
+      elseif ($operators[$operator]['values'] == 2) {
+
+        $min = strtotime($value['min']);
+
+        if ($min == -1 || $min === FALSE) {
+          $form_state->setError($form['min'], $this->t('Invalid date format.'));
+        }
+
+        $max = strtotime($value['max']);
+        if ($max == -1 || $max === FALSE) {
+          $form_state->setError($form['max'], $this->t('Invalid date format.'));
+        }
+      }
   }
 
   /**
@@ -123,6 +174,7 @@ class Date extends NumericFilter {
 
     // Store this because it will get overwritten.
     $type = NULL;
+    $append_time = NULL;
     if ($this->isAGroup()) {
       if (is_array($this->group_info)) {
         $type = $this->group_info['type'];
@@ -130,12 +182,17 @@ class Date extends NumericFilter {
     }
     else {
       $type = $this->value['type'];
+      $append_time = $this->value['append_time'];
     }
     $rc = parent::acceptExposedInput($input);
 
     // Restore what got overwritten by the parent.
     if (!is_null($type)) {
       $this->value['type'] = $type;
+    }
+
+    if (!is_null($append_time)) {
+      $this->value['append_time'] = $append_time;
     }
 
     // Don't filter if value(s) are empty.
@@ -182,7 +239,14 @@ class Date extends NumericFilter {
   }
 
   protected function opSimple($field) {
-    $value = intval(strtotime($this->value['value'], 0));
+
+    $time = $this->value['value'];
+    // Append time only makes sense for exposed filters
+    if ($this->isExposed() && !empty($time) && !empty($this->value['append_time'])) {
+      $time .= 'T' . $this->value['append_time'];
+    }
+
+    $value = intval(strtotime($time, 0));
     if (!empty($this->value['type']) && $this->value['type'] == 'offset') {
       // Keep sign.
       $value = '***CURRENT_TIME***' . sprintf('%+d', $value);

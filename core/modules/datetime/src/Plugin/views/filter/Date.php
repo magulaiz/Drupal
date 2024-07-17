@@ -129,8 +129,14 @@ class Date extends NumericDate implements ContainerFactoryPluginInterface {
     $timezone = $this->getTimezone();
     $origin_offset = $this->getOffset($this->value['value'], $timezone);
 
+    $time = $this->value['value'];
+    // Append time only makes sense for exposed filters
+    if ($this->isExposed() && !empty($time) && !empty($this->value['append_time'])) {
+      $time .= 'T' . $this->value['append_time'];
+    }
+
     // Convert to ISO. UTC timezone is used since dates are stored in UTC.
-    $value = new DateTimePlus($this->value['value'], new \DateTimeZone($timezone));
+    $value = new DateTimePlus($time, new \DateTimeZone($timezone));
     $value = $this->query->getDateFormat($this->query->getDateField("'" . $this->dateFormatter->format($value->getTimestamp() + $origin_offset, 'custom', DateTimeItemInterface::DATETIME_STORAGE_FORMAT, DateTimeItemInterface::STORAGE_TIMEZONE) . "'", TRUE, $this->calculateOffset), $this->dateFormat, TRUE);
 
     // This is safe because we are manually scrubbing the value.
