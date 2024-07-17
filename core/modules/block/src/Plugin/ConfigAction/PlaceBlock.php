@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\block\Plugin\ConfigAction;
 
+use Drupal\block\BlockInterface;
 use Drupal\block\Entity\Block;
 use Drupal\Core\Config\Action\Attribute\ConfigAction;
 use Drupal\Core\Config\Action\ConfigActionException;
