@@ -33,6 +33,7 @@ class ConfigActionsTest extends KernelTestBase {
     $this->container->get(ThemeInstallerInterface::class)->install([
       'olivero',
       'claro',
+      'umami',
     ]);
     $this->config('system.theme')
       ->set('default', 'olivero')
@@ -64,7 +65,7 @@ class ConfigActionsTest extends KernelTestBase {
   }
 
   /**
-   * @testWith ["placeBlockInDefaultTheme", "olivero", "header]
+   * @testWith ["placeBlockInDefaultTheme", "olivero", "header"]
    *   ["placeBlockInAdminTheme", "claro", "page_bottom"]
    */
   public function testPlaceBlockInTheme(string $action, string $expected_theme, string $expected_region): void {
@@ -82,6 +83,11 @@ class ConfigActionsTest extends KernelTestBase {
     $this->assertSame('system_powered_by_block', $block->getPluginId());
     $this->assertSame($expected_theme, $block->getTheme());
     $this->assertSame($expected_region, $block->getRegion());
+  }
+
+  public function testPlaceBlockInDefaultRegion(): void {
+    $this->config('system.theme')->set('default', 'umami')->save();
+    $this->testPlaceBlockInTheme('placeBlockInDefaultTheme', 'umami', 'content');
   }
 
 }
