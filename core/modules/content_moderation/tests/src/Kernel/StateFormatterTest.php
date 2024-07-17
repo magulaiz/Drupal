@@ -36,6 +36,7 @@ class StateFormatterTest extends KernelTestBase {
 
     $this->installEntitySchema('entity_test_rev');
     $this->installEntitySchema('content_moderation_state');
+    $this->installEntitySchema('action');
     $this->installConfig('content_moderation');
 
     $workflow = $this->createEditorialWorkflow();
