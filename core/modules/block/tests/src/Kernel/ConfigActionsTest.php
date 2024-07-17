@@ -6,7 +6,6 @@ namespace Drupal\Tests\block\Kernel;
 
 use Drupal\block\Entity\Block;
 use Drupal\Component\Plugin\Exception\PluginNotFoundException;
-use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Extension\ThemeInstallerInterface;
 use Drupal\Core\Recipe\RecipeRunner;
 use Drupal\FunctionalTests\Core\Recipe\RecipeTestTrait;
@@ -39,12 +38,6 @@ class ConfigActionsTest extends KernelTestBase {
       ->set('default', 'olivero')
       ->set('admin', 'claro')
       ->save();
-
-    // Delete the "powered by" blocks, which we'll restore in our tests.
-    $storage = $this->container->get(EntityTypeManagerInterface::class)
-      ->getStorage('block');
-    $blocks = $storage->loadByProperties(['plugin' => 'system_powered_by_block']);
-    $storage->delete($blocks);
   }
 
   /**
