@@ -303,8 +303,8 @@ abstract class ExposedFormPluginBase extends PluginBase implements CacheableDepe
         if (!isset($form[$name]) && isset($query[$name]) && ($value = $query[$name]) !== '') {
           if (is_array($value)) {
             foreach (explode('&', UrlHelper::buildQuery($value, $name)) as $param) {
-              list($name, $value) = explode('=', $param);
-              $form[rawurldecode($name)] = [
+              list($raw_name, $value) = explode('=', $param);
+              $form[rawurldecode($raw_name)] = [
                 '#type' => 'hidden',
                 '#value' => rawurldecode($value),
               ];
@@ -316,10 +316,6 @@ abstract class ExposedFormPluginBase extends PluginBase implements CacheableDepe
               '#value' => $value,
             ];
           }
-        }
-        // Prevent empty query params showing in URL.
-        if (empty($query[$name])) {
-          $form[$name]['#name'] = '';
         }
       }
     }
