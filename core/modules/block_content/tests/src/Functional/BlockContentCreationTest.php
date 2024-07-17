@@ -175,11 +175,11 @@ class BlockContentCreationTest extends BlockContentTestBase {
     $edit = [];
     $edit['info[0][value]'] = 'Test Block';
     $edit['body[0][value]'] = $this->randomMachineName(16);
-    $this->drupalGet('block/add/basic');
+    $this->drupalGet('block/add');
     $this->submitForm($edit, 'Save');
     // Check that the Basic block has been created.
     $this->assertSession()->pageTextContains('basic ' . $edit['info[0][value]'] . ' has been created.');
-    $this->assertSession()->addressEquals($url);
+    $this->assertSession()->addressEquals('/admin/content/block');
 
     // Check that the user is redirected to the block library on edit.
     $block = $this->getBlockByLabel($edit['info[0][value]']);
@@ -187,7 +187,7 @@ class BlockContentCreationTest extends BlockContentTestBase {
     $this->submitForm([
       'info[0][value]' => 'Test Block Updated',
     ], 'Save');
-    $this->assertSession()->addressEquals($url);
+    $this->assertSession()->addressEquals('admin/content/block');
 
     // Test with user who doesn't have permission to place a block.
     $this->drupalLogin($this->drupalCreateUser(['administer block content']));
