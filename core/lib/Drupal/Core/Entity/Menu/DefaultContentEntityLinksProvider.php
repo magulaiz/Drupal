@@ -26,7 +26,7 @@ class DefaultContentEntityLinksProvider extends BaseEntityLinksProvider implemen
   /**
    * {@inheritdoc}
    */
-  protected function getCollectionMenuLink(array $base_plugin_definition) {
+  protected function getCollectionMenuLink(array $base_plugin_definition): ?array {
     if ($this->routeExists($this->getRouteName('collection'))) {
       // Create a menu item for the collection under the parent menu item.
       $link = $base_plugin_definition;
@@ -40,12 +40,15 @@ class DefaultContentEntityLinksProvider extends BaseEntityLinksProvider implemen
 
       return $link;
     }
+    else {
+      return NULL;
+    }
   }
 
   /**
    * {@inheritdoc}
    */
-  protected function getCollectionTaskLink(array $base_plugin_definition) {
+  protected function getCollectionTaskLink(array $base_plugin_definition): ?array {
     // Place a tab under the collection parent menu item.
     if ($this->routeExists($this->getRouteName('collection'))) {
       $link = $base_plugin_definition;
@@ -56,12 +59,15 @@ class DefaultContentEntityLinksProvider extends BaseEntityLinksProvider implemen
 
       return $link;
     }
+    else {
+      return NULL;
+    }
   }
 
   /**
    * {@inheritdoc}
    */
-  protected function getCanonicalTaskLink(array $base_plugin_definition) {
+  protected function getCanonicalTaskLink(array $base_plugin_definition): ?array {
     $canonical_route_name = $this->getRouteName('canonical');
     if ($this->routeExists($canonical_route_name)) {
       $link = $base_plugin_definition;
@@ -72,12 +78,15 @@ class DefaultContentEntityLinksProvider extends BaseEntityLinksProvider implemen
 
       return $link;
     }
+    else {
+      return NULL;
+    }
   }
 
   /**
    * {@inheritdoc}
    */
-  protected function getEditFormTaskLink(array $base_plugin_definition) {
+  protected function getEditFormTaskLink(array $base_plugin_definition): ?array {
     if ($this->routeExists($this->getRouteName('edit_form')) && $this->routeExists($this->getRouteName('canonical'))) {
       $link = $base_plugin_definition;
 
@@ -87,12 +96,15 @@ class DefaultContentEntityLinksProvider extends BaseEntityLinksProvider implemen
 
       return $link;
     }
+    else {
+      return NULL;
+    }
   }
 
   /**
    * {@inheritdoc}
    */
-  protected function getDeleteFormTaskLink(array $base_plugin_definition) {
+  protected function getDeleteFormTaskLink(array $base_plugin_definition): ?array {
     if ($this->routeExists($this->getRouteName('delete_form')) && $this->routeExists($this->getRouteName('canonical'))) {
       $link = $base_plugin_definition;
 
@@ -101,6 +113,9 @@ class DefaultContentEntityLinksProvider extends BaseEntityLinksProvider implemen
       $link['base_route'] = $this->getRouteName('canonical');
 
       return $link;
+    }
+    else {
+      return NULL;
     }
   }
 

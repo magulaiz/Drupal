@@ -107,7 +107,8 @@ abstract class BaseEntityLinksProvider implements EntityLinksProviderInterface, 
    * @return array|null
    *   The plugin definition, or NULL if no link should be provided.
    */
-  protected function getCollectionMenuLink(array $base_plugin_definition) {
+  protected function getCollectionMenuLink(array $base_plugin_definition): ?array {
+    return NULL;
   }
 
   /**
@@ -144,7 +145,8 @@ abstract class BaseEntityLinksProvider implements EntityLinksProviderInterface, 
    * @return array|null
    *   The plugin definition, or NULL if no link should be provided.
    */
-  protected function getCollectionTaskLink(array $base_plugin_definition) {
+  protected function getCollectionTaskLink(array $base_plugin_definition): ?array {
+    return NULL;
   }
 
   /**
@@ -156,7 +158,8 @@ abstract class BaseEntityLinksProvider implements EntityLinksProviderInterface, 
    * @return array|null
    *   The plugin definition, or NULL if no link should be provided.
    */
-  protected function getCanonicalTaskLink(array $base_plugin_definition) {
+  protected function getCanonicalTaskLink(array $base_plugin_definition): ?array {
+    return NULL;
   }
 
   /**
@@ -168,7 +171,8 @@ abstract class BaseEntityLinksProvider implements EntityLinksProviderInterface, 
    * @return array|null
    *   The plugin definition, or NULL if no link should be provided.
    */
-  protected function getEditFormTaskLink(array $base_plugin_definition) {
+  protected function getEditFormTaskLink(array $base_plugin_definition): ?array {
+    return NULL;
   }
 
   /**
@@ -180,7 +184,8 @@ abstract class BaseEntityLinksProvider implements EntityLinksProviderInterface, 
    * @return array|null
    *   The plugin definition, or NULL if no link should be provided.
    */
-  protected function getDeleteFormTaskLink(array $base_plugin_definition) {
+  protected function getDeleteFormTaskLink(array $base_plugin_definition): ?array {
+    return NULL;
   }
 
   /**
@@ -205,17 +210,17 @@ abstract class BaseEntityLinksProvider implements EntityLinksProviderInterface, 
    * @return array|null
    *   The plugin definition, or NULL if no link should be provided.
    */
-  protected function getAddActionLink(array $base_plugin_definition) {
+  protected function getAddActionLink(array $base_plugin_definition): ?array {
     // The 'add' action link appears on the collection, so don't show one if
     // there is no collection.
     if (!$this->entityType->hasLinkTemplate('collection')) {
-      return;
+      return NULL;
     }
 
     $add_action_route = $this->getAddActionRouteName();
 
     if (!$add_action_route) {
-      return;
+      return NULL;
     }
 
     $link['title'] = $this->t('Add @entity-type', [
@@ -242,7 +247,7 @@ abstract class BaseEntityLinksProvider implements EntityLinksProviderInterface, 
    * @return string|null
    *   The route name, or NULL if no route is found.
    */
-  protected function getAddActionRouteName() {
+  protected function getAddActionRouteName(): ?string {
     if ($this->routeExists($this->getRouteName('add_page'))) {
       return $this->getRouteName('add_page');
     }
@@ -250,7 +255,7 @@ abstract class BaseEntityLinksProvider implements EntityLinksProviderInterface, 
       return $this->getRouteName('add_form');
     }
     else {
-      return;
+      return NULL;
     }
   }
 
