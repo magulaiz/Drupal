@@ -91,6 +91,24 @@ abstract class TypedData implements TypedDataInterface, PluginInspectionInterfac
   /**
    * {@inheritdoc}
    */
+  public function getValue() {
+    return $this->value;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function setValue($value, $notify = TRUE) {
+    $this->value = $value;
+    // Notify the parent of any changes.
+    if ($notify && isset($this->parent)) {
+      $this->parent->onChange($this->name);
+    }
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function getString() {
     return (string) $this->getValue();
   }

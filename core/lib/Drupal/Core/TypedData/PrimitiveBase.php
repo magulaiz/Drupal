@@ -14,4 +14,11 @@ abstract class PrimitiveBase extends TypedData implements PrimitiveInterface {
    */
   protected $value;
 
+  /**
+   * {@inheritdoc}
+   */
+  public function getValue() {
+    return $this->value;
+  }
+
 }
