@@ -48,6 +48,19 @@ class DefaultContentEntityLinksProvider extends BaseEntityLinksProvider implemen
   /**
    * {@inheritdoc}
    */
+  public function getTaskLinks(array $base_plugin_definition): array {
+    $task_derivative_plugins = parent::getTaskLinks($base_plugin_definition);
+
+    if ($version_history_task_link = $this->getVersionHistoryTaskLink($base_plugin_definition)) {
+      $task_derivative_plugins[$this->getRouteName('version_history')] = $version_history_task_link;
+    }
+
+    return $task_derivative_plugins;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   protected function getCollectionTaskLink(array $base_plugin_definition): ?array {
     // Place a tab under the collection parent menu item.
     if ($this->routeExists($this->getRouteName('collection'))) {
@@ -55,6 +68,31 @@ class DefaultContentEntityLinksProvider extends BaseEntityLinksProvider implemen
 
       $link['title'] = $this->entityType->getCollectionLabel();
       $link['route_name'] = $this->getRouteName('collection');
+      $link['base_route'] = $this->collectionParentMenuLinkId;
+
+      return $link;
+    }
+    else {
+      return NULL;
+    }
+  }
+
+  /**
+   * Gets the version history task link, if one should be created.
+   *
+   * @param array $base_plugin_definition
+   *   The base link plugin definition.
+   *
+   * @return array|null
+   *   The plugin definition, or NULL if no link should be provided.
+   */
+  protected function getVersionHistoryTaskLink(array $base_plugin_definition): ?array {
+    // Place a tab under the collection parent menu item.
+    if ($this->routeExists($this->getRouteName('version_history'))) {
+      $link = $base_plugin_definition;
+
+      $link['title'] = $this->entityType->getCollectionLabel();
+      $link['route_name'] = $this->getRouteName('version_history');
       $link['base_route'] = $this->collectionParentMenuLinkId;
 
       return $link;
