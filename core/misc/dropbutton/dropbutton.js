@@ -83,19 +83,17 @@
    */
   function dropbuttonClickHandler(e) {
     e.preventDefault();
-    const $buttonToOpen = $(e.target).closest(
+    const $collapsedDropbuttons = $(e.target).closest(
       '.dropbutton-wrapper:not(".open")',
     );
     $('.dropbutton-wrapper.open')
-      .find('.dropbutton__toggle')
+      .find('.dropbutton-toggle button')
       .attr('aria-expanded', 'false');
     $('.dropbutton-wrapper.open').removeClass('open');
-    if ($buttonToOpen) {
-      $buttonToOpen.addClass('open');
-      $(e.target).attr('aria-expanded', 'true');
-    }
+    $collapsedDropbuttons.addClass('open');
+    $(e.target).attr('aria-expanded', 'true');
     $('.dropbutton-wrapper:not(".open")')
-      .find('.dropbutton__toggle')
+      .find('.dropbutton-toggle button')
       .attr('aria-expanded', 'false');
   }
 
