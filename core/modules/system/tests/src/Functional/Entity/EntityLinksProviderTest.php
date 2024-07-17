@@ -51,7 +51,7 @@ class EntityLinksProviderTest extends BrowserTestBase {
     $this->assertSession()->linkExists("Add entity ui test type");
 
     // Test the content entity UI.
-    // TODO: test all the things!
+    // @todo Test all the things.
   }
 
 }
