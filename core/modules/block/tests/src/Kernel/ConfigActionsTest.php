@@ -83,6 +83,13 @@ class ConfigActionsTest extends KernelTestBase {
     $this->assertSame('system_powered_by_block', $block->getPluginId());
     $this->assertSame($expected_theme, $block->getTheme());
     $this->assertSame($expected_region, $block->getRegion());
+
+    $this->expectException(ConfigActionException::class);
+    $this->expectExceptionMessage('Cannot determine which region to place this block into, because no default region was provided.');
+    $this->configActionManager->applyAction($action, 'block.block.no_region', [
+      'plugin' => 'system_powered_by_block',
+      'region' => [],
+    ]);
   }
 
   public function testPlaceBlockInDefaultRegion(): void {
