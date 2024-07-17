@@ -96,10 +96,7 @@ class BlockContentController extends ControllerBase {
     if ($types && count($types) == 1) {
       $type = reset($types);
       $query = $request->query->all();
-      return $this->redirect('block_content.add_form',
-          ['block_content_type' => $type->id()],
-          ['query' => $query]
-      );
+      return $this->redirect('block_content.add_form', ['block_content_type' => $type->id()], ['query' => $query]);
     }
     if (count($types) === 0) {
       return [
