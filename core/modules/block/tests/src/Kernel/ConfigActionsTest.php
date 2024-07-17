@@ -7,9 +7,8 @@ namespace Drupal\Tests\block\Kernel;
 use Drupal\block\Entity\Block;
 use Drupal\Component\Plugin\Exception\PluginNotFoundException;
 use Drupal\Core\Config\Action\ConfigActionException;
+use Drupal\Core\Config\Action\ConfigActionManager;
 use Drupal\Core\Extension\ThemeInstallerInterface;
-use Drupal\Core\Recipe\RecipeRunner;
-use Drupal\FunctionalTests\Core\Recipe\RecipeTestTrait;
 use Drupal\KernelTests\KernelTestBase;
 
 /**
@@ -19,12 +18,12 @@ use Drupal\KernelTests\KernelTestBase;
  */
 class ConfigActionsTest extends KernelTestBase {
 
-  use RecipeTestTrait;
-
   /**
    * {@inheritdoc}
    */
   protected static $modules = ['block', 'user', 'system'];
+
+  private readonly ConfigActionManager $configActionManager;
 
   /**
    * {@inheritdoc}
@@ -39,6 +38,8 @@ class ConfigActionsTest extends KernelTestBase {
       ->set('default', 'olivero')
       ->set('admin', 'claro')
       ->save();
+
+    $this->configActionManager = $this->container->get('plugin.manager.config_action');
   }
 
   /**
@@ -46,31 +47,15 @@ class ConfigActionsTest extends KernelTestBase {
    *   ["placeBlockInAdminTheme"]
    */
   public function testActionOnlyWorksOnBlocks(string $action): void {
-    $recipe = $this->createRecipe(<<<YAML
-name: Targeting the wrong entity type
-config:
-  actions:
-    user.role.anonymous:
-      $action: {}
-YAML
-    );
     $this->expectException(PluginNotFoundException::class);
     $this->expectExceptionMessage("The \"$action\" plugin does not exist.");
-    RecipeRunner::processRecipe($recipe);
+    $this->configActionManager->applyAction($action, 'user.role.anonymous', []);
   }
 
   public function testBlockCannotAlreadyExist(): void {
-    $recipe = $this->createRecipe(<<<YAML
-name: Placing a block that already exists
-config:
-  actions:
-    block.block.olivero_powered:
-      placeBlockInDefaultTheme: {}
-YAML
-    );
     $this->expectException(ConfigActionException::class);
     $this->expectExceptionMessage('Entity block.block.olivero_powered exists');
-    RecipeRunner::processRecipe($recipe);
+    $this->configActionManager->applyAction('placeBlockInDefaultTheme', 'block.block.olivero_powered', []);
   }
 
   /**
@@ -78,17 +63,10 @@ YAML
    *   ["placeBlockInAdminTheme", "claro"]
    */
   public function testPlaceBlockInTheme(string $action, string $expected_theme): void {
-    $recipe = $this->createRecipe(<<<YAML
-name: Placing a block
-config:
-  actions:
-    block.block.test_block:
-      $action:
-        plugin: system_powered_by_block
-        region: header
-YAML
-    );
-    RecipeRunner::processRecipe($recipe);
+    $this->configActionManager->applyAction($action, 'block.block.test_block', [
+      'plugin' => 'system_powered_by_block',
+      'region' => 'header',
+    ]);
 
     $block = Block::load('test_block');
     $this->assertInstanceOf(Block::class, $block);
