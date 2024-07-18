@@ -89,7 +89,10 @@ class MultipleInlineFormErrorsTest extends WebDriverTestBase {
    * @dataProvider themeProvider
    */
   public function testInlineFormErrorsCount($theme) {
-    $this->defaultTheme = $theme;
+    \Drupal::service('theme_installer')->install([$theme]);
+    $this->config('system.theme')
+      ->set('default', $theme)
+      ->save();
     $this->drupalGet('node/add/page');
     $this->getSession()->getPage()->fillField('Title', 'Test Node');
 
