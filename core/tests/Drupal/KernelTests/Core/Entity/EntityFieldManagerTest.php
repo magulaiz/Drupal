@@ -75,6 +75,7 @@ class EntityFieldManagerTest extends EntityKernelTestBase {
     $this->bundleFieldMap->deleteAll();
     $this->bundleFieldMap->set('nonexistent', $original_bundle_field_map['user']);
     // Manually clear the entity_field_map cache to rebuild with corrupt data.
+    $this->container->set('entity_field.manager', NULL);
     $this->container->get('cache.discovery')->delete('entity_field_map');
     $bad_field_map = $this->container->get('entity_field.manager')->getFieldMap();
     $this->assertIsArray($bad_field_map);
@@ -89,6 +90,7 @@ class EntityFieldManagerTest extends EntityKernelTestBase {
     $this->assertEquals($original_bundle_field_map, $new_bundle_field_map, 'The rebuilt bundle field map matches the original one.');
 
     // Check that field map was rebuilt.
+    $this->container->set('entity_field.manager', NULL);
     $new_field_map = $this->container->get('entity_field.manager')->getFieldMap();
     $this->assertIsArray($new_field_map);
     $this->assertEquals($original_field_map, $new_field_map, 'The rebuilt field map matches the original one.');
