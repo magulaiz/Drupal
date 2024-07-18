@@ -141,7 +141,7 @@ class DatabaseBackendTest extends GenericCacheBackendUnitTestBase {
   /**
    * Helper method to check override status of a definition.
    *
-   * @param Definition $definition
+   * @param \Symfony\Component\DependencyInjection\Definition $definition
    *   Definition to check.
    */
   protected function checkOverridableOrOverridden(Definition $definition): void {
