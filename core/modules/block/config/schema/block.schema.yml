@@ -32,8 +32,6 @@ block.block.*:
     weight:
       type: weight
       label: 'Weight'
-      # @todo Remove `nullable: true` in https://www.drupal.org/project/drupal/issues/3426279
-      nullable: true
     provider:
       # @todo Deprecate this from config schema and remove it from the `config_export` definition in https://www.drupal.org/project/drupal/issues/3426278
       nullable: true
