@@ -50,18 +50,13 @@ class ConfigActionsTest extends KernelTestBase {
   public function testActionOnlyWorksOnBlocks(string $action): void {
     $this->expectException(PluginNotFoundException::class);
     $this->expectExceptionMessage("The \"$action\" plugin does not exist.");
-    $this->configActionManager->applyAction($action, 'user.role.anonymous', [
-      'region' => [],
-    ]);
+    $this->configActionManager->applyAction($action, 'user.role.anonymous', []);
   }
 
   public function testBlockCannotAlreadyExist(): void {
     $this->expectException(ConfigActionException::class);
     $this->expectExceptionMessage('Entity block.block.olivero_powered exists');
-    $this->configActionManager->applyAction('placeBlockInDefaultTheme', 'block.block.olivero_powered', [
-      'region' => [],
-      'default_region' => 'content',
-    ]);
+    $this->configActionManager->applyAction('placeBlockInDefaultTheme', 'block.block.olivero_powered', []);
   }
 
   /**
@@ -95,6 +90,42 @@ class ConfigActionsTest extends KernelTestBase {
   public function testPlaceBlockInDefaultRegion(): void {
     $this->config('system.theme')->set('default', 'umami')->save();
     $this->testPlaceBlockInTheme('placeBlockInDefaultTheme', 'umami', 'content');
+  }
+
+  public function testPlaceBlockAtPosition(): void {
+    // Create other blocks in the region.
+    Block::create([
+      'id' => 'block_1',
+      'theme' => 'olivero',
+      'region' => 'content_above',
+      'weight' => 0,
+      'plugin' => 'system_powered_by_block',
+    ])->save();
+    Block::create([
+      'id' => 'block_2',
+      'theme' => 'olivero',
+      'region' => 'content_above',
+      'weight' => 1,
+      'plugin' => 'system_powered_by_block',
+    ])->save();
+
+    $this->configActionManager->applyAction('placeBlockInDefaultTheme', 'block.block.first', [
+      'plugin' => 'system_powered_by_block',
+      'region' => [
+        'olivero' => 'content_above',
+      ],
+      'position' => 'first',
+    ]);
+    $this->configActionManager->applyAction('placeBlockInDefaultTheme', 'block.block.last', [
+      'plugin' => 'system_powered_by_block',
+      'region' => [
+        'olivero' => 'content_above',
+      ],
+      'position' => 'last',
+    ]);
+
+    $this->assertLessThan(0, Block::load('first')->getWeight());
+    $this->assertGreaterThan(1, Block::load('last')->getWeight());
   }
 
 }
