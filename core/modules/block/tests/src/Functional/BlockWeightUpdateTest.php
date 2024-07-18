@@ -1,5 +1,7 @@
 <?php
 
+// cspell:ignore anotherblock
+
 declare(strict_types=1);
 
 namespace Drupal\Tests\block\Functional\Update;
