@@ -8,6 +8,7 @@ use Drupal\block\Entity\Block;
 use Drupal\Component\Plugin\Exception\PluginNotFoundException;
 use Drupal\Core\Config\Action\ConfigActionException;
 use Drupal\Core\Config\Action\ConfigActionManager;
+use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Extension\ThemeInstallerInterface;
 use Drupal\KernelTests\KernelTestBase;
 
@@ -124,8 +125,17 @@ class ConfigActionsTest extends KernelTestBase {
       'position' => 'last',
     ]);
 
-    $this->assertLessThan(0, Block::load('first')->getWeight());
-    $this->assertGreaterThan(1, Block::load('last')->getWeight());
+    // Query for blocks in the region, ordered by weight.
+    $blocks = $this->container->get(EntityTypeManagerInterface::class)
+      ->getStorage('block')
+      ->getQuery()
+      ->condition('theme', 'olivero')
+      ->condition('region', 'content_above')
+      ->sort('weight', 'ASC')
+      ->execute();
+    $blocks = array_values($blocks);
+    $this->assertSame('first', $blocks[0]);
+    $this->assertSame('last', end($blocks));
   }
 
 }
