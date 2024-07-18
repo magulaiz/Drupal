@@ -594,6 +594,11 @@ class EntityFieldManager implements EntityFieldManagerInterface {
     $persistent_map = $this->keyValueFactory->get('entity.definitions.bundle_field_map');
     $persistent_map->deleteAll();
     $persistent_map->setMultiple($map);
+
+    // Delete entity_field_map cache to rebuild with new bundle field map.
+    if ($this->useCaches && $this->cacheBackend) {
+      $this->cacheBackend->delete('entity_field_map');
+    }
   }
 
   /**

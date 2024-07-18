@@ -63,20 +63,33 @@ class EntityFieldManagerTest extends EntityKernelTestBase {
       'bundle' => 'user',
     ])->save();
 
-    $original_map_data = $this->bundleFieldMap->getAll();
-    $this->bundleFieldMap->deleteAll();
-    // Simulate corrupt data by adding a nonexistent entity type.
-    $this->bundleFieldMap->set('nonexistent', $original_map_data['user']);
+    // Save original field maps.
+    $original_field_map = $this->container->get('entity_field.manager')->getFieldMap();
+    $this->assertIsArray($original_field_map);
+    $original_bundle_field_map = $this->bundleFieldMap->getAll();
+    $this->assertIsArray($original_bundle_field_map);
 
+    // Simulate corrupt data by adding a nonexistent entity type.
+    $this->bundleFieldMap->deleteAll();
+    $this->bundleFieldMap->set('nonexistent', $original_bundle_field_map['user']);
+    // Manually clear the entity_field_map cache to rebuild with corrupt data.
+    $this->container->get('cache.discovery')->delete('entity_field_map');
+    $bad_field_map = $this->container->get('entity_field.manager')->getFieldMap();
+    $this->assertIsArray($bad_field_map);
+    $this->assertNotEquals($original_field_map, $bad_field_map);
+
+    // Rebuild bundle field map.
     $this->container->get('entity_field.manager')->rebuildBundleFieldMap();
 
-    $new_map_data = $this->bundleFieldMap->getAll();
-    $this->assertIsArray($original_map_data);
-    $this->assertIsArray($new_map_data);
-    // There's no guarantee the field map data will be in the same order as it
-    // was, but it should otherwise be the same, so assert on equality and not
-    // identity.
-    $this->assertEquals($original_map_data, $new_map_data, 'The rebuilt bundle field map matches the original one.');
+    // Check that bundle field map was rebuilt.
+    $new_bundle_field_map = $this->bundleFieldMap->getAll();
+    $this->assertIsArray($new_bundle_field_map);
+    $this->assertEquals($original_bundle_field_map, $new_bundle_field_map, 'The rebuilt bundle field map matches the original one.');
+
+    // Check that field map was rebuilt.
+    $new_field_map = $this->container->get('entity_field.manager')->getFieldMap();
+    $this->assertIsArray($new_field_map);
+    $this->assertEquals($original_field_map, $new_field_map, 'The rebuilt field map matches the original one.');
   }
 
 }
