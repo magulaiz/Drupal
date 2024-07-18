@@ -94,7 +94,7 @@ class ConfigActionsTest extends KernelTestBase {
   }
 
   public function testPlaceBlockAtPosition(): void {
-    // Create other blocks in the region.
+    // Ensure there's at least one block already in the region.
     $block = Block::create([
       'id' => 'block_1',
       'theme' => 'olivero',
@@ -127,8 +127,7 @@ class ConfigActionsTest extends KernelTestBase {
       ->condition('region', 'content_above')
       ->sort('weight', 'ASC')
       ->execute();
-    $blocks = array_values($blocks);
-    $this->assertSame('first', $blocks[0]);
+    $this->assertSame('first', key($blocks));
     $this->assertSame('last', end($blocks));
   }
 
