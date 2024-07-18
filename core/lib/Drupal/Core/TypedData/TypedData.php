@@ -9,9 +9,6 @@ use Drupal\Core\StringTranslation\StringTranslationTrait;
 /**
  * The abstract base class for typed data.
  *
- * Classes deriving from this base class have to declare $value
- * or override getValue() or setValue().
- *
  * @ingroup typed_data
  */
 abstract class TypedData implements TypedDataInterface, PluginInspectionInterface {
@@ -86,24 +83,6 @@ abstract class TypedData implements TypedDataInterface, PluginInspectionInterfac
    */
   public function getDataDefinition() {
     return $this->definition;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function getValue() {
-    return $this->value;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function setValue($value, $notify = TRUE) {
-    $this->value = $value;
-    // Notify the parent of any changes.
-    if ($notify && isset($this->parent)) {
-      $this->parent->onChange($this->name);
-    }
   }
 
   /**

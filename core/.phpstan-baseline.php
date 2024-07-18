@@ -653,12 +653,6 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/lib/Drupal/Core/TypedData/ListDataDefinition.php',
 ];
 $ignoreErrors[] = [
-	// identifier: property.notFound
-	'message' => '#^Access to an undefined property Drupal\\\\Core\\\\TypedData\\\\TypedData\\:\\:\\$value\\.$#',
-	'count' => 2,
-	'path' => __DIR__ . '/lib/Drupal/Core/TypedData/TypedData.php',
-];
-$ignoreErrors[] = [
 	// identifier: isset.variable
 	'message' => '#^Variable \\$cache_key in isset\\(\\) always exists and is not nullable\\.$#',
 	'count' => 1,

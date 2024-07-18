@@ -257,7 +257,36 @@ class RecursiveContextualValidatorTest extends UnitTestCase {
 
     yield [new \stdClass()];
     yield [new class() {}];
-    yield [new class($dataDefinition) extends TypedDataBase {}];
+    yield [
+      new class($dataDefinition) extends TypedDataBase {
+
+        /**
+         * The configuration value.
+         *
+         * @var mixed
+         */
+        protected $value;
+
+        /**
+         * {@inheritdoc}
+         */
+        public function getValue() {
+          return $this->value;
+        }
+
+        /**
+         * {@inheritdoc}
+         */
+        public function setValue($value, $notify = TRUE) {
+          $this->value = $value;
+          // Notify the parent of any changes.
+          if ($notify && isset($this->parent)) {
+            $this->parent->onChange($this->name);
+          }
+        }
+
+      },
+    ];
   }
 
   /**
