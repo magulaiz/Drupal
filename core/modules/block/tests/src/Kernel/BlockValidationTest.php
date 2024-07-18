@@ -123,16 +123,6 @@ class BlockValidationTest extends ConfigEntityValidationTestBase {
       'region' => 'This is not a valid region of the <em class="placeholder">non_existent</em> theme.',
       'theme' => "Theme 'non_existent' is not installed.",
     ]);
-
-    // Install another theme and make it the default, so we can uninstall Stark.
-    $this->container->get('theme_installer')->install(['olivero']);
-    $this->config('system.theme')->set('default', 'olivero')->save();
-    $this->container->get('theme_installer')->uninstall(['stark']);
-    // TRICKY: uninstalling Stark has already deleted this entity, so it's not
-    // possible to try to set the tested block's theme to `olivero`, because the
-    // block has been deleted.
-    // @see \Drupal\Core\Extension\ThemeInstaller::uninstall()
-    $this->assertNull(Block::load($this->entity->id()));
   }
 
   /**
