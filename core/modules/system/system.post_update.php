@@ -77,3 +77,11 @@ function system_post_update_convert_empty_country_and_timezone_settings_to_null(
     $system_date_settings->save();
   }
 }
+
+/**
+ * Removes the country.default value from system.date config.
+ */
+function system_post_update_remove_country_default_value(): void {
+  $system_date_settings = \Drupal::configFactory()->getEditable('system.date');
+  $system_date_settings->clear('country.default')->save();
+}
