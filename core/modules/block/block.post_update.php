@@ -26,6 +26,11 @@ function block_removed_post_updates() {
 function block_post_update_make_weight_integer(array &$sandbox = []): void {
   \Drupal::classResolver(ConfigEntityUpdater::class)
     ->update($sandbox, 'block', function (BlockInterface $block): bool {
-      return !is_int($block->get('weight'));
+      $weight = $block->getWeight();
+      if (!is_int($weight)) {
+        $block->setWeight($weight);
+        return TRUE;
+      }
+      return FALSE;
     });
 }
