@@ -24,6 +24,19 @@ class MultipleInlineFormErrorsTest extends WebDriverTestBase {
   ];
 
   /**
+   * Provides themes for the test.
+   *
+   * @return array
+   *   An array of themes.
+   */
+  public function themeProvider() {
+    return [
+      ['stark'],
+      ['olivero'],
+    ];
+  }
+
+  /**
    * {@inheritdoc}
    */
   protected $defaultTheme = 'stark';
@@ -72,8 +85,11 @@ class MultipleInlineFormErrorsTest extends WebDriverTestBase {
 
   /**
    * Tests number of inline form errors for limited multiple file widget.
+   *
+   * @dataProvider themeProvider
    */
-  public function testInlineFormErrorsCount() {
+  public function testInlineFormErrorsCount($theme) {
+    $this->defaultTheme = $theme;
     $this->drupalGet('node/add/page');
     $this->getSession()->getPage()->fillField('Title', 'Test Node');
 
@@ -89,4 +105,5 @@ class MultipleInlineFormErrorsTest extends WebDriverTestBase {
     $elements = $this->getSession()->getPage()->findAll('css', '.form-item--error-message');
     $this->assertCount(1, $elements, 'Only one error message should be present.');
   }
+
 }
