@@ -899,7 +899,7 @@ function module_hook_info() {
 function module_implements_write_cache() {
   // The list of implementations includes vital modules only before full
   // bootstrap, so do not write cache if we are not fully bootstrapped yet.
-  if (drupal_get_bootstrap_phase() != DRUPAL_BOOTSTRAP_FULL) {
+  if (!drupal_static('drupal_bootstrap_finished')) {
     return;
   }
   $implementations = &drupal_static('module_implements');

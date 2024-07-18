@@ -5381,6 +5381,10 @@ function drupal_valid_token($token, $value = '', $skip_anonymous = FALSE) {
 function _drupal_bootstrap_full() {
   static $called = FALSE;
 
+  // In case bootstrap full is called again.
+  $finished = &drupal_static('drupal_bootstrap_finished');
+  $finished = FALSE;
+
   if ($called) {
     return;
   }
@@ -5443,6 +5447,9 @@ function _drupal_bootstrap_full() {
     drupal_theme_initialize();
     module_invoke_all('init');
   }
+
+  $finished = &drupal_static('drupal_bootstrap_finished');
+  $finished = TRUE;
 }
 
 /**
