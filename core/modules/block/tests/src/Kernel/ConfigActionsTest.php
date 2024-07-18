@@ -95,32 +95,26 @@ class ConfigActionsTest extends KernelTestBase {
 
   public function testPlaceBlockAtPosition(): void {
     // Create other blocks in the region.
-    Block::create([
+    $block = Block::create([
       'id' => 'block_1',
       'theme' => 'olivero',
       'region' => 'content_above',
       'weight' => 0,
       'plugin' => 'system_powered_by_block',
-    ])->save();
-    Block::create([
-      'id' => 'block_2',
-      'theme' => 'olivero',
-      'region' => 'content_above',
-      'weight' => 1,
-      'plugin' => 'system_powered_by_block',
-    ])->save();
+    ]);
+    $block->save();
 
     $this->configActionManager->applyAction('placeBlockInDefaultTheme', 'block.block.first', [
-      'plugin' => 'system_powered_by_block',
+      'plugin' => $block->getPluginId(),
       'region' => [
-        'olivero' => 'content_above',
+        $block->getTheme() => $block->getRegion(),
       ],
       'position' => 'first',
     ]);
     $this->configActionManager->applyAction('placeBlockInDefaultTheme', 'block.block.last', [
-      'plugin' => 'system_powered_by_block',
+      'plugin' => $block->getPluginId(),
       'region' => [
-        'olivero' => 'content_above',
+        $block->getTheme() => $block->getRegion(),
       ],
       'position' => 'last',
     ]);
