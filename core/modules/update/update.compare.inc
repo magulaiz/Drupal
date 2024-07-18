@@ -607,7 +607,14 @@ function update_recommended(array &$project_data): void {
     try {
       $security_version = ExtensionVersion::createFromVersionString($security_release->getVersion());
     }
-    catch (UnexpectedValueException) {
+    catch (UnexpectedValueException $exception) {
+      // Ignore unexpected version information. Although this is highly
+      // unlikely we should still process releases in the correct format.
+      Error::logException(
+        \Drupal::logger('update'),
+        $exception,
+        'Invalid version format: ' . $security_release->getVersion()
+      );
       continue;
     }
 
