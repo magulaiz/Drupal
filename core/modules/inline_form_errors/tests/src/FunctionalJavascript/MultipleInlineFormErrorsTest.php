@@ -29,7 +29,7 @@ class MultipleInlineFormErrorsTest extends WebDriverTestBase {
    * @return array
    *   An array of themes.
    */
-  public function themeProvider() {
+  public static function themeProvider() {
     return [
       ['stark'],
       ['olivero'],
