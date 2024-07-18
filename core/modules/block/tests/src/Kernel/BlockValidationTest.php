@@ -157,11 +157,6 @@ class BlockValidationTest extends ConfigEntityValidationTestBase {
    * Tests validating weight.
    */
   public function testWeightValidation(): void {
-    // @todo Test that this raises a deprecation error.
-    $this->entity->set('weight', NULL);
-    $this->assertNull($this->entity->getWeight());
-    $this->assertValidationErrors([]);
-
     $this->entity->set('weight', $this->randomString());
     $this->assertValidationErrors([
       'weight' => [
@@ -172,6 +167,16 @@ class BlockValidationTest extends ConfigEntityValidationTestBase {
 
     $this->entity->set('weight', 10);
     $this->assertValidationErrors([]);
+  }
+
+  /**
+   * @group legacy
+   */
+  public function testWeightCannotBeNull(): void {
+    $this->entity->set('weight', NULL);
+    $this->assertNull($this->entity->getWeight());
+    $this->expectDeprecation('Saving a block with a non-integer weight is deprecated in drupal:11.0.0 and removed in drupal:12.0.0. See https://drupal.org/node/3379725');
+    $this->entity->save();
   }
 
 }
