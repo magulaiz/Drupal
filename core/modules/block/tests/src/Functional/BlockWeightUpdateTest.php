@@ -1,7 +1,5 @@
 <?php
 
-// cspell:ignore anotherblock
-
 declare(strict_types=1);
 
 namespace Drupal\Tests\block\Functional\Update;
@@ -33,7 +31,7 @@ class BlockWeightUpdateTest extends UpdatePathTestBase {
     $database = $this->container->get('database');
     $block = $database->select('config', 'c')
       ->fields('c', ['data'])
-      ->condition('name', 'block.block.anotherblock')
+      ->condition('name', 'block.block.claro_content')
       ->execute()
       ->fetchField();
     $block = unserialize($block);
@@ -42,12 +40,12 @@ class BlockWeightUpdateTest extends UpdatePathTestBase {
       ->fields([
         'data' => serialize($block),
       ])
-      ->condition('name', 'block.block.anotherblock')
+      ->condition('name', 'block.block.claro_content')
       ->execute();
 
-    $this->assertNull(Block::load('anotherblock')->get('weight'));
+    $this->assertNull(Block::load('claro_content')->get('weight'));
     $this->runUpdates();
-    $this->assertSame(0, Block::load('anotherblock')->get('weight'));
+    $this->assertSame(0, Block::load('claro_content')->get('weight'));
   }
 
 }
