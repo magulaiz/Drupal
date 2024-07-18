@@ -26,11 +26,11 @@ use Drupal\link\LinkItemInterface;
   column_groups: [
     "uri" => [
       "label" => new TranslatableMarkup("Uri"),
-      "require_all_groups_for_translation" => TRUE
+      "require_all_groups_for_translation" => TRUE,
     ],
     "title" => [
       "label" => new TranslatableMarkup("Title"),
-      "translatable" => TRUE
+      "translatable" => TRUE,
     ],
   ],
   constraints: [
