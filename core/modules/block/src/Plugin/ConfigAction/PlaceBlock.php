@@ -73,13 +73,11 @@ final class PlaceBlock implements ConfigActionPluginInterface, ContainerFactoryP
         'last' => end($blocks)->getWeight() + 1,
       };
     }
-    else {
-      // Ensure a weight is set by default.
-      $value += ['weight' => 0];
-    }
     // This isn't a valid property of block entities, so it shouldn't be passed
     // along to the create action.
     unset($value['position']);
+    // Ensure a weight is set by default.
+    $value += ['weight' => 0];
 
     $this->entityCreate->apply($configName, $value);
   }
