@@ -123,7 +123,7 @@ function user_pass_submit($form, &$form_state) {
     // Mail one time login URL and instructions using current language.
     $mail = _user_mail_notify('password_reset', $account, $language);
     if (!empty($mail)) {
-      watchdog('user', 'Password reset instructions mailed to %name at %email.', array('%name' => $account->name, '%email' => $account->mail));
+      watchdog('user', 'Password reset instructions mailed to %name at %email.', array('%name' => format_username($account), '%email' => $account->mail));
     }
   }
   else {
@@ -189,7 +189,7 @@ function user_pass_reset($form, &$form_state, $uid, $timestamp, $hashed_pass, $a
       }
       if ($is_valid) {
         drupal_set_message(t('Another user (%other_user) is already logged into the site on this computer, but you tried to use a one-time link for user %resetting_user. Please <a href="!logout">logout</a> and try using the link again.',
-          array('%other_user' => $user->name, '%resetting_user' => $reset_link_account->name, '!logout' => url('user/logout'))), 'warning');
+          array('%other_user' => $user->name, '%resetting_user' => format_username($reset_link_account), '!logout' => url('user/logout'))), 'warning');
       } else {
         // Invalid one-time link specifies an unknown user.
         drupal_set_message(t('The one-time login link you clicked is invalid.'), 'error');
@@ -263,7 +263,7 @@ function user_pass_reset($form, &$form_state, $uid, $timestamp, $hashed_pass, $a
           user_login_finalize();
           // Clear any password reset flood events for this user.
           flood_clear_event('pass_reset_user', $account->uid);
-          watchdog('user', 'User %name used one-time login link at time %timestamp.', array('%name' => $account->name, '%timestamp' => $timestamp));
+          watchdog('user', 'User %name used one-time login link at time %timestamp.', array('%name' => format_username($account), '%timestamp' => $timestamp));
           drupal_set_message(t('You have just used your one-time login link. It is no longer necessary to use this link to log in. Please change your password.'));
           // Let the user's password be changed without the current password check.
           $token = drupal_random_key();
@@ -271,7 +271,7 @@ function user_pass_reset($form, &$form_state, $uid, $timestamp, $hashed_pass, $a
           drupal_goto('user/' . $user->uid . '/edit', array('query' => array('pass-reset-token' => $token)));
         }
         else {
-          $form['message'] = array('#markup' => t('<p>This is a one-time login for %user_name and will expire on %expiration_date.</p><p>Click on this button to log in to the site and change your password.</p>', array('%user_name' => $account->name, '%expiration_date' => format_date($timestamp + $timeout))));
+          $form['message'] = array('#markup' => t('<p>This is a one-time login for %user_name and will expire on %expiration_date.</p><p>Click on this button to log in to the site and change your password.</p>', array('%user_name' => format_username($account), '%expiration_date' => format_date($timestamp + $timeout))));
           $form['help'] = array('#markup' => '<p>' . t('This login can be used only once.') . '</p>');
           $form['actions'] = array('#type' => 'actions');
           $form['actions']['submit'] = array('#type' => 'submit', '#value' => t('Log in'));
@@ -311,7 +311,7 @@ function user_logout() {
 function user_logout_current_user() {
   global $user;
 
-  watchdog('user', 'Session closed for %name.', array('%name' => $user->name));
+  watchdog('user', 'Session closed for %name.', array('%name' => forma_username($user)));
 
   module_invoke_all('user_logout', $user);
 
@@ -537,7 +537,7 @@ function user_cancel_confirm_form($form, &$form_state, $account) {
     $question = t('Are you sure you want to cancel your account?');
   }
   else {
-    $question = t('Are you sure you want to cancel the account %name?', array('%name' => $account->name));
+    $question = t('Are you sure you want to cancel the account %name?', array('%name' => format_username($account)));
   }
   $description = '';
   if ($can_select_method) {
@@ -594,7 +594,7 @@ function user_cancel_confirm_form_submit($form, &$form_state) {
     $account = user_save($account, $edit);
     _user_mail_notify('cancel_confirm', $account);
     drupal_set_message(t('A confirmation request to cancel your account has been sent to your e-mail address.'));
-    watchdog('user', 'Sent account cancellation request to %name %email.', array('%name' => $account->name, '%email' => '<' . $account->mail . '>'), WATCHDOG_NOTICE);
+    watchdog('user', 'Sent account cancellation request to %name %email.', array('%name' => format_username($account), '%email' => '<' . $account->mail . '>'), WATCHDOG_NOTICE);
 
     $form_state['redirect'] = "user/$account->uid";
   }
