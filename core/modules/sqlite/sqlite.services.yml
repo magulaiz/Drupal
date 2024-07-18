@@ -2,6 +2,11 @@
 # circumstances where waiting for a transaction to commit would result in
 # data inconsistency or race conditions. SQLite initiates an exclusive lock
 # for transactions, which precludes the use of the non-transactional connection.
+
+# This file contains only service overrides for core services defined in
+# core.services.yml. Other overrides are specified in module services files,
+# e.g. views.
+
 services:
   sqlite.queue.database:
     class: Drupal\Core\Queue\QueueDatabaseFactory
