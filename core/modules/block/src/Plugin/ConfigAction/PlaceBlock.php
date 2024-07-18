@@ -16,6 +16,12 @@ use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
+/**
+ * Places a block in either the admin or default theme.
+ *
+ * @internal
+ *   This API is experimental.
+ */
 #[ConfigAction(
   id: 'placeBlock',
   admin_label: new TranslatableMarkup('Place a block'),
@@ -53,11 +59,18 @@ final class PlaceBlock implements ConfigActionPluginInterface, ContainerFactoryP
     $value['theme'] = $theme;
 
     if (array_key_exists('region', $value)) {
+      // Since the recipe author might not know ahead of time what theme the
+      // block is in, they should supply a map whose keys are theme names and
+      // values are region names, so we know where to place this block. If the
+      // target theme is not in the map, they should supply the name of a
+      // fallback region. If all that fails, give up with an exception.
       assert(is_array($value['region']));
       $value['region'] = $value['region'][$theme] ?? $value['default_region'] ?? throw new ConfigActionException("Cannot determine which region to place this block into, because no default region was provided.");
       unset($value['default_region']);
     }
 
+    // Allow the recipe author to position the block in the region without
+    // needing to know exact weights.
     if (array_key_exists('position', $value)) {
       $blocks = $this->blockStorage->loadByProperties([
         'theme' => $theme,
