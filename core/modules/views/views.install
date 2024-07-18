@@ -27,7 +27,7 @@ function views_update_11001() {
   $display_extenders = $config->get('display_extenders');
   if ($display_extenders) {
     $new_display_extenders = array_filter($display_extenders);
-    if (count($display_extenders) != $new_display_extenders) {
+    if (count($display_extenders) != count($new_display_extenders)) {
       $config->set('display_extenders', $new_display_extenders);
       $config->save();
     }
