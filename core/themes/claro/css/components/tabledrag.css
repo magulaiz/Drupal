@@ -94,13 +94,7 @@ body.drag-y {
 
 .draggable-table td:first-child ~ td,
 .draggable-table th:first-child ~ th {
-  padding-left: 0 /* LTR */;
-}
-
-[dir="rtl"] .draggable-table td:first-child ~ td,
-[dir="rtl"] .draggable-table th:first-child ~ th {
-  padding-right: 0;
-  padding-left: var(--space-m);
+  padding-inline: var(--space-m) 0;
 }
 
 /* Auto width for weight selects and number inputs. */
