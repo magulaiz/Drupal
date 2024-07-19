@@ -18,7 +18,7 @@ abstract class MenuLinkContentResourceTestBase extends EntityResourceTestBase {
   /**
    * {@inheritdoc}
    */
-  protected static $modules = ['menu_link_content'];
+  protected static $modules = ['content_translation', 'menu_link_content'];
 
   /**
    * {@inheritdoc}
@@ -291,6 +291,17 @@ abstract class MenuLinkContentResourceTestBase extends EntityResourceTestBase {
       default:
         return parent::getExpectedUnauthorizedAccessMessage($method);
     }
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  protected function getExpectedCacheContexts() {
+    return [
+      'languages:language_interface',
+      'url.site',
+      'user.permissions',
+    ];
   }
 
 }

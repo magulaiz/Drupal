@@ -26,13 +26,13 @@ use Drupal\Core\Plugin\PluginBase;
  * @endcode
  * Use this configuration:
  * @code
- * $configuration = array(
+ * $configuration = [
  *   'table' => 'two',
  *   'field' => 'field_b',
  *   'left_table' => 'one',
  *   'left_field' => 'field_a',
  *   'operator' => '=',
- * );
+ * ];
  * $join = Views::pluginManager('join')->createInstance('standard', $configuration);
  * @endcode
  * Note that the default join type is a LEFT join when 'type' is not supplied in
@@ -46,19 +46,19 @@ use Drupal\Core\Plugin\PluginBase;
  * @endcode
  * Use this configuration:
  * @code
- * $configuration = array(
+ * $configuration = [
  *   'table' => 'two',
  *   'field' => 'field_b',
  *   'left_table' => 'one',
  *   'left_formula' => 'MAX(one.field_a)',
  *   'operator' => '=',
- *   'extra' => array(
- *     0 => array(
+ *   'extra' => [
+ *     0 => [
  *       'left_field' => 'field_c',
  *       'value' => 'some_val',
- *     ),
- *   ),
- * );
+ *     ],
+ *   ],
+ * ];
  * $join = Views::pluginManager('join')->createInstance('standard', $configuration);
  * @endcode
  *
@@ -68,20 +68,20 @@ use Drupal\Core\Plugin\PluginBase;
  * @endcode
  * Use this configuration:
  * @code
- * $configuration = array(
+ * $configuration = [
  *   'type' => 'INNER',
  *   'table' => 'two',
  *   'field' => 'field_b',
  *   'left_table' => 'one',
  *   'left_field' => 'field_a',
  *   'operator' => '=',
- *   'extra' => array(
- *     0 => array(
+ *   'extra' => [
+ *     0 => [
  *       'left_field' => 'field_c',
  *       'value' => 'some_val',
- *     ),
- *   ),
- * );
+ *     ],
+ *   ],
+ * ];
  * $join = Views::pluginManager('join')->createInstance('standard', $configuration);
  * @endcode
  *
@@ -91,20 +91,20 @@ use Drupal\Core\Plugin\PluginBase;
  * @endcode
  * Use this configuration:
  * @code
- * $configuration = array(
+ * $configuration = [
  *   'type' => 'INNER',
  *   'table' => 'two',
  *   'field' => 'field_b',
  *   'left_table' => 'one',
  *   'left_field' => 'field_a',
  *   'operator' => '=',
- *   'extra' => array(
- *     0 => array(
+ *   'extra' => [
+ *     0 => [
  *       'field' => 'field_d',
  *       'value' => 'other_val',
- *     ),
- *   ),
- * );
+ *     ],
+ *   ],
+ * ];
  * $join = Views::pluginManager('join')->createInstance('standard', $configuration);
  * @endcode
  *
@@ -114,20 +114,20 @@ use Drupal\Core\Plugin\PluginBase;
  * @endcode
  * Use this configuration:
  * @code
- * $configuration = array(
+ * $configuration = [
  *   'type' => 'INNER',
  *   'table' => 'two',
  *   'field' => 'field_b',
  *   'left_table' => 'one',
  *   'left_field' => 'field_a',
  *   'operator' => '=',
- *   'extra' => array(
- *     0 => array(
+ *   'extra' => [
+ *     0 => [
  *       'left_field' => 'field_c',
  *       'field' => 'field_d',
- *     ),
- *   ),
- * );
+ *     ],
+ *   ],
+ * ];
  * $join = Views::pluginManager('join')->createInstance('standard', $configuration);
  * @endcode
  *

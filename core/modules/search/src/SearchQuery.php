@@ -467,7 +467,7 @@ class SearchQuery extends SelectExtender {
   /**
    * {@inheritdoc}
    */
-  public function preExecute(SelectInterface $query = NULL) {
+  public function preExecute(?SelectInterface $query = NULL) {
     if (!$this->executedPrepare) {
       $this->prepareAndNormalize();
     }

@@ -25,7 +25,7 @@ class OptionsListFilterTest extends OptionsTestBase {
   /**
    * Tests options list field filter.
    */
-  public function testViewsTestOptionsListFilter() {
+  public function testViewsTestOptionsListFilter(): void {
     if (Database::getConnection()->driver() == 'mongodb') {
       // For MongoDB this view results in an empty array. The value for the
       // field field_test_list_string is set to random values and the filter is
@@ -49,7 +49,7 @@ class OptionsListFilterTest extends OptionsTestBase {
   /**
    * Tests options list field filter when grouped.
    */
-  public function testViewsTestOptionsListGroupedFilter() {
+  public function testViewsTestOptionsListGroupedFilter(): void {
     $view = Views::getView('test_options_list_filter');
 
     if (Database::getConnection()->driver() == 'mongodb') {

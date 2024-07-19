@@ -540,7 +540,7 @@ class TranslateSql {
         $startEvent = $this->startEvent($connection, $query, $args);
 
         // Execute the count query.
-        // @TODO Something is wrong with this query. Can we remove it?
+        // @todo Something is wrong with this query. Can we remove it?
         $query_count = $connection->getConnection()->{$prefixed_table}->count(
           [],
           [

@@ -49,7 +49,7 @@ class FilterCombineTest extends ViewsKernelTestBase {
     $this->installEntitySchema('entity_test');
   }
 
-  public function testFilterCombineContains() {
+  public function testFilterCombineContains(): void {
     $view = Views::getView('test_view');
     $view->setDisplay();
 
@@ -104,7 +104,7 @@ class FilterCombineTest extends ViewsKernelTestBase {
   /**
    * Tests the Combine field filter with the 'regular_expression' operator.
    */
-  public function testFilterCombineRegEx() {
+  public function testFilterCombineRegEx(): void {
     $view = Views::getView('test_view');
     $view->setDisplay();
 
@@ -163,7 +163,7 @@ class FilterCombineTest extends ViewsKernelTestBase {
   /**
    * Tests the Combine field filter with the 'word' operator.
    */
-  public function testFilterCombineWord() {
+  public function testFilterCombineWord(): void {
     $view = Views::getView('test_view');
     $view->setDisplay();
 
@@ -214,7 +214,7 @@ class FilterCombineTest extends ViewsKernelTestBase {
   /**
    * Tests the Combine field filter with the 'allwords' operator.
    */
-  public function testFilterCombineAllWords() {
+  public function testFilterCombineAllWords(): void {
     $driver = Database::getConnection()->driver();
     $view = Views::getView('test_view');
     $view->setDisplay();
@@ -269,7 +269,7 @@ class FilterCombineTest extends ViewsKernelTestBase {
    * and fields set in the combine filter are removed from the display
    * but not from the combined filter settings.
    */
-  public function testFilterCombineContainsFieldsOverwritten() {
+  public function testFilterCombineContainsFieldsOverwritten(): void {
     $view = Views::getView('test_view');
     $view->setDisplay();
 
@@ -313,7 +313,7 @@ class FilterCombineTest extends ViewsKernelTestBase {
   /**
    * Tests that the "combine" filter is only valid on displays that use fields.
    */
-  public function testNonFieldsRow() {
+  public function testNonFieldsRow(): void {
     $view = Views::getView('entity_test_fields');
     $view->setDisplay();
 
@@ -353,7 +353,7 @@ class FilterCombineTest extends ViewsKernelTestBase {
    *
    * @covers ::opEqual
    */
-  public function testFilterCombineEqual() {
+  public function testFilterCombineEqual(): void {
     $view = Views::getView('test_view');
     $view->setDisplay();
 
@@ -453,7 +453,7 @@ class FilterCombineTest extends ViewsKernelTestBase {
   /**
    * Tests the Combine field filter using the 'starts' operator.
    */
-  public function testFilterCombineStarts() {
+  public function testFilterCombineStarts(): void {
     $view = Views::getView('test_view');
     $view->setDisplay();
 
@@ -499,7 +499,7 @@ class FilterCombineTest extends ViewsKernelTestBase {
   /**
    * Tests the Combine field filter using the 'not_starts' operator.
    */
-  public function testFilterCombineNotStarts() {
+  public function testFilterCombineNotStarts(): void {
     $view = Views::getView('test_view');
     $view->setDisplay();
 
@@ -549,7 +549,7 @@ class FilterCombineTest extends ViewsKernelTestBase {
   /**
    * Tests the Combine field filter using the 'ends' operator.
    */
-  public function testFilterCombineEnds() {
+  public function testFilterCombineEnds(): void {
     $view = Views::getView('test_view');
     $view->setDisplay();
 
@@ -595,7 +595,7 @@ class FilterCombineTest extends ViewsKernelTestBase {
   /**
    * Tests the Combine field filter using the 'not_ends' operator.
    */
-  public function testFilterCombineNotEnds() {
+  public function testFilterCombineNotEnds(): void {
     $view = Views::getView('test_view');
     $view->setDisplay();
 
@@ -645,7 +645,7 @@ class FilterCombineTest extends ViewsKernelTestBase {
   /**
    * Tests the Combine field filter using the 'not' operator.
    */
-  public function testFilterCombineNot() {
+  public function testFilterCombineNot(): void {
     $view = Views::getView('test_view');
     $view->setDisplay();
 
@@ -695,7 +695,7 @@ class FilterCombineTest extends ViewsKernelTestBase {
   /**
    * Tests the combine filter when no realName is used.
    */
-  public function testFilterCombineNoRealName() {
+  public function testFilterCombineNoRealName(): void {
     $view = Views::getView('test_view');
     $view->setDisplay();
 

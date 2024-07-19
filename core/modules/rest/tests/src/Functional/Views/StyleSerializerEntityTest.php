@@ -97,7 +97,7 @@ class StyleSerializerEntityTest extends ViewTestBase {
   /**
    * Checks the behavior of the Serializer callback paths and row plugins.
    */
-  public function testSerializerResponses() {
+  public function testSerializerResponses(): void {
     // Test the serialize callback.
     $view = Views::getView('test_serializer_display_field');
     $view->initDisplay();
@@ -219,7 +219,7 @@ class StyleSerializerEntityTest extends ViewTestBase {
   /**
    * Tests REST export with views render caching enabled.
    */
-  public function testRestRenderCaching() {
+  public function testRestRenderCaching(): void {
     $this->drupalLogin($this->adminUser);
     /** @var \Drupal\Core\Render\RenderCacheInterface $render_cache */
     $render_cache = \Drupal::service('render_cache');
@@ -310,7 +310,7 @@ class StyleSerializerEntityTest extends ViewTestBase {
   /**
    * Tests the response format configuration.
    */
-  public function testResponseFormatConfiguration() {
+  public function testResponseFormatConfiguration(): void {
     $connection = Database::getConnection();
     $this->drupalLogin($this->adminUser);
 
@@ -344,7 +344,7 @@ class StyleSerializerEntityTest extends ViewTestBase {
     $this->submitForm([], 'Save');
 
     // Should return a 406. Emulates a sample Firefox header.
-    $this->drupalGet('test/serialize/field', [], ['Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8']);
+    $this->drupalGet('test/serialize/field', [], ['Accept' => 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8']);
     if ($connection->driver() != 'mongodb') {
       // @todo MongoDB should pass the next assertions.
       $this->assertSession()->responseHeaderEquals('content-type', 'text/html; charset=UTF-8');
@@ -392,7 +392,7 @@ class StyleSerializerEntityTest extends ViewTestBase {
   /**
    * Tests the field ID alias functionality of the DataFieldRow plugin.
    */
-  public function testUIFieldAlias() {
+  public function testUIFieldAlias(): void {
     $this->drupalLogin($this->adminUser);
 
     // Test the UI settings for adding field ID aliases.
@@ -462,7 +462,7 @@ class StyleSerializerEntityTest extends ViewTestBase {
   /**
    * Tests the raw output options for row field rendering.
    */
-  public function testFieldRawOutput() {
+  public function testFieldRawOutput(): void {
     $this->drupalLogin($this->adminUser);
 
     // Test the UI settings for adding field ID aliases.
@@ -529,7 +529,7 @@ class StyleSerializerEntityTest extends ViewTestBase {
   /**
    * Tests the live preview output for json output.
    */
-  public function testLivePreview() {
+  public function testLivePreview(): void {
     // We set up a request so it looks like a request in the live preview.
     $request = new Request();
     $request->query->add([MainContentViewSubscriber::WRAPPER_FORMAT => 'drupal_ajax']);
@@ -583,7 +583,7 @@ class StyleSerializerEntityTest extends ViewTestBase {
   /**
    * Tests the views interface for REST export displays.
    */
-  public function testSerializerViewsUI() {
+  public function testSerializerViewsUI(): void {
     $this->drupalLogin($this->adminUser);
     // Click the "Update preview button".
     $this->drupalGet('admin/structure/views/view/test_serializer_display_field/edit/rest_export_1');

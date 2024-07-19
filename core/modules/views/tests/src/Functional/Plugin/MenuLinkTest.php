@@ -67,7 +67,7 @@ class MenuLinkTest extends ViewTestBase {
   /**
    * Tests that menu links using menu_link_content as parent are visible.
    */
-  public function testHierarchicalMenuLinkVisibility() {
+  public function testHierarchicalMenuLinkVisibility(): void {
     $this->drupalLogin($this->adminUser);
 
     $node = $this->drupalCreateNode(['type' => 'page']);
@@ -112,7 +112,7 @@ class MenuLinkTest extends ViewTestBase {
     $this->drupalGet($node->toUrl());
     $this->assertSession()->pageTextContains('Primary level node');
     if (Database::getConnection()->driver() !== 'mongodb') {
-      // @TODO Fix the next assertion for MongoDB.
+      // @todo Fix the next assertion for MongoDB.
       $this->assertSession()->pageTextContains('Secondary level view page');
     }
   }

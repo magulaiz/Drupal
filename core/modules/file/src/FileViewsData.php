@@ -28,7 +28,7 @@ class FileViewsData extends EntityViewsData {
       $comment_table = 'comment_field_data';
     }
 
-    // @TODO There is no corresponding information in entity metadata.
+    // @todo There is no corresponding information in entity metadata.
     $data['file_managed']['table']['base']['help'] = $this->t('Files maintained by Drupal and various modules.');
     $data['file_managed']['table']['base']['defaults']['field'] = 'filename';
     $data['file_managed']['table']['wizard_id'] = 'file_managed';

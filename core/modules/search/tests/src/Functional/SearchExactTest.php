@@ -27,9 +27,9 @@ class SearchExactTest extends BrowserTestBase {
   /**
    * Tests that the correct number of pager links are found for both keywords and phrases.
    */
-  public function testExactQuery() {
+  public function testExactQuery(): void {
     if (Database::getConnection()->driver() == 'mongodb') {
-      // @TODO The test should pass for MongoDB.
+      // @todo The test should pass for MongoDB.
       $this->markTestSkipped();
     }
 

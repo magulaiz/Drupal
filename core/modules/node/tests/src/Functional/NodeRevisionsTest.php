@@ -142,7 +142,7 @@ class NodeRevisionsTest extends NodeTestBase {
   /**
    * Checks node revision related operations.
    */
-  public function testRevisions() {
+  public function testRevisions(): void {
     // Access to the revision page for a node with 1 revision is allowed.
     $node = $this->drupalCreateNode();
     $this->drupalGet("node/" . $node->id() . "/revisions/" . $node->getRevisionId() . "/view");
@@ -356,7 +356,7 @@ class NodeRevisionsTest extends NodeTestBase {
   /**
    * Checks that revisions are correctly saved without log messages.
    */
-  public function testNodeRevisionWithoutLogMessage() {
+  public function testNodeRevisionWithoutLogMessage(): void {
     if (Database::getConnection()->driver() == 'mongodb') {
       // @todo MongoDB should support this functionality.
       $this->markTestSkipped();
@@ -408,7 +408,7 @@ class NodeRevisionsTest extends NodeTestBase {
   /**
    * Tests the revision translations are correctly reverted.
    */
-  public function testRevisionTranslationRevert() {
+  public function testRevisionTranslationRevert(): void {
     // Create a node and a few revisions.
     $node = $this->drupalCreateNode(['langcode' => 'en']);
 

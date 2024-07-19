@@ -118,7 +118,7 @@ class DefaultConfigTest extends KernelTestBase {
    *
    * @dataProvider themeListDataProvider
    */
-  public function testThemeConfig($theme) {
+  public function testThemeConfig($theme): void {
     $this->assertExtensionConfig($theme, 'theme');
   }
 

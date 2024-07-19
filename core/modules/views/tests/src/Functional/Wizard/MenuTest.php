@@ -22,9 +22,9 @@ class MenuTest extends WizardTestBase {
   /**
    * Tests the menu functionality.
    */
-  public function testMenus() {
+  public function testMenus(): void {
     if (Database::getConnection()->driver() == 'mongodb') {
-      // @TODO Fix this test for MongoDB.
+      // @todo Fix this test for MongoDB.
       $this->markTestSkipped();
     }
 

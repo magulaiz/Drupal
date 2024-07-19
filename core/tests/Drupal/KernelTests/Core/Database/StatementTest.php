@@ -17,7 +17,7 @@ class StatementTest extends DatabaseTestBase {
   /**
    * Tests that a prepared statement object can be reused for multiple inserts.
    */
-  public function testRepeatedInsertStatementReuse() {
+  public function testRepeatedInsertStatementReuse(): void {
     if ($this->connection->driver() == 'mongodb') {
       $this->markTestSkipped('The MongoDB database driver does not support setting the arguments in the statement execute when query is an SQL string.');
     }

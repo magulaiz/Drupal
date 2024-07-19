@@ -46,7 +46,7 @@ class HandlerAliasTest extends ViewsKernelTestBase {
     return $data;
   }
 
-  public function testPluginAliases() {
+  public function testPluginAliases(): void {
     $view = Views::getView('test_filter');
     $view->initDisplay();
 

@@ -85,7 +85,7 @@ class SearchDateIntervalTest extends BrowserTestBase {
   /**
    * Tests searching with date filters that exclude some translations.
    */
-  public function testDateIntervalQueryAlter() {
+  public function testDateIntervalQueryAlter(): void {
     if (Database::getConnection()->driver() == 'mongodb') {
       // The SearchQuery is doing too much special SQL stuff to make this work
       // for MongoDB.

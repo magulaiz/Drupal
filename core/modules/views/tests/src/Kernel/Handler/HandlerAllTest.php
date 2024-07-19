@@ -128,7 +128,7 @@ class HandlerAllTest extends ViewsKernelTestBase {
       }
 
       if (Database::getConnection()->driver() != 'mongodb') {
-        // @TODO Fix this for MongoDB.
+        // @todo Fix this for MongoDB.
         // Go through each step individually to see whether some parts are
         // failing.
         $view->build();

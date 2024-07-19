@@ -48,7 +48,7 @@ class ContentTranslationRevisionTranslationDeletionTest extends ContentTranslati
   /**
    * Tests that translation overview handles pending revisions correctly.
    */
-  public function testOverview() {
+  public function testOverview(): void {
     $index = 1;
     $accounts = [
       $this->rootUser,
@@ -56,7 +56,7 @@ class ContentTranslationRevisionTranslationDeletionTest extends ContentTranslati
       $this->translator,
     ];
     if ($this->connection->driver() == 'mongodb') {
-      // @TODO MongoDB should also support the other 2 users.
+      // @todo MongoDB should also support the other 2 users.
       $accounts = [
         $this->rootUser,
       ];
@@ -168,7 +168,7 @@ class ContentTranslationRevisionTranslationDeletionTest extends ContentTranslati
     $this->assertLessThan($entity->getRevisionId(), $it_revision->getRevisionId());
     $this->drupalGet($overview_url);
     if ($this->connection->driver() != 'mongodb') {
-      // @TODO MongoDB should support the next two assertions.
+      // @todo MongoDB should support the next two assertions.
       $this->assertSession()->linkByHrefNotExists($this->getEditUrl($it_revision)->toString());
       $this->assertSession()->linkByHrefExists($add_translation_href);
     }
@@ -252,7 +252,7 @@ class ContentTranslationRevisionTranslationDeletionTest extends ContentTranslati
     $this->assertLessThan($entity->getRevisionId(), $it_revision->getRevisionId());
     $this->drupalGet($overview_url);
     if ($this->connection->driver() != 'mongodb') {
-      // @TODO MongoDB should support the next two assertions.
+      // @todo MongoDB should support the next two assertions.
       $this->assertSession()->linkByHrefNotExists($this->getEditUrl($it_revision)->toString());
       $this->assertSession()->linkByHrefExists($add_translation_href);
     }

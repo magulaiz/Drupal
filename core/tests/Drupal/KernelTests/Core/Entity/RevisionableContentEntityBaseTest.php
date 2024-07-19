@@ -38,7 +38,7 @@ class RevisionableContentEntityBaseTest extends EntityKernelTestBase {
   /**
    * Tests the correct functionality CRUD operations of entity revisions.
    */
-  public function testRevisionableContentEntity() {
+  public function testRevisionableContentEntity(): void {
     $entity_type = 'entity_test_mul_revlog';
     $table_mapping = \Drupal::entityTypeManager()->getStorage('entity_test_mul_revlog')->getTableMapping();
 
@@ -100,7 +100,7 @@ class RevisionableContentEntityBaseTest extends EntityKernelTestBase {
    *
    * @covers \Drupal\Core\Entity\ContentEntityBase::wasDefaultRevision
    */
-  public function testWasDefaultRevision() {
+  public function testWasDefaultRevision(): void {
     $entity_type_id = 'entity_test_mul_revlog';
     $entity = EntityTestMulWithRevisionLog::create([
       'type' => $entity_type_id,

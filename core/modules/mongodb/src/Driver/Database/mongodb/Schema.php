@@ -417,7 +417,7 @@ class Schema extends DatabaseSchema {
       ];
       // The listing of tables in a multi-document transaction is not
       // supported by MongoDB.
-      // @TODO Fix this bug!
+      // @todo Fix this bug!
       if (!$this->connection->getMongodbSession()->isInTransaction()) {
         $options['session'] = $this->connection->getMongodbSession();
       }
@@ -618,7 +618,7 @@ class Schema extends DatabaseSchema {
       $prefixInfo = $this->getPrefixInfo($table);
       // The dropping of a table in a multi-document transaction is not
       // supported by MongoDB.
-      // @TODO Fix this bug!
+      // @todo Fix this bug!
       if ($this->connection->getMongodbSession()->isInTransaction()) {
         $result = $this->connection->getConnection()->dropCollection($prefixInfo['table']);
       }
@@ -649,7 +649,7 @@ class Schema extends DatabaseSchema {
     if ($table == $base_table_name) {
       // The dropping of a table in a multi-document transaction is not
       // supported by MongoDB.
-      // @TODO Fix this bug!
+      // @todo Fix this bug!
       if ($this->connection->getMongodbSession()->isInTransaction()) {
         $result = $this->connection->getConnection()->dropCollection($prefixInfo['table']);
       }

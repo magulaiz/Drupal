@@ -88,7 +88,7 @@ class DefaultTableMappingIntegrationTest extends EntityKernelTestBase {
    *
    * @covers ::getFieldTableName
    */
-  public function testGetFieldTableName() {
+  public function testGetFieldTableName(): void {
     // Test the field table name for a single-valued base field, which is stored
     // in the entity's base table.
     $expected = 'entity_test_mulrev';
@@ -118,7 +118,7 @@ class DefaultTableMappingIntegrationTest extends EntityKernelTestBase {
   /**
    * @covers ::getAllFieldTableNames
    */
-  public function testGetAllFieldTableNames() {
+  public function testGetAllFieldTableNames(): void {
     // Check a field that is stored in all the shared tables.
     if ($this->connection->driver() == 'mongodb') {
       $expected = [
@@ -212,7 +212,9 @@ class DefaultTableMappingIntegrationTest extends EntityKernelTestBase {
    *
    * @covers ::getTableNames
    */
-  public function testGetTableNames() {
+  public function testGetTableNames(): void {
+    // Check that both the data and the revision tables exist for a multi-valued
+    // base field.
     $database_schema = \Drupal::database()->schema();
     $storage_definitions = \Drupal::service('entity_field.manager')->getFieldStorageDefinitions('entity_test_mulrev');
     if ($this->connection->driver() == 'mongodb') {

@@ -57,7 +57,7 @@ class FrontPageTest extends ViewTestBase {
   /**
    * Tests the frontpage.
    */
-  public function testFrontPage() {
+  public function testFrontPage(): void {
     $site_name = $this->randomMachineName();
     $this->config('system.site')
       ->set('name', $site_name)
@@ -182,7 +182,7 @@ class FrontPageTest extends ViewTestBase {
   /**
    * Tests the cache tags when using the "none" cache plugin.
    */
-  public function testCacheTagsWithCachePluginNone() {
+  public function testCacheTagsWithCachePluginNone(): void {
     $this->enablePageCaching();
     $this->doTestFrontPageViewCacheTags(FALSE);
   }
@@ -190,7 +190,7 @@ class FrontPageTest extends ViewTestBase {
   /**
    * Tests the cache tags when using the "tag" cache plugin.
    */
-  public function testCacheTagsWithCachePluginTag() {
+  public function testCacheTagsWithCachePluginTag(): void {
     $this->enablePageCaching();
 
     $view = Views::getView('frontpage');
@@ -206,7 +206,7 @@ class FrontPageTest extends ViewTestBase {
   /**
    * Tests the cache tags when using the "time" cache plugin.
    */
-  public function testCacheTagsWithCachePluginTime() {
+  public function testCacheTagsWithCachePluginTime(): void {
     $this->enablePageCaching();
 
     $view = Views::getView('frontpage');

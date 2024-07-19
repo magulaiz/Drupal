@@ -79,7 +79,7 @@ class HandlerTest extends ViewTestBase {
   /**
    * Tests the breakString method.
    */
-  public function testBreakString() {
+  public function testBreakString(): void {
     // Check defaults.
     $this->assertEquals((object) ['value' => [], 'operator' => NULL], HandlerBase::breakString(''));
 
@@ -206,7 +206,7 @@ class HandlerTest extends ViewTestBase {
   /**
    * Tests the order of handlers is the same before and after saving.
    */
-  public function testHandlerWeights() {
+  public function testHandlerWeights(): void {
     $handler_types = ['fields', 'filters', 'sorts'];
 
     $view = Views::getView('test_view_handler_weight');
@@ -232,7 +232,7 @@ class HandlerTest extends ViewTestBase {
   /**
    * Tests the relationship ui for field/filter/argument/relationship.
    */
-  public function testRelationshipUI() {
+  public function testRelationshipUI(): void {
     $connection = Database::getConnection();
     $views_admin = $this->drupalCreateUser(['administer views']);
     $this->drupalLogin($views_admin);
@@ -278,7 +278,7 @@ class HandlerTest extends ViewTestBase {
     $this->submitForm([], 'Remove');
     $this->drupalGet($handler_options_path);
     if ($connection->driver() != 'mongodb') {
-      // @TODO Fix the next assertion for MongoDB.
+      // @todo Fix the next assertion for MongoDB.
       $this->assertSession()->fieldNotExists($relationship_name);
     }
 
@@ -315,7 +315,7 @@ class HandlerTest extends ViewTestBase {
   /**
    * Tests the relationship method on the base class.
    */
-  public function testSetRelationship() {
+  public function testSetRelationship(): void {
     $view = Views::getView('test_handler_relationships');
     $view->setDisplay();
     // Setup a broken relationship.
@@ -345,7 +345,7 @@ class HandlerTest extends ViewTestBase {
     unset($view->relationship['broken_relationship']);
 
     if (Database::getConnection()->driver() != 'mongodb') {
-      // @TODO Fix the following code for MongoDB.
+      // @todo Fix the following code for MongoDB.
       $view->build();
       $field->setRelationship();
       $this->assertEquals($field->relationship, $view->relationship['valid_relationship']->alias, 'Make sure that a valid relationship does create the right relationship query alias.');
@@ -357,7 +357,7 @@ class HandlerTest extends ViewTestBase {
    *
    * @see \Drupal\views\Plugin\views\HandlerBase::placeholder()
    */
-  public function testPlaceholder() {
+  public function testPlaceholder(): void {
     $view = Views::getView('test_view');
     $view->initHandlers();
     $view->initQuery();
@@ -399,7 +399,7 @@ class HandlerTest extends ViewTestBase {
    *
    * @see views_test_data_handler_test_access_callback
    */
-  public function testAccess() {
+  public function testAccess(): void {
     $view = Views::getView('test_handler_test_access');
     $views_data = $this->viewsData();
     $views_data = $views_data['views_test_data'];

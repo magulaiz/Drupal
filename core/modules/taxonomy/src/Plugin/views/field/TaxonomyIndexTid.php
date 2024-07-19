@@ -57,10 +57,10 @@ class TaxonomyIndexTid extends PrerenderList {
   /**
    * {@inheritdoc}
    */
-  public function init(ViewExecutable $view, DisplayPluginBase $display, array &$options = NULL) {
+  public function init(ViewExecutable $view, DisplayPluginBase $display, ?array &$options = NULL) {
     parent::init($view, $display, $options);
 
-    // @todo: Wouldn't it be possible to use $this->base_table and no if here?
+    // @todo Wouldn't it be possible to use $this->base_table and no if here?
     if ($view->storage->get('base_table') == 'node_field_revision') {
       if ($this->view->getDatabaseDriver() == 'mongodb') {
         $table = 'node';

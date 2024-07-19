@@ -14,7 +14,7 @@ class SelectSubqueryTest extends DatabaseTestBase {
   /**
    * Tests that we can use a subquery in a FROM clause.
    */
-  public function testFromSubquerySelect() {
+  public function testFromSubquerySelect(): void {
     if ($this->connection->driver() == 'mongodb') {
       $this->markTestSkipped('The MongoDB database driver does not support subqueries.');
     }
@@ -54,7 +54,7 @@ class SelectSubqueryTest extends DatabaseTestBase {
   /**
    * Tests that we can use a subquery in a FROM clause with a LIMIT.
    */
-  public function testFromSubquerySelectWithLimit() {
+  public function testFromSubquerySelectWithLimit(): void {
     if ($this->connection->driver() == 'mongodb') {
       $this->markTestSkipped('The MongoDB database driver does not support subqueries.');
     }
@@ -86,7 +86,7 @@ class SelectSubqueryTest extends DatabaseTestBase {
   /**
    * Tests that we can use a subquery with an IN operator in a WHERE clause.
    */
-  public function testConditionSubquerySelect() {
+  public function testConditionSubquerySelect(): void {
     if ($this->connection->driver() == 'mongodb') {
       $this->markTestSkipped('The MongoDB database driver does not support subqueries.');
     }
@@ -113,7 +113,7 @@ class SelectSubqueryTest extends DatabaseTestBase {
   /**
    * Tests we can use a subquery with a relational operator in a WHERE clause.
    */
-  public function testConditionSubquerySelect2() {
+  public function testConditionSubquerySelect2(): void {
     if ($this->connection->driver() == 'mongodb') {
       $this->markTestSkipped('The MongoDB database driver does not support subqueries.');
     }
@@ -138,7 +138,7 @@ class SelectSubqueryTest extends DatabaseTestBase {
   /**
    * Tests we can use 2 subqueries with a relational operator in a WHERE clause.
    */
-  public function testConditionSubquerySelect3() {
+  public function testConditionSubquerySelect3(): void {
     if ($this->connection->driver() == 'mongodb') {
       $this->markTestSkipped('The MongoDB database driver does not support subqueries.');
     }
@@ -172,7 +172,7 @@ class SelectSubqueryTest extends DatabaseTestBase {
    * the right hand side. The test query may not be that logical but that's due
    * to the limited amount of data and tables. 'Valid' use cases do exist :)
    */
-  public function testConditionSubquerySelect4() {
+  public function testConditionSubquerySelect4(): void {
     if ($this->connection->driver() == 'mongodb') {
       $this->markTestSkipped('The MongoDB database driver does not support subqueries.');
     }
@@ -212,7 +212,7 @@ class SelectSubqueryTest extends DatabaseTestBase {
   /**
    * Tests that we can use a subquery in a JOIN clause.
    */
-  public function testJoinSubquerySelect() {
+  public function testJoinSubquerySelect(): void {
     if ($this->connection->driver() == 'mongodb') {
       $this->markTestSkipped('The MongoDB database driver does not support subqueries.');
     }
@@ -245,7 +245,7 @@ class SelectSubqueryTest extends DatabaseTestBase {
    * We essentially select all rows from the {test} table that have matching
    * rows in the {test_people} table based on the shared name column.
    */
-  public function testExistsSubquerySelect() {
+  public function testExistsSubquerySelect(): void {
     if ($this->connection->driver() == 'mongodb') {
       $this->markTestSkipped('The MongoDB database driver does not support subqueries.');
     }
@@ -279,7 +279,7 @@ class SelectSubqueryTest extends DatabaseTestBase {
    * We essentially select all rows from the {test} table that don't have
    * matching rows in the {test_people} table based on the shared name column.
    */
-  public function testNotExistsSubquerySelect() {
+  public function testNotExistsSubquerySelect(): void {
     if ($this->connection->driver() == 'mongodb') {
       $this->markTestSkipped('The MongoDB database driver does not support subqueries.');
     }

@@ -29,7 +29,7 @@ class BrowserTestBaseUserAgentTest extends BrowserTestBase {
   /**
    * Tests validation of the User-Agent header we use to perform test requests.
    */
-  public function testUserAgentValidation() {
+  public function testUserAgentValidation(): void {
     if (Database::getConnection()->driver() == 'mongodb') {
       // @todo Fix this test for MongoDB. No idea why this test is failing. One
       // difference with the other database drivers is that the user module is

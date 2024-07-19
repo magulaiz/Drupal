@@ -44,7 +44,7 @@ class TaxonomyParentUITest extends UITestBase {
   /**
    * Tests the taxonomy parent plugin UI.
    */
-  public function testTaxonomyParentUI() {
+  public function testTaxonomyParentUI(): void {
     if (Database::getConnection()->driver() == 'mongodb') {
       // @todo Fix this test for MongoDB.
       // The view has a relationship that does not exists in MongoDB.

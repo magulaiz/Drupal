@@ -115,7 +115,7 @@ class EntityQueryRelationshipTest extends EntityKernelTestBase {
   /**
    * Tests querying.
    */
-  public function testQuery() {
+  public function testQuery(): void {
     if (\Drupal::database()->driver() == 'mongodb') {
       $this->markTestSkipped('The MongoDB database driver does not support entity queries with relationships.');
     }
@@ -218,7 +218,7 @@ class EntityQueryRelationshipTest extends EntityKernelTestBase {
   /**
    * Tests the invalid specifier in the query relationship.
    */
-  public function testInvalidSpecifier() {
+  public function testInvalidSpecifier(): void {
     $this->expectException(PluginNotFoundException::class);
     $this->container
       ->get('entity_type.manager')

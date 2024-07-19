@@ -62,7 +62,7 @@ class TaxonomyGlossaryTest extends ViewTestBase {
   /**
    * Tests a taxonomy glossary view.
    */
-  public function testTaxonomyGlossaryView() {
+  public function testTaxonomyGlossaryView(): void {
     $initials = [];
     foreach ($this->taxonomyTerms as $term) {
       $char = mb_strtolower(substr($term->label(), 0, 1));
@@ -94,7 +94,7 @@ class TaxonomyGlossaryTest extends ViewTestBase {
     // Go the taxonomy glossary page for the first term.
     $this->drupalGet('test_taxonomy_glossary/' . substr($this->taxonomyTerms[0]->getName(), 0, 1));
     if (Database::getConnection()->driver() != 'mongodb') {
-      // @TODO Fix the next assertion for MongoDB.
+      // @todo Fix the next assertion for MongoDB.
       $assert_session->pageTextContains($this->taxonomyTerms[0]->getName());
     }
   }

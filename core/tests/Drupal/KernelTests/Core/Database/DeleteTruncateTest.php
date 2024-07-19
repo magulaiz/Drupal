@@ -24,7 +24,7 @@ class DeleteTruncateTest extends DatabaseTestBase {
   /**
    * Confirms that we can use a subselect in a delete successfully.
    */
-  public function testSubselectDelete() {
+  public function testSubselectDelete(): void {
     if ($this->connection->driver() == 'mongodb') {
       // The MongoDB database driver does not do delete queries with the
       // condition being a subquery.
@@ -50,7 +50,7 @@ class DeleteTruncateTest extends DatabaseTestBase {
   /**
    * Confirms that we can delete a single record successfully.
    */
-  public function testSimpleDelete() {
+  public function testSimpleDelete(): void {
     $num_records_before = $this->connection->query('SELECT COUNT(*) FROM {test}')->fetchField();
 
     $num_deleted = $this->connection->delete('test')
@@ -65,7 +65,7 @@ class DeleteTruncateTest extends DatabaseTestBase {
   /**
    * Confirms that we can truncate a whole table successfully.
    */
-  public function testTruncate() {
+  public function testTruncate(): void {
     $num_records_before = $this->connection->query("SELECT COUNT(*) FROM {test}")->fetchField();
     $this->assertNotEmpty($num_records_before);
 
@@ -78,7 +78,7 @@ class DeleteTruncateTest extends DatabaseTestBase {
   /**
    * Confirms that we can truncate a whole table while in transaction.
    */
-  public function testTruncateInTransaction() {
+  public function testTruncateInTransaction(): void {
     if ($this->connection->driver() == 'mongodb') {
       $this->markTestSkipped("The MongoDB database driver does not support Drupal's transaction manager.");
     }
@@ -116,7 +116,7 @@ class DeleteTruncateTest extends DatabaseTestBase {
   /**
    * Confirms that transaction rollback voids a truncate operation.
    */
-  public function testTruncateTransactionRollback() {
+  public function testTruncateTransactionRollback(): void {
     if ($this->connection->driver() == 'mongodb') {
       $this->markTestSkipped("The MongoDB database driver does not support Drupal's transaction manager.");
     }
@@ -154,7 +154,7 @@ class DeleteTruncateTest extends DatabaseTestBase {
   /**
    * Confirms that we can delete a single special column name record successfully.
    */
-  public function testSpecialColumnDelete() {
+  public function testSpecialColumnDelete(): void {
     $num_records_before = $this->connection->query('SELECT COUNT(*) FROM {select}')->fetchField();
 
     $num_deleted = $this->connection->delete('select')

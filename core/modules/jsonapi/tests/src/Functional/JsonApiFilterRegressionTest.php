@@ -46,7 +46,7 @@ class JsonApiFilterRegressionTest extends JsonApiFunctionalTestBase {
    *
    * @see https://www.drupal.org/project/drupal/issues/2953207
    */
-  public function testBundleSpecificTargetEntityTypeFromIssue2953207() {
+  public function testBundleSpecificTargetEntityTypeFromIssue2953207(): void {
     // Set up data model.
     $this->assertTrue($this->container->get('module_installer')->install(['comment'], TRUE), 'Installed modules.');
     $this->addDefaultCommentField('taxonomy_term', 'tags', 'comment', CommentItemInterface::OPEN, 'tcomment');
@@ -82,7 +82,7 @@ class JsonApiFilterRegressionTest extends JsonApiFunctionalTestBase {
    *
    * @see https://www.drupal.org/project/drupal/issues/3015759
    */
-  public function testFilterByIdFromIssue3015759() {
+  public function testFilterByIdFromIssue3015759(): void {
     // Set up data model.
     $this->assertTrue($this->container->get('module_installer')->install(['shortcut'], TRUE), 'Installed modules.');
     $this->rebuildAll();
@@ -122,7 +122,7 @@ class JsonApiFilterRegressionTest extends JsonApiFunctionalTestBase {
    *
    * @see https://www.drupal.org/project/jsonapi/issues/3025372
    */
-  public function testEmptyRelationshipFilteringFromIssue3025372() {
+  public function testEmptyRelationshipFilteringFromIssue3025372(): void {
     // Set up data model.
     $this->drupalCreateContentType(['type' => 'folder']);
     $this->createEntityReferenceField(
@@ -182,7 +182,7 @@ class JsonApiFilterRegressionTest extends JsonApiFunctionalTestBase {
    *
    * @see https://www.drupal.org/project/drupal/issues/3036593
    */
-  public function testFilteringEntitiesByEntityReferenceTargetId() {
+  public function testFilteringEntitiesByEntityReferenceTargetId(): void {
     // Create two config entities to be the config targets of an entity
     // reference. In this case, the `roles` field.
     $role_llamalovers = $this->drupalCreateRole([], 'llamalovers', 'Llama Lovers');
@@ -237,7 +237,7 @@ class JsonApiFilterRegressionTest extends JsonApiFunctionalTestBase {
     $this->assertSame(200, $response->getStatusCode(), var_export($document, TRUE));
     // Only the node authored by the filtered user should be returned.
     if (Database::getConnection()->driver() != 'mongodb') {
-      // @TODO The next assertions should pass for MongoDB.
+      // @todo The next assertions should pass for MongoDB.
       $this->assertCount(1, $document['data']);
       $this->assertSame('Article created by ' . $users[1]->uuid(), $document['data'][0]['attributes']['title']);
     }

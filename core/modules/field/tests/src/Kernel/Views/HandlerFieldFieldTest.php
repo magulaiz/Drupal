@@ -89,7 +89,7 @@ class HandlerFieldFieldTest extends KernelTestBase {
   /**
    * Tests fields rendering in views.
    */
-  public function testFieldRender() {
+  public function testFieldRender(): void {
     // Create some nodes.
     $this->nodes = [];
     for ($i = 0; $i < 3; $i++) {

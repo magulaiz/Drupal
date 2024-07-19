@@ -282,7 +282,7 @@ class NodeTest extends ResourceTestBase {
    * @see \Drupal\Tests\jsonapi\Functional\TermTest::testPatchPath()
    * @see \Drupal\Tests\rest\Functional\EntityResource\Term\TermResourceTestBase::testPatchPath()
    */
-  public function testPatchPath() {
+  public function testPatchPath(): void {
     $this->setUpAuthorization('GET');
     $this->setUpAuthorization('PATCH');
     $this->config('jsonapi.settings')->set('read_only', FALSE)->save(TRUE);
@@ -320,7 +320,7 @@ class NodeTest extends ResourceTestBase {
   /**
    * {@inheritdoc}
    */
-  public function testGetIndividual() {
+  public function testGetIndividual(): void {
     // Cacheable normalizations are written after the response is flushed to
     // the client. We use WaitTerminateTestTrait to wait for Drupal to perform
     // its termination work before continuing.
@@ -339,34 +339,17 @@ class NodeTest extends ResourceTestBase {
 
     // 403 when accessing own unpublished node.
     $response = $this->request('GET', $url, $request_options);
-    // @todo Remove $expected + assertResourceResponse() in favor of the commented line below once https://www.drupal.org/project/drupal/issues/2943176 lands.
-    $expected_document = [
-      'jsonapi' => static::$jsonApiMember,
-      'errors' => [
-        [
-          'title' => 'Forbidden',
-          'status' => '403',
-          'detail' => 'The current user is not allowed to GET the selected resource.',
-          'links' => [
-            'info' => ['href' => HttpExceptionNormalizer::getInfoUrl(403)],
-            'via' => ['href' => $url->setAbsolute()->toString()],
-          ],
-          'source' => [
-            'pointer' => '/data',
-          ],
-        ],
-      ],
-    ];
-    $this->assertResourceResponse(
+    $this->assertResourceErrorResponse(
       403,
-      $expected_document,
+      'The current user is not allowed to GET the selected resource.',
+      $url,
       $response,
+      '/data',
       ['4xx-response', 'http_response', 'node:1'],
-      ['url.query_args:resourceVersion', 'url.site', 'user.permissions'],
+      ['url.query_args', 'url.site', 'user.permissions'],
       FALSE,
       'MISS'
     );
-    /* $this->assertResourceErrorResponse(403, 'The current user is not allowed to GET the selected resource.', $response, '/data'); */
 
     // 200 after granting permission.
     $this->grantPermissionsToTestedRole(['view own unpublished content']);
@@ -447,7 +430,7 @@ class NodeTest extends ResourceTestBase {
    *
    * @see https://github.com/json-api/json-api/issues/1033
    */
-  public function testPostNonExistingAuthor() {
+  public function testPostNonExistingAuthor(): void {
     $this->setUpAuthorization('POST');
     $this->config('jsonapi.settings')->set('read_only', FALSE)->save(TRUE);
     $this->grantPermissionsToTestedRole(['administer nodes']);
@@ -488,9 +471,9 @@ class NodeTest extends ResourceTestBase {
   /**
    * {@inheritdoc}
    */
-  public function testCollectionFilterAccess() {
+  public function testCollectionFilterAccess(): void {
     if (Database::getConnection()->driver() == 'mongodb') {
-      // @TODO This test should work for MongodB.
+      // @todo This test should work for MongoDB.
       $this->markTestSkipped();
     }
 

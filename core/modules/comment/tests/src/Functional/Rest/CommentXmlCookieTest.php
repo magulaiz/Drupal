@@ -36,20 +36,4 @@ class CommentXmlCookieTest extends CommentResourceTestBase {
    */
   protected $defaultTheme = 'stark';
 
-  /**
-   * {@inheritdoc}
-   */
-  public function testPostDxWithoutCriticalBaseFields() {
-    // Deserialization of the XML format is not supported.
-    $this->markTestSkipped();
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function testPostSkipCommentApproval() {
-    // Deserialization of the XML format is not supported.
-    $this->markTestSkipped();
-  }
-
 }

@@ -34,7 +34,7 @@ class WorkspaceEntityDeleteTest extends BrowserTestBase {
     parent::setUp();
 
     if (Database::getConnection()->driver() == 'mongodb') {
-      // @TODO Fix these tests for MongoDB.
+      // @todo Fix these tests for MongoDB.
       $this->markTestSkipped();
     }
 

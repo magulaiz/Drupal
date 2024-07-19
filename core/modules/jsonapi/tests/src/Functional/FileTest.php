@@ -204,7 +204,7 @@ class FileTest extends ResourceTestBase {
   /**
    * {@inheritdoc}
    */
-  public function testPostIndividual() {
+  public function testPostIndividual(): void {
     // @todo https://www.drupal.org/node/1927648
     $this->markTestSkipped();
   }
@@ -224,9 +224,9 @@ class FileTest extends ResourceTestBase {
   /**
    * {@inheritdoc}
    */
-  public function testCollectionFilterAccess() {
+  public function testCollectionFilterAccess(): void {
     if (Database::getConnection()->driver() == 'mongodb') {
-      // @TODO This test should work for MongodB.
+      // @todo This test should work for MongoDB.
       $this->markTestSkipped();
     }
 

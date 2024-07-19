@@ -132,7 +132,7 @@ class DisplayEntityReferenceTest extends ViewTestBase {
   /**
    * Tests the entity reference display plugin.
    */
-  public function testEntityReferenceDisplay() {
+  public function testEntityReferenceDisplay(): void {
     $connection = Database::getConnection();
 
     // Test that the 'title' settings are not shown.
@@ -293,7 +293,7 @@ class DisplayEntityReferenceTest extends ViewTestBase {
     $this->executeView($view);
 
     if ($connection->driver() != 'mongodb') {
-      // @TODO Fir the next assertion for MongoDB.
+      // @todo Fir the next assertion for MongoDB.
       $this->assertCount(2, $view->result, 'Search returned two rows');
     }
 

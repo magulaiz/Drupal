@@ -63,7 +63,7 @@ class AreaEntityTest extends ViewsKernelTestBase {
   /**
    * Tests views data for entity area handlers.
    */
-  public function testEntityAreaData() {
+  public function testEntityAreaData(): void {
     $data = $this->container->get('views.views_data')->get('views');
     $entity_types = $this->container->get('entity_type.manager')->getDefinitions();
 
@@ -91,7 +91,7 @@ class AreaEntityTest extends ViewsKernelTestBase {
   /**
    * Tests the area handler.
    */
-  public function testEntityArea() {
+  public function testEntityArea(): void {
     /** @var \Drupal\Core\Entity\EntityInterface[] $entities */
     $entities = [];
     for ($i = 0; $i < 3; $i++) {

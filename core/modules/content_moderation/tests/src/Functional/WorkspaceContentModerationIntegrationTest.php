@@ -53,9 +53,9 @@ class WorkspaceContentModerationIntegrationTest extends ModerationStateTestBase 
   /**
    * Tests moderating nodes in a workspace.
    */
-  public function testModerationInWorkspace() {
+  public function testModerationInWorkspace(): void {
     if (Database::getConnection()->driver() == 'mongodb') {
-      // @TODO Fix this test for MongoDB.
+      // @todo Fix this test for MongoDB.
       $this->markTestSkipped();
     }
 

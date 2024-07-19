@@ -51,9 +51,9 @@ class SearchNodeUpdateAndDeletionTest extends BrowserTestBase {
   /**
    * Tests that the search index info is properly updated when a node changes.
    */
-  public function testSearchIndexUpdateOnNodeChange() {
+  public function testSearchIndexUpdateOnNodeChange(): void {
     if (Database::getConnection()->driver() == 'mongodb') {
-      // @TODO The test should pass for MongoDB.
+      // @todo The test should pass for MongoDB.
       $this->markTestSkipped();
     }
 
@@ -93,7 +93,7 @@ class SearchNodeUpdateAndDeletionTest extends BrowserTestBase {
   /**
    * Tests that the search index info is updated when a node is deleted.
    */
-  public function testSearchIndexUpdateOnNodeDeletion() {
+  public function testSearchIndexUpdateOnNodeDeletion(): void {
     // Create a node.
     $node = $this->drupalCreateNode([
       'title' => 'No dragons here',

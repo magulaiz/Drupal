@@ -130,7 +130,7 @@ class FieldableEntityDefinitionUpdateTest extends EntityKernelTestBase {
    * @covers ::updateFieldableEntityType
    * @dataProvider providerTestFieldableEntityTypeUpdates
    */
-  public function testFieldableEntityTypeUpdates($initial_rev, $initial_mul, $new_rev, $new_mul, $data_migration_supported) {
+  public function testFieldableEntityTypeUpdates($initial_rev, $initial_mul, $new_rev, $new_mul, $data_migration_supported): void {
     if ($this->database->driver() == 'mongodb') {
       $this->markTestSkipped('The MongoDB database driver does not support this functionality.');
     }
@@ -670,7 +670,7 @@ class FieldableEntityDefinitionUpdateTest extends EntityKernelTestBase {
   /**
    * Tests that a failed entity schema update preserves the existing data.
    */
-  public function testFieldableEntityTypeUpdatesErrorHandling() {
+  public function testFieldableEntityTypeUpdatesErrorHandling(): void {
     if ($this->database->driver() == 'mongodb') {
       $this->markTestSkipped('The MongoDB database driver does not support this functionality.');
     }
@@ -842,7 +842,7 @@ class FieldableEntityDefinitionUpdateTest extends EntityKernelTestBase {
   /**
    * Tests the removal of the backup tables after a successful update.
    */
-  public function testFieldableEntityTypeUpdatesRemoveBackupTables() {
+  public function testFieldableEntityTypeUpdatesRemoveBackupTables(): void {
     if ($this->database->driver() == 'mongodb') {
       $this->markTestSkipped('The MongoDB database driver does not support this functionality.');
     }

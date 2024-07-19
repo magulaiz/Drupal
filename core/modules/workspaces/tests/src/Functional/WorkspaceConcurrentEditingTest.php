@@ -29,9 +29,9 @@ class WorkspaceConcurrentEditingTest extends BrowserTestBase {
   /**
    * Tests editing a node in multiple workspaces.
    */
-  public function testConcurrentEditing() {
+  public function testConcurrentEditing(): void {
     if (Database::getConnection()->driver() == 'mongodb') {
-      // @TODO Fix this test for MongoDB.
+      // @todo Fix this test for MongoDB.
       $this->markTestSkipped();
     }
 

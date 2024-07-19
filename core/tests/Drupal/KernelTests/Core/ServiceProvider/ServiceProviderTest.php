@@ -42,7 +42,7 @@ class ServiceProviderTest extends KernelTestBase {
   /**
    * Tests that services provided by module service providers get registered to the DIC.
    */
-  public function testServiceProviderRegistration() {
+  public function testServiceProviderRegistration(): void {
     if ($this->container->get('database')->driver() == 'mongodb') {
       $definition = $this->container->getDefinition('mongodb.file.usage');
     }
@@ -56,7 +56,7 @@ class ServiceProviderTest extends KernelTestBase {
   /**
    * Tests that the DIC keeps up with module enable/disable in the same request.
    */
-  public function testServiceProviderRegistrationDynamic() {
+  public function testServiceProviderRegistrationDynamic(): void {
     // Uninstall the module and ensure the service provider's service is not registered.
     \Drupal::service('module_installer')->uninstall(['service_provider_test']);
     $this->assertFalse(\Drupal::hasService('service_provider_test_class'), 'The service_provider_test_class service does not exist in the DIC.');

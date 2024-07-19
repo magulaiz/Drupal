@@ -21,7 +21,7 @@ class MenuLinkContentStorage extends SqlContentEntityStorage implements MenuLink
     $revision_default_field = $table_mapping->getColumnNames($this->entityType->getRevisionMetadataKey('revision_default'))['value'];
 
     if ($this->database->driver() == 'mongodb') {
-      // @TODO Fix this query for MongoDB.
+      // @todo Fix this query for MongoDB.
       // See: https://git.drupalcode.org/project/drupal/-/commit/fbdccdc952c53fce12a81ac6640514c52e5fc3af
       return [];
     }

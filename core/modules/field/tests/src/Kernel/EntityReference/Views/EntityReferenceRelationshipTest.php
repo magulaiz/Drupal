@@ -92,7 +92,7 @@ class EntityReferenceRelationshipTest extends ViewsKernelTestBase {
   /**
    * Tests using the views relationship.
    */
-  public function testNoDataTableRelationship() {
+  public function testNoDataTableRelationship(): void {
 
     // Create some test entities which link each other.
     $referenced_entity = EntityTestMul::create();
@@ -198,7 +198,7 @@ class EntityReferenceRelationshipTest extends ViewsKernelTestBase {
    *
    * @see entity_reference_field_views_data()
    */
-  public function testDataTableRelationship() {
+  public function testDataTableRelationship(): void {
 
     // Create some test entities which link each other.
     $referenced_entity = EntityTest::create();
@@ -303,7 +303,7 @@ class EntityReferenceRelationshipTest extends ViewsKernelTestBase {
    *
    * @see entity_reference_field_views_data()
    */
-  public function testDataTableRelationshipWithLongFieldName() {
+  public function testDataTableRelationshipWithLongFieldName(): void {
     // Create some test entities which link each other.
     $referenced_entity = EntityTest::create();
     $referenced_entity->save();
@@ -344,7 +344,7 @@ class EntityReferenceRelationshipTest extends ViewsKernelTestBase {
   /**
    * Tests group by with optional and empty relationship.
    */
-  public function testGroupByWithEmptyRelationships() {
+  public function testGroupByWithEmptyRelationships(): void {
     if (Database::getConnection()->driver() == 'mongodb') {
       $this->markTestSkipped('The MongoDB database driver does not support this functionality.');
     }
@@ -409,7 +409,7 @@ class EntityReferenceRelationshipTest extends ViewsKernelTestBase {
   /**
    * Test that config entities don't get relationships added.
    */
-  public function testEntityReferenceConfigEntity() {
+  public function testEntityReferenceConfigEntity(): void {
     // Create reference from entity_test to a config entity.
     $this->createEntityReferenceField('entity_test', 'entity_test', 'field_test_config_entity', 'field_test_config_entity', 'user_role');
     Views::viewsData()->clear();

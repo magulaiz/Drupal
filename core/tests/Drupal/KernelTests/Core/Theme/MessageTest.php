@@ -22,7 +22,7 @@ class MessageTest extends KernelTestBase {
   /**
    * Tests setting messages output.
    */
-  public function testMessages() {
+  public function testMessages(): void {
     // Enable the Starterkit theme.
     \Drupal::service('theme_installer')->install(['starterkit_theme']);
     $this->config('system.theme')->set('default', 'starterkit_theme')->save();
@@ -34,7 +34,7 @@ class MessageTest extends KernelTestBase {
     ];
     $this->render($messages);
     if (Database::getConnection()->driver() != 'mongodb') {
-      // @TODO Fix the next assertions for MongoDB.
+      // @todo Fix the next assertions for MongoDB.
       $this->assertRaw('messages messages--error');
       $this->assertRaw('messages messages--status');
     }

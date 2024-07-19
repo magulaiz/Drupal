@@ -69,7 +69,7 @@ class ModerationLocaleTest extends ModerationStateTestBase {
   /**
    * Tests article translations can be moderated separately.
    */
-  public function testTranslateModeratedContent() {
+  public function testTranslateModeratedContent(): void {
     // Create a published article in English.
     $edit = [
       'title[0][value]' => 'Published English node',
@@ -219,9 +219,9 @@ class ModerationLocaleTest extends ModerationStateTestBase {
   /**
    * Tests that individual translations can be moderated independently.
    */
-  public function testLanguageIndependentContentModeration() {
+  public function testLanguageIndependentContentModeration(): void {
     if (Database::getConnection()->driver() == 'mongodb') {
-      // @TODO Fix this test for MongoDB.
+      // @todo Fix this test for MongoDB.
       $this->markTestSkipped();
     }
 
@@ -421,7 +421,7 @@ class ModerationLocaleTest extends ModerationStateTestBase {
   /**
    * Checks that new translation values are populated properly.
    */
-  public function testNewTranslationSourceValues() {
+  public function testNewTranslationSourceValues(): void {
     // Create a published article in Italian (revision 1).
     $this->drupalGet('node/add/article');
     $node = $this->submitNodeForm('Test 1.1 IT', 'published', TRUE, 'it');
@@ -458,7 +458,7 @@ class ModerationLocaleTest extends ModerationStateTestBase {
   /**
    * Tests article revision history shows revisions for the correct translation.
    */
-  public function testTranslationRevisionsHistory() {
+  public function testTranslationRevisionsHistory(): void {
     // Create a published article in English.
     $edit = [
       'title[0][value]' => 'English node',

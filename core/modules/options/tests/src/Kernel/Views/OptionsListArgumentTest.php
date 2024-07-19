@@ -25,7 +25,7 @@ class OptionsListArgumentTest extends OptionsTestBase {
   /**
    * Tests the options field argument.
    */
-  public function testViewsTestOptionsListArgument() {
+  public function testViewsTestOptionsListArgument(): void {
     if (Database::getConnection()->driver() == 'mongodb') {
       // For MongoDB this view results in an empty array. The value for the
       // field field_test_list_integer is set to zero and the argument is set to

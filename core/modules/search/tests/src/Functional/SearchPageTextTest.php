@@ -55,7 +55,7 @@ class SearchPageTextTest extends BrowserTestBase {
    *
    * This is a regression test for https://www.drupal.org/node/2338081
    */
-  public function testSearchLabelXSS() {
+  public function testSearchLabelXSS(): void {
     if (Database::getConnection()->driver() == 'mongodb') {
       // The SearchQuery is doing too much special SQL stuff to make this work
       // for MongoDB.
@@ -76,7 +76,7 @@ class SearchPageTextTest extends BrowserTestBase {
   /**
    * Tests the failed search text, and various other text on the search page.
    */
-  public function testSearchText() {
+  public function testSearchText(): void {
     $this->drupalLogin($this->searchingUser);
     $this->drupalGet('search/node');
     $this->assertSession()->pageTextContains('Enter your keywords');

@@ -29,7 +29,7 @@ class LockFunctionalTest extends BrowserTestBase {
   /**
    * Confirms that we can acquire and release locks in two parallel requests.
    */
-  public function testLockAcquire() {
+  public function testLockAcquire(): void {
     $lock = $this->container->get('lock');
     $lock_acquired = 'TRUE: Lock successfully acquired in \Drupal\system_test\Controller\SystemTestController::lockAcquire()';
     $lock_not_acquired = 'FALSE: Lock not acquired in \Drupal\system_test\Controller\SystemTestController::lockAcquire()';
@@ -53,7 +53,7 @@ class LockFunctionalTest extends BrowserTestBase {
     // The other request should break our lock.
     $this->drupalGet('system-test/lock-acquire');
     if (Database::getConnection()->driver() != 'mongodb') {
-      // @TODO Fix the next assertions for MongoDB.
+      // @todo Fix the next assertions for MongoDB.
       $this->assertSession()->pageTextContains($lock_acquired);
       // We cannot renew it, since the other thread took it.
       $this->assertFalse($lock->acquire('system_test_lock_acquire'), 'Lock cannot be extended by this request.');
@@ -69,7 +69,7 @@ class LockFunctionalTest extends BrowserTestBase {
   /**
    * Tests that the persistent lock is persisted between requests.
    */
-  public function testPersistentLock() {
+  public function testPersistentLock(): void {
     $persistent_lock = $this->container->get('lock.persistent');
     // Get a persistent lock.
     $this->drupalGet('system-test/lock-persist/lock1');

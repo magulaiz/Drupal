@@ -80,7 +80,7 @@ class EntityReferenceAdminTest extends BrowserTestBase {
   /**
    * Tests the Entity Reference Admin UI.
    */
-  public function testFieldAdminHandler() {
+  public function testFieldAdminHandler(): void {
     $connection = Database::getConnection();
 
     $bundle_path = 'admin/structure/types/manage/' . $this->type;
@@ -211,7 +211,7 @@ class EntityReferenceAdminTest extends BrowserTestBase {
     $this->drupalGet('node/add/' . $this->type);
     $this->submitForm($edit, 'Save');
     if ($connection->driver() != 'mongodb') {
-      // @TODO Fix the next assertion for MongoDB.
+      // @todo Fix the next assertion for MongoDB.
       $this->assertSession()->linkExists($node1->getTitle());
     }
 
@@ -273,7 +273,7 @@ class EntityReferenceAdminTest extends BrowserTestBase {
   /**
    * Tests the formatters for the Entity References.
    */
-  public function testAvailableFormatters() {
+  public function testAvailableFormatters(): void {
     // Create a new vocabulary.
     Vocabulary::create(['vid' => 'tags', 'name' => 'tags'])->save();
 
@@ -334,7 +334,7 @@ class EntityReferenceAdminTest extends BrowserTestBase {
    * The tested entity reference field has multiple target bundles and is set
    * to auto-create the target entity.
    */
-  public function testMultipleTargetBundles() {
+  public function testMultipleTargetBundles(): void {
     /** @var \Drupal\taxonomy\Entity\Vocabulary[] $vocabularies */
     $vocabularies = [];
     for ($i = 0; $i < 2; $i++) {

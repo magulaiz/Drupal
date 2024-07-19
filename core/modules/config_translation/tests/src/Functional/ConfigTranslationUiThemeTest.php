@@ -68,7 +68,7 @@ class ConfigTranslationUiThemeTest extends BrowserTestBase {
   /**
    * Tests that theme provided *.config_translation.yml files are found.
    */
-  public function testThemeDiscovery() {
+  public function testThemeDiscovery(): void {
     // Install the test theme and rebuild routes.
     $theme = 'config_translation_test_theme';
 
@@ -79,7 +79,7 @@ class ConfigTranslationUiThemeTest extends BrowserTestBase {
     $this->drupalGet($this->getAbsoluteUrl($element->getAttribute('href')), ['external' => TRUE]);
 
     if (Database::getConnection()->driver() != 'mongodb') {
-      // @TODO Fix the next assertions for MongoDB.
+      // @todo Fix the next assertions for MongoDB.
       $translation_base_url = 'admin/config/development/performance/translate';
       $this->drupalGet($translation_base_url);
       $this->assertSession()->statusCodeEquals(200);

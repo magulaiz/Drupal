@@ -33,9 +33,9 @@ class WorkspaceBypassTest extends BrowserTestBase {
   /**
    * Verifies that a user can edit anything in a workspace they own.
    */
-  public function testBypassOwnWorkspace() {
+  public function testBypassOwnWorkspace(): void {
     if (Database::getConnection()->driver() == 'mongodb') {
-      // @TODO Fix this test for MongoDB.
+      // @todo Fix this test for MongoDB.
       $this->markTestSkipped();
     }
 

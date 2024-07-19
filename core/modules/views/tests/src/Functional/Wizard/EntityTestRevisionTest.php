@@ -26,9 +26,9 @@ class EntityTestRevisionTest extends WizardTestBase {
   /**
    * Tests creating a view of revisions where the type is not on the base table.
    */
-  public function testRevisionsViewWithNoTypeOnBaseTable() {
+  public function testRevisionsViewWithNoTypeOnBaseTable(): void {
     if (Database::getConnection()->driver() == 'mongodb') {
-      // @TODO Fix this test for MongoDB.
+      // @todo Fix this test for MongoDB.
       $this->markTestSkipped();
     }
 

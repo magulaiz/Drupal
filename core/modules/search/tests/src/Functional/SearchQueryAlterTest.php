@@ -27,7 +27,7 @@ class SearchQueryAlterTest extends BrowserTestBase {
   /**
    * Tests that the query alter works.
    */
-  public function testQueryAlter() {
+  public function testQueryAlter(): void {
     if (Database::getConnection()->driver() == 'mongodb') {
       // The SearchQuery is doing too much special SQL stuff to make this work
       // for MongoDB.

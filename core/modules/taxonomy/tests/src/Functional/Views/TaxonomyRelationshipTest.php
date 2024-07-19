@@ -60,7 +60,7 @@ class TaxonomyRelationshipTest extends TaxonomyTestBase {
   /**
    * Tests the taxonomy parent plugin UI.
    */
-  public function testTaxonomyRelationships() {
+  public function testTaxonomyRelationships(): void {
     if (Database::getConnection()->driver() == 'mongodb') {
       $taxonomy_table = 'taxonomy_term_data';
       $node_table = 'node';

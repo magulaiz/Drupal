@@ -48,7 +48,7 @@ class DownloadTest extends FileManagedTestBase {
   /**
    * Tests the public file transfer system.
    */
-  public function testPublicFileTransfer() {
+  public function testPublicFileTransfer(): void {
     // Test generating a URL to a created file.
     $file = $this->createFile();
     $url = $this->fileUrlGenerator->generateAbsoluteString($file->getFileUri());
@@ -72,7 +72,7 @@ class DownloadTest extends FileManagedTestBase {
   /**
    * Tests the private file transfer system.
    */
-  public function testPrivateFileTransferWithoutPageCache() {
+  public function testPrivateFileTransferWithoutPageCache(): void {
     $this->doPrivateFileTransferTest();
   }
 
@@ -148,7 +148,7 @@ class DownloadTest extends FileManagedTestBase {
   /**
    * Test FileUrlGeneratorInterface::generateString()
    */
-  public function testFileCreateUrl() {
+  public function testFileCreateUrl(): void {
     // "Special" ASCII characters.
     $basename = " -._~!$'\"()*@[]?&+%#,;=:\n\x00" .
       // Characters that look like a percent-escaped string.
@@ -175,7 +175,7 @@ class DownloadTest extends FileManagedTestBase {
       $base_path = $request->getSchemeAndHttpHost() . $request->getBasePath();
       $this->checkUrl('public', '', $basename, $base_path . '/' . $public_directory_path . '/' . $basename_encoded);
       if (Database::getConnection()->driver() != 'mongodb') {
-        // @TODO check to see if we can fix the thrown write conflict. The
+        // @todo check to see if we can fix the thrown write conflict. The
         // State change triggers a cache delete and that causes a conflict
         // with the entity delete. Maybe remove a MongoDB transaction.
         $this->checkUrl('private', '', $basename, $base_path . '/' . $script_path . 'system/files/' . $basename_encoded);

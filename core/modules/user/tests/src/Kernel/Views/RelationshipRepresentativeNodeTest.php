@@ -45,7 +45,7 @@ class RelationshipRepresentativeNodeTest extends KernelTestBase {
   /**
    * Tests the relationship.
    */
-  public function testRelationship() {
+  public function testRelationship(): void {
     if (Database::getConnection()->driver() == 'mongodb') {
       $this->markTestSkipped('The MongoDB database driver does not support views with groupwise max.');
     }

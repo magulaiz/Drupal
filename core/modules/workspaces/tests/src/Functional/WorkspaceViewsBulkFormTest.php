@@ -45,9 +45,9 @@ class WorkspaceViewsBulkFormTest extends BulkFormTest {
     $this->switchToWorkspace($stage);
   }
 
-  public function testBulkForm() {
+  public function testBulkForm(): void {
     if (Database::getConnection()->driver() == 'mongodb') {
-      // @TODO Fix this test for MongoDB.
+      // @todo Fix this test for MongoDB.
       $this->markTestSkipped();
     }
 
@@ -63,7 +63,7 @@ class WorkspaceViewsBulkFormTest extends BulkFormTest {
    */
   public function testConfirmRouteWithParameters(): void {
     if (Database::getConnection()->driver() == 'mongodb') {
-      // @TODO Fix this test for MongoDB.
+      // @todo Fix this test for MongoDB.
       $this->markTestSkipped();
     }
   }

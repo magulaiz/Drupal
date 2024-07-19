@@ -50,7 +50,7 @@ class UnsavedPreviewTest extends UITestBase {
   /**
    * Tests previews of unsaved new page displays.
    */
-  public function testUnsavedPageDisplayPreview() {
+  public function testUnsavedPageDisplayPreview(): void {
     $this->drupalCreateContentType(['type' => 'page']);
     for ($i = 0; $i < 5; $i++) {
       $this->drupalCreateNode();
@@ -81,7 +81,7 @@ class UnsavedPreviewTest extends UITestBase {
     $this->submitForm([], 'Update preview');
     $this->assertSession()->statusCodeEquals(200);
     if (Database::getConnection()->driver() != 'mongodb') {
-      // @TODO Fix the next assertion for MongoDB.
+      // @todo Fix the next assertion for MongoDB.
       $this->assertSession()->linkByHrefExists('foobar');
     }
   }

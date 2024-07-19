@@ -317,11 +317,12 @@ class MenuLinkContentTest extends ResourceTestBase {
   /**
    * {@inheritdoc}
    */
-  public function testCollectionFilterAccess() {
+  public function testCollectionFilterAccess(): void {
     if (Database::getConnection()->driver() == 'mongodb') {
-      // @TODO This test should work for MongodB.
+      // @todo This test should work for MongoDB.
       $this->markTestSkipped();
     }
+
     $this->doTestCollectionFilterAccessBasedOnPermissions('title', 'administer menu');
   }
 
@@ -330,7 +331,7 @@ class MenuLinkContentTest extends ResourceTestBase {
    *
    * @see https://security.drupal.org/node/161923
    */
-  public function testLinkOptionsSerialization() {
+  public function testLinkOptionsSerialization(): void {
     $this->config('jsonapi.settings')->set('read_only', FALSE)->save(TRUE);
 
     $document = $this->getPostDocument();

@@ -16,9 +16,9 @@ class InvalidDataTest extends DatabaseTestBase {
   /**
    * Tests aborting of traditional SQL database systems with invalid data.
    */
-  public function testInsertDuplicateData() {
+  public function testInsertDuplicateData(): void {
     if ($this->connection->driver() == 'mongodb') {
-      // @TODO See if we can make this work with MongoDB.
+      // @todo See if we can make this work with MongoDB.
       $this->markTestSkipped('The MongoDB database driver does not support this functionality.');
     }
 
@@ -60,9 +60,9 @@ class InvalidDataTest extends DatabaseTestBase {
   /**
    * Tests inserting with invalid data from a select query.
    */
-  public function testInsertDuplicateDataFromSelect() {
+  public function testInsertDuplicateDataFromSelect(): void {
     if ($this->connection->driver() == 'mongodb') {
-      // @TODO See if we can make this work with MongoDB.
+      // @todo See if we can make this work with MongoDB.
       $this->markTestSkipped('The MongoDB database driver does not support this functionality.');
     }
 

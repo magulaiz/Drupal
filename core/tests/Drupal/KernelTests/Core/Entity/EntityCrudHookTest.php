@@ -100,7 +100,7 @@ class EntityCrudHookTest extends EntityKernelTestBase {
   /**
    * Tests hook invocations for CRUD operations on blocks.
    */
-  public function testBlockHooks() {
+  public function testBlockHooks(): void {
     $entity = Block::create([
       'id' => 'stark_test_html',
       'plugin' => 'test_html',
@@ -155,7 +155,7 @@ class EntityCrudHookTest extends EntityKernelTestBase {
   /**
    * Tests hook invocations for CRUD operations on comments.
    */
-  public function testCommentHooks() {
+  public function testCommentHooks(): void {
     $account = $this->createUser();
     NodeType::create([
       'type' => 'article',
@@ -240,7 +240,7 @@ class EntityCrudHookTest extends EntityKernelTestBase {
   /**
    * Tests hook invocations for CRUD operations on files.
    */
-  public function testFileHooks() {
+  public function testFileHooks(): void {
     $this->installEntitySchema('file');
 
     $url = 'public://entity_crud_hook_test.file';
@@ -305,7 +305,7 @@ class EntityCrudHookTest extends EntityKernelTestBase {
   /**
    * Tests hook invocations for CRUD operations on nodes.
    */
-  public function testNodeHooks() {
+  public function testNodeHooks(): void {
     $account = $this->createUser();
 
     $node = Node::create([
@@ -369,7 +369,7 @@ class EntityCrudHookTest extends EntityKernelTestBase {
   /**
    * Tests hook invocations for CRUD operations on taxonomy terms.
    */
-  public function testTaxonomyTermHooks() {
+  public function testTaxonomyTermHooks(): void {
     $this->installEntitySchema('taxonomy_term');
 
     $vocabulary = Vocabulary::create([
@@ -438,7 +438,7 @@ class EntityCrudHookTest extends EntityKernelTestBase {
   /**
    * Tests hook invocations for CRUD operations on taxonomy vocabularies.
    */
-  public function testTaxonomyVocabularyHooks() {
+  public function testTaxonomyVocabularyHooks(): void {
     $this->installEntitySchema('taxonomy_term');
 
     $vocabulary = Vocabulary::create([
@@ -497,7 +497,7 @@ class EntityCrudHookTest extends EntityKernelTestBase {
   /**
    * Tests hook invocations for CRUD operations on users.
    */
-  public function testUserHooks() {
+  public function testUserHooks(): void {
     $account = User::create([
       'name' => 'Test user',
       'mail' => 'test@example.com',
@@ -554,7 +554,7 @@ class EntityCrudHookTest extends EntityKernelTestBase {
   /**
    * Tests rollback from failed entity save.
    */
-  public function testEntityRollback() {
+  public function testEntityRollback(): void {
     if (Database::getConnection()->driver() == 'mongodb') {
       // @todo This is something that should work.
       $this->markTestSkipped('The MongoDB database driver does not support rollbacks on a failed entity save.');
@@ -565,7 +565,7 @@ class EntityCrudHookTest extends EntityKernelTestBase {
       EntityTest::create(['name' => 'fail_insert'])->save();
       $this->fail('Expected exception has not been thrown.');
     }
-    catch (\Exception $e) {
+    catch (\Exception) {
       // Expected exception; just continue testing.
     }
 
