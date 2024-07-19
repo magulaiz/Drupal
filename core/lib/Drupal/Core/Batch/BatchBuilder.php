@@ -118,14 +118,14 @@ class BatchBuilder {
    *
    * @var \Symfony\Component\DependencyInjection\ContainerBuilder
    */
-  protected \Symfony\Component\DependencyInjection\ContainerBuilder $container;
+  protected ContainerBuilder $container;
 
   /**
    * The container.
    *
    * @var \Drupal\Core\Utility\CallableResolver
    */
-  protected \Drupal\Core\Utility\CallableResolver $callableResolver;
+  protected CallableResolver $callableResolver;
 
   /**
    * Sets the default values for the batch builder.
