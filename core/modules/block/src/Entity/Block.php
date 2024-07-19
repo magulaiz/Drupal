@@ -236,7 +236,6 @@ class Block extends ConfigEntityBase implements BlockInterface, EntityWithPlugin
    * {@inheritdoc}
    */
   public function calculateDependencies() {
-    parent::calculateDependencies();
     $this->addDependency('theme', $this->theme);
     return $this;
   }
@@ -312,7 +311,7 @@ class Block extends ConfigEntityBase implements BlockInterface, EntityWithPlugin
   /**
    * {@inheritdoc}
    */
-  #[ActionMethod(adminLabel: new TranslatableMarkup('Set region'), pluralize: FALSE)]
+  #[ActionMethod(adminLabel: new TranslatableMarkup('Set block region'), pluralize: FALSE)]
   public function setRegion($region) {
     $this->region = $region;
     return $this;
@@ -321,7 +320,7 @@ class Block extends ConfigEntityBase implements BlockInterface, EntityWithPlugin
   /**
    * {@inheritdoc}
    */
-  #[ActionMethod(adminLabel: new TranslatableMarkup('Set weight'), pluralize: FALSE)]
+  #[ActionMethod(adminLabel: new TranslatableMarkup('Set block weight'), pluralize: FALSE)]
   public function setWeight($weight) {
     $this->weight = $weight;
     return $this;

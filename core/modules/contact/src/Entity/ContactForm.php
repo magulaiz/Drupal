@@ -119,7 +119,7 @@ class ContactForm extends ConfigEntityBundleBase implements ContactFormInterface
   /**
    * {@inheritdoc}
    */
-  #[ActionMethod(adminLabel: new TranslatableMarkup('Change contact form message'), pluralize: FALSE)]
+  #[ActionMethod(adminLabel: new TranslatableMarkup('Set contact form message'), pluralize: FALSE)]
   public function setMessage($message) {
     $this->message = $message;
     return $this;
@@ -164,7 +164,7 @@ class ContactForm extends ConfigEntityBundleBase implements ContactFormInterface
   /**
    * {@inheritdoc}
    */
-  #[ActionMethod(adminLabel: new TranslatableMarkup('Change redirect path'), pluralize: FALSE)]
+  #[ActionMethod(adminLabel: new TranslatableMarkup('Set redirect path'), pluralize: FALSE)]
   public function setRedirectPath($redirect) {
     $this->redirect = $redirect;
     return $this;
@@ -196,7 +196,7 @@ class ContactForm extends ConfigEntityBundleBase implements ContactFormInterface
   /**
    * {@inheritdoc}
    */
-  #[ActionMethod(adminLabel: new TranslatableMarkup('Change weight'), pluralize: FALSE)]
+  #[ActionMethod(adminLabel: new TranslatableMarkup('Set weight'), pluralize: FALSE)]
   public function setWeight($weight) {
     $this->weight = $weight;
     return $this;

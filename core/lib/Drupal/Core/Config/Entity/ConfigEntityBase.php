@@ -194,7 +194,7 @@ abstract class ConfigEntityBase extends EntityBase implements ConfigEntityInterf
   /**
    * {@inheritdoc}
    */
-  #[ActionMethod(adminLabel: new TranslatableMarkup('Set status'), pluralize: FALSE)]
+  #[ActionMethod(adminLabel: new TranslatableMarkup('Set entity status'), pluralize: FALSE)]
   public function setStatus($status) {
     $this->status = (bool) $status;
     return $this;
