@@ -6,9 +6,13 @@ use Drupal\Component\Utility\Html;
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Cache\CacheableDependencyInterface;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
+use Drupal\user\Entity\Role;
+use Drupal\user\RoleInterface;
 use Drupal\views\Attribute\ViewsStyle;
 use Drupal\views\Plugin\views\wizard\WizardInterface;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Style plugin to render each item as a row in a table.
@@ -62,6 +66,20 @@ class Table extends StylePluginBase implements CacheableDependencyInterface {
    */
   public $order;
 
+  /**
+   * The current user.
+   */
+  protected AccountInterface $currentUser;
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
+    $instance = parent::create($container, $configuration, $plugin_id, $plugin_definition);
+    $instance->currentUser = $container->get('current_user');
+    return $instance;
+  }
+
   protected function defineOptions() {
     $options = parent::defineOptions();
 
@@ -75,6 +93,8 @@ class Table extends StylePluginBase implements CacheableDependencyInterface {
     $options['summary'] = ['default' => ''];
     $options['description'] = ['default' => ''];
     $options['empty_table'] = ['default' => FALSE];
+    $options['remember'] = ['default' => FALSE];
+    $options['remember_roles'] = ['default' => []];
 
     return $options;
   }
@@ -101,19 +121,35 @@ class Table extends StylePluginBase implements CacheableDependencyInterface {
    * Add our actual sort criteria.
    */
   public function buildSortPost() {
-    $query = $this->view->getRequest()->query;
+    $request = $this->view->getRequest();
+    $query = $request->query;
     $order = $query->get('order');
-    if (!isset($order)) {
-      // check for a 'default' clickSort. If there isn't one, exit gracefully.
-      if (empty($this->options['default'])) {
-        return;
+    // Try to get the remembered sort selection from the session.
+    if ($this->options['remember']) {
+      $allowed_rids = array_filter($this->options['remember_roles']);
+      if ($allowed_rids && array_intersect(array_keys($allowed_rids), $this->currentUser->getRoles())) {
+        $display_id = ($this->view->display_handler->isDefaulted('filters')) ? 'default' : $this->view->current_display;
+        $views_session = $request->getSession()->get('views_table_sort', []);
+        $remembered = &$views_session[$this->view->storage->id()][$display_id];
       }
-      $sort = $this->options['default'];
-      if (!empty($this->options['info'][$sort]['default_sort_order'])) {
-        $this->order = $this->options['info'][$sort]['default_sort_order'];
+    }
+    if (!isset($order)) {
+      if (isset($remembered)) {
+        $sort = $remembered['sort'];
+        $this->order = $remembered['order'];
       }
       else {
-        $this->order = !empty($this->options['order']) ? $this->options['order'] : 'asc';
+        // check for a 'default' clickSort. If there isn't one, exit gracefully.
+        if (empty($this->options['default'])) {
+          return;
+        }
+        $sort = $this->options['default'];
+        if (!empty($this->options['info'][$sort]['default_sort_order'])) {
+          $this->order = $this->options['info'][$sort]['default_sort_order'];
+        }
+        else {
+          $this->order = !empty($this->options['order']) ? $this->options['order'] : 'asc';
+        }
       }
     }
     else {
@@ -138,6 +174,13 @@ class Table extends StylePluginBase implements CacheableDependencyInterface {
 
     // Tell the field to click sort.
     $this->view->field[$sort]->clickSort($this->order);
+
+    // Remember the sort selection
+    // if it is not the default sort and a session is available.
+    if (isset($order) && isset($views_session)) {
+      $remembered = ['sort' => $sort, 'order' => $this->order];
+      $request->getSession()->set('views_table_sort', $views_session);
+    }
   }
 
   /**
@@ -404,6 +447,26 @@ class Table extends StylePluginBase implements CacheableDependencyInterface {
       '#title' => $this->t('Show the empty text in the table'),
       '#default_value' => $this->options['empty_table'],
       '#description' => $this->t('Per default the table is hidden for an empty view. With this option it is possible to show an empty table with the text in it.'),
+    ];
+
+    $form['remember'] = [
+      '#type' => 'checkbox',
+      '#title' => $this->t('Remember the last sort selection'),
+      '#description' => $this->t('Enable to remember the last sort selection made by the user.'),
+      '#default_value' => $this->options['remember'],
+    ];
+    $role_options = array_map(fn(RoleInterface $role) => Html::escape($role->label()), Role::loadMultiple());
+    $form['remember_roles'] = [
+      '#type' => 'checkboxes',
+      '#title' => $this->t('User roles'),
+      '#description' => $this->t('Remember sort selection only for the selected user role(s). If you select no roles, the sort data will never be stored.'),
+      '#default_value' => $this->options['remember_roles'],
+      '#options' => $role_options,
+      '#states' => [
+        'invisible' => [
+          ':input[name="style_options[remember]"]' => ['checked' => FALSE],
+        ],
+      ],
     ];
 
     $form['description_markup'] = [
