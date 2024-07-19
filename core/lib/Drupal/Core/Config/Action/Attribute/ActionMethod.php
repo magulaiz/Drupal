@@ -32,7 +32,7 @@ final class ActionMethod {
    *   logical sense.
    * @param string|null $alias
    *   The name of the action, if it should differ from the method name. Will be
-   *   pluralized if $pluralize is TRUE. If used, the actual name of hte method
+   *   pluralized if $pluralize is TRUE. If used, the actual name of the method
    *   will NOT be available as an action name.
    */
   public function __construct(
