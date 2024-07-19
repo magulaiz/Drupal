@@ -360,13 +360,13 @@ YAML;
     $this->assertIsArray($view_display->getComponent('links'));
 
     $recipe = <<<YAML
-name: 'Remove display components'
+name: 'Hide display components'
 config:
   actions:
     {$form_display->getConfigDependencyName()}:
-      removeComponent: uid
+      hideComponent: uid
     {$view_display->getConfigDependencyName()}:
-      removeComponents:
+      hideComponents:
         - body
         - links
 YAML;

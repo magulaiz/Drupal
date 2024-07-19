@@ -30,11 +30,16 @@ final class ActionMethod {
    *   ID. For example, if the method is called 'addArray' this can be set to
    *   'addMultipleArrays'. Set to FALSE if a pluralized version does not make
    *   logical sense.
+   * @param string|null $alias
+   *   The name of the action, if it should differ from the method name. Will be
+   *   pluralized if $pluralize is TRUE. If used, the actual name of hte method
+   *   will NOT be available as an action name.
    */
   public function __construct(
     public readonly Exists $exists = Exists::ErrorIfNotExists,
     public readonly TranslatableMarkup|string $adminLabel = '',
     public readonly bool|string $pluralize = TRUE,
+    public readonly ?string $alias = NULL,
   ) {
   }
 
