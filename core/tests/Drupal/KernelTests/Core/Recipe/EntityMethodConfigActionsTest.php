@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Drupal\KernelTests\Core\Recipe;
 
 use Drupal\block\Entity\Block;
+use Drupal\Component\Plugin\Exception\PluginNotFoundException;
 use Drupal\contact\Entity\ContactForm;
 use Drupal\Core\Entity\EntityDisplayRepositoryInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
@@ -359,6 +360,8 @@ YAML;
     $this->assertIsArray($view_display->getComponent('body'));
     $this->assertIsArray($view_display->getComponent('links'));
 
+    // The `hideComponent` action is an alias for `removeComponent`, proving
+    // that entity methods can be aliased.
     $recipe = <<<YAML
 name: 'Hide display components'
 config:
@@ -378,6 +381,13 @@ YAML;
     $view_display = $repository->getViewDisplay('node', 'test');
     $this->assertNull($view_display->getComponent('body'));
     $this->assertNull($view_display->getComponent('links'));
+
+    // `removeComponent` should not be a valid action name, even though it's the
+    // name of the underlying method.
+    $this->expectException(PluginNotFoundException::class);
+    $this->expectExceptionMessage('The "entity_form_display:removeComponent" plugin does not exist.');
+    $this->container->get('plugin.manager.config_action')
+      ->applyAction('entity_form_display:removeComponent', $form_display->getConfigDependencyName(), 'uid');
   }
 
   public function testNodeTypeEntityActions(): void {
