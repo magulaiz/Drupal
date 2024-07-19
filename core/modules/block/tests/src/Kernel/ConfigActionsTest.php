@@ -123,10 +123,11 @@ class ConfigActionsTest extends KernelTestBase {
     $blocks = $this->container->get(EntityTypeManagerInterface::class)
       ->getStorage('block')
       ->getQuery()
-      ->condition('theme', 'olivero')
-      ->condition('region', 'content_above')
+      ->condition('theme', $block->getTheme())
+      ->condition('region', $block->getRegion())
       ->sort('weight', 'ASC')
       ->execute();
+    $this->assertCount(3, $blocks);
     $this->assertSame('first', key($blocks));
     $this->assertSame('last', end($blocks));
   }
