@@ -429,7 +429,7 @@ function search_block_presave(BlockInterface $block) {
     $settings = $block->get('settings');
     if ($settings['page_id'] === '') {
       $settings['page_id'] = NULL;
+      $block->set('settings', $settings);
     }
-    $block->set('settings', $settings);
   }
 }
