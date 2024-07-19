@@ -7,6 +7,7 @@ namespace Drupal\KernelTests\Core\Database;
 use Drupal\Core\Database\InvalidQueryException;
 use Drupal\Core\Database\Database;
 use Drupal\Core\Database\DatabaseExceptionWrapper;
+use Drupal\Core\Database\Query\ConditionInterface;
 use Drupal\Core\Database\Query\SelectExtender;
 
 /**
@@ -675,7 +676,7 @@ class SelectTest extends DatabaseTestBase {
    *   Array of non array compatible operators and if an exception should be
    *   thrown.
    */
-  public function providerConditionCompareInvalidQueryException() {
+  public static function providerConditionCompareInvalidQueryException() {
     return [
       '=' => ['=', FALSE],
       '<' => ['<', FALSE],
@@ -701,12 +702,13 @@ class SelectTest extends DatabaseTestBase {
    *
    * @dataProvider providerConditionCompareInvalidQueryException
    */
-  public function testConditionCompareInvalidQueryException($operator, $exception) {
+  public function testConditionCompareInvalidQueryException($operator, $exception): void {
     if ($exception) {
       $this->expectException(InvalidQueryException::class);
       $this->expectExceptionMessage("In a query compare 'some_field " . $operator . " other_field' the operator must be one of the following: '=', '<', '>', '>=', '<=', '<>'.");
     }
-    $this->connection->condition('AND')->compare('some_field', 'other_field', $operator);
+    $condition = $this->connection->condition('AND')->compare('some_field', 'other_field', $operator);
+    $this->assertInstanceOf(ConditionInterface::class, $condition);
   }
 
 }
