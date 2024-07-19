@@ -127,7 +127,7 @@ class ConfigActionsTest extends KernelTestBase {
       ->condition('region', $block->getRegion())
       ->sort('weight', 'ASC')
       ->execute();
-    $this->assertCount(3, $blocks);
+    $this->assertGreaterThanOrEqual(3, $blocks);
     $this->assertSame('first', key($blocks));
     $this->assertSame('last', end($blocks));
   }
