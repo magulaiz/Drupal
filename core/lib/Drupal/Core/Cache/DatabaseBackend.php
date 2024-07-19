@@ -99,7 +99,7 @@ class DatabaseBackend implements CacheBackendInterface {
     $this->bin = $bin;
     $this->connection = $connection;
     $this->checksumProvider = $checksum_provider;
-    $this->maxRows = $max_rows === NULL ? static::DEFAULT_MAX_ROWS : $max_rows;
+    $this->maxRows = $max_rows ?? static::DEFAULT_MAX_ROWS;
   }
 
   /**
@@ -130,7 +130,7 @@ class DatabaseBackend implements CacheBackendInterface {
     try {
       $result = $this->connection->query('SELECT [cid], [data], [created], [expire], [serialized], [tags], [checksum] FROM {' . $this->connection->escapeTable($this->bin) . '} WHERE [cid] IN ( :cids[] ) ORDER BY [cid]', [':cids[]' => array_keys($cid_mapping)]);
     }
-    catch (\Exception $e) {
+    catch (\Exception) {
       // Nothing to do.
     }
     $cache = [];
@@ -411,7 +411,7 @@ class DatabaseBackend implements CacheBackendInterface {
         ->condition('expire', $this->time->getRequestTime(), '<')
         ->execute();
     }
-    catch (\Exception $e) {
+    catch (\Exception) {
       // If the table does not exist, it surely does not have garbage in it.
       // If the table exists, the next garbage collection will clean up.
       // There is nothing to do.
@@ -445,7 +445,7 @@ class DatabaseBackend implements CacheBackendInterface {
     // If another process has already created the cache table, attempting to
     // recreate it will throw an exception. In this case just catch the
     // exception and do nothing.
-    catch (DatabaseException $e) {
+    catch (DatabaseException) {
       return TRUE;
     }
     return FALSE;
