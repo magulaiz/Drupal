@@ -170,11 +170,17 @@ abstract class WidgetBase extends PluginSettingsBase implements WidgetInterface,
     $field_name = $this->fieldDefinition->getName();
     $cardinality = $this->fieldDefinition->getFieldStorageDefinition()->getCardinality();
     $is_multiple = $this->fieldDefinition->getFieldStorageDefinition()->isMultiple();
+    $is_unlimited_not_programmed = FALSE;
     $parents = $form['#parents'];
+    $add_more = ($cardinality === FieldStorageDefinitionInterface::CARDINALITY_UNLIMITED) || $this->getSetting('add_more');
 
     // Determine the number of widgets to display.
-    $field_state = static::getWidgetState($parents, $field_name, $form_state);
-    $max = $cardinality === FieldStorageDefinitionInterface::CARDINALITY_UNLIMITED ? $field_state['items_count'] : min($field_state['items_count'], $cardinality - 1);
+    $max = $cardinality - 1;
+    if (($cardinality === FieldStorageDefinitionInterface::CARDINALITY_UNLIMITED) || $this->getSetting('add_more')) {
+      $field_state = static::getWidgetState($parents, $field_name, $form_state);
+      $max = $field_state['items_count'];
+      $is_unlimited_not_programmed = !$form_state->isProgrammed();
+    }
 
     $title = $this->fieldDefinition->getLabel();
     $description = $this->getFilteredDescription();
@@ -224,7 +230,7 @@ abstract class WidgetBase extends PluginSettingsBase implements WidgetInterface,
           ];
 
           // Add 'remove' button, if not working with a programmed form.
-          if (!$form_state->isProgrammed()) {
+          if ($is_unlimited_not_programmed) {
             $remove_button = [
               '#delta' => $delta,
               '#name' => str_replace('-', '_', $id_prefix) . "_{$delta}_remove_button",
@@ -264,7 +270,7 @@ abstract class WidgetBase extends PluginSettingsBase implements WidgetInterface,
       ];
 
       // Add 'add more' button, if not working with a programmed form.
-      if ($is_multiple && !$form_state->isProgrammed()) {
+      if ($is_unlimited_not_programmed) {
         $elements['#prefix'] = '<div id="' . $wrapper_id . '">';
         $elements['#suffix'] = '</div>';
 
