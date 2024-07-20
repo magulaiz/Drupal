@@ -267,7 +267,7 @@ function mongodb_views_plugins_argument_alter(array &$plugins) {
         $plugins[$id]['provider'] = 'mongodb';
         break;
 
-      // Overrides for the module "user"
+      // Overrides for the module "user".
       case 'user_uid':
         $plugins[$id]['class'] = 'Drupal\mongodb\Plugin\views\argument\Uid';
         $plugins[$id]['provider'] = 'mongodb';
@@ -278,7 +278,7 @@ function mongodb_views_plugins_argument_alter(array &$plugins) {
         $plugins[$id]['provider'] = 'mongodb';
         break;
 
-      // Overrides for the module "node"
+      // Overrides for the module "node".
       case 'node_nid':
         $plugins[$id]['class'] = 'Drupal\mongodb\Plugin\views\argument\Nid';
         $plugins[$id]['provider'] = 'mongodb';
