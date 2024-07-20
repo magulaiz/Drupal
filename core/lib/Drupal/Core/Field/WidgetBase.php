@@ -172,7 +172,6 @@ abstract class WidgetBase extends PluginSettingsBase implements WidgetInterface,
     $is_multiple = $this->fieldDefinition->getFieldStorageDefinition()->isMultiple();
     $is_unlimited_not_programmed = FALSE;
     $parents = $form['#parents'];
-    $add_more = ($cardinality === FieldStorageDefinitionInterface::CARDINALITY_UNLIMITED) || $this->getSetting('add_more');
 
     // Determine the number of widgets to display.
     $max = $cardinality - 1;
