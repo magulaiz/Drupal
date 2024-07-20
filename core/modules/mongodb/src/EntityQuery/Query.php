@@ -397,7 +397,7 @@ class Query extends CoreQuery {
           return $this->mongodbSelect->countQuery()->execute()->fetchField();
         }
       }
-      catch (MongodbSQLException $e) {
+      catch (MongodbSQLException) {
         // With a relational database you can create queries that will result in
         // an exception when used in MongoDB. For instance embedded table data
         // queries are combined with the MongoDB operator "$elemMatch". That
@@ -490,7 +490,7 @@ class Query extends CoreQuery {
         }
       }
     }
-    catch (MongodbSQLException $e) {
+    catch (MongodbSQLException) {
       // With a relational database you can create queries that will result in
       // an exception when used in MongoDB. For instance embedded table data
       // queries are combined with the MongoDB operator "$elemMatch". That

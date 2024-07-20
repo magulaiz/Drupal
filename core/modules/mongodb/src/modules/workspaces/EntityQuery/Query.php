@@ -119,7 +119,7 @@ class Query extends BaseQuery {
       }
       return parent::result();
     }
-    catch (MongodbSQLException $e) {
+    catch (MongodbSQLException) {
       return [];
     }
   }

@@ -81,7 +81,7 @@ class TransactionTest extends DriverSpecificTransactionTestBase {
       $this->connection->query('SELECT [age] FROM {test} WHERE [name] = :name', [':name' => 'David'])->fetchField();
       $this->fail('Using the query method should have failed.');
     }
-    catch (\Exception $e) {
+    catch (\Exception) {
       // Just continue testing.
     }
 

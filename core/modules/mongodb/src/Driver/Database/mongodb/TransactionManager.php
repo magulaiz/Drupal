@@ -80,7 +80,7 @@ class TransactionManager extends TransactionManagerBase {
       $this->connection->getMongodbSession()->abortTransaction();
       $clientRollback = TRUE;
     }
-    catch (\Exception $e) {
+    catch (\Exception) {
       $clientRollback = FALSE;
     }
 
@@ -100,7 +100,7 @@ class TransactionManager extends TransactionManagerBase {
       $this->connection->getMongodbSession()->commitTransaction();
       $clientCommit = TRUE;
     }
-    catch (\Exception $e) {
+    catch (\Exception) {
       $clientCommit = FALSE;
     }
 
