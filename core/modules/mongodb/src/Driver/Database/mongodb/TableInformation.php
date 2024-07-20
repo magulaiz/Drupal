@@ -620,12 +620,6 @@ class TableInformation {
     if (count($auto_increment_fields) == 1) {
       return current($auto_increment_fields);
     }
-    // elseif (isset($this->tableInformation[$table]['primary key'])) {
-    // $pkey_fields = $this->toArray($this->tableInformation[$table]['primary key']);
-    // if (count($pkey_fields) == 1) {
-    // return current($pkey_fields);
-    // }
-    // }
 
     return NULL;
   }
@@ -1041,7 +1035,7 @@ class TableInformation {
   }
 
   /**
-   * Helper function for the list of tables that need to be saved to the database.
+   * Helper function for the list of tables that need to be saved.
    *
    * @param string $table
    *   The table name to save to the database.

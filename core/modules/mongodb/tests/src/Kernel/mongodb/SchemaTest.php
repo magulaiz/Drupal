@@ -16,7 +16,7 @@ class SchemaTest extends DriverSpecificSchemaTestBase {
   /**
    * {@inheritdoc}
    */
-  public function checkSchemaComment(string $description, string $table, string $column = NULL): void {
+  public function checkSchemaComment(string $description, string $table, ?string $column = NULL): void {
     $comment = $this->schema->getComment($table, $column);
     $this->assertSame($description, $comment, 'The comment matches the schema description.');
   }

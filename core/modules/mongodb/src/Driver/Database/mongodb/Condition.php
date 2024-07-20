@@ -88,11 +88,15 @@ class Condition extends QueryCondition {
 
   /**
    * The embedded table name for which to create the projection condition.
+   *
+   * @var ?string
    */
   protected $mongodbEmbeddedTableProjection = NULL;
 
   /**
    * Disable the use of $elemMatch in the condition.
+   *
+   * @var bool
    */
   protected $useElementMatch = TRUE;
 
@@ -137,10 +141,8 @@ class Condition extends QueryCondition {
    *
    * @param bool $join
    *   (optional) The boolean value to set. Defaults to TRUE.
-   *
-   * @return void
    */
-  public function setMongodbJoinCondition(bool $join = TRUE) {
+  public function setMongodbJoinCondition(bool $join = TRUE): void {
     $this->mongodbJoinCondition = $join;
     // We shall need to recompile the condition.
     $this->changed = TRUE;
@@ -161,10 +163,8 @@ class Condition extends QueryCondition {
    *
    * @param bool $set
    *   The boolean value to be set.
-   *
-   * @return void
    */
-  public function useElementMatch(bool $set) {
+  public function useElementMatch(bool $set): void {
     $this->useElementMatch = $set;
   }
 
@@ -294,8 +294,8 @@ class Condition extends QueryCondition {
             }
           }
           // Unwound (embedded) tables are no longer arrays. Therefor the
-          // condition operator $elemMatch can no longer be used, because it only
-          // works on arrays.
+          // condition operator $elemMatch can no longer be used, because it
+          // only works on arrays.
           if (!empty($this->mongodbEmbeddedTables) && !empty($this->mongodbUnwoundTables)) {
             foreach ($this->mongodbEmbeddedTables as $mongodbEmbeddedTableName => $mongodbEmbeddedTableCount) {
               if (in_array($mongodbEmbeddedTableName, $this->mongodbUnwoundTables, TRUE)) {
@@ -306,7 +306,8 @@ class Condition extends QueryCondition {
           if (!empty($this->mongodbEmbeddedTables)) {
             // For embedded tables with multiple conditions change those to
             // MongoDB "$elemMatch" on the embedded table. At this stage remove
-            // the embedded table from the field value and add the embedded table value.
+            // the embedded table from the field value and add the embedded
+            // table value.
             foreach ($conditions as &$condition) {
               if (is_string($condition['field'])) {
                 $last_dot = strrpos($condition['field'], '.');
@@ -336,8 +337,8 @@ class Condition extends QueryCondition {
         }
         else {
           // It's a structured condition, so parse it out accordingly.
-          // Note that $condition['field'] will only be an object for a dependent
-          // DatabaseCondition object, not for a dependent subquery.
+          // Note that $condition['field'] will only be an object for a
+          // dependent DatabaseCondition object, not for a dependent subquery.
           if ($condition['field'] instanceof ConditionInterface) {
             $condition['field']->setMongodbBaseTable($this->mongodbBaseTable);
             $condition['field']->setMongodbBaseAlias($this->mongodbBaseAlias);
@@ -355,8 +356,9 @@ class Condition extends QueryCondition {
             $arguments += $condition['field']->arguments();
           }
           else {
-            // For simplicity, we treat all operators as the same data structure.
-            // In the typical degenerate case, this won't get changed.
+            // For simplicity, we treat all operators as the same data
+            // structure. In the typical degenerate case, this won't get
+            // changed.
             $operator_defaults = [
               'prefix' => '',
               'delimiter' => '',
@@ -443,8 +445,9 @@ class Condition extends QueryCondition {
                 $arguments += $condition['value']->arguments();
               }
               // We assume that if there is a delimiter, then the value is an
-              // array. If not, it is a scalar. For simplicity, we first convert
-              // up to an array so that we can build the placeholders in the same way.
+              // array. If not, it is a scalar. For simplicity, we first
+              // convert up to an array so that we can build the placeholders
+              // in the same way.
               elseif (!$operator['delimiter'] && !is_array($condition['value'])) {
                 $condition['value'] = [$condition['value']];
               }
@@ -544,8 +547,8 @@ class Condition extends QueryCondition {
 
                 case 'IN':
                 case 'NOT IN':
-                  // MongoDB does not like array key values with '$in' and '$nin'
-                  // operators.
+                  // MongoDB does not like array key values with '$in' and
+                  // '$nin' operators.
                   if ($this->mongodbJoinCondition) {
                     $condition_fragment = $condition_aggregate_fragment = [
                       '$expr' => [
@@ -620,7 +623,8 @@ class Condition extends QueryCondition {
                   break;
 
                 case 'IS NULL':
-                  // In this MongoDB driver are fields with the value null not set.
+                  // In this MongoDB driver are fields with the value null not
+                  // set.
                   $action = ['$exists' => FALSE];
                   $condition_fragment = $condition_aggregate_fragment = [$connection->escapeField($condition['field']) => $action];
                   if (!empty($condition['embedded_table'])) {
@@ -629,7 +633,8 @@ class Condition extends QueryCondition {
                   break;
 
                 case 'IS NOT NULL':
-                  // In this MongoDB driver are fields with the value null not set.
+                  // In this MongoDB driver are fields with the value null not
+                  // set.
                   $action = ['$exists' => TRUE];
                   $condition_fragment = $condition_aggregate_fragment = [$connection->escapeField($condition['field']) => $action];
                   if (!empty($condition['embedded_table'])) {
@@ -644,8 +649,8 @@ class Condition extends QueryCondition {
                 case 'NOT REGEXP':
                   $pattern = reset($condition['value']);
                   if ($operator['operator'] == 'LIKE' || $operator['operator'] == 'NOT LIKE' || $operator['operator'] == 'LIKE BINARY') {
-                    // MongoDB does not support SQL LIKE statements. They must be
-                    // changed to regular expression.
+                    // MongoDB does not support SQL LIKE statements. They must
+                    // be changed to regular expression.
                     $pattern = SqlLikeToRegularExpression::convert($pattern);
                   }
 
@@ -819,7 +824,7 @@ class Condition extends QueryCondition {
           }
         }
 
-        // TODO: Test if we can remove the whole $expr_condition_fragments and
+        // @todo Test if we can remove the whole $expr_condition_fragments and
         // $expr_condition_aggregate_fragments!
         // Conditions that start with $expr must be combined differently.
         if (in_array($condition['operator'], ['DATEDATE', 'DATESTRING'])) {
@@ -835,15 +840,12 @@ class Condition extends QueryCondition {
               $embedded_table_field_operator_and_value = current($condition_fragment);
               if ($embedded_table_field_operator_and_value instanceof Regex) {
                 $embedded_table_field_operator = '$eq';
-                // $embedded_table_field_value = $embedded_table_field_operator_and_value;
               }
               elseif (!is_array($embedded_table_field_operator_and_value)) {
                 $embedded_table_field_operator = '$eq';
-                // $embedded_table_field_value = $embedded_table_field_operator_and_value;
               }
               else {
                 $embedded_table_field_operator = key($embedded_table_field_operator_and_value);
-                // $embedded_table_field_value = reset($embedded_table_field_operator_and_value);
               }
 
               if (!isset($embedded_tables_condition_fragments[$embedded_table][$embedded_table_field_name])) {
@@ -1042,6 +1044,7 @@ class Condition extends QueryCondition {
    * Get the embedded tables use in an $elemMatch condition.
    *
    * @return array
+   *   The element matched embedded tables.
    */
   public function getElemMatchEmbeddedTables() {
     return $this->mongodbElemMatchEmbeddedTables;

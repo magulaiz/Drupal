@@ -13,28 +13,28 @@ class TranslateSchema {
   public static function createTable($name, $schema) {
     switch ($name) {
 
-      // Overrides for the module "comment"
+      // Overrides for the module "comment".
       case 'comment_entity_statistics':
         if (isset($schema['fields']['last_comment_timestamp']['type'])) {
           $schema['fields']['last_comment_timestamp']['type'] = 'date';
         }
         break;
 
-      // Overrides for the module "dblog"
+      // Overrides for the module "dblog".
       case 'watchdog':
         if (isset($schema['fields']['timestamp']['type'])) {
           $schema['fields']['timestamp']['type'] = 'date';
         }
         break;
 
-      // Overrides for the module "history"
+      // Overrides for the module "history".
       case 'history':
         if (isset($schema['fields']['timestamp']['type'])) {
           $schema['fields']['timestamp']['type'] = 'date';
         }
         break;
 
-      // Overrides for the module "locale"
+      // Overrides for the module "locale".
       case 'locales_target':
         if (isset($schema['fields']['customized']['type'])) {
           $schema['fields']['customized']['type'] = 'bool';
@@ -44,7 +44,7 @@ class TranslateSchema {
         }
         break;
 
-      // Overrides for the module "node"
+      // Overrides for the module "node".
       case 'node_access':
         if (isset($schema['fields']['fallback']['type'])) {
           $schema['fields']['fallback']['type'] = 'bool';
@@ -83,14 +83,14 @@ class TranslateSchema {
         unset($schema['fields']['grant_delete']['size']);
         break;
 
-      // Overrides for the module "system"
+      // Overrides for the module "system".
       case 'sessions':
         if (isset($schema['fields']['timestamp']['type'])) {
           $schema['fields']['timestamp']['type'] = 'date';
         }
         break;
 
-      // Overrides for the module "user"
+      // Overrides for the module "user".
       case 'users_data':
         if (isset($schema['fields']['serialized']['type'])) {
           $schema['fields']['serialized']['type'] = 'bool';

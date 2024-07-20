@@ -21,7 +21,15 @@ class TranslateSql {
     [
       'pattern' => '/^SELECT cid, data, created, expire, serialized, tags, checksum FROM {(.*)} WHERE cid IN \( :cids\[\] \) ORDER BY cid$/',
       'filter' => ['cid' => ['$in' => ':cids']],
-      'projection' => ['cid' => 1, 'data' => 1, 'created' => 1, 'expire' => 1, 'serialized' => 1, 'tags' => 1, 'checksum' => 1],
+      'projection' => [
+        'cid' => 1,
+        'data' => 1,
+        'created' => 1,
+        'expire' => 1,
+        'serialized' => 1,
+        'tags' => 1,
+        'checksum' => 1,
+      ],
     ],
     [
       'pattern' => '/^SELECT name, value FROM {(.*)} WHERE name IN \( :keys\[\] \) AND collection = :collection$/',
@@ -1017,10 +1025,8 @@ class TranslateSql {
    *   The database connection.
    * @param \Drupal\Core\Database\Event\StatementExecutionStartEvent $startEvent
    *   The start event for the query.
-   *
-   * @return void
    */
-  protected function endEvent(Connection $connection, StatementExecutionStartEvent $startEvent = NULL) {
+  protected function endEvent(Connection $connection, StatementExecutionStartEvent $startEvent = NULL): void {
     if (isset($startEvent) && $connection->isEventEnabled(StatementExecutionEndEvent::class)) {
       $connection->dispatchEvent(new StatementExecutionEndEvent(
         $startEvent->statementObjectId,

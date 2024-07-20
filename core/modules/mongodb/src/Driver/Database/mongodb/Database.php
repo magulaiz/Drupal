@@ -10,7 +10,7 @@ use Drupal\Core\Database\Database as CoreDatabase;
 abstract class Database extends CoreDatabase {
 
   /**
-   * Gets the connection object for the specified database key to the admin database.
+   * Gets the connection object for the specified key to the admin database.
    *
    * @param string $key
    *   The database connection key. Defaults to NULL which means the active key.

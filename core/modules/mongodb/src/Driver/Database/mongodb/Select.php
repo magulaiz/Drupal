@@ -6,9 +6,9 @@ use Drupal\Core\Database\Connection as DatabaseConnection;
 use Drupal\Core\Database\Event\StatementExecutionEndEvent;
 use Drupal\Core\Database\Event\StatementExecutionStartEvent;
 use Drupal\Core\Database\Query\ConditionInterface;
+use Drupal\Core\Database\Query\PlaceholderInterface;
 use Drupal\Core\Database\Query\Select as QuerySelect;
 use Drupal\Core\Database\Query\SelectInterface;
-use Drupal\Core\Database\Query\PlaceholderInterface;
 
 // cspell:ignore substringed
 
@@ -46,14 +46,14 @@ class Select extends QuerySelect {
   protected $mongodbSort = [];
 
   /**
-   * The boolean value if the sorting part of the query can be done in one stage.
+   * The value if the sorting part of the query can be done in one stage.
    *
    * @var bool
    */
   protected $mongodbSortSeparate = FALSE;
 
   /**
-   * The integer value with how many results the query as a maximum should return.
+   * The value with how many results the query as a maximum should return.
    *
    * @var int
    */
@@ -703,7 +703,7 @@ class Select extends QuerySelect {
    *   The type of group by operation.
    * @param string $field
    *   The name of the field to use for the group by operation.
-   * @param $value
+   * @param mixed $value
    *   The value of the condition to test against.
    * @param string $operator
    *   The operator to use in the condition.
@@ -994,7 +994,7 @@ class Select extends QuerySelect {
     // Order by is not useful in a count query.
     $count->order = [];
 
-    // Remove the table from the "all_fields" table list
+    // Remove the table from the "all_fields" table list.
     $count->mongodbAllFieldsTables = array_diff($count->mongodbAllFieldsTables, [$count->mongodbBaseAlias]);
 
     // Let MongoDB perform a count query.
@@ -1029,10 +1029,10 @@ class Select extends QuerySelect {
       }
 
       if (!$added_field) {
-        // throw an exception for no fields added.
+        // Throw an exception for no fields added.
       }
 
-      // Fake the "all_fields" setting
+      // Fake the "all_fields" setting.
       $this->mongodbAllFieldsTables += [$table_alias];
     }
 
@@ -1042,9 +1042,9 @@ class Select extends QuerySelect {
   /**
    * Groups the result set by the specified field.
    *
-   * @param $alias
+   * @param string $alias
    *   The alias for which to group.
-   * @param $field
+   * @param string $field
    *   The field on which to group. This should be the field as aliased.
    *
    * @return \Drupal\Core\Database\Query\SelectInterface
@@ -1056,7 +1056,7 @@ class Select extends QuerySelect {
   }
 
   /**
-   * Helper method for reusing the select condition for an embedded table projection.
+   * Helper method for reusing the select condition.
    *
    * @return \Drupal\Core\Database\Query\ConditionInterface
    *   The cloned condition object.
@@ -1069,8 +1069,8 @@ class Select extends QuerySelect {
    * {@inheritdoc}
    */
   public function execute() {
-    // If validation fails, simply return NULL.
-    // Note that validation routines in preExecute() may throw exceptions instead.
+    // If validation fails, simply return NULL. Note that validation routines
+    // in preExecute() may throw exceptions instead.
     if (!$this->preExecute()) {
       return NULL;
     }
@@ -1220,7 +1220,8 @@ class Select extends QuerySelect {
       }
 
       if (!empty($this->mongodbProjection)) {
-        // Add the add fields to the projection when the projection is not empty.
+        // Add the add fields to the projection when the projection is not
+        // empty.
         if (!empty($this->mongodbAddFieldsPreJoin)) {
           foreach ($this->mongodbAddFieldsPreJoin as $alias => $add_field) {
             $this->mongodbProjection[$alias] = 1;
@@ -1680,7 +1681,7 @@ class Select extends QuerySelect {
           // Add the variable to the lookup let.
           $lookup_let[$lookup_let_key] = $value;
 
-          // update the variable to use the key from the lookup let.
+          // Update the variable to use the key from the lookup let.
           $value = '$$' . $lookup_let_key;
         }
 
@@ -1734,7 +1735,7 @@ class Select extends QuerySelect {
       $this->mongodbUseAggregate = TRUE;
     }
 
-    // The tables
+    // The tables.
     $this->mongodbLookups = [];
 
     // Add the joins to the select query.
@@ -1751,7 +1752,8 @@ class Select extends QuerySelect {
           // Let the condition know that we are doing a join condition.
           $mongodbJoin['condition']->setMongodbJoinCondition();
 
-          // Compile the condition and update the alias variable in the condition.
+          // Compile the condition and update the alias variable in the
+          // condition.
           $mongodbJoin['condition']->compile($this->connection, $this);
           $condition_compiled = $mongodbJoin['condition']->toMongoAggregateArray();
           $this->updateCompiledJoinCondition($condition_compiled, $mongodbJoin['table'], $mongodbJoin['alias'], $lookup_let, $lookup_left_unwind_paths, $lookup_right_unwind_paths);
@@ -1936,7 +1938,9 @@ class Select extends QuerySelect {
         ];
       }
 
-      $this->mongodbAddFields[$this->connection->escapeField($alias)] = ['$substrBytes' => [['$ifNull' => [$field, '']], $start, $length]];
+      $this->mongodbAddFields[$this->connection->escapeField($alias)] = [
+        '$substrBytes' => [['$ifNull' => [$field, '']], $start, $length],
+      ];
       $this->mongodbUseAggregate = TRUE;
     }
 
@@ -1974,7 +1978,9 @@ class Select extends QuerySelect {
 
     // Add the MongoDB coalesce value fields.
     foreach ($this->mongodbCoalesceValueFields as $alias => $data) {
-      $this->mongodbAddFields[$this->connection->escapeField($alias)] = ['$ifNull' => ['$' . $data['field'], $data['value']]];
+      $this->mongodbAddFields[$this->connection->escapeField($alias)] = [
+        '$ifNull' => ['$' . $data['field'], $data['value']],
+      ];
       $this->mongodbUseAggregate = TRUE;
     }
 
@@ -2004,10 +2010,10 @@ class Select extends QuerySelect {
       $this->mongodbUseAggregate = TRUE;
     }
 
-    // SELECT
+    // SELECT.
     $this->setMongodbProjection();
 
-    // WHERE
+    // WHERE.
     $this->mongodbFilter = [];
     $this->mongodbAggregateFilter = [];
     if (count($this->condition)) {
@@ -2051,7 +2057,7 @@ class Select extends QuerySelect {
       $this->distinct = FALSE;
     }
 
-    // DISTINCT
+    // DISTINCT.
     if ($this->distinct) {
       // Remake a distinct query into an aggregate query.
       foreach ($this->fields as $field) {
@@ -2060,28 +2066,29 @@ class Select extends QuerySelect {
       }
     }
 
-    // GROUP BY
+    // GROUP BY.
     $this->setMongodbGroup();
     if (!empty($this->mongodbGroup)) {
       $this->mongodbUseAggregate = TRUE;
     }
 
-    // HAVING
+    // HAVING.
     if (count($this->having)) {
       $this->mongodbHavingFilter = $this->having->toMongoAggregateArray();
     }
 
-    // UNION
+    // UNION.
     if ($this->union) {
       throw new MongodbSQLException('MongoDB does not support UNION queries.');
     }
 
-    // ORDER BY
+    // ORDER BY.
     $this->mongodbSort = [];
     if ($this->order) {
       $sort_embedded_tables = [];
       foreach ($this->order as $field => $direction) {
-        // Remove $this->mongodbBaseTable or $this->mongodbBaseAlias from the field.
+        // Remove $this->mongodbBaseTable or $this->mongodbBaseAlias from the
+        // field.
         if (strpos($field, $this->mongodbBaseTable . '.') === 0) {
           $field = substr($field, (strlen($this->mongodbBaseTable) + 1));
         }
@@ -2129,7 +2136,7 @@ class Select extends QuerySelect {
       }
     }
 
-    // RANGE
+    // RANGE.
     $this->mongodbSkip = NULL;
     $this->mongodbLimit = NULL;
     if (!empty($this->range)) {
@@ -2255,7 +2262,10 @@ class Select extends QuerySelect {
       foreach ($this->group as $alias => $field) {
         $dot_position = strrpos($this->getFieldName($field), '.');
         if ($dot_position != FALSE) {
-          if (in_array(substr($this->getFieldName($field), 0, $dot_position), [$this->mongodbBaseTable, $this->mongodbBaseAlias])) {
+          if (in_array(substr($this->getFieldName($field), 0, $dot_position), [
+            $this->mongodbBaseTable,
+            $this->mongodbBaseAlias,
+          ])) {
             $field = substr($field, ($dot_position + 1));
           }
           else {
@@ -2369,8 +2379,8 @@ class Select extends QuerySelect {
                 $field = substr($matches[2], $first_dot + 1);
               }
               else {
-                // The first part can also be of an embedded table. Do not remove
-                // those.
+                // The first part can also be of an embedded table. Do not
+                // remove those.
                 $field = $matches[2];
               }
             }
@@ -2399,7 +2409,7 @@ class Select extends QuerySelect {
    *   The operator to be used for the group by.
    */
   protected function setMongodbGroupHelper($alias, $field, $operator) {
-    // TODO: The embedded table can be more then one level deep.
+    // @todo The embedded table can be more then one level deep.
     // Check if the field is in an embedded table.
     $last_dot = strrpos($field, '.');
     if ($last_dot !== FALSE) {

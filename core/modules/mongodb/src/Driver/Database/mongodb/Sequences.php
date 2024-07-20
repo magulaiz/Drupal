@@ -205,7 +205,8 @@ class Sequences {
    * Get the current revision id for the given table.
    *
    * @param string $table
-   *   The table name for which to get the current revision id incremented value.
+   *   The table name for which to get the current revision id incremented
+   *   value.
    *
    * @return int
    *   The current incremented revision id value for the given table.

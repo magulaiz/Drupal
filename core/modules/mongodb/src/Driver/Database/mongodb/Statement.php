@@ -74,6 +74,12 @@ class Statement extends StatementPrefetchIterator {
     $this->data = $cursor->toArray();
   }
 
+  /**
+   * Return the data.
+   *
+   * @return array
+   *   The array with the data.
+   */
   public function getData() {
     return $this->data;
   }
@@ -210,7 +216,7 @@ class Statement extends StatementPrefetchIterator {
   }
 
   /**
-   * Helper method to transform the raw embedded table data to the format that Drupal demands.
+   * Method to transform the raw embedded table data to the Drupal format.
    *
    * @param string $table_name
    *   The table name belonging to the embedded table data.

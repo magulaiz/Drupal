@@ -172,9 +172,6 @@ class Update extends QueryUpdate {
     $this->dateFields = $this->tableInformation->getTableDateFields($this->table);
     $this->stringFields = $this->tableInformation->getTableStringFields($this->table);
 
-    // Embedded table data needs to be compiled for saving in MongoDB.
-    // $embedded_tables = $this->tableInformation->getTableEmbeddedTables($this->table);
-
     $update_mul = [];
     $update_inc = [];
     $update_set = [];
@@ -401,6 +398,17 @@ class Update extends QueryUpdate {
     }
   }
 
+  /**
+   * Update the values for the table.
+   *
+   * @param string $table
+   *   The table name.
+   * @param array $fields
+   *   The fields to be updated.
+   *
+   * @return mixed
+   *   The updated fields.
+   */
   protected function getUpdateValuesForTable($table, $fields) {
     $blob_fields = $this->tableInformation->getTableBlobFields($table);
     $boolean_fields = $this->tableInformation->getTableBooleanFields($table);

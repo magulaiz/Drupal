@@ -2,6 +2,7 @@
 
 namespace Drupal\mongodb\Menu;
 
+use Drupal\Component\Plugin\Exception\PluginException;
 use Drupal\Core\Database\Query\SelectInterface;
 use Drupal\Core\Menu\MenuTreeStorage as CoreMenuTreeStorage;
 use Drupal\Core\Menu\MenuTreeParameters;
@@ -40,7 +41,7 @@ class MenuTreeStorage extends CoreMenuTreeStorage {
       $this->tableExists = $this->ensureTableExists();
     }
 
-    return $query->execute();
+    return parent::safeExecuteSelect($query);
   }
 
   /**

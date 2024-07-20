@@ -51,7 +51,8 @@ trait DocumentInsertTrait {
     $default_value_fields = $this->tableInformation->getTableFieldsWithDefaultValue($table);
     $auto_increment_field = $this->tableInformation->getTableAutoIncrementField($table);
     foreach ($not_null_fields as $not_null_field) {
-      // Remove all not null fields that will have a value set by the $insert_values array.
+      // Remove all not null fields that will have a value set by the
+      // $insert_values array.
       foreach ($insert_fields as $insert_field_name) {
         if ($not_null_field == $insert_field_name) {
           $unresolved_not_null_fields = array_diff($unresolved_not_null_fields, [$not_null_field]);
@@ -126,7 +127,6 @@ trait DocumentInsertTrait {
         }
         elseif ($this->tableInformation->getTableBaseTable($table) === $table) {
           // The table is a base table and not an embedded table.
-
           if ($integer_fields = $this->tableInformation->getTableIntegerFields($table)) {
             if (in_array($auto_increment_field, $integer_fields)) {
               $insert_document[$auto_increment_field] = (int) $insert_document[$auto_increment_field];
@@ -152,12 +152,13 @@ trait DocumentInsertTrait {
             $result = reset($result);
           }
 
-          // TODO: Decide what is the best to do. Update the already set
+          // @todo Decide what is the best to do. Update the already set
           // auto-increment field or throw an exception.
           // if (!empty($result)) {
           // We can add a test here to make sure that value is not used in the
           // database, before throwing an exception.
-          // throw new MongodbSQLException('You cannot give an auto-increment field a lower value then its sequence value.');
+          // throw new MongodbSQLException('You cannot give an auto-increment
+          // field a lower value then its sequence value.');
           // }
         }
       }
@@ -191,7 +192,8 @@ trait DocumentInsertTrait {
       }
     }
 
-    // Change the big integer/LONG fields value in something that MongoDB can save.
+    // Change the big integer/LONG fields value in something that MongoDB can
+    // save.
     if ($long_fields = $this->tableInformation->getTableLongFields($table)) {
       foreach ($long_fields as $long_field) {
         if (!isset($insert_document[$long_field]) || is_null($insert_document[$long_field])) {
@@ -199,7 +201,7 @@ trait DocumentInsertTrait {
           if (isset($long_field_data['not null']) && $long_field_data['not null']) {
             // If a field has the value NULL and the field setting not null,
             // then give the field the value zero.
-            // TODO Use the $long_field_data['default'] value. Not zero!
+            // @todo Use the $long_field_data['default'] value. Not zero!
             $insert_document[$long_field] = 0;
           }
         }
@@ -223,12 +225,12 @@ trait DocumentInsertTrait {
           if (isset($integer_field_data['not null']) && $integer_field_data['not null']) {
             // If a field has the value NULL and the field setting not null,
             // then give the field the value zero.
-            // TODO Use the $integer_field_data['default'] value. Not zero!
+            // @todo Use the $integer_field_data['default'] value. Not zero!
             $insert_document[$integer_field] = 0;
           }
           else {
-            // The array value must exist or an undefined index exception will be
-            // thrown.
+            // The array value must exist or an undefined index exception will
+            // be thrown.
             $insert_document[$integer_field] = NULL;
           }
         }
@@ -319,10 +321,10 @@ trait DocumentInsertTrait {
           $insert_document[$date_field] = NULL;
         }
         elseif (!($insert_document[$date_field] instanceof UTCDateTime)) {
-          // The constructor for UTCDateTime wants the time in milliseconds since
-          // the Unix epoch (Jan 1, 1970). Drupal works with the number of seconds
-          // since the Unix epoch (Jan 1, 1970). We need to multiply the value
-          // with 1000.
+          // The constructor for UTCDateTime wants the time in milliseconds
+          // since the Unix epoch (Jan 1, 1970). Drupal works with the number
+          // of seconds since the Unix epoch (Jan 1, 1970). We need to multiply
+          // the value with 1000.
           $insert_document[$date_field] = new UTCDateTime($insert_document[$date_field] * 1000);
         }
       }

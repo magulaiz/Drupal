@@ -33,11 +33,11 @@ class SearchQuery extends CoreSearchQuery {
    * Parses the search query into SQL conditions.
    *
    * Sets up the following variables:
-   * - $this->keys
-   * - $this->words
-   * - $this->conditions
-   * - $this->simple
-   * - $this->matches
+   * - $this->keys;
+   * - $this->words;
+   * - $this->conditions;
+   * - $this->simple;
+   * - $this->matches.
    */
   protected function parseSearchExpression() {
     // Matches words optionally prefixed by a - sign. A word in this case is
@@ -142,7 +142,7 @@ class SearchQuery extends CoreSearchQuery {
         $has_new_scores = FALSE;
         $query_or = $this->connection->condition('OR');
         foreach ($key as $or) {
-          list($num_new_scores) = $this->parseWord($or);
+          [$num_new_scores] = $this->parseWord($or);
           $has_new_scores |= $num_new_scores;
           $query_or->condition('data', "% $or %", 'LIKE');
         }
@@ -155,7 +155,7 @@ class SearchQuery extends CoreSearchQuery {
       // Single ANDed term.
       else {
         $has_and = TRUE;
-        list($num_new_scores, $num_valid_words) = $this->parseWord($key);
+        [$num_new_scores, $num_valid_words] = $this->parseWord($key);
         $this->conditions->condition('data', "% $key %", 'LIKE');
         if (!$num_valid_words) {
           $this->simple = FALSE;

@@ -36,6 +36,8 @@ class Connection extends DatabaseConnection {
 
   /**
    * A map of condition operators to MongoDB operators.
+   *
+   * @var array
    */
   protected static $mongodbConditionOperatorMap = [
     'IN' => ['mongodb_operator' => '$in'],
@@ -49,7 +51,7 @@ class Connection extends DatabaseConnection {
     '<=' => ['mongodb_operator' => '$lte'],
     '<>' => ['mongodb_operator' => '$ne'],
     '!=' => ['mongodb_operator' => '$ne'],
-    // These ones are here for performance reasons.
+    // These are here for performance reasons.
     'IS NULL' => [],
     'IS NOT NULL' => [],
     'LIKE' => [],
@@ -129,7 +131,7 @@ class Connection extends DatabaseConnection {
       $uri .= implode(',', $hosts);
     }
 
-    // Add the module to the connection string
+    // Add the module to the connection string.
     $uri .= '/?module=mongodb';
 
     if (!empty($connection_options['replicaset'])) {
@@ -364,6 +366,7 @@ class Connection extends DatabaseConnection {
    *   The name of the table in question.
    *
    * @return string
+   *   The prefixed table name.
    */
   public function getMongodbPrefixedTable($table) {
     if (is_null($table)) {
@@ -372,10 +375,10 @@ class Connection extends DatabaseConnection {
     if (strpos($table, '.') !== FALSE) {
       $parts = explode('.', $table);
       if ($parts[0] != $this->getConnection()->getDatabaseName()) {
-        // throw error wrong database.
+        // Throw error wrong database.
       }
       if (count($parts) > 2) {
-        // throw error table name has too many dots.
+        // Throw error table name has too many dots.
       }
 
       // The MongoDB driver does at the moment not support queries from other
@@ -396,6 +399,7 @@ class Connection extends DatabaseConnection {
    * Get the MongoDB table information service.
    *
    * @return \Drupal\mongodb\Driver\Database\mongodb\TableInformation
+   *   The MongoDB table information service.
    */
   public function tableInformation() {
     return new TableInformation($this);
@@ -405,6 +409,7 @@ class Connection extends DatabaseConnection {
    * Get the MongoDB table information service.
    *
    * @return \Drupal\mongodb\Driver\Database\mongodb\Sequences
+   *   The MongoDB sequences service.
    */
   public function sequences() {
     return new Sequences($this);
@@ -476,8 +481,9 @@ class Connection extends DatabaseConnection {
       $return = static::$mongodbConditionOperatorMap[$operator];
     }
     else {
-      // We need to upper case because PHP index matches are case sensitive but
-      // do not need the more expensive Unicode::strtoupper() because SQL statements are ASCII.
+      // We need to upper case because PHP index matches are case-sensitive but
+      // do not need the more expensive Unicode::strtoupper() because SQL
+      // statements are ASCII.
       $operator = strtoupper($operator);
       $return = static::$mongodbConditionOperatorMap[$operator] ?? [];
     }

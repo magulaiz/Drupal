@@ -69,10 +69,8 @@ class EmbeddedTableData {
   /**
    * Compiles the embedded table data for saving to MongoDB.
    *
-   * @param $parent_table
-   *   The name of the parent table.
-   * @param $table
-   *   The name of the embedded table.
+   * @param string $table
+   *   The name of the table.
    *
    * @throws \Drupal\Core\Database\SchemaObjectDoesNotExistException
    *   If the specified base table doesn't exist.
@@ -105,7 +103,7 @@ class EmbeddedTableData {
   }
 
   /**
-   * Whether or not to delete the existing embedded table data on an update query.
+   * Whether to delete the existing embedded table data on an update query.
    *
    * @return bool
    *   Whether or not to delete the existing embedded table data.

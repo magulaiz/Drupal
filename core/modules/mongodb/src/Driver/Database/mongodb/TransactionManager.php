@@ -20,7 +20,8 @@ class TransactionManager extends TransactionManagerBase {
    */
   public function __destruct() {
     // @todo Fix working with Drupal transactions.
-    // assert($this->stack === [], "Transaction \$stack was not empty. Active stack: " . $this->dumpStackItemsAsString());
+    // assert($this->stack === [], "Transaction \$stack was not empty. Active
+    // stack: " . $this->dumpStackItemsAsString());
   }
 
   /**
@@ -43,6 +44,9 @@ class TransactionManager extends TransactionManagerBase {
     return TRUE;
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function inTransaction(): bool {
     return (bool) $this->connection->getMongodbSession() && $this->connection->getMongodbSession()->isInTransaction() && parent::inTransaction();
   }

@@ -3,10 +3,10 @@
 namespace Drupal\mongodb\Driver\Database\mongodb;
 
 use Daffie\SqlLikeToRegularExpression;
-use Drupal\Core\Database\SchemaException;
-use Drupal\Core\Database\SchemaObjectExistsException;
-use Drupal\Core\Database\SchemaObjectDoesNotExistException;
 use Drupal\Core\Database\Schema as DatabaseSchema;
+use Drupal\Core\Database\SchemaException;
+use Drupal\Core\Database\SchemaObjectDoesNotExistException;
+use Drupal\Core\Database\SchemaObjectExistsException;
 use MongoDB\BSON\Decimal128;
 use MongoDB\BSON\ObjectID;
 use MongoDB\BSON\Regex;
@@ -28,9 +28,11 @@ class Schema extends DatabaseSchema {
   protected $dropTarget = TRUE;
 
   /**
-   * The maximum allowed length for index, primary key and constraint names.
+   * The maximum allowed identifier length.
    *
-   * The length is calculated as follows: "<database name>.<collection name>.<index name>".
+   * The maximum allowed length for index, primary key and constraint names.
+   * The length is calculated as follows:
+   * "<database name>.<collection name>.<index name>".
    *
    * @var int
    *   The default value is 128.
@@ -114,11 +116,11 @@ class Schema extends DatabaseSchema {
   /**
    * Create a new embedded table from a Drupal table definition.
    *
-   * @param $parent_table_name
+   * @param string $parent_table_name
    *   The name of the table to create the embedded table on.
-   * @param $embedded_table_name
+   * @param string $embedded_table_name
    *   The name of the embedded table to create.
-   * @param $embedded_table_schema
+   * @param array $embedded_table_schema
    *   A Schema API table definition array.
    *
    * @throws \Drupal\Core\Database\SchemaObjectDoesNotExistException
@@ -170,7 +172,7 @@ class Schema extends DatabaseSchema {
   /**
    * Get the MongoDB table validation for the fields description.
    *
-   * @param $table
+   * @param string $table
    *   A table name for which to construct the MongoDB validation.
    *
    * @return array
@@ -223,10 +225,10 @@ class Schema extends DatabaseSchema {
    * Generates the MongoDB table validation for the given schema and full path
    * data.
    *
-   * @param $schema
+   * @param array $schema
    *   A field description array or a table description, as specified in the
    *   schema documentation.
-   * @param $embedded_full_path
+   * @param string $embedded_full_path
    *   Set if table is an embedded table. Do not set for the base table.
    *
    * @return array
@@ -695,7 +697,7 @@ class Schema extends DatabaseSchema {
   /**
    * Get the table schema from the table information service.
    *
-   * @param $table
+   * @param string $table
    *   The name of the table.
    *
    * @return array
@@ -708,7 +710,7 @@ class Schema extends DatabaseSchema {
   /**
    * Get the MongoDB table validation from the database.
    *
-   * @param $table
+   * @param string $table
    *   The name of the table.
    *
    * @return array
@@ -1096,7 +1098,7 @@ class Schema extends DatabaseSchema {
     // Create the new keys and/or indexes.
     $this->createKeys($table, $keys_new);
 
-    // TODO: Maybe we need to do the same for the other indexes.
+    // @todo Maybe we need to do the same for the other indexes.
     if ($original_primary_key_fields) {
       $new_primary_key_fields = [];
       $new_primary_key_fields_with_full_path = [];
@@ -1136,7 +1138,7 @@ class Schema extends DatabaseSchema {
   /**
    * Get the MongoDB table validation from the database.
    *
-   * @param $table
+   * @param string $table
    *   The name of the table.
    *
    * @return array
@@ -1155,9 +1157,9 @@ class Schema extends DatabaseSchema {
   /**
    * Get the MongoDB index name.
    *
-   * @param $table
+   * @param string $table
    *   The name of the table.
-   * @param $fields
+   * @param array $fields
    *   The array with field names to search the index for. If a field name is an
    *   array the first element is the field name and the second one is 'ASC' or
    *   'DESC'.
@@ -1181,9 +1183,9 @@ class Schema extends DatabaseSchema {
   /**
    * Get the MongoDB table validation from the database.
    *
-   * @param $table
+   * @param string $table
    *   The name of the table.
-   * @param $name
+   * @param string $name
    *   The index name.
    *
    * @return bool|\MongoDB\Model\IndexInfo
@@ -1215,9 +1217,9 @@ class Schema extends DatabaseSchema {
   /**
    * Helper function for creating keys and/or indexes.
    *
-   * @param $table
+   * @param string $table
    *   The name of the table to create keys and/or indexes for.
-   * @param $spec
+   * @param array $spec
    *   The key specification for the new keys and/or indexes.
    */
   protected function createKeys($table, $spec) {
@@ -1239,7 +1241,7 @@ class Schema extends DatabaseSchema {
   /**
    * Helper function to create the MongoDB createIndex() $key parameter.
    *
-   * @param $fields
+   * @param array $fields
    *   The array with field names to create the index for. If a field name is an
    *   array the first element is the field name and the second one is 'ASC' or
    *   'DESC'.
@@ -1600,8 +1602,8 @@ class Schema extends DatabaseSchema {
         $embedded_fields = [];
         $partial_filter_expression = [];
         foreach ($fields as $field) {
-          // It is possible in Drupal to add an array with the kind of type of index
-          // that you would like. This is not supported by MongoDB.
+          // It is possible in Drupal to add an array with the kind of type of
+          // index that you would like. This is not supported by MongoDB.
           if (is_array($field)) {
             $field = reset($field);
           }
@@ -1672,11 +1674,11 @@ class Schema extends DatabaseSchema {
   /**
    * Set the default value for a field.
    *
-   * @param $table
+   * @param string $table
    *   The table to be altered.
-   * @param $field
+   * @param string $field
    *   The field to be altered.
-   * @param $default
+   * @param mixed $default
    *   Default value to be set. NULL for 'default NULL'.
    *
    * @throws \Drupal\Core\Database\SchemaObjectDoesNotExistException
@@ -1699,9 +1701,9 @@ class Schema extends DatabaseSchema {
   /**
    * Set a field to have no default value.
    *
-   * @param $table
+   * @param string $table
    *   The table to be altered.
-   * @param $field
+   * @param string $field
    *   The field to be altered.
    *
    * @throws \Drupal\Core\Database\SchemaObjectDoesNotExistException
@@ -1816,7 +1818,7 @@ class Schema extends DatabaseSchema {
    *
    * For more information: https://docs.mongodb.com/manual/reference/limits/.
    *
-   * @param $data
+   * @param mixed $data
    *   String to be hashed.
    *
    * @return string
@@ -1826,7 +1828,20 @@ class Schema extends DatabaseSchema {
   protected function hashBase64($data): string {
     $hash = base64_encode(hash('sha256', $data, TRUE));
     // Modify the hash so it's safe to use in MongoDB identifiers.
-    return strtr($hash, ['/' => '_', '\\' => '_', '.' => '_', ' ' => '', '"' => '', '$' => '', '*' => '', '<' => '', '>' => '', ':' => '', '|' => '', '?' => '']);
+    return strtr($hash, [
+      '/' => '_',
+      '\\' => '_',
+      '.' => '_',
+      ' ' => '',
+      '"' => '',
+      '$' => '',
+      '*' => '',
+      '<' => '',
+      '>' => '',
+      ':' => '',
+      '|' => '',
+      '?' => '',
+    ]);
   }
 
 }
