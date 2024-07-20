@@ -73,7 +73,7 @@ class DbLogViewsTest extends DbLogTest {
   /**
    * Tests the database log filter functionality at admin/reports/dblog.
    */
-  public function testFilter() {
+  public function testFilter(): void {
     if (Database::getConnection()->driver() == 'mongodb') {
       $this->markTestSkipped();
     }
