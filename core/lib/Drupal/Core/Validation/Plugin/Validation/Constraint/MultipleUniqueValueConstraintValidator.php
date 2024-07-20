@@ -21,7 +21,7 @@ class MultipleUniqueValueConstraintValidator extends ConstraintValidator {
       $fieldValue = $value->getString();
       $delta = $value->getName();
     }
-    else if (is_string($fieldValue)) {
+    elseif (is_string($fieldValue)) {
       $fieldValue = array_map('trim', explode("\n", trim($fieldValue)));
     }
     $fieldValueaCount = array_count_values($fieldValue);
