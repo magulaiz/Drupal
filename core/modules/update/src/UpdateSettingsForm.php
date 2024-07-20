@@ -4,9 +4,9 @@ namespace Drupal\update;
 
 use Drupal\Core\Form\ConfigFormBase;
 use Drupal\Core\Form\ConfigTarget;
+use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\Core\Url;
-use Drupal\Core\Form\FormStateInterface;
 
 /**
  * Configure update settings for this site.
