@@ -24,8 +24,8 @@ class MultipleUniqueValueConstraintValidator extends ConstraintValidator {
     elseif (is_string($fieldValue)) {
       $fieldValue = array_map('trim', explode("\n", trim($fieldValue)));
     }
-    $fieldValueaCount = array_count_values($fieldValue);
-    foreach ($fieldValueaCount as $count) {
+    $fieldValueAccount = array_count_values($fieldValue);
+    foreach ($fieldValueAccount as $count) {
       if ($count > 1) {
         $this->context->buildViolation($constraint->message)
           ->atPath($delta)
