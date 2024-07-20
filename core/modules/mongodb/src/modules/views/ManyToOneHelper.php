@@ -15,8 +15,8 @@ class ManyToOneHelper extends CoreManyToOneHelper {
    * Get the field via formula or build it using alias and field name.
    *
    * Sometimes the handler might want us to use some kind of formula, so give
-   * it that option. If it wants us to do this, it must set $helper->formula = TRUE
-   * and implement handler->getFormula().
+   * it that option. If it wants us to do this, it must set
+   * $helper->formula = TRUE and implement handler->getFormula().
    */
   public function getField() {
     if (!empty($this->formula)) {
@@ -31,10 +31,10 @@ class ManyToOneHelper extends CoreManyToOneHelper {
   /**
    * Add a table to the query.
    *
-   * This is an advanced concept; not only does it add a new instance of the table,
-   * but it follows the relationship path all the way down to the relationship
-   * link point and adds *that* as a new relationship and then adds the table to
-   * the relationship, if necessary.
+   * This is an advanced concept; not only does it add a new instance of the
+   * table, but it follows the relationship path all the way down to the
+   * relationship link point and adds *that* as a new relationship and then
+   * adds the table to the relationship, if necessary.
    */
   public function addTable($join = NULL, $alias = NULL) {
     // This is used for lookups in the many_to_one table.
@@ -44,11 +44,11 @@ class ManyToOneHelper extends CoreManyToOneHelper {
       $join = $this->getJoin();
     }
 
-    // See if there's a chain between us and the base relationship. If so, we need
-    // to create a new relationship to use.
+    // See if there's a chain between us and the base relationship. If so, we
+    // need to create a new relationship to use.
     $relationship = $this->handler->relationship;
 
-    // Determine the primary table to seek
+    // Determine the primary table to seek.
     if (empty($this->handler->query->relationships[$relationship])) {
       $base_table = $this->handler->view->storage->get('base_table');
     }
@@ -96,7 +96,7 @@ class ManyToOneHelper extends CoreManyToOneHelper {
       $field = $this->handler->relationship . '_' . $this->handler->table . '.' . $this->handler->field;
       if ($this->handler->operator == 'or' && empty($this->handler->options['reduce_duplicates'])) {
         if (empty($this->handler->options['add_table']) && empty($this->handler->view->many_to_one_tables[$field])) {
-          // query optimization, INNER joins are slightly faster, so use them
+          // Query optimization, INNER joins are slightly faster, so use them
           // when we know we can.
           $join = $this->getJoin();
           if (isset($join)) {

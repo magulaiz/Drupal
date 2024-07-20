@@ -169,7 +169,16 @@ class NodeGrantDatabaseStorage extends CoreNodeGrantDatabaseStorage {
     }
     // Only perform work when node_access modules are active.
     if (!empty($grants) && $this->moduleHandler->hasImplementations('node_grants')) {
-      $query = $this->database->insert('node_access')->fields(['nid', 'langcode', 'fallback', 'realm', 'gid', 'grant_view', 'grant_update', 'grant_delete']);
+      $query = $this->database->insert('node_access')->fields([
+        'nid',
+        'langcode',
+        'fallback',
+        'realm',
+        'gid',
+        'grant_view',
+        'grant_update',
+        'grant_delete',
+      ]);
       // If we have defined a granted langcode, use it. But if not, add a grant
       // for every language this node is translated to.
       $fallback_langcode = $node->getUntranslated()->language()->getId();

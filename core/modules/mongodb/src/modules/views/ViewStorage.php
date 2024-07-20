@@ -2,8 +2,8 @@
 
 namespace Drupal\mongodb\modules\views;
 
-use Drupal\Core\Config\Entity\ConfigEntityStorage;
 use Drupal\Core\Cache\Cache;
+use Drupal\Core\Config\Entity\ConfigEntityStorage;
 use Drupal\Core\Entity\EntityTypeInterface;
 
 /**
@@ -21,10 +21,10 @@ class ViewStorage extends ConfigEntityStorage {
    *   An array with view entity config data for a MongoDB database.
    */
   protected function updateViewForMongodb($values) {
-    // TODO: Remove reverse relationships and associated fields. MongoDB does
+    // @todo Remove reverse relationships and associated fields. MongoDB does
     // not need or support them.
-    // See: Drupal\Tests\field\Kernel\EntityReference\Views\EntityReferenceRelationshipTest.
-
+    // @see Drupal\Tests\field\Kernel\EntityReference\Views\EntityReferenceRelationshipTest.
+    //
     // Update the records so that they will work for MongoDB.
     if (!empty($values['base_table'])) {
       $original_base_table = $values['base_table'];
@@ -77,7 +77,7 @@ class ViewStorage extends ConfigEntityStorage {
                 $table = !empty($display_option['table']) ? $display_option['table'] : NULL;
                 $entity_type = !empty($display_option['entity_type']) ? $display_option['entity_type'] : NULL;
 
-                // TODO: See if we can solve this more generally.
+                // @todo See if we can solve this more generally.
                 if (isset($display_option['table']) && ($display_option['table'] == 'taxonomy_term__parent') &&
                   isset($display_option['field']) && ($display_option['field'] == 'parent_target_id')) {
 
@@ -349,7 +349,7 @@ class ViewStorage extends ConfigEntityStorage {
       return substr($table, 0, -strlen('_property'));
     }
 
-    // Exception for Drupal\Tests\options\Kernel\Views\OptionsListFilterTest::testViewsTestOptionsListGroupedFilter
+    // Exception for Drupal\Tests\options\Kernel\Views\OptionsListFilterTest::testViewsTestOptionsListGroupedFilter.
     if (in_array($table, ['field_data_field_test_list_string', 'field_data_field_test_list_integer', 'nid'], TRUE)) {
       return 'node';
     }

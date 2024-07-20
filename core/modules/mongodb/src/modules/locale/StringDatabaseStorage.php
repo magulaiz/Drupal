@@ -3,8 +3,8 @@
 namespace Drupal\mongodb\modules\locale;
 
 use Drupal\Core\Database\Query\PagerSelectExtender;
-use Drupal\locale\StringDatabaseStorage as CoreStringDatabaseStorage;
 use Drupal\locale\SourceString;
+use Drupal\locale\StringDatabaseStorage as CoreStringDatabaseStorage;
 use Drupal\locale\TranslationString;
 
 /**
@@ -134,7 +134,7 @@ class StringDatabaseStorage extends CoreStringDatabaseStorage {
   protected function dbStringKeys($string) {
     $values = parent::dbStringKeys($string);
 
-    // For MongoDB
+    // For MongoDB.
     if (isset($values['lid'])) {
       $values['lid'] = (int) $values['lid'];
     }

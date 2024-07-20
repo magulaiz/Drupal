@@ -6,7 +6,7 @@ use Drupal\Core\Entity\ContentEntityTypeInterface;
 use Drupal\Core\Entity\Sql\SqlContentEntityStorageSchema;
 
 /**
- * The MongoDB implementation of \Drupal\content_moderation\ContentModerationStateStorageSchema.
+ * MongoDB override of ContentModerationStateStorageSchema.
  */
 class ContentModerationStateStorageSchema extends SqlContentEntityStorageSchema {
 

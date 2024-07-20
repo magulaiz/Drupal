@@ -7,7 +7,7 @@ use Drupal\file\FileUsage\DatabaseFileUsageBackend as CoreDatabaseFileUsageBacke
 use Drupal\file\FileUsage\FileUsageBase;
 
 /**
- * The MongoDB implementation of \Drupal\file\FileUsage\DatabaseFileUsageBackend.
+ * MongoDB implementation of \Drupal\file\FileUsage\DatabaseFileUsageBackend.
  */
 class DatabaseFileUsageBackend extends CoreDatabaseFileUsageBackend {
 

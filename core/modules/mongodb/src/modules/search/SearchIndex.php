@@ -216,7 +216,6 @@ class SearchIndex extends CoreSearchIndex {
       // Find words that were deleted from search_index, but are still in
       // search_total. We use a LEFT JOIN between the two tables and keep only
       // the rows which fail to join.
-      // $result = $this->replica->query("SELECT [t].[word] AS [realword], [i].[word] FROM {search_total} [t] LEFT JOIN {search_index} [i] ON [t].[word] = [i].[word] WHERE [i].[word] IS NULL");
       $query = $this->replica->select('search_total', 't');
       $query->addField('t', 'word', 'realword');
       $query->addJoin('LEFT', 'search_index', 'i', $query->joinCondition()->compare('t.word', 'i.word'));

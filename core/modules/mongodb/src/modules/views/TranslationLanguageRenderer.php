@@ -6,7 +6,7 @@ use Drupal\views\Entity\Render\TranslationLanguageRenderer as CoreTranslationLan
 use Drupal\views\Plugin\views\query\QueryPluginBase;
 
 /**
- * Overriding the views class \Drupal\views\Entity\Render\TranslationLanguageRenderer.
+ * MongoDB override \Drupal\views\Entity\Render\TranslationLanguageRenderer.
  */
 class TranslationLanguageRenderer extends CoreTranslationLanguageRenderer {
 

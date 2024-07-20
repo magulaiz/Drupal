@@ -43,7 +43,7 @@ class Query extends BaseQuery {
       // that the revision ID might come from the workspace_association
       // relationship, and, as a consequence, the revision ID field is no longer
       // a simple SQL field but an expression.
-      // $this->mongodbFields = [];
+      // $this->mongodbFields = [].
 
       $this->mongodbWorkspaceRevisionField = [
         'alias' => 'coalesce_' . $this->mongodbRevisionField,
@@ -76,9 +76,9 @@ class Query extends BaseQuery {
     try {
       if (!$this->count && !$this->allRevisions) {
         if (empty($this->sort)) {
-          // Return a keyed array of results. The key is either the revision_id or
-          // the entity_id depending on whether the entity type supports revisions.
-          // The value is always the entity id.
+          // Return a keyed array of results. The key is either the revision_id
+          // or the entity_id depending on whether the entity type supports
+          // revisions. The value is always the entity id.
           $results = $this->mongodbSelect->execute()->fetchAll();
 
           $entities = [];
