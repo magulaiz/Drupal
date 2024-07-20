@@ -566,14 +566,14 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
           }
           elseif ($field_name = strstr($name, '__', TRUE)) {
             $property_name = substr($name, strpos($name, '__') + 2);
-            // TODO: Test if typecasting is necessary. Maybe special case if
+            // @todo Test if typecasting is necessary. Maybe special case if
             // $value is null.
             $values[$id][$field_name][LanguageInterface::LANGCODE_DEFAULT][$property_name] = (is_null($value) ? NULL : (string) $value);
           }
           else {
             // Handle columns named directly after the field (e.g if the field
             // type only stores one property).
-            // TODO: Test if typecasting is necessary. Maybe special case if
+            // @todo Test if typecasting is necessary. Maybe special case if
             // $value is null.
             if (is_null($value)) {
               $values[$id][$name][LanguageInterface::LANGCODE_DEFAULT] = NULL;
@@ -780,8 +780,8 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
           }
           elseif (!$this->jsonStorageTranslationsTable && !$this->jsonStorageCurrentRevisionTable && !$this->jsonStorageLatestRevisionTable && !$this->jsonStorageAllRevisionsTable) {
             $embedded_tables[$this->idKey] = $values[$id][$this->idKey][LanguageInterface::LANGCODE_DEFAULT];
-            // TODO: Maybe there should be some else statement for the
-            // next if statement.
+            // @todo Maybe there should be some else statement for the next if
+            // statement.
             if (!empty($values[$id][$this->langcodeKey][LanguageInterface::LANGCODE_DEFAULT])) {
               $embedded_tables[$this->langcodeKey] = $values[$id][$this->langcodeKey][LanguageInterface::LANGCODE_DEFAULT];
             }
@@ -1960,6 +1960,7 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
         );
       }
     }
+    // phpcs:ignore SlevomatCodingStandard.Exceptions.RequireNonCapturingCatch.NonCapturingCatchRequired
     catch (\Exception $e) {
       // Throw exception that we could not load the entity.
     }
@@ -2033,7 +2034,7 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
         continue;
       }
 
-      // TODO: Test if the code that is below can be deleted.
+      // @todo Test if the code that is below can be deleted.
       // When updating an existing revision, keep the existing records if the
       // field values did not change.
       if (!$entity->isNewRevision() && $original && !$this->hasFieldValueChanged($field_definition, $entity, $original)) {
@@ -3065,7 +3066,7 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
             if (!isset($entities[$dedicated_table_row['revision_id']])) {
               // Create entity with the right revision id and entity id combination.
               $dedicated_table_row['entity_type'] = $this->entityTypeId;
-              // @todo: Replace this by an entity object created via an entity
+              // @todo Replace this by an entity object created via an entity
               // factory, see https://www.drupal.org/node/1867228.
               $entities[$dedicated_table_row['revision_id']] = _field_create_entity_from_ids((object) $dedicated_table_row);
             }

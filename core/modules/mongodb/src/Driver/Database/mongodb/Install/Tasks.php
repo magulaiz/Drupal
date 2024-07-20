@@ -6,6 +6,7 @@ use Drupal\Core\Database\Database;
 use Drupal\Core\Database\Install\Tasks as InstallTasks;
 
 // cspell:ignore replicaset
+// phpcs:ignore SlevomatCodingStandard.Exceptions.RequireNonCapturingCatch.NonCapturingCatchRequired
 
 /**
  * Specifies installation tasks for MongoDB databases.
