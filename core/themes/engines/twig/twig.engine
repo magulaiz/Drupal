@@ -43,10 +43,7 @@ function twig_render_template($template_file, array $variables) {
     throw $e;
   }
 
-  $debug_blacklisted = FALSE;
-  if (isset($variables['view']) && $variables['view']->getDisplay()->getType() == 'feed') {
-    $debug_blacklisted = TRUE;
-  }
+  $debug_blacklisted = $variables['view']) && $variables['view']->getDisplay()->getType() == 'feed';
   if ($twig_service->isDebug() && !$debug_blacklisted) {
     $output = [
       'debug_prefix' => '',
