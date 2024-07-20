@@ -34,7 +34,7 @@ abstract class RelationshipPluginBase extends CoreRelationshipPluginBase {
    * Init handler to let relationships live on tables other than
    * the table they operate on.
    */
-  public function init(ViewExecutable $view, DisplayPluginBase $display, array &$options = NULL) {
+  public function init(ViewExecutable $view, DisplayPluginBase $display, ?array &$options = NULL) {
     parent::init($view, $display, $options);
 
     if (isset($this->definition['relationship table'])) {

@@ -17,7 +17,7 @@ class Permissions extends CorePermissions {
   /**
    * {@inheritdoc}
    */
-  public function init(ViewExecutable $view, DisplayPluginBase $display, array &$options = NULL) {
+  public function init(ViewExecutable $view, DisplayPluginBase $display, ?array &$options = NULL) {
     PrerenderList::init($view, $display, $options);
 
     $this->additional_fields['uid'] = ['table' => 'users', 'field' => 'uid'];

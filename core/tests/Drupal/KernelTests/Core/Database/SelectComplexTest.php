@@ -450,7 +450,7 @@ class SelectComplexTest extends DatabaseTestBase {
 
     $this->assertEquals(7, $num_records, 'Returned the correct number of rows.');
 
-    // TODO The MongoDB database driver does not do self joins.
+    // @todo The MongoDB database driver does not do self joins.
     if ($this->connection->driver() != 'mongodb') {
       // Test a condition object that creates placeholders.
       $t1_name = 'John';

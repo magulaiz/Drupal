@@ -15,7 +15,7 @@ trait ManyToOneTrait {
   /**
    * {@inheritdoc}
    */
-  public function init(ViewExecutable $view, DisplayPluginBase $display, array &$options = NULL) {
+  public function init(ViewExecutable $view, DisplayPluginBase $display, ?array &$options = NULL) {
     InOperator::init($view, $display, $options);
 
     $this->helper = new ManyToOneHelper($this);
