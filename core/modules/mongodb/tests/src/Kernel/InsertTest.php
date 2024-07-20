@@ -207,7 +207,12 @@ class InsertTest extends DatabaseTestBase {
     // Insert row in the base fields and in the embedded table.
     $query = $connection->insert($base_table_name);
     $parent_table_data = $query->embeddedTableData()->fields(['pid' => 1, 'task' => 'eat', 'priority' => 3]);
-    $query->fields(['name' => 'Scuttle', 'age' => '11', 'job' => 'Flaps his wings', $parent_table_name => $parent_table_data])->execute();
+    $query->fields([
+      'name' => 'Scuttle',
+      'age' => '11',
+      'job' => 'Flaps his wings',
+      $parent_table_name => $parent_table_data,
+    ])->execute();
 
     $field_keys = ['name', 'age', 'job', 'embedded_test_task'];
     $result = $connection->select($base_table_name)->fields($base_table_name, $field_keys)->condition('job', 'Flaps his wings')->execute()->fetchObject();
@@ -224,7 +229,12 @@ class InsertTest extends DatabaseTestBase {
     // Insert row in the base fields and in the embedded table.
     $query = $connection->insert($base_table_name);
     $embedded_table_data = $query->embeddedTableData()->fields($fields);
-    $parent_table_data = $query->embeddedTableData()->fields(['pid' => 2, 'task' => 'sleep', 'priority' => 4, $embedded_table_name => $embedded_table_data]);
+    $parent_table_data = $query->embeddedTableData()->fields([
+      'pid' => 2,
+      'task' => 'sleep',
+      'priority' => 4,
+      $embedded_table_name => $embedded_table_data,
+    ]);
     $query->fields(['name' => 'Jasper', 'age' => '4', 'job' => 'Chatters', $parent_table_name => $parent_table_data])->execute();
 
     $field_keys = ['name', 'age', 'job', 'embedded_test_task'];

@@ -7,6 +7,11 @@ namespace Drupal\Tests\mongodb\Functional\Rest;
 use Drupal\mongodb\modules\views\View;
 use Drupal\Tests\views\Functional\Rest\ViewResourceTestBase as CoreViewResourceTestBase;
 
+/**
+ * Testing the MongoDB override of the views entity.
+ *
+ * @group rest
+ */
 abstract class ViewResourceTestBase extends CoreViewResourceTestBase {
 
   /**

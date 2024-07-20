@@ -8,6 +8,8 @@ use Drupal\Tests\rest\Functional\CookieResourceTestTrait;
 use Drupal\Tests\rest\Functional\EntityResource\XmlEntityNormalizationQuirksTrait;
 
 /**
+ * Testing the MongoDB override of the views entity.
+ *
  * @group rest
  */
 class ViewXmlCookieTest extends ViewResourceTestBase {

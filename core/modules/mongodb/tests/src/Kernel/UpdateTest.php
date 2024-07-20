@@ -208,7 +208,8 @@ class UpdateTest extends DatabaseTestBase {
       ->fields(['pid' => 1, 'task' => 'eat', 'priority' => 3])
       ->values(['pid' => 1, 'task' => 'sleep', 'priority' => 4]);
 
-    // The $-sign operator only updates the first element that matches the query.
+    // The $-sign operator only updates the first element that matches the
+    // query.
     $query->fields(['embedded_test.$.embedded_test_task' => $embedded_test_task])
       ->condition('embedded_test.job', 'Drummer')
       ->execute();
@@ -283,7 +284,12 @@ class UpdateTest extends DatabaseTestBase {
 
     $embedded_test = $query->embeddedTableData()
       ->fields(['name' => 'Zazu', 'age' => 20, 'job' => 'Makes noise', 'embedded_test_task' => $embedded_test_task1])
-      ->values(['name' => 'Iago', 'age' => 21, 'job' => 'Makes more noise', 'embedded_test_task' => $embedded_test_task2]);
+      ->values([
+        'name' => 'Iago',
+        'age' => 21,
+        'job' => 'Makes more noise',
+        'embedded_test_task' => $embedded_test_task2,
+      ]);
 
     $query->fields(['embedded_test' => $embedded_test])
       ->condition('job', 'Chatters')
@@ -432,10 +438,13 @@ class UpdateTest extends DatabaseTestBase {
   public function testDeleteConditionAndInsert() {
     $connection = $this->container->get('database');
 
-    // MongoDB does not allow a table variable to be changed twice in one update an exception is thrown.
+    // MongoDB does not allow a table variable to be changed twice in one
+    // update an exception is thrown.
     $this->expectException(DatabaseExceptionWrapper::class);
     $query = $connection->update('test_people');
-    $query->fields(['embedded_test' => $query->embeddedTableData()->fields(['name' => 'Zazu', 'age' => 20, 'job' => 'Makes noise'])])
+    $query->fields([
+      'embedded_test' => $query->embeddedTableData()->fields(['name' => 'Zazu', 'age' => 20, 'job' => 'Makes noise']),
+    ])
       ->condition('job', 'Chatters')
       ->embeddedTableDeleteCondition('embedded_test', 'age', 27)
       ->execute();

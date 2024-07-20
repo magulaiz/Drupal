@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\mongodb\Kernel\mongodb;
 
-use Drupal\Core\Database\DatabaseExceptionWrapper;
 use Drupal\Core\Database\Database;
+use Drupal\Core\Database\DatabaseExceptionWrapper;
 use Drupal\KernelTests\Core\Database\DriverSpecificKernelTestBase;
 
 /**

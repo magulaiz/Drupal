@@ -7,6 +7,8 @@ namespace Drupal\Tests\mongodb\Functional\Rest;
 use Drupal\Tests\rest\Functional\CookieResourceTestTrait;
 
 /**
+ * Testing the MongoDB override of the views entity.
+ *
  * @group rest
  */
 class ViewJsonCookieTest extends ViewResourceTestBase {

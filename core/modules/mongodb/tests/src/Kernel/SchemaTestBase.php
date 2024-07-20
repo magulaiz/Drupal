@@ -7,6 +7,8 @@ namespace Drupal\Tests\mongodb\Kernel;
 use Drupal\KernelTests\KernelTestBase;
 use MongoDB\Model\IndexInfo;
 
+// phpcs:ignoreFile
+
 /**
  * Base class for MongoDB schema tests.
  *

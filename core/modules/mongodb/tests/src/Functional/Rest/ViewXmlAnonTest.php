@@ -8,6 +8,8 @@ use Drupal\Tests\rest\Functional\AnonResourceTestTrait;
 use Drupal\Tests\rest\Functional\EntityResource\XmlEntityNormalizationQuirksTrait;
 
 /**
+ * Testing the MongoDB override of the views entity.
+ *
  * @group rest
  */
 class ViewXmlAnonTest extends ViewResourceTestBase {

@@ -7,6 +7,8 @@ namespace Drupal\Tests\mongodb\Functional\Rest;
 use Drupal\Tests\rest\Functional\AnonResourceTestTrait;
 
 /**
+ * Testing the MongoDB override of the views entity.
+ *
  * @group rest
  */
 class ViewJsonAnonTest extends ViewResourceTestBase {

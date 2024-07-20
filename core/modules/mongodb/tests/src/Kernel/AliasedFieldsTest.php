@@ -60,7 +60,7 @@ class AliasedFieldsTest extends DatabaseTestBase {
   }
 
   /**
-   * Tests select query with aliased fields and ordered descending by aliased field.
+   * Tests select query with aliased fields and ordered descending by field.
    */
   public function testSelectAliasedFieldsWithOrderByAge() {
     $connection = $this->container->get('database');
@@ -84,7 +84,7 @@ class AliasedFieldsTest extends DatabaseTestBase {
   }
 
   /**
-   * Tests select query with aliased fields and grouped by aliased field and ordered by aliased field.
+   * Tests select query with aliased fields and grouped and ordered by field.
    */
   public function testSelectAliasedFieldsWithGroupBy() {
     $connection = $this->container->get('database');

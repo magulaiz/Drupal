@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\mongodb\Kernel;
 
+// phpcs:ignoreFile
+
 /**
  * Tests MongoDB other method via the schema API.
  *

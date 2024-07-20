@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\mongodb\Kernel;
 
+// phpcs:ignoreFile
+
 /**
  * Tests MongoDB base/embedded field creation and modification via the schema API.
  *
