@@ -421,7 +421,7 @@ class TermStorage extends SqlContentEntityStorage implements TermStorageInterfac
       $query->orderby('taxonomy_term_current_revision.weight');
       $query->orderby('taxonomy_term_current_revision.name');
       $query->addTag('taxonomy_term_access');
-      if (!empty($vocabs)) {
+      if (!empty($vids)) {
         $query->condition('taxonomy_term_current_revision.vid', $vids, 'IN');
       }
       if (!empty($langcode)) {
