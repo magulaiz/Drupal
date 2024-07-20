@@ -6,7 +6,6 @@ use Drupal\Core\Database\Database;
 use Drupal\Core\Database\Install\Tasks as InstallTasks;
 
 // cspell:ignore replicaset
-// phpcs:ignore SlevomatCodingStandard.Exceptions.RequireNonCapturingCatch.NonCapturingCatchRequired
 
 /**
  * Specifies installation tasks for MongoDB databases.
@@ -100,7 +99,7 @@ class Tasks extends InstallTasks {
       Database::getConnection();
       $this->pass('Drupal can CONNECT to MongoDB.');
     }
-    catch (\Exception $e) {
+    catch (\Exception) {
       $this->fail('Failed to connect to MongoDB');
     }
     return TRUE;
@@ -241,8 +240,7 @@ class Tasks extends InstallTasks {
         $this->pass(t("The database server was able to drop the existing collection %name.", ['%name' => $name]));
       }
     }
-    // phpcs:ignore SlevomatCodingStandard.Exceptions.RequireNonCapturingCatch.NonCapturingCatchRequired
-    catch (\Exception $e) {
+    catch (\Exception) {
       $this->fail(t("The database server is unable to drop the existing collection %name.", ['%name' => $name]));
     }
   }
@@ -255,7 +253,7 @@ class Tasks extends InstallTasks {
       Database::getConnection()->schema()->createTable($name, $definition);
       $this->pass(t("The database server was able to create the collection %name.", ['%name' => $name]));
     }
-    catch (\Exception $e) {
+    catch (\Exception) {
       $this->fail(t("The database server is unable to create the collection %name.", ['%name' => $name]));
     }
   }
@@ -268,7 +266,7 @@ class Tasks extends InstallTasks {
       Database::getConnection()->insert($name)->fields($fields)->execute();
       $this->pass(t("The database server was able to insert data into the collection %name.", ['%name' => $name]));
     }
-    catch (\Exception $e) {
+    catch (\Exception) {
       $this->fail(t("The database server is unable to insert data into the collection %name.", ['%name' => $name]));
     }
   }
@@ -281,7 +279,7 @@ class Tasks extends InstallTasks {
       Database::getConnection()->update($name)->fields($fields)->condition($condition[0], $condition[1], $condition[2])->execute();
       $this->pass(t("The database server was able to update data in the collection %name.", ['%name' => $name]));
     }
-    catch (\Exception $e) {
+    catch (\Exception) {
       $this->fail(t("The database server is unable to update data in the collection %name.", ['%name' => $name]));
     }
   }
@@ -294,7 +292,7 @@ class Tasks extends InstallTasks {
       Database::getConnection()->delete($name)->condition($condition[0], $condition[1], $condition[2])->execute();
       $this->pass(t("The database server was able to delete data in the collection %name.", ['%name' => $name]));
     }
-    catch (\Exception $e) {
+    catch (\Exception) {
       $this->fail(t("The database server is unable to delete data in the collection %name.", ['%name' => $name]));
     }
   }
@@ -307,7 +305,7 @@ class Tasks extends InstallTasks {
       Database::getConnection()->schema()->dropTable($name);
       $this->pass(t("The database server was able to drop the collection %name.", ['%name' => $name]));
     }
-    catch (\Exception $e) {
+    catch (\Exception) {
       $this->fail(t("The database server is unable to drop the collection %name.", ['%name' => $name]));
     }
   }

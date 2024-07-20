@@ -429,7 +429,8 @@ class Schema extends DatabaseSchema {
         }
       }
     }
-    catch (ExecutionTimeoutException $e) {
+    // phpcs:ignore SlevomatCodingStandard.Exceptions.RequireNonCapturingCatch.NonCapturingCatchRequired
+    catch (ExecutionTimeoutException) {
       // Running Functional tests gets timeout. One fatal error we got was:
       // "Maximum execution time of 60 seconds exceeded in
       // vendor/mongodb/mongodb/src/Model/CollectionInfo.php
@@ -1351,7 +1352,7 @@ class Schema extends DatabaseSchema {
         );
       }
     }
-    catch (CommandException $e) {
+    catch (CommandException) {
       throw new SchemaObjectExistsException("Cannot add primary key to table $table: primary key already exists.");
     }
 
@@ -1497,7 +1498,7 @@ class Schema extends DatabaseSchema {
         );
       }
     }
-    catch (CommandException $e) {
+    catch (CommandException) {
       throw new SchemaObjectExistsException("Cannot add unique key $name to table $table: unique key already exists.");
     }
 
@@ -1628,7 +1629,7 @@ class Schema extends DatabaseSchema {
         );
       }
     }
-    catch (CommandException $e) {
+    catch (CommandException) {
       throw new SchemaObjectExistsException("Cannot add index $name to table $table: index already exists.");
     }
 

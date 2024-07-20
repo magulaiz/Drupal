@@ -2474,7 +2474,7 @@ class Select extends QuerySelect {
   /**
    * {@inheritdoc}
    */
-  public function getArguments(PlaceholderInterface $queryPlaceholder = NULL) {
+  public function getArguments(?PlaceholderInterface $queryPlaceholder = NULL) {
     return [];
   }
 

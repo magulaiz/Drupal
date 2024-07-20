@@ -1960,8 +1960,7 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
         );
       }
     }
-    // phpcs:ignore SlevomatCodingStandard.Exceptions.RequireNonCapturingCatch.NonCapturingCatchRequired
-    catch (\Exception $e) {
+    catch (\Exception) {
       // Throw exception that we could not load the entity.
     }
   }
