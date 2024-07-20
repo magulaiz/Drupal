@@ -1,0 +1,37 @@
+<?php
+
+namespace Drupal\Core\Validation\Plugin\Validation\Constraint;
+
+use Drupal\Core\Field\FieldItemListInterface;
+use Symfony\Component\Validator\Constraint;
+use Symfony\Component\Validator\ConstraintValidator;
+
+/**
+ * Validate multiple values on field to be unique.
+ */
+class MultipleUniqueValueConstraintValidator extends ConstraintValidator {
+
+  /**
+   * {@inheritdoc}
+   */
+  public function validate(mixed $value, Constraint $constraint) {
+    $fieldValue = $value;
+    $delta = '';
+    if ($value instanceof FieldItemListInterface) {
+      $fieldValue = $value->getString();
+      $delta = $value->getName();
+    }
+    else if (is_string($fieldValue)) {
+      $fieldValue = array_map('trim', explode("\n", trim($fieldValue)));
+    }
+    $fieldValueaCount = array_count_values($fieldValue);
+    foreach ($fieldValueaCount as $count) {
+      if ($count > 1) {
+        $this->context->buildViolation($constraint->message)
+          ->atPath($delta)
+          ->addViolation();
+      }
+    }
+  }
+
+}

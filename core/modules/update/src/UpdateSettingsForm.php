@@ -90,24 +90,6 @@ class UpdateSettingsForm extends ConfigFormBase {
   /**
    * {@inheritdoc}
    */
-  public function validateForm(array &$form, FormStateInterface $form_state) {
-    parent::validateForm($form, $form_state);
-    $emails = $form_state->getValue('update_notify_emails');
-    if (!empty($emails)) {
-      $emails = static::multiLineStringToArray($emails);
-      $emailsCount = array_count_values($emails);
-      foreach ($emailsCount as $count) {
-        if ($count > 1) {
-          $form_state->setErrorByName('update_notify_emails', $this->t('Add an unique email per line.'));
-        }
-      }
-    }
-
-  }
-
-  /**
-   * {@inheritdoc}
-   */
   protected function formatMultipleViolationsMessage(string $form_element_name, array $violations): TranslatableMarkup {
     if ($form_element_name !== 'update_notify_emails') {
       return parent::formatMultipleViolationsMessage($form_element_name, $violations);
