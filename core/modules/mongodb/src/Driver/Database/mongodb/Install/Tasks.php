@@ -241,6 +241,7 @@ class Tasks extends InstallTasks {
         $this->pass(t("The database server was able to drop the existing collection %name.", ['%name' => $name]));
       }
     }
+    // phpcs:ignore SlevomatCodingStandard.Exceptions.RequireNonCapturingCatch.NonCapturingCatchRequired
     catch (\Exception $e) {
       $this->fail(t("The database server is unable to drop the existing collection %name.", ['%name' => $name]));
     }

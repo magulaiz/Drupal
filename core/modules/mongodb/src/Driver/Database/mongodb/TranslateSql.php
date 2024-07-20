@@ -1023,7 +1023,7 @@ class TranslateSql {
    *
    * @param \Drupal\Core\Database\Connection $connection
    *   The database connection.
-   * @param \Drupal\Core\Database\Event\StatementExecutionStartEvent|NULL $startEvent
+   * @param \Drupal\Core\Database\Event\StatementExecutionStartEvent|null $startEvent
    *   The start event for the query.
    */
   protected function endEvent(Connection $connection, ?StatementExecutionStartEvent $startEvent = NULL): void {
