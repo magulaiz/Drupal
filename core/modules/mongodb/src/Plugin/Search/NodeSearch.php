@@ -109,7 +109,8 @@ class NodeSearch extends CoreNodeSearch {
     $keys = $this->keywords;
 
     foreach ($found as $item) {
-      // Move the results from the MongoDB variables to the ones expected by Drupal.
+      // Move the results from the MongoDB variables to the ones expected by
+      // Drupal.
       if (isset($item->i_sid)) {
         $item->sid = $item->i_sid;
         unset($item->i_sid);

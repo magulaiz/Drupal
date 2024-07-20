@@ -12,7 +12,7 @@ trait FieldPluginTrait {
    */
   protected function addAdditionalFields($fields = NULL) {
     if (!isset($fields)) {
-      // notice check
+      // Notice check.
       if (empty($this->additional_fields)) {
         return;
       }

@@ -2,8 +2,8 @@
 
 namespace Drupal\mongodb\Plugin\Field\FieldType;
 
-use Drupal\Core\Field\Plugin\Field\FieldType\TimestampItem as CoreTimestampItem;
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
+use Drupal\Core\Field\Plugin\Field\FieldType\TimestampItem as CoreTimestampItem;
 
 /**
  * Overriding the fieldtype plugin "timestamp".

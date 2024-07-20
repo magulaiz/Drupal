@@ -3,9 +3,9 @@
 namespace Drupal\mongodb\EntityQuery;
 
 use Drupal\Core\Database\Query\SelectInterface;
-use Drupal\Core\Entity\Query\Sql\Condition as CoreCondition;
 use Drupal\Core\Entity\Query\ConditionInterface;
 use Drupal\Core\Entity\Query\QueryException;
+use Drupal\Core\Entity\Query\Sql\Condition as CoreCondition;
 use Drupal\Core\Entity\Sql\SqlEntityStorageInterface;
 use Drupal\Core\Entity\Sql\TableMappingInterface;
 use Drupal\Core\Entity\TypedData\EntityDataDefinitionInterface;
@@ -72,7 +72,7 @@ class Condition extends CoreCondition {
     // The first two should use the same table but the last one needs to be a
     // new table. So for the first two, the table array index will be 'tags'
     // while the third will be 'node_reference.nid.tags'.
-    // $index_prefix = '';
+    // $index_prefix = ''.
     $specifiers = explode('.', $condition['field']);
     $count = count($specifiers) - 1;
     // This will contain the definitions of the last specifier seen by the
@@ -95,7 +95,8 @@ class Condition extends CoreCondition {
       // If there is revision support, only the current revisions are being
       // queried, and the field is revisionable then use the revision id.
       // Otherwise, the entity id will do.
-      // if (($revision_key = $entity_type->getKey('revision')) && $allRevisions && $field_storage && $field_storage->isRevisionable()) {
+      // if (($revision_key = $entity_type->getKey('revision')) &&
+      // $allRevisions && $field_storage && $field_storage->isRevisionable()) {
       // This contains the relevant SQL field to be used when joining entity
       // tables.
       // $entity_id_field = $revision_key;
@@ -106,7 +107,7 @@ class Condition extends CoreCondition {
       // tables.
       // $entity_id_field = $entity_type->getKey('id');
       // $field_id_field = 'entity_id';
-      // }
+      // }.
 
       /** @var \Drupal\mongodb\EntityStorage\ContentEntityStorage $storage */
       $storage = $this->getEntityTypeManager()->getStorage($entityTypeId);
@@ -177,7 +178,7 @@ class Condition extends CoreCondition {
             $propertyDefinitions = $field_storage->getPropertyDefinitions();
 
             // Prepare the next index prefix.
-            // $next_index_prefix = "$relationship_specifier.$column";
+            // $next_index_prefix = "$relationship_specifier.$column".
           }
         }
         $mongodb_column = $table_mapping->getFieldColumnName($field_storage, $column);

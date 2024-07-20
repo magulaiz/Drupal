@@ -2,8 +2,8 @@
 
 namespace Drupal\mongodb\Plugin\Field\FieldType;
 
-use Drupal\Core\Field\Plugin\Field\FieldType\ChangedItem as CoreChangedItem;
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
+use Drupal\Core\Field\Plugin\Field\FieldType\ChangedItem as CoreChangedItem;
 
 /**
  * Overriding the fieldtype plugin "changed".

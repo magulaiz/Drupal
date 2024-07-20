@@ -3,9 +3,9 @@
 namespace Drupal\mongodb\Plugin\views\filter;
 
 use Drupal\mongodb\modules\views\ManyToOneHelper;
+use Drupal\views\Plugin\views\display\DisplayPluginBase;
 use Drupal\views\Plugin\views\filter\InOperator;
 use Drupal\views\ViewExecutable;
-use Drupal\views\Plugin\views\display\DisplayPluginBase;
 
 /**
  * Overriding the views filter plugin "many_to_one".

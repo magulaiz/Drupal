@@ -5,7 +5,7 @@ namespace Drupal\mongodb\Lock;
 use Drupal\Core\Database\Connection;
 
 /**
- * The MongoDB implementation of \Drupal\Core\Lock\PersistentDatabaseLockBackend.
+ * MongoDB implementation of \Drupal\Core\Lock\PersistentDatabaseLockBackend.
  */
 class PersistentDatabaseLockBackend extends DatabaseLockBackend {
 

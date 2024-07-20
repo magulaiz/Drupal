@@ -3,8 +3,8 @@
 namespace Drupal\mongodb\EntityQuery;
 
 use Daffie\SqlLikeToRegularExpression;
-use Drupal\Core\Entity\Query\Sql\Query as CoreQuery;
 use Drupal\Core\Entity\Query\QueryException;
+use Drupal\Core\Entity\Query\Sql\Query as CoreQuery;
 use Drupal\Core\Entity\Sql\TableMappingInterface;
 use Drupal\mongodb\Driver\Database\mongodb\MongodbSQLException;
 use MongoDB\BSON\UTCDateTime;
@@ -265,10 +265,10 @@ class Query extends CoreQuery {
           // also use the property definitions for column.
           if ($key < $count) {
             // $relationship_specifier = $specifiers[$key + 1];
-            // $propertyDefinitions = $field_storage->getPropertyDefinitions();
-
+            // $propertyDefinitions = $field_storage->getPropertyDefinitions().
+            //
             // Prepare the next index prefix.
-            // $next_index_prefix = "$relationship_specifier.$column";
+            // $next_index_prefix = "$relationship_specifier.$column".
           }
         }
 
@@ -465,9 +465,9 @@ class Query extends CoreQuery {
       }
       else {
         if (empty($this->sort)) {
-          // Return a keyed array of results. The key is either the revision_id or
-          // the entity_id depending on whether the entity type supports revisions.
-          // The value is always the entity id.
+          // Return a keyed array of results. The key is either the revision_id
+          // or the entity_id depending on whether the entity type supports
+          // revisions. The value is always the entity id.
           $results = $this->mongodbSelect->execute()->fetchAll();
 
           $entities = [];
@@ -745,12 +745,13 @@ class Query extends CoreQuery {
    *   Returns the sorted array with the entity ids.
    */
   protected function sortQueryResult(array $results) {
-    // The first value of the variable $this->mongodbFields is the field name to be
-    // used as the key in the return array $entity_ids.
+    // The first value of the variable $this->mongodbFields is the field name
+    // to be used as the key in the return array $entity_ids.
     $field_name_entity_key = reset($this->mongodbFields);
 
-    // The second value of the variable $this->mongodbFields is the field name of
-    // the entity_id to be used as the value in the return array $entity_ids.
+    // The second value of the variable $this->mongodbFields is the field name
+    // of the entity_id to be used as the value in the return array
+    // $entity_ids.
     $field_name_entity_id = next($this->mongodbFields);
 
     // This array holds all the parameters that will be used by the function
@@ -815,7 +816,7 @@ class Query extends CoreQuery {
         }
 
         // Numeric keys will be re-indexed with the function array_multisort.
-        // We need the keys
+        // We need the keys.
         $associative_key_entity_ids[$field_name_entity_key . '__' . $result->{$field_name_entity_key}] = $result->{$field_name_entity_id};
       }
 

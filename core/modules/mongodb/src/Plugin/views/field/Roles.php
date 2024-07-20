@@ -4,8 +4,8 @@ namespace Drupal\mongodb\Plugin\views\field;
 
 use Drupal\user\Entity\Role;
 use Drupal\user\Entity\User;
-use Drupal\views\Plugin\views\display\DisplayPluginBase;
 use Drupal\user\Plugin\views\field\Roles as CoreRoles;
+use Drupal\views\Plugin\views\display\DisplayPluginBase;
 use Drupal\views\ViewExecutable;
 
 /**

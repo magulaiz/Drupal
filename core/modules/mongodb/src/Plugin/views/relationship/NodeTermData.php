@@ -29,7 +29,7 @@ class NodeTermData extends CoreNodeTermData {
 
     $join = \Drupal::service('plugin.manager.views.join')->createInstance('standard', $def);
 
-    // use a short alias for this:
+    // Use a short alias for this.
     $alias = $def['table'] . '_' . $this->table;
 
     $this->alias = $this->query->addRelationship($alias, $join, 'taxonomy_term_data', $this->relationship);

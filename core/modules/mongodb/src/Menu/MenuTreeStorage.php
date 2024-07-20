@@ -2,10 +2,9 @@
 
 namespace Drupal\mongodb\Menu;
 
-use Drupal\Component\Plugin\Exception\PluginException;
 use Drupal\Core\Database\Query\SelectInterface;
-use Drupal\Core\Menu\MenuTreeStorage as CoreMenuTreeStorage;
 use Drupal\Core\Menu\MenuTreeParameters;
+use Drupal\Core\Menu\MenuTreeStorage as CoreMenuTreeStorage;
 
 // cspell:ignore mlid
 
@@ -85,8 +84,8 @@ class MenuTreeStorage extends CoreMenuTreeStorage {
       $query->fields($fields)
         ->execute();
 
-      // Need to check both parent and menu_name, since parent can be empty in any
-      // menu.
+      // Need to check both parent and menu_name, since parent can be empty in
+      // any menu.
       if ($link['parent'] != $original['parent'] || $link['menu_name'] != $original['menu_name']) {
         $this->moveChildren($fields, $original);
       }
@@ -129,7 +128,7 @@ class MenuTreeStorage extends CoreMenuTreeStorage {
         ->execute();
 
       if ($mlid != $insert_id) {
-        // throw exception.
+        // Throw exception.
       }
 
       $this->updateParentalStatus($link);

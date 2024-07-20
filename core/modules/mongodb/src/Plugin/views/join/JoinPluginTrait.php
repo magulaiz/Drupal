@@ -29,7 +29,8 @@ trait JoinPluginTrait {
       $left_table = $view_query->getTableInfo($this->leftTable);
     }
     else {
-      // This can be used if left_field is a formula or something. It should be used only *very* rarely.
+      // This can be used if left_field is a formula or something. It should be
+      // used only *very* rarely.
       $left_table = NULL;
     }
 

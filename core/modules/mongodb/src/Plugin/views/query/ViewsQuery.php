@@ -2,8 +2,8 @@
 
 namespace Drupal\mongodb\Plugin\views\query;
 
-use Drupal\Core\Database\Query\ConditionInterface;
 use Drupal\Core\Database\DatabaseExceptionWrapper;
+use Drupal\Core\Database\Query\ConditionInterface;
 use Drupal\mongodb\Driver\Database\mongodb\MongodbSQLException;
 use Drupal\views\Plugin\views\filter\LatestRevision;
 use Drupal\views\Plugin\views\query\Sql;
@@ -79,14 +79,14 @@ class ViewsQuery extends Sql {
   protected array $mongodbFieldsLength = [];
 
   /**
-   * The array containing the date fields as a date string be added to the query.
+   * Array containing the date fields as a date string be added to the query.
    *
    * @var array
    */
   protected array $mongodbDateDateFormattedFields = [];
 
   /**
-   * The array containing the string fields as a date string be added to the query.
+   * Array containing the string fields as a date string be added to the query.
    *
    * @var array
    */
@@ -182,8 +182,8 @@ class ViewsQuery extends Sql {
       $alias = $table . '_' . str_replace('.', '_', $field);
     }
 
-    // Make sure an alias is assigned
-    $alias = $alias ? $alias : $field;
+    // Make sure an alias is assigned.
+    $alias = $alias ?: $field;
 
     $alias = $this->truncateAlias($alias);
 
@@ -389,17 +389,17 @@ class ViewsQuery extends Sql {
   /**
    * Add a condition clause to the query.
    *
-   * @param $group
+   * @param string $group
    *   The WHERE group to add these to; groups are used to create AND/OR
    *   sections. Groups cannot be nested. Use 0 as the default group.
    *   If the group does not yet exist it will be created as an AND group.
-   * @param $field
+   * @param string $field
    *   The name of the field to check.
-   * @param $value
+   * @param mixed $value
    *   The value to test the field against. In most cases, this is a scalar. For
    *   more complex options, it is an array. The meaning of each element in the
    *   array is dependent on the $operator.
-   * @param $operator
+   * @param string $operator
    *   The comparison operator, such as =, <, or >=. It also accepts more
    *   complex options such as IN, LIKE, LIKE BINARY, or BETWEEN. Defaults to =.
    *
@@ -457,17 +457,17 @@ class ViewsQuery extends Sql {
   /**
    * Add a HAVING condition clause to the query.
    *
-   * @param $group
+   * @param string $group
    *   The HAVING group to add these to; groups are used to create AND/OR
    *   sections. Groups cannot be nested. Use 0 as the default group.
    *   If the group does not yet exist it will be created as an AND group.
-   * @param $field
+   * @param string $field
    *   The name of the field to check.
-   * @param $value
+   * @param mixed $value
    *   The value to test the field against. In most cases, this is a scalar. For
    *   more complex options, it is an array. The meaning of each element in the
    *   array is dependent on the $operator.
-   * @param $operator
+   * @param string $operator
    *   The comparison operator, such as =, <, or >=. It also accepts more
    *   complex options such as IN, LIKE, LIKE BINARY, or BETWEEN. Defaults to =.
    *   If $field is a string you have to use 'formula' here.
@@ -524,7 +524,8 @@ class ViewsQuery extends Sql {
    */
   public function addOrderBy($table, $field = NULL, $order = 'ASC', $alias = '', $params = []) {
     // Only ensure the table if it's not the special random key.
-    // @todo: Maybe it would make sense to just add an addOrderByRand or something similar.
+    // @todo Maybe it would make sense to just add an addOrderByRand or
+    // something similar.
     if ($table && $table != 'rand') {
       $this->ensureTable($table);
     }
@@ -632,7 +633,8 @@ class ViewsQuery extends Sql {
           }
           elseif (is_array($clause)) {
             $has_condition = TRUE;
-            // Operators that end with the sting "_STRING" should have that part removed.
+            // Operators that end with the sting "_STRING" should have that
+            // part removed.
             $clause_operator = strtoupper(substr($clause['operator'], -7)) == '_STRING' ? 'IN' : $clause['operator'];
             $sub_group->condition($clause['field'], $clause['value'], $clause_operator);
           }
@@ -741,10 +743,9 @@ class ViewsQuery extends Sql {
       $distinct = TRUE;
     }
 
-    /**
-     * An optimized count query includes just the base field instead of all the fields.
-     * Determine of this query qualifies by checking for a groupby or distinct.
-     */
+    // An optimized count query includes just the base field instead of all the
+    // fields. Determine of this query qualifies by checking for a groupby or
+    // distinct.
     if ($get_count && !$this->groupby) {
       foreach ($this->fields as $field) {
         if (!empty($field['distinct']) || !empty($field['function'])) {
@@ -826,7 +827,7 @@ class ViewsQuery extends Sql {
     }
 
     if (!$this->getCountOptimized) {
-      // we only add the orderby if we're not counting.
+      // We only add the orderby if we're not counting.
       if ($this->orderby) {
         foreach ($this->orderby as $order) {
           if ($order['field'] == 'rand_') {
@@ -988,7 +989,8 @@ class ViewsQuery extends Sql {
     if (!empty($this->condition) && $condition = $this->buildCondition('condition')) {
       $query->condition($condition);
 
-      // Add the unwind actions for the embedded tables for the condition fields.
+      // Add the unwind actions for the embedded tables for the condition
+      // fields.
       foreach ($this->condition as $conditions) {
         if (isset($conditions['conditions']) && is_array($conditions['conditions'])) {
           foreach ($conditions['conditions'] as $condition) {
@@ -1069,7 +1071,8 @@ class ViewsQuery extends Sql {
         $view->pager->preExecute($query);
 
         if (!empty($this->limit) || !empty($this->offset)) {
-          // We can't have an offset without a limit, so provide a very large limit instead.
+          // We can't have an offset without a limit, so provide a very large
+          // limit instead.
           $limit = intval(!empty($this->limit) ? $this->limit : 999999);
           $offset = intval(!empty($this->offset) ? $this->offset : 0);
           $query->range($offset, $limit);
@@ -1115,7 +1118,7 @@ class ViewsQuery extends Sql {
   }
 
   /**
-   * Remove the results that do not have the latest translation affected revision.
+   * Remove results that do not have the latest translation affected revision.
    */
   protected function updateLatestTranslationAffectedRevision(&$results) {
     $entity_information = $this->getEntityTableInfo();
@@ -1144,7 +1147,8 @@ class ViewsQuery extends Sql {
       $langcode_key = $entity_info->getKey('langcode');
       $langcode_alias = $this->getFieldAlias($info['alias'], $langcode_key);
 
-      // Get the LATEST translation affected revision for each entity_type and translation.
+      // Get the LATEST translation affected revision for each entity_type and
+      // translation.
       foreach ($results as &$result) {
         if (isset($result->{$id_alias}) && ($result->{$id_alias} != '') && isset($result->{$langcode_alias}) && ($result->{$langcode_alias} != '')) {
           if (!isset($latest_translations_affected_revisions[$entity_type][$result->{$langcode_alias}])) {
@@ -1156,7 +1160,8 @@ class ViewsQuery extends Sql {
         }
       }
 
-      // Remove the results rows that do not have the LATEST translation affected revision.
+      // Remove the results rows that do not have the LATEST translation
+      // affected revision.
       foreach ($results as $row_id => &$result) {
         if (isset($result->{$id_alias}) && ($result->{$id_alias} != '') && isset($result->{$langcode_alias}) && ($result->{$langcode_alias} != '') &&
           isset($latest_translations_affected_revisions[$entity_type][$result->{$langcode_alias}]) && ($latest_translations_affected_revisions[$entity_type][$result->{$langcode_alias}] > $result->{$id_alias})) {

@@ -2,8 +2,8 @@
 
 namespace Drupal\mongodb\Plugin\Field\FieldType;
 
-use Drupal\Core\Field\Plugin\Field\FieldType\CreatedItem as CoreCreatedItem;
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
+use Drupal\Core\Field\Plugin\Field\FieldType\CreatedItem as CoreCreatedItem;
 
 /**
  * Overriding the fieldtype plugin "created".

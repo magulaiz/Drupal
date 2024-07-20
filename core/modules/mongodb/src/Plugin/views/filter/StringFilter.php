@@ -80,7 +80,7 @@ class StringFilter extends CoreStringFilter {
       $operator = $this->getConditionOperator('LIKE');
       foreach ($matches as $match) {
         $phrase = FALSE;
-        // Strip off phrase quotes
+        // Strip off phrase quotes.
         if ($match[2][0] == '"') {
           $match[2] = substr($match[2], 1, -1);
           $phrase = TRUE;
@@ -96,7 +96,7 @@ class StringFilter extends CoreStringFilter {
         return;
       }
 
-      // previously this was a call_user_func_array but that's unnecessary
+      // Previously this was a call_user_func_array but that's unnecessary
       // as views will unpack an array that is a single arg.
       $this->query->addCondition($this->options['group'], $condition);
     }

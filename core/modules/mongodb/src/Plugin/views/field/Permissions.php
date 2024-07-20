@@ -4,8 +4,8 @@ namespace Drupal\mongodb\Plugin\views\field;
 
 use Drupal\user\Plugin\views\field\Permissions as CorePermissions;
 use Drupal\views\Plugin\views\display\DisplayPluginBase;
-use Drupal\views\ViewExecutable;
 use Drupal\views\Plugin\views\field\PrerenderList;
+use Drupal\views\ViewExecutable;
 
 /**
  * Overriding the views field plugin "user_permissions".

@@ -2,9 +2,9 @@
 
 namespace Drupal\mongodb\Plugin\views\relationship;
 
-use Drupal\views\ViewExecutable;
 use Drupal\views\Plugin\views\display\DisplayPluginBase;
 use Drupal\views\Plugin\views\relationship\RelationshipPluginBase as CoreRelationshipPluginBase;
+use Drupal\views\ViewExecutable;
 use Drupal\views\Views;
 
 /**
@@ -125,7 +125,7 @@ abstract class RelationshipPluginBase extends CoreRelationshipPluginBase {
 
     $join = Views::pluginManager('join')->createInstance($id, $def);
 
-    // use a short alias for this:
+    // Use a short alias for this.
     $alias = $def['table'] . '_' . $this->table;
 
     $this->alias = $this->query->addRelationship($alias, $join, $this->definition['base'], $this->relationship);

@@ -2,8 +2,8 @@
 
 namespace Drupal\mongodb\Plugin\views\argument;
 
-use Drupal\user\Plugin\views\argument\RolesRid as CoreRolesRid;
 use Drupal\mongodb\modules\views\ManyToOneHelper;
+use Drupal\user\Plugin\views\argument\RolesRid as CoreRolesRid;
 use Drupal\views\Plugin\views\display\DisplayPluginBase;
 use Drupal\views\ViewExecutable;
 

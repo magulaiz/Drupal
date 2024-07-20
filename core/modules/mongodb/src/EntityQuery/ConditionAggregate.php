@@ -3,12 +3,12 @@
 namespace Drupal\mongodb\EntityQuery;
 
 use Drupal\Core\Database\Query\SelectInterface;
-use Drupal\Core\Entity\Query\Sql\ConditionAggregate as CoreConditionAggregate;
 use Drupal\Core\Entity\Query\ConditionAggregateInterface;
+use Drupal\Core\Entity\Query\Sql\ConditionAggregate as CoreConditionAggregate;
 use Drupal\mongodb\Driver\Database\mongodb\Condition as MongodbCondition;
 
 /**
- * The MongoDB implementation of \Drupal\Core\Entity\Query\Sql\ConditionAggregate.
+ * MongoDB implementation of \Drupal\Core\Entity\Query\Sql\ConditionAggregate.
  */
 class ConditionAggregate extends CoreConditionAggregate {
 

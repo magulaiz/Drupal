@@ -124,7 +124,7 @@ class QueryAggregate extends Query implements QueryAggregateInterface {
   }
 
   /**
-   * Helper method for updating the group by result of the MongoDB aggregate query.
+   * Helper method for updating the group by result of the aggregate query.
    *
    * Two group by results from MongoDB are changed to what Drupal expects:
    *  - The MongoDB field names are changed to the expected drupal field names.

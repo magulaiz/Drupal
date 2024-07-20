@@ -2,8 +2,8 @@
 
 namespace Drupal\mongodb\Plugin\views\argument;
 
-use Drupal\taxonomy\Plugin\views\argument\IndexTidDepth;
 use Drupal\mongodb\modules\taxonomy\TaxonomyIndexDepthQueryTrait;
+use Drupal\taxonomy\Plugin\views\argument\IndexTidDepth;
 
 /**
  * Overriding the views argument plugin "taxonomy_index_tid_depth".

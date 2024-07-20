@@ -2,8 +2,8 @@
 
 namespace Drupal\mongodb\Plugin\Field\FieldType;
 
-use Drupal\Core\Field\Plugin\Field\FieldType\BooleanItem as CoreBooleanItem;
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
+use Drupal\Core\Field\Plugin\Field\FieldType\BooleanItem as CoreBooleanItem;
 
 /**
  * Overriding the fieldtype plugin "boolean".
