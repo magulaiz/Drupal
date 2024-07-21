@@ -322,9 +322,13 @@ class RouteBuilder implements RouteBuilderInterface, DestructableInterface {
   protected function getRoutingAlterDefinitions() {
     // Always instantiate a new YamlDiscovery object so that we always search on
     // the up-to-date list of modules.
-    $discovery = new YamlDiscovery('routing.alter', $this->moduleHandler->getModuleDirectories());
+    if ($module_directories = $this->moduleHandler->getModuleDirectories()) {
+      $discovery = new YamlDiscovery('routing.alter', $module_directories);
 
-    return $discovery->findAll();
+      return $discovery->findAll();
+    }
+
+    return [];
   }
 
 }
