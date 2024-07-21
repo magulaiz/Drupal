@@ -8,7 +8,6 @@ use Drupal\block\BlockListBuilder;
 use Drupal\block\BlockViewBuilder;
 use Drupal\block\Form\BlockDeleteForm;
 use Drupal\Core\Entity\Attribute\ConfigEntityType;
-use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Condition\ConditionPluginCollection;
 use Drupal\Core\Config\Action\Attribute\ActionMethod;

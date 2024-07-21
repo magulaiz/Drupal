@@ -3,7 +3,6 @@
 namespace Drupal\image\Entity;
 
 use Drupal\Core\Entity\Attribute\ConfigEntityType;
-use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Config\Action\Attribute\ActionMethod;
 use Drupal\Core\Config\Entity\ConfigEntityBase;
