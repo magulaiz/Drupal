@@ -131,8 +131,59 @@ class RouteBuilder implements RouteBuilderInterface, DestructableInterface {
 
     $this->building = TRUE;
 
+    // @TODO `route_callbacks` alter.
+    // Special yml file for the `route_callbacks` list altering.
+    // Name: <module>.prerouting.alter.yml
+    // Structure:
+    // <alterning_module_name1>
+    //   route_callbacks_alter:
+    //     - <route_callback_name1>: <new_route_callback_name1>
+    //     - <route_callback_name2>: <new_route_callback_name2>
+    //     - ...
+    //     - <route_callback_nameN>: <new_route_callback_nameN>
+    //   weight: <route_callbacks_alter_weight_number>
+
+    // Take all definitions.
+    $route_definitions = $this->getRouteDefinitions();
+    $route_definitions_alter = [];
+    // '*.prerouting.alter.yml' calls from all modules.
+    foreach ($this->getPreRoutingAlterDefinitions() as $this_module) {
+      // Take full list of routes alter for every module
+      // every *.prerouting.alter.yml file.
+      foreach ($this_module as $altering_module_name => $altering_module) {
+        // If exists `route_callbacks` *.routing.yml for $altering_module.
+        if (isset($route_definitions[$altering_module_name]['route_callbacks'])) {
+          $route_callbacks = $route_definitions[$altering_module_name]['route_callbacks'];
+
+          // If exists 'route_callbacks_alter' list for $altering_module_name.
+          if (isset($this_module[$altering_module_name]['route_callbacks_alter'])) {
+            $route_callbacks_alter = $this_module[$altering_module_name]['route_callbacks_alter'];
+
+            // Check `route_callbacks` list from $altering_module.
+            foreach ($route_callbacks as $route_callback) {
+              // Check `route_callbacks_alter` list from $this_module.
+              foreach ($route_callbacks_alter as $route_callback_alter) {
+                if (isset($this_module[$altering_module_name]['weight'])) {
+                  $weight = $this_module[$altering_module_name]['weight'];
+
+                  // Check and add/change weight for this route_callback.
+                  $route_alter_key = "$altering_module_name:$route_callback";
+                  $route_definitions_alter[$route_alter_key] = $route_callback_alter;
+                  $route_definitions_alter[$route_alter_key]['weight'] =
+                    (isset($route_definitions_alter[$route_alter_key]['weight'])
+                      && $weight > $route_definitions_alter[$route_alter_key]['weight'])
+                      ? $weight
+                      : 0;
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+
     $collection = new RouteCollection();
-    foreach ($this->getRouteDefinitions() as $routes) {
+    foreach ($route_definitions as $route_name => $routes) {
       // The top-level 'routes_callback' is a list of methods in controller
       // syntax, see \Drupal\Core\Controller\ControllerResolver. These methods
       // should return a set of \Symfony\Component\Routing\Route objects, either
@@ -142,7 +193,17 @@ class RouteBuilder implements RouteBuilderInterface, DestructableInterface {
       // to the collection.
       if (isset($routes['route_callbacks'])) {
         foreach ($routes['route_callbacks'] as $route_callback) {
-          $callback = $this->controllerResolver->getControllerFromDefinition($route_callback);
+
+          // @TODO take alter route info from $route_definitions_alter.
+          $route_alter_key = "$route_name:$route_callback";
+          if (isset($route_definitions_alter[$route_alter_key])) {
+            $route_callback_alter = $route_definitions_alter[$route_alter_key][$route_callback];
+          }
+          else {
+            $route_callback_alter = $route_callback;
+          }
+
+          $callback = $this->controllerResolver->getControllerFromDefinition($route_callback_alter);
           if ($callback_routes = call_user_func($callback)) {
             // If a RouteCollection is returned, add the whole collection.
             if ($callback_routes instanceof RouteCollection) {
@@ -232,6 +293,35 @@ class RouteBuilder implements RouteBuilderInterface, DestructableInterface {
     // Always instantiate a new YamlDiscovery object so that we always search on
     // the up-to-date list of modules.
     $discovery = new YamlDiscovery('routing', $this->moduleHandler->getModuleDirectories());
+
+    return $discovery->findAll();
+  }
+
+  /**
+   * Retrieves all defined routes alter from .prerouting.alter.yml files.
+   *
+   * @TODO New *.prerouting.alter.yml file - need for *.routing.yml alter
+   * from other modules.
+   *
+   * Special yml file for the `route_callbacks` list altering.
+   * Name: <module>.prerouting.alter.yml
+   * Structure:
+   * <alterning_module_name1>
+   *   route_callbacks_alter:
+   *     - <route_callback_name1>: <new_route_callback_name1>
+   *     - <route_callback_name2>: <new_route_callback_name2>
+   *     - ...
+   *     - <route_callback_nameN>: <new_route_callback_nameN>
+   *   weight: <route_callbacks_alter_weight_number>
+   *
+   * @return array
+   *   The defined routes, keyed by provider.
+   */
+  protected function getPreRoutingAlterDefinitions() {
+    // Always instantiate a new YamlDiscovery object so that we always search on
+    // the up-to-date list of modules.
+    $discovery = new YamlDiscovery('prerouting.alter', $this->moduleHandler->getModuleDirectories());
+
     return $discovery->findAll();
   }
 
