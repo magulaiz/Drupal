@@ -8,8 +8,6 @@ use Drupal\Component\Plugin\Exception\PluginNotFoundException;
 use Drupal\Core\Config\Action\ConfigActionManager;
 use Drupal\Core\Entity\EntityDisplayRepositoryInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
-use Drupal\Core\Recipe\RecipeRunner;
-use Drupal\FunctionalTests\Core\Recipe\RecipeTestTrait;
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\Tests\node\Traits\ContentTypeCreationTrait;
 
@@ -19,7 +17,6 @@ use Drupal\Tests\node\Traits\ContentTypeCreationTrait;
 class EntityMethodConfigActionsTest extends KernelTestBase {
 
   use ContentTypeCreationTrait;
-  use RecipeTestTrait;
 
   /**
    * {@inheritdoc}
@@ -122,7 +119,7 @@ class EntityMethodConfigActionsTest extends KernelTestBase {
       $value,
     );
 
-    $expected_values = array_is_list($value) ? $value : reset($value);
+    $expected_values = array_is_list($value) ? $value : [$value];
     $entity = $storage->load('foo');
     foreach ($expected_values as ['property_name' => $name, 'value' => $value]) {
       $this->assertSame($value, $entity->get($name));
@@ -169,20 +166,16 @@ class EntityMethodConfigActionsTest extends KernelTestBase {
 
     // The `hideComponent` action is an alias for `removeComponent`, proving
     // that entity methods can be aliased.
-    $recipe = <<<YAML
-name: 'Hide display components'
-config:
-  actions:
-    {$form_display->getConfigDependencyName()}:
-      hideComponent: uid
-    {$view_display->getConfigDependencyName()}:
-      hideComponents:
-        - body
-        - links
-YAML;
-
-    $recipe = $this->createRecipe($recipe);
-    RecipeRunner::processRecipe($recipe);
+    $this->configActionManager->applyAction(
+      'entity_method:core.entity_form_display:hideComponent',
+      $form_display->getConfigDependencyName(),
+      'uid',
+    );
+    $this->configActionManager->applyAction(
+      'entity_method:core.entity_view_display:hideComponents',
+      $view_display->getConfigDependencyName(),
+      ['body', 'links'],
+    );
 
     $this->assertNull($repository->getFormDisplay('node', 'test')->getComponent('uid'));
     $view_display = $repository->getViewDisplay('node', 'test');
