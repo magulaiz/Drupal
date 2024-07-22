@@ -298,7 +298,7 @@ default:
   <<: [ *with-composer, *default-job-settings-lint ]
   stage: 🪄 Lint
   variables:
-    KUBERNETES_CPU_REQUEST: "16"
+    KUBERNETES_CPU_REQUEST: "4"
   script:
     # Get the phpstan cache file from the artifacts of the latest successful
     # job from the target branch. Allow the job to proceed and pass if the file
