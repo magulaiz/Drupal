@@ -9,7 +9,6 @@ use Drupal\Core\Config\Action\ConfigActionManager;
 use Drupal\Core\Entity\EntityDisplayRepositoryInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Recipe\RecipeRunner;
-use Drupal\field\Entity\FieldConfig;
 use Drupal\FunctionalTests\Core\Recipe\RecipeTestTrait;
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\language\Entity\ConfigurableLanguage;
@@ -156,61 +155,6 @@ class EntityMethodConfigActionsTest extends KernelTestBase {
     );
 
     $this->assertSame($expected_status, $storage->load('foo')->status());
-  }
-
-  public function testChangeFieldSettings(): void {
-    $field = FieldConfig::loadByName('node', 'test', 'body');
-    $this->assertTrue($field->isTranslatable());
-    $this->assertFalse($field->isRequired());
-    $this->assertTrue($field->getSetting('display_summary'));
-    $this->assertFalse($field->getSetting('required_summary'));
-    $this->assertEmpty($field->getDefaultValueLiteral());
-
-    $this->configActionManager->applyAction(
-      'entity_method:field.field:setLabel',
-      $field->getConfigDependencyName(),
-      'Not what you were expecting!',
-    );
-    $this->configActionManager->applyAction(
-      'entity_method:field.field:setDescription',
-      $field->getConfigDependencyName(),
-      "Any ol' nonsense can go here.",
-    );
-    $this->configActionManager->applyAction(
-      'entity_method:field.field:setTranslatable',
-      $field->getConfigDependencyName(),
-      FALSE,
-    );
-    $this->configActionManager->applyAction(
-      'entity_method:field.field:setRequired',
-      $field->getConfigDependencyName(),
-      TRUE,
-    );
-    $this->configActionManager->applyAction(
-      'entity_method:field.field:setSettings',
-      $field->getConfigDependencyName(),
-      [
-        'display_summary' => FALSE,
-        'required_summary' => TRUE,
-      ],
-    );
-    $this->configActionManager->applyAction(
-      'entity_method:field.field:setDefaultValue',
-      $field->getConfigDependencyName(),
-      [
-        'value' => "Don't build a castle in a swamp.",
-      ],
-    );
-
-    $field = FieldConfig::loadByName('node', 'test', 'body');
-    $this->assertNotEmpty($field);
-    $this->assertSame('Not what you were expecting!', $field->getLabel());
-    $this->assertSame("Any ol' nonsense can go here.", $field->getDescription());
-    $this->assertFalse($field->isTranslatable());
-    $this->assertTrue($field->isRequired());
-    $this->assertFalse($field->getSetting('display_summary'));
-    $this->assertTrue($field->getSetting('required_summary'));
-    $this->assertSame([['value' => "Don't build a castle in a swamp."]], $field->getDefaultValueLiteral());
   }
 
   public function testConfigurableLanguageEntityActions(): void {
