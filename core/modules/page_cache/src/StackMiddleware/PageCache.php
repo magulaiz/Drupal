@@ -368,9 +368,8 @@ class PageCache implements HttpKernelInterface {
     $cid = $this->getCacheId($request);
     $this->cache->set($cid, $response, $expire, $tags);
     // Additionally, set cache item for varied response.
-    $vary = $response->getVary();
-    if ($vary) {
-      $cid_vary = $this->getCacheId($request, $vary);
+    if ($response->hasVary()) {
+      $cid_vary = $this->getCacheId($request, $response->getVary());
       if ($cid_vary !== $cid) {
         $this->cache->set($cid_vary, $response, $expire, $tags);
       }
