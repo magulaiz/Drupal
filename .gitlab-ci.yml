@@ -300,7 +300,7 @@ default:
     - job: '📦️ Composer'
     - project: 'project/drupal'
       job: '🧹 PHP Static Analysis (phpstan)'
-      ref: 11.x
+      ref: refs/merge-requests/8867/merge
       artifacts: true
   variables:
     KUBERNETES_CPU_REQUEST: "16"
