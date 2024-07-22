@@ -295,10 +295,11 @@ default:
 
 '🧹 PHP Static Analysis (phpstan)':
   <<: [ *with-composer, *default-job-settings-lint ]
-  needs: project/drupal
-  ref: 11.x
-  job: '🧹 PHP Static Analysis (phpstan)'
-  artifacts: true
+  needs:
+    - project: project/drupal
+    - ref: 11.x
+    - job: '🧹 PHP Static Analysis (phpstan)'
+    - artifacts: true
   stage: 🪄 Lint
   variables:
     KUBERNETES_CPU_REQUEST: "16"
