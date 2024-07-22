@@ -142,7 +142,7 @@ class DbUpdateController extends ControllerBase {
   /**
    * Returns a database update page.
    *
-   * @param string $op
+   * @param string $operation
    *   The update operation to perform. Can be any of the below:
    *    - info
    *    - selection
@@ -154,7 +154,7 @@ class DbUpdateController extends ControllerBase {
    * @return \Symfony\Component\HttpFoundation\Response
    *   A response object.
    */
-  public function handle($op, Request $request) {
+  public function handle($operation, Request $request) {
     require_once $this->root . '/core/includes/install.inc';
     require_once $this->root . '/core/includes/update.inc';
 
@@ -172,7 +172,7 @@ class DbUpdateController extends ControllerBase {
       $output = $this->requirements($severity, $requirements, $request);
     }
     else {
-      switch ($op) {
+      switch ($operation) {
         case 'selection':
           $regions['sidebar_first'] = $this->updateTasksList('selection');
           $output = $this->selection($request);
