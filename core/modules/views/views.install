@@ -22,7 +22,7 @@ function views_update_last_removed() {
 /**
  * Remove disabled display extenders from views settings.
  */
-function views_update_11001() {
+function views_update_11001(): void {
   $config = \Drupal::configFactory()->getEditable('views.settings');
   $display_extenders = $config->get('display_extenders');
   if ($display_extenders) {
