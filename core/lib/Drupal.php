@@ -4,7 +4,7 @@ use Drupal\Core\DependencyInjection\ContainerNotInitializedException;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
- * Static Service Container wrapper an arbitrary change.
+ * Static Service Container wrapper.
  *
  * Generally, code in Drupal should accept its dependencies via either
  * constructor injection or setter method injection. However, there are cases,
