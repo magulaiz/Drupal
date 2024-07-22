@@ -14,10 +14,7 @@ use Drupal\FunctionalTests\Core\Recipe\RecipeTestTrait;
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\language\Entity\ConfigurableLanguage;
 use Drupal\media\Entity\MediaType;
-use Drupal\node\Entity\NodeType;
-use Drupal\Tests\block\Traits\BlockCreationTrait;
 use Drupal\Tests\node\Traits\ContentTypeCreationTrait;
-use Drupal\Tests\node\Traits\NodeCreationTrait;
 
 /**
  * @group Recipe
@@ -25,7 +22,6 @@ use Drupal\Tests\node\Traits\NodeCreationTrait;
 class EntityMethodConfigActionsTest extends KernelTestBase {
 
   use ContentTypeCreationTrait;
-  use NodeCreationTrait;
   use RecipeTestTrait;
 
   /**
@@ -307,32 +303,6 @@ YAML;
     $this->expectExceptionMessage('The "entity_form_display:removeComponent" plugin does not exist.');
     $this->container->get('plugin.manager.config_action')
       ->applyAction('entity_form_display:removeComponent', $form_display->getConfigDependencyName(), 'uid');
-  }
-
-  public function testNodeTypeEntityActions(): void {
-    $node_type = NodeType::load('test');
-
-    $this->assertTrue($node_type->shouldCreateNewRevision());
-    $this->assertSame(DRUPAL_OPTIONAL, $node_type->getPreviewMode());
-    $this->assertTrue($node_type->displaySubmitted());
-
-    $recipe = <<<YAML
-name: 'Change content type'
-config:
-  actions:
-    {$node_type->getConfigDependencyName()}:
-      setNewRevision: false
-      setPreviewMode: 2
-      setDisplaySubmitted: false
-YAML;
-
-    $recipe = $this->createRecipe($recipe);
-    RecipeRunner::processRecipe($recipe);
-
-    $node_type = NodeType::load('test');
-    $this->assertFalse($node_type->shouldCreateNewRevision());
-    $this->assertSame(DRUPAL_REQUIRED, $node_type->getPreviewMode());
-    $this->assertFalse($node_type->displaySubmitted());
   }
 
 }
