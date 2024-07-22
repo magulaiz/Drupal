@@ -19,7 +19,7 @@ use Drupal\Tests\UnitTestCase;
 class AssetResolverTest extends UnitTestCase {
 
   /**
-   * The tested asset resolver service something.
+   * The tested asset resolver service.
    *
    * @var \Drupal\Core\Asset\AssetResolver
    */
