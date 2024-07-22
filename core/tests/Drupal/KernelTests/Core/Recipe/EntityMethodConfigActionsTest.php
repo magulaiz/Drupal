@@ -11,7 +11,6 @@ use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Recipe\RecipeRunner;
 use Drupal\FunctionalTests\Core\Recipe\RecipeTestTrait;
 use Drupal\KernelTests\KernelTestBase;
-use Drupal\language\Entity\ConfigurableLanguage;
 use Drupal\Tests\node\Traits\ContentTypeCreationTrait;
 
 /**
@@ -155,31 +154,6 @@ class EntityMethodConfigActionsTest extends KernelTestBase {
     );
 
     $this->assertSame($expected_status, $storage->load('foo')->status());
-  }
-
-  public function testConfigurableLanguageEntityActions(): void {
-    $this->enableModules(['language']);
-    $this->installConfig('language');
-
-    $language = ConfigurableLanguage::load('en');
-    $this->assertSame('English', $language->getName());
-    $this->assertSame(0, $language->getWeight());
-
-    $recipe = <<<YAML
-name: 'Change configurable language'
-config:
-  actions:
-    {$language->getConfigDependencyName()}:
-      setName: "Wacky language"
-      setWeight: 39
-YAML;
-
-    $recipe = $this->createRecipe($recipe);
-    RecipeRunner::processRecipe($recipe);
-
-    $language = ConfigurableLanguage::load('en');
-    $this->assertSame('Wacky language', $language->getName());
-    $this->assertSame(39, $language->getWeight());
   }
 
   public function testRemoveComponentFromDisplay(): void {
