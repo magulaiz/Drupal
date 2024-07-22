@@ -2,10 +2,13 @@
 
 declare(strict_types=1);
 
-namespace Drupal\Tests\system\Functional\Block;
+namespace Drupal\Tests\system\FunctionalJavascript\Block;
 
+use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
 use Drupal\layout_builder\Entity\LayoutBuilderEntityViewDisplay;
-use Drupal\Tests\BrowserTestBase;
+use Drupal\layout_builder\Section;
+use Drupal\layout_builder\SectionComponent;
+use Drupal\Tests\layout_builder\FunctionalJavascript\LayoutBuilderSortTrait;
 use Drupal\Tests\layout_builder\Traits\EnableLayoutBuilderTrait;
 
 /**
@@ -14,9 +17,10 @@ use Drupal\Tests\layout_builder\Traits\EnableLayoutBuilderTrait;
  * @group system
  * @group layout_builder
  */
-class BreadcrumbLayoutBuilderPreviewTest extends BrowserTestBase {
+class BreadcrumbLayoutBuilderPreviewTest extends WebDriverTestBase {
 
   use EnableLayoutBuilderTrait;
+  use LayoutBuilderSortTrait;
 
   /**
    * {@inheritdoc}
@@ -64,11 +68,21 @@ class BreadcrumbLayoutBuilderPreviewTest extends BrowserTestBase {
       'type' => 'bundle_with_section_field',
       'title' => 'The first node title',
     ]);
-    $this->drupalGet($node->toUrl()->toString() . '/layout');
-    $page->clickLink('Add block');
-    $page->clickLink('Breadcrumbs');
-    $page->pressButton('Add block');
-    $this->assertSession()->pageTextContains('"Breadcrumbs" block');
+    $section = new Section('layout_twocol_section');
+    $component = new SectionComponent(\Drupal::service('uuid')->generate(), 'first', [
+      'id' => 'system_breadcrumb_block',
+    ]);
+    $section->appendComponent($component);
+    $node->get('layout_builder__layout')->appendSection($section);
+    $node->save();
+    $selector = '[data-layout-content-preview-placeholder-label*=Breadcrumbs]';
+    $this->drupalGet('node/' . $node->id() . '/layout');
+    $this->assertSession()->elementExists('css', '.layout__region--first ' . $selector);
+    $this->assertSession()->elementNotExists('css', '.layout__region--second ' . $selector);
+    $this->sortableTo($selector, '.layout__region--first', '.layout__region--second');
+    $this->assertSession()->assertWaitOnAjaxRequest();
+    $this->assertSession()->elementNotExists('css', '.layout__region--first ' . $selector);
+    $this->assertSession()->elementExists('css', '.layout__region--second ' . $selector);
     $page->pressButton('Save layout');
     $this->assertSession()->linkExists('Home');
     $this->assertSession()->pageTextNotContains('"Breadcrumbs" block');
