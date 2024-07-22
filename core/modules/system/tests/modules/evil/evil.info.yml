@@ -1,5 +1,5 @@
-name: <script>alert('Evil name');</script>
+name: <script>alert('Evil module name');</script>
 type: module
-description: <script>alert('Evil desc');</script>
+description: <script>alert('Evil module desc');</script>
 package: Testing
 version: VERSION
