@@ -6,7 +6,7 @@ namespace Drupal\KernelTests\Core\Recipe;
 
 use Drupal\block\Entity\Block;
 use Drupal\Component\Plugin\Exception\PluginNotFoundException;
-use Drupal\contact\Entity\ContactForm;
+use Drupal\Core\Config\Action\ConfigActionManager;
 use Drupal\Core\Entity\EntityDisplayRepositoryInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Extension\ThemeInstallerInterface;
@@ -47,6 +47,8 @@ class EntityMethodConfigActionsTest extends KernelTestBase {
     'user',
   ];
 
+  private readonly ConfigActionManager $configActionManager;
+
   /**
    * {@inheritdoc}
    */
@@ -62,21 +64,20 @@ class EntityMethodConfigActionsTest extends KernelTestBase {
     $this->container->get(EntityDisplayRepositoryInterface::class)
       ->getViewDisplay('node', 'test', 'full')
       ->save();
+
+    $this->configActionManager = $this->container->get('plugin.manager.config_action');
   }
 
   public function testSetSingleThirdPartySetting(): void {
-    $recipe = <<<YAML
-name: Third-party setting
-config:
-  actions:
-    core.entity_view_display.node.test.full:
-      setThirdPartySetting:
-        module: layout_builder
-        key: enabled
-        value: true
-YAML;
-    $recipe = $this->createRecipe($recipe);
-    RecipeRunner::processRecipe($recipe);
+    $this->configActionManager->applyAction(
+      'entity_method:core.entity_view_display:setThirdPartySetting',
+      'core.entity_view_display.node.test.full',
+      [
+        'module' => 'layout_builder',
+        'key' => 'enabled',
+        'value' => TRUE,
+      ],
+    );
 
     /** @var \Drupal\Core\Config\Entity\ThirdPartySettingsInterface $display */
     $display = $this->container->get(EntityDisplayRepositoryInterface::class)
@@ -85,23 +86,22 @@ YAML;
   }
 
   public function testSetMultipleThirdPartySettings(): void {
-    $recipe = <<<YAML
-name: Third-party setting
-config:
-  actions:
-    core.entity_view_display.node.test.full:
-      setThirdPartySettings:
-        -
-          module: layout_builder
-          key: enabled
-          value: true
-        -
-          module: layout_builder
-          key: allow_custom
-          value: true
-YAML;
-    $recipe = $this->createRecipe($recipe);
-    RecipeRunner::processRecipe($recipe);
+    $this->configActionManager->applyAction(
+      'entity_method:core.entity_view_display:setThirdPartySettings',
+      'core.entity_view_display.node.test.full',
+      [
+        [
+          'module' => 'layout_builder',
+          'key' => 'enabled',
+          'value' => TRUE,
+        ],
+        [
+          'module' => 'layout_builder',
+          'key' => 'allow_custom',
+          'value' => TRUE,
+        ],
+      ],
+    );
 
     /** @var \Drupal\Core\Config\Entity\ThirdPartySettingsInterface $display */
     $display = $this->container->get(EntityDisplayRepositoryInterface::class)
@@ -111,10 +111,10 @@ YAML;
   }
 
   /**
-   * @testWith [{"set": {"property_name": "protected_property", "value": "Here be sandworms..."}}]
-   *   [{"setMultiple": [{"property_name": "protected_property", "value": "Here be sandworms..."}, {"property_name": "label", "value": "New face"}]}]
+   * @testWith ["set", {"property_name": "protected_property", "value": "Here be sandworms..."}]
+   *   ["setMultiple", [{"property_name": "protected_property", "value": "Here be sandworms..."}, {"property_name": "label", "value": "New face"}]]
    */
-  public function testSet(array $config_actions): void {
+  public function testSet(string $action_name, array $value): void {
     $storage = $this->container->get(EntityTypeManagerInterface::class)
       ->getStorage('config_test');
 
@@ -127,19 +127,13 @@ YAML;
     $this->assertSame('Here be dragons...', $entity->get('protected_property'));
     $entity->save();
 
-    $recipe = $this->createRecipe([
-      'name' => 'Set a value',
-      'config' => [
-        'actions' => [
-          'config_test.dynamic.foo' => $config_actions,
-        ],
-      ],
-    ]);
-    RecipeRunner::processRecipe($recipe);
+    $this->configActionManager->applyAction(
+      "entity_method:config_test.dynamic:$action_name",
+      'config_test.dynamic.foo',
+      $value,
+    );
 
-    $expected_values = array_key_exists('set', $config_actions)
-      ? $config_actions
-      : reset($config_actions);
+    $expected_values = array_is_list($value) ? $value : reset($value);
     $entity = $storage->load('foo');
     foreach ($expected_values as ['property_name' => $name, 'value' => $value]) {
       $this->assertSame($value, $entity->get($name));
@@ -147,12 +141,12 @@ YAML;
   }
 
   /**
-   * @testWith [true, {"setStatus": false}, false]
-   *   [false, {"setStatus": true}, true]
-   *   [true, {"disable": []}, false]
-   *   [false, {"enable": []}, true]
+   * @testWith [true, "setStatus", false, false]
+   *   [false, "setStatus", true, true]
+   *   [true, "disable", [], false]
+   *   [false, "enable", [], true]
    */
-  public function testSetStatus(bool $initial_status, array $actions, bool $expected_status): void {
+  public function testSetStatus(bool $initial_status, string $action_name, array|bool $value, bool $expected_status): void {
     $storage = $this->container->get(EntityTypeManagerInterface::class)
       ->getStorage('config_test');
 
@@ -164,15 +158,11 @@ YAML;
     $this->assertSame($initial_status, $entity->status());
     $entity->save();
 
-    $recipe = $this->createRecipe([
-      'name' => 'Change config entity status',
-      'config' => [
-        'actions' => [
-          'config_test.dynamic.foo' => $actions,
-        ],
-      ],
-    ]);
-    RecipeRunner::processRecipe($recipe);
+    $this->configActionManager->applyAction(
+      "entity_method:config_test.dynamic:$action_name",
+      'config_test.dynamic.foo',
+      $value,
+    );
 
     $this->assertSame($expected_status, $storage->load('foo')->status());
   }
@@ -185,23 +175,41 @@ YAML;
     $this->assertFalse($field->getSetting('required_summary'));
     $this->assertEmpty($field->getDefaultValueLiteral());
 
-    $recipe = <<<YAML
-name: 'Set field label and description'
-config:
-  actions:
-    field.field.node.*.body:
-      setLabel: 'Not what you were expecting!'
-      setDescription: "Any ol' nonsense can go here."
-      setTranslatable: false
-      setRequired: true
-      setSettings:
-        display_summary: false
-        required_summary: true
-      setDefaultValue:
-        value: "Don't build a castle in a swamp."
-YAML;
-    $recipe = $this->createRecipe($recipe);
-    RecipeRunner::processRecipe($recipe);
+    $this->configActionManager->applyAction(
+      'entity_method:field.field:setLabel',
+      $field->getConfigDependencyName(),
+      'Not what you were expecting!',
+    );
+    $this->configActionManager->applyAction(
+      'entity_method:field.field:setDescription',
+      $field->getConfigDependencyName(),
+      "Any ol' nonsense can go here.",
+    );
+    $this->configActionManager->applyAction(
+      'entity_method:field.field:setTranslatable',
+      $field->getConfigDependencyName(),
+      FALSE,
+    );
+    $this->configActionManager->applyAction(
+      'entity_method:field.field:setRequired',
+      $field->getConfigDependencyName(),
+      TRUE,
+    );
+    $this->configActionManager->applyAction(
+      'entity_method:field.field:setSettings',
+      $field->getConfigDependencyName(),
+      [
+        'display_summary' => FALSE,
+        'required_summary' => TRUE,
+      ],
+    );
+    $this->configActionManager->applyAction(
+      'entity_method:field.field:setDefaultValue',
+      $field->getConfigDependencyName(),
+      [
+        'value' => "Don't build a castle in a swamp.",
+      ],
+    );
 
     $field = FieldConfig::loadByName('node', 'test', 'body');
     $this->assertNotEmpty($field);
@@ -236,44 +244,6 @@ YAML;
     $block = Block::load($block->id());
     $this->assertSame('highlighted', $block->getRegion());
     $this->assertSame(-10, $block->getWeight());
-  }
-
-  public function testContactFormEntityActions(): void {
-    $this->enableModules(['contact']);
-    $this->installConfig('contact');
-
-    $form = ContactForm::load('personal');
-    $this->assertSame('Your message has been sent.', $form->getMessage());
-    $this->assertEmpty($form->getRecipients());
-    $this->assertSame('/', $form->getRedirectUrl()->toString());
-    $this->assertEmpty($form->getReply());
-    $this->assertSame(0, $form->getWeight());
-
-    $node = $this->createNode(['type' => 'test']);
-
-    $recipe = <<<YAML
-name: 'Change contact form'
-config:
-  actions:
-    {$form->getConfigDependencyName()}:
-      setMessage: 'Fly, little message!'
-      setRecipients:
-        - ben@deep.space
-        - jake@deep.space
-      setRedirectPath: {$node->toUrl()->toString()}
-      setReply: "From hell's heart, I reply to thee."
-      setWeight: -10
-YAML;
-
-    $recipe = $this->createRecipe($recipe);
-    RecipeRunner::processRecipe($recipe);
-
-    $form = ContactForm::load($form->id());
-    $this->assertSame('Fly, little message!', $form->getMessage());
-    $this->assertSame(['ben@deep.space', 'jake@deep.space'], $form->getRecipients());
-    $this->assertSame($node->toUrl()->toString(), $form->getRedirectUrl()->toString());
-    $this->assertSame("From hell's heart, I reply to thee.", $form->getReply());
-    $this->assertSame(-10, $form->getWeight());
   }
 
   public function testImageStyleEntityActions(): void {
