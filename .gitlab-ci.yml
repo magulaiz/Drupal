@@ -297,16 +297,12 @@ default:
 '🧹 PHP Static Analysis (phpstan)':
   <<: [ *with-composer, *default-job-settings-lint ]
   stage: 🪄 Lint
-  needs:
-    - optional: true
-    - job: '📦️ Composer'
-    - project: 'project/drupal'
-      job: '🧹 PHP Static Analysis (phpstan)'
-      ref: refs/heads/$CACHE_TARGET
-      artifacts: true
   variables:
     KUBERNETES_CPU_REQUEST: "16"
   script:
+    # Get the phpstan cache file from the artifacts of the latest successful
+    # job from the target branch.
+    - 'curl --location --output artifacts.zip "https://git.drupalcode.org/api/v4/projects/59858/jobs/artifacts/{$CACHE_TARGET}/raw/resultCache.php?job=🧹%20PHP%20Static%20Analysis%20(phpstan)&job_token=$CI_JOB_TOKEN"'
     - vendor/bin/phpstan --version
     # Rely on PHPStan caching to execute analysis multiple times without performance drawback.
     # Output a copy in junit.
