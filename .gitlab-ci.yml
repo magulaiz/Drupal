@@ -326,7 +326,7 @@ default:
       junit: phpstan-junit.xml
     paths:
       - core/.phpstan-baseline.php
-      - /tmp/phpstan
+      - core/phpstan-tmp/
 
 '🧹 PHP Coding standards (PHPCS)':
   <<: [ *with-composer, *default-job-settings-lint ]
