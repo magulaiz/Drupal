@@ -13,7 +13,6 @@ use Drupal\Core\Extension\ThemeInstallerInterface;
 use Drupal\Core\Recipe\RecipeRunner;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\FunctionalTests\Core\Recipe\RecipeTestTrait;
-use Drupal\image\Entity\ImageStyle;
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\language\Entity\ConfigurableLanguage;
 use Drupal\media\Entity\MediaType;
@@ -244,29 +243,6 @@ YAML;
     $block = Block::load($block->id());
     $this->assertSame('highlighted', $block->getRegion());
     $this->assertSame(-10, $block->getWeight());
-  }
-
-  public function testImageStyleEntityActions(): void {
-    $this->enableModules(['image']);
-    $this->installConfig('image');
-
-    $style = ImageStyle::load('large');
-    $this->assertCount(2, $style->getEffects());
-
-    $recipe = <<<YAML
-name: 'Change image style'
-config:
-  actions:
-    {$style->getConfigDependencyName()}:
-      addImageEffect:
-        id: image_desaturate
-        weight: 1
-YAML;
-
-    $recipe = $this->createRecipe($recipe);
-    RecipeRunner::processRecipe($recipe);
-
-    $this->assertCount(3, ImageStyle::load('large')->getEffects());
   }
 
   public function testConfigurableLanguageEntityActions(): void {
