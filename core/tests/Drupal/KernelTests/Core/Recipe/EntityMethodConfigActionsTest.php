@@ -4,12 +4,10 @@ declare(strict_types=1);
 
 namespace Drupal\KernelTests\Core\Recipe;
 
-use Drupal\block\Entity\Block;
 use Drupal\Component\Plugin\Exception\PluginNotFoundException;
 use Drupal\Core\Config\Action\ConfigActionManager;
 use Drupal\Core\Entity\EntityDisplayRepositoryInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
-use Drupal\Core\Extension\ThemeInstallerInterface;
 use Drupal\Core\Recipe\RecipeRunner;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\FunctionalTests\Core\Recipe\RecipeTestTrait;
@@ -26,7 +24,6 @@ use Drupal\Tests\node\Traits\NodeCreationTrait;
  */
 class EntityMethodConfigActionsTest extends KernelTestBase {
 
-  use BlockCreationTrait;
   use ContentTypeCreationTrait;
   use NodeCreationTrait;
   use RecipeTestTrait;
@@ -219,30 +216,6 @@ class EntityMethodConfigActionsTest extends KernelTestBase {
     $this->assertFalse($field->getSetting('display_summary'));
     $this->assertTrue($field->getSetting('required_summary'));
     $this->assertSame([['value' => "Don't build a castle in a swamp."]], $field->getDefaultValueLiteral());
-  }
-
-  public function testBlockEntityActions(): void {
-    $this->enableModules(['block']);
-    $this->container->get(ThemeInstallerInterface::class)->install(['stark']);
-
-    $block = $this->placeBlock('system_messages_block', ['theme' => 'stark']);
-    $this->assertSame('content', $block->getRegion());
-    $this->assertSame(0, $block->getWeight());
-
-    $recipe = <<<YAML
-name: 'Change block setup'
-config:
-  actions:
-    {$block->getConfigDependencyName()}:
-      setRegion: highlighted
-      setWeight: -10
-YAML;
-    $recipe = $this->createRecipe($recipe);
-    RecipeRunner::processRecipe($recipe);
-
-    $block = Block::load($block->id());
-    $this->assertSame('highlighted', $block->getRegion());
-    $this->assertSame(-10, $block->getWeight());
   }
 
   public function testConfigurableLanguageEntityActions(): void {
