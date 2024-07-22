@@ -42,7 +42,7 @@ final class PlaceBlock implements ConfigActionPluginInterface, ContainerFactoryP
    */
   public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
     return new static(
-      $container->get('plugin.manager.config_action')->createInstance('entity_create:create'),
+      $container->get('plugin.manager.config_action')->createInstance('entity_create:createIfNotExists'),
       $plugin_definition['which_theme'],
       $container->get(ConfigFactoryInterface::class),
       $container->get(EntityTypeManagerInterface::class)->getStorage('block'),

@@ -54,10 +54,18 @@ class ConfigActionsTest extends KernelTestBase {
     $this->configActionManager->applyAction($action, 'user.role.anonymous', []);
   }
 
-  public function testBlockCannotAlreadyExist(): void {
-    $this->expectException(ConfigActionException::class);
-    $this->expectExceptionMessage('Entity block.block.olivero_powered exists');
-    $this->configActionManager->applyAction('placeBlockInDefaultTheme', 'block.block.olivero_powered', []);
+  public function testExistingBlockIsNotChanged(): void {
+    $extant_region = Block::load('olivero_powered')->getRegion();
+    $this->assertNotSame('content', $extant_region);
+
+    $this->configActionManager->applyAction('placeBlockInDefaultTheme', 'block.block.olivero_powered', [
+      'plugin' => 'system_powered_by_block',
+      'region' => [
+        'olivero' => 'content',
+      ],
+    ]);
+    // The extant block should be unchanged.
+    $this->assertSame($extant_region, Block::load('olivero_powered')->getRegion());
   }
 
   /**
