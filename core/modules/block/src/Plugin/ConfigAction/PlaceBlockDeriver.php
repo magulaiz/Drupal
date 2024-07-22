@@ -6,6 +6,13 @@ namespace Drupal\block\Plugin\ConfigAction;
 
 use Drupal\Component\Plugin\Derivative\DeriverBase;
 
+/**
+ * Defines a deriver for the `placeBlock` config action.
+ *
+ * This creates two actions: `placeBlockInDefaultTheme`, and
+ * `placeBlockInAdminTheme`. They behave identically except for which theme
+ * they target.
+ */
 final class PlaceBlockDeriver extends DeriverBase {
 
   /**
