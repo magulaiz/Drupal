@@ -15,8 +15,6 @@ parameters:
     - .
     - ../composer
 
-  tmpDir: phpstantmp
-
   bootstrapFiles:
     # Load aliases.
     - lib/Drupal/Core/Serialization/Yaml.php

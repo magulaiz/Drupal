@@ -295,6 +295,10 @@ default:
 
 '🧹 PHP Static Analysis (phpstan)':
   <<: [ *with-composer, *default-job-settings-lint ]
+  needs: project/drupal
+  ref: 11.x
+  job: '🧹 PHP Static Analysis (phpstan)'
+  artifacts: true
   stage: 🪄 Lint
   variables:
     KUBERNETES_CPU_REQUEST: "16"
@@ -318,10 +322,9 @@ default:
     reports:
       codequality: phpstan-quality-report.json
       junit: phpstan-junit.xml
-    # Only store the baseline if the job fails.
-    when: on_failure
     paths:
       - core/.phpstan-baseline.php
+      - /tmp/phpstan
 
 '🧹 PHP Coding standards (PHPCS)':
   <<: [ *with-composer, *default-job-settings-lint ]
