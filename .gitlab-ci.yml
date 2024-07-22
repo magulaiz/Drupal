@@ -58,6 +58,7 @@ workflow:
 variables:
   _CONFIG_DOCKERHUB_ROOT: "drupalci"
   # Let composer know what self.version means.
+  CACHE_TARGET: "${CI_MERGE_REQUEST_TARGET_BRANCH_NAME}${CI_COMMIT_BRANCH}"
   COMPOSER_ROOT_VERSION: "${CI_MERGE_REQUEST_TARGET_BRANCH_NAME}${CI_COMMIT_BRANCH}-dev"
   COMPOSER_ALLOW_SUPERUSER: 1
   CONCURRENCY: 24
@@ -300,7 +301,7 @@ default:
     - job: '📦️ Composer'
     - project: 'project/drupal'
       job: '🧹 PHP Static Analysis (phpstan)'
-      ref: refs/merge-requests/8867/merge
+      ref: refs/heads/$CACHE_TARGET
       artifacts: true
   variables:
     KUBERNETES_CPU_REQUEST: "16"
