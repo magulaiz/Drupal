@@ -297,6 +297,7 @@ default:
   <<: [ *with-composer, *default-job-settings-lint ]
   needs:
     - project: $CI_PROJECT_PATH
+    - job: '🧹 PHP Static Analysis (phpstan)'
     - ref: 11.x
     - artifacts: true
   stage: 🪄 Lint
