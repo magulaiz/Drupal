@@ -298,12 +298,12 @@ default:
   <<: [ *with-composer, *default-job-settings-lint ]
   stage: 🪄 Lint
   needs:
+    - optional: true
     - job: '📦️ Composer'
     - project: 'project/drupal'
       job: '🧹 PHP Static Analysis (phpstan)'
       ref: refs/heads/$CACHE_TARGET
       artifacts: true
-      optional: true
   variables:
     KUBERNETES_CPU_REQUEST: "16"
   script:
