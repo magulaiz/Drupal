@@ -25,7 +25,7 @@ class FinishResponseSubscriber implements EventSubscriberInterface {
   /**
    * A character length limit for headers with possibly long values.
    *
-   * Less than 8kb.
+   * Less than 8KB.
    *
    * @var int
    */
