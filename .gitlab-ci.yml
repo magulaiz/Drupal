@@ -304,8 +304,7 @@ default:
     # job from the target branch. Allow the job to proceed and pass if the file
     # doesn't exist.
     - mkdir core/phpstan-tmp
-    #- 'curl --location --output core/phpstan-tmp/resultCache.php "https://git.drupalcode.org/api/v4/projects/59858/jobs/artifacts/{$CACHE_TARGET}/raw/core/phpstan-tmp/resultCache.php?job=🧹%20PHP%20Static%20Analysis%20(phpstan)&job_token=$CI_JOB_TOKEN" || true'
-    - 'curl --location --output core/phpstan-tmp/resultCache.php "https://git.drupalcode.org/api/v4/projects/59858/jobs/artifacts/refs/merge-requests/8867/merge/raw/core/phpstan-tmp/resultCache.php?job=%F0%9F%A7%B9%20PHP%20Static%20Analysis%20(phpstan)&job_token=$CI_JOB_TOKEN" || true'
+    - 'curl --location --output core/phpstan-tmp/resultCache.php "https://git.drupalcode.org/api/v4/projects/59858/jobs/artifacts/{$CACHE_TARGET}/raw/core/phpstan-tmp/resultCache.php?job=🧹%20PHP%20Static%20Analysis%20(phpstan)&job_token=$CI_JOB_TOKEN" || true'
     - vendor/bin/phpstan --version
     # Rely on PHPStan caching to execute analysis multiple times without performance drawback.
     # Output a copy in junit.
