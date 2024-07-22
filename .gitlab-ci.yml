@@ -298,7 +298,7 @@ default:
   stage: 🪄 Lint
   needs:
     - job: '📦️ Composer'
-    - project: $CI_PROJECT_PATH
+    - project: 'project/drupal'
       job: '🧹 PHP Static Analysis (phpstan)'
       ref: 11.x
       artifacts: true
