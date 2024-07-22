@@ -298,9 +298,9 @@ default:
   stage: 🪄 Lint
   needs:
     - project: $CI_PROJECT_PATH
-    - job: '🧹 PHP Static Analysis (phpstan)'
-    - ref: 11.x
-    - artifacts: true
+      job: '🧹 PHP Static Analysis (phpstan)'
+      ref: 11.x
+      artifacts: true
   variables:
     KUBERNETES_CPU_REQUEST: "16"
   script:
