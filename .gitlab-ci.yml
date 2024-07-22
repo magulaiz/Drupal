@@ -296,7 +296,7 @@ default:
 '🧹 PHP Static Analysis (phpstan)':
   <<: [ *with-composer, *default-job-settings-lint ]
   needs:
-    - project: project/drupal
+    - project: 'project/drupal'
     - ref: 11.x
     - job: "🧹 PHP Static Analysis (phpstan)"
     - artifacts: true
