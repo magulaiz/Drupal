@@ -139,7 +139,7 @@ class FilterBooleanOperatorTest extends ViewsKernelTestBase {
   /**
    * Tests the BooleanOperator empty/not empty filters.
    */
-  public function testEmptyFilterBooleanOperator() {
+  public function testEmptyFilterBooleanOperator(): void {
     $view = Views::getView('test_view');
     $view->setDisplay();
 

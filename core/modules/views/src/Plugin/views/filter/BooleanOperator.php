@@ -341,7 +341,7 @@ class BooleanOperator extends FilterPluginBase implements FilterOperatorsInterfa
    * @param string $field
    *   The views field.
    */
-  protected function opEmpty($field) {
+  protected function opEmpty(string $field): void {
     if ($this->operator === 'empty') {
       $operator = "IS NULL";
     }
@@ -361,7 +361,7 @@ class BooleanOperator extends FilterPluginBase implements FilterOperatorsInterfa
    * @return string[]
    *   A filtered list of operators.
    */
-  protected function operatorValues($values = 1) {
+  protected function operatorValues(int $values = 1): array {
     $options = [];
     foreach ($this->operators() as $id => $info) {
       if (isset($info['values']) && $info['values'] === $values) {
