@@ -25,7 +25,7 @@ class VaryHeaderResponseSubscriber implements EventSubscriberInterface {
 
     if ($this->vary) {
       $response = $event->getResponse();
-      $response->setVary($this->vary, false);
+      $response->setVary($this->vary, FALSE);
       if ($response instanceof CacheableResponseInterface) {
         $metadata = new CacheableMetadata();
         $contexts = [];

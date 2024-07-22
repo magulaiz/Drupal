@@ -17,14 +17,14 @@ class TestVaryController extends ControllerBase {
   /**
    * The vary policy.
    *
-   * @var VaryHeaderResponseSubscriber
+   * @var \Drupal\Core\EventSubscriber\VaryHeaderResponseSubscriber
    */
   protected $varyResponseSubscriber;
 
   /**
    * Constructs the TestVaryController object.
    *
-   * @param VaryHeaderResponseSubscriber $varyResponseSubscriber
+   * @param \Drupal\Core\EventSubscriber\VaryHeaderResponseSubscriber $varyResponseSubscriber
    *   The vary policy.
    */
   public function __construct(VaryHeaderResponseSubscriber $varyResponseSubscriber) {

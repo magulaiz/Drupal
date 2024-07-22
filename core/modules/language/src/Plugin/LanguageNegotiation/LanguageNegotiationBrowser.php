@@ -36,7 +36,7 @@ class LanguageNegotiationBrowser extends LanguageNegotiationMethodBase implement
   protected $pageCacheKillSwitch;
 
   /**
-   * @var \Drupal\Core\EventSubscriber\VaryHeaderResponseSubscriber $varyResponseSubscriber
+   * @var \Drupal\Core\EventSubscriber\VaryHeaderResponseSubscriber
    */
   private VaryHeaderResponseSubscriber $varyResponseSubscriber;
 
