@@ -1,0 +1,33 @@
+/**
+ * @file
+ * Back to top styling.
+ */
+
+.scroll-top {
+  position: fixed;
+  z-index: 9999;
+  right: 1.875rem;
+  bottom: 1.875rem;
+  display: flex;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  pointer-events: auto;
+
+  & .scroll-top__button {
+    width: var(--sp2);
+    height: var(--sp2);
+    cursor: pointer;
+    border: 0;
+    outline: 0;
+    background-color: var(--color--primary-50);
+
+    & svg {
+      transform: rotate(180deg);
+
+      & path {
+        fill: var(--color--white);
+      }
+    }
+  }
+}
