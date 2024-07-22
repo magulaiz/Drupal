@@ -4,7 +4,6 @@ namespace Drupal\Core\EventSubscriber;
 
 use Drupal\Component\Utility\Xss;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Event\ResponseEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
 
@@ -26,7 +25,7 @@ class RssResponseCdata implements EventSubscriberInterface {
     }
 
     $response = $event->getResponse();
-    $response->setContent($this->wrapDescriptionCdata($response->getContent(), $event->getRequest()));
+    $response->setContent($this->wrapDescriptionCdata($response->getContent()));
   }
 
   /**
@@ -34,13 +33,11 @@ class RssResponseCdata implements EventSubscriberInterface {
    *
    * @param string $rss_markup
    *   The RSS markup to update.
-   * @param \Symfony\Component\HttpFoundation\Request $request
-   *   The current request.
    *
    * @return string|false
    *   The updated RSS XML or FALSE if there is an error saving the xml.
    */
-  protected function wrapDescriptionCdata(string $rss_markup, Request $request): string|false {
+  protected function wrapDescriptionCdata(string $rss_markup): string|false {
     $rss_dom = new \DOMDocument();
 
     // Load the RSS, if there are parsing errors, abort and return the unchanged
