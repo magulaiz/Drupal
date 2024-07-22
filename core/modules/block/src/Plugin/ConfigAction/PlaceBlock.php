@@ -8,7 +8,6 @@ use Drupal\block\BlockInterface;
 use Drupal\Core\Config\Action\Attribute\ConfigAction;
 use Drupal\Core\Config\Action\ConfigActionException;
 use Drupal\Core\Config\Action\ConfigActionPluginInterface;
-use Drupal\Core\Config\Action\Plugin\ConfigAction\EntityCreate;
 use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Config\Entity\ConfigEntityStorageInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
@@ -31,7 +30,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 final class PlaceBlock implements ConfigActionPluginInterface, ContainerFactoryPluginInterface {
 
   public function __construct(
-    private readonly EntityCreate $entityCreate,
+    private readonly ConfigActionPluginInterface $createAction,
     private readonly string $whichTheme,
     private readonly ConfigFactoryInterface $configFactory,
     private readonly ConfigEntityStorageInterface $blockStorage,
@@ -90,7 +89,7 @@ final class PlaceBlock implements ConfigActionPluginInterface, ContainerFactoryP
     // Ensure a weight is set by default.
     $value += ['weight' => 0];
 
-    $this->entityCreate->apply($configName, $value);
+    $this->createAction->apply($configName, $value);
   }
 
 }
