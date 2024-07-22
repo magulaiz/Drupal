@@ -54,7 +54,7 @@ class MappingTest extends KernelTestBase {
             'use_site_name' => TRUE,
             'use_site_slogan' => TRUE,
             'label_display' => FALSE,
-            // TRICKY: this is inherited from `type: block_settings`.
+            // This is inherited from `type: block_settings`.
             'context_mapping' => [],
           ],
         ])->save();
@@ -73,7 +73,7 @@ class MappingTest extends KernelTestBase {
           'settings' => [
             'primary' => TRUE,
             'secondary' => FALSE,
-            // TRICKY: this is inherited from `type: block_settings`.
+            // This is inherited from `type: block_settings`.
             'context_mapping' => [],
           ],
         ])->save();
@@ -94,7 +94,7 @@ class MappingTest extends KernelTestBase {
           'status' => TRUE,
           'settings' => [
             'label_display' => FALSE,
-            // TRICKY: this is inherited from `type: block_settings`.
+            // This is inherited from `type: block_settings`.
             'context_mapping' => [],
           ],
           // Avoid showing "Powered by Drupal" on 404 responses.
@@ -136,8 +136,8 @@ class MappingTest extends KernelTestBase {
       case 'field.field.node.config_mapping_test.comment_config_mapping_test':
         $this->enableModules(['field', 'node', 'comment', 'taxonomy', 'config_mapping_test']);
         $this->assertNull(FieldConfig::load('node.config_mapping_test.comment_config_mapping_test'));
-        // TRICKY: \Drupal\node\Entity\NodeType::$preview_mode uses
-        // DRUPAL_OPTIONAL, which is defined in system.module.
+        // \Drupal\node\Entity\NodeType::$preview_mode uses DRUPAL_OPTIONAL,
+        // which is defined in system.module.
         require_once 'core/modules/system/system.module';
         $this->installConfig(['config_mapping_test']);
         $this->assertNotNull(FieldConfig::load('node.config_mapping_test.comment_config_mapping_test'));

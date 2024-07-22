@@ -245,8 +245,8 @@ class ValidKeysConstraintValidatorTest extends KernelTestBase {
 
     // Passing a non-array value should raise an exception.
     try {
-      // TRICKY: we must clone the definition because the instance is modified
-      // when processing.
+      // We must clone the definition because the instance is modified when
+      // processing.
       // @see \Drupal\Core\Config\Schema\Mapping::processRequiredKeyFlags()
       $typed_config->create(clone $definition, 2501)->validate();
       $this->fail('Expected an exception but none was raised.');
