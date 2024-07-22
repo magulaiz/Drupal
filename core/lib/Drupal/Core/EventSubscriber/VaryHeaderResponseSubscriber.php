@@ -38,7 +38,7 @@ class VaryHeaderResponseSubscriber implements EventSubscriberInterface {
     }
   }
 
-  public static function getSubscribedEvents() {
+  public static function getSubscribedEvents(): array {
     /**
      *  Either Drupal\Tests\page_cache\Functional\PageCacheVaryTest::testPageCacheWithVary
      *  fails or Drupal\Tests\language\Functional\LanguageBrowserDetectionAcceptLanguageTest::testAcceptLanguageEmptyDefault
