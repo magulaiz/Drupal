@@ -298,7 +298,7 @@ default:
   needs:
     - project: project/drupal
     - ref: 11.x
-    - job: '🧹 PHP Static Analysis (phpstan)'
+    - job: "🧹 PHP Static Analysis (phpstan)"
     - artifacts: true
   stage: 🪄 Lint
   variables:
