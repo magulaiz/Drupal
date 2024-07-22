@@ -46,7 +46,7 @@ class ConfigActionsTest extends KernelTestBase {
 
   /**
    * @testWith ["placeBlockInDefaultTheme"]
-   *   ["placeBlockInAdminTheme"]
+   *           ["placeBlockInAdminTheme"]
    */
   public function testActionOnlyWorksOnBlocks(string $action): void {
     $this->expectException(PluginNotFoundException::class);
@@ -62,7 +62,7 @@ class ConfigActionsTest extends KernelTestBase {
 
   /**
    * @testWith ["placeBlockInDefaultTheme", "olivero", "header"]
-   *   ["placeBlockInAdminTheme", "claro", "page_bottom"]
+   *           ["placeBlockInAdminTheme", "claro", "page_bottom"]
    */
   public function testPlaceBlockInTheme(string $action, string $expected_theme, string $expected_region): void {
     $this->configActionManager->applyAction($action, 'block.block.test_block', [

@@ -66,7 +66,6 @@ final class PlaceBlock implements ConfigActionPluginInterface, ContainerFactoryP
       // fallback region. If all that fails, give up with an exception.
       assert(is_array($value['region']));
       $value['region'] = $value['region'][$theme] ?? $value['default_region'] ?? throw new ConfigActionException("Cannot determine which region to place this block into, because no default region was provided.");
-      unset($value['default_region']);
     }
 
     // Allow the recipe author to position the block in the region without
@@ -86,9 +85,8 @@ final class PlaceBlock implements ConfigActionPluginInterface, ContainerFactoryP
         'last' => end($blocks)->getWeight() + 1,
       };
     }
-    // This isn't a valid property of block entities, so it shouldn't be passed
-    // along to the create action.
-    unset($value['position']);
+    // Remove values that are not valid properties of block entities.
+    unset($value['position'], $value['default_region']);
     // Ensure a weight is set by default.
     $value += ['weight' => 0];
 
