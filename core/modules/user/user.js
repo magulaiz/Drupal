@@ -64,6 +64,7 @@
     attach(context, settings) {
       const cssClasses = Drupal.user.password.css;
       once('password', 'input.js-password-field', context).forEach((value) => {
+        let tmp = '';
         const $mainInput = $(value);
         const $mainInputParent = $mainInput
           .parent()
@@ -182,6 +183,13 @@
                 result.messageTips,
               ),
             );
+            if (result.messageTips.length === 0) {
+              Drupal.announce(Drupal.t('Password requirements met'));
+            }
+            else if (result.messageTips[0] !== tmp) {
+              Drupal.announce(result.messageTips[0]);
+              tmp = result.messageTips[0];
+            }
 
             // Update the suggestions for how to improve the password if needed.
             if (
