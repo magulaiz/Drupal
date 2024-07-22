@@ -1,4 +1,4 @@
-description: <script>alert('Evil desc');</script>
+description: <script>alert('Evil name');</script>
 type: module
 description: <script>alert('Evil desc');</script>
 package: Testing
