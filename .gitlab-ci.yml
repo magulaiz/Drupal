@@ -295,12 +295,12 @@ default:
 
 '🧹 PHP Static Analysis (phpstan)':
   <<: [ *with-composer, *default-job-settings-lint ]
+  stage: 🪄 Lint
   needs:
     - project: $CI_PROJECT_PATH
     - job: '🧹 PHP Static Analysis (phpstan)'
     - ref: 11.x
     - artifacts: true
-  stage: 🪄 Lint
   variables:
     KUBERNETES_CPU_REQUEST: "16"
   script:
