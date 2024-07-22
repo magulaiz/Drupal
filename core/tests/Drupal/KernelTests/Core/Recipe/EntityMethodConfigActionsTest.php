@@ -4,34 +4,21 @@ declare(strict_types=1);
 
 namespace Drupal\KernelTests\Core\Recipe;
 
-use Drupal\Component\Plugin\Exception\PluginNotFoundException;
 use Drupal\Core\Config\Action\ConfigActionManager;
 use Drupal\Core\Entity\EntityDisplayRepositoryInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
+use Drupal\entity_test\Entity\EntityTestBundle;
 use Drupal\KernelTests\KernelTestBase;
-use Drupal\Tests\node\Traits\ContentTypeCreationTrait;
 
 /**
  * @group Recipe
  */
 class EntityMethodConfigActionsTest extends KernelTestBase {
 
-  use ContentTypeCreationTrait;
-
   /**
    * {@inheritdoc}
    */
-  protected static $modules = [
-    'config_test',
-    'field',
-    'filter',
-    'layout_builder',
-    'layout_discovery',
-    'node',
-    'system',
-    'text',
-    'user',
-  ];
+  protected static $modules = ['config_test', 'entity_test', 'system'];
 
   private readonly ConfigActionManager $configActionManager;
 
@@ -41,14 +28,13 @@ class EntityMethodConfigActionsTest extends KernelTestBase {
   protected function setUp(): void {
     parent::setUp();
 
-    $this->installConfig('filter');
-    $this->installConfig('node');
-    $this->installEntitySchema('node');
-    $this->installEntitySchema('user');
-    $this->createContentType(['type' => 'test']);
+    EntityTestBundle::create([
+      'id' => 'test',
+      'label' => $this->randomString(),
+    ])->save();
 
     $this->container->get(EntityDisplayRepositoryInterface::class)
-      ->getViewDisplay('node', 'test', 'full')
+      ->getViewDisplay('entity_test_with_bundle', 'test')
       ->save();
 
     $this->configActionManager = $this->container->get('plugin.manager.config_action');
@@ -57,43 +43,43 @@ class EntityMethodConfigActionsTest extends KernelTestBase {
   public function testSetSingleThirdPartySetting(): void {
     $this->configActionManager->applyAction(
       'entity_method:core.entity_view_display:setThirdPartySetting',
-      'core.entity_view_display.node.test.full',
+      'core.entity_view_display.entity_test_with_bundle.test.default',
       [
-        'module' => 'layout_builder',
-        'key' => 'enabled',
-        'value' => TRUE,
+        'module' => 'entity_test',
+        'key' => 'verb',
+        'value' => 'Save',
       ],
     );
 
     /** @var \Drupal\Core\Config\Entity\ThirdPartySettingsInterface $display */
     $display = $this->container->get(EntityDisplayRepositoryInterface::class)
-      ->getViewDisplay('node', 'test', 'full');
-    $this->assertTrue($display->getThirdPartySetting('layout_builder', 'enabled'));
+      ->getViewDisplay('entity_test_with_bundle', 'test');
+    $this->assertSame('Save', $display->getThirdPartySetting('entity_test', 'verb'));
   }
 
   public function testSetMultipleThirdPartySettings(): void {
     $this->configActionManager->applyAction(
       'entity_method:core.entity_view_display:setThirdPartySettings',
-      'core.entity_view_display.node.test.full',
+      'core.entity_view_display.entity_test_with_bundle.test.default',
       [
         [
-          'module' => 'layout_builder',
-          'key' => 'enabled',
-          'value' => TRUE,
+          'module' => 'entity_test',
+          'key' => 'noun',
+          'value' => 'Spaceship',
         ],
         [
-          'module' => 'layout_builder',
-          'key' => 'allow_custom',
-          'value' => TRUE,
+          'module' => 'entity_test',
+          'key' => 'verb',
+          'value' => 'Explode',
         ],
       ],
     );
 
     /** @var \Drupal\Core\Config\Entity\ThirdPartySettingsInterface $display */
     $display = $this->container->get(EntityDisplayRepositoryInterface::class)
-      ->getViewDisplay('node', 'test', 'full');
-    $this->assertTrue($display->getThirdPartySetting('layout_builder', 'enabled'));
-    $this->assertTrue($display->getThirdPartySetting('layout_builder', 'allow_custom'));
+      ->getViewDisplay('entity_test_with_bundle', 'test');
+    $this->assertSame('Spaceship', $display->getThirdPartySetting('entity_test', 'noun'));
+    $this->assertSame('Explode', $display->getThirdPartySetting('entity_test', 'verb'));
   }
 
   /**
@@ -115,7 +101,7 @@ class EntityMethodConfigActionsTest extends KernelTestBase {
 
     $this->configActionManager->applyAction(
       "entity_method:config_test.dynamic:$action_name",
-      'config_test.dynamic.foo',
+      $entity->getConfigDependencyName(),
       $value,
     );
 
@@ -146,48 +132,41 @@ class EntityMethodConfigActionsTest extends KernelTestBase {
 
     $this->configActionManager->applyAction(
       "entity_method:config_test.dynamic:$action_name",
-      'config_test.dynamic.foo',
+      $entity->getConfigDependencyName(),
       $value,
     );
 
     $this->assertSame($expected_status, $storage->load('foo')->status());
   }
 
-  public function testRemoveComponentFromDisplay(): void {
+  /**
+   * @testWith ["hideComponent"]
+   *   ["hideComponents"]
+   */
+  public function testRemoveComponentFromDisplay(string $action_name): void {
+    $this->assertStringStartsWith('hideComponent', $action_name);
+
     /** @var \Drupal\Core\Entity\EntityDisplayRepositoryInterface $repository */
     $repository = $this->container->get(EntityDisplayRepositoryInterface::class);
 
-    $form_display = $repository->getFormDisplay('node', 'test');
-    $this->assertIsArray($form_display->getComponent('uid'));
-
-    $view_display = $repository->getViewDisplay('node', 'test');
-    $this->assertIsArray($view_display->getComponent('body'));
-    $this->assertIsArray($view_display->getComponent('links'));
+    $view_display = $repository->getViewDisplay('entity_test_with_bundle', 'test');
+    $this->assertIsArray($view_display->getComponent('name'));
 
     // The `hideComponent` action is an alias for `removeComponent`, proving
     // that entity methods can be aliased.
     $this->configActionManager->applyAction(
-      'entity_method:core.entity_form_display:hideComponent',
-      $form_display->getConfigDependencyName(),
-      'uid',
-    );
-    $this->configActionManager->applyAction(
-      'entity_method:core.entity_view_display:hideComponents',
+      "entity_method:core.entity_view_display:$action_name",
       $view_display->getConfigDependencyName(),
-      ['body', 'links'],
+      $action_name === 'hideComponents' ? ['name'] : 'name',
     );
 
-    $this->assertNull($repository->getFormDisplay('node', 'test')->getComponent('uid'));
-    $view_display = $repository->getViewDisplay('node', 'test');
-    $this->assertNull($view_display->getComponent('body'));
-    $this->assertNull($view_display->getComponent('links'));
+    $view_display = $repository->getViewDisplay('entity_test_with_bundle', 'test');
+    $this->assertNull($view_display->getComponent('name'));
 
-    // `removeComponent` should not be a valid action name, even though it's the
-    // name of the underlying method.
-    $this->expectException(PluginNotFoundException::class);
-    $this->expectExceptionMessage('The "entity_form_display:removeComponent" plugin does not exist.');
-    $this->container->get('plugin.manager.config_action')
-      ->applyAction('entity_form_display:removeComponent', $form_display->getConfigDependencyName(), 'uid');
+    // The underlying action name should not be available. It should be hidden
+    // by the alias.
+    $plugin_id = str_replace('hide', 'remove', $action_name);
+    $this->assertFalse($this->configActionManager->hasDefinition($plugin_id));
   }
 
 }
