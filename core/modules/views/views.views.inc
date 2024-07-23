@@ -8,7 +8,6 @@
 use Drupal\Component\Utility\NestedArray;
 use Drupal\Core\Entity\ContentEntityTypeInterface;
 use Drupal\Core\Entity\EntityStorageInterface;
-use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Entity\Sql\SqlContentEntityStorage;
 use Drupal\Core\Render\Markup;
 use Drupal\field\Entity\FieldConfig;
@@ -226,38 +225,6 @@ function views_views_data_alter(&$data) {
       $function = $field_storage->getTypeProvider() . '_field_views_data_views_data_alter';
       if (function_exists($function)) {
         $function($data, $field_storage);
-      }
-    }
-  }
-
-  // Get a list of filter handlers for each module
-  /** @var \Drupal\views\Plugin\ViewsHandlerManager $handler_manager */
-  $handler_manager = \Drupal::service('plugin.manager.views.filter');
-  foreach ($handler_manager->getDefinitions() as $plugin_id => $definition) {
-    if (!isset($filter_handlers[$definition['provider']])) {
-      $filter_handlers[$definition['provider']] = [];
-    }
-    $filter_handlers[$definition['provider']][] = $plugin_id;
-  }
-
-  foreach ($data as $table_name => $table_data) {
-    foreach ($table_data as $table_field_name => $table_field_data) {
-      if (
-        str_ends_with($table_field_name, '_reference')
-        && isset($table_field_data['filter']['id'])
-        && $table_field_data['filter']['id'] === 'entity_reference'
-      ) {
-        $original_field_name = substr($table_field_name, 0, strlen('_reference'));
-
-        // If the original filter is not 'numeric' any more, a viable
-        // alternative has been provided.
-        // @todo remove only only if provided by the module that the entity provides.
-        if (
-          isset($table_data[$original_field_name]['filter']['id'])
-          && $table_data[$original_field_name]['filter']['id'] != 'numeric'
-        ) {
-          unset($data[$table_name][$table_field_name]);
-        }
       }
     }
   }
@@ -803,9 +770,7 @@ function views_field_default_views_data(FieldStorageConfigInterface $field_stora
  * The function implements the hook on behalf of 'core' because it adds a
  * relationship and a reverse relationship to entity_reference field type, which
  * is provided by core. This function also provides an argument plugin for
- * entity_reference fields that handles title token replacement. Lastly, it
- * updates entity_reference fields to use the entity_reference handler for
- * filtering.
+ * entity_reference fields that handles title token replacement.
  */
 function core_field_views_data(FieldStorageConfigInterface $field_storage) {
   $data = views_field_default_views_data($field_storage);
@@ -828,23 +793,6 @@ function core_field_views_data(FieldStorageConfigInterface $field_storage) {
     $entity_type = $entity_type_manager->getDefinition($entity_type_id);
     $target_base_table = $target_entity_type->getDataTable() ?: $target_entity_type->getBaseTable();
     $field_name = $field_storage->getName();
-
-    if ($target_entity_type instanceof EntityTypeInterface) {
-      foreach ($table_data as $table_field_name => $table_field_data) {
-        if (
-          isset($table_field_data['filter'])
-          && $table_field_name != 'delta'
-          && !$field_storage->isBaseField()
-        ) {
-          // Add "entity_reference" filter to non-base fields. Most
-          // base fields already have a viable reference-like filter
-          // alternative like user ID. Contributed modules
-          // wishing to support usage of entity_reference for their
-          // own base field can use alter the views data to add this.
-          _views_add_entity_reference_filter_data($table_field_name, $data[$table_name]);
-        }
-      }
-    }
 
     if ($target_entity_type instanceof ContentEntityTypeInterface) {
       // Provide a relationship for the entity type with the entity reference

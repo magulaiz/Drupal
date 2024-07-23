@@ -149,7 +149,7 @@ display:
         field_test_target_id:
           id: field_test_target_id
           table: node__field_test
-          field: field_test_target_id_reference
+          field: field_test_target_id
           relationship: none
           group_type: group
           admin_label: ''
@@ -162,7 +162,7 @@ display:
             label: 'Test (field_test)'
             description: ''
             use_operator: false
-            operator: field_test_target_id_reference_op
+            operator: field_test_target_id_op
             identifier: field_test_target_id
             required: false
             remember: false
@@ -196,10 +196,10 @@ display:
             auto_create_bundle: ''
           widget: select
           plugin_id: entity_reference
-        field_test_config_target_id_reference:
-          id: field_test_config_target_id_reference
+        field_test_config_target_id:
+          id: field_test_config_target_id
           table: node__field_test_config
-          field: field_test_config_target_id_reference
+          field: field_test_config_target_id
           relationship: none
           group_type: group
           admin_label: ''
@@ -209,14 +209,14 @@ display:
           group: 1
           exposed: true
           expose:
-            operator_id: field_test_config_target_id_reference_op
-            label: 'Test config (field_test_config) as a Reference filter'
+            operator_id: field_test_config_target_id_op
+            label: 'Test config (field_test_config)'
             description: ''
             use_operator: false
-            operator: field_test_config_target_id_reference_op
+            operator: field_test_config_target_id_op
             operator_limit_selection: false
             operator_list: { }
-            identifier: field_test_config_target_id_reference
+            identifier: field_test_config_target_id
             required: false
             remember: false
             multiple: false

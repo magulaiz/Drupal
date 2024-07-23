@@ -31,6 +31,17 @@ class FilterEntityReferenceWebTest extends UITestBase {
   /**
    * {@inheritdoc}
    */
+  protected static $modules = [
+    'node',
+    'views_ui',
+    'block',
+    'taxonomy',
+    'views_test_entity_reference',
+  ];
+
+  /**
+   * {@inheritdoc}
+   */
   protected function setUp($import_test_views = TRUE, $modules = []): void {
     parent::setUp($import_test_views);
     $this->setUpEntityTypes();
@@ -95,10 +106,10 @@ class FilterEntityReferenceWebTest extends UITestBase {
    * Tests the filter UI for config reference.
    */
   public function testFilterConfigUi(): void {
-    $this->drupalGet('admin/structure/views/nojs/handler/test_filter_entity_reference/default/filter/field_test_config_target_id_reference');
+    $this->drupalGet('admin/structure/views/nojs/handler/test_filter_entity_reference/default/filter/field_test_config_target_id');
 
     $options = $this->getUiOptions();
-    // We should the content types defined as options.
+    // We should expect the content types defined as options.
     $this->assertEquals(['article', 'page'], array_column($options, 'label'));
   }
 

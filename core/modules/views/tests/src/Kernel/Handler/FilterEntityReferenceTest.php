@@ -43,6 +43,7 @@ class FilterEntityReferenceTest extends ViewsKernelTestBase {
     'text',
     'filter',
     'views',
+    'views_test_entity_reference',
   ];
 
   /**
