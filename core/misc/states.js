@@ -528,7 +528,7 @@
    * @prop value
    * @prop collapsed
    */
-  let blankSpaceExp = /^[\t\n\v\f\r ]+|[\t\n\v\f\r ]+$/g;
+  const blankSpaceExp = /^[\t\n\v\f\r ]+|[\t\n\v\f\r ]+$/g;
   states.Trigger.states = {
     // 'empty' describes the state to be monitored.
     empty: {
