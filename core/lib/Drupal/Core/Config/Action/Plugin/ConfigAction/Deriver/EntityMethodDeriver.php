@@ -102,7 +102,7 @@ final class EntityMethodDeriver extends DeriverBase implements ContainerDeriverI
       'pluralized' => FALSE,
     ];
     $derivative['entity_types'] = [$entity_type->id()];
-    $action_name = $action_attribute->alias ?: $method->name;
+    $action_name = $action_attribute->name ?: $method->name;
     // Build a config action identifier from the entity type's config
     // prefix  and the method name. For example, the Role entity adds a
     // 'user.role:grantPermission' action.

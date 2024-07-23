@@ -373,7 +373,7 @@ abstract class EntityDisplayBase extends ConfigEntityBase implements EntityDispl
   /**
    * {@inheritdoc}
    */
-  #[ActionMethod(adminLabel: new TranslatableMarkup('Hide component'), alias: 'hideComponent')]
+  #[ActionMethod(adminLabel: new TranslatableMarkup('Hide component'), name: 'hideComponent')]
   public function removeComponent($name) {
     $this->hidden[$name] = TRUE;
     unset($this->content[$name]);
