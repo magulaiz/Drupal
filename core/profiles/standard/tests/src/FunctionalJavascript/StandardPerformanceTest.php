@@ -52,7 +52,7 @@ class StandardPerformanceTest extends PerformanceTestBase {
   /**
    * Tests performance of the standard profile.
    */
-  public function testStandardPerformance(): void  {
+  public function testStandardPerformance(): void {
     $this->testAnonymous();
     $this->testLogin();
     $this->testLoginBlock();
