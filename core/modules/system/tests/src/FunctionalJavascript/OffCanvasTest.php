@@ -185,7 +185,7 @@ class OffCanvasTest extends OffCanvasTestBase {
   /**
    * Tests that the off-canvas dialog is not resizable.
    */
-  public function testOffCanvasNotResizable() {
+  public function testOffCanvasNotResizable(): void {
     $this->drupalGet('/off-canvas-test-links');
     $page = $this->getSession()->getPage();
 
