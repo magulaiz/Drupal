@@ -15,13 +15,13 @@
   pointer-events: auto;
 
   & .scroll-top__button {
+    display: none;
     width: var(--sp2);
     height: var(--sp2);
     cursor: pointer;
     border: 0;
     outline: 0;
     background-color: var(--color--primary-50);
-    display: none;
 
     & svg {
       transform: rotate(180deg);
