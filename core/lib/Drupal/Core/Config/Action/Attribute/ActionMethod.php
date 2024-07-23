@@ -34,8 +34,11 @@ final class ActionMethod {
    *   logical sense.
    * @param string|null $name
    *   The name of the action, if it should differ from the method name. Will be
-   *   pluralized if $pluralize is TRUE. If used, the actual name of the method
-   *   will NOT be available as an action name.
+   *   pluralized if $pluralize is TRUE. Must follow the rules for a valid PHP
+   *   function name (e.g., no spaces, no Unicode characters, etc.). If used,
+   *   the actual name of the method will NOT be available as an action name.
+   *
+   * @see https://www.php.net/manual/en/functions.user-defined.php
    */
   public function __construct(
     public readonly Exists $exists = Exists::ErrorIfNotExists,
