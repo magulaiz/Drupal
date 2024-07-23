@@ -194,7 +194,10 @@ class DbUpdateController extends ControllerBase {
           break;
 
         case 'op':
-          @trigger_error('op is deprecated. Rename $op to $operation arguments with BC usage in update.php. See https://www.drupal.org/node/1025928', E_USER_DEPRECATED);
+          @trigger_error('op is deprecated in drupal:11.1.0 and is removed from drupal:12.0.0. Rename $op to $operation arguments with BC usage in update.php. See https://www.drupal.org/node/1025928', E_USER_DEPRECATED);
+          require_once $this->root . '/core/includes/batch.inc';
+          $regions['sidebar_first'] = $this->updateTasksList('run');
+          $output = _batch_page($request);
           break;
 
         // Regular batch ops : defer to batch processing API.
