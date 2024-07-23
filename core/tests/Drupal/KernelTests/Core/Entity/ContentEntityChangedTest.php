@@ -64,7 +64,7 @@ class ContentEntityChangedTest extends EntityKernelTestBase {
   /**
    * Tests basic EntityChangedInterface functionality.
    */
-  public function testChanged() {
+  public function testChanged(): void {
     $user1 = $this->createUser();
     $user2 = $this->createUser();
 
@@ -241,7 +241,7 @@ class ContentEntityChangedTest extends EntityKernelTestBase {
   /**
    * Tests revisionable EntityChangedInterface functionality.
    */
-  public function testRevisionChanged() {
+  public function testRevisionChanged(): void {
     $user1 = $this->createUser();
     $user2 = $this->createUser();
 
@@ -470,6 +470,29 @@ class ContentEntityChangedTest extends EntityKernelTestBase {
       'German translation changed and a new revision is created but the changed flag is reset manually.'
     );
 
+  }
+
+  /**
+   * Tests the changed functionality when an entity is syncing.
+   */
+  public function testChangedSyncing(): void {
+    $entity = EntityTestMulChanged::create();
+    $entity->save();
+    $changed_time_1 = $entity->getChangedTime();
+
+    // Without the syncing flag the changed time will increment when content is
+    // changed.
+    $entity->setName($this->randomString());
+    $entity->save();
+    $changed_time_2 = $entity->getChangedTime();
+    $this->assertTrue($changed_time_2 > $changed_time_1);
+
+    // With the syncing flag, the changed time will not change.
+    $entity->setName($this->randomString());
+    $entity->setSyncing(TRUE);
+    $entity->save();
+    $changed_time_3 = $entity->getChangedTime();
+    $this->assertEquals($changed_time_2, $changed_time_3);
   }
 
   /**

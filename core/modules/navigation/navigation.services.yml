@@ -1,4 +1,6 @@
 services:
+  _defaults:
+    autoconfigure: true
   navigation.renderer:
     class: Drupal\navigation\NavigationRenderer
     arguments:
@@ -7,11 +9,12 @@ services:
         '@module_handler',
         '@current_route_match',
         '@plugin.manager.menu.local_task',
-        '@current_user',
         '@entity_type.manager',
         '@image.factory',
         '@file_url_generator',
         '@plugin.manager.layout_builder.section_storage',
+        '@request_stack',
+        '@extension.list.module'
       ]
   Drupal\navigation\NavigationRenderer: '@navigation.renderer'
 

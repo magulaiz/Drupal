@@ -2,6 +2,7 @@
 
 namespace Drupal\navigation;
 
+use Drupal\Component\Utility\NestedArray;
 use Drupal\Core\Block\BlockPluginInterface;
 use Drupal\Core\Cache\CacheableMetadata;
 use Drupal\Core\Config\ConfigFactoryInterface;
@@ -9,6 +10,7 @@ use Drupal\Core\Entity\ContentEntityInterface;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Entity\FieldableEntityInterface;
+use Drupal\Core\Extension\ModuleExtensionList;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\File\FileUrlGeneratorInterface;
 use Drupal\Core\Image\ImageFactory;
@@ -16,9 +18,9 @@ use Drupal\Core\Menu\LocalTaskManagerInterface;
 use Drupal\Core\Plugin\Context\Context;
 use Drupal\Core\Plugin\Context\ContextDefinition;
 use Drupal\Core\Routing\RouteMatchInterface;
-use Drupal\Core\Session\AccountInterface;
 use Drupal\file\Entity\File;
 use Drupal\layout_builder\SectionStorage\SectionStorageManagerInterface;
+use Symfony\Component\HttpFoundation\RequestStack;
 
 /**
  * Handle rendering for different pieces of the navigation.
@@ -64,11 +66,12 @@ final class NavigationRenderer {
     private ModuleHandlerInterface $moduleHandler,
     private RouteMatchInterface $routeMatch,
     private LocalTaskManagerInterface $localTaskManager,
-    private AccountInterface $currentUser,
     private EntityTypeManagerInterface $entityTypeManager,
     private ImageFactory $imageFactory,
     private FileUrlGeneratorInterface $fileUrlGenerator,
     private SectionStorageManagerInterface $sectionStorageManager,
+    private RequestStack $requestStack,
+    private ModuleExtensionList $moduleExtensionList,
   ) {}
 
   /**
@@ -118,10 +121,25 @@ final class NavigationRenderer {
       ->addCacheableDependency($this->configFactory->get('navigation.block_layout'));
     $cacheability->applyTo($build);
 
-    $build[0] += [
-      '#hide_logo' => $logo_provider === self::LOGO_PROVIDER_HIDE,
-      '#access' => $this->currentUser->hasPermission('access navigation'),
+    $module_path = $this->requestStack->getCurrentRequest()->getBasePath() . '/' . $this->moduleExtensionList->getPath('navigation');
+    $asset_url = $module_path . '/assets/fonts/inter-var.woff2';
+
+    $defaults = [
+      'settings' => ['hide_logo' => $logo_provider === self::LOGO_PROVIDER_HIDE],
+      '#attached' => [
+        'html_head_link' => [
+          [
+            [
+              'rel' => 'preload',
+              'href' => $asset_url,
+              'as' => 'font',
+              'crossorigin' => 'anonymous',
+            ],
+          ],
+        ],
+      ],
     ];
+    $build[0] = NestedArray::mergeDeepArray([$build[0], $defaults]);
     $page_top['navigation'] = $build;
 
     if ($logo_provider === self::LOGO_PROVIDER_CUSTOM) {
@@ -131,11 +149,11 @@ final class NavigationRenderer {
         if ($logo_managed instanceof File) {
           $logo_managed_uri = $logo_managed->getFileUri();
           $logo_managed_url = $this->fileUrlGenerator->generateAbsoluteString($logo_managed_uri);
-          $page_top['navigation']['#logo_path'] = $logo_managed_url;
+          $page_top['navigation'][0]['settings']['logo_path'] = $logo_managed_url;
           $image = $this->imageFactory->get($logo_managed_uri);
           if ($image->isValid()) {
-            $page_top['navigation']['#logo_width'] = $image->getWidth();
-            $page_top['navigation']['#logo_height'] = $image->getHeight();
+            $page_top['navigation'][0]['settings']['logo_width'] = $image->getWidth();
+            $page_top['navigation'][0]['settings']['logo_height'] = $image->getHeight();
           }
         }
       }
@@ -148,15 +166,19 @@ final class NavigationRenderer {
    * @param array $page_top
    *   A renderable array representing the top of the page.
    *
-   * @see toolbar_page_top()
+   * @see navigation_page_top()
    * @see hook_page_top()
    */
   public function buildTopBar(array &$page_top): void {
+    if (!$this->moduleHandler->moduleExists('navigation_top_bar')) {
+      return;
+    }
+
     $page_top['top_bar'] = [
       '#theme' => 'top_bar',
       '#attached' => [
         'library' => [
-          'navigation/navigation',
+          'navigation/internal.navigation',
         ],
       ],
       '#cache' => [
@@ -165,12 +187,7 @@ final class NavigationRenderer {
           'user.permissions',
         ],
       ],
-      '#access' => $this->currentUser->hasPermission('access navigation'),
     ];
-
-    if (!$this->moduleHandler->moduleExists('navigation_top_bar')) {
-      return;
-    }
 
     // Local tasks for content entities.
     if ($this->hasLocalTasks()) {

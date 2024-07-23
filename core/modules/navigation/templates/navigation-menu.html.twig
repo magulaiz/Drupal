@@ -1,8 +1,7 @@
 {% import _self as menus %}
-{% set menu_heading_id = 'menu--' ~ menu_name|clean_unique_id %}
 <div class="admin-toolbar__item">
-  <h4 id="{{ menu_heading_id }}" class="toolbar-block__title visually-hidden focusable">{{ title }}</h4>
-  <ul class="toolbar-block__list" aria-labelledby="{{ menu_heading_id }}">
+  <h4 class="visually-hidden focusable">{{ title }}</h4>
+  <ul class="toolbar-block__list">
     {{ menus.menu_items(items, attributes, 0) }}
   </ul>
 </div>
@@ -33,9 +32,9 @@
           } only %}
           <div class="toolbar-popover__wrapper" data-toolbar-popover-wrapper inert>
             {% if item.url %}
-              {{ link(item.title, item.url, create_attribute({'class': ['toolbar-popover__header', 'toolbar-button', 'toolbar-button--large']})) }}
+              {{ link(item.title, item.url, create_attribute({'class': ['toolbar-popover__header', 'toolbar-button', 'toolbar-button--large', 'toolbar-button--dark']})) }}
             {% else %}
-              <span class="toolbar-popover__header toolbar-button toolbar-button--large toolbar-button--non-interactive">{{ item.title }}</span>
+              <span class="toolbar-popover__header toolbar-button toolbar-button--large toolbar-button--dark toolbar-button--non-interactive">{{ item.title }}</span>
             {% endif %}
             <ul class="toolbar-menu toolbar-popover__menu">
               {{ menus.menu_items(item.below, attributes, 1) }}
