@@ -5,7 +5,9 @@ declare(strict_types=1);
 namespace Drupal\Core\Config\Action\Attribute;
 
 // cspell:ignore inflector
+use Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException;
 use Drupal\Core\Config\Action\Exists;
+use Drupal\Core\Extension\ExtensionDiscovery;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 
 /**
@@ -41,6 +43,9 @@ final class ActionMethod {
     public readonly bool|string $pluralize = TRUE,
     public readonly ?string $name = NULL,
   ) {
+    if ($name && !preg_match(ExtensionDiscovery::PHP_FUNCTION_PATTERN, $name)) {
+      throw new InvalidPluginDefinitionException($name, "'$name' is not a valid PHP function name.");
+    }
   }
 
 }
