@@ -193,6 +193,10 @@ class DbUpdateController extends ControllerBase {
           $output = $this->results($request);
           break;
 
+        case 'op':
+          @trigger_error('op is deprecated. Rename $op to $operation arguments with BC usage in update.php. See https://www.drupal.org/node/1025928', E_USER_DEPRECATED);
+          break;
+
         // Regular batch ops : defer to batch processing API.
         default:
           require_once $this->root . '/core/includes/batch.inc';
