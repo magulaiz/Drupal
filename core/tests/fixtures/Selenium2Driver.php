@@ -15,6 +15,7 @@ namespace Behat\Mink\Driver;
 use Behat\Mink\Exception\DriverException;
 use Behat\Mink\KeyModifier;
 use Behat\Mink\Selector\Xpath\Escaper;
+use Composer\InstalledVersions;
 use WebDriver\Element;
 use WebDriver\Exception\NoSuchElement;
 use WebDriver\Exception\StaleElementReference;
@@ -248,7 +249,8 @@ class Selenium2Driver extends CoreDriver
         ));
 
         if (!$hasSyn) {
-            $synJs = file_get_contents(__DIR__.'/Resources/syn.js');
+            $path = InstalledVersions::getInstallPath('lullabot/mink-selenium2-driver');
+            $synJs = file_get_contents($path . '/src/Resources/syn.js');
             \assert($synJs !== false);
             $this->getWebDriverSession()->execute(array(
                 'script' => $synJs,
