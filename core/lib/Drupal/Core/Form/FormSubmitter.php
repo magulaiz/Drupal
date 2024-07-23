@@ -39,8 +39,20 @@ class FormSubmitter implements FormSubmitterInterface {
       return;
     }
 
+    // Abort if the validation was halted by any of the form (re)build or
+    // validate steps.
+    if (!$form_state->isValidationHalted()) {
+      return;
+    }
+
     // Execute form submit handlers.
     $this->executeSubmitHandlers($form, $form_state);
+
+    // Abort if the validation was halted by any of the submit handlers, so it
+    // doesn't start the batch process.
+    if (!$form_state->isValidationHalted()) {
+      return;
+    }
 
     // If batches were set in the submit handlers, we process them now,
     // possibly ending execution. We make sure we do not react to the batch
@@ -103,6 +115,12 @@ class FormSubmitter implements FormSubmitterInterface {
       }
       else {
         call_user_func_array($form_state->prepareCallback($callback), [&$form, &$form_state]);
+
+        // Abort if the submit handler we just processed asked to halt
+        // validation.
+        if (!$form_state->isValidationHalted()) {
+          return;
+        }
       }
     }
   }
