@@ -28,7 +28,7 @@ class ConfigActionAttributeTest extends UnitTestCase {
    * @covers \Drupal\Core\Config\Action\Attribute\ActionMethod::__construct
    */
   public function testInvalidFunctionName(): void {
-    $name = "hello Goodb\x7fye";
+    $name = "hello Goodbye";
     $this->expectException(InvalidPluginDefinitionException::class);
     $this->expectExceptionMessage("'$name' is not a valid PHP function name.");
     new ActionMethod(name: $name);
