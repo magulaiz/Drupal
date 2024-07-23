@@ -34,6 +34,7 @@
         "symfony/console": "~v7.1.2",
         "symfony/dependency-injection": "~v7.1.2",
         "symfony/deprecation-contracts": "~v3.5.0",
+        "symfony/dotenv": "~v7.1.1",
         "symfony/error-handler": "~v7.1.2",
         "symfony/event-dispatcher": "~v7.1.1",
         "symfony/event-dispatcher-contracts": "~v3.5.0",
