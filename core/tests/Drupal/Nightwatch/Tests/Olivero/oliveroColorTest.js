@@ -1,3 +1,5 @@
+const { testPerTheme } = require('../../globals');
+
 const selectors = {
   schemePicker: '[data-drupal-selector="edit-color-scheme"]',
   primaryColor: {
@@ -47,88 +49,102 @@ module.exports = {
     browser.drupalUninstall();
   },
   'Olivero Settings - color schemes update individual values': (browser) => {
-    browser
-      .drupalRelativeURL('/admin/appearance/settings/olivero')
-      .waitForElementVisible(selectors.schemePicker)
-      .click(`${selectors.schemePicker} option[value="firehouse"]`)
-      .assert.valueEquals(
-        selectors.primaryColor.text,
-        colorSchemes.firehouse.base_primary_color,
-      )
-      .assert.valueEquals(
-        selectors.primaryColor.color,
-        colorSchemes.firehouse.base_primary_color,
-      )
-      .click(`${selectors.schemePicker} option[value="ice"]`)
-      .assert.valueEquals(
-        selectors.primaryColor.text,
-        colorSchemes.ice.base_primary_color,
-      )
-      .assert.valueEquals(
-        selectors.primaryColor.color,
-        colorSchemes.ice.base_primary_color,
-      )
-      .click(`${selectors.schemePicker} option[value="plum"]`)
-      .assert.valueEquals(
-        selectors.primaryColor.text,
-        colorSchemes.plum.base_primary_color,
-      )
-      .assert.valueEquals(
-        selectors.primaryColor.color,
-        colorSchemes.plum.base_primary_color,
-      )
-      .click(`${selectors.schemePicker} option[value="slate"]`)
-      .assert.valueEquals(
-        selectors.primaryColor.text,
-        colorSchemes.slate.base_primary_color,
-      )
-      .assert.valueEquals(
-        selectors.primaryColor.color,
-        colorSchemes.slate.base_primary_color,
-      )
-      .click(`${selectors.schemePicker} option[value="default"]`)
-      .assert.valueEquals(
-        selectors.primaryColor.text,
-        colorSchemes.default.base_primary_color,
-      )
-      .assert.valueEquals(
-        selectors.primaryColor.color,
-        colorSchemes.default.base_primary_color,
-      );
+    testPerTheme(browser, (browser, theme, title) => {
+      console.log('THEME: ', theme);
+      console.log('TITLE: ', title);
+
+      browser
+        // Adding 👇 gets the test to work, which I've left here for example, but
+        // clearly it will be better to figure out why the login in the before
+        // each is not active. The credentials still work, so the setup is
+        // happening. Something is putting this in a different session?
+        .drupalLogin({ name: 'user', password: '123' })
+        .drupalRelativeURL(`/admin/appearance/settings/${theme}`)
+        .waitForElementVisible(selectors.schemePicker)
+        .click(`${selectors.schemePicker} option[value="firehouse"]`)
+        .assert.valueEquals(
+          selectors.primaryColor.text,
+          colorSchemes.firehouse.base_primary_color,
+        )
+        .assert.valueEquals(
+          selectors.primaryColor.color,
+          colorSchemes.firehouse.base_primary_color,
+        )
+        .click(`${selectors.schemePicker} option[value="ice"]`)
+        .assert.valueEquals(
+          selectors.primaryColor.text,
+          colorSchemes.ice.base_primary_color,
+        )
+        .assert.valueEquals(
+          selectors.primaryColor.color,
+          colorSchemes.ice.base_primary_color,
+        )
+        .click(`${selectors.schemePicker} option[value="plum"]`)
+        .assert.valueEquals(
+          selectors.primaryColor.text,
+          colorSchemes.plum.base_primary_color,
+        )
+        .assert.valueEquals(
+          selectors.primaryColor.color,
+          colorSchemes.plum.base_primary_color,
+        )
+        .click(`${selectors.schemePicker} option[value="slate"]`)
+        .assert.valueEquals(
+          selectors.primaryColor.text,
+          colorSchemes.slate.base_primary_color,
+        )
+        .assert.valueEquals(
+          selectors.primaryColor.color,
+          colorSchemes.slate.base_primary_color,
+        )
+        .click(`${selectors.schemePicker} option[value="default"]`)
+        .assert.valueEquals(
+          selectors.primaryColor.text,
+          colorSchemes.default.base_primary_color,
+        )
+        .assert.valueEquals(
+          selectors.primaryColor.color,
+          colorSchemes.default.base_primary_color,
+        );
+    });
   },
   'Olivero Settings - color inputs stay synchronized': (browser) => {
-    browser
-      .drupalRelativeURL('/admin/appearance/settings/olivero')
-      .waitForElementVisible(selectors.primaryColor.text)
-      .waitForElementVisible(selectors.primaryColor.color)
-      .updateValue(selectors.primaryColor.text, '#ff0000')
-      .assert.valueEquals(selectors.primaryColor.color, '#ff0000')
-      .updateValue(selectors.primaryColor.text, '#00ff00')
-      .assert.valueEquals(selectors.primaryColor.color, '#00ff00')
-      .updateValue(selectors.primaryColor.text, '#0000ff')
-      .assert.valueEquals(selectors.primaryColor.color, '#0000ff');
+    testPerTheme(browser, (browser, theme, title) => {
+      browser
+        .drupalRelativeURL(`/admin/appearance/settings/${theme}`)
+        .waitForElementVisible(selectors.primaryColor.text)
+        .waitForElementVisible(selectors.primaryColor.color)
+        .updateValue(selectors.primaryColor.text, '#ff0000')
+        .assert.valueEquals(selectors.primaryColor.color, '#ff0000')
+        .updateValue(selectors.primaryColor.text, '#00ff00')
+        .assert.valueEquals(selectors.primaryColor.color, '#00ff00')
+        .updateValue(selectors.primaryColor.text, '#0000ff')
+        .assert.valueEquals(selectors.primaryColor.color, '#0000ff');
+    });
   },
   'Olivero Settings - color selections impact olivero theme': (browser) => {
-    browser
-      .drupalRelativeURL('/admin/appearance/settings/olivero')
-      .waitForElementVisible(selectors.primaryColor.color)
-      .updateValue(selectors.primaryColor.text, '#ff0000') // hsl(0, 100%, 50%)
-      .click(selectors.submit)
-      .waitForElementVisible(selectors.primaryColor.color)
-      .drupalRelativeURL('/')
-      .waitForElementVisible(selectors.siteHeader)
-      .expect.element(selectors.siteHeader)
-      .to.have.css('backgroundColor', 'rgb(255, 0, 0)');
+    testPerTheme(browser, (browser, theme, title) => {
+      browser
+        .drupalRelativeURL(`/admin/appearance/settings/${theme}`)
+        .waitForElementVisible(selectors.primaryColor.color)
+        .updateValue(selectors.primaryColor.text, '#ff0000') // hsl(0, 100%, 50%)
+        .click(selectors.submit)
+        .waitForElementVisible(selectors.primaryColor.color)
+        .drupalRelativeURL('/')
+        .waitForElementVisible(selectors.siteHeader)
+        .expect.element(selectors.siteHeader)
+        .to.have.css('backgroundColor', 'rgb(255, 0, 0)');
 
-    browser
-      .drupalRelativeURL('/admin/appearance/settings/olivero')
-      .waitForElementVisible(selectors.primaryColor.color)
-      .updateValue(selectors.primaryColor.text, '#7a4587') // hsl(0, 100%, 50%)
-      .click(selectors.submit)
-      .waitForElementVisible(selectors.primaryColor.color)
-      .drupalRelativeURL('/')
-      .waitForElementVisible(selectors.siteHeader)
-      .expect.element(selectors.siteHeader)
-      .to.have.css('backgroundColor', 'rgb(122, 69, 135)');
+      browser
+        .drupalRelativeURL(`/admin/appearance/settings/${theme}`)
+        .waitForElementVisible(selectors.primaryColor.color)
+        .updateValue(selectors.primaryColor.text, '#7a4587') // hsl(0, 100%, 50%)
+        .click(selectors.submit)
+        .waitForElementVisible(selectors.primaryColor.color)
+        .drupalRelativeURL('/')
+        .waitForElementVisible(selectors.siteHeader)
+        .expect.element(selectors.siteHeader)
+        .to.have.css('backgroundColor', 'rgb(122, 69, 135)');
+    });
   },
 };

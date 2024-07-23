@@ -590,6 +590,7 @@ strs
 sttid
 styleguide
 stylelint
+stylelintrc
 stylescombo
 subarrays
 subchild

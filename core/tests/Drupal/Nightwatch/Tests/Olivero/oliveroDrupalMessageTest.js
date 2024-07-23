@@ -1,3 +1,5 @@
+const { testPerTheme } = require('../../globals');
+
 const mainContent = '#block-olivero-content';
 const mainMessagesContainer = '[data-drupal-messages] > .messages__wrapper';
 const secondaryMessagesContainer = '[data-drupal-messages-other]';
@@ -34,68 +36,77 @@ module.exports = {
     browser.drupalUninstall();
   },
   'Verify default placement of javascript-created messages': (browser) => {
-    browser
-      .drupalRelativeURL('/js_message_test_link_with_system_messages')
-      .waitForElementVisible(mainContent)
-      .assert.elementPresent(mainMessagesContainer)
+    testPerTheme(browser, (browser, theme, title) => {
+      browser
+        .drupalRelativeURL('/js_message_test_link_with_system_messages')
+        .waitForElementVisible(mainContent)
+        .assert.elementPresent(mainMessagesContainer)
 
-      // We should load 3 messages on page load from \Drupal::messenger()
-      .assert.elementCount(`${mainMessagesContainer} > .messages-list__item`, 3)
+        // We should load 3 messages on page load from \Drupal::messenger()
+        .assert.elementCount(
+          `${mainMessagesContainer} > .messages-list__item`,
+          3,
+        )
 
-      // We should have one message of each type
-      .assert.elementCount(`${mainMessagesContainer} > .messages--status`, 1)
-      .assert.elementCount(`${mainMessagesContainer} > .messages--warning`, 1)
-      .assert.elementCount(`${mainMessagesContainer} > .messages--error`, 1)
+        // We should have one message of each type
+        .assert.elementCount(`${mainMessagesContainer} > .messages--status`, 1)
+        .assert.elementCount(`${mainMessagesContainer} > .messages--warning`, 1)
+        .assert.elementCount(`${mainMessagesContainer} > .messages--error`, 1)
 
-      // Trigger new messages via javascript
-      .click(mainButtons.addStatus)
-      .click(mainButtons.addWarning)
-      .click(mainButtons.addError)
+        // Trigger new messages via javascript
+        .click(mainButtons.addStatus)
+        .click(mainButtons.addWarning)
+        .click(mainButtons.addError)
 
-      // We should have 6 total messages
-      .assert.elementCount(`${mainMessagesContainer} > .messages-list__item`, 6)
+        // We should have 6 total messages
+        .assert.elementCount(
+          `${mainMessagesContainer} > .messages-list__item`,
+          6,
+        )
 
-      // We should have 2 messages of each type
-      .assert.elementCount(`${mainMessagesContainer} > .messages--status`, 2)
-      .assert.elementCount(`${mainMessagesContainer} > .messages--warning`, 2)
-      .assert.elementCount(`${mainMessagesContainer} > .messages--error`, 2);
+        // We should have 2 messages of each type
+        .assert.elementCount(`${mainMessagesContainer} > .messages--status`, 2)
+        .assert.elementCount(`${mainMessagesContainer} > .messages--warning`, 2)
+        .assert.elementCount(`${mainMessagesContainer} > .messages--error`, 2);
+    });
   },
-
   'Verify customized placement of javascript-created messages': (browser) => {
-    browser
-      .drupalRelativeURL('/js_message_test_link_with_system_messages')
-      .waitForElementVisible(mainContent)
-      .assert.elementPresent(secondaryMessagesContainer)
+    testPerTheme(browser, (browser, theme, title) => {
+      browser
+        .drupalRelativeURL('/js_message_test_link_with_system_messages')
+        .waitForElementVisible(mainContent)
+        .assert.elementPresent(secondaryMessagesContainer)
 
-      // We should load 3 messages on page load from \Drupal::messenger()
-      .assert.elementCount(
-        `${secondaryMessagesContainer} > .messages-list__item`,
-        0,
-      )
+        // We should load 3 messages on page load from \Drupal::messenger()
+        .assert.elementCount(
+          `${secondaryMessagesContainer} > .messages-list__item`,
+          0,
+        )
 
-      // Trigger new messages via javascript
-      .click(secondaryButtons.addStatus)
-      .click(secondaryButtons.addWarning)
-      .click(secondaryButtons.addError)
+        // Trigger new messages via javascript
+        .click(secondaryButtons.addStatus)
+        .click(secondaryButtons.addWarning)
+        .click(secondaryButtons.addError)
 
-      // We should have 6 total messages
-      .assert.elementCount(
-        `${secondaryMessagesContainer} > .messages-list__item`,
-        3,
-      )
+        // We should have 6 total messages
+        .assert.elementCount(
+          `${secondaryMessagesContainer} > .messages-list__item`,
+          3,
+        )
 
-      // We should have 2 messages of each type
-      .assert.elementCount(
-        `${secondaryMessagesContainer} > .messages--status`,
-        1,
-      )
-      .assert.elementCount(
-        `${secondaryMessagesContainer} > .messages--warning`,
-        1,
-      )
-      .assert.elementCount(
-        `${secondaryMessagesContainer} > .messages--error`,
-        1,
-      );
+        // We should have 2 messages of each type
+        .assert.elementCount(
+          `${secondaryMessagesContainer} > .messages--status`,
+          1,
+        )
+        .assert.elementCount(
+          `${secondaryMessagesContainer} > .messages--warning`,
+          1,
+        )
+        .assert.elementCount(
+          `${secondaryMessagesContainer} > .messages--error`,
+          1,
+        );
+    });
   },
 };
