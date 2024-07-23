@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\migrate_drupal\Kernel;
 
 use Drupal\Component\Discovery\YamlDiscovery;
@@ -39,7 +41,6 @@ class StateFileExistsTest extends MigrateDrupalTestBase {
     'ban',
     'block',
     'block_content',
-    'book',
     'comment',
     'config_translation',
     'contact',
@@ -49,8 +50,6 @@ class StateFileExistsTest extends MigrateDrupalTestBase {
     'field',
     'file',
     'filter',
-    // @todo Remove forum in https://www.drupal.org/project/drupal/issues/3261653
-    'forum',
     'image',
     'language',
     'link',
@@ -66,14 +65,11 @@ class StateFileExistsTest extends MigrateDrupalTestBase {
     'responsive_image',
     'search',
     'shortcut',
-    'statistics',
     'syslog',
     'system',
     'taxonomy',
     'telephone',
     'text',
-    // @todo Remove tracker in https://www.drupal.org/project/drupal/issues/3261452
-    'tracker',
     'update',
     'user',
   ];
@@ -81,7 +77,7 @@ class StateFileExistsTest extends MigrateDrupalTestBase {
   /**
    * Tests that the migrate_drupal.yml files exist as needed.
    */
-  public function testMigrationState() {
+  public function testMigrationState(): void {
     // Install all available modules.
     $module_handler = $this->container->get('module_handler');
     $all_modules = $this->coreModuleListDataProvider();
