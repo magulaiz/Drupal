@@ -984,7 +984,7 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
       $app_root = static::guessApplicationRoot();
     }
 
-    // loads .env, .env.local, and .env.$APP_ENV.local or .env.$APP_ENV
+    // Loads .env, .env.local, and .env.$APP_ENV.local or .env.$APP_ENV.
     $dotenv = new Dotenv();
     $dotenv->loadEnv($app_root . '/.env');
 
