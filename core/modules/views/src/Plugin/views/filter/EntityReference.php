@@ -399,7 +399,7 @@ class EntityReference extends ManyToOne {
   /**
    * {@inheritdoc}
    */
-  protected function valueForm(&$form, FormStateInterface $form_state): void {
+  protected function valueForm(&$form, FormStateInterface $form_state) {
     if (!isset($this->options['sub_handler'])) {
       return;
     }
