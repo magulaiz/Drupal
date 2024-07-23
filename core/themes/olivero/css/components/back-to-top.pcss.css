@@ -21,6 +21,7 @@
     border: 0;
     outline: 0;
     background-color: var(--color--primary-50);
+    display: none;
 
     & svg {
       transform: rotate(180deg);
