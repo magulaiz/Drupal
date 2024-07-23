@@ -143,6 +143,9 @@ function drupal_phpunit_populate_class_loader() {
   return $loader;
 }
 
+// Include this so we can override \Behat\Mink\Driver\Selenium2Driver.
+include 'fixtures/Selenium2Driver.php';
+
 // Do class loader population.
 $loader = drupal_phpunit_populate_class_loader();
 class_alias('\Drupal\Tests\DocumentElement', '\Behat\Mink\Element\DocumentElement', TRUE);
