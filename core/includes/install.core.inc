@@ -381,7 +381,8 @@ function install_begin_request($class_loader, &$install_state) {
   $container->set('class_loader', $class_loader);
 
   $container->set('settings', Settings::getInstance());
-  $container->register('stream_wrapper_manager', StreamWrapperManager::class);
+  $container->register('stream_wrapper_manager', StreamWrapperManager::class)
+    ->addArgument($container);
   $container->register('file_system', FileSystem::class)
     ->addArgument(new Reference('stream_wrapper_manager'))
     ->addArgument(new Reference('settings'));
