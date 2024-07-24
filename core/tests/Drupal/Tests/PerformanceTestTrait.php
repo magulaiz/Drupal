@@ -70,6 +70,10 @@ trait PerformanceTestTrait {
     $parent_driver_args = parent::getMinkDriverArgs();
     $driver_args = json_decode($parent_driver_args, TRUE);
 
+    if ($driver_args[0] !== 'chrome') {
+      $this->markTestSkipped("Performance tests only run on a chrome browser");
+    }
+
     $driver_args[1]['goog:loggingPrefs'] = [
       'browser' => 'ALL',
       'performance' => 'ALL',
