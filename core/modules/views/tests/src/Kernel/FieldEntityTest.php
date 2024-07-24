@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Drupal\Tests\views\Functional\Entity;
+namespace Drupal\Tests\views\Kernel;
 
 use Drupal\comment\Tests\CommentTestTrait;
 use Drupal\Core\Logger\LoggerChannelFactoryInterface;
@@ -10,8 +10,8 @@ use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\node\Entity\Node;
 use Drupal\node\NodeInterface;
+use Drupal\Tests\node\Traits\ContentTypeCreationTrait;
 use Drupal\user\Entity\User;
-use Drupal\Tests\views\Functional\ViewTestBase;
 use Drupal\views\Tests\ViewTestData;
 use Drupal\views\Views;
 use Drupal\comment\Entity\Comment;
@@ -21,26 +21,13 @@ use Drupal\comment\Entity\Comment;
  *
  * @group views
  */
-class FieldEntityTest extends ViewTestBase {
+class FieldEntityTest extends ViewsKernelTestBase {
 
   use CommentTestTrait;
 
-  /**
-   * Views used by this test.
-   *
-   * @var array
-   */
-  public static $testViews = [
-    'test_field_get_entity',
-    'test_field_get_entity_null',
-  ];
-
-  /**
-   * Modules to enable.
-   *
-   * @var array
-   */
-  protected static $modules = ['node', 'comment'];
+  use ContentTypeCreationTrait {
+    createContentType as drupalCreateContentType;
+  }
 
   /**
    * {@inheritdoc}
@@ -50,8 +37,8 @@ class FieldEntityTest extends ViewTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp($import_test_views = TRUE, $modules = ['views_test_config']): void {
-    parent::setUp(FALSE, $modules);
+  protected function setUp($import_test_views = TRUE): void {
+    parent::setUp(FALSE);
 
     $this->drupalCreateContentType(['type' => 'page']);
     $this->addDefaultCommentField('node', 'page');
@@ -80,7 +67,9 @@ class FieldEntityTest extends ViewTestBase {
         ],
       ],
     ])->save();
-    ViewTestData::createTestViews(static::class, $modules);
+
+    // Modules to enable.
+    ViewTestData::createTestViews(static::class, ['node', 'comment']);
   }
 
   /**
@@ -106,9 +95,6 @@ class FieldEntityTest extends ViewTestBase {
       'field_name' => 'comment',
     ]);
     $comment->save();
-
-    $user = $this->drupalCreateUser(['access comments']);
-    $this->drupalLogin($user);
 
     $view = Views::getView('test_field_get_entity');
     $this->executeView($view);
@@ -145,7 +131,6 @@ class FieldEntityTest extends ViewTestBase {
     ]);
     $node->save();
 
-    $this->drupalLogin($this->drupalCreateUser(['access content']));
     $view = Views::getView('test_field_get_entity_null');
     $this->executeView($view);
     // Second row will be $node.
