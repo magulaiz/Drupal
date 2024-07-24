@@ -241,7 +241,6 @@ variables:
   services:
     - <<: *with-database
     - <<: *with-selenium-chrome
-      ports: 4444:4444
   script:
     - export DRUPAL_TEST_DB_URL=$SIMPLETEST_DB
     - cp ./core/.env.example ./core/.env
