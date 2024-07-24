@@ -96,14 +96,6 @@ variables:
     SE_START_XVFB: "false"
     SE_START_VNC: "false"
 
-.with-selenium-chrome_performance: &with-selenium-chrome-performance
-  name: selenium/standalone-chrome:latest
-  alias: selenium
-  variables:
-    JAVA_OPTS: "-Dwebdriver.chrome.logfile=/builds/chromedriver.log"
-    SE_START_XVFB: "false"
-    SE_START_VNC: "false"
-
 .run-tests: &run-tests
   script:
     # Need to pass this along directly.
@@ -292,12 +284,11 @@ variables:
   when: manual
   variables:
     KUBERNETES_CPU_REQUEST: "24"
-    MINK_DRIVER_ARGS_WEBDRIVER: '["chrome", {"browserName":"chrome", "goog:chromeOptions":{"w3c": true, "args":["--no-sandbox","--ignore-certificate-errors", "--allow-insecure-localhost", "--headless", "--dns-prefetch-disable", "--no-sandbox"]}}, "http://selenium:4444"]'
   tags:
     - performance-test-runner
   services:
     - <<: *with-database
-    - <<: *with-selenium-chrome-performance
+    - <<: *with-selenium-chrome
   script:
     #  Determine DB driver.
     - |
