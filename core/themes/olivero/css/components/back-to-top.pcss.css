@@ -8,25 +8,40 @@
   z-index: 9999;
   right: 1.875rem;
   bottom: 1.875rem;
-  display: flex;
-  flex-shrink: 0;
-  align-items: center;
-  justify-content: center;
+  display: none; /* Initially hidden */
   pointer-events: auto;
 
-  & .scroll-top__button {
-    display: none;
+  & .scroll-top__progress {
+    position: relative;
+    width: var(--sp2-5);
+    height: var(--sp2-5);
+    border-radius: 50%;
+    background: conic-gradient(var(--color--primary-50, #1b9ae4) 0%, transparent 0%);
+  }
+
+  & .scroll-top__progress-inner {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     width: var(--sp2);
     height: var(--sp2);
-    cursor: pointer;
-    border: 0;
-    outline: 0;
-    background-color: var(--color--primary-50);
+    transform: translate(-50%, -50%);
+    border-radius: 50%;
+    background: var(--color--primary-50);
+  }
 
-    & svg {
+  & .scroll-top__button {
+    cursor: pointer;
+    border: none;
+    background: none;
+
+    svg {
       transform: rotate(180deg);
 
-      & path {
+      path {
         fill: var(--color--white);
       }
     }
