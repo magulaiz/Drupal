@@ -143,7 +143,9 @@ function drupal_phpunit_populate_class_loader() {
   return $loader;
 }
 
-// Include this so we can override \Behat\Mink\Driver\Selenium2Driver.
+// Include this so we can override \Behat\Mink\Driver\Selenium2Driver and
+// \WebDriver\Session.
+include 'fixtures/Session.php';
 include 'fixtures/Selenium2Driver.php';
 
 // Do class loader population.
