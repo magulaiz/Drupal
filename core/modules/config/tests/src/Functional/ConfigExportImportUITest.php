@@ -137,7 +137,7 @@ class ConfigExportImportUITest extends BrowserTestBase {
       ->setComponent($this->fieldName)
       ->save();
     $display_repository->getViewDisplay('node', $this->contentType->id(), 'teaser')
-      ->removeComponent($this->fieldName)
+      ->hideComponent($this->fieldName)
       ->save();
 
     $this->drupalGet('node/add/' . $this->contentType->id());

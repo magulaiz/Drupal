@@ -105,7 +105,7 @@ class EntityDisplayTest extends KernelTestBase {
     $this->assertEquals($expected, $display->getComponents());
 
     // Check that a component can be removed.
-    $display->removeComponent('component_3');
+    $display->hideComponent('component_3');
     $this->assertNULL($display->getComponent('component_3'));
 
     // Check that the removal is correctly persisted.
@@ -189,7 +189,7 @@ class EntityDisplayTest extends KernelTestBase {
     $this->assertNull($display->getComponent('display_extra_field_hidden'));
 
     // Check that setting explicit options overrides the defaults.
-    $display->removeComponent('display_extra_field');
+    $display->hideComponent('display_extra_field');
     $display->setComponent('display_extra_field_hidden', ['weight' => 10]);
     $this->assertNull($display->getComponent('display_extra_field'));
     $this->assertEquals(['weight' => 10, 'settings' => [], 'third_party_settings' => []], $display->getComponent('display_extra_field_hidden'));
@@ -218,7 +218,7 @@ class EntityDisplayTest extends KernelTestBase {
     $this->assertNull($display->getComponent('display_extra_field_hidden'));
 
     // Check that setting explicit options overrides the defaults.
-    $display->removeComponent('display_extra_field');
+    $display->hideComponent('display_extra_field');
     $display->setComponent('display_extra_field_hidden', ['weight' => 10]);
     $this->assertNull($display->getComponent('display_extra_field'));
     $this->assertEquals(['weight' => 10, 'settings' => [], 'third_party_settings' => []], $display->getComponent('display_extra_field_hidden'));

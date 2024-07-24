@@ -106,7 +106,7 @@ class NodeFieldFilterTest extends NodeTestBase {
     // Disable read more links.
     \Drupal::service('entity_display.repository')
       ->getViewDisplay('node', 'page', 'teaser')
-      ->removeComponent('links')
+      ->hideComponent('links')
       ->save();
 
     // Get the text of the page.

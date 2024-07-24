@@ -206,7 +206,7 @@ class OEmbedFormatterTest extends MediaFunctionalTestBase {
       'bundle' => $media_type->id(),
       'mode' => 'full',
       'status' => TRUE,
-    ])->removeComponent('thumbnail')
+    ])->hideComponent('thumbnail')
       ->setComponent($source_field->getName(), [
         'type' => 'oembed',
         'settings' => $formatter_settings,

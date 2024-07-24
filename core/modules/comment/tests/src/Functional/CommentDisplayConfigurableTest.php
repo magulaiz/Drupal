@@ -76,8 +76,8 @@ class CommentDisplayConfigurableTest extends CommentTestBase {
     $assert->elementExists('css', '.field--name-uid .field__item');
 
     // Remove from display.
-    $display->removeComponent('uid')
-      ->removeComponent('created')
+    $display->hideComponent('uid')
+      ->hideComponent('created')
       ->save();
 
     $this->drupalGet('node/' . $this->node->id());

@@ -76,7 +76,7 @@ abstract class ComponentEntityDisplayBase extends DestinationBase implements Con
       $entity->setComponent($values['field_name'], $row->getDestinationProperty('options') ?: []);
     }
     else {
-      $entity->removeComponent($values['field_name']);
+      $entity->hideComponent($values['field_name']);
     }
     $entity->save();
     return array_values($values);

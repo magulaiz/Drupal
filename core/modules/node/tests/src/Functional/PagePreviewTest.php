@@ -235,7 +235,7 @@ class PagePreviewTest extends NodeTestBase {
     // Switch view mode. We'll remove the body from the teaser view mode.
     \Drupal::service('entity_display.repository')
       ->getViewDisplay('node', 'page', 'teaser')
-      ->removeComponent('body')
+      ->hideComponent('body')
       ->save();
 
     $view_mode_edit = ['view_mode' => 'teaser'];

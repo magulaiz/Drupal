@@ -23,14 +23,14 @@ class TestWithHiddenSourceField extends Test {
    * {@inheritdoc}
    */
   public function prepareViewDisplay(MediaTypeInterface $type, EntityViewDisplayInterface $display) {
-    $display->removeComponent($this->getSourceFieldDefinition($type)->getName());
+    $display->hideComponent($this->getSourceFieldDefinition($type)->getName());
   }
 
   /**
    * {@inheritdoc}
    */
   public function prepareFormDisplay(MediaTypeInterface $type, EntityFormDisplayInterface $display) {
-    $display->removeComponent($this->getSourceFieldDefinition($type)->getName());
+    $display->hideComponent($this->getSourceFieldDefinition($type)->getName());
   }
 
   /**

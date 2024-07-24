@@ -147,7 +147,7 @@ interface MediaSourceInterface extends PluginInspectionInterface, ConfigurableIn
    *
    * This method should normally call
    * \Drupal\Core\Entity\Display\EntityDisplayInterface::setComponent() or
-   * \Drupal\Core\Entity\Display\EntityDisplayInterface::removeComponent() to
+   * \Drupal\Core\Entity\Display\EntityDisplayInterface::hideComponent() to
    * configure the media type fields in the view display.
    *
    * @param \Drupal\media\MediaTypeInterface $type
@@ -156,7 +156,7 @@ interface MediaSourceInterface extends PluginInspectionInterface, ConfigurableIn
    *   The display which should be prepared.
    *
    * @see \Drupal\Core\Entity\Display\EntityDisplayInterface::setComponent()
-   * @see \Drupal\Core\Entity\Display\EntityDisplayInterface::removeComponent()
+   * @see \Drupal\Core\Entity\Display\EntityDisplayInterface::hideComponent()
    */
   public function prepareViewDisplay(MediaTypeInterface $type, EntityViewDisplayInterface $display);
 
@@ -165,7 +165,7 @@ interface MediaSourceInterface extends PluginInspectionInterface, ConfigurableIn
    *
    * This method should normally call
    * \Drupal\Core\Entity\Display\EntityDisplayInterface::setComponent() or
-   * \Drupal\Core\Entity\Display\EntityDisplayInterface::removeComponent() to
+   * \Drupal\Core\Entity\Display\EntityDisplayInterface::hideComponent() to
    * configure the media type fields in the form display.
    *
    * @param \Drupal\media\MediaTypeInterface $type
@@ -174,7 +174,7 @@ interface MediaSourceInterface extends PluginInspectionInterface, ConfigurableIn
    *   The display which should be prepared.
    *
    * @see \Drupal\Core\Entity\Display\EntityDisplayInterface::setComponent()
-   * @see \Drupal\Core\Entity\Display\EntityDisplayInterface::removeComponent()
+   * @see \Drupal\Core\Entity\Display\EntityDisplayInterface::hideComponent()
    */
   public function prepareFormDisplay(MediaTypeInterface $type, EntityFormDisplayInterface $display);
 

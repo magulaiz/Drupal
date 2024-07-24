@@ -409,7 +409,7 @@ function _media_library_configure_form_display(MediaTypeInterface $type) {
   $display = EntityFormDisplay::create($values);
   // Remove all default components.
   foreach (array_keys($display->getComponents()) as $name) {
-    $display->removeComponent($name);
+    $display->hideComponent($name);
   }
   // Expose the name field when it is not mapped.
   if (!in_array('name', $type->getFieldMap(), TRUE)) {
@@ -456,7 +456,7 @@ function _media_library_configure_view_display(MediaTypeInterface $type) {
   $display = EntityViewDisplay::create($values);
   // Remove all default components.
   foreach (array_keys($display->getComponents()) as $name) {
-    $display->removeComponent($name);
+    $display->hideComponent($name);
   }
 
   // @todo Remove dependency on 'medium' and 'thumbnail' image styles from

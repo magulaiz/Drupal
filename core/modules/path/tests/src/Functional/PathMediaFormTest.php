@@ -60,7 +60,7 @@ class PathMediaFormTest extends PathTestBase {
 
     // Disable the 'Path' field for this content type.
     \Drupal::service('entity_display.repository')->getFormDisplay('media', $media_type_id, 'default')
-      ->removeComponent('path')
+      ->hideComponent('path')
       ->save();
 
     $this->drupalGet('media/add/' . $media_type_id);

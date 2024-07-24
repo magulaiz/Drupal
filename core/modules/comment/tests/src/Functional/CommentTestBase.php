@@ -253,7 +253,7 @@ abstract class CommentTestBase extends BrowserTestBase {
       ]);
     }
     else {
-      $form_display->removeComponent('subject');
+      $form_display->hideComponent('subject');
     }
     $form_display->save();
   }

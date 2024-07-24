@@ -118,7 +118,7 @@ class FieldRenderedEntityTest extends ViewsKernelTestBase {
     \Drupal::currentUser()->setAccount($this->user);
 
     $display = EntityViewDisplay::load('entity_test.entity_test.foobar');
-    $display->removeComponent('test_field')
+    $display->hideComponent('test_field')
       ->save();
 
     $view = Views::getView('test_field_entity_test_rendered');

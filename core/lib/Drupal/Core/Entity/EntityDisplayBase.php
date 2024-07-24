@@ -181,7 +181,7 @@ abstract class EntityDisplayBase extends ConfigEntityBase implements EntityDispl
             ]);
           }
           else {
-            $this->removeComponent($name);
+            $this->hideComponent($name);
           }
         }
         // Ensure extra fields have a 'region'.
@@ -197,7 +197,7 @@ abstract class EntityDisplayBase extends ConfigEntityBase implements EntityDispl
           $options = $definition->getDisplayOptions($this->displayContext);
 
           if (!empty($options['region']) && $options['region'] === 'hidden') {
-            $this->removeComponent($name);
+            $this->hideComponent($name);
           }
           elseif ($options) {
             $options += ['region' => $default_region];
@@ -374,7 +374,7 @@ abstract class EntityDisplayBase extends ConfigEntityBase implements EntityDispl
    * {@inheritdoc}
    */
   #[ActionMethod(adminLabel: new TranslatableMarkup('Hide component'), name: 'hideComponent')]
-  public function removeComponent($name) {
+  public function hideComponent($name) {
     $this->hidden[$name] = TRUE;
     unset($this->content[$name]);
     unset($this->plugins[$name]);
@@ -448,7 +448,7 @@ abstract class EntityDisplayBase extends ConfigEntityBase implements EntityDispl
     foreach ($dependencies['config'] as $entity) {
       if ($entity->getEntityTypeId() == 'field_config') {
         // Remove components for fields that are being deleted.
-        $this->removeComponent($entity->getName());
+        $this->hideComponent($entity->getName());
         unset($this->hidden[$entity->getName()]);
         $changed = TRUE;
       }
@@ -478,7 +478,7 @@ abstract class EntityDisplayBase extends ConfigEntityBase implements EntityDispl
           // If there are unresolved deleted dependencies left, disable this
           // component to avoid the removal of the entire display entity.
           if ($this->getPluginRemovedDependencies($renderer->calculateDependencies(), $dependencies)) {
-            $this->removeComponent($name);
+            $this->hideComponent($name);
             $arguments = [
               '@display' => (string) $this->getEntityType()->getLabel(),
               '@id' => $this->id(),

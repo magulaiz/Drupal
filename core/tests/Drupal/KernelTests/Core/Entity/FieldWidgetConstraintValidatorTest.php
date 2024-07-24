@@ -81,7 +81,7 @@ class FieldWidgetConstraintValidatorTest extends KernelTestBase {
       ->getFormDisplay($entity_type_id, $entity_type_id);
 
     foreach ($hidden_fields as $hidden_field) {
-      $display->removeComponent($hidden_field);
+      $display->hideComponent($hidden_field);
     }
 
     $form = [];
