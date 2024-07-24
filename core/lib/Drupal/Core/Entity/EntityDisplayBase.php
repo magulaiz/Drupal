@@ -5,8 +5,8 @@ namespace Drupal\Core\Entity;
 use Drupal\Core\Config\Action\Attribute\ActionMethod;
 use Drupal\Core\Config\Entity\ConfigEntityBase;
 use Drupal\Core\Config\Entity\ConfigEntityInterface;
-use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Core\Entity\Display\EntityDisplayInterface;
+use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 
 /**
@@ -373,21 +373,21 @@ abstract class EntityDisplayBase extends ConfigEntityBase implements EntityDispl
   /**
    * {@inheritdoc}
    *
-   * @deprecated in Drupal 11.0.0, use hideComponent() instead.
+   * @deprecated in Drupal 11.0.0 and is removed from drupal:12.0.0.
    */
   #[ActionMethod(adminLabel: new TranslatableMarkup('Hide component'), name: 'hideComponent')]
   public function removeComponent($name) {
-      // Deprecated method body.
-      $this->hidden[$name] = TRUE;
-      unset($this->content[$name]);
-      unset($this->plugins[$name]);
+    // Deprecated method body.
+    $this->hidden[$name] = TRUE;
+    unset($this->content[$name]);
+    unset($this->plugins[$name]);
 
-      return $this;
+    return $this;
   }
 
-    /**
-   * {@inheritdoc}
-   */
+  /**
+ * {@inheritdoc}
+ */
   #[ActionMethod(adminLabel: new TranslatableMarkup('Hide component'), name: 'hideComponent')]
   public function hideComponent($name) {
     $this->hidden[$name] = TRUE;
