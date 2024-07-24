@@ -94,7 +94,7 @@ class MenuLinkContentAccessControlHandler extends EntityAccessControlHandler imp
   /**
    * {@inheritdoc}
    */
-  public function createAccess($entity_bundle = NULL, AccountInterface $account = NULL, array $context = [], $return_as_object = FALSE) {
+  public function createAccess($entity_bundle = NULL, ?AccountInterface $account = NULL, array $context = [], $return_as_object = FALSE) {
     $context['menu_name'] = $this->routeMatch->getRawParameter('menu');
     return parent::createAccess($entity_bundle, $account, $context, $return_as_object);
   }
