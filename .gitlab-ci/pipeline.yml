@@ -281,8 +281,7 @@ variables:
 
 '🚲 Performance tests':
   <<: [ *with-composer, *default-job-settings ]
-  rules:
-    - if: $PERFORMANCE_TEST == "1"
+  when: manual
   variables:
     KUBERNETES_CPU_REQUEST: "24"
     MINK_DRIVER_ARGS_WEBDRIVER: '["chrome", {"browserName":"chrome", "goog:chromeOptions":{"w3c": true, "args":["--no-sandbox","--ignore-certificate-errors", "--allow-insecure-localhost", "--headless", "--dns-prefetch-disable", "--no-sandbox"]}}, "http://selenium:4444"]'
@@ -302,4 +301,4 @@ variables:
     - mkdir -p ./sites/simpletest ./sites/default/files ./build/logs/junit /var/www/.composer
     - chown -R www-data:www-data ./sites ./build/logs/junit ./vendor /var/www/
     - sudo -u www-data git config --global --add safe.directory $CI_PROJECT_DIR
-    - sudo SIMPLETEST_BASE_URL="http://$HOSTNAME/subdirectory" SIMPLETEST_DB="$SIMPLETEST_DB" MINK_DRIVER_ARGS_WEBDRIVER="$MINK_DRIVER_ARGS_WEBDRIVER" OTEL_COLLECTOR="$OTEL_COLLECTOR" -u www-data ./vendor/bin/phpunit -c core --group OpenTelemetry --log-junit=./sites/default/files/simpletest/phpunit-performance.xml
+    - sudo SIMPLETEST_BASE_URL="http://$HOSTNAME/subdirectory" SIMPLETEST_DB="$SIMPLETEST_DB" MINK_DRIVER_ARGS_WEBDRIVER="$MINK_DRIVER_ARGS_WEBDRIVER" OTEL_COLLECTOR="$OTEL_COLLECTOR" -u www-data ./vendor/bin/phpunit --debug -c core --group OpenTelemetry --log-junit=./sites/default/files/simpletest/phpunit-performance.xml
