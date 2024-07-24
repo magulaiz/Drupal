@@ -52,7 +52,8 @@ use Drupal\user\UserInterface;
     'delete-form' => '/entity_test/delete/entity_test/{entity_test}',
   ],
   admin_permission: 'administer entity_test content',
-  base_table: 'entity_test', field_ui_base_route: 'entity.entity_test.admin_form',
+  base_table: 'entity_test',
+  field_ui_base_route: 'entity.entity_test.admin_form',
   list_cache_contexts: [
     'entity_test_view_grants',
   ],
