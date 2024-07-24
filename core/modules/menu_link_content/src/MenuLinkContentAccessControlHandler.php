@@ -52,7 +52,7 @@ class MenuLinkContentAccessControlHandler extends EntityAccessControlHandler imp
    * {@inheritdoc}
    */
   public static function createInstance(ContainerInterface $container, EntityTypeInterface $entity_type) {
-    return new static($entity_type, $container->get('access_manager'));
+    return new static($entity_type, $container->get('access_manager'), $container->get('current_route_match'));
   }
 
   /**
