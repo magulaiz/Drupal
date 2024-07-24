@@ -237,7 +237,6 @@ variables:
   <<: [ *with-composer-and-yarn, *default-job-settings ]
   variables:
     KUBERNETES_CPU_REQUEST: "24"
-    MINK_DRIVER_ARGS_WEBDRIVER: '["chrome", {"browserName":"chrome", "goog:chromeOptions":{"w3c": true, "args":["--no-sandbox","--ignore-certificate-errors", "--allow-insecure-localhost", "--headless", "--dns-prefetch-disable"]}}, "http://localhost:4444"]'
   services:
     - <<: *with-database
     - <<: *with-selenium-chrome
@@ -284,6 +283,7 @@ variables:
   <<: [ *with-composer, *default-job-settings ]
   when: manual
   variables:
+    MINK_DRIVER_ARGS_WEBDRIVER: '["chrome", {"browserName":"chrome", "goog:chromeOptions":{"w3c": true, "args":["--no-sandbox","--ignore-certificate-errors", "--allow-insecure-localhost", "--headless", "--dns-prefetch-disable"]}}, "http://localhost:4444"]'
     KUBERNETES_CPU_REQUEST: "24"
   tags:
     - performance-test-runner
