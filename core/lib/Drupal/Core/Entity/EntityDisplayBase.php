@@ -372,6 +372,21 @@ abstract class EntityDisplayBase extends ConfigEntityBase implements EntityDispl
 
   /**
    * {@inheritdoc}
+   *
+   * @deprecated in Drupal 11.0.0, use hideComponent() instead.
+   */
+  #[ActionMethod(adminLabel: new TranslatableMarkup('Hide component'), name: 'hideComponent')]
+  public function removeComponent($name) {
+      // Deprecated method body.
+      $this->hidden[$name] = TRUE;
+      unset($this->content[$name]);
+      unset($this->plugins[$name]);
+
+      return $this;
+  }
+
+    /**
+   * {@inheritdoc}
    */
   #[ActionMethod(adminLabel: new TranslatableMarkup('Hide component'), name: 'hideComponent')]
   public function hideComponent($name) {
