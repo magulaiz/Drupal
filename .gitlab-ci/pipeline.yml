@@ -284,8 +284,6 @@ variables:
   when: manual
   variables:
     KUBERNETES_CPU_REQUEST: "24"
-  tags:
-    - performance-test-runner
   services:
     - <<: *with-database
     - <<: *with-selenium-chrome
