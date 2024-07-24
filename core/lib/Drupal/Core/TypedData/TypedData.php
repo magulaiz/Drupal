@@ -43,7 +43,7 @@ abstract class TypedData implements TypedDataInterface, PluginInspectionInterfac
   /**
    * The data value.
    *
-   * @var array
+   * @var mixed
    */
   protected $value;
 
