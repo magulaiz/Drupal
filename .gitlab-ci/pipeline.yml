@@ -148,7 +148,22 @@ variables:
   script:
     - $CI_PROJECT_DIR/.gitlab-ci/scripts/test-only.sh
 
-'🖱️️️ PHPUnit Functional Javascript':
+'🖱️️️ PHPUnit Functional Javascript (chrome)':
+  <<: [ *with-composer, *run-tests, *default-job-settings ]
+  parallel: 4
+  variables:
+    TESTSUITE: PHPUnit-FunctionalJavascript
+    CONCURRENCY: 15
+    KUBERNETES_CPU_REQUEST: "24"
+  services:
+    - <<: *with-database
+    - <<: *with-selenium-chrome
+  after_script:
+    - echo $MINK_DRIVER_ARGS_WEBDRIVER
+    - sed -i "s#$CI_PROJECT_DIR/##" ./sites/default/files/simpletest/phpunit-*.xml || true
+    - cp /builds/chromedriver.log ./
+
+'🖱️️️ PHPUnit Functional Javascript (firefox)':
   <<: [ *with-composer, *run-tests, *default-job-settings ]
   parallel: 3
   variables:
@@ -166,7 +181,7 @@ variables:
 
 '🖱️️️ PHPUnit Functional Javascript (non W3C legacy)':
   <<: [ *with-composer, *default-job-settings ]
-  parallel: 1
+  parallel: 2
   variables:
     TESTSUITE: PHPUnit-FunctionalJavascript
     CONCURRENCY: 6
@@ -175,9 +190,9 @@ variables:
   services:
     - <<: *with-database
     - <<: *with-chrome
-  script:
-    # Run a small subset of tests to prove non W3C testing still works.
-    - sudo MINK_DRIVER_ARGS_WEBDRIVER="$MINK_DRIVER_ARGS_WEBDRIVER" -u www-data php ./core/scripts/run-tests.sh --color --keep-results --types "$TESTSUITE" --concurrency "$CONCURRENCY" --repeat "1" --sqlite "./sites/default/files/tests.sqlite" --dburl $SIMPLETEST_DB --url $SIMPLETEST_BASE_URL --verbose --non-html javascript
+#  script:
+#    # Run a small subset of tests to prove non W3C testing still works.
+#    - sudo MINK_DRIVER_ARGS_WEBDRIVER="$MINK_DRIVER_ARGS_WEBDRIVER" -u www-data php ./core/scripts/run-tests.sh --color --keep-results --types "$TESTSUITE" --concurrency "$CONCURRENCY" --repeat "1" --sqlite "./sites/default/files/tests.sqlite" --dburl $SIMPLETEST_DB --url $SIMPLETEST_BASE_URL --verbose --non-html javascript
 
   after_script:
     - sed -i "s#$CI_PROJECT_DIR/##" ./sites/default/files/simpletest/phpunit-*.xml || true
