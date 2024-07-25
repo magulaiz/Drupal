@@ -11,10 +11,15 @@
   // Function to toggle visibility of the button based on scroll position
   const toggleButtonVisibility = () => {
     if (window.scrollY > 200) {
-      // Adjust the value as needed
-      scrollContainer.style.display = 'block';
+      scrollContainer.style.cssText = `
+        opacity: 1; 
+        visibility: visible;
+      `;
     } else {
-      scrollContainer.style.display = 'none';
+      scrollContainer.style.cssText = `
+        opacity: 0; 
+        visibility: hidden;
+      `;
     }
   };
 
@@ -24,7 +29,7 @@
     const docHeight =
       document.documentElement.scrollHeight - window.innerHeight;
     const scrollPercent = (scrollTop / docHeight) * 100;
-    progressCircle.style.background = `conic-gradient(#1475AD ${scrollPercent}%, transparent ${scrollPercent}%)`;
+    progressCircle.style.background = `conic-gradient(#1b9ae4 ${scrollPercent}%, transparent ${scrollPercent}%)`;
   };
 
   // Add the scroll event listener to toggle button visibility and update progress bar
