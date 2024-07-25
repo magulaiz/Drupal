@@ -208,7 +208,6 @@ body {
   & + .toolbar-block {
     @media (--admin-toolbar-desktop) {
       margin-block-start: 0;
-
     }
   }
 
@@ -222,8 +221,8 @@ body {
     position: static;
     align-items: start;
     margin-block-start: revert;
-    padding-block-end: var(--admin-toolbar-space-2);
     padding-block-start: var(--admin-toolbar-space-2);
+    padding-block-end: var(--admin-toolbar-space-2);
   }
 }
 
@@ -233,12 +232,12 @@ body {
 
 .admin-toolbar__logo {
   display: inline-flex;
-  border-radius: var(--admin-toolbar-space-8);
+  align-items: center;
+  justify-content: center;
   width: var(--admin-toolbar-space-40);
   height: var(--admin-toolbar-space-40);
-  justify-content: center;
-  align-items: center;
-  margin-left: var(--admin-toolbar-space-2);
+  margin-inline-start: var(--admin-toolbar-space-2);
+  border-radius: var(--admin-toolbar-space-8);
   background-color: transparent;
 
   &:hover {
