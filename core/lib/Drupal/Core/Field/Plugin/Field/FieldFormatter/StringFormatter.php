@@ -2,7 +2,6 @@
 
 namespace Drupal\Core\Field\Plugin\Field\FieldFormatter;
 
-use Drupal\Core\Access\AccessResultForbidden;
 use Drupal\Core\Cache\CacheableMetadata;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
@@ -124,29 +123,26 @@ class StringFormatter extends FormatterBase {
    */
   public function viewElements(FieldItemListInterface $items, $langcode) {
     $elements = [];
-    $url = NULL;
     $entity = $items->getEntity();
     $entity_type = $entity->getEntityType();
 
+    $render_as_link = FALSE;
     if ($this->getSetting('link_to_entity') && !$entity->isNew() && $entity_type->hasLinkTemplate('canonical')) {
       $url = $this->getEntityUrl($entity);
+      $access = $url->access(return_as_object: TRUE);
+      (new CacheableMetadata())
+        ->addCacheableDependency($access)
+        ->applyTo($elements);
+      $render_as_link = $access->isAllowed();
     }
 
-    $access = $url?->access(return_as_object: TRUE) ?? AccessResultForbidden::forbidden();
     foreach ($items as $delta => $item) {
-      $view_value = $this->viewValue($item);
-      $elements[$delta] = $access->isAllowed()
-        ? [
-          '#type' => 'link',
-          '#title' => $view_value,
-          '#url' => $url,
-        ]
-        : $view_value;
+      $elements[$delta] = $render_as_link ? [
+        '#type' => 'link',
+        '#title' => $this->viewValue($item),
+        '#url' => $url,
+      ] : $this->viewValue($item);
     }
-
-    (new CacheableMetadata())
-      ->addCacheableDependency($access)
-      ->applyTo($elements);
 
     return $elements;
   }
