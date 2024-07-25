@@ -9,7 +9,6 @@ use Drupal\Core\Render\RenderContext;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\node\Entity\Node;
 use Drupal\node\Entity\NodeType;
-use Drupal\Tests\user\Traits\UserCreationTrait;
 use Drupal\Tests\views\Kernel\ViewsKernelTestBase;
 use Drupal\views\Views;
 use Drupal\field\Entity\FieldStorageConfig;
@@ -22,8 +21,6 @@ use Drupal\field\Entity\FieldStorageConfig;
  * @group views
  */
 class FieldGroupRowsTest extends ViewsKernelTestBase {
-
-  use UserCreationTrait;
 
   /**
    * {@inheritdoc}
