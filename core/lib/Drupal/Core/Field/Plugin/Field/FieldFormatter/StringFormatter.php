@@ -137,11 +137,17 @@ class StringFormatter extends FormatterBase {
     }
 
     foreach ($items as $delta => $item) {
-      $elements[$delta] = $render_as_link ? [
-        '#type' => 'link',
-        '#title' => $this->viewValue($item),
-        '#url' => $url,
-      ] : $this->viewValue($item);
+      if ($render_as_link) {
+        assert(isset($url));
+        $elements[$delta] = [
+          '#type' => 'link',
+          '#title' => $this->viewValue($item),
+          '#url' => $url,
+        ];
+      }
+      else {
+        $elements[$delta] = $this->viewValue($item);
+      }
     }
 
     return $elements;
