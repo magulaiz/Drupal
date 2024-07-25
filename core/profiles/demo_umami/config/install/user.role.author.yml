@@ -16,6 +16,7 @@ dependencies:
     - contextual
     - file
     - layout_builder
+    - navigation
     - node
     - path
     - system
@@ -29,6 +30,7 @@ permissions:
   - 'access content overview'
   - 'access contextual links'
   - 'access files overview'
+  - 'access navigation'
   - 'access toolbar'
   - 'cancel account'
   - 'change own username'

@@ -23,6 +23,7 @@ install:
   - media
   - media_library
   - menu_ui
+  - navigation
   - options
   - path
   - page_cache
