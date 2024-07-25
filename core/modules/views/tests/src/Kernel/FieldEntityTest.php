@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Drupal\Tests\views\Functional\Entity;
+namespace Drupal\Tests\views\Kernel;
 
-use Drupal\comment\Tests\CommentTestTrait;
+use Drupal\KernelTests\KernelTestBase;
 use Drupal\Core\Logger\LoggerChannelFactoryInterface;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
@@ -21,19 +21,7 @@ use Drupal\comment\Entity\Comment;
  *
  * @group views
  */
-class FieldEntityTest extends ViewTestBase {
-
-  use CommentTestTrait;
-
-  /**
-   * Views used by this test.
-   *
-   * @var array
-   */
-  public static $testViews = [
-    'test_field_get_entity',
-    'test_field_get_entity_null',
-  ];
+class FieldEntityTest extends KernelTestBase {
 
   /**
    * Modules to enable.
