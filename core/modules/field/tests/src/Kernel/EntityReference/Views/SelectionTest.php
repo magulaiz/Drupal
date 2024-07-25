@@ -11,7 +11,6 @@ use Drupal\KernelTests\KernelTestBase;
 use Drupal\node\Entity\NodeType;
 use Drupal\Tests\field\Traits\EntityReferenceFieldCreationTrait;
 use Drupal\Tests\node\Traits\NodeCreationTrait;
-use Drupal\Tests\user\Traits\UserCreationTrait;
 use Drupal\views\Views;
 
 /**
@@ -23,7 +22,6 @@ class SelectionTest extends KernelTestBase {
 
   use EntityReferenceFieldCreationTrait;
   use NodeCreationTrait;
-  use UserCreationTrait;
 
   /**
    * {@inheritdoc}
