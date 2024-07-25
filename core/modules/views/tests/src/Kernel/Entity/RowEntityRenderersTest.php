@@ -97,7 +97,6 @@ class RowEntityRenderersTest extends ViewsKernelTestBase {
     $this->installEntitySchema('user');
     $this->installSchema('node', ['node_access']);
     $this->installConfig(['node', 'language']);
-    $this->setUpCurrentUser(['uid' => 0]);
 
     $this->langcodes = [\Drupal::languageManager()->getDefaultLanguage()->getId()];
     for ($i = 0; $i < 2; $i++) {
