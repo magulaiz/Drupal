@@ -1224,7 +1224,7 @@ function template_preprocess_html(&$variables) {
   try {
     $variables['is_front'] = $is_front_page;
   }
-  catch (Exception $e) {
+  catch (Exception) {
     // If the database is not yet available, set default values for these
     // variables.
     $variables['is_front'] = FALSE;
