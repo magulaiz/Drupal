@@ -26,10 +26,10 @@ class UmamiMultilingualInstallTest extends InstallerTestBase {
   /**
    * Ensures that Umami can be installed with Spanish as the default language.
    */
-  public function testUmami() {
+  public function testUmami(): void {
     $this->drupalGet('');
     // cSpell:disable-next-line
-    $this->assertSession()->pageTextContains('Quiche mediterráneo profundo');
+    $this->assertSession()->pageTextContains('Crema catalana');
   }
 
   /**

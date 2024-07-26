@@ -116,6 +116,9 @@ class SmartDefaultSettingsTest extends KernelTestBase {
     Editor::create([
       'format' => 'minimal_ckeditor_wrong_allowed_html',
       'editor' => 'ckeditor',
+      'image_upload' => [
+        'status' => FALSE,
+      ],
       'settings' => [
         'toolbar' => [
           'rows' => [
@@ -342,6 +345,9 @@ class SmartDefaultSettingsTest extends KernelTestBase {
     Editor::create([
       'format' => 'cke4_stylescombo_span',
       'editor' => 'ckeditor',
+      'image_upload' => [
+        'status' => FALSE,
+      ],
       'settings' => [
         'toolbar' => [
           'rows' => [
@@ -404,6 +410,9 @@ class SmartDefaultSettingsTest extends KernelTestBase {
     $minimal_valid_cke5_text_editor = Editor::create([
       'format' => $format_id,
       'editor' => 'ckeditor5',
+      'image_upload' => [
+        'status' => FALSE,
+      ],
       'settings' => ['toolbar' => ['items' => []]],
     ]);
     $pre_ck5_validation_errors = $this->validatePairToViolationsArray($minimal_valid_cke5_text_editor, $text_format, FALSE);

@@ -41,22 +41,22 @@ class BlockRenderOrderTest extends BrowserTestBase {
   /**
    * Tests the render order of the blocks.
    */
-  public function testBlockRenderOrder() {
+  public function testBlockRenderOrder(): void {
     // Enable test blocks and place them in the same region.
     $region = 'header';
     $test_blocks = [
       'stark_powered' => [
-        'weight' => '-3',
+        'weight' => -3,
         'id' => 'stark_powered',
         'label' => 'Test block A',
       ],
       'stark_by' => [
-        'weight' => '3',
+        'weight' => 3,
         'id' => 'stark_by',
         'label' => 'Test block C',
       ],
       'stark_drupal' => [
-        'weight' => '3',
+        'weight' => 3,
         'id' => 'stark_drupal',
         'label' => 'Test block B',
       ],
