@@ -5,8 +5,8 @@
  */
 
 (() => {
-  // Only execute if browser doesn't support native CSS scrolling.
-  if (!CSS.supports('animation-timeline', 'scroll()')) return;
+  // Exit if browser supports native CSS scrolling.
+  if (CSS.supports('animation-timeline', 'scroll()')) return;
 
   const backToTop = document.querySelector('.back-to-top');
 
