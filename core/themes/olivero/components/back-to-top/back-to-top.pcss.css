@@ -1,0 +1,115 @@
+/**
+ * @file
+ * Styles and interactions for "Back to Top" button.
+ */
+
+@property --back-to-top-scroll-progress {
+  syntax: "<percentage>";
+  inherits: false;
+  initial-value: 0%;
+}
+
+.back-to-top {
+  position: sticky;
+  inset-block-end: var(--drupal-displace-offset-bottom, 0);
+  z-index: 3; /* Appear above .layout-main-wrapper. */
+  width: min(100%, var(--max-bg-color));
+  height: 0;
+  margin-inline-end: auto;
+
+  @supports (animation-timeline: scroll()) {
+    opacity: 0;
+    animation-timeline: scroll();
+    animation-name: show-on-scroll;
+    animation-duration: auto;
+    animation-timing-function: linear;
+    transition: opacity 0.2s;
+    pointer-events: none;
+  }
+
+  &:focus-within {
+    opacity: 1;
+    animation-name: none;
+    pointer-events: auto;
+  }
+}
+
+.back-to-top__progress {
+  position: absolute;
+  inset-block-end: 0;
+  inset-inline-end: 0;
+  margin-inline: auto 30px;
+  margin-block-end: 30px;
+  padding: 6px;
+  border-radius: 50%;
+  width: fit-content;
+  height: fit-content;
+
+  @media (prefers-reduced-motion: no-preference) {
+    background: conic-gradient(var(--color--primary-50) 0% var(--back-to-top-scroll-progress), transparent 0);
+    animation-timeline: scroll();
+    animation-name: show-progress;
+    animation-duration: auto;
+    animation-timing-function: linear;
+  }
+}
+
+.back-to-top__button {
+  display: block;
+  height: 50px;
+  width: 50px;
+  border: solid 2px var(--color--white);
+  border-radius: 50%;
+  background-color: var(--color--gray-20);
+  transition: background-color 0.2s;
+
+  &:hover {
+    background-color: var(--color--gray-45);
+  }
+
+  &:focus {
+    outline-offset: 8px;
+  }
+
+  svg {
+    position: absolute;
+    inset: 0;
+    margin: auto;
+    scale: -1;
+  }
+
+  path {
+    fill: var(--color--white);
+
+    @media (forced-colors: active) {
+      fill: linkText;
+    }
+  }
+}
+
+@keyframes show-on-scroll {
+  10% {
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  15% {
+    opacity: 1;
+    pointer-events: auto;
+  }
+
+  100% {
+    opacity: 1;
+    pointer-events: auto;
+  }
+}
+
+@keyframes show-progress {
+  0% {
+    --back-to-top-scroll-progress: 0%;
+  }
+
+  100% {
+    --back-to-top-scroll-progress: 100%;
+  }
+}
