@@ -6,27 +6,27 @@
 
 (() => {
   // Only execute if browser doesn't support native CSS scrolling.
-  if (!CSS.supports('animation-timeline', 'scroll()')) {
-    const backToTop = document.querySelector('.back-to-top');
+  if (!CSS.supports('animation-timeline', 'scroll()')) return;
 
-    const options = {
-      rootMargin: '600px 0px 0px 0px',
-      threshold: 0,
-    };
+  const backToTop = document.querySelector('.back-to-top');
 
-    /**
-     * Toggles visibility of the button.
-     *
-     * @param {Array} entries - List of IntersectionObserverEntry objects.
-     */
-    function toggleVisibility(entries) {
-      backToTop.classList.toggle('is-visible', !entries[0].isIntersecting);
-    }
+  const options = {
+    rootMargin: '600px 0px 0px 0px',
+    threshold: 0,
+  };
 
-    const observer = new IntersectionObserver(toggleVisibility, options);
-
-    // We monitor the header because it's short, near the top of the page, and
-    // always present.
-    observer.observe(document.querySelector('.site-header'));
+  /**
+   * Toggles visibility of the button.
+   *
+   * @param {Array} entries - List of IntersectionObserverEntry objects.
+   */
+  function toggleVisibility(entries) {
+    backToTop.classList.toggle('is-visible', !entries[0].isIntersecting);
   }
+
+  const observer = new IntersectionObserver(toggleVisibility, options);
+
+  // We monitor the header because it's short, near the top of the page, and
+  // always present.
+  observer.observe(document.querySelector('.site-header'));
 })();
