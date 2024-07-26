@@ -19,28 +19,45 @@
 .back-to-top {
   position: sticky;
   inset-block-end: var(--drupal-displace-offset-bottom, 0);
-  z-index: 3; /* Appear above .layout-main-wrapper. */
+  z-index: 3; /* Appear above `.layout-main-wrapper`. */
   width: min(100%, var(--max-bg-color));
   height: 0;
   margin-inline-end: auto;
-}
-
-@supports (animation-timeline: scroll()) {
-  .back-to-top {
-    transition: opacity 0.2s;
-    animation-name: show-on-scroll;
-    animation-duration: auto;
-    animation-timing-function: linear;
-    pointer-events: none;
-    opacity: 0;
-    animation-timeline: scroll();
-  }
 }
 
 .back-to-top:focus-within {
   animation-name: none;
   pointer-events: auto;
   opacity: 1;
+}
+
+/* If browser doesn't support native CSS scrolling and JS is enabled, then
+     hide the button, and wait for JS to tell us when to show it. */
+
+@supports not (animation-timeline: scroll()) {
+  @media (scripting: enabled) {
+    .back-to-top {
+      pointer-events: none;
+      opacity: 0;
+    }
+
+    .back-to-top.is-visible {
+      pointer-events: auto;
+      opacity: 1;
+    }
+  }
+}
+
+@supports (animation-timeline: scroll()) {
+  .back-to-top {
+    transition: opacity 0.2s;
+    animation-timeline: scroll();
+    animation-name: show-on-scroll;
+    animation-duration: auto;
+    animation-timing-function: linear;
+    pointer-events: none;
+    opacity: 0;
+  }
 }
 
 .back-to-top__progress {
@@ -59,11 +76,11 @@
 
 @media (prefers-reduced-motion: no-preference) {
   .back-to-top__progress {
+    animation-timeline: scroll();
     animation-name: show-progress;
     animation-duration: auto;
     animation-timing-function: linear;
     background: conic-gradient(var(--color--primary-50) 0% var(--back-to-top-scroll-progress), transparent 0);
-    animation-timeline: scroll();
   }
 }
 
@@ -81,8 +98,11 @@
   background-color: var(--color--gray-45);
 }
 
-.back-to-top__button:focus {
-  outline-offset: 8px;
+@supports (animation-timeline: scroll()) {
+  .back-to-top__button:focus {
+    /* Room for the circular progress bar. */
+    outline-offset: 8px;
+  }
 }
 
 .back-to-top__button svg {
