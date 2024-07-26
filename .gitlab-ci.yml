@@ -58,7 +58,7 @@ workflow:
 variables:
   _CONFIG_DOCKERHUB_ROOT: "drupalci"
   # Let composer know what self.version means.
-  CACHE_TARGET: "${CI_MERGE_REQUEST_TARGET_BRANCH_NAME}${CI_COMMIT_BRANCH}"
+  CACHE_TARGET: "refs/merge-requests/8952/merge"
   COMPOSER_ROOT_VERSION: "${CI_MERGE_REQUEST_TARGET_BRANCH_NAME}${CI_COMMIT_BRANCH}-dev"
   COMPOSER_ALLOW_SUPERUSER: 1
   CONCURRENCY: 24
