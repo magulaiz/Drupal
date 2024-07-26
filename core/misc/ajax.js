@@ -1302,6 +1302,7 @@
    *
    * @constructor
    */
+  Drupal.AjaxBundleIndex = 0;
   Drupal.AjaxCommands = function () {};
   Drupal.AjaxCommands.prototype = {
     /**
@@ -1720,7 +1721,7 @@
      */
     add_css(ajax, response, status) {
       const allUniqueBundleIds = response.data.map(function (style) {
-        const uniqueBundleId = style.href + ajax.instanceIndex;
+        const uniqueBundleId = style.href + Drupal.AjaxBundleIndex++;
         // Force file to load as a CSS stylesheet using 'css!' flag.
         loadjs(`css!${style.href}`, uniqueBundleId, {
           before(path, styleEl) {
@@ -1795,10 +1796,7 @@
       const parentEl = document.querySelector(response.selector || 'body');
       const settings = ajax.settings || drupalSettings;
       const allUniqueBundleIds = response.data.map((script) => {
-        // loadjs requires a unique ID, and an AJAX instance's `instanceIndex`
-        // is guaranteed to be unique.
-        // @see Drupal.behaviors.AJAX.detach
-        const uniqueBundleId = script.src + ajax.instanceIndex;
+        const uniqueBundleId = script.src + Drupal.AjaxBundleIndex++;
         loadjs(script.src, uniqueBundleId, {
           // The default loadjs behavior is to load script with async, in Drupal
           // we need to explicitly tell scripts to load async, this is set in
