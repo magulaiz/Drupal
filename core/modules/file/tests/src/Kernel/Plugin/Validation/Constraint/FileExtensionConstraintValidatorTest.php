@@ -11,6 +11,7 @@ use Drupal\Tests\file\Kernel\Validation\FileValidatorTestBase;
  * Tests the FileExtensionConstraintValidator.
  *
  * @group file
+ * @group #slow
  * @coversDefaultClass \Drupal\file\Plugin\Validation\Constraint\FileExtensionConstraintValidator
  */
 class FileExtensionConstraintValidatorTest extends FileValidatorTestBase {
