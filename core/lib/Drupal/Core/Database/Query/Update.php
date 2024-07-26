@@ -116,22 +116,8 @@ class Update extends Query implements ConditionInterface {
    *   actually didn't have to be updated because the values didn't change.
    */
   public function execute() {
-    // Expressions take priority over literal fields, so we process those first
-    // and remove any literal fields that conflict.
-    $fields = $this->fields;
-    $update_values = [];
-    foreach ($this->expressionFields as $field => $data) {
-      if (!empty($data['arguments'])) {
-        $update_values += $data['arguments'];
-      }
-      if ($data['expression'] instanceof SelectInterface) {
-        $data['expression']->compile($this->connection, $this);
-        $update_values += $data['expression']->arguments();
-      }
-      unset($fields[$field]);
-    }
 
-    $args = $this->getQueryArguments();
+    [$args, $update_values] = $this->getQueryArguments();
     $update_values += $args;
 
     if (count($this->condition)) {
@@ -174,7 +160,7 @@ class Update extends Query implements ConditionInterface {
     }
 
     $max_placeholder = 0;
-    $args = $this->getQueryArguments();
+    [$args] = $this->getQueryArguments();
     $placeholders = array_keys($args);
     foreach ($fields as $field => $value) {
       $update_fields[] = $this->connection->escapeField($field) . '=' . $placeholders[$max_placeholder++];
@@ -195,7 +181,7 @@ class Update extends Query implements ConditionInterface {
    * {@inheritdoc}
    */
   public function arguments() {
-    $args = $this->getQueryArguments();
+    [$args] = $this->getQueryArguments();
     return $this->condition->arguments() + $args;
   }
 
@@ -203,19 +189,34 @@ class Update extends Query implements ConditionInterface {
    * Returns the query arguments with placeholders mapped to their values.
    *
    * @return array
-   *   An associative array where the keys are the placeholder names and the
-   *   values are the placeholder values.
+   *   An array containing arguments and update values.
+   *   Both arguments and update values are associative array where the keys
+   *   are the placeholder names and the values are the placeholder values.
    */
   protected function getQueryArguments(): array {
+    // Expressions take priority over literal fields, so we process those first
+    // and remove any literal fields that conflict.
+    $fields = $this->fields;
+    $update_values = [];
+    foreach ($this->expressionFields as $field => $data) {
+      if (!empty($data['arguments'])) {
+        $update_values += $data['arguments'];
+      }
+      if ($data['expression'] instanceof SelectInterface) {
+        $data['expression']->compile($this->connection, $this);
+        $update_values += $data['expression']->arguments();
+      }
+      unset($fields[$field]);
+    }
+
     // Because we filter $fields the same way here and in __toString(), the
     // placeholders will all match up properly.
-    $fields = $this->fields;
     $max_placeholder = 0;
     $args = [];
     foreach ($fields as $value) {
       $args[':db_update_placeholder_' . ($max_placeholder++)] = $value;
     }
-    return $args;
+    return [$args, $update_values];
   }
 
 }
