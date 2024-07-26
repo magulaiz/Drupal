@@ -42,7 +42,7 @@ services:
       - { name: 'context_provider' }
 
   # BC layers.
-  # @todo remove this in https://www.drupal.org/node/3086648 before Drupal 9.0.0.
+  # @todo remove this in https://www.drupal.org/node/3086648 before Drupal 11.0.0.
   node.deprecated_route_processor:
     class: Drupal\node\RouteProcessor\NodeDeprecatedRouteProcessor
     arguments: ['@router.route_provider']
