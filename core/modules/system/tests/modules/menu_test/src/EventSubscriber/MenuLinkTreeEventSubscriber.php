@@ -18,7 +18,7 @@ class MenuLinkTreeEventSubscriber implements EventSubscriberInterface {
    * @param \Drupal\Core\Menu\MenuLinkTreeManipulatorsAlterEvent $event
    *   The event.
    */
-  public static function alterMenuLinkManipulators(MenuLinkTreeManipulatorsAlterEvent $event) {
+  public static function alterMenuLinkManipulators(MenuLinkTreeManipulatorsAlterEvent $event): void {
     $manipulators = &$event->getManipulators();
     // Append the test menu link manipulator.
     $manipulators[] = ['callable' => MenuLinkManipulators::getTestManipulator()];
@@ -27,7 +27,7 @@ class MenuLinkTreeEventSubscriber implements EventSubscriberInterface {
   /**
    * {@inheritdoc}
    */
-  public static function getSubscribedEvents() {
+  public static function getSubscribedEvents(): array {
     return [
       MenuLinkTreeEvents::ALTER_MANIPULATORS => ['alterMenuLinkManipulators'],
     ];
