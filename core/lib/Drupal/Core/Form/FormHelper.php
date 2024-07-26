@@ -208,6 +208,8 @@ class FormHelper {
     // still want to be able to show/hide them. Since there's no actual HTML
     // input element available, setting #attributes does not make sense, but a
     // wrapper is available, so setting #wrapper_attributes makes it work.
+    // Elements of '#type' => 'password_confirm create child elements. Therefore
+    // setting #wrapper_attributes is required to make it work.
     $key = ($elements['#type'] == 'item' || $elements['#type'] == 'password_confirm') ? '#wrapper_attributes' : '#attributes';
     $elements[$key]['data-drupal-states'] = Json::encode($elements['#states']);
   }
