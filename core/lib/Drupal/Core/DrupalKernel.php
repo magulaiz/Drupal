@@ -27,6 +27,7 @@ use Drupal\Core\Site\Settings;
 use Drupal\Core\Test\TestDatabase;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBag;
+use Symfony\Component\Dotenv\Dotenv;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -982,6 +983,10 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
     if ($app_root === NULL) {
       $app_root = static::guessApplicationRoot();
     }
+
+    // Loads .env, .env.local, and .env.$APP_ENV.local or .env.$APP_ENV.
+    $dotenv = new Dotenv();
+    $dotenv->loadEnv($app_root . '/.env');
 
     // Enforce E_STRICT, but allow users to set levels not part of E_STRICT.
     error_reporting(E_STRICT | E_ALL);
