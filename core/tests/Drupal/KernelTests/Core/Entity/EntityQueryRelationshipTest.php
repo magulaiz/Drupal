@@ -86,7 +86,7 @@ class EntityQueryRelationshipTest extends EntityKernelTestBase {
       ],
       'auto_create' => TRUE,
     ];
-    $this->createEntityReferenceField('entity_test', 'test_bundle', $this->fieldName, NULL, 'taxonomy_term', 'default', $handler_settings);
+    $this->createField($handler_settings);
 
     // Create two terms and also two accounts.
     for ($i = 0; $i <= 1; $i++) {
@@ -110,6 +110,16 @@ class EntityQueryRelationshipTest extends EntityKernelTestBase {
       $entity->save();
       $this->entities[] = $entity;
     }
+  }
+
+  /**
+   * Creates the reference field to be tested.
+   *
+   * @param array $selection_handler_settings
+   *   An array of field settings.
+   */
+  protected function createField($selection_handler_settings) {
+    $this->createEntityReferenceField('entity_test', 'test_bundle', $this->fieldName, NULL, 'taxonomy_term', 'default', $selection_handler_settings);
   }
 
   /**

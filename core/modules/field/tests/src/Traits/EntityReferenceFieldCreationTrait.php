@@ -33,15 +33,17 @@ trait EntityReferenceFieldCreationTrait {
    *   (e.g. 'target_bundles', 'sort', 'auto_create', etc).
    * @param int $cardinality
    *   The cardinality of the field.
+   * @param string $field_type
+   *   The field type, defaults to entity_reference.
    *
    * @see \Drupal\Core\Entity\Plugin\EntityReferenceSelection\SelectionBase::buildConfigurationForm()
    */
-  protected function createEntityReferenceField($entity_type, $bundle, $field_name, $field_label, $target_entity_type, $selection_handler = 'default', $selection_handler_settings = [], $cardinality = 1) {
+  protected function createEntityReferenceField($entity_type, $bundle, $field_name, $field_label, $target_entity_type, $selection_handler = 'default', $selection_handler_settings = [], $cardinality = 1, $field_type = 'entity_reference') {
     // Look for or add the specified field to the requested entity bundle.
     if (!FieldStorageConfig::loadByName($entity_type, $field_name)) {
       FieldStorageConfig::create([
         'field_name' => $field_name,
-        'type' => 'entity_reference',
+        'type' => $field_type,
         'entity_type' => $entity_type,
         'cardinality' => $cardinality,
         'settings' => [

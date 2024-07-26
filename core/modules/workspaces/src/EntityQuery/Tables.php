@@ -3,7 +3,7 @@
 namespace Drupal\workspaces\EntityQuery;
 
 use Drupal\Core\Database\Query\SelectInterface;
-use Drupal\Core\Entity\EntityType;
+use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Entity\Query\Sql\Tables as BaseTables;
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
 
@@ -57,7 +57,7 @@ class Tables extends BaseTables {
   /**
    * {@inheritdoc}
    */
-  public function addField($field, $type, $langcode) {
+  public function addField($field, $join_type, $langcode) {
     // The parent method uses shared and dedicated revision tables only when the
     // entity query is instructed to query all revisions. However, if we are
     // looking for workspace-specific revisions, we have to force the parent
@@ -68,7 +68,7 @@ class Tables extends BaseTables {
       $this->sqlQuery->addMetaData('all_revisions', TRUE);
     }
 
-    $alias = parent::addField($field, $type, $langcode);
+    $alias = parent::addField($field, $join_type, $langcode);
 
     // Restore the 'all_revisions' metadata because we don't want to interfere
     // with the rest of the query.
@@ -113,7 +113,7 @@ class Tables extends BaseTables {
   /**
    * {@inheritdoc}
    */
-  protected function addNextBaseTable(EntityType $entity_type, $table, $sql_column, FieldStorageDefinitionInterface $field_storage) {
+  protected function addNextBaseTable(EntityTypeInterface $entity_type, $table, $sql_column, FieldStorageDefinitionInterface $field_storage) {
     $next_base_table_alias = parent::addNextBaseTable($entity_type, $table, $sql_column, $field_storage);
 
     $active_workspace_id = $this->sqlQuery->getMetaData('active_workspace_id');

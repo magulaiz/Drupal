@@ -363,18 +363,6 @@ $ignoreErrors[] = [
 ];
 $ignoreErrors[] = [
 	// identifier: variable.undefined
-	'message' => '#^Variable \\$next_index_prefix might not be defined\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/lib/Drupal/Core/Entity/Query/Sql/Tables.php',
-];
-$ignoreErrors[] = [
-	// identifier: variable.undefined
-	'message' => '#^Variable \\$relationship_specifier might not be defined\\.$#',
-	'count' => 5,
-	'path' => __DIR__ . '/lib/Drupal/Core/Entity/Query/Sql/Tables.php',
-];
-$ignoreErrors[] = [
-	// identifier: variable.undefined
 	'message' => '#^Variable \\$revision_query might not be defined\\.$#',
 	'count' => 2,
 	'path' => __DIR__ . '/lib/Drupal/Core/Entity/Sql/SqlContentEntityStorage.php',

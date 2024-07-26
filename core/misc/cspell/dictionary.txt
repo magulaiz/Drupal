@@ -485,6 +485,7 @@ pretransaction
 preuninstall
 processlist
 proname
+propertyname
 prophesize
 prophesized
 prophesizing
