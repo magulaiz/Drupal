@@ -9,6 +9,7 @@ use Drupal\Core\Routing\PreloadableRouteProviderInterface;
 use Drupal\Core\Routing\RouteProviderInterface;
 use Drupal\Core\Template\Attribute;
 use Drupal\Core\Utility\CallableResolver;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 /**
  * Implements the loading, transforming and rendering of menu link trees.
@@ -28,6 +29,8 @@ class MenuLinkTree implements MenuLinkTreeInterface {
    *   The active menu trail service.
    * @param \Drupal\Core\Utility\CallableResolver $callableResolver
    *   The callable resolver.
+   * @param \Symfony\Component\EventDispatcher\EventDispatcherInterface|null $eventDispatcher
+   *   The event dispatcher.
    */
   public function __construct(
     protected MenuTreeStorageInterface $treeStorage,
@@ -35,7 +38,12 @@ class MenuLinkTree implements MenuLinkTreeInterface {
     protected RouteProviderInterface $routeProvider,
     protected MenuActiveTrailInterface $menuActiveTrail,
     protected CallableResolver $callableResolver,
+    protected ?EventDispatcherInterface $eventDispatcher = NULL,
   ) {
+    if ($eventDispatcher === NULL) {
+      @trigger_error('The event_dispatcher service must be passed to ' . __NAMESPACE__ . '\MenuLinkTree::__construct(). It was added in drupal:11.1.0 and will be required before drupal:12.0.0.', E_USER_DEPRECATED);
+      $this->eventDispatcher = \Drupal::service('event_dispatcher');
+    }
   }
 
   /**
@@ -102,6 +110,7 @@ class MenuLinkTree implements MenuLinkTreeInterface {
    * {@inheritdoc}
    */
   public function transform(array $tree, array $manipulators) {
+    $this->eventDispatcher->dispatch(new MenuLinkTreeManipulatorsAlterEvent($tree, $manipulators, $this), MenuLinkTreeEvents::ALTER_MANIPULATORS);
     foreach ($manipulators as $manipulator) {
       $callable = $this->callableResolver->getCallableFromDefinition($manipulator['callable']);
       // Prepare the arguments for the menu tree manipulator callable; the first

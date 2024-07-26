@@ -1,0 +1,53 @@
+<?php
+
+namespace Drupal\menu_test;
+
+use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
+use Symfony\Component\DependencyInjection\ContainerInterface;
+
+/**
+ * A menu manipulator.
+ */
+class MenuLinkManipulators implements ContainerInjectionInterface {
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function create(ContainerInterface $container) {
+    return new static();
+  }
+
+  /**
+   * Add the class menu-test-link to certain links.
+   *
+   * @param \Drupal\Core\Menu\MenuLinkTreeElement[] $tree
+   *   The menu tree.
+   *
+   * @return array
+   *   The menu manipulators.
+   */
+  public function testManipulator(array $tree) {
+    foreach ($tree as $key => $element) {
+      $link = $tree[$key]->link;
+      $url = $link->getUrlObject();
+      if ($url->isRouted()) {
+        $manipulators = ['menu_test.manipulator2', 'menu_test.manipulator3'];
+        if (in_array($url->getRouteName(), $manipulators)) {
+          $tree[$key]->options['attributes']['class'][] = 'menu-test-link';
+        }
+      }
+    }
+    return $tree;
+  }
+
+  /**
+   * Gets the name of menu manipulator.
+   *
+   * @return string
+   *   The manipulator name.
+   */
+  public static function getTestManipulator() {
+    return self::class . ":testManipulator";
+  }
+
+}
