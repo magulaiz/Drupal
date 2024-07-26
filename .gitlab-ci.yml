@@ -308,13 +308,19 @@ default:
     # doesn't exist.
     - mkdir core/phpstan-tmp
     - 'curl --location --output core/phpstan-tmp/resultCache.php "https://git.drupalcode.org/api/v4/projects/$CI_PROJECT_ID/jobs/artifacts/{$CACHE_TARGET}/raw/core/phpstan-tmp/resultCache.php?job=Lint%20cache%20warming&job_token=$CI_JOB_TOKEN" || true'
+    - 'curl --location --output core/.cspellcache "https://git.drupalcode.org/api/v4/projects/$CI_PROJECT_ID/jobs/artifacts/{$CACHE_TARGET}/raw/core/.cspellcache?job=Lint%20cache%20warming&job_token=$CI_JOB_TOKEN" || true'
     - vendor/bin/phpstan --version
     # Rely on PHPStan caching to execute analysis multiple times without performance drawback.
     # Output a copy in junit.
     - php vendor/bin/phpstan -vvv analyze --configuration=./core/phpstan.neon.dist
+    - cd core
+    - corepack enable
+    - yarn install
+    - yarn run spellcheck:core --no-must-find-files --cache --cache-strategy content
   artifacts:
     paths:
       - core/phpstan-tmp/resultCache.php
+      - core/.cspell
 
 '🧹 PHP Static Analysis (phpstan)':
   <<: [ *with-composer, *default-job-settings-lint ]
@@ -427,10 +433,24 @@ default:
       else
         echo "HEAD is $(git rev-parse HEAD). \$CI_MERGE_REQUEST_DIFF_BASE_SHA is ${CI_MERGE_REQUEST_DIFF_BASE_SHA}";
       fi;
+    - 'curl --location --output core/.cspellcache "https://git.drupalcode.org/api/v4/projects/$CI_PROJECT_ID/jobs/artifacts/{$CACHE_TARGET}/raw/core/.cspellcache?job=Lint%20cache%20warming&job_token=$CI_JOB_TOKEN" || true'
     - cd core
     - corepack enable
-    - git diff ${CI_MERGE_REQUEST_TARGET_BRANCH_SHA:-$CI_MERGE_REQUEST_DIFF_BASE_SHA} --name-only 2>1 > /dev/null || (echo "Warning, cannot find changed files, converting to full clone." & (git fetch --unshallow --quiet && echo "Fetch successful."))
-    - git diff ${CI_MERGE_REQUEST_TARGET_BRANCH_SHA:-$CI_MERGE_REQUEST_DIFF_BASE_SHA} --name-only | sed "s_^_../_" | yarn run spellcheck:core --no-must-find-files --file-list stdin
+    - yarn install
+    - yarn run spellcheck:core --no-must-find-files --cache --cache-strategy content
+  cache:
+    key:
+      files:
+        - ./core/package.json
+        - ./core/yarn.lock
+    paths:
+      - ./core/node_modules
+  artifacts:
+    expire_in: 1 week
+    expose_as: 'yarn-vendor'
+    paths:
+      - core/node_modules/
+      - core/.cspellcache
 
 '📔 Validatable config':
   <<: [ *default-job-settings-lint ]
