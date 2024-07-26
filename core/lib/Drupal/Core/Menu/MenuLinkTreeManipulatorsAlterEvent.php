@@ -44,7 +44,7 @@ class MenuLinkTreeManipulatorsAlterEvent extends Event {
     $this->tree = $tree;
     $this->manipulators = &$manipulators;
     $this->menuLinkTree = $menuLinkTree;
-   }
+  }
 
   /**
    * The MenuLinkElement tree.
