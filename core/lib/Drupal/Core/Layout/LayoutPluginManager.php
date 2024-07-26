@@ -93,6 +93,10 @@ class LayoutPluginManager extends DefaultPluginManager implements LayoutPluginMa
       throw new InvalidPluginDefinitionException($plugin_id, sprintf('The "%s" layout definition must extend %s', $plugin_id, LayoutDefinition::class));
     }
 
+    if (empty($definition->getLabel())) {
+      @trigger_error('A layout plugin not having a label is deprecated in drupal:11.1.0 and having a label will be enforced in drupal:12.0.0. See https://www.drupal.org/node/3464076', E_USER_DEPRECATED);
+    }
+
     // Add the module or theme path to the 'path'.
     $provider = $definition->getProvider();
     if ($this->moduleHandler->moduleExists($provider)) {
