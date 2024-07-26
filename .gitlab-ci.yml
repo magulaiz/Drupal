@@ -320,7 +320,6 @@ default:
   artifacts:
     paths:
       - core/phpstan-tmp/resultCache.php
-      - core/.cspell
 
 '🧹 PHP Static Analysis (phpstan)':
   <<: [ *with-composer, *default-job-settings-lint ]
