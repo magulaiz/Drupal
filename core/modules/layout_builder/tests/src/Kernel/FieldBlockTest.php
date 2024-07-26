@@ -29,6 +29,7 @@ use Symfony\Component\HttpFoundation\Response;
 /**
  * @coversDefaultClass \Drupal\layout_builder\Plugin\Block\FieldBlock
  * @group Field
+ * @group #slow
  */
 class FieldBlockTest extends EntityKernelTestBase {
 
