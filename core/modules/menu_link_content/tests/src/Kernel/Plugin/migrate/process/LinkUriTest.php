@@ -16,6 +16,7 @@ use Drupal\Tests\user\Traits\UserCreationTrait;
  * Tests \Drupal\menu_link_content\Plugin\migrate\process\LinkUri.
  *
  * @group menu_link_content
+ * @group #slow
  *
  * @coversDefaultClass \Drupal\menu_link_content\Plugin\migrate\process\LinkUri
  */
