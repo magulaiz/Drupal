@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Drupal\Tests\media_library\FunctionalJavascript;
 
 use Drupal\media\Entity\Media;
-use Drupal\views\Views;
 
 /**
  * Tests the media library view with contextual filters.
