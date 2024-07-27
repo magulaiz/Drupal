@@ -15,7 +15,7 @@ trait XmlNormalizationQuirksTrait {
    * The XML encoding:
    * - maps empty arrays to the empty string
    * - maps single-item arrays to just that single item
-   * - restructures multiple-item arrays that lives in a single-item array
+   * - restructures multiple-item arrays that lives in a single-item array.
    *
    * @param array $normalization
    *   A normalization.

@@ -22,7 +22,7 @@ interface ConfigEntityTypeInterface extends EntityTypeInterface {
    *     characters by EntityTypeInterface::ID_MAX_LENGTH.
    * - The configuration entity ID.
    * So, a typical configuration entity filename will look something like:
-   * provider_module_name.namespace_identifier.config_entity_id.yml
+   * provider_module_name.namespace_identifier.config_entity_id.yml.
    *
    * Most file systems limit a file name's length to 255 characters, so
    * ConfigBase::MAX_NAME_LENGTH restricts the full configuration object name

@@ -28,7 +28,7 @@ interface AssetResolverInterface {
    * - CSS_LAYOUT
    * - CSS_COMPONENT
    * - CSS_STATE
-   * - CSS_THEME
+   * - CSS_THEME.
    * @see https://www.drupal.org/node/1887918#separate-concerns
    * This ensures proper cascading of styles so themes can easily override
    * module styles through CSS selectors.

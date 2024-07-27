@@ -194,7 +194,7 @@ class UpdateHookRegistry {
    * - A 2.x hook_update_N() would be added as normal, for example:
    *   MODULE_update_2005().
    * - When that same update is backported to 1.x, it is given its own update
-   *   number, for example: MODULE_update_1040(). In this update, a call to
+   *   number, for example: MODULE_update_1040(). In this update, a call to.
    *   @code
    *   \Drupal::service('update.update_hook_registry')->markFutureUpdateEquivalent(2005, '2.10')
    *   @endcode

@@ -24,7 +24,7 @@ use Symfony\Component\Routing\RouteCollection;
  * - edit-form
  * - delete-form
  * - collection
- * - delete-multiple-form
+ * - delete-multiple-form.
  *
  * @see \Drupal\Core\Entity\Routing\AdminHtmlRouteProvider.
  */

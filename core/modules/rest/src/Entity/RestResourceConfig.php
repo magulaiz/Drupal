@@ -54,7 +54,7 @@ class RestResourceConfig extends ConfigEntityBase implements RestResourceConfigI
    *
    * Currently either:
    * - \Drupal\rest\RestResourceConfigInterface::METHOD_GRANULARITY
-   * - \Drupal\rest\RestResourceConfigInterface::RESOURCE_GRANULARITY
+   * - \Drupal\rest\RestResourceConfigInterface::RESOURCE_GRANULARITY.
    *
    * @var string
    */

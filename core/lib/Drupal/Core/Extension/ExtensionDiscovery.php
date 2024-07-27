@@ -11,7 +11,7 @@ use Symfony\Component\HttpFoundation\Request;
 /**
  * Discovers available extensions in the filesystem.
  *
- * To also discover test modules, add
+ * To also discover test modules, add.
  * @code
  * $settings['extension_discovery_scan_tests'] = TRUE;
  * @endcode

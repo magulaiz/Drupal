@@ -61,7 +61,7 @@ class CacheableMetadata implements RefinableCacheableDependencyInterface {
   /**
    * Sets the maximum age (in seconds).
    *
-   * Defaults to Cache::PERMANENT
+   * Defaults to Cache::PERMANENT.
    *
    * @param int $max_age
    *   The max age to associate.

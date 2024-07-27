@@ -19,7 +19,7 @@ abstract class ConditionFundamentals {
    *
    * The value is one of the following:
    * - AND (default)
-   * - OR
+   * - OR.
    *
    * @var string
    */

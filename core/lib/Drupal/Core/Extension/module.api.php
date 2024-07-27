@@ -306,7 +306,7 @@ function hook_modules_uninstalled($modules, $is_syncing) {
  *
  * The information that the module should remove includes:
  * - state that the module has set using \Drupal::state()
- * - modifications to existing tables
+ * - modifications to existing tables.
  *
  * The module should not remove its entry from the module configuration.
  * Database tables defined by hook_schema() will be removed automatically.

@@ -8,7 +8,7 @@ use Drupal\Core\StringTranslation\TranslatableMarkup;
 /**
  * Defines a FieldWidget attribute for plugin discovery.
  *
- * Plugin Namespace: Plugin\Field\FieldWidget
+ * Plugin Namespace: Plugin\Field\FieldWidget.
  *
  * Widgets handle how fields are displayed in edit forms.
  *

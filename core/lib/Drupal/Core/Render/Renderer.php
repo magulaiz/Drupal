@@ -631,7 +631,7 @@ class Renderer implements RendererInterface {
    * Placeholders may have:
    * - #lazy_builder callback, to build a render array to be rendered into
    *   markup that can replace the placeholder
-   * - #cache: to cache the result of the placeholder
+   * - #cache: to cache the result of the placeholder.
    *
    * Also merges the bubbleable metadata resulting from the rendering of the
    * contents of the placeholders. Hence $elements will be contain the entirety

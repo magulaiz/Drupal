@@ -8,7 +8,7 @@ use Drupal\layout_builder\SectionStorage\SectionStorageDefinition;
 /**
  * Defines a SectionStorage attribute.
  *
- * Plugin Namespace: Plugin\SectionStorage
+ * Plugin Namespace: Plugin\SectionStorage.
  *
  * @see \Drupal\layout_builder\SectionStorage\SectionStorageManager
  * @see plugin_api

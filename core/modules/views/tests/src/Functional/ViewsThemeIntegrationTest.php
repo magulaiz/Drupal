@@ -7,7 +7,7 @@ namespace Drupal\Tests\views\Functional;
 /**
  * Tests the Views theme integration.
  *
- * We test against test_basetheme and test_subtheme provided by theme_test
+ * We test against test_basetheme and test_subtheme provided by theme_test.
  *
  * @group views
  */

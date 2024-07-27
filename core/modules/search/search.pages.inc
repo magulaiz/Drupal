@@ -11,7 +11,7 @@ use Drupal\Core\Language\LanguageInterface;
 /**
  * Prepares variables for individual search result templates.
  *
- * Default template: search-result.html.twig
+ * Default template: search-result.html.twig.
  *
  * @param array $variables
  *   An array with the following elements:

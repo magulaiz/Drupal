@@ -10,7 +10,7 @@ use Drupal\Core\StringTranslation\TranslatableMarkup;
 /**
  * Defines a filter attribute for plugin discovery.
  *
- * Plugin Namespace: Plugin\Filter
+ * Plugin Namespace: Plugin\Filter.
  *
  * For a working example, see \Drupal\filter\Plugin\Filter\FilterHtml
  *

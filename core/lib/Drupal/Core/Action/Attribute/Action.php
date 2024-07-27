@@ -8,7 +8,7 @@ use Drupal\Core\StringTranslation\TranslatableMarkup;
 /**
  * Defines an Action attribute object.
  *
- * Plugin Namespace: Plugin\Action
+ * Plugin Namespace: Plugin\Action.
  *
  * @see \Drupal\Core\Action\ActionInterface
  * @see \Drupal\Core\Action\ActionManager

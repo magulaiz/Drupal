@@ -395,7 +395,7 @@ class Drupal {
   /**
    * Retrieves a configuration object.
    *
-   * This is the main entry point to the configuration API. Calling
+   * This is the main entry point to the configuration API. Calling.
    * @code \Drupal::config('my_module.admin') @endcode will return a
    * configuration object the my_module module can use to read its
    * administrative settings.

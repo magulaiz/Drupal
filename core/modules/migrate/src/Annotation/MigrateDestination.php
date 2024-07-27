@@ -7,7 +7,7 @@ use Drupal\Component\Annotation\Plugin;
 /**
  * Defines a migration destination plugin annotation object.
  *
- * Plugin Namespace: Plugin\migrate\destination
+ * Plugin Namespace: Plugin\migrate\destination.
  *
  * For a working example, see
  * \Drupal\migrate\Plugin\migrate\destination\UrlAlias

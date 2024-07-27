@@ -171,7 +171,7 @@ abstract class PagerPluginBase extends PluginBase {
   /**
    * Determine if a pager needs a count query.
    *
-   * If a pager needs a count query, a simple query
+   * If a pager needs a count query, a simple query.
    */
   public function useCountQuery() {
     return TRUE;

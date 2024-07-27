@@ -9,7 +9,7 @@ use Drupal\Component\Plugin\Attribute\Plugin;
 /**
  * Defines a MigrateProcess attribute.
  *
- * Plugin Namespace: Plugin\migrate\process
+ * Plugin Namespace: Plugin\migrate\process.
  *
  * For a working example, see
  * \Drupal\migrate\Plugin\migrate\process\DefaultValue

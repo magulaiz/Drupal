@@ -10,7 +10,7 @@ use Drupal\Component\Gettext\PoStreamReader;
  * The operations are related to pumping data from a source to a destination,
  * for example:
  * - Remote files http://*.po to memory
- * - File public://*.po to database
+ * - File public://*.po to database.
  */
 class Gettext {
 

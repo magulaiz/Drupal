@@ -8,7 +8,7 @@ use Drupal\Core\TypedData\Plugin\DataType\Timestamp;
 /**
  * Converts values for TimestampItem to and from common formats.
  *
- * Overrides FieldItemNormalizer to use \Drupal\serialization\Normalizer\TimestampNormalizer
+ * Overrides FieldItemNormalizer to use \Drupal\serialization\Normalizer\TimestampNormalizer.
  *
  * Overrides FieldItemNormalizer to
  * - during normalization, add the 'format' key to assist consumers

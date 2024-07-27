@@ -50,7 +50,7 @@ class NodeSaveTest extends NodeTestBase {
    * Workflow:
    *  - first create a piece of content
    *  - save the content
-   *  - check if node exists
+   *  - check if node exists.
    */
   public function testImport(): void {
     // Node ID must be a number that is not in the database.

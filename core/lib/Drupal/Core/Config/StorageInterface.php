@@ -128,7 +128,7 @@ interface StorageInterface {
    *
    * Given the following configuration objects:
    * - node.type.article
-   * - node.type.page
+   * - node.type.page.
    *
    * Passing the prefix 'node.type.' will return an array containing the above
    * names.
@@ -147,7 +147,7 @@ interface StorageInterface {
    *
    * Given the following configuration object names:
    * - node.type.article
-   * - node.type.page
+   * - node.type.page.
    *
    * Passing the prefix 'node.type.' will delete the above configuration
    * objects.

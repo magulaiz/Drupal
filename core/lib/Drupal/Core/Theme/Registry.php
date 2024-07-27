@@ -359,7 +359,7 @@ class Registry implements DestructableInterface {
    * - Base theme engines
    * - Base themes
    * - Theme engine
-   * - Theme
+   * - Theme.
    *
    * All theme hook definitions are essentially just collated and merged in the
    * above order. However, various extension-specific default values and

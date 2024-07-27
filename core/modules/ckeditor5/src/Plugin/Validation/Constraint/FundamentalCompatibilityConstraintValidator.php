@@ -84,7 +84,7 @@ class FundamentalCompatibilityConstraintValidator extends ConstraintValidator im
    *
    * Two TYPE_MARKUP_LANGUAGE filters are exempted:
    * - filter_autop: pointless but harmless to have enabled
-   * - filter_url: not recommended but also harmless to have enabled
+   * - filter_url: not recommended but also harmless to have enabled.
    *
    * These two commonly enabled filters with a long history in Drupal are
    * considered to be acceptable to have enabled.

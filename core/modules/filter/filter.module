@@ -694,7 +694,7 @@ function _filter_url_trim($text, $length = NULL) {
 /**
  * Converts line breaks into <p> and <br> in an intelligent fashion.
  *
- * Based on: http://photomatt.net/scripts/autop
+ * Based on: http://photomatt.net/scripts/autop.
  */
 function _filter_autop($text) {
   // All block level tags

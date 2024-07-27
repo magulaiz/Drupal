@@ -7,7 +7,7 @@ use Drupal\Component\Annotation\Plugin;
 /**
  * Defines an Editor annotation object.
  *
- * Plugin Namespace: Plugin\Editor
+ * Plugin Namespace: Plugin\Editor.
  *
  * Text editor plugin implementations need to define a plugin definition array
  * through annotation. These definition arrays may be altered through

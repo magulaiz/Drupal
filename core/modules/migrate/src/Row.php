@@ -279,7 +279,7 @@ class Row {
   /**
    * Returns the raw destination. Rarely necessary.
    *
-   * For example calling setDestination('foo/bar', 'baz') results in
+   * For example calling setDestination('foo/bar', 'baz') results in.
    * @code
    * $this->destination['foo']['bar'] = 'baz';
    * $this->rawDestination['foo/bar'] = 'baz';

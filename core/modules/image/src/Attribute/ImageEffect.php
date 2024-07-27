@@ -10,7 +10,7 @@ use Drupal\Core\StringTranslation\TranslatableMarkup;
 /**
  * Defines an ImageEffect attribute for plugin discovery.
  *
- * Plugin Namespace: Plugin\ImageEffect
+ * Plugin Namespace: Plugin\ImageEffect.
  *
  * For a working example, see
  * \Drupal\image\Plugin\ImageEffect\ResizeImageEffect

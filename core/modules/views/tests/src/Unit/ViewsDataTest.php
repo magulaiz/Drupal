@@ -408,7 +408,7 @@ class ViewsDataTest extends UnitTestCase {
    *
    * Warm cache:
    *   - all tables
-   *   - views_test_data
+   *   - views_test_data.
    */
   public function testCacheCallsWithSameTableMultipleTimesAndWarmCache(): void {
     $expected_views_data = $this->viewsDataWithProvider();
@@ -476,7 +476,7 @@ class ViewsDataTest extends UnitTestCase {
    *   - all tables
    *   - views_test_data
    * Not warm cache:
-   *   - $non_existing_table
+   *   - $non_existing_table.
    */
   public function testCacheCallsWithWarmCacheAndInvalidTable(): void {
     $expected_views_data = $this->viewsDataWithProvider();
@@ -516,7 +516,7 @@ class ViewsDataTest extends UnitTestCase {
    * Warm cache:
    *   - all tables
    *   - views_test_data
-   *   - $non_existing_table
+   *   - $non_existing_table.
    */
   public function testCacheCallsWithWarmCacheForInvalidTable(): void {
     $non_existing_table = $this->randomMachineName();
@@ -569,7 +569,7 @@ class ViewsDataTest extends UnitTestCase {
    * Tests the cache calls for all views data.
    *
    * Warm cache:
-   *   - all tables
+   *   - all tables.
    */
   public function testCacheCallsWithWarmCacheAndGetAllTables(): void {
     $expected_views_data = $this->viewsDataWithProvider();

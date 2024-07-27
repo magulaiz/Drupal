@@ -7,7 +7,7 @@ use Drupal\Component\Annotation\Plugin;
 /**
  * Defines a migration source plugin annotation object.
  *
- * Plugin Namespace: Plugin\migrate\source
+ * Plugin Namespace: Plugin\migrate\source.
  *
  * For a working example, check
  * \Drupal\migrate\Plugin\migrate\source\EmptySource

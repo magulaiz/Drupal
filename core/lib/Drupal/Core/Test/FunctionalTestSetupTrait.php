@@ -426,7 +426,7 @@ trait FunctionalTestSetupTrait {
   /**
    * Installs the default theme defined by `static::$defaultTheme` when needed.
    *
-   * To install a test theme outside of the testing environment, add
+   * To install a test theme outside of the testing environment, add.
    * @code
    * $settings['extension_discovery_scan_tests'] = TRUE;
    * @endcode
@@ -476,7 +476,7 @@ trait FunctionalTestSetupTrait {
   /**
    * Install modules defined by `static::$modules`.
    *
-   * To install test modules outside of the testing environment, add
+   * To install test modules outside of the testing environment, add.
    * @code
    * $settings['extension_discovery_scan_tests'] = TRUE;
    * @endcode

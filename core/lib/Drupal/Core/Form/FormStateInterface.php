@@ -1149,7 +1149,7 @@ interface FormStateInterface {
    * - form_id
    * - form_token
    * - form_build_id
-   * - op
+   * - op.
    *
    * @return $this
    */
