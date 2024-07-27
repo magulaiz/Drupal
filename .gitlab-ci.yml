@@ -409,7 +409,6 @@ default:
     expose_as: 'yarn-vendor'
     paths:
       - core/node_modules/
-      - core/.cspellcache
 
 '📔 Validatable config':
   <<: [ *default-job-settings-lint ]
