@@ -268,6 +268,7 @@ default:
   artifacts:
     paths:
       - core/phpstan-tmp/resultCache.php
+      - core/.cspellcache
 
 '🧹 PHP Static Analysis (phpstan)':
   <<: [ *default-job-settings-lint ]
