@@ -64,7 +64,7 @@ class MediaLibraryContextualFilterTest extends MediaLibraryTestBase {
       'uid' => $user1->id(),
     ])->save();
 
-    // create media items with user 2.
+    // Create media items with user 2.
     Media::create([
       'name' => 'Bear',
       'bundle' => 'type_one',
