@@ -29,10 +29,6 @@ class MediaLibraryContextualFilterTest extends MediaLibraryTestBase {
   protected function setUp(): void {
     parent::setUp();
 
-    $assert_session = $this->assertSession();
-    $session = $this->getSession();
-    $page = $session->getPage();
-
     // Create an admin user to update the view.
     $adminUser = $this->createUser([], 'admin user', TRUE);
     // Add media author as a contextual filter to the widget display.
@@ -45,22 +41,14 @@ class MediaLibraryContextualFilterTest extends MediaLibraryTestBase {
    * Test contextual filters in the media library.
    */
   public function testMediaLibraryContextualFilter(): void {
-    $assert_session = $this->assertSession();
-    $session = $this->getSession();
-
     // Create users for adding media and using the media library.
     $permissions = [
-      'access administration pages',
-      'access content',
       'create basic_page content',
-      'create type_one media',
-      'view media',
     ];
     $user1 = $this->createUser($permissions, 'user 1');
     $user2 = $this->createUser($permissions, 'user 2');
 
-    // Login with user 1 and create media items.
-    $this->drupalLogin($user1);
+    // Create media items with user 1.
     Media::create([
       'name' => 'Mosquito',
       'bundle' => 'type_one',
@@ -76,8 +64,7 @@ class MediaLibraryContextualFilterTest extends MediaLibraryTestBase {
       'uid' => $user1->id(),
     ])->save();
 
-    // Login with user 2 and create media items.
-    $this->drupalLogin($user2);
+    // create media items with user 2.
     Media::create([
       'name' => 'Bear',
       'bundle' => 'type_one',
@@ -92,7 +79,8 @@ class MediaLibraryContextualFilterTest extends MediaLibraryTestBase {
       'status' => TRUE,
       'uid' => $user2->id(),
     ])->save();
-
+    
+    $this->drupalLogin($user2);
     // Visit a node create page with user 2.
     $this->drupalGet('node/add/basic_page');
     $this->openMediaLibraryForField('field_unlimited_media');
