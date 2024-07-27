@@ -79,7 +79,7 @@ class MediaLibraryContextualFilterTest extends MediaLibraryTestBase {
       'status' => TRUE,
       'uid' => $user2->id(),
     ])->save();
-    
+
     $this->drupalLogin($user2);
     // Visit a node create page with user 2.
     $this->drupalGet('node/add/basic_page');
