@@ -6,6 +6,7 @@ use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Routing\RouteSubscriberBase;
 use Drupal\Core\Routing\RoutingEvents;
 use Drupal\field_ui\Controller\FieldConfigAddController;
+use Drupal\field_ui\Controller\FieldStorageAddController;
 use Symfony\Component\Routing\Route;
 use Symfony\Component\Routing\RouteCollection;
 
@@ -94,13 +95,24 @@ class RouteSubscriber extends RouteSubscriberBase {
         $route = new Route(
           "$path/fields/add-field",
           [
-            '_form' => '\Drupal\field_ui\Form\FieldStorageAddForm',
+            '_controller' => FieldStorageAddController::class . '::getFieldSelectionLinks',
             '_title' => 'Add field',
           ] + $defaults,
           ['_permission' => 'administer ' . $entity_type_id . ' fields'],
           $options
         );
         $collection->add("field_ui.field_storage_config_add_$entity_type_id", $route);
+
+        $route = new Route(
+          "$path/fields/add-field/{new_storage_type}",
+          [
+            '_form' => '\Drupal\field_ui\Form\FieldStorageAddForm',
+            '_title' => 'Add field',
+          ] + $defaults,
+          ['_permission' => 'administer ' . $entity_type_id . ' fields'],
+          $options
+        );
+        $collection->add("field_ui.field_storage_config_add_sub_$entity_type_id", $route);
 
         $route = new Route(
           "$path/add-field/{entity_type}/{field_name}",

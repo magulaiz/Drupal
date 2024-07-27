@@ -510,12 +510,13 @@
           const input = clickToSelectEl.querySelector('input');
           if (input) {
             Drupal.behaviors.clickToSelect.clickHandler(clickToSelectEl, input);
-          }
-          if (input.classList.contains('error')) {
-            clickToSelectEl.classList.add('error');
-          }
-          if (input.checked) {
-            this.selectHandler(clickToSelectEl, input);
+            clickToSelectEl.classList.toggle(
+              'error',
+              input.classList.contains('error'),
+            );
+            if (input.checked) {
+              this.selectHandler(clickToSelectEl, input);
+            }
           }
         },
       );

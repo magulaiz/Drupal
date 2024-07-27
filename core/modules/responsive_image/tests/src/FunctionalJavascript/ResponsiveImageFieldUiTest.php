@@ -7,6 +7,7 @@ namespace Drupal\Tests\responsive_image\FunctionalJavascript;
 use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
 use Drupal\responsive_image\Entity\ResponsiveImageStyle;
 use Drupal\Tests\field_ui\Traits\FieldUiJSTestTrait;
+use Drupal\Tests\field_ui\Traits\FieldUiTestTrait;
 
 /**
  * Tests the responsive image field UI.
@@ -16,6 +17,7 @@ use Drupal\Tests\field_ui\Traits\FieldUiJSTestTrait;
 class ResponsiveImageFieldUiTest extends WebDriverTestBase {
 
   use FieldUiJSTestTrait;
+  use FieldUiTestTrait;
 
   /**
    * {@inheritdoc}

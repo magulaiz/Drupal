@@ -2,7 +2,6 @@
 
 namespace Drupal\field_ui\Form;
 
-use Drupal\Component\Utility\Html;
 use Drupal\Component\Utility\SortArray;
 use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Entity\EntityFieldManagerInterface;
@@ -66,12 +65,15 @@ class FieldStorageAddForm extends FormBase {
   /**
    * {@inheritdoc}
    */
-  public function buildForm(array $form, FormStateInterface $form_state, $entity_type_id = NULL, $bundle = NULL) {
+  public function buildForm(array $form, FormStateInterface $form_state, $entity_type_id = NULL, $bundle = NULL, $new_storage_type = NULL) {
     if (!$form_state->get('entity_type_id')) {
       $form_state->set('entity_type_id', $entity_type_id);
     }
     if (!$form_state->get('bundle')) {
       $form_state->set('bundle', $bundle);
+    }
+    if (!$form_state->getValue('new_storage_type')) {
+      $form_state->setValue('new_storage_type', $new_storage_type);
     }
     $this->entityTypeId = $form_state->get('entity_type_id');
     $this->bundle = $form_state->get('bundle');
@@ -101,14 +103,10 @@ class FieldStorageAddForm extends FormBase {
       'field_ui/drupal.field_ui.manage_fields',
       'core/drupal.ajax',
     ];
-
+    // The group info is stored in new_storage_type.
     if ($form_state->hasValue('new_storage_type')) {
       // A group is already selected. Show field types for that group.
       $this->addFieldOptionsForGroup($form, $form_state);
-    }
-    else {
-      // Show options for groups and ungrouped field types.
-      $this->addGroupFieldOptions($form, $form_state);
     }
 
     return $form;
@@ -145,94 +143,6 @@ class FieldStorageAddForm extends FormBase {
 
     $form_state->set('field_type_options', $field_type_options);
     $form_state->set('unique_definitions', $unique_definitions);
-  }
-
-  /**
-   * Adds ungrouped field types and field type groups to the form.
-   *
-   * When a group is selected, the related fields are shown when the form is
-   * rebuilt.
-   *
-   * @param array $form
-   *   An associative array containing the structure of the form.
-   * @param \Drupal\Core\Form\FormStateInterface $form_state
-   *   The current state of the form.
-   */
-  protected function addGroupFieldOptions(array &$form, FormStateInterface $form_state): void {
-    $field_type_options_radios = [];
-    foreach ($form_state->get('field_type_options') as $id => $field_type) {
-      /** @var  \Drupal\Core\Field\FieldTypeCategoryInterface $category_info */
-      $category_info = $this->fieldTypeCategoryManager
-        ->createInstance($field_type['category'], $field_type);
-      $display_as_group = $field_type['display_as_group'];
-      $cleaned_class_name = Html::getClass($field_type['unique_identifier']);
-      $field_type_options_radios[$id] = [
-        '#type' => 'container',
-        '#attributes' => [
-          'class' => ['field-option', 'js-click-to-select'],
-        ],
-        '#weight' => $category_info->getWeight(),
-        'thumb' => [
-          '#type' => 'container',
-          '#attributes' => [
-            'class' => ['field-option__thumb'],
-          ],
-          'icon' => [
-            '#type' => 'container',
-            '#attributes' => [
-              'class' => [
-                'field-option__icon',
-                $display_as_group ? "field-icon-$field_type[category]" : "field-icon-$cleaned_class_name",
-              ],
-            ],
-          ],
-        ],
-        'radio' => [
-          '#type' => 'radio',
-          '#title' => $category_info->getLabel(),
-          '#parents' => ['new_storage_type'],
-          '#title_display' => 'before',
-          '#description_display' => 'before',
-          '#theme_wrappers' => ['form_element__new_storage_type'],
-          // If it is a category, set return value as the category label.
-          // Otherwise, set it as the field type id.
-          '#return_value' => $display_as_group ? $field_type['category'] : $field_type['unique_identifier'],
-          '#attributes' => [
-            'class' => ['field-option-radio'],
-          ],
-          '#description' => [
-            '#type' => 'container',
-            '#attributes' => [
-              'class' => ['field-option__description'],
-            ],
-            '#markup' => $category_info->getDescription(),
-          ],
-          '#variant' => 'field-option',
-        ],
-      ];
-
-      if ($libraries = $category_info->getLibraries()) {
-        $field_type_options_radios[$id]['#attached']['library'] = $libraries;
-      }
-    }
-    uasort($field_type_options_radios, [SortArray::class, 'sortByWeightProperty']);
-
-    $form['add-label'] = [
-      '#type' => 'label',
-      '#title' => $this->t('Choose a type of field'),
-      '#required' => TRUE,
-    ];
-
-    $form['add'] = [
-      '#type' => 'container',
-      '#attributes' => [
-        'class' => 'add-field-container',
-      ],
-    ];
-    $form['add']['new_storage_type'] = $field_type_options_radios;
-
-    $form['actions']['submit']['#validate'][] = '::validateGroupOrField';
-    $form['actions']['submit']['#submit'][] = '::rebuildWithOptions';
   }
 
   /**
@@ -344,20 +254,6 @@ class FieldStorageAddForm extends FormBase {
     }
     uasort($group_field_options, [SortArray::class, 'sortByWeightProperty']);
     $form['group_field_options_wrapper']['fields'] += $group_field_options;
-  }
-
-  /**
-   * Validates the first step of the form.
-   *
-   * @param array $form
-   *   An associative array containing the structure of the form.
-   * @param \Drupal\Core\Form\FormStateInterface $form_state
-   *   The current state of the form.
-   */
-  public function validateGroupOrField(array &$form, FormStateInterface $form_state) {
-    if (!$form_state->getValue('new_storage_type')) {
-      $form_state->setErrorByName('add', $this->t('You need to select a field type.'));
-    }
   }
 
   /**
@@ -548,18 +444,14 @@ class FieldStorageAddForm extends FormBase {
   }
 
   /**
-   * Submit handler for displaying fields after a group is selected.
-   */
-  public static function rebuildWithOptions($form, FormStateInterface &$form_state) {
-    $form_state->setRebuild();
-  }
-
-  /**
    * Submit handler for resetting the form.
    */
-  public static function startOver($form, FormStateInterface &$form_state) {
-    $form_state->unsetValue('new_storage_type');
-    $form_state->setRebuild();
+  public function startOver($form, FormStateInterface &$form_state) {
+    // Need to do this as the parameters for buildForm are retained on rebuild.
+    $entity_type_id = $this->entityTypeId;
+    $entity_type = $this->entityTypeManager->getDefinition($entity_type_id);
+    $route_parameters_back = [] + FieldUI::getRouteBundleParameter($entity_type, $this->bundle);
+    $form_state->setRedirect("field_ui.field_storage_config_add_$entity_type_id", $route_parameters_back);
   }
 
 }
