@@ -245,6 +245,8 @@ default:
   stage: 🪄 Lint
   rules:
     - if: $CI_PIPELINE_SOURCE == "push" && $CI_PROJECT_ROOT_NAMESPACE == "project"
+    - when: manual
+      allow_failure: true
   variables:
     KUBERNETES_CPU_REQUEST: "4"
   script:
