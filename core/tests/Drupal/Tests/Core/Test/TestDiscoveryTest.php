@@ -82,7 +82,7 @@ class TestDiscoveryTest extends UnitTestCase {
       'Drupal\FunctionalTests\BrowserTestBaseTest',
     ];
 
-    // kernel PHPUnit test.
+    // Kernel PHPUnit test.
     $tests['phpunit-kernel'] = [
       // Expected result.
       [
