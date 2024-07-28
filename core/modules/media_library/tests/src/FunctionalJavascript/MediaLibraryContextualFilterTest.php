@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Drupal\Tests\media_library\FunctionalJavascript;
 
 use Drupal\media\Entity\Media;
+use Drupal\views\Entity\View;
 
 /**
  * Tests the media library view with contextual filters.
@@ -16,25 +17,21 @@ class MediaLibraryContextualFilterTest extends MediaLibraryTestBase {
   /**
    * {@inheritdoc}
    */
-  protected static $modules = ['views_ui'];
-
-  /**
-   * {@inheritdoc}
-   */
-  protected $defaultTheme = 'stark';
-
-  /**
-   * {@inheritdoc}
-   */
   protected function setUp(): void {
     parent::setUp();
 
-    // Create an admin user to update the view.
-    $adminUser = $this->createUser([], 'admin user', TRUE);
-    // Add media author as a contextual filter to the widget display.
-    $this->drupalLogin($adminUser);
-    $this->addMediaAuthorContextualFilterToDisplay('media_library', 'widget');
-    $this->addMediaAuthorContextualFilterToDisplay('media_library', 'widget_table');
+    // Add media_field_data.uid = current_user as contextual filter to
+    // media library widget displays.
+    $view = View::load('media_library');
+    $executable = $view->getExecutable();
+    foreach (['widget', 'widget_table'] as $display_id) {
+      $executable->addHandler($display_id, 'argument', 'media_field_data', 'uid', [
+        'default_argument_type' => 'current_user',
+        'default_argument_options' => [],
+        'default_action' => 'default',
+      ]);
+    }
+    $executable->save();
   }
 
   /**
@@ -97,33 +94,16 @@ class MediaLibraryContextualFilterTest extends MediaLibraryTestBase {
     $this->switchToMediaLibraryGrid();
     // Verify number of items again.
     $this->waitForElementsCount('css', '#media-library-view .views-row', 2);
-  }
 
-  /**
-   * Add the media author contextual filter to the media library view widgets.
-   *
-   * @param string $view_name
-   *   The view name.
-   * @param string $display_id
-   *   The display ID.
-   */
-  protected function addMediaAuthorContextualFilterToDisplay($view_name, $display_id): void {
-    $assert_session = $this->assertSession();
-    $session = $this->getSession();
-    $page = $session->getPage();
+    // Submit exposed views filters.
+    $this->getSession()->getPage()->find('css', '#media-library-view')->pressButton('Apply filters');
+    $this->assertSession()->assertWaitOnAjaxRequest();
+    $this->waitForElementsCount('css', '#media-library-view .views-row', 2);
 
-    $this->drupalGet("admin/structure/views/view/{$view_name}/edit/{$display_id}");
-    $assert_session->elementExists('css', '#views-add-argument')->click();
-    $assert_session->waitForElementVisible('css', '.views-ui-dialog');
-    $assert_session->elementExists('css', 'input[name="name[media_field_data.uid]"]')->check();
-    $page->find('css', '.ui-dialog-buttonset button:contains("Apply (this display)")')->press();
-    $assert_session->waitForElementVisible('css', 'input[name="options[default_action]"]');
-    $page->selectFieldOption('Provide default value', 'default');
-    $assert_session->waitForElementVisible('css', '[data-drupal-selector="edit-options-default-argument-type"]');
-    $page->selectFieldOption('options[default_argument_type]', 'current_user');
-    $page->find('css', '.ui-dialog-buttonset button:contains("Apply (this display)")')->press();
-    $assert_session->waitForElementRemoved('css', '.views-ui-dialog');
-    $this->submitForm([], 'Save');
+    // Select and submit items.
+    $this->selectMediaItem(0);
+    $this->selectMediaItem(1);
+    $this->pressInsertSelected();
   }
 
 }
