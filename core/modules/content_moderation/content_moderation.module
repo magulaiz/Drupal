@@ -326,6 +326,27 @@ function content_moderation_entity_bundle_info_alter(&$bundles) {
 }
 
 /**
+ * Implements hook_data_type_info_alter().
+ */
+function content_moderation_data_type_info_alter(&$data_types) {
+  // Enable the "SequentialEntityRevisionCreation" constraint validator for
+  // moderated bundles.
+  /** @var \Drupal\workflows\WorkflowInterface $workflow */
+  foreach (Workflow::loadMultipleByType('content_moderation') as $workflow) {
+    /** @var \Drupal\content_moderation\Plugin\WorkflowType\ContentModeration $plugin */
+    $plugin = $workflow->getTypePlugin();
+    foreach ($plugin->getEntityTypes() as $entity_type_id) {
+      foreach ($plugin->getBundlesForEntityType($entity_type_id) as $bundle_id) {
+        $key = 'entity:' . $entity_type_id . ':' . $bundle_id;
+        if (isset($data_types[$key])) {
+          $data_types[$key]['constraints']['SequentialEntityRevisionCreation'] = NULL;
+        }
+      }
+    }
+  }
+}
+
+/**
  * Implements hook_entity_bundle_delete().
  */
 function content_moderation_entity_bundle_delete($entity_type_id, $bundle_id) {

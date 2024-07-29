@@ -44,6 +44,13 @@ abstract class EntityKernelTestBase extends KernelTestBase {
   protected $entityTypeManager;
 
   /**
+   * The entity bundle info service.
+   *
+   * @var \Drupal\Core\Entity\EntityTypeBundleInfoInterface
+   */
+  protected $bundleInfo;
+
+  /**
    * A list of generated identifiers.
    *
    * @var array
@@ -65,6 +72,7 @@ abstract class EntityKernelTestBase extends KernelTestBase {
 
     $this->entityTypeManager = $this->container->get('entity_type.manager');
     $this->state = $this->container->get('state');
+    $this->bundleInfo = $this->container->get('entity_type.bundle.info');
 
     $this->installEntitySchema('user');
     $this->installEntitySchema('entity_test');
@@ -191,6 +199,14 @@ abstract class EntityKernelTestBase extends KernelTestBase {
     } while (isset($this->generatedIds[$id]));
     $this->generatedIds[$id] = $id;
     return $id;
+  }
+
+  /**
+   * Makes entity test bundles translatable.
+   */
+  protected function enableEntityTestTranslation() {
+    $this->state->set('entity_test.translation', TRUE);
+    $this->bundleInfo->clearCachedBundles();
   }
 
 }
