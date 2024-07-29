@@ -269,8 +269,8 @@ default:
     KUBERNETES_CPU_REQUEST: "4"
   before_script:
     - sudo apt update && sudo apt install git-restore-mtime
-    - git restore-mtime
   script:
+    - git restore-mtime
     - *phpstan-cache
     - *cspell-cache
     - composer install
@@ -400,9 +400,9 @@ default:
   variables:
     KUBERNETES_CPU_REQUEST: "2"
   before_script:
-    - sudo apt install git-restore-mtime
-    - git restore-mtime
+    - sudo apt update && sudo apt install git-restore-mtime
   script:
+    - git restore-mtime
     - *cspell-cache
     - *core-spellcheck
   cache:
