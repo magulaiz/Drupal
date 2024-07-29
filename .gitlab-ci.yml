@@ -119,7 +119,7 @@ default:
   - cd core
   - corepack enable
   - yarn install
-  - yarn run spellcheck:core --no-must-find-files --cache --cache-strategy content
+  - yarn run spellcheck:core --no-must-find-files --cache
 ################
 # Stages
 #
@@ -267,6 +267,9 @@ default:
       allow_failure: true
   variables:
     KUBERNETES_CPU_REQUEST: "4"
+  before_script:
+    - sudo apt install git-restore-mtime
+    - git restore-mtime
   script:
     - *phpstan-cache
     - *cspell-cache
@@ -396,6 +399,9 @@ default:
   stage: 🪄 Lint
   variables:
     KUBERNETES_CPU_REQUEST: "2"
+  before_script:
+    - sudo apt install git-restore-mtime
+    - git restore-mtime
   script:
     - *cspell-cache
     - *core-spellcheck
