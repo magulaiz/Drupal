@@ -10,7 +10,7 @@ use Symfony\Component\DependencyInjection\Exception\AutowiringFailedException;
 /**
  * Defines a trait for automatically wiring dependencies from the container.
  */
-trait AutosetupTrait {
+trait AutoSetupTrait {
 
   /**
    * Setup the test class using autowiring.

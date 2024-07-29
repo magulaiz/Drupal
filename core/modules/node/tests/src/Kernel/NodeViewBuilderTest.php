@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\node\Kernel;
 
-use Drupal\Core\DependencyInjection\AutosetupTrait;
+use Drupal\Core\DependencyInjection\AutoSetupTrait;
 use Drupal\Core\Render\RendererInterface;
 use Drupal\KernelTests\Core\Entity\EntityKernelTestBase;
 use Drupal\node\Entity\Node;
@@ -20,8 +20,8 @@ use Drupal\user\Entity\User;
  */
 class NodeViewBuilderTest extends EntityKernelTestBase {
 
-  use AutosetupTrait {
-    AutosetupTrait::setUp as protected autoSetup;
+  use AutoSetupTrait {
+    AutoSetupTrait::setUp as protected autoSetup;
   }
 
   /**

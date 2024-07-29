@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Drupal\Tests\file\Functional;
 
 use Drupal\Core\Database\Database;
-use Drupal\Core\DependencyInjection\AutosetupTrait;
+use Drupal\Core\DependencyInjection\AutoSetupTrait;
 use Drupal\Core\File\FileSystemInterface;
 use Drupal\Core\File\FileUrlGeneratorInterface;
 
@@ -16,7 +16,7 @@ use Drupal\Core\File\FileUrlGeneratorInterface;
  */
 class DownloadTest extends FileManagedTestBase {
 
-  use AutosetupTrait;
+  use AutoSetupTrait;
 
   /**
    * {@inheritdoc}
