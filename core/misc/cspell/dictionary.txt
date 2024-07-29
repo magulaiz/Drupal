@@ -453,6 +453,7 @@ persistable
 phpass
 phpcbf
 phpcodesniffer
+phpcscache
 phpdocumentor
 phpserialize
 phpspec
@@ -591,6 +592,7 @@ strs
 sttid
 styleguide
 stylelint
+stylelintcache
 stylescombo
 subarrays
 subchild

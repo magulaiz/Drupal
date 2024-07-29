@@ -29,3 +29,9 @@ nightwatch.settings.json
 
 # Ignore phpstan cache
 phpstan-tmp
+
+# Ingore eslint cache
+.eslintcache
+
+# Ignore phpcs cache
+.phpcscache
