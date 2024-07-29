@@ -268,7 +268,7 @@ default:
   variables:
     KUBERNETES_CPU_REQUEST: "4"
   before_script:
-    - sudo apt install git-restore-mtime
+    - sudo apt update && sudo apt install git-restore-mtime
     - git restore-mtime
   script:
     - *phpstan-cache
