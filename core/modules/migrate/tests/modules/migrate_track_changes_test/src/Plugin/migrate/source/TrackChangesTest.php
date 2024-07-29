@@ -34,9 +34,9 @@ class TrackChangesTest extends SqlBase {
    */
   public function fields() {
     $fields = [
-      'tid' => 'Term id',
-      'name' => 'Name',
-      'description' => 'Description',
+      'tid' => $this->t('Term id'),
+      'name' => $this->t('Name'),
+      'description' => $this->t('Description'),
     ];
 
     return $fields;

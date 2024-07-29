@@ -27,8 +27,8 @@ class QueryBatchTest extends SqlBase {
    */
   public function fields() {
     $fields = [
-      'id' => 'Id',
-      'data' => 'data',
+      'id' => $this->t('Id'),
+      'data' => $this->t('data'),
     ];
     return $fields;
   }

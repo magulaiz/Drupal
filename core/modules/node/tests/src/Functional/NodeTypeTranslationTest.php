@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\node\Functional;
 
-use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\language\Entity\ConfigurableLanguage;
 use Drupal\Tests\BrowserTestBase;
 
@@ -18,8 +17,6 @@ use Drupal\Tests\BrowserTestBase;
  * @group node
  */
 class NodeTypeTranslationTest extends BrowserTestBase {
-
-  use StringTranslationTrait;
 
   /**
    * {@inheritdoc}
@@ -128,7 +125,7 @@ class NodeTypeTranslationTest extends BrowserTestBase {
     $this->drupalGet("$langcode/node/add/$type");
     // This is a Spanish page, so ensure the text asserted is translated in
     // Spanish and not French by adding the langcode option.
-    $this->assertSession()->responseContains($this->t('Create @name', ['@name' => $translated_name], ['langcode' => $langcode]));
+    $this->assertSession()->responseContains(t('Create @name', ['@name' => $translated_name], ['langcode' => $langcode]));
 
     // Check the name is translated with admin theme for editing.
     $this->drupalGet('admin/appearance');
@@ -136,7 +133,7 @@ class NodeTypeTranslationTest extends BrowserTestBase {
     $this->drupalGet("$langcode/node/add/$type");
     // This is a Spanish page, so ensure the text asserted is translated in
     // Spanish and not French by adding the langcode option.
-    $this->assertSession()->responseContains($this->t('Create @name', ['@name' => $translated_name], ['langcode' => $langcode]));
+    $this->assertSession()->responseContains(t('Create @name', ['@name' => $translated_name], ['langcode' => $langcode]));
   }
 
   /**
