@@ -4,9 +4,11 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\node\Kernel;
 
+use Drupal\Core\Render\RendererInterface;
 use Drupal\KernelTests\Core\Entity\EntityKernelTestBase;
 use Drupal\node\Entity\Node;
 use Drupal\node\Entity\NodeType;
+use Drupal\Tests\AutowireProperty;
 use Drupal\user\Entity\User;
 
 /**
@@ -39,10 +41,9 @@ class NodeViewBuilderTest extends EntityKernelTestBase {
 
   /**
    * The renderer.
-   *
-   * @var \Drupal\Core\Render\RendererInterface
    */
-  protected $renderer;
+  #[AutowireProperty]
+  protected RendererInterface $renderer;
 
   /**
    * {@inheritdoc}
@@ -52,7 +53,6 @@ class NodeViewBuilderTest extends EntityKernelTestBase {
 
     $this->storage = $this->entityTypeManager->getStorage('node');
     $this->viewBuilder = $this->entityTypeManager->getViewBuilder('node');
-    $this->renderer = $this->container->get('renderer');
 
     $type = NodeType::create([
       'type' => 'article',
