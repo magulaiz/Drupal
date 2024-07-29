@@ -73,6 +73,7 @@ abstract class BrowserTestBase extends TestCase {
   use PhpUnitCompatibilityTrait;
   use ExpectDeprecationTrait;
   use ExtensionListTestTrait;
+  use AutowirePropertyTrait;
 
   /**
    * Time limit in seconds for the test.
@@ -374,6 +375,9 @@ abstract class BrowserTestBase extends TestCase {
     // PHPUnit 6 tests that only make assertions using $this->assertSession()
     // can be marked as risky.
     $this->addToAssertionCount(1);
+
+    // Autowire properties.
+    $this->autowireProperties();
   }
 
   /**

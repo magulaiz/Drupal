@@ -6,6 +6,8 @@ namespace Drupal\Tests\file\Functional;
 
 use Drupal\Core\Database\Database;
 use Drupal\Core\File\FileSystemInterface;
+use Drupal\Core\File\FileUrlGeneratorInterface;
+use Drupal\Tests\AutowireProperty;
 
 /**
  * Tests for download/file transfer functions.
@@ -21,10 +23,9 @@ class DownloadTest extends FileManagedTestBase {
 
   /**
    * The file URL generator.
-   *
-   * @var \Drupal\Core\File\FileUrlGeneratorInterface
    */
-  protected $fileUrlGenerator;
+  #[AutowireProperty]
+  protected FileUrlGeneratorInterface $fileUrlGenerator;
 
   /**
    * {@inheritdoc}
@@ -40,7 +41,6 @@ class DownloadTest extends FileManagedTestBase {
       $this->markTestSkipped('Test frequently causes a locked database on SQLite');
     }
 
-    $this->fileUrlGenerator = $this->container->get('file_url_generator');
     // Clear out any hook calls.
     file_test_reset();
   }
