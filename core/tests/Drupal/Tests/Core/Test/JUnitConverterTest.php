@@ -98,7 +98,7 @@ EOD;
   }
 
   /**
-   * See testConvertTestCaseToSimpletestRow method for test cases.
+   * Provides data for testConvertTestCaseToSimpletestRow().
    */
   public static function simpletestDataProvider(): array {
     $long_function_name = self::generateAlphanumericStr(220);
