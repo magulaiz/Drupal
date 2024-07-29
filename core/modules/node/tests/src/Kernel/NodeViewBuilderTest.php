@@ -20,9 +20,7 @@ use Drupal\user\Entity\User;
  */
 class NodeViewBuilderTest extends EntityKernelTestBase {
 
-  use AutoSetupTrait {
-    AutoSetupTrait::setUp as protected autoSetup;
-  }
+  use AutoSetupTrait;
 
   /**
    * {@inheritdoc}

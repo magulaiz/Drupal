@@ -17,6 +17,15 @@ trait AutoSetupTrait {
    */
   protected function setUp(): void {
     parent::setUp();
+    $this->autoSetUp();
+  }
+
+  /**
+   * Autowire the properties.
+   *
+   * Use this directly if the test class already has its own setUp method.
+   */
+  protected function autoSetUp(): void {
     $class = new \ReflectionClass($this);
     foreach ($class->getProperties() as $property) {
       if ($property->isInitialized($this) || !$property->hasType()) {
