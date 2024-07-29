@@ -1290,7 +1290,7 @@
         return tempDiv.childNodes;
       };
 
-      const $newContent = $($.parseHTML(response.data, document, true));
+      const $newContent = $(parseHTML(response.data));
 
       // If removing content from the wrapper, detach behaviors first.
       switch (method) {
