@@ -14,7 +14,7 @@ use Drupal\KernelTests\KernelTestBase;
  */
 class LocaleStringIsSafeTest extends KernelTestBase {
 
-  use StringTranslationTrait;;
+  use StringTranslationTrait;
 
   /**
    * {@inheritdoc}
