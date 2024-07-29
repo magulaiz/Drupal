@@ -94,6 +94,7 @@ class EntityPermissionsFormTest extends UnitTestCase {
 
     $access_actual = $bundle_form->access($route, $route_match, $bundle);
     $this->assertEquals($found ? AccessResult::allowed() : AccessResult::neutral(), $access_actual);
+    $this->expectDeprecation('Drupal\user\Form\EntityPermissionsForm::access() is deprecated in drupal:10.4.0 and is removed from drupal:12.0.0. Use a permissions check on the route definition instead. See https://www.drupal.org/node/3384745');
   }
 
   /**
