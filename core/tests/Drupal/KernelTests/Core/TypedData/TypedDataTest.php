@@ -610,7 +610,7 @@ class TypedDataTest extends KernelTestBase {
     $this->assertEquals(1, $violations->count());
 
     // Test translating violation messages.
-    $message = t('This value should be %limit or more.', ['%limit' => 5]);
+    $message = 'This value should be 5 or more.';
     $this->assertEquals($message, $violations[0]->getMessage(), 'Translated violation message retrieved.');
     $this->assertEquals('', $violations[0]->getPropertyPath());
     $this->assertSame($integer, $violations[0]->getRoot(), 'Root object returned.');
@@ -622,7 +622,7 @@ class TypedDataTest extends KernelTestBase {
       ]);
     $violations = $this->typedDataManager->create($definition, "short")->validate();
     $this->assertEquals(1, $violations->count());
-    $message = t('This value is too short. It should have %limit characters or more.', ['%limit' => 10]);
+    $message = 'This value is too short. It should have 10 characters or more.';
     $this->assertEquals($message, $violations[0]->getMessage(), 'Translated violation message retrieved.');
 
     // Test having multiple violations.
