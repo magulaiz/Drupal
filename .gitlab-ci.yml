@@ -115,6 +115,12 @@ default:
   # exist.
   - 'curl --location --output core/.cspellcache "https://git.drupalcode.org/api/v4/projects/$CI_PROJECT_ID/jobs/artifacts/{$CACHE_TARGET}/raw/core/.cspellcache?job=Lint%20cache%20warming&job_token=$CI_JOB_TOKEN" || true'
 
+.eslint-cache: &eslint-cache
+  # Fetch the eslint cache from the artifacts of the latest successful job from
+  # the target branch. Allow the job to proceed and pass if the file doesn't
+  # exist.
+  - 'curl --location --output core/.eslintcache "https://git.drupalcode.org/api/v4/projects/$CI_PROJECT_ID/jobs/artifacts/{$CACHE_TARGET}/raw/core/.eslintcache?job=Lint%20cache%20warming&job_token=$CI_JOB_TOKEN" || true'
+
 .core-spellcheck: &core-spellcheck
   - cd core
   - corepack enable
@@ -270,14 +276,17 @@ default:
   script:
     - *phpstan-cache
     - *cspell-cache
+    - *eslint-cache
     - composer install
     - vendor/bin/phpstan --version
     - php vendor/bin/phpstan -vvv analyze --configuration=./core/phpstan.neon.dist
     - *core-spellcheck
+    - yarn run lint:core-js-passing --cache --cache-strategy content
   artifacts:
     paths:
       - core/phpstan-tmp/resultCache.php
       - core/.cspellcache
+      - core/.eslintcache
 
 '🧹 PHP Static Analysis (phpstan)':
   <<: [ *default-job-settings-lint ]
@@ -356,11 +365,12 @@ default:
     - when: manual
       allow_failure: true
   script:
+    - *eslint-cache
     - cd core
     - corepack enable
     - yarn install
     - yarn run check:ckeditor5
-    - yarn run lint:core-js-passing --format gitlab
+    - yarn run lint:core-js-passing --cache --cache-strategy content --format gitlab
   artifacts:
     reports:
       codequality: eslint-quality-report.json
