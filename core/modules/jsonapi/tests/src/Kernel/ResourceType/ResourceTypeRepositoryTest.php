@@ -217,7 +217,7 @@ class ResourceTypeRepositoryTest extends JsonapiKernelTestBase {
   /**
    * Tests that resource type fields can be re-enabled per resource type.
    */
-  public function testResourceTypeFieldEnabling() {
+  public function testResourceTypeFieldEnabling(): void {
     $this->assertTrue($this->resourceTypeRepository->getByTypeName('node--article')->isFieldEnabled('uid'));
     $this->assertTrue($this->resourceTypeRepository->getByTypeName('node--page')->isFieldEnabled('uid'));
     $disabled_resource_type_fields = [
