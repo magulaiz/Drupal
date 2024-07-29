@@ -123,8 +123,9 @@ interface MigrationInterface extends PluginInspectionInterface, DerivativeInspec
    *
    * @param array|null $process
    *   (Optional) A process configuration array. Defaults to NULL.
-   *   Th method returns an empty array if no process plugins are specified
-   *   in the migration's process configuration.
+   *   If specify $process, then get the plugins from the given process array.
+   *   If not specify $process, then get the plugins from the migration
+   *   definition's process array.
    *
    * @return \Drupal\migrate\Plugin\MigrateProcessInterface[][]
    *   An associative array. The keys are the destination property names. Values
