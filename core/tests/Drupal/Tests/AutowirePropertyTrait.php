@@ -17,19 +17,20 @@ trait AutowirePropertyTrait {
    */
   public function autowireProperties(): void {
     $class = new \ReflectionClass($this);
-    if (!\property_exists($this, 'container') || !$this->container instanceof ContainerInterface) {
-      throw new \RuntimeException(sprintf('Cannot autowire properties of class "%s" as it does not have a container.', static::class));
-    }
 
     foreach ($class->getProperties() as $property) {
       // Only autowire properties that have not been initialized yet and have
       // the AutowireProperty attribute.
-      if ($property->isInitialized($this) || !$property->getAttributes(AutowireProperty::class)) {
+      $attr = $property->getAttributes(AutowireProperty::class);
+      if ($property->isInitialized($this) || !$attr) {
         continue;
       }
       // If the property has no type, we cannot autowire it.
       if (!$property->hasType()) {
         throw new \RuntimeException(sprintf('Cannot autowire property "%s" of class "%s" as it has no type.', $property->getName(), static::class));
+      }
+      if (!\property_exists($this, 'container') || !$this->container instanceof ContainerInterface) {
+        throw new \RuntimeException(sprintf('Cannot autowire properties of class "%s" as it does not have a container.', static::class));
       }
       // Find a matching service in the container.
       $service = ltrim((string) $property->getType(), '?');
