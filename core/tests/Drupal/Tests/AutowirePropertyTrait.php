@@ -30,7 +30,7 @@ trait AutowirePropertyTrait {
       }
       // Find a matching service in the container.
       if (!isset($attr[0]->getArguments()['service'])) {
-        throw new AutowiringFailedException($service, sprintf('No service to autowire specified for property "$%s" of class "%s".', $property->getName(), static::class));
+        throw new AutowiringFailedException('', sprintf('No service to autowire specified for property "$%s" of class "%s".', $property->getName(), static::class));
       }
       $service = $attr[0]->getArguments()['service'];
       if (!$this->container->has($service)) {
