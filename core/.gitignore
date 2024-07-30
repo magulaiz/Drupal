@@ -26,3 +26,12 @@ nightwatch.settings.json
 
 # Ignore CSpell cache
 .cspellcache
+
+# Ignore phpstan cache
+phpstan-tmp
+
+# Ingore eslint cache
+.eslintcache
+
+# Ignore phpcs cache
+.phpcscache

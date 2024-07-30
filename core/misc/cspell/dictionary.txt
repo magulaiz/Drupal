@@ -213,6 +213,7 @@ endtrans
 enoki
 entityviewedit
 errmode
+eslintcache
 etag
 eurozone
 evenodd
@@ -452,6 +453,7 @@ persistable
 phpass
 phpcbf
 phpcodesniffer
+phpcscache
 phpdocumentor
 phpserialize
 phpspec
@@ -590,6 +592,7 @@ strs
 sttid
 styleguide
 stylelint
+stylelintcache
 stylescombo
 subarrays
 subchild
