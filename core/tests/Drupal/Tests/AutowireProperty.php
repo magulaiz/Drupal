@@ -10,6 +10,6 @@ use Symfony\Component\DependencyInjection\Attribute\Autowire;
  * Autowire properties.
  */
 #[\Attribute(\Attribute::TARGET_PROPERTY)]
-final readonly class AutowireProperty extends Autowire {
+final class AutowireProperty extends Autowire {
 
 }
