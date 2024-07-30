@@ -9,11 +9,13 @@ use Drupal\Core\Entity\EntityDefinitionUpdateManagerInterface;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityPublishedInterface;
 use Drupal\Core\Entity\EntityStorageException;
+use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Language\LanguageInterface;
 use Drupal\Core\State\StateInterface;
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\language\Entity\ConfigurableLanguage;
 use Drupal\node\Entity\Node;
+use Drupal\Tests\AutowireProperty;
 use Drupal\Tests\content_moderation\Traits\ContentModerationTestTrait;
 use Drupal\Tests\node\Traits\ContentTypeCreationTrait;
 use Drupal\Tests\system\Functional\Entity\Traits\EntityDefinitionTestTrait;
@@ -59,7 +61,8 @@ class ContentModerationStateTest extends KernelTestBase {
   /**
    * @var \Drupal\Core\Entity\EntityTypeManager
    */
-  protected $entityTypeManager;
+  #[AutowireProperty]
+  protected EntityTypeManagerInterface $entityTypeManager;
 
   /**
    * The state object.
@@ -70,8 +73,6 @@ class ContentModerationStateTest extends KernelTestBase {
 
   /**
    * The entity definition update manager.
-   *
-   * @var \Drupal\Core\Entity\EntityDefinitionUpdateManagerInterface
    */
   protected EntityDefinitionUpdateManagerInterface $entityDefinitionUpdateManager;
 
@@ -105,8 +106,6 @@ class ContentModerationStateTest extends KernelTestBase {
 
     // Add the French language.
     ConfigurableLanguage::createFromLangcode('fr')->save();
-
-    $this->entityTypeManager = $this->container->get('entity_type.manager');
   }
 
   /**
