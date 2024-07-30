@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\content_translation\Kernel;
 
 use Drupal\KernelTests\KernelTestBase;
@@ -99,7 +101,7 @@ class ContentTranslationManagerTest extends KernelTestBase {
    */
   public function testSetBundleTranslationSettings() {
     $settings = $this->contentTranslationManager->setBundleTranslationSettings(NULL, NULL, []);
-    $this->aassertEmpty($settings);
+    $this->assertEmpty($settings);
   }
 
 }
