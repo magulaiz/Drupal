@@ -3,5 +3,5 @@
 }
 
 .ck-balloon-panel {
-  z-index:9998 !important;
+  z-index: 10000 !important;
 }
