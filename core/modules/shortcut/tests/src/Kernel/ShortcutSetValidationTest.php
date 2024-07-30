@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\shortcut\Kernel;
 
 use Drupal\KernelTests\Core\Config\ConfigEntityValidationTestBase;
@@ -9,6 +11,7 @@ use Drupal\shortcut\Entity\ShortcutSet;
  * Tests validation of shortcut_set entities.
  *
  * @group shortcut
+ * @group #slow
  */
 class ShortcutSetValidationTest extends ConfigEntityValidationTestBase {
 
