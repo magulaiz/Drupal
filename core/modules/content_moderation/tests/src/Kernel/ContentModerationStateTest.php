@@ -15,11 +15,11 @@ use Drupal\Core\State\StateInterface;
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\language\Entity\ConfigurableLanguage;
 use Drupal\node\Entity\Node;
-use Drupal\Tests\AutowireProperty;
 use Drupal\Tests\content_moderation\Traits\ContentModerationTestTrait;
 use Drupal\Tests\node\Traits\ContentTypeCreationTrait;
 use Drupal\Tests\system\Functional\Entity\Traits\EntityDefinitionTestTrait;
 use Drupal\workflows\Entity\Workflow;
+use Symfony\Component\DependencyInjection\Attribute\Autowire;
 
 /**
  * Tests links between a content entity and a content_moderation_state entity.
@@ -61,7 +61,7 @@ class ContentModerationStateTest extends KernelTestBase {
   /**
    * @var \Drupal\Core\Entity\EntityTypeManager
    */
-  #[AutowireProperty]
+  #[Autowire(service: 'entity_type.manager')]
   protected EntityTypeManagerInterface $entityTypeManager;
 
   /**
