@@ -4,8 +4,10 @@ declare(strict_types=1);
 
 namespace Drupal\KernelTests\Core\Entity\Sql;
 
+use Drupal\Core\Entity\EntityDefinitionUpdateManagerInterface;
 use Drupal\Core\Field\BaseFieldDefinition;
 use Drupal\KernelTests\Core\Entity\EntityKernelTestBase;
+use Drupal\Tests\AutowireProperty;
 
 /**
  * @group Entity
@@ -21,10 +23,9 @@ class SqlContentEntityStorageSchemaTest extends EntityKernelTestBase {
 
   /**
    * The entity definition update manager.
-   *
-   * @var \Drupal\Core\Entity\EntityDefinitionUpdateManagerInterface
    */
-  protected $entityDefinitionUpdateManager;
+  #[AutowireProperty]
+  protected EntityDefinitionUpdateManagerInterface $entityDefinitionUpdateManager;
 
   /**
    * {@inheritdoc}
@@ -35,7 +36,6 @@ class SqlContentEntityStorageSchemaTest extends EntityKernelTestBase {
     /** @var \Drupal\Core\KeyValueStore\KeyValueFactoryInterface $key_value_factory */
     $key_value_factory = $this->container->get('keyvalue');
     $this->installedStorageSchema = $key_value_factory->get('entity.storage_schema.sql');
-    $this->entityDefinitionUpdateManager = $this->container->get('entity.definition_update_manager');
   }
 
   /**
