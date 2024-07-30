@@ -124,7 +124,7 @@ class ViewsListingTest extends WebDriverTestBase {
     $this->assertEquals($view_description, $this->getSession()->evaluateScript("jQuery(document.activeElement).parents('tr').find('.views-ui-view-name strong').text()"));
 
     // Enable the view again and ensure we have the focus on the edit button.
-    $this->getSession()->evaluateScript('jQuery(document.activeElement).click()');
+    $this->getSession()->executeScript('jQuery(document.activeElement).click()');
     $session->assertWaitOnAjaxRequest();
 
     $this->assertTrue($this->getSession()->evaluateScript("jQuery(document.activeElement).text() === 'Edit'"));
