@@ -25,9 +25,7 @@
 }
 
 .modules-table-filter .form-item__description,
-.permissions-table-filter .form-item__description,
-.modules-table-filter .permissions-table-filter .form-item__description,
-.permissions-table-filter .permissions-table-filter .form-item__description {
+.permissions-table-filter .form-item__description {
   position: absolute !important;
   overflow: hidden;
   clip: rect(1px, 1px, 1px, 1px);
