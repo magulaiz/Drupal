@@ -9,9 +9,11 @@ use Drupal\Core\Entity\EntityDefinitionUpdateManagerInterface;
 use Drupal\Core\Entity\EntityTypeEvent;
 use Drupal\Core\Entity\EntityTypeEvents;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
+use Drupal\Core\State\StateInterface;
 use Drupal\Tests\AutowireProperty;
 use Drupal\Tests\system\Functional\Entity\Traits\EntityDefinitionTestTrait;
 use Drupal\Tests\views\Kernel\ViewsKernelTestBase;
+use Drupal\views\EventSubscriber\ViewsEntitySchemaSubscriber;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
 /**
@@ -27,7 +29,7 @@ class ViewsEntitySchemaSubscriberIntegrationTest extends ViewsKernelTestBase {
   /**
    * The entity definition update manager.
    */
-  #[AutowireProperty]
+  #[AutowireProperty(service: 'entity.definition_update_manager')]
   protected EntityDefinitionUpdateManagerInterface $entityDefinitionUpdateManager;
 
   /**
@@ -50,37 +52,32 @@ class ViewsEntitySchemaSubscriberIntegrationTest extends ViewsKernelTestBase {
   /**
    * The event dispatcher.
    */
-  #[AutowireProperty]
+  #[AutowireProperty(service: 'event_dispatcher')]
   protected EventDispatcherInterface $eventDispatcher;
 
   /**
    * The tested event subscriber of views.
-   *
-   * @var \Drupal\views\EventSubscriber\ViewsEntitySchemaSubscriber
    */
-  protected $eventSubscriber;
+  #[AutowireProperty(service: 'views.entity_schema_subscriber')]
+  protected ViewsEntitySchemaSubscriber $eventSubscriber;
 
   /**
    * The entity type manager service.
    */
-  #[AutowireProperty]
+  #[AutowireProperty(service: 'entity_type.manager')]
   protected EntityTypeManagerInterface $entityTypeManager;
 
   /**
    * The state service.
-   *
-   * @var \Drupal\Core\State\StateInterface
    */
-  protected $state;
+  #[AutowireProperty(service: 'state')]
+  protected StateInterface $state;
 
   /**
    * {@inheritdoc}
    */
   protected function setUp($import_test_views = TRUE): void {
     parent::setUp();
-
-    $this->eventSubscriber = $this->container->get('views.entity_schema_subscriber');
-    $this->state = $this->container->get('state');
 
     // Install every entity type's schema that wasn't installed in the parent
     // method.

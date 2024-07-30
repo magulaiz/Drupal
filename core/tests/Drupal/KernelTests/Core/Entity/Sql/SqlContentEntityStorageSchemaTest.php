@@ -24,7 +24,7 @@ class SqlContentEntityStorageSchemaTest extends EntityKernelTestBase {
   /**
    * The entity definition update manager.
    */
-  #[AutowireProperty]
+  #[AutowireProperty(service: 'entity.definition_update_manager')]
   protected EntityDefinitionUpdateManagerInterface $entityDefinitionUpdateManager;
 
   /**
