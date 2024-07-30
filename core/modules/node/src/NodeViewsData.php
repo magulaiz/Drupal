@@ -36,9 +36,14 @@ class NodeViewsData extends EntityViewsData {
     // Use status = 1 instead of status <> 0 in WHERE statement.
     $data['node_field_data']['status']['filter']['use_equal'] = TRUE;
 
+    $status_extra_help_text = $this->t('Filters out unpublished content if the current user cannot view it.');
+    if (\Drupal::moduleHandler()->hasImplementations('node_grants')) {
+      $status_extra_help_text = $this->t('Filters out unpublished content if the current user cannot view it. <strong>Does nothing when node access is in use.</strong>');
+    }
+
     $data['node_field_data']['status_extra'] = [
       'title' => $this->t('Published status or admin user'),
-      'help' => $this->t('Filters out unpublished content if the current user cannot view it. <strong>Does nothing when node access is in use.</strong>'),
+      'help' => $status_extra_help_text,
       'filter' => [
         'field' => 'status',
         'id' => 'node_status',
