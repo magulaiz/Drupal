@@ -194,7 +194,7 @@ class PageCacheTest extends BrowserTestBase {
     $this->assertSession()->statusCodeEquals(304);
 
     // Ensure a conditional request without If-None-Match returns 200 OK.
-    $this->drupalGet('', [], ['If-Modified-Since' => $last_modified, 'If-None-Match' => NULL]);
+    $this->drupalGet('', [], ['If-Modified-Since' => $last_modified, 'If-None-Match' => '']);
     // Verify the page is not printed twice when the cache is warm.
     $this->assertSession()->responseNotMatches('#<html.*<html#');
     $this->assertSession()->statusCodeEquals(200);
@@ -611,7 +611,7 @@ class PageCacheTest extends BrowserTestBase {
    * @return array
    *   Array of headers.
    */
-  protected function getHeaders($url) {
+  protected function getHeaders($url): array {
     $ch = curl_init();
     curl_setopt($ch, CURLOPT_URL, $url);
     curl_setopt($ch, CURLOPT_HEADER, TRUE);
