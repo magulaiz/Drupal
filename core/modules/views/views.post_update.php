@@ -64,3 +64,14 @@ function views_post_update_views_data_argument_plugin_id(?array &$sandbox = NULL
     return $view_config_updater->needsEntityArgumentUpdate($view);
   });
 }
+
+/**
+ * Update timestamp formatter settings for views.
+ */
+function views_post_update_timestamp_formatter_time_diff(?array &$sandbox = NULL): void {
+  /** @var \Drupal\views\ViewsConfigUpdater $view_config_updater */
+  $view_config_updater = \Drupal::classResolver(ViewsConfigUpdater::class);
+  \Drupal::classResolver(ConfigEntityUpdater::class)->update($sandbox, 'view', function (ViewEntityInterface $view) use ($view_config_updater): bool {
+    return $view_config_updater->needsTimestampFormatterTimeDiffDescriptionUpdate($view);
+  });
+}
