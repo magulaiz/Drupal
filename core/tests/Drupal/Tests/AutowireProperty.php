@@ -21,7 +21,9 @@ final class AutowireProperty extends Autowire {
     ?string $param = NULL,
     bool|string|array $lazy = FALSE,
   ) {
-    parent::__construct($value, $service, $expression, $env, $param, $lazy);
+    if ($value !== NULL || $service !== NULL || $expression !== NULL || $env !== NULL || $param !== NULL) {
+      parent::__construct($value, $service, $expression, $env, $param, $lazy);
+    }
   }
 
 }
