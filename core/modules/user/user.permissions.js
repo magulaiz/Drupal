@@ -39,16 +39,17 @@
         // deliberate, but desirable when we automatically check them.
         const $dummy = $(Drupal.theme('checkbox'))
           .removeClass('form-checkbox')
-          .addClass('dummy-checkbox js-dummy-checkbox')
-          .attr('disabled', 'disabled')
-          .attr('checked', 'checked')
-          .attr(
-            'title',
-            Drupal.t(
-              'This permission is inherited from the authenticated user role.',
-            ),
-          )
-          .hide();
+          .addClass('dummy-checkbox js-dummy-checkbox');
+
+        $dummy[0].setAttribute('disabled', 'disabled');
+        $dummy[0].setAttribute('checked', 'checked');
+        $dummy[0].setAttribute(
+          'title',
+          Drupal.t(
+            'This permission is inherited from the authenticated user role.',
+          ),
+        );
+        $dummy.hide();
 
         $table
           .find('input[type="checkbox"]')

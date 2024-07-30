@@ -95,7 +95,7 @@
    *   The function to call with the response.
    */
   function sourceData(request, response) {
-    const elementId = this.element.attr('id');
+    const elementId = this.element[0].id;
 
     if (!(elementId in autocomplete.cache)) {
       autocomplete.cache[elementId] = {};
@@ -143,7 +143,7 @@
         { success: sourceCallbackHandler, data: { q: term } },
         autocomplete.ajax,
       );
-      $.ajax(this.element.attr('data-autocomplete-path'), options);
+      $.ajax(this.element[0].getAttribute('data-autocomplete-path'), options);
     }
   }
 
@@ -212,7 +212,7 @@
         (element) => {
           const $autocomplete = $(element);
           // Allow options to be overridden per instance.
-          const blacklist = $autocomplete.attr(
+          const blacklist = element.getAttribute(
             'data-autocomplete-first-character-blacklist',
           );
           $.extend(autocomplete.options, {

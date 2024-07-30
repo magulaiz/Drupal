@@ -23,13 +23,14 @@
         const $checkbox = $(checkbox);
         // Retrieve the tabledrag row belonging to this filter.
         const $row = $context
-          .find(`#${$checkbox.attr('id').replace(/-status$/, '-weight')}`)
+          .find(`#${checkbox.id.replace(/-status$/, '-weight')}`)
           .closest('tr');
         // Retrieve the vertical tab belonging to this filter.
         const $filterSettings = $context.find(
-          `[data-drupal-selector='${$checkbox
-            .attr('id')
-            .replace(/-status$/, '-settings')}']`,
+          `[data-drupal-selector='${checkbox.id.replace(
+            /-status$/,
+            '-settings',
+          )}']`,
         );
         const filterSettingsTab = $filterSettings.data('verticalTab');
 

@@ -150,10 +150,10 @@
       // @todo Remove the custom ID when the AJAX system allows replacing
       //    elements by selector.
       //    https://www.drupal.org/project/drupal/issues/2821793
-      $view
-        .closest('.views-element-container')
-        .attr('id', 'media-library-view');
-
+      const closestContainer = $view.closest('.views-element-container')[0];
+      if (closestContainer) {
+        closestContainer.id = 'media-library-view';
+      }
       // We would ideally use a generic JavaScript specific class to detect the
       // display links. Since we have no good way of altering display links yet,
       // this is the best we can do for now.

@@ -13,7 +13,9 @@
 
     const openMenu = () => {
       $target.toggleClass('is-open');
-      $target.find('button').attr('aria-expanded', $target.hasClass('is-open'));
+      $target
+        .find('button')[0]
+        .setAttribute('aria-expanded', $target.hasClass('is-open'));
     };
 
     const toggleOrder = (reset) => {
@@ -40,26 +42,29 @@
       }
     };
 
-    const toggleCollapsed = ({ matches }) => {
-      if (matches) {
-        if ($tab.hasClass('is-horizontal') && !$tab.attr('data-width')) {
+    const toggleCollapsed = () => {
+      if (window.matchMedia('(min-width: 48em)').matches) {
+        if ($tab.hasClass('is-horizontal') && !tab.getAttribute('data-width')) {
           let width = 0;
 
           $target.find('.js-tabs-link').each((index, value) => {
             width += $(value).outerWidth();
           });
-          $tab.attr('data-width', width);
+          $tab[0].setAttribute('data-width', width);
         }
 
         // Collapse the tabs if the combined width of the tabs is greater than
         // the width of the parent container.
-        const isHorizontal = $tab.attr('data-width') <= $tab.outerWidth();
+        const isHorizontal =
+          tab.getAttribute('data-width') <= $tab.outerWidth();
         $tab.toggleClass('is-horizontal', isHorizontal);
-        $tab.find('button').attr('aria-expanded', null);
+        if ($tab.find('button')[0]) {
+          $tab.find('button')[0].setAttribute('aria-expanded', null);
+        }
         toggleOrder(isHorizontal);
       } else {
         toggleOrder(false);
-        $tab.find('button').attr('aria-expanded', 'false');
+        $tab.find('button')[0].setAttribute('aria-expanded', 'false');
       }
     };
 
@@ -67,7 +72,7 @@
 
     $target.find('.js-tab').each((index, element) => {
       const $item = $(element);
-      $item.attr('data-original-order', $item.index());
+      element.setAttribute('data-original-order', $item.index());
     });
 
     $tab.on('click.tabs', '[data-drupal-nav-tabs-trigger]', openMenu);

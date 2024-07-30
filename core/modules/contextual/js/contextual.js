@@ -179,8 +179,8 @@
       const ids = [];
       $placeholders.each(function () {
         ids.push({
-          id: $(this).attr('data-contextual-id'),
-          token: $(this).attr('data-contextual-token'),
+          id: this.getAttribute('data-contextual-id'),
+          token: this.getAttribute('data-contextual-token'),
         });
       });
 

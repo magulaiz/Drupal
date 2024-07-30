@@ -41,13 +41,13 @@
         '[data-action]',
         (e) => {
           const $target = $(e.currentTarget);
-          const type = $target.attr('data-type');
+          const type = e.currentTarget.getAttribute('data-type');
           const area =
             $target
-              .closest('[data-drupal-messages-area]')
-              .attr('data-drupal-messages-area') || 'default';
+              .closest('[data-drupal-messages-area]')[0]
+              .getAttribute('data-drupal-messages-area') || 'default';
           const message = messageObjects[area].zone;
-          const action = $target.attr('data-action');
+          const action = e.currentTarget.getAttribute('data-action');
 
           if (action === 'add') {
             messageObjects[area].indexes[type].push(

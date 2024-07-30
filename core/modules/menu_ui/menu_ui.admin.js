@@ -60,10 +60,9 @@
         });
 
         // Hide the parent options if there are no options for it.
-        $select
-          .closest('div')
-          .toggle(totalOptions > 0)
-          .attr('hidden', totalOptions === 0);
+        const $closestSelect = $select.closest('div');
+        $closestSelect.toggle(totalOptions > 0);
+        $closestSelect[0].setAttribute('hidden', totalOptions === 0);
       },
     });
   };

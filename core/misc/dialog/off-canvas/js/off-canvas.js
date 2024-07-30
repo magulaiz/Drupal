@@ -161,7 +161,7 @@
       $(
         '.ui-dialog-off-canvas, .ui-dialog-off-canvas .ui-dialog-titlebar',
       ).toggleClass('ui-dialog-empty-title', !settings.title);
-      $('.ui-dialog-off-canvas').attr('id', 'drupal-off-canvas-wrapper');
+      $('.ui-dialog-off-canvas')[0].id = 'drupal-off-canvas-wrapper';
     },
 
     /**
@@ -286,14 +286,17 @@
         mainCanvasWrapper.style[`padding-${Drupal.offCanvas.getEdge()}`] =
           `${width}px`;
 
-        $container.attr(`data-offset-${Drupal.offCanvas.getEdge()}`, width);
+        $container[0].setAttribute(
+          `data-offset-${Drupal.offCanvas.getEdge()}`,
+          width,
+        );
         displace();
       }
 
       const height = $container.outerHeight();
       if (position === 'top') {
         mainCanvasWrapper.style.paddingTop = `${height}px`;
-        $container.attr('data-offset-top', height);
+        $container[0].setAttribute('data-offset-top', height);
         displace();
       }
     },

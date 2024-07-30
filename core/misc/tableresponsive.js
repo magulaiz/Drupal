@@ -30,14 +30,14 @@
     // Add a link before the table for users to show or hide weight columns.
     this.$link = $(
       '<button type="button" class="link tableresponsive-toggle"></button>',
-    )
-      .attr(
-        'title',
-        Drupal.t(
-          'Show table cells that were hidden to make the table fit within a small screen.',
-        ),
-      )
-      .on('click', this.eventhandlerToggleColumns.bind(this));
+    );
+    this.$link[0].setAttribute(
+      'title',
+      Drupal.t(
+        'Show table cells that were hidden to make the table fit within a small screen.',
+      ),
+    );
+    this.$link.on('click', this.eventhandlerToggleColumns.bind(this));
 
     this.$table.before(
       $('<div class="tableresponsive-toggle-columns"></div>').append(
@@ -159,8 +159,7 @@
           // Strip the 'display:none' declaration from the style attributes of
           // the table cells that .hide() added.
           this.$revealedCells.each(function (index, element) {
-            const $cell = $(this);
-            const properties = $cell.attr('style').split(';');
+            const properties = this.getAttribute('style').split(';');
             const newProps = [];
             // The hide method adds display none to the element. The element
             // should be returned to the same state it was in before the columns
@@ -178,7 +177,7 @@
               newProps.push(prop);
             }
             // Return the rest of the style attribute values to the element.
-            $cell.attr('style', newProps.join(';'));
+            this.setAttribute('style', newProps.join(';'));
           });
           this.$link[0].textContent = this.showText;
           this.$link.data('pegged', 0);

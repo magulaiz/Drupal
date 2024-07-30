@@ -149,7 +149,7 @@
       .not('[data-drupal-selector=edit-reset]')
       .each(function (index) {
         const selfSettings = $.extend({}, that.element_settings, {
-          base: $(this).attr('id'),
+          base: this.id,
           element: this,
         });
         that.exposedFormAjax[index] = Drupal.ajax(selfSettings);
@@ -188,7 +188,7 @@
   Drupal.views.ajaxView.prototype.attachPagerLinkAjax = function (id, link) {
     const $link = $(link);
     const viewData = {};
-    const href = $link.attr('href');
+    const href = link.getAttribute('href');
     // Construct an object using the settings defaults and then overriding
     // with data specific to the link.
     $.extend(

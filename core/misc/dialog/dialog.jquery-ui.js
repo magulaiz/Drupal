@@ -31,15 +31,12 @@
       }
     },
     _createWrapper() {
-      this.uiDialog = $('<div>')
-        .hide()
-        .attr({
-          // Setting tabIndex makes the div focusable
-          tabIndex: -1,
-          role: 'dialog',
-          'aria-modal': this.options.modal ? 'true' : null,
-        })
-        .appendTo(this._appendTo());
+      this.uiDialog = $('<div>', {
+        tabIndex: '-1',
+        role: 'dialog',
+      }).hide();
+
+      this._appendTo().append(this.uiDialog[0]);
 
       this._addClass(
         this.uiDialog,
