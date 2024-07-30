@@ -8,7 +8,7 @@ use Drupal\Core\Entity\EntityDefinitionUpdateManagerInterface;
 use Drupal\Core\Field\BaseFieldDefinition;
 use Drupal\entity_test_update\Entity\EntityTestUpdate;
 use Drupal\KernelTests\Core\Entity\EntityKernelTestBase;
-use Symfony\Component\DependencyInjection\Attribute\Autowire;
+use Drupal\Tests\AutowireProperty;
 
 /**
  * Tests map base fields.
@@ -20,7 +20,7 @@ class MapBaseFieldTest extends EntityKernelTestBase {
   /**
    * The entity definition update manager.
    */
-  #[Autowire(service: 'entity.definition_update_manager')]
+  #[AutowireProperty(service: 'entity.definition_update_manager')]
   protected EntityDefinitionUpdateManagerInterface $entityDefinitionUpdateManager;
 
   /**
