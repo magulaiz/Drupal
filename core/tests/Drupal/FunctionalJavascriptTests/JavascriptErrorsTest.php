@@ -34,7 +34,7 @@ class JavascriptErrorsTest extends WebDriverTestBase {
     $this->drupalGet('user');
 
     $this->expectException(AssertionFailedError::class);
-    $this->expectExceptionMessageMatches('/^Error: A manually thrown error/');
+    $this->expectExceptionMessageMatches('/^(Uncaught )?Error: A manually thrown error/');
 
     // Manually call the method under test, as it cannot be caught by PHPUnit
     // when triggered from assertPostConditions().
@@ -51,7 +51,7 @@ class JavascriptErrorsTest extends WebDriverTestBase {
     $this->drupalGet('user');
 
     $this->expectException(AssertionFailedError::class);
-    $this->expectExceptionMessageMatches('/^Error: An error thrown in async context./');
+    $this->expectExceptionMessageMatches('/^(Uncaught )?Error: An error thrown in async context./');
 
     // Manually call the method under test, as it cannot be caught by PHPUnit
     // when triggered from assertPostConditions().
