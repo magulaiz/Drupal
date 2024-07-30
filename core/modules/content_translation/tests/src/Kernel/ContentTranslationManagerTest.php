@@ -76,7 +76,8 @@ class ContentTranslationManagerTest extends KernelTestBase {
       if ($has_exception) {
         $this->expectException(PluginNotFoundException::class);
       }
-      $this->assertFalse($this->contentTranslationManager->setEnabled($entity_type_id, $bundle, $value));
+      $this->contentTranslationManager->setEnabled($entity_type_id, $bundle, $value);
+      $this->assertFalse($this->contentTranslationManager->isEnabled($entity_type_id, $bundle));
     }
   }
 
