@@ -6,6 +6,7 @@ namespace Drupal\Tests\Core\Test;
 
 use Drupal\Core\Test\JUnitConverter;
 use Drupal\Tests\UnitTestCase;
+use Drupal\TestTools\Random;
 use org\bovigo\vfs\vfsStream;
 
 /**
@@ -101,7 +102,7 @@ EOD;
    * Provides data for testConvertTestCaseToSimpletestRow().
    */
   public static function simpletestDataProvider(): array {
-    $long_function_name = self::generateAlphanumericStr(220);
+    $long_function_name = Random::machineName(220);
     return [
       [
         <<<EOD
@@ -135,19 +136,6 @@ EOD;
       ],
     ];
 
-  }
-
-  /**
-   * Generates a string consisting of alphanumeric characters.
-   */
-  private static function generateAlphanumericStr(int $length = 220): string {
-    $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
-    $charLength = strlen($characters);
-    $randomString = '';
-    for ($i = 0; $i < $length; $i++) {
-      $randomString .= $characters[rand(0, $charLength - 1)];
-    }
-    return $randomString;
   }
 
 }
