@@ -4,10 +4,12 @@ declare(strict_types=1);
 
 namespace Drupal\Tests;
 
+use Symfony\Component\DependencyInjection\Attribute\Autowire;
+
 /**
  * Autowire properties.
  */
 #[\Attribute(\Attribute::TARGET_PROPERTY)]
-final readonly class AutowireProperty {
+final readonly class AutowireProperty extends Autowire {
 
 }

@@ -7,7 +7,7 @@ namespace Drupal\Tests\file\Functional;
 use Drupal\Core\Database\Database;
 use Drupal\Core\File\FileSystemInterface;
 use Drupal\Core\File\FileUrlGeneratorInterface;
-use Symfony\Component\DependencyInjection\Attribute\Autowire;
+use Drupal\Tests\AutowireProperty;
 
 /**
  * Tests for download/file transfer functions.
@@ -24,7 +24,7 @@ class DownloadTest extends FileManagedTestBase {
   /**
    * The file URL generator.
    */
-  #[Autowire(service: 'file_url_generator')]
+  #[AutowireProperty(service: 'file_url_generator')]
   protected FileUrlGeneratorInterface $fileUrlGenerator;
 
   /**
