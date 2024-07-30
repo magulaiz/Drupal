@@ -14,15 +14,16 @@ use Symfony\Component\DependencyInjection\Attribute\Autowire;
 final class AutowireProperty extends Autowire {
 
   public function __construct(
-    string|array|ArgumentInterface|NULL $value = NULL,
     ?string $service = NULL,
     ?string $expression = NULL,
-    ?string $env = NULL,
     ?string $param = NULL,
-    bool|string|array $lazy = FALSE,
   ) {
-    if ($value !== NULL || $service !== NULL || $expression !== NULL || $env !== NULL || $param !== NULL) {
-      parent::__construct($value, $service, $expression, $env, $param, $lazy);
+    if ($service !== NULL || $expression !== NULL || $param !== NULL) {
+      parent::__construct(
+        service: $service,
+        expression: $expression,
+        param: $param,
+      );
     }
   }
 

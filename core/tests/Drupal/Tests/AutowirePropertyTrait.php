@@ -34,6 +34,13 @@ trait AutowirePropertyTrait {
         if (isset($args['service'])) {
           $service = $args['service'];
         }
+        elseif (isset($args['param'])) {
+          if (!$this->container->hasParameter($args['param'])) {
+            throw new AutowiringFailedException($args['param'], sprintf('Cannot autowire parameter "%s": property "$%s" of class "%s".', $args['param'], $property->getName(), static::class));
+          }
+          $property->setValue($this, $this->container->getParameter($args['param']));
+          continue;
+        }
         elseif (isset($args['expression'])) {
           $expressionLanguage = new ExpressionLanguage();
           $eval = $expressionLanguage->evaluate($args['expression'], ['container' => $this->container]);
