@@ -91,9 +91,9 @@ class EntityReferenceWidgetTest extends MediaLibraryTestBase {
     $this->assertFalse($open_button->hasAttribute('data-disabled-focus'));
     $this->assertTrue($open_button->hasAttribute('disabled'));
     // The button should be disabled.
-    $this->assertJsCondition('jQuery("#field_twin_media-media-library-wrapper .js-media-library-open-button").is(":disabled")');
+    $this->assertJsCondition('jQuery("#field_twin_media-media-library-wrapper .js-media-library-open-button").is(":disabled") === true');
     // The button should not have focus.
-    $this->assertJsCondition('jQuery("#field_twin_media-media-library-wrapper .js-media-library-open-button").not(":focus")');
+    $this->assertJsCondition('jQuery("#field_twin_media-media-library-wrapper .js-media-library-open-button").is(":focus") === false');
   }
 
   /**
