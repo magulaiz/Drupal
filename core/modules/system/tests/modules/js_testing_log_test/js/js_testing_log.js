@@ -24,7 +24,7 @@
       sessionStorage.getItem('js_testing_log_test.errors') ||
         JSON.stringify([]),
     );
-    errors.push(evt.error.stack);
+    errors.push(evt.message.concat(' ', evt.error.stack));
     sessionStorage.setItem(
       'js_testing_log_test.errors',
       JSON.stringify(errors),
