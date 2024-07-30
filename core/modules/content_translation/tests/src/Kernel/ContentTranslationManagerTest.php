@@ -66,7 +66,6 @@ class ContentTranslationManagerTest extends KernelTestBase {
    *
    * @dataProvider providerTestTranslationSwitch
    *
-   * @covers ::setEnabled
    */
   public function testTranslationSwitch($entity_type_id, $bundle, $value, array $result) {
     [$is_success, $has_exception] = $result;
