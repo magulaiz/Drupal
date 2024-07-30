@@ -6,6 +6,7 @@ namespace Drupal\KernelTests\Core\Entity\Sql;
 
 use Drupal\Core\Entity\EntityDefinitionUpdateManagerInterface;
 use Drupal\Core\Field\BaseFieldDefinition;
+use Drupal\Core\KeyValueStore\KeyValueStoreInterface;
 use Drupal\KernelTests\Core\Entity\EntityKernelTestBase;
 use Drupal\Tests\AutowireProperty;
 
@@ -16,27 +17,15 @@ class SqlContentEntityStorageSchemaTest extends EntityKernelTestBase {
 
   /**
    * The key-value collection for tracking installed storage schema.
-   *
-   * @var \Drupal\Core\KeyValueStore\KeyValueStoreInterface
    */
-  protected $installedStorageSchema;
+  #[AutowireProperty(expression: "service('keyvalue').get('entity.storage_schema.sql')")]
+  protected KeyValueStoreInterface $installedStorageSchema;
 
   /**
    * The entity definition update manager.
    */
-  #[AutowireProperty()]
+  #[AutowireProperty]
   protected EntityDefinitionUpdateManagerInterface $entityDefinitionUpdateManager;
-
-  /**
-   * {@inheritdoc}
-   */
-  protected function setUp(): void {
-    parent::setUp();
-
-    /** @var \Drupal\Core\KeyValueStore\KeyValueFactoryInterface $key_value_factory */
-    $key_value_factory = $this->container->get('keyvalue');
-    $this->installedStorageSchema = $key_value_factory->get('entity.storage_schema.sql');
-  }
 
   /**
    * Tests updating a shared table field definition.

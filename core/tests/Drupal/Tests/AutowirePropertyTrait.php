@@ -6,6 +6,7 @@ namespace Drupal\Tests;
 
 use Drupal\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\DependencyInjection\Exception\AutowiringFailedException;
+use Symfony\Component\DependencyInjection\ExpressionLanguage;
 
 /**
  * Autowire properties.
@@ -28,8 +29,17 @@ trait AutowirePropertyTrait {
       if (!\property_exists($this, 'container') || !$this->container instanceof ContainerInterface) {
         throw new \RuntimeException(sprintf('Cannot autowire properties of class "%s" as there is no container available.', static::class));
       }
-      if (count($attr[0]->getArguments()) !== 0) {
-        $service = $attr[0]->getArguments()['service'] ?? '';
+      $args = $attr[0]->getArguments();
+      if (count($args) !== 0) {
+        if (isset($args['service'])) {
+          $service = $attr[0]->getArguments()['service'] ?? '';
+        }
+        elseif (isset($args['expression'])) {
+          $expressionLanguage = new ExpressionLanguage();
+          $eval = $expressionLanguage->evaluate($args['expression'], ['container' => $this->container]);
+          $property->setValue($this, $eval);
+          continue;
+        }
       }
       else {
         // When no arguments in the attribute, try finding out from the property
