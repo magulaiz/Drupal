@@ -115,7 +115,7 @@ class Checkboxes extends FormElementBase {
         'class' => [
           'check-all-btn',
           'button',
-          'button--small'
+          'button--small',
         ],
         'data-check-all' => TRUE,
         'type' => 'button',
@@ -130,7 +130,7 @@ class Checkboxes extends FormElementBase {
         'class' => [
           'check-all-btn',
           'button',
-          'button--small'
+          'button--small',
         ],
         'data-check-all' => FALSE,
         'type' => 'button',
