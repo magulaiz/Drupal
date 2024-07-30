@@ -42,7 +42,7 @@ class NodeViewBuilderTest extends EntityKernelTestBase {
   /**
    * The renderer.
    */
-  #[AutowireProperty]
+  #[AutowireProperty(service: 'renderer')]
   protected RendererInterface $renderer;
 
   /**
