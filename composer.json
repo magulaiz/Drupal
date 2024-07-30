@@ -38,6 +38,7 @@
         "symfony/css-selector": "^7.1",
         "symfony/dom-crawler": "^7.1",
         "symfony/error-handler": "^7.1",
+        "symfony/expression-language": "^7.1",
         "symfony/lock": "^7.1",
         "symfony/var-dumper": "^7.1"
     },
