@@ -86,10 +86,12 @@ class MediaOverviewTest extends MediaLibraryTestBase {
     $assert_session->pageTextContains('Turtle');
 
     // Verify that the media name does not contain a link. The selector is
-    // tricky, so start by asserting ".js-media-library-item-preview + div"
-    // can select a div containing a media name.
-    $assert_session->elementExists('css', '.js-media-library-item-preview + div:contains("Dog")');
-    $assert_session->elementExists('css', '.js-media-library-item-preview + div:contains("Turtle")');
+    // tricky, so start by asserting ".js-media-library-item-preview +
+    // :contains(TEXT)" can select a div containing a media name.
+    $element = $assert_session->elementExists('css', '.js-media-library-item-preview + :contains("Dog")');
+    $this->assertSame('div', $element->getTagName());
+    $element = $assert_session->elementExists('css', '.js-media-library-item-preview + :contains("Turtle")');
+    $this->assertSame('div', $element->getTagName());
     $assert_session->elementNotExists('css', '.js-media-library-item-preview + div a');
     // Verify that there are links to edit and delete media items.
     $assert_session->linkExists('Edit Dog');
@@ -124,6 +126,7 @@ class MediaOverviewTest extends MediaLibraryTestBase {
     // by the Mink driver). This workaround allows the delete form to be
     // submitted.
     $assert_session->elementExists('css', 'form')->submit();
+    $this->waitForNoText('Dog', 3000);
     $assert_session->pageTextNotContains('Dog');
     $assert_session->pageTextContains('Cat');
 
@@ -142,7 +145,7 @@ class MediaOverviewTest extends MediaLibraryTestBase {
     // by the Mink driver). This workaround allows the delete form to be
     // submitted.
     $assert_session->elementExists('css', 'form')->submit();
-
+    $this->waitForNoText('Cat', 3000);
     $assert_session->pageTextNotContains('Cat');
     $assert_session->pageTextNotContains('Turtle');
     $assert_session->pageTextNotContains('Snake');
