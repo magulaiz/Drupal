@@ -32,7 +32,7 @@ trait AutowirePropertyTrait {
       $args = $attr[0]->getArguments();
       if (count($args) !== 0) {
         if (isset($args['service'])) {
-          $service = $attr[0]->getArguments()['service'] ?? '';
+          $service = $args['service'];
         }
         elseif (isset($args['expression'])) {
           $expressionLanguage = new ExpressionLanguage();
@@ -48,6 +48,9 @@ trait AutowirePropertyTrait {
           continue;
         }
         $service = ltrim((string) $property->getType(), '?');
+      }
+      if (!isset($service)) {
+        throw new AutowiringFailedException('', sprintf('Cannot find a service definition for property "$%s" of class "%s".', $property->getName(), static::class));
       }
       if (!$this->container->has($service)) {
         throw new AutowiringFailedException($service, sprintf('Cannot autowire service "%s": property "$%s" of class "%s".', $service, $property->getName(), static::class));
