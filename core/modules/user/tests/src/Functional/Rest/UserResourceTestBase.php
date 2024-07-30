@@ -54,7 +54,7 @@ abstract class UserResourceTestBase extends EntityResourceTestBase {
    */
   #[Before]
   public function userResourceTestBaseSkipTests(): void {
-    if (in_array($this->name(), ['testPatchDxForSecuritySensitiveBaseFields', 'testPatchSecurityOtherUser'], TRUE)) {
+    if (\in_array($this->name(), ['testPatchDxForSecuritySensitiveBaseFields', 'testPatchSecurityOtherUser'], TRUE)) {
       if (static::$format === 'xml') {
         $this->markTestSkipped('Deserialization of the XML format is not supported.');
       }
@@ -171,7 +171,7 @@ abstract class UserResourceTestBase extends EntityResourceTestBase {
     /** @var \Drupal\user\UserInterface $user */
     $user = static::$auth ? $this->account : User::load(0);
     // @todo Remove the array_diff_key() call in https://www.drupal.org/node/2821077.
-    $original_normalization = array_diff_key($this->serializer->normalize($user, static::$format), ['created' => TRUE, 'changed' => TRUE, 'name' => TRUE]);
+    $original_normalization = \array_diff_key($this->serializer->normalize($user, static::$format), ['created' => TRUE, 'changed' => TRUE, 'name' => TRUE]);
 
     // Since this test must be performed by the user that is being modified,
     // we cannot use $this->getUrl().
@@ -179,7 +179,7 @@ abstract class UserResourceTestBase extends EntityResourceTestBase {
     $request_options = [
       RequestOptions::HEADERS => ['Content-Type' => static::$mimeType],
     ];
-    $request_options = array_merge_recursive($request_options, $this->getAuthenticationRequestOptions('PATCH'));
+    $request_options = \array_merge_recursive($request_options, $this->getAuthenticationRequestOptions('PATCH'));
 
     // Test case 1: changing email.
     $normalization = $original_normalization;
@@ -230,7 +230,7 @@ abstract class UserResourceTestBase extends EntityResourceTestBase {
     $request_options = [
       RequestOptions::HEADERS => ['Content-Type' => static::$mimeType],
     ];
-    $request_options = array_merge_recursive($request_options, $this->getAuthenticationRequestOptions('PATCH'));
+    $request_options = \array_merge_recursive($request_options, $this->getAuthenticationRequestOptions('PATCH'));
 
     // Test case 3: changing name.
     $normalization = $original_normalization;
@@ -281,7 +281,7 @@ abstract class UserResourceTestBase extends EntityResourceTestBase {
 
     /** @var \Drupal\user\UserInterface $user */
     $user = $this->account;
-    $original_normalization = array_diff_key($this->serializer->normalize($user, static::$format), ['changed' => TRUE]);
+    $original_normalization = \array_diff_key($this->serializer->normalize($user, static::$format), ['changed' => TRUE]);
 
     // Since this test must be performed by the user that is being modified,
     // we cannot use $this->getUrl().
@@ -289,7 +289,7 @@ abstract class UserResourceTestBase extends EntityResourceTestBase {
     $request_options = [
       RequestOptions::HEADERS => ['Content-Type' => static::$mimeType],
     ];
-    $request_options = array_merge_recursive($request_options, $this->getAuthenticationRequestOptions('PATCH'));
+    $request_options = \array_merge_recursive($request_options, $this->getAuthenticationRequestOptions('PATCH'));
 
     $normalization = $original_normalization;
     $normalization['mail'] = [['value' => 'new-email@example.com']];

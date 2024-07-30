@@ -78,11 +78,11 @@ class MenuBlockTest extends KernelTestBase {
         'url' => $this->menu->toUrl('edit-form'),
         'weight' => 50,
       ],
-    ], menu_ui_entity_operation($block));
+    ], \menu_ui_entity_operation($block));
 
     $this->setUpCurrentUser();
     // Test when user doesn't have "administer menu" permission.
-    $this->assertEmpty(menu_ui_entity_operation($block));
+    $this->assertEmpty(\menu_ui_entity_operation($block));
   }
 
 }

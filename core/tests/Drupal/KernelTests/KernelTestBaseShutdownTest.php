@@ -41,7 +41,7 @@ class KernelTestBaseShutdownTest extends KernelTestBase {
    */
   public function testShutdownFunction(): void {
     $this->expectedShutdownCalled = ['shutdownFunction', 'shutdownFunction2'];
-    drupal_register_shutdown_function([$this, 'shutdownFunction']);
+    \drupal_register_shutdown_function([$this, 'shutdownFunction']);
   }
 
   /**
@@ -56,7 +56,7 @@ class KernelTestBaseShutdownTest extends KernelTestBase {
    */
   public function shutdownFunction() {
     self::$shutdownCalled[] = 'shutdownFunction';
-    drupal_register_shutdown_function([$this, 'shutdownFunction2']);
+    \drupal_register_shutdown_function([$this, 'shutdownFunction2']);
   }
 
   /**

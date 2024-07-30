@@ -139,12 +139,12 @@ class JsonApiFunctionalTest extends JsonApiFunctionalTestBase {
     ]));
     $this->assertSession()->statusCodeEquals(200);
     $this->assertEquals('node--article', $single_output['data']['type']);
-    $first_include = reset($single_output['included']);
+    $first_include = \reset($single_output['included']);
     $this->assertEquals(
       'user--user',
       $first_include['type']
     );
-    $last_include = end($single_output['included']);
+    $last_include = \end($single_output['included']);
     $this->assertEquals(
       'taxonomy_term--tags',
       $last_include['type']
@@ -156,12 +156,12 @@ class JsonApiFunctionalTest extends JsonApiFunctionalTestBase {
     ]));
     $this->assertSession()->statusCodeEquals(200);
     $this->assertEquals('node--article', $single_output['data']['type']);
-    $first_include = reset($single_output['included']);
+    $first_include = \reset($single_output['included']);
     $this->assertEquals(
       'taxonomy_term--tags',
       $first_include['type']
     );
-    $last_include = end($single_output['included']);
+    $last_include = \end($single_output['included']);
     $this->assertEquals(
       'taxonomy_vocabulary--taxonomy_vocabulary',
       $last_include['type']
@@ -176,7 +176,7 @@ class JsonApiFunctionalTest extends JsonApiFunctionalTestBase {
     $this->assertEquals('user--user', $single_output['data']['type']);
     $this->assertArrayHasKey('related', $single_output['links']);
     $this->assertArrayHasKey('included', $single_output);
-    $first_include = reset($single_output['included']);
+    $first_include = \reset($single_output['included']);
     $this->assertEquals(
       'user--user',
       $first_include['type']
@@ -192,13 +192,13 @@ class JsonApiFunctionalTest extends JsonApiFunctionalTestBase {
     ]));
     $this->assertSession()->statusCodeEquals(200);
     $this->assertCount(1, $single_output['data']);
-    $non_help_links = array_filter(array_keys($single_output['meta']['omitted']['links']), function ($key) {
+    $non_help_links = \array_filter(\array_keys($single_output['meta']['omitted']['links']), function ($key) {
       return $key !== 'help';
     });
     $this->assertCount(1, $non_help_links);
-    $link_keys = array_keys($single_output['meta']['omitted']['links']);
-    $this->assertSame('help', reset($link_keys));
-    $this->assertMatchesRegularExpression('/^item--[a-zA-Z0-9]{7}$/', next($link_keys));
+    $link_keys = \array_keys($single_output['meta']['omitted']['links']);
+    $this->assertSame('help', \reset($link_keys));
+    $this->assertMatchesRegularExpression('/^item--[a-zA-Z0-9]{7}$/', \next($link_keys));
     $this->nodes[1]->set('status', TRUE);
     $this->nodes[1]->save();
     // 13. Test filtering when using short syntax.
@@ -210,7 +210,7 @@ class JsonApiFunctionalTest extends JsonApiFunctionalTestBase {
       'query' => ['filter' => $filter, 'include' => 'uid,field_tags'],
     ]));
     $this->assertSession()->statusCodeEquals(200);
-    $this->assertGreaterThan(0, count($single_output['data']));
+    $this->assertGreaterThan(0, \count($single_output['data']));
     // 14. Test filtering when using long syntax.
     $filter = [
       'and_group' => ['group' => ['conjunction' => 'AND']],
@@ -233,7 +233,7 @@ class JsonApiFunctionalTest extends JsonApiFunctionalTestBase {
       'query' => ['filter' => $filter, 'include' => 'uid,field_tags'],
     ]));
     $this->assertSession()->statusCodeEquals(200);
-    $this->assertGreaterThan(0, count($single_output['data']));
+    $this->assertGreaterThan(0, \count($single_output['data']));
     // 15. Test filtering when using invalid syntax.
     $filter = [
       'and_group' => ['group' => ['conjunction' => 'AND']],
@@ -271,7 +271,7 @@ class JsonApiFunctionalTest extends JsonApiFunctionalTestBase {
       'query' => ['filter' => $filter, 'include' => 'field_tags'] + $default_sort,
     ]));
     $this->assertSession()->statusCodeEquals(200);
-    $this->assertGreaterThanOrEqual(2, count($single_output['included']));
+    $this->assertGreaterThanOrEqual(2, \count($single_output['included']));
     // 17. Single user (check fields lacking 'view' access).
     $user_url = Url::fromRoute('jsonapi.user--user.individual', [
       'entity' => $this->user->uuid(),
@@ -302,7 +302,7 @@ class JsonApiFunctionalTest extends JsonApiFunctionalTestBase {
       'query' => ['filter' => $filter] + $default_sort,
     ]));
     $this->assertSession()->statusCodeEquals(200);
-    $this->assertGreaterThanOrEqual(1, count($single_output['data']));
+    $this->assertGreaterThanOrEqual(1, \count($single_output['data']));
     // 19. Test non-existing route without 'Accept' header.
     $this->drupalGet('/jsonapi/node/article/broccoli');
     $this->assertSession()->statusCodeEquals(404);
@@ -324,7 +324,7 @@ class JsonApiFunctionalTest extends JsonApiFunctionalTestBase {
         'sort' => 'field_sort1,field_sort2',
       ],
     ]));
-    $output_uuids = array_map(function ($result) {
+    $output_uuids = \array_map(function ($result) {
       return $result['id'];
     }, $output['data']);
     $this->assertCount(6, $output_uuids);
@@ -343,7 +343,7 @@ class JsonApiFunctionalTest extends JsonApiFunctionalTestBase {
         'sort' => 'field_sort1,-field_sort2',
       ],
     ]));
-    $output_uuids = array_map(function ($result) {
+    $output_uuids = \array_map(function ($result) {
       return $result['id'];
     }, $output['data']);
     $this->assertCount(6, $output_uuids);
@@ -362,7 +362,7 @@ class JsonApiFunctionalTest extends JsonApiFunctionalTestBase {
         'sort' => '-field_sort1,field_sort2',
       ],
     ]));
-    $output_uuids = array_map(function ($result) {
+    $output_uuids = \array_map(function ($result) {
       return $result['id'];
     }, $output['data']);
     $this->assertCount(5, $output_uuids);
@@ -381,7 +381,7 @@ class JsonApiFunctionalTest extends JsonApiFunctionalTestBase {
         'sort' => '-field_sort1,-field_sort2',
       ],
     ]));
-    $output_uuids = array_map(function ($result) {
+    $output_uuids = \array_map(function ($result) {
       return $result['id'];
     }, $output['data']);
     $this->assertCount(5, $output_uuids);
@@ -414,7 +414,7 @@ class JsonApiFunctionalTest extends JsonApiFunctionalTestBase {
       'query' => ['filter' => $filter] + $default_sort,
     ]));
     $this->assertSession()->statusCodeEquals(200);
-    $this->assertGreaterThanOrEqual(OffsetPage::SIZE_MAX, count($collection_output['data']));
+    $this->assertGreaterThanOrEqual(OffsetPage::SIZE_MAX, \count($collection_output['data']));
     // 2. Nested Filters: Get nodes created by user admin.
     $filter = [
       'name-filter' => [
@@ -428,7 +428,7 @@ class JsonApiFunctionalTest extends JsonApiFunctionalTestBase {
       'query' => ['filter' => $filter] + $default_sort,
     ]));
     $this->assertSession()->statusCodeEquals(200);
-    $this->assertGreaterThanOrEqual(OffsetPage::SIZE_MAX, count($collection_output['data']));
+    $this->assertGreaterThanOrEqual(OffsetPage::SIZE_MAX, \count($collection_output['data']));
     // 3. Filtering with arrays: Get nodes created by users [admin, john].
     $filter = [
       'name-filter' => [
@@ -446,7 +446,7 @@ class JsonApiFunctionalTest extends JsonApiFunctionalTestBase {
       'query' => ['filter' => $filter] + $default_sort,
     ]));
     $this->assertSession()->statusCodeEquals(200);
-    $this->assertGreaterThanOrEqual(OffsetPage::SIZE_MAX, count($collection_output['data']));
+    $this->assertGreaterThanOrEqual(OffsetPage::SIZE_MAX, \count($collection_output['data']));
     // 4. Grouping filters: Get nodes that are published and create by admin.
     $filter = [
       'and-group' => [
@@ -473,7 +473,7 @@ class JsonApiFunctionalTest extends JsonApiFunctionalTestBase {
       'query' => ['filter' => $filter] + $default_sort,
     ]));
     $this->assertSession()->statusCodeEquals(200);
-    $this->assertGreaterThanOrEqual(OffsetPage::SIZE_MAX, count($collection_output['data']));
+    $this->assertGreaterThanOrEqual(OffsetPage::SIZE_MAX, \count($collection_output['data']));
     // 5. Grouping grouped filters: Get nodes that are promoted or sticky and
     //    created by admin.
     $filter = [

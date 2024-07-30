@@ -491,7 +491,7 @@ class SqlContentEntityStorageTest extends UnitTestCase {
 
     $this->assertEquals(['entity_test'], $mapping->getTableNames());
 
-    $expected = array_values(array_filter($entity_keys));
+    $expected = \array_values(\array_filter($entity_keys));
     $this->assertEquals($expected, $mapping->getFieldNames('entity_test'));
 
     $this->assertEquals([], $mapping->getExtraColumns('entity_test'));
@@ -510,7 +510,7 @@ class SqlContentEntityStorageTest extends UnitTestCase {
    */
   public function testGetTableMappingSimpleWithFields(array $entity_keys): void {
     $base_field_names = ['title', 'description', 'owner'];
-    $field_names = array_merge(array_values(array_filter($entity_keys)), $base_field_names);
+    $field_names = \array_merge(\array_values(\array_filter($entity_keys)), $base_field_names);
     $this->fieldDefinitions = $this->mockFieldDefinitions($field_names);
     $this->setUpEntityStorage();
 
@@ -614,7 +614,7 @@ class SqlContentEntityStorageTest extends UnitTestCase {
     $expected = ['entity_test', 'entity_test_revision'];
     $this->assertEquals($expected, $mapping->getTableNames());
 
-    $expected = array_values(array_filter($entity_keys));
+    $expected = \array_values(\array_filter($entity_keys));
     $this->assertEquals($expected, $mapping->getFieldNames('entity_test'));
     $expected = [$entity_keys['id'], $entity_keys['revision']];
     $this->assertEquals($expected, $mapping->getFieldNames('entity_test_revision'));
@@ -658,12 +658,12 @@ class SqlContentEntityStorageTest extends UnitTestCase {
       $this->setUp();
 
       $base_field_names = ['title'];
-      $field_names = array_merge(array_values(array_filter($entity_keys)), $base_field_names);
+      $field_names = \array_merge(\array_values(\array_filter($entity_keys)), $base_field_names);
       $this->fieldDefinitions = $this->mockFieldDefinitions($field_names);
 
       $revisionable_field_names = ['description', 'owner'];
-      $field_names = array_merge($field_names, $revisionable_field_names);
-      $this->fieldDefinitions += $this->mockFieldDefinitions(array_merge($revisionable_field_names, array_values($revision_metadata_field_names)), ['isRevisionable' => TRUE]);
+      $field_names = \array_merge($field_names, $revisionable_field_names);
+      $this->fieldDefinitions += $this->mockFieldDefinitions(\array_merge($revisionable_field_names, \array_values($revision_metadata_field_names)), ['isRevisionable' => TRUE]);
 
       $this->entityType->expects($this->exactly(4))
         ->method('isRevisionable')
@@ -689,10 +689,10 @@ class SqlContentEntityStorageTest extends UnitTestCase {
       $this->assertEquals($expected, $mapping->getTableNames());
 
       $this->assertEquals($field_names, $mapping->getFieldNames('entity_test'));
-      $expected = array_merge(
+      $expected = \array_merge(
         [$entity_keys['id'], $entity_keys['revision']],
         $revisionable_field_names,
-        array_values($revision_metadata_field_names)
+        \array_values($revision_metadata_field_names)
       );
       $this->assertEquals($expected, $mapping->getFieldNames('entity_test_revision'));
 
@@ -738,11 +738,11 @@ class SqlContentEntityStorageTest extends UnitTestCase {
     $expected = ['entity_test', 'entity_test_field_data'];
     $this->assertEquals($expected, $mapping->getTableNames());
 
-    $expected = array_values(array_filter($entity_keys));
+    $expected = \array_values(\array_filter($entity_keys));
     $actual = $mapping->getFieldNames('entity_test');
     $this->assertEquals($expected, $actual);
     // The UUID is not stored on the data table.
-    $expected = array_values(array_filter([
+    $expected = \array_values(\array_filter([
       $entity_keys['id'],
       $entity_keys['bundle'],
       $entity_keys['langcode'],
@@ -773,7 +773,7 @@ class SqlContentEntityStorageTest extends UnitTestCase {
     $entity_keys['langcode'] = 'langcode';
 
     $base_field_names = ['title', 'description', 'owner'];
-    $field_names = array_merge(array_values(array_filter($entity_keys)), $base_field_names);
+    $field_names = \array_merge(\array_values(\array_filter($entity_keys)), $base_field_names);
     $this->fieldDefinitions = $this->mockFieldDefinitions($field_names);
 
     $this->entityType->expects($this->atLeastOnce())
@@ -798,11 +798,11 @@ class SqlContentEntityStorageTest extends UnitTestCase {
     $expected = ['entity_test', 'entity_test_field_data'];
     $this->assertEquals($expected, $mapping->getTableNames());
 
-    $expected = array_values(array_filter($entity_keys));
+    $expected = \array_values(\array_filter($entity_keys));
     $actual = $mapping->getFieldNames('entity_test');
     $this->assertEquals($expected, $actual);
     // The UUID is not stored on the data table.
-    $expected = array_merge(array_filter([
+    $expected = \array_merge(\array_filter([
       $entity_keys['id'],
       $entity_keys['bundle'],
       $entity_keys['langcode'],
@@ -865,7 +865,7 @@ class SqlContentEntityStorageTest extends UnitTestCase {
       ->method('getRevisionMetadataKeys')
       ->willReturn($revision_metadata_keys);
 
-    $this->fieldDefinitions = $this->mockFieldDefinitions(array_values($revision_metadata_keys), ['isRevisionable' => TRUE]);
+    $this->fieldDefinitions = $this->mockFieldDefinitions(\array_values($revision_metadata_keys), ['isRevisionable' => TRUE]);
 
     $this->setUpEntityStorage();
 
@@ -880,7 +880,7 @@ class SqlContentEntityStorageTest extends UnitTestCase {
     $this->assertEquals($expected, $mapping->getTableNames());
 
     // The default language code is stored on the base table.
-    $expected = array_values(array_filter([
+    $expected = \array_values(\array_filter([
       $entity_keys['id'],
       $entity_keys['revision'],
       $entity_keys['bundle'],
@@ -891,16 +891,16 @@ class SqlContentEntityStorageTest extends UnitTestCase {
     $this->assertEquals($expected, $actual);
     // The revision table on the other hand does not store the bundle and the
     // UUID.
-    $expected = array_values(array_filter([
+    $expected = \array_values(\array_filter([
       $entity_keys['id'],
       $entity_keys['revision'],
       $entity_keys['langcode'],
     ]));
-    $expected = array_merge($expected, array_values($revision_metadata_keys));
+    $expected = \array_merge($expected, \array_values($revision_metadata_keys));
     $actual = $mapping->getFieldNames('entity_test_revision');
     $this->assertEquals($expected, $actual);
     // The UUID is not stored on the data table.
-    $expected = array_values(array_filter([
+    $expected = \array_values(\array_filter([
       $entity_keys['id'],
       $entity_keys['revision'],
       $entity_keys['bundle'],
@@ -909,7 +909,7 @@ class SqlContentEntityStorageTest extends UnitTestCase {
     $actual = $mapping->getFieldNames('entity_test_field_data');
     $this->assertEquals($expected, $actual);
     // The data revision also does not store the bundle.
-    $expected = array_values(array_filter([
+    $expected = \array_values(\array_filter([
       $entity_keys['id'],
       $entity_keys['revision'],
       $entity_keys['langcode'],
@@ -964,11 +964,11 @@ class SqlContentEntityStorageTest extends UnitTestCase {
       $this->setUp();
 
       $base_field_names = ['title'];
-      $field_names = array_merge(array_values(array_filter($entity_keys)), $base_field_names);
+      $field_names = \array_merge(\array_values(\array_filter($entity_keys)), $base_field_names);
       $this->fieldDefinitions = $this->mockFieldDefinitions($field_names);
 
       $revisionable_field_names = ['description', 'owner'];
-      $this->fieldDefinitions += $this->mockFieldDefinitions(array_merge($revisionable_field_names, array_values($revision_metadata_field_names)), ['isRevisionable' => TRUE]);
+      $this->fieldDefinitions += $this->mockFieldDefinitions(\array_merge($revisionable_field_names, \array_values($revision_metadata_field_names)), ['isRevisionable' => TRUE]);
 
       $this->entityType->expects($this->atLeastOnce())
         ->method('isRevisionable')
@@ -1013,7 +1013,7 @@ class SqlContentEntityStorageTest extends UnitTestCase {
       $this->assertEquals($expected, $mapping->getTableNames());
 
       // The default language code is not stored on the base table.
-      $expected = array_values(array_filter([
+      $expected = \array_values(\array_filter([
         $entity_keys['id'],
         $entity_keys['revision'],
         $entity_keys['bundle'],
@@ -1024,15 +1024,15 @@ class SqlContentEntityStorageTest extends UnitTestCase {
       $this->assertEquals($expected, $actual);
       // The revision table on the other hand does not store the bundle and the
       // UUID.
-      $expected = array_merge(array_filter([
+      $expected = \array_merge(\array_filter([
         $entity_keys['id'],
         $entity_keys['revision'],
         $entity_keys['langcode'],
-      ]), array_values($revision_metadata_field_names));
+      ]), \array_values($revision_metadata_field_names));
       $actual = $mapping->getFieldNames('entity_test_revision');
       $this->assertEquals($expected, $actual);
       // The UUID is not stored on the data table.
-      $expected = array_merge(array_filter([
+      $expected = \array_merge(\array_filter([
         $entity_keys['id'],
         $entity_keys['revision'],
         $entity_keys['bundle'],
@@ -1041,7 +1041,7 @@ class SqlContentEntityStorageTest extends UnitTestCase {
       $actual = $mapping->getFieldNames('entity_test_field_data');
       $this->assertEquals($expected, $actual);
       // The data revision also does not store the bundle.
-      $expected = array_merge(array_filter([
+      $expected = \array_merge(\array_filter([
         $entity_keys['id'],
         $entity_keys['revision'],
         $entity_keys['langcode'],
@@ -1082,7 +1082,7 @@ class SqlContentEntityStorageTest extends UnitTestCase {
       ->willReturn($this->entityTypeId);
     $this->entityType->expects($this->atLeastOnce())
       ->method('getClass')
-      ->willReturn(get_class($entity));
+      ->willReturn(\get_class($entity));
     $this->entityType->expects($this->atLeastOnce())
       ->method('getKeys')
       ->willReturn(['id' => 'id']);

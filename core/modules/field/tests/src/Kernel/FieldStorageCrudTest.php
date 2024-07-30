@@ -40,7 +40,7 @@ class FieldStorageCrudTest extends FieldKernelTestBase {
       'entity_type' => 'entity_test',
       'type' => 'test_field',
     ];
-    field_test_memorize();
+    \field_test_memorize();
     $field_storage = FieldStorageConfig::create($field_storage_definition);
     $field_storage->save();
 
@@ -48,7 +48,7 @@ class FieldStorageCrudTest extends FieldKernelTestBase {
     $this->assertEquals('TRUE', $field_storage->getSetting('storage_setting_from_config_data'));
     $this->assertNull($field_storage->getSetting('config_data_from_storage_setting'));
 
-    $mem = field_test_memorize();
+    $mem = \field_test_memorize();
     $this->assertSame($field_storage_definition['field_name'], $mem['field_test_field_storage_config_create'][0][0]->getName(), 'hook_entity_create() called with correct arguments.');
     $this->assertSame($field_storage_definition['type'], $mem['field_test_field_storage_config_create'][0][0]->getType(), 'hook_entity_create() called with correct arguments.');
 
@@ -325,7 +325,7 @@ class FieldStorageCrudTest extends FieldKernelTestBase {
 
     // Test that the first field is not deleted, and then delete it.
     $field_storage_config_storage = \Drupal::entityTypeManager()->getStorage('field_storage_config');
-    $field_storage = current($field_storage_config_storage->loadByProperties(['field_name' => $field_storage_definition['field_name'], 'include_deleted' => TRUE]));
+    $field_storage = \current($field_storage_config_storage->loadByProperties(['field_name' => $field_storage_definition['field_name'], 'include_deleted' => TRUE]));
     $this->assertFalse($field_storage->isDeleted());
     FieldStorageConfig::loadByName('entity_test', $field_storage_definition['field_name'])->delete();
 
@@ -363,7 +363,7 @@ class FieldStorageCrudTest extends FieldKernelTestBase {
 
     // Save an entity with data for the field
     $entity = EntityTest::create();
-    $values[0]['value'] = mt_rand(1, 127);
+    $values[0]['value'] = \mt_rand(1, 127);
     $entity->{$field_storage->getName()}->value = $values[0]['value'];
     $entity = $this->entitySaveReload($entity);
 

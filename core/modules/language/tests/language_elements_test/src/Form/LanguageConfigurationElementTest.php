@@ -24,9 +24,9 @@ class LanguageConfigurationElementTest extends FormBase {
    */
   public function buildForm(array $form, FormStateInterface $form_state) {
     $form['langcode'] = [
-      '#title' => t('Language select'),
+      '#title' => \t('Language select'),
       '#type' => 'language_select',
-      '#default_value' => language_get_default_langcode('entity_test', 'some_bundle'),
+      '#default_value' => \language_get_default_langcode('entity_test', 'some_bundle'),
     ];
     return $form;
   }

@@ -35,7 +35,7 @@ class HelpEmptyPageTest extends KernelTestBase {
    */
   public function testEmptyHookHelp(): void {
     $all_modules = \Drupal::service('extension.list.module')->getList();
-    $all_modules = array_filter($all_modules, function ($module) {
+    $all_modules = \array_filter($all_modules, function ($module) {
       // Filter contrib, hidden, already enabled modules and modules in the
       // Testing package.
       if ($module->origin !== 'core' || !empty($module->info['hidden']) || $module->status == TRUE || $module->info['package'] == 'Testing') {
@@ -44,7 +44,7 @@ class HelpEmptyPageTest extends KernelTestBase {
       return TRUE;
     });
 
-    $this->enableModules(array_keys($all_modules));
+    $this->enableModules(\array_keys($all_modules));
     $this->installEntitySchema('menu_link_content');
 
     $route = \Drupal::service('router.route_provider')->getRouteByName('<front>');

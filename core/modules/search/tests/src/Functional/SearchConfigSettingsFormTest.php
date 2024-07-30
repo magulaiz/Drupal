@@ -181,7 +181,7 @@ class SearchConfigSettingsFormTest extends BrowserTestBase {
         'text' => 'Dummy search snippet to display',
       ],
     ];
-    $plugins = array_keys($plugin_info);
+    $plugins = \array_keys($plugin_info);
     /** @var \Drupal\search\SearchPageInterface[] $entities */
     $entities = SearchPage::loadMultiple();
     // Disable all of the search pages.
@@ -436,7 +436,7 @@ class SearchConfigSettingsFormTest extends BrowserTestBase {
    */
   protected function setDefaultThroughUi($entity_id) {
     $this->drupalGet('admin/config/search/pages');
-    preg_match('|href="([^"]+' . $entity_id . '/set-default[^"]+)"|', $this->getSession()->getPage()->getContent(), $matches);
+    \preg_match('|href="([^"]+' . $entity_id . '/set-default[^"]+)"|', $this->getSession()->getPage()->getContent(), $matches);
 
     $this->drupalGet($this->getAbsoluteUrl($matches[1]));
   }

@@ -73,7 +73,7 @@ class ViewsPreprocessTest extends ViewsKernelTestBase {
       'pagination_heading_level' => '',
       'parameters' => [],
     ];
-    template_preprocess_views_mini_pager($variables);
+    \template_preprocess_views_mini_pager($variables);
 
     $this->assertEquals('h4', $variables['pagination_heading_level']);
   }
@@ -91,7 +91,7 @@ class ViewsPreprocessTest extends ViewsKernelTestBase {
       'element' => 0,
       'parameters' => [],
     ];
-    template_preprocess_views_mini_pager($variables);
+    \template_preprocess_views_mini_pager($variables);
 
     $this->assertEquals('h4', $variables['pagination_heading_level']);
   }
@@ -110,7 +110,7 @@ class ViewsPreprocessTest extends ViewsKernelTestBase {
       'pagination_heading_level' => 'h5',
       'parameters' => [],
     ];
-    template_preprocess_views_mini_pager($variables);
+    \template_preprocess_views_mini_pager($variables);
 
     $this->assertEquals('h5', $variables['pagination_heading_level']);
   }

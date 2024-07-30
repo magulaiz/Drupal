@@ -134,7 +134,7 @@ abstract class RenderElementBase extends PluginBase implements ElementInterface 
       if (!isset($element['#attributes']['class'])) {
         $element['#attributes']['class'] = [];
       }
-      $element['#attributes']['class'] = array_merge($element['#attributes']['class'], $class);
+      $element['#attributes']['class'] = \array_merge($element['#attributes']['class'], $class);
     }
     // This function is invoked from form element theme functions, but the
     // rendered form element may not necessarily have been processed by
@@ -167,7 +167,7 @@ abstract class RenderElementBase extends PluginBase implements ElementInterface 
     }
 
     // Inject group member elements belonging to this group.
-    $parents = implode('][', $element['#parents']);
+    $parents = \implode('][', $element['#parents']);
     $children = Element::children($element['#groups'][$parents]);
     if (!empty($children)) {
       foreach ($children as $key) {
@@ -339,7 +339,7 @@ abstract class RenderElementBase extends PluginBase implements ElementInterface 
       if (!isset($element['#ajax']['refocus-blur'])) {
         // The change event on text input types is triggered on blur.
         $text_types = ['password', 'textfield', 'number', 'tel', 'textarea', 'machine_name'];
-        if ($element['#ajax']['event'] === 'blur' || ($element['#ajax']['event'] === 'change' && in_array($element['#type'], $text_types))) {
+        if ($element['#ajax']['event'] === 'blur' || ($element['#ajax']['event'] === 'change' && \in_array($element['#type'], $text_types))) {
           $element['#attributes']['data-refocus-blur'] = "true";
         }
       }
@@ -362,7 +362,7 @@ abstract class RenderElementBase extends PluginBase implements ElementInterface 
         'options' => ['query' => []],
         'dialogType' => 'ajax',
       ];
-      if (array_key_exists('callback', $settings) && !isset($settings['url'])) {
+      if (\array_key_exists('callback', $settings) && !isset($settings['url'])) {
         $settings['url'] = Url::fromRoute('<current>');
         // Add all the current query parameters in order to ensure that we build
         // the same form on the AJAX POST requests. For example,
@@ -415,7 +415,7 @@ abstract class RenderElementBase extends PluginBase implements ElementInterface 
       }
 
       // Convert a simple #ajax['progress'] string into an array.
-      if (isset($settings['progress']) && is_string($settings['progress'])) {
+      if (isset($settings['progress']) && \is_string($settings['progress'])) {
         $settings['progress'] = ['type' => $settings['progress']];
       }
       // Change progress path to a full URL.
@@ -451,7 +451,7 @@ abstract class RenderElementBase extends PluginBase implements ElementInterface 
    *   The processed element.
    */
   public static function processGroup(&$element, FormStateInterface $form_state, &$complete_form) {
-    $parents = implode('][', $element['#parents']);
+    $parents = \implode('][', $element['#parents']);
 
     // Each details element forms a new group. The #type 'vertical_tabs' basically
     // only injects a new details element.

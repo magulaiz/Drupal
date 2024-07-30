@@ -281,7 +281,7 @@ class OptionsFieldUITest extends WebDriverTestBase {
    */
   protected function assertNodeFormOrder($expected) {
     $elements = $this->assertSession()->selectExists('field_options_text')->findAll('css', 'option');
-    $elements = array_map(function ($element) {
+    $elements = \array_map(function ($element) {
       return $element->getText();
     }, $elements);
     $this->assertSame($expected, $elements);
@@ -369,7 +369,7 @@ JS;
     $test_cases = [];
     foreach ($type_cases as $key => $type_case) {
       foreach (['Press button', 'Enter button', 'Enter element'] as $add_more_method) {
-        $test_cases["$key: $add_more_method"] = array_merge($type_case, [$add_more_method]);
+        $test_cases["$key: $add_more_method"] = \array_merge($type_case, [$add_more_method]);
       }
     }
     return $test_cases;
@@ -403,7 +403,7 @@ JS;
     // Ensure that the machine name was saved correctly.
     $allowed_values = FieldStorageConfig::loadByName('node', $this->fieldName)
       ->getSetting('allowed_values');
-    $this->assertSame(['.hello #world'], array_keys($allowed_values));
+    $this->assertSame(['.hello #world'], \array_keys($allowed_values));
   }
 
   /**

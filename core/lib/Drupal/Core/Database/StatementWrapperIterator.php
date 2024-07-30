@@ -87,7 +87,7 @@ class StatementWrapperIterator implements \Iterator, StatementInterface {
    */
   public function execute($args = [], $options = []) {
     if (isset($options['fetch'])) {
-      if (is_string($options['fetch'])) {
+      if (\is_string($options['fetch'])) {
         // \PDO::FETCH_PROPS_LATE tells __construct() to run before properties
         // are added to the object.
         $this->setFetchMode(\PDO::FETCH_CLASS | \PDO::FETCH_PROPS_LATE, $options['fetch']);
@@ -99,7 +99,7 @@ class StatementWrapperIterator implements \Iterator, StatementInterface {
 
     if ($this->connection->isEventEnabled(StatementExecutionStartEvent::class)) {
       $startEvent = new StatementExecutionStartEvent(
-        spl_object_id($this),
+        \spl_object_id($this),
         $this->connection->getKey(),
         $this->connection->getTarget(),
         $this->getQueryString(),
@@ -123,7 +123,7 @@ class StatementWrapperIterator implements \Iterator, StatementInterface {
           $startEvent->args,
           $startEvent->caller,
           $startEvent->time,
-          get_class($e),
+          \get_class($e),
           $e->getCode(),
           $e->getMessage(),
         ));
@@ -165,7 +165,7 @@ class StatementWrapperIterator implements \Iterator, StatementInterface {
    */
   public function fetchAllAssoc($key, $fetch = NULL) {
     if (isset($fetch)) {
-      if (is_string($fetch)) {
+      if (\is_string($fetch)) {
         $this->setFetchMode(\PDO::FETCH_CLASS, $fetch);
       }
       else {
@@ -182,7 +182,7 @@ class StatementWrapperIterator implements \Iterator, StatementInterface {
     // allow more fetching.
     $return = [];
     while ($record = $this->fetch()) {
-      $recordKey = is_object($record) ? $record->$key : $record[$key];
+      $recordKey = \is_object($record) ? $record->$key : $record[$key];
       $return[$recordKey] = $record;
     }
 
@@ -269,12 +269,12 @@ class StatementWrapperIterator implements \Iterator, StatementInterface {
    * {@inheritdoc}
    */
   public function setFetchMode($mode, $a1 = NULL, $a2 = []) {
-    assert(in_array($mode, $this->supportedFetchModes), 'Fetch mode ' . ($this->fetchModeLiterals[$mode] ?? $mode) . ' is not supported. Use supported modes only.');
+    \assert(\in_array($mode, $this->supportedFetchModes), 'Fetch mode ' . ($this->fetchModeLiterals[$mode] ?? $mode) . ' is not supported. Use supported modes only.');
 
     // Call \PDOStatement::setFetchMode to set fetch mode.
     // \PDOStatement is picky about the number of arguments in some cases so we
     // need to be pass the exact number of arguments we where given.
-    return match(func_num_args()) {
+    return match(\func_num_args()) {
       1 => $this->clientStatement->setFetchMode($mode),
       2 => $this->clientStatement->setFetchMode($mode, $a1),
       default => $this->clientStatement->setFetchMode($mode, $a1, $a2),
@@ -285,12 +285,12 @@ class StatementWrapperIterator implements \Iterator, StatementInterface {
    * {@inheritdoc}
    */
   public function fetch($mode = NULL, $cursor_orientation = NULL, $cursor_offset = NULL) {
-    assert(!isset($mode) || in_array($mode, $this->supportedFetchModes), 'Fetch mode ' . ($this->fetchModeLiterals[$mode] ?? $mode) . ' is not supported. Use supported modes only.');
+    \assert(!isset($mode) || \in_array($mode, $this->supportedFetchModes), 'Fetch mode ' . ($this->fetchModeLiterals[$mode] ?? $mode) . ' is not supported. Use supported modes only.');
 
     // Call \PDOStatement::fetchAll to fetch all rows.
     // \PDOStatement is picky about the number of arguments in some cases so we
     // need to pass the exact number of arguments we were given.
-    $row = match(func_num_args()) {
+    $row = match(\func_num_args()) {
       0 => $this->clientStatement->fetch(),
       1 => $this->clientStatement->fetch($mode),
       2 => $this->clientStatement->fetch($mode, $cursor_orientation),
@@ -310,12 +310,12 @@ class StatementWrapperIterator implements \Iterator, StatementInterface {
    * {@inheritdoc}
    */
   public function fetchAll($mode = NULL, $column_index = NULL, $constructor_arguments = NULL) {
-    assert(!isset($mode) || in_array($mode, $this->supportedFetchModes), 'Fetch mode ' . ($this->fetchModeLiterals[$mode] ?? $mode) . ' is not supported. Use supported modes only.');
+    \assert(!isset($mode) || \in_array($mode, $this->supportedFetchModes), 'Fetch mode ' . ($this->fetchModeLiterals[$mode] ?? $mode) . ' is not supported. Use supported modes only.');
 
     // Call \PDOStatement::fetchAll to fetch all rows.
     // \PDOStatement is picky about the number of arguments in some cases so we
     // need to be pass the exact number of arguments we where given.
-    $return = match(func_num_args()) {
+    $return = match(\func_num_args()) {
       0 => $this->clientStatement->fetchAll(),
       1 => $this->clientStatement->fetchAll($mode),
       2 => $this->clientStatement->fetchAll($mode, $column_index),

@@ -111,7 +111,7 @@ class BlockContentTest extends ResourceTestBase {
         'revision' => TRUE,
       ]);
       $block_content_type->save();
-      block_content_add_body_field($block_content_type->id());
+      \block_content_add_body_field($block_content_type->id());
     }
 
     // Create a "Llama" content block.
@@ -136,7 +136,7 @@ class BlockContentTest extends ResourceTestBase {
     $self_url = clone $base_url;
     $version_identifier = 'id:' . $this->entity->getRevisionId();
     $self_url = $self_url->setOption('query', ['resourceVersion' => $version_identifier]);
-    $version_query_string = '?resourceVersion=' . urlencode($version_identifier);
+    $version_query_string = '?resourceVersion=' . \urlencode($version_identifier);
     return [
       'jsonapi' => [
         'meta' => [
@@ -240,7 +240,7 @@ class BlockContentTest extends ResourceTestBase {
    */
   protected function getExpectedCacheTags(?array $sparse_fieldset = NULL) {
     $tags = parent::getExpectedCacheTags($sparse_fieldset);
-    if ($sparse_fieldset === NULL || in_array('body', $sparse_fieldset)) {
+    if ($sparse_fieldset === NULL || \in_array('body', $sparse_fieldset)) {
       $tags = Cache::mergeTags($tags, ['config:filter.format.plain_text']);
     }
     return $tags;
@@ -251,7 +251,7 @@ class BlockContentTest extends ResourceTestBase {
    */
   protected function getExpectedCacheContexts(?array $sparse_fieldset = NULL) {
     $contexts = parent::getExpectedCacheContexts($sparse_fieldset);
-    if ($sparse_fieldset === NULL || in_array('body', $sparse_fieldset)) {
+    if ($sparse_fieldset === NULL || \in_array('body', $sparse_fieldset)) {
       $contexts = Cache::mergeContexts($contexts, ['languages:language_interface', 'theme']);
     }
     return $contexts;

@@ -111,7 +111,7 @@ class ContextualUnitTest extends KernelTestBase {
    * @dataProvider contextualLinksDataProvider
    */
   public function testContextualLinksToId(array $links, string $id): void {
-    $this->assertSame($id, _contextual_links_to_id($links));
+    $this->assertSame($id, \_contextual_links_to_id($links));
   }
 
   /**
@@ -127,7 +127,7 @@ class ContextualUnitTest extends KernelTestBase {
    * @dataProvider contextualLinksDataProvider
    */
   public function testContextualIdToLinks(array $links, string $id): void {
-    $this->assertSame($links, _contextual_id_to_links($id));
+    $this->assertSame($links, \_contextual_id_to_links($id));
   }
 
 }

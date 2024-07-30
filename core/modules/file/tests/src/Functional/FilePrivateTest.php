@@ -32,8 +32,8 @@ class FilePrivateTest extends FileFieldTestBase {
    */
   protected function setUp(): void {
     parent::setUp();
-    node_access_test_add_field(NodeType::load('article'));
-    node_access_rebuild();
+    \node_access_test_add_field(NodeType::load('article'));
+    \node_access_rebuild();
     \Drupal::state()->set('node_access_test.private', TRUE);
     // This test expects unused managed files to be marked as a temporary file.
     $this->config('file.settings')
@@ -137,7 +137,7 @@ class FilePrivateTest extends FileFieldTestBase {
     // As an anonymous user, create a temporary file with no references and
     // confirm that only the session that uploaded it may view it.
     $this->drupalLogout();
-    user_role_change_permissions(
+    \user_role_change_permissions(
       RoleInterface::ANONYMOUS_ID,
       [
         "create $type_name content" => TRUE,
@@ -152,7 +152,7 @@ class FilePrivateTest extends FileFieldTestBase {
     $file_storage = $this->container->get('entity_type.manager')->getStorage('file');
     $files = $file_storage->loadByProperties(['uid' => 0]);
     $this->assertCount(1, $files, 'Loaded one anonymous file.');
-    $file = end($files);
+    $file = \end($files);
     $this->assertTrue($file->isTemporary(), 'File is temporary.');
     $usage = $this->container->get('file.usage')->listUsage($file);
     $this->assertEmpty($usage, 'No file usage found.');

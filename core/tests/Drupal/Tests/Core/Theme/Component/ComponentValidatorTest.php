@@ -43,7 +43,7 @@ class ComponentValidatorTest extends TestCase {
    */
   public static function dataProviderValidateDefinitionValid(): array {
     return [
-      array_map(
+      \array_map(
         [static::class, 'loadComponentDefinitionFromFs'],
         ['my-banner', 'my-button', 'my-cta'],
       ),
@@ -74,7 +74,7 @@ class ComponentValidatorTest extends TestCase {
     unset($cta_with_missing_required['path']);
     $cta_with_invalid_class = $valid_cta;
     $cta_with_invalid_class['props']['properties']['attributes']['type'] = 'Drupal\Foo\Invalid';
-    $cta_with_invalid_enum = array_merge(
+    $cta_with_invalid_enum = \array_merge(
       $valid_cta,
       ['extension_type' => 'invalid'],
     );
@@ -197,9 +197,9 @@ class ComponentValidatorTest extends TestCase {
    *   The component definition
    */
   private static function loadComponentDefinitionFromFs(string $component_name): array {
-    return array_merge(
+    return \array_merge(
       Yaml::parseFile(
-        sprintf('%s/modules/system/tests/modules/sdc_test/components/%s/%s.component.yml', dirname(__DIR__, 6), $component_name, $component_name),
+        \sprintf('%s/modules/system/tests/modules/sdc_test/components/%s/%s.component.yml', \dirname(__DIR__, 6), $component_name, $component_name),
       ),
       [
         'machineName' => $component_name,

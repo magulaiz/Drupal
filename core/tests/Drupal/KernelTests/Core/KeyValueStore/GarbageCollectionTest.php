@@ -33,7 +33,7 @@ class GarbageCollectionTest extends KernelTestBase {
 
     // Insert some items and confirm that they're set.
     for ($i = 0; $i <= 3; $i++) {
-      $store->setWithExpire('key_' . $i, $this->randomObject(), rand(500, 100000));
+      $store->setWithExpire('key_' . $i, $this->randomObject(), \rand(500, 100000));
     }
     $this->assertCount(4, $store->getAll(), 'Four items were written to the storage.');
 
@@ -51,8 +51,8 @@ class GarbageCollectionTest extends KernelTestBase {
     }
 
     // Perform a new set operation and then trigger garbage collection.
-    $store->setWithExpire('autumn', 'winter', rand(500, 1000000));
-    system_cron();
+    $store->setWithExpire('autumn', 'winter', \rand(500, 1000000));
+    \system_cron();
 
     // Query the database and confirm that the stale records were deleted.
     $result = $connection->select('key_value_expire', 'kvp')

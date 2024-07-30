@@ -132,7 +132,7 @@ class TaxonomyIndexTid extends ManyToOne {
     if ($this->options['limit']) {
       // We only do this when the form is displayed.
       if (empty($this->options['vid'])) {
-        $first_vocabulary = reset($vocabularies);
+        $first_vocabulary = \reset($vocabularies);
         $this->options['vid'] = $first_vocabulary->id();
       }
 
@@ -202,7 +202,7 @@ class TaxonomyIndexTid extends ManyToOne {
               continue;
             }
             $choice = new \stdClass();
-            $choice->option = [$term->id() => str_repeat('-', $term->depth) . \Drupal::service('entity.repository')->getTranslationFromContext($term)->label()];
+            $choice->option = [$term->id() => \str_repeat('-', $term->depth) . \Drupal::service('entity.repository')->getTranslationFromContext($term)->label()];
             $options[] = $choice;
           }
         }
@@ -246,8 +246,8 @@ class TaxonomyIndexTid extends ManyToOne {
             $default_value = 'All';
           }
           elseif (empty($default_value)) {
-            $keys = array_keys($options);
-            $default_value = array_shift($keys);
+            $keys = \array_keys($options);
+            $default_value = \array_shift($keys);
           }
           // Due to #1464174 there is a chance that array('') was saved in the admin ui.
           // Let's choose a safe default value.
@@ -256,7 +256,7 @@ class TaxonomyIndexTid extends ManyToOne {
           }
           else {
             $copy = $default_value;
-            $default_value = array_shift($copy);
+            $default_value = \array_shift($copy);
           }
         }
       }
@@ -265,7 +265,7 @@ class TaxonomyIndexTid extends ManyToOne {
         '#title' => $this->options['limit'] ? $this->t('Select terms from vocabulary @voc', ['@voc' => $vocabulary->label()]) : $this->t('Select terms'),
         '#multiple' => TRUE,
         '#options' => $options,
-        '#size' => min(9, count($options)),
+        '#size' => \min(9, \count($options)),
         '#default_value' => $default_value,
       ];
 
@@ -392,7 +392,7 @@ class TaxonomyIndexTid extends ManyToOne {
     $this->valueOptions = [];
 
     if ($this->value) {
-      $this->value = array_filter($this->value);
+      $this->value = \array_filter($this->value);
       $terms = Term::loadMultiple($this->value);
       foreach ($terms as $term) {
         $this->valueOptions[$term->id()] = \Drupal::service('entity.repository')->getTranslationFromContext($term)->label();

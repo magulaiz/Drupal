@@ -52,10 +52,10 @@ class PathProcessorTest extends UnitTestCase {
     $this->languages = $languages;
 
     // Create a stub configuration.
-    $language_prefixes = array_keys($this->languages);
+    $language_prefixes = \array_keys($this->languages);
     $config = [
       'url' => [
-        'prefixes' => array_combine($language_prefixes, $language_prefixes),
+        'prefixes' => \array_combine($language_prefixes, $language_prefixes),
       ],
     ];
 

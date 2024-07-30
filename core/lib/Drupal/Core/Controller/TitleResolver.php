@@ -55,9 +55,9 @@ class TitleResolver implements TitleResolverInterface {
     if ($callback = $route->getDefault('_title_callback')) {
       $callable = $this->controllerResolver->getControllerFromDefinition($callback);
       $arguments = $this->argumentResolver->getArguments($request, $callable);
-      $route_title = call_user_func_array($callable, $arguments);
+      $route_title = \call_user_func_array($callable, $arguments);
     }
-    elseif ($route->hasDefault('_title') && strlen($route->getDefault('_title')) > 0) {
+    elseif ($route->hasDefault('_title') && \strlen($route->getDefault('_title')) > 0) {
       $title = $route->getDefault('_title');
       $options = [];
       if ($route->hasDefault('_title_context')) {
@@ -66,14 +66,14 @@ class TitleResolver implements TitleResolverInterface {
       $args = [];
       if (($raw_parameters = $request->attributes->get('_raw_variables'))) {
         foreach ($raw_parameters->all() as $key => $value) {
-          if (is_scalar($value)) {
+          if (\is_scalar($value)) {
             $args['@' . $key] = $value;
             $args['%' . $key] = $value;
           }
         }
       }
       if ($title_arguments = $route->getDefault('_title_arguments')) {
-        $args = array_merge($args, (array) $title_arguments);
+        $args = \array_merge($args, (array) $title_arguments);
       }
 
       // Fall back to a static string from the route.

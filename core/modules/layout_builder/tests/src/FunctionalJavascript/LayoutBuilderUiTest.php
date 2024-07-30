@@ -155,7 +155,7 @@ class LayoutBuilderUiTest extends WebDriverTestBase {
       'revision' => 1,
     ]);
     $bundle->save();
-    block_content_add_body_field($bundle->id());
+    \block_content_add_body_field($bundle->id());
 
     $this->drupalGet(static::FIELD_UI_PREFIX . '/display/default/layout');
     $assert_session->elementsCount('css', '.layout-builder__add-section', 2);

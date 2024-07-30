@@ -101,7 +101,7 @@ class ComponentPluginManager extends DefaultPluginManager {
     try {
       $instance = parent::createInstance($plugin_id, $configuration);
       if (!$instance instanceof Component) {
-        throw new ComponentNotFoundException(sprintf(
+        throw new ComponentNotFoundException(\sprintf(
           'Unable to find component "%s" in the component repository.',
           $plugin_id,
         ));
@@ -110,7 +110,7 @@ class ComponentPluginManager extends DefaultPluginManager {
     }
     catch (PluginException $e) {
       // Cast the PluginNotFound to a more specific exception.
-      $message = sprintf(
+      $message = \sprintf(
         'Unable to find component "%s" in the component repository. [%s]',
         $plugin_id,
         $e->getMessage()
@@ -146,8 +146,8 @@ class ComponentPluginManager extends DefaultPluginManager {
    *   An array of Component objects.
    */
   public function getAllComponents(): array {
-    $plugin_ids = array_keys($this->getDefinitions());
-    return array_values(array_filter(array_map(
+    $plugin_ids = \array_keys($this->getDefinitions());
+    return \array_values(\array_filter(\array_map(
       [$this, 'createInstance'],
       $plugin_ids
     )));
@@ -201,14 +201,14 @@ class ComponentPluginManager extends DefaultPluginManager {
         $component_directory
       );
       // Apply library overrides.
-      $library = array_merge(
+      $library = \array_merge(
         $library,
         $overrides
       );
       // Ensure that 'core/drupal' is always a dependency. This will ensure that
       // JS behaviors are attached.
       $library['dependencies'][] = 'core/drupal';
-      $library['dependencies'] = array_unique($library['dependencies']);
+      $library['dependencies'] = \array_unique($library['dependencies']);
     }
 
     return $library;
@@ -239,9 +239,9 @@ class ComponentPluginManager extends DefaultPluginManager {
     // Save in the definition whether this is a module or a theme. This is
     // important because when creating the plugin instance (the Component
     // object) we'll need to negotiate based on the active theme.
-    $definitions = array_map([$this, 'alterDefinition'], $definitions);
+    $definitions = \array_map([$this, 'alterDefinition'], $definitions);
     // Validate the definition after alterations.
-    assert(
+    \assert(
       Inspector::assertAll(
         fn(array $definition) => $this->isValidDefinition($definition),
         $definitions
@@ -250,17 +250,17 @@ class ComponentPluginManager extends DefaultPluginManager {
     parent::alterDefinitions($definitions);
 
     // Finally, validate replacements.
-    $replacing_definitions = array_filter(
+    $replacing_definitions = \array_filter(
       $definitions,
       static fn(array $definition) => ($definition['replaces'] ?? NULL) && ($definitions[$definition['replaces']] ?? NULL)
     );
-    $validation_errors = array_reduce($replacing_definitions, function (array $errors, array $new_definition) use ($definitions) {
+    $validation_errors = \array_reduce($replacing_definitions, function (array $errors, array $new_definition) use ($definitions) {
       $original_definition = $definitions[$new_definition['replaces']];
       $original_schemas = $original_definition['props'] ?? NULL;
       $new_schemas = $new_definition['props'] ?? NULL;
       if (!$original_schemas || !$new_schemas) {
         return [
-          sprintf(
+          \sprintf(
             "Component \"%s\" is attempting to replace \"%s\", however component replacement requires both components to have schema definitions.",
             $new_definition['id'],
             $original_definition['id'],
@@ -274,7 +274,7 @@ class ComponentPluginManager extends DefaultPluginManager {
         );
       }
       catch (IncompatibleComponentSchema $e) {
-        $errors[] = sprintf(
+        $errors[] = \sprintf(
           "\"%s\" is incompatible with the component is wants to replace \"%s\". Errors:\n%s",
           $new_definition['id'],
           $original_definition['id'],
@@ -284,7 +284,7 @@ class ComponentPluginManager extends DefaultPluginManager {
       return $errors;
     }, []);
     if (!empty($validation_errors)) {
-      throw new IncompatibleComponentSchema(implode("\n", $validation_errors));
+      throw new IncompatibleComponentSchema(\implode("\n", $validation_errors));
     }
   }
 
@@ -304,7 +304,7 @@ class ComponentPluginManager extends DefaultPluginManager {
     $metadata_path = $definition[YamlDirectoryDiscovery::FILE_KEY];
     $component_directory = $this->fileSystem->dirname($metadata_path);
     $definition['path'] = $component_directory;
-    [, $machine_name] = explode(':', $definition['id']);
+    [, $machine_name] = \explode(':', $definition['id']);
     $definition['machineName'] = $machine_name;
     $definition['library'] = $this->libraryFromDefinition($definition);
     // Discover the template.
@@ -313,11 +313,11 @@ class ComponentPluginManager extends DefaultPluginManager {
       $definition['machineName'],
       'twig'
     );
-    $definition['template'] = basename($template);
+    $definition['template'] = \basename($template);
     $definition['documentation'] = 'No documentation found. Add a README.md in your component directory.';
-    $documentation_path = sprintf('%s/README.md', $this->fileSystem->dirname($metadata_path));
-    if (file_exists($documentation_path)) {
-      $definition['documentation'] = file_get_contents($documentation_path);
+    $documentation_path = \sprintf('%s/README.md', $this->fileSystem->dirname($metadata_path));
+    if (\file_exists($documentation_path)) {
+      $definition['documentation'] = \file_get_contents($documentation_path);
     }
     return $definition;
   }
@@ -351,8 +351,8 @@ class ComponentPluginManager extends DefaultPluginManager {
       ...$this->moduleHandler->getModuleDirectories(),
       ...$this->themeHandler->getThemeDirectories(),
     ];
-    return array_map(
-      static fn(string $path) => rtrim($path, DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR . 'components',
+    return \array_map(
+      static fn(string $path) => \rtrim($path, DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR . 'components',
       $extension_directories
     );
   }
@@ -380,7 +380,7 @@ class ComponentPluginManager extends DefaultPluginManager {
     foreach ($css as $dir => $css_info) {
       foreach ($css_info as $filename => $options) {
         if (!UrlHelper::isExternal($filename)) {
-          $absolute_filename = sprintf('%s%s%s', $component_directory, DIRECTORY_SEPARATOR, $filename);
+          $absolute_filename = \sprintf('%s%s%s', $component_directory, DIRECTORY_SEPARATOR, $filename);
           $altered_filename = $this->makePathRelativeToLibraryRoot($absolute_filename);
           $altered_overrides['css'][$dir][$altered_filename] = $options;
         }
@@ -391,7 +391,7 @@ class ComponentPluginManager extends DefaultPluginManager {
     }
     foreach ($js as $filename => $options) {
       if (!UrlHelper::isExternal($filename)) {
-        $absolute_filename = sprintf('%s%s%s', $component_directory, DIRECTORY_SEPARATOR, $filename);
+        $absolute_filename = \sprintf('%s%s%s', $component_directory, DIRECTORY_SEPARATOR, $filename);
         $altered_filename = $this->makePathRelativeToLibraryRoot($absolute_filename);
         $altered_overrides['js'][$altered_filename] = $options;
       }
@@ -440,8 +440,8 @@ class ComponentPluginManager extends DefaultPluginManager {
    *   Filenames, maybe relative to the core folder.
    */
   private function findAsset(string $component_directory, string $machine_name, string $file_extension, bool $make_relative = FALSE): ?string {
-    $absolute_path = sprintf('%s%s%s.%s', $component_directory, DIRECTORY_SEPARATOR, $machine_name, $file_extension);
-    if (!file_exists($absolute_path)) {
+    $absolute_path = \sprintf('%s%s%s.%s', $component_directory, DIRECTORY_SEPARATOR, $machine_name, $file_extension);
+    if (!\file_exists($absolute_path)) {
       return NULL;
     }
     return $make_relative
@@ -466,8 +466,8 @@ class ComponentPluginManager extends DefaultPluginManager {
    *   The path relative to the library provider root.
    */
   private function makePathRelativeToLibraryRoot(string $path): string {
-    $path_from_root = str_starts_with($path, $this->appRoot)
-      ? substr($path, strlen($this->appRoot) + 1)
+    $path_from_root = \str_starts_with($path, $this->appRoot)
+      ? \substr($path, \strlen($this->appRoot) + 1)
       : $path;
     // The library owner is in <root>/core, so we need to go one level up to
     // find the app root.

@@ -71,7 +71,7 @@ class CallbackTest extends MigrateProcessTestCase {
       'pi' => [
         'pi',
         [],
-        pi(),
+        \pi(),
       ],
     ];
   }
@@ -131,7 +131,7 @@ class CallbackTest extends MigrateProcessTestCase {
    * @see \Drupal\Tests\migrate\Unit\process\CallbackTest::providerCallback()
    */
   public static function strToLower($string) {
-    return mb_strtolower($string);
+    return \mb_strtolower($string);
   }
 
 }

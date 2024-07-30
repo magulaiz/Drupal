@@ -40,7 +40,7 @@ class NodeTypeTest extends NodeTestBase {
    */
   public function testNodeTypeGetFunctions(): void {
     $node_types = NodeType::loadMultiple();
-    $node_names = node_type_get_names();
+    $node_names = \node_type_get_names();
 
     $this->assertTrue(isset($node_types['article']), 'Node type article is available.');
     $this->assertTrue(isset($node_types['page']), 'Node type basic page is available.');

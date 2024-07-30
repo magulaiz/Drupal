@@ -57,7 +57,7 @@ final class Recipe {
   public static function createFromDirectory(string $path): static {
     $recipe_data = self::parse($path . '/recipe.yml');
 
-    $recipes = new RecipeConfigurator(is_array($recipe_data['recipes']) ? $recipe_data['recipes'] : [], dirname($path));
+    $recipes = new RecipeConfigurator(\is_array($recipe_data['recipes']) ? $recipe_data['recipes'] : [], \dirname($path));
     $install = new InstallConfigurator($recipe_data['install'], \Drupal::service('extension.list.module'), \Drupal::service('extension.list.theme'));
     $config = new ConfigConfigurator($recipe_data['config'], $path, \Drupal::service('config.storage'));
     $content = new Finder($path . '/content');
@@ -78,10 +78,10 @@ final class Recipe {
    *   validated.
    */
   private static function parse(string $file): array {
-    if (!file_exists($file)) {
+    if (!\file_exists($file)) {
       throw new RecipeFileException($file, "There is no $file file");
     }
-    $recipe_contents = file_get_contents($file);
+    $recipe_contents = \file_get_contents($file);
     if (!$recipe_contents) {
       throw new RecipeFileException($file, "$file does not exist or could not be read.");
     }
@@ -89,7 +89,7 @@ final class Recipe {
     // recipes.
     // @see ::validateRecipeExists()
     // @see ::validateConfigActions()
-    $include_path = dirname($file, 2);
+    $include_path = \dirname($file, 2);
 
     $constraints = new Collection([
       'name' => new Required([
@@ -130,7 +130,7 @@ final class Recipe {
           // the recipe depends on itself, which is what Sequentially does.
           new Sequentially([
             new NotIdenticalTo(
-              value: basename(dirname($file)),
+              value: \basename(\dirname($file)),
               message: 'The {{ compared_value }} recipe cannot depend on itself.',
             ),
             new Callback(
@@ -190,7 +190,7 @@ final class Recipe {
     $recipe_data = Yaml::decode($recipe_contents);
     /** @var \Symfony\Component\Validator\ConstraintViolationList $violations */
     $violations = Validation::createValidator()->validate($recipe_data, $constraints);
-    if (count($violations) > 0) {
+    if (\count($violations) > 0) {
       throw RecipeFileException::fromViolationList($file, $violations);
     }
     $recipe_data += [
@@ -217,7 +217,7 @@ final class Recipe {
   private static function validateExtensionIsAvailable(string $value, ExecutionContextInterface $context): void {
     $name = Dependency::createFromString($value)->getName();
     $all_available = \Drupal::service(ModuleExtensionList::class)->getAllAvailableInfo() + \Drupal::service(ThemeExtensionList::class)->getAllAvailableInfo();
-    if (!array_key_exists($name, $all_available)) {
+    if (!\array_key_exists($name, $all_available)) {
       $context->addViolation('"%extension" is not a known module or theme.', [
         '%extension' => $name,
       ]);
@@ -257,27 +257,27 @@ final class Recipe {
    *   The recipe's include path.
    */
   private static function validateConfigActions(mixed $value, ExecutionContextInterface $context, string $include_path): void {
-    $config_name = str_replace(['[config][actions]', '[', ']'], '', $context->getPropertyPath());
-    [$config_provider] = explode('.', $config_name);
+    $config_name = \str_replace(['[config][actions]', '[', ']'], '', $context->getPropertyPath());
+    [$config_provider] = \explode('.', $config_name);
     if ($config_provider === 'core') {
       return;
     }
 
     $recipe_being_validated = $context->getRoot();
-    assert(is_array($recipe_being_validated));
+    \assert(\is_array($recipe_being_validated));
 
     $configurator = new RecipeConfigurator($recipe_being_validated['recipes'] ?? [], $include_path);
 
     // The config provider must either be an already-installed module or theme,
     // or an extension being installed by this recipe or a recipe it depends on.
     $all_extensions = [
-      ...array_keys(\Drupal::service('extension.list.module')->getAllInstalledInfo()),
-      ...array_keys(\Drupal::service('extension.list.theme')->getAllInstalledInfo()),
+      ...\array_keys(\Drupal::service('extension.list.module')->getAllInstalledInfo()),
+      ...\array_keys(\Drupal::service('extension.list.theme')->getAllInstalledInfo()),
       ...$recipe_being_validated['install'] ?? [],
       ...$configurator->listAllExtensions(),
     ];
 
-    if (!in_array($config_provider, $all_extensions, TRUE)) {
+    if (!\in_array($config_provider, $all_extensions, TRUE)) {
       $context->addViolation('Config actions cannot be applied to %config_name because the %config_provider extension is not installed, and is not installed by this recipe or any of the recipes it depends on.', [
         '%config_name' => $config_name,
         '%config_provider' => $config_provider,

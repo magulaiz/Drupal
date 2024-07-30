@@ -27,7 +27,7 @@ class KernelTestBaseTest extends KernelTestBase {
    */
   public function testSetUpBeforeClass(): void {
     // Note: PHPUnit automatically restores the original working directory.
-    $this->assertSame(realpath(__DIR__ . '/../../../../'), getcwd());
+    $this->assertSame(\realpath(__DIR__ . '/../../../../'), \getcwd());
   }
 
   /**
@@ -40,7 +40,7 @@ class KernelTestBaseTest extends KernelTestBase {
       'root' => [
         'sites' => [
           'simpletest' => [
-            substr($this->databasePrefix, 4) => [
+            \substr($this->databasePrefix, 4) => [
               'files' => [
                 'config' => [
                   'sync' => [],
@@ -171,7 +171,7 @@ class KernelTestBaseTest extends KernelTestBase {
     }
     catch (\Throwable $e) {
       // Ignore any HTTP errors, any other exception is considered an error.
-      self::assertInstanceOf(ClientExceptionInterface::class, $e, sprintf('Asserting that a possible exception is thrown. Got "%s" with message: "%s".', get_class($e), $e->getMessage()));
+      self::assertInstanceOf(ClientExceptionInterface::class, $e, \sprintf('Asserting that a possible exception is thrown. Got "%s" with message: "%s".', \get_class($e), $e->getMessage()));
     }
   }
 
@@ -213,7 +213,7 @@ class KernelTestBaseTest extends KernelTestBase {
       '#type' => 'textfield',
       '#name' => 'test',
     ];
-    $expected = '/' . preg_quote('<input type="text" name="test"', '/') . '/';
+    $expected = '/' . \preg_quote('<input type="text" name="test"', '/') . '/';
 
     $this->assertArrayNotHasKey('theme', $GLOBALS);
     $output = \Drupal::service('renderer')->renderRoot($build);
@@ -252,7 +252,7 @@ class KernelTestBaseTest extends KernelTestBase {
    */
   public function testLocalTimeZone(): void {
     // The 'Australia/Sydney' time zone is set in core/tests/bootstrap.php
-    $this->assertEquals('Australia/Sydney', date_default_timezone_get());
+    $this->assertEquals('Australia/Sydney', \date_default_timezone_get());
   }
 
   /**
@@ -299,14 +299,14 @@ class KernelTestBaseTest extends KernelTestBase {
     // Append the stream capturer to the STDERR stream, so that we can test the
     // dump() output and also prevent it from actually outputting in this
     // particular test.
-    stream_filter_register("capture", StreamCapturer::class);
-    stream_filter_append(STDERR, "capture");
+    \stream_filter_register("capture", StreamCapturer::class);
+    \stream_filter_append(STDERR, "capture");
 
     // Dump some variables.
     $this->enableModules(['system', 'user']);
     $role = Role::create(['id' => 'test_role', 'label' => 'Test role']);
-    dump($role);
-    dump($role->id());
+    \dump($role);
+    \dump($role->id());
 
     $this->assertStringContainsString('Drupal\user\Entity\Role', StreamCapturer::$cache);
     $this->assertStringContainsString('test_role', StreamCapturer::$cache);

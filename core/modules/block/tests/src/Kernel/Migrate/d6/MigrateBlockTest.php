@@ -54,7 +54,7 @@ class MigrateBlockTest extends MigrateDrupal6TestBase {
       'd6_user_role',
       'd6_block',
     ]);
-    block_rebuild();
+    \block_rebuild();
   }
 
   /**
@@ -87,7 +87,7 @@ class MigrateBlockTest extends MigrateDrupal6TestBase {
     $this->assertSame($status, $block->status());
     if ($settings) {
       $block_settings = $block->get('settings');
-      $block_settings['id'] = current(explode(':', $block_settings['id']));
+      $block_settings['id'] = \current(\explode(':', $block_settings['id']));
       $this->assertEquals($settings, $block_settings);
     }
   }
@@ -301,7 +301,7 @@ class MigrateBlockTest extends MigrateDrupal6TestBase {
     $this->assertNotInstanceOf(Block::class, $block);
 
     // Check migrate messages.
-    $messages = iterator_to_array($this->getMigration('d6_block')->getIdMap()->getMessages());
+    $messages = \iterator_to_array($this->getMigration('d6_block')->getIdMap()->getMessages());
     $this->assertCount(7, $messages);
     $this->assertSame($messages[0]->message, 'Schema errors for block.block.block_1 with the following errors: 0 [dependencies.theme.0] Theme &#039;bluemarine&#039; is not installed., 1 [theme] Theme &#039;bluemarine&#039; is not installed., 2 [region] This value should not be blank., 3 [region] This is not a valid region of the &lt;em class=&quot;placeholder&quot;&gt;bluemarine&lt;/em&gt; theme.');
     $this->assertSame($messages[1]->message, "d6_block:visibility: The block with bid '13' from module 'block' will have no PHP or request_path visibility configuration.");

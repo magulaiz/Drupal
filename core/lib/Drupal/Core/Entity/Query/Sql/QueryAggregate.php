@@ -75,7 +75,7 @@ class QueryAggregate extends Query implements QueryAggregateInterface {
     if ($this->aggregate) {
       foreach ($this->aggregate as $aggregate) {
         $sql_field = $this->getSqlField($aggregate['field'], $aggregate['langcode']);
-        $sql_field_escaped = '[' . str_replace('.', '].[', $sql_field) . ']';
+        $sql_field_escaped = '[' . \str_replace('.', '].[', $sql_field) . ']';
         $this->sqlExpressions[$aggregate['alias']] = $aggregate['function'] . "($sql_field_escaped)";
       }
     }
@@ -104,7 +104,7 @@ class QueryAggregate extends Query implements QueryAggregateInterface {
       $field = $group_by['field'];
       $sql_field = $this->getSqlField($field, $group_by['langcode']);
       $this->sqlGroupBy[$sql_field] = $sql_field;
-      [$table, $real_sql_field] = explode('.', $sql_field);
+      [$table, $real_sql_field] = \explode('.', $sql_field);
       $this->sqlFields[$sql_field] = [$table, $real_sql_field, $this->createSqlAlias($field, $real_sql_field)];
     }
 
@@ -152,10 +152,10 @@ class QueryAggregate extends Query implements QueryAggregateInterface {
    *   the _value is stripped.
    */
   public function createSqlAlias($field, $sql_field) {
-    $alias = str_replace('.', '_', $sql_field);
+    $alias = \str_replace('.', '_', $sql_field);
     // If the alias contains of field_*_value remove the _value at the end.
-    if (str_starts_with($alias, 'field_') && !str_ends_with($field, '_value') && str_ends_with($alias, '_value')) {
-      $alias = substr($alias, 0, -6);
+    if (\str_starts_with($alias, 'field_') && !\str_ends_with($field, '_value') && \str_ends_with($alias, '_value')) {
+      $alias = \substr($alias, 0, -6);
     }
     return $alias;
   }

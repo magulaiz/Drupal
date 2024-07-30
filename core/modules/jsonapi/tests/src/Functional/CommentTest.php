@@ -109,7 +109,7 @@ class CommentTest extends ResourceTestBase {
   protected function createEntity() {
     // Create a "bar" bundle for the "entity_test" entity type and create.
     $bundle = 'bar';
-    entity_test_create_bundle($bundle, NULL, 'entity_test');
+    \entity_test_create_bundle($bundle, NULL, 'entity_test');
 
     // Create a comment field on this bundle.
     $this->addDefaultCommentField('entity_test', 'bar', 'comment');
@@ -273,7 +273,7 @@ class CommentTest extends ResourceTestBase {
    */
   protected function getExpectedCacheTags(?array $sparse_fieldset = NULL) {
     $tags = parent::getExpectedCacheTags($sparse_fieldset);
-    if ($sparse_fieldset === NULL || in_array('comment_body', $sparse_fieldset)) {
+    if ($sparse_fieldset === NULL || \in_array('comment_body', $sparse_fieldset)) {
       $tags = Cache::mergeTags($tags, ['config:filter.format.plain_text']);
     }
     return $tags;
@@ -284,7 +284,7 @@ class CommentTest extends ResourceTestBase {
    */
   protected function getExpectedCacheContexts(?array $sparse_fieldset = NULL) {
     $contexts = parent::getExpectedCacheContexts($sparse_fieldset);
-    if ($sparse_fieldset === NULL || in_array('comment_body', $sparse_fieldset)) {
+    if ($sparse_fieldset === NULL || \in_array('comment_body', $sparse_fieldset)) {
       $contexts = Cache::mergeContexts($contexts, ['languages:language_interface', 'theme']);
     }
     return $contexts;
@@ -326,7 +326,7 @@ class CommentTest extends ResourceTestBase {
     $this->setUpAuthorization('POST');
     $this->config('jsonapi.settings')->set('read_only', FALSE)->save(TRUE);
 
-    $url = Url::fromRoute(sprintf('jsonapi.%s.collection.post', static::$resourceTypeName));
+    $url = Url::fromRoute(\sprintf('jsonapi.%s.collection.post', static::$resourceTypeName));
     $request_options = [];
     $request_options[RequestOptions::HEADERS]['Accept'] = 'application/vnd.api+json';
     $request_options[RequestOptions::HEADERS]['Content-Type'] = 'application/vnd.api+json';

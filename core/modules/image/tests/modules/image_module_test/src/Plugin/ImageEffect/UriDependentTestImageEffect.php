@@ -44,8 +44,8 @@ class UriDependentTestImageEffect extends ImageEffectBase {
    */
   protected function getUriDependentDimensions($uri) {
     $dimensions = [];
-    $extension = pathinfo($uri, PATHINFO_EXTENSION);
-    switch (strtolower($extension)) {
+    $extension = \pathinfo($uri, PATHINFO_EXTENSION);
+    switch (\strtolower($extension)) {
       case 'png':
         $dimensions['width'] = $dimensions['height'] = 100;
         break;

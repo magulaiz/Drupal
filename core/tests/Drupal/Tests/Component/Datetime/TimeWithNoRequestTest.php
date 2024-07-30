@@ -43,7 +43,7 @@ class TimeWithNoRequestTest extends TestCase {
    */
   public function testGetRequestTimeImmutable(): void {
     $requestTime = $this->time->getRequestTime();
-    sleep(2);
+    \sleep(2);
     $this->assertSame($requestTime, $this->time->getRequestTime());
   }
 
@@ -54,7 +54,7 @@ class TimeWithNoRequestTest extends TestCase {
    */
   public function testGetRequestMicroTimeImmutable(): void {
     $requestTime = $this->time->getRequestMicroTime();
-    usleep(20000);
+    \usleep(20000);
     $this->assertSame($requestTime, $this->time->getRequestMicroTime());
   }
 

@@ -30,7 +30,7 @@ class ComponentValidator {
       $this->validator = $validator;
       return;
     }
-    if (class_exists(Validator::class)) {
+    if (\class_exists(Validator::class)) {
       $this->validator = new Validator();
     }
   }
@@ -54,14 +54,14 @@ class ComponentValidator {
    */
   public function validateDefinition(array $definition, bool $enforce_schemas): bool {
     // First ensure there are no name collisions between props and slots.
-    $prop_names = array_keys($definition['props']['properties'] ?? []);
-    $slot_names = array_keys($definition['slots'] ?? []);
-    $collisions = array_intersect($prop_names, $slot_names);
+    $prop_names = \array_keys($definition['props']['properties'] ?? []);
+    $slot_names = \array_keys($definition['slots'] ?? []);
+    $collisions = \array_intersect($prop_names, $slot_names);
     if ($collisions) {
-      $message = sprintf(
+      $message = \sprintf(
         'The component "%s" declared [%s] both as a prop and as a slot. Make sure to use different names.',
         $definition['id'],
-        implode(', ', $collisions)
+        \implode(', ', $collisions)
       );
       throw new InvalidComponentException($message);
     }
@@ -73,7 +73,7 @@ class ComponentValidator {
     $schema = $definition['props'] ?? NULL;
     if (!$schema) {
       if ($enforce_schemas) {
-        throw new InvalidComponentException(sprintf('The component "%s" does not provide schema information. Schema definitions are mandatory for components declared in modules. For components declared in themes, schema definitions are only mandatory if the "enforce_prop_schemas" key is set to "true" in the theme info file.', $definition['id']));
+        throw new InvalidComponentException(\sprintf('The component "%s" does not provide schema information. Schema definitions are mandatory for components declared in modules. For components declared in themes, schema definitions are only mandatory if the "enforce_prop_schemas" key is set to "true" in the theme info file.', $definition['id']));
       }
       return TRUE;
     }
@@ -85,11 +85,11 @@ class ComponentValidator {
     $missing_class_errors = [];
     foreach ($classes_per_prop as $prop_name => $class_types) {
       // For each possible type, check if it is a class.
-      $missing_classes = array_filter($class_types, static fn(string $class) => !class_exists($class) && !interface_exists($class));
+      $missing_classes = \array_filter($class_types, static fn(string $class) => !\class_exists($class) && !\interface_exists($class));
       $missing_class_errors = [
         ...$missing_class_errors,
-        ...array_map(
-          static fn(string $class) => sprintf('Unable to find class/interface "%s" specified in the prop "%s" for the component "%s".', $class, $prop_name, $definition['id']),
+        ...\array_map(
+          static fn(string $class) => \sprintf('Unable to find class/interface "%s" specified in the prop "%s" for the component "%s".', $class, $prop_name, $definition['id']),
           $missing_classes
         ),
       ];
@@ -103,20 +103,20 @@ class ComponentValidator {
     $definition_object = Validator::arrayToObjectRecursive($definition);
     $this->validator->validate(
       $definition_object,
-      (object) ['$ref' => 'file://' . dirname(__DIR__, 5) . '/assets/schemas/v1/metadata-full.schema.json']
+      (object) ['$ref' => 'file://' . \dirname(__DIR__, 5) . '/assets/schemas/v1/metadata-full.schema.json']
     );
     if (empty($missing_class_errors) && $this->validator->isValid()) {
       return TRUE;
     }
-    $message_parts = array_map(
-      static fn(array $error): string => sprintf("[%s] %s", $error['property'], $error['message']),
+    $message_parts = \array_map(
+      static fn(array $error): string => \sprintf("[%s] %s", $error['property'], $error['message']),
       $this->validator->getErrors()
     );
     $message_parts = [
       ...$message_parts,
       ...$missing_class_errors,
     ];
-    $message = implode("/n", $message_parts);
+    $message = \implode("/n", $message_parts);
     // Throw the exception with the error message.
     throw new InvalidComponentException($message);
   }
@@ -146,7 +146,7 @@ class ComponentValidator {
     $schema = $component->metadata->schema;
     if (!$schema) {
       if ($component->metadata->mandatorySchemas) {
-        throw new InvalidComponentException(sprintf('The component "%s" does not provide schema information. Schema definitions are mandatory for components declared in modules. For components declared in themes, schema definitions are only mandatory if the "enforce_prop_schemas" key is set to "true" in the theme info file.', $component_id));
+        throw new InvalidComponentException(\sprintf('The component "%s" does not provide schema information. Schema definitions are mandatory for components declared in modules. For components declared in themes, schema definitions are only mandatory if the "enforce_prop_schemas" key is set to "true" in the theme info file.', $component_id));
       }
       return TRUE;
     }
@@ -154,8 +154,8 @@ class ComponentValidator {
       // If there are no properties in the schema there is nothing to validate.
       return TRUE;
     }
-    $prop_names = array_keys($schema['properties']);
-    $props_raw = array_intersect_key($context, array_flip($prop_names));
+    $prop_names = \array_keys($schema['properties']);
+    $props_raw = \array_intersect_key($context, \array_flip($prop_names));
     // Validator::arrayToObjectRecursive stringifies the props using the JSON
     // encoder. Before that happens, we want to validate classes. Once the
     // classes are validated, we remove them as potential problems for the JSON
@@ -173,7 +173,7 @@ class ComponentValidator {
       return TRUE;
     }
     // Dismiss type errors if the prop received a render array.
-    $errors = array_filter(
+    $errors = \array_filter(
       $validator->getErrors(),
       function (array $error) use ($context): bool {
         if (($error['constraint'] ?? '') !== 'type') {
@@ -185,21 +185,21 @@ class ComponentValidator {
     if (empty($errors)) {
       return TRUE;
     }
-    $message_parts = array_map(
+    $message_parts = \array_map(
       static function (array $error): string {
         // We check the error message instead of values and definitions here
         // because it's hard to access both given the possible complexity of a
         // schema. Since this is a small non critical DX improvement error
         // message checking should be sufficient.
-        if (str_contains($error['message'], 'NULL value found, but a ')) {
+        if (\str_contains($error['message'], 'NULL value found, but a ')) {
           $error['message'] .= '. This may be because the property is empty instead of having data present. If possible fix the source data, use the |default() twig filter, or update the schema to allow multiple types.';
         }
 
-        return sprintf("[%s] %s", $error['property'], $error['message']);
+        return \sprintf("[%s] %s", $error['property'], $error['message']);
       },
       $errors
     );
-    $message = implode("/n", $message_parts);
+    $message = \implode("/n", $message_parts);
     throw new InvalidComponentException($message);
   }
 
@@ -233,20 +233,20 @@ class ComponentValidator {
     foreach ($properties as $prop_name => $prop_def) {
       $class_types = $classes_per_prop[$prop_name] ?? [];
       $prop = $props_raw[$prop_name] ?? NULL;
-      if (empty($class_types) || is_null($prop)) {
+      if (empty($class_types) || \is_null($prop)) {
         continue;
       }
-      $is_valid = array_reduce(
+      $is_valid = \array_reduce(
         $class_types,
         static fn(bool $valid, string $class_name) => $valid || $prop instanceof $class_name,
         FALSE
       );
       if (!$is_valid) {
-        $error_messages[] = sprintf(
+        $error_messages[] = \sprintf(
           'Data provided to prop "%s" for component "%s" is not a valid instance of "%s"',
           $prop_name,
           $component_id,
-          implode(', ', $class_types),
+          \implode(', ', $class_types),
         );
       }
       // Remove the non JSON Schema types for later JSON Schema validation.
@@ -254,7 +254,7 @@ class ComponentValidator {
     }
     $props_schema = $this->nullifyClassPropsSchema($props_schema, $classes_per_prop);
     if (!empty($error_messages)) {
-      $message = implode("/n", $error_messages);
+      $message = \implode("/n", $error_messages);
       throw new InvalidComponentException($message);
     }
     return [$props_schema, $props_raw];
@@ -273,15 +273,15 @@ class ComponentValidator {
     $classes_per_prop = [];
     foreach ($props_schema['properties'] ?? [] as $prop_name => $prop_def) {
       $type = $prop_def['type'] ?? 'null';
-      $types = is_string($type) ? [$type] : $type;
+      $types = \is_string($type) ? [$type] : $type;
       // For each possible type, check if it is a class.
-      $class_types = array_filter($types, static fn(string $type) => !in_array(
+      $class_types = \array_filter($types, static fn(string $type) => !\in_array(
         $type,
         ['array', 'boolean', 'integer', 'null', 'number', 'object', 'string']
       ));
       $classes_per_prop[$prop_name] = $class_types;
     }
-    return array_filter($classes_per_prop);
+    return \array_filter($classes_per_prop);
   }
 
   /**
@@ -300,7 +300,7 @@ class ComponentValidator {
       $class_types = $classes_per_prop[$prop_name] ?? [];
       // Remove the non JSON Schema types for later JSON Schema validation.
       $types = (array) ($prop_def['type'] ?? ['null']);
-      $types = array_diff($types, $class_types);
+      $types = \array_diff($types, $class_types);
       $types = empty($types) ? ['null'] : $types;
       $schema_props['properties'][$prop_name]['type'] = $types;
     }

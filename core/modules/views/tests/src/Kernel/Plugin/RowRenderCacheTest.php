@@ -159,8 +159,8 @@ class RowRenderCacheTest extends ViewsKernelTestBase {
 
     // Retrieve nodes and sort them in alphabetical order to match view results.
     $nodes = Node::loadMultiple();
-    usort($nodes, function (NodeInterface $a, NodeInterface $b) {
-      return strcmp($a->label(), $b->label());
+    \usort($nodes, function (NodeInterface $a, NodeInterface $b) {
+      return \strcmp($a->label(), $b->label());
     });
 
     $index = 0;

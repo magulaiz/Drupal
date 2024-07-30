@@ -68,7 +68,7 @@ trait PerformanceTestTrait {
     // avoid clobbering anything set via environment variables.
     // @see https://chromedriver.chromium.org/logging/performance-log
     $parent_driver_args = parent::getMinkDriverArgs();
-    $driver_args = json_decode($parent_driver_args, TRUE);
+    $driver_args = \json_decode($parent_driver_args, TRUE);
 
     $driver_args[1]['goog:loggingPrefs'] = [
       'browser' => 'ALL',
@@ -80,7 +80,7 @@ trait PerformanceTestTrait {
       'traceCategories' => 'timeline,devtools.timeline,browser',
     ];
 
-    return json_encode($driver_args);
+    return \json_encode($driver_args);
   }
 
   /**
@@ -105,7 +105,7 @@ trait PerformanceTestTrait {
     $collection = \Drupal::keyValue('performance_test');
     while ($collection->get('performance_test_data')) {
       $collection->deleteAll();
-      sleep(1);
+      \sleep(1);
     }
 
     $session = $this->getSession();
@@ -139,19 +139,19 @@ trait PerformanceTestTrait {
           // Make the query easier to read and log it.
           static::logQuery(
             $performance_data,
-            str_replace([$this->databasePrefix, "\r\n", "\r", "\n"], ['', ' ', ' ', ' '], $event->queryString),
+            \str_replace([$this->databasePrefix, "\r\n", "\r", "\n"], ['', ' ', ' ', ' '], $event->queryString),
             $event->args
           );
         }
       }
       foreach ($performance_test_data['cache_operations'] as $operation) {
-        if (in_array($operation['operation'], ['get', 'getMultiple'], TRUE)) {
+        if (\in_array($operation['operation'], ['get', 'getMultiple'], TRUE)) {
           $cache_get_count++;
         }
-        elseif (in_array($operation['operation'], ['set', 'setMultiple'], TRUE)) {
+        elseif (\in_array($operation['operation'], ['set', 'setMultiple'], TRUE)) {
           $cache_set_count++;
         }
-        elseif (in_array($operation['operation'], ['delete', 'deleteMultiple'], TRUE)) {
+        elseif (\in_array($operation['operation'], ['delete', 'deleteMultiple'], TRUE)) {
           $cache_delete_count++;
         }
       }
@@ -185,69 +185,69 @@ trait PerformanceTestTrait {
    */
   protected static function logQuery(PerformanceData $performance_data, string $query, array $args): void {
     // Make queries with random variables invariable.
-    if (str_starts_with($query, 'INSERT INTO "semaphore"')) {
+    if (\str_starts_with($query, 'INSERT INTO "semaphore"')) {
       $args[':db_insert_placeholder_1'] = 'LOCK_ID';
       $args[':db_insert_placeholder_2'] = 'EXPIRE';
     }
-    elseif (str_starts_with($query, 'DELETE FROM "semaphore"')) {
+    elseif (\str_starts_with($query, 'DELETE FROM "semaphore"')) {
       $args[':db_condition_placeholder_1'] = 'LOCK_ID';
     }
-    elseif (str_starts_with($query, 'SELECT "base_table"."uid" AS "uid", "base_table"."uid" AS "base_table_uid" FROM "users"')) {
+    elseif (\str_starts_with($query, 'SELECT "base_table"."uid" AS "uid", "base_table"."uid" AS "base_table_uid" FROM "users"')) {
       $args[':db_condition_placeholder_0'] = 'ACCOUNT_NAME';
     }
-    elseif (str_starts_with($query, 'SELECT COUNT(*) AS "expression" FROM (SELECT 1 AS "expression" FROM "flood" "f"')) {
+    elseif (\str_starts_with($query, 'SELECT COUNT(*) AS "expression" FROM (SELECT 1 AS "expression" FROM "flood" "f"')) {
       $args[':db_condition_placeholder_1'] = 'CLIENT_IP';
       $args[':db_condition_placeholder_2'] = 'TIMESTAMP';
     }
-    elseif (str_starts_with($query, 'UPDATE "users_field_data" SET "login"')) {
+    elseif (\str_starts_with($query, 'UPDATE "users_field_data" SET "login"')) {
       $args[':db_update_placeholder_0'] = 'TIMESTAMP';
     }
-    elseif (str_starts_with($query, 'INSERT INTO "sessions"')) {
+    elseif (\str_starts_with($query, 'INSERT INTO "sessions"')) {
       $args[':db_insert_placeholder_0'] = 'SESSION_ID';
       $args[':db_insert_placeholder_2'] = 'CLIENT_IP';
       $args[':db_insert_placeholder_3'] = 'SESSION_DATA';
       $args[':db_insert_placeholder_4'] = 'TIMESTAMP';
     }
-    elseif (str_starts_with($query, 'SELECT "session" FROM "sessions"')) {
+    elseif (\str_starts_with($query, 'SELECT "session" FROM "sessions"')) {
       $args[':sid'] = 'SESSION_ID';
     }
-    elseif (str_starts_with($query, 'SELECT 1 AS "expression" FROM "sessions"')) {
+    elseif (\str_starts_with($query, 'SELECT 1 AS "expression" FROM "sessions"')) {
       $args[':db_condition_placeholder_0'] = 'SESSION_ID';
     }
-    elseif (str_starts_with($query, 'DELETE FROM "sessions"')) {
+    elseif (\str_starts_with($query, 'DELETE FROM "sessions"')) {
       $args[':db_condition_placeholder_0'] = 'TIMESTAMP';
     }
-    elseif (str_starts_with($query, 'INSERT INTO "watchdog"')) {
+    elseif (\str_starts_with($query, 'INSERT INTO "watchdog"')) {
       $args[':db_insert_placeholder_3'] = 'WATCHDOG_DATA';
       $args[':db_insert_placeholder_6'] = 'LOCATION';
       $args[':db_insert_placeholder_7'] = 'REFERER';
       $args[':db_insert_placeholder_8'] = 'CLIENT_IP';
       $args[':db_insert_placeholder_9'] = 'TIMESTAMP';
     }
-    elseif (str_starts_with($query, 'SELECT "name", "route", "fit" FROM "router"')) {
-      if (preg_match('@/sites/simpletest/(\d{8})/files/css/(.*)@', $args[':patterns__0'], $matches)) {
+    elseif (\str_starts_with($query, 'SELECT "name", "route", "fit" FROM "router"')) {
+      if (\preg_match('@/sites/simpletest/(\d{8})/files/css/(.*)@', $args[':patterns__0'], $matches)) {
         $search = [$matches[1], $matches[2]];
         $replace = ['TEST_ID', 'CSS_FILE'];
         foreach ($args as $name => $arg) {
-          if (!is_string($arg)) {
+          if (!\is_string($arg)) {
             continue;
           }
-          $args[$name] = str_replace($search, $replace, $arg);
+          $args[$name] = \str_replace($search, $replace, $arg);
         }
       }
     }
-    elseif (str_starts_with($query, 'SELECT "base_table"."id" AS "id", "base_table"."path" AS "path", "base_table"."alias" AS "alias", "base_table"."langcode" AS "langcode" FROM "path_alias" "base_table"')) {
-      if (str_contains($args[':db_condition_placeholder_1'], 'files/css')) {
+    elseif (\str_starts_with($query, 'SELECT "base_table"."id" AS "id", "base_table"."path" AS "path", "base_table"."alias" AS "alias", "base_table"."langcode" AS "langcode" FROM "path_alias" "base_table"')) {
+      if (\str_contains($args[':db_condition_placeholder_1'], 'files/css')) {
         $args[':db_condition_placeholder_1'] = 'CSS_FILE';
       }
     }
-    elseif (str_starts_with($query, 'SELECT "name", "value" FROM "key_value_expire" WHERE "expire" >')) {
+    elseif (\str_starts_with($query, 'SELECT "name", "value" FROM "key_value_expire" WHERE "expire" >')) {
       $args[':now'] = 'NOW';
       $args[':keys__0'] = 'KEY';
     }
 
     // Inline query arguments and log the query.
-    $query = str_replace(array_keys($args), array_values(static::quoteQueryArgs($args)), $query);
+    $query = \str_replace(\array_keys($args), \array_values(static::quoteQueryArgs($args)), $query);
     $performance_data->logQuery($query);
   }
 
@@ -262,9 +262,9 @@ trait PerformanceTestTrait {
    */
   protected static function quoteQueryArgs(array $args): array {
     $conditionalQuote = function ($arg) {
-      return is_int($arg) || is_float($arg) ? $arg : '"' . $arg . '"';
+      return \is_int($arg) || \is_float($arg) ? $arg : '"' . $arg . '"';
     };
-    return array_map($conditionalQuote, $args);
+    return \array_map($conditionalQuote, $args);
   }
 
   /**
@@ -299,7 +299,7 @@ trait PerformanceTestTrait {
       $performance_log = $session->getDriver()->getWebDriverSession()->log('performance');
 
       foreach ($performance_log as $entry) {
-        $decoded = json_decode($entry['message'], TRUE);
+        $decoded = \json_decode($entry['message'], TRUE);
         $message = $decoded['message'];
         if ($message['method'] === 'Tracing.dataCollected' && $message['params']['name'] === 'largestContentfulPaint::Candidate') {
           $lcp_count++;
@@ -327,7 +327,7 @@ trait PerformanceTestTrait {
       if ($lcp_count && empty($performance_log) && ($request_count === $response_count)) {
         break;
       }
-      sleep(1);
+      \sleep(1);
     }
     $performance_data = new PerformanceData();
     $this->collectNetworkData($messages, $performance_data);
@@ -381,25 +381,25 @@ trait PerformanceTestTrait {
     foreach ($stylesheet_urls as $url) {
       $stylesheet_count++;
       if ($GLOBALS['base_path'] === '/') {
-        $filename = ltrim(parse_url($url, PHP_URL_PATH), '/');
-        $stylesheet_bytes += strlen(file_get_contents($filename));
+        $filename = \ltrim(\parse_url($url, PHP_URL_PATH), '/');
+        $stylesheet_bytes += \strlen(\file_get_contents($filename));
       }
       else {
-        $filename = str_replace($GLOBALS['base_path'], '', parse_url($url, PHP_URL_PATH));
+        $filename = \str_replace($GLOBALS['base_path'], '', \parse_url($url, PHP_URL_PATH));
         // Strip the basepath from the contents of the file so that tests
         // running in a subdirectory get the same results.
-        $stylesheet_bytes += strlen(str_replace($GLOBALS['base_path'], '/', file_get_contents($filename)));
+        $stylesheet_bytes += \strlen(\str_replace($GLOBALS['base_path'], '/', \file_get_contents($filename)));
       }
     }
     foreach ($script_urls as $url) {
       $script_count++;
       if ($GLOBALS['base_path'] === '/') {
-        $filename = ltrim(parse_url($url, PHP_URL_PATH), '/');
+        $filename = \ltrim(\parse_url($url, PHP_URL_PATH), '/');
       }
       else {
-        $filename = str_replace($GLOBALS['base_path'], '', parse_url($url, PHP_URL_PATH));
+        $filename = \str_replace($GLOBALS['base_path'], '', \parse_url($url, PHP_URL_PATH));
       }
-      $script_bytes += strlen(file_get_contents($filename));
+      $script_bytes += \strlen(\file_get_contents($filename));
     }
 
     $performance_data->setStylesheetCount($stylesheet_count);
@@ -425,7 +425,7 @@ trait PerformanceTestTrait {
     $nanoseconds_per_millisecond = 1000_000;
     $nanoseconds_per_microsecond = 1000;
 
-    $collector = getenv('OTEL_COLLECTOR');
+    $collector = \getenv('OTEL_COLLECTOR');
     if (!$collector) {
       return;
     }
@@ -474,9 +474,9 @@ trait PerformanceTestTrait {
       ResourceAttributes::DEPLOYMENT_ENVIRONMENT => 'local',
     ])));
 
-    $otel_collector_headers = getenv('OTEL_COLLECTOR_HEADERS') ?: [];
+    $otel_collector_headers = \getenv('OTEL_COLLECTOR_HEADERS') ?: [];
     if ($otel_collector_headers) {
-      $otel_collector_headers = json_decode($otel_collector_headers, TRUE);
+      $otel_collector_headers = \json_decode($otel_collector_headers, TRUE);
     }
     $transport = (new OtlpHttpTransportFactory())->create($collector, 'application/x-protobuf', $otel_collector_headers);
     $exporter = new SpanExporter($transport);
@@ -508,11 +508,11 @@ trait PerformanceTestTrait {
           continue;
         }
         // Use the first part of the database query for the span name.
-        $query_span = $tracer->spanBuilder(substr($event->queryString, 0, 64))
+        $query_span = $tracer->spanBuilder(\substr($event->queryString, 0, 64))
           ->setStartTimestamp((int) ($event->startTime * $nanoseconds_per_second))
           ->setAttribute('query.string', $event->queryString)
-          ->setAttribute('query.args', var_export($event->args, TRUE))
-          ->setAttribute('query.caller', var_export($event->caller, TRUE))
+          ->setAttribute('query.args', \var_export($event->args, TRUE))
+          ->setAttribute('query.caller', \var_export($event->caller, TRUE))
           ->startSpan();
         $query_span->end((int) ($event->time * $nanoseconds_per_second));
       }
@@ -615,8 +615,8 @@ trait PerformanceTestTrait {
   protected static function isDatabaseCache(DatabaseEvent $event): bool {
     // If there is no class, then this is called from a procedural function.
     if (isset($event->caller['class'])) {
-      $class = str_replace('\\\\', '\\', $event->caller['class']);
-      return is_a($class, '\Drupal\Core\Cache\DatabaseBackend', TRUE) || is_a($class, '\Drupal\Core\Cache\DatabaseCacheTagsChecksum', TRUE);
+      $class = \str_replace('\\\\', '\\', $event->caller['class']);
+      return \is_a($class, '\Drupal\Core\Cache\DatabaseBackend', TRUE) || \is_a($class, '\Drupal\Core\Cache\DatabaseCacheTagsChecksum', TRUE);
     }
     return FALSE;
   }

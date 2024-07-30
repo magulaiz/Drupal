@@ -32,7 +32,7 @@ class SectionData extends TypedData {
    */
   public function setValue($value, $notify = TRUE) {
     if ($value && !$value instanceof Section) {
-      throw new \InvalidArgumentException(sprintf('Value assigned to "%s" is not a valid section', $this->getName()));
+      throw new \InvalidArgumentException(\sprintf('Value assigned to "%s" is not a valid section', $this->getName()));
     }
     parent::setValue($value, $notify);
   }

@@ -105,7 +105,7 @@ class ConfigEntityAdapterTest extends KernelTestBase {
       $keys[] = $key;
       $this->assertInstanceOf($expected_properties[$key], $property);
     }
-    $this->assertSame(array_keys($expected_properties), $keys);
+    $this->assertSame(\array_keys($expected_properties), $keys);
   }
 
   /**
@@ -158,7 +158,7 @@ class ConfigEntityAdapterTest extends KernelTestBase {
   public function testGetIterator(): void {
     $adapter = ConfigEntityAdapter::createFromEntity($this->entity);
     $iterator = $adapter->getIterator();
-    $fields = iterator_to_array($iterator);
+    $fields = \iterator_to_array($iterator);
     $expected_fields = [
       'uuid',
       'langcode',
@@ -172,7 +172,7 @@ class ConfigEntityAdapterTest extends KernelTestBase {
       'size_value',
       'protected_property',
     ];
-    $this->assertEquals($expected_fields, array_keys($fields));
+    $this->assertEquals($expected_fields, \array_keys($fields));
     $this->assertEquals($this->entity->id(), $fields['id']->getValue());
 
     $adapter->setValue(NULL);

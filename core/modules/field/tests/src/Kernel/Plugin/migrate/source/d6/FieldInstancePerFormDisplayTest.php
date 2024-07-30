@@ -48,7 +48,7 @@ class FieldInstancePerFormDisplayTest extends MigrateSqlSourceTestBase {
     ];
 
     // The source data.
-    $empty_array = serialize([]);
+    $empty_array = \serialize([]);
     $tests[0]['source_data']['content_node_field'] = [
       [
         'field_name' => 'field_test_filefield',

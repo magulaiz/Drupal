@@ -95,7 +95,7 @@ class Fixtures {
    *   Path to the root of this project.
    */
   public function projectRoot() {
-    return realpath(__DIR__) . '/../../../../../../../composer/Plugin/Scaffold';
+    return \realpath(__DIR__) . '/../../../../../../../composer/Plugin/Scaffold';
   }
 
   /**
@@ -105,7 +105,7 @@ class Fixtures {
    *   Path to project fixtures
    */
   public function allFixturesDir() {
-    return realpath(__DIR__ . '/fixtures');
+    return \realpath(__DIR__ . '/fixtures');
   }
 
   /**
@@ -119,7 +119,7 @@ class Fixtures {
    */
   public function projectFixtureDir($project_name) {
     $dir = $this->allFixturesDir() . '/' . $project_name;
-    if (!is_dir($dir)) {
+    if (!\is_dir($dir)) {
       throw new \RuntimeException("Requested fixture project {$project_name} that does not exist.");
     }
     return $dir;
@@ -136,7 +136,7 @@ class Fixtures {
    */
   public function binFixtureDir($bin_name) {
     $dir = $this->allFixturesDir() . '/scripts/' . $bin_name;
-    if (!is_dir($dir)) {
+    if (!\is_dir($dir)) {
       throw new \RuntimeException("Requested fixture bin dir {$bin_name} that does not exist.");
     }
     return $dir;
@@ -254,7 +254,7 @@ class Fixtures {
    */
   public function tmpDir($prefix) {
     $prefix .= static::persistentPrefix();
-    $tmpDir = sys_get_temp_dir() . '/scaffold-' . $prefix . uniqid(md5($prefix . microtime()), TRUE);
+    $tmpDir = \sys_get_temp_dir() . '/scaffold-' . $prefix . \uniqid(\md5($prefix . \microtime()), TRUE);
     $this->tmpDirs[] = $tmpDir;
     return $tmpDir;
   }
@@ -271,7 +271,7 @@ class Fixtures {
    */
   protected static function persistentPrefix() {
     if (empty(static::$randomPrefix)) {
-      static::$randomPrefix = getmypid() . md5(microtime());
+      static::$randomPrefix = \getmypid() . \md5(\microtime());
     }
     return static::$randomPrefix;
   }
@@ -297,7 +297,7 @@ class Fixtures {
    */
   public function createIsolatedComposerCacheDir() {
     $cacheDir = $this->mkTmpDir('composer-cache');
-    putenv("COMPOSER_CACHE_DIR=$cacheDir");
+    \putenv("COMPOSER_CACHE_DIR=$cacheDir");
   }
 
   /**
@@ -313,7 +313,7 @@ class Fixtures {
     $this->tmpDirs = [];
     $this->io = NULL;
     // Clear the composer cache dir, if it was set
-    putenv('COMPOSER_CACHE_DIR=');
+    \putenv('COMPOSER_CACHE_DIR=');
   }
 
   /**
@@ -339,14 +339,14 @@ class Fixtures {
     $interpolator = new Interpolator('__', '__');
     $interpolator->setData($replacements);
     $filesystem->copy($this->allFixturesDir(), $fixturesDir);
-    $composer_json_templates = glob($fixturesDir . "/*/composer.json.tmpl");
+    $composer_json_templates = \glob($fixturesDir . "/*/composer.json.tmpl");
     foreach ($composer_json_templates as $composer_json_tmpl) {
       // Inject replacements into composer.json.
-      if (file_exists($composer_json_tmpl)) {
-        $composer_json_contents = file_get_contents($composer_json_tmpl);
+      if (\file_exists($composer_json_tmpl)) {
+        $composer_json_contents = \file_get_contents($composer_json_tmpl);
         $composer_json_contents = $interpolator->interpolate($composer_json_contents, [], FALSE);
-        file_put_contents(dirname($composer_json_tmpl) . "/composer.json", $composer_json_contents);
-        @unlink($composer_json_tmpl);
+        \file_put_contents(\dirname($composer_json_tmpl) . "/composer.json", $composer_json_contents);
+        @\unlink($composer_json_tmpl);
       }
     }
   }
@@ -366,7 +366,7 @@ class Fixtures {
    *   Output captured from tests that write to Fixtures::io().
    */
   public function runScaffold($cwd) {
-    chdir($cwd);
+    \chdir($cwd);
     $handler = new Handler($this->getComposer(), $this->io());
     $handler->scaffold();
     return $this->getOutput();
@@ -384,7 +384,7 @@ class Fixtures {
    *   Standard output and standard error from the command.
    */
   public function runComposer($cmd, $cwd) {
-    chdir($cwd);
+    \chdir($cwd);
     $input = new StringInput($cmd);
     $output = new BufferedOutput();
     $application = new Application();

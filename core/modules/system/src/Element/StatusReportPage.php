@@ -78,18 +78,18 @@ class StatusReportPage extends RenderElementBase {
     $counters = [
       'error' => [
         'amount' => 0,
-        'text' => t('Error'),
-        'text_plural' => t('Errors'),
+        'text' => \t('Error'),
+        'text_plural' => \t('Errors'),
       ],
       'warning' => [
         'amount' => 0,
-        'text' => t('Warning'),
-        'text_plural' => t('Warnings'),
+        'text' => \t('Warning'),
+        'text_plural' => \t('Warnings'),
       ],
       'checked' => [
         'amount' => 0,
-        'text' => t('Checked', [], ['context' => 'Examined']),
-        'text_plural' => t('Checked', [], ['context' => 'Examined']),
+        'text' => \t('Checked', [], ['context' => 'Examined']),
+        'text_plural' => \t('Checked', [], ['context' => 'Examined']),
       ],
     ];
 
@@ -99,7 +99,7 @@ class StatusReportPage extends RenderElementBase {
       if (isset($requirement['severity'])) {
         $severity = $severities[(int) $requirement['severity']];
       }
-      elseif (defined('MAINTENANCE_MODE') && MAINTENANCE_MODE == 'install') {
+      elseif (\defined('MAINTENANCE_MODE') && MAINTENANCE_MODE == 'install') {
         $severity = $severities[REQUIREMENT_OK];
       }
 

@@ -44,7 +44,7 @@ class TwigNodeVisitor implements NodeVisitorInterface {
         unset($this->skipRenderVarFunction);
         return $node;
       }
-      $class = get_class($node);
+      $class = \get_class($node);
       $line = $node->getTemplateLine();
       return new $class(
         new FunctionExpression('render_var', new Node([$node->getNode('expr')]), $line),

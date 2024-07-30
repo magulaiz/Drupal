@@ -58,7 +58,7 @@ class MigrateLanguageNegotiationSettingsTest extends MigrateDrupal6TestBase {
    */
   public function testLanguageNegotiationWithNoNegotiation(): void {
     $this->sourceDatabase->update('variable')
-      ->fields(['value' => serialize(0)])
+      ->fields(['value' => \serialize(0)])
       ->condition('name', 'language_negotiation')
       ->execute();
 
@@ -90,7 +90,7 @@ class MigrateLanguageNegotiationSettingsTest extends MigrateDrupal6TestBase {
    */
   public function testLanguageNegotiationWithPathPrefix(): void {
     $this->sourceDatabase->update('variable')
-      ->fields(['value' => serialize(2)])
+      ->fields(['value' => \serialize(2)])
       ->condition('name', 'language_negotiation')
       ->execute();
 
@@ -131,7 +131,7 @@ class MigrateLanguageNegotiationSettingsTest extends MigrateDrupal6TestBase {
    */
   public function testLanguageNegotiationWithDomain(): void {
     $this->sourceDatabase->update('variable')
-      ->fields(['value' => serialize(3)])
+      ->fields(['value' => \serialize(3)])
       ->condition('name', 'language_negotiation')
       ->execute();
 
@@ -148,7 +148,7 @@ class MigrateLanguageNegotiationSettingsTest extends MigrateDrupal6TestBase {
     $this->assertSame(LanguageNegotiationUrl::CONFIG_DOMAIN, $config->get('url.source'));
     $this->assertSame('site_default', $config->get('selected_langcode'));
     $expected_domains = [
-      'en' => parse_url($base_url, PHP_URL_HOST),
+      'en' => \parse_url($base_url, PHP_URL_HOST),
       'fr' => 'fr.drupal.org',
       'zu' => 'zu.drupal.org',
     ];

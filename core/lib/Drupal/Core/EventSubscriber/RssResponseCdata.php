@@ -20,7 +20,7 @@ class RssResponseCdata implements EventSubscriberInterface {
    */
   public function onResponse(ResponseEvent $event): void {
     // Skip responses that are not RSS.
-    if (stripos($event->getResponse()->headers->get('Content-Type', ''), 'application/rss+xml') === FALSE) {
+    if (\stripos($event->getResponse()->headers->get('Content-Type', ''), 'application/rss+xml') === FALSE) {
       return;
     }
 
@@ -42,10 +42,10 @@ class RssResponseCdata implements EventSubscriberInterface {
 
     // Load the RSS, if there are parsing errors, abort and return the unchanged
     // markup.
-    $previous_value = libxml_use_internal_errors(TRUE);
+    $previous_value = \libxml_use_internal_errors(TRUE);
     $rss_dom->loadXML($rss_markup);
-    $errors = libxml_get_errors();
-    libxml_use_internal_errors($previous_value);
+    $errors = \libxml_get_errors();
+    \libxml_use_internal_errors($previous_value);
     if ($errors) {
       return $rss_markup;
     }

@@ -99,7 +99,7 @@ class Permissions extends PrerenderList {
     }
 
     if ($rids) {
-      $roles = $this->roleStorage->loadMultiple(array_keys($rids));
+      $roles = $this->roleStorage->loadMultiple(\array_keys($rids));
       foreach ($rids as $rid => $role_uids) {
         foreach ($roles[$rid]->getPermissions() as $permission) {
           foreach ($role_uids as $uid) {
@@ -109,7 +109,7 @@ class Permissions extends PrerenderList {
       }
 
       foreach ($this->items as &$permission) {
-        ksort($permission);
+        \ksort($permission);
       }
     }
   }

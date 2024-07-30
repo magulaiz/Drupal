@@ -151,7 +151,7 @@ class FormElementsRenderTest extends KernelTestBase {
     $xpath = $this->buildXPathQuery($xpath, $xpath_args);
     $element += ['#value' => NULL];
     $this->assertFieldByXPath($xpath, $element['#value'], new FormattableMarkup('#type @type was properly rendered.', [
-      '@type' => var_export($element['#type'], TRUE),
+      '@type' => \var_export($element['#type'], TRUE),
     ]));
   }
 

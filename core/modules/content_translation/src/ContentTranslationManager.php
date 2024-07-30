@@ -92,7 +92,7 @@ class ContentTranslationManager implements ContentTranslationManagerInterface, B
     $enabled = FALSE;
 
     if ($this->isSupported($entity_type_id)) {
-      $bundles = !empty($bundle) ? [$bundle] : array_keys($this->entityTypeBundleInfo->getBundleInfo($entity_type_id));
+      $bundles = !empty($bundle) ? [$bundle] : \array_keys($this->entityTypeBundleInfo->getBundleInfo($entity_type_id));
       foreach ($bundles as $bundle) {
         $config = $this->loadContentLanguageSettings($entity_type_id, $bundle);
         if ($config->getThirdPartySetting('content_translation', 'enabled', FALSE)) {
@@ -171,13 +171,13 @@ class ContentTranslationManager implements ContentTranslationManagerInterface, B
     foreach (Workflow::loadMultipleByType('content_moderation') as $workflow) {
       /** @var \Drupal\content_moderation\Plugin\WorkflowType\ContentModeration $plugin */
       $plugin = $workflow->getTypePlugin();
-      $entity_type_ids = array_flip($plugin->getEntityTypes());
+      $entity_type_ids = \array_flip($plugin->getEntityTypes());
       if (isset($entity_type_ids[$entity_type_id])) {
         if (!isset($bundle_id)) {
           return TRUE;
         }
         else {
-          $bundle_ids = array_flip($plugin->getBundlesForEntityType($entity_type_id));
+          $bundle_ids = \array_flip($plugin->getBundlesForEntityType($entity_type_id));
           if (isset($bundle_ids[$bundle_id])) {
             return TRUE;
           }

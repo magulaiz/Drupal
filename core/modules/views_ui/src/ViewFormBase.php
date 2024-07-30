@@ -51,7 +51,7 @@ abstract class ViewFormBase extends EntityForm {
       if (empty($this->displayID)) {
         // If a display isn't specified, use the first one after sorting by
         // #weight.
-        uasort($tabs, 'Drupal\Component\Utility\SortArray::sortByWeightProperty');
+        \uasort($tabs, 'Drupal\Component\Utility\SortArray::sortByWeightProperty');
         foreach ($tabs as $id => $tab) {
           if (!isset($tab['#access']) || $tab['#access']) {
             $this->displayID = $id;
@@ -121,7 +121,7 @@ abstract class ViewFormBase extends EntityForm {
     }
 
     // If the default display isn't supposed to be shown, don't display its tab, unless it's the only display.
-    if ((!$this->isDefaultDisplayShown($view) && $display_id != 'default') && count($tabs) > 1) {
+    if ((!$this->isDefaultDisplayShown($view) && $display_id != 'default') && \count($tabs) > 1) {
       $tabs['default']['#access'] = FALSE;
     }
 
@@ -148,7 +148,7 @@ abstract class ViewFormBase extends EntityForm {
     $advanced_mode = \Drupal::config('views.settings')->get('ui.show.default_display');
     // For other users, show the default display only if there are no others, and
     // hide it if there's at least one "real" display.
-    $additional_displays = (count($view->getExecutable()->displayHandlers) == 1);
+    $additional_displays = (\count($view->getExecutable()->displayHandlers) == 1);
 
     return $advanced_mode || $additional_displays;
   }

@@ -48,10 +48,10 @@ class EntityStorageBaseTest extends UnitTestCase {
    * @dataProvider providerLoad
    */
   public function testLoad(string|null $expected, array $entity_fixture, string $query): void {
-    if (!is_null($expected)) {
+    if (!\is_null($expected)) {
       $expected = $this->generateEntityInterface($expected);
     }
-    $entity_fixture = array_map([$this, 'generateEntityInterface'], $entity_fixture);
+    $entity_fixture = \array_map([$this, 'generateEntityInterface'], $entity_fixture);
 
     $mock_base = $this->getMockBuilder('\Drupal\Core\Entity\EntityStorageBase')
       ->disableOriginalConstructor()
@@ -72,7 +72,7 @@ class EntityStorageBaseTest extends UnitTestCase {
    */
   public static function providerLoadMultiple(): \Generator {
     // Data set for NULL ID parameter.
-    yield 'null-id-parameter' => [range(1, 10), range(1, 10), NULL];
+    yield 'null-id-parameter' => [\range(1, 10), \range(1, 10), NULL];
 
     // Data set for no results.
     yield 'no-results' => [[], [], ['11']];
@@ -88,7 +88,7 @@ class EntityStorageBaseTest extends UnitTestCase {
     yield 'results-for-all-ids' => [$ids, $ids, $ids];
 
     // Data set for partial results for multiple IDs.
-    yield 'partial-results-for-multiple-ids' => [$ids, $ids, array_merge($ids, ['11', '12'])];
+    yield 'partial-results-for-multiple-ids' => [$ids, $ids, \array_merge($ids, ['11', '12'])];
   }
 
   /**
@@ -101,8 +101,8 @@ class EntityStorageBaseTest extends UnitTestCase {
    * @dataProvider providerLoadMultiple
    */
   public function testLoadMultiple(array $expected, array $load_multiple, array|null $query): void {
-    $expected = array_map([$this, 'generateEntityInterface'], $expected);
-    $load_multiple = array_map([$this, 'generateEntityInterface'], $load_multiple);
+    $expected = \array_map([$this, 'generateEntityInterface'], $expected);
+    $load_multiple = \array_map([$this, 'generateEntityInterface'], $load_multiple);
 
     // Make our EntityStorageBase mock.
     $mock_base = $this->getMockBuilder('\Drupal\Core\Entity\EntityStorageBase')

@@ -220,7 +220,7 @@ class NumericFilter extends FilterPluginBase implements FilterOperatorsInterface
 
       if (empty($this->options['expose']['use_operator']) || empty($this->options['expose']['operator_id'])) {
         // Exposed and locked.
-        $which = in_array($this->operator, $this->operatorValues(2)) ? 'minmax' : 'value';
+        $which = \in_array($this->operator, $this->operatorValues(2)) ? 'minmax' : 'value';
       }
       else {
         $source = ':input[name="' . $this->options['expose']['operator_id'] . '"]';
@@ -276,7 +276,7 @@ class NumericFilter extends FilterPluginBase implements FilterOperatorsInterface
         !empty($this->options['expose']['operator_list'])) {
       $two_value_operators_available = FALSE;
       foreach ($this->options['expose']['operator_list'] as $operator) {
-        if (in_array($operator, $this->operatorValues(2), TRUE)) {
+        if (\in_array($operator, $this->operatorValues(2), TRUE)) {
           $two_value_operators_available = TRUE;
           break;
         }
@@ -347,15 +347,15 @@ class NumericFilter extends FilterPluginBase implements FilterOperatorsInterface
    *   The views field.
    */
   protected function opBetween($field) {
-    if (is_numeric($this->value['min']) && is_numeric($this->value['max'])) {
+    if (\is_numeric($this->value['min']) && \is_numeric($this->value['max'])) {
       $operator = $this->operator == 'between' ? 'BETWEEN' : 'NOT BETWEEN';
       $this->query->addWhere($this->options['group'], $field, [$this->value['min'], $this->value['max']], $operator);
     }
-    elseif (is_numeric($this->value['min'])) {
+    elseif (\is_numeric($this->value['min'])) {
       $operator = $this->operator == 'between' ? '>=' : '<';
       $this->query->addWhere($this->options['group'], $field, $this->value['min'], $operator);
     }
-    elseif (is_numeric($this->value['max'])) {
+    elseif (\is_numeric($this->value['max'])) {
       $operator = $this->operator == 'between' ? '<=' : '>';
       $this->query->addWhere($this->options['group'], $field, $this->value['max'], $operator);
     }
@@ -406,10 +406,10 @@ class NumericFilter extends FilterPluginBase implements FilterOperatorsInterface
 
     $options = $this->operatorOptions('short');
     $output = $options[$this->operator];
-    if (in_array($this->operator, $this->operatorValues(2))) {
+    if (\in_array($this->operator, $this->operatorValues(2))) {
       $output .= ' ' . $this->t('@min and @max', ['@min' => $this->value['min'], '@max' => $this->value['max']]);
     }
-    elseif (in_array($this->operator, $this->operatorValues(1))) {
+    elseif (\in_array($this->operator, $this->operatorValues(1))) {
       $output .= ' ' . $this->value['value'];
     }
     return $output;
@@ -431,7 +431,7 @@ class NumericFilter extends FilterPluginBase implements FilterOperatorsInterface
       return FALSE;
     }
     $value = &$input[$this->options[$key]['identifier']];
-    if (!is_array($value)) {
+    if (!\is_array($value)) {
       $value = [
         'value' => $value,
       ];

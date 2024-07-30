@@ -147,7 +147,7 @@ abstract class GenericCacheBackendUnitTestBase extends KernelTestBase {
     $this->assertTrue($cached->valid, 'Item is marked as valid.');
     // We need to round because microtime may be rounded up in the backend.
     $this->assertGreaterThanOrEqual(\Drupal::time()->getRequestTime(), $cached->created);
-    $this->assertLessThanOrEqual(round(microtime(TRUE), 3), $cached->created);
+    $this->assertLessThanOrEqual(\round(\microtime(TRUE), 3), $cached->created);
     $this->assertEquals(Cache::PERMANENT, $cached->expire, 'Expire time is correct.');
 
     $this->assertFalse($backend->get('test2'), "Backend does not contain data for cache id test2.");
@@ -157,7 +157,7 @@ abstract class GenericCacheBackendUnitTestBase extends KernelTestBase {
     $this->assertSame(['value' => 3], $cached->data);
     $this->assertTrue($cached->valid, 'Item is marked as valid.');
     $this->assertGreaterThanOrEqual(\Drupal::time()->getRequestTime(), $cached->created);
-    $this->assertLessThanOrEqual(round(microtime(TRUE), 3), $cached->created);
+    $this->assertLessThanOrEqual(\round(\microtime(TRUE), 3), $cached->created);
     $this->assertEquals(\Drupal::time()->getRequestTime() + 3, $cached->expire, 'Expire time is correct.');
 
     $backend->set('test3', 'foobar', \Drupal::time()->getRequestTime() - 3);
@@ -166,7 +166,7 @@ abstract class GenericCacheBackendUnitTestBase extends KernelTestBase {
     $this->assertIsObject($cached);
     $this->assertFalse($cached->valid, 'Item is marked as valid.');
     $this->assertGreaterThanOrEqual(\Drupal::time()->getRequestTime(), $cached->created);
-    $this->assertLessThanOrEqual(round(microtime(TRUE), 3), $cached->created);
+    $this->assertLessThanOrEqual(\round(\microtime(TRUE), 3), $cached->created);
     $this->assertEquals(\Drupal::time()->getRequestTime() - 3, $cached->expire, 'Expire time is correct.');
 
     $this->assertFalse($backend->get('test4'), "Backend does not contain data for cache id test4.");
@@ -177,7 +177,7 @@ abstract class GenericCacheBackendUnitTestBase extends KernelTestBase {
     $this->assertSame($with_eof, $cached->data);
     $this->assertTrue($cached->valid, 'Item is marked as valid.');
     $this->assertGreaterThanOrEqual(\Drupal::time()->getRequestTime(), $cached->created);
-    $this->assertLessThanOrEqual(round(microtime(TRUE), 3), $cached->created);
+    $this->assertLessThanOrEqual(\round(\microtime(TRUE), 3), $cached->created);
     $this->assertEquals(Cache::PERMANENT, $cached->expire, 'Expire time is correct.');
 
     $this->assertFalse($backend->get('test5'), "Backend does not contain data for cache id test5.");
@@ -188,7 +188,7 @@ abstract class GenericCacheBackendUnitTestBase extends KernelTestBase {
     $this->assertSame($with_eof_and_semicolon, $cached->data);
     $this->assertTrue($cached->valid, 'Item is marked as valid.');
     $this->assertGreaterThanOrEqual(\Drupal::time()->getRequestTime(), $cached->created);
-    $this->assertLessThanOrEqual(round(microtime(TRUE), 3), $cached->created);
+    $this->assertLessThanOrEqual(\round(\microtime(TRUE), 3), $cached->created);
     $this->assertEquals(Cache::PERMANENT, $cached->expire, 'Expire time is correct.');
 
     $with_variable = ['foo' => '$bar'];
@@ -217,7 +217,7 @@ abstract class GenericCacheBackendUnitTestBase extends KernelTestBase {
     $this->assertFalse(isset($fresh_cached->data->this_should_not_be_in_the_cache));
 
     // Check with a long key.
-    $cid = str_repeat('a', 300);
+    $cid = \str_repeat('a', 300);
     $backend->set($cid, 'test');
     $this->assertEquals('test', $backend->get($cid)->data);
 
@@ -258,7 +258,7 @@ abstract class GenericCacheBackendUnitTestBase extends KernelTestBase {
     $backend->delete('test2');
     $this->assertFalse($backend->get('test2'), "Backend does not contain data for cache id test2 after deletion.");
 
-    $long_cid = str_repeat('a', 300);
+    $long_cid = \str_repeat('a', 300);
     $backend->set($long_cid, 'test');
     $backend->delete($long_cid);
     $this->assertFalse($backend->get($long_cid), "Backend does not contain data for long cache id after deletion.");
@@ -287,8 +287,8 @@ abstract class GenericCacheBackendUnitTestBase extends KernelTestBase {
     // Retrieve and test cache objects.
     foreach ($variables as $cid => $value) {
       $object = $backend->get($cid);
-      $this->assertIsObject($object, sprintf("Backend returned an object for cache id %s.", $cid));
-      $this->assertSame($value, $object->data, sprintf("Data of cached id %s kept is identical in type and value", $cid));
+      $this->assertIsObject($object, \sprintf("Backend returned an object for cache id %s.", $cid));
+      $this->assertSame($value, $object->data, \sprintf("Data of cached id %s kept is identical in type and value", $cid));
     }
   }
 
@@ -299,7 +299,7 @@ abstract class GenericCacheBackendUnitTestBase extends KernelTestBase {
     $backend = $this->getCacheBackend();
 
     // Set numerous testing keys.
-    $long_cid = str_repeat('a', 300);
+    $long_cid = \str_repeat('a', 300);
     $backend->set('test1', 1);
     $backend->set('test2', 3);
     $backend->set('test3', 5);
@@ -331,7 +331,7 @@ abstract class GenericCacheBackendUnitTestBase extends KernelTestBase {
     // Test return - ensure that objects has expected properties.
     $this->assertTrue($ret['test2']->valid, 'Item is marked as valid.');
     $this->assertGreaterThanOrEqual(\Drupal::time()->getRequestTime(), $ret['test2']->created);
-    $this->assertLessThanOrEqual(round(microtime(TRUE), 3), $ret['test2']->created);
+    $this->assertLessThanOrEqual(\round(\microtime(TRUE), 3), $ret['test2']->created);
     $this->assertEquals(Cache::PERMANENT, $ret['test2']->expire, 'Expire time is correct.');
     // Test return - ensure it does not contain nonexistent cache ids.
     $this->assertFalse(isset($ret['test19']), "Nonexistent cache id test19 is not set.");
@@ -404,13 +404,13 @@ abstract class GenericCacheBackendUnitTestBase extends KernelTestBase {
       'cid_5' => ['data' => 1, 'tags' => ['test:a', 'test:b']],
     ];
     $backend->setMultiple($items);
-    $cids = array_keys($items);
+    $cids = \array_keys($items);
     $cached = $backend->getMultiple($cids);
 
     $this->assertEquals($items['cid_1']['data'], $cached['cid_1']->data, 'Over-written cache item set correctly.');
     $this->assertTrue($cached['cid_1']->valid, 'Item is marked as valid.');
     $this->assertGreaterThanOrEqual(\Drupal::time()->getRequestTime(), $cached['cid_1']->created);
-    $this->assertLessThanOrEqual(round(microtime(TRUE), 3), $cached['cid_1']->created);
+    $this->assertLessThanOrEqual(\round(\microtime(TRUE), 3), $cached['cid_1']->created);
     $this->assertEquals(CacheBackendInterface::CACHE_PERMANENT, $cached['cid_1']->expire, 'Cache expiration defaults to permanent.');
 
     $this->assertEquals($items['cid_2']['data'], $cached['cid_2']->data, 'New cache item set correctly.');
@@ -507,7 +507,7 @@ abstract class GenericCacheBackendUnitTestBase extends KernelTestBase {
 
     // Set both expiring and permanent keys.
     $backend_a->set('test1', 1, Cache::PERMANENT);
-    $backend_a->set('test2', 3, time() + 1000);
+    $backend_a->set('test2', 3, \time() + 1000);
     $backend_b->set('test3', 4, Cache::PERMANENT);
 
     $backend_a->deleteAll();
@@ -636,7 +636,7 @@ abstract class GenericCacheBackendUnitTestBase extends KernelTestBase {
 
     // Set both expiring and permanent keys.
     $backend_a->set('test1', 1, Cache::PERMANENT);
-    $backend_a->set('test2', 3, time() + 1000);
+    $backend_a->set('test2', 3, \time() + 1000);
     $backend_b->set('test3', 4, Cache::PERMANENT);
 
     $backend_a->invalidateAll();
@@ -657,7 +657,7 @@ abstract class GenericCacheBackendUnitTestBase extends KernelTestBase {
 
     // Set both expiring and permanent keys.
     $backend_a->set('test1', 1, Cache::PERMANENT);
-    $backend_a->set('test2', 3, time() + 1000);
+    $backend_a->set('test2', 3, \time() + 1000);
     $backend_b->set('test3', 4, Cache::PERMANENT);
 
     $backend_a->removeBin();

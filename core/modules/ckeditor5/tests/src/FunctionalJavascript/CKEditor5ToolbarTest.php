@@ -59,11 +59,11 @@ class CKEditor5ToolbarTest extends WebDriverTestBase {
       ],
       'settings' => [],
     ])->save();
-    $this->assertSame([], array_map(
+    $this->assertSame([], \array_map(
       function (ConstraintViolation $v) {
         return (string) $v->getMessage();
       },
-      iterator_to_array(CKEditor5::validatePair(
+      \iterator_to_array(CKEditor5::validatePair(
         Editor::load('test_format'),
         FilterFormat::load('test_format')
       ))

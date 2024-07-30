@@ -63,7 +63,7 @@ class User extends Entity {
 
     $roles = Role::loadMultiple();
     unset($roles[RoleInterface::ANONYMOUS_ID]);
-    $roles = array_map(fn(RoleInterface $role) => Html::escape($role->label()), $roles);
+    $roles = \array_map(fn(RoleInterface $role) => Html::escape($role->label()), $roles);
     $form['roles'] = [
       '#type' => 'checkboxes',
       '#title' => $this->t('Restrict to the selected roles'),
@@ -83,7 +83,7 @@ class User extends Entity {
    */
   public function submitOptionsForm(&$form, FormStateInterface $form_state, &$options = []) {
     // Filter trash out of the options so we don't store giant unnecessary arrays
-    $options['roles'] = array_filter($options['roles']);
+    $options['roles'] = \array_filter($options['roles']);
   }
 
   /**
@@ -95,7 +95,7 @@ class User extends Entity {
     // See if we're filtering users based on roles.
     if (!empty($this->options['restrict_roles']) && !empty($this->options['roles'])) {
       $roles = $this->options['roles'];
-      if (!(bool) array_intersect($entity->getRoles(), $roles)) {
+      if (!(bool) \array_intersect($entity->getRoles(), $roles)) {
         $role_check_success = FALSE;
       }
     }
@@ -109,7 +109,7 @@ class User extends Entity {
   public function calculateDependencies() {
     $dependencies = parent::calculateDependencies();
 
-    foreach ($this->entityTypeManager->getStorage('user_role')->loadMultiple(array_keys($this->options['roles'])) as $role) {
+    foreach ($this->entityTypeManager->getStorage('user_role')->loadMultiple(\array_keys($this->options['roles'])) as $role) {
       $dependencies[$role->getConfigDependencyKey()][] = $role->getConfigDependencyName();
     }
 

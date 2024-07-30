@@ -24,7 +24,7 @@ class FieldInstanceSettingsTest extends UnitTestCase {
    * @dataProvider getSettingsProvider
    */
   public function testGetSettings($field_type, $instance_settings, $expected): void {
-    $instance_settings = unserialize($instance_settings);
+    $instance_settings = \unserialize($instance_settings);
     $migration = $this->createMock(MigrationInterface::class);
     $plugin = new FieldInstanceSettings([], 'd6_field_field_settings', []);
 

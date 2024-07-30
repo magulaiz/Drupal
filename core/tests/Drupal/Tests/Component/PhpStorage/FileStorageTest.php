@@ -64,7 +64,7 @@ class FileStorageTest extends PhpStorageTestBase {
 
     // Find a global that doesn't exist.
     do {
-      $random = 'test' . mt_rand(10000, 100000);
+      $random = 'test' . \mt_rand(10000, 100000);
     } while (isset($GLOBALS[$random]));
 
     // Write out a PHP file and ensure it's successfully loaded.
@@ -98,13 +98,13 @@ class FileStorageTest extends PhpStorageTestBase {
 
     // PHPUnit 10 cannot expect warnings, so we have to catch them ourselves.
     $messages = [];
-    set_error_handler(function (int $errno, string $errstr) use (&$messages): void {
+    \set_error_handler(function (int $errno, string $errstr) use (&$messages): void {
       $messages[] = [$errno, $errstr];
     });
 
     $storage->save('subdirectory/foo.php', $code);
 
-    restore_error_handler();
+    \restore_error_handler();
     $this->assertCount(2, $messages);
     $this->assertSame(E_USER_WARNING, $messages[0][0]);
     $this->assertSame('mkdir(): Permission Denied', $messages[0][1]);

@@ -155,7 +155,7 @@ class LayoutBuilder extends RenderElementBase implements ContainerFactoryPluginI
 
     // If the delta and the count are the same, it is either the end of the
     // layout or an empty layout.
-    if ($delta === count($section_storage)) {
+    if ($delta === \count($section_storage)) {
       if ($delta === 0) {
         $title = $this->t('Add section');
       }
@@ -297,7 +297,7 @@ class LayoutBuilder extends RenderElementBase implements ContainerFactoryPluginI
       ]);
 
       // Get weights of all children for use by the region label.
-      $weights = array_map(function ($a) {
+      $weights = \array_map(function ($a) {
         return $a['#weight'] ?? 0;
       }, $build[$region]);
 
@@ -312,7 +312,7 @@ class LayoutBuilder extends RenderElementBase implements ContainerFactoryPluginI
         ],
         '#markup' => $this->t('Region: @region', ['@region' => $info['label']]),
         // Ensures the region label is displayed first.
-        '#weight' => min($weights) - 1,
+        '#weight' => \min($weights) - 1,
       ];
     }
 

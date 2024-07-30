@@ -51,7 +51,7 @@ class MaintenanceModeSubscriber implements EventSubscriberInterface {
   public function onMaintenanceModeRequest(RequestEvent $event) {
     // If the site is offline, log out unprivileged users.
     if ($this->account->isAuthenticated()) {
-      user_logout();
+      \user_logout();
       // Redirect to homepage.
       $event->setResponse(
         new RedirectResponse(Url::fromRoute('<front>')->toString())

@@ -63,9 +63,9 @@ class PreprocessPagerTest extends UnitTestCase {
         '#tags' => '',
       ],
     ];
-    template_preprocess_pager($variables);
+    \template_preprocess_pager($variables);
 
-    $this->assertEquals(['first', 'previous'], array_keys($variables['items']));
+    $this->assertEquals(['first', 'previous'], \array_keys($variables['items']));
   }
 
   /**
@@ -84,9 +84,9 @@ class PreprocessPagerTest extends UnitTestCase {
         '#tags' => '',
       ],
     ];
-    template_preprocess_pager($variables);
+    \template_preprocess_pager($variables);
 
-    $this->assertEquals(['first', 'previous', 'pages'], array_keys($variables['items']));
+    $this->assertEquals(['first', 'previous', 'pages'], \array_keys($variables['items']));
     /** @var \Drupal\Core\Template\AttributeString $attribute */
     $attribute = $variables['items']['pages']['2']['attributes']->offsetGet('aria-current');
     $this->assertInstanceOf(AttributeString::class, $attribute);
@@ -110,7 +110,7 @@ class PreprocessPagerTest extends UnitTestCase {
         '#tags' => '',
       ],
     ];
-    template_preprocess_pager($variables);
+    \template_preprocess_pager($variables);
 
     $this->assertEquals('h4', $variables['pagination_heading_level']);
   }
@@ -131,7 +131,7 @@ class PreprocessPagerTest extends UnitTestCase {
         '#tags' => '',
       ],
     ];
-    template_preprocess_pager($variables);
+    \template_preprocess_pager($variables);
 
     $this->assertEquals('h4', $variables['pagination_heading_level']);
   }
@@ -153,7 +153,7 @@ class PreprocessPagerTest extends UnitTestCase {
         '#tags' => '',
       ],
     ];
-    template_preprocess_pager($variables);
+    \template_preprocess_pager($variables);
 
     $this->assertEquals('h5', $variables['pagination_heading_level']);
   }
@@ -175,7 +175,7 @@ class PreprocessPagerTest extends UnitTestCase {
         '#tags' => '',
       ],
     ];
-    template_preprocess_pager($variables);
+    \template_preprocess_pager($variables);
 
     $this->assertEquals('h4', $variables['pagination_heading_level']);
   }

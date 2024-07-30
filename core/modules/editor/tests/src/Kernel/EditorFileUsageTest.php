@@ -65,7 +65,7 @@ class EditorFileUsageTest extends EntityKernelTestBase {
     // Create a node type for testing.
     $type = NodeType::create(['type' => 'page', 'name' => 'page']);
     $type->save();
-    node_add_body_field($type);
+    \node_add_body_field($type);
     FieldStorageConfig::create([
       'field_name' => 'description',
       'entity_type' => 'node',
@@ -193,9 +193,9 @@ class EditorFileUsageTest extends EntityKernelTestBase {
     // Test hook_entity_update(): decrement, by modifying the last revision:
     // remove the data-entity-type attribute from the body field.
     $original_values = [];
-    for ($i = 0; $i < count($image_entities); $i++) {
+    for ($i = 0; $i < \count($image_entities); $i++) {
       $original_value = $node->body[$i]->value;
-      $new_value = str_replace('data-entity-type', 'data-entity-type-modified', $original_value);
+      $new_value = \str_replace('data-entity-type', 'data-entity-type-modified', $original_value);
       $node->body[$i]->value = $new_value;
       $original_values[$i] = $original_value;
     }
@@ -219,7 +219,7 @@ class EditorFileUsageTest extends EntityKernelTestBase {
     // remove the data-entity-uuid attribute from the body field.
     foreach ($original_values as $key => $original_value) {
       $original_value = $node->body[$key]->value;
-      $new_value = str_replace('data-entity-type', 'data-entity-type-modified', $original_value);
+      $new_value = \str_replace('data-entity-type', 'data-entity-type-modified', $original_value);
       $node->body[$key]->value = $new_value;
     }
     $node->save();

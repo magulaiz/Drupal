@@ -49,7 +49,7 @@ class FilterPermissions implements ContainerInjectionInterface {
     // of them are potentially unsafe.
     /** @var \Drupal\filter\FilterFormatInterface[] $formats */
     $formats = $this->entityTypeManager->getStorage('filter_format')->loadByProperties(['status' => TRUE]);
-    uasort($formats, 'Drupal\Core\Config\Entity\ConfigEntityBase::sort');
+    \uasort($formats, 'Drupal\Core\Config\Entity\ConfigEntityBase::sort');
     foreach ($formats as $format) {
       if ($permission = $format->getPermissionName()) {
         $permissions[$permission] = [

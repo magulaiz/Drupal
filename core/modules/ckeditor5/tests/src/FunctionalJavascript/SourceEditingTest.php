@@ -95,11 +95,11 @@ JS;
       $text_format->setFilterConfig('filter_html', $new_config);
 
       // Verify the text format and editor are still a valid pair.
-      $this->assertSame([], array_map(
+      $this->assertSame([], \array_map(
         function (ConstraintViolation $v) {
           return (string) $v->getMessage();
         },
-        iterator_to_array(CKEditor5::validatePair(
+        \iterator_to_array(CKEditor5::validatePair(
           $text_editor,
           $text_format
         ))

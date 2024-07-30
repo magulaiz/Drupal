@@ -138,7 +138,7 @@ class Query extends QueryBase implements QueryInterface {
       $this->sqlQuery->isNull("base_table_2.$id_field");
     }
 
-    if (is_null($this->accessCheck)) {
+    if (\is_null($this->accessCheck)) {
       throw new QueryException('Entity queries must explicitly set whether the query should be access checked or not. See Drupal\Core\Entity\Query\QueryInterface::accessCheck().');
     }
     if ($this->accessCheck) {
@@ -220,7 +220,7 @@ class Query extends QueryBase implements QueryInterface {
         // can be ordered normally, without the aggregation function.
         $this->sqlQuery->orderBy($sql_alias, $direction);
         if (!isset($this->sqlFields[$sql_alias])) {
-          $this->sqlFields[$sql_alias] = explode('.', $sql_alias);
+          $this->sqlFields[$sql_alias] = \explode('.', $sql_alias);
         }
       }
       else {
@@ -346,14 +346,14 @@ class Query extends QueryBase implements QueryInterface {
     // Quote arguments so query is able to be run.
     $quoted = [];
     foreach ($clone->sqlQuery->getArguments() as $key => $value) {
-      $quoted[$key] = is_null($value) ? 'NULL' : $this->connection->quote($value);
+      $quoted[$key] = \is_null($value) ? 'NULL' : $this->connection->quote($value);
     }
 
     // Replace table name brackets.
     $sql = $clone->connection->prefixTables((string) $clone->sqlQuery);
     $sql = $clone->connection->quoteIdentifiers($sql);
 
-    return strtr($sql, $quoted);
+    return \strtr($sql, $quoted);
   }
 
 }

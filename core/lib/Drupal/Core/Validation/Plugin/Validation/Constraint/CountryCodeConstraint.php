@@ -22,7 +22,7 @@ class CountryCodeConstraint implements ContainerFactoryPluginInterface {
    */
   public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition): Choice {
     $countries = $container->get(CountryManagerInterface::class)->getList();
-    $configuration['choices'] = array_keys($countries);
+    $configuration['choices'] = \array_keys($countries);
     return new Choice($configuration);
   }
 

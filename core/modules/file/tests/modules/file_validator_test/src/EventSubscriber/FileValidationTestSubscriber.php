@@ -19,7 +19,7 @@ class FileValidationTestSubscriber implements EventSubscriberInterface {
    *   The event.
    */
   public function onFileValidation(FileValidationEvent $event): void {
-    _file_test_log_call('validate', [$event->file->id()]);
+    \_file_test_log_call('validate', [$event->file->id()]);
   }
 
   /**

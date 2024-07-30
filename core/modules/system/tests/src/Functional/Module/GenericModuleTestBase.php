@@ -31,7 +31,7 @@ abstract class GenericModuleTestBase extends BrowserTestBase {
    *   The module to test.
    */
   protected function getModule(): string {
-    return explode('\\', get_class($this))[2];
+    return \explode('\\', \get_class($this))[2];
   }
 
   /**

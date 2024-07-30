@@ -328,7 +328,7 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
     // - Removing the namespace directories from the path.
     // - Getting the path to the directory two levels up from the path
     //   determined in the previous step.
-    return dirname(substr(__DIR__, 0, -strlen(__NAMESPACE__)), 2);
+    return \dirname(\substr(__DIR__, 0, -\strlen(__NAMESPACE__)), 2);
   }
 
   /**
@@ -397,14 +397,14 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
     }
 
     // Check for a test override.
-    if ($test_prefix = drupal_valid_test_ua()) {
+    if ($test_prefix = \drupal_valid_test_ua()) {
       $test_db = new TestDatabase($test_prefix);
       return $test_db->getTestSitePath();
     }
 
     // Determine whether multi-site functionality is enabled. If not, return
     // the default directory.
-    if (!file_exists($app_root . '/sites/sites.php')) {
+    if (!\file_exists($app_root . '/sites/sites.php')) {
       return 'sites/default';
     }
 
@@ -424,21 +424,21 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
     // most specific, then dropping pieces from the start of the port/hostname
     // while keeping the full path, then gradually dropping pieces from the end
     // of the path... until we find a directory corresponding to the identifier.
-    $path_parts = explode('/', $script_name);
-    $host_parts = explode('.', implode('.', array_reverse(explode(':', rtrim($http_host, '.')))));
-    for ($i = count($path_parts) - 1; $i > 0; $i--) {
-      for ($j = count($host_parts); $j > 0; $j--) {
+    $path_parts = \explode('/', $script_name);
+    $host_parts = \explode('.', \implode('.', \array_reverse(\explode(':', \rtrim($http_host, '.')))));
+    for ($i = \count($path_parts) - 1; $i > 0; $i--) {
+      for ($j = \count($host_parts); $j > 0; $j--) {
         // Assume the path has a leading slash, so the imploded path parts are
         // either a path identifier with leading dot, or an empty string.
-        $site_id = implode('.', array_slice($host_parts, -$j)) . implode('.', array_slice($path_parts, 0, $i));
+        $site_id = \implode('.', \array_slice($host_parts, -$j)) . \implode('.', \array_slice($path_parts, 0, $i));
 
         // If the identifier is a key in $sites, check for a directory matching
         // the corresponding value. Otherwise, check for a directory matching
         // the identifier.
-        if (isset($sites[$site_id]) && file_exists($app_root . '/sites/' . $sites[$site_id])) {
+        if (isset($sites[$site_id]) && \file_exists($app_root . '/sites/' . $sites[$site_id])) {
           $site_id = $sites[$site_id];
         }
-        if (file_exists($app_root . '/sites/' . $site_id . '/settings.php') || (!$require_settings && file_exists($app_root . '/sites/' . $site_id))) {
+        if (\file_exists($app_root . '/sites/' . $site_id . '/settings.php') || (!$require_settings && \file_exists($app_root . '/sites/' . $site_id))) {
           return "sites/$site_id";
         }
       }
@@ -492,7 +492,7 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
     if (!isset($configuration['default'])) {
       // @todo Use extension_loaded('apcu') for non-testbot
       //   https://www.drupal.org/node/2447753.
-      if (function_exists('apcu_fetch')) {
+      if (\function_exists('apcu_fetch')) {
         $configuration['default']['cache_backend_class'] = '\Drupal\Component\FileCache\ApcuFileCacheBackend';
       }
     }
@@ -505,10 +505,10 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
     $this->initializeContainer();
 
     // Add the APCu prefix to use to cache found/not-found classes.
-    if (Settings::get('class_loader_auto_detect', TRUE) && method_exists($this->classLoader, 'setApcuPrefix')) {
+    if (Settings::get('class_loader_auto_detect', TRUE) && \method_exists($this->classLoader, 'setApcuPrefix')) {
       // Vary the APCu key by which modules are installed to allow
       // class_exists() checks to determine functionality.
-      $id = 'class_loader:' . crc32(implode(':', array_keys($this->container->getParameter('container.modules'))));
+      $id = 'class_loader:' . \crc32(\implode(':', \array_keys($this->container->getParameter('container.modules'))));
       $prefix = Settings::getApcuPrefix($id, $this->root);
       $this->classLoader->setApcuPrefix($prefix);
     }
@@ -645,11 +645,11 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
       $camelized = ContainerBuilder::camelize($module);
       $name = "{$camelized}ServiceProvider";
       $class = "Drupal\\{$module}\\{$name}";
-      if (class_exists($class)) {
+      if (\class_exists($class)) {
         $this->serviceProviderClasses['app'][$module] = $class;
       }
-      $filename = dirname($filename) . "/$module.services.yml";
-      if (file_exists($filename)) {
+      $filename = \dirname($filename) . "/$module.services.yml";
+      if (\file_exists($filename)) {
         $this->serviceYamls['app'][$module] = $filename;
       }
     }
@@ -657,7 +657,7 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
     // Add site-specific service providers.
     if (!empty($GLOBALS['conf']['container_service_providers'])) {
       foreach ($GLOBALS['conf']['container_service_providers'] as $class) {
-        if ((is_string($class) && class_exists($class)) || (is_object($class) && ($class instanceof ServiceProviderInterface || $class instanceof ServiceModifierInterface))) {
+        if ((\is_string($class) && \class_exists($class)) || (\is_object($class) && ($class instanceof ServiceProviderInterface || $class instanceof ServiceModifierInterface))) {
           $this->serviceProviderClasses['site'][] = $class;
         }
       }
@@ -768,9 +768,9 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
       $listing = new ExtensionDiscovery($this->root);
       $listing->setProfileDirectories([]);
       $all_profiles = $listing->scan('profile');
-      $profiles = array_intersect_key($all_profiles, $this->moduleList);
+      $profiles = \array_intersect_key($all_profiles, $this->moduleList);
 
-      $profile_directories = array_map(function (Extension $profile) {
+      $profile_directories = \array_map(function (Extension $profile) {
         return $profile->getPath();
       }, $profiles);
       $listing->setProfileDirectories($profile_directories);
@@ -789,7 +789,7 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
    */
   public function updateModules(array $module_list, array $module_filenames = []) {
     $pre_existing_module_namespaces = [];
-    if ($this->booted && is_array($this->moduleList)) {
+    if ($this->booted && \is_array($this->moduleList)) {
       $pre_existing_module_namespaces = $this->getModuleNamespacesPsr4($this->getModuleFileNames());
     }
     $this->moduleList = $module_list;
@@ -808,7 +808,7 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
       // the current class loader might have stored a negative result for a
       // class that is now available.
       // @see \Composer\Autoload\ClassLoader::findFile()
-      $new_namespaces = array_diff_key(
+      $new_namespaces = \array_diff_key(
         $this->getModuleNamespacesPsr4($this->getModuleFileNames()),
         $pre_existing_module_namespaces
       );
@@ -838,8 +838,8 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
    *   The cache key used for the service container.
    */
   protected function getContainerCacheKey() {
-    $parts = ['service_container', $this->environment, \Drupal::VERSION, Settings::get('deployment_identifier'), PHP_OS, serialize(Settings::get('container_yamls'))];
-    return implode(':', $parts);
+    $parts = ['service_container', $this->environment, \Drupal::VERSION, Settings::get('deployment_identifier'), PHP_OS, \serialize(Settings::get('container_yamls'))];
+    return \implode(':', $parts);
   }
 
   /**
@@ -984,7 +984,7 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
     }
 
     // Enforce E_STRICT, but allow users to set levels not part of E_STRICT.
-    error_reporting(E_STRICT | E_ALL);
+    \error_reporting(E_STRICT | E_ALL);
 
     // Override PHP settings required for Drupal to work properly.
     // sites/default/default.settings.php contains more runtime settings.
@@ -993,51 +993,51 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
     if (PHP_SAPI !== 'cli') {
       // Use session cookies, not transparent sessions that puts the session id
       // in the query string.
-      ini_set('session.use_cookies', '1');
-      ini_set('session.use_only_cookies', '1');
-      ini_set('session.use_trans_sid', '0');
+      \ini_set('session.use_cookies', '1');
+      \ini_set('session.use_only_cookies', '1');
+      \ini_set('session.use_trans_sid', '0');
       // Don't send HTTP headers using PHP's session handler.
       // Send an empty string to disable the cache limiter.
-      ini_set('session.cache_limiter', '');
+      \ini_set('session.cache_limiter', '');
       // Use httponly session cookies.
-      ini_set('session.cookie_httponly', '1');
+      \ini_set('session.cookie_httponly', '1');
     }
 
     // Set sane locale settings, to ensure consistent string, dates, times and
     // numbers handling.
-    setlocale(LC_ALL, 'C.UTF-8', 'C');
+    \setlocale(LC_ALL, 'C.UTF-8', 'C');
 
     // Set appropriate configuration for multi-byte strings.
-    mb_internal_encoding('utf-8');
-    mb_language('uni');
+    \mb_internal_encoding('utf-8');
+    \mb_language('uni');
 
     // Indicate that code is operating in a test child site.
-    if (!defined('DRUPAL_TEST_IN_CHILD_SITE')) {
-      if ($test_prefix = drupal_valid_test_ua()) {
+    if (!\defined('DRUPAL_TEST_IN_CHILD_SITE')) {
+      if ($test_prefix = \drupal_valid_test_ua()) {
         $test_db = new TestDatabase($test_prefix);
         // Only code that interfaces directly with tests should rely on this
         // constant; e.g., the error/exception handler conditionally adds further
         // error information into HTTP response headers that are consumed by
         // the internal browser.
-        define('DRUPAL_TEST_IN_CHILD_SITE', TRUE);
+        \define('DRUPAL_TEST_IN_CHILD_SITE', TRUE);
 
         // Log fatal errors to the test site directory.
-        ini_set('log_errors', 1);
-        ini_set('error_log', $app_root . '/' . $test_db->getTestSitePath() . '/error.log');
+        \ini_set('log_errors', 1);
+        \ini_set('error_log', $app_root . '/' . $test_db->getTestSitePath() . '/error.log');
 
         // Ensure that a rewritten settings.php is used if opcache is on.
-        ini_set('opcache.validate_timestamps', 'on');
-        ini_set('opcache.revalidate_freq', 0);
+        \ini_set('opcache.validate_timestamps', 'on');
+        \ini_set('opcache.revalidate_freq', 0);
       }
       else {
         // Ensure that no other code defines this.
-        define('DRUPAL_TEST_IN_CHILD_SITE', FALSE);
+        \define('DRUPAL_TEST_IN_CHILD_SITE', FALSE);
       }
     }
 
     // Set the Drupal custom error handler.
-    set_error_handler('_drupal_error_handler');
-    set_exception_handler('_drupal_exception_handler');
+    \set_error_handler('_drupal_error_handler');
+    \set_exception_handler('_drupal_exception_handler');
 
     static::$isEnvironmentInitialized = TRUE;
   }
@@ -1086,12 +1086,12 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
 
     // For a request URI of '/index.php/foo', $_SERVER['SCRIPT_NAME'] is
     // '/index.php', whereas $_SERVER['PHP_SELF'] is '/index.php/foo'.
-    if ($dir = rtrim(dirname($request->server->get('SCRIPT_NAME')), '\/')) {
+    if ($dir = \rtrim(\dirname($request->server->get('SCRIPT_NAME')), '\/')) {
       // Remove "core" directory if present, allowing install.php,
       // authorize.php, and others to auto-detect a base path.
-      $core_position = strrpos($dir, '/core');
-      if ($core_position !== FALSE && strlen($dir) - 5 == $core_position) {
-        $base_path = substr($dir, 0, $core_position);
+      $core_position = \strrpos($dir, '/core');
+      if ($core_position !== FALSE && \strlen($dir) - 5 == $core_position) {
+        $base_path = \substr($dir, 0, $core_position);
       }
       else {
         $base_path = $dir;
@@ -1102,8 +1102,8 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
     else {
       $base_path = '/';
     }
-    $base_secure_url = str_replace('http://', 'https://', $base_url);
-    $base_insecure_url = str_replace('https://', 'http://', $base_url);
+    $base_secure_url = \str_replace('http://', 'https://', $base_url);
+    $base_insecure_url = \str_replace('https://', 'http://', $base_url);
   }
 
   /**
@@ -1303,9 +1303,9 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
         /** @var \DirectoryIterator $component */
         $pathname = $component->getPathname();
         if (!$component->isDot() && $component->isDir() && (
-          is_dir($pathname . '/Plugin') ||
-          is_dir($pathname . '/Entity') ||
-          is_dir($pathname . '/Element')
+          \is_dir($pathname . '/Plugin') ||
+          \is_dir($pathname . '/Entity') ||
+          \is_dir($pathname . '/Element')
         )) {
           $namespaces[$parent_namespace . '\\' . $component->getFilename()] = $path . '/' . $component->getFilename();
         }
@@ -1389,7 +1389,7 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
     ];
     foreach ($this->serviceProviderClasses as $origin => $classes) {
       foreach ($classes as $name => $class) {
-        if (!is_object($class)) {
+        if (!\is_object($class)) {
           $this->serviceProviders[$origin][$name] = new $class();
         }
         else {
@@ -1510,7 +1510,7 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
   protected function getModuleNamespacesPsr4($module_file_names) {
     $namespaces = [];
     foreach ($module_file_names as $module => $filename) {
-      $namespaces["Drupal\\$module"] = dirname($filename) . '/src';
+      $namespaces["Drupal\\$module"] = \dirname($filename) . '/src';
     }
     return $namespaces;
   }
@@ -1532,12 +1532,12 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
       $class_loader = $this->classLoader;
     }
     foreach ($namespaces as $prefix => $paths) {
-      if (is_array($paths)) {
+      if (\is_array($paths)) {
         foreach ($paths as $key => $value) {
           $paths[$key] = $this->root . '/' . $value;
         }
       }
-      elseif (is_string($paths)) {
+      elseif (\is_string($paths)) {
         $paths = $this->root . '/' . $paths;
       }
       $class_loader->addPsr4($prefix . '\\', $paths);
@@ -1556,11 +1556,11 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
   protected static function validateHostnameLength($host) {
     // Limit the length of the host name to 1000 bytes to prevent DoS attacks
     // with long host names.
-    return strlen($host) <= 1000
+    return \strlen($host) <= 1000
     // Limit the number of subdomains and port separators to prevent DoS attacks
     // in findSitePath().
-    && substr_count($host, '.') <= 100
-    && substr_count($host, ':') <= 100;
+    && \substr_count($host, '.') <= 100
+    && \substr_count($host, ':') <= 100;
   }
 
   /**
@@ -1650,7 +1650,7 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
    *   A list of service files.
    */
   protected function addServiceFiles(array $service_yamls) {
-    $this->serviceYamls['site'] = array_filter($service_yamls, 'file_exists');
+    $this->serviceYamls['site'] = \array_filter($service_yamls, 'file_exists');
   }
 
   /**
@@ -1662,7 +1662,7 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
    */
   protected function getInstallProfile() {
     $config = $this->getConfigStorage()->read('core.extension');
-    if (is_array($config) && !array_key_exists('profile', $config)) {
+    if (\is_array($config) && !\array_key_exists('profile', $config)) {
       return FALSE;
     }
     return $config['profile'] ?? NULL;

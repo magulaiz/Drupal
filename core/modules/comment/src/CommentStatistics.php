@@ -87,7 +87,7 @@ class CommentStatistics implements CommentStatisticsInterface {
     $connection = $accurate ? $this->database : $this->databaseReplica;
     $stats = $connection->select('comment_entity_statistics', 'ces')
       ->fields('ces')
-      ->condition('ces.entity_id', array_keys($entities), 'IN')
+      ->condition('ces.entity_id', \array_keys($entities), 'IN')
       ->condition('ces.entity_type', $entity_type)
       ->execute();
 
@@ -173,7 +173,7 @@ class CommentStatistics implements CommentStatisticsInterface {
   public function getRankingInfo() {
     return [
       'comments' => [
-        'title' => t('Number of comments'),
+        'title' => \t('Number of comments'),
         'join' => [
           'type' => 'LEFT',
           'table' => 'comment_entity_statistics',

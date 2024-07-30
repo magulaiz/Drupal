@@ -28,18 +28,18 @@ trait RecipeTestTrait {
    *   The recipe object.
    */
   protected function createRecipe(string|array $data, ?string $machine_name = NULL): Recipe {
-    if (is_array($data)) {
+    if (\is_array($data)) {
       $data = Yaml::encode($data);
     }
     $recipes_dir = $this->siteDirectory . '/recipes';
     if ($machine_name === NULL) {
-      $dir = uniqid($recipes_dir . '/');
+      $dir = \uniqid($recipes_dir . '/');
     }
     else {
       $dir = $recipes_dir . '/' . $machine_name;
     }
-    mkdir($dir, recursive: TRUE);
-    file_put_contents($dir . '/recipe.yml', $data);
+    \mkdir($dir, recursive: TRUE);
+    \file_put_contents($dir . '/recipe.yml', $data);
 
     return Recipe::createFromDirectory($dir);
   }
@@ -57,7 +57,7 @@ trait RecipeTestTrait {
    *   The `drupal recipe` command process, after having run.
    */
   protected function applyRecipe(string $path, int $expected_exit_code = 0): Process {
-    assert($this instanceof BrowserTestBase);
+    \assert($this instanceof BrowserTestBase);
 
     $arguments = [
       (new PhpExecutableFinder())->find(),
@@ -72,7 +72,7 @@ trait RecipeTestTrait {
         // Ensure that the command boots Drupal into a state where it knows it's
         // a test site.
         // @see drupal_valid_test_ua()
-        'HTTP_USER_AGENT' => drupal_generate_test_ua($this->databasePrefix),
+        'HTTP_USER_AGENT' => \drupal_generate_test_ua($this->databasePrefix),
       ])
       ->setTimeout(500);
 

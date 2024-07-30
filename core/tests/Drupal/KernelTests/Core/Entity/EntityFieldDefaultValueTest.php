@@ -34,7 +34,7 @@ class EntityFieldDefaultValueTest extends EntityKernelTestBase {
    */
   public function testDefaultValues(): void {
     // All entity variations have to have the same results.
-    foreach (entity_test_entity_types() as $entity_type) {
+    foreach (\entity_test_entity_types() as $entity_type) {
       $this->assertDefaultValues($entity_type);
     }
   }

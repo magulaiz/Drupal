@@ -70,7 +70,7 @@ abstract class Updater {
    * @throws \Drupal\Core\Updater\UpdaterException
    */
   public static function factory($source, $root) {
-    if (is_dir($source)) {
+    if (\is_dir($source)) {
       $updater = self::getUpdaterFromDirectory($source);
     }
     else {
@@ -92,10 +92,10 @@ abstract class Updater {
    */
   public static function getUpdaterFromDirectory($directory) {
     // Gets a list of possible implementing classes.
-    $updaters = drupal_get_updaters();
+    $updaters = \drupal_get_updaters();
     foreach ($updaters as $updater) {
       $class = $updater['class'];
-      if (call_user_func([$class, 'canUpdateDirectory'], $directory)) {
+      if (\call_user_func([$class, 'canUpdateDirectory'], $directory)) {
         return $class;
       }
     }
@@ -119,20 +119,20 @@ abstract class Updater {
     /** @var \Drupal\Core\File\FileSystemInterface $file_system */
     $file_system = \Drupal::service('file_system');
     $info_files = [];
-    if (is_dir($directory)) {
+    if (\is_dir($directory)) {
       $info_files = $file_system->scanDirectory($directory, '/.*\.info.yml$/');
     }
     if (!$info_files) {
       return FALSE;
     }
     foreach ($info_files as $info_file) {
-      if (mb_substr($info_file->filename, 0, -9) == $file_system->basename($directory)) {
+      if (\mb_substr($info_file->filename, 0, -9) == $file_system->basename($directory)) {
         // Info file Has the same name as the directory, return it.
         return $info_file->uri;
       }
     }
     // Otherwise, return the first one.
-    $info_file = array_shift($info_files);
+    $info_file = \array_shift($info_files);
     return $info_file->uri;
   }
 
@@ -217,7 +217,7 @@ abstract class Updater {
       'install_dir' => $this->getInstallDirectory(),
       'backup_dir'  => $this->getBackupDir(),
     ];
-    return array_merge($args, $overrides);
+    return \array_merge($args, $overrides);
   }
 
   /**
@@ -253,7 +253,7 @@ abstract class Updater {
       // Make sure the installation parent directory exists and is writable.
       $this->prepareInstallDirectory($filetransfer, $args['install_dir']);
 
-      if (is_dir($args['install_dir'] . '/' . $this->name)) {
+      if (\is_dir($args['install_dir'] . '/' . $this->name)) {
         // Remove the existing installed file.
         $filetransfer->removeDirectory($args['install_dir'] . '/' . $this->name);
       }
@@ -272,7 +272,7 @@ abstract class Updater {
       return $this->postUpdateTasks();
     }
     catch (FileTransferException $e) {
-      throw new UpdaterFileTransferException("File Transfer failed, reason: '" . strtr($e->getMessage(), $e->arguments) . "'");
+      throw new UpdaterFileTransferException("File Transfer failed, reason: '" . \strtr($e->getMessage(), $e->arguments) . "'");
     }
   }
 
@@ -290,7 +290,7 @@ abstract class Updater {
    * @throws \Drupal\Core\Updater\UpdaterFileTransferException
    */
   public function install(&$filetransfer, $overrides = []) {
-    @trigger_error(__METHOD__ . '() is deprecated in drupal:11.1.0 and is removed from drupal:12.0.0. There is no replacement. See https://www.drupal.org/node/3461934', E_USER_DEPRECATED);
+    @\trigger_error(__METHOD__ . '() is deprecated in drupal:11.1.0 and is removed from drupal:12.0.0. There is no replacement. See https://www.drupal.org/node/3461934', E_USER_DEPRECATED);
     try {
       // Establish arguments with possible overrides.
       $args = $this->getInstallArgs($overrides);
@@ -311,7 +311,7 @@ abstract class Updater {
       return $this->postInstallTasks();
     }
     catch (FileTransferException $e) {
-      throw new UpdaterFileTransferException("File Transfer failed, reason: '" . strtr($e->getMessage(), $e->arguments) . "'");
+      throw new UpdaterFileTransferException("File Transfer failed, reason: '" . \strtr($e->getMessage(), $e->arguments) . "'");
     }
   }
 
@@ -327,10 +327,10 @@ abstract class Updater {
    */
   public function prepareInstallDirectory(&$filetransfer, $directory) {
     // Make the parent dir writable if need be and create the dir.
-    if (!is_dir($directory)) {
-      $parent_dir = dirname($directory);
-      if (!is_writable($parent_dir)) {
-        @chmod($parent_dir, 0755);
+    if (!\is_dir($directory)) {
+      $parent_dir = \dirname($directory);
+      if (!\is_writable($parent_dir)) {
+        @\chmod($parent_dir, 0755);
         // It is expected that this will fail if the directory is owned by the
         // FTP user. If the FTP user == web server, it will succeed.
         try {
@@ -341,7 +341,7 @@ abstract class Updater {
           // Probably still not writable. Try to chmod and do it again.
           // @todo Make a new exception class so we can catch it differently.
           try {
-            $old_perms = fileperms($parent_dir) & 0777;
+            $old_perms = \fileperms($parent_dir) & 0777;
             $filetransfer->chmod($parent_dir, 0755);
             $filetransfer->createDirectory($directory);
             $this->makeWorldReadable($filetransfer, $directory);
@@ -349,13 +349,13 @@ abstract class Updater {
             $filetransfer->chmod($parent_dir, $old_perms);
           }
           catch (FileTransferException $e) {
-            $message = t($e->getMessage(), $e->arguments);
-            $throw_message = t('Unable to create %directory due to the following: %reason', ['%directory' => $directory, '%reason' => $message]);
+            $message = \t($e->getMessage(), $e->arguments);
+            $throw_message = \t('Unable to create %directory due to the following: %reason', ['%directory' => $directory, '%reason' => $message]);
             throw new UpdaterException($throw_message);
           }
         }
         // Put the parent directory back.
-        @chmod($parent_dir, 0555);
+        @\chmod($parent_dir, 0555);
       }
     }
   }
@@ -371,9 +371,9 @@ abstract class Updater {
    *   If the chmod should be applied recursively.
    */
   public function makeWorldReadable(&$filetransfer, $path, $recursive = TRUE) {
-    if (!is_executable($path)) {
+    if (!\is_executable($path)) {
       // Set it to read + execute.
-      $new_perms = fileperms($path) & 0777 | 0005;
+      $new_perms = \fileperms($path) & 0777 | 0005;
       $filetransfer->chmod($path, $new_perms, $recursive);
     }
   }
@@ -404,7 +404,7 @@ abstract class Updater {
    * Performs actions after installation.
    */
   public function postInstall() {
-    @trigger_error(__METHOD__ . '() is deprecated in drupal:11.1.0 and is removed from drupal:12.0.0. There is no replacement. See https://www.drupal.org/node/3461934', E_USER_DEPRECATED);
+    @\trigger_error(__METHOD__ . '() is deprecated in drupal:11.1.0 and is removed from drupal:12.0.0. There is no replacement. See https://www.drupal.org/node/3461934', E_USER_DEPRECATED);
   }
 
   /**
@@ -414,7 +414,7 @@ abstract class Updater {
    *   Links which provide actions to take after the install is finished.
    */
   public function postInstallTasks() {
-    @trigger_error(__METHOD__ . '() is deprecated in drupal:11.1.0 and is removed from drupal:12.0.0. There is no replacement. See https://www.drupal.org/node/3461934', E_USER_DEPRECATED);
+    @\trigger_error(__METHOD__ . '() is deprecated in drupal:11.1.0 and is removed from drupal:12.0.0. There is no replacement. See https://www.drupal.org/node/3461934', E_USER_DEPRECATED);
     return [];
   }
 

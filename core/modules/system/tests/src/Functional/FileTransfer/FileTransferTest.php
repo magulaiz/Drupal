@@ -49,10 +49,10 @@ class FileTransferTest extends BrowserTestBase {
 
   public function _buildFakeModule() {
     $location = 'temporary://fake';
-    if (is_dir($location)) {
+    if (\is_dir($location)) {
       $ret = 0;
       $output = [];
-      exec('rm -Rf ' . escapeshellarg($location), $output, $ret);
+      \exec('rm -Rf ' . \escapeshellarg($location), $output, $ret);
       if ($ret != 0) {
         throw new \Exception('Error removing fake module directory.');
       }
@@ -64,14 +64,14 @@ class FileTransferTest extends BrowserTestBase {
   }
 
   public function _writeDirectory($base, $files = []) {
-    mkdir($base);
+    \mkdir($base);
     foreach ($files as $key => $file) {
-      if (is_array($file)) {
+      if (\is_array($file)) {
         $this->_writeDirectory($base . DIRECTORY_SEPARATOR . $key, $file);
       }
       else {
         // Just write the filename into the file
-        file_put_contents($base . DIRECTORY_SEPARATOR . $file, $file);
+        \file_put_contents($base . DIRECTORY_SEPARATOR . $file, $file);
       }
     }
   }
@@ -83,7 +83,7 @@ class FileTransferTest extends BrowserTestBase {
     // not support expecting exceptions.
     $got_it = FALSE;
     try {
-      $this->testConnection->copyDirectory($source, sys_get_temp_dir());
+      $this->testConnection->copyDirectory($source, \sys_get_temp_dir());
     }
     catch (FileTransferException) {
       $got_it = TRUE;

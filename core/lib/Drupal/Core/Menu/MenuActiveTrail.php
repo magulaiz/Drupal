@@ -55,8 +55,8 @@ class MenuActiveTrail extends CacheCollector implements MenuActiveTrailInterface
   protected function getCid() {
     if (!isset($this->cid)) {
       $route_parameters = $this->routeMatch->getRawParameters()->all();
-      ksort($route_parameters);
-      $this->cid = 'active-trail:route:' . $this->routeMatch->getRouteName() . ':route_parameters:' . serialize($route_parameters);
+      \ksort($route_parameters);
+      $this->cid = 'active-trail:route:' . $this->routeMatch->getRouteName() . ':route_parameters:' . \serialize($route_parameters);
     }
 
     return $this->cid;
@@ -134,7 +134,7 @@ class MenuActiveTrail extends CacheCollector implements MenuActiveTrailInterface
       $links = $this->menuLinkManager->loadLinksByRoute($route_name, $route_parameters, $menu_name);
       // Select the first matching link.
       if ($links) {
-        $found = reset($links);
+        $found = \reset($links);
       }
     }
     return $found;

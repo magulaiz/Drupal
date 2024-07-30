@@ -38,7 +38,7 @@ class RouterTest extends BrowserTestBase {
   public function testFinishResponseSubscriber(): void {
     $renderer_required_cache_contexts = ['languages:' . LanguageInterface::TYPE_INTERFACE, 'theme', 'user.permissions'];
     $expected_cache_contexts = Cache::mergeContexts($renderer_required_cache_contexts, ['url.query_args:' . MainContentViewSubscriber::WRAPPER_FORMAT, 'user.roles:authenticated']);
-    sort($expected_cache_contexts);
+    \sort($expected_cache_contexts);
 
     // Confirm that the router can get to a controller.
     $this->drupalGet('router_test/test1');
@@ -49,7 +49,7 @@ class RouterTest extends BrowserTestBase {
     $this->assertSession()->responseHeaderEquals('Content-language', 'en');
     $this->assertSession()->responseHeaderEquals('X-Content-Type-Options', 'nosniff');
     $this->assertSession()->responseHeaderEquals('X-Frame-Options', 'SAMEORIGIN');
-    if (strcasecmp($session->getResponseHeader('vary'), 'accept-encoding') !== 0) {
+    if (\strcasecmp($session->getResponseHeader('vary'), 'accept-encoding') !== 0) {
       $this->assertSession()->responseHeaderDoesNotExist('Vary');
     }
 
@@ -57,7 +57,7 @@ class RouterTest extends BrowserTestBase {
     $this->assertSession()->pageTextContains('test2');
     // Check expected headers from FinishResponseSubscriber.
     $headers = $session->getResponseHeaders();
-    $this->assertSession()->responseHeaderEquals('X-Drupal-Cache-Contexts', implode(' ', $expected_cache_contexts));
+    $this->assertSession()->responseHeaderEquals('X-Drupal-Cache-Contexts', \implode(' ', $expected_cache_contexts));
     $this->assertSession()->responseHeaderEquals('X-Drupal-Cache-Tags', 'config:user.role.anonymous http_response rendered');
     $this->assertSession()->responseHeaderEquals('X-Drupal-Cache-Max-Age', '-1 (Permanent)');
     // Confirm that the page wrapping is being added, so we're not getting a
@@ -72,8 +72,8 @@ class RouterTest extends BrowserTestBase {
     // 1. controller result: render array, globally cacheable route access.
     $this->drupalGet('router_test/test18');
     $expected_cache_contexts = Cache::mergeContexts($renderer_required_cache_contexts, ['url', 'user.roles:authenticated']);
-    sort($expected_cache_contexts);
-    $this->assertSession()->responseHeaderEquals('X-Drupal-Cache-Contexts', implode(' ', $expected_cache_contexts));
+    \sort($expected_cache_contexts);
+    $this->assertSession()->responseHeaderEquals('X-Drupal-Cache-Contexts', \implode(' ', $expected_cache_contexts));
     $this->assertSession()->responseHeaderEquals('X-Drupal-Cache-Tags', 'config:user.role.anonymous foo http_response rendered');
     $this->assertSession()->responseHeaderEquals('X-Drupal-Cache-Max-Age', '60');
     // 2. controller result: render array, per-role cacheable route access.
@@ -82,8 +82,8 @@ class RouterTest extends BrowserTestBase {
       'url',
       'user.roles',
     ]);
-    sort($expected_cache_contexts);
-    $this->assertSession()->responseHeaderEquals('X-Drupal-Cache-Contexts', implode(' ', $expected_cache_contexts));
+    \sort($expected_cache_contexts);
+    $this->assertSession()->responseHeaderEquals('X-Drupal-Cache-Contexts', \implode(' ', $expected_cache_contexts));
     $this->assertSession()->responseHeaderEquals('X-Drupal-Cache-Tags', 'config:user.role.anonymous foo http_response rendered');
     // 3. controller result: Response object, globally cacheable route access.
     $this->drupalGet('router_test/test1');

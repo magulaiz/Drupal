@@ -50,7 +50,7 @@ class LinkWidget extends WidgetBase {
    * @see static::getUserEnteredStringAsUri()
    */
   protected static function getUriAsDisplayableString($uri) {
-    $scheme = parse_url($uri, PHP_URL_SCHEME);
+    $scheme = \parse_url($uri, PHP_URL_SCHEME);
 
     // By default, the displayable string is the URI.
     $displayable_string = $uri;
@@ -58,19 +58,19 @@ class LinkWidget extends WidgetBase {
     // A different displayable string may be chosen in case of the 'internal:'
     // or 'entity:' built-in schemes.
     if ($scheme === 'internal') {
-      $uri_reference = explode(':', $uri, 2)[1];
+      $uri_reference = \explode(':', $uri, 2)[1];
 
       // @todo '<front>' is valid input for BC reasons, may be removed by
       //   https://www.drupal.org/node/2421941
-      $path = parse_url($uri, PHP_URL_PATH);
+      $path = \parse_url($uri, PHP_URL_PATH);
       if ($path === '/') {
-        $uri_reference = '<front>' . substr($uri_reference, 1);
+        $uri_reference = '<front>' . \substr($uri_reference, 1);
       }
 
       $displayable_string = $uri_reference;
     }
     elseif ($scheme === 'entity') {
-      [$entity_type, $entity_id] = explode('/', substr($uri, 7), 2);
+      [$entity_type, $entity_id] = \explode('/', \substr($uri, 7), 2);
       // Show the 'entity:' URI as the entity autocomplete would.
       // @todo Support entity types other than 'node'. Will be fixed in
       //   https://www.drupal.org/node/2423093.
@@ -79,7 +79,7 @@ class LinkWidget extends WidgetBase {
       }
     }
     elseif ($scheme === 'route') {
-      $displayable_string = ltrim($displayable_string, 'route:');
+      $displayable_string = \ltrim($displayable_string, 'route:');
     }
 
     return $displayable_string;
@@ -104,7 +104,7 @@ class LinkWidget extends WidgetBase {
    */
   protected static function getUserEnteredStringAsUri($string) {
     // By default, assume the entered string is a URI.
-    $uri = trim($string);
+    $uri = \trim($string);
 
     // Detect entity autocomplete string, map to 'entity:' URI.
     $entity_id = EntityAutocomplete::extractEntityIdFromAutocompleteInput($string);
@@ -114,17 +114,17 @@ class LinkWidget extends WidgetBase {
       $uri = 'entity:node/' . $entity_id;
     }
     // Support linking to nothing.
-    elseif (in_array($string, ['<nolink>', '<none>', '<button>'], TRUE)) {
+    elseif (\in_array($string, ['<nolink>', '<none>', '<button>'], TRUE)) {
       $uri = 'route:' . $string;
     }
     // Detect a schemeless string, map to 'internal:' URI.
-    elseif (!empty($string) && parse_url($string, PHP_URL_SCHEME) === NULL) {
+    elseif (!empty($string) && \parse_url($string, PHP_URL_SCHEME) === NULL) {
       // @todo '<front>' is valid input for BC reasons, may be removed by
       //   https://www.drupal.org/node/2421941
       // - '<front>' -> '/'
       // - '<front>#foo' -> '/#foo'
-      if (str_starts_with($string, '<front>')) {
-        $string = '/' . substr($string, strlen('<front>'));
+      if (\str_starts_with($string, '<front>')) {
+        $string = '/' . \substr($string, \strlen('<front>'));
       }
       $uri = 'internal:' . $string;
     }
@@ -145,7 +145,7 @@ class LinkWidget extends WidgetBase {
     // URI , ensure the raw value begins with '/', '?' or '#'.
     // @todo '<front>' is valid input for BC reasons, may be removed by
     //   https://www.drupal.org/node/2421941
-    if (parse_url($uri, PHP_URL_SCHEME) === 'internal' && !in_array($element['#value'][0], ['/', '?', '#'], TRUE) && !str_starts_with($element['#value'], '<front>')) {
+    if (\parse_url($uri, PHP_URL_SCHEME) === 'internal' && !\in_array($element['#value'][0], ['/', '?', '#'], TRUE) && !\str_starts_with($element['#value'], '<front>')) {
       $form_state->setError($element, new TranslatableMarkup('Manually entered paths should start with one of the following characters: / ? #'));
       return;
     }
@@ -228,7 +228,7 @@ class LinkWidget extends WidgetBase {
     // If the field is configured to allow only internal links, add a useful
     // element prefix and description.
     if (!$this->supportsExternalLinks()) {
-      $element['uri']['#field_prefix'] = rtrim(Url::fromRoute('<front>', [], ['absolute' => TRUE])->toString(), '/');
+      $element['uri']['#field_prefix'] = \rtrim(Url::fromRoute('<front>', [], ['absolute' => TRUE])->toString(), '/');
       $element['uri']['#description'] = $this->t('This must be an internal path such as %add-node. You can also start typing the title of a piece of content to select it. Enter %front to link to the front page. Enter %nolink to display link text only. Enter %button to display keyboard-accessible link text only.', ['%add-node' => '/node/add', '%front' => '<front>', '%nolink' => '<nolink>', '%button' => '<button>']);
     }
     // If the field is configured to allow both internal and external links,
@@ -246,9 +246,9 @@ class LinkWidget extends WidgetBase {
     if (!$this->isDefaultValueWidget($form_state) && $this->getFieldSetting('title') !== DRUPAL_DISABLED && !$element['uri']['#required']) {
       $parents = $element['#field_parents'];
       $parents[] = $this->fieldDefinition->getName();
-      $selector = $root = array_shift($parents);
+      $selector = $root = \array_shift($parents);
       if ($parents) {
-        $selector = $root . '[' . implode('][', $parents) . ']';
+        $selector = $root . '[' . \implode('][', $parents) . ']';
       }
 
       $element['uri']['#states']['required'] = [
@@ -280,9 +280,9 @@ class LinkWidget extends WidgetBase {
 
         $parents = $element['#field_parents'];
         $parents[] = $this->fieldDefinition->getName();
-        $selector = $root = array_shift($parents);
+        $selector = $root = \array_shift($parents);
         if ($parents) {
-          $selector = $root . '[' . implode('][', $parents) . ']';
+          $selector = $root . '[' . \implode('][', $parents) . ']';
         }
 
         $element['title']['#states']['required'] = [

@@ -59,7 +59,7 @@ class BlockRebuildTest extends KernelTestBase {
    * @covers ::block_rebuild
    */
   public function testRebuildNoBlocks(): void {
-    block_rebuild();
+    \block_rebuild();
     $messages = \Drupal::messenger()->all();
     \Drupal::messenger()->deleteAll();
     $this->assertEquals([], $messages);
@@ -71,7 +71,7 @@ class BlockRebuildTest extends KernelTestBase {
   public function testRebuildNoInvalidBlocks(): void {
     $this->placeBlock('system_powered_by_block', ['region' => 'content']);
 
-    block_rebuild();
+    \block_rebuild();
     $messages = \Drupal::messenger()->all();
     \Drupal::messenger()->deleteAll();
     $this->assertEquals([], $messages);
@@ -102,7 +102,7 @@ class BlockRebuildTest extends KernelTestBase {
     $this->assertSame('INVALID', $block2->getRegion());
     $this->assertFalse($block2->status());
 
-    block_rebuild();
+    \block_rebuild();
 
     // Reload block entities.
     $block1 = Block::load($block1->id());
@@ -113,7 +113,7 @@ class BlockRebuildTest extends KernelTestBase {
     $expected = ['warning' => [new TranslatableMarkup('The block %info was assigned to the invalid region %region and has been disabled.', ['%info' => $block1->id(), '%region' => 'INVALID'])]];
     $this->assertEquals($expected, $messages);
 
-    $default_region = system_default_region('stark');
+    $default_region = \system_default_region('stark');
     $this->assertSame($default_region, $block1->getRegion());
     $this->assertFalse($block1->status());
     $this->assertSame($default_region, $block2->getRegion());

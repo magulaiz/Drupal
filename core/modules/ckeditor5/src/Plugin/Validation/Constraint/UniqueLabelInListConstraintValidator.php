@@ -26,8 +26,8 @@ class UniqueLabelInListConstraintValidator extends ConstraintValidator {
       throw new UnexpectedTypeException($constraint, UniqueLabelInListConstraint::class);
     }
 
-    $labels = array_column($list, $constraint->labelKey);
-    $label_frequencies = array_count_values($labels);
+    $labels = \array_column($list, $constraint->labelKey);
+    $label_frequencies = \array_count_values($labels);
 
     foreach ($label_frequencies as $label => $frequency) {
       if ($frequency > 1) {

@@ -52,7 +52,7 @@ class MigrateBlockNoBlockContentTest extends MigrateDrupal7TestBase {
       'd7_user_role',
       'd7_block',
     ]);
-    block_rebuild();
+    \block_rebuild();
   }
 
   /**
@@ -89,7 +89,7 @@ class MigrateBlockNoBlockContentTest extends MigrateDrupal7TestBase {
 
     $visibility = $block->getVisibility();
     if ($roles) {
-      $this->assertSame($roles, array_values($visibility['user_role']['roles']));
+      $this->assertSame($roles, \array_values($visibility['user_role']['roles']));
       $this->assertSame('@user.current_user_context:current_user', $visibility['user_role']['context_mapping']['user']);
     }
     if ($pages) {

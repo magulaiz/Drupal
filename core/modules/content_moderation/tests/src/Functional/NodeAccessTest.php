@@ -62,11 +62,11 @@ class NodeAccessTest extends ModerationStateTestBase {
     $this->grantUserPermissionToCreateContentOfType($this->adminUser, 'moderated_content');
 
     // Add the private field to the node type.
-    node_access_test_add_field(NodeType::load('moderated_content'));
+    \node_access_test_add_field(NodeType::load('moderated_content'));
 
     // Rebuild permissions because hook_node_grants() is implemented by the
     // node_access_test_empty module.
-    node_access_rebuild();
+    \node_access_rebuild();
   }
 
   /**

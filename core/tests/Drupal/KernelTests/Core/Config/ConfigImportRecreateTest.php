@@ -68,7 +68,7 @@ class ConfigImportRecreateTest extends KernelTestBase {
       'name' => 'Node type one',
     ]);
     $content_type->save();
-    node_add_body_field($content_type);
+    \node_add_body_field($content_type);
     /** @var \Drupal\Core\Config\StorageInterface $active */
     $active = $this->container->get('config.storage');
     /** @var \Drupal\Core\Config\StorageInterface $sync */
@@ -87,7 +87,7 @@ class ConfigImportRecreateTest extends KernelTestBase {
       'name' => 'Node type two',
     ]);
     $content_type->save();
-    node_add_body_field($content_type);
+    \node_add_body_field($content_type);
 
     $this->configImporter->reset();
     // A node type, a field, an entity view display and an entity form display
@@ -97,7 +97,7 @@ class ConfigImportRecreateTest extends KernelTestBase {
     $this->assertCount(5, $creates, 'There are 5 configuration items to create.');
     $this->assertCount(5, $deletes, 'There are 5 configuration items to delete.');
     $this->assertCount(0, $this->configImporter->getUnprocessedConfiguration('update'), 'There are no configuration items to update.');
-    $this->assertSame($creates, array_reverse($deletes), 'Deletes and creates contain the same configuration names in opposite orders due to dependencies.');
+    $this->assertSame($creates, \array_reverse($deletes), 'Deletes and creates contain the same configuration names in opposite orders due to dependencies.');
 
     $this->configImporter->import();
 

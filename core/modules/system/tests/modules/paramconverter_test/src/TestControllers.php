@@ -11,7 +11,7 @@ use Drupal\node\NodeInterface;
 class TestControllers {
 
   public function testUserNodeFoo(EntityInterface $user, NodeInterface $node, $foo) {
-    $foo = is_object($foo) ? $foo->label() : $foo;
+    $foo = \is_object($foo) ? $foo->label() : $foo;
     return ['#markup' => "user: {$user->label()}, node: {$node->label()}, foo: $foo"];
   }
 

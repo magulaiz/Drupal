@@ -36,13 +36,13 @@ class ResourceResponseValidatorTest extends UnitTestCase {
   protected function setUp(): void {
     parent::setUp();
     // Check that the validation class is available.
-    if (!class_exists("\\JsonSchema\\Validator")) {
+    if (!\class_exists("\\JsonSchema\\Validator")) {
       $this->fail('The JSON Schema validator is missing. You can install it with `composer require justinrainbow/json-schema`.');
     }
 
     $module_handler = $this->prophesize(ModuleHandlerInterface::class);
     $module = $this->prophesize(Extension::class);
-    $module_path = dirname(__DIR__, 4);
+    $module_path = \dirname(__DIR__, 4);
     $module->getPath()->willReturn($module_path);
     $module_handler->getModule('jsonapi')->willReturn($module->reveal());
     $subscriber = new ResourceResponseValidator(
@@ -147,8 +147,8 @@ EOD
       ],
     ];
 
-    $test_cases = array_map(function ($input) use ($defaults) {
-      [$json, $expected, $description, $route_name, $resource_type] = array_values($input + $defaults);
+    $test_cases = \array_map(function ($input) use ($defaults) {
+      [$json, $expected, $description, $route_name, $resource_type] = \array_values($input + $defaults);
       return [
         static::createRequest($route_name, $resource_type),
         static::createResponse($json),

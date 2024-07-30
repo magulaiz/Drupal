@@ -46,7 +46,7 @@ class EngineTwigTest extends BrowserTestBase {
       ->set('default', 'test_theme')
       ->save();
     $this->drupalGet('twig-theme-test/php-variables');
-    foreach (_test_theme_twig_php_values() as $type => $value) {
+    foreach (\_test_theme_twig_php_values() as $type => $value) {
       $this->assertSession()->responseContains('<li>' . $type . ': ' . $value['expected'] . '</li>');
     }
   }

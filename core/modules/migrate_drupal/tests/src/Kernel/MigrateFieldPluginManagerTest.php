@@ -75,7 +75,7 @@ class MigrateFieldPluginManagerTest extends MigrateDrupalTestBase {
    */
   public function testNonExistentPluginExceptions($core, $field_type): void {
     $this->expectException(PluginNotFoundException::class);
-    $this->expectExceptionMessage(sprintf("Plugin ID '%s' was not found.", $field_type));
+    $this->expectExceptionMessage(\sprintf("Plugin ID '%s' was not found.", $field_type));
     $this->pluginManager->getPluginIdFromFieldType($field_type, ['core' => $core]);
   }
 
@@ -116,7 +116,7 @@ class MigrateFieldPluginManagerTest extends MigrateDrupalTestBase {
     ];
     foreach ($definitions as $id => $definition) {
       $this->assertArrayHasKey('weight', $definition);
-      if (in_array($id, $deprecated_plugins, TRUE)) {
+      if (\in_array($id, $deprecated_plugins, TRUE)) {
         $this->assertSame(9999999, $definition['weight']);
       }
       else {

@@ -116,7 +116,7 @@ abstract class AssetControllerBase extends FileDownloadController {
 
     // Check to see whether a file matching the $uri already exists, this can
     // happen if it was created while this request was in progress.
-    if (file_exists($uri)) {
+    if (\file_exists($uri)) {
       return new BinaryFileResponse($uri, 200, [
         'Cache-control' => static::CACHE_CONTROL,
       ]);
@@ -128,7 +128,7 @@ abstract class AssetControllerBase extends FileDownloadController {
     if (!$request->query->has('theme')) {
       throw new BadRequestHttpException('The theme must be passed as a query argument');
     }
-    if (!$request->query->has('delta') || !is_numeric($request->query->get('delta'))) {
+    if (!$request->query->has('delta') || !\is_numeric($request->query->get('delta'))) {
       throw new BadRequestHttpException('The numeric delta must be passed as a query argument');
     }
     if (!$request->query->has('language')) {
@@ -137,7 +137,7 @@ abstract class AssetControllerBase extends FileDownloadController {
     if (!$request->query->has('include')) {
       throw new BadRequestHttpException('The libraries to include must be passed as a query argument');
     }
-    $file_parts = explode('_', basename($file_name, '.' . $this->fileExtension), 2);
+    $file_parts = \explode('_', \basename($file_name, '.' . $this->fileExtension), 2);
     // Ensure the filename is correctly prefixed.
     if ($file_parts[0] !== $this->fileExtension) {
       throw new BadRequestHttpException('The filename prefix must match the file extension');
@@ -157,13 +157,13 @@ abstract class AssetControllerBase extends FileDownloadController {
     $this->themeManager->setActiveTheme($active_theme);
 
     $attached_assets = new AttachedAssets();
-    $include_libraries = explode(',', UrlHelper::uncompressQueryParameter($request->query->get('include')));
+    $include_libraries = \explode(',', UrlHelper::uncompressQueryParameter($request->query->get('include')));
 
     // Check that library names are in the correct format.
     $validate = function ($libraries_to_check) {
       foreach ($libraries_to_check as $library) {
-        if (substr_count($library, '/') === 0) {
-          throw new BadRequestHttpException(sprintf('The "%s" library name must include at least one slash.', $library));
+        if (\substr_count($library, '/') === 0) {
+          throw new BadRequestHttpException(\sprintf('The "%s" library name must include at least one slash.', $library));
         }
       }
     };
@@ -171,7 +171,7 @@ abstract class AssetControllerBase extends FileDownloadController {
     $attached_assets->setLibraries($include_libraries);
 
     if ($request->query->has('exclude')) {
-      $exclude_libraries = explode(',', UrlHelper::uncompressQueryParameter($request->query->get('exclude')));
+      $exclude_libraries = \explode(',', UrlHelper::uncompressQueryParameter($request->query->get('exclude')));
       $validate($exclude_libraries);
       $attached_assets->setAlreadyLoadedLibraries($exclude_libraries);
     }
@@ -195,7 +195,7 @@ abstract class AssetControllerBase extends FileDownloadController {
     // received hash and generated hash match. This prevents invalid filenames
     // from filling the disk, while still serving aggregates that may be
     // referenced in cached HTML.
-    if (hash_equals($generated_hash, $received_hash)) {
+    if (\hash_equals($generated_hash, $received_hash)) {
       $this->dumper->dumpToUri($data, $this->assetType, $uri);
     }
     return new Response($data, 200, [

@@ -90,7 +90,7 @@ class CssCollectionRendererUnitTest extends UnitTestCase {
       return [
         '#type' => 'html_tag',
         '#tag' => 'link',
-        '#attributes' => array_replace($attributes, $custom_attributes),
+        '#attributes' => \array_replace($attributes, $custom_attributes),
       ];
     };
 

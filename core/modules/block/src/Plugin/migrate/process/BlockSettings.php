@@ -33,7 +33,7 @@ class BlockSettings extends ProcessPluginBase {
     }
     switch ($plugin) {
       case 'aggregator_feed_block':
-        [, $id] = explode('-', $delta);
+        [, $id] = \explode('-', $delta);
         $settings['block_count'] = $old_settings['aggregator']['item_count'];
         $settings['feed'] = $id;
         break;

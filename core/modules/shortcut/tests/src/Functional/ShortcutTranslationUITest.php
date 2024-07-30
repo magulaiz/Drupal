@@ -52,7 +52,7 @@ class ShortcutTranslationUITest extends ContentTranslationUITestBase {
    * {@inheritdoc}
    */
   protected function getTranslatorPermissions(): array {
-    return array_merge(parent::getTranslatorPermissions(), ['access shortcuts', 'administer shortcuts', 'access toolbar']);
+    return \array_merge(parent::getTranslatorPermissions(), ['access shortcuts', 'administer shortcuts', 'access toolbar']);
   }
 
   /**

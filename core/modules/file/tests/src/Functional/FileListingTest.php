@@ -217,7 +217,7 @@ class FileListingTest extends FileFieldTestBase {
 
     // Create a bundle and attach a File field to the bundle.
     $bundle = $this->randomMachineName();
-    entity_test_create_bundle($bundle, NULL, 'entity_test_constraints');
+    \entity_test_create_bundle($bundle, NULL, 'entity_test_constraints');
     $this->createFileField('field_test_file', 'entity_test_constraints', $bundle, [], ['file_extensions' => 'txt png']);
 
     // Create file to attach to entity.
@@ -227,7 +227,7 @@ class FileListingTest extends FileFieldTestBase {
       'filemime' => 'text/plain',
     ]);
     $file->setPermanent();
-    file_put_contents($file->getFileUri(), 'hello world');
+    \file_put_contents($file->getFileUri(), 'hello world');
     $file->save();
 
     // Create entity and attach the created file.
@@ -273,7 +273,7 @@ class FileListingTest extends FileFieldTestBase {
       'changed' => 1,
     ]);
     $file->setPermanent();
-    file_put_contents($file->getFileUri(), 'hello world');
+    \file_put_contents($file->getFileUri(), 'hello world');
 
     // Save it, inserting a new record.
     $file->save();

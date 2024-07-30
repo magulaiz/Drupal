@@ -133,8 +133,8 @@ class ConfigDependenciesTest extends KernelTestBase {
    * @dataProvider providerOnDependencyRemovalForResourceGranularity
    */
   public function testOnDependencyRemovalForResourceGranularity(array $configuration, $module, $expected_configuration): void {
-    assert(is_string($module));
-    assert($expected_configuration === FALSE || is_array($expected_configuration));
+    \assert(\is_string($module));
+    \assert($expected_configuration === FALSE || \is_array($expected_configuration));
 
     $config_dependencies = new ConfigDependencies(['json' => 'serialization'], ['basic_auth' => 'basic_auth']);
 

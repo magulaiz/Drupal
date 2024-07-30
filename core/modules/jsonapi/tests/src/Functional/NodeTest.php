@@ -149,7 +149,7 @@ class NodeTest extends ResourceTestBase {
     $self_url = clone $base_url;
     $version_identifier = 'id:' . $this->entity->getRevisionId();
     $self_url = $self_url->setOption('query', ['resourceVersion' => $version_identifier]);
-    $version_query_string = '?resourceVersion=' . urlencode($version_identifier);
+    $version_query_string = '?resourceVersion=' . \urlencode($version_identifier);
     return [
       'jsonapi' => [
         'meta' => [
@@ -287,7 +287,7 @@ class NodeTest extends ResourceTestBase {
     $this->config('jsonapi.settings')->set('read_only', FALSE)->save(TRUE);
 
     // @todo Remove line below in favor of commented line in https://www.drupal.org/project/drupal/issues/2878463.
-    $url = Url::fromRoute(sprintf('jsonapi.%s.individual', static::$resourceTypeName), ['entity' => $this->entity->uuid()]);
+    $url = Url::fromRoute(\sprintf('jsonapi.%s.individual', static::$resourceTypeName), ['entity' => $this->entity->uuid()]);
     // $url = $this->entity->toUrl('jsonapi');
 
     // GET node's current normalization.
@@ -332,7 +332,7 @@ class NodeTest extends ResourceTestBase {
     $this->entity->setUnpublished()->save();
 
     // @todo Remove line below in favor of commented line in https://www.drupal.org/project/drupal/issues/2878463.
-    $url = Url::fromRoute(sprintf('jsonapi.%s.individual', static::$resourceTypeName), ['entity' => $this->entity->uuid()]);
+    $url = Url::fromRoute(\sprintf('jsonapi.%s.individual', static::$resourceTypeName), ['entity' => $this->entity->uuid()]);
     // $url = $this->entity->toUrl('jsonapi');
     $request_options = $this->getAuthenticationRequestOptions();
 
@@ -356,7 +356,7 @@ class NodeTest extends ResourceTestBase {
     // The response varies by 'user', causing the 'user.permissions' cache
     // context to be optimized away.
     $expected_cache_contexts = Cache::mergeContexts($this->getExpectedCacheContexts(), ['user']);
-    $expected_cache_contexts = array_diff($expected_cache_contexts, ['user.permissions']);
+    $expected_cache_contexts = \array_diff($expected_cache_contexts, ['user.permissions']);
     $this->assertResourceResponse(200, FALSE, $response, $this->getExpectedCacheTags(), $expected_cache_contexts, FALSE, 'UNCACHEABLE');
   }
 
@@ -376,7 +376,7 @@ class NodeTest extends ResourceTestBase {
     // After saving the entity the normalization should not be cached.
     $this->assertFalse($cache);
     // @todo Remove line below in favor of commented line in https://www.drupal.org/project/drupal/issues/2878463.
-    $url = Url::fromRoute(sprintf('jsonapi.%s.individual', static::$resourceTypeName), ['entity' => $uuid]);
+    $url = Url::fromRoute(\sprintf('jsonapi.%s.individual', static::$resourceTypeName), ['entity' => $uuid]);
     // $url = $this->entity->toUrl('jsonapi');
     $request_options = $this->getAuthenticationRequestOptions();
     $request_options[RequestOptions::QUERY] = ['fields' => ['node--camelids' => 'title']];
@@ -406,7 +406,7 @@ class NodeTest extends ResourceTestBase {
     $cache = \Drupal::service('variation_cache.jsonapi_normalizations')->get(['node--camelids', $this->entity->uuid(), $this->entity->language()->getId()], new CacheableMetadata());
     $cached_fields = $cache->data['fields'];
     $this->assertSameSize($field_names, $cached_fields);
-    array_walk($field_names, function ($field_name) use ($cached_fields) {
+    \array_walk($field_names, function ($field_name) use ($cached_fields) {
       $this->assertInstanceOf(
         CacheableNormalization::class,
         $cached_fields[$field_name]
@@ -442,7 +442,7 @@ class NodeTest extends ResourceTestBase {
     ];
 
     // Create node POST request.
-    $url = Url::fromRoute(sprintf('jsonapi.%s.collection.post', static::$resourceTypeName));
+    $url = Url::fromRoute(\sprintf('jsonapi.%s.collection.post', static::$resourceTypeName));
     $request_options = $this->getAuthenticationRequestOptions();
     $request_options[RequestOptions::HEADERS]['Accept'] = 'application/vnd.api+json';
     $request_options[RequestOptions::HEADERS]['Content-Type'] = 'application/vnd.api+json';
@@ -503,10 +503,10 @@ class NodeTest extends ResourceTestBase {
 
     // Assert bubbling of cacheability from query alter hook.
     $this->assertTrue($this->container->get('module_installer')->install(['node_access_test'], TRUE), 'Installed modules.');
-    node_access_rebuild();
+    \node_access_rebuild();
     $this->rebuildAll();
     $response = $this->request('GET', $collection_filter_url, $request_options);
-    $this->assertContains('user.node_grants:view', explode(' ', $response->getHeader('X-Drupal-Cache-Contexts')[0]));
+    $this->assertContains('user.node_grants:view', \explode(' ', $response->getHeader('X-Drupal-Cache-Contexts')[0]));
   }
 
 }

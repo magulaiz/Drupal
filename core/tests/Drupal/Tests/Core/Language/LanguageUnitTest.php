@@ -23,9 +23,9 @@ class LanguageUnitTest extends UnitTestCase {
     $uuid = $this->randomMachineName();
     $language = new Language(['id' => $language_code, 'name' => $name, 'uuid' => $uuid]);
     // Test that nonexistent properties are not added to the language object.
-    $this->assertTrue(property_exists($language, 'id'));
-    $this->assertTrue(property_exists($language, 'name'));
-    $this->assertFalse(property_exists($language, 'uuid'));
+    $this->assertTrue(\property_exists($language, 'id'));
+    $this->assertTrue(\property_exists($language, 'name'));
+    $this->assertFalse(\property_exists($language, 'uuid'));
   }
 
   /**
@@ -96,7 +96,7 @@ class LanguageUnitTest extends UnitTestCase {
    */
   public function testSortArrayOfLanguages(array $languages, array $expected): void {
     Language::sort($languages);
-    $this->assertSame($expected, array_keys($languages));
+    $this->assertSame($expected, \array_keys($languages));
   }
 
   /**

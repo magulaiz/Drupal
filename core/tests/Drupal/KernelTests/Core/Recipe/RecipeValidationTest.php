@@ -312,9 +312,9 @@ YAML,
    * @dataProvider providerRecipeValidation
    */
   public function testRecipeValidation(string $recipe, ?array $expected_violations, ?string $recipe_name = NULL): void {
-    $dir = 'public://' . ($recipe_name ?? uniqid());
-    mkdir($dir);
-    file_put_contents($dir . '/recipe.yml', $recipe);
+    $dir = 'public://' . ($recipe_name ?? \uniqid());
+    \mkdir($dir);
+    \file_put_contents($dir . '/recipe.yml', $recipe);
 
     try {
       Recipe::createFromDirectory($dir);
@@ -331,8 +331,8 @@ YAML,
         $property_path = $violation->getPropertyPath();
         $actual_violations[$property_path][] = (string) $violation->getMessage();
       }
-      ksort($actual_violations);
-      ksort($expected_violations);
+      \ksort($actual_violations);
+      \ksort($expected_violations);
       $this->assertSame($expected_violations, $actual_violations);
     }
   }

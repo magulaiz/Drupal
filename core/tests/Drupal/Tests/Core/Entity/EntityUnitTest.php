@@ -235,10 +235,10 @@ class EntityUnitTest extends UnitTestCase {
     // Base our mocked entity on a real entity class so we can test if calling
     // EntityBase::load() on the base class will bubble up to an actual entity.
     $this->entityTypeId = 'entity_test_mul';
-    $methods = get_class_methods(EntityTestMul::class);
-    unset($methods[array_search('load', $methods)]);
-    unset($methods[array_search('loadMultiple', $methods)]);
-    unset($methods[array_search('create', $methods)]);
+    $methods = \get_class_methods(EntityTestMul::class);
+    unset($methods[\array_search('load', $methods)]);
+    unset($methods[\array_search('loadMultiple', $methods)]);
+    unset($methods[\array_search('create', $methods)]);
     $this->entity = $this->getMockBuilder(EntityTestMul::class)
       ->disableOriginalConstructor()
       ->onlyMethods($methods)
@@ -256,7 +256,7 @@ class EntityUnitTest extends UnitTestCase {
   public function testLoad(): void {
     $this->setupTestLoad();
 
-    $class_name = get_class($this->entity);
+    $class_name = \get_class($this->entity);
 
     $entity_type_repository = $this->createMock(EntityTypeRepositoryInterface::class);
     $entity_type_repository->expects($this->once())
@@ -292,7 +292,7 @@ class EntityUnitTest extends UnitTestCase {
   public function testLoadMultiple(): void {
     $this->setupTestLoad();
 
-    $class_name = get_class($this->entity);
+    $class_name = \get_class($this->entity);
 
     $entity_type_repository = $this->createMock(EntityTypeRepositoryInterface::class);
     $entity_type_repository->expects($this->once())
@@ -324,7 +324,7 @@ class EntityUnitTest extends UnitTestCase {
   public function testCreate(): void {
     $this->setupTestLoad();
 
-    $class_name = get_class($this->entity);
+    $class_name = \get_class($this->entity);
 
     $entity_type_repository = $this->createMock(EntityTypeRepositoryInterface::class);
     $entity_type_repository->expects($this->once())

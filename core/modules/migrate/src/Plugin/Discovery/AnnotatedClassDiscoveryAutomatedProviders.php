@@ -62,7 +62,7 @@ class AnnotatedClassDiscoveryAutomatedProviders extends AnnotatedClassDiscovery 
     do {
       $providers[] = $this->getProviderFromNamespace($parser->getNamespaceName());
     } while ($parser = StaticReflectionParser::getParentParser($parser, $this->finder));
-    $providers = array_unique(array_filter($providers, function ($provider) {
+    $providers = \array_unique(\array_filter($providers, function ($provider) {
       return $provider && $provider !== 'component';
     }));
     $annotation->setProviders($providers);
@@ -82,7 +82,7 @@ class AnnotatedClassDiscoveryAutomatedProviders extends AnnotatedClassDiscovery 
     // Search for classes within all PSR-4 namespace locations.
     foreach ($this->getPluginNamespaces() as $namespace => $dirs) {
       foreach ($dirs as $dir) {
-        if (file_exists($dir)) {
+        if (\file_exists($dir)) {
           $iterator = new \RecursiveIteratorIterator(
             new \RecursiveDirectoryIterator($dir, \RecursiveDirectoryIterator::SKIP_DOTS)
           );
@@ -91,13 +91,13 @@ class AnnotatedClassDiscoveryAutomatedProviders extends AnnotatedClassDiscovery 
               if ($cached = $this->fileCache->get($fileinfo->getPathName())) {
                 if (isset($cached['id'])) {
                   // Explicitly unserialize this to create a new object instance.
-                  $definitions[$cached['id']] = unserialize($cached['content']);
+                  $definitions[$cached['id']] = \unserialize($cached['content']);
                 }
                 continue;
               }
 
               $sub_path = $iterator->getSubIterator()->getSubPath();
-              $sub_path = $sub_path ? str_replace(DIRECTORY_SEPARATOR, '\\', $sub_path) . '\\' : '';
+              $sub_path = $sub_path ? \str_replace(DIRECTORY_SEPARATOR, '\\', $sub_path) . '\\' : '';
               $class = $namespace . '\\' . $sub_path . $fileinfo->getBasename('.php');
 
               // The filename is already known, so there is no need to find the
@@ -114,7 +114,7 @@ class AnnotatedClassDiscoveryAutomatedProviders extends AnnotatedClassDiscovery 
                 $content = $annotation->get();
                 $definitions[$id] = $content;
                 // Explicitly serialize this to create a new object instance.
-                $this->fileCache->set($fileinfo->getPathName(), ['id' => $id, 'content' => serialize($content)]);
+                $this->fileCache->set($fileinfo->getPathName(), ['id' => $id, 'content' => \serialize($content)]);
               }
               else {
                 // Store a NULL object, so the file is not parsed again.

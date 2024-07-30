@@ -96,7 +96,7 @@ class JsonApiFunctionalDateFieldTest extends JsonApiFunctionalTestBase {
         'condition' => [
           'path' => 'field_datetime',
           'operator' => '>',
-          'value' => date(DateTimeItemInterface::DATETIME_STORAGE_FORMAT, $timestamp_greater_than_value),
+          'value' => \date(DateTimeItemInterface::DATETIME_STORAGE_FORMAT, $timestamp_greater_than_value),
         ],
       ],
     ];
@@ -104,7 +104,7 @@ class JsonApiFunctionalDateFieldTest extends JsonApiFunctionalTestBase {
       'query' => ['filter' => $filter],
     ]));
     $this->assertSession()->statusCodeEquals(200);
-    $output_uuids = array_map(function ($result) {
+    $output_uuids = \array_map(function ($result) {
       return $result['id'];
     }, $output['data']);
     $this->assertCount(1, $output_uuids);
@@ -118,7 +118,7 @@ class JsonApiFunctionalDateFieldTest extends JsonApiFunctionalTestBase {
         'condition' => [
           'path' => 'field_datetime',
           'operator' => '>=',
-          'value' => date(DateTimeItemInterface::DATETIME_STORAGE_FORMAT, $timestamp_greater_than_or_equal_value),
+          'value' => \date(DateTimeItemInterface::DATETIME_STORAGE_FORMAT, $timestamp_greater_than_or_equal_value),
         ],
       ],
     ];
@@ -126,7 +126,7 @@ class JsonApiFunctionalDateFieldTest extends JsonApiFunctionalTestBase {
       'query' => ['filter' => $filter],
     ]));
     $this->assertSession()->statusCodeEquals(200);
-    $output_uuids = array_map(function ($result) {
+    $output_uuids = \array_map(function ($result) {
       return $result['id'];
     }, $output['data']);
     $this->assertCount(2, $output_uuids);
@@ -141,7 +141,7 @@ class JsonApiFunctionalDateFieldTest extends JsonApiFunctionalTestBase {
         'condition' => [
           'path' => 'field_datetime',
           'operator' => '<',
-          'value' => date(DateTimeItemInterface::DATETIME_STORAGE_FORMAT, $timestamp_smaller_than_value),
+          'value' => \date(DateTimeItemInterface::DATETIME_STORAGE_FORMAT, $timestamp_smaller_than_value),
         ],
       ],
     ];
@@ -149,7 +149,7 @@ class JsonApiFunctionalDateFieldTest extends JsonApiFunctionalTestBase {
       'query' => ['filter' => $filter],
     ]));
     $this->assertSession()->statusCodeEquals(200);
-    $output_uuids = array_map(function ($result) {
+    $output_uuids = \array_map(function ($result) {
       return $result['id'];
     }, $output['data']);
     $this->assertCount(1, $output_uuids);
@@ -163,7 +163,7 @@ class JsonApiFunctionalDateFieldTest extends JsonApiFunctionalTestBase {
         'condition' => [
           'path' => 'field_datetime',
           'operator' => '<=',
-          'value' => date(DateTimeItemInterface::DATETIME_STORAGE_FORMAT, $timestamp_smaller_than_or_equal_value),
+          'value' => \date(DateTimeItemInterface::DATETIME_STORAGE_FORMAT, $timestamp_smaller_than_or_equal_value),
         ],
       ],
     ];
@@ -171,7 +171,7 @@ class JsonApiFunctionalDateFieldTest extends JsonApiFunctionalTestBase {
       'query' => ['filter' => $filter],
     ]));
     $this->assertSession()->statusCodeEquals(200);
-    $output_uuids = array_map(function ($result) {
+    $output_uuids = \array_map(function ($result) {
       return $result['id'];
     }, $output['data']);
     $this->assertCount(2, $output_uuids);

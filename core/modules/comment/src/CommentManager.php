@@ -206,7 +206,7 @@ class CommentManager implements CommentManagerInterface {
         }
         else {
           $function = $entity->getEntityTypeId() . '_last_viewed';
-          if (function_exists($function)) {
+          if (\function_exists($function)) {
             $timestamp = $function($entity->id());
           }
           else {

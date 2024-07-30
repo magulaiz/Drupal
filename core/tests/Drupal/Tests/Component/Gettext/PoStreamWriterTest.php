@@ -81,7 +81,7 @@ class PoStreamWriterTest extends TestCase {
 
     $this->poWriter->writeItem($poItem->reveal());
     $this->poWriter->close();
-    $this->assertEquals(file_get_contents($this->poFile->url()), $expected);
+    $this->assertEquals(\file_get_contents($this->poFile->url()), $expected);
   }
 
   /**

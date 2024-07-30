@@ -79,7 +79,7 @@ class DateRangePlainFormatter extends DateTimePlainFormatter {
    * {@inheritdoc}
    */
   public function settingsSummary() {
-    return array_merge(parent::settingsSummary(), $this->dateTimeRangeSettingsSummary());
+    return \array_merge(parent::settingsSummary(), $this->dateTimeRangeSettingsSummary());
   }
 
 }

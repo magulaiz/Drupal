@@ -36,7 +36,7 @@ class StandardRecipeTest extends StandardTest {
     $theme_installer->uninstall(['claro', 'olivero']);
 
     // Determine which modules to uninstall.
-    $uninstall = array_diff(array_keys(\Drupal::moduleHandler()->getModuleList()), ['user', 'system', 'path_alias', \Drupal::database()->getProvider()]);
+    $uninstall = \array_diff(\array_keys(\Drupal::moduleHandler()->getModuleList()), ['user', 'system', 'path_alias', \Drupal::database()->getProvider()]);
     foreach (['shortcut', 'field_config', 'filter_format', 'field_storage_config'] as $entity_type) {
       $storage = \Drupal::entityTypeManager()->getStorage($entity_type);
       $storage->delete($storage->loadMultiple());

@@ -240,7 +240,7 @@ class Token {
     foreach ($text_tokens as $type => $tokens) {
       $replacements += $this->generate($type, $tokens, $data, $options, $bubbleable_metadata);
       if (!empty($options['clear'])) {
-        $replacements += array_fill_keys($tokens, '');
+        $replacements += \array_fill_keys($tokens, '');
       }
     }
 
@@ -265,8 +265,8 @@ class Token {
       $function($replacements, $data, $options, $bubbleable_metadata);
     }
 
-    $tokens = array_keys($replacements);
-    $values = array_values($replacements);
+    $tokens = \array_keys($replacements);
+    $values = \array_values($replacements);
 
     // If a local $bubbleable_metadata object was created, apply the metadata
     // it collected to the renderer's currently active render context.
@@ -276,7 +276,7 @@ class Token {
       $this->renderer->render($build);
     }
 
-    return str_replace($tokens, $values, $text);
+    return \str_replace($tokens, $values, $text);
   }
 
   /**
@@ -292,7 +292,7 @@ class Token {
     // Matches tokens with the following pattern: [$type:$name]
     // $type and $name may not contain [ ] characters.
     // $type may not contain : or whitespace characters, but $name may.
-    preg_match_all('/
+    \preg_match_all('/
       \[             # [ - pattern start
       ([^\s\[\]:]+)  # match $type not containing whitespace : [ or ]
       :              # : - separator
@@ -307,7 +307,7 @@ class Token {
     // $tokens grouped by $types, pointing to the version of the token found in
     // the source text. For example, $results['node']['title'] = '[node:title]';
     $results = [];
-    for ($i = 0; $i < count($tokens); $i++) {
+    for ($i = 0; $i < \count($tokens); $i++) {
       $results[$types[$i]][$tokens[$i]] = $matches[0][$i];
     }
 
@@ -400,8 +400,8 @@ class Token {
   public function findWithPrefix(array $tokens, $prefix, $delimiter = ':') {
     $results = [];
     foreach ($tokens as $token => $raw) {
-      $parts = explode($delimiter, $token, 2);
-      if (count($parts) == 2 && $parts[0] == $prefix) {
+      $parts = \explode($delimiter, $token, 2);
+      if (\count($parts) == 2 && $parts[0] == $prefix) {
         $results[$parts[1]] = $raw;
       }
     }
@@ -422,7 +422,7 @@ class Token {
    * @see hook_token_info()
    */
   public function getInfo() {
-    if (is_null($this->tokenInfo)) {
+    if (\is_null($this->tokenInfo)) {
       $cache_id = 'token_info:' . $this->languageManager->getCurrentLanguage(LanguageInterface::TYPE_CONTENT)->getId();
       $cache = $this->cache->get($cache_id);
       if ($cache) {

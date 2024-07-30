@@ -33,7 +33,7 @@ class UnversionedAssetTest extends BrowserTestBase {
    */
   public function testUnversionedAssets(): void {
     $this->fileAssetsPath = $this->publicFilesDirectory;
-    file_put_contents('public://test.css', '.original-content{display:none;}');
+    \file_put_contents('public://test.css', '.original-content{display:none;}');
     // Test aggregation with a custom file_assets_path.
     $this->config('system.performance')->set('css', [
       'preprocess' => TRUE,
@@ -59,7 +59,7 @@ class UnversionedAssetTest extends BrowserTestBase {
       $href = $element->getAttribute('href');
       $url = $this->getAbsoluteUrl($href);
       // Not every script or style on a page is aggregated.
-      if (!str_contains($url, $this->fileAssetsPath)) {
+      if (!\str_contains($url, $this->fileAssetsPath)) {
         continue;
       }
       $session = $this->getSession();
@@ -69,8 +69,8 @@ class UnversionedAssetTest extends BrowserTestBase {
       $this->assertStringContainsString('original-content', $aggregate);
       $this->assertStringNotContainsString('extra-stuff', $aggregate);
     }
-    $file = file_get_contents('public://test.css') . '.extra-stuff{display:none;}';
-    file_put_contents('public://test.css', $file);
+    $file = \file_get_contents('public://test.css') . '.extra-stuff{display:none;}';
+    \file_put_contents('public://test.css', $file);
     // Clear the library discovery and page caches again so that new URLs are
     // generated.
     \Drupal::service('cache.data')->deleteAll();
@@ -85,7 +85,7 @@ class UnversionedAssetTest extends BrowserTestBase {
       $this->assertNotSame($new_href, $href);
       $url = $this->getAbsoluteUrl($new_href);
       // Not every script or style on a page is aggregated.
-      if (!str_contains($url, $this->fileAssetsPath)) {
+      if (!\str_contains($url, $this->fileAssetsPath)) {
         continue;
       }
       $session = $this->getSession();

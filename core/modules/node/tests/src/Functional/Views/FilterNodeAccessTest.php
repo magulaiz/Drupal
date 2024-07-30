@@ -46,9 +46,9 @@ class FilterNodeAccessTest extends NodeTestBase {
 
     $this->drupalCreateContentType(['type' => 'article', 'name' => 'Article']);
 
-    node_access_test_add_field(NodeType::load('article'));
+    \node_access_test_add_field(NodeType::load('article'));
 
-    node_access_rebuild();
+    \node_access_rebuild();
     \Drupal::state()->set('node_access_test.private', TRUE);
 
     $num_simple_users = 2;
@@ -67,7 +67,7 @@ class FilterNodeAccessTest extends NodeTestBase {
           'body' => [
             [
               'value' => $type . ' node',
-              'format' => filter_default_format(),
+              'format' => \filter_default_format(),
             ],
           ],
           'title' => "$type Article created by " . $web_user->getAccountName(),

@@ -57,7 +57,7 @@ class SessionTestController extends ControllerBase {
 
     $request->getSession()->save();
 
-    return ['#markup' => 'session_id:' . session_id() . "\n"];
+    return ['#markup' => 'session_id:' . \session_id() . "\n"];
   }
 
   /**
@@ -70,7 +70,7 @@ class SessionTestController extends ControllerBase {
    *   A notification message with session ID.
    */
   public function getIdFromCookie(Request $request) {
-    return ['#markup' => 'session_id:' . $request->cookies->get(session_name()) . "\n", '#cache' => ['contexts' => ['cookies:' . session_name()]]];
+    return ['#markup' => 'session_id:' . $request->cookies->get(\session_name()) . "\n", '#cache' => ['contexts' => ['cookies:' . \session_name()]]];
   }
 
   /**
@@ -275,7 +275,7 @@ class SessionTestController extends ControllerBase {
       'primary key' => ['sid'],
     ]);
 
-    drupal_register_shutdown_function(function () {
+    \drupal_register_shutdown_function(function () {
       $schema = \Drupal::database()->schema();
       $schema->dropTable('sessions');
       $schema->renameTable('sessions_tmp', 'sessions');

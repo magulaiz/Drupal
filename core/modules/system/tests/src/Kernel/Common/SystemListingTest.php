@@ -45,7 +45,7 @@ class SystemListingTest extends KernelTestBase {
     $listing->setProfileDirectories(['core/profiles/testing']);
     $files = $listing->scan('module');
     foreach ($expected_directories as $module => $directories) {
-      $expected_directory = array_shift($directories);
+      $expected_directory = \array_shift($directories);
       $expected_uri = "$expected_directory/$module/$module.info.yml";
       $module_path = $files[$module]->getPathname();
       $this->assertEquals($expected_uri, $module_path, "Module $module_path was found at $expected_uri.");

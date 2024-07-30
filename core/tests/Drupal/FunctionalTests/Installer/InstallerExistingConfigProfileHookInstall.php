@@ -25,7 +25,7 @@ class InstallerExistingConfigProfileHookInstall extends InstallerConfigDirectory
 function config_profile_with_hook_install_install() {
 }
 EOF;
-    file_put_contents("$path/{$this->profile}.install", $contents);
+    \file_put_contents("$path/{$this->profile}.install", $contents);
     parent::visitInstaller();
   }
 

@@ -23,7 +23,7 @@ class InstallerEmptySettingsTest extends InstallerTestBase {
     parent::prepareEnvironment();
     // Create an empty settings.php file.
     $path = $this->root . DIRECTORY_SEPARATOR . $this->siteDirectory;
-    file_put_contents($path . '/settings.php', '');
+    \file_put_contents($path . '/settings.php', '');
   }
 
   /**

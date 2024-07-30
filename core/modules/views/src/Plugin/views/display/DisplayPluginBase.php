@@ -195,7 +195,7 @@ abstract class DisplayPluginBase extends PluginBase implements DisplayPluginInte
       unset($options['defaults']);
     }
 
-    $cid = 'views:unpack_options:' . hash('sha256', serialize([$this->options, $options])) . ':' . \Drupal::languageManager()->getCurrentLanguage()->getId();
+    $cid = 'views:unpack_options:' . \hash('sha256', \serialize([$this->options, $options])) . ':' . \Drupal::languageManager()->getCurrentLanguage()->getId();
     if (empty(static::$unpackOptions[$cid])) {
       $cache = \Drupal::cache('data')->get($cid);
       if (!empty($cache->data)) {
@@ -225,7 +225,7 @@ abstract class DisplayPluginBase extends PluginBase implements DisplayPluginInte
 
     foreach ($this->handlers as $type => $handlers) {
       foreach ($handlers as $id => $handler) {
-        if (is_object($handler)) {
+        if (\is_object($handler)) {
           $this->handlers[$type][$id]->destroy();
         }
       }
@@ -739,7 +739,7 @@ abstract class DisplayPluginBase extends PluginBase implements DisplayPluginInte
     }
 
     $display_id = $this->getLinkDisplay();
-    if ($display_id && $this->view->displayHandlers->has($display_id) && is_object($this->view->displayHandlers->get($display_id))) {
+    if ($display_id && $this->view->displayHandlers->has($display_id) && \is_object($this->view->displayHandlers->get($display_id))) {
       return $this->view->displayHandlers->get($display_id)->getPath();
     }
   }
@@ -756,7 +756,7 @@ abstract class DisplayPluginBase extends PluginBase implements DisplayPluginInte
     // If the display does not have a route (e.g. a block display), get the
     // route for the linked display.
     $display_id = $this->getLinkDisplay();
-    if ($display_id && $this->view->displayHandlers->has($display_id) && is_object($this->view->displayHandlers->get($display_id))) {
+    if ($display_id && $this->view->displayHandlers->has($display_id) && \is_object($this->view->displayHandlers->get($display_id))) {
       return $this->view->displayHandlers->get($display_id)->getRoutedDisplay();
     }
 
@@ -927,7 +927,7 @@ abstract class DisplayPluginBase extends PluginBase implements DisplayPluginInte
       if ($only_overrides && $this->isDefaulted($handler_type_info['plural'])) {
         continue;
       }
-      $handlers = array_merge($handlers, array_values($this->getHandlers($handler_type)));
+      $handlers = \array_merge($handlers, \array_values($this->getHandlers($handler_type)));
     }
     return $handlers;
   }
@@ -963,8 +963,8 @@ abstract class DisplayPluginBase extends PluginBase implements DisplayPluginInte
     $this->dependencies = parent::calculateDependencies();
     // Collect all the dependencies of handlers and plugins. Only calculate
     // their dependencies if they are configured by this display.
-    $plugins = array_merge($this->getAllHandlers(TRUE), $this->getAllPlugins(TRUE));
-    array_walk($plugins, [$this, 'calculatePluginDependencies']);
+    $plugins = \array_merge($this->getAllHandlers(TRUE), $this->getAllPlugins(TRUE));
+    \array_walk($plugins, [$this, 'calculatePluginDependencies']);
 
     return $this->dependencies;
   }
@@ -1023,7 +1023,7 @@ abstract class DisplayPluginBase extends PluginBase implements DisplayPluginInte
    * {@inheritdoc}
    */
   public function optionLink($text, $section, $class = '', $title = '') {
-    if (!trim($text)) {
+    if (!\trim($text)) {
       $text = $this->t('Broken field');
     }
 
@@ -1130,7 +1130,7 @@ abstract class DisplayPluginBase extends PluginBase implements DisplayPluginInte
       'desc' => $this->t('Comment or document this display.'),
     ];
 
-    $title = strip_tags($this->getOption('title'));
+    $title = \strip_tags($this->getOption('title'));
     if (!$title) {
       $title = $this->t('None');
     }
@@ -1361,7 +1361,7 @@ abstract class DisplayPluginBase extends PluginBase implements DisplayPluginInte
       $options['exposed_form']['links']['exposed_form_options'] = $this->t('Exposed form settings for this exposed form style.');
     }
 
-    $css_class = trim($this->getOption('css_class'));
+    $css_class = \trim($this->getOption('css_class'));
     if (!$css_class) {
       $css_class = $this->t('None');
     }
@@ -1385,7 +1385,7 @@ abstract class DisplayPluginBase extends PluginBase implements DisplayPluginInte
     parent::buildOptionsForm($form, $form_state);
     $section = $form_state->get('section');
     if ($this->defaultableSections($section)) {
-      views_ui_standard_display_dropdown($form, $form_state, $section);
+      \views_ui_standard_display_dropdown($form, $form_state, $section);
     }
     $form['#title'] = $this->display['display_title'] . ': ';
 
@@ -1756,7 +1756,7 @@ abstract class DisplayPluginBase extends PluginBase implements DisplayPluginInte
             '#markup' => $this->t('The following tokens are available for this link. You may use Twig syntax in this field.'),
             '#suffix' => '</p>',
           ];
-          foreach (array_keys($options) as $type) {
+          foreach (\array_keys($options) as $type) {
             if (!empty($options[$type])) {
               $items = [];
               foreach ($options[$type] as $key => $value) {
@@ -1893,14 +1893,14 @@ abstract class DisplayPluginBase extends PluginBase implements DisplayPluginInte
 
       case 'css_class':
         $css_class = $form_state->getValue('css_class');
-        if (preg_match('/[^a-zA-Z0-9-_ ]/', $css_class)) {
+        if (\preg_match('/[^a-zA-Z0-9-_ ]/', $css_class)) {
           $form_state->setError($form['css_class'], $this->t('CSS classes must be alphanumeric or dashes only.'));
         }
         break;
 
       case 'display_id':
         if ($form_state->getValue('display_id')) {
-          if (preg_match('/[^a-z0-9_]/', $form_state->getValue('display_id'))) {
+          if (\preg_match('/[^a-z0-9_]/', $form_state->getValue('display_id'))) {
             $form_state->setError($form['display_id'], $this->t('Display machine name must contain only lowercase letters, numbers, or underscores.'));
           }
 
@@ -1921,8 +1921,8 @@ abstract class DisplayPluginBase extends PluginBase implements DisplayPluginInte
 
     // Validate plugin options. Every section with "_options" in it, belongs to
     // a plugin type, like "style_options".
-    if (str_contains($section, '_options')) {
-      $plugin_type = str_replace('_options', '', $section);
+    if (\str_contains($section, '_options')) {
+      $plugin_type = \str_replace('_options', '', $section);
       // Load the plugin and let it handle the validation.
       if ($plugin = $this->getPlugin($plugin_type)) {
         $plugin->validateOptionsForm($form[$section], $form_state);
@@ -1987,8 +1987,8 @@ abstract class DisplayPluginBase extends PluginBase implements DisplayPluginInte
         break;
 
       case 'use_more':
-        $this->setOption($section, intval($form_state->getValue($section)));
-        $this->setOption('use_more_always', intval($form_state->getValue('use_more_always')));
+        $this->setOption($section, \intval($form_state->getValue($section)));
+        $this->setOption('use_more_always', \intval($form_state->getValue('use_more_always')));
         $this->setOption('use_more_text', $form_state->getValue('use_more_text'));
         break;
 
@@ -2027,7 +2027,7 @@ abstract class DisplayPluginBase extends PluginBase implements DisplayPluginInte
       case 'style_options':
         // Submit plugin options. Every section with "_options" in it, belongs to
         // a plugin type, like "style_options".
-        $plugin_type = str_replace('_options', '', $section);
+        $plugin_type = \str_replace('_options', '', $section);
         if ($plugin = $this->getPlugin($plugin_type)) {
           $plugin_options = $this->getOption($plugin_type);
           $plugin->submitOptionsForm($form[$plugin_type . '_options'], $form_state);
@@ -2149,7 +2149,7 @@ abstract class DisplayPluginBase extends PluginBase implements DisplayPluginInte
 
       // Handle query parameters where the key is part of an array.
       // For example, f[0] for facets.
-      array_walk_recursive($parts['query'], function (&$value) use ($tokens) {
+      \array_walk_recursive($parts['query'], function (&$value) use ($tokens) {
         $value = $this->viewsTokenReplace($value, $tokens);
       });
       $options = $parts;
@@ -2161,7 +2161,7 @@ abstract class DisplayPluginBase extends PluginBase implements DisplayPluginInte
     // Create URL.
     // @todo Views should expect and store a leading /. See:
     //   https://www.drupal.org/node/2423913
-    $url = UrlHelper::isExternal($path) ? Url::fromUri($path, $options) : Url::fromUserInput('/' . ltrim($path, '/'), $options);
+    $url = UrlHelper::isExternal($path) ? Url::fromUri($path, $options) : Url::fromUserInput('/' . \ltrim($path, '/'), $options);
 
     // Merge the exposed query parameters.
     if (!empty($this->view->exposed_raw_input)) {
@@ -2227,7 +2227,7 @@ abstract class DisplayPluginBase extends PluginBase implements DisplayPluginInte
     $empty = empty($view->result);
 
     // Force a render array so CSS/JS can be attached.
-    if (!is_array($element['#rows'])) {
+    if (!\is_array($element['#rows'])) {
       $element['#rows'] = ['#markup' => $element['#rows']];
     }
 
@@ -2351,7 +2351,7 @@ abstract class DisplayPluginBase extends PluginBase implements DisplayPluginInte
 
     // Iterate over all handlers. Note that at least the argument handler will
     // need to ask all its subplugins.
-    foreach (array_keys(Views::getHandlerTypes()) as $handler_type) {
+    foreach (\array_keys(Views::getHandlerTypes()) as $handler_type) {
       $handlers = $this->getHandlers($handler_type);
       foreach ($handlers as $handler) {
         if ($handler instanceof CacheableDependencyInterface) {
@@ -2416,12 +2416,12 @@ abstract class DisplayPluginBase extends PluginBase implements DisplayPluginInte
       $this->view->element['#cache'] += ['keys' => []];
       // Places like \Drupal\views\ViewExecutable::setCurrentPage() set up an
       // additional cache context.
-      $this->view->element['#cache']['keys'] = array_merge(['views', 'display', $this->view->element['#name'], $this->view->element['#display_id']], $this->view->element['#cache']['keys']);
+      $this->view->element['#cache']['keys'] = \array_merge(['views', 'display', $this->view->element['#name'], $this->view->element['#display_id']], $this->view->element['#cache']['keys']);
 
       // Add arguments to the cache key.
       if ($args) {
         $this->view->element['#cache']['keys'][] = 'args';
-        $this->view->element['#cache']['keys'][] = implode(',', $args);
+        $this->view->element['#cache']['keys'][] = \implode(',', $args);
       }
     }
     else {
@@ -2451,7 +2451,7 @@ abstract class DisplayPluginBase extends PluginBase implements DisplayPluginInte
 
     if ($args) {
       $build['#cache']['keys'][] = 'args';
-      $build['#cache']['keys'][] = implode(',', $args);
+      $build['#cache']['keys'][] = \implode(',', $args);
     }
 
     $build['#cache_properties'] = ['#view_id', '#view_display_show_admin_links', '#view_display_plugin_id'];
@@ -2512,23 +2512,23 @@ abstract class DisplayPluginBase extends PluginBase implements DisplayPluginInte
     }
     else {
       $result = $style->validate();
-      if (!empty($result) && is_array($result)) {
-        $errors = array_merge($errors, $result);
+      if (!empty($result) && \is_array($result)) {
+        $errors = \array_merge($errors, $result);
       }
     }
 
     // Validate query plugin.
     $query = $this->getPlugin('query');
     $result = $query->validate();
-    if (!empty($result) && is_array($result)) {
-      $errors = array_merge($errors, $result);
+    if (!empty($result) && \is_array($result)) {
+      $errors = \array_merge($errors, $result);
     }
 
     // Check for missing relationships.
-    $relationships = array_keys($this->getHandlers('relationship'));
+    $relationships = \array_keys($this->getHandlers('relationship'));
     foreach (ViewExecutable::getHandlerTypes() as $type => $handler_type_info) {
       foreach ($this->getHandlers($type) as $handler) {
-        if (!empty($handler->options['relationship']) && $handler->options['relationship'] != 'none' && !in_array($handler->options['relationship'], $relationships)) {
+        if (!empty($handler->options['relationship']) && $handler->options['relationship'] != 'none' && !\in_array($handler->options['relationship'], $relationships)) {
           $errors[] = $this->t('The %relationship_name relationship used in %handler_type %handler is not present in the %display_name display.', [
             '%relationship_name' => $handler->options['relationship'],
             '%handler_type' => $handler_type_info['lstitle'],
@@ -2543,8 +2543,8 @@ abstract class DisplayPluginBase extends PluginBase implements DisplayPluginInte
     foreach (ViewExecutable::getHandlerTypes() as $type => $info) {
       foreach ($this->getHandlers($type) as $handler) {
         $result = $handler->validate();
-        if (!empty($result) && is_array($result)) {
-          $errors = array_merge($errors, $result);
+        if (!empty($result) && \is_array($result)) {
+          $errors = \array_merge($errors, $result);
         }
       }
     }
@@ -2552,8 +2552,8 @@ abstract class DisplayPluginBase extends PluginBase implements DisplayPluginInte
     // Validate extenders.
     foreach ($this->extenders as $extender) {
       $result = $extender->validate();
-      if (!empty($result) && is_array($result)) {
-        $errors = array_merge($errors, $result);
+      if (!empty($result) && \is_array($result)) {
+        $errors = \array_merge($errors, $result);
       }
     }
 
@@ -2635,7 +2635,7 @@ abstract class DisplayPluginBase extends PluginBase implements DisplayPluginInte
   public function viewExposedFormBlocks() {
     // Avoid interfering with the admin forms.
     $route_name = \Drupal::routeMatch()->getRouteName();
-    if (str_starts_with($route_name, 'views_ui.')) {
+    if (\str_starts_with($route_name, 'views_ui.')) {
       return;
     }
     $this->view->initHandlers();
@@ -2682,7 +2682,7 @@ abstract class DisplayPluginBase extends PluginBase implements DisplayPluginInte
 
     // Find all defined options, that have specified a merge_defaults callback.
     foreach ($defined_options as $type => $definition) {
-      if (!isset($definition['merge_defaults']) || !is_callable($definition['merge_defaults'])) {
+      if (!isset($definition['merge_defaults']) || !\is_callable($definition['merge_defaults'])) {
         continue;
       }
       // Switch the type to singular, if it's a plural handler.
@@ -2690,7 +2690,7 @@ abstract class DisplayPluginBase extends PluginBase implements DisplayPluginInte
         $type = $type_map[$type];
       }
 
-      call_user_func($definition['merge_defaults'], $type);
+      \call_user_func($definition['merge_defaults'], $type);
     }
   }
 

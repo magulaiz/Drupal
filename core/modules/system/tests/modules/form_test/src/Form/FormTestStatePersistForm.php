@@ -33,7 +33,7 @@ class FormTestStatePersistForm extends FormBase {
 
     $form['submit'] = [
       '#type' => 'submit',
-      '#value' => t('Submit'),
+      '#value' => \t('Submit'),
     ];
     return $form;
   }

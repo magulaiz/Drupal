@@ -251,7 +251,7 @@ class CommentFieldAccessTest extends EntityKernelTestBase {
       $this->assertEquals(
         $may_update,
         $set['user']->hasPermission('administer comments') || ($set['user']->hasPermission('edit own comments') && $set['user']->id() == $set['comment']->getOwnerId()),
-        sprintf('User %s %s update field subject on comment %s',
+        \sprintf('User %s %s update field subject on comment %s',
           $set['user']->getAccountName(),
           $may_update ? 'can' : 'cannot',
           $set['comment']->getSubject(),
@@ -277,7 +277,7 @@ class CommentFieldAccessTest extends EntityKernelTestBase {
         $this->assertEquals(
           $may_view,
           $view_access,
-          sprintf('User %s %s view field %s on comment %s',
+          \sprintf('User %s %s view field %s on comment %s',
             $set['user']->getAccountName(),
             $state,
             $field,
@@ -286,7 +286,7 @@ class CommentFieldAccessTest extends EntityKernelTestBase {
         );
         $this->assertFalse(
           $may_update,
-          sprintf('User %s %s update field %s on comment %s',
+          \sprintf('User %s %s update field %s on comment %s',
             $set['user']->getAccountName(),
             $may_update ? 'can' : 'cannot',
             $field,
@@ -304,7 +304,7 @@ class CommentFieldAccessTest extends EntityKernelTestBase {
         $may_update = $set['comment']->{$field}->access('edit', $set['user']);
         $this->assertTrue(
           $may_view,
-          sprintf('User %s can view field %s on comment %s',
+          \sprintf('User %s can view field %s on comment %s',
             $set['user']->getAccountName(),
             $field,
             $set['comment']->getSubject(),
@@ -314,7 +314,7 @@ class CommentFieldAccessTest extends EntityKernelTestBase {
         $this->assertEquals(
           $expected,
           $may_update,
-          sprintf('User %s %s update field %s on comment %s',
+          \sprintf('User %s %s update field %s on comment %s',
             $set['user']->getAccountName(),
             $expected ? 'can' : 'cannot',
             $field,
@@ -338,7 +338,7 @@ class CommentFieldAccessTest extends EntityKernelTestBase {
             $set['user']->hasPermission('post comments') &&
             $set['comment']->getFieldName() == 'comment_other'
           ),
-          sprintf('User %s %s update field %s on comment %s',
+          \sprintf('User %s %s update field %s on comment %s',
             $set['user']->getAccountName(),
             $may_update ? 'can' : 'cannot',
             $field,

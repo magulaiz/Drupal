@@ -36,7 +36,7 @@ class TestController extends ControllerBase {
     else {
       $module_message .= 'not installed';
     }
-    $function_message = $function . ': ' . var_export(function_exists($function), TRUE);
+    $function_message = $function . ': ' . \var_export(\function_exists($function), TRUE);
 
     return [
       '#theme' => 'item_list',
@@ -51,11 +51,11 @@ class TestController extends ControllerBase {
    *   A render array.
    */
   public function containerReset() {
-    $this->messenger()->addMessage(t('Before the container was reset.'));
+    $this->messenger()->addMessage(\t('Before the container was reset.'));
     $this->kernel->resetContainer();
     // The container has been reset, therefore we need to get the new service.
     $this->messenger = NULL;
-    $this->messenger()->addMessage(t('After the container was reset.'));
+    $this->messenger()->addMessage(\t('After the container was reset.'));
     return [];
   }
 

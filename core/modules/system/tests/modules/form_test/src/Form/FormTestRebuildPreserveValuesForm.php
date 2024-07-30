@@ -28,17 +28,17 @@ class FormTestRebuildPreserveValuesForm extends FormBase {
     $form = [
       'checkbox_1_default_off' => [
         '#type' => 'checkbox',
-        '#title' => t('This checkbox defaults to unchecked'),
+        '#title' => \t('This checkbox defaults to unchecked'),
         '#default_value' => FALSE,
       ],
       'checkbox_1_default_on' => [
         '#type' => 'checkbox',
-        '#title' => t('This checkbox defaults to checked'),
+        '#title' => \t('This checkbox defaults to checked'),
         '#default_value' => TRUE,
       ],
       'text_1' => [
         '#type' => 'textfield',
-        '#title' => t('This textfield has a non-empty default value.'),
+        '#title' => \t('This textfield has a non-empty default value.'),
         '#default_value' => 'DEFAULT 1',
       ],
     ];
@@ -57,17 +57,17 @@ class FormTestRebuildPreserveValuesForm extends FormBase {
       $form += [
         'checkbox_2_default_off' => [
           '#type' => 'checkbox',
-          '#title' => t('This checkbox defaults to unchecked'),
+          '#title' => \t('This checkbox defaults to unchecked'),
           '#default_value' => FALSE,
         ],
         'checkbox_2_default_on' => [
           '#type' => 'checkbox',
-          '#title' => t('This checkbox defaults to checked'),
+          '#title' => \t('This checkbox defaults to checked'),
           '#default_value' => TRUE,
         ],
         'text_2' => [
           '#type' => 'textfield',
-          '#title' => t('This textfield has a non-empty default value.'),
+          '#title' => \t('This textfield has a non-empty default value.'),
           '#default_value' => 'DEFAULT 2',
         ],
       ];
@@ -94,7 +94,7 @@ class FormTestRebuildPreserveValuesForm extends FormBase {
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
     // Finish the workflow. Do not rebuild.
-    $this->messenger()->addStatus($this->t('Form values: %values', ['%values' => var_export($form_state->getValues(), TRUE)]));
+    $this->messenger()->addStatus($this->t('Form values: %values', ['%values' => \var_export($form_state->getValues(), TRUE)]));
   }
 
 }

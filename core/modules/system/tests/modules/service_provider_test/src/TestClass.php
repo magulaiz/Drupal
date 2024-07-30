@@ -32,7 +32,7 @@ class TestClass implements EventSubscriberInterface, DestructableInterface {
    * A simple kernel listener method.
    */
   public function onKernelRequestTest(RequestEvent $event) {
-    \Drupal::messenger()->addStatus(t('The service_provider_test event subscriber fired!'));
+    \Drupal::messenger()->addStatus(\t('The service_provider_test event subscriber fired!'));
   }
 
   /**

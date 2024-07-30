@@ -82,7 +82,7 @@ class TwigSettingsTest extends BrowserTestBase {
    * Ensures Twig template cache setting can be overridden.
    */
   public function testTwigCacheOverride(): void {
-    $extension = twig_extension();
+    $extension = \twig_extension();
     $theme_installer = $this->container->get('theme_installer');
     $theme_installer->install(['test_theme']);
     $this->config('system.theme')->set('default', 'test_theme')->save();

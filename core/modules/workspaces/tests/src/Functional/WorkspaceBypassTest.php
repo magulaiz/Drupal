@@ -43,7 +43,7 @@ class WorkspaceBypassTest extends BrowserTestBase {
     $this->createContentType(['type' => 'test', 'label' => 'Test']);
     $this->setupWorkspaceSwitcherBlock();
 
-    $coach = $this->drupalCreateUser(array_merge($permissions, ['create test content']));
+    $coach = $this->drupalCreateUser(\array_merge($permissions, ['create test content']));
 
     // Login as a limited-access user and create a workspace.
     $this->drupalLogin($coach);
@@ -60,7 +60,7 @@ class WorkspaceBypassTest extends BrowserTestBase {
     // Create a new user that should be able to edit anything in the Bears
     // workspace.
     $this->switchToLive();
-    $lombardi = $this->drupalCreateUser(array_merge($permissions, ['view any workspace']));
+    $lombardi = $this->drupalCreateUser(\array_merge($permissions, ['view any workspace']));
     $this->drupalLogin($lombardi);
     $this->switchToWorkspace($bears);
 

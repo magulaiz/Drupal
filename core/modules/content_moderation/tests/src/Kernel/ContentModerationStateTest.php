@@ -643,7 +643,7 @@ class ContentModerationStateTest extends KernelTestBase {
    */
   public function testWorkflowNonConfigBundleDependencies(): void {
     // Create a bundle not based on any particular configuration.
-    entity_test_create_bundle('test_bundle');
+    \entity_test_create_bundle('test_bundle');
 
     $workflow = $this->createEditorialWorkflow();
     $workflow->getTypePlugin()->addEntityTypeAndBundle('entity_test', 'test_bundle');
@@ -662,7 +662,7 @@ class ContentModerationStateTest extends KernelTestBase {
 
     // Delete the test bundle to ensure the workflow entity responds
     // appropriately.
-    entity_test_delete_bundle('test_bundle');
+    \entity_test_delete_bundle('test_bundle');
 
     $workflow = Workflow::load('editorial');
     $this->assertEquals([], $workflow->getTypePlugin()->getBundlesForEntityType('entity_test'));

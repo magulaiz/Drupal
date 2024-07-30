@@ -112,7 +112,7 @@ class AssetResolver implements AssetResolverInterface {
     if ($libraries) {
       $libraries = $this->libraryDependencyResolver->getMinimalRepresentativeSubset($libraries);
     }
-    return array_diff(
+    return \array_diff(
       $this->libraryDependencyResolver->getLibrariesWithDependencies($libraries),
       $this->libraryDependencyResolver->getLibrariesWithDependencies($assets->getAlreadyLoadedLibraries())
     );
@@ -127,13 +127,13 @@ class AssetResolver implements AssetResolverInterface {
     }
     $libraries_to_load = $this->getLibrariesToLoad($assets);
     foreach ($libraries_to_load as $key => $library) {
-      [$extension, $name] = explode('/', $library, 2);
+      [$extension, $name] = \explode('/', $library, 2);
       $definition = $this->libraryDiscovery->getLibraryByName($extension, $name);
       if (empty($definition['css'])) {
         unset($libraries_to_load[$key]);
       }
     }
-    $libraries_to_load = array_values($libraries_to_load);
+    $libraries_to_load = \array_values($libraries_to_load);
     if (!$libraries_to_load) {
       return [];
     }
@@ -143,7 +143,7 @@ class AssetResolver implements AssetResolverInterface {
     $theme_info = $this->themeManager->getActiveTheme();
     // Add the theme name to the cache key since themes may implement
     // hook_library_info_alter().
-    $cid = 'css:' . $theme_info->getName() . ':' . $language->getId() . Crypt::hashBase64(serialize($libraries_to_load)) . (int) $optimize;
+    $cid = 'css:' . $theme_info->getName() . ':' . $language->getId() . Crypt::hashBase64(\serialize($libraries_to_load)) . (int) $optimize;
     if ($cached = $this->cache->get($cid)) {
       return $cached->data;
     }
@@ -158,7 +158,7 @@ class AssetResolver implements AssetResolverInterface {
     ];
 
     foreach ($libraries_to_load as $key => $library) {
-      [$extension, $name] = explode('/', $library, 2);
+      [$extension, $name] = \explode('/', $library, 2);
       $definition = $this->libraryDiscovery->getLibraryByName($extension, $name);
       foreach ($definition['css'] as $options) {
         $options += $default_options;
@@ -166,13 +166,13 @@ class AssetResolver implements AssetResolverInterface {
         $options['license'] = $definition['license'];
 
         // Files with a query string cannot be preprocessed.
-        if ($options['type'] === 'file' && $options['preprocess'] && str_contains($options['data'], '?')) {
+        if ($options['type'] === 'file' && $options['preprocess'] && \str_contains($options['data'], '?')) {
           $options['preprocess'] = FALSE;
         }
 
         // Always add a tiny value to the weight, to conserve the insertion
         // order.
-        $options['weight'] += count($css) / 30000;
+        $options['weight'] += \count($css) / 30000;
 
         // CSS files are being keyed by the full path.
         $css[$options['data']] = $options;
@@ -185,10 +185,10 @@ class AssetResolver implements AssetResolverInterface {
 
     if (!empty($css)) {
       // Sort CSS items, so that they appear in the correct order.
-      uasort($css, [static::class, 'sort']);
+      \uasort($css, [static::class, 'sort']);
 
       if ($optimize) {
-        $css = \Drupal::service('asset.css.collection_optimizer')->optimize($css, array_values($libraries_to_load), $language);
+        $css = \Drupal::service('asset.css.collection_optimizer')->optimize($css, \array_values($libraries_to_load), $language);
       }
     }
     $this->cache->set($cid, $css, CacheBackendInterface::CACHE_PERMANENT, ['library_info']);
@@ -212,7 +212,7 @@ class AssetResolver implements AssetResolverInterface {
     $settings = [];
 
     foreach ($this->getLibrariesToLoad($assets) as $library) {
-      [$extension, $name] = explode('/', $library, 2);
+      [$extension, $name] = \explode('/', $library, 2);
       $definition = $this->libraryDiscovery->getLibraryByName($extension, $name);
       if (isset($definition['drupalSettings'])) {
         $settings = NestedArray::mergeDeepArray([$settings, $definition['drupalSettings']], TRUE);
@@ -240,7 +240,7 @@ class AssetResolver implements AssetResolverInterface {
     // load.
     $header_js_libraries = [];
     foreach ($libraries_to_load as $key => $library) {
-      [$extension, $name] = explode('/', $library, 2);
+      [$extension, $name] = \explode('/', $library, 2);
       $definition = $this->libraryDiscovery->getLibraryByName($extension, $name);
       if (empty($definition['js'])) {
         unset($libraries_to_load[$key]);
@@ -250,7 +250,7 @@ class AssetResolver implements AssetResolverInterface {
         $header_js_libraries[] = $library;
       }
     }
-    $libraries_to_load = array_values($libraries_to_load);
+    $libraries_to_load = \array_values($libraries_to_load);
 
     // If all the libraries to load contained only CSS, there is nothing further
     // to do here, so return early.
@@ -261,7 +261,7 @@ class AssetResolver implements AssetResolverInterface {
     // Add the theme name to the cache key since themes may implement
     // hook_library_info_alter(). Additionally add the current language to
     // support translation of JavaScript files via hook_js_alter().
-    $cid = 'js:' . $theme_info->getName() . ':' . $language->getId() . ':' . Crypt::hashBase64(serialize($libraries_to_load)) . (int) (count($assets->getSettings()) > 0) . (int) $optimize;
+    $cid = 'js:' . $theme_info->getName() . ':' . $language->getId() . ':' . Crypt::hashBase64(\serialize($libraries_to_load)) . (int) (\count($assets->getSettings()) > 0) . (int) $optimize;
 
     if ($cached = $this->cache->get($cid)) {
       [$js_assets_header, $js_assets_footer, $settings, $settings_in_header] = $cached->data;
@@ -284,7 +284,7 @@ class AssetResolver implements AssetResolverInterface {
       $header_js_libraries = $this->libraryDependencyResolver->getLibrariesWithDependencies($header_js_libraries);
 
       foreach ($libraries_to_load as $library) {
-        [$extension, $name] = explode('/', $library, 2);
+        [$extension, $name] = \explode('/', $library, 2);
         $definition = $this->libraryDiscovery->getLibraryByName($extension, $name);
         foreach ($definition['js'] as $options) {
           $options += $default_options;
@@ -293,7 +293,7 @@ class AssetResolver implements AssetResolverInterface {
 
           // 'scope' is a calculated option, based on which libraries are
           // marked to be loaded from the header (see above).
-          $options['scope'] = in_array($library, $header_js_libraries) ? 'header' : 'footer';
+          $options['scope'] = \in_array($library, $header_js_libraries) ? 'header' : 'footer';
 
           // Preprocess can only be set if caching is enabled and no
           // attributes are set.
@@ -301,7 +301,7 @@ class AssetResolver implements AssetResolverInterface {
 
           // Always add a tiny value to the weight, to conserve the insertion
           // order.
-          $options['weight'] += count($javascript) / 30000;
+          $options['weight'] += \count($javascript) / 30000;
 
           // Local and external files must keep their name as the associative
           // key so the same JavaScript file is not added twice.
@@ -314,7 +314,7 @@ class AssetResolver implements AssetResolverInterface {
       $this->themeManager->alter('js', $javascript, $assets, $language);
 
       // Sort JavaScript assets, so that they appear in the correct order.
-      uasort($javascript, [static::class, 'sort']);
+      \uasort($javascript, [static::class, 'sort']);
 
       // Prepare the return value: filter JavaScript assets per scope.
       $js_assets_header = [];
@@ -338,8 +338,8 @@ class AssetResolver implements AssetResolverInterface {
       // loaded, get the JavaScript settings assets, and convert them into a
       // single "regular" JavaScript asset.
       $libraries_to_load = $this->getLibrariesToLoad($assets);
-      $settings_required = in_array('core/drupalSettings', $libraries_to_load) || in_array('core/drupalSettings', $this->libraryDependencyResolver->getLibrariesWithDependencies($assets->getAlreadyLoadedLibraries()));
-      $settings_have_changed = count($libraries_to_load) > 0 || count($assets->getSettings()) > 0;
+      $settings_required = \in_array('core/drupalSettings', $libraries_to_load) || \in_array('core/drupalSettings', $this->libraryDependencyResolver->getLibrariesWithDependencies($assets->getAlreadyLoadedLibraries()));
+      $settings_have_changed = \count($libraries_to_load) > 0 || \count($assets->getSettings()) > 0;
 
       // Initialize settings to FALSE since they are not needed by default. This
       // distinguishes between an empty array which must still allow
@@ -352,7 +352,7 @@ class AssetResolver implements AssetResolverInterface {
           $hook($settings, $assets);
         });
       }
-      $settings_in_header = in_array('core/drupalSettings', $header_js_libraries);
+      $settings_in_header = \in_array('core/drupalSettings', $header_js_libraries);
       $this->cache->set($cid, [$js_assets_header, $js_assets_footer, $settings, $settings_in_header], CacheBackendInterface::CACHE_PERMANENT, ['library_info']);
     }
 

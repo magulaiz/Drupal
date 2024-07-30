@@ -41,7 +41,7 @@ class StatusReport extends RenderElementBase {
         $requirement_severity = (int) $requirement['severity'] === REQUIREMENT_OK ? REQUIREMENT_INFO : (int) $requirement['severity'];
         $severity = $severities[$requirement_severity];
       }
-      elseif (defined('MAINTENANCE_MODE') && MAINTENANCE_MODE == 'install') {
+      elseif (\defined('MAINTENANCE_MODE') && MAINTENANCE_MODE == 'install') {
         $severity = $severities[REQUIREMENT_OK];
       }
 
@@ -51,8 +51,8 @@ class StatusReport extends RenderElementBase {
     }
 
     // Order the grouped requirements by a set order.
-    $order = array_flip($element['#priorities']);
-    uksort($grouped_requirements, function ($a, $b) use ($order) {
+    $order = \array_flip($element['#priorities']);
+    \uksort($grouped_requirements, function ($a, $b) use ($order) {
       return $order[$a] <=> $order[$b];
     });
 
@@ -69,19 +69,19 @@ class StatusReport extends RenderElementBase {
   public static function getSeverities() {
     return [
       REQUIREMENT_INFO => [
-        'title' => t('Checked', [], ['context' => 'Examined']),
+        'title' => \t('Checked', [], ['context' => 'Examined']),
         'status' => 'checked',
       ],
       REQUIREMENT_OK => [
-        'title' => t('OK'),
+        'title' => \t('OK'),
         'status' => 'ok',
       ],
       REQUIREMENT_WARNING => [
-        'title' => t('Warnings found'),
+        'title' => \t('Warnings found'),
         'status' => 'warning',
       ],
       REQUIREMENT_ERROR => [
-        'title' => t('Errors found'),
+        'title' => \t('Errors found'),
         'status' => 'error',
       ],
     ];

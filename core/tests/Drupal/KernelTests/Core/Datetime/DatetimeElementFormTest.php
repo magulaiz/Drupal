@@ -110,7 +110,7 @@ class DatetimeElementFormTest extends KernelTestBase implements FormInterface, T
 
     $form['submit'] = [
       '#type' => 'submit',
-      '#value' => t('Submit'),
+      '#value' => \t('Submit'),
     ];
 
     return $form;
@@ -182,12 +182,12 @@ class DatetimeElementFormTest extends KernelTestBase implements FormInterface, T
       'untrusted date' => [
         'datetimeDateCallback',
         'datetimeTimeCallbackTrusted',
-        sprintf('DateTime element #date_date_callbacks callbacks must be methods of a class that implements \Drupal\Core\Security\TrustedCallbackInterface or be an anonymous function. The callback was %s. See https://www.drupal.org/node/3217966', Variable::callableToString([static::class, 'datetimeDateCallback'])),
+        \sprintf('DateTime element #date_date_callbacks callbacks must be methods of a class that implements \Drupal\Core\Security\TrustedCallbackInterface or be an anonymous function. The callback was %s. See https://www.drupal.org/node/3217966', Variable::callableToString([static::class, 'datetimeDateCallback'])),
       ],
       'untrusted time' => [
         'datetimeDateCallbackTrusted',
         'datetimeTimeCallback',
-        sprintf('DateTime element #date_time_callbacks callbacks must be methods of a class that implements \Drupal\Core\Security\TrustedCallbackInterface or be an anonymous function. The callback was %s. See https://www.drupal.org/node/3217966', Variable::callableToString([static::class, 'datetimeTimeCallback'])),
+        \sprintf('DateTime element #date_time_callbacks callbacks must be methods of a class that implements \Drupal\Core\Security\TrustedCallbackInterface or be an anonymous function. The callback was %s. See https://www.drupal.org/node/3217966', Variable::callableToString([static::class, 'datetimeTimeCallback'])),
       ],
     ];
   }
@@ -202,7 +202,7 @@ class DatetimeElementFormTest extends KernelTestBase implements FormInterface, T
     $this->assertEquals('Australia/Sydney', $form['datetime_element']['#date_timezone']);
 
     // Mimic a user with a different timezone than Australia/Sydney.
-    date_default_timezone_set('UTC');
+    \date_default_timezone_set('UTC');
 
     $form = \Drupal::formBuilder()->getForm($this);
     $this->render($form);

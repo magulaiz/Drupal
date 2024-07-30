@@ -56,7 +56,7 @@ class SearchMatchTest extends KernelTestBase {
     $this->config('search.settings')->set('index.minimum_word_size', 3)->save();
 
     $search_index = \Drupal::service('search.index');
-    assert($search_index instanceof SearchIndexInterface);
+    \assert($search_index instanceof SearchIndexInterface);
     for ($i = 1; $i <= 7; ++$i) {
       $search_index->index(static::SEARCH_TYPE, $i, LanguageInterface::LANGCODE_NOT_SPECIFIED, $this->getText($i));
     }
@@ -86,8 +86,8 @@ class SearchMatchTest extends KernelTestBase {
    *   7  am minim veniam es cillum dolore eu
    */
   public function getText($n) {
-    $words = explode(' ', "Ipsum dolore sit am. Ut enim am minim veniam. Es cillum dolore eu.");
-    return implode(' ', array_slice($words, $n - 1, $n));
+    $words = \explode(' ', "Ipsum dolore sit am. Ut enim am minim veniam. Es cillum dolore eu.");
+    return \implode(' ', \array_slice($words, $n - 1, $n));
   }
 
   /**
@@ -101,8 +101,8 @@ class SearchMatchTest extends KernelTestBase {
    *   12 over from germany swimming
    */
   public function getText2($n) {
-    $words = explode(' ', "Dear King Philip came over from Germany swimming.");
-    return implode(' ', array_slice($words, $n - 1, $n));
+    $words = \explode(' ', "Dear King Philip came over from Germany swimming.");
+    return \implode(' ', \array_slice($words, $n - 1, $n));
   }
 
   /**
@@ -235,8 +235,8 @@ class SearchMatchTest extends KernelTestBase {
     }
 
     // Compare $results and $found.
-    sort($found);
-    sort($results);
+    \sort($found);
+    \sort($results);
     $this->assertEquals($found, $results, "Query matching '$query'");
   }
 
@@ -254,11 +254,11 @@ class SearchMatchTest extends KernelTestBase {
 
     // Check order.
     $sorted = $scores;
-    sort($sorted);
-    $this->assertEquals($scores, array_reverse($sorted), "Query order '$query'");
+    \sort($sorted);
+    $this->assertEquals($scores, \array_reverse($sorted), "Query order '$query'");
 
     // Check range.
-    $this->assertTrue(!count($scores) || (min($scores) > 0.0 && max($scores) <= 1.0001), "Query scoring '$query'");
+    $this->assertTrue(!\count($scores) || (\min($scores) > 0.0 && \max($scores) <= 1.0001), "Query scoring '$query'");
   }
 
 }

@@ -92,7 +92,7 @@ class NodeListBuilder extends EntityListBuilder {
     /** @var \Drupal\node\NodeInterface $entity */
     $mark = [
       '#theme' => 'mark',
-      '#status' => node_mark($entity->id(), $entity->getChangedTime()),
+      '#status' => \node_mark($entity->id(), $entity->getChangedTime()),
     ];
     $row['title']['data'] = [
       '#type' => 'link',
@@ -100,7 +100,7 @@ class NodeListBuilder extends EntityListBuilder {
       '#suffix' => ' ' . \Drupal::service('renderer')->render($mark),
       '#url' => $entity->toUrl(),
     ];
-    $row['type'] = node_get_type_label($entity);
+    $row['type'] = \node_get_type_label($entity);
     $row['author']['data'] = [
       '#theme' => 'username',
       '#account' => $entity->getOwner(),

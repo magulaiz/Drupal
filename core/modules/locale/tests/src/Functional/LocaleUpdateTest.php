@@ -81,7 +81,7 @@ class LocaleUpdateTest extends LocaleUpdateBase {
 
     // Get status of translation sources at local file system.
     $this->drupalGet('admin/reports/translations/check');
-    $result = locale_translation_get_status();
+    $result = \locale_translation_get_status();
     $this->assertEquals(LOCALE_TRANSLATION_LOCAL, $result['contrib_module_one']['de']->type, 'Translation of contrib_module_one found');
     $this->assertEquals($this->timestampOld, $result['contrib_module_one']['de']->timestamp, 'Translation timestamp found');
     $this->assertEquals(LOCALE_TRANSLATION_LOCAL, $result['contrib_module_two']['de']->type, 'Translation of contrib_module_two found');
@@ -98,7 +98,7 @@ class LocaleUpdateTest extends LocaleUpdateBase {
 
     // Get status of translation sources at both local and remote locations.
     $this->drupalGet('admin/reports/translations/check');
-    $result = locale_translation_get_status();
+    $result = \locale_translation_get_status();
     $this->assertEquals(LOCALE_TRANSLATION_REMOTE, $result['contrib_module_one']['de']->type, 'Translation of contrib_module_one found');
     $this->assertEquals($this->timestampNew, $result['contrib_module_one']['de']->timestamp, 'Translation timestamp found');
     $this->assertEquals(LOCALE_TRANSLATION_LOCAL, $result['contrib_module_two']['de']->type, 'Translation of contrib_module_two found');
@@ -148,7 +148,7 @@ class LocaleUpdateTest extends LocaleUpdateBase {
     $this->submitForm([], 'Update translations');
 
     // Check if the translation has been updated, using the status cache.
-    $status = locale_translation_get_status();
+    $status = \locale_translation_get_status();
     $this->assertEquals(LOCALE_TRANSLATION_CURRENT, $status['contrib_module_one']['de']->type, 'Translation of contrib_module_one found');
     $this->assertEquals(LOCALE_TRANSLATION_CURRENT, $status['contrib_module_two']['de']->type, 'Translation of contrib_module_two found');
     $this->assertEquals(LOCALE_TRANSLATION_CURRENT, $status['contrib_module_three']['de']->type, 'Translation of contrib_module_three found');
@@ -156,8 +156,8 @@ class LocaleUpdateTest extends LocaleUpdateBase {
     // Check the new translation status.
     // The static cache needs to be flushed first to get the most recent data
     // from the database. The function was called earlier during this test.
-    drupal_static_reset('locale_translation_get_file_history');
-    $history = locale_translation_get_file_history();
+    \drupal_static_reset('locale_translation_get_file_history');
+    $history = \locale_translation_get_file_history();
     // Verify that the translation of contrib_module_one is imported and
     // updated.
     $this->assertGreaterThanOrEqual($this->timestampNow, $history['contrib_module_one']['de']->timestamp);
@@ -170,13 +170,13 @@ class LocaleUpdateTest extends LocaleUpdateBase {
 
     // Check whether existing translations have (not) been overwritten.
     // cSpell:disable
-    $this->assertEquals('Januar_1', t('January', [], ['langcode' => 'de']), 'Translation of January');
-    $this->assertEquals('Februar_2', t('February', [], ['langcode' => 'de']), 'Translation of February');
-    $this->assertEquals('Marz_2', t('March', [], ['langcode' => 'de']), 'Translation of March');
-    $this->assertEquals('April_2', t('April', [], ['langcode' => 'de']), 'Translation of April');
-    $this->assertEquals('Mai_customized', t('May', [], ['langcode' => 'de']), 'Translation of May');
-    $this->assertEquals('Juni', t('June', [], ['langcode' => 'de']), 'Translation of June');
-    $this->assertEquals('Montag', t('Monday', [], ['langcode' => 'de']), 'Translation of Monday');
+    $this->assertEquals('Januar_1', \t('January', [], ['langcode' => 'de']), 'Translation of January');
+    $this->assertEquals('Februar_2', \t('February', [], ['langcode' => 'de']), 'Translation of February');
+    $this->assertEquals('Marz_2', \t('March', [], ['langcode' => 'de']), 'Translation of March');
+    $this->assertEquals('April_2', \t('April', [], ['langcode' => 'de']), 'Translation of April');
+    $this->assertEquals('Mai_customized', \t('May', [], ['langcode' => 'de']), 'Translation of May');
+    $this->assertEquals('Juni', \t('June', [], ['langcode' => 'de']), 'Translation of June');
+    $this->assertEquals('Montag', \t('Monday', [], ['langcode' => 'de']), 'Translation of Monday');
     // cSpell:enable
   }
 
@@ -209,7 +209,7 @@ class LocaleUpdateTest extends LocaleUpdateBase {
     $this->submitForm([], 'Update translations');
 
     // Check if the translation has been updated, using the status cache.
-    $status = locale_translation_get_status();
+    $status = \locale_translation_get_status();
     $this->assertEquals(LOCALE_TRANSLATION_CURRENT, $status['contrib_module_one']['de']->type, 'Translation of contrib_module_one found');
     $this->assertEquals(LOCALE_TRANSLATION_CURRENT, $status['contrib_module_two']['de']->type, 'Translation of contrib_module_two found');
     $this->assertEquals(LOCALE_TRANSLATION_CURRENT, $status['contrib_module_three']['de']->type, 'Translation of contrib_module_three found');
@@ -217,8 +217,8 @@ class LocaleUpdateTest extends LocaleUpdateBase {
     // Check the new translation status.
     // The static cache needs to be flushed first to get the most recent data
     // from the database. The function was called earlier during this test.
-    drupal_static_reset('locale_translation_get_file_history');
-    $history = locale_translation_get_file_history();
+    \drupal_static_reset('locale_translation_get_file_history');
+    $history = \locale_translation_get_file_history();
     // Verify that the translation of contrib_module_one is imported.
     $this->assertGreaterThanOrEqual($this->timestampMedium, $history['contrib_module_one']['de']->timestamp);
     $this->assertEquals($this->timestampMedium, $history['contrib_module_one']['de']->last_checked, 'Translation of contrib_module_one is updated');
@@ -230,13 +230,13 @@ class LocaleUpdateTest extends LocaleUpdateBase {
 
     // Check whether existing translations have (not) been overwritten.
     // cSpell:disable
-    $this->assertEquals('Januar_customized', t('January', [], ['langcode' => 'de']), 'Translation of January');
-    $this->assertEquals('Februar_2', t('February', [], ['langcode' => 'de']), 'Translation of February');
-    $this->assertEquals('Marz_2', t('March', [], ['langcode' => 'de']), 'Translation of March');
-    $this->assertEquals('April_2', t('April', [], ['langcode' => 'de']), 'Translation of April');
-    $this->assertEquals('Mai_customized', t('May', [], ['langcode' => 'de']), 'Translation of May');
-    $this->assertEquals('Juni', t('June', [], ['langcode' => 'de']), 'Translation of June');
-    $this->assertEquals('Montag', t('Monday', [], ['langcode' => 'de']), 'Translation of Monday');
+    $this->assertEquals('Januar_customized', \t('January', [], ['langcode' => 'de']), 'Translation of January');
+    $this->assertEquals('Februar_2', \t('February', [], ['langcode' => 'de']), 'Translation of February');
+    $this->assertEquals('Marz_2', \t('March', [], ['langcode' => 'de']), 'Translation of March');
+    $this->assertEquals('April_2', \t('April', [], ['langcode' => 'de']), 'Translation of April');
+    $this->assertEquals('Mai_customized', \t('May', [], ['langcode' => 'de']), 'Translation of May');
+    $this->assertEquals('Juni', \t('June', [], ['langcode' => 'de']), 'Translation of June');
+    $this->assertEquals('Montag', \t('Monday', [], ['langcode' => 'de']), 'Translation of Monday');
     // cSpell:enable
   }
 
@@ -270,13 +270,13 @@ class LocaleUpdateTest extends LocaleUpdateBase {
 
     // Check whether existing translations have (not) been overwritten.
     // cSpell:disable
-    $this->assertEquals('Januar_customized', t('January', [], ['langcode' => 'de']), 'Translation of January');
-    $this->assertEquals('Februar_customized', t('February', [], ['langcode' => 'de']), 'Translation of February');
-    $this->assertEquals('Marz_2', t('March', [], ['langcode' => 'de']), 'Translation of March');
-    $this->assertEquals('April_2', t('April', [], ['langcode' => 'de']), 'Translation of April');
-    $this->assertEquals('Mai_customized', t('May', [], ['langcode' => 'de']), 'Translation of May');
-    $this->assertEquals('Juni', t('June', [], ['langcode' => 'de']), 'Translation of June');
-    $this->assertEquals('Montag', t('Monday', [], ['langcode' => 'de']), 'Translation of Monday');
+    $this->assertEquals('Januar_customized', \t('January', [], ['langcode' => 'de']), 'Translation of January');
+    $this->assertEquals('Februar_customized', \t('February', [], ['langcode' => 'de']), 'Translation of February');
+    $this->assertEquals('Marz_2', \t('March', [], ['langcode' => 'de']), 'Translation of March');
+    $this->assertEquals('April_2', \t('April', [], ['langcode' => 'de']), 'Translation of April');
+    $this->assertEquals('Mai_customized', \t('May', [], ['langcode' => 'de']), 'Translation of May');
+    $this->assertEquals('Juni', \t('June', [], ['langcode' => 'de']), 'Translation of June');
+    $this->assertEquals('Montag', \t('Monday', [], ['langcode' => 'de']), 'Translation of Monday');
     // cSpell:enable
   }
 
@@ -350,9 +350,9 @@ class LocaleUpdateTest extends LocaleUpdateBase {
     $this->submitForm([], 'Uninstall');
 
     // Check if the file data is removed from the database.
-    $history = locale_translation_get_file_history();
+    $history = \locale_translation_get_file_history();
     $this->assertFalse(isset($history['locale_test_translate']), 'Project removed from the file history');
-    $projects = locale_translation_get_projects();
+    $projects = \locale_translation_get_projects();
     $this->assertFalse(isset($projects['locale_test_translate']), 'Project removed from the project list');
   }
 

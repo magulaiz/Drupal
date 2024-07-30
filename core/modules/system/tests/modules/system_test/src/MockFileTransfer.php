@@ -24,7 +24,7 @@ class MockFileTransfer {
     $form = [];
     $form['system_test_username'] = [
       '#type' => 'textfield',
-      '#title' => t('System Test Username'),
+      '#title' => \t('System Test Username'),
     ];
     return $form;
   }

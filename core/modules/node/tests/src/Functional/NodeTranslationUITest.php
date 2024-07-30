@@ -133,7 +133,7 @@ class NodeTranslationUITest extends ContentTranslationUITestBase {
    * {@inheritdoc}
    */
   protected function getTranslatorPermissions(): array {
-    return array_merge(parent::getTranslatorPermissions(), ['administer nodes', "edit any $this->bundle content"]);
+    return \array_merge(parent::getTranslatorPermissions(), ['administer nodes', "edit any $this->bundle content"]);
   }
 
   /**
@@ -147,7 +147,7 @@ class NodeTranslationUITest extends ContentTranslationUITestBase {
    * {@inheritdoc}
    */
   protected function getAdministratorPermissions(): array {
-    return array_merge(parent::getAdministratorPermissions(), ['access administration pages', 'administer content types', 'administer node fields', 'access content overview', 'bypass node access', 'administer languages', 'administer themes', 'view the administration theme']);
+    return \array_merge(parent::getAdministratorPermissions(), ['access administration pages', 'administer content types', 'administer node fields', 'access content overview', 'bypass node access', 'administer languages', 'administer themes', 'view the administration theme']);
   }
 
   /**
@@ -211,9 +211,9 @@ class NodeTranslationUITest extends ContentTranslationUITestBase {
       $user = $this->drupalCreateUser();
       $values[$langcode] = [
         'uid' => $user->id(),
-        'created' => \Drupal::time()->getRequestTime() - mt_rand(0, 1000),
-        'sticky' => (bool) mt_rand(0, 1),
-        'promote' => (bool) mt_rand(0, 1),
+        'created' => \Drupal::time()->getRequestTime() - \mt_rand(0, 1000),
+        'sticky' => (bool) \mt_rand(0, 1),
+        'promote' => (bool) \mt_rand(0, 1),
       ];
       /** @var \Drupal\Core\Datetime\DateFormatterInterface $date_formatter */
       $date_formatter = $this->container->get('date.formatter');
@@ -320,7 +320,7 @@ class NodeTranslationUITest extends ContentTranslationUITestBase {
     $node->setPromoted(TRUE);
 
     // Create translations.
-    foreach (array_diff($this->langcodes, [$default_langcode]) as $langcode) {
+    foreach (\array_diff($this->langcodes, [$default_langcode]) as $langcode) {
       $values[$langcode] = $this->getNewEntityValues($langcode);
       $translation = $node->addTranslation($langcode, $values[$langcode]);
       // Publish and promote the translation to frontpage.
@@ -360,7 +360,7 @@ class NodeTranslationUITest extends ContentTranslationUITestBase {
       }
       $pattern = '|^' . $expected_href . '$|';
       foreach ($this->xpath("//a[text()='Read more']") as $link) {
-        if (preg_match($pattern, $link->getAttribute('href'), $matches) == TRUE) {
+        if (\preg_match($pattern, $link->getAttribute('href'), $matches) == TRUE) {
           $num_match_found++;
         }
       }
@@ -382,7 +382,7 @@ class NodeTranslationUITest extends ContentTranslationUITestBase {
       }
       $pattern = '|^' . $expected_href . '$|';
       foreach ($this->xpath("//a[text()='Add new comment']") as $link) {
-        if (preg_match($pattern, $link->getAttribute('href'), $matches) == TRUE) {
+        if (\preg_match($pattern, $link->getAttribute('href'), $matches) == TRUE) {
           $num_match_found++;
         }
       }
@@ -460,7 +460,7 @@ class NodeTranslationUITest extends ContentTranslationUITestBase {
   protected function getFormSubmitSuffix(EntityInterface $entity, $langcode) {
     if (!$entity->isNew() && $entity->isTranslatable()) {
       $translations = $entity->getTranslationLanguages();
-      if ((count($translations) > 1 || !isset($translations[$langcode])) && ($field = $entity->getFieldDefinition('status'))) {
+      if ((\count($translations) > 1 || !isset($translations[$langcode])) && ($field = $entity->getFieldDefinition('status'))) {
         return ' ' . ($field->isTranslatable() ? '(this translation)' : '(all translations)');
       }
     }
@@ -476,7 +476,7 @@ class NodeTranslationUITest extends ContentTranslationUITestBase {
     foreach ($nodes as $node) {
       $node->delete();
     }
-    $language_count = count(\Drupal::configFactory()->listAll('language.content_settings.'));
+    $language_count = \count(\Drupal::configFactory()->listAll('language.content_settings.'));
     \Drupal::service('module_installer')->uninstall(['content_translation']);
     $this->rebuildContainer();
     $this->assertCount($language_count, \Drupal::configFactory()->listAll('language.content_settings.'), 'Languages have been fixed rather than deleted during content_translation uninstall.');
@@ -491,7 +491,7 @@ class NodeTranslationUITest extends ContentTranslationUITestBase {
     $storage->resetCache([$this->entityId]);
     $entity = $storage->load($this->entityId);
     $languages = $this->container->get('language_manager')->getLanguages();
-    $type_name = node_get_type_label($entity);
+    $type_name = \node_get_type_label($entity);
 
     foreach ($this->langcodes as $langcode) {
       // We only want to test the title for non-english translations.
@@ -658,7 +658,7 @@ class NodeTranslationUITest extends ContentTranslationUITestBase {
     $this->assertSession()->pageTextContains('There are 0 items left to index.');
 
     // Search for French content.
-    $this->drupalGet('search/node', ['query' => ['keys' => urlencode('First rev fr title')]]);
+    $this->drupalGet('search/node', ['query' => ['keys' => \urlencode('First rev fr title')]]);
     $this->assertSession()->pageTextContains('First rev fr title');
 
     // Delete translation.
@@ -674,7 +674,7 @@ class NodeTranslationUITest extends ContentTranslationUITestBase {
     $this->assertSession()->pageTextContains('There are 0 items left to index.');
 
     // Search for French content.
-    $this->drupalGet('search/node', ['query' => ['keys' => urlencode('First rev fr title')]]);
+    $this->drupalGet('search/node', ['query' => ['keys' => \urlencode('First rev fr title')]]);
     $this->assertSession()->pageTextNotContains('First rev fr title');
   }
 

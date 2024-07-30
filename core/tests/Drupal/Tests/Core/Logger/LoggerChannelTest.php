@@ -64,7 +64,7 @@ class LoggerChannelTest extends UnitTestCase {
 
       $channel->setCurrentUser($account_mock);
     }
-    $channel->log(rand(0, 7), $message);
+    $channel->log(\rand(0, 7), $message);
   }
 
   /**
@@ -79,7 +79,7 @@ class LoggerChannelTest extends UnitTestCase {
       ->method('log');
     $channel->addLogger($logger);
     $channel->addLogger(new NaughtyRecursiveLogger($channel));
-    $channel->log(rand(0, 7), $this->randomMachineName());
+    $channel->log(\rand(0, 7), $this->randomMachineName());
   }
 
   /**
@@ -103,7 +103,7 @@ class LoggerChannelTest extends UnitTestCase {
       $channel->addLogger($logger, $i);
     }
 
-    $channel->log(rand(0, 7), $this->randomMachineName());
+    $channel->log(\rand(0, 7), $this->randomMachineName());
     // Ensure that the logger added in the end fired first.
     $this->assertEquals('3210', $index_order);
   }
@@ -138,7 +138,7 @@ class LoggerChannelTest extends UnitTestCase {
     $channel->setRequestStack($requestStack);
 
     // Perform the test.
-    $channel->log(rand(0, 7), 'Test message');
+    $channel->log(\rand(0, 7), 'Test message');
   }
 
   /**
@@ -196,7 +196,7 @@ class NaughtyRecursiveLogger implements LoggerInterface {
   }
 
   public function log($level, string|\Stringable $message, array $context = []): void {
-    $this->channel->log(rand(0, 7), $message, $context);
+    $this->channel->log(\rand(0, 7), $message, $context);
   }
 
 }

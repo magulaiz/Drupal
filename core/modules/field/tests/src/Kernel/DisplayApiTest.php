@@ -167,7 +167,7 @@ class DisplayApiTest extends FieldKernelTestBase {
     foreach ($this->values as $delta => $value) {
       $array[] = $delta . ':' . $value['value'];
     }
-    $this->assertText($setting . '|' . implode('|', $array), 'Values were displayed with expected setting.');
+    $this->assertText($setting . '|' . \implode('|', $array), 'Values were displayed with expected setting.');
 
     // Display settings: Check visually_hidden field.
     $display = [
@@ -188,7 +188,7 @@ class DisplayApiTest extends FieldKernelTestBase {
     foreach ($this->values as $delta => $value) {
       $array[] = $delta . ':' . $value['value'];
     }
-    $this->assertText($setting . '|' . implode('|', $array), 'Values were displayed with expected setting.');
+    $this->assertText($setting . '|' . \implode('|', $array), 'Values were displayed with expected setting.');
 
     // Check the prepare_view steps are invoked.
     $display = [

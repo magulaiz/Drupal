@@ -43,13 +43,13 @@ class FormTestClickedButtonForm extends FormBase {
     foreach ($args as $arg) {
       $name = 'button' . ++$i;
       // 's', 'b', or 'i' in the argument define the button type wanted.
-      if (str_contains($arg, 's')) {
+      if (\str_contains($arg, 's')) {
         $type = 'submit';
       }
-      elseif (str_contains($arg, 'b')) {
+      elseif (\str_contains($arg, 'b')) {
         $type = 'button';
       }
-      elseif (str_contains($arg, 'i')) {
+      elseif (\str_contains($arg, 'i')) {
         $type = 'image_button';
       }
       else {
@@ -69,7 +69,7 @@ class FormTestClickedButtonForm extends FormBase {
         }
         // 'r' for restricted, so we can test that button click detection code
         // correctly takes #access security into account.
-        if (str_contains($arg, 'r')) {
+        if (\str_contains($arg, 'r')) {
           $form[$name]['#access'] = FALSE;
         }
       }
@@ -83,7 +83,7 @@ class FormTestClickedButtonForm extends FormBase {
    */
   public function validateForm(array &$form, FormStateInterface $form_state) {
     if ($triggering_element = $form_state->getTriggeringElement()) {
-      $this->messenger()->addStatus(t('The clicked button is %name.', ['%name' => $triggering_element['#name']]));
+      $this->messenger()->addStatus(\t('The clicked button is %name.', ['%name' => $triggering_element['#name']]));
     }
     else {
       $this->messenger()->addStatus('There is no clicked button.');

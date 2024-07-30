@@ -21,9 +21,9 @@ class CropImageEffect extends ResizeImageEffect {
    * {@inheritdoc}
    */
   public function applyEffect(ImageInterface $image) {
-    [$x, $y] = explode('-', $this->configuration['anchor']);
-    $x = image_filter_keyword($x, $image->getWidth(), $this->configuration['width']);
-    $y = image_filter_keyword($y, $image->getHeight(), $this->configuration['height']);
+    [$x, $y] = \explode('-', $this->configuration['anchor']);
+    $x = \image_filter_keyword($x, $image->getWidth(), $this->configuration['width']);
+    $y = \image_filter_keyword($y, $image->getHeight(), $this->configuration['height']);
     if (!$image->crop($x, $y, $this->configuration['width'], $this->configuration['height'])) {
       $this->logger->error('Image crop failed using the %toolkit toolkit on %path (%mimetype, %dimensions)', ['%toolkit' => $image->getToolkitId(), '%path' => $image->getSource(), '%mimetype' => $image->getMimeType(), '%dimensions' => $image->getWidth() . 'x' . $image->getHeight()]);
       return FALSE;

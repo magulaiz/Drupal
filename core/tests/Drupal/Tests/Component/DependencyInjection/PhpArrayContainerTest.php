@@ -29,10 +29,10 @@ class PhpArrayContainerTest extends ContainerTest {
    */
   protected function getServiceCall($id, $invalid_behavior = ContainerInterface::EXCEPTION_ON_INVALID_REFERENCE) {
     if ($invalid_behavior !== ContainerInterface::EXCEPTION_ON_INVALID_REFERENCE) {
-      return sprintf('@?%s', $id);
+      return \sprintf('@?%s', $id);
     }
 
-    return sprintf('@%s', $id);
+    return \sprintf('@%s', $id);
   }
 
   /**

@@ -73,7 +73,7 @@ class UserPictureTest extends BrowserTestBase {
     $this->drupalLogin($this->webUser);
 
     // Save a new picture.
-    $image = current($this->drupalGetTestFiles('image'));
+    $image = \current($this->drupalGetTestFiles('image'));
     $file = $this->saveUserPicture($image);
 
     // Verify that the image is displayed on the user account page.
@@ -101,7 +101,7 @@ class UserPictureTest extends BrowserTestBase {
     // Verify that the image has been deleted.
     $this->assertNull(File::load($file->id()), 'File was removed from the database.');
     // Clear out PHP's file stat cache so we see the current value.
-    clearstatcache(TRUE, $file->getFileUri());
+    \clearstatcache(TRUE, $file->getFileUri());
     $this->assertFileDoesNotExist($file->getFileUri());
   }
 
@@ -115,7 +115,7 @@ class UserPictureTest extends BrowserTestBase {
     $this->addDefaultCommentField('node', 'article');
 
     // Save a new picture.
-    $image = current($this->drupalGetTestFiles('image'));
+    $image = \current($this->drupalGetTestFiles('image'));
     $file = $this->saveUserPicture($image);
 
     $node = $this->drupalCreateNode(['type' => 'article']);

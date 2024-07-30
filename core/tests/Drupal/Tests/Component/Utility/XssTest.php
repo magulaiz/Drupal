@@ -636,7 +636,7 @@ class XssTest extends TestCase {
    * @internal
    */
   protected function assertNormalized(string $haystack, string $needle, string $message = ''): void {
-    $this->assertStringContainsString($needle, strtolower(Html::decodeEntities($haystack)), $message);
+    $this->assertStringContainsString($needle, \strtolower(Html::decodeEntities($haystack)), $message);
   }
 
   /**
@@ -658,7 +658,7 @@ class XssTest extends TestCase {
    * @internal
    */
   protected function assertNotNormalized(string $haystack, string $needle, string $message = ''): void {
-    $this->assertStringNotContainsString($needle, strtolower(Html::decodeEntities($haystack)), $message);
+    $this->assertStringNotContainsString($needle, \strtolower(Html::decodeEntities($haystack)), $message);
   }
 
 }

@@ -174,7 +174,7 @@ class EntityRevisionTranslationTest extends EntityKernelTestBase {
     $user = $this->createUser();
 
     // All revisionable entity variations have to have the same results.
-    foreach (entity_test_entity_types(ENTITY_TEST_TYPES_REVISABLE) as $entity_type) {
+    foreach (\entity_test_entity_types(ENTITY_TEST_TYPES_REVISABLE) as $entity_type) {
       $this->installEntitySchema($entity_type);
       $storage = \Drupal::entityTypeManager()->getStorage($entity_type);
 
@@ -205,7 +205,7 @@ class EntityRevisionTranslationTest extends EntityKernelTestBase {
   public function testIsAnyStoredRevisionTranslated(): void {
     /** @var \Drupal\Core\Entity\ContentEntityStorageInterface $storage */
     $storage = $this->entityTypeManager->getStorage('entity_test_mul');
-    $method = new \ReflectionMethod(get_class($storage), 'isAnyStoredRevisionTranslated');
+    $method = new \ReflectionMethod(\get_class($storage), 'isAnyStoredRevisionTranslated');
 
     // Check that a non-revisionable new entity is handled correctly.
     $entity = EntityTestMul::create();

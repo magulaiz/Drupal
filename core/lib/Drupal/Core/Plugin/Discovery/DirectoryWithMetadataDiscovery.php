@@ -63,11 +63,11 @@ class DirectoryWithMetadataDiscovery extends YamlDirectoryDiscovery {
    */
   protected function getIdentifier($file, array $data): string {
     $id = $this->fileSystem->basename($file, '.component.yml');
-    $provider_paths = array_flip($this->directories);
+    $provider_paths = \array_flip($this->directories);
     $provider = $this->findProvider($file, $provider_paths);
     // We use the provider to dedupe components because it does not make sense
     // for a single provider to fork itself.
-    return sprintf('%s:%s', $provider, $id);
+    return \sprintf('%s:%s', $provider, $id);
   }
 
   /**
@@ -86,14 +86,14 @@ class DirectoryWithMetadataDiscovery extends YamlDirectoryDiscovery {
    *   The provider
    */
   private function findProvider(string $file, array $provider_paths): string {
-    $parts = explode(DIRECTORY_SEPARATOR, $file);
-    array_pop($parts);
+    $parts = \explode(DIRECTORY_SEPARATOR, $file);
+    \array_pop($parts);
     if (empty($parts)) {
       return '';
     }
-    $provider = $provider_paths[implode(DIRECTORY_SEPARATOR, $parts)] ?? '';
+    $provider = $provider_paths[\implode(DIRECTORY_SEPARATOR, $parts)] ?? '';
     return empty($provider)
-      ? $this->findProvider(implode(DIRECTORY_SEPARATOR, $parts), $provider_paths)
+      ? $this->findProvider(\implode(DIRECTORY_SEPARATOR, $parts), $provider_paths)
       : $provider;
   }
 

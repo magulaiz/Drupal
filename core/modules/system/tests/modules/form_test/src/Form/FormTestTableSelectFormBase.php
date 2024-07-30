@@ -26,7 +26,7 @@ abstract class FormTestTableSelectFormBase extends FormBase {
    *   A form with a tableselect element and a submit button.
    */
   public function tableselectFormBuilder($form, FormStateInterface $form_state, $element_properties) {
-    [$header, $options] = _form_test_tableselect_get_data();
+    [$header, $options] = \_form_test_tableselect_get_data();
 
     $form['tableselect'] = $element_properties;
 
@@ -37,7 +37,7 @@ abstract class FormTestTableSelectFormBase extends FormBase {
       '#header' => $header,
       '#options' => $options,
       '#multiple' => FALSE,
-      '#empty' => t('Empty text.'),
+      '#empty' => \t('Empty text.'),
       '#ajax' => [
         'callback' => 'form_test_tableselect_ajax_callback',
         'wrapper' => 'tableselect-wrapper',
@@ -46,7 +46,7 @@ abstract class FormTestTableSelectFormBase extends FormBase {
 
     $form['submit'] = [
       '#type' => 'submit',
-      '#value' => t('Submit'),
+      '#value' => \t('Submit'),
     ];
 
     return $form;

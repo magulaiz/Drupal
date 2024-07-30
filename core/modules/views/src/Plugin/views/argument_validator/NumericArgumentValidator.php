@@ -18,7 +18,7 @@ use Drupal\views\Attribute\ViewsArgumentValidator;
 class NumericArgumentValidator extends ArgumentValidatorPluginBase {
 
   public function validateArgument($argument) {
-    return is_numeric($argument);
+    return \is_numeric($argument);
   }
 
   /**

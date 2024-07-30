@@ -62,7 +62,7 @@ class ViewsBlockTest extends ViewsKernelTestBase {
     ]);
 
     // The anonymous user doesn't have the "administer block" permission.
-    $this->assertEmpty(views_ui_entity_operation($block));
+    $this->assertEmpty(\views_ui_entity_operation($block));
 
     $this->setUpCurrentUser(['uid' => 1], ['administer views']);
 
@@ -76,7 +76,7 @@ class ViewsBlockTest extends ViewsKernelTestBase {
         ]),
         'weight' => 50,
       ],
-    ], views_ui_entity_operation($block));
+    ], \views_ui_entity_operation($block));
   }
 
 }

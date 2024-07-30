@@ -179,8 +179,8 @@ class GDToolkit extends ImageToolkitBase {
 
     // Invalidate the image object and return if there's no function to load the
     // image file.
-    $function = 'imagecreatefrom' . image_type_to_extension($this->getType(), FALSE);
-    if (!function_exists($function)) {
+    $function = 'imagecreatefrom' . \image_type_to_extension($this->getType(), FALSE);
+    if (!\function_exists($function)) {
       $this->logger->error("The image toolkit '@toolkit' can not process image '@image'.", [
         '@toolkit' => $this->getPluginId(),
         '@image' => $this->getSource(),
@@ -197,7 +197,7 @@ class GDToolkit extends ImageToolkitBase {
       $this->logger->error("The image toolkit '@toolkit' failed loading image '@image'. Reported error: @class - @message", [
         '@toolkit' => $this->getPluginId(),
         '@image' => $this->getSource(),
-        '@class' => get_class($t),
+        '@class' => \get_class($t),
         '@message' => $t->getMessage(),
       ]);
       $this->preLoadInfo = NULL;
@@ -205,7 +205,7 @@ class GDToolkit extends ImageToolkitBase {
     }
 
     $this->setImage($image);
-    if (imageistruecolor($image)) {
+    if (\imageistruecolor($image)) {
       return TRUE;
     }
     else {
@@ -213,14 +213,14 @@ class GDToolkit extends ImageToolkitBase {
       // truecolor image, so that filters work correctly and don't result
       // in unnecessary dither.
       $data = [
-        'width' => imagesx($image),
-        'height' => imagesy($image),
-        'extension' => image_type_to_extension($this->getType(), FALSE),
+        'width' => \imagesx($image),
+        'height' => \imagesy($image),
+        'extension' => \image_type_to_extension($this->getType(), FALSE),
         'transparent_color' => $this->getTransparentColor(),
         'is_temp' => TRUE,
       ];
       if ($this->apply('create_new', $data)) {
-        imagecopy($this->getImage(), $image, 0, 0, 0, 0, imagesx($image), imagesy($image));
+        \imagecopy($this->getImage(), $image, 0, 0, 0, 0, \imagesx($image), \imagesy($image));
       }
     }
     return (bool) $this->getImage();
@@ -250,8 +250,8 @@ class GDToolkit extends ImageToolkitBase {
       $destination = $this->fileSystem->realpath($destination);
     }
 
-    $function = 'image' . image_type_to_extension($this->getType(), FALSE);
-    if (!function_exists($function)) {
+    $function = 'image' . \image_type_to_extension($this->getType(), FALSE);
+    if (!\function_exists($function)) {
       return FALSE;
     }
     if ($this->getType() == IMAGETYPE_JPEG) {
@@ -262,7 +262,7 @@ class GDToolkit extends ImageToolkitBase {
         $this->logger->error("The image toolkit '@toolkit' failed saving image '@image'. Reported error: @class - @message", [
           '@toolkit' => $this->getPluginId(),
           '@image' => $destination,
-          '@class' => get_class($t),
+          '@class' => \get_class($t),
           '@message' => $t->getMessage(),
         ]);
         $success = FALSE;
@@ -270,9 +270,9 @@ class GDToolkit extends ImageToolkitBase {
     }
     else {
       // Image types that support alpha need to be saved accordingly.
-      if (in_array($this->getType(), [IMAGETYPE_PNG, IMAGETYPE_WEBP], TRUE)) {
-        imagealphablending($this->getImage(), FALSE);
-        imagesavealpha($this->getImage(), TRUE);
+      if (\in_array($this->getType(), [IMAGETYPE_PNG, IMAGETYPE_WEBP], TRUE)) {
+        \imagealphablending($this->getImage(), FALSE);
+        \imagesavealpha($this->getImage(), TRUE);
       }
       try {
         $success = $function($this->getImage(), $destination);
@@ -281,7 +281,7 @@ class GDToolkit extends ImageToolkitBase {
         $this->logger->error("The image toolkit '@toolkit' failed saving image '@image'. Reported error: @class - @message", [
           '@toolkit' => $this->getPluginId(),
           '@image' => $destination,
-          '@class' => get_class($t),
+          '@class' => \get_class($t),
           '@message' => $t->getMessage(),
         ]);
         $success = FALSE;
@@ -304,8 +304,8 @@ class GDToolkit extends ImageToolkitBase {
    * {@inheritdoc}
    */
   public function parseFile() {
-    $data = @getimagesize($this->getSource());
-    if ($data && in_array($data[2], static::supportedTypes())) {
+    $data = @\getimagesize($this->getSource());
+    if ($data && \in_array($data[2], static::supportedTypes())) {
       $this->setType($data[2]);
       $this->preLoadInfo = $data;
       return TRUE;
@@ -325,11 +325,11 @@ class GDToolkit extends ImageToolkitBase {
     }
     // Find out if a transparent color is set, will return -1 if no
     // transparent color has been defined in the image.
-    $transparent = imagecolortransparent($this->getImage());
+    $transparent = \imagecolortransparent($this->getImage());
     if ($transparent >= 0) {
       // Find out the number of colors in the image palette. It will be 0 for
       // truecolor images.
-      $palette_size = imagecolorstotal($this->getImage());
+      $palette_size = \imagecolorstotal($this->getImage());
       if ($palette_size == 0 || $transparent < $palette_size) {
         // Return the transparent color, either if it is a truecolor image
         // or if the transparent color is part of the palette.
@@ -337,7 +337,7 @@ class GDToolkit extends ImageToolkitBase {
         // image rather than of the palette, it is possible that an image
         // could be created with this index set outside the palette size.
         // (see http://stackoverflow.com/a/3898007).
-        $rgb = imagecolorsforindex($this->getImage(), $transparent);
+        $rgb = \imagecolorsforindex($this->getImage(), $transparent);
         unset($rgb['alpha']);
         return Color::rgbToHex($rgb);
       }
@@ -353,7 +353,7 @@ class GDToolkit extends ImageToolkitBase {
       return $this->preLoadInfo[0];
     }
     elseif ($res = $this->getImage()) {
-      return imagesx($res);
+      return \imagesx($res);
     }
     else {
       return NULL;
@@ -368,7 +368,7 @@ class GDToolkit extends ImageToolkitBase {
       return $this->preLoadInfo[1];
     }
     elseif ($res = $this->getImage()) {
-      return imagesy($res);
+      return \imagesy($res);
     }
     else {
       return NULL;
@@ -396,7 +396,7 @@ class GDToolkit extends ImageToolkitBase {
    * @return $this
    */
   public function setType($type) {
-    if (in_array($type, static::supportedTypes())) {
+    if (\in_array($type, static::supportedTypes())) {
       $this->type = $type;
     }
     return $this;
@@ -406,7 +406,7 @@ class GDToolkit extends ImageToolkitBase {
    * {@inheritdoc}
    */
   public function getMimeType() {
-    return $this->getType() ? image_type_to_mime_type($this->getType()) : '';
+    return $this->getType() ? \image_type_to_mime_type($this->getType()) : '';
   }
 
   /**
@@ -415,7 +415,7 @@ class GDToolkit extends ImageToolkitBase {
   public function getRequirements() {
     $requirements = [];
 
-    $info = gd_info();
+    $info = \gd_info();
     $requirements['version'] = [
       'title' => $this->t('GD library'),
       'value' => $info['GD Version'],
@@ -429,25 +429,25 @@ class GDToolkit extends ImageToolkitBase {
       IMG_PNG => 'PNG',
       IMG_WEBP => 'WEBP',
     ];
-    $supported_formats = array_filter($check_formats, fn($type) => imagetypes() & $type, ARRAY_FILTER_USE_KEY);
-    $unsupported_formats = array_diff_key($check_formats, $supported_formats);
+    $supported_formats = \array_filter($check_formats, fn($type) => \imagetypes() & $type, ARRAY_FILTER_USE_KEY);
+    $unsupported_formats = \array_diff_key($check_formats, $supported_formats);
 
     $descriptions = [];
     if ($supported_formats) {
       $descriptions[] = $this->formatPlural(
-        count($supported_formats),
+        \count($supported_formats),
         'Supported image file format: %formats.',
         'Supported image file formats: %formats.',
-        ['%formats' => implode(', ', $supported_formats)]
+        ['%formats' => \implode(', ', $supported_formats)]
       );
     }
     if ($unsupported_formats) {
       $requirements['version']['severity'] = REQUIREMENT_WARNING;
       $unsupported = $this->formatPlural(
-        count($unsupported_formats),
+        \count($unsupported_formats),
         'Unsupported image file format: %formats.',
         'Unsupported image file formats: %formats.',
-        ['%formats' => implode(', ', $unsupported_formats)]
+        ['%formats' => \implode(', ', $unsupported_formats)]
       );
       $fix_info = $this->t('Check the <a href="https://www.php.net/manual/en/image.installation.php">PHP GD installation documentation</a> if you want to add support.');
       $descriptions[] = $this->t('@unsupported<br>@ref', [
@@ -457,12 +457,12 @@ class GDToolkit extends ImageToolkitBase {
     }
 
     // Check for filter and rotate support.
-    if (!function_exists('imagefilter') || !function_exists('imagerotate')) {
+    if (!\function_exists('imagefilter') || !\function_exists('imagerotate')) {
       $requirements['version']['severity'] = REQUIREMENT_WARNING;
       $descriptions[] = $this->t('The GD Library for PHP is enabled, but was compiled without support for functions used by the rotate and desaturate effects. It was probably compiled using the official GD libraries from the <a href="https://libgd.github.io/">gdLibrary site</a> instead of the GD library bundled with PHP. You should recompile PHP --with-gd using the bundled GD library. See <a href="https://www.php.net/manual/book.image.php">the PHP manual</a>.');
     }
 
-    if (count($descriptions) > 1) {
+    if (\count($descriptions) > 1) {
       $requirements['version']['description'] = [
         '#theme' => 'item_list',
         '#items' => $descriptions,
@@ -480,7 +480,7 @@ class GDToolkit extends ImageToolkitBase {
    */
   public static function isAvailable() {
     // GD2 support is available.
-    return function_exists('imagegd2');
+    return \function_exists('imagegd2');
   }
 
   /**
@@ -491,7 +491,7 @@ class GDToolkit extends ImageToolkitBase {
     foreach (static::supportedTypes() as $image_type) {
       // @todo Automatically fetch possible extensions for each mime type.
       // @see https://www.drupal.org/node/2311679
-      $extension = mb_strtolower(image_type_to_extension($image_type, FALSE));
+      $extension = \mb_strtolower(\image_type_to_extension($image_type, FALSE));
       $extensions[] = $extension;
       // Add some known similar extensions.
       if ($extension === 'jpeg') {
@@ -517,11 +517,11 @@ class GDToolkit extends ImageToolkitBase {
    * @see image_type_to_extension()
    */
   public function extensionToImageType($extension) {
-    if (in_array($extension, ['jpe', 'jpg'])) {
+    if (\in_array($extension, ['jpe', 'jpg'])) {
       $extension = 'jpeg';
     }
     foreach ($this->supportedTypes() as $type) {
-      if (image_type_to_extension($type, FALSE) === $extension) {
+      if (\image_type_to_extension($type, FALSE) === $extension) {
         return $type;
       }
     }

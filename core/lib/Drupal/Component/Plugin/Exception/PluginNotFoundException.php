@@ -23,7 +23,7 @@ class PluginNotFoundException extends PluginException {
    */
   public function __construct($plugin_id, $message = '', $code = 0, ?\Exception $previous = NULL) {
     if (empty($message)) {
-      $message = sprintf("Plugin ID '%s' was not found.", $plugin_id);
+      $message = \sprintf("Plugin ID '%s' was not found.", $plugin_id);
     }
     parent::__construct($message, $code, $previous);
   }

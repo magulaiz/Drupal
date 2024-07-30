@@ -96,7 +96,7 @@ class WidgetOEmbedTest extends MediaLibraryTestBase {
     $this->waitForText('Add Type Five via URL');
     // Load the created media item.
     $media_items = Media::loadMultiple();
-    $added_media = array_pop($media_items);
+    $added_media = \array_pop($media_items);
     $added_media_id = $added_media->id();
 
     // Ensure the media item was saved to the library and automatically
@@ -158,7 +158,7 @@ class WidgetOEmbedTest extends MediaLibraryTestBase {
 
     // Load the created media item.
     $media_items = Media::loadMultiple();
-    $added_media = array_pop($media_items);
+    $added_media = \array_pop($media_items);
     $added_media_id = $added_media->id();
     // Ensure the media item was saved to the library and automatically
     // selected. The added media items should be in the first position of the
@@ -172,7 +172,7 @@ class WidgetOEmbedTest extends MediaLibraryTestBase {
     $assert_session->pageTextContains('2 items selected');
     $assert_session->checkboxChecked("Select Custom video title");
     $assert_session->checkboxChecked("Select $youtube_title");
-    $assert_session->hiddenFieldValueEquals('current_selection', implode(',', [$selected_item_id, $added_media_id]));
+    $assert_session->hiddenFieldValueEquals('current_selection', \implode(',', [$selected_item_id, $added_media_id]));
     $selected_checkboxes = [];
     foreach ($this->getCheckboxes() as $checkbox) {
       if ($checkbox->isChecked()) {
@@ -284,7 +284,7 @@ class WidgetOEmbedTest extends MediaLibraryTestBase {
     $this->waitForText('Add Type Five via URL');
     // Load the created media item.
     $media_items = Media::loadMultiple();
-    $added_media = array_pop($media_items);
+    $added_media = \array_pop($media_items);
     $added_media_id = $added_media->id();
 
     // Ensure the media item was saved to the library and automatically
@@ -348,7 +348,7 @@ class WidgetOEmbedTest extends MediaLibraryTestBase {
 
     // Load the created media item.
     $media_items = Media::loadMultiple();
-    $added_media = array_pop($media_items);
+    $added_media = \array_pop($media_items);
     $added_media_id = $added_media->id();
     // Ensure the media item was saved to the library and automatically
     // selected. The added media items should be in the first position of the
@@ -362,7 +362,7 @@ class WidgetOEmbedTest extends MediaLibraryTestBase {
     $assert_session->pageTextContains('2 items selected');
     $assert_session->checkboxChecked("Select Custom video title");
     $assert_session->checkboxChecked("Select $youtube_title");
-    $assert_session->hiddenFieldValueEquals('current_selection', implode(',', [$selected_item_id, $added_media_id]));
+    $assert_session->hiddenFieldValueEquals('current_selection', \implode(',', [$selected_item_id, $added_media_id]));
     $selected_checkboxes = [];
     foreach ($this->getCheckboxes() as $checkbox) {
       if ($checkbox->isChecked()) {
@@ -412,7 +412,7 @@ class WidgetOEmbedTest extends MediaLibraryTestBase {
     $this->saveAnd('select');
 
     $media_items = Media::loadMultiple();
-    $added_media = array_pop($media_items);
+    $added_media = \array_pop($media_items);
     $added_media_id = $added_media->id();
     $this->waitForText('1 item selected');
     $assert_session->checkboxChecked('Select Another video');

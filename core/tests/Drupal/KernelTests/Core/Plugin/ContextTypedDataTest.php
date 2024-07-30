@@ -31,8 +31,8 @@ class ContextTypedDataTest extends KernelTestBase {
     // getContextValue() will cause the context to reference the typed data
     // manager service.
     $value = $context->getContextValue();
-    $context = serialize($context);
-    $context = unserialize($context);
+    $context = \serialize($context);
+    $context = \unserialize($context);
     $this->assertSame($value, $context->getContextValue());
   }
 

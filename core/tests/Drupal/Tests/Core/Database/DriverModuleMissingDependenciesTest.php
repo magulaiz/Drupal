@@ -30,7 +30,7 @@ class DriverModuleMissingDependenciesTest extends UnitTestCase {
    * @covers ::get
    */
   public function testDetermineDriversAutoloadingFailingOnMissingDependency(): void {
-    $root = realpath(dirname(__FILE__) . '/fixtures');
+    $root = \realpath(\dirname(__FILE__) . '/fixtures');
 
     // Mock the container so we don't need to mock drupal_valid_test_ua().
     // @see \Drupal\Core\Extension\ExtensionDiscovery::scan()

@@ -107,7 +107,7 @@ abstract class WorkflowTypeBase extends PluginBase implements WorkflowTypeInterf
    */
   public function getInitialState() {
     $ordered_states = $this->getStates();
-    return reset($ordered_states);
+    return \reset($ordered_states);
   }
 
   /**
@@ -117,14 +117,14 @@ abstract class WorkflowTypeBase extends PluginBase implements WorkflowTypeInterf
     if ($this->hasState($state_id)) {
       throw new \InvalidArgumentException("The state '$state_id' already exists in workflow.");
     }
-    if (preg_match(static::VALID_ID_REGEX, $state_id)) {
+    if (\preg_match(static::VALID_ID_REGEX, $state_id)) {
       throw new \InvalidArgumentException("The state ID '$state_id' must contain only lowercase letters, numbers, and underscores");
     }
     $this->configuration['states'][$state_id] = [
       'label' => $label,
       'weight' => $this->getNextWeight($this->configuration['states']),
     ];
-    ksort($this->configuration['states']);
+    \ksort($this->configuration['states']);
     return $this;
   }
 
@@ -140,10 +140,10 @@ abstract class WorkflowTypeBase extends PluginBase implements WorkflowTypeInterf
    */
   public function getStates($state_ids = NULL) {
     if ($state_ids === NULL) {
-      $state_ids = array_keys($this->configuration['states']);
+      $state_ids = \array_keys($this->configuration['states']);
     }
     /** @var \Drupal\workflows\StateInterface[] $states */
-    $states = array_combine($state_ids, array_map([$this, 'getState'], $state_ids));
+    $states = \array_combine($state_ids, \array_map([$this, 'getState'], $state_ids));
     return static::labelWeightMultisort($states);
   }
 
@@ -180,7 +180,7 @@ abstract class WorkflowTypeBase extends PluginBase implements WorkflowTypeInterf
     if (!$this->hasState($state_id)) {
       throw new \InvalidArgumentException("The state '$state_id' does not exist in workflow.");
     }
-    if (!is_numeric($weight)) {
+    if (!\is_numeric($weight)) {
       $label = $this->getState($state_id)->label();
       throw new \InvalidArgumentException("The weight '$weight' must be numeric for state '$label'.");
     }
@@ -195,7 +195,7 @@ abstract class WorkflowTypeBase extends PluginBase implements WorkflowTypeInterf
     if (!$this->hasState($state_id)) {
       throw new \InvalidArgumentException("The state '$state_id' does not exist in workflow.");
     }
-    if (count($this->configuration['states']) === 1) {
+    if (\count($this->configuration['states']) === 1) {
       throw new \InvalidArgumentException("The state '$state_id' can not be deleted from workflow as it is the only state.");
     }
 
@@ -204,7 +204,7 @@ abstract class WorkflowTypeBase extends PluginBase implements WorkflowTypeInterf
         $this->deleteTransition($transition_id);
         continue;
       }
-      $from_key = array_search($state_id, $transition['from'], TRUE);
+      $from_key = \array_search($state_id, $transition['from'], TRUE);
       if ($from_key !== FALSE) {
         // Remove state from the from array.
         unset($transition['from'][$from_key]);
@@ -228,7 +228,7 @@ abstract class WorkflowTypeBase extends PluginBase implements WorkflowTypeInterf
     if ($this->hasTransition($transition_id)) {
       throw new \InvalidArgumentException("The transition '$transition_id' already exists in workflow.");
     }
-    if (preg_match(static::VALID_ID_REGEX, $transition_id)) {
+    if (\preg_match(static::VALID_ID_REGEX, $transition_id)) {
       throw new \InvalidArgumentException("The transition ID '$transition_id' must contain only lowercase letters, numbers, and underscores.");
     }
 
@@ -251,7 +251,7 @@ abstract class WorkflowTypeBase extends PluginBase implements WorkflowTypeInterf
       throw $e;
     }
 
-    ksort($this->configuration['transitions']);
+    \ksort($this->configuration['transitions']);
     return $this;
   }
 
@@ -260,10 +260,10 @@ abstract class WorkflowTypeBase extends PluginBase implements WorkflowTypeInterf
    */
   public function getTransitions(?array $transition_ids = NULL) {
     if ($transition_ids === NULL) {
-      $transition_ids = array_keys($this->configuration['transitions']);
+      $transition_ids = \array_keys($this->configuration['transitions']);
     }
     /** @var \Drupal\workflows\TransitionInterface[] $transitions */
-    $transitions = array_combine($transition_ids, array_map([$this, 'getTransition'], $transition_ids));
+    $transitions = \array_combine($transition_ids, \array_map([$this, 'getTransition'], $transition_ids));
     return static::labelWeightMultisort($transitions);
   }
 
@@ -279,16 +279,16 @@ abstract class WorkflowTypeBase extends PluginBase implements WorkflowTypeInterf
    *   transition ID.
    */
   protected static function labelWeightMultisort($objects) {
-    if (count($objects) > 1) {
+    if (\count($objects) > 1) {
       // Separate weights, labels, and keys into arrays.
       $weights = $labels = [];
-      $keys = array_keys($objects);
+      $keys = \array_keys($objects);
       foreach ($objects as $id => $object) {
         $weights[$id] = $object->weight();
         $labels[$id] = $object->label();
       }
       // Sort weights, labels, and keys in the same order as each other.
-      array_multisort(
+      \array_multisort(
       // Use the numerical weight as the primary sort.
         $weights, SORT_NUMERIC, SORT_ASC,
         // When objects have the same weight, sort them alphabetically by label.
@@ -299,9 +299,9 @@ abstract class WorkflowTypeBase extends PluginBase implements WorkflowTypeInterf
       );
       // Combine keys and weights to make sure the weights are keyed with the
       // correct keys.
-      $weights = array_combine($keys, $weights);
+      $weights = \array_combine($keys, $weights);
       // Return the objects sorted by weight.
-      return array_replace($weights, $objects);
+      return \array_replace($weights, $objects);
     }
     return $objects;
   }
@@ -334,8 +334,8 @@ abstract class WorkflowTypeBase extends PluginBase implements WorkflowTypeInterf
    * {@inheritdoc}
    */
   public function getTransitionsForState($state_id, $direction = TransitionInterface::DIRECTION_FROM) {
-    $transition_ids = array_keys(array_filter($this->configuration['transitions'], function ($transition) use ($state_id, $direction) {
-      return in_array($state_id, (array) $transition[$direction], TRUE);
+    $transition_ids = \array_keys(\array_filter($this->configuration['transitions'], function ($transition) use ($state_id, $direction) {
+      return \in_array($state_id, (array) $transition[$direction], TRUE);
     }));
     return $this->getTransitions($transition_ids);
   }
@@ -371,7 +371,7 @@ abstract class WorkflowTypeBase extends PluginBase implements WorkflowTypeInterf
    */
   protected function getTransitionIdFromStateToState($from_state_id, $to_state_id) {
     foreach ($this->configuration['transitions'] as $transition_id => $transition) {
-      if (in_array($from_state_id, $transition['from'], TRUE) && $transition['to'] === $to_state_id) {
+      if (\in_array($from_state_id, $transition['from'], TRUE) && $transition['to'] === $to_state_id) {
         return $transition_id;
       }
     }
@@ -396,7 +396,7 @@ abstract class WorkflowTypeBase extends PluginBase implements WorkflowTypeInterf
     if (!$this->hasTransition($transition_id)) {
       throw new \InvalidArgumentException("The transition '$transition_id' does not exist in workflow.");
     }
-    if (!is_numeric($weight)) {
+    if (!\is_numeric($weight)) {
       $label = $this->getTransition($transition_id)->label();
       throw new \InvalidArgumentException("The weight '$weight' must be numeric for transition '$label'.");
     }
@@ -427,8 +427,8 @@ abstract class WorkflowTypeBase extends PluginBase implements WorkflowTypeInterf
 
     // Preserve the order of the state IDs in the from value and don't save any
     // keys.
-    $from_state_ids = array_values($from_state_ids);
-    sort($from_state_ids);
+    $from_state_ids = \array_values($from_state_ids);
+    \sort($from_state_ids);
     $this->configuration['transitions'][$transition_id]['from'] = $from_state_ids;
 
     return $this;
@@ -456,8 +456,8 @@ abstract class WorkflowTypeBase extends PluginBase implements WorkflowTypeInterf
    *   The weight for a new item in the array so that it has the highest weight.
    */
   protected function getNextWeight(array $items) {
-    return array_reduce($items, function ($carry, $item) {
-      return max($carry, $item['weight'] + 1);
+    return \array_reduce($items, function ($carry, $item) {
+      return \max($carry, $item['weight'] + 1);
     }, 0);
   }
 

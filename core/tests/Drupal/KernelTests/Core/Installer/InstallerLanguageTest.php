@@ -34,7 +34,7 @@ class InstallerLanguageTest extends KernelTestBase {
     $file_translation = new FileTranslation('core/tests/fixtures/files/translations', $this->container->get('file_system'));
     foreach ($expected_translation_files as $langcode => $files_expected) {
       $files_found = $file_translation->findTranslationFiles($langcode);
-      $this->assertSameSize($files_expected, $files_found, count($files_expected) . ' installer languages found.');
+      $this->assertSameSize($files_expected, $files_found, \count($files_expected) . ' installer languages found.');
       foreach ($files_found as $file) {
         $this->assertContains($file->filename, $files_expected, $file->filename . ' found.');
       }
@@ -53,11 +53,11 @@ class InstallerLanguageTest extends KernelTestBase {
     // location.
     // @todo Remove as part of https://www.drupal.org/node/2186491
     $profile_list = \Drupal::service('extension.list.profile');
-    assert($profile_list instanceof ProfileExtensionList);
+    \assert($profile_list instanceof ProfileExtensionList);
     $profile_list->setPathname('testing', 'core/profiles/testing/testing.info.yml');
 
-    $info_en = install_profile_info('testing', 'en');
-    $info_nl = install_profile_info('testing', 'nl');
+    $info_en = \install_profile_info('testing', 'en');
+    $info_nl = \install_profile_info('testing', 'nl');
 
     $this->assertNotContains('locale', $info_en['install'], 'Locale is not set when installing in English.');
     $this->assertContains('locale', $info_nl['install'], 'Locale is set when installing in Dutch.');

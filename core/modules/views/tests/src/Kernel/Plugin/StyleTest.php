@@ -234,7 +234,7 @@ class StyleTest extends ViewsKernelTestBase {
     // Remove labels from expected results.
     foreach ($no_label_expected as $job => $data) {
       unset($no_label_expected[$job]);
-      $job = str_replace('Job: ', '', $job);
+      $job = \str_replace('Job: ', '', $job);
       $data['group'] = $job;
       $no_label_expected[$job] = $data;
     }
@@ -268,7 +268,7 @@ class StyleTest extends ViewsKernelTestBase {
     $no_colon_expected = $expected;
     foreach ($no_colon_expected as $job => $data) {
       unset($no_colon_expected[$job]);
-      $job = str_replace('Job: ', 'Job ', $job);
+      $job = \str_replace('Job: ', 'Job ', $job);
       $data['group'] = $job;
       $no_colon_expected[$job] = $data;
     }
@@ -316,7 +316,7 @@ class StyleTest extends ViewsKernelTestBase {
     if ($html_dom) {
       // It's much easier to work with simplexml than DOM, luckily enough
       // we can just simply import our DOM tree.
-      return simplexml_import_dom($html_dom);
+      return \simplexml_import_dom($html_dom);
     }
     return NULL;
   }

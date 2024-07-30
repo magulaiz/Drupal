@@ -65,7 +65,7 @@ class NodeAccessLanguageAwareCombinationTest extends NodeAccessTestBase {
   protected function setUp(): void {
     parent::setUp();
 
-    node_access_test_add_field(NodeType::load('page'));
+    \node_access_test_add_field(NodeType::load('page'));
 
     // Create the 'private' field, which allows the node to be marked as private
     // (restricted access) in a given translation.
@@ -90,7 +90,7 @@ class NodeAccessLanguageAwareCombinationTest extends NodeAccessTestBase {
     ])->save();
 
     // After enabling a node access module, the access table has to be rebuild.
-    node_access_rebuild();
+    \node_access_rebuild();
 
     // Add Hungarian and Catalan.
     ConfigurableLanguage::createFromLangcode('hu')->save();

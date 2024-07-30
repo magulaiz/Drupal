@@ -243,7 +243,7 @@ class LinkFieldTest extends BrowserTestBase {
       ];
       $this->drupalGet('entity_test/add');
       $this->submitForm($edit, 'Save');
-      preg_match('|entity_test/manage/(\d+)|', $this->getUrl(), $match);
+      \preg_match('|entity_test/manage/(\d+)|', $this->getUrl(), $match);
       $id = $match[1];
       $this->assertSession()->statusMessageContains('entity_test ' . $id . ' has been created.', 'status');
       $this->assertSession()->responseContains('"' . $string . '"');
@@ -267,7 +267,7 @@ class LinkFieldTest extends BrowserTestBase {
       ];
       $this->drupalGet('entity_test/add');
       $this->submitForm($edit, 'Save');
-      $this->assertSession()->responseContains(strtr($error_message, ['@link_path' => $invalid_value]));
+      $this->assertSession()->responseContains(\strtr($error_message, ['@link_path' => $invalid_value]));
     }
   }
 
@@ -374,7 +374,7 @@ class LinkFieldTest extends BrowserTestBase {
       "{$field_name}[0][title]" => '',
     ];
     $this->submitForm($edit, 'Save');
-    preg_match('|entity_test/manage/(\d+)|', $this->getUrl(), $match);
+    \preg_match('|entity_test/manage/(\d+)|', $this->getUrl(), $match);
     $id = $match[1];
     $this->assertSession()->statusMessageContains('entity_test ' . $id . ' has been created.', 'status');
 
@@ -459,7 +459,7 @@ class LinkFieldTest extends BrowserTestBase {
     // Assert label is shown.
     $this->assertSession()->pageTextContains('Read more about this entity');
     $this->submitForm($edit, 'Save');
-    preg_match('|entity_test/manage/(\d+)|', $this->getUrl(), $match);
+    \preg_match('|entity_test/manage/(\d+)|', $this->getUrl(), $match);
     $id = $match[1];
     $this->assertSession()->statusMessageContains('entity_test ' . $id . ' has been created.', 'status');
 
@@ -482,7 +482,7 @@ class LinkFieldTest extends BrowserTestBase {
     foreach ($options as $setting => $values) {
       foreach ($values as $new_value) {
         // Update the field formatter settings.
-        if (!is_array($new_value)) {
+        if (!\is_array($new_value)) {
           $display_options['settings'] = [$setting => $new_value];
         }
         else {
@@ -561,7 +561,7 @@ class LinkFieldTest extends BrowserTestBase {
       'field_name' => $field_name,
       'entity_type' => 'entity_test',
       'type' => 'link',
-      'cardinality' => count($test_urls),
+      'cardinality' => \count($test_urls),
     ]);
     $this->fieldStorage->save();
     FieldConfig::create([
@@ -621,7 +621,7 @@ class LinkFieldTest extends BrowserTestBase {
     foreach ($options as $setting => $values) {
       foreach ($values as $new_value) {
         // Update the field formatter settings.
-        if (!is_array($new_value)) {
+        if (!\is_array($new_value)) {
           $display_options['settings'] = [$setting => $new_value];
         }
         else {
@@ -789,7 +789,7 @@ class LinkFieldTest extends BrowserTestBase {
       "{$field_name}[2][title]" => $title3,
     ];
     $this->submitForm($edit, 'Save');
-    preg_match('|entity_test/manage/(\d+)|', $this->getUrl(), $match);
+    \preg_match('|entity_test/manage/(\d+)|', $this->getUrl(), $match);
     $id = $match[1];
     $this->assertSession()->statusMessageContains('entity_test ' . $id . ' has been created.', 'status');
 
@@ -1007,7 +1007,7 @@ class LinkFieldTest extends BrowserTestBase {
 
     $this->drupalGet('/entity_test/add');
     $this->submitForm($edit, 'Save');
-    preg_match('|entity_test/manage/(\d+)|', $this->getUrl(), $match);
+    \preg_match('|entity_test/manage/(\d+)|', $this->getUrl(), $match);
     $id = $match[1];
     $output = $this->renderTestEntity($id);
     $expected_link = (string) $this->container->get('link_generator')->generate('Title, no link', Url::fromUri('route:<nolink>'));
@@ -1021,7 +1021,7 @@ class LinkFieldTest extends BrowserTestBase {
 
     $this->drupalGet('/entity_test/add');
     $this->submitForm($edit, 'Save');
-    preg_match('|entity_test/manage/(\d+)|', $this->getUrl(), $match);
+    \preg_match('|entity_test/manage/(\d+)|', $this->getUrl(), $match);
     $id = $match[1];
     $output = $this->renderTestEntity($id);
     $expected_link = (string) $this->container->get('link_generator')->generate('Title, none', Url::fromUri('route:<none>'));
@@ -1035,7 +1035,7 @@ class LinkFieldTest extends BrowserTestBase {
 
     $this->drupalGet('/entity_test/add');
     $this->submitForm($edit, 'Save');
-    preg_match('|entity_test/manage/(\d+)|', $this->getUrl(), $match);
+    \preg_match('|entity_test/manage/(\d+)|', $this->getUrl(), $match);
     $id = $match[1];
     $output = $this->renderTestEntity($id);
     $expected_link = (string) $this->container->get('link_generator')->generate('Title, button', Url::fromUri('route:<button>'));

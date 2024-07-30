@@ -26,7 +26,7 @@ class FileFieldAnonymousSubmissionTest extends FileFieldTestBase {
   protected function setUp(): void {
     parent::setUp();
     // Set up permissions for anonymous attacker user.
-    user_role_change_permissions(RoleInterface::ANONYMOUS_ID, [
+    \user_role_change_permissions(RoleInterface::ANONYMOUS_ID, [
       'create article content' => TRUE,
       'access content' => TRUE,
     ]);
@@ -53,8 +53,8 @@ class FileFieldAnonymousSubmissionTest extends FileFieldTestBase {
     $this->assertSession()->statusCodeEquals(200);
     $this->assertSession()->pageTextContains("$type $title has been created.");
     $matches = [];
-    if (preg_match('@node/(\d+)$@', $this->getUrl(), $matches)) {
-      $nid = end($matches);
+    if (\preg_match('@node/(\d+)$@', $this->getUrl(), $matches)) {
+      $nid = \end($matches);
       $this->assertNotEquals(0, $nid, 'The node ID was extracted from the URL.');
       $node = Node::load($nid);
       $this->assertNotNull($node, 'The node was loaded successfully.');
@@ -88,8 +88,8 @@ class FileFieldAnonymousSubmissionTest extends FileFieldTestBase {
     $this->assertSession()->statusCodeEquals(200);
     $this->assertSession()->pageTextContains("$type $title has been created.");
     $matches = [];
-    if (preg_match('@node/(\d+)$@', $this->getUrl(), $matches)) {
-      $nid = end($matches);
+    if (\preg_match('@node/(\d+)$@', $this->getUrl(), $matches)) {
+      $nid = \end($matches);
       $this->assertNotEquals(0, $nid, 'The node ID was extracted from the URL.');
       $node = Node::load($nid);
       $this->assertNotNull($node, 'The node was loaded successfully.');
@@ -160,8 +160,8 @@ class FileFieldAnonymousSubmissionTest extends FileFieldTestBase {
     // Confirm the final submission actually worked.
     $this->assertSession()->pageTextContains("$type $title has been created.");
     $matches = [];
-    if (preg_match('@node/(\d+)$@', $this->getUrl(), $matches)) {
-      $nid = end($matches);
+    if (\preg_match('@node/(\d+)$@', $this->getUrl(), $matches)) {
+      $nid = \end($matches);
       $this->assertNotEquals(0, $nid, 'The node ID was extracted from the URL.');
       $node = Node::load($nid);
       $this->assertNotNull($node, 'The node was loaded successfully.');

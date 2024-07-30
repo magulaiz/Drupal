@@ -57,7 +57,7 @@ class MetapackageUpdateTest extends TestCase {
    */
   public function testUpdated($builderClass, $path): void {
     // Create a DrupalCoreComposer for the System Under Test (current repo)
-    $repositoryRoot = dirname(__DIR__, 6);
+    $repositoryRoot = \dirname(__DIR__, 6);
     $drupalCoreInfo = DrupalCoreComposer::createFromPath($repositoryRoot);
 
     // Rebuild the metapackage for the composer.json / composer.lock of
@@ -67,12 +67,12 @@ class MetapackageUpdateTest extends TestCase {
     $generatedJson = PackageGenerator::encode($generatedJson);
 
     // Also load the most-recently-generated version of the metapackage.
-    $loadedJson = file_get_contents("$repositoryRoot/$path/composer.json");
+    $loadedJson = \file_get_contents("$repositoryRoot/$path/composer.json");
 
     // The generated json is the "expected", what we think the loaded
     // json would contain, if the current patch is generated correctly
     // (metapackages updated when composer.lock is updated).
-    $version = str_replace('.0-dev', '.x-dev', \Drupal::VERSION);
+    $version = \str_replace('.0-dev', '.x-dev', \Drupal::VERSION);
     $message = <<< __EOT__
 The rebuilt version of $path does not match what is in the source tree.
 

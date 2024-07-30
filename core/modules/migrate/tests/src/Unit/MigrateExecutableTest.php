@@ -445,7 +445,7 @@ class MigrateExecutableTest extends MigrateTestCase {
     $class = 'Drupal\migrate\Plugin\migrate\source\SourcePluginBase';
     $source = $this->getMockBuilder($class)
       ->disableOriginalConstructor()
-      ->onlyMethods(get_class_methods($class))
+      ->onlyMethods(\get_class_methods($class))
       ->getMockForAbstractClass();
     $source->expects($this->once())
       ->method('rewind');
@@ -592,7 +592,7 @@ class MigrateExecutableTest extends MigrateTestCase {
    *   An ID map object prophecy.
    */
   public function getTestRollbackIdMap(array $items, array $source_id_keys, array $destination_id_keys) {
-    static::$idMapRecords = array_map(function (array $item) {
+    static::$idMapRecords = \array_map(function (array $item) {
       return $item + [
         'source_row_status' => '0',
         'rollback_action' => '0',
@@ -615,26 +615,26 @@ class MigrateExecutableTest extends MigrateTestCase {
     });
     $id_map->currentDestination()->will(function () use ($array_iterator, $destination_id_keys) {
       $current = $array_iterator->current();
-      $destination_values = array_filter($current, function ($key) use ($destination_id_keys) {
-        return in_array($key, $destination_id_keys, TRUE);
+      $destination_values = \array_filter($current, function ($key) use ($destination_id_keys) {
+        return \in_array($key, $destination_id_keys, TRUE);
       }, ARRAY_FILTER_USE_KEY);
-      return empty(array_filter($destination_values, 'is_null'))
-        ? array_combine($destination_id_keys, array_values($destination_values))
+      return empty(\array_filter($destination_values, 'is_null'))
+        ? \array_combine($destination_id_keys, \array_values($destination_values))
         : NULL;
     });
     $id_map->currentSource()->will(function () use ($array_iterator, $source_id_keys) {
       $current = $array_iterator->current();
-      $source_values = array_filter($current, function ($key) use ($source_id_keys) {
-        return in_array($key, $source_id_keys, TRUE);
+      $source_values = \array_filter($current, function ($key) use ($source_id_keys) {
+        return \in_array($key, $source_id_keys, TRUE);
       }, ARRAY_FILTER_USE_KEY);
-      return empty(array_filter($source_values, 'is_null'))
-        ? array_combine($source_id_keys, array_values($source_values))
+      return empty(\array_filter($source_values, 'is_null'))
+        ? \array_combine($source_id_keys, \array_values($source_values))
         : NULL;
     });
     $id_map->getRowByDestination(Argument::type('array'))->will(function () {
-      $destination_ids = func_get_args()[0][0];
-      $return = array_reduce(self::$idMapRecords, function (array $carry, array $record) use ($destination_ids) {
-        if (array_merge($record, $destination_ids) === $record) {
+      $destination_ids = \func_get_args()[0][0];
+      $return = \array_reduce(self::$idMapRecords, function (array $carry, array $record) use ($destination_ids) {
+        if (\array_merge($record, $destination_ids) === $record) {
           $carry = $record;
         }
         return $carry;
@@ -643,20 +643,20 @@ class MigrateExecutableTest extends MigrateTestCase {
       return $return;
     });
     $id_map->deleteDestination(Argument::type('array'))->will(function () {
-      $destination_ids = func_get_args()[0][0];
-      $matching_records = array_filter(self::$idMapRecords, function (array $record) use ($destination_ids) {
-        return array_merge($record, $destination_ids) === $record;
+      $destination_ids = \func_get_args()[0][0];
+      $matching_records = \array_filter(self::$idMapRecords, function (array $record) use ($destination_ids) {
+        return \array_merge($record, $destination_ids) === $record;
       });
-      foreach (array_keys($matching_records) as $record_key) {
+      foreach (\array_keys($matching_records) as $record_key) {
         unset(self::$idMapRecords[$record_key]);
       }
     });
     $id_map->delete(Argument::type('array'))->will(function () {
-      $source_ids = func_get_args()[0][0];
-      $matching_records = array_filter(self::$idMapRecords, function (array $record) use ($source_ids) {
-        return array_merge($record, $source_ids) === $record;
+      $source_ids = \func_get_args()[0][0];
+      $matching_records = \array_filter(self::$idMapRecords, function (array $record) use ($source_ids) {
+        return \array_merge($record, $source_ids) === $record;
       });
-      foreach (array_keys($matching_records) as $record_key) {
+      foreach (\array_keys($matching_records) as $record_key) {
         unset(self::$idMapRecords[$record_key]);
       }
     });

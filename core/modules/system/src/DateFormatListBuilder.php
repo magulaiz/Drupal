@@ -54,8 +54,8 @@ class DateFormatListBuilder extends ConfigEntityListBuilder {
    * {@inheritdoc}
    */
   public function buildHeader() {
-    $header['label'] = t('Name');
-    $header['pattern'] = t('Pattern');
+    $header['label'] = \t('Name');
+    $header['pattern'] = \t('Pattern');
     return $header + parent::buildHeader();
   }
 

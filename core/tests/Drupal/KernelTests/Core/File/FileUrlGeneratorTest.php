@@ -173,7 +173,7 @@ class FileUrlGeneratorTest extends FileTestBase {
     $public_directory_path = \Drupal::service('stream_wrapper_manager')
       ->getViaScheme('public')
       ->getDirectoryPath();
-    $this->assertSame(base_path() . $public_directory_path . '/' . rawurlencode(\Drupal::service('file_system')
+    $this->assertSame(base_path() . $public_directory_path . '/' . \rawurlencode(\Drupal::service('file_system')
       ->basename($uri)), $this->fileUrlGenerator->transformRelative($url));
   }
 

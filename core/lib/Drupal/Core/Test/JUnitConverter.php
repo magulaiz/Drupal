@@ -26,7 +26,7 @@ class JUnitConverter {
    * @internal
    */
   public static function xmlToRows($test_id, $phpunit_xml_file) {
-    $contents = @file_get_contents($phpunit_xml_file);
+    $contents = @\file_get_contents($phpunit_xml_file);
     if (!$contents) {
       return [];
     }
@@ -79,7 +79,7 @@ class JUnitConverter {
       // case for tests using a data provider. The name of the parent testsuite
       // will be in the format class::method.
       if (!$element->attributes()->class) {
-        $name = explode('::', $parent->attributes()->name, 2);
+        $name = \explode('::', $parent->attributes()->name, 2);
         $element->addAttribute('class', $name[0]);
       }
       return [$element];
@@ -92,7 +92,7 @@ class JUnitConverter {
       }
       $test_cases[] = static::findTestCases($child, $element);
     }
-    return array_merge(...$test_cases);
+    return \array_merge(...$test_cases);
   }
 
   /**
@@ -112,7 +112,7 @@ class JUnitConverter {
     $message = '';
     $pass = TRUE;
     if ($test_case->failure) {
-      $lines = explode("\n", $test_case->failure);
+      $lines = \explode("\n", $test_case->failure);
       $message = $lines[2];
       $pass = FALSE;
     }

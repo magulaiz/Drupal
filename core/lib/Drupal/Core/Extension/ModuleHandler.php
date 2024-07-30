@@ -173,7 +173,7 @@ class ModuleHandler implements ModuleHandlerInterface {
     if (isset($this->moduleList[$name])) {
       return $this->moduleList[$name];
     }
-    throw new UnknownExtensionException(sprintf('The module %s does not exist.', $name));
+    throw new UnknownExtensionException(\sprintf('The module %s does not exist.', $name));
   }
 
   /**
@@ -212,7 +212,7 @@ class ModuleHandler implements ModuleHandlerInterface {
    */
   protected function add($type, $name, $path) {
     $pathname = "$path/$name.info.yml";
-    $filename = file_exists($this->root . "/$path/$name.$type") ? "$name.$type" : NULL;
+    $filename = \file_exists($this->root . "/$path/$name.$type") ? "$name.$type" : NULL;
     $this->moduleList[$name] = new Extension($this->root, $type, $pathname, $filename);
     $this->resetImplementations();
   }
@@ -223,7 +223,7 @@ class ModuleHandler implements ModuleHandlerInterface {
   public function buildModuleDependencies(array $modules) {
     foreach ($modules as $module) {
       $graph[$module->getName()]['edges'] = [];
-      if (isset($module->info['dependencies']) && is_array($module->info['dependencies'])) {
+      if (isset($module->info['dependencies']) && \is_array($module->info['dependencies'])) {
         foreach ($module->info['dependencies'] as $dependency) {
           $dependency_data = Dependency::createFromString($dependency);
           $graph[$module->getName()]['edges'][$dependency_data->getName()] = $dependency_data;
@@ -272,7 +272,7 @@ class ModuleHandler implements ModuleHandlerInterface {
     }
     if (isset($this->moduleList[$module])) {
       $file = $this->root . '/' . $this->moduleList[$module]->getPath() . "/$name.$type";
-      if (is_file($file)) {
+      if (\is_file($file)) {
         require_once $file;
         $this->includeFileKeys[$key] = $file;
         return $file;
@@ -312,9 +312,9 @@ class ModuleHandler implements ModuleHandlerInterface {
     // $this->invokeAll() would cause an infinite recursion.
     foreach ($this->moduleList as $module => $filename) {
       $function = $module . '_hook_info';
-      if (function_exists($function)) {
+      if (\function_exists($function)) {
         $result = $function();
-        if (isset($result) && is_array($result)) {
+        if (isset($result) && \is_array($result)) {
           $this->hookInfo = NestedArray::mergeDeep($this->hookInfo, $result);
         }
       }
@@ -372,7 +372,7 @@ class ModuleHandler implements ModuleHandlerInterface {
         // must be included by the calling code. Additionally, this check avoids
         // unnecessary work when a hook implementation is present in a module's
         // .module file.
-        if (function_exists($module . '_' . $hook)) {
+        if (\function_exists($module . '_' . $hook)) {
           return TRUE;
         }
       }
@@ -383,14 +383,14 @@ class ModuleHandler implements ModuleHandlerInterface {
       return TRUE;
     }
 
-    return !empty(array_intersect((array) $modules, array_keys($implementations)));
+    return !empty(\array_intersect((array) $modules, \array_keys($implementations)));
   }
 
   /**
    * {@inheritdoc}
    */
   public function invokeAllWith(string $hook, callable $callback): void {
-    foreach (array_keys($this->getImplementationInfo($hook)) as $module) {
+    foreach (\array_keys($this->getImplementationInfo($hook)) as $module) {
       $hookInvoker = \Closure::fromCallable($module . '_' . $hook);
       $callback($hookInvoker, $module);
     }
@@ -404,7 +404,7 @@ class ModuleHandler implements ModuleHandlerInterface {
       return;
     }
     $hookInvoker = \Closure::fromCallable($module . '_' . $hook);
-    return call_user_func_array($hookInvoker, $args);
+    return \call_user_func_array($hookInvoker, $args);
   }
 
   /**
@@ -413,8 +413,8 @@ class ModuleHandler implements ModuleHandlerInterface {
   public function invokeAll($hook, array $args = []) {
     $return = [];
     $this->invokeAllWith($hook, function (callable $hook, string $module) use ($args, &$return) {
-      $result = call_user_func_array($hook, $args);
-      if (isset($result) && is_array($result)) {
+      $result = \call_user_func_array($hook, $args);
+      if (isset($result) && \is_array($result)) {
         $return = NestedArray::mergeDeep($return, $result);
       }
       elseif (isset($result)) {
@@ -451,13 +451,13 @@ class ModuleHandler implements ModuleHandlerInterface {
    *   The name of the hook.
    */
   private function triggerDeprecationError($description, $hook) {
-    $modules = array_keys($this->getImplementationInfo($hook));
+    $modules = \array_keys($this->getImplementationInfo($hook));
     if (!empty($modules)) {
       $message = 'The deprecated hook hook_' . $hook . '() is implemented in these functions: ';
-      $implementations = array_map(function ($module) use ($hook) {
+      $implementations = \array_map(function ($module) use ($hook) {
         return $module . '_' . $hook . '()';
       }, $modules);
-      @trigger_error($message . implode(', ', $implementations) . '. ' . $description, E_USER_DEPRECATED);
+      @\trigger_error($message . \implode(', ', $implementations) . '. ' . $description, E_USER_DEPRECATED);
     }
   }
 
@@ -469,10 +469,10 @@ class ModuleHandler implements ModuleHandlerInterface {
     // normalize it to that. When passed as an array, usually the first item in
     // the array is a generic type, and additional items in the array are more
     // specific variants of it, as in the case of array('form', 'form_FORM_ID').
-    if (is_array($type)) {
-      $cid = implode(',', $type);
+    if (\is_array($type)) {
+      $cid = \implode(',', $type);
       $extra_types = $type;
-      $type = array_shift($extra_types);
+      $type = \array_shift($extra_types);
       // Allow if statements in this function to use the faster isset() rather
       // than !empty() both when $type is passed as a string, or as an array
       // with one item.
@@ -490,7 +490,7 @@ class ModuleHandler implements ModuleHandlerInterface {
     if (!isset($this->alterFunctions[$cid])) {
       $this->alterFunctions[$cid] = [];
       $hook = $type . '_alter';
-      $modules = array_keys($this->getImplementationInfo($hook));
+      $modules = \array_keys($this->getImplementationInfo($hook));
       if (!isset($extra_types)) {
         // For the more common case of a single hook, we do not need to call
         // function_exists(), since $this->getImplementationInfo() returns only
@@ -504,9 +504,9 @@ class ModuleHandler implements ModuleHandlerInterface {
         // implements at least one of them.
         $extra_modules = [];
         foreach ($extra_types as $extra_type) {
-          $extra_modules[] = array_keys($this->getImplementationInfo($extra_type . '_alter'));
+          $extra_modules[] = \array_keys($this->getImplementationInfo($extra_type . '_alter'));
         }
-        $extra_modules = array_merge(...$extra_modules);
+        $extra_modules = \array_merge(...$extra_modules);
         // If any modules implement one of the extra hooks that do not implement
         // the primary hook, we need to add them to the $modules array in their
         // appropriate order. $this->getImplementationInfo() can only return
@@ -515,32 +515,32 @@ class ModuleHandler implements ModuleHandlerInterface {
         // $this->getImplementationInfo() logic of first ordering by
         // $this->getModuleList(), and then calling
         // $this->alter('module_implements').
-        if (array_diff($extra_modules, $modules)) {
+        if (\array_diff($extra_modules, $modules)) {
           // Merge the arrays and order by getModuleList().
-          $modules = array_intersect(array_keys($this->moduleList), array_merge($modules, $extra_modules));
+          $modules = \array_intersect(\array_keys($this->moduleList), \array_merge($modules, $extra_modules));
           // Since $this->getImplementationInfo() already took care of loading the
           // necessary include files, we can safely pass FALSE for the array
           // values.
-          $implementations = array_fill_keys($modules, FALSE);
+          $implementations = \array_fill_keys($modules, FALSE);
           // Let modules adjust the order solely based on the primary hook. This
           // ensures the same module order regardless of whether this if block
           // runs. Calling $this->alter() recursively in this way does not
           // result in an infinite loop, because this call is for a single
           // $type, so we won't end up in this code block again.
           $this->alter('module_implements', $implementations, $hook);
-          $modules = array_keys($implementations);
+          $modules = \array_keys($implementations);
         }
         foreach ($modules as $module) {
           // Since $modules is a merged array, for any given module, we do not
           // know whether it has any particular implementation, so we need a
           // function_exists().
           $function = $module . '_' . $hook;
-          if (function_exists($function)) {
+          if (\function_exists($function)) {
             $this->alterFunctions[$cid][] = $function;
           }
           foreach ($extra_types as $extra_type) {
             $function = $module . '_' . $extra_type . '_alter';
-            if (function_exists($function)) {
+            if (\function_exists($function)) {
               $this->alterFunctions[$cid][] = $function;
             }
           }
@@ -564,14 +564,14 @@ class ModuleHandler implements ModuleHandlerInterface {
     // internally, but we have to extract the proper $cid in order to discover
     // implementations.
     $cid = $type;
-    if (is_array($type)) {
-      $cid = implode(',', $type);
+    if (\is_array($type)) {
+      $cid = \implode(',', $type);
       $extra_types = $type;
-      $type = array_shift($extra_types);
+      $type = \array_shift($extra_types);
     }
     if (!empty($this->alterFunctions[$cid])) {
-      $message = 'The deprecated alter hook hook_' . $type . '_alter() is implemented in these functions: ' . implode(', ', $this->alterFunctions[$cid]) . '.';
-      @trigger_error($message . ' ' . $description, E_USER_DEPRECATED);
+      $message = 'The deprecated alter hook hook_' . $type . '_alter() is implemented in these functions: ' . \implode(', ', $this->alterFunctions[$cid]) . '.';
+      @\trigger_error($message . ' ' . $description, E_USER_DEPRECATED);
     }
   }
 
@@ -640,7 +640,7 @@ class ModuleHandler implements ModuleHandlerInterface {
       $include_file = isset($hook_info[$hook]['group']) && $this->loadInclude($module, 'inc', $module . '.' . $hook_info[$hook]['group']);
       // Since $this->implementsHook() may needlessly try to load the include
       // file again, function_exists() is used directly here.
-      if (function_exists($module . '_' . $hook)) {
+      if (\function_exists($module . '_' . $hook)) {
         $implementations[$module] = $include_file ? $hook_info[$hook]['group'] : FALSE;
       }
     }
@@ -653,14 +653,14 @@ class ModuleHandler implements ModuleHandlerInterface {
       // Verify implementations that were added or modified.
       $this->alter('module_implements', $implementations, $hook);
       // Verify new or modified implementations.
-      foreach (array_diff_assoc($implementations, $implementations_before) as $module => $group) {
+      foreach (\array_diff_assoc($implementations, $implementations_before) as $module => $group) {
         // If an implementation of hook_module_implements_alter() changed or
         // added a group, the respective file needs to be included.
         if ($group) {
           $this->loadInclude($module, 'inc', "$module.$group");
         }
         // If a new implementation was added, verify that the function exists.
-        if (!function_exists($module . '_' . $hook)) {
+        if (!\function_exists($module . '_' . $hook)) {
           throw new \RuntimeException("An invalid implementation {$module}_{$hook} was added by hook_module_implements_alter()");
         }
       }
@@ -697,7 +697,7 @@ class ModuleHandler implements ModuleHandlerInterface {
       // function exists on each request to avoid undefined function errors.
       // Since ModuleHandler::implementsHook() may needlessly try to
       // load the include file again, function_exists() is used directly here.
-      if (!function_exists($module . '_' . $hook)) {
+      if (!\function_exists($module . '_' . $hook)) {
         // Clear out the stale implementation from the cache and force a cache
         // refresh to forget about no longer existing hook implementations.
         unset($implementations[$module]);
@@ -724,7 +724,7 @@ class ModuleHandler implements ModuleHandlerInterface {
    * {@inheritdoc}
    */
   public function getName($module) {
-    @trigger_error(__METHOD__ . '() is deprecated in drupal:10.3.0 and is removed from drupal:12.0.0. Use \Drupal\Core\Extension\ModuleExtensionList::getName($module) instead. See https://www.drupal.org/node/3310017', E_USER_DEPRECATED);
+    @\trigger_error(__METHOD__ . '() is deprecated in drupal:10.3.0 and is removed from drupal:12.0.0. Use \Drupal\Core\Extension\ModuleExtensionList::getName($module) instead. See https://www.drupal.org/node/3310017', E_USER_DEPRECATED);
     return \Drupal::service('extension.list.module')->getName($module);
   }
 

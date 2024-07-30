@@ -104,10 +104,10 @@ class TableDragTestForm extends FormBase {
 
     // Provide a default set of five rows.
     $rows = !empty($rows) ? $rows :
-      $this->state->get('tabledrag_test_table', array_flip(range(1, 5)));
+      $this->state->get('tabledrag_test_table', \array_flip(\range(1, 5)));
 
     foreach ($rows as $id => $row) {
-      if (!is_array($row)) {
+      if (!\is_array($row)) {
         $row = [];
       }
 
@@ -185,7 +185,7 @@ class TableDragTestForm extends FormBase {
 
     switch ($operation) {
       case 'reset':
-        $this->state->set('tabledrag_test_table', array_flip(range(1, 5)));
+        $this->state->set('tabledrag_test_table', \array_flip(\range(1, 5)));
         break;
 
       default:

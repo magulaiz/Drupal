@@ -70,7 +70,7 @@ class WorkspaceSelection extends DefaultSelection {
     // Get all the workspace entities and sort them in tree order.
     $storage = $this->entityTypeManager->getStorage('workspace');
     $workspace_tree = $this->workspaceRepository->loadTree();
-    $entities = array_replace($workspace_tree, $storage->loadMultiple());
+    $entities = \array_replace($workspace_tree, $storage->loadMultiple());
 
     // If we need to restrict the list of workspaces by searching only a part of
     // their label ($match) or by a number of results ($limit), the workspace
@@ -81,16 +81,16 @@ class WorkspaceSelection extends DefaultSelection {
     else {
       $options = [];
       foreach ($entities as $entity) {
-        $options[$entity->bundle()][$entity->id()] = str_repeat('-', $workspace_tree[$entity->id()]['depth']) . Html::escape($this->entityRepository->getTranslationFromContext($entity)->label());
+        $options[$entity->bundle()][$entity->id()] = \str_repeat('-', $workspace_tree[$entity->id()]['depth']) . Html::escape($this->entityRepository->getTranslationFromContext($entity)->label());
       }
     }
 
     $restricted_access_entities = [];
     foreach ($options as $bundle => $bundle_options) {
-      foreach (array_keys($bundle_options) as $id) {
+      foreach (\array_keys($bundle_options) as $id) {
         // If a user can not view a workspace, we need to prevent them from
         // referencing that workspace as well as its descendants.
-        if (in_array($id, $restricted_access_entities) || !$entities[$id]->access('view', $this->currentUser)) {
+        if (\in_array($id, $restricted_access_entities) || !$entities[$id]->access('view', $this->currentUser)) {
           $restricted_access_entities += $workspace_tree[$id]['descendants'];
           unset($options[$bundle][$id]);
         }

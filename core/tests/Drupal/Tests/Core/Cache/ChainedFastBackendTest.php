@@ -68,13 +68,13 @@ class ChainedFastBackendTest extends UnitTestCase {
     $timestamp_item = (object) [
       'cid' => ChainedFastBackend::LAST_WRITE_TIMESTAMP_PREFIX . 'cache_foo',
       // Time travel is easy.
-      'data' => time() + 60,
+      'data' => \time() + 60,
     ];
     $cache_item = (object) [
       'cid' => 'foo',
       'data' => 'baz',
-      'created' => time(),
-      'expire' => time() + 3600,
+      'created' => \time(),
+      'expire' => \time() + 3600,
       'tags' => ['tag'],
     ];
 

@@ -155,7 +155,7 @@ class JsonApiRegressionTest extends JsonApiFunctionalTestBase {
   public function testGetNodeCollectionWithHookNodeGrantsImplementationsFromIssue2984964(): void {
     // Set up data model.
     $this->assertTrue($this->container->get('module_installer')->install(['node_access_test'], TRUE), 'Installed modules.');
-    node_access_rebuild();
+    \node_access_rebuild();
     $this->rebuildAll();
 
     // Create data.
@@ -175,7 +175,7 @@ class JsonApiRegressionTest extends JsonApiFunctionalTestBase {
       ],
     ]);
     $this->assertSame(200, $response->getStatusCode());
-    $this->assertContains('user.node_grants:view', explode(' ', $response->getHeader('X-Drupal-Cache-Contexts')[0]));
+    $this->assertContains('user.node_grants:view', \explode(' ', $response->getHeader('X-Drupal-Cache-Contexts')[0]));
   }
 
   /**
@@ -250,7 +250,7 @@ class JsonApiRegressionTest extends JsonApiFunctionalTestBase {
     $article_node->save();
 
     // Test.
-    $url = Url::fromUri(sprintf('internal:/jsonapi/node/journal_article/%s', $article_node->uuid()));
+    $url = Url::fromUri(\sprintf('internal:/jsonapi/node/journal_article/%s', $article_node->uuid()));
     $request_options = [
       RequestOptions::HEADERS => [
         'Content-Type' => 'application/vnd.api+json',
@@ -419,7 +419,7 @@ class JsonApiRegressionTest extends JsonApiFunctionalTestBase {
     ];
 
     // Test.
-    $response = $this->request('PATCH', Url::fromUri(sprintf('internal:/jsonapi/taxonomy_term/tags/%s/relationships/%s', Term::load(1)->uuid(), $public_relationship_field_name)), [
+    $response = $this->request('PATCH', Url::fromUri(\sprintf('internal:/jsonapi/taxonomy_term/tags/%s/relationships/%s', Term::load(1)->uuid(), $public_relationship_field_name)), [
       RequestOptions::AUTH => [
         $user->getAccountName(),
         $user->pass_raw,
@@ -637,7 +637,7 @@ class JsonApiRegressionTest extends JsonApiFunctionalTestBase {
     $data = $this->getDocumentFromResponse($response, FALSE);
     $this->assertSame(422, $response->getStatusCode());
     $this->assertNotNull($data);
-    $this->assertSame(sprintf('title: This value should not be null.'), $data['errors'][0]['detail']);
+    $this->assertSame(\sprintf('title: This value should not be null.'), $data['errors'][0]['detail']);
 
     // Make request as regular user.
     $request_options[RequestOptions::AUTH] = [$admin->getAccountName(), $admin->pass_raw];
@@ -648,7 +648,7 @@ class JsonApiRegressionTest extends JsonApiFunctionalTestBase {
     $data = $this->getDocumentFromResponse($response, FALSE);
     $this->assertSame(422, $response->getStatusCode());
     $this->assertNotNull($data);
-    $this->assertSame(sprintf('title: This value should not be null.'), $data['errors'][0]['detail']);
+    $this->assertSame(\sprintf('title: This value should not be null.'), $data['errors'][0]['detail']);
   }
 
   /**
@@ -702,7 +702,7 @@ class JsonApiRegressionTest extends JsonApiFunctionalTestBase {
     ]);
 
     // Test.
-    $url = Url::fromUri(sprintf('internal:/jsonapi/entity_test_map_field/entity_test_map_field/%s', $entity->uuid()));
+    $url = Url::fromUri(\sprintf('internal:/jsonapi/entity_test_map_field/entity_test_map_field/%s', $entity->uuid()));
     $request_options = [
       RequestOptions::AUTH => [$user->getAccountName(), $user->pass_raw],
     ];
@@ -768,7 +768,7 @@ class JsonApiRegressionTest extends JsonApiFunctionalTestBase {
 
     $omitted = $document['meta']['omitted']['links'];
     unset($omitted['help']);
-    $omitted = reset($omitted);
+    $omitted = \reset($omitted);
     $expected_url = Url::fromUri('internal:/jsonapi/' . $term->getEntityTypeId() . '/' . $term->bundle() . '/' . $term->uuid());
     $expected_url->setAbsolute();
     $this->assertSame($expected_url->toString(), $omitted['href'], 'Entity that is excluded due to access constraints is correctly reported in the "Omitted" section of the JSON API response.');

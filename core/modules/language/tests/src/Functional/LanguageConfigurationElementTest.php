@@ -109,8 +109,8 @@ class LanguageConfigurationElementTest extends BrowserTestBase {
     }
 
     // Ensure the bundles under test exist, to avoid config validation errors.
-    entity_test_create_bundle('custom_bundle');
-    entity_test_create_bundle('some_bundle');
+    \entity_test_create_bundle('custom_bundle');
+    \entity_test_create_bundle('some_bundle');
 
     // Fixed language.
     ContentLanguageSettings::loadByEntityTypeBundle('entity_test', 'custom_bundle')
@@ -118,7 +118,7 @@ class LanguageConfigurationElementTest extends BrowserTestBase {
       ->setDefaultLangcode('bb')
       ->save();
 
-    $langcode = language_get_default_langcode('entity_test', 'custom_bundle');
+    $langcode = \language_get_default_langcode('entity_test', 'custom_bundle');
     $this->assertEquals('bb', $langcode);
 
     // Current interface.
@@ -127,7 +127,7 @@ class LanguageConfigurationElementTest extends BrowserTestBase {
       ->setDefaultLangcode('current_interface')
       ->save();
 
-    $langcode = language_get_default_langcode('entity_test', 'custom_bundle');
+    $langcode = \language_get_default_langcode('entity_test', 'custom_bundle');
     $language_interface = \Drupal::languageManager()->getCurrentLanguage();
     $this->assertEquals($langcode, $language_interface->getId());
 
@@ -142,7 +142,7 @@ class LanguageConfigurationElementTest extends BrowserTestBase {
       ->setLanguageAlterable(TRUE)
       ->setDefaultLangcode(LanguageInterface::LANGCODE_SITE_DEFAULT)
       ->save();
-    $langcode = language_get_default_langcode('entity_test', 'custom_bundle');
+    $langcode = \language_get_default_langcode('entity_test', 'custom_bundle');
     $this->assertEquals('cc', $langcode);
 
     // Ensure the language entity default value is correct.

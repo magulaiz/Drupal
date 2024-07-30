@@ -58,7 +58,7 @@ class DisplayPluginCollection extends DefaultLazyPluginCollection {
    * {@inheritdoc}
    */
   public function clear() {
-    foreach (array_filter($this->pluginInstances) as $display) {
+    foreach (\array_filter($this->pluginInstances) as $display) {
       $display->destroy();
     }
 
@@ -80,7 +80,7 @@ class DisplayPluginCollection extends DefaultLazyPluginCollection {
     // display plugin isn't found.
     catch (PluginException $e) {
       $message = $e->getMessage();
-      \Drupal::messenger()->addWarning(t('@message', ['@message' => $message]));
+      \Drupal::messenger()->addWarning(\t('@message', ['@message' => $message]));
     }
 
     // If no plugin instance has been created, return NULL.

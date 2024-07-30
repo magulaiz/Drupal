@@ -58,7 +58,7 @@ class WorkspaceAssociation implements WorkspaceAssociationInterface, EventSubscr
 
     $tracked_revision_id = NULL;
     if (isset($tracked[$entity->getEntityTypeId()])) {
-      $tracked_revision_id = key($tracked[$entity->getEntityTypeId()]);
+      $tracked_revision_id = \key($tracked[$entity->getEntityTypeId()]);
     }
 
     try {
@@ -81,7 +81,7 @@ class WorkspaceAssociation implements WorkspaceAssociationInterface, EventSubscr
 
       // Insert a new index entry for each workspace that is not tracking this
       // entity yet.
-      $missing_workspaces = array_diff($affected_workspaces, $this->getEntityTrackingWorkspaceIds($entity));
+      $missing_workspaces = \array_diff($affected_workspaces, $this->getEntityTrackingWorkspaceIds($entity));
       if ($missing_workspaces) {
         $insert_query = $this->database->insert(static::TABLE)
           ->fields([
@@ -180,7 +180,7 @@ class WorkspaceAssociation implements WorkspaceAssociationInterface, EventSubscr
   public function getAssociatedRevisions($workspace_id, $entity_type_id, $entity_ids = NULL) {
     if (isset($this->associatedRevisions[$workspace_id][$entity_type_id])) {
       if ($entity_ids) {
-        return array_intersect($this->associatedRevisions[$workspace_id][$entity_type_id], $entity_ids);
+        return \array_intersect($this->associatedRevisions[$workspace_id][$entity_type_id], $entity_ids);
       }
       else {
         return $this->associatedRevisions[$workspace_id][$entity_type_id];
@@ -205,7 +205,7 @@ class WorkspaceAssociation implements WorkspaceAssociationInterface, EventSubscr
 
     $workspace_tree = $this->workspaceRepository->loadTree();
     if (isset($workspace_tree[$workspace_id])) {
-      $workspace_candidates = array_merge([$workspace_id], $workspace_tree[$workspace_id]['ancestors']);
+      $workspace_candidates = \array_merge([$workspace_id], $workspace_tree[$workspace_id]['ancestors']);
     }
     else {
       $workspace_candidates = [$workspace_id];
@@ -241,7 +241,7 @@ class WorkspaceAssociation implements WorkspaceAssociationInterface, EventSubscr
   public function getAssociatedInitialRevisions(string $workspace_id, string $entity_type_id, array $entity_ids = []) {
     if (isset($this->associatedInitialRevisions[$workspace_id][$entity_type_id])) {
       if ($entity_ids) {
-        return array_intersect($this->associatedInitialRevisions[$workspace_id][$entity_type_id], $entity_ids);
+        return \array_intersect($this->associatedInitialRevisions[$workspace_id][$entity_type_id], $entity_ids);
       }
       else {
         return $this->associatedInitialRevisions[$workspace_id][$entity_type_id];
@@ -316,7 +316,7 @@ class WorkspaceAssociation implements WorkspaceAssociationInterface, EventSubscr
 
     // Return workspace IDs sorted in tree order.
     $tree = $this->workspaceRepository->loadTree();
-    return array_keys(array_intersect_key($tree, array_flip($result)));
+    return \array_keys(\array_intersect_key($tree, \array_flip($result)));
   }
 
   /**

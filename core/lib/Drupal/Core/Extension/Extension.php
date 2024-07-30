@@ -70,7 +70,7 @@ class Extension {
    */
   public function __construct($root, $type, $pathname, $filename = NULL) {
     // @see \Drupal\Core\Theme\ThemeInitialization::getActiveThemeByName()
-    assert($pathname === 'core/core.info.yml' || ($pathname[0] !== '/' && file_exists($root . '/' . $pathname)), sprintf('The file specified by the given app root, relative path and file name (%s) do not exist.', $root . '/' . $pathname));
+    \assert($pathname === 'core/core.info.yml' || ($pathname[0] !== '/' && \file_exists($root . '/' . $pathname)), \sprintf('The file specified by the given app root, relative path and file name (%s) do not exist.', $root . '/' . $pathname));
     $this->root = $root;
     $this->type = $type;
     $this->pathname = $pathname;
@@ -92,7 +92,7 @@ class Extension {
    * @return string
    */
   public function getName() {
-    return basename($this->pathname, '.info.yml');
+    return \basename($this->pathname, '.info.yml');
   }
 
   /**
@@ -101,7 +101,7 @@ class Extension {
    * @return string
    */
   public function getPath() {
-    return dirname($this->pathname);
+    return \dirname($this->pathname);
   }
 
   /**
@@ -119,7 +119,7 @@ class Extension {
    * @return string
    */
   public function getFilename() {
-    return basename($this->pathname);
+    return \basename($this->pathname);
   }
 
   /**
@@ -180,11 +180,11 @@ class Extension {
   public function __sleep(): array {
     // @todo \Drupal\Core\Extension\ThemeExtensionList is adding custom
     //   properties to the Extension object.
-    $properties = get_object_vars($this);
+    $properties = \get_object_vars($this);
     // Don't serialize the app root, since this could change if the install is
     // moved. Don't serialize splFileInfo because it can not be.
     unset($properties['splFileInfo'], $properties['root']);
-    return array_keys($properties);
+    return \array_keys($properties);
   }
 
   /**

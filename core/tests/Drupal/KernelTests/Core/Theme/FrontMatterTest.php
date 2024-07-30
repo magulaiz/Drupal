@@ -45,7 +45,7 @@ class FrontMatterTest extends KernelTestBase {
   public function register(ContainerBuilder $container) {
     parent::register($container);
 
-    $definition = new Definition(FilesystemLoader::class, [[sys_get_temp_dir()]]);
+    $definition = new Definition(FilesystemLoader::class, [[\sys_get_temp_dir()]]);
     $definition->setPublic(TRUE);
     $container->setDefinition('twig_loader__file_system', $definition)
       ->addTag('twig.loader');
@@ -61,8 +61,8 @@ class FrontMatterTest extends KernelTestBase {
    *   The absolute path to the temporary file.
    */
   protected function createTwigTemplate(string $content = ''): string {
-    $file = tempnam(sys_get_temp_dir(), 'twig') . ".html.twig";
-    file_put_contents($file, $content);
+    $file = \tempnam(\sys_get_temp_dir(), 'twig') . ".html.twig";
+    \file_put_contents($file, $content);
     return $file;
   }
 
@@ -77,7 +77,7 @@ class FrontMatterTest extends KernelTestBase {
     $file = $this->createTwigTemplate($source);
     $this->expectException(SyntaxError::class);
     $this->expectExceptionMessage('An error occurred when attempting to parse front matter data on line 4 in ' . $file);
-    $this->twig->getTemplateMetadata(basename($file));
+    $this->twig->getTemplateMetadata(\basename($file));
   }
 
   /**
@@ -99,7 +99,7 @@ class FrontMatterTest extends KernelTestBase {
     // Create a temporary Twig template.
     $source = ComponentFrontMatterTest::createFrontMatterSource($yaml, $content);
     $file = $this->createTwigTemplate($source);
-    $name = basename($file);
+    $name = \basename($file);
 
     // Ensure the proper metadata is returned.
     $metadata = $this->twig->getTemplateMetadata($name);
@@ -112,7 +112,7 @@ class FrontMatterTest extends KernelTestBase {
     // Create a temporary Twig template.
     $source = ComponentFrontMatterTest::createFrontMatterSource($yaml, static::BROKEN_SOURCE);
     $file = $this->createTwigTemplate($source);
-    $name = basename($file);
+    $name = \basename($file);
 
     try {
       $this->twig->load($name);

@@ -288,12 +288,12 @@ abstract class BrowserTestBase extends TestCase {
   protected function getDefaultDriverInstance() {
     // Get default driver params from environment if available.
     if ($arg_json = $this->getMinkDriverArgs()) {
-      $this->minkDefaultDriverArgs = json_decode($arg_json, TRUE);
+      $this->minkDefaultDriverArgs = \json_decode($arg_json, TRUE);
     }
 
     // Get and check default driver class from environment if available.
-    if ($minkDriverClass = getenv('MINK_DRIVER_CLASS')) {
-      if (class_exists($minkDriverClass)) {
+    if ($minkDriverClass = \getenv('MINK_DRIVER_CLASS')) {
+      if (\class_exists($minkDriverClass)) {
         $this->minkDefaultDriverClass = $minkDriverClass;
       }
       else {
@@ -304,7 +304,7 @@ abstract class BrowserTestBase extends TestCase {
     if ($this->minkDefaultDriverClass === BrowserKitDriver::class) {
       $driver = new $this->minkDefaultDriverClass(new DrupalTestBrowser());
     }
-    elseif (is_array($this->minkDefaultDriverArgs)) {
+    elseif (\is_array($this->minkDefaultDriverArgs)) {
       // Use ReflectionClass to instantiate class with received params.
       $reflector = new \ReflectionClass($this->minkDefaultDriverClass);
       $driver = $reflector->newInstanceArgs($this->minkDefaultDriverArgs);
@@ -326,7 +326,7 @@ abstract class BrowserTestBase extends TestCase {
    *   The JSON-encoded argument string. False if it is not set.
    */
   protected function getMinkDriverArgs() {
-    return getenv('MINK_DRIVER_ARGS');
+    return \getenv('MINK_DRIVER_ARGS');
   }
 
   /**
@@ -351,7 +351,7 @@ abstract class BrowserTestBase extends TestCase {
     parent::setUp();
 
     $this->setUpAppRoot();
-    chdir($this->root);
+    \chdir($this->root);
 
     // Allow tests to compare MarkupInterface objects via assertEquals().
     $this->registerComparator(new MarkupInterfaceComparator());
@@ -381,7 +381,7 @@ abstract class BrowserTestBase extends TestCase {
    */
   protected function setUpAppRoot(): void {
     if ($this->root === NULL) {
-      $this->root = dirname(substr(__DIR__, 0, -strlen(__NAMESPACE__)), 2);
+      $this->root = \dirname(\substr(__DIR__, 0, -\strlen(__NAMESPACE__)), 2);
     }
   }
 
@@ -402,7 +402,7 @@ abstract class BrowserTestBase extends TestCase {
     // make read-only files writable again. If not, chmod will fail while the
     // file deletion still works if file permissions have been configured
     // correctly. Thus, we ignore any problems while running chmod.
-    @chmod($path, 0700);
+    @\chmod($path, 0700);
   }
 
   /**
@@ -455,8 +455,8 @@ abstract class BrowserTestBase extends TestCase {
     }
 
     // Restore original shutdown callbacks.
-    if (function_exists('drupal_register_shutdown_function')) {
-      $callbacks = &drupal_register_shutdown_function();
+    if (\function_exists('drupal_register_shutdown_function')) {
+      $callbacks = &\drupal_register_shutdown_function();
       $callbacks = $this->originalShutdownCallbacks;
     }
   }
@@ -481,7 +481,7 @@ abstract class BrowserTestBase extends TestCase {
    *   A cookie jar with the current session.
    */
   protected function getSessionCookies() {
-    $domain = parse_url($this->getUrl(), PHP_URL_HOST);
+    $domain = \parse_url($this->getUrl(), PHP_URL_HOST);
     $session_id = $this->getSession()->getCookie($this->getSessionName());
     $cookies = CookieJar::fromArray([$this->getSessionName() => $session_id], $domain);
 
@@ -512,7 +512,7 @@ abstract class BrowserTestBase extends TestCase {
     if ($this->isTestUsingGuzzleClient()) {
       return $mink_driver->getClient()->getClient();
     }
-    throw new \RuntimeException('The Mink client type ' . get_class($mink_driver) . ' does not support getHttpClient().');
+    throw new \RuntimeException('The Mink client type ' . \get_class($mink_driver) . ' does not support getHttpClient().');
   }
 
   /**
@@ -527,7 +527,7 @@ abstract class BrowserTestBase extends TestCase {
    *   Associative array of option keys and values.
    */
   protected function getOptions($select, ?Element $container = NULL) {
-    if (is_string($select)) {
+    if (\is_string($select)) {
       $select = $this->assertSession()->selectExists($select, $container);
     }
     $options = [];
@@ -623,7 +623,7 @@ abstract class BrowserTestBase extends TestCase {
    */
   protected function getDrupalSettings() {
     $html = $this->getSession()->getPage()->getContent();
-    if (preg_match('@<script type="application/json" data-drupal-selector="drupal-settings-json">([^<]*)</script>@', $html, $matches)) {
+    if (\preg_match('@<script type="application/json" data-drupal-selector="drupal-settings-json">([^<]*)</script>@', $html, $matches)) {
       $settings = Json::decode($matches[1]);
       if (isset($settings['ajaxPageState']['libraries'])) {
         $settings['ajaxPageState']['libraries'] = UrlHelper::uncompressQueryParameter($settings['ajaxPageState']['libraries']);
@@ -640,7 +640,7 @@ abstract class BrowserTestBase extends TestCase {
    *   An associative array with keys 'file', 'line' and 'function'.
    */
   protected function getTestMethodCaller() {
-    $backtrace = debug_backtrace();
+    $backtrace = \debug_backtrace();
     // Find the test class that has the test method.
     while ($caller = Error::getLastCaller($backtrace)) {
       // If we match PHPUnit's TestCase::runTest, then the previously processed
@@ -655,7 +655,7 @@ abstract class BrowserTestBase extends TestCase {
       // class name of $this will not be part of the backtrace.
       // In that case we process the backtrace until the caller is not a
       // subclass of $this and return the previous caller.
-      if (isset($last_caller) && (!isset($caller['class']) || !is_subclass_of($this, $caller['class']))) {
+      if (isset($last_caller) && (!isset($caller['class']) || !\is_subclass_of($this, $caller['class']))) {
         // Return the last caller since that has to be the test class.
         $caller = $last_caller;
         break;
@@ -668,7 +668,7 @@ abstract class BrowserTestBase extends TestCase {
       // Otherwise we have not reached our test class yet: save the last caller
       // and remove an element from to backtrace to process the next call.
       $last_caller = $caller;
-      array_shift($backtrace);
+      \array_shift($backtrace);
     }
 
     return $caller;
@@ -688,10 +688,10 @@ abstract class BrowserTestBase extends TestCase {
     // The easiest and most straightforward way to translate values suitable for
     // BrowserTestBase::submitForm() is to actually build the POST data
     // string and convert the resulting key/value pairs back into a flat array.
-    $query = http_build_query($values);
-    foreach (explode('&', $query) as $item) {
-      [$key, $value] = explode('=', $item);
-      $edit[urldecode($key)] = urldecode($value);
+    $query = \http_build_query($values);
+    foreach (\explode('&', $query) as $item) {
+      [$key, $value] = \explode('=', $item);
+      $edit[\urldecode($key)] = \urldecode($value);
     }
     return $edit;
   }

@@ -75,14 +75,14 @@ class PathAliasTest extends PathTestBase {
     // created.
     \Drupal::cache('data')->deleteAll();
     // Make sure the path is not converted to the alias.
-    $this->drupalGet(trim($edit['path[0][value]'], '/'), ['alias' => TRUE]);
+    $this->drupalGet(\trim($edit['path[0][value]'], '/'), ['alias' => TRUE]);
     $this->assertNotEmpty(\Drupal::cache('data')->get('preload-paths:' . $edit['path[0][value]']), 'Cache entry was created.');
 
     // Visit the alias for the node and confirm a cache entry is created.
     \Drupal::cache('data')->deleteAll();
     // @todo Remove this once https://www.drupal.org/node/2480077 lands.
     Cache::invalidateTags(['rendered']);
-    $this->drupalGet(trim($edit['alias[0][value]'], '/'));
+    $this->drupalGet(\trim($edit['alias[0][value]'], '/'));
     $this->assertNotEmpty(\Drupal::cache('data')->get('preload-paths:' . $edit['path[0][value]']), 'Cache entry was created.');
   }
 
@@ -105,12 +105,12 @@ class PathAliasTest extends PathTestBase {
     $this->assertSession()->pageTextContains($node1->label());
     $this->assertSession()->statusCodeEquals(200);
     // Confirm that the alias works in a case-insensitive way.
-    $this->assertTrue(ctype_lower(ltrim($edit['alias[0][value]'], '/')));
+    $this->assertTrue(\ctype_lower(\ltrim($edit['alias[0][value]'], '/')));
     $this->drupalGet($edit['alias[0][value]']);
     // Lower case.
     $this->assertSession()->pageTextContains($node1->label());
     $this->assertSession()->statusCodeEquals(200);
-    $this->drupalGet(mb_strtoupper($edit['alias[0][value]']));
+    $this->drupalGet(\mb_strtoupper($edit['alias[0][value]']));
     // Upper case.
     $this->assertSession()->pageTextContains($node1->label());
     $this->assertSession()->statusCodeEquals(200);
@@ -140,7 +140,7 @@ class PathAliasTest extends PathTestBase {
     $this->submitForm($edit, 'Save');
 
     // Confirm that the alias works.
-    $this->drupalGet(mb_strtoupper($edit['alias[0][value]']));
+    $this->drupalGet(\mb_strtoupper($edit['alias[0][value]']));
     $this->assertSession()->pageTextContains($node1->label());
     $this->assertSession()->statusCodeEquals(200);
 
@@ -163,7 +163,7 @@ class PathAliasTest extends PathTestBase {
     $this->assertSession()->statusMessageContains("The alias {$edit['alias[0][value]']} is already in use in this language.", 'error');
 
     $edit_upper = $edit;
-    $edit_upper['alias[0][value]'] = mb_strtoupper($edit['alias[0][value]']);
+    $edit_upper['alias[0][value]'] = \mb_strtoupper($edit['alias[0][value]']);
     $this->drupalGet('admin/config/search/path/add');
     $this->submitForm($edit_upper, 'Save');
     $this->assertSession()->statusMessageContains("The alias {$edit_upper['alias[0][value]']} could not be added because it is already in use in this language with different capitalization: {$edit['alias[0][value]']}.", 'error');
@@ -214,7 +214,7 @@ class PathAliasTest extends PathTestBase {
     // Confirm that the alias with trailing slash is not found.
     $this->assertSession()->pageTextNotContains($edit['alias[0][value]']);
     // The alias without trailing flash is found.
-    $this->assertSession()->pageTextContains(trim($edit['alias[0][value]'], '/'));
+    $this->assertSession()->pageTextContains(\trim($edit['alias[0][value]'], '/'));
 
     // Update an existing alias to point to a different source.
     $pid = $this->getPID($node4_alias);
@@ -300,7 +300,7 @@ class PathAliasTest extends PathTestBase {
     $this->submitForm($edit, 'Save');
 
     // Confirm that the alias works.
-    $this->drupalGet(mb_strtoupper($edit['path[0][alias]']));
+    $this->drupalGet(\mb_strtoupper($edit['path[0][alias]']));
     $this->assertSession()->pageTextContains($node1->label());
     $this->assertSession()->statusCodeEquals(200);
 
@@ -338,7 +338,7 @@ class PathAliasTest extends PathTestBase {
     $this->submitForm($edit, 'Save');
 
     // Confirm that the alias was converted to a relative path.
-    $this->drupalGet(trim($edit['path[0][alias]'], '/'));
+    $this->drupalGet(\trim($edit['path[0][alias]'], '/'));
     $this->assertSession()->pageTextContains($node3->label());
     $this->assertSession()->statusCodeEquals(200);
 
@@ -351,7 +351,7 @@ class PathAliasTest extends PathTestBase {
     $this->submitForm($edit, 'Save');
 
     // Confirm that the alias was converted to a relative path.
-    $this->drupalGet(trim($edit['path[0][alias]'], '/'));
+    $this->drupalGet(\trim($edit['path[0][alias]'], '/'));
     $this->assertSession()->pageTextContains($node4->label());
     $this->assertSession()->statusCodeEquals(200);
 
@@ -416,7 +416,7 @@ class PathAliasTest extends PathTestBase {
       ->condition('alias', $alias, '=')
       ->accessCheck(FALSE)
       ->execute();
-    return reset($result);
+    return \reset($result);
   }
 
   /**

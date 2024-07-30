@@ -64,9 +64,9 @@ class EditorAdminTest extends BrowserTestBase {
 
     // Ensure the form field order is correct.
     $raw_content = $this->getSession()->getPage()->getContent();
-    $roles_pos = strpos($raw_content, 'Roles');
-    $editor_pos = strpos($raw_content, 'Text editor');
-    $filters_pos = strpos($raw_content, 'Enabled filters');
+    $roles_pos = \strpos($raw_content, 'Roles');
+    $editor_pos = \strpos($raw_content, 'Text editor');
+    $filters_pos = \strpos($raw_content, 'Enabled filters');
     $this->assertGreaterThan($roles_pos, $editor_pos);
     $this->assertLessThan($filters_pos, $editor_pos);
 
@@ -120,7 +120,7 @@ class EditorAdminTest extends BrowserTestBase {
     // Create a new node type and attach the 'body' field to it.
     $node_type = NodeType::create(['type' => $this->randomMachineName(), 'name' => $this->randomString()]);
     $node_type->save();
-    node_add_body_field($node_type, $this->randomString());
+    \node_add_body_field($node_type, $this->randomString());
 
     $permissions = ['administer filters', "edit any {$node_type->id()} content"];
     foreach ($formats as $format => $name) {
@@ -242,7 +242,7 @@ class EditorAdminTest extends BrowserTestBase {
    *   The expected value of the ponies_too setting.
    */
   protected function verifyUnicornEditorConfiguration($format_id, $ponies_too = TRUE) {
-    $editor = editor_load($format_id);
+    $editor = \editor_load($format_id);
     $settings = $editor->getSettings();
     $this->assertSame('unicorn', $editor->getEditor(), 'The text editor is configured correctly.');
     $this->assertSame($ponies_too, $settings['ponies_too'], 'The text editor settings are stored correctly.');

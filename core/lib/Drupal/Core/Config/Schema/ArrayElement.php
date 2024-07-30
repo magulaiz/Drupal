@@ -40,7 +40,7 @@ abstract class ArrayElement extends Element implements \IteratorAggregate, Typed
    *   Array of valid configuration data keys.
    */
   protected function getAllKeys() {
-    return is_array($this->value) ? array_keys($this->value) : [];
+    return \is_array($this->value) ? \array_keys($this->value) : [];
   }
 
   /**
@@ -73,13 +73,13 @@ abstract class ArrayElement extends Element implements \IteratorAggregate, Typed
    * {@inheritdoc}
    */
   public function get($name) {
-    $parts = explode('.', $name);
-    $root_key = array_shift($parts);
+    $parts = \explode('.', $name);
+    $root_key = \array_shift($parts);
     $elements = $this->getElements();
     if (isset($elements[$root_key])) {
       $element = $elements[$root_key];
       // If $property_name contained a dot recurse into the keys.
-      while ($element && ($key = array_shift($parts)) !== NULL) {
+      while ($element && ($key = \array_shift($parts)) !== NULL) {
         if ($element instanceof TypedConfigInterface) {
           $element = $element->get($key);
         }
@@ -196,7 +196,7 @@ abstract class ArrayElement extends Element implements \IteratorAggregate, Typed
    */
   public function getProperties($include_computed = FALSE) {
     $properties = [];
-    foreach (array_keys($this->value) as $name) {
+    foreach (\array_keys($this->value) as $name) {
       $properties[$name] = $this->get($name);
     }
     return $properties;

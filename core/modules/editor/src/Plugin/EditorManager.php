@@ -64,7 +64,7 @@ class EditorManager extends DefaultPluginManager {
 
     $settings = [];
     foreach ($format_ids as $format_id) {
-      $editor = editor_load($format_id);
+      $editor = \editor_load($format_id);
       if (!$editor) {
         continue;
       }
@@ -73,7 +73,7 @@ class EditorManager extends DefaultPluginManager {
       $plugin_definition = $plugin->getPluginDefinition();
 
       // Libraries.
-      $attachments['library'] = array_merge($attachments['library'], $plugin->getLibraries($editor));
+      $attachments['library'] = \array_merge($attachments['library'], $plugin->getLibraries($editor));
 
       // Format-specific JavaScript settings.
       $settings['editor']['formats'][$format_id] = [

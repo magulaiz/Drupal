@@ -39,10 +39,10 @@ class Upgrade7TestWithContentModeration extends Upgrade7Test {
     }
 
     $editorial = Workflow::load('editorial');
-    assert($editorial instanceof WorkflowInterface);
+    \assert($editorial instanceof WorkflowInterface);
     $type_settings = $editorial->getTypePlugin()->getConfiguration();
     $type_settings['default_moderation_state'] = 'published';
-    $type_settings['entity_types']['node'] = array_merge(
+    $type_settings['entity_types']['node'] = \array_merge(
       ['article'],
       $types
     );

@@ -387,7 +387,7 @@ class SqlContentEntityStorageSchemaTest extends UnitTestCase {
     $this->setUpStorageSchema($expected);
 
     $table_mapping = new TestSqlContentDefaultTableMapping($this->entityType, $this->storageDefinitions);
-    $table_mapping->setFieldNames('entity_test', array_keys($this->storageDefinitions));
+    $table_mapping->setFieldNames('entity_test', \array_keys($this->storageDefinitions));
     $table_mapping->setExtraColumns('entity_test', ['default_langcode']);
 
     $this->storageSchema->expects($this->any())
@@ -494,8 +494,8 @@ class SqlContentEntityStorageSchemaTest extends UnitTestCase {
     $this->setUpStorageSchema($expected);
 
     $table_mapping = new TestSqlContentDefaultTableMapping($this->entityType, $this->storageDefinitions);
-    $table_mapping->setFieldNames('entity_test', array_keys($this->storageDefinitions));
-    $table_mapping->setFieldNames('entity_test_revision', array_keys($this->storageDefinitions));
+    $table_mapping->setFieldNames('entity_test', \array_keys($this->storageDefinitions));
+    $table_mapping->setFieldNames('entity_test_revision', \array_keys($this->storageDefinitions));
 
     $this->storageSchema->expects($this->any())
       ->method('getTableMapping')
@@ -601,10 +601,10 @@ class SqlContentEntityStorageSchemaTest extends UnitTestCase {
     $this->setUpStorageSchema($expected);
 
     $table_mapping = new TestSqlContentDefaultTableMapping($this->entityType, $this->storageDefinitions);
-    $non_data_fields = array_keys($this->storageDefinitions);
-    unset($non_data_fields[array_search('default_langcode', $non_data_fields)]);
+    $non_data_fields = \array_keys($this->storageDefinitions);
+    unset($non_data_fields[\array_search('default_langcode', $non_data_fields)]);
     $table_mapping->setFieldNames('entity_test', $non_data_fields);
-    $table_mapping->setFieldNames('entity_test_field_data', array_keys($this->storageDefinitions));
+    $table_mapping->setFieldNames('entity_test_field_data', \array_keys($this->storageDefinitions));
 
     $this->storageSchema->expects($this->any())
       ->method('getTableMapping')
@@ -817,12 +817,12 @@ class SqlContentEntityStorageSchemaTest extends UnitTestCase {
     $this->setUpStorageSchema($expected);
 
     $table_mapping = new TestSqlContentDefaultTableMapping($this->entityType, $this->storageDefinitions);
-    $non_data_fields = array_keys($this->storageDefinitions);
-    unset($non_data_fields[array_search('default_langcode', $non_data_fields)]);
+    $non_data_fields = \array_keys($this->storageDefinitions);
+    unset($non_data_fields[\array_search('default_langcode', $non_data_fields)]);
     $table_mapping->setFieldNames('entity_test', $non_data_fields);
     $table_mapping->setFieldNames('entity_test_revision', $non_data_fields);
-    $table_mapping->setFieldNames('entity_test_field_data', array_keys($this->storageDefinitions));
-    $table_mapping->setFieldNames('entity_test_revision_field_data', array_keys($this->storageDefinitions));
+    $table_mapping->setFieldNames('entity_test_field_data', \array_keys($this->storageDefinitions));
+    $table_mapping->setFieldNames('entity_test_revision_field_data', \array_keys($this->storageDefinitions));
 
     $this->storageSchema->expects($this->any())
       ->method('getTableMapping')
@@ -996,7 +996,7 @@ class SqlContentEntityStorageSchemaTest extends UnitTestCase {
     $this->setUpStorageSchema($expected);
 
     $table_mapping = new TestSqlContentDefaultTableMapping($this->entityType, $this->storageDefinitions);
-    $table_mapping->setFieldNames($entity_type_id, array_keys($this->storageDefinitions));
+    $table_mapping->setFieldNames($entity_type_id, \array_keys($this->storageDefinitions));
     $table_mapping->setExtraColumns($entity_type_id, ['default_langcode']);
 
     $this->storageSchema->expects($this->any())
@@ -1141,7 +1141,7 @@ class SqlContentEntityStorageSchemaTest extends UnitTestCase {
     $this->setUpStorageSchema($expected);
 
     $table_mapping = new TestSqlContentDefaultTableMapping($this->entityType, $this->storageDefinitions);
-    $table_mapping->setFieldNames($entity_type_id, array_keys($this->storageDefinitions));
+    $table_mapping->setFieldNames($entity_type_id, \array_keys($this->storageDefinitions));
     $table_mapping->setExtraColumns($entity_type_id, ['default_langcode']);
 
     $this->storageSchema->expects($this->any())
@@ -1190,7 +1190,7 @@ class SqlContentEntityStorageSchemaTest extends UnitTestCase {
       'entity_keys' => ['id' => 'id'],
     ]);
 
-    $this->storage->expects($this->exactly(is_null($original_storage_has_data) || !$shared_table_structure_changed ? 0 : 1))
+    $this->storage->expects($this->exactly(\is_null($original_storage_has_data) || !$shared_table_structure_changed ? 0 : 1))
       ->method('hasData')
       ->willReturn($original_storage_has_data);
 
@@ -1296,7 +1296,7 @@ class SqlContentEntityStorageSchemaTest extends UnitTestCase {
 
     $this->setUpStorageSchema();
     $table_mapping = new TestSqlContentDefaultTableMapping($this->entityType, $this->storageDefinitions);
-    $table_mapping->setFieldNames('entity_test', array_keys($this->storageDefinitions));
+    $table_mapping->setFieldNames('entity_test', \array_keys($this->storageDefinitions));
     $table_mapping->setExtraColumns('entity_test', ['default_langcode']);
     $this->storageSchema->expects($this->any())
       ->method('getTableMapping')
@@ -1360,8 +1360,8 @@ class SqlContentEntityStorageSchemaTest extends UnitTestCase {
 
     if ($expected) {
       $invocation_count = 0;
-      $expected_table_names = array_keys($expected);
-      $expected_table_schemas = array_values($expected);
+      $expected_table_names = \array_keys($expected);
+      $expected_table_schemas = \array_values($expected);
 
       $this->dbSchemaHandler->expects($this->any())
         ->method('createTable')
@@ -1495,7 +1495,7 @@ class SqlContentEntityStorageSchemaTest extends UnitTestCase {
     $this->setUpStorageSchema($expected);
 
     $table_mapping = new TestSqlContentDefaultTableMapping($this->entityType, $this->storageDefinitions);
-    $table_mapping->setFieldNames('entity_test', array_keys($this->storageDefinitions));
+    $table_mapping->setFieldNames('entity_test', \array_keys($this->storageDefinitions));
     $table_mapping->setExtraColumns('entity_test', ['default_langcode']);
 
     $this->storageSchema->expects($this->any())
@@ -1517,10 +1517,10 @@ class SqlContentEntityStorageSchemaTest extends UnitTestCase {
 
     // The original indexes should be dropped before the new one is added.
     $indexes = ['entity_test__b588603cb9', 'entity_test__removed_field', 'entity_test__b588603cb9'];
-    $this->dbSchemaHandler->expects($this->exactly(count($indexes)))
+    $this->dbSchemaHandler->expects($this->exactly(\count($indexes)))
       ->method('dropIndex')
       ->with('entity_test', $this->callback(function ($index) use (&$indexes) {
-        return array_shift($indexes) === $index;
+        return \array_shift($indexes) === $index;
       }));
 
     $this->dbSchemaHandler->expects($this->atLeastOnce())

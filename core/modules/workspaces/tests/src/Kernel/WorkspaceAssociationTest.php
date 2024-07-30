@@ -63,12 +63,12 @@ class WorkspaceAssociationTest extends KernelTestBase {
 
     $this->createContentType(['type' => 'article']);
 
-    $permissions = array_intersect([
+    $permissions = \array_intersect([
       'administer nodes',
       'create workspace',
       'edit any workspace',
       'view any workspace',
-    ], array_keys($this->container->get('user.permissions')->getPermissions()));
+    ], \array_keys($this->container->get('user.permissions')->getPermissions()));
     $this->setCurrentUser($this->createUser($permissions));
 
     $this->workspaces['stage'] = Workspace::create(['id' => 'stage', 'label' => 'Stage']);
@@ -176,17 +176,17 @@ class WorkspaceAssociationTest extends KernelTestBase {
     foreach ($expected_latest_revisions as $workspace_id => $expected_tracked_revision_ids) {
       $tracked_entities = $workspace_association->getTrackedEntities($workspace_id, $entity_type_id);
       $tracked_revision_ids = $tracked_entities[$entity_type_id] ?? [];
-      $this->assertEquals($expected_tracked_revision_ids, array_keys($tracked_revision_ids));
+      $this->assertEquals($expected_tracked_revision_ids, \array_keys($tracked_revision_ids));
     }
 
     foreach ($expected_all_revisions as $workspace_id => $expected_all_revision_ids) {
       $all_associated_revisions = $workspace_association->getAssociatedRevisions($workspace_id, $entity_type_id);
-      $this->assertEquals($expected_all_revision_ids, array_keys($all_associated_revisions));
+      $this->assertEquals($expected_all_revision_ids, \array_keys($all_associated_revisions));
     }
 
     foreach ($expected_initial_revisions as $workspace_id => $expected_initial_revision_ids) {
       $initial_revisions = $workspace_association->getAssociatedInitialRevisions($workspace_id, $entity_type_id);
-      $this->assertEquals($expected_initial_revision_ids, array_keys($initial_revisions));
+      $this->assertEquals($expected_initial_revision_ids, \array_keys($initial_revisions));
     }
   }
 

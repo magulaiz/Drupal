@@ -134,7 +134,7 @@ class ThemeManager implements ThemeManagerInterface {
     // If called before all modules are loaded, we do not necessarily have a
     // full theme registry to work with, and therefore cannot process the theme
     // request properly. See also \Drupal\Core\Theme\Registry::get().
-    if (!$this->moduleHandler->isLoaded() && !defined('MAINTENANCE_MODE')) {
+    if (!$this->moduleHandler->isLoaded() && !\defined('MAINTENANCE_MODE')) {
       throw new \Exception('The theme implementations may not be rendered until all modules are loaded.');
     }
 
@@ -142,7 +142,7 @@ class ThemeManager implements ThemeManagerInterface {
 
     // If an array of hook candidates were passed, use the first one that has an
     // implementation.
-    if (is_array($hook)) {
+    if (\is_array($hook)) {
       foreach ($hook as $candidate) {
         if ($theme_registry->has($candidate)) {
           break;
@@ -160,8 +160,8 @@ class ThemeManager implements ThemeManagerInterface {
     if (!$theme_registry->has($hook)) {
       // Iteratively strip everything after the last '__' delimiter, until an
       // implementation is found.
-      while ($pos = strrpos($hook, '__')) {
-        $hook = substr($hook, 0, $pos);
+      while ($pos = \strrpos($hook, '__')) {
+        $hook = \substr($hook, 0, $pos);
         if ($theme_registry->has($hook)) {
           break;
         }
@@ -183,7 +183,7 @@ class ThemeManager implements ThemeManagerInterface {
 
     $info = $theme_registry->get($hook);
     if (isset($info['deprecated'])) {
-      @trigger_error($info['deprecated'], E_USER_DEPRECATED);
+      @\trigger_error($info['deprecated'], E_USER_DEPRECATED);
     }
 
     // If a renderable array is passed as $variables, then set $variables to
@@ -192,7 +192,7 @@ class ThemeManager implements ThemeManagerInterface {
       $element = $variables;
       $variables = [];
       if (isset($info['variables'])) {
-        foreach (array_keys($info['variables']) as $name) {
+        foreach (\array_keys($info['variables']) as $name) {
           if (\array_key_exists("#$name", $element)) {
             $variables[$name] = $element["#$name"];
           }
@@ -224,7 +224,7 @@ class ThemeManager implements ThemeManagerInterface {
     // '#theme' => 'node', but a module can add 'node__article' as a suggestion
     // via hook_theme_suggestions_HOOK_alter(), enabling a theme to have
     // an alternate template file for article nodes.
-    foreach (array_reverse($suggestions) as $suggestion) {
+    foreach (\array_reverse($suggestions) as $suggestion) {
       if ($theme_registry->has($suggestion)) {
         $info = $theme_registry->get($suggestion);
         break;
@@ -257,8 +257,8 @@ class ThemeManager implements ThemeManagerInterface {
     }
     if (isset($info['preprocess functions'])) {
       foreach ($info['preprocess functions'] as $preprocessor_function) {
-        if (is_callable($preprocessor_function)) {
-          call_user_func_array($preprocessor_function, [&$variables, $hook, $info]);
+        if (\is_callable($preprocessor_function)) {
+          \call_user_func_array($preprocessor_function, [&$variables, $hook, $info]);
         }
       }
       // Allow theme preprocess functions to set $variables['#attached'] and
@@ -290,11 +290,11 @@ class ThemeManager implements ThemeManagerInterface {
     $theme_engine = $active_theme->getEngine();
     if (isset($theme_engine)) {
       if ($info['type'] != 'module') {
-        if (function_exists($theme_engine . '_render_template')) {
+        if (\function_exists($theme_engine . '_render_template')) {
           $render_function = $theme_engine . '_render_template';
         }
         $extension_function = $theme_engine . '_extension';
-        if (function_exists($extension_function)) {
+        if (\function_exists($extension_function)) {
           $extension = $extension_function();
         }
       }
@@ -312,7 +312,7 @@ class ThemeManager implements ThemeManagerInterface {
     // adding some new variable to track that.
     if (!isset($variables['directory'])) {
       $default_template_variables = [];
-      template_preprocess($default_template_variables, $hook, $info);
+      \template_preprocess($default_template_variables, $hook, $info);
       $variables += $default_template_variables;
     }
     if (!isset($default_attributes)) {
@@ -425,9 +425,9 @@ class ThemeManager implements ThemeManagerInterface {
     // normalize it to that. When passed as an array, usually the first item in
     // the array is a generic type, and additional items in the array are more
     // specific variants of it, as in the case of array('form', 'form_FORM_ID').
-    if (is_array($type)) {
+    if (\is_array($type)) {
       $extra_types = $type;
-      $type = array_shift($extra_types);
+      $type = \array_shift($extra_types);
       // Allow if statements in this function to use the faster isset() rather
       // than !empty() both when $type is passed as a string, or as an array with
       // one item.
@@ -436,18 +436,18 @@ class ThemeManager implements ThemeManagerInterface {
       }
     }
 
-    $theme_keys = array_reverse(array_keys($theme->getBaseThemeExtensions()));
+    $theme_keys = \array_reverse(\array_keys($theme->getBaseThemeExtensions()));
     $theme_keys[] = $theme->getName();
     $functions = [];
     foreach ($theme_keys as $theme_key) {
       $function = $theme_key . '_' . $type . '_alter';
-      if (function_exists($function)) {
+      if (\function_exists($function)) {
         $functions[] = $function;
       }
       if (isset($extra_types)) {
         foreach ($extra_types as $extra_type) {
           $function = $theme_key . '_' . $extra_type . '_alter';
-          if (function_exists($function)) {
+          if (\function_exists($function)) {
             $functions[] = $function;
           }
         }

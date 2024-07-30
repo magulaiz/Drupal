@@ -53,8 +53,8 @@ class PrepareUninstallTest extends BrowserTestBase {
     $this->drupalLogin($admin_user);
 
     $this->drupalCreateContentType(['type' => 'article', 'name' => 'Article']);
-    node_access_rebuild();
-    node_access_test_add_field(NodeType::load('article'));
+    \node_access_rebuild();
+    \node_access_test_add_field(NodeType::load('article'));
     \Drupal::state()->set('node_access_test.private', TRUE);
 
     // Create 10 nodes.
@@ -86,7 +86,7 @@ class PrepareUninstallTest extends BrowserTestBase {
 
     // Delete Taxonomy term data.
     $this->drupalGet('admin/modules/uninstall/entity/taxonomy_term');
-    $term_count = count($this->terms);
+    $term_count = \count($this->terms);
     for ($i = 1; $i < 11; $i++) {
       $this->assertSession()->pageTextContains($this->terms[$term_count - $i]->label());
     }

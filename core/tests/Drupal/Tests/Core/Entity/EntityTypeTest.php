@@ -447,7 +447,7 @@ class EntityTypeTest extends UnitTestCase {
    *   A mock controller class name.
    */
   protected function getTestHandlerClass() {
-    return get_class($this->getMockForAbstractClass('Drupal\Core\Entity\EntityHandlerBase'));
+    return \get_class($this->getMockForAbstractClass('Drupal\Core\Entity\EntityHandlerBase'));
   }
 
   /**

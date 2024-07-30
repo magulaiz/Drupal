@@ -52,7 +52,7 @@ class MoveTest extends FileManagedUnitTestBase {
     // Check the return status and that the contents changed.
     $this->assertNotFalse($result, 'File moved successfully.');
     $this->assertFileDoesNotExist($source->getFileUri());
-    $this->assertEquals($contents, file_get_contents($result->getFileUri()), 'Contents of file correctly written.');
+    $this->assertEquals($contents, \file_get_contents($result->getFileUri()), 'Contents of file correctly written.');
 
     // Check that the correct hooks were called.
     $this->assertFileHooksCalled(['move', 'load', 'update']);
@@ -86,7 +86,7 @@ class MoveTest extends FileManagedUnitTestBase {
     // Check the return status and that the contents changed.
     $this->assertNotFalse($result, 'File moved successfully.');
     $this->assertFileDoesNotExist($source->getFileUri());
-    $this->assertEquals($contents, file_get_contents($result->getFileUri()), 'Contents of file correctly written.');
+    $this->assertEquals($contents, \file_get_contents($result->getFileUri()), 'Contents of file correctly written.');
 
     // Check that the correct hooks were called.
     $this->assertFileHooksCalled(['move', 'load', 'update']);
@@ -121,7 +121,7 @@ class MoveTest extends FileManagedUnitTestBase {
     $result = $this->fileRepository->move(clone $source, $target->getFileUri(), FileExists::Replace);
 
     // Look at the results.
-    $this->assertEquals($contents, file_get_contents($result->getFileUri()), 'Contents of file were overwritten.');
+    $this->assertEquals($contents, \file_get_contents($result->getFileUri()), 'Contents of file were overwritten.');
     $this->assertFileDoesNotExist($source->getFileUri());
     $this->assertNotEmpty($result, 'File moved successfully.');
 
@@ -157,7 +157,7 @@ class MoveTest extends FileManagedUnitTestBase {
     catch (FileExistsException $e) {
       $this->assertStringContainsString("could not be copied because a file by that name already exists in the destination directory", $e->getMessage());
     }
-    $this->assertEquals($contents, file_get_contents($source->getFileUri()), 'Contents of file were not altered.');
+    $this->assertEquals($contents, \file_get_contents($source->getFileUri()), 'Contents of file were not altered.');
 
     // Check that no hooks were called while failing.
     $this->assertFileHooksCalled([]);
@@ -190,7 +190,7 @@ class MoveTest extends FileManagedUnitTestBase {
     }
     // Check the return status and that the contents did not change.
     $this->assertFileExists($source->getFileUri());
-    $this->assertEquals($contents, file_get_contents($target->getFileUri()), 'Contents of file were not altered.');
+    $this->assertEquals($contents, \file_get_contents($target->getFileUri()), 'Contents of file were not altered.');
 
     // Check that no hooks were called while failing.
     $this->assertFileHooksCalled([]);

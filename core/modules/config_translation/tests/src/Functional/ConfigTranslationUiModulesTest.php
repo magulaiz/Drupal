@@ -104,9 +104,9 @@ class ConfigTranslationUiModulesTest extends ConfigTranslationUiTestBase {
     // original text all appear in any translated page on the translation
     // forms.
     foreach ($this->langcodes as $langcode) {
-      $langcode_prefixes = array_merge([''], $this->langcodes);
+      $langcode_prefixes = \array_merge([''], $this->langcodes);
       foreach ($langcode_prefixes as $langcode_prefix) {
-        $this->drupalGet(ltrim("$langcode_prefix/$translation_base_url/$langcode/edit", '/'));
+        $this->drupalGet(\ltrim("$langcode_prefix/$translation_base_url/$langcode/edit", '/'));
         $this->assertSession()->fieldValueEquals('translation[config_names][contact.form.feedback][label]', 'Website feedback - ' . $langcode);
         $this->assertSession()->pageTextContains($label);
       }
@@ -119,7 +119,7 @@ class ConfigTranslationUiModulesTest extends ConfigTranslationUiTestBase {
     foreach ($captured_emails as $email) {
       if ($email['id'] == 'contact_page_autoreply') {
         // Trim because we get an added newline for the body.
-        $this->assertEquals('Thank you for your mail - ' . $email['langcode'], trim($email['body']));
+        $this->assertEquals('Thank you for your mail - ' . $email['langcode'], \trim($email['body']));
       }
     }
 
@@ -222,7 +222,7 @@ class ConfigTranslationUiModulesTest extends ConfigTranslationUiTestBase {
     $field_storage->save();
 
     $bundle = $this->randomMachineName();
-    entity_test_create_bundle($bundle);
+    \entity_test_create_bundle($bundle);
     $field = FieldConfig::create([
       'field_name' => $field_name,
       'entity_type' => 'entity_test',
@@ -257,7 +257,7 @@ class ConfigTranslationUiModulesTest extends ConfigTranslationUiTestBase {
     ])->save();
 
     $bundle = $this->randomMachineName();
-    entity_test_create_bundle($bundle);
+    \entity_test_create_bundle($bundle);
     $field = FieldConfig::create([
       'field_name' => $field_name,
       'entity_type' => 'entity_test',
@@ -277,7 +277,7 @@ class ConfigTranslationUiModulesTest extends ConfigTranslationUiTestBase {
 
     // Checks the text of details summary element that surrounds the translation
     // options.
-    $this->assertSession()->responseContains(Html::escape(strip_tags($on_label)) . ' Boolean settings');
+    $this->assertSession()->responseContains(Html::escape(\strip_tags($on_label)) . ' Boolean settings');
 
     // Checks that the correct on and off labels appear on the form.
     $this->assertSession()->assertEscaped($on_label);

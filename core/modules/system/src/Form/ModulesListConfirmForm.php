@@ -146,11 +146,11 @@ class ModulesListConfirmForm extends ConfirmFormBase {
       // Display a list of required modules that have to be installed as well
       // but were not manually selected.
       foreach ($this->modules['dependencies'] as $module => $dependencies) {
-        $items[] = $this->formatPlural(count($dependencies), 'You must install the @required module to install @module.', 'You must install the @required modules to install @module.', [
+        $items[] = $this->formatPlural(\count($dependencies), 'You must install the @required module to install @module.', 'You must install the @required modules to install @module.', [
           '@module' => $this->modules['install'][$module],
           // It is safe to implode this because module names are not translated
           // markup and so will not be double-escaped.
-          '@required' => implode(', ', $dependencies),
+          '@required' => \implode(', ', $dependencies),
         ]);
       }
     }
@@ -172,7 +172,7 @@ class ModulesListConfirmForm extends ConfirmFormBase {
       // submit, in which case the user has bigger problems.
       try {
         // Install the given modules.
-        $this->moduleInstaller->install(array_keys($this->modules['install']));
+        $this->moduleInstaller->install(\array_keys($this->modules['install']));
       }
       catch (PreExistingConfigException $e) {
         $this->messenger()->addError($this->modulesFailToEnableMessage($this->modules, $e));

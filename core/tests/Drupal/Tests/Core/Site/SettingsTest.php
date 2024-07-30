@@ -116,7 +116,7 @@ class SettingsTest extends UnitTestCase {
    */
   public function testSerialize(): void {
     $this->expectException(\LogicException::class);
-    serialize(new Settings([]));
+    \serialize(new Settings([]));
   }
 
   /**
@@ -325,13 +325,13 @@ class SettingsTest extends UnitTestCase {
       'driver' => $driver,
       'prefix' => '',
     ];
-    if (!is_null($namespace)) {
+    if (!\is_null($namespace)) {
       $databases['mock'][$driver]['namespace'] = $namespace;
     }
-    if (!is_null($autoload)) {
+    if (!\is_null($autoload)) {
       $databases['mock'][$driver]['autoload'] = $autoload;
     }
-    $settings_file_content = "<?php\n\$databases = " . var_export($databases, TRUE) . ";\n";
+    $settings_file_content = "<?php\n\$databases = " . \var_export($databases, TRUE) . ";\n";
 
     $vfs_root = vfsStream::setup('root');
     $sites_directory = vfsStream::newDirectory('sites')->at($vfs_root);
@@ -359,7 +359,7 @@ class SettingsTest extends UnitTestCase {
         'prefix' => '',
       ],
     ];
-    if (!is_null($expected_autoload)) {
+    if (!\is_null($expected_autoload)) {
       $expected[$driver]['autoload'] = $expected_autoload;
     }
     $this->assertEquals($expected, Database::getConnectionInfo('mock'));

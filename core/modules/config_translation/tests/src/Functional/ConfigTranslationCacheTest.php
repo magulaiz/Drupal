@@ -88,7 +88,7 @@ class ConfigTranslationCacheTest extends BrowserTestBase {
     /** @var \Drupal\filter\FilterFormatInterface $full_html_format */
     $full_html_format = FilterFormat::load('full_html');
 
-    $admin_permissions = array_merge($translator_permissions, [
+    $admin_permissions = \array_merge($translator_permissions, [
       'administer languages',
       'administer site configuration',
       'link to any page',
@@ -136,7 +136,7 @@ class ConfigTranslationCacheTest extends BrowserTestBase {
     $field_storage->save();
 
     $bundle = $this->randomMachineName();
-    entity_test_create_bundle($bundle);
+    \entity_test_create_bundle($bundle);
     $field = FieldConfig::create([
       'field_name' => $field_name,
       'entity_type' => 'entity_test',

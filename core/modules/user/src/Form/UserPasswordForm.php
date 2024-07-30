@@ -111,7 +111,7 @@ class UserPasswordForm extends FormBase {
       '#type' => 'textfield',
       '#title' => $this->t('Username or email address'),
       '#size' => 60,
-      '#maxlength' => max(UserInterface::USERNAME_MAX_LENGTH, Email::EMAIL_MAX_LENGTH),
+      '#maxlength' => \max(UserInterface::USERNAME_MAX_LENGTH, Email::EMAIL_MAX_LENGTH),
       '#required' => TRUE,
       '#attributes' => [
         'autocorrect' => 'off',
@@ -158,7 +158,7 @@ class UserPasswordForm extends FormBase {
     }
     $this->flood->register('user.password_request_ip', $flood_config->get('ip_window'));
     // First, see if the input is possibly valid as a username.
-    $name = trim($form_state->getValue('name'));
+    $name = \trim($form_state->getValue('name'));
     $violations = $this->userNameValidator->validateName($name);
     // Usernames have a maximum length shorter than email addresses. Only print
     // this error if the input is not valid as a username or email address.
@@ -173,7 +173,7 @@ class UserPasswordForm extends FormBase {
       // No success, try to load by name.
       $users = $this->userStorage->loadByProperties(['name' => $name]);
     }
-    $account = reset($users);
+    $account = \reset($users);
     // Blocked accounts cannot request a new password.
     if ($account && $account->id() && $account->isActive()) {
       // Register flood events based on the uid only, so they apply for any
@@ -195,7 +195,7 @@ class UserPasswordForm extends FormBase {
     $account = $form_state->getValue('account');
     if ($account) {
       // Mail one time login URL and instructions using current language.
-      $mail = _user_mail_notify('password_reset', $account);
+      $mail = \_user_mail_notify('password_reset', $account);
       if (!empty($mail)) {
         $this->logger('user')
           ->info('Password reset instructions mailed to %name at %email.', [

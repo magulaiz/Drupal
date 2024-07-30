@@ -50,7 +50,7 @@ class ConfigTestForm extends EntityForm {
     ];
     if ($this->moduleHandler->moduleExists('image')) {
       $form['style']['#access'] = TRUE;
-      $form['style']['#options'] = image_style_options();
+      $form['style']['#options'] = \image_style_options();
     }
 
     // The main premise of entity forms is that we get to work with an entity
@@ -79,7 +79,7 @@ class ConfigTestForm extends EntityForm {
     ];
     $form['size_wrapper']['size_submit'] = [
       '#type' => 'submit',
-      '#value' => t('Change size'),
+      '#value' => \t('Change size'),
       '#attributes' => [
         'class' => ['js-hide'],
       ],
@@ -99,7 +99,7 @@ class ConfigTestForm extends EntityForm {
 
     $form['langcode'] = [
       '#type' => 'language_select',
-      '#title' => t('Language'),
+      '#title' => \t('Language'),
       '#languages' => LanguageInterface::STATE_ALL,
       '#default_value' => $entity->language()->getId(),
     ];

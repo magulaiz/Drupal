@@ -33,8 +33,8 @@ class RecipeTest extends KernelTestBase {
   }
 
   public function testCreateFromDirectoryNoRecipe(): void {
-    $dir = uniqid('public://');
-    mkdir($dir);
+    $dir = \uniqid('public://');
+    \mkdir($dir);
 
     $this->expectException(RecipeFileException::class);
     $this->expectExceptionMessage('There is no ' . $dir . '/recipe.yml file');

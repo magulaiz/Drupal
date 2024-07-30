@@ -121,7 +121,7 @@ class ViewsDataTest extends UnitTestCase {
    */
   protected function viewsDataWithProvider() {
     $views_data = static::viewsData();
-    foreach (array_keys($views_data) as $table) {
+    foreach (\array_keys($views_data) as $table) {
       $views_data[$table]['table']['provider'] = 'views_test_data';
     }
     return $views_data;
@@ -149,14 +149,14 @@ class ViewsDataTest extends UnitTestCase {
     $base_tables = $this->viewsData->fetchBaseTables();
 
     // Ensure that 'provider' is set for each base table.
-    foreach (array_keys($base_tables) as $base_table) {
+    foreach (\array_keys($base_tables) as $base_table) {
       $this->assertEquals('views_test_data', $data[$base_table]['table']['provider']);
     }
 
     // Test the number of tables returned and their order.
     $this->assertCount(6, $base_tables, 'The correct amount of base tables were returned.');
-    $base_tables_keys = array_keys($base_tables);
-    for ($i = 1; $i < count($base_tables); ++$i) {
+    $base_tables_keys = \array_keys($base_tables);
+    for ($i = 1; $i < \count($base_tables); ++$i) {
       $prev = $base_tables[$base_tables_keys[$i - 1]];
       $current = $base_tables[$base_tables_keys[$i]];
       $this->assertGreaterThanOrEqual($prev['weight'], $current['weight']);
@@ -226,10 +226,10 @@ class ViewsDataTest extends UnitTestCase {
       'views_data:en',
       "views_data:$random_table_name:en",
     ];
-    $this->cacheBackend->expects($this->exactly(count($gets)))
+    $this->cacheBackend->expects($this->exactly(\count($gets)))
       ->method('get')
       ->with($this->callback(function (string $key) use (&$gets): bool {
-        return $key === array_shift($gets);
+        return $key === \array_shift($gets);
       }))
       ->willReturn(FALSE);
 
@@ -239,12 +239,12 @@ class ViewsDataTest extends UnitTestCase {
       'views_data:en', $expected_views_data,
       "views_data:$random_table_name:en", [],
     ];
-    $this->cacheBackend->expects($this->exactly(count($sets) / 2))
+    $this->cacheBackend->expects($this->exactly(\count($sets) / 2))
       ->method('set')
       ->with($this->callback(function (string $key) use (&$sets): bool {
-        return $key === array_shift($sets);
+        return $key === \array_shift($sets);
       }), $this->callback(function (array $data) use (&$sets): bool {
-        return $data === array_shift($sets);
+        return $data === \array_shift($sets);
       }));
 
     $this->cacheTagsInvalidator->expects($this->once())
@@ -314,10 +314,10 @@ class ViewsDataTest extends UnitTestCase {
       ->with('views_data', $this->viewsDataWithProvider());
 
     $gets = ["views_data:$table_name:en", 'views_data:en'];
-    $this->cacheBackend->expects($this->exactly(count($gets)))
+    $this->cacheBackend->expects($this->exactly(\count($gets)))
       ->method('get')
       ->with($this->callback(function (string $key) use (&$gets): bool {
-        return $key === array_shift($gets);
+        return $key === \array_shift($gets);
       }))
       ->willReturn(FALSE);
 
@@ -348,10 +348,10 @@ class ViewsDataTest extends UnitTestCase {
       ->with('views_data', $this->viewsDataWithProvider());
 
     $gets = ["views_data:$random_table_name:en", 'views_data:en'];
-    $this->cacheBackend->expects($this->exactly(count($gets)))
+    $this->cacheBackend->expects($this->exactly(\count($gets)))
       ->method('get')
       ->with($this->callback(function (string $key) use (&$gets): bool {
-        return $key === array_shift($gets);
+        return $key === \array_shift($gets);
       }))
       ->willReturn(FALSE);
 
@@ -373,22 +373,22 @@ class ViewsDataTest extends UnitTestCase {
     $this->setupMockedModuleHandler();
 
     $gets = ['views_data:views_test_data:en', 'views_data:en'];
-    $this->cacheBackend->expects($this->exactly(count($gets)))
+    $this->cacheBackend->expects($this->exactly(\count($gets)))
       ->method('get')
       ->with($this->callback(function (string $key) use (&$gets): bool {
-        return $key === array_shift($gets);
+        return $key === \array_shift($gets);
       }));
 
     $sets = [
       'views_data:en', $expected_views_data,
       'views_data:views_test_data:en', $expected_views_data['views_test_data'],
     ];
-    $this->cacheBackend->expects($this->exactly(count($sets) / 2))
+    $this->cacheBackend->expects($this->exactly(\count($sets) / 2))
       ->method('set')
       ->with($this->callback(function (string $key) use (&$sets): bool {
-        return $key === array_shift($sets);
+        return $key === \array_shift($sets);
       }), $this->callback(function (array $data) use (&$sets): bool {
-        return $data === array_shift($sets);
+        return $data === \array_shift($sets);
       }));
 
     // Request the same table 5 times. The caches are empty at this point, so
@@ -447,10 +447,10 @@ class ViewsDataTest extends UnitTestCase {
 
     // Setup a warm cache backend for a single table.
     $gets = ['views_data:views_test_data_2:en', 'views_data:en'];
-    $this->cacheBackend->expects($this->exactly(count($gets)))
+    $this->cacheBackend->expects($this->exactly(\count($gets)))
       ->method('get')
       ->with($this->callback(function (string $key) use (&$gets): bool {
-        return $key === array_shift($gets);
+        return $key === \array_shift($gets);
       }))
       ->willReturnOnConsecutiveCalls(
         FALSE,
@@ -486,10 +486,10 @@ class ViewsDataTest extends UnitTestCase {
 
     // Setup a warm cache backend for a single table.
     $gets = ["views_data:$non_existing_table:en", 'views_data:en'];
-    $this->cacheBackend->expects($this->exactly(count($gets)))
+    $this->cacheBackend->expects($this->exactly(\count($gets)))
       ->method('get')
       ->with($this->callback(function (string $key) use (&$gets): bool {
-        return $key === array_shift($gets);
+        return $key === \array_shift($gets);
       }))
       ->willReturnOnConsecutiveCalls(
         FALSE,
@@ -604,10 +604,10 @@ class ViewsDataTest extends UnitTestCase {
 
     // Setup a warm cache backend for all table data, but not single tables.
     $gets = ["views_data:$table_name:en", 'views_data:en', "views_data:$table_name_2:en"];
-    $this->cacheBackend->expects($this->exactly(count($gets)))
+    $this->cacheBackend->expects($this->exactly(\count($gets)))
       ->method('get')
       ->with($this->callback(function (string $key) use (&$gets): bool {
-        return $key === array_shift($gets);
+        return $key === \array_shift($gets);
       }))
       ->willReturnOnConsecutiveCalls(
         FALSE,
@@ -619,12 +619,12 @@ class ViewsDataTest extends UnitTestCase {
       "views_data:$table_name:en", $expected_views_data[$table_name],
       "views_data:$table_name_2:en", $expected_views_data[$table_name_2],
     ];
-    $this->cacheBackend->expects($this->exactly(count($sets) / 2))
+    $this->cacheBackend->expects($this->exactly(\count($sets) / 2))
       ->method('set')
       ->with($this->callback(function (string $key) use (&$sets): bool {
-        return $key === array_shift($sets);
+        return $key === \array_shift($sets);
       }), $this->callback(function (array $data) use (&$sets): bool {
-        return $data === array_shift($sets);
+        return $data === \array_shift($sets);
       }));
 
     $this->assertSame($expected_views_data[$table_name], $this->viewsData->get($table_name));

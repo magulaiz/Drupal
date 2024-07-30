@@ -97,8 +97,8 @@ class EntityQueryTest extends EntityKernelTestBase {
       // the first one. Beware: MySQL is not case sensitive.
       do {
         $bundle = $this->randomMachineName();
-      } while ($bundles && strtolower($bundles[0]) >= strtolower($bundle));
-      entity_test_create_bundle($bundle, entity_type: $field_storage->getTargetEntityTypeId());
+      } while ($bundles && \strtolower($bundles[0]) >= \strtolower($bundle));
+      \entity_test_create_bundle($bundle, entity_type: $field_storage->getTargetEntityTypeId());
       foreach ($field_storages as $field_storage) {
         FieldConfig::create([
           'field_storage' => $field_storage,
@@ -157,7 +157,7 @@ class EntityQueryTest extends EntityKernelTestBase {
       foreach (['tr', 'pl'] as $langcode) {
         $entity->addTranslation($langcode)->name = $this->randomMachineName();
       }
-      foreach (array_reverse(str_split(decbin($i))) as $key => $bit) {
+      foreach (\array_reverse(\str_split(\decbin($i))) as $key => $bit) {
         if ($bit) {
           // @todo https://www.drupal.org/project/drupal/issues/3001920 Doing
           //   [$field_name, $langcode, $values] = $units[$key]; causes
@@ -294,7 +294,7 @@ class EntityQueryTest extends EntityKernelTestBase {
       ->sort('id')
       ->execute();
     $entities = EntityTestMulRev::loadMultiple($ids);
-    $first_entity = reset($entities);
+    $first_entity = \reset($entities);
     $old_name = $first_entity->name->value;
     foreach ($entities as $entity) {
       $entity->setNewRevision();
@@ -310,7 +310,7 @@ class EntityQueryTest extends EntityKernelTestBase {
       ->allRevisions()
       ->execute();
     $this->assertCount(1, $this->queryResults);
-    $this->assertEquals($first_entity->getRevisionId(), key($this->queryResults));
+    $this->assertEquals($first_entity->getRevisionId(), \key($this->queryResults));
     // We changed the entity names, so the current revision should not match.
     $this->queryResults = $this->storage
       ->getQuery()
@@ -361,7 +361,7 @@ class EntityQueryTest extends EntityKernelTestBase {
       ->execute();
     // Now we only get the ones that originally were siema, entity id 8 and
     // above.
-    $this->assertSame(array_slice($assert, 4, 8, TRUE), $results);
+    $this->assertSame(\array_slice($assert, 4, 8, TRUE), $results);
     $results = $this->storage
       ->getQuery()
       ->accessCheck(FALSE)
@@ -370,7 +370,7 @@ class EntityQueryTest extends EntityKernelTestBase {
       ->execute();
     // It is very important that we do not get the ones which only have
     // xsiemax despite originally they were merhaba, ie. ended with a.
-    $this->assertSame(array_slice($assert, 4, 8, TRUE), $results);
+    $this->assertSame(\array_slice($assert, 4, 8, TRUE), $results);
     $results = $this->storage
       ->getQuery()
       ->accessCheck(FALSE)
@@ -410,13 +410,13 @@ class EntityQueryTest extends EntityKernelTestBase {
       ->accessCheck(FALSE)
       ->sort('id')
       ->execute();
-    $this->assertResult(range(1, 15));
+    $this->assertResult(\range(1, 15));
     $this->queryResults = $this->storage
       ->getQuery()
       ->accessCheck(FALSE)
       ->sort('id', 'DESC')
       ->execute();
-    $this->assertResult(range(15, 1));
+    $this->assertResult(\range(15, 1));
     $query = $this->storage
       ->getQuery()
       ->accessCheck(FALSE)
@@ -513,7 +513,7 @@ class EntityQueryTest extends EntityKernelTestBase {
       'type' => ['data' => 'Type', 'specifier' => 'type'],
     ];
 
-    $this->queryResults = array_values($this->storage
+    $this->queryResults = \array_values($this->storage
       ->getQuery()
       ->accessCheck(FALSE)
       ->tableSort($header)
@@ -529,7 +529,7 @@ class EntityQueryTest extends EntityKernelTestBase {
       'id' => ['data' => 'Id', 'specifier' => 'id'],
       'type' => ['data' => 'Type', 'specifier' => 'type'],
     ];
-    $this->queryResults = array_values($this->storage
+    $this->queryResults = \array_values($this->storage
       ->getQuery()
       ->accessCheck(FALSE)
       ->tableSort($header)
@@ -546,7 +546,7 @@ class EntityQueryTest extends EntityKernelTestBase {
       ->accessCheck(FALSE)
       ->tableSort($header)
       ->execute();
-    $this->assertResult(range(15, 1));
+    $this->assertResult(\range(15, 1));
   }
 
   /**
@@ -564,7 +564,7 @@ class EntityQueryTest extends EntityKernelTestBase {
     ]);
     $field_storage->save();
     $bundle = $this->randomMachineName();
-    entity_test_create_bundle($bundle);
+    \entity_test_create_bundle($bundle);
     FieldConfig::create([
       'field_storage' => $field_storage,
       'bundle' => $bundle,
@@ -610,7 +610,7 @@ class EntityQueryTest extends EntityKernelTestBase {
 
     $this->queryResults = $query
       ->condition($or)
-      ->condition('type', reset($this->bundles))
+      ->condition('type', \reset($this->bundles))
       ->sort('id')
       ->execute();
 
@@ -748,12 +748,12 @@ class EntityQueryTest extends EntityKernelTestBase {
    */
   protected function assertResult(): void {
     $assert = [];
-    $expected = func_get_args();
-    if ($expected && is_array($expected[0])) {
+    $expected = \func_get_args();
+    if ($expected && \is_array($expected[0])) {
       $expected = $expected[0];
     }
     foreach ($expected as $binary) {
-      $assert[$binary] = strval($binary);
+      $assert[$binary] = \strval($binary);
     }
     $this->assertSame($assert, $this->queryResults);
   }
@@ -764,7 +764,7 @@ class EntityQueryTest extends EntityKernelTestBase {
   protected function assertRevisionResult(array $keys, array $expected): void {
     $assert = [];
     foreach ($expected as $key => $binary) {
-      $assert[$keys[$key]] = strval($binary);
+      $assert[$keys[$key]] = \strval($binary);
     }
     $this->assertSame($assert, $this->queryResults);
   }
@@ -776,16 +776,16 @@ class EntityQueryTest extends EntityKernelTestBase {
     // This loop is for bundle1 entities.
     for ($i = 1; $i <= 15; $i += 2) {
       $ok = TRUE;
-      $index1 = array_search($i, $this->queryResults);
+      $index1 = \array_search($i, $this->queryResults);
       $this->assertNotFalse($index1, "$i found at $index1.");
       // This loop is for bundle2 entities.
       for ($j = 2; $j <= 15; $j += 2) {
         if ($ok) {
           if ($order == 'asc') {
-            $ok = $index1 > array_search($j, $this->queryResults);
+            $ok = $index1 > \array_search($j, $this->queryResults);
           }
           else {
-            $ok = $index1 < array_search($j, $this->queryResults);
+            $ok = $index1 < \array_search($j, $this->queryResults);
           }
         }
       }
@@ -799,7 +799,7 @@ class EntityQueryTest extends EntityKernelTestBase {
    * The tags and metadata should propagate to the SQL query object.
    */
   public function testMetaData(): void {
-    field_test_memorize();
+    \field_test_memorize();
 
     $query = $this->storage->getQuery()->accessCheck(FALSE);
     $query
@@ -807,7 +807,7 @@ class EntityQueryTest extends EntityKernelTestBase {
       ->addMetaData('foo', 'bar')
       ->execute();
 
-    $mem = field_test_memorize();
+    $mem = \field_test_memorize();
     $this->assertEquals('bar', $mem['field_test_query_efq_metadata_test_alter'][0], 'Tag and metadata propagated to the SQL query object.');
   }
 
@@ -816,7 +816,7 @@ class EntityQueryTest extends EntityKernelTestBase {
    */
   public function testCaseSensitivity(): void {
     $bundle = $this->randomMachineName();
-    entity_test_create_bundle($bundle, entity_type: 'entity_test_mulrev');
+    \entity_test_create_bundle($bundle, entity_type: 'entity_test_mulrev');
 
     $field_storage = FieldStorageConfig::create([
       'field_name' => 'field_ci',
@@ -862,8 +862,8 @@ class EntityQueryTest extends EntityKernelTestBase {
       $string = $this->randomMachineName(7) . 'a';
       $fixtures[] = [
         'original' => $string,
-        'uppercase' => mb_strtoupper($string),
-        'lowercase' => mb_strtolower($string),
+        'uppercase' => \mb_strtoupper($string),
+        'lowercase' => \mb_strtolower($string),
       ];
     }
 
@@ -1027,14 +1027,14 @@ class EntityQueryTest extends EntityKernelTestBase {
     $result = $this->storage
       ->getQuery()
       ->accessCheck(FALSE)
-      ->condition('field_ci', mb_substr($fixtures[0]['uppercase'] . $fixtures[1]['lowercase'], 4, 8), 'CONTAINS')
+      ->condition('field_ci', \mb_substr($fixtures[0]['uppercase'] . $fixtures[1]['lowercase'], 4, 8), 'CONTAINS')
       ->execute();
     $this->assertCount(1, $result, 'Case sensitive, lowercase.');
 
     $result = $this->storage
       ->getQuery()
       ->accessCheck(FALSE)
-      ->condition('field_ci', mb_strtolower(mb_substr($fixtures[0]['uppercase'] . $fixtures[1]['lowercase'], 4, 8)), 'CONTAINS')
+      ->condition('field_ci', \mb_strtolower(\mb_substr($fixtures[0]['uppercase'] . $fixtures[1]['lowercase'], 4, 8)), 'CONTAINS')
       ->execute();
     $this->assertCount(1, $result, 'Case sensitive, exact match.');
 
@@ -1042,14 +1042,14 @@ class EntityQueryTest extends EntityKernelTestBase {
     $result = $this->storage
       ->getQuery()
       ->accessCheck(FALSE)
-      ->condition('field_cs', mb_substr($fixtures[0]['uppercase'] . $fixtures[1]['lowercase'], 4, 8), 'CONTAINS')
+      ->condition('field_cs', \mb_substr($fixtures[0]['uppercase'] . $fixtures[1]['lowercase'], 4, 8), 'CONTAINS')
       ->execute();
     $this->assertCount(1, $result, 'Case sensitive, lowercase.');
 
     $result = $this->storage
       ->getQuery()
       ->accessCheck(FALSE)
-      ->condition('field_cs', mb_strtolower(mb_substr($fixtures[0]['uppercase'] . $fixtures[1]['lowercase'], 4, 8)), 'CONTAINS')
+      ->condition('field_cs', \mb_strtolower(\mb_substr($fixtures[0]['uppercase'] . $fixtures[1]['lowercase'], 4, 8)), 'CONTAINS')
       ->execute();
     $this->assertCount(0, $result, 'Case sensitive, exact match.');
 
@@ -1092,7 +1092,7 @@ class EntityQueryTest extends EntityKernelTestBase {
       ->condition('description.value', 'description1')
       ->execute();
     $this->assertCount(1, $ids);
-    $this->assertEquals($term1->id(), reset($ids));
+    $this->assertEquals($term1->id(), \reset($ids));
 
     $ids = $this->container->get('entity_type.manager')
       ->getStorage('taxonomy_term')
@@ -1101,7 +1101,7 @@ class EntityQueryTest extends EntityKernelTestBase {
       ->condition('description.format', 'format1')
       ->execute();
     $this->assertCount(1, $ids);
-    $this->assertEquals($term1->id(), reset($ids));
+    $this->assertEquals($term1->id(), \reset($ids));
 
     // Test that the main property is queried if no property is specified.
     $ids = $this->container->get('entity_type.manager')
@@ -1111,7 +1111,7 @@ class EntityQueryTest extends EntityKernelTestBase {
       ->condition('description', 'description1')
       ->execute();
     $this->assertCount(1, $ids);
-    $this->assertEquals($term1->id(), reset($ids));
+    $this->assertEquals($term1->id(), \reset($ids));
   }
 
   /**
@@ -1271,7 +1271,7 @@ class EntityQueryTest extends EntityKernelTestBase {
       ->condition('ref2', $ref2->id())
       ->execute();
     $this->assertCount(1, $result);
-    $this->assertEquals($entity->id(), reset($result));
+    $this->assertEquals($entity->id(), \reset($result));
 
     // Check that works when referring with "{$field_name}.target_id".
     $result = $storage->getQuery()
@@ -1281,7 +1281,7 @@ class EntityQueryTest extends EntityKernelTestBase {
       ->condition('ref2.target_id', $ref2->id())
       ->execute();
     $this->assertCount(1, $result);
-    $this->assertEquals($entity->id(), reset($result));
+    $this->assertEquals($entity->id(), \reset($result));
 
     // Check that works when referring with "{$field_name}.entity.id".
     $result = $storage->getQuery()
@@ -1291,7 +1291,7 @@ class EntityQueryTest extends EntityKernelTestBase {
       ->condition('ref2.entity.id', $ref2->id())
       ->execute();
     $this->assertCount(1, $result);
-    $this->assertEquals($entity->id(), reset($result));
+    $this->assertEquals($entity->id(), \reset($result));
   }
 
   /**
@@ -1362,7 +1362,7 @@ class EntityQueryTest extends EntityKernelTestBase {
     /** @var \Drupal\Core\Entity\ContentEntityStorageInterface $storage */
     $storage = $entity_type_manager->getStorage('entity_test_revlog');
 
-    $revision_created_timestamp = time();
+    $revision_created_timestamp = \time();
     $revision_created_field_name = $entity_type->getRevisionMetadataKey('revision_created');
     $entity = $storage->create([
       'type' => 'entity_test',
@@ -1376,7 +1376,7 @@ class EntityQueryTest extends EntityKernelTestBase {
       ->condition($revision_created_field_name, $revision_created_timestamp)
       ->execute();
     $this->assertCount(1, $result);
-    $this->assertEquals($entity->id(), reset($result));
+    $this->assertEquals($entity->id(), \reset($result));
 
     // Query all revisions.
     $result = $storage->getQuery()
@@ -1385,7 +1385,7 @@ class EntityQueryTest extends EntityKernelTestBase {
       ->allRevisions()
       ->execute();
     $this->assertCount(1, $result);
-    $this->assertEquals($entity->id(), reset($result));
+    $this->assertEquals($entity->id(), \reset($result));
   }
 
   /**
@@ -1430,7 +1430,7 @@ class EntityQueryTest extends EntityKernelTestBase {
     foreach ($expected->getArguments() as $key => $value) {
       $quoted[$key] = $connection->quote($value);
     }
-    $expected_string = strtr($expected_string, $quoted);
+    $expected_string = \strtr($expected_string, $quoted);
 
     $this->assertSame($expected_string, (string) $query);
   }

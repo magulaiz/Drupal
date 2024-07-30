@@ -184,7 +184,7 @@ class AssetResolverTest extends UnitTestCase {
   }
 
   public static function providerAttachedCssAssets() {
-    $time = time();
+    $time = \time();
     return [
       'one js only library and one css only library' => [
         (new AttachedAssets())->setAlreadyLoadedLibraries([])->setLibraries(['core/drupal']),
@@ -224,7 +224,7 @@ class AssetResolverTest extends UnitTestCase {
   }
 
   public static function providerAttachedJsAssets() {
-    $time = time();
+    $time = \time();
     return [
       'same libraries, different timestamps' => [
         (new AttachedAssets())->setAlreadyLoadedLibraries([])->setLibraries(['core/drupal'])->setSettings(['currentTime' => $time]),
@@ -243,18 +243,18 @@ class AssetResolverTest extends UnitTestCase {
 
 }
 
-if (!defined('CSS_AGGREGATE_DEFAULT')) {
-  define('CSS_AGGREGATE_DEFAULT', 0);
+if (!\defined('CSS_AGGREGATE_DEFAULT')) {
+  \define('CSS_AGGREGATE_DEFAULT', 0);
 }
 
-if (!defined('JS_DEFAULT')) {
-  define('JS_DEFAULT', 0);
+if (!\defined('JS_DEFAULT')) {
+  \define('JS_DEFAULT', 0);
 }
 
 class TestMemoryBackend extends MemoryBackend {
 
   public function getAllCids() {
-    return array_keys($this->cache);
+    return \array_keys($this->cache);
   }
 
 }

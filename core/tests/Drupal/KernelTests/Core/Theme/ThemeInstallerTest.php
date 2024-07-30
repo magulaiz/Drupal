@@ -53,14 +53,14 @@ class ThemeInstallerTest extends KernelTestBase {
   public function testEmpty(): void {
     $this->assertEmpty($this->extensionConfig()->get('theme'));
 
-    $this->assertEmpty(array_keys($this->themeHandler()->listInfo()));
-    $this->assertEmpty(array_keys(\Drupal::service('theme_handler')->listInfo()));
+    $this->assertEmpty(\array_keys($this->themeHandler()->listInfo()));
+    $this->assertEmpty(\array_keys(\Drupal::service('theme_handler')->listInfo()));
 
     // Rebuilding available themes should always yield results though.
     $this->assertNotEmpty($this->extensionListTheme()->reset()->getList()['stark'], 'ThemeExtensionList::getList() yields all available themes.');
 
     // theme_get_setting() should return global default theme settings.
-    $this->assertTrue(theme_get_setting('features.favicon'));
+    $this->assertTrue(\theme_get_setting('features.favicon'));
   }
 
   /**
@@ -81,9 +81,9 @@ class ThemeInstallerTest extends KernelTestBase {
     $this->assertEquals($name, $themes[$name]->getName());
 
     // Verify that test_basetheme.settings is active.
-    $this->assertFalse(theme_get_setting('features.favicon', $name));
-    $this->assertEquals('only', theme_get_setting('base', $name));
-    $this->assertEquals('base', theme_get_setting('override', $name));
+    $this->assertFalse(\theme_get_setting('features.favicon', $name));
+    $this->assertEquals('only', \theme_get_setting('base', $name));
+    $this->assertEquals('base', \theme_get_setting('override', $name));
   }
 
   /**
@@ -94,7 +94,7 @@ class ThemeInstallerTest extends KernelTestBase {
     $base_name = 'test_basetheme';
 
     $themes = $this->themeHandler()->listInfo();
-    $this->assertEmpty(array_keys($themes));
+    $this->assertEmpty(\array_keys($themes));
 
     $this->themeInstaller()->install([$name]);
 
@@ -116,7 +116,7 @@ class ThemeInstallerTest extends KernelTestBase {
     $name = 'non_existing_theme';
 
     $themes = $this->themeHandler()->listInfo();
-    $this->assertEmpty(array_keys($themes));
+    $this->assertEmpty(\array_keys($themes));
 
     try {
       $message = 'ThemeInstaller::install() throws UnknownExtensionException upon installing a non-existing theme.';
@@ -128,7 +128,7 @@ class ThemeInstallerTest extends KernelTestBase {
     }
 
     $themes = $this->themeHandler()->listInfo();
-    $this->assertEmpty(array_keys($themes));
+    $this->assertEmpty(\array_keys($themes));
   }
 
   /**
@@ -357,7 +357,7 @@ class ThemeInstallerTest extends KernelTestBase {
     $name = 'non_existing_theme';
 
     $themes = $this->themeHandler()->listInfo();
-    $this->assertEmpty(array_keys($themes));
+    $this->assertEmpty(\array_keys($themes));
 
     $this->expectException(UnknownExtensionException::class);
     $this->themeInstaller()->uninstall([$name]);
@@ -374,7 +374,7 @@ class ThemeInstallerTest extends KernelTestBase {
 
     $this->themeInstaller()->uninstall([$name]);
 
-    $this->assertEmpty(array_keys($this->themeHandler()->listInfo()));
+    $this->assertEmpty(\array_keys($this->themeHandler()->listInfo()));
 
     $this->assertEmpty($this->config("$name.settings")->get());
 
@@ -393,7 +393,7 @@ class ThemeInstallerTest extends KernelTestBase {
     $name = 'test_basetheme';
 
     $themes = $this->themeHandler()->listInfo();
-    $this->assertEmpty(array_keys($themes));
+    $this->assertEmpty(\array_keys($themes));
     $this->expectException(UnknownExtensionException::class);
     $this->themeInstaller()->uninstall([$name]);
   }
@@ -424,7 +424,7 @@ class ThemeInstallerTest extends KernelTestBase {
     // @see https://www.drupal.org/node/2228093
     $info = \Drupal::service('extension.list.theme')->getExtensionInfo($name);
     $this->assertTrue(isset($info['regions']['test_region']));
-    $regions = system_region_list($name);
+    $regions = \system_region_list($name);
     $this->assertTrue(isset($regions['test_region']));
     $theme_list = \Drupal::service('theme_handler')->listInfo();
     $this->assertTrue(isset($theme_list[$name]->info['regions']['test_region']));
@@ -440,7 +440,7 @@ class ThemeInstallerTest extends KernelTestBase {
     // @see https://www.drupal.org/node/2228093
     $info = \Drupal::service('extension.list.theme')->getExtensionInfo($name);
     $this->assertFalse(isset($info['regions']['test_region']));
-    $regions = system_region_list($name);
+    $regions = \system_region_list($name);
     $this->assertFalse(isset($regions['test_region']));
     $theme_list = \Drupal::service('theme_handler')->listInfo();
     $this->assertFalse(isset($theme_list[$name]->info['regions']['test_region']));

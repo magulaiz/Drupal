@@ -157,7 +157,7 @@ class ElementsTableSelectTest extends BrowserTestBase {
    */
   public function testMultipleTrueOptionChecker(): void {
 
-    [$header, $options] = _form_test_tableselect_get_data();
+    [$header, $options] = \_form_test_tableselect_get_data();
 
     $form['tableselect'] = [
       '#type' => 'tableselect',
@@ -180,7 +180,7 @@ class ElementsTableSelectTest extends BrowserTestBase {
    */
   public function testMultipleFalseOptionChecker(): void {
 
-    [$header, $options] = _form_test_tableselect_get_data();
+    [$header, $options] = \_form_test_tableselect_get_data();
 
     $form['tableselect'] = [
       '#type' => 'tableselect',

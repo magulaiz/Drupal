@@ -127,8 +127,8 @@ class UserListBuilder extends EntityListBuilder {
     $roles = Role::loadMultiple($entity->getRoles());
     unset($roles[RoleInterface::ANONYMOUS_ID]);
     unset($roles[RoleInterface::AUTHENTICATED_ID]);
-    $users_roles = array_map(fn(RoleInterface $role) => $role->label(), $roles);
-    asort($users_roles);
+    $users_roles = \array_map(fn(RoleInterface $role) => $role->label(), $roles);
+    \asort($users_roles);
     $row['roles']['data'] = [
       '#theme' => 'item_list',
       '#items' => $users_roles,
@@ -144,7 +144,7 @@ class UserListBuilder extends EntityListBuilder {
       CacheableMetadata::createFromObject($last_access)->applyTo($row['access']['data']);
     }
     else {
-      $row['access']['data']['#markup'] = t('never');
+      $row['access']['data']['#markup'] = \t('never');
     }
     return $row + parent::buildRow($entity);
   }

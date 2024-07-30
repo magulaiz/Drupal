@@ -87,8 +87,8 @@ class ToolkitGdTest extends KernelTestBase {
     if ($actual[3] == 127 && $expected[3] == 127) {
       return;
     }
-    $distance = pow(($actual[0] - $expected[0]), 2) + pow(($actual[1] - $expected[1]), 2) + pow(($actual[2] - $expected[2]), 2) + pow(($actual[3] - $expected[3]), 2);
-    $this->assertLessThanOrEqual($tolerance, $distance, $message . " - Actual: {" . implode(',', $actual) . "}, Expected: {" . implode(',', $expected) . "}, Distance: " . $distance . ", Tolerance: " . $tolerance);
+    $distance = \pow(($actual[0] - $expected[0]), 2) + \pow(($actual[1] - $expected[1]), 2) + \pow(($actual[2] - $expected[2]), 2) + \pow(($actual[3] - $expected[3]), 2);
+    $this->assertLessThanOrEqual($tolerance, $distance, $message . " - Actual: {" . \implode(',', $actual) . "}, Expected: {" . \implode(',', $expected) . "}, Distance: " . $distance . ", Tolerance: " . $tolerance);
   }
 
   /**
@@ -96,14 +96,14 @@ class ToolkitGdTest extends KernelTestBase {
    */
   public function getPixelColor(ImageInterface $image, int $x, int $y): array {
     $toolkit = $image->getToolkit();
-    $color_index = imagecolorat($toolkit->getImage(), $x, $y);
+    $color_index = \imagecolorat($toolkit->getImage(), $x, $y);
 
-    $transparent_index = imagecolortransparent($toolkit->getImage());
+    $transparent_index = \imagecolortransparent($toolkit->getImage());
     if ($color_index == $transparent_index) {
       return [0, 0, 0, 127];
     }
 
-    return array_values(imagecolorsforindex($toolkit->getImage(), $color_index));
+    return \array_values(\imagecolorsforindex($toolkit->getImage(), $color_index));
   }
 
   /**
@@ -156,14 +156,14 @@ class ToolkitGdTest extends KernelTestBase {
         'arguments' => ['x' => 12, 'y' => 4, 'width' => 16, 'height' => 12],
         'width' => 16,
         'height' => 12,
-        'corners' => array_fill(0, 4, static::WHITE),
+        'corners' => \array_fill(0, 4, static::WHITE),
       ],
       'scale_and_crop' => [
         'operation' => 'scale_and_crop',
         'arguments' => ['width' => 10, 'height' => 8],
         'width' => 10,
         'height' => 8,
-        'corners' => array_fill(0, 4, static::BLACK),
+        'corners' => \array_fill(0, 4, static::BLACK),
       ],
       'convert_jpg' => [
         'operation' => 'convert',
@@ -196,7 +196,7 @@ class ToolkitGdTest extends KernelTestBase {
     ];
 
     // Systems using non-bundled GD2 may miss imagerotate(). Test if available.
-    if (function_exists('imagerotate')) {
+    if (\function_exists('imagerotate')) {
       $test_cases += [
         'rotate_5' => [
           'operation' => 'rotate',
@@ -206,7 +206,7 @@ class ToolkitGdTest extends KernelTestBase {
           //   https://www.drupal.org/project/drupal/issues/2921123 is resolved.
           // 'width' => 41,
           // 'height' => 23,
-          'corners' => array_fill(0, 4, static::FUCHSIA),
+          'corners' => \array_fill(0, 4, static::FUCHSIA),
         ],
         'rotate_transparent_5' => [
           'operation' => 'rotate',
@@ -215,7 +215,7 @@ class ToolkitGdTest extends KernelTestBase {
           //   https://www.drupal.org/project/drupal/issues/2921123 is resolved.
           // 'width' => 41,
           // 'height' => 23,
-          'corners' => array_fill(0, 4, static::ROTATE_TRANSPARENT),
+          'corners' => \array_fill(0, 4, static::ROTATE_TRANSPARENT),
         ],
         'rotate_90' => [
           'operation' => 'rotate',
@@ -236,7 +236,7 @@ class ToolkitGdTest extends KernelTestBase {
     }
 
     // Systems using non-bundled GD2 may miss imagefilter(). Test if available.
-    if (function_exists('imagefilter')) {
+    if (\function_exists('imagefilter')) {
       $test_cases += [
         'desaturate' => [
           'operation' => 'desaturate',
@@ -247,10 +247,10 @@ class ToolkitGdTest extends KernelTestBase {
           // gray. The values of these were determined simply by looking at the
           // final image to see what desaturated colors end up being.
           'corners' => [
-            array_fill(0, 3, 76) + [3 => 0],
-            array_fill(0, 3, 149) + [3 => 0],
-            array_fill(0, 3, 29) + [3 => 0],
-            array_fill(0, 3, 225) + [3 => 127],
+            \array_fill(0, 3, 76) + [3 => 0],
+            \array_fill(0, 3, 149) + [3 => 0],
+            \array_fill(0, 3, 29) + [3 => 0],
+            \array_fill(0, 3, 225) + [3 => 127],
           ],
         ],
       ];
@@ -291,20 +291,20 @@ class ToolkitGdTest extends KernelTestBase {
     $this->assertTrue($image->isValid());
     $image_original_type = $image->getToolkit()->getType();
 
-    $this->assertTrue(imageistruecolor($toolkit->getImage()), "Image '$file_name' after load should be a truecolor image, but it is not.");
+    $this->assertTrue(\imageistruecolor($toolkit->getImage()), "Image '$file_name' after load should be a truecolor image, but it is not.");
 
     // Perform our operation.
     $image->apply($operation, $arguments);
 
     // Flush Image object to disk storage.
-    $file_path = $this->directory . '/' . $test_case . image_type_to_extension($image->getToolkit()->getType());
+    $file_path = $this->directory . '/' . $test_case . \image_type_to_extension($image->getToolkit()->getType());
     $image->save($file_path);
 
     // Check that the both the GD object and the Image object have an accurate
     // record of the dimensions.
     if (isset($expected['height']) && isset($expected['width'])) {
-      $this->assertSame($expected['height'], imagesy($toolkit->getImage()), "Image '$file_name' after '$test_case' should have a proper height.");
-      $this->assertSame($expected['width'], imagesx($toolkit->getImage()), "Image '$file_name' after '$test_case' should have a proper width.");
+      $this->assertSame($expected['height'], \imagesy($toolkit->getImage()), "Image '$file_name' after '$test_case' should have a proper height.");
+      $this->assertSame($expected['width'], \imagesx($toolkit->getImage()), "Image '$file_name' after '$test_case' should have a proper width.");
       $this->assertSame($expected['height'], $image->getHeight(), "Image '$file_name' after '$test_case' should have a proper height.");
       $this->assertSame($expected['width'], $image->getWidth(), "Image '$file_name' after '$test_case' should have a proper width.");
     }
@@ -395,9 +395,9 @@ class ToolkitGdTest extends KernelTestBase {
    * @dataProvider providerSupportedImageTypes
    */
   public function testGdFunctionsExist(int $type): void {
-    $extension = image_type_to_extension($type, FALSE);
-    $this->assertTrue(function_exists("imagecreatefrom$extension"), "imagecreatefrom$extension should exist.");
-    $this->assertTrue(function_exists("image$extension"), "image$extension should exist.");
+    $extension = \image_type_to_extension($type, FALSE);
+    $this->assertTrue(\function_exists("imagecreatefrom$extension"), "imagecreatefrom$extension should exist.");
+    $this->assertTrue(\function_exists("image$extension"), "image$extension should exist.");
   }
 
   /**
@@ -408,12 +408,12 @@ class ToolkitGdTest extends KernelTestBase {
   public function testCreateImageFromScratch(int $type): void {
     // Build an image from scratch.
     $image = $this->imageFactory->get();
-    $image->createNew(50, 20, image_type_to_extension($type, FALSE), '#ffff00');
-    $file = 'from_null' . image_type_to_extension($type);
+    $image->createNew(50, 20, \image_type_to_extension($type, FALSE), '#ffff00');
+    $file = 'from_null' . \image_type_to_extension($type);
     $file_path = $this->directory . '/' . $file;
     $this->assertSame(50, $image->getWidth());
     $this->assertSame(20, $image->getHeight());
-    $this->assertSame(image_type_to_mime_type($type), $image->getMimeType());
+    $this->assertSame(\image_type_to_mime_type($type), $image->getMimeType());
     $this->assertTrue($image->save($file_path), "Image '$file' should have been saved successfully, but it has not.");
 
     // Reload and check saved image.
@@ -421,7 +421,7 @@ class ToolkitGdTest extends KernelTestBase {
     $this->assertTrue($image_reloaded->isValid());
     $this->assertSame(50, $image_reloaded->getWidth());
     $this->assertSame(20, $image_reloaded->getHeight());
-    $this->assertSame(image_type_to_mime_type($type), $image_reloaded->getMimeType());
+    $this->assertSame(\image_type_to_mime_type($type), $image_reloaded->getMimeType());
     if ($image_reloaded->getToolkit()->getType() == IMAGETYPE_GIF) {
       $this->assertSame('#ffff00', $image_reloaded->getToolkit()->getTransparentColor(), "Image '$file' after reload should have color channel set to #ffff00, but it has not.");
     }
@@ -454,8 +454,8 @@ class ToolkitGdTest extends KernelTestBase {
     $file = 'image-test-transparent-indexed.gif';
     $image = $this->imageFactory->get('core/tests/fixtures/files/' . $file);
     $gd_image = $image->getToolkit()->getImage();
-    $color_index = imagecolorat($gd_image, $image->getWidth() - 1, 0);
-    $color = array_values(imagecolorsforindex($gd_image, $color_index));
+    $color_index = \imagecolorat($gd_image, $image->getWidth() - 1, 0);
+    $color = \array_values(\imagecolorsforindex($gd_image, $color_index));
     $this->assertEquals(static::ROTATE_TRANSPARENT, $color, "Image {$file} after load has full transparent color at corner 1.");
 
     // Test deliberately creating a GIF image with no transparent color set.
@@ -467,16 +467,16 @@ class ToolkitGdTest extends KernelTestBase {
     $image = $this->imageFactory->get();
     $image->createNew(50, 20, 'gif', NULL);
     $gd_image = $image->getToolkit()->getImage();
-    $color_index = imagecolorat($gd_image, $image->getWidth() - 1, 0);
-    $color = array_values(imagecolorsforindex($gd_image, $color_index));
+    $color_index = \imagecolorat($gd_image, $image->getWidth() - 1, 0);
+    $color = \array_values(\imagecolorsforindex($gd_image, $color_index));
     $this->assertEquals(static::ROTATE_TRANSPARENT, $color, "New GIF image with no transparent color set after creation has full transparent color at corner 1.");
     // Save image.
     $this->assertTrue($image->save($file_path), "New GIF image {$file} was saved.");
     // Reload image.
     $image_reloaded = $this->imageFactory->get($file_path);
     $gd_image = $image_reloaded->getToolkit()->getImage();
-    $color_index = imagecolorat($gd_image, $image_reloaded->getWidth() - 1, 0);
-    $color = array_values(imagecolorsforindex($gd_image, $color_index));
+    $color_index = \imagecolorat($gd_image, $image_reloaded->getWidth() - 1, 0);
+    $color = \array_values(\imagecolorsforindex($gd_image, $color_index));
     // Check explicitly for alpha == 0 as the rest of the color has been
     // compressed and may have slight difference from full white.
     $this->assertEquals(0, $color[3], "New GIF image {$file} after reload has no transparent color at corner 1.");
@@ -495,7 +495,7 @@ class ToolkitGdTest extends KernelTestBase {
     $file = 'image-test-transparent-out-of-range.gif';
     $image = $this->imageFactory->get('core/tests/fixtures/files/' . $file);
     $this->assertTrue($image->isValid(), "Image '$file' after load should be valid, but it is not.");
-    $this->assertTrue(imageistruecolor($image->getToolkit()->getImage()), "Image '$file' after load should be a truecolor image, but it is not.");
+    $this->assertTrue(\imageistruecolor($image->getToolkit()->getImage()), "Image '$file' after load should be a truecolor image, but it is not.");
   }
 
   /**
@@ -516,10 +516,10 @@ class ToolkitGdTest extends KernelTestBase {
   public function testGetRequirements(): void {
     $this->assertEquals([
       'version' => [
-        'title' => t('GD library'),
-        'value' => gd_info()['GD Version'],
-        'description' => t("Supported image file formats: %formats.", [
-          '%formats' => implode(', ', ['GIF', 'JPEG', 'PNG', 'WEBP']),
+        'title' => \t('GD library'),
+        'value' => \gd_info()['GD Version'],
+        'description' => \t("Supported image file formats: %formats.", [
+          '%formats' => \implode(', ', ['GIF', 'JPEG', 'PNG', 'WEBP']),
         ]),
       ],
     ], $this->imageFactory->get()->getToolkit()->getRequirements());

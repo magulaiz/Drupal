@@ -69,7 +69,7 @@ class PhpUnitTestRunnerTest extends UnitTestCase {
     $this->assertEquals(TestStatus::EXCEPTION, $status);
 
     // A serious error in runCommand() should give us a fixed set of results.
-    $row = reset($results);
+    $row = \reset($results);
     $fail_row = [
       'test_id' => $test_id,
       'test_class' => 'SomeTest',
@@ -87,7 +87,7 @@ class PhpUnitTestRunnerTest extends UnitTestCase {
    * @covers ::phpUnitCommand
    */
   public function testPhpUnitCommand(): void {
-    $runner = new PhpUnitTestRunner($this->root, sys_get_temp_dir());
+    $runner = new PhpUnitTestRunner($this->root, \sys_get_temp_dir());
     $this->assertMatchesRegularExpression('/phpunit/', $runner->phpUnitCommand());
   }
 
@@ -95,7 +95,7 @@ class PhpUnitTestRunnerTest extends UnitTestCase {
    * @covers ::xmlLogFilePath
    */
   public function testXmlLogFilePath(): void {
-    $runner = new PhpUnitTestRunner($this->root, sys_get_temp_dir());
+    $runner = new PhpUnitTestRunner($this->root, \sys_get_temp_dir());
     $this->assertStringEndsWith('phpunit-23.xml', $runner->xmlLogFilePath(23));
   }
 
@@ -145,12 +145,12 @@ class PhpUnitTestRunnerTest extends UnitTestCase {
    * @covers ::summarizeResults
    */
   public function testSummarizeResults($results, $has_status): void {
-    $runner = new PhpUnitTestRunner($this->root, sys_get_temp_dir());
+    $runner = new PhpUnitTestRunner($this->root, \sys_get_temp_dir());
     $summary = $runner->summarizeResults($results);
 
     $this->assertArrayHasKey(static::class, $summary);
     $this->assertEquals(1, $summary[static::class][$has_status]);
-    foreach (array_diff(['#pass', '#fail', '#exception', '#debug'], [$has_status]) as $should_be_zero) {
+    foreach (\array_diff(['#pass', '#fail', '#exception', '#debug'], [$has_status]) as $should_be_zero) {
       $this->assertSame(0, $summary[static::class][$should_be_zero]);
     }
   }

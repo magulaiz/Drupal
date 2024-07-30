@@ -140,7 +140,7 @@ class CounterTest extends UnitTestCase {
    */
   public function testCounterRandomStart($i): void {
     // Setup a counter field with a random start.
-    $rand_start = rand(5, 10);
+    $rand_start = \rand(5, 10);
     $counter_handler = new Counter([], 'counter', $this->definition);
     $options = [
       'counter_start' => $rand_start,
@@ -169,7 +169,7 @@ class CounterTest extends UnitTestCase {
     $offset = 3;
     $this->pager->setOffset($offset);
 
-    $rand_start = rand(5, 10);
+    $rand_start = \rand(5, 10);
     $counter_handler = new Counter([], 'counter', $this->definition);
     $options = [
       'counter_start' => $rand_start,
@@ -202,7 +202,7 @@ class CounterTest extends UnitTestCase {
     $current_page = 1;
     $this->pager->setCurrentPage($current_page);
 
-    $rand_start = rand(5, 10);
+    $rand_start = \rand(5, 10);
     $counter_handler = new Counter([], 'counter', $this->definition);
     $options = [
       'counter_start' => $rand_start,

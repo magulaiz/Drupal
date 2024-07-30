@@ -25,7 +25,7 @@ class SettingsTrayFormAnnotationIsClassBlockForm extends PluginFormBase {
 
     $form['some_setting'] = [
       '#type' => 'select',
-      '#title' => t('Some setting'),
+      '#title' => \t('Some setting'),
       '#options' => [
         'a' => 'A',
         'b' => 'B',

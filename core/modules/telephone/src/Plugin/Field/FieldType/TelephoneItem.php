@@ -82,7 +82,7 @@ class TelephoneItem extends FieldItemBase {
    * {@inheritdoc}
    */
   public static function generateSampleValue(FieldDefinitionInterface $field_definition) {
-    $values['value'] = rand(pow(10, 8), pow(10, 9) - 1);
+    $values['value'] = \rand(\pow(10, 8), \pow(10, 9) - 1);
     return $values;
   }
 

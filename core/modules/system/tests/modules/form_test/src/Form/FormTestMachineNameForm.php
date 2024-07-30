@@ -87,7 +87,7 @@ class FormTestMachineNameForm extends FormBase {
    * @return bool
    */
   public function load($machine_name) {
-    return str_contains($machine_name, 'duplicate');
+    return \str_contains($machine_name, 'duplicate');
   }
 
 }

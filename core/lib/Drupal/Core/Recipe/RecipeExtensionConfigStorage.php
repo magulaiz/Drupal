@@ -39,7 +39,7 @@ final class RecipeExtensionConfigStorage implements StorageInterface {
    * {@inheritdoc}
    */
   public function exists($name): bool {
-    if (!empty($this->configNames) && !in_array($name, $this->configNames, TRUE)) {
+    if (!empty($this->configNames) && !\in_array($name, $this->configNames, TRUE)) {
       return FALSE;
     }
     return $this->storage->exists($name);
@@ -49,7 +49,7 @@ final class RecipeExtensionConfigStorage implements StorageInterface {
    * {@inheritdoc}
    */
   public function read($name): array|bool {
-    if (!empty($this->configNames) && !in_array($name, $this->configNames, TRUE)) {
+    if (!empty($this->configNames) && !\in_array($name, $this->configNames, TRUE)) {
       return FALSE;
     }
     return $this->storage->read($name);
@@ -60,7 +60,7 @@ final class RecipeExtensionConfigStorage implements StorageInterface {
    */
   public function readMultiple(array $names): array {
     if (!empty($this->configNames)) {
-      $names = array_intersect($this->configNames, $names);
+      $names = \array_intersect($this->configNames, $names);
     }
     return $this->storage->readMultiple($names);
   }
@@ -106,7 +106,7 @@ final class RecipeExtensionConfigStorage implements StorageInterface {
   public function listAll($prefix = ''): array {
     $names = $this->storage->listAll($prefix);
     if (!empty($this->configNames)) {
-      $names = array_intersect($this->configNames, $names);
+      $names = \array_intersect($this->configNames, $names);
     }
     return $names;
   }

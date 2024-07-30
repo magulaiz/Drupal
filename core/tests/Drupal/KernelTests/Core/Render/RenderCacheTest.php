@@ -118,7 +118,7 @@ class RenderCacheTest extends KernelTestBase {
     $element = $test_element;
     $element['#markup'] = 'content that is role specific';
     $output = \Drupal::service('renderer')->renderRoot($element);
-    $expected = in_array('user.roles', $contexts, TRUE) ? 'content that is role specific' : 'content for admin users';
+    $expected = \in_array('user.roles', $contexts, TRUE) ? 'content that is role specific' : 'content for admin users';
     $this->assertEquals($expected, $output);
     \Drupal::service('account_switcher')->switchBack();
   }

@@ -19,7 +19,7 @@ class LeaveProfileNode extends Node {
   public function compile(Compiler $compiler): void {
     $compiler
       ->write("\n")
-      ->write(sprintf("\$%s->leave();\n\n", $this->getAttribute('var_name')));
+      ->write(\sprintf("\$%s->leave();\n\n", $this->getAttribute('var_name')));
   }
 
 }

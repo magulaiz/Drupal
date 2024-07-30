@@ -93,10 +93,10 @@ class ToolbarClaroOverridesTest extends BrowserTestBase {
     $stylesheet_positions = [];
     foreach ($default_stylesheets as $stylesheet) {
       $this->assertStringContainsString($stylesheet, $head);
-      $stylesheet_positions[] = strpos($head, $stylesheet);
+      $stylesheet_positions[] = \strpos($head, $stylesheet);
     }
     $sorted_stylesheet_positions = $stylesheet_positions;
-    sort($sorted_stylesheet_positions);
+    \sort($sorted_stylesheet_positions);
     $this->assertEquals($sorted_stylesheet_positions, $stylesheet_positions);
 
     foreach ($claro_stylesheets as $stylesheet) {
@@ -126,10 +126,10 @@ class ToolbarClaroOverridesTest extends BrowserTestBase {
     $stylesheet_positions = [];
     foreach ($claro_stylesheets as $stylesheet) {
       $this->assertStringContainsString($stylesheet, $head);
-      $stylesheet_positions[] = strpos($head, $stylesheet);
+      $stylesheet_positions[] = \strpos($head, $stylesheet);
     }
     $sorted_stylesheet_positions = $stylesheet_positions;
-    sort($sorted_stylesheet_positions);
+    \sort($sorted_stylesheet_positions);
     $this->assertEquals($sorted_stylesheet_positions, $stylesheet_positions);
 
     foreach ($default_stylesheets as $stylesheet) {

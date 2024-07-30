@@ -45,7 +45,7 @@ abstract class ModuleTestBase extends BrowserTestBase {
    *   The name of the module.
    */
   public function assertModuleTablesExist($module) {
-    $tables = array_keys(SchemaInspector::getTablesSpecification(\Drupal::moduleHandler(), $module));
+    $tables = \array_keys(SchemaInspector::getTablesSpecification(\Drupal::moduleHandler(), $module));
     $tables_exist = TRUE;
     $schema = Database::getConnection()->schema();
     foreach ($tables as $table) {
@@ -63,7 +63,7 @@ abstract class ModuleTestBase extends BrowserTestBase {
    *   The name of the module.
    */
   public function assertModuleTablesDoNotExist($module) {
-    $tables = array_keys(SchemaInspector::getTablesSpecification(\Drupal::moduleHandler(), $module));
+    $tables = \array_keys(SchemaInspector::getTablesSpecification(\Drupal::moduleHandler(), $module));
     $tables_exist = FALSE;
     $schema = Database::getConnection()->schema();
     foreach ($tables as $table) {
@@ -82,7 +82,7 @@ abstract class ModuleTestBase extends BrowserTestBase {
    */
   public function assertModuleConfig($module) {
     $module_config_dir = $this->getModulePath($module) . '/' . InstallStorage::CONFIG_INSTALL_DIRECTORY;
-    if (!is_dir($module_config_dir)) {
+    if (!\is_dir($module_config_dir)) {
       return;
     }
     $module_file_storage = new FileStorage($module_config_dir);
@@ -108,7 +108,7 @@ abstract class ModuleTestBase extends BrowserTestBase {
       // All configuration in a module's config/install directory should depend
       // on the module as it must be removed on uninstall or the module will not
       // be re-installable.
-      $this->assertTrue(str_starts_with($name, $module . '.') || isset($module_config_dependencies[$name]), "Configuration $name provided by $module in its config/install directory does not depend on it.");
+      $this->assertTrue(\str_starts_with($name, $module . '.') || isset($module_config_dependencies[$name]), "Configuration $name provided by $module in its config/install directory does not depend on it.");
     }
     // Verify that all configuration has been installed (which means that $names
     // is empty).
@@ -143,7 +143,7 @@ abstract class ModuleTestBase extends BrowserTestBase {
       else {
         $message = 'Module "%s" is not enabled.';
       }
-      $this->assertEquals($enabled, $this->container->get('module_handler')->moduleExists($module), sprintf($message, $module));
+      $this->assertEquals($enabled, $this->container->get('module_handler')->moduleExists($module), \sprintf($message, $module));
     }
   }
 
@@ -171,7 +171,7 @@ abstract class ModuleTestBase extends BrowserTestBase {
     $this->assertNotEmpty(Database::getConnection()->select('watchdog', 'w')
       ->condition('type', $type)
       ->condition('message', $message)
-      ->condition('variables', serialize($variables))
+      ->condition('variables', \serialize($variables))
       ->condition('severity', $severity)
       ->condition('link', $link)
       ->countQuery()

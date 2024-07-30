@@ -63,7 +63,7 @@ class DisplayFeedTest extends ViewTestBase {
       'body' => [
         0 => [
           'value' => 'A paragraph',
-          'format' => filter_default_format(),
+          'format' => \filter_default_format(),
         ],
       ],
     ]);
@@ -131,7 +131,7 @@ class DisplayFeedTest extends ViewTestBase {
       'body' => [
         0 => [
           'value' => 'A paragraph',
-          'format' => filter_default_format(),
+          'format' => \filter_default_format(),
         ],
       ],
     ]);

@@ -153,7 +153,7 @@ class View extends ConfigEntityBase implements ViewEntityInterface {
     $plugin = Views::pluginManager('display')->getDefinition($plugin_id);
 
     if (empty($plugin)) {
-      $plugin['title'] = t('Broken');
+      $plugin['title'] = \t('Broken');
     }
 
     if (empty($id)) {
@@ -162,7 +162,7 @@ class View extends ConfigEntityBase implements ViewEntityInterface {
       // Generate a unique human-readable name by inspecting the counter at the
       // end of the previous display ID, e.g., 'page_1'.
       if ($id !== 'default') {
-        preg_match("/[0-9]+/", $id, $count);
+        \preg_match("/[0-9]+/", $id, $count);
         $count = $count[0];
       }
       else {
@@ -185,7 +185,7 @@ class View extends ConfigEntityBase implements ViewEntityInterface {
       // Cast the display title to a string since it is an object.
       // @see \Drupal\Core\StringTranslation\TranslatableMarkup
       'display_title' => (string) $title,
-      'position' => $id === 'default' ? 0 : count($this->display),
+      'position' => $id === 'default' ? 0 : \count($this->display),
       'display_options' => [],
     ];
 
@@ -291,7 +291,7 @@ class View extends ConfigEntityBase implements ViewEntityInterface {
     $displays = $this->get('display');
 
     // Sort the displays.
-    ksort($displays);
+    \ksort($displays);
     $this->set('display', ['default' => $displays['default']] + $displays);
 
     // Calculating the cacheability metadata is only needed when the view is
@@ -320,7 +320,7 @@ class View extends ConfigEntityBase implements ViewEntityInterface {
 
     $current_display = $executable->current_display;
     $displays = $this->get('display');
-    foreach (array_keys($displays) as $display_id) {
+    foreach (\array_keys($displays) as $display_id) {
       $display =& $this->getDisplay($display_id);
       $executable->setDisplay($display_id);
 
@@ -331,8 +331,8 @@ class View extends ConfigEntityBase implements ViewEntityInterface {
       // Always include at least the 'languages:' context as there will most
       // probably be translatable strings in the view output.
       $display['cache_metadata']['contexts'] = Cache::mergeContexts($display['cache_metadata']['contexts'], ['languages:' . LanguageInterface::TYPE_INTERFACE]);
-      sort($display['cache_metadata']['tags']);
-      sort($display['cache_metadata']['contexts']);
+      \sort($display['cache_metadata']['tags']);
+      \sort($display['cache_metadata']['contexts']);
     }
     // Restore the previous active display.
     $executable->setDisplay($current_display);
@@ -345,7 +345,7 @@ class View extends ConfigEntityBase implements ViewEntityInterface {
     parent::postSave($storage, $update);
 
     // @todo Remove if views implements a view_builder controller.
-    views_invalidate_cache();
+    \views_invalidate_cache();
     $this->invalidateCaches();
 
     // Rebuild the router if this is a new view, or its status changed.
@@ -422,7 +422,7 @@ class View extends ConfigEntityBase implements ViewEntityInterface {
       $tempstore->delete($entity->id());
     }
 
-    views_invalidate_cache();
+    \views_invalidate_cache();
   }
 
   /**
@@ -460,7 +460,7 @@ class View extends ConfigEntityBase implements ViewEntityInterface {
    */
   public function __sleep(): array {
     $keys = parent::__sleep();
-    unset($keys[array_search('executable', $keys)]);
+    unset($keys[\array_search('executable', $keys)]);
     return $keys;
   }
 
@@ -480,7 +480,7 @@ class View extends ConfigEntityBase implements ViewEntityInterface {
     $changed = FALSE;
 
     // Don't intervene if the views module is removed.
-    if (isset($dependencies['module']) && in_array('views', $dependencies['module'])) {
+    if (isset($dependencies['module']) && \in_array('views', $dependencies['module'])) {
       return FALSE;
     }
 
@@ -489,7 +489,7 @@ class View extends ConfigEntityBase implements ViewEntityInterface {
     $views_data = Views::viewsData();
     $base_table = $this->get('base_table');
     $base_table_data = $views_data->get($base_table);
-    if (!empty($base_table_data['table']['provider']) && in_array($base_table_data['table']['provider'], $dependencies['module'])) {
+    if (!empty($base_table_data['table']['provider']) && \in_array($base_table_data['table']['provider'], $dependencies['module'])) {
       return FALSE;
     }
 
@@ -502,7 +502,7 @@ class View extends ConfigEntityBase implements ViewEntityInterface {
       $this->getExecutable()->setDisplay($display_id);
       $display = $this->getExecutable()->getDisplay();
 
-      foreach (array_keys($handler_types) as $handler_type) {
+      foreach (\array_keys($handler_types) as $handler_type) {
         $handlers = $display->getHandlers($handler_type);
         foreach ($handlers as $handler_id => $handler) {
           if ($handler instanceof DependentWithRemovalPluginInterface) {

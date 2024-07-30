@@ -62,7 +62,7 @@ class FileStorageReadOnlyTest extends PhpStorageTestBase {
 
     // Find a global that doesn't exist.
     do {
-      $random = 'test' . mt_rand(10000, 100000);
+      $random = 'test' . \mt_rand(10000, 100000);
     } while (isset($GLOBALS[$random]));
 
     // Write out a PHP file and ensure it's successfully loaded.
@@ -94,7 +94,7 @@ class FileStorageReadOnlyTest extends PhpStorageTestBase {
 
     // Find a global that doesn't exist.
     do {
-      $random = mt_rand(10000, 100000);
+      $random = \mt_rand(10000, 100000);
     } while (isset($GLOBALS[$random]));
 
     // Write our the file so we can test deleting.

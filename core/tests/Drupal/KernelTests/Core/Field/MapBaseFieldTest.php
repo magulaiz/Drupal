@@ -37,7 +37,7 @@ class MapBaseFieldTest extends EntityKernelTestBase {
 
     // Install every entity type's schema that wasn't installed in the parent
     // method.
-    foreach (array_diff_key($this->entityTypeManager->getDefinitions(), array_flip(['user', 'entity_test'])) as $entity_type_id => $entity_type) {
+    foreach (\array_diff_key($this->entityTypeManager->getDefinitions(), \array_flip(['user', 'entity_test'])) as $entity_type_id => $entity_type) {
       $this->installEntitySchema($entity_type_id);
     }
   }
@@ -47,7 +47,7 @@ class MapBaseFieldTest extends EntityKernelTestBase {
    */
   public function testUninstallMapItemBaseField(): void {
     $definitions['data_map'] = BaseFieldDefinition::create('map')
-      ->setLabel(t('Data'))
+      ->setLabel(\t('Data'))
       ->setRequired(TRUE);
 
     $this->state->set('entity_test_update.additional_base_field_definitions', $definitions);

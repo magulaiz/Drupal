@@ -226,8 +226,8 @@ class OverviewTerms extends FormBase {
 
     // Load all the terms we're going to display and set the weight and parents
     // from the tree.
-    $terms = $this->storageController->loadMultiple(array_keys($term_deltas));
-    $current_page = array_map(function ($raw_term) use ($terms) {
+    $terms = $this->storageController->loadMultiple(\array_keys($term_deltas));
+    $current_page = \array_map(function ($raw_term) use ($terms) {
       $term = $terms[$raw_term->tid];
       $term->depth = $raw_term->depth;
       $term->parents = $raw_term->parents;
@@ -244,13 +244,13 @@ class OverviewTerms extends FormBase {
     $user_input = $form_state->getUserInput();
     if (!empty($user_input['terms'])) {
       // Get the POST order.
-      $order = array_flip(array_keys($user_input['terms']));
+      $order = \array_flip(\array_keys($user_input['terms']));
       // Update our form with the new order.
-      $current_page = array_merge($order, $current_page);
+      $current_page = \array_merge($order, $current_page);
       foreach ($current_page as $key => $term) {
         // Verify this is a term for the current page and set at the current
         // depth.
-        if (is_array($user_input['terms'][$key]) && is_numeric($user_input['terms'][$key]['term']['tid'])) {
+        if (\is_array($user_input['terms'][$key]) && \is_numeric($user_input['terms'][$key]['term']['tid'])) {
           $current_page[$key]->depth = $user_input['terms'][$key]['term']['depth'];
         }
         else {
@@ -280,13 +280,13 @@ class OverviewTerms extends FormBase {
 
     // Get the IDs of the terms edited on the current page which have pending
     // revisions.
-    $edited_term_ids = array_map(function ($item) {
+    $edited_term_ids = \array_map(function ($item) {
       return $item->id();
     }, $current_page);
-    $pending_term_ids = array_intersect($this->storageController->getTermIdsWithPendingRevisions(), $edited_term_ids);
+    $pending_term_ids = \array_intersect($this->storageController->getTermIdsWithPendingRevisions(), $edited_term_ids);
     if ($pending_term_ids) {
       $help_message = $this->formatPlural(
-        count($pending_term_ids),
+        \count($pending_term_ids),
         '%capital_name contains 1 term with pending revisions. Drag and drop of terms with pending revisions is not supported, but you can re-enable drag-and-drop support by getting each term to a published state.',
         '%capital_name contains @count terms with pending revisions. Drag and drop of terms with pending revisions is not supported, but you can re-enable drag-and-drop support by getting each term to a published state.',
         $args
@@ -357,18 +357,18 @@ class OverviewTerms extends FormBase {
       ];
       $form['terms'][$key]['status'] = [
         '#type' => 'item',
-        '#markup' => ($term->isPublished()) ? t('Published') : t('Unpublished'),
+        '#markup' => ($term->isPublished()) ? \t('Published') : \t('Unpublished'),
       ];
 
       // Add a special class for terms with pending revision so we can highlight
       // them in the form.
       $form['terms'][$key]['#attributes']['class'] = [];
-      if (in_array($term->id(), $pending_term_ids)) {
+      if (\in_array($term->id(), $pending_term_ids)) {
         $form['terms'][$key]['#attributes']['class'][] = 'color-warning';
         $form['terms'][$key]['#attributes']['class'][] = 'taxonomy-term--pending-revision';
       }
 
-      if ($update_tree_access->isAllowed() && count($tree) > 1) {
+      if ($update_tree_access->isAllowed() && \count($tree) > 1) {
         $parent_fields = TRUE;
         $form['terms'][$key]['term']['tid'] = [
           '#type' => 'hidden',
@@ -424,7 +424,7 @@ class OverviewTerms extends FormBase {
         $form['terms'][$key]['#attributes']['class'][] = 'taxonomy-term-preview';
       }
 
-      if ($row_position !== 0 && $row_position !== count($tree) - 1) {
+      if ($row_position !== 0 && $row_position !== \count($tree) - 1) {
         if ($row_position == $back_step - 1 || $row_position == $page_entries - $forward_step - 1) {
           $form['terms'][$key]['#attributes']['class'][] = 'taxonomy-term-divider-top';
         }
@@ -435,7 +435,7 @@ class OverviewTerms extends FormBase {
 
       // Add an error class if this row contains a form error.
       foreach ($errors as $error_key => $error) {
-        if (str_starts_with($error_key, $key)) {
+        if (\str_starts_with($error_key, $key)) {
           $form['terms'][$key]['#attributes']['class'][] = 'error';
         }
       }
@@ -472,7 +472,7 @@ class OverviewTerms extends FormBase {
       ];
     }
 
-    if ($update_tree_access->isAllowed() && count($tree) > 1) {
+    if ($update_tree_access->isAllowed() && \count($tree) > 1) {
       $form['actions'] = ['#type' => 'actions', '#tree' => FALSE];
       $form['actions']['submit'] = [
         '#type' => 'submit',
@@ -510,7 +510,7 @@ class OverviewTerms extends FormBase {
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
     // Sort term order based on weight.
-    uasort($form_state->getValue('terms'), ['Drupal\Component\Utility\SortArray', 'sortByWeightElement']);
+    \uasort($form_state->getValue('terms'), ['Drupal\Component\Utility\SortArray', 'sortByWeightElement']);
 
     $vocabulary = $form_state->get(['taxonomy', 'vocabulary']);
     $changed_terms = [];
@@ -562,7 +562,7 @@ class OverviewTerms extends FormBase {
     }
 
     // Build a list of all terms that need to be updated on following pages.
-    for ($weight; $weight < count($tree); $weight++) {
+    for ($weight; $weight < \count($tree); $weight++) {
       $raw_term = $tree[$weight];
       if ($raw_term->parents[0] == 0 && $raw_term->weight != $weight) {
         $term_weights[$raw_term->tid] = $weight;
@@ -570,7 +570,7 @@ class OverviewTerms extends FormBase {
     }
 
     // Load all the items that need to be updated at once.
-    $terms = $this->storageController->loadMultiple(array_keys($term_weights));
+    $terms = $this->storageController->loadMultiple(\array_keys($term_weights));
     foreach ($terms as $term) {
       $term->setWeight($term_weights[$term->id()]);
       $changed_terms[$term->id()] = $term;
@@ -581,7 +581,7 @@ class OverviewTerms extends FormBase {
 
       // Force a form rebuild if any of the changed terms has a pending
       // revision.
-      if (array_intersect_key(array_flip($pending_term_ids), $changed_terms)) {
+      if (\array_intersect_key(\array_flip($pending_term_ids), $changed_terms)) {
         $this->messenger()->addError($this->t('The terms with updated parents have been modified by another user, the changes could not be saved.'));
         $form_state->setRebuild();
 

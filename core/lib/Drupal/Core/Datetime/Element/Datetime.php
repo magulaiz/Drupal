@@ -31,7 +31,7 @@ class Datetime extends DateElementBase {
     $date_format = '';
     $time_format = '';
     // Date formats cannot be loaded during install or update.
-    if (!defined('MAINTENANCE_MODE')) {
+    if (!\defined('MAINTENANCE_MODE')) {
       if ($date_format_entity = DateFormat::load('html_date')) {
         /** @var \Drupal\Core\Datetime\DateFormatInterface $date_format_entity */
         $date_format = $date_format_entity->getPattern();
@@ -76,7 +76,7 @@ class Datetime extends DateElementBase {
    * {@inheritdoc}
    */
   public static function valueCallback(&$element, $input, FormStateInterface $form_state) {
-    $element += ['#date_timezone' => date_default_timezone_get()];
+    $element += ['#date_timezone' => \date_default_timezone_get()];
 
     if ($input !== FALSE) {
       $date_input = $element['#date_date_element'] != 'none' && !empty($input['date']) ? $input['date'] : '';
@@ -85,13 +85,13 @@ class Datetime extends DateElementBase {
       $time_format = $element['#date_time_element'] != 'none' ? static::getHtml5TimeFormat($element) : '';
 
       // Seconds will be omitted in a post in case there's no entry.
-      if (!empty($time_input) && strlen($time_input) == 5) {
+      if (!empty($time_input) && \strlen($time_input) == 5) {
         $time_input .= ':00';
       }
 
       try {
-        $date_time_format = trim($date_format . ' ' . $time_format);
-        $date_time_input = trim($date_input . ' ' . $time_input);
+        $date_time_format = \trim($date_format . ' ' . $time_format);
+        $date_time_input = \trim($date_input . ' ' . $time_input);
         $date = DrupalDateTime::createFromFormat($date_time_format, $date_time_input, $element['#date_timezone']);
       }
       catch (\Exception) {
@@ -258,12 +258,12 @@ class Datetime extends DateElementBase {
 
       $element['date'] = [
         '#type' => 'date',
-        '#title' => t('Date'),
+        '#title' => \t('Date'),
         '#title_display' => 'invisible',
         '#value' => $date_value,
         '#attributes' => $element['#attributes'] + $extra_attributes,
         '#required' => $element['#required'],
-        '#size' => max(12, strlen($element['#value']['date'])),
+        '#size' => \max(12, \strlen($element['#value']['date'])),
         '#error_no_message' => TRUE,
         '#date_date_format' => $element['#date_date_format'],
       ];
@@ -271,7 +271,7 @@ class Datetime extends DateElementBase {
       // Allows custom callbacks to alter the element.
       if (!empty($element['#date_date_callbacks'])) {
         foreach ($element['#date_date_callbacks'] as $callback) {
-          $message = sprintf('DateTime element #date_date_callbacks callbacks must be methods of a class that implements \Drupal\Core\Security\TrustedCallbackInterface or be an anonymous function. The callback was %s. See https://www.drupal.org/node/3217966', Variable::callableToString($callback));
+          $message = \sprintf('DateTime element #date_date_callbacks callbacks must be methods of a class that implements \Drupal\Core\Security\TrustedCallbackInterface or be an anonymous function. The callback was %s. See https://www.drupal.org/node/3217966', Variable::callableToString($callback));
           StaticTrustedCallbackHelper::callback($callback, [&$element, $form_state, $date], $message);
         }
       }
@@ -289,7 +289,7 @@ class Datetime extends DateElementBase {
       ];
       $element['time'] = [
         '#type' => 'date',
-        '#title' => t('Time'),
+        '#title' => \t('Time'),
         '#title_display' => 'invisible',
         '#value' => $time_value,
         '#attributes' => $element['#attributes'] + $extra_attributes,
@@ -301,7 +301,7 @@ class Datetime extends DateElementBase {
       // Allows custom callbacks to alter the element.
       if (!empty($element['#date_time_callbacks'])) {
         foreach ($element['#date_time_callbacks'] as $callback) {
-          $message = sprintf('DateTime element #date_time_callbacks callbacks must be methods of a class that implements \Drupal\Core\Security\TrustedCallbackInterface or be an anonymous function. The callback was %s. See https://www.drupal.org/node/3217966', Variable::callableToString($callback));
+          $message = \sprintf('DateTime element #date_time_callbacks callbacks must be methods of a class that implements \Drupal\Core\Security\TrustedCallbackInterface or be an anonymous function. The callback was %s. See https://www.drupal.org/node/3217966', Variable::callableToString($callback));
           StaticTrustedCallbackHelper::callback($callback, [&$element, $form_state, $date], $message);
         }
       }
@@ -358,7 +358,7 @@ class Datetime extends DateElementBase {
       // If there's empty input and the field is required, set an error. A
       // reminder of the required format in the message provides a good UX.
       elseif (empty($input['date']) && empty($input['time']) && $element['#required']) {
-        $form_state->setError($element, t('The %field date is required.', ['%field' => $title]));
+        $form_state->setError($element, \t('The %field date is required.', ['%field' => $title]));
       }
       else {
         // If the date is valid, set it.
@@ -369,7 +369,7 @@ class Datetime extends DateElementBase {
         // If the date is invalid, set an error. A reminder of the required
         // format in the message provides a good UX.
         else {
-          $form_state->setError($element, t('The %field date is invalid. Enter a date in the correct format.', ['%field' => $title]));
+          $form_state->setError($element, \t('The %field date is invalid. Enter a date in the correct format.', ['%field' => $title]));
         }
       }
     }

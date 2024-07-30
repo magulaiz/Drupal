@@ -41,7 +41,7 @@ trait ContentTypeCreationTrait {
     ];
     $type = NodeType::create($values);
     $status = $type->save();
-    node_add_body_field($type);
+    \node_add_body_field($type);
 
     if ($this instanceof TestCase) {
       $this->assertSame($status, SAVED_NEW, (new FormattableMarkup('Created content type %type.', ['%type' => $type->id()]))->__toString());

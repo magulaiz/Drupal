@@ -79,7 +79,7 @@ class ContainerBuilderTest extends UnitTestCase {
   public function testSerialize(): void {
     $container = new ContainerBuilder();
     $this->expectException(\AssertionError::class);
-    serialize($container);
+    \serialize($container);
   }
 
   /**
@@ -92,7 +92,7 @@ class ContainerBuilderTest extends UnitTestCase {
    * @preserveGlobalState disabled
    */
   public function testConstructor(): void {
-    class_alias(TestInterface::class, 'Symfony\Component\Config\Resource\ResourceInterface');
+    \class_alias(TestInterface::class, 'Symfony\Component\Config\Resource\ResourceInterface');
     $container = new ContainerBuilder();
     $this->assertFalse($container->isTrackingResources());
   }
