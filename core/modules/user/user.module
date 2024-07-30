@@ -21,6 +21,7 @@ use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\Session\AnonymousUserSession;
 use Drupal\Core\Site\Settings;
 use Drupal\Core\Url;
+use Drupal\Core\Utility\UserEmailNotification;
 use Drupal\image\Plugin\Field\FieldType\ImageItem;
 use Drupal\filter\FilterFormatInterface;
 use Drupal\system\Entity\Action;
@@ -617,7 +618,7 @@ function _user_cancel($edit, $account, $method) {
     default:
       // Send account blocked notification if option was checked.
       if (!empty($edit['user_cancel_notify'])) {
-        _user_mail_notify('status_blocked', $account);
+        _user_mail_notify(UserEmailNotification::StatusBlocked->value, $account);
       }
       $account->block();
       $account->save();
@@ -629,7 +630,7 @@ function _user_cancel($edit, $account, $method) {
     case 'user_cancel_delete':
       // Send account canceled notification if option was checked.
       if (!empty($edit['user_cancel_notify'])) {
-        _user_mail_notify('status_canceled', $account);
+        _user_mail_notify(UserEmailNotification::StatusCanceled->value, $account);
       }
       $account->delete();
       \Drupal::messenger()->addStatus(t('Account %name has been deleted.', ['%name' => $account->getDisplayName()]));
@@ -950,10 +951,10 @@ function _user_mail_notify($op, AccountInterface $account) {
       $site_mail = ini_get('sendmail_from');
     }
     $mail = \Drupal::service('plugin.manager.mail')->mail('user', $op, $account->getEmail(), $account->getPreferredLangcode(), $params, $site_mail);
-    if ($op == 'register_pending_approval') {
+    if ($op == UserEmailNotification::RegisterPendingApproval->value) {
       // If a user registered requiring admin approval, notify the admin, too.
       // We use the site default language for this.
-      \Drupal::service('plugin.manager.mail')->mail('user', 'register_pending_approval_admin', $site_mail, \Drupal::languageManager()->getDefaultLanguage()->getId(), $params);
+      \Drupal::service('plugin.manager.mail')->mail('user', UserEmailNotification::RegisterPendingApprovalAdmin->value, $site_mail, \Drupal::languageManager()->getDefaultLanguage()->getId(), $params);
     }
   }
   return empty($mail) ? NULL : $mail['result'];

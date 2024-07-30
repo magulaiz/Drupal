@@ -6,6 +6,7 @@ use Drupal\Core\Config\ImmutableConfig;
 use Drupal\Core\Password\PasswordGeneratorInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
+use Drupal\Core\Utility\UserEmailNotification;
 use Drupal\rest\Attribute\RestResource;
 use Drupal\rest\ModifiedResourceResponse;
 use Drupal\rest\Plugin\ResourceBase;
@@ -181,12 +182,12 @@ class UserRegistrationResource extends ResourceBase {
     if ($approval_settings == UserInterface::REGISTER_VISITORS) {
       if ($this->userSettings->get('verify_mail')) {
         // No administrator approval required.
-        _user_mail_notify('register_no_approval_required', $account);
+        _user_mail_notify(UserEmailNotification::RegisterNoApprovalRequired->value, $account);
       }
     }
     // Administrator approval required.
     elseif ($approval_settings == UserInterface::REGISTER_VISITORS_ADMINISTRATIVE_APPROVAL) {
-      _user_mail_notify('register_pending_approval', $account);
+      _user_mail_notify(UserEmailNotification::RegisterPendingApproval->value, $account);
     }
   }
 

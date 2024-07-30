@@ -3,6 +3,7 @@
 namespace Drupal\user;
 
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Utility\UserEmailNotification;
 
 /**
  * Form handler for the user register forms.
@@ -113,7 +114,7 @@ class RegisterForm extends AccountForm {
     }
     // No email verification required; log in user immediately.
     elseif (!$admin && !\Drupal::config('user.settings')->get('verify_mail') && $account->isActive()) {
-      _user_mail_notify('register_no_approval_required', $account);
+      _user_mail_notify(UserEmailNotification::RegisterNoApprovalRequired->value, $account);
       user_login_finalize($account);
       $this->messenger()->addStatus($this->t('Registration successful. You are now logged in.'));
       $form_state->setRedirect('<front>');
@@ -124,7 +125,7 @@ class RegisterForm extends AccountForm {
         $this->messenger()->addStatus($this->t('The new user <a href=":url">%name</a> was created without an email address, so no welcome message was sent.', [':url' => $account->toUrl()->toString(), '%name' => $account->getAccountName()]));
       }
       else {
-        $op = $notify ? 'register_admin_created' : 'register_no_approval_required';
+        $op = $notify ? UserEmailNotification::RegisterAdminCreated->value : UserEmailNotification::RegisterNoApprovalRequired->value;
         if (_user_mail_notify($op, $account)) {
           if ($notify) {
             $this->messenger()->addStatus($this->t('A welcome message with further instructions has been emailed to the new user <a href=":url">%name</a>.', [':url' => $account->toUrl()->toString(), '%name' => $account->getAccountName()]));
@@ -138,7 +139,7 @@ class RegisterForm extends AccountForm {
     }
     // Administrator approval required.
     else {
-      _user_mail_notify('register_pending_approval', $account);
+      _user_mail_notify(UserEmailNotification::RegisterPendingApproval->value, $account);
       $this->messenger()->addStatus($this->t('Thank you for applying for an account. Your account is currently pending approval by the site administrator.<br />In the meantime, a welcome message with further instructions has been sent to your email address.'));
       $form_state->setRedirect('<front>');
     }

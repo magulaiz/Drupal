@@ -8,6 +8,7 @@ use Drupal\Tests\SchemaCheckTestTrait;
 use Drupal\Tests\migrate_drupal\Kernel\d7\MigrateDrupal7TestBase;
 use Drupal\user\AccountSettingsForm;
 use Drupal\Core\Database\Database;
+use Drupal\Core\Utility\UserEmailNotification;
 use Drupal\user\UserInterface;
 
 /**
@@ -32,8 +33,8 @@ class MigrateUserSettingsTest extends MigrateDrupal7TestBase {
    */
   public function testMigration(): void {
     $config = $this->config('user.settings');
-    $this->assertTrue($config->get('notify.status_blocked'));
-    $this->assertTrue($config->get('notify.status_activated'));
+    $this->assertTrue($config->get('notify.' . UserEmailNotification::StatusBlocked->value));
+    $this->assertTrue($config->get('notify.' . UserEmailNotification::StatusActivated->value));
     $this->assertTrue($config->get('verify_mail'));
     $this->assertSame(UserInterface::REGISTER_VISITORS_ADMINISTRATIVE_APPROVAL, $config->get('register'));
     $this->assertSame('Anonymous', $config->get('anonymous'));
