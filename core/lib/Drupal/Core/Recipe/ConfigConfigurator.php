@@ -24,7 +24,7 @@ final class ConfigConfigurator {
    *   The path to the recipe.
    * @param \Drupal\Core\Config\StorageInterface $active_configuration
    *   The active configuration storage.
-   * @param \Drupal\Core\Config\ConfigManagerInterface
+   * @param \Drupal\Core\Config\ConfigManagerInterface $configManager
    *   The config manager service.
    */
   public function __construct(public readonly array $config, string $recipe_directory, StorageInterface $active_configuration, ConfigManagerInterface $configManager) {
