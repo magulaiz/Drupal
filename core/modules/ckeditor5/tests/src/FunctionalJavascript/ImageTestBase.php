@@ -244,7 +244,7 @@ abstract class ImageTestBase extends CKEditor5TestBase {
       $this->assertNotEmpty($drupalimage);
       $this->assertFalse($drupalimage->hasClass('.ck-widget_selected'));
 
-      $src = basename($this->imageAttributes()['src']);
+      $src = \basename($this->imageAttributes()['src']);
       // Assert the "editingDowncast" HTML before making changes.
       $assert_session->elementExists('css', '.ck-content .ck-widget.' . $expected_widget_class . ' > img[src*="' . $src . '"][alt="drupalimage test image"]');
 
@@ -298,7 +298,7 @@ abstract class ImageTestBase extends CKEditor5TestBase {
       $this->pressEditorButton('Source');
       $source_text_area = $assert_session->waitForElement('css', '.ck-source-editing-area textarea');
       $this->assertNotEmpty($source_text_area);
-      $new_value = str_replace('<a ', '<a class="trusted" ', $source_text_area->getValue());
+      $new_value = \str_replace('<a ', '<a class="trusted" ', $source_text_area->getValue());
       $source_text_area->setValue('<p>temp</p>');
       $source_text_area->setValue($new_value);
       $this->pressEditorButton('Source');
@@ -565,7 +565,7 @@ abstract class ImageTestBase extends CKEditor5TestBase {
     $this->host->body->value = \sprintf('<img data-foo="bar" alt="drupalimage test image" ' . $this->imageAttributesAsString() . ' width="%s" />', $width);
     $this->host->save();
 
-    $this->drupalGet($this->host->toUrl('edit-form'));/Image/
+    $this->drupalGet($this->host->toUrl('edit-form'));
     $this->waitForEditor();
 
     // Ensure that the image is upcast as expected. In the editing view, the
