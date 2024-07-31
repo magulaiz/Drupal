@@ -287,7 +287,8 @@ class ComponentRenderTest extends ComponentKernelTestBase {
   }
 
   /**
-   * Ensure that the slots allow a render array or a scalar when using the render element.
+   * Ensure that the slots allow a render array or a scalar when using the
+   * render element.
    */
   public function checkSlots(): void {
     $slots = [
@@ -349,7 +350,7 @@ class ComponentRenderTest extends ComponentKernelTestBase {
     $crawler = $this->renderComponentRenderArray($build);
     $this->assertEquals(
       $crawler->filter('#sdc-wrapper')->innerText(),
-      'This is a test string.'
+      'This is a test string.',
     );
   }
 
@@ -368,6 +369,29 @@ class ComponentRenderTest extends ComponentKernelTestBase {
     $this->assertNotEmpty($definition['library']['css']['component']);
     $this->assertSame('my-banner.twig', $definition['template']);
     $this->assertNotEmpty($definition['documentation']);
+  }
+
+  /**
+   * Tests the component that uses other components inside.
+   */
+  public function testWrapperComponent(): void {
+    $build = [
+      '#type' => 'inline_template',
+      '#template' => "{% embed 'sdc_test:wrapper' with { text: 'Test' } only %}{% endembed %}",
+    ];
+    $crawler = $this->renderComponentRenderArray($build);
+    $this->assertEquals(
+      $crawler->filter('.wrapper__title')->innerText(),
+      'Test',
+    );
+    $this->assertEquals(
+      $crawler->filter('.wrapper__include')->innerText(),
+      'This is a test string.',
+    );
+    $this->assertEquals(
+      $crawler->filter('.wrapper__embed')->innerText(),
+      'This is a test string.',
+    );
   }
 
 }
