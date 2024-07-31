@@ -287,8 +287,7 @@ class ComponentRenderTest extends ComponentKernelTestBase {
   }
 
   /**
-   * Ensure that the slots allow a render array or a scalar when using the
-   * render element.
+   * Ensure that the slots allow a render array or a scalar when using the render element.
    */
   public function checkSlots(): void {
     $slots = [
@@ -350,7 +349,7 @@ class ComponentRenderTest extends ComponentKernelTestBase {
     $crawler = $this->renderComponentRenderArray($build);
     $this->assertEquals(
       $crawler->filter('#sdc-wrapper')->innerText(),
-      'This is a test string.',
+      'This is a test string.'
     );
   }
 
