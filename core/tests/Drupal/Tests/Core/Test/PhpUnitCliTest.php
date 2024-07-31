@@ -40,6 +40,8 @@ class PhpUnitCliTest extends UnitTestCase {
     $process
       ->setTimeout(300)
       ->setIdleTimeout(300)
+      // Do not care about deprecation notices arising from test discovery.
+      ->setEnv(['SYMFONY_DEPRECATIONS_HELPER' => 'disabled'])
       ->run();
     $this->assertEquals(0, $process->getExitCode(),
       'COMMAND: ' . $process->getCommandLine() . "\n" .
