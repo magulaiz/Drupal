@@ -130,10 +130,10 @@ class ScaffoldFileInfo {
    */
   final public function hasChanged() {
     $path = $this->destination()->fullPath();
-    if (!file_exists($path)) {
+    if (!\file_exists($path)) {
       return TRUE;
     }
-    return $this->op()->contents() !== file_get_contents($path);
+    return $this->op()->contents() !== \file_get_contents($path);
   }
 
 }
