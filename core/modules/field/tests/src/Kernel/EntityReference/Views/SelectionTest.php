@@ -77,7 +77,7 @@ class SelectionTest extends KernelTestBase {
 
     // Ensure the bundle to which the field is attached actually exists, or we
     // will get config validation errors.
-    entity_test_create_bundle('test_bundle');
+    \entity_test_create_bundle('test_bundle');
 
     // Create an entity reference field.
     $handler_settings = [
@@ -142,7 +142,7 @@ class SelectionTest extends KernelTestBase {
   public function testAnchorTagStripping(): void {
     $filtered_rendered_results_formatted = [];
     foreach ($this->selectionHandler->getReferenceableEntities() as $subresults) {
-      $filtered_rendered_results_formatted += array_map(fn(MarkupInterface $markup): string => (string) $markup, $subresults);
+      $filtered_rendered_results_formatted += \array_map(fn(MarkupInterface $markup): string => (string) $markup, $subresults);
     }
 
     // Note the missing <a> tags.
@@ -167,7 +167,7 @@ class SelectionTest extends KernelTestBase {
     foreach ($result as $node_type => $values) {
       foreach ($values as $nid => $label) {
         $this->assertSame($node_type, $this->nodes[$nid]->bundle());
-        $this->assertSame(trim(strip_tags((string) $label)), Html::escape($this->nodes[$nid]->label()));
+        $this->assertSame(\trim(\strip_tags((string) $label)), Html::escape($this->nodes[$nid]->label()));
       }
     }
   }

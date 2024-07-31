@@ -191,8 +191,8 @@ class SqlContentEntityStorageSchema implements DynamicallyFieldableEntityStorage
    */
   protected function getTableMapping(EntityTypeInterface $entity_type, ?array $storage_definitions = NULL) {
     // Allow passing a single field storage definition when updating a field.
-    if ($storage_definitions && count($storage_definitions) === 1) {
-      $storage_definition = reset($storage_definitions);
+    if ($storage_definitions && \count($storage_definitions) === 1) {
+      $storage_definition = \reset($storage_definitions);
       $field_storage_definitions = [$storage_definition->getName() => $storage_definition] + $this->fieldStorageDefinitions;
     }
     else {
@@ -298,7 +298,7 @@ class SqlContentEntityStorageSchema implements DynamicallyFieldableEntityStorage
    *   The schema data.
    */
   protected function getSchemaFromStorageDefinition(FieldStorageDefinitionInterface $storage_definition) {
-    assert(!$storage_definition->hasCustomStorage());
+    \assert(!$storage_definition->hasCustomStorage());
     $table_mapping = $this->getTableMapping($this->entityType, [$storage_definition]);
     $schema = [];
     if ($table_mapping->requiresDedicatedTableStorage($storage_definition)) {
@@ -306,8 +306,8 @@ class SqlContentEntityStorageSchema implements DynamicallyFieldableEntityStorage
     }
     elseif ($table_mapping->allowsSharedTableStorage($storage_definition)) {
       $field_name = $storage_definition->getName();
-      foreach (array_diff($table_mapping->getTableNames(), $table_mapping->getDedicatedTableNames()) as $table_name) {
-        if (in_array($field_name, $table_mapping->getFieldNames($table_name))) {
+      foreach (\array_diff($table_mapping->getTableNames(), $table_mapping->getDedicatedTableNames()) as $table_name) {
+        if (\in_array($field_name, $table_mapping->getFieldNames($table_name))) {
           $column_names = $table_mapping->getColumnNames($storage_definition->getName());
           $schema[$table_name] = $this->getSharedTableFieldSchema($storage_definition, $table_name, $column_names);
         }
@@ -323,7 +323,7 @@ class SqlContentEntityStorageSchema implements DynamicallyFieldableEntityStorage
     // If the original storage has existing entities, or it is impossible to
     // determine if that is the case, require entity data to be migrated.
     $original_storage_class = $original->getStorageClass();
-    if (!class_exists($original_storage_class)) {
+    if (!\class_exists($original_storage_class)) {
       return TRUE;
     }
 
@@ -363,7 +363,7 @@ class SqlContentEntityStorageSchema implements DynamicallyFieldableEntityStorage
     }
 
     // If shared table schema changes are needed, we can't proceed.
-    if (!class_exists($original->getStorageClass()) || $this->hasSharedTableStructureChange($entity_type, $original)) {
+    if (!\class_exists($original->getStorageClass()) || $this->hasSharedTableStructureChange($entity_type, $original)) {
       throw new EntityStorageException('It is not possible to change the entity type schema outside of a batch context. Use EntityDefinitionUpdateManagerInterface::updateFieldableEntityType() instead.');
     }
 
@@ -457,12 +457,12 @@ class SqlContentEntityStorageSchema implements DynamicallyFieldableEntityStorage
 
     $backup_prefix = static::getTemporaryTableMappingPrefix($original, $original_field_storage_definitions, 'old_');
     $sandbox['backup_table_mapping'] = $this->storage->getCustomTableMapping($original, $original_field_storage_definitions, $backup_prefix);
-    $sandbox['backup_prefix_key'] = substr($backup_prefix, 4);
+    $sandbox['backup_prefix_key'] = \substr($backup_prefix, 4);
     $sandbox['backup_request_time'] = \Drupal::time()->getRequestTime();
 
     // Create temporary tables based on the new entity type and field storage
     // definitions.
-    $temporary_table_names = array_combine(
+    $temporary_table_names = \array_combine(
       $this->getTableNames($entity_type, $field_storage_definitions, $sandbox['new_table_mapping']),
       $this->getTableNames($entity_type, $field_storage_definitions, $sandbox['temporary_table_mapping'])
     );
@@ -480,7 +480,7 @@ class SqlContentEntityStorageSchema implements DynamicallyFieldableEntityStorage
     $sandbox['new_entity_schema'] = $schema;
 
     // Filter out tables which are not part of the table mapping.
-    $schema = array_intersect_key($schema, $temporary_table_names);
+    $schema = \array_intersect_key($schema, $temporary_table_names);
 
     // Create entity tables.
     foreach ($schema as $table_name => $table_schema) {
@@ -493,7 +493,7 @@ class SqlContentEntityStorageSchema implements DynamicallyFieldableEntityStorage
         $schema = $this->getDedicatedTableSchema($field_storage_definition, $entity_type);
 
         // Filter out tables which are not part of the table mapping.
-        $schema = array_intersect_key($schema, $temporary_table_names);
+        $schema = \array_intersect_key($schema, $temporary_table_names);
         foreach ($schema as $table_name => $table_schema) {
           $this->database->schema()->createTable($temporary_table_names[$table_name], $table_schema);
         }
@@ -523,7 +523,7 @@ class SqlContentEntityStorageSchema implements DynamicallyFieldableEntityStorage
 
     // Rename the original tables so we can put them back in place in case
     // anything goes wrong.
-    $backup_table_names = array_combine(
+    $backup_table_names = \array_combine(
       $this->getTableNames($original, $original_field_storage_definitions, $original_table_mapping),
       $this->getTableNames($original, $original_field_storage_definitions, $backup_table_mapping)
     );
@@ -639,7 +639,7 @@ class SqlContentEntityStorageSchema implements DynamicallyFieldableEntityStorage
       foreach ($field_storage_definitions as $storage_definition) {
         if ($table_mapping->requiresDedicatedTableStorage($storage_definition)) {
           $dedicated_revision_table_name = $table_mapping->getDedicatedRevisionTableName($storage_definition);
-          if (!$storage_definition->isRevisionable() && !in_array($dedicated_revision_table_name, $table_names)) {
+          if (!$storage_definition->isRevisionable() && !\in_array($dedicated_revision_table_name, $table_names)) {
             $table_names[] = $dedicated_revision_table_name;
           }
         }
@@ -677,14 +677,14 @@ class SqlContentEntityStorageSchema implements DynamicallyFieldableEntityStorage
   public static function getTemporaryTableMappingPrefix(EntityTypeInterface $entity_type, array $field_storage_definitions, $first_prefix_part = 'tmp_') {
     // Construct a unique prefix based on the contents of the entity type and
     // field storage definitions.
-    $prefix_parts[] = spl_object_hash($entity_type);
+    $prefix_parts[] = \spl_object_hash($entity_type);
     foreach ($field_storage_definitions as $storage_definition) {
-      $prefix_parts[] = spl_object_hash($storage_definition);
+      $prefix_parts[] = \spl_object_hash($storage_definition);
     }
     $prefix_parts[] = \Drupal::time()->getRequestTime();
-    $hash = hash('sha256', implode('', $prefix_parts));
+    $hash = \hash('sha256', \implode('', $prefix_parts));
 
-    return $first_prefix_part . substr($hash, 0, 6);
+    return $first_prefix_part . \substr($hash, 0, 6);
   }
 
   /**
@@ -961,7 +961,7 @@ class SqlContentEntityStorageSchema implements DynamicallyFieldableEntityStorage
       }
 
       // We need to act only on shared entity schema tables.
-      $table_names = array_diff($table_mapping->getTableNames(), $table_mapping->getDedicatedTableNames());
+      $table_names = \array_diff($table_mapping->getTableNames(), $table_mapping->getDedicatedTableNames());
       foreach ($table_names as $table_name) {
         if (!isset($schema[$table_name])) {
           $schema[$table_name] = [];
@@ -974,7 +974,7 @@ class SqlContentEntityStorageSchema implements DynamicallyFieldableEntityStorage
           elseif ($table_mapping->allowsSharedTableStorage($this->fieldStorageDefinitions[$field_name])) {
             $column_names = $table_mapping->getColumnNames($field_name);
             $storage_definition = $this->fieldStorageDefinitions[$field_name];
-            $schema[$table_name] = array_merge_recursive($schema[$table_name], $this->getSharedTableFieldSchema($storage_definition, $table_name, $column_names));
+            $schema[$table_name] = \array_merge_recursive($schema[$table_name], $this->getSharedTableFieldSchema($storage_definition, $table_name, $column_names));
           }
         }
       }
@@ -988,7 +988,7 @@ class SqlContentEntityStorageSchema implements DynamicallyFieldableEntityStorage
       }
 
       // Add an index for the 'published' entity key.
-      if (is_subclass_of($entity_type->getClass(), EntityPublishedInterface::class)) {
+      if (\is_subclass_of($entity_type->getClass(), EntityPublishedInterface::class)) {
         $published_key = $entity_type->getKey('published');
         if ($published_key
             && isset($this->fieldStorageDefinitions[$published_key])
@@ -1024,7 +1024,7 @@ class SqlContentEntityStorageSchema implements DynamicallyFieldableEntityStorage
    */
   protected function getEntitySchemaTables(TableMappingInterface $table_mapping) {
     /** @var \Drupal\Core\Entity\Sql\DefaultTableMapping $table_mapping */
-    return array_filter([
+    return \array_filter([
       'base_table' => $table_mapping->getBaseTable(),
       'revision_table' => $table_mapping->getRevisionTable(),
       'data_table' => $table_mapping->getDataTable(),
@@ -1067,17 +1067,17 @@ class SqlContentEntityStorageSchema implements DynamicallyFieldableEntityStorage
     // Extract entity schema data from the Schema API definition.
     $schema_data = [];
     $keys = ['indexes', 'unique keys'];
-    $unused_keys = array_flip(['description', 'fields', 'foreign keys']);
+    $unused_keys = \array_flip(['description', 'fields', 'foreign keys']);
     foreach ($schema as $table_name => $table_schema) {
-      $table_schema = array_diff_key($table_schema, $unused_keys);
+      $table_schema = \array_diff_key($table_schema, $unused_keys);
       foreach ($keys as $key) {
         // Exclude data generated from field storage definitions, we will check
         // that separately.
         if ($field_schema_identifiers && !empty($table_schema[$key])) {
-          $table_schema[$key] = array_diff_key($table_schema[$key], $field_schema_identifiers);
+          $table_schema[$key] = \array_diff_key($table_schema[$key], $field_schema_identifiers);
         }
       }
-      $schema_data[$table_name] = array_filter($table_schema);
+      $schema_data[$table_name] = \array_filter($table_schema);
     }
 
     return $schema_data;
@@ -1146,7 +1146,7 @@ class SqlContentEntityStorageSchema implements DynamicallyFieldableEntityStorage
       foreach ($columns as $column) {
         // Allow for indexes and unique keys to specified as an array of column
         // name and length.
-        if (is_array($column)) {
+        if (\is_array($column)) {
           [$column_name, $length] = $column;
           $data[$real_key][] = [$column_mapping[$column_name], $length];
         }
@@ -1176,12 +1176,12 @@ class SqlContentEntityStorageSchema implements DynamicallyFieldableEntityStorage
     $real_key = isset($key) ? "{$entity_type_id}_field__{$field_name}__{$key}" : "{$entity_type_id}_field__{$field_name}";
     // Limit the string to 48 characters, keeping a 16 characters margin for db
     // prefixes.
-    if (strlen($real_key) > 48) {
+    if (\strlen($real_key) > 48) {
       // Use a shorter separator, a truncated entity_type, and a hash of the
       // field name.
       // Truncate to the same length for the current and revision tables.
-      $entity_type = substr($entity_type_id, 0, 36);
-      $field_hash = substr(hash('sha256', $real_key), 0, 10);
+      $entity_type = \substr($entity_type_id, 0, 36);
+      $field_hash = \substr(\hash('sha256', $real_key), 0, 10);
       $real_key = $entity_type . '__' . $field_hash;
     }
     return $real_key;
@@ -1575,7 +1575,7 @@ class SqlContentEntityStorageSchema implements DynamicallyFieldableEntityStorage
     $table_mapping = $this->getTableMapping($this->entityType, [$storage_definition]);
     $column_names = $table_mapping->getColumnNames($created_field_name);
     $schema_handler = $this->database->schema();
-    $shared_table_names = array_diff($table_mapping->getTableNames(), $table_mapping->getDedicatedTableNames());
+    $shared_table_names = \array_diff($table_mapping->getTableNames(), $table_mapping->getDedicatedTableNames());
 
     // Iterate over the mapped table to find the ones that will host the created
     // field schema.
@@ -1595,7 +1595,7 @@ class SqlContentEntityStorageSchema implements DynamicallyFieldableEntityStorage
               // this information when adding the field.
               // @see \Drupal\Core\Database\Schema::addField()
               $new_keys = [];
-              if (isset($entity_schema[$table_name]['primary key']) && array_intersect($column_names, $entity_schema[$table_name]['primary key'])) {
+              if (isset($entity_schema[$table_name]['primary key']) && \array_intersect($column_names, $entity_schema[$table_name]['primary key'])) {
                 $new_keys = ['primary key' => $entity_schema[$table_name]['primary key']];
               }
 
@@ -1672,7 +1672,7 @@ class SqlContentEntityStorageSchema implements DynamicallyFieldableEntityStorage
     $table_mapping = $this->getTableMapping($this->entityType, [$storage_definition]);
     $column_names = $table_mapping->getColumnNames($deleted_field_name);
     $schema_handler = $this->database->schema();
-    $shared_table_names = array_diff($table_mapping->getTableNames(), $table_mapping->getDedicatedTableNames());
+    $shared_table_names = \array_diff($table_mapping->getTableNames(), $table_mapping->getDedicatedTableNames());
 
     // Iterate over the mapped table to find the ones that host the deleted
     // field schema.
@@ -1779,7 +1779,7 @@ class SqlContentEntityStorageSchema implements DynamicallyFieldableEntityStorage
           foreach ($columns as $column_name) {
             // Indexes can be specified as either a column name or an array with
             // column name and length. Allow for either case.
-            if (is_array($column_name)) {
+            if (\is_array($column_name)) {
               $real_columns[] = [
                 $table_mapping->getFieldColumnName($storage_definition, $column_name[0]),
                 $column_name[1],
@@ -1940,10 +1940,10 @@ class SqlContentEntityStorageSchema implements DynamicallyFieldableEntityStorage
             // involving them. Only indexes for which all columns exist are
             // actually created.
             $create = FALSE;
-            $specifier_columns = array_map(function ($item) {
-              return is_string($item) ? $item : reset($item);
+            $specifier_columns = \array_map(function ($item) {
+              return \is_string($item) ? $item : \reset($item);
             }, $specifier);
-            if (!isset($column_names) || array_intersect($specifier_columns, $column_names)) {
+            if (!isset($column_names) || \array_intersect($specifier_columns, $column_names)) {
               $create = TRUE;
               foreach ($specifier_columns as $specifier_column_name) {
                 // This may happen when adding more than one field in the same
@@ -1991,10 +1991,10 @@ class SqlContentEntityStorageSchema implements DynamicallyFieldableEntityStorage
       foreach ($index_keys as $key => $drop_method) {
         if (!empty($schema[$key])) {
           foreach ($schema[$key] as $name => $specifier) {
-            $specifier_columns = array_map(function ($item) {
-              return is_string($item) ? $item : reset($item);
+            $specifier_columns = \array_map(function ($item) {
+              return \is_string($item) ? $item : \reset($item);
             }, $specifier);
-            if (!isset($column_names) || array_intersect($specifier_columns, $column_names)) {
+            if (!isset($column_names) || \array_intersect($specifier_columns, $column_names)) {
               $schema_handler->{$drop_method}($table_name, $name);
             }
           }
@@ -2056,7 +2056,7 @@ class SqlContentEntityStorageSchema implements DynamicallyFieldableEntityStorage
     $field_schema = $storage_definition->getSchema();
 
     // Check that the schema does not include forbidden column names.
-    if (array_intersect(array_keys($field_schema['columns']), $table_mapping->getReservedColumns())) {
+    if (\array_intersect(\array_keys($field_schema['columns']), $table_mapping->getReservedColumns())) {
       throw new FieldException("Illegal field column names on {$storage_definition->getName()}");
     }
 
@@ -2073,7 +2073,7 @@ class SqlContentEntityStorageSchema implements DynamicallyFieldableEntityStorage
         // tables (i.e. single-value fields).
         // @todo Implement initial value support for multi-value fields in
         //   https://www.drupal.org/node/2883851.
-        $initial_value = reset($initial_storage_value);
+        $initial_value = \reset($initial_storage_value);
       }
 
       if ($initial_value_field_name = $storage_definition->getInitialValueFromField()) {
@@ -2118,7 +2118,7 @@ class SqlContentEntityStorageSchema implements DynamicallyFieldableEntityStorage
       $column_schema = $field_schema['columns'][$field_column_name];
 
       $schema['fields'][$schema_field_name] = $column_schema;
-      $schema['fields'][$schema_field_name]['not null'] = in_array($field_name, $not_null_keys);
+      $schema['fields'][$schema_field_name]['not null'] = \in_array($field_name, $not_null_keys);
 
       // Use the initial value of the field storage, if available.
       if ($initial_value && isset($initial_value[$field_column_name])) {
@@ -2323,7 +2323,7 @@ class SqlContentEntityStorageSchema implements DynamicallyFieldableEntityStorage
     $schema = $storage_definition->getSchema();
     $properties = $storage_definition->getPropertyDefinitions();
     $table_mapping = $this->getTableMapping($entity_type, [$storage_definition]);
-    if (array_intersect(array_keys($schema['columns']), $table_mapping->getReservedColumns())) {
+    if (\array_intersect(\array_keys($schema['columns']), $table_mapping->getReservedColumns())) {
       throw new FieldException("Illegal field column names on {$storage_definition->getName()}");
     }
 
@@ -2347,7 +2347,7 @@ class SqlContentEntityStorageSchema implements DynamicallyFieldableEntityStorage
       foreach ($columns as $column_name) {
         // Indexes can be specified as either a column name or an array with
         // column name and length. Allow for either case.
-        if (is_array($column_name)) {
+        if (\is_array($column_name)) {
           $data_schema['indexes'][$real_name][] = [
             $table_mapping->getFieldColumnName($storage_definition, $column_name[0]),
             $column_name[1],
@@ -2365,7 +2365,7 @@ class SqlContentEntityStorageSchema implements DynamicallyFieldableEntityStorage
       foreach ($columns as $column_name) {
         // Unique keys can be specified as either a column name or an array with
         // column name and length. Allow for either case.
-        if (is_array($column_name)) {
+        if (\is_array($column_name)) {
           $data_schema['unique keys'][$real_name][] = [
             $table_mapping->getFieldColumnName($storage_definition, $column_name[0]),
             $column_name[1],
@@ -2472,12 +2472,12 @@ class SqlContentEntityStorageSchema implements DynamicallyFieldableEntityStorage
     }
 
     if (!$storage_definition->hasCustomStorage()) {
-      $keys = array_flip($this->getColumnSchemaRelevantKeys());
+      $keys = \array_flip($this->getColumnSchemaRelevantKeys());
       $definition_schema = $this->getSchemaFromStorageDefinition($storage_definition);
       foreach ($this->loadFieldSchemaData($original) as $table => $table_schema) {
         foreach ($table_schema['fields'] as $name => $spec) {
-          $definition_spec = array_intersect_key($definition_schema[$table]['fields'][$name], $keys);
-          $stored_spec = array_intersect_key($spec, $keys);
+          $definition_spec = \array_intersect_key($definition_schema[$table]['fields'][$name], $keys);
+          $stored_spec = \array_intersect_key($spec, $keys);
           if ($definition_spec != $stored_spec) {
             return TRUE;
           }

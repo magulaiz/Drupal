@@ -13,10 +13,10 @@ class TestPageTestController {
    * Returns a test page and sets the title.
    */
   public function testPage() {
-    $link_text = t('Visually identical test links');
+    $link_text = \t('Visually identical test links');
     return [
-      '#title' => t('Test page'),
-      '#markup' => t('Test page text.') . "<a href=\"/user/login\">$link_text</a><a href=\"/user/register\">$link_text</a>",
+      '#title' => \t('Test page'),
+      '#markup' => \t('Test page text.') . "<a href=\"/user/login\">$link_text</a><a href=\"/user/register\">$link_text</a>",
       '#attached' => [
         'drupalSettings' => [
           'test-setting' => 'azAZ09();.,\\\/-_{}',
@@ -30,10 +30,10 @@ class TestPageTestController {
    */
   public function testPageVarDump() {
     $role = Role::create(['id' => 'test_role', 'label' => 'Test role']);
-    dump($role);
+    \dump($role);
     return [
-      '#title' => t('Test page with var dump'),
-      '#markup' => t('Test page text.'),
+      '#title' => \t('Test page with var dump'),
+      '#markup' => \t('Test page text.'),
     ];
   }
 

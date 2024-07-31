@@ -137,8 +137,8 @@ class ManageFieldsFunctionalTestBase extends BrowserTestBase {
       ->save();
 
     // Setup node access testing.
-    node_access_rebuild();
-    node_access_test_add_field(NodeType::load('article'));
+    \node_access_rebuild();
+    \node_access_test_add_field(NodeType::load('article'));
     \Drupal::state()->set('node_access_test.private', TRUE);
 
   }

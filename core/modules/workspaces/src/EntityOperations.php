@@ -105,7 +105,7 @@ class EntityOperations implements ContainerInjectionInterface {
 
       // Swap out every entity which has a revision set for the current active
       // workspace.
-      foreach ($storage->loadMultipleRevisions(array_keys($tracked_entities[$entity_type_id])) as $revision) {
+      foreach ($storage->loadMultipleRevisions(\array_keys($tracked_entities[$entity_type_id])) as $revision) {
         $entities[$revision->id()] = $revision;
       }
     }

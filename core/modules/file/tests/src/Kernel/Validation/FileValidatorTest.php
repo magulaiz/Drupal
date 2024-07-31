@@ -32,25 +32,25 @@ class FileValidatorTest extends FileValidatorTestBase {
     $validators = [
       'FileNameLength' => [],
     ];
-    file_test_reset();
+    \file_test_reset();
 
     $violations = $this->validator->validate($this->file, $validators);
     $this->assertCount(0, $violations);
-    $this->assertCount(1, file_test_get_calls('validate'));
+    $this->assertCount(1, \file_test_get_calls('validate'));
 
-    file_test_reset();
+    \file_test_reset();
     $this->file->set('filename', '');
     $violations = $this->validator->validate($this->file, $validators);
     $this->assertCount(1, $violations);
     $this->assertEquals($violations[0]->getMessage(), $violations[0]->getMessage(), 'Message names are equal');
-    $this->assertCount(1, file_test_get_calls('validate'));
+    $this->assertCount(1, \file_test_get_calls('validate'));
 
-    file_test_reset();
+    \file_test_reset();
     $this->file->set('filename', $this->randomMachineName(241));
     $violations = $this->validator->validate($this->file, $validators);
     $this->assertCount(1, $violations);
     $this->assertEquals("The file's name exceeds the 240 characters limit. Rename the file and try again.", $violations[0]->getMessage());
-    $this->assertCount(1, file_test_get_calls('validate'));
+    $this->assertCount(1, \file_test_get_calls('validate'));
   }
 
 }

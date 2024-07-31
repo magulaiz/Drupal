@@ -474,7 +474,7 @@ class EntityUrlTest extends UnitTestCase {
    * @return \Drupal\Tests\Core\Entity\UrlTestEntity|\PHPUnit\Framework\MockObject\MockObject
    */
   protected function getEntity($class, array $values, array $methods = []) {
-    $methods = array_merge($methods, ['getEntityType', 'entityTypeBundleInfo']);
+    $methods = \array_merge($methods, ['getEntityType', 'entityTypeBundleInfo']);
 
     // Prophecy does not allow prophesizing abstract classes while actually
     // calling their code. We use Prophecy below because that allows us to

@@ -153,7 +153,7 @@ class NodeRevisionDeleteForm extends ConfirmFormBase {
     $parameters = ['node' => $this->revision->id()];
     // If no revisions found, or the user does not have access to the revisions
     // page, then redirect to the canonical node page instead.
-    if (!$this->accessManager->checkNamedRoute($route_name, $parameters) || count($this->nodeStorage->revisionIds($this->revision)) === 1) {
+    if (!$this->accessManager->checkNamedRoute($route_name, $parameters) || \count($this->nodeStorage->revisionIds($this->revision)) === 1) {
       $route_name = 'entity.node.canonical';
     }
     $form_state->setRedirect($route_name, $parameters);

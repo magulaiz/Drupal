@@ -50,9 +50,9 @@ class WorkspacePublisher implements WorkspacePublisherInterface {
       $this->workspaceManager->executeOutsideWorkspace(function () use ($tracked_entities) {
         foreach ($tracked_entities as $entity_type_id => $revision_difference) {
           $entity_revisions = $this->entityTypeManager->getStorage($entity_type_id)
-            ->loadMultipleRevisions(array_keys($revision_difference));
+            ->loadMultipleRevisions(\array_keys($revision_difference));
           $default_revisions = $this->entityTypeManager->getStorage($entity_type_id)
-            ->loadMultiple(array_values($revision_difference));
+            ->loadMultiple(\array_values($revision_difference));
 
           /** @var \Drupal\Core\Entity\ContentEntityInterface $entity */
           foreach ($entity_revisions as $entity) {
@@ -131,7 +131,7 @@ class WorkspacePublisher implements WorkspacePublisherInterface {
       // workspace to the latest revision IDs of those entities and the
       // difference between these two arrays gives us all the entities which
       // have been modified on the target.
-      if ($revision_difference = array_diff_key($result, $tracked_revisions)) {
+      if ($revision_difference = \array_diff_key($result, $tracked_revisions)) {
         $target_revision_difference[$entity_type_id] = $revision_difference;
       }
     }
@@ -152,7 +152,7 @@ class WorkspacePublisher implements WorkspacePublisherInterface {
    */
   public function getNumberOfChangesOnTarget() {
     $total_changes = $this->getDifferringRevisionIdsOnTarget();
-    return count($total_changes, COUNT_RECURSIVE) - count($total_changes);
+    return \count($total_changes, COUNT_RECURSIVE) - \count($total_changes);
   }
 
   /**
@@ -160,7 +160,7 @@ class WorkspacePublisher implements WorkspacePublisherInterface {
    */
   public function getNumberOfChangesOnSource() {
     $total_changes = $this->getDifferringRevisionIdsOnSource();
-    return count($total_changes, COUNT_RECURSIVE) - count($total_changes);
+    return \count($total_changes, COUNT_RECURSIVE) - \count($total_changes);
   }
 
 }

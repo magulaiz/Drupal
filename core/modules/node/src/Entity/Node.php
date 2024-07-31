@@ -104,7 +104,7 @@ class Node extends EditorialContentEntityBase implements NodeInterface {
   public function preSave(EntityStorageInterface $storage) {
     parent::preSave($storage);
 
-    foreach (array_keys($this->getTranslationLanguages()) as $langcode) {
+    foreach (\array_keys($this->getTranslationLanguages()) as $langcode) {
       $translation = $this->getTranslation($langcode);
 
       // If no owner has been set explicitly, make the anonymous user the owner.
@@ -163,7 +163,7 @@ class Node extends EditorialContentEntityBase implements NodeInterface {
     // Reindex the node when it is updated. The node is automatically indexed
     // when it is added, simply by being added to the node table.
     if ($update) {
-      node_reindex_node_search($this->id());
+      \node_reindex_node_search($this->id());
     }
   }
 
@@ -188,7 +188,7 @@ class Node extends EditorialContentEntityBase implements NodeInterface {
    */
   public static function postDelete(EntityStorageInterface $storage, array $nodes) {
     parent::postDelete($storage, $nodes);
-    \Drupal::service('node.grant_storage')->deleteNodeRecords(array_keys($nodes));
+    \Drupal::service('node.grant_storage')->deleteNodeRecords(\array_keys($nodes));
   }
 
   /**
@@ -274,7 +274,7 @@ class Node extends EditorialContentEntityBase implements NodeInterface {
     $fields += static::ownerBaseFieldDefinitions($entity_type);
 
     $fields['title'] = BaseFieldDefinition::create('string')
-      ->setLabel(t('Title'))
+      ->setLabel(\t('Title'))
       ->setRequired(TRUE)
       ->setTranslatable(TRUE)
       ->setRevisionable(TRUE)
@@ -291,8 +291,8 @@ class Node extends EditorialContentEntityBase implements NodeInterface {
       ->setDisplayConfigurable('form', TRUE);
 
     $fields['uid']
-      ->setLabel(t('Authored by'))
-      ->setDescription(t('The username of the content author.'))
+      ->setLabel(\t('Authored by'))
+      ->setDescription(\t('The username of the content author.'))
       ->setRevisionable(TRUE)
       ->setDisplayOptions('view', [
         'label' => 'hidden',
@@ -321,8 +321,8 @@ class Node extends EditorialContentEntityBase implements NodeInterface {
       ->setDisplayConfigurable('form', TRUE);
 
     $fields['created'] = BaseFieldDefinition::create('created')
-      ->setLabel(t('Authored on'))
-      ->setDescription(t('The date and time that the content was created.'))
+      ->setLabel(\t('Authored on'))
+      ->setDescription(\t('The date and time that the content was created.'))
       ->setRevisionable(TRUE)
       ->setTranslatable(TRUE)
       ->setDisplayOptions('view', [
@@ -337,13 +337,13 @@ class Node extends EditorialContentEntityBase implements NodeInterface {
       ->setDisplayConfigurable('form', TRUE);
 
     $fields['changed'] = BaseFieldDefinition::create('changed')
-      ->setLabel(t('Changed'))
-      ->setDescription(t('The time that the node was last edited.'))
+      ->setLabel(\t('Changed'))
+      ->setDescription(\t('The time that the node was last edited.'))
       ->setRevisionable(TRUE)
       ->setTranslatable(TRUE);
 
     $fields['promote'] = BaseFieldDefinition::create('boolean')
-      ->setLabel(t('Promoted to front page'))
+      ->setLabel(\t('Promoted to front page'))
       ->setRevisionable(TRUE)
       ->setTranslatable(TRUE)
       ->setDefaultValue(TRUE)
@@ -357,7 +357,7 @@ class Node extends EditorialContentEntityBase implements NodeInterface {
       ->setDisplayConfigurable('form', TRUE);
 
     $fields['sticky'] = BaseFieldDefinition::create('boolean')
-      ->setLabel(t('Sticky at top of lists'))
+      ->setLabel(\t('Sticky at top of lists'))
       ->setRevisionable(TRUE)
       ->setTranslatable(TRUE)
       ->setDefaultValue(FALSE)

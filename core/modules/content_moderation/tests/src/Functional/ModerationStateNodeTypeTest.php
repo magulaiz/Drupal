@@ -53,7 +53,7 @@ class ModerationStateNodeTypeTest extends ModerationStateTestBase {
       'access content overview',
       'use editorial transition create_new_draft',
     ];
-    $publish_permissions = array_merge($editor_permissions, ['use editorial transition publish']);
+    $publish_permissions = \array_merge($editor_permissions, ['use editorial transition publish']);
     $editor = $this->drupalCreateUser($editor_permissions);
     $editor_with_publish = $this->drupalCreateUser($publish_permissions);
 
@@ -89,7 +89,7 @@ class ModerationStateNodeTypeTest extends ModerationStateTestBase {
       $this->fail('Could not load node with title Test');
       return;
     }
-    $node = reset($nodes);
+    $node = \reset($nodes);
     $this->drupalGet('node/' . $node->id());
     $this->assertSession()->statusCodeEquals(200);
     $this->assertSession()->linkByHrefExists('node/' . $node->id() . '/edit');

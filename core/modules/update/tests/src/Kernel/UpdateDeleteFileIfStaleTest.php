@@ -40,7 +40,7 @@ class UpdateDeleteFileIfStaleTest extends KernelTestBase {
       ->save();
 
     // First test that the file is not stale and thus not deleted.
-    $deleted = update_delete_file_if_stale($file_path);
+    $deleted = \update_delete_file_if_stale($file_path);
     $this->assertFalse($deleted);
     $this->assertFileExists($file_path);
 
@@ -52,7 +52,7 @@ class UpdateDeleteFileIfStaleTest extends KernelTestBase {
 
     // Now attempt to delete the file; as it should be considered stale, this
     // attempt should succeed.
-    $deleted = update_delete_file_if_stale($file_path);
+    $deleted = \update_delete_file_if_stale($file_path);
     $this->assertTrue($deleted);
     $this->assertFileDoesNotExist($file_path);
   }

@@ -120,7 +120,7 @@ class ThemeNegotiatorTest extends UnitTestCase {
       ->willReturn(TRUE);
 
     $route_match = new RouteMatch('test_route', new Route('/test-route'), [], []);
-    $theme = $this->createThemeNegotiator(array_keys($negotiators))->determineActiveTheme($route_match);
+    $theme = $this->createThemeNegotiator(\array_keys($negotiators))->determineActiveTheme($route_match);
 
     $this->assertEquals('example_test', $theme);
   }
@@ -165,7 +165,7 @@ class ThemeNegotiatorTest extends UnitTestCase {
       ]);
 
     $route_match = new RouteMatch('test_route', new Route('/test-route'), [], []);
-    $theme = $this->createThemeNegotiator(array_keys($negotiators))->determineActiveTheme($route_match);
+    $theme = $this->createThemeNegotiator(\array_keys($negotiators))->determineActiveTheme($route_match);
 
     $this->assertEquals('example_test2', $theme);
   }
@@ -206,7 +206,7 @@ class ThemeNegotiatorTest extends UnitTestCase {
       ->willReturn(TRUE);
 
     $route_match = new RouteMatch('test_route', new Route('/test-route'), [], []);
-    $theme = $this->createThemeNegotiator(array_keys($negotiators))->determineActiveTheme($route_match);
+    $theme = $this->createThemeNegotiator(\array_keys($negotiators))->determineActiveTheme($route_match);
 
     $this->assertEquals('example_test2', $theme);
   }

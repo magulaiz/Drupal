@@ -48,10 +48,10 @@ class FileCacheTest extends TestCase {
 
     // Test a cache hit.
     $filename = __DIR__ . DIRECTORY_SEPARATOR . 'Fixtures' . DIRECTORY_SEPARATOR . 'llama-42.txt';
-    $realpath = realpath($filename);
+    $realpath = \realpath($filename);
     $cid = 'prefix:test:' . $realpath;
     $data = [
-      'mtime' => filemtime($realpath),
+      'mtime' => \filemtime($realpath),
       'filepath' => $realpath,
       'data' => 42,
     ];
@@ -75,10 +75,10 @@ class FileCacheTest extends TestCase {
 
     // Test a cache hit.
     $filename = __DIR__ . DIRECTORY_SEPARATOR . 'Fixtures' . DIRECTORY_SEPARATOR . 'llama-42.txt';
-    $realpath = realpath($filename);
+    $realpath = \realpath($filename);
     $cid = 'prefix:test:' . $realpath;
     $data = [
-      'mtime' => filemtime($realpath),
+      'mtime' => \filemtime($realpath),
       'filepath' => $realpath,
       'data' => 42,
     ];
@@ -105,10 +105,10 @@ class FileCacheTest extends TestCase {
    */
   public function testSet(): void {
     $filename = __DIR__ . DIRECTORY_SEPARATOR . 'Fixtures' . DIRECTORY_SEPARATOR . 'llama-23.txt';
-    $realpath = realpath($filename);
+    $realpath = \realpath($filename);
     $cid = 'prefix:test:' . $realpath;
     $data = [
-      'mtime' => filemtime($realpath),
+      'mtime' => \filemtime($realpath),
       'filepath' => $realpath,
       'data' => 23,
     ];
@@ -126,7 +126,7 @@ class FileCacheTest extends TestCase {
    */
   public function testDelete(): void {
     $filename = __DIR__ . DIRECTORY_SEPARATOR . 'Fixtures' . DIRECTORY_SEPARATOR . 'llama-23.txt';
-    $realpath = realpath($filename);
+    $realpath = \realpath($filename);
     $cid = 'prefix:test:' . $realpath;
 
     $this->fileCache->set($filename, 23);

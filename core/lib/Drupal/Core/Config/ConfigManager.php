@@ -120,7 +120,7 @@ class ConfigManager implements ConfigManagerInterface {
    */
   public function getEntityTypeIdByName($name) {
     foreach ($this->entityTypeManager->getDefinitions() as $entity_type_id => $entity_type) {
-      if (($entity_type instanceof ConfigEntityTypeInterface && $config_prefix = $entity_type->getConfigPrefix()) && str_starts_with($name, $config_prefix . '.')) {
+      if (($entity_type instanceof ConfigEntityTypeInterface && $config_prefix = $entity_type->getConfigPrefix()) && \str_starts_with($name, $config_prefix . '.')) {
         return $entity_type_id;
       }
     }
@@ -135,7 +135,7 @@ class ConfigManager implements ConfigManagerInterface {
     $entity_type_id = $this->getEntityTypeIdByName($name);
     if ($entity_type_id) {
       $entity_type = $this->entityTypeManager->getDefinition($entity_type_id);
-      $id = substr($name, strlen($entity_type->getConfigPrefix()) + 1);
+      $id = \substr($name, \strlen($entity_type->getConfigPrefix()) + 1);
       return $this->entityTypeManager->getStorage($entity_type_id)->load($id);
     }
     return NULL;
@@ -169,8 +169,8 @@ class ConfigManager implements ConfigManagerInterface {
     // The output should show configuration object differences formatted as YAML.
     // But the configuration is not necessarily stored in files. Therefore, they
     // need to be read and parsed, and lastly, dumped into YAML strings.
-    $source_data = explode("\n", Yaml::encode($source_storage->read($source_name)));
-    $target_data = explode("\n", Yaml::encode($target_storage->read($target_name)));
+    $source_data = \explode("\n", Yaml::encode($source_storage->read($source_name)));
+    $target_data = \explode("\n", Yaml::encode($target_storage->read($target_name)));
 
     // Check for new or removed files.
     if ($source_data === ['false']) {
@@ -234,7 +234,7 @@ class ConfigManager implements ConfigManagerInterface {
     }
 
     $schema_dir = $this->extensionPathResolver->getPath($type, $name) . '/' . InstallStorage::CONFIG_SCHEMA_DIRECTORY;
-    if (is_dir($schema_dir)) {
+    if (\is_dir($schema_dir)) {
       // Refresh the schema cache if uninstalling an extension that provides
       // configuration schema.
       $this->typedConfigManager->clearCachedDefinitions();
@@ -252,14 +252,14 @@ class ConfigManager implements ConfigManagerInterface {
     // dependencies on the config entity classes. Assume data with UUID is a
     // config entity. Only configuration entities can be depended on so we can
     // ignore everything else.
-    $data = array_map(function ($config) {
+    $data = \array_map(function ($config) {
       $data = $config->get();
       if (isset($data['uuid'])) {
         return $data;
       }
       return FALSE;
     }, $this->configFactory->loadMultiple($this->activeStorage->listAll()));
-    $dependency_manager->setData(array_filter($data));
+    $dependency_manager->setData(\array_filter($data));
     return $dependency_manager;
   }
 
@@ -274,7 +274,7 @@ class ConfigManager implements ConfigManagerInterface {
     foreach ($names as $name) {
       $dependencies[] = $dependency_manager->getDependentEntities($type, $name);
     }
-    return array_merge(...$dependencies);
+    return \array_merge(...$dependencies);
   }
 
   /**
@@ -293,7 +293,7 @@ class ConfigManager implements ConfigManagerInterface {
       // dependents of the system module are calculated since system.site has
       // a UUID key.
       if ($entity_type_id) {
-        $id = substr($config_name, strlen($definitions[$entity_type_id]->getConfigPrefix()) + 1);
+        $id = \substr($config_name, \strlen($definitions[$entity_type_id]->getConfigPrefix()) + 1);
         $entities[$entity_type_id][] = $id;
       }
     }
@@ -302,9 +302,9 @@ class ConfigManager implements ConfigManagerInterface {
       $storage = $this->entityTypeManager->getStorage($entity_type_id);
       // Remove the keys since there are potential ID clashes from different
       // configuration entity types.
-      $entities_to_return[] = array_values($storage->loadMultiple($entities_to_load));
+      $entities_to_return[] = \array_values($storage->loadMultiple($entities_to_load));
     }
-    return array_merge(...$entities_to_return);
+    return \array_merge(...$entities_to_return);
   }
 
   /**
@@ -342,7 +342,7 @@ class ConfigManager implements ConfigManagerInterface {
     // graph. Entities are processed in the order of most dependent first. For
     // example, this ensures that Menu UI third party dependencies on node types
     // are fixed before processing the node type's other dependents.
-    while ($dependent = array_pop($dependents_to_process)) {
+    while ($dependent = \array_pop($dependents_to_process)) {
       /** @var \Drupal\Core\Config\Entity\ConfigEntityInterface $dependent */
       if ($dry_run) {
         // Clone the entity so any changes do not change any static caches.
@@ -360,8 +360,8 @@ class ConfigManager implements ConfigManagerInterface {
         // Rebuild the list of entities that we need to process using the new
         // list of current dependents and removing any entities that we've
         // already processed.
-        $dependents_to_process = array_filter($current_dependents, function ($current_dependent) use ($affected_uuids) {
-          return !in_array($current_dependent->uuid(), $affected_uuids);
+        $dependents_to_process = \array_filter($current_dependents, function ($current_dependent) use ($affected_uuids) {
+          return !\in_array($current_dependent->uuid(), $affected_uuids);
         });
         // Ensure that the dependent has actually been fixed. It is possible
         // that other dependencies cause it to still be in the list.
@@ -383,13 +383,13 @@ class ConfigManager implements ConfigManagerInterface {
         $affected_uuids[] = $dependent->uuid();
         // Deletes should occur in the order of the least dependent first. For
         // example, this ensures that fields are removed before field storages.
-        array_unshift($return['delete'], $dependent);
+        \array_unshift($return['delete'], $dependent);
       }
     }
     // Use the list of affected UUIDs to filter the original list to work out
     // which configuration entities are unchanged.
-    $return['unchanged'] = array_filter($original_dependents, function ($dependent) use ($affected_uuids) {
-      return !(in_array($dependent->uuid(), $affected_uuids));
+    $return['unchanged'] = \array_filter($original_dependents, function ($dependent) use ($affected_uuids) {
+      return !(\in_array($dependent->uuid(), $affected_uuids));
     });
 
     return $return;
@@ -448,17 +448,17 @@ class ConfigManager implements ConfigManagerInterface {
     if (isset($entity_dependencies[$type])) {
       // Work out which dependencies the entity has in common with the provided
       // $type and $names.
-      $affected_dependencies[$type] = array_intersect($entity_dependencies[$type], $names);
+      $affected_dependencies[$type] = \array_intersect($entity_dependencies[$type], $names);
 
       // If the dependencies are entities we need to convert them into objects.
       if ($type == 'config' || $type == 'content') {
-        $affected_dependencies[$type] = array_map(function ($name) use ($type) {
+        $affected_dependencies[$type] = \array_map(function ($name) use ($type) {
           if ($type == 'config') {
             return $this->loadConfigEntityByName($name);
           }
           else {
             // Ignore the bundle.
-            [$entity_type_id,, $uuid] = explode(':', $name);
+            [$entity_type_id,, $uuid] = \explode(':', $name);
             return $this->entityRepository->loadEntityByConfigTarget($entity_type_id, $uuid);
           }
         }, $affected_dependencies[$type]);
@@ -469,7 +469,7 @@ class ConfigManager implements ConfigManagerInterface {
     // dependencies if necessary.
     if (isset($entity_dependencies['config'])) {
       foreach ($dependent_entities as $dependent_entity) {
-        if (in_array($dependent_entity->getConfigDependencyName(), $entity_dependencies['config'])) {
+        if (\in_array($dependent_entity->getConfigDependencyName(), $entity_dependencies['config'])) {
           $affected_dependencies['config'][] = $dependent_entity;
         }
       }
@@ -477,8 +477,8 @@ class ConfigManager implements ConfigManagerInterface {
 
     // Key the entity arrays by config dependency name to make searching easy.
     foreach (['config', 'content'] as $dependency_type) {
-      $affected_dependencies[$dependency_type] = array_combine(
-        array_map(function ($entity) {
+      $affected_dependencies[$dependency_type] = \array_combine(
+        \array_map(function ($entity) {
           return $entity->getConfigDependencyName();
         }, $affected_dependencies[$dependency_type]),
         $affected_dependencies[$dependency_type]
@@ -503,10 +503,10 @@ class ConfigManager implements ConfigManagerInterface {
         $content_dependencies[] = $config_data['dependencies']['enforced']['content'];
       }
     }
-    $unique_content_dependencies = array_unique(array_merge(...$content_dependencies));
+    $unique_content_dependencies = \array_unique(\array_merge(...$content_dependencies));
     foreach ($unique_content_dependencies as $content_dependency) {
       // Format of the dependency is entity_type:bundle:uuid.
-      [$entity_type, $bundle, $uuid] = explode(':', $content_dependency, 3);
+      [$entity_type, $bundle, $uuid] = \explode(':', $content_dependency, 3);
       if (!$this->entityRepository->loadEntityByUuid($entity_type, $uuid)) {
         $missing_dependencies[$uuid] = [
           'entity_type' => $entity_type,

@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\Core\Render;
 
-use function preg_replace;
-
 /**
  * @coversDefaultClass \Drupal\Core\Render\Renderer
  * @group Render
@@ -69,7 +67,7 @@ class RendererDebugTest extends RendererTestBase {
 Test 1
 <!-- END RENDERER -->
 EOF;
-    $this->assertSame($expected, preg_replace('/RENDERING TIME: \d{1}.\d{9}/', 'RENDERING TIME: 0.123456789', $markup->__toString()));
+    $this->assertSame($expected, \preg_replace('/RENDERING TIME: \d{1}.\d{9}/', 'RENDERING TIME: 0.123456789', $markup->__toString()));
 
     $element = [
       '#cache' => [

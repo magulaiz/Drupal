@@ -89,7 +89,7 @@ class UpdateReady extends FormBase {
    */
   public function buildForm(array $form, FormStateInterface $form_state) {
     $this->moduleHandler->loadInclude('update', 'inc', 'update.manager');
-    if (!_update_manager_check_backends($form, 'update')) {
+    if (!\_update_manager_check_backends($form, 'update')) {
       return $form;
     }
 
@@ -128,10 +128,10 @@ class UpdateReady extends FormBase {
     $projects = $session->remove('update_manager_update_projects');
     if ($projects) {
       // Make sure the Updater registry is loaded.
-      drupal_get_updaters();
+      \drupal_get_updaters();
 
       $updates = [];
-      $directory = _update_manager_extract_directory();
+      $directory = \_update_manager_extract_directory();
 
       $project_real_location = NULL;
       foreach ($projects as $project => $url) {
@@ -140,7 +140,7 @@ class UpdateReady extends FormBase {
         $project_real_location = \Drupal::service('file_system')->realpath($project_location);
         $updates[] = [
           'project' => $project,
-          'updater_name' => get_class($updater),
+          'updater_name' => \get_class($updater),
           'local_url' => $project_real_location,
         ];
       }
@@ -150,10 +150,10 @@ class UpdateReady extends FormBase {
       // trying to install the code, there's no need to prompt for FTP/SSH
       // credentials. Instead, we instantiate a Drupal\Core\FileTransfer\Local
       // and invoke update_authorize_run_update() directly.
-      if (fileowner($project_real_location) == fileowner($this->sitePath)) {
+      if (\fileowner($project_real_location) == \fileowner($this->sitePath)) {
         $this->moduleHandler->loadInclude('update', 'inc', 'update.authorize');
         $filetransfer = new Local($this->root, \Drupal::service('file_system'));
-        $response = update_authorize_run_update($filetransfer, $updates);
+        $response = \update_authorize_run_update($filetransfer, $updates);
         if ($response instanceof Response) {
           $form_state->setResponse($response);
         }
@@ -165,8 +165,8 @@ class UpdateReady extends FormBase {
         // The page title must be passed here to ensure it is initially used
         // when authorize.php loads for the first time with the FTP/SSH
         // credentials form.
-        system_authorized_init('update_authorize_run_update', __DIR__ . '/../../update.authorize.inc', [$updates], $this->t('Update manager'));
-        $form_state->setRedirectUrl(system_authorized_get_url());
+        \system_authorized_init('update_authorize_run_update', __DIR__ . '/../../update.authorize.inc', [$updates], $this->t('Update manager'));
+        $form_state->setRedirectUrl(\system_authorized_get_url());
       }
     }
   }

@@ -50,7 +50,7 @@ class DrupalDateTimeTest extends BrowserTestBase {
       ->save();
 
     // Detect the system timezone.
-    $system_timezone = date_default_timezone_get();
+    $system_timezone = \date_default_timezone_get();
 
     // Create a date object with an unspecified timezone, which should
     // end up using the system timezone.

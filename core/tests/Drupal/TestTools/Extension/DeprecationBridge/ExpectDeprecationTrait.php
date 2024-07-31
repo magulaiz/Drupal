@@ -41,7 +41,7 @@ trait ExpectDeprecationTrait {
     }
 
     DeprecationHandler::reset();
-    set_error_handler(new TestErrorHandler(Error::currentErrorHandler(), $this));
+    \set_error_handler(new TestErrorHandler(Error::currentErrorHandler(), $this));
   }
 
   /**
@@ -63,18 +63,18 @@ trait ExpectDeprecationTrait {
     // restored during ::tearDown().
     $handler = Error::currentErrorHandler();
     if (!$handler instanceof TestErrorHandler) {
-      throw new \RuntimeException(sprintf('%s registered its own error handler (%s) without restoring the previous one before or during tear down. This can cause unpredictable test results. Ensure the test cleans up after itself.',
+      throw new \RuntimeException(\sprintf('%s registered its own error handler (%s) without restoring the previous one before or during tear down. This can cause unpredictable test results. Ensure the test cleans up after itself.',
         $this->name(),
         self::getCallableName($handler),
       ));
     }
-    restore_error_handler();
+    \restore_error_handler();
 
     // Checks if collected deprecations match the expectations.
     if (DeprecationHandler::getExpectedDeprecations()) {
       $prefix = "@expectedDeprecation:\n";
-      $expDep = $prefix . '%A  ' . implode("\n%A  ", DeprecationHandler::getExpectedDeprecations()) . "\n%A";
-      $actDep = $prefix . '  ' . implode("\n  ", DeprecationHandler::getCollectedDeprecations()) . "\n";
+      $expDep = $prefix . '%A  ' . \implode("\n%A  ", DeprecationHandler::getExpectedDeprecations()) . "\n%A";
+      $actDep = $prefix . '  ' . \implode("\n  ", DeprecationHandler::getCollectedDeprecations()) . "\n";
       $this->assertStringMatchesFormat($expDep, $actDep);
     }
   }
@@ -110,23 +110,23 @@ trait ExpectDeprecationTrait {
    */
   private static function getCallableName(callable $callable): string {
     switch (TRUE) {
-      case is_string($callable) && strpos($callable, '::'):
+      case \is_string($callable) && \strpos($callable, '::'):
         return '[static] ' . $callable;
 
-      case is_string($callable):
+      case \is_string($callable):
         return '[function] ' . $callable;
 
-      case is_array($callable) && is_object($callable[0]):
-        return '[method] ' . get_class($callable[0]) . '->' . $callable[1];
+      case \is_array($callable) && \is_object($callable[0]):
+        return '[method] ' . \get_class($callable[0]) . '->' . $callable[1];
 
-      case is_array($callable):
+      case \is_array($callable):
         return '[static] ' . $callable[0] . '::' . $callable[1];
 
       case $callable instanceof \Closure:
         return '[closure]';
 
-      case is_object($callable):
-        return '[invokable] ' . get_class($callable);
+      case \is_object($callable):
+        return '[invokable] ' . \get_class($callable);
 
       default:
         return '[unknown]';

@@ -102,9 +102,9 @@ abstract class BlockContentTestBase extends ViewTestBase {
     ];
     $bundle = BlockContentType::create($values);
     $status = $bundle->save();
-    block_content_add_body_field($bundle->id());
+    \block_content_add_body_field($bundle->id());
 
-    $this->assertEquals(SAVED_NEW, $status, sprintf('Created block content type %s.', $bundle->id()));
+    $this->assertEquals(SAVED_NEW, $status, \sprintf('Created block content type %s.', $bundle->id()));
     return $bundle;
   }
 

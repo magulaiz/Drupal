@@ -104,7 +104,7 @@ abstract class DriverSpecificConnectionUnitTestBase extends DriverSpecificKernel
     // Close the connection.
     Database::closeConnection(static::TEST_TARGET_CONNECTION);
     // Wait 20ms to give the database engine sufficient time to react.
-    usleep(20000);
+    \usleep(20000);
 
     // Verify that we are back to the original connection count.
     $this->assertNoConnection($this->id);
@@ -120,7 +120,7 @@ abstract class DriverSpecificConnectionUnitTestBase extends DriverSpecificKernel
     // Close the connection.
     Database::closeConnection(static::TEST_TARGET_CONNECTION);
     // Wait 20ms to give the database engine sufficient time to react.
-    usleep(20000);
+    \usleep(20000);
 
     // Verify that we are back to the original connection count.
     $this->assertNoConnection($this->id);
@@ -136,7 +136,7 @@ abstract class DriverSpecificConnectionUnitTestBase extends DriverSpecificKernel
     // Close the connection.
     Database::closeConnection(static::TEST_TARGET_CONNECTION);
     // Wait 20ms to give the database engine sufficient time to react.
-    usleep(20000);
+    \usleep(20000);
 
     // Verify that we are back to the original connection count.
     $this->assertNoConnection($this->id);
@@ -169,7 +169,7 @@ abstract class DriverSpecificConnectionUnitTestBase extends DriverSpecificKernel
     // Close the connection.
     Database::closeConnection(static::TEST_TARGET_CONNECTION);
     // Wait 20ms to give the database engine sufficient time to react.
-    usleep(20000);
+    \usleep(20000);
 
     // Verify that we are back to the original connection count.
     $this->assertNoConnection($this->id);

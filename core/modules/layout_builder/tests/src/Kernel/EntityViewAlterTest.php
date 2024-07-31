@@ -36,7 +36,7 @@ class EntityViewAlterTest extends KernelTestBase {
    */
   protected function setUp(): void {
     parent::setUp();
-    entity_test_create_bundle('bundle_with_extra_fields');
+    \entity_test_create_bundle('bundle_with_extra_fields');
     $this->installEntitySchema('entity_test');
     $this->installConfig(['layout_builder_defaults_test']);
   }
@@ -57,7 +57,7 @@ class EntityViewAlterTest extends KernelTestBase {
     $request->setSession(new Session(new MockArraySessionStorage()));
     \Drupal::requestStack()->push($request);
     // Assert the contextual links are removed.
-    layout_builder_entity_view_alter($build, $entity, $display);
+    \layout_builder_entity_view_alter($build, $entity, $display);
     $this->assertArrayNotHasKey('#contextual_links', $build);
   }
 

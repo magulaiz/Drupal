@@ -193,7 +193,7 @@ class DisplayTest extends WebDriverTestBase {
   private function addTranslation($langcode, $source_string, $translation_string) {
     $storage = \Drupal::service('locale.storage');
     $string = $storage->findString(['source' => $source_string]);
-    if (is_null($string)) {
+    if (\is_null($string)) {
       $string = new SourceString();
       $string
         ->setString($source_string)

@@ -31,7 +31,7 @@ class FinderTest extends UnitTestCase {
       // Finally, the menu link to the node.
       '3434bd5a-d2cd-4f26-bf79-a7f6b951a21b',
     ];
-    $this->assertSame($expected_order, array_slice(array_keys($finder->data), 0, 4));
+    $this->assertSame($expected_order, \array_slice(\array_keys($finder->data), 0, 4));
   }
 
   /**
@@ -41,7 +41,7 @@ class FinderTest extends UnitTestCase {
     $dir = FileSystem::getOsTemporaryDirectory();
     $this->assertIsString($dir);
     /** @var string $dir */
-    file_put_contents($dir . '/no-uuid.yml', '_meta: {}');
+    \file_put_contents($dir . '/no-uuid.yml', '_meta: {}');
 
     $this->expectException(ImportException::class);
     $this->expectExceptionMessage("$dir/no-uuid.yml does not have a UUID.");

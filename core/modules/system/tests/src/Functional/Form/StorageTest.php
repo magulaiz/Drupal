@@ -192,7 +192,7 @@ class StorageTest extends BrowserTestBase {
 
     // Try to poison the form cache.
     $response = $this->drupalGet('form-test/form-storage-legacy/' . $build_id, ['query' => [MainContentViewSubscriber::WRAPPER_FORMAT => 'drupal_ajax']], ['X-Requested-With' => 'XMLHttpRequest']);
-    $original = json_decode($response, TRUE);
+    $original = \json_decode($response, TRUE);
 
     $this->assertEquals($original['form']['#build_id_old'], $build_id, 'Original build_id was recorded');
     $this->assertNotEquals($original['form']['#build_id'], $build_id, 'New build_id was generated');
@@ -209,7 +209,7 @@ class StorageTest extends BrowserTestBase {
 
     // Ensure that the form state was not poisoned by the preceding call.
     $response = $this->drupalGet('form-test/form-storage-legacy/' . $build_id, ['query' => [MainContentViewSubscriber::WRAPPER_FORMAT => 'drupal_ajax']], ['X-Requested-With' => 'XMLHttpRequest']);
-    $original = json_decode($response, TRUE);
+    $original = \json_decode($response, TRUE);
     $this->assertEquals($original['form']['#build_id_old'], $build_id, 'Original build_id was recorded');
     $this->assertNotEquals($original['form']['#build_id'], $build_id, 'New build_id was generated');
     $this->assertArrayNotHasKey('#poisoned', $original['form'], 'Original form structure was preserved');

@@ -37,7 +37,7 @@ class FunctionalTestDebugHtmlOutputTest extends BrowserTestBase {
       '--configuration',
       'core',
     ];
-    $process = new Process(array_merge($command, $config));
+    $process = new Process(\array_merge($command, $config));
     $process->setWorkingDirectory($this->root)
       ->setTimeout(300)
       ->setIdleTimeout(300);
@@ -58,7 +58,7 @@ class FunctionalTestDebugHtmlOutputTest extends BrowserTestBase {
       '--configuration',
       $alteredConfigFile,
     ];
-    $process = new Process(array_merge($command, $config));
+    $process = new Process(\array_merge($command, $config));
     $process->setWorkingDirectory($this->root)
       ->setTimeout(300)
       ->setIdleTimeout(300);
@@ -68,7 +68,7 @@ class FunctionalTestDebugHtmlOutputTest extends BrowserTestBase {
       'OUTPUT: ' . $process->getOutput() . "\n" .
       'ERROR: ' . $process->getErrorOutput() . "\n");
     $this->assertMatchesRegularExpression('/HTML output was generated, \d+ page\(s\)\./m', $process->getOutput());
-    unlink($alteredConfigFile);
+    \unlink($alteredConfigFile);
 
     // Test without verbose output, overridden by BROWSERTEST_OUTPUT_VERBOSE
     // environment variable.
@@ -76,7 +76,7 @@ class FunctionalTestDebugHtmlOutputTest extends BrowserTestBase {
       '--configuration',
       'core',
     ];
-    $process = new Process(array_merge($command, $config));
+    $process = new Process(\array_merge($command, $config));
     $process->setWorkingDirectory($this->root)
       ->setTimeout(300)
       ->setIdleTimeout(300);
@@ -98,7 +98,7 @@ class FunctionalTestDebugHtmlOutputTest extends BrowserTestBase {
       '--configuration',
       $alteredConfigFile,
     ];
-    $process = new Process(array_merge($command, $config));
+    $process = new Process(\array_merge($command, $config));
     $process->setWorkingDirectory($this->root)
       ->setTimeout(300)
       ->setIdleTimeout(300);
@@ -110,7 +110,7 @@ class FunctionalTestDebugHtmlOutputTest extends BrowserTestBase {
       'OUTPUT: ' . $process->getOutput() . "\n" .
       'ERROR: ' . $process->getErrorOutput() . "\n");
     $this->assertStringContainsString('HTML output directory can_we_assume_that_a_subdirectory_with_this_name_does_not_exist is not a writable directory.', $process->getOutput());
-    unlink($alteredConfigFile);
+    \unlink($alteredConfigFile);
 
     // Test with a wrong output directory, overridden by
     // BROWSERTEST_OUTPUT_DIRECTORY environment variable.
@@ -118,7 +118,7 @@ class FunctionalTestDebugHtmlOutputTest extends BrowserTestBase {
       '--configuration',
       'core',
     ];
-    $process = new Process(array_merge($command, $config));
+    $process = new Process(\array_merge($command, $config));
     $process->setWorkingDirectory($this->root)
       ->setTimeout(300)
       ->setIdleTimeout(300);
@@ -136,7 +136,7 @@ class FunctionalTestDebugHtmlOutputTest extends BrowserTestBase {
       '--configuration',
       'core',
     ];
-    $process = new Process(array_merge($command, $config));
+    $process = new Process(\array_merge($command, $config));
     $process->setWorkingDirectory($this->root)
       ->setTimeout(300)
       ->setIdleTimeout(300);
@@ -158,7 +158,7 @@ class FunctionalTestDebugHtmlOutputTest extends BrowserTestBase {
       '--configuration',
       $alteredConfigFile,
     ];
-    $process = new Process(array_merge($command, $config));
+    $process = new Process(\array_merge($command, $config));
     $process->setWorkingDirectory($this->root)
       ->setTimeout(300)
       ->setIdleTimeout(300);
@@ -170,16 +170,16 @@ class FunctionalTestDebugHtmlOutputTest extends BrowserTestBase {
       'OUTPUT: ' . $process->getOutput() . "\n" .
       'ERROR: ' . $process->getErrorOutput() . "\n");
     $this->assertStringContainsString('HTML output directory not specified.', $process->getOutput());
-    unlink($alteredConfigFile);
+    \unlink($alteredConfigFile);
   }
 
   private function getAlteredPhpunitXmlConfigurationFile(array|string $search, array|string $replace): string {
     $fileSystem = \Drupal::service('file_system');
     $copiedConfigFile = $fileSystem->tempnam($this->root . \DIRECTORY_SEPARATOR . 'core', 'pux');
     $fileSystem->copy($this->root . \DIRECTORY_SEPARATOR . 'core' . \DIRECTORY_SEPARATOR . 'phpunit.xml.dist', $copiedConfigFile, FileExists::Replace);
-    $content = file_get_contents($copiedConfigFile);
-    $content = str_replace($search, $replace, $content);
-    file_put_contents($copiedConfigFile, $content);
+    $content = \file_get_contents($copiedConfigFile);
+    $content = \str_replace($search, $replace, $content);
+    \file_put_contents($copiedConfigFile, $content);
     return $fileSystem->realpath($copiedConfigFile);
   }
 

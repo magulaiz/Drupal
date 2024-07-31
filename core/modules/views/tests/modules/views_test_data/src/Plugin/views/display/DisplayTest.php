@@ -96,7 +96,7 @@ class DisplayTest extends DisplayPluginBase {
     \Drupal::logger('views')->notice($form_state->getValue('test_option'));
     switch ($form_state->get('section')) {
       case 'test_option':
-        if (!trim($form_state->getValue('test_option'))) {
+        if (!\trim($form_state->getValue('test_option'))) {
           $form_state->setError($form['test_option'], $this->t('You cannot have an empty option.'));
         }
         break;

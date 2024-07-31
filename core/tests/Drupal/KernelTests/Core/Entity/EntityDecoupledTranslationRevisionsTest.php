@@ -294,7 +294,7 @@ class EntityDecoupledTranslationRevisionsTest extends EntityKernelTestBase {
     $revision_id = NULL;
     foreach ($sequence as $index => $step) {
       $this->stepIndex = $index;
-      $revision_id = call_user_func_array([$this, 'doEditStep'], $step);
+      $revision_id = \call_user_func_array([$this, 'doEditStep'], $step);
     }
     return (int) $revision_id;
   }
@@ -335,7 +335,7 @@ class EntityDecoupledTranslationRevisionsTest extends EntityKernelTestBase {
       $this->previousUntranslatableFieldValue[$previous_untranslatable_field_langcode] = NULL;
     }
     if (!isset($this->translations[$active_langcode])) {
-      $this->translations[$active_langcode] = reset($this->translations)->addTranslation($active_langcode);
+      $this->translations[$active_langcode] = \reset($this->translations)->addTranslation($active_langcode);
       $this->previousRevisionId[$active_langcode] = 0;
       $this->previousUntranslatableFieldValue[$active_langcode] = NULL;
     }
@@ -408,7 +408,7 @@ class EntityDecoupledTranslationRevisionsTest extends EntityKernelTestBase {
       // failures.
       $prev = 0;
       if (isset($previous_untranslatable_field_value)) {
-        preg_match('/^\d+ -> (\d+)$/', $previous_untranslatable_field_value, $matches);
+        \preg_match('/^\d+ -> (\d+)$/', $previous_untranslatable_field_value, $matches);
         $prev = $matches[1];
       }
       $value = $prev . ' -> ' . ($entity->getLoadedRevisionId() + 1);
@@ -422,7 +422,7 @@ class EntityDecoupledTranslationRevisionsTest extends EntityKernelTestBase {
       /** \Symfony\Component\Validator\ConstraintViolationInterface */
       $messages[] = $violation->getMessage();
     }
-    $this->assertEquals($valid, !$violations->count(), $this->formatMessage('Validation does not match the expected result: %s', implode(', ', $messages)));
+    $this->assertEquals($valid, !$violations->count(), $this->formatMessage('Validation does not match the expected result: %s', \implode(', ', $messages)));
 
     if ($valid) {
       $entity->save();
@@ -473,7 +473,7 @@ class EntityDecoupledTranslationRevisionsTest extends EntityKernelTestBase {
     $language_label = $revision->language()->getName();
     $revision_type = $revision->isDefaultRevision() ? 'Default' : 'Pending';
     $revision_id = $next ? $this->storage->getLatestRevisionId($revision->id()) + 1 : $revision->getLoadedRevisionId();
-    return sprintf('%s (%s %d -> %d)', $language_label, $revision_type, $previous_revision_id, $revision_id);
+    return \sprintf('%s (%s %d -> %d)', $language_label, $revision_type, $previous_revision_id, $revision_id);
   }
 
   /**
@@ -486,12 +486,12 @@ class EntityDecoupledTranslationRevisionsTest extends EntityKernelTestBase {
    *   The formatted message.
    */
   protected function formatMessage($message) {
-    $args = func_get_args();
-    array_shift($args);
-    $params = array_merge($args, $this->stepInfo);
-    array_unshift($params, $this->stepIndex + 1);
-    array_unshift($params, '[Step %d] ' . $message . ' (langcode: %s, default_revision: %d, untranslatable_update: %d, valid: %d)');
-    return call_user_func_array('sprintf', $params);
+    $args = \func_get_args();
+    \array_shift($args);
+    $params = \array_merge($args, $this->stepInfo);
+    \array_unshift($params, $this->stepIndex + 1);
+    \array_unshift($params, '[Step %d] ' . $message . ' (langcode: %s, default_revision: %d, untranslatable_update: %d, valid: %d)');
+    return \call_user_func_array('sprintf', $params);
   }
 
   /**

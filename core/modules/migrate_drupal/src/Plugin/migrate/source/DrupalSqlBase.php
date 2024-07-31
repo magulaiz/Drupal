@@ -172,7 +172,7 @@ abstract class DrupalSqlBase extends SqlBase implements DependentPluginInterface
     catch (\Exception) {
       $result = FALSE;
     }
-    return $result !== FALSE ? unserialize($result) : $default;
+    return $result !== FALSE ? \unserialize($result) : $default;
   }
 
   /**

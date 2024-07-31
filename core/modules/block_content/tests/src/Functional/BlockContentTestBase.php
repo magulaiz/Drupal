@@ -107,7 +107,7 @@ abstract class BlockContentTestBase extends BrowserTestBase {
    *   Created block type.
    */
   protected function createBlockContentType($values, $create_body = FALSE) {
-    if (is_array($values)) {
+    if (\is_array($values)) {
       if (!isset($values['id'])) {
         do {
           $id = $this->randomMachineName(8);
@@ -132,7 +132,7 @@ abstract class BlockContentTestBase extends BrowserTestBase {
     }
     $bundle->save();
     if ($create_body) {
-      block_content_add_body_field($bundle->id());
+      \block_content_add_body_field($bundle->id());
     }
     return $bundle;
   }

@@ -479,7 +479,7 @@ class JsonApiDocumentTopLevelNormalizerTest extends JsonapiKernelTestBase {
       )->getNormalization();
     $this->assertNotEmpty($jsonapi_doc_object['meta']['omitted']);
     foreach ($jsonapi_doc_object['meta']['omitted']['links'] as $key => $link) {
-      if (str_starts_with($key, 'item--')) {
+      if (\str_starts_with($key, 'item--')) {
         // Ensure that resource link contains URL with the alias field.
         $resource_link = Url::fromUri('internal:/jsonapi/user/user/' . $user->uuid() . '/user_roles')->setAbsolute()->toString(TRUE);
         $this->assertEquals($resource_link->getGeneratedUrl(), $link['href']);
@@ -509,7 +509,7 @@ class JsonApiDocumentTopLevelNormalizerTest extends JsonapiKernelTestBase {
         ],
       ]);
     $normalized = $jsonapi_doc_object->getNormalization();
-    $this->assertSame(['description', 'display_submitted'], array_keys($normalized['data']['attributes']));
+    $this->assertSame(['description', 'display_submitted'], \array_keys($normalized['data']['attributes']));
     $this->assertSame($normalized['data']['id'], NodeType::load('article')->uuid());
     $this->assertSame($normalized['data']['type'], 'node_type--node_type');
     // Make sure that the cache tags for the includes and the requested entities

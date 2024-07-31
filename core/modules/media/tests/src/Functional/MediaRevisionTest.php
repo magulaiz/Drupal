@@ -85,7 +85,7 @@ class MediaRevisionTest extends MediaFunctionalTestBase {
 
     // Test 'view all media revisions' permission ('view media' permission is
     // needed as well).
-    user_role_revoke_permissions($role->id(), [
+    \user_role_revoke_permissions($role->id(), [
       'view all media revisions',
     ]);
     $this->drupalGet($media->toUrl('revision'));
@@ -93,7 +93,7 @@ class MediaRevisionTest extends MediaFunctionalTestBase {
     $this->grantPermissions($role, ['view any test media revisions']);
     $this->drupalGet($media->toUrl('revision'));
     $assert->statusCodeEquals(200);
-    user_role_revoke_permissions($role->id(), ['view any test media revisions']);
+    \user_role_revoke_permissions($role->id(), ['view any test media revisions']);
     $this->grantPermissions($role, ['view all media revisions']);
     $this->drupalGet($media->toUrl('revision'));
     $assert->statusCodeEquals(200);
@@ -109,7 +109,7 @@ class MediaRevisionTest extends MediaFunctionalTestBase {
     $assert = $this->assertSession();
 
     $uri = 'temporary://foo.txt';
-    file_put_contents($uri, $this->randomString(128));
+    \file_put_contents($uri, $this->randomString(128));
 
     $this->createMediaType('file', ['id' => 'document', 'new_revision' => TRUE]);
 
@@ -291,7 +291,7 @@ class MediaRevisionTest extends MediaFunctionalTestBase {
     $this->assertSession()->pageTextNotContains("First revision");
     $this->assertSession()->pageTextContains("Second revision");
     $this->assertSession()->statusCodeEquals(200);
-    $this->assertSession()->addressEquals(sprintf('media/%s/revisions', $media->id()));
+    $this->assertSession()->addressEquals(\sprintf('media/%s/revisions', $media->id()));
     $this->assertSession()->pageTextContains('Revision from Sun, 01/11/2009 - 16:00 of test 1st changed title has been deleted.');
     // Check that only two revisions exists, i.e. the original and the latest
     // revision.
@@ -340,8 +340,8 @@ class MediaRevisionTest extends MediaFunctionalTestBase {
     $this->submitForm([], 'Revert');
     $this->assertSession()->statusCodeEquals(200);
     $this->assertSession()->pageTextContains('Copy of the revision from Sun, 01/11/2009 - 16:00');
-    $this->assertSession()->addressEquals(sprintf('media/%s/revisions', $media->id()));
-    $this->assertSession()->pageTextContains(sprintf('test %s has been reverted to the revision from Sun, 01/11/2009 - 16:00.', $originalRevisionLabel));
+    $this->assertSession()->addressEquals(\sprintf('media/%s/revisions', $media->id()));
+    $this->assertSession()->pageTextContains(\sprintf('test %s has been reverted to the revision from Sun, 01/11/2009 - 16:00.', $originalRevisionLabel));
     $this->assertSession()->elementsCount('css', 'table tbody tr', 4);
     $this->drupalGet($media->toUrl('edit-form'));
     // Check if the title is changed to the reverted revision.

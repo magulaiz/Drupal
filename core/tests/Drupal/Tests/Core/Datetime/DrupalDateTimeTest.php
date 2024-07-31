@@ -180,7 +180,7 @@ class DrupalDateTimeTest extends UnitTestCase {
    * @covers ::__call
    */
   public function testChainable(): void {
-    $tz = new \DateTimeZone(date_default_timezone_get());
+    $tz = new \DateTimeZone(\date_default_timezone_get());
     $date = new DrupalDateTime('now', $tz, ['langcode' => 'en']);
 
     $date->setTimestamp(12345678);
@@ -198,7 +198,7 @@ class DrupalDateTimeTest extends UnitTestCase {
    * @covers ::__call
    */
   public function testChainableNonChainable(): void {
-    $tz = new \DateTimeZone(date_default_timezone_get());
+    $tz = new \DateTimeZone(\date_default_timezone_get());
     $datetime1 = new DrupalDateTime('2009-10-11 12:00:00', $tz, ['langcode' => 'en']);
     $datetime2 = new DrupalDateTime('2009-10-13 12:00:00', $tz, ['langcode' => 'en']);
     $interval = $datetime1->diff($datetime2);
@@ -214,7 +214,7 @@ class DrupalDateTimeTest extends UnitTestCase {
   public function testChainableNonCallable(): void {
     $this->expectException(\BadMethodCallException::class);
     $this->expectExceptionMessage('Call to undefined method Drupal\Core\Datetime\DrupalDateTime::nonexistent()');
-    $tz = new \DateTimeZone(date_default_timezone_get());
+    $tz = new \DateTimeZone(\date_default_timezone_get());
     $date = new DrupalDateTime('now', $tz, ['langcode' => 'en']);
     $date->setTimezone(new \DateTimeZone('America/New_York'))->nonexistent();
   }
@@ -262,7 +262,7 @@ class DrupalDateTimeTest extends UnitTestCase {
 
     $time = '2019-02-02T13:30';
     $timezone = new \DateTimeZone('Europe/Berlin');
-    $langcodes = array_keys(LanguageManager::getStandardLanguageList());
+    $langcodes = \array_keys(LanguageManager::getStandardLanguageList());
     $langcodes[] = NULL;
     foreach ($langcodes as $langcode) {
       $datetime = new DrupalDateTime($time, $timezone, ['langcode' => $langcode]);
@@ -275,7 +275,7 @@ class DrupalDateTimeTest extends UnitTestCase {
    * Test to avoid serialization of formatTranslationCache.
    */
   public function testSleep(): void {
-    $tz = new \DateTimeZone(date_default_timezone_get());
+    $tz = new \DateTimeZone(\date_default_timezone_get());
     $date = new DrupalDateTime('now', $tz, ['langcode' => 'en']);
 
     // Override timestamp before serialize.
@@ -286,7 +286,7 @@ class DrupalDateTimeTest extends UnitTestCase {
     $this->assertContains('dateTimeObject', $vars);
     $this->assertNotContains('formatTranslationCache', $vars);
 
-    $unserialized_date = unserialize(serialize($date));
+    $unserialized_date = \unserialize(\serialize($date));
     $this->assertSame(12345678, $unserialized_date->getTimestamp());
   }
 

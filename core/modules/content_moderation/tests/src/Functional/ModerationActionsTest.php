@@ -83,10 +83,10 @@ class ModerationActionsTest extends BrowserTestBase {
 
     if ($warning_appears) {
       if ($action == 'node_publish_action') {
-        $this->assertSession()->statusMessageContains(node_get_type_label($node) . ' content items were skipped as they are under moderation and may not be directly published.', 'warning');
+        $this->assertSession()->statusMessageContains(\node_get_type_label($node) . ' content items were skipped as they are under moderation and may not be directly published.', 'warning');
       }
       else {
-        $this->assertSession()->statusMessageContains(node_get_type_label($node) . ' content items were skipped as they are under moderation and may not be directly unpublished.', 'warning');
+        $this->assertSession()->statusMessageContains(\node_get_type_label($node) . ' content items were skipped as they are under moderation and may not be directly unpublished.', 'warning');
       }
     }
     else {

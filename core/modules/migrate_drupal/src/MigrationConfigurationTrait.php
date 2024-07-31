@@ -139,7 +139,7 @@ trait MigrationConfigurationTrait {
         break;
     }
     foreach ($all_migrations as $key => $migrations) {
-      if (preg_match($patterns, $key)) {
+      if (\preg_match($patterns, $key)) {
         unset($all_migrations[$key]);
       }
     }
@@ -150,7 +150,7 @@ trait MigrationConfigurationTrait {
       // will be derived and executed after the migrations on which they depend
       // have been successfully executed.
       // @see Drupal\migrate_drupal\Plugin\MigrationWithFollowUpInterface
-      if (!empty(array_intersect($migration->getMigrationTags(), $this->getFollowUpMigrationTags()))) {
+      if (!empty(\array_intersect($migration->getMigrationTags(), $this->getFollowUpMigrationTags()))) {
         continue;
       }
 
@@ -219,7 +219,7 @@ trait MigrationConfigurationTrait {
 
     return match (TRUE) {
       !isset($version_string) => FALSE,
-      (int) $version_string >= 6000 => substr($version_string, 0, 1),
+      (int) $version_string >= 6000 => \substr($version_string, 0, 1),
       (int) $version_string >= 1000 => '5',
       default => FALSE,
     };

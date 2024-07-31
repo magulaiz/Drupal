@@ -100,7 +100,7 @@ class ResolvedLibraryDefinitionsFilesMatchTest extends KernelTestBase {
 
     // Enable all core modules.
     $all_modules = $this->container->get('extension.list.module')->getList();
-    $all_modules = array_filter($all_modules, function ($module) {
+    $all_modules = \array_filter($all_modules, function ($module) {
       // Filter contrib, hidden, already enabled modules and modules in the
       // Testing package.
       if ($module->origin !== 'core'
@@ -130,7 +130,7 @@ class ResolvedLibraryDefinitionsFilesMatchTest extends KernelTestBase {
     // that relies on the presence of entity tables and various other elements
     // not present in a kernel test.
     unset($all_modules['demo_umami_content']);
-    $this->allModules = array_keys($all_modules);
+    $this->allModules = \array_keys($all_modules);
     $this->allModules[] = 'system';
     $this->allModules[] = 'user';
     $this->allModules[] = 'path_alias';
@@ -138,11 +138,11 @@ class ResolvedLibraryDefinitionsFilesMatchTest extends KernelTestBase {
     if ($database_module !== 'core') {
       $this->allModules[] = $database_module;
     }
-    sort($this->allModules);
+    \sort($this->allModules);
     $this->container->get('module_installer')->install($this->allModules);
 
     // Install all core themes.
-    sort($this->allThemes);
+    \sort($this->allThemes);
     $this->container->get('theme_installer')->install($this->allThemes);
 
     $this->themeHandler = $this->container->get('theme_handler');
@@ -179,7 +179,7 @@ class ResolvedLibraryDefinitionsFilesMatchTest extends KernelTestBase {
   protected function verifyLibraryFilesExist($library_definitions) {
     foreach ($library_definitions as $extension => $libraries) {
       foreach ($libraries as $library_name => $library) {
-        if (in_array("$extension/$library_name", $this->librariesToSkip)) {
+        if (\in_array("$extension/$library_name", $this->librariesToSkip)) {
           continue;
         }
 
@@ -207,21 +207,21 @@ class ResolvedLibraryDefinitionsFilesMatchTest extends KernelTestBase {
   protected function getAllLibraries() {
     $modules = \Drupal::moduleHandler()->getModuleList();
     $extensions = $modules;
-    $module_list = array_keys($modules);
-    sort($module_list);
+    $module_list = \array_keys($modules);
+    \sort($module_list);
     $this->assertEquals($this->allModules, $module_list, 'All core modules are installed.');
 
     $themes = $this->themeHandler->listInfo();
     $extensions += $themes;
-    $theme_list = array_keys($themes);
-    sort($theme_list);
+    $theme_list = \array_keys($themes);
+    \sort($theme_list);
     $this->assertEquals($this->allThemes, $theme_list, 'All core themes are installed.');
 
     $libraries['core'] = $this->libraryDiscovery->getLibrariesByExtension('core');
 
     foreach ($extensions as $extension_name => $extension) {
       $library_file = $extension->getPath() . '/' . $extension_name . '.libraries.yml';
-      if (is_file($this->root . '/' . $library_file)) {
+      if (\is_file($this->root . '/' . $library_file)) {
         $libraries[$extension_name] = $this->libraryDiscovery->getLibrariesByExtension($extension_name);
       }
     }

@@ -54,8 +54,8 @@ class ScaffoldUpgradeTest extends TestCase {
    * Tests upgrading the Composer Scaffold plugin.
    */
   public function testScaffoldUpgrade(): void {
-    $composerVersionLine = exec('composer --version');
-    if (str_contains($composerVersionLine, 'Composer version 2')) {
+    $composerVersionLine = \exec('composer --version');
+    if (\str_contains($composerVersionLine, 'Composer version 2')) {
       $this->markTestSkipped('We cannot run the scaffold upgrade test with Composer 2 until we have a stable version of drupal/core-composer-scaffold to start from that we can install with Composer 2.x.');
     }
     $this->fixturesDir = $this->fixtures->tmpDir($this->name());
@@ -95,7 +95,7 @@ class ScaffoldUpgradeTest extends TestCase {
 
     // Remove a scaffold file and run the scaffold command again to prove that
     // scaffolding is still working.
-    unlink("$sut/index.php");
+    \unlink("$sut/index.php");
     $stdout = $this->mustExec("composer scaffold", $sut);
     $this->assertStringContainsString("Scaffolding files for", $stdout);
     $this->assertFileExists("$sut/index.php");
@@ -115,7 +115,7 @@ class ScaffoldUpgradeTest extends TestCase {
    *   Path to temporary git repository.
    */
   protected function createTmpRepo($source, $destParent, $version) {
-    $target = $destParent . '/' . basename($source);
+    $target = $destParent . '/' . \basename($source);
     $filesystem = new Filesystem();
     $filesystem->copy($source, $target);
     $this->mustExec("git init", $target);

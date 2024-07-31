@@ -60,7 +60,7 @@ class BlockContentTest extends KernelTestBase {
     ]);
 
     // The anonymous user doesn't have the "administer block" permission.
-    $this->assertEmpty(block_content_entity_operation($block));
+    $this->assertEmpty(\block_content_entity_operation($block));
 
     $this->setUpCurrentUser(['uid' => 1], ['edit any spiffy block content', 'administer blocks']);
 
@@ -71,7 +71,7 @@ class BlockContentTest extends KernelTestBase {
         'url' => $block_content->toUrl('edit-form')->setOptions([]),
         'weight' => 50,
       ],
-    ], block_content_entity_operation($block));
+    ], \block_content_entity_operation($block));
   }
 
 }

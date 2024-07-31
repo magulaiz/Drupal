@@ -78,7 +78,7 @@ class Map extends TypedData implements \IteratorAggregate, ComplexDataInterface 
    *   avoid being notified again.
    */
   public function setValue($values, $notify = TRUE) {
-    if (isset($values) && !is_array($values)) {
+    if (isset($values) && !\is_array($values)) {
       throw new \InvalidArgumentException("Invalid values given. Values must be represented as an associative array.");
     }
     $this->values = $values;
@@ -106,7 +106,7 @@ class Map extends TypedData implements \IteratorAggregate, ComplexDataInterface 
       $strings[] = $property->getString();
     }
     // Remove any empty strings resulting from empty items.
-    return implode(', ', array_filter($strings, 'mb_strlen'));
+    return \implode(', ', \array_filter($strings, 'mb_strlen'));
   }
 
   /**

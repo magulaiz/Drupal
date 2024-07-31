@@ -179,7 +179,7 @@ class Workspace extends ContentEntityBase implements WorkspaceInterface {
     $workspace_manager = \Drupal::service('workspaces.manager');
     // Disable the currently active workspace if it has been deleted.
     if ($workspace_manager->hasActiveWorkspace()
-      && in_array($workspace_manager->getActiveWorkspace()->id(), array_keys($entities), TRUE)) {
+      && \in_array($workspace_manager->getActiveWorkspace()->id(), \array_keys($entities), TRUE)) {
       $workspace_manager->switchToLive();
     }
 
@@ -189,7 +189,7 @@ class Workspace extends ContentEntityBase implements WorkspaceInterface {
       // be purged on cron.
       $state = \Drupal::state();
       $deleted_workspace_ids = $state->get('workspace.deleted', []);
-      $deleted_workspace_ids += array_combine(array_keys($entities), array_keys($entities));
+      $deleted_workspace_ids += \array_combine(\array_keys($entities), \array_keys($entities));
       $state->set('workspace.deleted', $deleted_workspace_ids);
 
       // Trigger a batch purge to allow empty workspaces to be deleted

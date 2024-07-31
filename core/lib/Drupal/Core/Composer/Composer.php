@@ -41,7 +41,7 @@ class Composer {
     // use APCu and optimize them if they're present.
     // @see \Drupal\Core\DrupalKernel::boot()
     if ($repository->findPackage('symfony/http-foundation', $constraint)) {
-      $autoload['classmap'] = array_merge($autoload['classmap'], [
+      $autoload['classmap'] = \array_merge($autoload['classmap'], [
         $vendor_dir . '/symfony/http-foundation/Request.php',
         $vendor_dir . '/symfony/http-foundation/RequestStack.php',
         $vendor_dir . '/symfony/http-foundation/ParameterBag.php',
@@ -52,19 +52,19 @@ class Composer {
       ]);
     }
     if ($repository->findPackage('symfony/http-kernel', $constraint)) {
-      $autoload['classmap'] = array_merge($autoload['classmap'], [
+      $autoload['classmap'] = \array_merge($autoload['classmap'], [
         $vendor_dir . '/symfony/http-kernel/HttpKernel.php',
         $vendor_dir . '/symfony/http-kernel/HttpKernelInterface.php',
         $vendor_dir . '/symfony/http-kernel/TerminableInterface.php',
       ]);
     }
     if ($repository->findPackage('symfony/dependency-injection', $constraint)) {
-      $autoload['classmap'] = array_merge($autoload['classmap'], [
+      $autoload['classmap'] = \array_merge($autoload['classmap'], [
         $vendor_dir . '/symfony/dependency-injection/ContainerInterface.php',
       ]);
     }
     if ($repository->findPackage('psr/container', $constraint)) {
-      $autoload['classmap'] = array_merge($autoload['classmap'], [
+      $autoload['classmap'] = \array_merge($autoload['classmap'], [
         $vendor_dir . '/psr/container/src/ContainerInterface.php',
       ]);
     }
@@ -115,7 +115,7 @@ class Composer {
    * @internal
    */
   public static function upgradePHPUnitCheck($phpunit_version) {
-    return !(version_compare(PHP_MAJOR_VERSION . '.' . PHP_MINOR_VERSION, '7.4') >= 0 && version_compare($phpunit_version, '9.0') < 0);
+    return !(\version_compare(PHP_MAJOR_VERSION . '.' . PHP_MINOR_VERSION, '7.4') >= 0 && \version_compare($phpunit_version, '9.0') < 0);
   }
 
 }

@@ -24,7 +24,7 @@ final class ConfigConfigurator {
    *   The active configuration storage.
    */
   public function __construct(public readonly array $config, string $recipe_directory, StorageInterface $active_configuration) {
-    $this->recipeConfigDirectory = is_dir($recipe_directory . '/config') ? $recipe_directory . '/config' : NULL;
+    $this->recipeConfigDirectory = \is_dir($recipe_directory . '/config') ? $recipe_directory . '/config' : NULL;
     $recipe_storage = $this->getConfigStorage();
     foreach ($recipe_storage->listAll() as $config_name) {
       if ($active_data = $active_configuration->read($config_name)) {
@@ -44,7 +44,7 @@ final class ConfigConfigurator {
         self::recursiveSortByKey($active_data);
         self::recursiveSortByKey($recipe_data);
         if ($active_data !== $recipe_data) {
-          throw new RecipePreExistingConfigException($config_name, sprintf("The configuration '%s' exists already and does not match the recipe's configuration", $config_name));
+          throw new RecipePreExistingConfigException($config_name, \sprintf("The configuration '%s' exists already and does not match the recipe's configuration", $config_name));
         }
       }
     }
@@ -61,11 +61,11 @@ final class ConfigConfigurator {
    */
   private static function recursiveSortByKey(array &$data): void {
     // If the array is a list, it is by definition already sorted.
-    if (!array_is_list($data)) {
-      ksort($data);
+    if (!\array_is_list($data)) {
+      \ksort($data);
     }
     foreach ($data as &$value) {
-      if (is_array($value)) {
+      if (\is_array($value)) {
         self::recursiveSortByKey($value);
       }
     }
@@ -117,7 +117,7 @@ final class ConfigConfigurator {
    *   not.
    */
   public function hasTasks(): bool {
-    return $this->recipeConfigDirectory !== NULL || count($this->config);
+    return $this->recipeConfigDirectory !== NULL || \count($this->config);
   }
 
 }

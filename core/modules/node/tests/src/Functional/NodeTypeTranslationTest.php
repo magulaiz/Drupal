@@ -97,7 +97,7 @@ class NodeTypeTranslationTest extends BrowserTestBase {
     // localize.drupal.org. It does not need to match the version exactly as the
     // multi-lingual system will fallback.
     \Drupal::service('file_system')->mkdir($this->publicFilesDirectory . '/translations', NULL, TRUE);
-    file_put_contents($this->publicFilesDirectory . "/translations/drupal-8.0.0.{$this->defaultLangcode}.po", '');
+    \file_put_contents($this->publicFilesDirectory . "/translations/drupal-8.0.0.{$this->defaultLangcode}.po", '');
     return $parameters;
   }
 
@@ -127,7 +127,7 @@ class NodeTypeTranslationTest extends BrowserTestBase {
     $this->drupalGet("$langcode/node/add/$type");
     // This is a Spanish page, so ensure the text asserted is translated in
     // Spanish and not French by adding the langcode option.
-    $this->assertSession()->responseContains(t('Create @name', ['@name' => $translated_name], ['langcode' => $langcode]));
+    $this->assertSession()->responseContains(\t('Create @name', ['@name' => $translated_name], ['langcode' => $langcode]));
 
     // Check the name is translated with admin theme for editing.
     $this->drupalGet('admin/appearance');
@@ -135,7 +135,7 @@ class NodeTypeTranslationTest extends BrowserTestBase {
     $this->drupalGet("$langcode/node/add/$type");
     // This is a Spanish page, so ensure the text asserted is translated in
     // Spanish and not French by adding the langcode option.
-    $this->assertSession()->responseContains(t('Create @name', ['@name' => $translated_name], ['langcode' => $langcode]));
+    $this->assertSession()->responseContains(\t('Create @name', ['@name' => $translated_name], ['langcode' => $langcode]));
   }
 
   /**

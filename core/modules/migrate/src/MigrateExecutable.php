@@ -107,7 +107,7 @@ class MigrateExecutable implements MigrateExecutableInterface {
     $this->getIdMap()->setMessage($this->message);
     $this->eventDispatcher = $event_dispatcher;
     // Record the memory limit in bytes
-    $limit = trim(ini_get('memory_limit'));
+    $limit = \trim(\ini_get('memory_limit'));
     if ($limit == '-1') {
       $this->memoryLimit = PHP_INT_MAX;
     }
@@ -224,7 +224,7 @@ class MigrateExecutable implements MigrateExecutableInterface {
         }
         catch (MigrateException $e) {
           $this->getIdMap()->saveIdMapping($row, [], $e->getStatus());
-          $msg = sprintf("%s:%s:%s", $this->migration->getPluginId(), $destination_property_name, $e->getMessage());
+          $msg = \sprintf("%s:%s:%s", $this->migration->getPluginId(), $destination_property_name, $e->getMessage());
           $this->saveMessage($msg, $e->getLevel());
           $save = FALSE;
         }
@@ -232,8 +232,8 @@ class MigrateExecutable implements MigrateExecutableInterface {
           if ($e->getSaveToMap()) {
             $id_map->saveIdMapping($row, [], MigrateIdMapInterface::STATUS_IGNORED);
           }
-          if ($message = trim($e->getMessage())) {
-            $msg = sprintf("%s:%s: %s", $this->migration->getPluginId(), $destination_property_name, $message);
+          if ($message = \trim($e->getMessage())) {
+            $msg = \sprintf("%s:%s: %s", $this->migration->getPluginId(), $destination_property_name, $message);
             $this->saveMessage($msg, MigrationInterface::MESSAGE_INFORMATIONAL);
           }
           $save = FALSE;
@@ -244,7 +244,7 @@ class MigrateExecutable implements MigrateExecutableInterface {
             $this->getEventDispatcher()
               ->dispatch(new MigratePreRowSaveEvent($this->migration, $this->message, $row), MigrateEvents::PRE_ROW_SAVE);
             $destination_ids = $id_map->lookupDestinationIds($this->sourceIdValues);
-            $destination_id_values = $destination_ids ? reset($destination_ids) : [];
+            $destination_id_values = $destination_ids ? \reset($destination_ids) : [];
             $destination_id_values = $destination->import($row, $destination_id_values);
             $this->getEventDispatcher()
               ->dispatch(new MigratePostRowSaveEvent($this->migration, $this->message, $row, $destination_id_values), MigrateEvents::POST_ROW_SAVE);
@@ -420,8 +420,8 @@ class MigrateExecutable implements MigrateExecutableInterface {
       // separately transformed.
       if ($multiple && !$definition['handle_multiples']) {
         $new_value = [];
-        if (!is_array($value)) {
-          throw new MigrateException(sprintf('Pipeline failed at %s plugin for destination %s: %s received instead of an array,', $plugin->getPluginId(), $destination, $value));
+        if (!\is_array($value)) {
+          throw new MigrateException(\sprintf('Pipeline failed at %s plugin for destination %s: %s received instead of an array,', $plugin->getPluginId(), $destination, $value));
         }
         $break = FALSE;
         foreach ($value as $scalar_value) {
@@ -435,7 +435,7 @@ class MigrateExecutable implements MigrateExecutableInterface {
           }
           catch (MigrateException $e) {
             // Prepend the process plugin id to the message.
-            $message = sprintf("%s: %s", $plugin->getPluginId(), $e->getMessage());
+            $message = \sprintf("%s: %s", $plugin->getPluginId(), $e->getMessage());
             throw new MigrateException($message);
           }
           if ($plugin->isPipelineStopped()) {
@@ -458,7 +458,7 @@ class MigrateExecutable implements MigrateExecutableInterface {
         }
         catch (MigrateException $e) {
           // Prepend the process plugin id to the message.
-          $message = sprintf("%s: %s", $plugin->getPluginId(), $e->getMessage());
+          $message = \sprintf("%s: %s", $plugin->getPluginId(), $e->getMessage());
           throw new MigrateException($message);
         }
         if ($plugin->isPipelineStopped()) {
@@ -544,7 +544,7 @@ class MigrateExecutable implements MigrateExecutableInterface {
         $this->t(
           'Memory usage is @usage (@pct% of limit @limit), reclaiming memory.',
           [
-            '@pct' => round($pct_memory * 100),
+            '@pct' => \round($pct_memory * 100),
             '@usage' => ByteSizeMarkup::create($usage, NULL, $this->stringTranslation),
             '@limit' => ByteSizeMarkup::create($this->memoryLimit, NULL, $this->stringTranslation),
           ]
@@ -560,7 +560,7 @@ class MigrateExecutable implements MigrateExecutableInterface {
           $this->t(
             'Memory usage is now @usage (@pct% of limit @limit), not enough reclaimed, starting new batch',
             [
-              '@pct' => round($pct_memory * 100),
+              '@pct' => \round($pct_memory * 100),
               '@usage' => ByteSizeMarkup::create($usage, NULL, $this->stringTranslation),
               '@limit' => ByteSizeMarkup::create($this->memoryLimit, NULL, $this->stringTranslation),
             ]
@@ -574,7 +574,7 @@ class MigrateExecutable implements MigrateExecutableInterface {
           $this->t(
             'Memory usage is now @usage (@pct% of limit @limit), reclaimed enough, continuing',
             [
-              '@pct' => round($pct_memory * 100),
+              '@pct' => \round($pct_memory * 100),
               '@usage' => ByteSizeMarkup::create($usage, NULL, $this->stringTranslation),
               '@limit' => ByteSizeMarkup::create($this->memoryLimit, NULL, $this->stringTranslation),
             ]
@@ -595,7 +595,7 @@ class MigrateExecutable implements MigrateExecutableInterface {
    *   The memory usage.
    */
   protected function getMemoryUsage() {
-    return memory_get_usage();
+    return \memory_get_usage();
   }
 
   /**
@@ -607,7 +607,7 @@ class MigrateExecutable implements MigrateExecutableInterface {
   protected function attemptMemoryReclaim() {
     // First, try resetting Drupal's static storage - this frequently releases
     // plenty of memory to continue.
-    drupal_static_reset();
+    \drupal_static_reset();
 
     // Entity storage can blow up with caches, so clear it out.
     \Drupal::service('entity.memory_cache')->deleteAll();
@@ -615,9 +615,9 @@ class MigrateExecutable implements MigrateExecutableInterface {
     // @todo Explore resetting the container.
 
     // Run garbage collector to further reduce memory.
-    gc_collect_cycles();
+    \gc_collect_cycles();
 
-    return memory_get_usage();
+    return \memory_get_usage();
   }
 
 }

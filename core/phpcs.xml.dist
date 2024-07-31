@@ -265,6 +265,12 @@
   </rule>
   <rule ref="SlevomatCodingStandard.ControlStructures.RequireNullCoalesceOperator"/>
   <rule ref="SlevomatCodingStandard.Exceptions.RequireNonCapturingCatch" />
+  <rule ref="SlevomatCodingStandard.Namespaces.FullyQualifiedGlobalFunctions">
+   <properties>
+     <property name="includeSpecialFunctions"></property>
+     <property name="exclude" type="array" value="base_path,history_read,views_add_contextual_links"></property>
+   </properties>
+  </rule>
   <rule ref="SlevomatCodingStandard.TypeHints.DeclareStrictTypes">
     <properties>
       <property name="spacesCountAroundEqualsSign" value="0" />

@@ -67,7 +67,7 @@ class RowPluginTest extends ViewsKernelTestBase {
       'name' => 'Article',
     ]);
     $node_type->save();
-    node_add_body_field($node_type);
+    \node_add_body_field($node_type);
 
     // Create two nodes.
     for ($i = 0; $i < 2; $i++) {
@@ -77,7 +77,7 @@ class RowPluginTest extends ViewsKernelTestBase {
           'body' => [
             [
               'value' => $this->randomMachineName(42),
-              'format' => filter_default_format(),
+              'format' => \filter_default_format(),
               'summary' => $this->randomMachineName(),
             ],
           ],

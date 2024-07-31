@@ -133,7 +133,7 @@ class BlockContentListTest extends BlockContentTestBase {
       ->get('entity_type.manager')
       ->getStorage('block_content')
       ->loadByProperties(['info' => $label]);
-    $block = reset($blocks);
+    $block = \reset($blocks);
     if (!empty($block)) {
       $this->assertSession()->linkByHrefExists('admin/content/block/' . $block->id());
       $this->clickLink('Edit');
@@ -182,7 +182,7 @@ class BlockContentListTest extends BlockContentTestBase {
     // Create test block for other user tests.
     $test_block = $this->createBlockContent($label);
 
-    $link_text = t('Add content block');
+    $link_text = \t('Add content block');
     // Test as a user with view only permissions.
     $this->drupalLogin($this->baseUser1);
     $this->drupalGet('admin/content/block');

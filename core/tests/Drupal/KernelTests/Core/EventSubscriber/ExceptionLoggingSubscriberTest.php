@@ -67,15 +67,15 @@ class ExceptionLoggingSubscriberTest extends KernelTestBase {
 
     // Temporarily disable error log as the ExceptionLoggingSubscriber logs 5xx
     // HTTP errors using error_log().
-    $error_log = ini_set('error_log', '/dev/null');
+    $error_log = \ini_set('error_log', '/dev/null');
     foreach ($channel_map as $code => $channel) {
       $request = Request::create('/test-http-response-exception/' . $code);
       $http_kernel->handle($request);
     }
-    ini_set('error_log', $error_log);
+    \ini_set('error_log', $error_log);
 
-    $expected_channels = array_values($channel_map);
-    $expected_levels = array_values($level_map);
+    $expected_channels = \array_values($channel_map);
+    $expected_levels = \array_values($level_map);
 
     $logs = $this->container->get($this->testLogServiceName)->cleanLogs();
     foreach ($expected_channels as $key => $expected_channel) {

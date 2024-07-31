@@ -50,7 +50,7 @@ class DefaultsSectionStorageTest extends KernelTestBase {
   protected function setUp(): void {
     parent::setUp();
 
-    entity_test_create_bundle('bundle_with_extra_fields');
+    \entity_test_create_bundle('bundle_with_extra_fields');
     $this->installEntitySchema('entity_test');
     $this->installEntitySchema('user');
     $this->installConfig(['layout_builder_defaults_test']);
@@ -152,7 +152,7 @@ class DefaultsSectionStorageTest extends KernelTestBase {
     $this->plugin->setContext('display', $context);
 
     $result = $this->plugin->getContexts();
-    $this->assertSame(['view_mode', 'display'], array_keys($result));
+    $this->assertSame(['view_mode', 'display'], \array_keys($result));
     $this->assertSame($context, $result['display']);
   }
 
@@ -172,7 +172,7 @@ class DefaultsSectionStorageTest extends KernelTestBase {
     $this->plugin->setContext('display', $context);
 
     $result = $this->plugin->getContextsDuringPreview();
-    $this->assertSame(['view_mode', 'display', 'layout_builder.entity'], array_keys($result));
+    $this->assertSame(['view_mode', 'display', 'layout_builder.entity'], \array_keys($result));
 
     $this->assertSame($context, $result['display']);
 

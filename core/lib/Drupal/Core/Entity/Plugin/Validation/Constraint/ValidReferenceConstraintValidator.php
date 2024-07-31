@@ -101,7 +101,7 @@ class ValidReferenceConstraintValidator extends ConstraintValidator implements C
     if ($new_entities) {
       if ($handler instanceof SelectionWithAutocreateInterface) {
         $valid_new_entities = $handler->validateReferenceableNewEntities($new_entities);
-        $invalid_new_entities = array_diff_key($new_entities, $valid_new_entities);
+        $invalid_new_entities = \array_diff_key($new_entities, $valid_new_entities);
       }
       else {
         // If the selection handler does not support referencing newly created
@@ -131,7 +131,7 @@ class ValidReferenceConstraintValidator extends ConstraintValidator implements C
       }
 
       $valid_target_ids = $handler->validateReferenceableEntities($target_ids);
-      if ($invalid_target_ids = array_diff($target_ids, $valid_target_ids)) {
+      if ($invalid_target_ids = \array_diff($target_ids, $valid_target_ids)) {
         // For accuracy of the error message, differentiate non-referenceable
         // and non-existent entities.
         $existing_entities = $this->entityTypeManager->getStorage($target_type_id)->loadMultiple($invalid_target_ids);

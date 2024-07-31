@@ -157,7 +157,7 @@ final class SettingsForm extends ConfigFormBase {
     ];
     $form['logo']['image']['logo_managed'] = [
       '#type' => 'managed_file',
-      '#title' => t('Choose custom logo'),
+      '#title' => \t('Choose custom logo'),
       '#upload_validators' => $upload_validators,
       '#upload_location' => 'public://navigation-logo',
       '#description' => $this->renderer->renderInIsolation($file_upload_help),
@@ -186,12 +186,12 @@ final class SettingsForm extends ConfigFormBase {
     // Get the previous config settings.
     $previous_logo_provider = $config->get('logo_provider');
     $logo_managed = $config->get('logo_managed');
-    $previous_logo_fid = $logo_managed ? reset($logo_managed) : NULL;
+    $previous_logo_fid = $logo_managed ? \reset($logo_managed) : NULL;
 
     // Get new values from the form.
     $new_logo_provider = $form_state->getValue('logo_provider');
     $logo = $form_state->getValue('logo_managed');
-    $new_logo_fid = !empty($logo) ? reset($logo) : NULL;
+    $new_logo_fid = !empty($logo) ? \reset($logo) : NULL;
 
     // Pre-load files if any for FileUsageInterface.
     $previous_logo_managed = $previous_logo_fid ? File::load($previous_logo_fid) : NULL;

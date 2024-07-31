@@ -51,7 +51,7 @@ class ImageFieldDisplayTest extends ImageFieldTestBase {
    */
   public function testImageFieldFormattersPrivate(): void {
     // Remove access content permission from anonymous users.
-    user_role_change_permissions(RoleInterface::ANONYMOUS_ID, ['access content' => FALSE]);
+    \user_role_change_permissions(RoleInterface::ANONYMOUS_ID, ['access content' => FALSE]);
     $this->_testImageFieldFormatters('private');
   }
 
@@ -75,7 +75,7 @@ class ImageFieldDisplayTest extends ImageFieldTestBase {
 
     // Remove 'administer image styles' permission from testing admin user.
     $admin_user_roles = $this->adminUser->getRoles(TRUE);
-    user_role_change_permissions(reset($admin_user_roles), ['administer image styles' => FALSE]);
+    \user_role_change_permissions(\reset($admin_user_roles), ['administer image styles' => FALSE]);
 
     // Go to manage display page again.
     $this->drupalGet("admin/structure/types/manage/article/display");
@@ -85,10 +85,10 @@ class ImageFieldDisplayTest extends ImageFieldTestBase {
     $this->assertSession()->linkByHrefNotExists(Url::fromRoute('entity.image_style.collection')->toString(), 'Link to image styles configuration is absent when permissions are insufficient');
 
     // Restore 'administer image styles' permission to testing admin user
-    user_role_change_permissions(reset($admin_user_roles), ['administer image styles' => TRUE]);
+    \user_role_change_permissions(\reset($admin_user_roles), ['administer image styles' => TRUE]);
 
     // Create a new node with an image attached.
-    $test_image = current($this->drupalGetTestFiles('image'));
+    $test_image = \current($this->drupalGetTestFiles('image'));
 
     // Ensure that preview works.
     $this->previewNodeImage($test_image, $field_name, 'article');
@@ -118,7 +118,7 @@ class ImageFieldDisplayTest extends ImageFieldTestBase {
       '#alt' => $alt,
       '#attributes' => ['loading' => 'lazy'],
     ];
-    $default_output = str_replace("\n", '', (string) $renderer->renderRoot($image));
+    $default_output = \str_replace("\n", '', (string) $renderer->renderRoot($image));
     $this->assertSession()->responseContains($default_output);
 
     // Test the image linked to file formatter.
@@ -148,7 +148,7 @@ class ImageFieldDisplayTest extends ImageFieldTestBase {
     $this->assertSession()->responseHeaderNotContains('X-Drupal-Cache-Tags', 'image_style:');
     $this->assertSession()->responseContains($default_output);
     // Verify that the image can be downloaded.
-    $this->assertEquals(file_get_contents($test_image->uri), $this->drupalGet($file->createFileUrl(FALSE)), 'File was downloaded successfully.');
+    $this->assertEquals(\file_get_contents($test_image->uri), $this->drupalGet($file->createFileUrl(FALSE)), 'File was downloaded successfully.');
     if ($scheme == 'private') {
       // Only verify HTTP headers when using private scheme and the headers are
       // sent by Drupal.
@@ -247,8 +247,8 @@ class ImageFieldDisplayTest extends ImageFieldTestBase {
     /** @var \Drupal\Core\Render\RendererInterface $renderer */
     $renderer = $this->container->get('renderer');
     $node_storage = $this->container->get('entity_type.manager')->getStorage('node');
-    $test_image = current($this->drupalGetTestFiles('image'));
-    [, $test_image_extension] = explode('.', $test_image->filename);
+    $test_image = \current($this->drupalGetTestFiles('image'));
+    [, $test_image_extension] = \explode('.', $test_image->filename);
     $field_name = $this->randomMachineName();
     $field_settings = [
       'alt_field' => 1,
@@ -315,7 +315,7 @@ class ImageFieldDisplayTest extends ImageFieldTestBase {
     ];
     $this->drupalGet('node/' . $nid . '/edit');
     $this->submitForm($edit, 'Save');
-    $default_output = str_replace("\n", '', (string) $renderer->renderRoot($image));
+    $default_output = \str_replace("\n", '', (string) $renderer->renderRoot($image));
     $this->assertSession()->responseContains($default_output);
 
     // Verify that alt/title longer than allowed results in a validation error.
@@ -380,7 +380,7 @@ class ImageFieldDisplayTest extends ImageFieldTestBase {
 
     // Remove 'administer image styles' permission from testing admin user.
     $admin_user_roles = $this->adminUser->getRoles(TRUE);
-    user_role_change_permissions(reset($admin_user_roles), ['administer image styles' => FALSE]);
+    \user_role_change_permissions(\reset($admin_user_roles), ['administer image styles' => FALSE]);
 
     // Go to manage display page again.
     $this->drupalGet("admin/structure/types/manage/article/display");
@@ -390,10 +390,10 @@ class ImageFieldDisplayTest extends ImageFieldTestBase {
     $this->assertSession()->linkByHrefNotExists(Url::fromRoute('entity.image_style.collection')->toString(), 'Link to image styles configuration is absent when permissions are insufficient');
 
     // Restore 'administer image styles' permission to testing admin user
-    user_role_change_permissions(reset($admin_user_roles), ['administer image styles' => TRUE]);
+    \user_role_change_permissions(\reset($admin_user_roles), ['administer image styles' => TRUE]);
 
     // Create a new node with an image attached.
-    $test_image = current($this->drupalGetTestFiles('image'));
+    $test_image = \current($this->drupalGetTestFiles('image'));
 
     // Ensure that preview works.
     $this->previewNodeImage($test_image, $field_name, 'article');
@@ -423,7 +423,7 @@ class ImageFieldDisplayTest extends ImageFieldTestBase {
       '#alt' => $alt,
       '#attributes' => ['loading' => 'lazy'],
     ];
-    $default_output = str_replace("\n", '', (string) $renderer->renderRoot($image));
+    $default_output = \str_replace("\n", '', (string) $renderer->renderRoot($image));
     $this->assertSession()->responseContains($default_output);
 
     // Test overrides of image loading attribute.
@@ -492,7 +492,7 @@ class ImageFieldDisplayTest extends ImageFieldTestBase {
     $this->drupalGet('node/' . $node->id());
     // Verify that no image is displayed on the page by checking for the class
     // that would be used on the image field.
-    $this->assertSession()->responseNotMatches('<div class="(.*?)field--name-' . strtr($field_name, '_', '-') . '(.*?)">');
+    $this->assertSession()->responseNotMatches('<div class="(.*?)field--name-' . \strtr($field_name, '_', '-') . '(.*?)">');
     // Verify that no image style cache tags are found.
     $this->assertSession()->responseHeaderNotContains('X-Drupal-Cache-Tags', 'image_style:');
 
@@ -523,7 +523,7 @@ class ImageFieldDisplayTest extends ImageFieldTestBase {
       '#height' => 20,
       '#attributes' => ['loading' => 'lazy'],
     ];
-    $default_output = str_replace("\n", '', (string) $renderer->renderRoot($image));
+    $default_output = \str_replace("\n", '', (string) $renderer->renderRoot($image));
     $this->drupalGet('node/' . $node->id());
     $this->assertSession()->responseHeaderContains('X-Drupal-Cache-Tags', $file->getCacheTags()[0]);
     // Verify that no image style cache tags are found.
@@ -549,7 +549,7 @@ class ImageFieldDisplayTest extends ImageFieldTestBase {
       '#alt' => $alt,
       '#attributes' => ['loading' => 'lazy'],
     ];
-    $image_output = str_replace("\n", '', (string) $renderer->renderRoot($image));
+    $image_output = \str_replace("\n", '', (string) $renderer->renderRoot($image));
     $this->drupalGet('node/' . $nid);
     $this->assertSession()->responseHeaderContains('X-Drupal-Cache-Tags', $file->getCacheTags()[0]);
     // Verify that no image style cache tags are found.
@@ -604,7 +604,7 @@ class ImageFieldDisplayTest extends ImageFieldTestBase {
       '#height' => 20,
       '#attributes' => ['loading' => 'lazy'],
     ];
-    $default_output = str_replace("\n", '', (string) $renderer->renderRoot($image));
+    $default_output = \str_replace("\n", '', (string) $renderer->renderRoot($image));
     $this->drupalGet('node/' . $node->id());
     $this->assertSession()->responseHeaderContains('X-Drupal-Cache-Tags', $file->getCacheTags()[0]);
     // Verify that no image style cache tags are found.

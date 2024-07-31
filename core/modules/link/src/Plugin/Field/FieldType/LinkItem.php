@@ -127,7 +127,7 @@ class LinkItem extends FieldItemBase implements LinkItemInterface {
       // Set of possible top-level domains.
       $tlds = ['com', 'net', 'gov', 'org', 'edu', 'biz', 'info'];
       // Set random length for the domain name.
-      $domain_length = mt_rand(7, 15);
+      $domain_length = \mt_rand(7, 15);
 
       switch ($field_definition->getSetting('title')) {
         case DRUPAL_DISABLED:
@@ -140,13 +140,13 @@ class LinkItem extends FieldItemBase implements LinkItemInterface {
 
         case DRUPAL_OPTIONAL:
           // In case of optional title, randomize its generation.
-          $values['title'] = mt_rand(0, 1) ? $random->sentences(4) : '';
+          $values['title'] = \mt_rand(0, 1) ? $random->sentences(4) : '';
           break;
       }
-      $values['uri'] = 'https://www.' . $random->word($domain_length) . '.' . $tlds[mt_rand(0, (count($tlds) - 1))];
+      $values['uri'] = 'https://www.' . $random->word($domain_length) . '.' . $tlds[\mt_rand(0, (\count($tlds) - 1))];
     }
     else {
-      $values['uri'] = 'base:' . $random->name(mt_rand(1, 64));
+      $values['uri'] = 'base:' . $random->name(\mt_rand(1, 64));
     }
     return $values;
   }
@@ -193,7 +193,7 @@ class LinkItem extends FieldItemBase implements LinkItemInterface {
   public function setValue($values, $notify = TRUE) {
     // Treat the values as property value of the main property, if no array is
     // given.
-    if (isset($values) && !is_array($values)) {
+    if (isset($values) && !\is_array($values)) {
       $values = [static::mainPropertyName() => $values];
     }
     if (isset($values)) {

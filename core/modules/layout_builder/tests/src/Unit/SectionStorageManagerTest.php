@@ -139,7 +139,7 @@ class SectionStorageManagerTest extends UnitTestCase {
       'plugin4',
     ];
     $result = $this->manager->getDefinitions();
-    $this->assertSame($expected, array_keys($result));
+    $this->assertSame($expected, \array_keys($result));
   }
 
   /**

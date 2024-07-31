@@ -176,7 +176,7 @@ class UrlTest extends KernelTestBase {
    *   TRUE if the class is found, FALSE otherwise.
    */
   private function hasAttribute($attribute, $link, $class): bool {
-    return (bool) preg_match('|' . $attribute . '="([^\"\s]+\s+)*' . $class . '|', $link);
+    return (bool) \preg_match('|' . $attribute . '="([^\"\s]+\s+)*' . $class . '|', $link);
   }
 
   /**

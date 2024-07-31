@@ -13,7 +13,7 @@ class Tasks extends CoreTasks {
    * {@inheritdoc}
    */
   public function name() {
-    return t('MySQL by the driver_test module');
+    return \t('MySQL by the driver_test module');
   }
 
 }

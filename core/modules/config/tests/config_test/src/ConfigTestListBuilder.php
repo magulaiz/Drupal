@@ -16,8 +16,8 @@ class ConfigTestListBuilder extends ConfigEntityListBuilder {
    * {@inheritdoc}
    */
   public function buildHeader() {
-    $header['label'] = t('Label');
-    $header['id'] = t('Machine name');
+    $header['label'] = \t('Label');
+    $header['id'] = \t('Machine name');
     return $header + parent::buildHeader();
   }
 

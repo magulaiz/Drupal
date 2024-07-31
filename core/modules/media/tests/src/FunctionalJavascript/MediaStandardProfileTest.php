@@ -112,8 +112,8 @@ class MediaStandardProfileTest extends MediaJavascriptTestBase {
     $test_filepath = 'public://' . $test_filename;
     $test_filename_updated = $this->randomMachineName() . '.mp3';
     $test_filepath_updated = 'public://' . $test_filename_updated;
-    file_put_contents($test_filepath, str_repeat('t', 10));
-    file_put_contents($test_filepath_updated, str_repeat('u', 10));
+    \file_put_contents($test_filepath, \str_repeat('t', 10));
+    \file_put_contents($test_filepath_updated, \str_repeat('u', 10));
 
     // Check if the name field is properly hidden on the media form.
     $this->drupalGet('media/add/audio');
@@ -134,7 +134,7 @@ class MediaStandardProfileTest extends MediaJavascriptTestBase {
       ->accessCheck(FALSE)
       ->sort('mid', 'DESC')
       ->execute();
-    $audio_media_id = reset($audio_media_id);
+    $audio_media_id = \reset($audio_media_id);
 
     // Reference the created media using an entity_reference field and make sure
     // the output is what we expect.
@@ -222,7 +222,7 @@ class MediaStandardProfileTest extends MediaJavascriptTestBase {
       ->accessCheck(FALSE)
       ->sort('mid', 'DESC')
       ->execute();
-    $image_media_id = reset($image_media_id);
+    $image_media_id = \reset($image_media_id);
 
     // Reference the created media using an entity_reference field and make sure
     // the output is what we expect.
@@ -303,8 +303,8 @@ class MediaStandardProfileTest extends MediaJavascriptTestBase {
     $test_filepath = 'public://' . $test_filename;
     $test_filename_updated = $this->randomMachineName() . '.txt';
     $test_filepath_updated = 'public://' . $test_filename_updated;
-    file_put_contents($test_filepath, $this->randomMachineName());
-    file_put_contents($test_filepath_updated, $this->randomMachineName());
+    \file_put_contents($test_filepath, $this->randomMachineName());
+    \file_put_contents($test_filepath_updated, $this->randomMachineName());
 
     // Check if the name field is properly hidden on the media form.
     $this->drupalGet('media/add/document');
@@ -325,7 +325,7 @@ class MediaStandardProfileTest extends MediaJavascriptTestBase {
       ->accessCheck(FALSE)
       ->sort('mid', 'DESC')
       ->execute();
-    $file_media_id = reset($file_media_id);
+    $file_media_id = \reset($file_media_id);
 
     // Reference the created media using an entity_reference field and make sure
     // the output is what we expect.
@@ -413,7 +413,7 @@ class MediaStandardProfileTest extends MediaJavascriptTestBase {
       ->accessCheck(FALSE)
       ->sort('mid', 'DESC')
       ->execute();
-    $remote_video_media_id = reset($remote_video_media_id);
+    $remote_video_media_id = \reset($remote_video_media_id);
 
     // Reference the created media using an entity_reference field and make sure
     // the output is what we expect.
@@ -439,11 +439,11 @@ class MediaStandardProfileTest extends MediaJavascriptTestBase {
     // Assert the iframe is present in the media element and its src attribute
     // matches the URL and query parameters.
     $iframe_url = $assert_session->elementExists('css', 'div.media--type-remote-video .field--name-field-media-oembed-video iframe')->getAttribute('src');
-    $iframe_url = parse_url($iframe_url);
+    $iframe_url = \parse_url($iframe_url);
     $this->assertStringEndsWith('/media/oembed', $iframe_url['path']);
     $this->assertNotEmpty($iframe_url['query']);
     $query = [];
-    parse_str($iframe_url['query'], $query);
+    \parse_str($iframe_url['query'], $query);
     $this->assertSame($video_url, $query['url']);
     $this->assertNotEmpty($query['hash']);
 
@@ -466,11 +466,11 @@ class MediaStandardProfileTest extends MediaJavascriptTestBase {
     // Assert the iframe is present in the media element and its src attribute
     // matches the updated URL and query parameters.
     $iframe_url = $assert_session->elementExists('css', 'div.media--type-remote-video .field--name-field-media-oembed-video iframe')->getAttribute('src');
-    $iframe_url = parse_url($iframe_url);
+    $iframe_url = \parse_url($iframe_url);
     $this->assertStringEndsWith('/media/oembed', $iframe_url['path']);
     $this->assertNotEmpty($iframe_url['query']);
     $query = [];
-    parse_str($iframe_url['query'], $query);
+    \parse_str($iframe_url['query'], $query);
     $this->assertSame($video_url_updated, $query['url']);
     $this->assertNotEmpty($query['hash']);
   }
@@ -488,8 +488,8 @@ class MediaStandardProfileTest extends MediaJavascriptTestBase {
     $test_filepath = 'public://' . $test_filename;
     $test_filename_updated = $this->randomMachineName() . '.mp4';
     $test_filepath_updated = 'public://' . $test_filename_updated;
-    file_put_contents($test_filepath, str_repeat('t', 10));
-    file_put_contents($test_filepath_updated, str_repeat('u', 10));
+    \file_put_contents($test_filepath, \str_repeat('t', 10));
+    \file_put_contents($test_filepath_updated, \str_repeat('u', 10));
 
     // Check if the name field is properly hidden on the media form.
     $this->drupalGet('media/add/video');
@@ -510,7 +510,7 @@ class MediaStandardProfileTest extends MediaJavascriptTestBase {
       ->accessCheck(FALSE)
       ->sort('mid', 'DESC')
       ->execute();
-    $video_media_id = reset($video_media_id);
+    $video_media_id = \reset($video_media_id);
 
     // Reference the created media using an entity_reference field and make sure
     // the output is what we expect.

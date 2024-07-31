@@ -104,8 +104,8 @@ abstract class FieldableEntity extends DrupalSqlBase {
     foreach ($query->execute() as $row) {
       foreach ($row as $key => $value) {
         $delta = $row['delta'];
-        if (str_starts_with($key, $field)) {
-          $column = substr($key, strlen($field) + 1);
+        if (\str_starts_with($key, $field)) {
+          $column = \substr($key, \strlen($field) + 1);
           $values[$delta][$column] = $value;
         }
       }
@@ -123,7 +123,7 @@ abstract class FieldableEntity extends DrupalSqlBase {
    *   Whether the entity type uses entity translation.
    */
   protected function isEntityTranslatable($entity_type) {
-    return in_array($entity_type, $this->variableGet('entity_translation_entity_types', []), TRUE);
+    return \in_array($entity_type, $this->variableGet('entity_translation_entity_types', []), TRUE);
   }
 
   /**

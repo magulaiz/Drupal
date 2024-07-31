@@ -77,9 +77,9 @@ abstract class ImageTestBase extends CKEditor5TestBase {
       $string[] = $key . '="' . $value . '"';
     }
     if ($reverse) {
-      $string = array_reverse($string);
+      $string = \array_reverse($string);
     }
-    return implode(' ', $string);
+    return \implode(' ', $string);
   }
 
   /**
@@ -217,7 +217,7 @@ abstract class ImageTestBase extends CKEditor5TestBase {
     $original_body_value = $this->host->body->value;
     foreach ($this->providerLinkability() as $data) {
       [$image_type, $unrestricted] = $data;
-      assert($image_type === 'inline' || $image_type === 'block');
+      \assert($image_type === 'inline' || $image_type === 'block');
 
       $format_config = $unrestricted ? ['status' => FALSE] : $original_config;
 
@@ -244,7 +244,7 @@ abstract class ImageTestBase extends CKEditor5TestBase {
       $this->assertNotEmpty($drupalimage);
       $this->assertFalse($drupalimage->hasClass('.ck-widget_selected'));
 
-      $src = basename($this->imageAttributes()['src']);
+      $src = \basename($this->imageAttributes()['src']);
       // Assert the "editingDowncast" HTML before making changes.
       $assert_session->elementExists('css', '.ck-content .ck-widget.' . $expected_widget_class . ' > img[src*="' . $src . '"][alt="drupalimage test image"]');
 
@@ -298,7 +298,7 @@ abstract class ImageTestBase extends CKEditor5TestBase {
       $this->pressEditorButton('Source');
       $source_text_area = $assert_session->waitForElement('css', '.ck-source-editing-area textarea');
       $this->assertNotEmpty($source_text_area);
-      $new_value = str_replace('<a ', '<a class="trusted" ', $source_text_area->getValue());
+      $new_value = \str_replace('<a ', '<a class="trusted" ', $source_text_area->getValue());
       $source_text_area->setValue('<p>temp</p>');
       $source_text_area->setValue($new_value);
       $this->pressEditorButton('Source');
@@ -375,7 +375,7 @@ abstract class ImageTestBase extends CKEditor5TestBase {
     }
 
     // Make the test content has a block image and an inline image.
-    $img_tag = preg_replace(
+    $img_tag = \preg_replace(
       '/width="\d+" height="\d+"/',
       'width="500"',
       '<img ' . $this->imageAttributesAsString() . ' />'
@@ -556,13 +556,13 @@ abstract class ImageTestBase extends CKEditor5TestBase {
     // should generate an appropriate `height`, matching with the aspect ratio
     // of the image.
     $expected_computed_height = $width;
-    if (!str_ends_with($width, '%')) {
+    if (!\str_ends_with($width, '%')) {
       $ratio = $width / (int) $this->imageAttributes()['width'];
-      $expected_computed_height = (string) (int) round($ratio * (int) $this->imageAttributes()['height']);
+      $expected_computed_height = (string) (int) \round($ratio * (int) $this->imageAttributes()['height']);
     }
 
     // Add image to the host body.
-    $this->host->body->value = sprintf('<img data-foo="bar" alt="drupalimage test image" ' . $this->imageAttributesAsString() . ' width="%s" />', $width);
+    $this->host->body->value = \sprintf('<img data-foo="bar" alt="drupalimage test image" ' . $this->imageAttributesAsString() . ' width="%s" />', $width);
     $this->host->save();
 
     $this->drupalGet($this->host->toUrl('edit-form'));

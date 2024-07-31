@@ -103,16 +103,16 @@ class TranslationWebTest extends FieldTestBase {
     $this->drupalLogin($web_user);
 
     // Prepare the field translations.
-    field_test_entity_info_translatable($this->entityTypeId, TRUE);
+    \field_test_entity_info_translatable($this->entityTypeId, TRUE);
     $entity = $this->container->get('entity_type.manager')
       ->getStorage($this->entityTypeId)
       ->create();
-    $available_langcodes = array_flip(array_keys($this->container->get('language_manager')->getLanguages()));
+    $available_langcodes = \array_flip(\array_keys($this->container->get('language_manager')->getLanguages()));
     $field_name = $this->fieldStorage->getName();
 
     // Store the field translations.
-    ksort($available_langcodes);
-    $entity->langcode->value = key($available_langcodes);
+    \ksort($available_langcodes);
+    $entity->langcode->value = \key($available_langcodes);
     foreach ($available_langcodes as $langcode => $value) {
       $translation = $entity->hasTranslation($langcode) ? $entity->getTranslation($langcode) : $entity->addTranslation($langcode);
       $translation->{$field_name}->value = $value + 1;

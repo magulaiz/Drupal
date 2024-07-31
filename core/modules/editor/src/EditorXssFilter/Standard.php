@@ -60,12 +60,12 @@ class Standard extends Xss implements EditorXssFilterInterface {
     // expectations of *both* formats apply.
     $allowed_tags = self::getAllowedTags($format_restrictions);
     if ($original_format !== NULL) {
-      $allowed_tags = array_intersect($allowed_tags, self::getAllowedTags($original_format_restrictions));
+      $allowed_tags = \array_intersect($allowed_tags, self::getAllowedTags($original_format_restrictions));
     }
 
     // Don't blacklist dangerous tags that are explicitly allowed in both text
     // formats.
-    $blacklisted_tags = array_diff($dangerous_tags, $allowed_tags);
+    $blacklisted_tags = \array_diff($dangerous_tags, $allowed_tags);
 
     $output = static::filter($html, $blacklisted_tags);
 
@@ -85,7 +85,7 @@ class Standard extends Xss implements EditorXssFilterInterface {
    *   The filtered string.
    */
   protected static function filterXssDataAttributes($html) {
-    if (stristr($html, 'data-') !== FALSE) {
+    if (\stristr($html, 'data-') !== FALSE) {
       $dom = Html::load($html);
       $xpath = new \DOMXPath($dom);
       foreach ($xpath->query('//@*[starts-with(name(.), "data-")]') as $node) {
@@ -118,10 +118,10 @@ class Standard extends Xss implements EditorXssFilterInterface {
       return [];
     }
 
-    $allowed_tags = array_keys($restrictions['allowed']);
+    $allowed_tags = \array_keys($restrictions['allowed']);
     // Exclude the wildcard tag, which is used to set attribute restrictions on
     // all tags simultaneously.
-    $allowed_tags = array_diff($allowed_tags, ['*']);
+    $allowed_tags = \array_diff($allowed_tags, ['*']);
 
     return $allowed_tags;
   }

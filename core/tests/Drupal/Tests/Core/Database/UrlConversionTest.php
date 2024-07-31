@@ -42,7 +42,7 @@ class UrlConversionTest extends UnitTestCase {
    *   - database_array: An array containing the expected results.
    */
   public static function providerConvertDbUrlToConnectionInfo() {
-    $root = dirname(__FILE__, 7);
+    $root = \dirname(__FILE__, 7);
     return [
       'MySql without prefix' => [
         'mysql://test_user:test_pass@test_host:3306/test_database',

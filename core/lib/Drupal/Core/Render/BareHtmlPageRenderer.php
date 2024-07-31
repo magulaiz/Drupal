@@ -40,7 +40,7 @@ class BareHtmlPageRenderer implements BareHtmlPageRendererInterface {
   public function renderBarePage(array $content, $title, $page_theme_property, array $page_additions = []) {
     $attributes = [
       'class' => [
-        str_replace('_', '-', $page_theme_property),
+        \str_replace('_', '-', $page_theme_property),
       ],
     ];
     $html = [
@@ -62,7 +62,7 @@ class BareHtmlPageRenderer implements BareHtmlPageRendererInterface {
 
     // Add the bare minimum of attachments from the system module and the
     // current maintenance theme.
-    system_page_attachments($html['page']);
+    \system_page_attachments($html['page']);
     $this->renderer->renderRoot($html);
 
     $response = new HtmlResponse();

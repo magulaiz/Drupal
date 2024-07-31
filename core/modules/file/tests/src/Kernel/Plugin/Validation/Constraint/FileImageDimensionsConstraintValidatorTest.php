@@ -105,7 +105,7 @@ class FileImageDimensionsConstraintValidatorTest extends FileValidatorTestBase {
     // Maximum size.
     if ($this->container->get('image.factory')->getToolkitId()) {
       // Copy the image so that the original doesn't get resized.
-      copy('core/misc/druplicon.png', 'temporary://druplicon.png');
+      \copy('core/misc/druplicon.png', 'temporary://druplicon.png');
       $this->image->setFileUri('temporary://druplicon.png');
 
       $validators = [
@@ -123,7 +123,7 @@ class FileImageDimensionsConstraintValidatorTest extends FileValidatorTestBase {
       $this->assertLessThanOrEqual(5, $image->getHeight());
 
       // Once again, now with negative width and height to force an error.
-      copy('core/misc/druplicon.png', 'temporary://druplicon.png');
+      \copy('core/misc/druplicon.png', 'temporary://druplicon.png');
       $this->image->setFileUri('temporary://druplicon.png');
       $validators = [
         'FileImageDimensions' => [

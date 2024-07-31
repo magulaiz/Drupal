@@ -31,7 +31,7 @@ class EntityDisplayFormBaseTest extends BrowserTestBase {
   protected function setUp(): void {
     parent::setUp();
 
-    foreach (entity_test_entity_types() as $entity_type) {
+    foreach (\entity_test_entity_types() as $entity_type) {
       // Auto-create fields for testing.
       FieldStorageConfig::create([
         'entity_type' => $entity_type,

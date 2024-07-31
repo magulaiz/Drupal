@@ -45,8 +45,8 @@ class UpdateMiscTest extends UpdateTestBase {
    */
   public function testClearDiskCache(): void {
     $directories = [
-      _update_manager_cache_directory(FALSE),
-      _update_manager_extract_directory(FALSE),
+      \_update_manager_cache_directory(FALSE),
+      \_update_manager_extract_directory(FALSE),
     ];
     // Check that update directories does not exists.
     foreach ($directories as $directory) {
@@ -54,7 +54,7 @@ class UpdateMiscTest extends UpdateTestBase {
     }
 
     // Method must not fail if update directories do not exists.
-    update_clear_update_disk_cache();
+    \update_clear_update_disk_cache();
   }
 
   /**
@@ -83,17 +83,17 @@ class UpdateMiscTest extends UpdateTestBase {
     ];
     $queue = \Drupal::queue('update_fetch_tasks');
     $this->assertEquals(0, $queue->numberOfItems(), 'Queue is empty');
-    update_create_fetch_task($project_a);
+    \update_create_fetch_task($project_a);
     $this->assertEquals(1, $queue->numberOfItems(), 'Queue contains one item');
-    update_create_fetch_task($project_b);
+    \update_create_fetch_task($project_b);
     $this->assertEquals(2, $queue->numberOfItems(), 'Queue contains two items');
     // Try to add a project again.
-    update_create_fetch_task($project_a);
+    \update_create_fetch_task($project_a);
     $this->assertEquals(2, $queue->numberOfItems(), 'Queue still contains two items');
 
     // Clear storage and try again.
-    update_storage_clear();
-    update_create_fetch_task($project_a);
+    \update_storage_clear();
+    \update_create_fetch_task($project_a);
     $this->assertEquals(2, $queue->numberOfItems(), 'Queue contains two items');
   }
 

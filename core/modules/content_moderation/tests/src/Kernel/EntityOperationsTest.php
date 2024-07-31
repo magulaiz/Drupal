@@ -105,8 +105,8 @@ class EntityOperationsTest extends KernelTestBase {
     // is a core bug that should get fixed.
     $storage = \Drupal::entityTypeManager()->getStorage('node');
     $revision_ids = $storage->revisionIds($page);
-    sort($revision_ids);
-    $latest = end($revision_ids);
+    \sort($revision_ids);
+    $latest = \end($revision_ids);
     $page = $storage->loadRevision($latest);
     $this->assertEquals('C', $page->getTitle());
 

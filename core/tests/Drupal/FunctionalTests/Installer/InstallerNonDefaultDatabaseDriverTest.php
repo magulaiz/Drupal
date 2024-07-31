@@ -34,11 +34,11 @@ class InstallerNonDefaultDatabaseDriverTest extends InstallerTestBase {
    */
   protected function setUpSettings() {
     $driver = Database::getConnection()->driver();
-    if (!in_array($driver, ['mysql', 'pgsql'])) {
+    if (!\in_array($driver, ['mysql', 'pgsql'])) {
       $this->markTestSkipped("This test does not support the {$driver} database driver.");
     }
     $driverNamespace = Database::getConnection()->getConnectionOptions()['namespace'];
-    $this->testDriverName = 'Drivertest' . ucfirst($driver);
+    $this->testDriverName = 'Drivertest' . \ucfirst($driver);
     $testDriverNamespace = "Drupal\\driver_test\\Driver\\Database\\{$this->testDriverName}";
 
     // Assert that we are using the database drivers from the driver_test module.
@@ -63,7 +63,7 @@ class InstallerNonDefaultDatabaseDriverTest extends InstallerTestBase {
 
     // Assert that in the settings.php the database connection array has the
     // correct values set.
-    $contents = file_get_contents($this->container->getParameter('app.root') . '/' . $this->siteDirectory . '/settings.php');
+    $contents = \file_get_contents($this->container->getParameter('app.root') . '/' . $this->siteDirectory . '/settings.php');
     $this->assertStringContainsString("'namespace' => 'Drupal\\\\driver_test\\\\Driver\\\\Database\\\\{$this->testDriverName}',", $contents);
     $this->assertStringContainsString("'driver' => '{$this->testDriverName}',", $contents);
     $this->assertStringContainsString("'autoload' => 'core/modules/system/tests/modules/driver_test/src/Driver/Database/{$this->testDriverName}/',", $contents);

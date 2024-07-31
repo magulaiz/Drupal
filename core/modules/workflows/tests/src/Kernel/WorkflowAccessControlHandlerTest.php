@@ -88,7 +88,7 @@ class WorkflowAccessControlHandlerTest extends KernelTestBase {
 
     // Remove all plugin types and ensure not even the admin user is allowed to
     // create a workflow.
-    workflow_type_test_set_definitions([]);
+    \workflow_type_test_set_definitions([]);
     $this->accessControlHandler->resetCache();
     $this->assertEquals(
       AccessResult::neutral()
@@ -112,7 +112,7 @@ class WorkflowAccessControlHandlerTest extends KernelTestBase {
     foreach ($states_to_create as $state_id => $is_required) {
       $workflow_type->addState($state_id, $this->randomString());
     }
-    \Drupal::state()->set('workflow_type_test.required_states', array_filter($states_to_create));
+    \Drupal::state()->set('workflow_type_test.required_states', \array_filter($states_to_create));
     $this->assertEquals($result, $this->accessControlHandler->access($workflow, $operation, $this->{$user}, TRUE));
   }
 

@@ -260,7 +260,7 @@ abstract class FileTransfer {
   final protected function checkPath($path) {
     $full_jail = $this->chroot . $this->jail;
     $full_path = \Drupal::service('file_system')
-      ->realpath(substr($this->chroot . $path, 0, strlen($full_jail)));
+      ->realpath(\substr($this->chroot . $path, 0, \strlen($full_jail)));
     $full_path = $this->fixRemotePath($full_path, FALSE);
     if ($full_jail !== $full_path) {
       throw new FileTransferException('@directory is outside of the @jail', 0, ['@directory' => $path, '@jail' => $this->jail]);
@@ -285,10 +285,10 @@ abstract class FileTransfer {
   final protected function fixRemotePath($path, $strip_chroot = TRUE) {
     $path = $this->sanitizePath($path);
     // Strip out windows drive letter if its there.
-    $path = preg_replace('|^([a-z]{1}):|i', '', $path);
+    $path = \preg_replace('|^([a-z]{1}):|i', '', $path);
     if ($strip_chroot) {
-      if ($this->chroot && str_starts_with($path, $this->chroot)) {
-        $path = ($path == $this->chroot) ? '' : substr($path, strlen($this->chroot));
+      if ($this->chroot && \str_starts_with($path, $this->chroot)) {
+        $path = ($path == $this->chroot) ? '' : \substr($path, \strlen($this->chroot));
       }
     }
     return $path;
@@ -305,9 +305,9 @@ abstract class FileTransfer {
    */
   public function sanitizePath($path) {
     // Windows path sanitization.
-    $path = str_replace('\\', '/', $path);
-    if (str_ends_with($path, '/')) {
-      $path = substr($path, 0, -1);
+    $path = \str_replace('\\', '/', $path);
+    if (\str_ends_with($path, '/')) {
+      $path = \substr($path, 0, -1);
     }
     return $path;
   }
@@ -328,7 +328,7 @@ abstract class FileTransfer {
     }
     $this->createDirectory($destination);
     foreach (new \RecursiveIteratorIterator(new \RecursiveDirectoryIterator($source, \RecursiveDirectoryIterator::SKIP_DOTS), \RecursiveIteratorIterator::SELF_FIRST) as $filename => $file) {
-      $relative_path = substr($filename, strlen($source));
+      $relative_path = \substr($filename, \strlen($source));
       if ($file->isDir()) {
         $this->createDirectory($destination . $relative_path);
       }
@@ -412,15 +412,15 @@ abstract class FileTransfer {
 
     $path = __DIR__;
     $path = $this->fixRemotePath($path, FALSE);
-    $parts = explode('/', $path);
+    $parts = \explode('/', $path);
     $chroot = '';
-    while (count($parts)) {
-      $check = implode('/', $parts);
+    while (\count($parts)) {
+      $check = \implode('/', $parts);
       if ($this->isFile($check . '/' . \Drupal::service('file_system')->basename(__FILE__))) {
         // Remove the trailing slash.
-        return substr($chroot, 0, -1);
+        return \substr($chroot, 0, -1);
       }
-      $chroot .= array_shift($parts) . '/';
+      $chroot .= \array_shift($parts) . '/';
     }
     return FALSE;
   }
@@ -445,26 +445,26 @@ abstract class FileTransfer {
   public function getSettingsForm() {
     $form['username'] = [
       '#type' => 'textfield',
-      '#title' => t('Username'),
+      '#title' => \t('Username'),
     ];
     $form['password'] = [
       '#type' => 'password',
-      '#title' => t('Password'),
-      '#description' => t('Your password is not saved in the database and is only used to establish a connection.'),
+      '#title' => \t('Password'),
+      '#description' => \t('Your password is not saved in the database and is only used to establish a connection.'),
     ];
     $form['advanced'] = [
       '#type' => 'details',
-      '#title' => t('Advanced settings'),
+      '#title' => \t('Advanced settings'),
     ];
     $form['advanced']['hostname'] = [
       '#type' => 'textfield',
-      '#title' => t('Host'),
+      '#title' => \t('Host'),
       '#default_value' => 'localhost',
-      '#description' => t('The connection will be created between your web server and the machine hosting the web server files. In the vast majority of cases, this will be the same machine, and "localhost" is correct.'),
+      '#description' => \t('The connection will be created between your web server and the machine hosting the web server files. In the vast majority of cases, this will be the same machine, and "localhost" is correct.'),
     ];
     $form['advanced']['port'] = [
       '#type' => 'textfield',
-      '#title' => t('Port'),
+      '#title' => \t('Port'),
       '#default_value' => NULL,
     ];
     return $form;

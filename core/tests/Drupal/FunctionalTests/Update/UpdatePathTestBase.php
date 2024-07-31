@@ -136,7 +136,7 @@ abstract class UpdatePathTestBase extends BrowserTestBase {
 
     // Load the database(s).
     foreach ($this->databaseDumpFiles as $file) {
-      if (str_ends_with($file, '.gz')) {
+      if (\str_ends_with($file, '.gz')) {
         $file = "compress.zlib://$file";
       }
       require $file;
@@ -215,7 +215,7 @@ abstract class UpdatePathTestBase extends BrowserTestBase {
     $installer_class = Database::getConnectionInfo()['default']['namespace'] . "\\Install\\Tasks";
     $errors = (new $installer_class())->runTasks();
     if (!empty($errors)) {
-      $this->fail('Failed to run installer database tasks: ' . implode(', ', $errors));
+      $this->fail('Failed to run installer database tasks: ' . \implode(', ', $errors));
     }
   }
 
@@ -255,18 +255,18 @@ abstract class UpdatePathTestBase extends BrowserTestBase {
       ->fetchAllKeyed(0, 1);
     // For the purpose of fetching the notices and displaying more helpful error
     // messages, let's override the error handler temporarily.
-    set_error_handler(function ($severity, $message, $filename, $lineno) {
+    \set_error_handler(function ($severity, $message, $filename, $lineno) {
       throw new \ErrorException($message, 0, $severity, $filename, $lineno);
     });
     foreach ($result as $route_name => $route) {
       try {
-        unserialize($route);
+        \unserialize($route);
       }
       catch (\Exception $e) {
-        $this->fail(sprintf('Error "%s" while unserializing route %s', $e->getMessage(), Html::escape($route_name)));
+        $this->fail(\sprintf('Error "%s" while unserializing route %s', $e->getMessage(), Html::escape($route_name)));
       }
     }
-    restore_error_handler();
+    \restore_error_handler();
 
     // Before accessing the site we need to run updates first or the site might
     // be broken.

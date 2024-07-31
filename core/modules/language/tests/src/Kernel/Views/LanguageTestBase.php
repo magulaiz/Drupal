@@ -51,8 +51,8 @@ abstract class LanguageTestBase extends ViewsKernelTestBase {
   protected function viewsData() {
     $data = parent::viewsData();
     $data['views_test_data']['langcode'] = [
-      'title' => t('Langcode'),
-      'help' => t('Langcode'),
+      'title' => \t('Langcode'),
+      'help' => \t('Langcode'),
       'field' => [
         'id' => 'language',
       ],

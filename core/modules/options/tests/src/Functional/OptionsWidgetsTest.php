@@ -412,7 +412,7 @@ class OptionsWidgetsTest extends FieldTestBase {
     // Submit form: select invalid 'none' option.
     $edit = ['card_1' => '_none'];
     $this->submitForm($edit, 'Save');
-    $this->assertSession()->responseContains(t('This is custom message for required field.'));
+    $this->assertSession()->responseContains(\t('This is custom message for required field.'));
   }
 
   /**

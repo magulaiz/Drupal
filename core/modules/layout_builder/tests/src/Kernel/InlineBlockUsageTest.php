@@ -48,7 +48,7 @@ class InlineBlockUsageTest extends KernelTestBase {
     $this->database = $this->container->get('database');
     $this->inlineBlockUsage = $this->container->get('inline_block.usage');
     $this->installSchema('layout_builder', ['inline_block_usage']);
-    entity_test_create_bundle('bundle_with_extra_fields');
+    \entity_test_create_bundle('bundle_with_extra_fields');
     $this->installEntitySchema('entity_test');
     $this->entity = EntityTest::create();
     $this->entity->save();

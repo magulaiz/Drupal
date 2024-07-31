@@ -79,7 +79,7 @@ class LocaleTranslationUiTest extends BrowserTestBase {
     $this->drupalGet('admin/config/regional/language/add');
     $this->submitForm($edit, 'Add custom language');
     // Add string.
-    t($name, [], ['langcode' => $langcode])->render();
+    \t($name, [], ['langcode' => $langcode])->render();
     // Reset locale cache.
     $this->container->get('string_translation')->reset();
     $this->assertSession()->responseContains('"edit-languages-' . $langcode . '-weight"');
@@ -126,7 +126,7 @@ class LocaleTranslationUiTest extends BrowserTestBase {
     $this->drupalGet('admin/config/regional/translate');
     $this->submitForm($edit, 'Save translations');
     $this->assertSession()->pageTextContains('The strings have been saved.');
-    $url_bits = explode('?', $this->getUrl());
+    $url_bits = \explode('?', $this->getUrl());
     $this->assertEquals(Url::fromRoute('locale.translate_page', [], ['absolute' => TRUE])->toString(), $url_bits[0], 'Correct page redirection.');
     $search = [
       'string' => $name,
@@ -161,15 +161,15 @@ class LocaleTranslationUiTest extends BrowserTestBase {
     $this->assertSession()->pageTextContains($translation_to_en);
 
     $this->assertNotEquals($translation, $name);
-    $this->assertEquals($translation, t($name, [], ['langcode' => $langcode]), 't() works for non-English.');
+    $this->assertEquals($translation, \t($name, [], ['langcode' => $langcode]), 't() works for non-English.');
     // Refresh the locale() cache to get fresh data from t() below. We are in
     // the same HTTP request and therefore t() is not refreshed by saving the
     // translation above.
     $this->container->get('string_translation')->reset();
     // Now we should get the proper fresh translation from t().
     $this->assertNotEquals($translation_to_en, $name);
-    $this->assertEquals($translation_to_en, t($name, [], ['langcode' => 'en']), 't() works for English.');
-    $this->assertTrue(t($name, [], ['langcode' => LanguageInterface::LANGCODE_SYSTEM]) == $name, 't() works for LanguageInterface::LANGCODE_SYSTEM.');
+    $this->assertEquals($translation_to_en, \t($name, [], ['langcode' => 'en']), 't() works for English.');
+    $this->assertTrue(\t($name, [], ['langcode' => LanguageInterface::LANGCODE_SYSTEM]) == $name, 't() works for LanguageInterface::LANGCODE_SYSTEM.');
 
     $search = [
       'string' => $name,
@@ -303,7 +303,7 @@ class LocaleTranslationUiTest extends BrowserTestBase {
     $this->submitForm($edit, 'Save translations');
 
     // Trigger JavaScript translation parsing and building.
-    _locale_rebuild_js($langcode);
+    \_locale_rebuild_js($langcode);
 
     $locale_javascripts = \Drupal::state()->get('locale.translation.javascript', []);
     $js_file = 'public://' . $config->get('javascript.directory') . '/' . $langcode . '_' . $locale_javascripts[$langcode] . '.js';
@@ -312,7 +312,7 @@ class LocaleTranslationUiTest extends BrowserTestBase {
     // Test JavaScript translation rebuilding.
     \Drupal::service('file_system')->delete($js_file);
     $this->assertFileDoesNotExist($js_file);
-    _locale_rebuild_js($langcode);
+    \_locale_rebuild_js($langcode);
     $this->assertFileExists($js_file);
 
     // Test if JavaScript translation contains a custom string override.
@@ -321,10 +321,10 @@ class LocaleTranslationUiTest extends BrowserTestBase {
     $settings['locale_custom_strings_' . $langcode] = ['' => [$string_override => $string_override]];
     // Recreate the settings static.
     new Settings($settings);
-    _locale_rebuild_js($langcode);
+    \_locale_rebuild_js($langcode);
     $locale_javascripts = \Drupal::state()->get('locale.translation.javascript', []);
     $js_file = 'public://' . $config->get('javascript.directory') . '/' . $langcode . '_' . $locale_javascripts[$langcode] . '.js';
-    $content = file_get_contents($js_file);
+    $content = \file_get_contents($js_file);
     $this->assertStringContainsString('"' . $string_override . '":"' . $string_override . '"', $content);
   }
 
@@ -363,7 +363,7 @@ class LocaleTranslationUiTest extends BrowserTestBase {
     $this->drupalGet('admin/config/regional/language/add');
     $this->submitForm($edit, 'Add custom language');
     // Add string.
-    t($name, [], ['langcode' => $langcode])->render();
+    \t($name, [], ['langcode' => $langcode])->render();
     // Reset locale cache.
     $search = [
       'string' => $name,
@@ -432,7 +432,7 @@ class LocaleTranslationUiTest extends BrowserTestBase {
     $this->submitForm($edit, 'Add custom language');
 
     // Add string.
-    t($name, [], ['langcode' => $langcode])->render();
+    \t($name, [], ['langcode' => $langcode])->render();
     // Reset locale cache.
     $this->container->get('string_translation')->reset();
     $this->drupalLogout();

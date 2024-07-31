@@ -264,8 +264,8 @@ class LocaleImportFunctionalTest extends BrowserTestBase {
 
     // We cast the return value of t() to string so as to retrieve the
     // translated value, rendered as a string.
-    $this->assertSame('Svibanj', (string) t('May', [], ['langcode' => 'hr', 'context' => 'Long month name']), 'Long month name context is working.');
-    $this->assertSame('Svi.', (string) t('May', [], ['langcode' => 'hr']), 'Default context is working.');
+    $this->assertSame('Svibanj', (string) \t('May', [], ['langcode' => 'hr', 'context' => 'Long month name']), 'Long month name context is working.');
+    $this->assertSame('Svi.', (string) \t('May', [], ['langcode' => 'hr']), 'Default context is working.');
   }
 
   /**
@@ -280,7 +280,7 @@ class LocaleImportFunctionalTest extends BrowserTestBase {
     ]);
 
     $this->assertSession()->pageTextContains("One translation file imported. 1 translations were added, 0 translations were updated and 0 translations were removed.");
-    $this->assertSame('Műveletek', (string) t('Operations', [], ['langcode' => $langcode]), 'String imported and translated.');
+    $this->assertSame('Műveletek', (string) \t('Operations', [], ['langcode' => $langcode]), 'String imported and translated.');
 
     // Try importing a .po file.
     $this->importPoFile($this->getPoFileWithEmptyMsgstr(), [
@@ -407,7 +407,7 @@ class LocaleImportFunctionalTest extends BrowserTestBase {
   public function importPoFile($contents, array $options = []) {
     $file_system = \Drupal::service('file_system');
     $name = $file_system->tempnam('temporary://', "po_") . '.po';
-    file_put_contents($name, $contents);
+    \file_put_contents($name, $contents);
     $options['files[file]'] = $name;
     $this->drupalGet('admin/config/regional/translate/import');
     $this->submitForm($options, 'Import');

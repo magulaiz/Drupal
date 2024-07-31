@@ -42,7 +42,7 @@ class ModerationStateBlockTest extends ModerationStateTestBase {
     $bundle->save();
 
     // Add the body field to it.
-    block_content_add_body_field($bundle->id());
+    \block_content_add_body_field($bundle->id());
   }
 
   /**

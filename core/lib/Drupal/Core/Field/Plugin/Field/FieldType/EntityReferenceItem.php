@@ -140,13 +140,13 @@ class EntityReferenceItem extends EntityReferenceItemBase implements OptionsProv
     /** @var \Drupal\Core\Entity\EntityTypeBundleInfoInterface $entity_bundle_information */
     $entity_bundle_information = \Drupal::service('entity_type.bundle.info');
     $bundle_info = $entity_bundle_information->getBundleInfo($target_type);
-    $bundles = array_map(fn($bundle) => $bundle_info[$bundle]['label'], $handler_settings['target_bundles']);
+    $bundles = \array_map(fn($bundle) => $bundle_info[$bundle]['label'], $handler_settings['target_bundles']);
     $bundle_label = \Drupal::entityTypeManager()->getDefinition($target_type)->getBundleLabel();
 
     if (!empty($bundles)) {
       $summary[] = new FormattableMarkup('@bundle: @entity_type', [
         '@bundle' => $bundle_label ?: new TranslatableMarkup('Bundle'),
-        '@entity_type' => implode(', ', $bundles),
+        '@entity_type' => \implode(', ', $bundles),
       ]);
     }
 
@@ -169,7 +169,7 @@ class EntityReferenceItem extends EntityReferenceItemBase implements OptionsProv
       $target_type_info = \Drupal::entityTypeManager()->getDefinition($target_type);
     }
     catch (PluginNotFoundException) {
-      throw new FieldException(sprintf("Field '%s' on entity type '%s' references a target entity type '%s' which does not exist.",
+      throw new FieldException(\sprintf("Field '%s' on entity type '%s' references a target entity type '%s' which does not exist.",
         $field_definition->getName(),
         $field_definition->getTargetEntityTypeId(),
         $target_type
@@ -226,7 +226,7 @@ class EntityReferenceItem extends EntityReferenceItemBase implements OptionsProv
    * {@inheritdoc}
    */
   public function setValue($values, $notify = TRUE) {
-    if (isset($values) && !is_array($values)) {
+    if (isset($values) && !\is_array($values)) {
       // If either a scalar or an object was passed as the value for the item,
       // assign it to the 'entity' property since that works for both cases.
       $this->set('entity', $values, $notify);
@@ -236,13 +236,13 @@ class EntityReferenceItem extends EntityReferenceItemBase implements OptionsProv
       // Support setting the field item with only one property, but make sure
       // values stay in sync if only property is passed.
       // NULL is a valid value, so we use array_key_exists().
-      if (is_array($values) && array_key_exists('target_id', $values) && !isset($values['entity'])) {
+      if (\is_array($values) && \array_key_exists('target_id', $values) && !isset($values['entity'])) {
         $this->onChange('target_id', FALSE);
       }
-      elseif (is_array($values) && !array_key_exists('target_id', $values) && isset($values['entity'])) {
+      elseif (\is_array($values) && !\array_key_exists('target_id', $values) && isset($values['entity'])) {
         $this->onChange('entity', FALSE);
       }
-      elseif (is_array($values) && array_key_exists('target_id', $values) && isset($values['entity'])) {
+      elseif (\is_array($values) && \array_key_exists('target_id', $values) && isset($values['entity'])) {
         // If both properties are passed, verify the passed values match. The
         // only exception we allow is when we have a new entity: in this case
         // its actual id and target_id will be different, due to the new entity
@@ -356,8 +356,8 @@ class EntityReferenceItem extends EntityReferenceItemBase implements OptionsProv
     // Select a random number of references between the last 50 referenceable
     // entities created.
     if ($referenceable = $selection_handler->getReferenceableEntities(NULL, 'CONTAINS', 50)) {
-      $group = array_rand($referenceable);
-      $values['target_id'] = array_rand($referenceable[$group]);
+      $group = \array_rand($referenceable);
+      $values['target_id'] = \array_rand($referenceable[$group]);
       return $values;
     }
 
@@ -405,7 +405,7 @@ class EntityReferenceItem extends EntityReferenceItemBase implements OptionsProv
       else {
         $bundle_ids = \Drupal::service('entity_type.bundle.info')->getBundleInfo($entity_type->id());
       }
-      return array_rand($bundle_ids);
+      return \array_rand($bundle_ids);
     }
   }
 
@@ -431,7 +431,7 @@ class EntityReferenceItem extends EntityReferenceItemBase implements OptionsProv
     };
     $options = \Drupal::service('entity_type.repository')->getEntityTypeLabels(TRUE);
     foreach ($options as $group_name => $group) {
-      $element['target_type']['#options'][$group_name] = array_filter($group, $filter, ARRAY_FILTER_USE_KEY);
+      $element['target_type']['#options'][$group_name] = \array_filter($group, $filter, ARRAY_FILTER_USE_KEY);
     }
     return $element;
   }
@@ -445,14 +445,14 @@ class EntityReferenceItem extends EntityReferenceItemBase implements OptionsProv
     // Get all selection plugins for this entity type.
     $selection_plugins = \Drupal::service('plugin.manager.entity_reference_selection')->getSelectionGroups($this->getSetting('target_type'));
     $handlers_options = [];
-    foreach (array_keys($selection_plugins) as $selection_group_id) {
+    foreach (\array_keys($selection_plugins) as $selection_group_id) {
       // We only display base plugins (e.g. 'default', 'views', ...) and not
       // entity type specific plugins (e.g. 'default:node', 'default:user',
       // ...).
-      if (array_key_exists($selection_group_id, $selection_plugins[$selection_group_id])) {
+      if (\array_key_exists($selection_group_id, $selection_plugins[$selection_group_id])) {
         $handlers_options[$selection_group_id] = Html::escape($selection_plugins[$selection_group_id][$selection_group_id]['label']);
       }
-      elseif (array_key_exists($selection_group_id . ':' . $this->getSetting('target_type'), $selection_plugins[$selection_group_id])) {
+      elseif (\array_key_exists($selection_group_id . ':' . $this->getSetting('target_type'), $selection_plugins[$selection_group_id])) {
         $selection_group_plugin = $selection_group_id . ':' . $this->getSetting('target_type');
         $handlers_options[$selection_group_plugin] = Html::escape($selection_plugins[$selection_group_id][$selection_group_plugin]['base_plugin_label']);
       }
@@ -546,7 +546,7 @@ class EntityReferenceItem extends EntityReferenceItemBase implements OptionsProv
     if ($default_value = $field_definition->getDefaultValueLiteral()) {
       $entity_repository = \Drupal::service('entity.repository');
       foreach ($default_value as $value) {
-        if (is_array($value) && isset($value['target_uuid'])) {
+        if (\is_array($value) && isset($value['target_uuid'])) {
           $entity = $entity_repository->loadEntityByUuid($target_entity_type->id(), $value['target_uuid']);
           // If the entity does not exist do not create the dependency.
           // @see \Drupal\Core\Field\EntityReferenceFieldItemList::processDefaultValue()
@@ -596,7 +596,7 @@ class EntityReferenceItem extends EntityReferenceItemBase implements OptionsProv
     if ($default_value = $field_definition->getDefaultValueLiteral()) {
       $entity_repository = \Drupal::service('entity.repository');
       foreach ($default_value as $key => $value) {
-        if (is_array($value) && isset($value['target_uuid'])) {
+        if (\is_array($value) && isset($value['target_uuid'])) {
           $entity = $entity_repository->loadEntityByUuid($target_entity_type->id(), $value['target_uuid']);
           // @see \Drupal\Core\Field\EntityReferenceFieldItemList::processDefaultValue()
           if ($entity && isset($dependencies[$entity->getConfigDependencyKey()][$entity->getConfigDependencyName()])) {
@@ -664,7 +664,7 @@ class EntityReferenceItem extends EntityReferenceItemBase implements OptionsProv
     // Flatten options first, because "settable options" may contain group
     // arrays.
     $flatten_options = OptGroup::flattenOptions($this->getSettableOptions($account));
-    return array_keys($flatten_options);
+    return \array_keys($flatten_options);
   }
 
   /**
@@ -688,7 +688,7 @@ class EntityReferenceItem extends EntityReferenceItemBase implements OptionsProv
       $return[$bundle_label] = $entity_ids;
     }
 
-    return count($return) == 1 ? reset($return) : $return;
+    return \count($return) == 1 ? \reset($return) : $return;
   }
 
   /**
@@ -731,7 +731,7 @@ class EntityReferenceItem extends EntityReferenceItemBase implements OptionsProv
    */
   public static function formProcessMergeParent($element) {
     $parents = $element['#parents'];
-    array_pop($parents);
+    \array_pop($parents);
     $element['#parents'] = $parents;
     return $element;
   }
@@ -756,7 +756,7 @@ class EntityReferenceItem extends EntityReferenceItemBase implements OptionsProv
     // Add all the commonly referenced entity types as distinct pre-configured
     // options.
     $entity_types = \Drupal::entityTypeManager()->getDefinitions();
-    $common_references = array_filter($entity_types, function (EntityTypeInterface $entity_type) {
+    $common_references = \array_filter($entity_types, function (EntityTypeInterface $entity_type) {
       return $entity_type->isCommonReferenceTarget();
     });
 
@@ -786,7 +786,7 @@ class EntityReferenceItem extends EntityReferenceItemBase implements OptionsProv
     $has_target_bundles = isset($handler_settings['target_bundles']) && !empty($handler_settings['target_bundles']);
     $target_bundles = $has_target_bundles
       ? $handler_settings['target_bundles']
-      : array_keys(\Drupal::service('entity_type.bundle.info')->getBundleInfo($target_type_id));
+      : \array_keys(\Drupal::service('entity_type.bundle.info')->getBundleInfo($target_type_id));
     return [$target_type_id => $target_bundles];
   }
 

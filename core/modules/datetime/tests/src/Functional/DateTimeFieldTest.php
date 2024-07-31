@@ -78,7 +78,7 @@ class DateTimeFieldTest extends DateTestBase {
         "{$field_name}[0][value][date]" => $date->format($date_format),
       ];
       $this->submitForm($edit, 'Save');
-      preg_match('|entity_test/manage/(\d+)|', $this->getUrl(), $match);
+      \preg_match('|entity_test/manage/(\d+)|', $this->getUrl(), $match);
       $id = $match[1];
       $this->assertSession()->pageTextContains('entity_test ' . $id . ' has been created.');
       $this->assertSession()->responseContains($date->format($date_format));
@@ -242,7 +242,7 @@ class DateTimeFieldTest extends DateTestBase {
     $date = new DrupalDateTime($value, 'UTC');
 
     // Update the timezone to the system default.
-    $date->setTimezone(timezone_open(date_default_timezone_get()));
+    $date->setTimezone(\timezone_open(\date_default_timezone_get()));
 
     // Submit a valid date and ensure it is accepted.
     $date_format = DateFormat::load('html_date')->getPattern();
@@ -253,7 +253,7 @@ class DateTimeFieldTest extends DateTestBase {
       "{$field_name}[0][value][time]" => $date->format($time_format),
     ];
     $this->submitForm($edit, 'Save');
-    preg_match('|entity_test/manage/(\d+)|', $this->getUrl(), $match);
+    \preg_match('|entity_test/manage/(\d+)|', $this->getUrl(), $match);
     $id = $match[1];
     $this->assertSession()->pageTextContains('entity_test ' . $id . ' has been created.');
     $this->assertSession()->responseContains($date->format($date_format));
@@ -490,7 +490,7 @@ class DateTimeFieldTest extends DateTestBase {
     }
 
     $this->submitForm($edit, 'Save');
-    preg_match('|entity_test/manage/(\d+)|', $this->getUrl(), $match);
+    \preg_match('|entity_test/manage/(\d+)|', $this->getUrl(), $match);
     $id = $match[1];
     $this->assertSession()->pageTextContains('entity_test ' . $id . ' has been created.');
 
@@ -530,7 +530,7 @@ class DateTimeFieldTest extends DateTestBase {
     }
 
     $this->submitForm($edit, 'Save');
-    preg_match('|entity_test/manage/(\d+)|', $this->getUrl(), $match);
+    \preg_match('|entity_test/manage/(\d+)|', $this->getUrl(), $match);
     $id = $match[1];
     $this->assertSession()->pageTextContains('entity_test ' . $id . ' has been created.');
 
@@ -584,7 +584,7 @@ class DateTimeFieldTest extends DateTestBase {
 
     $this->submitForm($edit, 'Save');
     $this->assertSession()->statusCodeEquals(200);
-    preg_match('|entity_test/manage/(\d+)|', $this->getUrl(), $match);
+    \preg_match('|entity_test/manage/(\d+)|', $this->getUrl(), $match);
     $id = $match[1];
     $this->assertSession()->pageTextContains('entity_test ' . $id . ' has been created.');
 
@@ -713,7 +713,7 @@ class DateTimeFieldTest extends DateTestBase {
 
       // Create a new node to check that datetime field default value is today.
       $new_node = Node::create(['type' => 'date_content']);
-      $expected_date = new DrupalDateTime('now', date_default_timezone_get());
+      $expected_date = new DrupalDateTime('now', \date_default_timezone_get());
       $this->assertEquals($expected_date->format(DateTimeItemInterface::DATE_STORAGE_FORMAT), $new_node->get($field_name)->offsetGet(0)->value);
 
       // Set an invalid relative default_value to test validation.
@@ -753,7 +753,7 @@ class DateTimeFieldTest extends DateTestBase {
       // Create a new node to check that datetime field default value is +90
       // days.
       $new_node = Node::create(['type' => 'date_content']);
-      $expected_date = new DrupalDateTime('+90 days', date_default_timezone_get());
+      $expected_date = new DrupalDateTime('+90 days', \date_default_timezone_get());
       $this->assertEquals($expected_date->format(DateTimeItemInterface::DATE_STORAGE_FORMAT), $new_node->get($field_name)->offsetGet(0)->value);
 
       // Remove default value.

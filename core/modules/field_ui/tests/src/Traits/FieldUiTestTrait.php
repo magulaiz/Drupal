@@ -84,13 +84,13 @@ trait FieldUiTestTrait {
       // Ensure that each array key in $storage_edit is prefixed with field_storage.
       $prefixed_storage_edit = [];
       foreach ($storage_edit as $key => $value) {
-        if (str_starts_with($key, 'field_storage')) {
+        if (\str_starts_with($key, 'field_storage')) {
           $prefixed_storage_edit[$key] = $value;
           continue;
         }
         // If the key starts with settings, it needs to be prefixed differently.
-        if (str_starts_with($key, 'settings[')) {
-          $prefixed_storage_edit[str_replace('settings[', 'field_storage[subform][settings][', $key)] = $value;
+        if (\str_starts_with($key, 'settings[')) {
+          $prefixed_storage_edit[\str_replace('settings[', 'field_storage[subform][settings][', $key)] = $value;
           continue;
         }
         $prefixed_storage_edit['field_storage[subform][' . $key . ']'] = $value;
@@ -227,7 +227,7 @@ trait FieldUiTestTrait {
    */
   protected function assertFieldDoesNotExist(string $bundle_path, string $label) {
     $original_url = $this->getUrl();
-    $this->drupalGet(explode('/fields', $bundle_path)[0] . '/fields');
+    $this->drupalGet(\explode('/fields', $bundle_path)[0] . '/fields');
     $this->assertFieldDoesNotExistOnOverview($label);
     $this->drupalGet($original_url);
   }
@@ -263,7 +263,7 @@ trait FieldUiTestTrait {
         ':label' => $label,
       ]);
     $element = $this->getSession()->getPage()->find('xpath', $xpath);
-    $this->assertSession()->assert($element === NULL, sprintf('A field "%s" appears on this page, but it should not.', $label));
+    $this->assertSession()->assert($element === NULL, \sprintf('A field "%s" appears on this page, but it should not.', $label));
   }
 
   /**
@@ -281,7 +281,7 @@ trait FieldUiTestTrait {
       ':label' => $label,
     ]);
     $element = $this->getSession()->getPage()->find('xpath', $xpath);
-    $this->assertSession()->assert($element !== NULL, sprintf('Table header not found by label: "%s".', $label));
+    $this->assertSession()->assert($element !== NULL, \sprintf('Table header not found by label: "%s".', $label));
   }
 
 }

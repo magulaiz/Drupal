@@ -29,7 +29,7 @@ trait TextEditorObjectDependentValidatorTrait {
       ]);
     }
     else {
-      assert(in_array($this->context->getRoot()->getDataDefinition()->getDataType(), ['editor.editor.*', 'entity:editor'], TRUE));
+      \assert(\in_array($this->context->getRoot()->getDataDefinition()->getDataType(), ['editor.editor.*', 'entity:editor'], TRUE));
       $text_format = FilterFormat::load($this->context->getRoot()->get('format')->getValue());
       // This validator must not complain about a missing text format.
       // @see \Drupal\Tests\editor\Kernel\EditorValidationTest::testInvalidFormat()
@@ -37,7 +37,7 @@ trait TextEditorObjectDependentValidatorTrait {
         $text_format = FilterFormat::create([]);
       }
     }
-    assert($text_format instanceof FilterFormatInterface);
+    \assert($text_format instanceof FilterFormatInterface);
 
     $text_editor = Editor::create([
       'editor' => 'ckeditor5',
@@ -52,7 +52,7 @@ trait TextEditorObjectDependentValidatorTrait {
       // its filter configuration. Those exist in $text_format.
       'filterFormat' => $text_format,
     ]);
-    assert($text_editor instanceof EditorInterface);
+    \assert($text_editor instanceof EditorInterface);
 
     return $text_editor;
   }

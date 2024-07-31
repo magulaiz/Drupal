@@ -56,8 +56,8 @@ class ReadOnlyStorageTest extends UnitTestCase {
   public function testReadOperations($method, $arguments, $fixture): void {
     $this->setRandomFixtureConfig($fixture);
 
-    $expected = call_user_func_array([$this->memory, $method], $arguments);
-    $actual = call_user_func_array([$this->storage, $method], $arguments);
+    $expected = \call_user_func_array([$this->memory, $method], $arguments);
+    $actual = \call_user_func_array([$this->storage, $method], $arguments);
     $this->assertEquals($expected, $actual);
   }
 
@@ -101,7 +101,7 @@ class ReadOnlyStorageTest extends UnitTestCase {
     static::replaceStorageContents($this->memory, $backup);
 
     try {
-      call_user_func_array([$this->storage, $method], $arguments);
+      \call_user_func_array([$this->storage, $method], $arguments);
       $this->fail("exception not thrown");
     }
     catch (\BadMethodCallException $exception) {
@@ -153,7 +153,7 @@ class ReadOnlyStorageTest extends UnitTestCase {
     $this->setRandomFixtureConfig($fixture);
 
     $this->assertEquals(['A', 'B', 'C'], $this->storage->getAllCollectionNames());
-    foreach (array_keys($fixture) as $collection) {
+    foreach (\array_keys($fixture) as $collection) {
       $storage = $this->storage->createCollection($collection);
       // Assert that the collection storage is still a read-only storage.
       $this->assertInstanceOf(ReadOnlyStorage::class, $storage);
@@ -185,7 +185,7 @@ class ReadOnlyStorageTest extends UnitTestCase {
    */
   protected function setRandomFixtureConfig($config) {
     // Erase previous fixture.
-    foreach (array_merge([StorageInterface::DEFAULT_COLLECTION], $this->memory->getAllCollectionNames()) as $collection) {
+    foreach (\array_merge([StorageInterface::DEFAULT_COLLECTION], $this->memory->getAllCollectionNames()) as $collection) {
       $this->memory->createCollection($collection)->deleteAll();
     }
 

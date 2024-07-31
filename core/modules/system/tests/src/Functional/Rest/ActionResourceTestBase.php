@@ -39,7 +39,7 @@ abstract class ActionResourceTestBase extends ConfigEntityResourceTestBase {
     $action = Action::create([
       'id' => 'user_add_role_action.' . RoleInterface::ANONYMOUS_ID,
       'type' => 'user',
-      'label' => t('Add the anonymous role to the selected users'),
+      'label' => \t('Add the anonymous role to the selected users'),
       'configuration' => [
         'rid' => RoleInterface::ANONYMOUS_ID,
       ],

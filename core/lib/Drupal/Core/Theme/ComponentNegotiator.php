@@ -69,7 +69,7 @@ class ComponentNegotiator {
   private function doNegotiate(string $component_id, array $all_definitions): ?string {
     // Consider only the component definitions matching the component ID in the
     // 'replaces' key.
-    $matches = array_filter(
+    $matches = \array_filter(
       $all_definitions,
       static fn(array $definition) => $component_id === ($definition['replaces'] ?? NULL),
     );
@@ -93,26 +93,26 @@ class ComponentNegotiator {
     // Prepare the error message.
     $theme_name = $this->themeManager->getActiveTheme()->getName();
     // Let's do theme based negotiation.
-    $base_theme_names = array_map(
+    $base_theme_names = \array_map(
       static fn(Extension $extension) => $extension->getName(),
       $this->themeManager->getActiveTheme()->getBaseThemeExtensions()
     );
     $considered_themes = [$theme_name, ...$base_theme_names];
     // Only consider components in the theme hierarchy tree.
-    $candidates = array_filter(
+    $candidates = \array_filter(
       $candidates,
       static fn(array $definition) => $definition['extension_type'] === ExtensionType::Theme
-        && in_array($definition['provider'], $considered_themes, TRUE)
+        && \in_array($definition['provider'], $considered_themes, TRUE)
     );
     if (empty($candidates)) {
       return NULL;
     }
-    $theme_weights = array_flip($considered_themes);
+    $theme_weights = \array_flip($considered_themes);
     $sort_by_theme_weight = static fn(array $definition_a, array $definition_b) =>
       $theme_weights[$definition_a['provider']] <=> $theme_weights[$definition_b['provider']];
     // Sort the candidates by weight and choose the one with the lowest weight.
-    uasort($candidates, $sort_by_theme_weight);
-    $definition = reset($candidates);
+    \uasort($candidates, $sort_by_theme_weight);
+    $definition = \reset($candidates);
     return $definition['id'] ?? NULL;
   }
 
@@ -130,7 +130,7 @@ class ComponentNegotiator {
     if (!$module_list) {
       return NULL;
     }
-    $candidates = array_filter(
+    $candidates = \array_filter(
       $candidates,
       static fn(array $definition) => $definition['extension_type'] === ExtensionType::Module
     );
@@ -141,8 +141,8 @@ class ComponentNegotiator {
         ? $a_weight <=> $b_weight
         : $definition_a['provider'] <=> $definition_b['provider'];
     };
-    uasort($candidates, $sort_by_module_weight_and_name);
-    $definition = reset($candidates);
+    \uasort($candidates, $sort_by_module_weight_and_name);
+    $definition = \reset($candidates);
     return $definition ? ($definition['id'] ?? NULL) : NULL;
   }
 
@@ -156,7 +156,7 @@ class ComponentNegotiator {
    *   The cache key.
    */
   private function generateCacheKey(string $component_id): string {
-    return sprintf(
+    return \sprintf(
       'component-negotiation::%s::%s',
       $component_id,
       $this->themeManager->getActiveTheme()->getName()

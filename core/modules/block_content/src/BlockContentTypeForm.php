@@ -97,7 +97,7 @@ class BlockContentTypeForm extends BundleEntityFormBase {
    */
   protected function copyFormValuesToEntity(EntityInterface $entity, array $form, FormStateInterface $form_state) {
     // An empty description violates config schema.
-    if (trim($form_state->getValue('description', '')) === '') {
+    if (\trim($form_state->getValue('description', '')) === '') {
       $form_state->unsetValue('description');
     }
     parent::copyFormValuesToEntity($entity, $form, $form_state);
@@ -117,7 +117,7 @@ class BlockContentTypeForm extends BundleEntityFormBase {
       $logger->notice('Block type %label has been updated.', ['%label' => $block_type->label(), 'link' => $edit_link]);
     }
     else {
-      block_content_add_body_field($block_type->id());
+      \block_content_add_body_field($block_type->id());
       $this->messenger()->addStatus($this->t('Block type %label has been added.', ['%label' => $block_type->label()]));
       $logger->notice('Block type %label has been added.', ['%label' => $block_type->label(), 'link' => $edit_link]);
     }

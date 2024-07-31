@@ -20,7 +20,7 @@ final class Reflection {
     $name = NULL;
     if ($parameter->hasType() && !$parameter->getType()->isBuiltin()) {
       $name = $parameter->getType()->getName();
-      $lc_name = strtolower($name);
+      $lc_name = \strtolower($name);
       switch ($lc_name) {
         case 'self':
           return $parameter->getDeclaringClass()->getName();

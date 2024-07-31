@@ -28,7 +28,7 @@ class InstallerExistingInstallationTest extends InstallerTestBase {
     $this->assertSession()->pageTextNotContains(\Drupal::VERSION);
 
     // Delete settings.php and attempt to reinstall again.
-    unlink($this->siteDirectory . '/settings.php');
+    \unlink($this->siteDirectory . '/settings.php');
     $this->visitInstaller();
     $this->setUpLanguage();
     $this->setUpProfile();

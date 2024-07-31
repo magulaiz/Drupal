@@ -103,15 +103,15 @@ class SystemManager {
   public function listRequirements() {
     // Load .install files
     include_once DRUPAL_ROOT . '/core/includes/install.inc';
-    drupal_load_updates();
+    \drupal_load_updates();
 
     // Check run-time requirements and status information.
     $requirements = $this->moduleHandler->invokeAll('requirements', ['runtime']);
     $this->moduleHandler->alter('requirements', $requirements);
-    uasort($requirements, function ($a, $b) {
+    \uasort($requirements, function ($a, $b) {
       if (!isset($a['weight'])) {
         if (!isset($b['weight'])) {
-          return strcasecmp($a['title'], $b['title']);
+          return \strcasecmp($a['title'], $b['title']);
         }
         return -$b['weight'];
       }
@@ -135,7 +135,7 @@ class SystemManager {
     $severity = static::REQUIREMENT_OK;
     foreach ($requirements as $requirement) {
       if (isset($requirement['severity'])) {
-        $severity = max($severity, $requirement['severity']);
+        $severity = \max($severity, $requirement['severity']);
       }
     }
     return $severity;
@@ -165,7 +165,7 @@ class SystemManager {
     }
     else {
       $output = [
-        '#markup' => t('You do not have any administrative items.'),
+        '#markup' => \t('You do not have any administrative items.'),
       ];
     }
     return $output;
@@ -208,7 +208,7 @@ class SystemManager {
       $content[$key]['description'] = $link->getDescription();
       $content[$key]['url'] = $link->getUrlObject();
     }
-    ksort($content);
+    \ksort($content);
     return $content;
   }
 

@@ -51,7 +51,7 @@ abstract class EntityLanguageTestBase extends EntityKernelTestBase {
 
     $this->languageManager = $this->container->get('language_manager');
 
-    foreach (entity_test_entity_types() as $entity_type_id) {
+    foreach (\entity_test_entity_types() as $entity_type_id) {
       // The entity_test schema is installed by the parent.
       if ($entity_type_id != 'entity_test') {
         $this->installEntitySchema($entity_type_id);
@@ -62,7 +62,7 @@ abstract class EntityLanguageTestBase extends EntityKernelTestBase {
 
     // Create the test field.
     $this->container->get('module_handler')->loadInclude('entity_test', 'install');
-    entity_test_install();
+    \entity_test_install();
 
     // Enable translations for the test entity type.
     $this->state->set('entity_test.translation', TRUE);
@@ -74,7 +74,7 @@ abstract class EntityLanguageTestBase extends EntityKernelTestBase {
     $this->untranslatableFieldName = $this->randomMachineName() . '_field_name';
 
     // Create field fields in all entity variations.
-    foreach (entity_test_entity_types() as $entity_type) {
+    foreach (\entity_test_entity_types() as $entity_type) {
       FieldStorageConfig::create([
         'field_name' => $this->fieldName,
         'entity_type' => $entity_type,

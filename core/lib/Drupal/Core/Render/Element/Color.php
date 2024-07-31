@@ -50,7 +50,7 @@ class Color extends FormElementBase {
    * Form element validation handler for #type 'color'.
    */
   public static function validateColor(&$element, FormStateInterface $form_state, &$complete_form) {
-    $value = trim($element['#value']);
+    $value = \trim($element['#value']);
 
     // Default to black if no value is given.
     // @see http://www.w3.org/TR/html5/number-state.html#color-state
@@ -63,7 +63,7 @@ class Color extends FormElementBase {
         $form_state->setValueForElement($element, ColorUtility::rgbToHex(ColorUtility::hexToRgb($value)));
       }
       catch (\InvalidArgumentException) {
-        $form_state->setError($element, t('%name must be a valid color.', ['%name' => empty($element['#title']) ? $element['#parents'][0] : $element['#title']]));
+        $form_state->setError($element, \t('%name must be a valid color.', ['%name' => empty($element['#title']) ? $element['#parents'][0] : $element['#title']]));
       }
     }
   }

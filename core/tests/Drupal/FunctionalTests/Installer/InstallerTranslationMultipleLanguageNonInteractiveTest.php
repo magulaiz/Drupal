@@ -33,9 +33,9 @@ class InstallerTranslationMultipleLanguageNonInteractiveTest extends BrowserTest
   protected function prepareEnvironment() {
     parent::prepareEnvironment();
     // Place custom local translations in the translations directory.
-    mkdir(DRUPAL_ROOT . '/' . $this->siteDirectory . '/files/translations', 0777, TRUE);
-    file_put_contents(DRUPAL_ROOT . '/' . $this->siteDirectory . '/files/translations/drupal-8.0.0.de.po', $this->getPo('de'));
-    file_put_contents(DRUPAL_ROOT . '/' . $this->siteDirectory . '/files/translations/drupal-8.0.0.es.po', $this->getPo('es'));
+    \mkdir(DRUPAL_ROOT . '/' . $this->siteDirectory . '/files/translations', 0777, TRUE);
+    \file_put_contents(DRUPAL_ROOT . '/' . $this->siteDirectory . '/files/translations/drupal-8.0.0.de.po', $this->getPo('de'));
+    \file_put_contents(DRUPAL_ROOT . '/' . $this->siteDirectory . '/files/translations/drupal-8.0.0.es.po', $this->getPo('es'));
   }
 
   /**
@@ -124,7 +124,7 @@ PO;
     $this->assertEquals('Anonymous es', $override_es->get('anonymous'));
 
     // Test translation from locale_test module.
-    $this->assertEquals('Montag', t('Monday', [], ['langcode' => 'de']));
+    $this->assertEquals('Montag', \t('Monday', [], ['langcode' => 'de']));
   }
 
   /**

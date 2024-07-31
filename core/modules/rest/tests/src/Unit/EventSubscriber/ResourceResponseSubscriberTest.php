@@ -82,7 +82,7 @@ class ResourceResponseSubscriberTest extends UnitTestCase {
   public function testResponseFormat($methods, array $supported_response_formats, array $supported_request_formats, $request_format, array $request_headers, $request_body, $expected_response_format, $expected_response_content_type, $expected_response_content): void {
     foreach ($request_headers as $key => $value) {
       unset($request_headers[$key]);
-      $key = strtoupper(str_replace('-', '_', $key));
+      $key = \strtoupper(\str_replace('-', '_', $key));
       $request_headers[$key] = $value;
     }
 
@@ -119,7 +119,7 @@ class ResourceResponseSubscriberTest extends UnitTestCase {
   public function testOnResponseWithCacheableResponse($methods, array $supported_response_formats, array $supported_request_formats, $request_format, array $request_headers, $request_body, $expected_response_format, $expected_response_content_type, $expected_response_content): void {
     foreach ($request_headers as $key => $value) {
       unset($request_headers[$key]);
-      $key = strtoupper(str_replace('-', '_', $key));
+      $key = \strtoupper(\str_replace('-', '_', $key));
       $request_headers[$key] = $value;
     }
 
@@ -169,7 +169,7 @@ class ResourceResponseSubscriberTest extends UnitTestCase {
   public function testOnResponseWithUncacheableResponse($methods, array $supported_response_formats, array $supported_request_formats, $request_format, array $request_headers, $request_body, $expected_response_format, $expected_response_content_type, $expected_response_content): void {
     foreach ($request_headers as $key => $value) {
       unset($request_headers[$key]);
-      $key = strtoupper(str_replace('-', '_', $key));
+      $key = \strtoupper(\str_replace('-', '_', $key));
       $request_headers[$key] = $value;
     }
 
@@ -413,10 +413,10 @@ class ResourceResponseSubscriberTest extends UnitTestCase {
    */
   protected function generateRouteRequirements(array $supported_response_formats, array $supported_request_formats): array {
     $route_requirements = [
-      '_format' => implode('|', $supported_response_formats),
+      '_format' => \implode('|', $supported_response_formats),
     ];
     if (!empty($supported_request_formats)) {
-      $route_requirements['_content_type_format'] = implode('|', $supported_request_formats);
+      $route_requirements['_content_type_format'] = \implode('|', $supported_request_formats);
     }
 
     return $route_requirements;

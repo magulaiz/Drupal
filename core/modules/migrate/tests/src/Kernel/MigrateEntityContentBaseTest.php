@@ -80,9 +80,9 @@ class MigrateEntityContentBaseTest extends KernelTestBase {
     $entity = $this->storage->load($id);
     $this->assertNotEmpty($entity, "Entity exists");
     $this->assertEquals($default, $entity->language()->getId(), "Entity default translation");
-    $translations = array_keys($entity->getTranslationLanguages(FALSE));
-    sort($others);
-    sort($translations);
+    $translations = \array_keys($entity->getTranslationLanguages(FALSE));
+    \sort($others);
+    \sort($translations);
     $this->assertEquals($others, $translations, "Entity translations");
   }
 
@@ -294,7 +294,7 @@ class MigrateEntityContentBaseTest extends KernelTestBase {
     $this->assertCount(1, $ids);
 
     // Make sure the entity was saved.
-    $entity = EntityTestMul::load(reset($ids));
+    $entity = EntityTestMul::load(\reset($ids));
     $this->assertInstanceOf(EntityTestMul::class, $entity);
     // Make sure the default value was applied to the required fields.
     $single_field_name = 'required_default_field';

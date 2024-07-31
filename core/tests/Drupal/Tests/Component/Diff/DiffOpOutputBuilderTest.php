@@ -108,7 +108,7 @@ class DiffOpOutputBuilderTest extends TestCase {
   public function testGetDiff(array $expected, array $from, array $to): void {
     $differ = new Differ(new DiffOpOutputBuilder());
     $diff = $differ->diff($from, $to);
-    $this->assertEquals($expected, unserialize($diff));
+    $this->assertEquals($expected, \unserialize($diff));
   }
 
   /**
@@ -117,8 +117,8 @@ class DiffOpOutputBuilderTest extends TestCase {
    * @covers ::toOpsArray
    */
   public function testDiffInfiniteLoop(): void {
-    $from = explode("\n", file_get_contents(__DIR__ . '/Engine/fixtures/file1.txt'));
-    $to = explode("\n", file_get_contents(__DIR__ . '/Engine/fixtures/file2.txt'));
+    $from = \explode("\n", \file_get_contents(__DIR__ . '/Engine/fixtures/file1.txt'));
+    $to = \explode("\n", \file_get_contents(__DIR__ . '/Engine/fixtures/file2.txt'));
     $diffOpBuilder = new DiffOpOutputBuilder();
     $differ = new Differ($diffOpBuilder);
     $diff = $differ->diffToArray($from, $to);

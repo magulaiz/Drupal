@@ -909,18 +909,18 @@ class ExtensionMimeTypeGuesser implements MimeTypeGuesserInterface {
     }
 
     $extension = '';
-    $file_parts = explode('.', \Drupal::service('file_system')->basename($path));
+    $file_parts = \explode('.', \Drupal::service('file_system')->basename($path));
 
     // Remove the first part: a full filename should not match an extension.
-    array_shift($file_parts);
+    \array_shift($file_parts);
 
     // Iterate over the file parts, trying to find a match.
     // For my.awesome.image.jpeg, we try:
     // - jpeg
     // - image.jpeg, and
     // - awesome.image.jpeg
-    while ($additional_part = array_pop($file_parts)) {
-      $extension = strtolower($additional_part . ($extension ? '.' . $extension : ''));
+    while ($additional_part = \array_pop($file_parts)) {
+      $extension = \strtolower($additional_part . ($extension ? '.' . $extension : ''));
       if (isset($this->mapping['extensions'][$extension])) {
         return $this->mapping['mimetypes'][$this->mapping['extensions'][$extension]];
       }

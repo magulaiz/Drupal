@@ -96,9 +96,9 @@ class AliasManager implements AliasManagerInterface {
       // languages will not be lost.
       $path_lookups = $this->preloadedPathLookups ?: [];
       foreach ($this->lookupMap as $langcode => $lookups) {
-        $path_lookups[$langcode] = array_keys($lookups);
+        $path_lookups[$langcode] = \array_keys($lookups);
         if (!empty($this->noAlias[$langcode])) {
-          $path_lookups[$langcode] = array_merge($path_lookups[$langcode], array_keys($this->noAlias[$langcode]));
+          $path_lookups[$langcode] = \array_merge($path_lookups[$langcode], \array_keys($this->noAlias[$langcode]));
         }
       }
 
@@ -123,7 +123,7 @@ class AliasManager implements AliasManagerInterface {
     }
 
     // Look for the alias within the cached map.
-    if (isset($this->lookupMap[$langcode]) && ($path = array_search($alias, $this->lookupMap[$langcode]))) {
+    if (isset($this->lookupMap[$langcode]) && ($path = \array_search($alias, $this->lookupMap[$langcode]))) {
       return $path;
     }
 
@@ -144,8 +144,8 @@ class AliasManager implements AliasManagerInterface {
    * {@inheritdoc}
    */
   public function getAliasByPath($path, $langcode = NULL) {
-    if (!str_starts_with($path, '/')) {
-      throw new \InvalidArgumentException(sprintf('Source path %s has to start with a slash.', $path));
+    if (!\str_starts_with($path, '/')) {
+      throw new \InvalidArgumentException(\sprintf('Source path %s has to start with a slash.', $path));
     }
     // If no language is explicitly specified we default to the current URL
     // language. If we used a language different from the one conveyed by the
@@ -156,7 +156,7 @@ class AliasManager implements AliasManagerInterface {
     // Check the path whitelist, if the top-level part before the first /
     // is not in the list, then there is no need to do anything further,
     // it is not in the database.
-    if ($path === '/' || !$this->whitelist->get(strtok(trim($path, '/'), '/'))) {
+    if ($path === '/' || !$this->whitelist->get(\strtok(\trim($path, '/'), '/'))) {
       return $path;
     }
 
@@ -184,7 +184,7 @@ class AliasManager implements AliasManagerInterface {
       if (!empty($this->preloadedPathLookups[$langcode])) {
         $this->lookupMap[$langcode] = $this->pathAliasRepository->preloadPathAlias($this->preloadedPathLookups[$langcode], $langcode);
         // Keep a record of paths with no alias to avoid querying twice.
-        $this->noAlias[$langcode] = array_flip(array_diff($this->preloadedPathLookups[$langcode], array_keys($this->lookupMap[$langcode])));
+        $this->noAlias[$langcode] = \array_flip(\array_diff($this->preloadedPathLookups[$langcode], \array_keys($this->lookupMap[$langcode])));
       }
     }
 
@@ -219,7 +219,7 @@ class AliasManager implements AliasManagerInterface {
     // alias being loaded correctly, only less efficiently.
 
     if ($source) {
-      foreach (array_keys($this->lookupMap) as $lang) {
+      foreach (\array_keys($this->lookupMap) as $lang) {
         unset($this->lookupMap[$lang][$source]);
       }
     }
@@ -243,7 +243,7 @@ class AliasManager implements AliasManagerInterface {
     // When paths are inserted, only rebuild the whitelist if the path has a top
     // level component which is not already in the whitelist.
     if (!empty($path)) {
-      if ($this->whitelist->get(strtok($path, '/'))) {
+      if ($this->whitelist->get(\strtok($path, '/'))) {
         return;
       }
     }

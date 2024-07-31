@@ -23,14 +23,14 @@ class TranslationsStream extends LocalStream {
    * {@inheritdoc}
    */
   public function getName() {
-    return t('Translation files');
+    return \t('Translation files');
   }
 
   /**
    * {@inheritdoc}
    */
   public function getDescription() {
-    return t('Translation files');
+    return \t('Translation files');
   }
 
   /**

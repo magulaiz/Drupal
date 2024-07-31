@@ -23,21 +23,21 @@ class DummyExternalReadOnlyWrapper extends ReadOnlyStream {
    * {@inheritdoc}
    */
   public function getName() {
-    return t('Dummy external stream wrapper (readonly)');
+    return \t('Dummy external stream wrapper (readonly)');
   }
 
   /**
    * {@inheritdoc}
    */
   public function getDescription() {
-    return t('Dummy external read-only stream wrapper for testing.');
+    return \t('Dummy external read-only stream wrapper for testing.');
   }
 
   /**
    * {@inheritdoc}
    */
   public function getExternalUrl() {
-    [, $target] = explode('://', $this->uri, 2);
+    [, $target] = \explode('://', $this->uri, 2);
     return 'https://www.dummy-external-readonly.com/' . $target;
   }
 

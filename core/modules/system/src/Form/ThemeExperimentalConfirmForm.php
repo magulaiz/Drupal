@@ -101,8 +101,8 @@ class ThemeExperimentalConfirmForm extends ConfirmFormBase {
     }
     $this->messenger()->addWarning($this->t('Experimental themes are provided for testing purposes only. Use at your own risk.'));
 
-    $dependencies = array_keys($all_themes[$theme]->requires);
-    $themes = array_merge([$theme], $dependencies);
+    $dependencies = \array_keys($all_themes[$theme]->requires);
+    $themes = \array_merge([$theme], $dependencies);
     $is_experimental = function ($theme) use ($all_themes) {
       return isset($all_themes[$theme]) && $all_themes[$theme]->isExperimental();
     };
@@ -113,15 +113,15 @@ class ThemeExperimentalConfirmForm extends ConfirmFormBase {
     $items = [];
     if (!empty($dependencies)) {
       // Display a list of required themes that have to be installed as well.
-      $items[] = $this->formatPlural(count($dependencies), 'You must install the @required theme to install @theme.', 'You must install the @required themes to install @theme.', [
+      $items[] = $this->formatPlural(\count($dependencies), 'You must install the @required theme to install @theme.', 'You must install the @required themes to install @theme.', [
         '@theme' => $get_label($theme),
         // It is safe to implode this because theme names are not translated
         // markup and so will not be double-escaped.
-        '@required' => implode(', ', array_map($get_label, $dependencies)),
+        '@required' => \implode(', ', \array_map($get_label, $dependencies)),
       ]);
     }
     // Add the list of experimental themes after any other messages.
-    $items[] = $this->t('The following themes are experimental: @themes', ['@themes' => implode(', ', array_map($get_label, array_filter($themes, $is_experimental)))]);
+    $items[] = $this->t('The following themes are experimental: @themes', ['@themes' => \implode(', ', \array_map($get_label, \array_filter($themes, $is_experimental)))]);
     $form['message'] = [
       '#theme' => 'item_list',
       '#items' => $items,
@@ -171,11 +171,11 @@ class ThemeExperimentalConfirmForm extends ConfirmFormBase {
       $config_objects = $e->flattenConfigObjects($e->getConfigObjects());
       $this->messenger()->addError(
         $this->formatPlural(
-          count($config_objects),
+          \count($config_objects),
           'Unable to install @extension, %config_names already exists in active configuration.',
           'Unable to install @extension, %config_names already exist in active configuration.',
           [
-            '%config_names' => implode(', ', $config_objects),
+            '%config_names' => \implode(', ', $config_objects),
             '@extension' => $theme,
           ])
       );

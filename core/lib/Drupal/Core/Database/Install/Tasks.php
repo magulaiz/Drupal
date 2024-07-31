@@ -93,7 +93,7 @@ abstract class Tasks {
    *   TRUE if the PDO driver is supported, otherwise FALSE.
    */
   protected function hasPdoDriver() {
-    return in_array($this->pdoDriver, \PDO::getAvailableDrivers());
+    return \in_array($this->pdoDriver, \PDO::getAvailableDrivers());
   }
 
   /**
@@ -152,14 +152,14 @@ abstract class Tasks {
         if (!isset($task['function'])) {
           $task['function'] = 'runTestQuery';
         }
-        if (method_exists($this, $task['function'])) {
+        if (\method_exists($this, $task['function'])) {
           // Returning false is fatal. No other tasks can run.
-          if (FALSE === call_user_func_array([$this, $task['function']], $task['arguments'])) {
+          if (FALSE === \call_user_func_array([$this, $task['function']], $task['arguments'])) {
             break;
           }
         }
         else {
-          $this->fail(t("Failed to run all tasks against the database server. The task %task wasn't found.", ['%task' => $task['function']]));
+          $this->fail(\t("Failed to run all tasks against the database server. The task %task wasn't found.", ['%task' => $task['function']]));
         }
       }
     }
@@ -194,7 +194,7 @@ abstract class Tasks {
       $this->pass('Drupal can CONNECT to the database ok.');
     }
     catch (\Exception $e) {
-      $this->fail(t('Failed to connect to your database server. The server reports the following message: %error.<ul><li>Is the database server running?</li><li>Does the database exist, and have you entered the correct database name?</li><li>Have you entered the correct username and password?</li><li>Have you entered the correct database hostname and port number?</li></ul>', ['%error' => $e->getMessage()]));
+      $this->fail(\t('Failed to connect to your database server. The server reports the following message: %error.<ul><li>Is the database server running?</li><li>Does the database exist, and have you entered the correct database name?</li><li>Have you entered the correct username and password?</li><li>Have you entered the correct database hostname and port number?</li></ul>', ['%error' => $e->getMessage()]));
       return FALSE;
     }
     return TRUE;
@@ -206,10 +206,10 @@ abstract class Tasks {
   protected function runTestQuery($query, $pass, $fail, $fatal = FALSE) {
     try {
       Database::getConnection()->query($query);
-      $this->pass(t($pass));
+      $this->pass(\t($pass));
     }
     catch (\Exception $e) {
-      $this->fail(t($fail, ['%query' => $query, '%error' => $e->getMessage(), '%name' => $this->name()]));
+      $this->fail(\t($fail, ['%query' => $query, '%error' => $e->getMessage(), '%name' => $this->name()]));
       return !$fatal;
     }
   }
@@ -234,8 +234,8 @@ abstract class Tasks {
     // of database servers should know what they're doing, whether Drupal warns
     // them or not.
     // @see https://www.php.net/manual/en/function.version-compare.php
-    if ($this->minimumVersion() && version_compare(Database::getConnection()->version(), $this->minimumVersion() . '-AnyName', '<')) {
-      $this->fail(t("The database server version %version is less than the minimum required version %minimum_version.", ['%version' => Database::getConnection()->version(), '%minimum_version' => $this->minimumVersion()]));
+    if ($this->minimumVersion() && \version_compare(Database::getConnection()->version(), $this->minimumVersion() . '-AnyName', '<')) {
+      $this->fail(\t("The database server version %version is less than the minimum required version %minimum_version.", ['%version' => Database::getConnection()->version(), '%minimum_version' => $this->minimumVersion()]));
     }
   }
 
@@ -253,12 +253,12 @@ abstract class Tasks {
     // @todo https:///www.drupal.org/node/3123240 Provide a better way to get
     //   the driver name.
     $reflection = new \ReflectionClass($this);
-    $dir_parts = explode(DIRECTORY_SEPARATOR, dirname($reflection->getFileName(), 2));
-    $driver = array_pop($dir_parts);
+    $dir_parts = \explode(DIRECTORY_SEPARATOR, \dirname($reflection->getFileName(), 2));
+    $driver = \array_pop($dir_parts);
 
     $form['database'] = [
       '#type' => 'textfield',
-      '#title' => t('Database name'),
+      '#title' => \t('Database name'),
       '#default_value' => empty($database['database']) ? '' : $database['database'],
       '#size' => 45,
       '#required' => TRUE,
@@ -271,7 +271,7 @@ abstract class Tasks {
 
     $form['username'] = [
       '#type' => 'textfield',
-      '#title' => t('Database username'),
+      '#title' => \t('Database username'),
       '#default_value' => empty($database['username']) ? '' : $database['username'],
       '#size' => 45,
       '#required' => TRUE,
@@ -284,7 +284,7 @@ abstract class Tasks {
 
     $form['password'] = [
       '#type' => 'password',
-      '#title' => t('Database password'),
+      '#title' => \t('Database password'),
       '#default_value' => empty($database['password']) ? '' : $database['password'],
       '#required' => FALSE,
       '#size' => 45,
@@ -292,7 +292,7 @@ abstract class Tasks {
 
     $form['advanced_options'] = [
       '#type' => 'details',
-      '#title' => t('Advanced options'),
+      '#title' => \t('Advanced options'),
       '#weight' => 10,
     ];
 
@@ -301,16 +301,16 @@ abstract class Tasks {
     $db_prefix = ($profile == 'standard') ? 'drupal_' : $profile . '_';
     $form['advanced_options']['prefix'] = [
       '#type' => 'textfield',
-      '#title' => t('Table name prefix'),
+      '#title' => \t('Table name prefix'),
       '#default_value' => empty($database['prefix']) ? '' : $database['prefix'],
       '#size' => 45,
-      '#description' => t('If more than one application will be sharing this database, a unique table name prefix – such as %prefix – will prevent collisions.', ['%prefix' => $db_prefix]),
+      '#description' => \t('If more than one application will be sharing this database, a unique table name prefix – such as %prefix – will prevent collisions.', ['%prefix' => $db_prefix]),
       '#weight' => 10,
     ];
 
     $form['advanced_options']['host'] = [
       '#type' => 'textfield',
-      '#title' => t('Host'),
+      '#title' => \t('Host'),
       '#default_value' => empty($database['host']) ? 'localhost' : $database['host'],
       '#size' => 45,
       // Host names can be 255 characters long.
@@ -320,7 +320,7 @@ abstract class Tasks {
 
     $form['advanced_options']['port'] = [
       '#type' => 'number',
-      '#title' => t('Port number'),
+      '#title' => \t('Port number'),
       '#default_value' => empty($database['port']) ? '' : $database['port'],
       '#min' => 0,
       '#max' => 65535,
@@ -345,8 +345,8 @@ abstract class Tasks {
     $errors = [];
 
     // Verify the table prefix.
-    if (!empty($database['prefix']) && is_string($database['prefix']) && !preg_match('/^[A-Za-z0-9_.]+$/', $database['prefix'])) {
-      $errors[$database['driver'] . '][prefix'] = t('The database table prefix you have entered, %prefix, is invalid. The table prefix can only contain alphanumeric characters, periods, or underscores.', ['%prefix' => $database['prefix']]);
+    if (!empty($database['prefix']) && \is_string($database['prefix']) && !\preg_match('/^[A-Za-z0-9_.]+$/', $database['prefix'])) {
+      $errors[$database['driver'] . '][prefix'] = \t('The database table prefix you have entered, %prefix, is invalid. The table prefix can only contain alphanumeric characters, periods, or underscores.', ['%prefix' => $database['prefix']]);
     }
 
     return $errors;
@@ -397,10 +397,10 @@ abstract class Tasks {
    */
   protected function checkJsonSupport() {
     if ($this->getConnection()->hasJson()) {
-      $this->pass(t('Database connection supports the JSON type.'));
+      $this->pass(\t('Database connection supports the JSON type.'));
     }
     else {
-      $this->fail(t('<a href="https://www.drupal.org/docs/system-requirements">Database connection does not support JSON.</a>'));
+      $this->fail(\t('<a href="https://www.drupal.org/docs/system-requirements">Database connection does not support JSON.</a>'));
     }
   }
 

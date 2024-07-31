@@ -80,9 +80,9 @@ class EmbeddedDataSource extends SourcePluginBase {
    */
   public function fields() {
     if ($this->count() > 0) {
-      $first_row = reset($this->dataRows);
-      $field_names = array_keys($first_row);
-      return array_combine($field_names, $field_names);
+      $first_row = \reset($this->dataRows);
+      $field_names = \array_keys($first_row);
+      return \array_combine($field_names, $field_names);
     }
     else {
       return [];
@@ -116,7 +116,7 @@ class EmbeddedDataSource extends SourcePluginBase {
   public function count($refresh = FALSE): int {
     // We do not want this source plugin to have a cacheable count.
     // @see \Drupal\migrate_cache_counts_test\Plugin\migrate\source\CacheableEmbeddedDataSource
-    return count($this->dataRows);
+    return \count($this->dataRows);
   }
 
 }

@@ -24,7 +24,7 @@ class NodeAccessGrantsCacheContext extends UserCacheContextBase implements Calcu
    * {@inheritdoc}
    */
   public static function getLabel() {
-    return t("Content access view grants");
+    return \t("Content access view grants");
   }
 
   /**
@@ -44,7 +44,7 @@ class NodeAccessGrantsCacheContext extends UserCacheContextBase implements Calcu
       foreach (['view', 'update', 'delete'] as $op) {
         $result[] = $this->checkNodeGrants($op);
       }
-      return implode('-', $result);
+      return \implode('-', $result);
     }
     else {
       return $this->checkNodeGrants($operation);
@@ -66,16 +66,16 @@ class NodeAccessGrantsCacheContext extends UserCacheContextBase implements Calcu
     // this is automatically the case if no node access modules exist (no
     // hook_node_grants() implementations) then we don't need to determine the
     // exact node view grants for the current user.
-    if ($operation === 'view' && node_access_view_all_nodes($this->user)) {
+    if ($operation === 'view' && \node_access_view_all_nodes($this->user)) {
       return 'view.all';
     }
 
-    $grants = node_access_grants($operation, $this->user);
+    $grants = \node_access_grants($operation, $this->user);
     $grants_context_parts = [];
     foreach ($grants as $realm => $gids) {
-      $grants_context_parts[] = $realm . ':' . implode(',', $gids);
+      $grants_context_parts[] = $realm . ':' . \implode(',', $gids);
     }
-    return $operation . '.' . implode(';', $grants_context_parts);
+    return $operation . '.' . \implode(';', $grants_context_parts);
   }
 
   /**

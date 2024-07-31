@@ -91,7 +91,7 @@ class ModerationStateFieldItemList extends FieldItemList {
     }
 
     /** @var \Drupal\content_moderation\Entity\ContentModerationStateInterface $content_moderation_state */
-    $content_moderation_state = $content_moderation_storage->loadRevision(key($revisions));
+    $content_moderation_state = $content_moderation_storage->loadRevision(\key($revisions));
     if ($entity->getEntityType()->hasKey('langcode')) {
       $langcode = $entity->language()->getId();
       if (!$content_moderation_state->hasTranslation($langcode)) {

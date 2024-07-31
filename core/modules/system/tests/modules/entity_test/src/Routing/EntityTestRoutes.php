@@ -16,7 +16,7 @@ class EntityTestRoutes {
    *   An array of route objects.
    */
   public function routes() {
-    $types = entity_test_entity_types(ENTITY_TEST_TYPES_ROUTING);
+    $types = \entity_test_entity_types(ENTITY_TEST_TYPES_ROUTING);
 
     $routes = [];
     foreach ($types as $entity_type_id) {

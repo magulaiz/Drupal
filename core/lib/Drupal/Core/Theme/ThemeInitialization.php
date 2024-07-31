@@ -112,7 +112,7 @@ class ThemeInitialization implements ThemeInitializationInterface {
     while ($ancestor && isset($themes[$ancestor]->base_theme)) {
       $ancestor = $themes[$ancestor]->base_theme;
       if (!$this->themeHandler->themeExists($ancestor)) {
-        throw new MissingThemeDependencyException(sprintf('Base theme %s has not been installed.', $ancestor), $ancestor);
+        throw new MissingThemeDependencyException(\sprintf('Base theme %s has not been installed.', $ancestor), $ancestor);
       }
       $base_themes[] = $themes[$ancestor];
     }
@@ -131,14 +131,14 @@ class ThemeInitialization implements ThemeInitializationInterface {
     if ($active_theme->getEngine()) {
       // Include the engine.
       include_once $this->root . '/' . $active_theme->getOwner();
-      foreach (array_reverse($active_theme->getBaseThemeExtensions()) as $base) {
+      foreach (\array_reverse($active_theme->getBaseThemeExtensions()) as $base) {
         $base->load();
       }
       $active_theme->getExtension()->load();
     }
     else {
       // Include non-engine theme files
-      foreach (array_reverse($active_theme->getBaseThemeExtensions()) as $base) {
+      foreach (\array_reverse($active_theme->getBaseThemeExtensions()) as $base) {
         // Include the theme file or the engine.
         if ($base->owner) {
           include_once $this->root . '/' . $base->owner;
@@ -178,7 +178,7 @@ class ThemeInitialization implements ThemeInitializationInterface {
     $values['libraries_override'] = [];
 
     // Get libraries overrides declared by base themes.
-    foreach (array_reverse($base_themes) as $base) {
+    foreach (\array_reverse($base_themes) as $base) {
       if (!empty($base->info['libraries-override'])) {
         foreach ($base->info['libraries-override'] as $library => $override) {
           $values['libraries_override'][$base->getPath()][$library] = $override;
@@ -200,7 +200,7 @@ class ThemeInitialization implements ThemeInitializationInterface {
           if (isset($values['libraries_extend'][$library])) {
             // Merge if libraries-extend has already been defined for this
             // library.
-            $values['libraries_extend'][$library] = array_merge($values['libraries_extend'][$library], $extend);
+            $values['libraries_extend'][$library] = \array_merge($values['libraries_extend'][$library], $extend);
           }
           else {
             $values['libraries_extend'][$library] = $extend;
@@ -214,7 +214,7 @@ class ThemeInitialization implements ThemeInitializationInterface {
         if (isset($values['libraries_extend'][$library])) {
           // Merge if libraries-extend has already been defined for this
           // library.
-          $values['libraries_extend'][$library] = array_merge($values['libraries_extend'][$library], $extend);
+          $values['libraries_extend'][$library] = \array_merge($values['libraries_extend'][$library], $extend);
         }
         else {
           $values['libraries_extend'][$library] = $extend;
@@ -265,7 +265,7 @@ class ThemeInitialization implements ThemeInitializationInterface {
    */
   protected function getExtensions() {
     if (!isset($this->extensions)) {
-      $this->extensions = array_merge($this->moduleHandler->getModuleList(), $this->themeHandler->listInfo());
+      $this->extensions = \array_merge($this->moduleHandler->getModuleList(), $this->themeHandler->listInfo());
     }
     return $this->extensions;
   }

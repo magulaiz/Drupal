@@ -541,7 +541,7 @@ class FieldPluginBaseTest extends UnitTestCase {
 
     $build = [
       '#type' => 'inline_template',
-      '#template' => 'test-path/' . explode('/', $path)[1],
+      '#template' => 'test-path/' . \explode('/', $path)[1],
       '#context' => ['foo' => 123],
       '#post_render' => [function () {}],
     ];
@@ -867,7 +867,7 @@ class FieldPluginBaseTestField extends FieldPluginBase {
 // @todo Remove as part of https://www.example.com/node/2529170.
 namespace Drupal\views\Plugin\views\field;
 
-if (!function_exists('base_path')) {
+if (!\function_exists('base_path')) {
 
   function base_path() {
     return '/';

@@ -172,10 +172,10 @@ class ViewsQueryAlter implements ContainerInjectionInterface {
     /** @var \Drupal\Core\Entity\Sql\DefaultTableMapping $table_mapping */
     $table_mapping = $this->entityTypeManager->getStorage($entity_type->id())->getTableMapping();
     $field_storage_definitions = $this->entityFieldManager->getFieldStorageDefinitions($entity_type->id());
-    $dedicated_field_storage_definitions = array_filter($field_storage_definitions, function ($definition) use ($table_mapping) {
+    $dedicated_field_storage_definitions = \array_filter($field_storage_definitions, function ($definition) use ($table_mapping) {
       return $table_mapping->requiresDedicatedTableStorage($definition);
     });
-    $dedicated_field_data_tables = array_map(function ($definition) use ($table_mapping) {
+    $dedicated_field_data_tables = \array_map(function ($definition) use ($table_mapping) {
       return $table_mapping->getDedicatedDataTableName($definition);
     }, $dedicated_field_storage_definitions);
 
@@ -189,7 +189,7 @@ class ViewsQueryAlter implements ContainerInjectionInterface {
       }
 
       // Any dedicated field table is a candidate.
-      if ($field_name = array_search($table_info['table'], $dedicated_field_data_tables, TRUE)) {
+      if ($field_name = \array_search($table_info['table'], $dedicated_field_data_tables, TRUE)) {
         $relationship = $table_info['relationship'];
 
         // There can be reverse relationships used. If so, Workspaces can't do
@@ -234,8 +234,8 @@ class ViewsQueryAlter implements ContainerInjectionInterface {
 
     $base_entity_table = $entity_type->isTranslatable() ? $entity_type->getDataTable() : $entity_type->getBaseTable();
 
-    $base_fields = array_diff($table_mapping->getFieldNames($entity_type->getBaseTable()), [$entity_type->getKey('langcode')]);
-    $revisionable_fields = array_diff($table_mapping->getFieldNames($entity_type->getRevisionDataTable()), $base_fields);
+    $base_fields = \array_diff($table_mapping->getFieldNames($entity_type->getBaseTable()), [$entity_type->getKey('langcode')]);
+    $revisionable_fields = \array_diff($table_mapping->getFieldNames($entity_type->getRevisionDataTable()), $base_fields);
 
     // Go through and look to see if we have to modify fields and filters.
     foreach ($query->fields as &$field_info) {
@@ -247,7 +247,7 @@ class ViewsQueryAlter implements ContainerInjectionInterface {
 
       // Dereference the alias into the actual table.
       $table = $table_queue[$field_info['table']]['table'];
-      if ($table == $base_entity_table && in_array($field_info['field'], $revisionable_fields)) {
+      if ($table == $base_entity_table && \in_array($field_info['field'], $revisionable_fields)) {
         $relationship = $table_queue[$field_info['table']]['alias'];
         $alias = $this->ensureRevisionTable($entity_type, $query, $relationship);
         if ($alias) {
@@ -272,7 +272,7 @@ class ViewsQueryAlter implements ContainerInjectionInterface {
         // to switch.
         foreach ($relationships as $relationship) {
           foreach ($revisionable_fields as $field) {
-            if (is_string($where_info['field']) && $where_info['field'] == "$relationship.$field") {
+            if (\is_string($where_info['field']) && $where_info['field'] == "$relationship.$field") {
               $alias = $this->ensureRevisionTable($entity_type, $query, $relationship);
               if ($alias) {
                 // Change the base table to use the revision table instead.
@@ -440,9 +440,9 @@ class ViewsQueryAlter implements ContainerInjectionInterface {
    */
   protected function moveEntityTable(Sql $query, $workspace_association_table, $alias) {
     $table_queue =& $query->getTableQueue();
-    $keys = array_keys($table_queue);
-    $current_index = array_search($workspace_association_table, $keys);
-    $index = array_search($alias, $keys);
+    $keys = \array_keys($table_queue);
+    $current_index = \array_search($workspace_association_table, $keys);
+    $index = \array_search($alias, $keys);
 
     // If it's already before our table, we don't need to move it, as we could
     // accidentally move it forward.
@@ -454,9 +454,9 @@ class ViewsQueryAlter implements ContainerInjectionInterface {
 
     // Now move the item to the proper location in the array. Don't use
     // array_splice() because that breaks indices.
-    $table_queue = array_slice($table_queue, 0, $index, TRUE) +
+    $table_queue = \array_slice($table_queue, 0, $index, TRUE) +
       $splice +
-      array_slice($table_queue, $index, NULL, TRUE);
+      \array_slice($table_queue, $index, NULL, TRUE);
   }
 
 }

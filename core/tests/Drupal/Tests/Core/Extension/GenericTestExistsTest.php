@@ -27,7 +27,7 @@ class GenericTestExistsTest extends UnitTestCase {
    * @dataProvider coreModuleListDataProvider
    */
   public function testGenericTestExists(string $module_name): void {
-    if (in_array($module_name, $this->modulesNoTest, TRUE)) {
+    if (\in_array($module_name, $this->modulesNoTest, TRUE)) {
       $this->markTestSkipped();
     }
     $this->assertFileExists("{$this->root}/core/modules/{$module_name}/tests/src/Functional/GenericTest.php");

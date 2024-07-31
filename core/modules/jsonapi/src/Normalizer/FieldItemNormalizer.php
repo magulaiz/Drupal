@@ -55,7 +55,7 @@ class FieldItemNormalizer extends NormalizerBase implements DenormalizerInterfac
    * catch it, and pass it to the value object that JSON:API uses.
    */
   public function normalize($field_item, $format = NULL, array $context = []): array|string|int|float|bool|\ArrayObject|NULL {
-    assert($field_item instanceof FieldItemInterface);
+    \assert($field_item instanceof FieldItemInterface);
     /** @var \Drupal\Core\TypedData\TypedDataInterface $property */
     $values = [];
     $context[CacheableNormalizerInterface::SERIALIZATION_CONTEXT_CACHEABILITY] = new CacheableMetadata();
@@ -67,8 +67,8 @@ class FieldItemNormalizer extends NormalizerBase implements DenormalizerInterfac
         $values[$property_name] = $this->serializer->normalize($property, $format, $context);
       }
       // Flatten if there is only a single property to normalize.
-      $flatten = count($field_properties) === 1 && $field_item::mainPropertyName() !== NULL;
-      $values = static::rasterizeValueRecursive($flatten ? reset($values) : $values);
+      $flatten = \count($field_properties) === 1 && $field_item::mainPropertyName() !== NULL;
+      $values = static::rasterizeValueRecursive($flatten ? \reset($values) : $values);
     }
     else {
       $values = $field_item->getValue();
@@ -86,7 +86,7 @@ class FieldItemNormalizer extends NormalizerBase implements DenormalizerInterfac
    */
   public function denormalize($data, $class, $format = NULL, array $context = []): mixed {
     $item_definition = $context['field_definition']->getItemDefinition();
-    assert($item_definition instanceof FieldItemDataDefinitionInterface);
+    \assert($item_definition instanceof FieldItemDataDefinitionInterface);
 
     $field_item = $this->getFieldItemInstance($context['resource_type'], $item_definition);
     $this->checkForSerializedStrings($data, $class, $field_item);
@@ -99,8 +99,8 @@ class FieldItemNormalizer extends NormalizerBase implements DenormalizerInterfac
         return $this->serializer->denormalize($property_value, $property_value_class, $format, $context);
       }
       else {
-        if (in_array($property_name, $serialized_property_names, TRUE)) {
-          $property_value = serialize($property_value);
+        if (\in_array($property_name, $serialized_property_names, TRUE)) {
+          $property_value = \serialize($property_value);
         }
         return $property_value;
       }
@@ -108,7 +108,7 @@ class FieldItemNormalizer extends NormalizerBase implements DenormalizerInterfac
     // Because e.g. the 'bundle' entity key field requires field values to not
     // be expanded to an array of all properties, we special-case single-value
     // properties.
-    if (!is_array($data)) {
+    if (!\is_array($data)) {
       // The NULL normalization means there is no value, hence we can return
       // early. Note that this is not just an optimization but a necessity for
       // field types without main properties (such as the "map" field type).
@@ -123,42 +123,42 @@ class FieldItemNormalizer extends NormalizerBase implements DenormalizerInterfac
 
     $data_internal = [];
     if (!empty($property_definitions)) {
-      $writable_properties = array_keys(array_filter($property_definitions, function (DataDefinitionInterface $data_definition) : bool {
+      $writable_properties = \array_keys(\array_filter($property_definitions, function (DataDefinitionInterface $data_definition) : bool {
         return !$data_definition->isReadOnly();
       }));
       $invalid_property_names = [];
       foreach ($data as $property_name => $property_value) {
         if (!isset($property_definitions[$property_name])) {
           $alt = static::getAlternatives($property_name, $writable_properties);
-          $invalid_property_names[$property_name] = reset($alt);
+          $invalid_property_names[$property_name] = \reset($alt);
         }
       }
       if (!empty($invalid_property_names)) {
-        $suggestions = array_values(array_filter($invalid_property_names));
+        $suggestions = \array_values(\array_filter($invalid_property_names));
         // Only use the "Did you mean"-style error message if there is a
         // suggestion for every invalid property name.
-        if (count($suggestions) === count($invalid_property_names)) {
-          $format = count($invalid_property_names) === 1
+        if (\count($suggestions) === \count($invalid_property_names)) {
+          $format = \count($invalid_property_names) === 1
             ? "The property '%s' does not exist on the '%s' field of type '%s'. Did you mean '%s'?"
             : "The properties '%s' do not exist on the '%s' field of type '%s'. Did you mean '%s'?";
-          throw new UnexpectedValueException(sprintf(
+          throw new UnexpectedValueException(\sprintf(
             $format,
-            implode("', '", array_keys($invalid_property_names)),
+            \implode("', '", \array_keys($invalid_property_names)),
             $item_definition->getFieldDefinition()->getName(),
             $item_definition->getFieldDefinition()->getType(),
-            implode("', '", $suggestions)
+            \implode("', '", $suggestions)
           ));
         }
         else {
-          $format = count($invalid_property_names) === 1
+          $format = \count($invalid_property_names) === 1
             ? "The property '%s' does not exist on the '%s' field of type '%s'. Writable properties are: '%s'."
             : "The properties '%s' do not exist on the '%s' field of type '%s'. Writable properties are: '%s'.";
-          throw new UnexpectedValueException(sprintf(
+          throw new UnexpectedValueException(\sprintf(
             $format,
-            implode("', '", array_keys($invalid_property_names)),
+            \implode("', '", \array_keys($invalid_property_names)),
             $item_definition->getFieldDefinition()->getName(),
             $item_definition->getFieldDefinition()->getType(),
-            implode("', '", $writable_properties)
+            \implode("', '", $writable_properties)
           ));
         }
       }
@@ -191,14 +191,14 @@ class FieldItemNormalizer extends NormalizerBase implements DenormalizerInterfac
   private static function getAlternatives(string $search_key, array $keys) : array {
     // $search_key is user input and could be longer than the 255 string length
     // limit of levenshtein().
-    if (strlen($search_key) > 255) {
+    if (\strlen($search_key) > 255) {
       return [];
     }
 
     $alternatives = [];
     foreach ($keys as $key) {
-      $lev = levenshtein($search_key, $key);
-      if ($lev <= strlen($search_key) / 3 || str_contains($key, $search_key)) {
+      $lev = \levenshtein($search_key, $key);
+      if ($lev <= \strlen($search_key) / 3 || \str_contains($key, $search_key)) {
         $alternatives[] = $key;
       }
     }
@@ -227,9 +227,9 @@ class FieldItemNormalizer extends NormalizerBase implements DenormalizerInterfac
     }
     $entity = $this->entityTypeManager->getStorage($resource_type->getEntityTypeId())->create($create_values);
     $field = $entity->get($item_definition->getFieldDefinition()->getName());
-    assert($field instanceof FieldItemListInterface);
+    \assert($field instanceof FieldItemListInterface);
     $field_item = $field->appendItem();
-    assert($field_item instanceof FieldItemInterface);
+    \assert($field_item instanceof FieldItemInterface);
     return $field_item;
   }
 

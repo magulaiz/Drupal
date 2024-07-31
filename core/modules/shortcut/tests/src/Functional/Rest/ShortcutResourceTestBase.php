@@ -56,7 +56,7 @@ abstract class ShortcutResourceTestBase extends EntityResourceTestBase {
     // Create shortcut.
     $shortcut = Shortcut::create([
       'shortcut_set' => 'default',
-      'title' => t('Comments'),
+      'title' => \t('Comments'),
       'weight' => -20,
       'link' => [
         'uri' => 'internal:/admin/content/comment',

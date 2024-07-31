@@ -47,7 +47,7 @@ class UserLogoutConfirm extends ConfirmFormBase implements WorkspaceSafeFormInte
    * {@inheritdoc}
    */
   public function submitForm(array &$form, FormStateInterface $form_state): void {
-    user_logout();
+    \user_logout();
     $form_state->setRedirect('<front>');
   }
 

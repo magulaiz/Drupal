@@ -63,7 +63,7 @@ class CommentNonNodeTest extends BrowserTestBase {
     $this->drupalPlaceBlock('page_title_block');
 
     // Create a bundle for entity_test.
-    entity_test_create_bundle('entity_test', 'Entity Test', 'entity_test');
+    \entity_test_create_bundle('entity_test', 'Entity Test', 'entity_test');
     CommentType::create([
       'id' => 'comment',
       'label' => 'Comment settings',
@@ -88,12 +88,12 @@ class CommentNonNodeTest extends BrowserTestBase {
     ]);
 
     // Enable anonymous and authenticated user comments.
-    user_role_grant_permissions(RoleInterface::ANONYMOUS_ID, [
+    \user_role_grant_permissions(RoleInterface::ANONYMOUS_ID, [
       'access comments',
       'post comments',
       'skip comment approval',
     ]);
-    user_role_grant_permissions(RoleInterface::AUTHENTICATED_ID, [
+    \user_role_grant_permissions(RoleInterface::AUTHENTICATED_ID, [
       'access comments',
       'post comments',
       'skip comment approval',
@@ -144,7 +144,7 @@ class CommentNonNodeTest extends BrowserTestBase {
       $this->assertSession()->fieldValueNotEquals('subject[0][value]', '');
     }
 
-    if ($contact !== NULL && is_array($contact)) {
+    if ($contact !== NULL && \is_array($contact)) {
       $edit += $contact;
     }
     switch ($preview_mode) {
@@ -168,7 +168,7 @@ class CommentNonNodeTest extends BrowserTestBase {
     }
     $match = [];
     // Get comment ID
-    preg_match('/#comment-([0-9]+)/', $this->getURL(), $match);
+    \preg_match('/#comment-([0-9]+)/', $this->getURL(), $match);
 
     // Get comment.
     if ($contact !== TRUE) {
@@ -203,7 +203,7 @@ class CommentNonNodeTest extends BrowserTestBase {
       $regex .= $comment->comment_body->value . '(.*?)';
       $regex .= '/s';
 
-      return (boolean) preg_match($regex, $this->getSession()->getPage()->getContent());
+      return (boolean) \preg_match($regex, $this->getSession()->getPage()->getContent());
     }
     else {
       return FALSE;
@@ -217,7 +217,7 @@ class CommentNonNodeTest extends BrowserTestBase {
    *   Contact info is available.
    */
   public function commentContactInfoAvailable() {
-    return (bool) preg_match('/(input).*?(name="name").*?(input).*?(name="mail").*?(input).*?(name="homepage")/s', $this->getSession()->getPage()->getContent());
+    return (bool) \preg_match('/(input).*?(name="name").*?(input).*?(name="mail").*?(input).*?(name="homepage")/s', $this->getSession()->getPage()->getContent());
   }
 
   /**
@@ -257,7 +257,7 @@ class CommentNonNodeTest extends BrowserTestBase {
    */
   public function getUnapprovedComment($subject) {
     $this->drupalGet('admin/content/comment/approval');
-    preg_match('/href="(.*?)#comment-([^"]+)"(.*?)>(' . $subject . ')/', $this->getSession()->getPage()->getContent(), $match);
+    \preg_match('/href="(.*?)#comment-([^"]+)"(.*?)>(' . $subject . ')/', $this->getSession()->getPage()->getContent(), $match);
 
     return $match[2];
   }
@@ -352,7 +352,7 @@ class CommentNonNodeTest extends BrowserTestBase {
     $this->drupalLogout();
 
     // Deny anonymous users access to comments.
-    user_role_change_permissions(RoleInterface::ANONYMOUS_ID, [
+    \user_role_change_permissions(RoleInterface::ANONYMOUS_ID, [
       'access comments' => FALSE,
       'post comments' => FALSE,
       'skip comment approval' => FALSE,
@@ -371,7 +371,7 @@ class CommentNonNodeTest extends BrowserTestBase {
     $this->assertSession()->fieldNotExists('subject[0][value]');
     $this->assertSession()->fieldNotExists('comment_body[0][value]');
 
-    user_role_change_permissions(RoleInterface::ANONYMOUS_ID, [
+    \user_role_change_permissions(RoleInterface::ANONYMOUS_ID, [
       'access comments' => TRUE,
       'post comments' => FALSE,
       'view test entity' => TRUE,
@@ -388,7 +388,7 @@ class CommentNonNodeTest extends BrowserTestBase {
     // Test the combination of anonymous users being able to post, but not view
     // comments, to ensure that access to post comments doesn't grant access to
     // view them.
-    user_role_change_permissions(RoleInterface::ANONYMOUS_ID, [
+    \user_role_change_permissions(RoleInterface::ANONYMOUS_ID, [
       'access comments' => FALSE,
       'post comments' => TRUE,
       'skip comment approval' => TRUE,
@@ -492,7 +492,7 @@ class CommentNonNodeTest extends BrowserTestBase {
    */
   public function testsNonIntegerIdEntities(): void {
     // Create a bundle for entity_test_string_id.
-    entity_test_create_bundle('entity_test', 'Entity Test', 'entity_test_string_id');
+    \entity_test_create_bundle('entity_test', 'Entity Test', 'entity_test_string_id');
     $limited_user = $this->drupalCreateUser([
       'administer entity_test_string_id fields',
       'administer comment types',
@@ -511,7 +511,7 @@ class CommentNonNodeTest extends BrowserTestBase {
     $this->assertSession()->responseNotContains('Test entity with string_id');
 
     // Create a bundle for entity_test_no_id.
-    entity_test_create_bundle('entity_test', 'Entity Test', 'entity_test_no_id');
+    \entity_test_create_bundle('entity_test', 'Entity Test', 'entity_test_no_id');
     $this->drupalLogin($this->drupalCreateUser([
       'administer entity_test_no_id fields',
     ]));

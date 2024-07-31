@@ -16,7 +16,7 @@ class RelationshipNormalizer extends NormalizerBase {
    * {@inheritdoc}
    */
   public function normalize($object, $format = NULL, array $context = []): array|string|int|float|bool|\ArrayObject|NULL {
-    assert($object instanceof Relationship);
+    \assert($object instanceof Relationship);
     return CacheableNormalization::aggregate([
       'data' => $this->serializer->normalize($object->getData(), $format, $context),
       'links' => $this->serializer->normalize($object->getLinks(), $format, $context)->omitIfEmpty(),

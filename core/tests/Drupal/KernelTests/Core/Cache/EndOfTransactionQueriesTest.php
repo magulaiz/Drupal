@@ -77,17 +77,17 @@ class EndOfTransactionQueriesTest extends KernelTestBase {
     foreach (Database::getLog('testEntitySave') as $log) {
       // Exclude transaction related statements from the log.
       if (
-        str_starts_with($log['query'], 'ROLLBACK TO SAVEPOINT ') ||
-        str_starts_with($log['query'], 'RELEASE SAVEPOINT ') ||
-        str_starts_with($log['query'], 'SAVEPOINT ')
+        \str_starts_with($log['query'], 'ROLLBACK TO SAVEPOINT ') ||
+        \str_starts_with($log['query'], 'RELEASE SAVEPOINT ') ||
+        \str_starts_with($log['query'], 'SAVEPOINT ')
       ) {
         continue;
       }
       $executed_statements[] = $log['query'];
     }
-    $last_statement_index = max(array_keys($executed_statements));
-    $cachetag_statements = array_keys($this->getStatementsForTable($executed_statements, 'cachetags'));
-    $this->assertSame($last_statement_index - count($cachetag_statements) + 1, min($cachetag_statements), 'All of the last queries in the transaction are for the "cachetags" table.');
+    $last_statement_index = \max(\array_keys($executed_statements));
+    $cachetag_statements = \array_keys($this->getStatementsForTable($executed_statements, 'cachetags'));
+    $this->assertSame($last_statement_index - \count($cachetag_statements) + 1, \min($cachetag_statements), 'All of the last queries in the transaction are for the "cachetags" table.');
 
     // Verify that a nested entity save occurred.
     $this->assertSame('john doe', User::load(1)->getAccountName());
@@ -159,7 +159,7 @@ class EndOfTransactionQueriesTest extends KernelTestBase {
    *   Filtered statement list.
    */
   protected function getStatementsForTable(array $statements, $table_name): array {
-    return array_filter($statements, function ($statement) use ($table_name) {
+    return \array_filter($statements, function ($statement) use ($table_name) {
       return $this->isStatementRelatedToTable($statement, $table_name);
     });
   }
@@ -180,8 +180,8 @@ class EndOfTransactionQueriesTest extends KernelTestBase {
    */
   protected static function isStatementRelatedToTable(string $statement, string $tableName): bool {
     $realTableIdentifier = Database::getConnection()->prefixTables('{' . $tableName . '}');
-    $pattern = '/.*(INTO|FROM|UPDATE)( |\n)' . preg_quote($realTableIdentifier, '/') . '/';
-    return preg_match($pattern, $statement) === 1 ? TRUE : FALSE;
+    $pattern = '/.*(INTO|FROM|UPDATE)( |\n)' . \preg_quote($realTableIdentifier, '/') . '/';
+    return \preg_match($pattern, $statement) === 1 ? TRUE : FALSE;
   }
 
 }

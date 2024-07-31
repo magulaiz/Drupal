@@ -42,7 +42,7 @@ class EntityViewMode extends EntityConfigBase {
    * {@inheritdoc}
    */
   public function rollback(array $destination_identifier) {
-    $destination_identifier = implode('.', $destination_identifier);
+    $destination_identifier = \implode('.', $destination_identifier);
     parent::rollback([$destination_identifier]);
   }
 

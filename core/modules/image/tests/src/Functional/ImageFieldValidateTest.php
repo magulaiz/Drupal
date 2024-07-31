@@ -51,7 +51,7 @@ class ImageFieldValidateTest extends ImageFieldTestBase {
     // Get invalid image test files.
     $dir = 'core/tests/fixtures/files';
     $files = [];
-    if (is_dir($dir)) {
+    if (\is_dir($dir)) {
       $files = $file_system->scanDirectory($dir, '/invalid-img-.*/');
     }
     $invalid_image_files = [];

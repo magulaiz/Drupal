@@ -66,7 +66,7 @@ abstract class CommentTestBase extends BrowserTestBase {
     // child classes may specify the standard profile.
     $types = NodeType::loadMultiple();
     if (empty($types['article'])) {
-      $this->drupalCreateContentType(['type' => 'article', 'name' => t('Article')]);
+      $this->drupalCreateContentType(['type' => 'article', 'name' => \t('Article')]);
     }
 
     // Create two test users.
@@ -147,7 +147,7 @@ abstract class CommentTestBase extends BrowserTestBase {
       $this->assertSession()->fieldNotExists('subject[0][value]');
     }
 
-    if ($contact !== NULL && is_array($contact)) {
+    if ($contact !== NULL && \is_array($contact)) {
       $edit += $contact;
     }
     switch ($preview_mode) {
@@ -171,7 +171,7 @@ abstract class CommentTestBase extends BrowserTestBase {
     }
     $match = [];
     // Get comment ID
-    preg_match('/#comment-([0-9]+)/', $this->getURL(), $match);
+    \preg_match('/#comment-([0-9]+)/', $this->getURL(), $match);
 
     // Get comment.
     if ($contact !== TRUE) {
@@ -350,7 +350,7 @@ abstract class CommentTestBase extends BrowserTestBase {
    *   Contact info is available.
    */
   public function commentContactInfoAvailable() {
-    return (bool) preg_match('/(input).*?(name="name").*?(input).*?(name="mail").*?(input).*?(name="homepage")/s', $this->getSession()->getPage()->getContent());
+    return (bool) \preg_match('/(input).*?(name="name").*?(input).*?(name="mail").*?(input).*?(name="homepage")/s', $this->getSession()->getPage()->getContent());
   }
 
   /**
@@ -390,7 +390,7 @@ abstract class CommentTestBase extends BrowserTestBase {
    */
   public function getUnapprovedComment($subject) {
     $this->drupalGet('admin/content/comment/approval');
-    preg_match('/href="(.*?)#comment-([^"]+)"(.*?)>(' . $subject . ')/', $this->getSession()->getPage()->getContent(), $match);
+    \preg_match('/href="(.*?)#comment-([^"]+)"(.*?)>(' . $subject . ')/', $this->getSession()->getPage()->getContent(), $match);
 
     return $match[2];
   }

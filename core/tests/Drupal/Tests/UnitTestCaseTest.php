@@ -18,15 +18,15 @@ class UnitTestCaseTest extends UnitTestCase {
     // Append the stream capturer to the STDERR stream, so that we can test the
     // dump() output and also prevent it from actually outputting in this
     // particular test.
-    stream_filter_register("capture", StreamCapturer::class);
-    stream_filter_append(STDERR, "capture");
+    \stream_filter_register("capture", StreamCapturer::class);
+    \stream_filter_append(STDERR, "capture");
 
     // Dump some variables.
     $object = (object) [
       'foo' => 'bar',
     ];
-    dump($object);
-    dump('banana');
+    \dump($object);
+    \dump('banana');
 
     $this->assertStringContainsString('bar', StreamCapturer::$cache);
     $this->assertStringContainsString('banana', StreamCapturer::$cache);
@@ -41,15 +41,15 @@ class UnitTestCaseTest extends UnitTestCase {
     // Append the stream capturer to the STDERR stream, so that we can test the
     // dump() output and also prevent it from actually outputting in this
     // particular test.
-    stream_filter_register("capture", StreamCapturer::class);
-    stream_filter_append(STDERR, "capture");
+    \stream_filter_register("capture", StreamCapturer::class);
+    \stream_filter_append(STDERR, "capture");
 
     // Dump some variables.
     $object = (object) [
       'foo' => 'bar',
     ];
-    dump($object);
-    dump('banana');
+    \dump($object);
+    \dump('banana');
 
     $this->assertStringContainsString('bar', StreamCapturer::$cache);
     $this->assertStringContainsString('banana', StreamCapturer::$cache);

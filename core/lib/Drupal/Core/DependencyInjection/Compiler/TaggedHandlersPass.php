@@ -165,7 +165,7 @@ class TaggedHandlersPass implements CompilerPassInterface {
     // Determine the ID.
 
     if (!isset($interface)) {
-      throw new LogicException(vsprintf("Service consumer '%s' class method %s::%s() has to type-hint an interface.", [
+      throw new LogicException(\vsprintf("Service consumer '%s' class method %s::%s() has to type-hint an interface.", [
         $consumer_id,
         $consumer->getClass(),
         $method_name,
@@ -178,7 +178,7 @@ class TaggedHandlersPass implements CompilerPassInterface {
     foreach ($this->tagCache[$tag] ?? [] as $id => $attributes) {
       // Validate the interface.
       $handler = $container->getDefinition($id);
-      if (!is_a($handler->getClass(), $interface, TRUE)) {
+      if (!\is_a($handler->getClass(), $interface, TRUE)) {
         throw new LogicException("Service '$id' for consumer '$consumer_id' does not implement $interface.");
       }
       $handlers[$id] = $attributes[0]['priority'] ?? 0;
@@ -189,11 +189,11 @@ class TaggedHandlersPass implements CompilerPassInterface {
     }
 
     if ($required && empty($handlers)) {
-      throw new LogicException(sprintf("At least one service tagged with '%s' is required.", $tag));
+      throw new LogicException(\sprintf("At least one service tagged with '%s' is required.", $tag));
     }
 
     // Sort all handlers by priority.
-    arsort($handlers, SORT_NUMERIC);
+    \arsort($handlers, SORT_NUMERIC);
 
     // Add a method call for each handler to the consumer service
     // definition.
@@ -212,7 +212,7 @@ class TaggedHandlersPass implements CompilerPassInterface {
         $arguments += $extra_arguments[$id];
       }
       // Sort the arguments by position.
-      ksort($arguments);
+      \ksort($arguments);
       $consumer->addMethodCall($method_name, $arguments);
     }
   }
@@ -240,13 +240,13 @@ class TaggedHandlersPass implements CompilerPassInterface {
     }
 
     if ($required && empty($handlers)) {
-      throw new LogicException(sprintf("At least one service tagged with '%s' is required.", $tag));
+      throw new LogicException(\sprintf("At least one service tagged with '%s' is required.", $tag));
     }
 
     // Sort all handlers by priority.
-    arsort($handlers, SORT_NUMERIC);
+    \arsort($handlers, SORT_NUMERIC);
 
-    $consumer->addArgument(array_keys($handlers));
+    $consumer->addArgument(\array_keys($handlers));
   }
 
 }

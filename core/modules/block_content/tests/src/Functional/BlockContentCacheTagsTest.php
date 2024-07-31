@@ -38,7 +38,7 @@ class BlockContentCacheTagsTest extends EntityCacheTagsTestBase {
       'revision' => FALSE,
     ]);
     $block_content_type->save();
-    block_content_add_body_field($block_content_type->id());
+    \block_content_add_body_field($block_content_type->id());
 
     // Create a "Llama" content block.
     $block_content = BlockContent::create([

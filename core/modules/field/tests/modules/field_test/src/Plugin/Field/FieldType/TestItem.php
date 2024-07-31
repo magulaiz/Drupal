@@ -112,7 +112,7 @@ class TestItem extends FieldItemBase {
    */
   public function delete() {
     // Reports that delete() method is executed for testing purposes.
-    field_test_memorize('field_test_field_delete', [$this->getEntity()]);
+    \field_test_memorize('field_test_field_delete', [$this->getEntity()]);
   }
 
   /**

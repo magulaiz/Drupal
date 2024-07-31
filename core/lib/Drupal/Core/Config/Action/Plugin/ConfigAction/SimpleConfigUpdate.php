@@ -48,12 +48,12 @@ final class SimpleConfigUpdate implements ConfigActionPluginInterface, Container
     // @todo https://www.drupal.org/i/3439713 Should we error if this is a
     //   config entity?
     if ($config->isNew()) {
-      throw new ConfigActionException(sprintf('Config %s does not exist so can not be updated', $configName));
+      throw new ConfigActionException(\sprintf('Config %s does not exist so can not be updated', $configName));
     }
 
     // Expect $value to be an array whose keys are the config keys to update.
-    if (!is_array($value)) {
-      throw new ConfigActionException(sprintf('Config %s can not be updated because $value is not an array', $configName));
+    if (!\is_array($value)) {
+      throw new ConfigActionException(\sprintf('Config %s can not be updated because $value is not an array', $configName));
     }
     foreach ($value as $key => $value) {
       $config->set($key, $value);

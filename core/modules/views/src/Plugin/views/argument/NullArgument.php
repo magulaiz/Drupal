@@ -42,7 +42,7 @@ class NullArgument extends ArgumentPluginBase {
    */
   protected function defaultActions($which = NULL) {
     if ($which) {
-      if (in_array($which, ['ignore', 'not found', 'empty', 'default'])) {
+      if (\in_array($which, ['ignore', 'not found', 'empty', 'default'])) {
         return parent::defaultActions($which);
       }
       return;

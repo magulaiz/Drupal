@@ -23,14 +23,14 @@ class TemporaryStream extends LocalStream {
    * {@inheritdoc}
    */
   public function getName() {
-    return t('Temporary files');
+    return \t('Temporary files');
   }
 
   /**
    * {@inheritdoc}
    */
   public function getDescription() {
-    return t('Temporary local files for upload and previews.');
+    return \t('Temporary local files for upload and previews.');
   }
 
   /**
@@ -44,7 +44,7 @@ class TemporaryStream extends LocalStream {
    * {@inheritdoc}
    */
   public function getExternalUrl() {
-    $path = str_replace('\\', '/', $this->getTarget());
+    $path = \str_replace('\\', '/', $this->getTarget());
     return Url::fromRoute('system.temporary', [], ['absolute' => TRUE, 'query' => ['file' => $path]])->toString();
   }
 

@@ -25,9 +25,9 @@ class ProfileFieldOptionTranslation extends ProcessPluginBase {
     $new_value = NULL;
     if (isset($translation)) {
       $allowed_values = [];
-      $list = explode("\n", $translation);
-      $list = array_map('trim', $list);
-      $list = array_filter($list, 'strlen');
+      $list = \explode("\n", $translation);
+      $list = \array_map('trim', $list);
+      $list = \array_filter($list, 'strlen');
       if ($field_type === 'list_string') {
         foreach ($list as $value) {
           $allowed_values[] = ['label' => $value];

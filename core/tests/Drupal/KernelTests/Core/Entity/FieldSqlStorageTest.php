@@ -134,7 +134,7 @@ class FieldSqlStorageTest extends EntityKernelTestBase {
     foreach ($revision_ids as $revision_id) {
       // Put one value too many.
       for ($delta = 0; $delta <= $this->fieldCardinality; $delta++) {
-        $value = mt_rand(1, 127);
+        $value = \mt_rand(1, 127);
         $values[$revision_id][] = $value;
         $query->values([$bundle, 0, $entity->id(), $revision_id, $delta, $entity->language()->getId(), $value]);
       }
@@ -173,7 +173,7 @@ class FieldSqlStorageTest extends EntityKernelTestBase {
     // Add a translation in an unavailable language code and verify it is not
     // loaded.
     $unavailable_langcode = 'xx';
-    $values = [$bundle, 0, $entity->id(), $entity->getRevisionId(), 0, $unavailable_langcode, mt_rand(1, 127)];
+    $values = [$bundle, 0, $entity->id(), $entity->getRevisionId(), 0, $unavailable_langcode, \mt_rand(1, 127)];
     $connection->insert($this->table)->fields($columns)->values($values)->execute();
     $connection->insert($this->revisionTable)->fields($columns)->values($values)->execute();
     $entity = $storage->load($entity->id());
@@ -194,7 +194,7 @@ class FieldSqlStorageTest extends EntityKernelTestBase {
     // Check insert. Add one value too many.
     $values = [];
     for ($delta = 0; $delta <= $this->fieldCardinality; $delta++) {
-      $values[$delta]['value'] = mt_rand(1, 127);
+      $values[$delta]['value'] = \mt_rand(1, 127);
     }
     $entity->{$this->fieldName} = $values;
     $entity->save();
@@ -220,9 +220,9 @@ class FieldSqlStorageTest extends EntityKernelTestBase {
     // persist.
     $values = [];
     for ($delta = 0; $delta <= $this->fieldCardinality - 2; $delta++) {
-      $values[$delta]['value'] = mt_rand(1, 127);
+      $values[$delta]['value'] = \mt_rand(1, 127);
     }
-    $values_count = count($values);
+    $values_count = \count($values);
     $entity->{$this->fieldName} = $values;
     $entity->save();
     $rows = $connection->select($this->table, 't')->fields('t')->execute()->fetchAllAssoc('delta', \PDO::FETCH_ASSOC);
@@ -244,7 +244,7 @@ class FieldSqlStorageTest extends EntityKernelTestBase {
     $revision_values[$entity->getRevisionId()] = $values;
     $values = [];
     for ($delta = 0; $delta < $this->fieldCardinality; $delta++) {
-      $values[$delta]['value'] = mt_rand(1, 127);
+      $values[$delta]['value'] = \mt_rand(1, 127);
     }
     $entity->{$this->fieldName} = $values;
     $entity->setNewRevision();
@@ -254,7 +254,7 @@ class FieldSqlStorageTest extends EntityKernelTestBase {
     // Check that data for both revisions are in the revision table.
     foreach ($revision_values as $revision_id => $values) {
       $rows = $connection->select($this->revisionTable, 't')->fields('t')->condition('revision_id', $revision_id)->execute()->fetchAllAssoc('delta', \PDO::FETCH_ASSOC);
-      $this->assertCount(min(count($values), $this->fieldCardinality), $rows);
+      $this->assertCount(\min(\count($values), $this->fieldCardinality), $rows);
       foreach ($rows as $delta => $row) {
         $expected = [
           'bundle' => $bundle,
@@ -301,7 +301,7 @@ class FieldSqlStorageTest extends EntityKernelTestBase {
         'entity_type' => $entity_type,
         'bundle' => $bundle,
       ])->save();
-      $values[$field_names[$i]] = mt_rand(1, 127);
+      $values[$field_names[$i]] = \mt_rand(1, 127);
     }
 
     // Save an entity with values.
@@ -509,9 +509,9 @@ class FieldSqlStorageTest extends EntityKernelTestBase {
       'field_name' => $field_name,
       'type' => 'test_field',
     ]);
-    $expected = 'short_entity_type__' . substr(hash('sha256', $field_storage->uuid()), 0, 10);
+    $expected = 'short_entity_type__' . \substr(\hash('sha256', $field_storage->uuid()), 0, 10);
     $this->assertEquals($expected, $this->tableMapping->getDedicatedDataTableName($field_storage));
-    $expected = 'short_entity_type_r__' . substr(hash('sha256', $field_storage->uuid()), 0, 10);
+    $expected = 'short_entity_type_r__' . \substr(\hash('sha256', $field_storage->uuid()), 0, 10);
     $this->assertEquals($expected, $this->tableMapping->getDedicatedRevisionTableName($field_storage));
 
     // Long entity type, short field name
@@ -522,9 +522,9 @@ class FieldSqlStorageTest extends EntityKernelTestBase {
       'field_name' => $field_name,
       'type' => 'test_field',
     ]);
-    $expected = 'long_entity_type_all_forty_three__' . substr(hash('sha256', $field_storage->uuid()), 0, 10);
+    $expected = 'long_entity_type_all_forty_three__' . \substr(\hash('sha256', $field_storage->uuid()), 0, 10);
     $this->assertEquals($expected, $this->tableMapping->getDedicatedDataTableName($field_storage));
-    $expected = 'long_entity_type_all_forty_three_r__' . substr(hash('sha256', $field_storage->uuid()), 0, 10);
+    $expected = 'long_entity_type_all_forty_three_r__' . \substr(\hash('sha256', $field_storage->uuid()), 0, 10);
     $this->assertEquals($expected, $this->tableMapping->getDedicatedRevisionTableName($field_storage));
 
     // Long entity type and field name.
@@ -535,9 +535,9 @@ class FieldSqlStorageTest extends EntityKernelTestBase {
       'field_name' => $field_name,
       'type' => 'test_field',
     ]);
-    $expected = 'long_entity_type_all_forty_three__' . substr(hash('sha256', $field_storage->uuid()), 0, 10);
+    $expected = 'long_entity_type_all_forty_three__' . \substr(\hash('sha256', $field_storage->uuid()), 0, 10);
     $this->assertEquals($expected, $this->tableMapping->getDedicatedDataTableName($field_storage));
-    $expected = 'long_entity_type_all_forty_three_r__' . substr(hash('sha256', $field_storage->uuid()), 0, 10);
+    $expected = 'long_entity_type_all_forty_three_r__' . \substr(\hash('sha256', $field_storage->uuid()), 0, 10);
     $this->assertEquals($expected, $this->tableMapping->getDedicatedRevisionTableName($field_storage));
     // Try creating a second field and check there are no clashes.
     $field_storage2 = FieldStorageConfig::create([
@@ -555,9 +555,9 @@ class FieldSqlStorageTest extends EntityKernelTestBase {
       'type' => 'test_field',
       'deleted' => TRUE,
     ]);
-    $expected = 'field_deleted_data_' . substr(hash('sha256', $field_storage->uuid()), 0, 10);
+    $expected = 'field_deleted_data_' . \substr(\hash('sha256', $field_storage->uuid()), 0, 10);
     $this->assertEquals($expected, $this->tableMapping->getDedicatedDataTableName($field_storage, TRUE));
-    $expected = 'field_deleted_revision_' . substr(hash('sha256', $field_storage->uuid()), 0, 10);
+    $expected = 'field_deleted_revision_' . \substr(\hash('sha256', $field_storage->uuid()), 0, 10);
     $this->assertEquals($expected, $this->tableMapping->getDedicatedRevisionTableName($field_storage, TRUE));
 
     // Check that the table mapping is kept up-to-date in a request where a new

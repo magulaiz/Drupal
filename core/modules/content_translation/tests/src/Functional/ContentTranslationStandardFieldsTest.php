@@ -78,7 +78,7 @@ class ContentTranslationStandardFieldsTest extends BrowserTestBase {
       'revision' => FALSE,
     ]);
     $bundle->save();
-    block_content_add_body_field($bundle->id());
+    \block_content_add_body_field($bundle->id());
 
     // Create a comment type with a body field.
     $bundle = CommentType::create([

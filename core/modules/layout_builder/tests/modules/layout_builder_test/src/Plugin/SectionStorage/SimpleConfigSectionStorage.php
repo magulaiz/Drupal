@@ -103,9 +103,9 @@ class SimpleConfigSectionStorage extends PluginBase implements SectionStorageInt
    * {@inheritdoc}
    */
   public function getSections() {
-    if (is_null($this->sections)) {
+    if (\is_null($this->sections)) {
       $sections = $this->configFactory->get($this->getConfigName())->get('sections') ?: [];
-      $this->setSections(array_map([Section::class, 'fromArray'], $sections));
+      $this->setSections(\array_map([Section::class, 'fromArray'], $sections));
     }
     return $this->sections;
   }
@@ -114,7 +114,7 @@ class SimpleConfigSectionStorage extends PluginBase implements SectionStorageInt
    * {@inheritdoc}
    */
   protected function setSections(array $sections) {
-    $this->sections = array_values($sections);
+    $this->sections = \array_values($sections);
     return $this;
   }
 
@@ -122,7 +122,7 @@ class SimpleConfigSectionStorage extends PluginBase implements SectionStorageInt
    * {@inheritdoc}
    */
   public function save() {
-    $sections = array_map(function (Section $section) {
+    $sections = \array_map(function (Section $section) {
       return $section->toArray();
     }, $this->getSections());
 

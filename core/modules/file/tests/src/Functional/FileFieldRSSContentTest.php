@@ -65,7 +65,7 @@ class FileFieldRSSContentTest extends FileFieldTestBase {
 
     // Check that the RSS enclosure appears in the RSS feed.
     $this->drupalGet('rss.xml');
-    $selector = sprintf(
+    $selector = \sprintf(
       '//enclosure[@url="%s" and @length="%s" and @type="%s"]',
       $node_file->createFileUrl(FALSE),
       $node_file->getSize(),

@@ -52,7 +52,7 @@ class SettingsTrayBlockFormTest extends SettingsTrayTestBase {
    */
   public function testBlocks(): void {
     foreach ($this->getBlockTests() as $test) {
-      call_user_func_array([$this, 'doTestBlocks'], array_values($test));
+      \call_user_func_array([$this, 'doTestBlocks'], \array_values($test));
     }
   }
 
@@ -157,7 +157,7 @@ class SettingsTrayBlockFormTest extends SettingsTrayTestBase {
     // Clean up test data so each test does not impact the next.
     $block->delete();
     if ($permissions) {
-      user_role_revoke_permissions(Role::AUTHENTICATED_ID, $permissions);
+      \user_role_revoke_permissions(Role::AUTHENTICATED_ID, $permissions);
     }
   }
 

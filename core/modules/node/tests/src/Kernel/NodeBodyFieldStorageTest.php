@@ -50,7 +50,7 @@ class NodeBodyFieldStorageTest extends KernelTestBase {
     $this->assertNotEmpty($field_storage, 'Node body field storage exists.');
     $type = NodeType::create(['name' => 'Ponies', 'type' => 'ponies']);
     $type->save();
-    node_add_body_field($type);
+    \node_add_body_field($type);
     $field_storage = FieldStorageConfig::loadByName('node', 'body');
     $this->assertCount(1, $field_storage->getBundles(), 'Node body field storage is being used on the new node type.');
     $field = FieldConfig::loadByName('node', 'ponies', 'body');

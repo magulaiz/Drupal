@@ -96,7 +96,7 @@ class ClaroEntityDisplayTest extends EntityDisplayTest {
    * with a line changed to reflect Claro's tabledrag selector.
    */
   public function testExtraFields(): void {
-    entity_test_create_bundle('bundle_with_extra_fields');
+    \entity_test_create_bundle('bundle_with_extra_fields');
     $this->drupalGet('entity_test/structure/bundle_with_extra_fields/display');
     $this->assertSession()->waitForElement('css', '.tabledrag-handle');
     $id = $this->getSession()->getPage()->find('css', '[name="form_build_id"]')->getValue();

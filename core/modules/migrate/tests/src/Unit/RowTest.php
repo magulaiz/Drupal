@@ -173,10 +173,10 @@ class RowTest extends UnitTestCase {
     $row->rehash();
     $this->assertSame($this->testHashMod, $row->getHash(), 'Hash changed correctly.');
     // Check hash calculation algorithm.
-    $hash = hash('sha256', serialize($row->getSource()));
+    $hash = \hash('sha256', \serialize($row->getSource()));
     $this->assertSame($hash, $row->getHash());
     // Check length of generated hash used for mapping schema.
-    $this->assertSame(64, strlen($row->getHash()));
+    $this->assertSame(64, \strlen($row->getHash()));
 
     // Set the map to successfully imported.
     $test_id_map = [
@@ -248,7 +248,7 @@ class RowTest extends UnitTestCase {
       'langcode' => 'en',
     ];
     $row = new Row($multi_source_ids_values, $multi_source_ids);
-    $this->assertSame(array_keys($multi_source_ids), array_keys($row->getSourceIdValues()));
+    $this->assertSame(\array_keys($multi_source_ids), \array_keys($row->getSourceIdValues()));
 
     // Set values in different order.
     $multi_source_ids = $this->testSourceIds + [
@@ -262,7 +262,7 @@ class RowTest extends UnitTestCase {
       'vid' => 1,
     ];
     $row = new Row($multi_source_ids_values, $multi_source_ids);
-    $this->assertSame(array_keys($multi_source_ids), array_keys($row->getSourceIdValues()));
+    $this->assertSame(\array_keys($multi_source_ids), \array_keys($row->getSourceIdValues()));
   }
 
   /**
@@ -368,7 +368,7 @@ class RowTest extends UnitTestCase {
    */
   public function testGetMultiple(array $keys, array $expected_values): void {
     $row = $this->createRowWithDestinationProperties($this->testGetSourceProperties, $this->testGetSourceIds, $this->testGetDestinationProperties);
-    $this->assertEquals(array_combine($keys, $expected_values), $row->getMultiple($keys));
+    $this->assertEquals(\array_combine($keys, $expected_values), $row->getMultiple($keys));
   }
 
   /**

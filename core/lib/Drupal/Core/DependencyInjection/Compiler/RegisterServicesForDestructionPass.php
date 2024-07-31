@@ -19,7 +19,7 @@ class RegisterServicesForDestructionPass implements CompilerPassInterface {
    */
   public function process(ContainerBuilder $container): void {
     $services = $container->findTaggedServiceIds('needs_destruction');
-    $container->setParameter('kernel.destructable_services', array_keys($services));
+    $container->setParameter('kernel.destructable_services', \array_keys($services));
   }
 
 }

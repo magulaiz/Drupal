@@ -81,7 +81,7 @@ class EntityReferenceSettingsTest extends KernelTestBase {
 
     // Create a custom bundle.
     $this->customBundle = 'test_bundle_' . $this->randomMachineName();
-    entity_test_create_bundle($this->customBundle, NULL, 'entity_test');
+    \entity_test_create_bundle($this->customBundle, NULL, 'entity_test');
 
     // Prepare the logger for collecting the expected critical error.
     $this->container->get($this->testLogServiceName)->cleanLogs();
@@ -163,7 +163,7 @@ class EntityReferenceSettingsTest extends KernelTestBase {
     $this->assertEquals($handler_settings, $actual_handler_settings);
 
     // Delete the custom bundle.
-    entity_test_delete_bundle($this->customBundle, 'entity_test');
+    \entity_test_delete_bundle($this->customBundle, 'entity_test');
 
     // Ensure that field_field_config_presave() logs the expected critical
     // error.

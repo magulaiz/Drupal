@@ -22,7 +22,7 @@ class CommonTestController {
     return [
       'no_query' => [
         '#type' => 'link',
-        '#title' => t('Link with no query string'),
+        '#title' => \t('Link with no query string'),
         '#url' => Url::fromRoute('<current>'),
         '#options' => [
           'set_active_class' => TRUE,
@@ -30,7 +30,7 @@ class CommonTestController {
       ],
       'with_query' => [
         '#type' => 'link',
-        '#title' => t('Link with a query string'),
+        '#title' => \t('Link with a query string'),
         '#url' => Url::fromRoute('<current>'),
         '#options' => [
           'query' => [
@@ -42,7 +42,7 @@ class CommonTestController {
       ],
       'with_query_reversed' => [
         '#type' => 'link',
-        '#title' => t('Link with the same query string in reverse order'),
+        '#title' => \t('Link with the same query string in reverse order'),
         '#url' => Url::fromRoute('<current>'),
         '#options' => [
           'query' => [
@@ -63,7 +63,7 @@ class CommonTestController {
    */
   public function jsAndCssQuerystring() {
     $module_extension_list = \Drupal::service('extension.list.module');
-    assert($module_extension_list instanceof ExtensionList);
+    \assert($module_extension_list instanceof ExtensionList);
     $attached = [
       '#attached' => [
         'library' => [

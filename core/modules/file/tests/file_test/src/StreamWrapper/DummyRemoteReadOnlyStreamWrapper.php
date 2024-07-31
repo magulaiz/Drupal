@@ -20,14 +20,14 @@ class DummyRemoteReadOnlyStreamWrapper extends DummyRemoteStreamWrapper {
    * {@inheritdoc}
    */
   public function getName() {
-    return t('Dummy remote read-only files');
+    return \t('Dummy remote read-only files');
   }
 
   /**
    * {@inheritdoc}
    */
   public function getDescription() {
-    return t('Dummy remote read-only stream wrapper for testing.');
+    return \t('Dummy remote read-only stream wrapper for testing.');
   }
 
 }

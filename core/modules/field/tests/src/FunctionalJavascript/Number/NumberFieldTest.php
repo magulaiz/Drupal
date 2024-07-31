@@ -50,12 +50,12 @@ class NumberFieldTest extends WebDriverTestBase {
     $type = $this->randomMachineName();
     $float_field = $this->randomMachineName();
     $integer_field = $this->randomMachineName();
-    $thousand_separators = ['', '.', ',', ' ', chr(8201), "'"];
+    $thousand_separators = ['', '.', ',', ' ', \chr(8201), "'"];
     $decimal_separators = ['.', ','];
     $prefix = $this->randomMachineName();
     $suffix = $this->randomMachineName();
-    $random_float = rand(0, pow(10, 6));
-    $random_integer = rand(0, pow(10, 6));
+    $random_float = \rand(0, \pow(10, 6));
+    $random_integer = \rand(0, \pow(10, 6));
     $assert_session = $this->assertSession();
 
     // Create a content type containing float and integer fields.
@@ -130,9 +130,9 @@ class NumberFieldTest extends WebDriverTestBase {
     $this->drupalGet("admin/structure/types/manage/$type/display");
 
     // Configure number_decimal formatter for the 'float' field type.
-    $thousand_separator = $thousand_separators[array_rand($thousand_separators)];
-    $decimal_separator = $decimal_separators[array_rand($decimal_separators)];
-    $scale = rand(0, 10);
+    $thousand_separator = $thousand_separators[\array_rand($thousand_separators)];
+    $decimal_separator = $decimal_separators[\array_rand($decimal_separators)];
+    $scale = \rand(0, 10);
 
     $page = $this->getSession()->getPage();
     $page->pressButton("{$float_field}_settings_edit");
@@ -152,7 +152,7 @@ class NumberFieldTest extends WebDriverTestBase {
 
     // Check number_decimal and number_unformatted formatters behavior.
     $this->drupalGet('node/' . $node->id());
-    $float_formatted = number_format($random_float, $scale, $decimal_separator, $thousand_separator);
+    $float_formatted = \number_format($random_float, $scale, $decimal_separator, $thousand_separator);
     $this->assertSession()->responseContains("$prefix$float_formatted$suffix");
     $this->assertSession()->responseContains((string) $random_integer);
 
@@ -164,7 +164,7 @@ class NumberFieldTest extends WebDriverTestBase {
       ->save();
     $this->drupalGet("admin/structure/types/manage/$type/display");
 
-    $thousand_separator = $thousand_separators[array_rand($thousand_separators)];
+    $thousand_separator = $thousand_separators[\array_rand($thousand_separators)];
 
     $page = $this->getSession()->getPage();
     $page->pressButton("{$integer_field}_settings_edit");
@@ -183,7 +183,7 @@ class NumberFieldTest extends WebDriverTestBase {
     // Check number_integer formatter behavior.
     $this->drupalGet('node/' . $node->id());
 
-    $integer_formatted = number_format($random_integer, 0, '', $thousand_separator);
+    $integer_formatted = \number_format($random_integer, 0, '', $thousand_separator);
     $this->assertSession()->responseContains($integer_formatted);
   }
 

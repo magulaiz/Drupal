@@ -46,8 +46,8 @@ class ManyToOneHelper {
   public function buildOptionsForm(&$form, FormStateInterface $form_state) {
     $form['reduce_duplicates'] = [
       '#type' => 'checkbox',
-      '#title' => t('Reduce duplicates'),
-      '#description' => t("This filter can cause items that have more than one of the selected options to appear as duplicate results. If this filter causes duplicate results to occur, this checkbox can reduce those duplicates; however, the more terms it has to search for, the less performant the query will be, so use this with caution. Shouldn't be set on single-value fields, as it may cause values to disappear from display, if used on an incompatible field."),
+      '#title' => \t('Reduce duplicates'),
+      '#description' => \t("This filter can cause items that have more than one of the selected options to appear as duplicate results. If this filter causes duplicate results to occur, this checkbox can reduce those duplicates; however, the more terms it has to search for, the less performant the query will be, so use this with caution. Shouldn't be set on single-value fields, as it may cause values to disappear from display, if used on an incompatible field."),
       '#default_value' => !empty($this->handler->options['reduce_duplicates']),
       '#weight' => 4,
     ];
@@ -117,7 +117,7 @@ class ManyToOneHelper {
       $this->handler->view->many_to_one_tables[$field] = $this->handler->value;
     }
     else {
-      $this->handler->view->many_to_one_tables[$field] = array_merge($this->handler->view->many_to_one_tables[$field], $this->handler->value);
+      $this->handler->view->many_to_one_tables[$field] = \array_merge($this->handler->view->many_to_one_tables[$field], $this->handler->value);
     }
 
     return $alias;
@@ -300,11 +300,11 @@ class ManyToOneHelper {
       $add_condition = FALSE;
     }
     elseif ($operator == 'or' && empty($options['reduce_duplicates'])) {
-      if (count($value) > 1) {
+      if (\count($value) > 1) {
         $operator = 'IN';
       }
       else {
-        $value = is_array($value) ? array_pop($value) : $value;
+        $value = \is_array($value) ? \array_pop($value) : $value;
         $operator = '=';
       }
       $add_condition = FALSE;
@@ -326,7 +326,7 @@ class ManyToOneHelper {
       }
       else {
         $placeholder = $this->placeholder();
-        if (count($this->handler->value) > 1) {
+        if (\count($this->handler->value) > 1) {
           $placeholder .= '[]';
 
           if ($operator == 'IS NULL') {

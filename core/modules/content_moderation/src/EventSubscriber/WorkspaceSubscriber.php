@@ -41,7 +41,7 @@ class WorkspaceSubscriber implements EventSubscriberInterface {
     $tracked_revisions = $this->workspaceAssociation->getTrackedEntities($workspace->id());
     // Extract all the second-level keys (revision IDs) of the two-dimensional
     // array.
-    $tracked_revision_ids = array_reduce(array_map('array_keys', $tracked_revisions), 'array_merge', []);
+    $tracked_revision_ids = \array_reduce(\array_map('array_keys', $tracked_revisions), 'array_merge', []);
 
     // Gather a list of moderation states that don't create a default revision.
     $workflow_non_default_states = [];
@@ -50,8 +50,8 @@ class WorkspaceSubscriber implements EventSubscriberInterface {
       $workflow_type = $workflow->getTypePlugin();
       // Find all workflows which are moderating entity types of the same type
       // to those that are tracked by the workspace.
-      if (array_intersect($workflow_type->getEntityTypes(), array_keys($tracked_revisions))) {
-        $workflow_non_default_states[$workflow->id()] = array_filter(array_map(function (ContentModerationState $state) {
+      if (\array_intersect($workflow_type->getEntityTypes(), \array_keys($tracked_revisions))) {
+        $workflow_non_default_states[$workflow->id()] = \array_filter(\array_map(function (ContentModerationState $state) {
           return !$state->isDefaultRevisionState() ? $state->id() : NULL;
         }, $workflow_type->getStates()));
       }

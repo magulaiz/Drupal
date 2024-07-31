@@ -95,7 +95,7 @@ class ManageDisplayTest extends BrowserTestBase {
       'langcode' => LanguageInterface::LANGCODE_NOT_SPECIFIED,
       'help' => '',
       'nodes' => ['article' => 'article'],
-      'weight' => mt_rand(0, 10),
+      'weight' => \mt_rand(0, 10),
     ]);
     $vocabulary->save();
     $this->vocabulary = $vocabulary->id();
@@ -382,8 +382,8 @@ class ManageDisplayTest extends BrowserTestBase {
       $field = $fields[0];
       $options = $this->getAllOptionsList($field);
 
-      sort($options);
-      sort($expected_options);
+      \sort($options);
+      \sort($expected_options);
 
       $this->assertSame($expected_options, $options);
     }
@@ -410,7 +410,7 @@ class ManageDisplayTest extends BrowserTestBase {
 
     // Loops trough all the option groups
     foreach ($element->optgroup as $optgroup) {
-      $options = array_merge($this->getAllOptionsList($optgroup), $options);
+      $options = \array_merge($this->getAllOptionsList($optgroup), $options);
     }
 
     return $options;
@@ -434,16 +434,16 @@ class ManageDisplayTest extends BrowserTestBase {
     $text = $session->getPage()->getHtml();
     $strings = [];
     foreach ($items as $item) {
-      if (($pos = strpos($text, $item)) === FALSE) {
+      if (($pos = \strpos($text, $item)) === FALSE) {
         throw new ExpectationException("Cannot find '$item' in the page", $session->getDriver());
       }
       $strings[$pos] = $item;
     }
-    ksort($strings);
-    $ordered = implode(', ', array_map(function ($item) {
+    \ksort($strings);
+    $ordered = \implode(', ', \array_map(function ($item) {
       return "'$item'";
     }, $items));
-    $this->assertSame($items, array_values($strings), "Found strings, ordered as: $ordered.");
+    $this->assertSame($items, \array_values($strings), "Found strings, ordered as: $ordered.");
   }
 
 }

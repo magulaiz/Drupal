@@ -102,11 +102,11 @@ class CKEditor5Test extends CKEditor5TestBase {
         ],
       ],
     ])->save();
-    $this->assertSame([], array_map(
+    $this->assertSame([], \array_map(
       function (ConstraintViolation $v) {
         return (string) $v->getMessage();
       },
-      iterator_to_array(CKEditor5::validatePair(
+      \iterator_to_array(CKEditor5::validatePair(
         Editor::load('ckeditor5'),
         FilterFormat::load('ckeditor5')
       ))
@@ -135,14 +135,14 @@ class CKEditor5Test extends CKEditor5TestBase {
     $image_uuid = $uploaded_image->uuid();
     $image_url = $this->container->get('file_url_generator')->generateString($uploaded_image->getFileUri());
     $this->drupalGet('node/1');
-    $this->assertNotEmpty($assert_session->waitForElement('xpath', sprintf('//img[@alt="</em> Kittens & llamas are cute" and @data-entity-uuid="%s" and @data-entity-type="file"]', $image_uuid)));
+    $this->assertNotEmpty($assert_session->waitForElement('xpath', \sprintf('//img[@alt="</em> Kittens & llamas are cute" and @data-entity-uuid="%s" and @data-entity-type="file"]', $image_uuid)));
 
     // Drupal CKEditor 5 integrations overrides the CKEditor 5 HTML writer to
     // escape ampersand characters (&) and the angle brackets (< and >). This is
     // required because \Drupal\Component\Utility\Xss::filter fails to parse
     // element attributes with unescaped entities in value.
     // @see https://www.drupal.org/project/drupal/issues/3227831
-    $this->assertEquals(sprintf('<img data-entity-uuid="%s" data-entity-type="file" src="%s" width="40" height="20" alt="&lt;/em&gt; Kittens &amp; llamas are cute">', $image_uuid, $image_url), Node::load(1)->get('body')->value);
+    $this->assertEquals(\sprintf('<img data-entity-uuid="%s" data-entity-type="file" src="%s" width="40" height="20" alt="&lt;/em&gt; Kittens &amp; llamas are cute">', $image_uuid, $image_url), Node::load(1)->get('body')->value);
   }
 
   /**
@@ -325,7 +325,7 @@ JS;
     $current_languages = $page->findAll('css', '.ck-text-fragment-language-dropdown li .ck-button__label');
 
     // Remove "Remove language" element from current languages.
-    array_shift($current_languages);
+    \array_shift($current_languages);
 
     // Create array of full language name.
     $languages = [];
@@ -334,11 +334,11 @@ JS;
     }
 
     // Return the values from a single column.
-    $configured_languages = array_column($configured_languages, 0);
+    $configured_languages = \array_column($configured_languages, 0);
 
     // Sort on full language name.
-    asort($configured_languages);
-    $this->assertSame(array_values($configured_languages), $languages);
+    \asort($configured_languages);
+    $this->assertSame(\array_values($configured_languages), $languages);
   }
 
   /**
@@ -368,7 +368,7 @@ JS;
     // Make sure that the container selector contains exactly one Vertical Tabs
     // UI component.
     $vertical_tabs = $container->findAll('css', '.vertical-tabs');
-    if (count($vertical_tabs) != 1) {
+    if (\count($vertical_tabs) != 1) {
       throw new \LogicException('The given container should contain exactly one Vertical Tabs component.');
     }
 
@@ -584,11 +584,11 @@ JS;
     $uploaded_image = File::load(1);
     $image_url = $this->container->get('file_url_generator')->generateString($uploaded_image->getFileUri());
     $image_uuid = $uploaded_image->uuid();
-    $assert_session->elementExists('xpath', sprintf('//img[@src="%s" and @width="40" and @height="20" and @data-entity-uuid="%s" and @data-entity-type="file"]', $image_url, $image_uuid));
+    $assert_session->elementExists('xpath', \sprintf('//img[@src="%s" and @width="40" and @height="20" and @data-entity-uuid="%s" and @data-entity-type="file"]', $image_url, $image_uuid));
 
     // Ensure that width, height, and length attributes are not stored in the
     // database.
-    $this->assertEquals(sprintf('<img data-entity-uuid="%s" data-entity-type="file" src="%s" width="40" height="20" alt="There is now alt text">', $image_uuid, $image_url), Node::load(1)->get('body')->value);
+    $this->assertEquals(\sprintf('<img data-entity-uuid="%s" data-entity-type="file" src="%s" width="40" height="20" alt="There is now alt text">', $image_uuid, $image_url), Node::load(1)->get('body')->value);
 
     // Ensure that data-entity-uuid and data-entity-type attributes are upcasted
     // correctly to CKEditor model.
@@ -596,7 +596,7 @@ JS;
     $this->assertNotEmpty($assert_session->waitForElement('css', '.ck-editor'));
     $page->pressButton('Save');
 
-    $assert_session->elementExists('xpath', sprintf('//img[@src="%s" and @width="40" and @height="20" and @data-entity-uuid="%s" and @data-entity-type="file"]', $image_url, $image_uuid));
+    $assert_session->elementExists('xpath', \sprintf('//img[@src="%s" and @width="40" and @height="20" and @data-entity-uuid="%s" and @data-entity-type="file"]', $image_url, $image_uuid));
   }
 
   /**
@@ -659,11 +659,11 @@ JS;
         ],
       ],
     ])->save();
-    $this->assertSame([], array_map(
+    $this->assertSame([], \array_map(
       function (ConstraintViolation $v) {
         return (string) $v->getMessage();
       },
-      iterator_to_array(CKEditor5::validatePair(
+      \iterator_to_array(CKEditor5::validatePair(
         Editor::load('test_format'),
         FilterFormat::load('test_format')
       ))
@@ -783,11 +783,11 @@ JS;
         'status' => FALSE,
       ],
     ])->save();
-    $this->assertSame([], array_map(
+    $this->assertSame([], \array_map(
       function (ConstraintViolation $v) {
         return (string) $v->getMessage();
       },
-      iterator_to_array(CKEditor5::validatePair(
+      \iterator_to_array(CKEditor5::validatePair(
         Editor::load('ckeditor5'),
         FilterFormat::load('ckeditor5')
       ))
@@ -928,11 +928,11 @@ JS;
         ],
       ],
     ])->save();
-    $this->assertSame([], array_map(
+    $this->assertSame([], \array_map(
       function (ConstraintViolation $v) {
         return (string) $v->getMessage();
       },
-      iterator_to_array(CKEditor5::validatePair(
+      \iterator_to_array(CKEditor5::validatePair(
         Editor::load('ckeditor5'),
         FilterFormat::load('ckeditor5')
       ))
@@ -983,11 +983,11 @@ JS;
         ],
       ],
     ])->save();
-    $this->assertSame([], array_map(
+    $this->assertSame([], \array_map(
       function (ConstraintViolation $v) {
         return (string) $v->getMessage();
       },
-      iterator_to_array(CKEditor5::validatePair(
+      \iterator_to_array(CKEditor5::validatePair(
         Editor::load('ckeditor5'),
         FilterFormat::load('ckeditor5')
       ))
@@ -1004,11 +1004,11 @@ JS;
         'status' => FALSE,
       ],
     ])->save();
-    $this->assertSame([], array_map(
+    $this->assertSame([], \array_map(
       function (ConstraintViolation $v) {
         return (string) $v->getMessage();
       },
-      iterator_to_array(CKEditor5::validatePair(
+      \iterator_to_array(CKEditor5::validatePair(
         Editor::load('ckeditor5_2'),
         FilterFormat::load('ckeditor5_2')
       ))

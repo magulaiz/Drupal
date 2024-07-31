@@ -90,7 +90,7 @@ class Test {
   }
 
   public function error() {
-    trigger_error('foo', E_USER_NOTICE);
+    \trigger_error('foo', E_USER_NOTICE);
     return [
       '#markup' => 'Content',
     ];
@@ -227,9 +227,9 @@ class Test {
     // Create 2 identical deprecation messages. This should only trigger a
     // single response header.
     // phpcs:ignore Drupal.Semantics.FunctionTriggerError
-    @trigger_error('Test deprecation message', E_USER_DEPRECATED);
+    @\trigger_error('Test deprecation message', E_USER_DEPRECATED);
     // phpcs:ignore Drupal.Semantics.FunctionTriggerError
-    @trigger_error('Test deprecation message', E_USER_DEPRECATED);
+    @\trigger_error('Test deprecation message', E_USER_DEPRECATED);
     return [
       '#markup' => 'Content that triggers deprecation messages',
     ];

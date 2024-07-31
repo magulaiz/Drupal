@@ -195,7 +195,7 @@ class ConfigTranslationListUiTest extends BrowserTestBase {
 
     // Test if the local task for translation is on this page.
     $this->assertSession()->linkExists('Translate taxonomy vocabulary');
-    $local_task_url = parse_url($this->getSession()->getPage()->findLink('Translate taxonomy vocabulary')->getAttribute('href'));
+    $local_task_url = \parse_url($this->getSession()->getPage()->findLink('Translate taxonomy vocabulary')->getAttribute('href'));
     $this->assertSame(base_path() . $translate_link, $local_task_url['path']);
   }
 
@@ -382,7 +382,7 @@ class ConfigTranslationListUiTest extends BrowserTestBase {
   public function doResponsiveImageListTest() {
     $edit = [];
     $edit['label'] = $this->randomMachineName();
-    $edit['id'] = strtolower($edit['label']);
+    $edit['id'] = \strtolower($edit['label']);
     $edit['fallback_image_style'] = 'thumbnail';
 
     $this->drupalGet('admin/config/media/responsive-image-style/add');

@@ -61,7 +61,7 @@ class EntityFieldTest extends EntityKernelTestBase {
   protected function setUp(): void {
     parent::setUp();
 
-    foreach (entity_test_entity_types() as $entity_type_id) {
+    foreach (\entity_test_entity_types() as $entity_type_id) {
       // The entity_test schema is installed by the parent.
       if ($entity_type_id != 'entity_test') {
         $this->installEntitySchema($entity_type_id);
@@ -70,7 +70,7 @@ class EntityFieldTest extends EntityKernelTestBase {
 
     // Create the test field.
     $this->container->get('module_handler')->loadInclude('entity_test', 'install');
-    entity_test_install();
+    \entity_test_install();
 
     // Install required default configuration for filter module.
     $this->installConfig(['system', 'filter']);
@@ -138,7 +138,7 @@ class EntityFieldTest extends EntityKernelTestBase {
    */
   public function testReadWrite(): void {
     // All entity variations have to have the same results.
-    foreach (entity_test_entity_types() as $entity_type) {
+    foreach (\entity_test_entity_types() as $entity_type) {
       $this->doTestReadWrite($entity_type);
     }
   }
@@ -357,7 +357,7 @@ class EntityFieldTest extends EntityKernelTestBase {
     $this->assertTrue($entity->name[0]->isEmpty(), "$entity_type: Name item is empty.");
     $this->assertTrue($entity->name->isEmpty(), "$entity_type: Name field is empty.");
     $this->assertCount(1, $entity->name, "$entity_type: Empty item is considered when counting.");
-    $this->assertCount(1, iterator_to_array($entity->name->getIterator()), "$entity_type: Count matches iterator count.");
+    $this->assertCount(1, \iterator_to_array($entity->name->getIterator()), "$entity_type: Count matches iterator count.");
     $this->assertSame([0 => ['value' => NULL]], $entity->name->getValue(), "$entity_type: Name field value contains a NULL value.");
 
     // Test using filterEmptyItems().
@@ -404,7 +404,7 @@ class EntityFieldTest extends EntityKernelTestBase {
    */
   public function testSave(): void {
     // All entity variations have to have the same results.
-    foreach (entity_test_entity_types() as $entity_type) {
+    foreach (\entity_test_entity_types() as $entity_type) {
       $this->doTestSave($entity_type);
     }
   }
@@ -441,7 +441,7 @@ class EntityFieldTest extends EntityKernelTestBase {
    */
   public function testIntrospection(): void {
     // All entity variations have to have the same results.
-    foreach (entity_test_entity_types() as $entity_type) {
+    foreach (\entity_test_entity_types() as $entity_type) {
       $this->doTestIntrospection($entity_type);
     }
   }
@@ -545,7 +545,7 @@ class EntityFieldTest extends EntityKernelTestBase {
    */
   public function testIterator(): void {
     // All entity variations have to have the same results.
-    foreach (entity_test_entity_types() as $entity_type) {
+    foreach (\entity_test_entity_types() as $entity_type) {
       $this->doTestIterator($entity_type);
     }
   }
@@ -569,14 +569,14 @@ class EntityFieldTest extends EntityKernelTestBase {
           $this->assertInstanceOf(TypedDataInterface::class, $value_property);
 
           $value = $value_property->getValue();
-          $this->assertTrue(!isset($value) || is_scalar($value) || $value instanceof EntityInterface, $entity_type . ": Value $value_name of item $delta of field $name is a primitive or an entity.");
+          $this->assertTrue(!isset($value) || \is_scalar($value) || $value instanceof EntityInterface, $entity_type . ": Value $value_name of item $delta of field $name is a primitive or an entity.");
         }
       }
     }
 
     $fields = $entity->getFields();
-    $this->assertEquals(array_keys($entity->getTypedData()->getDataDefinition()->getPropertyDefinitions()), array_keys($fields), "$entity_type: All fields returned.");
-    $this->assertEquals(iterator_to_array($entity->getIterator()), $fields, "$entity_type: Entity iterator iterates over all fields.");
+    $this->assertEquals(\array_keys($entity->getTypedData()->getDataDefinition()->getPropertyDefinitions()), \array_keys($fields), "$entity_type: All fields returned.");
+    $this->assertEquals(\iterator_to_array($entity->getIterator()), $fields, "$entity_type: Entity iterator iterates over all fields.");
   }
 
   /**
@@ -584,7 +584,7 @@ class EntityFieldTest extends EntityKernelTestBase {
    */
   public function testDataStructureInterfaces(): void {
     // All entity variations have to have the same results.
-    foreach (entity_test_entity_types() as $entity_type) {
+    foreach (\entity_test_entity_types() as $entity_type) {
       $this->doTestDataStructureInterfaces($entity_type);
     }
   }
@@ -622,9 +622,9 @@ class EntityFieldTest extends EntityKernelTestBase {
       $target_strings[] = '';
     }
 
-    asort($strings);
-    asort($target_strings);
-    $this->assertEquals(array_values($target_strings), array_values($strings), "$entity_type: All contained strings found.");
+    \asort($strings);
+    \asort($target_strings);
+    $this->assertEquals(\array_values($target_strings), \array_values($strings), "$entity_type: All contained strings found.");
   }
 
   /**
@@ -656,11 +656,11 @@ class EntityFieldTest extends EntityKernelTestBase {
    */
   public function testDataTypes(): void {
     $types = \Drupal::typedDataManager()->getDefinitions();
-    foreach (entity_test_entity_types() as $entity_type) {
+    foreach (\entity_test_entity_types() as $entity_type) {
       $this->assertNotEmpty($types['entity:' . $entity_type]['class'], 'Entity data type registered.');
     }
     // Check bundle types are provided as well.
-    entity_test_create_bundle('bundle');
+    \entity_test_create_bundle('bundle');
     $types = \Drupal::typedDataManager()->getDefinitions();
     $this->assertNotEmpty($types['entity:entity_test:bundle']['class'], 'Entity bundle data type registered.');
   }
@@ -695,7 +695,7 @@ class EntityFieldTest extends EntityKernelTestBase {
   public function testFieldOverrideBundleField(): void {
     // First make sure the bundle field override in code, which is provided by
     // the test entity works.
-    entity_test_create_bundle('some_test_bundle', 'Some test bundle', 'entity_test_field_override');
+    \entity_test_create_bundle('some_test_bundle', 'Some test bundle', 'entity_test_field_override');
     $field_definitions = \Drupal::service('entity_field.manager')->getFieldDefinitions('entity_test_field_override', 'entity_test_field_override');
     $this->assertEquals('The default description.', $field_definitions['name']->getDescription());
     $this->assertNull($field_definitions['name']->getTargetBundle());
@@ -776,7 +776,7 @@ class EntityFieldTest extends EntityKernelTestBase {
    */
   public function testComputedProperties(): void {
     // All entity variations have to have the same results.
-    foreach (entity_test_entity_types() as $entity_type) {
+    foreach (\entity_test_entity_types() as $entity_type) {
       $this->doTestComputedProperties($entity_type);
     }
   }
@@ -948,7 +948,7 @@ class EntityFieldTest extends EntityKernelTestBase {
   protected function doTestComputedProperties($entity_type) {
     $entity = $this->createTestEntity($entity_type);
     $entity->field_test_text->value = "The <strong>text</strong> text to filter.";
-    $entity->field_test_text->format = filter_default_format();
+    $entity->field_test_text->format = \filter_default_format();
 
     $target = "<p>The &lt;strong&gt;text&lt;/strong&gt; text to filter.</p>\n";
     $this->assertSame($target, (string) $entity->field_test_text->processed, "$entity_type: Text is processed with the default filter.");

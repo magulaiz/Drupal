@@ -35,7 +35,7 @@ class UpdateReportTest extends KernelTestBase {
 
     // The function should run without an exception being thrown when the value
     // of $variables['data'] is not set or is not an array.
-    template_preprocess_update_report($variables);
+    \template_preprocess_update_report($variables);
 
     // Test that the key "no_updates_message" has been set.
     $this->assertArrayHasKey('no_updates_message', $variables);
@@ -75,7 +75,7 @@ class UpdateReportTest extends KernelTestBase {
 
     \Drupal::moduleHandler()->loadInclude('update', 'inc', 'update.report');
     $variables = [];
-    template_preprocess_update_fetch_error_message($variables);
+    \template_preprocess_update_fetch_error_message($variables);
     $this->assertArrayHasKey('error_message', $variables);
     $this->assertEquals('Failed to fetch available update data:', $variables['error_message']['message']['#markup']);
     $this->assertArrayHasKey('documentation_link', $variables['error_message']['items']['#items']);
@@ -104,7 +104,7 @@ class UpdateReportTest extends KernelTestBase {
     $this->assertRaw('Failed to fetch available update data:<ul><li>See <a href="https://www.drupal.org/node/3170647">PHP OpenSSL requirements</a> in the Drupal.org handbook for possible reasons this could happen and what you can do to resolve them.</li><li>Check your local system logs for additional error messages.</li></ul>');
 
     $variables = [];
-    template_preprocess_update_fetch_error_message($variables);
+    \template_preprocess_update_fetch_error_message($variables);
     $this->assertArrayHasKey('error_message', $variables);
     $this->assertEquals('Failed to fetch available update data:', $variables['error_message']['message']['#markup']);
     $this->assertArrayHasKey('documentation_link', $variables['error_message']['items']['#items']);
@@ -121,7 +121,7 @@ class UpdateReportTest extends KernelTestBase {
     $this->assertRaw(' for additional error messages.</li></ul>');
 
     $variables = [];
-    template_preprocess_update_fetch_error_message($variables);
+    \template_preprocess_update_fetch_error_message($variables);
     $this->assertArrayHasKey('error_message', $variables);
     $this->assertEquals('Failed to fetch available update data:', $variables['error_message']['message']['#markup']);
     $this->assertArrayHasKey('documentation_link', $variables['error_message']['items']['#items']);

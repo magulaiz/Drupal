@@ -72,8 +72,8 @@ class Range extends Number {
       $offset = ($element['#max'] - $element['#min']) / 2;
 
       // Round to the step.
-      if (strtolower($element['#step']) != 'any') {
-        $steps = round($offset / $element['#step']);
+      if (\strtolower($element['#step']) != 'any') {
+        $steps = \round($offset / $element['#step']);
         $offset = $element['#step'] * $steps;
       }
 

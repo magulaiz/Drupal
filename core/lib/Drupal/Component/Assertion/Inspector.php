@@ -38,7 +38,7 @@ class Inspector {
    * @see http://php.net/manual/language.types.callable.php
    */
   public static function assertAll(callable $callable, $traversable) {
-    if (is_iterable($traversable)) {
+    if (\is_iterable($traversable)) {
       foreach ($traversable as $member) {
         if (!$callable($member)) {
           return FALSE;
@@ -76,7 +76,7 @@ class Inspector {
    *   objects with __toString().
    */
   public static function assertAllStringable($traversable) {
-    if (is_iterable($traversable)) {
+    if (\is_iterable($traversable)) {
       foreach ($traversable as $member) {
         if (!static::assertStringable($member)) {
           return FALSE;
@@ -100,7 +100,7 @@ class Inspector {
    *   TRUE if $string is a string or an object castable to a string.
    */
   public static function assertStringable($string) {
-    return is_string($string) || (is_object($string) && method_exists($string, '__toString'));
+    return \is_string($string) || (\is_object($string) && \method_exists($string, '__toString'));
   }
 
   /**
@@ -133,12 +133,12 @@ class Inspector {
    * @see http://php.net/manual/language.types.array.php
    */
   public static function assertStrictArray($array) {
-    if (!is_array($array)) {
+    if (!\is_array($array)) {
       return FALSE;
     }
     $i = 0;
 
-    foreach (array_keys($array) as $key) {
+    foreach (\array_keys($array) as $key) {
       if ($i !== $key) {
         return FALSE;
       }
@@ -191,13 +191,13 @@ class Inspector {
    *   TRUE if $traversable can be traversed and all members have all keys.
    */
   public static function assertAllHaveKey($traversable) {
-    $args = func_get_args();
+    $args = \func_get_args();
     unset($args[0]);
 
-    if (is_iterable($traversable)) {
+    if (\is_iterable($traversable)) {
       foreach ($traversable as $member) {
         foreach ($args as $key) {
-          if (!array_key_exists($key, $member)) {
+          if (!\array_key_exists($key, $member)) {
             return FALSE;
           }
         }
@@ -257,7 +257,7 @@ class Inspector {
    *   TRUE if $traversable can be traversed and all members not empty.
    */
   public static function assertAllNotEmpty($traversable) {
-    if (is_iterable($traversable)) {
+    if (\is_iterable($traversable)) {
       foreach ($traversable as $member) {
         if (empty($member)) {
           return FALSE;
@@ -298,17 +298,17 @@ class Inspector {
    *   containing $pattern.
    */
   public static function assertAllMatch($pattern, $traversable, $case_sensitive = FALSE) {
-    if (is_iterable($traversable)) {
+    if (\is_iterable($traversable)) {
       if ($case_sensitive) {
         foreach ($traversable as $member) {
-          if (!(is_string($member) && strstr($member, $pattern))) {
+          if (!(\is_string($member) && \strstr($member, $pattern))) {
             return FALSE;
           }
         }
       }
       else {
         foreach ($traversable as $member) {
-          if (!(is_string($member) && stristr($member, $pattern))) {
+          if (!(\is_string($member) && \stristr($member, $pattern))) {
             return FALSE;
           }
         }
@@ -331,13 +331,13 @@ class Inspector {
    *   matching $pattern.
    */
   public static function assertAllRegularExpressionMatch($pattern, $traversable) {
-    if (is_iterable($traversable)) {
+    if (\is_iterable($traversable)) {
       foreach ($traversable as $member) {
-        if (!is_string($member)) {
+        if (!\is_string($member)) {
           return FALSE;
         }
 
-        if (!preg_match($pattern, $member)) {
+        if (!\preg_match($pattern, $member)) {
           return FALSE;
         }
       }
@@ -378,12 +378,12 @@ class Inspector {
    *   at least one of the listed classes or interfaces.
    */
   public static function assertAllObjects($traversable) {
-    $args = func_get_args();
+    $args = \func_get_args();
     unset($args[0]);
 
-    if (is_iterable($traversable)) {
+    if (\is_iterable($traversable)) {
       foreach ($traversable as $member) {
-        if (count($args) > 0) {
+        if (\count($args) > 0) {
           foreach ($args as $instance) {
             if ($member instanceof $instance) {
               // We're continuing to the next member on the outer loop.
@@ -393,7 +393,7 @@ class Inspector {
           }
           return FALSE;
         }
-        elseif (!is_object($member)) {
+        elseif (!\is_object($member)) {
           return FALSE;
         }
       }

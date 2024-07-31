@@ -87,7 +87,7 @@ abstract class InlineBlockTestBase extends WebDriverTestBase {
     $page->pressButton('Save layout');
     $this->assertNotEmpty($assert_session->waitForElement('css', '.messages--status'));
 
-    if (stristr($this->getUrl(), 'admin/structure') === FALSE) {
+    if (\stristr($this->getUrl(), 'admin/structure') === FALSE) {
       $assert_session->pageTextContains('The layout override has been saved.');
     }
     else {
@@ -104,7 +104,7 @@ abstract class InlineBlockTestBase extends WebDriverTestBase {
       ->sort('id', 'DESC')
       ->range(0, 1)
       ->execute();
-    $block_id = array_pop($block_ids);
+    $block_id = \array_pop($block_ids);
     $this->assertNotEmpty($this->blockStorage->load($block_id));
     return $block_id;
   }
@@ -218,7 +218,7 @@ abstract class InlineBlockTestBase extends WebDriverTestBase {
       'revision' => 1,
     ]);
     $bundle->save();
-    block_content_add_body_field($bundle->id());
+    \block_content_add_body_field($bundle->id());
   }
 
 }

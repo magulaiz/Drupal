@@ -183,7 +183,7 @@ class RevisionRevertFormTest extends BrowserTestBase {
    * @dataProvider providerSubmitForm
    */
   public function testSubmitForm(array $permissions, string $entityTypeId, string $entityLabel, string $expectedLog, string $expectedMessage, string $expectedDestination): void {
-    if (count($permissions) > 0) {
+    if (\count($permissions) > 0) {
       $this->drupalLogin($this->createUser($permissions));
     }
     /** @var \Drupal\Core\Entity\RevisionableStorageInterface $storage */
@@ -338,8 +338,8 @@ class RevisionRevertFormTest extends BrowserTestBase {
    */
   protected function getLogs(string $channel): array {
     $logs = \Drupal::database()->query("SELECT * FROM {watchdog} WHERE type = :type", [':type' => $channel])->fetchAll();
-    return array_map(function (object $log) {
-      return (string) new FormattableMarkup($log->message, unserialize($log->variables));
+    return \array_map(function (object $log) {
+      return (string) new FormattableMarkup($log->message, \unserialize($log->variables));
     }, $logs);
   }
 

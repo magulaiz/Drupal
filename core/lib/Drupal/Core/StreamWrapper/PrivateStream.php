@@ -24,14 +24,14 @@ class PrivateStream extends LocalStream {
    * {@inheritdoc}
    */
   public function getName() {
-    return t('Private files');
+    return \t('Private files');
   }
 
   /**
    * {@inheritdoc}
    */
   public function getDescription() {
-    return t('Private local files served by Drupal.');
+    return \t('Private local files served by Drupal.');
   }
 
   /**
@@ -45,7 +45,7 @@ class PrivateStream extends LocalStream {
    * {@inheritdoc}
    */
   public function getExternalUrl() {
-    $path = str_replace('\\', '/', $this->getTarget());
+    $path = \str_replace('\\', '/', $this->getTarget());
     return Url::fromRoute('system.private_file_download', ['filepath' => $path], ['absolute' => TRUE, 'path_processing' => FALSE])->toString();
   }
 

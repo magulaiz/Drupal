@@ -107,7 +107,7 @@ class EarlyRenderingControllerTest extends BrowserTestBase {
 
     // The exceptions are expected. Do not interpret them as a test failure.
     // Not using File API; a potential error must trigger a PHP warning.
-    unlink($this->root . '/' . $this->siteDirectory . '/error.log');
+    \unlink($this->root . '/' . $this->siteDirectory . '/error.log');
   }
 
 }

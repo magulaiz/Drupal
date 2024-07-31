@@ -153,9 +153,9 @@ class MigrateEntityContentValidationTest extends KernelTestBase {
       ],
     ]);
 
-    $this->assertSame(sprintf('1: [user]: name=%s||name=%s||mail=Email field is required.', $username_constraint->illegalMessage, t($username_constraint->tooLongMessage, ['%name' => $long_username, '%max' => 60])), $this->messages[0], 'First message should have 3 validation errors.');
-    $this->assertSame(sprintf('2: [user]: name=%s||mail=Email field is required.', $username_constraint->illegalMessage), $this->messages[1], 'Second message should have 2 validation errors.');
-    $this->assertSame(sprintf('3: [user]: name=%s||mail=Email field is required.', $username_constraint->illegalMessage), $this->messages[2], 'Third message should have 2 validation errors.');
+    $this->assertSame(\sprintf('1: [user]: name=%s||name=%s||mail=Email field is required.', $username_constraint->illegalMessage, \t($username_constraint->tooLongMessage, ['%name' => $long_username, '%max' => 60])), $this->messages[0], 'First message should have 3 validation errors.');
+    $this->assertSame(\sprintf('2: [user]: name=%s||mail=Email field is required.', $username_constraint->illegalMessage), $this->messages[1], 'Second message should have 2 validation errors.');
+    $this->assertSame(\sprintf('3: [user]: name=%s||mail=Email field is required.', $username_constraint->illegalMessage), $this->messages[2], 'Third message should have 2 validation errors.');
     $this->assertArrayNotHasKey(3, $this->messages, 'Fourth message should not exist.');
   }
 
@@ -165,7 +165,7 @@ class MigrateEntityContentValidationTest extends KernelTestBase {
   public function testEntityOwnerValidation(): void {
     // Text format access is impacted by user permissions.
     $filter_test_format = FilterFormat::load('filter_test');
-    assert($filter_test_format instanceof FilterFormatInterface);
+    \assert($filter_test_format instanceof FilterFormatInterface);
 
     // Create 2 users, an admin user who has permission to use this text format
     // and another who does not have said access.
@@ -174,7 +174,7 @@ class MigrateEntityContentValidationTest extends KernelTestBase {
       'label' => 'admin',
       'is_admin' => TRUE,
     ]);
-    assert($role instanceof RoleInterface);
+    \assert($role instanceof RoleInterface);
     $role->grantPermission($filter_test_format->getPermissionName());
     $role->save();
     $admin_user = User::create([
@@ -243,7 +243,7 @@ class MigrateEntityContentValidationTest extends KernelTestBase {
 
     // The second user import should fail validation because they do not have
     // access to use "filter_test" filter.
-    $this->assertSame(sprintf('2: [entity_test: 2]: user_id.0.target_id=This entity (<em class="placeholder">user</em>: <em class="placeholder">%s</em>) cannot be referenced.||%s.0.format=The value you selected is not a valid choice.', $normal_user->id(), $field_name), $this->messages[0]);
+    $this->assertSame(\sprintf('2: [entity_test: 2]: user_id.0.target_id=This entity (<em class="placeholder">user</em>: <em class="placeholder">%s</em>) cannot be referenced.||%s.0.format=The value you selected is not a valid choice.', $normal_user->id(), $field_name), $this->messages[0]);
     $this->assertArrayNotHasKey(1, $this->messages);
   }
 
@@ -254,7 +254,7 @@ class MigrateEntityContentValidationTest extends KernelTestBase {
    *   The migration event.
    */
   public function mapMessageRecorder(MigrateIdMapMessageEvent $event) {
-    $this->messages[] = implode(',', $event->getSourceIdValues()) . ': ' . $event->getMessage();
+    $this->messages[] = \implode(',', $event->getSourceIdValues()) . ': ' . $event->getMessage();
   }
 
   /**

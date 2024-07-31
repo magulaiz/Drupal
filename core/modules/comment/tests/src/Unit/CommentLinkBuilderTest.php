@@ -137,7 +137,7 @@ class CommentLinkBuilderTest extends UnitTestCase {
     if (!empty($expected)) {
       if (!empty($links)) {
         foreach ($expected as $link => $detail) {
-          if (is_array($detail)) {
+          if (\is_array($detail)) {
             // Array of link attributes.
             foreach ($detail as $key => $value) {
               $this->assertEquals($value, $links['comment__comment']['#links'][$link][$key]);
@@ -279,7 +279,7 @@ class CommentLinkBuilderTest extends UnitTestCase {
       ->willReturn($has_field);
 
     if (empty($this->timestamp)) {
-      $this->timestamp = time();
+      $this->timestamp = \time();
     }
     $field_item = (object) [
       'status' => $comment_status,
@@ -325,7 +325,7 @@ class CommentLinkBuilderTest extends UnitTestCase {
 
 namespace Drupal\comment;
 
-if (!function_exists('history_read')) {
+if (!\function_exists('history_read')) {
 
   function history_read($nid) {
     return 0;

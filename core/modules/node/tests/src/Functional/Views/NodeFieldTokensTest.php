@@ -35,7 +35,7 @@ class NodeFieldTokensTest extends NodeTestBase {
     /** @var \Drupal\node\NodeTypeInterface $node_type */
     $node_type = NodeType::create(['type' => 'article', 'name' => 'Article']);
     $node_type->save();
-    node_add_body_field($node_type);
+    \node_add_body_field($node_type);
 
     // Create a user and a node.
     $account = $this->createUser();

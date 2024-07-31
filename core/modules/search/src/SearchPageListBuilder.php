@@ -199,7 +199,7 @@ class SearchPageListBuilder extends DraggableListBuilder implements FormInterfac
     $done = $total - $remaining;
     // Use floor() to calculate the percentage, so if it is not quite 100%, it
     // will show as 99%, to indicate "almost done".
-    $percentage = $total > 0 ? floor(100 * $done / $total) : 100;
+    $percentage = $total > 0 ? \floor(100 * $done / $total) : 100;
     $percentage .= '%';
     $status = '<p><strong>' . $this->t('%percentage of the site has been indexed.', ['%percentage' => $percentage]) . ' ' . $count . '</strong></p>';
     $form['status'] = [
@@ -216,7 +216,7 @@ class SearchPageListBuilder extends DraggableListBuilder implements FormInterfac
     ];
 
     $items = [10, 20, 50, 100, 200, 500];
-    $items = array_combine($items, $items);
+    $items = \array_combine($items, $items);
 
     // Indexing throttle:
     $form['indexing_throttle'] = [
@@ -284,7 +284,7 @@ class SearchPageListBuilder extends DraggableListBuilder implements FormInterfac
       '#type' => 'select',
       '#title' => $this->t('Search page type'),
       '#empty_option' => $this->t('- Choose page type -'),
-      '#options' => array_map(function ($definition) {
+      '#options' => \array_map(function ($definition) {
         return $definition['title'];
       }, $this->searchManager->getDefinitions()),
     ];

@@ -94,7 +94,7 @@ class MigrationPluginManager extends BaseMigrationPluginManager {
 
     // Check if the migration has any of the tags that trigger source_module
     // enforcement.
-    $applied_tags = array_intersect($this->getEnforcedSourceModuleTags(), $definition['migration_tags']);
+    $applied_tags = \array_intersect($this->getEnforcedSourceModuleTags(), $definition['migration_tags']);
     if ($applied_tags) {
       // Throw an exception if the source plugin definition does not define a
       // source_module.

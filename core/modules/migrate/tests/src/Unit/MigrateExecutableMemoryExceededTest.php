@@ -82,9 +82,9 @@ class MigrateExecutableMemoryExceededTest extends MigrateTestCase {
     $this->executable->setMemoryUsage($memory_usage_first ?: $this->memoryLimit, $memory_usage_second ?: $this->memoryLimit);
     $this->executable->setMemoryThreshold(0.85);
     if ($message) {
-      $this->message->display(Argument::that(fn(string $subject) => str_contains($subject, 'reclaiming memory')), 'warning')
+      $this->message->display(Argument::that(fn(string $subject) => \str_contains($subject, 'reclaiming memory')), 'warning')
         ->shouldBeCalledOnce();
-      $this->message->display(Argument::that(fn(string $subject) => str_contains($subject, $message)), 'warning')
+      $this->message->display(Argument::that(fn(string $subject) => \str_contains($subject, $message)), 'warning')
         ->shouldBeCalledOnce();
     }
     else {
@@ -114,7 +114,7 @@ class MigrateExecutableMemoryExceededTest extends MigrateTestCase {
    * Tests memoryExceeded when memory usage is not exceeded.
    */
   public function testMemoryNotExceeded(): void {
-    $this->runMemoryExceededTest('', FALSE, floor($this->memoryLimit * 0.85) - 1);
+    $this->runMemoryExceededTest('', FALSE, \floor($this->memoryLimit * 0.85) - 1);
   }
 
 }

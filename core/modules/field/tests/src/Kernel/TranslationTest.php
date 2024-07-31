@@ -110,19 +110,19 @@ class TranslationTest extends FieldKernelTestBase {
    */
   public function testTranslatableFieldSaveLoad(): void {
     // Enable field translations for nodes.
-    field_test_entity_info_translatable('node', TRUE);
+    \field_test_entity_info_translatable('node', TRUE);
     $entity_type = \Drupal::entityTypeManager()->getDefinition('node');
     $this->assertTrue($entity_type->isTranslatable(), 'Nodes are translatable.');
 
     // Prepare the field translations.
     $entity_type_id = 'entity_test';
-    field_test_entity_info_translatable($entity_type_id, TRUE);
+    \field_test_entity_info_translatable($entity_type_id, TRUE);
     $entity = $this->container->get('entity_type.manager')
       ->getStorage($entity_type_id)
       ->create(['type' => $this->field->getTargetBundle()]);
     $field_translations = [];
-    $available_langcodes = array_keys($this->container->get('language_manager')->getLanguages());
-    $entity->langcode->value = reset($available_langcodes);
+    $available_langcodes = \array_keys($this->container->get('language_manager')->getLanguages());
+    $entity->langcode->value = \reset($available_langcodes);
     foreach ($available_langcodes as $langcode) {
       $field_translations[$langcode] = $this->_generateTestFieldValues($this->fieldStorage->getCardinality());
       $translation = $entity->hasTranslation($langcode) ? $entity->getTranslation($langcode) : $entity->addTranslation($langcode);
@@ -150,13 +150,13 @@ class TranslationTest extends FieldKernelTestBase {
 
     $field_definition = $this->fieldDefinition;
     $field_definition['field_storage'] = $field_storage;
-    $field_definition['default_value'] = [['value' => rand(1, 127)]];
+    $field_definition['default_value'] = [['value' => \rand(1, 127)]];
     $field = FieldConfig::create($field_definition);
     $field->save();
 
-    $translation_langcodes = array_slice($available_langcodes, 0, 2);
-    asort($translation_langcodes);
-    $translation_langcodes = array_values($translation_langcodes);
+    $translation_langcodes = \array_slice($available_langcodes, 0, 2);
+    \asort($translation_langcodes);
+    $translation_langcodes = \array_values($translation_langcodes);
 
     $values = ['type' => $field->getTargetBundle(), 'langcode' => $translation_langcodes[0]];
     $entity = $this->container->get('entity_type.manager')
@@ -168,8 +168,8 @@ class TranslationTest extends FieldKernelTestBase {
       $translation->{$this->fieldName}->setValue($values[$this->fieldName][$langcode]);
     }
 
-    $field_langcodes = array_keys($entity->getTranslationLanguages());
-    sort($field_langcodes);
+    $field_langcodes = \array_keys($entity->getTranslationLanguages());
+    \sort($field_langcodes);
     $this->assertEquals($translation_langcodes, $field_langcodes, 'Missing translations did not get a default value.');
 
     // @todo Test every translation once the Entity Translation API allows for

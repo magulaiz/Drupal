@@ -15,8 +15,8 @@ use Drupal\KernelTests\KernelTestBase;
 class ConfigConfiguratorTest extends KernelTestBase {
 
   public function testExistingConfigWithKeysInDifferentOrder(): void {
-    $recipe_dir = uniqid('public://recipe_test_');
-    mkdir($recipe_dir . '/config', recursive: TRUE);
+    $recipe_dir = \uniqid('public://recipe_test_');
+    \mkdir($recipe_dir . '/config', recursive: TRUE);
 
     $this->enableModules(['system']);
     $this->installConfig('system');
@@ -26,15 +26,15 @@ class ConfigConfiguratorTest extends KernelTestBase {
     unset($original_data['uuid'], $original_data['_core']);
     $recipe_data = $original_data;
     // Reorder an inner array, to ensure keys are sorted recursively.
-    $recipe_data['page'] = array_reverse($original_data['page'], TRUE);
+    $recipe_data['page'] = \array_reverse($original_data['page'], TRUE);
     $this->assertNotSame($original_data, $recipe_data);
-    file_put_contents($recipe_dir . '/config/system.site.yml', Yaml::encode($recipe_data));
+    \file_put_contents($recipe_dir . '/config/system.site.yml', Yaml::encode($recipe_data));
 
     $recipe = [
       'name' => 'Same config, different order',
       'type' => 'Testing',
     ];
-    file_put_contents($recipe_dir . '/recipe.yml', Yaml::encode($recipe));
+    \file_put_contents($recipe_dir . '/recipe.yml', Yaml::encode($recipe));
 
     // If there was a conflict with the pre-existing config, ConfigConfigurator
     // would throw an exception and the recipe would not be created. So all we

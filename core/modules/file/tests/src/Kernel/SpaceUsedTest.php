@@ -47,7 +47,7 @@ class SpaceUsedTest extends FileManagedUnitTestBase {
    *   The file entity.
    */
   protected function createFileWithSize($uri, $size, $uid, $status = FileInterface::STATUS_PERMANENT) {
-    file_put_contents($uri, $this->randomMachineName($size));
+    \file_put_contents($uri, $this->randomMachineName($size));
     $file = File::create([
       'uri' => $uri,
       'uid' => $uid,

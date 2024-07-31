@@ -111,7 +111,7 @@ class ShortcutLinksTest extends ShortcutTestBase {
       $paths = $this->getShortcutInformation($saved_set, 'link');
       $this->assertContains('internal:' . $test_path, $paths, 'Shortcut created: ' . $test_path);
 
-      if (in_array($test_path, $test_cases_non_access)) {
+      if (\in_array($test_path, $test_cases_non_access)) {
         $this->assertSession()->linkNotExists($title, new FormattableMarkup('Shortcut link %url not accessible on the page.', ['%url' => $test_path]));
       }
       else {
@@ -262,7 +262,7 @@ class ShortcutLinksTest extends ShortcutTestBase {
     $new_link_name = $this->randomMachineName();
 
     $shortcuts = $set->getShortcuts();
-    $shortcut = reset($shortcuts);
+    $shortcut = \reset($shortcuts);
     $this->drupalGet('admin/config/user-interface/shortcut/link/' . $shortcut->id());
     $this->submitForm(['title[0][value]' => $new_link_name], 'Save');
     $saved_set = ShortcutSet::load($set->id());
@@ -282,7 +282,7 @@ class ShortcutLinksTest extends ShortcutTestBase {
     $new_link_path = '/admin/config';
 
     $shortcuts = $set->getShortcuts();
-    $shortcut = reset($shortcuts);
+    $shortcut = \reset($shortcuts);
     $this->drupalGet('admin/config/user-interface/shortcut/link/' . $shortcut->id());
     $this->submitForm([
       'title[0][value]' => $shortcut->getTitle(),
@@ -318,7 +318,7 @@ class ShortcutLinksTest extends ShortcutTestBase {
     $set = $this->set;
 
     $shortcuts = $set->getShortcuts();
-    $shortcut = reset($shortcuts);
+    $shortcut = \reset($shortcuts);
     $this->drupalGet('admin/config/user-interface/shortcut/link/' . $shortcut->id() . '/delete');
     $this->submitForm([], 'Delete');
     $saved_set = ShortcutSet::load($set->id());
@@ -327,7 +327,7 @@ class ShortcutLinksTest extends ShortcutTestBase {
 
     // Delete all the remaining shortcut links.
     $storage = \Drupal::entityTypeManager()->getStorage('shortcut');
-    $storage->delete($storage->loadMultiple(array_filter($ids)));
+    $storage->delete($storage->loadMultiple(\array_filter($ids)));
 
     // Get the front page to check that no exceptions occur.
     $this->drupalGet('');

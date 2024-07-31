@@ -76,23 +76,23 @@ class StackedKernelPass implements CompilerPassInterface {
       $responders[$id] = !empty($attributes[0]['responder']);
     }
 
-    array_multisort($priorities, SORT_ASC, $middlewares, $responders);
+    \array_multisort($priorities, SORT_ASC, $middlewares, $responders);
 
     $decorated_id = 'http_kernel.basic';
     $middlewares_param = [new Reference($decorated_id)];
 
-    $first_responder = array_search(TRUE, array_reverse($responders, TRUE), TRUE);
+    $first_responder = \array_search(TRUE, \array_reverse($responders, TRUE), TRUE);
     if ($first_responder) {
       $container->getDefinition($decorated_id)->setLazy(TRUE);
     }
 
     foreach ($middlewares as $id => $decorator) {
       // Prepend a reference to the middlewares container parameter.
-      array_unshift($middlewares_param, new Reference($id));
+      \array_unshift($middlewares_param, new Reference($id));
 
       // Prepend the inner kernel as first constructor argument.
       $arguments = $decorator->getArguments();
-      array_unshift($arguments, new Reference($decorated_id));
+      \array_unshift($arguments, new Reference($decorated_id));
       $decorator->setArguments($arguments);
 
       if ($first_responder === $id) {
@@ -103,7 +103,7 @@ class StackedKernelPass implements CompilerPassInterface {
         // to be set as lazy.
         $decorator->setLazy(TRUE);
         foreach ([HttpKernelInterface::class, TerminableInterface::class] as $interface) {
-          if (is_a($decorator->getClass(), $interface, TRUE)) {
+          if (\is_a($decorator->getClass(), $interface, TRUE)) {
             $decorator->addTag('proxy', ['interface' => $interface]);
           }
         }

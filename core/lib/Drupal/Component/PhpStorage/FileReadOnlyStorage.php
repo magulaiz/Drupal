@@ -32,7 +32,7 @@ class FileReadOnlyStorage implements PhpStorageInterface {
    * {@inheritdoc}
    */
   public function exists($name) {
-    return file_exists($this->getFullPath($name));
+    return \file_exists($this->getFullPath($name));
   }
 
   /**
@@ -77,7 +77,7 @@ class FileReadOnlyStorage implements PhpStorageInterface {
    */
   public function listAll() {
     $names = [];
-    if (file_exists($this->directory)) {
+    if (\file_exists($this->directory)) {
       foreach (new \DirectoryIterator($this->directory) as $fileinfo) {
         if (!$fileinfo->isDot()) {
           $name = $fileinfo->getFilename();

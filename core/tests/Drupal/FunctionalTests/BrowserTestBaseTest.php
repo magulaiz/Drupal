@@ -490,7 +490,7 @@ class BrowserTestBaseTest extends BrowserTestBase {
   public function testLocalTimeZone(): void {
     $expected = 'Australia/Sydney';
     // The 'Australia/Sydney' time zone is set in core/tests/bootstrap.php
-    $this->assertEquals($expected, date_default_timezone_get());
+    $this->assertEquals($expected, \date_default_timezone_get());
 
     // The 'Australia/Sydney' time zone is also set in
     // FunctionalTestSetupTrait::initConfig().
@@ -523,7 +523,7 @@ class BrowserTestBaseTest extends BrowserTestBase {
   }
 
   public function testGetDefaultDriveInstance(): void {
-    putenv('MINK_DRIVER_ARGS=' . json_encode([NULL, ['key1' => ['key2' => ['key3' => 3, 'key3.1' => 3.1]]]]));
+    \putenv('MINK_DRIVER_ARGS=' . \json_encode([NULL, ['key1' => ['key2' => ['key3' => 3, 'key3.1' => 3.1]]]]));
     $this->getDefaultDriverInstance();
     $this->assertEquals([NULL, ['key1' => ['key2' => ['key3' => 3, 'key3.1' => 3.1]]]], $this->minkDefaultDriverArgs);
   }
@@ -550,7 +550,7 @@ class BrowserTestBaseTest extends BrowserTestBase {
     $install_url = Url::fromUri('base:core/install.php', ['external' => TRUE, 'absolute' => TRUE])->toString();
     $this->drupalGet($install_url);
     $this->assertSession()->statusCodeEquals(200);
-    unlink($this->siteDirectory . '/.htkey');
+    \unlink($this->siteDirectory . '/.htkey');
     $this->drupalGet($install_url);
     $this->assertSession()->statusCodeEquals(403);
   }
@@ -581,10 +581,10 @@ class BrowserTestBaseTest extends BrowserTestBase {
 
     $deprecation_messages = [];
     foreach ($this->getSession()->getResponseHeaders() as $name => $values) {
-      if (preg_match('/^X-Drupal-Assertion-[0-9]+$/', $name, $matches)) {
+      if (\preg_match('/^X-Drupal-Assertion-[0-9]+$/', $name, $matches)) {
         foreach ($values as $value) {
-          $parameters = unserialize(urldecode($value));
-          if (count($parameters) === 3) {
+          $parameters = \unserialize(\urldecode($value));
+          if (\count($parameters) === 3) {
             if ($parameters[1] === 'User deprecated function') {
               $deprecation_messages[] = (string) $parameters[0];
             }
@@ -594,7 +594,7 @@ class BrowserTestBaseTest extends BrowserTestBase {
     }
 
     $this->assertContains('Test deprecation message', $deprecation_messages);
-    $test_deprecation_messages = array_filter($deprecation_messages, function ($message) {
+    $test_deprecation_messages = \array_filter($deprecation_messages, function ($message) {
       return $message === 'Test deprecation message';
     });
     $this->assertCount(1, $test_deprecation_messages);
@@ -607,14 +607,14 @@ class BrowserTestBaseTest extends BrowserTestBase {
     // Append the stream capturer to the STDERR stream, so that we can test the
     // dump() output and also prevent it from actually outputting in this
     // particular test.
-    stream_filter_register("capture", StreamCapturer::class);
-    stream_filter_append(STDERR, "capture");
+    \stream_filter_register("capture", StreamCapturer::class);
+    \stream_filter_append(STDERR, "capture");
 
     // Dump some variables to check that dump() in test code produces output
     // on the command line that is running the test.
     $role = Role::load('authenticated');
-    dump($role);
-    dump($role->id());
+    \dump($role);
+    \dump($role->id());
 
     $this->assertStringContainsString('Drupal\user\Entity\Role', StreamCapturer::$cache);
     $this->assertStringContainsString('authenticated', StreamCapturer::$cache);
@@ -639,7 +639,7 @@ class BrowserTestBaseTest extends BrowserTestBase {
    * Test if setting an invalid scheme in SIMPLETEST_BASE_URL throws an exception.
    */
   public function testSimpleTestBaseUrlValidation(): void {
-    putenv('SIMPLETEST_BASE_URL=mysql://user:pass@localhost/database');
+    \putenv('SIMPLETEST_BASE_URL=mysql://user:pass@localhost/database');
     $this->expectException(\Exception::class);
     $this->expectExceptionMessage('You must provide valid scheme for the SIMPLETEST_BASE_URL environment variable. Valid schema are: http, https.');
     $this->setupBaseUrl();

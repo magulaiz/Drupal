@@ -59,7 +59,7 @@ class EntityRevisionsTest extends BrowserTestBase {
   public function testRevisions(): void {
 
     // All revisable entity variations have to have the same results.
-    foreach (entity_test_entity_types(ENTITY_TEST_TYPES_REVISABLE) as $entity_type) {
+    foreach (\entity_test_entity_types(ENTITY_TEST_TYPES_REVISABLE) as $entity_type) {
       $this->runRevisionsTests($entity_type);
     }
   }
@@ -124,7 +124,7 @@ class EntityRevisionsTest extends BrowserTestBase {
           $this->randomMachineName(32),
           $this->randomMachineName(32),
         ],
-        'created' => time() + $i + 1,
+        'created' => \time() + $i + 1,
       ];
       $entity->set('name', $values['en'][$i]['name']);
       $entity->set('translatable_test_field', $values['en'][$i]['translatable_test_field']);

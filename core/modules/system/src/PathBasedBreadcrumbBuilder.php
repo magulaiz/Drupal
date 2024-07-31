@@ -158,8 +158,8 @@ class PathBasedBreadcrumbBuilder implements BreadcrumbBuilderInterface {
     // General path-based breadcrumbs. Use the actual request path, prior to
     // resolving path aliases, so the breadcrumb can be defined by simply
     // creating a hierarchy of path aliases.
-    $path = trim($this->context->getPathInfo(), '/');
-    $path_elements = explode('/', $path);
+    $path = \trim($this->context->getPathInfo(), '/');
+    $path_elements = \explode('/', $path);
     $exclude = [];
     // Don't show a link to the front-page path.
     $front = $this->config->get('page.front');
@@ -167,10 +167,10 @@ class PathBasedBreadcrumbBuilder implements BreadcrumbBuilderInterface {
     // /user is just a redirect, so skip it.
     // @todo Find a better way to deal with /user.
     $exclude['/user'] = TRUE;
-    while (count($path_elements) > 1) {
-      array_pop($path_elements);
+    while (\count($path_elements) > 1) {
+      \array_pop($path_elements);
       // Copy the path elements for up-casting.
-      $route_request = $this->getRequestForPath('/' . implode('/', $path_elements), $exclude);
+      $route_request = $this->getRequestForPath('/' . \implode('/', $path_elements), $exclude);
       if ($route_request) {
         $route_match = RouteMatch::createFromRequest($route_request);
         $access = $this->accessManager->check($route_match, $this->currentUser, NULL, TRUE);
@@ -182,7 +182,7 @@ class PathBasedBreadcrumbBuilder implements BreadcrumbBuilderInterface {
           if (!isset($title)) {
             // Fallback to using the raw path component as the title if the
             // route is missing a _title or _title_callback attribute.
-            $title = str_replace(['-', '_'], ' ', Unicode::ucfirst(end($path_elements)));
+            $title = \str_replace(['-', '_'], ' ', Unicode::ucfirst(\end($path_elements)));
           }
           $url = Url::fromRouteMatch($route_match);
           $links[] = new Link($title, $url);
@@ -193,7 +193,7 @@ class PathBasedBreadcrumbBuilder implements BreadcrumbBuilderInterface {
     // Add the Home link.
     $links[] = Link::createFromRoute($this->t('Home'), '<front>');
 
-    return $breadcrumb->setLinks(array_reverse($links));
+    return $breadcrumb->setLinks(\array_reverse($links));
   }
 
   /**

@@ -76,9 +76,9 @@ class LocalePluralFormatTest extends BrowserTestBase {
     ]);
 
     // Reset static caches from locale_get_plural() to ensure we get fresh data.
-    drupal_static_reset('locale_get_plural');
-    drupal_static_reset('locale_get_plural:plurals');
-    drupal_static_reset('locale');
+    \drupal_static_reset('locale_get_plural');
+    \drupal_static_reset('locale_get_plural:plurals');
+    \drupal_static_reset('locale');
 
     // Expected plural translation strings for each plural index.
     $plural_strings = [
@@ -142,11 +142,11 @@ class LocalePluralFormatTest extends BrowserTestBase {
     foreach ($plural_tests as $langcode => $tests) {
       foreach ($tests as $count => $expected_plural_index) {
         // Assert that the we get the right plural index.
-        $this->assertSame($expected_plural_index, locale_get_plural($count, $langcode), 'Computed plural index for ' . $langcode . ' for count ' . $count . ' is ' . $expected_plural_index);
+        $this->assertSame($expected_plural_index, \locale_get_plural($count, $langcode), 'Computed plural index for ' . $langcode . ' for count ' . $count . ' is ' . $expected_plural_index);
         // Assert that the we get the right translation for that. Change the
         // expected index as per the logic for translation lookups.
         $expected_plural_index = ($count == 1) ? 0 : $expected_plural_index;
-        $expected_plural_string = str_replace('@count', (string) $count, $plural_strings[$langcode][$expected_plural_index]);
+        $expected_plural_string = \str_replace('@count', (string) $count, $plural_strings[$langcode][$expected_plural_index]);
         $this->assertSame($expected_plural_string, \Drupal::translation()->formatPlural($count, '@count hour', '@count hours', [], ['langcode' => $langcode])->render(), 'Plural translation of @count hour / @count hours for count ' . $count . ' in ' . $langcode . ' is ' . $expected_plural_string);
         // DO NOT use translation to pass translated strings into
         // PluralTranslatableMarkup::createFromTranslatedString() this way. It
@@ -177,7 +177,7 @@ class LocalePluralFormatTest extends BrowserTestBase {
     // Visit User Info page before updating translation strings. Change the
     // created time to ensure that the we're dealing in seconds and it can't be
     // exactly 1 minute.
-    $this->adminUser->set('created', time() - 1)->save();
+    $this->adminUser->set('created', \time() - 1)->save();
     $this->drupalGet('user');
 
     // Member for time should be translated.
@@ -229,7 +229,7 @@ class LocalePluralFormatTest extends BrowserTestBase {
     // Member for time should be translated. Change the created time to ensure
     // that the we're dealing in multiple seconds and it can't be exactly 1
     // second or minute.
-    $this->adminUser->set('created', time() - 2)->save();
+    $this->adminUser->set('created', \time() - 2)->save();
     $this->drupalGet('user');
     $this->assertSession()->pageTextContains("secondes updated");
   }
@@ -390,7 +390,7 @@ class LocalePluralFormatTest extends BrowserTestBase {
   public function importPoFile($contents, array $options = []) {
     $file_system = \Drupal::service('file_system');
     $name = $file_system->tempnam('temporary://', "po_") . '.po';
-    file_put_contents($name, $contents);
+    \file_put_contents($name, $contents);
     $options['files[file]'] = $name;
     $this->drupalGet('admin/config/regional/translate/import');
     $this->submitForm($options, 'Import');

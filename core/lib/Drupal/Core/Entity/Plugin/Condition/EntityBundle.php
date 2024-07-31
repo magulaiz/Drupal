@@ -66,7 +66,7 @@ class EntityBundle extends ConditionPluginBase implements ContainerFactoryPlugin
     $form['bundles'] = [
       '#title' => $this->pluginDefinition['label'],
       '#type' => 'checkboxes',
-      '#options' => array_combine(array_keys($bundles), array_column($bundles, 'label')),
+      '#options' => \array_combine(\array_keys($bundles), \array_column($bundles, 'label')),
       '#default_value' => $this->configuration['bundles'],
     ];
     return parent::buildConfigurationForm($form, $form_state);
@@ -76,7 +76,7 @@ class EntityBundle extends ConditionPluginBase implements ContainerFactoryPlugin
    * {@inheritdoc}
    */
   public function submitConfigurationForm(array &$form, FormStateInterface $form_state) {
-    $this->configuration['bundles'] = array_filter($form_state->getValue('bundles'));
+    $this->configuration['bundles'] = \array_filter($form_state->getValue('bundles'));
     parent::submitConfigurationForm($form, $form_state);
   }
 
@@ -97,10 +97,10 @@ class EntityBundle extends ConditionPluginBase implements ContainerFactoryPlugin
    * {@inheritdoc}
    */
   public function summary() {
-    if (count($this->configuration['bundles']) > 1) {
+    if (\count($this->configuration['bundles']) > 1) {
       $bundles = $this->configuration['bundles'];
-      $last = array_pop($bundles);
-      $bundles = implode(', ', $bundles);
+      $last = \array_pop($bundles);
+      $bundles = \implode(', ', $bundles);
 
       if (empty($this->configuration['negate'])) {
         return $this->t('@bundle_type is @bundles or @last', [
@@ -117,7 +117,7 @@ class EntityBundle extends ConditionPluginBase implements ContainerFactoryPlugin
         ]);
       }
     }
-    $bundle = reset($this->configuration['bundles']);
+    $bundle = \reset($this->configuration['bundles']);
 
     if (empty($this->configuration['negate'])) {
       return $this->t('@bundle_type is @bundle', [

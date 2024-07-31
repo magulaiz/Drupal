@@ -37,7 +37,7 @@ class SelectPagerDefaultTest extends DatabaseTestBase {
     $count = Database::getConnection()->select('test')->countQuery()->execute()->fetchField();
 
     $correct_number = $limit;
-    $num_pages = floor($count / $limit);
+    $num_pages = \floor($count / $limit);
 
     // If there is no remainder from rounding, subtract 1 since we index from 0.
     if (!($num_pages * $limit < $count)) {
@@ -46,7 +46,7 @@ class SelectPagerDefaultTest extends DatabaseTestBase {
 
     for ($page = 0; $page <= $num_pages; ++$page) {
       $this->drupalGet('database_test/pager_query_even/' . $limit, ['query' => ['page' => $page]]);
-      $data = json_decode($this->getSession()->getPage()->getContent());
+      $data = \json_decode($this->getSession()->getPage()->getContent());
 
       if ($page == $num_pages) {
         $correct_number = $count - ($limit * $page);
@@ -71,7 +71,7 @@ class SelectPagerDefaultTest extends DatabaseTestBase {
     $count = Database::getConnection()->select('test_task')->countQuery()->execute()->fetchField();
 
     $correct_number = $limit;
-    $num_pages = floor($count / $limit);
+    $num_pages = \floor($count / $limit);
 
     // If there is no remainder from rounding, subtract 1 since we index from 0.
     if (!($num_pages * $limit < $count)) {
@@ -80,7 +80,7 @@ class SelectPagerDefaultTest extends DatabaseTestBase {
 
     for ($page = 0; $page <= $num_pages; ++$page) {
       $this->drupalGet('database_test/pager_query_odd/' . $limit, ['query' => ['page' => $page]]);
-      $data = json_decode($this->getSession()->getPage()->getContent());
+      $data = \json_decode($this->getSession()->getPage()->getContent());
 
       if ($page == $num_pages) {
         $correct_number = $count - ($limit * $page);

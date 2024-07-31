@@ -102,10 +102,10 @@ class DatabaseTestController extends ControllerBase {
    */
   public function testTablesort() {
     $header = [
-      'tid' => ['data' => t('Task ID'), 'field' => 'tid', 'sort' => 'desc'],
-      'pid' => ['data' => t('Person ID'), 'field' => 'pid'],
-      'task' => ['data' => t('Task'), 'field' => 'task'],
-      'priority' => ['data' => t('Priority'), 'field' => 'priority'],
+      'tid' => ['data' => \t('Task ID'), 'field' => 'tid', 'sort' => 'desc'],
+      'pid' => ['data' => \t('Person ID'), 'field' => 'pid'],
+      'task' => ['data' => \t('Task'), 'field' => 'task'],
+      'priority' => ['data' => \t('Priority'), 'field' => 'priority'],
     ];
 
     $query = $this->connection->select('test_task', 't');
@@ -134,10 +134,10 @@ class DatabaseTestController extends ControllerBase {
    */
   public function testTablesortFirst() {
     $header = [
-      'tid' => ['data' => t('Task ID'), 'field' => 'tid', 'sort' => 'desc'],
-      'pid' => ['data' => t('Person ID'), 'field' => 'pid'],
-      'task' => ['data' => t('Task'), 'field' => 'task'],
-      'priority' => ['data' => t('Priority'), 'field' => 'priority'],
+      'tid' => ['data' => \t('Task ID'), 'field' => 'tid', 'sort' => 'desc'],
+      'pid' => ['data' => \t('Person ID'), 'field' => 'pid'],
+      'task' => ['data' => \t('Task'), 'field' => 'task'],
+      'priority' => ['data' => \t('Priority'), 'field' => 'priority'],
     ];
 
     $query = $this->connection->select('test_task', 't');

@@ -76,7 +76,7 @@ class CommentInterfaceTest extends CommentTestBase {
 
     // Comment as anonymous with preview required.
     $this->drupalLogout();
-    user_role_grant_permissions(RoleInterface::ANONYMOUS_ID, ['access content', 'access comments', 'post comments', 'skip comment approval']);
+    \user_role_grant_permissions(RoleInterface::ANONYMOUS_ID, ['access content', 'access comments', 'post comments', 'skip comment approval']);
     $anonymous_comment = $this->postComment($this->node, $this->randomMachineName(), $this->randomMachineName(), TRUE);
     $this->assertTrue($this->commentExists($anonymous_comment), 'Comment found.');
     $anonymous_comment->delete();
@@ -133,7 +133,7 @@ class CommentInterfaceTest extends CommentTestBase {
     $this->assertTrue($this->commentExists($reply, TRUE), 'Reply found.');
     $this->assertEquals($comment->id(), $reply_loaded->getParentComment()->id(), 'Pid of a reply to a comment is set correctly.');
     // Check the thread of reply grows correctly.
-    $this->assertEquals(rtrim($comment->getThread(), '/') . '.00/', $reply_loaded->getThread());
+    $this->assertEquals(\rtrim($comment->getThread(), '/') . '.00/', $reply_loaded->getThread());
 
     // Second reply to comment #2 creating comment #4.
     $this->drupalGet('comment/reply/node/' . $this->node->id() . '/comment/' . $comment->id());
@@ -143,7 +143,7 @@ class CommentInterfaceTest extends CommentTestBase {
     $reply_loaded = Comment::load($reply->id());
     $this->assertTrue($this->commentExists($reply, TRUE), 'Second reply found.');
     // Check the thread of second reply grows correctly.
-    $this->assertEquals(rtrim($comment->getThread(), '/') . '.01/', $reply_loaded->getThread());
+    $this->assertEquals(\rtrim($comment->getThread(), '/') . '.01/', $reply_loaded->getThread());
 
     // Reply to comment #4 creating comment #5.
     $this->drupalGet('comment/reply/node/' . $this->node->id() . '/comment/' . $reply_loaded->id());
@@ -153,7 +153,7 @@ class CommentInterfaceTest extends CommentTestBase {
     $reply_loaded = Comment::load($reply->id());
     $this->assertTrue($this->commentExists($reply, TRUE), 'Second reply found.');
     // Check the thread of reply to second reply grows correctly.
-    $this->assertEquals(rtrim($comment->getThread(), '/') . '.01.00/', $reply_loaded->getThread());
+    $this->assertEquals(\rtrim($comment->getThread(), '/') . '.01.00/', $reply_loaded->getThread());
 
     // Edit reply.
     $this->drupalGet('comment/' . $reply->id() . '/edit');

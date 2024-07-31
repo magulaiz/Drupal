@@ -90,7 +90,7 @@ class FieldResolverTest extends JsonapiKernelTestBase {
    * @dataProvider resolveInternalIncludePathProvider
    */
   public function testResolveInternalIncludePath($expect, $external_path, $entity_type_id = 'entity_test_with_bundle', $bundle = 'bundle1'): void {
-    $path_parts = explode('.', $external_path);
+    $path_parts = \explode('.', $external_path);
     $resource_type = $this->resourceTypeRepository->get($entity_type_id, $bundle);
     $this->assertEquals($expect, $this->sut->resolveInternalIncludePath($resource_type, $path_parts));
   }
@@ -132,7 +132,7 @@ class FieldResolverTest extends JsonapiKernelTestBase {
    * @dataProvider resolveInternalIncludePathErrorProvider
    */
   public function testResolveInternalIncludePathError($entity_type, $bundle, $external_path, $expected_message = ''): void {
-    $path_parts = explode('.', $external_path);
+    $path_parts = \explode('.', $external_path);
     $this->expectException(CacheableBadRequestHttpException::class);
     if (!empty($expected_message)) {
       $this->expectExceptionMessage($expected_message);

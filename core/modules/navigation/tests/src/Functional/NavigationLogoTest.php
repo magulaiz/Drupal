@@ -84,7 +84,7 @@ class NavigationLogoTest extends BrowserTestBase {
     $edit = [
       'logo_provider' => 'hide',
     ];
-    $this->submitForm($edit, t('Save configuration'));
+    $this->submitForm($edit, \t('Save configuration'));
     $this->assertSession()->pageTextContains('The configuration options have been saved.');
     $this->assertSession()->elementNotExists('css', 'a.admin-toolbar__logo');
 
@@ -117,8 +117,8 @@ class NavigationLogoTest extends BrowserTestBase {
     $temp_dir = $this->fileSystem->getTempDirectory();
     $file_uri = 'public://' . $file_name;
     $logo_path = __DIR__ . '/../../assets/image_test_files/' . $file_name;
-    $file_contents = file_get_contents($logo_path);
-    file_put_contents($temp_dir . '/' . $file_name, $file_contents);
+    $file_contents = \file_get_contents($logo_path);
+    \file_put_contents($temp_dir . '/' . $file_name, $file_contents);
 
     // Create a file entity for testing.
     $file = File::create([
@@ -130,7 +130,7 @@ class NavigationLogoTest extends BrowserTestBase {
       $file->save();
     }
     catch (EntityStorageException $e) {
-      $this->fail(sprintf('Failed to create file entity: %s', $e->getMessage()));
+      $this->fail(\sprintf('Failed to create file entity: %s', $e->getMessage()));
     }
 
     return $file;

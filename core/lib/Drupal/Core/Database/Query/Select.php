@@ -167,14 +167,14 @@ class Select extends Query implements SelectInterface {
    * {@inheritdoc}
    */
   public function hasAllTags() {
-    return !(boolean) array_diff(func_get_args(), array_keys($this->alterTags));
+    return !(boolean) \array_diff(\func_get_args(), \array_keys($this->alterTags));
   }
 
   /**
    * {@inheritdoc}
    */
   public function hasAnyTag() {
-    return (boolean) array_intersect(func_get_args(), array_keys($this->alterTags));
+    return (boolean) \array_intersect(\func_get_args(), \array_keys($this->alterTags));
   }
 
   /**
@@ -327,8 +327,8 @@ class Select extends Query implements SelectInterface {
    * {@inheritdoc}
    */
   public function extend($extender_name) {
-    $parts = explode('\\', $extender_name);
-    $class = end($parts);
+    $parts = \explode('\\', $extender_name);
+    $class = \end($parts);
     $driver_class = $this->connection->getDriverClass($class);
     if ($driver_class !== $class) {
       return new $driver_class($this, $this->connection);
@@ -480,7 +480,7 @@ class Select extends Query implements SelectInterface {
       // @todo Emit E_USER_DEPRECATED if term_access is used.
       //   https://www.drupal.org/node/2575081
       $term_access_tags = ['term_access' => 1, 'taxonomy_term_access' => 1];
-      if (array_intersect_key($this->alterTags, $term_access_tags)) {
+      if (\array_intersect_key($this->alterTags, $term_access_tags)) {
         $this->alterTags += $term_access_tags;
       }
       $hooks = ['query'];
@@ -642,8 +642,8 @@ class Select extends Query implements SelectInterface {
     }
     $alias = $alias_candidate;
 
-    if (is_string($condition)) {
-      $condition = str_replace('%alias', $alias, $condition);
+    if (\is_string($condition)) {
+      $condition = \str_replace('%alias', $alias, $condition);
     }
 
     $this->tables[$alias] = [
@@ -662,7 +662,7 @@ class Select extends Query implements SelectInterface {
    */
   public function orderBy($field, $direction = 'ASC') {
     // Only allow ASC and DESC, default to ASC.
-    $direction = strtoupper($direction) == 'DESC' ? 'DESC' : 'ASC';
+    $direction = \strtoupper($direction) == 'DESC' ? 'DESC' : 'ASC';
     $this->order[$field] = $direction;
     return $this;
   }
@@ -748,14 +748,14 @@ class Select extends Query implements SelectInterface {
       // listed in a GROUP BY or HAVING clause need to be present in the
       // query.
       $fields =& $count->getFields();
-      foreach (array_keys($fields) as $field) {
+      foreach (\array_keys($fields) as $field) {
         if (empty($group_by[$field])) {
           unset($fields[$field]);
         }
       }
 
       $expressions =& $count->getExpressions();
-      foreach (array_keys($expressions) as $field) {
+      foreach (\array_keys($expressions) as $field) {
         if (empty($group_by[$field])) {
           unset($expressions[$field]);
         }
@@ -831,7 +831,7 @@ class Select extends Query implements SelectInterface {
     foreach ($this->expressions as $expression) {
       $fields[] = $expression['expression'] . ' AS ' . $this->connection->escapeAlias($expression['alias']);
     }
-    $query .= implode(', ', $fields);
+    $query .= \implode(', ', $fields);
 
     // FROM - We presume all queries have a FROM, as any query that doesn't won't need the query builder anyway.
     $query .= "\nFROM";
@@ -851,7 +851,7 @@ class Select extends Query implements SelectInterface {
       else {
         $table_string = $this->connection->escapeTable($table['table']);
         // Do not attempt prefixing cross database / schema queries.
-        if (!str_contains($table_string, '.')) {
+        if (!\str_contains($table_string, '.')) {
           $table_string = '{' . $table_string . '}';
         }
       }
@@ -866,21 +866,21 @@ class Select extends Query implements SelectInterface {
     }
 
     // WHERE
-    if (count($this->condition)) {
+    if (\count($this->condition)) {
       // There is an implicit string cast on $this->condition.
       $query .= "\nWHERE " . $this->condition;
     }
 
     // GROUP BY
     if ($this->group) {
-      $group_by_fields = array_map(function (string $field): string {
+      $group_by_fields = \array_map(function (string $field): string {
         return $this->connection->escapeField($field);
       }, $this->group);
-      $query .= "\nGROUP BY " . implode(', ', $group_by_fields);
+      $query .= "\nGROUP BY " . \implode(', ', $group_by_fields);
     }
 
     // HAVING
-    if (count($this->having)) {
+    if (\count($this->having)) {
       // There is an implicit string cast on $this->having.
       $query .= "\nHAVING " . $this->having;
     }
@@ -900,7 +900,7 @@ class Select extends Query implements SelectInterface {
       foreach ($this->order as $field => $direction) {
         $fields[] = $this->connection->escapeField($field) . ' ' . $direction;
       }
-      $query .= implode(', ', $fields);
+      $query .= \implode(', ', $fields);
     }
 
     // RANGE

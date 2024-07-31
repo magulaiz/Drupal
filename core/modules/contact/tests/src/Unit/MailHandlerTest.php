@@ -135,7 +135,7 @@ class MailHandlerTest extends UnitTestCase {
    */
   public function testSendMailMessages(bool $anonymous, ?bool $auto_reply, bool $copy_sender, array $results): void {
     if ($anonymous) {
-      $message = $this->getAnonymousMockMessage(explode(', ', $results[0]['to']), $auto_reply, $copy_sender);
+      $message = $this->getAnonymousMockMessage(\explode(', ', $results[0]['to']), $auto_reply, $copy_sender);
       $sender = $this->getMockSender();
     }
     else {
@@ -158,7 +158,7 @@ class MailHandlerTest extends UnitTestCase {
       ->method('mail')
       ->willReturnCallback(
         function ($module, $key, $to, $langcode, $params, $from) use (&$results, $expected_params) {
-          $result = array_shift($results);
+          $result = \array_shift($results);
           $this->assertEquals($module, $result['module']);
           $this->assertEquals($key, $result['key']);
           $this->assertEquals($to, $result['to']);

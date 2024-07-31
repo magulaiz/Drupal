@@ -122,7 +122,7 @@ class FileRepository implements FileRepositoryInterface {
       $file->setOwnerId($this->currentUser->id());
     }
 
-    if ($rename && is_file($destination)) {
+    if ($rename && \is_file($destination)) {
       $file->setFilename($this->fileSystem->basename($destination));
     }
 
@@ -155,7 +155,7 @@ class FileRepository implements FileRepositoryInterface {
 
       // If we are renaming around an existing file (rather than a directory),
       // use its basename for the filename.
-      if ($fileExists === FileExists::Rename && is_file($destination)) {
+      if ($fileExists === FileExists::Rename && \is_file($destination)) {
         $file->setFilename($this->fileSystem->basename($destination));
       }
       else {
@@ -196,7 +196,7 @@ class FileRepository implements FileRepositoryInterface {
     }
     // If we are renaming around an existing file (rather than a directory),
     // use its basename for the filename.
-    elseif ($fileExists === FileExists::Rename && is_file($destination)) {
+    elseif ($fileExists === FileExists::Rename && \is_file($destination)) {
       $file->setFilename($this->fileSystem->basename($destination));
     }
 
@@ -220,7 +220,7 @@ class FileRepository implements FileRepositoryInterface {
     $fileStorage = $this->entityTypeManager->getStorage('file');
     /** @var \Drupal\file\FileInterface[] $files */
     $files = $fileStorage->loadByProperties(['uri' => $uri]);
-    if (count($files)) {
+    if (\count($files)) {
       foreach ($files as $item) {
         // Since some database servers sometimes use a case-insensitive
         // comparison by default, double check that the filename is an exact

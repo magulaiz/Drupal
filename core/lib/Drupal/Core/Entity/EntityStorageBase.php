@@ -258,7 +258,7 @@ abstract class EntityStorageBase extends EntityHandlerBase implements EntityStor
    * {@inheritdoc}
    */
   public function load($id) {
-    assert(!is_null($id), sprintf('Cannot load the "%s" entity with NULL ID.', $this->entityTypeId));
+    \assert(!\is_null($id), \sprintf('Cannot load the "%s" entity with NULL ID.', $this->entityTypeId));
     $entities = $this->loadMultiple([$id]);
     return $entities[$id] ?? NULL;
   }
@@ -275,13 +275,13 @@ abstract class EntityStorageBase extends EntityHandlerBase implements EntityStor
     // were passed. The $ids array is reduced as items are loaded from cache,
     // and we need to know if it is empty for this reason to avoid querying the
     // database when all requested entities are loaded from cache.
-    $flipped_ids = $ids ? array_flip($ids) : FALSE;
+    $flipped_ids = $ids ? \array_flip($ids) : FALSE;
     // Try to load entities from the static cache, if the entity type supports
     // static caching.
     if ($ids) {
       $entities += $this->getFromStaticCache($ids);
       // If any entities were loaded, remove them from the IDs still to load.
-      $ids = array_keys(array_diff_key($flipped_ids, $entities));
+      $ids = \array_keys(\array_diff_key($flipped_ids, $entities));
     }
 
     // Try to gather any remaining entities from a 'preload' method. This method
@@ -299,7 +299,7 @@ abstract class EntityStorageBase extends EntityHandlerBase implements EntityStor
 
       // If any entities were pre-loaded, remove them from the IDs still to
       // load.
-      $ids = array_keys(array_diff_key($flipped_ids, $entities));
+      $ids = \array_keys(\array_diff_key($flipped_ids, $entities));
 
       // Add pre-loaded entities to the cache.
       $this->setStaticCache($preloaded_entities);
@@ -327,8 +327,8 @@ abstract class EntityStorageBase extends EntityHandlerBase implements EntityStor
     // $ids array if this was passed in and remove any invalid IDs.
     if ($flipped_ids) {
       // Remove any invalid IDs from the array and preserve the order passed in.
-      $flipped_ids = array_intersect_key($flipped_ids, $entities);
-      $entities = array_replace($flipped_ids, $entities);
+      $flipped_ids = \array_intersect_key($flipped_ids, $entities);
+      $entities = \array_replace($flipped_ids, $entities);
     }
 
     return $entities;
@@ -384,8 +384,8 @@ abstract class EntityStorageBase extends EntityHandlerBase implements EntityStor
     // sorts the array to enforce role weights. We have to let it manipulate the
     // final array, not a subarray. However if there are multiple bundle classes
     // involved, we only want to pass each one the entities that match.
-    if (count($entities_by_class) === 1) {
-      $entity_class = array_key_first($entities_by_class);
+    if (\count($entities_by_class) === 1) {
+      $entity_class = \array_key_first($entities_by_class);
       $entity_class::postLoad($this, $entities);
     }
     else {
@@ -454,7 +454,7 @@ abstract class EntityStorageBase extends EntityHandlerBase implements EntityStor
 
       // Perform the delete and reset the static cache for the deleted entities.
       $this->doDelete($items);
-      $this->resetCache(array_keys($items));
+      $this->resetCache(\array_keys($items));
 
       // Allow code to run after deleting.
       $entity_class::postDelete($this, $items);
@@ -652,7 +652,7 @@ abstract class EntityStorageBase extends EntityHandlerBase implements EntityStor
   protected function getEntitiesByClass(array $entities): array {
     $entity_classes = [];
     foreach ($entities as $entity) {
-      $entity_classes[get_class($entity)][$entity->id()] = $entity;
+      $entity_classes[\get_class($entity)][$entity->id()] = $entity;
     }
     return $entity_classes;
   }

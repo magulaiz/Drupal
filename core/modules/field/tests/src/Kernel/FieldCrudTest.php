@@ -185,7 +185,7 @@ class FieldCrudTest extends FieldKernelTestBase {
     $this->assertCount(2, $violations, 'Two violations found when using a null and outside the range value.');
 
     $this->assertEquals($field_name . '.0.value', $violations[0]->getPropertyPath());
-    $this->assertEquals(sprintf('%s does not accept the value -2.', $field_name), $violations[0]->getMessage());
+    $this->assertEquals(\sprintf('%s does not accept the value -2.', $field_name), $violations[0]->getMessage());
 
     $this->assertEquals($field_name . '.0.value', $violations[1]->getPropertyPath());
     $this->assertEquals('This value should be between 0 and 32.', $violations[1]->getMessage());
@@ -284,11 +284,11 @@ class FieldCrudTest extends FieldKernelTestBase {
     FieldConfig::create($this->fieldDefinition)->save();
     $another_field_definition = $this->fieldDefinition;
     $another_field_definition['bundle'] .= '_another_bundle';
-    entity_test_create_bundle($another_field_definition['bundle']);
+    \entity_test_create_bundle($another_field_definition['bundle']);
     FieldConfig::create($another_field_definition)->save();
 
     // Test that the first field is not deleted, and then delete it.
-    $field = current(\Drupal::entityTypeManager()->getStorage('field_config')->loadByProperties(['entity_type' => 'entity_test', 'field_name' => $this->fieldDefinition['field_name'], 'bundle' => $this->fieldDefinition['bundle'], 'include_deleted' => TRUE]));
+    $field = \current(\Drupal::entityTypeManager()->getStorage('field_config')->loadByProperties(['entity_type' => 'entity_test', 'field_name' => $this->fieldDefinition['field_name'], 'bundle' => $this->fieldDefinition['bundle'], 'include_deleted' => TRUE]));
     $this->assertFalse($field->isDeleted());
     $field->delete();
 
@@ -312,7 +312,7 @@ class FieldCrudTest extends FieldKernelTestBase {
   public function testDeleteFieldCrossDeletion(): void {
     $field_definition_2 = $this->fieldDefinition;
     $field_definition_2['bundle'] .= '_another_bundle';
-    entity_test_create_bundle($field_definition_2['bundle']);
+    \entity_test_create_bundle($field_definition_2['bundle']);
 
     // Check that deletion of a field storage deletes its fields.
     $field_storage = $this->fieldStorage;

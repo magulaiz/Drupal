@@ -215,7 +215,7 @@ class FieldStorageAddForm extends FormBase {
         $field_type_options_radios[$id]['#attached']['library'] = $libraries;
       }
     }
-    uasort($field_type_options_radios, [SortArray::class, 'sortByWeightProperty']);
+    \uasort($field_type_options_radios, [SortArray::class, 'sortByWeightProperty']);
 
     $form['add-label'] = [
       '#type' => 'label',
@@ -264,7 +264,7 @@ class FieldStorageAddForm extends FormBase {
       '#description' => $this->t('A unique machine-readable name containing letters, numbers, and underscores.'),
       // Calculate characters depending on the length of the field prefix
       // setting. Maximum length is 32.
-      '#maxlength' => FieldStorageConfig::NAME_MAX_LENGTH - strlen($field_prefix),
+      '#maxlength' => FieldStorageConfig::NAME_MAX_LENGTH - \strlen($field_prefix),
       '#machine_name' => [
         'source' => ['new_storage_wrapper', 'label'],
         'exists' => [$this, 'fieldNameExists'],
@@ -314,7 +314,7 @@ class FieldStorageAddForm extends FormBase {
       $identifier = $option['unique_identifier'];
       // If the field type plugin's annotation defines description as an
       // array, render it as an item_list.
-      $description = !is_array($option['description']) ? $option['description'] : [
+      $description = !\is_array($option['description']) ? $option['description'] : [
         '#theme' => 'item_list',
         '#items' => $option['description'],
       ];
@@ -342,7 +342,7 @@ class FieldStorageAddForm extends FormBase {
       }
       $group_field_options[$identifier] = $radio_element;
     }
-    uasort($group_field_options, [SortArray::class, 'sortByWeightProperty']);
+    \uasort($group_field_options, [SortArray::class, 'sortByWeightProperty']);
     $form['group_field_options_wrapper']['fields'] += $group_field_options;
   }
 
@@ -406,8 +406,8 @@ class FieldStorageAddForm extends FormBase {
     ];
 
     // Check if we're dealing with a preconfigured field.
-    if (str_starts_with($field_storage_type, 'field_ui:')) {
-      [, $field_type, $preset_key] = explode(':', $field_storage_type, 3);
+    if (\str_starts_with($field_storage_type, 'field_ui:')) {
+      [, $field_type, $preset_key] = \explode(':', $field_storage_type, 3);
       $default_options = $this->getNewFieldDefaults($field_type, $preset_key);
     }
     else {
@@ -515,7 +515,7 @@ class FieldStorageAddForm extends FormBase {
     foreach (['entity_form_display', 'entity_view_display'] as $key) {
       if (isset($field_options[$key])) {
         $default_options[$key] = [
-          'default' => array_intersect_key($field_options[$key], ['type' => '', 'settings' => []]),
+          'default' => \array_intersect_key($field_options[$key], ['type' => '', 'settings' => []]),
         ];
       }
       else {

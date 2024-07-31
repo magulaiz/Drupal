@@ -89,7 +89,7 @@ class StatementPrefetchIterator implements \Iterator, StatementInterface {
    */
   public function execute($args = [], $options = []) {
     if (isset($options['fetch'])) {
-      if (is_string($options['fetch'])) {
+      if (\is_string($options['fetch'])) {
         // Default to an object. Note: db fields will be added to the object
         // before the constructor is run. If you need to assign fields after
         // the constructor is run. See https://www.drupal.org/node/315092.
@@ -102,7 +102,7 @@ class StatementPrefetchIterator implements \Iterator, StatementInterface {
 
     if ($this->connection->isEventEnabled(StatementExecutionStartEvent::class)) {
       $startEvent = new StatementExecutionStartEvent(
-        spl_object_id($this),
+        \spl_object_id($this),
         $this->connection->getKey(),
         $this->connection->getTarget(),
         $this->getQueryString(),
@@ -127,7 +127,7 @@ class StatementPrefetchIterator implements \Iterator, StatementInterface {
           $startEvent->args,
           $startEvent->caller,
           $startEvent->time,
-          get_class($e),
+          \get_class($e),
           $e->getCode(),
           $e->getMessage(),
         ));
@@ -144,7 +144,7 @@ class StatementPrefetchIterator implements \Iterator, StatementInterface {
     unset($statement);
     $this->markResultsetIterable($return);
 
-    $this->columnNames = count($this->data) > 0 ? array_keys($this->data[0]) : [];
+    $this->columnNames = \count($this->data) > 0 ? \array_keys($this->data[0]) : [];
 
     if (isset($startEvent) && $this->connection->isEventEnabled(StatementExecutionEndEvent::class)) {
       $this->connection->dispatchEvent(new StatementExecutionEndEvent(
@@ -190,7 +190,7 @@ class StatementPrefetchIterator implements \Iterator, StatementInterface {
    * {@inheritdoc}
    */
   public function setFetchMode($mode, $a1 = NULL, $a2 = []) {
-    assert(in_array($mode, $this->supportedFetchModes), 'Fetch mode ' . ($this->fetchModeLiterals[$mode] ?? $mode) . ' is not supported. Use supported modes only.');
+    \assert(\in_array($mode, $this->supportedFetchModes), 'Fetch mode ' . ($this->fetchModeLiterals[$mode] ?? $mode) . ' is not supported. Use supported modes only.');
 
     $this->defaultFetchStyle = $mode;
     switch ($mode) {
@@ -299,7 +299,7 @@ class StatementPrefetchIterator implements \Iterator, StatementInterface {
   public function fetchAll($mode = NULL, $column_index = NULL, $constructor_arguments = NULL) {
     $fetchStyle = $mode ?? $this->defaultFetchStyle;
 
-    assert(in_array($fetchStyle, $this->supportedFetchModes), 'Fetch mode ' . ($this->fetchModeLiterals[$fetchStyle] ?? $fetchStyle) . ' is not supported. Use supported modes only.');
+    \assert(\in_array($fetchStyle, $this->supportedFetchModes), 'Fetch mode ' . ($this->fetchModeLiterals[$fetchStyle] ?? $fetchStyle) . ' is not supported. Use supported modes only.');
 
     if (isset($column_index)) {
       $this->fetchOptions['column'] = $column_index;

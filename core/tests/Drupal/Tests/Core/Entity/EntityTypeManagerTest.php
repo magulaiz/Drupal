@@ -96,7 +96,7 @@ class EntityTypeManagerTest extends UnitTestCase {
    *   (optional) An array of entity type definitions.
    */
   protected function setUpEntityTypeDefinitions($definitions = []) {
-    $class = get_class($this->createMock(EntityInterface::class));
+    $class = \get_class($this->createMock(EntityInterface::class));
     foreach ($definitions as $key => $entity_type) {
       // \Drupal\Core\Entity\EntityTypeInterface::getLinkTemplates() is called
       // by \Drupal\Core\Entity\EntityTypeManager::processDefinition() so it must
@@ -302,7 +302,7 @@ class EntityTypeManagerTest extends UnitTestCase {
    * @covers ::getHandler
    */
   public function testGetHandler(): void {
-    $class = get_class($this->getMockForAbstractClass(TestEntityHandlerBase::class));
+    $class = \get_class($this->getMockForAbstractClass(TestEntityHandlerBase::class));
     $apple = $this->prophesize(EntityTypeInterface::class);
     $apple->getHandlerClass('storage')->willReturn($class);
 
@@ -453,7 +453,7 @@ class EntityTypeManagerTest extends UnitTestCase {
    *   A mock controller class name.
    */
   protected function getTestHandlerClass() {
-    return get_class($this->getMockForAbstractClass(EntityHandlerBase::class));
+    return \get_class($this->getMockForAbstractClass(EntityHandlerBase::class));
   }
 
 }

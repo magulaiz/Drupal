@@ -60,7 +60,7 @@ class TestController extends ControllerBase {
    *   CSRF token.
    */
   public function getCsrfToken($num) {
-    sleep($num);
+    \sleep($num);
     return new JsonResponse($this->tokenGenerator->get());
   }
 

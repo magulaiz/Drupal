@@ -46,31 +46,31 @@ class SecurityFileUploadEventSubscriber implements EventSubscriberInterface {
   public function sanitizeName(FileUploadSanitizeNameEvent $event): void {
     $filename = $event->getFilename();
     // Dot files are renamed regardless of security settings.
-    $filename = trim($filename, '.');
+    $filename = \trim($filename, '.');
 
     // Remove any null bytes. See
     // http://php.net/manual/security.filesystem.nullbytes.php
-    $filename = str_replace(chr(0), '', $filename);
+    $filename = \str_replace(\chr(0), '', $filename);
 
     // Split up the filename by periods. The first part becomes the basename,
     // the last part the final extension.
-    $filename_parts = explode('.', $filename);
+    $filename_parts = \explode('.', $filename);
     // Remove file basename.
-    $filename = array_shift($filename_parts);
+    $filename = \array_shift($filename_parts);
     // Remove final extension.
-    $final_extension = (string) array_pop($filename_parts);
+    $final_extension = (string) \array_pop($filename_parts);
     // Check if we're dealing with a dot file that is also an insecure extension
     // e.g. .htaccess. In this scenario there is only one 'part' and the
     // extension becomes the filename. We use the original filename from the
     // event rather than the trimmed version above.
     $insecure_uploads = $this->configFactory->get('system.file')->get('allow_insecure_uploads');
-    if (!$insecure_uploads && $final_extension === '' && str_contains($event->getFilename(), '.') && in_array(strtolower($filename), FileSystemInterface::INSECURE_EXTENSIONS, TRUE)) {
+    if (!$insecure_uploads && $final_extension === '' && \str_contains($event->getFilename(), '.') && \in_array(\strtolower($filename), FileSystemInterface::INSECURE_EXTENSIONS, TRUE)) {
       $final_extension = $filename;
       $filename = '';
     }
 
     $extensions = $event->getAllowedExtensions();
-    if (!empty($extensions) && !in_array(strtolower($final_extension), $extensions, TRUE)) {
+    if (!empty($extensions) && !\in_array(\strtolower($final_extension), $extensions, TRUE)) {
       // This upload will be rejected by FileExtension constraint anyway so do
       // not make any alterations to the filename. This prevents a file named
       // 'example.php' being renamed to 'example.php_.txt' and uploaded if the
@@ -81,8 +81,8 @@ class SecurityFileUploadEventSubscriber implements EventSubscriberInterface {
       return;
     }
 
-    if (!$insecure_uploads && in_array(strtolower($final_extension), FileSystemInterface::INSECURE_EXTENSIONS, TRUE)) {
-      if (empty($extensions) || in_array('txt', $extensions, TRUE)) {
+    if (!$insecure_uploads && \in_array(\strtolower($final_extension), FileSystemInterface::INSECURE_EXTENSIONS, TRUE)) {
+      if (empty($extensions) || \in_array('txt', $extensions, TRUE)) {
         // Add .txt to potentially executable files prior to munging to help prevent
         // exploits. This results in a filenames like filename.php being changed to
         // filename.php.txt prior to munging.
@@ -98,7 +98,7 @@ class SecurityFileUploadEventSubscriber implements EventSubscriberInterface {
 
     // If there are any insecure extensions in the filename munge all the
     // internal extensions.
-    $munge_everything = !empty(array_intersect(array_map('strtolower', $filename_parts), FileSystemInterface::INSECURE_EXTENSIONS));
+    $munge_everything = !empty(\array_intersect(\array_map('strtolower', $filename_parts), FileSystemInterface::INSECURE_EXTENSIONS));
 
     // Munge the filename to protect against possible malicious extension hiding
     // within an unknown file type (i.e. filename.html.foo). This was introduced
@@ -112,7 +112,7 @@ class SecurityFileUploadEventSubscriber implements EventSubscriberInterface {
       if ($munge_everything) {
         $filename .= '_';
       }
-      elseif (!empty($extensions) && !in_array(strtolower($filename_part), $extensions) && preg_match("/^[a-zA-Z]{2,5}\d?$/", $filename_part)) {
+      elseif (!empty($extensions) && !\in_array(\strtolower($filename_part), $extensions) && \preg_match("/^[a-zA-Z]{2,5}\d?$/", $filename_part)) {
         $filename .= '_';
       }
     }

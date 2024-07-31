@@ -54,7 +54,7 @@ class LayoutBuilderContentModerationIntegrationTest extends BrowserTestBase {
       'label' => 'Basic',
       'revision' => 1,
     ])->save();
-    block_content_add_body_field('basic');
+    \block_content_add_body_field('basic');
 
     // Enable layout overrides.
     LayoutBuilderEntityViewDisplay::load('node.bundle_with_section_field.default')
@@ -110,7 +110,7 @@ class LayoutBuilderContentModerationIntegrationTest extends BrowserTestBase {
         ],
       ],
     ]);
-    _menu_ui_node_save($node, [
+    \_menu_ui_node_save($node, [
       'title' => 'bar',
       'menu_name' => 'main',
       'description' => 'view bar',

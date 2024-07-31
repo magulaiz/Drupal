@@ -26,7 +26,7 @@ class ViewsTestDataErrorForm implements FormInterface {
     ];
     $form['submit'] = [
       '#type' => 'submit',
-      '#value' => t('Submit'),
+      '#value' => \t('Submit'),
     ];
 
     return $form;
@@ -36,7 +36,7 @@ class ViewsTestDataErrorForm implements FormInterface {
    * {@inheritdoc}
    */
   public function validateForm(array &$form, FormStateInterface $form_state) {
-    $form_state->setErrorByName('text', t('Form validation error'));
+    $form_state->setErrorByName('text', \t('Form validation error'));
   }
 
   /**

@@ -65,9 +65,9 @@ class PageCacheTest extends BrowserTestBase {
     $this->drupalGet($path);
     $this->assertSession()->responseHeaderEquals('X-Drupal-Cache', 'HIT');
     $cid_parts = [Url::fromRoute('system_test.cache_tags_page', [], ['absolute' => TRUE])->toString(), ''];
-    $cid = implode(':', $cid_parts);
+    $cid = \implode(':', $cid_parts);
     $cache_entry = \Drupal::cache('page')->get($cid);
-    sort($cache_entry->tags);
+    \sort($cache_entry->tags);
     $expected_tags = [
       'config:user.role.anonymous',
       'http_response',
@@ -100,9 +100,9 @@ class PageCacheTest extends BrowserTestBase {
     $this->drupalGet($path);
     $this->assertSession()->responseHeaderEquals('X-Drupal-Cache', 'HIT');
     $cid_parts = [Url::fromRoute('system_test.cache_tags_page', [], ['absolute' => TRUE])->toString(), ''];
-    $cid = implode(':', $cid_parts);
+    $cid = \implode(':', $cid_parts);
     $cache_entry = \Drupal::cache('page')->get($cid);
-    sort($cache_entry->tags);
+    \sort($cache_entry->tags);
     $expected_tags = [
       'config:user.role.anonymous',
       'http_response',
@@ -180,7 +180,7 @@ class PageCacheTest extends BrowserTestBase {
     // Ensure a conditional request with obsolete If-Modified-Since date
     // returns 304 Not Modified.
     $this->drupalGet('', [], [
-      'If-Modified-Since' => gmdate(DATE_RFC822, strtotime($last_modified)),
+      'If-Modified-Since' => \gmdate(DATE_RFC822, \strtotime($last_modified)),
       'If-None-Match' => $etag,
     ]);
     $this->assertSession()->statusCodeEquals(304);
@@ -188,7 +188,7 @@ class PageCacheTest extends BrowserTestBase {
     // Ensure a conditional request with obsolete If-Modified-Since date
     // returns 304 Not Modified.
     $this->drupalGet('', [], [
-      'If-Modified-Since' => gmdate(DATE_RFC850, strtotime($last_modified)),
+      'If-Modified-Since' => \gmdate(DATE_RFC850, \strtotime($last_modified)),
       'If-None-Match' => $etag,
     ]);
     $this->assertSession()->statusCodeEquals(304);
@@ -203,7 +203,7 @@ class PageCacheTest extends BrowserTestBase {
     // Ensure a conditional request with If-Modified-Since newer than
     // Last-Modified returns 200 OK.
     $this->drupalGet('', [], [
-      'If-Modified-Since' => gmdate(DateTimePlus::RFC7231, strtotime($last_modified) + 1),
+      'If-Modified-Since' => \gmdate(DateTimePlus::RFC7231, \strtotime($last_modified) + 1),
       'If-None-Match' => $etag,
     ]);
     $this->assertSession()->statusCodeEquals(200);
@@ -295,7 +295,7 @@ class PageCacheTest extends BrowserTestBase {
     $this->assertSession()->responseHeaderContains('X-Drupal-Cache-Tags', 'config:user.role.anonymous');
 
     // 2. anonymous user, with permission.
-    user_role_grant_permissions(RoleInterface::ANONYMOUS_ID, ['pet llamas']);
+    \user_role_grant_permissions(RoleInterface::ANONYMOUS_ID, ['pet llamas']);
     $this->drupalGet($content_url);
     $this->assertSession()->pageTextContains('Permission to pet llamas: yes!');
     $this->assertCacheContext('user.permissions');
@@ -316,7 +316,7 @@ class PageCacheTest extends BrowserTestBase {
     $this->assertSession()->responseHeaderNotContains('X-Drupal-Cache-Tags', 'config:user.role.authenticated');
 
     // 4. authenticated user, with permission.
-    user_role_grant_permissions(RoleInterface::AUTHENTICATED_ID, ['pet llamas']);
+    \user_role_grant_permissions(RoleInterface::AUTHENTICATED_ID, ['pet llamas']);
     $this->drupalGet($content_url);
     $this->assertSession()->pageTextContains('Permission to pet llamas: yes!');
     $this->assertCacheContext('user.permissions');
@@ -612,20 +612,20 @@ class PageCacheTest extends BrowserTestBase {
    *   Array of headers.
    */
   protected function getHeaders($url): array {
-    $ch = curl_init();
-    curl_setopt($ch, CURLOPT_URL, $url);
-    curl_setopt($ch, CURLOPT_HEADER, TRUE);
-    curl_setopt($ch, CURLOPT_NOBODY, TRUE);
-    curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
-    curl_setopt($ch, CURLOPT_USERAGENT, drupal_generate_test_ua($this->databasePrefix));
-    $output = curl_exec($ch);
-    curl_close($ch);
+    $ch = \curl_init();
+    \curl_setopt($ch, CURLOPT_URL, $url);
+    \curl_setopt($ch, CURLOPT_HEADER, TRUE);
+    \curl_setopt($ch, CURLOPT_NOBODY, TRUE);
+    \curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
+    \curl_setopt($ch, CURLOPT_USERAGENT, \drupal_generate_test_ua($this->databasePrefix));
+    $output = \curl_exec($ch);
+    \curl_close($ch);
 
     $headers = [];
-    foreach (explode("\n", $output) as $header) {
-      if (strpos($header, ':')) {
-        [$key, $value] = explode(':', $header, 2);
-        $headers[trim($key)] = trim($value);
+    foreach (\explode("\n", $output) as $header) {
+      if (\strpos($header, ':')) {
+        [$key, $value] = \explode(':', $header, 2);
+        $headers[\trim($key)] = \trim($value);
       }
     }
 

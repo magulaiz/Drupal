@@ -23,7 +23,7 @@ class ExceptionHandler extends BaseExceptionHandler {
       // Wrap the exception in another exception, because PHP does not allow
       // overriding Exception::getMessage(). Its message is the extra database
       // debug information.
-      $code = is_int($exception->getCode()) ? $exception->getCode() : 0;
+      $code = \is_int($exception->getCode()) ? $exception->getCode() : 0;
 
       // If a max_allowed_packet error occurs the message length is truncated.
       // This should prevent the error from recurring if the exception is logged
@@ -33,13 +33,13 @@ class ExceptionHandler extends BaseExceptionHandler {
         throw new DatabaseExceptionWrapper($message, $code, $exception);
       }
 
-      $message = $exception->getMessage() . ": " . $statement->getQueryString() . "; " . print_r($arguments, TRUE);
+      $message = $exception->getMessage() . ": " . $statement->getQueryString() . "; " . \print_r($arguments, TRUE);
 
       // SQLSTATE 23xxx errors indicate an integrity constraint violation. Also,
       // in case of attempted INSERT of a record with an undefined column and no
       // default value indicated in schema, MySql returns a 1364 error code.
       if (
-        substr($exception->getCode(), -6, -3) == '23' ||
+        \substr($exception->getCode(), -6, -3) == '23' ||
         ($exception->errorInfo[1] ?? NULL) === 1364
       ) {
         throw new IntegrityConstraintViolationException($message, $code, $exception);

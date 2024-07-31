@@ -78,7 +78,7 @@ class RecipeRunnerTest extends KernelTestBase {
     $this->assertTrue($this->config('node.settings')->get('use_admin_theme'), 'The node.settings:use_admin_theme is set to TRUE');
     $this->assertSame('Test content type', NodeType::load('test')?->label());
     $node_type_data = $this->config('node.type.test')->get();
-    $this->assertGreaterThan(0, strlen($node_type_data['uuid']), 'The node type configuration has been assigned a UUID.');
+    $this->assertGreaterThan(0, \strlen($node_type_data['uuid']), 'The node type configuration has been assigned a UUID.');
     // cSpell:disable-next-line
     $this->assertSame('8Jlq8CmNXHVtNIHBHgFGpnAKthlUz0XoW_D0g56QXqY', $node_type_data['_core']['default_config_hash']);
   }
@@ -116,7 +116,7 @@ class RecipeRunnerTest extends KernelTestBase {
     // Test the state after to applying the recipe.
     $this->assertNotEmpty($this->container->get('config.factory')->listAll('config_test.'), 'There is config_test configuration');
     $config_test_entities = \Drupal::entityTypeManager()->getStorage('config_test')->loadMultiple();
-    $this->assertSame(['dotted.default', 'override'], array_keys($config_test_entities));
+    $this->assertSame(['dotted.default', 'override'], \array_keys($config_test_entities));
   }
 
   public function testConfigWildcard(): void {
@@ -129,7 +129,7 @@ class RecipeRunnerTest extends KernelTestBase {
     // Test the state after to applying the recipe.
     $this->assertNotEmpty($this->container->get('config.factory')->listAll('config_test.'), 'There is config_test configuration');
     $config_test_entities = \Drupal::entityTypeManager()->getStorage('config_test')->loadMultiple();
-    $this->assertSame(['dotted.default', 'override', 'override_unmet'], array_keys($config_test_entities));
+    $this->assertSame(['dotted.default', 'override', 'override_unmet'], \array_keys($config_test_entities));
     $this->assertSame('Default', $config_test_entities['dotted.default']->label());
     $this->assertSame('herp', $this->config('config_test.system')->get('404'));
   }
@@ -144,7 +144,7 @@ class RecipeRunnerTest extends KernelTestBase {
     // Test the state after to applying the recipe.
     $this->assertNotEmpty($this->container->get('config.factory')->listAll('config_test.'), 'There is config_test configuration');
     $config_test_entities = \Drupal::entityTypeManager()->getStorage('config_test')->loadMultiple();
-    $this->assertSame(['dotted.default', 'override', 'override_unmet'], array_keys($config_test_entities));
+    $this->assertSame(['dotted.default', 'override', 'override_unmet'], \array_keys($config_test_entities));
     $this->assertSame('Provided by recipe', $config_test_entities['dotted.default']->label());
     $this->assertSame('foo', $this->config('config_test.system')->get('404'));
   }

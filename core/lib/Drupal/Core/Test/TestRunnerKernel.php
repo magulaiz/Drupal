@@ -62,13 +62,13 @@ class TestRunnerKernel extends DrupalKernel {
     // Remove Drupal's error/exception handlers; they are designed for HTML
     // and there is no storage nor a (watchdog) logger here.
     $currentErrorHandler = Error::currentErrorHandler();
-    if (is_string($currentErrorHandler) && $currentErrorHandler === '_drupal_error_handler') {
-      restore_error_handler();
+    if (\is_string($currentErrorHandler) && $currentErrorHandler === '_drupal_error_handler') {
+      \restore_error_handler();
     }
-    restore_exception_handler();
+    \restore_exception_handler();
 
     // In addition, ensure that PHP errors are not hidden away in logs.
-    ini_set('display_errors', TRUE);
+    \ini_set('display_errors', TRUE);
 
     parent::boot();
 
@@ -84,7 +84,7 @@ class TestRunnerKernel extends DrupalKernel {
     $this->getContainer()->get('stream_wrapper_manager')->register();
 
     // Create the build/artifacts directory if necessary.
-    if (!is_dir('public://simpletest') && !@mkdir('public://simpletest', 0777, TRUE) && !is_dir('public://simpletest')) {
+    if (!\is_dir('public://simpletest') && !@\mkdir('public://simpletest', 0777, TRUE) && !\is_dir('public://simpletest')) {
       throw new \RuntimeException('Unable to create directory: public://simpletest');
     }
 

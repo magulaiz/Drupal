@@ -199,7 +199,7 @@ abstract class SectionListTestBase extends EntityKernelTestBase {
   protected function assertSections(array $expected) {
     $result = $this->sectionList->getSections();
     $this->assertEquals($expected, $result);
-    $this->assertSame(array_keys($expected), array_keys($result));
+    $this->assertSame(\array_keys($expected), \array_keys($result));
   }
 
 }

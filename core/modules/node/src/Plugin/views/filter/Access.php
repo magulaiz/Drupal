@@ -30,7 +30,7 @@ class Access extends FilterPluginBase {
     if (!$account->hasPermission('bypass node access')) {
       $table = $this->ensureMyTable();
       $grants = $this->query->getConnection()->condition('OR');
-      foreach (node_access_grants('view', $account) as $realm => $gids) {
+      foreach (\node_access_grants('view', $account) as $realm => $gids) {
         foreach ($gids as $gid) {
           $grants->condition(($this->query->getConnection()->condition('AND'))
             ->condition($table . '.gid', $gid)

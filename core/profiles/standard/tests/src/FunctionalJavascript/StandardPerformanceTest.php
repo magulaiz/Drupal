@@ -47,7 +47,7 @@ class StandardPerformanceTest extends PerformanceTestBase {
       'promote' => NodeInterface::PROMOTED,
     ]);
     // Grant the anonymous user the permission to look at user profiles.
-    user_role_grant_permissions('anonymous', ['access user profiles']);
+    \user_role_grant_permissions('anonymous', ['access user profiles']);
   }
 
   /**
@@ -70,14 +70,14 @@ class StandardPerformanceTest extends PerformanceTestBase {
     // Give time for big pipe placeholders, asset aggregate requests, and post
     // response tasks to finish processing and write to any caches before
     // clearing caches again.
-    sleep(2);
+    \sleep(2);
     foreach (Cache::getBins() as $bin) {
       $bin->deleteAll();
     }
     // Now visit a different page to warm some caches.
     $this->drupalGet('user/login');
     // Ensure everything finishes before we collect performance data.
-    sleep(2);
+    \sleep(2);
 
     // Test frontpage.
     $performance_data = $this->collectPerformanceData(function () {
@@ -203,7 +203,7 @@ class StandardPerformanceTest extends PerformanceTestBase {
     // form so that we repeat the same steps when recording performance data. Do
     // this twice so that any caches which take two requests to warm are also
     // covered.
-    foreach (range(0, 1) as $index) {
+    foreach (\range(0, 1) as $index) {
       $this->drupalGet('node');
       $this->drupalGet('user/login');
       $this->submitLoginForm($this->user);
@@ -255,7 +255,7 @@ class StandardPerformanceTest extends PerformanceTestBase {
     // we repeat the same steps when recording performance data. Do this twice
     // so that any caches which take two requests to warm are also covered.
 
-    foreach (range(0, 1) as $index) {
+    foreach (\range(0, 1) as $index) {
       $this->drupalGet('node');
       $this->assertSession()->responseContains('Password');
       $this->submitLoginForm($this->user);

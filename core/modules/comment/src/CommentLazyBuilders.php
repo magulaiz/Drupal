@@ -172,14 +172,14 @@ class CommentLazyBuilders implements TrustedCallbackInterface {
     if ($status == CommentItemInterface::OPEN) {
       if ($entity->access('delete')) {
         $links['comment-delete'] = [
-          'title' => t('Delete'),
+          'title' => \t('Delete'),
           'url' => $entity->toUrl('delete-form'),
         ];
       }
 
       if ($entity->access('update')) {
         $links['comment-edit'] = [
-          'title' => t('Edit'),
+          'title' => \t('Edit'),
           'url' => $entity->toUrl('edit-form'),
         ];
       }
@@ -187,7 +187,7 @@ class CommentLazyBuilders implements TrustedCallbackInterface {
       if ($entity->access('create')
         && $field_definition->getSetting('default_mode') === CommentManagerInterface::COMMENT_MODE_THREADED) {
         $links['comment-reply'] = [
-          'title' => t('Reply'),
+          'title' => \t('Reply'),
           'url' => Url::fromRoute('comment.reply', [
             'entity_type' => $entity->getCommentedEntityTypeId(),
             'entity' => $entity->getCommentedEntityId(),
@@ -198,7 +198,7 @@ class CommentLazyBuilders implements TrustedCallbackInterface {
       }
       if (!$entity->isPublished() && $entity->access('approve')) {
         $links['comment-approve'] = [
-          'title' => t('Approve'),
+          'title' => \t('Approve'),
           'url' => Url::fromRoute('comment.approve', ['comment' => $entity->id()]),
         ];
       }
@@ -210,7 +210,7 @@ class CommentLazyBuilders implements TrustedCallbackInterface {
     // Add translations link for translation-enabled comment bundles.
     if ($this->moduleHandler->moduleExists('content_translation') && $this->access($entity)->isAllowed()) {
       $links['comment-translations'] = [
-        'title' => t('Translate'),
+        'title' => \t('Translate'),
         'url' => $entity->toUrl('drupal:content-translation-overview'),
       ];
     }
@@ -227,7 +227,7 @@ class CommentLazyBuilders implements TrustedCallbackInterface {
    * Wraps content_translation_translate_access.
    */
   protected function access(EntityInterface $entity) {
-    return content_translation_translate_access($entity);
+    return \content_translation_translate_access($entity);
   }
 
   /**

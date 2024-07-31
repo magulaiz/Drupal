@@ -120,7 +120,7 @@ class Vocabulary extends ConfigEntityBundleBase implements VocabularyInterface {
 
     // Only load terms without a parent, child terms will get deleted too.
     $term_storage = \Drupal::entityTypeManager()->getStorage('taxonomy_term');
-    $terms = $term_storage->loadMultiple($storage->getToplevelTids(array_keys($entities)));
+    $terms = $term_storage->loadMultiple($storage->getToplevelTids(\array_keys($entities)));
     $term_storage->delete($terms);
   }
 
@@ -131,9 +131,9 @@ class Vocabulary extends ConfigEntityBundleBase implements VocabularyInterface {
     parent::postDelete($storage, $entities);
 
     // Reset caches.
-    $storage->resetCache(array_keys($entities));
+    $storage->resetCache(\array_keys($entities));
 
-    if (reset($entities)->isSyncing()) {
+    if (\reset($entities)->isSyncing()) {
       return;
     }
 

@@ -77,11 +77,11 @@ class UpdateManagerUpdate extends FormBase {
       '#last' => $this->state->get('update.last_check', 0),
     ];
 
-    if (!_update_manager_check_backends($form, 'update')) {
+    if (!\_update_manager_check_backends($form, 'update')) {
       return $form;
     }
 
-    $available = update_get_available(TRUE);
+    $available = \update_get_available(TRUE);
     if (empty($available)) {
       $form['message'] = [
         '#markup' => $this->t('There was a problem getting update information. Try again later.'),
@@ -102,7 +102,7 @@ class UpdateManagerUpdate extends FormBase {
     // project in the form, regardless of if it's installed or uninstalled.
     $form['project_downloads'] = ['#tree' => TRUE];
     $this->moduleHandler->loadInclude('update', 'inc', 'update.compare');
-    $project_data = update_calculate_project_data($available);
+    $project_data = \update_calculate_project_data($available);
 
     $fetch_failed = FALSE;
     foreach ($project_data as $name => $project) {
@@ -357,10 +357,10 @@ class UpdateManagerUpdate extends FormBase {
    */
   public function validateForm(array &$form, FormStateInterface $form_state) {
     if (!$form_state->isValueEmpty('projects')) {
-      $installed = array_filter($form_state->getValue('projects'));
+      $installed = \array_filter($form_state->getValue('projects'));
     }
     if (!$form_state->isValueEmpty('uninstalled_projects')) {
-      $uninstalled = array_filter($form_state->getValue('uninstalled_projects'));
+      $uninstalled = \array_filter($form_state->getValue('uninstalled_projects'));
     }
     if (empty($installed) && empty($uninstalled)) {
       $form_state->setErrorByName('projects', $this->t('You must select at least one project to update.'));
@@ -375,7 +375,7 @@ class UpdateManagerUpdate extends FormBase {
     $projects = [];
     foreach (['projects', 'uninstalled_projects'] as $type) {
       if (!$form_state->isValueEmpty($type)) {
-        $projects = array_merge($projects, array_keys(array_filter($form_state->getValue($type))));
+        $projects = \array_merge($projects, \array_keys(\array_filter($form_state->getValue($type))));
       }
     }
     $batch_builder = (new BatchBuilder())
@@ -389,7 +389,7 @@ class UpdateManagerUpdate extends FormBase {
         $form_state->getValue(['project_downloads', $project]),
       ]);
     }
-    batch_set($batch_builder->toArray());
+    \batch_set($batch_builder->toArray());
   }
 
 }

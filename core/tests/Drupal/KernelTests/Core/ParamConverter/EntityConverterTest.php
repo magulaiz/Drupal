@@ -36,9 +36,9 @@ class EntityConverterTest extends KernelTestBase {
     $this->installEntitySchema('entity_test');
 
     // Create some testing bundles for 'entity_test' entity type.
-    entity_test_create_bundle('foo', 'Foo');
-    entity_test_create_bundle('bar', 'Bar');
-    entity_test_create_bundle('baz', 'Baz');
+    \entity_test_create_bundle('foo', 'Foo');
+    \entity_test_create_bundle('bar', 'Bar');
+    \entity_test_create_bundle('baz', 'Baz');
   }
 
   /**

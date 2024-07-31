@@ -187,7 +187,7 @@ abstract class HandlerBase extends PluginBase implements ViewsHandlerInterface {
         $info = $this->query->getAggregationInfo();
         if (!empty($info[$this->options['group_type']]['method'])) {
           $method = $info[$this->options['group_type']]['method'];
-          if (method_exists($this->query, $method)) {
+          if (\method_exists($this->query, $method)) {
             return $this->query->$method($this->options['group_type'], $field);
           }
         }
@@ -244,10 +244,10 @@ abstract class HandlerBase extends PluginBase implements ViewsHandlerInterface {
       default:
         return $string;
       case 'upper':
-        return mb_strtoupper($string);
+        return \mb_strtoupper($string);
 
       case 'lower':
-        return mb_strtolower($string);
+        return \mb_strtolower($string);
 
       case 'ucfirst':
         return Unicode::ucfirst($string);
@@ -478,9 +478,9 @@ abstract class HandlerBase extends PluginBase implements ViewsHandlerInterface {
    * {@inheritdoc}
    */
   public function access(AccountInterface $account) {
-    if (isset($this->definition['access callback']) && function_exists($this->definition['access callback'])) {
-      if (isset($this->definition['access arguments']) && is_array($this->definition['access arguments'])) {
-        return call_user_func_array($this->definition['access callback'], [$account] + $this->definition['access arguments']);
+    if (isset($this->definition['access callback']) && \function_exists($this->definition['access callback'])) {
+      if (isset($this->definition['access arguments']) && \is_array($this->definition['access arguments'])) {
+        return \call_user_func_array($this->definition['access callback'], [$account] + $this->definition['access arguments']);
       }
       return $this->definition['access callback']($account);
     }
@@ -745,23 +745,23 @@ abstract class HandlerBase extends PluginBase implements ViewsHandlerInterface {
 
     // Determine if the string has 'or' operators (plus signs) or 'and'
     // operators (commas) and split the string accordingly.
-    if (preg_match('/^([\w0-9-_\.]+[+ ]+)+[\w0-9-_\.]+$/u', $str)) {
+    if (\preg_match('/^([\w0-9-_\.]+[+ ]+)+[\w0-9-_\.]+$/u', $str)) {
       // The '+' character in a query string may be parsed as ' '.
       $operator = 'or';
-      $value = preg_split('/[+ ]/', $str);
+      $value = \preg_split('/[+ ]/', $str);
     }
-    elseif (preg_match('/^([\w0-9-_\.]+[, ]+)*[\w0-9-_\.]+$/u', $str)) {
+    elseif (\preg_match('/^([\w0-9-_\.]+[, ]+)*[\w0-9-_\.]+$/u', $str)) {
       $operator = 'and';
-      $value = explode(',', $str);
+      $value = \explode(',', $str);
     }
 
     // Filter any empty matches (Like from '++' in a string) and reset the
     // array keys. 'strlen' is used as the filter callback so we do not lose
     // 0 values (would otherwise evaluate == FALSE).
-    $value = array_values(array_filter($value, 'strlen'));
+    $value = \array_values(\array_filter($value, 'strlen'));
 
     if ($force_int) {
-      $value = array_map('intval', $value);
+      $value = \array_map('intval', $value);
     }
 
     return (object) ['value' => $value, 'operator' => $operator];

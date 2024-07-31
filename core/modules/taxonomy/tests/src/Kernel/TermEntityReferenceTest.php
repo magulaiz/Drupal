@@ -85,7 +85,7 @@ class TermEntityReferenceTest extends KernelTestBase {
     ]);
     $field_storage->save();
 
-    entity_test_create_bundle('test_bundle');
+    \entity_test_create_bundle('test_bundle');
     $field = FieldConfig::create([
       'field_storage' => $field_storage,
       'entity_type' => 'entity_test',

@@ -32,7 +32,7 @@ class NodeTranslationHandler extends ContentTranslationHandler {
     // Change the submit button labels if there was a status field they affect
     // in which case their publishing / unpublishing may or may not apply
     // to all translations.
-    if (!$entity->isNew() && (!isset($translations[$form_langcode]) || count($translations) > 1)) {
+    if (!$entity->isNew() && (!isset($translations[$form_langcode]) || \count($translations) > 1)) {
       foreach ($entity->getFieldDefinitions() as $property_name => $definition) {
         if ($property_name == 'status') {
           $status_translatable = $definition->isTranslatable();
@@ -40,7 +40,7 @@ class NodeTranslationHandler extends ContentTranslationHandler {
       }
       if (isset($status_translatable)) {
         if (isset($form['actions']['submit'])) {
-          $form['actions']['submit']['#value'] .= ' ' . ($status_translatable ? t('(this translation)') : t('(all translations)'));
+          $form['actions']['submit']['#value'] .= ' ' . ($status_translatable ? \t('(this translation)') : \t('(all translations)'));
         }
       }
     }
@@ -50,8 +50,8 @@ class NodeTranslationHandler extends ContentTranslationHandler {
    * {@inheritdoc}
    */
   protected function entityFormTitle(EntityInterface $entity) {
-    $type_name = node_get_type_label($entity);
-    return t('<em>Edit @type</em> @title', ['@type' => $type_name, '@title' => $entity->label()]);
+    $type_name = \node_get_type_label($entity);
+    return \t('<em>Edit @type</em> @title', ['@type' => $type_name, '@title' => $entity->label()]);
   }
 
   /**

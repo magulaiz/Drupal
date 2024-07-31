@@ -22,12 +22,12 @@ class ConstraintFactory extends ContainerFactory {
     $plugin_class = static::getPluginClass($plugin_id, $plugin_definition, $this->interface);
 
     // If the plugin provides a factory method, pass the container to it.
-    if (is_subclass_of($plugin_class, ContainerFactoryPluginInterface::class)) {
+    if (\is_subclass_of($plugin_class, ContainerFactoryPluginInterface::class)) {
       return $plugin_class::create(\Drupal::getContainer(), $configuration, $plugin_id, $plugin_definition);
     }
 
     // If the plugin is a Symfony Constraint, use the correct constructor.
-    if (is_subclass_of($plugin_class, Constraint::class)) {
+    if (\is_subclass_of($plugin_class, Constraint::class)) {
       return new $plugin_class($configuration);
     }
 

@@ -34,7 +34,7 @@ class ToolbarController extends ControllerBase implements TrustedCallbackInterfa
    * @return \Drupal\Core\Ajax\AjaxResponse
    */
   public function subtreesAjax() {
-    [$subtrees] = toolbar_get_rendered_subtrees();
+    [$subtrees] = \toolbar_get_rendered_subtrees();
     $response = new AjaxResponse();
     $response->addCommand(new SetSubtreesCommand($subtrees));
 
@@ -63,8 +63,8 @@ class ToolbarController extends ControllerBase implements TrustedCallbackInterfa
    *   The access result.
    */
   public function checkSubTreeAccess($hash) {
-    $expected_hash = _toolbar_get_subtrees_hash()[0];
-    return AccessResult::allowedIf($this->currentUser()->hasPermission('access toolbar') && hash_equals($expected_hash, $hash))->cachePerPermissions();
+    $expected_hash = \_toolbar_get_subtrees_hash()[0];
+    return AccessResult::allowedIf($this->currentUser()->hasPermission('access toolbar') && \hash_equals($expected_hash, $hash))->cachePerPermissions();
   }
 
   /**
@@ -137,7 +137,7 @@ class ToolbarController extends ControllerBase implements TrustedCallbackInterfa
       // Many routes have dots as route name, while some special ones like
       // <front> have <> characters in them.
       $url = $link->getUrlObject();
-      $id = str_replace(['.', '<', '>'], ['-', '', ''], $url->isRouted() ? $url->getRouteName() : $url->getUri());
+      $id = \str_replace(['.', '<', '>'], ['-', '', ''], $url->isRouted() ? $url->getRouteName() : $url->getUri());
 
       $subtrees[$id] = $output;
     }
