@@ -38,8 +38,6 @@
       // Initial check.
       if (windowWidth <= 768) {
         setTimeout(handleLanguageSwitcher, 250);
-      } else {
-        setTimeout(handleReset, 250);
       }
 
       // Check after window resize.
