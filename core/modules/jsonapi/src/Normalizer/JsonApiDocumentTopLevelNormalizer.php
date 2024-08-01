@@ -36,11 +36,6 @@ use Drupal\jsonapi\ResourceType\ResourceTypeRepositoryInterface;
 class JsonApiDocumentTopLevelNormalizer extends NormalizerBase implements DenormalizerInterface, NormalizerInterface {
 
   /**
-   * {@inheritdoc}
-   */
-  protected $supportedInterfaceOrClass = JsonApiDocumentTopLevel::class;
-
-  /**
    * The entity type manager.
    *
    * @var \Drupal\Core\Entity\EntityTypeManagerInterface
@@ -119,7 +114,7 @@ class JsonApiDocumentTopLevelNormalizer extends NormalizerBase implements Denorm
         try {
           $entity_storage = $this->entityTypeManager->getStorage($entity_type_id);
         }
-        catch (PluginNotFoundException $e) {
+        catch (PluginNotFoundException) {
           throw new BadRequestHttpException("Invalid type specified for related resource: '" . $relationship['data'][0]['type'] . "'");
         }
         // In order to maintain the order ($delta) of the relationships, we need
@@ -151,7 +146,7 @@ class JsonApiDocumentTopLevelNormalizer extends NormalizerBase implements Denorm
             $reference_item += $relationship['data'][$delta]['meta'];
           }
           $canonical_ids[] = array_filter($reference_item, function ($key) {
-            return substr($key, 0, strlen('drupal_internal__')) !== 'drupal_internal__';
+            return !str_starts_with($key, 'drupal_internal__');
           }, ARRAY_FILTER_USE_KEY);
         }
 
@@ -219,7 +214,7 @@ class JsonApiDocumentTopLevelNormalizer extends NormalizerBase implements Denorm
    * @return \Drupal\jsonapi\Normalizer\Value\CacheableNormalization
    *   The normalized document.
    *
-   * @todo: refactor this to use CacheableNormalization::aggregate in https://www.drupal.org/project/drupal/issues/3036284.
+   * @todo Refactor this to use CacheableNormalization::aggregate in https://www.drupal.org/project/drupal/issues/3036284.
    */
   protected function normalizeErrorDocument(JsonApiDocumentTopLevel $document, $format, array $context = []) {
     $normalized_values = array_map(function (HttpExceptionInterface $exception) use ($format, $context) {
@@ -247,7 +242,7 @@ class JsonApiDocumentTopLevelNormalizer extends NormalizerBase implements Denorm
    * @return \Drupal\jsonapi\Normalizer\Value\CacheableNormalization|\Drupal\jsonapi\Normalizer\Value\CacheableOmission
    *   The normalized omissions.
    *
-   * @todo: refactor this to use link collections in https://www.drupal.org/project/drupal/issues/3036279.
+   * @todo Refactor this to use link collections in https://www.drupal.org/project/drupal/issues/3036279.
    */
   protected function normalizeOmissionsLinks(OmittedData $omissions, $format, array $context = []) {
     $normalized_omissions = array_map(function (HttpExceptionInterface $exception) use ($format, $context) {
@@ -335,8 +330,10 @@ class JsonApiDocumentTopLevelNormalizer extends NormalizerBase implements Denorm
   /**
    * {@inheritdoc}
    */
-  public function hasCacheableSupportsMethod(): bool {
-    return TRUE;
+  public function getSupportedTypes(?string $format): array {
+    return [
+      JsonApiDocumentTopLevel::class => TRUE,
+    ];
   }
 
 }

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\user\Functional;
 
 use Drupal\Core\Url;
@@ -9,8 +11,7 @@ use Drupal\Tests\BrowserTestBase;
 use Drupal\user\Entity\User;
 
 /**
- * Generates text using placeholders for dummy content to check user token
- * replacement.
+ * Tests the replacement of user tokens.
  *
  * @group user
  */
@@ -39,7 +40,7 @@ class UserTokenReplaceTest extends BrowserTestBase {
   /**
    * Creates a user, then tests the tokens generated from it.
    */
-  public function testUserTokenReplacement() {
+  public function testUserTokenReplacement(): void {
     $token_service = \Drupal::token();
     $language_interface = \Drupal::languageManager()->getCurrentLanguage();
     $url_options = [

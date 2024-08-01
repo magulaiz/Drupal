@@ -290,6 +290,7 @@ abstract class Updater {
    * @throws \Drupal\Core\Updater\UpdaterFileTransferException
    */
   public function install(&$filetransfer, $overrides = []) {
+    @trigger_error(__METHOD__ . '() is deprecated in drupal:11.1.0 and is removed from drupal:12.0.0. There is no replacement. See https://www.drupal.org/node/3461934', E_USER_DEPRECATED);
     try {
       // Establish arguments with possible overrides.
       $args = $this->getInstallArgs($overrides);
@@ -340,12 +341,12 @@ abstract class Updater {
           // Probably still not writable. Try to chmod and do it again.
           // @todo Make a new exception class so we can catch it differently.
           try {
-            $old_perms = substr(sprintf('%o', fileperms($parent_dir)), -4);
+            $old_perms = fileperms($parent_dir) & 0777;
             $filetransfer->chmod($parent_dir, 0755);
             $filetransfer->createDirectory($directory);
             $this->makeWorldReadable($filetransfer, $directory);
             // Put the permissions back.
-            $filetransfer->chmod($parent_dir, intval($old_perms, 8));
+            $filetransfer->chmod($parent_dir, $old_perms);
           }
           catch (FileTransferException $e) {
             $message = t($e->getMessage(), $e->arguments);
@@ -372,8 +373,8 @@ abstract class Updater {
   public function makeWorldReadable(&$filetransfer, $path, $recursive = TRUE) {
     if (!is_executable($path)) {
       // Set it to read + execute.
-      $new_perms = substr(sprintf('%o', fileperms($path)), -4, -1) . "5";
-      $filetransfer->chmod($path, intval($new_perms, 8), $recursive);
+      $new_perms = fileperms($path) & 0777 | 0005;
+      $filetransfer->chmod($path, $new_perms, $recursive);
     }
   }
 
@@ -400,15 +401,10 @@ abstract class Updater {
   }
 
   /**
-   * Performs actions after new code is updated.
-   */
-  public function postUpdate() {
-  }
-
-  /**
    * Performs actions after installation.
    */
   public function postInstall() {
+    @trigger_error(__METHOD__ . '() is deprecated in drupal:11.1.0 and is removed from drupal:12.0.0. There is no replacement. See https://www.drupal.org/node/3461934', E_USER_DEPRECATED);
   }
 
   /**
@@ -418,7 +414,14 @@ abstract class Updater {
    *   Links which provide actions to take after the install is finished.
    */
   public function postInstallTasks() {
+    @trigger_error(__METHOD__ . '() is deprecated in drupal:11.1.0 and is removed from drupal:12.0.0. There is no replacement. See https://www.drupal.org/node/3461934', E_USER_DEPRECATED);
     return [];
+  }
+
+  /**
+   * Performs actions after new code is updated.
+   */
+  public function postUpdate() {
   }
 
   /**

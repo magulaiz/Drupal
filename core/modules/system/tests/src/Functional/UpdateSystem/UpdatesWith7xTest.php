@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\system\Functional\UpdateSystem;
 
 use Drupal\Core\Url;
@@ -7,8 +9,7 @@ use Drupal\Tests\BrowserTestBase;
 use Drupal\Tests\RequirementsPageTrait;
 
 /**
- * Tests that the minimum schema version is correct even if only 7.x update
- * hooks are retained .
+ * Tests the minimum schema version when only 7.x update hooks are retained.
  *
  * @group Update
  */
@@ -52,7 +53,7 @@ class UpdatesWith7xTest extends BrowserTestBase {
     ]);
   }
 
-  public function testWith7x() {
+  public function testWith7x(): void {
     /** @var \Drupal\Core\Update\UpdateHookRegistry $update_registry */
     $update_registry = \Drupal::service('update.update_hook_registry');
 

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\comment\Functional;
 
 use Drupal\comment\Plugin\Field\FieldType\CommentItemInterface;
@@ -13,8 +15,7 @@ use Drupal\taxonomy\Entity\Vocabulary;
 use Drupal\user\Entity\User;
 
 /**
- * Generates text using placeholders for dummy content to check comment token
- * replacement.
+ * Tests comment token replacement.
  *
  * @group comment
  */
@@ -33,7 +34,7 @@ class CommentTokenReplaceTest extends CommentTestBase {
   /**
    * Creates a comment, then tests the tokens generated from it.
    */
-  public function testCommentTokenReplacement() {
+  public function testCommentTokenReplacement(): void {
     $token_service = \Drupal::token();
     $language_interface = \Drupal::languageManager()->getCurrentLanguage();
     $url_options = [

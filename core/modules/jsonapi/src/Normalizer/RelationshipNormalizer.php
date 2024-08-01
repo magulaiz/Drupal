@@ -15,11 +15,6 @@ class RelationshipNormalizer extends NormalizerBase {
   /**
    * {@inheritdoc}
    */
-  protected $supportedInterfaceOrClass = Relationship::class;
-
-  /**
-   * {@inheritdoc}
-   */
   public function normalize($object, $format = NULL, array $context = []): array|string|int|float|bool|\ArrayObject|NULL {
     assert($object instanceof Relationship);
     return CacheableNormalization::aggregate([
@@ -32,8 +27,10 @@ class RelationshipNormalizer extends NormalizerBase {
   /**
    * {@inheritdoc}
    */
-  public function hasCacheableSupportsMethod(): bool {
-    return TRUE;
+  public function getSupportedTypes(?string $format): array {
+    return [
+      Relationship::class => TRUE,
+    ];
   }
 
 }
