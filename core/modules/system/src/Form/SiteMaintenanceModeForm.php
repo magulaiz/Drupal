@@ -103,6 +103,7 @@ class SiteMaintenanceModeForm extends ConfigFormBase {
   public function submitForm(array &$form, FormStateInterface $form_state) {
     $this->state->set('system.maintenance_mode', $form_state->getValue('maintenance_mode'));
     parent::submitForm($form, $form_state);
+    $this->messenger()->addMessage($this->t('To display the maintenance mode message to all site visitors, flush the page cache on the <a href=":performance-page-url" title="performance settings page">Performance Settings page</a>.', [':performance-page-url' => Url::fromRoute('system.performance_settings')->toString()]));
   }
 
 }
