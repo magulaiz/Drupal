@@ -364,5 +364,4 @@ class TermIndexTest extends TaxonomyTestBase {
     ]);
   }
 
-
 }

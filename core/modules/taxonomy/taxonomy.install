@@ -14,7 +14,6 @@ function taxonomy_update_last_removed(): int {
   return 10100;
 }
 
-
 /**
  * Add 'langcode' field to 'taxonomy_index' entities.
  *

@@ -107,7 +107,7 @@ function taxonomy_build_node_index(Node $node) {
 
   $sticky = (int) $node->isSticky();
   // We only maintain the taxonomy index for published nodes.
-// Collect a unique list of all the term IDs from all node fields.
+  // Collect a unique list of all the term IDs from all node fields.
   $tid_all = [];
   $entity_reference_class = 'Drupal\Core\Field\Plugin\Field\FieldType\EntityReferenceItem';
   foreach ($node->getFieldDefinitions() as $field) {
@@ -123,20 +123,20 @@ function taxonomy_build_node_index(Node $node) {
         }
       }
     }
-    // Insert index entries for all the node's terms.
   }
-  
-    if (!empty($tid_all)) {
-      $connection = \Drupal::database();
-      foreach ($tid_all as $tid_info) {
-        foreach ($tid_info as $langcode => $tid) {
-          $connection->merge('taxonomy_index')
-            ->keys([
-                  'nid' => $node->id(),
-                  'tid' => $tid,
-                  'status' => (int) $node->getTranslation($langcode)->isPublished(),
-                  'langcode' => $langcode,
-                    ])
+
+  if (!empty($tid_all)) {
+    // Insert index entries for all the node's terms.
+    $connection = \Drupal::database();
+    foreach ($tid_all as $tid_info) {
+      foreach ($tid_info as $langcode => $tid) {
+        $connection->merge('taxonomy_index')
+          ->keys([
+            'nid' => $node->id(),
+            'tid' => $tid,
+            'status' => (int) $node->getTranslation($langcode)->isPublished(),
+            'langcode' => $langcode,
+          ])
           ->fields(['sticky' => $sticky, 'created' => $node->getCreatedTime()])
           ->execute();
       }
