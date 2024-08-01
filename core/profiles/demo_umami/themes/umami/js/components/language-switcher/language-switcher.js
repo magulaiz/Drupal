@@ -5,13 +5,18 @@
 
 (function umamiLanguageSwitcherBlocksScript(Drupal) {
   Drupal.behaviors.umamiLanguageSwitcherBlocks = {
-    attach: function (context) {
-
+    attach(context) {
       function handleLanguageSwitcher() {
-        const languageSwitcherBlocks = context.querySelectorAll('.umami-language-switcher');
+        const languageSwitcherBlocks = context.querySelectorAll(
+          '.umami-language-switcher'
+        );
         languageSwitcherBlocks.forEach((block) => {
-          const toggleButton = block.querySelector('.umami-language-switcher__toggle');
-          const languageList = block.querySelector('.umami-language-switcher__content');
+          const toggleButton = block.querySelector(
+            '.umami-language-switcher__toggle'
+          );
+          const languageList = block.querySelector(
+            '.umami-language-switcher__content'
+          );
           const languageListId = languageList.getAttribute('id');
           toggleButton.setAttribute('aria-controls', languageListId);
           toggleButton.removeAttribute('hidden');
@@ -23,11 +28,10 @@
           });
         });
       }
-
       // We need a timeout to ensure that the language switcher block is
       // rendered before we try to handle it.
       setTimeout(handleLanguageSwitcher, 50);
 
     }
   };
-}(Drupal));
+})(Drupal);
