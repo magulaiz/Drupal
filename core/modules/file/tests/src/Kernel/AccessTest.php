@@ -47,11 +47,13 @@ class AccessTest extends KernelTestBase {
 
     $user_any = $this->createUser([
       'delete any file',
+      'edit any file',
     ]);
     $this->assertGreaterThan(1, (int) $user_any->id());
 
     $user_own = $this->createUser([
       'delete own files',
+      'edit own file'
     ]);
 
     $test_files = $this->getTestFiles('text');
