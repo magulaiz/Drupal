@@ -88,12 +88,12 @@ class AccessTest extends KernelTestBase {
     $this->assertSame(['file:2'], $access->getCacheTags());
     /** @var \Drupal\Core\Access\AccessResult $access */
     $access = $file2->access('update', $user_any, TRUE);
-    $this->assertSame([], $access->getCacheContexts());
+    $this->assertSame(['user.permissions'], $access->getCacheContexts());
     $this->assertSame([], $access->getCacheTags());
     /** @var \Drupal\Core\Access\AccessResult $access */
     $access = $file2->access('update', $user_own, TRUE);
-    $this->assertSame([], $access->getCacheContexts());
-    $this->assertSame([], $access->getCacheTags());
+    $this->assertSame(['user.permissions', 'user'], $access->getCacheContexts());
+    $this->assertSame(['file:2'], $access->getCacheTags());
 
     // User without permissions should not be able to delete files even if they
     // are the owner.
