@@ -13,6 +13,7 @@ use Drupal\views\Views;
  * Tests native behaviors of the block views plugin.
  *
  * @group views
+ * @group #slow
  */
 class ViewsBlockTest extends ViewsKernelTestBase {
 
