@@ -106,8 +106,6 @@ class PhpUnitTestRunner implements ContainerInjectionInterface {
    * @param string[] $output
    *   (optional) The output by running the phpunit command. If provided, this
    *   array will contain the lines output by the command.
-   * @param array $environment_variables
-   *   (optional) The environment variables to add to the process run.
    *
    * @internal
    */
@@ -171,7 +169,7 @@ class PhpUnitTestRunner implements ContainerInjectionInterface {
    *
    * @internal
    */
-  public function execute(TestRun $test_run, string $test_class_name, ?int &$status = NULL, array $environment_variables = []): array {
+  public function execute(TestRun $test_run, string $test_class_name, ?int &$status = NULL): array {
     $log_junit_file_path = $this->xmlLogFilePath($test_run->id());
     // Store output from our test run.
     $output = [];
