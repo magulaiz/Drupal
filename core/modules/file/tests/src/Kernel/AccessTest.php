@@ -53,7 +53,7 @@ class AccessTest extends KernelTestBase {
 
     $user_own = $this->createUser([
       'delete own files',
-      'edit own file'
+      'edit own file',
     ]);
 
     $test_files = $this->getTestFiles('text');
