@@ -4,7 +4,6 @@ namespace Drupal\Core\Test;
 
 use Drupal\Core\Database\Database;
 use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
-use Drupal\Core\File\FileSystemInterface;
 use Drupal\TestTools\Extension\DeprecationBridge\DeprecationHandler;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Process\PhpExecutableFinder;
@@ -28,25 +27,18 @@ use Symfony\Component\Process\Process;
 class PhpUnitTestRunner implements ContainerInjectionInterface {
 
   /**
-   * Path to the working directory.
-   *
-   * JUnit log files will be stored in this directory.
-   */
-  protected string $workingDirectory;
-
-  /**
    * Constructs a test runner.
    *
    * @param string $appRoot
    *   Path to the application root.
-   * @param \Drupal\Core\File\FileSystemInterface $fileSystem
-   *   The file system service.
+   * @param string $workingDirectory
+   *   Path to the working directory. JUnit log files will be stored in this
+   *   directory.
    */
   public function __construct(
     protected string $appRoot,
-    protected FileSystemInterface $fileSystem,
+    protected string $workingDirectory,
   ) {
-    $this->workingDirectory = $this->fileSystem->realpath('public://simpletest');
   }
 
   /**
@@ -55,12 +47,12 @@ class PhpUnitTestRunner implements ContainerInjectionInterface {
   public static function create(ContainerInterface $container): static {
     return new static(
       (string) $container->getParameter('app.root'),
-      $container->get('file_system')
+      (string) $container->get('file_system')->realpath('public://simpletest'),
     );
   }
 
   /**
-   * Returns a prepared path to use for the JUnitListener output.
+   * Returns the path to use for PHPUnit's --log-junit option.
    *
    * @param int $test_id
    *   The current test ID.
@@ -71,7 +63,6 @@ class PhpUnitTestRunner implements ContainerInjectionInterface {
    * @internal
    */
   public function xmlLogFilePath(int $test_id): string {
-    $this->fileSystem->prepareDirectory($this->workingDirectory, FileSystemInterface::CREATE_DIRECTORY | FileSystemInterface::MODIFY_PERMISSIONS);
     return $this->workingDirectory . '/phpunit-' . $test_id . '.xml';
   }
 
@@ -120,14 +111,13 @@ class PhpUnitTestRunner implements ContainerInjectionInterface {
    *
    * @internal
    */
-  protected function runCommand(string $test_class_name, string $log_junit_file_path, ?int &$status = NULL, ?array &$output = NULL, array $environment_variables = []): void {
+  protected function runCommand(string $test_class_name, string $log_junit_file_path, ?int &$status = NULL, ?array &$output = NULL): void {
     global $base_url;
     // Setup an environment variable containing the database connection so that
     // functional tests can connect to the database.
-    $process_environment_variables = array_merge($environment_variables, [
+    $process_environment_variables = [
       'SIMPLETEST_DB' => Database::getConnectionInfoAsUrl(),
-      'SIMPLETEST_JUNIT_FILE' => $log_junit_file_path,
-    ]);
+    ];
 
     // Setup an environment variable containing the base URL, if it is available.
     // This allows functional tests to browse the site under test. When running
@@ -174,8 +164,6 @@ class PhpUnitTestRunner implements ContainerInjectionInterface {
    * @param int $status
    *   (optional) The exit status code of the PHPUnit process will be assigned
    *   to this variable.
-   * @param array $environment_variables
-   *   (optional) The environment variables to add to the process run.
    *
    * @return array
    *   The parsed results of PHPUnit's JUnit XML output, in the format of
@@ -187,7 +175,9 @@ class PhpUnitTestRunner implements ContainerInjectionInterface {
     $log_junit_file_path = $this->xmlLogFilePath($test_run->id());
     // Store output from our test run.
     $output = [];
-    $this->runCommand($test_class_name, $log_junit_file_path, $status, $output, $environment_variables);
+    $start = microtime(TRUE);
+    $this->runCommand($test_class_name, $log_junit_file_path, $status, $output);
+    $time = microtime(TRUE) - $start;
 
     if ($status == TestStatus::PASS) {
       return JUnitConverter::xmlToRows($test_run->id(), $log_junit_file_path);
@@ -202,7 +192,7 @@ class PhpUnitTestRunner implements ContainerInjectionInterface {
         'function' => $test_class_name,
         'line' => '0',
         'file' => $log_junit_file_path,
-        'time' => 0,
+        'time' => $time,
       ],
     ];
   }

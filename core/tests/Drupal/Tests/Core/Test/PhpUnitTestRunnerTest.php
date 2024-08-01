@@ -2,13 +2,13 @@
 
 declare(strict_types=1);
 
-namespace Drupal\KernelTests\Core\Test;
+namespace Drupal\Tests\Core\Test;
 
 use Drupal\Core\Test\PhpUnitTestRunner;
 use Drupal\Core\Test\SimpletestTestRunResultsStorage;
 use Drupal\Core\Test\TestRun;
 use Drupal\Core\Test\TestStatus;
-use Drupal\KernelTests\KernelTestBase;
+use Drupal\Tests\UnitTestCase;
 
 /**
  * @coversDefaultClass \Drupal\Core\Test\PhpUnitTestRunner
@@ -16,7 +16,7 @@ use Drupal\KernelTests\KernelTestBase;
  *
  * @see Drupal\Tests\simpletest\Unit\SimpletestPhpunitRunCommandTest
  */
-class PhpUnitTestRunnerTest extends KernelTestBase {
+class PhpUnitTestRunnerTest extends UnitTestCase {
 
   /**
    * Tests an error in the test running phase.
@@ -53,9 +53,8 @@ class PhpUnitTestRunnerTest extends KernelTestBase {
     $runner->expects($this->once())
       ->method('runCommand')
       ->willReturnCallback(
-        function (string $test_class_name, string $log_junit_file_path, int &$status): string {
+        function (string $test_class_name, string $log_junit_file_path, int &$status): void {
           $status = TestStatus::EXCEPTION;
-          return ' ';
         }
       );
 
@@ -70,6 +69,7 @@ class PhpUnitTestRunnerTest extends KernelTestBase {
 
     // A serious error in runCommand() should give us a fixed set of results.
     $row = reset($results);
+    unset($row['time']);
     $fail_row = [
       'test_id' => $test_id,
       'test_class' => 'SomeTest',
@@ -87,7 +87,7 @@ class PhpUnitTestRunnerTest extends KernelTestBase {
    * @covers ::phpUnitCommand
    */
   public function testPhpUnitCommand(): void {
-    $runner = new PhpUnitTestRunner($this->root, \Drupal::service('file_system'));
+    $runner = new PhpUnitTestRunner($this->root, sys_get_temp_dir());
     $this->assertMatchesRegularExpression('/phpunit/', $runner->phpUnitCommand());
   }
 
@@ -95,7 +95,7 @@ class PhpUnitTestRunnerTest extends KernelTestBase {
    * @covers ::xmlLogFilePath
    */
   public function testXmlLogFilePath(): void {
-    $runner = new PhpUnitTestRunner($this->root, \Drupal::service('file_system'));
+    $runner = new PhpUnitTestRunner($this->root, sys_get_temp_dir());
     $this->assertStringEndsWith('phpunit-23.xml', $runner->xmlLogFilePath(23));
   }
 
@@ -106,6 +106,7 @@ class PhpUnitTestRunnerTest extends KernelTestBase {
           [
             'test_class' => static::class,
             'status' => 'pass',
+            'time' => 0.010001,
           ],
         ],
         '#pass',
@@ -115,6 +116,7 @@ class PhpUnitTestRunnerTest extends KernelTestBase {
           [
             'test_class' => static::class,
             'status' => 'fail',
+            'time' => 0.010002,
           ],
         ],
         '#fail',
@@ -124,6 +126,7 @@ class PhpUnitTestRunnerTest extends KernelTestBase {
           [
             'test_class' => static::class,
             'status' => 'exception',
+            'time' => 0.010003,
           ],
         ],
         '#exception',
@@ -133,6 +136,7 @@ class PhpUnitTestRunnerTest extends KernelTestBase {
           [
             'test_class' => static::class,
             'status' => 'debug',
+            'time' => 0.010004,
           ],
         ],
         '#debug',
@@ -145,7 +149,7 @@ class PhpUnitTestRunnerTest extends KernelTestBase {
    * @covers ::summarizeResults
    */
   public function testSummarizeResults($results, $has_status): void {
-    $runner = new PhpUnitTestRunner($this->root, \Drupal::service('file_system'));
+    $runner = new PhpUnitTestRunner($this->root, sys_get_temp_dir());
     $summary = $runner->summarizeResults($results);
 
     $this->assertArrayHasKey(static::class, $summary);

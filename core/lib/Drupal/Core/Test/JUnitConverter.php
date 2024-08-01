@@ -160,10 +160,10 @@ class JUnitConverter {
   protected static function getStatus(\SimpleXMLElement $test_case) {
     $status = 'pass';
     if ($test_case->failure || $test_case->error || $test_case->risky) {
-      $status = 'fail';
+      return 'fail';
     }
     elseif ($test_case->skipped) {
-      $status = $test_case->skipped->attributes()->message;
+      return 'skipped';
     }
     return $status;
   }
