@@ -1091,7 +1091,7 @@ function simpletest_script_reporter_display_summary($class, $results, $time = NU
   $length = strlen($class);
   $offset = $length >= 60 ?  $length - 60 : 0;
   $class = substr($class, $offset, 60);
-  $output = vsprintf('%-60.60s %10s %9s %14s %12s', [
+  $output = vsprintf('%-60.60s %10s %5s %9s %14s %12s', [
     $class,
     $results['#pass'] . ' passes',
     isset($time) ? ceil($time) . 's' : '',
