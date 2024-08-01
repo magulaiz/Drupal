@@ -95,8 +95,8 @@ class AccessTest extends KernelTestBase {
     $this->assertSame(['user.permissions', 'user'], $access->getCacheContexts());
     $this->assertSame(['file:2'], $access->getCacheTags());
 
-    // User without permissions should not be able to delete files even if they
-    // are the owner.
+    // User without permissions should not be able to delete or update files
+    // even if they are the owner.
     $user_none = $this->createUser();
     $file3 = File::create([
       'uid' => $user_none->id(),
@@ -104,7 +104,7 @@ class AccessTest extends KernelTestBase {
       'filemime' => 'text/plain',
     ]);
     $this->assertFalse($file3->access('delete', $user_none));
-    $this->assertTrue($file3->access('update', $user_none));
+    $this->assertFalse($file3->access('update', $user_none));
 
     // Create a file with no user entity.
     $file4 = File::create([
