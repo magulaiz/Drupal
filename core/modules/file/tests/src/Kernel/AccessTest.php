@@ -114,7 +114,7 @@ class AccessTest extends KernelTestBase {
     $this->assertFalse($file4->access('delete', $user_own));
     $this->assertFalse($file4->access('update', $user_own));
     $this->assertTrue($file4->access('delete', $user_any));
-    $this->assertFalse($file4->access('update', $user_any));
+    $this->assertTrue($file4->access('update', $user_any));
   }
 
   /**
