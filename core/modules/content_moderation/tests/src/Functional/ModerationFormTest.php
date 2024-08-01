@@ -205,7 +205,7 @@ class ModerationFormTest extends ModerationStateTestBase {
 
     // If we don't use the UI to define this entity as moderated, we need to
     // display the extra-field programmatically as well.
-    entity_get_display('entity_test_mulrevpub', 'entity_test_mulrevpub', 'default')
+    \Drupal::service('entity_display.repository')->getViewDisplay('entity_test_mulrevpub', 'entity_test_mulrevpub', 'default')
       ->setComponent('content_moderation_control', [
         'weight' => -20,
       ])

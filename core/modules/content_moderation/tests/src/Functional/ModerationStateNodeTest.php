@@ -47,8 +47,8 @@ class ModerationStateNodeTest extends ModerationStateTestBase {
 
     // Make sure the content_moderation_control extra-field is visible.
     $this->assertSession()->elementExists('css', 'article.node form#content-moderation-entity-moderation-form');
-    // Check that it is not visible in the teaser viewmode, however.
-    $component = entity_get_display('node', $node->bundle(), 'teaser')
+    // Check that it is not visible in the teaser view mode, however.
+    $component = \Drupal::service('entity_display.repository')->getViewDisplay('node', $node->bundle(), 'teaser')
       ->getComponent('content_moderation_control');
     $this->assertNull($component);
 
