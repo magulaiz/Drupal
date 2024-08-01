@@ -29,3 +29,10 @@ function page_cache_help($route_name, RouteMatchInterface $route_match) {
       return $output;
   }
 }
+
+/**
+ * Implements hook_form_FORM_ID_alter() for system_site_maintenance_mode.
+ */
+function page_cache_form_system_site_maintenance_mode_alter(&$form) {
+  $form['maintenance_mode_message']['#description'] = t('To display the maintenance mode message to all site visitors, flush the page cache on the <a href=":performance-page-url" title="performance settings page">Performance Settings page</a>.', [':performance-page-url' => Url::fromRoute('system.performance_settings')->toString()]);
+}
