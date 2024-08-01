@@ -14,6 +14,7 @@ use Drupal\Tests\TestFileCreationTrait;
  * Tests comment preview.
  *
  * @group comment
+ * @group #slow
  */
 class CommentPreviewTest extends CommentTestBase {
 
