@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\menu_test;
 
 use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
@@ -8,14 +10,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 /**
  * A menu manipulator.
  */
-class MenuLinkManipulators implements ContainerInjectionInterface {
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function create(ContainerInterface $container) {
-    return new static();
-  }
+final class MenuLinkManipulators {
 
   /**
    * Add the class menu-test-link to certain links.
@@ -26,7 +21,7 @@ class MenuLinkManipulators implements ContainerInjectionInterface {
    * @return array
    *   The menu manipulators.
    */
-  public function testManipulator(array $tree) {
+  public function testManipulator(array $tree): array {
     foreach ($tree as $key => $element) {
       $link = $tree[$key]->link;
       $url = $link->getUrlObject();
@@ -38,16 +33,6 @@ class MenuLinkManipulators implements ContainerInjectionInterface {
       }
     }
     return $tree;
-  }
-
-  /**
-   * Gets the name of menu manipulator.
-   *
-   * @return string
-   *   The manipulator name.
-   */
-  public static function getTestManipulator() {
-    return self::class . ":testManipulator";
   }
 
 }

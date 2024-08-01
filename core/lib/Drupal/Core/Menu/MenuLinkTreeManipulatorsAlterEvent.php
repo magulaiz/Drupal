@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Core\Menu;
 
 use Drupal\Component\EventDispatcher\Event;
@@ -8,27 +10,6 @@ use Drupal\Component\EventDispatcher\Event;
  * Represents menu link tree manipulator information as event.
  */
 class MenuLinkTreeManipulatorsAlterEvent extends Event {
-
-  /**
-   * The menu tree to manipulate.
-   *
-   * @var \Drupal\Core\Menu\MenuLinkTreeElement[]
-   */
-  protected $tree;
-
-  /**
-   * The menu link tree manipulators.
-   *
-   * @var array
-   */
-  protected $manipulators;
-
-  /**
-   * The menu link tree.
-   *
-   * @var \Drupal\Core\Menu\MenuLinkTreeInterface
-   */
-  protected $menuLinkTree;
 
   /**
    * MenuLinkTreeManipulatorsAlterEvent constructor.
@@ -40,10 +21,11 @@ class MenuLinkTreeManipulatorsAlterEvent extends Event {
    * @param \Drupal\Core\Menu\MenuLinkTreeInterface $menuLinkTree
    *   The menu link tree.
    */
-  public function __construct(array $tree, array &$manipulators, MenuLinkTreeInterface $menuLinkTree) {
-    $this->tree = $tree;
-    $this->manipulators = &$manipulators;
-    $this->menuLinkTree = $menuLinkTree;
+  public function __construct(
+    protected array $tree,
+    protected array $manipulators,
+    protected MenuLinkTreeInterface $menuLinkTree,
+  ) {
   }
 
   /**
@@ -62,7 +44,7 @@ class MenuLinkTreeManipulatorsAlterEvent extends Event {
    * @return array
    *   The menu tree manipulators.
    */
-  public function &getManipulators(): array {
+  public function getManipulators(): array {
     return $this->manipulators;
   }
 

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\menu_test\EventSubscriber;
 
 use Drupal\Core\Menu\MenuLinkTreeEvents;
@@ -19,9 +21,10 @@ class MenuLinkTreeEventSubscriber implements EventSubscriberInterface {
    *   The event.
    */
   public static function alterMenuLinkManipulators(MenuLinkTreeManipulatorsAlterEvent $event): void {
-    $manipulators = &$event->getManipulators();
+    $manipulators = $event->getManipulators();
     // Append the test menu link manipulator.
-    $manipulators[] = ['callable' => MenuLinkManipulators::getTestManipulator()];
+    $manipulators[] = ['callable' => MenuLinkManipulators::class . ':testManipulator'];
+    $event->setManipulators($manipulators);
   }
 
   /**
