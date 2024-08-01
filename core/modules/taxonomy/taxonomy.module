@@ -158,7 +158,8 @@ function taxonomy_delete_node_index(EntityInterface $node) {
     \Drupal::database()
       ->delete('taxonomy_index')
       ->condition('nid', $node->id())
-      ->execute();  }
+      ->execute();
+  }
 }
 
 /**
