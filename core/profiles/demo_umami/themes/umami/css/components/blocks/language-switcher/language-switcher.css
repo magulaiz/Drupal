@@ -3,6 +3,10 @@
  * Stylesheet for the language switcher block.
  */
 
+.umami-language-switcher__content {
+  position: relative;
+}
+
 .js .umami-language-switcher .links {
   position: absolute;
   z-index: 1000;
@@ -10,34 +14,11 @@
   padding: 1rem;
   border: 1px solid #008068;
   border-top: 0;
-  background: #ffffffee;
+  background: #fffe;
 }
 
 .umami-language-switcher .links > li {
   margin-inline-start: 1rem;
-}
-
-@media screen and (min-width: 40em) {
-  .js .umami-language-switcher .links {
-    position: initial;
-    display: inline-flex;
-    margin: 0;
-    padding: 0;
-    list-style: none;
-    border: 0;
-    background: none;
-  }
-
-  .umami-language-switcher .links > li {
-    margin-inline-start: 0;
-  }
-  .umami-language-switcher .links > li + li {
-    margin-inline-start: 1rem;
-  }
-}
-
-.umami-language-switcher__content {
-  position: relative;
 }
 
 .language-link,

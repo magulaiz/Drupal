@@ -37,6 +37,8 @@
 
 {{ attach_library('umami/language-switcher') }}
 
+{% set randomId = random(10000) %}
+
 <div{{ attributes.addClass(classes) }}>
   {{ title_prefix }}
   {% if label %}
@@ -44,9 +46,9 @@
   {% endif %}
   {{ title_suffix }}
 
-  <button class="button umami-language-switcher__toggle" type="button" aria-controls="umami-language-switcher__content" aria-expanded="false" hidden>{{ 'Select language'|t }}</button>
+  <button class="button umami-language-switcher__toggle" type="button" aria-expanded="false" hidden>{{ 'Select language'|t }}</button>
 
-  <div id="umami-language-switcher__content" class="umami-language-switcher__content">
+  <div id="umami-language-switcher__content-{{ randomId }}" class="umami-language-switcher__content">
     {{ content }}
   </div>
 </div>
