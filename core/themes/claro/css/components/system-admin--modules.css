@@ -26,6 +26,7 @@
 
 .modules-table-filter .form-item__description,
 .permissions-table-filter .form-item__description {
+  /* Visually hide the module filter input description. */
   position: absolute !important;
   overflow: hidden;
   clip: rect(1px, 1px, 1px, 1px);
