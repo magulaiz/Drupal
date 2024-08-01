@@ -65,11 +65,11 @@ class AccessTest extends KernelTestBase {
     $file2->save();
 
     // User with "* any file" permissions should delete all files and update
-    // their own.
+    // all files.
     $this->assertTrue($file1->access('delete', $user_any));
     $this->assertTrue($file1->access('update', $user_any));
     $this->assertTrue($file2->access('delete', $user_any));
-    $this->assertFalse($file2->access('update', $user_any));
+    $this->assertTrue($file2->access('update', $user_any));
 
     // User with "* own files" permissions should access only own files.
     $this->assertFalse($file1->access('delete', $user_own));
