@@ -1089,10 +1089,17 @@ function simpletest_script_reporter_display_summary($class, $results, $time = NU
   // string so that individual test classes can still be identified. Pad each
   // group with 3 digits by default (more than 999 assertions are rare).
   $length = strlen($class);
-  $offset = $length >= 60 ?  $length - 60 : 0;
-  $class = substr($class, $offset, 60);
+  if ($length < 60) {
+    $class_out = str_pad($class, 60, ' ', STR_PAD_RIGHT);
+  }
+  elseif ($length > 60) {
+    $class_out = '...' . substr($class, -60 + 3);
+  }
+  else {
+    $class_out = $class;
+  }
   $output = vsprintf('%-60.60s %5s %10s %9s %14s %12s', [
-    $class,
+    $class_out,
     $results['#pass'] . ' passes',
     isset($time) ? ceil($time) . 's' : '',
     !$results['#fail'] ? '' : $results['#fail'] . ' fails',
