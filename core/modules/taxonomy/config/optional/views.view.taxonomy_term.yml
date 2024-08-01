@@ -216,6 +216,7 @@ display:
           relationship: none
           group_type: group
           admin_label: ''
+          plugin_id: language
           operator: in
           value:
             '***LANGUAGE_language_content***': '***LANGUAGE_language_content***'
@@ -228,7 +229,7 @@ display:
             use_operator: false
             operator: ''
             operator_limit_selection: false
-            operator_list: { }
+            operator_list: {  }
             identifier: ''
             required: false
             remember: false
@@ -246,9 +247,8 @@ display:
             multiple: false
             remember: false
             default_group: All
-            default_group_multiple: { }
-            group_items: { }
-          plugin_id: language
+            default_group_multiple: {  }
+            group_items: {  }
       style:
         type: default
         options:
