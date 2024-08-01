@@ -10,6 +10,7 @@ namespace Drupal\Tests\config_translation\Functional;
  * Translate site information to various languages.
  *
  * @group config_translation
+ * @group #slow
  */
 class ConfigTranslationUiSiteInformationTest extends ConfigTranslationUiTestBase {
 

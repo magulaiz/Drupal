@@ -16,6 +16,7 @@ use Drupal\user\RoleInterface;
  * Tests personal contact form functionality.
  *
  * @group contact
+ * @group #slow
  */
 class ContactPersonalTest extends BrowserTestBase {
 
