@@ -52,13 +52,9 @@ function taxonomy_update_10101() {
         'length' => 12,
         'not null' => TRUE,
         'default' => '',
+      ], [
+        'primary key' => ['nid', 'tid', 'langcode'],
       ]);
-
-    Database::getConnection()->schema()->dropPrimaryKey('taxonomy_index');
-    Database::getConnection()->schema()->addPrimaryKey(
-      'taxonomy_index',
-      ['nid', 'tid', 'langcode']
-    );
   }
 
   // Recreate the index to be sure it has the correct configuration.
