@@ -2,6 +2,7 @@
 
 namespace Drupal\node;
 
+use Drupal\Core\StringTranslation\PluralTranslatableMarkup;
 use Drupal\views\EntityViewsData;
 
 /**
@@ -38,7 +39,29 @@ class NodeViewsData extends EntityViewsData {
 
     $status_extra_help_text = $this->t('Filters out unpublished content if the current user cannot view it.');
     if (\Drupal::moduleHandler()->hasImplementations('node_grants')) {
-      $status_extra_help_text = $this->t('Filters out unpublished content if the current user cannot view it. <strong>Does nothing when node access is in use.</strong>');
+      $implementations = [];
+      $module_data = \Drupal::getContainer()->get('extension.list.module')->getList();
+      \Drupal::moduleHandler()->invokeAllWith(
+        'node_grants',
+        function (callable $hook, string $module) use (&$implementations, $module_data) {
+          $implementations[$module] = $module_data[$module]->info['name'];
+        }
+      );
+      \Drupal::moduleHandler()->invokeAllWith(
+        'node_grants_alter',
+        function (callable $hook, string $module) use (&$implementations, $module_data) {
+          $implementations[$module] = $module_data[$module]->info['name'];
+        }
+      );
+      asort($implementations);
+      $implementation_count = count($implementations);
+      $last_module = array_pop($implementations);
+      $status_extra_help_text = new PluralTranslatableMarkup(
+        $implementation_count,
+        'This filter has no effect because the %module module controls access.',
+        'This filter has no effect because the %modules and %module modules control access.',
+        ['%module' => $last_module, '%modules' => implode(', ', $implementations)]
+      );
     }
 
     $data['node_field_data']['status_extra'] = [
