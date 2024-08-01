@@ -817,12 +817,15 @@ function simpletest_script_execute_batch(TestRunResultsStorageInterface $test_ru
  */
 function simpletest_script_run_phpunit(TestRun $test_run, $class) {
   $runner = PhpUnitTestRunner::create(\Drupal::getContainer());
+  $start = microtime(TRUE);
   $results = $runner->execute($test_run, $class, $status);
+  $time = microtime(TRUE) - $start;
+
   $runner->processPhpUnitResults($test_run, $results);
 
   $summaries = $runner->summarizeResults($results);
   foreach ($summaries as $class => $summary) {
-    simpletest_script_reporter_display_summary($class, $summary);
+    simpletest_script_reporter_display_summary($class, $summary, $time);
   }
   return $status;
 }
@@ -1078,14 +1081,16 @@ function simpletest_script_reporter_init() {
  *   The test class name that was run.
  * @param array $results
  *   The assertion results using #pass, #fail, #exception, #debug array keys.
+ * @param int|null $time
  */
-function simpletest_script_reporter_display_summary($class, $results) {
+function simpletest_script_reporter_display_summary($class, $results, $time = NULL) {
   // Output all test results vertically aligned.
   // Cut off the class name after 60 chars, and pad each group with 3 digits
   // by default (more than 999 assertions are rare).
-  $output = vsprintf('%-60.60s %10s %9s %14s %12s', [
+  $output = vsprintf('%-60.60s %10s %5s %9s %14s %12s', [
     $class,
     $results['#pass'] . ' passes',
+    isset($time) ? ceil($time) . 's' : '',
     !$results['#fail'] ? '' : $results['#fail'] . ' fails',
     !$results['#exception'] ? '' : $results['#exception'] . ' exceptions',
     !$results['#debug'] ? '' : $results['#debug'] . ' messages',
