@@ -4,9 +4,6 @@ declare(strict_types=1);
 
 namespace Drupal\menu_test;
 
-use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
-use Symfony\Component\DependencyInjection\ContainerInterface;
-
 /**
  * A menu manipulator.
  */
