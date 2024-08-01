@@ -17,6 +17,7 @@ use Drupal\KernelTests\Core\Database\DriverSpecificSchemaTestBase;
  * Tests schema API for the MySQL driver.
  *
  * @group Database
+ * @group #slow
  */
 class SchemaTest extends DriverSpecificSchemaTestBase {
 
