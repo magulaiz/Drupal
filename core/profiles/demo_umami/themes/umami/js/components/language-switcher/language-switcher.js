@@ -24,6 +24,8 @@
         });
       }
 
+      // We need a timeout to ensure that the language switcher block is
+      // rendered before we try to handle it.
       setTimeout(handleLanguageSwitcher, 50);
 
     }
