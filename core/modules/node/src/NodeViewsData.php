@@ -53,7 +53,7 @@ class NodeViewsData extends EntityViewsData {
           $implementations[$module] = $module_data[$module]->info['name'];
         }
       );
-      asort($implementations);
+      uasort($implementations, 'strnatcasecmp');
       $implementation_count = count($implementations);
       $last_module = array_pop($implementations);
       $status_extra_help_text = new PluralTranslatableMarkup(
