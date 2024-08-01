@@ -1081,8 +1081,12 @@ function simpletest_script_reporter_init() {
  */
 function simpletest_script_reporter_display_summary($class, $results) {
   // Output all test results vertically aligned.
-  // Cut off the class name after 60 chars, and pad each group with 3 digits
-  // by default (more than 999 assertions are rare).
+  // Limit the fully qualified class name to 60 characters, using the end of the
+  // string so that individual test classes can still be identified. Pad each
+  // group with 3 digits by default (more than 999 assertions are rare).
+  $length = strlen($class);
+  $offset = $length >= 60 ?  $length - 60 : 0;
+  $class = substr($class, $offset, 60);
   $output = vsprintf('%-60.60s %10s %9s %14s %12s', [
     $class,
     $results['#pass'] . ' passes',
