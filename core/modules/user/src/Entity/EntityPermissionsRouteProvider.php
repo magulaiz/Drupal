@@ -13,7 +13,8 @@ use Symfony\Component\Routing\RouteCollection;
 /**
  * Provides routes for the entity permissions form.
  *
- * Use this class as a route provider for an entity type such as Vocabulary.
+ * Use this class as a route provider for an entity type such as Vocabulary. It
+ * will provide routes for the entity permissions form.
  */
 class EntityPermissionsRouteProvider implements EntityRouteProviderInterface, EntityHandlerInterface {
 
