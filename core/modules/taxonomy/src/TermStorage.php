@@ -336,12 +336,11 @@ class TermStorage extends SqlContentEntityStorage implements TermStorageInterfac
 
     // Reset terms for this vocabulary. We don't use loadMultiple for
     // performance reasons and limit memory consumption.
-    $entity_query = $this->getQuery();
     $entity_type_key = $this->getEntityType()->getKey('bundle');
-    $entity_query
+    $term_ids = $this->getQuery()
       ->accessCheck(FALSE)
-      ->condition($entity_type_key, $vid);
-    $term_ids = $entity_query->execute();
+      ->condition($entity_type_key, $vid)
+      ->execute();
     $this->resetCache($term_ids);
 
     // Invalidate correct cache tags.

@@ -254,10 +254,10 @@ class TaxonomyOverviewUITest extends WebDriverTestBase {
    */
   protected function assertIndentationOnForm(int $first, int $second, int $third, int $fourth) {
     $page = $this->getSession()->getPage();
-    $this->assertSame($first, count($page->findAll('css', '#taxonomy tbody tr:nth-child(1) .indentation')));
-    $this->assertSame($second, count($page->findAll('css', '#taxonomy tbody tr:nth-child(2) .indentation')));
-    $this->assertSame($third, count($page->findAll('css', '#taxonomy tbody tr:nth-child(3) .indentation')));
-    $this->assertSame($fourth, count($page->findAll('css', '#taxonomy tbody tr:nth-child(4) .indentation')));
+    $this->assertCount($first, $page->findAll('css', '#taxonomy tbody tr:nth-child(1) .indentation'));
+    $this->assertCount($second, $page->findAll('css', '#taxonomy tbody tr:nth-child(2) .indentation'));
+    $this->assertCount($third, $page->findAll('css', '#taxonomy tbody tr:nth-child(3) .indentation'));
+    $this->assertCount($fourth, $page->findAll('css', '#taxonomy tbody tr:nth-child(4) .indentation'));
   }
 
   /**
