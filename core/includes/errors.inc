@@ -57,7 +57,6 @@ function drupal_error_levels() {
  */
 function _drupal_error_handler_real($error_level, $message, $filename, $line) {
   if (($error_level & error_reporting()) || ($error_level === E_USER_DEPRECATED && _drupal_get_deprecation_setting('log_deprecations', FALSE))) {
-
     // Filter out deprecations depending on the deprecation settings.
     if ($error_level === E_USER_DEPRECATED) {
       $ignored_file_patterns = _drupal_get_deprecation_setting('deprecations_ignored_file_patterns', []);
@@ -370,7 +369,7 @@ function _drupal_get_deprecation_setting(string $setting, $default) {
   try {
     $value = \Drupal::config('system.logging')->get($setting);
   }
-  catch (\Exception $e) {
+  catch (\Exception) {
     $value = $GLOBALS['config']['system.logging'][$setting] ?? $default;
   }
 
