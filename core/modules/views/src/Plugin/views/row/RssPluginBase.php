@@ -53,7 +53,7 @@ abstract class RssPluginBase extends RowPluginBase {
    *
    * @var string
    */
-  protected string $entityTypeId;
+  protected $entityTypeId;
 
   /**
    * Constructs a RssPluginBase  object.
