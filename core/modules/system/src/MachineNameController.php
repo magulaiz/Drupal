@@ -10,6 +10,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Exception\BadRequestException;
+use Symfony\Component\HttpFoundation\Exception\UnexpectedValueException;
 
 /**
  * Controller routines for machine name transliteration routes.
@@ -78,7 +79,7 @@ class MachineNameController implements ContainerInjectionInterface {
       $replace = $request->query->get('replace');
       $lowercase = $request->query->get('lowercase');
     }
-    catch (BadRequestException $e) {
+    catch (UnexpectedValueException $e) {
       throw new BadRequestException($e->getMessage(), $e->getCode(), $e);
     }
 
