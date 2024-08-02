@@ -4,14 +4,16 @@ namespace Drupal\user\Form;
 
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
-use Drupal\Core\Render\RendererInterface;
+use Drupal\Core\Messenger\MessengerInterface;
 use Drupal\Core\Render\BareHtmlPageRendererInterface;
+use Drupal\Core\Render\RendererInterface;
+use Drupal\Core\State\StateInterface;
 use Drupal\Core\Url;
 use Drupal\user\UserAuthenticationInterface;
 use Drupal\user\UserAuthInterface;
+use Drupal\user\UserFloodControlInterface;
 use Drupal\user\UserInterface;
 use Drupal\user\UserStorageInterface;
-use Drupal\user\UserFloodControlInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -57,6 +59,20 @@ class UserLoginForm extends FormBase {
   protected $bareHtmlPageRenderer;
 
   /**
+   * The state keyvalue collection.
+   *
+   * @var \Drupal\Core\State\StateInterface
+   */
+  protected $state;
+
+  /**
+   * The messenger.
+   *
+   * @var \Drupal\Core\Messenger\MessengerInterface
+   */
+  protected $messenger;
+
+  /**
    * Constructs a new UserLoginForm.
    *
    * @param \Drupal\user\UserFloodControlInterface $user_flood_control
@@ -69,8 +85,12 @@ class UserLoginForm extends FormBase {
    *   The renderer.
    * @param \Drupal\Core\Render\BareHtmlPageRendererInterface $bare_html_renderer
    *   The renderer.
+   * @param \Drupal\Core\State\StateInterface $state
+   *   The state keyvalue collection to use.
+   * @param \Drupal\Core\Messenger\MessengerInterface $messenger
+   *   The messenger.
    */
-  public function __construct(UserFloodControlInterface $user_flood_control, UserStorageInterface $user_storage, UserAuthInterface|UserAuthenticationInterface $user_auth, RendererInterface $renderer, BareHtmlPageRendererInterface $bare_html_renderer) {
+  public function __construct(UserFloodControlInterface $user_flood_control, UserStorageInterface $user_storage, UserAuthInterface|UserAuthenticationInterface $user_auth, RendererInterface $renderer, BareHtmlPageRendererInterface $bare_html_renderer, StateInterface $state, MessengerInterface $messenger) {
     $this->userFloodControl = $user_flood_control;
     $this->userStorage = $user_storage;
     if (!$user_auth instanceof UserAuthenticationInterface) {
@@ -79,6 +99,8 @@ class UserLoginForm extends FormBase {
     $this->userAuth = $user_auth;
     $this->renderer = $renderer;
     $this->bareHtmlPageRenderer = $bare_html_renderer;
+    $this->state = $state;
+    $this->messenger = $messenger;
   }
 
   /**
@@ -90,7 +112,9 @@ class UserLoginForm extends FormBase {
       $container->get('entity_type.manager')->getStorage('user'),
       $container->get('user.auth'),
       $container->get('renderer'),
-      $container->get('bare_html_page_renderer')
+      $container->get('bare_html_page_renderer'),
+      $container->get('state'),
+      $container->get('messenger')
     );
   }
 
@@ -106,7 +130,9 @@ class UserLoginForm extends FormBase {
    */
   public function buildForm(array $form, FormStateInterface $form_state) {
     $config = $this->config('system.site');
-
+    if ($this->state->get('system.maintenance_mode')) {
+      $this->messenger->addMessage($this->t('Operating in maintenance mode. User with permission of accessing maintenance mode will be allowed to login.'), 'warning', TRUE);
+    }
     // Display login form:
     $form['name'] = [
       '#type' => 'textfield',
