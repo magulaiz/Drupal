@@ -150,12 +150,12 @@ class TermViewsData extends EntityViewsData {
 
     $data['taxonomy_index']['table']['join'] = [
       $data_table => [
-        // links directly to taxonomy_term_field_data via tid
+        // Links directly to taxonomy_term_field_data via tid
         'left_field' => 'tid',
         'field' => 'tid',
       ],
       $node_table => [
-        // links directly to node via nid
+        // Links directly to node via nid
         'left_field' => 'nid',
         'field' => 'nid',
       ],

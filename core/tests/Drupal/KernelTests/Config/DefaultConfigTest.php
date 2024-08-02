@@ -55,34 +55,34 @@ class DefaultConfigTest extends KernelTestBase {
    * @var array
    */
   public static $mongodbSkippedConfig = [
-    // dblog module.
+    // Dblog module.
     'views.view.watchdog',
 
-    // block_content module.
+    // Block_content module.
     'views.view.block_content',
 
-    // book module.
+    // Book module.
     'core.base_field_override.node.book.promote',
 
-    // comment module.
+    // Comment module.
     'views.view.comment',
     'views.view.comments_recent',
 
-    // file module.
+    // File module.
     'views.view.files',
 
-    // forum module.
+    // Forum module.
     'core.base_field_override.node.forum.promote',
     'field.field.taxonomy_term.forums.forum_container',
     'field.storage.taxonomy_term.forum_container',
 
-    // media module.
+    // Media module.
     'views.view.media',
 
-    // media_library.
+    // Media_library module.
     'views.view.media_library',
 
-    // node module.
+    // Node module.
     'search.page.node_search',
     'views.view.archive',
     'views.view.content',
@@ -90,13 +90,13 @@ class DefaultConfigTest extends KernelTestBase {
     'views.view.frontpage',
     'views.view.glossary',
 
-    // user module.
+    // User module.
     'search.page.user_search',
     'views.view.user_admin_people',
     'views.view.who_s_new',
     'views.view.who_s_online',
 
-    // taxonomy module.
+    // Taxonomy module.
     'views.view.taxonomy_term',
   ];
 

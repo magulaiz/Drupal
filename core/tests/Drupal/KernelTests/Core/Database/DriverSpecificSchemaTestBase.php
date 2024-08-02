@@ -315,7 +315,7 @@ abstract class DriverSpecificSchemaTestBase extends DriverSpecificKernelTestBase
   /**
    * Tests creating a table with database specific data type.
    */
-  // abstract public function testTableWithSpecificDataType(): void;
+  abstract public function testTableWithSpecificDataType(): void;
 
   /**
    * Tests creating unsigned columns and data integrity thereof.
