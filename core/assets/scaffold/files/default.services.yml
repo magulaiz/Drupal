@@ -135,7 +135,7 @@ parameters:
     # Disabling debug on empty markup will stop twig from adding comments when
     # the markup is empty.
     # @default true
-    debug_on_empty: false
+    debug_on_empty: true
   renderer.config:
     # Renderer required cache contexts:
     #
