@@ -89,8 +89,8 @@ class TaxonomyTermReorderTest extends TaxonomyTestBase {
     $assert->fieldValueEquals('terms[tid:4:0][weight]', '1');
     $assert->fieldValueEquals('terms[tid:2:0][weight]', '2');
     $assert->fieldValueEquals('terms[tid:3:0][weight]', '0');
-    $assert->hiddenFieldValueEquals('terms[tid:3:0][term][parent]', 2);
-    $assert->fieldValueEquals('terms[tid:1:0][weight]', 3);
+    $assert->hiddenFieldValueEquals('terms[tid:3:0][term][parent]', '2');
+    $assert->fieldValueEquals('terms[tid:1:0][weight]', '3');
 
     // Reload terms to prevent usage of cached loaded terms.
     $taxonomy_storage->resetCache();
@@ -121,11 +121,11 @@ class TaxonomyTermReorderTest extends TaxonomyTestBase {
     $page = $this->getSession()->getPage();
 
     // Asserts the new weight are set to 0 on the UI & order stay unchanged.
-    $assert->fieldValueEquals('terms[tid:2:0][weight]', 0);
-    $assert->fieldValueEquals('terms[tid:3:0][weight]', 0);
-    $assert->hiddenFieldValueEquals('terms[tid:3:0][term][parent]', 2);
-    $assert->fieldValueEquals('terms[tid:4:0][weight]', 0);
-    $assert->fieldValueEquals('terms[tid:1:0][weight]', 0);
+    $assert->fieldValueEquals('terms[tid:2:0][weight]', '0');
+    $assert->fieldValueEquals('terms[tid:3:0][weight]', '0');
+    $assert->hiddenFieldValueEquals('terms[tid:3:0][term][parent]', '2');
+    $assert->fieldValueEquals('terms[tid:4:0][weight]', '0');
+    $assert->fieldValueEquals('terms[tid:1:0][weight]', '0');
 
     // Reload terms to prevent usage of cached loaded terms.
     $taxonomy_storage->resetCache();
