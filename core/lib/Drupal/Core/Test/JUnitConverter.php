@@ -28,6 +28,7 @@ class JUnitConverter {
    * @internal
    */
   public static function xmlToRows($test_id, $phpunit_xml_file) {
+    // @todo throw if file if missing.
     $contents = @file_get_contents($phpunit_xml_file);
     if (!$contents) {
       return [];
@@ -101,11 +102,10 @@ class JUnitConverter {
 
     $message = '';
     if ($status == PhpUnitTestCaseResult::Fail) {
-      $lines = explode("\n", $test_case->failure);
-      $message = $lines[2];
+      $message = (string) $test_case->failure[0];
     }
     elseif ($status == PhpUnitTestCaseResult::Error) {
-      $message = $test_case->error[0];
+      $message = (string) $test_case->error[0];
     }
     elseif ($status == PhpUnitTestCaseResult::Skip) {
       $message = 'Skipped';
