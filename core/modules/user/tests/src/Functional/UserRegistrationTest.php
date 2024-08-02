@@ -16,6 +16,7 @@ use Drupal\user\UserInterface;
  * Tests registration of user under different configurations.
  *
  * @group user
+ * @group #slow
  */
 class UserRegistrationTest extends BrowserTestBase {
 

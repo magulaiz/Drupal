@@ -340,7 +340,7 @@ class FileUploadTest extends ResourceTestBase {
    * @see ::testPostFileUpload()
    * @see \Drupal\Tests\jsonapi\Functional\EntityTestTest::getPostDocument()
    */
-  protected function getPostDocument() {
+  protected function getPostDocument(): array {
     return [
       'data' => [
         'type' => 'entity_test--entity_test',
@@ -752,7 +752,7 @@ class FileUploadTest extends ResourceTestBase {
    * @return array
    *   A JSON:API response document.
    */
-  protected function getExpectedDocument($fid = 1, $expected_filename = 'example.txt', $expected_as_filename = FALSE, $expected_status = FALSE) {
+  protected function getExpectedDocument($fid = 1, $expected_filename = 'example.txt', $expected_as_filename = FALSE, $expected_status = FALSE): array {
     $author = User::load($this->account->id());
     $file = File::load($fid);
     $this->assertInstanceOf(File::class, $file);
