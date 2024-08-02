@@ -2,6 +2,8 @@
 
 namespace Drupal\Core\Test;
 
+use Drupal\TestTools\PhpUnitTestCaseResult;
+
 /**
  * Converts JUnit XML to Drupal's {simpletest} schema.
  *
@@ -70,26 +72,12 @@ class JUnitConverter {
    * @internal
    */
   public static function findTestCases(\SimpleXMLElement $element, ?\SimpleXMLElement $parent = NULL) {
-    if (!isset($parent)) {
-      $parent = $element;
-    }
-
-    if ($element->getName() === 'testcase' && (int) $parent->attributes()->tests > 0) {
-      // Add the class attribute if the test case does not have one. This is the
-      // case for tests using a data provider. The name of the parent testsuite
-      // will be in the format class::method.
-      if (!$element->attributes()->class) {
-        $name = explode('::', $parent->attributes()->name, 2);
-        $element->addAttribute('class', $name[0]);
-      }
+    if ($element->getName() === 'testcase') {
       return [$element];
     }
+
     $test_cases = [];
     foreach ($element as $child) {
-      $file = (string) $parent->attributes()->file;
-      if ($file && !$child->attributes()->file) {
-        $child->addAttribute('file', $file);
-      }
       $test_cases[] = static::findTestCases($child, $element);
     }
     return array_merge(...$test_cases);
@@ -112,22 +100,17 @@ class JUnitConverter {
     $status = static::getStatus($test_case);
 
     $message = '';
-    if ($status == 'fail') {
-      if ($test_case->failure) {
-        $lines = explode("\n", $test_case->failure);
-        $message = $lines[2];
-      }
-      elseif ($test_case->error) {
-        $message = $test_case->error[0];
-      }
+    if ($status == PhpUnitTestCaseResult::Fail) {
+      $lines = explode("\n", $test_case->failure);
+      $message = $lines[2];
     }
-    elseif ($status == 'risky') {
-      $message = 'Risky';
+    elseif ($status == PhpUnitTestCaseResult::Error) {
+      $message = $test_case->error[0];
     }
-    elseif ($status == 'skipped') {
+    elseif ($status == PhpUnitTestCaseResult::Skip) {
       $message = 'Skipped';
     }
-    elseif ($status == 'incomplete') {
+    elseif ($status == PhpUnitTestCaseResult::Incomplete) {
       $message = 'Incomplete';
     }
 
@@ -136,7 +119,7 @@ class JUnitConverter {
     $record = [
       'test_id' => $test_id,
       'test_class' => (string) $attributes->class,
-      'status' => $status,
+      'status' => $status->value,
       'message' => $message,
       'message_group' => 'Other',
       'function' => $attributes->class . '->' . $attributes->name . '()',
@@ -153,19 +136,20 @@ class JUnitConverter {
    * @param \SimpleXMLElement $test_case
    *   The test case XML element.
    *
-   * @return string
-   *   The status value to insert into the {simpletest} record. Allowed values:
-   *   'pass', 'fail', 'risky', 'skipped', 'incomplete'.
+   * @return \Drupal\TestTools\PhpUnitTestCaseResult
+   *   The status value to insert into the {simpletest} record.
    */
-  protected static function getStatus(\SimpleXMLElement $test_case) {
-    $status = 'pass';
-    if ($test_case->failure || $test_case->error || $test_case->risky) {
-      return 'fail';
+  protected static function getStatus(\SimpleXMLElement $test_case): PhpUnitTestCaseResult {
+    if ($test_case->error || $test_case->risky) {
+      return PhpUnitTestCaseResult::Error;
     }
-    elseif ($test_case->skipped) {
-      return 'skipped';
+    if ($test_case->failure) {
+      return PhpUnitTestCaseResult::Fail;
     }
-    return $status;
+    if ($test_case->skipped) {
+      return PhpUnitTestCaseResult::Skip;
+    }
+    return PhpUnitTestCaseResult::Pass;
   }
 
 }
