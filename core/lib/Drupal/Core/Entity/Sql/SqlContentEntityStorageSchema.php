@@ -3,6 +3,7 @@
 namespace Drupal\Core\Entity\Sql;
 
 use Drupal\Core\Database\Connection;
+use Drupal\Core\Database\DatabaseExceptionWrapper;
 use Drupal\Core\DependencyInjection\DependencySerializationTrait;
 use Drupal\Core\Entity\ContentEntityTypeInterface;
 use Drupal\Core\Entity\EntityFieldManagerInterface;
@@ -1848,11 +1849,8 @@ class SqlContentEntityStorageSchema implements DynamicallyFieldableEntityStorage
    *
    * @param \Drupal\Core\Entity\ContentEntityTypeInterface $entity_type
    *   The entity type.
-   * @param array $schema
+   * @param array &$schema
    *   The table schema, passed by reference.
-   *
-   * @return array
-   *   A partial schema array for the all revisions table.
    */
   protected function processJsonStorageRevisionsTable(ContentEntityTypeInterface $entity_type, array &$schema) {
     // Change the field "revision_id" from serial to integer. Serial primary key
@@ -1868,11 +1866,8 @@ class SqlContentEntityStorageSchema implements DynamicallyFieldableEntityStorage
    *
    * @param \Drupal\Core\Entity\ContentEntityTypeInterface $entity_type
    *   The entity type.
-   * @param array $schema
+   * @param array &$schema
    *   The table schema, passed by reference.
-   *
-   * @return array
-   *   A partial schema array for the translations table.
    */
   protected function processJsonStorageTranslationsTable(ContentEntityTypeInterface $entity_type, array &$schema) {}
 

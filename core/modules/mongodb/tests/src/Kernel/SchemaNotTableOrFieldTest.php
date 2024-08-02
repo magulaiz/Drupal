@@ -26,7 +26,7 @@ class SchemaNotTableOrFieldTest extends SchemaTestBase {
    *     - the array of field names to used for creating the primary key.
    *     - the expected schema for the table after adding the primary key.
    */
-  public function providerAddPrimaryKey() {
+  public static function providerAddPrimaryKey() {
     $add_primary_key_table_5_with_id = [
       'schema' => [
         'description' => 'Schema table with no indexes.',
@@ -746,58 +746,58 @@ class SchemaNotTableOrFieldTest extends SchemaTestBase {
 
     return [
       [
-        $this->testTable5,
+        static::TEST_TABLE5,
         [],
-        $this->testTable5['name'],
+        static::TEST_TABLE5['name'],
         ['id'],
         $add_primary_key_table_5_with_id,
       ],
       [
-        $this->testTable5,
+        static::TEST_TABLE5,
         [],
-        $this->testTable5['name'],
+        static::TEST_TABLE5['name'],
         ['id', 'test_field_string'],
         $add_primary_key_table_5_with_id_and_test_field_string,
       ],
       [
-        $this->testTable5,
+        static::TEST_TABLE5,
         [],
-        $this->testTable5['name'],
+        static::TEST_TABLE5['name'],
         ['test_field_string', 'id'],
         $add_primary_key_table_5_with_test_field_string_and_id,
       ],
       [
-        $this->testTable4,
-        [$this->testTable4['name'] => [$this->testTable5]],
-        $this->testTable5['name'],
+        static::TEST_TABLE4,
+        [static::TEST_TABLE4['name'] => [static::TEST_TABLE5]],
+        static::TEST_TABLE5['name'],
         ['id'],
         $add_primary_key_base_4_with_embedded_5_and_field_id,
       ],
       [
-        $this->testTable4,
-        [$this->testTable4['name'] => [$this->testTable5]],
-        $this->testTable5['name'],
+        static::TEST_TABLE4,
+        [static::TEST_TABLE4['name'] => [static::TEST_TABLE5]],
+        static::TEST_TABLE5['name'],
         ['id', 'test_field_string'],
         $add_primary_key_base_4_with_embedded_5_and_field_id_and_test_field_string,
       ],
       [
-        $this->testTable4,
-        [$this->testTable4['name'] => [$this->testTable5]],
-        $this->testTable5['name'],
+        static::TEST_TABLE4,
+        [static::TEST_TABLE4['name'] => [static::TEST_TABLE5]],
+        static::TEST_TABLE5['name'],
         ['test_field_string', 'id'],
         $add_primary_key_base_4_with_embedded_5_and_field_test_field_string_and_id,
       ],
       [
-        $this->testTable1,
-        [$this->testTable1['name'] => [$this->testTable2], $this->testTable2['name'] => [$this->testTable3, $this->testTable4], $this->testTable3['name'] => [$this->testTable5, $this->testTable6]],
-        $this->testTable3['name'],
+        static::TEST_TABLE1,
+        [static::TEST_TABLE1['name'] => [static::TEST_TABLE2], static::TEST_TABLE2['name'] => [static::TEST_TABLE3, static::TEST_TABLE4], static::TEST_TABLE3['name'] => [static::TEST_TABLE5, static::TEST_TABLE6]],
+        static::TEST_TABLE3['name'],
         ['id'],
         $add_primary_key_base_1_embedded_2_and_3_4_on_2_and_5_6_on_3_with_field_id_on_table_3,
       ],
       [
-        $this->testTable1,
-        [$this->testTable1['name'] => [$this->testTable2], $this->testTable2['name'] => [$this->testTable3, $this->testTable4], $this->testTable3['name'] => [$this->testTable5, $this->testTable6]],
-        $this->testTable5['name'],
+        static::TEST_TABLE1,
+        [static::TEST_TABLE1['name'] => [static::TEST_TABLE2], static::TEST_TABLE2['name'] => [static::TEST_TABLE3, static::TEST_TABLE4], static::TEST_TABLE3['name'] => [static::TEST_TABLE5, static::TEST_TABLE6]],
+        static::TEST_TABLE5['name'],
         ['id'],
         $add_primary_key_base_1_embedded_2_and_3_4_on_2_and_5_6_on_3_with_field_id_on_table_5,
       ],
@@ -906,12 +906,12 @@ class SchemaNotTableOrFieldTest extends SchemaTestBase {
    * @covers ::addPrimaryKey
    */
   public function testAddPrimaryKeyForTableDoesNotExist() {
-    $this->assertFalse($this->schema->tableExists($this->testTable5['name']), 'The table does not exist in the MongoDB database.');
+    $this->assertFalse($this->schema->tableExists(static::TEST_TABLE5['name']), 'The table does not exist in the MongoDB database.');
 
     // If we try to add a primary key to a table that does not exist an
     // exception should be thrown.
     $this->expectException('Drupal\Core\Database\SchemaObjectDoesNotExistException');
-    $this->schema->addPrimaryKey($this->testTable5['name'], ['id']);
+    $this->schema->addPrimaryKey(static::TEST_TABLE5['name'], ['id']);
   }
 
   /**
@@ -919,18 +919,18 @@ class SchemaNotTableOrFieldTest extends SchemaTestBase {
    * @covers ::primaryKeyExists
    */
   public function testAddPrimaryKeyForPrimaryKeyExist() {
-    $this->assertFalse($this->schema->tableExists($this->testTable4['name']), 'The table does not exist in the MongoDB database.');
+    $this->assertFalse($this->schema->tableExists(static::TEST_TABLE4['name']), 'The table does not exist in the MongoDB database.');
 
-    $this->schema->createTable($this->testTable4['name'], $this->testTable4['schema']);
+    $this->schema->createTable(static::TEST_TABLE4['name'], static::TEST_TABLE4['schema']);
 
-    $this->assertTrue($this->schema->tableExists($this->testTable4['name']), 'The table exists in the MongoDB database.');
-    $this->assertTrue($this->schema->constraintExists($this->testTable4['name'], 'pkey'), 'The table has a primary key.');
-    $this->assertTrue($this->schema->primaryKeyExists($this->testTable4['name']), 'The table has a primary key.');
+    $this->assertTrue($this->schema->tableExists(static::TEST_TABLE4['name']), 'The table exists in the MongoDB database.');
+    $this->assertTrue($this->schema->constraintExists(static::TEST_TABLE4['name'], 'pkey'), 'The table has a primary key.');
+    $this->assertTrue($this->schema->primaryKeyExists(static::TEST_TABLE4['name']), 'The table has a primary key.');
 
     // If we try to add a primary key to a table that has a primary key an
     // exception should be thrown.
     $this->expectException('Drupal\Core\Database\SchemaObjectExistsException');
-    $this->schema->addPrimaryKey($this->testTable4['name'], ['id']);
+    $this->schema->addPrimaryKey(static::TEST_TABLE4['name'], ['id']);
   }
 
   /**
@@ -939,41 +939,41 @@ class SchemaNotTableOrFieldTest extends SchemaTestBase {
    * @covers ::uniqueKeyExists
    */
   public function testAddPrimaryKeyForUniqueKeyExistsOnTheSameFields() {
-    $this->assertFalse($this->schema->tableExists($this->testTable4['name']), 'The table does not exist in the MongoDB database.');
+    $this->assertFalse($this->schema->tableExists(static::TEST_TABLE4['name']), 'The table does not exist in the MongoDB database.');
 
-    $this->schema->createTable($this->testTable4['name'], $this->testTable4['schema']);
+    $this->schema->createTable(static::TEST_TABLE4['name'], static::TEST_TABLE4['schema']);
 
-    $this->assertTrue($this->schema->tableExists($this->testTable4['name']), 'The table exists in the MongoDB database.');
+    $this->assertTrue($this->schema->tableExists(static::TEST_TABLE4['name']), 'The table exists in the MongoDB database.');
 
-    $this->schema->dropPrimaryKey($this->testTable4['name']);
+    $this->schema->dropPrimaryKey(static::TEST_TABLE4['name']);
 
-    $this->assertFalse($this->schema->constraintExists($this->testTable4['name'], 'pkey'), 'The table does not have a primary key.');
-    $this->assertFalse($this->schema->primaryKeyExists($this->testTable4['name']), 'The table does not have a primary key.');
-    $this->assertTrue($this->schema->constraintExists($this->testTable4['name'], 'test_field__key'), 'The table has the unique key.');
-    $this->assertTrue($this->schema->uniqueKeyExists($this->testTable4['name'], 'test_field'), 'The table has the unique key.');
+    $this->assertFalse($this->schema->constraintExists(static::TEST_TABLE4['name'], 'pkey'), 'The table does not have a primary key.');
+    $this->assertFalse($this->schema->primaryKeyExists(static::TEST_TABLE4['name']), 'The table does not have a primary key.');
+    $this->assertTrue($this->schema->constraintExists(static::TEST_TABLE4['name'], 'test_field__key'), 'The table has the unique key.');
+    $this->assertTrue($this->schema->uniqueKeyExists(static::TEST_TABLE4['name'], 'test_field'), 'The table has the unique key.');
 
     // If we try to add an unique key to a table that has an unique index on the
     // same fields an exception should be thrown.
     $this->expectException('Drupal\Core\Database\SchemaObjectExistsException');
-    $this->schema->addPrimaryKey($this->testTable4['name'], ['test_field']);
+    $this->schema->addPrimaryKey(static::TEST_TABLE4['name'], ['test_field']);
   }
 
   /**
    * @covers ::addPrimaryKey
    */
   public function testAddPrimaryKeyForEmbeddedPrimaryKeyExists() {
-    $this->assertFalse($this->schema->tableExists($this->testTable4['name']), 'The table does not exist in the MongoDB database.');
-    $this->assertFalse($this->schema->tableExists($this->testTable6['name']), 'The embedded table does not exist in the MongoDB database.');
+    $this->assertFalse($this->schema->tableExists(static::TEST_TABLE4['name']), 'The table does not exist in the MongoDB database.');
+    $this->assertFalse($this->schema->tableExists(static::TEST_TABLE6['name']), 'The embedded table does not exist in the MongoDB database.');
 
-    $this->schema->createTable($this->testTable4['name'], $this->testTable4['schema']);
-    $this->schema->createEmbeddedTable($this->testTable4['name'], $this->testTable6['name'], $this->testTable6['schema']);
+    $this->schema->createTable(static::TEST_TABLE4['name'], static::TEST_TABLE4['schema']);
+    $this->schema->createEmbeddedTable(static::TEST_TABLE4['name'], static::TEST_TABLE6['name'], static::TEST_TABLE6['schema']);
 
-    $this->assertTrue($this->schema->tableExists($this->testTable4['name']), 'The table exists in the MongoDB database.');
-    $this->assertTrue($this->schema->tableExists($this->testTable6['name']), 'The embedded table exists in the MongoDB database.');
+    $this->assertTrue($this->schema->tableExists(static::TEST_TABLE4['name']), 'The table exists in the MongoDB database.');
+    $this->assertTrue($this->schema->tableExists(static::TEST_TABLE6['name']), 'The embedded table exists in the MongoDB database.');
 
     // If we try to add a primary key to a table that has a primary key an exception should be thrown.
     $this->expectException('Drupal\Core\Database\SchemaObjectExistsException');
-    $this->schema->addPrimaryKey($this->testTable6['name'], ['id']);
+    $this->schema->addPrimaryKey(static::TEST_TABLE6['name'], ['id']);
   }
 
   /**
@@ -982,26 +982,26 @@ class SchemaNotTableOrFieldTest extends SchemaTestBase {
    * @covers ::uniqueKeyExists
    */
   public function testAddPrimaryKeyForEmbeddedUniqueKeyExistsOnTheSameFields() {
-    $this->assertFalse($this->schema->tableExists($this->testTable5['name']), 'The table does not exist in the MongoDB database.');
-    $this->assertFalse($this->schema->tableExists($this->testTable4['name']), 'The embedded table does not exist in the MongoDB database.');
+    $this->assertFalse($this->schema->tableExists(static::TEST_TABLE5['name']), 'The table does not exist in the MongoDB database.');
+    $this->assertFalse($this->schema->tableExists(static::TEST_TABLE4['name']), 'The embedded table does not exist in the MongoDB database.');
 
-    $this->schema->createTable($this->testTable5['name'], $this->testTable5['schema']);
-    $this->schema->createEmbeddedTable($this->testTable5['name'], $this->testTable4['name'], $this->testTable4['schema']);
+    $this->schema->createTable(static::TEST_TABLE5['name'], static::TEST_TABLE5['schema']);
+    $this->schema->createEmbeddedTable(static::TEST_TABLE5['name'], static::TEST_TABLE4['name'], static::TEST_TABLE4['schema']);
 
-    $this->assertTrue($this->schema->tableExists($this->testTable5['name']), 'The table exists in the MongoDB database.');
-    $this->assertTrue($this->schema->tableExists($this->testTable4['name']), 'The embedded table exists in the MongoDB database.');
+    $this->assertTrue($this->schema->tableExists(static::TEST_TABLE5['name']), 'The table exists in the MongoDB database.');
+    $this->assertTrue($this->schema->tableExists(static::TEST_TABLE4['name']), 'The embedded table exists in the MongoDB database.');
 
-    $this->schema->dropPrimaryKey($this->testTable4['name']);
+    $this->schema->dropPrimaryKey(static::TEST_TABLE4['name']);
 
-    $this->assertFalse($this->schema->constraintExists($this->testTable5['name'], $this->testTable4['name'] . '.__pkey'), 'The embedded table does not have a primary key.');
-    $this->assertFalse($this->schema->primaryKeyExists($this->testTable4['name']), 'The table does not have a primary key.');
-    $this->assertTrue($this->schema->constraintExists($this->testTable5['name'], $this->testTable4['name'] . '.test_field__key'), 'The embedded table has the unique key.');
-    $this->assertTrue($this->schema->uniqueKeyExists($this->testTable4['name'], 'test_field'), 'The table has the unique key.');
+    $this->assertFalse($this->schema->constraintExists(static::TEST_TABLE5['name'], static::TEST_TABLE4['name'] . '.__pkey'), 'The embedded table does not have a primary key.');
+    $this->assertFalse($this->schema->primaryKeyExists(static::TEST_TABLE4['name']), 'The table does not have a primary key.');
+    $this->assertTrue($this->schema->constraintExists(static::TEST_TABLE5['name'], static::TEST_TABLE4['name'] . '.test_field__key'), 'The embedded table has the unique key.');
+    $this->assertTrue($this->schema->uniqueKeyExists(static::TEST_TABLE4['name'], 'test_field'), 'The table has the unique key.');
 
     // If we try to add an unique key to an embedded table that has an unique
     // index on the same fields an exception should be thrown.
     $this->expectException('Drupal\Core\Database\SchemaObjectExistsException');
-    $this->schema->addPrimaryKey($this->testTable4['name'], ['test_field']);
+    $this->schema->addPrimaryKey(static::TEST_TABLE4['name'], ['test_field']);
   }
 
   /**
@@ -1015,7 +1015,7 @@ class SchemaNotTableOrFieldTest extends SchemaTestBase {
    *       key and the validation for the base table after dropping the primary
    *       key.
    */
-  public function providerDropPrimaryKey() {
+  public static function providerDropPrimaryKey() {
     $drop_primary_key_table_1_data = [
       'schema' => [
         'description' => 'Schema table description may contain "quotes" and could be long—very long indeed.',
@@ -2435,75 +2435,75 @@ class SchemaNotTableOrFieldTest extends SchemaTestBase {
 
     return [
       [
-        $this->testTable1,
+        static::TEST_TABLE1,
         [],
-        $this->testTable1['name'],
+        static::TEST_TABLE1['name'],
         $drop_primary_key_table_1_data,
       ],
       [
-        $this->testTable2,
+        static::TEST_TABLE2,
         [],
-        $this->testTable2['name'],
+        static::TEST_TABLE2['name'],
         $drop_primary_key_table_2_data,
       ],
       [
-        $this->testTable4,
+        static::TEST_TABLE4,
         [],
-        $this->testTable4['name'],
+        static::TEST_TABLE4['name'],
         $drop_primary_key_table_4_data,
       ],
       [
-        $this->testTable6,
+        static::TEST_TABLE6,
         [],
-        $this->testTable6['name'],
+        static::TEST_TABLE6['name'],
         $drop_primary_key_table_6_data,
       ],
       [
-        $this->testTable4,
-        [$this->testTable4['name'] => [$this->testTable6]],
-        $this->testTable6['name'],
+        static::TEST_TABLE4,
+        [static::TEST_TABLE4['name'] => [static::TEST_TABLE6]],
+        static::TEST_TABLE6['name'],
         $drop_primary_key_base_4_with_embedded_6_data,
       ],
       [
-        $this->testTable4,
-        [$this->testTable4['name'] => [$this->testTable6, $this->testTable5]],
-        $this->testTable6['name'],
+        static::TEST_TABLE4,
+        [static::TEST_TABLE4['name'] => [static::TEST_TABLE6, static::TEST_TABLE5]],
+        static::TEST_TABLE6['name'],
         $drop_primary_key_base_4_with_embedded_6_and_5_data,
       ],
       [
-        $this->testTable6,
-        [$this->testTable6['name'] => [$this->testTable4]],
-        $this->testTable4['name'],
+        static::TEST_TABLE6,
+        [static::TEST_TABLE6['name'] => [static::TEST_TABLE4]],
+        static::TEST_TABLE4['name'],
         $drop_primary_key_base_6_with_embedded_4_data,
       ],
       [
-        $this->testTable6,
-        [$this->testTable6['name'] => [$this->testTable4, $this->testTable5]],
-        $this->testTable4['name'],
+        static::TEST_TABLE6,
+        [static::TEST_TABLE6['name'] => [static::TEST_TABLE4, static::TEST_TABLE5]],
+        static::TEST_TABLE4['name'],
         $drop_primary_key_base_6_with_embedded_4_and_5_data,
       ],
       [
-        $this->testTable1,
-        [$this->testTable1['name'] => [$this->testTable2], $this->testTable2['name'] => [$this->testTable3, $this->testTable4], $this->testTable3['name'] => [$this->testTable5, $this->testTable6]],
-        $this->testTable1['name'],
+        static::TEST_TABLE1,
+        [static::TEST_TABLE1['name'] => [static::TEST_TABLE2], static::TEST_TABLE2['name'] => [static::TEST_TABLE3, static::TEST_TABLE4], static::TEST_TABLE3['name'] => [static::TEST_TABLE5, static::TEST_TABLE6]],
+        static::TEST_TABLE1['name'],
         $drop_primary_key_base_1_embedded_2_and_3_4_on_2_and_5_6_on_3_on_table_1,
       ],
       [
-        $this->testTable1,
-        [$this->testTable1['name'] => [$this->testTable2], $this->testTable2['name'] => [$this->testTable3, $this->testTable4], $this->testTable3['name'] => [$this->testTable5, $this->testTable6]],
-        $this->testTable2['name'],
+        static::TEST_TABLE1,
+        [static::TEST_TABLE1['name'] => [static::TEST_TABLE2], static::TEST_TABLE2['name'] => [static::TEST_TABLE3, static::TEST_TABLE4], static::TEST_TABLE3['name'] => [static::TEST_TABLE5, static::TEST_TABLE6]],
+        static::TEST_TABLE2['name'],
         $drop_primary_key_base_1_embedded_2_and_3_4_on_2_and_5_6_on_3_on_table_2,
       ],
       [
-        $this->testTable1,
-        [$this->testTable1['name'] => [$this->testTable2], $this->testTable2['name'] => [$this->testTable3, $this->testTable4], $this->testTable3['name'] => [$this->testTable5, $this->testTable6]],
-        $this->testTable4['name'],
+        static::TEST_TABLE1,
+        [static::TEST_TABLE1['name'] => [static::TEST_TABLE2], static::TEST_TABLE2['name'] => [static::TEST_TABLE3, static::TEST_TABLE4], static::TEST_TABLE3['name'] => [static::TEST_TABLE5, static::TEST_TABLE6]],
+        static::TEST_TABLE4['name'],
         $drop_primary_key_base_1_embedded_2_and_3_4_on_2_and_5_6_on_3_on_table_4,
       ],
       [
-        $this->testTable1,
-        [$this->testTable1['name'] => [$this->testTable2], $this->testTable2['name'] => [$this->testTable3, $this->testTable4], $this->testTable3['name'] => [$this->testTable5, $this->testTable6]],
-        $this->testTable6['name'],
+        static::TEST_TABLE1,
+        [static::TEST_TABLE1['name'] => [static::TEST_TABLE2], static::TEST_TABLE2['name'] => [static::TEST_TABLE3, static::TEST_TABLE4], static::TEST_TABLE3['name'] => [static::TEST_TABLE5, static::TEST_TABLE6]],
+        static::TEST_TABLE6['name'],
         $drop_primary_key_base_1_embedded_2_and_3_4_on_2_and_5_6_on_3_on_table_6,
       ],
     ];
@@ -2613,17 +2613,17 @@ class SchemaNotTableOrFieldTest extends SchemaTestBase {
    * @covers ::primaryKeyExists
    */
   public function testDropPrimaryKeyForPrimaryKeyDoesNotExist() {
-    $this->assertFalse($this->schema->tableExists($this->testTable5['name']), 'The table does not exist in the MongoDB database.');
+    $this->assertFalse($this->schema->tableExists(static::TEST_TABLE5['name']), 'The table does not exist in the MongoDB database.');
 
-    $this->schema->createTable($this->testTable5['name'], $this->testTable5['schema']);
+    $this->schema->createTable(static::TEST_TABLE5['name'], static::TEST_TABLE5['schema']);
 
-    $this->assertTrue($this->schema->tableExists($this->testTable5['name']), 'The table exists in the MongoDB database.');
-    $this->assertFalse($this->schema->constraintExists($this->testTable5['name'], 'pkey'), 'The table does not have a primary key.');
-    $this->assertFalse($this->schema->primaryKeyExists($this->testTable5['name']), 'The table does not have a primary key.');
+    $this->assertTrue($this->schema->tableExists(static::TEST_TABLE5['name']), 'The table exists in the MongoDB database.');
+    $this->assertFalse($this->schema->constraintExists(static::TEST_TABLE5['name'], 'pkey'), 'The table does not have a primary key.');
+    $this->assertFalse($this->schema->primaryKeyExists(static::TEST_TABLE5['name']), 'The table does not have a primary key.');
 
     // If we try to drop a non existent primary key on a table an exception
     // should be thrown.
-    $this->assertFalse($this->schema->dropPrimaryKey($this->testTable5['name']), 'The table does not have a primary key.');
+    $this->assertFalse($this->schema->dropPrimaryKey(static::TEST_TABLE5['name']), 'The table does not have a primary key.');
   }
 
   /**
@@ -2631,20 +2631,20 @@ class SchemaNotTableOrFieldTest extends SchemaTestBase {
    * @covers ::primaryKeyExists
    */
   public function testDropPrimaryKeyForEmbeddedPrimaryKeyDoesNotExist() {
-    $this->assertFalse($this->schema->tableExists($this->testTable4['name']), 'The table does not exist in the MongoDB database.');
-    $this->assertFalse($this->schema->tableExists($this->testTable5['name']), 'The embedded table does not exist in the MongoDB database.');
+    $this->assertFalse($this->schema->tableExists(static::TEST_TABLE4['name']), 'The table does not exist in the MongoDB database.');
+    $this->assertFalse($this->schema->tableExists(static::TEST_TABLE5['name']), 'The embedded table does not exist in the MongoDB database.');
 
-    $this->schema->createTable($this->testTable4['name'], $this->testTable4['schema']);
-    $this->schema->createEmbeddedTable($this->testTable4['name'], $this->testTable5['name'], $this->testTable5['schema']);
+    $this->schema->createTable(static::TEST_TABLE4['name'], static::TEST_TABLE4['schema']);
+    $this->schema->createEmbeddedTable(static::TEST_TABLE4['name'], static::TEST_TABLE5['name'], static::TEST_TABLE5['schema']);
 
-    $this->assertTrue($this->schema->tableExists($this->testTable4['name']), 'The table exists in the MongoDB database.');
-    $this->assertTrue($this->schema->tableExists($this->testTable5['name']), 'The embedded table exists in the MongoDB database.');
-    $this->assertFalse($this->schema->constraintExists($this->testTable4['name'], $this->testTable5['name'] . '.__pkey'), 'The embedded table does not have the primary key.');
-    $this->assertFalse($this->schema->primaryKeyExists($this->testTable5['name']), 'The embedded table does not have a primary key.');
+    $this->assertTrue($this->schema->tableExists(static::TEST_TABLE4['name']), 'The table exists in the MongoDB database.');
+    $this->assertTrue($this->schema->tableExists(static::TEST_TABLE5['name']), 'The embedded table exists in the MongoDB database.');
+    $this->assertFalse($this->schema->constraintExists(static::TEST_TABLE4['name'], static::TEST_TABLE5['name'] . '.__pkey'), 'The embedded table does not have the primary key.');
+    $this->assertFalse($this->schema->primaryKeyExists(static::TEST_TABLE5['name']), 'The embedded table does not have a primary key.');
 
     // If we try to drop a non existent primary key from a table an exception
     // should be thrown.
-    $this->assertFalse($this->schema->dropPrimaryKey($this->testTable5['name']), 'The embedded table does not have a primary key.');
+    $this->assertFalse($this->schema->dropPrimaryKey(static::TEST_TABLE5['name']), 'The embedded table does not have a primary key.');
   }
 
   /**
@@ -2660,7 +2660,7 @@ class SchemaNotTableOrFieldTest extends SchemaTestBase {
    *     - the array of field names to used for creating the unique key.
    *     - the expected schema for the table after adding the unique key.
    */
-  public function providerAddUniqueKey() {
+  public static function providerAddUniqueKey() {
     $add_unique_key_table_5_with_unique_id_key = [
       'schema' => [
         'description' => 'Schema table with no indexes.',
@@ -4017,105 +4017,105 @@ class SchemaNotTableOrFieldTest extends SchemaTestBase {
 
     return [
       [
-        $this->testTable5,
+        static::TEST_TABLE5,
         [],
-        $this->testTable5['name'],
+        static::TEST_TABLE5['name'],
         'unique_id_key',
         ['id'],
         $add_unique_key_table_5_with_unique_id_key,
       ],
       [
-        $this->testTable5,
+        static::TEST_TABLE5,
         [],
-        $this->testTable5['name'],
+        static::TEST_TABLE5['name'],
         'unique_id_and_test_field_string_key',
         ['id', 'test_field_string'],
         $add_unique_key_table_5_with_unique_id_and_test_field_string_key,
       ],
       [
-        $this->testTable5,
+        static::TEST_TABLE5,
         [],
-        $this->testTable5['name'],
+        static::TEST_TABLE5['name'],
         'unique_test_field_string_and_id_key',
         ['test_field_string', 'id'],
         $add_unique_key_table_5_with_unique_test_field_string_and_id_key,
       ],
       [
-        $this->testTable4,
+        static::TEST_TABLE4,
         [],
-        $this->testTable4['name'],
+        static::TEST_TABLE4['name'],
         'unique_id_and_test_field_key',
         ['id', 'test_field'],
         $add_unique_key_table_4_with_unique_id_and_test_field_key,
       ],
       [
-        $this->testTable4,
+        static::TEST_TABLE4,
         [],
-        $this->testTable4['name'],
+        static::TEST_TABLE4['name'],
         'unique_test_field_and_id_key',
         ['test_field', 'id'],
         $add_unique_key_table_4_with_unique_test_field_and_id_key,
       ],
       [
-        $this->testTable4,
-        [$this->testTable4['name'] => [$this->testTable5]],
-        $this->testTable5['name'],
+        static::TEST_TABLE4,
+        [static::TEST_TABLE4['name'] => [static::TEST_TABLE5]],
+        static::TEST_TABLE5['name'],
         'unique_id_key',
         ['id'],
         $add_unique_key_base_4_with_embedded_5_and_field_id,
       ],
       [
-        $this->testTable4,
-        [$this->testTable4['name'] => [$this->testTable5]],
-        $this->testTable5['name'],
+        static::TEST_TABLE4,
+        [static::TEST_TABLE4['name'] => [static::TEST_TABLE5]],
+        static::TEST_TABLE5['name'],
         'unique_id_and_test_field_string_key',
         ['id', 'test_field_string'],
         $add_unique_key_base_4_with_embedded_5_and_field_id_and_test_field_string,
       ],
       [
-        $this->testTable4,
-        [$this->testTable4['name'] => [$this->testTable5]],
-        $this->testTable5['name'],
+        static::TEST_TABLE4,
+        [static::TEST_TABLE4['name'] => [static::TEST_TABLE5]],
+        static::TEST_TABLE5['name'],
         'unique_test_field_string_and_id_key',
         ['test_field_string', 'id'],
         $add_unique_key_base_4_with_embedded_5_and_field_test_field_string_and_id,
       ],
       [
-        $this->testTable6,
-        [$this->testTable6['name'] => [$this->testTable4]],
-        $this->testTable4['name'],
+        static::TEST_TABLE6,
+        [static::TEST_TABLE6['name'] => [static::TEST_TABLE4]],
+        static::TEST_TABLE4['name'],
         'unique_id_and_test_field_key',
         ['id', 'test_field'],
         $add_unique_key_base_6_with_embedded_4_and_field_id_and_test_field,
       ],
       [
-        $this->testTable1,
-        [$this->testTable1['name'] => [$this->testTable2], $this->testTable2['name'] => [$this->testTable3, $this->testTable4], $this->testTable3['name'] => [$this->testTable5, $this->testTable6]],
-        $this->testTable1['name'],
+        static::TEST_TABLE1,
+        [static::TEST_TABLE1['name'] => [static::TEST_TABLE2], static::TEST_TABLE2['name'] => [static::TEST_TABLE3, static::TEST_TABLE4], static::TEST_TABLE3['name'] => [static::TEST_TABLE5, static::TEST_TABLE6]],
+        static::TEST_TABLE1['name'],
         'unique_id_and_test_field_string_key',
         ['id', 'test_field_string'],
         $add_unique_key_base_1_embedded_2_and_3_4_on_2_and_5_6_on_3_on_table_1,
       ],
       [
-        $this->testTable1,
-        [$this->testTable1['name'] => [$this->testTable2], $this->testTable2['name'] => [$this->testTable3, $this->testTable4], $this->testTable3['name'] => [$this->testTable5, $this->testTable6]],
-        $this->testTable2['name'],
+        static::TEST_TABLE1,
+        [static::TEST_TABLE1['name'] => [static::TEST_TABLE2], static::TEST_TABLE2['name'] => [static::TEST_TABLE3, static::TEST_TABLE4], static::TEST_TABLE3['name'] => [static::TEST_TABLE5, static::TEST_TABLE6]],
+        static::TEST_TABLE2['name'],
         'unique_id_and_test_field_int_default_key',
         ['id', 'test_field_int_default'],
         $add_unique_key_base_1_embedded_2_and_3_4_on_2_and_5_6_on_3_on_table_2,
       ],
       [
-        $this->testTable1,
-        [$this->testTable1['name'] => [$this->testTable2], $this->testTable2['name'] => [$this->testTable3, $this->testTable4], $this->testTable3['name'] => [$this->testTable5, $this->testTable6]],
-        $this->testTable3['name'],
+        static::TEST_TABLE1,
+        [static::TEST_TABLE1['name'] => [static::TEST_TABLE2], static::TEST_TABLE2['name'] => [static::TEST_TABLE3, static::TEST_TABLE4], static::TEST_TABLE3['name'] => [static::TEST_TABLE5, static::TEST_TABLE6]],
+        static::TEST_TABLE3['name'],
         'unique_id_key',
         ['id'],
         $add_unique_key_base_1_embedded_2_and_3_4_on_2_and_5_6_on_3_on_table_3,
       ],
       [
-        $this->testTable1,
-        [$this->testTable1['name'] => [$this->testTable2], $this->testTable2['name'] => [$this->testTable3, $this->testTable4], $this->testTable3['name'] => [$this->testTable5, $this->testTable6]],
-        $this->testTable5['name'],
+        static::TEST_TABLE1,
+        [static::TEST_TABLE1['name'] => [static::TEST_TABLE2], static::TEST_TABLE2['name'] => [static::TEST_TABLE3, static::TEST_TABLE4], static::TEST_TABLE3['name'] => [static::TEST_TABLE5, static::TEST_TABLE6]],
+        static::TEST_TABLE5['name'],
         'unique_id_key',
         ['id'],
         $add_unique_key_base_1_embedded_2_and_3_4_on_2_and_5_6_on_3_on_table_5,
@@ -4215,12 +4215,12 @@ class SchemaNotTableOrFieldTest extends SchemaTestBase {
    * @covers ::addUniqueKey
    */
   public function testAddUniqueKeyForTableDoesNotExist() {
-    $this->assertFalse($this->schema->tableExists($this->testTable5['name']), 'The table does not exist in the MongoDB database.');
+    $this->assertFalse($this->schema->tableExists(static::TEST_TABLE5['name']), 'The table does not exist in the MongoDB database.');
 
     // If we try to add a unique key to a table that does not exist an exception
     // should be thrown.
     $this->expectException('Drupal\Core\Database\SchemaObjectDoesNotExistException');
-    $this->schema->addUniqueKey($this->testTable5['name'], 'unique_id_key', ['id']);
+    $this->schema->addUniqueKey(static::TEST_TABLE5['name'], 'unique_id_key', ['id']);
   }
 
   /**
@@ -4228,18 +4228,18 @@ class SchemaNotTableOrFieldTest extends SchemaTestBase {
    * @covers ::uniqueKeyExists
    */
   public function testAddUniqueKeyForUniqueKeyExist() {
-    $this->assertFalse($this->schema->tableExists($this->testTable4['name']), 'The table does not exist in the MongoDB database.');
+    $this->assertFalse($this->schema->tableExists(static::TEST_TABLE4['name']), 'The table does not exist in the MongoDB database.');
 
-    $this->schema->createTable($this->testTable4['name'], $this->testTable4['schema']);
+    $this->schema->createTable(static::TEST_TABLE4['name'], static::TEST_TABLE4['schema']);
 
-    $this->assertTrue($this->schema->tableExists($this->testTable4['name']), 'The table exists in the MongoDB database.');
-    $this->assertTrue($this->schema->constraintExists($this->testTable4['name'], 'test_field__key'), 'The table has the unique key.');
-    $this->assertTrue($this->schema->uniqueKeyExists($this->testTable4['name'], 'test_field'), 'The table has the unique key.');
+    $this->assertTrue($this->schema->tableExists(static::TEST_TABLE4['name']), 'The table exists in the MongoDB database.');
+    $this->assertTrue($this->schema->constraintExists(static::TEST_TABLE4['name'], 'test_field__key'), 'The table has the unique key.');
+    $this->assertTrue($this->schema->uniqueKeyExists(static::TEST_TABLE4['name'], 'test_field'), 'The table has the unique key.');
 
     // If we try to add a unique key to a table that has a unique key an
     // exception should be thrown.
     $this->expectException('Drupal\Core\Database\SchemaObjectExistsException');
-    $this->schema->addUniqueKey($this->testTable4['name'], 'test_field', ['test_field']);
+    $this->schema->addUniqueKey(static::TEST_TABLE4['name'], 'test_field', ['test_field']);
   }
 
   /**
@@ -4247,18 +4247,18 @@ class SchemaNotTableOrFieldTest extends SchemaTestBase {
    * @covers ::primaryKeyExists
    */
   public function testAddUniqueKeyForPrimaryKeyExistsOnTheSameFields() {
-    $this->assertFalse($this->schema->tableExists($this->testTable4['name']), 'The table does not exist in the MongoDB database.');
+    $this->assertFalse($this->schema->tableExists(static::TEST_TABLE4['name']), 'The table does not exist in the MongoDB database.');
 
-    $this->schema->createTable($this->testTable4['name'], $this->testTable4['schema']);
+    $this->schema->createTable(static::TEST_TABLE4['name'], static::TEST_TABLE4['schema']);
 
-    $this->assertTrue($this->schema->tableExists($this->testTable4['name']), 'The table exists in the MongoDB database.');
-    $this->assertTrue($this->schema->constraintExists($this->testTable4['name'], '__pkey'), 'The table has a primary key.');
-    $this->assertTrue($this->schema->primaryKeyExists($this->testTable4['name']), 'The table has a primary key.');
+    $this->assertTrue($this->schema->tableExists(static::TEST_TABLE4['name']), 'The table exists in the MongoDB database.');
+    $this->assertTrue($this->schema->constraintExists(static::TEST_TABLE4['name'], '__pkey'), 'The table has a primary key.');
+    $this->assertTrue($this->schema->primaryKeyExists(static::TEST_TABLE4['name']), 'The table has a primary key.');
 
     // If we try to add an unique key to a table that has a primary key on the
     // same fields an exception should be thrown.
     $this->expectException('Drupal\Core\Database\SchemaObjectExistsException');
-    $this->schema->addUniqueKey($this->testTable4['name'], 'unique_id_key', ['id']);
+    $this->schema->addUniqueKey(static::TEST_TABLE4['name'], 'unique_id_key', ['id']);
   }
 
   /**
@@ -4266,36 +4266,36 @@ class SchemaNotTableOrFieldTest extends SchemaTestBase {
    * @covers ::uniqueKeyExists
    */
   public function testAddUniqueKeyForUniqueKeyExistsOnTheSameFields() {
-    $this->assertFalse($this->schema->tableExists($this->testTable4['name']), 'The table does not exist in the MongoDB database.');
+    $this->assertFalse($this->schema->tableExists(static::TEST_TABLE4['name']), 'The table does not exist in the MongoDB database.');
 
-    $this->schema->createTable($this->testTable4['name'], $this->testTable4['schema']);
+    $this->schema->createTable(static::TEST_TABLE4['name'], static::TEST_TABLE4['schema']);
 
-    $this->assertTrue($this->schema->tableExists($this->testTable4['name']), 'The table exists in the MongoDB database.');
-    $this->assertTrue($this->schema->constraintExists($this->testTable4['name'], 'test_field__key'), 'The table has the unique key.');
-    $this->assertTrue($this->schema->uniqueKeyExists($this->testTable4['name'], 'test_field'), 'The table has the unique key.');
+    $this->assertTrue($this->schema->tableExists(static::TEST_TABLE4['name']), 'The table exists in the MongoDB database.');
+    $this->assertTrue($this->schema->constraintExists(static::TEST_TABLE4['name'], 'test_field__key'), 'The table has the unique key.');
+    $this->assertTrue($this->schema->uniqueKeyExists(static::TEST_TABLE4['name'], 'test_field'), 'The table has the unique key.');
 
     // If we try to add an unique key to a table that has an unique index on the
     // same fields an exception should be thrown.
     $this->expectException('Drupal\Core\Database\SchemaObjectExistsException');
-    $this->schema->addUniqueKey($this->testTable4['name'], 'unique_test_field_key', ['test_field']);
+    $this->schema->addUniqueKey(static::TEST_TABLE4['name'], 'unique_test_field_key', ['test_field']);
   }
 
   /**
    * @covers ::addUniqueKey
    */
   public function testAddUniqueKeyForEmbeddedUniqueKeyExists() {
-    $this->assertFalse($this->schema->tableExists($this->testTable5['name']), 'The table does not exist in the MongoDB database.');
-    $this->assertFalse($this->schema->tableExists($this->testTable4['name']), 'The embedded table does not exist in the MongoDB database.');
+    $this->assertFalse($this->schema->tableExists(static::TEST_TABLE5['name']), 'The table does not exist in the MongoDB database.');
+    $this->assertFalse($this->schema->tableExists(static::TEST_TABLE4['name']), 'The embedded table does not exist in the MongoDB database.');
 
-    $this->schema->createTable($this->testTable5['name'], $this->testTable5['schema']);
-    $this->schema->createEmbeddedTable($this->testTable5['name'], $this->testTable4['name'], $this->testTable4['schema']);
+    $this->schema->createTable(static::TEST_TABLE5['name'], static::TEST_TABLE5['schema']);
+    $this->schema->createEmbeddedTable(static::TEST_TABLE5['name'], static::TEST_TABLE4['name'], static::TEST_TABLE4['schema']);
 
-    $this->assertTrue($this->schema->tableExists($this->testTable5['name']), 'The table exists in the MongoDB database.');
-    $this->assertTrue($this->schema->tableExists($this->testTable4['name']), 'The embedded table exists in the MongoDB database.');
+    $this->assertTrue($this->schema->tableExists(static::TEST_TABLE5['name']), 'The table exists in the MongoDB database.');
+    $this->assertTrue($this->schema->tableExists(static::TEST_TABLE4['name']), 'The embedded table exists in the MongoDB database.');
 
     // If we try to add an unique key to a table that has an unique key an exception should be thrown.
     $this->expectException('Drupal\Core\Database\SchemaObjectExistsException');
-    $this->schema->addUniqueKey($this->testTable4['name'], 'test_field', ['test_field']);
+    $this->schema->addUniqueKey(static::TEST_TABLE4['name'], 'test_field', ['test_field']);
   }
 
   /**
@@ -4303,21 +4303,21 @@ class SchemaNotTableOrFieldTest extends SchemaTestBase {
    * @covers ::primaryKeyExists
    */
   public function testAddUniqueKeyForEmbeddedPrimaryKeyExistsOnTheSameFields() {
-    $this->assertFalse($this->schema->tableExists($this->testTable5['name']), 'The table does not exist in the MongoDB database.');
-    $this->assertFalse($this->schema->tableExists($this->testTable4['name']), 'The embedded table does not exist in the MongoDB database.');
+    $this->assertFalse($this->schema->tableExists(static::TEST_TABLE5['name']), 'The table does not exist in the MongoDB database.');
+    $this->assertFalse($this->schema->tableExists(static::TEST_TABLE4['name']), 'The embedded table does not exist in the MongoDB database.');
 
-    $this->schema->createTable($this->testTable5['name'], $this->testTable5['schema']);
-    $this->schema->createEmbeddedTable($this->testTable5['name'], $this->testTable4['name'], $this->testTable4['schema']);
+    $this->schema->createTable(static::TEST_TABLE5['name'], static::TEST_TABLE5['schema']);
+    $this->schema->createEmbeddedTable(static::TEST_TABLE5['name'], static::TEST_TABLE4['name'], static::TEST_TABLE4['schema']);
 
-    $this->assertTrue($this->schema->tableExists($this->testTable5['name']), 'The table exists in the MongoDB database.');
-    $this->assertTrue($this->schema->tableExists($this->testTable4['name']), 'The embedded table exists in the MongoDB database.');
-    $this->assertTrue($this->schema->constraintExists($this->testTable5['name'], $this->testTable4['name'] . '.__pkey'), 'The embedded table has a primary key.');
-    $this->assertTrue($this->schema->primaryKeyExists($this->testTable4['name']), 'The table has a primary key.');
+    $this->assertTrue($this->schema->tableExists(static::TEST_TABLE5['name']), 'The table exists in the MongoDB database.');
+    $this->assertTrue($this->schema->tableExists(static::TEST_TABLE4['name']), 'The embedded table exists in the MongoDB database.');
+    $this->assertTrue($this->schema->constraintExists(static::TEST_TABLE5['name'], static::TEST_TABLE4['name'] . '.__pkey'), 'The embedded table has a primary key.');
+    $this->assertTrue($this->schema->primaryKeyExists(static::TEST_TABLE4['name']), 'The table has a primary key.');
 
     // If we try to add an unique key to an embedded table that has a primary
     // key on the same fields an exception should be thrown.
     $this->expectException('Drupal\Core\Database\SchemaObjectExistsException');
-    $this->schema->addUniqueKey($this->testTable4['name'], 'unique_id_key', ['id']);
+    $this->schema->addUniqueKey(static::TEST_TABLE4['name'], 'unique_id_key', ['id']);
   }
 
   /**
@@ -4325,21 +4325,21 @@ class SchemaNotTableOrFieldTest extends SchemaTestBase {
    * @covers ::uniqueKeyExists
    */
   public function testAddUniqueKeyForEmbeddedUniqueKeyExistsOnTheSameFields() {
-    $this->assertFalse($this->schema->tableExists($this->testTable5['name']), 'The table does not exist in the MongoDB database.');
-    $this->assertFalse($this->schema->tableExists($this->testTable4['name']), 'The embedded table does not exist in the MongoDB database.');
+    $this->assertFalse($this->schema->tableExists(static::TEST_TABLE5['name']), 'The table does not exist in the MongoDB database.');
+    $this->assertFalse($this->schema->tableExists(static::TEST_TABLE4['name']), 'The embedded table does not exist in the MongoDB database.');
 
-    $this->schema->createTable($this->testTable5['name'], $this->testTable5['schema']);
-    $this->schema->createEmbeddedTable($this->testTable5['name'], $this->testTable4['name'], $this->testTable4['schema']);
+    $this->schema->createTable(static::TEST_TABLE5['name'], static::TEST_TABLE5['schema']);
+    $this->schema->createEmbeddedTable(static::TEST_TABLE5['name'], static::TEST_TABLE4['name'], static::TEST_TABLE4['schema']);
 
-    $this->assertTrue($this->schema->tableExists($this->testTable5['name']), 'The table exists in the MongoDB database.');
-    $this->assertTrue($this->schema->tableExists($this->testTable4['name']), 'The embedded table exists in the MongoDB database.');
-    $this->assertTrue($this->schema->constraintExists($this->testTable5['name'], $this->testTable4['name'] . '.test_field__key'), 'The embedded table has the unique key.');
-    $this->assertTrue($this->schema->uniqueKeyExists($this->testTable4['name'], 'test_field'), 'The table has the unique key.');
+    $this->assertTrue($this->schema->tableExists(static::TEST_TABLE5['name']), 'The table exists in the MongoDB database.');
+    $this->assertTrue($this->schema->tableExists(static::TEST_TABLE4['name']), 'The embedded table exists in the MongoDB database.');
+    $this->assertTrue($this->schema->constraintExists(static::TEST_TABLE5['name'], static::TEST_TABLE4['name'] . '.test_field__key'), 'The embedded table has the unique key.');
+    $this->assertTrue($this->schema->uniqueKeyExists(static::TEST_TABLE4['name'], 'test_field'), 'The table has the unique key.');
 
     // If we try to add an unique key to an embedded table that has an unique
     // index on the same fields an exception should be thrown.
     $this->expectException('Drupal\Core\Database\SchemaObjectExistsException');
-    $this->schema->addUniqueKey($this->testTable4['name'], 'unique_test_field_key', ['test_field']);
+    $this->schema->addUniqueKey(static::TEST_TABLE4['name'], 'unique_test_field_key', ['test_field']);
   }
 
   /**
@@ -4352,7 +4352,7 @@ class SchemaNotTableOrFieldTest extends SchemaTestBase {
    *     - the name of the unique key that is to be dropped.
    *     - the expected schema for the table after dropping the unique key.
    */
-  public function providerDropUniqueKey() {
+  public static function providerDropUniqueKey() {
     $drop_unique_key_test_field_table_1_data = [
       'schema' => [
         'description' => 'Schema table description may contain "quotes" and could be long—very long indeed.',
@@ -5789,79 +5789,79 @@ class SchemaNotTableOrFieldTest extends SchemaTestBase {
 
     return [
       [
-        $this->testTable1,
+        static::TEST_TABLE1,
         [],
-        $this->testTable1['name'],
+        static::TEST_TABLE1['name'],
         'test_field',
         $drop_unique_key_test_field_table_1_data,
       ],
       [
-        $this->testTable2,
+        static::TEST_TABLE2,
         [],
-        $this->testTable2['name'],
+        static::TEST_TABLE2['name'],
         'test_fields_not_null',
         $drop_unique_key_test_fields_not_null_table_2_data,
       ],
       [
-        $this->testTable2,
+        static::TEST_TABLE2,
         [],
-        $this->testTable2['name'],
+        static::TEST_TABLE2['name'],
         'test_fields_null',
         $drop_unique_key_test_fields_null_table_2_data,
       ],
       [
-        $this->testTable4,
+        static::TEST_TABLE4,
         [],
-        $this->testTable4['name'],
+        static::TEST_TABLE4['name'],
         'test_field',
         $drop_unique_key_test_field_table_4_data,
       ],
       [
-        $this->testTable6,
-        [$this->testTable6['name'] => [$this->testTable1]],
-        $this->testTable1['name'],
+        static::TEST_TABLE6,
+        [static::TEST_TABLE6['name'] => [static::TEST_TABLE1]],
+        static::TEST_TABLE1['name'],
         'test_field',
         $drop_unique_key_base_6_with_embedded_1_unique_key_test_field,
       ],
       [
-        $this->testTable6,
-        [$this->testTable6['name'] => [$this->testTable2]],
-        $this->testTable2['name'],
+        static::TEST_TABLE6,
+        [static::TEST_TABLE6['name'] => [static::TEST_TABLE2]],
+        static::TEST_TABLE2['name'],
         'test_fields_not_null',
         $drop_unique_key_base_6_with_embedded_2_unique_key_test_fields_not_null,
       ],
       [
-        $this->testTable6,
-        [$this->testTable6['name'] => [$this->testTable2]],
-        $this->testTable2['name'],
+        static::TEST_TABLE6,
+        [static::TEST_TABLE6['name'] => [static::TEST_TABLE2]],
+        static::TEST_TABLE2['name'],
         'test_fields_null',
         $drop_unique_key_base_6_with_embedded_2_unique_key_test_fields_null,
       ],
       [
-        $this->testTable6,
-        [$this->testTable6['name'] => [$this->testTable4]],
-        $this->testTable4['name'],
+        static::TEST_TABLE6,
+        [static::TEST_TABLE6['name'] => [static::TEST_TABLE4]],
+        static::TEST_TABLE4['name'],
         'test_field',
         $drop_unique_key_base_6_with_embedded_4_unique_key_test_field,
       ],
       [
-        $this->testTable1,
-        [$this->testTable1['name'] => [$this->testTable2], $this->testTable2['name'] => [$this->testTable3, $this->testTable4], $this->testTable3['name'] => [$this->testTable5, $this->testTable6]],
-        $this->testTable1['name'],
+        static::TEST_TABLE1,
+        [static::TEST_TABLE1['name'] => [static::TEST_TABLE2], static::TEST_TABLE2['name'] => [static::TEST_TABLE3, static::TEST_TABLE4], static::TEST_TABLE3['name'] => [static::TEST_TABLE5, static::TEST_TABLE6]],
+        static::TEST_TABLE1['name'],
         'test_field',
         $drop_unique_key_base_1_embedded_2_and_3_4_on_2_and_5_6_on_3_on_table_1,
       ],
       [
-        $this->testTable1,
-        [$this->testTable1['name'] => [$this->testTable2], $this->testTable2['name'] => [$this->testTable3, $this->testTable4], $this->testTable3['name'] => [$this->testTable5, $this->testTable6]],
-        $this->testTable2['name'],
+        static::TEST_TABLE1,
+        [static::TEST_TABLE1['name'] => [static::TEST_TABLE2], static::TEST_TABLE2['name'] => [static::TEST_TABLE3, static::TEST_TABLE4], static::TEST_TABLE3['name'] => [static::TEST_TABLE5, static::TEST_TABLE6]],
+        static::TEST_TABLE2['name'],
         'test_fields_null',
         $drop_unique_key_base_1_embedded_2_and_3_4_on_2_and_5_6_on_3_on_table_2,
       ],
       [
-        $this->testTable1,
-        [$this->testTable1['name'] => [$this->testTable2], $this->testTable2['name'] => [$this->testTable3, $this->testTable4], $this->testTable3['name'] => [$this->testTable5, $this->testTable6]],
-        $this->testTable4['name'],
+        static::TEST_TABLE1,
+        [static::TEST_TABLE1['name'] => [static::TEST_TABLE2], static::TEST_TABLE2['name'] => [static::TEST_TABLE3, static::TEST_TABLE4], static::TEST_TABLE3['name'] => [static::TEST_TABLE5, static::TEST_TABLE6]],
+        static::TEST_TABLE4['name'],
         'test_field',
         $drop_unique_key_base_1_embedded_2_and_3_4_on_2_and_5_6_on_3_on_table_4,
       ],
@@ -5970,12 +5970,12 @@ class SchemaNotTableOrFieldTest extends SchemaTestBase {
    * @covers ::dropUniqueKey
    */
   public function testDropUniqueKeyForTableDoesNotExist() {
-    $this->assertFalse($this->schema->tableExists($this->testTable2['name']), 'The table does not exist in the MongoDB database.');
+    $this->assertFalse($this->schema->tableExists(static::TEST_TABLE2['name']), 'The table does not exist in the MongoDB database.');
 
     // If we try to drop a unique key to a table that does not exist an
     // exception should be thrown.
     $this->expectException('Drupal\Core\Database\SchemaObjectDoesNotExistException');
-    $this->schema->dropUniqueKey($this->testTable2['name'], 'test_fields_not_null');
+    $this->schema->dropUniqueKey(static::TEST_TABLE2['name'], 'test_fields_not_null');
   }
 
   /**
@@ -5983,17 +5983,17 @@ class SchemaNotTableOrFieldTest extends SchemaTestBase {
    * @covers ::uniqueKeyExists
    */
   public function testDropUniqueKeyForUniqueKeyDoesNotExist() {
-    $this->assertFalse($this->schema->tableExists($this->testTable5['name']), 'The table does not exist in the MongoDB database.');
+    $this->assertFalse($this->schema->tableExists(static::TEST_TABLE5['name']), 'The table does not exist in the MongoDB database.');
 
-    $this->schema->createTable($this->testTable5['name'], $this->testTable5['schema']);
+    $this->schema->createTable(static::TEST_TABLE5['name'], static::TEST_TABLE5['schema']);
 
-    $this->assertTrue($this->schema->tableExists($this->testTable5['name']), 'The table exists in the MongoDB database.');
-    $this->assertFalse($this->schema->constraintExists($this->testTable5['name'], 'does_not_exist__key'), 'The table does not have the unique key.');
-    $this->assertFalse($this->schema->uniqueKeyExists($this->testTable5['name'], 'does_not_exist'), 'The table does not have the unique key.');
+    $this->assertTrue($this->schema->tableExists(static::TEST_TABLE5['name']), 'The table exists in the MongoDB database.');
+    $this->assertFalse($this->schema->constraintExists(static::TEST_TABLE5['name'], 'does_not_exist__key'), 'The table does not have the unique key.');
+    $this->assertFalse($this->schema->uniqueKeyExists(static::TEST_TABLE5['name'], 'does_not_exist'), 'The table does not have the unique key.');
 
     // If we try to drop a non existent unique key on a table an exception
     // should be thrown.
-    $this->assertFalse($this->schema->dropUniqueKey($this->testTable5['name'], 'does_not_exist__key'), 'The table does not have the unique key.');
+    $this->assertFalse($this->schema->dropUniqueKey(static::TEST_TABLE5['name'], 'does_not_exist__key'), 'The table does not have the unique key.');
   }
 
   /**
@@ -6001,20 +6001,20 @@ class SchemaNotTableOrFieldTest extends SchemaTestBase {
    * @covers ::uniqueKeyExists
    */
   public function testDropUniqueKeyForEmbeddedUniqueKeyDoesNotExist() {
-    $this->assertFalse($this->schema->tableExists($this->testTable6['name']), 'The table does not exist in the MongoDB database.');
-    $this->assertFalse($this->schema->tableExists($this->testTable4['name']), 'The embedded table does not exist in the MongoDB database.');
+    $this->assertFalse($this->schema->tableExists(static::TEST_TABLE6['name']), 'The table does not exist in the MongoDB database.');
+    $this->assertFalse($this->schema->tableExists(static::TEST_TABLE4['name']), 'The embedded table does not exist in the MongoDB database.');
 
-    $this->schema->createTable($this->testTable6['name'], $this->testTable6['schema']);
-    $this->schema->createEmbeddedTable($this->testTable6['name'], $this->testTable4['name'], $this->testTable4['schema']);
+    $this->schema->createTable(static::TEST_TABLE6['name'], static::TEST_TABLE6['schema']);
+    $this->schema->createEmbeddedTable(static::TEST_TABLE6['name'], static::TEST_TABLE4['name'], static::TEST_TABLE4['schema']);
 
-    $this->assertTrue($this->schema->tableExists($this->testTable6['name']), 'The table exists in the MongoDB database.');
-    $this->assertTrue($this->schema->tableExists($this->testTable4['name']), 'The embedded table exists in the MongoDB database.');
-    $this->assertFalse($this->schema->constraintExists($this->testTable6['name'], $this->testTable4['name'] . '.unique_does_not_exist_key__key'), 'The embedded table does not have the unique key.');
-    $this->assertFalse($this->schema->uniqueKeyExists($this->testTable4['name'], 'unique_does_not_exist_key'), 'The table does not have the unique key.');
+    $this->assertTrue($this->schema->tableExists(static::TEST_TABLE6['name']), 'The table exists in the MongoDB database.');
+    $this->assertTrue($this->schema->tableExists(static::TEST_TABLE4['name']), 'The embedded table exists in the MongoDB database.');
+    $this->assertFalse($this->schema->constraintExists(static::TEST_TABLE6['name'], static::TEST_TABLE4['name'] . '.unique_does_not_exist_key__key'), 'The embedded table does not have the unique key.');
+    $this->assertFalse($this->schema->uniqueKeyExists(static::TEST_TABLE4['name'], 'unique_does_not_exist_key'), 'The table does not have the unique key.');
 
     // If we try to drop a non existent unique key from a table the method
     // should return false.
-    $this->assertFalse($this->schema->dropUniqueKey($this->testTable4['name'], 'unique_does_not_exist_key'), 'The embedded table does not have the unique key.');
+    $this->assertFalse($this->schema->dropUniqueKey(static::TEST_TABLE4['name'], 'unique_does_not_exist_key'), 'The embedded table does not have the unique key.');
   }
 
   /**
@@ -6030,7 +6030,7 @@ class SchemaNotTableOrFieldTest extends SchemaTestBase {
    *     - the array of field names to used for creating the index.
    *     - the expected schema for the table after adding the index.
    */
-  public function providerAddIndex() {
+  public static function providerAddIndex() {
     $add_index_table_5_with_index_id = [
       'schema' => [
         'description' => 'Schema table with no indexes.',
@@ -7372,105 +7372,105 @@ class SchemaNotTableOrFieldTest extends SchemaTestBase {
 
     return [
       [
-        $this->testTable5,
+        static::TEST_TABLE5,
         [],
-        $this->testTable5['name'],
+        static::TEST_TABLE5['name'],
         'index_id',
         ['id'],
         $add_index_table_5_with_index_id,
       ],
       [
-        $this->testTable5,
+        static::TEST_TABLE5,
         [],
-        $this->testTable5['name'],
+        static::TEST_TABLE5['name'],
         'index_id_and_test_field_string',
         ['id', 'test_field_string'],
         $add_index_table_5_with_index_id_and_test_field_string,
       ],
       [
-        $this->testTable5,
+        static::TEST_TABLE5,
         [],
-        $this->testTable5['name'],
+        static::TEST_TABLE5['name'],
         'index_test_field_string_and_id',
         ['test_field_string', 'id'],
         $add_index_table_5_with_index_test_field_string_and_id,
       ],
       [
-        $this->testTable4,
+        static::TEST_TABLE4,
         [],
-        $this->testTable4['name'],
+        static::TEST_TABLE4['name'],
         'index_id_and_test_field',
         ['id', 'test_field'],
         $add_index_table_4_with_index_id_and_test_field,
       ],
       [
-        $this->testTable4,
+        static::TEST_TABLE4,
         [],
-        $this->testTable4['name'],
+        static::TEST_TABLE4['name'],
         'index_test_field_and_id',
         ['test_field', 'id'],
         $add_index_table_4_with_index_test_field_and_id,
       ],
       [
-        $this->testTable4,
-        [$this->testTable4['name'] => [$this->testTable5]],
-        $this->testTable5['name'],
+        static::TEST_TABLE4,
+        [static::TEST_TABLE4['name'] => [static::TEST_TABLE5]],
+        static::TEST_TABLE5['name'],
         'index_id',
         ['id'],
         $add_index_base_4_with_embedded_5_and_field_id,
       ],
       [
-        $this->testTable4,
-        [$this->testTable4['name'] => [$this->testTable5]],
-        $this->testTable5['name'],
+        static::TEST_TABLE4,
+        [static::TEST_TABLE4['name'] => [static::TEST_TABLE5]],
+        static::TEST_TABLE5['name'],
         'index_id_and_test_field_string',
         ['id', 'test_field_string'],
         $add_index_base_4_with_embedded_5_and_field_id_and_test_field_string,
       ],
       [
-        $this->testTable4,
-        [$this->testTable4['name'] => [$this->testTable5]],
-        $this->testTable5['name'],
+        static::TEST_TABLE4,
+        [static::TEST_TABLE4['name'] => [static::TEST_TABLE5]],
+        static::TEST_TABLE5['name'],
         'index_test_field_string_and_id',
         ['test_field_string', 'id'],
         $add_index_base_4_with_embedded_5_and_field_test_field_string_and_id,
       ],
       [
-        $this->testTable6,
-        [$this->testTable6['name'] => [$this->testTable4]],
-        $this->testTable4['name'],
+        static::TEST_TABLE6,
+        [static::TEST_TABLE6['name'] => [static::TEST_TABLE4]],
+        static::TEST_TABLE4['name'],
         'index_id_and_test_field',
         ['id', 'test_field'],
         $add_index_base_6_with_embedded_4_and_field_id_and_test_field,
       ],
       [
-        $this->testTable1,
-        [$this->testTable1['name'] => [$this->testTable2], $this->testTable2['name'] => [$this->testTable3, $this->testTable4], $this->testTable3['name'] => [$this->testTable5, $this->testTable6]],
-        $this->testTable1['name'],
+        static::TEST_TABLE1,
+        [static::TEST_TABLE1['name'] => [static::TEST_TABLE2], static::TEST_TABLE2['name'] => [static::TEST_TABLE3, static::TEST_TABLE4], static::TEST_TABLE3['name'] => [static::TEST_TABLE5, static::TEST_TABLE6]],
+        static::TEST_TABLE1['name'],
         'index_id_and_test_field_string',
         ['id', 'test_field_string'],
         $add_index_base_1_embedded_2_and_3_4_on_2_and_5_6_on_3_on_table_1,
       ],
       [
-        $this->testTable1,
-        [$this->testTable1['name'] => [$this->testTable2], $this->testTable2['name'] => [$this->testTable3, $this->testTable4], $this->testTable3['name'] => [$this->testTable5, $this->testTable6]],
-        $this->testTable2['name'],
+        static::TEST_TABLE1,
+        [static::TEST_TABLE1['name'] => [static::TEST_TABLE2], static::TEST_TABLE2['name'] => [static::TEST_TABLE3, static::TEST_TABLE4], static::TEST_TABLE3['name'] => [static::TEST_TABLE5, static::TEST_TABLE6]],
+        static::TEST_TABLE2['name'],
         'index_id_and_test_field_int_default',
         ['id', 'test_field_int_default'],
         $add_index_base_1_embedded_2_and_3_4_on_2_and_5_6_on_3_on_table_2,
       ],
       [
-        $this->testTable1,
-        [$this->testTable1['name'] => [$this->testTable2], $this->testTable2['name'] => [$this->testTable3, $this->testTable4], $this->testTable3['name'] => [$this->testTable5, $this->testTable6]],
-        $this->testTable4['name'],
+        static::TEST_TABLE1,
+        [static::TEST_TABLE1['name'] => [static::TEST_TABLE2], static::TEST_TABLE2['name'] => [static::TEST_TABLE3, static::TEST_TABLE4], static::TEST_TABLE3['name'] => [static::TEST_TABLE5, static::TEST_TABLE6]],
+        static::TEST_TABLE4['name'],
         'index_id_and_test_field',
         ['id', 'test_field'],
         $add_index_base_1_embedded_2_and_3_4_on_2_and_5_6_on_3_on_table_4,
       ],
       [
-        $this->testTable1,
-        [$this->testTable1['name'] => [$this->testTable2], $this->testTable2['name'] => [$this->testTable3, $this->testTable4], $this->testTable3['name'] => [$this->testTable5, $this->testTable6]],
-        $this->testTable6['name'],
+        static::TEST_TABLE1,
+        [static::TEST_TABLE1['name'] => [static::TEST_TABLE2], static::TEST_TABLE2['name'] => [static::TEST_TABLE3, static::TEST_TABLE4], static::TEST_TABLE3['name'] => [static::TEST_TABLE5, static::TEST_TABLE6]],
+        static::TEST_TABLE6['name'],
         'index_id_and_test_field_string',
         ['id', 'test_field_string'],
         $add_index_base_1_embedded_2_and_3_4_on_2_and_5_6_on_3_on_table_6,
@@ -7575,12 +7575,12 @@ class SchemaNotTableOrFieldTest extends SchemaTestBase {
    * @covers ::addIndex
    */
   public function testAddIndexForTableDoesNotExist() {
-    $this->assertFalse($this->schema->tableExists($this->testTable5['name']), 'The table does not exist in the MongoDB database.');
+    $this->assertFalse($this->schema->tableExists(static::TEST_TABLE5['name']), 'The table does not exist in the MongoDB database.');
 
     // If we try to add an index to a table that does not exist an exception
     // should be thrown.
     $this->expectException('Drupal\Core\Database\SchemaObjectDoesNotExistException');
-    $this->schema->addIndex($this->testTable5['name'], 'index_id', ['id'], []);
+    $this->schema->addIndex(static::TEST_TABLE5['name'], 'index_id', ['id'], []);
   }
 
   /**
@@ -7588,18 +7588,18 @@ class SchemaNotTableOrFieldTest extends SchemaTestBase {
    * @covers ::indexExists
    */
   public function testAddIndexForIndexExist() {
-    $this->assertFalse($this->schema->tableExists($this->testTable6['name']), 'The table does not exist in the MongoDB database.');
+    $this->assertFalse($this->schema->tableExists(static::TEST_TABLE6['name']), 'The table does not exist in the MongoDB database.');
 
-    $this->schema->createTable($this->testTable6['name'], $this->testTable6['schema']);
+    $this->schema->createTable(static::TEST_TABLE6['name'], static::TEST_TABLE6['schema']);
 
-    $this->assertTrue($this->schema->tableExists($this->testTable6['name']), 'The table exists in the MongoDB database.');
-    $this->assertTrue($this->schema->constraintExists($this->testTable6['name'], 'test_field_string__idx'), 'The table has the index.');
-    $this->assertTrue($this->schema->indexExists($this->testTable6['name'], 'test_field_string'), 'The table has the index.');
+    $this->assertTrue($this->schema->tableExists(static::TEST_TABLE6['name']), 'The table exists in the MongoDB database.');
+    $this->assertTrue($this->schema->constraintExists(static::TEST_TABLE6['name'], 'test_field_string__idx'), 'The table has the index.');
+    $this->assertTrue($this->schema->indexExists(static::TEST_TABLE6['name'], 'test_field_string'), 'The table has the index.');
 
     // If we try to add an index to a table that has an index an exception
     // should be thrown.
     $this->expectException('Drupal\Core\Database\SchemaObjectExistsException');
-    $this->schema->addIndex($this->testTable6['name'], 'test_field_string', ['test_field_string'], []);
+    $this->schema->addIndex(static::TEST_TABLE6['name'], 'test_field_string', ['test_field_string'], []);
   }
 
   /**
@@ -7607,34 +7607,34 @@ class SchemaNotTableOrFieldTest extends SchemaTestBase {
    * @covers ::indexExists
    */
   public function testAddIndexForIndexExistsOnTheSameFields() {
-    $this->assertFalse($this->schema->tableExists($this->testTable6['name']), 'The table does not exist in the MongoDB database.');
+    $this->assertFalse($this->schema->tableExists(static::TEST_TABLE6['name']), 'The table does not exist in the MongoDB database.');
 
-    $this->schema->createTable($this->testTable6['name'], $this->testTable6['schema']);
+    $this->schema->createTable(static::TEST_TABLE6['name'], static::TEST_TABLE6['schema']);
 
-    $this->assertTrue($this->schema->tableExists($this->testTable6['name']), 'The table exists in the MongoDB database.');
-    $this->assertTrue($this->schema->constraintExists($this->testTable6['name'], 'test_field_string__idx'), 'The table has the index.');
-    $this->assertTrue($this->schema->indexExists($this->testTable6['name'], 'test_field_string'), 'The table has the index.');
+    $this->assertTrue($this->schema->tableExists(static::TEST_TABLE6['name']), 'The table exists in the MongoDB database.');
+    $this->assertTrue($this->schema->constraintExists(static::TEST_TABLE6['name'], 'test_field_string__idx'), 'The table has the index.');
+    $this->assertTrue($this->schema->indexExists(static::TEST_TABLE6['name'], 'test_field_string'), 'The table has the index.');
 
     // If we try to add an index to a table that has an non-unique index on the
     // same fields an exception should be thrown.
     $this->expectException('Drupal\Core\Database\SchemaObjectExistsException');
-    $this->schema->addIndex($this->testTable6['name'], 'index_test_field_string', ['test_field_string'], []);
+    $this->schema->addIndex(static::TEST_TABLE6['name'], 'index_test_field_string', ['test_field_string'], []);
   }
 
   /**
    * @covers ::addIndex
    */
   public function testAddIndexForEmbeddedTableDoesNotExist() {
-    $this->assertFalse($this->schema->tableExists($this->testTable4['name']), 'The table does not exist in the MongoDB database.');
+    $this->assertFalse($this->schema->tableExists(static::TEST_TABLE4['name']), 'The table does not exist in the MongoDB database.');
 
-    $this->schema->createTable($this->testTable4['name'], $this->testTable4['schema']);
+    $this->schema->createTable(static::TEST_TABLE4['name'], static::TEST_TABLE4['schema']);
 
-    $this->assertTrue($this->schema->tableExists($this->testTable4['name']), 'The table exists in the MongoDB database.');
+    $this->assertTrue($this->schema->tableExists(static::TEST_TABLE4['name']), 'The table exists in the MongoDB database.');
 
     // If we try to rename an embedded table on a non existent embedded table an
     // exception should be thrown.
     $this->expectException('Drupal\Core\Database\SchemaObjectDoesNotExistException');
-    $this->schema->addIndex($this->testTable5['name'], 'index_id', ['id'], []);
+    $this->schema->addIndex(static::TEST_TABLE5['name'], 'index_id', ['id'], []);
   }
 
   /**
@@ -7642,21 +7642,21 @@ class SchemaNotTableOrFieldTest extends SchemaTestBase {
    * @covers ::indexExists
    */
   public function testAddIndexForEmbeddedIndexExists() {
-    $this->assertFalse($this->schema->tableExists($this->testTable5['name']), 'The table does not exist in the MongoDB database.');
-    $this->assertFalse($this->schema->tableExists($this->testTable6['name']), 'The embedded table does not exist in the MongoDB database.');
+    $this->assertFalse($this->schema->tableExists(static::TEST_TABLE5['name']), 'The table does not exist in the MongoDB database.');
+    $this->assertFalse($this->schema->tableExists(static::TEST_TABLE6['name']), 'The embedded table does not exist in the MongoDB database.');
 
-    $this->schema->createTable($this->testTable5['name'], $this->testTable5['schema']);
-    $this->schema->createEmbeddedTable($this->testTable5['name'], $this->testTable6['name'], $this->testTable6['schema']);
+    $this->schema->createTable(static::TEST_TABLE5['name'], static::TEST_TABLE5['schema']);
+    $this->schema->createEmbeddedTable(static::TEST_TABLE5['name'], static::TEST_TABLE6['name'], static::TEST_TABLE6['schema']);
 
-    $this->assertTrue($this->schema->tableExists($this->testTable5['name']), 'The table exists in the MongoDB database.');
-    $this->assertTrue($this->schema->tableExists($this->testTable6['name']), 'The embedded table exists in the MongoDB database.');
-    $this->assertTrue($this->schema->constraintExists($this->testTable5['name'], $this->testTable6['name'] . '.test_field_string__idx'), 'The embedded table has the index.');
-    $this->assertTrue($this->schema->indexExists($this->testTable6['name'], 'test_field_string'), 'The embedded table has the index.');
+    $this->assertTrue($this->schema->tableExists(static::TEST_TABLE5['name']), 'The table exists in the MongoDB database.');
+    $this->assertTrue($this->schema->tableExists(static::TEST_TABLE6['name']), 'The embedded table exists in the MongoDB database.');
+    $this->assertTrue($this->schema->constraintExists(static::TEST_TABLE5['name'], static::TEST_TABLE6['name'] . '.test_field_string__idx'), 'The embedded table has the index.');
+    $this->assertTrue($this->schema->indexExists(static::TEST_TABLE6['name'], 'test_field_string'), 'The embedded table has the index.');
 
     // If we try to add an index to a table that has an index an exception
     // should be thrown.
     $this->expectException('Drupal\Core\Database\SchemaObjectExistsException');
-    $this->schema->addIndex($this->testTable6['name'], 'test_field_string', ['test_field_string'], []);
+    $this->schema->addIndex(static::TEST_TABLE6['name'], 'test_field_string', ['test_field_string'], []);
   }
 
   /**
@@ -7664,21 +7664,21 @@ class SchemaNotTableOrFieldTest extends SchemaTestBase {
    * @covers ::indexExists
    */
   public function testAddIndexForEmbeddedIndexExistsOnTheSameFields() {
-    $this->assertFalse($this->schema->tableExists($this->testTable5['name']), 'The table does not exist in the MongoDB database.');
-    $this->assertFalse($this->schema->tableExists($this->testTable6['name']), 'The embedded table does not exist in the MongoDB database.');
+    $this->assertFalse($this->schema->tableExists(static::TEST_TABLE5['name']), 'The table does not exist in the MongoDB database.');
+    $this->assertFalse($this->schema->tableExists(static::TEST_TABLE6['name']), 'The embedded table does not exist in the MongoDB database.');
 
-    $this->schema->createTable($this->testTable5['name'], $this->testTable5['schema']);
-    $this->schema->createEmbeddedTable($this->testTable5['name'], $this->testTable6['name'], $this->testTable6['schema']);
+    $this->schema->createTable(static::TEST_TABLE5['name'], static::TEST_TABLE5['schema']);
+    $this->schema->createEmbeddedTable(static::TEST_TABLE5['name'], static::TEST_TABLE6['name'], static::TEST_TABLE6['schema']);
 
-    $this->assertTrue($this->schema->tableExists($this->testTable5['name']), 'The table exists in the MongoDB database.');
-    $this->assertTrue($this->schema->tableExists($this->testTable6['name']), 'The embedded table exists in the MongoDB database.');
-    $this->assertTrue($this->schema->constraintExists($this->testTable5['name'], $this->testTable6['name'] . '.test_field_string__idx'), 'The embedded table has the index.');
-    $this->assertTrue($this->schema->indexExists($this->testTable6['name'], 'test_field_string'), 'The embedded table has the index.');
+    $this->assertTrue($this->schema->tableExists(static::TEST_TABLE5['name']), 'The table exists in the MongoDB database.');
+    $this->assertTrue($this->schema->tableExists(static::TEST_TABLE6['name']), 'The embedded table exists in the MongoDB database.');
+    $this->assertTrue($this->schema->constraintExists(static::TEST_TABLE5['name'], static::TEST_TABLE6['name'] . '.test_field_string__idx'), 'The embedded table has the index.');
+    $this->assertTrue($this->schema->indexExists(static::TEST_TABLE6['name'], 'test_field_string'), 'The embedded table has the index.');
 
     // If we try to add an index to an embedded table that has an index on the
     // same fields an exception should be thrown.
     $this->expectException('Drupal\Core\Database\SchemaObjectExistsException');
-    $this->schema->addIndex($this->testTable6['name'], 'index_test_field_string', ['test_field_string'], []);
+    $this->schema->addIndex(static::TEST_TABLE6['name'], 'index_test_field_string', ['test_field_string'], []);
   }
 
   /**
@@ -7691,7 +7691,7 @@ class SchemaNotTableOrFieldTest extends SchemaTestBase {
    *     - the name of the index that is to be dropped.
    *     - the expected schema for the table after dropping the index.
    */
-  public function providerDropIndex() {
+  public static function providerDropIndex() {
     $drop_index_test_fields_default_table_2_data = [
       'schema' => [
         'description' => 'Schema table for testing integer with null, not null and default values.',
@@ -8764,58 +8764,58 @@ class SchemaNotTableOrFieldTest extends SchemaTestBase {
 
     return [
       [
-        $this->testTable2,
+        static::TEST_TABLE2,
         [],
-        $this->testTable2['name'],
+        static::TEST_TABLE2['name'],
         'test_fields_default',
         $drop_index_test_fields_default_table_2_data,
       ],
       [
-        $this->testTable2,
+        static::TEST_TABLE2,
         [],
-        $this->testTable2['name'],
+        static::TEST_TABLE2['name'],
         'test_field_int_null',
         $drop_index_test_field_int_null_table_2_data,
       ],
       [
-        $this->testTable6,
+        static::TEST_TABLE6,
         [],
-        $this->testTable6['name'],
+        static::TEST_TABLE6['name'],
         'test_field_string',
         $drop_index_test_field_string_table_6_data,
       ],
       [
-        $this->testTable6,
-        [$this->testTable6['name'] => [$this->testTable2]],
-        $this->testTable2['name'],
+        static::TEST_TABLE6,
+        [static::TEST_TABLE6['name'] => [static::TEST_TABLE2]],
+        static::TEST_TABLE2['name'],
         'test_fields_default',
         $drop_index_base_6_with_embedded_2_index_test_fields_default,
       ],
       [
-        $this->testTable6,
-        [$this->testTable6['name'] => [$this->testTable2]],
-        $this->testTable2['name'],
+        static::TEST_TABLE6,
+        [static::TEST_TABLE6['name'] => [static::TEST_TABLE2]],
+        static::TEST_TABLE2['name'],
         'test_field_int_null',
         $drop_index_base_6_with_embedded_2_index_test_field_int_null,
       ],
       [
-        $this->testTable4,
-        [$this->testTable4['name'] => [$this->testTable6]],
-        $this->testTable6['name'],
+        static::TEST_TABLE4,
+        [static::TEST_TABLE4['name'] => [static::TEST_TABLE6]],
+        static::TEST_TABLE6['name'],
         'test_field_string',
         $drop_index_base_4_with_embedded_6_index_test_field_string,
       ],
       [
-        $this->testTable1,
-        [$this->testTable1['name'] => [$this->testTable2], $this->testTable2['name'] => [$this->testTable3, $this->testTable4], $this->testTable3['name'] => [$this->testTable5, $this->testTable6]],
-        $this->testTable2['name'],
+        static::TEST_TABLE1,
+        [static::TEST_TABLE1['name'] => [static::TEST_TABLE2], static::TEST_TABLE2['name'] => [static::TEST_TABLE3, static::TEST_TABLE4], static::TEST_TABLE3['name'] => [static::TEST_TABLE5, static::TEST_TABLE6]],
+        static::TEST_TABLE2['name'],
         'test_fields_default',
         $drop_index_base_1_embedded_2_and_3_4_on_2_and_5_6_on_3_on_table_2,
       ],
       [
-        $this->testTable1,
-        [$this->testTable1['name'] => [$this->testTable2], $this->testTable2['name'] => [$this->testTable3, $this->testTable4], $this->testTable3['name'] => [$this->testTable5, $this->testTable6]],
-        $this->testTable6['name'],
+        static::TEST_TABLE1,
+        [static::TEST_TABLE1['name'] => [static::TEST_TABLE2], static::TEST_TABLE2['name'] => [static::TEST_TABLE3, static::TEST_TABLE4], static::TEST_TABLE3['name'] => [static::TEST_TABLE5, static::TEST_TABLE6]],
+        static::TEST_TABLE6['name'],
         'test_field_string',
         $drop_index_base_1_embedded_2_and_3_4_on_2_and_5_6_on_3_on_table_6,
       ],
@@ -8925,17 +8925,17 @@ class SchemaNotTableOrFieldTest extends SchemaTestBase {
    * @covers ::indexExists
    */
   public function testDropIndexForIndexDoesNotExist() {
-    $this->assertFalse($this->schema->tableExists($this->testTable5['name']), 'The table does not exist in the MongoDB database.');
+    $this->assertFalse($this->schema->tableExists(static::TEST_TABLE5['name']), 'The table does not exist in the MongoDB database.');
 
-    $this->schema->createTable($this->testTable5['name'], $this->testTable5['schema']);
+    $this->schema->createTable(static::TEST_TABLE5['name'], static::TEST_TABLE5['schema']);
 
-    $this->assertTrue($this->schema->tableExists($this->testTable5['name']), 'The table exists in the MongoDB database.');
-    $this->assertFalse($this->schema->constraintExists($this->testTable5['name'], 'does_not_exist__idx'), 'The table does not have the index.');
-    $this->assertFalse($this->schema->indexExists($this->testTable5['name'], 'does_not_exist'), 'The table does not have the index.');
+    $this->assertTrue($this->schema->tableExists(static::TEST_TABLE5['name']), 'The table exists in the MongoDB database.');
+    $this->assertFalse($this->schema->constraintExists(static::TEST_TABLE5['name'], 'does_not_exist__idx'), 'The table does not have the index.');
+    $this->assertFalse($this->schema->indexExists(static::TEST_TABLE5['name'], 'does_not_exist'), 'The table does not have the index.');
 
     // If we try to drop a non existent index on a table an exception should be
     // thrown.
-    $this->assertFalse($this->schema->dropIndex($this->testTable5['name'], 'does_not_exist'), 'The table does not have the index.');
+    $this->assertFalse($this->schema->dropIndex(static::TEST_TABLE5['name'], 'does_not_exist'), 'The table does not have the index.');
   }
 
   /**
@@ -8943,20 +8943,20 @@ class SchemaNotTableOrFieldTest extends SchemaTestBase {
    * @covers ::indexExists
    */
   public function testDropIndexForEmbeddedIndexDoesNotExist() {
-    $this->assertFalse($this->schema->tableExists($this->testTable6['name']), 'The table does not exist in the MongoDB database.');
-    $this->assertFalse($this->schema->tableExists($this->testTable4['name']), 'The embedded table does not exist in the MongoDB database.');
+    $this->assertFalse($this->schema->tableExists(static::TEST_TABLE6['name']), 'The table does not exist in the MongoDB database.');
+    $this->assertFalse($this->schema->tableExists(static::TEST_TABLE4['name']), 'The embedded table does not exist in the MongoDB database.');
 
-    $this->schema->createTable($this->testTable6['name'], $this->testTable6['schema']);
-    $this->schema->createEmbeddedTable($this->testTable6['name'], $this->testTable4['name'], $this->testTable4['schema']);
+    $this->schema->createTable(static::TEST_TABLE6['name'], static::TEST_TABLE6['schema']);
+    $this->schema->createEmbeddedTable(static::TEST_TABLE6['name'], static::TEST_TABLE4['name'], static::TEST_TABLE4['schema']);
 
-    $this->assertTrue($this->schema->tableExists($this->testTable6['name']), 'The table exists in the MongoDB database.');
-    $this->assertTrue($this->schema->tableExists($this->testTable4['name']), 'The embedded table exists in the MongoDB database.');
-    $this->assertFalse($this->schema->constraintExists($this->testTable6['name'], $this->testTable4['name'] . '.index_does_not_exist__idx'), 'The embedded table does not have the index.');
-    $this->assertFalse($this->schema->indexExists($this->testTable4['name'], 'index_does_not_exist'), 'The embedded table does not have the index.');
+    $this->assertTrue($this->schema->tableExists(static::TEST_TABLE6['name']), 'The table exists in the MongoDB database.');
+    $this->assertTrue($this->schema->tableExists(static::TEST_TABLE4['name']), 'The embedded table exists in the MongoDB database.');
+    $this->assertFalse($this->schema->constraintExists(static::TEST_TABLE6['name'], static::TEST_TABLE4['name'] . '.index_does_not_exist__idx'), 'The embedded table does not have the index.');
+    $this->assertFalse($this->schema->indexExists(static::TEST_TABLE4['name'], 'index_does_not_exist'), 'The embedded table does not have the index.');
 
     // If we try to drop a non existent index from a table the method should
     // return false.
-    $this->assertFalse($this->schema->dropIndex($this->testTable4['name'], 'index_does_not_exist'), 'The embedded table does not have the index.');
+    $this->assertFalse($this->schema->dropIndex(static::TEST_TABLE4['name'], 'index_does_not_exist'), 'The embedded table does not have the index.');
   }
 
   /**
@@ -8971,7 +8971,7 @@ class SchemaNotTableOrFieldTest extends SchemaTestBase {
    *     - the expected schema for the table after setting the default value for
    *       the field.
    */
-  public function providerFieldSetDefault() {
+  public static function providerFieldSetDefault() {
     $field_set_default_table_4_field_id_value_0_schema = [
       'description' => 'Schema table with primary and unique key.',
       'fields' => [
@@ -9069,12 +9069,12 @@ class SchemaNotTableOrFieldTest extends SchemaTestBase {
     ];
 
     return [
-      [$this->testTable4, 'id', 0, $field_set_default_table_4_field_id_value_0_schema],
-      [$this->testTable4, 'id', 6, $field_set_default_table_4_field_id_value_6_schema],
-      [$this->testTable4, 'id', NULL, $field_set_default_table_4_field_id_value_null_schema],
-      [$this->testTable5, 'test_field_string', '', $field_set_default_table_5_field_test_field_string_value__schema],
-      [$this->testTable5, 'test_field_string', 'My new default value', $field_set_default_table_5_field_test_field_string_value_my_new_default_value_schema],
-      [$this->testTable5, 'test_field_string', NULL, $field_set_default_table_5_field_test_field_string_value_null_schema],
+      [static::TEST_TABLE4, 'id', 0, $field_set_default_table_4_field_id_value_0_schema],
+      [static::TEST_TABLE4, 'id', 6, $field_set_default_table_4_field_id_value_6_schema],
+      [static::TEST_TABLE4, 'id', NULL, $field_set_default_table_4_field_id_value_null_schema],
+      [static::TEST_TABLE5, 'test_field_string', '', $field_set_default_table_5_field_test_field_string_value__schema],
+      [static::TEST_TABLE5, 'test_field_string', 'My new default value', $field_set_default_table_5_field_test_field_string_value_my_new_default_value_schema],
+      [static::TEST_TABLE5, 'test_field_string', NULL, $field_set_default_table_5_field_test_field_string_value_null_schema],
     ];
   }
 
@@ -9099,28 +9099,28 @@ class SchemaNotTableOrFieldTest extends SchemaTestBase {
    * @covers ::fieldSetDefault
    */
   public function testFieldSetDefaultForTableDoesNotExist() {
-    $this->assertFalse($this->schema->tableExists($this->testTable4['name']), 'The table does not exist in the MongoDB database.');
+    $this->assertFalse($this->schema->tableExists(static::TEST_TABLE4['name']), 'The table does not exist in the MongoDB database.');
 
     // If we try to set the default value for a field on a table that does not
     // exist an exception should be thrown.
     $this->expectException('Drupal\Core\Database\SchemaObjectDoesNotExistException');
-    $this->schema->fieldSetDefault($this->testTable4['name'], 'id', 6);
+    $this->schema->fieldSetDefault(static::TEST_TABLE4['name'], 'id', 6);
   }
 
   /**
    * @covers ::fieldSetDefault
    */
   public function testFieldSetDefaultForFieldDoesNotExist() {
-    $this->assertFalse($this->schema->tableExists($this->testTable4['name']), 'The table does not exist in the MongoDB database.');
+    $this->assertFalse($this->schema->tableExists(static::TEST_TABLE4['name']), 'The table does not exist in the MongoDB database.');
 
-    $this->schema->createTable($this->testTable4['name'], $this->testTable4['schema']);
+    $this->schema->createTable(static::TEST_TABLE4['name'], static::TEST_TABLE4['schema']);
 
-    $this->assertTrue($this->schema->tableExists($this->testTable4['name']), 'The table exists in the MongoDB database.');
+    $this->assertTrue($this->schema->tableExists(static::TEST_TABLE4['name']), 'The table exists in the MongoDB database.');
 
     // If we try to set the default value for a field on a table that does not
     // has such a field an exception should be thrown.
     $this->expectException('Drupal\Core\Database\SchemaObjectDoesNotExistException');
-    $this->schema->fieldSetDefault($this->testTable4['name'], 'does_not_exist_field', 6);
+    $this->schema->fieldSetDefault(static::TEST_TABLE4['name'], 'does_not_exist_field', 6);
   }
 
   /**
@@ -9134,7 +9134,7 @@ class SchemaNotTableOrFieldTest extends SchemaTestBase {
    *     - the expected schema for the table after unsetting the default value
    *       for the field.
    */
-  public function providerFieldSetNoDefault() {
+  public static function providerFieldSetNoDefault() {
     $field_set_no_default_table_5_field_test_field_string_schema = [
       'description' => 'Schema table with no indexes.',
       'fields' => [
@@ -9208,9 +9208,9 @@ class SchemaNotTableOrFieldTest extends SchemaTestBase {
     ];
 
     return [
-      [$this->testTable1, 'id', $field_set_no_default_table_1_field_id_schema],
-      [$this->testTable1, 'test_field_string', $field_set_no_default_table_1_field_test_field_string_schema],
-      [$this->testTable5, 'test_field_string', $field_set_no_default_table_5_field_test_field_string_schema],
+      [static::TEST_TABLE1, 'id', $field_set_no_default_table_1_field_id_schema],
+      [static::TEST_TABLE1, 'test_field_string', $field_set_no_default_table_1_field_test_field_string_schema],
+      [static::TEST_TABLE5, 'test_field_string', $field_set_no_default_table_5_field_test_field_string_schema],
     ];
   }
 
@@ -9235,28 +9235,28 @@ class SchemaNotTableOrFieldTest extends SchemaTestBase {
    * @covers ::fieldSetNoDefault
    */
   public function testFieldSetNoDefaultForTableDoesNotExist() {
-    $this->assertFalse($this->schema->tableExists($this->testTable5['name']), 'The table does not exist in the MongoDB database.');
+    $this->assertFalse($this->schema->tableExists(static::TEST_TABLE5['name']), 'The table does not exist in the MongoDB database.');
 
     // If we try to unset the default value for a field on a table that does not
     // exist an exception should be thrown.
     $this->expectException('Drupal\Core\Database\SchemaObjectDoesNotExistException');
-    $this->schema->fieldSetNoDefault($this->testTable5['name'], 'test_field_string');
+    $this->schema->fieldSetNoDefault(static::TEST_TABLE5['name'], 'test_field_string');
   }
 
   /**
    * @covers ::fieldSetNoDefault
    */
   public function testFieldSetNoDefaultForFieldDoesNotExist() {
-    $this->assertFalse($this->schema->tableExists($this->testTable5['name']), 'The table does not exist in the MongoDB database.');
+    $this->assertFalse($this->schema->tableExists(static::TEST_TABLE5['name']), 'The table does not exist in the MongoDB database.');
 
-    $this->schema->createTable($this->testTable5['name'], $this->testTable5['schema']);
+    $this->schema->createTable(static::TEST_TABLE5['name'], static::TEST_TABLE5['schema']);
 
-    $this->assertTrue($this->schema->tableExists($this->testTable5['name']), 'The table exists in the MongoDB database.');
+    $this->assertTrue($this->schema->tableExists(static::TEST_TABLE5['name']), 'The table exists in the MongoDB database.');
 
     // If we try to un set the default value for a field on a table that does
     // not has such a field an exception should be thrown.
     $this->expectException('Drupal\Core\Database\SchemaObjectDoesNotExistException');
-    $this->schema->fieldSetNoDefault($this->testTable5['name'], 'does_not_exist_field');
+    $this->schema->fieldSetNoDefault(static::TEST_TABLE5['name'], 'does_not_exist_field');
   }
 
   /**
@@ -9270,16 +9270,16 @@ class SchemaNotTableOrFieldTest extends SchemaTestBase {
    *       schema and the validation) keyed by their parent table name.
    *     - the expected full table path for each table keyed by their table name.
    */
-  public function providerMongodbTableServiceFullPathAndBaseTable() {
+  public static function providerMongodbTableServiceFullPathAndBaseTable() {
     return [
       [
-        $this->testTable1,
+        static::TEST_TABLE1,
         [
-          $this->testTable1['name'] => [$this->testTable2],
-          $this->testTable2['name'] => [$this->testTable3],
-          $this->testTable3['name'] => [$this->testTable4],
-          $this->testTable4['name'] => [$this->testTable5],
-          $this->testTable5['name'] => [$this->testTable6],
+          static::TEST_TABLE1['name'] => [static::TEST_TABLE2],
+          static::TEST_TABLE2['name'] => [static::TEST_TABLE3],
+          static::TEST_TABLE3['name'] => [static::TEST_TABLE4],
+          static::TEST_TABLE4['name'] => [static::TEST_TABLE5],
+          static::TEST_TABLE5['name'] => [static::TEST_TABLE6],
         ],
         [
           'test_table1' => '',
@@ -9291,11 +9291,11 @@ class SchemaNotTableOrFieldTest extends SchemaTestBase {
         ],
       ],
       [
-        $this->testTable2,
+        static::TEST_TABLE2,
         [
-          $this->testTable2['name'] => [$this->testTable1],
-          $this->testTable1['name'] => [$this->testTable3],
-          $this->testTable3['name'] => [$this->testTable4, $this->testTable5, $this->testTable6],
+          static::TEST_TABLE2['name'] => [static::TEST_TABLE1],
+          static::TEST_TABLE1['name'] => [static::TEST_TABLE3],
+          static::TEST_TABLE3['name'] => [static::TEST_TABLE4, static::TEST_TABLE5, static::TEST_TABLE6],
         ],
         [
           'test_table2' => '',

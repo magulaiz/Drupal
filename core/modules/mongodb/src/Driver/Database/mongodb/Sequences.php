@@ -92,7 +92,7 @@ class Sequences {
    * @return int
    *   The current incremented value for the given table.
    */
-  public function currentId($table) {
+  public function currentId($table): int {
     // Update the sequence.
     $result = $this->connection->getConnection()->{$this->getPrefixedSequencesTableName()}->findOne(
       ['_id' => $table],
@@ -114,6 +114,8 @@ class Sequences {
         return 1;
       }
     }
+
+    return 1;
   }
 
   /**
@@ -176,7 +178,7 @@ class Sequences {
    * @return int
    *   The next incremented revision id value for the given table.
    */
-  public function nextRevisionId($table) {
+  public function nextRevisionId($table): int {
     // Update the sequence.
     $result = $this->connection->getConnection()->{$this->getPrefixedSequencesTableName()}->findOneAndUpdate(
       ['_id' => $table],
@@ -199,6 +201,8 @@ class Sequences {
         return 1;
       }
     }
+
+    return 1;
   }
 
   /**
@@ -211,7 +215,7 @@ class Sequences {
    * @return int
    *   The current incremented revision id value for the given table.
    */
-  public function currentRevisionId($table) {
+  public function currentRevisionId($table): int {
     // Update the sequence.
     $result = $this->connection->getConnection()->{$this->getPrefixedSequencesTableName()}->findOne(
       ['_id' => $table],
@@ -233,6 +237,8 @@ class Sequences {
         return 1;
       }
     }
+
+    return 1;
   }
 
   /**

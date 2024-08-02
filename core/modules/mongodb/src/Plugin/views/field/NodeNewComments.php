@@ -90,7 +90,7 @@ class NodeNewComments extends CoreNodeNewComments {
 
         // Only add the comment to the count when it is a "new" comment.
         if ($is_new) {
-          if (isset($comments_count[$row->nid])) {
+          if (isset($comment_count[$row->nid])) {
             $comment_count[$row->nid]++;
           }
           else {

@@ -120,7 +120,7 @@ class NodeGrantDatabaseStorage extends CoreNodeGrantDatabaseStorage {
     // Find all instances of the base table being joined -- could appear
     // more than once in the query, and could be aliased. Join each one to
     // the node_access table.
-    $grants = node_access_grants($op, $account);
+    $grants = node_access_grants($operation, $account);
     // If any grant exists for the specified user, then user has access to the
     // node for the specified operation.
     $grant_conditions = $this->buildGrantsQueryCondition($grants);

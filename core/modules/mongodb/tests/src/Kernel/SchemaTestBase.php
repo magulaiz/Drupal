@@ -22,7 +22,7 @@ class SchemaTestBase extends KernelTestBase {
    *
    * @var array
    */
-  protected $testTable1 = [
+  CONST TEST_TABLE1 = [
     'name' => 'test_table1',
     'schema' => [
       'description' => 'Schema table description may contain "quotes" and could be long—very long indeed.',
@@ -81,7 +81,7 @@ class SchemaTestBase extends KernelTestBase {
    *
    * @var array
    */
-  protected $testTable2 = [
+  CONST TEST_TABLE2 = [
     'name' => 'test_table2',
     'schema' => [
       'description' => 'Schema table for testing integer with null, not null and default values.',
@@ -200,7 +200,7 @@ class SchemaTestBase extends KernelTestBase {
    *
    * @var array
    */
-  protected $testTable3 = [
+  CONST TEST_TABLE3 = [
     'name' => 'test_table3',
     'schema' => [
       'description' => 'Schema table for testing varchar with null, not null and default values.',
@@ -277,7 +277,7 @@ class SchemaTestBase extends KernelTestBase {
    *
    * @var array
    */
-  protected $testTable4 = [
+  CONST TEST_TABLE4 = [
     'name' => 'test_table4',
     'schema' => [
       'description' => 'Schema table with primary and unique key.',
@@ -314,7 +314,7 @@ class SchemaTestBase extends KernelTestBase {
    *
    * @var array
    */
-  protected $testTable5 = [
+  CONST TEST_TABLE5 = [
     'name' => 'test_table5',
     'schema' => [
       'description' => 'Schema table with no indexes.',
@@ -349,7 +349,7 @@ class SchemaTestBase extends KernelTestBase {
    *
    * @var array
    */
-  protected $testTable6 = [
+  CONST TEST_TABLE6 = [
     'name' => 'test_table6',
     'schema' => [
       'description' => 'Schema table with primary and index.',

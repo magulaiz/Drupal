@@ -2,6 +2,7 @@
 
 namespace Drupal\mongodb\modules\views;
 
+use Drupal\views\Entity\Render\ConfigurableLanguageRenderer;
 use Drupal\views\Entity\Render\EntityFieldRenderer as CoreEntityFieldRenderer;
 use Drupal\views\Plugin\views\PluginBase;
 
@@ -37,16 +38,21 @@ class EntityFieldRenderer extends CoreEntityFieldRenderer {
         $renderer = 'ConfigurableLanguageRenderer';
       }
 
+      // Get the entity type.
+      $entity_type = $this->getEntityTypeManager()->getDefinition($this->getEntityTypeId());
+
       // Get the MongoDB version of the class
       // \Drupal\views\Entity\Render\TranslationLanguageRenderer.
       if ($renderer == 'TranslationLanguageRenderer') {
-        $class = '\Drupal\mongodb\modules\views\TranslationLanguageRenderer';
+        $this->entityTranslationRenderer = new TranslationLanguageRenderer($view, $this->getLanguageManager(), $entity_type);
+      }
+      elseif ($renderer == 'ConfigurableLanguageRenderer') {
+        $this->entityTranslationRenderer = new ConfigurableLanguageRenderer($view, $this->getLanguageManager(), $entity_type, $langcode);
       }
       else {
         $class = '\Drupal\views\Entity\Render\\' . $renderer;
+        $this->entityTranslationRenderer = new $class($view, $this->getLanguageManager(), $entity_type);
       }
-      $entity_type = $this->getEntityTypeManager()->getDefinition($this->getEntityTypeId());
-      $this->entityTranslationRenderer = new $class($view, $this->getLanguageManager(), $entity_type, $langcode);
     }
     return $this->entityTranslationRenderer;
   }

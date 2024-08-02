@@ -25,7 +25,7 @@ class InsertTest extends DatabaseTestBase {
    *     - the parameters for the table insert.
    *     - the expected result
    */
-  public function providerInsert() {
+  public static function providerInsert() {
     return [
       [
         'test',

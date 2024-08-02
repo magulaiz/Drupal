@@ -5,6 +5,7 @@ namespace Drupal\Core\Entity\Sql;
 use Drupal\Core\Entity\ContentEntityTypeInterface;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
+use Drupal\views\ViewsConfigUpdater;
 
 // cspell:ignore sharded unsharded
 

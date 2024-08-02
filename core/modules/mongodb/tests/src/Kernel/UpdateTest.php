@@ -87,7 +87,7 @@ class UpdateTest extends DatabaseTestBase {
    *     - the parameters for the table update.
    *     - the expected result
    */
-  public function providerUpdate() {
+  public static function providerUpdate() {
     return [
       [
         ['name' => 'Zazu', 'age' => 20, 'job' => 'Makes noise'],
@@ -344,7 +344,7 @@ class UpdateTest extends DatabaseTestBase {
    *     - the parameters for the table update.
    *     - the expected result
    */
-  public function providerDeleteCondition() {
+  public static function providerDeleteCondition() {
     return [
       ['age', 27, '=', ['John', 'Ringo', 'Paul']],
       ['age', 27, '>', ['John', 'George', 'Paul']],

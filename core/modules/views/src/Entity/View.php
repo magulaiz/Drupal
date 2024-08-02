@@ -541,7 +541,7 @@ class View extends ConfigEntityBase implements ViewEntityInterface {
    * {@inheritdoc}
    */
   public function get($key) {
-    if (isset($key) && ($key == 'base_table') && isset($this->mongodb_base_table)) {
+    if (($key == 'base_table') && isset($this->mongodb_base_table)) {
       return $this->mongodb_base_table;
     }
     return parent::get($key);

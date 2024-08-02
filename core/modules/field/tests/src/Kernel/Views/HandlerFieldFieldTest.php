@@ -68,7 +68,7 @@ class HandlerFieldFieldTest extends KernelTestBase {
    * {@inheritdoc}
    */
   protected function setUp($import_test_views = TRUE): void {
-    parent::setUp(FALSE);
+    parent::setUp();
 
     $this->installConfig(['filter']);
     $this->installEntitySchema('user');

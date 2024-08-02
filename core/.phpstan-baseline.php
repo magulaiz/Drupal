@@ -188,6 +188,12 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/lib/Drupal/Core/Block/BlockManager.php',
 ];
 $ignoreErrors[] = [
+	// identifier: variable.undefined
+	'message' => '#^Variable \\$session_started might not be defined\\.$#',
+	'count' => 2,
+	'path' => __DIR__ . '/lib/Drupal/Core/Cache/DatabaseBackend.php',
+];
+$ignoreErrors[] = [
 	// identifier: constructor.unusedParameter
 	'message' => '#^Constructor of class Drupal\\\\Core\\\\Cache\\\\NullBackend has an unused parameter \\$bin\\.$#',
 	'count' => 1,
@@ -375,21 +381,93 @@ $ignoreErrors[] = [
 ];
 $ignoreErrors[] = [
 	// identifier: variable.undefined
+	'message' => '#^Variable \\$current_revision_id might not be defined\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/lib/Drupal/Core/Entity/Sql/SqlContentEntityStorage.php',
+];
+$ignoreErrors[] = [
+	// identifier: variable.undefined
 	'message' => '#^Variable \\$revision_query might not be defined\\.$#',
 	'count' => 2,
 	'path' => __DIR__ . '/lib/Drupal/Core/Entity/Sql/SqlContentEntityStorage.php',
 ];
 $ignoreErrors[] = [
-	// identifier: isset.variable
-	'message' => '#^Variable \\$transaction in isset\\(\\) always exists and is not nullable\\.$#',
+	// identifier: variable.undefined
+	'message' => '#^Variable \\$session_started might not be defined\\.$#',
+	'count' => 6,
+	'path' => __DIR__ . '/lib/Drupal/Core/Entity/Sql/SqlContentEntityStorage.php',
+];
+$ignoreErrors[] = [
+	// identifier: variable.undefined
+	'message' => '#^Variable \\$table_mapping might not be defined\\.$#',
 	'count' => 2,
 	'path' => __DIR__ . '/lib/Drupal/Core/Entity/Sql/SqlContentEntityStorage.php',
+];
+$ignoreErrors[] = [
+	// identifier: variable.undefined
+	'message' => '#^Undefined variable\\: \\$transaction$#',
+	'count' => 1,
+	'path' => __DIR__ . '/lib/Drupal/Core/Entity/Sql/SqlContentEntityStorageSchema.php',
+];
+$ignoreErrors[] = [
+	// identifier: variable.undefined
+	'message' => '#^Variable \\$dedicated_all_revisions_table might not be defined\\.$#',
+	'count' => 3,
+	'path' => __DIR__ . '/lib/Drupal/Core/Entity/Sql/SqlContentEntityStorageSchema.php',
+];
+$ignoreErrors[] = [
+	// identifier: variable.undefined
+	'message' => '#^Variable \\$dedicated_base_table might not be defined\\.$#',
+	'count' => 3,
+	'path' => __DIR__ . '/lib/Drupal/Core/Entity/Sql/SqlContentEntityStorageSchema.php',
+];
+$ignoreErrors[] = [
+	// identifier: variable.undefined
+	'message' => '#^Variable \\$dedicated_current_revision_table might not be defined\\.$#',
+	'count' => 3,
+	'path' => __DIR__ . '/lib/Drupal/Core/Entity/Sql/SqlContentEntityStorageSchema.php',
+];
+$ignoreErrors[] = [
+	// identifier: variable.undefined
+	'message' => '#^Variable \\$dedicated_latest_revision_table might not be defined\\.$#',
+	'count' => 3,
+	'path' => __DIR__ . '/lib/Drupal/Core/Entity/Sql/SqlContentEntityStorageSchema.php',
+];
+$ignoreErrors[] = [
+	// identifier: variable.undefined
+	'message' => '#^Variable \\$dedicated_translations_table might not be defined\\.$#',
+	'count' => 3,
+	'path' => __DIR__ . '/lib/Drupal/Core/Entity/Sql/SqlContentEntityStorageSchema.php',
 ];
 $ignoreErrors[] = [
 	// identifier: empty.variable
 	'message' => '#^Variable \\$initial_storage_value in empty\\(\\) always exists and is not falsy\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/lib/Drupal/Core/Entity/Sql/SqlContentEntityStorageSchema.php',
+];
+$ignoreErrors[] = [
+	// identifier: variable.undefined
+	'message' => '#^Variable \\$revision_table might not be defined\\.$#',
+	'count' => 3,
+	'path' => __DIR__ . '/lib/Drupal/Core/Entity/Sql/SqlContentEntityStorageSchema.php',
+];
+$ignoreErrors[] = [
+	// identifier: variable.undefined
+	'message' => '#^Variable \\$table might not be defined\\.$#',
+	'count' => 3,
+	'path' => __DIR__ . '/lib/Drupal/Core/Entity/Sql/SqlContentEntityStorageSchema.php',
+];
+$ignoreErrors[] = [
+	// identifier: isset.variable
+	'message' => '#^Variable \\$transaction in isset\\(\\) is never defined\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/lib/Drupal/Core/Entity/Sql/SqlContentEntityStorageSchema.php',
+];
+$ignoreErrors[] = [
+	// identifier: variable.undefined
+	'message' => '#^Variable \\$session_started might not be defined\\.$#',
+	'count' => 2,
+	'path' => __DIR__ . '/lib/Drupal/Core/EventSubscriber/MenuRouterRebuildSubscriber.php',
 ];
 $ignoreErrors[] = [
 	// identifier: variable.undefined
@@ -552,9 +630,9 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/lib/Drupal/Core/Menu/MenuLinkManager.php',
 ];
 $ignoreErrors[] = [
-	// identifier: isset.variable
-	'message' => '#^Variable \\$transaction in isset\\(\\) always exists and is not nullable\\.$#',
-	'count' => 1,
+	// identifier: variable.undefined
+	'message' => '#^Variable \\$session_started might not be defined\\.$#',
+	'count' => 2,
 	'path' => __DIR__ . '/lib/Drupal/Core/Menu/MenuTreeStorage.php',
 ];
 $ignoreErrors[] = [
@@ -599,9 +677,9 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/lib/Drupal/Core/Render/Renderer.php',
 ];
 $ignoreErrors[] = [
-	// identifier: isset.variable
-	'message' => '#^Variable \\$transaction in isset\\(\\) always exists and is not nullable\\.$#',
-	'count' => 1,
+	// identifier: variable.undefined
+	'message' => '#^Variable \\$session_started might not be defined\\.$#',
+	'count' => 2,
 	'path' => __DIR__ . '/lib/Drupal/Core/Routing/MatcherDumper.php',
 ];
 $ignoreErrors[] = [
@@ -729,6 +807,12 @@ $ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\comment\\\\CommentTypeForm\\:\\:save\\(\\) should return int but return statement is missing\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/comment/src/CommentTypeForm.php',
+];
+$ignoreErrors[] = [
+	// identifier: variable.undefined
+	'message' => '#^Variable \\$data_table might not be defined\\.$#',
+	'count' => 2,
+	'path' => __DIR__ . '/modules/comment/src/Plugin/EntityReferenceSelection/CommentSelection.php',
 ];
 $ignoreErrors[] = [
 	// identifier: variable.undefined
@@ -1073,6 +1157,12 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/jsonapi/src/Revisions/VersionNegotiator.php',
 ];
 $ignoreErrors[] = [
+	// identifier: phpunit.callParent
+	'message' => '#^Missing call to parent\\:\\:setUp\\(\\) method\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/jsonapi/tests/src/Functional/MenuLinkContentTest.php',
+];
+$ignoreErrors[] = [
 	// identifier: variable.undefined
 	'message' => '#^Variable \\$created_entity might not be defined\\.$#',
 	'count' => 1,
@@ -1227,6 +1317,12 @@ $ignoreErrors[] = [
 	'message' => '#^Variable \\$uuid might not be defined\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/menu_link_content/src/Plugin/Menu/MenuLinkContent.php',
+];
+$ignoreErrors[] = [
+	// identifier: phpunit.callParent
+	'message' => '#^Missing call to parent\\:\\:setUp\\(\\) method\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/menu_link_content/tests/src/Functional/Rest/MenuLinkContentResourceTestBase.php',
 ];
 $ignoreErrors[] = [
 	// identifier: return.missing
@@ -1433,6 +1529,132 @@ $ignoreErrors[] = [
 	'message' => '#^Call to an undefined method Drupal\\\\Tests\\\\migrate_drupal_ui\\\\Functional\\\\MultilingualReviewPageTestBase\\:\\:installEntitySchema\\(\\)\\.$#',
 	'count' => 8,
 	'path' => __DIR__ . '/modules/migrate_drupal_ui/tests/src/Functional/MultilingualReviewPageTestBase.php',
+];
+$ignoreErrors[] = [
+	// identifier: return.missing
+	'message' => '#^Method Drupal\\\\mongodb\\\\Driver\\\\Database\\\\mongodb\\\\Delete\\:\\:execute\\(\\) should return int but return statement is missing\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/src/Driver/Database/mongodb/Delete.php',
+];
+$ignoreErrors[] = [
+	// identifier: method.notFound
+	'message' => '#^Call to an undefined method Drupal\\\\mongodb\\\\Driver\\\\Database\\\\mongodb\\\\SearchQuery\\:\\:addGroupField\\(\\)\\.$#',
+	'count' => 2,
+	'path' => __DIR__ . '/modules/mongodb/src/Driver/Database/mongodb/SearchQuery.php',
+];
+$ignoreErrors[] = [
+	// identifier: method.notFound
+	'message' => '#^Call to an undefined method Drupal\\\\mongodb\\\\Driver\\\\Database\\\\mongodb\\\\SearchQuery\\:\\:addSumMultiplyExpression\\(\\)\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/src/Driver/Database/mongodb/SearchQuery.php',
+];
+$ignoreErrors[] = [
+	// identifier: method.notFound
+	'message' => '#^Call to an undefined method Drupal\\\\mongodb\\\\Driver\\\\Database\\\\mongodb\\\\SearchQuery\\:\\:havingConditionWithType\\(\\)\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/src/Driver/Database/mongodb/SearchQuery.php',
+];
+$ignoreErrors[] = [
+	// identifier: method.notFound
+	'message' => '#^Call to an undefined method Drupal\\\\mongodb\\\\Driver\\\\Database\\\\mongodb\\\\SearchQuery\\:\\:unwindJoinAndAddFields\\(\\)\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/src/Driver/Database/mongodb/SearchQuery.php',
+];
+$ignoreErrors[] = [
+	// identifier: unset.offset
+	'message' => '#^Cannot unset offset \'session\' on array\\{limit\\: int, skip\\: int\\}\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/src/Driver/Database/mongodb/Select.php',
+];
+$ignoreErrors[] = [
+	// identifier: empty.variable
+	'message' => '#^Variable \\$_ids in empty\\(\\) always exists and is not falsy\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/src/Driver/Database/mongodb/Select.php',
+];
+$ignoreErrors[] = [
+	// identifier: variable.undefined
+	'message' => '#^Variable \\$relationship_specifier might not be defined\\.$#',
+	'count' => 5,
+	'path' => __DIR__ . '/modules/mongodb/src/EntityQuery/Condition.php',
+];
+$ignoreErrors[] = [
+	// identifier: return.missing
+	'message' => '#^Method Drupal\\\\mongodb\\\\EntityQuery\\\\Query\\:\\:getMongodbFieldName\\(\\) should return string but return statement is missing\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/src/EntityQuery/Query.php',
+];
+$ignoreErrors[] = [
+	// identifier: property.notFound
+	'message' => '#^Access to an undefined property Drupal\\\\mongodb\\\\Plugin\\\\views\\\\argument\\\\Formula\\:\\:\\$argFormat\\.$#',
+	'count' => 2,
+	'path' => __DIR__ . '/modules/mongodb/src/Plugin/views/argument/Formula.php',
+];
+$ignoreErrors[] = [
+	// identifier: property.notFound
+	'message' => '#^Access to an undefined property Drupal\\\\mongodb\\\\Plugin\\\\views\\\\argument\\\\Formula\\:\\:\\$mongodbOperator\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/src/Plugin/views/argument/Formula.php',
+];
+$ignoreErrors[] = [
+	// identifier: variable.undefined
+	'message' => '#^Variable \\$inner_count might not be defined\\.$#',
+	'count' => 2,
+	'path' => __DIR__ . '/modules/mongodb/src/Plugin/views/argument/TaxonomyIndexTidDepth.php',
+];
+$ignoreErrors[] = [
+	// identifier: return.missing
+	'message' => '#^Method Drupal\\\\mongodb\\\\Plugin\\\\views\\\\field\\\\Date\\:\\:render\\(\\) should return Drupal\\\\Component\\\\Render\\\\MarkupInterface\\|string but return statement is missing\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/src/Plugin/views/field/Date.php',
+];
+$ignoreErrors[] = [
+	// identifier: variable.undefined
+	'message' => '#^Variable \\$custom_format might not be defined\\.$#',
+	'count' => 9,
+	'path' => __DIR__ . '/modules/mongodb/src/Plugin/views/field/Date.php',
+];
+$ignoreErrors[] = [
+	// identifier: return.missing
+	'message' => '#^Method Drupal\\\\mongodb\\\\Plugin\\\\views\\\\field\\\\HistoryUserTimestamp\\:\\:render\\(\\) should return Drupal\\\\Component\\\\Render\\\\MarkupInterface\\|string but return statement is missing\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/src/Plugin/views/field/HistoryUserTimestamp.php',
+];
+$ignoreErrors[] = [
+	// identifier: variable.undefined
+	'message' => '#^Undefined variable\\: \\$placeholder$#',
+	'count' => 2,
+	'path' => __DIR__ . '/modules/mongodb/src/Plugin/views/filter/Combine.php',
+];
+$ignoreErrors[] = [
+	// identifier: variable.undefined
+	'message' => '#^Variable \\$or_condition might not be defined\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/src/Plugin/views/filter/HistoryUserTimestamp.php',
+];
+$ignoreErrors[] = [
+	// identifier: variable.undefined
+	'message' => '#^Variable \\$inner_count might not be defined\\.$#',
+	'count' => 2,
+	'path' => __DIR__ . '/modules/mongodb/src/Plugin/views/filter/TaxonomyIndexTidDepth.php',
+];
+$ignoreErrors[] = [
+	// identifier: empty.variable
+	'message' => '#^Variable \\$joined_table_alias in empty\\(\\) always exists and is not falsy\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/src/Plugin/views/query/ViewsQuery.php',
+];
+$ignoreErrors[] = [
+	// identifier: return.missing
+	'message' => '#^Method Drupal\\\\mongodb\\\\modules\\\\node\\\\NodeGrantDatabaseStorage\\:\\:alterQuery\\(\\) should return int but return statement is missing\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/src/modules/node/NodeGrantDatabaseStorage.php',
+];
+$ignoreErrors[] = [
+	// identifier: variable.undefined
+	'message' => '#^Variable \\$conditions might not be defined\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/src/modules/node/NodeGrantDatabaseStorage.php',
 ];
 $ignoreErrors[] = [
 	// identifier: variable.undefined
@@ -1786,6 +2008,12 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/taxonomy/src/Plugin/views/argument/IndexTidDepth.php',
 ];
 $ignoreErrors[] = [
+	// identifier: property.notFound
+	'message' => '#^Access to an undefined property Drupal\\\\taxonomy\\\\Plugin\\\\views\\\\filter\\\\TaxonomyIndexTid\\:\\:\\$mongodbField\\.$#',
+	'count' => 5,
+	'path' => __DIR__ . '/modules/taxonomy/src/Plugin/views/filter/TaxonomyIndexTid.php',
+];
+$ignoreErrors[] = [
 	// identifier: variable.undefined
 	'message' => '#^Variable \\$inner_count might not be defined\\.$#',
 	'count' => 1,
@@ -1946,6 +2174,18 @@ $ignoreErrors[] = [
 	'message' => '#^Variable \\$items might not be defined\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/views/src/Plugin/views/argument/Broken.php',
+];
+$ignoreErrors[] = [
+	// identifier: property.notFound
+	'message' => '#^Access to an undefined property Drupal\\\\views\\\\Plugin\\\\views\\\\argument\\\\Formula\\:\\:\\$argFormat\\.$#',
+	'count' => 2,
+	'path' => __DIR__ . '/modules/views/src/Plugin/views/argument/Formula.php',
+];
+$ignoreErrors[] = [
+	// identifier: property.notFound
+	'message' => '#^Access to an undefined property Drupal\\\\views\\\\Plugin\\\\views\\\\argument\\\\Formula\\:\\:\\$mongodbOperator\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/views/src/Plugin/views/argument/Formula.php',
 ];
 $ignoreErrors[] = [
 	// identifier: return.missing
@@ -2152,6 +2392,12 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/views/src/Plugin/views/wizard/WizardPluginBase.php',
 ];
 $ignoreErrors[] = [
+	// identifier: staticMethod.notFound
+	'message' => '#^Call to an undefined static method Drupal\\\\views\\\\Plugin\\\\views\\\\join\\\\JoinPluginBase\\:\\:buildMongodbJoin\\(\\)\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/views/tests/modules/views_test_data/src/Plugin/views/join/JoinTest.php',
+];
+$ignoreErrors[] = [
 	// identifier: isset.variable
 	'message' => '#^Variable \\$view in isset\\(\\) always exists and is not nullable\\.$#',
 	'count' => 2,
@@ -2162,6 +2408,12 @@ $ignoreErrors[] = [
 	'message' => '#^Variable \\$link might not be defined\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/views/tests/src/Functional/TaxonomyGlossaryTest.php',
+];
+$ignoreErrors[] = [
+	// identifier: variable.undefined
+	'message' => '#^Variable \\$revision_table might not be defined\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/views/tests/src/Kernel/FieldApiDataTest.php',
 ];
 $ignoreErrors[] = [
 	// identifier: variable.undefined
@@ -2216,6 +2468,66 @@ $ignoreErrors[] = [
 	'message' => '#^Call to deprecated method getMockForAbstractClass\\(\\) of class PHPUnit\\\\Framework\\\\MockObject\\\\MockBuilder\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/views/tests/src/Unit/Plugin/views/field/EntityOperationsUnitTest.php',
+];
+$ignoreErrors[] = [
+	// identifier: variable.undefined
+	'message' => '#^Variable \\$argument might not be defined\\.$#',
+	'count' => 2,
+	'path' => __DIR__ . '/modules/views/views.views.inc',
+];
+$ignoreErrors[] = [
+	// identifier: variable.undefined
+	'message' => '#^Variable \\$data_table might not be defined\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/views/views.views.inc',
+];
+$ignoreErrors[] = [
+	// identifier: variable.undefined
+	'message' => '#^Variable \\$entity_revision_data_table might not be defined\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/views/views.views.inc',
+];
+$ignoreErrors[] = [
+	// identifier: variable.undefined
+	'message' => '#^Variable \\$entity_revision_table might not be defined\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/views/views.views.inc',
+];
+$ignoreErrors[] = [
+	// identifier: variable.undefined
+	'message' => '#^Variable \\$entity_storage might not be defined\\.$#',
+	'count' => 4,
+	'path' => __DIR__ . '/modules/views/views.views.inc',
+];
+$ignoreErrors[] = [
+	// identifier: variable.undefined
+	'message' => '#^Variable \\$filter might not be defined\\.$#',
+	'count' => 2,
+	'path' => __DIR__ . '/modules/views/views.views.inc',
+];
+$ignoreErrors[] = [
+	// identifier: variable.undefined
+	'message' => '#^Variable \\$sort might not be defined\\.$#',
+	'count' => 2,
+	'path' => __DIR__ . '/modules/views/views.views.inc',
+];
+$ignoreErrors[] = [
+	// identifier: variable.undefined
+	'message' => '#^Variable \\$supports_revisions might not be defined\\.$#',
+	'count' => 3,
+	'path' => __DIR__ . '/modules/views/views.views.inc',
+];
+$ignoreErrors[] = [
+	// identifier: variable.undefined
+	'message' => '#^Variable \\$table might not be defined\\.$#',
+	'count' => 8,
+	'path' => __DIR__ . '/modules/views/views.views.inc',
+];
+$ignoreErrors[] = [
+	// identifier: variable.undefined
+	'message' => '#^Variable \\$table_alias might not be defined\\.$#',
+	'count' => 17,
+	'path' => __DIR__ . '/modules/views/views.views.inc',
 ];
 $ignoreErrors[] = [
 	// identifier: empty.variable
@@ -2326,9 +2638,9 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/workspaces/src/Plugin/Validation/Constraint/EntityWorkspaceConflictConstraintValidator.php',
 ];
 $ignoreErrors[] = [
-	// identifier: isset.variable
-	'message' => '#^Variable \\$transaction in isset\\(\\) always exists and is not nullable\\.$#',
-	'count' => 1,
+	// identifier: variable.undefined
+	'message' => '#^Variable \\$session_started might not be defined\\.$#',
+	'count' => 2,
 	'path' => __DIR__ . '/modules/workspaces/src/WorkspaceAssociation.php',
 ];
 $ignoreErrors[] = [
@@ -2338,15 +2650,21 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/workspaces/src/WorkspaceMerger.php',
 ];
 $ignoreErrors[] = [
-	// identifier: isset.variable
-	'message' => '#^Variable \\$transaction in isset\\(\\) always exists and is not nullable\\.$#',
-	'count' => 1,
+	// identifier: variable.undefined
+	'message' => '#^Variable \\$session_started might not be defined\\.$#',
+	'count' => 2,
 	'path' => __DIR__ . '/modules/workspaces/src/WorkspaceMerger.php',
 ];
 $ignoreErrors[] = [
 	// identifier: return.missing
 	'message' => '#^Method Drupal\\\\workspaces\\\\WorkspacePublisher\\:\\:checkConflictsOnTarget\\(\\) should return array but return statement is missing\\.$#',
 	'count' => 1,
+	'path' => __DIR__ . '/modules/workspaces/src/WorkspacePublisher.php',
+];
+$ignoreErrors[] = [
+	// identifier: variable.undefined
+	'message' => '#^Variable \\$session_started might not be defined\\.$#',
+	'count' => 2,
 	'path' => __DIR__ . '/modules/workspaces/src/WorkspacePublisher.php',
 ];
 $ignoreErrors[] = [
@@ -2393,6 +2711,12 @@ $ignoreErrors[] = [
 	'message' => '#^Variable \\$expected_driver might not be defined\\.$#',
 	'count' => 2,
 	'path' => __DIR__ . '/tests/Drupal/KernelTests/Core/Database/DriverSpecificKernelTestBase.php',
+];
+$ignoreErrors[] = [
+	// identifier: variable.undefined
+	'message' => '#^Variable \\$introspect_index_schema might not be defined\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/tests/Drupal/KernelTests/Core/Database/DriverSpecificSchemaTestBase.php',
 ];
 $ignoreErrors[] = [
 	// identifier: variable.undefined
