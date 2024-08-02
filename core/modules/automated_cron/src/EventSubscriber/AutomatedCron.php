@@ -2,6 +2,7 @@
 
 namespace Drupal\automated_cron\EventSubscriber;
 
+use Drupal\automated_cron\lib\InstantQueue;
 use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\CronInterface;
 use Drupal\Core\State\StateInterface;
@@ -44,8 +45,10 @@ class AutomatedCron implements EventSubscriberInterface {
    *   The config factory.
    * @param \Drupal\Core\State\StateInterface $state
    *   The state key-value store service.
+   * @param \Drupal\automated_cron\lib\InstantQueue $instantQueue
+   *   The InstantQueue object.
    */
-  public function __construct(CronInterface $cron, ConfigFactoryInterface $config_factory, StateInterface $state) {
+  public function __construct(CronInterface $cron, ConfigFactoryInterface $config_factory, StateInterface $state, protected InstantQueue $instantQueue) {
     $this->cron = $cron;
     $this->config = $config_factory->get('automated_cron.settings');
     $this->state = $state;
@@ -66,11 +69,11 @@ class AutomatedCron implements EventSubscriberInterface {
       }
     }
 
-    $queues_to_process = &drupal_static('__automated_cron_instant_queue__', []);
+    $queues_to_process = $this->instantQueue->getQueueNames();
     if (!empty($queues_to_process)) {
       $max_items_process = $this->config->get('max_items_to_process');
       if ($max_items_process > 0) {
-        $this->cron->instantProcessQueues($queues_to_process, $max_items_process);
+        $this->instantQueue->instantProcessQueues($queues_to_process, $max_items_process);
       }
     }
   }

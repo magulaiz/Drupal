@@ -8,21 +8,18 @@ use Drupal\Component\Datetime\TimeInterface;
 use Drupal\Component\Utility\Environment;
 use Drupal\Component\Utility\Random;
 use Drupal\Core\Config\ConfigFactoryInterface;
-use Drupal\Core\Cron as BaseCron;
-use Drupal\Core\Extension\ModuleHandlerInterface;
-use Drupal\Core\Lock\LockBackendInterface;
 use Drupal\Core\Queue\QueueFactory;
 use Drupal\Core\Queue\QueueWorkerManagerInterface;
-use Drupal\Core\Session\AccountSwitcherInterface;
-use Drupal\Core\State\StateInterface;
 use Psr\Log\LoggerInterface;
 use Drupal\Core\Database\Connection;
+use Drupal\Core\Queue\QueueProcessTrait;
 use Drupal\Core\Utility\Error;
 
 /**
- * {@inheritdoc}
+ * Instant queue implementation.
  */
-class Cron extends BaseCron {
+class InstantQueue {
+  use QueueProcessTrait;
 
   /**
    * The cron configuration.
@@ -39,18 +36,17 @@ class Cron extends BaseCron {
   protected $connection;
 
   /**
+   * Array of queues names.
+   *
+   * @var array
+   */
+  protected array $queueNames = [];
+
+  /**
    * Constructs a cron object.
    *
-   * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
-   *   The module handler.
-   * @param \Drupal\Core\Lock\LockBackendInterface $lock
-   *   The lock service.
    * @param \Drupal\Core\Queue\QueueFactory $queue_factory
    *   The queue service.
-   * @param \Drupal\Core\State\StateInterface $state
-   *   The state service.
-   * @param \Drupal\Core\Session\AccountSwitcherInterface $account_switcher
-   *   The account switching service.
    * @param \Psr\Log\LoggerInterface $logger
    *   A logger instance.
    * @param \Drupal\Core\Queue\QueueWorkerManagerInterface $queue_manager
@@ -64,10 +60,35 @@ class Cron extends BaseCron {
    * @param mixed[]|null $queue_config
    *   Queue configuration from the service container.
    */
-  public function __construct(ModuleHandlerInterface $module_handler, LockBackendInterface $lock, QueueFactory $queue_factory, StateInterface $state, AccountSwitcherInterface $account_switcher, LoggerInterface $logger, QueueWorkerManagerInterface $queue_manager, ConfigFactoryInterface $config_factory, Connection $connection, TimeInterface $time, array $queue_config) {
-    parent::__construct($module_handler, $lock, $queue_factory, $state, $account_switcher, $logger, $queue_manager, $time, $queue_config);
+  public function __construct(QueueFactory $queue_factory, LoggerInterface $logger, QueueWorkerManagerInterface $queue_manager, ConfigFactoryInterface $config_factory, Connection $connection, TimeInterface $time, array $queue_config) {
+    $this->queueFactory = $queue_factory;
+    $this->logger = $logger;
+    $this->queueManager = $queue_manager;
+    $this->time = $time;
+    $this->queueConfig = $queue_config;
     $this->config = $config_factory->get('automated_cron.settings');
     $this->connection = $connection;
+  }
+
+  /**
+   * Adds the queue name to the instantQueue for processing.
+   *
+   * @param string $name
+   *   Name of the queue.
+   *
+   * @return void
+   */
+  public function addToInstantQueue(string $name): void {
+    $this->queueNames[$name] = ($this->queueNames[$name] ?? 0) + 1;
+  }
+
+  /**
+   * Retuns the queue names.
+   *
+   * @return array
+   */
+  public function getQueueNames(): array {
+    return $this->queueNames;
   }
 
   /**

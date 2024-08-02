@@ -20,9 +20,8 @@ class DatabaseQueue extends BaseDatabaseQueue {
     // queue processing. This cache will be read in
     // Drupal\automated_cron\EventSubscriber\AutomatedCron::onTerminate
     // and trigger the queue processing.
-    $cache = &drupal_static('__automated_cron_instant_queue__', []);
     $id = parent::createItem($data);
-    $cache[$this->name] = ($cache[$this->name] ?? 0) + 1;
+    \Drupal::service('automated_cron.instantqueue')->addToInstantQueue($this->name);
     return $id;
   }
 
