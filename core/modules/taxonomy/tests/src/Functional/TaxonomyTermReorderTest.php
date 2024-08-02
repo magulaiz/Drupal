@@ -1,6 +1,10 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\taxonomy\Functional;
+
+use Drupal\taxonomy\VocabularyInterface;
 
 /**
  * Ensures that the term pager works properly.
@@ -14,7 +18,7 @@ class TaxonomyTermReorderTest extends TaxonomyTestBase {
    *
    * @var \Drupal\taxonomy\VocabularyInterface
    */
-  protected $vocabulary;
+  protected VocabularyInterface $vocabulary;
 
   /**
    * {@inheritdoc}
@@ -26,6 +30,7 @@ class TaxonomyTermReorderTest extends TaxonomyTestBase {
    */
   protected function setUp(): void {
     parent::setUp();
+
     $this->drupalLogin($this->drupalCreateUser(['administer taxonomy', 'bypass node access']));
     $this->vocabulary = $this->createVocabulary();
   }
@@ -44,7 +49,7 @@ class TaxonomyTermReorderTest extends TaxonomyTestBase {
 
     // Fetch the created terms in the default alphabetical order, i.e. term1,
     // term2, term3 & term4.
-    list($term1, $term2, $term3, $term4) = $taxonomy_storage->loadTree($this->vocabulary->id(), 0, NULL, TRUE);
+    [$term1, $term2, $term3, $term4] = $taxonomy_storage->loadTree($this->vocabulary->id(), 0, NULL, TRUE);
 
     $this->drupalGet('admin/structure/taxonomy/manage/' . $this->vocabulary->id() . '/overview');
 
@@ -73,10 +78,12 @@ class TaxonomyTermReorderTest extends TaxonomyTestBase {
       'terms[tid:' . $term1->id() . ':0][term][depth]' => 0,
       'terms[tid:' . $term1->id() . ':0][weight]' => 2,
     ];
+
     foreach ($fields as $field => $value) {
       $page->find('css', '[name="' . $field . '"]')->setValue($value);
     }
-    $page->pressButton(t('Save'));
+
+    $page->pressButton((string) t('Save'));
 
     // Asserts the order & hierarchy has been saved & show new order in the UI.
     $assert->fieldValueEquals('terms[tid:4:0][weight]', '1');

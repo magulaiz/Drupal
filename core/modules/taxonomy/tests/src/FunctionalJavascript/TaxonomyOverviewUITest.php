@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\taxonomy\FunctionalJavascript;
 
 use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
@@ -99,7 +101,7 @@ class TaxonomyOverviewUITest extends WebDriverTestBase {
     $this->assertSession()->addressEquals('admin/structure/taxonomy/manage/' . $this->vocabulary->id() . '/overview');
     // Should be alphabetical: Alpha 2, Bravo 1, Charlie 4, Delta 3.
     $this->assertOrderOnForm('Alpha 2', 'Bravo 1', 'Charlie 4', 'Delta 3');
-    $this->assertWeightOnForm(0, 0, 0, 0);
+    $this->assertWeightOnForm('0', '0', '0', '0');
     $this->assertOrderInTree('Alpha 2', 'Bravo 1', 'Charlie 4', 'Delta 3');
 
     // Save and confirm order does not change on form or storage.
@@ -108,7 +110,7 @@ class TaxonomyOverviewUITest extends WebDriverTestBase {
     // Weights should get updated to match form.
     $page->pressButton('Save');
     $this->assertOrderOnForm('Alpha 2', 'Bravo 1', 'Charlie 4', 'Delta 3');
-    $this->assertWeightOnForm(0, 1, 2, 3);
+    $this->assertWeightOnForm('0', '1', '2', '3');
     $this->assertOrderInTree('Alpha 2', 'Bravo 1', 'Charlie 4', 'Delta 3');
 
     // Confirm that dragging works after alphabetization.
@@ -147,7 +149,7 @@ class TaxonomyOverviewUITest extends WebDriverTestBase {
     $this->assertOrderOnForm('Alpha 2', 'Bravo 1', 'Charlie 4', 'Delta 3');
     $this->assertIndentationOnForm(0, 1, 0, 0);
     $this->assertOrderInTree('Alpha 2', 'Bravo 1', 'Charlie 4', 'Delta 3');
-    $this->assertParentsInTree(0, 2, 0, 0);
+    $this->assertParentsInTree('0', '2', '0', '0');
     // We should have a nesting message.
     $this->assertSession()->pageTextContains('contains terms grouped under parent terms');
 
@@ -161,7 +163,7 @@ class TaxonomyOverviewUITest extends WebDriverTestBase {
     $this->assertOrderOnForm('Charlie 4', 'Delta 3', 'Alpha 2', 'Bravo 1');
     $this->assertIndentationOnForm(0, 0, 0, 1);
     $this->assertOrderInTree('Charlie 4', 'Delta 3', 'Alpha 2', 'Bravo 1');
-    $this->assertParentsInTree(0, 0, 0, 2);
+    $this->assertParentsInTree('0', '0', '0', '2');
 
     // Nest Delta 3 under Alpha 2 but before Bravo 1.
     $delta_handle = $page->find('css', '#taxonomy tbody tr:nth-child(2) .tabledrag-handle');
@@ -173,7 +175,7 @@ class TaxonomyOverviewUITest extends WebDriverTestBase {
     $this->assertOrderOnForm('Charlie 4', 'Alpha 2', 'Delta 3', 'Bravo 1');
     $this->assertIndentationOnForm(0, 0, 1, 1);
     $this->assertOrderInTree('Charlie 4', 'Alpha 2', 'Delta 3', 'Bravo 1');
-    $this->assertParentsInTree(0, 0, 2, 2);
+    $this->assertParentsInTree('0', '0', '2', '2');
 
     // Reset to alphabetical order.
     $this->submitForm([], 'Reset to alphabetical');
@@ -185,9 +187,9 @@ class TaxonomyOverviewUITest extends WebDriverTestBase {
     // Alpha 2, Bravo 1, Delta 3, Charlie 4.
     $this->assertOrderOnForm('Alpha 2', 'Bravo 1', 'Delta 3', 'Charlie 4');
     $this->assertIndentationOnForm(0, 1, 1, 0);
-    $this->assertWeightOnForm(0, 0, 0, 0);
+    $this->assertWeightOnForm('0', '0', '0', '0');
     $this->assertOrderInTree('Alpha 2', 'Bravo 1', 'Delta 3', 'Charlie 4');
-    $this->assertParentsInTree(0, 2, 2, 0);
+    $this->assertParentsInTree('0', '2', '2', '0');
 
     // Save and confirm order does not change on form or storage.
     // Nothing has been dragged so it should still be (nested) alphabetical.
@@ -195,7 +197,7 @@ class TaxonomyOverviewUITest extends WebDriverTestBase {
     // Alpha 2, Bravo 1, Delta 3, Charlie 4.
     $page->pressButton('Save');
     $this->assertOrderOnForm('Alpha 2', 'Bravo 1', 'Delta 3', 'Charlie 4');
-    $this->assertWeightOnForm(0, 0, 1, 3);
+    $this->assertWeightOnForm('0', '0', '1', '3');
   }
 
   /**
