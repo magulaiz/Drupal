@@ -2,6 +2,7 @@
 
 namespace Drupal\mongodb\modules\workspaces\EntityQuery;
 
+use Drupal\mongodb\Driver\Database\mongodb\MongodbSQLException;
 use Drupal\mongodb\EntityQuery\Query as BaseQuery;
 
 /**

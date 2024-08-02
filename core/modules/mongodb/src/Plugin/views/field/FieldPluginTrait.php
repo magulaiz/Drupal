@@ -38,7 +38,7 @@ trait FieldPluginTrait {
 
           if (empty($table_alias)) {
             trigger_error(sprintf(
-              "Handler % tried to add additional_field %s but % could not be added!",
+              "Handler %s tried to add additional_field %s but %s could not be added!",
               $this->definition['id'],
               $identifier,
               $info['table']
