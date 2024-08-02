@@ -77,7 +77,7 @@ class ConnectionUnitTest extends DriverSpecificConnectionUnitTestBase {
   /**
    * Tests pdo options override.
    */
-  public function testConnectionOpen() {
+  public function testConnectionOpen(): void {
     $this->markTestSkipped('The MongoDB database driver does not support PDO.');
   }
 

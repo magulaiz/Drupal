@@ -16,7 +16,7 @@ class TemporaryQueryTest extends TemporaryQueryTestBase {
   /**
    * Confirms that temporary tables work.
    */
-  public function testTemporaryQuery() {
+  public function testTemporaryQuery(): void {
     $this->markTestSkipped('The MongoDB database driver does not support temporary tables.');
   }
 

@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\datetime\Plugin\views\argument;
+namespace Drupal\mongodb\Plugin\views\argument;
 
 /**
  * Overriding the views argument plugin "datetime".
