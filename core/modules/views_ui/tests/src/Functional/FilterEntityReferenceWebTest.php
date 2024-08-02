@@ -1,1 +1,138 @@
-<?php&#10&#10declare(strict_types=1);&#10&#10namespace Drupal\Tests\views_ui\Functional;&#10&#10use Drupal\Component\Render\FormattableMarkup;&#10use Drupal\Core\Entity\EntityInterface;&#10use Drupal\Tests\views_ui\Traits\FilterEntityReferenceTrait;&#10&#10/**&#10 * Tests the entity reference filter UI.&#10 *&#10 * @group views_ui&#10 * @see \Drupal\views\Plugin\views\filter\EntityReference&#10 */&#10class FilterEntityReferenceWebTest extends UITestBase {&#10&#10  use FilterEntityReferenceTrait;&#10&#10  /**&#10   * {@inheritdoc}&#10   */&#10  protected $defaultTheme = 'stark';&#10&#10  /**&#10   * {@inheritdoc}&#10   */&#10  public static $testViews = ['test_filter_entity_reference'];&#10&#10  /**&#10   * {@inheritdoc}&#10   */&#10  protected static $modules = [&#10    'node',&#10    'views_ui',&#10    'block',&#10    'taxonomy',&#10    'views_test_entity_reference',&#10  ];&#10&#10  /**&#10   * {@inheritdoc}&#10   */&#10  protected function setUp($import_test_views = TRUE, $modules = []): void {&#10    parent::setUp($import_test_views);&#10    $this->setUpEntityTypes();&#10  }&#10&#10  /**&#10   * Tests the filter UI.&#10   */&#10  public function testFilterUi(): void {&#10    $this->drupalGet('admin/structure/views/nojs/handler/test_filter_entity_reference/default/filter/field_test_target_id');&#10&#10    $options = $this->getUiOptions();&#10    // Should be sorted by title ASC.&#10    uasort($this->targetEntities, function (EntityInterface $a, EntityInterface $b) {&#10      return strnatcasecmp($a->getTitle(), $b->getTitle());&#10    });&#10    $i = 0;&#10    foreach ($this->targetEntities as $id => $entity) {&#10      $message = (string) new FormattableMarkup('Expected target entity label found for option :option', [':option' => $i]);&#10      $this->assertEquals($options[$i]['label'], $entity->label(), $message);&#10      $i++;&#10    }&#10&#10    // Change the sort field and direction.&#10    $this->drupalGet('admin/structure/views/nojs/handler-extra/test_filter_entity_reference/default/filter/field_test_target_id');&#10    $edit = [&#10      'options[reference_default:node][sort][field]' => 'nid',&#10      'options[reference_default:node][sort][direction]' => 'DESC',&#10    ];&#10    $this->submitForm($edit, 'Apply');&#10&#10    $this->drupalGet('admin/structure/views/nojs/handler/test_filter_entity_reference/default/filter/field_test_target_id');&#10    // Items should now be in reverse id order.&#10    krsort($this->targetEntities);&#10    $options = $this->getUiOptions();&#10    $i = 0;&#10    foreach ($this->targetEntities as $entity) {&#10      $message = (string) new FormattableMarkup('Expected target entity label found for option :option', [':option' => $i]);&#10      $this->assertEquals($options[$i]['label'], $entity->label(), $message);&#10      $i++;&#10    }&#10&#10    // Change bundle types.&#10    $this->drupalGet('admin/structure/views/nojs/handler-extra/test_filter_entity_reference/default/filter/field_test_target_id');&#10    $edit = [&#10      "options[reference_default:node][target_bundles][{$this->hostBundle->id()}]" => TRUE,&#10      "options[reference_default:node][target_bundles][{$this->targetBundle->id()}]" => TRUE,&#10    ];&#10    $this->submitForm($edit, 'Apply');&#10&#10    $this->drupalGet('admin/structure/views/nojs/handler/test_filter_entity_reference/default/filter/field_test_target_id');&#10    $options = $this->getUiOptions();&#10    $i = 0;&#10    foreach ($this->hostEntities + $this->targetEntities as $entity) {&#10      $message = (string) new FormattableMarkup('Expected target entity label found for option :option', [':option' => $i]);&#10      $this->assertEquals($options[$i]['label'], $entity->label(), $message);&#10      $i++;&#10    }&#10  }&#10&#10  /**&#10   * Tests the filter UI for config reference.&#10   */&#10  public function testFilterConfigUi(): void {&#10    $this->drupalGet('admin/structure/views/nojs/handler/test_filter_entity_reference/default/filter/field_test_config_target_id');&#10&#10    $options = $this->getUiOptions();&#10    // We should expect the content types defined as options.&#10    $this->assertEquals(['article', 'page'], array_column($options, 'label'));&#10  }&#10&#10  /**&#10   * Helper method to parse options from the UI.&#10   *&#10   * @return array&#10   *   Array of keyed arrays containing the id and label of each option.&#10   */&#10  protected function getUiOptions(): array {&#10    /** @var \Behat\Mink\Element\TraversableElement[] $result */&#10    $result = $this->xpath('//select[@name="options[value][]"]/option');&#10    $this->assertNotEmpty($result, 'Options found');&#10&#10    $options = [];&#10    foreach ($result as $option) {&#10      $options[] = [&#10        'id' => (int) $option->getValue(),&#10        'label' => $option->getText(),&#10      ];&#10    }&#10&#10    return $options;&#10  }&#10&#10}&#10
+<?php
+
+declare(strict_types=1);
+
+namespace Drupal\Tests\views_ui\Functional;
+
+use Drupal\Component\Render\FormattableMarkup;
+use Drupal\Core\Entity\EntityInterface;
+use Drupal\Tests\views_ui\Traits\FilterEntityReferenceTrait;
+
+/**
+ * Tests the entity reference filter UI.
+ *
+ * @group views_ui
+ * @see \Drupal\views\Plugin\views\filter\EntityReference
+ */
+class FilterEntityReferenceWebTest extends UITestBase {
+
+  use FilterEntityReferenceTrait;
+
+  /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stark';
+
+  /**
+   * {@inheritdoc}
+   */
+  public static $testViews = ['test_filter_entity_reference'];
+
+  /**
+   * {@inheritdoc}
+   */
+  protected static $modules = [
+    'node',
+    'views_ui',
+    'block',
+    'taxonomy',
+    'views_test_entity_reference',
+  ];
+
+  /**
+   * {@inheritdoc}
+   */
+  protected function setUp($import_test_views = TRUE, $modules = []): void {
+    parent::setUp($import_test_views);
+    $this->setUpEntityTypes();
+  }
+
+  /**
+   * Tests the filter UI.
+   */
+  public function testFilterUi(): void {
+    $this->drupalGet('admin/structure/views/nojs/handler/test_filter_entity_reference/default/filter/field_test_target_id');
+
+    $options = $this->getUiOptions();
+    // Should be sorted by title ASC.
+    uasort($this->targetEntities, function (EntityInterface $a, EntityInterface $b) {
+      return strnatcasecmp($a->getTitle(), $b->getTitle());
+    });
+    $i = 0;
+    foreach ($this->targetEntities as $id => $entity) {
+      $message = (string) new FormattableMarkup('Expected target entity label found for option :option', [':option' => $i]);
+      $this->assertEquals($options[$i]['label'], $entity->label(), $message);
+      $i++;
+    }
+
+    // Change the sort field and direction.
+    $this->drupalGet('admin/structure/views/nojs/handler-extra/test_filter_entity_reference/default/filter/field_test_target_id');
+    $edit = [
+      'options[reference_default:node][sort][field]' => 'nid',
+      'options[reference_default:node][sort][direction]' => 'DESC',
+    ];
+    $this->submitForm($edit, 'Apply');
+
+    $this->drupalGet('admin/structure/views/nojs/handler/test_filter_entity_reference/default/filter/field_test_target_id');
+    // Items should now be in reverse id order.
+    krsort($this->targetEntities);
+    $options = $this->getUiOptions();
+    $i = 0;
+    foreach ($this->targetEntities as $entity) {
+      $message = (string) new FormattableMarkup('Expected target entity label found for option :option', [':option' => $i]);
+      $this->assertEquals($options[$i]['label'], $entity->label(), $message);
+      $i++;
+    }
+
+    // Change bundle types.
+    $this->drupalGet('admin/structure/views/nojs/handler-extra/test_filter_entity_reference/default/filter/field_test_target_id');
+    $edit = [
+      "options[reference_default:node][target_bundles][{$this->hostBundle->id()}]" => TRUE,
+      "options[reference_default:node][target_bundles][{$this->targetBundle->id()}]" => TRUE,
+    ];
+    $this->submitForm($edit, 'Apply');
+
+    $this->drupalGet('admin/structure/views/nojs/handler/test_filter_entity_reference/default/filter/field_test_target_id');
+    $options = $this->getUiOptions();
+    $i = 0;
+    foreach ($this->hostEntities + $this->targetEntities as $entity) {
+      $message = (string) new FormattableMarkup('Expected target entity label found for option :option', [':option' => $i]);
+      $this->assertEquals($options[$i]['label'], $entity->label(), $message);
+      $i++;
+    }
+  }
+
+  /**
+   * Tests the filter UI for config reference.
+   */
+  public function testFilterConfigUi(): void {
+    $this->drupalGet('admin/structure/views/nojs/handler/test_filter_entity_reference/default/filter/field_test_config_target_id');
+
+    $options = $this->getUiOptions();
+    // We should expect the content types defined as options.
+    $this->assertEquals(['article', 'page'], array_column($options, 'label'));
+  }
+
+  /**
+   * Helper method to parse options from the UI.
+   *
+   * @return array
+   *   Array of keyed arrays containing the id and label of each option.
+   */
+  protected function getUiOptions(): array {
+    /** @var \Behat\Mink\Element\TraversableElement[] $result */
+    $result = $this->xpath('//select[@name="options[value][]"]/option');
+    $this->assertNotEmpty($result, 'Options found');
+
+    $options = [];
+    foreach ($result as $option) {
+      $options[] = [
+        'id' => (int) $option->getValue(),
+        'label' => $option->getText(),
+      ];
+    }
+
+    return $options;
+  }
+
+}

@@ -1,1 +1,269 @@
-langcode: en&#10status: true&#10dependencies:&#10  module:&#10    - node&#10    - user&#10id: test_entity_reference&#10label: 'Test Entity Reference'&#10module: views&#10description: ''&#10tag: ''&#10base_table: node_field_data&#10base_field: nid&#10display:&#10  default:&#10    id: default&#10    display_title: Default&#10    display_plugin: default&#10    position: 0&#10    display_options:&#10      fields:&#10        title:&#10          id: title&#10          table: node_field_data&#10          field: title&#10          relationship: none&#10          group_type: group&#10          admin_label: ''&#10          entity_type: node&#10          entity_field: title&#10          plugin_id: field&#10          label: ''&#10          exclude: false&#10          alter:&#10            alter_text: false&#10            text: ''&#10            make_link: false&#10            path: ''&#10            absolute: false&#10            external: false&#10            replace_spaces: false&#10            path_case: none&#10            trim_whitespace: false&#10            alt: ''&#10            rel: ''&#10            link_class: ''&#10            prefix: ''&#10            suffix: ''&#10            target: ''&#10            nl2br: false&#10            max_length: 0&#10            word_boundary: false&#10            ellipsis: false&#10            more_link: false&#10            more_link_text: ''&#10            more_link_path: ''&#10            strip_tags: false&#10            trim: false&#10            preserve_tags: ''&#10            html: false&#10          element_type: ''&#10          element_class: ''&#10          element_label_type: ''&#10          element_label_class: ''&#10          element_label_colon: false&#10          element_wrapper_type: ''&#10          element_wrapper_class: ''&#10          element_default_classes: true&#10          empty: ''&#10          hide_empty: false&#10          empty_zero: false&#10          hide_alter_empty: true&#10          click_sort_column: value&#10          type: string&#10          settings:&#10            link_to_entity: true&#10          group_column: value&#10          group_columns: {  }&#10          group_rows: true&#10          delta_limit: 0&#10          delta_offset: 0&#10          delta_reversed: false&#10          delta_first_last: false&#10          multi_type: separator&#10          separator: ', '&#10          field_api_classes: false&#10      pager:&#10        type: mini&#10        options:&#10          offset: 0&#10          items_per_page: 10&#10          total_pages: null&#10          id: 0&#10          tags:&#10            next: â€ºâ€º&#10            previous: â€¹â€¹&#10          expose:&#10            items_per_page: false&#10            items_per_page_label: 'Items per page'&#10            items_per_page_options: '5, 10, 25, 50'&#10            items_per_page_options_all: false&#10            items_per_page_options_all_label: '- All -'&#10            offset: false&#10            offset_label: Offset&#10      exposed_form:&#10        type: basic&#10        options:&#10          submit_button: Apply&#10          reset_button: false&#10          reset_button_label: Reset&#10          exposed_sorts_label: 'Sort by'&#10          expose_sort_order: true&#10          sort_asc_label: Asc&#10          sort_desc_label: Desc&#10      access:&#10        type: perm&#10        options:&#10          perm: 'access content'&#10      cache:&#10        type: tag&#10        options: {  }&#10      empty: {  }&#10      sorts:&#10        created:&#10          id: created&#10          table: node_field_data&#10          field: created&#10          relationship: none&#10          group_type: group&#10          admin_label: ''&#10          entity_type: node&#10          entity_field: created&#10          plugin_id: date&#10          order: DESC&#10          expose:&#10            label: ''&#10            field_identifier: ''&#10          exposed: false&#10          granularity: second&#10      arguments: {  }&#10      filters:&#10        status:&#10          id: status&#10          table: node_field_data&#10          field: status&#10          entity_type: node&#10          entity_field: status&#10          plugin_id: boolean&#10          value: '1'&#10          group: 1&#10          expose:&#10            operator: ''&#10            operator_limit_selection: false&#10            operator_list: {  }&#10        type:&#10          id: type&#10          table: node_field_data&#10          field: type&#10          entity_type: node&#10          entity_field: type&#10          plugin_id: bundle&#10          value:&#10            article: article&#10          expose:&#10            operator_limit_selection: false&#10            operator_list: {  }&#10        title:&#10          id: title&#10          table: node_field_data&#10          field: title&#10          relationship: none&#10          group_type: group&#10          admin_label: ''&#10          entity_type: node&#10          entity_field: title&#10          plugin_id: string&#10          operator: '='&#10          value: 'Article 0'&#10          group: 1&#10          exposed: false&#10          expose:&#10            operator_id: ''&#10            label: ''&#10            description: ''&#10            use_operator: false&#10            operator: ''&#10            operator_limit_selection: false&#10            operator_list: {  }&#10            identifier: ''&#10            required: false&#10            remember: false&#10            multiple: false&#10            remember_roles:&#10              authenticated: authenticated&#10            placeholder: ''&#10          is_grouped: false&#10          group_info:&#10            label: ''&#10            description: ''&#10            identifier: ''&#10            optional: true&#10            widget: select&#10            multiple: false&#10            remember: false&#10            default_group: All&#10            default_group_multiple: {  }&#10            group_items: {  }&#10      style:&#10        type: default&#10        options:&#10          grouping: {  }&#10          row_class: ''&#10          default_row_class: true&#10          uses_fields: false&#10      row:&#10        type: fields&#10        options:&#10          default_field_elements: true&#10          inline: {  }&#10          separator: ''&#10          hide_empty: false&#10      query:&#10        type: views_query&#10        options:&#10          query_comment: ''&#10          disable_sql_rewrite: false&#10          distinct: false&#10          replica: false&#10          query_tags: {  }&#10      relationships: {  }&#10      header: {  }&#10      footer: {  }&#10      display_extenders: {  }&#10    cache_metadata:&#10      max-age: -1&#10      contexts:&#10        - 'languages:language_content'&#10        - 'languages:language_interface'&#10        - url.query_args&#10        - 'user.node_grants:view'&#10        - user.permissions&#10      tags: {  }&#10  entity_reference:&#10    id: entity_reference&#10    display_title: 'Entity Reference'&#10    display_plugin: entity_reference&#10    position: 1&#10    display_options:&#10      style:&#10        type: entity_reference&#10        options:&#10          search_fields:&#10            title: title&#10      row:&#10        type: entity_reference&#10        options:&#10          default_field_elements: true&#10          inline: {  }&#10          separator: '-'&#10          hide_empty: false&#10      display_extenders: {  }&#10    cache_metadata:&#10      max-age: -1&#10      contexts:&#10        - 'languages:language_content'&#10        - 'languages:language_interface'&#10        - 'user.node_grants:view'&#10        - user.permissions&#10      tags: {  }&#10
+langcode: en
+status: true
+dependencies:
+  module:
+    - node
+    - user
+id: test_entity_reference
+label: 'Test Entity Reference'
+module: views
+description: ''
+tag: ''
+base_table: node_field_data
+base_field: nid
+display:
+  default:
+    id: default
+    display_title: Default
+    display_plugin: default
+    position: 0
+    display_options:
+      fields:
+        title:
+          id: title
+          table: node_field_data
+          field: title
+          relationship: none
+          group_type: group
+          admin_label: ''
+          entity_type: node
+          entity_field: title
+          plugin_id: field
+          label: ''
+          exclude: false
+          alter:
+            alter_text: false
+            text: ''
+            make_link: false
+            path: ''
+            absolute: false
+            external: false
+            replace_spaces: false
+            path_case: none
+            trim_whitespace: false
+            alt: ''
+            rel: ''
+            link_class: ''
+            prefix: ''
+            suffix: ''
+            target: ''
+            nl2br: false
+            max_length: 0
+            word_boundary: false
+            ellipsis: false
+            more_link: false
+            more_link_text: ''
+            more_link_path: ''
+            strip_tags: false
+            trim: false
+            preserve_tags: ''
+            html: false
+          element_type: ''
+          element_class: ''
+          element_label_type: ''
+          element_label_class: ''
+          element_label_colon: false
+          element_wrapper_type: ''
+          element_wrapper_class: ''
+          element_default_classes: true
+          empty: ''
+          hide_empty: false
+          empty_zero: false
+          hide_alter_empty: true
+          click_sort_column: value
+          type: string
+          settings:
+            link_to_entity: true
+          group_column: value
+          group_columns: {  }
+          group_rows: true
+          delta_limit: 0
+          delta_offset: 0
+          delta_reversed: false
+          delta_first_last: false
+          multi_type: separator
+          separator: ', '
+          field_api_classes: false
+      pager:
+        type: mini
+        options:
+          offset: 0
+          items_per_page: 10
+          total_pages: null
+          id: 0
+          tags:
+            next: â€ºâ€º
+            previous: â€¹â€¹
+          expose:
+            items_per_page: false
+            items_per_page_label: 'Items per page'
+            items_per_page_options: '5, 10, 25, 50'
+            items_per_page_options_all: false
+            items_per_page_options_all_label: '- All -'
+            offset: false
+            offset_label: Offset
+      exposed_form:
+        type: basic
+        options:
+          submit_button: Apply
+          reset_button: false
+          reset_button_label: Reset
+          exposed_sorts_label: 'Sort by'
+          expose_sort_order: true
+          sort_asc_label: Asc
+          sort_desc_label: Desc
+      access:
+        type: perm
+        options:
+          perm: 'access content'
+      cache:
+        type: tag
+        options: {  }
+      empty: {  }
+      sorts:
+        created:
+          id: created
+          table: node_field_data
+          field: created
+          relationship: none
+          group_type: group
+          admin_label: ''
+          entity_type: node
+          entity_field: created
+          plugin_id: date
+          order: DESC
+          expose:
+            label: ''
+            field_identifier: ''
+          exposed: false
+          granularity: second
+      arguments: {  }
+      filters:
+        status:
+          id: status
+          table: node_field_data
+          field: status
+          entity_type: node
+          entity_field: status
+          plugin_id: boolean
+          value: '1'
+          group: 1
+          expose:
+            operator: ''
+            operator_limit_selection: false
+            operator_list: {  }
+        type:
+          id: type
+          table: node_field_data
+          field: type
+          entity_type: node
+          entity_field: type
+          plugin_id: bundle
+          value:
+            article: article
+          expose:
+            operator_limit_selection: false
+            operator_list: {  }
+        title:
+          id: title
+          table: node_field_data
+          field: title
+          relationship: none
+          group_type: group
+          admin_label: ''
+          entity_type: node
+          entity_field: title
+          plugin_id: string
+          operator: '='
+          value: 'Article 0'
+          group: 1
+          exposed: false
+          expose:
+            operator_id: ''
+            label: ''
+            description: ''
+            use_operator: false
+            operator: ''
+            operator_limit_selection: false
+            operator_list: {  }
+            identifier: ''
+            required: false
+            remember: false
+            multiple: false
+            remember_roles:
+              authenticated: authenticated
+            placeholder: ''
+          is_grouped: false
+          group_info:
+            label: ''
+            description: ''
+            identifier: ''
+            optional: true
+            widget: select
+            multiple: false
+            remember: false
+            default_group: All
+            default_group_multiple: {  }
+            group_items: {  }
+      style:
+        type: default
+        options:
+          grouping: {  }
+          row_class: ''
+          default_row_class: true
+          uses_fields: false
+      row:
+        type: fields
+        options:
+          default_field_elements: true
+          inline: {  }
+          separator: ''
+          hide_empty: false
+      query:
+        type: views_query
+        options:
+          query_comment: ''
+          disable_sql_rewrite: false
+          distinct: false
+          replica: false
+          query_tags: {  }
+      relationships: {  }
+      header: {  }
+      footer: {  }
+      display_extenders: {  }
+    cache_metadata:
+      max-age: -1
+      contexts:
+        - 'languages:language_content'
+        - 'languages:language_interface'
+        - url.query_args
+        - 'user.node_grants:view'
+        - user.permissions
+      tags: {  }
+  entity_reference:
+    id: entity_reference
+    display_title: 'Entity Reference'
+    display_plugin: entity_reference
+    position: 1
+    display_options:
+      style:
+        type: entity_reference
+        options:
+          search_fields:
+            title: title
+      row:
+        type: entity_reference
+        options:
+          default_field_elements: true
+          inline: {  }
+          separator: '-'
+          hide_empty: false
+      display_extenders: {  }
+    cache_metadata:
+      max-age: -1
+      contexts:
+        - 'languages:language_content'
+        - 'languages:language_interface'
+        - 'user.node_grants:view'
+        - user.permissions
+      tags: {  }

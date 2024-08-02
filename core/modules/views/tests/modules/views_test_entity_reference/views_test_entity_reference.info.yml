@@ -1,1 +1,8 @@
-name: 'Views Test Entity Reference'&#10type: module&#10description: 'Provides an entity reference view for use in a selection handler.'&#10package: Testing&#10version: VERSION&#10dependencies:&#10  - drupal:views&#10  - drupal:field&#10
+name: 'Views Test Entity Reference'
+type: module
+description: 'Provides an entity reference view for use in a selection handler.'
+package: Testing
+version: VERSION
+dependencies:
+  - drupal:views
+  - drupal:field

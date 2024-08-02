@@ -1,1 +1,256 @@
-<?php&#10&#10declare(strict_types=1);&#10&#10namespace Drupal\Tests\views\Kernel\Handler;&#10&#10use Drupal\Core\Field\FieldStorageDefinitionInterface;&#10use Drupal\Tests\field\Traits\EntityReferenceFieldCreationTrait;&#10use Drupal\Tests\node\Traits\ContentTypeCreationTrait;&#10use Drupal\Tests\node\Traits\NodeCreationTrait;&#10use Drupal\Tests\user\Traits\UserCreationTrait;&#10use Drupal\Tests\views\Kernel\ViewsKernelTestBase;&#10use Drupal\user\UserInterface;&#10use Drupal\views\Plugin\views\filter\EntityReference;&#10use Drupal\views\Tests\ViewTestData;&#10use Drupal\views\Views;&#10&#10/**&#10 * Tests the core Drupal\views\Plugin\views\filter\EntityReference handler.&#10 *&#10 * @group views&#10 */&#10class FilterEntityReferenceTest extends ViewsKernelTestBase {&#10&#10  use ContentTypeCreationTrait;&#10  use EntityReferenceFieldCreationTrait;&#10  use NodeCreationTrait;&#10  use UserCreationTrait;&#10&#10  /**&#10   * {@inheritdoc}&#10   */&#10  public static $testViews = ['test_filter_entity_reference'];&#10&#10  /**&#10   * {@inheritdoc}&#10   */&#10  protected static $modules = [&#10    'system',&#10    'node',&#10    'user',&#10    'field',&#10    'text',&#10    'filter',&#10    'views',&#10    'views_test_entity_reference',&#10  ];&#10&#10  /**&#10   * Test host nodes containing the entity reference.&#10   *&#10   * @var \Drupal\node\NodeInterface[]&#10   */&#10  protected array $hostNodes;&#10&#10  /**&#10   * Test target nodes referenced by the entity reference.&#10   *&#10   * @var \Drupal\node\NodeInterface[]&#10   */&#10  protected array $targetNodes;&#10&#10  /**&#10   * First test user as node author.&#10   *&#10   * @var \Drupal\user\UserInterface&#10   */&#10  protected UserInterface $user1;&#10&#10  /**&#10   * Second test user as node author.&#10   *&#10   * @var \Drupal\user\UserInterface&#10   */&#10  protected UserInterface $user2;&#10&#10  /**&#10   * {@inheritdoc}&#10   */&#10  protected function setUp($import_test_views = TRUE): void {&#10    parent::setUp(FALSE);&#10    $this->installEntitySchema('node');&#10    $this->installEntitySchema('user');&#10    $this->installConfig(['node', 'user', 'filter']);&#10&#10    ViewTestData::createTestViews(static::class, ['views_test_config']);&#10    // Create two node types.&#10    $this->createContentType(['type' => 'page']);&#10    $this->createContentType(['type' => 'article']);&#10&#10    // Add an entity reference field to the page type referencing the article&#10    // type.&#10    $selection_handler_settings = [&#10      'target_bundles' => [&#10        'article' => 'article',&#10      ],&#10    ];&#10    $this->createEntityReferenceField('node', 'page', 'field_test', 'Test reference', 'node', $selection_handler = 'default', $selection_handler_settings, FieldStorageDefinitionInterface::CARDINALITY_UNLIMITED);&#10&#10    // Create user 1.&#10    $this->user1 = $this->createUser();&#10    $this->user2 = $this->createUser();&#10&#10    // Create target nodes to be referenced.&#10    foreach (range(0, 5) as $count) {&#10      $this->targetNodes[$count] = $this->createNode([&#10        'type' => 'article',&#10        'title' => 'Article ' . $count,&#10        'status' => 1,&#10        'uid' => $this->user1,&#10      ]);&#10    }&#10&#10    // Create a page referencing Article 0 and Article 1.&#10    $this->hostNodes[0] = $this->createNode([&#10      'type' => 'page',&#10      'title' => 'Page 0',&#10      'status' => 1,&#10      'created' => time(),&#10      'field_test' => [&#10        $this->targetNodes[0]->id(),&#10        $this->targetNodes[1]->id(),&#10      ],&#10      'uid' => $this->user2,&#10    ]);&#10&#10    // Create a page referencing Article 1, Article 2, and Article 3.&#10    $this->hostNodes[1] = $this->createNode([&#10      'type' => 'page',&#10      'title' => 'Page 1',&#10      'status' => 1,&#10      'created' => time() - 100,&#10      'field_test' => [&#10        $this->targetNodes[1]->id(),&#10        $this->targetNodes[2]->id(),&#10        $this->targetNodes[3]->id(),&#10      ],&#10      'uid' => $this->user2,&#10    ]);&#10&#10    // Create a page referencing nothing.&#10    $this->hostNodes[2] = $this->createNode([&#10      'type' => 'page',&#10      'title' => 'Page 2',&#10      'status' => 1,&#10      'created' => time() - 200,&#10      'uid' => $this->user2,&#10    ]);&#10  }&#10&#10  /**&#10   * Tests that results are successfully filtered by the select list widget.&#10   */&#10  public function testViewEntityReferenceAsSelectList(): void {&#10    $view = Views::getView('test_filter_entity_reference');&#10    $view->setDisplay();&#10    $view->preExecute([]);&#10    $view->setExposedInput([&#10      'field_test_target_id' => [$this->targetNodes[0]->id()],&#10    ]);&#10    $this->executeView($view);&#10&#10    // Expect to have only Page 0, with Article 0 referenced.&#10    $expected = [&#10      ['title' => 'Page 0'],&#10    ];&#10    $this->assertIdenticalResultset($view, $expected, [&#10      'title' => 'title',&#10    ]);&#10&#10    // Change to both Article 0 and Article 3.&#10    $view = Views::getView('test_filter_entity_reference');&#10    $view->setDisplay();&#10    $view->setExposedInput([&#10      'field_test_target_id' => [&#10        $this->targetNodes[0]->id(),&#10        $this->targetNodes[3]->id(),&#10      ],&#10    ]);&#10    $this->executeView($view);&#10&#10    // Expect to have Page 0 and 1, with Article 0 and 3 referenced.&#10    $expected = [&#10      ['title' => 'Page 0'],&#10      ['title' => 'Page 1'],&#10    ];&#10    $this->assertIdenticalResultset($view, $expected, [&#10      'title' => 'title',&#10    ]);&#10  }&#10&#10  /**&#10   * Tests that results are successfully filtered by the autocomplete widget.&#10   */&#10  public function testViewEntityReferenceAsAutocomplete(): void {&#10    // Change the widget to autocomplete.&#10    $view = Views::getView('test_filter_entity_reference');&#10    $view->setDisplay();&#10    $filters = $view->displayHandlers->get('default')->getOption('filters');&#10    $filters['field_test_target_id']['widget'] = EntityReference::WIDGET_AUTOCOMPLETE;&#10    $view->displayHandlers->get('default')->overrideOption('filters', $filters);&#10    $view->setExposedInput([&#10      'field_test_target_id' => [&#10        ['target_id' => $this->targetNodes[0]->id()],&#10        ['target_id' => $this->targetNodes[3]->id()],&#10      ],&#10    ]);&#10    $this->executeView($view);&#10&#10    // Expect to have Page 0 and 1, with Article 0 and 3 referenced.&#10    $expected = [&#10      ['title' => 'Page 0'],&#10      ['title' => 'Page 1'],&#10    ];&#10    $this->assertIdenticalResultset($view, $expected, [&#10      'title' => 'title',&#10    ]);&#10  }&#10&#10  /**&#10   * Tests that content dependencies are added to the view.&#10   */&#10  public function testViewContentDependencies(): void {&#10    $view = Views::getView('test_filter_entity_reference');&#10    $value = [&#10      $this->targetNodes[0]->id(),&#10      $this->targetNodes[3]->id(),&#10    ];&#10    $view->setHandlerOption(&#10      'default',&#10      'filter',&#10      'field_test_target_id',&#10      'value',&#10      $value&#10    );&#10&#10    // Dependencies are sorted.&#10    $content_dependencies = [&#10      $this->targetNodes[0]->getConfigDependencyName(),&#10      $this->targetNodes[3]->getConfigDependencyName(),&#10    ];&#10    sort($content_dependencies);&#10&#10    $this->assertEquals([&#10      'config' => [&#10        'node.type.page',&#10      ],&#10      'content' => $content_dependencies,&#10      'module' => [&#10        'node',&#10        'user',&#10      ],&#10    ], $view->getDependencies());&#10  }&#10&#10}&#10
+<?php
+
+declare(strict_types=1);
+
+namespace Drupal\Tests\views\Kernel\Handler;
+
+use Drupal\Core\Field\FieldStorageDefinitionInterface;
+use Drupal\Tests\field\Traits\EntityReferenceFieldCreationTrait;
+use Drupal\Tests\node\Traits\ContentTypeCreationTrait;
+use Drupal\Tests\node\Traits\NodeCreationTrait;
+use Drupal\Tests\user\Traits\UserCreationTrait;
+use Drupal\Tests\views\Kernel\ViewsKernelTestBase;
+use Drupal\user\UserInterface;
+use Drupal\views\Plugin\views\filter\EntityReference;
+use Drupal\views\Tests\ViewTestData;
+use Drupal\views\Views;
+
+/**
+ * Tests the core Drupal\views\Plugin\views\filter\EntityReference handler.
+ *
+ * @group views
+ */
+class FilterEntityReferenceTest extends ViewsKernelTestBase {
+
+  use ContentTypeCreationTrait;
+  use EntityReferenceFieldCreationTrait;
+  use NodeCreationTrait;
+  use UserCreationTrait;
+
+  /**
+   * {@inheritdoc}
+   */
+  public static $testViews = ['test_filter_entity_reference'];
+
+  /**
+   * {@inheritdoc}
+   */
+  protected static $modules = [
+    'system',
+    'node',
+    'user',
+    'field',
+    'text',
+    'filter',
+    'views',
+    'views_test_entity_reference',
+  ];
+
+  /**
+   * Test host nodes containing the entity reference.
+   *
+   * @var \Drupal\node\NodeInterface[]
+   */
+  protected array $hostNodes;
+
+  /**
+   * Test target nodes referenced by the entity reference.
+   *
+   * @var \Drupal\node\NodeInterface[]
+   */
+  protected array $targetNodes;
+
+  /**
+   * First test user as node author.
+   *
+   * @var \Drupal\user\UserInterface
+   */
+  protected UserInterface $user1;
+
+  /**
+   * Second test user as node author.
+   *
+   * @var \Drupal\user\UserInterface
+   */
+  protected UserInterface $user2;
+
+  /**
+   * {@inheritdoc}
+   */
+  protected function setUp($import_test_views = TRUE): void {
+    parent::setUp(FALSE);
+    $this->installEntitySchema('node');
+    $this->installEntitySchema('user');
+    $this->installConfig(['node', 'user', 'filter']);
+
+    ViewTestData::createTestViews(static::class, ['views_test_config']);
+    // Create two node types.
+    $this->createContentType(['type' => 'page']);
+    $this->createContentType(['type' => 'article']);
+
+    // Add an entity reference field to the page type referencing the article
+    // type.
+    $selection_handler_settings = [
+      'target_bundles' => [
+        'article' => 'article',
+      ],
+    ];
+    $this->createEntityReferenceField('node', 'page', 'field_test', 'Test reference', 'node', $selection_handler = 'default', $selection_handler_settings, FieldStorageDefinitionInterface::CARDINALITY_UNLIMITED);
+
+    // Create user 1.
+    $this->user1 = $this->createUser();
+    $this->user2 = $this->createUser();
+
+    // Create target nodes to be referenced.
+    foreach (range(0, 5) as $count) {
+      $this->targetNodes[$count] = $this->createNode([
+        'type' => 'article',
+        'title' => 'Article ' . $count,
+        'status' => 1,
+        'uid' => $this->user1,
+      ]);
+    }
+
+    // Create a page referencing Article 0 and Article 1.
+    $this->hostNodes[0] = $this->createNode([
+      'type' => 'page',
+      'title' => 'Page 0',
+      'status' => 1,
+      'created' => time(),
+      'field_test' => [
+        $this->targetNodes[0]->id(),
+        $this->targetNodes[1]->id(),
+      ],
+      'uid' => $this->user2,
+    ]);
+
+    // Create a page referencing Article 1, Article 2, and Article 3.
+    $this->hostNodes[1] = $this->createNode([
+      'type' => 'page',
+      'title' => 'Page 1',
+      'status' => 1,
+      'created' => time() - 100,
+      'field_test' => [
+        $this->targetNodes[1]->id(),
+        $this->targetNodes[2]->id(),
+        $this->targetNodes[3]->id(),
+      ],
+      'uid' => $this->user2,
+    ]);
+
+    // Create a page referencing nothing.
+    $this->hostNodes[2] = $this->createNode([
+      'type' => 'page',
+      'title' => 'Page 2',
+      'status' => 1,
+      'created' => time() - 200,
+      'uid' => $this->user2,
+    ]);
+  }
+
+  /**
+   * Tests that results are successfully filtered by the select list widget.
+   */
+  public function testViewEntityReferenceAsSelectList(): void {
+    $view = Views::getView('test_filter_entity_reference');
+    $view->setDisplay();
+    $view->preExecute([]);
+    $view->setExposedInput([
+      'field_test_target_id' => [$this->targetNodes[0]->id()],
+    ]);
+    $this->executeView($view);
+
+    // Expect to have only Page 0, with Article 0 referenced.
+    $expected = [
+      ['title' => 'Page 0'],
+    ];
+    $this->assertIdenticalResultset($view, $expected, [
+      'title' => 'title',
+    ]);
+
+    // Change to both Article 0 and Article 3.
+    $view = Views::getView('test_filter_entity_reference');
+    $view->setDisplay();
+    $view->setExposedInput([
+      'field_test_target_id' => [
+        $this->targetNodes[0]->id(),
+        $this->targetNodes[3]->id(),
+      ],
+    ]);
+    $this->executeView($view);
+
+    // Expect to have Page 0 and 1, with Article 0 and 3 referenced.
+    $expected = [
+      ['title' => 'Page 0'],
+      ['title' => 'Page 1'],
+    ];
+    $this->assertIdenticalResultset($view, $expected, [
+      'title' => 'title',
+    ]);
+  }
+
+  /**
+   * Tests that results are successfully filtered by the autocomplete widget.
+   */
+  public function testViewEntityReferenceAsAutocomplete(): void {
+    // Change the widget to autocomplete.
+    $view = Views::getView('test_filter_entity_reference');
+    $view->setDisplay();
+    $filters = $view->displayHandlers->get('default')->getOption('filters');
+    $filters['field_test_target_id']['widget'] = EntityReference::WIDGET_AUTOCOMPLETE;
+    $view->displayHandlers->get('default')->overrideOption('filters', $filters);
+    $view->setExposedInput([
+      'field_test_target_id' => [
+        ['target_id' => $this->targetNodes[0]->id()],
+        ['target_id' => $this->targetNodes[3]->id()],
+      ],
+    ]);
+    $this->executeView($view);
+
+    // Expect to have Page 0 and 1, with Article 0 and 3 referenced.
+    $expected = [
+      ['title' => 'Page 0'],
+      ['title' => 'Page 1'],
+    ];
+    $this->assertIdenticalResultset($view, $expected, [
+      'title' => 'title',
+    ]);
+  }
+
+  /**
+   * Tests that content dependencies are added to the view.
+   */
+  public function testViewContentDependencies(): void {
+    $view = Views::getView('test_filter_entity_reference');
+    $value = [
+      $this->targetNodes[0]->id(),
+      $this->targetNodes[3]->id(),
+    ];
+    $view->setHandlerOption(
+      'default',
+      'filter',
+      'field_test_target_id',
+      'value',
+      $value
+    );
+
+    // Dependencies are sorted.
+    $content_dependencies = [
+      $this->targetNodes[0]->getConfigDependencyName(),
+      $this->targetNodes[3]->getConfigDependencyName(),
+    ];
+    sort($content_dependencies);
+
+    $this->assertEquals([
+      'config' => [
+        'node.type.page',
+      ],
+      'content' => $content_dependencies,
+      'module' => [
+        'node',
+        'user',
+      ],
+    ], $view->getDependencies());
+  }
+
+}
