@@ -127,7 +127,13 @@ trait KernelHtmlDebugTrait {
   protected function initBrowserOutputFile() {
     $browser_output_file = getenv('BROWSERTEST_OUTPUT_FILE');
     $this->htmlOutputEnabled = is_file($browser_output_file);
-    $this->htmlOutputBaseUrl = getenv('BROWSERTEST_OUTPUT_BASE_URL') ?: $GLOBALS['base_url'];
+    if (empty($GLOBALS['base_url'])) {
+      $base_url = 'http://example.com';
+    }
+    else {
+      $base_url = $GLOBALS['base_url'];
+    }
+    $this->htmlOutputBaseUrl = getenv('BROWSERTEST_OUTPUT_BASE_URL') ?: $base_url;
     if ($this->htmlOutputEnabled) {
       $this->htmlOutputFile = $browser_output_file;
       $this->htmlOutputClassName = str_replace("\\", "_", static::class);
