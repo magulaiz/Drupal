@@ -1,1 +1,704 @@
-<?php&#10&#10namespace Drupal\views\Plugin\views\filter;&#10&#10use Drupal\Component\Plugin\DependentPluginInterface;&#10use Drupal\Component\Utility\NestedArray;&#10use Drupal\Core\Entity\Element\EntityAutocomplete;&#10use Drupal\Core\Entity\EntityReferenceSelection\SelectionInterface;&#10use Drupal\Core\Entity\EntityReferenceSelection\SelectionPluginManagerInterface;&#10use Drupal\Core\Entity\EntityTypeInterface;&#10use Drupal\Core\Entity\EntityTypeManagerInterface;&#10use Drupal\Core\Form\FormStateInterface;&#10use Drupal\Core\Form\SubformState;&#10use Drupal\Core\Messenger\MessengerInterface;&#10use Drupal\Core\Render\Element;&#10use Drupal\views\FieldAPIHandlerTrait;&#10use Drupal\views\Plugin\EntityReferenceSelection\ViewsSelection;&#10use Drupal\views\Plugin\views\display\DisplayPluginBase;&#10use Drupal\views\ViewExecutable;&#10use Symfony\Component\DependencyInjection\ContainerInterface;&#10&#10/**&#10 * Filters a view by entity references.&#10 *&#10 * @ingroup views_filter_handlers&#10 *&#10 * @ViewsFilter("entity_reference")&#10 */&#10class EntityReference extends ManyToOne {&#10&#10  use FieldAPIHandlerTrait;&#10&#10  /**&#10   * Type for the autocomplete filter format.&#10   */&#10  const WIDGET_AUTOCOMPLETE = 'autocomplete';&#10&#10  /**&#10   * Type for the select list filter format.&#10   */&#10  const WIDGET_SELECT = 'select';&#10&#10  /**&#10   * Max number of entities in the select widget.&#10   */&#10  const WIDGET_SELECT_LIMIT = 100;&#10&#10  /**&#10   * The subform prefix.&#10   */&#10  const SUBFORM_PREFIX = 'reference_';&#10&#10  /**&#10   * The all value.&#10   */&#10  const ALL_VALUE = 'All';&#10&#10  /**&#10   * The selection handlers available for the target entity ID of the filter.&#10   *&#10   * @var array|null&#10   */&#10  protected ?array $handlerOptions = NULL;&#10&#10  /**&#10   * Validated exposed input that will be set as the input value.&#10   *&#10   * If the select list widget is chosen.&#10   *&#10   * @var array&#10   */&#10  protected array $validatedExposedInput;&#10&#10  /**&#10   * {@inheritdoc}&#10   */&#10  public function init(ViewExecutable $view, DisplayPluginBase $display, ?array &$options = NULL): void {&#10    parent::init($view, $display, $options);&#10    if (empty($this->definition['field_name'])) {&#10      $this->definition['field_name'] = $options['field'];&#10    }&#10&#10    $this->definition['options callback'] = [$this, 'getValueOptionsCallback'];&#10    $this->definition['options arguments'] = [$this->getSelectionHandler($this->options['sub_handler'])];&#10  }&#10&#10  /**&#10   * Constructs an EntityReference object.&#10   */&#10  public function __construct(&#10    array $configuration,&#10    $plugin_id,&#10    $plugin_definition,&#10    protected SelectionPluginManagerInterface $selectionPluginManager,&#10    protected EntityTypeManagerInterface $entityTypeManager,&#10    MessengerInterface $messenger,&#10  ) {&#10    parent::__construct($configuration, $plugin_id, $plugin_definition);&#10    $this->setMessenger($messenger);&#10&#10    // @todo Unify 'entity field'/'field_name' instead of converting back and&#10    // forth. https://www.drupal.org/node/2410779&#10    if (isset($this->definition['entity field'])) {&#10      $this->definition['field_name'] = $this->definition['entity field'];&#10    }&#10  }&#10&#10  /**&#10   * {@inheritdoc}&#10   */&#10  public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition): EntityReference {&#10    return new static(&#10      $configuration,&#10      $plugin_id,&#10      $plugin_definition,&#10      $container->get('plugin.manager.entity_reference_selection'),&#10      $container->get('entity_type.manager'),&#10      $container->get('messenger'),&#10    );&#10  }&#10&#10  /**&#10   * Gets the entity reference selection handler.&#10   *&#10   * @param string|null $sub_handler&#10   *   The sub handler to get an instance of or NULL for the current selection.&#10   *&#10   * @return \Drupal\Core\Entity\EntityReferenceSelection\SelectionInterface&#10   *   The selection handler plugin instance.&#10   */&#10  protected function getSelectionHandler(?string $sub_handler = NULL): SelectionInterface {&#10    // Default values for the handler.&#10    $handler_settings = $this->options['sub_handler_settings'] ?? [];&#10    $handler_settings['handler'] = $sub_handler;&#10    $handler_settings['target_type'] = $this->getReferencedEntityType()->id();&#10    /** @var \Drupal\Core\Entity\EntityReferenceSelection\SelectionInterface */&#10    return $this->selectionPluginManager->getInstance($handler_settings);&#10  }&#10&#10  /**&#10   * {@inheritdoc}&#10   */&#10  protected function defineOptions(): array {&#10    $options = parent::defineOptions();&#10    $options['sub_handler'] = [&#10      'default' => 'default:' . $this->getReferencedEntityType()->id(),&#10    ];&#10    $options['sub_handler_settings'] = ['default' => []];&#10    $options['widget'] = ['default' => static::WIDGET_AUTOCOMPLETE];&#10    return $options;&#10  }&#10&#10  /**&#10   * {@inheritdoc}&#10   */&#10  public function hasExtraOptions(): bool {&#10    return TRUE;&#10  }&#10&#10  /**&#10   * Get all selection plugins for this entity type.&#10   *&#10   * @return string[]&#10   *   The selection handlers available for the target entity ID of the filter.&#10   */&#10  protected function getSubHandlerOptions(): array {&#10    if ($this->handlerOptions) {&#10      return $this->handlerOptions;&#10    }&#10    $entity_type = $this->getReferencedEntityType();&#10    $selection_plugins = $this->selectionPluginManager->getSelectionGroups($entity_type->id());&#10    $this->handlerOptions = [];&#10    foreach (array_keys($selection_plugins) as $selection_group_id) {&#10      // We only display base plugins (e.g. 'default', 'views', ...).&#10      if (array_key_exists($selection_group_id, $selection_plugins[$selection_group_id])) {&#10        $this->handlerOptions[$selection_group_id] = (string) $selection_plugins[$selection_group_id][$selection_group_id]['label'];&#10      }&#10      elseif (array_key_exists($selection_group_id . ':' . $entity_type->id(), $selection_plugins[$selection_group_id])) {&#10        $selection_group_plugin = $selection_group_id . ':' . $entity_type->id();&#10        $this->handlerOptions[$selection_group_plugin] = (string) $selection_plugins[$selection_group_id][$selection_group_plugin]['base_plugin_label'];&#10      }&#10    }&#10    return $this->handlerOptions;&#10  }&#10&#10  /**&#10   * {@inheritdoc}&#10   */&#10  public function buildExtraOptionsForm(&$form, FormStateInterface $form_state): void {&#10    $form['sub_handler'] = [&#10      '#type' => 'select',&#10      '#title' => $this->t('Reference method'),&#10      '#options' => $this->getSubHandlerOptions(),&#10      '#default_value' => $this->options['sub_handler'],&#10      '#required' => TRUE,&#10    ];&#10&#10    // We store the settings from any sub handler in sub_handler_settings, but&#10    // in this form, we have multiple sub handlers conditionally displayed.&#10    // Copy the active sub_handler_settings into the handler specific settings&#10    // to set the defaults to match the saved options on build.&#10    if (!empty($this->options['sub_handler']) && !empty($this->options['sub_handler_settings'])) {&#10      $this->options[static::SUBFORM_PREFIX . $this->options['sub_handler']] = $this->options['sub_handler_settings'];&#10    }&#10&#10    foreach ($this->getSubHandlerOptions() as $sub_handler => $sub_handler_label) {&#10      $subform_key = static::SUBFORM_PREFIX . $sub_handler;&#10      $subform = [&#10        '#type' => 'fieldset',&#10        '#title' => $this->t('Reference type "@type"', [&#10          '@type' => $sub_handler_label,&#10        ]),&#10        '#tree' => TRUE,&#10        '#parents' => [&#10          'options',&#10          $subform_key,&#10        ],&#10        // Make the sub handler settings conditional on the selected selection&#10        // handler.&#10        '#states' => [&#10          'visible' => [&#10            'select[name="options[sub_handler]"]' => ['value' => $sub_handler],&#10          ],&#10        ],&#10      ];&#10&#10      // Build the sub form and sub for state.&#10      $selection_handler = $this->getSelectionHandler($sub_handler);&#10      if (!empty($this->options[$subform_key])) {&#10        $selection_config = $selection_handler->getConfiguration();&#10        $selection_config = NestedArray::mergeDeepArray([&#10          $selection_config,&#10          $this->options[$subform_key],&#10        ], TRUE);&#10        $selection_handler->setConfiguration($selection_config);&#10      }&#10      $subform_state = SubformState::createForSubform($subform, $form, $form_state);&#10      $sub_handler_settings = $selection_handler->buildConfigurationForm($subform, $subform_state);&#10&#10      if ($selection_handler instanceof ViewsSelection) {&#10        if (isset($sub_handler_settings['view']['no_view_help'])) {&#10          // If there are no views with entity reference displays,&#10          // ViewsSelection still validates the view.&#10          // This will prevent form config extra form submission,&#10          // so we remove it here.&#10          unset($sub_handler_settings['view']['#element_validate']);&#10        }&#10      }&#10      else {&#10        // Remove unnecessary and inappropriate handler settings from the&#10        // filter config form.&#10        $sub_handler_settings['target_bundles_update']['#access'] = FALSE;&#10        $sub_handler_settings['auto_create']['#access'] = FALSE;&#10        $sub_handler_settings['auto_create_bundle']['#access'] = FALSE;&#10      }&#10&#10      $subform = NestedArray::mergeDeepArray([&#10        $subform,&#10        $sub_handler_settings,&#10      ], TRUE);&#10&#10      $form[$subform_key] = $subform;&#10      $this->cleanUpSubformChildren($form[$subform_key]);&#10    }&#10&#10    $form['widget'] = [&#10      '#type' => 'radios',&#10      '#title' => $this->t('Selection type'),&#10      '#default_value' => $this->options['widget'],&#10      '#options' => [&#10        static::WIDGET_SELECT => $this->t('Select list'),&#10        static::WIDGET_AUTOCOMPLETE => $this->t('Autocomplete'),&#10      ],&#10      '#description' => $this->t('For performance and UX reasons, the maximum count of selectable entities for the "Select list" selection type is limited to @count. If more is expected, select "Autocomplete" instead.', [&#10        '@count' => static::WIDGET_SELECT_LIMIT,&#10      ]),&#10    ];&#10  }&#10&#10  /**&#10   * Clean up subform children for properties that could cause problems.&#10   *&#10   * Views modal forms do not work with required or ajax elements.&#10   *&#10   * @param array $element&#10   *   The form element.&#10   */&#10  protected function cleanUpSubformChildren(array &$element): void {&#10    // Remove the required property to prevent focus errors.&#10    if (isset($element['#required']) && $element['#required']) {&#10      $element['#required'] = FALSE;&#10      $element['#element_validate'][] = [static::class, 'validateRequired'];&#10    }&#10&#10    // Remove the ajax property as it does not work.&#10    if (!empty($element['#ajax'])) {&#10      unset($element['#ajax']);&#10    }&#10&#10    // Recursively apply to nested fields within the handler sub form.&#10    foreach (Element::children($element) as $delta) {&#10      $this->cleanUpSubformChildren($element[$delta]);&#10    }&#10  }&#10&#10  /**&#10   * Validates that a required field for a sub handler has a value.&#10   *&#10   * @param array $element&#10   *   The cardinality form render array.&#10   * @param \Drupal\Core\Form\FormStateInterface $form_state&#10   *   The form state.&#10   */&#10  public static function validateRequired(array &$element, FormStateInterface $form_state): void {&#10    if (!empty($element['value'])) {&#10      return;&#10    }&#10&#10    // Config extra handler does not output validation messages and&#10    // closes the modal with no feedback to the user.&#10    // @todo https://www.drupal.org/project/drupal/issues/3163740.&#10  }&#10&#10  /**&#10   * {@inheritdoc}&#10   */&#10  public function validateExtraOptionsForm($form, FormStateInterface $form_state): void {&#10    $options = $form_state->getValue('options');&#10    $sub_handler = $options['sub_handler'];&#10    $subform = $form[static::SUBFORM_PREFIX . $sub_handler];&#10    $subform_state = SubformState::createForSubform($subform, $form, $form_state);&#10&#10    // Copy handler_settings from options to settings to be compatible with&#10    // selection plugins.&#10    $subform_options = $form_state->getValue([&#10      'options',&#10      static::SUBFORM_PREFIX . $sub_handler,&#10    ]);&#10    $subform_state->setValue([&#10      'settings',&#10    ], $subform_options);&#10    $this->getSelectionHandler($sub_handler)&#10      ->validateConfigurationForm($subform, $subform_state);&#10&#10    // Store the sub handler options in sub_handler_settings.&#10    $form_state->setValue(['options', 'sub_handler_settings'], $subform_options);&#10&#10    // Remove options that are not from the selected sub_handler.&#10    foreach (array_keys($this->getSubHandlerOptions()) as $sub_handler_option) {&#10      if (isset($options[static::SUBFORM_PREFIX . $sub_handler_option])) {&#10        $form_state->unsetValue(['options', static::SUBFORM_PREFIX . $sub_handler_option]);&#10      }&#10    }&#10&#10    parent::validateExtraOptionsForm($form, $form_state);&#10  }&#10&#10  /**&#10   * {@inheritdoc}&#10   */&#10  public function submitExtraOptionsForm($form, FormStateInterface $form_state): void {&#10    $sub_handler = $form_state->getValue('options')['sub_handler'];&#10&#10    // Ensure that only the select sub handler option is saved.&#10    foreach (array_keys($this->getSubHandlerOptions()) as $sub_handler_option) {&#10      if ($sub_handler_option == $sub_handler) {&#10        $this->options['sub_handler_settings'] = $this->options[static::SUBFORM_PREFIX . $sub_handler_option];&#10      }&#10      if (isset($this->options[static::SUBFORM_PREFIX . $sub_handler_option])) {&#10        unset($this->options[static::SUBFORM_PREFIX . $sub_handler_option]);&#10      }&#10    }&#10  }&#10&#10  /**&#10   * Fixes the issue with switching between the widgets in the view editor.&#10   *&#10   * @param array $form&#10   *   Associative array containing the structure of the form, passed by&#10   *   reference.&#10   * @param \Drupal\Core\Form\FormStateInterface $form_state&#10   *   The current state of the form.&#10   */&#10  protected function alternateWidgetsDefaultNormalize(array &$form, FormStateInterface $form_state): void {&#10    $field_id = '_' . $this->getFieldDefinition()->getName() . '-widget';&#10    $form[$field_id] = [&#10      '#type' => 'hidden',&#10      '#value' => $this->options['widget'],&#10    ];&#10&#10    $previous_widget = $form_state->getUserInput()[$field_id] ?? NULL;&#10    if ($previous_widget && $previous_widget !== $this->options['widget']) {&#10      $form['value']['#value_callback'] = function ($element) {&#10        return $element['#default_value'] ?? '';&#10      };&#10    }&#10  }&#10&#10  /**&#10   * {@inheritdoc}&#10   */&#10  protected function valueForm(&$form, FormStateInterface $form_state) {&#10    if (!isset($this->options['sub_handler'])) {&#10      return;&#10    }&#10    switch ($this->options['widget']) {&#10      case static::WIDGET_SELECT:&#10        $this->valueFormAddSelect($form, $form_state);&#10        break;&#10&#10      case static::WIDGET_AUTOCOMPLETE:&#10        $this->valueFormAddAutocomplete($form, $form_state);&#10        break;&#10    }&#10&#10    if (!empty($this->view->live_preview)) {&#10      $this->alternateWidgetsDefaultNormalize($form, $form_state);&#10    }&#10&#10    // Show or hide the value field depending on the operator field.&#10    $is_exposed = $this->options['exposed'];&#10&#10    $visible = [];&#10    if ($is_exposed) {&#10      $operator_field = ($this->options['expose']['use_operator'] && $this->options['expose']['operator_id']) ? $this->options['expose']['operator_id'] : NULL;&#10    }&#10    else {&#10      $operator_field = 'options[operator]';&#10      $visible[] = [&#10        ':input[name="options[expose_button][checkbox][checkbox]"]' => ['checked' => TRUE],&#10        ':input[name="options[expose][use_operator]"]' => ['checked' => TRUE],&#10        ':input[name="options[expose][operator_id]"]' => ['empty' => FALSE],&#10      ];&#10    }&#10    if ($operator_field) {&#10      foreach ($this->operatorValues(1) as $operator) {&#10        $visible[] = [&#10          ':input[name="' . $operator_field . '"]' => ['value' => $operator],&#10        ];&#10      }&#10      $form['value']['#states'] = ['visible' => $visible];&#10    }&#10&#10    if (!$is_exposed) {&#10      // Retain the helper option.&#10      $this->helper->buildOptionsForm($form, $form_state);&#10&#10      // Show help text if not exposed to end users.&#10      $form['value']['#description'] = $this->t('Leave blank for all. Otherwise, the first selected item will be the default instead of "Any".');&#10    }&#10  }&#10&#10  /**&#10   * Adds an autocomplete element to the form.&#10   *&#10   * @param array $form&#10   *   Associative array containing the structure of the form, passed by&#10   *   reference.&#10   * @param \Drupal\Core\Form\FormStateInterface $form_state&#10   *   The current state of the form.&#10   */&#10  protected function valueFormAddAutocomplete(array &$form, FormStateInterface $form_state): void {&#10    $referenced_type = $this->getReferencedEntityType();&#10    $form['value'] = [&#10      '#title' => $this->t('Select %entity_types', ['%entity_types' => $referenced_type->getPluralLabel()]),&#10      '#type' => 'entity_autocomplete',&#10      '#default_value' => EntityAutocomplete::getEntityLabels($this->getDefaultSelectedEntities()),&#10      '#tags' => TRUE,&#10      '#process_default_value' => FALSE,&#10      '#target_type' => $referenced_type->id(),&#10      '#selection_handler' => $this->options['sub_handler'],&#10      '#selection_settings' => $this->options['sub_handler_settings'],&#10      // Validation is done by validateExposed().&#10      '#validate_reference' => FALSE,&#10    ];&#10  }&#10&#10  /**&#10   * Adds a select element to the form.&#10   *&#10   * @param array $form&#10   *   Associative array containing the structure of the form, passed by&#10   *   reference.&#10   * @param \Drupal\Core\Form\FormStateInterface $form_state&#10   *   The current state of the form.&#10   */&#10  protected function valueFormAddSelect(array &$form, FormStateInterface $form_state): void {&#10    $is_exposed = $form_state->get('exposed');&#10&#10    $options = $this->getValueOptions();&#10    $default_value = (array) $this->value;&#10&#10    if ($is_exposed) {&#10      $identifier = $this->options['expose']['identifier'];&#10&#10      if (!empty($this->options['expose']['reduce'])) {&#10        $options = $this->reduceValueOptions($options);&#10&#10        if (!empty($this->options['expose']['multiple']) && empty($this->options['expose']['required'])) {&#10          $default_value = [];&#10        }&#10      }&#10&#10      if (empty($this->options['expose']['multiple'])) {&#10        if (empty($this->options['expose']['required']) && (empty($default_value) || !empty($this->options['expose']['reduce']))) {&#10          $default_value = static::ALL_VALUE;&#10        }&#10        elseif (empty($default_value)) {&#10          $keys = array_keys($options);&#10          $default_value = array_shift($keys);&#10        }&#10        else {&#10          // Set the default value to be the first element of the array.&#10          $default_value = reset($default_value);&#10        }&#10      }&#10    }&#10&#10    $referenced_type = $this->getReferencedEntityType();&#10    $form['value'] = [&#10      '#type' => 'select',&#10      '#title' => $this->t('Select @entity_types', ['@entity_types' => $referenced_type->getPluralLabel()]),&#10      '#multiple' => TRUE,&#10      '#options' => $options,&#10      // Set a minimum size to facilitate easier selection of entities.&#10      '#size' => min(8, count($options)),&#10      '#default_value' => $default_value,&#10    ];&#10&#10    $user_input = $form_state->getUserInput();&#10    if ($is_exposed && isset($identifier) && !isset($user_input[$identifier])) {&#10      $user_input[$identifier] = $default_value;&#10      $form_state->setUserInput($user_input);&#10    }&#10  }&#10&#10  /**&#10   * Gets all entities selected by default.&#10   *&#10   * @return \Drupal\Core\Entity\EntityInterface[]&#10   *   All entities selected by default, or an empty array, if none.&#10   */&#10  protected function getDefaultSelectedEntities(): array {&#10    $referenced_type_id = $this->getReferencedEntityType()->id();&#10    $entity_storage = $this->entityTypeManager->getStorage($referenced_type_id);&#10&#10    return !empty($this->value) && !isset($this->value[static::ALL_VALUE]) ? $entity_storage->loadMultiple($this->value) : [];&#10  }&#10&#10  /**&#10   * Returns the value options for a select widget.&#10   *&#10   * @param \Drupal\Core\Entity\EntityReferenceSelection\SelectionInterface $selection_handler&#10   *   The selection handler.&#10   *&#10   * @return string[]&#10   *   The options.&#10   *&#10   * @see \Drupal\views\Plugin\views\filter\InOperator::getValueOptions()&#10   */&#10  protected function getValueOptionsCallback(SelectionInterface $selection_handler): array {&#10    $entity_data = [];&#10    if ($this->options['widget'] === static::WIDGET_SELECT) {&#10      $entity_data = $selection_handler->getReferenceableEntities(NULL, 'CONTAINS', static::WIDGET_SELECT_LIMIT);&#10    }&#10&#10    $options = [];&#10    foreach ($entity_data as $bundle) {&#10      foreach ($bundle as $id => $entity_label) {&#10        $options[$id] = $entity_label;&#10      }&#10    }&#10&#10    return $options;&#10  }&#10&#10  /**&#10   * {@inheritdoc}&#10   */&#10  public function validate(): array {&#10    // InOperator validation logic is not appropriate for entity reference&#10    // autocomplete or select, so prevent parent class validation from&#10    // occurring.&#10    return [];&#10  }&#10&#10  /**&#10   * {@inheritdoc}&#10   */&#10  public function acceptExposedInput($input): bool {&#10    if (empty($this->options['exposed'])) {&#10      return TRUE;&#10    }&#10&#10    // We need to know the operator, which is normally set in&#10    // \Drupal\views\Plugin\views\filter\FilterPluginBase::acceptExposedInput(),&#10    // before we actually call the parent version of ourselves.&#10    if (!empty($this->options['expose']['use_operator']) && !empty($this->options['expose']['operator_id']) && isset($input[$this->options['expose']['operator_id']])) {&#10      $this->operator = $input[$this->options['expose']['operator_id']];&#10    }&#10&#10    // If view is an attachment and is inheriting exposed filters, then assume&#10    // exposed input has already been validated.&#10    if (!empty($this->view->is_attachment) && $this->view->display_handler->usesExposed()) {&#10      $this->validatedExposedInput = (array) $this->view->exposed_raw_input[$this->options['expose']['identifier']];&#10    }&#10&#10    // If we're checking for EMPTY or NOT, we don't need any input, and we can&#10    // say that our input conditions are met by just having the right operator.&#10    if ($this->operator == 'empty' || $this->operator == 'not empty') {&#10      return TRUE;&#10    }&#10&#10    // If it's non-required and there's no value don't bother filtering.&#10    if (!$this->options['expose']['required'] && empty($this->validatedExposedInput)) {&#10      return FALSE;&#10    }&#10&#10    $accept_exposed_input = parent::acceptExposedInput($input);&#10    if ($accept_exposed_input) {&#10      // If we have previously validated input, override.&#10      if (isset($this->validatedExposedInput)) {&#10        $this->value = $this->validatedExposedInput;&#10      }&#10    }&#10&#10    return $accept_exposed_input;&#10  }&#10&#10  /**&#10   * {@inheritdoc}&#10   */&#10  public function validateExposed(&$form, FormStateInterface $form_state): void {&#10    if (empty($this->options['exposed'])) {&#10      return;&#10    }&#10&#10    $identifier = $this->options['expose']['identifier'];&#10&#10    // Set the validated exposed input from the select list when not the all&#10    // value option.&#10    if ($this->options['widget'] == static::WIDGET_SELECT) {&#10      if ($form_state->getValue($identifier) != static::ALL_VALUE) {&#10        $this->validatedExposedInput = (array) $form_state->getValue($identifier);&#10      }&#10      return;&#10    }&#10&#10    if (empty($identifier)) {&#10      return;&#10    }&#10&#10    $values = $form_state->getValue($identifier);&#10    if (!is_array($values)) {&#10      return;&#10    }&#10&#10    foreach ($values as $value) {&#10      $this->validatedExposedInput[] = $value['target_id'];&#10    }&#10  }&#10&#10  /**&#10   * {@inheritdoc}&#10   */&#10  protected function valueSubmit($form, FormStateInterface $form_state): void {&#10    // Prevent the parent class InOperator from altering the array.&#10    // @see \Drupal\views\Plugin\views\filter\InOperator::valueSubmit().&#10  }&#10&#10  /**&#10   * Gets the target entity type referenced by this field.&#10   *&#10   * @return \Drupal\Core\Entity\EntityTypeInterface&#10   *   The entity type definition.&#10   */&#10  protected function getReferencedEntityType(): EntityTypeInterface {&#10    $field_def = $this->getFieldDefinition();&#10    $entity_type_id = $field_def->getItemDefinition()&#10      ->getSetting('target_type');&#10    return $this->entityTypeManager->getDefinition($entity_type_id);&#10  }&#10&#10  /**&#10   * {@inheritdoc}&#10   */&#10  public function calculateDependencies(): array {&#10    $dependencies = parent::calculateDependencies();&#10&#10    $sub_handler = $this->options['sub_handler'];&#10    $selection_handler = $this->getSelectionHandler($sub_handler);&#10    if ($selection_handler instanceof DependentPluginInterface) {&#10      $dependencies += $selection_handler->calculateDependencies();&#10    }&#10&#10    foreach ($this->getDefaultSelectedEntities() as $entity) {&#10      $dependencies[$entity->getConfigDependencyKey()][] = $entity->getConfigDependencyName();&#10    }&#10&#10    return $dependencies;&#10  }&#10&#10}&#10
+<?php
+
+namespace Drupal\views\Plugin\views\filter;
+
+use Drupal\Component\Plugin\DependentPluginInterface;
+use Drupal\Component\Utility\NestedArray;
+use Drupal\Core\Entity\Element\EntityAutocomplete;
+use Drupal\Core\Entity\EntityReferenceSelection\SelectionInterface;
+use Drupal\Core\Entity\EntityReferenceSelection\SelectionPluginManagerInterface;
+use Drupal\Core\Entity\EntityTypeInterface;
+use Drupal\Core\Entity\EntityTypeManagerInterface;
+use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Form\SubformState;
+use Drupal\Core\Messenger\MessengerInterface;
+use Drupal\Core\Render\Element;
+use Drupal\views\FieldAPIHandlerTrait;
+use Drupal\views\Plugin\EntityReferenceSelection\ViewsSelection;
+use Drupal\views\Plugin\views\display\DisplayPluginBase;
+use Drupal\views\ViewExecutable;
+use Symfony\Component\DependencyInjection\ContainerInterface;
+
+/**
+ * Filters a view by entity references.
+ *
+ * @ingroup views_filter_handlers
+ *
+ * @ViewsFilter("entity_reference")
+ */
+class EntityReference extends ManyToOne {
+
+  use FieldAPIHandlerTrait;
+
+  /**
+   * Type for the autocomplete filter format.
+   */
+  const WIDGET_AUTOCOMPLETE = 'autocomplete';
+
+  /**
+   * Type for the select list filter format.
+   */
+  const WIDGET_SELECT = 'select';
+
+  /**
+   * Max number of entities in the select widget.
+   */
+  const WIDGET_SELECT_LIMIT = 100;
+
+  /**
+   * The subform prefix.
+   */
+  const SUBFORM_PREFIX = 'reference_';
+
+  /**
+   * The all value.
+   */
+  const ALL_VALUE = 'All';
+
+  /**
+   * The selection handlers available for the target entity ID of the filter.
+   *
+   * @var array|null
+   */
+  protected ?array $handlerOptions = NULL;
+
+  /**
+   * Validated exposed input that will be set as the input value.
+   *
+   * If the select list widget is chosen.
+   *
+   * @var array
+   */
+  protected array $validatedExposedInput;
+
+  /**
+   * {@inheritdoc}
+   */
+  public function init(ViewExecutable $view, DisplayPluginBase $display, ?array &$options = NULL): void {
+    parent::init($view, $display, $options);
+    if (empty($this->definition['field_name'])) {
+      $this->definition['field_name'] = $options['field'];
+    }
+
+    $this->definition['options callback'] = [$this, 'getValueOptionsCallback'];
+    $this->definition['options arguments'] = [$this->getSelectionHandler($this->options['sub_handler'])];
+  }
+
+  /**
+   * Constructs an EntityReference object.
+   */
+  public function __construct(
+    array $configuration,
+    $plugin_id,
+    $plugin_definition,
+    protected SelectionPluginManagerInterface $selectionPluginManager,
+    protected EntityTypeManagerInterface $entityTypeManager,
+    MessengerInterface $messenger,
+  ) {
+    parent::__construct($configuration, $plugin_id, $plugin_definition);
+    $this->setMessenger($messenger);
+
+    // @todo Unify 'entity field'/'field_name' instead of converting back and
+    // forth. https://www.drupal.org/node/2410779
+    if (isset($this->definition['entity field'])) {
+      $this->definition['field_name'] = $this->definition['entity field'];
+    }
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition): EntityReference {
+    return new static(
+      $configuration,
+      $plugin_id,
+      $plugin_definition,
+      $container->get('plugin.manager.entity_reference_selection'),
+      $container->get('entity_type.manager'),
+      $container->get('messenger'),
+    );
+  }
+
+  /**
+   * Gets the entity reference selection handler.
+   *
+   * @param string|null $sub_handler
+   *   The sub handler to get an instance of or NULL for the current selection.
+   *
+   * @return \Drupal\Core\Entity\EntityReferenceSelection\SelectionInterface
+   *   The selection handler plugin instance.
+   */
+  protected function getSelectionHandler(?string $sub_handler = NULL): SelectionInterface {
+    // Default values for the handler.
+    $handler_settings = $this->options['sub_handler_settings'] ?? [];
+    $handler_settings['handler'] = $sub_handler;
+    $handler_settings['target_type'] = $this->getReferencedEntityType()->id();
+    /** @var \Drupal\Core\Entity\EntityReferenceSelection\SelectionInterface */
+    return $this->selectionPluginManager->getInstance($handler_settings);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  protected function defineOptions(): array {
+    $options = parent::defineOptions();
+    $options['sub_handler'] = [
+      'default' => 'default:' . $this->getReferencedEntityType()->id(),
+    ];
+    $options['sub_handler_settings'] = ['default' => []];
+    $options['widget'] = ['default' => static::WIDGET_AUTOCOMPLETE];
+    return $options;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function hasExtraOptions(): bool {
+    return TRUE;
+  }
+
+  /**
+   * Get all selection plugins for this entity type.
+   *
+   * @return string[]
+   *   The selection handlers available for the target entity ID of the filter.
+   */
+  protected function getSubHandlerOptions(): array {
+    if ($this->handlerOptions) {
+      return $this->handlerOptions;
+    }
+    $entity_type = $this->getReferencedEntityType();
+    $selection_plugins = $this->selectionPluginManager->getSelectionGroups($entity_type->id());
+    $this->handlerOptions = [];
+    foreach (array_keys($selection_plugins) as $selection_group_id) {
+      // We only display base plugins (e.g. 'default', 'views', ...).
+      if (array_key_exists($selection_group_id, $selection_plugins[$selection_group_id])) {
+        $this->handlerOptions[$selection_group_id] = (string) $selection_plugins[$selection_group_id][$selection_group_id]['label'];
+      }
+      elseif (array_key_exists($selection_group_id . ':' . $entity_type->id(), $selection_plugins[$selection_group_id])) {
+        $selection_group_plugin = $selection_group_id . ':' . $entity_type->id();
+        $this->handlerOptions[$selection_group_plugin] = (string) $selection_plugins[$selection_group_id][$selection_group_plugin]['base_plugin_label'];
+      }
+    }
+    return $this->handlerOptions;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function buildExtraOptionsForm(&$form, FormStateInterface $form_state): void {
+    $form['sub_handler'] = [
+      '#type' => 'select',
+      '#title' => $this->t('Reference method'),
+      '#options' => $this->getSubHandlerOptions(),
+      '#default_value' => $this->options['sub_handler'],
+      '#required' => TRUE,
+    ];
+
+    // We store the settings from any sub handler in sub_handler_settings, but
+    // in this form, we have multiple sub handlers conditionally displayed.
+    // Copy the active sub_handler_settings into the handler specific settings
+    // to set the defaults to match the saved options on build.
+    if (!empty($this->options['sub_handler']) && !empty($this->options['sub_handler_settings'])) {
+      $this->options[static::SUBFORM_PREFIX . $this->options['sub_handler']] = $this->options['sub_handler_settings'];
+    }
+
+    foreach ($this->getSubHandlerOptions() as $sub_handler => $sub_handler_label) {
+      $subform_key = static::SUBFORM_PREFIX . $sub_handler;
+      $subform = [
+        '#type' => 'fieldset',
+        '#title' => $this->t('Reference type "@type"', [
+          '@type' => $sub_handler_label,
+        ]),
+        '#tree' => TRUE,
+        '#parents' => [
+          'options',
+          $subform_key,
+        ],
+        // Make the sub handler settings conditional on the selected selection
+        // handler.
+        '#states' => [
+          'visible' => [
+            'select[name="options[sub_handler]"]' => ['value' => $sub_handler],
+          ],
+        ],
+      ];
+
+      // Build the sub form and sub for state.
+      $selection_handler = $this->getSelectionHandler($sub_handler);
+      if (!empty($this->options[$subform_key])) {
+        $selection_config = $selection_handler->getConfiguration();
+        $selection_config = NestedArray::mergeDeepArray([
+          $selection_config,
+          $this->options[$subform_key],
+        ], TRUE);
+        $selection_handler->setConfiguration($selection_config);
+      }
+      $subform_state = SubformState::createForSubform($subform, $form, $form_state);
+      $sub_handler_settings = $selection_handler->buildConfigurationForm($subform, $subform_state);
+
+      if ($selection_handler instanceof ViewsSelection) {
+        if (isset($sub_handler_settings['view']['no_view_help'])) {
+          // If there are no views with entity reference displays,
+          // ViewsSelection still validates the view.
+          // This will prevent form config extra form submission,
+          // so we remove it here.
+          unset($sub_handler_settings['view']['#element_validate']);
+        }
+      }
+      else {
+        // Remove unnecessary and inappropriate handler settings from the
+        // filter config form.
+        $sub_handler_settings['target_bundles_update']['#access'] = FALSE;
+        $sub_handler_settings['auto_create']['#access'] = FALSE;
+        $sub_handler_settings['auto_create_bundle']['#access'] = FALSE;
+      }
+
+      $subform = NestedArray::mergeDeepArray([
+        $subform,
+        $sub_handler_settings,
+      ], TRUE);
+
+      $form[$subform_key] = $subform;
+      $this->cleanUpSubformChildren($form[$subform_key]);
+    }
+
+    $form['widget'] = [
+      '#type' => 'radios',
+      '#title' => $this->t('Selection type'),
+      '#default_value' => $this->options['widget'],
+      '#options' => [
+        static::WIDGET_SELECT => $this->t('Select list'),
+        static::WIDGET_AUTOCOMPLETE => $this->t('Autocomplete'),
+      ],
+      '#description' => $this->t('For performance and UX reasons, the maximum count of selectable entities for the "Select list" selection type is limited to @count. If more is expected, select "Autocomplete" instead.', [
+        '@count' => static::WIDGET_SELECT_LIMIT,
+      ]),
+    ];
+  }
+
+  /**
+   * Clean up subform children for properties that could cause problems.
+   *
+   * Views modal forms do not work with required or ajax elements.
+   *
+   * @param array $element
+   *   The form element.
+   */
+  protected function cleanUpSubformChildren(array &$element): void {
+    // Remove the required property to prevent focus errors.
+    if (isset($element['#required']) && $element['#required']) {
+      $element['#required'] = FALSE;
+      $element['#element_validate'][] = [static::class, 'validateRequired'];
+    }
+
+    // Remove the ajax property as it does not work.
+    if (!empty($element['#ajax'])) {
+      unset($element['#ajax']);
+    }
+
+    // Recursively apply to nested fields within the handler sub form.
+    foreach (Element::children($element) as $delta) {
+      $this->cleanUpSubformChildren($element[$delta]);
+    }
+  }
+
+  /**
+   * Validates that a required field for a sub handler has a value.
+   *
+   * @param array $element
+   *   The cardinality form render array.
+   * @param \Drupal\Core\Form\FormStateInterface $form_state
+   *   The form state.
+   */
+  public static function validateRequired(array &$element, FormStateInterface $form_state): void {
+    if (!empty($element['value'])) {
+      return;
+    }
+
+    // Config extra handler does not output validation messages and
+    // closes the modal with no feedback to the user.
+    // @todo https://www.drupal.org/project/drupal/issues/3163740.
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function validateExtraOptionsForm($form, FormStateInterface $form_state): void {
+    $options = $form_state->getValue('options');
+    $sub_handler = $options['sub_handler'];
+    $subform = $form[static::SUBFORM_PREFIX . $sub_handler];
+    $subform_state = SubformState::createForSubform($subform, $form, $form_state);
+
+    // Copy handler_settings from options to settings to be compatible with
+    // selection plugins.
+    $subform_options = $form_state->getValue([
+      'options',
+      static::SUBFORM_PREFIX . $sub_handler,
+    ]);
+    $subform_state->setValue([
+      'settings',
+    ], $subform_options);
+    $this->getSelectionHandler($sub_handler)
+      ->validateConfigurationForm($subform, $subform_state);
+
+    // Store the sub handler options in sub_handler_settings.
+    $form_state->setValue(['options', 'sub_handler_settings'], $subform_options);
+
+    // Remove options that are not from the selected sub_handler.
+    foreach (array_keys($this->getSubHandlerOptions()) as $sub_handler_option) {
+      if (isset($options[static::SUBFORM_PREFIX . $sub_handler_option])) {
+        $form_state->unsetValue(['options', static::SUBFORM_PREFIX . $sub_handler_option]);
+      }
+    }
+
+    parent::validateExtraOptionsForm($form, $form_state);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function submitExtraOptionsForm($form, FormStateInterface $form_state): void {
+    $sub_handler = $form_state->getValue('options')['sub_handler'];
+
+    // Ensure that only the select sub handler option is saved.
+    foreach (array_keys($this->getSubHandlerOptions()) as $sub_handler_option) {
+      if ($sub_handler_option == $sub_handler) {
+        $this->options['sub_handler_settings'] = $this->options[static::SUBFORM_PREFIX . $sub_handler_option];
+      }
+      if (isset($this->options[static::SUBFORM_PREFIX . $sub_handler_option])) {
+        unset($this->options[static::SUBFORM_PREFIX . $sub_handler_option]);
+      }
+    }
+  }
+
+  /**
+   * Fixes the issue with switching between the widgets in the view editor.
+   *
+   * @param array $form
+   *   Associative array containing the structure of the form, passed by
+   *   reference.
+   * @param \Drupal\Core\Form\FormStateInterface $form_state
+   *   The current state of the form.
+   */
+  protected function alternateWidgetsDefaultNormalize(array &$form, FormStateInterface $form_state): void {
+    $field_id = '_' . $this->getFieldDefinition()->getName() . '-widget';
+    $form[$field_id] = [
+      '#type' => 'hidden',
+      '#value' => $this->options['widget'],
+    ];
+
+    $previous_widget = $form_state->getUserInput()[$field_id] ?? NULL;
+    if ($previous_widget && $previous_widget !== $this->options['widget']) {
+      $form['value']['#value_callback'] = function ($element) {
+        return $element['#default_value'] ?? '';
+      };
+    }
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  protected function valueForm(&$form, FormStateInterface $form_state) {
+    if (!isset($this->options['sub_handler'])) {
+      return;
+    }
+    switch ($this->options['widget']) {
+      case static::WIDGET_SELECT:
+        $this->valueFormAddSelect($form, $form_state);
+        break;
+
+      case static::WIDGET_AUTOCOMPLETE:
+        $this->valueFormAddAutocomplete($form, $form_state);
+        break;
+    }
+
+    if (!empty($this->view->live_preview)) {
+      $this->alternateWidgetsDefaultNormalize($form, $form_state);
+    }
+
+    // Show or hide the value field depending on the operator field.
+    $is_exposed = $this->options['exposed'];
+
+    $visible = [];
+    if ($is_exposed) {
+      $operator_field = ($this->options['expose']['use_operator'] && $this->options['expose']['operator_id']) ? $this->options['expose']['operator_id'] : NULL;
+    }
+    else {
+      $operator_field = 'options[operator]';
+      $visible[] = [
+        ':input[name="options[expose_button][checkbox][checkbox]"]' => ['checked' => TRUE],
+        ':input[name="options[expose][use_operator]"]' => ['checked' => TRUE],
+        ':input[name="options[expose][operator_id]"]' => ['empty' => FALSE],
+      ];
+    }
+    if ($operator_field) {
+      foreach ($this->operatorValues(1) as $operator) {
+        $visible[] = [
+          ':input[name="' . $operator_field . '"]' => ['value' => $operator],
+        ];
+      }
+      $form['value']['#states'] = ['visible' => $visible];
+    }
+
+    if (!$is_exposed) {
+      // Retain the helper option.
+      $this->helper->buildOptionsForm($form, $form_state);
+
+      // Show help text if not exposed to end users.
+      $form['value']['#description'] = $this->t('Leave blank for all. Otherwise, the first selected item will be the default instead of "Any".');
+    }
+  }
+
+  /**
+   * Adds an autocomplete element to the form.
+   *
+   * @param array $form
+   *   Associative array containing the structure of the form, passed by
+   *   reference.
+   * @param \Drupal\Core\Form\FormStateInterface $form_state
+   *   The current state of the form.
+   */
+  protected function valueFormAddAutocomplete(array &$form, FormStateInterface $form_state): void {
+    $referenced_type = $this->getReferencedEntityType();
+    $form['value'] = [
+      '#title' => $this->t('Select %entity_types', ['%entity_types' => $referenced_type->getPluralLabel()]),
+      '#type' => 'entity_autocomplete',
+      '#default_value' => EntityAutocomplete::getEntityLabels($this->getDefaultSelectedEntities()),
+      '#tags' => TRUE,
+      '#process_default_value' => FALSE,
+      '#target_type' => $referenced_type->id(),
+      '#selection_handler' => $this->options['sub_handler'],
+      '#selection_settings' => $this->options['sub_handler_settings'],
+      // Validation is done by validateExposed().
+      '#validate_reference' => FALSE,
+    ];
+  }
+
+  /**
+   * Adds a select element to the form.
+   *
+   * @param array $form
+   *   Associative array containing the structure of the form, passed by
+   *   reference.
+   * @param \Drupal\Core\Form\FormStateInterface $form_state
+   *   The current state of the form.
+   */
+  protected function valueFormAddSelect(array &$form, FormStateInterface $form_state): void {
+    $is_exposed = $form_state->get('exposed');
+
+    $options = $this->getValueOptions();
+    $default_value = (array) $this->value;
+
+    if ($is_exposed) {
+      $identifier = $this->options['expose']['identifier'];
+
+      if (!empty($this->options['expose']['reduce'])) {
+        $options = $this->reduceValueOptions($options);
+
+        if (!empty($this->options['expose']['multiple']) && empty($this->options['expose']['required'])) {
+          $default_value = [];
+        }
+      }
+
+      if (empty($this->options['expose']['multiple'])) {
+        if (empty($this->options['expose']['required']) && (empty($default_value) || !empty($this->options['expose']['reduce']))) {
+          $default_value = static::ALL_VALUE;
+        }
+        elseif (empty($default_value)) {
+          $keys = array_keys($options);
+          $default_value = array_shift($keys);
+        }
+        else {
+          // Set the default value to be the first element of the array.
+          $default_value = reset($default_value);
+        }
+      }
+    }
+
+    $referenced_type = $this->getReferencedEntityType();
+    $form['value'] = [
+      '#type' => 'select',
+      '#title' => $this->t('Select @entity_types', ['@entity_types' => $referenced_type->getPluralLabel()]),
+      '#multiple' => TRUE,
+      '#options' => $options,
+      // Set a minimum size to facilitate easier selection of entities.
+      '#size' => min(8, count($options)),
+      '#default_value' => $default_value,
+    ];
+
+    $user_input = $form_state->getUserInput();
+    if ($is_exposed && isset($identifier) && !isset($user_input[$identifier])) {
+      $user_input[$identifier] = $default_value;
+      $form_state->setUserInput($user_input);
+    }
+  }
+
+  /**
+   * Gets all entities selected by default.
+   *
+   * @return \Drupal\Core\Entity\EntityInterface[]
+   *   All entities selected by default, or an empty array, if none.
+   */
+  protected function getDefaultSelectedEntities(): array {
+    $referenced_type_id = $this->getReferencedEntityType()->id();
+    $entity_storage = $this->entityTypeManager->getStorage($referenced_type_id);
+
+    return !empty($this->value) && !isset($this->value[static::ALL_VALUE]) ? $entity_storage->loadMultiple($this->value) : [];
+  }
+
+  /**
+   * Returns the value options for a select widget.
+   *
+   * @param \Drupal\Core\Entity\EntityReferenceSelection\SelectionInterface $selection_handler
+   *   The selection handler.
+   *
+   * @return string[]
+   *   The options.
+   *
+   * @see \Drupal\views\Plugin\views\filter\InOperator::getValueOptions()
+   */
+  protected function getValueOptionsCallback(SelectionInterface $selection_handler): array {
+    $entity_data = [];
+    if ($this->options['widget'] === static::WIDGET_SELECT) {
+      $entity_data = $selection_handler->getReferenceableEntities(NULL, 'CONTAINS', static::WIDGET_SELECT_LIMIT);
+    }
+
+    $options = [];
+    foreach ($entity_data as $bundle) {
+      foreach ($bundle as $id => $entity_label) {
+        $options[$id] = $entity_label;
+      }
+    }
+
+    return $options;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function validate(): array {
+    // InOperator validation logic is not appropriate for entity reference
+    // autocomplete or select, so prevent parent class validation from
+    // occurring.
+    return [];
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function acceptExposedInput($input): bool {
+    if (empty($this->options['exposed'])) {
+      return TRUE;
+    }
+
+    // We need to know the operator, which is normally set in
+    // \Drupal\views\Plugin\views\filter\FilterPluginBase::acceptExposedInput(),
+    // before we actually call the parent version of ourselves.
+    if (!empty($this->options['expose']['use_operator']) && !empty($this->options['expose']['operator_id']) && isset($input[$this->options['expose']['operator_id']])) {
+      $this->operator = $input[$this->options['expose']['operator_id']];
+    }
+
+    // If view is an attachment and is inheriting exposed filters, then assume
+    // exposed input has already been validated.
+    if (!empty($this->view->is_attachment) && $this->view->display_handler->usesExposed()) {
+      $this->validatedExposedInput = (array) $this->view->exposed_raw_input[$this->options['expose']['identifier']];
+    }
+
+    // If we're checking for EMPTY or NOT, we don't need any input, and we can
+    // say that our input conditions are met by just having the right operator.
+    if ($this->operator == 'empty' || $this->operator == 'not empty') {
+      return TRUE;
+    }
+
+    // If it's non-required and there's no value don't bother filtering.
+    if (!$this->options['expose']['required'] && empty($this->validatedExposedInput)) {
+      return FALSE;
+    }
+
+    $accept_exposed_input = parent::acceptExposedInput($input);
+    if ($accept_exposed_input) {
+      // If we have previously validated input, override.
+      if (isset($this->validatedExposedInput)) {
+        $this->value = $this->validatedExposedInput;
+      }
+    }
+
+    return $accept_exposed_input;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function validateExposed(&$form, FormStateInterface $form_state): void {
+    if (empty($this->options['exposed'])) {
+      return;
+    }
+
+    $identifier = $this->options['expose']['identifier'];
+
+    // Set the validated exposed input from the select list when not the all
+    // value option.
+    if ($this->options['widget'] == static::WIDGET_SELECT) {
+      if ($form_state->getValue($identifier) != static::ALL_VALUE) {
+        $this->validatedExposedInput = (array) $form_state->getValue($identifier);
+      }
+      return;
+    }
+
+    if (empty($identifier)) {
+      return;
+    }
+
+    $values = $form_state->getValue($identifier);
+    if (!is_array($values)) {
+      return;
+    }
+
+    foreach ($values as $value) {
+      $this->validatedExposedInput[] = $value['target_id'];
+    }
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  protected function valueSubmit($form, FormStateInterface $form_state): void {
+    // Prevent the parent class InOperator from altering the array.
+    // @see \Drupal\views\Plugin\views\filter\InOperator::valueSubmit().
+  }
+
+  /**
+   * Gets the target entity type referenced by this field.
+   *
+   * @return \Drupal\Core\Entity\EntityTypeInterface
+   *   The entity type definition.
+   */
+  protected function getReferencedEntityType(): EntityTypeInterface {
+    $field_def = $this->getFieldDefinition();
+    $entity_type_id = $field_def->getItemDefinition()
+      ->getSetting('target_type');
+    return $this->entityTypeManager->getDefinition($entity_type_id);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function calculateDependencies(): array {
+    $dependencies = parent::calculateDependencies();
+
+    $sub_handler = $this->options['sub_handler'];
+    $selection_handler = $this->getSelectionHandler($sub_handler);
+    if ($selection_handler instanceof DependentPluginInterface) {
+      $dependencies += $selection_handler->calculateDependencies();
+    }
+
+    foreach ($this->getDefaultSelectedEntities() as $entity) {
+      $dependencies[$entity->getConfigDependencyKey()][] = $entity->getConfigDependencyName();
+    }
+
+    return $dependencies;
+  }
+
+}
+
