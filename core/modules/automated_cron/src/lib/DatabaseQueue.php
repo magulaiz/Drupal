@@ -21,7 +21,7 @@ class DatabaseQueue extends BaseDatabaseQueue {
     // Drupal\automated_cron\EventSubscriber\AutomatedCron::onTerminate
     // and trigger the queue processing.
     $id = parent::createItem($data);
-    \Drupal::service('automated_cron.instantqueue')->addToInstantQueue($this->name);
+    \Drupal::service('automated_cron.instant_queue')->addToInstantQueue($this->name);
     return $id;
   }
 

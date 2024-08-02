@@ -83,7 +83,7 @@ class InstantQueue {
   }
 
   /**
-   * Retuns the queue names.
+   * Returns the queue names.
    *
    * @return array
    */
