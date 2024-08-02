@@ -85,4 +85,3 @@ function system_post_update_sdc_uninstall() {
     \Drupal::service('module_installer')->uninstall(['sdc'], FALSE);
   }
 }
-
