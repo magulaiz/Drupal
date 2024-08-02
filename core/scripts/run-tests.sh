@@ -1047,6 +1047,8 @@ function simpletest_script_reporter_init() {
   $results_map = [
     'pass' => 'Pass',
     'fail' => 'Fail',
+    'error' => 'Error',
+    'skipped' => 'Skipped',
     'exception' => 'Exception',
   ];
 
@@ -1238,6 +1240,7 @@ function simpletest_script_reporter_display_results(TestRunResultsStorageInterfa
       exit(SIMPLETEST_SCRIPT_EXIT_EXCEPTION);
     }
     $test_class = '';
+dump($results, $results_map);
     foreach ($results as $result) {
       if (isset($results_map[$result->status])) {
         if ($result->test_class != $test_class) {

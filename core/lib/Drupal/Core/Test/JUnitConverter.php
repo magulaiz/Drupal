@@ -81,6 +81,7 @@ class JUnitConverter {
     foreach ($element as $child) {
       $test_cases[] = static::findTestCases($child, $element);
     }
+
     return array_merge(...$test_cases);
   }
 
@@ -98,7 +99,7 @@ class JUnitConverter {
    * @internal
    */
   public static function convertTestCaseToSimpletestRow($test_id, \SimpleXMLElement $test_case) {
-    $status = static::getStatus($test_case);
+    $status = static::getTestCaseResult($test_case);
 
     $message = '';
     if ($status == PhpUnitTestCaseResult::Fail) {
@@ -110,24 +111,20 @@ class JUnitConverter {
     elseif ($status == PhpUnitTestCaseResult::Skip) {
       $message = 'Skipped';
     }
-    elseif ($status == PhpUnitTestCaseResult::Incomplete) {
-      $message = 'Incomplete';
-    }
 
     $attributes = $test_case->attributes();
 
-    $record = [
+    return [
       'test_id' => $test_id,
       'test_class' => (string) $attributes->class,
       'status' => $status->value,
       'message' => $message,
       'message_group' => 'Other',
-      'function' => $attributes->class . '->' . $attributes->name . '()',
+      'function' => '::' . $attributes->name . '()',
       'line' => (int) $attributes->line ?: 0,
       'file' => (string) $attributes->file,
       'time' => (float) $attributes->time,
     ];
-    return $record;
   }
 
   /**
@@ -139,7 +136,7 @@ class JUnitConverter {
    * @return \Drupal\TestTools\PhpUnitTestCaseResult
    *   The status value to insert into the {simpletest} record.
    */
-  protected static function getStatus(\SimpleXMLElement $test_case): PhpUnitTestCaseResult {
+  protected static function getTestCaseResult(\SimpleXMLElement $test_case): PhpUnitTestCaseResult {
     if ($test_case->error || $test_case->risky) {
       return PhpUnitTestCaseResult::Error;
     }

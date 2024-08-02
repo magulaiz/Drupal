@@ -13,6 +13,5 @@ enum PhpUnitTestCaseResult: string {
   case Fail = 'fail';
   case Error = 'error';
   case Skip = 'skipped';
-  case Incomplete = 'incomplete';
 
 }
