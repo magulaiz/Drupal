@@ -1081,9 +1081,9 @@ function simpletest_script_reporter_init() {
  */
 function simpletest_script_reporter_display_summary($class, $results) {
   // Output all test results vertically aligned.
-  // Limit the fully qualified class name to 60 characters, using the end of the
-  // string so that individual test classes can still be identified. Pad each
-  // group with 3 digits by default (more than 999 assertions are rare).
+  // Limit the fully qualified method name to 60 characters, using the end of
+  // the string so that individual test classes can still be identified. Pad
+  // each group with 3 digits by default (more than 999 assertions are rare).
   $length = strlen($class);
   if ($length < 60) {
     $class_out = str_pad($class, 60, ' ', STR_PAD_RIGHT);
@@ -1245,6 +1245,12 @@ function simpletest_script_reporter_display_results(TestRunResultsStorageInterfa
 function simpletest_script_format_result($result) {
   global $args, $results_map, $color;
 
+  // Limit the fully qualified method name to 60 characters, using the end of
+  // the string so that individual test classes can still be identified.
+  $class = $result->function;
+  $length = strlen($class);
+  $offset = $length >= 60 ?  $length - 60 : 0;
+  $class = substr($class, $offset, 60);
   $summary = sprintf("%-9.9s %-10.10s %-17.17s %4.4s %-35.35s\n",
     $results_map[$result->status], $result->message_group, basename($result->file), $result->line, $result->function);
 
