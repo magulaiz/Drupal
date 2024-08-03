@@ -1029,7 +1029,16 @@ function simpletest_script_get_test_list() {
   if ((int) $args['ci-parallel-node-total'] > 1) {
     $slow_tests_per_job = (int) ceil(count($slow_tests) / $args['ci-parallel-node-total']);
     $tests_per_job = (int) ceil(count($test_list) / $args['ci-parallel-node-total']);
-    $test_list = array_merge(array_slice($slow_tests, ($args['ci-parallel-node-index'] -1) * $slow_tests_per_job, $slow_tests_per_job), array_slice($test_list, ($args['ci-parallel-node-index'] - 1) * $tests_per_job, $tests_per_job));
+    $not_slow_tests = array_slice($test_list, ($args['ci-parallel-node-index'] - 1) * $tests_per_job, $tests_per_job);
+    usort($not_slow_tests, function ($a, $b) {
+      $method_count = function ($class) {
+        $reflection = new \ReflectionClass($class);
+        return count($reflection->getMethods(\ReflectionMethod::IS_PUBLIC));
+      };
+      return $method_count($a) > $method_count($b) ? 1 : -1;
+    });
+
+    $test_list = array_merge(array_slice($slow_tests, ($args['ci-parallel-node-index'] -1) * $slow_tests_per_job, $slow_tests_per_job), $not_slow_tests);
   }
 
   return $test_list;
