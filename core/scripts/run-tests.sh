@@ -1105,6 +1105,7 @@ function simpletest_script_reporter_display_summary($class, $results, $time = NU
     !$results['#fail'] ? '' : $results['#fail'] . ' fails',
     !$results['#exception'] ? '' : $results['#exception'] . ' exceptions',
     !$results['#debug'] ? '' : $results['#debug'] . ' messages',
+    $time,
   ]);
 
   $status = ($results['#fail'] || $results['#exception'] ? 'fail' : 'pass');
