@@ -1254,10 +1254,17 @@ function simpletest_script_format_result($result) {
   // the string so that individual test classes can still be identified.
   $class = $result->function;
   $length = strlen($class);
-  $offset = $length >= 60 ?  $length - 60 : 0;
-  $class = substr($class, $offset, 60);
+  if ($length < 60) {
+    $class_out = str_pad($class, 60, ' ', STR_PAD_RIGHT);
+  }
+  elseif ($length > 60) {
+    $class_out = '...' . substr($class, -60 + 3);
+  }
+  else {
+    $class_out = $class;
+  }
   $summary = sprintf("%-9.9s %-10.10s %-17.17s %4.4s %-35.35s\n",
-    $results_map[$result->status], $result->message_group, basename($result->file), $result->line, $result->function);
+  $results_map[$result->status], $result->message_group, basename($result->file), $result->line, $class_out);
 
   simpletest_script_print($summary, simpletest_script_color_code($result->status));
 
