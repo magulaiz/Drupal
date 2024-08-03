@@ -54,7 +54,7 @@ class PhpUnitTestRunnerTest extends UnitTestCase {
       ->method('runCommand')
       ->willReturnCallback(
         function (string $test_class_name, string $log_junit_file_path, int &$status): void {
-          $status = TestStatus::EXCEPTION;
+          $status = TestStatus::ERROR;
         }
       );
 
@@ -65,7 +65,7 @@ class PhpUnitTestRunnerTest extends UnitTestCase {
     $results = $runner->execute($test_run, 'SomeTest', $status);
 
     // Make sure our status code made the round trip.
-    $this->assertEquals(TestStatus::EXCEPTION, $status);
+    $this->assertEquals(TestStatus::ERROR, $status);
 
     // A serious error in runCommand() should give us a fixed set of results.
     $row = reset($results);
@@ -73,7 +73,7 @@ class PhpUnitTestRunnerTest extends UnitTestCase {
     $fail_row = [
       'test_id' => $test_id,
       'test_class' => 'SomeTest',
-      'status' => TestStatus::label(TestStatus::EXCEPTION),
+      'status' => TestStatus::label(TestStatus::ERROR),
       'message' => 'PHPUnit Test failed to complete; Error: ',
       'message_group' => 'Other',
       'function' => 'SomeTest',

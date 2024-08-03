@@ -180,6 +180,9 @@ class PhpUnitTestRunner implements ContainerInjectionInterface {
     if (file_exists($log_junit_file_path)) {
       $results = JUnitConverter::xmlToRows($test_run->id(), $log_junit_file_path);
     }
+    else {
+      $results = [];
+    }
 
     // If not passed, add full PHPUnit run output since individual test cases
     // messages may not give full clarity (deprecations, warnings, etc.).
