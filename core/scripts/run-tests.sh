@@ -1034,7 +1034,7 @@ function simpletest_script_get_test_list() {
         $reflection = new \ReflectionClass($class);
         return count($reflection->getMethods(\ReflectionMethod::IS_PUBLIC));
       };
-      return $method_count($a) > $method_count($b) ? 1 : -1;
+      return $method_count($a) < $method_count($b) ? 1 : -1;
     });
 
     $test_list = array_merge(array_slice($slow_tests, ($args['ci-parallel-node-index'] -1) * $slow_tests_per_job, $slow_tests_per_job), $not_slow_tests);
