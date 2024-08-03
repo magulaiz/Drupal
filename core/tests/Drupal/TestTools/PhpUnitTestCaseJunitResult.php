@@ -7,7 +7,7 @@ namespace Drupal\TestTools;
 /**
  * @todo add doc.
  */
-enum PhpUnitTestCaseResult: string {
+enum PhpUnitTestCaseJUnitResult: string {
 
   case Pass = 'pass';
   case Fail = 'fail';

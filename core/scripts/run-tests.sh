@@ -792,10 +792,9 @@ function simpletest_script_execute_batch(TestRunResultsStorageInterface $test_ru
           // Ensure that an error line is displayed for the class.
           simpletest_script_reporter_display_summary($child['class'], [
             '#pass' => 0,
-            '#fail' => 1,
-            '#risky' => 0,
+            '#fail' => 0,
+            '#error' => 1,
             '#skipped' => 0,
-            '#incomplete' => 0,
             '#exception' => 0,
             '#debug' => 0,
             '#time' => 0,
@@ -1100,14 +1099,11 @@ function simpletest_script_reporter_display_summary($class, $results) {
   if ($results['#fail']) {
     $summary[] = $results['#fail'] . ' fails';
   }
-  if ($results['#risky']) {
-    $summary[] = $results['#risky'] . ' risky';
+  if ($results['#error']) {
+    $summary[] = $results['#error'] . ' errors';
   }
   if ($results['#skipped']) {
     $summary[] = $results['#skipped'] . ' skipped';
-  }
-  if ($results['#incomplete']) {
-    $summary[] = $results['#incomplete'] . ' incomplete';
   }
   if ($results['#exception']) {
     $summary[] = $results['#exception'] . ' exceptions';
@@ -1124,7 +1120,7 @@ function simpletest_script_reporter_display_summary($class, $results) {
   }
 
   $output = vsprintf('%s %s %s', [$time, $class_out, implode(', ', $summary)]);
-  $status = ($results['#fail'] || $results['#exception'] || $results['#risky'] ? 'fail' : 'pass');
+  $status = ($results['#fail'] || $results['#exception'] || $results['#error'] ? 'fail' : 'pass');
   simpletest_script_print($output . "\n", simpletest_script_color_code($status));
 }
 
@@ -1240,7 +1236,6 @@ function simpletest_script_reporter_display_results(TestRunResultsStorageInterfa
       exit(SIMPLETEST_SCRIPT_EXIT_EXCEPTION);
     }
     $test_class = '';
-dump($results, $results_map);
     foreach ($results as $result) {
       if (isset($results_map[$result->status])) {
         if ($result->test_class != $test_class) {
@@ -1249,7 +1244,7 @@ dump($results, $results_map);
           $test_class = $result->test_class;
 
           // Print table header.
-          echo "Status    Group      Filename          Line Function                            \n";
+          echo "Status          Time Filename          Line Test                                \n";
           echo "--------------------------------------------------------------------------------\n";
         }
 
@@ -1268,10 +1263,14 @@ dump($results, $results_map);
 function simpletest_script_format_result($result) {
   global $args, $results_map, $color;
 
-  $summary = sprintf("%-9.9s %-10.10s %-17.17s %4.4s %-35.35s\n",
-    $results_map[$result->status], $result->message_group, basename($result->file), $result->line, $result->function);
+  $summary = sprintf("%-9.9s %9.3fs %-17.17s %4.4s %-35.35s\n",
+    $results_map[$result->status], $result->time, basename($result->file), $result->line, $result->function);
 
   simpletest_script_print($summary, simpletest_script_color_code($result->status));
+
+  if ($result->message === '') {
+    return;
+  }
 
   $message = trim(strip_tags($result->message));
   if ($args['non-html']) {

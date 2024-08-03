@@ -2,7 +2,7 @@
 
 namespace Drupal\Core\Test;
 
-use Drupal\TestTools\PhpUnitTestCaseResult;
+use Drupal\TestTools\PhpUnitTestCaseJUnitResult;
 
 /**
  * Converts JUnit XML to Drupal's {simpletest} schema.
@@ -28,7 +28,6 @@ class JUnitConverter {
    * @internal
    */
   public static function xmlToRows($test_id, $phpunit_xml_file) {
-    // @todo throw if file if missing.
     $contents = @file_get_contents($phpunit_xml_file);
     if (!$contents) {
       return [];
@@ -100,19 +99,13 @@ class JUnitConverter {
    */
   public static function convertTestCaseToSimpletestRow($test_id, \SimpleXMLElement $test_case) {
     $status = static::getTestCaseResult($test_case);
-
-    $message = '';
-    if ($status == PhpUnitTestCaseResult::Fail) {
-      $message = (string) $test_case->failure[0];
-    }
-    elseif ($status == PhpUnitTestCaseResult::Error) {
-      $message = (string) $test_case->error[0];
-    }
-    elseif ($status == PhpUnitTestCaseResult::Skip) {
-      $message = 'Skipped';
-    }
-
     $attributes = $test_case->attributes();
+
+    $message = match ($status) {
+      PhpUnitTestCaseJUnitResult::Fail => (string) $test_case->failure[0],
+      PhpUnitTestCaseJUnitResult::Error => (string) $test_case->error[0],
+      default => '',
+    };
 
     return [
       'test_id' => $test_id,
@@ -120,7 +113,7 @@ class JUnitConverter {
       'status' => $status->value,
       'message' => $message,
       'message_group' => 'Other',
-      'function' => '::' . $attributes->name . '()',
+      'function' => $attributes->name,
       'line' => (int) $attributes->line ?: 0,
       'file' => (string) $attributes->file,
       'time' => (float) $attributes->time,
@@ -133,20 +126,20 @@ class JUnitConverter {
    * @param \SimpleXMLElement $test_case
    *   The test case XML element.
    *
-   * @return \Drupal\TestTools\PhpUnitTestCaseResult
+   * @return \Drupal\TestTools\PhpUnitTestCaseJUnitResult
    *   The status value to insert into the {simpletest} record.
    */
-  protected static function getTestCaseResult(\SimpleXMLElement $test_case): PhpUnitTestCaseResult {
-    if ($test_case->error || $test_case->risky) {
-      return PhpUnitTestCaseResult::Error;
+  protected static function getTestCaseResult(\SimpleXMLElement $test_case): PhpUnitTestCaseJUnitResult {
+    if ($test_case->error) {
+      return PhpUnitTestCaseJUnitResult::Error;
     }
     if ($test_case->failure) {
-      return PhpUnitTestCaseResult::Fail;
+      return PhpUnitTestCaseJUnitResult::Fail;
     }
     if ($test_case->skipped) {
-      return PhpUnitTestCaseResult::Skip;
+      return PhpUnitTestCaseJUnitResult::Skip;
     }
-    return PhpUnitTestCaseResult::Pass;
+    return PhpUnitTestCaseJUnitResult::Pass;
   }
 
 }

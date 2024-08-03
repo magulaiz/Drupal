@@ -47,7 +47,7 @@ class PhpUnitTestRunner implements ContainerInjectionInterface {
   public static function create(ContainerInterface $container): static {
     return new static(
       (string) $container->getParameter('app.root'),
-      (string) $container->get('file_system')->realpath('public://simpletest'),
+      (string) $container->get('file_system')->realpath('public://simpletest')
     );
   }
 
@@ -230,9 +230,8 @@ class PhpUnitTestRunner implements ContainerInjectionInterface {
         $summaries[$result['test_class']] = [
           '#pass' => 0,
           '#fail' => 0,
-          '#risky' => 0,
+          '#error' => 0,
           '#skipped' => 0,
-          '#incomplete' => 0,
           '#exception' => 0,
           '#debug' => 0,
           '#time' => 0,
@@ -250,16 +249,12 @@ class PhpUnitTestRunner implements ContainerInjectionInterface {
           $summaries[$result['test_class']]['#fail']++;
           break;
 
-        case 'risky':
-          $summaries[$result['test_class']]['#risky']++;
+        case 'error':
+          $summaries[$result['test_class']]['#error']++;
           break;
 
         case 'skipped':
           $summaries[$result['test_class']]['#skipped']++;
-          break;
-
-        case 'incomplete':
-          $summaries[$result['test_class']]['#incomplete']++;
           break;
 
         case 'exception':

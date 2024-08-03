@@ -205,7 +205,7 @@ class SimpletestTestRunResultsStorage implements TestRunResultsStorageInterface 
         ],
         'status' => [
           'type' => 'varchar',
-          'length' => 12,
+          'length' => 9,
           'not null' => TRUE,
           'default' => '',
           'description' => 'Message status.',
