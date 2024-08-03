@@ -1098,14 +1098,13 @@ function simpletest_script_reporter_display_summary($class, $results, $time = NU
   else {
     $class_out = $class;
   }
-  $output = vsprintf('%-60.60s %5s %10s %9s %14s %12s', [
+  $output = vsprintf('%-60.60s %10s %5s %9s %14s %12s', [
     $class_out,
     $results['#pass'] . ' passes',
     isset($time) ? ceil($time) . 's' : '',
     !$results['#fail'] ? '' : $results['#fail'] . ' fails',
     !$results['#exception'] ? '' : $results['#exception'] . ' exceptions',
     !$results['#debug'] ? '' : $results['#debug'] . ' messages',
-    $time,
   ]);
 
   $status = ($results['#fail'] || $results['#exception'] ? 'fail' : 'pass');
