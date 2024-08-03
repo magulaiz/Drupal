@@ -177,22 +177,27 @@ class PhpUnitTestRunner implements ContainerInjectionInterface {
     $this->runCommand($test_class_name, $log_junit_file_path, $status, $output);
     $time = microtime(TRUE) - $start;
 
-    if ($status == TestStatus::PASS) {
-      return JUnitConverter::xmlToRows($test_run->id(), $log_junit_file_path);
+    if (file_exists($log_junit_file_path)) {
+      $results = JUnitConverter::xmlToRows($test_run->id(), $log_junit_file_path);
     }
-    return [
-      [
+
+    // If not passed, add full PHPUnit run output since individual test cases
+    // messages may not give full clarity (deprecations, warnings, etc.).
+    if ($status > TestStatus::PASS) {
+      $results[] = [
         'test_id' => $test_run->id(),
         'test_class' => $test_class_name,
-        'status' => TestStatus::label($status),
-        'message' => 'PHPUnit Test failed to complete; Error: ' . implode("\n", $output),
+        'status' => $status < TestStatus::SYSTEM ? 'debug' : 'exception',
+        'message' => implode("\n", $output),
         'message_group' => 'Other',
-        'function' => $test_class_name,
+        'function' => '*** PHPUnit runner output ***',
         'line' => '0',
         'file' => $log_junit_file_path,
         'time' => $time,
-      ],
-    ];
+      ];
+    }
+
+    return $results;
   }
 
   /**

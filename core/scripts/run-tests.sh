@@ -37,13 +37,16 @@ const SIMPLETEST_SCRIPT_COLOR_PASS = 32;
 const SIMPLETEST_SCRIPT_COLOR_FAIL = 31;
 // An annoying brown.
 const SIMPLETEST_SCRIPT_COLOR_EXCEPTION = 33;
+// An appeasing cyan.
+const SIMPLETEST_SCRIPT_COLOR_YELLOW = 33;
 
 // Restricting the chunk of queries prevents memory exhaustion.
 const SIMPLETEST_SCRIPT_SQLITE_VARIABLE_LIMIT = 350;
 
 const SIMPLETEST_SCRIPT_EXIT_SUCCESS = 0;
 const SIMPLETEST_SCRIPT_EXIT_FAILURE = 1;
-const SIMPLETEST_SCRIPT_EXIT_EXCEPTION = 2;
+const SIMPLETEST_SCRIPT_EXIT_ERROR = 2;
+const SIMPLETEST_SCRIPT_EXIT_EXCEPTION = 3;
 
 // Set defaults and get overrides.
 [$args, $count] = simpletest_script_parse_args();
@@ -775,8 +778,11 @@ function simpletest_script_execute_batch(TestRunResultsStorageInterface $test_ru
         if ($status['exitcode'] === SIMPLETEST_SCRIPT_EXIT_FAILURE) {
           $total_status = max($status['exitcode'], $total_status);
         }
+        elseif ($status['exitcode'] === SIMPLETEST_SCRIPT_EXIT_ERROR) {
+          $total_status = max($status['exitcode'], $total_status);
+        }
         elseif ($status['exitcode']) {
-          $message = 'FATAL ' . $child['class'] . ': test runner returned a non-zero error code (' . $status['exitcode'] . ').';
+          $message = 'FATAL ' . $child['class'] . ': test runner returned an unexpected error code (' . $status['exitcode'] . ').';
           echo $message . "\n";
           // @todo Return SIMPLETEST_SCRIPT_EXIT_EXCEPTION instead, when
           // DrupalCI supports this.
@@ -1049,6 +1055,7 @@ function simpletest_script_reporter_init() {
     'error' => 'Error',
     'skipped' => 'Skipped',
     'exception' => 'Exception',
+    'debug' => 'Log',
   ];
 
   echo "\n";
@@ -1095,21 +1102,21 @@ function simpletest_script_reporter_display_summary($class, $results) {
   if (strlen($class_out) > 70) {
       $class_out = '...' . substr($class_out, -70 + 3);
   }
-  $summary = [str_pad($results['#pass'], 4, " ", STR_PAD_LEFT) . ' passes'];
+  $summary = [str_pad($results['#pass'], 4, " ", STR_PAD_LEFT) . ' passed'];
   if ($results['#fail']) {
-    $summary[] = $results['#fail'] . ' fails';
+    $summary[] = $results['#fail'] . ' failed';
   }
   if ($results['#error']) {
-    $summary[] = $results['#error'] . ' errors';
+    $summary[] = $results['#error'] . ' errored';
   }
   if ($results['#skipped']) {
     $summary[] = $results['#skipped'] . ' skipped';
   }
   if ($results['#exception']) {
-    $summary[] = $results['#exception'] . ' exceptions';
+    $summary[] = $results['#exception'] . ' exception(s)';
   }
   if ($results['#debug']) {
-    $summary[] = $results['#debug'] . ' messages';
+    $summary[] = $results['#debug'] . ' log(s)';
   }
 
   if ($results['#time']) {
@@ -1244,8 +1251,8 @@ function simpletest_script_reporter_display_results(TestRunResultsStorageInterfa
           $test_class = $result->test_class;
 
           // Print table header.
-          echo "Status          Time Filename          Line Test                                \n";
-          echo "--------------------------------------------------------------------------------\n";
+          echo "Status          Time Filename          Line Test                                               \n";
+          echo "-----------------------------------------------------------------------------------------------\n";
         }
 
         simpletest_script_format_result($result);
@@ -1263,7 +1270,7 @@ function simpletest_script_reporter_display_results(TestRunResultsStorageInterfa
 function simpletest_script_format_result($result) {
   global $args, $results_map, $color;
 
-  $summary = sprintf("%-9.9s %9.3fs %-17.17s %4.4s %-35.35s\n",
+  $summary = sprintf("%-9.9s %9.3fs %-17.17s %4.4s %-50.50s\n",
     $results_map[$result->status], $result->time, basename($result->file), $result->line, $result->function);
 
   simpletest_script_print($summary, simpletest_script_color_code($result->status));
@@ -1324,18 +1331,12 @@ function simpletest_script_print($message, $color_code) {
  *   Color code. Returns 0 for default case.
  */
 function simpletest_script_color_code($status) {
-  switch ($status) {
-    case 'pass':
-      return SIMPLETEST_SCRIPT_COLOR_PASS;
-
-    case 'fail':
-      return SIMPLETEST_SCRIPT_COLOR_FAIL;
-
-    case 'exception':
-      return SIMPLETEST_SCRIPT_COLOR_EXCEPTION;
-  }
-  // Default formatting.
-  return 0;
+  return match ($status) {
+    'pass' => SIMPLETEST_SCRIPT_COLOR_PASS,
+    'fail', 'error', 'exception' => SIMPLETEST_SCRIPT_COLOR_FAIL,
+    'skipped' => SIMPLETEST_SCRIPT_COLOR_YELLOW,
+    default => 0,
+  };
 }
 
 /**
