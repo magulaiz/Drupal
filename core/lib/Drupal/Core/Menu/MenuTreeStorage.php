@@ -54,6 +54,15 @@ class MenuTreeStorage implements MenuTreeStorageInterface {
   protected $table;
 
   /**
+   * Indicator for the existence of the database table.
+   *
+   * This variable is only used by the database driver for MongoDB.
+   *
+   * @var bool
+   */
+  protected $tableExists = FALSE;
+
+  /**
    * Additional database connection options to use in queries.
    *
    * @var array
@@ -212,6 +221,12 @@ class MenuTreeStorage implements MenuTreeStorageInterface {
    *   failed.
    */
   protected function safeExecuteSelect(SelectInterface $query) {
+    if ($this->connection->driver() == 'mongodb' && !$this->tableExists) {
+      // For MongoDB the table needs to exist. Otherwise MongoDB creates one
+      // without the correct validation.
+      $this->tableExists = $this->ensureTableExists();
+    }
+
     try {
       return $query->execute();
     }
@@ -256,6 +271,12 @@ class MenuTreeStorage implements MenuTreeStorageInterface {
    *   depth.
    */
   protected function doSave(array $link) {
+    if ($this->connection->driver() == 'mongodb' && !$this->tableExists) {
+      // For MongoDB the table needs to exist. Otherwise MongoDB creates one
+      // without the correct validation.
+      $this->tableExists = $this->ensureTableExists();
+    }
+
     $affected_menus = [];
 
     // Get the existing definition if it exists. This does not use
@@ -443,6 +464,12 @@ class MenuTreeStorage implements MenuTreeStorageInterface {
    *   Returns the relative depth.
    */
   protected function doFindChildrenRelativeDepth(array $original) {
+    if ($this->connection->driver() == 'mongodb' && !$this->tableExists) {
+      // For MongoDB the table needs to exist. Otherwise MongoDB creates one
+      // without the correct validation.
+      $this->tableExists = $this->ensureTableExists();
+    }
+
     $query = $this->connection->select($this->table, NULL, $this->options);
     $query->addField($this->table, 'depth');
     $query->condition('menu_name', $original['menu_name']);
@@ -519,6 +546,12 @@ class MenuTreeStorage implements MenuTreeStorageInterface {
    *   The original menu link.
    */
   protected function moveChildren($fields, $original) {
+    if ($this->connection->driver() == 'mongodb' && !$this->tableExists) {
+      // For MongoDB the table needs to exist. Otherwise MongoDB creates one
+      // without the correct validation.
+      $this->tableExists = $this->ensureTableExists();
+    }
+
     $query = $this->connection->update($this->table, $this->options);
 
     $query->fields(['menu_name' => $fields['menu_name']]);
@@ -603,6 +636,12 @@ class MenuTreeStorage implements MenuTreeStorageInterface {
    *   The link to get a parent ID from.
    */
   protected function updateParentalStatus(array $link) {
+    if ($this->connection->driver() == 'mongodb' && !$this->tableExists) {
+      // For MongoDB the table needs to exist. Otherwise MongoDB creates one
+      // without the correct validation.
+      $this->tableExists = $this->ensureTableExists();
+    }
+
     // If parent is empty, there is nothing to update.
     if (!empty($link['parent'])) {
       // Check if at least one visible child exists in the table.
@@ -650,6 +689,12 @@ class MenuTreeStorage implements MenuTreeStorageInterface {
    * {@inheritdoc}
    */
   public function loadByProperties(array $properties) {
+    if ($this->connection->driver() == 'mongodb' && !$this->tableExists) {
+      // For MongoDB the table needs to exist. Otherwise MongoDB creates one
+      // without the correct validation.
+      $this->tableExists = $this->ensureTableExists();
+    }
+
     $query = $this->connection->select($this->table, NULL, $this->options);
     $query->fields($this->table, $this->definitionFields());
     foreach ($properties as $name => $value) {
@@ -670,6 +715,12 @@ class MenuTreeStorage implements MenuTreeStorageInterface {
    * {@inheritdoc}
    */
   public function loadByRoute($route_name, array $route_parameters = [], $menu_name = NULL) {
+    if ($this->connection->driver() == 'mongodb' && !$this->tableExists) {
+      // For MongoDB the table needs to exist. Otherwise MongoDB creates one
+      // without the correct validation.
+      $this->tableExists = $this->ensureTableExists();
+    }
+
     // Sort the route parameters so that the query string will be the same.
     asort($route_parameters);
     // Since this will be urlencoded, it's safe to store and match against a
@@ -702,6 +753,12 @@ class MenuTreeStorage implements MenuTreeStorageInterface {
     $missing_ids = array_diff($ids, array_keys($this->definitions));
 
     if ($missing_ids) {
+      if ($this->connection->driver() == 'mongodb' && !$this->tableExists) {
+        // For MongoDB the table needs to exist. Otherwise MongoDB creates one
+        // without the correct validation.
+        $this->tableExists = $this->ensureTableExists();
+      }
+
       $query = $this->connection->select($this->table, NULL, $this->options);
       $query->fields($this->table, $this->definitionFields());
       $query->condition('id', $missing_ids, 'IN');
@@ -748,6 +805,12 @@ class MenuTreeStorage implements MenuTreeStorageInterface {
    *   The loaded menu link definitions.
    */
   protected function loadFullMultiple(array $ids) {
+    if ($this->connection->driver() == 'mongodb' && !$this->tableExists) {
+      // For MongoDB the table needs to exist. Otherwise MongoDB creates one
+      // without the correct validation.
+      $this->tableExists = $this->ensureTableExists();
+    }
+
     $query = $this->connection->select($this->table, NULL, $this->options);
     $query->fields($this->table);
     $query->condition('id', $ids, 'IN');
@@ -766,6 +829,12 @@ class MenuTreeStorage implements MenuTreeStorageInterface {
    * {@inheritdoc}
    */
   public function getRootPathIds($id) {
+    if ($this->connection->driver() == 'mongodb' && !$this->tableExists) {
+      // For MongoDB the table needs to exist. Otherwise MongoDB creates one
+      // without the correct validation.
+      $this->tableExists = $this->ensureTableExists();
+    }
+
     $subquery = $this->connection->select($this->table, NULL, $this->options);
     // @todo Consider making this dynamic based on static::MAX_DEPTH or from the
     //   schema if that is generated using static::MAX_DEPTH.
@@ -790,6 +859,12 @@ class MenuTreeStorage implements MenuTreeStorageInterface {
    * {@inheritdoc}
    */
   public function getExpanded($menu_name, array $parents) {
+    if ($this->connection->driver() == 'mongodb' && !$this->tableExists) {
+      // For MongoDB the table needs to exist. Otherwise MongoDB creates one
+      // without the correct validation.
+      $this->tableExists = $this->ensureTableExists();
+    }
+
     // @todo Go back to tracking in state or some other way which menus have
     //   expanded links? https://www.drupal.org/node/2302187
     do {
@@ -875,6 +950,12 @@ class MenuTreeStorage implements MenuTreeStorageInterface {
    *   depth-first.
    */
   protected function loadLinks($menu_name, MenuTreeParameters $parameters) {
+    if ($this->connection->driver() == 'mongodb' && !$this->tableExists) {
+      // For MongoDB the table needs to exist. Otherwise MongoDB creates one
+      // without the correct validation.
+      $this->tableExists = $this->ensureTableExists();
+    }
+
     $query = $this->connection->select($this->table, NULL, $this->options);
     $query->fields($this->table);
 
@@ -1022,6 +1103,12 @@ class MenuTreeStorage implements MenuTreeStorageInterface {
    * {@inheritdoc}
    */
   public function menuNameInUse($menu_name) {
+    if ($this->connection->driver() == 'mongodb' && !$this->tableExists) {
+      // For MongoDB the table needs to exist. Otherwise MongoDB creates one
+      // without the correct validation.
+      $this->tableExists = $this->ensureTableExists();
+    }
+
     $query = $this->connection->select($this->table, NULL, $this->options);
     $query->addField($this->table, 'mlid');
     $query->condition('menu_name', $menu_name);
@@ -1033,6 +1120,12 @@ class MenuTreeStorage implements MenuTreeStorageInterface {
    * {@inheritdoc}
    */
   public function getMenuNames() {
+    if ($this->connection->driver() == 'mongodb' && !$this->tableExists) {
+      // For MongoDB the table needs to exist. Otherwise MongoDB creates one
+      // without the correct validation.
+      $this->tableExists = $this->ensureTableExists();
+    }
+
     $query = $this->connection->select($this->table, NULL, $this->options);
     $query->addField($this->table, 'menu_name');
     $query->distinct();
@@ -1043,6 +1136,12 @@ class MenuTreeStorage implements MenuTreeStorageInterface {
    * {@inheritdoc}
    */
   public function countMenuLinks($menu_name = NULL) {
+    if ($this->connection->driver() == 'mongodb' && !$this->tableExists) {
+      // For MongoDB the table needs to exist. Otherwise MongoDB creates one
+      // without the correct validation.
+      $this->tableExists = $this->ensureTableExists();
+    }
+
     $query = $this->connection->select($this->table, NULL, $this->options);
     if ($menu_name) {
       $query->condition('menu_name', $menu_name);
@@ -1058,6 +1157,13 @@ class MenuTreeStorage implements MenuTreeStorageInterface {
     if (!$root) {
       return [];
     }
+
+    if ($this->connection->driver() == 'mongodb' && !$this->tableExists) {
+      // For MongoDB the table needs to exist. Otherwise MongoDB creates one
+      // without the correct validation.
+      $this->tableExists = $this->ensureTableExists();
+    }
+
     $query = $this->connection->select($this->table, NULL, $this->options);
     $query->fields($this->table, ['id']);
     $query->condition('menu_name', $root['menu_name']);
@@ -1449,6 +1555,12 @@ class MenuTreeStorage implements MenuTreeStorageInterface {
    *   A list of menu link IDs that no longer exist.
    */
   protected function findNoLongerExistingLinks(array $definitions) {
+    if ($this->connection->driver() == 'mongodb' && !$this->tableExists) {
+      // For MongoDB the table needs to exist. Otherwise MongoDB creates one
+      // without the correct validation.
+      $this->tableExists = $this->ensureTableExists();
+    }
+
     if ($definitions) {
       $query = $this->connection->select($this->table, NULL, $this->options);
       $query->addField($this->table, 'id');
@@ -1472,6 +1584,12 @@ class MenuTreeStorage implements MenuTreeStorageInterface {
    *   A list of menu link IDs to be purged.
    */
   protected function doDeleteMultiple(array $ids) {
+    if ($this->connection->driver() == 'mongodb' && !$this->tableExists) {
+      // For MongoDB the table needs to exist. Otherwise MongoDB creates one
+      // without the correct validation.
+      $this->tableExists = $this->ensureTableExists();
+    }
+
     $this->connection->delete($this->table, $this->options)
       ->condition('id', $ids, 'IN')
       ->execute();
