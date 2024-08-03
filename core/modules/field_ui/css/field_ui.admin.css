@@ -40,7 +40,7 @@
 .field-ui-overview .field-plugin-summary-cell .warning {
   display: block;
   float: left; /* LTR */
-  margin-right: 0.5em;
+  margin-inline-end: 0.5em;
 }
 [dir="rtl"] .field-ui-overview .field-plugin-summary-cell .warning {
   float: right;

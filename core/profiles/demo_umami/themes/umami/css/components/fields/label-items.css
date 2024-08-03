@@ -4,7 +4,7 @@
  * category.
  */
 .label-items {
-  margin-bottom: 1.2em;
+  margin-block-end: 1.2em;
 }
 
 .label-items .field__items {
@@ -14,5 +14,5 @@
 
 .label-items .field__label,
 .label-items .field__item {
-  padding-right: 0.6rem;
+  padding-inline-end: 0.6rem;
 }

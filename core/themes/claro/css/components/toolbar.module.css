@@ -233,10 +233,10 @@
 }
 /* Anti flicker styling. */
 .toolbar-anti-flicker.toolbar-loading.toolbar-fixed body {
-  padding-top: 2.4375rem;
+  padding-block-start: 2.4375rem;
 }
 .toolbar-anti-flicker.toolbar-loading.toolbar-fixed.toolbar-horizontal.toolbar-tray-open body {
-  padding-top: 4.91331rem;
+  padding-block-start: 4.91331rem;
 }
 .toolbar-anti-flicker.toolbar-vertical.toolbar-tray-open .menu-item + .menu-item {
   border-top: 1px solid #ddd;

@@ -1,6 +1,7 @@
 .component--my-cta {
   margin: 0;
-  padding: 1em 2em;
+  padding-block: 1em;
+  padding-inline: 2em;
   text-decoration: none;
   text-transform: uppercase;
   color: white;

@@ -11,15 +11,17 @@
  */
 
 .layout-builder {
-  padding: 1.5em 1.5em 0.5em;
+  padding-block: 1.5em 0.5em;
+  padding-inline: 1.5em;
   border: 3px solid #2f91da;
   background-color: #fff;
 }
 
 .layout-builder__add-section {
   width: 100%;
-  margin-bottom: 1.5em;
-  padding: 1.5em 0;
+  margin-block-end: 1.5em;
+  padding-block: 1.5em;
+  padding-inline: 0;
   text-align: center;
   outline: 2px dashed #979797;
   background-color: #f7f7f7;
@@ -43,7 +45,7 @@
 }
 
 .layout-builder__section {
-  margin-bottom: 1.5em;
+  margin-block-end: 1.5em;
 }
 
 .layout-builder__section .ui-sortable-helper {
@@ -63,7 +65,8 @@
 }
 
 .layout-builder__add-block {
-  padding: 1.5em 0;
+  padding-block: 1.5em;
+  padding-inline: 0;
   text-align: center;
   background-color: #eff6fc;
 }
@@ -130,7 +133,7 @@
 }
 
 .layout-builder__add-section.is-layout-builder-highlighted {
-  margin-bottom: calc(1.5em - 0.5rem);
+  margin-block-end: calc(1.5em - 0.5rem);
   outline: none;
 }
 
@@ -139,7 +142,8 @@
 .layout-builder__add-block.is-layout-builder-highlighted {
   position: relative;
   z-index: 1;
-  margin: -0.25rem -2px;
+  margin-block: -0.25rem;
+  margin-inline: -2px;
 }
 
 .layout-builder__add-block.is-layout-builder-highlighted,

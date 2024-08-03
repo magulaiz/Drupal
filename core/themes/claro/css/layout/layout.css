@@ -10,13 +10,12 @@
  */
 
 .page-content {
-  margin-top: 1.5rem;
-  margin-bottom: 5rem;
+  margin-block: 1.5rem 5rem;
 }
 
 @media screen and (min-width: 38em) {
   .page-content {
-    margin-top: 2rem;
+    margin-block-start: 2rem;
   }
 }
 

@@ -7,7 +7,8 @@
  * Reusable layout styles.
  */
 .layout-container {
-  margin: 0 1.5em;
+  margin-block: 0;
+  margin-inline: 1.5em;
 }
 .layout-container::after {
   display: table;
@@ -17,7 +18,8 @@
 
 @media screen and (min-width: 38em) {
   .layout-container {
-    margin: 0 2.5em;
+    margin-block: 0;
+    margin-inline: 2.5em;
   }
   .layout-column {
     float: left; /* LTR */
@@ -27,11 +29,10 @@
     float: right;
   }
   .layout-column + .layout-column {
-    padding-left: 10px; /* LTR */
+    padding-inline-start: 10px; /* LTR */
   }
   [dir="rtl"] .layout-column + .layout-column {
-    padding-right: 10px;
-    padding-left: 0;
+    padding-inline: 0 10px;
   }
   .layout-column--half {
     width: 50%;
@@ -49,18 +50,22 @@
  * Used to visually group items together.
  */
 .panel {
-  padding: 5px 5px 15px;
+  padding-block: 5px 15px;
+  padding-inline: 5px;
 }
 .panel__description {
-  margin: 0 0 3px;
-  padding: 2px 0 3px 0;
+  margin-block: 0 3px;
+  margin-inline: 0;
+  padding-block: 2px 3px;
+  padding-inline: 0;
 }
 
 /**
  * System compact link: to toggle the display of description text.
  */
 .compact-link {
-  margin: 0 0 0.5em 0;
+  margin-block: 0 0.5em;
+  margin-inline: 0;
 }
 
 /**
@@ -126,11 +131,10 @@ small .admin-link::after {
   font-weight: normal;
 }
 .system-modules td {
-  padding-left: 0; /* LTR */
+  padding-inline-start: 0; /* LTR */
 }
 [dir="rtl"] .system-modules td {
-  padding-right: 0;
-  padding-left: 12px;
+  padding-inline: 12px 0;
 }
 
 @media screen and (max-width: 40em) {
@@ -143,16 +147,18 @@ small .admin-link::after {
 }
 .system-modules .requirements {
   max-width: 490px;
-  padding: 5px 0;
+  padding-block: 5px;
+  padding-inline: 0;
 }
 .system-modules .links {
   overflow: hidden; /* prevents collapse */
 }
 .system-modules .checkbox {
-  margin: 0 5px;
+  margin-block: 0;
+  margin-inline: 5px;
 }
 .system-modules .checkbox .form-item {
-  margin-bottom: 0;
+  margin-block-end: 0;
 }
 .admin-requirements,
 .admin-required {
@@ -168,8 +174,9 @@ small .admin-link::after {
 .module-link {
   display: block;
   float: left; /* LTR */
-  margin-top: 2px;
-  padding: 2px 20px;
+  margin-block-start: 2px;
+  padding-block: 2px;
+  padding-inline: 20px;
   white-space: nowrap;
 }
 [dir="rtl"] .module-link {
@@ -194,12 +201,11 @@ small .admin-link::after {
   background-position: top 50% right 0;
 }
 .module-link--non-stable {
-  padding-left: 18px;
+  padding-inline-start: 18px;
   background: url(../../../misc/icons/e29700/warning.svg) 0 50% no-repeat; /* LTR */
 }
 [dir="rtl"] .module-link--non-stable {
-  padding-right: 18px;
-  padding-left: 0;
+  padding-inline: 0 18px;
   background-position: top 50% right 0;
 }
 
@@ -208,13 +214,15 @@ small .admin-link::after {
   position: relative;
   box-sizing: border-box;
   width: 100%;
-  padding: 10px 6px 10px 40px; /* LTR */
+  padding-block: 10px;
+  padding-inline: 40px 6px; /* LTR */
   vertical-align: top;
   background-color: transparent;
   font-weight: normal;
 }
 [dir="rtl"] .system-status-report__status-title {
-  padding: 10px 40px 10px 6px;
+  padding-block: 10px;
+  padding-inline: 6px 40px;
 }
 .system-status-report__status-icon::before {
   position: absolute;
@@ -237,31 +245,32 @@ small .admin-link::after {
   background-image: url(../../../misc/icons/e29700/warning.svg);
 }
 .system-status-report__entry__value {
-  padding: 1em 0.5em;
+  padding-block: 1em;
+  padding-inline: 0.5em;
 }
 
 /**
  * Appearance page.
  */
 .theme-info__header {
-  margin-bottom: 0;
+  margin-block-end: 0;
   font-weight: normal;
 }
 .theme-default .theme-info__header {
   font-weight: bold;
 }
 .theme-info__description {
-  margin-top: 0;
+  margin-block-start: 0;
 }
 .theme-link--non-stable {
-  padding-left: 18px;
+  padding-inline-start: 18px;
   background: url(../../../misc/icons/e29700/warning.svg) 0 50% no-repeat; /* LTR */
 }
 .system-themes-list {
-  margin-bottom: 20px;
+  margin-block-end: 20px;
 }
 .system-themes-list-uninstalled {
-  padding-top: 20px;
+  padding-block-start: 20px;
   border-top: 1px solid #cdcdcd;
 }
 .system-themes-list__header {
@@ -269,7 +278,7 @@ small .admin-link::after {
 }
 
 .theme-selector {
-  padding-top: 20px;
+  padding-block-start: 20px;
 }
 .theme-selector .screenshot,
 .theme-selector .no-screenshot {
@@ -297,25 +306,29 @@ small .admin-link::after {
   body:not(.toolbar-vertical) .system-themes-list-installed .no-screenshot {
     float: left; /* LTR */
     width: 294px;
-    margin: 0 20px 0 0; /* LTR */
+    margin-block: 0;
+    margin-inline: 0 20px; /* LTR */
   }
   [dir="rtl"] body:not(.toolbar-vertical) .system-themes-list-installed .screenshot,
   [dir="rtl"] body:not(.toolbar-vertical) .system-themes-list-installed .no-screenshot {
     float: right;
-    margin: 0 0 0 20px;
+    margin-block: 0;
+    margin-inline: 20px 0;
   }
   body:not(.toolbar-vertical) .system-themes-list-installed .system-themes-list__header {
-    margin-top: 0;
+    margin-block-start: 0;
   }
   body:not(.toolbar-vertical) .system-themes-list-uninstalled .theme-selector {
     float: left; /* LTR */
     box-sizing: border-box;
     width: 31.25%;
-    padding: 20px 20px 20px 0; /* LTR */
+    padding-block: 20px;
+    padding-inline: 0 20px; /* LTR */
   }
   [dir="rtl"] body:not(.toolbar-vertical) .system-themes-list-uninstalled .theme-selector {
     float: right;
-    padding: 20px 0 20px 20px;
+    padding-block: 20px;
+    padding-inline: 20px 0;
   }
   body:not(.toolbar-vertical) .system-themes-list-uninstalled .theme-info {
     min-height: 170px;
@@ -330,25 +343,29 @@ small .admin-link::after {
   .toolbar-vertical .system-themes-list-installed .no-screenshot {
     float: left; /* LTR */
     width: 294px;
-    margin: 0 20px 0 0; /* LTR */
+    margin-block: 0;
+    margin-inline: 0 20px; /* LTR */
   }
   [dir="rtl"] .toolbar-vertical .system-themes-list-installed .screenshot,
   [dir="rtl"] .toolbar-vertical .system-themes-list-installed .no-screenshot {
     float: right;
-    margin: 0 0 0 20px;
+    margin-block: 0;
+    margin-inline: 20px 0;
   }
   .toolbar-vertical .system-themes-list-installed .theme-info__header {
-    margin-top: 0;
+    margin-block-start: 0;
   }
   .toolbar-vertical .system-themes-list-uninstalled .theme-selector {
     float: left; /* LTR */
     box-sizing: border-box;
     width: 31.25%;
-    padding: 20px 20px 20px 0; /* LTR */
+    padding-block: 20px;
+    padding-inline: 0 20px; /* LTR */
   }
   [dir="rtl"] .toolbar-vertical .system-themes-list-uninstalled .theme-selector {
     float: right;
-    padding: 20px 0 20px 20px;
+    padding-block: 20px;
+    padding-inline: 20px 0;
   }
   .toolbar-vertical .system-themes-list-uninstalled .theme-info {
     min-height: 170px;
@@ -359,17 +376,19 @@ small .admin-link::after {
 }
 
 .theme-selector .incompatible {
-  margin-top: 10px;
+  margin-block-start: 10px;
   font-weight: bold;
 }
 .theme-selector .operations {
-  margin: 10px 0 0 0;
+  margin-block: 10px 0;
+  margin-inline: 0;
   padding: 0;
 }
 .theme-selector .operations li {
   float: left; /* LTR */
   margin: 0;
-  padding: 0 0.7em;
+  padding-block: 0;
+  padding-inline: 0.7em;
   list-style-type: none;
   border-right: 1px solid #cdcdcd; /* LTR */
 }
@@ -379,24 +398,28 @@ small .admin-link::after {
   border-left: 1px solid #cdcdcd;
 }
 .theme-selector .operations li:last-child {
-  padding: 0 0 0 0.7em; /* LTR */
+  padding-block: 0;
+  padding-inline: 0.7em 0; /* LTR */
   border-right: none; /* LTR */
 }
 [dir="rtl"] .theme-selector .operations li:last-child {
-  padding: 0 0.7em 0 0;
+  padding-block: 0;
+  padding-inline: 0 0.7em;
   border-left: none;
 }
 .theme-selector .operations li:first-child {
-  padding: 0 0.7em 0 0; /* LTR */
+  padding-block: 0;
+  padding-inline: 0 0.7em; /* LTR */
 }
 [dir="rtl"] .theme-selector .operations li:first-child {
-  padding: 0 0 0 0.7em;
+  padding-block: 0;
+  padding-inline: 0.7em 0;
 }
 .system-themes-admin-form {
-  clear: left; /* LTR */
+  clear: inline-start; /* LTR */
 }
 [dir="rtl"] .system-themes-admin-form {
-  clear: right;
+  clear: inline-end;
 }
 .cron-description__run-cron {
   display: block;

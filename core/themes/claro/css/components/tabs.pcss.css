@@ -27,7 +27,8 @@
   display: flex;
   flex-direction: column;
   width: 100%;
-  margin: 0 0 var(--space-l) 0;
+  margin-block: 0 var(--space-l);
+  margin-inline: 0;
   border: var(--tabs-base-border);
   border-radius: var(--tabs-border-radius-size);
   box-shadow: var(--tabs-base-shadow);
@@ -74,7 +75,8 @@
   align-items: center;
   box-sizing: border-box;
   min-height: var(--tabs-link-height);
-  padding: var(--space-s) var(--space-l);
+  padding-block: var(--space-s);
+  padding-inline: var(--space-l);
   text-decoration: none;
   color: var(--color-gray-800);
   line-height: 1.2rem;
@@ -98,9 +100,9 @@
     flex-grow: 1;
     color: var(--color-absolutezero);
     &:focus {
-      margin: -1px 0;
-      padding-right: var(--space-l);
-      padding-left: var(--space-l);
+      margin-block: -1px;
+      margin-inline: 0;
+      padding-inline: var(--space-l);
       border-inline-start: none;
       border-radius: 0;
     }
@@ -141,11 +143,11 @@
   align-items: center;
   justify-content: center;
   width: var(--tabs-link-height);
-  padding-right: 1px;
+  padding-inline-end: 1px;
   text-align: center;
   border-inline-start: var(--tabs-trigger-border);
   &:focus {
-    padding-right: 0;
+    padding-inline-end: 0;
     border: var(--tabs--focus-height) solid var(--color-focus);
     border-radius: var(--tabs-border-radius-size);
     box-shadow: none;
@@ -172,8 +174,10 @@
     }
     & .tabs--secondary {
       overflow: hidden;
-      margin: calc(calc(var(--tabs--focus-height) + 3px) * -1) calc(calc(var(--tabs--focus-height) + 3px) * -1) 0;
-      padding: calc(var(--tabs--focus-height) + 3px) calc(var(--tabs--focus-height) + 3px) 0;
+      margin-block: calc(calc(var(--tabs--focus-height) + 3px) * -1) 0;
+      margin-inline: calc(calc(var(--tabs--focus-height) + 3px) * -1);
+      padding-block: calc(var(--tabs--focus-height) + 3px) 0;
+      padding-inline: calc(var(--tabs--focus-height) + 3px);
       border-radius: 0;
       &::after {
         position: absolute;
@@ -189,8 +193,7 @@
       }
       & .tabs__link {
         min-height: var(--tabs-secondary-link-height);
-        padding-top: var(--space-xs);
-        padding-bottom: var(--space-xs);
+        padding-block: var(--space-xs);
         &:focus {
           min-height: var(--tabs-secondary-link-height);
         }
@@ -217,14 +220,12 @@
       }
     }
     & .tabs__link {
-      padding-right: 2rem;
-      padding-left: 2rem;
+      padding-inline: 2rem;
       border-radius: var(--tabs-border-radius-size) var(--tabs-border-radius-size) 0 0;
       &:focus {
         min-height: var(--tabs-link-height);
         margin: 0;
-        padding-right: 2rem;
-        padding-left: 2rem;
+        padding-inline: 2rem;
         color: var(--color-text);
         border: none;
         border-radius: var(--tabs-border-radius-size) var(--tabs-border-radius-size) 0 0;

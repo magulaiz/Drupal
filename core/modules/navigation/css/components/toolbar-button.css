@@ -66,7 +66,8 @@
   background-color: var(--admin-toolbar-color-gray-050);
 }
 .toolbar-button--large {
-  padding: var(--admin-toolbar-space-8) var(--admin-toolbar-space-16);
+  padding-block: var(--admin-toolbar-space-8);
+  padding-inline: var(--admin-toolbar-space-16);
   font-size: var(--admin-toolbar-font-size-info-lg);
   line-height: var(--admin-toolbar-line-height-info-lg);
 }

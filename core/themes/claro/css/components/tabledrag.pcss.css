@@ -103,7 +103,8 @@ body.drag-y {
     width: var(--tabledrag-handle-icon-size);
     height: var(--tabledrag-handle-icon-size);
     margin-inline-start: calc(var(--space-m) * -1);
-    padding: var(--space-xs) var(--space-m);
+    padding-block: var(--space-xs);
+    padding-inline: var(--space-m);
     content: "";
     transition: transform 0.1s ease-in-out 0s;
     background: url(../../images/icons/000f33/tabledrag-handle.svg) no-repeat center;
@@ -145,7 +146,8 @@ body.drag-y {
     display: block;
     width: calc(var(--space-m) + (var(--space-xs) * 2)); /* Same as height. */
     height: calc(var(--space-m) + (var(--space-xs) * 2)); /* Hande svg height + its vertical padding */
-    margin: 0 calc(var(--space-xs) * -1) calc((var(--space-m) + (var(--space-xs) * 2)) * -1); /* Bottom: handle height as negative value. */
+    margin-block: 0 calc((var(--space-m) + (var(--space-xs) * 2)) * -1);
+    margin-inline: calc(var(--space-xs) * -1); /* Bottom: handle height as negative value. */
     content: "";
     border-radius: var(--base-border-radius);
     outline: var(--outline-size) dotted transparent;

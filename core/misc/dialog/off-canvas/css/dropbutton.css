@@ -125,8 +125,9 @@
   display: flex;
   align-items: center;
   min-height: var(--off-canvas-dropbutton-height);
-  margin-bottom: -2px;
-  padding: 0 0.5625rem;
+  margin-block-end: -2px;
+  padding-block: 0;
+  padding-inline: 0.5625rem;
   -webkit-text-decoration: none;
   text-decoration: none;
   color: var(--off-canvas-dropbutton-text-color);
@@ -143,7 +144,7 @@
 #drupal-off-canvas-wrapper .secondary-action {
   visibility: hidden;
   width: calc(100% + var(--off-canvas-dropbutton-height));
-  margin-top: var(--off-canvas-dropbutton-border-width);
+  margin-block-start: var(--off-canvas-dropbutton-border-width);
   border-right: var(--off-canvas-dropbutton-border-width) solid var(--off-canvas-dropbutton-border-color);
   border-left: var(--off-canvas-dropbutton-border-width) solid var(--off-canvas-dropbutton-border-color);
   background-color: var(--off-canvas-dropbutton-primary-background-color);

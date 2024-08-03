@@ -6,10 +6,10 @@
 @media screen and (min-width: 48em) {
   .menu--account {
     display: block;
-    text-align: right; /* LTR */
+    text-align: end; /* LTR */
   }
   [dir="rtl"] .menu--account {
-    text-align: left;
+    text-align: start;
   }
 }
 .menu-account {
@@ -20,11 +20,10 @@
   line-height: 1.5;
 }
 .menu-account__item + .menu-account__item {
-  margin-left: 1em; /* LTR */
+  margin-inline-start: 1em; /* LTR */
 }
 [dir="rtl"] .menu-account__item + .menu-account__item {
-  margin-right: 1em;
-  margin-left: 0;
+  margin-inline: 0 1em;
 }
 .menu-account__link,
 .menu-account__link:hover,

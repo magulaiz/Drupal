@@ -5,8 +5,10 @@
 
 .toolbar-warning {
   overflow: hidden;
-  margin: 0.5em 0;
-  padding: 0.5em 2em 0.5em 2.3333em;
+  margin-block: 0.5em;
+  margin-inline: 0;
+  padding-block: 0.5em;
+  padding-inline: 2.3333em 2em;
   text-indent: -1000px;
   background: url(../../../../core/misc/icons/e29700/warning.svg) no-repeat center center transparent;
   background-size: auto 20px;
@@ -18,7 +20,7 @@
 
 @media only screen and (min-width: 40em) {
   .toolbar-warning {
-    padding-right: 1em; /* LTR */
+    padding-inline-end: 1em; /* LTR */
     text-decoration: none;
     text-indent: 0;
     color: #000;
@@ -30,8 +32,7 @@
     font-weight: bold;
   }
   [dir="rtl"] .toolbar-warning {
-    padding-right: 2em;
-    padding-left: 1em;
+    padding-inline: 1em 2em;
     background-position: right 0.5em center;
   }
 }

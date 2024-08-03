@@ -41,7 +41,8 @@
 }
 
 .ck .image-alternative-text-missing-wrapper .ck.ck-button {
-  padding: 12px 12px 12px 8px;
+  padding-block: 12px;
+  padding-inline: 8px 12px;
   cursor: pointer;
   color: #fff;
   background: none !important; /* Override background for all states. */
@@ -49,7 +50,7 @@
 .ck .image-alternative-text-missing-wrapper .ck.ck-button::before {
   width: 16px;
   height: 16px;
-  padding-right: 8px;
+  padding-inline-end: 8px;
   content: "";
   background: url("../icons/warning.svg") left center no-repeat;
 }
@@ -57,7 +58,7 @@
   display: inline-block;
   width: 12px;
   height: 12px;
-  padding-left: 2rem;
+  padding-inline-start: 2rem;
   content: "";
   background: url("../icons/caret.svg") right center no-repeat;
   font-size: 18px;

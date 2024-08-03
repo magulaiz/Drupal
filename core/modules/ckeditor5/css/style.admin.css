@@ -7,7 +7,7 @@
 }
 
 .ckeditor5-toolbar-button-style::before {
-  margin-left: 10px;
+  margin-inline-start: 10px;
   /* For browsers which don't support alt content, eg FireFox */
   content: "Style";
   content: "Style" / "";
@@ -15,15 +15,14 @@
 }
 
 [dir="rtl"] .ckeditor5-toolbar-button-style::before {
-  margin-right: 10px;
-  margin-left: 0;
+  margin-inline: 0 10px;
 }
 
 .ckeditor5-toolbar-button-style::after {
   display: inline-block;
   width: 7px;
   height: 7px;
-  margin-right: 10px;
+  margin-inline-end: 10px;
   content: "";
   transform: rotate(135deg);
   border-width: 2px 2px 0 0;
@@ -31,6 +30,5 @@
 }
 
 [dir="rtl"] .ckeditor5-toolbar-button-style::after {
-  margin-right: 0;
-  margin-left: 10px;
+  margin-inline: 10px 0;
 }

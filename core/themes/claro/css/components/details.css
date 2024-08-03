@@ -403,7 +403,8 @@ td .claro-details {
 
 @media screen and (min-width: 40.0625rem) {
   .claro-details__wrapper {
-    margin: var(--space-l) var(--details-desktop-wrapper-padding-start);
+    margin-block: var(--space-l);
+    margin-inline: var(--details-desktop-wrapper-padding-start);
   }
 
   .claro-details__wrapper--accordion,
@@ -422,7 +423,8 @@ td .claro-details {
 .claro-details__content--accordion,
 .claro-details__content--accordion-item,
 .claro-details__content--vertical-tabs-item {
-  margin: var(--space-m) var(--space-m) var(--space-l);
+  margin-block: var(--space-m) var(--space-l);
+  margin-inline: var(--space-m);
 }
 
 @media screen and (min-width: 85em) {

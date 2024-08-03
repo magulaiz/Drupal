@@ -87,12 +87,12 @@
 }
 
 #drupal-off-canvas-wrapper .tabledrag-changed-warning {
-  margin-bottom: var(--off-canvas-vertical-spacing-unit);
+  margin-block-end: var(--off-canvas-vertical-spacing-unit);
   font-size: 0.875rem;
 }
 
 #drupal-off-canvas-wrapper .tabledrag-toggle-weight-wrapper {
-  padding-top: 0.625rem;
+  padding-block-start: 0.625rem;
   text-align: end;
 }
 
@@ -101,12 +101,14 @@
 }
 
 .touchevents #drupal-off-canvas-wrapper .draggable td {
-  padding: 0 0.625rem;
+  padding-block: 0;
+  padding-inline: 0.625rem;
 }
 
 .touchevents #drupal-off-canvas-wrapper .draggable .menu-item__link {
   display: inline-block;
-  padding: 0.625rem 0;
+  padding-block: 0.625rem;
+  padding-inline: 0;
 }
 
 .touchevents #drupal-off-canvas-wrapper a.tabledrag-handle {

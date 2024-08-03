@@ -34,7 +34,8 @@
 .ui-dialog .ui-dialog-titlebar {
   position: relative;
   box-sizing: border-box;
-  padding: var(--space-m) var(--jui-dialog-close-button-reserved-space) var(--space-m) var(--space-l); /* LTR */
+  padding-block: var(--space-m);
+  padding-inline: var(--space-l) var(--jui-dialog-close-button-reserved-space); /* LTR */
   color: var(--jui-dialog-title-color);
   border-top-left-radius: var(--jui-dialog-border-radius);
   border-top-right-radius: var(--jui-dialog-border-radius);
@@ -42,8 +43,7 @@
   line-height: calc(var(--space-m) * 2);
 }
 [dir="rtl"] .ui-dialog .ui-dialog-titlebar {
-  padding-right: var(--space-l);
-  padding-left: var(--jui-dialog-close-button-reserved-space);
+  padding-inline: var(--jui-dialog-close-button-reserved-space) var(--space-l);
 }
 
 .ui-dialog .ui-dialog-title {
@@ -59,7 +59,8 @@
   box-sizing: border-box;
   width: var(--jui-dialog-close-button-size);
   height: var(--jui-dialog-close-button-size);
-  margin: 0 var(--space-l);
+  margin-block: 0;
+  margin-inline: var(--space-l);
   padding: 0;
   transition: all 0.1s;
   transform: translateY(-50%);
@@ -98,7 +99,8 @@
 
 .ui-dialog > .ui-dialog-content {
   overflow: auto;
-  padding: var(--space-m) var(--space-l);
+  padding-block: var(--space-m);
+  padding-inline: var(--space-l);
   color: var(--color-text);
   background: var(--color-white);
 }
@@ -145,7 +147,7 @@
 
 #drupal-off-canvas {
   & .form-type--boolean {
-    margin-left: 0;
+    margin-inline-start: 0;
   }
   & .form-item .form-item__description {
     color: var(--color-gray-050);

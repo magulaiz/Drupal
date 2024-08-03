@@ -4,10 +4,10 @@
  */
 
 .text-align-left {
-  text-align: left;
+  text-align: start;
 }
 .text-align-right {
-  text-align: right;
+  text-align: end;
 }
 .text-align-center {
   text-align: center;
@@ -27,6 +27,5 @@
 }
 .align-center {
   display: block;
-  margin-right: auto;
-  margin-left: auto;
+  margin-inline: auto;
 }

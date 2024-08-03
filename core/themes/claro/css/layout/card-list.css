@@ -32,7 +32,7 @@
 
 .card-list__item {
   box-sizing: border-box;
-  margin-bottom: var(--card-list-spacing);
+  margin-block-end: var(--card-list-spacing);
 }
 
 .card-list--two-cols .card-list__item,
@@ -49,19 +49,17 @@
   }
 
   .card-list--four-cols .card-list__item {
-    margin-right: var(--card-list-spacing);
+    margin-inline-end: var(--card-list-spacing);
   }
   [dir="rtl"] .card-list--four-cols .card-list__item {
-    margin-right: 0;
-    margin-left: var(--card-list-spacing);
+    margin-inline: var(--card-list-spacing) 0;
   }
 
   .card-list--four-cols .card-list__item:nth-child(even) {
-    margin-right: 0;
+    margin-inline-end: 0;
   }
   [dir="rtl"] .card-list--four-cols .card-list__item:nth-child(even) {
-    margin-right: 0;
-    margin-left: 0;
+    margin-inline: 0;
   }
 }
 
@@ -71,8 +69,7 @@
   .toolbar-tray-open.toolbar-vertical.toolbar-fixed .card-list--four-cols .card-list__item {
     flex-basis: 100%;
     max-width: 100%;
-    margin-right: 0;
-    margin-left: 0;
+    margin-inline: 0;
   }
 }
 
@@ -83,19 +80,17 @@
   }
 
   .card-list--four-cols .card-list__item:nth-child(even) {
-    margin-right: var(--card-list-spacing);
+    margin-inline-end: var(--card-list-spacing);
   }
   [dir="rtl"] .card-list--four-cols .card-list__item:nth-child(even) {
-    margin-right: 0;
-    margin-left: var(--card-list-spacing);
+    margin-inline: var(--card-list-spacing) 0;
   }
 
   .card-list--four-cols .card-list__item:nth-child(3n) {
-    margin-right: 0;
+    margin-inline-end: 0;
   }
   [dir="rtl"] .card-list--four-cols .card-list__item:nth-child(3n) {
-    margin-right: 0;
-    margin-left: 0;
+    margin-inline: 0;
   }
 }
 
@@ -103,19 +98,17 @@
   .card-list--two-cols .card-list__item {
     flex-basis: var(--cards-two-cols-width);
     max-width: var(--cards-two-cols-width);
-    margin-right: var(--card-list-spacing);
+    margin-inline-end: var(--card-list-spacing);
   }
   [dir="rtl"] .card-list--two-cols .card-list__item {
-    margin-right: 0;
-    margin-left: var(--card-list-spacing);
+    margin-inline: var(--card-list-spacing) 0;
   }
 
   .card-list--two-cols .card-list__item:nth-child(even) {
-    margin-right: 0;
+    margin-inline-end: 0;
   }
   [dir="rtl"] .card-list--two-cols .card-list__item:nth-child(even) {
-    margin-right: 0;
-    margin-left: 0;
+    margin-inline: 0;
   }
 
   .card-list--four-cols .card-list__item {
@@ -124,26 +117,23 @@
   }
 
   .card-list--four-cols .card-list__item:nth-child(even) {
-    margin-right: var(--card-list-spacing);
+    margin-inline-end: var(--card-list-spacing);
   }
   [dir="rtl"] .card-list--four-cols .card-list__item:nth-child(even) {
-    margin-right: 0;
-    margin-left: var(--card-list-spacing);
+    margin-inline: var(--card-list-spacing) 0;
   }
 
   .card-list--four-cols .card-list__item:nth-child(3n) {
-    margin-right: var(--card-list-spacing);
+    margin-inline-end: var(--card-list-spacing);
   }
   [dir="rtl"] .card-list--four-cols .card-list__item:nth-child(3n) {
-    margin-right: 0;
-    margin-left: var(--card-list-spacing);
+    margin-inline: var(--card-list-spacing) 0;
   }
 
   .card-list--four-cols .card-list__item:nth-child(4n) {
-    margin-right: 0;
+    margin-inline-end: 0;
   }
   [dir="rtl"] .card-list--four-cols .card-list__item:nth-child(4n) {
-    margin-right: 0;
-    margin-left: 0;
+    margin-inline: 0;
   }
 }

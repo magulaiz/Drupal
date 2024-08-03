@@ -19,14 +19,13 @@
     float: left; /* LTR */
     box-sizing: border-box;
     width: 65%;
-    padding-right: 2em; /* LTR */
+    padding-inline-end: 2em; /* LTR */
   }
 
   [dir="rtl"] .layout-region-node-main,
   [dir="rtl"] .layout-region-node-footer {
     float: right;
-    padding-right: 0;
-    padding-left: 2em;
+    padding-inline: 2em 0;
   }
 
   .layout-region-node-secondary {
@@ -66,6 +65,6 @@
   .toolbar-vertical.toolbar-tray-open .layout-region-node-secondary {
     float: none;
     width: auto;
-    padding-right: 0;
+    padding-inline-end: 0;
   }
 }

@@ -17,7 +17,8 @@
 .system-status-general-info__header {
   --system-status-general-info-header-color: #ccc;
 
-  padding: 2.75rem 0 var(--space-l);
+  padding-block: 2.75rem var(--space-l);
+  padding-inline: 0;
   border-block-start: 1px solid var(--system-status-general-info-header-color);
 }
 
@@ -114,12 +115,14 @@
 }
 
 .system-status-general-info__item-title {
-  margin: 0 0 0.5rem;
+  margin-block: 0 0.5rem;
+  margin-inline: 0;
   font-size: 1.125rem;
 }
 
 .system-status-general-info__sub-item-title {
-  margin: 0.875rem 0 0;
+  margin-block: 0.875rem 0;
+  margin-inline: 0;
   font-size: 0.875rem;
 }
 
@@ -132,7 +135,8 @@
 }
 
 .system-status-general-info__run-cron {
-  margin: 1em 0 0;
+  margin-block: 1em 0;
+  margin-inline: 0;
 }
 
 @media screen and (min-width: 48em) {

@@ -13,8 +13,10 @@
 
   & .ui-dialog-titlebar {
     position: relative;
-    margin: 0 calc(-1 * var(--off-canvas-padding));
-    padding: var(--off-canvas-title-padding) 50px;
+    margin-block: 0;
+    margin-inline: calc(-1 * var(--off-canvas-padding));
+    padding-block: var(--off-canvas-title-padding);
+    padding-inline: 50px;
     color: var(--off-canvas-title-text-color);
     background-color: var(--off-canvas-title-background-color);
     font-family: var(--off-canvas-title-font-family);

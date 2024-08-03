@@ -4,9 +4,10 @@
  */
 
 .block-views-blockarticles-aside-block-1 > .block__title {
-  margin: 0 0 1.562rem;
+  margin-block: 0 1.562rem;
+  margin-inline: 0;
 }
 
 .block-views-blockarticles-aside-block-1 .views-row {
-  margin-bottom: 1.562rem;
+  margin-block-end: 1.562rem;
 }

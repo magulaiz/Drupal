@@ -101,7 +101,8 @@
   position: relative;
   display: block;
   margin-block-start: calc(var(--vertical-tabs-border-size) * -1);
-  padding: var(--space-s) var(--space-s) var(--space-s) calc(var(--space-l) - var(--vertical-tabs-menu-link--active-border-size));
+  padding-block: var(--space-s);
+  padding-inline: calc(var(--space-l) - var(--vertical-tabs-menu-link--active-border-size)) var(--space-s);
   text-decoration: none;
   color: var(--color-text);
   border: var(--vertical-tabs-border-size) solid transparent;
@@ -120,7 +121,8 @@
     &::after {
       position: absolute;
       inset: 0;
-      margin: calc(var(--vertical-tabs-border-size) * -1) calc(var(--vertical-tabs-menu-link--active-border-size) * -1);
+      margin-block: calc(var(--vertical-tabs-border-size) * -1);
+      margin-inline: calc(var(--vertical-tabs-menu-link--active-border-size) * -1);
       content: "";
       pointer-events: none;
       border: var(--vertical-tabs-menu-link-focus-border-size) solid var(--color-focus);
@@ -237,7 +239,8 @@
  */
 .vertical-tabs__item {
   /* Render on top of the border of vertical-tabs__items. */
-  margin: calc(var(--vertical-tabs-border-size) * -1) calc(var(--vertical-tabs-border-size) * -1) 0;
+  margin-block: calc(var(--vertical-tabs-border-size) * -1) 0;
+  margin-inline: calc(var(--vertical-tabs-border-size) * -1);
   border-radius: 0;
 
   &.first {
@@ -246,7 +249,7 @@
   }
 
   &.last {
-    margin-bottom: calc(var(--vertical-tabs-border-size) * -1);
+    margin-block-end: calc(var(--vertical-tabs-border-size) * -1);
     border-bottom-right-radius: var(--details-accordion-border-size-radius);
     border-bottom-left-radius: var(--details-accordion-border-size-radius);
   }

@@ -15,7 +15,8 @@
  */
 
 .local-actions {
-  margin: var(--space-m) 0;
+  margin-block: var(--space-m);
+  margin-inline: 0;
   padding: 0;
   list-style: none;
 }
@@ -23,33 +24,31 @@
 /* This is required to win over specificity of [dir="rtl"] ul */
 
 [dir="rtl"] .local-actions {
-  margin-right: 0;
+  margin-inline-end: 0;
 }
 
 .local-actions__item {
   display: inline-block;
-  margin: 0 calc(var(--space-xs) / 2);
+  margin-block: 0;
+  margin-inline: calc(var(--space-xs) / 2);
 }
 
 .local-actions__item:first-child {
-  margin-left: 0; /* LTR */
+  margin-inline-start: 0; /* LTR */
 }
 
 [dir="rtl"] .local-actions__item:first-child {
-  margin-right: 0;
-  margin-left: calc(var(--space-xs) / 2);
+  margin-inline: calc(var(--space-xs) / 2) 0;
 }
 
 .local-actions__item:last-child {
-  margin-right: 0; /* LTR */
+  margin-inline-end: 0; /* LTR */
 }
 
 [dir="rtl"] .local-actions__item:last-child {
-  margin-right: calc(var(--space-xs) / 2);
-  margin-left: 0;
+  margin-inline: 0 calc(var(--space-xs) / 2);
 }
 
 [dir="rtl"] .local-actions__item:only-child {
-  margin-right: 0;
-  margin-left: 0;
+  margin-inline: 0;
 }

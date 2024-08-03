@@ -44,11 +44,10 @@
   display: block; /* Show the sub-menus */
 }
 .toolbar .toolbar-tray-vertical .toolbar-handle + a {
-  margin-right: 3em; /* LTR */
+  margin-inline-end: 3em; /* LTR */
 }
 [dir="rtl"] .toolbar .toolbar-tray-vertical .toolbar-handle + a {
-  margin-right: 0;
-  margin-left: 3em;
+  margin-inline: 3em 0;
 }
 .toolbar .toolbar-tray .menu-item--active-trail > .toolbar-box a,
 .toolbar .toolbar-tray a.is-active {

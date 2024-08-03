@@ -14,9 +14,10 @@
 }
 .progress__bar {
   height: 16px;
-  margin-top: -1px;
-  margin-left: -1px; /* LTR */
-  padding: 0 1px;
+  margin-block-start: -1px;
+  margin-inline-start: -1px; /* LTR */
+  padding-block: 0;
+  padding-inline: 1px;
   -webkit-transition: width 0.5s ease-out;
   transition: width 0.5s ease-out;
   -webkit-animation: animate-stripes 3s linear infinite;
@@ -27,8 +28,7 @@
   background-size: 40px 40px;
 }
 [dir="rtl"] .progress__bar {
-  margin-right: -1px;
-  margin-left: 0;
+  margin-inline: 0 -1px;
   -webkit-animation-direction: reverse;
   animation-direction: reverse;
 }

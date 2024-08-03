@@ -8,7 +8,7 @@
     text-shadow: none !important;
   }
   body {
-    padding-top: 0;
+    padding-block-start: 0;
   }
   pre,
   blockquote {
@@ -51,7 +51,8 @@
     max-height: 999em;
   }
   .is-horizontal .tabs__tab {
-    margin: 0 4px !important;
+    margin-block: 0 !important;
+    margin-inline: 4px !important;
     border-radius: 4px 4px 0 0 !important;
   }
   .dropbutton-multiple .dropbutton .secondary-action {

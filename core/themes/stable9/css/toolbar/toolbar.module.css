@@ -37,7 +37,7 @@
   list-style-image: none;
 }
 .toolbar .menu-item {
-  padding-top: 0;
+  padding-block-start: 0;
 }
 .toolbar .toolbar-bar .toolbar-tab,
 .toolbar .menu-item {
@@ -218,27 +218,26 @@ html.toolbar-fixed .toolbar .toolbar-tray-vertical {
  * the page content away from the edge of the viewport. */
 body.toolbar-tray-open.toolbar-vertical.toolbar-fixed,
 html.toolbar-tray-open.toolbar-vertical.toolbar-fixed {
-  margin-left: 240px; /* LTR */
-  margin-left: 15rem; /* LTR */
+  margin-inline-start: 240px; /* LTR */
+  margin-inline-start: 15rem; /* LTR */
 }
 
 @media print {
   body.toolbar-tray-open.toolbar-vertical.toolbar-fixed,
   html.toolbar-tray-open.toolbar-vertical.toolbar-fixed {
-    margin-left: 0;
+    margin-inline-start: 0;
   }
 }
 [dir="rtl"] body.toolbar-tray-open.toolbar-vertical.toolbar-fixed,
 [dir="rtl"].toolbar-tray-open.toolbar-vertical.toolbar-fixed {
-  margin-right: 240px;
-  margin-right: 15rem;
-  margin-left: auto;
+  margin-inline: auto 240px;
+  margin-inline-end: 15rem;
 }
 
 @media print {
   [dir="rtl"] body.toolbar-tray-open.toolbar-vertical.toolbar-fixed,
   [dir="rtl"].toolbar-tray-open.toolbar-vertical.toolbar-fixed {
-    margin-right: 0;
+    margin-inline-end: 0;
   }
 }
 /**

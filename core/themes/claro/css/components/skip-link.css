@@ -22,7 +22,8 @@
   z-index: 503;
   top: 0;
   left: 0; /* LTR */
-  padding: 1px 0.625rem 2px;
+  padding-block: 1px 2px;
+  padding-inline: 0.625rem;
   color: var(--skip-link-color);
   border-radius: 0 0 0.625rem 0; /* LTR */
   background: var(--skip-link-bg-color);

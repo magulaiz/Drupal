@@ -56,7 +56,8 @@
 }
 
 .system-status-report__entry__value {
-  padding: 1em 0.5em;
+  padding-block: 1em;
+  padding-inline: 0.5em;
 }
 
 .cron-description__run-cron {

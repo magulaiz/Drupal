@@ -8,15 +8,14 @@
   font-weight: bold;
 }
 .permissions .permission {
-  padding-left: 1.5em; /* LTR */
+  padding-inline-start: 1.5em; /* LTR */
 }
 [dir="rtl"] .permissions .permission {
-  padding-right: 1.5em;
-  padding-left: 0;
+  padding-inline: 0 1.5em;
 }
 
 /* Account settings */
 .user-admin-settings .details-description {
-  padding-bottom: 0.5em;
+  padding-block-end: 0.5em;
   font-size: 0.85em;
 }

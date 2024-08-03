@@ -73,12 +73,12 @@
   }
 
   & .tabledrag-changed-warning {
-    margin-bottom: var(--off-canvas-vertical-spacing-unit);
+    margin-block-end: var(--off-canvas-vertical-spacing-unit);
     font-size: 14px;
   }
 
   & .tabledrag-toggle-weight-wrapper {
-    padding-top: 10px;
+    padding-block-start: 10px;
     text-align: end;
   }
 
@@ -87,12 +87,14 @@
   }
 
   @nest .touchevents & .draggable td {
-    padding: 0 10px;
+    padding-block: 0;
+    padding-inline: 10px;
   }
 
   @nest .touchevents & .draggable .menu-item__link {
     display: inline-block;
-    padding: 10px 0;
+    padding-block: 10px;
+    padding-inline: 0;
   }
 
   @nest .touchevents & a.tabledrag-handle {

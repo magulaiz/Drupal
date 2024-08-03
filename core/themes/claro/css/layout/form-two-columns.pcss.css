@@ -6,7 +6,7 @@
 }
 
 .layout-region--footer .layout-region__content {
-  margin-top: var(--space-l);
+  margin-block-start: var(--space-l);
 }
 
 /**

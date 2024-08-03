@@ -4,5 +4,6 @@
  */
 
 .help p {
-  margin: 0 0 10px;
+  margin-block: 0 10px;
+  margin-inline: 0;
 }

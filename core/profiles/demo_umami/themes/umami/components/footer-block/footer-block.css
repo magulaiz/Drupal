@@ -30,7 +30,7 @@
 
 @media screen and (min-width: 60rem) {
   .footer-block__title {
-    padding-top: 2rem;
+    padding-block-start: 2rem;
   }
 }
 

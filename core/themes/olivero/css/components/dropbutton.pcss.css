@@ -102,8 +102,9 @@
   & a {
     display: flex;
     align-items: center;
-    margin-bottom: -2px; /* Account for borders. */
-    padding: 0 9px;
+    margin-block-end: -2px; /* Account for borders. */
+    padding-block: 0;
+    padding-inline: 9px;
     text-decoration: none;
     color: var(--dropbutton--text-color);
     font-weight: 600;

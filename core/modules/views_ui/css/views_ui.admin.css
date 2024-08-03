@@ -10,8 +10,7 @@
   padding: 0;
 }
 .views-admin pre {
-  margin-top: 0;
-  margin-bottom: 0;
+  margin-block: 0;
   white-space: pre-wrap;
 }
 .views-left-25 {
@@ -71,8 +70,7 @@
   float: left;
 }
 .views-group-box .form-item {
-  margin-right: 3px;
-  margin-left: 3px;
+  margin-inline: 3px;
 }
 
 /*
@@ -144,7 +142,7 @@
   box-sizing: border-box;
 }
 .views-display-columns > * {
-  margin-bottom: 2em;
+  margin-block-end: 2em;
 }
 
 @media screen and (min-width: 45em) {
@@ -152,19 +150,18 @@
   .views-display-columns > * {
     float: left; /* LTR */
     width: 32%;
-    margin-bottom: 0;
-    margin-left: 2%; /* LTR */
+    margin-block-end: 0;
+    margin-inline-start: 2%; /* LTR */
   }
   [dir="rtl"] .views-display-columns > * {
     float: right;
-    margin-right: 2%;
-    margin-left: 0;
+    margin-inline: 0 2%;
   }
   .views-display-columns > *:first-child {
-    margin-left: 0; /* LTR */
+    margin-inline-start: 0; /* LTR */
   }
   [dir="rtl"] .views-display-columns > *:first-child {
-    margin-right: 0;
+    margin-inline-end: 0;
   }
 }
 

@@ -20,7 +20,8 @@
 }
 
 .admin-list--panel {
-  margin: -1em -1.5em;
+  margin-block: -1em;
+  margin-inline: -1.5em;
 }
 
 /**

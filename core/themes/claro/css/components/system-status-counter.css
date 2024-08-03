@@ -78,7 +78,8 @@
 }
 .system-status-counter__status-title {
   display: inline-block;
-  padding: 0 1.125rem;
+  padding-block: 0;
+  padding-inline: 1.125rem;
   vertical-align: middle;
   font-size: 1.125em;
   font-weight: bold;

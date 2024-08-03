@@ -4,7 +4,8 @@ body {
 #position-reference-1 {
   width: 200px;
   height: 200px;
-  margin: 75px 100px;
+  margin-block: 75px;
+  margin-inline: 100px;
   border: 1px solid black;
 }
 

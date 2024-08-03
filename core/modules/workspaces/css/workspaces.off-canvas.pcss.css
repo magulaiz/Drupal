@@ -7,7 +7,7 @@
 @custom-media --workspace-layout-large (min-width: 767px);
 
 #drupal-off-canvas-wrapper.workspaces-dialog {
-  padding-bottom: calc(var(--off-canvas-padding) / 2);
+  padding-block-end: calc(var(--off-canvas-padding) / 2);
 
   & .ui-dialog-content > div {
     @media (--workspace-layout-large) {
@@ -48,7 +48,8 @@
   }
 
   & .active-workspace {
-    padding: 0 var(--off-canvas-padding);
+    padding-block: 0;
+    padding-inline: var(--off-canvas-padding);
 
     @media (--workspace-layout-large) {
       display: flex;
@@ -57,7 +58,8 @@
       flex-grow: 2;
       align-self: stretch;
       order: 1;
-      padding: var(--off-canvas-padding) var(--off-canvas-padding) 0;
+      padding-block: var(--off-canvas-padding) 0;
+      padding-inline: var(--off-canvas-padding);
     }
   }
 
@@ -68,7 +70,8 @@
 
   & .active-workspace__label {
     position: relative; /* Anchor icon pseudo-element. */
-    padding: 18px 50px 0;
+    padding-block: 18px 0;
+    padding-inline: 50px;
     color: #fff;
     font-size: 18px;
     font-weight: bold;
@@ -113,7 +116,7 @@
 
   & .workspaces {
     & > h3 {
-      margin-top: 0;
+      margin-block-start: 0;
     }
 
     & ul {
@@ -178,7 +181,8 @@
   }
 
   & .active-workspace__actions .button {
-    margin: 10px 0 0;
+    margin-block: 10px 0;
+    margin-inline: 0;
   }
 
   @media (--workspace-layout-small) {

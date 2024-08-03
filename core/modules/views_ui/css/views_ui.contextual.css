@@ -23,7 +23,8 @@
 .contextual .contextual-links {
   right: auto; /* LTR */
   min-width: 10em;
-  padding: 6px 6px 9px 6px;
+  padding-block: 6px 9px;
+  padding-inline: 6px;
   border-radius: 0 4px 4px 4px; /* LTR */
 }
 [dir="rtl"] .contextual .contextual-links {
@@ -32,25 +33,23 @@
 }
 .contextual-links li a,
 .contextual-links li span {
-  padding-top: 0.25em;
-  padding-right: 0.1667em; /* LTR */
-  padding-bottom: 0.25em;
+  padding-block: 0.25em;
+  padding-inline-end: 0.1667em; /* LTR */
 }
 [dir="rtl"] .contextual-links li a,
 [dir="rtl"] .contextual-links li span {
-  padding-right: 0;
-  padding-left: 0.1667em;
+  padding-inline: 0.1667em 0;
 }
 .contextual-links li span {
   font-weight: bold;
 }
 .contextual-links li a {
-  margin: 0.25em 0;
-  padding-left: 1em; /* LTR */
+  margin-block: 0.25em;
+  margin-inline: 0;
+  padding-inline-start: 1em; /* LTR */
 }
 [dir="rtl"] .contextual-links li a {
-  padding-right: 1em;
-  padding-left: 0.1667em;
+  padding-inline: 0.1667em 1em;
 }
 .contextual-links li a:hover {
   background-color: #badbec;

@@ -9,7 +9,7 @@
   top: 50%;
   float: left;
   width: 48%;
-  padding-bottom: 2em;
+  padding-block-end: 2em;
   text-align: center;
 }
 .image-style-preview .preview-image {
@@ -43,7 +43,7 @@
   top: 50%;
   left: 10px;
   height: 2em;
-  margin-top: -1em;
+  margin-block-start: -1em;
 }
 
 /**
@@ -52,10 +52,10 @@
 @media screen and (max-width: 470px) {
   .image-style-preview .preview-image-wrapper {
     float: none;
-    margin-bottom: 1em;
+    margin-block-end: 1em;
   }
   .image-style-preview .preview-image-wrapper:last-child {
-    margin-bottom: 0;
+    margin-block-end: 0;
   }
 }
 

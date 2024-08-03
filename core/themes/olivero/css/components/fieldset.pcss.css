@@ -40,7 +40,7 @@
   line-height: var(--line-height-base);
 
   & + * {
-    clear: left;
+    clear: inline-start;
   }
 
   & .fieldset__label {

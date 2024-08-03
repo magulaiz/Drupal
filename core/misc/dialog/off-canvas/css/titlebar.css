@@ -21,8 +21,10 @@
 
 #drupal-off-canvas-wrapper .ui-dialog-titlebar {
   position: relative;
-  margin: 0 calc(-1 * var(--off-canvas-padding));
-  padding: var(--off-canvas-title-padding) 3.125rem;
+  margin-block: 0;
+  margin-inline: calc(-1 * var(--off-canvas-padding));
+  padding-block: var(--off-canvas-title-padding);
+  padding-inline: 3.125rem;
   color: var(--off-canvas-title-text-color);
   background-color: var(--off-canvas-title-background-color);
   font-family: var(--off-canvas-title-font-family);

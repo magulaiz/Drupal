@@ -46,7 +46,7 @@
 }
 
 .fieldset__legend + * {
-  clear: left;
+  clear: inline-start;
 }
 
 .fieldset__legend .fieldset__label.form-required::after {

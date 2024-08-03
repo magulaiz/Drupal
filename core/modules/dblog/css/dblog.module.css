@@ -6,15 +6,18 @@
 .dblog-filter-form .form-item-severity {
   display: inline-block;
   max-width: 30%;
-  margin: 0.1em 0.9em 0.1em 0.1em; /* LTR */
+  margin-block: 0.1em;
+  margin-inline: 0.1em 0.9em; /* LTR */
 }
 [dir="rtl"] .dblog-filter-form .form-item-type,
 [dir="rtl"] .dblog-filter-form .form-item-severity {
-  margin: 0.1em 0.1em 0.1em 0.9em;
+  margin-block: 0.1em;
+  margin-inline: 0.9em 0.1em;
 }
 .dblog-filter-form .form-actions {
   display: inline-block;
-  padding: 3ex 0 0;
+  padding-block: 3ex 0;
+  padding-inline: 0;
   vertical-align: top;
 }
 .admin-dblog .icon,

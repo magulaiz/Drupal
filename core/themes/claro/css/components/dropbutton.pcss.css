@@ -81,30 +81,27 @@
  * First dropbutton list item.
  */
 .dropbutton--multiple .dropbutton__item:first-of-type {
-  margin-right: calc(var(--dropbutton-toggle-size) + var(--dropbutton-toggle-size-spacing)); /* LTR */
+  margin-inline-end: calc(var(--dropbutton-toggle-size) + var(--dropbutton-toggle-size-spacing)); /* LTR */
   white-space: nowrap;
   [dir="rtl"] & {
-    margin-right: 0;
-    margin-left: calc(var(--dropbutton-toggle-size) + var(--dropbutton-toggle-size-spacing));
+    margin-inline: calc(var(--dropbutton-toggle-size) + var(--dropbutton-toggle-size-spacing)) 0;
   }
 }
 
 /* First dropbutton list item variants */
 .no-touchevents .dropbutton--multiple.dropbutton--small .dropbutton__item:first-of-type {
-  margin-right: calc(var(--dropbutton-small-toggle-size) + var(--dropbutton-toggle-size-spacing)); /* LTR */
+  margin-inline-end: calc(var(--dropbutton-small-toggle-size) + var(--dropbutton-toggle-size-spacing)); /* LTR */
   white-space: nowrap;
   [dir="rtl"] & {
-    margin-right: 0;
-    margin-left: calc(var(--dropbutton-small-toggle-size) + var(--dropbutton-toggle-size-spacing));
+    margin-inline: calc(var(--dropbutton-small-toggle-size) + var(--dropbutton-toggle-size-spacing)) 0;
   }
 }
 
 .no-touchevents .dropbutton--multiple.dropbutton--extrasmall .dropbutton__item:first-of-type {
-  margin-right: calc(var(--dropbutton-extrasmall-toggle-size) + var(--dropbutton-toggle-size-spacing)); /* LTR */
+  margin-inline-end: calc(var(--dropbutton-extrasmall-toggle-size) + var(--dropbutton-toggle-size-spacing)); /* LTR */
   white-space: nowrap;
   [dir="rtl"] & {
-    margin-right: 0;
-    margin-left: calc(var(--dropbutton-extrasmall-toggle-size) + var(--dropbutton-toggle-size-spacing));
+    margin-inline: calc(var(--dropbutton-extrasmall-toggle-size) + var(--dropbutton-toggle-size-spacing)) 0;
   }
 }
 
@@ -186,13 +183,13 @@
   .dropbutton__toggle::before {
     width: 0.5625rem;
     height: 0.5625rem;
-    margin-top: calc(0.5625rem / (2 * -1.41429));
+    margin-block-start: calc(0.5625rem / (2 * -1.41429));
     transform: translate(50%, -50%) rotate(135deg); /* LTR */
     border-width: 0.125rem 0.125rem 0 0;
     border-style: solid;
     background: none;
     .dropbutton-wrapper.open & {
-      margin-top: calc(0.5625rem / (2 * 1.41429));
+      margin-block-start: calc(0.5625rem / (2 * 1.41429));
       transform: translate(50%, -50%) rotate(315deg);
     }
     [dir="rtl"] .dropbutton-wrapper.open & {
@@ -206,11 +203,11 @@
   .no-touchevents .dropbutton--extrasmall .dropbutton__toggle::before {
     width: 0.4375rem;
     height: 0.4375rem;
-    margin-top: calc(0.4375rem / (2 * -1.41429));
+    margin-block-start: calc(0.4375rem / (2 * -1.41429));
   }
 
   .dropbutton-wrapper.open .dropbutton__toggle::before {
-    margin-top: calc(0.4375rem / (2 * 1.41429));
+    margin-block-start: calc(0.4375rem / (2 * 1.41429));
   }
 }
 
@@ -223,7 +220,8 @@
   & > * {
     display: inline-block;
     margin: 0;
-    padding: calc(var(--dropbutton-spacing-size) - var(--dropbutton-border-size)) calc(var(--space-l) - var(--dropbutton-border-size));
+    padding-block: calc(var(--dropbutton-spacing-size) - var(--dropbutton-border-size));
+    padding-inline: calc(var(--space-l) - var(--dropbutton-border-size));
     cursor: pointer;
     text-align: center;
     text-decoration: none;
@@ -250,8 +248,7 @@
   }
 
   .no-touchevents .dropbutton--extrasmall & > * {
-    padding-top: calc(var(--dropbutton-extrasmall-spacing-size) - var(--dropbutton-border-size));
-    padding-bottom: calc(var(--dropbutton-extrasmall-spacing-size) - var(--dropbutton-border-size));
+    padding-block: calc(var(--dropbutton-extrasmall-spacing-size) - var(--dropbutton-border-size));
     font-size: var(--dropbutton-extrasmall-font-size);
     line-height: var(--dropbutton-extrasmall-line-height);
   }
@@ -303,11 +300,11 @@
   box-sizing: border-box;
   width: 100%;
   margin: 0;
-  text-align: left; /* LTR */
+  text-align: start; /* LTR */
 }
 [dir="rtl"] .dropbutton > .dropbutton__item > a,
 [dir="rtl"] .dropbutton > .dropbutton__item > .button {
-  text-align: right;
+  text-align: end;
 }
 
 .dropbutton-wrapper:not(.open) .dropbutton__item:first-of-type ~ .dropbutton__item {
@@ -368,16 +365,14 @@
 /* Variants. */
 .no-touchevents .dropbutton--small .dropbutton__item:first-of-type ~ .dropbutton__item > a,
 .no-touchevents .dropbutton--small .dropbutton__item:first-of-type ~ .dropbutton__item > .button {
-  padding-top: var(--dropbutton-small-spacing-size);
-  padding-bottom: var(--dropbutton-small-spacing-size);
+  padding-block: var(--dropbutton-small-spacing-size);
   font-size: var(--dropbutton-small-font-size);
   line-height: var(--dropbutton-small-line-height);
 }
 
 .no-touchevents .dropbutton--extrasmall .dropbutton__item:first-of-type ~ .dropbutton__item > a,
 .no-touchevents .dropbutton--extrasmall .dropbutton__item:first-of-type ~ .dropbutton__item > .button {
-  padding-top: var(--dropbutton-extrasmall-spacing-size);
-  padding-bottom: var(--dropbutton-extrasmall-spacing-size);
+  padding-block: var(--dropbutton-extrasmall-spacing-size);
   font-size: var(--dropbutton-extrasmall-font-size);
   line-height: var(--dropbutton-extrasmall-line-height);
 }

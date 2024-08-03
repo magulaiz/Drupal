@@ -5,7 +5,8 @@
 
 .fieldset {
   min-width: 0;
-  margin: var(--space-m) 0;
+  margin-block: var(--space-m);
+  margin-inline: 0;
   padding: 0;
   color: var(--color-text);
   border: var(--details-border-size) solid var(--details-border-color);
@@ -46,7 +47,7 @@
 
 @media screen and (min-width: 48em) {
   .fieldset__legend {
-    margin-bottom: var(--space-l);
+    margin-block-end: var(--space-l);
   }
 }
 
@@ -76,8 +77,7 @@
 
 @media screen and (min-width: 48em) {
   .fieldset__label {
-    padding-right: var(--space-l);
-    padding-left: var(--space-l);
+    padding-inline: var(--space-l);
   }
 
   .fieldset__label--group {
@@ -118,7 +118,8 @@
 
 @media screen and (min-width: 48em) {
   .fieldset__wrapper {
-    margin: var(--space-l) var(--space-l) calc(var(--space-m) + var(--space-s));
+    margin-block: var(--space-l) calc(var(--space-m) + var(--space-s));
+    margin-inline: var(--space-l);
   }
 }
 

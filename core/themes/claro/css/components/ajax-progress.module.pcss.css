@@ -13,7 +13,8 @@
 
 .ajax-progress-bar {
   width: 13em;
-  padding: 0 0.3125rem; /* 0 5px */
+  padding-block: 0;
+  padding-inline: 0.3125rem; /* 0 5px */
 }
 
 /**
@@ -24,7 +25,8 @@
   display: inline-flex;
   align-content: center;
   height: 1.125rem;
-  margin: -3px var(--ajax-progress-margin-horizontal) 0;
+  margin-block: -3px 0;
+  margin-inline: var(--ajax-progress-margin-horizontal);
   vertical-align: middle;
   white-space: nowrap;
   line-height: 1.125rem;

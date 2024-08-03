@@ -11,8 +11,7 @@
  */
 
 .layout-container {
-  margin-right: 1em;
-  margin-left: 1em;
+  margin-inline: 1em;
 }
 
 .layout-container::after {
@@ -24,20 +23,17 @@
 @media screen and (min-width: 38em) {
   .toolbar-tray-open:not(.toolbar-vertical) .layout-container,
   body:not(.toolbar-tray-open) .layout-container {
-    margin-right: 3em;
-    margin-left: 3em;
+    margin-inline: 3em;
   }
   .toolbar-tray-open:not(.toolbar-vertical) .layout-row,
   body:not(.toolbar-tray-open) .layout-row {
-    margin-right: -1.5em;
-    margin-left: -1.5em;
+    margin-inline: -1.5em;
   }
   .toolbar-tray-open:not(.toolbar-vertical) .layout-column,
   body:not(.toolbar-tray-open) .layout-column {
     float: left; /* LTR */
     box-sizing: border-box;
-    padding-right: 1.5em;
-    padding-left: 1.5em;
+    padding-inline: 1.5em;
   }
   [dir="rtl"] .toolbar-tray-open:not(.toolbar-vertical) .layout-column,
   [dir="rtl"] body:not(.toolbar-tray-open) .layout-column {
@@ -59,18 +55,15 @@
 
 @media screen and (min-width: 60em) {
   .layout-container {
-    margin-right: 3em;
-    margin-left: 3em;
+    margin-inline: 3em;
   }
   .layout-row {
-    margin-right: -1.5em;
-    margin-left: -1.5em;
+    margin-inline: -1.5em;
   }
   .layout-column {
     float: left; /* LTR */
     box-sizing: border-box;
-    padding-right: 1.5em;
-    padding-left: 1.5em;
+    padding-inline: 1.5em;
   }
   [dir="rtl"] .layout-column {
     float: right;

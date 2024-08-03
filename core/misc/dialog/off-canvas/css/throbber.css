@@ -18,7 +18,8 @@
   overflow: hidden;
   width: 0.9375rem;
   height: 0.9375rem;
-  margin: 0 0.625rem;
+  margin-block: 0;
+  margin-inline: 0.625rem;
   animation: off-canvas-throbber-spin 1s linear infinite;
   vertical-align: middle;
   border: 2px solid var(--off-canvas-text-color);

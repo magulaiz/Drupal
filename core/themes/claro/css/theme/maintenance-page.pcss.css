@@ -20,19 +20,19 @@ h3 {
 }
 
 .site-name {
-  margin-top: var(--space-s);
+  margin-block-start: var(--space-s);
   word-wrap: break-word;
   color: var(--color-gray);
   font-size: var(--font-size-xl);
 }
 .site-name--subtle {
-  margin-top: var(--space-s);
+  margin-block-start: var(--space-s);
   color: var(--color-gray-800);
   font-size: var(--font-size-h4);
 }
 
 .title {
-  margin-top: 0;
+  margin-block-start: 0;
   font-size: var(--font-size-h3);
 }
 .title--broad {
@@ -41,11 +41,11 @@ h3 {
 
 .site-name,
 .title {
-  margin-bottom: var(--space-l);
+  margin-block-end: var(--space-l);
 }
 
 .content {
-  margin-bottom: var(--space-m);
+  margin-block-end: var(--space-m);
   color: var(--color-gray);
 }
 .content--subtle {
@@ -86,34 +86,34 @@ h3 {
     display: none;
   }
   .task-list {
-    margin-left: -3rem; /* LTR */
+    margin-inline-start: -3rem; /* LTR */
     padding: 0;
     list-style-type: none;
     counter-reset: steps;
     font-weight: bold;
   }
   [dir="rtl"] .task-list {
-    margin-right: -3rem;
-    margin-left: 0;
+    margin-inline: 0 -3rem;
   }
   .task-list li {
-    padding: 1rem 1rem 1rem 3rem; /* LTR */
+    padding-block: 1rem;
+    padding-inline: 3rem 1rem; /* LTR */
     counter-increment: steps;
     color: var(--color-gray);
     border-radius: 0 2rem 2rem 0 /* LTR */;
     font-weight: 500;
   }
   [dir="rtl"] .task-list li {
-    padding: 1rem 3rem 1rem 1rem;
+    padding-block: 1rem;
+    padding-inline: 1rem 3rem;
     border-radius: 2rem 0 0 2rem;
   }
   .task-list li::before {
-    margin-right: 0.375rem;
+    margin-inline-end: 0.375rem;
     content: counter(steps);
   }
   [dir="rtl"] .task-list li::before {
-    margin-right: 0;
-    margin-left: 0.375rem;
+    margin-inline: 0.375rem 0;
   }
 
   .task-list .is-active {
@@ -132,8 +132,7 @@ h3 {
  */
 .layout-container {
   width: auto;
-  margin-right: 1.25em;
-  margin-left: 1.25em;
+  margin-inline: 1.25em;
   padding: var(--space-xl);
   border: 1px solid transparent; /* Required for forced-colors mode. */
   border-radius: 8px;
@@ -151,7 +150,8 @@ h3 {
   /* 768px */
   .layout-container {
     margin: 1.25em;
-    padding: var(--space-m) var(--space-l);
+    padding-block: var(--space-m);
+    padding-inline: var(--space-l);
   }
 
   .layout-sidebar-first {
@@ -167,7 +167,8 @@ h3 {
   .install-page,
   .maintenance-page {
     display: table-cell;
-    padding: 1em 0;
+    padding-block: 1em;
+    padding-inline: 0;
     vertical-align: middle;
   }
   html,
@@ -183,14 +184,16 @@ h3 {
   .layout-container.layout-container.layout-container {
     width: 75%;
     max-width: 940px;
-    margin: 0 auto;
+    margin-block: 0;
+    margin-inline: auto;
   }
   ul {
-    margin: 0.25em 0;
+    margin-block: 0.25em;
+    margin-inline: 0;
     padding: 15px;
   }
   [dir="rtl"] ul {
-    margin-right: 0; /* Overrides default [dir="rtl"] ul margin. */
+    margin-inline-end: 0; /* Overrides default [dir="rtl"] ul margin. */
   }
 
   /* Positioning sidebar & content. */
@@ -207,15 +210,14 @@ h3 {
     clear: none;
     box-sizing: border-box;
     width: 65%;
-    padding-left: 3.85em; /* LTR */
+    padding-inline-start: 3.85em; /* LTR */
   }
   [dir="rtl"] .main-content {
     float: right;
-    padding-right: 3.85em;
-    padding-left: 0;
+    padding-inline: 0 3.85em;
   }
   .main-content--attached {
-    padding-left: 0;
+    padding-inline-start: 0;
   }
 }
 
@@ -229,12 +231,11 @@ h3 {
 .system-status-report__entry__value {
   float: none;
   width: 100%;
-  padding-top: 0;
-  padding-left: 3em; /* LTR */
+  padding-block-start: 0;
+  padding-inline-start: 3em; /* LTR */
 }
 [dir="rtl"] .system-status-report__entry__value {
-  padding-right: 3em;
-  padding-left: 1em;
+  padding-inline: 1em 3em;
 }
 
 /**
@@ -242,14 +243,14 @@ h3 {
  */
 .update-results {
   overflow: auto; /* Required to prevent text clipping. */
-  margin-top: 0;
+  margin-block-start: 0;
   padding: var(--space-s);
   border: 1px solid var(--color-gray-100);
   border-radius: var(--base-border-radius);
   background: var(--color-gray-050);
 }
 .update-results > h3:first-child {
-  margin-top: 0;
+  margin-block-start: 0;
 }
 .update-results .failure strong {
   color: var(--color-maximumred);
@@ -259,5 +260,5 @@ h3 {
   font-size: var(--font-size-h5);
 }
 .item-list > ul {
-  margin-left: 0;
+  margin-inline-start: 0;
 }

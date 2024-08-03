@@ -12,7 +12,8 @@
     overflow: hidden;
     width: 15px;
     height: 15px;
-    margin: 0 10px;
+    margin-block: 0;
+    margin-inline: 10px;
     animation: off-canvas-throbber-spin 1s linear infinite;
     vertical-align: middle;
     border: 2px solid var(--off-canvas-text-color);

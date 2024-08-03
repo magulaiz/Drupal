@@ -17,8 +17,8 @@
   font-size: 2em;
 }
 .component--my-banner--body > * {
-  margin-bottom: 0;
+  margin-block-end: 0;
 }
 .component--my-banner--body > :first-child {
-  margin-top: 1em;
+  margin-block-start: 1em;
 }

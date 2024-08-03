@@ -15,7 +15,8 @@
   touch-callout: none;
 }
 .toolbar .toolbar-item {
-  padding: 1em 1.3333em;
+  padding-block: 1em;
+  padding-inline: 1.3333em;
   cursor: pointer;
   text-decoration: none;
   line-height: 1em;
@@ -59,11 +60,10 @@
   background-color: #fff;
 }
 .toolbar-horizontal .toolbar-tray > .toolbar-lining {
-  padding-right: 5em; /* LTR */
+  padding-inline-end: 5em; /* LTR */
 }
 [dir="rtl"] .toolbar-horizontal .toolbar-tray > .toolbar-lining {
-  padding-right: 0;
-  padding-left: 5em;
+  padding-inline: 5em 0;
 }
 .toolbar .toolbar-tray-vertical {
   border-right: 1px solid #aaa; /* LTR */
@@ -87,7 +87,8 @@
 }
 .toolbar-tray a,
 .toolbar-tray a:visited {
-  padding: 1em 1.3333em;
+  padding-block: 1em;
+  padding-inline: 1.3333em;
   cursor: pointer;
   text-decoration: none;
   color: #565656;
@@ -132,11 +133,10 @@
   border-bottom: 0;
 }
 .toolbar .toolbar-tray-vertical .toolbar-menu .toolbar-menu .toolbar-menu .toolbar-menu {
-  margin-left: 0.25em; /* LTR */
+  margin-inline-start: 0.25em; /* LTR */
 }
 [dir="rtl"] .toolbar .toolbar-tray-vertical .toolbar-menu .toolbar-menu .toolbar-menu .toolbar-menu {
-  margin-right: 0.25em;
-  margin-left: 0;
+  margin-inline: 0 0.25em;
 }
 .toolbar .toolbar-menu .toolbar-menu a {
   color: #434343;

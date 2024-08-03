@@ -35,9 +35,9 @@ body.js-off-canvas-dialog-open {
 /* This is a page level content wrapper that shrinks when off-canvas is open. */
 .dialog-off-canvas-main-canvas {
   transition:
-    padding-right 0.7s ease,
-    padding-left 0.7s ease,
-    padding-top 0.3s ease;
+    padding-inline-end 0.7s ease,
+    padding-inline-start 0.7s ease,
+    padding-block-start 0.3s ease;
 
   @media (prefers-reduced-motion: reduce) {
     transition: none;

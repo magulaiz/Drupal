@@ -4,12 +4,14 @@
  */
 
 .banner__content {
-  margin: 1rem 4%;
+  margin-block: 1rem;
+  margin-inline: 4%;
   font-size: 1.188em;
 }
 
 .banner__title {
-  margin: 0 0 0.5em 0;
+  margin-block: 0 0.5em;
+  margin-inline: 0;
   font-family: "Scope One", Georgia, serif;
   font-size: 1.777em;
   font-weight: 400;
@@ -29,7 +31,8 @@
     align-items: center;
     min-height: 54vw;
     margin: auto;
-    padding: 0 4%;
+    padding-block: 0;
+    padding-inline: 4%;
   }
 
   .banner__content {

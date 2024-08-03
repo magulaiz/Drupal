@@ -11,5 +11,6 @@
  */
 
 .help p {
-  margin: 0 0 0.625rem;
+  margin-block: 0 0.625rem;
+  margin-inline: 0;
 }

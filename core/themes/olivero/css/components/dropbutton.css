@@ -110,8 +110,9 @@
 .dropbutton-action a {
   display: flex;
   align-items: center;
-  margin-bottom: -2px; /* Account for borders. */
-  padding: 0 0.5625rem;
+  margin-block-end: -2px; /* Account for borders. */
+  padding-block: 0;
+  padding-inline: 0.5625rem;
   -webkit-text-decoration: none;
   text-decoration: none;
   color: var(--dropbutton--text-color);

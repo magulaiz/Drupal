@@ -4,26 +4,25 @@
  */
 
 .messages {
-  margin-bottom: 1em;
+  margin-block-end: 1em;
   padding: 20px;
   word-wrap: break-word;
   color: inherit;
   overflow-wrap: break-word;
 }
 [dir="rtl"] .messages {
-  text-align: right;
+  text-align: end;
   background-position: right 10px top 17px;
 }
 .messages + .messages {
-  margin-top: 1.538em;
+  margin-block-start: 1.538em;
 }
 .messages__content {
-  padding-left: 24px; /* LTR */
+  padding-inline-start: 24px; /* LTR */
   background: no-repeat 0 center; /* LTR */
 }
 [dir="rtl"] .messages__content {
-  padding-right: 24px;
-  padding-left: 0;
+  padding-inline: 0 24px;
   background-position: right;
 }
 .messages--status {
@@ -59,5 +58,5 @@
   list-style: none;
 }
 .messages__item + .messages__item {
-  margin-top: 0.769em;
+  margin-block-start: 0.769em;
 }

@@ -28,7 +28,8 @@ th {
   position: relative;
   box-sizing: border-box;
   height: var(--space-xl);
-  padding: var(--space-xs) var(--space-m);
+  padding-block: var(--space-xs);
+  padding-inline: var(--space-m);
   text-align: start;
   color: var(--color-text);
   background: var(--color-gray-050);
@@ -38,7 +39,8 @@ th {
 /* The actual sort link. */
 
 .sortable-heading {
-  padding: 0 var(--space-m);
+  padding-block: 0;
+  padding-inline: var(--space-m);
 }
 
 .sortable-heading > a {
@@ -160,7 +162,8 @@ thead tr {
 td {
   box-sizing: border-box;
   height: 4rem;
-  padding: var(--space-xs) var(--space-m);
+  padding-block: var(--space-xs);
+  padding-inline: var(--space-m);
   text-align: start;
 }
 

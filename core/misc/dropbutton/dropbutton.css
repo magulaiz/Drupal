@@ -42,14 +42,12 @@
 }
 .js td .dropbutton-multiple {
   max-width: 100%;
-  margin-right: 2em; /* LTR */
-  padding-right: 10em; /* LTR */
+  margin-inline-end: 2em; /* LTR */
+  padding-inline-end: 10em; /* LTR */
 }
 [dir="rtl"].js td .dropbutton-multiple {
-  margin-right: 0;
-  margin-left: 2em;
-  padding-right: 0;
-  padding-left: 10em;
+  margin-inline: 2em 0;
+  padding-inline: 10em 0;
 }
 .js td .dropbutton-multiple .dropbutton-action a,
 .js td .dropbutton-multiple .dropbutton-action input,
@@ -89,11 +87,10 @@
  * The arrow inherits the link color, but can be overridden with border colors.
  */
 .js .dropbutton-multiple .dropbutton-widget {
-  padding-right: 2em; /* LTR */
+  padding-inline-end: 2em; /* LTR */
 }
 .js[dir="rtl"] .dropbutton-multiple .dropbutton-widget {
-  padding-right: 0;
-  padding-left: 2em;
+  padding-inline: 2em 0;
 }
 .dropbutton-multiple.open,
 .dropbutton-multiple.open .dropbutton-widget {
@@ -144,7 +141,7 @@
   overflow: hidden;
   width: 0;
   height: 0;
-  margin-top: -0.1666em;
+  margin-block-start: -0.1666em;
   border-width: 0.3333em 0.3333em 0;
   border-style: solid;
   border-right-color: transparent;

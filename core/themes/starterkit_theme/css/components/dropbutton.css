@@ -11,7 +11,8 @@
   border-color: #b8b8b8;
 }
 .dropbutton .dropbutton-action > * {
-  padding: 0.1em 0.5em;
+  padding-block: 0.1em;
+  padding-inline: 0.5em;
   white-space: nowrap;
 }
 .dropbutton .secondary-action {
@@ -25,9 +26,8 @@
   border-left: 1px solid #e8e8e8;
 }
 .dropbutton-multiple .dropbutton .dropbutton-action > * {
-  margin-right: 0.25em; /* LTR */
+  margin-inline-end: 0.25em; /* LTR */
 }
 [dir="rtl"] .dropbutton-multiple .dropbutton .dropbutton-action > * {
-  margin-right: 0;
-  margin-left: 0.25em;
+  margin-inline: 0.25em 0;
 }

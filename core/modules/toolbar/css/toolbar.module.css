@@ -37,7 +37,7 @@
   list-style-image: none;
 }
 .toolbar .menu-item {
-  padding-top: 0;
+  padding-block-start: 0;
 }
 .toolbar .toolbar-bar .toolbar-tab,
 .toolbar .menu-item {
@@ -253,10 +253,10 @@
 
 /* Anti flicker styling. */
 .toolbar-anti-flicker.toolbar-loading.toolbar-fixed body {
-  padding-top: 2.4375rem;
+  padding-block-start: 2.4375rem;
 }
 .toolbar-anti-flicker.toolbar-loading.toolbar-fixed.toolbar-horizontal.toolbar-tray-open body {
-  padding-top: 4.91331rem;
+  padding-block-start: 4.91331rem;
 }
 
 .toolbar-anti-flicker.toolbar-loading.toolbar-vertical.toolbar-tray-open .toolbar-tray {

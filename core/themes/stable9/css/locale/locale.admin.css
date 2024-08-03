@@ -11,26 +11,27 @@
    * its immediate child is floated without an explicit width set.
    */
   width: 15em;
-  margin-right: 1em; /* LTR */
-  margin-bottom: 0;
+  margin-block-end: 0;
+  margin-inline-end: 1em; /* LTR */
 }
 [dir="rtl"] .locale-translate-filter-form .form-item-langcode,
 [dir="rtl"] .locale-translate-filter-form .form-item-translation,
 [dir="rtl"] .locale-translate-filter-form .form-item-customized {
   float: right;
-  margin-right: 0;
-  margin-left: 1em;
+  margin-inline: 1em 0;
 }
 .locale-translate-filter-form .form-type-select select {
   width: 100%;
 }
 .locale-translate-filter-form .form-actions {
   float: left; /* LTR */
-  padding: 3.8ex 0 0 0; /* LTR */
+  padding-block: 3.8ex 0;
+  padding-inline: 0; /* LTR */
 }
 [dir="rtl"] .locale-translate-filter-form .form-actions {
   float: right;
-  padding: 3.5ex 0 0 0;
+  padding-block: 3.5ex 0;
+  padding-inline: 0;
 }
 .locale-translate-edit-form th {
   width: 50%;
@@ -49,11 +50,11 @@
 }
 
 .locale-translate-filter-form .form-wrapper {
-  margin-bottom: 0;
+  margin-block-end: 0;
 }
 
 .locale-translate-edit-form table.changed {
-  margin-top: 0;
+  margin-block-start: 0;
 }
 
 /**
@@ -114,7 +115,8 @@
 }
 .locale-translation-update__details {
   max-width: 490px;
-  padding: 5px 0;
+  padding-block: 5px;
+  padding-inline: 0;
   white-space: normal;
   color: #666;
   font-size: 0.9em;
@@ -124,7 +126,8 @@
   padding: 0;
 }
 .locale-translation-update__details li {
-  margin: 0 0 0.25em 1.5em;
+  margin-block: 0 0.25em;
+  margin-inline: 1.5em 0;
   padding: 0;
 }
 

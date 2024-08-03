@@ -20,10 +20,9 @@
 
 @media only screen and (min-width: 36em) {
   .node-preview-container .form-type-select {
-    margin-left: 25%; /* LTR */
+    margin-inline-start: 25%; /* LTR */
   }
   [dir="rtl"] .node-preview-container .form-type-select {
-    margin-right: 25%;
-    margin-left: 0;
+    margin-inline: 0 25%;
   }
 }
