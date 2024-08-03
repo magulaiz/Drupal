@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 namespace Drupal\Tests\rest\Functional;
+
 use Drupal\Core\Url;
 use Drupal\rest\RestResourceConfigInterface;
 use Drupal\Tests\BrowserTestBase;
