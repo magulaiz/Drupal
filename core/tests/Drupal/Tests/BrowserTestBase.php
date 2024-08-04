@@ -458,7 +458,7 @@ abstract class BrowserTestBase extends TestCase {
     // Mink takes care of stopping sessions in __destruct(). We only need to
     // reset state in-between test methods, so restart.
     if ($this->mink) {
-      $this->mink->restartSessions();
+      $this->mink->resetSessions();
     }
 
     // Restore original shutdown callbacks.
