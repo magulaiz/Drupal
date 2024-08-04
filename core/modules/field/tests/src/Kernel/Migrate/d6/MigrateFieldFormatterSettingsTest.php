@@ -11,6 +11,7 @@ use Drupal\Tests\migrate_drupal\Kernel\d6\MigrateDrupal6TestBase;
  * Upgrade field formatter settings to entity.display.*.*.yml.
  *
  * @group migrate_drupal_6
+ * @group #slow
  */
 class MigrateFieldFormatterSettingsTest extends MigrateDrupal6TestBase {
 

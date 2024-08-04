@@ -13,6 +13,7 @@ use Drupal\Tests\file\Kernel\Migrate\d6\FileMigrationTestTrait;
  * Node content migration.
  *
  * @group migrate_drupal_6
+ * @group #slow
  */
 class MigrateNodeTest extends MigrateNodeTestBase {
 
