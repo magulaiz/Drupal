@@ -12,6 +12,7 @@ use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
  * Tests migrate upgrade credential form with settings in settings.php.
  *
  * @group migrate_drupal_ui
+ * @group #slow
  */
 class SettingsTest extends WebDriverTestBase {
 
