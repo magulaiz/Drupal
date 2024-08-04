@@ -438,12 +438,6 @@ abstract class BrowserTestBase extends TestCase {
     }
     parent::tearDown();
 
-    // Stop mink sessions as early as possible so that a new session can be
-    // started by a different concurrent test.
-    if ($this->mink) {
-      $this->mink->stopSessions();
-    }
-
     if ($this->container) {
       // Cleanup mock session started in DrupalKernel::preHandle().
       /** @var \Symfony\Component\HttpFoundation\Session\Session $session */
@@ -460,6 +454,12 @@ abstract class BrowserTestBase extends TestCase {
 
     // Ensure that internal logged in variable is reset.
     $this->loggedInUser = FALSE;
+
+    // Mink takes care of stopping sessions in __destruct(). We only need to
+    // reset state in-between test methods, so restart.
+    if ($this->mink) {
+      $this->mink->restartSessions();
+    }
 
     // Restore original shutdown callbacks.
     if (function_exists('drupal_register_shutdown_function')) {
