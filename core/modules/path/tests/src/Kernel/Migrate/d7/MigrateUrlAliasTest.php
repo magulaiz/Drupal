@@ -8,6 +8,7 @@ namespace Drupal\Tests\path\Kernel\Migrate\d7;
  * Tests URL alias migration.
  *
  * @group path
+ * @group #slow
  */
 class MigrateUrlAliasTest extends MigrateUrlAliasTestBase {
 
