@@ -39,6 +39,7 @@ use Drupal\Core\Entity\EntityTypeInterface;
  *     "label" = "name",
  *     "langcode" = "langcode",
  *     "published" = "status",
+ *     "owner" = "user_id",
  *   },
  *   links = {
  *     "add-form" = "/entity_test_revpub/add",

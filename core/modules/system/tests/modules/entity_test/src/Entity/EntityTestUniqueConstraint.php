@@ -24,6 +24,7 @@ use Drupal\Core\Field\BaseFieldDefinition;
  *   entity_keys = {
  *     "id" = "id",
  *     "uuid" = "uuid",
+ *     "owner" = "user_id",
  *   },
  * )
  */

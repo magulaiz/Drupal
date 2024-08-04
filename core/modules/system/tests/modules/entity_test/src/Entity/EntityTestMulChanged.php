@@ -33,7 +33,8 @@ use Drupal\Core\Field\BaseFieldDefinition;
  *     "uuid" = "uuid",
  *     "bundle" = "type",
  *     "label" = "name",
- *     "langcode" = "langcode"
+ *     "langcode" = "langcode",
+ *     "owner" = "user_id",
  *   },
  *   links = {
  *     "add-form" = "/entity_test_mul_changed/add",

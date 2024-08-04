@@ -35,6 +35,7 @@ use Drupal\Core\Field\BaseFieldDefinition;
  *     "revision" = "revision_id",
  *     "label" = "name",
  *     "langcode" = "langcode",
+ *     "owner" = "user_id",
  *   },
  *   links = {
  *     "add-form" = "/entity_test_mulrev_changed/add",

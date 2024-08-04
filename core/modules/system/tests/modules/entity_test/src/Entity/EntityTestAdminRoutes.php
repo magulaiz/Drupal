@@ -30,7 +30,7 @@ namespace Drupal\entity_test\Entity;
  *     "bundle" = "type",
  *     "label" = "name",
  *     "langcode" = "langcode",
- *     "owner" = "user_id"
+ *     "owner" = "user_id",
  *   },
  *   links = {
  *     "canonical" = "/entity_test_admin_routes/manage/{entity_test_admin_routes}",

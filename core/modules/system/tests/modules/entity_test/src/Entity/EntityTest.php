@@ -38,7 +38,7 @@ use Drupal\user\EntityOwnerTrait;
  *     "bundle" = "type",
  *     "label" = "name",
  *     "langcode" = "langcode",
- *     "owner" = "user_id"
+ *     "owner" = "user_id",
  *   },
  *   links = {
  *     "canonical" = "/entity_test/{entity_test}",
