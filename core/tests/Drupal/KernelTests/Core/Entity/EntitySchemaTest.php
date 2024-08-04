@@ -15,6 +15,7 @@ use Drupal\Tests\system\Functional\Entity\Traits\EntityDefinitionTestTrait;
  * Tests the default entity storage schema handler.
  *
  * @group Entity
+ * @group #slow
  */
 class EntitySchemaTest extends EntityKernelTestBase {
 

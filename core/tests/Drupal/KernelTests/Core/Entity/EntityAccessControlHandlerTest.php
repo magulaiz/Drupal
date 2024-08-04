@@ -24,6 +24,7 @@ use Drupal\user\Entity\User;
  *
  * @coversDefaultClass \Drupal\Core\Entity\EntityAccessControlHandler
  * @group Entity
+ * @group #slow
  */
 class EntityAccessControlHandlerTest extends EntityLanguageTestBase {
 
