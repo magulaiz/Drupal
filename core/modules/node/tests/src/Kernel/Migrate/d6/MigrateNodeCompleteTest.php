@@ -12,6 +12,7 @@ use Drupal\Tests\migrate_drupal\Traits\CreateTestContentEntitiesTrait;
  * Test class for a complete node migration for Drupal 6.
  *
  * @group migrate_drupal_6
+ * @group #slow
  */
 class MigrateNodeCompleteTest extends MigrateNodeTestBase {
 
