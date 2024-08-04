@@ -29,10 +29,7 @@
     float: inline-end;
   }
   .layout-column + .layout-column {
-    padding-inline-start: 10px; /* LTR */
-  }
-  [dir="rtl"] .layout-column + .layout-column {
-    padding-inline: 0 10px;
+    padding-inline-start: 10px;
   }
   .layout-column--half {
     inline-size: 50%;
@@ -131,10 +128,7 @@ small .admin-link::after {
   font-weight: normal;
 }
 .system-modules td {
-  padding-inline-start: 0; /* LTR */
-}
-[dir="rtl"] .system-modules td {
-  padding-inline: 12px 0;
+  padding-inline-start: 0;
 }
 
 @media screen and (max-width: 40em) {
@@ -205,7 +199,6 @@ small .admin-link::after {
   background: url(../../../misc/icons/e29700/warning.svg) 0 50% no-repeat; /* LTR */
 }
 [dir="rtl"] .module-link--non-stable {
-  padding-inline: 0 18px;
   background-position: top 50% right 0;
 }
 
@@ -215,14 +208,10 @@ small .admin-link::after {
   box-sizing: border-box;
   inline-size: 100%;
   padding-block: 10px;
-  padding-inline: 40px 6px; /* LTR */
+  padding-inline: 40px 6px;
   vertical-align: top;
   background-color: transparent;
   font-weight: normal;
-}
-[dir="rtl"] .system-status-report__status-title {
-  padding-block: 10px;
-  padding-inline: 6px 40px;
 }
 .system-status-report__status-icon::before {
   position: absolute;
@@ -306,13 +295,11 @@ small .admin-link::after {
     float: inline-start; /* LTR */
     inline-size: 294px;
     margin-block: 0;
-    margin-inline: 0 20px; /* LTR */
+    margin-inline: 0 20px;
   }
   [dir="rtl"] body:not(.toolbar-vertical) .system-themes-list-installed .screenshot,
   [dir="rtl"] body:not(.toolbar-vertical) .system-themes-list-installed .no-screenshot {
     float: inline-end;
-    margin-block: 0;
-    margin-inline: 20px 0;
   }
   body:not(.toolbar-vertical) .system-themes-list-installed .system-themes-list__header {
     margin-block-start: 0;
@@ -322,12 +309,10 @@ small .admin-link::after {
     box-sizing: border-box;
     inline-size: 31.25%;
     padding-block: 20px;
-    padding-inline: 0 20px; /* LTR */
+    padding-inline: 0 20px;
   }
   [dir="rtl"] body:not(.toolbar-vertical) .system-themes-list-uninstalled .theme-selector {
     float: inline-end;
-    padding-block: 20px;
-    padding-inline: 20px 0;
   }
   body:not(.toolbar-vertical) .system-themes-list-uninstalled .theme-info {
     min-block-size: 170px;
@@ -343,13 +328,11 @@ small .admin-link::after {
     float: inline-start; /* LTR */
     inline-size: 294px;
     margin-block: 0;
-    margin-inline: 0 20px; /* LTR */
+    margin-inline: 0 20px;
   }
   [dir="rtl"] .toolbar-vertical .system-themes-list-installed .screenshot,
   [dir="rtl"] .toolbar-vertical .system-themes-list-installed .no-screenshot {
     float: inline-end;
-    margin-block: 0;
-    margin-inline: 20px 0;
   }
   .toolbar-vertical .system-themes-list-installed .theme-info__header {
     margin-block-start: 0;
@@ -359,12 +342,10 @@ small .admin-link::after {
     box-sizing: border-box;
     inline-size: 31.25%;
     padding-block: 20px;
-    padding-inline: 0 20px; /* LTR */
+    padding-inline: 0 20px;
   }
   [dir="rtl"] .toolbar-vertical .system-themes-list-uninstalled .theme-selector {
     float: inline-end;
-    padding-block: 20px;
-    padding-inline: 20px 0;
   }
   .toolbar-vertical .system-themes-list-uninstalled .theme-info {
     min-block-size: 170px;
@@ -398,12 +379,10 @@ small .admin-link::after {
 }
 .theme-selector .operations li:last-child {
   padding-block: 0;
-  padding-inline: 0.7em 0; /* LTR */
+  padding-inline: 0.7em 0;
   border-inline-end: none; /* LTR */
 }
 [dir="rtl"] .theme-selector .operations li:last-child {
-  padding-block: 0;
-  padding-inline: 0 0.7em;
   border-inline-start: none;
 }
 .theme-selector .operations li:first-child {
@@ -415,10 +394,7 @@ small .admin-link::after {
   padding-inline: 0.7em 0;
 }
 .system-themes-admin-form {
-  clear: inline-start; /* LTR */
-}
-[dir="rtl"] .system-themes-admin-form {
-  clear: inline-end;
+  clear: inline-start;
 }
 .cron-description__run-cron {
   display: block;

@@ -6,12 +6,10 @@
 .image-preview {
   float: inline-start; /* LTR */
   padding-block: 0 10px;
-  padding-inline: 0 10px; /* LTR */
+  padding-inline: 0 10px;
 }
 [dir="rtl"] .image-preview {
   float: inline-end;
-  padding-block: 0 10px;
-  padding-inline: 10px 0;
 }
 .image-widget-data {
   float: inline-start; /* LTR */

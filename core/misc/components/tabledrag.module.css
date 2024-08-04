@@ -24,13 +24,12 @@ tr.add-new .tabledrag-changed {
   float: inline-start; /* LTR */
   overflow: hidden;
   block-size: 1.7em;
-  margin-inline-start: -1em; /* LTR */
+  margin-inline-start: -1em;
   cursor: move;
   text-decoration: none;
 }
 [dir="rtl"] .draggable a.tabledrag-handle {
   float: inline-end;
-  margin-inline: 0 -1em;
 }
 a.tabledrag-handle:hover {
   text-decoration: none;
@@ -89,22 +88,15 @@ a.tabledrag-handle:focus .handle {
 .tabledrag-toggle-weight-wrapper {
   text-align: end; /* LTR */
 }
-[dir="rtl"] .tabledrag-toggle-weight-wrapper {
-  text-align: start;
-}
 .indentation {
   float: inline-start; /* LTR */
   inline-size: 20px;
   block-size: 1.7em;
   margin-block: -0.4em;
-  margin-inline: -0.4em 0.2em; /* LTR */
+  margin-inline: -0.4em 0.2em;
   padding-block: 0.42em;
-  padding-inline: 0.6em 0; /* LTR */
+  padding-inline: 0.6em 0;
 }
 [dir="rtl"] .indentation {
   float: inline-end;
-  margin-block: -0.4em;
-  margin-inline: 0.2em -0.4em;
-  padding-block: 0.42em;
-  padding-inline: 0 0.6em;
 }

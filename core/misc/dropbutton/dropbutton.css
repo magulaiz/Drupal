@@ -42,12 +42,8 @@
 }
 .js td .dropbutton-multiple {
   max-inline-size: 100%;
-  margin-inline-end: 2em; /* LTR */
-  padding-inline-end: 10em; /* LTR */
-}
-[dir="rtl"].js td .dropbutton-multiple {
-  margin-inline: 2em 0;
-  padding-inline: 10em 0;
+  margin-inline-end: 2em;
+  padding-inline-end: 10em;
 }
 .js td .dropbutton-multiple .dropbutton-action a,
 .js td .dropbutton-multiple .dropbutton-action input,
@@ -88,9 +84,6 @@
  */
 .js .dropbutton-multiple .dropbutton-widget {
   padding-inline-end: 2em; /* LTR */
-}
-.js[dir="rtl"] .dropbutton-multiple .dropbutton-widget {
-  padding-inline: 2em 0;
 }
 .dropbutton-multiple.open,
 .dropbutton-multiple.open .dropbutton-widget {

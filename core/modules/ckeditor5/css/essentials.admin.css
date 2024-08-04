@@ -45,6 +45,3 @@
   border-style: solid;
 }
 
-[dir="rtl"] .ckeditor5-toolbar-button-heading::after {
-  margin-inline: 10px 0;
-}

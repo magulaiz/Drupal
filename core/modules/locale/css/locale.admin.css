@@ -15,7 +15,6 @@
 [dir="rtl"] .locale-translate-filter-form .form-item-translation,
 [dir="rtl"] .locale-translate-filter-form .form-item-customized {
   float: inline-end;
-  margin-inline: 1em 0;
 }
 .locale-translate-filter-form .form-type-select select {
   inline-size: 100%;
@@ -23,12 +22,10 @@
 .locale-translate-filter-form .form-actions {
   float: inline-start; /* LTR */
   padding-block: 3.8ex 0;
-  padding-inline: 0; /* LTR */
+  padding-inline: 0;
 }
 [dir="rtl"] .locale-translate-filter-form .form-actions {
   float: inline-end;
-  padding-block: 3.5ex 0;
-  padding-inline: 0;
 }
 .locale-translate-edit-form th {
   inline-size: 50%;

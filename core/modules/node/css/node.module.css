@@ -19,7 +19,7 @@
     float: inline-start; /* LTR */
     box-sizing: border-box;
     inline-size: 65%;
-    padding-inline-end: 2em; /* LTR */
+    padding-inline-end: 2em;
   }
 
   [dir="rtl"] .layout-region-node-main,

@@ -6,12 +6,9 @@ body {
   direction: rtl;
 }
 th {
-  text-align: start; /* LTR */
+  text-align: start;
   color: #006;
   border-block-end: 1px solid #ccc;
-}
-[dir="rtl"] th {
-  text-align: end;
 }
 tr:nth-child(odd) {
   background-color: #ddd;

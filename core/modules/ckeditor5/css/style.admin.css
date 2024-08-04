@@ -14,9 +14,6 @@
   font-size: 14px;
 }
 
-[dir="rtl"] .ckeditor5-toolbar-button-style::before {
-  margin-inline: 0 10px;
-}
 
 .ckeditor5-toolbar-button-style::after {
   display: inline-block;
@@ -29,6 +26,3 @@
   border-style: solid;
 }
 
-[dir="rtl"] .ckeditor5-toolbar-button-style::after {
-  margin-inline: 10px 0;
-}

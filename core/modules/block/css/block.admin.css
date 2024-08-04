@@ -1,10 +1,7 @@
 /* Block listing page */
 .region-title__action {
   display: inline-block;
-  margin-inline-start: 1em; /* LTR */
-}
-[dir="rtl"] .region-title__action {
-  margin-inline: 0 1em;
+  margin-inline-start: 1em;
 }
 
 /* Block demo mode */
