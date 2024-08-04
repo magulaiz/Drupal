@@ -11,6 +11,7 @@ use Drupal\views\Views;
  * Tests the core Drupal\views\Plugin\views\field\Numeric handler.
  *
  * @group views
+ * @group #slow
  * @see \Drupal\views\Plugin\views\field\Numeric
  */
 class FieldNumericTest extends ViewsKernelTestBase {
