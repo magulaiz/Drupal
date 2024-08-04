@@ -13,6 +13,7 @@ use Drupal\user\UserInterface;
  * Tests basic CRUD functionality.
  *
  * @group Entity
+ * @group #slow
  */
 class EntityApiTest extends EntityKernelTestBase {
 
