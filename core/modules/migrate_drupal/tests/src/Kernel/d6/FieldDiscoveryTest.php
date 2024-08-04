@@ -16,6 +16,7 @@ use Drupal\Tests\migrate_drupal\Traits\FieldDiscoveryTestTrait;
  * Tests FieldDiscovery service against Drupal 6.
  *
  * @group migrate_drupal
+ * @group #slow
  * @coversDefaultClass \Drupal\migrate_drupal\FieldDiscovery
  */
 class FieldDiscoveryTest extends MigrateDrupal6TestBase {
