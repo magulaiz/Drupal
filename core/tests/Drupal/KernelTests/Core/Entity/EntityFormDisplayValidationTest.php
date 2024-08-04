@@ -18,6 +18,7 @@ use Drupal\Tests\node\Traits\ContentTypeCreationTrait;
  *
  * @group Entity
  * @group Validation
+ * @group #slow
  */
 class EntityFormDisplayValidationTest extends ConfigEntityValidationTestBase {
 
