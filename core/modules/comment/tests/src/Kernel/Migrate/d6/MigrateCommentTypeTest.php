@@ -12,6 +12,7 @@ use Drupal\Tests\migrate_drupal\Kernel\d6\MigrateDrupal6TestBase;
  *
  * @group comment
  * @group migrate_drupal_6
+ * @group #slow
  */
 class MigrateCommentTypeTest extends MigrateDrupal6TestBase {
 

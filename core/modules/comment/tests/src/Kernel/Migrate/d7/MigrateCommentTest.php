@@ -13,6 +13,7 @@ use Drupal\node\NodeInterface;
  *
  * @group comment
  * @group migrate_drupal_7
+ * @group #slow
  */
 class MigrateCommentTest extends MigrateDrupal7TestBase {
 
