@@ -273,6 +273,13 @@ abstract class BrowserTestBase extends TestCase {
    */
   protected function initFrontPage() {
     $session = $this->getSession();
+    if (!$session->isStarted()) {
+      $time = microtime(TRUE);
+      $session->start();
+      if (microtime(TRUE) - $time > 1) {
+        throw new \Exception('Waited too long for a selenium session');
+      }
+    }
     $session->visit($this->baseUrl);
   }
 
