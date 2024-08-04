@@ -12,6 +12,7 @@ use Drupal\Tests\migrate_drupal\Kernel\d7\MigrateDrupal7TestBase;
  * Migrate field widget settings.
  *
  * @group field
+ * @group #slow
  */
 class MigrateFieldInstanceWidgetSettingsTest extends MigrateDrupal7TestBase {
 
