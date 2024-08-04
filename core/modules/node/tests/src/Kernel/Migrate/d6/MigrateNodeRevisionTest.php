@@ -10,6 +10,7 @@ use Drupal\node\NodeInterface;
  * Node content revisions migration.
  *
  * @group migrate_drupal_6
+ * @group #slow
  */
 class MigrateNodeRevisionTest extends MigrateNodeTestBase {
 
