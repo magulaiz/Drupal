@@ -25,7 +25,6 @@
   [dir="rtl"] .layout-region-node-main,
   [dir="rtl"] .layout-region-node-footer {
     float: inline-end;
-    padding-inline: 2em 0;
   }
 
   .layout-region-node-secondary {

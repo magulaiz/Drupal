@@ -86,7 +86,7 @@ a.tabledrag-handle:focus .handle {
   background-position: 50% -32px;
 }
 .tabledrag-toggle-weight-wrapper {
-  text-align: end; /* LTR */
+  text-align: end;
 }
 .indentation {
   float: inline-start; /* LTR */
