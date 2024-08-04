@@ -18,6 +18,7 @@ namespace Drupal\entity_test\Entity;
  *     "bundle" = "type",
  *     "label" = "name",
  *     "langcode" = "langcode",
+ *     "owner" = "user_id",
  *   }
  * )
  */
