@@ -36,7 +36,7 @@ tr .ajax-progress-throbber .throbber {
   z-index: 1261;
   inset-block-start: 48.5%;
   /* Can't do center:50% middle: 50%, so approximate it for a typical window size. */
-  inset-inline-start: 49%; /* LTR */
+  inset-inline-start: 49%;
   inline-size: 24px;
   block-size: 24px;
   padding: 4px;
@@ -46,7 +46,4 @@ tr .ajax-progress-throbber .throbber {
   background-image: url(../loading-small.svg);
   background-repeat: no-repeat;
   background-position: center center;
-}
-[dir="rtl"] .ajax-progress-fullscreen {
-  inset-inline: auto 49%;
 }

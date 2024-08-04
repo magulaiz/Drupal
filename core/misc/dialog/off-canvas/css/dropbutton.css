@@ -49,11 +49,8 @@
   padding-inline-end: 0;
 }
 #drupal-off-canvas-wrapper .dropbutton-wrapper.dropbutton-single .dropbutton-action:first-child {
-  border-inline-end: solid 1px var(--off-canvas-dropbutton-border-color); /* LTR */
+  border-inline-end: solid 1px var(--off-canvas-dropbutton-border-color);
   border-radius: var(--off-canvas-dropbutton-border-radius);
-}
-[dir="rtl"] #drupal-off-canvas-wrapper .dropbutton-wrapper.dropbutton-single .dropbutton-action:first-child {
-  border: solid 1px var(--off-canvas-dropbutton-border-color);
 }
 #drupal-off-canvas-wrapper .dropbutton-wrapper.dropbutton-single .dropbutton-action a {
   justify-content: center;

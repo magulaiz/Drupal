@@ -31,16 +31,10 @@
   font-size: 0.875em;
 }
 .progress__description {
-  float: inline-start; /* LTR */
-}
-[dir="rtl"] .progress__description {
-  float: inline-end;
+  float: inline-start;
 }
 .progress__percentage {
-  float: inline-end; /* LTR */
-}
-[dir="rtl"] .progress__percentage {
-  float: inline-start;
+  float: inline-end;
 }
 .progress--small .progress__track {
   block-size: 7px;
