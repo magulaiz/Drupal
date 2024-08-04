@@ -11,6 +11,7 @@ use Drupal\views\Tests\ViewTestData;
  * Tests the fields dialogs.
  *
  * @group views_ui
+ * @group #slow
  */
 class FieldDialogsTest extends WebDriverTestBase {
 
