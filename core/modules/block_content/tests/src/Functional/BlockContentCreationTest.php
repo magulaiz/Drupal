@@ -14,7 +14,6 @@ use Drupal\Core\Database\Database;
  * Create a block and test saving it.
  *
  * @group block_content
- * @group #slow
  */
 class BlockContentCreationTest extends BlockContentTestBase {
 

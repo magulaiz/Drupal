@@ -12,7 +12,6 @@ use Drupal\node\Entity\Node;
  * Tests paging of comments and their settings.
  *
  * @group comment
- * @group #slow
  */
 class CommentPagerTest extends CommentTestBase {
 

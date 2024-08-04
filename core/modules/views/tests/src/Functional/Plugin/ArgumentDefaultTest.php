@@ -16,7 +16,6 @@ use Symfony\Component\HttpFoundation\Request;
  * Tests pluggable argument_default for views.
  *
  * @group views
- * @group #slow
  */
 class ArgumentDefaultTest extends ViewTestBase {
 

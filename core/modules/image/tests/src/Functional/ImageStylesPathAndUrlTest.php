@@ -16,7 +16,6 @@ use Drupal\Tests\TestFileCreationTrait;
  * Tests the functions for generating paths and URLs for image styles.
  *
  * @group image
- * @group #slow
  */
 class ImageStylesPathAndUrlTest extends BrowserTestBase {
 
