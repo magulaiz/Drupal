@@ -16,7 +16,7 @@
   padding-block: 0.5em;
   padding-inline: 0.666em;
   border: 1px solid #ccc;
-  border-top: 0;
+  border-block-start: 0;
 }
 .filter-wrapper .form-item {
   margin: 0;
@@ -26,10 +26,10 @@
 }
 
 .filter-help {
-  float: right; /* LTR */
+  float: inline-end; /* LTR */
 }
 [dir="rtl"] .filter-help {
-  float: left;
+  float: inline-start;
 }
 .filter-guidelines .filter-guidelines-item {
   margin-block-start: 1em;
@@ -48,17 +48,16 @@
 }
 .filter-help a::after {
   position: absolute;
-  top: 0;
-  right: -20px; /* LTR */
+  inset-block-start: 0;
+  inset-inline-end: -20px; /* LTR */
   display: block;
-  width: 16px;
-  height: 16px;
+  inline-size: 16px;
+  block-size: 16px;
   content: "";
   background: transparent url(../../../../../../misc/help.png);
 }
 [dir="rtl"] .filter-help a::after {
-  right: auto;
-  left: -20px;
+  inset-inline: -20px auto;
 }
 
 .text-format-wrapper .description {

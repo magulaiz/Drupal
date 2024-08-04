@@ -6,7 +6,7 @@
 }
 
 .layout-builder__add-section {
-  width: 100%;
+  inline-size: 100%;
   margin-block-end: 1.5em;
   padding-block: 1.5em;
   padding-inline: 0;
@@ -18,7 +18,7 @@
 .layout-builder__link--add {
   padding-inline-start: 1.3em; /* LTR */
   color: #686868;
-  border-bottom: none;
+  border-block-end: none;
   background: url(../../../../misc/icons/787878/plus.svg) transparent center left / 1em no-repeat; /* LTR */
 }
 
@@ -31,7 +31,7 @@
 .layout-builder__link--add:active,
 .layout-builder__link--add:focus {
   color: #000;
-  border-bottom-style: none;
+  border-block-end-style: none;
 }
 
 .layout-builder__section {
@@ -66,8 +66,8 @@
   z-index: 2;
   display: inline-block;
   box-sizing: border-box;
-  width: 26px;
-  height: 26px;
+  inline-size: 26px;
+  block-size: 26px;
   margin-inline: -10px 6px; /* LTR */ /* LTR */
   padding: 0;
   white-space: nowrap;
@@ -115,7 +115,7 @@
 
 .layout-builder--content-preview-disabled .layout-builder-block {
   margin: 0;
-  border-bottom: 2px dashed #979797;
+  border-block-end: 2px dashed #979797;
 }
 
 #drupal-off-canvas .layout-selection li {
@@ -173,7 +173,7 @@
 /* Highlight the active block in the Move Block dialog. */
 #drupal-off-canvas .layout-builder-components-table__block-label--current {
   padding-inline-start: 17px;
-  border-left: solid 5px;
+  border-inline-start: solid 5px;
 }
 
 /**
@@ -202,7 +202,7 @@
 .layout__region-info {
   padding: 0.5em;
   text-align: center;
-  border-bottom: 2px dashed #979797;
+  border-block-end: 2px dashed #979797;
 }
 
 /**

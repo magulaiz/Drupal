@@ -20,10 +20,10 @@
  * Alignment classes for block level elements (images, videos, blockquotes, etc.)
  */
 .align-left {
-  float: left;
+  float: inline-start;
 }
 .align-right {
-  float: right;
+  float: inline-end;
 }
 .align-center {
   display: block;

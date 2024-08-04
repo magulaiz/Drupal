@@ -11,7 +11,7 @@
 }
 
 .layout-builder__add-section {
-  width: 100%;
+  inline-size: 100%;
   margin-block-end: 1.5em;
   padding-block: 1.5em;
   padding-inline: 0;
@@ -23,7 +23,7 @@
 .layout-builder__link--add {
   padding-inline-start: 1.3em;
   color: #686868;
-  border-bottom: none;
+  border-block-end: none;
   background: url(../../../misc/icons/787878/plus.svg) transparent center left / 1em no-repeat; /* LTR */
 
   &:dir(rtl) {
@@ -33,7 +33,7 @@
   &:hover,
   &:active {
     color: #000;
-    border-bottom-style: none;
+    border-block-end-style: none;
   }
 }
 
@@ -69,8 +69,8 @@
   z-index: 2;
   display: inline-block;
   box-sizing: border-box;
-  width: 26px;
-  height: 26px;
+  inline-size: 26px;
+  block-size: 26px;
   margin-inline: -10px 6px;
   padding: 0;
   white-space: nowrap;
@@ -96,7 +96,7 @@
 
   @nest .layout-builder--content-preview-disabled & {
     margin: 0;
-    border-bottom: 2px dashed #979797;
+    border-block-end: 2px dashed #979797;
   }
 }
 
@@ -159,7 +159,7 @@
 .layout__region-info {
   padding: 0.5em;
   text-align: center;
-  border-bottom: 2px dashed #979797;
+  border-block-end: 2px dashed #979797;
 }
 
 /**

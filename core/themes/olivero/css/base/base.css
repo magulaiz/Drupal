@@ -38,7 +38,7 @@ body {
 body.is-fixed {
   position: fixed;
   overflow: hidden;
-  width: 100%;
+  inline-size: 100%;
 }
 
 [dir="rtl"] body {
@@ -65,13 +65,13 @@ button {
 img,
 video {
   display: block;
-  max-width: 100%;
-  height: auto;
+  max-inline-size: 100%;
+  block-size: auto;
 }
 
 audio {
   display: block;
-  max-width: 100%;
+  max-inline-size: 100%;
 }
 
 h1 {

@@ -20,6 +20,12 @@
     "liberty/use-logical-spec": [
       "always",
       {
+        "direction": [
+          "ltr",
+          "rtl"
+        ]
+      },
+      {
         "except": [
           "float",
           "top",

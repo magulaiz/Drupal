@@ -4,11 +4,11 @@
  */
 
 .form--inline .form-item {
-  float: left; /* LTR */
+  float: inline-start; /* LTR */
   margin-inline-end: 0.5em; /* LTR */
 }
 [dir="rtl"] .form--inline .form-item {
-  float: right;
+  float: inline-end;
   margin-inline: 0.5em 0;
 }
 /* This is required to win over specificity of [dir="rtl"] .form--inline .form-item */

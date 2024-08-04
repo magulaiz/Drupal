@@ -7,7 +7,7 @@
   position: fixed;
   z-index: 499;
   box-sizing: border-box;
-  width: 100%;
+  inline-size: 100%;
   padding: 10px;
 }
 

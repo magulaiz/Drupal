@@ -4,10 +4,10 @@
  */
 
 .language-content-settings-form .bundle {
-  width: 24%;
+  inline-size: 24%;
 }
 .language-content-settings-form .field {
-  width: 24%;
+  inline-size: 24%;
   padding-inline-start: 3em; /* LTR */
 }
 [dir="rtl"] .language-content-settings-form .field {
@@ -24,8 +24,8 @@
   font-weight: normal;
 }
 .language-content-settings-form .translatable {
-  width: 1%;
+  inline-size: 1%;
 }
 .language-content-settings-form .operations {
-  width: 75%;
+  inline-size: 75%;
 }

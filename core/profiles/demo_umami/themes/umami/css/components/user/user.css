@@ -10,7 +10,7 @@
 }
 .password-strength__indicator {
   -webkit-transition: width 0.5s ease-out;
-  transition: width 0.5s ease-out;
+  transition: inline-size 0.5s ease-out;
   background-color: #77b259;
 }
 .password-strength__indicator.is-weak {
@@ -30,11 +30,11 @@
 .password-field,
 .password-strength,
 .password-confirm-match {
-  width: 55%;
+  inline-size: 55%;
 }
 
 .password-suggestions {
-  max-width: 34.7em;
+  max-inline-size: 34.7em;
   margin-block: 0.7em;
   margin-inline: 0;
   padding-block: 0.2em;
@@ -49,7 +49,7 @@
 .password-parent {
   clear: inline-start; /* LTR */
   overflow: hidden;
-  max-width: 33em;
+  max-inline-size: 33em;
   margin: 0;
 }
 [dir="rtl"] .confirm-parent,

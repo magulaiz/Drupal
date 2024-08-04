@@ -16,8 +16,8 @@
     position: absolute;
     inset-block-start: 0;
     inset-inline-end: calc(var(--sp1) * -1);
-    width: var(--sp3);
-    height: var(--sp2);
+    inline-size: var(--sp3);
+    block-size: var(--sp2);
     content: "";
     background: linear-gradient(to left, var(--color--white) 0%, rgba(255, 255, 255, 0) 100%); /* LTR */
 
@@ -53,7 +53,7 @@
 
 .breadcrumb__list {
   overflow-x: auto;
-  width: max-content;
+  inline-size: max-content;
   margin-block: 0;
   margin-inline-start: calc(var(--sp1) * -1);
   margin-inline-end: calc(var(--sp1) * -1);
@@ -78,8 +78,8 @@
 
   &:nth-child(n + 2)::before {
     display: inline-block;
-    width: 8px;
-    height: 8px;
+    inline-size: 8px;
+    block-size: 8px;
     margin-inline: 16px 20px;
     content: "";
     transform: rotate(45deg); /* LTR */

@@ -6,7 +6,7 @@
  */
 /* cspell:ignore wght */
 .toolbar-dropdown__item + .toolbar-dropdown__item {
-  border-top: 1px solid #d8dfea;
+  border-block-start: 1px solid #d8dfea;
 }
 .toolbar-dropdown__link {
   display: block;

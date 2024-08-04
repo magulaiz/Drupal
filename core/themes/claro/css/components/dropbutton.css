@@ -66,8 +66,8 @@
 .dropbutton {
   display: block;
   overflow: visible;
-  min-width: 6rem; /* Help mitigate long dropbutton text from obscuring other dropbuttons. */
-  height: var(--dropbutton-toggle-size);
+  min-inline-size: 6rem; /* Help mitigate long dropbutton text from obscuring other dropbuttons. */
+  block-size: var(--dropbutton-toggle-size);
   margin: 0;
   list-style: none;
 }
@@ -80,11 +80,11 @@
 /* Variants. */
 
 .dropbutton--small {
-  height: var(--dropbutton-small-toggle-size);
+  block-size: var(--dropbutton-small-toggle-size);
 }
 
 .dropbutton--extrasmall {
-  height: var(--dropbutton-extrasmall-toggle-size);
+  block-size: var(--dropbutton-extrasmall-toggle-size);
 }
 
 /**
@@ -127,11 +127,10 @@
 .dropbutton__toggle {
   position: absolute;
   z-index: 3;
-  top: 0;
-  right: 0; /* LTR */
-  bottom: 0;
-  width: var(--dropbutton-toggle-size);
-  height: var(--dropbutton-toggle-size);
+  inset-block: 0;
+  inset-inline-end: 0; /* LTR */
+  inline-size: var(--dropbutton-toggle-size);
+  block-size: var(--dropbutton-toggle-size);
   border: var(--dropbutton-border-size) solid transparent !important; /* 1 */
   border-inline-start: var(--dropbutton-border-size) solid white !important;
   border-radius: 0 var(--button-border-radius-size) var(--button-border-radius-size) 0; /* LTR */
@@ -141,17 +140,16 @@
 }
 
 [dir="rtl"] .dropbutton__toggle {
-  right: auto;
-  left: 0;
+  inset-inline: 0 auto;
   border-radius: var(--button-border-radius-size) 0 0 var(--button-border-radius-size);
 }
 
 .dropbutton__toggle::before {
   position: absolute;
-  top: 50%;
-  right: 50%;
-  width: 0.875rem;
-  height: 0.5625rem;
+  inset-block-start: 50%;
+  inset-inline-end: 50%;
+  inline-size: 0.875rem;
+  block-size: 0.5625rem;
   content: "";
   transform: translate(50%, -50%) rotate(0);
   background: url("data:image/svg+xml,%3csvg width='14' height='9' xmlns='http://www.w3.org/2000/svg'%3e%3cpath d='M.238 1.938L1.647.517 7 5.819 12.354.517l1.408 1.421L7 8.636z' fill='%23000f33'/%3e%3c/svg%3e") no-repeat center;
@@ -186,18 +184,18 @@
 /* Toggler variants */
 
 .no-touchevents .dropbutton--small .dropbutton__toggle {
-  width: var(--dropbutton-small-toggle-size);
-  height: var(--dropbutton-small-toggle-size);
+  inline-size: var(--dropbutton-small-toggle-size);
+  block-size: var(--dropbutton-small-toggle-size);
 }
 
 .no-touchevents .dropbutton--extrasmall .dropbutton__toggle {
-  width: var(--dropbutton-extrasmall-toggle-size);
-  height: var(--dropbutton-extrasmall-toggle-size);
+  inline-size: var(--dropbutton-extrasmall-toggle-size);
+  block-size: var(--dropbutton-extrasmall-toggle-size);
 }
 
 .no-touchevents .dropbutton--small .dropbutton__toggle::before,
 .no-touchevents .dropbutton--extrasmall .dropbutton__toggle::before {
-  width: 0.75rem; /* 12px */
+  inline-size: 0.75rem; /* 12px */
 }
 
 /* High contrast. */
@@ -205,8 +203,8 @@
 @media (forced-colors: active) {
   /* Default. */
   .dropbutton__toggle::before {
-    width: 0.5625rem;
-    height: 0.5625rem;
+    inline-size: 0.5625rem;
+    block-size: 0.5625rem;
     margin-block-start: calc(0.5625rem / (2 * -1.41429));
     transform: translate(50%, -50%) rotate(135deg); /* LTR */
     border-width: 0.125rem 0.125rem 0 0;
@@ -225,8 +223,8 @@
 
   .no-touchevents .dropbutton--small .dropbutton__toggle::before,
   .no-touchevents .dropbutton--extrasmall .dropbutton__toggle::before {
-    width: 0.4375rem;
-    height: 0.4375rem;
+    inline-size: 0.4375rem;
+    block-size: 0.4375rem;
     margin-block-start: calc(0.4375rem / (2 * -1.41429));
   }
 
@@ -326,7 +324,7 @@
 .dropbutton > .dropbutton__item > .button {
   display: block;
   box-sizing: border-box;
-  width: 100%;
+  inline-size: 100%;
   margin: 0;
   text-align: start; /* LTR */
 }
@@ -342,7 +340,7 @@
   * By setting a height of 1px, the dropbutton items are hidden
   * from view while still occupying minimal space, ensuring the layout remains intact.
   */
-  height: 1px;
+  block-size: 1px;
 }
 
 /**
@@ -351,16 +349,16 @@
 
 .dropbutton__item:first-of-type ~ .dropbutton__item {
   border: var(--dropbutton-border-size) solid var(--color-gray-200);
-  border-bottom: 0;
+  border-block-end: 0;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.15);
 }
 
 :is(.dropbutton__item:first-of-type ~ .dropbutton__item) ~ .dropbutton__item {
-  border-top: 0;
+  border-block-start: 0;
 }
 
 .dropbutton__item ~ .dropbutton__item:last-child {
-  border-bottom: var(--dropbutton-border-size) solid var(--color-gray-200);
+  border-block-end: var(--dropbutton-border-size) solid var(--color-gray-200);
   border-radius: 0 0 var(--dropbutton-border-radius-size) var(--dropbutton-border-radius-size);
 }
 
@@ -369,7 +367,7 @@
  */
 
 .dropbutton__item:first-of-type ~ .dropbutton__item {
-  max-width: var(--dropbutton-item-max-width);
+  max-inline-size: var(--dropbutton-item-max-width);
 }
 
 .dropbutton__item:first-of-type ~ .dropbutton__item > a,

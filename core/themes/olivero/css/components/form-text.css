@@ -25,9 +25,9 @@
 [type="url"],
 [type="week"],
 textarea {
-  width: 100%;
-  max-width: 100%;
-  min-height: var(--sp3);
+  inline-size: 100%;
+  max-inline-size: 100%;
+  min-block-size: var(--sp3);
   padding-block: 0;
   padding-inline: var(--sp);
   color: var(--color-text-neutral-loud);
@@ -72,7 +72,7 @@ textarea {
 }
 
 .form-element--small:is([type="color"], [type="date"], [type="datetime-local"], [type="email"], [type="file"], [type="month"], [type="number"], [type="password"], [type="search"], [type="tel"], [type="text"], [type="time"], [type="url"], [type="week"], textarea) {
-  min-height: var(--sp2-5);
+  min-block-size: var(--sp2-5);
 }
 
 @media (min-width: 31.25rem) {
@@ -91,7 +91,7 @@ textarea {
   [type="url"],
   [type="week"],
   textarea {
-    width: auto;
+    inline-size: auto;
   }
 }
 
@@ -104,11 +104,11 @@ textarea {
 }
 
 [type="file"] {
-  height: auto;
+  block-size: auto;
   padding-block: var(--sp0-75);
 }
 
 [type="color"] {
-  width: var(--sp3);
+  inline-size: var(--sp3);
   padding: 0;
 }

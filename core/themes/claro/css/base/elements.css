@@ -50,7 +50,7 @@ a:active,
 }
 
 hr {
-  height: 1px;
+  block-size: 1px;
   margin-block: var(--space-m);
   margin-inline: 0;
   padding: 0;
@@ -197,7 +197,7 @@ sup {
 
 abbr,
 acronym {
-  border-bottom: dotted 1px;
+  border-block-end: dotted 1px;
 }
 
 ul {
@@ -249,8 +249,8 @@ details summary:focus {
 }
 
 img {
-  max-width: 100%;
-  height: auto;
+  max-inline-size: 100%;
+  block-size: auto;
 }
 
 /**

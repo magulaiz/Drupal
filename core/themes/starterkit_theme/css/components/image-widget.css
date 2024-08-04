@@ -4,21 +4,21 @@
  */
 
 .image-preview {
-  float: left; /* LTR */
+  float: inline-start; /* LTR */
   padding-block: 0 10px;
   padding-inline: 0 10px; /* LTR */
 }
 [dir="rtl"] .image-preview {
-  float: right;
+  float: inline-end;
   padding-block: 0 10px;
   padding-inline: 10px 0;
 }
 .image-widget-data {
-  float: left; /* LTR */
+  float: inline-start; /* LTR */
 }
 [dir="rtl"] .image-widget-data {
-  float: right;
+  float: inline-end;
 }
 .image-widget-data .text-field {
-  width: auto;
+  inline-size: auto;
 }

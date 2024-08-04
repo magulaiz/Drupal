@@ -10,8 +10,8 @@
 
 .footer-block__link::after {
   display: inline-block;
-  width: 14px;
-  height: 14px;
+  inline-size: 14px;
+  block-size: 14px;
   content: "";
   vertical-align: middle;
   background: url("../../images/svg/pointer--white.svg") no-repeat center center;

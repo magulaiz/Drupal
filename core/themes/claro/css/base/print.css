@@ -29,7 +29,7 @@
     page-break-inside: avoid;
   }
   img {
-    max-width: 100% !important;
+    max-inline-size: 100% !important;
   }
   p,
   h2,
@@ -54,7 +54,7 @@
     border-color: #999;
   }
   .is-collapse-enabled .tabs {
-    max-height: 999em;
+    max-block-size: 999em;
   }
   .is-horizontal .tabs__tab {
     margin-block: 0 !important;

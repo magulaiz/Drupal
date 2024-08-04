@@ -64,17 +64,17 @@
   padding-inline: 5em 0;
 }
 .toolbar .toolbar-tray-vertical {
-  border-right: 1px solid #aaa; /* LTR */
+  border-inline-end: 1px solid #aaa; /* LTR */
   background-color: #f5f5f5;
   box-shadow: -1px 0 5px 2px rgba(0, 0, 0, 0.3333); /* LTR */
 }
 [dir="rtl"] .toolbar .toolbar-tray-vertical {
-  border-right: 0 none;
-  border-left: 1px solid #aaa;
+  border-inline-end: 0 none;
+  border-inline-start: 1px solid #aaa;
   box-shadow: 1px 0 5px 2px rgba(0, 0, 0, 0.3333);
 }
 .toolbar-horizontal .toolbar-tray {
-  border-bottom: 1px solid #aaa;
+  border-block-end: 1px solid #aaa;
   box-shadow: -2px 1px 3px 1px rgba(0, 0, 0, 0.3333); /* LTR */
 }
 [dir="rtl"] .toolbar-horizontal .toolbar-tray {
@@ -102,33 +102,33 @@
   background-color: #fff;
 }
 .toolbar-horizontal .toolbar-tray .menu-item + .menu-item {
-  border-left: 1px solid #ddd; /* LTR */
+  border-inline-start: 1px solid #ddd; /* LTR */
 }
 [dir="rtl"] .toolbar-horizontal .toolbar-tray .menu-item + .menu-item {
-  border-right: 1px solid #ddd;
-  border-left: 0 none;
+  border-inline-end: 1px solid #ddd;
+  border-inline-start: 0 none;
 }
 .toolbar-horizontal .toolbar-tray .menu-item:last-child {
-  border-right: 1px solid #ddd; /* LTR */
+  border-inline-end: 1px solid #ddd; /* LTR */
 }
 [dir="rtl"] .toolbar-horizontal .toolbar-tray .menu-item:last-child {
-  border-left: 1px solid #ddd;
+  border-inline-start: 1px solid #ddd;
 }
 .toolbar .toolbar-tray-vertical .menu-item + .menu-item {
-  border-top: 1px solid #ddd;
+  border-block-start: 1px solid #ddd;
 }
 .toolbar .toolbar-tray-vertical .menu-item:last-child {
-  border-bottom: 1px solid #ddd;
+  border-block-end: 1px solid #ddd;
 }
 .toolbar .toolbar-tray-vertical .menu-item .menu-item {
   border: 0 none;
 }
 .toolbar .toolbar-tray-vertical .toolbar-menu ul ul {
-  border-top: 1px solid #ddd;
-  border-bottom: 1px solid #ddd;
+  border-block-start: 1px solid #ddd;
+  border-block-end: 1px solid #ddd;
 }
 .toolbar .toolbar-tray-vertical .menu-item:last-child > ul {
-  border-bottom: 0;
+  border-block-end: 0;
 }
 .toolbar .toolbar-tray-vertical .toolbar-menu .toolbar-menu .toolbar-menu .toolbar-menu {
   margin-inline-start: 0.25em; /* LTR */
@@ -144,22 +144,22 @@
  * Orientation toggle.
  */
 .toolbar .toolbar-toggle-orientation {
-  height: 100%;
+  block-size: 100%;
   padding: 0;
   background-color: #f5f5f5;
 }
 .toolbar-horizontal .toolbar-tray .toolbar-toggle-orientation {
-  border-left: 1px solid #c9c9c9; /* LTR */
+  border-inline-start: 1px solid #c9c9c9; /* LTR */
 }
 [dir="rtl"] .toolbar-horizontal .toolbar-tray .toolbar-toggle-orientation {
-  border-right: 1px solid #c9c9c9;
-  border-left: 0 none;
+  border-inline-end: 1px solid #c9c9c9;
+  border-inline-start: 0 none;
 }
 .toolbar .toolbar-toggle-orientation > .toolbar-lining {
-  float: right; /* LTR */
+  float: inline-end; /* LTR */
 }
 [dir="rtl"] .toolbar .toolbar-toggle-orientation > .toolbar-lining {
-  float: left;
+  float: inline-start;
 }
 .toolbar .toolbar-toggle-orientation button {
   display: inline-block;

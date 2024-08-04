@@ -35,8 +35,8 @@
   }
 
   @media (forced-colors: active) {
-    width: 5px; /* Width and height of the SVG. */
-    height: 8px;
+    inline-size: 5px; /* Width and height of the SVG. */
+    block-size: 8px;
     content: "";
     background-color: canvastext;
     mask-image: url(../../images/icons/currentColor/arrow-breadcrumb.svg);

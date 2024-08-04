@@ -5,7 +5,7 @@
 .dblog-filter-form .form-item-type,
 .dblog-filter-form .form-item-severity {
   display: inline-block;
-  max-width: 30%;
+  max-inline-size: 30%;
   margin-block: 0.1em;
   margin-inline: 0.1em 0.9em; /* LTR */
 }
@@ -26,7 +26,7 @@
 .admin-dblog .dblog-critical .icon,
 .admin-dblog .dblog-alert .icon,
 .admin-dblog .dblog-emergency .icon {
-  width: 16px;
+  inline-size: 16px;
   background: no-repeat center;
 }
 .admin-dblog .dblog-warning .icon {

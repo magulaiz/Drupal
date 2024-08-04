@@ -95,8 +95,8 @@
       position: absolute;
       inset-block-end: 0;
       inset-inline-start: 0;
-      width: var(--sp0-5);
-      height: calc(100% - 30px);
+      inline-size: var(--sp0-5);
+      block-size: calc(100% - 30px);
       margin-inline-start: 4px;
       content: "";
       background: var(--color--gray-100);

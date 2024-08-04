@@ -20,8 +20,8 @@
   position: absolute !important;
   overflow: hidden;
   clip: rect(1px, 1px, 1px, 1px);
-  width: 1px !important;
-  height: 1px !important;
+  inline-size: 1px !important;
+  block-size: 1px !important;
   word-wrap: normal;
 }
 
@@ -29,8 +29,8 @@
   position: static !important;
   overflow: visible;
   clip: auto;
-  width: auto !important;
-  height: auto !important;
+  inline-size: auto !important;
+  block-size: auto !important;
 }
 
 #drupal-off-canvas-wrapper .invisible {

@@ -10,7 +10,7 @@
   & .tabledrag-cell-content {
     position: relative;
     display: block;
-    height: auto;
+    block-size: auto;
 
     & > * {
       display: block;
@@ -21,13 +21,13 @@
   }
   & .tabledrag-handle,
   & .tabledrag-changed {
-    float: left;
+    float: inline-start;
   }
   & .tabledrag-changed {
     line-height: calc(var(--tabledrag-handle-icon-size) + calc(var(--space-xs) * 2));
   }
   & td {
-    height: calc(var(--space-m) * 3);
+    block-size: calc(var(--space-m) * 3);
     padding-block: var(--space-m);
     & > :first-child,
     & > :last-child {
@@ -38,7 +38,7 @@
     margin: 0;
   }
   & th {
-    height: calc(var(--space-m) * 2);
+    block-size: calc(var(--space-m) * 2);
     color: var(--color-gray-800);
     background: var(--color-gray-050);
     font-size: var(--font-size-s);
@@ -54,7 +54,7 @@
 [dir="rtl"] .table-file-multiple-widget {
   & .tabledrag-handle,
   & .tabledrag-changed {
-    float: right;
+    float: inline-end;
   }
 }
 
@@ -66,7 +66,7 @@
  * The cell that contains file operations (usually, this is the remove button).
  */
 .file-operations-cell {
-  width: 1px;
+  inline-size: 1px;
   white-space: nowrap; /* Don't let ajax-progress be broken into a new line. */
 }
 

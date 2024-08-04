@@ -35,7 +35,7 @@
 
 @media (min-width: 62.5rem) {
   .vertical-tabs__menu {
-    width: var(--vertical-tabs-menu-width);
+    inline-size: var(--vertical-tabs-menu-width);
     border-width: var(--vertical-tabs-menu-border-width) 0 var(--vertical-tabs-menu-border-width) var(--vertical-tabs-menu-border-width);
   }
 }
@@ -46,14 +46,14 @@
 
 @media (min-width: 62.5rem) {
   .vertical-tabs__panes {
-    width: calc(100% - var(--vertical-tabs-menu-width));
+    inline-size: calc(100% - var(--vertical-tabs-menu-width));
     margin-block-start: 0;
   }
 }
 
 @media (min-width: 62.5rem) {
   .vertical-tabs__pane {
-    min-height: 100%;
+    min-block-size: 100%;
   }
 }
 

@@ -1,7 +1,7 @@
 .component--my-banner {
   position: relative;
-  width: 80%;
-  max-width: 1200px;
+  inline-size: 80%;
+  max-inline-size: 1200px;
   padding: 2em;
   color: white;
   background: black;

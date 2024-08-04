@@ -13,19 +13,19 @@
 
 /* 'Manage form display' and 'Manage display' overview */
 .field-plugin-summary {
-  float: left; /* LTR */
+  float: inline-start; /* LTR */
   font-size: var(--font-size-s);
 }
 [dir="rtl"] .field-plugin-summary {
-  float: right;
+  float: inline-end;
 }
 .field-plugin-summary-cell .warning {
   display: block;
-  float: left; /* LTR */
+  float: inline-start; /* LTR */
   margin-inline-end: 0.5em; /* LTR */
 }
 [dir="rtl"] .field-plugin-summary-cell .warning {
-  float: right;
+  float: inline-end;
   margin-inline: 0.5em 0;
 }
 
@@ -38,7 +38,7 @@
 }
 
 .field-plugin-settings-edit {
-  width: var(--space-m);
+  inline-size: var(--space-m);
   margin: 0;
   padding-block: 1px;
   padding-inline: 8px;

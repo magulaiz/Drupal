@@ -7,7 +7,7 @@ form .field-multiple-table {
   margin: 0;
 }
 form .field-multiple-table .field-multiple-drag {
-  width: 30px;
+  inline-size: 30px;
   padding-inline-end: 0; /* LTR */
 }
 [dir="rtl"] form .field-multiple-table .field-multiple-drag {
@@ -68,8 +68,8 @@ label.option {
 }
 .form-required::after {
   display: inline-block;
-  width: 6px;
-  height: 6px;
+  inline-size: 6px;
+  block-size: 6px;
   margin-block: 0;
   margin-inline: 0.3em;
   content: "";
@@ -81,7 +81,7 @@ label.option {
 }
 abbr.tabledrag-changed,
 abbr.ajax-changed {
-  border-bottom: none;
+  border-block-end: none;
 }
 .form-item input.error,
 .form-item textarea.error,
@@ -95,8 +95,8 @@ abbr.ajax-changed {
 }
 .form-item--error-message::before {
   display: inline-block;
-  width: 14px;
-  height: 14px;
+  inline-size: 14px;
+  block-size: 14px;
   content: "";
   vertical-align: sub;
   background: url(../../../../../../../misc/icons/e32700/error.svg) no-repeat;

@@ -23,7 +23,7 @@
   }
 
   .disclaimer__disclaimer {
-    max-width: 40%;
+    max-inline-size: 40%;
     margin-inline-start: 0.5rem; /* LTR */
   }
 
@@ -32,6 +32,6 @@
   }
 
   .disclaimer__copyright {
-    width: 25%;
+    inline-size: 25%;
   }
 }

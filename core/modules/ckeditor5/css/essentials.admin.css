@@ -18,7 +18,7 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  width: 100px;
+  inline-size: 100px;
   color: #000;
 }
 
@@ -36,8 +36,8 @@
 
 .ckeditor5-toolbar-button-heading::after {
   display: inline-block;
-  width: 7px;
-  height: 7px;
+  inline-size: 7px;
+  block-size: 7px;
   margin-inline-end: 10px;
   content: "";
   transform: rotate(135deg);

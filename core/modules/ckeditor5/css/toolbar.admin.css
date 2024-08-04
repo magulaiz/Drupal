@@ -10,7 +10,7 @@
   display: flex;
   flex-flow: row wrap;
   align-items: center;
-  min-height: 40px;
+  min-block-size: 40px;
   margin-block: 0 0.5em;
   margin-inline: 0;
   padding: 0;
@@ -32,8 +32,8 @@
 .ckeditor5-toolbar-item,
 .ckeditor5-toolbar-button {
   display: block;
-  min-width: 36px;
-  height: 36px;
+  min-inline-size: 36px;
+  block-size: 36px;
   cursor: move;
   border-radius: 2px;
 }
@@ -70,7 +70,7 @@
 .ckeditor5-toolbar-tooltip {
   position: absolute;
   z-index: 1;
-  left: 50%;
+  inset-inline-start: 50%;
   display: block;
   padding-block: 6px;
   padding-inline: 10px;
@@ -85,15 +85,15 @@
 
 .ckeditor5-toolbar-tooltip::before {
   position: absolute;
-  top: -10px;
-  left: 50%;
-  width: 0;
-  height: 5px;
+  inset-block-start: -10px;
+  inset-inline-start: 50%;
+  inline-size: 0;
+  block-size: 5px;
   content: "";
   transform: translateX(-50%);
-  border-right: solid 5px transparent;
-  border-bottom: solid 5px #333;
-  border-left: solid 5px transparent;
+  border-inline-end: solid 5px transparent;
+  border-block-end: solid 5px #333;
+  border-inline-start: solid 5px transparent;
 }
 
 .ckeditor5-toolbar-button + .ckeditor5-toolbar-tooltip {

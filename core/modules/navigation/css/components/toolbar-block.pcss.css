@@ -13,7 +13,7 @@
       &::after {
         margin-block-start: var(--admin-toolbar-space-8);
         content: "";
-        border-top: 1px solid var(--admin-toolbar-color-gray-200);
+        border-block-start: 1px solid var(--admin-toolbar-color-gray-200);
       }
     }
   }
@@ -60,8 +60,8 @@
     &::before {
       position: absolute;
       display: block;
-      width: var(--admin-toolbar-space-4);
-      height: var(--admin-toolbar-space-4);
+      inline-size: var(--admin-toolbar-space-4);
+      block-size: var(--admin-toolbar-space-4);
       content: "";
       border-radius: 50%;
       background-color: currentColor;

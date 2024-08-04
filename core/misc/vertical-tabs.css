@@ -12,16 +12,16 @@
   margin-inline: 0 15em;
 }
 .vertical-tabs__menu {
-  float: left; /* LTR */
-  width: 15em;
+  float: inline-start; /* LTR */
+  inline-size: 15em;
   margin-block: -1px;
   margin-inline: -15em 0; /* LTR */
   padding: 0;
   list-style: none;
-  border-top: 1px solid #ccc;
+  border-block-start: 1px solid #ccc;
 }
 [dir="rtl"] .vertical-tabs__menu {
-  float: right;
+  float: inline-end;
   margin-inline: 0 -15em;
 }
 .vertical-tabs__pane {
@@ -35,7 +35,7 @@
 /* Layout of each tab. */
 .vertical-tabs__menu-item {
   border: 1px solid #ccc;
-  border-top: 0;
+  border-block-start: 0;
   background: #eee;
 }
 .vertical-tabs__menu-item a {
@@ -53,12 +53,12 @@
   outline: 1px dotted;
 }
 .vertical-tabs__menu-item.is-selected {
-  border-right-width: 0; /* LTR */
+  border-inline-end-width: 0; /* LTR */
   background-color: #fff;
 }
 [dir="rtl"] .vertical-tabs__menu-item.is-selected {
-  border-right-width: 1px;
-  border-left-width: 0;
+  border-inline-end-width: 1px;
+  border-inline-start-width: 0;
 }
 .vertical-tabs__menu-item.is-selected .vertical-tabs__menu-item-title {
   color: #000;

@@ -33,7 +33,7 @@
 
 .quicklinks__col {
   position: relative;
-  min-height: 9rem;
+  min-block-size: 9rem;
   padding-block: 1.5rem;
   padding-inline: 0.25rem;
   text-align: center;
@@ -49,11 +49,11 @@
 
 .quicklinks__col::after {
   position: absolute;
-  right: 10%;
-  bottom: 0;
+  inset-inline-end: 10%;
+  inset-block-end: 0;
   display: block;
-  width: 80%;
-  height: 1px;
+  inline-size: 80%;
+  block-size: 1px;
   content: "";
   background-color: #e6eee0;
 }
@@ -72,11 +72,11 @@
   /* 960px */
   .quicklinks__col::after {
     position: absolute;
-    top: 0;
-    right: 0;
+    inset-block-start: 0;
+    inset-inline-end: 0;
     display: block;
-    width: 1px;
-    height: 100%;
+    inline-size: 1px;
+    block-size: 100%;
     content: "";
     background-color: #e6eee0;
   }

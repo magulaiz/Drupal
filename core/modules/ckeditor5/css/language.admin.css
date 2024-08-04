@@ -2,7 +2,7 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  width: 110px;
+  inline-size: 110px;
   color: #000;
 }
 
@@ -20,8 +20,8 @@
 
 .ckeditor5-toolbar-button-textPartLanguage::after {
   display: inline-block;
-  width: 7px;
-  height: 7px;
+  inline-size: 7px;
+  block-size: 7px;
   margin-inline-end: 10px;
   content: "";
   transform: rotate(135deg);

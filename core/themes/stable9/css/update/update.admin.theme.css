@@ -8,17 +8,17 @@
   font-weight: bold;
 }
 .project-update__status {
-  float: right; /* LTR */
+  float: inline-end; /* LTR */
   font-size: 110%;
 }
 [dir="rtl"] .project-update__status {
-  float: left;
+  float: inline-start;
 }
 .project-update__status--not-supported {
-  float: right; /* LTR */
+  float: inline-end; /* LTR */
 }
 [dir="rtl"] .project-update__status--not-supported {
-  float: left;
+  float: inline-start;
 }
 .project-update__status--security-error {
   color: #970f00;

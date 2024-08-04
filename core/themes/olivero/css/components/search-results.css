@@ -95,11 +95,11 @@
 .search-results__item::after {
   position: absolute;
   inset-block-end: 0;
-  width: var(--sp3);
-  height: 0;
+  inline-size: var(--sp3);
+  block-size: 0;
   content: "";
   /* Intentionally not using CSS logical properties. */
-  border-top: solid 2px var(--color--gray-95);
+  border-block-start: solid 2px var(--color--gray-95);
 }
 
 .search-results__item:last-child {

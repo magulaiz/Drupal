@@ -13,7 +13,7 @@
   justify-content: space-between;
   padding-block: 0.75rem;
   padding-inline: 4%;
-  border-bottom: 1px solid #e6eee0;
+  border-block-end: 1px solid #e6eee0;
 }
 /* Medium */
 @media screen and (min-width: 48rem) {

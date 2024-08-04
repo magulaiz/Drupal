@@ -43,12 +43,12 @@
   inset-block-start: 50%;
   inset-inline-start: var(--sp0-75);
   display: block;
-  width: 10px;
-  height: 10px;
+  inline-size: 10px;
+  block-size: 10px;
   content: "";
   transform: translateY(-50%) rotate(45deg); /* LTR */
-  border-top: solid 2px currentColor;
-  border-right: solid 2px currentColor;
+  border-block-start: solid 2px currentColor;
+  border-inline-end: solid 2px currentColor;
 }
 
 [dir="rtl"] .olivero-details__summary::before {

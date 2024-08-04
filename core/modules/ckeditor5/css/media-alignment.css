@@ -1,17 +1,17 @@
 .ck-content .drupal-media-style-align-right {
-  float: right;
+  float: inline-end;
   margin-inline-start: 1.5rem;
 }
 .ck-content .drupal-media-style-align-left {
-  float: left;
+  float: inline-start;
   margin-inline-end: 1.5rem;
 }
 .ck-content .drupal-media-style-align-left,
 .ck-content .drupal-media-style-align-right {
   clear: both;
-  max-width: 50%;
+  max-inline-size: 50%;
 }
 .ck-content .drupal-media-style-align-center {
-  max-width: 50%;
+  max-inline-size: 50%;
   margin-inline: auto;
 }

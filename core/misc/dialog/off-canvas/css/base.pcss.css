@@ -37,7 +37,7 @@
   }
 
   & hr {
-    height: 1px;
+    block-size: 1px;
     background: var(--off-canvas-border-color);
   }
 
@@ -83,8 +83,8 @@
   }
 
   & img {
-    max-width: 100%;
-    height: auto;
+    max-inline-size: 100%;
+    block-size: auto;
   }
 
   & .links {

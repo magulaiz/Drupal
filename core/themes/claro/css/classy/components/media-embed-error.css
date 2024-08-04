@@ -9,7 +9,7 @@
  */
 .media-embed-error,
 .caption > .media-embed-error {
-  max-width: 200px;
+  max-inline-size: 200px;
   padding-block: 100px 20px;
   padding-inline: 20px;
   text-align: center;

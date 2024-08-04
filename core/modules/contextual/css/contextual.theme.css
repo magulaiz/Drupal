@@ -9,12 +9,11 @@
 .contextual {
   position: absolute;
   z-index: 500;
-  top: 6px;
-  right: 0; /* LTR */
+  inset-block-start: 6px;
+  inset-inline-end: 0; /* LTR */
 }
 [dir="rtl"] .contextual {
-  right: auto;
-  left: 0;
+  inset-inline: 0 auto;
 }
 
 /**
@@ -30,8 +29,8 @@
  */
 .contextual .trigger {
   position: relative;
-  right: 6px; /* LTR */
-  float: right; /* LTR */
+  inset-inline-end: 6px; /* LTR */
+  float: inline-end; /* LTR */
   overflow: hidden;
   margin: 0;
   padding-block: 0;
@@ -43,14 +42,13 @@
   background-attachment: scroll;
 }
 [dir="rtl"] .contextual .trigger {
-  right: auto;
-  left: 6px;
-  float: left;
+  inset-inline: 6px auto;
+  float: inline-start;
 }
 .contextual.open .trigger {
   z-index: 2;
   border: 1px solid #ccc;
-  border-bottom-color: transparent;
+  border-block-end-color: transparent;
   border-radius: 13px 13px 0 0;
   box-shadow: none;
 }
@@ -62,9 +60,9 @@
  */
 .contextual-region .contextual .contextual-links {
   position: relative;
-  top: -1px;
-  right: 6px; /* LTR */
-  float: right; /* LTR */
+  inset-block-start: -1px;
+  inset-inline-end: 6px; /* LTR */
+  float: inline-end; /* LTR */
   clear: both;
   margin: 0;
   padding-block: 0.25em;
@@ -76,9 +74,8 @@
   background-color: #fff;
 }
 [dir="rtl"] .contextual-region .contextual .contextual-links {
-  right: auto;
-  left: 6px;
-  float: left;
+  inset-inline: 6px auto;
+  float: inline-start;
   text-align: end;
   border-radius: 0 4px 4px 4px;
 }

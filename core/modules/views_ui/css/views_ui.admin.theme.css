@@ -19,8 +19,8 @@
   margin-inline: 12px;
 }
 .views-admin .icon {
-  width: 16px;
-  height: 16px;
+  inline-size: 16px;
+  block-size: 16px;
 }
 .views-admin .icon,
 .views-admin .icon-text {
@@ -50,10 +50,10 @@
 }
 .views-admin span.icon {
   position: relative;
-  float: left; /* LTR */
+  float: inline-start; /* LTR */
 }
 [dir="rtl"] .views-admin span.icon {
-  float: right;
+  float: inline-end;
 }
 .views-admin .icon.compact {
   display: block;
@@ -202,19 +202,19 @@ details.box-padding {
 
 /* These header classes are ambiguous and should be scoped to th elements */
 .views-ui-name {
-  width: 20%;
+  inline-size: 20%;
 }
 .views-ui-description {
-  width: 30%;
+  inline-size: 30%;
 }
 .views-ui-machine-name {
-  width: 15%;
+  inline-size: 15%;
 }
 .views-ui-displays {
-  width: 25%;
+  inline-size: 25%;
 }
 .views-ui-operations {
-  width: 10%;
+  inline-size: 10%;
 }
 
 /**
@@ -259,18 +259,18 @@ td.group-title {
 .views-ui-dialog td.group-title span {
   display: block;
   overflow: hidden;
-  height: 1px;
+  block-size: 1px;
 }
 .group-message .form-submit,
 .views-remove-group-link,
 .views-add-group {
-  float: right; /* LTR */
+  float: inline-end; /* LTR */
   clear: both;
 }
 [dir="rtl"] .group-message .form-submit,
 [dir="rtl"] .views-remove-group-link,
 [dir="rtl"] .views-add-group {
-  float: left;
+  float: inline-start;
 }
 .views-operator-label {
   padding-inline-start: 0.5em; /* LTR */
@@ -283,13 +283,13 @@ td.group-title {
 }
 .grouped-description,
 .exposed-description {
-  float: left; /* LTR */
+  float: inline-start; /* LTR */
   padding-block-start: 3px;
   padding-inline-end: 10px; /* LTR */
 }
 [dir="rtl"] .grouped-description,
 [dir="rtl"] .exposed-description {
-  float: right;
+  float: inline-end;
   padding-inline: 10px 0;
 }
 .views-displays {
@@ -300,7 +300,7 @@ td.group-title {
   position: relative;
   padding-block: 8px 3px;
   padding-inline: 8px;
-  border-bottom: 1px solid #ccc;
+  border-block-end: 1px solid #ccc;
   background-color: #e1e2dc;
 }
 .views-display-top .tabs {
@@ -327,9 +327,9 @@ td.group-title {
   margin-block-start: 0;
   padding-block: 8px;
   padding-inline: 12px;
-  border-right: 1px solid #ccc;
-  border-bottom: 1px solid #ccc;
-  border-left: 1px solid #ccc;
+  border-inline-end: 1px solid #ccc;
+  border-block-end: 1px solid #ccc;
+  border-inline-start: 1px solid #ccc;
   background-color: #e1e2dc;
 }
 .views-displays .tabs.secondary {
@@ -341,7 +341,7 @@ td.group-title {
 }
 .views-displays .tabs.secondary li,
 .views-displays .tabs.secondary li.is-active {
-  width: auto;
+  inline-size: auto;
   padding: 0;
   border: 0;
   background: transparent;
@@ -357,7 +357,7 @@ td.group-title {
   margin-inline: 5px 6px;
 }
 .views-displays .tabs.secondary .tabs__tab + .tabs__tab {
-  border-top: 0;
+  border-block-start: 0;
 }
 .views-displays .tabs li.tabs__tab:hover {
   padding-inline-start: 0; /* LTR */
@@ -398,7 +398,7 @@ td.group-title {
 }
 .views-displays .tabs .open > a {
   position: relative;
-  border-bottom: 1px solid transparent;
+  border-block-end: 1px solid transparent;
   background-color: #f1f1f1;
 }
 .views-displays .tabs .open > a:hover {
@@ -468,13 +468,13 @@ td.group-title {
   margin-inline: 0 10px;
 }
 .view-preview-form .form-item-view-args label {
-  float: left; /* LTR */
-  height: 6ex;
+  float: inline-start; /* LTR */
+  block-size: 6ex;
   margin-inline-end: 0.75em; /* LTR */
   font-weight: normal;
 }
 [dir="rtl"] .view-preview-form .form-item-view-args label {
-  float: right;
+  float: inline-end;
   margin-inline: 0.75em 0.2em;
 }
 .form-item-live-preview,
@@ -499,14 +499,14 @@ td.group-title {
   position: relative;
   margin: 0;
   padding-block-start: 4px;
-  border-bottom: 1px solid #f3f3f3;
+  border-block-end: 1px solid #f3f3f3;
   line-height: 20px;
 }
 .views-ui-display-tab-bucket:last-of-type {
-  border-bottom: none;
+  border-block-end: none;
 }
 .views-ui-display-tab-bucket + .views-ui-display-tab-bucket {
-  border-top: medium none;
+  border-block-start: medium none;
 }
 .views-ui-display-tab-bucket__title,
 .views-ui-display-tab-bucket > .views-display-setting {
@@ -521,7 +521,7 @@ td.group-title {
   padding-block-start: 0;
 }
 .views-ui-display-tab-bucket.page-settings {
-  border-bottom: medium none;
+  border-block-end: medium none;
 }
 .views-display-setting .views-ajax-link {
   margin-inline: 0.2083em;
@@ -579,10 +579,10 @@ td.group-title {
 .views-filterable-options .form-type-checkbox {
   padding-block: 5px;
   padding-inline: 8px;
-  border-top: none;
+  border-block-start: none;
 }
 .views-filterable-options {
-  border-top: 1px solid #ccc;
+  border-block-start: 1px solid #ccc;
 }
 .filterable-option .form-item {
   margin-block: 0;
@@ -595,7 +595,7 @@ td.group-title {
   margin-block: 0;
 }
 .views-filterable-options-controls .form-item {
-  width: 30%;
+  inline-size: 30%;
   margin-block: 0;
   margin-inline: 2% 0; /* LTR */
 }
@@ -605,7 +605,7 @@ td.group-title {
 }
 .views-filterable-options-controls input,
 .views-filterable-options-controls select {
-  width: 100%;
+  inline-size: 100%;
 }
 .views-ui-dialog .ui-dialog-content {
   padding: 0;
@@ -633,10 +633,10 @@ td.group-title {
   border: none;
 }
 .views-ui-dialog .views-offset-top {
-  border-bottom: 1px solid #ccc;
+  border-block-end: 1px solid #ccc;
 }
 .views-ui-dialog .views-offset-bottom {
-  border-top: 1px solid #ccc;
+  border-block-start: 1px solid #ccc;
 }
 .views-ui-dialog .views-override > * {
   margin: 0;
@@ -656,20 +656,20 @@ td.group-title {
   border-color: #cdcdcd;
 }
 .views-ui-rearrange-filter-form tr[id^="views-row"] {
-  border-right: 1px solid #cdcdcd; /* LTR */
+  border-inline-end: 1px solid #cdcdcd; /* LTR */
 }
 [dir="rtl"] .views-ui-rearrange-filter-form tr[id^="views-row"] {
-  border-right: 0;
-  border-left: 1px solid #cdcdcd;
+  border-inline-end: 0;
+  border-inline-start: 1px solid #cdcdcd;
 }
 .views-ui-rearrange-filter-form .even td {
   background-color: #f3f4ed;
 }
 .views-ui-rearrange-filter-form .views-group-title {
-  border-top: 1px solid #cdcdcd;
+  border-block-start: 1px solid #cdcdcd;
 }
 .views-ui-rearrange-filter-form .group-empty {
-  border-bottom: 1px solid #cdcdcd;
+  border-block-end: 1px solid #cdcdcd;
 }
 .form-item-options-expose-required,
 .form-item-options-expose-label,
@@ -694,19 +694,18 @@ td.group-title {
   margin-block-start: 0;
   padding-block: 8px;
   padding-inline: 12px;
-  border-bottom: 1px solid #ccc;
+  border-block-end: 1px solid #ccc;
   background-color: #e1e2dc;
 }
 .view-preview-form .form-item-live-preview {
   position: absolute;
-  top: 3px;
-  right: 12px;
+  inset-block-start: 3px;
+  inset-inline-end: 12px;
   margin-block-start: 2px;
   margin-inline-start: 2px; /* LTR */
 }
 [dir="rtl"] .view-preview-form .form-item-live-preview {
-  right: auto;
-  left: 12px;
+  inset-inline: 12px auto;
   margin-inline: 0 2px;
 }
 .views-live-preview {
@@ -773,12 +772,11 @@ td.group-title {
 .js .dropbutton-wrapper .dropbutton .dropbutton-action > .ajax-progress-throbber {
   position: absolute;
   z-index: 2;
-  top: -1px;
-  right: -5px; /* LTR */
+  inset-block-start: -1px;
+  inset-inline-end: -5px; /* LTR */
 }
 [dir="rtl"].js .dropbutton-wrapper .dropbutton .dropbutton-action > .ajax-progress-throbber {
-  right: auto;
-  left: -5px;
+  inset-inline: -5px auto;
 }
 .js .dropbutton-wrapper.dropbutton-multiple.open .dropbutton-action:first-child a {
   border-radius: 1.1em 0 0 0; /* LTR */
@@ -794,28 +792,26 @@ td.group-title {
 }
 .views-display-top .dropbutton-wrapper {
   position: absolute;
-  top: 7px;
-  right: 12px; /* LTR */
+  inset-block-start: 7px;
+  inset-inline-end: 12px; /* LTR */
 }
 [dir="rtl"] .views-display-top .dropbutton-wrapper {
-  right: auto;
-  left: 12px;
+  inset-inline: 12px auto;
 }
 .views-display-top .dropbutton-wrapper .dropbutton-widget .dropbutton-action a {
-  width: auto;
+  inline-size: auto;
 }
 
 .views-ui-display-tab-bucket .dropbutton-wrapper {
   position: absolute;
-  top: 4px;
-  right: 5px; /* LTR */
+  inset-block-start: 4px;
+  inset-inline-end: 5px; /* LTR */
 }
 [dir="rtl"] .views-ui-display-tab-bucket .dropbutton-wrapper {
-  right: auto;
-  left: 5px;
+  inset-inline: 5px auto;
 }
 .views-ui-display-tab-bucket .dropbutton-wrapper .dropbutton-widget .dropbutton-action a {
-  width: auto;
+  inline-size: auto;
 }
 .views-ui-display-tab-actions .dropbutton-wrapper li a,
 .views-ui-display-tab-actions .dropbutton-wrapper input {
@@ -839,5 +835,5 @@ td.group-title {
 }
 .form-textarea-wrapper,
 .form-item-options-content {
-  width: 100%;
+  inline-size: 100%;
 }

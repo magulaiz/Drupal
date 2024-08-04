@@ -2,7 +2,7 @@
  * Traditional split diff theming
  */
 table.diff {
-  width: 100%;
+  inline-size: 100%;
   margin-block-end: 20px;
   border-spacing: 4px;
 }
@@ -10,11 +10,11 @@ table.diff .diff-context {
   background-color: #fafafa;
 }
 table.diff .diff-deletedline {
-  width: 50%;
+  inline-size: 50%;
   background-color: #ffa;
 }
 table.diff .diff-addedline {
-  width: 50%;
+  inline-size: 50%;
   background-color: #afa;
 }
 table.diff .diffchange {
@@ -22,7 +22,7 @@ table.diff .diffchange {
   font-weight: bold;
 }
 table.diff .diff-marker {
-  width: 1.4em;
+  inline-size: 1.4em;
 }
 table.diff th {
   padding-inline-end: inherit; /* LTR */

@@ -13,8 +13,8 @@
   text-decoration: none;
 }
 .views-admin .icon {
-  width: 16px;
-  height: 16px;
+  inline-size: 16px;
+  block-size: 16px;
 }
 .views-admin .icon,
 .views-admin .icon-text {
@@ -44,10 +44,10 @@
 }
 .views-admin span.icon {
   position: relative;
-  float: left; /* LTR */
+  float: inline-start; /* LTR */
 }
 [dir="rtl"] .views-admin span.icon {
-  float: right;
+  float: inline-end;
 }
 .views-admin .icon.compact {
   display: block;
@@ -158,19 +158,19 @@ details.box-padding {
 
 /* These header classes are ambiguous and should be scoped to th elements */
 .views-ui-name {
-  width: 20%;
+  inline-size: 20%;
 }
 .views-ui-description {
-  width: 30%;
+  inline-size: 30%;
 }
 .views-ui-machine-name {
-  width: 15%;
+  inline-size: 15%;
 }
 .views-ui-displays {
-  width: 25%;
+  inline-size: 25%;
 }
 .views-ui-operations {
-  width: 10%;
+  inline-size: 10%;
 }
 
 /**
@@ -209,30 +209,30 @@ td.group-title {
   font-weight: bold;
 }
 .views-ui-dialog td.group-title {
-  height: 1px;
+  block-size: 1px;
   margin: 0;
   padding: 0;
 }
 .views-ui-dialog td.group-title span {
   display: block;
   overflow: hidden;
-  height: 1px;
+  block-size: 1px;
 }
 .group-message .form-submit,
 .views-remove-group-link,
 .views-add-group {
-  float: right; /* LTR */
+  float: inline-end; /* LTR */
   clear: both;
 }
 [dir="rtl"] .group-message .form-submit,
 [dir="rtl"] .views-remove-group-link,
 [dir="rtl"] .views-add-group {
-  float: left;
+  float: inline-start;
 }
 .views-operator-label {
   position: absolute;
   z-index: 1;
-  bottom: -13px;
+  inset-block-end: -13px;
   padding-block: 0.5px;
   padding-inline: 6px;
   text-transform: uppercase;
@@ -243,20 +243,20 @@ td.group-title {
 }
 .grouped-description,
 .exposed-description {
-  float: left; /* LTR */
+  float: inline-start; /* LTR */
   padding-block-start: 3px;
   padding-inline-end: 10px; /* LTR */
 }
 [dir="rtl"] .grouped-description,
 [dir="rtl"] .exposed-description {
-  float: right;
+  float: inline-end;
   padding-inline: 10px 0;
 }
 .views-displays {
   padding-block-end: 36px;
-  border-top: 1px solid var(--color-gray-200-o-80);
-  border-right: 1px solid var(--color-gray-200-o-80);
-  border-left: 1px solid var(--color-gray-200-o-80);
+  border-block-start: 1px solid var(--color-gray-200-o-80);
+  border-inline-end: 1px solid var(--color-gray-200-o-80);
+  border-inline-start: 1px solid var(--color-gray-200-o-80);
 }
 .views-display-top {
   position: relative;
@@ -265,7 +265,7 @@ td.group-title {
   justify-content: space-between;
   padding-block: var(--space-s) calc(var(--space-s) - 5px);
   padding-inline: var(--space-s);
-  border-bottom: 1px solid var(--color-gray-200-o-80);
+  border-block-end: 1px solid var(--color-gray-200-o-80);
   background-color: var(--color-gray-050);
 }
 .form-edit .form-actions,
@@ -273,9 +273,9 @@ td.group-title {
   margin-block-start: 0;
   padding-block: var(--space-s);
   padding-inline: var(--space-m);
-  border-right: 1px solid var(--color-gray-200-o-80);
-  border-bottom: 1px solid var(--color-gray-200-o-80);
-  border-left: 1px solid var(--color-gray-200-o-80);
+  border-inline-end: 1px solid var(--color-gray-200-o-80);
+  border-block-end: 1px solid var(--color-gray-200-o-80);
+  border-inline-start: 1px solid var(--color-gray-200-o-80);
   background-color: var(--color-gray-050);
 }
 .edit-display-settings {
@@ -290,7 +290,7 @@ td.group-title {
   margin-block: 0 var(--space-l);
   margin-inline: 0;
   padding: 0;
-  border-bottom: none;
+  border-block-end: none;
   line-height: 20px;
 }
 .edit-display-settings-top.views-ui-display-tab-bucket .views-display-setting {
@@ -345,21 +345,21 @@ td.group-title {
   margin-block: 0 var(--space-xs);
   margin-inline: 0;
   padding-block: var(--space-xs);
-  border-bottom: 1px solid var(--color-gray-200-o-80);
+  border-block-end: 1px solid var(--color-gray-200-o-80);
   line-height: 20px;
 }
 .views-ui-display-tab-bucket:last-of-type {
   margin-block-end: 0;
-  border-bottom: none;
+  border-block-end: none;
 }
 .views-ui-display-tab-bucket + .views-ui-display-tab-bucket {
-  border-top: medium none;
+  border-block-start: medium none;
 }
 .views-ui-display-tab-bucket__header {
   display: inline-flex;
   justify-content: space-between;
   box-sizing: border-box;
-  width: 100%;
+  inline-size: 100%;
   padding-block: var(--space-s) calc(var(--space-s) + 2px);
   padding-inline: var(--space-m);
 }
@@ -371,7 +371,7 @@ td.group-title {
   padding-block-start: 0;
 }
 .views-ui-display-tab-bucket.page-settings {
-  border-bottom: medium none;
+  border-block-end: medium none;
 }
 
 /** Applies an overridden(italics) font style to overridden buckets.
@@ -429,7 +429,7 @@ td.group-title {
 .views-filterable-options .form-type-checkbox {
   padding-block: 5px;
   padding-inline: 8px;
-  border-top: none;
+  border-block-start: none;
 }
 .filterable-option .form-item {
   margin-block: 0;
@@ -438,7 +438,7 @@ td.group-title {
   margin-block: 0;
 }
 .views-filterable-options-controls .form-item {
-  width: 30%;
+  inline-size: 30%;
   margin-block: 0;
   margin-inline: 2% 0; /* LTR */
 }
@@ -448,7 +448,7 @@ td.group-title {
 }
 .views-filterable-options-controls input,
 .views-filterable-options-controls select {
-  width: 100%;
+  inline-size: 100%;
 }
 .views-ui-dialog.views-ui-dialog > .ui-dialog-content {
   padding: 0;
@@ -493,10 +493,10 @@ td.group-title {
 }
 .views-ui-dialog .views-offset-top:not(:empty)::after {
   position: absolute;
-  bottom: 0;
-  left: 0;
-  width: 100%;
-  height: 3px;
+  inset-block-end: 0;
+  inset-inline-start: 0;
+  inline-size: 100%;
+  block-size: 3px;
   content: "";
   background: linear-gradient(to bottom, rgba(80, 81, 86, 0.11) 0%, rgba(18, 19, 20, 0.02) 49%, rgba(18, 19, 20, 0) 100%);
 }
@@ -506,7 +506,7 @@ td.group-title {
 }
 
 .views-ui-dialog .views-offset-top .form-item {
-  max-width: 40%;
+  max-inline-size: 40%;
   margin-block: 0 var(--space-s);
   margin-inline: 0 var(--space-s);
 }
@@ -532,17 +532,17 @@ td.group-title {
   border: 1px solid var(--color-gray-200);
 }
 .views-ui-rearrange-filter-form tr[id^="views-row"] {
-  border-right: 1px solid #cdcdcd; /* LTR */
+  border-inline-end: 1px solid #cdcdcd; /* LTR */
 }
 [dir="rtl"] .views-ui-rearrange-filter-form tr[id^="views-row"] {
-  border-right: 0;
-  border-left: 1px solid #cdcdcd;
+  border-inline-end: 0;
+  border-inline-start: 1px solid #cdcdcd;
 }
 .views-ui-rearrange-filter-form .draggable td {
-  border-bottom: 0.0625rem solid var(--color-gray-200);
+  border-block-end: 0.0625rem solid var(--color-gray-200);
 }
 .views-ui-rearrange-filter-form .group-empty {
-  border-bottom: 1px solid #cdcdcd;
+  border-block-end: 1px solid #cdcdcd;
 }
 .form-item-options-expose-required,
 .form-item-options-expose-label,
@@ -567,19 +567,18 @@ td.group-title {
   margin-block-start: 0;
   padding-block: 8px;
   padding-inline: 12px;
-  border-bottom: 1px solid #ccc;
+  border-block-end: 1px solid #ccc;
   background-color: var(--color-gray-050);
 }
 .view-preview-form .form-item--live-preview {
   position: absolute;
-  top: 0.6875rem;
-  right: var(--space-s);
+  inset-block-start: 0.6875rem;
+  inset-inline-end: var(--space-s);
   margin-block-start: 2px;
   margin-inline-start: 2px; /* LTR */
 }
 [dir="rtl"] .view-preview-form .form-item--live-preview {
-  right: auto;
-  left: var(--space-s);
+  inset-inline: var(--space-s) auto;
   margin-inline: 0 2px;
 }
 .views-live-preview {
@@ -638,12 +637,11 @@ td.group-title {
 .js .dropbutton-wrapper .dropbutton .dropbutton-action > .ajax-progress-throbber {
   position: absolute;
   z-index: 2;
-  top: -1px;
-  right: -5px; /* LTR */
+  inset-block-start: -1px;
+  inset-inline-end: -5px; /* LTR */
 }
 [dir="rtl"].js .dropbutton-wrapper .dropbutton .dropbutton-action > .ajax-progress-throbber {
-  right: auto;
-  left: -5px;
+  inset-inline: -5px auto;
 }
 
 /**
@@ -654,12 +652,11 @@ td.group-title {
  * @see https://www.drupal.org/project/drupal/issues/1899236
  */
 .edit-display-settings-top.views-ui-display-tab-bucket .dropbutton-wrapper {
-  top: 0.8125rem;
-  right: var(--space-s); /* LTR */
+  inset-block-start: 0.8125rem;
+  inset-inline-end: var(--space-s); /* LTR */
 }
 [dir="rtl"] .edit-display-settings-top.views-ui-display-tab-bucket .dropbutton-wrapper {
-  right: auto;
-  left: var(--space-s);
+  inset-inline: var(--space-s) auto;
 }
 
 .views-list-section {
@@ -667,7 +664,7 @@ td.group-title {
 }
 .form-textarea-wrapper,
 .form-item-options-content {
-  width: 100%;
+  inline-size: 100%;
 }
 
 .views-messages .messages-list,

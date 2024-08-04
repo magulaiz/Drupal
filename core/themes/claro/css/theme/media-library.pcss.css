@@ -25,7 +25,7 @@
 .media-library-menu {
   position: relative;
   display: block;
-  width: var(--vertical-tabs-menu-width);
+  inline-size: var(--vertical-tabs-menu-width);
   margin: 0;
   padding-block-start: var(--vertical-tabs-menu-item-shadow-extraspace);
   list-style: none;
@@ -50,10 +50,10 @@
 .media-library-menu__item::before {
   z-index: var(--vertical-tabs-menu--z-index); /* The line should be kept above the vertical tabs menu link to keep it visible even if the link is hovered and gets the 'hover' background color. */
   display: block;
-  width: 100%;
+  inline-size: 100%;
   margin-block-start: calc(var(--vertical-tabs-menu-separator-size) * -1);
   content: "";
-  border-top: var(--vertical-tabs-menu-separator-size) solid var(--vertical-tabs-menu-separator-color);
+  border-block-start: var(--vertical-tabs-menu-separator-size) solid var(--vertical-tabs-menu-separator-color);
 }
 
 .media-library-menu__link {
@@ -86,8 +86,8 @@
   text-decoration: none;
   color: var(--color-absolutezero);
   /* These borders are necessary to replace the dividing lines while in the hover state. */
-  border-top: var(--vertical-tabs-menu-separator-size) solid var(--vertical-tabs-menu-separator-color);
-  border-bottom: var(--vertical-tabs-menu-separator-size) solid var(--vertical-tabs-menu-separator-color);
+  border-block-start: var(--vertical-tabs-menu-separator-size) solid var(--vertical-tabs-menu-separator-color);
+  border-block-end: var(--vertical-tabs-menu-separator-size) solid var(--vertical-tabs-menu-separator-color);
   background: var(--color-bgblue-hover);
 }
 
@@ -95,25 +95,19 @@
 .media-library-menu__link::before {
   position: absolute;
   z-index: calc(var(--vertical-tabs-menu--z-index) - 1); /* This should be on a lower level than the menu-item separator lines. */
-  top: calc(var(--vertical-tabs-border-size) * -1);
-  right: 0; /* LTR */
-  bottom: calc(var(--vertical-tabs-border-size) * -1);
-  left: calc(var(--vertical-tabs-menu-link--active-border-size) * -1); /* LTR */
+  inset-block: calc(var(--vertical-tabs-border-size) * -1);
+  inset-inline: calc(var(--vertical-tabs-menu-link--active-border-size) * -1) 0; /* LTR */ /* LTR */
   content: "";
   pointer-events: none;
   background-clip: padding-box;
 }
 [dir="rtl"] .media-library-menu__link::before {
-  right: calc(var(--vertical-tabs-menu-link--active-border-size) * -1);
-  left: 0;
+  inset-inline: 0 calc(var(--vertical-tabs-menu-link--active-border-size) * -1);
 }
 
 .media-library-menu__link:focus::after {
   position: absolute;
-  top: 0;
-  right: 0;
-  bottom: 0;
-  left: 0;
+  inset: 0;
   margin-block: calc(var(--vertical-tabs-border-size) * -1);
   margin-inline: calc(var(--vertical-tabs-menu-link--active-border-size) * -1);
   content: "";
@@ -137,12 +131,12 @@
 
 .media-library-menu__link.active::before {
   z-index: 1; /* The blue active-tab indication should be on a higher level than the green focus border. */
-  border-left: var(--vertical-tabs-menu-link--active-border-size) solid var(--vertical-tabs-menu-link--active-border-color); /* LTR */
+  border-inline-start: var(--vertical-tabs-menu-link--active-border-size) solid var(--vertical-tabs-menu-link--active-border-color); /* LTR */
   border-radius: var(--base-border-radius) 0 0 var(--base-border-radius); /* LTR */
 }
 [dir="rtl"] .media-library-menu__link.active::before {
-  border-right: var(--vertical-tabs-menu-link--active-border-size) solid var(--vertical-tabs-menu-link--active-border-color);
-  border-left: 0;
+  border-inline-end: var(--vertical-tabs-menu-link--active-border-size) solid var(--vertical-tabs-menu-link--active-border-color);
+  border-inline-start: 0;
   border-radius: 0 var(--base-border-radius) var(--base-border-radius) 0;
 }
 
@@ -151,20 +145,20 @@
 }
 
 .media-library-content {
-  width: 100%;
+  inline-size: 100%;
   padding: 1em;
   outline: none;
 }
 
 .media-library-menu + .media-library-content {
   z-index: var(--vertical-tabs-menu--z-index);
-  border-left: var(--vertical-tabs-border); /* LTR */
+  border-inline-start: var(--vertical-tabs-border); /* LTR */
   box-shadow: var(--vertical-tabs-shadow);
 }
 
 [dir="rtl"] .media-library-menu + .media-library-content {
-  border-right: var(--vertical-tabs-border);
-  border-left: 0;
+  border-inline-end: var(--vertical-tabs-border);
+  border-inline-start: 0;
 }
 
 /* Generic media add form styles. */
@@ -249,7 +243,7 @@
 }
 
 .media-library-add-form-oembed-url {
-  width: 100%;
+  inline-size: 100%;
 }
 
 /* Media add form selection styles. */
@@ -264,13 +258,13 @@
 }
 
 .media-library-add-form__selected-media .media-library-item .field--name-thumbnail img {
-  height: 100px;
+  block-size: 100px;
 }
 
 /* Generic media library view styles. */
 .media-library-select-all {
   flex-basis: 100%;
-  width: 100%;
+  inline-size: 100%;
   margin-block: 10px;
   margin-inline: 8px;
 }
@@ -387,11 +381,11 @@
 .media-library-item .ajax-progress.ajax-progress.ajax-progress {
   position: absolute;
   z-index: calc(var(--vertical-tabs-menu--z-index) + 1);
-  top: 50%;
-  left: 50%;
+  inset-block-start: 50%;
+  inset-inline-start: 50%;
   box-sizing: border-box;
-  width: 3rem; /* 56px */
-  height: 3rem;
+  inline-size: 3rem; /* 56px */
+  block-size: 3rem;
   margin: -1.5rem;
   border: var(--input-border-size) solid var(--jui-dropdown-border-color);
   border-radius: 3.5rem;
@@ -400,13 +394,13 @@
 }
 .media-library-item .ajax-progress__throbber {
   position: absolute;
-  top: 50%;
-  left: 50%;
-  width: 1.75rem;
-  height: 1.75rem;
+  inset-block-start: 50%;
+  inset-inline-start: 50%;
+  inline-size: 1.75rem;
+  block-size: 1.75rem;
   margin: -0.875rem;
   border: 3px solid var(--color-absolutezero);
-  border-right: 3px dotted transparent;
+  border-inline-end: 3px dotted transparent;
 }
 .media-library-item .ajax-progress__message {
   display: none;
@@ -415,7 +409,7 @@
 .media-library-item--grid {
   justify-content: center;
   box-sizing: border-box;
-  width: 50%;
+  inline-size: 50%;
   padding: 8px;
   vertical-align: top;
   outline: none;
@@ -424,10 +418,10 @@
 
 .media-library-item--grid::before {
   position: absolute;
-  top: 7px;
-  left: 7px;
-  width: calc(100% - 16px);
-  height: calc(100% - 16px);
+  inset-block-start: 7px;
+  inset-inline-start: 7px;
+  inline-size: calc(100% - 16px);
+  block-size: calc(100% - 16px);
   content: "";
   transition:
     border-color 0.2s,
@@ -460,7 +454,7 @@
 
 /* The selected items in the add form should be shown a bit smaller. */
 .media-library-add-form__selected-media .media-library-item--small {
-  width: 33.3%;
+  inline-size: 33.3%;
 }
 
 .media-library-widget-modal .ui-dialog-buttonpane {
@@ -478,57 +472,57 @@
  * @see Drupal.ckeditor5.openDialog()
  */
 .ui-dialog--narrow.media-library-widget-modal {
-  max-width: 75%;
+  max-inline-size: 75%;
 }
 
 @media screen and (min-width: 45em) {
   .media-library-item--grid {
-    width: 33.3%;
+    inline-size: 33.3%;
   }
 
   /* Change the width for the modal and widget since there is less space. */
   .media-library-widget-modal .media-library-item--grid,
   .media-library-selection .media-library-item--grid {
-    width: 50%;
+    inline-size: 50%;
   }
 
   /* The selected items in the add form should be shown a bit smaller. */
   .media-library-add-form__selected-media .media-library-item--small {
-    width: 25%;
+    inline-size: 25%;
   }
 }
 
 @media screen and (min-width: 60em) {
   .media-library-item--grid {
-    width: 25%;
+    inline-size: 25%;
   }
 
   /* Change the width for the modal and widget since there is less space. */
   .media-library-widget-modal .media-library-item--grid,
   .media-library-selection .media-library-item--grid {
-    width: 33.3%;
+    inline-size: 33.3%;
   }
 
   /* The selected items in the add form should be shown a bit smaller. */
   .media-library-add-form__selected-media .media-library-item--small {
-    width: 16.6%;
+    inline-size: 16.6%;
   }
 }
 
 @media screen and (min-width: 77em) {
   .media-library-item--grid {
-    width: 16.6%;
+    inline-size: 16.6%;
   }
 
   /* Change the width for the modal and widget since there is less space. */
   .media-library-widget-modal .media-library-item--grid,
   .media-library-selection .media-library-item--grid {
-    width: 25%;
+    inline-size: 25%;
   }
 
   /* The selected items in the add form should be shown a bit smaller. */
   .media-library-add-form__selected-media .media-library-item--small {
-    width: 16.6%;
+    inline-size: 16.6%;
   }
 }
 
@@ -539,7 +533,7 @@
 }
 
 .media-library-item--grid .field--name-thumbnail img {
-  height: 180px;
+  block-size: 180px;
   object-fit: contain;
   object-position: center center;
 }
@@ -547,8 +541,8 @@
 .media-library-item--grid.is-hover::before,
 .media-library-item--grid.checked::before,
 .media-library-item--grid.is-focus::before {
-  top: 5px;
-  left: 5px;
+  inset-block-start: 5px;
+  inset-inline-start: 5px;
   border-width: 3px;
   border-radius: 3px;
 }
@@ -573,18 +567,17 @@
 .media-library-item__click-to-select-checkbox {
   position: absolute;
   z-index: 1;
-  top: 16px;
-  left: 16px; /* LTR */
+  inset-block-start: 16px;
+  inset-inline-start: 16px; /* LTR */
   display: block;
 }
 [dir="rtl"] .media-library-item__click-to-select-checkbox {
-  right: 16px;
-  left: auto;
+  inset-inline: auto 16px;
 }
 
 .media-library-item__click-to-select-checkbox input {
-  width: 20px;
-  height: 20px;
+  inline-size: 20px;
+  block-size: 20px;
 }
 
 .media-library-item__click-to-select-checkbox .form-item {
@@ -593,14 +586,14 @@
 
 .media-library-item__click-to-select-trigger {
   overflow: hidden;
-  height: 100%;
+  block-size: 100%;
   cursor: pointer;
 }
 
 /* Media library item table styles. */
 .media-library-item--table img {
-  max-width: 100px;
-  height: auto;
+  max-inline-size: 100px;
+  block-size: auto;
 }
 
 /* Media library entity view display styles. */
@@ -613,8 +606,8 @@
 }
 
 .field--widget-media-library-widget .media-library-item__preview img {
-  border-top-left-radius: 2px;
-  border-top-right-radius: 2px;
+  border-start-start-radius: 2px;
+  border-start-end-radius: 2px;
 }
 
 .field--widget-media-library-widget .js-media-library-item:only-child .media-library-item__preview {
@@ -623,8 +616,8 @@
 
 .media-library-item__status {
   position: absolute;
-  top: 40px;
-  left: 5px; /* LTR */
+  inset-block-start: 40px;
+  inset-inline-start: 5px; /* LTR */
   padding-block: 5px;
   padding-inline: 10px;
   pointer-events: none;
@@ -634,17 +627,16 @@
   font-style: italic;
 }
 [dir="rtl"] .media-library-item__status {
-  right: 5px;
-  left: auto;
+  inset-inline: auto 5px;
 }
 
 .media-library-item__attributes {
   position: absolute;
-  bottom: 0;
+  inset-block-end: 0;
   display: block;
   overflow: hidden;
-  max-width: calc(100% - 10px);
-  max-height: calc(100% - 50px);
+  max-inline-size: calc(100% - 10px);
+  max-block-size: calc(100% - 50px);
   padding: 5px;
   background: white;
 }
@@ -682,13 +674,12 @@
 
 .media-library-widget__toggle-weight.media-library-widget__toggle-weight {
   position: absolute;
-  top: var(--space-s);
-  right: var(--space-m); /* LTR */
+  inset-block-start: var(--space-s);
+  inset-inline-end: var(--space-m); /* LTR */
   text-decoration: none;
 }
 [dir="rtl"] .media-library-widget__toggle-weight.media-library-widget__toggle-weight {
-  right: auto;
-  left: var(--space-m);
+  inset-inline: var(--space-m) auto;
 }
 
 /* Add negative margin for flex grid. */
@@ -717,10 +708,10 @@
 .media-library-item__remove.button:focus {
   position: absolute;
   z-index: 1;
-  top: 10px;
+  inset-block-start: 10px;
   overflow: hidden;
-  width: 24px;
-  height: 24px;
+  inline-size: 24px;
+  block-size: 24px;
   margin: 5px;
   padding: 0;
   transition: 0.2s border-color;
@@ -731,19 +722,17 @@
 }
 
 .media-library-item__edit {
-  right: 40px; /* LTR */
+  inset-inline-end: 40px; /* LTR */
 }
 [dir="rtl"] .media-library-item__edit {
-  right: auto;
-  left: 40px;
+  inset-inline: 40px auto;
 }
 
 .media-library-item__remove {
-  right: 10px; /* LTR */
+  inset-inline-end: 10px; /* LTR */
 }
 [dir="rtl"] .media-library-item__remove {
-  right: auto;
-  left: 10px;
+  inset-inline: 10px auto;
 }
 
 .media-library-item__edit {
@@ -784,20 +773,20 @@
 .media-library-add-form__media {
   position: relative;
   display: flex;
-  border-bottom: 1px solid #c0c0c0;
+  border-block-end: 1px solid #c0c0c0;
 }
 
 /* Do not show the bottom border and padding for the last item. */
 .media-library-add-form__media:last-child {
   padding-block-end: 0;
-  border-bottom: 0;
+  border-block-end: 0;
 }
 
 .media-library-add-form__preview {
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 220px;
+  inline-size: 220px;
   margin-inline-end: 20px; /* LTR */
   background: var(--color-gray-050-o-40);
 }
@@ -811,15 +800,14 @@
 
 .media-library-add-form__remove-button {
   position: absolute;
-  right: 0; /* LTR */
+  inset-inline-end: 0; /* LTR */
   background-image: url("../../../../misc/icons/000000/ex.svg");
   background-repeat: no-repeat;
   background-position: var(--space-xs) center;
   background-size: var(--space-s);
 }
 [dir="rtl"] .media-library-add-form__remove-button {
-  right: auto;
-  left: 0;
+  inset-inline: 0 auto;
 }
 .media-library-add-form__remove-button.button:disabled {
   background-image: url("../../../../misc/icons/8e929c/ex.svg");

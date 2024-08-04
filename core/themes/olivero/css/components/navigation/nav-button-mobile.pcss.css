@@ -11,8 +11,8 @@
   display: flex;
   align-items: center;
   align-self: center;
-  width: var(--sp2);
-  height: var(--sp2);
+  inline-size: var(--sp2);
+  block-size: var(--sp2);
   margin-inline-start: auto;
   margin-inline-end: -6px;
   padding-block: 0;
@@ -33,7 +33,7 @@
 
   @media (--sm) {
     display: inline-flex;
-    width: auto;
+    inline-size: auto;
     padding-inline-start: var(--sp);
   }
 }
@@ -44,16 +44,16 @@
   display: block;
   overflow: hidden;
   clip: rect(1px, 1px, 1px, 1px);
-  width: 1px;
-  height: 1px;
+  inline-size: 1px;
+  block-size: 1px;
   word-wrap: normal;
 
   @media (--sm) {
     position: static;
     overflow: visible;
     clip: auto;
-    width: auto;
-    height: auto;
+    inline-size: auto;
+    block-size: auto;
     margin-inline-end: 12px;
     letter-spacing: 0.05em;
     font-size: 14px;
@@ -64,20 +64,20 @@
 .mobile-nav-button__icon {
   position: relative;
   display: block;
-  width: var(--sp2);
-  height: 0;
-  border-top: solid 3px var(--color--primary-50);
+  inline-size: var(--sp2);
+  block-size: 0;
+  border-block-start: solid 3px var(--color--primary-50);
 
   &::before,
   &::after {
     position: absolute;
     inset-block-start: 0;
     inset-inline-start: 0;
-    width: 100%;
-    height: 0;
+    inline-size: 100%;
+    block-size: 0;
     content: "";
     transition: transform 0.2s;
-    border-top: solid 3px var(--color--primary-50);
+    border-block-start: solid 3px var(--color--primary-50);
   }
 
   &::before {
@@ -90,7 +90,7 @@
 }
 
 .mobile-nav-button[aria-expanded="true"] .mobile-nav-button__icon {
-  border-top-color: transparent;
+  border-block-start-color: transparent;
 
   &::before {
     transform: translateY(-3px) rotate(-45deg);

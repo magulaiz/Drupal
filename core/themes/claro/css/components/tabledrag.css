@@ -60,7 +60,7 @@ body.drag-y {
  */
 
 .tabledrag-changed.tabledrag-changed {
-  border-bottom: none;
+  border-block-end: none;
 }
 
 /* Don't display the abbreviation of 'add-new' table rows. */
@@ -75,8 +75,8 @@ body.drag-y {
 }
 
 .tabledrag-cell--only-drag .tabledrag-changed {
-  width: var(--space-l);
-  min-width: var(--space-l);
+  inline-size: var(--space-l);
+  min-inline-size: var(--space-l);
 }
 
 /**
@@ -97,7 +97,7 @@ body.drag-y {
 .draggable td .form-element--type-select[name$="][_weight]"], /* Multiple field */
 .draggable td .term-weight, /* Taxonomy term list */
 .draggable td .field-weight /* Field UI table */ {
-  width: auto;
+  inline-size: auto;
 }
 
 /**
@@ -115,8 +115,8 @@ body.drag-y {
 
 .tabledrag-handle::after {
   display: inline-block;
-  width: var(--tabledrag-handle-icon-size);
-  height: var(--tabledrag-handle-icon-size);
+  inline-size: var(--tabledrag-handle-icon-size);
+  block-size: var(--tabledrag-handle-icon-size);
   margin-inline-start: calc(var(--space-m) * -1);
   padding-block: var(--space-xs);
   padding-inline: var(--space-m);
@@ -165,8 +165,8 @@ body.drag-y {
 
 .tabledrag-handle:focus::before {
   display: block;
-  width: calc(var(--space-m) + (var(--space-xs) * 2)); /* Same as height. */
-  height: calc(var(--space-m) + (var(--space-xs) * 2)); /* Hande svg height + its vertical padding */
+  inline-size: calc(var(--space-m) + (var(--space-xs) * 2)); /* Same as height. */
+  block-size: calc(var(--space-m) + (var(--space-xs) * 2)); /* Hande svg height + its vertical padding */
   margin-block: 0 calc((var(--space-m) + (var(--space-xs) * 2)) * -1);
   margin-inline: calc(var(--space-xs) * -1); /* Bottom: handle height as negative value. */
   content: "";
@@ -232,14 +232,14 @@ body.drag-y {
  */
 
 .tabledrag-cell--only-drag {
-  width: 1px; /* This forces this cell to use the smallest possible width. */
+  inline-size: 1px; /* This forces this cell to use the smallest possible width. */
   padding-inline-end: 0;
 }
 
 .tabledrag-cell-content {
   display: flex;
   align-items: center;
-  height: 100%;
+  block-size: 100%;
 }
 
 .tabledrag-cell-content > * {
@@ -270,9 +270,9 @@ body.drag-y {
 .indentation {
   position: relative;
   inset-inline-start: calc(var(--space-xs) * -0.5);
-  float: left; /* LTR */
-  width: 1.5625rem;
-  height: 1.5625rem;
+  float: inline-start; /* LTR */
+  inline-size: 1.5625rem;
+  block-size: 1.5625rem;
   background: none !important;
   line-height: 0;
 }
@@ -284,11 +284,11 @@ body.drag-y {
   float: none;
   overflow: hidden;
   flex-direction: column;
-  height: 100%;
+  block-size: 100%;
 }
 
 [dir="rtl"] .indentation {
-  float: right;
+  float: inline-end;
 }
 
 /**
@@ -300,8 +300,8 @@ body.drag-y {
  */
 
 .tree {
-  width: 1.5625rem;
-  height: 1.5625rem;
+  inline-size: 1.5625rem;
+  block-size: 1.5625rem;
 }
 
 .tree__item {

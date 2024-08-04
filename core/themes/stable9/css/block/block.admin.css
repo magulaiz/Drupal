@@ -19,7 +19,7 @@ a.block-demo-backlink:link,
 a.block-demo-backlink:visited {
   position: fixed;
   z-index: 499;
-  left: 20px; /* LTR */
+  inset-inline-start: 20px; /* LTR */
   padding-block: 5px;
   padding-inline: 10px;
   color: #000;

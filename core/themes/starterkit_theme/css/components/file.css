@@ -7,7 +7,7 @@
 
 .file {
   display: inline-block;
-  min-height: 16px;
+  min-block-size: 16px;
   padding-inline-start: 20px; /* LTR */
   background-repeat: no-repeat;
   background-position: left center; /* LTR */

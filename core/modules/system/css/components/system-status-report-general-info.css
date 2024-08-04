@@ -11,5 +11,5 @@
 }
 
 .system-status-general-info__item-title {
-  border-bottom: 1px solid #ccc;
+  border-block-end: 1px solid #ccc;
 }

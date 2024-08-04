@@ -23,8 +23,8 @@
 }
 
 .node__author-image img {
-  width: var(--sp2-5);
-  height: var(--sp2-5);
+  inline-size: var(--sp2-5);
+  block-size: var(--sp2-5);
   margin-inline-end: var(--sp0-5);
   object-fit: cover;
   border-radius: 50%;

@@ -12,8 +12,8 @@
 
 .ui-dialog {
   position: absolute;
-  top: 0;
-  left: 0;
+  inset-block-start: 0;
+  inset-inline-start: 0;
   padding: 0;
   border: 0;
   border-radius: var(--jui-dialog-border-radius);
@@ -35,8 +35,8 @@
 @media all and (max-width: 48em) {
   /* 768px */
   .ui-dialog:not(.ui-dialog-off-canvas) {
-    min-width: 92%;
-    max-width: 92%;
+    min-inline-size: 92%;
+    max-inline-size: 92%;
   }
 }
 
@@ -46,8 +46,8 @@
   padding-block: var(--space-m);
   padding-inline: var(--space-l) var(--jui-dialog-close-button-reserved-space); /* LTR */
   color: var(--jui-dialog-title-color);
-  border-top-left-radius: var(--jui-dialog-border-radius);
-  border-top-right-radius: var(--jui-dialog-border-radius);
+  border-start-start-radius: var(--jui-dialog-border-radius);
+  border-start-end-radius: var(--jui-dialog-border-radius);
   background: var(--jui-dialog-title-bg-color);
   line-height: calc(var(--space-m) * 2);
 }
@@ -64,11 +64,11 @@
 
 .ui-dialog .ui-dialog-titlebar-close {
   position: absolute;
-  top: 50%;
-  right: 0; /* LTR */
+  inset-block-start: 50%;
+  inset-inline-end: 0; /* LTR */
   box-sizing: border-box;
-  width: var(--jui-dialog-close-button-size);
-  height: var(--jui-dialog-close-button-size);
+  inline-size: var(--jui-dialog-close-button-size);
+  block-size: var(--jui-dialog-close-button-size);
   margin-block: 0;
   margin-inline: var(--space-l);
   padding: 0;
@@ -80,8 +80,7 @@
 }
 
 [dir="rtl"] .ui-dialog .ui-dialog-titlebar-close {
-  right: auto;
-  left: 0;
+  inset-inline: 0 auto;
 }
 
 .ui-dialog .ui-dialog-titlebar-close:hover {
@@ -95,8 +94,8 @@
 }
 
 .ui-dialog .ui-icon.ui-icon-closethick {
-  width: 100%;
-  height: 100%;
+  inline-size: 100%;
+  block-size: 100%;
   margin: 0;
   transform: translate(-50%, -50%);
   background: url("data:image/svg+xml,%3csvg width='12' height='12' fill='none' xmlns='http://www.w3.org/2000/svg'%3e%3cpath d='M11 1.318l-10 10M11 11.318l-10-10' stroke='%23D3D4D9' stroke-width='1.5'/%3e%3c/svg%3e") no-repeat 50%;
@@ -118,8 +117,8 @@
 
 .ui-dialog > .ui-dialog-buttonpane {
   color: var(--color-text);
-  border-bottom-right-radius: var(--jui-dialog-border-radius);
-  border-bottom-left-radius: var(--jui-dialog-border-radius);
+  border-end-end-radius: var(--jui-dialog-border-radius);
+  border-end-start-radius: var(--jui-dialog-border-radius);
   background: var(--color-gray-050);
 }
 

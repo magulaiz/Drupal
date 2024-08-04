@@ -11,8 +11,8 @@
 
 .branding__site-logo {
   display: inline-block;
-  width: 100%;
-  max-width: 205px;
+  inline-size: 100%;
+  max-inline-size: 205px;
   background-color: inherit;
 }
 
@@ -22,7 +22,7 @@
 }
 
 .branding__site-logo svg {
-  width: 100%;
-  max-width: 205px;
-  height: auto;
+  inline-size: 100%;
+  max-inline-size: 205px;
+  block-size: auto;
 }

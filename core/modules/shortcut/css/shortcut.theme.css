@@ -14,10 +14,10 @@
   text-align: start;
 }
 .toolbar .toolbar-tray-horizontal .edit-shortcuts {
-  float: right; /* LTR */
+  float: inline-end; /* LTR */
 }
 [dir="rtl"] .toolbar .toolbar-tray-horizontal .edit-shortcuts {
-  float: left;
+  float: inline-start;
 }
 
 /**

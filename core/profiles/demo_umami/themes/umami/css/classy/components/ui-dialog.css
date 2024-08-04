@@ -4,12 +4,12 @@
  */
 
 .ui-dialog--narrow {
-  max-width: 500px;
+  max-inline-size: 500px;
 }
 
 @media screen and (max-width: 600px) {
   .ui-dialog--narrow {
-    min-width: 95%;
-    max-width: 95%;
+    min-inline-size: 95%;
+    max-inline-size: 95%;
   }
 }

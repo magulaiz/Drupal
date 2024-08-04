@@ -4,11 +4,11 @@
  */
 
 .exposed-filters .filters {
-  float: left; /* LTR */
+  float: inline-start; /* LTR */
   margin-inline-end: 1em; /* LTR */
 }
 [dir="rtl"] .exposed-filters .filters {
-  float: right;
+  float: inline-end;
   margin-inline: 1em 0;
 }
 .exposed-filters .form-item {
@@ -17,15 +17,15 @@
   padding: 0;
 }
 .exposed-filters .form-item label {
-  float: left; /* LTR */
-  width: 10em;
+  float: inline-start; /* LTR */
+  inline-size: 10em;
   font-weight: normal;
 }
 [dir="rtl"] .exposed-filters .form-item label {
-  float: right;
+  float: inline-end;
 }
 .exposed-filters .form-select {
-  width: 14em;
+  inline-size: 14em;
 }
 /* Current filters */
 .exposed-filters .current-filters {
@@ -36,10 +36,10 @@
   font-style: normal;
 }
 .exposed-filters .additional-filters {
-  float: left; /* LTR */
+  float: inline-start; /* LTR */
   margin-inline-end: 1em; /* LTR */
 }
 [dir="rtl"] .exposed-filters .additional-filters {
-  float: right;
+  float: inline-end;
   margin-inline: 1em 0;
 }

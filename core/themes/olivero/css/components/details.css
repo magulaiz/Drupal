@@ -51,12 +51,12 @@
   inset-block-start: 50%;
   inset-inline-start: var(--sp0-75);
   display: block;
-  width: 0.625rem;
-  height: 0.625rem;
+  inline-size: 0.625rem;
+  block-size: 0.625rem;
   content: "";
   transform: translateY(-50%) rotate(45deg); /* LTR */
-  border-top: solid 2px currentColor;
-  border-right: solid 2px currentColor;
+  border-block-start: solid 2px currentColor;
+  border-inline-end: solid 2px currentColor;
 }
 
 [dir="rtl"] .olivero-details__summary::before {

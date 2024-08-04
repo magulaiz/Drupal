@@ -10,12 +10,12 @@
 }
 /* Grid style column align. */
 .views-view-grid .views-col {
-  float: left;
+  float: inline-start;
 }
 .views-view-grid .views-row {
-  float: left;
+  float: inline-start;
   clear: both;
-  width: 100%;
+  inline-size: 100%;
 }
 /* Provide some space between display links. */
 .views-display-link + .views-display-link {

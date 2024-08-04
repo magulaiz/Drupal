@@ -9,7 +9,7 @@
   padding-inline: 5px;
 }
 [dir="rtl"] .ajax-progress {
-  float: right;
+  float: inline-end;
 }
 .ajax-progress-throbber .throbber {
   display: inline;
@@ -27,18 +27,18 @@ tr .ajax-progress-throbber .throbber {
   margin-inline: 2px;
 }
 .ajax-progress-bar {
-  width: 16em;
+  inline-size: 16em;
 }
 
 /* Full screen throbber */
 .ajax-progress-fullscreen {
   position: fixed;
   z-index: 1261;
-  top: 48.5%;
+  inset-block-start: 48.5%;
   /* Can't do center:50% middle: 50%, so approximate it for a typical window size. */
-  left: 49%; /* LTR */
-  width: 24px;
-  height: 24px;
+  inset-inline-start: 49%; /* LTR */
+  inline-size: 24px;
+  block-size: 24px;
   padding: 4px;
   opacity: 0.9;
   border-radius: 7px;
@@ -48,6 +48,5 @@ tr .ajax-progress-throbber .throbber {
   background-position: center center;
 }
 [dir="rtl"] .ajax-progress-fullscreen {
-  right: 49%;
-  left: auto;
+  inset-inline: auto 49%;
 }

@@ -22,7 +22,7 @@
   margin-inline: 0;
   padding-block: 0 0.6em;
   padding-inline: 0;
-  border-bottom: 1px solid #eec2cb;
+  border-block-end: 1px solid #eec2cb;
   font-family: "Scope One", Georgia, serif;
   font-size: 1.266rem;
   font-weight: 400;
@@ -43,6 +43,6 @@
   margin-inline: 0;
   padding-block: 0 0.6em;
   padding-inline: 0;
-  border-bottom: 1px solid #eec2cb;
+  border-block-end: 1px solid #eec2cb;
   break-inside: avoid-column;
 }

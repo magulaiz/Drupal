@@ -26,7 +26,7 @@
   transition: all 0.2s;
   text-decoration: none;
   color: inherit;
-  border-bottom: solid 0.15em transparent;
+  border-block-end: solid 0.15em transparent;
   background-color: inherit;
 }
 .menu-main__link:hover,
@@ -34,13 +34,13 @@
 .menu-main__link:focus {
   text-decoration: none;
   color: #da3c13;
-  border-bottom-color: #da3c13;
+  border-block-end-color: #da3c13;
   background-color: inherit;
 }
 .menu-main__link:active,
 .menu-main__link.is-active {
   text-decoration: none;
-  border-bottom-color: #da3c13;
+  border-block-end-color: #da3c13;
 }
 
 @media screen and (min-width: 48em) {

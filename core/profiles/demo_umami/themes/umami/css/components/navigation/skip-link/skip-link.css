@@ -9,7 +9,7 @@
   padding-block: 1px 2px;
   padding-inline: 10px;
   border: 1px solid #444;
-  border-top-width: 0;
+  border-block-start-width: 0;
   border-radius: 0 0 10px 10px;
   outline: 0;
   background: #444;

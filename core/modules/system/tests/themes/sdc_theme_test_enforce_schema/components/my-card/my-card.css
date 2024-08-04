@@ -1,5 +1,5 @@
 .component--my-card {
-  max-width: 500px;
+  max-inline-size: 500px;
   margin-block: 15px;
   margin-inline: auto;
   color: #f1f1f1;
@@ -11,7 +11,7 @@
   margin: 0;
   padding-block: 12px 5px;
   padding-inline: 24px;
-  border-bottom: 1px solid #4a4a4a;
+  border-block-end: 1px solid #4a4a4a;
   font-size: 2.5rem;
   font-weight: bold;
 }

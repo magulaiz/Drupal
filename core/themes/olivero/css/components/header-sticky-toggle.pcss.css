@@ -16,8 +16,8 @@
     flex-shrink: 0;
     align-items: center;
     justify-content: center;
-    width: var(--content-left);
-    height: var(--sp6);
+    inline-size: var(--content-left);
+    block-size: var(--sp6);
     pointer-events: none;
     opacity: 0;
     border: 0;
@@ -53,8 +53,8 @@ body.is-always-mobile-nav .sticky-header-toggle {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  width: var(--sp2);
-  height: calc((var(--icon-bar-height) * 3) + (var(--icon-bar-space) * 2));
+  inline-size: var(--sp2);
+  block-size: calc((var(--icon-bar-height) * 3) + (var(--icon-bar-space) * 2));
   /* Height = 3 bars + 2 spaces */
   transition: opacity 0.2s;
   pointer-events: none;
@@ -62,8 +62,8 @@ body.is-always-mobile-nav .sticky-header-toggle {
 
   & > span {
     display: block;
-    width: 100%;
-    height: var(--icon-bar-height);
+    inline-size: 100%;
+    block-size: var(--icon-bar-height);
     transition: transform 0.2s;
     transform-origin: center;
     background-color: var(--color--white);

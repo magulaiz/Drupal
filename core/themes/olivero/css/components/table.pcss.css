@@ -69,7 +69,7 @@
 }
 
 .draggable-table {
-  width: 100%;
+  inline-size: 100%;
 }
 
 .draggable-table .form-item {

@@ -13,8 +13,8 @@
 
 .form-text,
 .form-email {
-  min-width: 100%;
-  max-width: 100%;
+  min-inline-size: 100%;
+  max-inline-size: 100%;
   margin-block: 0.25rem;
   margin-inline: 0;
   padding-block: 0.8rem;
@@ -28,8 +28,8 @@
   border: 2px solid #008068;
 }
 .form-text[type="checkbox"] {
-  min-width: inherit;
-  max-width: none;
+  min-inline-size: inherit;
+  max-inline-size: none;
 }
 
 .form-textarea {

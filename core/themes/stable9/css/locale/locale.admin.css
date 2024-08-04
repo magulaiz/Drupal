@@ -4,37 +4,37 @@
 .locale-translate-filter-form .form-item-langcode,
 .locale-translate-filter-form .form-item-translation,
 .locale-translate-filter-form .form-item-customized {
-  float: left; /* LTR */
+  float: inline-start; /* LTR */
   /**
    * In Opera 9, DOM elements with the property of "overflow: auto"
    * will partially hide its contents with unnecessary scrollbars when
    * its immediate child is floated without an explicit width set.
    */
-  width: 15em;
+  inline-size: 15em;
   margin-block-end: 0;
   margin-inline-end: 1em; /* LTR */
 }
 [dir="rtl"] .locale-translate-filter-form .form-item-langcode,
 [dir="rtl"] .locale-translate-filter-form .form-item-translation,
 [dir="rtl"] .locale-translate-filter-form .form-item-customized {
-  float: right;
+  float: inline-end;
   margin-inline: 1em 0;
 }
 .locale-translate-filter-form .form-type-select select {
-  width: 100%;
+  inline-size: 100%;
 }
 .locale-translate-filter-form .form-actions {
-  float: left; /* LTR */
+  float: inline-start; /* LTR */
   padding-block: 3.8ex 0;
   padding-inline: 0; /* LTR */
 }
 [dir="rtl"] .locale-translate-filter-form .form-actions {
-  float: right;
+  float: inline-end;
   padding-block: 3.5ex 0;
   padding-inline: 0;
 }
 .locale-translate-edit-form th {
-  width: 50%;
+  inline-size: 50%;
   table-layout: fixed;
 }
 .locale-translate-edit-form td {
@@ -64,10 +64,10 @@
   table-layout: fixed;
 }
 #locale-translation-status-form th.select-all {
-  width: 4%;
+  inline-size: 4%;
 }
 #locale-translation-status-form th.title {
-  width: 25%;
+  inline-size: 25%;
 }
 #locale-translation-status-form td {
   vertical-align: top;
@@ -98,7 +98,7 @@
 }
 .expanded .locale-translation-update__wrapper {
   overflow: visible;
-  height: auto;
+  block-size: auto;
   white-space: normal;
 }
 .expanded .locale-translation-update__message {
@@ -106,15 +106,15 @@
   hyphens: auto;
 }
 .js .locale-translation-update__wrapper {
-  height: 20px;
+  block-size: 20px;
 }
 .expanded .locale-translation-update__wrapper {
   overflow: visible;
-  height: auto;
+  block-size: auto;
   white-space: normal;
 }
 .locale-translation-update__details {
-  max-width: 490px;
+  max-inline-size: 490px;
   padding-block: 5px;
   padding-inline: 0;
   white-space: normal;
@@ -133,9 +133,9 @@
 
 @media screen and (max-width: 40em) {
   #locale-translation-status-form th.title {
-    width: 20%;
+    inline-size: 20%;
   }
   #locale-translation-status-form th.status {
-    width: 40%;
+    inline-size: 40%;
   }
 }

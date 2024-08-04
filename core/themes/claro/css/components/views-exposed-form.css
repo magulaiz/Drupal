@@ -41,7 +41,7 @@
 }
 
 .views-exposed-form__item.views-exposed-form__item {
-  max-width: 100%;
+  max-inline-size: 100%;
   margin-block: var(--space-s) 0;
   margin-inline: 0 var(--space-xs);
 }

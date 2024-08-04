@@ -12,10 +12,10 @@
   margin-inline: 0;
 }
 .entity-moderation-form__item .form-text {
-  width: 100%;
+  inline-size: 100%;
 }
 .entity-moderation-form__item:last-child {
-  width: 100%;
+  inline-size: 100%;
 }
 .entity-moderation-form input[type="submit"] {
   margin-block-end: 1em;

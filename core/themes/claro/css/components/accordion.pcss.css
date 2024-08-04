@@ -27,8 +27,8 @@
 
   &:first-child {
     margin-block-start: -1px;
-    border-top-left-radius: var(--accordion-item-border-radius);
-    border-top-right-radius: var(--accordion-item-border-radius);
+    border-start-start-radius: var(--accordion-item-border-radius);
+    border-start-end-radius: var(--accordion-item-border-radius);
   }
 
   & + .accordion__item {
@@ -37,8 +37,8 @@
 
   &:last-child {
     margin-block-end: -1px;
-    border-bottom-right-radius: var(--accordion-item-border-radius);
-    border-bottom-left-radius: var(--accordion-item-border-radius);
+    border-end-end-radius: var(--accordion-item-border-radius);
+    border-end-start-radius: var(--accordion-item-border-radius);
   }
 
   & .claro-details__summary .summary {

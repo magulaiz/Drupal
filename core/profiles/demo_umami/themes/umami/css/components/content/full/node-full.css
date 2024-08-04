@@ -6,10 +6,10 @@
   margin-block: 0;
   margin-inline: auto;
   padding: 1.266rem;
-  border-top: 1px solid #fcece7;
-  border-right: none;
-  border-bottom: 1px solid #fcece7;
-  border-left: none;
+  border-block-start: 1px solid #fcece7;
+  border-inline-end: none;
+  border-block-end: 1px solid #fcece7;
+  border-inline-start: none;
   background-color: #fff;
 }
 /* Large */
@@ -17,8 +17,8 @@
   /* 960px */
   .node--view-mode-full {
     padding: 2.37rem;
-    border-right: 1px solid #fcece7;
-    border-left: 1px solid #fcece7;
+    border-inline-end: 1px solid #fcece7;
+    border-inline-start: 1px solid #fcece7;
   }
 }
 

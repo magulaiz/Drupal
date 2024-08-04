@@ -204,8 +204,8 @@
     }
     &:focus,
     &:hover {
-      border-bottom-right-radius: 0;
-      border-bottom-left-radius: 0;
+      border-end-end-radius: 0;
+      border-end-start-radius: 0;
     }
   }
 }
@@ -315,8 +315,8 @@ html:not([data-admin-toolbar="expanded"]) {
     position: absolute;
     overflow: hidden;
     clip: rect(0 0 0 0);
-    width: 1px;
-    height: 1px;
+    inline-size: 1px;
+    block-size: 1px;
     white-space: nowrap;
     clip-path: inset(50%);
     opacity: 0;

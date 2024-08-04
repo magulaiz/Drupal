@@ -16,7 +16,7 @@
 .admin-toolbar__content .toolbar-block:nth-last-child(n + 2)::after {
   margin-block-start: var(--admin-toolbar-space-8);
   content: "";
-  border-top: 1px solid var(--admin-toolbar-color-gray-200);
+  border-block-start: 1px solid var(--admin-toolbar-color-gray-200);
 }
 .toolbar-block__list {
   display: grid;
@@ -58,8 +58,8 @@ html[data-admin-toolbar-animating][data-admin-toolbar="expanded"] .toolbar-block
 :is(html:not([data-admin-toolbar="expanded"]) .toolbar-block__title, html[data-admin-toolbar-animating][data-admin-toolbar="expanded"] .toolbar-block__title)::before {
   position: absolute;
   display: block;
-  width: var(--admin-toolbar-space-4);
-  height: var(--admin-toolbar-space-4);
+  inline-size: var(--admin-toolbar-space-4);
+  block-size: var(--admin-toolbar-space-4);
   content: "";
   border-radius: 50%;
   background-color: currentColor;
