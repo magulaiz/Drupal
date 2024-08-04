@@ -14,6 +14,7 @@ use Drupal\user\UserInterface;
  * Users migration.
  *
  * @group user
+ * @group #slow
  */
 class MigrateUserTest extends MigrateDrupal7TestBase {
 
