@@ -438,6 +438,12 @@ abstract class BrowserTestBase extends TestCase {
     }
     parent::tearDown();
 
+    // Stop mink sessions as early as possible so that a new session can be
+    // started by a different concurrent test.
+    if ($this->mink) {
+      $this->mink->stopSessions();
+    }
+
     if ($this->container) {
       // Cleanup mock session started in DrupalKernel::preHandle().
       /** @var \Symfony\Component\HttpFoundation\Session\Session $session */
