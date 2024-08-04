@@ -149,7 +149,7 @@
         if (firstState && window.matchMedia('(min-width: 1024px)').matches) {
           document.documentElement.setAttribute(
             'data-admin-toolbar',
-            'expanded'
+            'expanded',
           );
         }
 
