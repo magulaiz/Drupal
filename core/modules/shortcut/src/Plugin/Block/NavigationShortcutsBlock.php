@@ -16,6 +16,8 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Defines a shortcuts navigation block class.
+ *
+ * @internal
  */
 #[Block(
   id: 'navigation_shortcuts',
