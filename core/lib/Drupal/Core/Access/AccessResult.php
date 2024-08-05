@@ -84,7 +84,7 @@ abstract class AccessResult implements AccessResultInterface, RefinableCacheable
   /**
    * Optionally combines this access result with another using OR.
    *
-   * @param \Closure $closure
+   * @param Closure(\Drupal\Core\Cache\CacheableMetadata): bool $closure
    *   The closure to allow access if it returns TRUE or neutral if FALSE. Will
    *   only be called if the original access result can be influenced by the
    *   outcome. Takes a CacheableMetadata argument where the closure can set
@@ -112,7 +112,7 @@ abstract class AccessResult implements AccessResultInterface, RefinableCacheable
   /**
    * Optionally combines this access result with another using AND.
    *
-   * @param \Closure $closure
+   * @param Closure(\Drupal\Core\Cache\CacheableMetadata): bool $closure
    *   The closure to allow access if it returns TRUE or neutral if FALSE. Will
    *   only be called if the original access result can be influenced by the
    *   outcome. Takes a CacheableMetadata argument where the closure can set
@@ -157,7 +157,7 @@ abstract class AccessResult implements AccessResultInterface, RefinableCacheable
   /**
    * Optionally combines this access result with another using OR.
    *
-   * @param \Closure $closure
+   * @param Closure(\Drupal\Core\Cache\CacheableMetadata): bool $closure
    *   The closure to forbid access if it returns TRUE or neutral if FALSE. Will
    *   only be called if the original access result can be influenced by the
    *   outcome. Takes a CacheableMetadata argument where the closure can set
@@ -185,7 +185,7 @@ abstract class AccessResult implements AccessResultInterface, RefinableCacheable
   /**
    * Optionally combines this access result with another using AND.
    *
-   * @param \Closure $closure
+   * @param Closure(\Drupal\Core\Cache\CacheableMetadata): bool $closure
    *   The closure to forbid access if it returns TRUE or neutral if FALSE. Will
    *   only be called if the original access result can be influenced by the
    *   outcome. Takes a CacheableMetadata argument where the closure can set
