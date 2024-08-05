@@ -464,6 +464,15 @@ class FormValidatorTest extends UnitTestCase {
       ],
       [
         [
+          '#type' => 'textfield',
+          '#maxlength' => 10,
+          '#value' => ['foo'],
+        ],
+        'Something went wrong submitting. Expected a string value but got a value of type "array" instead.',
+        FALSE,
+      ],
+      [
+        [
           '#type' => 'select',
           '#options' => [
             'foo' => 'Foo',

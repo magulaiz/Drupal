@@ -330,7 +330,7 @@ class FormValidator implements FormValidatorInterface {
   protected function performRequiredValidation(&$elements, FormStateInterface &$form_state) {
     // Verify that $elements['#value'] is a string, if it is supposed to be one:
     if (isset($elements['#maxlength']) && !is_string($elements['#value'])) {
-      $form_state->setError($elements, $this->t('Something went wrong submitting @name. Expected a string value', ['@name' => $elements['#name']]));
+      $form_state->setError($elements, $this->t('Something went wrong submitting. Expected a string value but got a value of type "@type" instead.', ['@type' => gettype($elements['#value'])]));
       return;
     }
     // Verify that the value is not longer than #maxlength.
