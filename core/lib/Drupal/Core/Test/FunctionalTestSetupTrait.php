@@ -70,11 +70,6 @@ trait FunctionalTestSetupTrait {
   protected bool $usesSuperUserAccessPolicy;
 
   /**
-   * Path to SQL dump file.
-   */
-  protected string $dumpFile;
-
-  /**
    * Prepares site settings and services before installation.
    */
   protected function prepareSettings() {
