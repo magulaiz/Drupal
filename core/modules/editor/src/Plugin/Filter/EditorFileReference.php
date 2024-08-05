@@ -100,9 +100,19 @@ class EditorFileReference extends FilterBase implements ContainerFactoryPluginIn
               // Set dimensions to avoid content layout shift (CLS).
               // @see https://web.dev/cls/
               if ($width !== NULL && !$node->hasAttribute('width')) {
+                // Maintain aspect ratio.
+                if ($node->hasAttribute('height')) {
+                  $image_height = $node->getAttribute('height');
+                  $width = round(($image_height/$height) * $width);
+                }
                 $node->setAttribute('width', (string) $width);
               }
               if ($height !== NULL && !$node->hasAttribute('height')) {
+                // Maintain aspect ratio.
+                if ($node->hasAttribute('width')) {
+                  $image_width = $node->getAttribute('width');
+                  $height = round(($image_width/$width) * $height);
+                }
                 $node->setAttribute('height', (string) $height);
               }
             }
