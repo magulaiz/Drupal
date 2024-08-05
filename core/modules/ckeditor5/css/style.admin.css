@@ -14,7 +14,6 @@
   font-size: 14px;
 }
 
-
 .ckeditor5-toolbar-button-style::after {
   display: inline-block;
   inline-size: 7px;
@@ -25,4 +24,3 @@
   border-width: 2px 2px 0 0;
   border-style: solid;
 }
-
