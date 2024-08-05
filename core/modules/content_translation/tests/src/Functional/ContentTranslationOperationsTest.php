@@ -209,7 +209,7 @@ class ContentTranslationOperationsTest extends NodeTestBase {
     $this->drupalPlaceBlock('local_tasks_block');
     $this->drupalGet('node/' . $node->id());
     $this->assertSession()->linkByHrefExists('node/' . $node->id() . '/translations');
-    $this->drupalPostForm('admin/config/regional/content-language', ['settings[node][article][translatable]' => FALSE], 'Save configuration');
+    $this->submitForm(['settings[node][article][translatable]' => FALSE], 'Save configuration');
     $this->drupalGet('node/' . $node->id());
     $this->assertSession()->linkByHrefNotExists('node/' . $node->id() . '/translations');
   }
