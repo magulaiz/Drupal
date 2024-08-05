@@ -63,6 +63,8 @@
    * @fires event:dialogContentResize
    */
   function resetSize(event) {
+    if (typeof event.data === 'undefined') return;
+
     const positionOptions = [
       'width',
       'height',
@@ -79,7 +81,7 @@
     let adjustedValue;
     for (let n = 0; n < positionOptions.length; n++) {
       option = positionOptions[n];
-      optionValue = event.data?.settings[option];
+      optionValue = event.data.settings[option];
       if (optionValue) {
         // jQuery UI does not support percentages on heights, convert to pixels.
         if (
@@ -96,7 +98,7 @@
           // Don't force the dialog to be bigger vertically than needed.
           if (
             option === 'height' &&
-            event.data?.$element.parent().outerHeight() < adjustedValue
+            event.data.$element.parent().outerHeight() < adjustedValue
           ) {
             adjustedValue = 'auto';
           }
@@ -105,12 +107,12 @@
       }
     }
     // Offset the dialog center to be at the center of Drupal.displace.offsets.
-    if (!event.data?.settings.modal) {
+    if (!event.data.settings.modal) {
       adjustedOptions = resetPosition(adjustedOptions);
     }
-    event.data?.$element.dialog('option', adjustedOptions);
+    event.data.$element.dialog('option', adjustedOptions);
 
-    event.data?.$element
+    event.data.$element
       ?.get(0)
       ?.dispatchEvent(
         new CustomEvent('dialogContentResize', { bubbles: true }),
