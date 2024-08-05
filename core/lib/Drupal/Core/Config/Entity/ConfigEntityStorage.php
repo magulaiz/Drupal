@@ -362,12 +362,12 @@ class ConfigEntityStorage extends EntityStorageBase implements ConfigEntityStora
   public function importDelete($name, Config $new_config, Config $old_config) {
     $id = static::getIDFromConfigName($name, $this->entityType->getConfigPrefix());
     $entity = $this->load($id);
-    
+
     if ($entity) {
       $entity->setSyncing(TRUE);
       $entity->delete();
     }
-    
+
     return TRUE;
   }
 
