@@ -64,9 +64,8 @@ final class NavigationShortcutsBlock extends BlockBase implements ContainerFacto
    * {@inheritdoc}
    */
   public function build(): array {
-    // This navigation block requires shortcut module. Once the plugin is moved
-    // to the module, this should not be necessary.
-    if (!$this->moduleHandler->moduleExists('shortcut')) {
+    // This navigation shortcuts block requires navigation module.
+    if (!$this->moduleHandler->moduleExists('navigation')) {
       return [];
     }
     return [
