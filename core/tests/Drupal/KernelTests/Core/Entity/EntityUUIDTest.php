@@ -8,7 +8,6 @@ namespace Drupal\KernelTests\Core\Entity;
  * Tests creation, saving, and loading of entity UUIDs.
  *
  * @group Entity
- * @group #slow
  */
 class EntityUUIDTest extends EntityKernelTestBase {
 
