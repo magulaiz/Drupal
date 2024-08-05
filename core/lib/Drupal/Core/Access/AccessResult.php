@@ -90,13 +90,13 @@ abstract class AccessResult implements AccessResultInterface, RefinableCacheable
    *   outcome. Takes a CacheableMetadata argument where the closure can set
    *   cacheable metadata.
    *
-   * @return \Drupal\Core\Access\AccessResult
+   * @return static
    *   The original access result if it would be unaffected, or the outcome of
    *   ::orIf() otherwise.
    *
    * @see \Drupal\Core\Access\AccessResult::orIf()
    */
-  public function orAllowedIf(\Closure $closure) {
+  public function orAllowedIf(\Closure $closure): static {
     // The allowedIf method can only return allowed or neutral, neither of which
     // can change the outcome of a forbidden or allowed result.
     if ($this->isForbidden() || $this->isAllowed()) {
@@ -118,13 +118,13 @@ abstract class AccessResult implements AccessResultInterface, RefinableCacheable
    *   outcome. Takes a CacheableMetadata argument where the closure can set
    *   cacheable metadata.
    *
-   * @return \Drupal\Core\Access\AccessResult
+   * @return static
    *   The original access result if it would be unaffected, or the outcome of
    *   ::andIf() otherwise.
    *
    * @see \Drupal\Core\Access\AccessResult::andIf()
    */
-  public function andAllowedIf(\Closure $closure) {
+  public function andAllowedIf(\Closure $closure): static {
     // The allowedIf method can only return allowed or neutral, neither of which
     // can change the outcome of a forbidden or neutral result.
     if ($this->isForbidden() || $this->isNeutral()) {
@@ -167,9 +167,9 @@ abstract class AccessResult implements AccessResultInterface, RefinableCacheable
    *   The original access result if it would be unaffected, or the outcome of
    *   ::orIf() otherwise.
    *
-   * @see \Drupal\Core\Access\AccessResult::orIf()
+   * @see static
    */
-  public function orForbiddenIf(\Closure $closure) {
+  public function orForbiddenIf(\Closure $closure): static {
     // The forbiddenIf method can only return forbidden or neutral, neither of
     // which can change the outcome of a forbidden result.
     if ($this->isForbidden()) {
@@ -191,13 +191,13 @@ abstract class AccessResult implements AccessResultInterface, RefinableCacheable
    *   outcome. Takes a CacheableMetadata argument where the closure can set
    *   cacheable metadata.
    *
-   * @return \Drupal\Core\Access\AccessResult
+   * @return static
    *   The original access result if it would be unaffected, or the outcome of
    *   ::andIf() otherwise.
    *
    * @see \Drupal\Core\Access\AccessResult::andIf()
    */
-  public function andForbiddenIf(\Closure $closure) {
+  public function andForbiddenIf(\Closure $closure): static {
     // The forbiddenIf method can only return forbidden or neutral, neither of
     // which can change the outcome of a forbidden result.
     if ($this->isForbidden()) {
