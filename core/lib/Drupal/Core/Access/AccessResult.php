@@ -176,7 +176,7 @@ abstract class AccessResult implements AccessResultInterface, RefinableCacheable
       return $this;
     }
 
-    // Now that we know the other result needs to be taken into account, do we
+    // Now that we know the other result needs to be taken into account, we
     // call the actual code and cacheability and pass it on to andIf().
     $cacheability = new CacheableMetadata();
     return $this->orIf($this::forbiddenIf($closure($cacheability))->addCacheableDependency($cacheability));
