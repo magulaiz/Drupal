@@ -14,7 +14,6 @@ use Drupal\Tests\TestFileCreationTrait;
  * Tests the file field widget, single and multi-valued, using AJAX upload.
  *
  * @group file
- * @group #slow
  */
 class FileFieldWidgetTest extends WebDriverTestBase {
 
