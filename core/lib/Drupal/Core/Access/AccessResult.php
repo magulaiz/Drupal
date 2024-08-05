@@ -103,8 +103,8 @@ abstract class AccessResult implements AccessResultInterface, RefinableCacheable
       return $this;
     }
 
-    // Now that we know the other result needs to be taken into account, do we
-    // call the actual code and cacheability and pass it on to orIf().
+    // Now that we know the other result needs to be taken into account, we call
+    // the closure with cacheability and pass it on to orIf().
     $cacheability = new CacheableMetadata();
     return $this->orIf($this::allowedIf($closure($cacheability))->addCacheableDependency($cacheability));
   }
@@ -131,8 +131,8 @@ abstract class AccessResult implements AccessResultInterface, RefinableCacheable
       return $this;
     }
 
-    // Now that we know the other result needs to be taken into account, do we
-    // call the actual code and cacheability and pass it on to andIf().
+    // Now that we know the other result needs to be taken into account, we call
+    // the closure with cacheability and pass it on to andIf().
     $cacheability = new CacheableMetadata();
     return $this->andIf($this::allowedIf($closure($cacheability))->addCacheableDependency($cacheability));
   }
@@ -163,11 +163,11 @@ abstract class AccessResult implements AccessResultInterface, RefinableCacheable
    *   outcome. Takes a CacheableMetadata argument where the closure can set
    *   cacheable metadata.
    *
-   * @return \Drupal\Core\Access\AccessResult
+   * @return static
    *   The original access result if it would be unaffected, or the outcome of
    *   ::orIf() otherwise.
    *
-   * @see static
+   * @see \Drupal\Core\Access\AccessResult::orIf()
    */
   public function orForbiddenIf(\Closure $closure): static {
     // The forbiddenIf method can only return forbidden or neutral, neither of
@@ -176,8 +176,8 @@ abstract class AccessResult implements AccessResultInterface, RefinableCacheable
       return $this;
     }
 
-    // Now that we know the other result needs to be taken into account, we
-    // call the actual code and cacheability and pass it on to andIf().
+    // Now that we know the other result needs to be taken into account, we call
+    // the closure with cacheability and pass it on to orIf().
     $cacheability = new CacheableMetadata();
     return $this->orIf($this::forbiddenIf($closure($cacheability))->addCacheableDependency($cacheability));
   }
@@ -204,8 +204,8 @@ abstract class AccessResult implements AccessResultInterface, RefinableCacheable
       return $this;
     }
 
-    // Now that we know the other result needs to be taken into account, do we
-    // call the actual code and cacheability and pass it on to andIf().
+    // Now that we know the other result needs to be taken into account, we call
+    // the closure with cacheability and pass it on to andIf().
     $cacheability = new CacheableMetadata();
     return $this->andIf($this::forbiddenIf($closure($cacheability))->addCacheableDependency($cacheability));
   }
