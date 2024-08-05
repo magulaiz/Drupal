@@ -96,7 +96,7 @@
           // Don't force the dialog to be bigger vertically than needed.
           if (
             option === 'height' &&
-            event.data.$element.parent().outerHeight() < adjustedValue
+            event.data?.$element.parent().outerHeight() < adjustedValue
           ) {
             adjustedValue = 'auto';
           }
@@ -108,9 +108,9 @@
     if (!event.data?.settings.modal) {
       adjustedOptions = resetPosition(adjustedOptions);
     }
-    event.data.$element.dialog('option', adjustedOptions);
+    event.data?.$element.dialog('option', adjustedOptions);
 
-    event.data.$element
+    event.data?.$element
       ?.get(0)
       ?.dispatchEvent(
         new CustomEvent('dialogContentResize', { bubbles: true }),
