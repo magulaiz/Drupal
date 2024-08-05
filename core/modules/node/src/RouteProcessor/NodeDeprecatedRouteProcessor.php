@@ -33,7 +33,7 @@ class NodeDeprecatedRouteProcessor implements OutboundRouteProcessorInterface {
   /**
    * {@inheritdoc}
    */
-  public function processOutbound($route_name, Route $route, array &$parameters, BubbleableMetadata $bubbleable_metadata = NULL) {
+  public function processOutbound($route_name, Route $route, array &$parameters, ?BubbleableMetadata $bubbleable_metadata = NULL) {
     if (in_array($route_name, array_keys($this->routeMap), TRUE)) {
       $redirected_route_name = $this->routeMap[$route_name];
       @trigger_error(sprintf("The '%s' route is deprecated in drupal:11.1.0 and is removed in drupal:12.0.0. Use the '%s' route instead. See https://www.drupal.org/node/2940083", $route_name, $redirected_route_name), E_USER_DEPRECATED);
