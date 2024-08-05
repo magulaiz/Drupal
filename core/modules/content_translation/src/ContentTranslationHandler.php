@@ -3,7 +3,6 @@
 namespace Drupal\content_translation;
 
 use Drupal\Component\Datetime\TimeInterface;
-use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Datetime\DateFormatterInterface;
 use Drupal\Core\DependencyInjection\DependencySerializationTrait;
 use Drupal\Core\Entity\EntityChangedInterface;
@@ -43,7 +42,7 @@ class ContentTranslationHandler implements ContentTranslationHandlerInterface, E
    *
    * @var string
    */
-  protected $entityTypeId;
+  protected string $entityTypeId;
 
   /**
    * Installed field storage definitions for the entity type.
@@ -52,7 +51,7 @@ class ContentTranslationHandler implements ContentTranslationHandlerInterface, E
    *
    * @var \Drupal\Core\Field\FieldStorageDefinitionInterface[]
    */
-  protected $fieldStorageDefinitions;
+  protected array $fieldStorageDefinitions;
 
   /**
    * Initializes an instance of the content translation controller.
@@ -249,20 +248,7 @@ class ContentTranslationHandler implements ContentTranslationHandlerInterface, E
    * {@inheritdoc}
    */
   public function getTranslationAccess(EntityInterface $entity, $op) {
-    // @todo Move this logic into a translation access control handler checking also
-    //   the translation language and the given account.
-    $entity_type = $entity->getEntityType();
-    $translate_permission = TRUE;
-    // If no permission granularity is defined this entity type does not need an
-    // explicit translate permission.
-    if (!$this->currentUser->hasPermission('translate any entity') && $permission_granularity = $entity_type->getPermissionGranularity()) {
-      $translate_permission = $this->currentUser->hasPermission($permission_granularity == 'bundle' ? "translate {$entity->bundle()} {$entity->getEntityTypeId()}" : "translate {$entity->getEntityTypeId()}");
-    }
-    $access = AccessResult::allowedIf(($translate_permission && $this->currentUser->hasPermission("$op content translations")))->cachePerPermissions();
-    if (!$access->isAllowed()) {
-      return AccessResult::allowedIfHasPermission($this->currentUser, 'translate editable entities')->andIf($entity->access('update', $this->currentUser, TRUE));
-    }
-    return $access;
+    return $entity->access("$op translation", $this->currentUser, TRUE);
   }
 
   /**
@@ -302,7 +288,11 @@ class ContentTranslationHandler implements ContentTranslationHandlerInterface, E
       $title = $this->entityFormTitle($entity);
       // When editing the original values display just the entity label.
       if ($is_translation) {
-        $t_args = ['%language' => $languages[$form_langcode]->getName(), '%title' => $entity->label(), '@title' => $title];
+        $t_args = [
+          '%language' => $languages[$form_langcode]->getName(),
+          '%title' => $entity->label(),
+          '@title' => $title,
+        ];
         $title = $new_translation ? $this->t('Create %language translation of %title', $t_args) : $this->t('@title [%language translation]', $t_args);
       }
       $form['#title'] = $title;
@@ -616,7 +606,24 @@ class ContentTranslationHandler implements ContentTranslationHandlerInterface, E
     // Elements which can have a #title attribute according to FAPI Reference.
     if (!isset($suffix)) {
       $suffix = ' <span class="translation-entity-all-languages">(' . $this->t('all languages') . ')</span>';
-      $fapi_title_elements = array_flip(['checkbox', 'checkboxes', 'date', 'details', 'fieldset', 'file', 'item', 'password', 'password_confirm', 'radio', 'radios', 'select', 'text_format', 'textarea', 'textfield', 'weight']);
+      $fapi_title_elements = array_flip([
+        'checkbox',
+        'checkboxes',
+        'date',
+        'details',
+        'fieldset',
+        'file',
+        'item',
+        'password',
+        'password_confirm',
+        'radio',
+        'radios',
+        'select',
+        'text_format',
+        'textarea',
+        'textfield',
+        'weight',
+      ]);
     }
 
     // Update #title attribute for all elements that are allowed to have a
