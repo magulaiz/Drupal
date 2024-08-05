@@ -672,14 +672,6 @@ function _claro_convert_link_to_action_link(array $link, $icon_name = NULL, $siz
 function claro_form_node_form_alter(&$form, FormStateInterface $form_state) {
   $form['#theme'] = ['node_edit_form'];
   $form['#attached']['library'][] = 'claro/form-two-columns';
-
-  $form['advanced']['#type'] = 'container';
-  $form['advanced']['#accordion'] = TRUE;
-  $form['meta']['#type'] = 'container';
-  $form['meta']['#access'] = TRUE;
-
-  $form['revision_information']['#type'] = 'container';
-  $form['revision_information']['#group'] = 'meta';
   $form['revision_information']['#attributes']['class'][] = 'entity-meta__revision';
 }
 
@@ -747,15 +739,7 @@ function claro_form_menu_link_edit_alter(&$form, FormStateInterface $form_state)
  * Implements hook_form_BASE_FORM_ID_alter() for \Drupal\media\MediaForm.
  */
 function claro_form_media_form_alter(&$form, FormStateInterface $form_state) {
-  // Only attach CSS from core if this form comes from Media core, and not from
-  // the contrib Media Entity 1.x branch.
-  if (\Drupal::moduleHandler()->moduleExists('media') && $form_state->getFormObject() instanceof MediaForm) {
-    // @todo Revisit after https://www.drupal.org/node/2892304 is in. It
-    //   introduces a footer region to these forms which will allow for us to
-    //   display a top border over the published checkbox by defining a
-    //   media-edit-form.html.twig template the same way node does.
-    $form['#attached']['library'][] = 'claro/media-form';
-  }
+  $form['revision_information']['#attributes']['class'][] = 'entity-meta__revision';
 }
 
 /**

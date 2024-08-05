@@ -238,6 +238,9 @@ function system_theme() {
       'variables' => ['menu_items' => NULL],
       'file' => 'system.admin.inc',
     ],
+    'content_entity_form' => [
+      'render element' => 'form',
+    ],
     'entity_add_list' => [
       'variables' => [
         'bundles' => [],

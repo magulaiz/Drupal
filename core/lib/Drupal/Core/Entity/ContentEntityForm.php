@@ -3,9 +3,12 @@
 namespace Drupal\Core\Entity;
 
 use Drupal\Component\Datetime\TimeInterface;
+use Drupal\Core\Datetime\DateFormatterInterface;
 use Drupal\Core\Entity\Display\EntityFormDisplayInterface;
 use Drupal\Core\Entity\Entity\EntityFormDisplay;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Session\AccountInterface;
+use Drupal\user\EntityOwnerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -44,6 +47,20 @@ class ContentEntityForm extends EntityForm implements ContentEntityFormInterface
   protected $entityRepository;
 
   /**
+   * The current user object.
+   *
+   * @var \Drupal\Core\Session\AccountInterface
+   */
+  protected $currentUser;
+  
+  /**
+   * The date formatter service.
+   *
+   * @var \Drupal\Core\Datetime\DateFormatterInterface
+   */
+  protected $dateFormatter;
+  
+  /**
    * Constructs a ContentEntityForm object.
    *
    * @param \Drupal\Core\Entity\EntityRepositoryInterface $entity_repository
@@ -52,11 +69,27 @@ class ContentEntityForm extends EntityForm implements ContentEntityFormInterface
    *   The entity type bundle service.
    * @param \Drupal\Component\Datetime\TimeInterface $time
    *   The time service.
+   * @param \Drupal\Core\Session\AccountInterface $current_user
+   *   The current user.
+   * @param \Drupal\Core\Datetime\DateFormatterInterface $date_formatter
+   *   The date formatter service.
    */
-  public function __construct(EntityRepositoryInterface $entity_repository, EntityTypeBundleInfoInterface $entity_type_bundle_info, TimeInterface $time) {
+  public function __construct(EntityRepositoryInterface $entity_repository, EntityTypeBundleInfoInterface $entity_type_bundle_info, TimeInterface $time, AccountInterface $current_user = NULL, DateFormatterInterface $date_formatter = NULL) {
     $this->entityRepository = $entity_repository;
     $this->entityTypeBundleInfo = $entity_type_bundle_info;
     $this->time = $time;
+
+    if (is_null($current_user)) {
+      @trigger_error('Calling ' . __METHOD__ . '() without the $current_user argument is deprecated in drupal:9.2.0 and will be required in drupal:10.0.0.', E_USER_DEPRECATED);
+      $current_user = \Drupal::currentUser();
+    }
+    $this->currentUser = $current_user;
+
+    if (is_null($date_formatter)) {
+      @trigger_error('Calling ' . __METHOD__ . '() without the $date_formatter argument is deprecated in drupal:9.2.0 and will be required in drupal:10.0.0.', E_USER_DEPRECATED);
+      $date_formatter = \Drupal::service('date.formatter');
+    }
+    $this->dateFormatter = $date_formatter;
   }
 
   /**
@@ -66,7 +99,9 @@ class ContentEntityForm extends EntityForm implements ContentEntityFormInterface
     return new static(
       $container->get('entity.repository'),
       $container->get('entity_type.bundle.info'),
-      $container->get('datetime.time')
+      $container->get('datetime.time'),
+      $container->get('current_user'),
+      $container->get('date.formatter')
     );
   }
 
@@ -100,17 +135,36 @@ class ContentEntityForm extends EntityForm implements ContentEntityFormInterface
    */
   public function form(array $form, FormStateInterface $form_state) {
 
-    if ($this->showRevisionUi()) {
-      // Advanced tab must be the first, because other fields rely on that.
-      if (!isset($form['advanced'])) {
-        $form['advanced'] = [
-          '#type' => 'vertical_tabs',
-          '#weight' => 99,
-        ];
-      }
+    $form['#theme'] = ['content_entity_form'];
+
+    // Advanced tab must be the first, because other fields rely on that.
+    if (!isset($form['advanced'])) {
+      $form['advanced'] = [
+        '#type' => 'container',
+        '#weight' => 99,
+        '#accordion' => TRUE,
+      ];
     }
 
     $form = parent::form($form, $form_state);
+
+    $form['meta'] = [
+      '#type' => 'container',
+      '#group' => 'advanced',
+      '#weight' => -10,
+      '#title' => $this->t('Status'),
+      '#attributes' => ['class' => ['entity-meta__header']],
+      '#tree' => TRUE,
+    ];
+
+    $form['footer'] = [
+      '#type' => 'container',
+      '#weight' => 99,
+      '#attributes' => [
+        'class' => ['entity-content-form-footer'],
+      ],
+      '#optional' => TRUE,
+    ];
 
     // Content entity forms do not use the parent's #after_build callback
     // because they only need to rebuild the entity in the validation and the
@@ -126,14 +180,54 @@ class ContentEntityForm extends EntityForm implements ContentEntityFormInterface
       $this->addRevisionableFormFields($form);
     }
 
-    $form['footer'] = [
-      '#type' => 'container',
-      '#weight' => 99,
-      '#attributes' => [
-        'class' => ['entity-content-form-footer'],
-      ],
-      '#optional' => TRUE,
-    ];
+    $form['advanced']['#attributes']['class'][] = 'entity-meta';
+
+    if ($this->entity instanceof EntityPublishedInterface) {
+      $form['meta']['published'] = [
+        '#type' => 'item',
+        '#markup' => $this->entity->isPublished() ? $this->t('Published') : $this->t('Not published'),
+        '#access' => !$this->entity->isNew(),
+        '#wrapper_attributes' => ['class' => ['entity-meta__title']],
+      ];
+    }
+    if ($this->entity instanceof EntityChangedInterface) {
+      $form['meta']['changed'] = [
+        '#type' => 'item',
+        '#title' => $this->t('Last saved'),
+        '#markup' => !$this->entity->isNew() ? $this->dateFormatter->format($this->entity->getChangedTime(), 'short') : $this->t('Not saved yet'),
+        '#wrapper_attributes' => ['class' => ['entity-meta__last-saved']],
+      ];
+    }
+    if ($this->entity instanceof EntityOwnerInterface && $this->entity->getOwner()) {
+      $form['meta']['author'] = [
+        '#type' => 'item',
+        '#title' => $this->t('Author'),
+        '#markup' => $this->entity->getOwner()->getAccountName(),
+        '#wrapper_attributes' => ['class' => ['entity-meta__author']],
+      ];
+    }
+
+    $form['status']['#group'] = 'footer';
+
+    // Author information for administrators.
+    $owner_key = $this->entity->getEntityType()->getKey('owner');
+    if (($this->entity instanceof EntityOwnerInterface && isset($form[$owner_key])) || isset($form['created'])) {
+      $form['author'] = [
+        '#type' => 'details',
+        '#title' => $this->t('Authoring information'),
+        '#group' => 'advanced',
+        '#weight' => 90,
+        '#optional' => TRUE,
+      ];
+
+      if (isset($form[$owner_key])) {
+        $form[$owner_key]['#group'] = 'author';
+      }
+
+      if (isset($form['created'])) {
+        $form['created']['#group'] = 'author';
+      }
+    }
 
     return $form;
   }
@@ -416,11 +510,11 @@ class ContentEntityForm extends EntityForm implements ContentEntityFormInterface
     // Add a log field if the "Create new revision" option is checked, or if the
     // current user has the ability to check that option.
     $form['revision_information'] = [
-      '#type' => 'details',
+      '#type' => 'container',
       '#title' => $this->t('Revision information'),
       // Open by default when "Create new revision" is checked.
       '#open' => $new_revision_default,
-      '#group' => 'advanced',
+      '#group' => 'meta',
       '#weight' => 20,
       '#access' => $new_revision_default || $this->entity->get($entity_type->getKey('revision'))->access('update'),
       '#optional' => TRUE,
