@@ -4,10 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\field\Functional;
 
-use Drupal\Component\Utility\Html;
 use Drupal\Core\Entity\Entity\EntityFormDisplay;
-use Drupal\Core\Field\FieldStorageDefinitionInterface;
-use Drupal\Core\Form\FormState;
 use Drupal\entity_test\Entity\EntityTest;
 use Drupal\entity_test\Entity\EntityTestBaseFieldDisplay;
 use Drupal\field\Entity\FieldConfig;
