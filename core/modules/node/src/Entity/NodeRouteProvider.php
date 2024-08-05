@@ -20,8 +20,7 @@ class NodeRouteProvider extends DefaultHtmlRouteProvider {
       return $route
         ->setDefault('_controller', NodeController::class . '::addPage')
         ->setDefault('_title', 'Add content')
-        ->setOption('_node_operation_route', TRUE)
-        ->setRequirements(['_node_add_access' => 'node']);
+        ->setOption('_node_operation_route', TRUE);
     }
   }
 
@@ -32,7 +31,6 @@ class NodeRouteProvider extends DefaultHtmlRouteProvider {
     if ($route = parent::getAddFormRoute($entity_type)) {
       return $route
         ->setDefault('_title_callback', NodeController::class . '::addPageTitle')
-        ->setRequirements(['_node_add_access' => 'node:{node_type}'])
         ->setOption('_node_operation_route', TRUE);
     }
   }
