@@ -79,7 +79,7 @@
     let adjustedValue;
     for (let n = 0; n < positionOptions.length; n++) {
       option = positionOptions[n];
-      optionValue = event.data.settings[option];
+      optionValue = event.data?.settings[option];
       if (optionValue) {
         // jQuery UI does not support percentages on heights, convert to pixels.
         if (
