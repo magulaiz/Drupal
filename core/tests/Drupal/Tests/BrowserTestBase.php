@@ -575,6 +575,10 @@ abstract class BrowserTestBase extends TestCase {
       }
       $class = get_parent_class($class);
     }
+    if (!empty($this->defaultTheme)) {
+      $modules[] = $this->defaultTheme;
+    }
+    $modules[] = $this->profile;
     sort($modules);
     array_unique($modules);
     $cache_dir = getenv('BROWSERTEST_CACHE_DIR') ?: sys_get_temp_dir() . '/test_dumps/' . \Drupal::VERSION;
