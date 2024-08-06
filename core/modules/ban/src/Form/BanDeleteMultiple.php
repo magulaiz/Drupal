@@ -7,21 +7,21 @@ use Drupal\ban\BanIpManagerInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Url;
 use Symfony\Component\DependencyInjection\ContainerInterface;
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Drupal\Core\TempStore\PrivateTempStoreFactory;
 
 /**
  * Provides a form to unban IP addresses.
  *
  * @internal
  */
-class BanDelete extends ConfirmFormBase {
+class BanDeleteMultiple extends ConfirmFormBase {
 
   /**
-   * The banned IP address.
+   * The banned IP addresses.
    *
-   * @var string
+   * @var array
    */
-  protected $banIp;
+  protected $banIps;
 
   /**
    * The IP manager.
@@ -31,13 +31,23 @@ class BanDelete extends ConfirmFormBase {
   protected $ipManager;
 
   /**
+   * The temp store factory.
+   *
+   * @var \Drupal\Core\TempStore\PrivateTempStoreFactory
+   */
+  protected $tempStoreFactory;
+
+  /**
    * Constructs a new BanDelete object.
    *
    * @param \Drupal\ban\BanIpManagerInterface $ip_manager
    *   The IP manager.
+   * @param \Drupal\Core\TempStore\PrivateTempStoreFactory $temp_store_factory
+   *   The temp store factory.
    */
-  public function __construct(BanIpManagerInterface $ip_manager) {
+  public function __construct(BanIpManagerInterface $ip_manager, PrivateTempStoreFactory $temp_store_factory) {
     $this->ipManager = $ip_manager;
+    $this->tempStoreFactory = $temp_store_factory;
   }
 
   /**
@@ -45,7 +55,8 @@ class BanDelete extends ConfirmFormBase {
    */
   public static function create(ContainerInterface $container) {
     return new static(
-      $container->get('ban.ip_manager')
+      $container->get('ban.ip_manager'),
+      $container->get('tempstore.private'),
     );
   }
 
@@ -60,7 +71,7 @@ class BanDelete extends ConfirmFormBase {
    * {@inheritdoc}
    */
   public function getQuestion() {
-    return $this->t('Are you sure you want to unblock %ip?', ['%ip' => $this->banIp]);
+    return $this->t('Are you sure you want to unblock %ips_amount IP addresses?', ['%ips_amount' => count($this->banIps)]);
   }
 
   /**
@@ -88,9 +99,7 @@ class BanDelete extends ConfirmFormBase {
    *   The IP address record ID to unban.
    */
   public function buildForm(array $form, FormStateInterface $form_state, $ban_id = '') {
-    if (!$this->banIp = $this->ipManager->findById($ban_id)) {
-      throw new NotFoundHttpException();
-    }
+    $this->banIps = $this->tempStoreFactory->get('ban_ip_delete_multiple')->get('selected_ips');
     return parent::buildForm($form, $form_state);
   }
 
@@ -98,9 +107,12 @@ class BanDelete extends ConfirmFormBase {
    * {@inheritdoc}
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
-    $this->ipManager->unbanIp($this->banIp);
-    $this->logger('user')->notice('Deleted %ip', ['%ip' => $this->banIp]);
-    $this->messenger()->addStatus($this->t('The IP address %ip was deleted.', ['%ip' => $this->banIp]));
+    foreach ($this->banIps as $ip) {
+      $this->ipManager->unbanIp($ip);
+    }
+    $this->tempStoreFactory->get('ban_ip_delete_multiple')->delete('selected_ips');
+    $this->logger('user')->notice('Deleted %ips_amount IP addresses.', ['%ips_amount' => count($this->banIps)]);
+    $this->messenger()->addStatus($this->t('The selected IP addresses were unblocked.'));
     $form_state->setRedirectUrl($this->getCancelUrl());
   }
 
