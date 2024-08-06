@@ -9,11 +9,24 @@ use Behat\Mink\Exception\DriverException;
 use WebDriver\Element;
 use WebDriver\Exception;
 use WebDriver\Exception\UnknownError;
+use WebDriver\ServiceFactory;
 
 /**
  * Provides a driver for Selenium testing.
  */
 class DrupalSelenium2Driver extends Selenium2Driver {
+
+  /**
+   * {@inheritdoc}
+   */
+  public function __construct($browserName = 'firefox', $desiredCapabilities = NULL, $wdHost = 'http://localhost:4444/wd/hub') {
+    parent::__construct($browserName, $desiredCapabilities, $wdHost);
+    dump($desiredCapabilities);
+    $is_w3c = $desiredCapabilities['goog:chromeOptions']['w3c'] ?? $desiredCapabilities['w3c'] ?? FALSE;
+    if (!$is_w3c) {
+      ServiceFactory::getInstance()->setServiceClass('service.curl', WebDriverCurlService::class);
+    }
+  }
 
   /**
    * Uploads a file to the Selenium instance and returns the remote path.
