@@ -14,7 +14,6 @@ use Drupal\Tests\user\Traits\UserCreationTrait;
 /**
  * @coversDefaultClass \Drupal\content_moderation\Plugin\Validation\Constraint\ModerationStateConstraintValidator
  * @group content_moderation
- * @group #slow
  */
 class EntityStateChangeValidationTest extends KernelTestBase {
 

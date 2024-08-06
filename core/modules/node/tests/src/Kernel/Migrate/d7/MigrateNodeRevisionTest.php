@@ -12,7 +12,6 @@ use Drupal\Tests\migrate_drupal\Kernel\d7\MigrateDrupal7TestBase;
  * Tests node revision migrations.
  *
  * @group node
- * @group #slow
  */
 class MigrateNodeRevisionTest extends MigrateDrupal7TestBase {
 
