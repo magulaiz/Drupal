@@ -22,7 +22,7 @@ class LayoutBuilderDisplayElement extends ListElement {
     $source_config,
     $translation_config,
     array $parents,
-    $base_key = NULL
+    $base_key = NULL,
   ): array {
     $parent_build = parent::getTranslationBuild($source_language, $translation_language,
       $source_config, $translation_config, $parents,

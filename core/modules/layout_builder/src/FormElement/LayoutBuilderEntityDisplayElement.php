@@ -20,7 +20,7 @@ class LayoutBuilderEntityDisplayElement extends EntityDisplayElement {
     $source_config,
     $translation_config,
     array $parents,
-    $base_key = NULL
+    $base_key = NULL,
   ): array {
     $parent_build = parent::getTranslationBuild($source_language, $translation_language,
       $source_config, $translation_config, $parents,
@@ -51,6 +51,9 @@ class LayoutBuilderEntityDisplayElement extends EntityDisplayElement {
             [,,, $field_name] = explode(PluginBase::DERIVATIVE_SEPARATOR, $component_config['configuration']['id']);
           }
           catch (\Exception $e) {
+            \Drupal::logger('layout_builder')->warning('Error exploding configuration id of LB component', [
+              'exception' => $e,
+            ]);
             continue;
           }
           $component['configuration']['#open'] = TRUE;
