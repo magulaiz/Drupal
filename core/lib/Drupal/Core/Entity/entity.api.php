@@ -1970,7 +1970,7 @@ function hook_entity_base_field_info_alter(&$fields, \Drupal\Core\Entity\EntityT
   // Replace the mymodule_text field with a new base field that uses a custom
   // class.
   if ($entity_type->id() == 'node' && !empty($fields['my_module_text'])) {
-    $fields['mymodule_text'] = BaseFieldDefinition::createFromFieldDefinition($fields['mymodule_text'])->setClass('\Drupal\anothermodule\EntityComputedText');
+    $fields['my_module_text'] = BaseFieldDefinition::createFromFieldDefinition($fields['my_module_text'])->setClass('\Drupal\another_module\EntityComputedText');
   }
 }
 
