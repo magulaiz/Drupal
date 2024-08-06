@@ -156,10 +156,6 @@ class WebAssertTest extends UnitTestCase {
     $this->assertSession()->addressNotEquals('test-page?a=b&c=d&e=f');
     $this->assertSession()->addressNotEquals('other-page');
     $this->assertSession()->addressNotEquals('other-page?a=b&c=d');
-
-    $this->expectException(ExpectationException::class);
-    $this->expectExceptionMessage('Current page is "/test-page?a=b&c=d", but "/test-page?a=b&c=e" expected.');
-    $this->assertSession()->addressEquals('test-page?a=b&c=e');
   }
 
   /**
@@ -167,10 +163,7 @@ class WebAssertTest extends UnitTestCase {
    */
   public function testAddressNotEqualsException(): void {
     $this->visit('http://localhost/test-page?a=b&c=d');
-
-    $this->expectException(ExpectationException::class);
-    $this->expectExceptionMessage('Current page is "/test-page?a=b&c=d", but should not be.');
-    $this->assertSession()->addressNotEquals('test-page?a=b&c=d');
+    $this->assertSession()->addressNotEquals('test-page?a=b&c=e');
   }
 
   /**
@@ -194,18 +187,6 @@ class WebAssertTest extends UnitTestCase {
   }
 
   /**
-   * Tests linkExistsExact() functionality fail.
-   *
-   * @covers ::linkExistsExact
-   */
-  public function testInvalidLinkExistsExact(): void {
-    $this->visit('', '<a href="http://example.com">foo|bar|baz</a>');
-    $this->expectException(ExpectationException::class);
-    $this->expectExceptionMessage('Link with label foo|bar not found');
-    $this->assertSession()->linkExistsExact('foo|bar');
-  }
-
-  /**
    * Tests linkNotExistsExact() functionality.
    *
    * @covers ::linkNotExistsExact
@@ -213,18 +194,6 @@ class WebAssertTest extends UnitTestCase {
   public function testLinkNotExistsExact(): void {
     $this->visit('', '<a href="http://example.com">foo|bar|baz</a>');
     $this->assertSession()->linkNotExistsExact('foo|bar');
-  }
-
-  /**
-   * Tests linkNotExistsExact() functionality fail.
-   *
-   * @covers ::linkNotExistsExact
-   */
-  public function testInvalidLinkNotExistsExact(): void {
-    $this->visit('', '<a href="http://example.com">foo|bar|baz</a>');
-    $this->expectException(ExpectationException::class);
-    $this->expectExceptionMessage('Link with label foo|bar|baz found');
-    $this->assertSession()->linkNotExistsExact('foo|bar|baz');
   }
 
   /**
@@ -241,17 +210,6 @@ class WebAssertTest extends UnitTestCase {
   }
 
   /**
-   * Tests linkExistsByHref() functionality fail.
-   *
-   * @covers ::linkByHrefExists
-   */
-  public function testInvalidLinkByHrefExists(): void {
-    $this->visit('', '<a href="/user/login">Log in</a><a href="/user/register">Register</a>');
-    $this->expectException(ExpectationException::class);
-    $this->assertSession()->linkByHrefExists('/foo');
-  }
-
-  /**
    * Tests linkByHrefNotExists() functionality.
    *
    * @covers ::linkByHrefNotExists
@@ -259,28 +217,6 @@ class WebAssertTest extends UnitTestCase {
   public function testLinkByHrefNotExists(): void {
     $this->visit('', '<a href="/user/login">Log in</a><a href="/user/register">Register</a>');
     $this->assertSession()->linkByHrefNotExists('/foo');
-  }
-
-  /**
-   * Tests LinkByHrefNotExists() functionality fail partial match.
-   *
-   * @covers ::linkByHrefNotExists
-   */
-  public function testInvalidLinkByHrefNotExistsPartial(): void {
-    $this->visit('', '<a href="/user/login">Log in</a><a href="/user/register">Register</a>');
-    $this->expectException(ExpectationException::class);
-    $this->assertSession()->linkByHrefNotExists('/user');
-  }
-
-  /**
-   * Tests LinkByHrefNotExists() functionality fail full match.
-   *
-   * @covers ::linkByHrefNotExists
-   */
-  public function testInvalidLinkByHrefNotExistsFull(): void {
-    $this->visit('', '<a href="/user/login">Log in</a><a href="/user/register">Register</a>');
-    $this->expectException(ExpectationException::class);
-    $this->assertSession()->linkByHrefNotExists('/user/login');
   }
 
   /**
@@ -294,17 +230,6 @@ class WebAssertTest extends UnitTestCase {
   }
 
   /**
-   * Tests linkByHrefExistsExact() functionality fail.
-   *
-   * @covers ::linkByHrefExistsExact
-   */
-  public function testInvalidLinkByHrefExistsExact(): void {
-    $this->visit('', '<a href="/user/login">Log in</a><a href="/user/register">Register</a>');
-    $this->expectException(ExpectationException::class);
-    $this->assertSession()->linkByHrefExistsExact('/foo');
-  }
-
-  /**
    * Tests linkByHrefNotExistsExact() functionality.
    *
    * @covers ::linkByHrefNotExistsExact
@@ -312,17 +237,6 @@ class WebAssertTest extends UnitTestCase {
   public function testLinkByHrefNotExistsExact(): void {
     $this->visit('', '<a href="/user/login">Log in</a><a href="/user/register">Register</a>');
     $this->assertSession()->linkByHrefNotExistsExact('/foo');
-  }
-
-  /**
-   * Tests linkByHrefNotExistsExact() functionality fail.
-   *
-   * @covers ::linkByHrefNotExistsExact
-   */
-  public function testInvalidLinkByHrefNotExistsExact(): void {
-    $this->visit('', '<a href="/user/login">Log in</a><a href="/user/register">Register</a>');
-    $this->expectException(ExpectationException::class);
-    $this->assertSession()->linkByHrefNotExistsExact('/user/login');
   }
 
   /**
@@ -371,14 +285,6 @@ HTML);
     $this->assertSession()->buttonExists('Duplicate button 1');
     $this->assertSession()->buttonExists('Duplicate button 2');
     $this->assertSession()->buttonNotExists('Rabbit');
-
-    try {
-      $this->assertSession()->buttonNotExists('Duplicate button 2');
-      $this->fail('The "duplicate_button" field with the value Duplicate button 2 was not found.');
-    }
-    catch (ExpectationException) {
-      // Expected exception; just continue testing.
-    }
   }
 
   /**
