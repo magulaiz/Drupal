@@ -1967,7 +1967,7 @@ function hook_entity_base_field_info(\Drupal\Core\Entity\EntityTypeInterface $en
  * @see hook_entity_bundle_field_info_alter()
  */
 function hook_entity_base_field_info_alter(&$fields, \Drupal\Core\Entity\EntityTypeInterface $entity_type) {
-  // Replace the mymodule_text field with a new base field that uses a custom
+  // Replace the my_module_text field with a new base field that uses a custom
   // class.
   if ($entity_type->id() == 'node' && !empty($fields['my_module_text'])) {
     $fields['my_module_text'] = BaseFieldDefinition::createFromFieldDefinition($fields['my_module_text'])->setClass('\Drupal\another_module\EntityComputedText');
