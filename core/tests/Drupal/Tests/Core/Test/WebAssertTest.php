@@ -181,7 +181,6 @@ class WebAssertTest extends UnitTestCase {
   public function testPipeCharInLocator(): void {
     $this->visit('', '<a href="http://example.com">foo|bar|baz</a>');
     $this->assertSession()->linkExists('foo|bar|baz');
-    $this->addToAssertionCount(1);
   }
 
   /**
@@ -192,7 +191,6 @@ class WebAssertTest extends UnitTestCase {
   public function testLinkExistsExact(): void {
     $this->visit('', '<a href="http://example.com">foo|bar|baz</a>');
     $this->assertSession()->linkExistsExact('foo|bar|baz');
-    $this->addToAssertionCount(1);
   }
 
   /**
@@ -215,7 +213,6 @@ class WebAssertTest extends UnitTestCase {
   public function testLinkNotExistsExact(): void {
     $this->visit('', '<a href="http://example.com">foo|bar|baz</a>');
     $this->assertSession()->linkNotExistsExact('foo|bar');
-    $this->addToAssertionCount(1);
   }
 
   /**
@@ -228,7 +225,6 @@ class WebAssertTest extends UnitTestCase {
     $this->expectException(ExpectationException::class);
     $this->expectExceptionMessage('Link with label foo|bar|baz found');
     $this->assertSession()->linkNotExistsExact('foo|bar|baz');
-    $this->addToAssertionCount(1);
   }
 
   /**
@@ -242,7 +238,6 @@ class WebAssertTest extends UnitTestCase {
     $this->assertSession()->linkByHrefExists('/user');
     // Full matching.
     $this->assertSession()->linkByHrefExists('/user/login');
-    $this->addToAssertionCount(1);
   }
 
   /**
@@ -254,7 +249,6 @@ class WebAssertTest extends UnitTestCase {
     $this->visit('', '<a href="/user/login">Log in</a><a href="/user/register">Register</a>');
     $this->expectException(ExpectationException::class);
     $this->assertSession()->linkByHrefExists('/foo');
-    $this->addToAssertionCount(1);
   }
 
   /**
@@ -265,7 +259,6 @@ class WebAssertTest extends UnitTestCase {
   public function testLinkByHrefNotExists(): void {
     $this->visit('', '<a href="/user/login">Log in</a><a href="/user/register">Register</a>');
     $this->assertSession()->linkByHrefNotExists('/foo');
-    $this->addToAssertionCount(1);
   }
 
   /**
@@ -277,7 +270,6 @@ class WebAssertTest extends UnitTestCase {
     $this->visit('', '<a href="/user/login">Log in</a><a href="/user/register">Register</a>');
     $this->expectException(ExpectationException::class);
     $this->assertSession()->linkByHrefNotExists('/user');
-    $this->addToAssertionCount(1);
   }
 
   /**
@@ -299,7 +291,6 @@ class WebAssertTest extends UnitTestCase {
   public function testLinkByHrefExistsExact(): void {
     $this->visit('', '<a href="/user/login">Log in</a><a href="/user/register">Register</a>');
     $this->assertSession()->linkByHrefExistsExact('/user/login');
-    $this->addToAssertionCount(1);
   }
 
   /**
@@ -321,7 +312,6 @@ class WebAssertTest extends UnitTestCase {
   public function testLinkByHrefNotExistsExact(): void {
     $this->visit('', '<a href="/user/login">Log in</a><a href="/user/register">Register</a>');
     $this->assertSession()->linkByHrefNotExistsExact('/foo');
-    $this->addToAssertionCount(1);
   }
 
   /**
@@ -347,7 +337,6 @@ class WebAssertTest extends UnitTestCase {
     $sanitized = Html::escape($dangerous);
     $this->assertSession()->responseNotContains($dangerous);
     $this->assertSession()->responseContains($sanitized);
-    $this->addToAssertionCount(2);
   }
 
   /**
@@ -390,7 +379,6 @@ HTML);
     catch (ExpectationException) {
       // Expected exception; just continue testing.
     }
-    $this->addToAssertionCount(11);
   }
 
   /**
@@ -442,7 +430,6 @@ HTML);
     $assert->responseContains('<div class="unescaped">');
     $assert->responseContains("<script>alert('Marked safe');alert(\"Marked safe\");</script>");
     $assert->assertNoEscaped("<script>alert('Marked safe');alert(\"Marked safe\");</script>");
-    $this->addToAssertionCount(10);
   }
 
 }
