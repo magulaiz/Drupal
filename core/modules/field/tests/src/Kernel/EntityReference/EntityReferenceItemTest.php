@@ -31,7 +31,6 @@ use Drupal\Tests\field\Traits\EntityReferenceFieldCreationTrait;
  * Tests the new entity API for the entity reference field type.
  *
  * @group entity_reference
- * @group #slow
  */
 class EntityReferenceItemTest extends FieldKernelTestBase {
 

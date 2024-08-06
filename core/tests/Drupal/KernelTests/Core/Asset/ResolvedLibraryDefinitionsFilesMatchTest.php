@@ -15,7 +15,6 @@ use Drupal\KernelTests\KernelTestBase;
  * applied.
  *
  * @group Asset
- * @group #slow
  */
 class ResolvedLibraryDefinitionsFilesMatchTest extends KernelTestBase {
 

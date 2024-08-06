@@ -12,7 +12,6 @@ use Drupal\user\Entity\User;
  * Tests follow-up migrations.
  *
  * @group migrate_drupal
- * @group #slow
  */
 class FollowUpMigrationsTest extends MigrateDrupal7TestBase {
 
