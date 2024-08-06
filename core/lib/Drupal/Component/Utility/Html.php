@@ -95,13 +95,16 @@ class Html {
    * @return string
    *   The cleaned identifier.
    */
-  public static function cleanCssIdentifier($identifier, array $filter = [
-    ' ' => '-',
-    '_' => '-',
-    '/' => '-',
-    '[' => '-',
-    ']' => '',
-  ]) {
+  public static function cleanCssIdentifier(
+    $identifier,
+    array $filter = [
+      ' ' => '-',
+      '_' => '-',
+      '/' => '-',
+      '[' => '-',
+      ']' => '',
+    ],
+  ) {
     // We could also use strtr() here but its much slower than str_replace(). In
     // order to keep '__' to stay '__' we first replace it with a different
     // placeholder after checking that it is not defined as a filter.
@@ -387,11 +390,7 @@ class Html {
    * @see html_entity_decode()
    * @see \Drupal\Component\Utility\Html::escape()
    */
-  public static function decodeEntities($text): string {
-    if (is_null($text)) {
-      @trigger_error('Passing NULL to ' . __METHOD__ . ' is deprecated in drupal:9.5.0 and will trigger a PHP error from drupal:11.0.0. Pass a string instead. See https://www.drupal.org/node/3318826', E_USER_DEPRECATED);
-      return '';
-    }
+  public static function decodeEntities(string $text): string {
     return html_entity_decode($text, ENT_QUOTES, 'UTF-8');
   }
 
@@ -429,11 +428,7 @@ class Html {
    *
    * @ingroup sanitization
    */
-  public static function escape($text): string {
-    if (is_null($text)) {
-      @trigger_error('Passing NULL to ' . __METHOD__ . ' is deprecated in drupal:9.5.0 and will trigger a PHP error from drupal:11.0.0. Pass a string instead. See https://www.drupal.org/node/3318826', E_USER_DEPRECATED);
-      return '';
-    }
+  public static function escape(string $text): string {
     return htmlspecialchars($text, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
   }
 
@@ -484,11 +479,10 @@ class Html {
       // @see https://html.spec.whatwg.org/multipage/embedded-content.html#attr-img-srcset
       // @see https://html.spec.whatwg.org/multipage/embedded-content.html#image-candidate-string
       $image_candidate_strings = explode(',', $node->getAttribute('srcset'));
-      $image_candidate_strings = array_map('trim', $image_candidate_strings);
-      for ($i = 0; $i < count($image_candidate_strings); $i++) {
-        $image_candidate_string = $image_candidate_strings[$i];
+      $image_candidate_strings = array_filter(array_map('trim', $image_candidate_strings));
+      foreach ($image_candidate_strings as $key => $image_candidate_string) {
         if ($image_candidate_string[0] === '/' && $image_candidate_string[1] !== '/') {
-          $image_candidate_strings[$i] = $scheme_and_host . $image_candidate_string;
+          $image_candidate_strings[$key] = $scheme_and_host . $image_candidate_string;
         }
       }
       $node->setAttribute('srcset', implode(', ', $image_candidate_strings));
