@@ -30,7 +30,6 @@ use Drupal\node\Entity\NodeType;
  * Tests the Entity Field API.
  *
  * @group Entity
- * @group #slow
  */
 class EntityFieldTest extends EntityKernelTestBase {
 

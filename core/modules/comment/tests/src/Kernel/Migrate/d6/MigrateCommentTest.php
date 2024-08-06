@@ -14,7 +14,6 @@ use Drupal\node\NodeInterface;
  *
  * @group comment
  * @group migrate_drupal_6
- * @group #slow
  */
 class MigrateCommentTest extends MigrateDrupal6TestBase {
 
