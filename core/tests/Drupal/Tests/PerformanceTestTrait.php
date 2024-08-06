@@ -75,10 +75,6 @@ trait PerformanceTestTrait {
       'performance' => 'ALL',
       'performanceTimeline' => 'ALL',
     ];
-    // Support legacy key.
-    $driver_args[1]['goog:chromeOptions']['perfLoggingPrefs'] = [
-      'traceCategories' => 'timeline,devtools.timeline,browser',
-    ];
 
     return json_encode($driver_args);
   }

@@ -87,14 +87,15 @@ variables:
     - "--allowed-origins=*"
 
 .with-selenium-chrome: &with-selenium-chrome
-  name: selenium/standalone-chrome:latest
+  name: selenium/standalone-chromium:latest
   alias: selenium
   variables:
     JAVA_OPTS: "-Dwebdriver.chrome.logfile=/builds/chromedriver.log"
     SE_NODE_OVERRIDE_MAX_SESSIONS: "true"
-    SE_NODE_MAX_SESSIONS: "5"
+    SE_NODE_MAX_SESSIONS: "4"
     SE_START_XVFB: "false"
     SE_START_VNC: "false"
+    SE_LOG_LEVEL: "fine"
 
 .run-tests: &run-tests
   script:
@@ -286,13 +287,14 @@ variables:
     - when: manual
       allow_failure: true
   variables:
+    CI_DEBUG_SERVICES: "true"
     KUBERNETES_CPU_REQUEST: "24"
-    MINK_DRIVER_ARGS_WEBDRIVER: '["chrome", {"browserName":"chrome","goog:chromeOptions":{"args":["--disable-dev-shm-usage","--disable-gpu","--headless","--no-sandbox"]}}, "http://chrome:9515"]'
+    MINK_DRIVER_ARGS_WEBDRIVER: '["chrome", {"browserName":"chrome", "goog:chromeOptions":{"w3c": true, "args":["--no-sandbox", "--shm-size=2g",  "--disable-gpu", "--disable-extensions", "--ignore-certificate-errors", "--allow-insecure-localhost", "--headless", "--dns-prefetch-disable"]}}, "http://selenium:4444"]'
   tags:
     - performance-test-runner
   services:
     - <<: *with-database
-    - <<: *with-chrome
+    - <<: *with-selenium-chrome
   script:
     #  Determine DB driver.
     - |
