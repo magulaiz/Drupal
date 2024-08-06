@@ -8,6 +8,7 @@
 use Drupal\Core\Config\Entity\ConfigEntityUpdater;
 use Drupal\Core\Entity\Display\EntityViewDisplayInterface;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
+use Drupal\file\FileConfigUpdater;
 
 /**
  * Implements hook_removed_post_updates().
@@ -37,5 +38,16 @@ function file_post_update_add_playsinline(array &$sandbox = []): ?TranslatableMa
       }
     }
     return $needs_update;
+  });
+}
+
+/**
+ * Add the preload configuration to existing media formatters.
+ */
+function file_post_update_preload_setting(array &$sandbox = NULL): void {
+  $file_config_updater = \Drupal::classResolver(FileConfigUpdater::class);
+  assert($file_config_updater instanceof FileConfigUpdater);
+  \Drupal::classResolver(ConfigEntityUpdater::class)->update($sandbox, 'entity_view_display', function (EntityViewDisplayInterface $view_display) use ($file_config_updater): bool {
+    return $file_config_updater->processPreloadSetting($view_display);
   });
 }
