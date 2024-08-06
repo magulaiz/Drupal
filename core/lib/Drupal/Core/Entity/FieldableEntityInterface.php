@@ -33,6 +33,11 @@ interface FieldableEntityInterface extends EntityInterface {
    *   ->setLabel(t('Name'));
    * @endcode
    *
+   * If you return fields as an instance of BaseFieldDefinition, the field name,
+   * target entity type ID and provider will be set automatically. If some other
+   * implementation of FieldDefinitionInterface is returned, this information
+   * must be explicitly available.
+   *
    * By definition, base fields are fields that exist for every bundle. To
    * provide definitions for fields that should only exist on some bundles, use
    * \Drupal\Core\Entity\FieldableEntityInterface::bundleFieldDefinitions().

@@ -280,7 +280,7 @@ class EntityFieldManagerTest extends UnitTestCase {
     $this->assertSame($expected, $this->entityFieldManager->getFieldDefinitions('test_entity_type', 'test_entity_bundle'));
 
     // Test that base fields and bundle fields from the bundle class and
-    // entity class are retrieved
+    // entity class are retrieved.
     $expected = [
       'id' => $field_definition,
       'some_extra_field' => $bundle_fields['the_entity_id']['test_entity_bundle_class']['some_extra_field'],
@@ -547,8 +547,6 @@ class EntityFieldManagerTest extends UnitTestCase {
 
     $module = 'entity_field_manager_test_module';
 
-    // @todo Mock FieldDefinitionInterface once it exposes a proper provider
-    //   setter. See https://www.drupal.org/node/2346329.
     $field_definition = $this->prophesize(BaseFieldDefinition::class);
 
     // We expect two calls as the field definition will be returned from both
@@ -620,11 +618,11 @@ class EntityFieldManagerTest extends UnitTestCase {
     $storage->loadMultiple(Argument::type('array'))->willReturn([]);
 
     // By default, make the storage entity class lookup return the
-    // EntityTypeManagerTestEntity class
+    // EntityTypeManagerTestEntity class.
     $storage->getEntityClass(NULL)->willReturn(EntityTypeManagerTestEntity::class);
     $storage->getEntityClass(Argument::type('string'))->willReturn(EntityTypeManagerTestEntity::class);
     // When using the "test_entity_bundle_class" bundle, return the
-    // EntityTypeManagerTestEntityBundle class
+    // EntityTypeManagerTestEntityBundle class.
     $storage->getEntityClass('test_entity_bundle_class')->willReturn(EntityTypeManagerTestEntityBundle::class);
 
     $this->entityTypeManager->getStorage('test_entity_type')->willReturn($storage->reveal());
@@ -866,6 +864,9 @@ class EntityFieldManagerTest extends UnitTestCase {
 
 }
 
+/**
+ * Tests for entity type manager class.
+ */
 class TestEntityFieldManager extends EntityFieldManager {
 
   /**

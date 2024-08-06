@@ -96,6 +96,29 @@ class BaseFieldDefinition extends ListDataDefinition implements FieldDefinitionI
   }
 
   /**
+   * Creates a new base field definition based upon a field definition.
+   *
+   * @param \Drupal\Core\Field\FieldDefinitionInterface $definition
+   *   The field definition to base the new field definition upon.
+   *
+   * @return $this
+   */
+  public static function createFromFieldDefinition(FieldDefinitionInterface $definition) {
+    return static::create($definition->getType())
+      ->setCardinality($definition->getFieldStorageDefinition()->getCardinality())
+      ->setConstraints($definition->getFieldStorageDefinition()->getConstraints())
+      ->setCustomStorage($definition->getFieldStorageDefinition()->hasCustomStorage())
+      ->setDescription($definition->getFieldStorageDefinition()->getDescription())
+      ->setLabel($definition->getFieldStorageDefinition()->getLabel())
+      ->setName($definition->getName())
+      ->setProvider($definition->getFieldStorageDefinition()->getProvider())
+      ->setRevisionable($definition->getFieldStorageDefinition()->isRevisionable())
+      ->setSettings($definition->getFieldStorageDefinition()->getSettings())
+      ->setTargetEntityTypeId($definition->getTargetEntityTypeId())
+      ->setTranslatable($definition->isTranslatable());
+  }
+
+  /**
    * {@inheritdoc}
    */
   public static function createFromItemType($item_type) {

@@ -1965,14 +1965,12 @@ function hook_entity_base_field_info(\Drupal\Core\Entity\EntityTypeInterface $en
  * @see hook_entity_base_field_info()
  * @see hook_entity_bundle_field_info()
  * @see hook_entity_bundle_field_info_alter()
- *
- * @todo WARNING: This hook will be changed in
- * https://www.drupal.org/node/2346329.
  */
 function hook_entity_base_field_info_alter(&$fields, \Drupal\Core\Entity\EntityTypeInterface $entity_type) {
-  // Alter the my_module_text field to use a custom class.
+  // Replace the mymodule_text field with a new base field that uses a custom
+  // class.
   if ($entity_type->id() == 'node' && !empty($fields['my_module_text'])) {
-    $fields['my_module_text']->setClass('\Drupal\another_module\EntityComputedText');
+    $fields['mymodule_text'] = BaseFieldDefinition::createFromFieldDefinition($fields['mymodule_text'])->setClass('\Drupal\anothermodule\EntityComputedText');
   }
 }
 
@@ -2197,7 +2195,7 @@ function hook_entity_field_access_alter(array &$grants, array $context) {
     // take out node module's part in the access handling of this field. We also
     // don't want to switch node module's grant to
     // AccessResultInterface::isAllowed() , because the grants of other modules
-    // should still decide on their own if this field is accessible or not
+    // should still decide on their own if this field is accessible or not.
     $grants['node'] = AccessResult::neutral()->inheritCacheability($grants['node']);
   }
 }

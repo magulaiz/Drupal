@@ -168,14 +168,14 @@ function language_process_language_select($element) {
  * Implements hook_entity_base_field_info_alter().
  */
 function language_entity_base_field_info_alter(&$fields) {
-  foreach ($fields as $definition) {
+  foreach ($fields as $field_name => $definition) {
     // Set configurable form display for language fields with display options.
     if ($definition->getType() == 'language') {
       foreach (['form', 'view'] as $type) {
         if ($definition->getDisplayOptions($type)) {
           // The related configurations will be purged manually on Language
           // module uninstallation. @see language_modules_uninstalled().
-          $definition->setDisplayConfigurable($type, TRUE);
+          $fields[$field_name]->setDisplayConfigurable($type, TRUE);
         }
       }
     }
