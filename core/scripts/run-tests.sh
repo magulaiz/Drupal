@@ -1042,12 +1042,10 @@ function simpletest_script_get_test_list() {
     // Now loop over the slow tests and add them to a bin one by one, this
     // distributes the tests evenly across the bins.
     $binned_slow_tests = place_tests_into_bins($slow_tests, $bin_count);
-    print_r($binned_slow_tests);
     $slow_tests_for_job = $binned_slow_tests[$args['ci-parallel-node-index'] - 1];
 
     // And the same for the rest of the tests.
     $binned_other_tests = place_tests_into_bins($test_list, $bin_count);
-    //print_r($binned_other_tests);
     $other_tests_for_job = $binned_other_tests[$args['ci-parallel-node-index'] - 1];
 
     $test_list = array_merge($slow_tests_for_job, $other_tests_for_job);
@@ -1086,7 +1084,6 @@ function place_tests_into_bins($tests, $bin_count) {
   foreach (range(0, $bin_max_index) as $index) {
     $bins[$index] = [];
   }
-  print_r($bins);
   $cycle = 0;
   foreach ($tests as $key => $test) {
     if ($cycle === 0) {
@@ -1095,7 +1092,7 @@ function place_tests_into_bins($tests, $bin_count) {
     else {
       $bin_key = $key - ($cycle * $bin_count);
     }
-      $bins[$bin_key][] = $test;
+    $bins[$bin_key][] = $test;
     if ($bin_key / $bin_max_index === 1) {
       $cycle++;
     }
