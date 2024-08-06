@@ -13,20 +13,14 @@
 
 /* 'Manage form display' and 'Manage display' overview */
 .field-plugin-summary {
-  float: inline-start; /* LTR */
+  float: inline-start;
   font-size: var(--font-size-s);
 }
-[dir="rtl"] .field-plugin-summary {
-  float: inline-end;
-}
+
 .field-plugin-summary-cell .warning {
   display: block;
-  float: inline-start; /* LTR */
-  margin-inline-end: 0.5em; /* LTR */
-}
-[dir="rtl"] .field-plugin-summary-cell .warning {
-  float: inline-end;
-  margin-inline: 0.5em 0;
+  float: inline-start;
+  margin-inline-end: 0.5em;
 }
 
 /* Settings edit. */
