@@ -14,7 +14,6 @@ use Drupal\Tests\BrowserTestBase;
  * Tests the rendering of a layout section field.
  *
  * @group layout_builder
- * @group #slow
  */
 class LayoutSectionTest extends BrowserTestBase {
 
