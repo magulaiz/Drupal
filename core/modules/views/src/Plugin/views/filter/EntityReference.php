@@ -13,6 +13,7 @@ use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Form\SubformState;
 use Drupal\Core\Messenger\MessengerInterface;
 use Drupal\Core\Render\Element;
+use Drupal\views\Attribute\ViewsFilter;
 use Drupal\views\FieldAPIHandlerTrait;
 use Drupal\views\Plugin\EntityReferenceSelection\ViewsSelection;
 use Drupal\views\Plugin\views\display\DisplayPluginBase;
@@ -23,9 +24,8 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  * Filters a view by entity references.
  *
  * @ingroup views_filter_handlers
- *
- * @ViewsFilter("entity_reference")
  */
+#[ViewsFilter("entity_reference")]
 class EntityReference extends ManyToOne {
 
   use FieldAPIHandlerTrait;
@@ -373,7 +373,11 @@ class EntityReference extends ManyToOne {
   }
 
   /**
-   * Fixes the issue with switching between the widgets in the view editor.
+   * Normalize values for widget switching.
+   *
+   * The saved values can differ in live preview if switching back and forth
+   * between the select and autocomplete widgets. This normalizes the values to
+   * avoid errors when making the switch.
    *
    * @param array $form
    *   Associative array containing the structure of the form, passed by
