@@ -86,7 +86,7 @@ class GenerateThemeTest extends QuickStartTestBase {
   /**
    * Tests the generate-theme command.
    */
-  public function test() {
+  public function test(): void {
     // Do not rely on \Drupal::VERSION: change the version to a concrete version
     // number, to simulate using a tagged core release.
     $starterkit_info_yml = $this->getWorkspaceDirectory() . '/core/themes/starterkit_theme/starterkit_theme.info.yml';
@@ -134,7 +134,7 @@ class GenerateThemeTest extends QuickStartTestBase {
   /**
    * Tests generating a theme from another Starterkit enabled theme.
    */
-  public function testGeneratingFromAnotherTheme() {
+  public function testGeneratingFromAnotherTheme(): void {
     // Do not rely on \Drupal::VERSION: change the version to a concrete version
     // number, to simulate using a tagged core release.
     $starterkit_info_yml = $this->getWorkspaceDirectory() . '/core/themes/starterkit_theme/starterkit_theme.info.yml';
@@ -178,7 +178,7 @@ YAML
   /**
    * Tests the generate-theme command on a dev snapshot of Drupal core.
    */
-  public function testDevSnapshot() {
+  public function testDevSnapshot(): void {
     // Do not rely on \Drupal::VERSION: change the version to a development
     // snapshot version number, to simulate using a branch snapshot of core.
     $starterkit_info_yml = $this->getWorkspaceDirectory() . '/core/themes/starterkit_theme/starterkit_theme.info.yml';
@@ -270,6 +270,7 @@ YAML
     // not found. Note that we run our tests using process isolation, so we do
     // not need to restore the PATH when we are done.
     $unavailableGitPath = $this->getWorkspaceDirectory() . '/bin';
+    putenv('PATH=' . $unavailableGitPath . ':' . getenv('PATH'));
     mkdir($unavailableGitPath);
     $bash = <<<SH
 #!/bin/bash
@@ -279,18 +280,14 @@ SH;
     file_put_contents($unavailableGitPath . '/git', $bash);
     chmod($unavailableGitPath . '/git', 0755);
     // Confirm that 'git' is no longer available.
-    $env = [
-      'PATH' => $unavailableGitPath . ':' . getenv('PATH'),
-      'COLUMNS' => 80,
-    ];
-    $process = new Process([
-      'git',
-      '--help',
-    ], NULL, $env);
+    $process = new Process(['git', '--help']);
     $process->run();
     $this->assertEquals(127, $process->getExitCode(), 'Fake git used by process.');
 
-    $process = $this->generateThemeFromStarterkit($env);
+    $process = $this->generateThemeFromStarterkit([
+      'PATH' => getenv('PATH'),
+      'COLUMNS' => 80,
+    ]);
     $result = $process->run();
     $this->assertEquals("[ERROR] The source theme starterkit_theme has a development version number     \n         (7.x-dev). Determining a specific commit is not possible because git is\n         not installed. Either install git or use a tagged release to generate a\n         theme.", trim($process->getErrorOutput()), $process->getErrorOutput());
     $this->assertSame(1, $result);

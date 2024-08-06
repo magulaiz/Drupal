@@ -1232,7 +1232,7 @@
    * @param {object} response
    *   The response from the Ajax request.
    *
-   * @deprecated in drupal:8.6.0 and is removed from drupal:10.0.0.
+   * @deprecated in drupal:8.6.0 and is removed from drupal:12.0.0.
    *   Use data with desired wrapper.
    *
    * @see https://www.drupal.org/node/2940704
@@ -1263,7 +1263,7 @@
    * @param {jQuery} $elements
    *   Response elements after parsing.
    *
-   * @deprecated in drupal:8.6.0 and is removed from drupal:10.0.0.
+   * @deprecated in drupal:8.6.0 and is removed from drupal:12.0.0.
    *   Use data with desired wrapper.
    *
    * @see https://www.drupal.org/node/2940704
@@ -1333,7 +1333,20 @@
       const settings = response.settings || ajax.settings || drupalSettings;
 
       // Parse response.data into an element collection.
-      let $newContent = $($.parseHTML(response.data, document, true));
+      const parseHTML = (htmlString) => {
+        const fragment = document.createDocumentFragment();
+        // Create a temporary div element
+        const tempDiv = fragment.appendChild(document.createElement('div'));
+
+        // Set the innerHTML of the div to the provided HTML string
+        tempDiv.innerHTML = htmlString;
+
+        // Return the contents of the temporary div
+        return tempDiv.childNodes;
+      };
+
+      let $newContent = $(parseHTML(response.data));
+
       // For backward compatibility, in some cases a wrapper will be added. This
       // behavior will be removed before Drupal 9.0.0. If different behavior is
       // needed, the theme functions can be overridden.
