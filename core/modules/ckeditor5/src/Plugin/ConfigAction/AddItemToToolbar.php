@@ -71,16 +71,9 @@ final class AddItemToToolbar implements ConfigActionPluginInterface, ContainerFa
         $editor_settings['toolbar']['items'][] = $item_name;
       }
     }
-    // If we're just adding a vertical separator, there's nothing else we need
-    // to do at this point.
-    if ($item_name === '|') {
-      $editor->setSettings($editor_settings)->save();
-      return;
-    }
-
-    // If we're just adding a wrapping, there's nothing else we need
-    // to do at this point.
-    if ($item_name === '-') {
+    // If we're just adding a divider (vertical separator) or wrapping,
+    // there's nothing else we need to do at this point.
+    if ($item_name === '|' || $item_name === '-') {
       $editor->setSettings($editor_settings)->save();
       return;
     }
