@@ -1081,10 +1081,21 @@ function simpletest_script_reporter_init() {
  */
 function simpletest_script_reporter_display_summary($class, $results) {
   // Output all test results vertically aligned.
-  // Cut off the class name after 60 chars, and pad each group with 3 digits
-  // by default (more than 999 assertions are rare).
+  // Limit the fully qualified method name to 60 characters, using the end of
+  // the string so that individual test classes can still be identified. Pad
+  // each group with 3 digits by default (more than 999 assertions are rare).
+  $length = strlen($class);
+  if ($length < 60) {
+    $class_out = str_pad($class, 60, ' ', STR_PAD_RIGHT);
+  }
+  elseif ($length > 60) {
+    $class_out = '...' . substr($class, -60 + 3);
+  }
+  else {
+    $class_out = $class;
+  }
   $output = vsprintf('%-60.60s %10s %9s %14s %12s', [
-    $class,
+    $class_out,
     $results['#pass'] . ' passes',
     !$results['#fail'] ? '' : $results['#fail'] . ' fails',
     !$results['#exception'] ? '' : $results['#exception'] . ' exceptions',
@@ -1234,8 +1245,21 @@ function simpletest_script_reporter_display_results(TestRunResultsStorageInterfa
 function simpletest_script_format_result($result) {
   global $args, $results_map, $color;
 
+  // Limit the fully qualified method name to 60 characters, using the end of
+  // the string so that individual test classes can still be identified.
+  $class = $result->function;
+  $length = strlen($class);
+  if ($length < 60) {
+    $class_out = str_pad($class, 60, ' ', STR_PAD_RIGHT);
+  }
+  elseif ($length > 60) {
+    $class_out = '...' . substr($class, -60 + 3);
+  }
+  else {
+    $class_out = $class;
+  }
   $summary = sprintf("%-9.9s %-10.10s %-17.17s %4.4s %-35.35s\n",
-    $results_map[$result->status], $result->message_group, basename($result->file), $result->line, $result->function);
+  $results_map[$result->status], $result->message_group, basename($result->file), $result->line, $class_out);
 
   simpletest_script_print($summary, simpletest_script_color_code($result->status));
 
