@@ -100,6 +100,10 @@ class BanDeleteMultiple extends ConfirmFormBase {
    */
   public function buildForm(array $form, FormStateInterface $form_state, $ban_id = '') {
     $this->banIps = $this->tempStoreFactory->get('ban_ip_delete_multiple')->get('selected_ips');
+    $form['selected_ips'] = [
+      '#theme' => 'item_list',
+      '#items' => $this->banIps,
+    ];
     return parent::buildForm($form, $form_state);
   }
 
