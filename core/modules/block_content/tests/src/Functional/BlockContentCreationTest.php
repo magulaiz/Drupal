@@ -56,6 +56,7 @@ class BlockContentCreationTest extends BlockContentTestBase {
    * Creates a "Basic block" block and verifies its consistency in the database.
    */
   public function testBlockContentCreation(): void {
+    $assert = $this->assertSession();
     $this->drupalLogin($this->adminUser);
 
     // Create a block.
