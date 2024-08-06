@@ -25,10 +25,7 @@
 /* Splitbuttons */
 @media screen and (min-width: 600px) {
   .form-actions .dropbutton-wrapper {
-    float: inline-start; /* LTR */
-  }
-  [dir="rtl"] .form-actions .dropbutton-wrapper {
-    float: inline-end;
+    float: inline-start;
   }
 }
 .js .form-actions .dropbutton-widget {

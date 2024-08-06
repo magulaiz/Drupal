@@ -9,16 +9,13 @@
   border: 1px solid #ccc;
 }
 .vertical-tabs__menu {
-  float: inline-start; /* LTR */
+  float: inline-start;
   inline-size: 15em;
   margin-block: -1px;
   margin-inline: -15em 0;
   padding: 0;
   list-style: none;
   border-block-start: 1px solid #ccc;
-}
-[dir="rtl"] .vertical-tabs__menu {
-  float: inline-end;
 }
 .vertical-tabs__pane {
   margin: 0;

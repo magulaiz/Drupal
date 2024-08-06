@@ -23,8 +23,5 @@
   margin-inline: 1em 0.5em;
 }
 .form--inline .form-actions {
-  clear: inline-start; /* LTR */
-}
-[dir="rtl"] .form--inline .form-actions {
-  clear: inline-end;
+  clear: inline-start;
 }

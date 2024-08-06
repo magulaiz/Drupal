@@ -5,8 +5,5 @@
 
 .more-link {
   display: block;
-  text-align: end; /* LTR */
-}
-[dir="rtl"] .more-link {
-  text-align: start;
+  text-align: end;
 }

@@ -49,12 +49,8 @@
 
       & .dropbutton-action {
         &:first-child {
-          border-inline-end: solid 1px var(--off-canvas-dropbutton-border-color); /* LTR */
+          border-inline-end: solid 1px var(--off-canvas-dropbutton-border-color);
           border-radius: var(--off-canvas-dropbutton-border-radius);
-
-          &:dir(rtl) {
-            border: solid 1px var(--off-canvas-dropbutton-border-color);
-          }
         }
 
         & a {

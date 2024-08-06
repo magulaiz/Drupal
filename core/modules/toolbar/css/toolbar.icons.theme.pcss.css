@@ -13,7 +13,7 @@
 .toolbar .toolbar-icon::before {
   position: absolute;
   inset-block-start: 0;
-  inset-inline-start: 0.6667em; /* LTR */
+  inset-inline-start: 0.6667em;
   display: block;
   inline-size: 20px;
   block-size: 100%;
@@ -24,34 +24,22 @@
   background-position: center center;
   background-size: 100% auto;
 }
-[dir="rtl"] .toolbar .toolbar-icon::before {
-  inset-inline: auto 0.6667em;
-}
 .toolbar button.toolbar-icon {
   border: 0;
   background-color: transparent;
   font-size: 1em;
 }
 .toolbar .toolbar-menu ul .toolbar-icon {
-  padding-inline-start: 1.3333em; /* LTR */
-}
-[dir="rtl"] .toolbar .toolbar-menu ul .toolbar-icon {
-  padding-inline: 0 1.3333em;
+  padding-inline-start: 1.3333em;
 }
 .toolbar .toolbar-menu ul a.toolbar-icon::before {
   display: none;
 }
 .toolbar .toolbar-tray-vertical .toolbar-menu ul a {
-  padding-inline-start: 2.75em; /* LTR */
-}
-[dir="rtl"] .toolbar .toolbar-tray-vertical .toolbar-menu ul a {
-  padding-inline: 0 2.75em;
+  padding-inline-start: 2.75em;
 }
 .toolbar .toolbar-tray-vertical .toolbar-menu ul ul a {
-  padding-inline-start: 3.75em; /* LTR */
-}
-[dir="rtl"] .toolbar .toolbar-tray-vertical .toolbar-menu ul ul a {
-  padding-inline: 0 3.75em;
+  padding-inline-start: 3.75em;
 }
 
 .toolbar .toolbar-tray-vertical .toolbar-menu a {
@@ -174,15 +162,12 @@
     background-position: right center;
   }
   .toolbar .toolbar-bar .toolbar-tab > .toolbar-icon::before {
-    inset-inline-start: 0.6667em; /* LTR */
+    inset-inline-start: 0.6667em;
     inline-size: 20px;
     background-size: 100% auto;
   }
   .no-svg .toolbar .toolbar-bar .toolbar-tab > .toolbar-icon::before {
     background-size: auto auto;
-  }
-  [dir="rtl"] .toolbar .toolbar-bar .toolbar-tab > .toolbar-icon::before {
-    inset-inline: 0 0.6667em;
   }
 }
 
@@ -217,10 +202,7 @@
   text-indent: -9999px;
 }
 .toolbar .toolbar-icon.toolbar-handle::before {
-  inset-inline-start: 1.6667em; /* LTR */
-}
-[dir="rtl"] .toolbar .toolbar-icon.toolbar-handle::before {
-  inset-inline: auto 1.6667em;
+  inset-inline-start: 1.6667em;
 }
 .toolbar .toolbar-icon.toolbar-handle::before {
   background-image: url(../../../misc/icons/5181c6/chevron-disc-down.svg);
