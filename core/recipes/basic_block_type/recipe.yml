@@ -12,3 +12,5 @@ config:
       - views.view.block_content
       - system.action.block_content_publish_action
       - system.action.block_content_unpublish_action
+      - system.action.block_content_publish_action
+      - system.action.block_content_unpublish_action

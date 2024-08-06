@@ -110,6 +110,7 @@ class BlockContentCreationTest extends BlockContentTestBase {
     $edit = [];
     $edit['info[0][value]'] = 'Test Block';
     $edit['body[0][value]'] = $this->randomMachineName(16);
+
     $this->drupalGet('block/add/basic');
     $this->submitForm($edit, 'Save and configure');
 
