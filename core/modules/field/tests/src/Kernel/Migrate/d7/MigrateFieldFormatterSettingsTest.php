@@ -12,7 +12,6 @@ use Drupal\Tests\migrate_drupal\Kernel\d7\MigrateDrupal7TestBase;
  * Tests migration of D7 field formatter settings.
  *
  * @group field
- * @group #slow
  */
 class MigrateFieldFormatterSettingsTest extends MigrateDrupal7TestBase {
 

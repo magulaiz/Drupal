@@ -12,7 +12,6 @@ use Drupal\KernelTests\KernelTestBase;
  * Tests the default file formatter.
  *
  * @group field
- * @group #slow
  */
 class FileEntityFormatterTest extends KernelTestBase {
 

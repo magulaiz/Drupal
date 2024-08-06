@@ -11,7 +11,6 @@ use Drupal\migrate\MigrateExecutable;
  * Migrates and rolls back Drupal 7 fields.
  *
  * @group field
- * @group #slow
  */
 class RollbackFieldInstanceTest extends MigrateFieldInstanceTest {
 
