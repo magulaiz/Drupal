@@ -1029,13 +1029,26 @@ function simpletest_script_get_test_list() {
   }
 
   if ((int) $args['ci-parallel-node-total'] > 1) {
-    $slow_tests_per_job = (int) ceil(count($slow_tests) / $args['ci-parallel-node-total']);
-    $tests_per_job = (int) ceil(count($test_list) / $args['ci-parallel-node-total']);
-    $sort_slow_tests = array_slice($slow_tests, ($args['ci-parallel-node-index'] -1) * $slow_tests_per_job, $slow_tests_per_job);
-    $not_slow_tests = array_slice($test_list, ($args['ci-parallel-node-index'] - 1) * $tests_per_job, $tests_per_job);
-    sort_tests_by_public_method_count($sort_slow_tests);
-    sort_tests_by_public_method_count($not_slow_tests);
-    $test_list = array_merge($sort_slow_tests, $not_slow_tests);
+    // Sort all tests by the number of public methods on the test class.
+    // This is a proxy for the approximate time taken to run the test,
+    // which is used in combination with @group #slow to start the slowest tests
+    // first and distribute tests between test runners.
+    sort_tests_by_public_method_count($slow_tests);
+    sort_tests_by_public_method_count($test_list);
+
+    // Now set up a bin per test runner.
+    $bin_count = $args['ci-parallel-node-total'];
+
+    // Now loop over the slow tests and add them to a bin one by one, this
+    // distributes the tests evenly across the bins.
+    $binned_slow_tests = place_tests_into_bins($slow_tests, $bin_count);
+    $slow_tests_for_job = $binned_slow_tests[$args['ci-parallel-node-index'] - 1];
+
+    // And the same for the rest of the tests.
+    $binned_other_tests = place_tests_into_bins($test_list, $bin_count);
+    $other_tests_for_job = $binned_other_tests[$args['ci-parallel-node-index'] - 1];
+
+    $test_list = array_merge($slow_tests_for_job, $other_tests_for_job);
   }
 
   return $test_list;
@@ -1060,6 +1073,31 @@ function sort_tests_by_public_method_count(&$tests): void {
     };
     return $method_count($a) < $method_count($b) ? 1 : -1;
   });
+}
+
+/**
+ * Distribute tests into bins.
+ */
+function place_tests_into_bins($tests, $bin_count) {
+  $bin_max_index = $bin_count - 1;
+  $bins = [];
+  foreach (range(0, $bin_max_index) as $index) {
+    $bins[$index] = [];
+  }
+  $cycle = 0;
+  foreach ($tests as $key => $test) {
+    if ($cycle === 0) {
+      $bin_key = $key;
+    }
+    else {
+      $bin_key = $key - ($cycle * $bin_count);
+    }
+    $bins[$bin_key][] = $test;
+    if ($bin_key / $bin_max_index === 1) {
+      $cycle++;
+    }
+  }
+  return $bins;
 }
 
 /**
