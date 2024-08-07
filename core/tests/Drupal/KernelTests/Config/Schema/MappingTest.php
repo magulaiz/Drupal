@@ -420,6 +420,7 @@ class MappingTest extends KernelTestBase {
           'uuid',
           'context_mapping',
           'pages',
+          'page_options',
         ],
         'condition.plugin.response_status' => [
           'id',
@@ -463,6 +464,7 @@ class MappingTest extends KernelTestBase {
         ],
         'condition.plugin.request_path' => [
           'pages',
+          'page_options',
         ],
         'condition.plugin.response_status' => [
           'status_codes',
