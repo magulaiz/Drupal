@@ -63,7 +63,7 @@ class PagerTest extends BrowserTestBase {
   /**
    * Tests markup and CSS classes of pager links.
    */
-  public function testActiveClass() {
+  public function testActiveClass(): void {
     // Verify first page.
     $this->drupalGet('admin/reports/dblog');
     $current_page = 0;
@@ -89,7 +89,7 @@ class PagerTest extends BrowserTestBase {
   /**
    * Tests pager query parameters and cache context.
    */
-  public function testPagerQueryParametersAndCacheContext() {
+  public function testPagerQueryParametersAndCacheContext(): void {
     // First page.
     $this->drupalGet('pager-test/query-parameters');
     $this->assertSession()->pageTextContains('Pager calls: 0');
@@ -115,7 +115,7 @@ class PagerTest extends BrowserTestBase {
   /**
    * Tests proper functioning of multiple pagers.
    */
-  public function testMultiplePagers() {
+  public function testMultiplePagers(): void {
     // First page.
     $this->drupalGet('pager-test/multiple-pagers');
 
@@ -198,7 +198,7 @@ class PagerTest extends BrowserTestBase {
   /**
    * Tests proper functioning of the ellipsis.
    */
-  public function testPagerEllipsis() {
+  public function testPagerEllipsis(): void {
     // Insert 100 extra log messages to get 9 pages.
     $logger = $this->container->get('logger.factory')->get('pager_test');
     for ($i = 0; $i < 100; $i++) {
@@ -331,7 +331,7 @@ class PagerTest extends BrowserTestBase {
    *
    * @internal
    */
-  protected function assertClass(NodeElement $element, string $class, string $message = NULL): void {
+  protected function assertClass(NodeElement $element, string $class, ?string $message = NULL): void {
     if (!isset($message)) {
       $message = "Class .$class found.";
     }
@@ -350,7 +350,7 @@ class PagerTest extends BrowserTestBase {
    *
    * @internal
    */
-  protected function assertNoClass(NodeElement $element, string $class, string $message = NULL): void {
+  protected function assertNoClass(NodeElement $element, string $class, ?string $message = NULL): void {
     if (!isset($message)) {
       $message = "Class .$class not found.";
     }
