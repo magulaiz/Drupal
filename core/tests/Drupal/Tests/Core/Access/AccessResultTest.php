@@ -272,7 +272,7 @@ class AccessResultTest extends UnitTestCase {
    * @dataProvider andAllowedIfDataProvider
    */
   public function testAndAllowedIf(AccessResult $access_result, bool $closure_returns, bool $is_closure_call_expected, bool $cache_merge_expected = TRUE): void {
-    self::assertAndOrIfClosureResult($access_result->andAllowedIf((new AndOrIfClosureSpy($closure_returns, $is_closure_call_expected))(...)), $is_closure_call_expected, $cache_merge_expected);
+    self::assertAndOrIfClosureResult($access_result->andAllowedIf((new AndOrIfClosureTester($closure_returns, $is_closure_call_expected))(...)), $is_closure_call_expected, $cache_merge_expected);
   }
 
   /**
@@ -317,7 +317,7 @@ class AccessResultTest extends UnitTestCase {
    * @dataProvider andForbiddenIfDataProvider
    */
   public function testAndForbiddenIf(AccessResult $access_result, bool $closure_returns, bool $is_closure_call_expected, bool $cache_merge_expected = TRUE): void {
-    self::assertAndOrIfClosureResult($access_result->andForbiddenIf((new AndOrIfClosureSpy($closure_returns, $is_closure_call_expected))(...)), $is_closure_call_expected, $cache_merge_expected);
+    self::assertAndOrIfClosureResult($access_result->andForbiddenIf((new AndOrIfClosureTester($closure_returns, $is_closure_call_expected))(...)), $is_closure_call_expected, $cache_merge_expected);
   }
 
   /**
@@ -363,7 +363,7 @@ class AccessResultTest extends UnitTestCase {
    * @dataProvider orAllowedIfDataProvider
    */
   public function testOrAllowedIf(AccessResult $access_result, bool $closure_returns, bool $is_closure_call_expected, bool $cache_merge_expected = TRUE): void {
-    self::assertAndOrIfClosureResult($access_result->orAllowedIf((new AndOrIfClosureSpy($closure_returns, $is_closure_call_expected))(...)), $is_closure_call_expected, $cache_merge_expected);
+    self::assertAndOrIfClosureResult($access_result->orAllowedIf((new AndOrIfClosureTester($closure_returns, $is_closure_call_expected))(...)), $is_closure_call_expected, $cache_merge_expected);
   }
 
   /**
@@ -408,7 +408,7 @@ class AccessResultTest extends UnitTestCase {
    * @dataProvider orForbiddenIfDataProvider
    */
   public function testOrForbiddenIf(AccessResult $access_result, bool $closure_returns, bool $is_closure_call_expected, bool $cache_merge_expected = TRUE): void {
-    self::assertAndOrIfClosureResult($access_result->orForbiddenIf((new AndOrIfClosureSpy($closure_returns, $is_closure_call_expected))(...)), $is_closure_call_expected, $cache_merge_expected);
+    self::assertAndOrIfClosureResult($access_result->orForbiddenIf((new AndOrIfClosureTester($closure_returns, $is_closure_call_expected))(...)), $is_closure_call_expected, $cache_merge_expected);
   }
 
   /**
@@ -448,11 +448,11 @@ class AccessResultTest extends UnitTestCase {
   }
 
   public static function assertAndOrIfClosureResult(AccessResult $access_result, bool $is_closure_call_expected, bool $is_merge_expected = TRUE): void {
-    $expected_cache_contexts = $is_closure_call_expected  && $is_merge_expected ? Cache::mergeContexts($access_result->getCacheContexts(), AndOrIfClosureSpy::CACHE_CONTEXTS) : $access_result->getCacheContexts();
+    $expected_cache_contexts = $is_closure_call_expected  && $is_merge_expected ? Cache::mergeContexts($access_result->getCacheContexts(), AndOrIfClosureTester::CACHE_CONTEXTS) : $access_result->getCacheContexts();
     $expected_cache_contexts_message = $expected_cache_contexts === [] ? 'No cache contexts bubbled up from closure.' : 'Expected cache contexts bubbled up from the closure.';
-    $expected_cache_tags = $is_closure_call_expected && $is_merge_expected ? Cache::mergeTags($access_result->getCacheTags(), AndOrIfClosureSpy::CACHE_TAGS) : $access_result->getCacheTags();
+    $expected_cache_tags = $is_closure_call_expected && $is_merge_expected ? Cache::mergeTags($access_result->getCacheTags(), AndOrIfClosureTester::CACHE_TAGS) : $access_result->getCacheTags();
     $expected_cache_tags_message = $expected_cache_tags === [] ? 'No cache tags bubbled up from closure.' : 'Expected cache tags bubbled up from the closure.';
-    $expected_max_age = $is_closure_call_expected && $is_merge_expected ? Cache::mergeMaxAges($access_result->getCacheMaxAge(), AndOrIfClosureSpy::CACHE_MAX_AGE) : $access_result->getCacheMaxAge();
+    $expected_max_age = $is_closure_call_expected && $is_merge_expected ? Cache::mergeMaxAges($access_result->getCacheMaxAge(), AndOrIfClosureTester::CACHE_MAX_AGE) : $access_result->getCacheMaxAge();
 
     self::assertEquals($expected_cache_contexts, $access_result->getCacheContexts(), $expected_cache_contexts_message);
     self::assertEquals($expected_cache_tags, $access_result->getCacheTags(), $expected_cache_tags_message);
@@ -1236,7 +1236,7 @@ class UncacheableTestAccessResult implements AccessResultInterface {
 
 }
 
-class AndOrIfClosureSpy {
+class AndOrIfClosureTester {
 
   public const array CACHE_CONTEXTS = ['user'];
 
