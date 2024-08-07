@@ -37,10 +37,10 @@ class PerformanceTest extends PerformanceTestBase {
   }
 
   /**
-   * Load the front page as a user with access to Toolbar.
+   * Load the front page as a user with access to the content overview page.
    */
   public function testFrontPagePerformance(): void {
-    $admin_user = $this->drupalCreateUser(['access toolbar']);
+    $admin_user = $this->drupalCreateUser(['access content overview']);
     $this->drupalLogin($admin_user);
     $performance_data = $this->collectPerformanceData(function () {
       $this->drupalGet('<front>');
