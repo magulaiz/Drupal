@@ -190,8 +190,8 @@ class LinkFieldTest extends BrowserTestBase {
     $validation_error_3 = "The path '@link_path' is inaccessible.";
     $validation_error_4 = "The path '@link_path' doesn't exist.";
     $validation_error_5 = "The path '@link_path' has an invalid parameter.";
-    $validation_error_7 = "The path '@uri' is internal, but the link field only supports external paths.";
-    $validation_error_8 = "The path '@uri' is external, but the link field only supports internal paths.";
+    $validation_error_7 = "The path '@uri' is internal, but the {$field_name} field only supports external paths.";
+    $validation_error_8 = "The path '@uri' is external, but the {$field_name} field only supports internal paths.";
 
     $invalid_external_entries = [
       // Invalid protocol

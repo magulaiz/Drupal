@@ -27,13 +27,13 @@ class LinkTypeConstraint extends SymfonyConstraint {
    *
    * @var string
    */
-  public string $onlyInternalMessage = "The path '@uri' is external, but the link field only supports internal paths.";
+  public string $onlyInternalMessage = "The path '@uri' is external, but the @field-label field only supports internal paths.";
 
   /**
    * Message when path is internal on external only field.
    *
    * @var string
    */
-  public string $onlyExternalMessage = "The path '@uri' is internal, but the link field only supports external paths.";
+  public string $onlyExternalMessage = "The path '@uri' is internal, but the @field-label field only supports external paths.";
 
 }

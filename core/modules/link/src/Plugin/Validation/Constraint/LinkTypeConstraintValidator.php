@@ -22,15 +22,24 @@ class LinkTypeConstraintValidator extends ConstraintValidator {
     // Try to resolve the given URI to a URL. It may fail if it's schemeless.
     try {
       $url = $value->getUrl();
+
+      $field_definition = $value->getFieldDefinition();
+
       // If the link field doesn't support both internal and external links,
       // check whether the URL (a resolved URI) is in fact violating either
       // restriction.
-      $link_type = $value->getFieldDefinition()->getSetting('link_type');
+      $link_type = $field_definition->getSetting('link_type');
       if ($url->isExternal() && !($link_type & LinkItemInterface::LINK_EXTERNAL)) {
-        $this->context->addViolation($constraint->onlyInternalMessage, ['@uri' => $value->uri]);
+        $this->context->addViolation($constraint->onlyInternalMessage, [
+          '@uri' => $value->uri,
+          '@field-label' => $field_definition->getLabel(),
+        ]);
       }
       elseif (!$url->isExternal() && !($link_type & LinkItemInterface::LINK_INTERNAL)) {
-        $this->context->addViolation($constraint->onlyExternalMessage, ['@uri' => $value->uri]);
+        $this->context->addViolation($constraint->onlyExternalMessage, [
+          '@uri' => $value->uri,
+          '@field-label' => $field_definition->getLabel(),
+        ]);
       }
     }
     catch (\InvalidArgumentException $e) {
