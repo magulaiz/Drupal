@@ -19,7 +19,7 @@ function content_moderation_removed_post_updates() {
 }
 
 /**
- * Implements hook_removed_post_updates().
+ * Add moderation_state index to content_moderation_state tables.
  */
 function content_moderation_post_update_add_index_content_moderation_state_field_revision_moderation_state(): void {
   /** @var \Drupal\Core\Entity\EntityDefinitionUpdateManagerInterface $update_manager */
