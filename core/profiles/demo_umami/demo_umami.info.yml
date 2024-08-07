@@ -32,7 +32,6 @@ install:
   - dblog
   - search
   - shortcut
-  - toolbar
   - field_ui
   - file
   - views
