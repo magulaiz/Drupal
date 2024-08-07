@@ -205,7 +205,6 @@ class DemoUmamiProfileTest extends BrowserTestBase {
   protected function testDemonstrationWarningMessage() {
     $permissions = [
       'access content overview',
-      'access toolbar',
       'administer nodes',
       'edit any recipe content',
       'create recipe content',
