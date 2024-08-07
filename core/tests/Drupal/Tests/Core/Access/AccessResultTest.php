@@ -447,6 +447,18 @@ class AccessResultTest extends UnitTestCase {
     ];
   }
 
+  /**
+   * Asserts on the result of [and,or][Allowed,Forbidden]if calls.
+   *
+   * @param \Drupal\Core\Access\AccessResult $access_result
+   *   The result of the andAllowedIf(), andForbiddenIf(), orAllowedIf() or
+   *   orForbiddenIf() call.
+   * @param bool $is_closure_call_expected
+   *   Whether closure is expected to be called or not.
+   * @param bool $is_merge_expected
+   *   Whether cacheability information merge is expected or not, expected
+   *   by default.
+   */
   public static function assertAndOrIfClosureResult(AccessResult $access_result, bool $is_closure_call_expected, bool $is_merge_expected = TRUE): void {
     $expected_cache_contexts = $is_closure_call_expected  && $is_merge_expected ? Cache::mergeContexts($access_result->getCacheContexts(), AndOrIfClosureTester::CACHE_CONTEXTS) : $access_result->getCacheContexts();
     $expected_cache_contexts_message = $expected_cache_contexts === [] ? 'No cache contexts bubbled up from closure.' : 'Expected cache contexts bubbled up from the closure.';
