@@ -23,7 +23,6 @@ dependencies:
     - shortcut
     - system
     - taxonomy
-    - toolbar
 id: editor
 label: Editor
 weight: 4
@@ -35,7 +34,6 @@ permissions:
   - 'access files overview'
   - 'access navigation'
   - 'access taxonomy overview'
-  - 'access toolbar'
   - 'administer shortcuts'
   - 'cancel account'
   - 'change own username'

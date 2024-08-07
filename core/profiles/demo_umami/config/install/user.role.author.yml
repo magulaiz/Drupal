@@ -21,7 +21,6 @@ dependencies:
     - path
     - system
     - taxonomy
-    - toolbar
 id: author
 label: Author
 weight: 3
@@ -31,7 +30,6 @@ permissions:
   - 'access contextual links'
   - 'access files overview'
   - 'access navigation'
-  - 'access toolbar'
   - 'cancel account'
   - 'change own username'
   - 'configure editable article node layout overrides'
