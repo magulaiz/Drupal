@@ -455,16 +455,16 @@ class AccessResultTest extends UnitTestCase {
    *   orForbiddenIf() call.
    * @param bool $is_closure_call_expected
    *   Whether closure is expected to be called or not.
-   * @param bool $is_merge_expected
+   * @param bool $is_cache_merge_expected
    *   Whether cacheability information merge is expected or not, expected
    *   by default.
    */
-  public static function assertAndOrIfClosureResult(AccessResult $access_result, bool $is_closure_call_expected, bool $is_merge_expected = TRUE): void {
-    $expected_cache_contexts = $is_closure_call_expected  && $is_merge_expected ? Cache::mergeContexts($access_result->getCacheContexts(), AndOrIfClosureTester::CACHE_CONTEXTS) : $access_result->getCacheContexts();
+  public static function assertAndOrIfClosureResult(AccessResult $access_result, bool $is_closure_call_expected, bool $is_cache_merge_expected = TRUE): void {
+    $expected_cache_contexts = $is_closure_call_expected  && $is_cache_merge_expected ? Cache::mergeContexts($access_result->getCacheContexts(), AndOrIfClosureTester::CACHE_CONTEXTS) : $access_result->getCacheContexts();
     $expected_cache_contexts_message = $expected_cache_contexts === [] ? 'No cache contexts bubbled up from closure.' : 'Expected cache contexts bubbled up from the closure.';
-    $expected_cache_tags = $is_closure_call_expected && $is_merge_expected ? Cache::mergeTags($access_result->getCacheTags(), AndOrIfClosureTester::CACHE_TAGS) : $access_result->getCacheTags();
+    $expected_cache_tags = $is_closure_call_expected && $is_cache_merge_expected ? Cache::mergeTags($access_result->getCacheTags(), AndOrIfClosureTester::CACHE_TAGS) : $access_result->getCacheTags();
     $expected_cache_tags_message = $expected_cache_tags === [] ? 'No cache tags bubbled up from closure.' : 'Expected cache tags bubbled up from the closure.';
-    $expected_max_age = $is_closure_call_expected && $is_merge_expected ? Cache::mergeMaxAges($access_result->getCacheMaxAge(), AndOrIfClosureTester::CACHE_MAX_AGE) : $access_result->getCacheMaxAge();
+    $expected_max_age = $is_closure_call_expected && $is_cache_merge_expected ? Cache::mergeMaxAges($access_result->getCacheMaxAge(), AndOrIfClosureTester::CACHE_MAX_AGE) : $access_result->getCacheMaxAge();
 
     self::assertEquals($expected_cache_contexts, $access_result->getCacheContexts(), $expected_cache_contexts_message);
     self::assertEquals($expected_cache_tags, $access_result->getCacheTags(), $expected_cache_tags_message);
