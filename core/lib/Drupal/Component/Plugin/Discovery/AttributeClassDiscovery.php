@@ -6,6 +6,7 @@ use Drupal\Component\Plugin\Attribute\AttributeInterface;
 use Drupal\Component\Plugin\Attribute\Plugin;
 use Drupal\Component\FileCache\FileCacheFactory;
 use Drupal\Component\FileCache\FileCacheInterface;
+use Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException;
 
 /**
  * Defines a discovery mechanism to find plugins with attributes.
