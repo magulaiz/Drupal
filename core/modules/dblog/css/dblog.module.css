@@ -7,12 +7,7 @@
   display: inline-block;
   max-inline-size: 30%;
   margin-block: 0.1em;
-  margin-inline: 0.1em 0.9em; /* LTR */
-}
-[dir="rtl"] .dblog-filter-form .form-item-type,
-[dir="rtl"] .dblog-filter-form .form-item-severity {
-  margin-block: 0.1em;
-  margin-inline: 0.9em 0.1em;
+  margin-inline: 0.1em 0.9em;
 }
 .dblog-filter-form .form-actions {
   display: inline-block;
