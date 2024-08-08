@@ -212,9 +212,9 @@ class Table extends StylePluginBase implements CacheableDependencyInterface {
     }
 
     $form['class'] = [
-      '#title' => $this->t('CSS classes'),
+      '#title' => $this->t('Table CSS classes'),
       '#type' => 'textfield',
-      '#description' => $this->t('Add CSS classes to the table; multiple classes may be separated by spaces.'),
+      '#description' => $this->t('The class or classes to provide on the table. Separate multiple classes with a space.'),
       '#default_value' => $this->options['class'],
     ];
 
