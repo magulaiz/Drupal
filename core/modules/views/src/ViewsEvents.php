@@ -2,6 +2,9 @@
 
 namespace Drupal\views;
 
+/**
+ * The Views event declarations.
+ */
 final class ViewsEvents {
 
   /**
@@ -12,4 +15,5 @@ final class ViewsEvents {
    * @var string
    */
   const DISPLAY_BLOCK_PRE_BUILD_BLOCK = 'display.block.pre_build_block';
+
 }

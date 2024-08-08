@@ -6,6 +6,9 @@ use Drupal\views\Event\PreBuildBlockEvent;
 use Drupal\views\ViewsEvents;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
+/**
+ *
+ */
 class PreBuildBlock implements EventSubscriberInterface {
 
   /**
@@ -16,6 +19,10 @@ class PreBuildBlock implements EventSubscriberInterface {
     return $events;
   }
 
+  /**
+   * @var Drupal\views\Event\PreBuildBlockEvent $event
+   *   Event for the Block.
+   */
   public function onPreBlockBuild(PreBuildBlockEvent $event) {
     $block = $event->getBlock();
 
@@ -27,4 +34,5 @@ class PreBuildBlock implements EventSubscriberInterface {
     }
 
   }
+
 }
