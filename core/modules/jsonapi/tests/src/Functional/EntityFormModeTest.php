@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\jsonapi\Functional;
 
 use Drupal\Core\Entity\Entity\EntityFormMode;
@@ -9,13 +11,14 @@ use Drupal\Core\Url;
  * JSON:API integration test for the "EntityFormMode" config entity type.
  *
  * @group jsonapi
+ * @group #slow
  */
 class EntityFormModeTest extends ConfigEntityResourceTestBase {
 
   /**
    * {@inheritdoc}
    *
-   * @todo: Remove 'field_ui' when https://www.drupal.org/node/2867266.
+   * @todo Remove 'field_ui' when https://www.drupal.org/node/2867266.
    */
   protected static $modules = ['user', 'field_ui'];
 
@@ -55,6 +58,7 @@ class EntityFormModeTest extends ConfigEntityResourceTestBase {
     $entity_form_mode = EntityFormMode::create([
       'id' => 'user.test',
       'label' => 'Test',
+      'description' => '',
       'targetEntityType' => 'user',
     ]);
     $entity_form_mode->save();
@@ -64,7 +68,7 @@ class EntityFormModeTest extends ConfigEntityResourceTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function getExpectedDocument() {
+  protected function getExpectedDocument(): array {
     $self_url = Url::fromUri('base:/jsonapi/entity_form_mode/entity_form_mode/' . $this->entity->uuid())->setAbsolute()->toString(TRUE)->getGeneratedUrl();
     return [
       'jsonapi' => [
@@ -91,6 +95,7 @@ class EntityFormModeTest extends ConfigEntityResourceTestBase {
               'user',
             ],
           ],
+          'description' => '',
           'label' => 'Test',
           'langcode' => 'en',
           'status' => TRUE,
@@ -104,7 +109,7 @@ class EntityFormModeTest extends ConfigEntityResourceTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function getPostDocument() {
+  protected function getPostDocument(): array {
     // @todo Update in https://www.drupal.org/node/2300677.
     return [];
   }

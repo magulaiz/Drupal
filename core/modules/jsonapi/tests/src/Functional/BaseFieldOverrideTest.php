@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\jsonapi\Functional;
 
 use Drupal\Core\Field\Entity\BaseFieldOverride;
@@ -10,6 +12,7 @@ use Drupal\node\Entity\NodeType;
  * JSON:API integration test for the "BaseFieldOverride" config entity type.
  *
  * @group jsonapi
+ * @group #slow
  */
 class BaseFieldOverrideTest extends ConfigEntityResourceTestBase {
 
@@ -61,6 +64,7 @@ class BaseFieldOverrideTest extends ConfigEntityResourceTestBase {
       'field_name' => 'promote',
       'entity_type' => 'node',
       'bundle' => 'camelids',
+      'label' => 'Promote to front page',
     ]);
     $entity->save();
 
@@ -70,7 +74,7 @@ class BaseFieldOverrideTest extends ConfigEntityResourceTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function getExpectedDocument() {
+  protected function getExpectedDocument(): array {
     $self_url = Url::fromUri('base:/jsonapi/base_field_override/base_field_override/' . $this->entity->uuid())->setAbsolute()->toString(TRUE)->getGeneratedUrl();
     return [
       'jsonapi' => [
@@ -103,7 +107,7 @@ class BaseFieldOverrideTest extends ConfigEntityResourceTestBase {
           'entity_type' => 'node',
           'field_name' => 'promote',
           'field_type' => 'boolean',
-          'label' => NULL,
+          'label' => 'Promote to front page',
           'langcode' => 'en',
           'required' => FALSE,
           'settings' => [
@@ -121,7 +125,7 @@ class BaseFieldOverrideTest extends ConfigEntityResourceTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function getPostDocument() {
+  protected function getPostDocument(): array {
     // @todo Update in https://www.drupal.org/node/2300677.
     return [];
   }
@@ -141,6 +145,7 @@ class BaseFieldOverrideTest extends ConfigEntityResourceTestBase {
       'field_name' => 'status',
       'entity_type' => 'node',
       'bundle' => 'camelids',
+      'label' => 'Published',
     ]);
     $entity->save();
     return $entity;
