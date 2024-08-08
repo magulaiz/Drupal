@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Drupal\FunctionalTests\Installer;
 
 use Drupal\Component\Serialization\Yaml;
-use Drupal\Core\Archiver\ArchiveTar;
 use Drupal\Core\Database\Database;
 use Drupal\Core\Installer\Form\SelectProfileForm;
 
@@ -33,6 +32,28 @@ abstract class InstallerExistingConfigTestBase extends InstallerTestBase {
   protected $existingSyncDirectory = FALSE;
 
   /**
+   * @todo Fill out docblock.
+   */
+  protected function copyDirectory($source, $destination) {
+    if (!is_dir($destination)) {
+      mkdir($destination, 0755, TRUE);
+    }
+    $files = scandir($source);
+    foreach ($files as $file) {
+      if ($file !== '.' && $file !== '..') {
+        $sourceFile = $source . '/' . $file;
+        $destinationFile = $destination . '/' . $file;
+        if (is_dir($sourceFile)) {
+          $this->copyDirectory($sourceFile, $destinationFile);
+        }
+        else {
+          copy($sourceFile, $destinationFile);
+        }
+      }
+    }
+  }
+
+  /**
    * {@inheritdoc}
    */
   public function __construct(string $name) {
@@ -45,10 +66,10 @@ abstract class InstallerExistingConfigTestBase extends InstallerTestBase {
    */
   protected function prepareEnvironment() {
     parent::prepareEnvironment();
-    $archiver = new ArchiveTar($this->getConfigTarball(), 'gz');
 
     if ($this->profile === NULL) {
-      $core_extension = Yaml::decode($archiver->extractInString('core.extension.yml'));
+      $core_extension_location = $this->getConfigLocation() . '/core.extension.yml';
+      $core_extension = Yaml::decode(file_get_contents($core_extension_location));
       $this->profile = $core_extension['profile'];
     }
 
@@ -87,14 +108,7 @@ abstract class InstallerExistingConfigTestBase extends InstallerTestBase {
     // Create config/sync directory and extract tarball contents to it.
     mkdir($config_sync_directory, 0777, TRUE);
     $files = [];
-    $list = $archiver->listContent();
-    if (is_array($list)) {
-      /** @var array $list */
-      foreach ($list as $file) {
-        $files[] = $file['filename'];
-      }
-      $archiver->extractList($files, $config_sync_directory);
-    }
+    $this->copyDirectory($this->getConfigLocation(), $config_sync_directory);
 
     // Add the module that is providing the database driver to the list of
     // modules that can not be uninstalled in the core.extension configuration.
@@ -119,15 +133,12 @@ abstract class InstallerExistingConfigTestBase extends InstallerTestBase {
   }
 
   /**
-   * Gets the filepath to the configuration tarball.
-   *
-   * The tarball will be extracted to the install profile's config/sync
-   * directory for testing.
+   * Gets the filepath to the configuration directory.
    *
    * @return string
-   *   The filepath to the configuration tarball.
+   *   The filepath to the configuration.
    */
-  abstract protected function getConfigTarball();
+  abstract protected function getConfigLocation();
 
   /**
    * {@inheritdoc}
