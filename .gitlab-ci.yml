@@ -28,7 +28,7 @@
 
 workflow:
   rules:
-  # These 3 rules from https://gitlab.com/gitlab-org/gitlab/-/blob/master/lib/gitlab/ci/templates/Workflows/MergeRequest-Pipelines.gitlab-ci.yml
+    # These 3 rules from https://gitlab.com/gitlab-org/gitlab/-/blob/master/lib/gitlab/ci/templates/Workflows/MergeRequest-Pipelines.gitlab-ci.yml
     # Run on merge requests
     - if: $CI_PIPELINE_SOURCE == 'merge_request_event'
     # Run when called from an upstream pipeline https://docs.gitlab.com/ee/ci/pipelines/downstream_pipelines.html?tab=Multi-project+pipeline#use-rules-to-control-downstream-pipeline-jobs
@@ -41,7 +41,7 @@ workflow:
     - if: $CI_PIPELINE_SOURCE == "schedule" && $CI_PROJECT_ROOT_NAMESPACE == "project"
     # Run if triggered from Web using 'Run Pipelines'
     - if: $CI_PIPELINE_SOURCE == "web"
-     # Run if triggered from WebIDE
+    # Run if triggered from WebIDE
     - if: $CI_PIPELINE_SOURCE == "webide"
 
 ################
@@ -64,7 +64,7 @@ variables:
   CONCURRENCY: 24
   GIT_DEPTH: "50"
   PARENT_PIPELINE_ID: $CI_PIPELINE_ID
-  _TARGET_PHP: "8.3"
+  _TARGET_PHP: "8.3-ubuntu"
 
 #############
 # Stages    #
@@ -88,7 +88,7 @@ default:
       - runner_system_failure
       - scheduler_failure
   image:
-    name: $_CONFIG_DOCKERHUB_ROOT/php-$_TARGET_PHP-apache:production
+    name: $_CONFIG_DOCKERHUB_ROOT/php-$_TARGET_PHP-apache:dev
 
 #############
 # Templates #
@@ -170,8 +170,8 @@ default:
 'DEFAULT: PHP 8.3 MySQL 8':
   <<: *default-stage
   variables:
-    _TARGET_PHP: "8.3"
-    _TARGET_DB: "mysql-8"
+    _TARGET_PHP: "8.3-ubuntu"
+    _TARGET_DB: "mongodb-7"
     PERFORMANCE_TEST: $PERFORMANCE_TEST
     OTEL_COLLECTOR: $OTEL_COLLECTOR
   # Run on MR, schedule, push, parent pipeline and performance test.
@@ -205,8 +205,8 @@ default:
   when: manual
   allow_failure: true
   variables:
-    _TARGET_PHP: "8.3"
-    _TARGET_DB: "mysql-8"
+    _TARGET_PHP: "8.3-ubuntu"
+    _TARGET_DB: "mongodb-7"
   rules:
     - if: $CI_PIPELINE_SOURCE == "merge_request_event"
   trigger:
@@ -306,11 +306,12 @@ default:
     KUBERNETES_CPU_REQUEST: "4"
   script:
     - *phpstan-cache
+    - docker-php-ext-enable mongodb
     - composer validate
     - composer install --optimize-autoloader
     - if [ -n "$COMPOSER_UPDATE" ]; then
-        composer update --optimize-autoloader;
-        composer outdated;
+      composer update --optimize-autoloader;
+      composer outdated;
       fi
     - vendor/bin/phpstan --version
     # Rely on PHPStan caching to execute analysis multiple times without performance drawback.
@@ -342,11 +343,12 @@ default:
   variables:
     KUBERNETES_CPU_REQUEST: "16"
   script:
+    - docker-php-ext-enable mongodb
     - composer validate
     - composer install --optimize-autoloader
     - if [ -n "$COMPOSER_UPDATE" ]; then
-        composer update --optimize-autoloader;
-        composer outdated;
+      composer update --optimize-autoloader;
+      composer outdated;
       fi
     - vendor/bin/phpcs --version
     - composer phpcs -- -s --report-full --report-summary --report-\\Micheh\\PhpCodeSniffer\\Report\\Gitlab=phpcs-quality-report.json

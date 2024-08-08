@@ -334,7 +334,11 @@ class RevisionDeleteFormTest extends BrowserTestBase {
    *   Watchdog entries.
    */
   protected function getLogs(string $channel): array {
-    $logs = \Drupal::database()->query("SELECT * FROM {watchdog} WHERE type = :type", [':type' => $channel])->fetchAll();
+    $logs = \Drupal::database()->select('watchdog')
+      ->fields('watchdog')
+      ->condition('type', $channel)
+      ->execute()
+      ->fetchAll();
     return array_map(function (object $log) {
       return (string) new FormattableMarkup($log->message, unserialize($log->variables));
     }, $logs);

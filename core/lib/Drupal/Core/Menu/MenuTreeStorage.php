@@ -285,7 +285,17 @@ class MenuTreeStorage implements MenuTreeStorageInterface {
     }
 
     try {
-      $transaction = $this->connection->startTransaction();
+      if ($this->connection->driver() == 'mongodb') {
+        $session = $this->connection->getMongodbSession();
+        $session_started = FALSE;
+        if (!$session->isInTransaction()) {
+          $session->startTransaction();
+          $session_started = TRUE;
+        }
+      }
+      else {
+        $transaction = $this->connection->startTransaction();
+      }
       if (!$original) {
         // Generate a new mlid.
         $link['mlid'] = $this->connection->insert($this->table, $this->options)
@@ -296,17 +306,24 @@ class MenuTreeStorage implements MenuTreeStorageInterface {
       // We may be moving the link to a new menu.
       $affected_menus[$fields['menu_name']] = $fields['menu_name'];
       $query = $this->connection->update($this->table, $this->options);
-      $query->condition('mlid', $link['mlid']);
+      $query->condition('mlid', (int) $link['mlid']);
       $query->fields($fields)
         ->execute();
       if ($original) {
         $this->updateParentalStatus($original);
       }
       $this->updateParentalStatus($link);
+
+      if (isset($session) && $session->isInTransaction() && $session_started) {
+        $session->commitTransaction();
+      }
     }
     catch (\Exception $e) {
       if (isset($transaction)) {
         $transaction->rollBack();
+      }
+      if (isset($session) && $session->isInTransaction() && $session_started) {
+        $session->abortTransaction();
       }
       throw $e;
     }
@@ -433,7 +450,7 @@ class MenuTreeStorage implements MenuTreeStorageInterface {
     $query->range(0, 1);
 
     for ($i = 1; $i <= static::MAX_DEPTH && $original["p$i"]; $i++) {
-      $query->condition("p$i", $original["p$i"]);
+      $query->condition("p$i", (int) $original["p$i"]);
     }
 
     $max_depth = $this->safeExecuteSelect($query)->fetchField();
@@ -590,14 +607,14 @@ class MenuTreeStorage implements MenuTreeStorageInterface {
     if (!empty($link['parent'])) {
       // Check if at least one visible child exists in the table.
       $query = $this->connection->select($this->table, NULL, $this->options);
-      $query->addExpression('1');
+      $query->addExpressionConstant('1');
       $query->range(0, 1);
       $query
         ->condition('menu_name', $link['menu_name'])
         ->condition('parent', $link['parent'])
         ->condition('enabled', 1);
 
-      $parent_has_children = ((bool) $query->execute()->fetchField()) ? 1 : 0;
+      $parent_has_children = ((bool) $query->execute()->fetchField() ? 1 : 0);
       $this->connection->update($this->table, $this->options)
         ->fields(['has_children' => $parent_has_children])
         ->condition('id', $link['parent'])
@@ -779,9 +796,9 @@ class MenuTreeStorage implements MenuTreeStorageInterface {
       $query = $this->connection->select($this->table, NULL, $this->options);
       $query->fields($this->table, ['id']);
       $query->condition('menu_name', $menu_name);
-      $query->condition('expanded', 1);
-      $query->condition('has_children', 1);
-      $query->condition('enabled', 1);
+      $query->condition('expanded', TRUE);
+      $query->condition('has_children', TRUE);
+      $query->condition('enabled', TRUE);
       $query->condition('parent', $parents, 'IN');
       $query->condition('id', $parents, 'NOT IN');
       $result = $this->safeExecuteSelect($query)->fetchAllKeyed(0, 0);
@@ -876,7 +893,7 @@ class MenuTreeStorage implements MenuTreeStorageInterface {
       // tree. In other words: we exclude everything unreachable from the
       // custom root.
       for ($i = 1; $i <= $root['depth']; $i++) {
-        $query->condition("p$i", $root["p$i"]);
+        $query->condition("p$i", (int) $root["p$i"]);
       }
 
       // When specifying a custom root, the menu is determined by that root.
@@ -917,10 +934,10 @@ class MenuTreeStorage implements MenuTreeStorageInterface {
       $query->condition('parent', $parameters->expandedParents, 'IN');
     }
     if (isset($parameters->minDepth) && $parameters->minDepth > 1) {
-      $query->condition('depth', $parameters->minDepth, '>=');
+      $query->condition('depth', (int) $parameters->minDepth, '>=');
     }
     if (isset($parameters->maxDepth)) {
-      $query->condition('depth', $parameters->maxDepth, '<=');
+      $query->condition('depth', (int) $parameters->maxDepth, '<=');
     }
     // Add custom query conditions, if any were passed.
     if (!empty($parameters->conditions)) {
@@ -1045,7 +1062,7 @@ class MenuTreeStorage implements MenuTreeStorageInterface {
     $query->fields($this->table, ['id']);
     $query->condition('menu_name', $root['menu_name']);
     for ($i = 1; $i <= $root['depth']; $i++) {
-      $query->condition("p$i", $root["p$i"]);
+      $query->condition("p$i", (int) $root["p$i"]);
     }
     // The next p column should not be empty. This excludes the root link.
     $query->condition("p$i", 0, '>');

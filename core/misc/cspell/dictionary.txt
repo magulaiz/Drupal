@@ -139,6 +139,7 @@ curle
 curlopt
 customrequest
 cweagans
+daffie
 datelist
 daterange
 datestamp
@@ -607,6 +608,7 @@ subview
 sulaco
 supercede
 svgz
+swisleiden
 synchronizable
 syrop
 tabbingmanager

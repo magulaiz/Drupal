@@ -47,13 +47,21 @@ function file_field_views_data_views_data_alter(array &$data, FieldStorageConfig
 
   [$label] = views_entity_field_label($entity_type_id, $field_name);
 
+  // MongoDB always uses the entity base table as the base.
+  if ((\Drupal::database()->driver() != 'mongodb') && $entity_type->getDataTable()) {
+    $base = $entity_type->getDataTable();
+  }
+  else {
+    $base = $entity_type->getBaseTable();
+  }
+
   $data['file_managed'][$pseudo_field_name]['relationship'] = [
     'title' => t('@entity using @field', ['@entity' => $entity_type->getLabel(), '@field' => $label]),
     'label' => t('@field_name', ['@field_name' => $field_name]),
     'group' => $entity_type->getLabel(),
     'help' => t('Relate each @entity with a @field set to the file.', ['@entity' => $entity_type->getLabel(), '@field' => $label]),
     'id' => 'entity_reverse',
-    'base' => $entity_type->getDataTable() ?: $entity_type->getBaseTable(),
+    'base' => $base,
     'entity_type' => $entity_type_id,
     'base field' => $entity_type->getKey('id'),
     'field_name' => $field_name,
@@ -67,4 +75,10 @@ function file_field_views_data_views_data_alter(array &$data, FieldStorageConfig
       ],
     ],
   ];
+
+  // Only set the field table when the database is not MongoDB.
+  if (\Drupal::database()->driver() == 'mongodb') {
+    unset($data['file_managed'][$pseudo_field_name]['relationship']['field table']);
+  }
+
 }

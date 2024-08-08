@@ -5,6 +5,8 @@
  * Install, update and uninstall functions for the user module.
  */
 
+use Drupal\Core\Database\Database;
+
 /**
  * Implements hook_schema().
  */
@@ -61,6 +63,14 @@ function user_schema() {
       ],
     ],
   ];
+
+  if (Database::getConnection()->driver() == 'mongodb') {
+    $schema['users_data']['fields']['serialized'] = [
+      'description' => 'Whether value is serialized.',
+      'type' => 'bool',
+      'default' => FALSE,
+    ];
+  }
 
   return $schema;
 }

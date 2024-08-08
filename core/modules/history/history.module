@@ -73,7 +73,7 @@ function history_read_multiple($nids) {
     }
     else {
       // Initialize value if current user has not viewed the node.
-      $nodes_to_read[$nid] = 0;
+      $nodes_to_read[(int) $nid] = 0;
     }
   }
 
@@ -81,10 +81,11 @@ function history_read_multiple($nids) {
     return $return;
   }
 
-  $result = \Drupal::database()->query('SELECT [nid], [timestamp] FROM {history} WHERE [uid] = :uid AND [nid] IN ( :nids[] )', [
-    ':uid' => \Drupal::currentUser()->id(),
-    ':nids[]' => array_keys($nodes_to_read),
-  ]);
+  $result = \Drupal::database()->select('history', 'h')
+    ->fields('h', ['nid', 'timestamp'])
+    ->condition('uid', (int) \Drupal::currentUser()->id())
+    ->condition('nid', array_keys($nodes_to_read), 'IN')
+    ->execute();
   foreach ($result as $row) {
     $nodes_to_read[$row->nid] = (int) $row->timestamp;
   }
@@ -112,8 +113,8 @@ function history_write($nid, $account = NULL) {
     $request_time = \Drupal::time()->getRequestTime();
     \Drupal::database()->merge('history')
       ->keys([
-        'uid' => $account->id(),
-        'nid' => $nid,
+        'uid' => (int) $account->id(),
+        'nid' => (int) $nid,
       ])
       ->fields(['timestamp' => $request_time])
       ->execute();
@@ -158,7 +159,7 @@ function history_node_view_alter(array &$build, EntityInterface $node, EntityVie
  */
 function history_node_delete(EntityInterface $node) {
   \Drupal::database()->delete('history')
-    ->condition('nid', $node->id())
+    ->condition('nid', (int) $node->id())
     ->execute();
 }
 
@@ -169,7 +170,7 @@ function history_user_cancel($edit, UserInterface $account, $method) {
   switch ($method) {
     case 'user_cancel_reassign':
       \Drupal::database()->delete('history')
-        ->condition('uid', $account->id())
+        ->condition('uid', (int) $account->id())
         ->execute();
       break;
   }
@@ -180,6 +181,6 @@ function history_user_cancel($edit, UserInterface $account, $method) {
  */
 function history_user_delete($account) {
   \Drupal::database()->delete('history')
-    ->condition('uid', $account->id())
+    ->condition('uid', (int) $account->id())
     ->execute();
 }

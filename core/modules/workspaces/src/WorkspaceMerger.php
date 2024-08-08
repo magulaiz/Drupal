@@ -30,7 +30,18 @@ class WorkspaceMerger implements WorkspaceMergerInterface {
     }
 
     try {
-      $transaction = $this->database->startTransaction();
+      if ($this->database->driver() == 'mongodb') {
+        $session = $this->database->getMongodbSession();
+        $session_started = FALSE;
+        if (!$session->isInTransaction()) {
+          $session->startTransaction();
+          $session_started = TRUE;
+        }
+      }
+      else {
+        $transaction = $this->database->startTransaction();
+      }
+
       foreach ($this->getDifferringRevisionIdsOnSource() as $entity_type_id => $revision_difference) {
         $entity_type = $this->entityTypeManager->getDefinition($entity_type_id);
         $revisions_on_source = $this->entityTypeManager->getStorage($entity_type_id)
@@ -50,10 +61,17 @@ class WorkspaceMerger implements WorkspaceMergerInterface {
           $revision->save();
         }
       }
+
+      if (isset($session) && $session->isInTransaction() && $session_started) {
+        $session->commitTransaction();
+      }
     }
     catch (\Exception $e) {
       if (isset($transaction)) {
         $transaction->rollBack();
+      }
+      if (isset($session) && $session->isInTransaction() && $session_started) {
+        $session->abortTransaction();
       }
       Error::logException($this->logger, $e);
       throw $e;

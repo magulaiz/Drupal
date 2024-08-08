@@ -142,9 +142,9 @@ class ContentModerationState extends ContentEntityBase implements ContentModerat
       $ids = $storage->getQuery()
         ->accessCheck(FALSE)
         ->condition('content_entity_type_id', $entity->getEntityTypeId())
-        ->condition('content_entity_id', $entity->id())
+        ->condition('content_entity_id', (int) $entity->id())
         ->condition('workflow', $moderation_info->getWorkflowForEntity($entity)->id())
-        ->condition('content_entity_revision_id', $revision_id)
+        ->condition('content_entity_revision_id', (int) $revision_id)
         ->allRevisions()
         ->execute();
 

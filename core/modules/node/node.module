@@ -33,6 +33,7 @@ use Drupal\node\NodeInterface;
 use Drupal\node\NodeTypeInterface;
 use Drupal\user\UserInterface;
 use Drupal\node\Form\NodePreviewForm;
+use MongoDB\BSON\UTCDateTime;
 
 /**
  * Implements hook_help().
@@ -600,6 +601,17 @@ function node_ranking() {
   // Add relevance based on updated date, but only if it the scale values have
   // been calculated in node_cron().
   if ($node_min_max = \Drupal::state()->get('node.min_max_update_time')) {
+    if (isset($node_min_max['min_created']) && ($node_min_max['min_created'] instanceof UTCDateTime)) {
+      $node_min_max['min_created'] = (int) $node_min_max['min_created']->__toString();
+      $node_min_max['min_created'] = $node_min_max['min_created'] / 1000;
+      $node_min_max['min_created'] = (string) $node_min_max['min_created'];
+    }
+    if (isset($node_min_max['max_created']) && ($node_min_max['max_created'] instanceof UTCDateTime)) {
+      $node_min_max['max_created'] = (int) $node_min_max['max_created']->__toString();
+      $node_min_max['max_created'] = $node_min_max['max_created'] / 1000;
+      $node_min_max['max_created'] = (string) $node_min_max['max_created'];
+    }
+
     $ranking['recent'] = [
       'title' => t('Recently created'),
       // Exponential decay with half life of 14% of the age range of nodes.
@@ -622,10 +634,10 @@ function node_user_cancel($edit, UserInterface $account, $method) {
       // Unpublish nodes (current revisions).
       $nids = \Drupal::entityQuery('node')
         ->accessCheck(FALSE)
-        ->condition('uid', $account->id())
+        ->condition('uid', (int) $account->id())
         ->execute();
       \Drupal::moduleHandler()->loadInclude('node', 'inc', 'node.admin');
-      node_mass_update($nids, ['status' => 0], NULL, TRUE);
+      node_mass_update($nids, ['status' => FALSE], NULL, TRUE);
       break;
 
     case 'user_cancel_reassign':
@@ -647,7 +659,7 @@ function node_user_predelete($account) {
   // Delete nodes (current revisions).
   // @todo Introduce node_mass_delete() or make node_mass_update() more flexible.
   $nids = \Drupal::entityQuery('node')
-    ->condition('uid', $account->id())
+    ->condition('uid', (int) $account->id())
     ->accessCheck(FALSE)
     ->execute();
   // Delete old revisions.
@@ -1075,7 +1087,7 @@ function _node_access_rebuild_batch_operation(&$context) {
   // Process the next 20 nodes.
   $limit = 20;
   $nids = \Drupal::entityQuery('node')
-    ->condition('nid', $context['sandbox']['current_node'], '>')
+    ->condition('nid', (int) $context['sandbox']['current_node'], '>')
     ->sort('nid', 'ASC')
     // Disable access checking since all nodes must be processed even if the
     // user does not have access. And unless the current user has the bypass
