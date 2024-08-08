@@ -28,8 +28,8 @@ class ConfigFormBaseTest extends UnitTestCase {
 
     // Define the expected value for the map.
     $expected_map = [
-      'foo.settings.value' => ['parent', 'akey', 'asubkey'],
-      'foo.settings.format' => ['parent', 'akey', 'asubkey'],
+      'foo.settings.value' => ['parent', 'key', 'subkey'],
+      'foo.settings.format' => ['parent', 'key', 'subkey'],
     ];
 
     // Prepare the form state mock to expect the set call.
@@ -63,12 +63,12 @@ class ConfigFormBaseTest extends UnitTestCase {
     // Define a sample form element.
     $element = [
       'parent' => [
-        'akey' => [
-          'asubkey' => [
+        'key' => [
+          'subkey' => [
             '#type' => 'text_format',
             '#title' => 'Subkey title',
-            '#config_target' => 'foo.settings:akey.asubkey',
-            '#array_parents' => ['parent', 'akey', 'asubkey'],
+            '#config_target' => 'foo.settings:key.subkey',
+            '#array_parents' => ['parent', 'key', 'subkey'],
           ],
         ],
       ],
