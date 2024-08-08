@@ -15,6 +15,7 @@ use Drupal\user\RoleInterface;
  *
  * @group Access
  * @group filter
+ * @group #slow
  */
 class FilterFormatAccessTest extends BrowserTestBase {
 

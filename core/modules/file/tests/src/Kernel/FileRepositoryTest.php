@@ -18,6 +18,7 @@ use Drupal\file\FileRepository;
  *
  * @coversDefaultClass \Drupal\file\FileRepository
  * @group file
+ * @group #slow
  */
 class FileRepositoryTest extends FileManagedUnitTestBase {
 

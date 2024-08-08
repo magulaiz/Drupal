@@ -21,6 +21,7 @@ use Drupal\user\RoleInterface;
  * Tests commenting on a test entity.
  *
  * @group comment
+ * @group #slow
  */
 class CommentNonNodeTest extends BrowserTestBase {
 

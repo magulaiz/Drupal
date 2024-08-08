@@ -18,6 +18,7 @@ use Symfony\Component\Validator\ConstraintViolationListInterface;
  * Tests the behavior of the API of the Filter module.
  *
  * @group filter
+ * @group #slow
  */
 class FilterAPITest extends EntityKernelTestBase {
 
