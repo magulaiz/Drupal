@@ -203,7 +203,7 @@ class DemoUmamiProfileTest extends BrowserTestBase {
    * Tests that the toolbar warning only appears on the admin pages.
    */
   protected function testDemonstrationWarningMessage() {
-    // Uninstall navigation module & enables the toolabar module.
+    // Uninstall navigation module & enables the toolbar module.
     \Drupal::service('module_installer')->uninstall(['navigation']);
     \Drupal::service('module_installer')->install(['toolbar']);
     $permissions = [
