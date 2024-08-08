@@ -20,13 +20,6 @@ use PHPUnit\Framework\Attributes\IgnoreDeprecations;
 
 /**
  * Tests the TestDiscovery class, using legacy annotations.
- *
- * @todo 'legacy' group annotation is needed until PHPStan recognizes
- *   #[IgnoreDeprecations] as a deprecated scope marker.
- *
- * @see https://github.com/phpstan/phpstan-deprecation-rules/issues/109
- *
- * @group legacy
  */
 #[CoversClass(TestDiscovery::class)]
 #[Group('Test')]
