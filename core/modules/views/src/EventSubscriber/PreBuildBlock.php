@@ -7,7 +7,9 @@ use Drupal\views\ViewsEvents;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 /**
- *
+ * The EventSubscriber handler for Block pre-build.
+ * 
+ * @package Drupal\views\EventSubscriber
  */
 class PreBuildBlock implements EventSubscriberInterface {
 
