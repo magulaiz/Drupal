@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\content_translation\Functional;
 
 use Drupal\Core\Entity\EntityInterface;
@@ -11,6 +13,7 @@ use Drupal\Tests\TestFileCreationTrait;
 /**
  * Tests the field synchronization behavior for the image field.
  *
+ * @covers ::_content_translation_form_language_content_settings_form_alter
  * @group content_translation
  */
 class ContentTranslationSyncImageTest extends ContentTranslationTestBase {
@@ -56,6 +59,7 @@ class ContentTranslationSyncImageTest extends ContentTranslationTestBase {
    */
   protected function setUp(): void {
     parent::setUp();
+    $this->doSetup();
     $this->files = $this->drupalGetTestFiles('image');
   }
 
@@ -93,7 +97,7 @@ class ContentTranslationSyncImageTest extends ContentTranslationTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function getEditorPermissions() {
+  protected function getEditorPermissions(): array {
     // Every entity-type-specific test needs to define these.
     return ['administer entity_test_mul fields', 'administer languages', 'administer content translation'];
   }
@@ -101,7 +105,7 @@ class ContentTranslationSyncImageTest extends ContentTranslationTestBase {
   /**
    * Tests image field synchronization.
    */
-  public function testImageFieldSync() {
+  public function testImageFieldSync(): void {
     // Check that the alt and title fields are enabled for the image field.
     $this->drupalLogin($this->editor);
     $this->drupalGet('entity_test_mul/structure/' . $this->entityTypeId . '/fields/' . $this->entityTypeId . '.' . $this->entityTypeId . '.' . $this->fieldName);
@@ -136,7 +140,7 @@ class ContentTranslationSyncImageTest extends ContentTranslationTestBase {
     // Populate the test entity with some random initial values.
     $values = [
       'name' => $this->randomMachineName(),
-      'user_id' => mt_rand(1, 128),
+      'user_id' => 2,
       'langcode' => $default_langcode,
     ];
     $entity = \Drupal::entityTypeManager()

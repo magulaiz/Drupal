@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\system\Functional\Module;
 
 use Drupal\Core\Cache\Cache;
@@ -45,7 +47,7 @@ class UninstallTest extends BrowserTestBase {
   /**
    * Tests the hook_modules_uninstalled() of the user module.
    */
-  public function testUserPermsUninstalled() {
+  public function testUserPermsUninstalled(): void {
     // Uninstalls the module_test module, so hook_modules_uninstalled()
     // is executed.
     $this->container->get('module_installer')->uninstall(['module_test']);
@@ -64,9 +66,8 @@ class UninstallTest extends BrowserTestBase {
    * @return array
    *   List of admin themes to test with.
    */
-  public function dataUninstallPage() : array {
-    $data = [['default'], ['claro']];
-    return $data;
+  public static function dataUninstallPage() : array {
+    return [['default'], ['claro']];
   }
 
   /**
@@ -227,7 +228,7 @@ class UninstallTest extends BrowserTestBase {
   /**
    * Tests that a module which fails to install can still be uninstalled.
    */
-  public function testFailedInstallStatus() {
+  public function testFailedInstallStatus(): void {
     $account = $this->drupalCreateUser(['administer modules']);
     $this->drupalLogin($account);
 
@@ -236,7 +237,7 @@ class UninstallTest extends BrowserTestBase {
       $this->container->get('module_installer')->install(['module_installer_config_test']);
       $this->fail($message);
     }
-    catch (EntityMalformedException $e) {
+    catch (EntityMalformedException) {
       // Expected exception; just continue testing.
     }
 
