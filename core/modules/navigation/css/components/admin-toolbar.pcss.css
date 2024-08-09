@@ -268,6 +268,14 @@ body {
   overflow-y: auto;
   flex-direction: column;
   height: 100%;
+  background: linear-gradient(var(--admin-toolbar-color-white) 30%, var(--admin-toolbar-color-white)), radial-gradient(farthest-side at 50% 0, var(--admin-toolbar-color-shadow-15), var(--admin-toolbar-color-shadow-0));
+  background-color: var(--admin-toolbar-color-white);
+  background-repeat: no-repeat;
+  background-attachment: local, scroll;
+  background-position-y: 48px;
+  background-size:
+    100% 40px,
+    100% 16px;
 
   @media (--admin-toolbar-desktop) {
     display: contents;
@@ -294,6 +302,19 @@ body {
     flex-direction: column;
     flex-grow: 1;
     padding-block-start: var(--admin-toolbar-space-16);
+    background:
+      linear-gradient(var(--admin-toolbar-color-white) 30%, var(--admin-toolbar-color-white)),
+      linear-gradient(var(--admin-toolbar-color-white), var(--admin-toolbar-color-white) 80%) 0 100%,
+      radial-gradient(farthest-side at 50% 0, var(--admin-toolbar-color-shadow-15), var(--admin-toolbar-color-shadow-0)),
+      radial-gradient(farthest-side at 50% 100%, var(--admin-toolbar-color-shadow-15), var(--admin-toolbar-color-shadow-0)) 0 100%;
+    background-color: var(--admin-toolbar-color-white);
+    background-repeat: no-repeat;
+    background-attachment: local, local, scroll, scroll;
+    background-size:
+      100% 40px,
+      100% 40px,
+      100% 16px,
+      100% 16px;
   }
 }
 
