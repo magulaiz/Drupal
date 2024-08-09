@@ -227,13 +227,14 @@ class FileUploadTest extends ResourceTestBase {
     $this->assertTrue($this->fileStorage->loadUnchanged(1)->isTemporary());
 
     // Test the file again but using extended 'filename*' in the Content-Disposition with an encoded UTF-8 character.
-    $response = $this->fileRequest($uri, $this->testFileData, ['Content-Disposition' => 'filename*="UTF-8\'\'ex%C3%A4mple.txt"']);
+    /* cspell:disable-next-line */
+    $response = $this->fileRequest($uri, $this->testFileData, ['Content-Disposition' => 'filename*="UTF-8\'\'r%C3%A9sum%C3%A9.txt"']);
     $this->assertSame(201, $response->getStatusCode());
-    $expected = $this->getExpectedDocument(3, 'exämple.txt');
+    $expected = $this->getExpectedDocument(3, 'résumé.txt');
     $this->assertResponseData($expected, $response);
 
     // Check the actual file data.
-    $this->assertSame($this->testFileData, file_get_contents('public://foobar/exämple.txt'));
+    $this->assertSame($this->testFileData, file_get_contents('public://foobar/résumé.txt'));
 
     // Verify that we can create an entity that references the uploaded file.
     $entity_test_post_url = Url::fromRoute('jsonapi.entity_test--entity_test.collection.post');

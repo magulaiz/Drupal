@@ -22,7 +22,6 @@ final class ContentDispositionFilenameParser {
    */
   const REQUEST_HEADER_EXTENDED_FILENAME_REGEX = "@\bfilename\*=\"?(?<charset>[\w-]+)'(?<lang>\w*)'(?<filename>.+)\"?@";
 
-
   /**
    * Private constructor to prevent instantiation.
    */
@@ -55,11 +54,6 @@ final class ContentDispositionFilenameParser {
       if (!preg_match(static::REQUEST_HEADER_FILENAME_REGEX, $content_disposition, $matches)) {
         throw new BadRequestHttpException('No filename found in "Content-Disposition" header. A file name in the format "filename=FILENAME" must be provided.');
       }
-    }
-
-    // Check for the "filename*" format. This is currently unsupported.
-    if (!empty($matches['star'])) {
-      throw new BadRequestHttpException('The extended "filename*" format is currently not supported in the "Content-Disposition" header.');
     }
 
     // Don't validate the actual filename here, that will be done by the upload
