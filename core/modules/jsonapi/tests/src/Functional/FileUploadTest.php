@@ -226,12 +226,13 @@ class FileUploadTest extends ResourceTestBase {
     $this->assertSame($this->testFileData, file_get_contents('public://foobar/example_0.txt'));
     $this->assertTrue($this->fileStorage->loadUnchanged(1)->isTemporary());
 
-    // Test the file again but using extended 'filename*' in the Content-Disposition with an encoded UTF-8 character.
+    // Test the file again but using extended 'filename*' in the Content-Disposition
+    // header with an encoded UTF-8 character.
     /* cspell:disable-next-line */
     $response = $this->fileRequest($uri, $this->testFileData, ['Content-Disposition' => 'filename*="UTF-8\'\'r%C3%A9sum%C3%A9.txt"']);
     $this->assertSame(201, $response->getStatusCode());
     /* cspell:disable-next-line */
-    $expected = $this->getExpectedDocument(3, 'résumé.txt');
+    $expected = $this->getExpectedDocument(3, 'résumé.txt', TRUE);
     $this->assertResponseData($expected, $response);
 
     // Check the actual file data.
