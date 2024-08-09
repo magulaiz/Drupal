@@ -230,10 +230,12 @@ class FileUploadTest extends ResourceTestBase {
     /* cspell:disable-next-line */
     $response = $this->fileRequest($uri, $this->testFileData, ['Content-Disposition' => 'filename*="UTF-8\'\'r%C3%A9sum%C3%A9.txt"']);
     $this->assertSame(201, $response->getStatusCode());
+    /* cspell:disable-next-line */
     $expected = $this->getExpectedDocument(3, 'résumé.txt');
     $this->assertResponseData($expected, $response);
 
     // Check the actual file data.
+    /* cspell:disable-next-line */
     $this->assertSame($this->testFileData, file_get_contents('public://foobar/résumé.txt'));
 
     // Verify that we can create an entity that references the uploaded file.
