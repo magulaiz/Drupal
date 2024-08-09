@@ -9,7 +9,6 @@ use Drupal\Core\Field\FieldStorageDefinitionInterface;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\taxonomy\Entity\Term;
 use Drupal\taxonomy\TermInterface;
-use Drupal\taxonomy\VocabularyInterface;
 use Drupal\Tests\system\Functional\Menu\AssertBreadcrumbTrait;
 
 /**
