@@ -62,7 +62,7 @@ final class ContentDispositionFilenameParser {
     $filename = $matches['filename'];
 
     // Decode filename if character set provided by extended filename. Only UTF-8 currently supported.
-    if (!empty($matches['charset']) && $matches['charset'] === 'UTF-8') {
+    if (!empty($matches['charset']) && strtolower($matches['charset']) === 'utf-8') {
       $filename = rawurldecode($filename);
     }
 
