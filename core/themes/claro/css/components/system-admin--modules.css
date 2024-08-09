@@ -22,11 +22,12 @@
   border: 1px solid var(--color-gray-200);
   border-radius: 2px 2px 0 0;
   box-shadow: var(--module-table-filter-box-shadow);
+
+  /* Visually hide the module filter input description. */
 }
 
 .modules-table-filter .form-item__description,
 .permissions-table-filter .form-item__description {
-  /* Visually hide the module filter input description. */
   position: absolute !important;
   overflow: hidden;
   clip: rect(1px, 1px, 1px, 1px);
