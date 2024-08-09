@@ -187,6 +187,9 @@ function content_moderation_entity_extra_field_info() {
  * Implements hook_entity_view().
  */
 function content_moderation_entity_view(array &$build, EntityInterface $entity, EntityViewDisplayInterface $display, $view_mode) {
+  if ($view_mode !== 'full') {
+    return;
+  }
   \Drupal::service('class_resolver')
     ->getInstanceFromDefinition(EntityOperations::class)
     ->entityView($build, $entity, $display, $view_mode);
