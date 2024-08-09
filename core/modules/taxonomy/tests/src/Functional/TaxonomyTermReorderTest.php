@@ -38,7 +38,7 @@ class TaxonomyTermReorderTest extends TaxonomyTestBase {
   /**
    * Change order of terms & update a term using the user interface.
    */
-  public function testTermReorderAndUpdate() {
+  public function testTermReorderAndUpdate(): void {
     $assert = $this->assertSession();
     $this->createTerm($this->vocabulary, ['name' => 'Alpha']);
     $this->createTerm($this->vocabulary, ['name' => 'Beta']);

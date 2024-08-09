@@ -129,7 +129,7 @@ class TaxonomyOverviewUITest extends WebDriverTestBase {
   /**
    * Test nesting and moving terms using the form.
    */
-  public function testTermNesting() {
+  public function testTermNesting(): void {
     $this->drupalGet('admin/structure/taxonomy/manage/' . $this->vocabulary->id() . '/overview');
     $session = $this->getSession();
     $assert_session = $this->assertSession();
@@ -212,7 +212,7 @@ class TaxonomyOverviewUITest extends WebDriverTestBase {
    * @param string $fourth
    *   Name of term expected in fourth row.
    */
-  protected function assertOrderOnForm(string $first, string $second, string $third, string $fourth) {
+  protected function assertOrderOnForm(string $first, string $second, string $third, string $fourth): void {
     $page = $this->getSession()->getPage();
     $this->assertSame($first, $page->find('css', '#taxonomy tbody tr:nth-child(1) a[id^="edit-terms"]')->getText());
     $this->assertSame($second, $page->find('css', '#taxonomy tbody tr:nth-child(2) a[id^="edit-terms"]')->getText());
@@ -232,7 +232,7 @@ class TaxonomyOverviewUITest extends WebDriverTestBase {
    * @param string $fourth
    *   Weight of term expected in fourth row.
    */
-  protected function assertWeightOnForm(string $first, string $second, string $third, string $fourth) {
+  protected function assertWeightOnForm(string $first, string $second, string $third, string $fourth): void {
     $page = $this->getSession()->getPage();
     $this->assertSame($first, $page->find('css', '#taxonomy tbody tr:nth-child(1) .term-weight')->getValue());
     $this->assertSame($second, $page->find('css', '#taxonomy tbody tr:nth-child(2) .term-weight')->getValue());
@@ -252,7 +252,7 @@ class TaxonomyOverviewUITest extends WebDriverTestBase {
    * @param int $fourth
    *   Indentation expected in fourth row.
    */
-  protected function assertIndentationOnForm(int $first, int $second, int $third, int $fourth) {
+  protected function assertIndentationOnForm(int $first, int $second, int $third, int $fourth): void {
     $page = $this->getSession()->getPage();
     $this->assertCount($first, $page->findAll('css', '#taxonomy tbody tr:nth-child(1) .indentation'));
     $this->assertCount($second, $page->findAll('css', '#taxonomy tbody tr:nth-child(2) .indentation'));
@@ -272,7 +272,7 @@ class TaxonomyOverviewUITest extends WebDriverTestBase {
    * @param string $fourth
    *   Name of term expected fourth.
    */
-  protected function assertOrderInTree(string $first, string $second, string $third, string $fourth) {
+  protected function assertOrderInTree(string $first, string $second, string $third, string $fourth): void {
     $taxonomy_storage = $this->container->get('entity_type.manager')->getStorage('taxonomy_term');
     $taxonomy_storage->resetCache();
     $tree = $taxonomy_storage->loadTree($this->vocabulary->id(), 0, NULL, TRUE);
@@ -294,7 +294,7 @@ class TaxonomyOverviewUITest extends WebDriverTestBase {
    * @param string $fourth
    *   TID of term expected as parent of fourth term.
    */
-  protected function assertParentsInTree(string $first, string $second, string $third, string $fourth) {
+  protected function assertParentsInTree(string $first, string $second, string $third, string $fourth): void {
     $taxonomy_storage = $this->container->get('entity_type.manager')->getStorage('taxonomy_term');
     $taxonomy_storage->resetCache();
     $tree = $taxonomy_storage->loadTree($this->vocabulary->id(), 0, NULL, TRUE);

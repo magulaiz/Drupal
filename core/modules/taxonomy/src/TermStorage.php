@@ -71,7 +71,6 @@ class TermStorage extends SqlContentEntityStorage implements TermStorageInterfac
     if (empty($values['parent'])) {
       $values['parent'] = [0];
     }
-
     $entity = parent::create($values);
 
     return $entity;
@@ -87,7 +86,6 @@ class TermStorage extends SqlContentEntityStorage implements TermStorageInterfac
     $this->treeTerms = [];
     $this->trees = [];
     $this->vocabularyHierarchyType = [];
-
     parent::resetCache($ids);
   }
 
@@ -96,7 +94,6 @@ class TermStorage extends SqlContentEntityStorage implements TermStorageInterfac
    */
   public function loadParents($tid) {
     $terms = [];
-
     /** @var \Drupal\taxonomy\TermInterface $term */
     if ($tid && $term = $this->load($tid)) {
       foreach ($this->getParents($term) as $id => $parent) {
@@ -215,7 +212,6 @@ class TermStorage extends SqlContentEntityStorage implements TermStorageInterfac
    */
   public function loadTree($vid, $parent = 0, $max_depth = NULL, $load_entities = FALSE) {
     $cache_key = implode(':', func_get_args());
-
     if (!isset($this->trees[$cache_key])) {
       // We cache trees, so it's not CPU-intensive to call on a term and its
       // children, too.
