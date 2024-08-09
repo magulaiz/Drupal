@@ -3,21 +3,29 @@
  * Styling for toolbar warning message.
  */
 
-.toolbar-warning {
+.demo-profile-warning {
+  margin: 0;
+}
+
+.demo-profile-warning a {
   overflow: hidden;
-  margin: 0.5em 0;
+  /* margin: 0.5em 0; */
   padding: 0.5em 2em 0.5em 2.3333em;
   text-indent: -1000px;
   background: url(../../../../core/misc/icons/e29700/warning.svg) no-repeat center center transparent;
   background-size: auto 20px;
 }
 
-.toolbar-warning:hover {
+.demo-profile-warning a:hover {
   color: #000;
 }
 
 @media only screen and (min-width: 40em) {
-  .toolbar-warning {
+  .demo-profile-warning {
+    padding: 0.5em 2em 0.5em 2.3333em;
+    background-color: #fdf8ed;
+  }
+  .demo-profile-warning a {
     padding-right: 1em; /* LTR */
     text-decoration: none;
     text-indent: 0;
@@ -29,7 +37,7 @@
     background-size: auto 18px;
     font-weight: bold;
   }
-  [dir="rtl"] .toolbar-warning {
+  [dir="rtl"] .demo-profile-warning a {
     padding-right: 2em;
     padding-left: 1em;
     background-position: right 0.5em center;

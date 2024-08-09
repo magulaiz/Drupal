@@ -1,4 +1,4 @@
-toolbar-warning:
+demo-profile-warning:
   css:
     component:
-      css/toolbar-warning.css: {}
+      css/demo-profile-warning.css: {}
