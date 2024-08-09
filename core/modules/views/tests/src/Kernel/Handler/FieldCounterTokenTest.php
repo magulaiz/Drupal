@@ -8,7 +8,7 @@ use Drupal\Tests\views\Kernel\ViewsKernelTestBase;
 use Drupal\views\Views;
 
 /**
- * Tests the core Drupal\views\Plugin\views\field\Counter handler.
+ * Tests Drupal\views\Plugin\views\field\Counter token usage.
  *
  * @group views
  */
@@ -31,14 +31,14 @@ class FieldCounterTokenTest extends ViewsKernelTestBase {
   }
 
   /**
-   * Ensure that counter field as token work into link path.
+   * Tests the counter when used as a token in a link path.
    */
   public function testFieldCounterToken(): void {
     $view = Views::getView('test_view');
     $view->setDisplay();
 
-    // Enable checkbox 'Output this field as a custom link',
-    // Add counter field token into link path.
+    // Enable the display of the View result counter and the name field.
+    // Configure the name field to be output as a link using the counter token.
     $view->displayHandlers->get('default')->overrideOption('fields', [
       'counter' => [
         'id' => 'counter',
@@ -65,9 +65,8 @@ class FieldCounterTokenTest extends ViewsKernelTestBase {
     // Execute the view.
     $this->executeView($view);
 
-    $desired_output = '<a href="/counter/2">Counter 2</a>';
-    $this->assertSame($desired_output, (string) $view->style_plugin->getField(2, 'name'));
-
+    $expected_output = '<a href="/counter/2">Counter 2</a>';
+    $this->assertSame($expected_output, (string) $view->style_plugin->getField(2, 'name'));
   }
 
 }
