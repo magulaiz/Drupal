@@ -166,14 +166,28 @@ class OverridesEntityForm extends ContentEntityForm implements WorkspaceDynamicS
     $actions = $this->buildActions($actions);
     $actions['delete']['#access'] = FALSE;
 
-    $actions['discard_changes']['#limit_validation_errors'] = [];
+    $actions ['discard_changes'] = [
+      '#type' => 'link',
+      '#title' => $this->t('Discard changes'),
+      '#url' => $this->sectionStorage->getLayoutBuilderUrl('discard_changes'),
+      '#attributes' => [
+        'class' => ['use-ajax', 'glb-button'],
+        'data-dialog-type' => 'dialog',
+        'data-dialog-options' => Json::encode(['width' => '85vw']),
+      ],
+      '#limit_validation_errors' => [],
+    ];
     // @todo This button should be conditionally displayed, see
     //   https://www.drupal.org/node/2917777.
-    $actions['revert'] = [
-      '#type' => 'submit',
-      '#value' => $this->t('Revert to defaults'),
-      '#submit' => ['::redirectOnSubmit'],
-      '#redirect' => 'revert',
+    $actions ['revert'] = [
+      '#type' => 'link',
+      '#title' => $this->t('Revert to defaults'),
+      '#url' => $this->sectionStorage->getLayoutBuilderUrl('revert'),
+      '#attributes' => [
+        'class' => ['use-ajax', 'button'],
+        'data-dialog-type' => 'dialog',
+        'data-dialog-options' => Json::encode(['width' => '85vw']),
+      ],
     ];
     return $actions;
   }
