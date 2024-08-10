@@ -20,7 +20,7 @@ final class ContentDispositionFilenameParser {
    *
    * @var string
    */
-  const REQUEST_HEADER_EXTENDED_FILENAME_REGEX = "@\bfilename\*=\"?(?<charset>[\w-]+)'(?<lang>\w*)'(?<filename>.+)\"?@";
+  const REQUEST_HEADER_EXTENDED_FILENAME_REGEX = "@\bfilename\*=\"(?<charset>[\w-]+)'(?<lang>\w*)'(?<filename>.+)\"@";
 
   /**
    * Private constructor to prevent instantiation.
