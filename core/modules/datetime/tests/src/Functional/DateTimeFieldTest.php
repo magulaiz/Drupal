@@ -18,6 +18,7 @@ use Drupal\Core\Form\FormState;
  * Tests Datetime field functionality.
  *
  * @group datetime
+ * @group #slow
  */
 class DateTimeFieldTest extends DateTestBase {
 

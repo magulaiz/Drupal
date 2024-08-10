@@ -15,6 +15,7 @@ use Drupal\migrate\Row;
  *
  * @coversDefaultClass \Drupal\filter\Plugin\migrate\process\FilterID
  * @group filter
+ * @group #slow
  */
 class FilterIdTest extends KernelTestBase {
 

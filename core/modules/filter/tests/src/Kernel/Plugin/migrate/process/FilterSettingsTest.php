@@ -15,6 +15,7 @@ use Drupal\Tests\migrate\Unit\MigrateTestCase;
  *
  * @coversDefaultClass \Drupal\filter\Plugin\migrate\process\FilterSettings
  * @group filter
+ * @group #slow
  */
 class FilterSettingsTest extends MigrateTestCase {
 

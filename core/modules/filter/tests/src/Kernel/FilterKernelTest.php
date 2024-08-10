@@ -19,6 +19,7 @@ use Drupal\KernelTests\KernelTestBase;
  * Tests Filter module filters individually.
  *
  * @group filter
+ * @group #slow
  */
 class FilterKernelTest extends KernelTestBase {
 

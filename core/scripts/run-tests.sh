@@ -819,12 +819,15 @@ function simpletest_script_execute_batch(TestRunResultsStorageInterface $test_ru
  */
 function simpletest_script_run_phpunit(TestRun $test_run, $class) {
   $runner = PhpUnitTestRunner::create(\Drupal::getContainer());
+  $start = microtime(TRUE);
   $results = $runner->execute($test_run, $class, $status);
+  $time = microtime(TRUE) - $start;
+
   $runner->processPhpUnitResults($test_run, $results);
 
   $summaries = $runner->summarizeResults($results);
   foreach ($summaries as $class => $summary) {
-    simpletest_script_reporter_display_summary($class, $summary);
+    simpletest_script_reporter_display_summary($class, $summary, $time);
   }
   return $status;
 }
@@ -1028,7 +1031,16 @@ function simpletest_script_get_test_list() {
   if ((int) $args['ci-parallel-node-total'] > 1) {
     $slow_tests_per_job = (int) ceil(count($slow_tests) / $args['ci-parallel-node-total']);
     $tests_per_job = (int) ceil(count($test_list) / $args['ci-parallel-node-total']);
-    $test_list = array_merge(array_slice($slow_tests, ($args['ci-parallel-node-index'] -1) * $slow_tests_per_job, $slow_tests_per_job), array_slice($test_list, ($args['ci-parallel-node-index'] - 1) * $tests_per_job, $tests_per_job));
+    $not_slow_tests = array_slice($test_list, ($args['ci-parallel-node-index'] - 1) * $tests_per_job, $tests_per_job);
+    usort($not_slow_tests, function ($a, $b) {
+      $method_count = function ($class) {
+        $reflection = new \ReflectionClass($class);
+        return count($reflection->getMethods(\ReflectionMethod::IS_PUBLIC));
+      };
+      return $method_count($a) < $method_count($b) ? 1 : -1;
+    });
+
+    $test_list = array_merge(array_slice($slow_tests, ($args['ci-parallel-node-index'] -1) * $slow_tests_per_job, $slow_tests_per_job), $not_slow_tests);
   }
 
   return $test_list;
@@ -1080,14 +1092,27 @@ function simpletest_script_reporter_init() {
  *   The test class name that was run.
  * @param array $results
  *   The assertion results using #pass, #fail, #exception, #debug array keys.
+ * @param int|null $time
  */
-function simpletest_script_reporter_display_summary($class, $results) {
+function simpletest_script_reporter_display_summary($class, $results, $time = NULL) {
   // Output all test results vertically aligned.
-  // Cut off the class name after 60 chars, and pad each group with 3 digits
-  // by default (more than 999 assertions are rare).
-  $output = vsprintf('%-60.60s %10s %9s %14s %12s', [
-    $class,
+  // Limit the fully qualified method name to 60 characters, using the end of
+  // the string so that individual test classes can still be identified. Pad
+  // each group with 3 digits by default (more than 999 assertions are rare).
+  $length = strlen($class);
+  if ($length < 60) {
+    $class_out = str_pad($class, 60, ' ', STR_PAD_RIGHT);
+  }
+  elseif ($length > 60) {
+    $class_out = '...' . substr($class, -60 + 3);
+  }
+  else {
+    $class_out = $class;
+  }
+  $output = vsprintf('%-60.60s %10s %5s %9s %14s %12s', [
+    $class_out,
     $results['#pass'] . ' passes',
+    isset($time) ? ceil($time) . 's' : '',
     !$results['#fail'] ? '' : $results['#fail'] . ' fails',
     !$results['#exception'] ? '' : $results['#exception'] . ' exceptions',
     !$results['#debug'] ? '' : $results['#debug'] . ' messages',
@@ -1236,8 +1261,21 @@ function simpletest_script_reporter_display_results(TestRunResultsStorageInterfa
 function simpletest_script_format_result($result) {
   global $args, $results_map, $color;
 
+  // Limit the fully qualified method name to 60 characters, using the end of
+  // the string so that individual test classes can still be identified.
+  $class = $result->function;
+  $length = strlen($class);
+  if ($length < 60) {
+    $class_out = str_pad($class, 60, ' ', STR_PAD_RIGHT);
+  }
+  elseif ($length > 60) {
+    $class_out = '...' . substr($class, -60 + 3);
+  }
+  else {
+    $class_out = $class;
+  }
   $summary = sprintf("%-9.9s %-10.10s %-17.17s %4.4s %-35.35s\n",
-    $results_map[$result->status], $result->message_group, basename($result->file), $result->line, $result->function);
+  $results_map[$result->status], $result->message_group, basename($result->file), $result->line, $class_out);
 
   simpletest_script_print($summary, simpletest_script_color_code($result->status));
 
