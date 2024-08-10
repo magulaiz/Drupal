@@ -275,7 +275,7 @@ class TermTest extends TaxonomyTestBase {
       $this->assertSession()->pageTextContains($term);
     }
     $tree = $this->container->get('entity_type.manager')->getStorage('taxonomy_term')->loadTree($this->vocabulary->id());
-    $this->assertTrue(empty($tree), 'The terms are not created on preview.');
+    $this->assertEmpty($tree, 'The terms are not created on preview.');
 
     // Save, creating the terms.
     $this->drupalGet('node/add/article');
@@ -443,7 +443,7 @@ class TermTest extends TaxonomyTestBase {
     // Fetch the created terms in the default alphabetical order, i.e. term1
     // precedes term2 alphabetically, and term2 precedes term3.
     $taxonomy_storage->resetCache();
-    list($term1, $term2, $term3) = $taxonomy_storage->loadTree($this->vocabulary->id(), 0, NULL, TRUE);
+    [$term1, $term2, $term3] = $taxonomy_storage->loadTree($this->vocabulary->id(), 0, NULL, TRUE);
 
     $this->drupalGet('admin/structure/taxonomy/manage/' . $this->vocabulary->id() . '/overview');
 

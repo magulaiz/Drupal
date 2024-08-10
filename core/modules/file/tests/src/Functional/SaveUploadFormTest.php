@@ -29,7 +29,7 @@ class SaveUploadFormTest extends FileManagedTestBase {
   /**
    * {@inheritdoc}
    */
-  protected $defaultTheme = 'classy';
+  protected $defaultTheme = 'stark';
 
   /**
    * An image file path for uploading.
@@ -70,7 +70,7 @@ class SaveUploadFormTest extends FileManagedTestBase {
     $image_files = $this->drupalGetTestFiles('image');
     $this->image = File::create((array) current($image_files));
 
-    list(, $this->imageExtension) = explode('.', $this->image->getFilename());
+    [, $this->imageExtension] = explode('.', $this->image->getFilename());
     $this->assertFileExists($this->image->getFileUri());
 
     $this->phpfile = current($this->drupalGetTestFiles('php'));
@@ -570,7 +570,7 @@ class SaveUploadFormTest extends FileManagedTestBase {
     $this->assertSession()->pageTextContains("Epic upload FAIL!");
 
     // Search for combined error message followed by a formatted list of messages.
-    $this->assertSession()->responseContains('One or more files could not be uploaded.<div class="item-list">');
+    $this->assertSession()->responseContains('One or more files could not be uploaded.<ul>');
   }
 
   /**

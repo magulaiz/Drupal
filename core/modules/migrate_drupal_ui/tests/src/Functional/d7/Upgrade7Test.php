@@ -230,12 +230,16 @@ class Upgrade7Test extends MigrateUpgradeExecuteTestBase {
     $this->assertUserLogIn(2, 'a password');
 
     $this->assertFollowUpMigrationResults();
+
+    $this->assertEmailsSent();
   }
 
   /**
    * Tests that follow-up migrations have been run successfully.
+   *
+   * @internal
    */
-  protected function assertFollowUpMigrationResults() {
+  protected function assertFollowUpMigrationResults(): void {
     $node = Node::load(2);
     $this->assertSame('4', $node->get('field_reference')->target_id);
     $this->assertSame('6', $node->get('field_reference_2')->target_id);

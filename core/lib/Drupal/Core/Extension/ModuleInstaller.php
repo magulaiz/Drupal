@@ -307,7 +307,7 @@ class ModuleInstaller implements ModuleInstallerInterface {
                   $update_manager->installFieldStorageDefinition($storage_definition->getName(), $entity_type->id(), $module, $storage_definition);
                 }
                 catch (EntityStorageException $e) {
-                  watchdog_exception('system', $e, 'An error occurred while notifying the creation of the @name field storage definition: "!message" in %function (line %line of %file).', ['@name' => $storage_definition->getName()]);
+                  watchdog_exception('system', $e, 'An error occurred while notifying the creation of the @name field storage definition: "@message" in %function (line %line of %file).', ['@name' => $storage_definition->getName()]);
                 }
               }
             }
@@ -583,9 +583,9 @@ class ModuleInstaller implements ModuleInstallerInterface {
     $definitions = Yaml::decode(file_get_contents($service_yaml_file));
 
     $cache_bin_services = array_filter(
-      isset($definitions['services']) ? $definitions['services'] : [],
+      $definitions['services'] ?? [],
       function ($definition) {
-        $tags = isset($definition['tags']) ? $definition['tags'] : [];
+        $tags = $definition['tags'] ?? [];
         foreach ($tags as $tag) {
           if (isset($tag['name']) && ($tag['name'] == 'cache.bin')) {
             return TRUE;
