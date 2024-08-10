@@ -195,6 +195,11 @@ abstract class BrowserTestBase extends TestCase {
   protected $originalContainer;
 
   /**
+   * The number of URLs visited.
+   */
+  protected static int $visitCount = 0;
+
+  /**
    * {@inheritdoc}
    */
   public function __construct(string $name) {
@@ -208,6 +213,9 @@ abstract class BrowserTestBase extends TestCase {
   public static function setUpBeforeClass(): void {
     parent::setUpBeforeClass();
     VarDumper::setHandler(TestVarDumper::class . '::cliHandler');
+
+    // Reset the visit count to detect functional tests with any HTTP requests.
+    self::$visitCount = 0;
   }
 
   /**
@@ -460,6 +468,14 @@ abstract class BrowserTestBase extends TestCase {
       $callbacks = &drupal_register_shutdown_function();
       $callbacks = $this->originalShutdownCallbacks;
     }
+  }
+
+  /**
+   * This method is called after the last test of this test class is run.
+   */
+  public static function tearDownAfterClass(): void {
+    self::assertGreaterThan(0, self::$visitCount, 'Functional(Javascript) test classes should visit at least one URL.');
+    parent::tearDownAfterClass();
   }
 
   /**

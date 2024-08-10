@@ -50,6 +50,7 @@ trait ApiRequestTrait {
     $request_options[RequestOptions::ALLOW_REDIRECTS] = FALSE;
     $request_options = $this->decorateWithXdebugCookie($request_options);
     $client = $this->getSession()->getDriver()->getClient()->getClient();
+    BrowserTestBase::$visitCount++;
     return $client->request($method, $url->setAbsolute(TRUE)->toString(), $request_options);
   }
 
