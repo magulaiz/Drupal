@@ -4,10 +4,12 @@ namespace Drupal\KernelTests\Core\Entity;
 
 use Drupal\Core\Entity\Exception\AmbiguousBundleClassException;
 use Drupal\Core\Entity\Exception\BundleClassInheritanceException;
+use Drupal\Core\Entity\Exception\MissingBundleClassException;
 use Drupal\entity_test\Entity\EntityTest;
 use Drupal\entity_test_bundle_class\Entity\EntityTestAmbiguousBundleClass;
 use Drupal\entity_test_bundle_class\Entity\EntityTestBundleClass;
 use Drupal\entity_test_bundle_class\Entity\EntityTestUserClass;
+use Drupal\entity_test_bundle_class\Entity\EntityTestVariant;
 use Drupal\user\Entity\User;
 
 /**
@@ -246,6 +248,30 @@ class BundleClassTest extends EntityKernelTestBase {
     $this->expectException(BundleClassInheritanceException::class);
     entity_test_create_bundle('bundle_class');
     $this->storage->create(['type' => 'bundle_class']);
+  }
+
+  /**
+   * Checks exception thrown if a bundle class doesn't exist.
+   */
+  public function testBundleClassShouldExist() {
+    $this->container->get('state')->set('entity_test_bundle_class_does_not_exist', TRUE);
+    $this->entityTypeManager->clearCachedDefinitions();
+    $this->expectException(MissingBundleClassException::class);
+    entity_test_create_bundle('bundle_class');
+    $this->storage->create(['type' => 'bundle_class']);
+  }
+
+  /**
+   * Tests that a module can override an entity-type class.
+   *
+   * Ensures a module can implement hook_entity_info_alter() and alter the
+   * entity's class without needing to write to the last installed
+   * definitions repository.
+   */
+  public function testEntityClassNotTakenFromActiveDefinitions(): void {
+    $this->container->get('state')->set('entity_test_bundle_class_override_base_class', TRUE);
+    $this->entityTypeManager->clearCachedDefinitions();
+    $this->assertEquals(EntityTestVariant::class, $this->entityTypeManager->getStorage('entity_test')->getEntityClass());
   }
 
 }
