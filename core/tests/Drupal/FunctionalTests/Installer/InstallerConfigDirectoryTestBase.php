@@ -25,7 +25,7 @@ abstract class InstallerConfigDirectoryTestBase extends InstallerTestBase {
   /**
    * @var bool
    */
-  protected $existingSyncDirectory = FALSE;
+  protected bool $existingSyncDirectory = FALSE;
 
   /**
    * This copies a source directory to a destination directory recursively.

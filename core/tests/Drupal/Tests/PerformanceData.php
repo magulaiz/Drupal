@@ -74,7 +74,7 @@ class PerformanceData {
   /**
    * The original return value.
    */
-  protected $returnValue;
+  protected mixed $returnValue;
 
   /**
    * Sets the stylesheet request count.
