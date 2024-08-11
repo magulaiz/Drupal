@@ -172,7 +172,7 @@ variables:
 
 '🌐️️ PHPUnit Functional':
   <<: [ *with-composer, *run-tests, *default-job-settings ]
-  parallel: 7
+  parallel: 8
   variables:
     TESTSUITE: PHPUnit-Functional
     KUBERNETES_CPU_REQUEST: "24"
@@ -181,7 +181,7 @@ variables:
 
 '⚙️️ PHPUnit Kernel':
   <<: [ *with-composer, *run-tests, *default-job-settings ]
-  parallel: 3
+  parallel: 2
   variables:
     TESTSUITE: PHPUnit-Kernel
     KUBERNETES_CPU_REQUEST: "16"

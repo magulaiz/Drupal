@@ -16,6 +16,7 @@ use Drupal\file\Entity\File;
  * and whether the field is required.
  *
  * @group file
+ * @group #slow
  */
 class FileFieldValidateTest extends FileFieldTestBase {
 
