@@ -24,8 +24,6 @@ class MemoryBackend implements CacheBackendInterface, CacheTagsInvalidatorInterf
 
   /**
    * Array to store cache objects.
-   *
-   * @var object[]
    */
   protected $cache = [];
 

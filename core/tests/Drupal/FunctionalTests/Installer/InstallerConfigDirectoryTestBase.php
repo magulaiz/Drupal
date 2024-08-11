@@ -24,8 +24,6 @@ abstract class InstallerConfigDirectoryTestBase extends InstallerTestBase {
 
   /**
    * @todo Fill out docblock.
-   *
-   * @var bool
    */
   protected $existingSyncDirectory = FALSE;
 
