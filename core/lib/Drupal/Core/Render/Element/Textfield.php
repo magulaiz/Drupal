@@ -5,7 +5,6 @@ namespace Drupal\Core\Render\Element;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Render\Attribute\FormElement;
 use Drupal\Core\Render\Element;
-use Drupal\Core\Render\Element\FormElement as FormElementBase;
 
 /**
  * Provides a one-line text field form element.
@@ -21,7 +20,7 @@ use Drupal\Core\Render\Element\FormElement as FormElementBase;
  *
  * Usage example:
  * @code
- * $form['title'] = array(
+ * $form['title'] = [
  *   '#type' => 'textfield',
  *   '#title' => $this->t('Subject'),
  *   '#default_value' => $node->title,
@@ -29,7 +28,7 @@ use Drupal\Core\Render\Element\FormElement as FormElementBase;
  *   '#maxlength' => 128,
  *   '#pattern' => 'some-prefix-[a-z]+',
  *   '#required' => TRUE,
- * );
+ * ];
  * @endcode
  *
  * @see \Drupal\Core\Render\Element\Color

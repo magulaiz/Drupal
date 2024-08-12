@@ -4,7 +4,6 @@ namespace Drupal\Core\Render\Element;
 
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Render\Attribute\FormElement;
-use Drupal\Core\Render\Element\FormElement as FormElementBase;
 
 /**
  * Provides a form element for input of multiple-line text.
@@ -18,10 +17,10 @@ use Drupal\Core\Render\Element\FormElement as FormElementBase;
  *
  * Usage example:
  * @code
- * $form['text'] = array(
+ * $form['text'] = [
  *   '#type' => 'textarea',
  *   '#title' => $this->t('Text'),
- * );
+ * ];
  * @endcode
  *
  * @see \Drupal\Core\Render\Element\Textfield

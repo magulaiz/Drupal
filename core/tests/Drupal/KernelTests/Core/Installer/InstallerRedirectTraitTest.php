@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\KernelTests\Core\Installer;
 
 use Drupal\Core\Database\Connection;
@@ -67,7 +69,7 @@ class InstallerRedirectTraitTest extends KernelTestBase {
    * @covers ::shouldRedirectToInstaller
    * @dataProvider providerShouldRedirectToInstaller
    */
-  public function testShouldRedirectToInstaller($expected, $exception, $connection, $connection_info, $sequences_table_exists = TRUE) {
+  public function testShouldRedirectToInstaller($expected, $exception, $connection, $connection_info, $sequences_table_exists = TRUE): void {
     try {
       throw new $exception();
     }
