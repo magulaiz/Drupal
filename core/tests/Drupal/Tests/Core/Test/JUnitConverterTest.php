@@ -95,7 +95,7 @@ EOD;
    */
   public function testConvertTestCaseToSimpletestRow(string $junitXmlString, array $expectedSimpletestRow): void {
     $this->assertEquals($expectedSimpletestRow, JUnitConverter::convertTestCaseToSimpletestRow($expectedSimpletestRow['test_id'], new \SimpleXMLElement($junitXmlString)));
-    $this->assertLessThanOrEqual(255, strlen($expectedSimpletestRow['function']), 'Function value is less than or equal to 255');
+    $this->assertLessThanOrEqual(255, strlen($expectedSimpletestRow['function']));
   }
 
   /**
