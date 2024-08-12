@@ -163,6 +163,20 @@ abstract class InstallerConfigDirectoryTestBase extends InstallerTestBase {
       'delete' => [],
       'rename' => [],
     ];
+    if (Database::getConnection()->driver() == 'mongodb') {
+      $expected['update'] = [
+        'system.mail',
+        'views.view.archive',
+        'views.view.content',
+        'views.view.content_recent',
+        'views.view.frontpage',
+        'views.view.glossary',
+        'views.view.user_admin_people',
+        'views.view.watchdog',
+        'views.view.who_s_new',
+        'views.view.who_s_online',
+      ];
+    }
     $this->assertEquals($expected, $change_list);
   }
 

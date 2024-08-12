@@ -44,7 +44,11 @@ final class ConfigConfigurator {
         self::recursiveSortByKey($active_data);
         self::recursiveSortByKey($recipe_data);
         if ($active_data !== $recipe_data) {
-          throw new RecipePreExistingConfigException($config_name, sprintf("The configuration '%s' exists already and does not match the recipe's configuration", $config_name));
+          // @todo Views should have their specific overrides for MongoDB.
+          // MongoDB updates views during install.
+          if (!in_array($config_name, ['views.view.files', 'views.view.media_library', 'views.view.media'])) {
+            throw new RecipePreExistingConfigException($config_name, sprintf("The configuration '%s' exists already and does not match the recipe's configuration", $config_name));
+          }
         }
       }
     }
