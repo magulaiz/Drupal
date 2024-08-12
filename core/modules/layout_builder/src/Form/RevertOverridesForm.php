@@ -2,6 +2,8 @@
 
 namespace Drupal\layout_builder\Form;
 
+use Drupal\Core\Ajax\AjaxResponse;
+use Drupal\Core\Ajax\CloseModalDialogCommand;
 use Drupal\Core\Form\ConfirmFormBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Form\WorkspaceDynamicSafeFormInterface;
@@ -102,8 +104,14 @@ class RevertOverridesForm extends ConfirmFormBase implements WorkspaceDynamicSaf
     }
 
     $this->sectionStorage = $section_storage;
+
     // Mark this as an administrative page for JavaScript ("Back to site" link).
     $form['#attached']['drupalSettings']['path']['currentPathIsAdmin'] = TRUE;
+
+    // If this form is loaded via Ajax, make sure it's ready for the modal.
+    $form['#attributes']['class'][] = 'ajax-form';
+    $form['#attached']['library'][] = 'core/drupal.dialog.ajax';
+
     return parent::buildForm($form, $form_state);
   }
 
@@ -118,7 +126,15 @@ class RevertOverridesForm extends ConfirmFormBase implements WorkspaceDynamicSaf
     $this->layoutTempstoreRepository->delete($this->sectionStorage);
 
     $this->messenger->addMessage($this->t('The layout has been reverted back to defaults.'));
-    $form_state->setRedirectUrl($this->sectionStorage->getRedirectUrl());
+
+    // Prepare the Ajax response to close the modal dialog.
+    $response = new AjaxResponse();
+    $response->addCommand(new CloseModalDialogCommand());
+
+    // Set the redirect URL within the modal context.
+    $response->setAttachments(['#attached' => ['library' => ['core/drupal.dialog.ajax']]]);
+
+    return $response;
   }
 
 }
