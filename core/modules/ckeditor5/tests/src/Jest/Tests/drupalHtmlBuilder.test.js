@@ -1,3 +1,4 @@
+/* eslint-disable no-undef */
 import DrupalHtmlBuilder from '../../../../js/ckeditor5_plugins/drupalHtmlEngine/src/drupalhtmlbuilder';
 
 describe('drupalHtmlBuilderTest', () => {
