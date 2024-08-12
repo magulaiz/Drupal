@@ -190,7 +190,7 @@ class MigrateMessageController extends ControllerBase {
     $query->leftJoin($map_table, 'map', $query->joinCondition()->compare('msg.source_ids_hash', 'map.source_ids_hash'));
     $query->fields('msg');
     $query->fields('map');
-    $filter = $this->addFilterQuery($request, $query);
+    $this->addFilterQuery($request, $query);
     $result = $query
       ->limit(50)
       ->orderByHeader($header)
@@ -238,10 +238,10 @@ class MigrateMessageController extends ControllerBase {
   /**
    * Adds the condition to the query for migrate message administration.
    *
-   * @param \Drupal\Core\Database\Query\SelectInterface $query
-   *    The database query.
    * @param \Symfony\Component\HttpFoundation\Request $request
    *   The request.
+   * @param \Drupal\Core\Database\Query\SelectInterface $query
+   *   The database query.
    */
   protected function addFilterQuery(Request $request, SelectInterface &$query): void {
     $session_filters = $request->getSession()->get('migration_messages_overview_filter', []);
