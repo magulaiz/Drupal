@@ -256,10 +256,9 @@ class KernelTestBaseTest extends KernelTestBase {
   }
 
   /**
-   * Tests that :;tearDown() does not perform assertions.
+   * Tests that ::tearDown() does not perform assertions.
    */
   public function testTearDown(): void {
-    return;
   }
 
   /**
