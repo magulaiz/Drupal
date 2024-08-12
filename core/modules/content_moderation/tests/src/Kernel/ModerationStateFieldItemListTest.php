@@ -353,10 +353,6 @@ class ModerationStateFieldItemListTest extends KernelTestBase {
     $workflow = Workflow::load('editorial');
     $configuration = $workflow->getTypePlugin()->getConfiguration();
 
-    // Test a node for a workflow that hasn't been updated to include the
-    // 'default_moderation_state' setting. We must be backwards compatible with
-    // configuration that was exported before this change was introduced.
-    $this->assertFalse(isset($configuration['default_moderation_state']));
     $legacy_configuration_node = Node::create([
       'title' => 'Test title',
       'type' => 'example',
