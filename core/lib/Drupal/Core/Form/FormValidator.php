@@ -328,9 +328,11 @@ class FormValidator implements FormValidatorInterface {
    *   not be repeated in the submission step.
    */
   protected function performRequiredValidation(&$elements, FormStateInterface &$form_state) {
+    $name = empty($elements['#title']) ? $elements['#parents'][0] : $elements['#title'];
+
     // Verify that $elements['#value'] is a string, if it is supposed to be one:
     if (isset($elements['#maxlength']) && !is_string($elements['#value'])) {
-      $form_state->setError($elements, $this->t('Something went wrong submitting. Expected a string value but got a value of type "@type" instead.', ['@type' => gettype($elements['#value'])]));
+      $form_state->setError($elements, $this->t('The submitted value type %type in the %name element is not allowed.', ['%type' => gettype($elements['#value']), '%name' => $name]));
       return;
     }
     // Verify that the value is not longer than #maxlength.
@@ -339,7 +341,6 @@ class FormValidator implements FormValidatorInterface {
     }
 
     if (isset($elements['#options']) && isset($elements['#value'])) {
-      $name = empty($elements['#title']) ? $elements['#parents'][0] : $elements['#title'];
       $message_arguments = ['%name' => $name];
       if ($elements['#type'] == 'select') {
         $options = OptGroup::flattenOptions($elements['#options']);
