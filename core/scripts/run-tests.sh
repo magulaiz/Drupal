@@ -769,8 +769,13 @@ function simpletest_script_execute_batch(TestRunResultsStorageInterface $test_ru
 
     // If no child was added this iteration, wait 200ms to avoid a spin lock.
     // Otherwise immediately check if any children finished running.
+    $time = microtime(TRUE);
     if (!$child_added) {
+      print "Sleeping for 200ms {$time} \n";
       usleep(200000);
+    }
+    else {
+      print "Not sleeping {$time} \n";
     }
 
     // Check if some children finished.
