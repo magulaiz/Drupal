@@ -282,6 +282,7 @@ class KernelTestBaseTest extends KernelTestBase {
     }
     else {
       $tables = $connection->schema()->findTables($this->databasePrefix . '%');
+    }
     
     if (!empty($tables)) {
       throw new \RuntimeException("Not all test tables were removed");
