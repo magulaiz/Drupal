@@ -94,8 +94,8 @@ function media_requirements($phase) {
       });
 
       if ($oembed_types) {
-        $suppress_warning = \Drupal::config('media.settings')->get('suppress_warning');
-        if (!$suppress_warning) {
+        $suppress_oembed_warning = \Drupal::config('media.settings')->get('suppress_oembed_warning');
+        if (!$suppress_oembed_warning) {
           $requirements['media_insecure_iframe'] = [
             'title' => t('Media'),
             'description' => t('It is potentially insecure to display oEmbed content in a frame that is served from the same domain as your main Drupal site, as this may allow execution of third-party code. <a href=":url">You can specify a different domain for serving oEmbed content here</a>.', [
@@ -187,6 +187,6 @@ function media_update_last_removed() {
  */
 function media_update_11000(&$sandbox = NULL): void {
   \Drupal::configFactory()->getEditable('media.settings')
-    ->set('suppress_warning', FALSE)
+    ->set('suppress_oembed_warning', FALSE)
     ->save(TRUE);
 }
