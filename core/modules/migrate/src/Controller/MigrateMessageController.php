@@ -273,7 +273,7 @@ class MigrateMessageController extends ControllerBase {
 
         default:
           if ($filter['where'] == 'msg.level') {
-            $value = (int) $value;
+            $filter['value'] = (int) $filter['value'];
           }
           $condition->condition($filter['where'], $filter['value']);
           $filter_added = TRUE;
