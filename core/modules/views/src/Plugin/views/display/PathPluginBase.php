@@ -351,7 +351,10 @@ abstract class PathPluginBase extends DisplayPluginBase implements DisplayRouter
 
     if ($path) {
       $menu = $this->getOption('menu');
-      if (!empty($menu['type']) && $menu['type'] == 'normal') {
+      if (empty($menu['type'])) {
+        return [];
+      }
+      if ($menu['type'] == 'normal') {
         $links[$menu_link_id] = [];
         // Some views might override existing paths, so we have to set the route
         // name based upon the altering.
@@ -378,6 +381,38 @@ abstract class PathPluginBase extends DisplayPluginBase implements DisplayRouter
           'view_id' => $view_id,
           'display_id' => $display_id,
         ];
+      }
+      elseif ($menu['type'] == 'default tab') {
+        $tab_options = $this->getOption('tab_options');
+        if ($tab_options['type'] === 'normal') {
+          $links[$menu_link_id] = [];
+          // Some views might override existing paths, so we have to set the route
+          // name based upon the altering.
+          $links[$menu_link_id] = [
+            'route_name' => $this->getRouteName(),
+            // Identify URL embedded arguments and correlate them to a handler.
+            'load arguments'  => [$this->view->storage->id(), $this->display['id'], '%index'],
+            'id' => $menu_link_id,
+          ];
+          if (!isset($tab_options['menu_name'])) {
+            [$tab_options['menu_name'], $tab_options['parent']] = explode(':', $tab_options['parent'] ?? '', 2);
+          }
+          $links[$menu_link_id]['title'] = $tab_options['title'] ?? '';
+          $links[$menu_link_id]['description'] = $tab_options['description'] ?? '';
+          $links[$menu_link_id]['parent'] = $tab_options['parent'] ?? '';
+
+          if (isset($menu['weight'])) {
+            $links[$menu_link_id]['weight'] = intval($menu['weight']);
+          }
+
+          // Insert item into the proper menu.
+          $links[$menu_link_id]['menu_name'] = $tab_options['menu_name'] ?? '';
+          // Keep track of where we came from.
+          $links[$menu_link_id]['metadata'] = [
+            'view_id' => $view_id,
+            'display_id' => $display_id,
+          ];
+        }
       }
     }
 
