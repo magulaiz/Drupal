@@ -88,4 +88,5 @@ class BooleanOperator extends CoreBooleanOperator {
       $this->query->addCondition($this->options['group'], $field, TRUE);
     }
   }
+
 }
