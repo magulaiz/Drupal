@@ -350,7 +350,8 @@ function template_preprocess_system_themes_page(&$variables) {
 
       // Build operation links.
       $current_theme['operations'] = [
-        '#theme' => 'links',
+        '#type' => 'dropbutton',
+        '#dropbutton_type' => 'small',
         '#links' => $theme->operations,
         '#attributes' => [
           'class' => ['operations', 'clearfix'],
