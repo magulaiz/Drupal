@@ -6,6 +6,8 @@ namespace Drupal\Tests\Composer\Plugin\Scaffold;
 
 /**
  * Holds result of a scaffold test.
+ *
+ * @group #slow
  */
 class ScaffoldTestResult {
 
