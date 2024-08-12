@@ -127,7 +127,7 @@ class SelectionPluginManager extends DefaultPluginManager implements SelectionPl
       $group = $plugin_id;
     }
 
-    if (!isset($definition['group'])) {
+    if (empty($definition['group'])) {
       $definition['group'] = $group;
     }
   }
