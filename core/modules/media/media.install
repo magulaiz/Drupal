@@ -185,7 +185,7 @@ function media_update_last_removed() {
 /**
  * Expose a way to suppress oEmbed security warnings.
  */
-function media_update_11000(&$sandbox = NULL) {
+function media_update_11000(&$sandbox = NULL): void {
   \Drupal::configFactory()->getEditable('media.settings')
     ->set('suppress_warning', FALSE)
     ->save(TRUE);
