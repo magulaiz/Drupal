@@ -68,6 +68,13 @@ class GroupwiseMax extends RelationshipPluginBase {
   public string $subquery_namespace;
 
   /**
+   * Keyed array by alias of table relations.
+   *
+   * @var string[]
+   */
+  public ?array $tableAliases;
+
+  /**
    * {@inheritdoc}
    */
   protected function defineOptions() {
@@ -251,12 +258,12 @@ class GroupwiseMax extends RelationshipPluginBase {
     // appending a namespace to it, '_inner' by default.
     $tables = &$subquery->getTables();
     // Store the used aliases, so we can apply them in all kind of places.
-    $this->table_aliases = [];
+    $this->tableAliases = [];
     foreach (array_keys($tables) as $table_name) {
-      $this->table_aliases[$table_name] = $tables[$table_name]['alias'] . $this->subquery_namespace;
+      $this->tableAliases[$table_name] = $tables[$table_name]['alias'] . $this->subquery_namespace;
     }
     foreach (array_keys($tables) as $table_name) {
-      $tables[$table_name]['alias'] = $this->table_aliases[$table_name];
+      $tables[$table_name]['alias'] = $this->tableAliases[$table_name];
       // Namespace the join on every table.
       if (isset($tables[$table_name]['condition'])) {
         $tables[$table_name]['condition'] = $this->conditionNamespace($tables[$table_name]['condition']);
@@ -346,7 +353,7 @@ class GroupwiseMax extends RelationshipPluginBase {
    * need to quote each single part to prevent from query exceptions.
    */
   protected function conditionNamespace($string) {
-    foreach ($this->table_aliases as $table_name => $table_alias) {
+    foreach ($this->tableAliases as $table_name => $table_alias) {
       $string = preg_replace("/\b{$table_name}\b/", '"' . $table_alias . '"', $string);
     }
     return $string;
