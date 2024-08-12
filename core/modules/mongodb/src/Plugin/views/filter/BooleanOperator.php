@@ -82,14 +82,10 @@ class BooleanOperator extends CoreBooleanOperator {
    */
   protected function opEmpty(string $field): void {
     if ($this->operator === 'empty') {
-      $operator = "IS NULL";
       $this->query->addCondition($this->options['group'], $field, FALSE);
     }
     else {
-      $operator = "IS NOT NULL";
       $this->query->addCondition($this->options['group'], $field, TRUE);
     }
-
-//    $this->query->addCondition($this->options['group'], $field, NULL, $operator);
   }
 }
