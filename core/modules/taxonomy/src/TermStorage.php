@@ -72,7 +72,6 @@ class TermStorage extends SqlContentEntityStorage implements TermStorageInterfac
       $values['parent'] = [0];
     }
     $entity = parent::create($values);
-
     return $entity;
   }
 
@@ -178,7 +177,6 @@ class TermStorage extends SqlContentEntityStorage implements TermStorageInterfac
         }
       }
     }
-
     return $this->ancestors[$term->id()];
   }
 
@@ -203,7 +201,6 @@ class TermStorage extends SqlContentEntityStorage implements TermStorageInterfac
     $query = \Drupal::entityQuery('taxonomy_term')
       ->accessCheck(TRUE)
       ->condition('parent', $term->id());
-
     return static::loadMultiple($query->execute());
   }
 
@@ -304,7 +301,6 @@ class TermStorage extends SqlContentEntityStorage implements TermStorageInterfac
       }
       $this->trees[$cache_key] = $tree;
     }
-
     return $this->trees[$cache_key];
   }
 
@@ -317,7 +313,6 @@ class TermStorage extends SqlContentEntityStorage implements TermStorageInterfac
     $query->leftJoin($this->getBaseTable(), 'td', '[ti].[tid] = [td].[tid]');
     $query->condition('td.vid', $vid);
     $query->addTag('vocabulary_node_count');
-
     return $query->execute()->fetchField();
   }
 
@@ -359,18 +354,15 @@ class TermStorage extends SqlContentEntityStorage implements TermStorageInterfac
     $query->orderby('td.name');
     $query->condition('tn.nid', $nids, 'IN');
     $query->addTag('taxonomy_term_access');
-
     if (!empty($vids)) {
       $query->condition('td.vid', $vids, 'IN');
     }
-
     if (!empty($langcode)) {
       $query->condition('td.langcode', $langcode);
     }
 
     $results = [];
     $all_tids = [];
-
     foreach ($query->execute() as $term_record) {
       $results[$term_record->node_nid][] = $term_record->tid;
       $all_tids[] = $term_record->tid;
@@ -378,13 +370,11 @@ class TermStorage extends SqlContentEntityStorage implements TermStorageInterfac
 
     $all_terms = $this->loadMultiple($all_tids);
     $terms = [];
-
     foreach ($results as $nid => $tids) {
       foreach ($tids as $tid) {
         $terms[$nid][$tid] = $all_terms[$tid];
       }
     }
-
     return $terms;
   }
 
@@ -465,7 +455,6 @@ class TermStorage extends SqlContentEntityStorage implements TermStorageInterfac
     $vars = parent::__sleep();
     // Do not serialize static cache.
     unset($vars['ancestors'], $vars['treeChildren'], $vars['treeParents'], $vars['treeTerms'], $vars['trees'], $vars['vocabularyHierarchyType']);
-
     return $vars;
   }
 
@@ -474,7 +463,6 @@ class TermStorage extends SqlContentEntityStorage implements TermStorageInterfac
    */
   public function __wakeup(): void {
     parent::__wakeup();
-
     // Initialize static caches.
     $this->ancestors = [];
     $this->treeChildren = [];
