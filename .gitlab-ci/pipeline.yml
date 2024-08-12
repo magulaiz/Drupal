@@ -272,6 +272,20 @@ variables:
       - ./nightwatch_output
       - '*.log'
 
+'Jest':
+    <<: [ *with-composer-and-yarn, *default-job-settings ]
+    variables:
+        KUBERNETES_CPU_REQUEST: "2"
+    script:
+        - cd core
+        - corepack enable
+        - yarn run jest --reporters=jest-junit
+    artifacts:
+        when: always
+        expire_in: 6 mos
+        reports:
+          junit: ./junit.xml
+
 '🔁 Repeat Class Test':
   <<: [ *with-composer, *run-repeat-class-test, *default-job-settings ]
   when: manual
