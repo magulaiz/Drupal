@@ -172,7 +172,7 @@ class OverridesEntityForm extends ContentEntityForm implements WorkspaceDynamicS
       '#title' => $this->t('Discard changes'),
       '#url' => $this->sectionStorage->getLayoutBuilderUrl('discard_changes'),
       '#attributes' => [
-        'class' => ['use-ajax', 'glb-button'],
+        'class' => ['use-ajax', 'button'],
         'data-dialog-type' => 'dialog',
         'data-dialog-options' => Json::encode(['width' => '85vw']),
       ],
