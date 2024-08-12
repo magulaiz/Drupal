@@ -468,7 +468,7 @@ class FormValidatorTest extends UnitTestCase {
           '#maxlength' => 10,
           '#value' => ['foo'],
         ],
-        'he submitted value type <em class="placeholder">array</em> in the <em class="placeholder">Test</em> element is not allowed.',
+        'The submitted value type <em class="placeholder">array</em> in the <em class="placeholder">Test</em> element is not allowed.',
         FALSE,
       ],
       [
