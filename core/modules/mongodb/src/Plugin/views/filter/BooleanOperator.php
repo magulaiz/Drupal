@@ -23,7 +23,7 @@ class BooleanOperator extends CoreBooleanOperator {
 
     $info = $this->operators();
     if (!empty($info[$this->operator]['method'])) {
-      call_user_func([$this, $info[$this->operator]['method']], $field, $info[$this->operator]['query_operator']);
+      $this->{$info[$this->operator]['method']}($field, $info[$this->operator]['query_operator'] ?? NULL);
     }
   }
 
@@ -77,4 +77,19 @@ class BooleanOperator extends CoreBooleanOperator {
     }
   }
 
+  /**
+   * {@inheritdoc}
+   */
+  protected function opEmpty(string $field): void {
+    if ($this->operator === 'empty') {
+      $operator = "IS NULL";
+      $this->query->addCondition($this->options['group'], $field, FALSE);
+    }
+    else {
+      $operator = "IS NOT NULL";
+      $this->query->addCondition($this->options['group'], $field, TRUE);
+    }
+
+//    $this->query->addCondition($this->options['group'], $field, NULL, $operator);
+  }
 }
