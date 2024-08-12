@@ -344,12 +344,6 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/lib/Drupal/Core/Entity/KeyValueStore/KeyValueContentEntityStorage.php',
 ];
 $ignoreErrors[] = [
-	// identifier: variable.undefined
-	'message' => '#^Variable \\$selected_bundles might not be defined\\.$#',
-	'count' => 2,
-	'path' => __DIR__ . '/lib/Drupal/Core/Entity/Plugin/EntityReferenceSelection/DefaultSelection.php',
-];
-$ignoreErrors[] = [
 	// identifier: isset.variable
 	'message' => '#^Variable \\$value in isset\\(\\) always exists and is not nullable\\.$#',
 	'count' => 1,
@@ -927,12 +921,6 @@ $ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\datetime\\\\Plugin\\\\Field\\\\FieldType\\\\DateTimeFieldItemList\\:\\:defaultValuesForm\\(\\) should return array but return statement is missing\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/datetime/src/Plugin/Field/FieldType/DateTimeFieldItemList.php',
-];
-$ignoreErrors[] = [
-	// identifier: property.notFound
-	'message' => '#^Access to an undefined property Drupal\\\\datetime\\\\Plugin\\\\Field\\\\FieldType\\\\DateTimeItem\\:\\:\\$date\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/datetime/src/Plugin/Field/FieldType/DateTimeItem.php',
 ];
 $ignoreErrors[] = [
 	// identifier: isset.variable
@@ -2686,21 +2674,6 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/tests/Drupal/BuildTests/Composer/Template/ComposerProjectTemplatesTest.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Drupal\\\\Tests\\\\BrowserTestBase\\:\\:\\$defaultTheme is required\\. See https\\://www\\.drupal\\.org/node/3083055, which includes recommendations on which theme to use\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/tests/Drupal/FunctionalTests/Installer/InstallerExistingConfigExistingSettingsTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Drupal\\\\Tests\\\\BrowserTestBase\\:\\:\\$defaultTheme is required\\. See https\\://www\\.drupal\\.org/node/3083055, which includes recommendations on which theme to use\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/tests/Drupal/FunctionalTests/Installer/InstallerExistingConfigNoSystemSiteTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Drupal\\\\Tests\\\\BrowserTestBase\\:\\:\\$defaultTheme is required\\. See https\\://www\\.drupal\\.org/node/3083055, which includes recommendations on which theme to use\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/tests/Drupal/FunctionalTests/Installer/InstallerExistingConfigTest.php',
-];
-$ignoreErrors[] = [
 	// identifier: variable.undefined
 	'message' => '#^Variable \\$found might not be defined\\.$#',
 	'count' => 1,
@@ -2852,18 +2825,6 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/tests/Drupal/Tests/Component/Plugin/Factory/ReflectionFactoryTest.php',
 ];
 $ignoreErrors[] = [
-	// identifier: method.deprecated
-	'message' => '#^Call to deprecated method getMockForAbstractClass\\(\\) of class PHPUnit\\\\Framework\\\\TestCase\\.$#',
-	'count' => 4,
-	'path' => __DIR__ . '/tests/Drupal/Tests/Component/Plugin/PluginBaseTest.php',
-];
-$ignoreErrors[] = [
-	// identifier: method.deprecated
-	'message' => '#^Call to deprecated method getMockForAbstractClass\\(\\) of class PHPUnit\\\\Framework\\\\MockObject\\\\MockBuilder\\.$#',
-	'count' => 2,
-	'path' => __DIR__ . '/tests/Drupal/Tests/Component/Plugin/PluginManagerBaseTest.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^Missing cache backend declaration for performance\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/tests/Drupal/Tests/Component/Plugin/StubPluginManagerBaseWithMapper.php',
@@ -2879,12 +2840,6 @@ $ignoreErrors[] = [
 	'message' => '#^Call to deprecated method getMockForAbstractClass\\(\\) of class PHPUnit\\\\Framework\\\\TestCase\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/tests/Drupal/Tests/Core/Config/Entity/ConfigEntityStorageTest.php',
-];
-$ignoreErrors[] = [
-	// identifier: method.deprecated
-	'message' => '#^Call to deprecated method getMockForAbstractClass\\(\\) of class PHPUnit\\\\Framework\\\\TestCase\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/tests/Drupal/Tests/Core/Controller/ControllerBaseTest.php',
 ];
 $ignoreErrors[] = [
 	// identifier: method.deprecated

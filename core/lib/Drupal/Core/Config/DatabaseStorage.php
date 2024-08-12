@@ -151,6 +151,10 @@ class DatabaseStorage implements StorageInterface {
    * {@inheritdoc}
    */
   public function readMultiple(array $names) {
+    if (empty($names)) {
+      return [];
+    }
+
     $list = [];
     try {
       if ($this->connection->driver() == 'mongodb') {
