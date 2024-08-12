@@ -1093,7 +1093,7 @@ function simpletest_script_reporter_display_summary($class, $results, $duration 
   $output = vsprintf('%-60.60s %10s %5s %9s %14s %12s', [
     $class,
     $results['#pass'] . ' passes',
-    isset($duration) ? ceil($duration) . 's' : '',
+    isset($duration) ? $duration . 's' : '',
     !$results['#fail'] ? '' : $results['#fail'] . ' fails',
     !$results['#exception'] ? '' : $results['#exception'] . ' exceptions',
     !$results['#debug'] ? '' : $results['#debug'] . ' messages',
