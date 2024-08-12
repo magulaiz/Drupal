@@ -51,6 +51,8 @@ class ExtensionMimeTypeGuesser implements MimeTypeGuesserInterface {
       27 => 'application/smil',
       349 => 'application/vnd.amazon.ebook',
       363 => 'application/vnd.apple.keynote',
+      364 => 'application/vnd.apple.numbers',
+      365 => 'application/vnd.apple.pages',
       28 => 'application/vnd.cinderella',
       29 => 'application/vnd.google-earth.kml+xml',
       30 => 'application/vnd.google-earth.kmz',
@@ -870,6 +872,8 @@ class ExtensionMimeTypeGuesser implements MimeTypeGuesserInterface {
       'aac' => 360,
       'json' => 361,
       'avif' => 362,
+      'numbers' => 364,
+      'pages' => 365,
     ],
     // cspell:enable
   ];
