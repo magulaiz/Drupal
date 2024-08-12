@@ -732,6 +732,7 @@ function simpletest_script_execute_batch(TestRunResultsStorageInterface $test_ru
   // Multi-process execution.
   $children = [];
   while (!empty($test_classes) || !empty($children)) {
+    $child_added = FALSE;
     while (count($children) < $args['concurrency']) {
       if (empty($test_classes)) {
         break;
@@ -763,10 +764,14 @@ function simpletest_script_execute_batch(TestRunResultsStorageInterface $test_ru
         'class' => $test_class,
         'pipes' => $pipes,
       ];
+      $child_added = TRUE;
     }
 
-    // Wait for children every 200ms.
-    usleep(200000);
+    // If no child was added this iteration, wait 200ms to avoid a spin lock.
+    // Otherwise immediately check if any children finished running.
+    if (!$child_added) {
+      usleep(200000);
+    }
 
     // Check if some children finished.
     foreach ($children as $cid => $child) {
