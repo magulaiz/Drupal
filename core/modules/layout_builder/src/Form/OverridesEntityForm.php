@@ -167,7 +167,7 @@ class OverridesEntityForm extends ContentEntityForm implements WorkspaceDynamicS
     $actions = $this->buildActions($actions);
     $actions['delete']['#access'] = FALSE;
 
-    $actions ['discard_changes'] = [
+    $actions['discard_changes'] = [
       '#type' => 'link',
       '#title' => $this->t('Discard changes'),
       '#url' => $this->sectionStorage->getLayoutBuilderUrl('discard_changes'),
@@ -180,7 +180,7 @@ class OverridesEntityForm extends ContentEntityForm implements WorkspaceDynamicS
     ];
     // @todo This button should be conditionally displayed, see
     //   https://www.drupal.org/node/2917777.
-    $actions ['revert'] = [
+    $actions['revert'] = [
       '#type' => 'link',
       '#title' => $this->t('Revert to defaults'),
       '#url' => $this->sectionStorage->getLayoutBuilderUrl('revert'),
