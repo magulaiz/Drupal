@@ -161,7 +161,7 @@ class TaxonomyIndexTid extends PrerenderList {
    * {@inheritdoc}
    */
   public function render_item($count, $item) {
-    @trigger_error('MultiItemsFieldHandlerInterface::render_item() is deprecated in drupal:11.1.0 and is removed from drupal:12.0.0. Use renderItem() instead. See https://www.drupal.org/project/drupal/issues/3074719', E_USER_DEPRECATED);
+    @trigger_error('MultiItemsFieldHandlerInterface::render_item() is deprecated in drupal:11.1.0 and is removed from drupal:12.0.0. Use renderItem() instead. See https://www.drupal.org/node/3467146', E_USER_DEPRECATED);
     return $this->renderItem($count, $item);
   }
 

@@ -23,7 +23,7 @@ interface MultiItemsFieldHandlerInterface extends FieldHandlerInterface {
    * @deprecated in drupal:11.1.0 and is removed from drupal:12.0.0.
    *   Use renderItem() instead.
    *
-   * @see https://www.drupal.org/project/drupal/issues/3074719
+   * @see https://www.drupal.org/node/3467146
    */
   public function render_item($count, $item);
 
