@@ -22,10 +22,9 @@
   border: 1px solid var(--color-gray-200);
   border-radius: 2px 2px 0 0;
   box-shadow: var(--module-table-filter-box-shadow);
-
-  /* Visually hide the module filter input description. */
 }
 
+/* Visually hide the module filter input description. */
 .modules-table-filter .form-item__description,
 .permissions-table-filter .form-item__description {
   position: absolute !important;
