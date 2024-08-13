@@ -62,10 +62,9 @@ class SubformState extends FormStateDecoratorBase implements SubformStateInterfa
    *   is not set, as it is required for this class to work properly.
    */
   public static function createForSubform(array &$subform, array &$parent_form, FormStateInterface $parent_form_state, ?FormInterface $subform_form_object = NULL) {
-    // In case of non empty subforms, the #tree property of the subform must
-    // be set for the class to work properly.That's because without that,
-    // the subform's form values are the top of the values array,
-    // and SubformState::getValues() won't find them.
+    // In case of non empty subforms, the #tree property of the subform must be
+    // set. Without it, the subform's form values are the top of the values
+    // array, and SubformState::getValues() won't find them.
     if (!empty($subform)) {
       if (!isset($subform['#tree']) || !$subform['#tree']) {
         throw new \Exception("The #tree attribute of the subform is not set");
