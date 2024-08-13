@@ -140,10 +140,10 @@ class MultipleWidgetFormTest extends FieldTestBase {
 
     // Test the field with 'Show add more button' option enabled.
     $form = \Drupal::service('entity_display.repository')->getFormDisplay($this->field['entity_type'], $this->field['bundle'], 'default')
-    ->setComponent($field_name, [
-      'type' => 'test_field_widget_multiple_single_value',
-      'settings' => ['add_more' => TRUE]
-    ]);
+      ->setComponent($field_name, [
+        'type' => 'test_field_widget_multiple_single_value',
+        'settings' => ['add_more' => TRUE],
+      ]);
     $form->save();
     $this->drupalGet('entity_test/add');
     // Verify that only one input field is rendered.
@@ -182,10 +182,10 @@ class MultipleWidgetFormTest extends FieldTestBase {
 
     // Test again with 'Show add more button' disabled.
     $form = \Drupal::service('entity_display.repository')->getFormDisplay($this->field['entity_type'], $this->field['bundle'], 'default')
-    ->setComponent($field_name, [
-      'type' => 'test_field_widget_multiple_single_value',
-      'settings' => ['add_more' => FALSE]
-    ]);
+      ->setComponent($field_name, [
+        'type' => 'test_field_widget_multiple_single_value',
+        'settings' => ['add_more' => FALSE],
+      ]);
     $form->save();
     $this->drupalGet('entity_test/add');
     // Verify that all input fields are rendered by default while creating a
