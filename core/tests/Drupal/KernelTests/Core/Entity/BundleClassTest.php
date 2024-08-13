@@ -29,6 +29,13 @@ class BundleClassTest extends EntityKernelTestBase {
   protected static $modules = ['entity_test_bundle_class'];
 
   /**
+   * The entity type bundle info service.
+   *
+   * @var \Drupal\Core\Entity\EntityTypeBundleInfoInterface
+   */
+  protected $entityTypeBundleInfo;
+
+  /**
    * The entity storage.
    *
    * @var \Drupal\Core\Entity\EntityStorageInterface
@@ -40,6 +47,7 @@ class BundleClassTest extends EntityKernelTestBase {
    */
   protected function setUp(): void {
     parent::setUp();
+    $this->entityTypeBundleInfo = $this->container->get('entity_type.bundle.info');
     $this->storage = $this->entityTypeManager->getStorage('entity_test');
   }
 
@@ -264,10 +272,9 @@ class BundleClassTest extends EntityKernelTestBase {
    */
   public function testBundleClassShouldExtendEntityClass(): void {
     $this->container->get('state')->set('entity_test_bundle_class_non_inheriting', TRUE);
-    $this->entityTypeManager->clearCachedDefinitions();
     $this->expectException(BundleClassInheritanceException::class);
-    entity_test_create_bundle('bundle_class');
-    $this->storage->create(['type' => 'bundle_class']);
+    $this->entityTypeBundleInfo->clearCachedBundles();
+    $this->entityTypeBundleInfo->getAllBundleInfo();
   }
 
   /**
@@ -275,10 +282,9 @@ class BundleClassTest extends EntityKernelTestBase {
    */
   public function testBundleClassShouldExist(): void {
     $this->container->get('state')->set('entity_test_bundle_class_does_not_exist', TRUE);
-    $this->entityTypeManager->clearCachedDefinitions();
     $this->expectException(MissingBundleClassException::class);
-    entity_test_create_bundle('bundle_class');
-    $this->storage->create(['type' => 'bundle_class']);
+    $this->entityTypeBundleInfo->clearCachedBundles();
+    $this->entityTypeBundleInfo->getAllBundleInfo();
   }
 
   /**
