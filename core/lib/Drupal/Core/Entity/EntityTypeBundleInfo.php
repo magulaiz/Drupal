@@ -111,6 +111,8 @@ class EntityTypeBundleInfo implements EntityTypeBundleInfoInterface {
         }
         $this->moduleHandler->alter('entity_bundle_info', $this->bundleInfo);
 
+        // Verify bundle classes after hook_entity_bundle_info_alter() has been
+        // invoked.
         foreach ($this->entityTypeManager->getDefinitions() as $type => $entity_type) {
           $entity_class = $entity_type->getClass();
           if ($bundle_entity_type = $entity_type->getBundleEntityType()) {
