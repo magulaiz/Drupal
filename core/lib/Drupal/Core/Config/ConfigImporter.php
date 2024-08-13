@@ -880,7 +880,7 @@ class ConfigImporter {
    * @param string|array $names
    *   The name or names of the extension to process.
    */
-  protected function processExtension($type, $op, $names) {
+  protected function processExtension(string $type, string $op, string|array $names) {
     $names = (array) $names;
     // Set the config installer to use the sync directory instead of the
     // extensions own default config directories.
