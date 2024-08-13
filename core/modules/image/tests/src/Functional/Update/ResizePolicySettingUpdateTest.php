@@ -29,12 +29,17 @@ class ResizePolicySettingUpdateTest extends UpdatePathTestBase {
   public function testSystemPostUpdateLinksetSettings() {
     $storage = \Drupal::entityTypeManager()->getStorage('field_config');
     $imageFields = $storage->loadMultiple();
+    $imagesProcessed = FALSE;
     if (!empty($imageFields)) {
       foreach ($imageFields as $field) {
         if ($field->getType() === 'image') {
           $this->assertNull($field->getSetting('resize_policy'));
+          $imagesProcessed = TRUE;
         }
       }
+    }
+    if (!$imagesProcessed) {
+      $this->fail('No image fields found.');
     }
 
     $this->runUpdates();
