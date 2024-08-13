@@ -59,7 +59,7 @@ class TaxonomyOverviewUITest extends WebDriverTestBase {
   /**
    * Test re-ordering terms using the form.
    */
-  public function testTermReorder() {
+  public function testTermReorder(): void {
     $this->drupalGet('admin/structure/taxonomy/manage/' . $this->vocabulary->id() . '/overview');
     $session = $this->getSession();
     $assert_session = $this->assertSession();
