@@ -4,6 +4,7 @@ description: 'Allows users to register and log in, and manages user roles and pe
 package: Core
 version: VERSION
 required: true
+container_rebuild_required: false
 configure: user.admin_index
 dependencies:
   - drupal:system
