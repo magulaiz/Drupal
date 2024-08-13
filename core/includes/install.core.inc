@@ -1608,7 +1608,22 @@ function install_profile_modules(&$install_state) {
   arsort($non_required);
 
   $batch_builder = new BatchBuilder();
-  $module_groups = array_chunk($required + $non_required, Settings::get('core.multi-module-install', 20), TRUE);
+
+  // Put modules into groups of up to the maximum batch size, or until a module
+  // states that it needs a container rebuild immediately after install.
+  $index = 0;
+  $module_groups = [];
+  foreach ($required + $non_required as $module => $weight) {
+    $module_groups[$index][$module] = $weight;
+    if (count($module_groups[$index]) === Settings::get('core.multi-module-install', 20)) {
+      $index++;
+    }
+    // @todo Consider reversing this logic so that modules must explicitly
+    // state that they need a container build.
+    elseif (!isset($files[$module]->info['container_rebuild_required']) || $files[$module]->info['container_rebuild_required']) {
+      $index++;
+    }
+  }
 
   foreach ($module_groups as $module_group) {
     $names = [];
