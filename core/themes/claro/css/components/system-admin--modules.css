@@ -16,6 +16,8 @@
   --module-table-filter-box-shadow: 0 2px 0.25rem rgba(0, 0, 0, 0.1);
 }
 
+/* Visually hide the module filter input description. */
+
 .modules-table-filter,
 .permissions-table-filter {
   padding: 0.25rem var(--space-l);
@@ -24,7 +26,6 @@
   box-shadow: var(--module-table-filter-box-shadow);
 }
 
-/* Visually hide the module filter input description. */
 .modules-table-filter .form-item__description,
 .permissions-table-filter .form-item__description {
   position: absolute !important;
