@@ -17,6 +17,7 @@ use Symfony\Component\HttpKernel\Exception\HttpException;
  * Tests the Response Status Condition, provided by the system module.
  *
  * @group Plugin
+ * @group #slow
  */
 class ResponseStatusTest extends KernelTestBase {
 

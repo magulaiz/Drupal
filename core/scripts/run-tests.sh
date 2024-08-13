@@ -732,6 +732,7 @@ function simpletest_script_execute_batch(TestRunResultsStorageInterface $test_ru
   // Multi-process execution.
   $children = [];
   while (!empty($test_classes) || !empty($children)) {
+    $child_added = FALSE;
     while (count($children) < $args['concurrency']) {
       if (empty($test_classes)) {
         break;
@@ -763,10 +764,19 @@ function simpletest_script_execute_batch(TestRunResultsStorageInterface $test_ru
         'class' => $test_class,
         'pipes' => $pipes,
       ];
+      $child_added = TRUE;
     }
 
-    // Wait for children every 200ms.
-    usleep(200000);
+    // If no child was added this iteration, wait 200ms to avoid a spin lock.
+    // Otherwise immediately check if any children finished running.
+    $time = microtime(TRUE);
+    if (!$child_added) {
+      print "Sleeping for 200ms {$time} \n";
+      usleep(200000);
+    }
+    else {
+      print "Not sleeping {$time} \n";
+    }
 
     // Check if some children finished.
     foreach ($children as $cid => $child) {
@@ -819,12 +829,15 @@ function simpletest_script_execute_batch(TestRunResultsStorageInterface $test_ru
  */
 function simpletest_script_run_phpunit(TestRun $test_run, $class) {
   $runner = PhpUnitTestRunner::create(\Drupal::getContainer());
+  $start = microtime(TRUE);
   $results = $runner->execute($test_run, $class, $status);
+  $time = microtime(TRUE) - $start;
+
   $runner->processPhpUnitResults($test_run, $results);
 
   $summaries = $runner->summarizeResults($results);
   foreach ($summaries as $class => $summary) {
-    simpletest_script_reporter_display_summary($class, $summary);
+    simpletest_script_reporter_display_summary($class, $summary, $time);
   }
   return $status;
 }
@@ -1026,12 +1039,76 @@ function simpletest_script_get_test_list() {
   }
 
   if ((int) $args['ci-parallel-node-total'] > 1) {
-    $slow_tests_per_job = (int) ceil(count($slow_tests) / $args['ci-parallel-node-total']);
-    $tests_per_job = (int) ceil(count($test_list) / $args['ci-parallel-node-total']);
-    $test_list = array_merge(array_slice($slow_tests, ($args['ci-parallel-node-index'] -1) * $slow_tests_per_job, $slow_tests_per_job), array_slice($test_list, ($args['ci-parallel-node-index'] - 1) * $tests_per_job, $tests_per_job));
+    // Sort all tests by the number of public methods on the test class.
+    // This is a proxy for the approximate time taken to run the test,
+    // which is used in combination with @group #slow to start the slowest tests
+    // first and distribute tests between test runners.
+    sort_tests_by_public_method_count($slow_tests);
+    sort_tests_by_public_method_count($test_list);
+
+    // Now set up a bin per test runner.
+    $bin_count = $args['ci-parallel-node-total'];
+
+    // Now loop over the slow tests and add them to a bin one by one, this
+    // distributes the tests evenly across the bins.
+    $binned_slow_tests = place_tests_into_bins($slow_tests, $bin_count);
+    $slow_tests_for_job = $binned_slow_tests[$args['ci-parallel-node-index'] - 1];
+
+    // And the same for the rest of the tests.
+    $binned_other_tests = place_tests_into_bins($test_list, $bin_count);
+    $other_tests_for_job = $binned_other_tests[$args['ci-parallel-node-index'] - 1];
+
+    $test_list = array_merge($slow_tests_for_job, $other_tests_for_job);
   }
 
   return $test_list;
+}
+
+/**
+ * Sort tests by the number of public methods in the test class.
+ *
+ * Tests with several methods take longer to run than tests with a single
+ * method all else being equal, so this allows tests runs to be sorted by
+ * approximately the slowest to fastest tests. Tests that are exceptionally
+ * slow can be added to the '#slow' group so they are placed first in each
+ * test run regardless of the number of methods.
+ *
+ * @param string[] an array of test class names.
+ */
+function sort_tests_by_public_method_count(&$tests): void {
+  usort($tests, function ($a, $b) {
+    $method_count = function ($class) {
+      $reflection = new \ReflectionClass($class);
+      return count($reflection->getMethods(\ReflectionMethod::IS_PUBLIC));
+    };
+    return $method_count($a) < $method_count($b) ? 1 : -1;
+  });
+}
+
+/**
+ * Distribute tests into bins.
+ */
+function place_tests_into_bins($tests, $bin_count) {
+  // Create a bin corresponding to each parallel test job.
+  $bins = array_fill(0, $bin_count, []);
+  $bin_max_index = $bin_count - 1;
+  $cycle = 0;
+  // Go through each test, already sorted from most methods to least, and
+  // add them to one bin at a time. This results each bin having a similar
+  // number of test methods to run in total.
+  foreach ($tests as $key => $test) {
+    if ($cycle === 0) {
+      $bin = $key;
+    }
+    else {
+      $bin = $key - ($cycle * $bin_count);
+    }
+    $bins[$bin][] = $test;
+    if ($bin / $bin_max_index === 1) {
+      $cycle++;
+    }
+  }
+  return $bins;
 }
 
 /**
@@ -1080,14 +1157,17 @@ function simpletest_script_reporter_init() {
  *   The test class name that was run.
  * @param array $results
  *   The assertion results using #pass, #fail, #exception, #debug array keys.
+ * @param int|null $duration
+ *   The time taken for the test to complete.
  */
-function simpletest_script_reporter_display_summary($class, $results) {
+function simpletest_script_reporter_display_summary($class, $results, $duration = NULL) {
   // Output all test results vertically aligned.
   // Cut off the class name after 60 chars, and pad each group with 3 digits
   // by default (more than 999 assertions are rare).
-  $output = vsprintf('%-60.60s %10s %9s %14s %12s', [
+  $output = vsprintf('%-60.60s %10s %5s %9s %14s %12s', [
     $class,
     $results['#pass'] . ' passes',
+    isset($duration) ? $duration . 's' : '',
     !$results['#fail'] ? '' : $results['#fail'] . ' fails',
     !$results['#exception'] ? '' : $results['#exception'] . ' exceptions',
     !$results['#debug'] ? '' : $results['#debug'] . ' messages',
@@ -1236,8 +1316,21 @@ function simpletest_script_reporter_display_results(TestRunResultsStorageInterfa
 function simpletest_script_format_result($result) {
   global $args, $results_map, $color;
 
+  // Limit the fully qualified method name to 60 characters, using the end of
+  // the string so that individual test classes can still be identified.
+  $class = $result->function;
+  $length = strlen($class);
+  if ($length < 60) {
+    $class_out = str_pad($class, 60, ' ', STR_PAD_RIGHT);
+  }
+  elseif ($length > 60) {
+    $class_out = '...' . substr($class, -60 + 3);
+  }
+  else {
+    $class_out = $class;
+  }
   $summary = sprintf("%-9.9s %-10.10s %-17.17s %4.4s %-35.35s\n",
-    $results_map[$result->status], $result->message_group, basename($result->file), $result->line, $result->function);
+  $results_map[$result->status], $result->message_group, basename($result->file), $result->line, $class_out);
 
   simpletest_script_print($summary, simpletest_script_color_code($result->status));
 

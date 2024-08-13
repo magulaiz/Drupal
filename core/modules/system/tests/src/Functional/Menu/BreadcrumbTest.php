@@ -15,6 +15,7 @@ use PHPUnit\Framework\ExpectationFailedException;
  * Tests breadcrumbs functionality.
  *
  * @group Menu
+ * @group #slow
  */
 class BreadcrumbTest extends BrowserTestBase {
 

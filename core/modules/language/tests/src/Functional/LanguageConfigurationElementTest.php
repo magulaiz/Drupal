@@ -14,6 +14,7 @@ use Drupal\Tests\BrowserTestBase;
  * Tests the features of the language configuration element field.
  *
  * @group language
+ * @group #slow
  */
 class LanguageConfigurationElementTest extends BrowserTestBase {
 
