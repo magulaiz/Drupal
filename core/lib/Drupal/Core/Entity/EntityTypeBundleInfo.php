@@ -116,8 +116,6 @@ class EntityTypeBundleInfo implements EntityTypeBundleInfoInterface {
       }
     }
 
-    \Drupal::logger("dasdadsada")->notice(print_r($this->bundleInfo, TRUE));
-
     return $this->bundleInfo;
   }
 
