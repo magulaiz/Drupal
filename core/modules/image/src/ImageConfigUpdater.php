@@ -60,7 +60,7 @@ class ImageConfigUpdater implements ContainerInjectionInterface {
    * @return bool
    *   Whether the field was updated.
    */
-  public function updateField(FieldConfigInterface $field) {
+  public function updateField(FieldConfigInterface $field): bool {
     $changed = FALSE;
     if ($this->needsEntitySettingUpdate($field)) {
       $field->setSetting('resize_policy', ImageResizePolicy::ResizeLargerImages->value);
