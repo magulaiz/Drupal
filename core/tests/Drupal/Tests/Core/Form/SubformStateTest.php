@@ -337,4 +337,17 @@ class SubformStateTest extends UnitTestCase {
     $this->assertSame($parent_form_object, $subform_state->getCompleteFormState()->getFormObject());
   }
 
+  /**
+   * Tests an exception is thrown if the subform does not have #tree = TRUE.
+   */
+  public function testMissingTree(): void {
+    $parent_form_state = new FormState();
+    $parent_form_state->setValues(static::$formStateValues);
+
+    $subform = NestedArray::getValue($this->parentForm, ['dog']);
+
+    $this->expectException(\Exception::class);
+    SubformState::createForSubform($subform, $this->parentForm, $parent_form_state);
+  }
+
 }
