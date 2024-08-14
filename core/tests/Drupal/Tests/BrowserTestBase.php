@@ -451,6 +451,11 @@ abstract class BrowserTestBase extends TestCase {
    * {@inheritdoc}
    */
   protected function tearDown(): void {
+    if ($this->preserveSite || getenv('BROWSERTEST_PRESERVE_SITE')) {
+      $site_id = filter_var(drupal_valid_test_ua(), FILTER_SANITIZE_NUMBER_INT);
+      print "Test site is preserved with site ID $site_id.\n";
+    }
+
     // Close any mink sessions as early as possible to free a new browser
     // session up for the next test method or test.
     if ($this->mink) {
