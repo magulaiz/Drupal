@@ -389,7 +389,7 @@ trait FunctionalTestSetupTrait {
    */
   protected function initUserSession() {
     // If the site is being preserved use a simple password.
-    if (!empty($this->preserveSiteInTearDown) || getenv('BROWSERTEST_PRESERVE_SITE')) {
+    if (!empty($this->preserveSite) || getenv('BROWSERTEST_PRESERVE_SITE')) {
       $password = 'admin';
     }
     else {

@@ -187,7 +187,7 @@ abstract class BrowserTestBase extends TestCase {
    * @see sites/example.sites.php
    * @see \Drupal\Core\DrupalKernel::findSitePath()
    */
-  protected $preserveSiteInTearDown = FALSE;
+  protected $preserveSite = FALSE;
 
   /**
    * The base URL.
@@ -467,7 +467,7 @@ abstract class BrowserTestBase extends TestCase {
 
     // Destroy the testing kernel.
     if (isset($this->kernel)) {
-      if (!($this->preserveSiteInTearDown || getenv('BROWSERTEST_PRESERVE_SITE'))) {
+      if (!($this->preserveSite || getenv('BROWSERTEST_PRESERVE_SITE'))) {
         $this->cleanupEnvironment();
       }
       $this->kernel->shutdown();
