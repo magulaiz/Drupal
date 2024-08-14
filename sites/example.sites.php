@@ -18,11 +18,12 @@
  * the database (files, system table, etc.) this will ensure the paths are
  * correct when the site is deployed to a live server.
  *
- * If a test site from a Functional test has been preserved after a test, the
- * site may be accessed by setting a site directory (or indeed the main site) to
- * the test site directory, in the form 'simpletest/TEST_PREFIX'. 'TEST_PREFIX'
- * is the numeric prefix of the test which is also used as part of the test
- * database table prefix.
+ * Aliases can also be used to access a test site that was created by a
+ * browser test. The test site may be accessed by setting a site directory to
+ * the site directory created by the test. The directory is in the form
+ * 'simpletest/TEST_PREFIX', where 'TEST_PREFIX' is the numeric prefix of the
+ * test. To preserve the site see the documentation in the core/phpunit.xml.dist
+ * file.
  *
  * To activate this feature, copy and rename it such that its path plus
  * filename is 'sites/sites.php'.

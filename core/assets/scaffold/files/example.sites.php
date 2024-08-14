@@ -18,6 +18,13 @@
  * the database (files, system table, etc.) this will ensure the paths are
  * correct when the site is deployed to a live server.
  *
+ * Aliases can also be used to access a test site that was created by a
+ * browser test. The test site may be accessed by setting a site directory to
+ * the site directory created by the test. The directory is in the form
+ * 'simpletest/TEST_PREFIX', where 'TEST_PREFIX' is the numeric prefix of the
+ * test. To preserve the site see the documentation in the core/phpunit.xml.dist
+ * file.
+ *
  * If a test site from a Functional test has been preserved after a test, the
  * site may be accessed by setting a site directory (or indeed the main site) to
  * the test site directory, in the form 'simpletest/TEST_PREFIX'. 'TEST_PREFIX'
