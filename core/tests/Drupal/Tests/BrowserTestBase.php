@@ -369,6 +369,7 @@ abstract class BrowserTestBase extends TestCase {
 
     // Set up the browser test output file.
     $this->initBrowserOutputFile();
+
   }
 
   /**
