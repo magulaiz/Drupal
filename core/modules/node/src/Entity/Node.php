@@ -165,6 +165,9 @@ class Node extends EditorialContentEntityBase implements NodeInterface {
     if ($update) {
       node_reindex_node_search($this->id());
     }
+    if (\Drupal::moduleHandler()->moduleExists('search') && \Drupal::moduleHandler()->moduleExists('automated_cron')) {
+      \Drupal::queue('node_index')->createItem([$this->id()]);
+    }
   }
 
   /**
