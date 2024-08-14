@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Core\Entity;
 
 use Drupal\Core\Cache\MemoryCache\MemoryCacheInterface;
@@ -70,14 +72,14 @@ class ChunkedIterator implements \IteratorAggregate, \Countable {
   }
 
   /**
-   * @inheritdoc
+   * {@inheritdoc}
    */
   public function count() {
     return count($this->entityIds);
   }
 
   /**
-   * @inheritdoc
+   * {@inheritdoc}
    */
   public function getIterator() {
     foreach ($this->chunkIds() as $ids_chunk) {
