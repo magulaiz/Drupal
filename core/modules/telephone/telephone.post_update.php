@@ -8,7 +8,7 @@
 use Drupal\Core\Batch\BatchBuilder;
 
 /**
- * Ensures that all telephone fields has size attribue in config.
+ * Ensures that all telephone fields has size attribute in config.
  */
 function telephone_post_update_add_size_attribute() {
   $configNames = \Drupal::service('config.storage')->listAll('core.entity_form_display');
