@@ -47,7 +47,7 @@ class ChunkedIteratorTest extends UnitTestCase {
    * {@inheritdoc}
    */
   public function setUp() : void {
-    parent::setUp() 
+    parent::setUp();
     $this->entityStorage = $this->prophesize(EntityStorageInterface::class);
     $this->memoryCache = $this->prophesize(MemoryCacheInterface::class);
     $this->entity = $this->prophesize(EntityInterface::class);
