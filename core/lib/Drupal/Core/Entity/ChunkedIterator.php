@@ -23,13 +23,6 @@ use Drupal\Core\Cache\MemoryCache\MemoryCacheInterface;
 class ChunkedIterator implements \IteratorAggregate, \Countable {
 
   /**
-   * The entity storage controller to load entities.
-   *
-   * @var \Drupal\Core\Entity\EntityStorageInterface
-   */
-  protected $entityStorage;
-
-  /**
    * An iterable of entity IDs to iterate over.
    *
    * @var iterable
@@ -37,39 +30,17 @@ class ChunkedIterator implements \IteratorAggregate, \Countable {
   protected $entityIds;
 
   /**
-   * The size of each chunk of loaded entities.
-   *
-   * @var int
-   */
-  protected $chunkSize;
-
-  /**
-   * The memory cache to store but also reset loaded entities.
-   *
-   * @var \Drupal\Core\Cache\MemoryCache\MemoryCacheInterface
-   */
-  protected $memoryCache;
-
-  /**
    * Constructs an entity iterator object.
-   *
-   * @param \Drupal\Core\Entity\EntityStorageInterface $entity_storage
-   *   The entity storage.
-   * @param \Drupal\Core\Cache\MemoryCache\MemoryCacheInterface $memory_cache
-   *   The memory cache service.
-   * @param iterable $ids
-   *   An iterable of entity IDs. Common examples would be an array or a
-   *   generator.
-   * @param int $chunk_size
-   *   The size per chunk we want to load in parallel.
    */
-  public function __construct(EntityStorageInterface $entity_storage, MemoryCacheInterface $memory_cache, iterable $ids, $chunk_size = 50) {
-    $this->entityStorage = $entity_storage;
-    $this->memoryCache = $memory_cache;
-    // Make sure we don't use a keyed array.
-    $this->entityIds = $ids;
-    $this->chunkSize = (int) $chunk_size;
-  }
+  public function __construct(
+    private EntityStorageInterface $entityStorage, 
+    private MemoryCacheInterface $memoryCache, 
+    private iterable $ids, 
+    private int $chunkSize = 50
+    ) {
+      // Make sure we don't use a keyed array.
+      $this->entityIds = $ids;
+    }
 
   /**
    * {@inheritdoc}
