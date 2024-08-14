@@ -15,6 +15,7 @@ use Drupal\Tests\taxonomy\Traits\TaxonomyTestTrait;
  * Tests local tasks derived from router and added/altered via hooks.
  *
  * @group Menu
+ * @group #slow
  */
 class LocalTasksTest extends BrowserTestBase {
 

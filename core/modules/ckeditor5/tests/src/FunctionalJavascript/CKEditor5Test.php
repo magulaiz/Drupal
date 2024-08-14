@@ -71,9 +71,17 @@ class CKEditor5Test extends CKEditor5TestBase {
   }
 
   /**
+   * Tests attributes.
+   */
+  public function testAttributes(): void {
+    $this->testAttributeEncoding();
+    $this->testFilterHtmlAllowedGlobalAttributes();
+  }
+
+  /**
    * Ensures that attribute values are encoded.
    */
-  public function testAttributeEncoding(): void {
+  protected function testAttributeEncoding(): void {
     $page = $this->getSession()->getPage();
     $assert_session = $this->assertSession();
 
@@ -295,7 +303,7 @@ JS;
   /**
    * Helper to set language list option for CKEditor.
    */
-  public function languageOfPartsPluginConfigureLanguageListHelper($page, $assert_session, $option) {
+  protected function languageOfPartsPluginConfigureLanguageListHelper($page, $assert_session, $option) {
     $this->drupalGet('admin/config/content/formats/manage/ckeditor5');
     $this->assertNotEmpty($assert_session->waitForElement('css', 'a[href^="#edit-editor-settings-plugins-ckeditor5-language"]'));
 
@@ -314,7 +322,7 @@ JS;
   /**
    * Validate expected languages available in editor.
    */
-  public function languageOfPartsPluginTestHelper($page, $assert_session, $configured_languages) {
+  protected function languageOfPartsPluginTestHelper($page, $assert_session, $configured_languages) {
     $this->drupalGet('node/add/page');
     $this->assertNotEmpty($assert_session->waitForText('Choose language'));
 
@@ -732,7 +740,7 @@ JS;
    * @see ckeditor5_globalAttributeLang
    * @see https://html.spec.whatwg.org/multipage/dom.html#global-attributes
    */
-  public function testFilterHtmlAllowedGlobalAttributes(): void {
+  protected function testFilterHtmlAllowedGlobalAttributes(): void {
     $page = $this->getSession()->getPage();
     $assert_session = $this->assertSession();
 
