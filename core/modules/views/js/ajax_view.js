@@ -147,10 +147,11 @@
       this.$exposed_form,
     )
       .not('[data-drupal-selector=edit-reset]')
-      .each(function (index) {
+      .get()
+      .forEach((element, index) => {
         const selfSettings = $.extend({}, that.element_settings, {
-          base: $(this).attr('id'),
-          element: this,
+          base: element.getAttribute('id'),
+          element,
         });
         that.exposedFormAjax[index] = Drupal.ajax(selfSettings);
       });

@@ -156,12 +156,14 @@
         // The "active tabbing set" are the elements tabbing should be constrained
         // to.
         let tabbableElements = [];
-        $(elements).each((index, rootElement) => {
-          tabbableElements = [...tabbableElements, ...tabbable(rootElement)];
-          if (isTabbable(rootElement)) {
-            tabbableElements = [...tabbableElements, rootElement];
-          }
-        });
+        $(elements)
+          .get()
+          .forEach((rootElement) => {
+            tabbableElements = [...tabbableElements, ...tabbable(rootElement)];
+            if (isTabbable(rootElement)) {
+              tabbableElements = [...tabbableElements, rootElement];
+            }
+          });
 
         const tabbingContext = new TabbingContext({
           // The level is the current height of the stack before this new

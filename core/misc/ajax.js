@@ -1391,7 +1391,7 @@
       }
 
       // Attach behaviors to all element nodes.
-      $newContent.each((index, element) => {
+      $newContent.get().forEach((element) => {
         if (
           element.nodeType === Node.ELEMENT_NODE &&
           // Attach all JavaScript behaviors to the new content, if it was
@@ -1421,10 +1421,11 @@
     remove(ajax, response, status) {
       const settings = response.settings || ajax.settings || drupalSettings;
       $(response.selector)
-        .each(function () {
-          Drupal.detachBehaviors(this, settings);
-        })
-        .remove();
+        .get()
+        .forEach((element) => {
+          Drupal.detachBehaviors(element, settings);
+          element.remove();
+        });
     },
 
     /**

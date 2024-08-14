@@ -113,9 +113,10 @@
       // Create row handlers.
       $(table)
         .find('tr.draggable')
-        .each(function () {
+        .get()
+        .forEach((element) => {
           // Extract server-side data for the row.
-          const row = this;
+          const row = element;
           if (row.id in rowsData) {
             const data = rowsData[row.id];
             data.tableDrag = tableDrag;
@@ -220,8 +221,9 @@
       const rowObject = this;
       $(rowObject.table)
         .find('tr.region-message')
-        .each(function () {
-          const $this = $(this);
+        .get()
+        .forEach((element) => {
+          const $this = $(element);
           // If the dragged row is in this region, but above the message row, swap
           // it down one space.
           if (
@@ -234,7 +236,7 @@
               rowObject.method !== 'keyboard' ||
               rowObject.direction === 'down'
             ) {
-              rowObject.swap('after', this);
+              rowObject.swap('after', element);
             }
           }
           // This region has become empty.
@@ -245,7 +247,7 @@
             $this.removeClass('region-populated').addClass('region-empty');
           }
           // This region has become populated.
-          else if (this.matches('.region-empty')) {
+          else if (element.matches('.region-empty')) {
             $this.removeClass('region-empty').addClass('region-populated');
           }
         });
@@ -451,7 +453,7 @@
 
       function filterRows(e) {
         const query = e.target.value;
-        function showRow(index, row) {
+        function showRow(row) {
           const sources = row.querySelectorAll('.form-item');
           let sourcesConcat = '';
           // Concatenate the textContent of the elements in the row, with a
@@ -469,7 +471,7 @@
         // Filter if the length of the query is at least 1 character.
         if (query.length > 0) {
           searching = true;
-          $rows.each(showRow);
+          $rows.get().forEach(showRow);
         } else if (searching) {
           searching = false;
           $rows.show();

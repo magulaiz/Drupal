@@ -37,12 +37,12 @@
         /**
          * Shows or hides the block entry based on the query.
          *
-         * @param {number} index
-         *   The index in the loop, as provided by `jQuery.each`
          * @param {HTMLElement} link
          *   The link to add the block.
+         * @param {number} index
+         *   The index in the loop, as provided by `forEach`
          */
-        const toggleBlockEntry = (index, link) => {
+        const toggleBlockEntry = (link) => {
           const $link = $(link);
           const textMatch = link.textContent.toLowerCase().includes(query);
           // Checks if a category is currently hidden.
@@ -68,7 +68,7 @@
           // Open all categories so every block is available to filtering.
           $categories.find('.js-layout-builder-category').attr('open', '');
           // Toggle visibility of links based on query.
-          $filterLinks.each(toggleBlockEntry);
+          $filterLinks.get().forEach(toggleBlockEntry);
 
           // Only display categories containing visible links.
           $categories
@@ -366,8 +366,9 @@
          * Iterate over all Layout Builder blocks to hide their content and add
          * placeholder labels.
          */
-        $('[data-layout-content-preview-placeholder-label]', context).each(
-          (i, element) => {
+        $('[data-layout-content-preview-placeholder-label]', context)
+          .get()
+          .forEach((element) => {
             const $element = $(element);
 
             // Hide everything in block that isn't contextual link related.
@@ -382,8 +383,7 @@
               contentPreviewPlaceholderText,
             );
             $element.prepend(contentPreviewPlaceholderLabel);
-          },
-        );
+          });
       };
 
       /**
@@ -403,11 +403,11 @@
         $('.js-layout-builder-content-preview-placeholder-label').remove();
 
         // Iterate over all blocks.
-        $('[data-layout-content-preview-placeholder-label]').each(
-          (i, element) => {
+        $('[data-layout-content-preview-placeholder-label]')
+          .get()
+          .forEach((element) => {
             $(element).children().show();
-          },
-        );
+          });
       };
 
       $('#layout-builder-content-preview', context).on('change', (event) => {

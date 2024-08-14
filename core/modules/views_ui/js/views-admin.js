@@ -395,9 +395,9 @@
         .end()
         .eq(-1)
         .addClass('last');
-      $displayButtons.each(function () {
-        const $this = $(this);
-        this.value = $this.attr('data-drupal-dropdown-label');
+
+      $displayButtons.get().forEach((button) => {
+        button.value = button.getAttribute('data-drupal-dropdown-label');
       });
       $addDisplayDropdown.appendTo($menu);
 
@@ -905,7 +905,7 @@
         const operators = this.dropdowns.find('select').not($target);
 
         // Change the other operators to match this new value.
-        operators.each(function (index, item) {
+        operators.get().forEach((item) => {
           item.value = $target[0].value;
         });
       },

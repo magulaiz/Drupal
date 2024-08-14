@@ -21,9 +21,10 @@
         $(context)
           .find('input[name^="options"]:checked')
           .parent()
-          .each(function () {
+          .get()
+          .forEach((element) => {
             values.push(
-              Drupal.checkPlain($(this).find('label')[0].textContent),
+              Drupal.checkPlain($(element).find('label')[0].textContent),
             );
           });
         if ($(context).find('#edit-options-status:checked').length === 0) {
@@ -45,8 +46,9 @@
           $(context)
             .find('input:checked')
             .next('label')
-            .each(function () {
-              values.push(Drupal.checkPlain(this.textContent));
+            .get()
+            .forEach((element) => {
+              values.push(Drupal.checkPlain(element.textContent));
             });
 
           return values.join(', ');

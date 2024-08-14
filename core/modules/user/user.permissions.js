@@ -62,8 +62,8 @@
           .on('click.permissions', this.toggle)
           // .triggerHandler() cannot be used here, as it only affects the first
           // element.
-          .each(this.toggle);
-
+          .get()
+          .forEach(this.toggle);
         // Re-insert the table into the DOM.
         $ancestor[method]($table);
       });
@@ -81,12 +81,18 @@
       // jQuery performs too many layout calculations for .hide() and .show(),
       // leading to a major page rendering lag on sites with many roles and
       // permissions. Therefore, we toggle visibility directly.
-      $row.find('.js-real-checkbox').each(function () {
-        this.style.display = authCheckbox.checked ? 'none' : '';
-      });
-      $row.find('.js-dummy-checkbox').each(function () {
-        this.style.display = authCheckbox.checked ? '' : 'none';
-      });
+      $row
+        .find('.js-real-checkbox')
+        .get()
+        .forEach((element) => {
+          element.style.display = authCheckbox.checked ? 'none' : '';
+        });
+      $row
+        .find('.js-dummy-checkbox')
+        .get()
+        .forEach((element) => {
+          element.style.display = authCheckbox.checked ? '' : 'none';
+        });
     },
   };
 
@@ -153,7 +159,7 @@
         // Case insensitive expression to find query at the beginning of a word.
         const re = new RegExp(`\\b${query}`, 'i');
 
-        function showPermissionRow(index, row) {
+        function showPermissionRow(row) {
           const sources = row.querySelectorAll('.table-filter-text-source');
           if (sources.length > 0) {
             const textMatch = sources[0].textContent.search(re) !== -1;
@@ -165,7 +171,7 @@
 
         // Filter if the length of the query is at least 2 characters.
         if (query.length >= 2) {
-          $rows.each(showPermissionRow);
+          $rows.get().forEach(showPermissionRow);
 
           // Hide the empty header if they don't have any visible rows.
           const visibleRows = $table.find('tbody tr:visible');

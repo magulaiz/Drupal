@@ -238,9 +238,10 @@
     }
     // Make each applicable row draggable.
     // Match immediate children of the parent element to allow nesting.
-    $table.find('> tr.draggable, > tbody > tr.draggable').each(function () {
-      self.makeDraggable(this);
-    });
+    $table
+      .find('> tr.draggable, > tbody > tr.draggable')
+      .get()
+      .forEach((element) => self.makeDraggable(element));
 
     const $toggleWeightWrapper = $(Drupal.theme('tableDragToggle'));
     this.$toggleWeightButton = $toggleWeightWrapper.find(
@@ -337,7 +338,8 @@
         columnIndex = cell.parent().find('> td').index(cell.get(0)) + 1;
         $table
           .find('> thead > tr, > tbody > tr, > tr')
-          .each(this.addColspanClass(columnIndex));
+          .get()
+          .forEach((element) => this.addColspanClass(element, columnIndex));
       }
     });
     this.displayColumns(showWeight);
@@ -347,6 +349,8 @@
    * Mark cells that have colspan.
    *
    * In order to adjust the colspan instead of hiding them altogether.
+   * @param {HTMLElement} element
+   *   The element to adjust colspans.
    *
    * @param {number} columnIndex
    *   The column index to add colspan class to.
@@ -354,29 +358,27 @@
    * @return {function}
    *   Function to add colspan class.
    */
-  Drupal.tableDrag.prototype.addColspanClass = function (columnIndex) {
-    return function () {
-      // Get the columnIndex and adjust for any colspans in this row.
-      const $row = $(this);
-      let index = columnIndex;
-      const cells = $row.children();
-      let cell;
-      cells.each(function (n) {
-        if (n < index && this.colSpan && this.colSpan > 1) {
-          index -= this.colSpan - 1;
-        }
-      });
-      if (index > 0) {
-        cell = cells.filter(`:nth-child(${index})`);
-        if (cell[0].colSpan && cell[0].colSpan > 1) {
-          // If this cell has a colspan, mark it so we can reduce the colspan.
-          cell.addClass('tabledrag-has-colspan');
-        } else {
-          // Mark this cell so we can hide it.
-          cell.addClass('tabledrag-hide');
-        }
+  Drupal.tableDrag.prototype.addColspanClass = function (element, columnIndex) {
+    // Get the columnIndex and adjust for any colspans in this row.
+    const $row = $(element);
+    let index = columnIndex;
+    const cells = $row.children();
+    let cell;
+    cells.each(function (n) {
+      if (n < index && this.colSpan && this.colSpan > 1) {
+        index -= this.colSpan - 1;
       }
-    };
+    });
+    if (index > 0) {
+      cell = cells.filter(`:nth-child(${index})`);
+      if (cell[0].colSpan && cell[0].colSpan > 1) {
+        // If this cell has a colspan, mark it so we can reduce the colspan.
+        cell.addClass('tabledrag-has-colspan');
+      } else {
+        // Mark this cell so we can hide it.
+        cell.addClass('tabledrag-hide');
+      }
+    }
   };
 
   /**
@@ -433,17 +435,26 @@
   Drupal.tableDrag.prototype.hideColumns = function () {
     const $tables = $(once.filter('tabledrag', 'table'));
     // Hide weight/parent cells and headers.
-    $tables.find('.tabledrag-hide').each(function () {
-      this.style.display = 'none';
-    });
+    $tables
+      .find('.tabledrag-hide')
+      .get()
+      .forEach(({ style }) => {
+        style.display = 'none';
+      });
     // Show TableDrag handles.
-    $tables.find('.tabledrag-handle').each(function () {
-      this.style.display = '';
-    });
+    $tables
+      .find('.tabledrag-handle')
+      .get()
+      .forEach(({ style }) => {
+        style.display = '';
+      });
     // Reduce the colspan of any effected multi-span columns.
-    $tables.find('.tabledrag-has-colspan').each(function () {
-      this.colSpan -= 1;
-    });
+    $tables
+      .find('.tabledrag-has-colspan')
+      .get()
+      .forEach(({ colSpan }) => {
+        colSpan -= 1;
+      });
   };
 
   /**
@@ -454,17 +465,26 @@
   Drupal.tableDrag.prototype.showColumns = function () {
     const $tables = $(once.filter('tabledrag', 'table'));
     // Show weight/parent cells and headers.
-    $tables.find('.tabledrag-hide').each(function () {
-      this.style.display = '';
-    });
+    $tables
+      .find('.tabledrag-hide')
+      .get()
+      .forEach(({ style }) => {
+        style.display = '';
+      });
     // Hide TableDrag handles.
-    $tables.find('.tabledrag-handle').each(function () {
-      this.style.display = 'none';
-    });
+    $tables
+      .find('.tabledrag-handle')
+      .get()
+      .forEach(({ style }) => {
+        style.display = 'none';
+      });
     // Increase the colspan for any columns where it was previously reduced.
-    $tables.find('.tabledrag-has-colspan').each(function () {
-      this.colSpan += 1;
-    });
+    $tables
+      .find('.tabledrag-has-colspan')
+      .get()
+      .forEach(({ colSpan }) => {
+        colSpan += 1;
+      });
   };
 
   /**
@@ -667,11 +687,13 @@
                 false,
               );
               if (nextGroup) {
-                $(nextGroup.group).each(function () {
-                  groupHeight += Drupal.elementIsHidden(this)
-                    ? 0
-                    : this.offsetHeight;
-                });
+                $(nextGroup.group)
+                  .get()
+                  .forEach((element) => {
+                    groupHeight += Drupal.elementIsHidden(element)
+                      ? 0
+                      : element.offsetHeight;
+                  });
                 const nextGroupRow = $(nextGroup.group).eq(-1).get(0);
                 self.rowObject.swap('after', nextGroupRow);
                 // No need to check for indentation, 0 is the only valid one.
@@ -1166,20 +1188,22 @@
             const values = [];
             $(targetElement)
               .find('option')
-              .each(function () {
-                values.push(this.value);
+              .get()
+              .forEach((element) => {
+                values.push(element.value);
               });
             const maxVal = values[values.length - 1];
             // Populate the values in the siblings.
             $(siblings)
               .find(targetClass)
-              .each(function () {
+              .get()
+              .forEach((element) => {
                 // If there are more items than possible values, assign the
                 // maximum value to the row.
                 if (values.length > 0) {
-                  this.value = values.shift();
+                  element.value = values.shift();
                 } else {
-                  this.value = maxVal;
+                  element.value = maxVal;
                 }
               });
           } else {
@@ -1191,8 +1215,9 @@
             }
             $(siblings)
               .find(targetClass)
-              .each(function () {
-                this.value = weight;
+              .get()
+              .forEach((element) => {
+                element.value = weight;
                 weight++;
               });
           }

@@ -25,9 +25,12 @@
    *   The targeted node as a jQuery object.
    */
   const handleFragmentLinkClickOrHashChange = (e, $target) => {
-    $target.parents('.vertical-tabs__pane').each((index, pane) => {
-      $(pane).data('verticalTab').focus();
-    });
+    $target
+      .parents('.vertical-tabs__pane')
+      .get()
+      .forEach((pane) => {
+        $(pane).data('verticalTab').focus();
+      });
   };
 
   /**
@@ -82,8 +85,8 @@
             .before(tabList);
 
           // Transform each details into a tab.
-          $details.each(function () {
-            const $that = $(this);
+          $details.get().forEach((element) => {
+            const $that = $(element);
             const $summary = $that.find('> summary');
             const verticalTab = new Drupal.verticalTab({
               title: $summary.length ? $summary[0].textContent : '',
@@ -95,7 +98,7 @@
               .removeAttr('open')
               .addClass('vertical-tabs__pane')
               .data('verticalTab', verticalTab);
-            if (this.id === focusID) {
+            if (element.id === focusID) {
               tabFocus = $that;
             }
           });

@@ -219,10 +219,13 @@
             firstCharacterBlacklist: blacklist || '',
           });
           // Use jQuery UI Autocomplete on the textfield.
-          $autocomplete.autocomplete(autocomplete.options).each(function () {
-            $(this).data('ui-autocomplete')._renderItem =
-              autocomplete.options.renderItem;
-          });
+          $autocomplete
+            .autocomplete(autocomplete.options)
+            .get()
+            .forEach((autocompletionElement) => {
+              $(autocompletionElement).data('ui-autocomplete')._renderItem =
+                autocomplete.options.renderItem;
+            });
 
           // Use CompositionEvent to handle IME inputs. It requests remote server on "compositionend" event only.
           $autocomplete.on('compositionstart.autocomplete', () => {

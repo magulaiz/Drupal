@@ -38,9 +38,8 @@
       // Initially, hide language detection types that are not customized.
       $configForm
         .find(`${inputSelector}:not(:checked)`)
-        .each((index, element) => {
-          toggleTable(element);
-        });
+        .get()
+        .forEach(toggleTable);
     },
   };
 })(jQuery, Drupal);

@@ -261,7 +261,7 @@
           const defaultValue =
             $element.attr('data-drupal-default-value') === $element[0].value;
           if (browserData && (emptyValue || defaultValue)) {
-            $element.each(function (index, item) {
+            $element.get().forEach((item) => {
               item.value = browserData;
             });
           }

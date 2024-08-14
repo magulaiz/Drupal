@@ -458,8 +458,8 @@
     // Force my and at to have valid horizontal and vertical positions
     // if a value is missing or invalid, it will be converted to center
     // eslint-disable-next-line func-names
-    $.each(['my', 'at'], function () {
-      let pos = (options[this] || '').split(' ');
+    ['my', 'at'].forEach((str) => {
+      let pos = (options[str] || '').split(' ');
 
       if (pos.length === 1) {
         // eslint-disable-next-line no-nested-ternary
@@ -475,13 +475,13 @@
       // Calculate offsets
       const horizontalOffset = regexOffset.exec(pos[0]);
       const verticalOffset = regexOffset.exec(pos[1]);
-      offsets[this] = [
+      offsets[str] = [
         horizontalOffset ? horizontalOffset[0] : 0,
         verticalOffset ? verticalOffset[0] : 0,
       ];
 
       // Reduce to just the positions without the offsets
-      options[this] = [
+      options[str] = [
         regexPosition.exec(pos[0])[0],
         regexPosition.exec(pos[1])[0],
       ];
@@ -554,8 +554,7 @@
         marginTop,
       };
 
-      // eslint-disable-next-line func-names
-      $.each(['left', 'top'], function (i, dir) {
+      ['left', 'top'].forEach((dir, i) => {
         if (collisions[collision[i]]) {
           collisions[collision[i]][dir](position, {
             targetWidth,
