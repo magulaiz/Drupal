@@ -183,6 +183,7 @@ abstract class BrowserTestBase extends TestCase {
    * This behavior can also be controlled with the BROWSERTEST_PRESERVE_SITE
    * environment variable.
    *
+   * @see core/phpunit.xml.dist
    * @see sites/example.sites.php
    * @see \Drupal\Core\DrupalKernel::findSitePath()
    */
