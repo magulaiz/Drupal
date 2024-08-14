@@ -173,15 +173,16 @@ abstract class BrowserTestBase extends TestCase {
   /**
    * Whether to preserve test site database and directory when the test has run.
    *
-   * If a site is preserved, it may be accessed with a browser after the test
-   * for debugging and development. To access the site, set up sites.php
-   * to return the test site folder.
+   * Saving the test site database and directory is useful for debugging and
+   * development. It allows the test site that was created by the test to to be
+   * accessed with a browser after the test has completed.
    *
-   * When this is set to TRUE, the password of the admin user in the test site
-   * is set to 'admin' to allow logging in.
-   *
-   * This behavior can also be controlled with the BROWSERTEST_PRESERVE_SITE
-   * environment variable.
+   * To use this feature:
+   * - Set this variable to TRUE or set the BROWSERTEST_PRESERVE_SITE
+   *   environment variable to true.
+   * - To access the test site, create an entry for the site in sites.php to
+   *   return the test site directory.
+   * - Log in to the test with username 'admin' and password 'admin'
    *
    * @see core/phpunit.xml.dist
    * @see sites/example.sites.php
