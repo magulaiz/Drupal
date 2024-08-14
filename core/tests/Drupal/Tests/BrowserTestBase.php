@@ -171,7 +171,7 @@ abstract class BrowserTestBase extends TestCase {
   protected $mink;
 
   /**
-   * Whether to preserve the site DB tables and directory when the test is done.
+   * Whether to preserve test site database and directory when the test has run.
    *
    * If a site is preserved, it may be accessed with a browser after the test
    * for debugging and development. To access the site, set up sites.php
