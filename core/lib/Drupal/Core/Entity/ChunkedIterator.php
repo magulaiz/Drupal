@@ -33,14 +33,14 @@ class ChunkedIterator implements \IteratorAggregate, \Countable {
    * Constructs an entity iterator object.
    */
   public function __construct(
-    private EntityStorageInterface $entityStorage, 
-    private MemoryCacheInterface $memoryCache, 
-    private iterable $ids, 
-    private int $chunkSize = 50
-    ) {
-      // Make sure we don't use a keyed array.
-      $this->entityIds = $ids;
-    }
+    private EntityStorageInterface $entityStorage,
+    private MemoryCacheInterface $memoryCache,
+    private iterable $ids,
+    private int $chunkSize = 50,
+  ) {
+    // Make sure we don't use a keyed array.
+    $this->entityIds = $ids;
+  }
 
   /**
    * {@inheritdoc}
