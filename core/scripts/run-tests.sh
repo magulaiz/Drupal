@@ -30,6 +30,8 @@ use PHPUnit\Runner\Version;
 use Symfony\Component\Console\Output\ConsoleOutput;
 use Symfony\Component\HttpFoundation\Request;
 
+// cspell:ignore exitcode wwwrun
+
 // Define some colors for display.
 // A nice calming green.
 const SIMPLETEST_SCRIPT_COLOR_PASS = 32;
@@ -828,12 +830,15 @@ function simpletest_script_execute_batch(TestRunResultsStorageInterface $test_ru
  */
 function simpletest_script_run_phpunit(TestRun $test_run, $class) {
   $runner = PhpUnitTestRunner::create(\Drupal::getContainer());
+  $start = microtime(TRUE);
   $results = $runner->execute($test_run, $class, $status);
+  $time = microtime(TRUE) - $start;
+
   $runner->processPhpUnitResults($test_run, $results);
 
   $summaries = $runner->summarizeResults($results);
   foreach ($summaries as $class => $summary) {
-    simpletest_script_reporter_display_summary($class, $summary);
+    simpletest_script_reporter_display_summary($class, $summary, $time);
   }
   return $status;
 }
@@ -1092,8 +1097,10 @@ function simpletest_script_reporter_init() {
  *   The test class name that was run.
  * @param array $results
  *   The assertion results using #pass, #fail, #exception, #debug array keys.
+ * @param float|null $duration
+ *   The time taken for the test to complete.
  */
-function simpletest_script_reporter_display_summary($class, $results) {
+function simpletest_script_reporter_display_summary($class, $results, $duration = NULL) {
   // Output all test results vertically aligned.
   $class_out = $class;
   if (strlen($class_out) < 70) {
@@ -1123,7 +1130,7 @@ function simpletest_script_reporter_display_summary($class, $results) {
     $time = sprintf('%8.3fs', $results['#time']);
   }
   else {
-    $time = '         ';
+    $time = sprintf('%8.3fs', $duration);
   }
 
   $output = vsprintf('%s %s %s', [$time, $class_out, implode(', ', $summary)]);
@@ -1251,7 +1258,7 @@ function simpletest_script_reporter_display_results(TestRunResultsStorageInterfa
           $test_class = $result->test_class;
 
           // Print table header.
-          echo "Status          Time Filename          Line Test                                               \n";
+          echo "Status      Duration Filename          Line Test                                               \n";
           echo "-----------------------------------------------------------------------------------------------\n";
         }
 
