@@ -20,14 +20,6 @@ class ToolbarActiveTrailTest extends WebDriverTestBase {
 
   /**
    * {@inheritdoc}
-   *
-   * @todo Remove and fix test to not rely on super user.
-   * @see https://www.drupal.org/project/drupal/issues/3437620
-   */
-  protected bool $usesSuperUserAccessPolicy = TRUE;
-
-  /**
-   * {@inheritdoc}
    */
   protected $defaultTheme = 'stark';
 
@@ -36,7 +28,13 @@ class ToolbarActiveTrailTest extends WebDriverTestBase {
    */
   protected function setUp(): void {
     parent::setUp();
-    $this->drupalLogin($this->rootUser);
+    $this->drupalLogin($this->drupalCreateUser([
+      'access content',
+      'create article content',
+      'edit any article content',
+      'delete any article content',
+      'access administration pages',
+    ]));
     $this->drupalCreateContentType(['type' => 'article', 'name' => 'Article']);
   }
 
