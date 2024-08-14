@@ -2,18 +2,18 @@
 
 namespace Drupal\field\Plugin\migrate\process\d6;
 
+use Drupal\migrate\Attribute\MigrateProcess;
 use Drupal\migrate\MigrateExecutableInterface;
 use Drupal\migrate\ProcessPluginBase;
 use Drupal\migrate\Row;
 
 /**
  * Determines the allowed values translation for select lists.
- *
- * @MigrateProcessPlugin(
- *   id = "d6_field_option_translation",
- *   handle_multiples = TRUE
- * )
  */
+#[MigrateProcess(
+  id: "d6_field_option_translation",
+  handle_multiples: TRUE,
+)]
 class FieldOptionTranslation extends ProcessPluginBase {
 
   /**
@@ -22,7 +22,7 @@ class FieldOptionTranslation extends ProcessPluginBase {
    * Get the field default/mapped settings.
    */
   public function transform($value, MigrateExecutableInterface $migrate_executable, Row $row, $destination_property) {
-    list($field_type, $global_settings) = $value;
+    [$field_type, $global_settings] = $value;
 
     $allowed_values = '';
     $i = 0;

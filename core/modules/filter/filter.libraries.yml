@@ -5,17 +5,8 @@ drupal.filter.admin:
   dependencies:
     - core/jquery
     - core/drupal
-    - core/jquery.once
+    - core/once
     - core/drupal.form
-
-drupal.filter.filter_html.admin:
-  version: VERSION
-  js:
-    filter.filter_html.admin.js: {}
-  dependencies:
-    - core/jquery
-    - core/jquery.once
-    - core/underscore
 
 drupal.filter:
   version: VERSION
@@ -24,7 +15,7 @@ drupal.filter:
   dependencies:
     - core/jquery
     - core/drupal
-    - core/jquery.once
+    - core/once
 
 caption:
   version: VERSION

@@ -1,6 +1,11 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\KernelTests\Core\Database;
+
+use Drupal\Core\Database\DatabaseExceptionWrapper;
+use Drupal\Core\Database\IntegrityConstraintViolationException;
 
 /**
  * Tests the update query builder.
@@ -12,7 +17,7 @@ class UpdateTest extends DatabaseTestBase {
   /**
    * Confirms that we can update a single record successfully.
    */
-  public function testSimpleUpdate() {
+  public function testSimpleUpdate(): void {
     $num_updated = $this->connection->update('test')
       ->fields(['name' => 'Tiffany'])
       ->condition('id', 1)
@@ -26,7 +31,7 @@ class UpdateTest extends DatabaseTestBase {
   /**
    * Confirms updating to NULL.
    */
-  public function testSimpleNullUpdate() {
+  public function testSimpleNullUpdate(): void {
     $this->ensureSampleDataNull();
     $num_updated = $this->connection->update('test_null')
       ->fields(['age' => NULL])
@@ -41,7 +46,7 @@ class UpdateTest extends DatabaseTestBase {
   /**
    * Confirms that we can update multiple records successfully.
    */
-  public function testMultiUpdate() {
+  public function testMultiUpdate(): void {
     $num_updated = $this->connection->update('test')
       ->fields(['job' => 'Musician'])
       ->condition('job', 'Singer')
@@ -55,7 +60,7 @@ class UpdateTest extends DatabaseTestBase {
   /**
    * Confirms that we can update multiple records with a non-equality condition.
    */
-  public function testMultiGTUpdate() {
+  public function testMultiGTUpdate(): void {
     $num_updated = $this->connection->update('test')
       ->fields(['job' => 'Musician'])
       ->condition('age', 26, '>')
@@ -69,7 +74,7 @@ class UpdateTest extends DatabaseTestBase {
   /**
    * Confirms that we can update multiple records with a where call.
    */
-  public function testWhereUpdate() {
+  public function testWhereUpdate(): void {
     $num_updated = $this->connection->update('test')
       ->fields(['job' => 'Musician'])
       ->where('[age] > :age', [':age' => 26])
@@ -83,7 +88,7 @@ class UpdateTest extends DatabaseTestBase {
   /**
    * Confirms that we can stack condition and where calls.
    */
-  public function testWhereAndConditionUpdate() {
+  public function testWhereAndConditionUpdate(): void {
     $update = $this->connection->update('test')
       ->fields(['job' => 'Musician'])
       ->where('[age] > :age', [':age' => 26])
@@ -98,7 +103,7 @@ class UpdateTest extends DatabaseTestBase {
   /**
    * Tests updating with expressions.
    */
-  public function testExpressionUpdate() {
+  public function testExpressionUpdate(): void {
     // Ensure that expressions are handled properly. This should set every
     // record's age to a square of itself.
     $num_rows = $this->connection->update('test')
@@ -113,7 +118,7 @@ class UpdateTest extends DatabaseTestBase {
   /**
    * Tests return value on update.
    */
-  public function testUpdateAffectedRows() {
+  public function testUpdateAffectedRows(): void {
     // At 5am in the morning, all band members but those with a priority 1 task
     // are sleeping. So we set their tasks to 'sleep'. 5 records match the
     // condition and therefore are affected by the query, even though two of
@@ -130,7 +135,7 @@ class UpdateTest extends DatabaseTestBase {
   /**
    * Confirm that we can update values in a column with special name.
    */
-  public function testSpecialColumnUpdate() {
+  public function testSpecialColumnUpdate(): void {
     $num_updated = $this->connection->update('select')
       ->fields([
         'update' => 'New update value',
@@ -141,6 +146,30 @@ class UpdateTest extends DatabaseTestBase {
 
     $saved_value = $this->connection->query('SELECT [update] FROM {select} WHERE [id] = :id', [':id' => 1])->fetchField();
     $this->assertEquals('New update value', $saved_value);
+  }
+
+  /**
+   * Updating a not existing table throws a DatabaseExceptionWrapper.
+   */
+  public function testUpdateNonExistingTable(): void {
+    $this->expectException(DatabaseExceptionWrapper::class);
+    $this->connection->update('a-table-that-does-not-exist')
+      ->fields([
+        'update' => 'New update value',
+      ])
+      ->condition('id', 1)
+      ->execute();
+  }
+
+  /**
+   * Updating a serial field throws a IntegrityConstraintViolationException.
+   */
+  public function testUpdateValueInSerial(): void {
+    $this->expectException(IntegrityConstraintViolationException::class);
+    $this->connection->update('test')
+      ->fields(['id' => 2])
+      ->condition('id', 1)
+      ->execute();
   }
 
 }

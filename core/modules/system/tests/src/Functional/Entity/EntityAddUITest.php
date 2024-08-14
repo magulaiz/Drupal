@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\system\Functional\Entity;
 
 use Drupal\entity_test\Entity\EntityTestBundle;
@@ -27,7 +29,7 @@ class EntityAddUITest extends BrowserTestBase {
   /**
    * Tests the add page for an entity type using bundle entities.
    */
-  public function testAddPageWithBundleEntities() {
+  public function testAddPageWithBundleEntities(): void {
     $admin_user = $this->drupalCreateUser([
       'administer entity_test_with_bundle content',
     ]);
@@ -47,7 +49,7 @@ class EntityAddUITest extends BrowserTestBase {
     // No bundles exist, the add bundle message should be present as the user
     // has the necessary permissions.
     $this->drupalGet('/entity_test_with_bundle/add');
-    $this->assertText('There is no test entity bundle yet.');
+    $this->assertSession()->pageTextContains('There is no test entity bundle yet.');
     $this->assertSession()->linkExists('Add a new test entity bundle.');
 
     // One bundle exists, confirm redirection to the add-form.
@@ -69,15 +71,15 @@ class EntityAddUITest extends BrowserTestBase {
 
     $this->assertSession()->linkExists('Test label');
     $this->assertSession()->linkExists('Test2 label');
-    $this->assertText('My test description');
-    $this->assertText('My test2 description');
+    $this->assertSession()->pageTextContains('My test description');
+    $this->assertSession()->pageTextContains('My test2 description');
 
     $this->clickLink('Test2 label');
     $this->drupalGet('/entity_test_with_bundle/add/test2');
 
     $this->submitForm(['name[0][value]' => 'test name'], 'Save');
     $entity = EntityTestWithBundle::load(1);
-    $this->assertEqual('test name', $entity->label());
+    $this->assertEquals('test name', $entity->label());
 
     // Create a new user that only has bundle specific permissions.
     $user = $this->drupalCreateUser([
@@ -92,11 +94,21 @@ class EntityAddUITest extends BrowserTestBase {
       'label' => 'Test3 label',
       'description' => 'My test3 description',
     ])->save();
+
+    // Create a bundle that the user is forbidden from creating (always).
+    EntityTestBundle::create([
+      'id' => 'forbidden_access_bundle',
+      'label' => 'Forbidden to create bundle',
+      'description' => 'A bundle that can never be created',
+    ])->save();
+
     $this->drupalGet('/entity_test_with_bundle/add');
+    $this->assertSession()->statusCodeEquals(200);
     $this->assertSession()->linkExists('Test label');
     $this->assertSession()->linkExists('Test2 label');
+    $this->assertSession()->linkNotExists('Forbidden to create bundle');
     $this->assertSession()->linkNotExists('Test3 label');
-    $this->clickLink(t('Test label'));
+    $this->clickLink('Test label');
     $this->assertSession()->statusCodeEquals(200);
 
     // Without any permissions, access must be denied.
@@ -114,6 +126,7 @@ class EntityAddUITest extends BrowserTestBase {
     // does not have bundle specific permissions. The add bundle message is
     // present as the user has bundle create permissions.
     $this->drupalGet('/entity_test_with_bundle/add');
+    $this->assertSession()->linkNotExists('Forbidden to create bundle');
     $this->assertSession()->linkNotExists('Test label');
     $this->assertSession()->linkNotExists('Test2 label');
     $this->assertSession()->linkNotExists('Test3 label');
@@ -123,14 +136,20 @@ class EntityAddUITest extends BrowserTestBase {
   /**
    * Tests the add page for an entity type not using bundle entities.
    */
-  public function testAddPageWithoutBundleEntities() {
+  public function testAddPageWithoutBundleEntities(): void {
     $admin_user = $this->drupalCreateUser([
       'administer entity_test content',
     ]);
     $this->drupalLogin($admin_user);
 
     entity_test_create_bundle('test', 'Test label', 'entity_test_mul');
-    // Delete the default bundle, so that we can rely on our own.
+    // Delete the default bundle, so that we can rely on our own. The form
+    // display has to be deleted first to prevent schema errors when fields
+    // attached to the deleted bundle are themselves deleted, which triggers
+    // an update of the form display.
+    $this->container->get('entity_display.repository')
+      ->getFormDisplay('entity_test_mul', 'entity_test_mul')
+      ->delete();
     entity_test_delete_bundle('entity_test_mul', 'entity_test_mul');
 
     // One bundle exists, confirm redirection to the add-form.
@@ -149,7 +168,7 @@ class EntityAddUITest extends BrowserTestBase {
 
     $this->submitForm(['name[0][value]' => 'test name'], 'Save');
     $entity = EntityTestMul::load(1);
-    $this->assertEqual('test name', $entity->label());
+    $this->assertEquals('test name', $entity->label());
   }
 
 }

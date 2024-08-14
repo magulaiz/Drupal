@@ -49,9 +49,9 @@ interface ConfigInstallerInterface {
    *   (optional) If set, ensures that the configuration being installed has
    *   this dependency. The format is dependency type as the key ('module',
    *   'theme', or 'config') and the dependency name as the value
-   *   ('book', 'bartik', 'views.view.frontpage').
+   *   ('node', 'olivero', 'views.view.frontpage').
    */
-  public function installOptionalConfig(StorageInterface $storage = NULL, $dependency = []);
+  public function installOptionalConfig(?StorageInterface $storage = NULL, $dependency = []);
 
   /**
    * Installs all default configuration in the specified collection.
@@ -70,6 +70,7 @@ interface ConfigInstallerInterface {
    * Sets the configuration storage that provides the default configuration.
    *
    * @param \Drupal\Core\Config\StorageInterface $storage
+   *   The storage.
    *
    * @return $this
    */

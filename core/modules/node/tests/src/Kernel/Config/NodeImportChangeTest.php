@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\node\Kernel\Config;
 
 use Drupal\node\Entity\NodeType;
@@ -39,7 +41,7 @@ class NodeImportChangeTest extends KernelTestBase {
   /**
    * Tests importing an updated content type.
    */
-  public function testImportChange() {
+  public function testImportChange(): void {
     $node_type_id = 'default';
     $node_type_config_name = "node.type.$node_type_id";
 
@@ -60,7 +62,7 @@ class NodeImportChangeTest extends KernelTestBase {
 
     // Check that the updated config was correctly imported.
     $node_type = NodeType::load($node_type_id);
-    $this->assertEqual($new_label, $node_type->label(), 'Node type name has been updated.');
+    $this->assertEquals($new_label, $node_type->label(), 'Node type name has been updated.');
   }
 
 }

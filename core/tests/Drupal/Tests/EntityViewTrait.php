@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests;
 
 use Drupal\Core\Entity\EntityInterface;
@@ -15,11 +17,11 @@ trait EntityViewTrait {
    *
    * Entities postpone the composition of their renderable arrays to #pre_render
    * functions in order to maximize cache efficacy. This means that the full
-   * renderable array for an entity is constructed in drupal_render(). Some
-   * tests require the complete renderable array for an entity outside of the
-   * drupal_render process in order to verify the presence of specific values.
-   * This method isolates the steps in the render process that produce an
-   * entity's renderable array.
+   * renderable array for an entity is constructed in
+   * \Drupal::service('renderer')->render(). Some tests require the complete
+   * renderable array for an entity outside of the render process in order to
+   * verify the presence of specific values. This method isolates the steps in
+   * the render process that produce an entity's renderable array.
    *
    * @param \Drupal\Core\Entity\EntityInterface $entity
    *   The entity to prepare a renderable array for.

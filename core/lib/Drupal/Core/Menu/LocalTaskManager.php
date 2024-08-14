@@ -223,8 +223,8 @@ class LocalTaskManager extends DefaultPluginManager implements LocalTaskManagerI
             }
             // Tabs that link to the current route are viable parents
             // and their parent and children should be visible also.
-            // @todo - this only works for 2 levels of tabs.
-            // instead need to iterate up.
+            // @todo This only works for 2 levels of tabs instead
+            //   need to iterate up.
             $parents[$plugin_id] = TRUE;
             if (!empty($task_info['parent_id'])) {
               $parents[$task_info['parent_id']] = TRUE;
@@ -304,7 +304,7 @@ class LocalTaskManager extends DefaultPluginManager implements LocalTaskManagerI
     }
 
     foreach ($tree as $level => $instances) {
-      /** @var $instances \Drupal\Core\Menu\LocalTaskInterface[] */
+      /** @var \Drupal\Core\Menu\LocalTaskInterface[] $instances */
       foreach ($instances as $plugin_id => $child) {
         $route_name = $child->getRouteName();
         $route_parameters = $child->getRouteParameters($this->routeMatch);
@@ -389,6 +389,7 @@ class LocalTaskManager extends DefaultPluginManager implements LocalTaskManagerI
    * @param string $route_name
    *   The route name of the local task to determine the active status.
    * @param array $route_parameters
+   *   The parameter for the route.
    *
    * @return bool
    *   Returns TRUE if the passed route_name and route_parameters is considered

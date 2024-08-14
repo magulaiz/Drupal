@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\jsonapi\Functional;
 
 use Drupal\path_alias\Entity\PathAlias;
@@ -10,13 +12,14 @@ use Drupal\Core\Url;
  *
  * @group jsonapi
  * @group path
+ * @group #slow
  */
 class PathAliasTest extends ResourceTestBase {
 
   /**
    * {@inheritdoc}
    */
-  protected static $modules = ['user'];
+  protected static $modules = ['path'];
 
   /**
    * {@inheritdoc}
@@ -32,6 +35,11 @@ class PathAliasTest extends ResourceTestBase {
    * {@inheritdoc}
    */
   protected static $resourceTypeName = 'path_alias--path_alias';
+
+  /**
+   * {@inheritdoc}
+   */
+  protected static $resourceTypeIsVersionable = TRUE;
 
   /**
    * {@inheritdoc}
@@ -68,8 +76,11 @@ class PathAliasTest extends ResourceTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function getExpectedDocument() {
-    $self_url = Url::fromUri('base:/jsonapi/path_alias/path_alias/' . $this->entity->uuid())->setAbsolute()->toString(TRUE)->getGeneratedUrl();
+  protected function getExpectedDocument(): array {
+    $base_url = Url::fromUri('base:/jsonapi/path_alias/path_alias/' . $this->entity->uuid())->setAbsolute();
+    $self_url = clone $base_url;
+    $version_identifier = 'id:' . $this->entity->getRevisionId();
+    $self_url = $self_url->setOption('query', ['resourceVersion' => $version_identifier]);
     return [
       'jsonapi' => [
         'meta' => [
@@ -80,13 +91,13 @@ class PathAliasTest extends ResourceTestBase {
         'version' => '1.0',
       ],
       'links' => [
-        'self' => ['href' => $self_url],
+        'self' => ['href' => $base_url->toString()],
       ],
       'data' => [
         'id' => $this->entity->uuid(),
         'type' => static::$resourceTypeName,
         'links' => [
-          'self' => ['href' => $self_url],
+          'self' => ['href' => $self_url->toString()],
         ],
         'attributes' => [
           'alias' => '/frontpage1',
@@ -103,7 +114,7 @@ class PathAliasTest extends ResourceTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function getPostDocument() {
+  protected function getPostDocument(): array {
     return [
       'data' => [
         'type' => static::$resourceTypeName,

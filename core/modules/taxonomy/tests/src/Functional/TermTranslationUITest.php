@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\taxonomy\Functional;
 
 use Drupal\Tests\content_translation\Functional\ContentTranslationUITestBase;
@@ -21,6 +23,17 @@ class TermTranslationUITest extends ContentTranslationUITestBase {
   protected $vocabulary;
 
   /**
+   * {@inheritdoc}
+   */
+  protected $defaultCacheContexts = [
+    'languages:language_interface',
+    'theme',
+    'url.query_args:_wrapper_format',
+    'user.permissions',
+    'url.site',
+  ];
+
+  /**
    * Modules to enable.
    *
    * @var array
@@ -30,12 +43,16 @@ class TermTranslationUITest extends ContentTranslationUITestBase {
   /**
    * {@inheritdoc}
    */
-  protected $defaultTheme = 'classy';
+  protected $defaultTheme = 'stark';
 
+  /**
+   * {@inheritdoc}
+   */
   protected function setUp(): void {
     $this->entityTypeId = 'taxonomy_term';
     $this->bundle = 'tags';
     parent::setUp();
+    $this->doSetup();
   }
 
   /**
@@ -58,7 +75,7 @@ class TermTranslationUITest extends ContentTranslationUITestBase {
   /**
    * {@inheritdoc}
    */
-  protected function getTranslatorPermissions() {
+  protected function getTranslatorPermissions(): array {
     return array_merge(parent::getTranslatorPermissions(), ['administer taxonomy']);
   }
 
@@ -91,12 +108,13 @@ class TermTranslationUITest extends ContentTranslationUITestBase {
   /**
    * {@inheritdoc}
    */
-  public function testTranslationUI() {
+  public function testTranslationUI(): void {
     parent::testTranslationUI();
 
     // Make sure that no row was inserted for taxonomy vocabularies which do
     // not have translations enabled.
     $tids = \Drupal::entityQueryAggregate('taxonomy_term')
+      ->accessCheck(FALSE)
       ->aggregate('tid', 'COUNT')
       ->condition('vid', $this->bundle, '<>')
       ->groupBy('tid')
@@ -110,7 +128,7 @@ class TermTranslationUITest extends ContentTranslationUITestBase {
   /**
    * Tests translate link on vocabulary term list.
    */
-  public function testTranslateLinkVocabularyAdminPage() {
+  public function testTranslateLinkVocabularyAdminPage(): void {
     $this->drupalLogin($this->drupalCreateUser(array_merge(parent::getTranslatorPermissions(), ['access administration pages', 'administer taxonomy'])));
 
     $values = [
@@ -161,12 +179,7 @@ class TermTranslationUITest extends ContentTranslationUITestBase {
         $options = ['language' => $languages[$langcode]];
         $url = $entity->toUrl('edit-form', $options);
         $this->drupalGet($url);
-
-        $title = t('@title [%language translation]', [
-          '@title' => $entity->getTranslation($langcode)->label(),
-          '%language' => $languages[$langcode]->getName(),
-        ]);
-        $this->assertRaw($title);
+        $this->assertSession()->pageTextContains("{$entity->getTranslation($langcode)->label()} [{$languages[$langcode]->getName()} translation]");
       }
     }
   }
@@ -192,7 +205,8 @@ class TermTranslationUITest extends ContentTranslationUITestBase {
       foreach ($this->langcodes as $langcode) {
         $options = ['language' => $languages[$langcode]];
         $url = $entity->toUrl('edit-form', $options);
-        $this->drupalPostForm($url, ['status[value]' => $value], 'Save', $options);
+        $this->drupalGet($url, $options);
+        $this->submitForm(['status[value]' => $value], 'Save');
       }
       $storage->resetCache([$this->entityId]);
       $entity = $storage->load($this->entityId);

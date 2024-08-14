@@ -1,6 +1,6 @@
-import { execSync } from 'child_process';
-import { URL } from 'url';
-import { commandAsWebserver } from '../globals';
+const { execSync } = require('child_process');
+const { URL } = require('url');
+const { commandAsWebserver } = require('../globals');
 
 /**
  * Installs a Drupal test site.
@@ -24,6 +24,9 @@ exports.command = function drupalInstall(
 ) {
   const self = this;
 
+  // Ensure no session cookie exists anymore; they won't work on this newly installed Drupal site anyway.
+  this.deleteCookies();
+
   try {
     setupFile = setupFile ? `--setup-file "${setupFile}"` : '';
     installProfile = `--install-profile "${installProfile}"`;
@@ -46,7 +49,6 @@ exports.command = function drupalInstall(
       // Colons need to be URL encoded to be valid.
       value: encodeURIComponent(installData.user_agent),
       path: url.pathname,
-      domain: url.host,
     });
   } catch (error) {
     this.assert.fail(error);

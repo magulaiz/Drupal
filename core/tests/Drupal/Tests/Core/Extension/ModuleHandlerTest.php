@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\Core\Extension;
 
 use Drupal\Core\Cache\CacheBackendInterface;
@@ -59,11 +61,11 @@ class ModuleHandlerTest extends UnitTestCase {
   }
 
   /**
-   * Test loading a module.
+   * Tests loading a module.
    *
    * @covers ::load
    */
-  public function testLoadModule() {
+  public function testLoadModule(): void {
     $module_handler = $this->getModuleHandler();
     $this->assertFalse(function_exists('module_handler_test_hook'));
     $this->assertTrue($module_handler->load('module_handler_test'));
@@ -79,11 +81,11 @@ class ModuleHandlerTest extends UnitTestCase {
   }
 
   /**
-   * Test loading all modules.
+   * Tests loading all modules.
    *
    * @covers ::loadAll
    */
-  public function testLoadAllModules() {
+  public function testLoadAllModules(): void {
     $module_handler = $this->getModuleHandler();
     $module_handler->addModule('module_handler_test_all1', 'core/tests/Drupal/Tests/Core/Extension/modules/module_handler_test_all1');
     $module_handler->addModule('module_handler_test_all2', 'core/tests/Drupal/Tests/Core/Extension/modules/module_handler_test_all2');
@@ -95,11 +97,11 @@ class ModuleHandlerTest extends UnitTestCase {
   }
 
   /**
-   * Test reload method.
+   * Tests reload method.
    *
    * @covers ::reload
    */
-  public function testModuleReloading() {
+  public function testModuleReloading(): void {
     $module_handler = $this->getMockBuilder(ModuleHandler::class)
       ->setConstructorArgs([
         $this->root,
@@ -111,30 +113,31 @@ class ModuleHandlerTest extends UnitTestCase {
           ],
         ], $this->cacheBackend,
       ])
-      ->setMethods(['load'])
+      ->onlyMethods(['load'])
       ->getMock();
-    // First reload.
-    $module_handler->expects($this->at(0))
+    $calls = [
+      // First reload.
+      'module_handler_test',
+      // Second reload.
+      'module_handler_test',
+      'module_handler_test_added',
+    ];
+    $module_handler->expects($this->exactly(count($calls)))
       ->method('load')
-      ->with($this->equalTo('module_handler_test'));
-    // Second reload.
-    $module_handler->expects($this->at(1))
-      ->method('load')
-      ->with($this->equalTo('module_handler_test'));
-    $module_handler->expects($this->at(2))
-      ->method('load')
-      ->with($this->equalTo('module_handler_test_added'));
+      ->with($this->callback(function (string $module) use (&$calls): bool {
+        return $module === array_shift($calls);
+      }));
     $module_handler->reload();
     $module_handler->addModule('module_handler_test_added', 'core/tests/Drupal/Tests/Core/Extension/modules/module_handler_test_added');
     $module_handler->reload();
   }
 
   /**
-   * Test isLoaded accessor.
+   * Tests isLoaded accessor.
    *
    * @covers ::isLoaded
    */
-  public function testIsLoaded() {
+  public function testIsLoaded(): void {
     $module_handler = $this->getModuleHandler();
     $this->assertFalse($module_handler->isLoaded());
     $module_handler->loadAll();
@@ -146,7 +149,7 @@ class ModuleHandlerTest extends UnitTestCase {
    *
    * @covers ::getModuleList
    */
-  public function testGetModuleList() {
+  public function testGetModuleList(): void {
     $this->assertEquals($this->getModuleHandler()->getModuleList(), [
       'module_handler_test' => new Extension($this->root, 'module', 'core/tests/Drupal/Tests/Core/Extension/modules/module_handler_test/module_handler_test.info.yml', 'module_handler_test.module'),
     ]);
@@ -157,14 +160,14 @@ class ModuleHandlerTest extends UnitTestCase {
    *
    * @covers ::getModule
    */
-  public function testGetModuleWithExistingModule() {
+  public function testGetModuleWithExistingModule(): void {
     $this->assertEquals($this->getModuleHandler()->getModule('module_handler_test'), new Extension($this->root, 'module', 'core/tests/Drupal/Tests/Core/Extension/modules/module_handler_test/module_handler_test.info.yml', 'module_handler_test.module'));
   }
 
   /**
    * @covers ::getModule
    */
-  public function testGetModuleWithNonExistingModule() {
+  public function testGetModuleWithNonExistingModule(): void {
     $this->expectException(UnknownExtensionException::class);
     $this->getModuleHandler()->getModule('claire_alice_watch_my_little_pony_module_that_does_not_exist');
   }
@@ -174,20 +177,20 @@ class ModuleHandlerTest extends UnitTestCase {
    *
    * @covers ::setModuleList
    */
-  public function testSetModuleList() {
+  public function testSetModuleList(): void {
     $fixture_module_handler = $this->getModuleHandler();
     $module_handler = $this->getMockBuilder(ModuleHandler::class)
       ->setConstructorArgs([
         $this->root, [], $this->cacheBackend,
       ])
-      ->setMethods(['resetImplementations'])
+      ->onlyMethods(['resetImplementations'])
       ->getMock();
 
     // Ensure we reset implementations when settings a new modules list.
     $module_handler->expects($this->once())->method('resetImplementations');
 
     // Make sure we're starting empty.
-    $this->assertEquals($module_handler->getModuleList(), []);
+    $this->assertEquals([], $module_handler->getModuleList());
 
     // Replace the list with a prebuilt list.
     $module_handler->setModuleList($fixture_module_handler->getModuleList());
@@ -197,18 +200,18 @@ class ModuleHandlerTest extends UnitTestCase {
   }
 
   /**
-   * Test adding a module.
+   * Tests adding a module.
    *
    * @covers ::addModule
    * @covers ::add
    */
-  public function testAddModule() {
+  public function testAddModule(): void {
 
     $module_handler = $this->getMockBuilder(ModuleHandler::class)
       ->setConstructorArgs([
         $this->root, [], $this->cacheBackend,
       ])
-      ->setMethods(['resetImplementations'])
+      ->onlyMethods(['resetImplementations'])
       ->getMock();
 
     // Ensure we reset implementations when settings a new modules list.
@@ -219,18 +222,18 @@ class ModuleHandlerTest extends UnitTestCase {
   }
 
   /**
-   * Test adding a profile.
+   * Tests adding a profile.
    *
    * @covers ::addProfile
    * @covers ::add
    */
-  public function testAddProfile() {
+  public function testAddProfile(): void {
 
     $module_handler = $this->getMockBuilder(ModuleHandler::class)
       ->setConstructorArgs([
         $this->root, [], $this->cacheBackend,
       ])
-      ->setMethods(['resetImplementations'])
+      ->onlyMethods(['resetImplementations'])
       ->getMock();
 
     // Ensure we reset implementations when settings a new modules list.
@@ -242,11 +245,11 @@ class ModuleHandlerTest extends UnitTestCase {
   }
 
   /**
-   * Test module exists returns correct module status.
+   * Tests module exists returns correct module status.
    *
    * @covers ::moduleExists
    */
-  public function testModuleExists() {
+  public function testModuleExists(): void {
     $module_handler = $this->getModuleHandler();
     $this->assertTrue($module_handler->moduleExists('module_handler_test'));
     $this->assertFalse($module_handler->moduleExists('module_handler_test_added'));
@@ -255,7 +258,7 @@ class ModuleHandlerTest extends UnitTestCase {
   /**
    * @covers ::loadAllIncludes
    */
-  public function testLoadAllIncludes() {
+  public function testLoadAllIncludes(): void {
     $this->assertTrue(TRUE);
     $module_handler = $this->getMockBuilder(ModuleHandler::class)
       ->setConstructorArgs([
@@ -268,7 +271,7 @@ class ModuleHandlerTest extends UnitTestCase {
           ],
         ], $this->cacheBackend,
       ])
-      ->setMethods(['loadInclude'])
+      ->onlyMethods(['loadInclude'])
       ->getMock();
 
     // Ensure we reset implementations when settings a new modules list.
@@ -277,14 +280,15 @@ class ModuleHandlerTest extends UnitTestCase {
   }
 
   /**
-   * @covers ::loadInclude
+   * Tests loadInclude().
    *
    * Note we load code, so isolate the test.
    *
+   * @covers ::loadInclude
    * @runInSeparateProcess
    * @preserveGlobalState disabled
    */
-  public function testLoadInclude() {
+  public function testLoadInclude(): void {
     $module_handler = $this->getModuleHandler();
     // Include exists.
     $this->assertEquals(__DIR__ . '/modules/module_handler_test/hook_include.inc', $module_handler->loadInclude('module_handler_test', 'inc', 'hook_include'));
@@ -294,11 +298,11 @@ class ModuleHandlerTest extends UnitTestCase {
   }
 
   /**
-   * Test invoke methods when module is enabled.
+   * Tests invoke methods when module is enabled.
    *
    * @covers ::invoke
    */
-  public function testInvokeModuleEnabled() {
+  public function testInvokeModuleEnabled(): void {
     $module_handler = $this->getModuleHandler();
     $this->assertTrue($module_handler->invoke('module_handler_test', 'hook', [TRUE]), 'Installed module runs hook.');
     $this->assertFalse($module_handler->invoke('module_handler_test', 'hook', [FALSE]), 'Installed module runs hook.');
@@ -306,45 +310,59 @@ class ModuleHandlerTest extends UnitTestCase {
   }
 
   /**
-   * Test implementations methods when module is enabled.
+   * Tests implementations methods when module is enabled.
    *
-   * @covers ::implementsHook
+   * @covers ::hasImplementations
    * @covers ::loadAllIncludes
    */
-  public function testImplementsHookModuleEnabled() {
+  public function testImplementsHookModuleEnabled(): void {
     $module_handler = $this->getModuleHandler();
-    $this->assertTrue($module_handler->implementsHook('module_handler_test', 'hook'), 'Installed module implementation found.');
+    $this->assertTrue($module_handler->hasImplementations('hook', 'module_handler_test'), 'Installed module implementation found.');
 
     $module_handler->addModule('module_handler_test_added', 'core/tests/Drupal/Tests/Core/Extension/modules/module_handler_test_added');
-    $this->assertTrue($module_handler->implementsHook('module_handler_test_added', 'hook'), 'Runtime added module with implementation in include found.');
+    $this->assertTrue($module_handler->hasImplementations('hook', 'module_handler_test_added'), 'Runtime added module with implementation in include found.');
 
     $module_handler->addModule('module_handler_test_no_hook', 'core/tests/Drupal/Tests/Core/Extension/modules/module_handler_test_no_hook');
-    $this->assertFalse($module_handler->implementsHook('module_handler_test_no_hook', 'hook', [TRUE]), 'Missing implementation not found.');
+    $this->assertFalse($module_handler->hasImplementations('hook', 'module_handler_test_no_hook'), 'Missing implementation not found.');
   }
 
   /**
-   * Test getImplementations.
+   * Tests hasImplementations.
    *
-   * @covers ::getImplementations
-   * @covers ::getImplementationInfo
-   * @covers ::buildImplementationInfo
+   * @covers ::hasImplementations
    */
-  public function testGetImplementations() {
-    $this->assertEquals(['module_handler_test'], $this->getModuleHandler()->getImplementations('hook'));
+  public function testHasImplementations(): void {
+    $module_handler = $this->getMockBuilder(ModuleHandler::class)
+      ->setConstructorArgs([$this->root, [], $this->cacheBackend])
+      ->onlyMethods(['buildImplementationInfo'])
+      ->getMock();
+    $module_handler->expects($this->exactly(2))
+      ->method('buildImplementationInfo')
+      ->with('hook')
+      ->willReturnOnConsecutiveCalls(
+        [],
+        ['my_module' => FALSE],
+      );
+
+    // ModuleHandler::buildImplementationInfo mock returns no implementations.
+    $this->assertFalse($module_handler->hasImplementations('hook'));
+
+    // Reset static caches.
+    $module_handler->resetImplementations();
+
+    // ModuleHandler::buildImplementationInfo mock returns an implementation.
+    $this->assertTrue($module_handler->hasImplementations('hook'));
   }
 
   /**
-   * Test getImplementations.
+   * Tests getImplementations.
    *
-   * @covers ::getImplementations
-   * @covers ::getImplementationInfo
+   * @covers ::invokeAllWith
    */
-  public function testCachedGetImplementations() {
+  public function testCachedGetImplementations(): void {
     $this->cacheBackend->expects($this->exactly(1))
       ->method('get')
-      ->will($this->onConsecutiveCalls(
-        (object) ['data' => ['hook' => ['module_handler_test' => 'test']]]
-      ));
+      ->willReturn((object) ['data' => ['hook' => ['module_handler_test' => 'test']]]);
 
     // Ensure buildImplementationInfo doesn't get called and that we work off cached results.
     $module_handler = $this->getMockBuilder(ModuleHandler::class)
@@ -357,32 +375,38 @@ class ModuleHandlerTest extends UnitTestCase {
           ],
         ], $this->cacheBackend,
       ])
-      ->setMethods(['buildImplementationInfo', 'loadInclude'])
+      ->onlyMethods(['buildImplementationInfo', 'loadInclude'])
       ->getMock();
     $module_handler->load('module_handler_test');
 
     $module_handler->expects($this->never())->method('buildImplementationInfo');
     $module_handler->expects($this->once())->method('loadInclude');
-    $this->assertEquals(['module_handler_test'], $module_handler->getImplementations('hook'));
+    $implementors = [];
+    $module_handler->invokeAllWith(
+      'hook',
+      function (callable $hook, string $module) use (&$implementors) {
+        $implementors[] = $module;
+      }
+    );
+    $this->assertEquals(['module_handler_test'], $implementors);
   }
 
   /**
-   * Test getImplementations.
+   * Tests getImplementations.
    *
-   * @covers ::getImplementations
-   * @covers ::getImplementationInfo
+   * @covers ::invokeAllWith
    */
-  public function testCachedGetImplementationsMissingMethod() {
+  public function testCachedGetImplementationsMissingMethod(): void {
     $this->cacheBackend->expects($this->exactly(1))
       ->method('get')
-      ->will($this->onConsecutiveCalls((object) [
+      ->willReturn((object) [
         'data' => [
           'hook' => [
             'module_handler_test' => [],
             'module_handler_test_missing' => [],
           ],
         ],
-      ]));
+      ]);
 
     // Ensure buildImplementationInfo doesn't get called and that we work off cached results.
     $module_handler = $this->getMockBuilder(ModuleHandler::class)
@@ -395,20 +419,27 @@ class ModuleHandlerTest extends UnitTestCase {
           ],
         ], $this->cacheBackend,
       ])
-      ->setMethods(['buildImplementationInfo'])
+      ->onlyMethods(['buildImplementationInfo'])
       ->getMock();
     $module_handler->load('module_handler_test');
 
     $module_handler->expects($this->never())->method('buildImplementationInfo');
-    $this->assertEquals(['module_handler_test'], $module_handler->getImplementations('hook'));
+    $implementors = [];
+    $module_handler->invokeAllWith(
+      'hook',
+      function (callable $hook, string $module) use (&$implementors) {
+        $implementors[] = $module;
+      }
+    );
+    $this->assertEquals(['module_handler_test'], $implementors);
   }
 
   /**
-   * Test invoke all.
+   * Tests invoke all.
    *
    * @covers ::invokeAll
    */
-  public function testInvokeAll() {
+  public function testInvokeAll(): void {
     $module_handler = $this->getModuleHandler();
     $module_handler->addModule('module_handler_test_all1', 'core/tests/Drupal/Tests/Core/Extension/modules/module_handler_test_all1');
     $module_handler->addModule('module_handler_test_all2', 'core/tests/Drupal/Tests/Core/Extension/modules/module_handler_test_all2');
@@ -416,40 +447,40 @@ class ModuleHandlerTest extends UnitTestCase {
   }
 
   /**
-   * Test that write cache calls through to cache library correctly.
+   * Tests that write cache calls through to cache library correctly.
    *
    * @covers ::writeCache
    */
-  public function testWriteCache() {
+  public function testWriteCache(): void {
     $module_handler = $this->getModuleHandler();
     $this->cacheBackend
       ->expects($this->exactly(2))
       ->method('get')
-      ->will($this->returnValue(NULL));
+      ->willReturn(NULL);
     $this->cacheBackend
       ->expects($this->exactly(2))
       ->method('set')
       ->with($this->logicalOr('module_implements', 'hook_info'));
-    $module_handler->getImplementations('hook');
+    $module_handler->invokeAllWith('hook', function (callable $hook, string $module) {});
     $module_handler->writeCache();
   }
 
   /**
-   * Test hook_hook_info() fetching through getHookInfo().
+   * Tests hook_hook_info() fetching through getHookInfo().
    *
    * @covers ::getHookInfo
    * @covers ::buildHookInfo
    */
-  public function testGetHookInfo() {
+  public function testGetHookInfo(): void {
     $module_handler = $this->getModuleHandler();
     // Set up some synthetic results.
     $this->cacheBackend
       ->expects($this->exactly(2))
       ->method('get')
-      ->will($this->onConsecutiveCalls(
+      ->willReturn(
         NULL,
         (object) ['data' => ['hook_foo' => ['group' => 'hook']]]
-      ));
+      );
 
     // Results from building from mocked environment.
     $this->assertEquals([
@@ -464,14 +495,14 @@ class ModuleHandlerTest extends UnitTestCase {
   }
 
   /**
-   * Test internal implementation cache reset.
+   * Tests internal implementation cache reset.
    *
    * @covers ::resetImplementations
    */
-  public function testResetImplementations() {
+  public function testResetImplementations(): void {
     $module_handler = $this->getModuleHandler();
     // Prime caches
-    $module_handler->getImplementations('hook');
+    $module_handler->invokeAllWith('hook', function (callable $hook, string $module) {});
     $module_handler->getHookInfo();
 
     // Reset all caches internal and external.
@@ -482,7 +513,7 @@ class ModuleHandlerTest extends UnitTestCase {
     $this->cacheBackend
       ->expects($this->exactly(2))
       ->method('set')
-      // reset sets module_implements to array() and getHookInfo later
+      // Reset sets module_implements to array() and getHookInfo later
       // populates hook_info.
       ->with($this->logicalOr('module_implements', 'hook_info'));
     $module_handler->resetImplementations();
@@ -493,13 +524,13 @@ class ModuleHandlerTest extends UnitTestCase {
       ->expects($this->exactly(2))
       ->method('get')
       ->with($this->logicalOr('module_implements', 'hook_info'));
-    $module_handler->getImplementations('hook');
+    $module_handler->invokeAllWith('hook', function (callable $hook, string $module) {});
   }
 
   /**
    * @covers ::getModuleDirectories
    */
-  public function testGetModuleDirectories() {
+  public function testGetModuleDirectories(): void {
     $module_handler = $this->getModuleHandler();
     $module_handler->setModuleList([]);
     $module_handler->addModule('node', 'core/modules/node');

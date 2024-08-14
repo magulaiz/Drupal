@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\system\Kernel\Entity;
 
 use Drupal\Component\Uuid\Php;
@@ -24,7 +26,6 @@ class ConfigEntityImportTest extends KernelTestBase {
    * {@inheritdoc}
    */
   protected static $modules = [
-    'action',
     'block',
     'config_test',
     'filter',
@@ -37,9 +38,9 @@ class ConfigEntityImportTest extends KernelTestBase {
   /**
    * Runs test methods for each module within a single test run.
    */
-  public function testConfigUpdateImport() {
-    $this->installConfig(['action', 'block', 'filter', 'image']);
-    $this->container->get('theme_installer')->install(['bartik']);
+  public function testConfigUpdateImport(): void {
+    $this->installConfig(['block', 'filter', 'image']);
+    $this->container->get('theme_installer')->install(['olivero']);
     $config_storage = $this->container->get('config.storage');
     // Ensure the 'system.site' config.
     $config_storage->write('system.site', ['uuid' => (new Php())->generate()]);
@@ -83,7 +84,7 @@ class ConfigEntityImportTest extends KernelTestBase {
     $block = $this->placeBlock('system_powered_by_block', [
       'id' => 'apple',
       'label' => 'Red Delicious',
-      'theme' => 'bartik',
+      'theme' => 'olivero',
     ]);
 
     $this->checkSinglePluginConfigSync($block, 'settings', 'label', 'Red Delicious');
@@ -101,7 +102,7 @@ class ConfigEntityImportTest extends KernelTestBase {
     // Create a test filter format with a known label.
     $name = 'filter.format.plain_text';
 
-    /** @var $entity \Drupal\filter\Entity\FilterFormat */
+    /** @var \Drupal\filter\Entity\FilterFormat $entity */
     $entity = FilterFormat::load('plain_text');
     $plugin_collection = $entity->getPluginCollections()['filters'];
 
@@ -133,7 +134,7 @@ class ConfigEntityImportTest extends KernelTestBase {
     // Create a test image style with a known label.
     $name = 'image.style.thumbnail';
 
-    /** @var $entity \Drupal\image\Entity\ImageStyle */
+    /** @var \Drupal\image\Entity\ImageStyle $entity */
     $entity = ImageStyle::load('thumbnail');
     $plugin_collection = $entity->getPluginCollections()['effects'];
 
@@ -171,6 +172,8 @@ class ConfigEntityImportTest extends KernelTestBase {
     $name = 'search.page.apple';
     $entity = SearchPage::create([
       'id' => 'apple',
+      'label' => 'Apple search',
+      'path' => 'apple',
       'plugin' => 'search_extra_type_search',
     ]);
     $entity->save();
@@ -254,8 +257,10 @@ class ConfigEntityImportTest extends KernelTestBase {
    *   The original data stored in the config object.
    * @param array $custom_data
    *   The new data to store in the config object.
+   *
+   * @internal
    */
-  public function assertConfigUpdateImport($name, $original_data, $custom_data) {
+  public function assertConfigUpdateImport(string $name, array $original_data, array $custom_data): void {
     $this->container->get('config.storage.sync')->write($name, $custom_data);
 
     // Verify the active configuration still returns the default values.

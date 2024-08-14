@@ -1,16 +1,21 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\jsonapi\Functional;
 
 use Drupal\Core\Url;
 use Drupal\search\Entity\SearchPage;
 
+// cspell:ignore hinode
+
 /**
  * JSON:API integration test for the "SearchPage" config entity type.
  *
  * @group jsonapi
+ * @group #slow
  */
-class SearchPageTest extends ResourceTestBase {
+class SearchPageTest extends ConfigEntityResourceTestBase {
 
   /**
    * {@inheritdoc}
@@ -73,7 +78,7 @@ class SearchPageTest extends ResourceTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function getExpectedDocument() {
+  protected function getExpectedDocument(): array {
     $self_url = Url::fromUri('base:/jsonapi/search_page/search_page/' . $this->entity->uuid())->setAbsolute()->toString(TRUE)->getGeneratedUrl();
     return [
       'jsonapi' => [
@@ -117,8 +122,9 @@ class SearchPageTest extends ResourceTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function getPostDocument() {
+  protected function getPostDocument(): array {
     // @todo Update in https://www.drupal.org/node/2300677.
+    return [];
   }
 
   /**

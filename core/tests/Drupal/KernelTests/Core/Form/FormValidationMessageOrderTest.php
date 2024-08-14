@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\KernelTests\Core\Form;
 
 use Drupal\Core\Form\FormInterface;
@@ -75,7 +77,7 @@ class FormValidationMessageOrderTest extends KernelTestBase implements FormInter
   /**
    * Tests that fields validation messages are sorted in the fields order.
    */
-  public function testLimitValidationErrors() {
+  public function testValidationErrorMessagesSortedWithWeight(): void {
     $form_state = new FormState();
     $form_builder = $this->container->get('form_builder');
     $form_builder->submitForm($this, $form_state);
@@ -84,10 +86,10 @@ class FormValidationMessageOrderTest extends KernelTestBase implements FormInter
     \Drupal::messenger()->deleteAll();
     $this->assertTrue(isset($messages['error']));
     $error_messages = $messages['error'];
-    $this->assertEqual('Three field is required.', $error_messages[0]);
-    $this->assertEqual('Four field is required.', $error_messages[1]);
-    $this->assertEqual('Two field is required.', $error_messages[2]);
-    $this->assertEqual('One field is required.', $error_messages[3]);
+    $this->assertEquals('Three field is required.', $error_messages[0]);
+    $this->assertEquals('Four field is required.', $error_messages[1]);
+    $this->assertEquals('Two field is required.', $error_messages[2]);
+    $this->assertEquals('One field is required.', $error_messages[3]);
   }
 
 }

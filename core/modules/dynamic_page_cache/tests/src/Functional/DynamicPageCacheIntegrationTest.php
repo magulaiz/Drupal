@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\dynamic_page_cache\Functional;
 
 use Drupal\Core\EventSubscriber\MainContentViewSubscriber;
@@ -25,11 +27,6 @@ class DynamicPageCacheIntegrationTest extends BrowserTestBase {
   /**
    * {@inheritdoc}
    */
-  protected $dumpHeaders = TRUE;
-
-  /**
-   * {@inheritdoc}
-   */
   protected static $modules = ['dynamic_page_cache_test'];
 
   /**
@@ -51,7 +48,7 @@ class DynamicPageCacheIntegrationTest extends BrowserTestBase {
   /**
    * Tests that Dynamic Page Cache works correctly, and verifies the edge cases.
    */
-  public function testDynamicPageCache() {
+  public function testDynamicPageCache(): void {
     // Controllers returning plain response objects are ignored by Dynamic Page
     // Cache.
     $url = Url::fromUri('route:dynamic_page_cache_test.response');
@@ -81,10 +78,10 @@ class DynamicPageCacheIntegrationTest extends BrowserTestBase {
     foreach (['llama', 'piggy', 'unicorn', 'kitten'] as $animal) {
       $url = Url::fromUri('route:dynamic_page_cache_test.html.with_cache_contexts', ['query' => ['animal' => $animal]]);
       $this->drupalGet($url);
-      $this->assertRaw($animal);
+      $this->assertSession()->pageTextContains($animal);
       $this->assertSession()->responseHeaderEquals(DynamicPageCacheSubscriber::HEADER, 'MISS');
       $this->drupalGet($url);
-      $this->assertRaw($animal);
+      $this->assertSession()->pageTextContains($animal);
       $this->assertSession()->responseHeaderEquals(DynamicPageCacheSubscriber::HEADER, 'HIT');
 
       // Finally, let's also verify that the 'dynamic_page_cache_test.html'

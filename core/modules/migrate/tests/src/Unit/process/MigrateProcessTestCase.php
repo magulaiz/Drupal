@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\migrate\Unit\process;
 
 use Drupal\Tests\migrate\Unit\MigrateTestCase;
@@ -12,7 +14,7 @@ abstract class MigrateProcessTestCase extends MigrateTestCase {
   protected $plugin;
 
   /**
-   * @var \Drupal\migrate\Row
+   * @var \Drupal\migrate\Row|\PHPUnit\Framework\MockObject\MockObject
    */
   protected $row;
 
@@ -24,7 +26,7 @@ abstract class MigrateProcessTestCase extends MigrateTestCase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     $this->row = $this->getMockBuilder('Drupal\migrate\Row')
       ->disableOriginalConstructor()
       ->getMock();

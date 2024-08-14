@@ -1,8 +1,11 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\workspaces\Functional;
 
 use Drupal\Tests\BrowserTestBase;
+use Drupal\Tests\node\Traits\ContentTypeCreationTrait;
 
 /**
  * Tests uninstalling the Workspaces module.
@@ -10,16 +13,12 @@ use Drupal\Tests\BrowserTestBase;
  * @group workspaces
  */
 class WorkspacesUninstallTest extends BrowserTestBase {
+  use ContentTypeCreationTrait;
 
   /**
    * {@inheritdoc}
    */
-  protected $profile = 'standard';
-
-  /**
-   * {@inheritdoc}
-   */
-  protected static $modules = ['workspaces'];
+  protected static $modules = ['workspaces', 'node'];
 
   /**
    * {@inheritdoc}
@@ -27,17 +26,32 @@ class WorkspacesUninstallTest extends BrowserTestBase {
   protected $defaultTheme = 'stark';
 
   /**
+   * {@inheritdoc}
+   */
+  protected function setUp(): void {
+    parent::setUp();
+    $permissions = [
+      'administer workspaces',
+      'administer modules',
+    ];
+
+    $this->drupalLogin($this->drupalCreateUser($permissions));
+  }
+
+  /**
    * Tests deleting workspace entities and uninstalling Workspaces module.
    */
-  public function testUninstallingWorkspace() {
-    $this->drupalLogin($this->rootUser);
+  public function testUninstallingWorkspace(): void {
+    $this->createContentType(['type' => 'article']);
     $this->drupalGet('/admin/modules/uninstall');
     $session = $this->assertSession();
     $session->linkExists('Remove workspaces');
     $this->clickLink('Remove workspaces');
     $session->pageTextContains('Are you sure you want to delete all workspaces?');
-    $this->drupalPostForm('/admin/modules/uninstall/entity/workspace', [], 'Delete all workspaces');
-    $this->drupalPostForm('admin/modules/uninstall', ['uninstall[workspaces]' => TRUE], 'Uninstall');
+    $this->drupalGet('/admin/modules/uninstall/entity/workspace');
+    $this->submitForm([], 'Delete all workspaces');
+    $this->drupalGet('admin/modules/uninstall');
+    $this->submitForm(['uninstall[workspaces]' => TRUE], 'Uninstall');
     $this->submitForm([], 'Uninstall');
     $session->pageTextContains('The selected modules have been uninstalled.');
     $session->pageTextNotContains('Workspaces');

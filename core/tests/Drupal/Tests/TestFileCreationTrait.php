@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests;
 
 use Drupal\Core\StreamWrapper\PublicStream;
@@ -48,8 +50,9 @@ trait TestFileCreationTrait {
    *   (optional) File size in bytes to match. Defaults to NULL, which will not
    *   filter the returned list by size.
    *
-   * @return array[]
-   *   List of files in public:// that match the filter(s).
+   * @return object[]
+   *   List of files in public:// that match the filter(s). Each file is an
+   *   object with 'uri', 'filename', and 'name' properties.
    */
   protected function getTestFiles($type, $size = NULL) {
     /** @var \Drupal\Core\File\FileSystemInterface $file_system */
@@ -144,7 +147,7 @@ trait TestFileCreationTrait {
    * @return string
    *   The name of the file, including the path.
    */
-  public static function generateFile($filename, $width, $lines, $type = 'binary-text') {
+  protected static function generateFile($filename, $width, $lines, $type = 'binary-text') {
     $text = '';
     for ($i = 0; $i < $lines; $i++) {
       // Generate $width - 1 characters to leave space for the "\n" character.

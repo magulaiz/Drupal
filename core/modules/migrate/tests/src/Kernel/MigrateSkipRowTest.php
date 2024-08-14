@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\migrate\Kernel;
 
 use Drupal\KernelTests\KernelTestBase;
@@ -24,7 +26,7 @@ class MigrateSkipRowTest extends KernelTestBase {
   /**
    * Tests migration interruptions.
    */
-  public function testPrepareRowSkip() {
+  public function testPrepareRowSkip(): void {
     // Run a simple little migration with two data rows which should be skipped
     // in different ways.
     $definition = [
@@ -51,13 +53,13 @@ class MigrateSkipRowTest extends KernelTestBase {
 
     $executable = new MigrateExecutable($migration);
     $result = $executable->import();
-    $this->assertEqual(MigrationInterface::RESULT_COMPLETED, $result);
+    $this->assertEquals(MigrationInterface::RESULT_COMPLETED, $result);
 
     /** @var \Drupal\migrate\Plugin\MigrateIdMapInterface $id_map_plugin */
     $id_map_plugin = $migration->getIdMap();
     // The first row is recorded in the map as ignored.
     $map_row = $id_map_plugin->getRowBySource(['id' => 1]);
-    $this->assertEqual(MigrateIdMapInterface::STATUS_IGNORED, $map_row['source_row_status']);
+    $this->assertEquals(MigrateIdMapInterface::STATUS_IGNORED, $map_row['source_row_status']);
     // Check that no message has been logged for the first exception.
     $messages = $id_map_plugin->getMessages(['id' => 1])->fetchAll();
     $this->assertEmpty($messages);
@@ -86,7 +88,7 @@ class MigrateSkipRowTest extends KernelTestBase {
 
     $executable = new MigrateExecutable($migration);
     $result = $executable->import();
-    $this->assertEquals($result, MigrationInterface::RESULT_COMPLETED);
+    $this->assertEquals(MigrationInterface::RESULT_COMPLETED, $result);
 
     $id_map_plugin = $migration->getIdMap();
 

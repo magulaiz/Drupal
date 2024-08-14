@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\config_translation\Kernel\Migrate\d6;
 
 use Drupal\Tests\migrate_drupal\Kernel\d6\MigrateDrupal6TestBase;
@@ -21,14 +23,17 @@ class MigrateSystemSiteTranslationTest extends MigrateDrupal6TestBase {
    */
   protected function setUp(): void {
     parent::setUp();
-    $this->executeMigration('system_site');
-    $this->executeMigration('d6_system_site_translation');
+    $this->executeMigrations([
+      'language',
+      'system_site',
+      'd6_system_site_translation',
+    ]);
   }
 
   /**
    * Tests migration of system (site) variables to system.site.yml.
    */
-  public function testSystemSite() {
+  public function testSystemSite(): void {
     $config_translation = \Drupal::service('language_manager')->getLanguageConfigOverride('fr', 'system.site');
     $this->assertSame('fr site name', $config_translation->get('name'));
     $this->assertSame('fr_site_mail@example.com', $config_translation->get('mail'));

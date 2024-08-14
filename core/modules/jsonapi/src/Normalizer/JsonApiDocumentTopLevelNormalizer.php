@@ -36,11 +36,6 @@ use Drupal\jsonapi\ResourceType\ResourceTypeRepositoryInterface;
 class JsonApiDocumentTopLevelNormalizer extends NormalizerBase implements DenormalizerInterface, NormalizerInterface {
 
   /**
-   * {@inheritdoc}
-   */
-  protected $supportedInterfaceOrClass = JsonApiDocumentTopLevel::class;
-
-  /**
    * The entity type manager.
    *
    * @var \Drupal\Core\Entity\EntityTypeManagerInterface
@@ -70,7 +65,7 @@ class JsonApiDocumentTopLevelNormalizer extends NormalizerBase implements Denorm
   /**
    * {@inheritdoc}
    */
-  public function denormalize($data, $class, $format = NULL, array $context = []) {
+  public function denormalize($data, $class, $format = NULL, array $context = []): mixed {
     $resource_type = $context['resource_type'];
 
     // Validate a few common errors in document formatting.
@@ -119,7 +114,7 @@ class JsonApiDocumentTopLevelNormalizer extends NormalizerBase implements Denorm
         try {
           $entity_storage = $this->entityTypeManager->getStorage($entity_type_id);
         }
-        catch (PluginNotFoundException $e) {
+        catch (PluginNotFoundException) {
           throw new BadRequestHttpException("Invalid type specified for related resource: '" . $relationship['data'][0]['type'] . "'");
         }
         // In order to maintain the order ($delta) of the relationships, we need
@@ -150,7 +145,9 @@ class JsonApiDocumentTopLevelNormalizer extends NormalizerBase implements Denorm
           if (isset($relationship['data'][$delta]['meta'])) {
             $reference_item += $relationship['data'][$delta]['meta'];
           }
-          $canonical_ids[] = $reference_item;
+          $canonical_ids[] = array_filter($reference_item, function ($key) {
+            return !str_starts_with($key, 'drupal_internal__');
+          }, ARRAY_FILTER_USE_KEY);
         }
 
         return array_filter($canonical_ids);
@@ -170,7 +167,7 @@ class JsonApiDocumentTopLevelNormalizer extends NormalizerBase implements Denorm
   /**
    * {@inheritdoc}
    */
-  public function normalize($object, $format = NULL, array $context = []) {
+  public function normalize($object, $format = NULL, array $context = []): array|string|int|float|bool|\ArrayObject|NULL {
     assert($object instanceof JsonApiDocumentTopLevel);
     $data = $object->getData();
     $document['jsonapi'] = CacheableNormalization::permanent([
@@ -217,7 +214,7 @@ class JsonApiDocumentTopLevelNormalizer extends NormalizerBase implements Denorm
    * @return \Drupal\jsonapi\Normalizer\Value\CacheableNormalization
    *   The normalized document.
    *
-   * @todo: refactor this to use CacheableNormalization::aggregate in https://www.drupal.org/project/drupal/issues/3036284.
+   * @todo Refactor this to use CacheableNormalization::aggregate in https://www.drupal.org/project/drupal/issues/3036284.
    */
   protected function normalizeErrorDocument(JsonApiDocumentTopLevel $document, $format, array $context = []) {
     $normalized_values = array_map(function (HttpExceptionInterface $exception) use ($format, $context) {
@@ -245,7 +242,7 @@ class JsonApiDocumentTopLevelNormalizer extends NormalizerBase implements Denorm
    * @return \Drupal\jsonapi\Normalizer\Value\CacheableNormalization|\Drupal\jsonapi\Normalizer\Value\CacheableOmission
    *   The normalized omissions.
    *
-   * @todo: refactor this to use link collections in https://www.drupal.org/project/drupal/issues/3036279.
+   * @todo Refactor this to use link collections in https://www.drupal.org/project/drupal/issues/3036279.
    */
   protected function normalizeOmissionsLinks(OmittedData $omissions, $format, array $context = []) {
     $normalized_omissions = array_map(function (HttpExceptionInterface $exception) use ($format, $context) {
@@ -328,6 +325,15 @@ class JsonApiDocumentTopLevelNormalizer extends NormalizerBase implements Denorm
    */
   protected static function getLinkHash($salt, $link_href) {
     return substr(str_replace(['-', '_'], '', Crypt::hashBase64($salt . $link_href)), 0, 7);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getSupportedTypes(?string $format): array {
+    return [
+      JsonApiDocumentTopLevel::class => TRUE,
+    ];
   }
 
 }

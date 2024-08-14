@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\Core\Transliteration;
 
 use Drupal\Component\Utility\Random;
@@ -30,7 +32,7 @@ class PhpTransliterationTest extends UnitTestCase {
    *
    * @dataProvider providerTestPhpTransliterationWithAlter
    */
-  public function testPhpTransliterationWithAlter($langcode, $original, $expected, $printable = NULL) {
+  public function testPhpTransliterationWithAlter($langcode, $original, $expected, $printable = NULL): void {
     if ($printable === NULL) {
       $printable = $original;
     }
@@ -40,7 +42,7 @@ class PhpTransliterationTest extends UnitTestCase {
     $module_handler = $this->createMock('Drupal\Core\Extension\ModuleHandlerInterface');
     $module_handler->expects($this->any())
       ->method('alter')
-      ->will($this->returnCallback(function ($hook, &$overrides, $langcode) {
+      ->willReturnCallback(function ($hook, &$overrides, $langcode) {
         if ($langcode == 'zz') {
           // The default transliteration of Ä is A, but change it to Z for testing.
           $overrides[0xC4] = 'Z';
@@ -49,7 +51,7 @@ class PhpTransliterationTest extends UnitTestCase {
           $overrides[0x10330] = 'A';
           $overrides[0x10338] = 'Th';
         }
-      }));
+      });
     $transliteration = new PhpTransliteration(NULL, $module_handler);
 
     $actual = $transliteration->transliterate($original, $langcode);
@@ -61,7 +63,7 @@ class PhpTransliterationTest extends UnitTestCase {
    *
    * @return array
    */
-  public function providerTestPhpTransliterationWithAlter() {
+  public static function providerTestPhpTransliterationWithAlter() {
     $random_generator = new Random();
     $random = $random_generator->string(10);
     // Make some strings with two, three, and four-byte characters for testing.

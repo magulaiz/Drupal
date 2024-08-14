@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\layout_builder\Kernel;
 
 use Drupal\Core\Field\FieldItemListInterface;
@@ -13,8 +15,9 @@ use Drupal\layout_builder\Plugin\SectionStorage\OverridesSectionStorage;
  * @coversDefaultClass \Drupal\layout_builder\Field\LayoutSectionItemList
  *
  * @group layout_builder
+ * @group #slow
  */
-class LayoutSectionItemListTest extends SectionStorageTestBase {
+class LayoutSectionItemListTest extends SectionListTestBase {
 
   /**
    * {@inheritdoc}
@@ -27,7 +30,7 @@ class LayoutSectionItemListTest extends SectionStorageTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function getSectionStorage(array $section_data) {
+  protected function getSectionList(array $section_data) {
     $this->installEntitySchema('entity_test_base_field_display');
     LayoutBuilderEntityViewDisplay::create([
       'targetEntityType' => 'entity_test_base_field_display',
@@ -53,22 +56,22 @@ class LayoutSectionItemListTest extends SectionStorageTestBase {
   /**
    * @covers ::equals
    */
-  public function testEquals() {
-    $this->sectionStorage->getSection(0)->setLayoutSettings(['foo' => 1]);
+  public function testEquals(): void {
+    $this->sectionList->getSection(0)->setLayoutSettings(['foo' => 1]);
 
-    $second_section_storage = clone $this->sectionStorage;
-    $this->assertTrue($this->sectionStorage->equals($second_section_storage));
+    $second_section_storage = clone $this->sectionList;
+    $this->assertTrue($this->sectionList->equals($second_section_storage));
 
     $second_section_storage->getSection(0)->setLayoutSettings(['foo' => '1']);
-    $this->assertFalse($this->sectionStorage->equals($second_section_storage));
+    $this->assertFalse($this->sectionList->equals($second_section_storage));
   }
 
   /**
    * @covers ::equals
    */
-  public function testEqualsNonSection() {
+  public function testEqualsNonSection(): void {
     $list = $this->prophesize(FieldItemListInterface::class);
-    $this->assertFalse($this->sectionStorage->equals($list->reveal()));
+    $this->assertFalse($this->sectionList->equals($list->reveal()));
   }
 
 }

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\FunctionalTests\Installer;
 
 use Drupal\Core\DrupalKernel;
@@ -63,10 +65,10 @@ class InstallerExistingSettingsNoProfileTest extends InstallerTestBase {
   /**
    * Verifies that installation succeeded.
    */
-  public function testInstaller() {
+  public function testInstaller(): void {
     $this->assertSession()->addressEquals('user/1');
     $this->assertSession()->statusCodeEquals(200);
-    $this->assertEqual('testing', \Drupal::installProfile());
+    $this->assertEquals('testing', \Drupal::installProfile());
   }
 
 }

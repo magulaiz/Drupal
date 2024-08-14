@@ -85,6 +85,7 @@ abstract class ViewsFormBase extends FormBase implements ViewsFormInterface {
    * {@inheritdoc}
    */
   public function getForm(ViewEntityInterface $view, $display_id, $js) {
+    /** @var \Drupal\Core\Form\FormStateInterface $form_state */
     $form_state = $this->getFormState($view, $display_id, $js);
     $view = $form_state->get('view');
     $form_key = $form_state->get('form_key');
@@ -97,7 +98,7 @@ abstract class ViewsFormBase extends FormBase implements ViewsFormInterface {
     // being used.
     Html::resetSeenIds();
 
-    // check to see if this is the top form of the stack. If it is, pop
+    // Check to see if this is the top form of the stack. If it is, pop
     // it off; if it isn't, the user clicked somewhere else and the stack is
     // now irrelevant.
     if (!empty($view->stack)) {
@@ -137,7 +138,6 @@ abstract class ViewsFormBase extends FormBase implements ViewsFormInterface {
 
       // Build the new form state for the next form in the stack.
       $reflection = new \ReflectionClass($view::$forms[$top[1]]);
-      /** @var $form_state \Drupal\Core\Form\FormStateInterface */
       $form_state = $reflection->newInstanceArgs(array_slice($top, 3, 2))->getFormState($view, $top[2], $form_state->get('ajax'));
       $form_class = get_class($form_state->getFormObject());
 
@@ -150,7 +150,7 @@ abstract class ViewsFormBase extends FormBase implements ViewsFormInterface {
       $response = $this->ajaxFormWrapper($form_class, $form_state);
     }
     elseif (!$form_state->get('ajax')) {
-      // if nothing on the stack, non-js forms just go back to the main view editor.
+      // If nothing on the stack, non-js forms just go back to the main view editor.
       $display_id = $form_state->get('display_id');
       return new RedirectResponse(Url::fromRoute('entity.view.edit_display_form', ['view' => $view->id(), 'display_id' => $display_id], ['absolute' => TRUE])->toString());
     }
@@ -244,7 +244,9 @@ abstract class ViewsFormBase extends FormBase implements ViewsFormInterface {
       $display .= $output;
 
       $options = [
-        'dialogClass' => 'views-ui-dialog js-views-ui-dialog',
+        'classes' => [
+          'ui-dialog' => 'views-ui-dialog js-views-ui-dialog',
+        ],
         'width' => '75%',
       ];
 

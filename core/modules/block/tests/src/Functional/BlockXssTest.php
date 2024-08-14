@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\block\Functional;
 
 use Drupal\block_content\Entity\BlockContent;
@@ -26,12 +28,12 @@ class BlockXssTest extends BrowserTestBase {
   /**
    * {@inheritdoc}
    */
-  protected $defaultTheme = 'classy';
+  protected $defaultTheme = 'stark';
 
   /**
    * Tests that nothing is escaped other than the blocks explicitly tested.
    */
-  public function testNoUnexpectedEscaping() {
+  public function testNoUnexpectedEscaping(): void {
     $this->drupalLogin($this->drupalCreateUser([
       'administer blocks',
       'access administration pages',
@@ -44,14 +46,14 @@ class BlockXssTest extends BrowserTestBase {
   /**
    * Tests XSS in title.
    */
-  public function testXssInTitle() {
+  public function testXssInTitle(): void {
     $this->container->get('module_installer')->install(['block_test']);
     $this->drupalPlaceBlock('test_xss_title', ['label' => '<script>alert("XSS label");</script>']);
 
     \Drupal::state()->set('block_test.content', $this->randomMachineName());
     $this->drupalGet('');
     // Check that the block title was properly sanitized when rendered.
-    $this->assertNoRaw('<script>alert("XSS label");</script>');
+    $this->assertSession()->responseNotContains('<script>alert("XSS label");</script>');
 
     $this->drupalLogin($this->drupalCreateUser([
       'administer blocks',
@@ -61,13 +63,13 @@ class BlockXssTest extends BrowserTestBase {
     $this->drupalGet('admin/structure/block/list/' . $default_theme);
     // Check that the block title was properly sanitized in Block Plugin UI
     // Admin page.
-    $this->assertNoRaw("<script>alert('XSS subject');</script>");
+    $this->assertSession()->responseNotContains("<script>alert('XSS subject');</script>");
   }
 
   /**
    * Tests XSS in category.
    */
-  public function testXssInCategory() {
+  public function testXssInCategory(): void {
     $this->container->get('module_installer')->install(['block_test']);
     $this->drupalPlaceBlock('test_xss_title');
     $this->drupalLogin($this->drupalCreateUser([
@@ -76,14 +78,17 @@ class BlockXssTest extends BrowserTestBase {
     ]));
     $this->drupalGet(Url::fromRoute('block.admin_display'));
     $this->clickLink('Place block');
-    $this->assertNoRaw("<script>alert('XSS category');</script>");
+    $this->assertSession()->responseNotContains("<script>alert('XSS category');</script>");
   }
 
   /**
    * Tests various modules that provide blocks for XSS.
    */
-  public function testBlockXss() {
-    $this->drupalLogin($this->rootUser);
+  public function testBlockXss(): void {
+    $this->drupalLogin($this->drupalCreateUser([
+      'administer blocks',
+      'access administration pages',
+    ]));
 
     $this->doViewTest();
     $this->doMenuTest();
@@ -92,7 +97,7 @@ class BlockXssTest extends BrowserTestBase {
     $this->drupalGet(Url::fromRoute('block.admin_display'));
     $this->clickLink('Place block');
     // Check that the page does not have double escaped HTML tags.
-    $this->assertNoRaw('&amp;lt;');
+    $this->assertSession()->responseNotContains('&amp;lt;');
   }
 
   /**
@@ -135,14 +140,14 @@ class BlockXssTest extends BrowserTestBase {
     // Assert that the blocks have their admin labels escaped and
     // don't appear anywhere unescaped.
     $this->assertSession()->assertEscaped('<script>alert("view1");</script>');
-    $this->assertNoRaw('<script>alert("view1");</script>');
+    $this->assertSession()->responseNotContains('<script>alert("view1");</script>');
     $this->assertSession()->assertEscaped('<script>alert("view2");</script>: Fish & chips');
-    $this->assertNoRaw('<script>alert("view2");</script>');
-    $this->assertNoRaw('Fish & chips');
+    $this->assertSession()->responseNotContains('<script>alert("view2");</script>');
+    $this->assertSession()->responseNotContains('Fish & chips');
 
     // Assert the Display label doesn't appear anywhere double escaped.
-    $this->assertNoRaw('Fish & chips');
-    $this->assertNoRaw('Fish &amp;amp; chips');
+    $this->assertSession()->responseNotContains('Fish & chips');
+    $this->assertSession()->responseNotContains('Fish &amp;amp; chips');
   }
 
   /**
@@ -158,7 +163,7 @@ class BlockXssTest extends BrowserTestBase {
     $this->clickLink('Place block');
 
     $this->assertSession()->assertEscaped('<script>alert("menu");</script>');
-    $this->assertNoRaw('<script>alert("menu");</script>');
+    $this->assertSession()->responseNotContains('<script>alert("menu");</script>');
   }
 
   /**
@@ -179,7 +184,7 @@ class BlockXssTest extends BrowserTestBase {
     $this->clickLink('Place block');
 
     $this->assertSession()->assertEscaped('<script>alert("block_content");</script>');
-    $this->assertNoRaw('<script>alert("block_content");</script>');
+    $this->assertSession()->responseNotContains('<script>alert("block_content");</script>');
   }
 
 }

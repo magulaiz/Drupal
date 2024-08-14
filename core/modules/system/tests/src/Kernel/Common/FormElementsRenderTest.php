@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\system\Kernel\Common;
 
 use Drupal\Component\Render\FormattableMarkup;
@@ -7,7 +9,7 @@ use Drupal\Core\Url;
 use Drupal\KernelTests\KernelTestBase;
 
 /**
- * Performs integration tests on drupal_render().
+ * Performs integration tests on \Drupal::service('renderer')->render().
  *
  * @group system
  */
@@ -19,10 +21,11 @@ class FormElementsRenderTest extends KernelTestBase {
   protected static $modules = ['common_test', 'system'];
 
   /**
-   * Tests rendering form elements without passing through
-   * \Drupal::formBuilder()->doBuildForm().
+   * Tests rendering form elements without using doBuildForm().
+   *
+   * @see \Drupal\Core\Form\FormBuilderInterface::doBuildForm()
    */
-  public function testDrupalRenderFormElements() {
+  public function testDrupalRenderFormElements(): void {
     // Define a series of form elements.
     $element = [
       '#type' => 'button',
@@ -139,8 +142,10 @@ class FormElementsRenderTest extends KernelTestBase {
 
   /**
    * Tests that elements are rendered properly.
+   *
+   * @internal
    */
-  protected function assertRenderedElement(array $element, $xpath, array $xpath_args = []) {
+  protected function assertRenderedElement(array $element, string $xpath, array $xpath_args = []): void {
     $this->render($element);
 
     $xpath = $this->buildXPathQuery($xpath, $xpath_args);

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\jsonapi\Kernel\EventSubscriber;
 
 use Drupal\Core\Cache\Cache;
@@ -9,7 +11,10 @@ use Drupal\jsonapi\JsonApiResource\ResourceObject;
 use Drupal\jsonapi\Normalizer\Value\CacheableNormalization;
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\user\Entity\User;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Event\TerminateEvent;
+use Symfony\Component\HttpKernel\HttpKernelInterface;
 
 /**
  * @coversDefaultClass \Drupal\jsonapi\EventSubscriber\ResourceObjectNormalizationCacher
@@ -23,6 +28,7 @@ class ResourceObjectNormalizerCacherTest extends KernelTestBase {
    * {@inheritdoc}
    */
   protected static $modules = [
+    'file',
     'system',
     'serialization',
     'jsonapi',
@@ -58,7 +64,6 @@ class ResourceObjectNormalizerCacherTest extends KernelTestBase {
     // Add the entity schemas.
     $this->installEntitySchema('user');
     // Add the additional table schemas.
-    $this->installSchema('system', ['sequences']);
     $this->installSchema('user', ['users_data']);
     $this->resourceTypeRepository = $this->container->get('jsonapi.resource_type.repository');
     $this->serializer = $this->container->get('jsonapi.serializer');
@@ -70,7 +75,7 @@ class ResourceObjectNormalizerCacherTest extends KernelTestBase {
    *
    * @see https://www.drupal.org/project/drupal/issues/3077287
    */
-  public function testLinkNormalizationCacheability() {
+  public function testLinkNormalizationCacheability(): void {
     $user = User::create([
       'name' => $this->randomMachineName(),
       'pass' => $this->randomString(),
@@ -92,8 +97,12 @@ class ResourceObjectNormalizerCacherTest extends KernelTestBase {
       ResourceObjectNormalizationCacher::RESOURCE_CACHE_SUBSET_FIELDS => [],
     ];
     $this->cacher->saveOnTerminate($resource_object, $normalization_parts);
-    $event = $this->prophesize(TerminateEvent::class);
-    $this->cacher->onTerminate($event->reveal());
+
+    $http_kernel = $this->prophesize(HttpKernelInterface::class);
+    $request = $this->prophesize(Request::class);
+    $response = $this->prophesize(Response::class);
+    $event = new TerminateEvent($http_kernel->reveal(), $request->reveal(), $response->reveal());
+    $this->cacher->onTerminate($event);
     $this->assertNotFalse((bool) $this->cacher->get($resource_object));
     Cache::invalidateTags([$cache_tag_to_invalidate]);
     $this->assertFalse((bool) $this->cacher->get($resource_object));

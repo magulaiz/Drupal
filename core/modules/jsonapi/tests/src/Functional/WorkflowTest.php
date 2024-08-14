@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\jsonapi\Functional;
 
 use Drupal\Core\Url;
@@ -9,8 +11,9 @@ use Drupal\workflows\Entity\Workflow;
  * JSON:API integration test for the "Workflow" config entity type.
  *
  * @group jsonapi
+ * @group #slow
  */
-class WorkflowTest extends ResourceTestBase {
+class WorkflowTest extends ConfigEntityResourceTestBase {
 
   /**
    * {@inheritdoc}
@@ -70,7 +73,7 @@ class WorkflowTest extends ResourceTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function getExpectedDocument() {
+  protected function getExpectedDocument(): array {
     $self_url = Url::fromUri('base:/jsonapi/workflow/workflow/' . $this->entity->uuid())->setAbsolute()->toString(TRUE)->getGeneratedUrl();
     return [
       'jsonapi' => [
@@ -124,8 +127,9 @@ class WorkflowTest extends ResourceTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function getPostDocument() {
+  protected function getPostDocument(): array {
     // @todo Update in https://www.drupal.org/node/2300677.
+    return [];
   }
 
 }

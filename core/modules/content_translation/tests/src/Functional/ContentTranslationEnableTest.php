@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\content_translation\Functional;
 
 use Drupal\Tests\BrowserTestBase;
@@ -7,6 +9,8 @@ use Drupal\Tests\BrowserTestBase;
 /**
  * Test enabling content translation module.
  *
+ * @covers \Drupal\language\Form\ContentLanguageSettingsForm
+ * @covers ::_content_translation_form_language_content_settings_form_alter
  * @group content_translation
  */
 class ContentTranslationEnableTest extends BrowserTestBase {
@@ -18,13 +22,21 @@ class ContentTranslationEnableTest extends BrowserTestBase {
 
   /**
    * {@inheritdoc}
+   *
+   * @todo Remove and fix test to not rely on super user.
+   * @see https://www.drupal.org/project/drupal/issues/3437620
+   */
+  protected bool $usesSuperUserAccessPolicy = TRUE;
+
+  /**
+   * {@inheritdoc}
    */
   protected $defaultTheme = 'stark';
 
   /**
    * Tests that entity schemas are up-to-date after enabling translation.
    */
-  public function testEnable() {
+  public function testEnable(): void {
     $this->drupalLogin($this->rootUser);
     // Enable modules and make sure the related config entity type definitions
     // are installed.
@@ -32,20 +44,20 @@ class ContentTranslationEnableTest extends BrowserTestBase {
       'modules[content_translation][enable]' => TRUE,
       'modules[language][enable]' => TRUE,
     ];
-    $this->drupalPostForm('admin/modules', $edit, 'Install');
+    $this->drupalGet('admin/modules');
+    $this->submitForm($edit, 'Install');
 
     // Status messages are shown.
-    $this->assertText('This site has only a single language enabled. Add at least one more language in order to translate content.');
-    $this->assertText('Enable translation for content types, taxonomy vocabularies, accounts, or any other element you wish to translate.');
+    $this->assertSession()->statusMessageContains('This site has only a single language enabled. Add at least one more language in order to translate content.', 'warning');
+    $this->assertSession()->statusMessageContains('Enable translation for content types, taxonomy vocabularies, accounts, or any other element you wish to translate.', 'warning');
 
     // No pending updates should be available.
     $this->drupalGet('admin/reports/status');
-    $requirement_value = $this->cssSelect("details.system-status-report__entry summary:contains('Entity/field definitions') + div");
-    $this->assertEqual(t('Up to date'), trim($requirement_value[0]->getText()));
+    $this->assertSession()->elementTextEquals('css', "details.system-status-report__entry summary:contains('Entity/field definitions') + div", 'Up to date');
 
     $this->drupalGet('admin/config/regional/content-language');
     // The node entity type should not be an option because it has no bundles.
-    $this->assertNoRaw('entity_types[node]');
+    $this->assertSession()->responseNotContains('entity_types[node]');
     // Enable content translation on entity types that have will have a
     // content_translation_uid.
     $edit = [
@@ -58,8 +70,7 @@ class ContentTranslationEnableTest extends BrowserTestBase {
 
     // No pending updates should be available.
     $this->drupalGet('admin/reports/status');
-    $requirement_value = $this->cssSelect("details.system-status-report__entry summary:contains('Entity/field definitions') + div");
-    $this->assertEqual(t('Up to date'), trim($requirement_value[0]->getText()));
+    $this->assertSession()->elementTextEquals('css', "details.system-status-report__entry summary:contains('Entity/field definitions') + div", 'Up to date');
 
     // Create a node type and check the content translation settings are now
     // available for nodes.
@@ -68,9 +79,10 @@ class ContentTranslationEnableTest extends BrowserTestBase {
       'title_label' => 'title for foo',
       'type' => 'foo',
     ];
-    $this->drupalPostForm('admin/structure/types/add', $edit, 'Save content type');
+    $this->drupalGet('admin/structure/types/add');
+    $this->submitForm($edit, 'Save');
     $this->drupalGet('admin/config/regional/content-language');
-    $this->assertRaw('entity_types[node]');
+    $this->assertSession()->responseContains('entity_types[node]');
   }
 
 }

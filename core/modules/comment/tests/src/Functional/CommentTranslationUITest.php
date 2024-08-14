@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\comment\Functional;
 
 use Drupal\comment\Plugin\Field\FieldType\CommentItemInterface;
@@ -62,13 +64,16 @@ class CommentTranslationUITest extends ContentTranslationUITestBase {
     'comment',
   ];
 
+  /**
+   * {@inheritdoc}
+   */
   protected function setUp(): void {
     $this->entityTypeId = 'comment';
-    $this->nodeBundle = 'article';
     $this->bundle = 'comment_article';
     $this->testLanguageSelector = FALSE;
     $this->subject = $this->randomMachineName();
     parent::setUp();
+    $this->doSetup();
   }
 
   /**
@@ -76,7 +81,7 @@ class CommentTranslationUITest extends ContentTranslationUITestBase {
    */
   public function setupBundle() {
     parent::setupBundle();
-    $this->drupalCreateContentType(['type' => $this->nodeBundle, 'name' => $this->nodeBundle]);
+    $this->drupalCreateContentType(['type' => 'article', 'name' => 'article']);
     // Add a comment field to the article content type.
     $this->addDefaultCommentField('node', 'article', 'comment_article', CommentItemInterface::OPEN, 'comment_article');
     // Create a page content type.
@@ -91,7 +96,7 @@ class CommentTranslationUITest extends ContentTranslationUITestBase {
   /**
    * {@inheritdoc}
    */
-  protected function getTranslatorPermissions() {
+  protected function getTranslatorPermissions(): array {
     return array_merge(parent::getTranslatorPermissions(), ['post comments', 'administer comments', 'access comments']);
   }
 
@@ -148,7 +153,8 @@ class CommentTranslationUITest extends ContentTranslationUITestBase {
       if ($index > 0) {
         $edit = ['status' => 0];
         $url = $entity->toUrl('edit-form', ['language' => ConfigurableLanguage::load($langcode)]);
-        $this->drupalPostForm($url, $edit, $this->getFormSubmitAction($entity, $langcode));
+        $this->drupalGet($url);
+        $this->submitForm($edit, $this->getFormSubmitAction($entity, $langcode));
         $storage->resetCache();
         $entity = $storage->load($this->entityId);
         $this->assertFalse($this->manager->getTranslationMetadata($entity->getTranslation($langcode))->isPublished(), 'The translation has been correctly unpublished.');
@@ -173,7 +179,7 @@ class CommentTranslationUITest extends ContentTranslationUITestBase {
       $user = $this->drupalCreateUser();
       $values[$langcode] = [
         'uid' => $user->id(),
-        'created' => REQUEST_TIME - mt_rand(0, 1000),
+        'created' => \Drupal::time()->getRequestTime() - mt_rand(0, 1000),
       ];
       /** @var \Drupal\Core\Datetime\DateFormatterInterface $date_formatter */
       $date_formatter = $this->container->get('date.formatter');
@@ -182,22 +188,23 @@ class CommentTranslationUITest extends ContentTranslationUITestBase {
         'date[date]' => $date_formatter->format($values[$langcode]['created'], 'custom', 'Y-m-d'),
         'date[time]' => $date_formatter->format($values[$langcode]['created'], 'custom', 'H:i:s'),
       ];
-      $this->drupalPostForm($url, $edit, $this->getFormSubmitAction($entity, $langcode));
+      $this->drupalGet($url);
+      $this->submitForm($edit, $this->getFormSubmitAction($entity, $langcode));
     }
 
     $storage->resetCache([$this->entityId]);
     $entity = $storage->load($this->entityId);
     foreach ($this->langcodes as $langcode) {
       $metadata = $this->manager->getTranslationMetadata($entity->getTranslation($langcode));
-      $this->assertEqual($values[$langcode]['uid'], $metadata->getAuthor()->id(), 'Translation author correctly stored.');
-      $this->assertEqual($values[$langcode]['created'], $metadata->getCreatedTime(), 'Translation date correctly stored.');
+      $this->assertEquals($values[$langcode]['uid'], $metadata->getAuthor()->id(), 'Translation author correctly stored.');
+      $this->assertEquals($values[$langcode]['created'], $metadata->getCreatedTime(), 'Translation date correctly stored.');
     }
   }
 
   /**
    * Tests translate link on comment content admin page.
    */
-  public function testTranslateLinkCommentAdminPage() {
+  public function testTranslateLinkCommentAdminPage(): void {
     $this->adminUser = $this->drupalCreateUser(array_merge(parent::getTranslatorPermissions(), ['access administration pages', 'administer comments', 'skip comment approval']));
     $this->drupalLogin($this->adminUser);
 
@@ -227,13 +234,7 @@ class CommentTranslationUITest extends ContentTranslationUITestBase {
         $options = ['language' => $languages[$langcode]];
         $url = $entity->toUrl('edit-form', $options);
         $this->drupalGet($url);
-
-        $title = t('Edit @type @title [%language translation]', [
-          '@type' => $this->entityTypeId,
-          '@title' => $entity->getTranslation($langcode)->label(),
-          '%language' => $languages[$langcode]->getName(),
-        ]);
-        $this->assertRaw($title);
+        $this->assertSession()->pageTextContains("Edit {$this->entityTypeId} {$entity->getTranslation($langcode)->label()} [{$languages[$langcode]->getName()} translation]");
       }
     }
   }

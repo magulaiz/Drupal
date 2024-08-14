@@ -15,7 +15,7 @@ class MediaTestConstraintValidator extends ConstraintValidator {
   /**
    * {@inheritdoc}
    */
-  public function validate($value, Constraint $constraint) {
+  public function validate($value, Constraint $constraint): void {
     if ($value instanceof EntityInterface) {
       $string_to_test = $value->label();
     }
@@ -26,7 +26,7 @@ class MediaTestConstraintValidator extends ConstraintValidator {
       return;
     }
 
-    if (strpos($string_to_test, 'love Drupal') === FALSE) {
+    if (!str_contains($string_to_test, 'love Drupal')) {
       $this->context->addViolation($constraint->message);
     }
   }

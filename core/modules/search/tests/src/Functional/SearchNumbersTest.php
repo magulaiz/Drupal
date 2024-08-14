@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\search\Functional;
 
 use Drupal\Core\Language\LanguageInterface;
@@ -65,6 +67,9 @@ class SearchNumbersTest extends BrowserTestBase {
    */
   protected $nodes;
 
+  /**
+   * {@inheritdoc}
+   */
   protected function setUp(): void {
     parent::setUp();
 
@@ -91,13 +96,13 @@ class SearchNumbersTest extends BrowserTestBase {
     // Run cron to ensure the content is indexed.
     $this->cronRun();
     $this->drupalGet('admin/reports/dblog');
-    $this->assertText('Cron run completed');
+    $this->assertSession()->pageTextContains('Cron run completed');
   }
 
   /**
    * Tests that all the numbers can be searched.
    */
-  public function testNumberSearching() {
+  public function testNumberSearching(): void {
     $types = array_keys($this->numbers);
 
     foreach ($types as $type) {
@@ -109,13 +114,15 @@ class SearchNumbersTest extends BrowserTestBase {
 
       // Verify that the node title does not appear on the search page
       // with a dummy search.
-      $this->drupalPostForm('search/node', ['keys' => 'foo'], 'Search');
-      $this->assertNoText($node->label());
+      $this->drupalGet('search/node');
+      $this->submitForm(['keys' => 'foo'], 'Search');
+      $this->assertSession()->pageTextNotContains($node->label());
 
       // Verify that the node title does appear as a link on the search page
       // when searching for the number.
-      $this->drupalPostForm('search/node', ['keys' => $number], 'Search');
-      $this->assertText($node->label());
+      $this->drupalGet('search/node');
+      $this->submitForm(['keys' => $number], 'Search');
+      $this->assertSession()->pageTextContains($node->label());
     }
   }
 

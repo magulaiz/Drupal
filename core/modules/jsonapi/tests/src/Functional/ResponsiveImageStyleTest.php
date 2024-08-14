@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\jsonapi\Functional;
 
 use Drupal\Core\Url;
@@ -9,8 +11,9 @@ use Drupal\responsive_image\Entity\ResponsiveImageStyle;
  * JSON:API integration test for the "ResponsiveImageStyle" config entity type.
  *
  * @group jsonapi
+ * @group #slow
  */
-class ResponsiveImageStyleTest extends ResourceTestBase {
+class ResponsiveImageStyleTest extends ConfigEntityResourceTestBase {
 
   /**
    * {@inheritdoc}
@@ -79,7 +82,7 @@ class ResponsiveImageStyleTest extends ResourceTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function getExpectedDocument() {
+  protected function getExpectedDocument(): array {
     $self_url = Url::fromUri('base:/jsonapi/responsive_image_style/responsive_image_style/' . $this->entity->uuid())->setAbsolute()->toString(TRUE)->getGeneratedUrl();
     return [
       'jsonapi' => [
@@ -140,8 +143,9 @@ class ResponsiveImageStyleTest extends ResourceTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function getPostDocument() {
+  protected function getPostDocument(): array {
     // @todo Update in https://www.drupal.org/node/2300677.
+    return [];
   }
 
 }

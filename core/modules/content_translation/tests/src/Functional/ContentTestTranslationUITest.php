@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\content_translation\Functional;
 
 /**
@@ -15,6 +17,17 @@ class ContentTestTranslationUITest extends ContentTranslationUITestBase {
   protected $testHTMLEscapeForAllLanguages = TRUE;
 
   /**
+   * {@inheritdoc}
+   */
+  protected $defaultCacheContexts = [
+    'languages:language_interface',
+    'theme',
+    'url.query_args:_wrapper_format',
+    'user.permissions',
+    'url.site',
+  ];
+
+  /**
    * Modules to enable.
    *
    * @var array
@@ -28,7 +41,7 @@ class ContentTestTranslationUITest extends ContentTranslationUITestBase {
   /**
    * {@inheritdoc}
    */
-  protected $defaultTheme = 'classy';
+  protected $defaultTheme = 'stark';
 
   /**
    * {@inheritdoc}
@@ -37,12 +50,13 @@ class ContentTestTranslationUITest extends ContentTranslationUITestBase {
     // Use the entity_test_mul as this has multilingual property support.
     $this->entityTypeId = 'entity_test_mul_changed';
     parent::setUp();
+    $this->doSetup();
   }
 
   /**
    * {@inheritdoc}
    */
-  protected function getTranslatorPermissions() {
+  protected function getTranslatorPermissions(): array {
     return array_merge(parent::getTranslatorPermissions(), ['administer entity_test content', 'view test entity']);
   }
 

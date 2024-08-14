@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\block_content\Functional;
 
 use Drupal\block_content\Entity\BlockContentType;
@@ -28,7 +30,7 @@ class BlockContentTranslationUITest extends ContentTranslationUITestBase {
   /**
    * {@inheritdoc}
    */
-  protected $defaultTheme = 'classy';
+  protected $defaultTheme = 'stark';
 
   /**
    * {@inheritdoc}
@@ -51,6 +53,7 @@ class BlockContentTranslationUITest extends ContentTranslationUITestBase {
     $this->bundle = 'basic';
     $this->testLanguageSelector = FALSE;
     parent::setUp();
+    $this->doSetup();
 
     $this->drupalPlaceBlock('page_title_block');
   }
@@ -77,6 +80,10 @@ class BlockContentTranslationUITest extends ContentTranslationUITestBase {
       'access administration pages',
       'administer blocks',
       'administer block_content fields',
+      'access block library',
+      'create basic block content',
+      'edit any basic block content',
+      'delete any basic block content',
     ]);
   }
 
@@ -84,7 +91,7 @@ class BlockContentTranslationUITest extends ContentTranslationUITestBase {
    * {@inheritdoc}
    */
   protected function getNewEntityValues($langcode) {
-    return ['info' => mb_strtolower($this->randomMachineName())] + parent::getNewEntityValues($langcode);
+    return ['info' => $this->randomMachineName()] + parent::getNewEntityValues($langcode);
   }
 
   /**
@@ -120,13 +127,13 @@ class BlockContentTranslationUITest extends ContentTranslationUITestBase {
     try {
       $entity->save();
     }
-    catch (\Exception $e) {
+    catch (\Exception) {
       $this->fail('Blocks can have translations with the same "info" value.');
     }
 
     // Check that the translate operation link is shown.
-    $this->drupalGet('admin/structure/block/block-content');
-    $this->assertSession()->linkByHrefExists('block/' . $entity->id() . '/translations');
+    $this->drupalGet('admin/content/block');
+    $this->assertSession()->linkByHrefExists('admin/content/block/' . $entity->id() . '/translations');
   }
 
   /**
@@ -145,13 +152,7 @@ class BlockContentTranslationUITest extends ContentTranslationUITestBase {
         $options = ['language' => $languages[$langcode]];
         $url = $entity->toUrl('edit-form', $options);
         $this->drupalGet($url);
-
-        $title = t('<em>Edit @type</em> @title [%language translation]', [
-          '@type' => $entity->bundle(),
-          '@title' => $entity->getTranslation($langcode)->label(),
-          '%language' => $languages[$langcode]->getName(),
-        ]);
-        $this->assertRaw($title);
+        $this->assertSession()->pageTextContains("Edit {$entity->bundle()} {$entity->getTranslation($langcode)->label()} [{$languages[$langcode]->getName()} translation]");
       }
     }
   }

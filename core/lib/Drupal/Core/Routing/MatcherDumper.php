@@ -4,6 +4,8 @@ namespace Drupal\Core\Routing;
 
 use Drupal\Core\Database\DatabaseException;
 use Drupal\Core\State\StateInterface;
+use Drupal\Core\Utility\Error;
+use Psr\Log\LoggerInterface;
 use Symfony\Component\Routing\RouteCollection;
 
 use Drupal\Core\Database\Connection;
@@ -16,25 +18,12 @@ use Drupal\Core\Database\Connection;
 class MatcherDumper implements MatcherDumperInterface {
 
   /**
-   * The database connection to which to dump route information.
-   *
-   * @var \Drupal\Core\Database\Connection
-   */
-  protected $connection;
-
-  /**
    * The routes to be dumped.
    *
    * @var \Symfony\Component\Routing\RouteCollection
    */
   protected $routes;
 
-  /**
-   * The state.
-   *
-   * @var \Drupal\Core\State\StateInterface
-   */
-  protected $state;
 
   /**
    * The name of the SQL table to which to dump the routes.
@@ -51,14 +40,20 @@ class MatcherDumper implements MatcherDumperInterface {
    *   information.
    * @param \Drupal\Core\State\StateInterface $state
    *   The state.
+   * @param \Psr\Log\LoggerInterface $logger
+   *   The logger.
    * @param string $table
    *   (optional) The table to store the route info in. Defaults to 'router'.
    */
-  public function __construct(Connection $connection, StateInterface $state, $table = 'router') {
-    $this->connection = $connection;
-    $this->state = $state;
-
-    $this->tableName = $table;
+  public function __construct(
+    protected Connection $connection,
+    protected StateInterface $state,
+    protected LoggerInterface $logger,
+    protected $table = 'router',
+  ) {
+    if (is_null($this->tableName)) {
+      $this->tableName = $table;
+    }
   }
 
   /**
@@ -83,16 +78,20 @@ class MatcherDumper implements MatcherDumperInterface {
    *
    * @param array $options
    *   An array of options.
+   *
+   * @throws \Exception
+   *   Thrown if the table could not be created or the database connection
+   *   failed.
    */
-  public function dump(array $options = []) {
+  public function dump(array $options = []): string {
     // Convert all of the routes into database records.
     // Accumulate the menu masks on top of any we found before.
     $masks = array_flip($this->state->get('routing.menu_masks.' . $this->tableName, []));
     // Delete any old records first, then insert the new ones. That avoids
     // stale data. The transaction makes it atomic to avoid unstable router
     // states due to random failures.
-    $transaction = $this->connection->startTransaction();
     try {
+      $transaction = $this->connection->startTransaction();
       // We don't use truncate, because it is not guaranteed to be transaction
       // safe.
       try {
@@ -100,7 +99,9 @@ class MatcherDumper implements MatcherDumperInterface {
           ->execute();
       }
       catch (\Exception $e) {
-        $this->ensureTableExists();
+        if (!$this->ensureTableExists()) {
+          throw $e;
+        }
       }
 
       // Split the routes into chunks to avoid big INSERT queries.
@@ -143,8 +144,10 @@ class MatcherDumper implements MatcherDumperInterface {
 
     }
     catch (\Exception $e) {
-      $transaction->rollBack();
-      watchdog_exception('Routing', $e);
+      if (isset($transaction)) {
+        $transaction->rollBack();
+      }
+      Error::logException($this->logger, $e);
       throw $e;
     }
     // Sort the masks so they are in order of descending fit.
@@ -153,6 +156,8 @@ class MatcherDumper implements MatcherDumperInterface {
     $this->state->set('routing.menu_masks.' . $this->tableName, $masks);
 
     $this->routes = NULL;
+
+    return '';
   }
 
   /**
@@ -162,7 +167,7 @@ class MatcherDumper implements MatcherDumperInterface {
    *   A RouteCollection instance representing all routes currently in the
    *   dumper.
    */
-  public function getRoutes() {
+  public function getRoutes(): RouteCollection {
     return $this->routes;
   }
 
@@ -174,18 +179,17 @@ class MatcherDumper implements MatcherDumperInterface {
    */
   protected function ensureTableExists() {
     try {
-      if (!$this->connection->schema()->tableExists($this->tableName)) {
-        $this->connection->schema()->createTable($this->tableName, $this->schemaDefinition());
-        return TRUE;
-      }
+      $this->connection->schema()->createTable($this->tableName, $this->schemaDefinition());
     }
-    catch (DatabaseException $e) {
+    catch (DatabaseException) {
       // If another process has already created the config table, attempting to
       // recreate it will throw an exception. In this case just catch the
       // exception and do nothing.
-      return TRUE;
     }
-    return FALSE;
+    catch (\Exception) {
+      return FALSE;
+    }
+    return TRUE;
   }
 
   /**

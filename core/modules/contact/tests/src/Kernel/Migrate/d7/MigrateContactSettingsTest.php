@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\contact\Kernel\Migrate\d7;
 
 use Drupal\Tests\migrate_drupal\Kernel\d7\MigrateDrupal7TestBase;
@@ -28,11 +30,11 @@ class MigrateContactSettingsTest extends MigrateDrupal7TestBase {
   /**
    * Tests migration of Contact's variables to configuration.
    */
-  public function testContactSettings() {
+  public function testContactSettings(): void {
     $config = $this->config('contact.settings');
     $this->assertTrue($config->get('user_default_enabled'));
     $this->assertSame(33, $config->get('flood.limit'));
-    $this->assertEqual('website_testing', $config->get('default_form'));
+    $this->assertEquals('website_testing', $config->get('default_form'));
   }
 
 }

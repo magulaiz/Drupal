@@ -2,6 +2,7 @@
 
 namespace Drupal\language\Form;
 
+use Drupal\Core\Config\TypedConfigManagerInterface;
 use Drupal\Core\Form\ConfigFormBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Language\LanguageInterface;
@@ -10,6 +11,8 @@ use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Url;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Drupal\language\Plugin\LanguageNegotiation\LanguageNegotiationUrl;
+
+// cspell:ignore deutsch
 
 /**
  * Configure the URL language negotiation method for this site.
@@ -30,11 +33,13 @@ class NegotiationUrlForm extends ConfigFormBase {
    *
    * @param \Drupal\Core\Config\ConfigFactoryInterface $config_factory
    *   The factory for configuration objects.
+   * @param \Drupal\Core\Config\TypedConfigManagerInterface $typedConfigManager
+   *   The typed config manager.
    * @param \Drupal\Core\Language\LanguageManagerInterface $language_manager
    *   The language manager.
    */
-  public function __construct(ConfigFactoryInterface $config_factory, LanguageManagerInterface $language_manager) {
-    parent::__construct($config_factory);
+  public function __construct(ConfigFactoryInterface $config_factory, TypedConfigManagerInterface $typedConfigManager, LanguageManagerInterface $language_manager) {
+    parent::__construct($config_factory, $typedConfigManager);
     $this->languageManager = $language_manager;
   }
 
@@ -44,6 +49,7 @@ class NegotiationUrlForm extends ConfigFormBase {
   public static function create(ContainerInterface $container) {
     return new static(
       $container->get('config.factory'),
+      $container->get('config.typed'),
       $container->get('language_manager')
     );
   }
@@ -117,14 +123,14 @@ class NegotiationUrlForm extends ConfigFormBase {
         '#type' => 'textfield',
         '#title' => $language->isDefault() ? $this->t('%language (%langcode) path prefix (Default language)', $t_args) : $this->t('%language (%langcode) path prefix', $t_args),
         '#maxlength' => 64,
-        '#default_value' => isset($prefixes[$langcode]) ? $prefixes[$langcode] : '',
+        '#default_value' => $prefixes[$langcode] ?? '',
         '#field_prefix' => $base_url . '/',
       ];
       $form['domain'][$langcode] = [
         '#type' => 'textfield',
         '#title' => $this->t('%language (%langcode) domain', ['%language' => $language->getName(), '%langcode' => $language->getId()]),
         '#maxlength' => 128,
-        '#default_value' => isset($domains[$langcode]) ? $domains[$langcode] : '',
+        '#default_value' => $domains[$langcode] ?? '',
       ];
     }
 
@@ -156,7 +162,7 @@ class NegotiationUrlForm extends ConfigFormBase {
           ]));
         }
       }
-      elseif (strpos($value, '/') !== FALSE) {
+      elseif (str_contains($value, '/')) {
         // Throw a form error if the string contains a slash,
         // which would not work.
         $form_state->setErrorByName("prefix][$langcode", $this->t('The prefix may not contain a slash.'));

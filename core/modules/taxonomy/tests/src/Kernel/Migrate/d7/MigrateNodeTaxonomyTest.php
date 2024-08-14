@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\taxonomy\Kernel\Migrate\d7;
 
 use Drupal\Tests\migrate_drupal\Kernel\d7\MigrateDrupal7TestBase;
@@ -14,6 +16,7 @@ class MigrateNodeTaxonomyTest extends MigrateDrupal7TestBase {
   protected static $modules = [
     'comment',
     'datetime',
+    'datetime_range',
     'image',
     'link',
     'menu_ui',
@@ -37,14 +40,14 @@ class MigrateNodeTaxonomyTest extends MigrateDrupal7TestBase {
   }
 
   /**
-   * Test node migration from Drupal 7 to 8.
+   * Tests node migration from Drupal 7 to 8.
    */
-  public function testMigration() {
+  public function testMigration(): void {
     $node = Node::load(2);
     $this->assertInstanceOf(NodeInterface::class, $node);
-    $this->assertEqual(9, $node->field_tags[0]->target_id);
-    $this->assertEqual(14, $node->field_tags[1]->target_id);
-    $this->assertEqual(17, $node->field_tags[2]->target_id);
+    $this->assertEquals(9, $node->field_tags[0]->target_id);
+    $this->assertEquals(14, $node->field_tags[1]->target_id);
+    $this->assertEquals(17, $node->field_tags[2]->target_id);
   }
 
 }

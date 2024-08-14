@@ -5,4 +5,4 @@ version: VERSION
 hidden: true
 install:
   - locale
-  - tour
+  - locale_test_translate

@@ -6,7 +6,7 @@ use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityListBuilder;
 
 /**
- * Defines a class to build a listing of custom block entities.
+ * Defines a class to build a listing of content block entities.
  *
  * @see \Drupal\block_content\Entity\BlockContent
  */
@@ -33,6 +33,7 @@ class BlockContentListBuilder extends EntityListBuilder {
    */
   protected function getEntityIds() {
     $query = $this->getStorage()->getQuery()
+      ->accessCheck(TRUE)
       ->sort($this->entityType->getKey('id'));
     $query->condition('reusable', TRUE);
 
