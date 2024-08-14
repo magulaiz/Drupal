@@ -3,12 +3,12 @@
 namespace Drupal\telephone;
 
 /**
- * Telephone cofig class to process telephone config in batch.
+ * Telephone config class to process telephone config in batch.
  */
 class TelephoneConfig {
 
   /**
-   * Function to procecss telephone config in batch.
+   * Function to process telephone config in batch.
    */
   public static function processTelephoneConfig($configName, &$context) {
     $message = 'Updating ...';
