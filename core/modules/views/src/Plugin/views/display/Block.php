@@ -79,12 +79,12 @@ class Block extends DisplayPluginBase {
    * @param \Symfony\Component\EventDispatcher\EventDispatcherInterface $event_dispatcher
    *   The event dispatcher service.
    */
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, EntityTypeManagerInterface $entity_type_manager, BlockManagerInterface $block_manager, $event_dispatcher) {
+  public function __construct(array $configuration, $plugin_id, $plugin_definition, EntityTypeManagerInterface $entity_type_manager, BlockManagerInterface $block_manager, $event_dispatcher = NULL) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
 
     $this->entityTypeManager = $entity_type_manager;
     $this->blockManager = $block_manager;
-    $this->eventDispatcher = $event_dispatcher;
+    $this->eventDispatcher = $event_dispatcher ?: \Drupal::service('event_dispatcher');
   }
 
   /**

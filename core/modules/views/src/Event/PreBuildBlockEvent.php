@@ -3,6 +3,8 @@
 namespace Drupal\views\Event;
 
 use Drupal\Component\EventDispatcher\Event;
+use Drupal\views\Plugin\Block\ViewsBlock;
+use Drupal\views\Plugin\views\display\Block;
 
 /**
  * Event fired during \Drupal\views\Plugin\views\display\Block::preBuildBlock().
@@ -46,7 +48,7 @@ class PreBuildBlockEvent extends Event {
    * @return \Drupal\views\Plugin\Block\ViewsBlock
    *   The views block instance.
    */
-  public function getBlock() {
+  public function getBlock(): ViewsBlock {
     return $this->block;
   }
 
@@ -56,7 +58,7 @@ class PreBuildBlockEvent extends Event {
    * @return \Drupal\views\Plugin\views\display\Block
    *   The views block display handler.
    */
-  public function getDisplay() {
+  public function getDisplay(): Block {
     return $this->display;
   }
 
