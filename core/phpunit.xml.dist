@@ -35,7 +35,7 @@
      reachable from your host machine here. This will allow you to follow them
      directly and view the output. -->
     <env name="BROWSERTEST_OUTPUT_BASE_URL" value=""/>
-    <!-- To preserve the test database after a Functional test, uncomment the
+    <!-- To preserve the test database after a browser test, uncomment the
     following. The test site can be made accessible in a browser using the
     sites.php file. -->
     <!-- <env name="BROWSERTEST_PRESERVE_SITE" value="true"/> -->
