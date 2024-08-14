@@ -73,7 +73,7 @@ class ChunkedIterator implements \IteratorAggregate, \Countable {
 
   /**
    * {@inheritdoc}
-   */ 
+   */
   #[\ReturnTypeWillChange]
   public function count() {
     return count($this->entityIds);
