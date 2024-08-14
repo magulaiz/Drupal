@@ -227,6 +227,7 @@ SH;
     putenv('PATH=' . $oldPath . ':' . getenv('PATH'));
 
     $expected = <<<EOT
+Composer could not detect the root package (fixtures/drupal-composer-drupal-project) version, defaulting to '1.0.0'. See https://getcomposer.org/root-version
 Scaffolding files for fixtures/drupal-assets-fixture:
   - Copy [web-root]/.csslintrc from assets/.csslintrc
   - Copy [web-root]/.editorconfig from assets/.editorconfig
