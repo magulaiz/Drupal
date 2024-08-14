@@ -6,6 +6,7 @@ namespace Drupal\Tests\rest\Functional;
 
 use Drupal\Core\Url;
 use Drupal\rest\RestResourceConfigInterface;
+use Drupal\Tests\ApiRequestTrait;
 use Drupal\Tests\BrowserTestBase;
 use Drupal\user\Entity\Role;
 use Drupal\user\RoleInterface;
@@ -24,7 +25,9 @@ use Psr\Http\Message\ResponseInterface;
  */
 abstract class ResourceTestBase extends BrowserTestBase {
 
-  use RestRequestTestTrait;
+  use ApiRequestTrait {
+    makeApiRequest as request;
+  }
 
   /**
    * The format to use in this test.
