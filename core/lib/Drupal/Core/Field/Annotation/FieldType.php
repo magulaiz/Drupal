@@ -44,7 +44,7 @@ class FieldType extends DataType {
    *
    * @ingroup plugin_translatable
    *
-   * @var \Drupal\Core\Annotation\Translation
+   * @var \Drupal\Core\Annotation\Translation|\Drupal\Core\Annotation\Translation[]
    */
   public $description;
 
@@ -53,7 +53,7 @@ class FieldType extends DataType {
    *
    * @ingroup plugin_translatable
    *
-   * @var \Drupal\Core\Annotation\Translation
+   * @var \Drupal\Core\Annotation\Translation|string
    */
   public $category = '';
 
