@@ -73,7 +73,8 @@ class ChunkedIterator implements \IteratorAggregate, \Countable {
 
   /**
    * {@inheritdoc}
-   */
+   */ 
+  #[\ReturnTypeWillChange]
   public function count() {
     return count($this->entityIds);
   }
@@ -81,6 +82,7 @@ class ChunkedIterator implements \IteratorAggregate, \Countable {
   /**
    * {@inheritdoc}
    */
+  #[\ReturnTypeWillChange]
   public function getIterator() {
     foreach ($this->chunkIds() as $ids_chunk) {
       yield from $this->entityStorage->loadMultiple($ids_chunk);

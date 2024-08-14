@@ -47,6 +47,7 @@ class ChunkedIteratorTest extends UnitTestCase {
    * {@inheritdoc}
    */
   public function setUp() : void {
+    parent::setUp() 
     $this->entityStorage = $this->prophesize(EntityStorageInterface::class);
     $this->memoryCache = $this->prophesize(MemoryCacheInterface::class);
     $this->entity = $this->prophesize(EntityInterface::class);
@@ -59,7 +60,7 @@ class ChunkedIteratorTest extends UnitTestCase {
   public function testCountWithNoItems() {
     $this->entityStorage->loadMultiple()->shouldNotBeCalled();
     $iterator = new ChunkedIterator($this->entityStorage->reveal(), $this->memoryCache->reveal(), []);
-    $this->assertSame(0, $iterator->count());
+    $this->assertCount(0, $iterator);
   }
 
   /**
