@@ -23,6 +23,7 @@ use PHPUnit\Framework\TestCase;
  *   CVE-2006-1226 (= rev. 1.112?), CVE-2008-0273, CVE-2008-3740.
  *
  * @group Utility
+ * @group #slow
  * @coversDefaultClass \Drupal\Component\Utility\Xss
  * @runTestsInSeparateProcesses
  */
@@ -68,7 +69,7 @@ class XssTest extends TestCase {
    *
    * @dataProvider providerTestFilterXssNormalized
    */
-  public function testFilterXssNormalized($value, $expected, $message, ?array $allowed_tags = NULL) {
+  public function testFilterXssNormalized($value, $expected, $message, ?array $allowed_tags = NULL): void {
     if ($allowed_tags === NULL) {
       $value = Xss::filter($value);
     }
@@ -135,7 +136,7 @@ class XssTest extends TestCase {
    *
    * @dataProvider providerTestFilterXssNotNormalized
    */
-  public function testFilterXssNotNormalized($value, $expected, $message, ?array $allowed_tags = NULL) {
+  public function testFilterXssNotNormalized($value, $expected, $message, ?array $allowed_tags = NULL): void {
     if ($allowed_tags === NULL) {
       $value = Xss::filter($value);
     }
@@ -448,7 +449,7 @@ class XssTest extends TestCase {
    *
    * @dataProvider providerTestInvalidMultiByte
    */
-  public function testInvalidMultiByte($value, $expected, $message) {
+  public function testInvalidMultiByte($value, $expected, $message): void {
     $this->assertEquals(Xss::filter($value), $expected, $message);
   }
 
@@ -474,7 +475,7 @@ class XssTest extends TestCase {
   /**
    * Checks that strings starting with a question sign are correctly processed.
    */
-  public function testQuestionSign() {
+  public function testQuestionSign(): void {
     $value = Xss::filter('<?xml:namespace ns="urn:schemas-microsoft-com:time">');
     $this->assertStringNotContainsStringIgnoringCase('<?xml', $value, 'HTML tag stripping evasion -- starting with a question sign (processing instructions).');
   }
@@ -485,7 +486,7 @@ class XssTest extends TestCase {
    * @covers ::attributes
    * @dataProvider providerTestAttributes
    */
-  public function testAttribute($value, $expected, $message, $allowed_tags = NULL) {
+  public function testAttribute($value, $expected, $message, $allowed_tags = NULL): void {
     $value = Xss::filter($value, $allowed_tags);
     $this->assertEquals($expected, $value, $message);
   }
@@ -567,7 +568,7 @@ class XssTest extends TestCase {
   /**
    * Checks that \Drupal\Component\Utility\Xss::filterAdmin() correctly strips disallowed tags.
    */
-  public function testFilterXSSAdmin() {
+  public function testFilterXSSAdmin(): void {
     $value = Xss::filterAdmin('<style /><iframe /><frame /><frameset /><meta /><link /><embed /><applet /><param /><layer />');
     $this->assertEquals('', $value, 'Admin HTML filter -- should never allow some tags.');
   }
@@ -584,7 +585,7 @@ class XssTest extends TestCase {
    *
    * @dataProvider providerTestFilterXssAdminNotNormalized
    */
-  public function testFilterXssAdminNotNormalized($value, $expected, $message) {
+  public function testFilterXssAdminNotNormalized($value, $expected, $message): void {
     $this->assertNotNormalized(Xss::filterAdmin($value), $expected, $message);
   }
 
@@ -612,7 +613,7 @@ class XssTest extends TestCase {
    *
    * @see \Drupal\Component\Utility\HtmlSerializerRules
    */
-  public function testFilterNormalizedHtml5() {
+  public function testFilterNormalizedHtml5(): void {
     $input = '<span data-caption="foo &lt;em&gt;bar&lt;/em&gt;"></span>';
     $this->assertEquals($input, Xss::filter(Html::normalize($input), ['span']));
   }

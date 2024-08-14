@@ -37,7 +37,7 @@ trait QueueProcessTrait {
   /**
    * The time service.
    *
-   * @var Drupal\Component\Datetime\TimeInterface;
+   * @var Drupal\Component\Datetime\TimeInterface
    */
   protected TimeInterface $time;
 
@@ -93,7 +93,7 @@ trait QueueProcessTrait {
       // Each queue will be processed immediately when it is reached for the
       // first time, as zero > currentTime will never be true.
       if ($process_from > $this->time->getCurrentMicroTime()) {
-        $this->usleep(round($process_from - $this->time->getCurrentMicroTime(), 3) * 1000000);
+        $this->usleep((int) round($process_from - $this->time->getCurrentMicroTime(), 3) * 1000000);
       }
 
       try {
