@@ -1,0 +1,15 @@
+asset_test.load_libraries_1:
+  path: '/asset_test/load-libraries-1'
+  defaults:
+    _title: 'Load libraries'
+    _controller: '\Drupal\asset_test\Controller\AssetTestController::loadLibraries1'
+  requirements:
+    _access: 'TRUE'
+
+asset_test.load_libraries_2:
+  path: '/asset_test/load-libraries-2'
+  defaults:
+    _title: 'Load libraries'
+    _controller: '\Drupal\asset_test\Controller\AssetTestController::loadLibraries2'
+  requirements:
+    _access: 'TRUE'
