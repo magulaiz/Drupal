@@ -1,4 +1,4 @@
-(function(window) {
+(function closure(window) {
   console.log('Testing loading of libraries');
   console.log([
     window.header_a,

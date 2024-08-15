@@ -1,1 +1,1 @@
-(function(window) {})(window);
+(function closure() {})();
