@@ -255,6 +255,22 @@ class AssetResolver implements AssetResolverInterface {
     $theme_info = $this->themeManager->getActiveTheme();
     $libraries_to_load = $this->getLibrariesToLoad($assets);
 
+    // Remove all libraries without JS as we can ignore.
+    foreach ($libraries_to_load as $key => $library) {
+      [$extension, $name] = explode('/', $library, 2);
+      $definition = $this->libraryDiscovery->getLibraryByName($extension, $name);
+      if (empty($definition['js'])) {
+        unset($libraries_to_load[$key]);
+      }
+    }
+
+    // Need to ensure that the order of the JavaScript we want to include is
+    // based on the minimal representative subset, as that is how the scripts
+    // will be generated using the JS optimizer. If the order is not the same
+    // things can blow up as you might end up with different groups.
+    $min_js_scripts = $this->libraryDependencyResolver->getMinimalRepresentativeSubset($libraries_to_load);
+    $libraries_to_load = $this->libraryDependencyResolver->getLibrariesWithDependencies($min_js_scripts);
+
     // Collect all libraries that contain JS assets and are in the header.
     // Also remove any libraries with no JavaScript from the libraries to
     // load.
