@@ -145,7 +145,7 @@ class UserAdminTest extends BrowserTestBase {
     $this->assertSession()->elementExists('xpath', static::getLinkSelectorForUser($user_c));
 
     // Test unblocking of a user from /admin/people page and sending of
-    // activation mail
+    // activation mail.
     $edit_unblock = [];
     $edit_unblock['action'] = 'user_unblock_user_action';
     $edit_unblock['user_bulk_form[4]'] = TRUE;

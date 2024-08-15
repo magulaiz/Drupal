@@ -825,7 +825,7 @@ class FieldKernelTest extends ViewsKernelTestBase {
       $result_text = FieldPluginBase::trimText($alter, $line);
       $this->assertEquals($expect[$key], $result_text);
     }
-    // cSpell:enable
+    // cSpell:enable.
   }
 
 }

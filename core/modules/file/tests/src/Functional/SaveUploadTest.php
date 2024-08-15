@@ -11,7 +11,7 @@ use Drupal\file\Entity\File;
 use Drupal\file_test\FileTestHelper;
 use Drupal\Tests\TestFileCreationTrait;
 
-// cSpell:ignore TÉXT Pácê
+// cSpell:ignore TÉXT Pácê.
 
 /**
  * Tests the file_save_upload() function.

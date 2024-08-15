@@ -583,7 +583,7 @@ function system_requirements($phase): array {
     }
   }
 
-  // Test PHP memory_limit
+  // Test PHP memory_limit.
   $memory_limit = ini_get('memory_limit');
   $requirements['php_memory_limit'] = [
     'title' => t('PHP memory limit'),
@@ -976,7 +976,7 @@ function system_requirements($phase): array {
     }
   }
 
-  // Verify the update.php access setting
+  // Verify the update.php access setting.
   if ($phase == 'runtime') {
     if (Settings::get('update_free_access')) {
       $requirements['update access'] = [
