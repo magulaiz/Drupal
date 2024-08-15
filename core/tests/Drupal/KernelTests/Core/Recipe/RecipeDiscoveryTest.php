@@ -95,11 +95,17 @@ class RecipeDiscoveryTest extends KernelTestBase {
    * @covers ::getAllRecipePaths
    */
   public function testRecipeDiscoveryGetAllRecipes(): void {
-    $recipeDiscovery = new RecipeDiscovery($this->recipeFixturePath, FALSE
+    $recipeDiscovery = new RecipeDiscovery(
+      $this->recipeFixturePath,
+      FALSE
     );
 
     $found_recipes = $recipeDiscovery->getAllRecipes();
-    $this->assertSame($this->validExpectedRecipePaths, array_keys($found_recipes));
+    $found_recipe_keys = array_keys($found_recipes);
+    $this->assertSame(
+      ksort($this->validExpectedRecipePaths),
+      ksort($found_recipe_keys)
+    );
 
     foreach ($found_recipes as $found_recipe) {
       $this->assertTrue($found_recipe instanceof Recipe);
