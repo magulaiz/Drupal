@@ -1,0 +1,54 @@
+header_a:
+  header: true
+  js:
+    js/header_a.js: { weight: -101 }
+
+header_b:
+  header: true
+  js:
+    js/header_b.js: { weight: -101 }
+
+header_preprocess_a:
+  header: true
+  js:
+    js/header_preprocess_a.js: { preprocess: false, weight: -101 }
+
+header_preprocess_b:
+  header: true
+  js:
+    js/header_preprocess_b.js: { preprocess: false, weight: -101 }
+
+dep_header_a:
+  js:
+    js/plain.js: { }
+  dependencies:
+    - asset_test/header_a
+
+css_dep_header_b:
+  css:
+    component:
+      css/plain.css: { }
+  dependencies:
+    - asset_test/header_b
+
+dep_header_b:
+  js:
+    js/plain.js: { }
+  dependencies:
+    - asset_test/header_b
+
+dep_header_preprocess_a:
+  js:
+    js/plain.js: { }
+  dependencies:
+    - asset_test/header_preprocess_a
+
+dep_header_preprocess_b:
+  js:
+    js/plain.js: { }
+  dependencies:
+    - asset_test/header_preprocess_b
+
+validation:
+  js:
+    js/validation.js: { }
