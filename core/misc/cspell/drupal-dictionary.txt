@@ -1,10 +1,16 @@
 bartik
+corepack
 dblog
+dependee
+dependee's
+dependees
 drupalci
 druplicon
+drupalimage
 drush
 langcode
 langcodes
+lullabot
 olivero
 olivero's
 simpletest
