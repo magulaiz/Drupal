@@ -2,14 +2,6 @@
 
 namespace Drupal\asset_test\Controller;
 
-use Drupal\Component\Serialization\Json;
-use Drupal\Core\Ajax\AjaxResponse;
-use Drupal\Core\Ajax\AlertCommand;
-use Drupal\Core\Ajax\CloseDialogCommand;
-use Drupal\Core\Ajax\HtmlCommand;
-use Drupal\Core\Url;
-use Symfony\Component\HttpFoundation\Request;
-
 /**
  * Provides route to test asset loading.
  */
@@ -36,7 +28,7 @@ class AssetTestController {
       'content' => [
         '#type' => 'html_tag',
         '#tag' => 'p',
-        '#value' => 'Please check the JavaScript console to validate if libraries are loaded'
+        '#value' => 'Check the JavaScript console to validate if libraries are loaded.',
       ],
     ];
   }
@@ -62,7 +54,7 @@ class AssetTestController {
       'content' => [
         '#type' => 'html_tag',
         '#tag' => 'p',
-        '#value' => 'Please check the JavaScript console to validate if libraries are loaded'
+        '#value' => 'Check the JavaScript console to validate if libraries are loaded.',
       ],
     ];
   }
