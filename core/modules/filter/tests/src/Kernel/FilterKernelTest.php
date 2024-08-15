@@ -1064,7 +1064,7 @@ class FilterKernelTest extends KernelTestBase {
     $f = Html::normalize('<img src="http://example.com/test.jpg">test</img>');
     $this->assertEquals('<img src="http://example.com/test.jpg">test', $f, 'HTML corrector -- Fix self-closing single tags.');
 
-    $f = Html::normalize('<br>');
+    $f = Html::normalize('<br></br>');
     $this->assertEquals('<br>', $f, "HTML corrector -- Transform empty tags to a self-closed tag if the tag's content model is EMPTY.");
 
     $f = Html::normalize('<div></div>');
