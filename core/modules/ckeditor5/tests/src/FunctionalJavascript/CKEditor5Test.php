@@ -14,6 +14,8 @@ use Drupal\node\Entity\Node;
 use Drupal\Tests\ckeditor5\Traits\CKEditor5TestTrait;
 use Drupal\Tests\TestFileCreationTrait;
 use Drupal\user\RoleInterface;
+use PHPUnit\Framework\AssertionFailedError;
+use PHPUnit\Framework\ExpectationFailedException;
 use Symfony\Component\Validator\ConstraintViolation;
 
 // cspell:ignore esque māori sourceediting splitbutton upcasted
@@ -817,9 +819,35 @@ JS;
         '<script>(function() { let player = 5, script = 10; if (player<script) { console.log("run me!"); }})()</script>',
         '<script>(function() { let player = 5, script = 10; if (player<script) { console.log("run me!"); }})()</script>',
       ],
+      'script like tag 2' => [
+        <<<HTML
+        let x,y,player,script;
+        if (x<!--y) { console.log('1'); }
+        if ( player<script ) { console.log('2'); }
+        HTML,
+        <<<HTML
+        let x,y,player,script;
+        if (x<!--y) { console.log('1'); }
+        if ( player<script ) { console.log('2'); }
+        HTML,
+      ],
       'script to escape' => [
         "<script>const example = 'Consider this string: <!-- <script>';</script>",
         "<script>const example = 'Consider this string: <!-- <script>';</script>",
+      ],
+      'script to escape multiline' => [
+        <<<HTML
+        <script>
+        const example = 'Consider this string: <!-- <script>';
+        console.log(example);
+        </script>
+        HTML,
+        <<<HTML
+        <script>
+        const example = 'Consider this string: <!-- <script>';
+        console.log(example);
+        </script>
+        HTML,
       ],
       'unescaped script tag' => [
         <<<HTML
@@ -869,8 +897,7 @@ JS;
         if(y < x){
         console.log('is smaller')
         }
-        </script>
-        <style type="text/css">
+        </script><style type="text/css">
         :root {
           --main-bg-color: brown;
         }
@@ -937,6 +964,8 @@ JS;
     ));
 
     // Add a node with text rendered via the CKEditor 5 HTML format.
+    $failure_messages = [];
+    $failure_exception = NULL;
     foreach ($test_cases as $test_case_name => $test_case) {
       [$markup, $expected_content] = $test_case;
       $this->drupalGet('node/add');
@@ -944,10 +973,27 @@ JS;
       $this->waitForEditor();
       $this->pressEditorButton('Source');
       $editor = $page->find('css', '.ck-source-editing-area textarea');
-      $editor->setValue($markup);
+      $editor->setValue('<div id="ckeditor5-script-content">' . $markup . '</div>');
       $page->pressButton('Save');
 
-      $assert_session->responseContains($expected_content);
+      try {
+        $script_content = $page->find('css', '#ckeditor5-script-content');
+        $this->assertNotEmpty($script_content);
+        $this->assertEquals($expected_content, $script_content->getHtml());
+        $assert_session->responseContains($expected_content);
+      }
+      catch (AssertionFailedError $e) {
+        // Catch the assertions so that test-only pipelines may run effectively.
+        $test_case_error_prefix = '"' . $test_case_name . '" test case failed:';
+        $failure_messages[] = "$test_case_error_prefix\n$e";
+        $failure_exception = new ExpectationFailedException($test_case_error_prefix . ' ' . $e->getMessage(), NULL, $failure_exception);
+      }
+    }
+    if ($failure_messages) {
+      throw new ExpectationFailedException(
+        count($failure_messages) . " assertions failed:\n" . implode("\n", $failure_messages),
+        NULL, $failure_exception
+      );
     }
   }
 
