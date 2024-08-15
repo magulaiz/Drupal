@@ -109,7 +109,7 @@ class LayoutBuilderFormModeTest extends BrowserTestBase {
     // When Discarding changes, a validation error will not be shown.
     // Reload the form for fresh state.
     $this->drupalGet('entity_test/1/layout');
-    $page->pressButton('Discard changes');
+    $page->clickLink('Discard changes');
     $assert_session->pageTextNotContains('foo field is required.');
     $assert_session->addressEquals('entity_test/1/layout/discard-changes');
 

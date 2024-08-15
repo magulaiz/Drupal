@@ -250,7 +250,7 @@ class LayoutBuilderTest extends LayoutBuilderTestBase {
     $assert_session->elementExists('css', '.field--name-nid');
     $assert_session->pageTextContains('ID');
     $assert_session->pageTextContains('1');
-    $page->pressButton('Revert to defaults');
+    $page->clickLink('Revert to defaults');
     $page->pressButton('Revert');
     $assert_session->addressEquals('node/1');
     $assert_session->pageTextContains('The layout has been reverted back to defaults.');

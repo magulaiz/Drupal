@@ -261,7 +261,7 @@ class LayoutBuilderOverridesTest extends LayoutBuilderTestBase {
     $assert_session->elementsCount('css', '.layout-builder__add-section', 2);
 
     // Revert the override.
-    $page->pressButton('Revert to defaults');
+    $page->clickLink('Revert to defaults');
     $page->pressButton('Revert');
     $assert_session->elementsCount('css', '.layout', 0);
     $assert_session->pageTextNotContains('The first node body');
