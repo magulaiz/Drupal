@@ -53,7 +53,7 @@ final class RecipeDiscovery {
    *   (optional) Whether or not to include core recipes. If you're requesting
    *   a specific path, you may not want to include core recipes.
    */
-  public function __construct(string $path = NULL, bool $include_core_recipes = TRUE) {
+  public function __construct(?string $path = NULL, bool $include_core_recipes = TRUE) {
     if (is_null($path)) {
       $path = self::getComposerRecipePath();
     }
