@@ -120,7 +120,6 @@ class CommentType extends ConfigEntityBundleBase implements CommentTypeInterface
     return $this;
   }
 
-
   /**
    * {@inheritdoc}
    */
