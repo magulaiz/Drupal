@@ -14,7 +14,7 @@ interface ImageFieldManagerInterface {
   /**
    * The default image directory.
    */
-  public const string DEFAULT_IMAGE_DIRECTORY = 'default_images';
+  public const DEFAULT_IMAGE_DIRECTORY = 'default_images';
 
   /**
    * Map default values for image fields, and those fields' definitions.
