@@ -146,7 +146,7 @@ class Tasks extends InstallTasks {
     $form['host1']['host'] = [
       '#type' => 'textfield',
       '#title' => t('Host'),
-      '#default_value' => empty($database['host']) ? '' : $database['host'],
+      '#default_value' => $database['hosts'][0]['host'] ?? $database['host1']['host'] ?? '',
       '#size' => 45,
       // Host names can be 255 characters long.
       '#maxlength' => 255,
@@ -155,7 +155,7 @@ class Tasks extends InstallTasks {
     $form['host1']['port'] = [
       '#type' => 'number',
       '#title' => t('Port number'),
-      '#default_value' => empty($database['port']) ? '27017' : $database['port'],
+      '#default_value' => $database['hosts'][0]['port'] ?? $database['host1']['port'] ?? '27017',
       '#min' => 0,
       '#max' => 65535,
     ];
@@ -169,7 +169,7 @@ class Tasks extends InstallTasks {
     $form['host2']['host'] = [
       '#type' => 'textfield',
       '#title' => t('Host'),
-      '#default_value' => empty($database['host']) ? '' : $database['host'],
+      '#default_value' => $database['hosts'][1]['host'] ?? $database['host2']['host'] ?? '',
       '#size' => 45,
       // Host names can be 255 characters long.
       '#maxlength' => 255,
@@ -178,7 +178,7 @@ class Tasks extends InstallTasks {
     $form['host2']['port'] = [
       '#type' => 'number',
       '#title' => t('Port number'),
-      '#default_value' => empty($database['port']) ? '27017' : $database['port'],
+      '#default_value' => $database['hosts'][1]['port'] ?? $database['host2']['port'] ?? '27017',
       '#min' => 0,
       '#max' => 65535,
     ];
@@ -192,7 +192,7 @@ class Tasks extends InstallTasks {
     $form['host3']['host'] = [
       '#type' => 'textfield',
       '#title' => t('Host'),
-      '#default_value' => empty($database['host']) ? '' : $database['host'],
+      '#default_value' => $database['hosts'][2]['host'] ?? $database['host3']['host'] ?? '',
       '#size' => 45,
       // Host names can be 255 characters long.
       '#maxlength' => 255,
@@ -201,7 +201,7 @@ class Tasks extends InstallTasks {
     $form['host3']['port'] = [
       '#type' => 'number',
       '#title' => t('Port number'),
-      '#default_value' => empty($database['port']) ? '27017' : $database['port'],
+      '#default_value' => $database['hosts'][2]['port'] ?? $database['host3']['port'] ?? '27017',
       '#min' => 0,
       '#max' => 65535,
     ];

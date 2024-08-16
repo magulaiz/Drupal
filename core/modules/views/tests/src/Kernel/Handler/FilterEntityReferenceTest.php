@@ -247,6 +247,7 @@ class FilterEntityReferenceTest extends ViewsKernelTestBase {
       ],
       'content' => $content_dependencies,
       'module' => [
+        'mongodb',
         'node',
         'user',
       ],
