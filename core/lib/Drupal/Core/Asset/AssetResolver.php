@@ -268,8 +268,11 @@ class AssetResolver implements AssetResolverInterface {
     // based on the minimal representative subset, as that is how the scripts
     // will be generated using the JS optimizer. If the order is not the same
     // things can blow up as you might end up with different groups.
-    $min_js_scripts = $this->libraryDependencyResolver->getMinimalRepresentativeSubset($libraries_to_load);
-    $libraries_to_load = $this->libraryDependencyResolver->getLibrariesWithDependencies($min_js_scripts);
+    $minimum_libraries = $this->libraryDependencyResolver->getMinimalRepresentativeSubset($libraries_to_load);
+    $libraries_to_load = array_diff(
+      $this->libraryDependencyResolver->getLibrariesWithDependencies($minimum_libraries),
+      $this->libraryDependencyResolver->getLibrariesWithDependencies($assets->getAlreadyLoadedLibraries())
+    );
 
     // Collect all libraries that contain JS assets and are in the header.
     // Also remove any libraries with no JavaScript from the libraries to
