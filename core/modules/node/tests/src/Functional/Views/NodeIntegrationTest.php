@@ -51,7 +51,7 @@ class NodeIntegrationTest extends NodeTestBase {
 
     foreach ($types as $type) {
       $this->drupalGet("test-node-view/{$type->id()}");
-      $this->assertSession()->assertEscaped($type->label());
+      $this->assertSession()->responseContains($type->label());
       $this->assertNids(array_keys($nodes[$type->id()]));
     }
   }

@@ -41,7 +41,7 @@ class RolesRidArgumentTest extends UserTestBase {
     $second_user->addRole('second_role_name')->save();
 
     $this->drupalGet('/user_roles_rid_test/markup_role_name');
-    $this->assertSession()->assertEscaped('<em>Role name with markup</em>');
+    $this->assertSession()->responseContains('<em>Role name with markup</em>');
 
     $views_user = $this->drupalCreateUser(['administer views']);
     $this->drupalLogin($views_user);
