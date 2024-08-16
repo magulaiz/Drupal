@@ -103,6 +103,13 @@ class CommentTypeForm extends EntityForm {
       '#description' => $this->t('Displays on the <em>Comment types</em> page.'),
       '#title' => $this->t('Description'),
     ];
+    
+    $form['form_heading'] = [
+      '#type' => 'textfield',
+      '#title' => $this->t('Form heading'),
+      '#maxlength' => 255,
+      '#default_value' => $comment_type->getFormHeading(),
+    ];
 
     if ($comment_type->isNew()) {
       $options = [];
