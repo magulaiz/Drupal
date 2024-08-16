@@ -45,7 +45,6 @@ interface CommentTypeInterface extends ConfigEntityInterface {
    */
   public function setFormHeading($form_heading);
 
-
   /**
    * Gets the target entity type id for this comment type.
    *
