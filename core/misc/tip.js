@@ -1,4 +1,3 @@
-// cspell:ignore popovertarget
 /**
  * @file
  * Attaches behaviors for adding tip functionality.

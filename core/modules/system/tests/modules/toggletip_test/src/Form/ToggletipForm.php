@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\toggletip_test\Form;
 
 // cspell:ignore Beale
