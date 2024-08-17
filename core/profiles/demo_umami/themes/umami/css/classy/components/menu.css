@@ -4,14 +4,10 @@
  */
 
 ul.menu {
-  margin-inline-start: 1em; /* LTR */
+  margin-inline-start: 1em;
   padding: 0;
   list-style: none outside;
-  text-align: start; /* LTR */
-}
-[dir="rtl"] ul.menu {
-  margin-inline: 0 1em;
-  text-align: end;
+  text-align: start;
 }
 .menu-item--expanded {
   list-style-type: circle;

@@ -23,10 +23,7 @@
 @media screen and (min-width: 60rem) {
   /* 960px */
   .footer {
-    text-align: start; /* LTR */
-  }
-  [dir="rtl"] .footer {
-    text-align: end;
+    text-align: start;
   }
   .region-footer {
     flex-direction: row;

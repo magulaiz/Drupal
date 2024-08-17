@@ -26,10 +26,7 @@
 }
 
 .filter-help {
-  float: inline-end; /* LTR */
-}
-[dir="rtl"] .filter-help {
-  float: inline-start;
+  float: inline-end;
 }
 .filter-guidelines .filter-guidelines-item {
   margin-block-start: 1em;
@@ -40,24 +37,17 @@
 .filter-help a {
   position: relative;
   margin-block: 0;
-  margin-inline: 0 20px; /* LTR */
-}
-[dir="rtl"] .filter-help a {
-  margin-block: 0;
-  margin-inline: 20px 0;
+  margin-inline: 0 20px;
 }
 .filter-help a::after {
   position: absolute;
   inset-block-start: 0;
-  inset-inline-end: -20px; /* LTR */
+  inset-inline-end: -20px;
   display: block;
   inline-size: 16px;
   block-size: 16px;
   content: "";
   background: transparent url(../../../../../../misc/help.png);
-}
-[dir="rtl"] .filter-help a::after {
-  inset-inline: -20px auto;
 }
 
 .text-format-wrapper .description {
@@ -73,8 +63,5 @@
  * Improve filter tips position.
  */
 .tips {
-  padding-inline-start: 0; /* LTR */
-}
-[dir="rtl"] .tips {
-  padding-inline-end: 0;
+  padding-inline-start: 0;
 }

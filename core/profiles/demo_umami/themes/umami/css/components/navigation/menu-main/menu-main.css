@@ -53,10 +53,7 @@
     margin-block: 0;
   }
   .menu-main__item + .menu-main__item {
-    margin-inline-start: 2.5em; /* LTR */
-  }
-  [dir="rtl"] .menu-main__item + .menu-main__item {
-    margin-inline: 0 2.5em;
+    margin-inline-start: 2.5em;
   }
 }
 

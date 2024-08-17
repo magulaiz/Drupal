@@ -32,12 +32,8 @@
   line-height: 160%;
 }
 .button-action::before {
-  margin-inline-start: -0.1em; /* LTR */
-  padding-inline-end: 0.2em; /* LTR */
+  margin-inline-start: -0.1em;
+  padding-inline-end: 0.2em;
   content: "+";
   font-weight: 900;
-}
-[dir="rtl"] .button-action::before {
-  margin-inline: 0 -0.1em;
-  padding-inline: 0.2em 0;
 }

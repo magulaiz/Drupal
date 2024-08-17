@@ -15,7 +15,7 @@
 .progress__bar {
   block-size: 16px;
   margin-block-start: -1px;
-  margin-inline-start: -1px; /* LTR */
+  margin-inline-start: -1px;
   padding-block: 0;
   padding-inline: 1px;
   -webkit-transition: width 0.5s ease-out;
@@ -28,7 +28,6 @@
   background-size: 40px 40px;
 }
 [dir="rtl"] .progress__bar {
-  margin-inline: 0 -1px;
   -webkit-animation-direction: reverse;
   animation-direction: reverse;
 }

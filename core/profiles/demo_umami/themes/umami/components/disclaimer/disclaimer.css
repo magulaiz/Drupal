@@ -24,11 +24,7 @@
 
   .disclaimer__disclaimer {
     max-inline-size: 40%;
-    margin-inline-start: 0.5rem; /* LTR */
-  }
-
-  [dir="rtl"] .disclaimer__disclaimer {
-    margin-inline: 0 0.5rem;
+    margin-inline-start: 0.5rem;
   }
 
   .disclaimer__copyright {
