@@ -11,10 +11,7 @@
 .media-library-wrapper {
   display: flex;
   margin-block: -1rem;
-  margin-inline: -1rem -1.5rem; /* LTR */
-}
-[dir="rtl"] .media-library-wrapper {
-  margin-inline: -1.5em -1em;
+  margin-inline: -1rem -1.5rem;
 }
 
 .media-library-wrapper .messages-list,

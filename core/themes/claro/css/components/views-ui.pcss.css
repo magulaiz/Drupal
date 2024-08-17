@@ -54,11 +54,8 @@ details.fieldset-no-legend {
   inset-block-start: 0;
   float: none;
   margin-block: 0;
-  margin-inline: 0 0.25rem; /* LTR */
+  margin-inline: 0 0.25rem;
   transform: none;
-}
-[dir="rtl"] .views-ui-dialog .form-type--boolean .form-boolean {
-  margin-inline: 0.25rem 0;
 }
 
 .views-ui-dialog .form-boolean-group .form-type--boolean {
@@ -104,13 +101,7 @@ details.fieldset-no-legend {
 .form-item-options-expose-label,
 .form-item-options-expose-field-identifier,
 .form-item-options-expose-description {
-  margin-inline-start: 1.5em; /* LTR */
-}
-[dir="rtl"] .form-item-options-expose-required,
-[dir="rtl"] .form-item-options-expose-label,
-[dir="rtl"] .form-item-options-expose-field-identifier,
-[dir="rtl"] .form-item-options-expose-description {
-  margin-inline: 0 1.5em;
+  margin-inline-start: 1.5em;
 }
 
 .views-admin-dependent .form-item .form-item,
@@ -139,17 +130,11 @@ details.fieldset-no-legend {
 }
 
 .views-admin .links li {
-  padding-inline-end: 0; /* LTR */
-}
-[dir="rtl"] .views-admin .links li {
-  padding-inline-start: 0;
+  padding-inline-end: 0;
 }
 
 .views-admin .button .links li {
-  padding-inline-end: 12px; /* LTR */
-}
-[dir="rtl"] .views-admin .button .links li {
-  padding-inline-start: 12px;
+  padding-inline-end: 12px;
 }
 
 .views-display-top__extra-actions-wrapper {
@@ -215,20 +200,14 @@ details.fieldset-no-legend {
 }
 .views-tabs li {
   margin-block: 0 5px;
-  margin-inline: 6px 5px; /* LTR */
-}
-[dir="rtl"] .views-tabs li {
-  margin-inline: 5px 6px;
+  margin-inline: 6px 5px;
 }
 .views-tabs li + li {
   border-block-start: 0;
 }
 .views-tabs li:hover {
-  padding-inline-start: 0; /* LTR */
+  padding-inline-start: 0;
   border: 0;
-}
-[dir="rtl"] .views-tabs li:hover {
-  padding-inline-end: 0;
 }
 .views-tabs a {
   display: inline-block;
@@ -402,10 +381,7 @@ is loaded but does not properly run. */
 }
 
 .views-ui-display-tab-bucket .links li + li {
-  margin-inline-start: 3px; /* LTR */
-}
-[dir="rtl"] .views-ui-display-tab-bucket .links li + li {
-  margin-inline: 0 3px;
+  margin-inline-start: 3px;
 }
 
 /* @end */
