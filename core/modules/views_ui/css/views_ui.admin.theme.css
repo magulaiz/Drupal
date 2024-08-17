@@ -64,10 +64,7 @@
 
 /* Targets any element with an icon -> text combo */
 .views-admin .icon-text {
-  padding-inline-start: 19px; /* LTR */
-}
-[dir="rtl"] .views-admin .icon-text {
-  padding-inline: 0 19px;
+  padding-inline-start: 19px;
 }
 .views-admin .icon.linked {
   background-position: center -153px;
@@ -143,11 +140,7 @@ details.box-padding {
 }
 .container-inline > * + *,
 .container-inline .details-wrapper > * + * {
-  padding-inline-start: 4px; /* LTR */
-}
-[dir="rtl"] .container-inline > * + *,
-[dir="rtl"] .container-inline .details-wrapper > * + * {
-  padding-inline: 0 4px;
+  padding-inline-start: 4px;
 }
 .views-admin details details.container-inline {
   margin-block: 1em;
@@ -158,10 +151,7 @@ details.box-padding {
 }
 /* Indent form elements so they're directly underneath the label of the checkbox that reveals them */
 .views-admin .form-type-checkbox + .form-wrapper {
-  margin-inline-start: 16px; /* LTR */
-}
-[dir="rtl"] .views-admin .form-type-checkbox + .form-wrapper {
-  margin-inline: 0 16px;
+  margin-inline-start: 16px;
 }
 
 /* Hide 'remove' checkboxes. */
@@ -273,13 +263,10 @@ td.group-title {
   float: inline-start;
 }
 .views-operator-label {
-  padding-inline-start: 0.5em; /* LTR */
+  padding-inline-start: 0.5em;
   text-transform: uppercase;
   font-weight: bold;
   font-style: italic;
-}
-[dir="rtl"] .views-operator-label {
-  padding-inline: 0 0.5em;
 }
 .grouped-description,
 .exposed-description {
@@ -304,18 +291,11 @@ td.group-title {
   background-color: #e1e2dc;
 }
 .views-display-top .tabs {
-  margin-inline-end: 18em; /* LTR */
-}
-[dir="rtl"] .views-display-top .tabs {
-  margin-inline: 18em 0;
+  margin-inline-end: 18em;
 }
 .views-display-top .tabs > li {
-  margin-inline-end: 6px; /* LTR */
-  padding-inline-start: 0; /* LTR */
-}
-[dir="rtl"] .views-display-top .tabs > li {
-  margin-inline: 6px 0.3em;
-  padding-inline-end: 0;
+  margin-inline-end: 6px;
+  padding-inline-start: 0;
 }
 .views-display-top .tabs > li:last-child {
   margin-inline-end: 0; /* LTR */
@@ -333,11 +313,8 @@ td.group-title {
   background-color: #e1e2dc;
 }
 .views-displays .tabs.secondary {
-  margin-inline-end: 200px; /* LTR */
+  margin-inline-end: 200px;
   border: 0;
-}
-[dir="rtl"] .views-displays .tabs.secondary {
-  margin-inline: 200px 0;
 }
 .views-displays .tabs.secondary li,
 .views-displays .tabs.secondary li.is-active {
@@ -351,20 +328,14 @@ td.group-title {
 }
 .views-displays .tabs.secondary li {
   margin-block: 0 5px;
-  margin-inline: 6px 5px; /* LTR */
-}
-[dir="rtl"] .views-displays .tabs.secondary li {
-  margin-inline: 5px 6px;
+  margin-inline: 6px 5px;
 }
 .views-displays .tabs.secondary .tabs__tab + .tabs__tab {
   border-block-start: 0;
 }
 .views-displays .tabs li.tabs__tab:hover {
-  padding-inline-start: 0; /* LTR */
+  padding-inline-start: 0;
   border: 0;
-}
-[dir="rtl"] .views-displays .tabs li.tabs__tab:hover {
-  padding-inline-end: 0;
 }
 .views-displays .tabs.secondary a {
   display: inline-block;
@@ -461,11 +432,7 @@ td.group-title {
 }
 .view-preview-form .arguments-preview,
 .view-preview-form .form-item-view-args {
-  margin-inline-start: 10px; /* LTR */
-}
-[dir="rtl"] .view-preview-form .arguments-preview,
-[dir="rtl"] .view-preview-form .form-item-view-args {
-  margin-inline: 0 10px;
+  margin-inline-start: 10px;
 }
 .view-preview-form .form-item-view-args label {
   float: inline-start; /* LTR */
@@ -528,12 +495,8 @@ td.group-title {
 }
 
 .views-ui-display-tab-setting > span {
-  margin-inline-start: 0.5em; /* LTR */
+  margin-inline-start: 0.5em;
 }
-[dir="rtl"] .views-ui-display-tab-setting > span {
-  margin-inline: 0 0.5em;
-}
-
 /** Applies an overridden(italics) font style to overridden buckets.
  * The better way to implement this would be to add the overridden class
  * to the bucket header when the bucket is overridden and style it as a
@@ -561,10 +524,7 @@ td.group-title {
   margin-block: 6px;
 }
 .views-display-setting .label {
-  margin-inline-end: 3px; /* LTR */
-}
-[dir="rtl"] .views-display-setting .label {
-  margin-inline: 3px 0;
+  margin-inline-end: 3px;
 }
 .views-edit-view {
   margin-block-end: 15px;
@@ -642,10 +602,7 @@ td.group-title {
   margin: 0;
 }
 .views-ui-dialog details .item-list {
-  padding-inline-start: 2em; /* LTR */
-}
-[dir="rtl"] .views-ui-dialog details .item-list {
-  padding-inline: 0 2em;
+  padding-inline-start: 2em;
 }
 .views-ui-rearrange-filter-form table {
   border-collapse: collapse;
@@ -656,11 +613,7 @@ td.group-title {
   border-color: #cdcdcd;
 }
 .views-ui-rearrange-filter-form tr[id^="views-row"] {
-  border-inline-end: 1px solid #cdcdcd; /* LTR */
-}
-[dir="rtl"] .views-ui-rearrange-filter-form tr[id^="views-row"] {
-  border-inline-end: 0;
-  border-inline-start: 1px solid #cdcdcd;
+  border-inline-end: 1px solid #cdcdcd;
 }
 .views-ui-rearrange-filter-form .even td {
   background-color: #f3f4ed;
@@ -676,13 +629,7 @@ td.group-title {
 .form-item-options-expose-field-identifier,
 .form-item-options-expose-description {
   margin-block: 6px;
-  margin-inline-start: 18px; /* LTR */
-}
-[dir="rtl"] .form-item-options-expose-required,
-[dir="rtl"] .form-item-options-expose-label,
-[dir="rtl"] .form-item-options-expose-field-identifier,
-[dir="rtl"] .form-item-options-expose-description {
-  margin-inline: 0 18px;
+  margin-inline-start: 18px;
 }
 .views-preview-wrapper {
   border: 1px solid #ccc;
@@ -702,11 +649,7 @@ td.group-title {
   inset-block-start: 3px;
   inset-inline-end: 12px;
   margin-block-start: 2px;
-  margin-inline-start: 2px; /* LTR */
-}
-[dir="rtl"] .view-preview-form .form-item-live-preview {
-  inset-inline: 12px auto;
-  margin-inline: 0 2px;
+  margin-inline-start: 2px;
 }
 .views-live-preview {
   padding: 12px;
@@ -773,10 +716,7 @@ td.group-title {
   position: absolute;
   z-index: 2;
   inset-block-start: -1px;
-  inset-inline-end: -5px; /* LTR */
-}
-[dir="rtl"].js .dropbutton-wrapper .dropbutton .dropbutton-action > .ajax-progress-throbber {
-  inset-inline: -5px auto;
+  inset-inline-end: -5px;
 }
 .js .dropbutton-wrapper.dropbutton-multiple.open .dropbutton-action:first-child a {
   border-radius: 1.1em 0 0 0; /* LTR */
@@ -793,10 +733,7 @@ td.group-title {
 .views-display-top .dropbutton-wrapper {
   position: absolute;
   inset-block-start: 7px;
-  inset-inline-end: 12px; /* LTR */
-}
-[dir="rtl"] .views-display-top .dropbutton-wrapper {
-  inset-inline: 12px auto;
+  inset-inline-end: 12px;
 }
 .views-display-top .dropbutton-wrapper .dropbutton-widget .dropbutton-action a {
   inline-size: auto;
@@ -805,10 +742,7 @@ td.group-title {
 .views-ui-display-tab-bucket .dropbutton-wrapper {
   position: absolute;
   inset-block-start: 4px;
-  inset-inline-end: 5px; /* LTR */
-}
-[dir="rtl"] .views-ui-display-tab-bucket .dropbutton-wrapper {
-  inset-inline: 5px auto;
+  inset-inline-end: 5px;
 }
 .views-ui-display-tab-bucket .dropbutton-wrapper .dropbutton-widget .dropbutton-action a {
   inline-size: auto;

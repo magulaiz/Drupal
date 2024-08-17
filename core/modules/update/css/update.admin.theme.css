@@ -8,17 +8,11 @@
   font-weight: bold;
 }
 .project-update__status {
-  float: inline-end; /* LTR */
+  float: inline-end;
   font-size: 110%;
 }
-[dir="rtl"] .project-update__status {
-  float: inline-start;
-}
 .project-update__status--not-supported {
-  float: inline-end; /* LTR */
-}
-[dir="rtl"] .project-update__status--not-supported {
-  float: inline-start;
+  float: inline-end;
 }
 .project-update__status--security-error {
   color: #970f00;
@@ -26,10 +20,7 @@
 }
 
 .project-update__status-icon {
-  padding-inline-start: 0.5em; /* LTR */
-}
-[dir="rtl"] .project-update__status-icon {
-  padding-inline: 0 0.5em;
+  padding-inline-start: 0.5em;
 }
 .project-update__details {
   padding-block: 1em 0.25em;
@@ -44,20 +35,15 @@
   white-space: nowrap;
 }
 .project-update__version-details {
-  padding-inline-end: 0.5em; /* LTR */
+  padding-inline-end: 0.5em;
 }
 [dir="rtl"] .project-update__version-details {
-  padding-inline-start: 0.5em;
   direction: ltr; /* Version numbers should always be LTR. */
 }
 .project-update__version-links {
-  padding-inline-end: 1em; /* LTR */
+  padding-inline-end: 1em;
   list-style-type: none;
-  text-align: end; /* LTR */
-}
-[dir="rtl"] .project-update__version-links {
-  padding-inline-start: 1em;
-  text-align: start;
+  text-align: end;
 }
 .project-update__version--recommended-strong .project-update__version-title {
   font-weight: bold;

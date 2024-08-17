@@ -102,12 +102,7 @@
 .toolbar-loading.toolbar-horizontal .toolbar .toolbar-tray .toolbar-menu > li,
 .toolbar .toolbar-bar .toolbar-tab,
 .toolbar .toolbar-tray-horizontal li {
-  float: inline-start; /* LTR */
-}
-[dir="rtl"] .toolbar-loading.toolbar-horizontal .toolbar .toolbar-tray .toolbar-menu > li,
-[dir="rtl"] .toolbar .toolbar-bar .toolbar-tab,
-[dir="rtl"] .toolbar .toolbar-tray-horizontal li {
-  float: inline-end;
+  float: inline-start;
 }
 /* Present the admin toolbar tabs vertically by default on user agents that
  * that understand media queries. This will be the small screen default. */
@@ -127,23 +122,16 @@
 @media (min-width: 16.5em) {
   .toolbar .toolbar-bar .toolbar-tab,
   .toolbar .toolbar-tray-horizontal li {
-    float: inline-start; /* LTR */
-  }
-  [dir="rtl"] .toolbar .toolbar-bar .toolbar-tab,
-  [dir="rtl"] .toolbar .toolbar-tray-horizontal li {
-    float: inline-end;
+    float: inline-start;
   }
 }
 /* Present the admin toolbar tabs horizontally when the configured narrow
  * breakpoint is active. */
 .toolbar-oriented .toolbar-bar .toolbar-tab,
 .toolbar-oriented .toolbar-tray-horizontal li {
-  float: inline-start; /* LTR */
+  float: inline-start;
 }
 [dir="rtl"] .toolbar-oriented .toolbar-bar .toolbar-tab,
-[dir="rtl"] .toolbar-oriented .toolbar-tray-horizontal li {
-  float: inline-end;
-}
 
 /**
  * Toolbar tray.
@@ -154,12 +142,9 @@
 }
 .toolbar-oriented .toolbar-tray-vertical {
   position: absolute;
-  inset-inline-start: -100%; /* LTR */
+  inset-inline-start: -100%;
   inline-size: 240px;
   inline-size: 15rem;
-}
-[dir="rtl"] .toolbar-oriented .toolbar-tray-vertical {
-  inset-inline: auto -100%;
 }
 .toolbar .toolbar-tray-vertical > .toolbar-lining {
   min-block-size: 100%;
@@ -222,10 +207,7 @@
 .toolbar-oriented .toolbar-tray-horizontal .toolbar-toggle-orientation {
   position: absolute;
   inset-block: auto 0;
-  inset-inline-end: 0; /* LTR */
-}
-[dir="rtl"] .toolbar-oriented .toolbar-tray-horizontal .toolbar-toggle-orientation {
-  inset-inline: 0 auto;
+  inset-inline-end: 0;
 }
 .toolbar-oriented .toolbar-tray-vertical .toolbar-toggle-orientation {
   float: inline-end; /* LTR */

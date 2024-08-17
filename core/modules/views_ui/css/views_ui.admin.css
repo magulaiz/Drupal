@@ -14,60 +14,36 @@
   white-space: pre-wrap;
 }
 .views-left-25 {
-  float: inline-start; /* LTR */
+  float: inline-start;
   inline-size: 25%;
 }
-[dir="rtl"] .views-left-25 {
-  float: inline-end;
-}
 .views-left-30 {
-  float: inline-start; /* LTR */
+  float: inline-start;
   inline-size: 30%;
 }
-[dir="rtl"] .views-left-30 {
-  float: inline-end;
-}
 .views-left-40 {
-  float: inline-start; /* LTR */
+  float: inline-start;
   inline-size: 40%;
 }
-[dir="rtl"] .views-left-40 {
-  float: inline-end;
-}
 .views-left-50 {
-  float: inline-start; /* LTR */
+  float: inline-start;
   inline-size: 50%;
-}
-[dir="rtl"] .views-left-50 {
-  float: inline-end;
 }
 .views-left-75 {
-  float: inline-start; /* LTR */
+  float: inline-start;
   inline-size: 75%;
 }
-[dir="rtl"] .views-left-75 {
-  float: inline-end;
-}
 .views-right-50 {
-  float: inline-end; /* LTR */
+  float: inline-end;
   inline-size: 50%;
 }
-[dir="rtl"] .views-right-50 {
-  float: inline-start;
-}
 .views-right-60 {
-  float: inline-end; /* LTR */
+  float: inline-end;
   inline-size: 60%;
 }
-[dir="rtl"] .views-right-60 {
-  float: inline-start;
-}
 .views-right-70 {
-  float: inline-end; /* LTR */
+  float: inline-end;
   inline-size: 70%;
-}
-[dir="rtl"] .views-right-70 {
-  float: inline-start;
 }
 .views-group-box .form-item {
   margin-inline: 3px;
@@ -125,11 +101,8 @@
   position: absolute;
   z-index: 50;
   inset-block-start: 23px;
-  inset-inline-start: 0; /* LTR */
+  inset-inline-start: 0;
   margin: 0;
-}
-[dir="rtl"] .views-displays .tabs .action-list {
-  inset-inline: auto 0;
 }
 .views-displays .tabs .action-list li {
   display: block;

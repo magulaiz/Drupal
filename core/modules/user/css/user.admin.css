@@ -8,12 +8,8 @@
   font-weight: bold;
 }
 .permissions .permission {
-  padding-inline-start: 1.5em; /* LTR */
+  padding-inline-start: 1.5em;
 }
-[dir="rtl"] .permissions .permission {
-  padding-inline: 0 1.5em;
-}
-
 /* Account settings */
 .user-admin-settings .details-description {
   padding-block-end: 0.5em;

@@ -8,16 +8,10 @@
  */
 .toolbar .toolbar-tray-vertical .edit-shortcuts {
   padding: 1em;
-  text-align: end; /* LTR */
-}
-[dir="rtl"] .toolbar .toolbar-tray-vertical .edit-shortcuts {
-  text-align: start;
+  text-align: end;
 }
 .toolbar .toolbar-tray-horizontal .edit-shortcuts {
-  float: inline-end; /* LTR */
-}
-[dir="rtl"] .toolbar .toolbar-tray-horizontal .edit-shortcuts {
-  float: inline-start;
+  float: inline-end;
 }
 
 /**

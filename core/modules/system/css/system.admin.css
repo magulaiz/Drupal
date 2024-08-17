@@ -167,14 +167,11 @@ small .admin-link::after {
 }
 .module-link {
   display: block;
-  float: inline-start; /* LTR */
+  float: inline-start;
   margin-block-start: 2px;
   padding-block: 2px;
   padding-inline: 20px;
   white-space: nowrap;
-}
-[dir="rtl"] .module-link {
-  float: inline-end;
 }
 .module-link-help {
   background: url(../../../misc/icons/787878/questionmark-disc.svg) 0 50% no-repeat; /* LTR */
@@ -216,15 +213,12 @@ small .admin-link::after {
 .system-status-report__status-icon::before {
   position: absolute;
   inset-block-start: 12px;
-  inset-inline-start: 12px; /* LTR */
+  inset-inline-start: 12px;
   display: block;
   inline-size: 16px;
   block-size: 16px;
   content: "";
   background-repeat: no-repeat;
-}
-[dir="rtl"] .system-status-report__status-icon::before {
-  inset-inline: auto 12px;
 }
 .system-status-report__status-icon--error::before {
   background-image: url(../../../misc/icons/e32700/error.svg);
@@ -292,27 +286,20 @@ small .admin-link::after {
 @media screen and (min-width: 45em) {
   body:not(.toolbar-vertical) .system-themes-list-installed .screenshot,
   body:not(.toolbar-vertical) .system-themes-list-installed .no-screenshot {
-    float: inline-start; /* LTR */
+    float: inline-start;
     inline-size: 294px;
     margin-block: 0;
     margin-inline: 0 20px;
-  }
-  [dir="rtl"] body:not(.toolbar-vertical) .system-themes-list-installed .screenshot,
-  [dir="rtl"] body:not(.toolbar-vertical) .system-themes-list-installed .no-screenshot {
-    float: inline-end;
   }
   body:not(.toolbar-vertical) .system-themes-list-installed .system-themes-list__header {
     margin-block-start: 0;
   }
   body:not(.toolbar-vertical) .system-themes-list-uninstalled .theme-selector {
-    float: inline-start; /* LTR */
+    float: inline-start;
     box-sizing: border-box;
     inline-size: 31.25%;
     padding-block: 20px;
     padding-inline: 0 20px;
-  }
-  [dir="rtl"] body:not(.toolbar-vertical) .system-themes-list-uninstalled .theme-selector {
-    float: inline-end;
   }
   body:not(.toolbar-vertical) .system-themes-list-uninstalled .theme-info {
     min-block-size: 170px;
@@ -325,27 +312,20 @@ small .admin-link::after {
 @media screen and (min-width: 60em) {
   .toolbar-vertical .system-themes-list-installed .screenshot,
   .toolbar-vertical .system-themes-list-installed .no-screenshot {
-    float: inline-start; /* LTR */
+    float: inline-start;
     inline-size: 294px;
     margin-block: 0;
     margin-inline: 0 20px;
-  }
-  [dir="rtl"] .toolbar-vertical .system-themes-list-installed .screenshot,
-  [dir="rtl"] .toolbar-vertical .system-themes-list-installed .no-screenshot {
-    float: inline-end;
   }
   .toolbar-vertical .system-themes-list-installed .theme-info__header {
     margin-block-start: 0;
   }
   .toolbar-vertical .system-themes-list-uninstalled .theme-selector {
-    float: inline-start; /* LTR */
+    float: inline-start;
     box-sizing: border-box;
     inline-size: 31.25%;
     padding-block: 20px;
     padding-inline: 0 20px;
-  }
-  [dir="rtl"] .toolbar-vertical .system-themes-list-uninstalled .theme-selector {
-    float: inline-end;
   }
   .toolbar-vertical .system-themes-list-uninstalled .theme-info {
     min-block-size: 170px;
@@ -365,17 +345,12 @@ small .admin-link::after {
   padding: 0;
 }
 .theme-selector .operations li {
-  float: inline-start; /* LTR */
+  float: inline-start;
   margin: 0;
   padding-block: 0;
   padding-inline: 0.7em;
   list-style-type: none;
-  border-inline-end: 1px solid #cdcdcd; /* LTR */
-}
-[dir="rtl"] .theme-selector .operations li {
-  float: inline-end;
-  border-inline-end: none;
-  border-inline-start: 1px solid #cdcdcd;
+  border-inline-end: 1px solid #cdcdcd;
 }
 .theme-selector .operations li:last-child {
   padding-block: 0;
@@ -387,11 +362,7 @@ small .admin-link::after {
 }
 .theme-selector .operations li:first-child {
   padding-block: 0;
-  padding-inline: 0 0.7em; /* LTR */
-}
-[dir="rtl"] .theme-selector .operations li:first-child {
-  padding-block: 0;
-  padding-inline: 0.7em 0;
+  padding-inline: 0 0.7em;
 }
 .system-themes-admin-form {
   clear: inline-start;
