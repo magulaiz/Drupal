@@ -1,5 +1,0 @@
-name: 'Asset Test'
-type: module
-description: 'Test asset management.'
-package: Testing
-version: VERSION
