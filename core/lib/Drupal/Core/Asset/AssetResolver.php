@@ -263,12 +263,13 @@ class AssetResolver implements AssetResolverInterface {
         unset($libraries_to_load[$key]);
       }
     }
-    sort($libraries_to_load);
 
     // Need to ensure that the order of the JavaScript we want to include is
-    // based on the minimal representative subset, as that is how the scripts
-    // will be generated using the JS optimizer. If the order is not the same
-    // things can blow up as you might end up with different groups.
+    // based on the minimal representative subset in a specific order. This is
+    // needed to ensure that groups produced here and groups produced from
+    // generating optimized scripts are the same. If we don't get the same
+    // groups in the same order, user will not fetch the correct scripts.
+    sort($libraries_to_load);
     $minimum_libraries = $this->libraryDependencyResolver->getMinimalRepresentativeSubset($libraries_to_load);
     $libraries_to_load = array_diff(
       $this->libraryDependencyResolver->getLibrariesWithDependencies($minimum_libraries),
