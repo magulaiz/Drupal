@@ -150,8 +150,8 @@ class AssetResolverTest extends UnitTestCase {
             'data' => 'assets/vendor/ckeditor5/ckeditor5-dll/ckeditor5-dll.js',
             'preprocess' => FALSE,
             'minified' => TRUE,
-          ]
-        ]
+          ],
+        ],
       ],
       'piggy/ckeditor' => [
         'version' => '1.0.0',
@@ -162,9 +162,9 @@ class AssetResolverTest extends UnitTestCase {
         'js' => [],
         'license' => '',
         'dependencies' => [
-          'core/ckeditor5'
+          'core/ckeditor5',
         ],
-      ]
+      ],
     ];
     $this->libraryDependencyResolver = new LibraryDependencyResolver($this->libraryDiscovery);
     $this->moduleHandler = $this->createMock('\Drupal\Core\Extension\ModuleHandlerInterface');
