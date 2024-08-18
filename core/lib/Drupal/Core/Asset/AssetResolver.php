@@ -263,6 +263,7 @@ class AssetResolver implements AssetResolverInterface {
         unset($libraries_to_load[$key]);
       }
     }
+    sort($libraries_to_load);
 
     // Need to ensure that the order of the JavaScript we want to include is
     // based on the minimal representative subset, as that is how the scripts
