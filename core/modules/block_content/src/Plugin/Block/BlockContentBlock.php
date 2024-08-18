@@ -161,6 +161,7 @@ class BlockContentBlock extends BlockBase implements ContainerFactoryPluginInter
     }
 
     $options = $this->entityDisplayRepository->getViewModeOptionsByBundle('block_content', $block->bundle());
+
     $form['view_mode'] = [
       '#type' => 'select',
       '#options' => $options,
@@ -218,10 +219,12 @@ class BlockContentBlock extends BlockBase implements ContainerFactoryPluginInter
         '#block' => $this->getEntity(),
       ];
 
-      EntityFormDisplay::collectRenderDisplay($this->getEntity(), 'edit')
+      $form_mode = 'edit';
+      EntityFormDisplay::collectRenderDisplay($this->getEntity(), $form_mode)
         ->buildForm($this->getEntity(), $form['block_form'], $form_state);
       $form['block_form']['revision_log']['#access'] = FALSE;
       $form['block_form']['info']['#access'] = FALSE;
+      $form['block_form']['#form_mode'] = $form_mode;
     }
 
     return $form;
@@ -238,7 +241,7 @@ class BlockContentBlock extends BlockBase implements ContainerFactoryPluginInter
 
     $block = $this->getEntity();
     $block_form = $form['block_form'];
-    $form_display = EntityFormDisplay::collectRenderDisplay($block, 'edit');
+    $form_display = EntityFormDisplay::collectRenderDisplay($block, $block_form['#form_mode']);
     $complete_form_state = $form_state instanceof SubformStateInterface ? $form_state->getCompleteFormState() : $form_state;
     $form_display->extractFormValues($block, $block_form, $complete_form_state);
     $form_display->validateFormValues($block, $block_form, $complete_form_state);
@@ -257,7 +260,7 @@ class BlockContentBlock extends BlockBase implements ContainerFactoryPluginInter
 
     // @todo Remove when https://www.drupal.org/project/drupal/issues/2948549 is closed.
     $block_form = NestedArray::getValue($form, $form_state->getTemporaryValue('block_form_parents'));
-    $form_display = EntityFormDisplay::collectRenderDisplay($this->getEntity(), 'edit');
+    $form_display = EntityFormDisplay::collectRenderDisplay($this->getEntity(), $block_form['settings']['block_form']['#form_mode']);
     $complete_form_state = $form_state instanceof SubformStateInterface ? $form_state->getCompleteFormState() : $form_state;
     $form_display->extractFormValues($this->getEntity(), $block_form, $complete_form_state);
     $this->getEntity()->save();
