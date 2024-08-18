@@ -283,7 +283,7 @@ class FileManagedFileElementTest extends FileFieldTestBase {
     $this->drupalGet("file/$fid/edit");
     $new_file_content = $this->randomString(32);
     file_put_contents('public://new-file.txt', $new_file_content);
-    $edit = ['files[new_file]' => $file_system->realpath('public://new-file.txt')];
+    $edit = ['files[replacement_file]' => $file_system->realpath('public://new-file.txt')];
     $this->submitForm($edit, 'Save');
     $this->assertNotEquals($new_file_content, file_get_contents($file_system->realpath($test_file_uri)));
 
@@ -291,7 +291,7 @@ class FileManagedFileElementTest extends FileFieldTestBase {
     $result = file_put_contents($test_file_uri, $new_file_content);
     $this->assertIsNumeric($result);
     $this->drupalGet("file/$fid/edit");
-    $edit = ['files[new_file]' => $file_system->realpath($test_file_uri)];
+    $edit = ['files[replacement_file]' => $file_system->realpath($test_file_uri)];
     $this->submitForm($edit, 'Save');
     $this->assertEquals($new_file_content, file_get_contents($file_system->realpath($test_file_uri)));
     $this->assertNotEquals($original_content, file_get_contents($file_system->realpath($test_file_uri)));
