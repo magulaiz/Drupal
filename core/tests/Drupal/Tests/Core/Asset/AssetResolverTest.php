@@ -102,35 +102,35 @@ class AssetResolverTest extends UnitTestCase {
         'version' => '1.0.0',
         'css' => [],
         'js' =>
-        [
-          'core/misc/drupal.js' => ['data' => 'core/misc/drupal.js', 'preprocess' => TRUE],
-        ],
+          [
+            'core/misc/drupal.js' => ['data' => 'core/misc/drupal.js', 'preprocess' => TRUE],
+          ],
         'license' => '',
       ],
       'core/jquery' => [
         'version' => '1.0.0',
         'css' => [],
         'js' =>
-        [
-          'core/misc/jquery.js' => ['data' => 'core/misc/jquery.js', 'minified' => TRUE],
-        ],
+          [
+            'core/misc/jquery.js' => ['data' => 'core/misc/jquery.js', 'minified' => TRUE],
+          ],
         'license' => '',
       ],
       'llama/css' => [
         'version' => '1.0.0',
         'css' =>
-        [
-          'core/misc/llama.css' => ['data' => 'core/misc/llama.css'],
-        ],
+          [
+            'core/misc/llama.css' => ['data' => 'core/misc/llama.css'],
+          ],
         'js' => [],
         'license' => '',
       ],
       'piggy/css' => [
         'version' => '1.0.0',
         'css' =>
-        [
-          'core/misc/piggy.css' => ['data' => 'core/misc/piggy.css'],
-        ],
+          [
+            'core/misc/piggy.css' => ['data' => 'core/misc/piggy.css'],
+          ],
         'js' => [],
         'license' => '',
       ],
