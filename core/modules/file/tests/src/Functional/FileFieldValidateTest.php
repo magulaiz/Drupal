@@ -7,7 +7,6 @@ namespace Drupal\Tests\file\Functional;
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
 use Drupal\Core\File\FileSystemInterface;
 use Drupal\Core\StringTranslation\ByteSizeMarkup;
-use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\file\Entity\File;
 
