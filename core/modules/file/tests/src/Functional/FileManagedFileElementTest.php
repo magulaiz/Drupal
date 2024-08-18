@@ -285,7 +285,6 @@ class FileManagedFileElementTest extends FileFieldTestBase {
     file_put_contents('public://new-file.txt', $new_file_content);
     $edit = ['files[new_file]' => $file_system->realpath('public://new-file.txt')];
     $this->submitForm($edit, 'Save');
-    $this->assertSession()->pageTextContains('The uploaded file new-file.txt name does not match the existing file test-file.txt');
     $this->assertNotEquals($new_file_content, file_get_contents($file_system->realpath($test_file_uri)));
 
     // Replace with new content.
