@@ -1081,21 +1081,15 @@ function sort_tests_by_public_method_count(&$tests): void {
 function place_tests_into_bins($tests, $bin_count) {
   // Create a bin corresponding to each parallel test job.
   $bins = array_fill(0, $bin_count, []);
-  $bin_max_index = $bin_count - 1;
-  $cycle = 0;
+  $bin = 0;
   // Go through each test, already sorted from most methods to least, and
   // add them to one bin at a time. This results each bin having a similar
   // number of test methods to run in total.
-  foreach ($tests as $key => $test) {
-    if ($cycle === 0) {
-      $bin = $key;
-    }
-    else {
-      $bin = $key - ($cycle * $bin_count);
-    }
+  foreach ($tests as $test) {
     $bins[$bin][] = $test;
-    if ($bin / $bin_max_index === 1) {
-      $cycle++;
+    $bin++;
+    if ($bin === $bin_count) {
+      $bin = 0;
     }
   }
   return $bins;
