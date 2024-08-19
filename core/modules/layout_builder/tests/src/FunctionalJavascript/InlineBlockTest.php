@@ -134,7 +134,7 @@ class InlineBlockTest extends InlineBlockTestBase {
 
     $this->drupalGet('node/1/layout');
     $this->addInlineBlockToLayout('Block title', 'The block body');
-    $page->clickLink($no_save_button_text);
+    $page->pressButton($no_save_button_text);
     if ($confirm_button_text) {
       $page->pressButton($confirm_button_text);
     }
