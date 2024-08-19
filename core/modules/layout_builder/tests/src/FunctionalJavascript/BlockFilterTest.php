@@ -90,19 +90,15 @@ class BlockFilterTest extends WebDriverTestBase {
 
     // Test block filter reduces the number of visible rows.
     $filter->setValue('ad');
-    $fewer_blocks_message = ' blocks are available in the modified list';
-    $this->assertAnnounceContains($fewer_blocks_message);
+    $this->assertAnnounceContains('3 blocks are available in the modified list.');
     $visible_rows = $this->filterVisibleElements($blocks);
     $this->assertCount(3, $visible_rows);
     $visible_categories = $this->filterVisibleElements($categories);
     $this->assertCount(3, $visible_categories);
 
-    // Test Drupal.announce() message when multiple matches are present.
-    $expected_message = count($visible_rows) . $fewer_blocks_message;
-    $this->assertAnnounceContains($expected_message);
-
     // Test 3 letter search.
     $filter->setValue('adm');
+    $this->assertAnnounceContains('2 blocks are available in the modified list.');
     $visible_rows = $this->filterVisibleElements($blocks);
     $this->assertCount(2, $visible_rows);
     $visible_categories = $this->filterVisibleElements($categories);
@@ -110,6 +106,7 @@ class BlockFilterTest extends WebDriverTestBase {
 
     // Retest that blocks appear when reducing letters.
     $filter->setValue('ad');
+    $this->assertAnnounceContains('3 blocks are available in the modified list.');
     $visible_rows = $this->filterVisibleElements($blocks);
     $this->assertCount(3, $visible_rows);
     $visible_categories = $this->filterVisibleElements($categories);
@@ -130,14 +127,11 @@ class BlockFilterTest extends WebDriverTestBase {
 
     // Test Drupal.announce() message when no matches are present.
     $filter->setValue('Pan-Galactic Gargle Blaster');
+    $this->assertAnnounceContains('0 blocks are available in the modified list.');
     $visible_rows = $this->filterVisibleElements($blocks);
     $this->assertCount(0, $visible_rows);
     $visible_categories = $this->filterVisibleElements($categories);
     $this->assertCount(0, $visible_categories);
-    $announce_element = $page->find('css', '#drupal-live-announce');
-    $page->waitFor(2, function () use ($announce_element) {
-      return str_starts_with($announce_element->getText(), '0 blocks are available');
-    });
 
     // Test Drupal.announce() message when all blocks are listed.
     $filter->setValue('');
