@@ -43,6 +43,7 @@ use Drupal\block_content\BlockContentInterface;
  *     },
  *     "translation" = "Drupal\block_content\BlockContentTranslationHandler"
  *   },
+ *   permission_granularity = "bundle",
  *   admin_permission = "administer block content",
  *   collection_permission = "access block library",
  *   base_table = "block_content",
