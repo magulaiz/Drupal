@@ -9,7 +9,7 @@ use Drupal\Core\Database\Database;
 use Drupal\Core\Database\DatabaseExceptionWrapper;
 use Drupal\Core\Database\Query\SelectExtender;
 
-// cSpell:ignore handies
+// cspell:ignore handies uncompahgre
 
 /**
  * Tests the Select query builder.
@@ -652,8 +652,9 @@ class SelectTest extends DatabaseTestBase {
       'String instead of number' => ['$.number', 'stringy', '=', 0],
       'Array value with full containment' => ['$.array', [32, 41], '@>', 1],
       'Array value with partial containment' => ['$.array', [41], '@>', 1],
-      'Array value with no containment' => ['$.array', [69], '@>', 0],
+      'Array value with no containment' => ['$.array', [81235], '@>', 0],
       'Associative array value with containment' => ['$.associative', ['mountain' => 'Handies'], '@>', 1],
+      'Associative array value with no containment' => ['$.associative', ['mountain' => 'Uncompahgre'], '@>', 0],
     ];
   }
 

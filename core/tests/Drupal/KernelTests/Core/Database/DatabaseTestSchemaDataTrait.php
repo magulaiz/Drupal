@@ -6,6 +6,8 @@ namespace Drupal\KernelTests\Core\Database;
 
 use Drupal\Tests\system\Functional\Database\FakeRecord;
 
+// cspell:ignore handies
+
 /**
  * Trait to manage data samples for test tables.
  */
