@@ -20,7 +20,7 @@ class FileEventSubscriber implements EventSubscriberInterface {
    *   The sanitize filename service.
    */
   public function __construct(
-    protected FileSanitizeName $fileSanitizeName
+    protected FileSanitizeName $fileSanitizeName,
   ) {}
 
   /**
