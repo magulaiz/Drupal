@@ -1088,7 +1088,7 @@ function place_tests_into_bins($tests, $bin_count) {
   foreach ($tests as $test) {
     $bins[$bin][] = $test;
     $bin++;
-    if ($bin === $bin_count) {
+    if ($bin === (int) $bin_count) {
       $bin = 0;
     }
   }
