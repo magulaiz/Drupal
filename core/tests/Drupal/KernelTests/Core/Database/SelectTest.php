@@ -9,7 +9,7 @@ use Drupal\Core\Database\Database;
 use Drupal\Core\Database\DatabaseExceptionWrapper;
 use Drupal\Core\Database\Query\SelectExtender;
 
-// cspell:ignore handies
+// cspell:ignore Handies
 
 /**
  * Tests the Select query builder.
