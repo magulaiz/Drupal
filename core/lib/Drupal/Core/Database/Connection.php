@@ -366,7 +366,23 @@ abstract class Connection {
    *   The properly-prefixed string.
    */
   public function prefixTables($sql) {
-    return str_replace(['{', '}'], $this->tablePlaceholderReplacements, $sql);
+    // Historically, this was a simple str_replace() call. Sadly, blindly
+    // replacing curly braces is incompatible with the inlined JSON expressions
+    // that must be within single quotes. We cannot placeholder that JSON, as it
+    // is within single-quoted portions of the SQL statement that are not
+    // interpolated. This regex matches first against those single-quoted
+    // portions of the statement. They are then passed over when matching
+    // the second half of the pattern finding curly-braced table names which
+    // require prefixing.
+    return preg_replace_callback(
+      "/(?:'[^']*')|({(\w+)})/U",
+      function ($matches) {
+        return count($matches) > 1
+          ? "{$this->tablePlaceholderReplacements[0]}{$matches[2]}{$this->tablePlaceholderReplacements[1]}"
+          : $matches[0];
+      },
+      $sql
+    );
   }
 
   /**
@@ -390,7 +406,23 @@ abstract class Connection {
    *   This method should only be called by database API code.
    */
   public function quoteIdentifiers($sql) {
-    return str_replace(['[', ']'], $this->identifierQuotes, $sql);
+    // Historically, this was a simple str_replace() call. Sadly, blindly
+    // replacing square brackets is incompatible with the inlined JSON
+    // expressions that must be within single quotes. We cannot placeholder that
+    // JSON, as it is within single-quoted portions of the SQL statement that
+    // are not interpolated. This regex matches first against those
+    // single-quoted portions of the statement. They are then passed over when
+    // matching the second half of the pattern finding bracketed identifiers
+    // requiring quotes.
+    return preg_replace_callback(
+      "/(?:'[^']*')|(\[(\w+)])/U",
+      function ($matches) {
+        return count($matches) > 1
+          ? "{$this->identifierQuotes[0]}{$matches[2]}{$this->identifierQuotes[1]}"
+          : $matches[0];
+      },
+      $sql
+    );
   }
 
   /**

@@ -648,6 +648,10 @@ class SelectTest extends DatabaseTestBase {
       'Boolean invalid condition' => ['$.boolean', 'invalid string argument', '=', 0],
       'Non-matching text' => ['$.key', 'nothing to see here', '=', 0],
       'String instead of number' => ['$.number', 'stringy', '=', 0],
+      'Array value with full containment' => ['$.array', [32, 41], '@>', 1],
+      'Array value with partial containment' => ['$.array', [41], '@>', 1],
+      'Array value with no containment' => ['$.array', [69], '@>', 0],
+      'Associative array value with containment' => ['$.associative', ['mountain' => 'Handies'], '@>', 1],
     ];
   }
 
@@ -661,7 +665,7 @@ class SelectTest extends DatabaseTestBase {
    *
    * @dataProvider providerJsonConditionOperators
    */
-  public function testJsonCondition(string $jsonpath, int|string|bool $value, string $operator, int $expected_count): void {
+  public function testJsonCondition(string $jsonpath, int|string|bool|array $value, string $operator, int $expected_count): void {
     $query = $this->connection->select('json', 'j');
     $query->fields('j');
     $query->jsonCondition('test_field', $jsonpath, $value, $operator);

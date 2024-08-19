@@ -142,14 +142,21 @@ class Condition implements ConditionInterface, JsonConditionInterface, \Countabl
   /**
    * {@inheritdoc}
    */
-  public function jsonCondition(string $field, string $jsonpath, string|int|float|array|SelectInterface|bool|null $value = NULL, string $operator = '=') {
-    $allowed_operators = ['=', '<>', '!=', '<', '<=', '>', '>='];
-    if (!in_array($operator, $allowed_operators)) {
+  public function jsonCondition(string $field, string $jsonpath, string|int|float|array|bool|null $value = NULL, string $operator = '=') {
+    $array_operators = ['@>'];
+    $scalar_operators = ['=', '<>', '!=', '<', '<=', '>', '>='];
+    if (!in_array($operator, [...$scalar_operators, ...$array_operators], TRUE)) {
       throw new InvalidQueryException(sprintf(
         'Operator %s is not supported by %s. Allowed operators include: %s',
         $operator,
         __METHOD__,
-        implode(', ', $allowed_operators),
+        implode(', ', [...$scalar_operators, ...$array_operators]),
+      ));
+    }
+    if (in_array($operator, $array_operators, TRUE) && !is_array($value)) {
+      throw new InvalidQueryException(sprintf(
+        'Operator %s is only supported with an array $value.',
+        $operator,
       ));
     }
     if (!str_starts_with($jsonpath, '$')) {

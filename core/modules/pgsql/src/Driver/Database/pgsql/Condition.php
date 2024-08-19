@@ -19,17 +19,22 @@ class Condition extends QueryCondition {
   protected function processJsonCondition(array $condition, Connection $connection, bool &$ignore_operator, PlaceholderInterface $query_placeholder): string {
     $ignore_operator = TRUE;
     $op = $condition['operator'];
+    $valueType = gettype($condition['value']);
     if ($op === '=') {
       $op = '==';
     }
-    // @todo Security - determine if this is sufficient escaping.
-    $value = in_array(gettype($condition['value']), ['string', 'boolean'])
+    $value = in_array($valueType, ['string', 'boolean', 'array'])
+      // These values are not bound using a named parameter, however encoding
+      // string values in particular provides a hedge against SQL injection.
       ? json_encode($condition['value'], JSON_THROW_ON_ERROR)
       : $condition['value'];
-    // PDO requires the ? be doubled else they are considered placeholders.
-    // Inside the single-quoted jsonpath expression, we can't use a named
-    // placeholder, as would normally be preferred. (It won't be interpreted.)
-    return "{$condition['field']} @?? '{$condition['jsonpath']} ? (@ {$op} {$value})'";
+    return $op === '@>'
+      // Containment.
+      ? "JSONB_PATH_QUERY_ARRAY({$condition['field']}, '{$condition['jsonpath']}') @> '[{$value}]'"
+      // PDO requires the ? be doubled else they are considered placeholders.
+      // Inside the single-quoted jsonpath expression, we can't use a named
+      // placeholder, as would normally be preferred. (It won't be interpreted.)
+      : "{$condition['field']} @?? '{$condition['jsonpath']} ? (@ {$op} {$value})'";
   }
 
 }

@@ -137,6 +137,14 @@ trait DatabaseTestSchemaDataTrait {
         'id' => 4,
         'test_field' => '{"boolean": true, "key": "some other text"}',
       ])
+      ->values([
+        'id' => 5,
+        'test_field' => '{"array": [32, 41]}',
+      ])
+      ->values([
+        'id' => 6,
+        'test_field' => '{"associative": {"mountain": "Handies"}}',
+      ])
       ->execute();
   }
 
