@@ -9,6 +9,8 @@ use Drupal\Core\Database\Database;
 use Drupal\Core\Database\DatabaseExceptionWrapper;
 use Drupal\Core\Database\Query\SelectExtender;
 
+// cspell:ignore handies
+
 /**
  * Tests the Select query builder.
  *

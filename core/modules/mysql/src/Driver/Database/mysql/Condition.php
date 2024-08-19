@@ -20,6 +20,19 @@ class Condition extends QueryCondition {
     getJsonFieldFragmentFunction as doGetJsonFieldFragmentFunction;
   }
 
+  protected function processJsonCondition(array $condition, Connection $connection, bool &$ignore_operator, PlaceholderInterface $query_placeholder): string {
+    if ($condition['operator'] === '@>') {
+      $ignore_operator = TRUE;
+      $value = in_array(gettype($condition['value']), ['string', 'boolean', 'array'])
+        // These values are not bound using a named parameter, however encoding
+        // string values in particular provides a hedge against SQL injection.
+        ? json_encode($condition['value'], JSON_THROW_ON_ERROR)
+        : $condition['value'];
+      return "JSON_CONTAINS({$condition['field']}, '{$value}', '{$condition['jsonpath']}')";
+    }
+    return $this->getJsonFieldFragment($condition['field'], $condition, $connection, $query_placeholder);
+  }
+
   /**
    * {@inheritdoc}
    */

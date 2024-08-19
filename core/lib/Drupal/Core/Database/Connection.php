@@ -375,7 +375,7 @@ abstract class Connection {
     // the second half of the pattern finding curly-braced table names which
     // require prefixing.
     return preg_replace_callback(
-      "/(?:'[^']*')|({(\w+)})/U",
+      "/(?:'.*(?<!\\\)')|({(\w+)})/U",
       function ($matches) {
         return count($matches) > 1
           ? "{$this->tablePlaceholderReplacements[0]}{$matches[2]}{$this->tablePlaceholderReplacements[1]}"
@@ -415,7 +415,7 @@ abstract class Connection {
     // matching the second half of the pattern finding bracketed identifiers
     // requiring quotes.
     return preg_replace_callback(
-      "/(?:'[^']*')|(\[(\w+)])/U",
+      "/(?:'.*(?<!\\\)')|(\[(\w+)])/U",
       function ($matches) {
         return count($matches) > 1
           ? "{$this->identifierQuotes[0]}{$matches[2]}{$this->identifierQuotes[1]}"
