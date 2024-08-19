@@ -1065,7 +1065,7 @@ function simpletest_script_get_test_list() {
  *
  * @param string[] an array of test class names.
  */
-function sort_tests_by_public_method_count(&$tests): void {
+function sort_tests_by_public_method_count(array &$tests): void {
   usort($tests, function ($a, $b) {
     $method_count = function ($class) {
       $reflection = new \ReflectionClass($class);
@@ -1081,16 +1081,11 @@ function sort_tests_by_public_method_count(&$tests): void {
 function place_tests_into_bins(array $tests, int $bin_count) {
   // Create a bin corresponding to each parallel test job.
   $bins = array_fill(0, $bin_count, []);
-  $bin = 0;
   // Go through each test, already sorted from most methods to least, and
   // add them to one bin at a time. This results each bin having a similar
   // number of test methods to run in total.
-  foreach ($tests as $test) {
-    $bins[$bin][] = $test;
-    $bin++;
-    if ($bin === $bin_count) {
-      $bin = 0;
-    }
+  foreach ($tests as $key => $test) {
+    $bins[($key % $bin_count)][] = $test;
   }
   return $bins;
 }
