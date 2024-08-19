@@ -9,7 +9,7 @@ use Drupal\Core\Database\Database;
 use Drupal\Core\Database\DatabaseExceptionWrapper;
 use Drupal\Core\Database\Query\SelectExtender;
 
-// cspell:ignore Handies
+// cSpell:ignore handies
 
 /**
  * Tests the Select query builder.
@@ -668,6 +668,9 @@ class SelectTest extends DatabaseTestBase {
    * @dataProvider providerJsonConditionOperators
    */
   public function testJsonCondition(string $jsonpath, int|string|bool|array $value, string $operator, int $expected_count): void {
+    if ($operator === '@>' && $this->connection->driver() === 'sqlite') {
+      $this->markTestSkipped('SQLite does not support containment operator.');
+    }
     $query = $this->connection->select('json', 'j');
     $query->fields('j');
     $query->jsonCondition('test_field', $jsonpath, $value, $operator);
