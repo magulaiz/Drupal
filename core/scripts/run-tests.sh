@@ -1071,7 +1071,7 @@ function sort_tests_by_public_method_count(&$tests): void {
       $reflection = new \ReflectionClass($class);
       return count($reflection->getMethods(\ReflectionMethod::IS_PUBLIC));
     };
-    return $method_count($a) <=> $method_count($b);
+    return $method_count($b) <=> $method_count($a);
   });
 }
 
