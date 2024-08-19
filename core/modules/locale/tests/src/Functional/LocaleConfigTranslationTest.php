@@ -12,6 +12,7 @@ use Drupal\Core\Language\LanguageInterface;
  * Tests translation of configuration strings.
  *
  * @group locale
+ * @group #slow
  */
 class LocaleConfigTranslationTest extends BrowserTestBase {
 
