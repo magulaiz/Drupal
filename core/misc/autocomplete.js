@@ -226,7 +226,9 @@
             firstCharacterBlacklist: blacklist || '',
           });
           // Read the cardinality from the field attributes.
-          const isSingleAttribute = $autocomplete.attr('data-autocomplete-single');
+          const isSingleAttribute = $autocomplete.attr(
+            'data-autocomplete-single',
+          );
           if (isSingleAttribute && isSingleAttribute !== '0') {
             $.extend(autocomplete.options, {
               isSingle: true,
