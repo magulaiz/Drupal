@@ -1037,7 +1037,7 @@ function simpletest_script_get_test_list() {
     sort_tests_by_public_method_count($test_list);
 
     // Now set up a bin per test runner.
-    $bin_count = $args['ci-parallel-node-total'];
+    $bin_count = (int) $args['ci-parallel-node-total'];
 
     // Now loop over the slow tests and add them to a bin one by one, this
     // distributes the tests evenly across the bins.
@@ -1078,7 +1078,7 @@ function sort_tests_by_public_method_count(&$tests): void {
 /**
  * Distribute tests into bins.
  */
-function place_tests_into_bins($tests, $bin_count) {
+function place_tests_into_bins(array $tests, int $bin_count) {
   // Create a bin corresponding to each parallel test job.
   $bins = array_fill(0, $bin_count, []);
   $bin = 0;
@@ -1088,7 +1088,7 @@ function place_tests_into_bins($tests, $bin_count) {
   foreach ($tests as $test) {
     $bins[$bin][] = $test;
     $bin++;
-    if ($bin === (int) $bin_count) {
+    if ($bin === $bin_count) {
       $bin = 0;
     }
   }
