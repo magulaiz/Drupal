@@ -150,10 +150,10 @@ variables:
 
 '🖱️️️ PHPUnit Functional Javascript (chrome)':
   <<: [ *with-composer, *run-tests, *default-job-settings ]
-  parallel: 4
+  parallel: 2
   variables:
     TESTSUITE: PHPUnit-FunctionalJavascript
-    CONCURRENCY: 15
+    CONCURRENCY: 8
     KUBERNETES_CPU_REQUEST: "24"
   services:
     - <<: *with-database
@@ -181,7 +181,7 @@ variables:
 
 '🖱️️️ PHPUnit Functional Javascript (non W3C legacy)':
   <<: [ *with-composer, *default-job-settings ]
-  parallel: 2
+  parallel: 1
   variables:
     TESTSUITE: PHPUnit-FunctionalJavascript
     CONCURRENCY: 6
@@ -191,7 +191,8 @@ variables:
     - <<: *with-database
     - <<: *with-chrome
   script:
-    - sudo MINK_DRIVER_ARGS_WEBDRIVER="$MINK_DRIVER_ARGS_WEBDRIVER" -u www-data php ./core/scripts/run-tests.sh --color --keep-results --types "$TESTSUITE" --concurrency "$CONCURRENCY" --repeat "1" --sqlite "./sites/default/files/tests.sqlite" --dburl $SIMPLETEST_DB --url $SIMPLETEST_BASE_URL --verbose --non-html --all --ci-parallel-node-index $CI_PARALLEL_NODE_INDEX --ci-parallel-node-total $CI_PARALLEL_NODE_TOTAL
+    # Run a small subset of tests to prove non W3C testing still works.
+    - sudo MINK_DRIVER_ARGS_WEBDRIVER="$MINK_DRIVER_ARGS_WEBDRIVER" -u www-data php ./core/scripts/run-tests.sh --color --keep-results --types "$TESTSUITE" --concurrency "$CONCURRENCY" --repeat "1" --sqlite "./sites/default/files/tests.sqlite" --dburl $SIMPLETEST_DB --url $SIMPLETEST_BASE_URL --verbose --non-html javascript
   after_script:
     - sed -i "s#$CI_PROJECT_DIR/##" ./sites/default/files/simpletest/phpunit-*.xml || true
     - cp /builds/chromedriver.log ./
