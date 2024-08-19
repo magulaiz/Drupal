@@ -280,12 +280,8 @@ class OptionsFieldUIAllowedValuesTest extends WebDriverTestBase {
    *   Current element having focus.
    */
   private function pressEnterOnElement(string $selector): void {
-    $javascript = <<<JS
-      const element = document.querySelector('$selector');
-      const event = new KeyboardEvent('keypress', { key: 'Enter', keyCode: 13, bubbles: true });
-      element.dispatchEvent(event);
-JS;
-    $this->getSession()->executeScript($javascript);
+    $element = $this->assertSession()->elementExists('css', $selector);
+    $this->getSession()->getDriver()->keyPress($element->getXpath(), 13);
   }
 
   /**
