@@ -12,8 +12,7 @@
         "composer/installers": "^2.3",
         "drupal/core": "self.version",
         "drupal/core-project-message": "self.version",
-        "drupal/core-vendor-hardening": "self.version",
-        "vincentlanglet/twig-cs-fixer": "^2.1"
+        "drupal/core-vendor-hardening": "self.version"
     },
     "require-dev": {
         "behat/mink": "^1.11",
@@ -40,7 +39,8 @@
         "symfony/dom-crawler": "^7.1",
         "symfony/error-handler": "^7.1",
         "symfony/lock": "^7.1",
-        "symfony/var-dumper": "^7.1"
+        "symfony/var-dumper": "^7.1",
+        "vincentlanglet/twig-cs-fixer": "^3.0"
     },
     "replace": {
         "symfony/polyfill-php72": "*",
