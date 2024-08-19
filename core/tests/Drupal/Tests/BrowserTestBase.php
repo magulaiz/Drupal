@@ -75,13 +75,6 @@ abstract class BrowserTestBase extends TestCase {
   use ExtensionListTestTrait;
 
   /**
-   * Path to SQL dump file.
-   *
-   * @var string
-   */
-  protected $dumpFile;
-
-  /**
    * Time limit in seconds for the test.
    *
    * @var int
