@@ -277,6 +277,10 @@ class ExposedFilterAJAXTest extends WebDriverTestBase {
     $this->assertSession()->pageTextContains('Default prefix');
 
     $page->fillField('title', 'value');
+
+    // Simulate a click outside the title field so the title field ajax callback
+    // kicks in. It does not matter here what action is carried out here.
+    $page->selectFieldOption('status', 'Published');
     $this->assertSession()->assertWaitOnAjaxRequest();
 
     $this->assertSession()->pageTextContains('Callback called.');
