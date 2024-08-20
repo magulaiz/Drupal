@@ -6,7 +6,6 @@ use Drupal\Component\Annotation\Doctrine\StaticReflectionParser;
 use Drupal\Component\Annotation\Reflection\MockFileFinder;
 use Drupal\Component\Utility\NestedArray;
 use Drupal\Core\Extension\ExtensionDiscovery;
-use Drupal\Core\Test\Exception\MissingGroupException;
 
 /**
  * Discovers available tests.
@@ -170,20 +169,11 @@ class TestDiscovery {
     foreach ($classmap as $classname => $pathname) {
       $finder = MockFileFinder::create($pathname);
       $parser = new StaticReflectionParser($classname, $finder, TRUE);
-      try {
-        $info = static::getTestInfo($classname, $parser->getDocComment());
-      }
-      catch (MissingGroupException $e) {
-        // If the class name ends in Test and is not a migrate table dump.
-        if (str_ends_with($classname, 'Test') && !str_contains($classname, 'migrate_drupal\Tests\Table')) {
-          throw $e;
-        }
-        // If the class is @group annotation just skip it. Most likely it is an
-        // abstract class, trait or test fixture.
-        continue;
-      }
-      foreach ($info['groups'] as $group) {
-        $list[$group][$classname] = $info;
+      $info = static::getTestInfo($classname, $parser->getDocComment());
+      if (!empty($info['groups'])) {
+        foreach ($info['groups'] as $group) {
+          $list[$group][$classname] = $info;
+        }  
       }
     }
 
@@ -340,7 +330,12 @@ class TestDiscovery {
     }
 
     // If no group is set, assign the "default" one.
-    if (empty($annotations['group'])) {
+    if (
+      empty($annotations['group']) && 
+      str_ends_with($classname, 'Test') && 
+      !str_contains($classname, 'migrate_drupal\Tests\Table') &&
+      !empty($doc_comment)
+    ) {
       $annotations['group'] = 'default';
       $annotations['groups'][] = 'default';
     }
