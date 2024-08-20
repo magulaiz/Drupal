@@ -3,12 +3,13 @@
 namespace Drupal\search;
 
 use Drupal\Core\Config\ConfigFactoryInterface;
+use Drupal\Core\Cron\CronSubscriberInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 
 /**
  * Provides a repository for Search Page config entities.
  */
-class SearchPageRepository implements SearchPageRepositoryInterface {
+class SearchPageRepository implements SearchPageRepositoryInterface, CronSubscriberInterface {
 
   /**
    * The config factory.
@@ -117,6 +118,17 @@ class SearchPageRepository implements SearchPageRepositoryInterface {
    */
   protected function getQuery() {
     return $this->storage->getQuery();
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function onCron(): void {
+    // Fires updateIndex() in the plugins for all indexable active search pages,
+    // and cleans up dirty words.
+    foreach ($this->getIndexableSearchPages() as $entity) {
+      $entity->getPlugin()->updateIndex();
+    }
   }
 
 }

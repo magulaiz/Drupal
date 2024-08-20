@@ -4,12 +4,13 @@ namespace Drupal\Core\KeyValueStore;
 
 use Drupal\Component\Datetime\TimeInterface;
 use Drupal\Component\Serialization\SerializationInterface;
+use Drupal\Core\Cron\CronSubscriberInterface;
 use Drupal\Core\Database\Connection;
 
 /**
  * Defines the key/value store factory for the database backend.
  */
-class KeyValueDatabaseExpirableFactory implements KeyValueExpirableFactoryInterface {
+class KeyValueDatabaseExpirableFactory implements KeyValueExpirableFactoryInterface, CronSubscriberInterface {
 
   /**
    * Holds references to each instantiation so they can be terminated.
@@ -74,6 +75,13 @@ class KeyValueDatabaseExpirableFactory implements KeyValueExpirableFactoryInterf
     if ($this->connection->schema()->tableExists('key_value_expire')) {
       throw $e;
     }
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function onCron(): void {
+    $this->garbageCollection();
   }
 
 }

@@ -211,6 +211,8 @@ services:
     arguments: ['@settings', '%cache_default_bin_backends%', '%memory_cache_default_bin_backends%']
     calls:
       - [setContainer, ['@service_container']]
+    tags:
+      - { name: cron }
   Drupal\Core\Cache\CacheFactoryInterface: '@cache_factory'
   variation_cache_factory:
     class: Drupal\Core\Cache\VariationCacheFactory
@@ -451,6 +453,8 @@ services:
     class: Drupal\Core\Cron
     arguments: ['@module_handler', '@lock', '@queue', '@state', '@account_switcher', '@logger.channel.cron', '@plugin.manager.queue_worker', '@datetime.time', '%queue.config%']
     lazy: true
+    tags:
+      - { name: service_collector, call: addCronSubscriber, tag: cron }
   Drupal\Core\CronInterface: '@cron'
   diff.formatter:
     class: Drupal\Core\Diff\DiffFormatter
@@ -514,6 +518,8 @@ services:
   keyvalue.expirable.database:
     class: Drupal\Core\KeyValueStore\KeyValueDatabaseExpirableFactory
     arguments: ['@serialization.phpserialize', '@database', '@datetime.time']
+    tags:
+      - { name: cron }
   logger.factory:
     class: Drupal\Core\Logger\LoggerChannelFactory
     arguments: ['@request_stack', '@current_user']
@@ -849,6 +855,8 @@ services:
   plugin.manager.queue_worker:
     class: Drupal\Core\Queue\QueueWorkerManager
     parent: default_plugin_manager
+    tags:
+      - { name: cron }
   Drupal\Core\Queue\QueueWorkerManagerInterface: '@plugin.manager.queue_worker'
   plugin.cache_clearer:
     class: Drupal\Core\Plugin\CachedDiscoveryClearer
@@ -1470,6 +1478,7 @@ services:
     arguments: ['@database', '@request_stack', '@datetime.time']
     tags:
       - { name: backend_overridable }
+      - { name: cron }
   Drupal\Core\Flood\FloodInterface: '@flood'
   plugin.manager.mail:
     class: Drupal\Core\Mail\MailManager
@@ -1764,6 +1773,8 @@ services:
   file.htaccess_writer:
     class: Drupal\Core\File\HtaccessWriter
     arguments: ['@logger.channel.security', '@stream_wrapper_manager']
+    tags:
+      - { name: cron }
   Drupal\Core\File\HtaccessWriterInterface: '@file.htaccess_writer'
   file.mime_type.guesser:
     class: Drupal\Core\File\MimeType\MimeTypeGuesser

@@ -4,6 +4,7 @@ namespace Drupal\system\SecurityAdvisories;
 
 use Drupal\Component\Serialization\Json;
 use Drupal\Core\Config\ConfigFactoryInterface;
+use Drupal\Core\Cron\CronSubscriberInterface;
 use Drupal\Core\Extension\ModuleExtensionList;
 use Drupal\Core\Extension\ProfileExtensionList;
 use Drupal\Core\Extension\ThemeExtensionList;
@@ -20,7 +21,7 @@ use Psr\Log\LoggerInterface;
 /**
  * Defines a service to get security advisories.
  */
-final class SecurityAdvisoriesFetcher {
+final class SecurityAdvisoriesFetcher implements CronSubscriberInterface {
 
   /**
    * The key to use to store the advisories feed response.
@@ -327,6 +328,17 @@ final class SecurityAdvisoriesFetcher {
       }
     }
     return (string) $response->getBody();
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function onCron(): void {
+    if ($this->config->get('enabled')) {
+      // Fetch the security advisories so that they will be pre-fetched during
+      // _system_advisories_requirements() and system_page_top().
+      $this->getSecurityAdvisories();
+    }
   }
 
 }

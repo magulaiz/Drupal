@@ -5,6 +5,7 @@ namespace Drupal\Core;
 use Drupal\Component\Datetime\TimeInterface;
 use Drupal\Component\Utility\Environment;
 use Drupal\Component\Utility\Timer;
+use Drupal\Core\Cron\CronSubscriberInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Lock\LockBackendInterface;
 use Drupal\Core\Queue\DelayableQueueInterface;
@@ -33,6 +34,13 @@ class Cron implements CronInterface {
    * @var array
    */
   protected array $queueConfig;
+
+  /**
+   * List of tagged services that implement the cron interface.
+   *
+   * @var \Drupal\Core\Cron\CronSubscriberInterface[]
+   */
+  protected array $cronSubscribers = [];
 
   /**
    * Constructs a cron object.
@@ -247,10 +255,39 @@ class Cron implements CronInterface {
    */
   protected function invokeCronHandlers() {
     $module_previous = '';
+    $service_previous = '';
 
     // If detailed logging isn't enabled, don't log individual execution times.
     $time_logging_enabled = \Drupal::config('system.cron')->get('logging');
     $logger = $time_logging_enabled ? $this->logger : new NullLogger();
+
+    // Also call all tagged services.
+    foreach ($this->cronSubscribers as $cron_service) {
+      $service_class = get_class($cron_service);
+      if (!$service_previous) {
+        $logger->info('Starting execution of service @class.', [
+          '@class' => $service_class,
+        ]);
+      }
+      else {
+        $logger->info('Starting execution of service @class(), execution of @previous_class() took @time.', [
+          '@module' => $service_class,
+          '@module_previous' => $service_previous,
+          '@time' => Timer::read('cron_' . $service_previous) . 'ms',
+        ]);
+      }
+      Timer::start('cron_' . $service_class);
+
+      try {
+        $cron_service->onCron();
+      }
+      catch (\Exception $e) {
+        Error::logException($this->logger, $e);
+      }
+
+      Timer::stop('cron_' . $service_class);
+      $service_previous = $service_class;
+    }
 
     // Iterate through the modules calling their cron handlers (if any):
     $this->moduleHandler->invokeAllWith('cron', function (callable $hook, string $module) use (&$module_previous, $logger) {
@@ -285,6 +322,7 @@ class Cron implements CronInterface {
         '@time' => Timer::read('cron_' . $module_previous) . 'ms',
       ]);
     }
+
   }
 
   /**
@@ -295,6 +333,18 @@ class Cron implements CronInterface {
    */
   protected function usleep(int $microseconds): void {
     usleep($microseconds);
+  }
+
+  /**
+   * Add a cron subscriber.
+   *
+   * @param \Drupal\Core\Cron\CronSubscriberInterface $cron_subscriber
+   *   The cron subscriber.
+   *
+   * @return void
+   */
+  public function addCronSubscriber(CronSubscriberInterface $cron_subscriber) {
+    $this->cronSubscribers[] = $cron_subscriber;
   }
 
 }

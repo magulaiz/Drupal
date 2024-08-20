@@ -2,12 +2,13 @@
 
 namespace Drupal\Core\Flood;
 
+use Drupal\Core\Cron\CronSubscriberInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
 
 /**
  * Defines the memory flood backend. This is used for testing.
  */
-class MemoryBackend implements FloodInterface, PrefixFloodInterface {
+class MemoryBackend implements FloodInterface, PrefixFloodInterface, CronSubscriberInterface {
 
   /**
    * The request stack.
@@ -97,6 +98,13 @@ class MemoryBackend implements FloodInterface, PrefixFloodInterface {
         });
       }
     }
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function onCron(): void {
+    $this->garbageCollection();
   }
 
 }

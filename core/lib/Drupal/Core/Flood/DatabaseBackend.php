@@ -3,6 +3,7 @@
 namespace Drupal\Core\Flood;
 
 use Drupal\Component\Datetime\TimeInterface;
+use Drupal\Core\Cron\CronSubscriberInterface;
 use Drupal\Core\Database\Connection;
 use Drupal\Core\Database\DatabaseException;
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -10,7 +11,7 @@ use Symfony\Component\HttpFoundation\RequestStack;
 /**
  * Defines the database flood backend. This is the default Drupal backend.
  */
-class DatabaseBackend implements FloodInterface, PrefixFloodInterface {
+class DatabaseBackend implements FloodInterface, PrefixFloodInterface, CronSubscriberInterface {
 
   /**
    * The database table name.
@@ -150,6 +151,13 @@ class DatabaseBackend implements FloodInterface, PrefixFloodInterface {
     catch (\Exception $e) {
       $this->catchException($e);
     }
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function onCron(): void {
+    $this->garbageCollection();
   }
 
   /**

@@ -6,6 +6,7 @@ services:
     arguments: ['@request_stack', '@entity_type.manager', '@entity.memory_cache', '@current_user', '@state', '@logger.channel.workspaces', '@class_resolver', '@workspaces.association', '@workspaces.information']
     tags:
       - { name: service_id_collector, tag: workspace_negotiator }
+      - { name: cron }
   Drupal\workspaces\WorkspaceManagerInterface: '@workspaces.manager'
   workspaces.information:
     class: Drupal\workspaces\WorkspaceInformation

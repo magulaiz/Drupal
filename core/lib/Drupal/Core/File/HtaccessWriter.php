@@ -3,6 +3,7 @@
 namespace Drupal\Core\File;
 
 use Drupal\Component\FileSecurity\FileSecurity;
+use Drupal\Core\Cron\CronSubscriberInterface;
 use Drupal\Core\Site\Settings;
 use Drupal\Core\StreamWrapper\PrivateStream;
 use Drupal\Core\StreamWrapper\StreamWrapperManager;
@@ -12,7 +13,7 @@ use Psr\Log\LoggerInterface;
 /**
  * Provides functions to manage Apache .htaccess files.
  */
-class HtaccessWriter implements HtaccessWriterInterface {
+class HtaccessWriter implements HtaccessWriterInterface, CronSubscriberInterface {
 
   /**
    * The stream wrapper manager.
@@ -116,6 +117,13 @@ class HtaccessWriter implements HtaccessWriterInterface {
       $protected_dirs[] = new ProtectedDirectory('Optimized assets directory', $assets_path);
     }
     return $protected_dirs;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function onCron(): void {
+    $this->ensure();
   }
 
 }
