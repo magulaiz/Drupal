@@ -341,8 +341,8 @@ class TestDiscovery {
 
     // If no group is set, assign the "default" one.
     if (empty($annotations['group'])) {
-      $annotations['group'] = "default";
-      $annotations['groups'][] = "default";
+      $annotations['group'] = 'default';
+      $annotations['groups'][] = 'default';
     }
     $info['group'] = $annotations['group'];
     $info['groups'] = $annotations['groups'];
