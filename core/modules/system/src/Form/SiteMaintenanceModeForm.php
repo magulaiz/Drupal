@@ -21,46 +21,25 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 class SiteMaintenanceModeForm extends ConfigFormBase {
 
   /**
-   * The state keyvalue collection.
-   *
-   * @var \Drupal\Core\State\StateInterface
-   */
-  protected $state;
-
-  /**
-   * The permission handler.
-   *
-   * @var \Drupal\user\PermissionHandlerInterface
-   */
-  protected $permissionHandler;
-
-  /**
-   * The module handler service.
-   *
-   * @var \Drupal\Core\Extension\ModuleHandlerInterface
-   */
-  protected $moduleHandler;
-
-  /**
    * Constructs a new SiteMaintenanceModeForm.
    *
-   * @param \Drupal\Core\Config\ConfigFactoryInterface $config_factory
+   * @param \Drupal\Core\Config\ConfigFactoryInterface $configFactory
    *   The factory for configuration objects.
    * @param \Drupal\Core\Config\TypedConfigManagerInterface $typedConfigManager
    *   The typed config manager.
    * @param \Drupal\Core\State\StateInterface $state
    *   The state keyvalue collection to use.
-   * @param \Drupal\user\PermissionHandlerInterface $permission_handler
+   * @param \Drupal\user\PermissionHandlerInterface $permissionHandler
    *   The permission handler.
-   * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
+   * @param \Drupal\Core\Extension\ModuleHandlerInterface $moduleHandler
    *   The module handler service.
    */
-  public function __construct(ConfigFactoryInterface $config_factory, TypedConfigManagerInterface $typedConfigManager, StateInterface $state, PermissionHandlerInterface $permission_handler, ModuleHandlerInterface $module_handler) {
-    parent::__construct($config_factory, $typedConfigManager);
-    $this->state = $state;
-    $this->permissionHandler = $permission_handler;
-    $this->moduleHandler = $module_handler;
-  }
+  public function __construct(
+    protected ConfigFactoryInterface $config_factory,
+    protected TypedConfigManagerInterface $typedConfigManager,
+    protected readonly StateInterface $state,
+    protected readonly PermissionHandlerInterface $permissionHandler,
+    protected readonly ModuleHandlerInterface $moduleHandler) {}
 
   /**
    * {@inheritdoc}
