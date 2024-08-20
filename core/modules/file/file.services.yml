@@ -35,3 +35,4 @@ services:
   file.sanitize_name:
     class: Drupal\file\FileSanitizeName
     arguments: ['@config.factory', '@transliteration', '@language_manager']
+    Drupal\file\FileSanitizeName: '@file.sanitize_name'
