@@ -172,10 +172,10 @@ variables:
 
 '🌐️️ PHPUnit Functional':
   <<: [ *with-composer, *run-tests, *default-job-settings ]
-  parallel: 11
+  parallel: 10
   variables:
     TESTSUITE: PHPUnit-Functional
-    CONCURRENCY: 12
+    CONCURRENCY: "12"
     KUBERNETES_CPU_REQUEST: "12"
   services:
     - <<: *with-database
