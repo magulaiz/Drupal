@@ -339,8 +339,12 @@ class TestDiscovery {
       $annotations['group'] = 'default';
       $annotations['groups'][] = 'default';
     }
-    $info['group'] = $annotations['group'];
-    $info['groups'] = $annotations['groups'];
+    if (!empty($annotations['group'])) {
+      $info['group'] = $annotations['group'];
+    }
+    if (!empty($annotations['groups'])) {
+      $info['groups'] = $annotations['groups'];
+    }
     $info['type'] = 'PHPUnit-' . static::getPhpunitTestSuite($classname);
 
     if (!empty($annotations['coversDefaultClass'])) {
