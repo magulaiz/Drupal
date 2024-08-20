@@ -340,6 +340,12 @@ class ImageStyle extends ConfigEntityBase implements ImageStyleInterface, Entity
       return FALSE;
     }
 
+    // Inform other modules about the derivative image creation.
+    $this->moduleHandler()->invokeAll('image_derivative_created', [
+      $original_uri,
+      $derivative_uri,
+    ]);
+
     return TRUE;
   }
 
