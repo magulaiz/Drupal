@@ -173,7 +173,7 @@ class TestDiscovery {
       if (!empty($info['groups'])) {
         foreach ($info['groups'] as $group) {
           $list[$group][$classname] = $info;
-        }  
+        }
       }
     }
 
@@ -331,8 +331,8 @@ class TestDiscovery {
 
     // If no group is set, assign the "default" one.
     if (
-      empty($annotations['group']) && 
-      str_ends_with($classname, 'Test') && 
+      empty($annotations['group']) &&
+      str_ends_with($classname, 'Test') &&
       !str_contains($classname, 'migrate_drupal\Tests\Table') &&
       !empty($doc_comment)
     ) {
