@@ -185,7 +185,7 @@ variables:
   variables:
     TESTSUITE: PHPUnit-Kernel
     KUBERNETES_CPU_REQUEST: "16"
-    CONCURRENCY: 16
+    CONCURRENCY: 12
   services:
     - <<: *with-database
 
