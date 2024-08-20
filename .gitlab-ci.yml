@@ -27,6 +27,8 @@
 ################
 
 workflow:
+  auto_cancel:
+    on_job_failure: all
   rules:
   # These 3 rules from https://gitlab.com/gitlab-org/gitlab/-/blob/master/lib/gitlab/ci/templates/Workflows/MergeRequest-Pipelines.gitlab-ci.yml
     # Run on merge requests
@@ -64,7 +66,7 @@ variables:
   CONCURRENCY: 24
   GIT_DEPTH: "50"
   PARENT_PIPELINE_ID: $CI_PIPELINE_ID
-  _TARGET_PHP: "8.3"
+  _TARGET_PHP: "8.3-ubuntu"
 
 #############
 # Stages    #
@@ -115,6 +117,18 @@ default:
   # exist.
   - 'curl --location --output core/.cspellcache "https://git.drupalcode.org/api/v4/projects/$CI_PROJECT_ID/jobs/artifacts/{$CACHE_TARGET}/raw/core/.cspellcache?job=Lint%20cache%20warming" || true'
 
+.eslint-cache: &eslint-cache
+  # Fetch the eslint cache from the artifacts of the latest successful job from
+  # the target branch. Allow the job to proceed and pass if the file doesn't
+  # exist.
+  - 'curl --location --output core/.eslintcache "https://git.drupalcode.org/api/v4/projects/$CI_PROJECT_ID/jobs/artifacts/{$CACHE_TARGET}/raw/core/.eslintcache?job=Lint%20cache%20warming" || true'
+
+.stylelint-cache: &stylelint-cache
+  # Fetch the stylelint cache from the artifacts of the latest successful job from
+  # the target branch. Allow the job to proceed and pass if the file doesn't
+  # exist.
+  - 'curl --location --output core/.stylelintcache "https://git.drupalcode.org/api/v4/projects/$CI_PROJECT_ID/jobs/artifacts/{$CACHE_TARGET}/raw/core/.stylelintcache?job=Lint%20cache%20warming" || true'
+
 .core-spellcheck: &core-spellcheck
   - cd core
   - corepack enable
@@ -132,6 +146,11 @@ default:
 
 .default-stage: &default-stage
   stage: 🗜️ Test
+  needs:
+    # Start the child jobs as soon as phpcs passes.
+    - "🧹 PHP Coding standards (PHPCS)"
+    - "📔 Spell-checking"
+
   trigger:
     # Rely on the status of the child pipeline.
     strategy: depend
@@ -158,7 +177,7 @@ default:
 'DEFAULT: PHP 8.3 MySQL 8':
   <<: *default-stage
   variables:
-    _TARGET_PHP: "8.3"
+    _TARGET_PHP: "8.3-ubuntu"
     _TARGET_DB: "mysql-8"
     PERFORMANCE_TEST: $PERFORMANCE_TEST
     OTEL_COLLECTOR: $OTEL_COLLECTOR
@@ -193,7 +212,7 @@ default:
   when: manual
   allow_failure: true
   variables:
-    _TARGET_PHP: "8.3"
+    _TARGET_PHP: "8.3-ubuntu"
     _TARGET_DB: "mysql-8"
   rules:
     - if: $CI_PIPELINE_SOURCE == "merge_request_event"
@@ -209,13 +228,13 @@ default:
 'PHP 8.3 MariaDB 10.6':
   <<: [ *default-stage, *run-on-mr ]
   variables:
-    _TARGET_PHP: "8.3"
+    _TARGET_PHP: "8.3-ubuntu"
     _TARGET_DB: "mariadb-10.6"
 
 'PHP 8.3 PostgreSQL 16':
   <<: [ *default-stage, *run-on-mr ]
   variables:
-    _TARGET_PHP: "8.3"
+    _TARGET_PHP: "8.3-ubuntu"
     _TARGET_DB: "pgsql-16"
 
 'PHP 8.3 SQLite 3.45':
@@ -271,14 +290,21 @@ default:
   script:
     - *phpstan-cache
     - *cspell-cache
+    - *eslint-cache
+    - *stylelint-cache
     - composer install
     - vendor/bin/phpstan --version
     - php vendor/bin/phpstan -vvv analyze --configuration=./core/phpstan.neon.dist
     - *core-spellcheck
+    - yarn run lint:core-js-passing --cache --cache-strategy content
+    - yarn run build:css --check
+    - yarn run lint:css --cache --cache-location .stylelintcache --cache-strategy content
   artifacts:
     paths:
       - core/phpstan-tmp/resultCache.php
       - core/.cspellcache
+      - core/.eslintcache
+      - core/.stylelintcache
 
 '🧹 PHP Static Analysis (phpstan)':
   <<: [ *default-job-settings-lint ]
@@ -357,11 +383,12 @@ default:
     - when: manual
       allow_failure: true
   script:
+    - *eslint-cache
     - cd core
     - corepack enable
     - yarn install
     - yarn run check:ckeditor5
-    - yarn run lint:core-js-passing --format gitlab
+    - yarn run lint:core-js-passing --cache --cache-strategy content --format gitlab
   artifacts:
     reports:
       codequality: eslint-quality-report.json
@@ -383,11 +410,12 @@ default:
     - when: manual
       allow_failure: true
   script:
+    - *stylelint-cache
     - corepack enable
     - cd core
     - yarn install
     - yarn run build:css --check
-    - yarn run lint:css --color --custom-formatter=node_modules/stylelint-formatter-gitlab
+    - yarn run lint:css --cache --cache-location .stylelintcache --cache-strategy content --color --custom-formatter=node_modules/stylelint-formatter-gitlab
   artifacts:
     reports:
       codequality: stylelint-quality-report.json
