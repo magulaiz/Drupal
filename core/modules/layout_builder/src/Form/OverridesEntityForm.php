@@ -3,7 +3,6 @@
 namespace Drupal\layout_builder\Form;
 
 use Drupal\Component\Datetime\TimeInterface;
-use Drupal\Component\Serialization\Json;
 use Drupal\Core\Ajax\AjaxResponse;
 use Drupal\Core\Ajax\OpenModalDialogWithUrl;
 use Drupal\Core\Entity\ContentEntityForm;
@@ -170,10 +169,10 @@ class OverridesEntityForm extends ContentEntityForm implements WorkspaceDynamicS
     $actions['delete']['#access'] = FALSE;
 
     $actions['discard_changes'] = [
-      '#type' => 'submit',
-      '#value' => $this->t('Discard changes'),
-      '#ajax' => [
-        'callback' => [$this, 'ajaxcallbackDiscardChanges'],
+      '#type'   => 'submit',
+      '#value'  => $this->t('Discard changes'),
+      '#ajax'   => [
+        'callback' => [$this, 'ajaxCallbackDiscardChanges'],
       ],
       '#submit' => [
         [$this, 'submitDiscardChanges'],
@@ -183,15 +182,14 @@ class OverridesEntityForm extends ContentEntityForm implements WorkspaceDynamicS
     // @todo This button should be conditionally displayed, see
     //   https://www.drupal.org/node/2917777.
     $actions['revert'] = [
-      '#type' => 'button',
-      '#value' => $this->t('Revert to defaults'),
-//      '#url' => $this->sectionStorage->getLayoutBuilderUrl('discard_changes'),
-      '#ajax' => [
+      '#type'   => 'submit',
+      '#value'  => $this->t('Revert to defaults'),
+      '#ajax'   => [
         'callback' => [$this, 'ajaxcallbackRevertDefaults'],
       ],
-      '#submit' => [
+      '#submit'  => [
         [$this, 'submitRevertDefaults'],
-      ]
+      ],
     ];
 
     return $actions;
@@ -200,12 +198,12 @@ class OverridesEntityForm extends ContentEntityForm implements WorkspaceDynamicS
   /**
    * Ajax callback to cancel discard changes.
    *
-   * @return AjaxResponse
+   * @return \Drupal\Core\Ajax\AjaxResponse
    *   An ajax response object.
    */
-  public function ajaxcallbackDiscardChanges(){
+  public function ajaxCallbackDiscardChanges() {
     $response = new AjaxResponse();
-    $url  = $this->sectionStorage->getLayoutBuilderUrl('discard_changes');
+    $url = $this->sectionStorage->getLayoutBuilderUrl('discard_changes');
     $settings = [
       'title'     => $this->t('Discard changes'),
       'modal'     => TRUE,
@@ -219,26 +217,25 @@ class OverridesEntityForm extends ContentEntityForm implements WorkspaceDynamicS
   }
 
   /**
-   *  Non Ajax redirect to discard changes form,
-   *  we need this one if our javascript doesn't work for some reason
+   * Non Ajax redirect to discard changes form.
    */
-  function submitDiscardChanges(array $form, FormStateInterface $form_state){
-    // Generate the URL using the sectionStorage's getLayoutBuilderUrl method
+  public function submitDiscardChanges(array $form, FormStateInterface $form_state) {
+    // Generate the URL using the sectionStorage's getLayoutBuilderUrl method.
     $url = $this->sectionStorage->getLayoutBuilderUrl('discard_changes');
 
-    // Set the redirect to the generated "Discard changes" page
+    // Set the redirect to the generated "Discard changes" page.
     $form_state->setRedirectUrl($url);
   }
 
   /**
    * Ajax callback to Revert defaults .
    *
-   * @return AjaxResponse
+   * @return \Drupal\Core\Ajax\AjaxResponse
    *   An ajax response object.
    */
-  public function ajaxcallbackRevertDefaults(){
+  public function ajaxcallbackRevertDefaults() {
     $response = new AjaxResponse();
-    $url  = $this->sectionStorage->getLayoutBuilderUrl('revert');
+    $url = $this->sectionStorage->getLayoutBuilderUrl('revert');
     $settings = [
       'title'     => $this->t('Revert to defaults'),
       'modal'     => TRUE,
@@ -252,14 +249,15 @@ class OverridesEntityForm extends ContentEntityForm implements WorkspaceDynamicS
   }
 
   /**
-   *  Non Ajax redirect to "Revert defaults" form,
-   *  we need this one if our javascript doesn't work for some reason
+   * Non Ajax redirect to "Revert defaults" form.
+   *
+   * We need this one if our javascript doesn't work for some reason.
    */
-  function submitRevertDefaults(array $form, FormStateInterface $form_state){
-    // Generate the URL using the sectionStorage's getLayoutBuilderUrl method
-    $url = $this->sectionStorage->getLayoutBuilderUrl('discard_changes');
+  public function submitRevertDefaults(array $form, FormStateInterface $form_state) {
+    // Generate the URL using the sectionStorage's getLayoutBuilderUrl method.
+    $url = $this->sectionStorage->getLayoutBuilderUrl('revert');
 
-    // Set the redirect to the generated "Discard changes" page
+    // Set the redirect to the generated "Discard changes" page.
     $form_state->setRedirectUrl($url);
   }
 
