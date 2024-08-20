@@ -310,9 +310,6 @@ class TestDiscovery {
    *   - group: The test's first @group (parsed from PHPDoc annotations).
    *   - groups: All of the test's @group annotations, as an array (parsed from
    *     PHPDoc annotations).
-   *
-   * @throws \Drupal\Core\Test\Exception\MissingGroupException
-   *   If the class does not have a @group annotation.
    */
   public static function getTestInfo($classname, $doc_comment = NULL) {
     if ($doc_comment === NULL) {
@@ -342,9 +339,10 @@ class TestDiscovery {
       }
     }
 
-    if (empty($annotations['group'])) {
-      // Concrete tests must have a group.
-      throw new MissingGroupException(sprintf('Missing @group annotation in %s', $classname));
+    // If no group is set, assign the "default" one.
+    if (empty($annotations['group'])) {      
+      $annotations['group'] = "default";
+      $annotations['groups'][] = "default";
     }
     $info['group'] = $annotations['group'];
     $info['groups'] = $annotations['groups'];
