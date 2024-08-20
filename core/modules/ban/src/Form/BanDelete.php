@@ -60,14 +60,14 @@ class BanDelete extends ConfirmFormBase {
    * {@inheritdoc}
    */
   public function getQuestion() {
-    return $this->t('Are you sure you want to unblock %ip?', ['%ip' => $this->banIp]);
+    return $this->t('Are you sure you want to unban %ip?', ['%ip' => $this->banIp]);
   }
 
   /**
    * {@inheritdoc}
    */
   public function getConfirmText() {
-    return $this->t('Unblock');
+    return $this->t('Unban');
   }
 
   /**

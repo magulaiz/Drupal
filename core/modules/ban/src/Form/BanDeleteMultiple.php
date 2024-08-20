@@ -71,14 +71,14 @@ class BanDeleteMultiple extends ConfirmFormBase {
    * {@inheritdoc}
    */
   public function getQuestion() {
-    return $this->t('Are you sure you want to unblock %ips_amount IP addresses?', ['%ips_amount' => count($this->banIps)]);
+    return $this->t('Are you sure you want to unban %ips_amount IP addresses?', ['%ips_amount' => count($this->banIps)]);
   }
 
   /**
    * {@inheritdoc}
    */
   public function getConfirmText() {
-    return $this->t('Unblock');
+    return $this->t('Unban');
   }
 
   /**
@@ -116,7 +116,7 @@ class BanDeleteMultiple extends ConfirmFormBase {
     }
     $this->tempStoreFactory->get('ban_ip_delete_multiple')->delete('selected_ips');
     $this->logger('user')->notice('Deleted %ips_amount IP addresses.', ['%ips_amount' => count($this->banIps)]);
-    $this->messenger()->addStatus($this->t('The selected IP addresses were unblocked.'));
+    $this->messenger()->addStatus($this->t('The selected IP addresses were unbanned.'));
     $form_state->setRedirectUrl($this->getCancelUrl());
   }
 
