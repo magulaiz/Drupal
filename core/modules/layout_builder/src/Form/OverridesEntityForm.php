@@ -185,7 +185,7 @@ class OverridesEntityForm extends ContentEntityForm implements WorkspaceDynamicS
       '#type'   => 'submit',
       '#value'  => $this->t('Revert to defaults'),
       '#ajax'   => [
-        'callback' => [$this, 'ajaxcallbackRevertDefaults'],
+        'callback' => [$this, 'ajaxCallbackRevertDefaults'],
       ],
       '#submit'  => [
         [$this, 'submitRevertDefaults'],
@@ -233,7 +233,7 @@ class OverridesEntityForm extends ContentEntityForm implements WorkspaceDynamicS
    * @return \Drupal\Core\Ajax\AjaxResponse
    *   An ajax response object.
    */
-  public function ajaxcallbackRevertDefaults() {
+  public function ajaxCallbackRevertDefaults() {
     $response = new AjaxResponse();
     $url = $this->sectionStorage->getLayoutBuilderUrl('revert');
     $settings = [
