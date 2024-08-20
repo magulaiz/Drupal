@@ -92,7 +92,7 @@ variables:
   variables:
     JAVA_OPTS: "-Dwebdriver.chrome.logfile=/builds/chromedriver.log"
     SE_NODE_OVERRIDE_MAX_SESSIONS: "true"
-    SE_NODE_MAX_SESSIONS: "24"
+    SE_NODE_MAX_SESSIONS: "12"
     SE_SESSION_RETRY_INTERVAL: "1"
     SE_SESSION_REQUEST_TIMEOUT: "10"
     SE_START_XVFB: "false"
@@ -138,11 +138,11 @@ variables:
 
 '🖱️️️ PHPUnit Functional Javascript':
   <<: [ *with-composer, *run-tests, *default-job-settings ]
-  parallel: 2
+  parallel: 3
   variables:
     TESTSUITE: PHPUnit-FunctionalJavascript
-    CONCURRENCY: 5
-    KUBERNETES_CPU_REQUEST: "24"
+    CONCURRENCY: 3
+    KUBERNETES_CPU_REQUEST: "16"
   services:
     - <<: *with-database
     - <<: *with-selenium-chrome
@@ -240,7 +240,7 @@ variables:
 '🦉️️️ Nightwatch':
   <<: [ *with-composer-and-yarn, *default-job-settings ]
   variables:
-    KUBERNETES_CPU_REQUEST: "8"
+    KUBERNETES_CPU_REQUEST: "12"
   services:
     - <<: *with-database
     - <<: *with-selenium-chrome
@@ -262,7 +262,7 @@ variables:
     - chown -R www-data:www-data ./sites /var/www
     - cd core
     - corepack enable
-    - sudo -u www-data yarn run test:nightwatch --workers=4
+    - sudo -u www-data yarn run test:nightwatch --workers=3
   after_script:
     - cp /builds/chromedriver.log ./
   artifacts:
