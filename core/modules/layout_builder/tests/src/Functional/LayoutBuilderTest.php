@@ -693,7 +693,7 @@ class LayoutBuilderTest extends LayoutBuilderTestBase {
   /**
    * Tests a config-based implementation of Layout Builder.
    *
-   * @see \Drupal\layout_builder_test\Plugin\SectionStorage\SimpleConfigSectionStorage
+   * @see \Drupal\layout_builder\Plugin\SectionStorage\SimpleConfigSectionStorage
    */
   public function testSimpleConfigBasedLayout(): void {
     $assert_session = $this->assertSession();
@@ -710,12 +710,12 @@ class LayoutBuilderTest extends LayoutBuilderTestBase {
       ->save();
 
     // The pre-existing section is found.
-    $this->drupalGet('layout-builder-test-simple-config/existing');
+    $this->drupalGet('layout-builder-simple-config/existing');
     $assert_session->elementsCount('css', '.layout', 1);
     $assert_session->elementsCount('css', '.layout--twocol', 1);
 
     // No layout is selected for a new object.
-    $this->drupalGet('layout-builder-test-simple-config/new');
+    $this->drupalGet('layout-builder-simple-config/new');
     $assert_session->elementNotExists('css', '.layout');
   }
 

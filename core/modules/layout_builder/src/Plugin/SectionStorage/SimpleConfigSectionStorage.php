@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\layout_builder_test\Plugin\SectionStorage;
+namespace Drupal\layout_builder\Plugin\SectionStorage;
 
 use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Cache\RefinableCacheableDependencyInterface;
@@ -14,7 +14,6 @@ use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\Core\Url;
 use Drupal\layout_builder\Attribute\SectionStorage;
-use Drupal\layout_builder\Plugin\SectionStorage\SectionStorageLocalTaskProviderInterface;
 use Drupal\layout_builder\Routing\LayoutBuilderRoutesTrait;
 use Drupal\layout_builder\Section;
 use Drupal\layout_builder\SectionListTrait;
@@ -25,7 +24,7 @@ use Symfony\Component\Routing\RouteCollection;
 /**
  * Provides section storage utilizing simple config.
  */
-#[SectionStorage(id: "test_simple_config", context_definitions: [
+#[SectionStorage(id: "simple_config", context_definitions: [
   "config_id" => new ContextDefinition(
     data_type: "string",
     label: new TranslatableMarkup("Configuration ID"),
@@ -96,7 +95,7 @@ class SimpleConfigSectionStorage extends PluginBase implements SectionStorageInt
    * Returns the name to be used to store in the config system.
    */
   protected function getConfigName() {
-    return 'layout_builder_test.' . $this->getStorageType() . '.' . $this->getStorageId();
+    return 'layout_builder.' . $this->getStorageType() . '.' . $this->getStorageId();
   }
 
   /**
@@ -136,7 +135,7 @@ class SimpleConfigSectionStorage extends PluginBase implements SectionStorageInt
    * {@inheritdoc}
    */
   public function buildRoutes(RouteCollection $collection) {
-    $this->buildLayoutRoutes($collection, $this->getPluginDefinition(), 'layout-builder-test-simple-config/{id}');
+    $this->buildLayoutRoutes($collection, $this->getPluginDefinition(), 'layout-builder-simple-config/{id}');
   }
 
   /**
