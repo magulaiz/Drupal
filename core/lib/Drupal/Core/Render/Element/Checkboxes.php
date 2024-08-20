@@ -121,7 +121,7 @@ class Checkboxes extends FormElementBase {
           'type' => 'button',
         ],
       ];
-      $element['#attached']['library'][] = 'core/drupal.check-all';
+      $element['#attached']['library'][] = 'core/drupal.checkboxes-check-all';
     }
 
     return $element;
