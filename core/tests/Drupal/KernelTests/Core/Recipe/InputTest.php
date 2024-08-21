@@ -117,7 +117,9 @@ input:
       arguments:
         question: What is the capital of Assyria?
         validator: 'test_validator'
-    default: "I don't know that!"
+    default:
+      source: value
+      value: "I don't know that!"
 YAML
     );
     ConsoleInputCollector::create($this->container, io: $io)
@@ -136,7 +138,9 @@ input:
     description: The capital of a long-defunct country.
     prompt:
       method: ask
-    default: "I don't know that!"
+    default:
+      source: value
+      value: "I don't know that!"
 YAML
     );
     $this->expectException(\ArgumentCountError::class);
