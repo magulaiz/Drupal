@@ -36,6 +36,24 @@ trait EntityTrait {
   }
 
   /**
+   * Asserts that an entity passes entity validation.
+   *
+   * @param \Drupal\Core\Entity\EntityInterface $entity
+   *   The entity to validate.
+   */
+  protected function assertEntityValid(EntityInterface $entity): void {
+    $violations = $entity->validate();
+    $messages = [];
+    foreach ($violations as $violation) {
+      $messages[] = (string) $violation;
+    }
+    $this->assertEmpty($messages, sprintf("The entity failed validation with %s errors:\n%s",
+      count($violations),
+      implode("\n", $messages)
+    ));
+  }
+
+  /**
    * Generates a random ID avoiding collisions.
    *
    * @param bool $string
