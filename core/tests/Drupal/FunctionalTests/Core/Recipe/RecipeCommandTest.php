@@ -145,13 +145,14 @@ class RecipeCommandTest extends BrowserTestBase {
   }
 
   public function testListInputs(): void {
-    $dir = $this->getDrupalRoot() . '/core/recipes/feedback_contact_form';
+    $root = $this->getDrupalRoot();
 
-    $output = $this->applyRecipe($dir, options: ['--list-inputs'])
-      ->getOutput();
-
+    $output = $this->applyRecipe($root . '/core/recipes/feedback_contact_form', command: 'recipe:info')->getOutput();
     $this->assertStringContainsString('feedback_contact_form.recipient', $output);
     $this->assertStringContainsString('The email address that should receive submissions from the feedback form.', $output);
+
+    $output = $this->applyRecipe($root . '/core/recipes/page_content_type', command: 'recipe:info')->getOutput();
+    $this->assertStringContainsString('This recipe does not accept any input.', $output);
   }
 
 }
