@@ -4,7 +4,6 @@
  */
 
 (function ($, Drupal) {
-
   function getUrlWithOp(url, newOp) {
     // Replace the operation parameter instead of just appending it to
     // avoid problems with CDNs that modify query string ordering.
