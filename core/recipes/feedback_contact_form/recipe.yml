@@ -24,8 +24,11 @@ config:
       - system.menu.footer
   actions:
     contact.form.feedback:
-      setRecipients:
-        - $recipient$
+      createIfNotExists:
+        label: 'Website feedback'
+        recipients:
+          - $recipient$
+        message: 'Your message has been sent.'
     core.menu.static_menu_link_overrides:
       simpleConfigUpdate:
         definitions.contact__site_page:
