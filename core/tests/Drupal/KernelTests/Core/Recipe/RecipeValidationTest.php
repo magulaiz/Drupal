@@ -294,6 +294,236 @@ YAML,
         ],
       ],
     ];
+    yield 'input definitions are an indexed array' => [
+      <<<YAML
+name: Bad input definitions
+input:
+  - description: A valid enough input, but in an indexed array.
+    default: Here be dragons
+YAML,
+      [
+        '[input]' => ['This value should be of type associative_array.'],
+      ],
+    ];
+    yield 'input description is not a string' => [
+      <<<YAML
+name: Bad input definitions
+input:
+  foo:
+    description: 3.141
+    default: Here be dragons
+YAML,
+      [
+        '[input][foo][description]' => ['This value should be of type string.'],
+      ],
+    ];
+    yield 'input description is blank' => [
+      <<<YAML
+name: Bad input definitions
+input:
+  foo:
+    description: ''
+    default: Here be dragons
+YAML,
+      [
+        '[input][foo][description]' => ['This value should not be blank.'],
+      ],
+    ];
+    yield 'input constraints are an indexed array' => [
+      <<<YAML
+name: Bad input definitions
+input:
+  foo:
+    description: 'Constraints need to be associative'
+    constraints:
+      - Type: string
+    default: Here be dragons
+YAML,
+      [
+        '[input][foo][constraints]' => ['This value should be of type associative_array.'],
+      ],
+    ];
+    yield 'prompt definition is not an array' => [
+      <<<YAML
+name: Bad input definitions
+input:
+  foo:
+    description: 'Prompt info must be an array'
+    prompt: ask
+    default: Here be dragons
+YAML,
+      [
+        '[input][foo][prompt]' => ['This value should be of type array|(Traversable&ArrayAccess).'],
+      ],
+    ];
+    yield 'invalid prompt method' => [
+      <<<YAML
+name: Bad input definitions
+input:
+  foo:
+    description: 'Bad prompt type'
+    prompt:
+      method: whoops
+    default: Here be dragons
+YAML,
+      [
+        '[input][foo][prompt][method]' => ['The value you selected is not a valid choice.'],
+      ],
+    ];
+    yield 'prompt data type is invalid' => [
+      <<<YAML
+name: Bad input definitions
+input:
+  foo:
+    description: 'Bad data type'
+    prompt:
+      method: ask
+      data_type: power_tool
+    default: Here be dragons
+YAML,
+      [
+        '[input][foo][prompt][data_type]' => ['The value you selected is not a valid choice.'],
+      ],
+    ];
+    yield 'prompt arguments are an indexed array' => [
+      <<<YAML
+name: Bad input definitions
+input:
+  foo:
+    description: 'Prompt arguments must be associative'
+    prompt:
+      method: ask
+      arguments: [1, 2]
+    default: Here be dragons
+YAML,
+      [
+        '[input][foo][prompt][arguments]' => ['This value should be of type associative_array.'],
+      ],
+    ];
+    yield 'input definition without default value' => [
+      <<<YAML
+name: Bad input definitions
+input:
+  foo:
+    description: 'No default'
+    prompt:
+      method: ask
+YAML,
+      [
+        '[input][foo][default]' => ['This field is missing.'],
+      ],
+    ];
+    yield 'default value from config is not defined' => [
+      <<<YAML
+name: Bad input definitions
+input:
+  foo:
+    description: 'Bad default definition'
+    prompt:
+      method: ask
+    default:
+      source: config
+YAML,
+      [
+        '[input][foo][default]' => ['Default values from config must have a "config" array with exactly two elements: the name of a config object, and a property path.'],
+      ],
+    ];
+    yield 'default value from config is not an array' => [
+      <<<YAML
+name: Bad input definitions
+input:
+  foo:
+    description: 'Bad default definition'
+    prompt:
+      method: ask
+    default:
+      source: config
+      config: 'system.site:mail'
+YAML,
+      [
+        '[input][foo][default]' => ['Default values from config must have a "config" array with exactly two elements: the name of a config object, and a property path.'],
+      ],
+    ];
+    yield 'default value from config has too few values' => [
+      <<<YAML
+name: Bad input definitions
+input:
+  foo:
+    description: 'Bad default definition'
+    prompt:
+      method: ask
+    default:
+      source: config
+      config: ['system.site:mail']
+YAML,
+      [
+        '[input][foo][default]' => ['Default values from config must have a "config" array with exactly two elements: the name of a config object, and a property path.'],
+      ],
+    ];
+    yield 'default value from config is an associative array' => [
+      <<<YAML
+name: Bad input definitions
+input:
+  foo:
+    description: 'Bad default definition'
+    prompt:
+      method: ask
+    default:
+      source: config
+      config:
+        name: system.site
+        key: mail
+YAML,
+      [
+        '[input][foo][default]' => ['Default values from config must have a "config" array with exactly two elements: the name of a config object, and a property path.'],
+      ],
+    ];
+    yield 'default value from config has non-string values' => [
+      <<<YAML
+name: Bad input definitions
+input:
+  foo:
+    description: 'Bad default definition'
+    prompt:
+      method: ask
+    default:
+      source: config
+      config: ['system.site', 39]
+YAML,
+      [
+        '[input][foo][default]' => ['Default values from config must have a "config" array with exactly two elements: the name of a config object, and a property path.'],
+      ],
+    ];
+    yield 'default value from config has empty strings' => [
+      <<<YAML
+name: Bad input definitions
+input:
+  foo:
+    description: 'Bad default definition'
+    prompt:
+      method: ask
+    default:
+      source: config
+      config: ['', 'mail']
+YAML,
+      [
+        '[input][foo][default]' => ['Default values from config must have a "config" array with exactly two elements: the name of a config object, and a property path.'],
+      ],
+    ];
+    yield 'valid default value from config' => [
+      <<<YAML
+name: Good input definitions
+input:
+  foo:
+    description: 'Good default definition'
+    prompt:
+      method: ask
+    default:
+      source: config
+      config: ['system.site', 'mail']
+YAML,
+      NULL,
+    ];
   }
 
   /**

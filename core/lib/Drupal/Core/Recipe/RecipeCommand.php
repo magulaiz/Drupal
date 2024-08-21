@@ -16,6 +16,7 @@ use Psr\Log\LogLevel;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Logger\ConsoleLogger;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
@@ -53,7 +54,10 @@ final class RecipeCommand extends Command {
   protected function configure(): void {
     $this
       ->setDescription('Applies a recipe to a site.')
-      ->addArgument('path', InputArgument::REQUIRED, 'The path to the recipe\'s folder to apply');
+      ->addArgument('path', InputArgument::REQUIRED, 'The path to the recipe\'s folder to apply')
+      ->addOption('list-inputs', mode: InputOption::VALUE_NONE, description: "List the input values accepted by the recipe and its dependencies. Pass values with the `" . ConsoleInputCollector::INPUT_OPTION . "` option.");
+
+    ConsoleInputCollector::configureCommand($this);
   }
 
   /**
@@ -73,6 +77,17 @@ final class RecipeCommand extends Command {
     /** @var \Drupal\Core\Config\Checkpoint\CheckpointStorageInterface $checkpoint_storage */
     $checkpoint_storage = $container->get('config.storage.checkpoint');
     $recipe = Recipe::createFromDirectory($recipe_path);
+
+    // Collect input for this recipe and all the recipes it directly and
+    // indirectly applies.
+    $collector = ConsoleInputCollector::create($container, $input, $io);
+
+    if ($input->getOption('list-inputs')) {
+      $collector->listAll($recipe);
+      return 0;
+    }
+    $collector->collectAll($recipe);
+
     if ($checkpoint_storage instanceof LoggerAwareInterface) {
       $logger = new ConsoleLogger($output, [
         // The checkpoint storage logs a notice if it decides to not create a

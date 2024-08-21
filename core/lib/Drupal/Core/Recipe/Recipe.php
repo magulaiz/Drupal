@@ -13,6 +13,7 @@ use Drupal\Core\Validation\Plugin\Validation\Constraint\RegexConstraint;
 use Symfony\Component\Validator\Constraints\All;
 use Symfony\Component\Validator\Constraints\AtLeastOneOf;
 use Symfony\Component\Validator\Constraints\Callback;
+use Symfony\Component\Validator\Constraints\Choice;
 use Symfony\Component\Validator\Constraints\Collection;
 use Symfony\Component\Validator\Constraints\IdenticalTo;
 use Symfony\Component\Validator\Constraints\NotBlank;
@@ -33,6 +34,41 @@ final class Recipe {
 
   const COMPOSER_PROJECT_TYPE = 'drupal-recipe';
 
+  /**
+   * @var array<string, mixed>
+   */
+  private ?array $inputValues = NULL;
+
+  /**
+   * @var array<string, array<string, mixed>>
+   */
+  public readonly array $inputDefinitions;
+
+  /**
+   * @param string $name
+   *   The human-readable name of the recipe.
+   * @param string $description
+   *   A short description of the recipe.
+   * @param string $type
+   *   The recipe type.
+   * @param \Drupal\Core\Recipe\RecipeConfigurator $recipes
+   *   The recipe configurator, which lists the recipes that will be applied
+   *   before this one.
+   * @param \Drupal\Core\Recipe\InstallConfigurator $install
+   *   The install configurator, which lists the extensions this recipe will
+   *   install.
+   * @param \Drupal\Core\Recipe\ConfigConfigurator $config
+   *   The config configurator, which lists the config that this recipe will
+   *   install, and what config actions will be taken.
+   * @param \Drupal\Core\DefaultContent\Finder $content
+   *   The default content finder.
+   * @param string $path
+   *   The recipe's path.
+   * @param array<string, array<string, mixed>> $input_definitions
+   *   The recipe's input definitions, keyed by name. This is an array of arrays
+   *   where each sub-array has a `from` element, and the other elements vary
+   *   depending on what `from` is.
+   */
   public function __construct(
     public readonly string $name,
     public readonly string $description,
@@ -42,7 +78,10 @@ final class Recipe {
     public readonly ConfigConfigurator $config,
     public readonly Finder $content,
     public readonly string $path,
+    array $input_definitions,
   ) {
+    assert(ksort($input_definitions));
+    $this->inputDefinitions = $input_definitions;
   }
 
   /**
@@ -61,7 +100,7 @@ final class Recipe {
     $install = new InstallConfigurator($recipe_data['install'], \Drupal::service('extension.list.module'), \Drupal::service('extension.list.theme'));
     $config = new ConfigConfigurator($recipe_data['config'], $path, \Drupal::service('config.storage'));
     $content = new Finder($path . '/content');
-    return new static($recipe_data['name'], $recipe_data['description'], $recipe_data['type'], $recipes, $install, $config, $content, $path);
+    return new static($recipe_data['name'], $recipe_data['description'], $recipe_data['type'], $recipes, $install, $config, $content, $path, $recipe_data['input'] ?? []);
   }
 
   /**
@@ -149,6 +188,45 @@ final class Recipe {
             new NotBlank(),
             new Callback(self::validateExtensionIsAvailable(...)),
           ]),
+        ]),
+      ]),
+      'input' => new Optional([
+        new Type('associative_array'),
+        new All([
+          new Collection(
+            fields: [
+              // Every input definition must have a description.
+              'description' => [
+                new Type('string'),
+                new NotBlank(),
+              ],
+              // There can be an optional set of constraints, which is an
+              // associative array of arrays, as in config schema.
+              'constraints' => new Optional([
+                new Type('associative_array'),
+              ]),
+              // If there is a `prompt` element, it has its own set of
+              // constraints.
+              'prompt' => new Optional([
+                new Collection([
+                  'method' => [
+                    new Choice(['ask', 'askHidden', 'confirm', 'choice']),
+                  ],
+                  'data_type' => new Optional([
+                    new Choice(['string', 'integer', 'float', 'boolean']),
+                  ]),
+                  'arguments' => new Optional([
+                    new Type('associative_array'),
+                  ]),
+                ]),
+              ]),
+              // Every input must define a default value.
+              'default' => new Required([
+                new Callback([
+                  DefaultValueResolver::class, 'validateDefinition',
+                ]),
+              ]),
+            ]),
         ]),
       ]),
       'config' => new Optional([
@@ -283,6 +361,32 @@ final class Recipe {
         '%config_provider' => $config_provider,
       ]);
     }
+  }
+
+  /**
+   * @param array<string, mixed> $values
+   *   The input values, keyed by name. The keys need to match the ones in the
+   *   recipe's input definitions, and all the defined inputs must have a
+   *   corresponding value in this array.
+   */
+  public function setInputValues(array $values): void {
+    if (is_array($this->inputValues)) {
+      throw new \LogicException('Input values cannot be changed once they have been set.');
+    }
+    assert(ksort($values));
+    assert(array_keys($values) === array_keys($this->inputDefinitions));
+    $this->inputValues = $values;
+  }
+
+  /**
+   * @return array<string, mixed>
+   */
+  public function getInputValues(): array {
+    return $this->inputValues ?? [];
+  }
+
+  public function machineName(): string {
+    return basename($this->path);
   }
 
 }
