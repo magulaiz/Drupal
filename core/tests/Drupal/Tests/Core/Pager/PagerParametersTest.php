@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\Core\Pager;
 
 use Drupal\Core\Pager\PagerParameters;
@@ -81,6 +83,9 @@ class PagerParametersTest extends UnitTestCase {
     $this->assertSame($parameter, $parameters->getPagerParameter());
   }
 
+  /**
+   * Data provider for testGetPagerParameter(), testGetPagerQuery(), and testFindPage().
+   */
   public static function providePagerQueries(): array {
     return [
       'defensive null page value' => [NULL, '', []],
@@ -92,7 +97,6 @@ class PagerParametersTest extends UnitTestCase {
       // Conventional but "zero" page values.
       'page 0 as a string' => ['0', '0', [0]],
       'page 0 as a integer' => [0, '0', [0]],
-
       // Conventional pager values.
       'page 1' => ['1', '1', [1]],
       'simple list of page values' => [
