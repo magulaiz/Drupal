@@ -32,9 +32,7 @@ final class RecipeRunner {
    *   The recipe to apply.
    */
   public static function processRecipe(Recipe $recipe): void {
-    foreach ($recipe->recipes->recipes as $dependency) {
-      static::processRecipe($dependency);
-    }
+    static::processRecipes($recipe->recipes);
     static::processInstall($recipe->install, $recipe->config->getConfigStorage());
     static::processConfiguration($recipe);
     static::processContent($recipe->content);
@@ -54,6 +52,18 @@ final class RecipeRunner {
     \Drupal::service(EventDispatcherInterface::class)->dispatch($event);
     $context['message'] = t('Applied %recipe recipe.', ['%recipe' => $recipe->name]);
     $context['results']['recipe'][] = $recipe->name;
+  }
+
+  /**
+   * Applies any recipes listed by the recipe.
+   *
+   * @param \Drupal\Core\Recipe\RecipeConfigurator $recipes
+   *   The list of recipes to apply.
+   */
+  protected static function processRecipes(RecipeConfigurator $recipes): void {
+    foreach ($recipes->recipes as $recipe) {
+      static::processRecipe($recipe);
+    }
   }
 
   /**
