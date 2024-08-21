@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\FunctionalTests\Entity;
 
 use Drupal\Component\Render\FormattableMarkup;
@@ -86,10 +88,10 @@ class RevisionRevertFormTest extends BrowserTestBase {
   /**
    * Data provider for testPageTitle.
    */
-  public function providerPageTitle(): array {
+  public static function providerPageTitle(): array {
     return [
       ['entity_test_rev', 'Are you sure you want to revert the revision?'],
-      ['entity_test_revlog', 'Are you sure you want to revert to the revision from Sun, 01/11/2009 - 16:00?'],
+      ['entity_test_revlog', 'Are you sure you want to revert to the revision from Sun, 11 Jan 2009 - 16:00?'],
     ];
   }
 
@@ -227,7 +229,7 @@ class RevisionRevertFormTest extends BrowserTestBase {
   /**
    * Data provider for testSubmitForm.
    */
-  public function providerSubmitForm(): array {
+  public static function providerSubmitForm(): array {
     $data = [];
 
     $data['not supporting revision log, no version history access'] = [
@@ -253,7 +255,7 @@ class RevisionRevertFormTest extends BrowserTestBase {
       'entity_test_revlog',
       'view, revert',
       'entity_test_revlog: reverted <em class="placeholder">view, revert</em> revision <em class="placeholder">1</em>.',
-      'Test entity - revisions log view, revert has been reverted to the revision from Sun, 01/11/2009 - 16:00.',
+      'Test entity - revisions log view, revert has been reverted to the revision from Sun, 11 Jan 2009 - 16:00.',
       '/entity_test_revlog/manage/1',
     ];
 
@@ -262,7 +264,7 @@ class RevisionRevertFormTest extends BrowserTestBase {
       'entity_test_revlog',
       'view, view all revisions, revert',
       'entity_test_revlog: reverted <em class="placeholder">view, view all revisions, revert</em> revision <em class="placeholder">1</em>.',
-      'Test entity - revisions log view, view all revisions, revert has been reverted to the revision from Sun, 01/11/2009 - 16:00.',
+      'Test entity - revisions log view, view all revisions, revert has been reverted to the revision from Sun, 11 Jan 2009 - 16:00.',
       '/entity_test_revlog/1/revisions',
     ];
 
@@ -319,7 +321,7 @@ class RevisionRevertFormTest extends BrowserTestBase {
     /** @var \Drupal\entity_test_revlog\Entity\EntityTestWithRevisionLog $latestRevision */
     $latestRevision = $storage->loadUnchanged($entity->id());
     $this->assertEquals($count + 1, $this->countRevisions($entity->getEntityTypeId()));
-    $this->assertEquals('Copy of the revision from <em class="placeholder">Sun, 01/11/2009 - 17:00</em>.', $latestRevision->getRevisionLogMessage());
+    $this->assertEquals('Copy of the revision from <em class="placeholder">Sun, 11 Jan 2009 - 17:00</em>.', $latestRevision->getRevisionLogMessage());
     $this->assertGreaterThan($revisionCreationTime, $latestRevision->getRevisionCreationTime());
     $this->assertEquals($user->id(), $latestRevision->getRevisionUserId());
     $this->assertTrue($latestRevision->isDefaultRevision());
