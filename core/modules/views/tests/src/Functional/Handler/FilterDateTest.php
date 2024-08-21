@@ -44,11 +44,15 @@ class FilterDateTest extends ViewTestBase {
   public $dateFormatter;
 
   /**
+   * The list of nodes.
+   *
    * @var array
    */
   protected array $nodes;
 
   /**
+   * The mapping nodes.
+   *
    * @var array
    */
   protected array $map;
@@ -166,15 +170,15 @@ class FilterDateTest extends ViewTestBase {
     $this->assertIdenticalResultset($view, $expected_result, $this->map);
     $view->destroy();
 
-     // Test between with empty min and max.
-     $view->initHandlers();
-     $view->filter['created']->operator = 'between';
-     $view->filter['created']->value['min'] = '';
-     $view->filter['created']->value['max'] = '';
-     $view->executeDisplay('default');
-     $expected_result = [];
-     $this->assertIdenticalResultset($view, $expected_result, $this->map);
-     $view->destroy();
+    // Test between with empty min and max.
+    $view->initHandlers();
+    $view->filter['created']->operator = 'between';
+    $view->filter['created']->value['min'] = '';
+    $view->filter['created']->value['max'] = '';
+    $view->executeDisplay('default');
+    $expected_result = [];
+    $this->assertIdenticalResultset($view, $expected_result, $this->map);
+    $view->destroy();
 
     // Test not between with min and max.
     $view->initHandlers();
