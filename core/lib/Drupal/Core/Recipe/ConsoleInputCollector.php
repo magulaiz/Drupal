@@ -162,15 +162,7 @@ final class ConsoleInputCollector extends InputCollectorBase implements Containe
    */
   private function prompt(string $method, array $arguments): mixed {
     foreach ($arguments as $name => $argument) {
-      try {
-        $parameter = new \ReflectionParameter([StyleInterface::class, $method], $name);
-      }
-      catch (\ReflectionException) {
-        // The parameter is not defined by the method, so just remove it from
-        // the arguments list.
-        unset($arguments[$name]);
-        continue;
-      }
+      $parameter = new \ReflectionParameter([StyleInterface::class, $method], $name);
 
       // If the parameter must be a callable, run the argument through the
       // callable resolver.

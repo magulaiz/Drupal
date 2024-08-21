@@ -15,6 +15,7 @@ use Symfony\Component\Validator\Constraints\AtLeastOneOf;
 use Symfony\Component\Validator\Constraints\Callback;
 use Symfony\Component\Validator\Constraints\Choice;
 use Symfony\Component\Validator\Constraints\Collection;
+use Symfony\Component\Validator\Constraints\Count;
 use Symfony\Component\Validator\Constraints\IdenticalTo;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\Constraints\NotIdenticalTo;
@@ -222,9 +223,23 @@ final class Recipe {
               ]),
               // Every input must define a default value.
               'default' => new Required([
-                new Callback([
-                  DefaultValueResolver::class, 'validateDefinition',
+                new Collection([
+                  'source' => new Required([
+                    new Choice(['value', 'config']),
+                  ]),
+                  'value' => new Optional(),
+                  'config' => new Optional([
+                    new Sequentially([
+                      new Type('list'),
+                      new Count(2),
+                      new All([
+                        new Type('string'),
+                        new NotBlank(),
+                      ]),
+                    ]),
+                  ]),
                 ]),
+                new Callback(self::validateDefaultValueDefinition(...)),
               ]),
             ]),
         ]),
@@ -280,6 +295,24 @@ final class Recipe {
       'content' => [],
     ];
     return $recipe_data;
+  }
+
+  /**
+   * Validates the definition of an input's default value.
+   *
+   * @param array $definition
+   *   The array to validate (part of a single input definition).
+   * @param \Symfony\Component\Validator\Context\ExecutionContextInterface $context
+   *   The validator execution context.
+   *
+   * @see ::parse()
+   */
+  public static function validateDefaultValueDefinition(array $definition, ExecutionContextInterface $context): void {
+    $source = $definition['source'];
+
+    if (!array_key_exists($source, $definition)) {
+      $context->addViolation("The '$source' key is required.");
+    }
   }
 
   /**

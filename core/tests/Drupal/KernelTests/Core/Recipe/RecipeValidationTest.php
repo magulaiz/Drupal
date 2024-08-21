@@ -299,7 +299,9 @@ YAML,
 name: Bad input definitions
 input:
   - description: A valid enough input, but in an indexed array.
-    default: Here be dragons
+    default:
+      source: value
+      value: Here be dragons
 YAML,
       [
         '[input]' => ['This value should be of type associative_array.'],
@@ -311,7 +313,9 @@ name: Bad input definitions
 input:
   foo:
     description: 3.141
-    default: Here be dragons
+    default:
+      source: value
+      value: Here be dragons
 YAML,
       [
         '[input][foo][description]' => ['This value should be of type string.'],
@@ -323,7 +327,9 @@ name: Bad input definitions
 input:
   foo:
     description: ''
-    default: Here be dragons
+    default:
+      source: value
+      value: Here be dragons
 YAML,
       [
         '[input][foo][description]' => ['This value should not be blank.'],
@@ -337,7 +343,9 @@ input:
     description: 'Constraints need to be associative'
     constraints:
       - Type: string
-    default: Here be dragons
+    default:
+      source: value
+      value: Here be dragons
 YAML,
       [
         '[input][foo][constraints]' => ['This value should be of type associative_array.'],
@@ -350,7 +358,9 @@ input:
   foo:
     description: 'Prompt info must be an array'
     prompt: ask
-    default: Here be dragons
+    default:
+      source: value
+      value: Here be dragons
 YAML,
       [
         '[input][foo][prompt]' => ['This value should be of type array|(Traversable&ArrayAccess).'],
@@ -364,7 +374,9 @@ input:
     description: 'Bad prompt type'
     prompt:
       method: whoops
-    default: Here be dragons
+    default:
+      source: value
+      value: Here be dragons
 YAML,
       [
         '[input][foo][prompt][method]' => ['The value you selected is not a valid choice.'],
@@ -379,7 +391,9 @@ input:
     prompt:
       method: ask
       data_type: power_tool
-    default: Here be dragons
+    default:
+      source: value
+      value: Here be dragons
 YAML,
       [
         '[input][foo][prompt][data_type]' => ['The value you selected is not a valid choice.'],
@@ -394,7 +408,9 @@ input:
     prompt:
       method: ask
       arguments: [1, 2]
-    default: Here be dragons
+    default:
+      source: value
+      value: Here be dragons
 YAML,
       [
         '[input][foo][prompt][arguments]' => ['This value should be of type associative_array.'],
@@ -425,7 +441,7 @@ input:
       source: config
 YAML,
       [
-        '[input][foo][default]' => ['Default values from config must have a "config" array with exactly two elements: the name of a config object, and a property path.'],
+        '[input][foo][default]' => ["The 'config' key is required."],
       ],
     ];
     yield 'default value from config is not an array' => [
@@ -441,7 +457,7 @@ input:
       config: 'system.site:mail'
 YAML,
       [
-        '[input][foo][default]' => ['Default values from config must have a "config" array with exactly two elements: the name of a config object, and a property path.'],
+        '[input][foo][default][config]' => ['This value should be of type list.'],
       ],
     ];
     yield 'default value from config has too few values' => [
@@ -457,7 +473,7 @@ input:
       config: ['system.site:mail']
 YAML,
       [
-        '[input][foo][default]' => ['Default values from config must have a "config" array with exactly two elements: the name of a config object, and a property path.'],
+        '[input][foo][default][config]' => ['This collection should contain exactly 2 elements.'],
       ],
     ];
     yield 'default value from config is an associative array' => [
@@ -475,7 +491,7 @@ input:
         key: mail
 YAML,
       [
-        '[input][foo][default]' => ['Default values from config must have a "config" array with exactly two elements: the name of a config object, and a property path.'],
+        '[input][foo][default][config]' => ['This value should be of type list.'],
       ],
     ];
     yield 'default value from config has non-string values' => [
@@ -491,7 +507,7 @@ input:
       config: ['system.site', 39]
 YAML,
       [
-        '[input][foo][default]' => ['Default values from config must have a "config" array with exactly two elements: the name of a config object, and a property path.'],
+        '[input][foo][default][config][1]' => ['This value should be of type string.'],
       ],
     ];
     yield 'default value from config has empty strings' => [
@@ -507,7 +523,7 @@ input:
       config: ['', 'mail']
 YAML,
       [
-        '[input][foo][default]' => ['Default values from config must have a "config" array with exactly two elements: the name of a config object, and a property path.'],
+        '[input][foo][default][config][0]' => ['This value should not be blank.'],
       ],
     ];
     yield 'valid default value from config' => [
