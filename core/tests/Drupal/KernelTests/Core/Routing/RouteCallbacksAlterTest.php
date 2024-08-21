@@ -40,7 +40,7 @@ class RouteCallbacksAlterTest extends KernelTestBase {
       /** @var \Symfony\Component\Routing\Route $route */
       $route_primary = \Drupal::service('router.route_provider')->getRouteByName('route_callback.primary.test');
     }
-    catch (RouteNotFoundException $exception) {
+    catch (RouteNotFoundException) {
       $route_primary = NULL;
     }
     $this->assertNull($route_primary);
@@ -56,7 +56,7 @@ class RouteCallbacksAlterTest extends KernelTestBase {
       /** @var \Symfony\Component\Routing\Route $route */
       $route_primary = \Drupal::service('router.route_provider')->getRouteByName('route_callback.primary.test');
     }
-    catch (RouteNotFoundException $exception) {
+    catch (RouteNotFoundException) {
       $route_primary = NULL;
     }
     $this->assertNull($route_primary);
@@ -65,7 +65,7 @@ class RouteCallbacksAlterTest extends KernelTestBase {
       /** @var \Symfony\Component\Routing\Route $route */
       $route_primary = \Drupal::service('router.route_provider')->getRouteByName('route_callback.secondary.test');
     }
-    catch (RouteNotFoundException $exception) {
+    catch (RouteNotFoundException) {
       $route_secondary = NULL;
     }
     $this->assertNull($route_secondary);
