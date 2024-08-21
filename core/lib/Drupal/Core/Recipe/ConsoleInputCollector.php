@@ -8,6 +8,7 @@ use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
 use Drupal\Core\TypedData\TypedDataManagerInterface;
 use Drupal\Core\Utility\CallableResolver;
 use Symfony\Component\Console\Command\Command;
+use Symfony\Component\Console\Exception\InvalidArgumentException;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Style\StyleInterface;
@@ -60,7 +61,7 @@ final class ConsoleInputCollector extends InputCollectorBase implements Containe
    *   The command being configured.
    */
   public static function configureCommand(Command $command): void {
-    $command->addOption(static::INPUT_OPTION, 'i', InputOption::VALUE_IS_ARRAY | InputOption::VALUE_REQUIRED, 'An input value to pass to the recipe or one of its dependencies, in the form `--input=RECIPE_NAME.INPUT_NAME=VALUE`.');
+    $command->addOption(static::INPUT_OPTION, 'i', InputOption::VALUE_IS_ARRAY | InputOption::VALUE_REQUIRED, 'An input value to pass to the recipe or one of its dependencies, in the form `--input=RECIPE_NAME.INPUT_NAME=VALUE`.', []);
   }
 
   /**
@@ -72,15 +73,19 @@ final class ConsoleInputCollector extends InputCollectorBase implements Containe
    *   recipe).
    */
   private function getInputFromOptions(): array {
-    if ($this->input?->hasOption(static::INPUT_OPTION)) {
-      $options = [];
-
-      foreach ($this->input->getOption(static::INPUT_OPTION) as $value) {
-        [$key, $value] = explode('=', $value, 2);
+    $options = [];
+    try {
+      foreach ($this->input->getOption(static::INPUT_OPTION) as $option) {
+        [$key, $value] = explode('=', $option, 2);
         $options[$key] = $value;
       }
     }
-    return [];
+    catch (InvalidArgumentException) {
+      // The option is undefined; there's nothing we need to do.
+    }
+    finally {
+      return $options;
+    }
   }
 
   /**

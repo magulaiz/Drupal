@@ -145,7 +145,7 @@ YAML
     );
     $this->expectException(\ArgumentCountError::class);
     $this->expectExceptionMessage('Argument #1 ($question) not passed');
-    ConsoleInputCollector::create($this->container)->collectAll($recipe);
+    ConsoleInputCollector::create($this->container, io: $this->createMock(StyleInterface::class))->collectAll($recipe);
   }
 
   public function testLiterals(): void {
