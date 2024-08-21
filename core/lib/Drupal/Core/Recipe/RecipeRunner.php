@@ -109,9 +109,9 @@ final class RecipeRunner {
 
     if (!empty($config->config['actions'])) {
       $values = $recipe->getInputValues();
-      // Sandwich the replacement strings with `$`, which is meaningless in YAML
-      // and thus avoids parsing snafus.
-      $keys = array_map(fn ($k) => "\$$k\$", array_keys($values));
+      // Wrap the replacement strings with `${` and `}`, which is a fairly
+      // common style of placeholder.
+      $keys = array_map(fn ($k) => sprintf('${%s}', $k), array_keys($values));
       $replace = array_combine($keys, $values);
 
       // Process the actions.

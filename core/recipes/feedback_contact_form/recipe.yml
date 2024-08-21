@@ -27,7 +27,7 @@ config:
       createIfNotExists:
         label: 'Website feedback'
         recipients:
-          - $recipient$
+          - ${recipient}
         message: 'Your message has been sent.'
         redirect: ''
     core.menu.static_menu_link_overrides:

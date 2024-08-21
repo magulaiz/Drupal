@@ -91,7 +91,7 @@ class InputTest extends KernelTestBase {
   }
 
   /**
-   * @covers \Drupal\Core\Recipe\ConsoleInputCollector::prompt
+   * @covers \Drupal\Core\Recipe\ConsoleInputCollector::collectValue
    */
   public function testPromptArgumentsAreForwarded(): void {
     $validator = new class () {
@@ -128,7 +128,7 @@ YAML
   }
 
   /**
-   * @covers \Drupal\Core\Recipe\ConsoleInputCollector::prompt
+   * @covers \Drupal\Core\Recipe\ConsoleInputCollector::collectValue
    */
   public function testMissingArgumentsThrowsException(): void {
     $recipe = $this->createRecipe(<<<YAML
@@ -146,6 +146,49 @@ YAML
     $this->expectException(\ArgumentCountError::class);
     $this->expectExceptionMessage('Argument #1 ($question) not passed');
     ConsoleInputCollector::create($this->container)->collectAll($recipe);
+  }
+
+  public function testLiterals(): void {
+    $recipe = $this->createRecipe(<<<YAML
+name: Literals as input
+install:
+  - config_test
+input:
+  some_int:
+    description: This is an integer and should be stored as an integer.
+    default:
+      source: value
+      value: 1234
+  some_bool:
+    description: This is a boolean and should be stored as a boolean.
+    default:
+      source: value
+      value: false
+  some_float:
+    description: Pi is a float, should be stored as a float.
+    default:
+      source: value
+      value: 3.141
+config:
+  actions:
+    config_test.types:
+      simpleConfigUpdate:
+        int: \${{ some_int }}
+        boolean: \${{ some_bool }}
+        float: \${{ some_float }}
+    system.site:
+      simpleConfigUpdate:
+        slogan: int is \${{ some_int }}, bool is \${{ some_bool }} and float is \${{ some_float }}
+YAML
+    );
+    DefaultValueResolver::create($this->container)->collectAll($recipe);
+    RecipeRunner::processRecipe($recipe);
+
+    $config = $this->config('config_test.types');
+    $this->assertSame(1234, $config->get('int'));
+    $this->assertFalse($config->get('boolean'));
+    $this->assertSame(3.141, $config->get('float'));
+    $this->assertSame('int is 1234, bool is  and float is 3.141', $this->config('system.site')->get('slogan'));
   }
 
 }
