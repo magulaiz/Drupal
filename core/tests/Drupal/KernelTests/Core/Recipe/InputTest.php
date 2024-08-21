@@ -148,6 +148,25 @@ YAML
     ConsoleInputCollector::create($this->container, io: $this->createMock(StyleInterface::class))->collectAll($recipe);
   }
 
+  /**
+   * @covers \Drupal\Core\Recipe\DefaultValueResolver::collectValue
+   */
+  public function testDefaultValueFromNonExistentConfig(): void {
+    $recipe = $this->createRecipe(<<<YAML
+name: 'Default value from non-existent config'
+input:
+  capital:
+    description: This will be erroneous.
+    default:
+      source: config
+      config: ['foo.baz', 'bar']
+YAML
+    );
+    $this->expectException(\RuntimeException::class);
+    $this->expectExceptionMessage("The 'foo.baz' config object does not exist.");
+    DefaultValueResolver::create($this->container)->collectAll($recipe);
+  }
+
   public function testLiterals(): void {
     $recipe = $this->createRecipe(<<<YAML
 name: Literals as input

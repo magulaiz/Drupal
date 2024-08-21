@@ -40,7 +40,11 @@ final class DefaultValueResolver extends InputCollectorBase implements Container
   protected function collectValue(string $name, array $definition): mixed {
     if ($definition['default']['source'] === 'config') {
       [$name, $key] = $definition['default']['config'];
-      return $this->configFactory->get($name)->get($key);
+      $config = $this->configFactory->get($name);
+      if ($config->isNew()) {
+        throw new \RuntimeException("The '$name' config object does not exist.");
+      }
+      return $config->get($key);
     }
     return $definition['default']['value'];
   }
