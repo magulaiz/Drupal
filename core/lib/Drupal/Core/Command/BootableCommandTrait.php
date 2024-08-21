@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Drupal\Core\Command;
 
 use Drupal\Core\DrupalKernel;
+use Drupal\Core\DrupalKernelInterface;
 use Drupal\Core\Site\Settings;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -29,7 +30,7 @@ trait BootableCommandTrait {
    * @throws \Exception
    *   Exception thrown if kernel does not boot.
    */
-  protected function boot() {
+  protected function boot(): DrupalKernelInterface {
     $kernel = new DrupalKernel('prod', $this->classLoader);
     $kernel::bootEnvironment();
     $kernel->setSitePath($this->getSitePath());
@@ -48,7 +49,7 @@ trait BootableCommandTrait {
    * @return string
    *   The site path to use.
    */
-  protected function getSitePath() {
+  protected function getSitePath(): string {
     return getenv('DRUPAL_DEV_SITE_PATH') ?: 'sites/default';
   }
 
