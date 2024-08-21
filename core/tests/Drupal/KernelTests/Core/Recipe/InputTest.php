@@ -154,6 +154,11 @@ name: Literals as input
 install:
   - config_test
 input:
+  capital:
+    description: Your favorite state capital.
+    default:
+      source: value
+      value: Boston
   some_int:
     description: This is an integer and should be stored as an integer.
     default:
@@ -173,12 +178,13 @@ config:
   actions:
     config_test.types:
       simpleConfigUpdate:
-        int: \${{ some_int }}
-        boolean: \${{ some_bool }}
-        float: \${{ some_float }}
+        int: \${some_int}
+        boolean: \${some_bool}
+        float: \${some_float}
     system.site:
       simpleConfigUpdate:
-        slogan: int is \${{ some_int }}, bool is \${{ some_bool }} and float is \${{ some_float }}
+        name: '\${capital} rocks!'
+        slogan: int is \${some_int}, bool is \${some_bool} and float is \${some_float}
 YAML
     );
     DefaultValueResolver::create($this->container)->collectAll($recipe);
@@ -188,7 +194,10 @@ YAML
     $this->assertSame(1234, $config->get('int'));
     $this->assertFalse($config->get('boolean'));
     $this->assertSame(3.141, $config->get('float'));
-    $this->assertSame('int is 1234, bool is  and float is 3.141', $this->config('system.site')->get('slogan'));
+
+    $config = $this->config('system.site');
+    $this->assertSame("Boston rocks!", $config->get('name'));
+    $this->assertSame('int is 1234, bool is  and float is 3.141', $config->get('slogan'));
   }
 
 }
