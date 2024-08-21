@@ -74,7 +74,7 @@ final class ConsoleInputCollector extends InputCollectorBase implements Containe
 
       foreach ($input_options as $value) {
         if (str_starts_with($value, "$name=")) {
-          return $cast(explode('=', $value, 2)[1]);
+          return explode('=', $value, 2)[1];
         }
       }
     }

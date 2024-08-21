@@ -209,7 +209,7 @@ final class Recipe {
               // The value can optionally be cast to a particular data type.
               // @see \Drupal\Core\Recipe\InputCollectorBase::collectAll()
               'data_type' => new Optional([
-                new Choice(['string', 'integer', 'float', 'boolean']),
+                new Choice(['string', 'integer', 'float', 'boolean', 'any']),
               ]),
               // If there is a `prompt` element, it has its own set of
               // constraints.

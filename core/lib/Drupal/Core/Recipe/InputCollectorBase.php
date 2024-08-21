@@ -44,15 +44,15 @@ abstract class InputCollectorBase {
     foreach ($recipe->inputDefinitions as $key => $definition) {
       $value = $this->collectValue($recipe->machineName() . '.' . $key, $definition);
 
-      $data_type = $definition['data_type'] ?? 'any';
-      $value = match ($data_type) {
+      // If the input definition specifies a particular data type, coerce the
+      // collected value to that type.
+      $value = match ($definition['data_type'] ?? 'any') {
         'string' => strval($value),
         'integer' => intval($value),
         'float' => floatval($value),
         'boolean' => boolval($value),
-        default => $value,
+        'any' => $value,
       };
-
       /** @var array{constraints?: array<mixed>} $definition */
       if (isset($definition['constraints'])) {
         $this->validate($definition['constraints'], $value);
