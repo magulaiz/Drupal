@@ -89,9 +89,7 @@ final class ConsoleInputCollector extends InputCollectorBase implements Containe
     catch (InvalidArgumentException) {
       // The option is undefined; there's nothing we need to do.
     }
-    finally {
-      return $options;
-    }
+    return $options;
   }
 
   /**
