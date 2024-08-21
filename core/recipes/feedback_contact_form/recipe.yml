@@ -26,10 +26,10 @@ config:
     contact.form.feedback:
       createIfNotExists:
         label: 'Website feedback'
-        recipients:
-          - ${recipient}
         message: 'Your message has been sent.'
         redirect: ''
+      setRecipients:
+        - ${recipient}
     core.menu.static_menu_link_overrides:
       simpleConfigUpdate:
         definitions.contact__site_page:
