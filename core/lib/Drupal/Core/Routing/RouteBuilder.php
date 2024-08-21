@@ -168,12 +168,18 @@ class RouteBuilder implements RouteBuilderInterface, DestructableInterface {
 
                   // Check and add/change weight for this route_callback.
                   $route_alter_key = "$altering_module_name:$route_callback";
-                  $route_definitions_alter[$route_alter_key] = $route_callback_alter;
-                  $route_definitions_alter[$route_alter_key]['weight'] =
-                    (isset($route_definitions_alter[$route_alter_key]['weight'])
-                      && $weight > $route_definitions_alter[$route_alter_key]['weight'])
-                      ? $weight
-                      : 0;
+
+                  if (isset($route_definitions_alter[$route_alter_key]['weight'])) {
+                    if ($weight > $route_definitions_alter[$route_alter_key]['weight']) {
+                      $route_definitions_alter[$route_alter_key] = $route_callback_alter;
+                      $route_definitions_alter[$route_alter_key]['weight'] = $weight;
+                    }
+                  }
+                  // No weight - initialization.
+                  else {
+                    $route_definitions_alter[$route_alter_key] = $route_callback_alter;
+                    $route_definitions_alter[$route_alter_key]['weight'] = $weight;
+                  }
                 }
               }
             }
