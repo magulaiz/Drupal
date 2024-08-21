@@ -1,11 +1,15 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\path\Kernel;
 
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\language\Entity\ConfigurableLanguage;
 use Drupal\node\Entity\Node;
 use Drupal\node\Entity\NodeType;
+
+// cspell:ignore furchtbar
 
 /**
  * Tests loading and storing data using PathItem.
@@ -53,7 +57,7 @@ class PathItemTest extends KernelTestBase {
   /**
    * Tests creating, loading, updating and deleting aliases through PathItem.
    */
-  public function testPathItem() {
+  public function testPathItem(): void {
     /** @var \Drupal\path_alias\AliasRepositoryInterface $alias_repository */
     $alias_repository = \Drupal::service('path_alias.repository');
 

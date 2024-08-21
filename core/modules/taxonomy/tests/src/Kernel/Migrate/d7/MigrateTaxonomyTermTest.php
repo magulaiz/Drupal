@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\taxonomy\Kernel\Migrate\d7;
 
 use Drupal\taxonomy\Entity\Term;
@@ -81,7 +83,7 @@ class MigrateTaxonomyTermTest extends MigrateDrupal7TestBase {
    *
    * @internal
    */
-  protected function assertEntity(int $id, string $expected_language, string $expected_label, string $expected_vid, ?string $expected_description = '', ?string $expected_format = NULL, int $expected_weight = 0, array $expected_parents = [], int $expected_field_integer_value = NULL, int $expected_term_reference_tid = NULL, int|NULL $expected_container_flag = NULL): void {
+  protected function assertEntity(int $id, string $expected_language, string $expected_label, string $expected_vid, ?string $expected_description = '', ?string $expected_format = NULL, int $expected_weight = 0, array $expected_parents = [], ?int $expected_field_integer_value = NULL, ?int $expected_term_reference_tid = NULL, int|NULL $expected_container_flag = NULL): void {
     /** @var \Drupal\taxonomy\TermInterface $entity */
     $entity = Term::load($id);
     $this->assertInstanceOf(TermInterface::class, $entity);
@@ -106,7 +108,7 @@ class MigrateTaxonomyTermTest extends MigrateDrupal7TestBase {
   /**
    * Tests the Drupal 7 taxonomy term to Drupal 8 migration.
    */
-  public function testTaxonomyTerms() {
+  public function testTaxonomyTerms(): void {
     $this->assertEntity(1, 'en', 'General discussion', 'sujet_de_discussion', '', NULL, 2);
 
     // Tests that terms that used the Drupal 7 Title module and that have their
@@ -129,23 +131,23 @@ class MigrateTaxonomyTermTest extends MigrateDrupal7TestBase {
     $this->assertEntity(24, 'fr', 'FR - Crewman', 'vocabfixed', NULL, NULL, 0, [], NULL, NULL);
 
     // Localized.
-    $this->assertEntity(19, 'en', 'Jupiter Station', 'vocablocalized', 'Holographic research.', 'filtered_html', '0', []);
-    $this->assertEntity(20, 'en', 'DS9', 'vocablocalized', 'Terok Nor', 'filtered_html', '0', []);
-    $this->assertEntity(25, 'en', 'Emissary', 'vocablocalized2', 'Pilot episode', 'filtered_html', '0', []);
+    $this->assertEntity(19, 'en', 'Jupiter Station', 'vocablocalized', 'Holographic research.', 'filtered_html', 0, []);
+    $this->assertEntity(20, 'en', 'DS9', 'vocablocalized', 'Terok Nor', 'filtered_html', 0, []);
+    $this->assertEntity(25, 'en', 'Emissary', 'vocablocalized2', 'Pilot episode', 'filtered_html', 0, []);
 
     /** @var \Drupal\taxonomy\TermInterface $entity */
     $entity = Term::load(20);
     $this->assertSame('Bajor', $entity->field_sector->value);
 
     // Translate.
-    $this->assertEntity(21, 'en', 'High council', 'vocabtranslate', NULL, NULL, '0', []);
+    $this->assertEntity(21, 'en', 'High council', 'vocabtranslate', NULL, NULL, 0, []);
     $entity = Term::load(21);
     $this->assertSame("K'mpec", $entity->field_chancellor->value);
-    $this->assertEntity(22, 'fr', 'fr - High council', 'vocabtranslate', NULL, NULL, '0', []);
-    $this->assertEntity(23, 'is', 'is - High council', 'vocabtranslate', NULL, NULL, '0', []);
+    $this->assertEntity(22, 'fr', 'fr - High council', 'vocabtranslate', NULL, NULL, 0, []);
+    $this->assertEntity(23, 'is', 'is - High council', 'vocabtranslate', NULL, NULL, 0, []);
 
     // Fixed.
-    $this->assertEntity(24, 'fr', 'FR - Crewman', 'vocabfixed', NULL, NULL, '0', []);
+    $this->assertEntity(24, 'fr', 'FR - Crewman', 'vocabfixed', NULL, NULL, 0, []);
 
     // Tests the migration of taxonomy term entity translations.
     $manager = $this->container->get('content_translation.manager');
@@ -205,7 +207,7 @@ class MigrateTaxonomyTermTest extends MigrateDrupal7TestBase {
    * @return array
    *   List of parent term IDs.
    */
-  protected function getParentIDs($tid) {
+  protected function getParentIDs($tid): array {
     return array_keys(\Drupal::entityTypeManager()->getStorage('taxonomy_term')->loadParents($tid));
   }
 

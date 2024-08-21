@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\FunctionalTests\Entity;
 
 use Drupal\Component\Render\FormattableMarkup;
@@ -12,6 +14,7 @@ use Drupal\Tests\BrowserTestBase;
  * Tests deleting a revision with revision delete form.
  *
  * @group Entity
+ * @group #slow
  * @coversDefaultClass \Drupal\Core\Entity\Form\RevisionDeleteForm
  */
 class RevisionDeleteFormTest extends BrowserTestBase {
@@ -84,10 +87,10 @@ class RevisionDeleteFormTest extends BrowserTestBase {
   /**
    * Data provider for testPageTitle.
    */
-  public function providerPageTitle(): array {
+  public static function providerPageTitle(): array {
     return [
       ['entity_test_rev', 'Are you sure you want to delete the revision?'],
-      ['entity_test_revlog', 'Are you sure you want to delete the revision from Sun, 01/11/2009 - 16:00?'],
+      ['entity_test_revlog', 'Are you sure you want to delete the revision from Sun, 11 Jan 2009 - 16:00?'],
     ];
   }
 
@@ -275,7 +278,7 @@ class RevisionDeleteFormTest extends BrowserTestBase {
   /**
    * Data provider for testSubmitForm.
    */
-  public function providerSubmitForm(): array {
+  public static function providerSubmitForm(): array {
     $data = [];
 
     $data['not supporting revision log, one revision remaining after delete, no view access'] = [
@@ -304,7 +307,7 @@ class RevisionDeleteFormTest extends BrowserTestBase {
       'view all revisions, delete revision',
       2,
       'entity_test_revlog: deleted <em class="placeholder">view all revisions, delete revision</em> revision <em class="placeholder">1</em>.',
-      'Revision from Sun, 01/11/2009 - 16:00 of Test entity - revisions log view all revisions, delete revision has been deleted.',
+      'Revision from Sun, 11 Jan 2009 - 16:00 of Test entity - revisions log view all revisions, delete revision has been deleted.',
       '/entity_test_revlog/1/revisions',
     ];
 
@@ -314,7 +317,7 @@ class RevisionDeleteFormTest extends BrowserTestBase {
       'view, view all revisions, delete revision',
       2,
       'entity_test_revlog: deleted <em class="placeholder">view, view all revisions, delete revision</em> revision <em class="placeholder">1</em>.',
-      'Revision from Sun, 01/11/2009 - 16:00 of Test entity - revisions log view, view all revisions, delete revision has been deleted.',
+      'Revision from Sun, 11 Jan 2009 - 16:00 of Test entity - revisions log view, view all revisions, delete revision has been deleted.',
       '/entity_test_revlog/1/revisions',
     ];
 
