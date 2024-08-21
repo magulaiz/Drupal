@@ -69,10 +69,7 @@ final class ConsoleInputCollector extends InputCollectorBase implements Containe
   protected function collectValue(string $name, array $definition): mixed {
     // If the value was passed as a `--input` option, return that.
     if ($this->input->hasOption('input')) {
-      /** @var string[] $input_options */
-      $input_options = $this->input->getOption('input');
-
-      foreach ($input_options as $value) {
+      foreach ($this->input->getOption('input') as $value) {
         if (str_starts_with($value, "$name=")) {
           return explode('=', $value, 2)[1];
         }
@@ -87,40 +84,23 @@ final class ConsoleInputCollector extends InputCollectorBase implements Containe
       return $default_value;
     }
 
+    $method = $definition['prompt']['method'];
     $arguments = $definition['prompt']['arguments'] ?? [];
+
+    foreach ($arguments as $name => $argument) {
+      $type = (new \ReflectionParameter([StyleInterface::class, $method], $name))
+        ->getType();
+      // If the parameter must be a callable, run the argument through the
+      // callable resolver.
+      if ($argument && $type instanceof \ReflectionNamedType && $type->getName() === 'callable') {
+        $arguments[$name] = $this->callableResolver->getCallableFromDefinition($argument);
+      }
+    }
     // Most of the input-collecting methods of StyleInterface have a `default`
     // parameter.
     $arguments += [
       'default' => $default_value,
     ];
-    return $this->prompt($definition['prompt']['method'], $arguments);
-  }
-
-  /**
-   * Collects an input value by interacting with the user.
-   *
-   * @param string $method
-   *   The name of a method of \Symfony\Component\Console\Style\StyleInterface
-   *   that returns a value.
-   * @param array<mixed> $arguments
-   *   An array of arguments, keyed by parameter name, to pass to the prompt
-   *   method.
-   *
-   * @return mixed
-   *   The collected value.
-   */
-  private function prompt(string $method, array $arguments): mixed {
-    foreach ($arguments as $name => $argument) {
-      $parameter = new \ReflectionParameter([StyleInterface::class, $method], $name);
-
-      // If the parameter must be a callable, run the argument through the
-      // callable resolver.
-      $type = $parameter->getType();
-      if ($argument && $type instanceof \ReflectionNamedType && $type->getName() === 'callable') {
-        /** @var array<mixed>|(callable(): mixed)|string $argument */
-        $arguments[$name] = $this->callableResolver->getCallableFromDefinition($argument);
-      }
-    }
     return $this->io->$method(...$arguments);
   }
 
