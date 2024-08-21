@@ -53,7 +53,7 @@ final class RecipeInfoCommand extends Command {
     $io->text($recipe->description);
 
     $io->section('Inputs');
-    $descriptions = $this->getDescriptions($recipe);
+    $descriptions = $this->getInputDescriptions($recipe);
     if ($descriptions) {
       // Passing NULL as the callable to array_map() makes it act like a Python
       // zip() operation.
@@ -78,10 +78,10 @@ final class RecipeInfoCommand extends Command {
    *   dependencies, keyed by the input's fully qualified name (i.e., prefixed
    *   by the name of the recipe that defines it).
    */
-  private function getDescriptions(Recipe $recipe): array {
+  private function getInputDescriptions(Recipe $recipe): array {
     $descriptions = [];
     foreach ($recipe->recipes->recipes as $dependency) {
-      $descriptions = array_merge($descriptions, $this->getDescriptions($dependency));
+      $descriptions = array_merge($descriptions, $this->getInputDescriptions($dependency));
     }
     foreach ($recipe->inputDefinitions as $key => $definition) {
       $name = $recipe->machineName() . '.' . $key;

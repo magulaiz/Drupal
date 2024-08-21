@@ -206,6 +206,11 @@ final class Recipe {
               'constraints' => new Optional([
                 new Type('associative_array'),
               ]),
+              // The value can optionally be cast to a particular data type.
+              // @see \Drupal\Core\Recipe\InputCollectorBase::collectAll()
+              'data_type' => new Optional([
+                new Choice(['string', 'integer', 'float', 'boolean']),
+              ]),
               // If there is a `prompt` element, it has its own set of
               // constraints.
               'prompt' => new Optional([
@@ -213,9 +218,6 @@ final class Recipe {
                   'method' => [
                     new Choice(['ask', 'askHidden', 'confirm', 'choice']),
                   ],
-                  'data_type' => new Optional([
-                    new Choice(['string', 'integer', 'float', 'boolean']),
-                  ]),
                   'arguments' => new Optional([
                     new Type('associative_array'),
                   ]),

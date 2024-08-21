@@ -351,6 +351,23 @@ YAML,
         '[input][foo][constraints]' => ['This value should be of type associative_array.'],
       ],
     ];
+    yield 'input data type is invalid' => [
+      <<<YAML
+name: Bad input definitions
+input:
+  foo:
+    description: 'Bad data type'
+    data_type: power_tool
+    prompt:
+      method: ask
+    default:
+      source: value
+      value: Here be dragons
+YAML,
+      [
+        '[input][foo][data_type]' => ['The value you selected is not a valid choice.'],
+      ],
+    ];
     yield 'prompt definition is not an array' => [
       <<<YAML
 name: Bad input definitions
@@ -380,23 +397,6 @@ input:
 YAML,
       [
         '[input][foo][prompt][method]' => ['The value you selected is not a valid choice.'],
-      ],
-    ];
-    yield 'prompt data type is invalid' => [
-      <<<YAML
-name: Bad input definitions
-input:
-  foo:
-    description: 'Bad data type'
-    prompt:
-      method: ask
-      data_type: power_tool
-    default:
-      source: value
-      value: Here be dragons
-YAML,
-      [
-        '[input][foo][prompt][data_type]' => ['The value you selected is not a valid choice.'],
       ],
     ];
     yield 'prompt arguments are an indexed array' => [

@@ -67,19 +67,6 @@ final class ConsoleInputCollector extends InputCollectorBase implements Containe
    * {@inheritdoc}
    */
   protected function collectValue(string $name, array $definition): mixed {
-    /** @var array{prompt?: array{method: string, arguments?: array<mixed>, data_type?: string}} $definition */
-    $cast = function ($value) use ($definition): mixed {
-      $data_type = $definition['prompt']['data_type'] ?? NULL;
-
-      return match ($data_type) {
-        'string' => strval($value),
-        'integer' => intval($value),
-        'float' => floatval($value),
-        'boolean' => boolval($value),
-        default => $value,
-      };
-    };
-
     // If the value was passed as a `--input` option, return that.
     if ($this->input->hasOption('input')) {
       /** @var string[] $input_options */
@@ -92,6 +79,7 @@ final class ConsoleInputCollector extends InputCollectorBase implements Containe
       }
     }
 
+    /** @var array{prompt?: array{method: string, arguments?: array<mixed>}} $definition */
     $default_value = $this->defaultValueResolver->collectValue($name, $definition);
     // If there's no information on how to prompt the user, there's nothing else
     // for us to do; return the default value.
@@ -105,7 +93,7 @@ final class ConsoleInputCollector extends InputCollectorBase implements Containe
     $arguments += [
       'default' => $default_value,
     ];
-    return $cast($this->prompt($definition['prompt']['method'], $arguments));
+    return $this->prompt($definition['prompt']['method'], $arguments);
   }
 
   /**
