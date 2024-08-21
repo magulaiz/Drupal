@@ -4,12 +4,10 @@ declare(strict_types=1);
 
 namespace Drupal\Core\Recipe;
 
-use Drupal\Component\Assertion\Inspector;
 use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
 use Drupal\Core\TypedData\TypedDataManagerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
-use Symfony\Component\Validator\Context\ExecutionContextInterface;
 
 /**
  * Collects default input values for a recipe and all of its dependencies.
