@@ -5,22 +5,19 @@ declare(strict_types=1);
 namespace Drupal\Core\Recipe;
 
 use Drupal\Component\Render\PlainTextOutput;
+use Drupal\Core\Command\BootableCommandTrait;
 use Drupal\Core\Config\Checkpoint\Checkpoint;
 use Drupal\Core\Config\ConfigImporter;
 use Drupal\Core\Config\ConfigImporterException;
 use Drupal\Core\Config\StorageComparer;
-use Drupal\Core\DrupalKernel;
-use Drupal\Core\Site\Settings;
 use Psr\Log\LoggerAwareInterface;
 use Psr\Log\LogLevel;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
-use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Logger\ConsoleLogger;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
-use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Applies recipe.
@@ -30,12 +27,7 @@ use Symfony\Component\HttpFoundation\Request;
  */
 final class RecipeCommand extends Command {
 
-  /**
-   * The class loader.
-   *
-   * @var object
-   */
-  protected $classLoader;
+  use BootableCommandTrait;
 
   /**
    * Constructs a new RecipeCommand command.
@@ -54,8 +46,7 @@ final class RecipeCommand extends Command {
   protected function configure(): void {
     $this
       ->setDescription('Applies a recipe to a site.')
-      ->addArgument('path', InputArgument::REQUIRED, 'The path to the recipe\'s folder to apply')
-      ->addOption('list-inputs', mode: InputOption::VALUE_NONE, description: "List the input values accepted by the recipe and its dependencies. Pass values with the `" . ConsoleInputCollector::INPUT_OPTION . "` option.");
+      ->addArgument('path', InputArgument::REQUIRED, 'The path to the recipe\'s folder to apply');
 
     ConsoleInputCollector::configureCommand($this);
   }
@@ -80,13 +71,7 @@ final class RecipeCommand extends Command {
 
     // Collect input for this recipe and all the recipes it directly and
     // indirectly applies.
-    $collector = ConsoleInputCollector::create($container, $input, $io);
-
-    if ($input->getOption('list-inputs')) {
-      $collector->listAll($recipe);
-      return 0;
-    }
-    $collector->collectAll($recipe);
+    ConsoleInputCollector::create($container, $input, $io)->collectAll($recipe);
 
     if ($checkpoint_storage instanceof LoggerAwareInterface) {
       $logger = new ConsoleLogger($output, [
@@ -195,38 +180,6 @@ final class RecipeCommand extends Command {
       $container->get('extension.list.theme'),
     );
     $config_importer->import();
-  }
-
-  /**
-   * Boots up a Drupal environment.
-   *
-   * @return \Drupal\Core\DrupalKernelInterface
-   *   The Drupal kernel.
-   *
-   * @throws \Exception
-   *   Exception thrown if kernel does not boot.
-   */
-  protected function boot() {
-    $kernel = new DrupalKernel('prod', $this->classLoader);
-    $kernel::bootEnvironment();
-    $kernel->setSitePath($this->getSitePath());
-    Settings::initialize($kernel->getAppRoot(), $kernel->getSitePath(), $this->classLoader);
-    $kernel->boot();
-    $kernel->preHandle(Request::createFromGlobals());
-    return $kernel;
-  }
-
-  /**
-   * Gets the site path.
-   *
-   * Defaults to 'sites/default'. For testing purposes this can be overridden
-   * using the DRUPAL_DEV_SITE_PATH environment variable.
-   *
-   * @return string
-   *   The site path to use.
-   */
-  protected function getSitePath() {
-    return getenv('DRUPAL_DEV_SITE_PATH') ?: 'sites/default';
   }
 
 }

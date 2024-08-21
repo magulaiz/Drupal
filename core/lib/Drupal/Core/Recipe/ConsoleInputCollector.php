@@ -64,45 +64,6 @@ final class ConsoleInputCollector extends InputCollectorBase implements Containe
   }
 
   /**
-   * Returns the description for all inputs of a recipe and its dependencies.
-   *
-   * @param \Drupal\Core\Recipe\Recipe $recipe
-   *   The recipe to examine.
-   *
-   * @return string[]
-   *   The descriptions of every input defined by the recipe and its
-   *   dependencies, keyed by the input's fully qualified name (i.e., prefixed
-   *   by the name of the recipe that defines it).
-   */
-  private function getDescriptions(Recipe $recipe): array {
-    $descriptions = [];
-    foreach ($recipe->recipes->recipes as $dependency) {
-      $descriptions = array_merge($descriptions, $this->getDescriptions($dependency));
-    }
-    foreach ($recipe->inputDefinitions as $key => $definition) {
-      $name = $recipe->machineName() . '.' . $key;
-      $descriptions[$name] = $definition['description'];
-    }
-    return $descriptions;
-  }
-
-  /**
-   * Lists every input defined by a recipe and its dependencies.
-   *
-   * @param \Drupal\Core\Recipe\Recipe $recipe
-   *   The recipe being examined.
-   */
-  public function listAll(Recipe $recipe): void {
-    $descriptions = $this->getDescriptions($recipe);
-
-    // Passing NULL as the callable to array_map() makes it act like a Python
-    // zip() operation.
-    // @see https://docs.python.org/3.8/library/functions.html#zip
-    $rows = array_map(NULL, array_keys($descriptions), $descriptions);
-    $this->io->table(['Name', 'Description'], $rows);
-  }
-
-  /**
    * {@inheritdoc}
    */
   protected function collectValue(string $name, array $definition): mixed {
