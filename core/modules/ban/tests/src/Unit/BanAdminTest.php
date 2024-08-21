@@ -8,6 +8,7 @@ use Drupal\ban\BanIpManagerInterface;
 use Drupal\ban\Form\BanAdmin;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Messenger\MessengerInterface;
+use Drupal\Core\TempStore\PrivateTempStoreFactory;
 use Drupal\Tests\UnitTestCase;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -33,7 +34,7 @@ class BanAdminTest extends UnitTestCase {
       ->with($ip)
       ->willReturn($isBanned);
 
-    $formObject = new BanAdmin($manager);
+    $formObject = new BanAdmin($manager, $this->getTempStoreMock());
     $formObject->setStringTranslation($this->getStringTranslationStub());
     $formObject->setRequestStack($this->getRequestStackMock());
 
@@ -42,6 +43,11 @@ class BanAdminTest extends UnitTestCase {
       ->method('getValue')
       ->with('ip')
       ->willReturn($ip);
+    $formState->expects($this->any())
+      ->method('getTriggeringElement')
+      ->willReturn([
+        '#name' => 'submit_add',
+      ]);
 
     if ($error === NULL) {
       $formState->expects($this->never())
@@ -71,7 +77,7 @@ class BanAdminTest extends UnitTestCase {
     $messenger = $this->createMock(MessengerInterface::class);
     $messenger->expects($this->once())->method('addStatus');
 
-    $formObject = new BanAdmin($manager);
+    $formObject = new BanAdmin($manager, $this->getTempStoreMock());
     $formObject->setStringTranslation($this->getStringTranslationStub());
     $formObject->setMessenger($messenger);
 
@@ -80,6 +86,11 @@ class BanAdminTest extends UnitTestCase {
       ->method('getValue')
       ->with('ip')
       ->willReturn($ip);
+    $formState->expects($this->any())
+      ->method('getTriggeringElement')
+      ->willReturn([
+        '#name' => 'submit_add',
+      ]);
 
     $form = [];
     $formObject->submitForm($form, $formState);
@@ -92,7 +103,7 @@ class BanAdminTest extends UnitTestCase {
    */
   public function testRouteParameter(): void {
     $ip = '1.2.3.4';
-    $formObject = new BanAdmin($this->getIpManagerMock());
+    $formObject = new BanAdmin($this->getIpManagerMock(), $this->getTempStoreMock());
     $formObject->setStringTranslation($this->getStringTranslationStub());
     $formState = $this->createMock(FormStateInterface::class);
     $form = $formObject->buildForm([], $formState, $ip);
@@ -139,6 +150,17 @@ class BanAdminTest extends UnitTestCase {
       ->method('findAll')
       ->willReturn([]);
     return $manager;
+  }
+
+  /**
+   * Get the mocked IP manager service.
+   */
+  protected function getTempStoreMock(): PrivateTempStoreFactory {
+    $tempStore = $this->createMock(PrivateTempStoreFactory::class);
+    $tempStore->expects($this->any())
+      ->method('get')
+      ->willReturn(NULL);
+    return $tempStore;
   }
 
 }
