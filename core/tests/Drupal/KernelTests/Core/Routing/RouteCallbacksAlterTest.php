@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Drupal\KernelTests\Core\Routing;
 
 use Drupal\KernelTests\KernelTestBase;
-use Symfony\Component\Routing\Exception\RouteNotFoundException;
 
 /**
  * Tests the route_callbacks_alter.
@@ -36,13 +35,8 @@ class RouteCallbacksAlterTest extends KernelTestBase {
     // 2. Enable second route_callbacks - should replace first.
     $this->enableModules(['router_route_callback_secondary_test']);
     drupal_flush_all_caches();
-    try {
-      /** @var \Symfony\Component\Routing\Route $route */
-      $route_primary = \Drupal::service('router.route_provider')->getRouteByName('route_callback.primary.test');
-    }
-    catch (RouteNotFoundException) {
-      $route_primary = NULL;
-    }
+    /** @var \Symfony\Component\Routing\Route $route */
+    $route_primary = \Drupal::service('router.route_provider')->preLoadRoutes(['route_callback.primary.test']);
     $this->assertNull($route_primary);
 
     $route_secondary = \Drupal::service('router.route_provider')->getRouteByName('route_callback.secondary.test');
@@ -52,22 +46,11 @@ class RouteCallbacksAlterTest extends KernelTestBase {
     // - should replace second according to weight.
     $this->enableModules(['router_route_callback_third_test']);
     drupal_flush_all_caches();
-    try {
-      /** @var \Symfony\Component\Routing\Route $route */
-      $route_primary = \Drupal::service('router.route_provider')->getRouteByName('route_callback.primary.test');
-    }
-    catch (RouteNotFoundException) {
-      $route_primary = NULL;
-    }
+    /** @var \Symfony\Component\Routing\Route $route */
+    $route_primary = \Drupal::service('router.route_provider')->preLoadRoutes(['route_callback.primary.test']);
     $this->assertNull($route_primary);
 
-    try {
-      /** @var \Symfony\Component\Routing\Route $route */
-      $route_primary = \Drupal::service('router.route_provider')->getRouteByName('route_callback.secondary.test');
-    }
-    catch (RouteNotFoundException) {
-      $route_secondary = NULL;
-    }
+    $route_secondary = \Drupal::service('router.route_provider')->preLoadRoutes(['route_callback.secondary.test']);
     $this->assertNull($route_secondary);
 
     $route_third = \Drupal::service('router.route_provider')->getRouteByName('route_callback.third.test');
