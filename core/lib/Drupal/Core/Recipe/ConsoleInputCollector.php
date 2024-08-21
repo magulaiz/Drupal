@@ -61,7 +61,13 @@ final class ConsoleInputCollector extends InputCollectorBase implements Containe
    *   The command being configured.
    */
   public static function configureCommand(Command $command): void {
-    $command->addOption(static::INPUT_OPTION, 'i', InputOption::VALUE_IS_ARRAY | InputOption::VALUE_REQUIRED, 'An input value to pass to the recipe or one of its dependencies, in the form `--input=RECIPE_NAME.INPUT_NAME=VALUE`.', []);
+    $command->addOption(
+      static::INPUT_OPTION,
+      'i',
+      InputOption::VALUE_IS_ARRAY | InputOption::VALUE_REQUIRED,
+      sprintf('An input value to pass to the recipe or one of its dependencies, in the form `--%s=RECIPE_NAME.INPUT_NAME=VALUE`.', static::INPUT_OPTION),
+      [],
+    );
   }
 
   /**
