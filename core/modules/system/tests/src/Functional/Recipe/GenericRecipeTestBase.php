@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\system\Functional\Recipe;
 
+use Drupal\contact\Entity\ContactForm;
 use Drupal\FunctionalTests\Core\Recipe\RecipeTestTrait;
 use Drupal\Tests\BrowserTestBase;
 
@@ -48,7 +49,12 @@ abstract class GenericRecipeTestBase extends BrowserTestBase {
   public function testRecipeCanBeApplied(): void {
     $this->setUpCurrentUser(admin: TRUE);
     $this->doApply();
-    // Apply the recipe again to prove that it is idempotent.
+    // Apply the recipe again to prove that it is idempotent. Because this
+    // recipe takes dynamic input, we have to reset the active version of the
+    // form to what the recipe ships with, at least until recipes can do more
+    // nuanced comparisons between active config and shipped config.
+    ContactForm::load('feedback')?->setRecipients(['admin@example.com'])
+      ->save();
     $this->doApply();
   }
 
