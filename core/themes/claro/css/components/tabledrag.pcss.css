@@ -276,16 +276,6 @@ body.drag-y {
   }
 }
 
-.indentation::before {
-  display: block;
-  visibility: hidden;
-  width: 100%;
-  height: 100%;
-  content: "";
-  background: url(../../images/src/indentation.svg) no-repeat center center;
-  background-size: cover;
-}
-
 [dir="rtl"] .indentation {
   right: calc(var(--space-xs) * -0.5);
   left: auto;
