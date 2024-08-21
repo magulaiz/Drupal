@@ -64,16 +64,34 @@ final class ConsoleInputCollector extends InputCollectorBase implements Containe
   }
 
   /**
+   * Returns the `--input` options passed to the command.
+   *
+   * @return string[]
+   *   The values from the `--input` options passed to the command, keyed by
+   *   fully qualified name (i.e., prefixed with the name of their defining
+   *   recipe).
+   */
+  private function getInputFromOptions(): array {
+    if ($this->input?->hasOption(static::INPUT_OPTION)) {
+      $options = [];
+
+      foreach ($this->input->getOption(static::INPUT_OPTION) as $value) {
+        [$key, $value] = explode('=', $value, 2);
+        $options[$key] = $value;
+      }
+    }
+    return [];
+  }
+
+  /**
    * {@inheritdoc}
    */
   protected function collectValue(string $name, array $definition): mixed {
+    $option_values = $this->getInputFromOptions();
+
     // If the value was passed as a `--input` option, return that.
-    if ($this->input?->hasOption(static::INPUT_OPTION)) {
-      foreach ($this->input->getOption(static::INPUT_OPTION) as $value) {
-        if (str_starts_with($value, "$name=")) {
-          return explode('=', $value, 2)[1];
-        }
-      }
+    if (array_key_exists($name, $option_values)) {
+      return $option_values[$name];
     }
 
     /** @var array{prompt?: array{method: string, arguments?: array<mixed>}} $definition */
