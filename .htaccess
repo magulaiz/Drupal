@@ -18,11 +18,11 @@ Options -Indexes
 # Set the default handler.
 DirectoryIndex index.php index.html index.htm
 
-# Add correct encoding for SVGZ:
+# Add correct encoding for SVGZ.
 AddType image/svg+xml svg svgz
 AddEncoding gzip svgz
 
-# Add correct encoding for webp:
+# Add correct encoding for webp.
 AddType image/webp .webp
 
 # Most of the following PHP settings cannot be changed at runtime. See
