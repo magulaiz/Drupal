@@ -133,6 +133,8 @@ class FinishResponseSubscriber implements EventSubscriberInterface {
       // X-Drupal-Cache-Contexts and X-Drupal-Cache-Tags header respectively.
       $response_cacheability = $response->getCacheableMetadata();
 
+      // Build the potentially longer header values incrementally to avoid
+      // situations where the header value length exceeds its maximum.
       $add_header_with_long_value = static function (string $header_name, array $values) use ($response): void {
         sort($values);
         $values_as_string = implode(' ', $values);
