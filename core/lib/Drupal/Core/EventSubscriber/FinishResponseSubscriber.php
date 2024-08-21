@@ -134,7 +134,9 @@ class FinishResponseSubscriber implements EventSubscriberInterface {
       $response_cacheability = $response->getCacheableMetadata();
 
       // Build the potentially longer header values incrementally to avoid
-      // situations where the header value length exceeds its maximum.
+      // situations where the header value length exceeds its maximum. If the
+      // maximum length is exceeded, create additional headers with suffixes
+      // to store the additional data.
       $add_header_with_long_value = static function (string $header_name, array $values) use ($response): void {
         sort($values);
         $values_as_string = implode(' ', $values);
