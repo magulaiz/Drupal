@@ -16,7 +16,7 @@ class PagerParametersTest extends UnitTestCase {
   /**
    * @covers ::getQueryParameters
    */
-  public function testGetQueryParameters() {
+  public function testGetQueryParameters(): void {
     $request_stack = new RequestStack();
     $request_stack->push(new Request());
     $parameters = new PagerParameters($request_stack);
@@ -34,7 +34,7 @@ class PagerParametersTest extends UnitTestCase {
    * @covers ::findPage
    * @dataProvider providePagerQueries
    */
-  public function testFindPage($raw_query, $parameter, $expected_query) {
+  public function testFindPage($raw_query, $parameter, $expected_query): void {
     $request_stack = new RequestStack();
     $request_stack->push(new Request());
     $parameters = new PagerParameters($request_stack);
@@ -50,7 +50,7 @@ class PagerParametersTest extends UnitTestCase {
    * @covers ::getPagerQuery
    * @dataProvider providePagerQueries
    */
-  public function testGetPagerQuery($raw_query, $parameter, $expected_query) {
+  public function testGetPagerQuery($raw_query, $parameter, $expected_query): void {
     $request_stack = new RequestStack();
     $request_stack->push(new Request());
     $parameters = new PagerParameters($request_stack);
@@ -63,7 +63,7 @@ class PagerParametersTest extends UnitTestCase {
    *
    * @covers ::getPagerParameter
    */
-  public function testGetPagerParameterNoRequest() {
+  public function testGetPagerParameterNoRequest(): void {
     $request_stack = new RequestStack();
     $parameters = new PagerParameters($request_stack);
     $this->assertSame('', $parameters->getPagerParameter());
@@ -81,7 +81,7 @@ class PagerParametersTest extends UnitTestCase {
     $this->assertSame($parameter, $parameters->getPagerParameter());
   }
 
-  public static function providePagerQueries() {
+  public static function providePagerQueries(): array {
     return [
       'defensive null page value' => [NULL, '', []],
       // Array values aren't supported, so they default to empty.
