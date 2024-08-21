@@ -3,7 +3,7 @@
 namespace Drupal\file\EventSubscriber;
 
 use Drupal\Core\File\Event\FileUploadSanitizeNameEvent;
-use Drupal\file\FileSanitizeName;
+use Drupal\file\FilenameSanitizer;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 /**
@@ -16,11 +16,11 @@ class FileEventSubscriber implements EventSubscriberInterface {
   /**
    * Constructs a new file event listener.
    *
-   * @param \Drupal\file\FileSanitizeName $fileSanitizeName
+   * @param \Drupal\file\FilenameSanitizer $fileSanitizeName
    *   The sanitize filename service.
    */
   public function __construct(
-    protected FileSanitizeName $fileSanitizeName,
+    protected FilenameSanitizer $fileSanitizeName,
   ) {}
 
   /**

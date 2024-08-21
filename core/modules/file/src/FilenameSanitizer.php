@@ -8,12 +8,12 @@ use Drupal\Core\Language\LanguageInterface;
 use Drupal\Core\Language\LanguageManagerInterface;
 
 /**
- * Class SanitizeName.
+ * Class FilenameSanitizer.
  */
-class FileSanitizeName {
+class FilenameSanitizer {
 
   /**
-   * SanitizeName constructor.
+   * FilenameSanitizer constructor.
    *
    * @param \Drupal\Core\Config\ConfigFactoryInterface $configFactory
    *   The config factory.

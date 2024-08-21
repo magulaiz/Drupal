@@ -33,6 +33,6 @@ services:
     arguments: ['@file_system']
   Drupal\file\Upload\InputStreamFileWriterInterface: '@file.input_stream_file_writer'
   file.sanitize_name:
-    class: Drupal\file\FileSanitizeName
+    class: Drupal\file\FilenameSanitizer
     arguments: ['@config.factory', '@transliteration', '@language_manager']
-  Drupal\file\FileSanitizeName: '@file.sanitize_name'
+  Drupal\file\FilenameSanitizer: '@file.sanitize_name'

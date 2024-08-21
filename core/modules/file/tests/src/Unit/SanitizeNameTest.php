@@ -10,7 +10,7 @@ use Drupal\Core\Language\Language;
 use Drupal\Core\Language\LanguageInterface;
 use Drupal\Core\Language\LanguageManagerInterface;
 use Drupal\file\EventSubscriber\FileEventSubscriber;
-use Drupal\file\FileSanitizeName;
+use Drupal\file\FilenameSanitizer;
 use Drupal\Tests\UnitTestCase;
 
 // cSpell:ignore TÉXT äöüåøhello aouaohello aeoeueaohello Pácê
@@ -41,7 +41,7 @@ class SanitizeNameTest extends UnitTestCase {
    *
    * @dataProvider provideFilenames
    *
-   * @covers \Drupal\file\FileSanitizeName::sanitizeFilename
+   * @covers \Drupal\file\FilenameSanitizer::sanitizeFilename
    * @covers \Drupal\file\EventSubscriber\FileEventSubscriber::sanitizeFilename
    * @covers \Drupal\Core\File\Event\FileUploadSanitizeNameEvent::__construct
    */
@@ -65,7 +65,7 @@ class SanitizeNameTest extends UnitTestCase {
     $language_manager->getCurrentLanguage(LanguageInterface::TYPE_CONTENT)->willReturn($language);
 
     $event = new FileUploadSanitizeNameEvent($original, $language_id);
-    $file_sanitize = new FileSanitizeName($config_factory, new PhpTransliteration(), $language_manager->reveal());
+    $file_sanitize = new FilenameSanitizer($config_factory, new PhpTransliteration(), $language_manager->reveal());
     $subscriber = new FileEventSubscriber($file_sanitize);
     $subscriber->sanitizeFilename($event);
 
