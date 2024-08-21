@@ -166,6 +166,16 @@ class FilterDateTest extends ViewTestBase {
     $this->assertIdenticalResultset($view, $expected_result, $this->map);
     $view->destroy();
 
+     // Test between with empty min and max.
+     $view->initHandlers();
+     $view->filter['created']->operator = 'between';
+     $view->filter['created']->value['min'] = '';
+     $view->filter['created']->value['max'] = '';
+     $view->executeDisplay('default');
+     $expected_result = [];
+     $this->assertIdenticalResultset($view, $expected_result, $this->map);
+     $view->destroy();
+
     // Test not between with min and max.
     $view->initHandlers();
     $view->filter['created']->operator = 'not between';
