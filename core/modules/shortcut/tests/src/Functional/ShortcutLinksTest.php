@@ -112,10 +112,10 @@ class ShortcutLinksTest extends ShortcutTestBase {
       $this->assertContains('internal:' . $test_path, $paths, 'Shortcut created: ' . $test_path);
 
       if (in_array($test_path, $test_cases_non_access)) {
-        $this->assertSession()->linkNotExists($title, new FormattableMarkup('Shortcut link %url not accessible on the page.', ['%url' => $test_path]));
+        $this->assertSession()->linkNotExists($title, "Shortcut link $test_path not accessible on the page.");
       }
       else {
-        $this->assertSession()->linkExists($title, 0, new FormattableMarkup('Shortcut link %url found on the page.', ['%url' => $test_path]));
+        $this->assertSession()->linkExists($title, 0, "Shortcut link $test_path found on the page.");
       }
     }
     $saved_set = ShortcutSet::load($set->id());

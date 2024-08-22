@@ -176,7 +176,7 @@ class WebAssert extends MinkWebAssert {
     $container = $container ?: $this->session->getPage();
     $node = $container->findButton($button);
 
-    $this->assert(NULL === $node, sprintf('A button "%s" appears on this page, but it should not.', $button));
+    Assert::assertNull($node, sprintf('A button "%s" appears on this page, but it should not.', $button));
   }
 
   /**
@@ -269,7 +269,7 @@ class WebAssert extends MinkWebAssert {
 
     $option_field = $select_field->find('named_exact', ['option', $option]);
 
-    $this->assert($option_field === NULL, sprintf('An option "%s" exists in select "%s", but it should not.', $option, $select));
+    Assert::assertNull($option_field, sprintf('An option "%s" exists in select "%s", but it should not.', $option, $select));
   }
 
   /**
@@ -287,7 +287,7 @@ class WebAssert extends MinkWebAssert {
       throw new ExpectationException('No title element found on the page', $this->session->getDriver());
     }
     $actual_title = $title_element->getText();
-    $this->assert($expected_title === $actual_title, 'Title found');
+    Assert::assertSame($expected_title, $actual_title, 'Title found');
   }
 
   /**
@@ -303,14 +303,11 @@ class WebAssert extends MinkWebAssert {
    *   (optional) A message to display with the assertion. Do not translate
    *   messages: use strtr() to embed variables in the message text, not
    *   t(). If left blank, a default message will be displayed.
-   *
-   * @throws \Behat\Mink\Exception\ExpectationException
-   *   Thrown when element doesn't exist, or the link label is a different one.
    */
   public function linkExists($label, $index = 0, $message = '') {
     $message = ($message ? $message : strtr('Link with label %label not found.', ['%label' => $label]));
     $links = $this->session->getPage()->findAll('named', ['link', $label]);
-    $this->assert(!empty($links[$index]), $message);
+    Assert::assertNotEmpty($links[$index], $message);
   }
 
   /**
@@ -326,14 +323,11 @@ class WebAssert extends MinkWebAssert {
    *   (optional) A message to display with the assertion. Do not translate
    *   messages: use strtr() to embed variables in the message text, not
    *   t(). If left blank, a default message will be displayed.
-   *
-   * @throws \Behat\Mink\Exception\ExpectationException
-   *   Thrown when element doesn't exist, or the link label is a different one.
    */
   public function linkExistsExact($label, $index = 0, $message = '') {
     $message = ($message ? $message : strtr('Link with label %label not found.', ['%label' => $label]));
     $links = $this->session->getPage()->findAll('named_exact', ['link', $label]);
-    $this->assert(!empty($links[$index]), $message);
+    Assert::assertNotEmpty($links[$index], $message);
   }
 
   /**
@@ -347,14 +341,11 @@ class WebAssert extends MinkWebAssert {
    *   (optional) A message to display with the assertion. Do not translate
    *   messages: use strtr() to embed variables in the message text, not
    *   t(). If left blank, a default message will be displayed.
-   *
-   * @throws \Behat\Mink\Exception\ExpectationException
-   *   Thrown when element doesn't exist, or the link label is a different one.
    */
   public function linkNotExists($label, $message = '') {
     $message = ($message ? $message : strtr('Link with label %label found.', ['%label' => $label]));
     $links = $this->session->getPage()->findAll('named', ['link', $label]);
-    $this->assert(empty($links), $message);
+    Assert::assertEmpty($links, $message);
   }
 
   /**
@@ -368,14 +359,11 @@ class WebAssert extends MinkWebAssert {
    *   (optional) A message to display with the assertion. Do not translate
    *   messages: use strtr() to embed variables in the message text, not
    *   t(). If left blank, a default message will be displayed.
-   *
-   * @throws \Behat\Mink\Exception\ExpectationException
-   *   Thrown when element doesn't exist, or the link label is a different one.
    */
   public function linkNotExistsExact($label, $message = '') {
     $message = ($message ? $message : strtr('Link with label %label found.', ['%label' => $label]));
     $links = $this->session->getPage()->findAll('named_exact', ['link', $label]);
-    $this->assert(empty($links), $message);
+    Assert::assertEmpty($links, $message);
   }
 
   /**
@@ -390,15 +378,12 @@ class WebAssert extends MinkWebAssert {
    *   messages: use \Drupal\Component\Render\FormattableMarkup to embed
    *   variables in the message text, not t(). If left blank, a default message
    *   will be displayed.
-   *
-   * @throws \Behat\Mink\Exception\ExpectationException
-   *   Thrown when element doesn't exist, or the link label is a different one.
    */
   public function linkByHrefExists($href, $index = 0, $message = '') {
     $xpath = $this->buildXPathQuery('//a[contains(@href, :href)]', [':href' => $href]);
     $message = ($message ? $message : strtr('No link containing href %href found.', ['%href' => $href]));
     $links = $this->session->getPage()->findAll('xpath', $xpath);
-    $this->assert(!empty($links[$index]), $message);
+    Assert::assertNotEmpty($links[$index], $message);
   }
 
   /**
@@ -413,15 +398,12 @@ class WebAssert extends MinkWebAssert {
    *   messages: use \Drupal\Component\Render\FormattableMarkup to embed
    *   variables in the message text, not t(). If left blank, a default message
    *   will be displayed.
-   *
-   * @throws \Behat\Mink\Exception\ExpectationException
-   *   Thrown when element doesn't exist, or the link label is a different one.
    */
   public function linkByHrefExistsExact(string $href, int $index = 0, string $message = ''): void {
     $xpath = $this->buildXPathQuery('//a[@href=:href]', [':href' => $href]);
     $message = ($message ?: strtr('No link with href %href found.', ['%href' => $href]));
     $links = $this->session->getPage()->findAll('xpath', $xpath);
-    $this->assert(!empty($links[$index]), $message);
+    Assert::assertNotEmpty($links[$index], $message);
   }
 
   /**
@@ -434,15 +416,12 @@ class WebAssert extends MinkWebAssert {
    *   messages: use \Drupal\Component\Render\FormattableMarkup to embed
    *   variables in the message text, not t(). If left blank, a default message
    *   will be displayed.
-   *
-   * @throws \Behat\Mink\Exception\ExpectationException
-   *   Thrown when element doesn't exist, or the link label is a different one.
    */
   public function linkByHrefNotExists($href, $message = '') {
     $xpath = $this->buildXPathQuery('//a[contains(@href, :href)]', [':href' => $href]);
     $message = ($message ? $message : strtr('Link containing href %href found.', ['%href' => $href]));
     $links = $this->session->getPage()->findAll('xpath', $xpath);
-    $this->assert(empty($links), $message);
+    Assert::assertEmpty($links, $message);
   }
 
   /**
@@ -455,15 +434,12 @@ class WebAssert extends MinkWebAssert {
    *   messages: use \Drupal\Component\Render\FormattableMarkup to embed
    *   variables in the message text, not t(). If left blank, a default message
    *   will be displayed.
-   *
-   * @throws \Behat\Mink\Exception\ExpectationException
-   *   Thrown when element doesn't exist, or the link label is a different one.
    */
   public function linkByHrefNotExistsExact(string $href, string $message = ''): void {
     $xpath = $this->buildXPathQuery('//a[@href=:href]', [':href' => $href]);
     $message = ($message ?: strtr('Link with href %href found.', ['%href' => $href]));
     $links = $this->session->getPage()->findAll('xpath', $xpath);
-    $this->assert(empty($links), $message);
+    Assert::assertEmpty($links, $message);
   }
 
   /**
@@ -552,6 +528,7 @@ class WebAssert extends MinkWebAssert {
    */
   public function responseContains($text) {
     parent::responseContains((string) $text);
+    Assert::assertTrue(TRUE);
   }
 
   /**
@@ -564,6 +541,7 @@ class WebAssert extends MinkWebAssert {
    */
   public function responseNotContains($text) {
     parent::responseNotContains((string) $text);
+    Assert::assertTrue(TRUE);
   }
 
   /**
@@ -673,13 +651,11 @@ class WebAssert extends MinkWebAssert {
    *   One of id|name|value for the hidden field.
    * @param \Behat\Mink\Element\TraversableElement $container
    *   (optional) The document to check against. Defaults to the current page.
-   *
-   * @throws \Behat\Mink\Exception\ExpectationException
    */
   public function hiddenFieldNotExists($field, ?TraversableElement $container = NULL) {
     $container = $container ?: $this->session->getPage();
     $node = $container->find('hidden_field_selector', ['hidden_field', $field]);
-    $this->assert($node === NULL, "A hidden field '$field' exists on this page, but it should not.");
+    Assert::assertNull($node, "A hidden field '$field' exists on this page, but it should not.");
   }
 
   /**
@@ -700,7 +676,7 @@ class WebAssert extends MinkWebAssert {
     $actual = $node->getValue();
     $regex = '/^' . preg_quote($value, '/') . '$/ui';
     $message = "The hidden field '$field' value is '$actual', but '$value' expected.";
-    $this->assert((bool) preg_match($regex, $actual), $message);
+    Assert::assertTrue((bool) preg_match($regex, $actual), $message);
   }
 
   /**
@@ -721,7 +697,7 @@ class WebAssert extends MinkWebAssert {
     $actual = $node->getValue();
     $regex = '/^' . preg_quote($value, '/') . '$/ui';
     $message = "The hidden field '$field' value is '$actual', but it should not be.";
-    $this->assert(!preg_match($regex, $actual), $message);
+    Assert::assertFalse((bool) preg_match($regex, $actual), $message);
   }
 
   /**
@@ -765,14 +741,12 @@ class WebAssert extends MinkWebAssert {
    *   A url string, or object.
    *
    * @return void
-   *
-   * @throws \Behat\Mink\Exception\ExpectationException
    */
   public function addressEquals(string|Url $page) {
     $expected = $this->cleanUrl($page, TRUE);
     $actual = $this->cleanUrl($this->session->getCurrentUrl(), str_contains($expected, '?'));
 
-    $this->assert($actual === $expected, sprintf('Current page is "%s", but "%s" expected.', $actual, $expected));
+    Assert::assertSame($expected, $actual, sprintf('Current page is "%s", but "%s" expected.', $actual, $expected));
   }
 
   /**
@@ -780,14 +754,12 @@ class WebAssert extends MinkWebAssert {
    *
    * @param string|\Drupal\Core\Url $page
    *   A url string, or object.
-   *
-   * @throws \Behat\Mink\Exception\ExpectationException
    */
   public function addressNotEquals(string|Url $page) {
     $expected = $this->cleanUrl($page, TRUE);
     $actual = $this->cleanUrl($this->session->getCurrentUrl(), str_contains($expected, '?'));
 
-    $this->assert($actual !== $expected, sprintf('Current page is "%s", but should not be.', $actual));
+    Assert::assertNotSame($expected, $actual, sprintf('Current page is "%s", but should not be.', $actual));
   }
 
   /**
