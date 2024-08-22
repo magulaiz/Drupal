@@ -491,7 +491,7 @@ abstract class SqlBase extends SourcePluginBase implements ContainerFactoryPlugi
         ->execute()
         ->fetchField();
     }
-    catch (DatabaseExceptionWrapper $e) {
+    catch (DatabaseExceptionWrapper) {
       return FALSE;
     }
   }
