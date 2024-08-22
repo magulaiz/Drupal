@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\layout_builder\FunctionalJavascript;
 
+use Behat\Mink\Exception\ElementNotFoundException;
 use Drupal\layout_builder\Entity\LayoutBuilderEntityViewDisplay;
 use Drupal\node\Entity\Node;
 
@@ -114,6 +115,7 @@ class InlineBlockTest extends InlineBlockTestBase {
    * Tests adding a new entity block and then not saving the layout.
    *
    * @dataProvider layoutNoSaveProvider
+   * @throws ElementNotFoundException
    */
   public function testNoLayoutSave($operation, $no_save_button_text, $confirm_button_text): void {
     $this->drupalLogin($this->drupalCreateUser([
@@ -134,9 +136,18 @@ class InlineBlockTest extends InlineBlockTestBase {
 
     $this->drupalGet('node/1/layout');
     $this->addInlineBlockToLayout('Block title', 'The block body');
+    //In our case it should be AJAX call.
     $page->pressButton($no_save_button_text);
+    $assert_session->assertWaitOnAjaxRequest();
     if ($confirm_button_text) {
-      $page->pressButton($confirm_button_text);
+      // wait loading modal dialog and find buttons panel.
+      $button_pane = $assert_session->waitForElementVisible('css', 'div.ui-dialog-buttonpane');
+
+      // Press the button.
+      $button_pane->pressButton($confirm_button_text);
+
+      $assert_session->assertWaitOnAjaxRequest();
+
     }
     $this->drupalGet('node/1');
     $this->assertEmpty($this->blockStorage->loadMultiple(), 'No entity blocks were created when layout changes are discarded.');
@@ -159,8 +170,15 @@ class InlineBlockTest extends InlineBlockTestBase {
     $this->configureInlineBlock('The block body', 'The block updated body');
 
     $page->pressButton($no_save_button_text);
+    $assert_session->assertWaitOnAjaxRequest();
     if ($confirm_button_text) {
-      $page->pressButton($confirm_button_text);
+      // wait loading modal dialog and find buttons panel.
+      $button_pane = $assert_session->waitForElementVisible('css', 'div.ui-dialog-buttonpane');
+
+      // Press the button.
+      $button_pane->pressButton($confirm_button_text);
+
+      $assert_session->assertWaitOnAjaxRequest();
     }
     $this->drupalGet('node/1');
 
@@ -186,7 +204,7 @@ class InlineBlockTest extends InlineBlockTestBase {
   /**
    * Provides test data for ::testNoLayoutSave().
    */
-  public static function layoutNoSaveProvider() {
+  public static function layoutNoSaveProvider():array {
     return [
       'discard_changes' => [
         'discard_changes',
