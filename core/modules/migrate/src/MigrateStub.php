@@ -164,6 +164,7 @@ class MigrateStub implements MigrateStubInterface {
    */
   protected function hasSourceIdsFallback(MigrateSourceInterface $source_plugin, array $source_ids) {
     try {
+      $stub_should_be_created = FALSE;
       foreach ($source_plugin as $row) {
         assert($row instanceof Row);
         $id_values = [];

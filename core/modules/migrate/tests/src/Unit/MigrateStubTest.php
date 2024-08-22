@@ -49,6 +49,7 @@ class MigrateStubTest extends UnitTestCase {
     $ids = ['id' => ['type' => 'integer']];
     $row_source_1_missing = new Row(['id' => 1], $ids, TRUE);
     $row_source_2 = new Row(['id' => 2], $ids, TRUE);
+    $destination_2 = ['id' => 2];
     $destination_plugin = $this->prophesize(MigrateDestinationInterface::class);
     $destination_plugin->import($row_source_1_missing)->willReturn(['id' => 2]);
     $destination_plugin->import($row_source_2)->willReturn($destination_2);
@@ -88,7 +89,7 @@ class MigrateStubTest extends UnitTestCase {
     $this->assertSame(['id' => 2], $stub->createStub('test_migration', ['id' => 1], []));
     // If MigrateStub is asked to create only valid stubs, then with the
     // incoming "['id' => 1]" source IDs array shouldn't create a stub.
-    $this->assertSame(FALSE, $stub->createStub('test_migration', $row_source_1_missing->getSource(), [], NULL, TRUE));
+    $this->assertFalse($stub->createStub('test_migration', $row_source_1_missing->getSource(), [], NULL, TRUE));
     $this->assertSame($destination_2, $stub->createStub('test_migration', $row_source_2->getSource(), [], NULL, TRUE));
   }
 
