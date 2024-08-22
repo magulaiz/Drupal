@@ -8,9 +8,17 @@ namespace Drupal\Tests\update\Functional;
  * Tests the security coverage messages for Drupal core versions.
  *
  * @group update
- * @group #slow
  */
 class UpdateSemverCoreSecurityCoverageTest extends UpdateSemverCoreTestBase {
+
+  /**
+   * Tests the security coverage messages for Drupal core versions.
+   */
+  public function testSecurityCoverageMessage(): void {
+    foreach (static::securityCoverageMessageProvider() as $case) {
+      $this->doTestSecurityCoverageMessage($case['installed_version'], $case['fixture'], $case['requirements_section_heading'], $case['message'], $case['mock_date']);
+    }
+  }
 
   /**
    * Tests the security coverage messages for Drupal core versions.
@@ -26,10 +34,8 @@ class UpdateSemverCoreSecurityCoverageTest extends UpdateSemverCoreTestBase {
    * @param string $mock_date
    *   The mock date to use if needed in the format CCYY-MM-DD. If an empty
    *   string is provided, no mock date will be used.
-   *
-   * @dataProvider securityCoverageMessageProvider
    */
-  public function testSecurityCoverageMessage($installed_version, $fixture, $requirements_section_heading, $message, $mock_date): void {
+  protected function doTestSecurityCoverageMessage($installed_version, $fixture, $requirements_section_heading, $message, $mock_date): void {
     \Drupal::state()->set('update_test.mock_date', $mock_date);
     $this->setProjectInstalledVersion($installed_version);
     $this->refreshUpdateStatus(['drupal' => $fixture]);
