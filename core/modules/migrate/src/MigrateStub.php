@@ -176,7 +176,7 @@ class MigrateStub implements MigrateStubInterface {
         }
       }
     }
-    catch (\Exception $e) {
+    catch (\Exception) {
     }
 
     return $stub_should_be_created;
