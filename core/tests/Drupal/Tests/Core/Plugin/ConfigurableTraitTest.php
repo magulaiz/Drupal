@@ -23,7 +23,7 @@ class ConfigurableTraitTest extends TestCase {
    *
    * @covers ::defaultConfiguration
    */
-  public function testDefaultConfiguration() {
+  public function testDefaultConfiguration(): void {
     /** @var \Drupal\Component\Plugin\ConfigurableInterface $configurable_plugin */
     $configurable_plugin = new ConfigurableTestClass();
     $this->assertSame([], $configurable_plugin->defaultConfiguration());
@@ -34,7 +34,7 @@ class ConfigurableTraitTest extends TestCase {
    *
    * @covers ::getConfiguration
    */
-  public function testGetConfiguration() {
+  public function testGetConfiguration(): void {
     $test_configuration = [
       'config_key_1' => 'config_value_1',
       'config_key_2' => [
@@ -75,7 +75,7 @@ class ConfigurableTraitTest extends TestCase {
    * @return array
    *   The data.
    */
-  public static function setConfigurationDataProvider() {
+  public static function setConfigurationDataProvider(): array {
     return [
       'Direct Override' => [
         'default_configuration' => [
@@ -173,7 +173,7 @@ class ConfigurableTestClass extends PluginBase implements ConfigurableInterface 
   /**
    * A default configuration for the test class to return.
    *
-   * @var array
+   * @var array|null
    */
   protected ?array $defaultConfiguration = NULL;
 
@@ -191,14 +191,14 @@ class ConfigurableTestClass extends PluginBase implements ConfigurableInterface 
    * @param array $default_configuration
    *   The default configuration to use.
    */
-  public function setDefaultConfiguration(array $default_configuration) {
+  public function setDefaultConfiguration(array $default_configuration): void {
     $this->defaultConfiguration = $default_configuration;
   }
 
   /**
    * {@inheritdoc}
    */
-  public function defaultConfiguration() {
+  public function defaultConfiguration(): array {
     return $this->defaultConfiguration ?? $this->traitDefaultConfiguration();
   }
 

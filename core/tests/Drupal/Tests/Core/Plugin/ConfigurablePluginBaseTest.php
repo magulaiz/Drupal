@@ -19,7 +19,7 @@ class ConfigurablePluginBaseTest extends TestCase {
   /**
    * tests __construct().
    */
-  public function testConstructor() {
+  public function testConstructor(): void {
     $provided_configuration = [
       'foo' => 'bar',
     ];
