@@ -334,7 +334,7 @@ class TermStorage extends SqlContentEntityStorage implements TermStorageInterfac
       ->execute();
     $this->resetCache($term_ids);
 
-    // Invalidate correct cache tags.
+    // Invalidate the taxonomy term cache tags.
     array_walk($term_ids, function (&$tid) {
       $tid = 'taxonomy_term:' . $tid;
     });
