@@ -6,6 +6,7 @@
  */
 
 use Drupal\Core\Breadcrumb\Breadcrumb;
+use Drupal\Core\Block\BlockPluginInterface;
 use Drupal\Core\Entity\Display\EntityFormDisplayInterface;
 use Drupal\Core\Entity\Display\EntityViewDisplayInterface;
 use Drupal\Core\Entity\EntityInterface;
@@ -186,4 +187,20 @@ function layout_builder_test_theme() {
       'base hook' => 'block',
     ],
   ];
+}
+
+/**
+ * Implements hook_block_view_alter().
+ */
+function layout_builder_test_block_view_alter(array &$build, BlockPluginInterface $block) {
+  // Modify the content of the block.
+  $build['content']['#markup'] = 'The block content altered.';
+}
+
+/**
+ * Implements hook_block_build_alter().
+ */
+function layout_builder_test_block_build_alter(array &$build, BlockPluginInterface $block) {
+  // Modify the content of the block.
+  $build['content']['#markup'] = 'The block content altered.';
 }

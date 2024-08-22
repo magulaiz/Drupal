@@ -10,6 +10,7 @@ use Drupal\Core\Block\BlockPluginInterface;
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\DependencyInjection\ContainerBuilder;
 use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Plugin\Context\ContextHandlerInterface;
 use Drupal\Core\Render\PreviewFallbackInterface;
 use Drupal\Core\Session\AccountInterface;
@@ -29,6 +30,15 @@ use Prophecy\Argument;
 class BlockComponentRenderArrayTest extends UnitTestCase {
 
   /**
+   * {@inheritdoc}
+   */
+  protected static $modules = [
+    'block',
+    'layout_builder',
+    'layout_builder_test',
+  ];
+
+  /**
    * The current user.
    *
    * @var \Drupal\Core\Session\AccountInterface
@@ -41,6 +51,13 @@ class BlockComponentRenderArrayTest extends UnitTestCase {
    * @var \Drupal\Core\Block\BlockManagerInterface
    */
   protected $blockManager;
+
+  /**
+   * The module handler.
+   *
+   * @var \Drupal\Core\Extension\ModuleHandlerInterface
+   */
+  protected $moduleHandler;
 
   /**
    * Data provider for test functions that should test block types.
@@ -60,6 +77,7 @@ class BlockComponentRenderArrayTest extends UnitTestCase {
 
     $this->blockManager = $this->prophesize(BlockManagerInterface::class);
     $this->account = $this->prophesize(AccountInterface::class);
+    $this->moduleHandler = $this->prophesize(ModuleHandlerInterface::class);
 
     $container = new ContainerBuilder();
     $container->set('plugin.manager.block', $this->blockManager->reveal());
@@ -110,7 +128,7 @@ class BlockComponentRenderArrayTest extends UnitTestCase {
     $in_preview = FALSE;
     $event = new SectionComponentBuildRenderArrayEvent($component, $contexts, $in_preview);
 
-    $subscriber = new BlockComponentRenderArray($this->account->reveal());
+    $subscriber = new BlockComponentRenderArray($this->account->reveal(), $this->moduleHandler->reveal());
 
     $expected_build = [
       '#theme' => 'block',
@@ -137,6 +155,16 @@ class BlockComponentRenderArrayTest extends UnitTestCase {
     $subscriber->onBuildRender($event);
     $result = $event->getBuild();
     $this->assertEquals($expected_build, $result);
+
+    // Block alter with hooks.
+    $expected_build['content']['#markup'] = 'The block content altered.';
+    $this->moduleHandler->alter('block_view', $result);
+
+    $this->assertEquals($expected_build, $result);
+
+    $this->moduleHandler->alter('block_build', $result);
+    $this->assertEquals($expected_build, $result);
+
     $event->getCacheableMetadata()->applyTo($result);
     $this->assertEqualsCanonicalizing($expected_build_with_expected_cache['#cache'], $result['#cache']);
   }
@@ -181,7 +209,7 @@ class BlockComponentRenderArrayTest extends UnitTestCase {
     $in_preview = FALSE;
     $event = new SectionComponentBuildRenderArrayEvent($component, $contexts, $in_preview);
 
-    $subscriber = new BlockComponentRenderArray($this->account->reveal());
+    $subscriber = new BlockComponentRenderArray($this->account->reveal(), $this->moduleHandler->reveal());
 
     $translation = $this->prophesize(TranslationInterface::class);
     $translation->translateString(Argument::type(TranslatableMarkup::class))
@@ -254,7 +282,7 @@ class BlockComponentRenderArrayTest extends UnitTestCase {
     $in_preview = FALSE;
     $event = new SectionComponentBuildRenderArrayEvent($component, $contexts, $in_preview);
 
-    $subscriber = new BlockComponentRenderArray($this->account->reveal());
+    $subscriber = new BlockComponentRenderArray($this->account->reveal(), $this->moduleHandler->reveal());
 
     $expected_build = [];
     $expected_cache = [
@@ -313,7 +341,7 @@ class BlockComponentRenderArrayTest extends UnitTestCase {
     $in_preview = TRUE;
     $event = new SectionComponentBuildRenderArrayEvent($component, $contexts, $in_preview);
 
-    $subscriber = new BlockComponentRenderArray($this->account->reveal());
+    $subscriber = new BlockComponentRenderArray($this->account->reveal(), $this->moduleHandler->reveal());
 
     $expected_build = [
       '#theme' => 'block',
@@ -370,7 +398,7 @@ class BlockComponentRenderArrayTest extends UnitTestCase {
     $component = new SectionComponent('some-uuid', 'some-region', ['id' => 'some_block_id']);
     $event = new SectionComponentBuildRenderArrayEvent($component, [], TRUE);
 
-    $subscriber = new BlockComponentRenderArray($this->account->reveal());
+    $subscriber = new BlockComponentRenderArray($this->account->reveal(), $this->moduleHandler->reveal());
     $translation = $this->prophesize(TranslationInterface::class);
     $translation->translateString(Argument::type(TranslatableMarkup::class))
       ->willReturn($placeholder_string);
@@ -430,7 +458,7 @@ class BlockComponentRenderArrayTest extends UnitTestCase {
     $component = new SectionComponent('some-uuid', 'some-region', ['id' => 'some_block_id']);
     $event = new SectionComponentBuildRenderArrayEvent($component, [], FALSE);
 
-    $subscriber = new BlockComponentRenderArray($this->account->reveal());
+    $subscriber = new BlockComponentRenderArray($this->account->reveal(), $this->moduleHandler->reveal());
 
     $expected_build = [];
 
@@ -478,7 +506,7 @@ class BlockComponentRenderArrayTest extends UnitTestCase {
     $component = new SectionComponent('some-uuid', 'some-region', ['id' => 'some_block_id']);
     $event = new SectionComponentBuildRenderArrayEvent($component, [], FALSE);
 
-    $subscriber = new BlockComponentRenderArray($this->account->reveal());
+    $subscriber = new BlockComponentRenderArray($this->account->reveal(), $this->moduleHandler->reveal());
 
     $expected_build = [];
 
@@ -508,7 +536,7 @@ class BlockComponentRenderArrayTest extends UnitTestCase {
     $in_preview = FALSE;
     $event = new SectionComponentBuildRenderArrayEvent($component, $contexts, $in_preview);
 
-    $subscriber = new BlockComponentRenderArray($this->account->reveal());
+    $subscriber = new BlockComponentRenderArray($this->account->reveal(), $this->moduleHandler->reveal());
 
     $expected_build = [];
     $expected_cache = [
