@@ -50,9 +50,14 @@ class BlockComponentRenderArray implements EventSubscriberInterface {
    * @param \Drupal\Core\Extension\ModuleHandlerInterface|null $module_handler
    *   The module handler.
    */
-  public function __construct(AccountInterface $current_user, ModuleHandlerInterface $module_handler = NULL) {
+  public function __construct(AccountInterface $current_user, ?ModuleHandlerInterface $module_handler = NULL) {
     $this->currentUser = $current_user;
-    $this->moduleHandler = $module_handler;
+    if (is_null($module_handler)) {
+      $this->moduleHandler = \Drupal::moduleHandler();
+    }
+    else {
+      $this->moduleHandler = $module_handler;
+    }
   }
 
   /**
