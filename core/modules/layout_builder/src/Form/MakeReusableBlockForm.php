@@ -6,6 +6,7 @@ use Drupal\block_content\Entity\BlockContent;
 use Drupal\Core\Block\BlockManagerInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\layout_builder\InlineBlockUsageInterface;
 use Drupal\layout_builder\LayoutTempstoreRepositoryInterface;
 use Drupal\layout_builder\SectionStorageInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -42,7 +43,8 @@ final class MakeReusableBlockForm extends LayoutRebuildConfirmFormBase {
   public function __construct(
     LayoutTempstoreRepositoryInterface $layout_tempstore_repository,
     protected EntityTypeManagerInterface $entityTypeManager,
-    protected BlockManagerInterface $blockManager
+    protected BlockManagerInterface $blockManager,
+    protected InlineBlockUsageInterface $inlineBlockUsage
   ) {
     parent::__construct($layout_tempstore_repository);
   }
@@ -54,7 +56,8 @@ final class MakeReusableBlockForm extends LayoutRebuildConfirmFormBase {
     return new static(
       $container->get('layout_builder.tempstore_repository'),
       $container->get('entity_type.manager'),
-      $container->get('plugin.manager.block')
+      $container->get('plugin.manager.block'),
+      $container->get('inline_block.usage')
     );
   }
 
@@ -135,6 +138,10 @@ final class MakeReusableBlockForm extends LayoutRebuildConfirmFormBase {
 
     $block_content->setReusable();
     $block_content->save();
+
+    // Delete existing usage for the block since it is no longer an inline
+    // block.
+    $this->inlineBlockUsage->deleteUsage([$block_content->id()]);
 
     assert($block_content instanceof BlockContent);
     $converter_block = $this->blockManager->createInstance('block_content:' . $block_content->uuid(), [
