@@ -4,6 +4,7 @@ namespace Drupal\views\Plugin\views;
 
 use Drupal\Component\Plugin\DependentPluginInterface;
 use Drupal\Component\Utility\Xss;
+use Drupal\Core\DependencyInjection\AutowirePluginTrait;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Language\LanguageInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
@@ -13,7 +14,6 @@ use Drupal\Core\Security\TrustedCallbackInterface;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\views\Plugin\views\display\DisplayPluginBase;
 use Drupal\views\ViewExecutable;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Base class for any views plugin types.
@@ -38,6 +38,8 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  * @ingroup views_plugins
  */
 abstract class PluginBase extends ComponentPluginBase implements ContainerFactoryPluginInterface, ViewsPluginInterface, DependentPluginInterface, TrustedCallbackInterface {
+
+  use AutowirePluginTrait;
 
   /**
    * Include negotiated languages when listing languages.
@@ -125,13 +127,6 @@ abstract class PluginBase extends ComponentPluginBase implements ContainerFactor
     parent::__construct($configuration, $plugin_id, $plugin_definition);
 
     $this->definition = $plugin_definition + $configuration;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
-    return new static($configuration, $plugin_id, $plugin_definition);
   }
 
   /**
