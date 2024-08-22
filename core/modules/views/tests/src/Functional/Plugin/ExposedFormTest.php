@@ -17,7 +17,6 @@ use Drupal\views\Plugin\views\filter\FilterPluginBase;
  * Tests exposed forms functionality.
  *
  * @group views
- * @group #slow
  */
 class ExposedFormTest extends ViewTestBase {
 
