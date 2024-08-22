@@ -21,7 +21,6 @@ use Drupal\Tests\BrowserTestBase;
  * and uninstall functionality is tested.
  *
  * @group config
- * @group #slow
  */
 class ConfigInstallWebTest extends BrowserTestBase {
 
