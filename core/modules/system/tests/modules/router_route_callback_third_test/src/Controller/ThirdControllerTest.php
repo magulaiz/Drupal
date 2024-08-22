@@ -2,12 +2,12 @@
 
 namespace Drupal\router_route_callback_third_test\Controller;
 
-use PHPUnit\Framework\TestCase;
+use Drupal\Core\Controller\ControllerBase;
 
 /**
  * Controller routines for testing the route_callbacks.
  */
-class ThirdControllerTest extends TestCase {
+class ThirdControllerTest extends ControllerBase {
 
   /**
    * Test function.
