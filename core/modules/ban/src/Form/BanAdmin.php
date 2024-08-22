@@ -17,29 +17,17 @@ use Drupal\Core\TempStore\PrivateTempStoreFactory;
 class BanAdmin extends FormBase {
 
   /**
-   * The tempstore factory.
-   *
-   * @var \Drupal\Core\TempStore\PrivateTempStoreFactory
-   */
-  protected $tempStoreFactory;
-
-  /**
-   * @var \Drupal\ban\BanIpManagerInterface
-   */
-  protected $ipManager;
-
-  /**
    * Constructs a new BanAdmin object.
    *
-   * @param \Drupal\ban\BanIpManagerInterface $ip_manager
+   * @param \Drupal\ban\BanIpManagerInterface $ipManager
    *   The ban IP manager.
-   * @param \Drupal\Core\TempStore\PrivateTempStoreFactory $temp_store_factory
+   * @param \Drupal\Core\TempStore\PrivateTempStoreFactory $tempStoreFactory
    *   The tempstore factory.
    */
-  public function __construct(BanIpManagerInterface $ip_manager, PrivateTempStoreFactory $temp_store_factory) {
-    $this->ipManager = $ip_manager;
-    $this->tempStoreFactory = $temp_store_factory;
-  }
+  public function __construct(
+    protected BanIpManagerInterface $ipManager,
+    protected PrivateTempStoreFactory $tempStoreFactory,
+  ) {}
 
   /**
    * {@inheritdoc}

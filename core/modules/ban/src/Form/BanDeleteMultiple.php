@@ -1,13 +1,16 @@
 <?php
 
+declare(strict_types = 1);
+
 namespace Drupal\ban\Form;
 
-use Drupal\Core\Form\ConfirmFormBase;
 use Drupal\ban\BanIpManagerInterface;
+use Drupal\Core\Form\ConfirmFormBase;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
+use Drupal\Core\TempStore\PrivateTempStoreFactory;
 use Drupal\Core\Url;
 use Symfony\Component\DependencyInjection\ContainerInterface;
-use Drupal\Core\TempStore\PrivateTempStoreFactory;
 
 /**
  * Provides a form to unban IP addresses.
@@ -24,31 +27,17 @@ class BanDeleteMultiple extends ConfirmFormBase {
   protected $banIps;
 
   /**
-   * The IP manager.
-   *
-   * @var \Drupal\ban\BanIpManagerInterface
-   */
-  protected $ipManager;
-
-  /**
-   * The temp store factory.
-   *
-   * @var \Drupal\Core\TempStore\PrivateTempStoreFactory
-   */
-  protected $tempStoreFactory;
-
-  /**
    * Constructs a new BanDelete object.
    *
-   * @param \Drupal\ban\BanIpManagerInterface $ip_manager
+   * @param \Drupal\ban\BanIpManagerInterface $ipManager
    *   The IP manager.
-   * @param \Drupal\Core\TempStore\PrivateTempStoreFactory $temp_store_factory
+   * @param \Drupal\Core\TempStore\PrivateTempStoreFactory $tempStoreFactory
    *   The temp store factory.
    */
-  public function __construct(BanIpManagerInterface $ip_manager, PrivateTempStoreFactory $temp_store_factory) {
-    $this->ipManager = $ip_manager;
-    $this->tempStoreFactory = $temp_store_factory;
-  }
+  public function __construct(
+    protected BanIpManagerInterface $ipManager,
+    protected PrivateTempStoreFactory $tempStoreFactory,
+  ) {}
 
   /**
    * {@inheritdoc}
@@ -63,28 +52,28 @@ class BanDeleteMultiple extends ConfirmFormBase {
   /**
    * {@inheritdoc}
    */
-  public function getFormId() {
+  public function getFormId(): string {
     return 'ban_ip_delete_form';
   }
 
   /**
    * {@inheritdoc}
    */
-  public function getQuestion() {
+  public function getQuestion(): TranslatableMarkup {
     return $this->t('Are you sure you want to unban %ips_amount IP addresses?', ['%ips_amount' => count($this->banIps)]);
   }
 
   /**
    * {@inheritdoc}
    */
-  public function getConfirmText() {
+  public function getConfirmText(): TranslatableMarkup {
     return $this->t('Unban');
   }
 
   /**
    * {@inheritdoc}
    */
-  public function getCancelUrl() {
+  public function getCancelUrl(): Url {
     return new Url('ban.admin_page');
   }
 

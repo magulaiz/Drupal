@@ -46,7 +46,7 @@ class BanFormTest extends BrowserTestBase {
   /**
    * Tests unbanning multiple IP addresses via the UI.
    */
-  public function testUnbanning() {
+  public function testUnbanning(): void {
     // Create user.
     $admin_user = $this->drupalCreateUser(['ban IP addresses']);
     $this->drupalLogin($admin_user);
