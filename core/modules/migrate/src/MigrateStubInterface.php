@@ -39,4 +39,5 @@ interface MigrateStubInterface {
    *   key, or false if the stub failed.
    */
   public function createStub($migration_id, array $source_ids, array $default_values = [], $key_by_destination_ids = NULL, bool $create_only_valid = FALSE);
+
 }
