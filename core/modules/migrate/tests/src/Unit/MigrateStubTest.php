@@ -78,7 +78,7 @@ class MigrateStubTest extends UnitTestCase {
     $module_handler
       ->expects($this->any())
       ->method('invokeAll')
-      ->will($this->returnValue([]));
+      ->willReturn([]);
     $container = new ContainerBuilder();
     $container->set('module_handler', $module_handler);
     \Drupal::setContainer($container);
