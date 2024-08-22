@@ -251,7 +251,8 @@ class MigrationLookup extends ProcessPluginBase implements ContainerFactoryPlugi
       // down the migration.
       try {
         $create_only_valid = (bool) ($this->configuration['create_only_valid'] ?? FALSE);
-        $destination_ids = $this->migrateStub->createStub($stub_migration, $source_id_values[$stub_migration], [], FALSE, $create_only_valid);      }
+        $destination_ids = $this->migrateStub->createStub($stub_migration, $source_id_values[$stub_migration], [], FALSE, $create_only_valid);
+      }
       catch (\LogicException) {
         // For BC reasons, we must allow attempting to stub a derived migration.
         // This also catches LogicExceptions thrown in
