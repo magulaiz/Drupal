@@ -175,7 +175,7 @@ variables:
   parallel: 8
   variables:
     TESTSUITE: PHPUnit-Functional
-    CONCURRENCY: "10"
+    CONCURRENCY: "8"
     KUBERNETES_CPU_REQUEST: "15"
   services:
     - <<: *with-database
