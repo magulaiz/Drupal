@@ -11,7 +11,6 @@ use Drupal\user\UserInterface;
  * Tests the installation of deprecated and experimental modules.
  *
  * @group Module
- * @group #slow
  */
 class NonStableModulesTest extends BrowserTestBase {
 
