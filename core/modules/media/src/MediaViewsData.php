@@ -19,8 +19,8 @@ class MediaViewsData extends EntityViewsData {
     $data['media_field_revision']['table']['wizard_id'] = 'media_revision';
 
     $data['media_field_data']['user_name']['filter'] = $data['media_field_data']['uid']['filter'];
-    $data['media_field_data']['user_name']['filter']['title'] = $this->t('Author name');
-    $data['media_field_data']['user_name']['filter']['help'] = $this->t('The user ID of the author with autocomplete');
+    $data['media_field_data']['user_name']['filter']['title'] = $this->t('Authored by');
+    $data['media_field_data']['user_name']['filter']['help'] = $this->t('The username of the content author.');
     $data['media_field_data']['user_name']['filter']['id'] = 'user_name';
     $data['media_field_data']['user_name']['filter']['real field'] = 'uid';
 
