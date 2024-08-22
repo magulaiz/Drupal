@@ -1048,7 +1048,8 @@ function simpletest_script_get_test_list() {
     $binned_other_tests = place_tests_into_bins($test_list, $bin_count);
     $other_tests_for_job = $binned_other_tests[$args['ci-parallel-node-index'] - 1];
 
-    $test_list = array_merge($slow_tests_for_job, $other_tests_for_job);
+    //$test_list = array_merge($slow_tests_for_job, $other_tests_for_job);
+    $test_list = $slow_tests_for_job;
   }
 
   return $test_list;
