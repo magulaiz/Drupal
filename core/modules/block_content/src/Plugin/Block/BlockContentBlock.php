@@ -15,6 +15,7 @@ use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\Core\Routing\UrlGeneratorInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
+use Symfony\Component\DependencyInjection\Attribute\Autowire;
 
 /**
  * Defines a generic block type.
@@ -98,7 +99,18 @@ class BlockContentBlock extends BlockBase implements ContainerFactoryPluginInter
    * @param \Drupal\Core\Entity\EntityDisplayRepositoryInterface $entity_display_repository
    *   The entity display repository.
    */
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, BlockManagerInterface $block_manager, EntityTypeManagerInterface $entity_type_manager, AccountInterface $account, UrlGeneratorInterface $url_generator, BlockContentUuidLookup $uuid_lookup, EntityDisplayRepositoryInterface $entity_display_repository) {
+  public function __construct(
+    array $configuration,
+    $plugin_id,
+    $plugin_definition,
+    BlockManagerInterface $block_manager,
+    EntityTypeManagerInterface $entity_type_manager,
+    AccountInterface $account,
+    UrlGeneratorInterface $url_generator,
+    #[Autowire(service: 'block_content.uuid_lookup')]
+    BlockContentUuidLookup $uuid_lookup,
+    EntityDisplayRepositoryInterface $entity_display_repository,
+  ) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
 
     $this->blockManager = $block_manager;
