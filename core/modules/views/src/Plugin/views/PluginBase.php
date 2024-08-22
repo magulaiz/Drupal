@@ -4,7 +4,6 @@ namespace Drupal\views\Plugin\views;
 
 use Drupal\Component\Plugin\DependentPluginInterface;
 use Drupal\Component\Utility\Xss;
-use Drupal\Core\DependencyInjection\AutowirePluginTrait;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Language\LanguageInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
@@ -38,8 +37,6 @@ use Drupal\views\ViewExecutable;
  * @ingroup views_plugins
  */
 abstract class PluginBase extends ComponentPluginBase implements ContainerFactoryPluginInterface, ViewsPluginInterface, DependentPluginInterface, TrustedCallbackInterface {
-
-  use AutowirePluginTrait;
 
   /**
    * Include negotiated languages when listing languages.

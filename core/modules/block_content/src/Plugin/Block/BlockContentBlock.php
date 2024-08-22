@@ -15,7 +15,6 @@ use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\Core\Routing\UrlGeneratorInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Defines a generic block type.
@@ -108,23 +107,6 @@ class BlockContentBlock extends BlockBase implements ContainerFactoryPluginInter
     $this->urlGenerator = $url_generator;
     $this->uuidLookup = $uuid_lookup;
     $this->entityDisplayRepository = $entity_display_repository;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
-    return new static(
-      $configuration,
-      $plugin_id,
-      $plugin_definition,
-      $container->get('plugin.manager.block'),
-      $container->get('entity_type.manager'),
-      $container->get('current_user'),
-      $container->get('url_generator'),
-      $container->get('block_content.uuid_lookup'),
-      $container->get('entity_display.repository')
-    );
   }
 
   /**
