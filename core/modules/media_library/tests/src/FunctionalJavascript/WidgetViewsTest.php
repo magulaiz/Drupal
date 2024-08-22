@@ -8,7 +8,6 @@ namespace Drupal\Tests\media_library\FunctionalJavascript;
  * Tests the views in the media library widget.
  *
  * @group media_library
- * @group #slow
  */
 class WidgetViewsTest extends MediaLibraryTestBase {
 
