@@ -172,7 +172,7 @@ variables:
 
 '🌐️️ PHPUnit Functional':
   <<: [ *with-composer, *run-tests, *default-job-settings ]
-  parallel: 6
+  parallel: 7
   variables:
     TESTSUITE: PHPUnit-Functional
     CONCURRENCY: "10"
