@@ -19,7 +19,7 @@ class SecondaryRouterTestRoutes {
     $routes = [];
     $routes['route_callback.secondary.test'] = new Route(
       "/route_callback/secondary/test",
-      ['_controller' => '\Drupal\router_route_callback_secondary_test\Controller\SecondaryControllerTest::test'],);
+      ['_controller' => '\Drupal\router_route_callback_secondary_test\Controller\SecondaryTestController::test'],);
 
     return $routes;
   }

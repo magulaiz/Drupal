@@ -19,7 +19,7 @@ class ThirdRouterTestRoutes {
     $routes = [];
     $routes['route_callback.third.test'] = new Route(
       "/route_callback/third/test",
-      ['_controller' => '\Drupal\router_route_callback_third_test\Controller\ThirdControllerTest::test'],);
+      ['_controller' => '\Drupal\router_route_callback_third_test\Controller\ThirdTestController::test'],);
 
     return $routes;
   }

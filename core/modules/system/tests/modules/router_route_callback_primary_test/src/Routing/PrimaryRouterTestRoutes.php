@@ -19,7 +19,7 @@ class PrimaryRouterTestRoutes {
     $routes = [];
     $routes['route_callback.primary.test'] = new Route(
       "/route_callback/primary/test",
-      ['_controller' => '\Drupal\router_route_callback_primary_test\Controller\PrimaryControllerTest::test'],
+      ['_controller' => '\Drupal\router_route_callback_primary_test\Controller\PrimaryTestController::test'],
     );
 
     return $routes;
