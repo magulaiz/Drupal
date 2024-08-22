@@ -56,6 +56,7 @@ class MigrateStub implements MigrateStubInterface {
    * @param bool $create_only_valid
    *   (optional) Create stub only if the provided source IDs can be found in
    *   the source of the given migration. Defaults to FALSE.
+   * 
    * @return array|false
    *   An array of destination ids for the new stub, keyed by destination id
    *   key, or false if the stub failed.
