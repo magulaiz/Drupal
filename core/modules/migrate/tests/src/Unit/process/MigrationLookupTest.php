@@ -54,7 +54,7 @@ class MigrationLookupTest extends MigrationLookupTestCase {
   public function testTransformWithStubbing($exception_class, $exception_message, $expected_message): void {
     $migration_plugin = $this->prophesize(MigrationInterface::class);
     $this->migrateLookup->lookup('destination_migration', [1])->willReturn(NULL);
-    $this->migrateStub->createStub('destination_migration', [1], [], FALSE)->willReturn([2]);
+    $this->migrateStub->createStub('destination_migration', [1], [], FALSE, TRUE)->willReturn([2]);
 
     $configuration = [
       'no_stub' => FALSE,
