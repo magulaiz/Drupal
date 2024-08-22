@@ -203,6 +203,15 @@ class AssetResolverTest extends UnitTestCase {
    * @dataProvider providerAttachedCssAssets
    */
   public function testGetCssAssets(AttachedAssetsInterface $assets_a, AttachedAssetsInterface $assets_b, $expected_css_cache_item_count): void {
+    $map = [
+      ['core', 'drupal', $this->libraries['drupal']],
+      ['core', 'jquery', $this->libraries['jquery']],
+      ['llama', 'css', $this->libraries['llama']],
+      ['piggy', 'css', $this->libraries['piggy']],
+    ];
+    $this->libraryDiscovery->method('getLibraryByName')
+      ->willReturnMap($map);
+
     $this->assetResolver->getCssAssets($assets_a, FALSE, $this->english);
     $this->assetResolver->getCssAssets($assets_b, FALSE, $this->english);
     $this->assertCount($expected_css_cache_item_count, $this->cache->getAllCids());
@@ -228,6 +237,13 @@ class AssetResolverTest extends UnitTestCase {
    * @dataProvider providerAttachedJsAssets
    */
   public function testGetJsAssets(AttachedAssetsInterface $assets_a, AttachedAssetsInterface $assets_b, $expected_js_cache_item_count, $expected_multilingual_js_cache_item_count): void {
+    $map = [
+      ['core', 'drupal', $this->libraries['drupal']],
+      ['core', 'jquery', $this->libraries['jquery']],
+    ];
+    $this->libraryDiscovery->method('getLibraryByName')
+      ->willReturnMap($map);
+
     $this->assetResolver->getJsAssets($assets_a, FALSE, $this->english);
     $this->assetResolver->getJsAssets($assets_b, FALSE, $this->english);
     $this->assertCount($expected_js_cache_item_count, $this->cache->getAllCids());
