@@ -10,14 +10,21 @@ source:
       vocab: 1
       name: music
       parent: 2
+    -
+      id: 3
+      vocab: 1
+      name: cat
+      parent: 0
   ids:
     id:
       type: integer
+  constants:
+    weight: 0
 process:
   tid: id
   vid: vocab
   name: name
-  weight: weight
+  weight: constants/weight
   parent:
     plugin: migration_lookup
     migration: taxonomy_term_stub_test
