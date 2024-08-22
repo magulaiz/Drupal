@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\layout_builder\FunctionalJavascript;
 
-use Behat\Mink\Exception\ElementNotFoundException;
 use Drupal\layout_builder\Entity\LayoutBuilderEntityViewDisplay;
 use Drupal\node\Entity\Node;
 
@@ -115,7 +114,6 @@ class InlineBlockTest extends InlineBlockTestBase {
    * Tests adding a new entity block and then not saving the layout.
    *
    * @dataProvider layoutNoSaveProvider
-   * @throws ElementNotFoundException
    */
   public function testNoLayoutSave($operation, $no_save_button_text, $confirm_button_text): void {
     $this->drupalLogin($this->drupalCreateUser([
@@ -136,11 +134,11 @@ class InlineBlockTest extends InlineBlockTestBase {
 
     $this->drupalGet('node/1/layout');
     $this->addInlineBlockToLayout('Block title', 'The block body');
-    //In our case it should be AJAX call.
+    // In our case it should be AJAX call.
     $page->pressButton($no_save_button_text);
     $assert_session->assertWaitOnAjaxRequest();
     if ($confirm_button_text) {
-      // wait loading modal dialog and find buttons panel.
+      // Wait loading modal dialog and find buttons panel.
       $button_pane = $assert_session->waitForElementVisible('css', 'div.ui-dialog-buttonpane');
 
       // Press the button.
@@ -172,7 +170,7 @@ class InlineBlockTest extends InlineBlockTestBase {
     $page->pressButton($no_save_button_text);
     $assert_session->assertWaitOnAjaxRequest();
     if ($confirm_button_text) {
-      // wait loading modal dialog and find buttons panel.
+      // Wait loading modal dialog and find buttons panel.
       $button_pane = $assert_session->waitForElementVisible('css', 'div.ui-dialog-buttonpane');
 
       // Press the button.
