@@ -121,16 +121,7 @@ function demo_umami_preprocess_layout(&$variables) {
       if ($link_to_help_page) {
         $url = Url::fromRoute('help.page', ['name' => 'demo_umami'])->toString();
       }
-      $demo_profile_warning = '
-        <div class="demo-profile-warning">
-          <a class="demo-profile-warning__link" href="' . $url . '">
-            <span class="demo-profile-warning__icon">
-              <img class="demo-profile-warning__icon" src="/core/misc/icons/e29700/warning.svg" aria-labelledby="demo-profile-warning__text" alt="">
-            </span>
-            <span id="demo-profile-warning__text" class="demo-profile-warning__text">This site is intended for demonstration purposes.</span>
-          </a>
-        </div>
-      ';
+      $demo_profile_warning = '<div class="demo-profile-warning"><a class="demo-profile-warning__link" href="' . $url . '"><span class="demo-profile-warning__icon"><img class="demo-profile-warning__icon" src="/core/misc/icons/e29700/warning.svg" aria-labelledby="demo-profile-warning__text" alt=""></span><span id="demo-profile-warning__text" class="demo-profile-warning__text">' . t('This site is intended for demonstration purposes.') . '</span></a></div>';
 
       $block_render_array = [
         '#theme' => 'block__navigation',

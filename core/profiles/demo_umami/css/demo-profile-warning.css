@@ -5,13 +5,21 @@
 
 .demo-profile-warning {
   position: relative;
+  padding-inline: calc(0.75 * var(--admin-toolbar-rem));
 }
 
 .demo-profile-warning__link {
-  padding-inline: calc(0.75 * var(--admin-toolbar-rem));
   font-weight: bold;
   text-decoration: none;
   color: var(--admin-toolbar-color-gray-800);
+}
+
+.demo-profile-warning__link:hover {
+  color: var(--admin-toolbar-color-gray-990);
+}
+
+.demo-profile-warning__icon {
+  margin-inline-end: 0.25em;
 }
 
 .demo-profile-warning__text {
@@ -20,8 +28,4 @@
 
 [data-admin-toolbar="expanded"] .demo-profile-warning__text {
   display: inline;
-}
-
-.demo-profile-warning__link:hover {
-  color: var(--admin-toolbar-color-gray-990);
 }
