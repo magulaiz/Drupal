@@ -381,4 +381,33 @@ class ManageFieldsTest extends BrowserTestBase {
     $this->assertEquals('', $description_container->getText());
   }
 
+  /**
+   * Tests hook_field_config_edit_form_validate().
+   */
+  public function testFieldConfigEditFormAlter() {
+    $node_type = $this->drupalCreateContentType();
+    $bundle = $node_type->id();
+    $field_storage = FieldStorageConfig::create([
+      'field_name' => 'field_test_field',
+      'entity_type' => 'node',
+      'type' => 'test_field',
+    ]);
+    $field_storage->save();
+    FieldConfig::create([
+      'label' => 'Dogs',
+      'field_storage' => $field_storage,
+      'bundle' => $bundle,
+    ])->save();
+
+    $this->drupalGet("/admin/structure/types/manage/$bundle/fields/node.$bundle.field_test_field");
+    $this->assertEquals('Dogs', $this->assertSession()->fieldExists('label')->getValue());
+    $this->assertSession()->pageTextContains('Field label: Dogs');
+    $this->submitForm([], 'Update settings');
+
+    $this->assertSession()->pageTextContains('Field label: Kittens');
+    $this->assertEquals('Dogs', $this->assertSession()->fieldExists('label')->getValue());
+    $this->submitForm([], 'Save settings');
+    $this->assertSession()->pageTextContains('Saved Kittens configuration.');
+  }
+
 }

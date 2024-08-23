@@ -5,6 +5,7 @@
  * Field UI test module.
  */
 
+use Drupal\Component\Render\FormattableMarkup;
 use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Render\Element;
@@ -65,4 +66,18 @@ function field_ui_test_form_entity_view_display_edit_form_alter(&$form, FormStat
 
 function field_ui_test_region_callback($row) {
   return 'content';
+}
+
+function field_ui_test_form_field_config_edit_form_alter(&$form, FormStateInterface $form_state) {
+  /** @var \Drupal\Core\Field\FieldConfigInterface $field_config */
+  $field_config = $form_state->getFormObject()->getEntity();
+  \Drupal::messenger()->addStatus(new FormattableMarkup('Field label: %label', ['%label' => $field_config->label()]));
+  $form['#validate'][] = 'field_ui_test_field_config_edit_form_validate';
+}
+
+function field_ui_test_field_config_edit_form_validate(&$form, FormStateInterface $form_state) {
+  $field_name = $form_state->getValue('label');
+  if ($field_name === 'Dogs') {
+    $form_state->setValue('label', 'Kittens');
+  }
 }
