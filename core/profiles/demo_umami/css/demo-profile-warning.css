@@ -9,8 +9,8 @@
 }
 
 .demo-profile-warning__link {
-  font-weight: bold;
   text-decoration: none;
+  font-weight: bold;
   color: var(--admin-toolbar-color-gray-800);
 }
 
