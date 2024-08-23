@@ -262,7 +262,7 @@ class ExposedFilterAJAXTest extends WebDriverTestBase {
   /**
    * Tests if Ajax events can be attached to the exposed filter form.
    */
-  public function testExposedFilterAjaxCallback() {
+  public function testExposedFilterAjaxCallback(): void {
     ViewTestData::createTestViews(self::class, ['views_test_config']);
 
     // Attach an Ajax event to all 'title' fields in the exposed filter form.
