@@ -12,7 +12,6 @@ use Drupal\language\Entity\ConfigurableLanguage;
  * Tests the content translation handler.
  *
  * @group content_translation
- * @group #slow
  *
  * @coversDefaultClass \Drupal\content_translation\ContentTranslationHandler
  */
