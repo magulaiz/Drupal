@@ -51,7 +51,7 @@ function hook_image_style_flush($style, $path = NULL) {
  * @param string $derivative_uri
  *   URI of created derivative.
  */
-function hook_image_derivative_created($original_uri, $style, $derivative_uri) {
+function hook_image_derivative_created(string $original_uri, string $style, string $derivative_uri) {
   // Notify a remote server that a derivative has been created.
   if ($style === 'spa_header') {
     $post_data = [
