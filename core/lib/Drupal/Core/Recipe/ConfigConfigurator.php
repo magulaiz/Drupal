@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Drupal\Core\Recipe;
 
+use Drupal\Core\Config\ConfigManagerInterface;
+use Drupal\Core\Config\Entity\ComparatorBase;
 use Drupal\Core\Config\FileStorage;
 use Drupal\Core\Config\StorageInterface;
 
@@ -22,51 +24,37 @@ final class ConfigConfigurator {
    *   The path to the recipe.
    * @param \Drupal\Core\Config\StorageInterface $active_configuration
    *   The active configuration storage.
+   * @param \Drupal\Core\Config\ConfigManagerInterface $configManager
+   *   The config manager service.
    */
-  public function __construct(public readonly array $config, string $recipe_directory, StorageInterface $active_configuration) {
+  public function __construct(public readonly array $config, string $recipe_directory, StorageInterface $active_configuration, ConfigManagerInterface $configManager) {
     $this->recipeConfigDirectory = is_dir($recipe_directory . '/config') ? $recipe_directory . '/config' : NULL;
     $recipe_storage = $this->getConfigStorage();
     foreach ($recipe_storage->listAll() as $config_name) {
-      if ($active_data = $active_configuration->read($config_name)) {
-        // @todo https://www.drupal.org/i/3439714 Investigate if there is any
-        //   generic code in core for this.
-        unset($active_data['uuid'], $active_data['_core']);
-        if (empty($active_data['dependencies'])) {
-          unset($active_data['dependencies']);
-        }
-        $recipe_data = $recipe_storage->read($config_name);
-        if (empty($recipe_data['dependencies'])) {
-          unset($recipe_data['dependencies']);
-        }
-        // Ensure we don't get a false mismatch due to differing key order.
-        // @todo When https://www.drupal.org/project/drupal/issues/3230826 is
-        //   fixed in core, use that API instead to sort the config data.
-        self::recursiveSortByKey($active_data);
-        self::recursiveSortByKey($recipe_data);
-        if ($active_data !== $recipe_data) {
-          throw new RecipePreExistingConfigException($config_name, sprintf("The configuration '%s' exists already and does not match the recipe's configuration", $config_name));
+      $active_data = $active_configuration->read($config_name);
+      if (empty($active_data)) {
+        continue;
+      }
+      // @todo https://www.drupal.org/i/3439714 Investigate if there is any
+      //   generic code in core for this.
+      unset($active_data['uuid'], $active_data['_core']);
+      if (empty($active_data['dependencies'])) {
+        unset($active_data['dependencies']);
+      }
+      $recipe_data = $recipe_storage->read($config_name);
+      if (empty($recipe_data['dependencies'])) {
+        unset($recipe_data['dependencies']);
+      }
+      $entity_type_id = $configManager->getEntityTypeIdByName($config_name);
+      if ($entity_type_id) {
+        $entity_type_manager = $configManager->getEntityTypeManager();
+        if ($entity_type_manager->hasHandler($entity_type_id, 'comparator')) {
+          $comparator = new ComparatorBase();
         }
       }
-    }
-  }
-
-  /**
-   * Sorts an array recursively, by key, alphabetically.
-   *
-   * @param mixed[] $data
-   *   The array to sort, passed by reference.
-   *
-   * @todo Remove when https://www.drupal.org/project/drupal/issues/3230826 is
-   *   fixed in core.
-   */
-  private static function recursiveSortByKey(array &$data): void {
-    // If the array is a list, it is by definition already sorted.
-    if (!array_is_list($data)) {
-      ksort($data);
-    }
-    foreach ($data as &$value) {
-      if (is_array($value)) {
-        self::recursiveSortByKey($value);
+      $comparator ??= new ComparatorBase();
+      if (!$comparator->isEquivalent($active_data, $recipe_data)) {
+        throw new RecipePreExistingConfigException($config_name, sprintf("The configuration '%s' exists already and does not match the recipe's configuration", $config_name));
       }
     }
   }
