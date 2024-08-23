@@ -118,7 +118,7 @@ class EntityTypeBundleInfo implements EntityTypeBundleInfoInterface {
         foreach ($this->bundleInfo as $entity_type_id => $bundles) {
           $entity_class = $entity_types[$entity_type_id]->getClass();
 
-          foreach ($this->bundleInfo[$entity_type_id] as $bundle => $bundle_info) {
+          foreach ($this->bundleInfo[$entity_type_id] as $bundle_info) {
             if (isset($bundle_info['class'])) {
               $bundle_class = $bundle_info['class'];
               if (!class_exists($bundle_class)) {
