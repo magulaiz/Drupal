@@ -1770,11 +1770,9 @@ function _system_update_get_timestamp_fields(): array {
   $entity_field_manager = \Drupal::service('entity_field.manager');
 
   // Build a list of all the timestamp fields.
-  $entities = [];
   foreach ($field_types as $field_type) {
     $entity_field_map = $entity_field_manager->getFieldMapByFieldType($field_type);
     foreach ($entity_field_map as $entity_type_id => $fields) {
-      $entities[] = $entity_type_id;
       $storage = \Drupal::entityTypeManager()->getStorage($entity_type_id);
       if ($storage instanceof SqlContentEntityStorage) {
         foreach (array_keys($fields) as $field_name) {
