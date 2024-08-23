@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\KernelTests\Core\Entity;
 
+use Drupal\Core\Entity\EntityTypeBundleInfoInterface;
 use Drupal\Core\Entity\Exception\AmbiguousBundleClassException;
 use Drupal\Core\Entity\Exception\BundleClassInheritanceException;
 use Drupal\Core\Entity\Exception\MissingBundleClassException;
@@ -33,7 +34,7 @@ class BundleClassTest extends EntityKernelTestBase {
    *
    * @var \Drupal\Core\Entity\EntityTypeBundleInfoInterface
    */
-  protected $entityTypeBundleInfo;
+  protected EntityTypeBundleInfoInterface $entityTypeBundleInfo;
 
   /**
    * The entity storage.
