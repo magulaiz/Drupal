@@ -1778,8 +1778,6 @@ function _system_update_get_timestamp_fields(): array {
         foreach (array_keys($fields) as $field_name) {
           $items[] = [$entity_type_id, $field_name];
         }
-        // Clear the cache for this entity.
-        $storage->resetCache();
       }
     }
   }
