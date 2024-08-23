@@ -106,22 +106,36 @@ function demo_umami_toolbar() {
 }
 
 /**
- * Implements hook_preprocess_block().
+ * Implements hook_preprocess_HOOK() for layouts.
  */
-function demo_umami_preprocess_block(&$variables) {
+function demo_umami_preprocess_layout(&$variables) {
   // Add a warning about using an experimental profile.
   // Show warning only on administration pages.
   $admin_context = \Drupal::service('router.admin_context');
   if ($admin_context->isAdminRoute()) {
-    if ($variables['plugin_id'] == 'navigation_menu:content') {
+
+    $layout_id = $variables['layout']->get('id');
+    if ($layout_id === 'navigation_layout') {
       $link_to_help_page = \Drupal::moduleHandler()->moduleExists('help') && \Drupal::currentUser()->hasPermission('access help pages');
       if ($link_to_help_page) {
         $url = Url::fromRoute('help.page', ['name' => 'demo_umami'])->toString();
-        $variables['content']['#prefix'] = '<div class="demo-profile-warning"><a class="demo-profile-warning__link" href="' . $url . '">This site is intended for demonstration purposes.</a></div>';
+        $demo_profile_warning = '<div class="demo-profile-warning"><a class="demo-profile-warning__link" href="' . $url . '">This site is intended for demonstration purposes.</a></div>';
       }
       else {
-        $variables['content']['#prefix'] = '<div class="demo-profile-warning"><a class="demo-profile-warning__link" href="https://www.drupal.org/node/2941833">This site is intended for demonstration purposes.</a></div>';
+        $demo_profile_warning = '<div class="demo-profile-warning"><a class="demo-profile-warning__link" href="https://www.drupal.org/node/2941833">This site is intended for demonstration purposes.</a></div>';
+      }
+
+      $block_render_array = [
+        '#theme' => 'block__navigation',
+        'content' => [
+          '#markup' => $demo_profile_warning,
+        ],
+      ];
+
+      if (isset($variables['content']['content'])) {
+        $variables['content']['content'][] = $block_render_array;
       }
     }
+
   }
 }
