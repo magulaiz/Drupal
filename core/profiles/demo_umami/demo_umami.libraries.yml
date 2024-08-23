@@ -2,3 +2,8 @@ toolbar-warning:
   css:
     component:
       css/toolbar-warning.css: {}
+
+demo-profile-warning:
+  css:
+    component:
+      css/demo-profile-warning.css: {}

@@ -1,0 +1,27 @@
+/**
+ * @file
+ * Styling for Demo Profile warning message.
+ */
+
+.demo-profile-warning {
+  position: relative;
+}
+
+.demo-profile-warning__link {
+  padding-inline: calc(0.75 * var(--admin-toolbar-rem));
+  font-weight: bold;
+  text-decoration: none;
+  color: var(--admin-toolbar-color-gray-800);
+}
+
+.demo-profile-warning__text {
+  display: none;
+}
+
+[data-admin-toolbar="expanded"] .demo-profile-warning__text {
+  display: inline;
+}
+
+.demo-profile-warning__link:hover {
+  color: var(--admin-toolbar-color-gray-990);
+}
