@@ -93,10 +93,10 @@ class ImageDerivativeCreatedHookTest extends ImageFieldTestBase {
     $style->createDerivative($source_uri, $derivative_uri);
 
     // Assert that the hook was called, by checking the state variables.
-    $this->assertEquale($state->get('image_module_test_image_derivative_created.called'), TRUE);
-    $this->assertEquale($state->get('image_module_test_image_derivative_created.original_uri'), $source_uri);
-    $this->assertEquale($state->get('image_module_test_image_derivative_created.style'), $style_name);
-    $this->assertEquale($state->get('image_module_test_image_derivative_created.derivative_uri'), $derivative_uri);
+    $this->assertEquals($state->get('image_module_test_image_derivative_created.called'), TRUE);
+    $this->assertEquals($state->get('image_module_test_image_derivative_created.original_uri'), $source_uri);
+    $this->assertEquals($state->get('image_module_test_image_derivative_created.style'), $style_name);
+    $this->assertEquals($state->get('image_module_test_image_derivative_created.derivative_uri'), $derivative_uri);
   }
 
 }
