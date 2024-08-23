@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Drupal\Tests\image\Functional;
 
 use Drupal\image\Entity\ImageStyle;
+use Drupal\Tests\TestFileCreationTrait;
 
 /**
  * Tests Test call of hook_image_derivative_created.
@@ -12,6 +13,11 @@ use Drupal\image\Entity\ImageStyle;
  * @group image
  */
 class ImageDerivativeCreatedHookTest extends ImageFieldTestBase {
+
+  use TestFileCreationTrait {
+    getTestFiles as drupalGetTestFiles;
+  }
+
 
   /**
    * {@inheritdoc}
