@@ -17,6 +17,9 @@ exports.command = function drupalLogout({ silent = false } = {}, callback) {
     '#user-logout-confirm',
   );
 
+  // MongoDB needs a moment.
+  this.pause(50);
+
   this.drupalUserIsLoggedIn((sessionExists) => {
     if (silent) {
       if (sessionExists) {
