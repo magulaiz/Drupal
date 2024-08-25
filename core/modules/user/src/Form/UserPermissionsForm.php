@@ -150,6 +150,11 @@ class UserPermissionsForm extends FormBase {
       '#type' => 'system_compact_link',
     ];
 
+    $form['toggle_machine_names'] = [
+      '#type' => 'inline_template',
+      '#template' => '<div class="toggle-machine-names"><a href="javascript:;"> {{"Show machine names"|t}}</a></div>',
+    ];
+
     $form['filters'] = [
       '#type' => 'container',
       '#attributes' => [
@@ -206,9 +211,10 @@ class UserPermissionsForm extends FormBase {
         ];
         $form['permissions'][$perm]['description'] = [
           '#type' => 'inline_template',
-          '#template' => '<div class="permission"><span class="title table-filter-text-source">{{ title }}</span>{% if description or warning %}<div class="description">{% if warning %}<em class="permission-warning">{{ warning }}</em> {% endif %}{{ description }}</div>{% endif %}</div>',
+          '#template' => '<div class="permission"><span class="title table-filter-text-source">{{ title }}</span><div class="permissions-machine-name"><small>{{ "Machine name"|t }}: {{ machine_name }}</small></div>{% if description or warning %}<div class="description">{% if warning %}<em class="permission-warning">{{ warning }}</em> {% endif %}{{ description }}</div>{% endif %}</div>',
           '#context' => [
             'title' => $perm_item['title'],
+            'machine_name' => $perm,
           ],
         ];
         // Show the permission description.
