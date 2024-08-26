@@ -9,6 +9,12 @@ use Drupal\Core\TypedData\PrimitiveInterface;
 use Drupal\Core\TypedData\TypedDataManagerInterface;
 use Symfony\Component\Validator\Exception\ValidationFailedException;
 
+/**
+ * Collects and validates input values for a recipe.
+ *
+ * @internal
+ *   This API is experimental.
+ */
 final class InputConfigurator {
 
   /**
@@ -77,6 +83,10 @@ final class InputConfigurator {
    *
    * @param \Drupal\Core\Recipe\InputCollectorInterface $collector
    *   The input collector to use.
+   *
+   * @throws \Symfony\Component\Validator\Exception\ValidationFailedException
+   *   Thrown if any of the collected values violate their validation
+   *   constraints.
    */
   public function collectAll(InputCollectorInterface $collector): void {
     if (is_array($this->values)) {
@@ -104,10 +114,9 @@ final class InputConfigurator {
         $this->getDefaultValue($definition['default']),
       );
 
-      $data_definition = $this->typedDataManager->createDataDefinition($definition['data_type'] ?? 'any');
-      if (isset($definition['constraints'])) {
-        $data_definition->setConstraints($definition['constraints']);
-      }
+      // Use typed data to validate and cast the value, if needed.
+      $data_definition = $this->typedDataManager->createDataDefinition($definition['data_type'] ?? 'any')
+        ->setConstraints($definition['constraints'] ?? []);
       $data = $this->typedDataManager->create($data_definition, $value);
       $violations = $data->validate();
       if (count($violations) > 0) {
