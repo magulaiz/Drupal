@@ -6,7 +6,6 @@ namespace Drupal\Core\Recipe;
 
 use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
 use Drupal\Core\TypedData\TypedDataManagerInterface;
-use Drupal\Core\Utility\CallableResolver;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Exception\InvalidArgumentException;
 use Symfony\Component\Console\Input\InputInterface;
@@ -31,7 +30,6 @@ final class ConsoleInputCollector extends InputCollectorBase implements Containe
 
   public function __construct(
     private readonly DefaultValueResolver $defaultValueResolver,
-    private readonly CallableResolver $callableResolver,
     private readonly ?InputInterface $input,
     private readonly ?StyleInterface $io,
     TypedDataManagerInterface $typedDataManager,
@@ -45,7 +43,6 @@ final class ConsoleInputCollector extends InputCollectorBase implements Containe
   public static function create(ContainerInterface $container, ?InputInterface $input = NULL, ?StyleInterface $io = NULL): static {
     return new static(
       DefaultValueResolver::create($container),
-      $container->get(CallableResolver::class),
       $input,
       $io,
       $container->get(TypedDataManagerInterface::class),
@@ -115,20 +112,15 @@ final class ConsoleInputCollector extends InputCollectorBase implements Containe
     $method = $definition['prompt']['method'];
     $arguments = $definition['prompt']['arguments'] ?? [];
 
-    foreach ($arguments as $name => $argument) {
-      $type = (new \ReflectionParameter([StyleInterface::class, $method], $name))
-        ->getType();
-      // If the parameter must be a callable, run the argument through the
-      // callable resolver.
-      if ($argument && $type instanceof \ReflectionNamedType && $type->getName() === 'callable') {
-        $arguments[$name] = $this->callableResolver->getCallableFromDefinition($argument);
-      }
-    }
     // Most of the input-collecting methods of StyleInterface have a `default`
     // parameter.
     $arguments += [
       'default' => $default_value,
     ];
+    // We don't support using Symfony Console's inline validation; instead,
+    // input definitions should define constraints.
+    unset($arguments['validator']);
+
     return $this->io->$method(...$arguments);
   }
 

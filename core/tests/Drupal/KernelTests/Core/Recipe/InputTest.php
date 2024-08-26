@@ -94,17 +94,10 @@ class InputTest extends KernelTestBase {
    * @covers \Drupal\Core\Recipe\ConsoleInputCollector::collectValue
    */
   public function testPromptArgumentsAreForwarded(): void {
-    $validator = new class () {
-
-      public function __invoke(): void {}
-
-    };
-    $this->container->set('test_validator', $validator);
-
     $io = $this->createMock(StyleInterface::class);
     $io->expects($this->once())
       ->method('ask')
-      ->with('What is the capital of Assyria?', "I don't know that!", $validator)
+      ->with('What is the capital of Assyria?', "I don't know that!")
       ->willReturn('<scream>');
 
     $recipe = $this->createRecipe(<<<YAML
@@ -116,6 +109,7 @@ input:
       method: ask
       arguments:
         question: What is the capital of Assyria?
+        # This argument should be discarded.
         validator: 'test_validator'
     default:
       source: value
