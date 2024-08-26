@@ -29,7 +29,7 @@ class UmamiMultilingualInstallTest extends InstallerTestBase {
   public function testUmami(): void {
     $this->drupalGet('');
     // cSpell:disable-next-line
-    $this->assertSession()->pageTextContains('Quiche mediterráneo profundo');
+    $this->assertSession()->pageTextContains('Crema catalana');
   }
 
   /**
@@ -53,7 +53,7 @@ class UmamiMultilingualInstallTest extends InstallerTestBase {
    * @return string
    *   Contents for the test .po file.
    */
-  protected function getPo($langcode) {
+  protected function getPo($langcode): string {
     return <<<PO
 msgid ""
 msgstr ""
