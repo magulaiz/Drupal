@@ -6,11 +6,11 @@ namespace Drupal\Tests\taxonomy\Kernel\Migrate;
 
 use Drupal\migrate\MigrateExecutable;
 use Drupal\migrate\Plugin\MigrateIdMapInterface;
-use Drupal\taxonomy\TermInterface;
-use Drupal\Tests\migrate_drupal\Kernel\MigrateDrupalTestBase;
 use Drupal\migrate_drupal\Tests\StubTestTrait;
 use Drupal\taxonomy\Entity\Term;
 use Drupal\taxonomy\Entity\Vocabulary;
+use Drupal\taxonomy\TermInterface;
+use Drupal\Tests\migrate_drupal\Kernel\MigrateDrupalTestBase;
 
 /**
  * Test stub creation for taxonomy terms.
@@ -48,7 +48,7 @@ class MigrateTaxonomyTermStubTest extends MigrateDrupalTestBase {
   /**
    * Tests creation of stubs when parent is stubbed.
    */
-  public function testStubWithParentStub() {
+  public function testStubWithParentStub(): void {
     // Create a vocabulary via migration for the terms to reference.
     $vocabulary_data_rows = [
       ['id' => '1', 'name' => 'tags'],
