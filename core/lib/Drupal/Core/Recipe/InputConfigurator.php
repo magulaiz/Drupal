@@ -4,9 +4,8 @@ declare(strict_types=1);
 
 namespace Drupal\Core\Recipe;
 
-use Drupal\Core\Config\ConfigFactoryInterface;
+use Drupal\Core\TypedData\DataDefinition;
 use Drupal\Core\TypedData\PrimitiveInterface;
-use Drupal\Core\TypedData\TypedDataManagerInterface;
 use Symfony\Component\Validator\Exception\ValidationFailedException;
 
 /**
@@ -45,17 +44,11 @@ final class InputConfigurator {
    *   A prefix for each input definition, to give each one a unique name
    *   when collecting input for multiple recipes. Usually this is the unique
    *   name of the recipe.
-   * @param \Drupal\Core\TypedData\TypedDataManagerInterface $typedDataManager
-   *   The typed data manager service.
-   * @param \Drupal\Core\Config\ConfigFactoryInterface $configFactory
-   *   The config factory service.
    */
   public function __construct(
     private readonly array $definitions,
     private readonly RecipeConfigurator $dependencies,
     private readonly string $prefix,
-    private readonly TypedDataManagerInterface $typedDataManager,
-    private readonly ConfigFactoryInterface $configFactory,
   ) {}
 
   /**
@@ -125,9 +118,9 @@ final class InputConfigurator {
       );
 
       // Use typed data to validate and cast the value, if needed.
-      $data_definition = $this->typedDataManager->createDataDefinition($definition['data_type'] ?? 'any')
+      $data_definition = DataDefinition::create($definition['data_type'] ?? 'any')
         ->setConstraints($definition['constraints'] ?? []);
-      $data = $this->typedDataManager->create($data_definition, $value);
+      $data = \Drupal::typedDataManager()->create($data_definition, $value);
       $violations = $data->validate();
       if (count($violations) > 0) {
         throw new ValidationFailedException($value, $violations);
@@ -157,7 +150,7 @@ final class InputConfigurator {
   private function getDefaultValue(array $definition): mixed {
     if ($definition['source'] === 'config') {
       [$name, $key] = $definition['config'];
-      $config = $this->configFactory->get($name);
+      $config = \Drupal::config($name);
       if ($config->isNew()) {
         throw new \RuntimeException("The '$name' config object does not exist.");
       }
