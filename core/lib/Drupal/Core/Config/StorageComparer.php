@@ -102,7 +102,10 @@ class StorageComparer implements StorageComparerInterface {
    * Constructs the Configuration storage comparer.
    *
    * @param \Drupal\Core\Config\StorageInterface $source_storage
-   *   Storage object used to read configuration.
+   *   Storage object used to read configuration. If it is expensive to re-read
+   *   items for the storage it is recommended to pass in an instance of the
+   *   storage wrapped in a \Drupal\Core\Config\CachedStorage. Note that
+   *   \Drupal\Core\Config\FileStorage provides an internal static cache.
    * @param \Drupal\Core\Config\StorageInterface $target_storage
    *   Storage object used to write configuration.
    */
@@ -115,21 +118,8 @@ class StorageComparer implements StorageComparerInterface {
     }
 
     $time = \Drupal::hasService(TimeInterface::class) ? \Drupal::service(TimeInterface::class) : new Time();
-    if ($source_storage instanceof FileStorage) {
-      // FileStorage has its own static cache so that multiple reads of the
-      // same raw configuration object are not costly.
-      $this->sourceCacheStorage = new NullBackend('storage_comparer');
-      $this->sourceStorage = $source_storage;
-    }
-    else {
-      // Wrap the source storage in a static cache so that multiple reads of the
-      // same raw configuration object are not costly.
-      $this->sourceCacheStorage = new MemoryBackend($time);
-      $this->sourceStorage = new CachedStorage(
-        $source_storage,
-        $this->sourceCacheStorage
-      );
-    }
+
+    $this->sourceStorage = $source_storage;
 
     $this->targetCacheStorage = new MemoryBackend($time);
     $this->targetStorage = $target_storage;
@@ -406,8 +396,9 @@ class StorageComparer implements StorageComparerInterface {
   public function reset() {
     $this->changelist = [StorageInterface::DEFAULT_COLLECTION => $this->getEmptyChangelist()];
     $this->sourceNames = $this->targetNames = [];
-    // Reset the static configuration data caches.
-    $this->sourceCacheStorage->deleteAll();
+    if ($this->sourceStorage instanceof StorageCacheInterface) {
+      $this->sourceStorage->resetListCache();
+    }
     $this->targetCacheStorage->deleteAll();
     return $this->createChangelist();
   }

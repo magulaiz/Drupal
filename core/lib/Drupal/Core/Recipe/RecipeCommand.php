@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace Drupal\Core\Recipe;
 
 use Drupal\Component\Render\PlainTextOutput;
+use Drupal\Core\Cache\MemoryBackend;
+use Drupal\Core\Config\CachedStorage;
 use Drupal\Core\Config\Checkpoint\Checkpoint;
 use Drupal\Core\Config\ConfigImporter;
 use Drupal\Core\Config\ConfigImporterException;
@@ -162,8 +164,9 @@ final class RecipeCommand extends Command {
     /** @var \Drupal\Core\Config\Checkpoint\CheckpointStorageInterface $checkpoint_storage */
     $checkpoint_storage = $container->get('config.storage.checkpoint');
     $checkpoint_storage->setCheckpointToReadFrom($checkpoint);
+    $source_storage = new CachedStorage($checkpoint_storage, (new MemoryBackend($container->get('datetime.time'))));
 
-    $storage_comparer = new StorageComparer($checkpoint_storage, $container->get('config.storage'));
+    $storage_comparer = new StorageComparer($source_storage, $container->get('config.storage'));
     $storage_comparer->reset();
 
     $config_importer = new ConfigImporter(
