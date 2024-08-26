@@ -53,6 +53,26 @@ final class InputConfigurator {
   }
 
   /**
+   * Returns the description for all inputs of this recipe and its dependencies.
+   *
+   * @return string[]
+   *   The descriptions of every input defined by the recipe and its
+   *   dependencies, keyed by the input's fully qualified name (i.e., prefixed
+   *   by the name of the recipe that defines it).
+   */
+  public function describeAll(): array {
+    $descriptions = [];
+    foreach ($this->dependencies->recipes as $dependency) {
+      $descriptions = array_merge($descriptions, $dependency->input->describeAll());
+    }
+    foreach ($this->definitions as $key => $definition) {
+      $name = $this->prefix . '.' . $key;
+      $descriptions[$name] = $definition['description'];
+    }
+    return $descriptions;
+  }
+
+  /**
    * Collects input values for this recipe and its dependencies.
    *
    * @param \Drupal\Core\Recipe\InputCollectorInterface $collector
@@ -71,7 +91,7 @@ final class InputConfigurator {
 
     // First, collect values for the recipe's dependencies.
     /** @var \Drupal\Core\Recipe\Recipe $dependency */
-    foreach ($recipe->recipes->recipes as $dependency) {
+    foreach ($this->dependencies->recipes as $dependency) {
       $dependency->input->collectAll($collector);
     }
 

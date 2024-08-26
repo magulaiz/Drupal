@@ -53,7 +53,7 @@ final class RecipeInfoCommand extends Command {
     $io->text($recipe->description);
 
     $io->section('Inputs');
-    $descriptions = $this->getInputDescriptions($recipe);
+    $descriptions = $recipe->input->describeAll();
     if ($descriptions) {
       // Passing NULL as the callable to array_map() makes it act like a Python
       // zip() operation.
@@ -65,29 +65,6 @@ final class RecipeInfoCommand extends Command {
       $io->writeln("This recipe does not accept any input.");
     }
     return 0;
-  }
-
-  /**
-   * Returns the description for all inputs of a recipe and its dependencies.
-   *
-   * @param \Drupal\Core\Recipe\Recipe $recipe
-   *   The recipe to examine.
-   *
-   * @return string[]
-   *   The descriptions of every input defined by the recipe and its
-   *   dependencies, keyed by the input's fully qualified name (i.e., prefixed
-   *   by the name of the recipe that defines it).
-   */
-  private function getInputDescriptions(Recipe $recipe): array {
-    $descriptions = [];
-    foreach ($recipe->recipes->recipes as $dependency) {
-      $descriptions = array_merge($descriptions, $this->getInputDescriptions($dependency));
-    }
-    foreach ($recipe->inputDefinitions as $key => $definition) {
-      $name = $recipe->machineName() . '.' . $key;
-      $descriptions[$name] = $definition['description'];
-    }
-    return $descriptions;
   }
 
 }
