@@ -92,7 +92,6 @@ class MigrateStub implements MigrateStubInterface {
     if (($key_by_destination_ids !== FALSE) && array_keys($stub) === range(0, count($stub) - 1)) {
       $stub = array_combine(array_keys($migration->getDestinationPlugin()->getIds()), $stub);
     }
-
     // Check the existence of a source that matches the source IDs before
     // creating a stub, if applicable.
     if ($create_only_valid) {
