@@ -19,11 +19,20 @@ final class InputConfigurator {
   private ?array $values = NULL;
 
   /**
-   * @param array<string, array<string, mixed>> $input_definitions
+   * @param array<string, array<string, mixed>> $definitions
    *   The recipe's input definitions, keyed by name. This is an array of arrays
    *   where each sub-array has a `from` element, and the other elements vary
    *   depending on what `from` is.
    * @param \Drupal\Core\Recipe\RecipeConfigurator $dependencies
+   *   The recipes that this recipe depends on.
+   * @param string $prefix
+   *   A prefix for each input definition, to give each one a unique name
+   *   when collecting input for multiple recipes. Usually this is the unique
+   *   name of the recipe.
+   * @param \Drupal\Core\TypedData\TypedDataManagerInterface $typedDataManager
+   *   The typed data manager service.
+   * @param \Drupal\Core\Config\ConfigFactoryInterface $configFactory
+   *   The config factory service.
    */
   public function __construct(
     private readonly array $definitions,
