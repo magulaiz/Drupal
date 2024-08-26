@@ -766,7 +766,7 @@ function system_js_settings_alter(&$settings, AttachedAssetsInterface $assets) {
     $settings['ajaxPageState']['libraries'] = implode(',', $minimal_libraries);
   }
 
-  // @TODO: Preferably, these could be retrieved from the render element?
+  // @todo: Preferably, these could be retrieved from the render element?
   foreach (['status', 'error', 'warning'] as $type) {
     $message_type_key = $type . 'MessagesTemplate';
     if (array_key_exists($message_type_key, $settings)) {
@@ -776,7 +776,7 @@ function system_js_settings_alter(&$settings, AttachedAssetsInterface $assets) {
         '#theme' => 'status_messages',
         '#message_list' => [
           $type => [
-            '#markup' => Markup::create('<div data-drupal-message-template></div>')
+            '#markup' => Markup::create('<div data-drupal-message-template></div>'),
           ],
         ],
         '#status_headings' => [
