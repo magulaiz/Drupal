@@ -27,8 +27,18 @@ final class InputConfigurator {
   /**
    * @param array<string, array<string, mixed>> $definitions
    *   The recipe's input definitions, keyed by name. This is an array of arrays
-   *   where each sub-array has a `from` element, and the other elements vary
-   *   depending on what `from` is.
+   *   where each sub-array has, at minimum:
+   *   - `description`: A short, human-readable description of the input (e.g.,
+   *      what the recipe uses it for).
+   *   - `data_type`: An optional Typed Data data type for the input value.
+   *      Defaults to `any`.
+   *   - `constraints`: An optional array of validation constraints to apply
+   *     to the value. This should be an associative array of arrays, keyed by
+   *     constraint name, where each sub-array is a set of options for that
+   *     constraint (identical to the way validation constraints are defined in
+   *     config schema).
+   *   - `default`: A default value for the input, if it cannot be collected
+   *     the user. See ::getDefaultValue() for more information.
    * @param \Drupal\Core\Recipe\RecipeConfigurator $dependencies
    *   The recipes that this recipe depends on.
    * @param string $prefix
