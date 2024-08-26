@@ -7,13 +7,12 @@ namespace Drupal\KernelTests\Core\Recipe;
 use Drupal\Component\Uuid\UuidInterface;
 use Drupal\contact\Entity\ContactForm;
 use Drupal\Core\Recipe\ConsoleInputCollector;
-use Drupal\Core\Recipe\DefaultValueResolver;
-use Drupal\Core\Recipe\InputCollectorBase;
+use Drupal\Core\Recipe\InputCollectorInterface;
 use Drupal\Core\Recipe\Recipe;
 use Drupal\Core\Recipe\RecipeRunner;
-use Drupal\Core\TypedData\TypedDataManagerInterface;
 use Drupal\FunctionalTests\Core\Recipe\RecipeTestTrait;
 use Drupal\KernelTests\KernelTestBase;
+use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Style\StyleInterface;
 use Symfony\Component\Validator\Exception\ValidationFailedException;
 
@@ -55,33 +54,32 @@ class InputTest extends KernelTestBase {
    * @covers \Drupal\Core\Recipe\DefaultValueResolver
    */
   public function testDefaultValueFromConfig(): void {
-    // Collect the input values before processing the recipe.
-    DefaultValueResolver::create($this->container)->collectAll($this->recipe);
+    // Collect the input values before processing the recipe, using a mocked
+    // collector that will always return the default value.
+    $collector = $this->createMock(InputCollectorInterface::class);
+    $collector->expects($this->any())
+      ->method('collectValue')
+      ->withAnyParameters()
+      ->willReturnArgument(3);
+
+    $this->recipe->input->collectAll($collector);
     RecipeRunner::processRecipe($this->recipe);
 
     $this->assertSame(['ben@deep.space'], ContactForm::load('feedback')?->getRecipients());
   }
 
   /**
-   * @covers \Drupal\Core\Recipe\InputCollectorBase::validate
+   * @covers \Drupal\Core\Recipe\InputCollector::validate
    */
   public function testInputIsValidated(): void {
-    // @phpstan-ignore-next-line
-    $collector = new class (
-      $this->container->get(TypedDataManagerInterface::class),
-    ) extends InputCollectorBase {
+    $collector = $this->createMock(InputCollectorInterface::class);
+    $collector->expects($this->atLeastOnce())
+      ->method('collectValue')
+      ->with('feedback_contact_form.recipient', $this->isType('string'), $this->isType('array'), $this->anything())
+      ->willReturn('not-an-email-address');
 
-      /**
-       * {@inheritdoc}
-       */
-      protected function collectValue(string $name, array $definition): mixed {
-        assert($name === 'feedback_contact_form.recipient');
-        return 'not-an-email-address';
-      }
-
-    };
     try {
-      $collector->collectAll($this->recipe);
+      $this->recipe->input->collectAll($collector);
       $this->fail('Expected an exception due to validation failure, but none was thrown.');
     }
     catch (ValidationFailedException $e) {
@@ -116,9 +114,12 @@ input:
       value: "I don't know that!"
 YAML
     );
-    ConsoleInputCollector::create($this->container, io: $io)
-      ->collectAll($recipe);
-    $this->assertSame(['capital' => '<scream>'], $recipe->getInputValues());
+    $collector = new ConsoleInputCollector(
+      $this->createMock(InputInterface::class),
+      $io,
+    );
+    $recipe->input->collectAll($collector);
+    $this->assertSame(['capital' => '<scream>'], $recipe->input->getValues());
   }
 
   /**
@@ -137,9 +138,14 @@ input:
       value: "I don't know that!"
 YAML
     );
+    $collector = new ConsoleInputCollector(
+      $this->createMock(InputInterface::class),
+      $this->createMock(StyleInterface::class),
+    );
+
     $this->expectException(\ArgumentCountError::class);
     $this->expectExceptionMessage('Argument #1 ($question) not passed');
-    ConsoleInputCollector::create($this->container, io: $this->createMock(StyleInterface::class))->collectAll($recipe);
+    $recipe->input->collectAll($collector);
   }
 
   /**
@@ -158,7 +164,7 @@ YAML
     );
     $this->expectException(\RuntimeException::class);
     $this->expectExceptionMessage("The 'foo.baz' config object does not exist.");
-    DefaultValueResolver::create($this->container)->collectAll($recipe);
+    $recipe->input->collectAll($this->createMock(InputCollectorInterface::class));
   }
 
   public function testLiterals(): void {
@@ -200,7 +206,14 @@ config:
         slogan: int is \${some_int}, bool is \${some_bool} and float is \${some_float}
 YAML
     );
-    DefaultValueResolver::create($this->container)->collectAll($recipe);
+    // Mock a collector that only returns the default value.
+    $collector = $this->createMock(InputCollectorInterface::class);
+    $collector->expects($this->any())
+      ->method('collectValue')
+      ->withAnyParameters()
+      ->willReturnArgument(3);
+    $recipe->input->collectAll($collector);
+
     RecipeRunner::processRecipe($recipe);
 
     $config = $this->config('config_test.types');

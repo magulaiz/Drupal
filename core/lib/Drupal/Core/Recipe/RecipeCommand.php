@@ -7,9 +7,11 @@ namespace Drupal\Core\Recipe;
 use Drupal\Component\Render\PlainTextOutput;
 use Drupal\Core\Command\BootableCommandTrait;
 use Drupal\Core\Config\Checkpoint\Checkpoint;
+use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Config\ConfigImporter;
 use Drupal\Core\Config\ConfigImporterException;
 use Drupal\Core\Config\StorageComparer;
+use Drupal\Core\TypedData\TypedDataManagerInterface;
 use Psr\Log\LoggerAwareInterface;
 use Psr\Log\LogLevel;
 use Symfony\Component\Console\Command\Command;
@@ -71,7 +73,7 @@ final class RecipeCommand extends Command {
 
     // Collect input for this recipe and all the recipes it directly and
     // indirectly applies.
-    ConsoleInputCollector::create($container, $input, $io)->collectAll($recipe);
+    $recipe->input->collectAll(new ConsoleInputCollector($input, $io));
 
     if ($checkpoint_storage instanceof LoggerAwareInterface) {
       $logger = new ConsoleLogger($output, [

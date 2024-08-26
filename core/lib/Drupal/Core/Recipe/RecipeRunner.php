@@ -108,7 +108,7 @@ final class RecipeRunner {
     $config_installer->installRecipeConfig($config);
 
     if (!empty($config->config['actions'])) {
-      $values = $recipe->getInputValues();
+      $values = $recipe->input->getValues();
       // Wrap the replacement strings with `${` and `}`, which is a fairly
       // common style of placeholder.
       $keys = array_map(fn ($k) => sprintf('${%s}', $k), array_keys($values));

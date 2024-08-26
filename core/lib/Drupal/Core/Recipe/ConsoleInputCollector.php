@@ -4,14 +4,11 @@ declare(strict_types=1);
 
 namespace Drupal\Core\Recipe;
 
-use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
-use Drupal\Core\TypedData\TypedDataManagerInterface;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Exception\InvalidArgumentException;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Style\StyleInterface;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Collects input values for recipes from the command line.
@@ -19,7 +16,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  * @internal
  *   This API is experimental.
  */
-final class ConsoleInputCollector extends InputCollectorBase implements ContainerInjectionInterface {
+final class ConsoleInputCollector implements InputCollectorInterface {
 
   /**
    * The name of the command-line option for passing input values.
@@ -29,25 +26,9 @@ final class ConsoleInputCollector extends InputCollectorBase implements Containe
   public const INPUT_OPTION = 'input';
 
   public function __construct(
-    private readonly DefaultValueResolver $defaultValueResolver,
-    private readonly ?InputInterface $input,
-    private readonly ?StyleInterface $io,
-    TypedDataManagerInterface $typedDataManager,
-  ) {
-    parent::__construct($typedDataManager);
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function create(ContainerInterface $container, ?InputInterface $input = NULL, ?StyleInterface $io = NULL): static {
-    return new static(
-      DefaultValueResolver::create($container),
-      $input,
-      $io,
-      $container->get(TypedDataManagerInterface::class),
-    );
-  }
+    private readonly InputInterface $input,
+    private readonly StyleInterface $io,
+  ) {}
 
   /**
    * Configures a console command to support the `--input` option.
@@ -92,7 +73,7 @@ final class ConsoleInputCollector extends InputCollectorBase implements Containe
   /**
    * {@inheritdoc}
    */
-  protected function collectValue(string $name, array $definition): mixed {
+  public function collectValue(string $name, string|\Stringable $description, array $definition, mixed $default_value): mixed {
     $option_values = $this->getInputFromOptions();
 
     // If the value was passed as a `--input` option, return that.
@@ -101,11 +82,9 @@ final class ConsoleInputCollector extends InputCollectorBase implements Containe
     }
 
     /** @var array{prompt?: array{method: string, arguments?: array<mixed>}} $definition */
-    $default_value = $this->defaultValueResolver->collectValue($name, $definition);
-    // If there's no way to prompt the user (i.e., the I/O handler is
-    // unavailable), or there's no information on how to prompt the user,
-    // there's nothing else for us to do; return the default value.
-    if (empty($this->io) || empty($definition['prompt'])) {
+    // If there's no information on how to prompt the user, there's nothing else
+    // for us to do; return the default value.
+    if (empty($definition['prompt'])) {
       return $default_value;
     }
 
