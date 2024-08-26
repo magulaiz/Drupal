@@ -23,8 +23,8 @@
         // detection or Content language detection.
         $checkbox
           .closest('.table-language-group')
-          .find('table, .tabledrag-toggle-weight')
-          .toggle($checkbox.prop('checked'));
+          .find('table, .tabledrag-toggle-weight')[0].style.display =
+          $checkbox.prop('checked') ? '' : 'none';
       }
 
       // Bind hide/show and rearrange customization checkboxes.

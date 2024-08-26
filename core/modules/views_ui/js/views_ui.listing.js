@@ -37,7 +37,7 @@
             sourcesConcat += item.textContent;
           });
           const textMatch = sourcesConcat.toLowerCase().includes(query);
-          $(row).closest('tr').toggle(textMatch);
+          $(row).closest('tr')[0].style.display = textMatch ? '' : 'none';
         }
 
         // Filter if the length of the query is at least 2 characters.

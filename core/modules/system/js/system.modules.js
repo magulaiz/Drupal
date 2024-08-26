@@ -31,7 +31,7 @@
       function hidePackageDetails(index, element) {
         const $packDetails = $(element);
         const $visibleRows = $packDetails.find('tbody tr:visible');
-        $packDetails.toggle($visibleRows.length > 0);
+        $packDetails[0].style.display = $visibleRows.length > 0 ? '' : 'none';
       }
 
       function filterModuleList(e) {
@@ -50,7 +50,7 @@
             sourcesConcat += ` ${item.textContent}`;
           });
           const textMatch = sourcesConcat.search(re) !== -1;
-          $(row).closest('tr').toggle(textMatch);
+          $(row).closest('tr')[0].style.display = textMatch ? '' : 'none';
         }
         // Search over all rows and packages.
         $rowsAndDetails.show();

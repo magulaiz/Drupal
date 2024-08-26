@@ -138,9 +138,10 @@
 
           // Hide the current row with class "module" if it meets the
           // conditions.
-          $(row).toggle(
-            !nextVisibleSiblingHasModuleClass && !isLastVisibleModuleRow,
-          );
+          $(row)[0].style.display =
+            !nextVisibleSiblingHasModuleClass && !isLastVisibleModuleRow
+              ? ''
+              : 'none';
         }
       }
 
@@ -157,7 +158,7 @@
           const sources = row.querySelectorAll('.table-filter-text-source');
           if (sources.length > 0) {
             const textMatch = sources[0].textContent.search(re) !== -1;
-            $(row).closest('tr').toggle(textMatch);
+            $(row).closest('tr')[0].style.display = textMatch ? '' : 'none';
           }
         }
         // Search over all rows.
