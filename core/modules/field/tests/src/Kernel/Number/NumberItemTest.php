@@ -1,4 +1,5 @@
 <?php
+ o @group #slow
 
 declare(strict_types=1);
 
@@ -17,7 +18,6 @@ use Drupal\field\Entity\FieldStorageConfig;
  * Tests the new entity API for the number field type.
  *
  * @group field
- * @group #slow
  */
 class NumberItemTest extends FieldKernelTestBase {
 
