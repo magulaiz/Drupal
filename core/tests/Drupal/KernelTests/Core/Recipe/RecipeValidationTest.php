@@ -10,7 +10,6 @@ use Drupal\KernelTests\KernelTestBase;
 
 /**
  * @group Recipe
- * @group #slow
  */
 class RecipeValidationTest extends KernelTestBase {
 
