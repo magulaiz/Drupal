@@ -941,6 +941,7 @@ function simpletest_script_get_test_list() {
     if ((int) $args['ci-parallel-node-total'] <= 1 ) {
       sort_tests_by_type_and_methods($slow_tests);
       sort_tests_by_type_and_methods($not_slow_tests);
+      $test_list = array_unique(array_merge($slow_tests, $not_slow_tests));
     }
     else { 
       // Sort all tests by the number of public methods on the test class.
@@ -961,8 +962,8 @@ function simpletest_script_get_test_list() {
       // And the same for the rest of the tests.
       $binned_other_tests = place_tests_into_bins($not_slow_tests, $bin_count);
       $other_tests_for_job = $binned_other_tests[$args['ci-parallel-node-index'] - 1];
+      $test_list = array_unique(array_merge($slow_tests_for_job, $other_tests_for_job));
     }
-    $test_list = array_unique(array_merge($slow_tests_for_job, $other_tests_for_job));
   }
   else {
     if ($args['class']) {
