@@ -1108,11 +1108,13 @@ function get_test_class_method_count(string $class) {
   $reflection = new \ReflectionClass($class);
   $count = 0;
   foreach ($reflection->getMethods(\ReflectionMethod::IS_PUBLIC) as $method) {
+    // If a method uses a dataProvider, increase the count by 20 since data
+    // providers result in a single method running multiple times.
     $comments = $method->getDocComment();
     preg_match_all('#@(.*?)\n#s', $comments, $annotations);
     foreach ($annotations[1] as $annotation) {
       if (str_starts_with($annotation, 'dataProvider')) {
-        $count = $count + 5;
+        $count = $count + 20;
         continue;
       }
     }
