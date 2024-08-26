@@ -766,7 +766,7 @@ function system_js_settings_alter(&$settings, AttachedAssetsInterface $assets) {
     $settings['ajaxPageState']['libraries'] = implode(',', $minimal_libraries);
   }
 
-  // @todo: Preferably, retrieve these from the render element.
+  // @todo Preferably, retrieve these from the render element.
   foreach (['status', 'error', 'warning'] as $type) {
     $message_type_key = $type . 'MessagesTemplate';
     if (array_key_exists($message_type_key, $settings)) {
