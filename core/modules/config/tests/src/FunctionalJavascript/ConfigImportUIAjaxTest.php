@@ -55,18 +55,14 @@ class ConfigImportUIAjaxTest extends WebDriverTestBase {
     $this->assertSession()->buttonExists('Import all');
 
     // Click the dropbutton to show the differences in a modal and close it.
-    $page->find('css', '.dropbutton-action')->click();
-    $assert_session->waitForElementVisible('css', '.ui-dialog');
-    $assert_session->assertVisibleInViewport('css', '.ui-dialog .ui-dialog-content');
-    $page->pressButton('Close');
-    $assert_session->assertNoElementAfterWait('css', '.ui-dialog');
-
-    // Click the dropbutton again.
-    $page->find('css', '.dropbutton-action')->click();
-    $assert_session->waitForElementVisible('css', '.ui-dialog');
-    $assert_session->assertVisibleInViewport('css', '.ui-dialog .ui-dialog-content');
-    $page->pressButton('Close');
-    $assert_session->assertNoElementAfterWait('css', '.ui-dialog');
+    // Do this twice to make sure no JavaScript errors occur on revisits.
+    for ($i = 0; $i <= 1; $i++) {
+      $page->find('css', '.dropbutton-action')->click();
+      $assert_session->waitForElementVisible('css', '.ui-dialog');
+      $assert_session->assertVisibleInViewport('css', '.ui-dialog .ui-dialog-content');
+      $page->pressButton('Close');
+      $assert_session->assertNoElementAfterWait('css', '.ui-dialog');
+    }
   }
 
 }
