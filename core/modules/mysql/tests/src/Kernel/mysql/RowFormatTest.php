@@ -47,6 +47,11 @@ class RowFormatTest extends DriverSpecificKernelTestBase {
     $this->assertEqualsIgnoringCase($rowFormat, $result, "{$tableName} should have row format {$rowFormat}, but it has not.");
   }
 
+  /**
+   * Data provider for testRowFormat().
+   *
+   * @return array
+   */
   public static function rowFormatProvider(): array {
     return [
       'row format redundant' => ['REDUNDANT'],
