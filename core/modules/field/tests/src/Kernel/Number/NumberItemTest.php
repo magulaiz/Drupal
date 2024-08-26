@@ -1,5 +1,4 @@
 <?php
- o @group #slow
 
 declare(strict_types=1);
 
