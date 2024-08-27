@@ -60,7 +60,7 @@ final class ConsoleInputCollector implements InputCollectorInterface {
   private function getInputFromOptions(): array {
     $options = [];
     try {
-      foreach ($this->input?->getOption(static::INPUT_OPTION) ?? [] as $option) {
+      foreach ($this->input->getOption(static::INPUT_OPTION) ?? [] as $option) {
         [$key, $value] = explode('=', $option, 2);
         $options[$key] = $value;
       }
