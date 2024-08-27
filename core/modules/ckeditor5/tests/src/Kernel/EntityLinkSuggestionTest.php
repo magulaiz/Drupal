@@ -75,6 +75,9 @@ class EntityLinkSuggestionTest extends KernelTestBase {
     Editor::create([
       'format' => 'test_format',
       'editor' => 'ckeditor5',
+      'image_upload' => [
+        'status' => FALSE,
+      ],
       'settings' => [
         'toolbar' => [
           'items' => [
@@ -120,7 +123,7 @@ class EntityLinkSuggestionTest extends KernelTestBase {
     ]);
     $user->addRole('create page content');
     $user->addRole('use text format test_format');
-    $user->save();
+    $user->activate()->save();
     $this->container->get('current_user')->setAccount($user);
 
     // Create the translation language.
@@ -217,27 +220,27 @@ class EntityLinkSuggestionTest extends KernelTestBase {
 
     // "f", multiple results, from node vs user.
     yield 'suggestions=default (everything), host entity type=node, host entity langcode=en, search term="f"' => [
-      'configuration' => [
+      [
         'allow_download_links' => TRUE,
         'suggester' => 'core.entity_link_suggester.everything',
       ],
-      'search term' => 'f',
-      'host entity type' => 'node',
-      'host entity langcode' => 'en',
-      'expected suggestions' => [
+      'f',
+      'node',
+      'en',
+      [
         $suggestion_node_1_en,
         $suggestion_user_1,
       ],
     ];
     yield 'suggestions=default (everything), host entity type=user, host entity langcode=en, search term="f"' => [
-      'configuration' => [
+      [
         'allow_download_links' => TRUE,
         'suggester' => 'core.entity_link_suggester.everything',
       ],
-      'search term' => 'f',
-      'host entity type' => 'user',
-      'host entity langcode' => 'en',
-      'expected suggestions' => [
+      'f',
+      'user',
+      'en',
+      [
         $suggestion_user_1,
         $suggestion_node_1_en,
       ],
@@ -245,40 +248,40 @@ class EntityLinkSuggestionTest extends KernelTestBase {
 
     // "f", single result due to (different) suggestion restrictions.
     yield 'suggestions=nodes only, host entity type=node, host entity langcode=en, search term="f"' => [
-      'configuration' => [
+      [
         'allow_download_links' => TRUE,
         'suggester' => 'core.entity_link_suggester.nodes_only',
       ],
-      'search term' => 'f',
-      'host entity type' => 'node',
-      'host entity langcode' => 'en',
-      'expected suggestions' => [
+      'f',
+      'node',
+      'en',
+      [
         $suggestion_node_1_en,
       ],
     ];
     yield 'suggestions=users only, host entity type=node, host entity langcode=en, search term="f"' => [
-      'configuration' => [
+      [
         'allow_download_links' => TRUE,
         'suggester' => 'core.entity_link_suggester.users_only',
       ],
-      'search term' => 'f',
-      'host entity type' => 'node',
-      'host entity langcode' => 'en',
-      'expected suggestions' => [
+      'f',
+      'node',
+      'en',
+      [
         $suggestion_user_1,
       ],
     ];
 
     // "f", no result due to even tighter suggestion restrictions.
     yield 'suggestions=article nodes only, host entity type=node, host entity langcode=en, search term="f"' => [
-      'configuration' => [
+      [
         'allow_download_links' => TRUE,
         'suggester' => 'core.entity_link_suggester.articles_only',
       ],
-      'search term' => 'f',
-      'host entity type' => 'node',
-      'host entity langcode' => 'en',
-      'expected suggestions' => [
+      'f',
+      'node',
+      'en',
+      [
         [
           'description' => 'No content suggestions found. This URL will be used as is.',
           'group' => 'No results',
@@ -290,26 +293,26 @@ class EntityLinkSuggestionTest extends KernelTestBase {
 
     // "fo", single result, but different labels due to host entity langcode.
     yield 'suggestions=default (everything), host entity type=node, host entity langcode=en, search term="fo"' => [
-      'configuration' => [
+      [
         'allow_download_links' => TRUE,
         'suggester' => 'core.entity_link_suggester.everything',
       ],
-      'search term' => 'fo',
-      'host entity type' => 'node',
-      'host entity langcode' => 'en',
-      'expected suggestions' => [
+      'fo',
+      'node',
+      'en',
+      [
         $suggestion_node_1_en,
       ],
     ];
     yield 'suggestions=default (everything), host entity type=node, host entity langcode=de, search term="fo"' => [
-      'configuration' => [
+      [
         'allow_download_links' => TRUE,
         'suggester' => 'core.entity_link_suggester.everything',
       ],
-      'search term' => 'fo',
-      'host entity type' => 'node',
-      'host entity langcode' => 'de',
-      'expected suggestions' => [
+      'fo',
+      'node',
+      'de',
+      [
         $suggestion_node_1_de,
       ],
     ];
@@ -317,26 +320,26 @@ class EntityLinkSuggestionTest extends KernelTestBase {
     // "Deutsch" (which appears only on a translation of an entity!), single
     // result, but different labels due to host entity langcode.
     yield 'suggestions=default (everything), host entity type=node, host entity langcode=en, search term="Deutsch"' => [
-      'configuration' => [
+      [
         'allow_download_links' => TRUE,
         'suggester' => 'core.entity_link_suggester.everything',
       ],
-      'search term' => 'Deutsch',
-      'host entity type' => 'node',
-      'host entity langcode' => 'en',
-      'expected suggestions' => [
+      'Deutsch',
+      'node',
+      'en',
+      [
         $suggestion_node_1_en,
       ],
     ];
     yield 'suggestions=default (everything), host entity type=node, host entity langcode=de, search term="Deutsch"' => [
-      'configuration' => [
+      [
         'allow_download_links' => TRUE,
         'suggester' => 'core.entity_link_suggester.everything',
       ],
-      'search term' => 'Deutsch',
-      'host entity type' => 'node',
-      'host entity langcode' => 'de',
-      'expected suggestions' => [
+      'Deutsch',
+      'node',
+      'de',
+      [
         $suggestion_node_1_de,
       ],
     ];
