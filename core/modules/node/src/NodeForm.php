@@ -63,7 +63,7 @@ class NodeForm extends ContentEntityForm {
    *   The current user.
    * @param \Drupal\Core\Datetime\DateFormatterInterface $date_formatter
    *   The date formatter service.
-   * @param \Drupal\Core\Language\LanguageManagerInterface $language_manager
+   * @param \Drupal\Core\Language\LanguageManagerInterface|null $language_manager
    *   The language manager.
    */
   public function __construct(
@@ -73,7 +73,7 @@ class NodeForm extends ContentEntityForm {
     TimeInterface $time,
     AccountInterface $current_user,
     DateFormatterInterface $date_formatter,
-    LanguageManagerInterface $language_manager = NULL,
+    ?LanguageManagerInterface $language_manager = NULL,
   ) {
     parent::__construct($entity_repository, $entity_type_bundle_info, $time);
     $this->tempStoreFactory = $temp_store_factory;
