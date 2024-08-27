@@ -773,7 +773,7 @@ function system_js_settings_alter(&$settings, AttachedAssetsInterface $assets) {
  */
 function system_form_alter(&$form, FormStateInterface $form_state) {
   if (InstallerKernel::installationAttempted()) {
-    // The installer is not cacheable.
+    // The installer is not cacheable, see install_display_output().
     return;
   }
   // If the page that's being built is cacheable, set the 'immutable' flag, to
