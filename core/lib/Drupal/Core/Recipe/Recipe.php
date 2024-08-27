@@ -9,6 +9,8 @@ use Drupal\Core\Extension\Dependency;
 use Drupal\Core\Extension\ModuleExtensionList;
 use Drupal\Core\Extension\ThemeExtensionList;
 use Drupal\Component\Serialization\Yaml;
+use Drupal\Core\Plugin\Plugin\Validation\Constraint\PluginExistsConstraint;
+use Drupal\Core\TypedData\PrimitiveInterface;
 use Drupal\Core\Validation\Plugin\Validation\Constraint\RegexConstraint;
 use Symfony\Component\Validator\Constraints\All;
 use Symfony\Component\Validator\Constraints\AtLeastOneOf;
@@ -193,11 +195,15 @@ final class Recipe {
               'constraints' => new Optional([
                 new Type('associative_array'),
               ]),
-              // The value can optionally be cast to a particular data type.
-              // @see \Drupal\Core\Recipe\InputCollectorBase::collectAll()
-              'data_type' => new Optional([
-                new Choice(['string', 'integer', 'float', 'boolean', 'any']),
-              ]),
+              // The data type must be known to the typed data system.
+              'data_type' => [
+                new PluginExistsConstraint(\Drupal::typedDataManager(), [
+                  'manager' => 'typed_data_manager',
+                  // Only primitives are supported because it's not always clear
+                  // how to collect, validate, and cast complex structures.
+                  'interface' => PrimitiveInterface::class,
+                ])
+              ],
               // If there is a `prompt` element, it has its own set of
               // constraints.
               'prompt' => new Optional([

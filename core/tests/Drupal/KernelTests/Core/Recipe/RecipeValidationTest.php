@@ -6,6 +6,7 @@ namespace Drupal\KernelTests\Core\Recipe;
 
 use Drupal\Core\Recipe\Recipe;
 use Drupal\Core\Recipe\RecipeFileException;
+use Drupal\Core\TypedData\PrimitiveInterface;
 use Drupal\KernelTests\KernelTestBase;
 
 /**
@@ -298,7 +299,8 @@ YAML,
       <<<YAML
 name: Bad input definitions
 input:
-  - description: A valid enough input, but in an indexed array.
+  - data_type: string
+    description: A valid enough input, but in an indexed array.
     default:
       source: value
       value: Here be dragons
@@ -307,11 +309,26 @@ YAML,
         '[input]' => ['This value should be of type associative_array.'],
       ],
     ];
+    yield 'input data type is missing' => [
+      <<<YAML
+name: Bad input definitions
+input:
+  foo:
+    description: What's my data type?
+    default:
+      source: value
+      value: Here be dragons
+YAML,
+      [
+        '[input][foo][data_type]' => ['This field is missing.'],
+      ],
+    ];
     yield 'input description is not a string' => [
       <<<YAML
 name: Bad input definitions
 input:
   foo:
+    data_type: string
     description: 3.141
     default:
       source: value
@@ -326,6 +343,7 @@ YAML,
 name: Bad input definitions
 input:
   foo:
+    data_type: string
     description: ''
     default:
       source: value
@@ -340,6 +358,7 @@ YAML,
 name: Bad input definitions
 input:
   foo:
+    data_type: string
     description: 'Constraints need to be associative'
     constraints:
       - Type: string
@@ -351,13 +370,13 @@ YAML,
         '[input][foo][constraints]' => ['This value should be of type associative_array.'],
       ],
     ];
-    yield 'input data type is invalid' => [
+    yield 'input data type is unknown' => [
       <<<YAML
 name: Bad input definitions
 input:
   foo:
-    description: 'Bad data type'
     data_type: power_tool
+    description: 'Bad data type'
     prompt:
       method: ask
     default:
@@ -365,7 +384,24 @@ input:
       value: Here be dragons
 YAML,
       [
-        '[input][foo][data_type]' => ['The value you selected is not a valid choice.'],
+        '[input][foo][data_type]' => ["The 'power_tool' plugin does not exist."],
+      ],
+    ];
+    yield 'data type is not a primitive' => [
+      <<<YAML
+name: Bad input definitions
+input:
+  foo:
+    data_type: list
+    description: 'Non-primitive data type'
+    default:
+      source: value
+      value: [Yeah, No]
+YAML,
+      [
+        '[input][foo][data_type]' => [
+          "The 'list' plugin must implement or extend " . PrimitiveInterface::class . '.',
+        ],
       ],
     ];
     yield 'prompt definition is not an array' => [
@@ -373,6 +409,7 @@ YAML,
 name: Bad input definitions
 input:
   foo:
+    data_type: string
     description: 'Prompt info must be an array'
     prompt: ask
     default:
@@ -388,6 +425,7 @@ YAML,
 name: Bad input definitions
 input:
   foo:
+    data_type: string
     description: 'Bad prompt type'
     prompt:
       method: whoops
@@ -404,6 +442,7 @@ YAML,
 name: Bad input definitions
 input:
   foo:
+    data_type: string
     description: 'Prompt arguments must be associative'
     prompt:
       method: ask
@@ -421,6 +460,7 @@ YAML,
 name: Bad input definitions
 input:
   foo:
+    data_type: string
     description: 'No default'
     prompt:
       method: ask
@@ -434,6 +474,7 @@ YAML,
 name: Bad input definitions
 input:
   foo:
+    data_type: string
     description: 'Bad default definition'
     prompt:
       method: ask
@@ -449,6 +490,7 @@ YAML,
 name: Bad input definitions
 input:
   foo:
+    data_type: email
     description: 'Bad default definition'
     prompt:
       method: ask
@@ -465,6 +507,7 @@ YAML,
 name: Bad input definitions
 input:
   foo:
+    data_type: email
     description: 'Bad default definition'
     prompt:
       method: ask
@@ -481,6 +524,7 @@ YAML,
 name: Bad input definitions
 input:
   foo:
+    data_type: email
     description: 'Bad default definition'
     prompt:
       method: ask
@@ -499,6 +543,7 @@ YAML,
 name: Bad input definitions
 input:
   foo:
+    data_type: string
     description: 'Bad default definition'
     prompt:
       method: ask
@@ -515,6 +560,7 @@ YAML,
 name: Bad input definitions
 input:
   foo:
+    data_type: email
     description: 'Bad default definition'
     prompt:
       method: ask
@@ -531,6 +577,7 @@ YAML,
 name: Good input definitions
 input:
   foo:
+    data_type: email
     description: 'Good default definition'
     prompt:
       method: ask

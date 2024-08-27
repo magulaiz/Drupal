@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Drupal\Core\Recipe;
 
 use Drupal\Core\TypedData\DataDefinition;
-use Drupal\Core\TypedData\PrimitiveInterface;
 use Drupal\Core\TypedData\TypedDataManagerInterface;
 use Symfony\Component\Validator\Exception\ValidationFailedException;
 
@@ -37,8 +36,7 @@ final class InputConfigurator {
    *   where each sub-array has, at minimum:
    *   - `description`: A short, human-readable description of the input (e.g.,
    *      what the recipe uses it for).
-   *   - `data_type`: An optional Typed Data data type for the input value.
-   *      Defaults to `any`.
+   *   - `data_type`: A primitive data type known to the typed data system.
    *   - `constraints`: An optional array of validation constraints to apply
    *     to the value. This should be an associative array of arrays, keyed by
    *     constraint name, where each sub-array is a set of options for that
@@ -63,7 +61,7 @@ final class InputConfigurator {
   ) {
     // Convert the input definitions to typed data definitions.
     foreach ($definitions as $name => $definition) {
-      $data_definition = DataDefinition::create($definition['data_type'] ?? 'any')
+      $data_definition = DataDefinition::create($definition['data_type'])
         ->setDescription($definition['description'])
         ->setConstraints($definition['constraints'] ?? []);
 
@@ -149,12 +147,7 @@ final class InputConfigurator {
       if (count($violations) > 0) {
         throw new ValidationFailedException($value, $violations);
       }
-      // If the data is a primitive, cast it. But if the data is an array or
-      // other complex value, use it as-is.
-      if ($data instanceof PrimitiveInterface) {
-        $value = $data->getCastedValue();
-      }
-      $this->values[$key] = $value;
+      $this->values[$key] = $data->getCastedValue();
     }
     $processed[] = $this->prefix;
   }

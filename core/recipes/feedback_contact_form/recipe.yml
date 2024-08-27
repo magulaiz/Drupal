@@ -5,10 +5,10 @@ install:
   - contact
 input:
   recipient:
+    data_type: email
     description: 'The email address that should receive submissions from the feedback form.'
     constraints:
       NotBlank: []
-      Email: []
     prompt:
       method: ask
       arguments:

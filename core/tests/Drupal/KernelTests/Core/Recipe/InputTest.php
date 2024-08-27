@@ -98,6 +98,7 @@ class InputTest extends KernelTestBase {
 name: 'Collecting prompt input'
 input:
   capital:
+    data_type: string
     description: The capital of a long-defunct country.
     prompt:
       method: ask
@@ -118,28 +119,6 @@ YAML
     $this->assertSame(['capital' => '<scream>'], $recipe->input->getValues());
   }
 
-  public function testCollectedArraysAreNativeTypes(): void {
-    $collector = $this->createMock(InputCollectorInterface::class);
-    $collector->expects($this->atLeastOnce())
-      ->method('collectValue')
-      ->withAnyParameters()
-      ->willReturnArgument(2);
-
-    $recipe = $this->createRecipe(<<<YAML
-name: 'Collecting array input'
-input:
-  goodbyes:
-    description: Give me some ways to say goodbye.
-    default:
-      source: value
-      value: ['Tchau', 'Auf weidersehen']
-YAML
-    );
-    $recipe->input->collectAll($collector);
-    $values = $recipe->input->getValues();
-    $this->assertSame(['Tchau', 'Auf weidersehen'], $values['goodbyes']);
-  }
-
   /**
    * @covers \Drupal\Core\Recipe\ConsoleInputCollector::collectValue
    */
@@ -148,6 +127,7 @@ YAML
 name: 'Collecting prompt input'
 input:
   capital:
+    data_type: string
     description: The capital of a long-defunct country.
     prompt:
       method: ask
@@ -171,6 +151,7 @@ YAML
 name: 'Default value from non-existent config'
 input:
   capital:
+    data_type: string
     description: This will be erroneous.
     default:
       source: config
@@ -189,21 +170,25 @@ install:
   - config_test
 input:
   capital:
+    data_type: string
     description: Your favorite state capital.
     default:
       source: value
       value: Boston
   some_int:
+    data_type: integer
     description: This is an integer and should be stored as an integer.
     default:
       source: value
       value: 1234
   some_bool:
+    data_type: boolean
     description: This is a boolean and should be stored as a boolean.
     default:
       source: value
       value: false
   some_float:
+    data_type: float
     description: Pi is a float, should be stored as a float.
     default:
       source: value
