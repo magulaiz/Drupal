@@ -9,7 +9,6 @@ use Drupal\Core\Extension\Dependency;
 use Drupal\Core\Extension\ModuleExtensionList;
 use Drupal\Core\Extension\ThemeExtensionList;
 use Drupal\Component\Serialization\Yaml;
-use Drupal\Core\Plugin\Plugin\Validation\Constraint\PluginExistsConstraint;
 use Drupal\Core\TypedData\PrimitiveInterface;
 use Drupal\Core\Validation\Plugin\Validation\Constraint\RegexConstraint;
 use Symfony\Component\Validator\Constraints\All;
@@ -195,9 +194,9 @@ final class Recipe {
               'constraints' => new Optional([
                 new Type('associative_array'),
               ]),
-              // The data type must be known to the typed data system.
               'data_type' => [
-                new PluginExistsConstraint(\Drupal::typedDataManager(), [
+                // The data type must be known to the typed data system.
+                \Drupal::service('validation.constraint')->createInstance('PluginExists', [
                   'manager' => 'typed_data_manager',
                   // Only primitives are supported because it's not always clear
                   // how to collect, validate, and cast complex structures.
