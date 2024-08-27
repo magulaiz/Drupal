@@ -668,7 +668,7 @@ class NodeTranslationUITest extends ContentTranslationUITestBase {
     $this->assertSession()->pageTextNotContains('First rev fr title');
   }
 
-  /** 
+  /**
    * Tests redirection after saving translation.
    */
   public function testRedirect() {
