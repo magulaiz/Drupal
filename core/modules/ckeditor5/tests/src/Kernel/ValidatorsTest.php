@@ -1586,7 +1586,7 @@ class ValidatorsTest extends KernelTestBase {
     ];
 
     $data['INVALID: EntityLinkSuggestions plugin configured to not have a suggester'] = [
-      'settings' => [
+      'ckeditor5_settings' => [
         'toolbar' => [
           'items' => [
             'link',
@@ -1599,7 +1599,7 @@ class ValidatorsTest extends KernelTestBase {
           ],
         ],
       ],
-      'image_upload' => [
+      'editor_image_upload_settings' => [
         'status' => FALSE,
       ],
       'filters' => [
@@ -1611,13 +1611,13 @@ class ValidatorsTest extends KernelTestBase {
           'settings' => [],
         ],
       ],
-      'violations' => [
+      'expected_violations' => [
         'settings.plugins.ckeditor5_link_entity_suggestions.suggester' => 'This value should not be null.',
       ],
     ];
 
     $data['VALID: EntityLinkSuggestions plugin configured to use a link suggester that allows all linkable entity types'] = [
-      'settings' => [
+      'ckeditor5_settings' => [
         'toolbar' => [
           'items' => [
             'link',
@@ -1630,7 +1630,7 @@ class ValidatorsTest extends KernelTestBase {
           ],
         ],
       ],
-      'image_upload' => [
+      'editor_image_upload_settings' => [
         'status' => FALSE,
       ],
       'filters' => [
@@ -1642,7 +1642,7 @@ class ValidatorsTest extends KernelTestBase {
           'settings' => [],
         ],
       ],
-      'violations' => [],
+      'expected_violations' => [],
     ];
 
     return $data;
