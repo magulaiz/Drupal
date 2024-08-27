@@ -221,11 +221,11 @@
         'change',
         function (event) {
           // Make our new row and select field.
-          const row = $(this).closest('tr');
+          const row = this.closest('tr');
           const select = $(this);
           // Find the correct region and insert the row as the last in the
           // region.
-          tableDrag.rowObject = new tableDrag.row(row[0]);
+          tableDrag.rowObject = new tableDrag.row(row);
           const regionMessage = table.find(
             `.region-${select[0].value}-message`,
           );

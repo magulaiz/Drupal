@@ -29,9 +29,9 @@
           $buttonPane.prepend($moveSelectedCount);
         };
 
-        const $buttonPane = $element
-          .closest('.media-library-widget-modal')
-          .find('.ui-dialog-buttonpane');
+        const element = $element[0];
+        const closestWidget = element.closest('.media-library-widget-modal');
+        const $buttonPane = $(closestWidget).find('.ui-dialog-buttonpane');
         if (!$buttonPane.length) {
           return;
         }

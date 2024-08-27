@@ -133,11 +133,14 @@
      */
     onChange() {
       const $trigger = $(this);
-      const $row = $trigger.closest('tr');
+      const row = this.closest('tr');
+      const $row = $(row);
+      const closestContent = this.closest('.ajax-new-content');
+      const closestTabledrag = this.closest('.tabledrag-hide');
 
       // Do not fire change listeners for items within forms that have their
       // own AJAX callbacks to process a change.
-      if ($trigger.closest('.ajax-new-content').length !== 0) {
+      if ($(closestContent).length !== 0) {
         return;
       }
 
@@ -164,7 +167,7 @@
       // while visible, the row should be marked as changed, but they should not
       // be processed via AJAXRefreshRows as they are intended to be fields AJAX
       // updates the value of.
-      if ($trigger.closest('.tabledrag-hide').length) {
+      if ($(closestTabledrag).length) {
         const thisTableDrag = Drupal.tableDrag['field-display-overview'];
         // eslint-disable-next-line new-cap
         const rowObject = new thisTableDrag.row(
@@ -453,6 +456,7 @@
         const query = e.target.value;
         function showRow(index, row) {
           const sources = row.querySelectorAll('.form-item');
+          const closestRow = row.closest('tr');
           let sourcesConcat = '';
           // Concatenate the textContent of the elements in the row, with a
           // space in between.
@@ -463,7 +467,7 @@
           const textMatch = sourcesConcat
             .toLowerCase()
             .includes(query.toLowerCase());
-          $(row).closest('tr').toggle(textMatch);
+          $(closestRow).toggle(textMatch);
         }
 
         // Filter if the length of the query is at least 1 character.

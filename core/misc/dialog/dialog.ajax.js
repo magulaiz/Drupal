@@ -14,8 +14,6 @@
    */
   Drupal.behaviors.dialog = {
     attach(context, settings) {
-      const $context = $(context);
-
       // Provide a known 'drupal-modal' DOM element for Drupal-based modal
       // dialogs. Non-modal dialogs are responsible for creating their own
       // elements, since there can be multiple non-modal dialogs at a time.
@@ -28,9 +26,11 @@
           .appendTo('body');
       }
 
+      const closestDialog =
+        context !== document && context.closest('.ui-dialog-content');
       // Special behaviors specific when attaching content within a dialog.
       // These behaviors usually fire after a validation error inside a dialog.
-      const $dialog = $context.closest('.ui-dialog-content');
+      const $dialog = $(closestDialog);
       if ($dialog.length) {
         // Remove and replace the dialog buttons with those from the new form.
         if ($dialog.dialog('option', 'drupalAutoButtons')) {
@@ -56,28 +56,30 @@
         originalClose.apply(settings.dialog, [event, ...args]);
         // Check if the opener element is inside an AJAX container.
         const $element = $(event.target);
-        const ajaxContainer = $element.data('uiDialog')
-          ? $element
-              .data('uiDialog')
-              .opener.closest('[data-drupal-ajax-container]')
-          : [];
+        const dataDialog = $element.data('uiDialog');
+        const openerElement = dataDialog && dataDialog.opener[0];
+        if (openerElement) {
+          const closestContainer = openerElement.closest(
+            '[data-drupal-ajax-container]',
+          );
+          const ajaxContainer = $(closestContainer);
 
-        // If the opener element was in an ajax container, and focus is on the
-        // body element, we can assume focus was lost. To recover, focus is
-        // moved to the first focusable element in the container.
-        if (
-          ajaxContainer.length &&
-          (document.activeElement === document.body ||
-            $(document.activeElement).not(':visible'))
-        ) {
-          const focusableChildren = focusable(ajaxContainer[0]);
-          if (focusableChildren.length > 0) {
-            setTimeout(() => {
-              focusableChildren[0].focus();
-            }, 0);
+          // If the opener element was in an ajax container, and focus is on the
+          // body element, we can assume focus was lost. To recover, focus is
+          // moved to the first focusable element in the container.
+          if (
+            ajaxContainer.length &&
+            (document.activeElement === document.body ||
+              $(document.activeElement).not(':visible'))
+          ) {
+            const focusableChildren = focusable(ajaxContainer[0]);
+            if (focusableChildren.length > 0) {
+              setTimeout(() => {
+                focusableChildren[0].focus();
+              }, 0);
+            }
           }
         }
-
         $(event.target).remove();
       };
     },

@@ -75,7 +75,8 @@
             return;
           }
           e.preventDefault();
-          const $tr = $(this).closest('tr');
+          const closestRow = this.closest('tr');
+          const $tr = $(closestRow);
 
           $tr.toggleClass('expanded');
 

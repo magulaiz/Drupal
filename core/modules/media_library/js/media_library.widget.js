@@ -55,9 +55,11 @@
         e.currentTarget.textContent = $target.hasClass('active')
           ? strings.show
           : strings.hide;
-        $target
-          .toggleClass('active')
-          .closest('.js-media-library-widget')
+        const targetElement = e.currentTarget.closest(
+          '.js-media-library-widget',
+        );
+        $target.toggleClass('active');
+        $(targetElement)
           .find('.js-media-library-item-weight')
           .parent()
           .toggle();
