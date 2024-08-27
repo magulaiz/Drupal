@@ -671,7 +671,7 @@ class NodeTranslationUITest extends ContentTranslationUITestBase {
   /**
    * Tests redirection after saving translation.
    */
-  public function testRedirect() {
+  public function testRedirect(): void {
     $this->drupalLogin($this->administrator);
 
     $article = $this->drupalCreateNode(['type' => 'article', 'langcode' => $this->langcodes[0]]);
