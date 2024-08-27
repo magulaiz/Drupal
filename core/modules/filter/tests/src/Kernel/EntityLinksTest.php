@@ -333,7 +333,7 @@ class EntityLinksTest extends KernelTestBase {
    * @covers \Drupal\shortcut\Entity\ShortcutLinkTarget
    */
   public function testShortcutEntity(): void {
-    $path = '/user/logout';
+    $path = '/user/logout?token=fzL0Ox4jS6qafdt6gzGzjWGb_hsR6kJ8L8E0D4hC5Mo';
     $shortcut = Shortcut::create([
       'shortcut_set' => 'default',
       'title' => 'Comments',
