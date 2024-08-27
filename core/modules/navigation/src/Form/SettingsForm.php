@@ -7,6 +7,7 @@ namespace Drupal\navigation\Form;
 use Drupal\Component\Utility\Environment;
 use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Config\TypedConfigManagerInterface;
+use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\File\FileSystemInterface;
 use Drupal\Core\File\FileUrlGeneratorInterface;
 use Drupal\Core\Form\ConfigFormBase;
@@ -53,6 +54,13 @@ final class SettingsForm extends ConfigFormBase {
   protected RendererInterface $renderer;
 
   /**
+   * The entity type manager.
+   *
+   * @var \Drupal\Core\Entity\EntityTypeManagerInterface
+   */
+  protected $entityTypeManager;
+
+  /**
    * Constructs a Navigation SettingsForm object.
    *
    * @param \Drupal\Core\Config\ConfigFactoryInterface $config_factory
@@ -67,6 +75,8 @@ final class SettingsForm extends ConfigFormBase {
    *   The File Usage service.
    * @param \Drupal\Core\Render\RendererInterface $renderer
    *   Renderer service.
+   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
+   *   The entity type manager.
    */
   public function __construct(
     ConfigFactoryInterface $config_factory,
@@ -75,12 +85,14 @@ final class SettingsForm extends ConfigFormBase {
     FileUrlGeneratorInterface $fileUrlGenerator,
     FileUsageInterface $fileUsage,
     RendererInterface $renderer,
+    EntityTypeManagerInterface $entity_type_manager,
   ) {
     parent::__construct($config_factory, $typed_config_manager);
     $this->fileSystem = $file_system;
     $this->fileUrlGenerator = $fileUrlGenerator;
     $this->fileUsage = $fileUsage;
     $this->renderer = $renderer;
+    $this->entityTypeManager = $entity_type_manager;
   }
 
   /**
@@ -93,7 +105,8 @@ final class SettingsForm extends ConfigFormBase {
       $container->get('file_system'),
       $container->get('file_url_generator'),
       $container->get('file.usage'),
-      $container->get('renderer')
+      $container->get('renderer'),
+      $container->get('entity_type.manager')
     );
   }
 
@@ -141,7 +154,9 @@ final class SettingsForm extends ConfigFormBase {
       ],
     ];
     $allowed = 'png jpg jpeg';
-    $current_logo_managed_fid = $config->get('logo_managed');
+    if (!empty($config->get('logo_managed'))) {
+      $fid = $this->getFidFromPath($config->get('logo_managed'));
+    }
     $max_navigation_allowed = $config->get('logo_max_filesize');
     $max_system_allowed = Environment::getUploadMaxSize();
     $max_allowed = $max_navigation_allowed < $max_system_allowed ? $max_navigation_allowed : $max_system_allowed;
@@ -161,7 +176,7 @@ final class SettingsForm extends ConfigFormBase {
       '#upload_validators' => $upload_validators,
       '#upload_location' => 'public://navigation-logo',
       '#description' => $this->renderer->renderInIsolation($file_upload_help),
-      '#default_value' => $current_logo_managed_fid,
+      '#default_value' => $config->get('logo_managed') ? [$fid] : [],
       '#multiple' => FALSE,
     ];
     return parent::buildForm($form, $form_state);
@@ -182,11 +197,10 @@ final class SettingsForm extends ConfigFormBase {
    */
   public function submitForm(array &$form, FormStateInterface $form_state): void {
     $config = $this->config('navigation.settings');
-
     // Get the previous config settings.
     $previous_logo_provider = $config->get('logo_provider');
-    $logo_managed = $config->get('logo_managed');
-    $previous_logo_fid = $logo_managed ? reset($logo_managed) : NULL;
+    $logo_path = $config->get('logo_managed');
+    $previous_logo_fid = $logo_path ? $this->getFidFromPath($logo_path) : NULL;
 
     // Get new values from the form.
     $new_logo_provider = $form_state->getValue('logo_provider');
@@ -208,6 +222,7 @@ final class SettingsForm extends ConfigFormBase {
 
     // Increment usage if different from the previous one.
     if ($new_logo_managed && $new_logo_fid !== $previous_logo_fid) {
+      $logo_path = $new_logo_managed->getFileUri();
       $new_logo_managed->setPermanent();
       $new_logo_managed->save();
       $this->fileUsage->add($new_logo_managed, 'navigation', 'logo', 1);
@@ -215,9 +230,24 @@ final class SettingsForm extends ConfigFormBase {
 
     $config
       ->set('logo_provider', $form_state->getValue('logo_provider'))
-      ->set('logo_managed', $form_state->getValue('logo_managed'))
+      ->set('logo_managed', $logo_path)
       ->save();
     parent::submitForm($form, $form_state);
+  }
+
+  /**
+   * Helper function to get fid from image path.
+   */
+  protected function getFidFromPath(string $file_path): string {
+    $fid = '';
+    $files = $this->entityTypeManager->getStorage('file')
+      ->loadByProperties(['uri' => $file_path]);
+    /** @var \Drupal\file\FileInterface|null $file */
+    $file = reset($files) ?: NULL;
+    if (!empty($file)) {
+      $fid = $file->id();
+    }
+    return $fid;
   }
 
 }
