@@ -202,7 +202,7 @@ final class Recipe {
                   // Only primitives are supported because it's not always clear
                   // how to collect, validate, and cast complex structures.
                   'interface' => PrimitiveInterface::class,
-                ])
+                ]),
               ],
               // If there is a `prompt` element, it has its own set of
               // constraints.
