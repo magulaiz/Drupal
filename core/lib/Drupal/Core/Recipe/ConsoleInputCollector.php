@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\Core\Recipe;
 
+use Drupal\Core\TypedData\DataDefinitionInterface;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Exception\InvalidArgumentException;
 use Symfony\Component\Console\Input\InputInterface;
@@ -73,7 +74,7 @@ final class ConsoleInputCollector implements InputCollectorInterface {
   /**
    * {@inheritdoc}
    */
-  public function collectValue(string $name, string|\Stringable $description, array $definition, mixed $default_value): mixed {
+  public function collectValue(string $name, DataDefinitionInterface $definition, mixed $default_value): mixed {
     $option_values = $this->getInputFromOptions();
 
     // If the value was passed as a `--input` option, return that.
@@ -81,15 +82,16 @@ final class ConsoleInputCollector implements InputCollectorInterface {
       return $option_values[$name];
     }
 
-    /** @var array{prompt?: array{method: string, arguments?: array<mixed>}} $definition */
+    /** @var array{method: string, arguments?: array<mixed>}|null $settings */
+    $settings = $definition->getSetting('prompt');
     // If there's no information on how to prompt the user, there's nothing else
     // for us to do; return the default value.
-    if (empty($definition['prompt'])) {
+    if (empty($settings)) {
       return $default_value;
     }
 
-    $method = $definition['prompt']['method'];
-    $arguments = $definition['prompt']['arguments'] ?? [];
+    $method = $settings['method'];
+    $arguments = $settings['arguments'] ?? [];
 
     // Most of the input-collecting methods of StyleInterface have a `default`
     // parameter.

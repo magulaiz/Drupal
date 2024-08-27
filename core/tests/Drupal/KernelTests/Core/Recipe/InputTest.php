@@ -10,6 +10,7 @@ use Drupal\Core\Recipe\ConsoleInputCollector;
 use Drupal\Core\Recipe\InputCollectorInterface;
 use Drupal\Core\Recipe\Recipe;
 use Drupal\Core\Recipe\RecipeRunner;
+use Drupal\Core\TypedData\DataDefinitionInterface;
 use Drupal\FunctionalTests\Core\Recipe\RecipeTestTrait;
 use Drupal\KernelTests\KernelTestBase;
 use Symfony\Component\Console\Input\InputInterface;
@@ -58,7 +59,7 @@ class InputTest extends KernelTestBase {
     $collector->expects($this->any())
       ->method('collectValue')
       ->withAnyParameters()
-      ->willReturnArgument(3);
+      ->willReturnArgument(2);
 
     $this->recipe->input->collectAll($collector);
     RecipeRunner::processRecipe($this->recipe);
@@ -70,7 +71,7 @@ class InputTest extends KernelTestBase {
     $collector = $this->createMock(InputCollectorInterface::class);
     $collector->expects($this->atLeastOnce())
       ->method('collectValue')
-      ->with('feedback_contact_form.recipient', $this->isType('string'), $this->isType('array'), $this->anything())
+      ->with('feedback_contact_form.recipient', $this->isInstanceOf(DataDefinitionInterface::class), $this->anything())
       ->willReturn('not-an-email-address');
 
     try {
@@ -203,7 +204,7 @@ YAML
     $collector->expects($this->any())
       ->method('collectValue')
       ->withAnyParameters()
-      ->willReturnArgument(3);
+      ->willReturnArgument(2);
     $recipe->input->collectAll($collector);
 
     RecipeRunner::processRecipe($recipe);

@@ -17,6 +17,13 @@ use Symfony\Component\Validator\Exception\ValidationFailedException;
 final class InputConfigurator {
 
   /**
+   * The input data definitions.
+   *
+   * @var \Drupal\Core\TypedData\DataDefinitionInterface[]
+   */
+  private readonly array $definitions;
+
+  /**
    * The collected input values, or NULL if none have been collected yet.
    *
    * @var mixed[]|null
@@ -46,10 +53,26 @@ final class InputConfigurator {
    *   name of the recipe.
    */
   public function __construct(
-    private readonly array $definitions,
+    array $definitions,
     private readonly RecipeConfigurator $dependencies,
     private readonly string $prefix,
-  ) {}
+  ) {
+    // Convert the input definitions to typed data definitions.
+    foreach ($definitions as $name => $definition) {
+      $data_definition = DataDefinition::create($definition['data_type'] ?? 'any')
+        ->setDescription($definition['description'])
+        ->setConstraints($definition['constraints'] ?? []);
+
+      unset(
+        $definition['data_type'],
+        $definition['description'],
+        $definition['constraints'],
+      );
+      $data_definition->setSettings($definition);
+      $definitions[$name] = $data_definition;
+    }
+    $this->definitions = $definitions;
+  }
 
   /**
    * Returns the collected input values, keyed by name.
@@ -76,7 +99,7 @@ final class InputConfigurator {
     }
     foreach ($this->definitions as $key => $definition) {
       $name = $this->prefix . '.' . $key;
-      $descriptions[$name] = $definition['description'];
+      $descriptions[$name] = $definition->getDescription();
     }
     return $descriptions;
   }
@@ -112,15 +135,12 @@ final class InputConfigurator {
     foreach ($this->definitions as $key => $definition) {
       $value = $collector->collectValue(
         $this->prefix . '.' . $key,
-        $definition['description'],
         $definition,
-        $this->getDefaultValue($definition['default']),
+        $this->getDefaultValue($definition),
       );
 
       // Use typed data to validate and cast the value, if needed.
-      $data_definition = DataDefinition::create($definition['data_type'] ?? 'any')
-        ->setConstraints($definition['constraints'] ?? []);
-      $data = \Drupal::typedDataManager()->create($data_definition, $value);
+      $data = \Drupal::typedDataManager()->create($definition, $value);
       $violations = $data->validate();
       if (count($violations) > 0) {
         throw new ValidationFailedException($value, $violations);
@@ -147,16 +167,18 @@ final class InputConfigurator {
    * @return mixed
    *   The default value.
    */
-  private function getDefaultValue(array $definition): mixed {
-    if ($definition['source'] === 'config') {
-      [$name, $key] = $definition['config'];
+  private function getDefaultValue(DataDefinition $definition): mixed {
+    $settings = $definition->getSetting('default');
+
+    if ($settings['source'] === 'config') {
+      [$name, $key] = $settings['config'];
       $config = \Drupal::config($name);
       if ($config->isNew()) {
         throw new \RuntimeException("The '$name' config object does not exist.");
       }
       return $config->get($key);
     }
-    return $definition['value'];
+    return $settings['value'];
   }
 
 }
