@@ -67,6 +67,9 @@ class EntityLinkSuggestionsTest extends CKEditor5TestBase {
     Editor::create([
       'format' => 'test_format',
       'editor' => 'ckeditor5',
+      'image_upload' => [
+        'status' => FALSE,
+      ],
       'settings' => [
         'toolbar' => [
           'items' => [
