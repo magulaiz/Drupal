@@ -145,11 +145,12 @@ final class InputConfigurator {
       );
       $data->setValue($value, FALSE);
 
-      // Use typed data to validate and cast the value, if needed.
       $violations = $data->validate();
       if (count($violations) > 0) {
         throw new ValidationFailedException($value, $violations);
       }
+      // If the data is a primitive, cast it. But if the data is an array or
+      // other complex value, use it as-is.
       if ($data instanceof PrimitiveInterface) {
         $value = $data->getCastedValue();
       }

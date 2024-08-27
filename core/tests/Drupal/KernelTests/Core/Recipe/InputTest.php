@@ -118,6 +118,28 @@ YAML
     $this->assertSame(['capital' => '<scream>'], $recipe->input->getValues());
   }
 
+  public function testCollectedArraysAreNativeTypes(): void {
+    $collector = $this->createMock(InputCollectorInterface::class);
+    $collector->expects($this->atLeastOnce())
+      ->method('collectValue')
+      ->withAnyParameters()
+      ->willReturnArgument(2);
+
+    $recipe = $this->createRecipe(<<<YAML
+name: 'Collecting array input'
+input:
+  goodbyes:
+    description: Give me some ways to say goodbye.
+    default:
+      source: value
+      value: ['Tchau', 'Auf weidersehen']
+YAML
+    );
+    $recipe->input->collectAll($collector);
+    $values = $recipe->input->getValues();
+    $this->assertSame(['Tchau', 'Auf weidersehen'], $values['goodbyes']);
+  }
+
   /**
    * @covers \Drupal\Core\Recipe\ConsoleInputCollector::collectValue
    */
