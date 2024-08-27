@@ -6,6 +6,7 @@ namespace Drupal\Core\Recipe;
 
 use Drupal\Core\TypedData\DataDefinition;
 use Drupal\Core\TypedData\PrimitiveInterface;
+use Drupal\Core\TypedData\TypedDataManagerInterface;
 use Symfony\Component\Validator\Exception\ValidationFailedException;
 
 /**
@@ -17,11 +18,11 @@ use Symfony\Component\Validator\Exception\ValidationFailedException;
 final class InputConfigurator {
 
   /**
-   * The input data definitions.
+   * The input data.
    *
-   * @var \Drupal\Core\TypedData\DataDefinitionInterface[]
+   * @var \Drupal\Core\TypedData\TypedDataInterface[]
    */
-  private readonly array $definitions;
+  private array $data = [];
 
   /**
    * The collected input values, or NULL if none have been collected yet.
@@ -51,11 +52,14 @@ final class InputConfigurator {
    *   A prefix for each input definition, to give each one a unique name
    *   when collecting input for multiple recipes. Usually this is the unique
    *   name of the recipe.
+   * @param \Drupal\Core\TypedData\TypedDataManagerInterface $typedDataManager
+   *   The typed data manager service.
    */
   public function __construct(
     array $definitions,
     private readonly RecipeConfigurator $dependencies,
     private readonly string $prefix,
+    TypedDataManagerInterface $typedDataManager,
   ) {
     // Convert the input definitions to typed data definitions.
     foreach ($definitions as $name => $definition) {
@@ -69,9 +73,8 @@ final class InputConfigurator {
         $definition['constraints'],
       );
       $data_definition->setSettings($definition);
-      $definitions[$name] = $data_definition;
+      $this->data[$name] = $typedDataManager->create($data_definition);
     }
-    $this->definitions = $definitions;
   }
 
   /**
@@ -97,9 +100,9 @@ final class InputConfigurator {
     foreach ($this->dependencies->recipes as $dependency) {
       $descriptions = array_merge($descriptions, $dependency->input->describeAll());
     }
-    foreach ($this->definitions as $key => $definition) {
+    foreach ($this->data as $key => $data) {
       $name = $this->prefix . '.' . $key;
-      $descriptions[$name] = $definition->getDescription();
+      $descriptions[$name] = $data->getDataDefinition()->getDescription();
     }
     return $descriptions;
   }
@@ -132,15 +135,17 @@ final class InputConfigurator {
     }
 
     $this->values = [];
-    foreach ($this->definitions as $key => $definition) {
+    foreach ($this->data as $key => $data) {
+      $definition = $data->getDataDefinition();
+
       $value = $collector->collectValue(
         $this->prefix . '.' . $key,
         $definition,
         $this->getDefaultValue($definition),
       );
+      $data->setValue($value, FALSE);
 
       // Use typed data to validate and cast the value, if needed.
-      $data = \Drupal::typedDataManager()->create($definition, $value);
       $violations = $data->validate();
       if (count($violations) > 0) {
         throw new ValidationFailedException($value, $violations);
