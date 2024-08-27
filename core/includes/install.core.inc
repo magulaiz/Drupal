@@ -1626,9 +1626,7 @@ function install_profile_modules(&$install_state) {
     if (count($module_groups[$index]) === Settings::get('core.multi-module-install', 20)) {
       $index++;
     }
-    // @todo Consider reversing this logic so that modules must explicitly
-    // state that they need a container build.
-    elseif (!isset($files[$module]->info['container_rebuild_required']) || $files[$module]->info['container_rebuild_required']) {
+    elseif (isset($files[$module]->info['container_rebuild_required']) && $files[$module]->info['container_rebuild_required']) {
       $index++;
     }
   }
