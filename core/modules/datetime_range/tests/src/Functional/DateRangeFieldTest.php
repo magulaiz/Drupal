@@ -19,7 +19,6 @@ use Drupal\Tests\datetime\Functional\DateTestBase;
  * Tests Daterange field functionality.
  *
  * @group datetime
- * @group #slow
  */
 class DateRangeFieldTest extends DateTestBase {
 
@@ -49,7 +48,7 @@ class DateRangeFieldTest extends DateTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function getTestFieldType() {
+  protected function getTestFieldType(): string {
     return 'daterange';
   }
 
@@ -1505,8 +1504,8 @@ class DateRangeFieldTest extends DateTestBase {
     $datetime_types = [
       DateRangeItem::DATETIME_TYPE_DATE => [
         'daterange_default' => [
-          DateTimeRangeConstantsInterface::START_DATE => '12/31/2012',
-          DateTimeRangeConstantsInterface::END_DATE => '06/06/2013',
+          DateTimeRangeConstantsInterface::START_DATE => '31 Dec 2012',
+          DateTimeRangeConstantsInterface::END_DATE => '6 Jun 2013',
         ],
         'daterange_plain' => [
           DateTimeRangeConstantsInterface::START_DATE => '2012-12-31',
@@ -1519,8 +1518,8 @@ class DateRangeFieldTest extends DateTestBase {
       ],
       DateRangeItem::DATETIME_TYPE_DATETIME => [
         'daterange_default' => [
-          DateTimeRangeConstantsInterface::START_DATE => '12/31/2012 - 00:00',
-          DateTimeRangeConstantsInterface::END_DATE => '06/06/2013 - 00:00',
+          DateTimeRangeConstantsInterface::START_DATE => '31 Dec 2012 - 00:00',
+          DateTimeRangeConstantsInterface::END_DATE => '6 Jun 2013 - 00:00',
         ],
         'daterange_plain' => [
           DateTimeRangeConstantsInterface::START_DATE => '2012-12-31T00:00:00',
@@ -1533,8 +1532,8 @@ class DateRangeFieldTest extends DateTestBase {
       ],
       DateRangeItem::DATETIME_TYPE_ALLDAY => [
         'daterange_default' => [
-          DateTimeRangeConstantsInterface::START_DATE => '12/31/2012',
-          DateTimeRangeConstantsInterface::END_DATE => '06/06/2013',
+          DateTimeRangeConstantsInterface::START_DATE => '31 Dec 2012',
+          DateTimeRangeConstantsInterface::END_DATE => '6 Jun 2013',
         ],
         'daterange_plain' => [
           DateTimeRangeConstantsInterface::START_DATE => '2012-12-31',
