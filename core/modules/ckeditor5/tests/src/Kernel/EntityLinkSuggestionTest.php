@@ -184,7 +184,7 @@ class EntityLinkSuggestionTest extends KernelTestBase {
    */
   public static function providerEntityLinkSuggestions(): \Generator {
     $suggestion_node_1_en = [
-      'description' => 'by sofie on Tue, 09/19/2023 - 03:31',
+      'description' => 'by sofie on Tue, 19 Sep 2023 - 03:31',
       'entity_type_id' => 'node',
       'entity_uuid' => '36c25329-6c3b-452e-82fa-e20c502f69ed',
       'group' => 'Content - Basic page',
@@ -195,7 +195,7 @@ class EntityLinkSuggestionTest extends KernelTestBase {
       ],
     ];
     $suggestion_node_1_de = [
-      'description' => 'by sofie on Tue, 09/19/2023 - 03:31',
+      'description' => 'by sofie on Tue, 19 Sep 2023 - 03:31',
       'entity_type_id' => 'node',
       'entity_uuid' => '36c25329-6c3b-452e-82fa-e20c502f69ed',
       'group' => 'Content - Basic page',
@@ -207,7 +207,7 @@ class EntityLinkSuggestionTest extends KernelTestBase {
     ];
 
     $suggestion_user_1 = [
-      'description' => 'on Mon, 01/06/1992 - 23:52',
+      'description' => 'on Mon, 6 Jan 1992 - 23:52',
       'entity_type_id' => 'user',
       'entity_uuid' => '966e5967-f19c-44b0-87b1-697441385b08',
       'group' => 'User',
