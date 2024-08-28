@@ -1082,7 +1082,7 @@ function sort_tests_by_public_method_count(array &$tests): void {
  * @param string $class
  *   The test class name.
  */
-function get_test_type_weight(string $class) {
+function get_test_type_weight(string $class): int {
   if (is_a($class, WebDriverTestBase::class, TRUE)) {
     return 3;
   }
@@ -1104,7 +1104,7 @@ function get_test_type_weight(string $class) {
  * @param string $class
  *   The test class name.
  */
-function get_test_class_method_count(string $class) {
+function get_test_class_method_count(string $class): int {
   $reflection = new \ReflectionClass($class);
   $count = 0;
   foreach ($reflection->getMethods(\ReflectionMethod::IS_PUBLIC) as $method) {
