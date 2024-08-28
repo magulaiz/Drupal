@@ -55,7 +55,7 @@ class PhpUnitTestRunnerTest extends UnitTestCase {
       ->willReturnCallback(
         function (string $test_class_name, string $log_junit_file_path, int &$status, array &$output): void {
           $status = TestStatus::SYSTEM;
-          $output = 'A most serious error occurred.';
+          $output = ['A most serious error occurred.'];
         }
       );
 
