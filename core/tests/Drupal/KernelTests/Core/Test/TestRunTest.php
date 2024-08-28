@@ -275,7 +275,7 @@ class TestRunTest extends KernelTestBase {
    * @covers ::insertLogEntry
    */
   public function testProcessPhpUnitResults(): void {
-    $phpunit_error_xml = __DIR__ . '/../../../Tests/Core/Test/fixtures/phpunit_error.xml';
+    $phpunit_error_xml = __DIR__ . '/../../../../fixtures/phpunit_error.xml';
     $res = JUnitConverter::xmlToRows(1, $phpunit_error_xml);
 
     $runner = PhpUnitTestRunner::create(\Drupal::getContainer());
