@@ -81,9 +81,10 @@ use Drupal\node\Entity\NodeType;
  * to change. Aside from historical revisions, there can be "pending" revisions,
  * that contain changes that did not make their way into the default revision.
  * Typically these revisions contain data that is waiting for some form of
- * approval, before being accepted as canonical.
- * @see \Drupal\Core\Entity\RevisionableInterface
- * @see \Drupal\Core\Entity\RevisionableStorageInterface
+ * approval, before being accepted as canonical. See these:
+ * 
+ * \Drupal\Core\Entity\RevisionableInterface
+ * \Drupal\Core\Entity\RevisionableStorageInterface
  *
  * A translatable entity can contain multiple translations of the same content.
  * Content entity data is stored via fields, and each field can have one version
@@ -95,9 +96,10 @@ use Drupal\node\Entity\NodeType;
  * language" that is used to determine which field translation values should be
  * handled. Typically the default translation's active language is the language
  * of the content that was originally entered and served as source for the other
- * translations.
- * @see \Drupal\Core\Entity\TranslatableInterface
- * @see \Drupal\Core\Entity\TranslatableStorageInterface
+ * translations. See these:
+ * 
+ * \Drupal\Core\Entity\TranslatableInterface
+ * \Drupal\Core\Entity\TranslatableStorageInterface
  *
  * An entity that is both revisionable and translatable has all the features
  * described above: every revision can contain one or more translations. The
@@ -115,15 +117,16 @@ use Drupal\node\Entity\NodeType;
  * translations will be affected when saving a revision containing changes for
  * untranslatable fields. On the other hand, pending revisions are not supposed
  * to contain multiple affected translations, even when they are being
- * manipulated via the API.
- * @see \Drupal\Core\Entity\TranslatableRevisionableInterface
- * @see \Drupal\Core\Entity\TranslatableRevisionableStorageInterface
+ * manipulated via the API. See these:
+ *
+ * \Drupal\Core\Entity\TranslatableRevisionableInterface
+ * \Drupal\Core\Entity\TranslatableRevisionableStorageInterface
  *
  * @section characteristics Entity characteristics
  *
  * In addition to entity interfaces for revisionable and translatable
  * interfaces, there are interfaces for other kinds of entity functionality.
- * @see entity_characteristics
+ * @see entity_type_characteristics
  *
  * @section create Create operations
  * To create an entity:
@@ -363,7 +366,7 @@ use Drupal\node\Entity\NodeType;
  *   either \Drupal\Core\Config\Entity\ConfigEntityInterface or
  *   \Drupal\Core\Entity\ContentEntityInterface. Other interfaces that add
  *   functionality are also available: see the
- *   @link entity_characteristics Entity characteristics topic @endlink
+ *   @link entity_type_characteristics Entity characteristics topic @endlink
  *   for more information.
  * - Define a class for your entity, implementing your interface and extending
  *   either \Drupal\Core\Config\Entity\ConfigEntityBase or
