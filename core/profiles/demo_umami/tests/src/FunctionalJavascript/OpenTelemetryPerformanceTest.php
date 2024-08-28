@@ -29,6 +29,7 @@ class OpenTelemetryPerformanceTest extends PerformanceTestBase {
     $this->testNodePageCoolCache();
     $this->testNodePageWarmCache();
     $this->testNodePageHotCache();
+    sleep(2);
     $this->testFrontPageColdCache();
     $this->testFrontPageCoolCache();
     $this->testFrontPageHotCache();
