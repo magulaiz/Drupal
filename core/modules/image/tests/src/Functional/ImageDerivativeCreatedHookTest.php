@@ -71,14 +71,12 @@ class ImageDerivativeCreatedHookTest extends ImageFieldTestBase {
     }
 
     // The hook should not have been called yet.
-    $this->assertNull(\Drupal::state()->get('image_module_test_image_derivative_created.called'));
     $this->assertNull(\Drupal::state()->get('image_module_test_image_derivative_created.original_uri'));
     $this->assertNull(\Drupal::state()->get('image_module_test_image_derivative_created.style'));
     $this->assertNull(\Drupal::state()->get('image_module_test_image_derivative_created.derivative_uri'));
 
     // Initiate relevant state variables to FALSE.
     $state = \Drupal::state();
-    $state->set('image_module_test_image_derivative_created.called', FALSE);
     $state->set('image_module_test_image_derivative_created.original_uri', FALSE);
     $state->set('image_module_test_image_derivative_created.style', FALSE);
     $state->set('image_module_test_image_derivative_created.derivative_uri', FALSE);
@@ -91,7 +89,6 @@ class ImageDerivativeCreatedHookTest extends ImageFieldTestBase {
     $style->createDerivative($source_uri, $derivative_uri);
 
     // Assert that the hook was called, by checking the state variables.
-    $this->assertEquals($state->get('image_module_test_image_derivative_created.called'), TRUE);
     $this->assertEquals($state->get('image_module_test_image_derivative_created.original_uri'), $source_uri);
     $this->assertEquals($state->get('image_module_test_image_derivative_created.style'), $style_name);
     $this->assertEquals($state->get('image_module_test_image_derivative_created.derivative_uri'), $derivative_uri);
