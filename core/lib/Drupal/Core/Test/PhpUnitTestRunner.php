@@ -193,7 +193,7 @@ class PhpUnitTestRunner implements ContainerInjectionInterface {
         'status' => $status < TestStatus::SYSTEM ? 'debug' : 'exception',
         'message' => implode("\n", $output),
         'message_group' => 'Other',
-        'function' => '*** PHPUnit runner output ***',
+        'function' => '*** Execution output log ***',
         'line' => '0',
         'file' => $log_junit_file_path,
         'time' => $time,

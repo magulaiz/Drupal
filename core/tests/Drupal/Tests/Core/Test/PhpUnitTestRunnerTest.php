@@ -53,8 +53,9 @@ class PhpUnitTestRunnerTest extends UnitTestCase {
     $runner->expects($this->once())
       ->method('runCommand')
       ->willReturnCallback(
-        function (string $test_class_name, string $log_junit_file_path, int &$status): void {
+        function (string $test_class_name, string $log_junit_file_path, int &$status, array &$output): void {
           $status = TestStatus::SYSTEM;
+          $output = 'A most serious error occurred.';
         }
       );
 
@@ -74,9 +75,9 @@ class PhpUnitTestRunnerTest extends UnitTestCase {
       'test_id' => $test_id,
       'test_class' => 'SomeTest',
       'status' => TestStatus::label(TestStatus::SYSTEM),
-      'message' => 'PHPUnit Test failed to complete; Error: ',
+      'message' => 'A most serious error occurred.',
       'message_group' => 'Other',
-      'function' => 'SomeTest',
+      'function' => '*** Execution output log ***',
       'line' => '0',
       'file' => $log_path,
     ];
