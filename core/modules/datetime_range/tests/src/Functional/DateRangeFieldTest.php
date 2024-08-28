@@ -23,9 +23,7 @@ use Drupal\Tests\datetime\Functional\DateTestBase;
 class DateRangeFieldTest extends DateTestBase {
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = ['datetime_range'];
 
@@ -48,7 +46,7 @@ class DateRangeFieldTest extends DateTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function getTestFieldType() {
+  protected function getTestFieldType(): string {
     return 'daterange';
   }
 

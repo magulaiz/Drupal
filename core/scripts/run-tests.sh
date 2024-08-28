@@ -1063,40 +1063,41 @@ function simpletest_script_get_test_list() {
  * slow can be added to the '#slow' group so they are placed first in each
  * test run regardless of the number of methods.
  *
- * @param string[] an array of test class names.
+ * @param string[] $tests
+ *   An array of test class names.
  */
-function sort_tests_by_public_method_count(&$tests): void {
+function sort_tests_by_public_method_count(array &$tests): void {
   usort($tests, function ($a, $b) {
     $method_count = function ($class) {
       $reflection = new \ReflectionClass($class);
       return count($reflection->getMethods(\ReflectionMethod::IS_PUBLIC));
     };
-    return $method_count($a) < $method_count($b) ? 1 : -1;
+    return $method_count($b) <=> $method_count($a);
   });
 }
 
 /**
  * Distribute tests into bins.
+ *
+ * The given array of tests is split into the available bins. The distribution
+ * starts with the first test, placing the first test in the first bin, the
+ * second test in the second bin and so on. This results each bin having a
+ * similar number of test methods to run in total.
+ *
+ * @param string[] $tests
+ *   An array of test class names.
+ * @param int $bin_count
+ *   The number of bins available.
+ *
+ * @return array
+ *   An associative array of bins and the test class names in each bin.
  */
-function place_tests_into_bins($tests, $bin_count) {
+ function place_tests_into_bins(array $tests, int $bin_count) {
   // Create a bin corresponding to each parallel test job.
   $bins = array_fill(0, $bin_count, []);
-  $bin_max_index = $bin_count - 1;
-  $cycle = 0;
-  // Go through each test, already sorted from most methods to least, and
-  // add them to one bin at a time. This results each bin having a similar
-  // number of test methods to run in total.
+  // Go through each test and add them to one bin at a time.
   foreach ($tests as $key => $test) {
-    if ($cycle === 0) {
-      $bin = $key;
-    }
-    else {
-      $bin = $key - ($cycle * $bin_count);
-    }
-    $bins[$bin][] = $test;
-    if ($bin / $bin_max_index === 1) {
-      $cycle++;
-    }
+    $bins[($key % $bin_count)][] = $test;
   }
   return $bins;
 }
