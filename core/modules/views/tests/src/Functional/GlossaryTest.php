@@ -22,9 +22,7 @@ class GlossaryTest extends ViewTestBase {
   use AssertViewsCacheTagsTrait;
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = ['node'];
 

@@ -25,9 +25,7 @@ class FieldGroupRowsWebTest extends ViewTestBase {
   public static $testViews = ['test_group_rows', 'test_ungroup_rows'];
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = ['node'];
 

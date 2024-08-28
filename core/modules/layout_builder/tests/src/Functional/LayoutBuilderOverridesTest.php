@@ -12,7 +12,6 @@ use Drupal\node\Entity\Node;
  * Tests the Layout Builder UI.
  *
  * @group layout_builder
- * @group #slow
  */
 class LayoutBuilderOverridesTest extends LayoutBuilderTestBase {
 

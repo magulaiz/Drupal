@@ -20,9 +20,7 @@ use Drupal\views\Tests\ViewTestData;
 class RevisionRelationshipsTest extends ViewsKernelTestBase {
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = [
     'node',

@@ -14,7 +14,6 @@ use Drupal\Tests\BrowserTestBase;
  * Verify the search config settings form.
  *
  * @group search
- * @group #slow
  */
 class SearchConfigSettingsFormTest extends BrowserTestBase {
 

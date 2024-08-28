@@ -19,7 +19,6 @@ use GuzzleHttp\RequestOptions;
  * JSON:API integration test for the "Term" content entity type.
  *
  * @group jsonapi
- * @group #slow
  */
 class TermTest extends ResourceTestBase {
 

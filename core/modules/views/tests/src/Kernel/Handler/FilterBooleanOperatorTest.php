@@ -17,9 +17,7 @@ use Drupal\views\Views;
 class FilterBooleanOperatorTest extends ViewsKernelTestBase {
 
   /**
-   * The modules to enable for this test.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = ['system'];
 

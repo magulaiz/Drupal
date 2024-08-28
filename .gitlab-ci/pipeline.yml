@@ -184,10 +184,10 @@ variables:
 
 '⚙️️ PHPUnit Kernel':
   <<: [ *with-composer, *run-tests, *default-job-settings ]
-  parallel: 3
+  parallel: 4
   variables:
     TESTSUITE: PHPUnit-Kernel
-    KUBERNETES_CPU_REQUEST: "16"
+    KUBERNETES_CPU_REQUEST: "8"
   services:
     - <<: *with-database
 
@@ -196,6 +196,7 @@ variables:
   variables:
     TESTSUITE: PHPUnit-Build
     KUBERNETES_CPU_REQUEST: "2"
+    CONCURRENCY: "4"
   services:
     - <<: *with-database
 
@@ -207,7 +208,8 @@ variables:
     - <<: *with-database
   variables:
     TESTSUITE: PHPUnit-Unit
-    KUBERNETES_CPU_REQUEST: "16"
+    KUBERNETES_CPU_REQUEST: "1"
+    CONCURRENCY: 6
 
 '✅️ PHPStan Tests':
   <<: [ *default-job-settings ]
@@ -241,7 +243,7 @@ variables:
 '🦉️️️ Nightwatch':
   <<: [ *with-composer-and-yarn, *default-job-settings ]
   variables:
-    KUBERNETES_CPU_REQUEST: "24"
+    KUBERNETES_CPU_REQUEST: "16"
   services:
     - <<: *with-database
     - <<: *with-selenium-chrome

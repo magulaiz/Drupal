@@ -40,9 +40,7 @@ class EntityReferenceRelationshipTest extends ViewsKernelTestBase {
   ];
 
   /**
-   * Modules to install.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = [
     'user',

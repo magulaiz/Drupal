@@ -64,6 +64,7 @@ blockquotes
 blockrecipe
 blockrelated
 boing
+bootable
 bovigo
 brotli
 browserkit
@@ -176,7 +177,6 @@ dotenv
 downcasting
 dragtable
 drillable
-drivertest
 dropbutton
 dropbuttons
 drupaldevdays
@@ -185,7 +185,6 @@ drupalelementstylecommand
 drupalelementstyleediting
 drupalelementstyleui
 drupalhtmlbuilder
-drupalimage
 drupalism
 drupalisms
 drupallink
@@ -291,7 +290,6 @@ introspectable
 invalidators
 invokable
 isam
-isinstallable
 itok
 javascripts
 jessebeach
@@ -387,8 +385,6 @@ nightwatch
 nightwatchjs
 nikic
 nntp
-noadd
-nocache
 nocase
 nodir
 nofields
@@ -398,7 +394,6 @@ nomask
 nonconfigurable
 noquotes
 nosniff
-notexisting
 notnull
 notsimpletest
 nourriture
@@ -430,7 +425,6 @@ pathauto
 pcre
 pcss
 peast
-permissionless
 persistable
 phpass
 phpcbf
@@ -499,7 +493,6 @@ relname
 relpersistence
 renderable
 renderables
-renderered
 reparenting
 replyto
 resave
@@ -520,8 +513,6 @@ ribisi
 rowspans
 rtsp
 ruleset
-sameline
-samename
 sameorigin
 samesite
 savepoints
@@ -549,7 +540,6 @@ smalldatetime
 smtps
 somecompany
 sortablejs
-specialchars
 splitbutton
 splitbuttons
 squaresmall
@@ -567,7 +557,6 @@ streamwrappers
 strikethrough
 striptags
 strs
-sttid
 styleguide
 stylelint
 stylelintcache
@@ -623,7 +612,6 @@ tablesorts
 tabset
 tabwidth
 taskless
-tcomment
 testbot
 testbots
 testgroups
@@ -697,14 +685,12 @@ uploadprogress
 upscaling
 urandom
 userinfo
-userref
 vampirize
 versionable
 versionless
 vfsstream
 viewports
 wcag
-webassert
 webcal
 webflo
 webhosting

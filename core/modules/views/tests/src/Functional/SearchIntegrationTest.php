@@ -17,9 +17,7 @@ class SearchIntegrationTest extends ViewTestBase {
   use CronRunTrait;
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = ['node', 'search'];
 

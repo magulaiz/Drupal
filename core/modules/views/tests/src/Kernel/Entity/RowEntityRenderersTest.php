@@ -23,9 +23,7 @@ use Drupal\views\Views;
 class RowEntityRenderersTest extends ViewsKernelTestBase {
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = [
     'field',

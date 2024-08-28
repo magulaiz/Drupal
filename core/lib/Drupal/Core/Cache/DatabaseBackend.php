@@ -45,9 +45,9 @@ class DatabaseBackend implements CacheBackendInterface {
   /**
    * The maximum number of rows that this cache bin table is allowed to store.
    *
-   * @see ::MAXIMUM_NONE
-   *
    * @var int
+   *
+   * @see ::MAXIMUM_NONE
    */
   protected $maxRows;
 

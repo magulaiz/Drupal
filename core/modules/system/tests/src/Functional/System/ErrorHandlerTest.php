@@ -16,9 +16,7 @@ use Drupal\Tests\BrowserTestBase;
 class ErrorHandlerTest extends BrowserTestBase {
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = ['error_test'];
 

@@ -39,9 +39,7 @@ class FieldEntityTest extends ViewsKernelTestBase {
   ];
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = ['node', 'comment', 'field', 'text'];
 
