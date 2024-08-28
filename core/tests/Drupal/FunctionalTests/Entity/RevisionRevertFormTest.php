@@ -15,7 +15,6 @@ use Drupal\Tests\BrowserTestBase;
  * Tests reverting a revision with revision revert form.
  *
  * @group Entity
- * @group #slow
  * @coversDefaultClass \Drupal\Core\Entity\Form\RevisionRevertForm
  */
 class RevisionRevertFormTest extends BrowserTestBase {

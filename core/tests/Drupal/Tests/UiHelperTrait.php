@@ -11,6 +11,7 @@ use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\Session\AnonymousUserSession;
 use Drupal\Core\Test\RefreshVariablesTrait;
 use Drupal\Core\Url;
+use Drupal\user\UserInterface;
 use Symfony\Component\CssSelector\CssSelectorConverter;
 
 /**
@@ -27,6 +28,11 @@ trait UiHelperTrait {
    * @var \Drupal\user\UserInterface
    */
   protected $loggedInUser = FALSE;
+
+  /**
+   * Use one-time login links instead of submitting the login form.
+   */
+  protected bool $useOneTimeLoginLinks = TRUE;
 
   /**
    * The number of meta refresh redirects to follow, or NULL if unlimited.
@@ -156,11 +162,21 @@ trait UiHelperTrait {
       $this->drupalLogout();
     }
 
-    $this->drupalGet(Url::fromRoute('user.login'));
-    $this->submitForm([
-      'name' => $account->getAccountName(),
-      'pass' => $account->passRaw,
-    ], 'Log in');
+    if ($this->useOneTimeLoginLinks) {
+      // Reload to get latest login timestamp.
+      $storage = \Drupal::entityTypeManager()->getStorage('user');
+      /** @var \Drupal\user\UserInterface $accountUnchanged */
+      $accountUnchanged = $storage->loadUnchanged($account->id());
+      $login = $this->userPassResetUrl($accountUnchanged) . '/login?destination=user/' . $account->id();
+      $this->drupalGet($login);
+    }
+    else {
+      $this->drupalGet(Url::fromRoute('user.login'));
+      $this->submitForm([
+        'name' => $account->getAccountName(),
+        'pass' => $account->passRaw,
+      ], 'Log in');
+    }
 
     // @see ::drupalUserIsLoggedIn()
     $account->sessionId = $this->getSession()->getCookie(\Drupal::service('session_configuration')->getOptions(\Drupal::request())['name']);
@@ -199,6 +215,41 @@ trait UiHelperTrait {
     unset($this->loggedInUser->sessionId);
     $this->loggedInUser = FALSE;
     \Drupal::currentUser()->setAccount(new AnonymousUserSession());
+  }
+
+  /**
+   * Generates a unique URL for a user to log in and reset their password.
+   *
+   * The only from user_pass_reset_url is to use the current time instead of
+   * the request time.
+   *
+   * @param \Drupal\user\UserInterface $account
+   *   An object containing the user account.
+   * @param array $options
+   *   (optional) A keyed array of settings. Supported options are:
+   *   - langcode: A language code to be used when generating locale-sensitive
+   *   URLs. If langcode is NULL the users preferred language is used.
+   *
+   * @return string
+   *   A unique URL that provides a one-time log in for the user, from which
+   *   they can change their password.
+   *
+   * @see \user_pass_reset_url()
+   */
+  protected function userPassResetUrl(UserInterface $account, array $options = []): string {
+    $timestamp = \Drupal::time()->getCurrentTime();
+    $langcode = $options['langcode'] ?? $account->getPreferredLangcode();
+    return Url::fromRoute('user.reset',
+      [
+        'uid' => $account->id(),
+        'timestamp' => $timestamp,
+        'hash' => user_pass_rehash($account, $timestamp),
+      ],
+      [
+        'absolute' => TRUE,
+        'language' => \Drupal::languageManager()->getLanguage($langcode),
+      ]
+    )->toString();
   }
 
   /**

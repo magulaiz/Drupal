@@ -1037,7 +1037,7 @@ function simpletest_script_get_test_list() {
     sort_tests_by_public_method_count($test_list);
 
     // Now set up a bin per test runner.
-    $bin_count = (int) $args['ci-parallel-node-total'];
+    $bin_count = $args['ci-parallel-node-total'];
 
     // Now loop over the slow tests and add them to a bin one by one, this
     // distributes the tests evenly across the bins.
@@ -1307,8 +1307,21 @@ function simpletest_script_reporter_display_results(TestRunResultsStorageInterfa
 function simpletest_script_format_result($result) {
   global $args, $results_map, $color;
 
+  // Limit the fully qualified method name to 60 characters, using the end of
+  // the string so that individual test classes can still be identified.
+  $class = $result->function;
+  $length = strlen($class);
+  if ($length < 60) {
+    $class_out = str_pad($class, 60, ' ', STR_PAD_RIGHT);
+  }
+  elseif ($length > 60) {
+    $class_out = '...' . substr($class, -60 + 3);
+  }
+  else {
+    $class_out = $class;
+  }
   $summary = sprintf("%-9.9s %-10.10s %-17.17s %4.4s %-35.35s\n",
-    $results_map[$result->status], $result->message_group, basename($result->file), $result->line, $result->function);
+  $results_map[$result->status], $result->message_group, basename($result->file), $result->line, $class_out);
 
   simpletest_script_print($summary, simpletest_script_color_code($result->status));
 

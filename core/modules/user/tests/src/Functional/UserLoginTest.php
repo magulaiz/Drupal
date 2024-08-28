@@ -32,6 +32,11 @@ class UserLoginTest extends BrowserTestBase {
   protected static $modules = ['dblog'];
 
   /**
+   * {@inheritdoc}
+   */
+  protected bool $useOneTimeLoginLinks = FALSE;
+
+  /**
    * Tests login with destination.
    */
   public function testLoginCacheTagsAndDestination(): void {

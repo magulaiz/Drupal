@@ -273,6 +273,13 @@ abstract class BrowserTestBase extends TestCase {
    */
   protected function initFrontPage() {
     $session = $this->getSession();
+    if (!$session->isStarted()) {
+      $time = microtime(TRUE);
+      $session->start();
+      if (microtime(TRUE) - $time > 1) {
+        throw new \Exception('Waited too long for a selenium session');
+      }
+    }
     $session->visit($this->baseUrl);
   }
 
@@ -450,6 +457,12 @@ abstract class BrowserTestBase extends TestCase {
 
     // Ensure that internal logged in variable is reset.
     $this->loggedInUser = FALSE;
+
+    // Mink takes care of stopping sessions in __destruct(). We only need to
+    // reset state in-between test methods, so restart.
+    if ($this->mink) {
+      $this->mink->resetSessions();
+    }
 
     // Restore original shutdown callbacks.
     if (function_exists('drupal_register_shutdown_function')) {
