@@ -313,6 +313,13 @@ field.formatter.settings.string:
       type: boolean
       label: 'Link to the entity'
 
+field.formatter.settings.title:
+  type: field.formatter.settings.string
+  mapping:
+    tag:
+      type: string
+      label: 'Tag'
+
 field.formatter.settings.language:
   type: field.formatter.settings.string
   mapping:
