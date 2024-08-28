@@ -1,4 +1,4 @@
-// The test fails for MongoDB, because the recipe's from the demo_unami module
+// The test fails for MongoDB, because the recipe's from the demo_umami profile
 // break on MongoDB.
 module.exports = {
   '@tags': ['core'],
