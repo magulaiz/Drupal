@@ -48,6 +48,7 @@ final class ConfigConfigurator {
           // MongoDB updates views during install.
           if (!in_array($config_name, [
             'core.base_field_override.node.page.promote',
+            'search.page.help_search',
             'search.page.node_search',
             'views.view.block_content',
             'views.view.comment',
