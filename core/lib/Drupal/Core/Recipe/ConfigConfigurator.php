@@ -49,12 +49,15 @@ final class ConfigConfigurator {
           if (!in_array($config_name, [
             'core.base_field_override.node.page.promote',
             'search.page.node_search',
+            'views.view.block_content',
             'views.view.comment',
+            'views.view.comments_recent',
             'views.view.files',
             'views.view.media_library',
             'views.view.media',
             'views.view.moderated_content',
             'views.view.taxonomy_term',
+            'views.view.watchdog',
           ])) {
             throw new RecipePreExistingConfigException($config_name, sprintf("The configuration '%s' exists already and does not match the recipe's configuration", $config_name));
           }
