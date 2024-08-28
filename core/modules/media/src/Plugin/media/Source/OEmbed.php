@@ -251,7 +251,10 @@ class OEmbed extends MediaSourceBase implements OEmbedInterface {
       }
       $this->logger->error(
         $e->getMessage() . ' Resource URL: %resource_url | Media ID: %media_id',
-        ['%resource_url' => $resource_url, '%media_id' => $media->id()]
+        [
+          '%resource_url' => $resource_url ?? 'unknown',
+          '%media_id' => $media->id(),
+        ]
       );
       return NULL;
     }
