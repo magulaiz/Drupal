@@ -1947,7 +1947,8 @@ function system_update_10201(&$sandbox) {
 /**
  * Update TimestampItem field schema size to support dates greater than 2038.
  */
-function system_update_11001(&$sandbox) {
+function system_update_10401(&$sandbox) {
+  \Drupal::service('update.update_hook_registry')->markFutureUpdateEquivalent(11001, '11.0.1');
   // Execute only if allowed setting, 'timestamp_field_update_y2038', is true.
   if (!Settings::get('timestamp_field_update_y2038', FALSE)) {
     return t("Update '11001 - Update TimestampItem field schema size to support dates greater than 2038' skipped due to setting of 'timestamp_field_update_y2038' in settings.php");
