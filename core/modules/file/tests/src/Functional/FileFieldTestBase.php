@@ -231,7 +231,7 @@ abstract class FileFieldTestBase extends BrowserTestBase {
   /**
    * Asserts that a file does not exist in the database.
    */
-  public function assertFileEntryNotExists($file, $message) {
+  public function assertFileEntryNotExists($file, $message = NULL) {
     $this->container->get('entity_type.manager')->getStorage('file')->resetCache();
     $message = $message ?? new FormattableMarkup('File %file exists in database at the correct path.', ['%file' => $file->getFileUri()]);
     $this->assertNull(File::load($file->id()), $message);
