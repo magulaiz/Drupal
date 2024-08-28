@@ -122,13 +122,23 @@
      *   The root of the menu to be initialized.
      */
     function initItems($menu) {
+      const menu = $menu.find('li > a').toArray();
       const options = {
         class: 'toolbar-icon toolbar-handle',
         action: ui.handleOpen,
         text: '',
       };
+
+      // Javascript equivalent to Jquery wrap()
+      function wrapItem(el) {
+        const wrappingElement = document.createElement('div');
+        wrappingElement.className = 'toolbar-box';
+        el.replaceWith(wrappingElement);
+        wrappingElement.appendChild(el);
+      }
+
       // Initialize items and their links.
-      $menu.find('li > a').wrap('<div class="toolbar-box">');
+      menu.forEach((el) => wrapItem(el));
       // Add a handle to each list item if it has a menu.
       $menu.find('li').each((index, element) => {
         const $item = $(element);
