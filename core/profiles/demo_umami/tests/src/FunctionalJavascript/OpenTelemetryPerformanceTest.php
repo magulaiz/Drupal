@@ -40,6 +40,7 @@ class OpenTelemetryPerformanceTest extends PerformanceTestBase {
    */
   protected function testNodePageColdCache(): void {
     $this->rebuildAll();
+    sleep(1);
     $this->collectPerformanceData(function () {
       $this->drupalGet('node/1');
     }, 'umamiNodePageColdCache');
@@ -110,6 +111,7 @@ class OpenTelemetryPerformanceTest extends PerformanceTestBase {
    */
   protected function testFrontPageColdCache(): void {
     $this->rebuildAll();
+    sleep(1);
     $this->collectPerformanceData(function () {
       $this->drupalGet('<front>');
     }, 'umamiFrontPageColdCache');
