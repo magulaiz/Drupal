@@ -106,13 +106,15 @@ class TimestampItemTest extends FieldKernelTestBase {
     $this->assertEquals($entity->field_timestamp->value, $new_value);
 
     // Ensure min and max values are accepted.
-    $new_value = -9223372036854775807;
+    // The original number was too big for a timestamp in MongoDB.
+    $new_value = -9223372036854775;
     $entity->field_timestamp->value = $new_value;
     $this->entityValidateAndSave($entity);
     $entity = EntityTest::load(2);
     $this->assertEquals($entity->field_timestamp->value, $new_value);
 
-    $new_value = 9223372036854775807;
+    // The original number was too big for a timestamp in MongoDB.
+    $new_value = 9223372036854775;
     $entity->field_timestamp->value = $new_value;
     $this->entityValidateAndSave($entity);
     $entity = EntityTest::load(2);

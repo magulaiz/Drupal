@@ -360,7 +360,7 @@ class Schema extends DatabaseSchema {
       'text:normal' => 'string',
       'text:big' => 'string',
 
-      // The MongoDB validation for long fails when you try to insert a int.
+      // The MongoDB validation for long fails when you try to insert an int.
       // Mongodb PHP extension >= 1.5.0 is needed for MongoDB\BSON\Int64.
       'int:tiny' => 'int',
       'int:small' => 'int',
