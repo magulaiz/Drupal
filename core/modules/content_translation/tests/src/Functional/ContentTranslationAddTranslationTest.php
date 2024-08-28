@@ -17,6 +17,11 @@ class ContentTranslationAddTranslationTest extends ContentTranslationPendingRevi
   /**
    * {@inheritdoc}
    */
+  protected $defaultTheme = 'stark';
+
+  /**
+   * {@inheritdoc}
+   */
   protected function setUp(): void {
     parent::setUp();
     $this->enableContentModeration();
