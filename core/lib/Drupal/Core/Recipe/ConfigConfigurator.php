@@ -46,7 +46,16 @@ final class ConfigConfigurator {
         if ($active_data !== $recipe_data) {
           // @todo Views should have their specific overrides for MongoDB.
           // MongoDB updates views during install.
-          if (!in_array($config_name, ['views.view.files', 'views.view.media_library', 'views.view.media'])) {
+          if (!in_array($config_name, [
+            'core.base_field_override.node.page.promote',
+            'search.page.node_search',
+            'views.view.comment',
+            'views.view.files',
+            'views.view.media_library',
+            'views.view.media',
+            'views.view.moderated_content',
+            'views.view.taxonomy_term',
+          ])) {
             throw new RecipePreExistingConfigException($config_name, sprintf("The configuration '%s' exists already and does not match the recipe's configuration", $config_name));
           }
         }
