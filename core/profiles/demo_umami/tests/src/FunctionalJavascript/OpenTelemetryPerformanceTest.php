@@ -25,11 +25,10 @@ class OpenTelemetryPerformanceTest extends PerformanceTestBase {
    * Tests performance of the Umami demo front page.
    */
   public function testPerformance(): void {
-    $this->testNodePageColdCache();
     $this->testNodePageCoolCache();
     $this->testNodePageWarmCache();
     $this->testNodePageHotCache();
-    sleep(2);
+    $this->testNodePageColdCache();
     $this->testFrontPageColdCache();
     $this->testFrontPageCoolCache();
     $this->testFrontPageHotCache();
@@ -40,10 +39,6 @@ class OpenTelemetryPerformanceTest extends PerformanceTestBase {
    * Logs node page tracing data with a cold cache.
    */
   protected function testNodePageColdCache(): void {
-    // @todo Chromedriver doesn't collect tracing performance logs for the very
-    //   first request in a test, so warm it up.
-    //   https://www.drupal.org/project/drupal/issues/3379750
-    $this->drupalGet('user/login');
     $this->rebuildAll();
     $this->collectPerformanceData(function () {
       $this->drupalGet('node/1');
@@ -114,10 +109,6 @@ class OpenTelemetryPerformanceTest extends PerformanceTestBase {
    * Logs front page tracing data with a cold cache.
    */
   protected function testFrontPageColdCache(): void {
-    // @todo Chromedriver doesn't collect tracing performance logs for the very
-    //   first request in a test, so warm it up.
-    //   https://www.drupal.org/project/drupal/issues/3379750
-    $this->drupalGet('user/login');
     $this->rebuildAll();
     $this->collectPerformanceData(function () {
       $this->drupalGet('<front>');
