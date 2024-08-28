@@ -252,7 +252,7 @@ class OEmbed extends MediaSourceBase implements OEmbedInterface {
       $this->logger->error(
        'An error occurred while fetching an oEmbed resource for Media ID: %media_id, Embed URL: %media_url, oEmebed Resource URL: %resource_url. Error: @error',
         [
-          '%resource_url' => $resource_url ?? 'unknown',
+          '%resource_url' => !empty($resource_url) ? $resource_url : 'unknown',
           '%media_url' => $media_url,
           '%media_id' => $media->id(),
           '@error' =>  $e->getMessage(),
