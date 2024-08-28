@@ -22,7 +22,10 @@
     attach(context) {
       // Start by finding all potentially active links.
       const path = drupalSettings.path;
-      const queryString = JSON.stringify(path.currentQuery);
+      let queryString = JSON.stringify(path.currentQuery);
+      if (queryString) {
+        queryString = queryString.replace(/'/g, "\\'");
+      }
       const querySelector = path.currentQuery
         ? `[data-drupal-link-query='${queryString}']`
         : ':not([data-drupal-link-query])';
