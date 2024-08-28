@@ -170,7 +170,7 @@ class ContentTranslationController extends ControllerBase {
         if ($use_latest_revisions) {
           $entity = $default_revision;
           $latest_revision_id = $storage->getLatestTranslationAffectedRevisionId($entity->id(), $langcode);
-          if ($latest_revision_id > $entity->getRevisionId()) {
+          if ($latest_revision_id > $entity->getRevisionId() || $default_revision->hasTranslation($langcode)) {
             /** @var \Drupal\Core\Entity\ContentEntityInterface $latest_revision */
             $latest_revision = $storage->loadRevision($latest_revision_id);
             // Make sure we do not list removed translations, i.e. translations
