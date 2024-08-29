@@ -21,7 +21,9 @@ interface ImageInterface {
    * @return int|null
    *   The height of the image, or NULL if the image is invalid.
    */
+  // phpcs:disable
   public function getHeight() /* : ?int */;
+  // phpcs:enable
 
   /**
    * Returns the width of the image.
@@ -29,7 +31,9 @@ interface ImageInterface {
    * @return int|null
    *   The width of the image, or NULL if the image is invalid.
    */
+  // phpcs:disable
   public function getWidth() /* : ?int */;
+  // phpcs:enable
 
   /**
    * Returns the size of the image file.
