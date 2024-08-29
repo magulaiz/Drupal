@@ -107,11 +107,11 @@ interface ImageToolkitInterface extends ContainerFactoryPluginInterface, PluginI
    * @return int|null
    *   The height of the image, or NULL if the image is invalid.
    *
-   * @todo Uncomment return typehint before drupal:12.0.0.
+   * @todo Uncomment return type hint before drupal:12.0.0.
    * @see https://www.drupal.org/project/drupal/issues/3470951
    */
-  // phpcs:disable
-  public function getHeight() /* : ?int */;
+  // phpcs:disable Drupal.Commenting
+  public function getHeight()/* : ?int */;
   // phpcs:enable
 
   /**
@@ -120,11 +120,11 @@ interface ImageToolkitInterface extends ContainerFactoryPluginInterface, PluginI
    * @return int|null
    *   The width of the image, or NULL if the image is invalid.
    *
-   * @todo Uncomment return typehint before drupal:12.0.0.
+   * @todo Uncomment return type hint before drupal:12.0.0.
    * @see https://www.drupal.org/project/drupal/issues/3470951
    */
-  // phpcs:disable
-  public function getWidth() /* : ?int */;
+  // phpcs:disable Drupal.Commenting
+  public function getWidth()/* : ?int */;
   // phpcs:enable
 
   /**
