@@ -534,6 +534,7 @@
   height: 180px;
   object-fit: contain;
   object-position: center center;
+  vertical-align: bottom;
 }
 
 .media-library-item--grid.is-hover::before,
@@ -636,7 +637,7 @@
   overflow: hidden;
   max-width: calc(100% - 10px);
   max-height: calc(100% - 50px);
-  padding: 5px;
+  padding: 0.1rem;
   background: white;
 }
 
