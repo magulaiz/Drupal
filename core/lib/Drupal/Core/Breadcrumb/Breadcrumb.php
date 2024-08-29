@@ -37,15 +37,8 @@ class Breadcrumb implements RenderableInterface, RefinableCacheableDependencyInt
    *   The breadcrumb links.
    *
    * @return $this
-   *
-   * @throws \LogicException
-   *   Thrown when setting breadcrumb links after they've already been set.
    */
   public function setLinks(array $links) {
-    if (!empty($this->links)) {
-      throw new \LogicException('Once breadcrumb links are set, only additional breadcrumb links can be added.');
-    }
-
     $this->links = $links;
 
     return $this;
