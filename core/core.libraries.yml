@@ -725,7 +725,8 @@ drupal.touchevents-test:
 drupal.vertical-tabs:
   version: VERSION
   js:
-    misc/vertical-tabs.js: {}
+    # Load before core/drupal.collapse.
+    misc/vertical-tabs.js: { weight: -1 }
   css:
     component:
       misc/vertical-tabs.css: {}
