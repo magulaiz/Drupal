@@ -287,14 +287,13 @@ class FileManagedFileElementTest extends FileFieldTestBase {
     $this->submitForm($edit, 'Save');
     $this->assertNotEquals($new_file_content, file_get_contents($file_system->realpath($test_file_uri)));
 
-    // Replace with new content.
-    $result = file_put_contents($test_file_uri, $new_file_content);
-    $this->assertIsNumeric($result);
-    $this->drupalGet("file/$fid/edit");
-    $edit = ['files[replacement_file]' => $file_system->realpath($test_file_uri)];
+    // Replace with different mime
+    $file = $this->getTestFile('image');
+    $file->setPermanent();
+    $file->save();
+    $edit = ['files[replacement_file]' => $file_system->realpath($file->getFileUri())];
     $this->submitForm($edit, 'Save');
-    $this->assertEquals($new_file_content, file_get_contents($file_system->realpath($test_file_uri)));
-    $this->assertNotEquals($original_content, file_get_contents($file_system->realpath($test_file_uri)));
+    $this->assertSession()->pageTextContains('The uploaded file is not the same type as the existing file.');
   }
 
 }
