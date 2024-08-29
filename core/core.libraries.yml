@@ -591,7 +591,8 @@ drupal.entity-form:
 drupal.form:
   version: VERSION
   js:
-    misc/form.js: {}
+    # Load before drupal.vertical-tabs
+    misc/form.js: { weight: -2 }
   dependencies:
     - core/jquery
     - core/drupal
@@ -725,7 +726,7 @@ drupal.touchevents-test:
 drupal.vertical-tabs:
   version: VERSION
   js:
-    # Load before core/drupal.collapse.
+    # Load before core/drupal.collapse but after drupal.form.
     misc/vertical-tabs.js: { weight: -1 }
   css:
     component:
