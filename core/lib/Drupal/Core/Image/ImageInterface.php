@@ -21,7 +21,7 @@ interface ImageInterface {
    * @return int|null
    *   The height of the image, or NULL if the image is invalid.
    */
-  public function getHeight();
+  public function getHeight() /* : ?int */;
 
   /**
    * Returns the width of the image.
@@ -29,7 +29,7 @@ interface ImageInterface {
    * @return int|null
    *   The width of the image, or NULL if the image is invalid.
    */
-  public function getWidth();
+  public function getWidth() /* : ?int */;
 
   /**
    * Returns the size of the image file.
