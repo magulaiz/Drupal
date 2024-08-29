@@ -126,6 +126,7 @@ class AssetResolver implements AssetResolverInterface {
     // @todo https://www.drupal.org/project/drupal/issues/1945262
     $libraries = $assets->getLibraries();
     if ($libraries) {
+      sort($libraries);
       $libraries = $this->libraryDependencyResolver->getMinimalRepresentativeSubset($libraries);
     }
     return array_diff(
