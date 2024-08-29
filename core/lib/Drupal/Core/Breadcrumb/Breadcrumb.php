@@ -66,6 +66,24 @@ class Breadcrumb implements RenderableInterface, RefinableCacheableDependencyInt
   }
 
   /**
+   * Removes a link by route name from the ordered list of breadcrumb links.
+   *
+   * @param \Drupal\Core\Link $link
+   *   The link removed from the breadcrumb.
+   *
+   * @return $this
+   */
+  public function removeLink(Link $link) {
+    foreach ($this->links as $key => $value) {
+      if ($value->getUrl()->getRouteName() == $link->getUrl()->getRouteName() && $value->getUrl()->getRouteParameters() === $link->getUrl()->getRouteParameters()) {
+        unset($this->links[$key]);
+      }
+    }
+
+    return $this;
+  }
+
+  /**
    * {@inheritdoc}
    */
   public function toRenderable() {
