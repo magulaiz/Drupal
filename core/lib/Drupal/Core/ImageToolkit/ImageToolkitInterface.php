@@ -110,7 +110,7 @@ interface ImageToolkitInterface extends ContainerFactoryPluginInterface, PluginI
    * @todo Uncomment return type hint before drupal:12.0.0.
    * @see https://www.drupal.org/project/drupal/issues/3470951
    */
-  // phpcs:disable Drupal.Commenting
+  // phpcs:disable Drupal.Commenting,Squiz.WhiteSpace.SemicolonSpacing.Incorrect
   public function getHeight()/* : ?int */;
   // phpcs:enable
 
@@ -123,7 +123,7 @@ interface ImageToolkitInterface extends ContainerFactoryPluginInterface, PluginI
    * @todo Uncomment return type hint before drupal:12.0.0.
    * @see https://www.drupal.org/project/drupal/issues/3470951
    */
-  // phpcs:disable Drupal.Commenting
+  // phpcs:disable Drupal.Commenting,Squiz.WhiteSpace.SemicolonSpacing.Incorrect
   public function getWidth()/* : ?int */;
   // phpcs:enable
 
