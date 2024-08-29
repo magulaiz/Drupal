@@ -21,6 +21,8 @@ class BreadcrumbTest extends UnitTestCase {
   public function testSetLinks(): void {
     $breadcrumb = new Breadcrumb();
     $breadcrumb->setLinks([new Link('Home', Url::fromRoute('<front>'))]);
+    $links = $breadcrumb->getLinks();
+    $this->assertCount(1, $links);
   }
 
 }
