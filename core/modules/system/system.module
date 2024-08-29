@@ -16,6 +16,7 @@ use Drupal\Core\Database\Query\AlterableInterface;
 use Drupal\Core\Entity\ContentEntityTypeInterface;
 use Drupal\Core\Extension\Extension;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Installer\InstallerKernel;
 use Drupal\Core\KeyValueStore\KeyValueDatabaseExpirableFactory;
 use Drupal\Core\Language\LanguageInterface;
 use Drupal\Core\Link;
@@ -771,6 +772,10 @@ function system_js_settings_alter(&$settings, AttachedAssetsInterface $assets) {
  * Implements hook_form_alter().
  */
 function system_form_alter(&$form, FormStateInterface $form_state) {
+  if (InstallerKernel::installationAttempted()) {
+    // The installer is not cacheable, see install_display_output().
+    return;
+  }
   // If the page that's being built is cacheable, set the 'immutable' flag, to
   // ensure that when the form is used, a new form build ID is generated when
   // appropriate, to prevent information disclosure.
