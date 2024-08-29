@@ -576,9 +576,9 @@
 
 .media-library-item--grid .field--name-thumbnail img {
   height: 11.25rem;
+  vertical-align: bottom;
   object-fit: contain;
   object-position: center center;
-  vertical-align: bottom;
 }
 
 .media-library-item--grid.is-hover::before,
