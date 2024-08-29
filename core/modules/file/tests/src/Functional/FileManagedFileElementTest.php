@@ -279,7 +279,7 @@ class FileManagedFileElementTest extends FileFieldTestBase {
     $this->submitForm([], 'Save');
     $fid = $this->getLastFileId();
 
-    // Replace file with a different name.
+    // Replace file.
     $this->drupalGet("file/$fid/edit");
     $new_file_content = $this->randomString(32);
     file_put_contents('public://new-file.txt', $new_file_content);
@@ -287,7 +287,7 @@ class FileManagedFileElementTest extends FileFieldTestBase {
     $this->submitForm($edit, 'Save');
     $this->assertNotEquals($new_file_content, file_get_contents($file_system->realpath($test_file_uri)));
 
-    // Replace with different mime
+    // Replace with different mime.
     $file = $this->getTestFile('image');
     $file->setPermanent();
     $file->save();
