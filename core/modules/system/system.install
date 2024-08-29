@@ -11,6 +11,7 @@ use Drupal\Component\Utility\Crypt;
 use Drupal\Component\Utility\Environment;
 use Drupal\Component\Utility\OpCodeCache;
 use Drupal\Component\Utility\Unicode;
+use Drupal\Core\Config\Entity\ConfigEntityType;
 use Drupal\Core\Database\Database;
 use Drupal\Core\DrupalKernel;
 use Drupal\Core\Extension\ExtensionLifecycle;
@@ -1747,6 +1748,24 @@ function system_update_11001(&$sandbox) {
   $sandbox['current']++;
 
   $sandbox['#finished'] = empty($sandbox['max']) ? 1 : ($sandbox['current'] / $sandbox['max']);
+}
+
+/**
+ * Install the new `entity_link_suggester` config entity type.
+ */
+function system_update_11002(&$sandbox) {
+  \Drupal::entityDefinitionUpdateManager()->installEntityType(new ConfigEntityType([
+    'id' => 'entity_link_suggester',
+    'label' => new TranslatableMarkup('Link suggester'),
+    'label_collection' => new TranslatableMarkup("Link suggesters"),
+    'label_singular' => new TranslatableMarkup("link suggester"),
+    'label_plural' => new TranslatableMarkup("link suggesters"),
+    'admin_permission' => "administer site configuration",
+    'entity_keys' => [
+      'id' => 'id',
+      'label' => 'admin_label',
+    ],
+  ]));
 }
 
 /**

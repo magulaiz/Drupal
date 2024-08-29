@@ -49,6 +49,7 @@ class ValidatorsTest extends KernelTestBase {
     'filter_test',
     'media',
     'media_library',
+    'system',
     'views',
   ];
 
@@ -58,6 +59,12 @@ class ValidatorsTest extends KernelTestBase {
   protected function setUp(): void {
     parent::setUp();
     $this->typedConfig = $this->container->get('config.typed');
+
+    // Ensure core/modules/system/config/install/core.entity_link_suggester.everything.yml
+    // is installed.
+    $this->installConfig(['system']);
+    // Avoid needing to install the Stark theme.
+    $this->config('system.theme')->delete();
   }
 
   /**
@@ -1577,6 +1584,67 @@ class ValidatorsTest extends KernelTestBase {
       ],
       'expected_violations' => [],
     ];
+
+    $data['INVALID: EntityLinkSuggestions plugin configured to not have a suggester'] = [
+      'ckeditor5_settings' => [
+        'toolbar' => [
+          'items' => [
+            'link',
+          ],
+        ],
+        'plugins' => [
+          'ckeditor5_link_entity_suggestions' => [
+            'allow_download_links' => TRUE,
+            'suggester' => NULL,
+          ],
+        ],
+      ],
+      'editor_image_upload_settings' => [
+        'status' => FALSE,
+      ],
+      'filters' => [
+        'entity_links' => [
+          'id' => 'entity_links',
+          'provider' => 'filter',
+          'status' => TRUE,
+          'weight' => 0,
+          'settings' => [],
+        ],
+      ],
+      'expected_violations' => [
+        'settings.plugins.ckeditor5_link_entity_suggestions.suggester' => 'This value should not be null.',
+      ],
+    ];
+
+    $data['VALID: EntityLinkSuggestions plugin configured to use a link suggester that allows all linkable entity types'] = [
+      'ckeditor5_settings' => [
+        'toolbar' => [
+          'items' => [
+            'link',
+          ],
+        ],
+        'plugins' => [
+          'ckeditor5_link_entity_suggestions' => [
+            'allow_download_links' => TRUE,
+            'suggester' => 'core.entity_link_suggester.everything',
+          ],
+        ],
+      ],
+      'editor_image_upload_settings' => [
+        'status' => FALSE,
+      ],
+      'filters' => [
+        'entity_links' => [
+          'id' => 'entity_links',
+          'provider' => 'filter',
+          'status' => TRUE,
+          'weight' => 0,
+          'settings' => [],
+        ],
+      ],
+      'expected_violations' => [],
+    ];
+
     return $data;
   }
 

@@ -2,7 +2,6 @@
  * @file
  * Autocomplete based on jQuery UI.
  */
-
 (function ($, Drupal) {
   let autocomplete;
 

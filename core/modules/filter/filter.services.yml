@@ -9,3 +9,6 @@ services:
   filter.uninstall_validator:
     class: Drupal\filter\FilterUninstallValidator
     arguments: ['@plugin.manager.filter', '@entity_type.manager', '@string_translation']
+  logger.channel.filter:
+    parent: logger.channel_base
+    arguments: [ 'filter' ]
