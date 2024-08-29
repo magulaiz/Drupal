@@ -15,7 +15,6 @@ use Symfony\Component\Routing\Exception\RouteNotFoundException;
  * JSON:API integration test for the "Message" content entity type.
  *
  * @group jsonapi
- * @group #slow
  */
 class MessageTest extends ResourceTestBase {
 
@@ -96,7 +95,7 @@ class MessageTest extends ResourceTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function getPostDocument() {
+  protected function getPostDocument(): array {
     return [
       'data' => [
         'type' => 'contact_message--camelids',
