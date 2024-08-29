@@ -82,7 +82,7 @@ use Drupal\node\Entity\NodeType;
  * that contain changes that did not make their way into the default revision.
  * Typically these revisions contain data that is waiting for some form of
  * approval, before being accepted as canonical. See these:
- * 
+ *
  * \Drupal\Core\Entity\RevisionableInterface
  * \Drupal\Core\Entity\RevisionableStorageInterface
  *
@@ -97,7 +97,7 @@ use Drupal\node\Entity\NodeType;
  * handled. Typically the default translation's active language is the language
  * of the content that was originally entered and served as source for the other
  * translations. See these:
- * 
+ *
  * \Drupal\Core\Entity\TranslatableInterface
  * \Drupal\Core\Entity\TranslatableStorageInterface
  *
