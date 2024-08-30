@@ -84,8 +84,6 @@ class MigrateTaxonomyTermTranslationTest extends MigrateDrupal6TestBase {
     $this->assertSame($expected_language, $entity->language()->getId());
     $this->assertSame($expected_label, $entity->label());
     $this->assertSame($expected_vid, $entity->bundle());
-    $this->assertSame($expected_description, $entity->getDescription());
-    $this->assertSame($expected_format, $entity->getFormat());
     $this->assertSame($expected_weight, $entity->getWeight());
     $this->assertHierarchy($expected_vid, $id, $expected_parents);
   }

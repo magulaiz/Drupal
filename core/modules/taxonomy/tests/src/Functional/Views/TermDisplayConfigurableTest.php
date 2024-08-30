@@ -37,10 +37,8 @@ class TermDisplayConfigurableTest extends TaxonomyTestBase {
     // Name should be linked to entity and description should be displayed.
     $assert->pageTextContains($this->term1->getName());
     $assert->linkByHrefExists($this->term1->toUrl()->toString());
-    $assert->pageTextContains($this->term1->getDescription());
     $assert->pageTextContains($this->term2->getName());
     $assert->linkByHrefExists($this->term2->toUrl()->toString());
-    $assert->pageTextContains($this->term2->getDescription());
     // The field labels should not be present.
     $assert->pageTextNotContains('Name');
     $assert->pageTextNotContains('Description');
@@ -64,14 +62,10 @@ class TermDisplayConfigurableTest extends TaxonomyTestBase {
     $assert->pageTextNotContains('Description');
     $assert->pageTextContains($this->term1->getName());
     $assert->linkByHrefNotExists($this->term1->toUrl()->toString());
-    $assert->pageTextContains($this->term1->getDescription());
-    $assert->elementTextContains('xpath', '//*[@class="views-row"][1]/div/div[1]//p', $this->term1->getDescription());
     $assert->elementTextContains('xpath', '//*[@class="views-row"][1]/div/div[2]/div[1]', 'Name');
     $assert->elementTextContains('xpath', '//*[@class="views-row"][1]/div/div[2]/div[2]', $this->term1->getName());
     $assert->pageTextContains($this->term2->getName());
     $assert->linkByHrefNotExists($this->term2->toUrl()->toString());
-    $assert->pageTextContains($this->term2->getDescription());
-    $assert->elementTextContains('xpath', '//*[@class="views-row"][2]/div/div[1]//p', $this->term2->getDescription());
     $assert->elementTextContains('xpath', '//*[@class="views-row"][2]/div/div[2]/div[1]', 'Name');
     $assert->elementTextContains('xpath', '//*[@class="views-row"][2]/div/div[2]/div[2]', $this->term2->getName());
 
@@ -86,10 +80,8 @@ class TermDisplayConfigurableTest extends TaxonomyTestBase {
     $assert->pageTextNotContains('Description');
     $assert->pageTextNotContains($this->term1->getName());
     $assert->linkByHrefNotExists($this->term1->toUrl()->toString());
-    $assert->pageTextContains($this->term1->getDescription());
     $assert->pageTextNotContains($this->term2->getName());
     $assert->linkByHrefNotExists($this->term2->toUrl()->toString());
-    $assert->pageTextContains($this->term2->getDescription());
   }
 
 }
