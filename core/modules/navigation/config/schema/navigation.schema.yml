@@ -19,6 +19,10 @@ navigation.settings:
     logo_max_filesize:
       type: integer
       label: 'Maximum file sizes (bytes)'
+      nullable: true
+      constraints:
+        NotBlank:
+          allowNull: true
 
 navigation.block_layout:
   type: config_object
