@@ -1868,7 +1868,7 @@
       }
 
       // Only scroll upward.
-      if (offset.top - 10 < scrollTarget.scrollTop) {
+      if (offset.top - 10 < $(scrollTarget).scrollTop()) {
         scrollTarget.scrollTo({
           top: offset.top - 10,
           behavior: 'smooth',
