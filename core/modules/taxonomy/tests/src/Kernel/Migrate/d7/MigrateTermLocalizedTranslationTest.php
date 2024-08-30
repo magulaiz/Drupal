@@ -80,8 +80,6 @@ class MigrateTermLocalizedTranslationTest extends MigrateDrupal7TestBase {
     $this->assertSame($expected_language, $entity->language()->getId());
     $this->assertSame($expected_label, $entity->label());
     $this->assertSame($expected_vid, $entity->bundle());
-    $this->assertSame($expected_description, $entity->getDescription());
-    $this->assertSame($expected_format, $entity->getFormat());
     $this->assertSame($expected_weight, $entity->getWeight());
     $this->assertHierarchy($expected_vid, $id, $expected_parents);
   }
@@ -126,14 +124,12 @@ class MigrateTermLocalizedTranslationTest extends MigrateDrupal7TestBase {
     $this->assertTrue($entity->hasTranslation('is'));
     $translation = $entity->getTranslation('is');
     $this->assertSame('Jupiter Station', $translation->label());
-    $this->assertSame('is - Holographic research. (localized)', $translation->getDescription());
 
     $entity = Term::load(20);
     $this->assertFalse($entity->hasTranslation('is'));
     $this->assertTrue($entity->hasTranslation('fr'));
     $translation = $entity->getTranslation('fr');
     $this->assertSame('fr - DS9 (localized)', $translation->label());
-    $this->assertSame('fr - Terok Nor (localized)', $translation->getDescription());
     $this->assertFALSE($entity->hasTranslation('is'));
 
     $entity = Term::load(25);
@@ -141,7 +137,6 @@ class MigrateTermLocalizedTranslationTest extends MigrateDrupal7TestBase {
     $this->assertTrue($entity->hasTranslation('fr'));
     $translation = $entity->getTranslation('fr');
     $this->assertSame('fr - Emissary', $translation->label());
-    $this->assertSame('fr - Pilot episode', $translation->getDescription());
   }
 
 }

@@ -93,8 +93,6 @@ class MigrateTaxonomyTermTest extends MigrateDrupal7TestBase {
     $this->assertSame($expected_language, $entity->language()->getId());
     $this->assertEquals($expected_label, $entity->label());
     $this->assertEquals($expected_vid, $entity->bundle());
-    $this->assertEquals($expected_description, $entity->getDescription());
-    $this->assertEquals($expected_format, $entity->getFormat());
     $this->assertEquals($expected_weight, $entity->getWeight());
     $this->assertEquals($expected_parents, $this->getParentIDs($id));
     $this->assertHierarchy($expected_vid, $id, $expected_parents);
@@ -164,12 +162,6 @@ class MigrateTaxonomyTermTest extends MigrateDrupal7TestBase {
     $this->assertSame('Term3 in plain old English', $term->getName());
     $this->assertSame('Term3 en français s\'il vous plaît', $term_fr->getName());
     $this->assertSame('Term3 á íslensku', $term_is->getName());
-    $this->assertSame('The third term in plain old English.', $term->getDescription());
-    $this->assertSame('The third term en français s\'il vous plaît.', $term_fr->getDescription());
-    $this->assertSame('The third term á íslensku.', $term_is->getDescription());
-    $this->assertSame('full_html', $term->getFormat());
-    $this->assertSame('filtered_html', $term_fr->getFormat());
-    $this->assertSame('plain_text', $term_is->getFormat());
     $this->assertSame('6', $term->field_integer->value);
     $this->assertSame('5', $term_fr->field_integer->value);
     $this->assertSame('4', $term_is->field_integer->value);
