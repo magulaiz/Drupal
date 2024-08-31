@@ -19,6 +19,11 @@ navigation.settings:
     logo_max_filesize:
       type: integer
       label: 'Maximum file sizes (bytes)'
+    logo_extensions:  
+      type: string
+      label: 'Supported logo extensions'
+      constraints:
+        NotNull: []
 
 navigation.block_layout:
   type: config_object
