@@ -33,6 +33,7 @@ function navigation_post_update_update_permissions(array &$sandbox) {
  */
 function navigation_post_update_update_settings(array &$sandbox) {
   \Drupal::classResolver(ConfigFactoryInterface::class)->getEditable('navigation.settings')
-    ->set('logo_managed', '')
+    ->set('logo_managed', NULL)
+    ->set('logo_extensions', 'png jpg jpeg svg')
     ->save();
 }
