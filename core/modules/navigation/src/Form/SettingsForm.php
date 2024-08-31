@@ -113,7 +113,7 @@ final class SettingsForm extends ConfigFormBase {
         ],
       ],
     ];
-    $allowed = 'png jpg jpeg svg';
+    $allowed = $config->get('logo_extensions');
     if (!empty($config->get('logo_managed'))) {
       $fid = $this->getFidFromPath($config->get('logo_managed'));
     }
