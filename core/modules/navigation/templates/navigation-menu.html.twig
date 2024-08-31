@@ -47,6 +47,7 @@
       <li class="toolbar-menu__item toolbar-menu__item--level-{{ menu_level }}">
         {% if item.below is empty  %}
           <a
+            {% if item.target %}target="{{ item.target }}"{% endif %}
             href="{{ item.url }}"
             class="toolbar-button"
             data-index-text="{{ item.title|first|lower }}"

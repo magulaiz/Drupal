@@ -5,13 +5,18 @@ declare(strict_types=1);
 namespace Drupal\navigation\Plugin\Block;
 
 use Drupal\Core\Block\Attribute\Block;
+use Drupal\Core\Datetime\DrupalDateTime;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Menu\MenuTreeParameters;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
+use Drupal\Core\Render\Markup;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
+use Drupal\Core\Template\Attribute;
+use Drupal\Core\Url;
 use Drupal\navigation\Plugin\Derivative\SystemMenuNavigationBlock as SystemMenuNavigationBlockDeriver;
 use Drupal\system\Plugin\Block\SystemMenuBlock;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Drupal\announcements_feed\AnnounceFetcher;
 
 /**
  * Provides a generic menu navigation block.
@@ -28,6 +33,15 @@ final class NavigationMenuBlock extends SystemMenuBlock implements ContainerFact
 
   const NAVIGATION_MAX_DEPTH = 3;
 
+  protected $announceFetcher;
+  protected $feedLink;
+
+  public function __construct(array $configuration, $plugin_id, $plugin_definition, $menu_tree, $active_trail, AnnounceFetcher $announce_fetcher, string $feed_link) {
+    parent::__construct($configuration, $plugin_id, $plugin_definition, $menu_tree, $active_trail);
+    $this->announceFetcher = $announce_fetcher;
+    $this->feedLink = $feed_link;
+  }
+
   /**
    * {@inheritdoc}
    */
@@ -38,6 +52,8 @@ final class NavigationMenuBlock extends SystemMenuBlock implements ContainerFact
       $plugin_definition,
       $container->get('navigation.menu_tree'),
       $container->get('menu.active_trail'),
+      $container->get('announcements_feed.fetcher'),
+      $container->getParameter('announcements_feed.feed_link'),
     );
   }
 
@@ -91,6 +107,40 @@ final class NavigationMenuBlock extends SystemMenuBlock implements ContainerFact
     $build = $this->menuTree->build($tree);
     if (!empty($build)) {
       $build['#title'] = $this->configuration['label'];
+    }
+
+    $announcements = $this->announceFetcher->fetch();
+    $feed_link = $this->feedLink;
+
+    if (isset($build['#items']['announcements_feed.announcement'])) {
+      $build['#items']['announcements_feed.announcement']['is_expanded'] = true;
+      foreach ($announcements as $announcements_item) {
+        $date_time = DrupalDateTime::createFromFormat(DATE_ATOM, $announcements_item->date_published);
+        $date_formatter = \Drupal::service('date.formatter');
+        $build['#items']['announcements_feed.announcement']['below'][$announcements_item->id] = [
+          'is_expanded' => false,
+          'is_collapsed' => false,
+          'in_active_trail' => false,
+          'attributes' => new Attribute(),
+          'title' => Markup::create($announcements_item->title . '<br/>' . $date_formatter->format($date_time->getTimestamp(), 'short')),
+          'url' => Url::fromUri($announcements_item->url),
+          'below' => [],
+          'original_link' => '',
+          'target' => '_blank',
+        ];
+      }
+
+      $build['#items']['announcements_feed.announcement']['below']['feed_link'] = [
+        'is_expanded' => false,
+        'is_collapsed' => false,
+        'in_active_trail' => false,
+        'attributes' => new Attribute(),
+        'title' => $this->t('View all announcements'),
+        'url' => Url::fromUri($feed_link),
+        'below' => [],
+        'original_link' => '',
+        'target' => '_blank',
+      ];
     }
 
     return $build;
