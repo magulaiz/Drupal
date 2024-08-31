@@ -27,6 +27,9 @@ function navigation_post_update_update_permissions(array &$sandbox) {
   });
 }
 
+/**
+ * Update for navigation logo to store the file path instead of ID.
+ */
 function navigation_post_update_update_settings(array &$sandbox) {
   \Drupal::configFactory()->getEditable('navigation.settings')
     ->set('logo_managed', '')
