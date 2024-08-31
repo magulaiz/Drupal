@@ -4,6 +4,7 @@ namespace Drupal\node\Entity;
 
 use Drupal\Core\Config\Action\Attribute\ActionMethod;
 use Drupal\Core\Config\Entity\ConfigEntityBundleBase;
+use Drupal\Core\Config\Entity\EntityBundleWithPluralLabelsTrait;
 use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\node\NodeTypeInterface;
@@ -54,10 +55,15 @@ use Drupal\node\NodeTypeInterface;
  *     "new_revision",
  *     "preview_mode",
  *     "display_submitted",
+ *     "label_singular",
+ *     "label_plural",
+ *     "label_count",
  *   }
  * )
  */
 class NodeType extends ConfigEntityBundleBase implements NodeTypeInterface {
+
+  use EntityBundleWithPluralLabelsTrait;
 
   /**
    * The machine name of this node type.
