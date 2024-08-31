@@ -26,41 +26,6 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 final class SettingsForm extends ConfigFormBase {
 
   /**
-   * The file system service.
-   *
-   * @var \Drupal\Core\File\FileSystemInterface
-   */
-  protected $fileSystem;
-
-  /**
-   * The file usage service.
-   *
-   * @var \Drupal\file\FileUsage\FileUsageInterface
-   */
-  protected $fileUsage;
-
-  /**
-   * The file URL generator.
-   *
-   * @var \Drupal\Core\File\FileUrlGeneratorInterface
-   */
-  protected $fileUrlGenerator;
-
-  /**
-   * Renderer service.
-   *
-   * @var \Drupal\Core\Render\RendererInterface
-   */
-  protected RendererInterface $renderer;
-
-  /**
-   * The entity type manager.
-   *
-   * @var \Drupal\Core\Entity\EntityTypeManagerInterface
-   */
-  protected $entityTypeManager;
-
-  /**
    * Constructs a Navigation SettingsForm object.
    *
    * @param \Drupal\Core\Config\ConfigFactoryInterface $config_factory
@@ -75,24 +40,19 @@ final class SettingsForm extends ConfigFormBase {
    *   The File Usage service.
    * @param \Drupal\Core\Render\RendererInterface $renderer
    *   Renderer service.
-   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
+   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entityTypeManager
    *   The entity type manager.
    */
   public function __construct(
     ConfigFactoryInterface $config_factory,
     TypedConfigManagerInterface $typed_config_manager,
-    FileSystemInterface $file_system,
-    FileUrlGeneratorInterface $fileUrlGenerator,
-    FileUsageInterface $fileUsage,
-    RendererInterface $renderer,
-    EntityTypeManagerInterface $entity_type_manager,
+    protected FileSystemInterface $file_system,
+    protected FileUrlGeneratorInterface $fileUrlGenerator,
+    protected FileUsageInterface $fileUsage,
+    protected RendererInterface $renderer,
+    protected EntityTypeManagerInterface $entityTypeManager,
   ) {
     parent::__construct($config_factory, $typed_config_manager);
-    $this->fileSystem = $file_system;
-    $this->fileUrlGenerator = $fileUrlGenerator;
-    $this->fileUsage = $fileUsage;
-    $this->renderer = $renderer;
-    $this->entityTypeManager = $entity_type_manager;
   }
 
   /**
