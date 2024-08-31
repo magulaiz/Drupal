@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\file\Kernel\Migrate\d6;
 
-use Drupal\migrate\Plugin\MigrationInterface;
-
 /**
  * Helper for setting up a file migration test.
  */
@@ -18,23 +16,23 @@ trait FileMigrationTestTrait {
     $this->installEntitySchema('file');
     $this->installConfig(['file']);
 
-    $this->executeMigration('d6_file');
+    $this->executeMigration('d6_file', $this->fileConfiguration());
   }
 
   /**
-   * {@inheritdoc}
+   * Returns an array of migration configuration for file migrations.
    */
-  protected function prepareMigration(MigrationInterface $migration) {
+  protected function fileConfiguration(): array {
     // File migrations need a source_base_path.
     // @see MigrateUpgradeRunBatch::run
-    $destination = $migration->getDestinationConfiguration();
-    if ($destination['plugin'] === 'entity:file') {
-      // Make sure we have a single trailing slash.
-      $source = $migration->getSourceConfiguration();
-      $source['site_path'] = 'core/tests/fixtures';
-      $source['constants']['source_base_path'] = $this->root . '/';
-      $migration->set('source', $source);
-    }
+    return [
+      'source' => [
+        'site_path' => 'core/tests/fixtures',
+        'constants' => [
+          'source_base_path' => $this->root,
+        ],
+      ],
+    ];
   }
 
 }

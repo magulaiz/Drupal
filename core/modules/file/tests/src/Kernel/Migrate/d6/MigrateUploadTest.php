@@ -61,7 +61,7 @@ class MigrateUploadTest extends MigrateDrupal6TestBase {
     // Since we are only testing a subset of the file migration, do not check
     // that the full file migration has been run.
     $migration = $this->getMigration('d6_upload');
-    $migration->set('requirements', []);
+    $migration->setRequirements([]);
     $this->executeMigration($migration);
   }
 

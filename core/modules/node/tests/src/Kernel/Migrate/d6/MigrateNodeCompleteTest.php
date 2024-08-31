@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Drupal\Tests\node\Kernel\Migrate\d6;
 
 use Drupal\node\NodeInterface;
-use Drupal\Tests\file\Kernel\Migrate\d6\FileMigrationTestTrait;
 use Drupal\Tests\migrate_drupal\Traits\CreateTestContentEntitiesTrait;
 
 /**
@@ -15,7 +14,6 @@ use Drupal\Tests\migrate_drupal\Traits\CreateTestContentEntitiesTrait;
  */
 class MigrateNodeCompleteTest extends MigrateNodeTestBase {
 
-  use FileMigrationTestTrait;
   use CreateTestContentEntitiesTrait;
 
   /**

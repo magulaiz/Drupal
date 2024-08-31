@@ -300,6 +300,58 @@ interface MigrationInterface extends PluginInspectionInterface, DerivativeInspec
   public function getMigrationTags();
 
   /**
+   * Sets the migration dependencies.
+   *
+   * @param string[][] $migration_dependencies
+   *   An array of arrays, keyed by 'required' and 'optional' (both optional).
+   *   Each array is a list of migration IDs. The current migration will not be
+   *   run if any of the required migrations are incomplete. The system attempts
+   *   to run the optional migrations before the current one.
+   *
+   * @return $this
+   *
+   * @deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. There is no
+   * replacement.
+   *
+   * @see https://www.drupal.org/node/3183069
+   */
+  public function setMigrationDependencies(array $migration_dependencies): MigrationInterface;
+
+  /**
+   * Add required migration dependencies.
+   *
+   * @param string[] $required_dependencies
+   *   An array of migration IDs to be added to the required migration
+   *   dependencies.
+   *
+   * @return $this
+   */
+  public function addRequiredDependencies(array $required_dependencies): MigrationInterface;
+
+  /**
+   * Add optional migration dependencies.
+   *
+   * @param string[] $optional_dependencies
+   *   An array of migration IDs to be added to the optional migration
+   *   dependencies.
+   *
+   * @return $this
+   */
+  public function addOptionalDependencies(array $optional_dependencies): MigrationInterface;
+
+  /**
+   * Sets the migration requirements.
+   *
+   * @param string[] $requirements
+   *   An array of migration IDs, where the key and value are the same,
+   *   indicating the migrations that must be completed before the current
+   *   migration will run.
+   *
+   * @return $this
+   */
+  public function setRequirements(array $requirements): MigrationInterface;
+
+  /**
    * Indicates if the migration is auditable.
    *
    * @return bool

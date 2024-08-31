@@ -7,7 +7,6 @@ namespace Drupal\Tests\node\Kernel\Migrate\d6;
 use Drupal\Core\Database\Database;
 use Drupal\migrate\Plugin\MigrateIdMapInterface;
 use Drupal\node\Entity\Node;
-use Drupal\Tests\file\Kernel\Migrate\d6\FileMigrationTestTrait;
 
 /**
  * Node content migration.
@@ -15,8 +14,6 @@ use Drupal\Tests\file\Kernel\Migrate\d6\FileMigrationTestTrait;
  * @group migrate_drupal_6
  */
 class MigrateNodeTest extends MigrateNodeTestBase {
-
-  use FileMigrationTestTrait;
 
   /**
    * {@inheritdoc}

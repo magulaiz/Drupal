@@ -149,33 +149,25 @@ abstract class MigrateTestBase extends KernelTestBase implements MigrateMessageI
   }
 
   /**
-   * Modify a migration's configuration before executing it.
-   *
-   * @param \Drupal\migrate\Plugin\MigrationInterface $migration
-   *   The migration to execute.
-   */
-  protected function prepareMigration(MigrationInterface $migration) {
-    // Default implementation for test classes not requiring modification.
-  }
-
-  /**
    * Executes a single migration.
    *
    * @param string|\Drupal\migrate\Plugin\MigrationInterface $migration
    *   The migration to execute, or its ID.
+   * @param array $configuration
+   *   The migration configuration.
    */
-  protected function executeMigration($migration) {
+  protected function executeMigration($migration, array $configuration = []): void {
+    // The string may be the derived name of migration, so use it and not the
+    // migration id.
     if (is_string($migration)) {
-      $this->migration = $this->getMigration($migration);
+      $migration = $this->getMigration($migration, $configuration);
     }
-    else {
-      $this->migration = $migration;
-    }
+    $this->migration = $migration;
+
     if ($this instanceof MigrateDumpAlterInterface) {
       static::migrateDumpAlter($this);
     }
 
-    $this->prepareMigration($this->migration);
     (new MigrateExecutable($this->migration, $this))->import();
   }
 
@@ -189,7 +181,9 @@ abstract class MigrateTestBase extends KernelTestBase implements MigrateMessageI
   protected function executeMigrations(array $ids) {
     $manager = $this->container->get('plugin.manager.migration');
     $instances = $manager->createInstances($ids);
-    array_walk($instances, [$this, 'executeMigration']);
+    foreach ($instances as $instance) {
+      $this->executeMigration($instance);
+    }
   }
 
   /**
@@ -250,12 +244,15 @@ abstract class MigrateTestBase extends KernelTestBase implements MigrateMessageI
    *
    * @param $plugin_id
    *   The plugin ID of the migration to get.
+   * @param array $configuration
+   *   An array of configuration relevant to the plugin instance.
    *
    * @return \Drupal\migrate\Plugin\Migration
    *   The migration plugin.
    */
-  protected function getMigration($plugin_id) {
-    return $this->container->get('plugin.manager.migration')->createInstance($plugin_id);
+  protected function getMigration($plugin_id, array $configuration = []): MigrationInterface {
+    return $this->container->get('plugin.manager.migration')
+      ->createInstance($plugin_id, $configuration);
   }
 
   /**

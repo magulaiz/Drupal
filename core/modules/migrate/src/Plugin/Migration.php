@@ -579,9 +579,23 @@ class Migration extends PluginBase implements MigrationInterface, RequirementsIn
   }
 
   /**
-   * {@inheritdoc}
+   * Sets a property on the migration.
+   *
+   * @param string $property_name
+   *   The name of the property.
+   * @param mixed $value
+   *   The value to set the property to.
+   *
+   * @return $this
+   *   The migration plugin.
+   *
+   * @deprecated in drupal:11.1.0 and is removed from drupal:12.0.0. Instead,
+   *   use the specific setter method for the property.
+   *
+   * @see https://www.drupal.org/node/3183069
    */
   public function set($property_name, $value) {
+    @trigger_error(__METHOD__ . '() is deprecated in drupal:11.1.0 and is removed from drupal:12.0.0. Instead, use the specific setter method for the property. See https://www.drupal.org/node/3183069', E_USER_DEPRECATED);
     if ($property_name == 'source') {
       // Invalidate the source plugin.
       unset($this->sourcePlugin);
@@ -623,6 +637,53 @@ class Migration extends PluginBase implements MigrationInterface, RequirementsIn
   /**
    * {@inheritdoc}
    */
+  public function addRequiredDependencies(array $required_dependencies): MigrationInterface {
+    // @todo Remove check for 'required' key. https://www.drupal.org/node/3332807
+    $this->migration_dependencies['required'] = isset($this->migration_dependencies['required'])
+      ? array_unique(array_merge($this->migration_dependencies['required'], $required_dependencies))
+      : $required_dependencies;
+    return $this;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function addOptionalDependencies(array $optional_dependencies): MigrationInterface {
+    // @todo Remove check for 'optional' key. https://www.drupal.org/node/3332807
+    $this->migration_dependencies['optional'] = isset($this->migration_dependencies['optional'])
+      ? array_unique(array_merge($this->migration_dependencies['optional'], $optional_dependencies))
+      : $optional_dependencies;
+    return $this;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function setRequirements(array $requirements): MigrationInterface {
+    $this->requirements = $requirements;
+    return $this;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function setMigrationDependencies(array $migration_dependencies): MigrationInterface {
+    @trigger_error(__METHOD__ . '() is deprecated in drupal:11.1.0 and is removed from drupal:12.0.0. There is no replacement. See https://www.drupal.org/node/3183069', E_USER_DEPRECATED);
+    $this->migration_dependencies = ($migration_dependencies ?: []) +
+      [
+        'required' => [],
+        'optional' => [],
+      ];
+    if (count($migration_dependencies) !== 2 || !is_array($migration_dependencies['required']) || !is_array($migration_dependencies['optional'])) {
+      @trigger_error("Invalid migration dependencies for {$this->id()} is deprecated in drupal:11.1.0 and will cause an error in drupal:12.0.0. See https://www.drupal.org/node/3266691", E_USER_DEPRECATED);
+    }
+    $this->migration_dependencies = $migration_dependencies;
+    return $this;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function mergeProcessOfProperty($property, array $process_of_property) {
     // If we already have a process value then merge the incoming process array
     // otherwise simply set it.
@@ -645,7 +706,7 @@ class Migration extends PluginBase implements MigrationInterface, RequirementsIn
    */
   public function getMigrationDependencies() {
     if (func_num_args() > 0) {
-      @trigger_error('Calling ' . __METHOD__ . ' with the $expand parameter is deprecated in drupal:11.0.0 and is removed drupal:12.0.0. See https://www.drupal.org/node/3442785', E_USER_DEPRECATED);
+      @trigger_error('Calling ' . __METHOD__ . ' with the $expand parameter is deprecated in drupal:11.1.0 and is removed drupal:12.0.0. See https://www.drupal.org/node/3442785', E_USER_DEPRECATED);
     }
 
     $this->migration_dependencies = ($this->migration_dependencies ?: []) + ['required' => [], 'optional' => []];
