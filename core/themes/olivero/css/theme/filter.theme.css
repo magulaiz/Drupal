@@ -31,7 +31,7 @@
 }
 
 .filter-help {
-  float: inline-end; /* LTR */
+  float: right; /* LTR */
   padding-block: var(--sp0-5);
   font-size: var(--font-size-xxs);
 

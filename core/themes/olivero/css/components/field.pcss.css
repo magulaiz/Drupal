@@ -15,7 +15,7 @@
 
 .field--label-inline .field__label,
 .field--label-inline .field__items {
-  float: inline-start; /* LTR */
+  float: left; /* LTR */
 
   /**
    * Chromium and Webkit do not yet support flow relative logical properties,

@@ -12,7 +12,7 @@
   background-color: #81c071;
 }
 .toolbar-oriented .toolbar-bar .workspaces-toolbar-tab {
-  float: inline-end; /* LTR */
+  float: right; /* LTR */
 
   /**
    * Chromium and Webkit do not yet support flow relative logical properties,
@@ -29,7 +29,7 @@
 
 @media (min-width: 264px) {
   .toolbar:not(.toolbar-oriented) .toolbar-bar .workspaces-toolbar-tab {
-    float: inline-end; /* LTR */
+    float: right; /* LTR */
 
     /**
      * Chromium and Webkit do not yet support flow relative logical properties,
@@ -47,13 +47,13 @@
 
 /* Link within the toolbar tab. */
 .toolbar .toolbar-bar .workspaces-toolbar-tab .toolbar-item {
-  inline-size: 100%;
+  width: 100%;
   margin: 0;
   text-align: start;
   color: inherit;
 
   @nest .toolbar-oriented & {
-    inline-size: auto;
+    width: auto;
     text-align: initial;
   }
 }
@@ -64,8 +64,8 @@
 
 @media all and (max-width: 766px) {
   .toolbar-oriented .toolbar-bar .workspaces-toolbar-tab .toolbar-icon-workspace {
-    inline-size: auto;
-    max-inline-size: 8em;
+    width: auto;
+    max-width: 8em;
   }
 
   .toolbar .toolbar-bar .workspaces-toolbar-tab .toolbar-icon-workspace {
@@ -78,7 +78,7 @@
 
   .toolbar .toolbar-bar .workspaces-toolbar-tab .toolbar-icon-workspace::before {
     inset-inline-start: 0.6667em;
-    inline-size: 20px;
+    width: 20px;
     background-size: 100% auto;
   }
 }
