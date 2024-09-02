@@ -26,7 +26,7 @@ class InstantQueue {
    *
    * @var \Drupal\Core\Config\Config
    */
-  protected $config;
+  protected Config  $config;
 
   /**
    * The drupal database connection.
