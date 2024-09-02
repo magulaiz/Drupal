@@ -72,7 +72,7 @@ class EntityResource extends ResourceBase implements DependentPluginInterface {
   /**
    * Time service used for retrieval of request time.
    *
-   * @var TimeInterface
+   * @var \Drupal\Component\Datetime\TimeInterface
    */
   protected $time;
 
