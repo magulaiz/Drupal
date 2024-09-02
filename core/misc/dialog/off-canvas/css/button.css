@@ -27,9 +27,10 @@
 }
 #drupal-off-canvas-wrapper .button {
   display: inline-block;
-  width: 100%;
-  height: auto;
-  margin: 0 0 0.625rem;
+  inline-size: 100%;
+  block-size: auto;
+  margin-block: 0 0.625rem;
+  margin-inline: 0;
   padding: var(--off-canvas-button-padding);
   cursor: pointer;
   transition: background 0.5s ease;
@@ -62,7 +63,7 @@
   font-weight: normal;
 }
 #drupal-off-canvas-wrapper .button--primary {
-  margin-top: 0.9375rem;
+  margin-block-start: 0.9375rem;
   color: var(--off-canvas-primary-button-text-color);
   background: var(--off-canvas-primary-button-background-color);
 }
@@ -106,6 +107,7 @@
   color: #737373;
 }
 .no-touchevents #drupal-off-canvas-wrapper .button--small {
-  padding: 2px 1em;
+  padding-block: 2px;
+  padding-inline: 1em;
   font-size: 0.8125rem;
 }

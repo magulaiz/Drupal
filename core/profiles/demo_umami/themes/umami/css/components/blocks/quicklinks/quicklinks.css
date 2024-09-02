@@ -10,7 +10,8 @@
 @media screen and (min-width: 60rem) {
   /* 960px */
   .quicklinks {
-    padding: 2rem 0;
+    padding-block: 2rem;
+    padding-inline: 0;
   }
 }
 
@@ -32,8 +33,9 @@
 
 .quicklinks__col {
   position: relative;
-  min-height: 9rem;
-  padding: 1.5rem 0.25rem;
+  min-block-size: 9rem;
+  padding-block: 1.5rem;
+  padding-inline: 0.25rem;
   text-align: center;
 }
 /* Small */
@@ -41,18 +43,17 @@
   /* 480px */
   .quicklinks__col {
     flex-basis: 50%;
-    padding-top: 1rem;
-    padding-bottom: 1rem;
+    padding-block: 1rem;
   }
 }
 
 .quicklinks__col::after {
   position: absolute;
-  right: 10%;
-  bottom: 0;
+  inset-inline-end: 10%;
+  inset-block-end: 0;
   display: block;
-  width: 80%;
-  height: 1px;
+  inline-size: 80%;
+  block-size: 1px;
   content: "";
   background-color: #e6eee0;
 }
@@ -71,11 +72,11 @@
   /* 960px */
   .quicklinks__col::after {
     position: absolute;
-    top: 0;
-    right: 0;
+    inset-block-start: 0;
+    inset-inline-end: 0;
     display: block;
-    width: 1px;
-    height: 100%;
+    inline-size: 1px;
+    block-size: 100%;
     content: "";
     background-color: #e6eee0;
   }
@@ -85,5 +86,5 @@
 }
 
 .quicklinks__img {
-  margin-bottom: 1rem;
+  margin-block-end: 1rem;
 }

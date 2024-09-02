@@ -4,12 +4,14 @@
  */
 
 .banner__content {
-  margin: 1rem 4%;
+  margin-block: 1rem;
+  margin-inline: 4%;
   font-size: 1.188em;
 }
 
 .banner__title {
-  margin: 0 0 0.5em 0;
+  margin-block: 0 0.5em;
+  margin-inline: 0;
   font-family: "Scope One", Georgia, serif;
   font-size: 1.777em;
   font-weight: 400;
@@ -27,14 +29,15 @@
   .banner__inner {
     display: flex;
     align-items: center;
-    min-height: 54vw;
+    min-block-size: 54vw;
     margin: auto;
-    padding: 0 4%;
+    padding-block: 0;
+    padding-inline: 4%;
   }
 
   .banner__content {
     position: relative; /* Establish stacking context to appear above absolutely positioned background image. */
-    max-width: 50%;
+    max-inline-size: 50%;
     margin: 0;
     padding: 1.777em;
     color: #fff;
@@ -44,10 +47,10 @@
 
   .banner__image img {
     position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
+    inset-block-start: 0;
+    inset-inline-start: 0;
+    inline-size: 100%;
+    block-size: 100%;
     object-fit: cover;
   }
 }
@@ -55,10 +58,10 @@
 @media screen and (min-width: 60rem) {
   /* 960px */
   .banner__content {
-    max-width: 41%;
+    max-inline-size: 41%;
   }
   .banner__inner {
-    min-height: 43vw;
+    min-block-size: 43vw;
   }
 }
 /* Extra large + side margins */

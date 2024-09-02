@@ -15,9 +15,9 @@
   /* Ensure that header nav not use additional space and force system branding
    * block text to unnecessarily wrap. */
   flex-basis: max-content;
-  width: 100%;
-  max-width: var(--mobile-nav-width);
-  height: 100%;
+  inline-size: 100%;
+  max-inline-size: var(--mobile-nav-width);
+  block-size: 100%;
   padding-block: 0 var(--sp);
   padding-inline-start: var(--sp);
   padding-inline-end: var(--sp);
@@ -39,13 +39,13 @@
   }
 
   @media (--sm) {
-    border-top-width: calc(var(--sp5) + var(--drupal-displace-offset-top, 0px));
+    border-block-start-width: calc(var(--sp5) + var(--drupal-displace-offset-top, 0px));
   }
 
   @media (--md) {
     padding-block-end: var(--sp3);
     padding-inline-start: var(--sp3);
-    border-top-width: calc(var(--sp7) + var(--drupal-displace-offset-top, 0px));
+    border-block-start-width: calc(var(--sp7) + var(--drupal-displace-offset-top, 0px));
   }
 
   @media (--lg) {
@@ -56,7 +56,7 @@
    * Ensure top border has the same color as the background when in forced colors.
    */
   @media (forced-colors: active) {
-    border-top-color: canvas;
+    border-block-start-color: canvas;
   }
 }
 
@@ -79,8 +79,8 @@ body:not(.is-always-mobile-nav) .header-nav {
     grid-column: 5 / 15;
     align-items: center;
     justify-content: flex-end;
-    max-width: none;
-    height: var(--header-height-wide-when-fixed);
+    max-inline-size: none;
+    block-size: var(--header-height-wide-when-fixed);
     margin-block-start: auto;
     padding-block: 0;
     padding-inline-start: 0;
@@ -96,16 +96,16 @@ body.is-always-mobile-nav {
   & .header-nav {
     @media (--nav) {
       overflow: auto;
-      max-width: calc((7 * (var(--grid-col-width) + var(--grid-gap))));
+      max-inline-size: calc((7 * (var(--grid-col-width) + var(--grid-gap))));
       padding-inline-end: var(--sp);
       transition:
         transform 0.2s,
         visibility 0.2s;
-      border-top-width: calc(var(--drupal-displace-offset-top, 0px) + var(--sp11));
+      border-block-start-width: calc(var(--drupal-displace-offset-top, 0px) + var(--sp11));
     }
 
     @media (--grid-max) {
-      max-width: calc(100vw - (var(--max-width) + var(--content-left)) + ((7 * (var(--grid-col-width) + var(--grid-gap)))));
+      max-inline-size: calc(100vw - (var(--max-width) + var(--content-left)) + ((7 * (var(--grid-col-width) + var(--grid-gap)))));
       padding-inline-end: calc(100vw - (var(--max-width) + var(--content-left) - var(--sp)));
     }
   }
@@ -117,8 +117,8 @@ body.is-always-mobile-nav {
   inset-block-start: 0;
   inset-inline-start: 0;
   display: none;
-  width: 100%;
-  height: 100vh;
+  inline-size: 100%;
+  block-size: 100vh;
   opacity: 0.2;
   background: var(--color--gray-5);
 

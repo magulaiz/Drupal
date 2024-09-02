@@ -13,7 +13,7 @@
 .layout--content-medium,
 .layout--pass--content-medium > * {
   grid-column: 1 / 7;
-  width: 100%;
+  inline-size: 100%;
 }
 
 @media (min-width: 43.75rem) {

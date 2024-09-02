@@ -22,7 +22,8 @@
     display: flex;
     flex-wrap: wrap;
     margin-block: var(--space-l);
-    padding: var(--space-xs) var(--space-l) var(--space-l) var(--space-l);
+    padding-block: var(--space-xs) var(--space-l);
+    padding-inline: var(--space-l);
     border: var(--details-border-size) solid var(--details-border-color);
     border-radius: var(--details-border-size-radius);
     background-color: var(--color-white);
@@ -31,13 +32,13 @@
 }
 .views-exposed-form--preview {
   &.views-exposed-form--preview {
-    margin-top: 0;
+    margin-block-start: 0;
   }
 }
 
 .views-exposed-form__item {
   &.views-exposed-form__item {
-    max-width: 100%;
+    max-inline-size: 100%;
     margin-block: var(--space-s) 0;
     margin-inline: 0 var(--space-xs);
   }
@@ -61,5 +62,5 @@
 .views-exposed-form .form-item--no-label,
 .views-exposed-form__item.views-exposed-form__item.views-exposed-form__item--actions {
   /* Line height of a label + existing margin for the element + margin for label */
-  margin-top: calc(var(--line-height-form-label) + var(--space-s) + var(--space-xs));
+  margin-block-start: calc(var(--line-height-form-label) + var(--space-s) + var(--space-xs));
 }

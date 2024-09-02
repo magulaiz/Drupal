@@ -19,7 +19,8 @@
   --off-canvas-focus-outline-width: 2px;
   --off-canvas-focus-outline-color: #fff;
 
-  padding: 0 var(--off-canvas-padding) var(--off-canvas-padding);
+  padding-block: 0 var(--off-canvas-padding);
+  padding-inline: var(--off-canvas-padding);
   color: var(--off-canvas-text-color);
   background-color: var(--off-canvas-background-color);
   font-family: var(--off-canvas-font-family);
@@ -36,7 +37,7 @@
   }
 
   & hr {
-    height: 1px;
+    block-size: 1px;
     background: var(--off-canvas-border-color);
   }
 
@@ -48,19 +49,22 @@
 
   & h2,
   & .heading-b {
-    margin: var(--off-canvas-vertical-spacing-unit) 0;
+    margin-block: var(--off-canvas-vertical-spacing-unit);
+    margin-inline: 0;
     font-size: 19px;
   }
 
   & h3,
   & .heading-c {
-    margin: var(--off-canvas-vertical-spacing-unit) 0;
+    margin-block: var(--off-canvas-vertical-spacing-unit);
+    margin-inline: 0;
     font-size: 17px;
   }
 
   & h4,
   & .heading-d {
-    margin: var(--off-canvas-vertical-spacing-unit) 0;
+    margin-block: var(--off-canvas-vertical-spacing-unit);
+    margin-inline: 0;
     font-size: 16px;
   }
 
@@ -68,17 +72,19 @@
   & .heading-e,
   & h6,
   & .heading-f {
-    margin: var(--off-canvas-vertical-spacing-unit) 0;
+    margin-block: var(--off-canvas-vertical-spacing-unit);
+    margin-inline: 0;
     font-size: 15px;
   }
 
   & p {
-    margin: var(--off-canvas-vertical-spacing-unit) 0;
+    margin-block: var(--off-canvas-vertical-spacing-unit);
+    margin-inline: 0;
   }
 
   & img {
-    max-width: 100%;
-    height: auto;
+    max-inline-size: 100%;
+    block-size: auto;
   }
 
   & .links {
@@ -87,7 +93,8 @@
     list-style: none;
 
     & li {
-      margin: calc(var(--off-canvas-vertical-spacing-unit) / 2) 0;
+      margin-block: calc(var(--off-canvas-vertical-spacing-unit) / 2);
+      margin-inline: 0;
     }
   }
 }

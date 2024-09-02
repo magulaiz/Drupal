@@ -28,13 +28,13 @@
 }
 
 .progress--small .progress__track {
-  height: var(--progress-bar-small-size);
+  block-size: var(--progress-bar-small-size);
 }
 
 .progress--small .progress__bar {
-  width: var(--progress-bar-small-size);
-  min-width: var(--progress-bar-small-size);
-  height: var(--progress-bar-small-size);
+  inline-size: var(--progress-bar-small-size);
+  min-inline-size: var(--progress-bar-small-size);
+  block-size: var(--progress-bar-small-size);
 }
 
 .progress--small .progress__label {
@@ -42,7 +42,7 @@
 }
 
 .progress__track {
-  height: var(--progress-bar-default-size);
+  block-size: var(--progress-bar-default-size);
   margin-block-start: 0;
   border: var(--progress-bar-border-size) var(--progress-track-border-color) solid;
   border-radius: var(--progress-bar-default-size-radius);
@@ -50,9 +50,9 @@
 }
 
 .progress__bar {
-  width: var(--progress-bar-default-size);
-  min-width: var(--progress-bar-default-size);
-  height: var(--progress-bar-default-size);
+  inline-size: var(--progress-bar-default-size);
+  min-inline-size: var(--progress-bar-default-size);
+  block-size: var(--progress-bar-default-size);
   margin-block-start: calc(var(--progress-bar-border-size) * -1);
   margin-inline-start: calc(var(--progress-bar-border-size) * -1);
   transition: var(--progress-bar-transition);

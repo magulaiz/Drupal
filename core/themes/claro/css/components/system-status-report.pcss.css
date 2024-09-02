@@ -21,7 +21,7 @@
 .system-status-report__status-title {
   position: relative;
   box-sizing: border-box;
-  width: 100%;
+  inline-size: 100%;
   padding-block: 0.625em;
   padding-inline: 2.5em 0.375em;
   vertical-align: top;
@@ -33,8 +33,8 @@
   inset-block-start: 12px;
   inset-inline-start: 12px;
   display: block;
-  width: 16px;
-  height: 16px;
+  inline-size: 16px;
+  block-size: 16px;
   content: "";
   background-repeat: no-repeat;
 }
@@ -45,7 +45,8 @@
   background-image: url(../../images/core/e29700/warning.svg);
 }
 .system-status-report__entry__value {
-  padding: 1em 0.5em;
+  padding-block: 1em;
+  padding-inline: 0.5em;
 }
 
 .cron-description__run-cron {
@@ -60,10 +61,10 @@
 
 .system-status-report__row {
   display: flex;
-  border-bottom: 1px solid var(--system-admin-status-report-border-color);
+  border-block-end: 1px solid var(--system-admin-status-report-border-color);
 
   &:last-of-type {
-    border-bottom: none;
+    border-block-end: none;
   }
 }
 
@@ -72,7 +73,7 @@
 }
 .system-status-report__entry {
   overflow: auto;
-  width: 100%;
+  inline-size: 100%;
   margin: 0;
   border: 0;
   border-radius: 0;
@@ -101,7 +102,7 @@
 .system-status-report__status-title {
   position: relative;
   box-sizing: border-box;
-  width: 100%;
+  inline-size: 100%;
   padding-block: 1em;
   padding-inline: 3em 1em;
   font-weight: bold;
@@ -112,8 +113,8 @@
   inset-block-start: 1em;
   inset-inline-start: 10px;
   display: inline-block;
-  width: 24px;
-  height: 24px;
+  inline-size: 24px;
+  block-size: 24px;
   margin-inline-end: 10px;
   content: "";
   vertical-align: top;
@@ -168,7 +169,7 @@
     content: "";
   }
   .system-status-report__status-title {
-    width: 18rem;
+    inline-size: 18rem;
     cursor: default;
 
     &:hover,
@@ -182,7 +183,7 @@
   }
   .system-status-report__entry__value {
     display: block;
-    width: calc(100% - 23em);
+    inline-size: calc(100% - 23em);
     padding-block-start: 1em;
     padding-inline-start: 0;
   }

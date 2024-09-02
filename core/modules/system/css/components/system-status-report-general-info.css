@@ -4,11 +4,12 @@
  */
 
 .system-status-general-info__item {
-  margin-top: 1em;
-  padding: 0 1em 1em;
+  margin-block-start: 1em;
+  padding-block: 0 1em;
+  padding-inline: 1em;
   border: 1px solid #ccc;
 }
 
 .system-status-general-info__item-title {
-  border-bottom: 1px solid #ccc;
+  border-block-end: 1px solid #ccc;
 }

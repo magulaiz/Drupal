@@ -23,8 +23,8 @@
 
 a.tabledrag-handle,
 .touchevents a.tabledrag-handle {
-  width: 36px;
-  height: 36px;
+  inline-size: 36px;
+  block-size: 36px;
 }
 
 .draggable a.tabledrag-handle {
@@ -32,14 +32,14 @@ a.tabledrag-handle,
 }
 
 a.tabledrag-handle .handle {
-  width: var(--sp2);
-  height: var(--sp2);
+  inline-size: var(--sp2);
+  block-size: var(--sp2);
   margin: 0;
   background-position: 50% 5px;
 }
 
 .touchevents a.tabledrag-handle .handle {
-  height: var(--sp2);
+  block-size: var(--sp2);
   background-position: 50% 5px;
 }
 

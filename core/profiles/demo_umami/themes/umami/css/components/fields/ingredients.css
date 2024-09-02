@@ -4,7 +4,7 @@
  */
 
 .field--name-field-ingredients {
-  margin-bottom: 1.184rem;
+  margin-block-end: 1.184rem;
   padding: 1.266rem;
   background-color: #fbf5ee;
 }
@@ -12,15 +12,17 @@
 @media screen and (min-width: 60rem) {
   /* 960px */
   .field--name-field-ingredients {
-    margin-bottom: 2.369rem;
+    margin-block-end: 2.369rem;
     padding: 2.369rem;
   }
 }
 
 .field--name-field-ingredients .field__label {
-  margin: 0 0 1em 0;
-  padding: 0 0 0.6em 0;
-  border-bottom: 1px solid #eec2cb;
+  margin-block: 0 1em;
+  margin-inline: 0;
+  padding-block: 0 0.6em;
+  padding-inline: 0;
+  border-block-end: 1px solid #eec2cb;
   font-family: "Scope One", Georgia, serif;
   font-size: 1.266rem;
   font-weight: 400;
@@ -30,14 +32,17 @@
 @media screen and (min-width: 60rem) {
   /* 960px */
   .field--name-field-ingredients .field__label {
-    margin: 0 0 1.5em 0;
+    margin-block: 0 1.5em;
+    margin-inline: 0;
     font-size: 1.77rem;
   }
 }
 
 .field--name-field-ingredients .field__item {
-  margin: 0 0 0.6em 0;
-  padding: 0 0 0.6em 0;
-  border-bottom: 1px solid #eec2cb;
+  margin-block: 0 0.6em;
+  margin-inline: 0;
+  padding-block: 0 0.6em;
+  padding-inline: 0;
+  border-block-end: 1px solid #eec2cb;
   break-inside: avoid-column;
 }

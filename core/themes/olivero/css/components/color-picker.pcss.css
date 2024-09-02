@@ -5,7 +5,7 @@
 
 [data-drupal-selector="olivero-color-picker"] {
   & input[type="color"] {
-    margin-left: 13px;
+    margin-inline-start: 13px;
     vertical-align: bottom;
   }
 }

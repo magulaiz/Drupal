@@ -1,7 +1,7 @@
 /* cspell:ignore cacbd */
 .field-option__icon {
   position: relative;
-  height: 100%;
+  block-size: 100%;
   background-image: url(../../../misc/icons/cacbd2/puzzle_piece_placeholder.svg);
   background-repeat: no-repeat;
   background-position: center;

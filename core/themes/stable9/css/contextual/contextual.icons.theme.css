@@ -19,9 +19,9 @@
  */
 .contextual .trigger {
   /* Override the .focusable height: auto */
-  width: 26px !important;
+  inline-size: 26px !important;
   /* Override the .focusable height: auto */
-  height: 26px !important;
+  block-size: 26px !important;
   text-indent: -9999px;
   background-image: url(../../../../misc/icons/bebebe/pencil.svg);
   background-repeat: no-repeat;

@@ -17,7 +17,7 @@
   &.no-upload {
     display: inline-flex;
     flex-direction: column;
-    max-width: 100%;
+    max-inline-size: 100%;
   }
 
   &.has-value.is-multiple {
@@ -60,14 +60,14 @@
   margin-block-start: var(--space-m); /* Bottom margin will be added by the child elements: because of we use flex display here, our margins won't collapse. */
 
   & .form-element {
-    width: 100%;
+    inline-size: 100%;
   }
 
   /**
    * Limiting the width of form items inside the meta element.
    */
   & .form-item {
-    max-width: var(--file-widget-form-item-max-width);
+    max-inline-size: var(--file-widget-form-item-max-width);
     margin-block: 0 var(--space-m); /* Top margin is added by the parent element */
 
     /**
@@ -95,7 +95,7 @@
  */
 .form-managed-file__image-preview {
   flex: 0 0 auto;
-  max-width: 100%;
+  max-inline-size: 100%;
   margin-block-end: var(--space-m);
 
   @nest .form-managed-file.has-meta & {
@@ -124,7 +124,7 @@
  */
 .form-managed-file__meta-items {
   flex: 1 1 var(--file-widget-form-item-min-width);
-  max-width: 100%;
+  max-inline-size: 100%;
 }
 
 /**
@@ -140,7 +140,7 @@
 .form-managed-file__main {
   display: inline-flex;
   align-items: center;
-  max-width: 100%;
+  max-inline-size: 100%;
 
   & .file {
     flex: 1 1 auto;

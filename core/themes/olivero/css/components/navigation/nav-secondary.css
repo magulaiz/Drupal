@@ -35,8 +35,8 @@
    */
 
   /* @todo should this be scoped to desktop nav? */
-  width: max-content;
-  max-width: 12.5rem;
+  inline-size: max-content;
+  max-inline-size: 12.5rem;
 }
 
 .secondary-nav__menu-item:not(:last-child) {
@@ -47,7 +47,7 @@
   position: relative;
   display: inline-flex;
   align-items: center;
-  height: var(--sp2);
+  block-size: var(--sp2);
   -webkit-text-decoration: none;
   text-decoration: none;
   color: inherit;
@@ -55,10 +55,10 @@
 
 .secondary-nav__menu-link::after {
   position: absolute;
-  bottom: 0;
-  left: 0;
-  width: 100%;
-  height: 0;
+  inset-block-end: 0;
+  inset-inline-start: 0;
+  inline-size: 100%;
+  block-size: 0;
   content: "";
   transition:
     opacity 0.2s,
@@ -66,7 +66,7 @@
   transform: translateY(0.3125rem);
   opacity: 0;
   /* Intentionally not using CSS logical properties. */
-  border-top: solid 2px currentColor;
+  border-block-start: solid 2px currentColor;
 }
 
 .secondary-nav__menu-link:hover::after {
@@ -86,8 +86,8 @@
     position: absolute;
     inset-block-start: 50%;
     inset-inline-start: 0;
-    width: 2px;
-    height: var(--sp2);
+    inline-size: 2px;
+    block-size: var(--sp2);
     content: "";
     transform: translateY(-50%);
     background-color: var(--color--gray-90);
@@ -103,10 +103,10 @@
 
   body:not(.is-always-mobile-nav) .secondary-nav__menu-link:focus::before {
     position: absolute;
-    top: 50%;
-    left: 50%;
-    width: calc(100% + var(--sp));
-    height: var(--sp3);
+    inset-block-start: 50%;
+    inset-inline-start: 50%;
+    inline-size: calc(100% + var(--sp));
+    block-size: var(--sp3);
     content: "";
     transform: translate(-50%, -50%);
     border: solid 2px var(--color--primary-50);

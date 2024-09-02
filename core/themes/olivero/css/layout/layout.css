@@ -11,8 +11,8 @@
  */
 
 .container {
-  width: 100%;
-  max-width: var(--max-width);
+  inline-size: 100%;
+  max-inline-size: var(--max-width);
   padding-inline: var(--container-padding);
 
   /* This fixes an issue where if the toolbar is open in vertical mode, and
@@ -21,11 +21,11 @@
 }
 
 body.is-fixed .container {
-  width: calc(100% - var(--drupal-displace-offset-left, 0px) - var(--drupal-displace-offset-right, 0px));
+  inline-size: calc(100% - var(--drupal-displace-offset-left, 0px) - var(--drupal-displace-offset-right, 0px));
 }
 
 .page-wrapper {
-  max-width: var(--max-bg-color);
+  max-inline-size: var(--max-bg-color);
   background: var(--color--white);
 }
 
@@ -51,7 +51,7 @@ body.is-fixed .container {
 
 @media (min-width: 75rem) {
   .main-content {
-    width: calc(100% - var(--content-left));
+    inline-size: calc(100% - var(--content-left));
     margin-inline-end: auto;
   }
 }

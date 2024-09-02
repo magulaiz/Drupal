@@ -10,17 +10,18 @@
   & .ajax-progress-throbber {
     display: inline-block;
     overflow: hidden;
-    width: 15px;
-    height: 15px;
-    margin: 0 10px;
+    inline-size: 15px;
+    block-size: 15px;
+    margin-block: 0;
+    margin-inline: 10px;
     animation: off-canvas-throbber-spin 1s linear infinite;
     vertical-align: middle;
     border: 2px solid var(--off-canvas-text-color);
-    border-top-color: transparent;
+    border-block-start-color: transparent;
     border-radius: 50%;
 
     @media (forced-colors: active) {
-      border-top-color: transparent;
+      border-block-start-color: transparent;
     }
   }
 

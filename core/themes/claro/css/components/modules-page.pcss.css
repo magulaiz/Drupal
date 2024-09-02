@@ -11,7 +11,7 @@
 .system-modules {
   & fieldset {
     border: 0;
-    border-top: 1px solid var(--modules-page-system-modules-fieldset-color);
+    border-block-start: 1px solid var(--modules-page-system-modules-fieldset-color);
   }
 
   & .fieldset-wrapper {
@@ -28,7 +28,7 @@
 .locale-translation-status-form tr.even,
 .locale-translation-status-form tr.odd {
   border: 0;
-  border-bottom: 10px solid var(--modules-page-system-modules-tr-border-color);
+  border-block-end: 10px solid var(--modules-page-system-modules-tr-border-color);
   background: var(--modules-page-system-modules-tr-bg-color);
 }
 .system-modules tr td:last-child,
@@ -38,7 +38,7 @@
 .system-modules table th,
 .locale-translation-status-form table th {
   border: 0;
-  border-bottom: 10px solid var(--modules-page-system-modules-tr-border-color);
+  border-block-end: 10px solid var(--modules-page-system-modules-tr-border-color);
 }
 .system-modules .sticky-header th,
 .locale-translation-status-form .sticky-header th {

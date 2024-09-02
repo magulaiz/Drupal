@@ -10,7 +10,8 @@
 .system-status-general-info__header {
   --system-status-general-info-header-color: #ccc;
 
-  padding: 2.75rem 0 var(--space-l);
+  padding-block: 2.75rem var(--space-l);
+  padding-inline: 0;
   border-block-start: 1px solid var(--system-status-general-info-header-color);
 }
 
@@ -24,14 +25,14 @@
 
 .system-status-general-info__item-icon {
   display: inline-block;
-  width: 42px;
-  height: 42px;
+  inline-size: 42px;
+  block-size: 42px;
   vertical-align: top;
 }
 .system-status-general-info__item-icon::before {
   display: block;
-  width: 100%;
-  height: 100%;
+  inline-size: 100%;
+  block-size: 100%;
   content: "";
   border-radius: 42px;
   background-color: var(--color-gray-600);
@@ -86,18 +87,20 @@
   position: relative;
   display: inline-block;
   box-sizing: border-box;
-  width: calc(100% - 60px);
+  inline-size: calc(100% - 60px);
   padding-inline-start: 10px;
   font-size: var(--font-size-s);
 }
 
 .system-status-general-info__item-title {
-  margin: 0 0 8px;
+  margin-block: 0 8px;
+  margin-inline: 0;
   font-size: 18px;
 }
 
 .system-status-general-info__sub-item-title {
-  margin: 14px 0 0;
+  margin-block: 14px 0;
+  margin-inline: 0;
   font-size: 14px;
 }
 
@@ -109,7 +112,8 @@
 }
 
 .system-status-general-info__run-cron {
-  margin: 1em 0 0;
+  margin-block: 1em 0;
+  margin-inline: 0;
 }
 
 @media screen and (min-width: 48em) {
@@ -126,7 +130,7 @@
 
   .system-status-general-info__item {
     display: block;
-    width: 32%;
+    inline-size: 32%;
   }
   .system-status-general-info__item:last-of-type {
     margin-inline-start: 2%;

@@ -7,7 +7,8 @@
  * System compact link: to toggle the display of description text.
  */
 .compact-link {
-  margin: 0 0 0.5em 0;
+  margin-block: 0 0.5em;
+  margin-inline: 0;
 }
 
 /**

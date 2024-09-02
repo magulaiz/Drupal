@@ -36,7 +36,8 @@
   display: inline-block;
   margin-block: var(--space-m);
   margin-inline: 0 var(--space-s);
-  padding: calc(var(--space-m) - 1px) calc(var(--space-l) - 1px); /* 1 */
+  padding-block: calc(var(--space-m) - 1px);
+  padding-inline: calc(var(--space-l) - 1px); /* 1 */
   cursor: pointer;
   text-align: center;
   -webkit-text-decoration: none;
@@ -77,7 +78,8 @@
 .no-touchevents .button--small {
   margin-block: var(--space-s);
   margin-inline: 0 var(--space-xs);
-  padding: calc(var(--space-xs) - 1px) calc(var(--space-m) - 1px); /* 1 */
+  padding-block: calc(var(--space-xs) - 1px);
+  padding-inline: calc(var(--space-m) - 1px); /* 1 */
   font-size: var(--font-size-xs);
 }
 
@@ -86,7 +88,8 @@
 .no-touchevents .button--extrasmall {
   margin-block: var(--space-xs);
   margin-inline: 0 var(--space-xs);
-  padding: calc(calc(var(--space-xs) / 2) - 1px) calc(var(--space-s) - 1px); /* 1 */
+  padding-block: calc(calc(var(--space-xs) / 2) - 1px);
+  padding-inline: calc(var(--space-s) - 1px); /* 1 */
   font-size: var(--font-size-xs);
 }
 

@@ -1,7 +1,7 @@
 .component--my-banner {
   position: relative;
-  width: 80%;
-  max-width: 1200px;
+  inline-size: 80%;
+  max-inline-size: 1200px;
   padding: 2em;
   color: white;
   background: black;
@@ -17,8 +17,8 @@
   font-size: 2em;
 }
 .component--my-banner--body > * {
-  margin-bottom: 0;
+  margin-block-end: 0;
 }
 .component--my-banner--body > :first-child {
-  margin-top: 1em;
+  margin-block-start: 1em;
 }

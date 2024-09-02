@@ -25,7 +25,7 @@
 
 #drupal-off-canvas-wrapper .messages {
   position: relative; /* Anchor ::before pseudo-element. */
-  margin-top: calc(2 * var(--off-canvas-vertical-spacing-unit));
+  margin-block-start: calc(2 * var(--off-canvas-vertical-spacing-unit));
   padding: calc(2 * var(--off-canvas-vertical-spacing-unit));
   padding-inline-start: calc(2 * var(--off-canvas-messages-icon-size)); /* Room for icon. */
   border: solid 1px transparent;
@@ -36,10 +36,10 @@
 
 #drupal-off-canvas-wrapper .messages::before {
   position: absolute;
-  top: 50%;
+  inset-block-start: 50%;
   display: block;
-  width: var(--off-canvas-messages-icon-size);
-  height: var(--off-canvas-messages-icon-size);
+  inline-size: var(--off-canvas-messages-icon-size);
+  block-size: var(--off-canvas-messages-icon-size);
   content: "";
   transform: translateY(-50%);
   background-repeat: no-repeat;
@@ -58,7 +58,7 @@
 }
 
 #drupal-off-canvas-wrapper h2 {
-  margin-top: 0;
+  margin-block-start: 0;
 }
 
 /*

@@ -56,7 +56,7 @@ html {
 *::before,
 *::after {
   box-sizing: inherit;
-  margin-top: 0; /* This allows us to ensure that items side-by-side line up nicely. */
+  margin-block-start: 0; /* This allows us to ensure that items side-by-side line up nicely. */
 }
 
 *:focus {
@@ -95,18 +95,20 @@ h6 {
 }
 
 blockquote {
-  margin: 0 0 1.28rem;
+  margin-block: 0 1.28rem;
+  margin-inline: 0;
   padding: 1.5rem;
   background: #f4f2e9;
 }
 blockquote p:last-child {
-  margin-bottom: 0;
+  margin-block-end: 0;
 }
 /* Small */
 @media screen and (min-width: 30rem) {
   /* 480px */
   blockquote {
-    margin: 0 1.5rem 1.28rem;
+    margin-block: 0 1.28rem;
+    margin-inline: 1.5rem;
     padding: 1.5rem;
   }
 }
@@ -114,7 +116,8 @@ blockquote p:last-child {
 @media screen and (min-width: 40rem) {
   /* 640px */
   blockquote {
-    margin: 0 2.5rem 1.28rem;
+    margin-block: 0 1.28rem;
+    margin-inline: 2.5rem;
     padding: 3rem;
   }
 }
@@ -134,7 +137,8 @@ blockquote a:focus {
 }
 
 h1 {
-  margin: 0 0 1.07rem 0;
+  margin-block: 0 1.07rem;
+  margin-inline: 0;
   font-family: "Scope One", Georgia, serif;
   font-size: 1.424rem; /* +3 based on 1.125 modular scale (major second) */
   line-height: 1.2;
@@ -148,7 +152,8 @@ h1 {
 }
 
 h2 {
-  margin: 0 0 0.7rem 0;
+  margin-block: 0 0.7rem;
+  margin-inline: 0;
   font-family: "Scope One", Georgia, serif;
   font-size: 1.266rem; /* +2 based on 1.125 modular scale (major second) */
   line-height: 1.2;
@@ -162,7 +167,8 @@ h2 {
 }
 
 h3 {
-  margin: 0 0 0.96rem 0;
+  margin-block: 0 0.96rem;
+  margin-inline: 0;
   font-family: "Scope One", Georgia, serif;
   font-size: 1.125rem;
   line-height: 1.2; /* +1 based on 1.125 modular scale (major second) */
@@ -176,7 +182,8 @@ h3 {
 }
 
 h4 {
-  margin: 0 0 1.28rem 0;
+  margin-block: 0 1.28rem;
+  margin-inline: 0;
   font-family: "Scope One", Georgia, serif;
   font-size: 1rem;
   line-height: 1.2;
@@ -190,7 +197,8 @@ h4 {
 }
 
 h5 {
-  margin: 0 0 1.28rem 0;
+  margin-block: 0 1.28rem;
+  margin-inline: 0;
   font-family: "Scope One", Georgia, serif;
   font-size: 0.889rem; /* -1 based on 1.125 modular scale (major second) */
   line-height: 1.2;
@@ -204,7 +212,8 @@ h5 {
 }
 
 h6 {
-  margin: 0 0 1.28rem 0;
+  margin-block: 0 1.28rem;
+  margin-inline: 0;
   font-family: "Scope One", Georgia, serif;
   font-size: 0.79rem; /* -1 based on 1.125 modular scale (major second) */
   line-height: 1.2;
@@ -218,8 +227,8 @@ h6 {
 }
 
 img {
-  max-width: 100%;
-  height: auto;
+  max-inline-size: 100%;
+  block-size: auto;
 }
 
 /**
@@ -227,8 +236,10 @@ img {
  * 6.0.0.
  */
 fieldset {
-  margin: 0 2px;
-  padding: 0.35em 0.625em 0.75em;
+  margin-block: 0;
+  margin-inline: 2px;
+  padding-block: 0.35em 0.75em;
+  padding-inline: 0.625em;
   border: 1px solid #c0c0c0;
 }
 
@@ -256,18 +267,17 @@ input:not([type="file"]) {
 
 ul,
 ol {
-  margin-bottom: 1.28rem;
+  margin-block-end: 1.28rem;
 }
 ol ol,
 ol ul,
 ul ul,
 ul ol {
-  margin-top: 0;
-  margin-bottom: 0;
+  margin-block: 0;
 }
 
 p {
-  margin-bottom: 1.28rem;
+  margin-block-end: 1.28rem;
 }
 
 /**

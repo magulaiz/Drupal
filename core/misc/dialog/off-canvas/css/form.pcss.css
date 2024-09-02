@@ -20,8 +20,8 @@
     padding-block: var(--off-canvas-padding);
 
     & > *:first-child {
-      margin-top: 0;
-      padding-top: 0;
+      margin-block-start: 0;
+      padding-block-start: 0;
     }
   }
 
@@ -30,7 +30,8 @@
   }
 
   & .form-item:where(:not(fieldset)) {
-    padding: var(--off-canvas-vertical-spacing-unit) 0;
+    padding-block: var(--off-canvas-vertical-spacing-unit);
+    padding-inline: 0;
   }
 
   & .form-items-inline > * {
@@ -42,12 +43,14 @@
   }
 
   & .form-type-boolean {
-    padding: calc(0.5 * var(--off-canvas-vertical-spacing-unit)) 0;
+    padding-block: calc(0.5 * var(--off-canvas-vertical-spacing-unit));
+    padding-inline: 0;
   }
 
   & .description,
   & .form-item__description {
-    margin: calc(0.5 * var(--off-canvas-vertical-spacing-unit)) 0;
+    margin-block: calc(0.5 * var(--off-canvas-vertical-spacing-unit));
+    margin-inline: 0;
     font-size: 12px;
   }
 
@@ -57,7 +60,8 @@
 
   & .fieldset,
   & fieldset {
-    margin: calc(2 * var(--off-canvas-vertical-spacing-unit)) 0;
+    margin-block: calc(2 * var(--off-canvas-vertical-spacing-unit));
+    margin-inline: 0;
     padding: var(--off-canvas-vertical-spacing-unit);
     border: solid var(--drupal-off-canvas-fieldset-border-width) var(--drupal-off-canvas-fieldset-border-color);
     background-color: var(--drupal-off-canvas-fieldset-background-color);
@@ -70,7 +74,7 @@
   }
 
   & :is(.fieldset, fieldset, .draggable-table) input:where(:not([type="submit"], [type="checkbox"], [type="radio"])) {
-    width: 100%; /* Prevent text fields from breaking out of tables and fieldsets at narrow widths. */
+    inline-size: 100%; /* Prevent text fields from breaking out of tables and fieldsets at narrow widths. */
   }
 
   & input,
@@ -81,7 +85,7 @@
   & input:where(:not([type="submit"], [type="checkbox"], [type="radio"], [type="file"])),
   & select,
   & textarea {
-    max-width: 100%;
+    max-inline-size: 100%;
     padding: var(--drupal-off-canvas-input-padding);
     color: var(--drupal-off-canvas-input-text-color);
     border: var(--drupal-off-canvas-input-border);
@@ -98,7 +102,7 @@
   }
 
   & input[type="file"] {
-    margin-bottom: var(--off-canvas-vertical-spacing-unit);
+    margin-block-end: var(--off-canvas-vertical-spacing-unit);
   }
 
   & input[type="search"] {

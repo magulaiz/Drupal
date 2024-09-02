@@ -4,27 +4,29 @@
  */
 
 .contact-form {
-  max-width: 600px;
-  margin: auto auto 1rem;
+  max-inline-size: 600px;
+  margin-block: auto 1rem;
+  margin-inline: auto;
 }
 
 @media screen and (min-width: 30rem) {
   /* 480px */
   .contact-form {
-    margin-bottom: 2rem;
+    margin-block-end: 2rem;
   }
 }
 
 @media screen and (min-width: 60rem) {
   /* 960px */
   .contact-form {
-    margin-bottom: 3rem;
+    margin-block-end: 3rem;
   }
 }
 .contact-form .form-item-copy {
-  margin-bottom: 0;
+  margin-block-end: 0;
 }
 .contact-form .form-item-copy .form-checkbox {
-  min-width: auto;
-  margin: 0 5px 0 0;
+  min-inline-size: auto;
+  margin-block: 0;
+  margin-inline: 0 5px;
 }

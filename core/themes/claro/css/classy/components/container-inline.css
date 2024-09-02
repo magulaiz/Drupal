@@ -13,10 +13,10 @@
 }
 .form-type-radios .container-inline .form-type-radio,
 .form-type-checkboxes .container-inline .form-type-checkbox {
-  margin: 0 1em;
+  margin-block: 0;
+  margin-inline: 1em;
 }
 .container-inline .form-actions,
 .container-inline.form-actions {
-  margin-top: 0;
-  margin-bottom: 0;
+  margin-block: 0;
 }

@@ -3,14 +3,15 @@
   flex-wrap: wrap;
   align-items: center;
   justify-content: space-between;
-  padding: 0.75rem 4%;
+  padding-block: 0.75rem;
+  padding-inline: 4%;
 }
 
 /* Medium */
 @media screen and (min-width: 48rem) {
   /* 768px */
   .umami-header {
-    padding-top: 0;
+    padding-block-start: 0;
   }
 }
 
@@ -23,12 +24,13 @@
 }
 
 .umami-header__burger {
-  width: 41px;
-  height: 41px;
-  margin-right: -9px;
+  inline-size: 41px;
+  block-size: 41px;
+  margin-inline-end: -9px;
   /* the padding, margin & transparent border means the hamburger doesn't move on focus/hover */
-  padding: 0 6px;
-  text-align: left;
+  padding-block: 0;
+  padding-inline: 6px;
+  text-align: start;
   border: 3px solid transparent;
   border-radius: 0;
   background-color: transparent;
@@ -52,15 +54,15 @@
 .umami-header__dropdown {
   overflow: hidden;
   flex-basis: 100%;
-  max-height: 0;
-  transition: max-height 0.5s ease-in;
+  max-block-size: 0;
+  transition: max-block-size 0.5s ease-in;
 }
 
 @media screen and (min-width: 48em) {
   .umami-header__dropdown {
     overflow: auto;
     flex-basis: auto;
-    max-height: none;
+    max-block-size: none;
   }
 }
 
@@ -71,7 +73,7 @@
    * It my not be much larger than the content because that would break the animation.
    * See: https://css-tricks.com/using-css-transitions-auto-dimensions/
    */
-  max-height: 18.75rem;
+  max-block-size: 18.75rem;
 }
 
 .umami-header__logo {
@@ -81,6 +83,7 @@
 @media screen and (min-width: 48em) {
   .umami-header__logo {
     flex: 0 1 220px;
-    margin: 2.5rem 0;
+    margin-block: 2.5rem;
+    margin-inline: 0;
   }
 }

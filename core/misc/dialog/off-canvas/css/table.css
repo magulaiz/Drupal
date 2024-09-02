@@ -18,12 +18,13 @@
 }
 
 #drupal-off-canvas-wrapper table {
-  width: calc(100% + 2 * var(--off-canvas-padding));
-  margin: var(--off-canvas-vertical-spacing-unit) calc(-1 * var(--off-canvas-padding));
+  inline-size: calc(100% + 2 * var(--off-canvas-padding));
+  margin-block: var(--off-canvas-vertical-spacing-unit);
+  margin-inline: calc(-1 * var(--off-canvas-padding));
 }
 
 #drupal-off-canvas-wrapper tr {
-  border-bottom: 1px solid var(--off-canvas-border-color);
+  border-block-end: 1px solid var(--off-canvas-border-color);
 }
 
 #drupal-off-canvas-wrapper td,
@@ -40,5 +41,5 @@
 
 #drupal-off-canvas-wrapper td:not(:last-child) td,
 #drupal-off-canvas-wrapper th:not(:last-child) td {
-  border-bottom: solid 1px var(--off-canvas-border-color);
+  border-block-end: solid 1px var(--off-canvas-border-color);
 }

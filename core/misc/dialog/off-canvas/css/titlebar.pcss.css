@@ -13,8 +13,10 @@
 
   & .ui-dialog-titlebar {
     position: relative;
-    margin: 0 calc(-1 * var(--off-canvas-padding));
-    padding: var(--off-canvas-title-padding) 50px;
+    margin-block: 0;
+    margin-inline: calc(-1 * var(--off-canvas-padding));
+    padding-block: var(--off-canvas-title-padding);
+    padding-inline: 50px;
     color: var(--off-canvas-title-text-color);
     background-color: var(--off-canvas-title-background-color);
     font-family: var(--off-canvas-title-font-family);
@@ -24,11 +26,11 @@
     /* The pencil icon. */
     &::before {
       position: absolute;
-      top: 0;
+      inset-block-start: 0;
       inset-inline-start: 1em;
       display: block;
-      width: 20px;
-      height: 100%;
+      inline-size: 20px;
+      block-size: 100%;
       content: "";
       background-color: currentColor;
       mask-image: url(../../../icons/ffffff/pencil.svg);
@@ -45,11 +47,11 @@
   /* Close button. */
   & .ui-dialog-titlebar-close {
     position: absolute;
-    top: 50%;
+    inset-block-start: 50%;
     inset-inline: auto 10px;
     overflow: hidden;
-    width: 30px;
-    height: 30px;
+    inline-size: 30px;
+    block-size: 30px;
     cursor: pointer;
     transform: translateY(-50%);
     text-indent: -9999px;
@@ -67,12 +69,12 @@
     &::before,
     &::after {
       position: absolute;
-      top: calc(50% - 1px);
-      left: 50%;
-      width: 50%;
-      height: 0;
+      inset-block-start: calc(50% - 1px);
+      inset-inline-start: 50%;
+      inline-size: 50%;
+      block-size: 0;
       content: "";
-      border-top: solid 2px currentColor;
+      border-block-start: solid 2px currentColor;
     }
 
     &::before {

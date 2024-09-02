@@ -12,9 +12,10 @@
 
 .form-element {
   box-sizing: border-box;
-  max-width: 100%;
-  min-height: calc(((var(--input-padding-vertical) + var(--input-border-size)) * 2) + var(--input-line-height)); /* iOS. */
-  padding: var(--input-padding-vertical) var(--input-padding-horizontal);
+  max-inline-size: 100%;
+  min-block-size: calc(((var(--input-padding-vertical) + var(--input-border-size)) * 2) + var(--input-line-height)); /* iOS. */
+  padding-block: var(--input-padding-vertical);
+  padding-inline: var(--input-padding-horizontal);
   color: var(--input-fg-color);
   border: var(--input-border-size) solid var(--input-border-color);
   border-radius: var(--input-border-radius-size);
@@ -26,8 +27,9 @@
 
 .no-touchevents .form-element--extrasmall,
 .no-touchevents .form-element[name$="][_weight]"] {
-  min-height: calc(((var(--input--extrasmall-padding-vertical) + var(--input-border-size)) * 2) + var(--input--extrasmall-line-height)); /* iOS. */
-  padding: var(--input--extrasmall-padding-vertical) var(--input--extrasmall-padding-horizontal);
+  min-block-size: calc(((var(--input--extrasmall-padding-vertical) + var(--input-border-size)) * 2) + var(--input--extrasmall-line-height)); /* iOS. */
+  padding-block: var(--input--extrasmall-padding-vertical);
+  padding-inline: var(--input--extrasmall-padding-horizontal);
   font-size: var(--input--extrasmall-font-size);
   line-height: var(--input--extrasmall-line-height);
 }
@@ -51,15 +53,15 @@
 }
 
 .form-element--type-date {
-  min-width: 9.5rem; /* Prevent input width change while filling. */
+  min-inline-size: 9.5rem; /* Prevent input width change while filling. */
 }
 
 .form-element--type-time {
-  min-width: 7.5rem; /* Prevent input width change while filling. */
+  min-inline-size: 7.5rem; /* Prevent input width change while filling. */
 }
 
 .form-element--type-color {
-  min-width: 3rem; /* Bigger input for webkit */
+  min-inline-size: 3rem; /* Bigger input for webkit */
   padding: 0; /* Bigger pickable area */
   text-indent: calc(0.75rem - var(--input-border-size)); /* Text-input fallback for non-supporting browsers like Safari */
 }
@@ -134,7 +136,7 @@
   /* Number, date and time are skipped here */
   .form-element {
     float: none;
-    width: 100%;
+    inline-size: 100%;
     margin-block-start: 0.75rem;
     margin-inline: 0;
   }
