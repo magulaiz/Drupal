@@ -323,7 +323,7 @@ class TestDiscovery {
     try {
       $reflection = new \ReflectionClass($classname);
     }
-    catch (\ReflectionException $e) {
+    catch (\ReflectionException) {
       // There are classes that end up here (for example, fixtures), that
       // cannot be reflected.
       $reflection = NULL;
