@@ -27,10 +27,10 @@
 
 /* Balloon panels need a higher z-index than Drupal's modals */
 .ck.ck-balloon-panel {
-  z-index: 1300 !important;
+  z-index: 1262 !important;
 }
 .ck.ck-balloon-panel.ck-tooltip {
-  z-index: 1301 !important;
+  z-index: 1263 !important;
 }
 
 /* Enhance visibility of selected/active buttons on the toolbar. */
