@@ -18,7 +18,7 @@ class CronQueueTestInstantQueueController extends ControllerBase {
    * @param int $count
    *   Number of queue items to create.
    */
-  public function createItems(int $count) {
+  public function createItems(int $count): void {
     $queue = \Drupal::queue('instant_queue', TRUE);
     $queue->createQueue();
     for ($cnt = 1; $cnt <= $count; $cnt++) {
