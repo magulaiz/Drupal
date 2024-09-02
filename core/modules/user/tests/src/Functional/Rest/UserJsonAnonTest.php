@@ -8,7 +8,6 @@ use Drupal\Tests\rest\Functional\AnonResourceTestTrait;
 use PHPUnit\Framework\Attributes\Group;
 
 #[Group('rest')]
-#[Group('#slow')]
 class UserJsonAnonTest extends UserResourceTestBase {
 
   use AnonResourceTestTrait;
