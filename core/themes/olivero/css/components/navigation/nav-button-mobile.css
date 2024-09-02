@@ -76,7 +76,7 @@
   display: block;
   inline-size: var(--sp2);
   block-size: 0;
-  border-block-start: solid 3px var(--color--primary-50);
+  border-block-start: solid 0.1875rem var(--color--primary-50);
 }
 
 .mobile-nav-button__icon::before,
@@ -88,7 +88,7 @@
   block-size: 0;
   content: "";
   transition: transform 0.2s;
-  border-block-start: solid 3px var(--color--primary-50);
+  border-block-start: solid 0.1875rem var(--color--primary-50);
 }
 
 .mobile-nav-button__icon::before {

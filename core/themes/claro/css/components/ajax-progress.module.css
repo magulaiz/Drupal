@@ -105,7 +105,7 @@
   margin: -0.875rem;
   content: "";
   border: 3px solid var(--color-absolutezero);
-  border-inline-end: 3px dotted transparent;
+  border-inline-end: 0.1875rem dotted transparent;
 }
 
 .ui-dialog .ajax-progress__message {
