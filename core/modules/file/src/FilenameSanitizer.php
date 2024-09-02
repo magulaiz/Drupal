@@ -8,7 +8,7 @@ use Drupal\Core\Language\LanguageInterface;
 use Drupal\Core\Language\LanguageManagerInterface;
 
 /**
- * Class FilenameSanitizer.
+ * Class of FilenameSanitizer.
  */
 class FilenameSanitizer {
 
