@@ -87,11 +87,6 @@ abstract class MigrateTestCase extends UnitTestCase {
 
     $configuration = &$this->migrationConfiguration;
 
-    $migration->method('set')
-      ->willReturnCallback(function ($argument, $value) use (&$configuration) {
-        $configuration[$argument] = $value;
-      });
-
     $migration->method('id')
       ->willReturn($configuration['id']);
 

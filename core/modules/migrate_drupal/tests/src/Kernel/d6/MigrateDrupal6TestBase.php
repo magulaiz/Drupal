@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Drupal\Tests\migrate_drupal\Kernel\d6;
 
 use Drupal\migrate_drupal\NodeMigrateType;
+use Drupal\Tests\file\Kernel\Migrate\d6\FileMigrationTestTrait;
 use Drupal\Tests\migrate_drupal\Kernel\MigrateDrupalTestBase;
 use Drupal\Tests\migrate_drupal\Traits\NodeMigrateTypeTestTrait;
 
@@ -13,6 +14,7 @@ use Drupal\Tests\migrate_drupal\Traits\NodeMigrateTypeTestTrait;
  */
 abstract class MigrateDrupal6TestBase extends MigrateDrupalTestBase {
 
+  use FileMigrationTestTrait;
   use NodeMigrateTypeTestTrait;
   /**
    * {@inheritdoc}
@@ -57,9 +59,11 @@ abstract class MigrateDrupal6TestBase extends MigrateDrupalTestBase {
 
     if ($include_pictures) {
       $this->installEntitySchema('file');
+
+      $this->executeMigration('d6_file', $this->fileConfiguration());
+      $this->executeMigration('d6_user_picture_file', $this->fileConfiguration());
+
       $this->executeMigrations([
-        'd6_file',
-        'd6_user_picture_file',
         'user_picture_field',
         'user_picture_field_instance',
         'user_picture_entity_display',

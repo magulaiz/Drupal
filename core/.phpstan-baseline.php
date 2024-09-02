@@ -1300,6 +1300,14 @@ $ignoreErrors[] = [
 ];
 $ignoreErrors[] = [
 	// identifier: method.deprecated
+	'message' => '#^Call to deprecated method set\\(\\) of class Drupal\\\\migrate\\\\Plugin\\\\Migration\\:
+in drupal\\:11\\.1\\.0 and is removed from drupal\\:12\\.0\\.0\\. Instead,
+  use the specific setter method for the property\\.$#',
+	'count' => 2,
+	'path' => __DIR__ . '/modules/migrate/tests/src/Kernel/MigrationTest.php',
+];
+$ignoreErrors[] = [
+	// identifier: method.deprecated
 	'message' => '#^Call to deprecated method getMockForAbstractClass\\(\\) of class PHPUnit\\\\Framework\\\\MockObject\\\\MockBuilder\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/migrate/tests/src/Unit/MigrateExecutableTest.php',

@@ -34,14 +34,11 @@ trait FileMigrationSetupTrait {
     // Put test file in the source directory.
     file_put_contents($info['path'], str_repeat('*', $info['size']));
 
-    /** @var \Drupal\migrate\Plugin\Migration $migration */
-    $migration = $this->getMigration($info['plugin_id']);
     // Set the source plugin's source_base_path configuration value, which
     // would normally be set by the user running the migration.
-    $source = $migration->getSourceConfiguration();
-    $source['constants']['source_base_path'] = $fs->realpath($info['base_path']);
-    $migration->set('source', $source);
-    $this->executeMigration($migration);
+    $definition = [];
+    $definition['source']['constants']['source_base_path'] = $fs->realpath($info['base_path']);
+    $this->executeMigration($info['plugin_id'], $definition);
   }
 
   /**

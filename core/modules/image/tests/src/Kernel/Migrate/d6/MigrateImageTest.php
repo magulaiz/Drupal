@@ -6,7 +6,6 @@ namespace Drupal\Tests\image\Kernel\Migrate\d6;
 
 use Drupal\node\Entity\Node;
 use Drupal\Tests\node\Kernel\Migrate\d6\MigrateNodeTestBase;
-use Drupal\Tests\file\Kernel\Migrate\d6\FileMigrationTestTrait;
 
 /**
  * Image migration test.
@@ -17,8 +16,6 @@ use Drupal\Tests\file\Kernel\Migrate\d6\FileMigrationTestTrait;
  * @group migrate_drupal_6
  */
 class MigrateImageTest extends MigrateNodeTestBase {
-
-  use FileMigrationTestTrait;
 
   /**
    * {@inheritdoc}

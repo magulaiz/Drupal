@@ -54,17 +54,8 @@ class MigrationPluginManagerTest extends UnitTestCase {
       $migration = $migrations[$migration_id];
 
       $requirements = $migration_data['result_requirements'];
-      if (empty($requirements)) {
-        $this->assertEquals([], $migration->set);
-      }
-      else {
-        $requirements = array_combine($requirements, $requirements);
-
-        $this->assertCount(1, $migration->set);
-        [$set_prop, $set_requirements] = reset($migration->set);
-        $this->assertEquals('requirements', $set_prop);
-        $this->assertEquals($requirements, $set_requirements);
-      }
+      $actual_dependencies = $migration->getMigrationDependencies();
+      $this->assertEquals($requirements, $actual_dependencies);
     }
   }
 
@@ -110,7 +101,9 @@ class MigrationPluginManagerTest extends UnitTestCase {
             'migration_dependencies' => [
               'required' => ['required1', 'required2'],
             ],
-            'result_requirements' => ['required1', 'required2'],
+            'result_requirements' => [
+              'required' => ['required1', 'required2'],
+            ],
           ],
         ],
         ['m1'],
@@ -123,7 +116,9 @@ class MigrationPluginManagerTest extends UnitTestCase {
             'migration_dependencies' => [
               'optional' => ['optional1'],
             ],
-            'result_requirements' => [],
+            'result_requirements' => [
+              'optional' => ['optional1'],
+            ],
           ],
         ],
         ['m1'],
@@ -136,13 +131,17 @@ class MigrationPluginManagerTest extends UnitTestCase {
             'migration_dependencies' => [
               'required' => ['required1', 'required2'],
             ],
-            'result_requirements' => ['required1', 'required2'],
+            'result_requirements' => [
+              'required' => ['required1', 'required2'],
+            ],
           ],
           'm2' => [
             'migration_dependencies' => [
               'optional' => ['optional1'],
             ],
-            'result_requirements' => [],
+            'result_requirements' => [
+              'optional' => ['optional1'],
+            ],
           ],
         ],
         ['m1', 'm2'],
@@ -155,13 +154,17 @@ class MigrationPluginManagerTest extends UnitTestCase {
             'migration_dependencies' => [
               'optional' => ['m2'],
             ],
-            'result_requirements' => [],
+            'result_requirements' => [
+              'optional' => ['m2'],
+            ],
           ],
           'm2' => [
             'migration_dependencies' => [
               'optional' => ['optional1'],
             ],
-            'result_requirements' => [],
+            'result_requirements' => [
+              'optional' => ['optional1'],
+            ],
           ],
         ],
         ['m2', 'm1'],
@@ -175,7 +178,9 @@ class MigrationPluginManagerTest extends UnitTestCase {
             'migration_dependencies' => [
               'optional' => ['m2'],
             ],
-            'result_requirements' => [],
+            'result_requirements' => [
+              'optional' => ['m2'],
+            ],
           ],
           'm2' => [
             'migration_dependencies' => [],
@@ -194,20 +199,11 @@ class MigrationPluginManagerTest extends UnitTestCase {
  *
  * Why are we using a custom class here?
  *
- * 1. The function buildDependencyMigration() calls $migration->set(), which
- * is not actually in MigrationInterface.
- *
- * 2. The function buildDependencyMigration() calls array_multisort on an
+ * 1. The function buildDependencyMigration() calls array_multisort on an
  * array with mocks in it. PHPUnit mocks are really complex, and if PHP tries
  * to compare them it will die with "Nesting level too deep".
  */
 class TestMigrationMock extends Migration {
-  /**
-   * The values passed into set().
-   *
-   * @var array
-   */
-  public $set = [];
 
   /**
    * TestMigrationMock constructor.
@@ -231,13 +227,6 @@ class TestMigrationMock extends Migration {
   public function getMigrationDependencies() {
     // For the purpose of testing, do not expand dependencies.
     return $this->migration_dependencies;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function set($prop, $value) {
-    $this->set[] = func_get_args();
   }
 
 }

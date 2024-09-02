@@ -198,7 +198,7 @@ class MigrationPluginManager extends DefaultPluginManager implements MigrationPl
       // Populate a weights array to use with array_multisort() later.
       $weights[] = $dependency_graph[$migration_id]['weight'];
       if (!empty($required_dependency_graph[$migration_id]['paths'])) {
-        $migration->set('requirements', $required_dependency_graph[$migration_id]['paths']);
+        $migration->setRequirements($required_dependency_graph[$migration_id]['paths']);
       }
     }
     // Sort weights, labels, and keys in the same order as each other.

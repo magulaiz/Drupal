@@ -18,8 +18,6 @@ use Drupal\Tests\migrate_drupal\Kernel\d6\MigrateDrupal6TestBase;
  */
 class MigrateFileTest extends MigrateDrupal6TestBase implements MigrateDumpAlterInterface {
 
-  use FileMigrationTestTrait;
-
   /**
    * The filename of a file used to test temporary file migration.
    *
@@ -113,7 +111,7 @@ class MigrateFileTest extends MigrateDrupal6TestBase implements MigrateDumpAlter
       ->values(['name' => 'file_directory_path', 'value' => serialize('files/test')])
       ->execute();
 
-    $this->executeMigration('d6_file');
+    $this->executeMigration('d6_file', $this->fileConfiguration());
 
     // File 2, when migrated for the second time, is treated as a different file
     // (due to having a different uri this time) and is given fid 6.

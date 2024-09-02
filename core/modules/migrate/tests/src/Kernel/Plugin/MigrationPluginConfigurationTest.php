@@ -23,19 +23,29 @@ class MigrationPluginConfigurationTest extends KernelTestBase {
     // Test with a simple migration.
     'ban',
     'locale',
+    'field',
   ];
 
   /**
    * Tests merging configuration into a plugin through the plugin manager.
    *
+   * @param array $new_configuration
+   *   The migration plugin configuration.
+   * @param array $expected_source
+   *   The expected source plugin configuration.
+   * @param array $expected_destination
+   *   The expected destination plugin configuration.
+   *
    * @dataProvider mergeProvider
    */
-  public function testConfigurationMerge($id, $configuration, $expected): void {
+  public function testConfigurationMerge(array $new_configuration, array $expected_source, array $expected_destination): void {
     /** @var \Drupal\migrate\Plugin\MigrationInterface $migration */
     $migration = $this->container->get('plugin.manager.migration')
-      ->createInstance($id, $configuration);
+      ->createInstance('d7_blocked_ips', $new_configuration);
     $source_configuration = $migration->getSourceConfiguration();
-    $this->assertEquals($expected, $source_configuration);
+    $this->assertEquals($expected_source, $source_configuration);
+    $destination_configuration = $migration->getDestinationConfiguration();
+    $this->assertEquals($expected_destination, $destination_configuration);
   }
 
   /**
@@ -43,43 +53,95 @@ class MigrationPluginConfigurationTest extends KernelTestBase {
    */
   public static function mergeProvider() {
     return [
-      // Tests adding new configuration to a migration.
-      [
-        // New configuration.
-        'd7_blocked_ips',
-        [
+      'Tests adding new configuration to a migration' => [
+        'new_configuration' => [
           'source' => [
             'constants' => [
               'added_setting' => 'Ban them all!',
             ],
           ],
         ],
-        // Expected final source configuration.
-        [
+        'expected_source' => [
           'plugin' => 'd7_blocked_ips',
           'constants' => [
             'added_setting' => 'Ban them all!',
           ],
         ],
+        'expected_destination' => [
+          'plugin' => 'blocked_ip',
+        ],
       ],
-      // Tests overriding pre-existing configuration in a migration.
-      [
-        // New configuration.
-        'd7_blocked_ips',
-        [
+      'Tests overriding source configuration' => [
+        'new_configuration' => [
           'source' => [
             'plugin' => 'a_different_plugin',
           ],
         ],
-        // Expected final source configuration.
-        [
+        'expected_source' => [
           'plugin' => 'a_different_plugin',
         ],
+        'expected_destination' => [
+          'plugin' => 'blocked_ip',
+        ],
       ],
-      // New configuration.
-      [
-        'locale_settings',
-        [
+      'Tests overriding source and destination configuration' => [
+        'new_configuration' => [
+          'source' => [
+            'plugin' => 'empty',
+          ],
+          'destination' => [
+            'plugin' => 'entity:entity_view_mode',
+          ],
+        ],
+        'expected_source' => [
+          'plugin' => 'empty',
+        ],
+        'expected_destination' => [
+          'plugin' => 'entity:entity_view_mode',
+        ],
+      ],
+      'Test the source plugin is invalidated' => [
+        'new_configuration' => [
+          'source' => [
+            'plugin' => 'embedded_data',
+            'data_rows' => [],
+            'ids' => [],
+          ],
+          'destination' => [
+            'plugin' => 'entity:entity_view_mode',
+          ],
+        ],
+        'expected_source' => [
+          'plugin' => 'embedded_data',
+          'data_rows' => [],
+          'ids' => [],
+        ],
+        'expected_destination' => [
+          'plugin' => 'entity:entity_view_mode',
+        ],
+      ],
+      'Test the destination plugin is invalidated' => [
+        'new_configuration' => [
+          'source' => [
+            'plugin' => 'embedded_data',
+            'data_rows' => [],
+            'ids' => [],
+          ],
+          'destination' => [
+            'plugin' => 'null',
+          ],
+        ],
+        'expected_source' => [
+          'plugin' => 'embedded_data',
+          'data_rows' => [],
+          'ids' => [],
+        ],
+        'expected_destination' => [
+          'plugin' => 'null',
+        ],
+      ],
+      'Tests overriding source properties' => [
+        'new_configuration' => [
           'source' => [
             'plugin' => 'variable',
             'variables' => [
@@ -89,14 +151,16 @@ class MigrationPluginConfigurationTest extends KernelTestBase {
             'source_module' => 'locale',
           ],
         ],
-        // Expected final source and process configuration.
-        [
+        'expected_source' => [
           'plugin' => 'variable',
           'variables' => [
             'locale_cache_strings',
             'locale_js_directory',
           ],
           'source_module' => 'locale',
+        ],
+        'expected_destination' => [
+          'plugin' => 'blocked_ip',
         ],
       ],
     ];
