@@ -33,7 +33,7 @@ class InstantQueue {
    *
    * @var \Drupal\Core\Database\Connection
    */
-  protected $connection;
+  protected Connection  $connection;
 
   /**
    * Array of queues names.
