@@ -62,7 +62,7 @@ class AttributeBasedTestDiscoveryTest extends UnitTestCase {
       [
         'name' => 'Drupal\Tests\user\Functional\Rest\UserJsonAnonTest',
         'group' => 'rest',
-        'groups' => ['rest', '#slow'],
+        'groups' => ['rest'],
         'description' => '',
         'type' => 'PHPUnit-Functional',
       ],
