@@ -103,7 +103,7 @@ class EditorFileReference extends FilterBase implements ContainerFactoryPluginIn
                 // Maintain aspect ratio.
                 if ($node->hasAttribute('height')) {
                   $image_height = $node->getAttribute('height');
-                  $width = round(($image_height/$height) * $width);
+                  $width = round(($image_height / $height) * $width);
                 }
                 $node->setAttribute('width', (string) $width);
               }
@@ -111,7 +111,7 @@ class EditorFileReference extends FilterBase implements ContainerFactoryPluginIn
                 // Maintain aspect ratio.
                 if ($node->hasAttribute('width')) {
                   $image_width = $node->getAttribute('width');
-                  $height = round(($image_width/$width) * $height);
+                  $height = round(($image_width / $width) * $height);
                 }
                 $node->setAttribute('height', (string) $height);
               }
