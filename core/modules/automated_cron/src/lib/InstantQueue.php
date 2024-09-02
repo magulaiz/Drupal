@@ -7,6 +7,7 @@ namespace Drupal\automated_cron\lib;
 use Drupal\Component\Datetime\TimeInterface;
 use Drupal\Component\Utility\Environment;
 use Drupal\Component\Utility\Random;
+use Drupal\Core\Config\Config;
 use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Queue\QueueFactory;
 use Drupal\Core\Queue\QueueWorkerManagerInterface;
@@ -26,14 +27,14 @@ class InstantQueue {
    *
    * @var \Drupal\Core\Config\Config
    */
-  protected Config  $config;
+  protected Config $config;
 
   /**
    * The drupal database connection.
    *
    * @var \Drupal\Core\Database\Connection
    */
-  protected Connection  $connection;
+  protected Connection $connection;
 
   /**
    * Array of queues names.

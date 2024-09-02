@@ -5,21 +5,21 @@ declare(strict_types=1);
 namespace Drupal\cron_queue_test\Plugin\QueueWorker;
 
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
+use Drupal\Core\Queue\Attribute\QueueWorker;
 use Drupal\Core\Queue\QueueInterface;
 use Drupal\Core\Queue\QueueWorkerBase;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Symfony\Component\DependencyInjection\ContainerInterface as DependencyInjectionContainerInterface;
 
 /**
- * Hello.
- *
- * @QueueWorker(
- *   id = "instant_queue",
- *   title = @Translation("Custom Queue"),
- *   cron = {"time" = 60}
- * )
+ * Instant queue test worker.
  */
+#[QueueWorker(
+  id: 'instant_queue',
+  title: new TranslatableMarkup('Custom Queue'),
+  cron: ['time' => 60],
+)]
 class CronQueueTestInstantQueue extends QueueWorkerBase implements ContainerFactoryPluginInterface {
-
 
   /**
    * The queue object.

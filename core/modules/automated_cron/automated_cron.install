@@ -1,0 +1,16 @@
+<?php
+
+/**
+ * @file
+ * Install, update and uninstall functions for the automated_cron module.
+ */
+
+/**
+ * Install new config.
+ */
+function automated_cron_update_11001() {
+  \Drupal::configFactory()->getEditable('automated_cron.settings')
+    ->set('max_items_to_process', 1)
+    ->set('max_concurrent_queue_process', 0)
+    ->save();
+}

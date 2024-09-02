@@ -54,7 +54,7 @@ trait QueueProcessTrait {
    * @param array $queues_to_process
    *   Queue and the number of items in the queue to be processed.
    */
-  protected function processQueues(array $queues_to_process = []) {
+  protected function processQueues(array $queues_to_process = []): void {
     $max_wait = (float) $this->queueConfig['suspendMaximumWait'];
 
     // Build a stack of queues to work on.
