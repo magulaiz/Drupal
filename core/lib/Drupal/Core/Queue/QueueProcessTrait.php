@@ -129,7 +129,7 @@ trait QueueProcessTrait {
    * @throws \Drupal\Core\Queue\SuspendQueueException
    *   If the queue was suspended.
    */
-  protected function processQueue(QueueInterface $queue, QueueWorkerInterface $worker, int $max_items = 0) {
+  protected function processQueue(QueueInterface $queue, QueueWorkerInterface $worker, int $max_items = 0): void {
     $lease_time = $worker->getPluginDefinition()['cron']['time'];
     $end = $this->time->getCurrentTime() + $lease_time;
     $no_items = 0;
