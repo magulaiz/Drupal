@@ -52,10 +52,16 @@
               $link.closest('.js-layout-builder-category')[0],
             )
           ) {
-            $link.closest('.js-layout-builder-category').show();
+            $link
+              .closest('.js-layout-builder-category')[0]
+              .removeAttribute('data-hidden');
           }
           // Toggle the li tag of the matching link.
-          $link.parent().toggle(textMatch);
+          if (textMatch) {
+            $link.parent()[0].removeAttribute('data-hidden');
+          } else {
+            $link.parent()[0].setAttribute('data-hidden', true);
+          }
         };
 
         // Filter if the length of the query is at least 2 characters.
@@ -75,7 +81,9 @@
             .find(
               '.js-layout-builder-category:not(:has(.js-layout-builder-block-link:visible))',
             )
-            .hide();
+            .each(function () {
+              this.setAttribute('data-hidden', true);
+            });
 
           announce(
             formatPlural(
@@ -93,9 +101,14 @@
             .removeAttr('open')
             .removeAttr('remember-closed');
           // Show all categories since filter is turned off.
-          $categories.find('.js-layout-builder-category').show();
+          $categories.find('.js-layout-builder-category').each(function () {
+            this.removeAttribute('data-hidden');
+          });
+
           // Show all li tags since filter is turned off.
-          $filterLinks.parent().show();
+          $filterLinks.parent().each(function () {
+            this.removeAttribute('data-hidden');
+          });
           announce(Drupal.t('All available blocks are listed.'));
         }
       };
@@ -371,7 +384,9 @@
             const $element = $(element);
 
             // Hide everything in block that isn't contextual link related.
-            $element.children(':not([data-contextual-id])').hide(0);
+            element
+              .querySelectorAll(':not([data-contextual-id])')
+              .forEach((i) => i.setAttribute('data-hidden', true));
 
             const contentPreviewPlaceholderText = $element.attr(
               'data-layout-content-preview-placeholder-label',
@@ -405,7 +420,9 @@
         // Iterate over all blocks.
         $('[data-layout-content-preview-placeholder-label]').each(
           (i, element) => {
-            $(element).children().show();
+            element
+              .querySelectorAll(':not([data-contextual-id])')
+              .forEach((i) => i.removeAttribute('data-hidden'));
           },
         );
       };
