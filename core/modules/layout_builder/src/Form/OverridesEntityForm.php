@@ -219,7 +219,7 @@ class OverridesEntityForm extends ContentEntityForm implements WorkspaceDynamicS
   /**
    * Non Ajax redirect to discard changes form.
    */
-  public function submitDiscardChanges(array $form, FormStateInterface $form_state) {
+  public function submitDiscardChanges(array $form, FormStateInterface $form_state): void {
     // Generate the URL using the sectionStorage's getLayoutBuilderUrl method.
     $url = $this->sectionStorage->getLayoutBuilderUrl('discard_changes');
 
