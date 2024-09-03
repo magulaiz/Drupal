@@ -81,10 +81,9 @@ use Drupal\node\Entity\NodeType;
  * to change. Aside from historical revisions, there can be "pending" revisions,
  * that contain changes that did not make their way into the default revision.
  * Typically these revisions contain data that is waiting for some form of
- * approval, before being accepted as canonical. See these:
- *
- * \Drupal\Core\Entity\RevisionableInterface
- * \Drupal\Core\Entity\RevisionableStorageInterface
+ * approval, before being accepted as canonical. See
+ * \Drupal\Core\Entity\RevisionableInterface and
+ * \Drupal\Core\Entity\RevisionableStorageInterface.
  *
  * A translatable entity can contain multiple translations of the same content.
  * Content entity data is stored via fields, and each field can have one version
@@ -96,10 +95,8 @@ use Drupal\node\Entity\NodeType;
  * language" that is used to determine which field translation values should be
  * handled. Typically the default translation's active language is the language
  * of the content that was originally entered and served as source for the other
- * translations. See these:
- *
- * \Drupal\Core\Entity\TranslatableInterface
- * \Drupal\Core\Entity\TranslatableStorageInterface
+ * translations. See \Drupal\Core\Entity\TranslatableInterface and
+ * \Drupal\Core\Entity\TranslatableStorageInterface.
  *
  * An entity that is both revisionable and translatable has all the features
  * described above: every revision can contain one or more translations. The
@@ -117,10 +114,9 @@ use Drupal\node\Entity\NodeType;
  * translations will be affected when saving a revision containing changes for
  * untranslatable fields. On the other hand, pending revisions are not supposed
  * to contain multiple affected translations, even when they are being
- * manipulated via the API. See these:
- *
- * \Drupal\Core\Entity\TranslatableRevisionableInterface
- * \Drupal\Core\Entity\TranslatableRevisionableStorageInterface
+ * manipulated via the API. See
+ * \Drupal\Core\Entity\TranslatableRevisionableInterface and
+ * \Drupal\Core\Entity\TranslatableRevisionableStorageInterface.
  *
  * @section characteristics Entity characteristics
  *
