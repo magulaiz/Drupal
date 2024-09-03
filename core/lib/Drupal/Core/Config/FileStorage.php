@@ -381,7 +381,6 @@ class FileStorage implements StorageInterface {
     return \Drupal::service('file_system');
   }
 
-
   /**
    * Get the driver name of the database connection.
    *
@@ -395,7 +394,7 @@ class FileStorage implements StorageInterface {
           $this->driver = $connection->driver();
         }
       }
-      catch (\Exception $e) {
+      catch (\Exception) {
         // Do nothing.
       }
     }
