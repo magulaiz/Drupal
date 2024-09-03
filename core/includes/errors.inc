@@ -117,7 +117,9 @@ function _drupal_error_handler_real($error_level, $message, $filename, $line) {
  *   TRUE if an error should be displayed.
  */
 function error_displayable($error = NULL) {
-  if (defined('MAINTENANCE_MODE') && MAINTENANCE_MODE === 'install') {
+  // Always show errors if an installation is being attempted so that users are
+  // presented with errors immediately and do not have to consult server logs.
+  if (defined('MAINTENANCE_MODE') && MAINTENANCE_MODE === 'install' && InstallerKernel::installationAttempted()) {
     return TRUE;
   }
   $error_level = _drupal_get_error_level();
