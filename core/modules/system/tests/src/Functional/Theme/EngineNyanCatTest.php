@@ -14,9 +14,7 @@ use Drupal\Tests\BrowserTestBase;
 class EngineNyanCatTest extends BrowserTestBase {
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = ['theme_test'];
 
@@ -36,7 +34,7 @@ class EngineNyanCatTest extends BrowserTestBase {
   /**
    * Ensures a theme's template is overridable based on the 'template' filename.
    */
-  public function testTemplateOverride() {
+  public function testTemplateOverride(): void {
     $this->config('system.theme')
       ->set('default', 'test_theme_nyan_cat_engine')
       ->save();

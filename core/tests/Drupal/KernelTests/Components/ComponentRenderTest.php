@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\KernelTests\Components;
 
 use Drupal\Core\Render\BubbleableMetadata;
@@ -154,7 +156,7 @@ class ComponentRenderTest extends ComponentKernelTestBase {
       $this->renderComponentRenderArray($build);
       $this->fail('Invalid prop did not cause an exception');
     }
-    catch (\Throwable $e) {
+    catch (\Throwable) {
       $this->addToAssertionCount(1);
     }
 
@@ -168,7 +170,7 @@ class ComponentRenderTest extends ComponentKernelTestBase {
       $this->renderComponentRenderArray($build);
       $this->fail('Invalid prop did not cause an exception');
     }
-    catch (\Throwable $e) {
+    catch (\Throwable) {
       $this->addToAssertionCount(1);
     }
   }
@@ -187,7 +189,7 @@ class ComponentRenderTest extends ComponentKernelTestBase {
       $this->renderComponentRenderArray($build);
       $this->addToAssertionCount(1);
     }
-    catch (\Throwable $e) {
+    catch (\Throwable) {
       $this->fail('Empty array was not converted to object');
     }
   }
@@ -205,7 +207,7 @@ class ComponentRenderTest extends ComponentKernelTestBase {
       $this->renderComponentRenderArray($build);
       $this->fail('Invalid prop did not cause an exception');
     }
-    catch (\Throwable $e) {
+    catch (\Throwable) {
       $this->addToAssertionCount(1);
     }
   }

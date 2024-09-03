@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\views\Kernel\Handler;
 
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
@@ -7,6 +9,7 @@ use Drupal\entity_test\Entity\EntityTest;
 use Drupal\entity_test\Entity\EntityTestRev;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
+use Drupal\Tests\user\Traits\UserCreationTrait;
 use Drupal\user\Entity\User;
 use Drupal\views\Plugin\views\field\EntityField;
 use Drupal\Tests\views\Kernel\ViewsKernelTestBase;
@@ -22,6 +25,8 @@ use Drupal\views\Views;
  */
 class FieldFieldTest extends ViewsKernelTestBase {
 
+  use UserCreationTrait;
+
   /**
    * {@inheritdoc}
    */
@@ -32,14 +37,6 @@ class FieldFieldTest extends ViewsKernelTestBase {
     'views_test_formatter',
     'views_entity_test',
   ];
-
-  /**
-   * {@inheritdoc}
-   *
-   * @todo Remove and fix test to not rely on super user.
-   * @see https://www.drupal.org/project/drupal/issues/3437620
-   */
-  protected bool $usesSuperUserAccessPolicy = TRUE;
 
   /**
    * {@inheritdoc}
@@ -88,8 +85,7 @@ class FieldFieldTest extends ViewsKernelTestBase {
     ViewTestData::createTestViews(static::class, ['views_test_config']);
 
     // Bypass any field access.
-    $this->adminUser = User::create(['name' => $this->randomString()]);
-    $this->adminUser->save();
+    $this->adminUser = $this->createUser(['administer users'], $this->randomString());
     $this->container->get('current_user')->setAccount($this->adminUser);
 
     $this->testUsers = [];
@@ -240,7 +236,7 @@ class FieldFieldTest extends ViewsKernelTestBase {
   /**
    * Tests the result of a view with base fields and configurable fields.
    */
-  public function testSimpleExecute() {
+  public function testSimpleExecute(): void {
     $executable = Views::getView('test_field_field_test');
     $executable->execute();
 
@@ -262,7 +258,7 @@ class FieldFieldTest extends ViewsKernelTestBase {
   /**
    * Tests the output of a view with base fields and configurable fields.
    */
-  public function testSimpleRender() {
+  public function testSimpleRender(): void {
     $executable = Views::getView('test_field_field_test');
     $executable->execute();
 
@@ -285,7 +281,7 @@ class FieldFieldTest extends ViewsKernelTestBase {
    *
    * @see \Drupal\views_test_formatter\Plugin\Field\FieldFormatter\AttachmentTestFormatter::viewElements()
    */
-  public function testAttachedRender() {
+  public function testAttachedRender(): void {
     $executable = Views::getView('test_field_field_attachment_test');
     $executable->execute();
 
@@ -310,7 +306,7 @@ class FieldFieldTest extends ViewsKernelTestBase {
    * A complex field configuration contains multiple times the same field, with
    * different delta limit / offset.
    */
-  public function testFieldAlias() {
+  public function testFieldAlias(): void {
     $executable = Views::getView('test_field_alias_test');
     $executable->execute();
 
@@ -336,7 +332,7 @@ class FieldFieldTest extends ViewsKernelTestBase {
    * A complex field configuration contains multiple times the same field, with
    * different delta limit / offset.
    */
-  public function testFieldAliasRender() {
+  public function testFieldAliasRender(): void {
     $executable = Views::getView('test_field_alias_test');
     $executable->execute();
 
@@ -351,7 +347,7 @@ class FieldFieldTest extends ViewsKernelTestBase {
   /**
    * Tests the result of a view field with field_api_classes enabled.
    */
-  public function testFieldApiClassesRender() {
+  public function testFieldApiClassesRender(): void {
     /** @var \Drupal\Core\Render\RendererInterface $renderer */
     $renderer = $this->container->get('renderer');
     $executable = Views::getView('test_field_field_test');
@@ -375,7 +371,7 @@ class FieldFieldTest extends ViewsKernelTestBase {
    * A complex field configuration contains multiple times the same field, with
    * different delta limit / offset.
    */
-  public function testComplexExecute() {
+  public function testComplexExecute(): void {
     $executable = Views::getView('test_field_field_complex_test');
     $executable->execute();
 
@@ -404,7 +400,7 @@ class FieldFieldTest extends ViewsKernelTestBase {
   /**
    * Tests the output of a view with complex field configuration.
    */
-  public function testComplexRender() {
+  public function testComplexRender(): void {
     $executable = Views::getView('test_field_field_complex_test');
     $executable->execute();
     $date_formatter = \Drupal::service('date.formatter');
@@ -453,7 +449,7 @@ class FieldFieldTest extends ViewsKernelTestBase {
   /**
    * Tests the revision result.
    */
-  public function testRevisionExecute() {
+  public function testRevisionExecute(): void {
     $executable = Views::getView('test_field_field_revision_test');
     $executable->execute();
 
@@ -474,7 +470,7 @@ class FieldFieldTest extends ViewsKernelTestBase {
   /**
    * Tests the output of a revision view with base and configurable fields.
    */
-  public function testRevisionRender() {
+  public function testRevisionRender(): void {
     $executable = Views::getView('test_field_field_revision_test');
     $executable->execute();
 
@@ -502,7 +498,7 @@ class FieldFieldTest extends ViewsKernelTestBase {
   /**
    * Tests the token replacement for revision fields.
    */
-  public function testRevisionTokenRender() {
+  public function testRevisionTokenRender(): void {
     $view = Views::getView('test_field_field_revision_test');
     $this->executeView($view);
 
@@ -515,7 +511,7 @@ class FieldFieldTest extends ViewsKernelTestBase {
   /**
    * Tests the result set of a complex revision view.
    */
-  public function testRevisionComplexExecute() {
+  public function testRevisionComplexExecute(): void {
     $executable = Views::getView('test_field_field_revision_complex_test');
     $executable->execute();
 
@@ -545,7 +541,7 @@ class FieldFieldTest extends ViewsKernelTestBase {
   /**
    * Tests the output of a revision view with base fields and configurable fields.
    */
-  public function testRevisionComplexRender() {
+  public function testRevisionComplexRender(): void {
     $executable = Views::getView('test_field_field_revision_complex_test');
     $executable->execute();
 
@@ -581,7 +577,7 @@ class FieldFieldTest extends ViewsKernelTestBase {
   /**
    * Tests that a field not available for every bundle is rendered as empty.
    */
-  public function testMissingBundleFieldRender() {
+  public function testMissingBundleFieldRender(): void {
     // Create a new bundle not having the test field attached.
     $bundle = $this->randomMachineName();
     entity_test_create_bundle($bundle);
@@ -602,7 +598,7 @@ class FieldFieldTest extends ViewsKernelTestBase {
   /**
    * Tests \Drupal\views\Plugin\views\field\EntityField::getValue.
    */
-  public function testGetValueMethod() {
+  public function testGetValueMethod(): void {
     $bundle = 'test_bundle';
     entity_test_create_bundle($bundle);
 

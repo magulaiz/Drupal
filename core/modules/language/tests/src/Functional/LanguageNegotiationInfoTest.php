@@ -16,9 +16,7 @@ use Drupal\Tests\BrowserTestBase;
 class LanguageNegotiationInfoTest extends BrowserTestBase {
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = ['language', 'content_translation'];
 
@@ -74,7 +72,7 @@ class LanguageNegotiationInfoTest extends BrowserTestBase {
   /**
    * Tests alterations to language types/negotiation info.
    */
-  public function testInfoAlterations() {
+  public function testInfoAlterations(): void {
     $this->stateSet([
       // Enable language_test type info.
       'language_test.language_types' => TRUE,
@@ -184,7 +182,7 @@ class LanguageNegotiationInfoTest extends BrowserTestBase {
   /**
    * Tests altering config of configurable language types.
    */
-  public function testConfigLangTypeAlterations() {
+  public function testConfigLangTypeAlterations(): void {
     // Default of config.
     $test_type = LanguageInterface::TYPE_CONTENT;
     $this->assertFalse($this->isLanguageTypeConfigurable($test_type), 'Language type is not configurable.');
@@ -215,7 +213,7 @@ class LanguageNegotiationInfoTest extends BrowserTestBase {
    * @return bool
    *   TRUE if the specified language type is configurable, FALSE otherwise.
    */
-  protected function isLanguageTypeConfigurable($type) {
+  protected function isLanguageTypeConfigurable($type): bool {
     $configurable_types = $this->config('language.types')->get('configurable');
     return in_array($type, $configurable_types);
   }

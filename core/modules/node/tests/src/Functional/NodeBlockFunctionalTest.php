@@ -40,9 +40,7 @@ class NodeBlockFunctionalTest extends NodeTestBase {
   protected $webUser;
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = ['block', 'views', 'node_block_test'];
 
@@ -69,7 +67,7 @@ class NodeBlockFunctionalTest extends NodeTestBase {
   /**
    * Tests the recent comments block.
    */
-  public function testRecentNodeBlock() {
+  public function testRecentNodeBlock(): void {
     $this->drupalLogin($this->adminUser);
 
     // Disallow anonymous users to view content.
