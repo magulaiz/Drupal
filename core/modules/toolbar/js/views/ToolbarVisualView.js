@@ -111,7 +111,7 @@
         this.updateBarAttributes();
 
         $('[data-toolbar-anti-flicker-loading]').remove();
-        $('html').removeClass([
+        $('html')[0].classList.remove(
           'toolbar-loading',
           'toolbar-horizontal',
           'toolbar-vertical',
@@ -119,8 +119,9 @@
           'toolbar-fixed',
           'toolbar-oriented',
           'toolbar-anti-flicker',
-        ]);
-        $('body').removeClass('toolbar-loading');
+        );
+
+        document.body.classList.remove('toolbar-loading');
 
         // Load the subtrees if the orientation of the toolbar is changed to
         // vertical. This condition responds to the case that the toolbar switches
@@ -209,10 +210,10 @@
         const $tab = $(this.model.get('activeTab'));
         // Deactivate the previous tab.
         $(this.model.previous('activeTab'))
-          .removeClass('is-active')
-          .prop('aria-pressed', false);
+          .prop('aria-pressed', false)[0]
+          ?.classList.remove('is-active');
         // Deactivate the previous tray.
-        $(this.model.previous('activeTray')).removeClass('is-active');
+        $(this.model.previous('activeTray'))[0]?.classList.remove('is-active');
 
         // The stored active tab is removed as updateTabs() can be called when
         // a tray is explicitly closed, thus not replaced with a new active tab.
@@ -220,9 +221,9 @@
         // Activate the selected tab.
         if ($tab.length > 0) {
           $tab
-            .addClass('is-active')
             // Mark the tab as pressed.
             .prop('aria-pressed', true);
+          $tab[0].classList.add('is-active');
           const name = $tab.attr('data-toolbar-tray');
           // Store the active tab name or remove the setting.
           const id = $tab.get(0).id;
@@ -237,7 +238,7 @@
             `[data-toolbar-tray="${name}"].toolbar-tray`,
           );
           if ($tray.length) {
-            $tray.addClass('is-active');
+            $tray[0].classList.add('is-active');
             this.model.set('activeTray', $tray.get(0));
           } else {
             // There is no active tray.
@@ -262,7 +263,7 @@
         }
         // Toggle between a basic vertical view and a more sophisticated
         // horizontal and vertical display of the toolbar bar and trays.
-        this.$el.toggleClass('toolbar-oriented', isOriented);
+        this.$el[0].classList.toggle('toolbar-oriented', isOriented);
       },
 
       /**
@@ -278,18 +279,24 @@
 
         // Toggle toolbar's parent classes before other toolbar classes to avoid
         // potential flicker and re-rendering.
-        $('body')
-          .toggleClass('toolbar-vertical', orientation === 'vertical')
-          .toggleClass('toolbar-horizontal', orientation === 'horizontal');
+        document.body.classList.toggle(
+          'toolbar-vertical',
+          orientation === 'vertical',
+        );
+        document.body.classList.toggle(
+          'toolbar-horizontal',
+          orientation === 'horizontal',
+        );
 
         const removeClass =
           antiOrientation === 'horizontal'
             ? 'toolbar-tray-horizontal'
             : 'toolbar-tray-vertical';
-        const $trays = this.$el
-          .find('.toolbar-tray')
-          .removeClass(removeClass)
-          .addClass(`toolbar-tray-${orientation}`);
+        const $trays = this.$el.find('.toolbar-tray');
+        $trays.toArray().forEach((element) => {
+          element.classList.remove(removeClass);
+          element.classList.add(`toolbar-tray-${orientation}`);
+        });
 
         // Update the tray orientation toggle button.
         const iconClass = `toolbar-icon-toggle-${orientation}`;
@@ -299,10 +306,11 @@
           .toggle(this.model.get('isTrayToggleVisible'));
         const $orientationToggleButton = $orientationToggle.find('button');
         $orientationToggleButton[0].value = antiOrientation;
-        $orientationToggleButton
-          .attr('title', this.strings[antiOrientation])
-          .removeClass(iconClass)
-          .addClass(iconAntiClass);
+        $orientationToggleButton.attr('title', this.strings[antiOrientation]);
+        $orientationToggleButton.toArray().forEach((button) => {
+          button.classList.remove(iconClass);
+          button.classList.add(iconAntiClass);
+        });
         $orientationToggleButton[0].textContent = this.strings[antiOrientation];
 
         // Update data offset attributes for the trays.
@@ -326,9 +334,8 @@
       adjustPlacement() {
         const $trays = this.$el.find('.toolbar-tray');
         if (!this.model.get('isOriented')) {
-          $trays
-            .removeClass('toolbar-tray-horizontal')
-            .addClass('toolbar-tray-vertical');
+          $trays[0].classList.remove('toolbar-tray-horizontal');
+          $trays[0].classList.add('toolbar-tray-vertical');
         }
       },
 

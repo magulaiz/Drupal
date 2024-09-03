@@ -79,11 +79,11 @@
           .find('td:first-of-type')
           .eq(0)
           .wrapInner(Drupal.theme('tableDragCellContentWrapper'))
-          .wrapInner(
-            $(Drupal.theme('tableDragCellItemsWrapper')).addClass(
-              'js-tabledrag-cell-content',
-            ),
-          );
+          .wrapInner(() => {
+            const wrapper = $(Drupal.theme('tableDragCellItemsWrapper'))[0];
+            wrapper.classList.add('js-tabledrag-cell-content');
+            return wrapper;
+          });
 
         const $targetElem = $firstCell.find('.js-tabledrag-cell-content');
 
@@ -115,9 +115,8 @@
      * @todo this may be removable as part of https://drupal.org/node/3084910
      */
     markChanged() {
-      const marker = $(Drupal.theme('tableDragChangedMarker')).addClass(
-        'js-tabledrag-changed-marker',
-      );
+      const marker = $(Drupal.theme('tableDragChangedMarker'));
+      marker[0].classList.add('js-tabledrag-changed-marker');
       const cell = $(this.element).find('td:first-of-type');
       if (cell.find('.js-tabledrag-changed-marker').length === 0) {
         cell.find('.js-tabledrag-handle').after(marker);

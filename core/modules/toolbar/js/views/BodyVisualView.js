@@ -27,7 +27,7 @@
         const isViewportOverflowConstrained = this.model.get(
           'isViewportOverflowConstrained',
         );
-        $('body').toggleClass(
+        document.body.classList.toggle(
           'toolbar-fixed',
           isViewportOverflowConstrained || this.model.get('isFixed'),
         );
@@ -37,11 +37,13 @@
        * {@inheritdoc}
        */
       render() {
-        $('body')
-          // Toggle the toolbar-tray-open class on the body element. The class is
-          // applied when a toolbar tray is active. Padding might be applied to
-          // the body element to prevent the tray from overlapping content.
-          .toggleClass('toolbar-tray-open', !!this.model.get('activeTray'));
+        // Toggle the toolbar-tray-open class on the body element. The class is
+        // applied when a toolbar tray is active. Padding might be applied to
+        // the body element to prevent the tray from overlapping content.
+        document.body.classList.toggle(
+          'toolbar-tray-open',
+          !!this.model.get('activeTray'),
+        );
       },
     },
   );

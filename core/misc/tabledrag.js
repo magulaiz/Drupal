@@ -221,7 +221,7 @@
       // manually append 2 indentations in the first draggable row, measure
       // the offset, then remove.
       const indent = Drupal.theme('tableDragIndentation');
-      const testRow = $('<tr></tr>').addClass('draggable').appendTo(table);
+      const testRow = $('<tr class="draggable"></tr>').appendTo(table);
       const testCell = $('<td></td>')
         .appendTo(testRow)
         .prepend(indent)
@@ -370,10 +370,10 @@
         cell = cells.filter(`:nth-child(${index})`);
         if (cell[0].colSpan && cell[0].colSpan > 1) {
           // If this cell has a colspan, mark it so we can reduce the colspan.
-          cell.addClass('tabledrag-has-colspan');
+          cell[0].classList.add('tabledrag-has-colspan');
         } else {
           // Mark this cell so we can hide it.
-          cell.addClass('tabledrag-hide');
+          cell[0].classList.add('tabledrag-hide');
         }
       }
     };
@@ -507,11 +507,14 @@
     const self = this;
     const $item = $(item);
     // Add a class to the title link.
-    $item.find('td:first-of-type').find('a').addClass('menu-item__link');
+    $item
+      .find('td:first-of-type')
+      .find('a')[0]
+      ?.classList.add('menu-item__link');
     // Create the handle.
     const $handle = $(Drupal.theme('tableDragHandle', this.dragOrientation));
     if (this.dragOrientation === 'drag-y') {
-      $handle.addClass('tabledrag-handle-y');
+      $handle[0].classList.add('tabledrag-handle-y');
     }
     // Insert the handle after indentations (if any).
     const $indentationLast = $item
@@ -694,9 +697,9 @@
       /* eslint-enable no-fallthrough */
 
       if (self.rowObject && self.rowObject.changed === true) {
-        $(item).addClass('drag');
+        item.classList.add('drag');
         if (self.oldRowElement) {
-          $(self.oldRowElement).removeClass('drag-previous');
+          self.oldRowElement.classList.remove('drag-previous');
         }
         self.oldRowElement = item;
         if (self.striping === true) {
@@ -772,12 +775,12 @@
     self.table.bottomY = self.table.topY + self.table.offsetHeight;
 
     // Add classes to the handle and row.
-    $(item).addClass('drag');
+    item.classList.add('drag');
 
     // Set the document to use the move cursor during drag.
-    $('body').addClass(this.dragOrientation);
+    document.body.classList.add(this.dragOrientation);
     if (self.oldRowElement) {
-      $(self.oldRowElement).removeClass('drag-previous');
+      self.oldRowElement.classList.remove('drag-previous');
     }
 
     // Set the initial y coordinate so the direction can be calculated in
@@ -896,9 +899,10 @@
         self.rowObject.removeIndentClasses();
       }
       if (self.oldRowElement) {
-        $(self.oldRowElement).removeClass('drag-previous');
+        self.oldRowElement.classList.remove('drag-previous');
       }
-      $droppedRow.removeClass('drag').addClass('drag-previous');
+      $droppedRow[0].classList.remove('drag');
+      $droppedRow[0].classList.add('drag-previous');
       self.oldRowElement = droppedRow;
       self.onDrop();
       self.rowObject = null;
@@ -907,7 +911,7 @@
     // Functionality specific only to pointerup events.
     if (self.dragObject !== null) {
       self.dragObject = null;
-      $('body').removeClass(self.dragOrientation);
+      document.body.classList.remove(self.dragOrientation);
       clearInterval(self.scrollInterval);
     }
   };
@@ -1295,16 +1299,26 @@
     // :even and :odd are reversed because jQuery counts from 0 and
     // we count from 1, so we're out of sync.
     // Match immediate children of the parent element to allow nesting.
-    $(this.table)
-      .find('> tbody > tr.draggable, > tr.draggable')
+    const tableDraggable = $(this.table).find(
+      '> tbody > tr.draggable, > tr.draggable',
+    );
+
+    tableDraggable
       .filter(':visible')
       .filter(':odd')
-      .removeClass('odd')
-      .addClass('even')
-      .end()
+      .toArray()
+      .forEach((element) => {
+        element.classList.remove('odd');
+        element.classList.add('even');
+      });
+
+    tableDraggable
       .filter(':even')
-      .removeClass('even')
-      .addClass('odd');
+      .toArray()
+      .forEach((element) => {
+        element.classList.remove('even');
+        element.classList.add('odd');
+      });
   };
 
   /**
@@ -1419,12 +1433,12 @@
     function rowIndentation(indentNum, el) {
       const self = $(el);
       if (child === 1 && indentNum === parentIndentation) {
-        self.addClass('tree-child-first');
+        self[0].classList.add('tree-child-first');
       }
       if (indentNum === parentIndentation) {
-        self.addClass('tree-child');
+        self[0].classList.add('tree-child');
       } else if (indentNum > parentIndentation) {
-        self.addClass('tree-child-horizontal');
+        self[0].classList.add('tree-child-horizontal');
       }
     }
 
@@ -1443,8 +1457,8 @@
     }
     if (addClasses && rows.length) {
       $(rows[rows.length - 1])
-        .find(`.js-indentation:nth-child(${parentIndentation + 1})`)
-        .addClass('tree-child-last');
+        .find(`.js-indentation:nth-child(${parentIndentation + 1})`)[0]
+        .classList.add('tree-child-last');
     }
     return rows;
   };
@@ -1668,10 +1682,15 @@
     Object.keys(this.children || {}).forEach((n) => {
       $(this.children[n])
         .find('.js-indentation')
-        .removeClass('tree-child')
-        .removeClass('tree-child-first')
-        .removeClass('tree-child-last')
-        .removeClass('tree-child-horizontal');
+        .toArray()
+        .forEach((element) => {
+          element.classList.remove(
+            'tree-child',
+            'tree-child-first',
+            'tree-child-last',
+            'tree-child-horizontal',
+          );
+        });
     });
   };
 

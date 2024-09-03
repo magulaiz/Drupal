@@ -21,8 +21,8 @@
     response,
     status,
   ) {
-    $('.hilited').removeClass('hilited');
-    $(response.selector).addClass('hilited');
+    $('.hilited')[0]?.classList.remove('hilited');
+    $(response.selector)[0]?.classList.add('hilited');
   };
 
   /**
@@ -83,9 +83,11 @@
     response,
     status,
   ) {
-    $('div.views-edit-view div.form-actions').removeClass('js-hide');
+    $('div.views-edit-view div.form-actions')[0]?.classList.remove('js-hide');
     if (response.changed) {
-      $('div.views-edit-view div.view-changed.messages').removeClass('js-hide');
+      $('div.views-edit-view div.view-changed.messages')[0]?.classList.remove(
+        'js-hide',
+      );
     }
   };
 

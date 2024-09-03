@@ -63,7 +63,8 @@
 
       once('vertical-tabs', '[data-vertical-tabs-panes]', context).forEach(
         (verticalTab) => {
-          const $this = $(verticalTab).addClass('vertical-tabs__panes');
+          const $this = $(verticalTab);
+          $this[0].classList.add('vertical-tabs__panes');
           const focusID = $this.find(':hidden.vertical-tabs__active-tab')[0]
             .value;
           let tabFocus;
@@ -90,18 +91,16 @@
               details: $that,
             });
             tabList.append(verticalTab.item);
-            $that
-              .removeClass('collapsed')
-              .removeAttr('open')
-              .addClass('vertical-tabs__pane')
-              .data('verticalTab', verticalTab);
+            $that.removeAttr('open').data('verticalTab', verticalTab);
+            $that[0].classList.remove('collapsed');
+            $that[0].classList.add('vertical-tabs__pane');
             if (this.id === focusID) {
               tabFocus = $that;
             }
           });
 
-          $(tabList).find('> li').eq(0).addClass('first');
-          $(tabList).find('> li').eq(-1).addClass('last');
+          $(tabList).find('> li').eq(0)[0].classList.add('first');
+          $(tabList).find('> li').eq(-1)[0].classList.add('last');
 
           if (!tabFocus) {
             // If the current URL has a fragment and one of the tabs contains an
@@ -202,7 +201,7 @@
           hidden.value = this.details.attr('id');
         });
       this.details.attr('open', true);
-      this.item.addClass('is-selected');
+      this.item[0].classList.add('is-selected');
       // Mark the active tab for screen readers.
       $('#active-vertical-tab').remove();
       this.link.append(
@@ -238,8 +237,8 @@
         .children('.vertical-tabs__menu-item')
         .removeClass('first')
         .filter(':visible')
-        .eq(0)
-        .addClass('first');
+        .eq(0)[0]
+        .classList.add('first');
       // Display the details element.
       this.details.removeClass('vertical-tab--hidden').show();
       // Focus this tab.
@@ -264,10 +263,11 @@
         .children('.vertical-tabs__menu-item')
         .removeClass('first')
         .filter(':visible')
-        .eq(0)
-        .addClass('first');
+        .eq(0)[0]
+        ?.classList.add('first');
       // Hide the details element.
-      this.details.addClass('vertical-tab--hidden').hide().removeAttr('open');
+      this.details.hide().removeAttr('open');
+      this.details[0].classList.add('vertical-tab--hidden');
       // Focus the first visible tab (if there is one).
       const $firstTab = this.details
         .siblings('.vertical-tabs__pane:not(.vertical-tab--hidden)')

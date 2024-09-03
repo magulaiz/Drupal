@@ -1444,8 +1444,8 @@
      */
     changed(ajax, response, status) {
       const $element = $(response.selector);
-      if (!$element.hasClass('ajax-changed')) {
-        $element.addClass('ajax-changed');
+      if (!$element[0].classList.contains('ajax-changed')) {
+        $element[0].classList.add('ajax-changed');
         if (response.asterisk) {
           $element
             .find(response.asterisk)
@@ -1672,14 +1672,28 @@
       // :even and :odd are reversed because jQuery counts from 0 and
       // we count from 1, so we're out of sync.
       // Match immediate children of the parent element to allow nesting.
-      $(response.selector)
-        .find('> tbody > tr:visible, > tr:visible')
-        .removeClass('odd even')
+
+      const $selector = $(response.selector).find(
+        '> tbody > tr:visible, > tr:visible',
+      );
+      $selector.toArray().forEach((element) => {
+        element.classList.remove('odd', 'even');
+      });
+      $selector
         .filter(':even')
-        .addClass('odd')
+        .toArray()
+        .forEach((element) => {
+          element.classList.add('odd');
+        });
+
+      $selector
+        .filter(':even')
         .end()
         .filter(':odd')
-        .addClass('even');
+        .toArray()
+        .forEach((element) => {
+          element.classList.add('even');
+        });
     },
 
     /**

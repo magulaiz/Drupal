@@ -223,7 +223,7 @@
     const $element = $(e.target);
     if (Drupal.offCanvas.isOffCanvas($element)) {
       // Start by removing any existing highlighted elements.
-      $('.is-layout-builder-highlighted').removeClass(
+      $('.is-layout-builder-highlighted')[0]?.classList.remove(
         'is-layout-builder-highlighted',
       );
 
@@ -240,13 +240,15 @@
         .find('[data-layout-builder-target-highlight-id]')
         .attr('data-layout-builder-target-highlight-id');
       if (id) {
-        $(`[data-layout-builder-highlight-id="${id}"]`).addClass(
-          'is-layout-builder-highlighted',
-        );
+        document
+          .querySelector(`[data-layout-builder-highlight-id="${id}"]`)
+          .classList.add('is-layout-builder-highlighted');
       }
 
       // Remove wrapper class added by move block form.
-      $('#layout-builder').removeClass('layout-builder--move-blocks-active');
+      $('#layout-builder')[0]?.classList.remove(
+        'layout-builder--move-blocks-active',
+      );
 
       /**
        * If dialog has a data-add-layout-builder-wrapper attribute, get the
@@ -260,7 +262,9 @@
         .find('[data-add-layout-builder-wrapper]')
         .attr('data-add-layout-builder-wrapper');
       if (layoutBuilderWrapperValue) {
-        $('#layout-builder').addClass(layoutBuilderWrapperValue);
+        document
+          .querySelector('#layout-builder')
+          .classList.add(layoutBuilderWrapperValue);
       }
     }
   });
@@ -314,12 +318,14 @@
     const $element = $(e.target);
     if (Drupal.offCanvas.isOffCanvas($element)) {
       // Remove the highlight from all elements.
-      $('.is-layout-builder-highlighted').removeClass(
+      $('.is-layout-builder-highlighted')[0]?.classList.remove(
         'is-layout-builder-highlighted',
       );
 
       // Remove wrapper class added by move block form.
-      $('#layout-builder').removeClass('layout-builder--move-blocks-active');
+      $('#layout-builder')[0]?.classList.remove(
+        'layout-builder--move-blocks-active',
+      );
     }
   });
 
@@ -360,7 +366,9 @@
        *   possible to remove all but the first line of this function.
        */
       const disableContentPreview = () => {
-        $layoutBuilder.addClass('layout-builder--content-preview-disabled');
+        $layoutBuilder[0].classList.add(
+          'layout-builder--content-preview-disabled',
+        );
 
         /**
          * Iterate over all Layout Builder blocks to hide their content and add
@@ -397,7 +405,9 @@
        *   possible to remove all but the first line of this function.
        */
       const enableContentPreview = () => {
-        $layoutBuilder.removeClass('layout-builder--content-preview-disabled');
+        $layoutBuilder[0]?.classList.remove(
+          'layout-builder--content-preview-disabled',
+        );
 
         // Remove all placeholder labels.
         $('.js-layout-builder-content-preview-placeholder-label').remove();

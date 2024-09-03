@@ -38,8 +38,6 @@
         // permission table would be polluted with redundant entries. This is
         // deliberate, but desirable when we automatically check them.
         const $dummy = $(Drupal.theme('checkbox'))
-          .removeClass('form-checkbox')
-          .addClass('dummy-checkbox js-dummy-checkbox')
           .attr('disabled', 'disabled')
           .attr('checked', 'checked')
           .attr(
@@ -49,13 +47,17 @@
             ),
           )
           .hide();
+        $dummy[0].classList.remove('form-checkbox');
+        $dummy[0].classList.add('dummy-checkbox', 'js-dummy-checkbox');
 
         $table
           .find('input[type="checkbox"]')
           .not('.js-rid-anonymous, .js-rid-authenticated')
-          .addClass('real-checkbox js-real-checkbox')
-          .after($dummy);
-
+          .after($dummy)
+          .toArray()
+          .forEach((checkbox) => {
+            checkbox.classList.add('real-checkbox', 'js-real-checkbox');
+          });
         // Initialize the authenticated user checkbox.
         $table
           .find('input[type=checkbox].js-rid-authenticated')

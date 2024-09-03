@@ -24,7 +24,8 @@
           const $marker = $(
             Drupal.theme('localeTranslateChangedWarning'),
           ).hide();
-          $(this).addClass('changed').before($marker);
+          $(this).before($marker);
+          this.classList.add('changed');
           $marker.fadeIn('slow');
         });
         // Highlight changed row.
@@ -32,8 +33,7 @@
           const $row = $(this);
           const rowToMark = once('localemark', $row);
           const marker = Drupal.theme('localeTranslateChangedMarker');
-
-          $row.addClass('changed');
+          $row[0].classList.add('changed');
           // Add an asterisk only once if row changed.
           if (rowToMark.length) {
             $(rowToMark).find('td:first-child .js-form-item').append(marker);
@@ -68,7 +68,6 @@
       if (table.length) {
         const $table = $(table);
         const $tableBodies = $table.find('tbody');
-
         // Open/close the description details by toggling a tr class.
         $tableBodies.on('click keydown', '.description', function (e) {
           if (e.keyCode && e.keyCode !== 13 && e.keyCode !== 32) {
@@ -76,13 +75,12 @@
           }
           e.preventDefault();
           const $tr = $(this).closest('tr');
-
-          $tr.toggleClass('expanded');
+          $tr[0].classList.toggle('expanded');
 
           const $localePrefix = $tr.find('.locale-translation-update__prefix');
           if ($localePrefix.length) {
             // Change screen reader text.
-            $localePrefix[0].textContent = $tr.hasClass('expanded')
+            $localePrefix[0].textContent = $tr[0].classList.contains('expanded')
               ? Drupal.t('Hide description')
               : Drupal.t('Show description');
           }

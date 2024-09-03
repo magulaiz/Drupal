@@ -103,15 +103,19 @@
 
           // Set the selected tab.
           $menu.find('.active-tab').remove();
-          $menu.find('a').removeClass('active');
-          $(e.currentTarget)
-            .addClass('active')
-            .html(
-              Drupal.t(
-                '<span class="visually-hidden">Show </span>@title<span class="visually-hidden"> media</span><span class="active-tab visually-hidden"> (selected)</span>',
-                { '@title': $(e.currentTarget).data('title') },
-              ),
-            );
+          $menu
+            .find('a')
+            .toArray()
+            .forEach((element) => {
+              element.classList.remove('active');
+            });
+          e.currentTarget.classList.add('active');
+          $(e.currentTarget).html(
+            Drupal.t(
+              '<span class="visually-hidden">Show </span>@title<span class="visually-hidden"> media</span><span class="active-tab visually-hidden"> (selected)</span>',
+              { '@title': $(e.currentTarget).data('title') },
+            ),
+          );
 
           // Announce the updated content.
           Drupal.announce(
@@ -142,7 +146,7 @@
    */
   Drupal.behaviors.MediaLibraryViewsDisplay = {
     attach(context) {
-      const $view = $(context).hasClass('.js-media-library-view')
+      const $view = context?.classList?.contains('js-media-library-view')
         ? $(context)
         : $('.js-media-library-view', context);
 
@@ -176,11 +180,13 @@
         let loadingAnnouncement = '';
         let displayAnnouncement = '';
         let focusSelector = '';
-        if ($link.hasClass('views-display-link-widget')) {
+        if ($link[0].classList.contains('views-display-link-widget')) {
           loadingAnnouncement = Drupal.t('Loading grid view.');
           displayAnnouncement = Drupal.t('Changed to grid view.');
           focusSelector = '.views-display-link-widget';
-        } else if ($link.hasClass('views-display-link-widget_table')) {
+        } else if (
+          $link[0].classList.contains('views-display-link-widget_table')
+        ) {
           loadingAnnouncement = Drupal.t('Loading table view.');
           displayAnnouncement = Drupal.t('Changed to table view.');
           focusSelector = '.views-display-link-widget_table';
@@ -263,7 +269,10 @@
         $items
           .prop('disabled', true)
           .closest('.js-media-library-item')
-          .addClass('media-library-item--disabled');
+          .toArray()
+          .forEach((element) => {
+            element.classList.add('media-library-item--disabled');
+          });
       }
 
       /**
@@ -276,7 +285,10 @@
         $items
           .prop('disabled', false)
           .closest('.js-media-library-item')
-          .removeClass('media-library-item--disabled');
+          .toArray()
+          .forEach((element) => {
+            element.classList.remove('media-library-item--disabled');
+          });
       }
 
       /**

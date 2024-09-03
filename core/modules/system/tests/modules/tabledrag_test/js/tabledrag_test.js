@@ -15,7 +15,7 @@
       $(once('tabledrag-test', '.tabledrag-handle', context)).on(
         'keydown.tabledrag-test',
         (event) => {
-          $(event.currentTarget).removeClass('tabledrag-test-dragging');
+          $(event.currentTarget)[0].classList.remove('tabledrag-test-dragging');
         },
       );
     },

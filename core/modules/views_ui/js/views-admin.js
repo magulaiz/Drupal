@@ -24,7 +24,7 @@
       $('[data-drupal-selector="edit-query-options-disable-sql-rewrite"]').on(
         'click',
         () => {
-          $('.sql-rewrite-warning').toggleClass('js-hide');
+          $('.sql-rewrite-warning')[0].classList.toggle('js-hide');
         },
       );
     },
@@ -386,15 +386,15 @@
         )}</a><ul class="action-list" style="display:none;"></ul></li>`,
       );
       const $displayButtons = $menu.nextAll('input.add-display').detach();
-      $displayButtons
-        .appendTo($addDisplayDropdown.find('.action-list'))
-        .wrap('<li>')
-        .parent()
-        .eq(0)
-        .addClass('first')
-        .end()
-        .eq(-1)
-        .addClass('last');
+      const actionList = $addDisplayDropdown[0].querySelector('.action-list');
+      $displayButtons.toArray().forEach((button) => {
+        const li = document.createElement('li');
+        actionList.appendChild(li);
+        li.appendChild(button);
+      });
+      actionList.firstChild.classList.add('first');
+      actionList.lastChild.classList.add('last');
+
       $displayButtons.each(function () {
         const $this = $(this);
         this.value = $this.attr('data-drupal-dropdown-label');
@@ -436,7 +436,7 @@
    *   where to put it.
    */
   Drupal.behaviors.viewsUiRenderAddViewButton.toggleMenu = function ($trigger) {
-    $trigger.parent().toggleClass('open');
+    $trigger.parent()[0].classList.toggle('open');
     $trigger.next().slideToggle('fast');
   };
 
@@ -585,7 +585,7 @@
             found = words.every(hasWord);
           }
           if (found && group !== 'all') {
-            found = option.$div.hasClass(group);
+            found = option.$div[0].classList.contains(group);
           }
 
           option.$div.toggle(found);
@@ -938,8 +938,8 @@
             const previousRow = thisRow.prev('tr');
             if (
               previousRow.length &&
-              !previousRow.hasClass('group-message') &&
-              !previousRow.hasClass('draggable')
+              !previousRow[0].classList.contains('group-message') &&
+              !previousRow[0].classList.contains('draggable')
             ) {
               // Move the dragged row down one.
               const next = thisRow.next();
@@ -1027,7 +1027,7 @@
             const $existingOperatorLabel = $firstCell.find(
               '.views-operator-label',
             );
-            if ($nextRow.hasClass('draggable')) {
+            if ($nextRow[0]?.classList.contains('draggable')) {
               // If an operator label was already there, replace it with the new
               // one.
               if ($existingOperatorLabel.length) {
@@ -1064,29 +1064,27 @@
         const length = rows.length;
         for (let i = 0; i < length; i++) {
           $row = $(rows[i]);
-          if ($row.hasClass('views-group-title')) {
+          if ($row[0].classList.contains('views-group-title')) {
             // This row is a title row.
             // Keep a reference to the cell containing the dropdown operator.
             $operatorCell = $row.find('td.group-operator');
             // Assume this filter group is empty, until we find otherwise.
             draggableCount = 0;
             $currentEmptyRow = $row.next('tr');
-            $currentEmptyRow
-              .removeClass('group-populated')
-              .addClass('group-empty');
+            $currentEmptyRow[0].classList.remove('group-empty');
+            $currentEmptyRow[0].classList.add('group-populated');
             // The cell with the dropdown operator should span the title row and
             // the "this group is empty" row.
             $operatorCell.attr('rowspan', 2);
           } else if (
-            $row.hasClass('draggable') &&
+            $row[0].classList.contains('draggable') &&
             Drupal.elementIsVisible(rows[i])
           ) {
             // We've found a visible filter row, so we now know the group isn't
             // empty.
             draggableCount++;
-            $currentEmptyRow
-              .removeClass('group-empty')
-              .addClass('group-populated');
+            $currentEmptyRow[0].classList.remove('group-empty');
+            $currentEmptyRow[0].classList.add('group-populated');
             // The operator cell should span all draggable rows, plus the title.
             $operatorCell.attr('rowspan', draggableCount + 1);
           }
@@ -1148,7 +1146,10 @@
     attach(context) {
       $(once('dropbutton-icon', '.dropbutton', context))
         .find('.icon')
-        .removeClass('icon');
+        .toArray()
+        .forEach((element) => {
+          element.classList.remove('icon');
+        });
     },
   };
 

@@ -65,9 +65,8 @@
       const cssClasses = Drupal.user.password.css;
       once('password', 'input.js-password-field', context).forEach((value) => {
         const $mainInput = $(value);
-        const $mainInputParent = $mainInput
-          .parent()
-          .addClass(cssClasses.passwordParent);
+        const $mainInputParent = $mainInput.parent();
+        $mainInputParent[0].classList.add(cssClasses.passwordParent);
         const $passwordWidget = $mainInput.closest(
           '.js-form-type-password-confirm',
         );
@@ -82,9 +81,8 @@
 
         const $confirmInputParent = $confirmInput
           .parent()
-          .addClass('confirm-parent')
           .append($passwordConfirmMessage);
-
+        $confirmInputParent[0].classList.add('confirm-parent');
         // List of classes to be removed from the strength bar on a state
         // change.
         const passwordStrengthBarClassesToRemove = [
@@ -142,17 +140,14 @@
          * Adds classes to the widget indicating if the elements are filled.
          */
         const addWidgetClasses = () => {
-          $passwordWidget
-            .addClass(
-              $mainInput[0].value
-                ? cssClasses.passwordFilled
-                : cssClasses.passwordEmpty,
-            )
-            .addClass(
-              $confirmInput[0].value
-                ? cssClasses.confirmFilled
-                : cssClasses.confirmEmpty,
-            );
+          $passwordWidget[0].classList.add(
+            $mainInput[0].value
+              ? cssClasses.passwordFilled
+              : cssClasses.passwordEmpty,
+            $confirmInput[0].value
+              ? cssClasses.confirmFilled
+              : cssClasses.confirmEmpty,
+          );
         };
 
         /**
@@ -172,15 +167,17 @@
 
           // Update the success message and set the class if needed.
           if (
-            !$passwordMatchStatus.hasClass(confirmClass) ||
+            !$passwordMatchStatus[0].classList.contains(confirmClass) ||
             !$passwordMatchStatus.html() === confirmMessage
           ) {
             if (confirmTextWrapperClassesToRemove) {
-              $passwordMatchStatus.removeClass(
-                confirmTextWrapperClassesToRemove,
+              $passwordMatchStatus[0].classList.remove(
+                ...confirmTextWrapperClassesToRemove.split(' '),
               );
             }
-            $passwordMatchStatus.html(confirmMessage).addClass(confirmClass);
+            $passwordMatchStatus
+              .html(confirmMessage)[0]
+              .classList.add(confirmClass);
           }
         };
 
@@ -217,12 +214,12 @@
 
             if (passwordStrengthBarClassesToRemove) {
               password.$strengthBar.removeClass(
-                passwordStrengthBarClassesToRemove,
+                ...passwordStrengthBarClassesToRemove.split(' '),
               );
             }
             // Adjust the length of the strength indicator.
             password.$strengthBar[0].style.width = `${result.strength}%`;
-            password.$strengthBar.addClass(result.indicatorClass);
+            password.$strengthBar[0].classList.add(result.indicatorClass);
 
             // Update the strength indication text.
             password.$strengthTextWrapper.html(result.indicatorText);
@@ -235,9 +232,10 @@
           } else {
             $passwordConfirmMessage[0].style.visibility = 'hidden';
           }
-
           if (widgetClassesToRemove) {
-            $passwordWidget.removeClass(widgetClassesToRemove);
+            $passwordWidget[0].classList.remove(
+              ...widgetClassesToRemove.split(' '),
+            );
             addWidgetClasses();
           }
         };

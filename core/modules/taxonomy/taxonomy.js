@@ -27,32 +27,36 @@
       // When a row is swapped, keep previous and next page classes set.
       tableDrag.row.prototype.onSwap = function (swappedRow) {
         $table
-          .find('tr.taxonomy-term-preview')
-          .removeClass('taxonomy-term-preview');
+          .find('tr.taxonomy-term-preview')[0]
+          ?.classList.remove('taxonomy-term-preview');
         $table
-          .find('tr.taxonomy-term-divider-top')
-          .removeClass('taxonomy-term-divider-top');
+          .find('tr.taxonomy-term-divider-top')[0]
+          ?.classList.remove('taxonomy-term-divider-top');
         $table
-          .find('tr.taxonomy-term-divider-bottom')
-          .removeClass('taxonomy-term-divider-bottom');
+          .find('tr.taxonomy-term-divider-bottom')[0]
+          ?.classList.remove('taxonomy-term-divider-bottom');
 
         const tableBody = $table[0].tBodies[0];
         if (backStep) {
           for (let n = 0; n < backStep; n++) {
-            $(tableBody.rows[n]).addClass('taxonomy-term-preview');
+            tableBody.rows[n].classList.add('taxonomy-term-preview');
           }
-          $(tableBody.rows[backStep - 1]).addClass('taxonomy-term-divider-top');
-          $(tableBody.rows[backStep]).addClass('taxonomy-term-divider-bottom');
+          tableBody.rows[backStep - 1].classList.add(
+            'taxonomy-term-divider-top',
+          );
+          tableBody.rows[backStep].classList.add(
+            'taxonomy-term-divider-bottom',
+          );
         }
 
         if (forwardStep) {
           for (let k = rows - forwardStep - 1; k < rows - 1; k++) {
-            $(tableBody.rows[k]).addClass('taxonomy-term-preview');
+            tableBody.rows[k].classList.add('taxonomy-term-preview');
           }
-          $(tableBody.rows[rows - forwardStep - 2]).addClass(
+          tableBody.rows[rows - forwardStep - 2].classList.add(
             'taxonomy-term-divider-top',
           );
-          $(tableBody.rows[rows - forwardStep - 1]).addClass(
+          tableBody.rows[rows - forwardStep - 1].classList.add(
             'taxonomy-term-divider-bottom',
           );
         }

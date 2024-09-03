@@ -12,20 +12,20 @@
         (value) => {
           const $input = $(value);
           const classRemove = ($autoCompleteElem) => {
-            $autoCompleteElem.removeClass('is-autocompleting');
+            $autoCompleteElem[0].classList.remove('is-autocompleting');
             $autoCompleteElem
-              .siblings('[data-drupal-selector="autocomplete-message"]')
-              .addClass('hidden');
+              .siblings('[data-drupal-selector="autocomplete-message"]')[0]
+              .classList.add('hidden');
           };
 
           $input.autocomplete({
             search(event) {
               const result = Drupal.autocomplete.options.search(event);
               if (result) {
-                $(event.target).addClass('is-autocompleting');
+                event.target.classList.add('is-autocompleting');
                 $(event.target)
-                  .siblings('[data-drupal-selector="autocomplete-message"]')
-                  .removeClass('hidden');
+                  .siblings('[data-drupal-selector="autocomplete-message"]')[0]
+                  .classList.remove('hidden');
               }
 
               return result;

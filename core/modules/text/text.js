@@ -31,12 +31,12 @@
         // To ensure the summary toggle is shown in case the label is hidden
         // (in multivalue fields in particular), show the label but hide
         // the original text of the label.
-        if ($fullLabel.hasClass('visually-hidden')) {
+        if ($fullLabel[0].classList.contains('visually-hidden')) {
           $fullLabel.html(
             (index, oldHtml) =>
               `<span class="visually-hidden">${oldHtml}</span>`,
           );
-          $fullLabel.removeClass('visually-hidden');
+          $fullLabel[0].classList.remove('visually-hidden');
         }
 
         // Set up the edit/hide summary link.

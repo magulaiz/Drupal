@@ -113,11 +113,13 @@
             $this.next('tr').length === 0 ||
             !$this.next('tr')[0].matches('.draggable')
           ) {
-            $this.removeClass('region-populated').addClass('region-empty');
+            $this[0].classList.remove('region-populated');
+            $this[0].classList.add('region-empty');
           }
           // This region has become populated.
           else if (this.matches('.region-empty')) {
-            $this.removeClass('region-empty').addClass('region-populated');
+            $this[0].classList.remove('region-empty');
+            $this[0].classList.add('region-populated');
           }
         });
       }
@@ -132,11 +134,11 @@
        */
       function updateLastPlaced(table, rowObject) {
         // Remove the color-success class from new block if applicable.
-        table.find('.color-success').removeClass('color-success');
+        table.find('.color-success')[0]?.classList.remove('color-success');
         const $rowObject = $(rowObject);
         if (!rowObject.element.matches('.drag-previous')) {
-          table.find('.drag-previous').removeClass('drag-previous');
-          $rowObject.addClass('drag-previous');
+          table.find('.drag-previous')[0]?.classList.remove('drag-previous');
+          $rowObject[0].element.classList.add('drag-previous');
         }
       }
 
@@ -204,12 +206,10 @@
             /([^ ]+[ ]+)*block-weight-([^ ]+)([ ]+[^ ]+)*/,
             '$2',
           );
-          regionField
-            .removeClass(`block-region-${oldRegionName}`)
-            .addClass(`block-region-${regionName}`);
-          weightField
-            .removeClass(`block-weight-${oldRegionName}`)
-            .addClass(`block-weight-${regionName}`);
+          regionField[0].classList.remove(`block-region-${oldRegionName}`);
+          regionField[0].classList.add(`block-region-${regionName}`);
+          weightField[0].classList.remove(`block-weight-${oldRegionName}`);
+          weightField[0].classList.add(`block-weight-${regionName}`);
           regionField[0].value = regionName;
         }
 

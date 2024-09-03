@@ -12,8 +12,10 @@
     const $active = $target.find('.js-active-tab');
 
     const openMenu = () => {
-      $target.toggleClass('is-open');
-      $target.find('button').attr('aria-expanded', $target.hasClass('is-open'));
+      $target[0].classList.toggle('is-open');
+      $target
+        .find('button')
+        .attr('aria-expanded', $target[0].classList.contains('is-open'));
     };
 
     const toggleOrder = (reset) => {
@@ -40,9 +42,12 @@
       }
     };
 
-    const toggleCollapsed = ({ matches }) => {
-      if (matches) {
-        if ($tab.hasClass('is-horizontal') && !$tab.attr('data-width')) {
+    const toggleCollapsed = () => {
+      if (window.matchMedia('(min-width: 48em)').matches) {
+        if (
+          $tab[0].classList.contains('is-horizontal') &&
+          !$tab.attr('data-width')
+        ) {
           let width = 0;
 
           $target.find('.js-tabs-link').each((index, value) => {
@@ -54,7 +59,7 @@
         // Collapse the tabs if the combined width of the tabs is greater than
         // the width of the parent container.
         const isHorizontal = $tab.attr('data-width') <= $tab.outerWidth();
-        $tab.toggleClass('is-horizontal', isHorizontal);
+        $tab[0].classList.toggle('is-horizontal', isHorizontal);
         $tab.find('button').attr('aria-expanded', null);
         toggleOrder(isHorizontal);
       } else {
@@ -62,8 +67,7 @@
         $tab.find('button').attr('aria-expanded', 'false');
       }
     };
-
-    $tab.addClass('position-container is-horizontal-enabled');
+    $tab[0].classList.add('position-container', 'is-horizontal-enabled');
 
     $target.find('.js-tab').each((index, element) => {
       const $item = $(element);

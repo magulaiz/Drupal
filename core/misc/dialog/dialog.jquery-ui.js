@@ -27,7 +27,7 @@
       this._super();
       const $buttons = this.uiButtonSet.children().addClass(opts.buttonClass);
       if (typeof primaryIndex !== 'undefined') {
-        $buttons.eq(index).addClass(opts.buttonPrimaryClass);
+        $buttons.eq(index)[0].classList.add(opts.buttonPrimaryClass);
       }
     },
     _createWrapper() {

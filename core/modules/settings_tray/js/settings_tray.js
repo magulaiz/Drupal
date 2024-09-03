@@ -117,8 +117,17 @@
       }
       closeOffCanvas();
     }
-    getItemsToToggle().toggleClass('js-settings-tray-edit-mode', editMode);
-    $('.edit-mode-inactive').toggleClass('visually-hidden', editMode);
+    getItemsToToggle()
+      .toArray()
+      .forEach((element) => {
+        element.classList.toggle('js-settings-tray-edit-mode', editMode);
+      });
+
+    $('.edit-mode-inactive')
+      .toArray()
+      .forEach((element) => {
+        element.classList.toggle('visually-hidden', editMode);
+      });
   }
 
   /**
@@ -130,7 +139,9 @@
    *   State of the settings-tray edit mode.
    */
   function isInEditMode() {
-    return $('#toolbar-bar').hasClass('js-settings-tray-edit-mode');
+    return $('#toolbar-bar')[0].classList.contains(
+      'js-settings-tray-edit-mode',
+    );
   }
 
   /**
@@ -239,18 +250,18 @@
   // Manage Active editable class on opening and closing of the dialog.
   window.addEventListener('dialog:beforecreate', (e) => {
     if (e.target.id === 'drupal-off-canvas') {
-      $('body .settings-tray-active-editable').removeClass(
+      $('body .settings-tray-active-editable')[0]?.classList.remove(
         'settings-tray-active-editable',
       );
       const $activeElement = $(`#${e.settings.settingsTrayActiveEditableId}`);
       if ($activeElement.length) {
-        $activeElement.addClass('settings-tray-active-editable');
+        $activeElement[0]?.classList.add('settings-tray-active-editable');
       }
     }
   });
   window.addEventListener('dialog:beforeclose', (e) => {
     if (e.target.id === 'drupal-off-canvas') {
-      $('body .settings-tray-active-editable').removeClass(
+      $('body .settings-tray-active-editable')[0]?.classList.remove(
         'settings-tray-active-editable',
       );
     }

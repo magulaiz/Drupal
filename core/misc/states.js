@@ -695,9 +695,15 @@
     const tagsSupportDisable =
       'button, fieldset, optgroup, option, select, textarea, input';
     if (e.trigger) {
+      // eslint-disable-next-line jquery/no-class
       $(e.target)
         .closest('.js-form-item, .js-form-submit, .js-form-wrapper')
-        .toggleClass('form-disabled', e.value)
+        .toArray()
+        .forEach((element) => {
+          element.classList.toggle('form-readonly', e.value);
+        });
+      $(e.target)
+        .closest('.js-form-item, .js-form-submit, .js-form-wrapper')
         .find(tagsSupportDisable)
         .addBack(tagsSupportDisable)
         .prop('disabled', e.value);
@@ -708,9 +714,15 @@
     if (e.trigger) {
       $(e.target)
         .closest('.js-form-item, .js-form-submit, .js-form-wrapper')
-        .toggleClass('form-readonly', e.value)
         .find('input, textarea')
         .prop('readonly', e.value);
+
+      $(e.target)
+        .closest('.js-form-item, .js-form-submit, .js-form-wrapper')
+        .toArray()
+        .forEach((element) => {
+          element.classList.toggle('form-readonly', e.value);
+        });
     }
   });
 
@@ -723,15 +735,18 @@
           .closest('.js-form-item, .js-form-wrapper')
           .find(label);
         // Avoids duplicate required markers on initialization.
-        if (!$label.hasClass('js-form-required').length) {
-          $label.addClass('js-form-required form-required');
+        if (!$label[0]?.classList.contains('js-form-required')) {
+          $label[0]?.classList.add('js-form-required', 'form-required');
         }
       } else {
         $(e.target)
           .removeAttr('required aria-required')
           .closest('.js-form-item, .js-form-wrapper')
           .find('label.js-form-required')
-          .removeClass('js-form-required form-required');
+          .toArray()
+          .forEach((element) => {
+            element.classList.remove('js-form-required', 'form-required');
+          });
       }
     }
   });

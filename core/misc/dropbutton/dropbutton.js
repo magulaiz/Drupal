@@ -43,7 +43,10 @@
      *
      * @type {jQuery}
      */
-    this.$actions = this.$list.find('li').addClass('dropbutton-action');
+    this.$actions = this.$list.find('li');
+    this.$actions.toArray().forEach((element) => {
+      element.classList.add('dropbutton-action');
+    });
 
     // Add the special dropdown only if there are hidden actions.
     if (this.$actions.length > 1) {
@@ -51,11 +54,15 @@
       const $primary = this.$actions.slice(0, 1);
       // Identify the secondary actions.
       const $secondary = this.$actions.slice(1);
-      $secondary.addClass('secondary-action');
+      $secondary.toArray().forEach((element) => {
+        element.classList.add('secondary-action');
+      });
+
       // Add toggle link.
       $primary.after(Drupal.theme('dropbuttonToggle', options));
       // Bind mouse events.
-      this.$dropbutton.addClass('dropbutton-multiple').on({
+      this.$dropbutton[0].classList.add('dropbutton-multiple');
+      this.$dropbutton.on({
         /**
          * Adds a timeout to close the dropdown on mouseleave.
          *
@@ -83,7 +90,7 @@
         'focusin.dropbutton': this.focusIn.bind(this),
       });
     } else {
-      this.$dropbutton.addClass('dropbutton-single');
+      this.$dropbutton[0].classList.add('dropbutton-single');
     }
   }
 
@@ -97,7 +104,7 @@
    */
   function dropbuttonClickHandler(e) {
     e.preventDefault();
-    $(e.target).closest('.dropbutton-wrapper').toggleClass('open');
+    $(e.target).closest('.dropbutton-wrapper')[0].classList.toggle('open');
   }
 
   /**
