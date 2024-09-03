@@ -233,7 +233,7 @@ class OverridesEntityForm extends ContentEntityForm implements WorkspaceDynamicS
    * @return \Drupal\Core\Ajax\AjaxResponse
    *   An ajax response object.
    */
-  public function ajaxCallbackRevertDefaults() {
+  public function ajaxCallbackRevertDefaults(): AjaxResponse {
     $response = new AjaxResponse();
     $url = $this->sectionStorage->getLayoutBuilderUrl('revert');
     $settings = [
