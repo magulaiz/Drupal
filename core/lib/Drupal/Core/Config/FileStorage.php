@@ -35,6 +35,13 @@ class FileStorage implements StorageInterface {
   protected $fileCache;
 
   /**
+   * The driver name of the database connection.
+   *
+   * @var string
+   */
+  protected $driver;
+
+  /**
    * Constructs a new FileStorage.
    *
    * @param string $directory
@@ -59,6 +66,14 @@ class FileStorage implements StorageInterface {
    *   The path to the configuration file.
    */
   public function getFilePath($name) {
+    // Let a config item be overridden by a database driver one.
+    if ($this->getDatabaseDriver()) {
+      $file_name = $this->getCollectionDirectory() . '/' . $this->getDatabaseDriver() . '/' . $name . '.' . static::getFileExtension();
+      if (file_exists($file_name)) {
+        return $file_name;
+      }
+    }
+
     return $this->getCollectionDirectory() . '/' . $name . '.' . static::getFileExtension();
   }
 
@@ -364,6 +379,27 @@ class FileStorage implements StorageInterface {
    */
   private function getFileSystem() {
     return \Drupal::service('file_system');
+  }
+
+
+  /**
+   * Get the driver name of the database connection.
+   *
+   * @return string|null
+   *   The driver name of the database connection.
+   */
+  protected function getDatabaseDriver(): ?string {
+    if (!isset($this->driver)) {
+      try {
+        if ($connection = \Drupal::database()) {
+          $this->driver = $connection->driver();
+        }
+      }
+      catch (\Exception $e) {
+        // Do nothing.
+      }
+    }
+    return $this->driver;
   }
 
 }

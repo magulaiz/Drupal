@@ -99,6 +99,11 @@ abstract class InstallerConfigDirectoryTestBase extends InstallerTestBase {
     // Create config/sync directory and extract tarball contents to it.
     mkdir($config_sync_directory, 0777, TRUE);
     $this->copyDirectory($this->getConfigLocation(), $config_sync_directory);
+    $driver = Database::getConnection()->driver();
+    $override_directory = $this->getConfigLocation() . '/' . $driver;
+    if (is_dir($override_directory)) {
+      $this->copyDirectory($override_directory, $config_sync_directory);
+    }
 
     // Add the module that is providing the database driver to the list of
     // modules that can not be uninstalled in the core.extension configuration.
@@ -163,20 +168,6 @@ abstract class InstallerConfigDirectoryTestBase extends InstallerTestBase {
       'delete' => [],
       'rename' => [],
     ];
-    if (Database::getConnection()->driver() == 'mongodb') {
-      $expected['update'] = [
-        'system.mail',
-        'views.view.archive',
-        'views.view.content',
-        'views.view.content_recent',
-        'views.view.frontpage',
-        'views.view.glossary',
-        'views.view.user_admin_people',
-        'views.view.watchdog',
-        'views.view.who_s_new',
-        'views.view.who_s_online',
-      ];
-    }
     $this->assertEquals($expected, $change_list);
   }
 

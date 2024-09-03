@@ -48,68 +48,11 @@ class DefaultConfigTest extends KernelTestBase {
   ];
 
   /**
-   * The following config entries are changed on module install for MongoDB.
-   *
-   * Comparing them does not make sense.
-   *
-   * @var array
-   */
-  public static $mongodbSkippedConfig = [
-    // Dblog module.
-    'views.view.watchdog',
-
-    // Block_content module.
-    'views.view.block_content',
-
-    // Book module.
-    'core.base_field_override.node.book.promote',
-
-    // Comment module.
-    'views.view.comment',
-    'views.view.comments_recent',
-
-    // File module.
-    'views.view.files',
-
-    // Forum module.
-    'core.base_field_override.node.forum.promote',
-    'field.field.taxonomy_term.forums.forum_container',
-    'field.storage.taxonomy_term.forum_container',
-
-    // Media module.
-    'views.view.media',
-
-    // Media_library module.
-    'views.view.media_library',
-
-    // Node module.
-    'search.page.node_search',
-    'views.view.archive',
-    'views.view.content',
-    'views.view.content_recent',
-    'views.view.frontpage',
-    'views.view.glossary',
-
-    // User module.
-    'search.page.user_search',
-    'views.view.user_admin_people',
-    'views.view.who_s_new',
-    'views.view.who_s_online',
-
-    // Taxonomy module.
-    'views.view.taxonomy_term',
-  ];
-
-  /**
    * Tests if installed config is equal to the exported config.
    *
    * @dataProvider moduleListDataProvider
    */
   public function testModuleConfig(string $module): void {
-    if ((Database::getConnection()->driver() == 'mongodb') && in_array($module, ['help'], TRUE)) {
-      // @todo For both modules there is still a bug to be fixed.
-      $this->markTestSkipped();
-    }
     $this->assertExtensionConfig($module, 'module');
   }
 
@@ -168,6 +111,10 @@ class DefaultConfigTest extends KernelTestBase {
     $extension_config_storage = new FileStorage($extension_path . InstallStorage::CONFIG_INSTALL_DIRECTORY, StorageInterface::DEFAULT_COLLECTION);
     $optional_config_storage = new FileStorage($extension_path . InstallStorage::CONFIG_OPTIONAL_DIRECTORY, StorageInterface::DEFAULT_COLLECTION);
 
+    // The database driver override of the default config storage.
+    $database_driver_extension_config_storage = new FileStorage($extension_path . InstallStorage::CONFIG_INSTALL_DIRECTORY . '/mongodb', StorageInterface::DEFAULT_COLLECTION);
+    $database_driver_optional_config_storage = new FileStorage($extension_path . InstallStorage::CONFIG_OPTIONAL_DIRECTORY . '/mongodb', StorageInterface::DEFAULT_COLLECTION);
+
     if (empty($optional_config_storage->listAll()) && empty($extension_config_storage->listAll())) {
       $this->markTestSkipped("$name has no configuration to test");
     }
@@ -188,10 +135,10 @@ class DefaultConfigTest extends KernelTestBase {
     $this->container->get('theme_installer')->install(array_unique($themes_to_install));
 
     // Test configuration in the extension's config/install directory.
-    $this->doTestsOnConfigStorage($extension_config_storage, $name, $type);
+    $this->doTestsOnConfigStorage($extension_config_storage, $database_driver_extension_config_storage, $name, $type);
 
     // Test configuration in the extension's config/optional directory.
-    $this->doTestsOnConfigStorage($optional_config_storage, $name, $type);
+    $this->doTestsOnConfigStorage($optional_config_storage, $database_driver_optional_config_storage, $name, $type);
   }
 
   /**
@@ -245,12 +192,14 @@ class DefaultConfigTest extends KernelTestBase {
    *
    * @param \Drupal\Core\Config\StorageInterface $default_config_storage
    *   The default config storage to test.
+   * @param \Drupal\Core\Config\StorageInterface $override_config_storage
+   *   The database driver override config storage to test.
    * @param string $extension
    *   The extension that is being tested.
    * @param string $type
    *   The extension type to test.
    */
-  protected function doTestsOnConfigStorage(StorageInterface $default_config_storage, $extension, string $type = 'module') {
+  protected function doTestsOnConfigStorage(StorageInterface $default_config_storage, StorageInterface $override_config_storage, $extension, string $type = 'module') {
     /** @var \Drupal\Core\Config\ConfigManagerInterface $config_manager */
     $config_manager = $this->container->get('config.manager');
 
@@ -265,10 +214,6 @@ class DefaultConfigTest extends KernelTestBase {
     $connection = Database::getConnection();
 
     foreach ($default_config_storage->listAll() as $config_name) {
-      if (($connection->driver() == 'mongodb') && in_array($config_name, static::$mongodbSkippedConfig, TRUE)) {
-        continue;
-      }
-
       if ($active_config_storage->exists($config_name)) {
         // If it is a config entity re-save it. This ensures that any
         // recalculation of dependencies does not cause config change.
@@ -285,7 +230,12 @@ class DefaultConfigTest extends KernelTestBase {
           // applied.
           $config_factory->getEditable($config_name)->save();
         }
-        $result = $config_manager->diff($default_config_storage, $active_config_storage, $config_name);
+        if ($override_config_storage->exists($config_name)) {
+          $result = $config_manager->diff($override_config_storage, $active_config_storage, $config_name);
+        }
+        else {
+          $result = $config_manager->diff($default_config_storage, $active_config_storage, $config_name);
+        }
         // ::assertConfigDiff will throw an exception if the configuration is
         // different.
         $this->assertNull($this->assertConfigDiff($result, $config_name, static::$skippedConfig));

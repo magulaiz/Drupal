@@ -29,9 +29,10 @@ class ViewStorage extends ConfigEntityStorage {
     if (!empty($values['base_table'])) {
       $original_base_table = $values['base_table'];
       $base_table = $this->getBaseTable($values['base_table']);
-      $values['mongodb_base_table'] = $base_table;
-      $values['original_base_table'] = $values['base_table'];
       if (!empty($base_table) && ($original_base_table != $base_table)) {
+        $values['mongodb_base_table'] = $base_table;
+        $values['original_base_table'] = $values['base_table'];
+
         $entity_type = NULL;
         if (!empty($values['entity_type'])) {
           $entity_type = \Drupal::entityTypeManager()->getDefinition($values['entity_type']);

@@ -206,6 +206,19 @@ class InstallStorage extends FileStorage {
             $folders[basename($file, $extension)] = $directory;
           }
         }
+
+        // Let a config item be overridden by a database driver one.
+        if ($this->getDatabaseDriver()) {
+          $database_driver_override_directory = $directory . '/' . $this->getDatabaseDriver();
+          if (is_dir($database_driver_override_directory)) {
+            $database_driver_override_files = scandir($database_driver_override_directory);
+            foreach ($database_driver_override_files as $database_driver_override_file) {
+              if ($database_driver_override_file[0] !== '.' && preg_match($pattern, $database_driver_override_file)) {
+                $folders[basename($database_driver_override_file, $extension)] = $database_driver_override_directory;
+              }
+            }
+          }
+        }
       }
     }
     return $folders;
