@@ -193,7 +193,9 @@
     }
 
     // Add the standard Drupal class for buttons for style consistency.
-    $dialog.parent().find('.ui-dialog-buttonset').addClass('form-actions');
+    $($dialog[0].parentElement)
+      .find('.ui-dialog-buttonset')
+      .addClass('form-actions');
   };
 
   /**
