@@ -253,7 +253,7 @@ class OverridesEntityForm extends ContentEntityForm implements WorkspaceDynamicS
    *
    * We need this one if our javascript doesn't work for some reason.
    */
-  public function submitRevertDefaults(array $form, FormStateInterface $form_state) {
+  public function submitRevertDefaults(array $form, FormStateInterface $form_state): void {
     // Generate the URL using the sectionStorage's getLayoutBuilderUrl method.
     $url = $this->sectionStorage->getLayoutBuilderUrl('revert');
 
