@@ -16,6 +16,7 @@ use Drupal\Tests\BrowserTestBase;
  * Tests the functionality of Timestamp core field UI.
  *
  * @group field
+ * @group lendude
  */
 class TimestampTest extends BrowserTestBase {
 
@@ -165,6 +166,14 @@ class TimestampTest extends BrowserTestBase {
     $this->assertSession()->elementsCount('xpath', '//div[contains(@class, "field--widget-datetime-timestamp") and @id="edit-field-timestamp-wrapper"]', 1);
 
     // Look for the widget elements and make sure they are empty.
+    $this->assertSession()->fieldExists('field_timestamp[0][value][date]');
+    $this->assertSession()->fieldValueEquals('field_timestamp[0][value][date]', '');
+    $this->assertSession()->fieldExists('field_timestamp[0][value][time]');
+    $this->assertSession()->fieldValueEquals('field_timestamp[0][value][time]', '');
+
+    $this->submitForm([], 'Save');
+
+    // Look for the widget elements and make sure they are still empty.
     $this->assertSession()->fieldExists('field_timestamp[0][value][date]');
     $this->assertSession()->fieldValueEquals('field_timestamp[0][value][date]', '');
     $this->assertSession()->fieldExists('field_timestamp[0][value][time]');
