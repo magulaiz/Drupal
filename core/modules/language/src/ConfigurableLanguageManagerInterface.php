@@ -103,5 +103,4 @@ interface ConfigurableLanguageManagerInterface extends LanguageManagerInterface 
    */
   public function getNegotiatedLanguageMethod($type = LanguageInterface::TYPE_INTERFACE);
 
-
 }
