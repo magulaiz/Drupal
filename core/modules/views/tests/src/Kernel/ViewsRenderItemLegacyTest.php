@@ -25,37 +25,18 @@ class ViewsRenderItemLegacyTest extends KernelTestBase {
    * Tests the render_item() method deprecation.
    */
   public function testRenderItemDeprecation() {
-    // Variable to track if the specific deprecation was triggered.
-    $deprecationTriggered = FALSE;
+    $this->expectDeprecation('MultiItemsFieldHandlerInterface::render_item() is deprecated in drupal:11.1.0 and is removed from drupal:12.0.0. Use renderItem() instead. See https://www.drupal.org/node/3467146');
 
-    // Set a custom error handler to catch the deprecation notice.
-    set_error_handler(function ($errno, $errstr) use (&$deprecationTriggered) {
-      if (strpos($errstr, 'MultiItemsFieldHandlerInterface::render_item() is deprecated') !== FALSE) {
-        $deprecationTriggered = TRUE;
-      }
-      else {
-        // Re-throw the error if it's not the deprecation we're expecting.
-        return FALSE;
-      }
-    });
+    // Create an instance of the field plugin.
+    /** @var \Drupal\views\Plugin\views\field\FieldPluginBase $fieldPlugin */
+    $fieldPlugin = \Drupal::service('plugin.manager.views.field')->createInstance('field', []);
 
-    try {
-      // Get the necessary services.
-      /** @var \Drupal\views\Plugin\ViewsHandlerManager $viewsHandlerManager */
-      $viewsHandlerManager = $this->container->get('plugin.manager.views.field');
+    // Use reflection to invoke the deprecated method.
+    $method = new \ReflectionMethod($fieldPlugin, 'render_item');
+    $method->setAccessible(TRUE);
 
-      // Create a new instance of a field plugin.
-      $fieldPlugin = $viewsHandlerManager->createInstance('field', []);
-
-      // Call the deprecated render_item() method.
-      $fieldPlugin->render_item(0, ['name' => 'Foo']);
-    } finally {
-      // Restore the original error handler.
-      restore_error_handler();
-    }
-
-    // Assert that the deprecation was triggered.
-    $this->assertTrue($deprecationTriggered, 'Deprecation notice for render_item() was not triggered.');
+    // Call the deprecated method.
+    $method->invoke($fieldPlugin, 0, ['name' => 'Foo']);
   }
 
 }
