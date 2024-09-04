@@ -245,4 +245,25 @@ abstract class DateTimeFormatterBase extends FormatterBase {
     return $build;
   }
 
+  protected function hideDay(DrupalDateTime $date) {
+    // Create the ISO date in Universal Time.
+    $this->setTimeZone($date);
+
+    $iso_date = $date->format("H:i");
+
+    $build = [
+      '#theme' => 'time',
+      '#text' => $iso_date,
+      '#attributes' => [
+        'datetime' => $iso_date,
+      ],
+      '#cache' => [
+        'contexts' => [
+          'timezone',
+        ],
+      ],
+    ];
+
+    return $build;
+  }
 }
