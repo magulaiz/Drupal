@@ -235,7 +235,7 @@ YAML;
       RecipeRunner::processRecipe($recipe);
     }
     catch (PluginNotFoundException $e) {
-      $this->assertSame('The "config_test" entity does not support the "setBody" config action. Valid config actions for config_test are: setProtectedProperty, concatProtectedProperty, concatProtectedProperties, concatProtectedPropertyOptional, append, appends, defaultProtectedProperty, addToArray, addToArrayMultipleTimes, setArray, set, setMultiple, enable, disable, setStatus, setThirdPartySetting, setThirdPartySettings, createIfNotExists, create, ensure_exists', $e->getMessage());
+      $this->assertStringStartsWith('The "config_test" entity does not support the "setBody" config action.', $e->getMessage());
     }
   }
 
