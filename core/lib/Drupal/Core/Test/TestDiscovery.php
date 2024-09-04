@@ -394,12 +394,12 @@ class TestDiscovery {
    * @throws \Drupal\Core\Test\Exception\MissingGroupException
    *   If the class does not have a @group annotation.
    *
-   * @deprecated in drupal:11.0.0 and is removed from drupal:12.0.0. Make sure
+   * @deprecated in drupal:11.1.0 and is removed from drupal:12.0.0. Make sure
    *   all tests classes have a #[Group()] attribute.
    *
    * @see https://www.drupal.org/node/3447698
    */
-  protected static function getTestInfoFromAnnotation($classname, $doc_comment = NULL, ?\ReflectionClass $reflection = NULL) {
+  protected static function getTestInfoFromAnnotation(string $classname, ?string $doc_comment = NULL, ?\ReflectionClass $reflection = NULL) {
     @trigger_error(__METHOD__ . '() is deprecated in drupal:11.0.0 and is removed from drupal:12.0.0. Make sure all tests classes have a #[Group()] attribute. See https://www.drupal.org/node/3447698', E_USER_DEPRECATED);
     if ($doc_comment === NULL) {
       $doc_comment = $reflection ? $reflection->getDocComment() : '';

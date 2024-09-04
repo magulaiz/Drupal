@@ -18,6 +18,7 @@ use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\Attributes\IgnoreDeprecations;
+use PHPUnit\Framework\MockObject\MockObject;
 
 /**
  * Tests the TestDiscovery class.
@@ -102,7 +103,7 @@ class AttributeBasedTestDiscoveryTest extends UnitTestCase {
     $this->assertEmpty($info['description']);
   }
 
-  protected function setupVfsWithTestClasses() {
+  protected function setupVfsWithTestClasses(): void {
     vfsStream::setup('drupal');
 
     $test_file = <<<EOF
@@ -173,7 +174,7 @@ EOF;
     ]);
   }
 
-  public function testGetTestClasses() {
+  public function testGetTestClasses(): void {
     $this->setupVfsWithTestClasses();
     $extensions = [
       'test_module' => new Extension('vfs://drupal', 'module', 'modules/test_module/test_module.info.yml'),
@@ -223,7 +224,7 @@ EOF;
   /**
    * Mock a TestDiscovery object to return specific extension values.
    */
-  protected function getTestDiscoveryMock($app_root, $extensions) {
+  protected function getTestDiscoveryMock(string $app_root, array $extensions): TestDiscovery&MockObject {
     $class_loader = $this->prophesize(ClassLoader::class);
     $module_handler = $this->prophesize(ModuleHandlerInterface::class);
 
@@ -239,7 +240,7 @@ EOF;
     return $test_discovery;
   }
 
-  public function testGetTestClassesWithSelectedTypes() {
+  public function testGetTestClassesWithSelectedTypes(): void {
     $this->setupVfsWithTestClasses();
     $extensions = [
       'test_module' => new Extension('vfs://drupal', 'module', 'modules/test_module/test_module.info.yml'),
@@ -281,7 +282,7 @@ EOF;
     ], $result);
   }
 
-  public function testGetTestsInProfiles() {
+  public function testGetTestsInProfiles(): void {
     $this->setupVfsWithTestClasses();
     $class_loader = $this->prophesize(ClassLoader::class);
 
@@ -308,11 +309,11 @@ EOF;
   }
 
   #[DataProvider('providerTestGetPhpunitTestSuite')]
-  public function testGetPhpunitTestSuite($classname, $expected) {
+  public function testGetPhpunitTestSuite(string $classname, string|FALSE $expected): void {
     $this->assertEquals($expected, TestDiscovery::getPhpunitTestSuite($classname));
   }
 
-  public static function providerTestGetPhpunitTestSuite() {
+  public static function providerTestGetPhpunitTestSuite(): array {
     $data = [];
     $data['simpletest-web test'] = ['\Drupal\rest\Tests\NodeTest', FALSE];
     $data['module-unittest'] = [static::class, 'Unit'];
@@ -333,7 +334,7 @@ EOF;
   /**
    * Ensure TestDiscovery::scanDirectory() ignores certain abstract file types.
    */
-  public function testScanDirectoryNoAbstract() {
+  public function testScanDirectoryNoAbstract(): void {
     $this->setupVfsWithTestClasses();
     $files = TestDiscovery::scanDirectory('Drupal\\Tests\\test_module\\Kernel\\', vfsStream::url('drupal/modules/test_module/tests/src/Kernel'));
     $this->assertNotEmpty($files);
