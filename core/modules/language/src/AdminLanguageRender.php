@@ -49,8 +49,8 @@ class AdminLanguageRender {
     }
     // Switch to the admin language as early as possible and then switch back as
     // late as possible.
-    array_unshift($type['#pre_render'], 'language.admin_language_render:switchToUserAdminLanguage');
-    $type['#post_render'][] = 'language.admin_language_render:restoreLanguage';
+    array_unshift($type['#pre_render'], 'Drupal\language\AdminLanguageRender:switchToUserAdminLanguage');
+    $type['#post_render'][] = 'Drupal\language\AdminLanguageRender:restoreLanguage';
     return $type;
   }
 
