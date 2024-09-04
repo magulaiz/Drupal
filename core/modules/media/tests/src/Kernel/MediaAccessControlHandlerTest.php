@@ -154,7 +154,7 @@ class MediaAccessControlHandlerTest extends MediaKernelTestBase {
       ['status' => TRUE],
       'update',
       AccessResult::neutral(),
-      ['user.permissions', 'user'],
+      ['user'],
       ['media:1'],
       TRUE,
     ];
@@ -163,7 +163,7 @@ class MediaAccessControlHandlerTest extends MediaKernelTestBase {
       ['status' => TRUE],
       'delete',
       AccessResult::neutral(),
-      ['user.permissions', 'user'],
+      ['user'],
       ['media:1'],
       TRUE,
     ];
@@ -172,7 +172,7 @@ class MediaAccessControlHandlerTest extends MediaKernelTestBase {
       [],
       'view',
       AccessResult::neutral(),
-      ['user.permissions', 'user'],
+      ['user'],
       ['media:1'],
       TRUE,
     ];
@@ -181,7 +181,7 @@ class MediaAccessControlHandlerTest extends MediaKernelTestBase {
       [],
       'update',
       AccessResult::neutral(),
-      ['user.permissions', 'user'],
+      ['user'],
       ['media:1'],
       TRUE,
     ];
@@ -190,7 +190,7 @@ class MediaAccessControlHandlerTest extends MediaKernelTestBase {
       [],
       'delete',
       AccessResult::neutral(),
-      ['user.permissions', 'user'],
+      ['user'],
       ['media:1'],
       TRUE,
     ];
@@ -211,7 +211,7 @@ class MediaAccessControlHandlerTest extends MediaKernelTestBase {
       ['uid' => 0, 'status' => TRUE],
       'update',
       AccessResult::neutral(),
-      ['user.permissions', 'user'],
+      ['user'],
       ['media:1'],
       TRUE,
     ];
@@ -220,7 +220,7 @@ class MediaAccessControlHandlerTest extends MediaKernelTestBase {
       ['uid' => 0, 'status' => TRUE],
       'delete',
       AccessResult::neutral(),
-      ['user.permissions', 'user'],
+      ['user'],
       ['media:1'],
       TRUE,
     ];
@@ -229,7 +229,7 @@ class MediaAccessControlHandlerTest extends MediaKernelTestBase {
       ['uid' => 0],
       'view',
       AccessResult::neutral(),
-      ['user.permissions', 'user'],
+      ['user'],
       ['media:1'],
       TRUE,
     ];
@@ -238,7 +238,7 @@ class MediaAccessControlHandlerTest extends MediaKernelTestBase {
       ['uid' => 0],
       'update',
       AccessResult::neutral(),
-      ['user.permissions', 'user'],
+      ['user'],
       ['media:1'],
       TRUE,
     ];
@@ -247,7 +247,7 @@ class MediaAccessControlHandlerTest extends MediaKernelTestBase {
       ['uid' => 0],
       'delete',
       AccessResult::neutral(),
-      ['user.permissions', 'user'],
+      ['user'],
       ['media:1'],
       TRUE,
     ];
@@ -268,7 +268,7 @@ class MediaAccessControlHandlerTest extends MediaKernelTestBase {
       ['status' => TRUE],
       'update',
       AccessResult::neutral(),
-      ['user.permissions', 'user'],
+      ['user'],
       ['media:1'],
       TRUE,
     ];
@@ -277,7 +277,7 @@ class MediaAccessControlHandlerTest extends MediaKernelTestBase {
       ['status' => TRUE],
       'delete',
       AccessResult::neutral(),
-      ['user.permissions', 'user'],
+      ['user'],
       ['media:1'],
       TRUE,
     ];
@@ -286,7 +286,7 @@ class MediaAccessControlHandlerTest extends MediaKernelTestBase {
       [],
       'view',
       AccessResult::neutral(),
-      ['user.permissions', 'user'],
+      ['user'],
       ['media:1'],
       TRUE,
     ];
@@ -295,7 +295,7 @@ class MediaAccessControlHandlerTest extends MediaKernelTestBase {
       [],
       'update',
       AccessResult::neutral(),
-      ['user.permissions', 'user'],
+      ['user'],
       ['media:1'],
       TRUE,
     ];
@@ -304,7 +304,7 @@ class MediaAccessControlHandlerTest extends MediaKernelTestBase {
       [],
       'delete',
       AccessResult::neutral(),
-      ['user.permissions', 'user'],
+      ['user'],
       ['media:1'],
       TRUE,
     ];
@@ -325,7 +325,7 @@ class MediaAccessControlHandlerTest extends MediaKernelTestBase {
       ['uid' => 0, 'status' => TRUE],
       'update',
       AccessResult::neutral(),
-      ['user.permissions', 'user'],
+      ['user'],
       ['media:1'],
       TRUE,
     ];
@@ -334,7 +334,7 @@ class MediaAccessControlHandlerTest extends MediaKernelTestBase {
       ['uid' => 0, 'status' => TRUE],
       'delete',
       AccessResult::neutral(),
-      ['user.permissions', 'user'],
+      ['user'],
       ['media:1'],
       TRUE,
     ];
@@ -343,7 +343,7 @@ class MediaAccessControlHandlerTest extends MediaKernelTestBase {
       ['uid' => 0],
       'view',
       AccessResult::neutral(),
-      ['user.permissions', 'user'],
+      ['user'],
       ['media:1'],
       TRUE,
     ];
@@ -352,7 +352,7 @@ class MediaAccessControlHandlerTest extends MediaKernelTestBase {
       ['uid' => 0],
       'update',
       AccessResult::neutral(),
-      ['user.permissions', 'user'],
+      ['user'],
       ['media:1'],
       TRUE,
     ];
@@ -361,7 +361,7 @@ class MediaAccessControlHandlerTest extends MediaKernelTestBase {
       ['uid' => 0],
       'delete',
       AccessResult::neutral(),
-      ['user.permissions', 'user'],
+      ['user'],
       ['media:1'],
       TRUE,
     ];
@@ -382,7 +382,7 @@ class MediaAccessControlHandlerTest extends MediaKernelTestBase {
       ['status' => TRUE],
       'update',
       AccessResult::neutral(),
-      ['user.permissions', 'user'],
+      ['user'],
       ['media:1'],
       TRUE,
     ];
@@ -391,7 +391,7 @@ class MediaAccessControlHandlerTest extends MediaKernelTestBase {
       ['status' => TRUE],
       'delete',
       AccessResult::neutral(),
-      ['user.permissions', 'user'],
+      ['user'],
       ['media:1'],
       TRUE,
     ];
@@ -400,7 +400,7 @@ class MediaAccessControlHandlerTest extends MediaKernelTestBase {
       [],
       'view',
       AccessResult::allowed(),
-      ['user.permissions', 'user'],
+      ['user'],
       ['media:1'],
       TRUE,
     ];
@@ -409,7 +409,7 @@ class MediaAccessControlHandlerTest extends MediaKernelTestBase {
       [],
       'update',
       AccessResult::neutral(),
-      ['user.permissions', 'user'],
+      ['user'],
       ['media:1'],
       TRUE,
     ];
@@ -418,7 +418,7 @@ class MediaAccessControlHandlerTest extends MediaKernelTestBase {
       [],
       'delete',
       AccessResult::neutral(),
-      ['user.permissions', 'user'],
+      ['user'],
       ['media:1'],
       TRUE,
     ];
@@ -439,7 +439,7 @@ class MediaAccessControlHandlerTest extends MediaKernelTestBase {
       ['uid' => 0, 'status' => TRUE],
       'update',
       AccessResult::neutral(),
-      ['user.permissions', 'user'],
+      ['user'],
       ['media:1'],
       TRUE,
     ];
@@ -448,7 +448,7 @@ class MediaAccessControlHandlerTest extends MediaKernelTestBase {
       ['uid' => 0, 'status' => TRUE],
       'delete',
       AccessResult::neutral(),
-      ['user.permissions', 'user'],
+      ['user'],
       ['media:1'],
       TRUE,
     ];
@@ -457,7 +457,7 @@ class MediaAccessControlHandlerTest extends MediaKernelTestBase {
       ['uid' => 0],
       'view',
       AccessResult::neutral(),
-      ['user.permissions', 'user'],
+      ['user'],
       ['media:1'],
       TRUE,
     ];
@@ -466,7 +466,7 @@ class MediaAccessControlHandlerTest extends MediaKernelTestBase {
       ['uid' => 0],
       'update',
       AccessResult::neutral(),
-      ['user.permissions', 'user'],
+      ['user'],
       ['media:1'],
       TRUE,
     ];
@@ -475,7 +475,7 @@ class MediaAccessControlHandlerTest extends MediaKernelTestBase {
       ['uid' => 0],
       'delete',
       AccessResult::neutral(),
-      ['user.permissions', 'user'],
+      ['user'],
       ['media:1'],
       TRUE,
     ];
@@ -535,7 +535,7 @@ class MediaAccessControlHandlerTest extends MediaKernelTestBase {
       [],
       'view',
       AccessResult::allowed(),
-      ['user.permissions', 'user'],
+      ['user'],
       ['media:1'],
       TRUE,
     ];
@@ -623,7 +623,7 @@ class MediaAccessControlHandlerTest extends MediaKernelTestBase {
       ['uid' => 0],
       'view',
       AccessResult::neutral(),
-      ['user.permissions', 'user'],
+      ['user'],
       ['media:1'],
       TRUE,
     ];
@@ -683,7 +683,7 @@ class MediaAccessControlHandlerTest extends MediaKernelTestBase {
       ['status' => TRUE],
       'update',
       AccessResult::allowed(),
-      ['user.permissions', 'user'],
+      ['user'],
       ['media:1'],
       TRUE,
     ];
@@ -697,7 +697,7 @@ class MediaAccessControlHandlerTest extends MediaKernelTestBase {
       ['status' => TRUE],
       'delete',
       AccessResult::allowed(),
-      ['user.permissions', 'user'],
+      ['user'],
       ['media:1'],
       TRUE,
     ];
@@ -711,7 +711,7 @@ class MediaAccessControlHandlerTest extends MediaKernelTestBase {
       [],
       'view',
       AccessResult::allowed(),
-      ['user.permissions', 'user'],
+      ['user'],
       ['media:1'],
       TRUE,
     ];
@@ -725,7 +725,7 @@ class MediaAccessControlHandlerTest extends MediaKernelTestBase {
       [],
       'update',
       AccessResult::allowed(),
-      ['user.permissions', 'user'],
+      ['user'],
       ['media:1'],
       TRUE,
     ];
@@ -739,7 +739,7 @@ class MediaAccessControlHandlerTest extends MediaKernelTestBase {
       [],
       'delete',
       AccessResult::allowed(),
-      ['user.permissions', 'user'],
+      ['user'],
       ['media:1'],
       TRUE,
     ];
@@ -771,7 +771,7 @@ class MediaAccessControlHandlerTest extends MediaKernelTestBase {
       ['uid' => 0, 'status' => TRUE],
       'update',
       AccessResult::neutral(),
-      ['user.permissions', 'user'],
+      ['user'],
       ['media:1'],
       TRUE,
     ];
@@ -785,7 +785,7 @@ class MediaAccessControlHandlerTest extends MediaKernelTestBase {
       ['uid' => 0, 'status' => TRUE],
       'delete',
       AccessResult::neutral(),
-      ['user.permissions', 'user'],
+      ['user'],
       ['media:1'],
       TRUE,
     ];
@@ -799,7 +799,7 @@ class MediaAccessControlHandlerTest extends MediaKernelTestBase {
       ['uid' => 0],
       'view',
       AccessResult::neutral(),
-      ['user.permissions', 'user'],
+      ['user'],
       ['media:1'],
       TRUE,
     ];
@@ -813,7 +813,7 @@ class MediaAccessControlHandlerTest extends MediaKernelTestBase {
       ['uid' => 0],
       'update',
       AccessResult::neutral(),
-      ['user.permissions', 'user'],
+      ['user'],
       ['media:1'],
       TRUE,
     ];
@@ -827,7 +827,7 @@ class MediaAccessControlHandlerTest extends MediaKernelTestBase {
       ['uid' => 0],
       'delete',
       AccessResult::neutral(),
-      ['user.permissions', 'user'],
+      ['user'],
       ['media:1'],
       TRUE,
     ];
@@ -895,7 +895,7 @@ class MediaAccessControlHandlerTest extends MediaKernelTestBase {
       [],
       'view',
       AccessResult::allowed(),
-      ['user.permissions', 'user'],
+      ['user'],
       ['media:1'],
       TRUE,
     ];
@@ -996,7 +996,7 @@ class MediaAccessControlHandlerTest extends MediaKernelTestBase {
       ['uid' => 0],
       'view',
       AccessResult::neutral(),
-      ['user.permissions', 'user'],
+      ['user'],
       ['media:1'],
       TRUE,
     ];
@@ -1088,7 +1088,7 @@ class MediaAccessControlHandlerTest extends MediaKernelTestBase {
       [],
       'view',
       AccessResult::allowed(),
-      ['user.permissions', 'user'],
+      ['user'],
       ['media:1'],
       TRUE,
     ];
@@ -1176,7 +1176,7 @@ class MediaAccessControlHandlerTest extends MediaKernelTestBase {
       ['uid' => 0],
       'view',
       AccessResult::neutral(),
-      ['user.permissions', 'user'],
+      ['user'],
       ['media:1'],
       TRUE,
     ];
@@ -1236,7 +1236,7 @@ class MediaAccessControlHandlerTest extends MediaKernelTestBase {
       ['status' => TRUE],
       'update',
       AccessResult::allowed(),
-      ['user.permissions', 'user'],
+      ['user'],
       ['media:1'],
       TRUE,
     ];
@@ -1250,7 +1250,7 @@ class MediaAccessControlHandlerTest extends MediaKernelTestBase {
       ['status' => TRUE],
       'delete',
       AccessResult::allowed(),
-      ['user.permissions', 'user'],
+      ['user'],
       ['media:1'],
       TRUE,
     ];
@@ -1264,7 +1264,7 @@ class MediaAccessControlHandlerTest extends MediaKernelTestBase {
       [],
       'view',
       AccessResult::allowed(),
-      ['user.permissions', 'user'],
+      ['user'],
       ['media:1'],
       TRUE,
     ];
@@ -1278,7 +1278,7 @@ class MediaAccessControlHandlerTest extends MediaKernelTestBase {
       [],
       'update',
       AccessResult::allowed(),
-      ['user.permissions', 'user'],
+      ['user'],
       ['media:1'],
       TRUE,
     ];
@@ -1292,7 +1292,7 @@ class MediaAccessControlHandlerTest extends MediaKernelTestBase {
       [],
       'delete',
       AccessResult::allowed(),
-      ['user.permissions', 'user'],
+      ['user'],
       ['media:1'],
       TRUE,
     ];
@@ -1359,7 +1359,7 @@ class MediaAccessControlHandlerTest extends MediaKernelTestBase {
       ['uid' => 0, 'status' => TRUE],
       'update',
       AccessResult::neutral(),
-      ['user.permissions', 'user'],
+      ['user'],
       ['media:1'],
       TRUE,
     ];
@@ -1373,7 +1373,7 @@ class MediaAccessControlHandlerTest extends MediaKernelTestBase {
       ['uid' => 0, 'status' => TRUE],
       'delete',
       AccessResult::neutral(),
-      ['user.permissions', 'user'],
+      ['user'],
       ['media:1'],
       TRUE,
     ];
@@ -1387,7 +1387,7 @@ class MediaAccessControlHandlerTest extends MediaKernelTestBase {
       ['uid' => 0],
       'view',
       AccessResult::neutral(),
-      ['user.permissions', 'user'],
+      ['user'],
       ['media:1'],
       TRUE,
     ];
@@ -1401,7 +1401,7 @@ class MediaAccessControlHandlerTest extends MediaKernelTestBase {
       ['uid' => 0],
       'update',
       AccessResult::neutral(),
-      ['user.permissions', 'user'],
+      ['user'],
       ['media:1'],
       TRUE,
     ];
@@ -1415,7 +1415,7 @@ class MediaAccessControlHandlerTest extends MediaKernelTestBase {
       ['uid' => 0],
       'delete',
       AccessResult::neutral(),
-      ['user.permissions', 'user'],
+      ['user'],
       ['media:1'],
       TRUE,
     ];
@@ -1484,7 +1484,7 @@ class MediaAccessControlHandlerTest extends MediaKernelTestBase {
       [],
       'view',
       AccessResult::allowed(),
-      ['user.permissions', 'user'],
+      ['user'],
       ['media:1'],
       TRUE,
     ];
@@ -1585,7 +1585,7 @@ class MediaAccessControlHandlerTest extends MediaKernelTestBase {
       ['uid' => 0],
       'view',
       AccessResult::neutral(),
-      ['user.permissions', 'user'],
+      ['user'],
       ['media:1'],
       TRUE,
     ];
