@@ -400,7 +400,7 @@ class TestDiscovery {
    * @see https://www.drupal.org/node/3447698
    */
   protected static function getTestInfoFromAnnotation(string $classname, ?string $doc_comment = NULL, ?\ReflectionClass $reflection = NULL) {
-    @trigger_error(__METHOD__ . '() is deprecated in drupal:11.0.0 and is removed from drupal:12.0.0. Make sure all tests classes have a #[Group()] attribute. See https://www.drupal.org/node/3447698', E_USER_DEPRECATED);
+    @trigger_error(__METHOD__ . '() is deprecated in drupal:11.1.0 and is removed from drupal:12.0.0. Make sure all tests classes have a #[Group()] attribute. See https://www.drupal.org/node/3447698', E_USER_DEPRECATED);
     if ($doc_comment === NULL) {
       $doc_comment = $reflection ? $reflection->getDocComment() : '';
     }
