@@ -131,7 +131,7 @@ class ExtensionMimeTypeGuesser implements MimeTypeGuesserInterface {
       109 => 'application/x-dms',
       110 => 'application/x-doom',
       111 => 'application/x-dvi',
-      112 => 'audio/flac'
+      112 => 'audio/flac',
       113 => 'application/x-font',
       114 => 'application/x-freemind',
       115 => 'application/x-futuresplash',
