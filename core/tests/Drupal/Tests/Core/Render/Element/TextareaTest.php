@@ -20,6 +20,15 @@ class TextareaTest extends UnitTestCase {
    * @dataProvider providerTestValueCallback
    */
   public function testValueCallback($expected, $input, array $element = []): void {
+    // Make sure element has it's defaults added.
+    // @see \Drupal\Core\Render\Element\Textarea::getInfo()
+    $element += [
+      '#cols' => 60,
+      '#rows' => 5,
+      '#resizable' => 'vertical',
+      '#maxlength' => NULL,
+      '#normalize_newlines' => TRUE,
+    ];
     $form_state = $this->prophesize(FormStateInterface::class)->reveal();
     $this->assertSame($expected, Textarea::valueCallback($element, $input, $form_state));
   }
@@ -38,7 +47,6 @@ class TextareaTest extends UnitTestCase {
     $data[] = [
       "some\ndifferent\nline\nendings",
       "some\r\ndifferent\rline\nendings",
-      ['#normalize_newlines' => TRUE],
     ];
     // New lines normalization is disabled.
     $data[] = [
