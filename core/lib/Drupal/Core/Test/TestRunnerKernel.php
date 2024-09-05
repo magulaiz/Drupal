@@ -5,10 +5,11 @@ namespace Drupal\Core\Test;
 use Drupal\Core\DrupalKernel;
 use Drupal\Core\Extension\Extension;
 use Drupal\Core\Site\Settings;
+use Drupal\Core\Utility\Error;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
- * Kernel for run-tests.sh.
+ * Defines a kernel used for running Functional tests and run-tests.sh.
  *
  * @internal
  */
@@ -60,7 +61,10 @@ class TestRunnerKernel extends DrupalKernel {
 
     // Remove Drupal's error/exception handlers; they are designed for HTML
     // and there is no storage nor a (watchdog) logger here.
-    restore_error_handler();
+    $currentErrorHandler = Error::currentErrorHandler();
+    if (is_string($currentErrorHandler) && $currentErrorHandler === '_drupal_error_handler') {
+      restore_error_handler();
+    }
     restore_exception_handler();
 
     // In addition, ensure that PHP errors are not hidden away in logs.
@@ -83,6 +87,8 @@ class TestRunnerKernel extends DrupalKernel {
     if (!is_dir('public://simpletest') && !@mkdir('public://simpletest', 0777, TRUE) && !is_dir('public://simpletest')) {
       throw new \RuntimeException('Unable to create directory: public://simpletest');
     }
+
+    return $this;
   }
 
   /**
@@ -93,6 +99,7 @@ class TestRunnerKernel extends DrupalKernel {
     // The test runner does not require an installed Drupal site to exist.
     // Therefore, its environment is identical to that of the early installer.
     $this->serviceProviderClasses['app']['Test'] = 'Drupal\Core\Installer\InstallerServiceProvider';
+    return $this->serviceProviderClasses;
   }
 
 }

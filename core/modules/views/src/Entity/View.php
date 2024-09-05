@@ -139,10 +139,7 @@ class View extends ConfigEntityBase implements ViewEntityInterface {
    * {@inheritdoc}
    */
   public function label() {
-    if (!$label = $this->get('label')) {
-      $label = $this->id();
-    }
-    return $label;
+    return $this->get('label');
   }
 
   /**
@@ -424,6 +421,8 @@ class View extends ConfigEntityBase implements ViewEntityInterface {
     foreach ($entities as $entity) {
       $tempstore->delete($entity->id());
     }
+
+    views_invalidate_cache();
   }
 
   /**
@@ -459,7 +458,7 @@ class View extends ConfigEntityBase implements ViewEntityInterface {
   /**
    * {@inheritdoc}
    */
-  public function __sleep() {
+  public function __sleep(): array {
     $keys = parent::__sleep();
     unset($keys[array_search('executable', $keys)]);
     return $keys;

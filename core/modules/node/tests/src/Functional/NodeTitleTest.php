@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\node\Functional;
 
 use Drupal\comment\Tests\CommentTestTrait;
@@ -56,7 +58,7 @@ class NodeTitleTest extends NodeTestBase {
   /**
    * Creates one node and tests if the node title has the correct value.
    */
-  public function testNodeTitle() {
+  public function testNodeTitle(): void {
     // Create "Basic page" content with title.
     // Add the node to the frontpage so we can test if teaser links are
     // clickable.
@@ -68,8 +70,7 @@ class NodeTitleTest extends NodeTestBase {
 
     // Test <title> tag.
     $this->drupalGet('node/' . $node->id());
-    $xpath = '//title';
-    $this->assertEquals($this->xpath($xpath)[0]->getText(), $node->label() . ' | Drupal', 'Page title is equal to node title.');
+    $this->assertSession()->elementTextEquals('xpath', '//title', $node->label() . ' | Drupal');
 
     // Test breadcrumb in comment preview.
     $this->assertBreadcrumb('comment/reply/node/' . $node->id() . '/comment', [
@@ -93,8 +94,7 @@ class NodeTitleTest extends NodeTestBase {
     $this->drupalGet('node/' . $node->id());
     $this->assertSession()->titleEquals('0 | Drupal');
     // Test that 0 appears in the template <h1>.
-    $xpath = '//h1';
-    $this->assertSame('0', $this->xpath($xpath)[0]->getText(), 'Node title is displayed as 0.');
+    $this->assertSession()->elementTextEquals('xpath', '//h1', '0');
 
     // Test edge case where node title contains special characters.
     $edge_case_title = 'article\'s "title".';

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\KernelTests\Core\Entity;
 
 use Drupal\Core\Entity\EntityInterface;
@@ -55,13 +57,14 @@ abstract class EntityKernelTestBase extends KernelTestBase {
    */
   protected $state;
 
+  /**
+   * {@inheritdoc}
+   */
   protected function setUp(): void {
     parent::setUp();
 
     $this->entityTypeManager = $this->container->get('entity_type.manager');
     $this->state = $this->container->get('state');
-
-    $this->installSchema('system', 'sequences');
 
     $this->installEntitySchema('user');
     $this->installEntitySchema('entity_test');
@@ -80,15 +83,6 @@ abstract class EntityKernelTestBase extends KernelTestBase {
           foreach (array_intersect(['node', 'comment'], $class::$modules) as $module) {
             $this->installEntitySchema($module);
           }
-          if (in_array('forum', $class::$modules, TRUE)) {
-            // Forum module is particular about the order that dependencies are
-            // enabled in. The comment, node and taxonomy config and the
-            // taxonomy_term schema need to be installed before the forum config
-            // which in turn needs to be installed before field config.
-            $this->installEntitySchema('taxonomy_term');
-            $this->installConfig(['comment', 'node', 'taxonomy']);
-            $this->installConfig(['forum']);
-          }
         }
       }
       $class = get_parent_class($class);
@@ -100,16 +94,22 @@ abstract class EntityKernelTestBase extends KernelTestBase {
   /**
    * Creates a user.
    *
-   * @param array $values
-   *   (optional) The values used to create the entity.
    * @param array $permissions
-   *   (optional) Array of permission names to assign to user.
+   *   Array of permission names to assign to user. Note that the user always
+   *   has the default permissions derived from the "authenticated users" role.
+   * @param string $name
+   *   The user name.
+   * @param bool $admin
+   *   (optional) Whether the user should be an administrator
+   *   with all the available permissions.
+   * @param array $values
+   *   (optional) An array of initial user field values.
    *
    * @return \Drupal\user\Entity\User
    *   The created user entity.
    */
-  protected function createUser($values = [], $permissions = []) {
-    return $this->drupalCreateUser($permissions ?: [], NULL, FALSE, $values ?: []);
+  protected function createUser(array $permissions = [], $name = NULL, bool $admin = FALSE, array $values = []) {
+    return $this->drupalCreateUser($permissions, $name, $admin, $values);
   }
 
   /**

@@ -52,13 +52,13 @@
   &.text-content,
   & .text-content {
     & blockquote {
-      &:before {
+      &::before {
         @media (--grid-md) {
           inset-inline-start: calc(-1 * (var(--grid-col-width) + var(--grid-gap)));
         }
       }
 
-      &:after {
+      &::after {
         @media (--grid-md) {
           inset-inline-start: calc(-1 * (var(--grid-col-width) + var(--grid-gap)));
           width: var(--sp);
@@ -76,7 +76,6 @@
 
     & pre {
       @media (--grid-md) {
-        width: calc(10 * var(--grid-col-width) + 9 * var(--grid-gap));
         margin-block: var(--sp3);
       }
 

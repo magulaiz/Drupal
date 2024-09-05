@@ -61,7 +61,7 @@
   z-index: var(--vertical-tabs-menu--z-index); /* The line should be kept above the vertical tabs menu link to keep it visible even if the link is hovered and gets the 'hover' background color. */
   display: block;
   width: 100%;
-  margin-top: calc(var(--vertical-tabs-menu-separator-size)*-1);
+  margin-top: calc(var(--vertical-tabs-menu-separator-size) * -1);
   content: "";
   border-top: var(--vertical-tabs-menu-separator-size) solid var(--vertical-tabs-menu-separator-color);
 }
@@ -69,12 +69,10 @@
 .media-library-menu__link {
   position: relative;
   display: block;
-  margin-top: calc(var(--vertical-tabs-border-size)*-1);
+  margin-top: calc(var(--vertical-tabs-border-size) * -1);
   padding: var(--space-s) var(--space-s) var(--space-s) calc(var(--space-l) - var(--vertical-tabs-menu-link--active-border-size)); /* LTR */
+  -webkit-text-decoration: none;
   text-decoration: none;
-  word-wrap: break-word;
-  -webkit-hyphens: auto;
-  hyphens: auto;
   color: var(--color-text);
   border: var(--vertical-tabs-border-size) solid transparent;
   border-width: var(--vertical-tabs-border-size) 0 var(--vertical-tabs-border-size) var(--vertical-tabs-menu-link--active-border-size); /* LTR */
@@ -88,21 +86,17 @@
   border-radius: 0 var(--vertical-tabs-border-radius) var(--vertical-tabs-border-radius) 0;
 }
 
-@media screen and (-ms-high-contrast: active) {
-  .media-library-menu__link {
-    border-color: transparent;
-  }
-}
-
 /* Menu link states. */
 
 .media-library-menu__link:focus {
   z-index: calc(var(--vertical-tabs-menu--z-index) + 3); /* Focus state should be on the highest level to make the focus effect be fully visible. This also means that it should have bigger z-index than the selected link. */
+  -webkit-text-decoration: none;
   text-decoration: none;
   box-shadow: none;
 }
 
 .media-library-menu__link:hover {
+  -webkit-text-decoration: none;
   text-decoration: none;
   color: var(--color-absolutezero);
   /* These borders are necessary to replace the dividing lines while in the hover state. */
@@ -116,17 +110,17 @@
 .media-library-menu__link::before {
   position: absolute;
   z-index: calc(var(--vertical-tabs-menu--z-index) - 1); /* This should be on a lower level than the menu-item separator lines. */
-  top: calc(var(--vertical-tabs-border-size)*-1);
+  top: calc(var(--vertical-tabs-border-size) * -1);
   right: 0; /* LTR */
-  bottom: calc(var(--vertical-tabs-border-size)*-1);
-  left: calc(var(--vertical-tabs-menu-link--active-border-size)*-1); /* LTR */
+  bottom: calc(var(--vertical-tabs-border-size) * -1);
+  left: calc(var(--vertical-tabs-menu-link--active-border-size) * -1); /* LTR */
   content: "";
   pointer-events: none;
   background-clip: padding-box;
 }
 
 [dir="rtl"] .media-library-menu__link::before {
-  right: calc(var(--vertical-tabs-menu-link--active-border-size)*-1);
+  right: calc(var(--vertical-tabs-menu-link--active-border-size) * -1);
   left: 0;
 }
 
@@ -136,7 +130,7 @@
   right: 0;
   bottom: 0;
   left: 0;
-  margin: calc(var(--vertical-tabs-border-size)*-1) calc(var(--vertical-tabs-menu-link--active-border-size)*-1);
+  margin: calc(var(--vertical-tabs-border-size) * -1) calc(var(--vertical-tabs-menu-link--active-border-size) * -1);
   content: "";
   pointer-events: none;
   border: var(--vertical-tabs-menu-link-focus-border-size) solid var(--color-focus);
@@ -162,7 +156,7 @@
   border-radius: var(--base-border-radius) 0 0 var(--base-border-radius); /* LTR */
 }
 
-[dir=rtl] .media-library-menu__link.active::before {
+[dir="rtl"] .media-library-menu__link.active::before {
   border-right: var(--vertical-tabs-menu-link--active-border-size) solid var(--vertical-tabs-menu-link--active-border-color);
   border-left: 0;
   border-radius: 0 var(--base-border-radius) var(--base-border-radius) 0;
@@ -217,7 +211,7 @@
 .media-library-add-form__added-media .media-library-add-form__remove-button.button--extrasmall {
   margin: var(--space-xs) 0; /* LTR */
   /* Left padding is double the background size of the button icon. */
-  padding: calc(var(--space-xs)/2 - 1px) calc(var(--space-s) - 1px) calc(var(--space-xs)/2 - 1px) calc(var(--space-s)*2);
+  padding: calc(calc(var(--space-xs) / 2) - 1px) calc(var(--space-s) - 1px) calc(calc(var(--space-xs) / 2) - 1px) calc(var(--space-s) * 2);
 }
 
 /* This is needed to override the default extrasmall button left margin. */
@@ -248,22 +242,13 @@
 /* Adjust the focus border on this element so it is not too close to buttons. */
 
 .media-library-add-form__added-media:focus {
-  box-shadow: 0 0 0 calc(var(--focus-border-offset-size) + 2px) var(--color-white), 0 0 0 calc(var(--focus-border-size) + var(--focus-border-offset-size) + 2px) var(--color-focus);
+  box-shadow:
+    0 0 0 calc(var(--focus-border-offset-size) + 2px) var(--color-white),
+    0 0 0 calc(var(--focus-border-size) + var(--focus-border-offset-size) + 2px) var(--color-focus);
 }
 
 .media-library-add-form .file-upload-help {
   margin: 0.5rem 0 0;
-}
-
-/* Align remove buttons with Save button and compensate for IE scrollbar and focus padding. */
-
-@media all and (-ms-high-contrast: active), (-ms-high-contrast: none) {
-  .ui-dialog > .ui-dialog-content {
-    padding-right: calc(var(--space-s) - var(--focus-border-size) - var(--focus-border-offset-size) - 2px);
-  }
-  [dir="rtl"] .ui-dialog > .ui-dialog-content {
-    padding-left: calc(var(--space-s) - var(--focus-border-size) - var(--focus-border-offset-size) - 2px);
-  }
 }
 
 /* Style the media add oEmbed form. */
@@ -327,7 +312,8 @@
   flex-wrap: wrap;
 }
 
-.media-library-views-form > .form-actions {
+.media-library-views-form > .form-actions,
+.media-library-views-form > .field-actions {
   flex-basis: 100%;
 }
 
@@ -468,14 +454,17 @@
   background: #fff;
 }
 
-.media-library-item--grid:before {
+.media-library-item--grid::before {
   position: absolute;
   top: 0.4375rem;
   left: 0.4375rem;
   width: calc(100% - 1rem);
   height: calc(100% - 1rem);
   content: "";
-  transition: border-color 0.2s, color 0.2s, background 0.2s;
+  transition:
+    border-color 0.2s,
+    color 0.2s,
+    background 0.2s;
   pointer-events: none;
   border: 1px solid #dbdbdb;
   border-radius: 2px;
@@ -514,13 +503,14 @@
   align-items: center;
 }
 
-.media-library-widget-modal .ui-dialog-buttonpane .form-actions {
+.media-library-widget-modal .ui-dialog-buttonpane .form-actions,
+.media-library-widget-modal .ui-dialog-buttonpane .field-actions {
   flex: 1;
 }
 
 /**
  * By default, the dialog is too narrow to be usable.
- * @see Drupal.ckeditor.openDialog()
+ * @see Drupal.ckeditor5.openDialog()
  */
 
 .ui-dialog--narrow.media-library-widget-modal {
@@ -590,25 +580,25 @@
   object-position: center center;
 }
 
-.media-library-item--grid.is-hover:before,
-.media-library-item--grid.checked:before,
-.media-library-item--grid.is-focus:before {
+.media-library-item--grid.is-hover::before,
+.media-library-item--grid.checked::before,
+.media-library-item--grid.is-focus::before {
   top: 0.3125rem;
   left: 0.3125rem;
   border-width: 3px;
   border-radius: 0.1875rem;
 }
 
-.media-library-item--grid.is-hover:before,
-.media-library-item--grid.checked.is-hover:before {
+.media-library-item--grid.is-hover::before,
+.media-library-item--grid.checked.is-hover::before {
   border-color: var(--color-absolutezero-hover);
 }
 
-.media-library-item--grid.is-focus:before {
+.media-library-item--grid.is-focus::before {
   border-color: var(--color-focus);
 }
 
-.media-library-item--grid.checked:before {
+.media-library-item--grid.checked::before {
   border-color: var(--button--focus-border-color);
 }
 
@@ -702,7 +692,7 @@
 .media-library-item__name {
   display: block;
   overflow: hidden;
-  margin: calc(var(--space-xs)/2) var(--space-xs);
+  margin: calc(var(--space-xs) / 2) var(--space-xs);
   white-space: nowrap;
   text-overflow: ellipsis;
   font-size: 0.875rem;
@@ -734,6 +724,7 @@
   position: absolute;
   top: var(--space-s);
   right: var(--space-m); /* LTR */
+  -webkit-text-decoration: none;
   text-decoration: none;
 }
 
@@ -886,8 +877,6 @@
 .media-library-add-form__remove-button.button:disabled {
   background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16'%3e%3cpath fill='%238e929c' d='M3.51 13.925c.194.194.512.195.706.001l3.432-3.431c.194-.194.514-.194.708 0l3.432 3.431c.192.194.514.193.707-.001l1.405-1.417c.191-.195.189-.514-.002-.709l-3.397-3.4c-.192-.193-.192-.514-.002-.708l3.401-3.43c.189-.195.189-.515 0-.709l-1.407-1.418c-.195-.195-.513-.195-.707-.001l-3.43 3.431c-.195.194-.516.194-.708 0l-3.432-3.431c-.195-.195-.512-.194-.706.001l-1.407 1.417c-.194.195-.194.515 0 .71l3.403 3.429c.193.195.193.514-.001.708l-3.4 3.399c-.194.195-.195.516-.001.709l1.406 1.419z'/%3e%3c/svg%3e");
 }
-
-/* @todo Remove in https://www.drupal.org/project/drupal/issues/3064914 */
 
 .views-live-preview .media-library-view div.views-row + div.views-row {
   margin-top: 0;

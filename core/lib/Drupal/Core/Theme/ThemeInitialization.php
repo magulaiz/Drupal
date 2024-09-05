@@ -112,13 +112,6 @@ class ThemeInitialization implements ThemeInitializationInterface {
     while ($ancestor && isset($themes[$ancestor]->base_theme)) {
       $ancestor = $themes[$ancestor]->base_theme;
       if (!$this->themeHandler->themeExists($ancestor)) {
-        if ($ancestor == 'stable') {
-          // Themes that depend on Stable will be fixed by system_update_8014().
-          // There is no harm in not adding it as an ancestor since at worst
-          // some people might experience slight visual regressions on
-          // update.php.
-          continue;
-        }
         throw new MissingThemeDependencyException(sprintf('Base theme %s has not been installed.', $ancestor), $ancestor);
       }
       $base_themes[] = $themes[$ancestor];
@@ -135,17 +128,17 @@ class ThemeInitialization implements ThemeInitializationInterface {
    */
   public function loadActiveTheme(ActiveTheme $active_theme) {
     // Initialize the theme.
-    if ($theme_engine = $active_theme->getEngine()) {
+    if ($active_theme->getEngine()) {
       // Include the engine.
       include_once $this->root . '/' . $active_theme->getOwner();
-      foreach ($active_theme->getBaseThemeExtensions() as $base) {
+      foreach (array_reverse($active_theme->getBaseThemeExtensions()) as $base) {
         $base->load();
       }
       $active_theme->getExtension()->load();
     }
     else {
       // include non-engine theme files
-      foreach ($active_theme->getBaseThemeExtensions() as $base) {
+      foreach (array_reverse($active_theme->getBaseThemeExtensions()) as $base) {
         // Include the theme file or the engine.
         if ($base->owner) {
           include_once $this->root . '/' . $base->owner;
@@ -185,7 +178,7 @@ class ThemeInitialization implements ThemeInitializationInterface {
     $values['libraries_override'] = [];
 
     // Get libraries overrides declared by base themes.
-    foreach ($base_themes as $base) {
+    foreach (array_reverse($base_themes) as $base) {
       if (!empty($base->info['libraries-override'])) {
         foreach ($base->info['libraries-override'] as $library => $override) {
           $values['libraries_override'][$base->getPath()][$library] = $override;
@@ -275,32 +268,6 @@ class ThemeInitialization implements ThemeInitializationInterface {
       $this->extensions = array_merge($this->moduleHandler->getModuleList(), $this->themeHandler->listInfo());
     }
     return $this->extensions;
-  }
-
-  /**
-   * Gets CSS file where tokens have been resolved.
-   *
-   * @param string $css_file
-   *   CSS file which may contain tokens.
-   *
-   * @return string
-   *   CSS file where placeholders are replaced.
-   *
-   * @todo Remove in Drupal 9.0.x.
-   */
-  protected function resolveStyleSheetPlaceholders($css_file) {
-    $token_candidate = explode('/', $css_file)[0];
-    if (!preg_match('/@[A-z0-9_-]+/', $token_candidate)) {
-      return $css_file;
-    }
-
-    $token = substr($token_candidate, 1);
-
-    // Prime extensions.
-    $extensions = $this->getExtensions();
-    if (isset($extensions[$token])) {
-      return str_replace($token_candidate, $extensions[$token]->getPath(), $css_file);
-    }
   }
 
 }

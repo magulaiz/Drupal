@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\jsonapi\Kernel\Controller;
 
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
@@ -77,6 +79,13 @@ class EntityResourceTest extends JsonapiKernelTestBase {
   protected $node3;
 
   /**
+   * A node with related nodes.
+   *
+   * @var \Drupal\node\Entity\Node
+   */
+  protected Node $node4;
+
+  /**
    * A fake request.
    *
    * @var \Symfony\Component\HttpFoundation\Request
@@ -99,14 +108,15 @@ class EntityResourceTest extends JsonapiKernelTestBase {
     $this->installEntitySchema('node');
     $this->installEntitySchema('user');
     // Add the additional table schemas.
-    $this->installSchema('system', ['sequences']);
     $this->installSchema('node', ['node_access']);
     $this->installSchema('user', ['users_data']);
     NodeType::create([
       'type' => 'lorem',
+      'name' => 'Lorem',
     ])->save();
     $type = NodeType::create([
       'type' => 'article',
+      'name' => 'Article',
     ]);
     $type->save();
     $this->user = User::create([
@@ -185,7 +195,7 @@ class EntityResourceTest extends JsonapiKernelTestBase {
   /**
    * @covers ::getCollection
    */
-  public function testGetPagedCollection() {
+  public function testGetPagedCollection(): void {
     $request = Request::create('/jsonapi/node/article');
     $request->query = new InputBag([
       'sort' => 'nid',
@@ -214,7 +224,7 @@ class EntityResourceTest extends JsonapiKernelTestBase {
   /**
    * @covers ::getCollection
    */
-  public function testGetEmptyCollection() {
+  public function testGetEmptyCollection(): void {
     $request = Request::create('/jsonapi/node/article');
     $request->query = new InputBag(['filter' => ['id' => 'invalid']]);
 

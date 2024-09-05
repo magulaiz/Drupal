@@ -22,14 +22,17 @@ class TwigSandboxPolicy implements SecurityPolicyInterface {
    *
    * @var array
    */
+  // phpcs:ignore Drupal.NamingConventions.ValidVariableName.LowerCamelName
   protected $allowed_methods;
 
   /**
-   * An array of allowed method prefixes -- any method starting with one of
-   * these prefixes will be allowed.
+   * Allowed method prefixes.
+   *
+   * Any method starting with one of these prefixes will be allowed.
    *
    * @var array
    */
+  // phpcs:ignore Drupal.NamingConventions.ValidVariableName.LowerCamelName
   protected $allowed_prefixes;
 
   /**
@@ -37,6 +40,7 @@ class TwigSandboxPolicy implements SecurityPolicyInterface {
    *
    * @var array
    */
+  // phpcs:ignore Drupal.NamingConventions.ValidVariableName.LowerCamelName
   protected $allowed_classes;
 
   /**
@@ -100,7 +104,7 @@ class TwigSandboxPolicy implements SecurityPolicyInterface {
     // If the method name starts with an allowed prefix, allow it. Note:
     // strpos() is between 3x and 7x faster than preg_match() in this case.
     foreach ($this->allowed_prefixes as $prefix) {
-      if (strpos($method, $prefix) === 0) {
+      if (str_starts_with($method, $prefix)) {
         return;
       }
     }

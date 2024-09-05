@@ -15,12 +15,14 @@ use GuzzleHttp\Psr7\Response as Psr7Response;
  */
 class TestControllers {
 
+  const LONG_TEXT = 'This is text long enough to trigger Apache mod_deflate to add a `vary: accept-encoding` header to the response.';
+
   public function test() {
     return new Response('test');
   }
 
   public function test1() {
-    return new Response('test1');
+    return new Response(self::LONG_TEXT);
   }
 
   public function test2() {
@@ -117,6 +119,19 @@ class TestControllers {
   }
 
   /**
+   * Rejects requests with query keys.
+   *
+   * @param \Symfony\Component\HttpFoundation\Request $request
+   *   The given request.
+   *
+   * @return \Symfony\Component\HttpFoundation\Response
+   *   The response.
+   */
+  public function rejectsQueryStrings(Request $request) {
+    return new Response('', $request->query->keys() ? Response::HTTP_BAD_REQUEST : Response::HTTP_OK);
+  }
+
+  /**
    * Throws an exception.
    *
    * @param string $message
@@ -133,7 +148,7 @@ class TestControllers {
     // Remove the exception logger from the event dispatcher. We are going to
     // throw an exception to check if it is properly escaped when rendered as a
     // backtrace. The exception logger does a call to error_log() which is not
-    // handled by the Simpletest error handler and would cause a test failure.
+    // handled by the test error handler and would cause a test failure.
     $event_dispatcher = \Drupal::service('event_dispatcher');
     $exception_logger = \Drupal::service('exception.logger');
     $event_dispatcher->removeSubscriber($exception_logger);

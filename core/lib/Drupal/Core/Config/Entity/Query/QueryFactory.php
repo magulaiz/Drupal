@@ -40,6 +40,16 @@ class QueryFactory implements QueryFactoryInterface, EventSubscriberInterface {
   protected $namespaces;
 
   /**
+   * The key value factory.
+   */
+  protected KeyValueFactoryInterface $keyValueFactory;
+
+  /**
+   * The configuration manager.
+   */
+  protected ConfigManagerInterface $configManager;
+
+  /**
    * Constructs a QueryFactory object.
    *
    * @param \Drupal\Core\Config\ConfigFactoryInterface $config_factory
@@ -152,7 +162,7 @@ class QueryFactory implements QueryFactoryInterface, EventSubscriberInterface {
    *   you cannot do fast lookups against this.
    */
   protected function getKeys(Config $config, $key, $get_method, ConfigEntityTypeInterface $entity_type) {
-    if (substr($key, -1) == '*') {
+    if (str_ends_with($key, '*')) {
       throw new InvalidLookupKeyException(strtr('%entity_type lookup key %key ends with a wildcard this can not be used as a lookup', ['%entity_type' => $entity_type->id(), '%key' => $key]));
     }
     $parts = explode('.*', $key);

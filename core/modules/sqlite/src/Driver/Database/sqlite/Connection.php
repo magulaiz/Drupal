@@ -2,14 +2,17 @@
 
 namespace Drupal\sqlite\Driver\Database\sqlite;
 
-use Drupal\Core\Database\DatabaseNotFoundException;
 use Drupal\Core\Database\Connection as DatabaseConnection;
+use Drupal\Core\Database\DatabaseNotFoundException;
+use Drupal\Core\Database\ExceptionHandler;
 use Drupal\Core\Database\StatementInterface;
+use Drupal\Core\Database\SupportsTemporaryTablesInterface;
+use Drupal\Core\Database\Transaction\TransactionManagerInterface;
 
 /**
  * SQLite implementation of \Drupal\Core\Database\Connection.
  */
-class Connection extends DatabaseConnection {
+class Connection extends DatabaseConnection implements SupportsTemporaryTablesInterface {
 
   /**
    * Error code for "Unable to open database file" error.
@@ -20,13 +23,6 @@ class Connection extends DatabaseConnection {
    * {@inheritdoc}
    */
   protected $statementWrapperClass = NULL;
-
-  /**
-   * Whether or not the active transaction (if any) will be rolled back.
-   *
-   * @var bool
-   */
-  protected $willRollback;
 
   /**
    * A map of condition operators to SQLite operators.
@@ -107,7 +103,7 @@ class Connection extends DatabaseConnection {
     ];
 
     try {
-      $pdo = new \PDO('sqlite:' . $connection_options['database'], '', '', $connection_options['pdo']);
+      $pdo = new PDOConnection('sqlite:' . $connection_options['database'], '', '', $connection_options['pdo']);
     }
     catch (\PDOException $e) {
       if ($e->getCode() == static::DATABASE_NOT_FOUND) {
@@ -352,6 +348,22 @@ class Connection extends DatabaseConnection {
     return $this->query($query . ' LIMIT ' . (int) $from . ', ' . (int) $count, $args, $options);
   }
 
+  /**
+   * {@inheritdoc}
+   */
+  public function queryTemporary($query, array $args = [], array $options = []) {
+    $tablename = 'db_temporary_' . uniqid();
+
+    $this->query('CREATE TEMPORARY TABLE ' . $tablename . ' AS ' . $query, $args, $options);
+
+    // Temporary tables always live in the temp database, which means that
+    // they cannot be fully qualified table names since they do not live
+    // in the main SQLite database. We provide the fully-qualified name
+    // ourselves to prevent Drupal from applying prefixes.
+    // @see https://www.sqlite.org/lang_createtable.html
+    return 'temp.' . $tablename;
+  }
+
   public function driver() {
     return 'sqlite';
   }
@@ -384,9 +396,7 @@ class Connection extends DatabaseConnection {
    * {@inheritdoc}
    */
   public function prepareStatement(string $query, array $options, bool $allow_row_count = FALSE): StatementInterface {
-    if (isset($options['return'])) {
-      @trigger_error('Passing "return" option to ' . __METHOD__ . '() is deprecated in drupal:9.4.0 and is removed in drupal:11.0.0. For data manipulation operations, use dynamic queries instead. See https://www.drupal.org/node/3185520', E_USER_DEPRECATED);
-    }
+    assert(!isset($options['return']), 'Passing "return" option to prepareStatement() has no effect. See https://www.drupal.org/node/3185520');
 
     try {
       $query = $this->preprocessStatement($query, $options);
@@ -398,35 +408,11 @@ class Connection extends DatabaseConnection {
     return $statement;
   }
 
-  public function nextId($existing_id = 0) {
-    $this->startTransaction();
-    // We can safely use literal queries here instead of the slower query
-    // builder because if a given database breaks here then it can simply
-    // override nextId. However, this is unlikely as we deal with short strings
-    // and integers and no known databases require special handling for those
-    // simple cases. If another transaction wants to write the same row, it will
-    // wait until this transaction commits.
-    $stmt = $this->prepareStatement('UPDATE {sequences} SET [value] = GREATEST([value], :existing_id) + 1', [], TRUE);
-    $args = [':existing_id' => $existing_id];
-    try {
-      $stmt->execute($args);
-    }
-    catch (\Exception $e) {
-      $this->exceptionHandler()->handleExecutionException($e, $stmt, $args, []);
-    }
-    if ($stmt->rowCount() === 0) {
-      $this->query('INSERT INTO {sequences} ([value]) VALUES (:existing_id + 1)', $args);
-    }
-    // The transaction gets committed when the transaction object gets destroyed
-    // because it gets out of scope.
-    return $this->query('SELECT [value] FROM {sequences}')->fetchField();
-  }
-
   /**
    * {@inheritdoc}
    */
   public function getFullQualifiedTableName($table) {
-    $prefix = $this->tablePrefix($table);
+    $prefix = $this->getPrefix();
 
     // Don't include the SQLite database file name as part of the table name.
     return $prefix . $table;
@@ -476,6 +462,58 @@ class Connection extends DatabaseConnection {
     }
 
     return $db_url;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function exceptionHandler() {
+    return new ExceptionHandler();
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function select($table, $alias = NULL, array $options = []) {
+    return new Select($this, $table, $alias, $options);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function insert($table, array $options = []) {
+    return new Insert($this, $table, $options);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function upsert($table, array $options = []) {
+    return new Upsert($this, $table, $options);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function truncate($table, array $options = []) {
+    return new Truncate($this, $table, $options);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function schema() {
+    if (empty($this->schema)) {
+      $this->schema = new Schema($this);
+    }
+    return $this->schema;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  protected function driverTransactionManager(): TransactionManagerInterface {
+    return new TransactionManager($this);
   }
 
 }

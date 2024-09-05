@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\taxonomy\Functional\Views;
 
 use Drupal\Core\Language\LanguageInterface;
@@ -57,6 +59,9 @@ class TaxonomyFieldFilterTest extends ViewTestBase {
    */
   public $termNames = [];
 
+  /**
+   * {@inheritdoc}
+   */
   protected function setUp($import_test_views = TRUE, $modules = []): void {
     parent::setUp($import_test_views, $modules);
 
@@ -109,7 +114,7 @@ class TaxonomyFieldFilterTest extends ViewTestBase {
   /**
    * Tests description and term name filters.
    */
-  public function testFilters() {
+  public function testFilters(): void {
     // Test the name filter page, which filters for name contains 'Comida'.
     // Should show just the Spanish translation, once.
     $this->assertPageCounts('test-name-filter', ['es' => 1, 'fr' => 0, 'en' => 0], 'Comida name filter');

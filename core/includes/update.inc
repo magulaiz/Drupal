@@ -52,6 +52,7 @@ function update_check_requirements() {
 
   // Check requirements of all loaded modules.
   $requirements = \Drupal::moduleHandler()->invokeAll('requirements', ['update']);
+  \Drupal::moduleHandler()->alter('requirements', $requirements);
   $requirements += update_system_schema_requirements();
   return $requirements;
 }
@@ -64,7 +65,7 @@ function update_check_requirements() {
  * system would detect and attempt to run all historical updates for a
  * module.
  *
- * @todo: remove in a major version after
+ * @todo remove in a major version after
  * https://www.drupal.org/project/drupal/issues/3130037 has been fixed.
  */
 function _update_fix_missing_schema() {
@@ -170,14 +171,14 @@ function update_do_one($module, $number, $dependency_map, &$context) {
       $ret['results']['query'] = $function($context['sandbox']);
       $ret['results']['success'] = TRUE;
     }
-    // @TODO We may want to do different error handling for different
+    // @todo We may want to do different error handling for different
     // exception types, but for now we'll just log the exception and
     // return the message for printing.
     // @see https://www.drupal.org/node/2564311
     catch (Exception $e) {
-      watchdog_exception('update', $e);
-
       $variables = Error::decodeException($e);
+      \Drupal::logger('update')->error(Error::DEFAULT_ERROR_MESSAGE, $variables);
+
       unset($variables['backtrace'], $variables['exception'], $variables['severity_level']);
       $ret['#abort'] = ['success' => FALSE, 'query' => t(Error::DEFAULT_ERROR_MESSAGE, $variables)];
     }
@@ -239,15 +240,14 @@ function update_invoke_post_update($function, &$context) {
         \Drupal::service('update.post_update_registry')->registerInvokedUpdates([$function]);
       }
     }
-    // @TODO We may want to do different error handling for different exception
+    // @todo We may want to do different error handling for different exception
     // types, but for now we'll just log the exception and return the message
     // for printing.
     // @see https://www.drupal.org/node/2564311
     catch (Exception $e) {
-      watchdog_exception('update', $e);
-
       $variables = Error::decodeException($e);
-      unset($variables['backtrace'], $variables['exception']);
+      \Drupal::logger('update')->error(Error::DEFAULT_ERROR_MESSAGE, $variables);
+      unset($variables['backtrace'], $variables['exception'], $variables['severity_level']);
       $ret['#abort'] = [
         'success' => FALSE,
         'query' => t(Error::DEFAULT_ERROR_MESSAGE, $variables),
@@ -275,7 +275,7 @@ function update_invoke_post_update($function, &$context) {
 /**
  * Returns a list of all the pending database updates.
  *
- * @return
+ * @return array
  *   An associative array keyed by module name which contains all information
  *   about database updates that need to be run, and any updates that are not
  *   going to proceed due to missing requirements. The system module will
@@ -342,7 +342,7 @@ function update_get_update_list() {
     if ($updates) {
       foreach ($updates as $update) {
         if ($update == \Drupal::CORE_MINIMUM_SCHEMA_VERSION) {
-          $ret[$module]['warning'] = '<em>' . $module . '</em> module cannot be updated. It contains an update numbered as ' . \Drupal::CORE_MINIMUM_SCHEMA_VERSION . ' which is reserved for the earliest installation of a module in Drupal ' . \Drupal::CORE_COMPATIBILITY . ', before any updates. In order to update <em>' . $module . '</em> module, you will need to install a version of the module with valid updates.';
+          $ret[$module]['warning'] = '<em>' . $module . '</em> module cannot be updated. It contains an update numbered as ' . \Drupal::CORE_MINIMUM_SCHEMA_VERSION . ' which is reserved for the earliest installation of a module in Drupal ' . \Drupal::CORE_COMPATIBILITY . ', before any updates. In order to update <em>' . $module . '</em> module, you will need to download a version of the module with valid updates.';
           continue 2;
         }
         if ($update > $schema_version) {
@@ -393,7 +393,7 @@ function update_get_update_list() {
  *   and whose values contain the number of the first requested update for that
  *   module.
  *
- * @return
+ * @return array
  *   An array whose keys are the names of all update functions within the
  *   provided modules that would need to be run in order to fulfill the
  *   request, arranged in the order in which the update functions should be
@@ -459,7 +459,7 @@ function update_resolve_dependencies($starting_updates) {
  *   An array whose keys contain the names of modules and whose values contain
  *   the number of the first requested update for that module.
  *
- * @return
+ * @return array
  *   An array containing all the update functions that should be run for each
  *   module, including the provided starting update and all subsequent updates
  *   that are available. The keys of the array contain the module names, and
@@ -517,7 +517,7 @@ function update_get_update_function_list($starting_updates) {
  *   An organized array of update functions, in the format returned by
  *   update_get_update_function_list().
  *
- * @return
+ * @return array
  *   A multidimensional array representing the dependency graph, suitable for
  *   passing in to Drupal\Component\Graph\Graph::searchAndSort(), but with extra
  *   information about each update function also included. Each array key
@@ -585,7 +585,7 @@ function update_build_dependency_graph($update_functions) {
  *   update_get_update_function_list(). This should represent all module
  *   updates that are requested to run at the time this function is called.
  *
- * @return
+ * @return bool
  *   TRUE if the provided module update is not installed or is not in the
  *   provided list of updates to run; FALSE otherwise.
  */
@@ -601,7 +601,7 @@ function update_is_missing($module, $number, $update_functions) {
  * @param $number
  *   The number of the update within that module.
  *
- * @return
+ * @return bool
  *   TRUE if the database schema indicates that the update has already been
  *   performed; FALSE otherwise.
  */
@@ -617,7 +617,7 @@ function update_already_performed($module, $number) {
  * its hook, only that it be installed. This allows the update system to
  * properly perform updates even on modules that are currently disabled.
  *
- * @return
+ * @return array
  *   An array of return values obtained by merging the results of the
  *   hook_update_dependencies() implementations in all installed modules.
  *

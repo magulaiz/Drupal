@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\jsonapi\Functional;
 
 use Drupal\block\Entity\Block;
@@ -10,6 +12,7 @@ use Drupal\Core\Url;
  * JSON:API integration test for the "Block" config entity type.
  *
  * @group jsonapi
+ * @group #slow
  */
 class BlockTest extends ConfigEntityResourceTestBase {
 
@@ -136,12 +139,13 @@ class BlockTest extends ConfigEntityResourceTestBase {
    */
   protected function getPostDocument() {
     // @todo Update once https://www.drupal.org/node/2300677 is fixed.
+    return [];
   }
 
   /**
    * {@inheritdoc}
    */
-  protected function getExpectedCacheContexts(array $sparse_fieldset = NULL) {
+  protected function getExpectedCacheContexts(?array $sparse_fieldset = NULL) {
     // @see ::createEntity()
     return array_values(array_diff(parent::getExpectedCacheContexts(), ['user.permissions']));
   }
@@ -149,7 +153,7 @@ class BlockTest extends ConfigEntityResourceTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function getExpectedCacheTags(array $sparse_fieldset = NULL) {
+  protected function getExpectedCacheTags(?array $sparse_fieldset = NULL) {
     // Because the 'user.permissions' cache context is missing, the cache tag
     // for the anonymous user role is never added automatically.
     return array_values(array_diff(parent::getExpectedCacheTags(), ['config:user.role.anonymous']));
@@ -186,7 +190,7 @@ class BlockTest extends ConfigEntityResourceTestBase {
   /**
    * {@inheritdoc}
    */
-  protected static function getExpectedCollectionCacheability(AccountInterface $account, array $collection, array $sparse_fieldset = NULL, $filtered = FALSE) {
+  protected static function getExpectedCollectionCacheability(AccountInterface $account, array $collection, ?array $sparse_fieldset = NULL, $filtered = FALSE) {
     return parent::getExpectedCollectionCacheability($account, $collection, $sparse_fieldset, $filtered)
       ->addCacheTags(['user:2'])
       ->addCacheContexts(['user.roles']);

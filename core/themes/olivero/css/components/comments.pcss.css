@@ -42,7 +42,7 @@
   font-size: 11px;
   line-height: 21px;
 
-  &:after {
+  &::after {
     position: absolute;
     inset-block-end: -7px;
     inset-inline-start: 8px;
@@ -174,7 +174,7 @@
 
 .comment__time {
   margin: 0;
-  color: var(--color--gray-45);
+  color: var(--color-text-neutral-soft);
   font-family: var(--font-sans);
   font-size: 14px;
   line-height: var(--sp);
@@ -183,7 +183,7 @@
 .indented {
   margin-inline-start: var(--comment-indentation);
 
-  & > .comment:not(:last-of-type):not(.has-children):before {
+  & > .comment:not(:last-of-type, .has-children)::before {
     position: absolute;
     inset-block-start: var(--sp2);
     inset-inline-start: calc(-1 * var(--comment-indentation) - var(--sp)); /* Comment's padding-top */
@@ -211,7 +211,7 @@
   padding-inline-start: 0;
   padding-inline-end: 0;
   cursor: pointer;
-  color: var(--color--gray-20);
+  color: var(--color-text-neutral-medium);
   border: 0;
   background: none;
   font-size: 14px;
@@ -219,11 +219,11 @@
   line-height: 18px;
   appearance: none;
 
-  &[aria-expanded="true"]:after {
+  &[aria-expanded="true"]::after {
     content: "\0020 -";
   }
 
-  &[aria-expanded="false"]:after {
+  &[aria-expanded="false"]::after {
     content: "\0020 +";
   }
 

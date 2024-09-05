@@ -12,10 +12,11 @@
 
 :root {
   --module-table-cell-padding-vertical: var(--space-m);
-  --module-table-cell-padding-horizontal: calc(var(--space-m) - var(--input-border-size)*2);
+  --module-table-cell-padding-horizontal: calc(var(--space-m) - (var(--input-border-size) * 2));
 }
 
-.modules-table-filter {
+.modules-table-filter,
+.permissions-table-filter {
   padding: 0.25rem var(--space-l);
   border: 1px solid var(--color-gray-200);
   border-radius: 2px 2px 0 0;
@@ -24,7 +25,8 @@
 
 /* Visually hide the module filter input description. */
 
-.modules-table-filter .form-item__description {
+.modules-table-filter .form-item__description,
+.permissions-table-filter .form-item__description {
   position: absolute !important;
   overflow: hidden;
   clip: rect(1px, 1px, 1px, 1px);
@@ -147,7 +149,7 @@ td.module-list__description {
 .module-details__links {
   position: relative;
   /* Negative margin matches the value of action link's top padding. */
-  margin-top: calc(var(--space-s)*-1 - var(--space-l)/2*-1 + var(--space-s)/2*-1);
+  margin-top: calc((var(--space-s) - ((var(--space-l) - var(--space-s)) / 2)) * -1);
   margin-bottom: var(--space-m);
 }
 
@@ -169,7 +171,7 @@ td.module-list__description {
   position: relative;
   top: -1px;
   display: inline-block;
-  width: calc(var(--space-m)*2);
+  width: calc(var(--space-m) * 2);
   height: 1.25rem;
   content: "";
   cursor: pointer;
@@ -189,7 +191,12 @@ td.module-list__description {
 
 .claro-details .tableresponsive-toggle-columns button {
   margin-top: var(--space-xs);
+  -webkit-text-decoration: none;
   text-decoration: none;
   color: var(--color-gray-800);
   font-weight: bold;
+}
+
+.claro-details .admin-missing {
+  color: var(--color-maximumred);
 }

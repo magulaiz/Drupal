@@ -8,7 +8,7 @@
   --tabs-padding-inline: var(--sp1-5);
   --tabs-active-border-size: 6px;
   --tabs-highlight-color: var(--color--primary-50); /* Minimum 3:1 contrast ratio against --tabs-background-color and --tabs-background-color-hover. */
-  --tabs-text-color: var(--color--gray-45); /* Minimum 4.5:1 contrast ratio against --tabs-background-color and --tabs-background-color-hover. */
+  --tabs-text-color: var(--color-text-neutral-soft); /* Minimum 4.5:1 contrast ratio against --tabs-background-color and --tabs-background-color-hover. */
   --tabs-text-color-active: var(--color--gray-5); /* Minimum 4.5:1 contrast ratio against --tabs-background-color and --tabs-background-color-hover. */
   --tabs-letter-spacing: 1px;
   --tabs-font-size: var(--font-size-s);
@@ -94,15 +94,15 @@
   }
 
   &.is-active {
-    position: relative; /* Anchor :after pseudo-element. */
+    position: relative; /* Anchor ::after pseudo-element. */
     color: var(--tabs-text-color-active);
     font-weight: 600;
 
     /*
-     * We use :after pseudo-element in place of border so edges do not appear
+     * We use ::after pseudo-element in place of border so edges do not appear
      * diagonally cut off due to other edges with transparent borders.
      */
-    &:after {
+    &::after {
       position: absolute;
       inset-block-start: calc(-1 * var(--tabs-border-width));
       inset-inline-start: calc(-1 * var(--tabs-border-width));
@@ -173,7 +173,10 @@
     inset-inline-start: 0;
     display: block;
     width: 100%;
-    transition: transform var(--tabs-transition-duration), opacity var(--tabs-transition-duration), top var(--tabs-transition-duration);
+    transition:
+      transform var(--tabs-transition-duration),
+      opacity var(--tabs-transition-duration),
+      top var(--tabs-transition-duration);
     border-block-start: solid 2px var(--tabs-highlight-color);
 
     &:nth-child(1) {

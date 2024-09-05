@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\system\Functional\Form;
 
 use Drupal\Core\Database\Database;
@@ -7,8 +9,7 @@ use Drupal\Core\EventSubscriber\MainContentViewSubscriber;
 use Drupal\Tests\BrowserTestBase;
 
 /**
- * Tests a multistep form using form storage and makes sure validation and
- * caching works right.
+ * Tests a multistep form using form storage.
  *
  * The tested form puts data into the storage during the initial form
  * construction. These tests verify that there are no duplicate form
@@ -17,6 +18,7 @@ use Drupal\Tests\BrowserTestBase;
  * values are not lost due to a wrong form rebuild.
  *
  * @group Form
+ * @group #slow
  */
 class StorageTest extends BrowserTestBase {
 
@@ -44,7 +46,7 @@ class StorageTest extends BrowserTestBase {
   /**
    * Tests using the form in a usual way.
    */
-  public function testForm() {
+  public function testForm(): void {
     $this->drupalGet('form_test/form-storage');
 
     $assert_session = $this->assertSession();
@@ -73,7 +75,7 @@ class StorageTest extends BrowserTestBase {
   /**
    * Tests using the form after calling $form_state->setCached().
    */
-  public function testFormCached() {
+  public function testFormCached(): void {
     $this->drupalGet('form_test/form-storage', ['query' => ['cache' => 1]]);
     $this->assertSession()->pageTextContains('Form constructions: 1');
 
@@ -101,7 +103,7 @@ class StorageTest extends BrowserTestBase {
   /**
    * Tests validation when form storage is used.
    */
-  public function testValidation() {
+  public function testValidation(): void {
     $this->drupalGet('form_test/form-storage');
     $this->submitForm([
       'title' => '',
@@ -121,7 +123,7 @@ class StorageTest extends BrowserTestBase {
    * during form validation, while another, required element in the form
    * triggers a form validation error.
    */
-  public function testCachedFormStorageValidation() {
+  public function testCachedFormStorageValidation(): void {
     // Request the form with 'cache' query parameter to enable form caching.
     $this->drupalGet('form_test/form-storage', ['query' => ['cache' => 1]]);
 
@@ -147,10 +149,9 @@ class StorageTest extends BrowserTestBase {
   }
 
   /**
-   * Verifies that form build-id is regenerated when loading an immutable form
-   * from the cache.
+   * Tests form build ID regeneration when loading a cached immutable form.
    */
-  public function testImmutableForm() {
+  public function testImmutableForm(): void {
     // Request the form with 'cache' query parameter to enable form caching.
     $this->drupalGet('form_test/form-storage', ['query' => ['cache' => 1, 'immutable' => 1]]);
 
@@ -183,7 +184,7 @@ class StorageTest extends BrowserTestBase {
   /**
    * Verify that existing contrib code cannot overwrite immutable form state.
    */
-  public function testImmutableFormLegacyProtection() {
+  public function testImmutableFormLegacyProtection(): void {
     $this->drupalGet('form_test/form-storage', ['query' => ['cache' => 1, 'immutable' => 1]]);
     // Ensure the hidden 'form_build_id' field is unique.
     $this->assertSession()->elementsCount('xpath', '//input[@name="form_build_id"]', 1);

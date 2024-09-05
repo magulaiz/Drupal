@@ -80,7 +80,9 @@ class CssOptimizer implements AssetOptimizerInterface {
    */
   protected function processFile($css_asset) {
     $contents = $this->loadFile($css_asset['data'], TRUE);
-
+    if ($css_asset['media'] !== 'print' && $css_asset['media'] !== 'all') {
+      $contents = '@media ' . $css_asset['media'] . '{' . $contents . '}' . "\n";
+    }
     $contents = $this->clean($contents);
 
     // Get the parent directory of this file, relative to the Drupal root.
@@ -88,8 +90,8 @@ class CssOptimizer implements AssetOptimizerInterface {
     // Store base path.
     $this->rewriteFileURIBasePath = $css_base_path . '/';
 
-    // Anchor all paths in the CSS with its base URL, ignoring external and absolute paths.
-    return preg_replace_callback('/url\(\s*[\'"]?(?![a-z]+:|\/+)([^\'")]+)[\'"]?\s*\)/i', [$this, 'rewriteFileURI'], $contents);
+    // Anchor all paths in the CSS with its base URL, ignoring external and absolute paths and paths starting with '#'.
+    return preg_replace_callback('/url\(\s*[\'"]?(?![a-z]+:|\/+|#|%23)([^\'")]+)[\'"]?\s*\)/i', [$this, 'rewriteFileURI'], $contents);
   }
 
   /**
@@ -104,8 +106,8 @@ class CssOptimizer implements AssetOptimizerInterface {
    * color.module enabled themes with CSS aggregation turned off.
    *
    * Note: the only reason this method is public is so color.module can call it;
-   * it is not on the AssetOptimizerInterface, so future refactorings can make
-   * it protected.
+   * it is not on the AssetOptimizerInterface, so any future refactoring can
+   * make it protected.
    *
    * @param $file
    *   Name of the stylesheet to be processed.
@@ -114,7 +116,7 @@ class CssOptimizer implements AssetOptimizerInterface {
    * @param $reset_basepath
    *   Used internally to facilitate recursive resolution of @import commands.
    *
-   * @return
+   * @return string
    *   Contents of the stylesheet, including any resolved @import commands.
    */
   public function loadFile($file, $optimize = NULL, $reset_basepath = TRUE) {
@@ -176,7 +178,7 @@ class CssOptimizer implements AssetOptimizerInterface {
    *   An array of matches by a preg_replace_callback() call that scans for
    *   @import-ed CSS files, except for external CSS files.
    *
-   * @return
+   * @return string
    *   The contents of the CSS file at $matches[1], with corrected paths.
    *
    * @see \Drupal\Core\Asset\AssetOptimizerInterface::loadFile()
@@ -207,7 +209,7 @@ class CssOptimizer implements AssetOptimizerInterface {
    *   (optional) Boolean whether CSS contents should be minified. Defaults to
    *   FALSE.
    *
-   * @return
+   * @return string
    *   Contents of the stylesheet including the imported stylesheets.
    */
   protected function processCss($contents, $optimize = FALSE) {
@@ -269,8 +271,8 @@ class CssOptimizer implements AssetOptimizerInterface {
    * Prefixes all paths within a CSS file for processFile().
    *
    * Note: the only reason this method is public is so color.module can call it;
-   * it is not on the AssetOptimizerInterface, so future refactorings can make
-   * it protected.
+   * it is not on the AssetOptimizerInterface, so any future refactoring can
+   * make it protected.
    *
    * @param array $matches
    *   An array of matches by a preg_replace_callback() call that scans for

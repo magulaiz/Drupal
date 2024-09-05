@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\field\Functional\Views;
 
 use Drupal\field\Entity\FieldConfig;
@@ -34,13 +36,15 @@ abstract class FieldTestBase extends ViewTestBase {
   public $fieldStorages;
 
   /**
-   * Stores the fields of the field storage. They have the same keys as the
-   * field storages.
+   * Stores the fields of the field storage.
    *
    * @var array
    */
   public $fields;
 
+  /**
+   * {@inheritdoc}
+   */
   protected function setUp($import_test_views = TRUE, $modules = ['field_test_views']): void {
     parent::setUp($import_test_views, $modules);
 

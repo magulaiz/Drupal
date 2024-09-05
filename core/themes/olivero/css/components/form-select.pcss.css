@@ -15,7 +15,7 @@ select {
   padding-block: 0;
   padding-inline-start: var(--sp);
   padding-inline-end: var(--sp3);
-  color: var(--color--gray-5);
+  color: var(--color-text-neutral-loud);
   border: 1px solid var(--color--gray-60);
   border-radius: var(--border-radius);
   background-color: var(--color--white);
@@ -36,11 +36,6 @@ select {
       outline-style: double;
       outline-offset: -1px;
     }
-  }
-
-  /* Hides default chevron within Internet Explorer. */
-  &::-ms-expand {
-    display: none;
   }
 
   &[disabled] {
@@ -80,16 +75,6 @@ select {
     /* Lets browser set <select> appearance to whatever the browser's default is. */
     @supports (appearance: revert) {
       appearance: revert;
-    }
-  }
-
-  /* Necessary for Internet Explorer to show chevron. */
-  @media screen and (-ms-high-contrast: active) {
-    padding-inline-end: 0;
-
-    /* Re-enable default chevron for Internet Explorer. */
-    &::-ms-expand {
-      display: block;
     }
   }
 }

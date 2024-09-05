@@ -105,8 +105,7 @@ class FormattableMarkup implements MarkupInterface, \Countable {
    * @return int
    *   The length of the string.
    */
-  #[\ReturnTypeWillChange]
-  public function count() {
+  public function count(): int {
     return mb_strlen($this->string);
   }
 
@@ -116,8 +115,7 @@ class FormattableMarkup implements MarkupInterface, \Countable {
    * @return string
    *   The safe string content.
    */
-  #[\ReturnTypeWillChange]
-  public function jsonSerialize() {
+  public function jsonSerialize(): string {
     return $this->__toString();
   }
 
@@ -131,11 +129,10 @@ class FormattableMarkup implements MarkupInterface, \Countable {
    * @param array $args
    *   An associative array of replacements. Each array key should be the same
    *   as a placeholder in $string. The corresponding value should be a string
-   *   or an object that implements
-   *   \Drupal\Component\Render\MarkupInterface. The value replaces the
-   *   placeholder in $string. Sanitization and formatting will be done before
-   *   replacement. The type of sanitization and formatting depends on the first
-   *   character of the key:
+   *   or an object that implements \Drupal\Component\Render\MarkupInterface.
+   *   The args[] value replaces the placeholder in $string. Sanitization and
+   *   formatting will be done before replacement. The type of sanitization
+   *   and formatting depends on the first character of the key:
    *   - @variable: When the placeholder replacement value is:
    *     - A string, the replaced value in the returned string will be sanitized
    *       using \Drupal\Component\Utility\Html::escape().
@@ -233,12 +230,9 @@ class FormattableMarkup implements MarkupInterface, \Countable {
           break;
 
         default:
-          // Deprecate support for random variables that won't be replaced.
-          if (ctype_alpha($key[0]) && strpos($string, $key) === FALSE) {
-            @trigger_error(sprintf('Support for keys without a placeholder prefix is deprecated in Drupal 9.1.0 and will be removed in Drupal 10.0.0. Invalid placeholder (%s) with string: "%s"', $key, $string), E_USER_DEPRECATED);
-          }
-          else {
-            trigger_error(sprintf('Invalid placeholder (%s) with string: "%s"', $key, $string), E_USER_WARNING);
+          if (!ctype_alnum($key[0])) {
+            // Warn for random placeholders that won't be replaced.
+            trigger_error(sprintf('Placeholders must begin with one of the following "@", ":" or "%%", invalid placeholder (%s) with string: "%s"', $key, $string), E_USER_WARNING);
           }
           // No replacement possible therefore we can discard the argument.
           unset($args[$key]);

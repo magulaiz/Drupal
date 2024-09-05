@@ -3,6 +3,7 @@
 namespace Drupal\migrate;
 
 use Drupal\Component\Utility\Bytes;
+use Drupal\Core\StringTranslation\ByteSizeMarkup;
 use Drupal\Core\Utility\Error;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\migrate\Event\MigrateEvents;
@@ -100,7 +101,7 @@ class MigrateExecutable implements MigrateExecutableInterface {
    * @param \Symfony\Contracts\EventDispatcher\EventDispatcherInterface $event_dispatcher
    *   (optional) The event dispatcher.
    */
-  public function __construct(MigrationInterface $migration, MigrateMessageInterface $message = NULL, EventDispatcherInterface $event_dispatcher = NULL) {
+  public function __construct(MigrationInterface $migration, ?MigrateMessageInterface $message = NULL, ?EventDispatcherInterface $event_dispatcher = NULL) {
     $this->migration = $migration;
     $this->message = $message ?: new MigrateMessage();
     $this->getIdMap()->setMessage($this->message);
@@ -164,11 +165,10 @@ class MigrateExecutable implements MigrateExecutableInterface {
     catch (RequirementsException $e) {
       $this->message->display(
         $this->t(
-          'Migration @id did not meet the requirements. @message @requirements',
+          'Migration @id did not meet the requirements. @message',
           [
             '@id' => $this->migration->id(),
             '@message' => $e->getMessage(),
-            '@requirements' => $e->getRequirementsString(),
           ]
         ),
         'error'
@@ -387,7 +387,7 @@ class MigrateExecutable implements MigrateExecutableInterface {
   /**
    * {@inheritdoc}
    */
-  public function processRow(Row $row, array $process = NULL, $value = NULL) {
+  public function processRow(Row $row, ?array $process = NULL, $value = NULL) {
     foreach ($this->migration->getProcessPlugins($process) as $destination => $plugins) {
       $this->processPipeline($row, $destination, $plugins, $value);
     }
@@ -425,6 +425,7 @@ class MigrateExecutable implements MigrateExecutableInterface {
         }
         $break = FALSE;
         foreach ($value as $scalar_value) {
+          $plugin->reset();
           try {
             $new_value[] = $plugin->transform($scalar_value, $this, $row, $destination);
           }
@@ -437,6 +438,9 @@ class MigrateExecutable implements MigrateExecutableInterface {
             $message = sprintf("%s: %s", $plugin->getPluginId(), $e->getMessage());
             throw new MigrateException($message);
           }
+          if ($plugin->isPipelineStopped()) {
+            $break = TRUE;
+          }
         }
         $value = $new_value;
         if ($break) {
@@ -444,6 +448,7 @@ class MigrateExecutable implements MigrateExecutableInterface {
         }
       }
       else {
+        $plugin->reset();
         try {
           $value = $plugin->transform($value, $this, $row, $destination);
         }
@@ -456,7 +461,9 @@ class MigrateExecutable implements MigrateExecutableInterface {
           $message = sprintf("%s: %s", $plugin->getPluginId(), $e->getMessage());
           throw new MigrateException($message);
         }
-
+        if ($plugin->isPipelineStopped()) {
+          break;
+        }
         $multiple = $plugin->multiple();
       }
     }
@@ -538,8 +545,8 @@ class MigrateExecutable implements MigrateExecutableInterface {
           'Memory usage is @usage (@pct% of limit @limit), reclaiming memory.',
           [
             '@pct' => round($pct_memory * 100),
-            '@usage' => $this->formatSize($usage),
-            '@limit' => $this->formatSize($this->memoryLimit),
+            '@usage' => ByteSizeMarkup::create($usage, NULL, $this->stringTranslation),
+            '@limit' => ByteSizeMarkup::create($this->memoryLimit, NULL, $this->stringTranslation),
           ]
         ),
         'warning'
@@ -554,8 +561,8 @@ class MigrateExecutable implements MigrateExecutableInterface {
             'Memory usage is now @usage (@pct% of limit @limit), not enough reclaimed, starting new batch',
             [
               '@pct' => round($pct_memory * 100),
-              '@usage' => $this->formatSize($usage),
-              '@limit' => $this->formatSize($this->memoryLimit),
+              '@usage' => ByteSizeMarkup::create($usage, NULL, $this->stringTranslation),
+              '@limit' => ByteSizeMarkup::create($this->memoryLimit, NULL, $this->stringTranslation),
             ]
           ),
           'warning'
@@ -568,8 +575,8 @@ class MigrateExecutable implements MigrateExecutableInterface {
             'Memory usage is now @usage (@pct% of limit @limit), reclaimed enough, continuing',
             [
               '@pct' => round($pct_memory * 100),
-              '@usage' => $this->formatSize($usage),
-              '@limit' => $this->formatSize($this->memoryLimit),
+              '@usage' => ByteSizeMarkup::create($usage, NULL, $this->stringTranslation),
+              '@limit' => ByteSizeMarkup::create($this->memoryLimit, NULL, $this->stringTranslation),
             ]
           ),
           'warning');
@@ -605,25 +612,12 @@ class MigrateExecutable implements MigrateExecutableInterface {
     // Entity storage can blow up with caches, so clear it out.
     \Drupal::service('entity.memory_cache')->deleteAll();
 
-    // @TODO: explore resetting the container.
+    // @todo Explore resetting the container.
 
     // Run garbage collector to further reduce memory.
     gc_collect_cycles();
 
     return memory_get_usage();
-  }
-
-  /**
-   * Generates a string representation for the given byte count.
-   *
-   * @param int $size
-   *   A size in bytes.
-   *
-   * @return string
-   *   A translated string representation of the size.
-   */
-  protected function formatSize($size) {
-    return format_size($size);
   }
 
 }

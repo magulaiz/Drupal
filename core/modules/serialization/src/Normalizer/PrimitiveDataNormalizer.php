@@ -15,11 +15,6 @@ class PrimitiveDataNormalizer extends NormalizerBase {
   /**
    * {@inheritdoc}
    */
-  protected $supportedInterfaceOrClass = PrimitiveInterface::class;
-
-  /**
-   * {@inheritdoc}
-   */
   public function normalize($object, $format = NULL, array $context = []): array|string|int|float|bool|\ArrayObject|NULL {
     // Add cacheability if applicable.
     $this->addCacheableDependency($context, $object);
@@ -44,8 +39,10 @@ class PrimitiveDataNormalizer extends NormalizerBase {
   /**
    * {@inheritdoc}
    */
-  public function hasCacheableSupportsMethod(): bool {
-    return TRUE;
+  public function getSupportedTypes(?string $format): array {
+    return [
+      PrimitiveInterface::class => TRUE,
+    ];
   }
 
 }

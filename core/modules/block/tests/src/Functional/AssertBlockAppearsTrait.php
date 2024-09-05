@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\block\Functional;
 
 use Drupal\block\Entity\Block;
@@ -18,8 +20,7 @@ trait AssertBlockAppearsTrait {
    *   The block entity to find on the page.
    */
   protected function assertBlockAppears(Block $block) {
-    $result = $this->findBlockInstance($block);
-    $this->assertNotEmpty($result, sprintf('The block %s should appear on the page.', $block->id()));
+    $this->assertSession()->elementExists('xpath', "//div[@id = 'block-{$block->id()}']");
   }
 
   /**
@@ -29,21 +30,7 @@ trait AssertBlockAppearsTrait {
    *   The block entity to find on the page.
    */
   protected function assertNoBlockAppears(Block $block) {
-    $result = $this->findBlockInstance($block);
-    $this->assertEmpty($result, sprintf('The block %s should not appear on the page.', $block->id()));
-  }
-
-  /**
-   * Find a block instance on the page.
-   *
-   * @param \Drupal\block\Entity\Block $block
-   *   The block entity to find on the page.
-   *
-   * @return array
-   *   The result from the xpath query.
-   */
-  protected function findBlockInstance(Block $block) {
-    return $this->xpath('//div[@id = :id]', [':id' => 'block-' . $block->id()]);
+    $this->assertSession()->elementNotExists('xpath', "//div[@id = 'block-{$block->id()}']");
   }
 
 }

@@ -69,7 +69,7 @@ update.theme_install:
     _access_update_manager: 'TRUE'
 
 update.theme_update:
-  path: '/admin/theme/update'
+  path: '/admin/appearance/update'
   defaults:
     _form: '\Drupal\update\Form\UpdateManagerUpdate'
     _title: 'Update'

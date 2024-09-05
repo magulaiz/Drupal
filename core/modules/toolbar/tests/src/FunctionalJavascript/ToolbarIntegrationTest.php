@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\toolbar\FunctionalJavascript;
 
 use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
@@ -24,7 +26,7 @@ class ToolbarIntegrationTest extends WebDriverTestBase {
   /**
    * Tests if the toolbar can be toggled with JavaScript.
    */
-  public function testToolbarToggling() {
+  public function testToolbarToggling(): void {
     $admin_user = $this->drupalCreateUser([
       'access toolbar',
       'administer site configuration',
@@ -37,8 +39,6 @@ class ToolbarIntegrationTest extends WebDriverTestBase {
     $this->drupalGet('<front>');
     $this->assertNotEmpty($this->assertSession()->waitForElement('css', 'body.toolbar-horizontal'));
     $this->assertNotEmpty($this->assertSession()->waitForElementVisible('css', '.toolbar-tray'));
-    // Confirm touchevents detection is loaded with the toolbar.
-    $this->assertNotNull($this->assertSession()->waitForElement('css', 'html.no-touchevents'));
 
     $page = $this->getSession()->getPage();
 
@@ -63,7 +63,7 @@ class ToolbarIntegrationTest extends WebDriverTestBase {
   /**
    * Tests that the orientation toggle is not shown for empty toolbar items.
    */
-  public function testEmptyTray() {
+  public function testEmptyTray(): void {
     // Granting access to the toolbar but not any administrative menu links will
     // result in an empty toolbar tray for the "Manage" toolbar item.
     $admin_user = $this->drupalCreateUser([

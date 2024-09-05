@@ -1,16 +1,21 @@
 <?php
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace Drupal\Tests\ckeditor5\Unit;
 
 use Drupal\ckeditor5\Annotation\CKEditor5Plugin;
 use Drupal\ckeditor5\HTMLRestrictions;
 use Drupal\ckeditor5\Plugin\CKEditor5PluginDefinition;
+use Drupal\ckeditor5\Plugin\CKEditor5PluginManagerInterface;
 use Drupal\ckeditor5\SmartDefaultSettings;
 use Drupal\Component\Utility\NestedArray;
+use Drupal\Core\Extension\ModuleHandlerInterface;
+use Drupal\Core\Session\AccountInterface;
+use Drupal\editor\EditorInterface;
 use Drupal\Tests\ckeditor5\Traits\PrivateMethodUnitTestTrait;
 use Drupal\Tests\UnitTestCase;
+use Psr\Log\LoggerInterface;
 
 /**
  * @coversDefaultClass \Drupal\ckeditor5\SmartDefaultSettings
@@ -34,7 +39,7 @@ class SmartDefaultSettingsTest extends UnitTestCase {
    *
    * @return \Generator
    */
-  public function providerSurplusScore(): \Generator {
+  public static function providerSurplusScore(): \Generator {
     $needed = new HTMLRestrictions(['code' => FALSE]);
 
     yield 'surplus: 1 tag, 1 attribute, 1 attribute with wildcard restriction' => [
@@ -82,7 +87,14 @@ class SmartDefaultSettingsTest extends UnitTestCase {
    */
   public function testCandidates(HTMLRestrictions $provided, HTMLRestrictions $still_needed, array $disabled_plugin_definitions, array $expected_candidates, array $expected_selection = []): void {
     $get_candidates = self::getMethod(SmartDefaultSettings::class, 'getCandidates');
-    $this->assertSame($expected_candidates, $get_candidates->invoke(NULL, $provided, $still_needed, $disabled_plugin_definitions));
+    $smart_default_settings = new SmartDefaultSettings(
+      $this->prophesize(CKEditor5PluginManagerInterface::class)->reveal(),
+      $this->prophesize(LoggerInterface::class)->reveal(),
+      $this->prophesize(ModuleHandlerInterface::class)->reveal(),
+      $this->prophesize(AccountInterface::class)->reveal(),
+    );
+    $editor = $this->prophesize(EditorInterface::class);
+    $this->assertSame($expected_candidates, $get_candidates->invoke($smart_default_settings, $provided, $still_needed, $disabled_plugin_definitions, $editor->reveal()));
     $select_candidate = self::getMethod(SmartDefaultSettings::class, 'selectCandidate');
     $this->assertSame($expected_selection, $select_candidate->invoke(NULL, $expected_candidates, $still_needed, array_keys($provided->getAllowedElements())));
   }
@@ -92,7 +104,7 @@ class SmartDefaultSettingsTest extends UnitTestCase {
    *
    * @return \Generator
    */
-  public function providerCandidates(): \Generator {
+  public static function providerCandidates(): \Generator {
     $generate_definition = function (string $label_and_id, array $overrides): CKEditor5PluginDefinition {
       $annotation = [
         'provider' => 'test',
@@ -108,7 +120,7 @@ class SmartDefaultSettingsTest extends UnitTestCase {
       return $definition;
     };
 
-    yield 'Tag needed, no match' => [
+    yield 'Tag needed, no match due to no plugin supporting it' => [
       HTMLRestrictions::emptySet(),
       HTMLRestrictions::fromString('<foo>'),
       [
@@ -135,21 +147,15 @@ class SmartDefaultSettingsTest extends UnitTestCase {
       ['test_foo' => ['-attributes-none-' => ['foo' => NULL]]],
     ];
 
-    yield 'Tag needed, single match with surplus' => [
+    yield 'Tag needed, no match due to plugins only supporting attributes on the needed tag' => [
       HTMLRestrictions::emptySet(),
       HTMLRestrictions::fromString('<foo>'),
       [
         $generate_definition('foo', ['drupal.elements' => ['<foo bar baz>']]),
       ],
-      [
-        'foo' => [
-          '-attributes-none-' => [
-            'test_foo' => 2200,
-          ],
-        ],
-      ],
-      // Not great surplus score, but only choice available.
-      ['test_foo' => ['-attributes-none-' => ['foo' => NULL]]],
+      [],
+      // No choice available due to the tag not being creatable.
+      [],
     ];
 
     $various_foo_definitions = [
@@ -169,13 +175,8 @@ class SmartDefaultSettingsTest extends UnitTestCase {
       [
         'foo' => [
           '-attributes-none-' => [
-            'test_all_attrs' => 100000,
-            'test_attrs' => 2200,
-            'test_attr_values' => 1002,
             'test_plain' => 0,
             'test_tags' => 2000000,
-            'test_tags_and_attrs' => 2002200,
-            'test_tags_and_attr_values' => 2002102,
           ],
         ],
       ],

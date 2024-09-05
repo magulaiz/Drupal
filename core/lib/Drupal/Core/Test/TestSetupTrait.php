@@ -17,8 +17,8 @@ trait TestSetupTrait {
   protected static $configSchemaCheckerExclusions = [
     // Following are used to test lack of or partial schema. Where partial
     // schema is provided, that is explicitly tested in specific tests.
-    'config_schema_test.noschema',
-    'config_schema_test.someschema',
+    'config_schema_test.no_schema',
+    'config_schema_test.some_schema',
     'config_schema_test.schema_data_types',
     'config_schema_test.no_schema_data_types',
     // Used to test application of schema to filtering of configuration.
@@ -81,6 +81,20 @@ trait TestSetupTrait {
   protected $kernel;
 
   /**
+   * The database prefix of this test run.
+   *
+   * @var string
+   */
+  protected $databasePrefix;
+
+  /**
+   * The app root.
+   *
+   * @var string
+   */
+  protected $root;
+
+  /**
    * The temporary file directory for the test environment.
    *
    * This value has to match the temporary directory created in
@@ -99,16 +113,6 @@ trait TestSetupTrait {
    * @var string
    */
   protected $testId;
-
-  /**
-   * Returns the database connection to the site under test.
-   *
-   * @return \Drupal\Core\Database\Connection
-   *   The database connection to use for inserting assertions.
-   */
-  public static function getDatabaseConnection() {
-    return TestDatabase::getConnection();
-  }
 
   /**
    * Generates a database prefix for running tests.
@@ -150,7 +154,7 @@ trait TestSetupTrait {
       // Ensure no existing database gets in the way. If a default database
       // exists already it must be removed.
       Database::removeConnection('default');
-      $database = Database::convertDbUrlToConnectionInfo($db_url, $this->root ?? DRUPAL_ROOT);
+      $database = Database::convertDbUrlToConnectionInfo($db_url, $this->root ?? DRUPAL_ROOT, TRUE);
       Database::addConnectionInfo('default', 'default', $database);
     }
 
@@ -166,6 +170,7 @@ trait TestSetupTrait {
         // prefixes of the test runner leak into the test.
         $connection_info[$target]['prefix'] = $value['prefix'] . $this->databasePrefix;
       }
+      Database::removeConnection('default');
       Database::addConnectionInfo('default', 'default', $connection_info['default']);
     }
   }
@@ -181,12 +186,12 @@ trait TestSetupTrait {
     $exceptions = [];
     while ($class) {
       if (property_exists($class, 'configSchemaCheckerExclusions')) {
-        $exceptions = array_merge($exceptions, $class::$configSchemaCheckerExclusions);
+        $exceptions[] = $class::$configSchemaCheckerExclusions;
       }
       $class = get_parent_class($class);
     }
     // Filter out any duplicates.
-    return array_unique($exceptions);
+    return array_unique(array_merge(...$exceptions));
   }
 
 }

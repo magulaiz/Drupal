@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\options\Functional;
 
 use Drupal\field\Entity\FieldConfig;
@@ -22,7 +24,7 @@ abstract class OptionsDynamicValuesTestBase extends FieldTestBase {
   /**
    * The created entity.
    *
-   * @var \Drupal\Core\Entity\Entity
+   * @var \Drupal\Core\Entity\EntityInterface
    */
   protected $entity;
 
@@ -33,6 +35,21 @@ abstract class OptionsDynamicValuesTestBase extends FieldTestBase {
    */
   protected $fieldStorage;
 
+  /**
+   * @var int
+   */
+  protected int $field;
+
+  /**
+   * Test data.
+   *
+   * @var array
+   */
+  protected array $test;
+
+  /**
+   * {@inheritdoc}
+   */
   protected function setUp(): void {
     parent::setUp();
 

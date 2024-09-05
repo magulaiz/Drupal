@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\filter\Functional;
 
 use Drupal\Component\Utility\Html;
@@ -15,6 +17,7 @@ use Drupal\user\RoleInterface;
  * Thoroughly test the administrative interface of the filter module.
  *
  * @group filter
+ * @group #slow
  */
 class FilterAdminTest extends BrowserTestBase {
 
@@ -125,11 +128,11 @@ class FilterAdminTest extends BrowserTestBase {
   /**
    * Tests the format administration functionality.
    */
-  public function testFormatAdmin() {
+  public function testFormatAdmin(): void {
     // Add text format.
     $this->drupalGet('admin/config/content/formats');
     $this->clickLink('Add text format');
-    $format_id = mb_strtolower($this->randomMachineName());
+    $format_id = $this->randomMachineName();
     $name = $this->randomMachineName();
     $edit = [
       'format' => $format_id,
@@ -194,7 +197,7 @@ class FilterAdminTest extends BrowserTestBase {
   /**
    * Tests filter administration functionality.
    */
-  public function testFilterAdmin() {
+  public function testFilterAdmin(): void {
     $first_filter = 'filter_autop';
     $second_filter = 'filter_url';
 
@@ -224,12 +227,7 @@ class FilterAdminTest extends BrowserTestBase {
     $this->drupalGet('admin/config/content/formats/manage/' . $restricted);
     // Check that the allowed HTML tag was added and the string reformatted.
     $this->assertSession()->fieldValueEquals('filters[filter_html][settings][allowed_html]', "<a> <em> <strong> <cite> <code> <ul> <ol> <li> <dl> <dt> <dd> <quote>");
-
-    $elements = $this->xpath('//select[@name=:first]/following::select[@name=:second]', [
-      ':first' => 'filters[' . $first_filter . '][weight]',
-      ':second' => 'filters[' . $second_filter . '][weight]',
-    ]);
-    $this->assertNotEmpty($elements, 'Order confirmed in admin interface.');
+    $this->assertSession()->elementExists('xpath', "//select[@name='filters[" . $first_filter . "][weight]']/following::select[@name='filters[" . $second_filter . "][weight]']");
 
     // Reorder filters.
     $edit = [];
@@ -240,12 +238,7 @@ class FilterAdminTest extends BrowserTestBase {
     $this->drupalGet('admin/config/content/formats/manage/' . $restricted);
     $this->assertSession()->fieldValueEquals('filters[' . $second_filter . '][weight]', 1);
     $this->assertSession()->fieldValueEquals('filters[' . $first_filter . '][weight]', 2);
-
-    $elements = $this->xpath('//select[@name=:first]/following::select[@name=:second]', [
-      ':first' => 'filters[' . $second_filter . '][weight]',
-      ':second' => 'filters[' . $first_filter . '][weight]',
-    ]);
-    $this->assertNotEmpty($elements, 'Reorder confirmed in admin interface.');
+    $this->assertSession()->elementExists('xpath', "//select[@name='filters[" . $second_filter . "][weight]']/following::select[@name='filters[" . $first_filter . "][weight]']");
 
     $filter_format = FilterFormat::load($restricted);
     foreach ($filter_format->filters() as $filter_name => $filter) {
@@ -258,7 +251,7 @@ class FilterAdminTest extends BrowserTestBase {
 
     // Add format.
     $edit = [];
-    $edit['format'] = mb_strtolower($this->randomMachineName());
+    $edit['format'] = $this->randomMachineName();
     $edit['name'] = $this->randomMachineName();
     $edit['roles[' . RoleInterface::AUTHENTICATED_ID . ']'] = 1;
     $edit['filters[' . $second_filter . '][status]'] = TRUE;
@@ -382,7 +375,7 @@ class FilterAdminTest extends BrowserTestBase {
   /**
    * Tests the URL filter settings form is properly validated.
    */
-  public function testUrlFilterAdmin() {
+  public function testUrlFilterAdmin(): void {
     // The form does not save with an invalid filter URL length.
     $edit = [
       'filters[filter_url][settings][filter_url_length]' => $this->randomMachineName(4),
@@ -395,7 +388,7 @@ class FilterAdminTest extends BrowserTestBase {
   /**
    * Tests whether filter tips page is not HTML escaped.
    */
-  public function testFilterTipHtmlEscape() {
+  public function testFilterTipHtmlEscape(): void {
     $this->drupalLogin($this->adminUser);
     global $base_url;
 
@@ -420,16 +413,19 @@ class FilterAdminTest extends BrowserTestBase {
   /**
    * Tests whether a field using a disabled format is rendered.
    */
-  public function testDisabledFormat() {
+  public function testDisabledFormat(): void {
     // Create a node type and add a standard body field.
-    $node_type = NodeType::create(['type' => mb_strtolower($this->randomMachineName())]);
+    $node_type = NodeType::create([
+      'type' => $this->randomMachineName(),
+      'name' => $this->randomString(),
+    ]);
     $node_type->save();
     node_add_body_field($node_type, $this->randomString());
 
     // Create a text format with a filter that returns a static string.
     $format = FilterFormat::create([
       'name' => $this->randomString(),
-      'format' => $format_id = mb_strtolower($this->randomMachineName()),
+      'format' => $format_id = $this->randomMachineName(),
     ]);
     $format->setFilterConfig('filter_static_text', ['status' => TRUE]);
     $format->save();

@@ -5,8 +5,6 @@
  * Post update functions for System.
  */
 
-use Drupal\Core\Database\Database;
-
 /**
  * Implements hook_removed_post_updates().
  */
@@ -42,31 +40,40 @@ function system_removed_post_updates() {
     'system_post_update_service_advisory_settings' => '10.0.0',
     'system_post_update_delete_authorize_settings' => '10.0.0',
     'system_post_update_sort_all_config' => '10.0.0',
+    'system_post_update_enable_provider_database_driver' => '10.0.0',
+    'system_post_update_linkset_settings' => '11.0.0',
+    'system_post_update_enable_password_compatibility' => '11.0.0',
+    'system_post_update_remove_asset_entries' => '11.0.0',
+    'system_post_update_remove_asset_query_string' => '11.0.0',
+    'system_post_update_add_description_to_entity_view_mode' => '11.0.0',
+    'system_post_update_add_description_to_entity_form_mode' => '11.0.0',
+    'system_post_update_set_blank_log_url_to_null' => '11.0.0',
+    'system_post_update_mailer_dsn_settings' => '11.0.0',
+    'system_post_update_mailer_structured_dsn_settings' => '11.0.0',
+    'system_post_update_amend_config_sync_readme_url' => '11.0.0',
+    'system_post_update_mail_notification_setting' => '11.0.0',
+    'system_post_update_set_cron_logging_setting_to_boolean' => '11.0.0',
+    'system_post_update_sdc_uninstall' => '11.0.0',
+    'system_post_update_move_development_settings_to_keyvalue' => '11.0.0',
+    'system_post_update_add_langcode_to_all_translatable_config' => '11.0.0',
   ];
 }
 
 /**
- * Enable the modules that are providing the listed database drivers.
+ * Updates system.date config to NULL for empty country and timezone defaults.
  */
-function system_post_update_enable_provider_database_driver() {
-  $modules_to_install = [];
-  foreach (Database::getAllConnectionInfo() as $targets) {
-    foreach ($targets as $target) {
-      // Provider determination taken from Connection::getProvider().
-      [$first, $second] = explode('\\', $target['namespace'] ?? '', 3);
-      $provider = ($first === 'Drupal' && strtolower($second) === $second) ? $second : 'core';
-      if ($provider !== 'core' && !\Drupal::moduleHandler()->moduleExists($provider)) {
-        $autoload = $target['autoload'] ?? '';
-        // We are only enabling the module for database drivers that are
-        // provided by a module.
-        if (str_contains($autoload, 'src/Driver/Database/')) {
-          $modules_to_install[$provider] = TRUE;
-        }
-      }
-    }
+function system_post_update_convert_empty_country_and_timezone_settings_to_null(): void {
+  $system_date_settings = \Drupal::configFactory()->getEditable('system.date');
+  $changed = FALSE;
+  if ($system_date_settings->get('country.default') === '') {
+    $system_date_settings->set('country.default', NULL);
+    $changed = TRUE;
   }
-
-  if ($modules_to_install !== []) {
-    \Drupal::service('module_installer')->install(array_keys($modules_to_install));
+  if ($system_date_settings->get('timezone.default') === '') {
+    $system_date_settings->set('timezone.default', NULL);
+    $changed = TRUE;
+  }
+  if ($changed) {
+    $system_date_settings->save();
   }
 }
