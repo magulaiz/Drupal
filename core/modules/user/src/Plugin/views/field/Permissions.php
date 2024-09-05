@@ -133,7 +133,7 @@ class Permissions extends PrerenderList {
    * @return string
    *   The rendered output.
    */
-  public function renderItem($count, $item) {
+  public function renderItem(int $count, array $item): string {
     return $item['permission'];
   }
 
