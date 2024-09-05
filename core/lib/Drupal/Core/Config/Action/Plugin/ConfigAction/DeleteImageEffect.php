@@ -26,10 +26,10 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 final class DeleteImageEffect implements ConfigActionPluginInterface, ContainerFactoryPluginInterface {
 
   /**
-   * Constructs a deleteImageEffect object.
+   * Constructs a DeleteImageEffect object.
    *
    * @param \Drupal\Core\Config\ConfigManagerInterface $configManager
-   *   The entity type manager.
+   *   The config action manager.
    */
   public function __construct(
     private readonly ConfigManagerInterface $configManager
