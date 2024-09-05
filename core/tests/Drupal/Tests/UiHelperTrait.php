@@ -204,7 +204,7 @@ trait UiHelperTrait {
   /**
    * Returns WebAssert object.
    *
-   * @param string $name
+   * @param string|null $name
    *   (optional) Name of the session. Defaults to the active session.
    *
    * @return \Drupal\Tests\WebAssert
