@@ -22,7 +22,6 @@ use GuzzleHttp\RequestOptions;
  * JSON:API integration test for the "Comment" content entity type.
  *
  * @group jsonapi
- * @group #slow
  */
 class CommentTest extends ResourceTestBase {
 
@@ -383,7 +382,7 @@ class CommentTest extends ResourceTestBase {
   /**
    * {@inheritdoc}
    */
-  public function testPatchIndividual(): void {
+  protected function doTestPatchIndividual(): void {
     // Ensure ::getModifiedEntityForPatchTesting() can pick an alternative value
     // for the 'entity_id' field.
     EntityTest::create([
@@ -391,7 +390,7 @@ class CommentTest extends ResourceTestBase {
       'type' => 'bar',
     ])->save();
 
-    parent::testPatchIndividual();
+    parent::doTestPatchIndividual();
   }
 
 }

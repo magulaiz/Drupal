@@ -21,15 +21,14 @@ use Drupal\Tests\Traits\Core\PathAliasTestTrait;
  * Tests link field widgets and formatters.
  *
  * @group link
+ * @group #slow
  */
 class LinkFieldTest extends BrowserTestBase {
 
   use PathAliasTestTrait;
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = [
     'entity_test',

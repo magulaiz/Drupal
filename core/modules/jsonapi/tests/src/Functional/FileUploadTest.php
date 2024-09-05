@@ -24,7 +24,6 @@ use Psr\Http\Message\ResponseInterface;
  * Tests binary data file upload route.
  *
  * @group jsonapi
- * @group #slow
  */
 class FileUploadTest extends ResourceTestBase {
 
@@ -113,7 +112,7 @@ class FileUploadTest extends ResourceTestBase {
    *
    * @var array
    */
-  const SKIP_METHODS = ['testGetIndividual', 'testPostIndividual', 'testPatchIndividual', 'testDeleteIndividual', 'testCollection', 'testRelationships'];
+  const SKIP_METHODS = ['testGetIndividual', 'testIndividual', 'testCollection', 'testRelationships'];
 
   /**
    * {@inheritdoc}
