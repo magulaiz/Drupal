@@ -169,7 +169,7 @@ class AssetResolver implements AssetResolverInterface {
    * @return array
    *   The filtered libraries array.
    */
-  protected function filterLibrariesByType(array $libraries, string $asset_type) {
+  protected function filterLibrariesByType(array $libraries, string $asset_type): array {
     foreach ($libraries as $key => $library) {
       [$extension, $name] = explode('/', $library, 2);
       $definition = $this->libraryDiscovery->getLibraryByName($extension, $name);
