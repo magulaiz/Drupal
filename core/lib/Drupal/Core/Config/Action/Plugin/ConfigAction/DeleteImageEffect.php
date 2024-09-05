@@ -32,7 +32,7 @@ final class DeleteImageEffect implements ConfigActionPluginInterface, ContainerF
    *   The config action manager.
    */
   public function __construct(
-    private readonly ConfigManagerInterface $configManager
+    private readonly ConfigManagerInterface $configManager,
   ) {}
 
   /**
