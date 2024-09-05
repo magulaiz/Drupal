@@ -6,6 +6,7 @@
  */
 
 use Drupal\Core\Routing\RouteMatchInterface;
+use Drupal\pgsql\PathAliasStorageSchema;
 
 /**
  * Implements hook_help().
@@ -18,5 +19,15 @@ function pgsql_help($route_name, RouteMatchInterface $route_match) {
       $output .= '<p>' . t('The PostgreSQL module provides the connection between Drupal and a PostgreSQL database. For more information, see the <a href=":pgsql">online documentation for the PostgreSQL module</a>.', [':pgsql' => 'https://www.drupal.org/docs/core-modules-and-themes/core-modules/postgresql-module']) . '</p>';
       return $output;
 
+  }
+}
+
+/**
+ * Implements hook_entity_type_alter().
+ */
+function pgsql_entity_type_alter(array &$entity_types) {
+  $connection = \Drupal::database();
+  if ($connection && $connection->databaseType() === 'pgsql' && !empty($entity_types['path_alias'])) {
+    $entity_types['path_alias']->setHandlerClass('storage_schema', PathAliasStorageSchema::class);
   }
 }
