@@ -35,7 +35,7 @@ class UrlConversionTest extends UnitTestCase {
     // already. Without this reversion, the additional autoloader isn't tested
     // correctly.
     // @see core/tests/bootstrap.php
-    global $loader;
+    $loader = $GLOBALS['loader'];
     $loader->setPsr4('Drupal\\mysql\\', []);
     $loader->setPsr4('Drupal\\pgsql\\', []);
     $loader->setPsr4('Drupal\\sqlite\\', []);
