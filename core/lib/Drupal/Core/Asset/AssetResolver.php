@@ -118,21 +118,23 @@ class AssetResolver implements AssetResolverInterface {
    *
    * @param \Drupal\Core\Asset\AttachedAssetsInterface $assets
    *   The assets attached to the current response.
-   * @param string $asset_type
+   * @param string|null $asset_type
    *   The asset type to load.
    *
    * @return string[]
    *   A list of libraries and their dependencies, in the order they should be
    *   loaded, excluding any libraries that have already been loaded.
    */
-  protected function getLibrariesToLoad(AttachedAssetsInterface $assets, string $asset_type) {
+  protected function getLibrariesToLoad(AttachedAssetsInterface $assets, ?string $asset_type = NULL) {
     // @see Drupal\FunctionalTests\Core\Asset\AssetOptimizationTestUmami
     // @todo https://www.drupal.org/project/drupal/issues/1945262
     $libraries_to_load = array_diff(
       $this->libraryDependencyResolver->getLibrariesWithDependencies($assets->getLibraries()),
       $this->libraryDependencyResolver->getLibrariesWithDependencies($assets->getAlreadyLoadedLibraries())
     );
-    $libraries_to_load = $this->filterLibrariesByType($libraries_to_load, $asset_type);
+    if ($asset_type) {
+      $libraries_to_load = $this->filterLibrariesByType($libraries_to_load, $asset_type);
+    }
 
     // We now have a complete list of libraries requested. However, this list
     // could be in any order depending on when libraries were attached during
@@ -149,7 +151,9 @@ class AssetResolver implements AssetResolverInterface {
 
     // Now remove any libraries without the relevant asset type again, since
     // they have been brought back in via dependencies.
-    $libraries_to_load = $this->filterLibrariesByType($libraries_to_load, $asset_type);
+    if ($asset_type) {
+      $libraries_to_load = $this->filterLibrariesByType($libraries_to_load, $asset_type);
+    }
 
     return $libraries_to_load;
   }
@@ -388,6 +392,7 @@ class AssetResolver implements AssetResolverInterface {
       // If the core/drupalSettings library is being loaded or is already
       // loaded, get the JavaScript settings assets, and convert them into a
       // single "regular" JavaScript asset.
+      $libraries_to_load = $this->getLibrariesToLoad($assets);
       $settings_required = in_array('core/drupalSettings', $libraries_to_load) || in_array('core/drupalSettings', $this->libraryDependencyResolver->getLibrariesWithDependencies($assets->getAlreadyLoadedLibraries()));
       $settings_have_changed = count($libraries_to_load) > 0 || count($assets->getSettings()) > 0;
 
