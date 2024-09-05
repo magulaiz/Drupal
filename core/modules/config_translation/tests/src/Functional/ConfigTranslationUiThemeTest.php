@@ -76,13 +76,10 @@ class ConfigTranslationUiThemeTest extends BrowserTestBase {
     $element = $this->assertSession()->elementExists('xpath', "//a[normalize-space()='Install and set as default' and contains(@href, '{$theme}')]");
     $this->drupalGet($this->getAbsoluteUrl($element->getAttribute('href')), ['external' => TRUE]);
 
-    if (Database::getConnection()->driver() != 'mongodb') {
-      // @todo Fix the next assertions for MongoDB.
-      $translation_base_url = 'admin/config/development/performance/translate';
-      $this->drupalGet($translation_base_url);
-      $this->assertSession()->statusCodeEquals(200);
-      $this->assertSession()->linkByHrefExists("$translation_base_url/fr/add");
-    }
+    $translation_base_url = 'admin/config/development/performance/translate';
+    $this->drupalGet($translation_base_url);
+    $this->assertSession()->statusCodeEquals(200);
+    $this->assertSession()->linkByHrefExists("$translation_base_url/fr/add");
   }
 
 }
