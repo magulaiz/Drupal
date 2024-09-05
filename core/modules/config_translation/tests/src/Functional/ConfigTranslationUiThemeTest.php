@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\config_translation\Functional;
 
-use Drupal\Core\Database\Database;
 use Drupal\language\Entity\ConfigurableLanguage;
 use Drupal\Tests\BrowserTestBase;
 
