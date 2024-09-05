@@ -377,16 +377,11 @@ class MediaTest extends ResourceTestBase {
    * {@inheritdoc}
    */
   protected function getExpectedCacheContexts(?array $sparse_fieldset = NULL) {
-    $cache_contexts = [
-      // Cache contexts for JSON:API URL query parameters.
-      'url.query_args:fields',
-      'url.query_args:include',
-      // Drupal defaults.
+    return [
+      'url.query_args',
       'url.site',
       'user',
     ];
-    $entity_type = $this->entity->getEntityType();
-    return Cache::mergeContexts($cache_contexts, $entity_type->isRevisionable() ? ['url.query_args:resourceVersion'] : []);
   }
 
   /**
