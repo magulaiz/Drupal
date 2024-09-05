@@ -7,6 +7,7 @@ namespace Drupal\Tests\content_moderation\Functional;
 use Drupal\Tests\BrowserTestBase;
 use Drupal\Tests\content_moderation\Traits\ContentModerationTestTrait;
 use Drupal\Tests\content_translation\Traits\ContentTranslationTestTrait;
+use Drupal\user\Entity\Role;
 
 /**
  * Test content_moderation functionality with content_translation.
@@ -88,7 +89,7 @@ class ModerationContentTranslationTest extends BrowserTestBase {
     $workflow = $this->createEditorialWorkflow();
     $workflow->getTypePlugin()->addEntityTypeAndBundle('node', 'article');
     $workflow->save();
-    $this->adminUser->addRole($this->drupalCreateRole(['use editorial transition publish']))->save();
+    $this->grantPermissions(Role::load(Role::AUTHENTICATED_ID), ['use editorial transition publish']);
 
     // Edit the English node.
     $this->drupalGet('node/' . $english_node->id() . '/edit');
