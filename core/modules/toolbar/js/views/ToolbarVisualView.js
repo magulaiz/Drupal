@@ -352,7 +352,8 @@
         //   (3) The orientation of the tray is vertical.
         if (
           !this.model.get('areSubtreesLoaded') &&
-          typeof $activeTab.data('drupal-subtrees') !== 'undefined' &&
+          $activeTab[0] &&
+          $activeTab[0].getAttribute('data-drupal-subtrees') !== null &&
           orientation === 'vertical'
         ) {
           const subtreesHash = drupalSettings.toolbar.subtreesHash;

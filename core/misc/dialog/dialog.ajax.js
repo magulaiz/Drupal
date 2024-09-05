@@ -56,11 +56,14 @@
         originalClose.apply(settings.dialog, [event, ...args]);
         // Check if the opener element is inside an AJAX container.
         const $element = $(event.target);
-        const ajaxContainer = $element.data('uiDialog')
-          ? $element
-              .data('uiDialog')
-              .opener.closest('[data-drupal-ajax-container]')
-          : [];
+
+        const dialogData = new WeakMap();
+        const ajaxContainer =
+          (dialogData.get($element[0]) &&
+            dialogData
+              .get($element[0])
+              .opener.closest('[data-drupal-ajax-container]')) ||
+          [];
 
         // If the opener element was in an ajax container, and focus is on the
         // body element, we can assume focus was lost. To recover, focus is
@@ -99,10 +102,16 @@
       $buttons.each(function () {
         const $originalButton = $(this);
         this.style.display = 'none';
+        const originalButton = this;
+        originalButton.style.display = 'none';
+        const originalButtonOnce = originalButton.getAttribute('data-once');
+        const originalButtonData = new WeakMap();
+        originalButtonData.set(originalButton, { once: originalButtonOnce });
+
         buttons.push({
           text: $originalButton.html() || $originalButton.attr('value'),
           class: $originalButton.attr('class'),
-          'data-once': $originalButton.data('once'),
+          'data-once': originalButtonOnce,
           click(e) {
             // If the original button is an anchor tag, triggering the "click"
             // event will not simulate a click. Use the click method instead.
@@ -272,7 +281,7 @@
    */
   window.addEventListener('dialog:aftercreate', (event) => {
     const $element = $(event.target);
-    const dialog = event.dialog;
+    const { dialog } = event;
     $element.on('click.dialog', '.dialog-cancel', (e) => {
       dialog.close('cancel');
       e.preventDefault();
