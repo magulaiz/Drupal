@@ -60,7 +60,7 @@ class InlineBlockUsage implements InlineBlockUsageInterface {
         'layout_entity_id' => NULL,
       ]);
     $query->condition('layout_entity_type', $entity->getEntityTypeId());
-    $query->condition('layout_entity_id', (int) $entity->id());
+    $query->condition('layout_entity_id', $entity->id());
     $query->execute();
   }
 
