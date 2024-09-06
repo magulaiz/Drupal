@@ -10,7 +10,13 @@
   {% for item in items %}
 
     {% if item.url is not empty %}
-      {% set item_link_tag = link_tag(item.url) %}
+      {% if item.url.isRouted and item.url.routeName == '<nolink>' %}
+        {% set item_link_tag = 'span' %}
+      {% elseif item.url.isRouted and item.url.routeName == '<button>' %}
+        {% set item_link_tag = 'button' %}
+      {% else %}
+        {% set item_link_tag = 'a' %}
+      {% endif %}
     {% endif %}
 
     {% if item.url.options.attributes is empty %}
