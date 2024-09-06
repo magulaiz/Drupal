@@ -39,7 +39,7 @@ parameters:
     default: keyvalue.database
   http.response.content_security_policy:
     report_only: ''
-    # @todo Set default value in Drupal 12.0.0. See https://www.drupal.org/project/drupal/issues/2513356
+    # @todo Set default value in Drupal 12.0.0. See https://www.drupal.org/project/drupal/issues/3472502
     enforced: ''
   http.response.debug_cacheability_headers: false
   factory.keyvalue.expirable:

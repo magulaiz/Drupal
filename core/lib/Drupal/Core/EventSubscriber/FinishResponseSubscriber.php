@@ -111,8 +111,7 @@ class FinishResponseSubscriber implements EventSubscriberInterface {
     if (!empty($this->contentSecurityPolicy['enforced'])) {
       $response->headers->set('Content-Security-Policy', $this->contentSecurityPolicy['enforced']);
     }
-    // @todo Remove X-Frame-Options in 12.0.0.
-    // See https://www.drupal.org/project/drupal/issues/2513356
+    // @todo Remove in Drupal 12.0.0. See https://www.drupal.org/project/drupal/issues/3472502
     elseif (!$response->headers->has('X-Frame-Options')) {
       // This will be translated to a CSP header by onRespondSetCspPolicy().
       $response->headers->set('X-Frame-Options', 'SAMEORIGIN');
@@ -179,7 +178,7 @@ class FinishResponseSubscriber implements EventSubscriberInterface {
   /**
    * Translate X-Frame-Options header to Content Security Policy for BC.
    *
-   * @todo Remove in Drupal 12.0.0. See https://www.drupal.org/project/drupal/issues/2513356
+   * @todo Remove in Drupal 12.0.0. See https://www.drupal.org/project/drupal/issues/3472502
    *
    * @param \Symfony\Component\HttpKernel\Event\ResponseEvent $event
    *   The event to process.
@@ -211,7 +210,7 @@ class FinishResponseSubscriber implements EventSubscriberInterface {
       else {
         // Only values other than SAMEORIGIN need a deprecation warning because
         // 'self' will be the default in 12.0.0.
-        @trigger_error('X-Frame-Options header is deprecated in drupal:11.1.0 and will be replaced with Content-Security-Policy frame-ancestors in drupal:12.0.0. See https://www.drupal.org/project/drupal/issues/2513356', E_USER_DEPRECATED);
+        @trigger_error('X-Frame-Options header is deprecated in drupal:11.1.0 and will be replaced with Content-Security-Policy frame-ancestors in drupal:12.0.0. See https://www.drupal.org/node/3472498', E_USER_DEPRECATED);
 
         if ($frameOptions === 'DENY') {
           $policy .= '; frame-ancestors \'none\'';
@@ -362,6 +361,7 @@ class FinishResponseSubscriber implements EventSubscriberInterface {
     $events[KernelEvents::RESPONSE][] = ['onAllResponds', 16];
 
     // Execute late to act on X-Frame-Options set by any other subscriber.
+    // @todo Remove in Drupal 12.0.0. See https://www.drupal.org/project/drupal/issues/3472502
     $events[KernelEvents::RESPONSE][] = ['onRespondSetCspPolicy', -16];
 
     return $events;

@@ -179,7 +179,7 @@ class FinishResponseSubscriberTest extends UnitTestCase {
   /**
    * Data Provider for testing conversion of X-Frame-Options to CSP header.
    *
-   * @todo Remove in Drupal 12.0.0. See https://www.drupal.org/project/drupal/issues/2513356
+   * @todo Remove in Drupal 12.0.0. See https://www.drupal.org/project/drupal/issues/3472502
    *
    * @return array
    */
@@ -207,7 +207,7 @@ class FinishResponseSubscriberTest extends UnitTestCase {
   /**
    * X-Frame-Options should be converted to a CSP header.
    *
-   * @todo Remove in Drupal 12.0.0. See https://www.drupal.org/project/drupal/issues/2513356
+   * @todo Remove in Drupal 12.0.0. See https://www.drupal.org/project/drupal/issues/3472502
    *
    * @dataProvider xFrameOptionsProvider
    *
@@ -247,7 +247,7 @@ class FinishResponseSubscriberTest extends UnitTestCase {
   /**
    * Existing CSP header should not be altered by X-Frame-Options.
    *
-   * @todo Remove in Drupal 12.0.0. See https://www.drupal.org/project/drupal/issues/2513356
+   * @todo Remove in Drupal 12.0.0. See https://www.drupal.org/project/drupal/issues/3472502
    *
    * @covers ::onRespond
    * @covers ::onRespondSetCspPolicy
