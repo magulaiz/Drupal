@@ -355,6 +355,7 @@ default:
 
 '✅️ PHPStan Tests':
   <<: [ *default-job-settings-lint ]
+  stage: 🪄 Lint
   variables:
     KUBERNETES_CPU_REQUEST: "2"
   # Run if PHPStan files have changed, or manually.
