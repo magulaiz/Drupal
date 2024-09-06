@@ -34,7 +34,7 @@ class ContentTranslationRevisionTranslationDeletionTest extends ContentTranslati
     parent::setUp();
     $this->connection = Database::getConnection();
     if ($this->connection->driver() == 'mongodb') {
-      //@todo Fix this test for MongoDB.
+      // @todo Fix this test for MongoDB.
       $this->markTestSkipped();
     }
 
