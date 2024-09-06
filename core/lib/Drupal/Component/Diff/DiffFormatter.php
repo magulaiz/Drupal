@@ -134,7 +134,7 @@ class DiffFormatter {
         $this->_changed($edit->orig, $edit->closing);
       }
       else {
-        trigger_error('Unknown edit type', E_USER_ERROR);
+        throw new \RuntimeException('Unknown edit type: '. $edit->type);
       }
     }
     $this->_end_block();
