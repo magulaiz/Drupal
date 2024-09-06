@@ -92,7 +92,9 @@
  *   matches the base route, that will be the default/first tab shown.
  *
  * Local tasks from other modules can be altered using
- * hook_menu_local_tasks_alter().
+ * hook_local_tasks_alter().
+ * Additionally, hook_menu_local_tasks_alter() can be used to dynamically alter
+ * local tasks before they are rendered.
  *
  * @todo Derivatives are in flux for these; when they are more stable, add
  *   documentation here.
@@ -323,6 +325,8 @@ function hook_menu_links_discovered_alter(&$links) {
  * @param \Drupal\Core\Cache\RefinableCacheableDependencyInterface $cacheability
  *   The cacheability metadata for the current route's local tasks.
  *
+ * @see hook_local_tasks_alter()
+ *
  * @ingroup menu
  */
 function hook_menu_local_tasks_alter(&$data, $route_name, \Drupal\Core\Cache\RefinableCacheableDependencyInterface &$cacheability) {
@@ -366,6 +370,7 @@ function hook_menu_local_actions_alter(&$local_actions) {
  *
  * @see \Drupal\Core\Menu\LocalTaskInterface
  * @see \Drupal\Core\Menu\LocalTaskManager
+ * @see hook_menu_local_tasks_alter()
  *
  * @ingroup menu
  */
