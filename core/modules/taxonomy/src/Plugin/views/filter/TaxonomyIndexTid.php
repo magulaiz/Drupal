@@ -83,7 +83,7 @@ class TaxonomyIndexTid extends ManyToOne {
     $this->termStorage = $term_storage;
     $this->currentUser = $current_user;
     if (!$language_manager) {
-      @trigger_error('The language_manager service must be passed to ' . __NAMESPACE__ . '\TaxonomyIndexTid::__construct(). It was added in drupal:11.1.0 and will be required before drupal:12.0.0.', E_USER_DEPRECATED);
+      @trigger_error('Calling ' . __METHOD__ . '() without the $language_manager argument is deprecated in drupal:11.1.0 and will be required in drupal:12.0.0.', E_USER_DEPRECATED);
       $language_manager = \Drupal::languageManager();
     }
     $this->languageManager = $language_manager;
