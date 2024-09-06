@@ -353,6 +353,31 @@ default:
     paths:
       - core/.phpstan-baseline.php
 
+'✅️ PHPStan Tests':
+  <<: [ *default-job-settings-lint ]
+  variables:
+    KUBERNETES_CPU_REQUEST: "2"
+  # Run if PHPStan files have changed, or manually.
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "parent_pipeline" && $PERFORMANCE_TEST != "1"
+      changes:
+        - core/tests/PHPStan/*
+        - composer/Metapackage/PinnedDevDependencies/composer.json
+    - when: manual
+      allow_failure: true
+  script:
+    - docker-php-ext-enable pcov
+    - cd core/tests/PHPStan
+    - composer install
+    - vendor/bin/phpunit tests --testdox --coverage-text --colors=always --coverage-cobertura=coverage.cobertura.xml --log-junit junit.xml
+  artifacts:
+    when: always
+    reports:
+      junit: core/tests/PHPStan/junit.xml
+      coverage_report:
+        coverage_format: cobertura
+        path: core/tests/PHPStan/coverage.cobertura.xml
+
 '🧹 PHP Coding standards (PHPCS)':
   <<: [ *default-job-settings-lint ]
   stage: 🪄 Lint
