@@ -381,7 +381,10 @@ class BigPipe {
           throw $e;
         }
         else {
-          trigger_error($e, E_USER_ERROR);
+          $this->logger->error($e->getMessage(), [
+            'exception' => $e,
+            'backtrace' => $e->getTraceAsString(),
+          ]);
           continue;
         }
       }
@@ -417,7 +420,10 @@ class BigPipe {
           throw $e;
         }
         else {
-          trigger_error($e, E_USER_ERROR);
+          $this->logger->error($e->getMessage(), [
+            'exception' => $e,
+            'backtrace' => $e->getTraceAsString(),
+          ]);
           continue;
         }
       }
@@ -615,7 +621,11 @@ EOF;
             throw $e;
           }
           else {
-            trigger_error($e, E_USER_ERROR);
+            $this->logger->error($e->getMessage(), [
+              '@message' => $e->getMessage(),
+              'exception' => $e,
+              'backtrace' => $e->getTraceAsString(),
+            ]);
           }
         }
       }
