@@ -55,6 +55,8 @@ class DateTimePlus {
 
   /**
    * An array of possible date parts.
+   *
+   * @var string[]
    */
   protected static $dateParts = [
     'year',
@@ -109,11 +111,15 @@ class DateTimePlus {
 
   /**
    * The value of the language code passed to the constructor.
+   *
+   * @var string|null
    */
   protected $langcode = NULL;
 
   /**
    * An array of errors encountered when creating this date.
+   *
+   * @var string[]
    */
   protected $errors = [];
 
