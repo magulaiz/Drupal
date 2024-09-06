@@ -299,9 +299,9 @@ class MediaTest extends ResourceTestBase {
     if (Database::getConnection()->driver() == 'mongodb') {
       $backtrace = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS);
       foreach ($backtrace as $element) {
-        if (isset($element['function']) && ($element['function'] == 'testPatchIndividual')) {
-          // Only when the test method is called testPatchIndividual and we are
-          // using MongoDB should the display value be TRUE.
+        if (isset($element['function']) && ($element['function'] == 'doTestPatchIndividual')) {
+          // Only when the test method is called doTestPatchIndividual and we
+          // are using MongoDB should the display value be TRUE.
           $display = TRUE;
         }
       }
