@@ -176,7 +176,7 @@
         }
       }
 
-      // The function beiong requested each time the user types in the search box.
+      // The function being requested on each keystroke by the user.
       function filterPermissionList(e) {
         const rawQuery = e.target.value;
         const query = re(rawQuery);
