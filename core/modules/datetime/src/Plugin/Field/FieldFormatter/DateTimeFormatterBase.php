@@ -225,9 +225,8 @@ abstract class DateTimeFormatterBase extends FormatterBase {
    */
   protected function buildDateWithIsoAttribute(DrupalDateTime $date) {
     // Create the ISO date in Universal Time.
-    $iso_date = $date->format("Y-m-d\TH:i:s") . 'Z';
-
     $this->setTimeZone($date);
+    $iso_date = $date->format("Y-m-d\TH:i:s") . 'Z';
 
     $build = [
       '#theme' => 'time',
