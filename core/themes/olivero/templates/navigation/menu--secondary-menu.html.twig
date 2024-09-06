@@ -39,9 +39,17 @@
       {% set attributes = attributes.removeClass(secondary_nav_level) %}
       {% for item in items %}
 
+        {% if item.url.isRouted and item.url.routeName == '<nolink>' %}
+          {% set menu_item_type = 'nolink' %}
+        {% elseif item.url.isRouted and item.url.routeName == '<button>' %}
+          {% set menu_item_type = 'button' %}
+        {% else %}
+          {% set menu_item_type = 'link' %}
+        {% endif %}
+
         {% set item_classes = [
             'secondary-nav__menu-item',
-            'secondary-nav__menu-item--' ~ link_tag(item.url),
+            'secondary-nav__menu-item--' ~ menu_item_type,
             'secondary-nav__menu-item--level-' ~ (menu_level + 1),
             item.in_active_trail ? 'secondary-nav__menu-item--active-trail',
             item.below ? 'secondary-nav__menu-item--has-children',
@@ -50,7 +58,7 @@
 
         {% set link_classes = [
             'secondary-nav__menu-link',
-            'secondary-nav__menu-link--' ~ link_tag(item.url),
+            'secondary-nav__menu-link--' ~ menu_item_type,
             'secondary-nav__menu-link--level-' ~ (menu_level + 1),
             item.in_active_trail ? 'secondary-nav__menu-link--active-trail',
             item.below ? 'secondary-nav__menu-link--has-children',
