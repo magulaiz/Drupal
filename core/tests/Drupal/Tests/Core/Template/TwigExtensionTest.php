@@ -8,9 +8,7 @@ namespace Drupal\Tests\Core\Template;
 
 use Drupal\Component\Serialization\Json;
 use Drupal\Core\File\FileUrlGeneratorInterface;
-use Drupal\Core\GeneratedButton;
 use Drupal\Core\GeneratedLink;
-use Drupal\Core\GeneratedNoLink;
 use Drupal\Core\Render\Markup;
 use Drupal\Core\Render\RenderableInterface;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
@@ -79,13 +77,6 @@ class TwigExtensionTest extends UnitTestCase {
   protected $fileUrlGenerator;
 
   /**
-   * The mocked link generator.
-   *
-   * @var \Drupal\Core\Utility\LinkGeneratorInterface|\PHPUnit\Framework\MockObject\MockObject
-   */
-  protected $linkGenerator;
-
-  /**
    * {@inheritdoc}
    */
   protected function setUp(): void {
@@ -96,9 +87,8 @@ class TwigExtensionTest extends UnitTestCase {
     $this->themeManager = $this->createMock('\Drupal\Core\Theme\ThemeManagerInterface');
     $this->dateFormatter = $this->createMock('\Drupal\Core\Datetime\DateFormatterInterface');
     $this->fileUrlGenerator = $this->createMock(FileUrlGeneratorInterface::class);
-    $this->linkGenerator = $this->createMock('Drupal\Core\Utility\LinkGeneratorInterface');
 
-    $this->systemUnderTest = new TwigExtension($this->renderer, $this->urlGenerator, $this->themeManager, $this->dateFormatter, $this->fileUrlGenerator, $this->linkGenerator);
+    $this->systemUnderTest = new TwigExtension($this->renderer, $this->urlGenerator, $this->themeManager, $this->dateFormatter, $this->fileUrlGenerator);
   }
 
   /**
@@ -441,38 +431,6 @@ class TwigExtensionTest extends UnitTestCase {
     $build = $this->systemUnderTest->getLink('test', $url, ['class' => ['bar']]);
 
     $this->assertEquals(['foo', 'bar'], $build['#url']->getOption('attributes')['class']);
-  }
-
-  /**
-   * @covers ::getLinkTag
-   */
-  public function testLinkTag() {
-    $this->renderer->expects($this->any())
-      ->method('render')
-      ->with(['#markup' => '<strong>will be rendered</strong>', '#printed' => FALSE])
-      ->willReturn('<strong>will be rendered</strong>');
-
-    $this->linkGenerator->expects($this->any())
-      ->method('generate')
-      ->willReturnCallback(function ($text, Url $url) {
-        return match ($url->getRouteName()) {
-          '<button>' => $this->createMock(GeneratedButton::class),
-          '<nolink>' => $this->createMock(GeneratedNoLink::class),
-          default => $this->createMock(GeneratedLink::class),
-        };
-      });
-
-    $url = Url::fromRoute('<button>');
-    $link_tag = $this->systemUnderTest->getLinkTag($url);
-    $this->assertEquals('button', $link_tag);
-
-    $url = Url::fromRoute('<nolink>');
-    $link_tag = $this->systemUnderTest->getLinkTag($url);
-    $this->assertEquals('span', $link_tag);
-
-    $url = Url::fromRoute('<front>');
-    $link_tag = $this->systemUnderTest->getLinkTag($url);
-    $this->assertEquals('a', $link_tag);
   }
 
   /**
