@@ -77,7 +77,7 @@ class TaxonomyIndexTid extends ManyToOne {
    * @param \Drupal\Core\Language\LanguageManagerInterface|null $language_manager
    *   The language manager.
    */
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, VocabularyStorageInterface $vocabulary_storage, TermStorageInterface $term_storage, AccountInterface $current_user, LanguageManagerInterface $language_manager = NULL) {
+  public function __construct(array $configuration, $plugin_id, $plugin_definition, VocabularyStorageInterface $vocabulary_storage, TermStorageInterface $term_storage, AccountInterface $current_user, ?LanguageManagerInterface $language_manager = NULL) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
     $this->vocabularyStorage = $vocabulary_storage;
     $this->termStorage = $term_storage;
