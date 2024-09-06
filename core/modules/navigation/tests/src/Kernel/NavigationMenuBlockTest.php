@@ -33,9 +33,7 @@ use Symfony\Component\Routing\RouteCollection;
 class NavigationMenuBlockTest extends KernelTestBase {
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = [
     'system',
@@ -366,7 +364,7 @@ class NavigationMenuBlockTest extends KernelTestBase {
    * @return array
    *   The "menu link ID tree" representation of the given render array.
    */
-  protected function convertBuiltMenuToIdTree(array $build) {
+  protected function convertBuiltMenuToIdTree(array $build): array {
     $level = [];
     foreach (Element::children($build) as $id) {
       $level[$id] = [];
