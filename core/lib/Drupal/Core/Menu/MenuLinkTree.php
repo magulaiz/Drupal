@@ -110,8 +110,9 @@ class MenuLinkTree implements MenuLinkTreeInterface {
    * {@inheritdoc}
    */
   public function transform(array $tree, array $manipulators) {
-    $this->eventDispatcher->dispatch(new MenuLinkTreeManipulatorsAlterEvent($tree, $manipulators, $this), MenuLinkTreeEvents::ALTER_MANIPULATORS);
-    foreach ($manipulators as $manipulator) {
+    $event = new MenuLinkTreeManipulatorsAlterEvent($tree, $manipulators, $this);
+    $this->eventDispatcher->dispatch($event, MenuLinkTreeEvents::ALTER_MANIPULATORS);
+    foreach ($event->getManipulators() as $manipulator) {
       $callable = $this->callableResolver->getCallableFromDefinition($manipulator['callable']);
       // Prepare the arguments for the menu tree manipulator callable; the first
       // argument is always the menu link tree.
