@@ -48,7 +48,7 @@ class BundleConstraintValidatorTest extends KernelTestBase {
    * @group legacy
    */
   public function testStringValue(): void {
-    $this->expectDeprecation("The Bundle's constraint's support for string values for its 'bundle' option is deprecated in drupal:10.3.0 and will trigger a PHP error from drupal:11.0.0. Pass in an array of valid string values instead. See https://www.drupal.org/node/3418350");
+    $this->expectDeprecation("The Bundle's constraint's support for string values for its 'bundle' option is deprecated in drupal:11.1.0 and will trigger a PHP error from drupal:12.0.0. Pass in an array of valid string values instead. See https://www.drupal.org/node/3418350");
     $this->assertValidation('foo');
   }
 
