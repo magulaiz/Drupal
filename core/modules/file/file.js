@@ -235,9 +235,13 @@
       )
         .not($enabledFields)
         .not(':disabled');
-      $fieldsToTemporarilyDisable.prop('disabled', true);
+      $fieldsToTemporarilyDisable.each(function () {
+        this.disabled = true;
+      });
       setTimeout(() => {
-        $fieldsToTemporarilyDisable.prop('disabled', false);
+        $fieldsToTemporarilyDisable.each(function () {
+          this.disabled = false;
+        });
       }, 1000);
     },
 

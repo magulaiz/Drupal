@@ -234,7 +234,10 @@
         }
         // Make all tabbable elements outside of the active tabbing set
         // unreachable.
-        $disabledSet.prop('tabindex', -1).prop('autofocus', false);
+        $disabledSet.each(function () {
+          this.tabIndex = -1;
+          this.autofocus = false;
+        });
 
         // Set focus on an element in the tabbingContext's set of tabbable
         // elements. First, check if there is an element with an autofocus

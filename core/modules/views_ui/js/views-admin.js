@@ -1122,14 +1122,19 @@
         // Show the select all checkbox.
         $selectAll.show();
         $selectAllCheckbox.on('click', function () {
+          const selectAllChecked = this.checked;
           // Update all checkbox beside the select all checkbox.
-          $checkboxes.prop('checked', this.checked);
+          $checkboxes.each(function () {
+            this.checked = selectAllChecked;
+          });
         });
 
         // Uncheck the select all checkbox if any of the others are unchecked.
         $checkboxes.on('click', function () {
           if (this.checked === false) {
-            $selectAllCheckbox.prop('checked', false);
+            $selectAllCheckbox.each(function () {
+              this.checked = false;
+            });
           }
         });
       }
@@ -1183,7 +1188,7 @@
       const $context = $(context);
 
       function changeDefaultWidget(event) {
-        if ($(event.target).prop('checked')) {
+        if (event.target.checked) {
           $context.find('input.default-radios').parent().hide();
           $context.find('td.any-default-radios-row').parent().hide();
           $context.find('input.default-checkboxes').parent().show();
@@ -1299,7 +1304,9 @@
         function (event) {
           const id = $(this).attr('id').replace('views-remove-link-', '');
           $context.find(`#views-row-${id}`).hide();
-          $context.find(`#views-removed-${id}`).prop('checked', true);
+          $context.find(`#views-removed-${id}`).each(function () {
+            this.checked = true;
+          });
           event.preventDefault();
         },
       );
@@ -1311,7 +1318,9 @@
         function (event) {
           const id = $(this).attr('id').replace('display-remove-link-', '');
           $context.find(`#display-row-${id}`).hide();
-          $context.find(`#display-removed-${id}`).prop('checked', true);
+          $context.find(`#display-removed-${id}`).each(function () {
+            this.checked = true;
+          });
           event.preventDefault();
         },
       );

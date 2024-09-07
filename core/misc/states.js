@@ -545,14 +545,12 @@
 
     checked: {
       change() {
-        // prop() and attr() only takes the first element into account. To
-        // support selectors matching multiple checkboxes, iterate over all and
-        // return whether any is checked.
+        // attr() only takes the first element into account. To support
+        // selectors matching multiple checkboxes, iterate over all and return
+        // whether any is checked.
         let checked = false;
         this.each(function () {
-          // Use prop() here as we want a boolean of the checkbox state.
-          // @see http://api.jquery.com/prop/
-          checked = $(this).prop('checked');
+          checked = this.checked;
           // Break the each() loop if this is checked.
           return !checked;
         });
@@ -700,7 +698,13 @@
         .toggleClass('form-disabled', e.value)
         .find(tagsSupportDisable)
         .addBack(tagsSupportDisable)
-        .prop('disabled', e.value);
+        .each(function () {
+          if (e.value) {
+            this.setAttribute('disabled', '');
+          } else {
+            this.removeAttribute('disabled');
+          }
+        });
     }
   });
 
@@ -710,7 +714,9 @@
         .closest('.js-form-item, .js-form-submit, .js-form-wrapper')
         .toggleClass('form-readonly', e.value)
         .find('input, textarea')
-        .prop('readonly', e.value);
+        .each(function () {
+          this.readOnly = e.value;
+        });
     }
   });
 
@@ -754,7 +760,9 @@
       $(e.target)
         .closest('.js-form-item, .js-form-wrapper')
         .find('input')
-        .prop('checked', e.value)
+        .each(function () {
+          this.checked = e.value;
+        })
         .trigger('change');
     }
   });

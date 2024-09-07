@@ -261,7 +261,9 @@
        */
       function disableItems($items) {
         $items
-          .prop('disabled', true)
+          .each(function () {
+            this.disabled = true;
+          })
           .closest('.js-media-library-item')
           .addClass('media-library-item--disabled');
       }
@@ -274,7 +276,9 @@
        */
       function enableItems($items) {
         $items
-          .prop('disabled', false)
+          .each(function () {
+            this.disabled = false;
+          })
           .closest('.js-media-library-item')
           .removeClass('media-library-item--disabled');
       }
@@ -372,7 +376,9 @@
       currentSelection.forEach((value) => {
         $form
           .find(`input[type="checkbox"][value="${value}"]`)
-          .prop('checked', true)
+          .each(function () {
+            this.checked = true;
+          })
           .trigger('change');
       });
 

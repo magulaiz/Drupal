@@ -71,20 +71,24 @@
   // eslint-disable-next-line func-names
   Drupal.Ajax.prototype.beforeSend = function () {
     // Disable the submit button on AJAX request initiation.
-    $('.field-config-edit-form [data-drupal-selector="edit-submit"]').prop(
-      'disabled',
-      true,
-    );
+    const editSubmit = $(
+      '.field-config-edit-form [data-drupal-selector="edit-submit"]',
+    )[0];
+    if (editSubmit) {
+      editSubmit.disabled = true;
+    }
     // eslint-disable-next-line prefer-rest-params
     return originalAjaxBeforeSend.apply(this, arguments);
   };
   // Re-enable the submit button after AJAX request is completed.
   // eslint-disable-next-line
   $(document).on('ajaxComplete', () => {
-    $('.field-config-edit-form [data-drupal-selector="edit-submit"]').prop(
-      'disabled',
-      false,
-    );
+    const editSubmit = $(
+      '.field-config-edit-form [data-drupal-selector="edit-submit"]',
+    )[0];
+    if (editSubmit) {
+      editSubmit.disabled = false;
+    }
   });
 
   /**
@@ -324,7 +328,9 @@
 
         // Disabled elements do not appear in POST ajax data, so we mark the
         // elements disabled only after firing the request.
-        $(ajaxElements).prop('disabled', true);
+        $(ajaxElements).each(function () {
+          this.disabled = true;
+        });
       }
     },
   };
