@@ -103,6 +103,15 @@ default:
   rules:
     - if: $PERFORMANCE_TEST != "1"
 
+.bind-mount: &bind-mount
+  # Gitlab creates a different build directory for each job, so run lint steps
+  # under a bind mount to normalize the directory. This works around the usage
+  # of absolute paths in phpstan and yarn lint caches.
+  # See https://github.com/phpstan/phpstan/issues/8599
+  - mkdir /tmp/linting/
+  - mount --bind $(pwd) /tmp/linting
+  - cd /tmp/linting
+
 .phpstan-cache: &phpstan-cache
   # Get the phpstan cache file from the artifacts of the latest successful
   # job from the target branch. Allow the job to proceed and pass if the file
@@ -309,6 +318,7 @@ default:
   variables:
     KUBERNETES_CPU_REQUEST: "4"
   script:
+    - *bind-mount
     - *phpstan-cache
     - *cspell-cache
     - *eslint-cache
@@ -333,6 +343,7 @@ default:
   variables:
     KUBERNETES_CPU_REQUEST: "4"
   script:
+    - *bind-mount
     - *phpstan-cache
     - composer validate
     - composer install --optimize-autoloader
@@ -404,6 +415,7 @@ default:
     - when: manual
       allow_failure: true
   script:
+    - *bind-mount
     - *eslint-cache
     - cd core
     - corepack enable
@@ -431,6 +443,7 @@ default:
     - when: manual
       allow_failure: true
   script:
+    - *bind-mount
     - *stylelint-cache
     - corepack enable
     - cd core
@@ -447,6 +460,7 @@ default:
   variables:
     KUBERNETES_CPU_REQUEST: "2"
   script:
+    - *bind-mount
     - *cspell-cache
     - *core-spellcheck
   cache:
