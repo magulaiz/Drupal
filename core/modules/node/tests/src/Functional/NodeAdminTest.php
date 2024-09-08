@@ -238,7 +238,7 @@ class NodeAdminTest extends NodeTestBase {
   }
 
   /**
-   * Tests the content overview Views view page does not filter out nodes.
+   * Tests that the content overview page does not filter out nodes.
    */
   public function testContentAdminPageWithLimitedContentViewer(): void {
     \Drupal::service('module_installer')->install(['node_access_test']);
@@ -251,7 +251,8 @@ class NodeAdminTest extends NodeTestBase {
       'node test view',
     ]);
     $viewer_user = $this->drupalCreateUser(values: ['roles' => [$role_id]]);
-
+    // Create published and unpublished content authored by an administrator and
+    // the viewer user.
     $nodes_visible = [];
     $nodes_visible[] = $this->drupalCreateNode(['type' => 'page', 'uid' => $this->adminUser->id(), 'title' => 'Published page by admin']);
     $nodes_visible[] = $this->drupalCreateNode(['type' => 'page', 'uid' => $viewer_user->id(), 'title' => 'Published own page']);
@@ -262,12 +263,12 @@ class NodeAdminTest extends NodeTestBase {
     $nodes_visible[] = $this->drupalCreateNode(['type' => 'page', 'uid' => $this->adminUser->id(), 'title' => 'Unpublished private page by admin', 'status' => NodeInterface::NOT_PUBLISHED, 'private' => ['value' => 1]]);
 
     $this->drupalLogin($viewer_user);
-
+    // Confirm the current user has limited privileges.
     $admin_permissions = ['administer nodes', 'bypass node access'];
     foreach ($admin_permissions as $admin_permission) {
       $this->assertFalse(\Drupal::service('current_user')->hasPermission($admin_permission), sprintf('The current user does not have "%s" permission.', $admin_permission));
     }
-
+    // Confirm that the nodes are visible to the less privileged user.
     foreach ($nodes_visible as $node) {
       $this->drupalGet($node->toUrl('canonical'));
       $this->assertSession()->statusCodeEquals(200);
@@ -276,7 +277,7 @@ class NodeAdminTest extends NodeTestBase {
     }
 
     // Without the "node test view" permission the unpublished page of the
-    // other user is not visible.
+    // admin user is not visible.
     $this->drupalLogin($this->drupalCreateUser(values: [
       'roles' => [
         $this->drupalCreateRole([
@@ -289,7 +290,7 @@ class NodeAdminTest extends NodeTestBase {
     $this->drupalGet($unpublished_node_by_admin->toUrl('canonical'));
     $this->assertSession()->statusCodeEquals(403);
     $this->drupalGet('admin/content');
-    $this->assertSession()->linkByHrefNotExists('node/' . $unpublished_node_by_admin->id(), sprintf('The "%s" node is not visible on the admin/content page.', $unpublished_node_by_admin->getTitle()));
+    $this->assertSession()->linkByHrefNotExists('node/' . $unpublished_node_by_admin->id());
   }
 
   /**

@@ -38,16 +38,16 @@ class NodeViewsData extends EntityViewsData {
     $data['node_field_data']['status']['filter']['use_equal'] = TRUE;
 
     $status_extra_help_text = $this->t('Filters out unpublished content if the current user cannot view it.');
-    if (\Drupal::moduleHandler()->hasImplementations('node_grants')) {
+    if ($this->moduleHandler->hasImplementations('node_grants')) {
       $implementations = [];
       $module_data = \Drupal::getContainer()->get('extension.list.module')->getList();
-      \Drupal::moduleHandler()->invokeAllWith(
+      $this->moduleHandler->invokeAllWith(
         'node_grants',
         function (callable $hook, string $module) use (&$implementations, $module_data) {
           $implementations[$module] = $module_data[$module]->info['name'];
         }
       );
-      \Drupal::moduleHandler()->invokeAllWith(
+      $this->moduleHandler->invokeAllWith(
         'node_grants_alter',
         function (callable $hook, string $module) use (&$implementations, $module_data) {
           $implementations[$module] = $module_data[$module]->info['name'];

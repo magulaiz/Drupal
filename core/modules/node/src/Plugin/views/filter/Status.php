@@ -23,7 +23,7 @@ class Status extends FilterPluginBase {
   }
 
   public function query() {
-    if (\Drupal::moduleHandler()->hasImplementations('node_grants')) {
+    if ($this->moduleHandler->hasImplementations('node_grants')) {
       return;
     }
     $table = $this->ensureMyTable();

@@ -94,7 +94,7 @@ class StatusExtraTest extends NodeTestBase {
     $this->assertSession()->pageTextNotContains($node_unpublished2->label());
     $this->assertSession()->pageTextNotContains($node_unpublished3->label());
 
-    // A privileged user must see the published/unpublished content
+    // A privileged user must see the published and unpublished content
     // when access is granted via hook_node_access_grants().
     \Drupal::service('module_installer')->install(['node_access_test']);
     NodeType::create(['type' => 'page', 'name' => 'page'])->save();
