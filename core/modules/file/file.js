@@ -254,6 +254,7 @@
       const $progressId = $clickedButton
         .closest('div.js-form-managed-file')
         .find('input.file-progress');
+
       if ($progressId.length) {
         const originalName = $progressId.attr('name');
 
@@ -268,13 +269,6 @@
           $progressId.attr('name', originalName);
         }, 1000);
       }
-      // Show the progress bar if the upload takes longer than half a second.
-      setTimeout(() => {
-        $clickedButton
-          .closest('div.js-form-managed-file')
-          .find('div.ajax-progress-bar')
-          .slideDown();
-      }, 500);
       $clickedButton.trigger('fileUpload');
     },
 
