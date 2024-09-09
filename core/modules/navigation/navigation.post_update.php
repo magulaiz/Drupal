@@ -5,7 +5,6 @@
  * Post update functions for the Navigation module.
  */
 
-use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Config\Entity\ConfigEntityUpdater;
 use Drupal\user\RoleInterface;
 
@@ -44,9 +43,14 @@ function navigation_post_update_set_logo_dimensions_default(array &$sandbox) {
 /**
  * Update for navigation logo to store the file path instead of ID.
  */
-function navigation_post_update_update_settings(array &$sandbox) {
-  \Drupal::classResolver(ConfigFactoryInterface::class)->getEditable('navigation.settings')
-    ->set('logo_managed', NULL)
-    ->set('logo_extensions', 'png jpg jpeg svg')
-    ->save();
+function navigation_post_update_set_logo_path(array &$sandbox) {
+  $settings = \Drupal::configFactory()->getEditable('navigation.settings');
+  if (!empty($settings->get('logo_managed'))) {
+    $logo_fid = $settings->get('logo_managed');
+    $file = \Drupal::entityTypeManager()->getStorage('file')->load($logo_fid);
+    if(isset($file)){
+      $settings->set('logo_managed', $file->getFileUri());
+    }
+  }
+  $settings->save();
 }

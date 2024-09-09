@@ -42,11 +42,6 @@ navigation.settings:
         NotNull: [ ]
         Range:
           min: 0
-    logo_extensions:
-      type: string
-      label: 'Supported logo extensions'
-      constraints:
-        NotNull: []
 
 navigation.block_layout:
   type: config_object

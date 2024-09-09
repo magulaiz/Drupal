@@ -118,7 +118,7 @@ final class SettingsForm extends ConfigFormBase {
         ],
       ],
     ];
-    $allowed = $config->get('logo_extensions');
+    $allowed = 'png jpg jpeg svg';
     if (!empty($config->get('logo_managed'))) {
       $fid = $this->getFidFromPath($config->get('logo_managed'));
     }
@@ -198,7 +198,7 @@ final class SettingsForm extends ConfigFormBase {
     }
 
     $config
-      ->set('logo_provider', $new_logo_fid)
+      ->set('logo_provider', $new_logo_provider)
       ->set('logo_managed', $logo_path)
       ->save();
     parent::submitForm($form, $form_state);
