@@ -63,14 +63,30 @@ class MediaLibraryFieldWidgetOpener implements MediaLibraryOpenerInterface {
     /** @var \Drupal\Core\Entity\RevisionableStorageInterface $storage */
     $storage = $this->entityTypeManager->getStorage($entity_type_id);
     $access_handler = $this->entityTypeManager->getAccessControlHandler($entity_type_id);
+    /** @var \Drupal\content_translation\ContentTranslationHandlerInterface $handler */
+    $translation_access_handler = $this->entityTypeManager->getHandler($entity_type_id, 'translation');
+    // Route name pattern for translation add/edit operations.
+    $translation_route_name_pattern = '/entity\.\w+\.content_translation_(add|edit)/';
 
     if (!empty($parameters['revision_id'])) {
       $entity = $storage->loadRevision($parameters['revision_id']);
-      $entity_access = $access_handler->access($entity, 'update', $account, TRUE);
+      // Check if entity route name is for adding or editing translation.
+      if (preg_match($translation_route_name_pattern, $parameters['entity_route_name'])) {
+        $entity_access = $translation_access_handler->getTranslationAccess($entity, 'update');
+      }
+      else {
+        $entity_access = $access_handler->access($entity, 'update', $account, TRUE);
+      }
     }
     elseif ($parameters['entity_id']) {
       $entity = $storage->load($parameters['entity_id']);
-      $entity_access = $access_handler->access($entity, 'update', $account, TRUE);
+      // Check if entity route name is for adding or editing translation.
+      if (preg_match($translation_route_name_pattern, $parameters['entity_route_name'])) {
+        $entity_access = $translation_access_handler->getTranslationAccess($entity, 'update');
+      }
+      else {
+        $entity_access = $access_handler->access($entity, 'update', $account, TRUE);
+      }
     }
     else {
       $entity_access = $access_handler->createAccess($bundle, $account, [], TRUE);
