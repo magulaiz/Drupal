@@ -43,13 +43,13 @@ class NodeViewsData extends EntityViewsData {
       $module_data = \Drupal::getContainer()->get('extension.list.module')->getList();
       $this->moduleHandler->invokeAllWith(
         'node_grants',
-        function (callable $hook, string $module) use (&$implementations, $module_data) {
+        static function (callable $hook, string $module) use (&$implementations, $module_data) {
           $implementations[$module] = $module_data[$module]->info['name'];
         }
       );
       $this->moduleHandler->invokeAllWith(
         'node_grants_alter',
-        function (callable $hook, string $module) use (&$implementations, $module_data) {
+        static function (callable $hook, string $module) use (&$implementations, $module_data) {
           $implementations[$module] = $module_data[$module]->info['name'];
         }
       );
