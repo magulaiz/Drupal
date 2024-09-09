@@ -115,7 +115,7 @@ class SelectionPluginManager extends DefaultPluginManager implements SelectionPl
   public function processDefinition(&$definition, $plugin_id) {
     parent::processDefinition($definition, $plugin_id);
 
-    if (isset($definition['group'])) {
+    if (!empty($definition['group'])) {
       @trigger_error("Setting the 'group' property on selection plugin '$plugin_id is deprecated in drupal:11.1.0 and will be removed in drupal:12.0.0. The property should be removed. See https://www.drupal.org/node/1111111", E_USER_DEPRECATED);
     }
 
