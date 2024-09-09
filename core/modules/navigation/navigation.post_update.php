@@ -48,7 +48,7 @@ function navigation_post_update_set_logo_path(array &$sandbox) {
   if (!empty($settings->get('logo_managed'))) {
     $logo_fid = $settings->get('logo_managed');
     $file = \Drupal::entityTypeManager()->getStorage('file')->load($logo_fid);
-    if(isset($file)){
+    if (isset($file)) {
       $settings->set('logo_managed', $file->getFileUri());
     }
   }
