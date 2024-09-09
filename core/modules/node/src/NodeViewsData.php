@@ -59,7 +59,7 @@ class NodeViewsData extends EntityViewsData {
       $status_extra_help_text = new PluralTranslatableMarkup(
         $implementation_count,
         'This filter has no effect because the %module module controls access.',
-        'This filter has no effect because the %modules and %module modules control access.',
+        'This filter has no effect because the %modules, and %module modules control access.',
         ['%module' => $last_module, '%modules' => implode(', ', $implementations)]
       );
     }
