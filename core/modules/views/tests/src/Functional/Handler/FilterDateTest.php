@@ -176,6 +176,7 @@ class FilterDateTest extends ViewTestBase {
     $view->filter['created']->value['min'] = '';
     $view->filter['created']->value['max'] = '';
     $view->executeDisplay('default');
+    $this->assertNotIdenticalResultset($view, $expected_result, $this->map);
     $expected_result = [];
     $this->assertIdenticalResultset($view, $expected_result, $this->map);
     $view->destroy();
