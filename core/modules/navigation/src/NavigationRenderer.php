@@ -18,6 +18,7 @@ use Drupal\Core\Menu\LocalTaskManagerInterface;
 use Drupal\Core\Plugin\Context\Context;
 use Drupal\Core\Plugin\Context\ContextDefinition;
 use Drupal\Core\Routing\RouteMatchInterface;
+use Drupal\file\Entity\File;
 use Drupal\layout_builder\SectionStorage\SectionStorageManagerInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
 
