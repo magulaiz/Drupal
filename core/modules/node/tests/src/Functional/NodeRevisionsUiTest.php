@@ -213,7 +213,7 @@ class NodeRevisionsUiTest extends NodeTestBase {
     }
 
     $this->drupalGet('node/' . $node->id() . '/revisions');
-    $this->assertSession()->statusCodeEquals(200);
+    $this->assertSession()->pageTextContains('Current revision');
 
     $this->drupalGet('node/' . $node->id() . '/revisions', ['query' => ['page' => '1']]);
     $this->assertSession()->addressEquals('node/' . $node->id() . '/revisions?page=1');
