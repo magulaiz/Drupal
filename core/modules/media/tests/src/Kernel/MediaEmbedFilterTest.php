@@ -176,7 +176,7 @@ class MediaEmbedFilterTest extends MediaEmbedFilterTestBase {
             'media:1',
             'media_view',
           ])
-          ->setCacheContexts(['user.permissions'])
+          ->setCacheContexts(['user'])
           ->setCacheMaxAge(Cache::PERMANENT),
         [],
       ],
@@ -193,7 +193,7 @@ class MediaEmbedFilterTest extends MediaEmbedFilterTestBase {
             'media_view',
             'user:2',
           ])
-          ->setCacheContexts(['timezone', 'user', 'user.permissions'])
+          ->setCacheContexts(['timezone', 'user'])
           ->setCacheMaxAge(Cache::PERMANENT),
         ['library' => ['media/filter.caption']],
       ],

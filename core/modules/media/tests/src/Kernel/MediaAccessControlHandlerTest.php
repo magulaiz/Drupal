@@ -154,8 +154,8 @@ class MediaAccessControlHandlerTest extends MediaKernelTestBase {
       ['status' => TRUE],
       'update',
       AccessResult::neutral(),
-      ['user.permissions'],
-      [],
+      ['user'],
+      ['media:1'],
       TRUE,
     ];
     $test_data['owner, no permissions / published / delete'] = [
@@ -163,8 +163,8 @@ class MediaAccessControlHandlerTest extends MediaKernelTestBase {
       ['status' => TRUE],
       'delete',
       AccessResult::neutral(),
-      ['user.permissions'],
-      [],
+      ['user'],
+      ['media:1'],
       TRUE,
     ];
     $test_data['owner, no permissions / unpublished / view'] = [
@@ -172,7 +172,7 @@ class MediaAccessControlHandlerTest extends MediaKernelTestBase {
       [],
       'view',
       AccessResult::neutral(),
-      ['user.permissions'],
+      ['user'],
       ['media:1'],
       TRUE,
     ];
@@ -181,8 +181,8 @@ class MediaAccessControlHandlerTest extends MediaKernelTestBase {
       [],
       'update',
       AccessResult::neutral(),
-      ['user.permissions'],
-      [],
+      ['user'],
+      ['media:1'],
       TRUE,
     ];
     $test_data['owner, no permissions / unpublished / delete'] = [
@@ -190,8 +190,8 @@ class MediaAccessControlHandlerTest extends MediaKernelTestBase {
       [],
       'delete',
       AccessResult::neutral(),
-      ['user.permissions'],
-      [],
+      ['user'],
+      ['media:1'],
       TRUE,
     ];
 
@@ -211,8 +211,8 @@ class MediaAccessControlHandlerTest extends MediaKernelTestBase {
       ['uid' => 0, 'status' => TRUE],
       'update',
       AccessResult::neutral(),
-      ['user.permissions'],
-      [],
+      ['user'],
+      ['media:1'],
       TRUE,
     ];
     $test_data['not owner, no permissions / published / delete'] = [
@@ -220,8 +220,8 @@ class MediaAccessControlHandlerTest extends MediaKernelTestBase {
       ['uid' => 0, 'status' => TRUE],
       'delete',
       AccessResult::neutral(),
-      ['user.permissions'],
-      [],
+      ['user'],
+      ['media:1'],
       TRUE,
     ];
     $test_data['not owner, no permissions / unpublished / view'] = [
@@ -229,7 +229,7 @@ class MediaAccessControlHandlerTest extends MediaKernelTestBase {
       ['uid' => 0],
       'view',
       AccessResult::neutral(),
-      ['user.permissions'],
+      ['user'],
       ['media:1'],
       TRUE,
     ];
@@ -238,8 +238,8 @@ class MediaAccessControlHandlerTest extends MediaKernelTestBase {
       ['uid' => 0],
       'update',
       AccessResult::neutral(),
-      ['user.permissions'],
-      [],
+      ['user'],
+      ['media:1'],
       TRUE,
     ];
     $test_data['not owner, no permissions / unpublished / delete'] = [
@@ -247,8 +247,8 @@ class MediaAccessControlHandlerTest extends MediaKernelTestBase {
       ['uid' => 0],
       'delete',
       AccessResult::neutral(),
-      ['user.permissions'],
-      [],
+      ['user'],
+      ['media:1'],
       TRUE,
     ];
 
@@ -268,8 +268,8 @@ class MediaAccessControlHandlerTest extends MediaKernelTestBase {
       ['status' => TRUE],
       'update',
       AccessResult::neutral(),
-      ['user.permissions'],
-      [],
+      ['user'],
+      ['media:1'],
       TRUE,
     ];
     $test_data['owner, can view media / published / delete'] = [
@@ -277,8 +277,8 @@ class MediaAccessControlHandlerTest extends MediaKernelTestBase {
       ['status' => TRUE],
       'delete',
       AccessResult::neutral(),
-      ['user.permissions'],
-      [],
+      ['user'],
+      ['media:1'],
       TRUE,
     ];
     $test_data['owner, can view media / unpublished / view'] = [
@@ -286,7 +286,7 @@ class MediaAccessControlHandlerTest extends MediaKernelTestBase {
       [],
       'view',
       AccessResult::neutral(),
-      ['user.permissions'],
+      ['user'],
       ['media:1'],
       TRUE,
     ];
@@ -295,8 +295,8 @@ class MediaAccessControlHandlerTest extends MediaKernelTestBase {
       [],
       'update',
       AccessResult::neutral(),
-      ['user.permissions'],
-      [],
+      ['user'],
+      ['media:1'],
       TRUE,
     ];
     $test_data['owner, can view media / unpublished / delete'] = [
@@ -304,8 +304,8 @@ class MediaAccessControlHandlerTest extends MediaKernelTestBase {
       [],
       'delete',
       AccessResult::neutral(),
-      ['user.permissions'],
-      [],
+      ['user'],
+      ['media:1'],
       TRUE,
     ];
 
@@ -325,8 +325,8 @@ class MediaAccessControlHandlerTest extends MediaKernelTestBase {
       ['uid' => 0, 'status' => TRUE],
       'update',
       AccessResult::neutral(),
-      ['user.permissions'],
-      [],
+      ['user'],
+      ['media:1'],
       TRUE,
     ];
     $test_data['not owner, can view media / published / delete'] = [
@@ -334,8 +334,8 @@ class MediaAccessControlHandlerTest extends MediaKernelTestBase {
       ['uid' => 0, 'status' => TRUE],
       'delete',
       AccessResult::neutral(),
-      ['user.permissions'],
-      [],
+      ['user'],
+      ['media:1'],
       TRUE,
     ];
     $test_data['not owner, can view media / unpublished / view'] = [
@@ -343,7 +343,7 @@ class MediaAccessControlHandlerTest extends MediaKernelTestBase {
       ['uid' => 0],
       'view',
       AccessResult::neutral(),
-      ['user.permissions'],
+      ['user'],
       ['media:1'],
       TRUE,
     ];
@@ -352,8 +352,8 @@ class MediaAccessControlHandlerTest extends MediaKernelTestBase {
       ['uid' => 0],
       'update',
       AccessResult::neutral(),
-      ['user.permissions'],
-      [],
+      ['user'],
+      ['media:1'],
       TRUE,
     ];
     $test_data['not owner, can view media / unpublished / delete'] = [
@@ -361,8 +361,8 @@ class MediaAccessControlHandlerTest extends MediaKernelTestBase {
       ['uid' => 0],
       'delete',
       AccessResult::neutral(),
-      ['user.permissions'],
-      [],
+      ['user'],
+      ['media:1'],
       TRUE,
     ];
 
@@ -382,8 +382,8 @@ class MediaAccessControlHandlerTest extends MediaKernelTestBase {
       ['status' => TRUE],
       'update',
       AccessResult::neutral(),
-      ['user.permissions'],
-      [],
+      ['user'],
+      ['media:1'],
       TRUE,
     ];
     $test_data['owner, can view own unpublished media / published / delete'] = [
@@ -391,8 +391,8 @@ class MediaAccessControlHandlerTest extends MediaKernelTestBase {
       ['status' => TRUE],
       'delete',
       AccessResult::neutral(),
-      ['user.permissions'],
-      [],
+      ['user'],
+      ['media:1'],
       TRUE,
     ];
     $test_data['owner, can view own unpublished media / unpublished / view'] = [
@@ -400,7 +400,7 @@ class MediaAccessControlHandlerTest extends MediaKernelTestBase {
       [],
       'view',
       AccessResult::allowed(),
-      ['user.permissions', 'user'],
+      ['user'],
       ['media:1'],
       TRUE,
     ];
@@ -409,8 +409,8 @@ class MediaAccessControlHandlerTest extends MediaKernelTestBase {
       [],
       'update',
       AccessResult::neutral(),
-      ['user.permissions'],
-      [],
+      ['user'],
+      ['media:1'],
       TRUE,
     ];
     $test_data['owner, can view own unpublished media / unpublished / delete'] = [
@@ -418,8 +418,8 @@ class MediaAccessControlHandlerTest extends MediaKernelTestBase {
       [],
       'delete',
       AccessResult::neutral(),
-      ['user.permissions'],
-      [],
+      ['user'],
+      ['media:1'],
       TRUE,
     ];
 
@@ -439,8 +439,8 @@ class MediaAccessControlHandlerTest extends MediaKernelTestBase {
       ['uid' => 0, 'status' => TRUE],
       'update',
       AccessResult::neutral(),
-      ['user.permissions'],
-      [],
+      ['user'],
+      ['media:1'],
       TRUE,
     ];
     $test_data['not owner, can view own unpublished media / published / delete'] = [
@@ -448,8 +448,8 @@ class MediaAccessControlHandlerTest extends MediaKernelTestBase {
       ['uid' => 0, 'status' => TRUE],
       'delete',
       AccessResult::neutral(),
-      ['user.permissions'],
-      [],
+      ['user'],
+      ['media:1'],
       TRUE,
     ];
     $test_data['not owner, can view own unpublished media / unpublished / view'] = [
@@ -457,7 +457,7 @@ class MediaAccessControlHandlerTest extends MediaKernelTestBase {
       ['uid' => 0],
       'view',
       AccessResult::neutral(),
-      ['user.permissions', 'user'],
+      ['user'],
       ['media:1'],
       TRUE,
     ];
@@ -466,8 +466,8 @@ class MediaAccessControlHandlerTest extends MediaKernelTestBase {
       ['uid' => 0],
       'update',
       AccessResult::neutral(),
-      ['user.permissions'],
-      [],
+      ['user'],
+      ['media:1'],
       TRUE,
     ];
     $test_data['not owner, can view own unpublished media / unpublished / delete'] = [
@@ -475,10 +475,1153 @@ class MediaAccessControlHandlerTest extends MediaKernelTestBase {
       ['uid' => 0],
       'delete',
       AccessResult::neutral(),
+      ['user'],
+      ['media:1'],
+      TRUE,
+    ];
+
+    // Check published / unpublished media access for a user owning the media
+    // item with the 'view media', 'view own unpublished', 'update any media'
+    // and 'delete any media' permissions.
+    $test_data['owner, can view own unpublished media and update or delete any media / published / view'] = [
+      [
+        'view media',
+        'view own unpublished media',
+        'update any media',
+        'delete any media',
+      ],
+      ['status' => TRUE],
+      'view',
+      AccessResult::allowed(),
+      ['user.permissions'],
+      ['media:1'],
+      TRUE,
+    ];
+    $test_data['owner, can view own unpublished media and update or delete any media / published / update'] = [
+      [
+        'view media',
+        'view own unpublished media',
+        'update any media',
+        'delete any media',
+      ],
+      ['status' => TRUE],
+      'update',
+      AccessResult::allowed(),
       ['user.permissions'],
       [],
       TRUE,
     ];
+    $test_data['owner, can view own unpublished media and update or delete any media / published / delete'] = [
+      [
+        'view media',
+        'view own unpublished media',
+        'update any media',
+        'delete any media',
+      ],
+      ['status' => TRUE],
+      'delete',
+      AccessResult::allowed(),
+      ['user.permissions'],
+      [],
+      TRUE,
+    ];
+    $test_data['owner, can view own unpublished media and update or delete any media / unpublished / view'] = [
+      [
+        'view media',
+        'view own unpublished media',
+        'update any media',
+        'delete any media',
+      ],
+      [],
+      'view',
+      AccessResult::allowed(),
+      ['user'],
+      ['media:1'],
+      TRUE,
+    ];
+    $test_data['owner, can view own unpublished media and update or delete any media / unpublished / update'] = [
+      [
+        'view media',
+        'view own unpublished media',
+        'update any media',
+        'delete any media',
+      ],
+      [],
+      'update',
+      AccessResult::allowed(),
+      ['user.permissions'],
+      [],
+      TRUE,
+    ];
+    $test_data['owner, can view own unpublished media and update or delete any media / unpublished / delete'] = [
+      [
+        'view media',
+        'view own unpublished media',
+        'update any media',
+        'delete any media',
+      ],
+      [],
+      'delete',
+      AccessResult::allowed(),
+      ['user.permissions'],
+      [],
+      TRUE,
+    ];
+
+    // Check published / unpublished media access for a user not owning the
+    // media item with the 'view media', 'view own unpublished',
+    // 'update any media' and 'delete any media' permissions.
+    $test_data['not owner, can view own unpublished media and update or delete any media / published / view'] = [
+      [
+        'view media',
+        'view own unpublished media',
+        'update any media',
+        'delete any media',
+      ],
+      ['uid' => 0, 'status' => TRUE],
+      'view',
+      AccessResult::allowed(),
+      ['user.permissions'],
+      ['media:1'],
+      TRUE,
+    ];
+    $test_data['not owner, can view own unpublished media and update or delete any media / published / update'] = [
+      [
+        'view media',
+        'view own unpublished media',
+        'update any media',
+        'delete any media',
+      ],
+      ['uid' => 0, 'status' => TRUE],
+      'update',
+      AccessResult::allowed(),
+      ['user.permissions'],
+      [],
+      TRUE,
+    ];
+    $test_data['not owner, can view own unpublished media and update or delete any media / published / delete'] = [
+      [
+        'view media',
+        'view own unpublished media',
+        'update any media',
+        'delete any media',
+      ],
+      ['uid' => 0, 'status' => TRUE],
+      'delete',
+      AccessResult::allowed(),
+      ['user.permissions'],
+      [],
+      TRUE,
+    ];
+    $test_data['not owner, can view own unpublished media and update or delete any media / unpublished / view'] = [
+      [
+        'view media',
+        'view own unpublished media',
+        'update any media',
+        'delete any media',
+      ],
+      ['uid' => 0],
+      'view',
+      AccessResult::neutral(),
+      ['user'],
+      ['media:1'],
+      TRUE,
+    ];
+    $test_data['not owner, can view own unpublished media and update or delete any media / unpublished / update'] = [
+      [
+        'view media',
+        'view own unpublished media',
+        'update any media',
+        'delete any media',
+      ],
+      ['uid' => 0],
+      'update',
+      AccessResult::allowed(),
+      ['user.permissions'],
+      [],
+      TRUE,
+    ];
+    $test_data['not owner, can view own unpublished media and update or delete any media / unpublished / delete'] = [
+      [
+        'view media',
+        'view own unpublished media',
+        'update any media',
+        'delete any media',
+      ],
+      ['uid' => 0],
+      'delete',
+      AccessResult::allowed(),
+      ['user.permissions'],
+      [],
+      TRUE,
+    ];
+
+    // Check published / unpublished media access for a user owning the media
+    // item with the 'view media', 'view own unpublished', 'update media'
+    // and 'delete media' permissions.
+    $test_data['owner, can view own unpublished media and update or delete own media / published / view'] = [
+      [
+        'view media',
+        'view own unpublished media',
+        'update media',
+        'delete media',
+      ],
+      ['status' => TRUE],
+      'view',
+      AccessResult::allowed(),
+      ['user.permissions'],
+      ['media:1'],
+      TRUE,
+    ];
+    $test_data['owner, can view own unpublished media and update or delete own media / published / update'] = [
+      [
+        'view media',
+        'view own unpublished media',
+        'update media',
+        'delete media',
+      ],
+      ['status' => TRUE],
+      'update',
+      AccessResult::allowed(),
+      ['user'],
+      ['media:1'],
+      TRUE,
+    ];
+    $test_data['owner, can view own unpublished media and update or delete own media / published / delete'] = [
+      [
+        'view media',
+        'view own unpublished media',
+        'update media',
+        'delete media',
+      ],
+      ['status' => TRUE],
+      'delete',
+      AccessResult::allowed(),
+      ['user'],
+      ['media:1'],
+      TRUE,
+    ];
+    $test_data['owner, can view own unpublished media and update or delete own media / unpublished / view'] = [
+      [
+        'view media',
+        'view own unpublished media',
+        'update media',
+        'delete media',
+      ],
+      [],
+      'view',
+      AccessResult::allowed(),
+      ['user'],
+      ['media:1'],
+      TRUE,
+    ];
+    $test_data['owner, can view own unpublished media and update or delete own media / unpublished / update'] = [
+      [
+        'view media',
+        'view own unpublished media',
+        'update media',
+        'delete media',
+      ],
+      [],
+      'update',
+      AccessResult::allowed(),
+      ['user'],
+      ['media:1'],
+      TRUE,
+    ];
+    $test_data['owner, can view own unpublished media and update or delete own media / unpublished / delete'] = [
+      [
+        'view media',
+        'view own unpublished media',
+        'update media',
+        'delete media',
+      ],
+      [],
+      'delete',
+      AccessResult::allowed(),
+      ['user'],
+      ['media:1'],
+      TRUE,
+    ];
+
+    // Check published / unpublished media access for a user not owning the
+    // media item with the 'view media', 'view own unpublished',
+    // 'update media' and 'delete media' permissions.
+    $test_data['not owner, can view own unpublished media and update or delete own media / published / view'] = [
+      [
+        'view media',
+        'view own unpublished media',
+        'update media',
+        'delete media',
+      ],
+      ['uid' => 0, 'status' => TRUE],
+      'view',
+      AccessResult::allowed(),
+      ['user.permissions'],
+      ['media:1'],
+      TRUE,
+    ];
+    $test_data['not owner, can view own unpublished media and update or delete own media / published / update'] = [
+      [
+        'view media',
+        'view own unpublished media',
+        'update media',
+        'delete media',
+      ],
+      ['uid' => 0, 'status' => TRUE],
+      'update',
+      AccessResult::neutral(),
+      ['user'],
+      ['media:1'],
+      TRUE,
+    ];
+    $test_data['not owner, can view own unpublished media and update or delete own media / published / delete'] = [
+      [
+        'view media',
+        'view own unpublished media',
+        'update media',
+        'delete media',
+      ],
+      ['uid' => 0, 'status' => TRUE],
+      'delete',
+      AccessResult::neutral(),
+      ['user'],
+      ['media:1'],
+      TRUE,
+    ];
+    $test_data['not owner, can view own unpublished media and update or delete own media / unpublished / view'] = [
+      [
+        'view media',
+        'view own unpublished media',
+        'update media',
+        'delete media',
+      ],
+      ['uid' => 0],
+      'view',
+      AccessResult::neutral(),
+      ['user'],
+      ['media:1'],
+      TRUE,
+    ];
+    $test_data['not owner, can view own unpublished media and update or delete own media / unpublished / update'] = [
+      [
+        'view media',
+        'view own unpublished media',
+        'update media',
+        'delete media',
+      ],
+      ['uid' => 0],
+      'update',
+      AccessResult::neutral(),
+      ['user'],
+      ['media:1'],
+      TRUE,
+    ];
+    $test_data['not owner, can view own unpublished media and update or delete own media / unpublished / delete'] = [
+      [
+        'view media',
+        'view own unpublished media',
+        'update media',
+        'delete media',
+      ],
+      ['uid' => 0],
+      'delete',
+      AccessResult::neutral(),
+      ['user'],
+      ['media:1'],
+      TRUE,
+    ];
+
+    // Check published / unpublished media access for a user owning the media
+    // item with the 'view media', 'view own unpublished', 'update any media'
+    // , 'delete any media', 'update media' and 'delete media' permissions.
+    $test_data['owner, can view own unpublished media and update or delete all media / published / view'] = [
+      [
+        'view media',
+        'view own unpublished media',
+        'update any media',
+        'delete any media',
+        'update media',
+        'delete media',
+      ],
+      ['status' => TRUE],
+      'view',
+      AccessResult::allowed(),
+      ['user.permissions'],
+      ['media:1'],
+      TRUE,
+    ];
+    $test_data['owner, can view own unpublished media and update or delete all media / published / update'] = [
+      [
+        'view media',
+        'view own unpublished media',
+        'update any media',
+        'delete any media',
+        'update media',
+        'delete media',
+      ],
+      ['status' => TRUE],
+      'update',
+      AccessResult::allowed(),
+      ['user.permissions'],
+      [],
+      TRUE,
+    ];
+    $test_data['owner, can view own unpublished media and update or delete all media / published / delete'] = [
+      [
+        'view media',
+        'view own unpublished media',
+        'update any media',
+        'delete any media',
+        'update media',
+        'delete media',
+      ],
+      ['status' => TRUE],
+      'delete',
+      AccessResult::allowed(),
+      ['user.permissions'],
+      [],
+      TRUE,
+    ];
+    $test_data['owner, can view own unpublished media and update or delete all media / unpublished / view'] = [
+      [
+        'view media',
+        'view own unpublished media',
+        'update any media',
+        'delete any media',
+        'update media',
+        'delete media',
+      ],
+      [],
+      'view',
+      AccessResult::allowed(),
+      ['user'],
+      ['media:1'],
+      TRUE,
+    ];
+    $test_data['owner, can view own unpublished media and update or delete all media / unpublished / update'] = [
+      [
+        'view media',
+        'view own unpublished media',
+        'update any media',
+        'delete any media',
+        'update media',
+        'delete media',
+      ],
+      [],
+      'update',
+      AccessResult::allowed(),
+      ['user.permissions'],
+      [],
+      TRUE,
+    ];
+    $test_data['owner, can view own unpublished media and update or delete all media / unpublished / delete'] = [
+      [
+        'view media',
+        'view own unpublished media',
+        'update any media',
+        'delete any media',
+        'update media',
+        'delete media',
+      ],
+      [],
+      'delete',
+      AccessResult::allowed(),
+      ['user.permissions'],
+      [],
+      TRUE,
+    ];
+
+    // Check published / unpublished media access for a user not owning the
+    // media item with the 'view media', 'view own unpublished',
+    // 'update any media', 'delete any media', 'update media' and
+    // 'delete media' permissions.
+    $test_data['not owner, can view own unpublished media and update or delete all media / published / view'] = [
+      [
+        'view media',
+        'view own unpublished media',
+        'update any media',
+        'delete any media',
+        'update media',
+        'delete media',
+      ],
+      ['uid' => 0, 'status' => TRUE],
+      'view',
+      AccessResult::allowed(),
+      ['user.permissions'],
+      ['media:1'],
+      TRUE,
+    ];
+    $test_data['not owner, can view own unpublished media and update or delete all media / published / update'] = [
+      [
+        'view media',
+        'view own unpublished media',
+        'update any media',
+        'delete any media',
+        'update media',
+        'delete media',
+      ],
+      ['uid' => 0, 'status' => TRUE],
+      'update',
+      AccessResult::allowed(),
+      ['user.permissions'],
+      [],
+      TRUE,
+    ];
+    $test_data['not owner, can view own unpublished media and update or delete all media / published / delete'] = [
+      [
+        'view media',
+        'view own unpublished media',
+        'update any media',
+        'delete any media',
+        'update media',
+        'delete media',
+      ],
+      ['uid' => 0, 'status' => TRUE],
+      'delete',
+      AccessResult::allowed(),
+      ['user.permissions'],
+      [],
+      TRUE,
+    ];
+    $test_data['not owner, can view own unpublished media and update or delete all media / unpublished / view'] = [
+      [
+        'view media',
+        'view own unpublished media',
+        'update any media',
+        'delete any media',
+        'update media',
+        'delete media',
+      ],
+      ['uid' => 0],
+      'view',
+      AccessResult::neutral(),
+      ['user'],
+      ['media:1'],
+      TRUE,
+    ];
+    $test_data['not owner, can view own unpublished media and update or delete all media / unpublished / update'] = [
+      [
+        'view media',
+        'view own unpublished media',
+        'update any media',
+        'delete any media',
+        'update media',
+        'delete media',
+      ],
+      ['uid' => 0],
+      'update',
+      AccessResult::allowed(),
+      ['user.permissions'],
+      [],
+      TRUE,
+    ];
+    $test_data['not owner, can view own unpublished media and update or delete all media / unpublished / delete'] = [
+      [
+        'view media',
+        'view own unpublished media',
+        'update any media',
+        'delete any media',
+        'update media',
+        'delete media',
+      ],
+      ['uid' => 0],
+      'delete',
+      AccessResult::allowed(),
+      ['user.permissions'],
+      [],
+      TRUE,
+    ];
+
+    // Check published / unpublished media access for a user owning the media
+    // item with the 'view media', 'view own unpublished',
+    // 'edit any [type] media' and 'delete any [type] media' permissions.
+    $test_data['owner, can view own unpublished media and update or delete any [type] media / published / view'] = [
+      [
+        'view media',
+        'view own unpublished media',
+        'edit any test media',
+        'delete any test media',
+      ],
+      ['status' => TRUE],
+      'view',
+      AccessResult::allowed(),
+      ['user.permissions'],
+      ['media:1'],
+      TRUE,
+    ];
+    $test_data['owner, can view own unpublished media and update or delete any [type] media / published / update'] = [
+      [
+        'view media',
+        'view own unpublished media',
+        'edit any test media',
+        'delete any test media',
+      ],
+      ['status' => TRUE],
+      'update',
+      AccessResult::allowed(),
+      ['user.permissions'],
+      ['media:1'],
+      TRUE,
+    ];
+    $test_data['owner, can view own unpublished media and update or delete any [type] media / published / delete'] = [
+      [
+        'view media',
+        'view own unpublished media',
+        'edit any test media',
+        'delete any test media',
+      ],
+      ['status' => TRUE],
+      'delete',
+      AccessResult::allowed(),
+      ['user.permissions'],
+      ['media:1'],
+      TRUE,
+    ];
+    $test_data['owner, can view own unpublished media and update or delete any [type] media / unpublished / view'] = [
+      [
+        'view media',
+        'view own unpublished media',
+        'edit any test media',
+        'delete any test media',
+      ],
+      [],
+      'view',
+      AccessResult::allowed(),
+      ['user'],
+      ['media:1'],
+      TRUE,
+    ];
+    $test_data['owner, can view own unpublished media and update or delete any [type] media / unpublished / update'] = [
+      [
+        'view media',
+        'view own unpublished media',
+        'edit any test media',
+        'delete any test media',
+      ],
+      [],
+      'update',
+      AccessResult::allowed(),
+      ['user.permissions'],
+      ['media:1'],
+      TRUE,
+    ];
+    $test_data['owner, can view own unpublished media and update or delete any [type] media / unpublished / delete'] = [
+      [
+        'view media',
+        'view own unpublished media',
+        'edit any test media',
+        'delete any test media',
+      ],
+      [],
+      'delete',
+      AccessResult::allowed(),
+      ['user.permissions'],
+      ['media:1'],
+      TRUE,
+    ];
+
+    // Check published / unpublished media access for a user not owning the
+    // media item with the 'view media', 'view own unpublished',
+    // 'edit any [type] media' and 'delete any [type] media' permissions.
+    $test_data['not owner, can view own unpublished media and update or delete any [type] media / published / view'] = [
+      [
+        'view media',
+        'view own unpublished media',
+        'edit any test media',
+        'delete any test media',
+      ],
+      ['uid' => 0, 'status' => TRUE],
+      'view',
+      AccessResult::allowed(),
+      ['user.permissions'],
+      ['media:1'],
+      TRUE,
+    ];
+    $test_data['not owner, can view own unpublished media and update or delete any [type] media / published / update'] = [
+      [
+        'view media',
+        'view own unpublished media',
+        'edit any test media',
+        'delete any test media',
+      ],
+      ['uid' => 0, 'status' => TRUE],
+      'update',
+      AccessResult::allowed(),
+      ['user.permissions'],
+      ['media:1'],
+      TRUE,
+    ];
+    $test_data['not owner, can view own unpublished media and update or delete any [type] media / published / delete'] = [
+      [
+        'view media',
+        'view own unpublished media',
+        'edit any test media',
+        'delete any test media',
+      ],
+      ['uid' => 0, 'status' => TRUE],
+      'delete',
+      AccessResult::allowed(),
+      ['user.permissions'],
+      ['media:1'],
+      TRUE,
+    ];
+    $test_data['not owner, can view own unpublished media and update or delete any [type] media / unpublished / view'] = [
+      [
+        'view media',
+        'view own unpublished media',
+        'edit any test media',
+        'delete any test media',
+      ],
+      ['uid' => 0],
+      'view',
+      AccessResult::neutral(),
+      ['user'],
+      ['media:1'],
+      TRUE,
+    ];
+    $test_data['not owner, can view own unpublished media and update or delete any [type] media / unpublished / update'] = [
+      [
+        'view media',
+        'view own unpublished media',
+        'edit any test media',
+        'delete any test media',
+      ],
+      ['uid' => 0],
+      'update',
+      AccessResult::allowed(),
+      ['user.permissions'],
+      ['media:1'],
+      TRUE,
+    ];
+    $test_data['not owner, can view own unpublished media and update or delete any [type] media / unpublished / delete'] = [
+      [
+        'view media',
+        'view own unpublished media',
+        'edit any test media',
+        'delete any test media',
+      ],
+      ['uid' => 0],
+      'delete',
+      AccessResult::allowed(),
+      ['user.permissions'],
+      ['media:1'],
+      TRUE,
+    ];
+
+    // Check published / unpublished media access for a user owning the media
+    // item with the 'view media', 'view own unpublished',
+    // 'edit own [type] media' and 'delete own [type] media' permissions.
+    $test_data['owner, can view own unpublished media and update or delete own [type] media / published / view'] = [
+      [
+        'view media',
+        'view own unpublished media',
+        'edit own test media',
+        'delete own test media',
+      ],
+      ['status' => TRUE],
+      'view',
+      AccessResult::allowed(),
+      ['user.permissions'],
+      ['media:1'],
+      TRUE,
+    ];
+    $test_data['owner, can view own unpublished media and update or delete own [type] media / published / update'] = [
+      [
+        'view media',
+        'view own unpublished media',
+        'edit own test media',
+        'delete own test media',
+      ],
+      ['status' => TRUE],
+      'update',
+      AccessResult::allowed(),
+      ['user'],
+      ['media:1'],
+      TRUE,
+    ];
+    $test_data['owner, can view own unpublished media and update or delete own [type] media / published / delete'] = [
+      [
+        'view media',
+        'view own unpublished media',
+        'edit own test media',
+        'delete own test media',
+      ],
+      ['status' => TRUE],
+      'delete',
+      AccessResult::allowed(),
+      ['user'],
+      ['media:1'],
+      TRUE,
+    ];
+    $test_data['owner, can view own unpublished media and update or delete own [type] media / unpublished / view'] = [
+      [
+        'view media',
+        'view own unpublished media',
+        'edit own test media',
+        'delete own test media',
+      ],
+      [],
+      'view',
+      AccessResult::allowed(),
+      ['user'],
+      ['media:1'],
+      TRUE,
+    ];
+    $test_data['owner, can view own unpublished media and update or delete own [type] media / unpublished / update'] = [
+      [
+        'view media',
+        'view own unpublished media',
+        'edit own test media',
+        'delete own test media',
+      ],
+      [],
+      'update',
+      AccessResult::allowed(),
+      ['user'],
+      ['media:1'],
+      TRUE,
+    ];
+    $test_data['owner, can view own unpublished media and update or delete own [type] media / unpublished / delete'] = [
+      [
+        'view media',
+        'view own unpublished media',
+        'edit own test media',
+        'delete own test media',
+      ],
+      [],
+      'delete',
+      AccessResult::allowed(),
+      ['user'],
+      ['media:1'],
+      TRUE,
+    ];
+
+    // Check "any" permissions are checked before edit own [type] so the user
+    // context is not added.
+    $test_data['owner, can view own unpublished media and update or delete own [type] media or delete any media / unpublished / update'] = [
+      [
+        'view media',
+        'view own unpublished media',
+        'edit own test media',
+        'delete own test media',
+        'delete any media',
+        'update any media',
+      ],
+      [],
+      'update',
+      AccessResult::allowed(),
+      ['user.permissions'],
+      [],
+      TRUE,
+    ];
+    $test_data['owner, can view own unpublished media and update or delete own [type] media or delete any media / unpublished / delete'] = [
+      [
+        'view media',
+        'view own unpublished media',
+        'edit own test media',
+        'delete own test media',
+        'delete any media',
+        'update any media',
+      ],
+      [],
+      'delete',
+      AccessResult::allowed(),
+      ['user.permissions'],
+      [],
+      TRUE,
+    ];
+
+    // Check published / unpublished media access for a user not owning the
+    // media item with the 'view media', 'view own unpublished',
+    // 'edit own [type] media' and 'delete own [type] media' permissions.
+    $test_data['not owner, can view own unpublished media and update or delete own [type] media / published / view'] = [
+      [
+        'view media',
+        'view own unpublished media',
+        'edit own test media',
+        'delete own test media',
+      ],
+      ['uid' => 0, 'status' => TRUE],
+      'view',
+      AccessResult::allowed(),
+      ['user.permissions'],
+      ['media:1'],
+      TRUE,
+    ];
+    $test_data['not owner, can view own unpublished media and update or delete own [type] media / published / update'] = [
+      [
+        'view media',
+        'view own unpublished media',
+        'edit own test media',
+        'delete own test media',
+      ],
+      ['uid' => 0, 'status' => TRUE],
+      'update',
+      AccessResult::neutral(),
+      ['user'],
+      ['media:1'],
+      TRUE,
+    ];
+    $test_data['not owner, can view own unpublished media and update or delete own [type] media / published / delete'] = [
+      [
+        'view media',
+        'view own unpublished media',
+        'edit own test media',
+        'delete own test media',
+      ],
+      ['uid' => 0, 'status' => TRUE],
+      'delete',
+      AccessResult::neutral(),
+      ['user'],
+      ['media:1'],
+      TRUE,
+    ];
+    $test_data['not owner, can view own unpublished media and update or delete own [type] media / unpublished / view'] = [
+      [
+        'view media',
+        'view own unpublished media',
+        'edit own test media',
+        'delete own test media',
+      ],
+      ['uid' => 0],
+      'view',
+      AccessResult::neutral(),
+      ['user'],
+      ['media:1'],
+      TRUE,
+    ];
+    $test_data['not owner, can view own unpublished media and update or delete own [type] media / unpublished / update'] = [
+      [
+        'view media',
+        'view own unpublished media',
+        'edit own test media',
+        'delete own test media',
+      ],
+      ['uid' => 0],
+      'update',
+      AccessResult::neutral(),
+      ['user'],
+      ['media:1'],
+      TRUE,
+    ];
+    $test_data['not owner, can view own unpublished media and update or delete own [type] media / unpublished / delete'] = [
+      [
+        'view media',
+        'view own unpublished media',
+        'edit own test media',
+        'delete own test media',
+      ],
+      ['uid' => 0],
+      'delete',
+      AccessResult::neutral(),
+      ['user'],
+      ['media:1'],
+      TRUE,
+    ];
+
+    // Check published / unpublished media access for a user owning the media
+    // item with the 'view media', 'view own unpublished',
+    // 'edit any [type] media', 'delete any [type] media',
+    // 'edit own [type] media' and 'delete own [type] media' permissions.
+    $test_data['owner, can view own unpublished media and update or delete all [type] media / published / view'] = [
+      [
+        'view media',
+        'view own unpublished media',
+        'edit any test media',
+        'delete any test media',
+        'edit own test media',
+        'delete own test media',
+      ],
+      ['status' => TRUE],
+      'view',
+      AccessResult::allowed(),
+      ['user.permissions'],
+      ['media:1'],
+      TRUE,
+    ];
+    $test_data['owner, can view own unpublished media and update or delete all [type] media / published / update'] = [
+      [
+        'view media',
+        'view own unpublished media',
+        'edit any test media',
+        'delete any test media',
+        'edit own test media',
+        'delete own test media',
+      ],
+      ['status' => TRUE],
+      'update',
+      AccessResult::allowed(),
+      ['user.permissions'],
+      ['media:1'],
+      TRUE,
+    ];
+    $test_data['owner, can view own unpublished media and update or delete all [type] media / published / delete'] = [
+      [
+        'view media',
+        'view own unpublished media',
+        'edit any test media',
+        'delete any test media',
+        'edit own test media',
+        'delete own test media',
+      ],
+      ['status' => TRUE],
+      'delete',
+      AccessResult::allowed(),
+      ['user.permissions'],
+      ['media:1'],
+      TRUE,
+    ];
+    $test_data['owner, can view own unpublished media and update or delete all [type] media / unpublished / view'] = [
+      [
+        'view media',
+        'view own unpublished media',
+        'edit any test media',
+        'delete any test media',
+        'edit own test media',
+        'delete own test media',
+      ],
+      [],
+      'view',
+      AccessResult::allowed(),
+      ['user'],
+      ['media:1'],
+      TRUE,
+    ];
+    $test_data['owner, can view own unpublished media and update or delete all [type] media / unpublished / update'] = [
+      [
+        'view media',
+        'view own unpublished media',
+        'edit any test media',
+        'delete any test media',
+        'edit own test media',
+        'delete own test media',
+      ],
+      [],
+      'update',
+      AccessResult::allowed(),
+      ['user.permissions'],
+      ['media:1'],
+      TRUE,
+    ];
+    $test_data['owner, can view own unpublished media and update or delete all [type] media / unpublished / delete'] = [
+      [
+        'view media',
+        'view own unpublished media',
+        'edit any test media',
+        'delete any test media',
+        'edit own test media',
+        'delete own test media',
+      ],
+      [],
+      'delete',
+      AccessResult::allowed(),
+      ['user.permissions'],
+      ['media:1'],
+      TRUE,
+    ];
+
+    // Check published / unpublished media access for a user not owning the
+    // media item with the 'view media', 'view own unpublished',
+    // 'edit any [type] media', 'delete any [type] media',
+    // 'edit own [type] media' and 'delete own [type] media' permissions.
+    $test_data['not owner, can view own unpublished media and update or delete all [type] media / published / view'] = [
+      [
+        'view media',
+        'view own unpublished media',
+        'edit any test media',
+        'delete any test media',
+        'edit own test media',
+        'delete own test media',
+      ],
+      ['uid' => 0, 'status' => TRUE],
+      'view',
+      AccessResult::allowed(),
+      ['user.permissions'],
+      ['media:1'],
+      TRUE,
+    ];
+    $test_data['not owner, can view own unpublished media and update or delete all [type] media / published / update'] = [
+      [
+        'view media',
+        'view own unpublished media',
+        'edit any test media',
+        'delete any test media',
+        'edit own test media',
+        'delete own test media',
+      ],
+      ['uid' => 0, 'status' => TRUE],
+      'update',
+      AccessResult::allowed(),
+      ['user.permissions'],
+      ['media:1'],
+      TRUE,
+    ];
+    $test_data['not owner, can view own unpublished media and update or delete all [type] media / published / delete'] = [
+      [
+        'view media',
+        'view own unpublished media',
+        'edit any test media',
+        'delete any test media',
+        'edit own test media',
+        'delete own test media',
+      ],
+      ['uid' => 0, 'status' => TRUE],
+      'delete',
+      AccessResult::allowed(),
+      ['user.permissions'],
+      ['media:1'],
+      TRUE,
+    ];
+    $test_data['not owner, can view own unpublished media and update or delete all [type] media / unpublished / view'] = [
+      [
+        'view media',
+        'view own unpublished media',
+        'edit any test media',
+        'delete any test media',
+        'edit own test media',
+        'delete own test media',
+      ],
+      ['uid' => 0],
+      'view',
+      AccessResult::neutral(),
+      ['user'],
+      ['media:1'],
+      TRUE,
+    ];
+    $test_data['not owner, can view own unpublished media and update or delete all [type] media / unpublished / update'] = [
+      [
+        'view media',
+        'view own unpublished media',
+        'edit any test media',
+        'delete any test media',
+        'edit own test media',
+        'delete own test media',
+      ],
+      ['uid' => 0],
+      'update',
+      AccessResult::allowed(),
+      ['user.permissions'],
+      ['media:1'],
+      TRUE,
+    ];
+    $test_data['not owner, can view own unpublished media and update or delete all [type] media / unpublished / delete'] = [
+      [
+        'view media',
+        'view own unpublished media',
+        'edit any test media',
+        'delete any test media',
+        'edit own test media',
+        'delete own test media',
+      ],
+      ['uid' => 0],
+      'delete',
+      AccessResult::allowed(),
+      ['user.permissions'],
+      ['media:1'],
+      TRUE,
+    ];
+
     // View all revisions:
     $test_data['view all revisions:none'] = [
       [],

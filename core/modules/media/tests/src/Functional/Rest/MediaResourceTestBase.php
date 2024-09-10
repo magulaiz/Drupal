@@ -316,7 +316,7 @@ abstract class MediaResourceTestBase extends EntityResourceTestBase {
     return [
       'languages:language_interface',
       'url.site',
-      'user.permissions',
+      'user',
     ];
   }
 
