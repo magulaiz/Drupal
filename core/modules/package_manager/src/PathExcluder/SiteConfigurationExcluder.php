@@ -35,7 +35,7 @@ class SiteConfigurationExcluder implements EventSubscriberInterface {
   public function __construct(
     protected string $sitePath,
     private readonly PathLocator $pathLocator,
-    private readonly FileSystemInterface $fileSystem
+    private readonly FileSystemInterface $fileSystem,
   ) {}
 
   /**

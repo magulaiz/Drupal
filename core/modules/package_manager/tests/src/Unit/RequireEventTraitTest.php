@@ -49,7 +49,7 @@ class RequireEventTraitTest extends UnitTestCase {
    * @return mixed[]
    *   The test cases.
    */
-  public function providerGetPackages(): array {
+  public static function providerGetPackages(): array {
     return [
       'Package with constraint' => [
         ['drupal/new_package:^8.1'],

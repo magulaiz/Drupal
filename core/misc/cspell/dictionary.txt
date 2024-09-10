@@ -1,3 +1,4 @@
+Syncer
 absolutezero
 adamson
 addedline
@@ -227,6 +228,7 @@ fieldgroup
 fieldgroups
 fieldnames
 fieldsets
+filedate
 filemime
 filesystems
 filetransfer
@@ -249,6 +251,7 @@ fulldate
 fulltext
 gabilondo
 gids
+gitlabci
 gloop
 greeking
 gripsmall
@@ -259,6 +262,7 @@ guzzlehttp
 hande
 hateoas
 hexcode
+hhvm
 hilited
 hmac
 hookname
@@ -292,6 +296,7 @@ keyevent
 keypresses
 keyvalue
 kinberg
+kirk
 kolkata
 lamoids
 languageswitcher
@@ -444,6 +449,7 @@ prerendered
 presave
 pretransaction
 preuninstall
+proc_open
 proname
 prophesize
 prophesized
@@ -525,6 +531,8 @@ squiz
 squizlabs
 srcset
 ssess
+stage's
+stager's
 starterkit
 statuscode
 stddev
@@ -574,6 +582,8 @@ subvalues
 subview
 supercede
 svgz
+syncer
+syncers
 synchronizable
 syrop
 tabbingmanager
@@ -643,6 +653,7 @@ unpromote
 unpublish
 unpublishes
 unpublishing
+unrequested
 unrevisionable
 unrouted
 unsanitized
@@ -652,8 +663,10 @@ unserializes
 unserializing
 unsets
 unsetting
+unshallow
 unsticky
 untabbable
+unwritable
 upcasted
 upcasting
 updateprogress

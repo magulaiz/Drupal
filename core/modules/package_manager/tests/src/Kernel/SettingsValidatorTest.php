@@ -21,7 +21,7 @@ class SettingsValidatorTest extends PackageManagerKernelTestBase {
    * @return mixed[][]
    *   The test cases.
    */
-  public function providerSettingsValidation(): array {
+  public static function providerSettingsValidation(): array {
     $result = ValidationResult::createError([t('The <code>update_fetch_with_http_fallback</code> setting must be disabled.')]);
 
     return [

@@ -66,11 +66,15 @@ abstract class TemplateProjectTestBase extends QuickStartTestBase {
    * {@inheritdoc}
    */
   protected function setUp(): void {
-    // Build tests cannot be run if Sqlite minimum version is not met.
-    $sqlite = (new \PDO('sqlite::memory:'))->query('select sqlite_version()')->fetch()[0];
-    if (version_compare($sqlite, Tasks::SQLITE_MINIMUM_VERSION) < 0) {
-      $this->markTestSkipped();
+    // Build tests cannot be run if SQLite minimum version is not met.
+    $minimum_version = Tasks::SQLITE_MINIMUM_VERSION;
+    $actual_version = (new \PDO('sqlite::memory:'))
+      ->query('select sqlite_version()')
+      ->fetch()[0];
+    if (version_compare($actual_version, $minimum_version, '<')) {
+      $this->markTestSkipped("SQLite version $minimum_version or later is required, but $actual_version was detected.");
     }
+
     parent::setUp();
   }
 
@@ -90,7 +94,7 @@ abstract class TemplateProjectTestBase extends QuickStartTestBase {
    * @return string[][]
    *   The test cases.
    */
-  public function providerTemplate(): array {
+  public static function providerTemplate(): array {
     return [
       'RecommendedProject' => ['RecommendedProject'],
       'LegacyProject' => ['LegacyProject'],
@@ -335,6 +339,20 @@ END;
     $code = <<<END
 \$config['update.settings']['fetch']['url'] = 'http://localhost:$port/test-release-history';
 END;
+
+    // Ensure Package Manager logs Composer Stager's process output to a file
+    // named for the current test.
+    $log = $this->getDrupalRoot() . '/sites/simpletest/browser_output';
+    @mkdir($log, recursive: TRUE);
+    $this->assertDirectoryIsWritable($log);
+    $log .= '/' . str_replace('\\', '_', static::class) . '-' . $this->name();
+    if ($this->usesDataProvider()) {
+      $log .= '-' . preg_replace('/[^a-z0-9]+/i', '_', $this->dataName());
+    }
+    $code .= <<<END
+\$config['package_manager.settings']['log'] = '$log-package_manager.log';
+END;
+
     $this->writeSettings($code);
 
     // Install helpful modules.
@@ -483,7 +501,7 @@ END;
    *
    * @param string $command
    *   The command to execute, including the `composer` invocation.
-   * @param string $working_dir
+   * @param string|null $working_dir
    *   (optional) A working directory relative to the workspace, within which to
    *   execute the command. Defaults to the workspace directory.
    * @param bool $json
@@ -493,7 +511,7 @@ END;
    * @return mixed|string|null
    *   The command's output, optionally parsed as JSON.
    */
-  protected function runComposer(string $command, string $working_dir = NULL, bool $json = FALSE) {
+  protected function runComposer(string $command, ?string $working_dir = NULL, bool $json = FALSE) {
     $process = $this->executeCommand($command, $working_dir);
     $this->assertCommandSuccessful();
 
@@ -694,14 +712,19 @@ END;
 
     // Ensure test failures provide helpful debug output when there's a fatal
     // PHP error: don't use \Behat\Mink\WebAssert::statusCodeEquals().
-    $message = sprintf("Error response: %s\n\nServer error log: %s", $session->getPage()->getContent(), $this->serverErrorLog);
+    $message = sprintf(
+      "Error response: %s\n\nHeaders: %s\n\nServer error log: %s",
+      $session->getPage()->getContent(),
+      var_export($session->getResponseHeaders(), TRUE),
+      $this->serverErrorLog,
+    );
     $this->assertSame(200, $session->getStatusCode(), $message);
   }
 
   /**
    * {@inheritdoc}
    */
-  public function copyCodebase(\Iterator $iterator = NULL, $working_dir = NULL) {
+  public function copyCodebase(?\Iterator $iterator = NULL, $working_dir = NULL) {
     parent::copyCodebase($iterator, $working_dir);
 
     // Create a local Composer repository for all third-party dependencies and

@@ -24,7 +24,7 @@ class CollectPathsToExcludeFailValidator implements EventSubscriberInterface {
    */
   public function __construct(
     private readonly ComposerInspector $composerInspector,
-    private readonly PathLocator $pathLocator
+    private readonly PathLocator $pathLocator,
   ) {}
 
   /**

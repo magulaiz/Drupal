@@ -34,7 +34,7 @@ final class ComposerMinimumStabilityValidator implements EventSubscriberInterfac
    */
   public function __construct(
     private readonly PathLocator $pathLocator,
-    private readonly ComposerInspector $inspector
+    private readonly ComposerInspector $inspector,
   ) {}
 
   /**

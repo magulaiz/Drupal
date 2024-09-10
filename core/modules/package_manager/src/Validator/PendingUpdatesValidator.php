@@ -35,7 +35,7 @@ final class PendingUpdatesValidator implements EventSubscriberInterface {
    */
   public function __construct(
     private readonly string $appRoot,
-    private readonly UpdateRegistry $updateRegistry
+    private readonly UpdateRegistry $updateRegistry,
   ) {}
 
   /**

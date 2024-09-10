@@ -46,7 +46,7 @@ class StageBaseTest extends UnitTestCase {
    * @return array[]
    *   The test cases.
    */
-  public function providerValidateRequirements(): array {
+  public static function providerValidateRequirements(): array {
     return [
       // Valid requirements.
       [NULL, 'vendor/package'],

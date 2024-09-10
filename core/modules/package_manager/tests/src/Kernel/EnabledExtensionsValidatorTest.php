@@ -26,7 +26,7 @@ class EnabledExtensionsValidatorTest extends PackageManagerKernelTestBase {
    * @return mixed[][]
    *   The test cases.
    */
-  public function providerExtensionRemoved(): array {
+  public static function providerExtensionRemoved(): array {
     $summary = t('The update cannot proceed because the following enabled Drupal extension was removed during the update.');
     return [
       'module' => [

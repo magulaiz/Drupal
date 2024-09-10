@@ -150,7 +150,7 @@ abstract class StageBase implements LoggerAwareInterface {
    *
    * @var string[]
    */
-  private array $lock;
+  private $lock;
 
   /**
    * The shared temp store.
@@ -598,7 +598,7 @@ abstract class StageBase implements LoggerAwareInterface {
     $this->tempStore->delete(static::TEMPSTORE_METADATA_KEY);
     $this->tempStore->delete(static::TEMPSTORE_LOCK_KEY);
     $this->tempStore->delete(self::TEMPSTORE_STAGING_ROOT_KEY);
-    $this->lock = [];
+    $this->lock = NULL;
   }
 
   /**
@@ -606,14 +606,14 @@ abstract class StageBase implements LoggerAwareInterface {
    *
    * @param \Drupal\package_manager\Event\StageEvent $event
    *   The event object.
-   * @param callable $on_error
+   * @param callable|null $on_error
    *   (optional) A callback function to call if an error occurs, before any
    *   exceptions are thrown.
    *
    * @throws \Drupal\package_manager\Exception\StageEventException
    *   If the event collects any validation errors.
    */
-  protected function dispatch(StageEvent $event, callable $on_error = NULL): void {
+  protected function dispatch(StageEvent $event, ?callable $on_error = NULL): void {
     try {
       $this->eventDispatcher->dispatch($event);
 
@@ -747,7 +747,7 @@ abstract class StageBase implements LoggerAwareInterface {
    *   If this method is called before the stage has been created or claimed.
    */
   public function getStageDirectory(): string {
-    if (empty($this->lock)) {
+    if (!$this->lock) {
       throw new \LogicException(__METHOD__ . '() cannot be called because the stage has not been created or claimed.');
     }
     return $this->getStagingRoot() . DIRECTORY_SEPARATOR . $this->lock[0];

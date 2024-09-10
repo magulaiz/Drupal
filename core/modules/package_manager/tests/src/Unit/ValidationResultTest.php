@@ -113,7 +113,7 @@ class ValidationResultTest extends UnitTestCase {
    * @return array[]
    *   The test cases.
    */
-  public function providerCreateExceptions(): array {
+  public static function providerCreateExceptions(): array {
     return [
       '2 messages, no summary' => [
         [t('Something is wrong'), t('Something else is also wrong')],
@@ -132,7 +132,7 @@ class ValidationResultTest extends UnitTestCase {
    * @return mixed[]
    *   The test cases.
    */
-  public function providerValidConstructorArguments(): array {
+  public static function providerValidConstructorArguments(): array {
     return [
       '1 message no summary' => [
         'messages' => [t('Something is wrong')],

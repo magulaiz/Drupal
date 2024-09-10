@@ -26,7 +26,7 @@ final class LoggingBeginner implements BeginnerInterface {
    *
    * @var \PhpTuf\ComposerStager\API\Core\BeginnerInterface
    */
-  private BeginnerInterface $inner;
+  private $inner;
 
   /**
    * Constructs a Beginner object.

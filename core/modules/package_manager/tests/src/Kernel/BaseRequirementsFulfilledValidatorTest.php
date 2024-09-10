@@ -56,7 +56,7 @@ class BaseRequirementsFulfilledValidatorTest extends PackageManagerKernelTestBas
    * @return array[]
    *   The test cases.
    */
-  public function providerBaseRequirement(): array {
+  public static function providerBaseRequirement(): array {
     return [
       [PreCreateEvent::class],
       [PreRequireEvent::class],

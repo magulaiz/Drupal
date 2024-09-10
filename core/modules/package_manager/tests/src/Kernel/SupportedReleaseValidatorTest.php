@@ -70,7 +70,7 @@ class SupportedReleaseValidatorTest extends PackageManagerKernelTestBase {
    * @return mixed[][]
    *   The test cases.
    */
-  public function providerException(): array {
+  public static function providerException(): array {
     $release_fixture_folder = __DIR__ . '/../../fixtures/release-history';
     $summary = t('Cannot update because the following project version is not in the list of installable releases.');
     return [

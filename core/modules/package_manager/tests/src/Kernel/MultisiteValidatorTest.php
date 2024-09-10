@@ -22,7 +22,7 @@ class MultisiteValidatorTest extends PackageManagerKernelTestBase {
    * @return mixed[][]
    *   The test cases.
    */
-  public function providerMultisite(): array {
+  public static function providerMultisite(): array {
     return [
       'sites.php present and listing multiple sites' => [
         <<<'PHP'

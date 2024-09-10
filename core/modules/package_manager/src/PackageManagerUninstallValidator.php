@@ -61,7 +61,7 @@ final class PackageManagerUninstallValidator implements ModuleUninstallValidator
     private readonly SharedTempStoreFactory $sharedTempStoreFactory,
     private readonly TimeInterface $time,
     private readonly PathFactoryInterface $pathFactory,
-    private readonly FailureMarker $failureMarker
+    private readonly FailureMarker $failureMarker,
   ) {}
 
   /**

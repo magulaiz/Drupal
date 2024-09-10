@@ -22,7 +22,7 @@ class PostApplySubscriber implements EventSubscriberInterface {
    *
    * @var \Drupal\package_manager\PathLocator
    */
-  private PathLocator $pathLocator;
+  private $pathLocator;
 
   /**
    * Constructs a PostApplySubscriber.

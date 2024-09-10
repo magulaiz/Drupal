@@ -27,7 +27,7 @@ final class InstalledPackage {
     public readonly string $name,
     public readonly string $version,
     public readonly ?string $path,
-    public readonly string $type
+    public readonly string $type,
   ) {}
 
   /**

@@ -61,7 +61,7 @@ final class ComposerPatchesValidator implements EventSubscriberInterface {
   public function __construct(
     private readonly ModuleHandlerInterface $moduleHandler,
     private readonly ComposerInspector $composerInspector,
-    private readonly PathLocator $pathLocator
+    private readonly PathLocator $pathLocator,
   ) {}
 
   /**

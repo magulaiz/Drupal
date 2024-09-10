@@ -29,7 +29,7 @@ class LockFileValidatorTest extends PackageManagerKernelTestBase {
    *
    * @var string
    */
-  private string $activeDir;
+  private $activeDir;
 
   /**
    * {@inheritdoc}
@@ -201,7 +201,7 @@ class LockFileValidatorTest extends PackageManagerKernelTestBase {
    * @return string[][]
    *   The test cases.
    */
-  public function providerValidateStageEvents(): array {
+  public static function providerValidateStageEvents(): array {
     return [
       'pre-require' => [
         PreRequireEvent::class,

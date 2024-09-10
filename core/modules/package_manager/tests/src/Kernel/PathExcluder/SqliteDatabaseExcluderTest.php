@@ -48,7 +48,7 @@ class SqliteDatabaseExcluderTest extends PackageManagerKernelTestBase {
    * @return array[]
    *   The test cases.
    */
-  public function providerSqliteDatabaseFilesExcluded(): array {
+  public static function providerSqliteDatabaseFilesExcluded(): array {
     return [
       // If the database is at a relative path, it should be excluded relative
       // to the web root.

@@ -40,7 +40,7 @@ final class EnabledExtensionsValidator implements EventSubscriberInterface {
     private readonly PathLocator $pathLocator,
     private readonly ModuleHandlerInterface $moduleHandler,
     private readonly ComposerInspector $composerInspector,
-    private readonly ThemeHandlerInterface $themeHandler
+    private readonly ThemeHandlerInterface $themeHandler,
   ) {}
 
   /**

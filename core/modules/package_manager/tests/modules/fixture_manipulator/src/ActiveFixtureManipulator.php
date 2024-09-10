@@ -14,7 +14,7 @@ final class ActiveFixtureManipulator extends FixtureManipulator {
   /**
    * {@inheritdoc}
    */
-  public function commitChanges(string $dir = NULL): void {
+  public function commitChanges(?string $dir = NULL): void {
     if ($dir) {
       throw new \UnexpectedValueException("$dir cannot be specific for a ActiveFixtureManipulator instance");
     }

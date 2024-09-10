@@ -55,7 +55,7 @@ class StageNotInActiveValidatorTest extends UnitTestCase {
    * @return mixed[]
    *   The test cases.
    */
-  public function providerTestCheckNotInActive(): array {
+  public static function providerTestCheckNotInActive(): array {
     $expected_symlink_validation_error = ValidationResult::createError([
       t('Stage directory is a subdirectory of the active directory.'),
     ]);

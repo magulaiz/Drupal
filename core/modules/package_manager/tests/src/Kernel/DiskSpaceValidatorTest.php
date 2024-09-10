@@ -23,7 +23,7 @@ class DiskSpaceValidatorTest extends PackageManagerKernelTestBase {
    * @return mixed[][]
    *   The test cases.
    */
-  public function providerDiskSpaceValidation(): array {
+  public static function providerDiskSpaceValidation(): array {
     // @see \Drupal\Tests\package_manager\Traits\ValidationTestTrait::resolvePlaceholdersInArrayValuesWithRealPaths()
     $root = '<PROJECT_ROOT>';
     $vendor = '<VENDOR_DIR>';

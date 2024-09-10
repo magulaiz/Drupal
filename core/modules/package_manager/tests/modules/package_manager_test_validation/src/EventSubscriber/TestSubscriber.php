@@ -32,7 +32,7 @@ class TestSubscriber implements EventSubscriberInterface {
    *
    * @var \Drupal\Core\State\StateInterface
    */
-  protected StateInterface $state;
+  protected $state;
 
   /**
    * Creates a TestSubscriber object.

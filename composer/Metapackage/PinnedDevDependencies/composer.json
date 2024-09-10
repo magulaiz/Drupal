@@ -80,6 +80,7 @@
         "slevomat/coding-standard": "8.15.0",
         "squizlabs/php_codesniffer": "3.10.2",
         "symfony/browser-kit": "v7.1.1",
+        "symfony/config": "v7.1.1",
         "symfony/css-selector": "v7.1.1",
         "symfony/dom-crawler": "v7.1.1",
         "symfony/lock": "v7.1.1",

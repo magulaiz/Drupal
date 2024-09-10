@@ -43,7 +43,7 @@ final class OverwriteExistingPackagesValidator implements EventSubscriberInterfa
    */
   public function __construct(
     private readonly PathLocator $pathLocator,
-    private readonly ComposerInspector $composerInspector
+    private readonly ComposerInspector $composerInspector,
   ) {}
 
   /**

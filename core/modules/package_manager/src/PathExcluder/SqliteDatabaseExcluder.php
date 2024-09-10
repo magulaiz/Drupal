@@ -12,9 +12,6 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 /**
  * Excludes SQLite database files from stage operations.
  *
- * @todo This class should handle all database connections not just the default
- *   connection in https://drupal.org/i/3441919.
- *
  * @internal
  *   This is an internal part of Package Manager and may be changed or removed
  *   at any time without warning. External code should not interact with this

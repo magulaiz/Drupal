@@ -29,21 +29,21 @@ class ApiController extends ControllerBase {
    *
    * @var string
    */
-  protected string $finishedRoute = 'package_manager_test_api.finish';
+  protected $finishedRoute = 'package_manager_test_api.finish';
 
   /**
    * The stage.
    *
    * @var \Drupal\package_manager\StageBase
    */
-  protected StageBase $stage;
+  protected $stage;
 
   /**
    * The path locator service.
    *
    * @var \Drupal\package_manager\PathLocator
    */
-  private PathLocator $pathLocator;
+  private $pathLocator;
 
   /**
    * Constructs an ApiController object.

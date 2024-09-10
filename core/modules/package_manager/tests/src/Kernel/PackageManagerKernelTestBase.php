@@ -61,7 +61,7 @@ abstract class PackageManagerKernelTestBase extends KernelTestBase {
    *
    * @see ::register()
    */
-  private Client $client;
+  private $client;
 
   /**
    * {@inheritdoc}
@@ -80,7 +80,7 @@ abstract class PackageManagerKernelTestBase extends KernelTestBase {
    *
    * @var string[]
    */
-  protected array $disableValidators = [];
+  protected $disableValidators = [];
 
   /**
    * The test root directory, if any, created by ::createTestProject().
@@ -151,7 +151,7 @@ abstract class PackageManagerKernelTestBase extends KernelTestBase {
 
     // If we previously set up a mock HTTP client in ::setReleaseMetadata(),
     // re-inject it into the container.
-    if (isset($this->client)) {
+    if ($this->client) {
       $container->set('http_client', $this->client);
     }
 
@@ -207,7 +207,7 @@ abstract class PackageManagerKernelTestBase extends KernelTestBase {
    * @return \Drupal\package_manager\StageBase
    *   The stage that was used to collect the validation results.
    */
-  protected function assertResults(array $expected_results, string $event_class = NULL): StageBase {
+  protected function assertResults(array $expected_results, ?string $event_class = NULL): StageBase {
     $stage = $this->createStage();
 
     try {
@@ -237,7 +237,7 @@ abstract class PackageManagerKernelTestBase extends KernelTestBase {
    *   (optional) The test stage to use to create the status check event. If
    *   none is provided a new stage will be created.
    */
-  protected function assertStatusCheckResults(array $expected_results, StageBase $stage = NULL): void {
+  protected function assertStatusCheckResults(array $expected_results, ?StageBase $stage = NULL): void {
     $actual_results = $this->runStatusCheck($stage ?? $this->createStage(), $this->container->get('event_dispatcher'));
     $this->assertValidationResultsEqual($expected_results, $actual_results);
   }
@@ -489,14 +489,14 @@ class TestDiskSpaceValidator extends DiskSpaceValidator {
    *
    * @var bool
    */
-  public bool $sharedDisk = TRUE;
+  public $sharedDisk = TRUE;
 
   /**
    * The amount of free space, keyed by path.
    *
    * @var float[]
    */
-  public array $freeSpace = [];
+  public $freeSpace = [];
 
   /**
    * {@inheritdoc}

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\fixture_manipulator;
 
 use PhpTuf\ComposerStager\API\Path\Value\PathInterface;

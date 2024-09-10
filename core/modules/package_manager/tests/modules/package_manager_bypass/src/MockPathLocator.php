@@ -20,7 +20,7 @@ final class MockPathLocator extends BasePathLocator {
    *
    * @var \Drupal\Core\State\StateInterface
    */
-  private StateInterface $state;
+  private $state;
 
   /**
    * Constructs a PathLocator object.

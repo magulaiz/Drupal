@@ -33,7 +33,7 @@ final class SupportedReleaseValidator implements EventSubscriberInterface {
    */
   public function __construct(
     private readonly ComposerInspector $composerInspector,
-    private readonly PathLocator $pathLocator
+    private readonly PathLocator $pathLocator,
   ) {}
 
   /**

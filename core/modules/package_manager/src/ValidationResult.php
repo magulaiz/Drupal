@@ -37,7 +37,7 @@ final class ValidationResult {
     public readonly int $severity,
     private array $messages,
     public readonly ?TranslatableMarkup $summary,
-    bool $assert_translatable
+    bool $assert_translatable,
   ) {
     if ($assert_translatable) {
       assert(Inspector::assertAll(fn ($message) => $message instanceof TranslatableMarkup, $messages));
