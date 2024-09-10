@@ -302,7 +302,7 @@ class NodeController extends ControllerBase implements ContainerInjectionInterfa
    * @return int|null
    *   The current revision ID, if it exists.
    */
-  protected function getCurrentRevisionId(NodeInterface $node, NodeStorageInterface $node_storage) {
+  protected function getCurrentRevisionId(NodeInterface $node, NodeStorageInterface $node_storage): int|null {
     $result = $node_storage->getQuery()
       ->accessCheck(FALSE)
       ->allRevisions()

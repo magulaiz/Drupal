@@ -197,7 +197,7 @@ class NodeRevisionsUiTest extends NodeTestBase {
   /**
    * Test revisions pagination.
    */
-  public function testPaginationRevisions() {
+  public function testPaginationRevisions(): void {
     $this->drupalLogin($this->editor);
 
     $revision_log = $this->randomMachineName(10);
