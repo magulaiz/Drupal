@@ -29,8 +29,8 @@ class MediaLibraryFieldWidgetOpener implements MediaLibraryOpenerInterface {
    *   The entity repository.
    */
   public function __construct(
-    protected EntityTypeManagerInterface $entity_type_manager,
-    protected EntityRepositoryInterface $entity_repository,
+    protected EntityTypeManagerInterface $entityTypeManager,
+    protected EntityRepositoryInterface $entityRepository,
   ) {}
 
   /**
