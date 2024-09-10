@@ -1,15 +1,17 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\KernelTests\Core\Database;
 
 use Drupal\Core\Database\Database;
 use Drupal\Core\Database\Transaction;
+use Drupal\Core\Database\Transaction\ClientConnectionTransactionState;
 use Drupal\Core\Database\Transaction\StackItem;
 use Drupal\Core\Database\Transaction\StackItemType;
-use Drupal\Core\Database\TransactionExplicitCommitNotAllowedException;
+use Drupal\Core\Database\Transaction\TransactionManagerBase;
 use Drupal\Core\Database\TransactionNameNonUniqueException;
 use Drupal\Core\Database\TransactionOutOfOrderException;
-use PHPUnit\Framework\Error\Warning;
 
 /**
  * Tests the transaction abstraction system.
@@ -430,15 +432,13 @@ class DriverSpecificTransactionTestBase extends DriverSpecificDatabaseTestBase {
       $this->insertRow('row');
       $this->executeDDLStatement();
 
-      try {
-        // Rollback the outer transaction.
-        $transaction->rollBack();
-        // @see \Drupal\mysql\Driver\Database\mysql\TransactionManager::rollbackClientTransaction()
-        $this->fail('Rolling back a transaction containing DDL should produce a warning.');
-      }
-      catch (Warning $warning) {
-        $this->assertSame('Rollback attempted when there is no active transaction. This can cause data integrity issues.', $warning->getMessage());
-      }
+      // Try to rollback the outer transaction. It should fail and void
+      // the transaction stack.
+      $transaction->rollBack();
+      $manager = $this->connection->transactionManager();
+      $reflectedTransactionState = new \ReflectionMethod($manager, 'getConnectionTransactionState');
+      $this->assertSame(ClientConnectionTransactionState::Voided, $reflectedTransactionState->invoke($manager));
+
       unset($transaction);
       $this->assertRowPresent('row');
     }
@@ -492,7 +492,7 @@ class DriverSpecificTransactionTestBase extends DriverSpecificDatabaseTestBase {
    *
    * @internal
    */
-  public function assertRowPresent(string $name, string $message = NULL): void {
+  public function assertRowPresent(string $name, ?string $message = NULL): void {
     $present = (boolean) $this->connection->query('SELECT 1 FROM {test} WHERE [name] = :name', [':name' => $name])->fetchField();
     $this->assertTrue($present, $message ?? "Row '{$name}' should be present, but it actually does not exist.");
   }
@@ -507,7 +507,7 @@ class DriverSpecificTransactionTestBase extends DriverSpecificDatabaseTestBase {
    *
    * @internal
    */
-  public function assertRowAbsent(string $name, string $message = NULL): void {
+  public function assertRowAbsent(string $name, ?string $message = NULL): void {
     $present = (boolean) $this->connection->query('SELECT 1 FROM {test} WHERE [name] = :name', [':name' => $name])->fetchField();
     $this->assertFalse($present, $message ?? "Row '{$name}' should be absent, but it actually exists.");
   }
@@ -561,7 +561,7 @@ class DriverSpecificTransactionTestBase extends DriverSpecificDatabaseTestBase {
       $this->connection->query('SELECT [age] FROM {test} WHERE [name] = :name', [':name' => 'David'])->fetchField();
       $this->fail('Using the query method should have failed.');
     }
-    catch (\Exception $e) {
+    catch (\Exception) {
       // Just continue testing.
     }
 
@@ -573,7 +573,7 @@ class DriverSpecificTransactionTestBase extends DriverSpecificDatabaseTestBase {
 
       $this->fail('Select query should have failed.');
     }
-    catch (\Exception $e) {
+    catch (\Exception) {
       // Just continue testing.
     }
 
@@ -588,7 +588,7 @@ class DriverSpecificTransactionTestBase extends DriverSpecificDatabaseTestBase {
 
       $this->fail('Insert query should have failed.');
     }
-    catch (\Exception $e) {
+    catch (\Exception) {
       // Just continue testing.
     }
 
@@ -601,7 +601,7 @@ class DriverSpecificTransactionTestBase extends DriverSpecificDatabaseTestBase {
 
       $this->fail('Update query should have failed.');
     }
-    catch (\Exception $e) {
+    catch (\Exception) {
       // Just continue testing.
     }
 
@@ -613,7 +613,7 @@ class DriverSpecificTransactionTestBase extends DriverSpecificDatabaseTestBase {
 
       $this->fail('Delete query should have failed.');
     }
-    catch (\Exception $e) {
+    catch (\Exception) {
       // Just continue testing.
     }
 
@@ -629,7 +629,7 @@ class DriverSpecificTransactionTestBase extends DriverSpecificDatabaseTestBase {
 
       $this->fail('Merge query should have failed.');
     }
-    catch (\Exception $e) {
+    catch (\Exception) {
       // Just continue testing.
     }
 
@@ -647,7 +647,7 @@ class DriverSpecificTransactionTestBase extends DriverSpecificDatabaseTestBase {
 
       $this->fail('Upsert query should have failed.');
     }
-    catch (\Exception $e) {
+    catch (\Exception) {
       // Just continue testing.
     }
 
@@ -776,18 +776,60 @@ class DriverSpecificTransactionTestBase extends DriverSpecificDatabaseTestBase {
   /**
    * Tests post-transaction callback executes after transaction rollback.
    */
-  public function testRootTransactionEndCallbackCalledOnRollback(): void {
+  public function testRootTransactionEndCallbackCalledAfterRollbackAndDestruction(): void {
     $transaction = $this->createRootTransaction('', FALSE);
     $this->connection->transactionManager()->addPostTransactionCallback([$this, 'rootTransactionCallback']);
     $this->insertRow('row');
     $this->assertNull($this->postTransactionCallbackAction);
+
+    // Callbacks are processed only when destructing the transaction.
+    // Executing a rollback is not sufficient by itself.
     $transaction->rollBack();
-    $this->assertSame('rtcRollback', $this->postTransactionCallbackAction);
-    unset($transaction);
-    $this->assertRowAbsent('row');
-    // The row insert should be missing since the client rollback occurs after
-    // the processing of the callbacks.
+    $this->assertNull($this->postTransactionCallbackAction);
+    $this->assertRowAbsent('rtcCommit');
     $this->assertRowAbsent('rtcRollback');
+    $this->assertRowAbsent('row');
+
+    // Destruct the transaction.
+    unset($transaction);
+
+    // The post-transaction callback should now have inserted a 'rtcRollback'
+    // row.
+    $this->assertSame('rtcRollback', $this->postTransactionCallbackAction);
+    $this->assertRowAbsent('rtcCommit');
+    $this->assertRowPresent('rtcRollback');
+    $this->assertRowAbsent('row');
+  }
+
+  /**
+   * Tests post-transaction callback executes after a DDL statement.
+   */
+  public function testRootTransactionEndCallbackCalledAfterDdlAndDestruction(): void {
+    $transaction = $this->createRootTransaction('', FALSE);
+    $this->connection->transactionManager()->addPostTransactionCallback([$this, 'rootTransactionCallback']);
+    $this->insertRow('row');
+    $this->assertNull($this->postTransactionCallbackAction);
+
+    // Callbacks are processed only when destructing the transaction.
+    // Executing a DDL statement is not sufficient itself.
+    // We cannot use truncate here, since it has protective code to fall back
+    // to a transactional delete when in transaction. We drop an unrelated
+    // table instead.
+    $this->connection->schema()->dropTable('test_people');
+    $this->assertNull($this->postTransactionCallbackAction);
+    $this->assertRowAbsent('rtcCommit');
+    $this->assertRowAbsent('rtcRollback');
+    $this->assertRowPresent('row');
+
+    // Destruct the transaction.
+    unset($transaction);
+
+    // The post-transaction callback should now have inserted a 'rtcCommit'
+    // row.
+    $this->assertSame('rtcCommit', $this->postTransactionCallbackAction);
+    $this->assertRowPresent('rtcCommit');
+    $this->assertRowAbsent('rtcRollback');
+    $this->assertRowPresent('row');
   }
 
   /**
@@ -807,53 +849,32 @@ class DriverSpecificTransactionTestBase extends DriverSpecificDatabaseTestBase {
     $testConnection = Database::getConnection('test_fail');
 
     // Add a fake item to the stack.
-    $reflectionMethod = new \ReflectionMethod(get_class($testConnection->transactionManager()), 'addStackItem');
-    $reflectionMethod->invoke($testConnection->transactionManager(), 'bar', new StackItem('qux', StackItemType::Savepoint));
+    $manager = $testConnection->transactionManager();
+    $reflectionMethod = new \ReflectionMethod($manager, 'addStackItem');
+    $reflectionMethod->invoke($manager, 'bar', new StackItem('qux', StackItemType::Root));
+    // Ensure transaction state can be determined during object destruction.
+    // This is necessary for the test to pass when xdebug.mode has the 'develop'
+    // option enabled.
+    $reflectionProperty = new \ReflectionProperty(TransactionManagerBase::class, 'connectionTransactionState');
+    $reflectionProperty->setValue($manager, ClientConnectionTransactionState::Active);
 
-    $this->expectException(\AssertionError::class);
-    $this->expectExceptionMessageMatches("/^Transaction .stack was not empty\\. Active stack: bar\\\\qux/");
+    // Ensure that __destruct() results in an assertion error. Note that this
+    // will normally be called by PHP during the object's destruction but Drupal
+    // will commit all transactions when a database is closed thereby making
+    // this impossible to test unless it is called directly.
+    try {
+      $manager->__destruct();
+      $this->fail("Expected AssertionError error not thrown");
+    }
+    catch (\AssertionError $e) {
+      $this->assertStringStartsWith('Transaction $stack was not empty. Active stack: bar\\qux', $e->getMessage());
+    }
+
+    // Clean up.
+    $reflectionProperty = new \ReflectionProperty(TransactionManagerBase::class, 'stack');
+    $reflectionProperty->setValue($manager, []);
     unset($testConnection);
     Database::closeConnection('test_fail');
-  }
-
-  /**
-   * Tests deprecation of Connection methods.
-   *
-   * @group legacy
-   */
-  public function testConnectionDeprecations(): void {
-    $this->cleanUp();
-    $transaction = $this->connection->startTransaction();
-    $this->expectDeprecation('Drupal\\Core\\Database\\Connection::transactionDepth() is deprecated in drupal:10.2.0 and is removed from drupal:11.0.0. Do not access the transaction stack depth, it is an implementation detail. See https://www.drupal.org/node/3381002');
-    $this->assertSame(1, $this->connection->transactionDepth());
-    $this->insertRow('row');
-    $this->expectDeprecation('Drupal\\Core\\Database\\Connection::rollBack() is deprecated in drupal:10.2.0 and is removed from drupal:11.0.0. Do not rollback the connection, roll back the Transaction objects instead. See https://www.drupal.org/node/3381002');
-    $this->connection->rollback();
-    $transaction = NULL;
-    $this->assertRowAbsent('row');
-
-    $this->cleanUp();
-    $transaction = $this->connection->startTransaction();
-    $this->expectDeprecation('Drupal\\Core\\Database\\Connection::addRootTransactionEndCallback() is deprecated in drupal:10.2.0 and is removed from drupal:11.0.0. Use TransactionManagerInterface::addPostTransactionCallback() instead. See https://www.drupal.org/node/3381002');
-    $this->connection->addRootTransactionEndCallback([$this, 'rootTransactionCallback']);
-    $this->insertRow('row');
-    $this->expectDeprecation('Drupal\\Core\\Database\\Connection::commit() is deprecated in drupal:10.2.0 and is removed from drupal:11.0.0. Do not commit the connection, void the Transaction objects instead. See https://www.drupal.org/node/3381002');
-    try {
-      $this->connection->commit();
-    }
-    catch (TransactionExplicitCommitNotAllowedException $e) {
-      // Do nothing.
-    }
-    $transaction = NULL;
-    $this->assertRowPresent('row');
-
-    $this->cleanUp();
-    $this->expectDeprecation('Drupal\\Core\\Database\\Connection::pushTransaction() is deprecated in drupal:10.2.0 and is removed from drupal:11.0.0. Use TransactionManagerInterface methods instead. See https://www.drupal.org/node/3381002');
-    $this->connection->pushTransaction('foo');
-    $this->expectDeprecation('Drupal\\Core\\Database\\Connection::popTransaction() is deprecated in drupal:10.2.0 and is removed from drupal:11.0.0. Use TransactionManagerInterface methods instead. See https://www.drupal.org/node/3381002');
-    $this->expectDeprecation('Drupal\\Core\\Database\\Connection::popCommittableTransactions() is deprecated in drupal:10.2.0 and is removed from drupal:11.0.0. Use TransactionManagerInterface methods instead. See https://www.drupal.org/node/3381002');
-    $this->expectDeprecation('Drupal\\Core\\Database\\Connection::doCommit() is deprecated in drupal:10.2.0 and is removed from drupal:11.0.0. Use TransactionManagerInterface methods instead. See https://www.drupal.org/node/3381002');
-    $this->connection->popTransaction('foo');
   }
 
 }

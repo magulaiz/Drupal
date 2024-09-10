@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\KernelTests\Core\Asset;
 
 use Drupal\Core\Extension\ExtensionLifecycle;
@@ -152,7 +154,7 @@ class ResolvedLibraryDefinitionsFilesMatchTest extends KernelTestBase {
   /**
    * Ensures that all core module and theme library files exist.
    */
-  public function testCoreLibraryCompleteness() {
+  public function testCoreLibraryCompleteness(): void {
     // First verify all libraries with no active theme.
     $this->verifyLibraryFilesExist($this->getAllLibraries());
 
@@ -161,7 +163,7 @@ class ResolvedLibraryDefinitionsFilesMatchTest extends KernelTestBase {
     // and these changes are only applied for the active theme.
     foreach ($this->allThemes as $theme) {
       $this->themeManager->setActiveTheme($this->themeInitialization->getActiveThemeByName($theme));
-      $this->libraryDiscovery->clearCachedDefinitions();
+      $this->libraryDiscovery->clear();
 
       $this->verifyLibraryFilesExist($this->getAllLibraries());
     }

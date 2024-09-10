@@ -1,8 +1,9 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\system\Functional\Module;
 
-use Drupal\Component\Render\FormattableMarkup;
 use Drupal\Core\Config\InstallStorage;
 use Drupal\Core\Database\Database;
 use Drupal\Core\Config\FileStorage;
@@ -16,9 +17,7 @@ use Drupal\TestTools\Extension\SchemaInspector;
 abstract class ModuleTestBase extends BrowserTestBase {
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = ['system_test'];
 
@@ -137,12 +136,12 @@ abstract class ModuleTestBase extends BrowserTestBase {
     $this->rebuildContainer();
     foreach ($modules as $module) {
       if ($enabled) {
-        $message = 'Module "@module" is enabled.';
+        $message = 'Module "%s" is enabled.';
       }
       else {
-        $message = 'Module "@module" is not enabled.';
+        $message = 'Module "%s" is not enabled.';
       }
-      $this->assertEquals($enabled, $this->container->get('module_handler')->moduleExists($module), new FormattableMarkup($message, ['@module' => $module]));
+      $this->assertEquals($enabled, $this->container->get('module_handler')->moduleExists($module), sprintf($message, $module));
     }
   }
 
