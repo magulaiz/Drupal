@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\jsonapi\Functional;
 
+use Drupal\Core\Cache\Cache;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Url;
 use Drupal\file\Entity\File;
@@ -351,22 +352,15 @@ class MediaTest extends ResourceTestBase {
    * {@inheritdoc}
    */
   protected function getEditorialPermissions(): array {
-    return array_merge(parent::getEditorialPermissions(), ['view any unpublished content']);
+    return array_merge(parent::getEditorialPermissions(), ['view all media revisions', 'view any ' . $this->entity->getEntityTypeId() . ' media revisions']);
   }
 
   /**
    * {@inheritdoc}
    */
   protected function getExpectedUnauthorizedAccessCacheability() {
-    $this->entityStorage->resetCache();
-    $latestRevisionId = $this->entityStorage->getLatestRevisionId($this->entity->id());
-    $entity = $this->entityStorage->loadRevision($latestRevisionId);
-    $isPublished = $entity->isPublished();
-    // @see \Drupal\media\MediaAccessControlHandler::checkAccess()
     $parent = parent::getExpectedUnauthorizedAccessCacheability();
-    // If the latest revision is unpublished we probably expect the user cache
-    // context.
-    if (!$isPublished) {
+    if (!$this->entity->isPublished()) {
       $parent->addCacheContexts(['user']);
     }
     return $parent->addCacheTags(['media:1']);
@@ -376,11 +370,19 @@ class MediaTest extends ResourceTestBase {
    * {@inheritdoc}
    */
   protected function getExpectedCacheContexts(?array $sparse_fieldset = NULL) {
-    return [
-      'url.query_args',
-      'url.site',
-      'user',
-    ];
+    $cache_contexts = parent::getExpectedCacheContexts($sparse_fieldset);
+
+    if (!$this->entity->isPublished()) {
+      return Cache::mergeContexts($cache_contexts, ['user']);
+    }
+
+    foreach ($this->getEditorialPermissions() as $permission) {
+      if (\Drupal::currentUser()->hasPermission($permission)) {
+        return Cache::mergeContexts($cache_contexts, ['user']);
+      }
+    }
+
+    return $cache_contexts;
   }
 
   /**
