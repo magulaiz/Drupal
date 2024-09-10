@@ -23,9 +23,9 @@ class MediaLibraryFieldWidgetOpener implements MediaLibraryOpenerInterface {
   /**
    * MediaLibraryFieldWidgetOpener constructor.
    *
-   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
+   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entityTypeManager
    *   The entity type manager.
-   * @param \Drupal\Core\Entity\EntityRepositoryInterface $entity_repository
+   * @param \Drupal\Core\Entity\EntityRepositoryInterface $entityRpository
    *   The entity repository.
    */
   public function __construct(
