@@ -136,7 +136,9 @@ use Drupal\node\Entity\NodeType;
  * $entity->save();
  * @endcode
  * There is also a shortcut method on entity classes, which creates an entity
- * with an array of provided property values: \Drupal\Core\Entity::create().
+ * with an array of provided property values. It is the create method. To create
+ * an Action entity one would use Drupal\system\Entity\Action::create(). For a
+ * custom entity use $yourEntityTypeClass::create().
  *
  * Hooks invoked during the create operation:
  * - hook_ENTITY_TYPE_create()
@@ -1878,6 +1880,23 @@ function hook_entity_form_mode_alter(&$form_mode, \Drupal\Core\Entity\EntityInte
 }
 
 /**
+ * Change the form mode of a specific entity type currently being displayed.
+ *
+ * @param string $form_mode
+ *   The form_mode currently displaying the entity.
+ * @param \Drupal\Core\Entity\EntityInterface $entity
+ *   The entity that is being viewed.
+ *
+ * @ingroup entity_crud
+ */
+function hook_ENTITY_TYPE_form_mode_alter(string &$form_mode, \Drupal\Core\Entity\EntityInterface $entity): void {
+  // Change the form mode for nodes with 'article' bundle.
+  if ($entity->bundle() == 'article') {
+    $form_mode = 'custom_article_form_mode';
+  }
+}
+
+/**
  * Alter the settings used for displaying an entity form.
  *
  * @param \Drupal\Core\Entity\Display\EntityFormDisplayInterface $form_display
@@ -2142,7 +2161,7 @@ function hook_entity_operation_alter(array &$operations, \Drupal\Core\Entity\Ent
  *
  * @see \Drupal\Core\Entity\EntityAccessControlHandlerInterface::fieldAccess()
  */
-function hook_entity_field_access($operation, \Drupal\Core\Field\FieldDefinitionInterface $field_definition, \Drupal\Core\Session\AccountInterface $account, \Drupal\Core\Field\FieldItemListInterface $items = NULL) {
+function hook_entity_field_access($operation, \Drupal\Core\Field\FieldDefinitionInterface $field_definition, \Drupal\Core\Session\AccountInterface $account, ?\Drupal\Core\Field\FieldItemListInterface $items = NULL) {
   if ($field_definition->getName() == 'field_of_interest' && $operation == 'edit') {
     return AccessResult::allowedIfHasPermission($account, 'update field of interest');
   }

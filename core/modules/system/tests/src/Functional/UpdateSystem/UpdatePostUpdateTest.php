@@ -8,6 +8,8 @@ use Drupal\Core\Database\Database;
 use Drupal\Tests\BrowserTestBase;
 use Drupal\Tests\UpdatePathTestTrait;
 
+// cspell:ignore postupdate
+
 /**
  * Tests hook_post_update().
  *
@@ -74,7 +76,7 @@ class UpdatePostUpdateTest extends BrowserTestBase {
   /**
    * Tests hook_post_update_NAME().
    */
-  public function testPostUpdate() {
+  public function testPostUpdate(): void {
     $this->runUpdates();
 
     $this->assertSession()->responseContains('<h3>Update first</h3>');
