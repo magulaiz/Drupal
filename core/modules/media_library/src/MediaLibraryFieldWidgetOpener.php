@@ -21,20 +21,6 @@ use Drupal\Core\Field\EntityReferenceFieldItemList;
 class MediaLibraryFieldWidgetOpener implements MediaLibraryOpenerInterface {
 
   /**
-   * The entity type manager.
-   *
-   * @var \Drupal\Core\Entity\EntityTypeManagerInterface
-   */
-  protected $entityTypeManager;
-
-  /**
-   * The entity repository.
-   *
-   * @var \Drupal\Core\Entity\EntityRepositoryInterface
-   */
-  protected $entityRepository;
-
-  /**
    * MediaLibraryFieldWidgetOpener constructor.
    *
    * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
@@ -42,10 +28,10 @@ class MediaLibraryFieldWidgetOpener implements MediaLibraryOpenerInterface {
    * @param \Drupal\Core\Entity\EntityRepositoryInterface $entity_repository
    *   The entity repository.
    */
-  public function __construct(EntityTypeManagerInterface $entity_type_manager, EntityRepositoryInterface $entity_repository) {
-    $this->entityTypeManager = $entity_type_manager;
-    $this->entityRepository = $entity_repository;
-  }
+  public function __construct(
+    protected EntityTypeManagerInterface $entity_type_manager,
+    protected EntityRepositoryInterface $entity_repository,
+  ) {}
 
   /**
    * {@inheritdoc}
