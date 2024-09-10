@@ -4,8 +4,11 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\contextual\FunctionalJavascript;
 
+use Drupal\Core\Language\LanguageManagerInterface;
 use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
 use Drupal\language\Entity\ConfigurableLanguage;
+use Drupal\locale\StringStorageInterface;
+use Drupal\user\Entity\User;
 
 /**
  * Tests contextual link translation.
@@ -38,21 +41,21 @@ class ContextualTranslationTest extends WebDriverTestBase {
    *
    * @var \Drupal\user\Entity\User
    */
-  protected $adminUser;
+  protected User $adminUser;
 
   /**
    * The language manager.
    *
    * @var \Drupal\Core\Language\LanguageManagerInterface
    */
-  protected $languageManager;
+  protected LanguageManagerInterface $languageManager;
 
   /**
    * The locale storage.
    *
    * @var \Drupal\locale\StringStorageInterface
    */
-  protected $localeStorage;
+  protected StringStorageInterface $localeStorage;
 
   /**
    * {@inheritdoc}
