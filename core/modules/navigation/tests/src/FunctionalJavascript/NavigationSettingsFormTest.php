@@ -82,7 +82,7 @@ class NavigationSettingsFormTest extends WebDriverTestBase {
     $this->assertLessThanOrEqual(10, $image->getHeight());
     $this->assertLessThanOrEqual(10, $image->getWidth());
 
-    // Ensure that valid type pass to the file usage API of uploaded file.
+    // Ensure that valid type pass to the file usage API for uploaded file.
     $this->drupalGet('admin/content/files/usage/' . $file->id());
     $this->assertSession()->pageTextContains($file->getFilename());
   }
