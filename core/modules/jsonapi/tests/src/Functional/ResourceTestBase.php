@@ -986,7 +986,7 @@ abstract class ResourceTestBase extends BrowserTestBase {
         ],
       ],
     ];
-    $this->assertResourceResponse(400, $expected_document, $response, ['4xx-response', 'http_response'], ['url.query_args', 'url.site'], FALSE, 'MISS');
+    $this->assertResourceResponse(400, $expected_document, $response, ['4xx-response', 'http_response'], ['url.query_args', 'url.site'], 'UNCACHEABLE (request policy)', TRUE);
 
     // 200 for well-formed HEAD request.
     $response = $this->request('HEAD', $url, $request_options);
@@ -1151,14 +1151,14 @@ abstract class ResourceTestBase extends BrowserTestBase {
         'url.site',
         'user.permissions',
       ];
-      $this->assertResourceErrorResponse(403, $expected_error_message, $unauthorized_filter_url, $response, FALSE, $expected_cache_tags, $expected_cache_contexts, FALSE, 'MISS');
+      $this->assertResourceErrorResponse(403, $expected_error_message, $unauthorized_filter_url, $response, FALSE, $expected_cache_tags, $expected_cache_contexts, 'UNCACHEABLE (request policy)', TRUE);
 
       $this->grantPermissionsToTestedRole(['field_jsonapi_test_entity_ref view access']);
 
       // 403 for filtering on an unauthorized field on a related resource type.
       $response = $this->request('GET', $unauthorized_filter_url, $request_options);
       $expected_error_message = "The current user is not authorized to filter by the `status` field, given in the path `field_jsonapi_test_entity_ref.entity:user.status`.";
-      $this->assertResourceErrorResponse(403, $expected_error_message, $unauthorized_filter_url, $response, FALSE, $expected_cache_tags, $expected_cache_contexts, FALSE, 'MISS');
+      $this->assertResourceErrorResponse(403, $expected_error_message, $unauthorized_filter_url, $response, FALSE, $expected_cache_tags, $expected_cache_contexts, 'UNCACHEABLE (request policy)', TRUE);
     }
 
     // Remove an entity from the collection, then filter it out.
