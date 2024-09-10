@@ -2403,7 +2403,7 @@ class SqlContentEntityStorageSchema implements DynamicallyFieldableEntityStorage
           'fields' => [
             'interned_hash' => [
               'type' => 'char',
-              'length' => 64,
+              'length' => 32,
               'not null' => TRUE,
               'default' => '',
             ],
