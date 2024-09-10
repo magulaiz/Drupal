@@ -101,33 +101,68 @@
      */
     Drupal.behaviors.navigationProcessToolbarMenuLinks = {
       attach: (context) => {
-        once(
-          'toolbar-menu-link',
-          'a.toolbar-menu__link, a.toolbar-button',
-          context,
-        ).forEach((link) => {
-          // What we do if menu link is in current url.
+        // Check if a menu link is in the current URL and handle its behavior.
+        const handleMenuLink = (link) => {
           if (document.URL === link.href) {
             link.classList.add('current', 'is-active');
-
             link.dispatchEvent(
-              new CustomEvent('toolbar-active-url', {
-                bubbles: true,
-              }),
+              new CustomEvent('toolbar-active-url', { bubbles: true }),
             );
 
-            // We also want to open all parent menus.
+            // Open all parent menus.
             const menu = link.closest('.toolbar-menu');
             if (menu) {
               menu.previousElementSibling.dispatchEvent(
                 new CustomEvent(TOOLBAR_MENU_SET_TOGGLE, {
-                  detail: {
-                    state: true,
-                  },
+                  detail: { state: true },
                 }),
               );
             }
           }
+        };
+
+        // Select toolbar menu links and buttons and iterate over them.
+        const toolbarLinks = once(
+          'toolbar-menu-link',
+          context.querySelectorAll('a.toolbar-menu__link, a.toolbar-button'),
+        );
+        toolbarLinks.forEach((link) => {
+          handleMenuLink(link);
+        });
+
+        // MutationObserver to observe changes in toolbar menus for mutations.
+        const menuObserver = new MutationObserver((mutations) => {
+          mutations.forEach((mutation) => {
+            if (
+              mutation.type === 'attributes' &&
+              mutation.attributeName === 'class'
+            ) {
+              // Check if the target element has the class 'toolbar-popover--expanded'.
+              if (
+                mutation.target.classList.contains('toolbar-popover--expanded')
+              ) {
+                // Find the active submenu.
+                const activeSubmenu =
+                  mutation.target.querySelector('.is-active');
+                if (activeSubmenu) {
+                  // Find the active button and set its 'aria-expanded' attribute to 'true'.
+                  const activeButton = activeSubmenu
+                    .closest('li.toolbar-menu__item--level-1')
+                    .querySelector('button.toolbar-button');
+                  if (activeButton) {
+                    activeButton.setAttribute('aria-expanded', 'true');
+                  }
+                }
+              }
+            }
+          });
+        });
+
+        // Start observing the admin toolbar menus for mutations.
+        menuObserver.observe(document.getElementById('admin-toolbar'), {
+          attributes: true,
+          attributeFilter: ['class'],
+          subtree: true,
         });
       },
     };
