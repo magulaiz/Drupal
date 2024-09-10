@@ -76,7 +76,7 @@ class MediaLibraryWidget extends WidgetBase implements TrustedCallbackInterface 
     protected EntityTypeManagerInterface $entityTypeManager,
     protected AccountInterface $currentUser,
     protected ModuleHandlerInterface $moduleHandler,
-    protected RouteMatchInterface $routeMatch
+    protected RouteMatchInterface $routeMatch,
   ) {
     parent::__construct($plugin_id, $plugin_definition, $field_definition, $settings, $third_party_settings);
   }
