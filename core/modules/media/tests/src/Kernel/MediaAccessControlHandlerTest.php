@@ -118,7 +118,9 @@ class MediaAccessControlHandlerTest extends MediaKernelTestBase {
     $this->assertSame($expected_access_result->isForbidden(), $actual->isForbidden());
     $this->assertSame($expected_access_result->isNeutral(), $actual->isNeutral());
 
-    $actual_cache_contexts = $actual->getCacheContexts();
+    /** @var \Drupal\Core\Cache\Context\CacheContextsManager $cache_context_manager */
+    $cache_context_manager = $this->container->get('cache_contexts_manager');
+    $actual_cache_contexts = $cache_context_manager->optimizeTokens($actual->getCacheContexts());
     sort($expected_cache_contexts);
     sort($actual_cache_contexts);
     $this->assertSame($expected_cache_contexts, $actual_cache_contexts);
@@ -155,7 +157,7 @@ class MediaAccessControlHandlerTest extends MediaKernelTestBase {
       'update',
       AccessResult::neutral(),
       ['user'],
-      ['media:1'],
+      [],
       TRUE,
     ];
     $test_data['owner, no permissions / published / delete'] = [
@@ -164,7 +166,7 @@ class MediaAccessControlHandlerTest extends MediaKernelTestBase {
       'delete',
       AccessResult::neutral(),
       ['user'],
-      ['media:1'],
+      [],
       TRUE,
     ];
     $test_data['owner, no permissions / unpublished / view'] = [
@@ -182,7 +184,7 @@ class MediaAccessControlHandlerTest extends MediaKernelTestBase {
       'update',
       AccessResult::neutral(),
       ['user'],
-      ['media:1'],
+      [],
       TRUE,
     ];
     $test_data['owner, no permissions / unpublished / delete'] = [
@@ -191,7 +193,7 @@ class MediaAccessControlHandlerTest extends MediaKernelTestBase {
       'delete',
       AccessResult::neutral(),
       ['user'],
-      ['media:1'],
+      [],
       TRUE,
     ];
 
@@ -212,7 +214,7 @@ class MediaAccessControlHandlerTest extends MediaKernelTestBase {
       'update',
       AccessResult::neutral(),
       ['user'],
-      ['media:1'],
+      [],
       TRUE,
     ];
     $test_data['not owner, no permissions / published / delete'] = [
@@ -221,7 +223,7 @@ class MediaAccessControlHandlerTest extends MediaKernelTestBase {
       'delete',
       AccessResult::neutral(),
       ['user'],
-      ['media:1'],
+      [],
       TRUE,
     ];
     $test_data['not owner, no permissions / unpublished / view'] = [
@@ -239,7 +241,7 @@ class MediaAccessControlHandlerTest extends MediaKernelTestBase {
       'update',
       AccessResult::neutral(),
       ['user'],
-      ['media:1'],
+      [],
       TRUE,
     ];
     $test_data['not owner, no permissions / unpublished / delete'] = [
@@ -248,7 +250,7 @@ class MediaAccessControlHandlerTest extends MediaKernelTestBase {
       'delete',
       AccessResult::neutral(),
       ['user'],
-      ['media:1'],
+      [],
       TRUE,
     ];
 
@@ -269,7 +271,7 @@ class MediaAccessControlHandlerTest extends MediaKernelTestBase {
       'update',
       AccessResult::neutral(),
       ['user'],
-      ['media:1'],
+      [],
       TRUE,
     ];
     $test_data['owner, can view media / published / delete'] = [
@@ -278,7 +280,7 @@ class MediaAccessControlHandlerTest extends MediaKernelTestBase {
       'delete',
       AccessResult::neutral(),
       ['user'],
-      ['media:1'],
+      [],
       TRUE,
     ];
     $test_data['owner, can view media / unpublished / view'] = [
@@ -296,7 +298,7 @@ class MediaAccessControlHandlerTest extends MediaKernelTestBase {
       'update',
       AccessResult::neutral(),
       ['user'],
-      ['media:1'],
+      [],
       TRUE,
     ];
     $test_data['owner, can view media / unpublished / delete'] = [
@@ -305,7 +307,7 @@ class MediaAccessControlHandlerTest extends MediaKernelTestBase {
       'delete',
       AccessResult::neutral(),
       ['user'],
-      ['media:1'],
+      [],
       TRUE,
     ];
 
@@ -326,7 +328,7 @@ class MediaAccessControlHandlerTest extends MediaKernelTestBase {
       'update',
       AccessResult::neutral(),
       ['user'],
-      ['media:1'],
+      [],
       TRUE,
     ];
     $test_data['not owner, can view media / published / delete'] = [
@@ -335,7 +337,7 @@ class MediaAccessControlHandlerTest extends MediaKernelTestBase {
       'delete',
       AccessResult::neutral(),
       ['user'],
-      ['media:1'],
+      [],
       TRUE,
     ];
     $test_data['not owner, can view media / unpublished / view'] = [
@@ -353,7 +355,7 @@ class MediaAccessControlHandlerTest extends MediaKernelTestBase {
       'update',
       AccessResult::neutral(),
       ['user'],
-      ['media:1'],
+      [],
       TRUE,
     ];
     $test_data['not owner, can view media / unpublished / delete'] = [
@@ -362,7 +364,7 @@ class MediaAccessControlHandlerTest extends MediaKernelTestBase {
       'delete',
       AccessResult::neutral(),
       ['user'],
-      ['media:1'],
+      [],
       TRUE,
     ];
 
@@ -383,7 +385,7 @@ class MediaAccessControlHandlerTest extends MediaKernelTestBase {
       'update',
       AccessResult::neutral(),
       ['user'],
-      ['media:1'],
+      [],
       TRUE,
     ];
     $test_data['owner, can view own unpublished media / published / delete'] = [
@@ -392,7 +394,7 @@ class MediaAccessControlHandlerTest extends MediaKernelTestBase {
       'delete',
       AccessResult::neutral(),
       ['user'],
-      ['media:1'],
+      [],
       TRUE,
     ];
     $test_data['owner, can view own unpublished media / unpublished / view'] = [
@@ -410,7 +412,7 @@ class MediaAccessControlHandlerTest extends MediaKernelTestBase {
       'update',
       AccessResult::neutral(),
       ['user'],
-      ['media:1'],
+      [],
       TRUE,
     ];
     $test_data['owner, can view own unpublished media / unpublished / delete'] = [
@@ -419,7 +421,7 @@ class MediaAccessControlHandlerTest extends MediaKernelTestBase {
       'delete',
       AccessResult::neutral(),
       ['user'],
-      ['media:1'],
+      [],
       TRUE,
     ];
 
@@ -440,7 +442,7 @@ class MediaAccessControlHandlerTest extends MediaKernelTestBase {
       'update',
       AccessResult::neutral(),
       ['user'],
-      ['media:1'],
+      [],
       TRUE,
     ];
     $test_data['not owner, can view own unpublished media / published / delete'] = [
@@ -449,7 +451,7 @@ class MediaAccessControlHandlerTest extends MediaKernelTestBase {
       'delete',
       AccessResult::neutral(),
       ['user'],
-      ['media:1'],
+      [],
       TRUE,
     ];
     $test_data['not owner, can view own unpublished media / unpublished / view'] = [
@@ -467,7 +469,7 @@ class MediaAccessControlHandlerTest extends MediaKernelTestBase {
       'update',
       AccessResult::neutral(),
       ['user'],
-      ['media:1'],
+      [],
       TRUE,
     ];
     $test_data['not owner, can view own unpublished media / unpublished / delete'] = [
@@ -476,7 +478,7 @@ class MediaAccessControlHandlerTest extends MediaKernelTestBase {
       'delete',
       AccessResult::neutral(),
       ['user'],
-      ['media:1'],
+      [],
       TRUE,
     ];
 
@@ -684,7 +686,7 @@ class MediaAccessControlHandlerTest extends MediaKernelTestBase {
       'update',
       AccessResult::allowed(),
       ['user'],
-      ['media:1'],
+      [],
       TRUE,
     ];
     $test_data['owner, can view own unpublished media and update or delete own media / published / delete'] = [
@@ -698,7 +700,7 @@ class MediaAccessControlHandlerTest extends MediaKernelTestBase {
       'delete',
       AccessResult::allowed(),
       ['user'],
-      ['media:1'],
+      [],
       TRUE,
     ];
     $test_data['owner, can view own unpublished media and update or delete own media / unpublished / view'] = [
@@ -726,7 +728,7 @@ class MediaAccessControlHandlerTest extends MediaKernelTestBase {
       'update',
       AccessResult::allowed(),
       ['user'],
-      ['media:1'],
+      [],
       TRUE,
     ];
     $test_data['owner, can view own unpublished media and update or delete own media / unpublished / delete'] = [
@@ -740,7 +742,7 @@ class MediaAccessControlHandlerTest extends MediaKernelTestBase {
       'delete',
       AccessResult::allowed(),
       ['user'],
-      ['media:1'],
+      [],
       TRUE,
     ];
 
@@ -772,7 +774,7 @@ class MediaAccessControlHandlerTest extends MediaKernelTestBase {
       'update',
       AccessResult::neutral(),
       ['user'],
-      ['media:1'],
+      [],
       TRUE,
     ];
     $test_data['not owner, can view own unpublished media and update or delete own media / published / delete'] = [
@@ -786,7 +788,7 @@ class MediaAccessControlHandlerTest extends MediaKernelTestBase {
       'delete',
       AccessResult::neutral(),
       ['user'],
-      ['media:1'],
+      [],
       TRUE,
     ];
     $test_data['not owner, can view own unpublished media and update or delete own media / unpublished / view'] = [
@@ -814,7 +816,7 @@ class MediaAccessControlHandlerTest extends MediaKernelTestBase {
       'update',
       AccessResult::neutral(),
       ['user'],
-      ['media:1'],
+      [],
       TRUE,
     ];
     $test_data['not owner, can view own unpublished media and update or delete own media / unpublished / delete'] = [
@@ -828,7 +830,7 @@ class MediaAccessControlHandlerTest extends MediaKernelTestBase {
       'delete',
       AccessResult::neutral(),
       ['user'],
-      ['media:1'],
+      [],
       TRUE,
     ];
 
@@ -1061,7 +1063,7 @@ class MediaAccessControlHandlerTest extends MediaKernelTestBase {
       'update',
       AccessResult::allowed(),
       ['user.permissions'],
-      ['media:1'],
+      [],
       TRUE,
     ];
     $test_data['owner, can view own unpublished media and update or delete any [type] media / published / delete'] = [
@@ -1075,7 +1077,7 @@ class MediaAccessControlHandlerTest extends MediaKernelTestBase {
       'delete',
       AccessResult::allowed(),
       ['user.permissions'],
-      ['media:1'],
+      [],
       TRUE,
     ];
     $test_data['owner, can view own unpublished media and update or delete any [type] media / unpublished / view'] = [
@@ -1103,7 +1105,7 @@ class MediaAccessControlHandlerTest extends MediaKernelTestBase {
       'update',
       AccessResult::allowed(),
       ['user.permissions'],
-      ['media:1'],
+      [],
       TRUE,
     ];
     $test_data['owner, can view own unpublished media and update or delete any [type] media / unpublished / delete'] = [
@@ -1117,7 +1119,7 @@ class MediaAccessControlHandlerTest extends MediaKernelTestBase {
       'delete',
       AccessResult::allowed(),
       ['user.permissions'],
-      ['media:1'],
+      [],
       TRUE,
     ];
 
@@ -1149,7 +1151,7 @@ class MediaAccessControlHandlerTest extends MediaKernelTestBase {
       'update',
       AccessResult::allowed(),
       ['user.permissions'],
-      ['media:1'],
+      [],
       TRUE,
     ];
     $test_data['not owner, can view own unpublished media and update or delete any [type] media / published / delete'] = [
@@ -1163,7 +1165,7 @@ class MediaAccessControlHandlerTest extends MediaKernelTestBase {
       'delete',
       AccessResult::allowed(),
       ['user.permissions'],
-      ['media:1'],
+      [],
       TRUE,
     ];
     $test_data['not owner, can view own unpublished media and update or delete any [type] media / unpublished / view'] = [
@@ -1191,7 +1193,7 @@ class MediaAccessControlHandlerTest extends MediaKernelTestBase {
       'update',
       AccessResult::allowed(),
       ['user.permissions'],
-      ['media:1'],
+      [],
       TRUE,
     ];
     $test_data['not owner, can view own unpublished media and update or delete any [type] media / unpublished / delete'] = [
@@ -1205,7 +1207,7 @@ class MediaAccessControlHandlerTest extends MediaKernelTestBase {
       'delete',
       AccessResult::allowed(),
       ['user.permissions'],
-      ['media:1'],
+      [],
       TRUE,
     ];
 
@@ -1237,7 +1239,7 @@ class MediaAccessControlHandlerTest extends MediaKernelTestBase {
       'update',
       AccessResult::allowed(),
       ['user'],
-      ['media:1'],
+      [],
       TRUE,
     ];
     $test_data['owner, can view own unpublished media and update or delete own [type] media / published / delete'] = [
@@ -1251,7 +1253,7 @@ class MediaAccessControlHandlerTest extends MediaKernelTestBase {
       'delete',
       AccessResult::allowed(),
       ['user'],
-      ['media:1'],
+      [],
       TRUE,
     ];
     $test_data['owner, can view own unpublished media and update or delete own [type] media / unpublished / view'] = [
@@ -1279,7 +1281,7 @@ class MediaAccessControlHandlerTest extends MediaKernelTestBase {
       'update',
       AccessResult::allowed(),
       ['user'],
-      ['media:1'],
+      [],
       TRUE,
     ];
     $test_data['owner, can view own unpublished media and update or delete own [type] media / unpublished / delete'] = [
@@ -1293,7 +1295,7 @@ class MediaAccessControlHandlerTest extends MediaKernelTestBase {
       'delete',
       AccessResult::allowed(),
       ['user'],
-      ['media:1'],
+      [],
       TRUE,
     ];
 
@@ -1360,7 +1362,7 @@ class MediaAccessControlHandlerTest extends MediaKernelTestBase {
       'update',
       AccessResult::neutral(),
       ['user'],
-      ['media:1'],
+      [],
       TRUE,
     ];
     $test_data['not owner, can view own unpublished media and update or delete own [type] media / published / delete'] = [
@@ -1374,7 +1376,7 @@ class MediaAccessControlHandlerTest extends MediaKernelTestBase {
       'delete',
       AccessResult::neutral(),
       ['user'],
-      ['media:1'],
+      [],
       TRUE,
     ];
     $test_data['not owner, can view own unpublished media and update or delete own [type] media / unpublished / view'] = [
@@ -1402,7 +1404,7 @@ class MediaAccessControlHandlerTest extends MediaKernelTestBase {
       'update',
       AccessResult::neutral(),
       ['user'],
-      ['media:1'],
+      [],
       TRUE,
     ];
     $test_data['not owner, can view own unpublished media and update or delete own [type] media / unpublished / delete'] = [
@@ -1416,7 +1418,7 @@ class MediaAccessControlHandlerTest extends MediaKernelTestBase {
       'delete',
       AccessResult::neutral(),
       ['user'],
-      ['media:1'],
+      [],
       TRUE,
     ];
 
@@ -1453,7 +1455,7 @@ class MediaAccessControlHandlerTest extends MediaKernelTestBase {
       'update',
       AccessResult::allowed(),
       ['user.permissions'],
-      ['media:1'],
+      [],
       TRUE,
     ];
     $test_data['owner, can view own unpublished media and update or delete all [type] media / published / delete'] = [
@@ -1469,7 +1471,7 @@ class MediaAccessControlHandlerTest extends MediaKernelTestBase {
       'delete',
       AccessResult::allowed(),
       ['user.permissions'],
-      ['media:1'],
+      [],
       TRUE,
     ];
     $test_data['owner, can view own unpublished media and update or delete all [type] media / unpublished / view'] = [
@@ -1501,7 +1503,7 @@ class MediaAccessControlHandlerTest extends MediaKernelTestBase {
       'update',
       AccessResult::allowed(),
       ['user.permissions'],
-      ['media:1'],
+      [],
       TRUE,
     ];
     $test_data['owner, can view own unpublished media and update or delete all [type] media / unpublished / delete'] = [
@@ -1517,7 +1519,7 @@ class MediaAccessControlHandlerTest extends MediaKernelTestBase {
       'delete',
       AccessResult::allowed(),
       ['user.permissions'],
-      ['media:1'],
+      [],
       TRUE,
     ];
 
@@ -1554,7 +1556,7 @@ class MediaAccessControlHandlerTest extends MediaKernelTestBase {
       'update',
       AccessResult::allowed(),
       ['user.permissions'],
-      ['media:1'],
+      [],
       TRUE,
     ];
     $test_data['not owner, can view own unpublished media and update or delete all [type] media / published / delete'] = [
@@ -1570,7 +1572,7 @@ class MediaAccessControlHandlerTest extends MediaKernelTestBase {
       'delete',
       AccessResult::allowed(),
       ['user.permissions'],
-      ['media:1'],
+      [],
       TRUE,
     ];
     $test_data['not owner, can view own unpublished media and update or delete all [type] media / unpublished / view'] = [
@@ -1602,7 +1604,7 @@ class MediaAccessControlHandlerTest extends MediaKernelTestBase {
       'update',
       AccessResult::allowed(),
       ['user.permissions'],
-      ['media:1'],
+      [],
       TRUE,
     ];
     $test_data['not owner, can view own unpublished media and update or delete all [type] media / unpublished / delete'] = [
@@ -1618,7 +1620,7 @@ class MediaAccessControlHandlerTest extends MediaKernelTestBase {
       'delete',
       AccessResult::allowed(),
       ['user.permissions'],
-      ['media:1'],
+      [],
       TRUE,
     ];
 
@@ -1666,7 +1668,7 @@ class MediaAccessControlHandlerTest extends MediaKernelTestBase {
       'revert',
       AccessResult::neutral(),
       ['user.permissions'],
-      ['media:1'],
+      [],
       FALSE,
     ];
     $test_data['revert latest revision with administer media permission'] = [
@@ -1702,7 +1704,7 @@ class MediaAccessControlHandlerTest extends MediaKernelTestBase {
       'revert',
       AccessResult::allowed(),
       ['user.permissions'],
-      ['media:1'],
+      [],
       FALSE,
     ];
     // Delete revisions:
@@ -1721,7 +1723,7 @@ class MediaAccessControlHandlerTest extends MediaKernelTestBase {
       'delete revision',
       AccessResult::neutral(),
       ['user.permissions'],
-      ['media:1'],
+      [],
       FALSE,
     ];
     $test_data['delete a latest revision with administer media permission'] = [
@@ -1757,7 +1759,7 @@ class MediaAccessControlHandlerTest extends MediaKernelTestBase {
       'delete revision',
       AccessResult::allowed(),
       ['user.permissions'],
-      ['media:1'],
+      [],
       FALSE,
     ];
 

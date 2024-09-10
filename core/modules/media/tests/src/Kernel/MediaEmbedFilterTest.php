@@ -156,8 +156,11 @@ class MediaEmbedFilterTest extends MediaEmbedFilterTestBase {
       $this->assertCount(1, $this->cssSelect('div[data-media-embed-test-view-mode="default"]'));
     }
 
+    /** @var \Drupal\Core\Cache\Context\CacheContextsManager $cache_context_manager */
+    $cache_context_manager = $this->container->get('cache_contexts_manager');
+
     $this->assertEqualsCanonicalizing($expected_cacheability->getCacheTags(), $result->getCacheTags());
-    $this->assertEqualsCanonicalizing($expected_cacheability->getCacheContexts(), $result->getCacheContexts());
+    $this->assertEqualsCanonicalizing($expected_cacheability->getCacheContexts(), $cache_context_manager->optimizeTokens($result->getCacheContexts()));
     $this->assertSame($expected_cacheability->getCacheMaxAge(), $result->getCacheMaxAge());
     $this->assertSame($expected_attachments, $result->getAttachments());
   }
