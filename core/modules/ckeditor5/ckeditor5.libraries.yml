@@ -119,6 +119,7 @@ internal.admin:
     - core/jquery
     - core/once
     - core/drupal.announce
+    - core/drupal.vertical-tabs
 
 internal.admin.specialCharacters:
   css:
