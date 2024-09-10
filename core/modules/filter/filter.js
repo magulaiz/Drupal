@@ -26,7 +26,7 @@
       }
 
       $(once('filter-guidelines', '.js-filter-guidelines', context))
-        .find(':header')
+        .find('h1, h2, h3, h4, h5, h6')
         .hide()
         .closest('.js-filter-wrapper')
         .find('select.js-filter-list')

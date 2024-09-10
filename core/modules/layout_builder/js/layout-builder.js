@@ -69,8 +69,8 @@
           $categories.find('.js-layout-builder-category').attr('open', '');
           // Toggle visibility of links based on query.
           $filterLinks.each(toggleBlockEntry);
-
           // Only display categories containing visible links.
+          // eslint-disable-next-line jquery/no-sizzle
           $categories
             .find(
               '.js-layout-builder-category:not(:has(.js-layout-builder-block-link:visible))',
@@ -79,7 +79,8 @@
 
           announce(
             formatPlural(
-              $categories.find('.js-layout-builder-block-link:visible').length,
+              $categories.find('.js-layout-builder-category > ul > li:visible')
+                .length,
               '1 block is available in the modified list.',
               '@count blocks are available in the modified list.',
             ),

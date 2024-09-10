@@ -64,8 +64,10 @@
       once('vertical-tabs', '[data-vertical-tabs-panes]', context).forEach(
         (verticalTab) => {
           const $this = $(verticalTab).addClass('vertical-tabs__panes');
-          const focusID = $this.find(':hidden.vertical-tabs__active-tab')[0]
-            .value;
+          const focusID = document.querySelector(
+            '.vertical-tabs__active-tab',
+          )[0].value;
+
           let tabFocus;
 
           // Check if there are some details that can be converted to
@@ -170,7 +172,9 @@
         event.preventDefault();
         self.focus();
         // Set focus on the first input field of the visible details/tab pane.
-        $('.vertical-tabs__pane :input:visible:enabled').eq(0).trigger('focus');
+        document
+          .querySelector('.vertical-tabs__pane input:visible:enabled')
+          .focus();
       }
     });
 

@@ -1675,10 +1675,10 @@
       $(response.selector)
         .find('> tbody > tr:visible, > tr:visible')
         .removeClass('odd even')
-        .filter(':even')
+        .filter(':nth-child(even)')
         .addClass('odd')
         .end()
-        .filter(':odd')
+        .filter(':nth-child(odd)')
         .addClass('even');
     },
 

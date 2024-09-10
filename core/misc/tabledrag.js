@@ -1298,11 +1298,11 @@
     $(this.table)
       .find('> tbody > tr.draggable, > tr.draggable')
       .filter(':visible')
-      .filter(':odd')
+      .filter(':nth-child(odd)')
       .removeClass('odd')
       .addClass('even')
       .end()
-      .filter(':even')
+      .filter(':nth-child(even)')
       .removeClass('even')
       .addClass('odd');
   };

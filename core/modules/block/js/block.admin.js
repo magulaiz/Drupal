@@ -54,7 +54,7 @@
           $filterRows.each(toggleBlockEntry);
           Drupal.announce(
             Drupal.formatPlural(
-              $table.find('tr:visible').length - 1,
+              $table.find('tr').filter(':visible').length - 1,
               '1 block is available in the modified list.',
               '@count blocks are available in the modified list.',
             ),

@@ -1016,8 +1016,9 @@
             // row's filter group.
             const operatorValue = $draggableRow
               .prevAll('.views-group-title')
-              .find('option:selected')
+              .find('option:checked')
               .html();
+
             const operatorLabel = `<span class="views-operator-label">${operatorValue}</span>`;
             // If the next visible row after this one is a draggable filter row,
             // display the operator label next to the current row. (Checking for

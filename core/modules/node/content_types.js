@@ -39,10 +39,9 @@
       });
       $('#edit-language', context).drupalSetSummary((context) => {
         const values = [];
-
         values.push(
           $(
-            '.js-form-item-language-configuration-langcode select option:selected',
+            '.js-form-item-language-configuration-langcode select option:checked',
             context,
           )[0].textContent,
         );
