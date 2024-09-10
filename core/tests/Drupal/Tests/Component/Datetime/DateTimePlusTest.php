@@ -683,7 +683,7 @@ class DateTimePlusTest extends TestCase {
         'expected' => $positive_18_hours,
       ],
       [
-        'input1' => DateTimePlus::createFromTimestamp(3600, new \DateTimeZone('America/Los_Angeles')),
+        'input1' => DateTimePlus::createFromFormat('U', '3600', new \DateTimeZone('America/Los_Angeles')),
         'input2' => DateTimePlus::createFromTimestamp(0, new \DateTimeZone('UTC')),
         'absolute' => FALSE,
         'expected' => $negative_1_hour,
