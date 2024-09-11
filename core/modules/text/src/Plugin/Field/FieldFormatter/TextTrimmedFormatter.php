@@ -34,6 +34,7 @@ class TextTrimmedFormatter extends FormatterBase implements TrustedCallbackInter
   public static function defaultSettings() {
     return [
       'trim_length' => '600',
+      'exclude_html_tags' => TRUE,
     ] + parent::defaultSettings();
   }
 
@@ -50,6 +51,14 @@ class TextTrimmedFormatter extends FormatterBase implements TrustedCallbackInter
       '#min' => 1,
       '#required' => TRUE,
     ];
+  
+    $element['exclude_html_tags'] = [
+      '#title' => $this->t('Exclude HTML tags from trim length'),
+      '#type' => 'checkbox',
+      '#default_value' => $this->getSetting('exclude_html_tags'),
+      '#description' => $this->t('If checked, HTML tags will not count toward the character limit.'),
+    ];
+  
     return $element;
   }
 
@@ -86,6 +95,7 @@ class TextTrimmedFormatter extends FormatterBase implements TrustedCallbackInter
         '#text' => NULL,
         '#format' => $item->format,
         '#langcode' => $item->getLangcode(),
+        '#exclude_html_tags' => $this->getSetting('exclude_html_tags'),
       ];
 
       if ($this->getPluginId() == 'text_summary_or_trimmed' && !empty($item->summary)) {
@@ -119,8 +129,78 @@ class TextTrimmedFormatter extends FormatterBase implements TrustedCallbackInter
    * @see text_summary()
    */
   public static function preRenderSummary(array $element) {
-    $element['#markup'] = text_summary($element['#markup'], $element['#format'], $element['#text_summary_trim_length']);
+    $raw_text = (string) $element['#markup'];
+    $exclude_html = $element['#exclude_html_tags'] ?? TRUE;
+  
+    if ($exclude_html) {
+      $plain_text = strip_tags($raw_text);
+    } else {
+      $plain_text = $raw_text;
+    }
+    $trimmed_plain_text = text_summary($plain_text, $element['#format'], $element['#text_summary_trim_length']);
+  
+    if ($exclude_html) {
+      $element['#markup'] = self::truncateHtml($raw_text, strlen($trimmed_plain_text));
+    } else {
+      $element['#markup'] = $trimmed_plain_text;
+    }
+  
     return $element;
+  }
+  
+  /**
+   * Truncates an HTML string to a given length while preserving tags.
+   *
+   * @param string $html
+   *   The HTML string to truncate.
+   * @param int $length
+   *   The desired character length.
+   *
+   * @return string
+   *   The truncated HTML string.
+   */
+  public static function truncateHtml($html, $length) {
+    $is_open = false;
+    $ret = '';
+    $i = 0;
+    $tags = [];
+    $stripped_text = strip_tags($html);
+  
+    // If the text is shorter than the required length, return it as is.
+    if (strlen($stripped_text) <= $length) {
+      return $html;
+    }
+  
+    // Use a loop to walk through the string.
+    while ($i < strlen($html) && strlen(strip_tags($ret)) < $length) {
+      $char = $html[$i];
+      $ret .= $char;
+  
+      // Handle tags.
+      if ($char === '<') {
+        $is_open = true;
+        $tag = '';
+      } elseif ($is_open && $char === '>') {
+        $is_open = false;
+  
+        // Add open tags to the list and handle self-closing tags.
+        if ($tag[0] != '/' && substr($tag, -1) != '/') {
+          $tags[] = $tag;
+        } elseif ($tag[0] == '/') {
+          array_pop($tags);
+        }
+      } elseif ($is_open) {
+        $tag .= $char;
+      }
+      $i++;
+    }
+  
+    // Close any open tags.
+    while (count($tags) > 0) {
+      $ret .= '</' . array_pop($tags) . '>';
+    }
+  
+    return $ret;
   }
 
   /**
