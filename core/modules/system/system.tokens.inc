@@ -80,7 +80,7 @@ function system_token_info() {
   ];
   $date['custom'] = [
     'name' => t("Custom format"),
-    'description' => t('The current date in a custom format. See <a href="https://www.php.net/manual/datetime.format.php#refsect1-datetime.format-parameters">the PHP documentation</a> for details.'),
+    'description' => t('The current date in a custom format. See <a href="!url">the PHP documentation</a> for details.', ['!url' => 'https://www.php.net/manual/datetime.format.php#refsect1-datetime.format-parameters']),
   ];
   $date['since'] = [
     'name' => t("Time-since"),
