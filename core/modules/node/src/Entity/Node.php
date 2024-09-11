@@ -163,6 +163,8 @@ class Node extends EditorialContentEntityBase implements NodeInterface {
     // Reindex the node when it is updated. The node is automatically indexed
     // when it is added, simply by being added to the node table.
     if ($update) {
+      // Node will be indexed in queue. In case queue processing fails
+      // next cron run will ensure indexing of the node.
       node_reindex_node_search($this->id());
     }
     if (\Drupal::moduleHandler()->moduleExists('search') && \Drupal::moduleHandler()->moduleExists('automated_cron')) {

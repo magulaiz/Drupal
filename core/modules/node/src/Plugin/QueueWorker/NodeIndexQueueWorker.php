@@ -11,7 +11,7 @@ use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
- * Defines 'automated_cron_index' queue worker.
+ * Defines 'node_index' queue worker.
  */
 #[QueueWorker(
   id: 'node_index',
