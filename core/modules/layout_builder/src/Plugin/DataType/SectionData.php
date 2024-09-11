@@ -30,11 +30,23 @@ class SectionData extends TypedData {
   /**
    * {@inheritdoc}
    */
+  public function getValue() {
+    return $this->value;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function setValue($value, $notify = TRUE) {
     if ($value && !$value instanceof Section) {
       throw new \InvalidArgumentException(sprintf('Value assigned to "%s" is not a valid section', $this->getName()));
     }
-    parent::setValue($value, $notify);
+
+    $this->value = $value;
+    // Notify the parent of any changes.
+    if ($notify && isset($this->parent)) {
+      $this->parent->onChange($this->name);
+    }
   }
 
 }

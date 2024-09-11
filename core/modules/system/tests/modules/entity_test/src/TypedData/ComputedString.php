@@ -34,6 +34,17 @@ class ComputedString extends TypedData implements CacheableDependencyInterface {
   /**
    * {@inheritdoc}
    */
+  public function setValue($value, $notify = TRUE) {
+    $this->value = $value;
+    // Notify the parent of any changes.
+    if ($notify && isset($this->parent)) {
+      $this->parent->onChange($this->name);
+    }
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function getCastedValue() {
     return $this->getString();
   }
