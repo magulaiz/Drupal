@@ -89,7 +89,7 @@ function system_post_update_sdc_uninstall() {
 /**
  * Update the WEBP quality setting to default value.
  */
-function system_post_update_webp_quality_default_value() {
+function system_post_update_webp_quality_default_value(): void {
   $config = \Drupal::configFactory()->getEditable('system.image.gd');
   $config->set('webp_lossless', FALSE)->save();
   $config->set('webp_quality', 75)->save();
