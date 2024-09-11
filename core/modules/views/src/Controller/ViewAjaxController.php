@@ -6,6 +6,7 @@ use Drupal\Component\Utility\Html;
 use Drupal\Component\Utility\UrlHelper;
 use Drupal\Core\Ajax\PrependCommand;
 use Drupal\Core\Ajax\ReplaceCommand;
+use Drupal\Core\Ajax\ScrollTopCommand;
 use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
 use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\EventSubscriber\MainContentViewSubscriber;
@@ -13,13 +14,12 @@ use Drupal\Core\Form\FormBuilderInterface;
 use Drupal\Core\Path\CurrentPathStack;
 use Drupal\Core\Render\RendererInterface;
 use Drupal\Core\Routing\RedirectDestinationInterface;
-use Drupal\Core\Ajax\ScrollTopCommand;
 use Drupal\views\Ajax\ViewAjaxResponse;
 use Drupal\views\ViewExecutableFactory;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
  * Defines a controller to load a view via AJAX.
@@ -127,12 +127,12 @@ class ViewAjaxController implements ContainerInjectionInterface {
    */
   public function ajaxView(Request $request) {
     $name = $request->get('view_name');
-    if (!$this->isValid($name)) {
+    if (isset($name) && !$this->isValid($name)) {
       throw new NotFoundHttpException();
     }
 
     $display_id = $request->get('view_display_id');
-    if (!$this->isValid($display_id)) {
+    if (isset($display_id) && !$this->isValid($display_id)) {
       throw new NotFoundHttpException();
     }
 
@@ -150,7 +150,7 @@ class ViewAjaxController implements ContainerInjectionInterface {
       }
 
       $path = $request->get('view_path');
-      if (!$this->isValid($path)) {
+      if (isset($path) && !$this->isValid($path)) {
         throw new NotFoundHttpException();
       }
 
