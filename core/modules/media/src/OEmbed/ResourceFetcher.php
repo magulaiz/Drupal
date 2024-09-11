@@ -74,6 +74,11 @@ class ResourceFetcher implements ResourceFetcherInterface {
       throw new ResourceException('The oEmbed resource could not be decoded.', $url);
     }
 
+    if ((empty($data['thumbnail_width']) || empty($data['thumbnail_height']))
+        && !empty($data['thumbnail_url'])) {
+      list($data['thumbnail_width'], $data['thumbnail_height']) = getimagesize($data['thumbnail_url']);
+    }
+
     $this->cacheBackend->set($cache_id, $data);
 
     return $this->createResource($data, $url);
