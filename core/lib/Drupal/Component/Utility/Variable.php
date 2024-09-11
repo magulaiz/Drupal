@@ -50,16 +50,16 @@ class Variable {
   public static function export($var, $prefix = '') {
     if (is_array($var)) {
       if (empty($var)) {
-        $output = 'array()';
+        $output = '[]';
       }
       else {
-        $output = "array(\n";
+        $output = "[\n";
         // Don't export keys if the array is non associative.
         $export_keys = array_values($var) != $var;
         foreach ($var as $key => $value) {
           $output .= '  ' . ($export_keys ? static::export($key) . ' => ' : '') . static::export($value, '  ') . ",\n";
         }
-        $output .= ')';
+        $output .= ']';
       }
     }
     elseif (is_bool($var)) {
