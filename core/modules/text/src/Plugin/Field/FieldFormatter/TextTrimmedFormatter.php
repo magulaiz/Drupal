@@ -166,6 +166,7 @@ class TextTrimmedFormatter extends FormatterBase implements TrustedCallbackInter
     $ret = '';
     $i = 0;
     $tags = [];
+    $tag = '';
     $stripped_text = strip_tags($html);
 
     // If the text is shorter than the required length, return it as is.
