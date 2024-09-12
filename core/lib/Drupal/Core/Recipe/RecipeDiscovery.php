@@ -17,6 +17,16 @@ use Symfony\Component\Finder\Finder;
  * intentional difference from ExtensionDiscovery, because all recipes (except
  * core's) must be installed in a single location.
  *
+ * Once instantiated, this object should be used as a simple iterator over
+ * \Drupal\Core\Recipe\Recipe objects. For example:
+ *
+ * @code
+ * $discovery = new RecipeDiscovery('/path/to/recipes');
+ * foreach ($discovery as $recipe) {
+ *   echo $recipe->name;
+ * }
+ * @endcode
+ *
  * @see \Drupal\Core\Recipe\RecipeConfigurator
  *
  * @internal
