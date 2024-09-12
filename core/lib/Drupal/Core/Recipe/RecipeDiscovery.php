@@ -84,7 +84,7 @@ final class RecipeDiscovery {
    * @return string|bool
    *   Path to composer recipes, FALSE if no composer path.
    */
-  private static function getComposerRecipePath() : string|bool {
+  private static function getComposerRecipePath(): string|bool {
     $composer_values = Json::decode(file_get_contents(DRUPAL_ROOT . '/composer.json'));
     $installer_types_and_paths = $composer_values['extra']['installer-paths'];
 
