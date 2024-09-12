@@ -54,9 +54,7 @@ final class RecipeDiscovery {
    *   a specific path, you may not want to include core recipes.
    */
   public function __construct(?string $path = NULL, bool $include_core_recipes = TRUE) {
-    if (is_null($path)) {
-      $path = self::getComposerRecipePath();
-    }
+    $path ??= self::getComposerRecipePath();
 
     if ($include_core_recipes) {
       $this->directoriesToSearch[] = DRUPAL_ROOT . '/' . self::CORE_RECIPE_DIR;
