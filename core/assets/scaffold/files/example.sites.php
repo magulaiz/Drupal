@@ -25,12 +25,6 @@
  * test. To preserve the site see the documentation in the core/phpunit.xml.dist
  * file.
  *
- * If a test site from a Functional test has been preserved after a test, the
- * site may be accessed by setting a site directory (or indeed the main site) to
- * the test site directory, in the form 'simpletest/TEST_PREFIX'. 'TEST_PREFIX'
- * is the numeric prefix of the test which is also used as part of the test
- * database table prefix.
- *
  * To activate this feature, copy and rename it such that its path plus
  * filename is 'sites/sites.php'.
  *
