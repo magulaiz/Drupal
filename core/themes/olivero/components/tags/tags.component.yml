@@ -27,15 +27,12 @@ props:
         - hidden
         - visually_hidden
       default: above
-    items:
-      title: Tags Items
+    tags:
+      title: Tags
       type: array
-      item:
+      items:
         type: object
         properties:
           content:
-            title: Tags Item
-            type: object
-          attributes:
-            title: Item Attributes
-            type: Drupal\Core\Template\Attribute
+            title: Tag
+            type: string
