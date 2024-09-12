@@ -4,9 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\Core\Recipe;
 
-use Drupal\Component\Serialization\Json;
-use Drupal\Core\StringTranslation\StringTranslationTrait;
-use Psr\Log\LoggerAwareTrait;
+use Composer\InstalledVersions;
 use Symfony\Component\Finder\Finder;
 
 /**
@@ -17,14 +15,7 @@ use Symfony\Component\Finder\Finder;
  * design, differing it intentionally from ExtensionDiscovery despite sometimes
  * borrowing from it in name and some method naming conventions.
  */
-final class RecipeDiscovery {
-  use LoggerAwareTrait;
-  use StringTranslationTrait;
-
-  /**
-   * Array of directories we will search.
-   */
-  private const string CORE_RECIPE_DIR = 'core/recipes';
+final class RecipeDiscovery implements \IteratorAggregate {
 
   /**
    * The directories to search.
@@ -47,112 +38,50 @@ final class RecipeDiscovery {
    *   a specific path, you may not want to include core recipes.
    */
   public function __construct(?string $path = NULL, bool $include_core_recipes = TRUE) {
-    $path ??= self::getComposerRecipePath();
-
     if ($include_core_recipes) {
-      $this->directoriesToSearch[] = \Drupal::root() . '/' . self::CORE_RECIPE_DIR;
+      $this->directoriesToSearch[] = \Drupal::root() . '/core/recipes';
     }
 
-    // In the absence of a path (FALSE) the user will just get core recipes.
-    if ($path !== FALSE) {
-      if (is_dir($path)) {
-        $this->directoriesToSearch[] = $path;
-      }
+    // If there are Composer-installed recipes, we will only find core recipes.
+    $path ??= self::getRecipesPathFromComposer();
+    if ($path) {
+      assert(is_dir($path));
+      $this->directoriesToSearch[] = $path;
     }
-
   }
 
   /**
    * Gets the path at which Composer has installed recipes.
    *
-   * @return string|bool
-   *   Path to Composer recipes, FALSE if no composer path.
+   * @return string|false
+   *   The path where Composer has installed recipes, or FALSE if no recipes
+   *   are installed.
    */
-  private static function getComposerRecipePath(): string|bool {
-    if (file_exists(\Drupal::root() . '/composer.json')) {
-      $composer_values = Json::decode(file_get_contents(\Drupal::root() . '/composer.json'));
-      $installer_types_and_paths = $composer_values['extra']['installer-paths'];
-
-      foreach ($installer_types_and_paths as $path => $installer_type) {
-        if (reset($installer_type) == Recipe::COMPOSER_PROJECT_TYPE) {
-          $recipe_path = explode('/', $path);
-          array_pop($recipe_path);
-          $recipe_path = implode('/', $recipe_path);
-          return DRUPAL_ROOT . '/' . $path;
-        }
-      }
+  private static function getRecipesPathFromComposer(): string|false {
+    $installed_recipes = InstalledVersions::getInstalledPackagesByType(Recipe::COMPOSER_PROJECT_TYPE);
+    if ($installed_recipes) {
+      $name = reset($installed_recipes);
+      $path = InstalledVersions::getInstallPath($name);
+      return dirname($path);
     }
-
     return FALSE;
   }
 
   /**
-   * Scans the site for recipes in the specified search directories.
-   *
-   * @return array
-   *   An array of recipe paths, as discovered in the provided paths.
+   * {@inheritdoc}
    */
-  public function getAllRecipePaths(): array {
-    $recipes = [];
-
-    foreach ($this->directoriesToSearch as $search_dir) {
-      $recipes = array_merge($recipes, $this->scanDirectory($search_dir));
-    }
-
-    return $recipes;
-  }
-
-  /**
-   * Scans the site for recipes and returns an array of loaded Recipe objects.
-   *
-   * WARNING: Recipes can be sizable so be careful using this method!
-   *
-   * @return Recipe[]
-   *   An array of recipe objects.
-   */
-  public function getAllRecipes() : array {
-    $valid_recipes = [];
-
-    foreach ($this->getAllRecipePaths() as $recipePath) {
-      try {
-        $valid_recipes[$recipePath] = Recipe::createFromDirectory($recipePath);
-      }
-      catch (RecipeFileException $e) {
-        // Invalid recipes aren't really our problem, but are worth logging.
-        $this->logger?->debug(
-          $this->t("Attempted to load recipe at path '@path', but got a RecipeFileException of: @message",
-            ['@path' => $recipePath, '@message' => $e->getMessage()]
-        ));
-      }
-    }
-
-    return $valid_recipes;
-  }
-
-  /**
-   * Scans a directory and returns all found recipes by path.
-   *
-   * @param string $directory
-   *   The directory to search.
-   *
-   * @return array
-   *   All recipes found, by path.
-   */
-  protected function scanDirectory(string $directory) : array {
-    $recipes = [];
-
+  public function getIterator(): iterable {
     $finder = Finder::create()
       ->files()
       ->name('recipe.yml')
       ->depth(1)
       ->followLinks()
-      ->in($directory);
+      ->in($this->directoriesToSearch);
 
+    /** @var \Symfony\Component\Finder\SplFileInfo $file */
     foreach ($finder as $file) {
-      $recipes[] = $file->getPath();
+      yield Recipe::createFromDirectory($file->getPath());
     }
-
-    return $recipes;
   }
 
 }
