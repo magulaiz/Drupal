@@ -57,7 +57,7 @@ abstract class BlockContentTestBase extends BrowserTestBase {
   protected function setUp(): void {
     parent::setUp();
     if ($this->autoCreateBasicBlockType) {
-      $this->createBlockContentType(['id' => 'basic', 'label' => 'basic'], TRUE);
+      $this->createBlockContentType(['id' => 'basic'], TRUE);
     }
 
     $this->adminUser = $this->drupalCreateUser($this->permissions);
@@ -108,7 +108,7 @@ abstract class BlockContentTestBase extends BrowserTestBase {
    */
   protected function createBlockContentType($values, $create_body = FALSE) {
     if (is_string($values)) {
-      @trigger_error('Using the variable $values as string is deprecated in drupal:11.1.0 and is removed from drupal:12.0.0. Provide an array as parameter. See https://www.drupal.org/node/3196937', E_USER_DEPRECATED);
+      @trigger_error('Using the variable $values as string is deprecated in drupal:11.1.0 and is removed from drupal:12.0.0. Provide an array as parameter. See https://www.drupal.org/node/3473739', E_USER_DEPRECATED);
     }
     if (is_array($values)) {
       if (!isset($values['id'])) {
