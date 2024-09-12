@@ -46,7 +46,7 @@ final class RecipeInfoCommand extends Command {
       $io->error(sprintf('The supplied path %s is not a directory', $recipe_path));
       return 1;
     }
-    $this->boot();
+    $this->boot('sites/default');
 
     $recipe = Recipe::createFromDirectory($recipe_path);
     $io->section('Description');
