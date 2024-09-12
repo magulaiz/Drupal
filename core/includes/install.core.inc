@@ -447,7 +447,6 @@ function install_begin_request($class_loader, &$install_state) {
   $module_list = \Drupal::service('extension.list.module');
   /** @var \Drupal\Core\Extension\ProfileExtensionList $profile_list */
   $profile_list = \Drupal::service('extension.list.profile');
-  $sync_directory = Settings::get('config_sync_directory');
 
   // Add list of all available profiles to the installation state.
   if (!$install_state['base_system_verified']) {
@@ -488,12 +487,13 @@ function install_begin_request($class_loader, &$install_state) {
     }
   }
 
+  $sync_directory = Settings::get('config_sync_directory');
   if (!empty($install_state['parameters']['existing_config']) && !empty($sync_directory)) {
     $install_state['config_install_path'] = $sync_directory;
   }
   // If the profile has a config/sync directory copy the information to the
   // install_state global.
-  if (!empty($install_state['profile_info']['config_install_path'])) {
+  elseif (!empty($install_state['profile_info']['config_install_path'])) {
     $install_state['config_install_path'] = $install_state['profile_info']['config_install_path'];
   }
 
