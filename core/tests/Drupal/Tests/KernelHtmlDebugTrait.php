@@ -125,9 +125,10 @@ trait KernelHtmlDebugTrait {
    * URLs to has been created by \Drupal\Tests\Listeners\HtmlOutputPrinter.
    */
   protected function initBrowserOutputFile() {
+    global $base_url;
     $browser_output_file = getenv('BROWSERTEST_OUTPUT_FILE');
     $this->htmlOutputEnabled = is_file($browser_output_file);
-    $this->htmlOutputBaseUrl = getenv('BROWSERTEST_OUTPUT_BASE_URL') ?: $GLOBALS['base_url'];
+    $this->htmlOutputBaseUrl = getenv('BROWSERTEST_OUTPUT_BASE_URL') ?: $base_url;
     if ($this->htmlOutputEnabled) {
       $this->htmlOutputFile = $browser_output_file;
       $this->htmlOutputClassName = str_replace("\\", "_", static::class);
