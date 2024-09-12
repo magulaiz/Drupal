@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace Drupal\Core\Recipe;
 
 use Composer\InstalledVersions;
+use Psr\Log\LoggerAwareInterface;
+use Psr\Log\LoggerAwareTrait;
 use Symfony\Component\Finder\Finder;
 
 /**
@@ -15,7 +17,9 @@ use Symfony\Component\Finder\Finder;
  * design, differing it intentionally from ExtensionDiscovery despite sometimes
  * borrowing from it in name and some method naming conventions.
  */
-final class RecipeDiscovery implements \IteratorAggregate {
+final class RecipeDiscovery implements \IteratorAggregate, LoggerAwareInterface {
+
+  use LoggerAwareTrait;
 
   /**
    * The directories to search for recipes.
@@ -33,7 +37,11 @@ final class RecipeDiscovery implements \IteratorAggregate {
    * @param bool $include_core_recipes
    *   (optional) Whether or not to include recipes provided by core.
    */
-  public function __construct(?string $path = NULL, bool $include_core_recipes = TRUE) {
+  public function __construct(
+    ?string $path = NULL,
+    bool $include_core_recipes = TRUE,
+    public bool $skipInvalid = FALSE,
+  ) {
     if ($include_core_recipes) {
       $this->directoriesToSearch[] = \Drupal::root() . '/core/recipes';
     }
@@ -76,7 +84,18 @@ final class RecipeDiscovery implements \IteratorAggregate {
 
     /** @var \Symfony\Component\Finder\SplFileInfo $file */
     foreach ($finder as $file) {
-      yield Recipe::createFromDirectory($file->getPath());
+      try {
+        yield Recipe::createFromDirectory($file->getPath());
+      }
+      catch (RecipeFileException $e) {
+        // If we're ignoring invalid recipes, log the exception message (if a
+        // logger has been set).
+        if ($this->skipInvalid) {
+          $this->logger?->warning($e->getMessage());
+          continue;
+        }
+        throw $e;
+      }
     }
   }
 

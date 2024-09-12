@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Drupal\KernelTests\Core\Recipe;
 
+use ColinODell\PsrTestLogger\TestLogger;
+use Drupal\Component\FileSystem\FileSystem;
 use Drupal\Core\Recipe\Recipe;
 use Drupal\Core\Recipe\RecipeDiscovery;
 use Drupal\KernelTests\KernelTestBase;
@@ -128,6 +130,34 @@ class RecipeDiscoveryTest extends KernelTestBase {
     $found_core_recipes = $recipeDiscovery->getAllRecipes(NULL, TRUE);
 
     $this->assertGreaterThan(10, count($found_core_recipes));
+  }
+
+  public function testSkipInvalidRecipes(): void {
+    $cookbook_dir = uniqid(FileSystem::getOsTemporaryDirectory() . '/');
+    mkdir($cookbook_dir);
+
+    mkdir($cookbook_dir . '/a');
+    mkdir($cookbook_dir . '/b');
+    mkdir($cookbook_dir . '/c');
+
+    file_put_contents($cookbook_dir . '/a/recipe.yml', 'name: A valid recipe');
+    // B is not a valid recipe, because it has no name.
+    file_put_contents($cookbook_dir . '/b/recipe.yml', 'nom nom nom');
+    file_put_contents($cookbook_dir . '/c/recipe.yml', 'name: C valid recipe');
+
+    $discovery = new RecipeDiscovery($cookbook_dir, FALSE, TRUE);
+    $logger = new TestLogger();
+    $discovery->setLogger($logger);
+    $paths = array_map(
+      fn (Recipe $recipe) => $recipe->path,
+      iterator_to_array($discovery),
+    );
+    $expected_recipes = [
+      $cookbook_dir . '/a',
+      $cookbook_dir . '/c',
+    ];
+    $this->assertSame($expected_recipes, $paths);
+    $this->assertTrue($logger->hasWarningThatContains("Validation errors were found in $cookbook_dir/b/recipe.yml:"));
   }
 
 }
