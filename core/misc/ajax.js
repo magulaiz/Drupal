@@ -692,7 +692,7 @@
    *
    * @return {object}
    *   Returns the jQuery.Deferred object underlying the Ajax request. If
-   *   pre-serialization fails, the Deferred will be returned in the rejected
+   *   pre-serialization fails, the Promise will be returned in the rejected
    *   state.
    */
   Drupal.Ajax.prototype.execute = function () {
@@ -712,9 +712,9 @@
       window.alert(
         `An error occurred while attempting to process ${this.options.url}: ${e.message}`,
       );
-      // For consistency, return a rejected Deferred (i.e., jqXHR's superclass)
+      // For consistency, return a rejected Promise
       // so that calling code can take appropriate action.
-      return $.Deferred().reject();
+      return Promise.reject();
     }
   };
 
