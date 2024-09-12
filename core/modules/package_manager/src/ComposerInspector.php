@@ -56,16 +56,6 @@ class ComposerInspector implements LoggerAwareInterface {
    */
   final public const SUPPORTED_VERSION = '^2.6';
 
-  /**
-   * Constructs a ComposerInspector object.
-   *
-   * @param \PhpTuf\ComposerStager\API\Process\Service\ComposerProcessRunnerInterface $runner
-   *   The Composer runner service from Composer Stager.
-   * @param \PhpTuf\ComposerStager\API\Precondition\Service\ComposerIsAvailableInterface $composerIsAvailable
-   *   The Composer Stager precondition to ensure that Composer is available.
-   * @param \PhpTuf\ComposerStager\API\Path\Factory\PathFactoryInterface $pathFactory
-   *   The path factory service from Composer Stager.
-   */
   public function __construct(
     private readonly ComposerProcessRunnerInterface $runner,
     private readonly ComposerIsAvailableInterface $composerIsAvailable,

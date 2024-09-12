@@ -27,12 +27,6 @@ use Drupal\package_manager\Exception\StageFailureMarkerException;
  */
 final class FailureMarker implements EventSubscriberInterface {
 
-  /**
-   * Constructs a FailureMarker object.
-   *
-   * @param \Drupal\package_manager\PathLocator $pathLocator
-   *   The path locator service.
-   */
   public function __construct(private readonly PathLocator $pathLocator) {
   }
 

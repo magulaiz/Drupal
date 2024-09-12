@@ -20,14 +20,6 @@ use Symfony\Component\Filesystem\Filesystem;
  */
 final class SiteFilesExcluder implements EventSubscriberInterface {
 
-  /**
-   * Constructs a SiteFilesExcluder object.
-   *
-   * @param \Drupal\Core\StreamWrapper\StreamWrapperManagerInterface $streamWrapperManager
-   *   The stream wrapper manager service.
-   * @param \Symfony\Component\Filesystem\Filesystem $fileSystem
-   *   The Symfony file system service.
-   */
   public function __construct(
     private readonly StreamWrapperManagerInterface $streamWrapperManager,
     private readonly Filesystem $fileSystem,

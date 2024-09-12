@@ -19,14 +19,6 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
  */
 class SqliteDatabaseExcluder implements EventSubscriberInterface {
 
-  /**
-   * Constructs a SqliteDatabaseExcluder object.
-   *
-   * @param \PhpTuf\ComposerStager\API\Path\Factory\PathFactoryInterface $pathFactory
-   *   The path factory service.
-   * @param \Drupal\Core\Database\Connection $database
-   *   The database connection.
-   */
   public function __construct(
     private readonly PathFactoryInterface $pathFactory,
     private readonly Connection $database,

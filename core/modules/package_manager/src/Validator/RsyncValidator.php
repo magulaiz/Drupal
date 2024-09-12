@@ -26,14 +26,6 @@ final class RsyncValidator implements EventSubscriberInterface {
 
   use StringTranslationTrait;
 
-  /**
-   * Constructs an RsyncValidator object.
-   *
-   * @param \PhpTuf\ComposerStager\API\Finder\Service\ExecutableFinderInterface $executableFinder
-   *   The executable finder service.
-   * @param \Drupal\Core\Extension\ModuleHandlerInterface $moduleHandler
-   *   The module handler service.
-   */
   public function __construct(
     private readonly ExecutableFinderInterface $executableFinder,
     private readonly ModuleHandlerInterface $moduleHandler,

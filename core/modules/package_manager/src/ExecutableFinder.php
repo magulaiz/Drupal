@@ -17,14 +17,6 @@ use PhpTuf\ComposerStager\API\Finder\Service\ExecutableFinderInterface;
  */
 final class ExecutableFinder implements ExecutableFinderInterface {
 
-  /**
-   * Constructs an ExecutableFinder object.
-   *
-   * @param \PhpTuf\ComposerStager\API\Finder\Service\ExecutableFinderInterface $decorated
-   *   The decorated executable finder.
-   * @param \Drupal\Core\Config\ConfigFactoryInterface $configFactory
-   *   The config factory service.
-   */
   public function __construct(
     private readonly ExecutableFinderInterface $decorated,
     private readonly ConfigFactoryInterface $configFactory,

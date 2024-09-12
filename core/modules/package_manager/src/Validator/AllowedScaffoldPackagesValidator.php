@@ -26,14 +26,6 @@ final class AllowedScaffoldPackagesValidator implements EventSubscriberInterface
 
   use StringTranslationTrait;
 
-  /**
-   * Constructs a AllowedScaffoldPackagesValidator object.
-   *
-   * @param \Drupal\package_manager\ComposerInspector $composerInspector
-   *   The Composer inspector service.
-   * @param \Drupal\package_manager\PathLocator $pathLocator
-   *   The path locator service.
-   */
   public function __construct(
     private readonly ComposerInspector $composerInspector,
     private readonly PathLocator $pathLocator,

@@ -35,7 +35,6 @@ use PhpTuf\ComposerStager\API\Path\Factory\PathFactoryInterface;
 use PhpTuf\ComposerStager\API\Path\Value\PathListInterface;
 use Psr\Log\LoggerAwareInterface;
 use Psr\Log\LoggerAwareTrait;
-use Psr\Log\NullLogger;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
 /**
@@ -170,30 +169,6 @@ abstract class StageBase implements LoggerAwareInterface {
    */
   protected string $type;
 
-  /**
-   * Constructs a new Stage object.
-   *
-   * @param \Drupal\package_manager\PathLocator $pathLocator
-   *   The path locator service.
-   * @param \PhpTuf\ComposerStager\API\Core\BeginnerInterface $beginner
-   *   The beginner service.
-   * @param \PhpTuf\ComposerStager\API\Core\StagerInterface $stager
-   *   The stager service.
-   * @param \PhpTuf\ComposerStager\API\Core\CommitterInterface $committer
-   *   The committer service.
-   * @param \Drupal\Core\Queue\QueueFactory $queueFactory
-   *   The queue factory.
-   * @param \Symfony\Contracts\EventDispatcher\EventDispatcherInterface $eventDispatcher
-   *   The event dispatcher service.
-   * @param \Drupal\Core\TempStore\SharedTempStoreFactory $tempStoreFactory
-   *   The shared tempstore factory.
-   * @param \Drupal\Component\Datetime\TimeInterface $time
-   *   The time service.
-   * @param \PhpTuf\ComposerStager\API\Path\Factory\PathFactoryInterface $pathFactory
-   *   The path factory service.
-   * @param \Drupal\package_manager\FailureMarker $failureMarker
-   *   The failure marker service.
-   */
   public function __construct(
     protected readonly PathLocator $pathLocator,
     protected readonly BeginnerInterface $beginner,
@@ -207,7 +182,6 @@ abstract class StageBase implements LoggerAwareInterface {
     protected readonly FailureMarker $failureMarker,
   ) {
     $this->tempStore = $tempStoreFactory->get('package_manager_stage');
-    $this->setLogger(new NullLogger());
   }
 
   /**
@@ -543,7 +517,7 @@ abstract class StageBase implements LoggerAwareInterface {
     $this->checkOwnership();
 
     if ($this->tempStore->get(self::TEMPSTORE_APPLY_TIME_KEY) === $this->time->getRequestTime()) {
-      $this->logger->warning('Post-apply tasks are running in the same request during which staged changes were applied to the active code base. This can result in unpredictable behavior.');
+      $this->logger?->warning('Post-apply tasks are running in the same request during which staged changes were applied to the active code base. This can result in unpredictable behavior.');
     }
     // Rebuild the container and clear all caches, to ensure that new services
     // are picked up.
@@ -629,7 +603,9 @@ abstract class StageBase implements LoggerAwareInterface {
 
     if (isset($error)) {
       // Ensure the error is logged for post-mortem diagnostics.
-      Error::logException($this->logger, $error);
+      if ($this->logger) {
+        Error::logException($this->logger, $error);
+      }
       if ($on_error) {
         $on_error();
       }

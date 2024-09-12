@@ -48,16 +48,6 @@ final class ComposerPatchesValidator implements EventSubscriberInterface {
    */
   private const PLUGIN_NAME = 'cweagans/composer-patches';
 
-  /**
-   * Constructs a ComposerPatchesValidator object.
-   *
-   * @param \Drupal\Core\Extension\ModuleHandlerInterface $moduleHandler
-   *   The module handler service.
-   * @param \Drupal\package_manager\ComposerInspector $composerInspector
-   *   The Composer inspector service.
-   * @param \Drupal\package_manager\PathLocator $pathLocator
-   *   The path locator service.
-   */
   public function __construct(
     private readonly ModuleHandlerInterface $moduleHandler,
     private readonly ComposerInspector $composerInspector,

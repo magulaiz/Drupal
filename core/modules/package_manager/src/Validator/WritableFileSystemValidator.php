@@ -23,12 +23,6 @@ class WritableFileSystemValidator implements EventSubscriberInterface {
   use BaseRequirementValidatorTrait;
   use StringTranslationTrait;
 
-  /**
-   * Constructs a WritableFileSystemValidator object.
-   *
-   * @param \Drupal\package_manager\PathLocator $pathLocator
-   *   The path locator service.
-   */
   public function __construct(private readonly PathLocator $pathLocator) {
   }
 

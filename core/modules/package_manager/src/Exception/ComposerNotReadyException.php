@@ -17,7 +17,7 @@ final class ComposerNotReadyException extends \RuntimeException {
    * Constructs an ComposerNotReadyException object.
    *
    * @param string|null $workingDir
-   *   The directory where Composer was run , or NULL if the errors are related
+   *   The directory where Composer was run, or NULL if the errors are related
    *   to the Composer executable itself.
    * @param array $messages
    *   An array of messages explaining why Composer cannot be run correctly.

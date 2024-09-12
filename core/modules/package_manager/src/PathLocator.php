@@ -13,16 +13,6 @@ use Drupal\Core\File\FileSystemInterface;
  */
 class PathLocator {
 
-  /**
-   * Constructs a PathLocator object.
-   *
-   * @param string $appRoot
-   *   The absolute path of the running Drupal code base.
-   * @param \Drupal\Core\Config\ConfigFactoryInterface $configFactory
-   *   The config factory service.
-   * @param \Drupal\Core\File\FileSystemInterface $fileSystem
-   *   The file system service.
-   */
   public function __construct(
     protected string $appRoot,
     protected ConfigFactoryInterface $configFactory,

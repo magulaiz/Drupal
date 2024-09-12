@@ -22,16 +22,6 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
  */
 class SiteConfigurationExcluder implements EventSubscriberInterface {
 
-  /**
-   * Constructs an SiteConfigurationExcluder.
-   *
-   * @param string $sitePath
-   *   The current site path, relative to the Drupal root.
-   * @param \Drupal\package_manager\PathLocator $pathLocator
-   *   The path locator service.
-   * @param \Drupal\Core\File\FileSystemInterface $fileSystem
-   *   The file system service.
-   */
   public function __construct(
     protected string $sitePath,
     private readonly PathLocator $pathLocator,

@@ -27,30 +27,6 @@ final class PackageManagerUninstallValidator implements ModuleUninstallValidator
 
   use StringTranslationTrait;
 
-  /**
-   * Constructs a new PackageManagerUninstallValidator object.
-   *
-   * @param \Drupal\package_manager\PathLocator $pathLocator
-   *   The path locator service.
-   * @param \PhpTuf\ComposerStager\API\Core\BeginnerInterface $beginner
-   *   The beginner service.
-   * @param \PhpTuf\ComposerStager\API\Core\StagerInterface $stager
-   *   The stager service.
-   * @param \PhpTuf\ComposerStager\API\Core\CommitterInterface $committer
-   *   The committer service.
-   * @param \Drupal\Core\Queue\QueueFactory $queueFactory
-   *   The queue factory service.
-   * @param \Symfony\Component\EventDispatcher\EventDispatcherInterface $eventDispatcher
-   *   The event dispatcher service.
-   * @param \Drupal\Core\TempStore\SharedTempStoreFactory $sharedTempStoreFactory
-   *   The shared temp store factory service.
-   * @param \Drupal\Component\Datetime\TimeInterface $time
-   *   The time service.
-   * @param \PhpTuf\ComposerStager\API\Path\Factory\PathFactoryInterface $pathFactory
-   *   The path factory service.
-   * @param \Drupal\package_manager\FailureMarker $failureMarker
-   *   The failure marker service.
-   */
   public function __construct(
     private readonly PathLocator $pathLocator,
     private readonly BeginnerInterface $beginner,

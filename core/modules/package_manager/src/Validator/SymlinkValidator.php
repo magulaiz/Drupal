@@ -27,18 +27,6 @@ final class SymlinkValidator implements EventSubscriberInterface {
 
   use BaseRequirementValidatorTrait;
 
-  /**
-   * Constructs a SymlinkValidator object.
-   *
-   * @param \Drupal\package_manager\PathLocator $pathLocator
-   *   The path locator service.
-   * @param \PhpTuf\ComposerStager\API\Precondition\Service\NoUnsupportedLinksExistInterface $precondition
-   *   The Composer Stager precondition that this validator wraps.
-   * @param \PhpTuf\ComposerStager\API\Path\Factory\PathFactoryInterface $pathFactory
-   *   The path factory service.
-   * @param \PhpTuf\ComposerStager\API\Path\Factory\PathListFactoryInterface $pathListFactory
-   *   The path list factory service.
-   */
   public function __construct(
     private readonly PathLocator $pathLocator,
     private readonly NoUnsupportedLinksExistInterface $precondition,

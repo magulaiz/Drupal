@@ -48,16 +48,6 @@ final class UnknownPathExcluder implements EventSubscriberInterface, LoggerAware
   use LoggerAwareTrait;
   use StringTranslationTrait;
 
-  /**
-   * Constructs a UnknownPathExcluder object.
-   *
-   * @param \Drupal\package_manager\ComposerInspector $composerInspector
-   *   The Composer inspector service.
-   * @param \Drupal\package_manager\PathLocator $pathLocator
-   *   The path locator service.
-   * @param \Drupal\Core\Config\ConfigFactoryInterface $configFactory
-   *   The config factory service.
-   */
   public function __construct(
     private readonly ComposerInspector $composerInspector,
     private readonly PathLocator $pathLocator,

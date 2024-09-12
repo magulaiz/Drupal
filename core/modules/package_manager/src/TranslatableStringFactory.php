@@ -20,14 +20,6 @@ use PhpTuf\ComposerStager\API\Translation\Value\TranslationParametersInterface;
  */
 final class TranslatableStringFactory implements TranslatableFactoryInterface {
 
-  /**
-   * Constructs a TranslatableStringFactory object.
-   *
-   * @param \PhpTuf\ComposerStager\API\Translation\Factory\TranslatableFactoryInterface $decorated
-   *   The decorated translatable factory service.
-   * @param \Drupal\Core\StringTranslation\TranslationInterface $translation
-   *   The string translation service.
-   */
   public function __construct(
     private readonly TranslatableFactoryInterface $decorated,
     private readonly TranslationInterface $translation,

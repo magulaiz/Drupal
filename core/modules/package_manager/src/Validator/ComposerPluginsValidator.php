@@ -99,16 +99,6 @@ final class ComposerPluginsValidator implements EventSubscriberInterface {
    */
   private array $additionalTrustedComposerPlugins;
 
-  /**
-   * Constructs a new ComposerPluginsValidator.
-   *
-   * @param \Drupal\Core\Config\ConfigFactoryInterface $config_factory
-   *   The config factory.
-   * @param \Drupal\package_manager\ComposerInspector $inspector
-   *   The Composer inspector service.
-   * @param \Drupal\package_manager\PathLocator $pathLocator
-   *   The path locator service.
-   */
   public function __construct(
     ConfigFactoryInterface $config_factory,
     private readonly ComposerInspector $inspector,

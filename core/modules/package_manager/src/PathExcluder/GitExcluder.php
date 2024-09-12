@@ -19,14 +19,6 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
  */
 final class GitExcluder implements EventSubscriberInterface {
 
-  /**
-   * Constructs a GitExcluder object.
-   *
-   * @param \Drupal\package_manager\PathLocator $pathLocator
-   *   The path locator service.
-   * @param \Drupal\package_manager\ComposerInspector $composerInspector
-   *   The Composer inspector service.
-   */
   public function __construct(
     private readonly PathLocator $pathLocator,
     private readonly ComposerInspector $composerInspector,

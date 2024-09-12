@@ -45,14 +45,6 @@ final class ChangeLogger implements EventSubscriberInterface, LoggerAwareInterfa
    */
   private const REQUESTED_PACKAGES_KEY = 'package_manager_requested_packages';
 
-  /**
-   * Constructs a ChangeLogger object.
-   *
-   * @param \Drupal\package_manager\ComposerInspector $composerInspector
-   *   The Composer inspector service.
-   * @param \Drupal\package_manager\PathLocator $pathLocator
-   *   The path locator service.
-   */
   public function __construct(
     private readonly ComposerInspector $composerInspector,
     private readonly PathLocator $pathLocator,

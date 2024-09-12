@@ -26,16 +26,6 @@ final class ComposerValidator implements EventSubscriberInterface {
   use BaseRequirementValidatorTrait;
   use StringTranslationTrait;
 
-  /**
-   * Constructs a ComposerExecutableValidator object.
-   *
-   * @param \Drupal\package_manager\ComposerInspector $composerInspector
-   *   The Composer inspector service.
-   * @param \Drupal\package_manager\PathLocator $pathLocator
-   *   The path locator service.
-   * @param \Drupal\Core\Extension\ModuleHandlerInterface $moduleHandler
-   *   The module handler service.
-   */
   public function __construct(
     private readonly ComposerInspector $composerInspector,
     private readonly PathLocator $pathLocator,

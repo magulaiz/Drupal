@@ -25,16 +25,6 @@ class StagedDBUpdateValidator implements EventSubscriberInterface {
 
   use StringTranslationTrait;
 
-  /**
-   * Constructs a StagedDBUpdateValidator object.
-   *
-   * @param \Drupal\package_manager\PathLocator $pathLocator
-   *   The path locator service.
-   * @param \Drupal\Core\Extension\ModuleExtensionList $moduleList
-   *   The module list service.
-   * @param \Drupal\Core\Extension\ThemeExtensionList $themeList
-   *   The theme list service.
-   */
   public function __construct(
     private readonly PathLocator $pathLocator,
     private readonly ModuleExtensionList $moduleList,

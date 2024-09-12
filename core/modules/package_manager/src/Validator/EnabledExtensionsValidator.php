@@ -24,18 +24,6 @@ final class EnabledExtensionsValidator implements EventSubscriberInterface {
 
   use StringTranslationTrait;
 
-  /**
-   * Constructs an EnabledExtensionsValidator object.
-   *
-   * @param \Drupal\package_manager\PathLocator $pathLocator
-   *   The path locator service.
-   * @param \Drupal\Core\Extension\ModuleHandlerInterface $moduleHandler
-   *   The module handler service.
-   * @param \Drupal\package_manager\ComposerInspector $composerInspector
-   *   The Composer inspector service.
-   * @param \Drupal\Core\Extension\ThemeHandlerInterface $themeHandler
-   *   The theme handler service.
-   */
   public function __construct(
     private readonly PathLocator $pathLocator,
     private readonly ModuleHandlerInterface $moduleHandler,

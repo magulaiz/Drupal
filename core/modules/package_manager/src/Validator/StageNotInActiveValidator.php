@@ -25,12 +25,6 @@ final class StageNotInActiveValidator implements EventSubscriberInterface {
   }
   use StringTranslationTrait;
 
-  /**
-   * Constructs a new StageNotInActiveValidator object.
-   *
-   * @param \Drupal\package_manager\PathLocator $pathLocator
-   *   The path locator service.
-   */
   public function __construct(private readonly PathLocator $pathLocator) {
   }
 

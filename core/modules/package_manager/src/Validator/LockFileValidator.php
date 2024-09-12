@@ -34,14 +34,6 @@ final class LockFileValidator implements EventSubscriberInterface {
    */
   private const STATE_KEY = 'package_manager.lock_hash';
 
-  /**
-   * Constructs a LockFileValidator object.
-   *
-   * @param \Drupal\Core\State\StateInterface $state
-   *   The state service.
-   * @param \Drupal\package_manager\PathLocator $pathLocator
-   *   The path locator service.
-   */
   public function __construct(
     private readonly StateInterface $state,
     private readonly PathLocator $pathLocator,

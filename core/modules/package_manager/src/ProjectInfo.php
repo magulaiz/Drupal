@@ -21,12 +21,6 @@ use Drupal\update\UpdateManagerInterface;
  */
 final class ProjectInfo {
 
-  /**
-   * Constructs a ProjectInfo object.
-   *
-   * @param string $name
-   *   The project name.
-   */
   public function __construct(private readonly string $name) {
   }
 

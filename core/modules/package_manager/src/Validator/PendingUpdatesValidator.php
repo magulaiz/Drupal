@@ -25,14 +25,6 @@ final class PendingUpdatesValidator implements EventSubscriberInterface {
 
   use StringTranslationTrait;
 
-  /**
-   * Constructs an PendingUpdatesValidator object.
-   *
-   * @param string $appRoot
-   *   The Drupal root.
-   * @param \Drupal\Core\Update\UpdateRegistry $updateRegistry
-   *   The update registry service.
-   */
   public function __construct(
     private readonly string $appRoot,
     private readonly UpdateRegistry $updateRegistry,

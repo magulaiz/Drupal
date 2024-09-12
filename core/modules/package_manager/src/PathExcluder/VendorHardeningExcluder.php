@@ -18,12 +18,6 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
  */
 final class VendorHardeningExcluder implements EventSubscriberInterface {
 
-  /**
-   * Constructs a VendorHardeningExcluder object.
-   *
-   * @param \Drupal\package_manager\PathLocator $pathLocator
-   *   The path locator service.
-   */
   public function __construct(private readonly PathLocator $pathLocator) {}
 
   /**

@@ -23,14 +23,6 @@ final class SupportedReleaseValidator implements EventSubscriberInterface {
 
   use StringTranslationTrait;
 
-  /**
-   * Constructs a SupportedReleaseValidator object.
-   *
-   * @param \Drupal\package_manager\ComposerInspector $composerInspector
-   *   The Composer inspector service.
-   * @param \Drupal\package_manager\PathLocator $pathLocator
-   *   The path locator service.
-   */
   public function __construct(
     private readonly ComposerInspector $composerInspector,
     private readonly PathLocator $pathLocator,
