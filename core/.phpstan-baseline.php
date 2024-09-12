@@ -146,18 +146,6 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/lib/Drupal/Core/Action/ActionBase.php',
 ];
 $ignoreErrors[] = [
-	// identifier: class.notFound
-	'message' => '#^Call to method getDefinitions\\(\\) on an unknown class Drupal\\\\Core\\\\Plugin\\\\CategorizingPluginManagerTrait\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/lib/Drupal/Core/Action/ActionManager.php',
-];
-$ignoreErrors[] = [
-	// identifier: class.notFound
-	'message' => '#^Call to method getSortedDefinitions\\(\\) on an unknown class Drupal\\\\Core\\\\Plugin\\\\CategorizingPluginManagerTrait\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/lib/Drupal/Core/Action/ActionManager.php',
-];
-$ignoreErrors[] = [
 	// identifier: return.missing
 	'message' => '#^Method Drupal\\\\Core\\\\Archiver\\\\ArchiverManager\\:\\:getInstance\\(\\) should return object\\|false but return statement is missing\\.$#',
 	'count' => 1,
@@ -176,34 +164,10 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/lib/Drupal/Core/Asset/JsCollectionGrouper.php',
 ];
 $ignoreErrors[] = [
-	// identifier: class.notFound
-	'message' => '#^Call to method getDefinitions\\(\\) on an unknown class Drupal\\\\Core\\\\Plugin\\\\CategorizingPluginManagerTrait\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/lib/Drupal/Core/Block/BlockManager.php',
-];
-$ignoreErrors[] = [
-	// identifier: class.notFound
-	'message' => '#^Call to method getSortedDefinitions\\(\\) on an unknown class Drupal\\\\Core\\\\Plugin\\\\CategorizingPluginManagerTrait\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/lib/Drupal/Core/Block/BlockManager.php',
-];
-$ignoreErrors[] = [
 	// identifier: constructor.unusedParameter
 	'message' => '#^Constructor of class Drupal\\\\Core\\\\Cache\\\\NullBackend has an unused parameter \\$bin\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/lib/Drupal/Core/Cache/NullBackend.php',
-];
-$ignoreErrors[] = [
-	// identifier: class.notFound
-	'message' => '#^Call to method getDefinitions\\(\\) on an unknown class Drupal\\\\Core\\\\Plugin\\\\CategorizingPluginManagerTrait\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/lib/Drupal/Core/Condition/ConditionManager.php',
-];
-$ignoreErrors[] = [
-	// identifier: class.notFound
-	'message' => '#^Call to method getSortedDefinitions\\(\\) on an unknown class Drupal\\\\Core\\\\Plugin\\\\CategorizingPluginManagerTrait\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/lib/Drupal/Core/Condition/ConditionManager.php',
 ];
 $ignoreErrors[] = [
 	// identifier: isset.variable
@@ -425,18 +389,6 @@ $ignoreErrors[] = [
 	'message' => '#^Variable \\$values might not be defined\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/lib/Drupal/Core/Field/FieldItemList.php',
-];
-$ignoreErrors[] = [
-	// identifier: class.notFound
-	'message' => '#^Call to method getDefinitions\\(\\) on an unknown class Drupal\\\\Core\\\\Plugin\\\\CategorizingPluginManagerTrait\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/lib/Drupal/Core/Field/FieldTypePluginManager.php',
-];
-$ignoreErrors[] = [
-	// identifier: class.notFound
-	'message' => '#^Call to method getSortedDefinitions\\(\\) on an unknown class Drupal\\\\Core\\\\Plugin\\\\CategorizingPluginManagerTrait\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/lib/Drupal/Core/Field/FieldTypePluginManager.php',
 ];
 $ignoreErrors[] = [
 	// identifier: return.missing
@@ -2583,18 +2535,6 @@ $ignoreErrors[] = [
 	'message' => '#^Call to deprecated method getMockForAbstractClass\\(\\) of class PHPUnit\\\\Framework\\\\TestCase\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/tests/Drupal/Tests/Core/Lock/LockBackendAbstractTest.php',
-];
-$ignoreErrors[] = [
-	// identifier: class.notFound
-	'message' => '#^Call to method getDefinitions\\(\\) on an unknown class Drupal\\\\Core\\\\Plugin\\\\CategorizingPluginManagerTrait\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/tests/Drupal/Tests/Core/Plugin/CategorizingPluginManagerTraitTest.php',
-];
-$ignoreErrors[] = [
-	// identifier: class.notFound
-	'message' => '#^Call to method getSortedDefinitions\\(\\) on an unknown class Drupal\\\\Core\\\\Plugin\\\\CategorizingPluginManagerTrait\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/tests/Drupal/Tests/Core/Plugin/CategorizingPluginManagerTraitTest.php',
 ];
 $ignoreErrors[] = [
 	'message' => '#^Missing cache backend declaration for performance\\.$#',
