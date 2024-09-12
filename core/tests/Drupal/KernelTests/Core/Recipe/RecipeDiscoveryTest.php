@@ -5,9 +5,11 @@ declare(strict_types=1);
 namespace Drupal\KernelTests\Core\Recipe;
 
 use ColinODell\PsrTestLogger\TestLogger;
+use Drupal\Component\FileSystem\FileSystem;
 use Drupal\Core\Recipe\Recipe;
 use Drupal\Core\Recipe\RecipeDiscovery;
 use Drupal\KernelTests\KernelTestBase;
+use Symfony\Component\Filesystem\Filesystem as SymfonyFilesystem;
 
 /**
  * @coversDefaultClass \Drupal\Core\Recipe\RecipeDiscovery
@@ -58,6 +60,21 @@ class RecipeDiscoveryTest extends KernelTestBase {
     else {
       $this->assertEmpty($include_core_recipes);
     }
+  }
+
+  public function testDiscoveryFollowsSymlinks(): void {
+    $cookbook_dir = FileSystem::getOsTemporaryDirectory();
+    $link_name = uniqid($cookbook_dir . '/recipe_link');
+    $target = $this->getDrupalRoot() . '/core/recipes/administrator_role';
+
+    $file_system = new SymfonyFilesystem();
+    $file_system->symlink($target, $link_name);
+
+    $recipes = iterator_to_array(new RecipeDiscovery($cookbook_dir, FALSE));
+    $this->assertCount(1, $recipes);
+    $this->assertSame('Administrator role', reset($recipes)->name);
+
+    $file_system->remove($link_name);
   }
 
 }
