@@ -25,8 +25,8 @@
  * test. To preserve the site see the documentation in the core/phpunit.xml.dist
  * file.
  *
- * To activate this feature, copy and rename it such that its path plus
- * filename is 'sites/sites.php'.
+ * To activate multi-site support and directory aliasing, copy and rename this
+ * file such that its path plus filename is 'sites/sites.php'.
  *
  * Aliases are defined in an associative array named $sites. The array is
  * written in the format: '<port>.<domain>.<path>' => 'directory'. As an
