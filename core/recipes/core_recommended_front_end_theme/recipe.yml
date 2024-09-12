@@ -4,6 +4,7 @@ type: 'Themes'
 install:
   - olivero
   - block
+  - system
 config:
   import:
     system:

@@ -10,12 +10,17 @@ use Psr\Log\LoggerAwareTrait;
 use Symfony\Component\Finder\Finder;
 
 /**
- * This class facilitates discovering recipes.
+ * Discovers recipes at specific locations in the file system.
  *
- * Discovery means scanning a single directory of your choosing, and core's
- * recipes. It won't discover any recipes anywhere else in the filesystem by
- * design, differing it intentionally from ExtensionDiscovery despite sometimes
- * borrowing from it in name and some method naming conventions.
+ * This scans a single directory of your choosing, as well as core's recipes.
+ * By design, it won't search anywhere else in the file system, which is an
+ * intentional difference from ExtensionDiscovery, because all recipes (except
+ * core's) must be installed in a single location.
+ *
+ * @see \Drupal\Core\Recipe\RecipeConfigurator
+ *
+ * @internal
+ *   This API is experimental.
  */
 final class RecipeDiscovery implements \IteratorAggregate, LoggerAwareInterface {
 
@@ -46,7 +51,8 @@ final class RecipeDiscovery implements \IteratorAggregate, LoggerAwareInterface 
       $this->directoriesToSearch[] = \Drupal::root() . '/core/recipes';
     }
 
-    // If there are Composer-installed recipes, we will only find core recipes.
+    // If there are no Composer-installed recipes, we will only find core
+    // recipes.
     $path ??= self::getRecipesPathFromComposer();
     if ($path) {
       assert(is_dir($path));
@@ -57,18 +63,18 @@ final class RecipeDiscovery implements \IteratorAggregate, LoggerAwareInterface 
   /**
    * Gets the path at which Composer has installed recipes.
    *
-   * @return string|false
-   *   The path where Composer has installed recipes, or FALSE if no recipes
+   * @return string|null
+   *   The path where Composer has installed recipes, or NULL if no recipes
    *   are installed.
    */
-  private static function getRecipesPathFromComposer(): string|false {
+  private static function getRecipesPathFromComposer(): ?string {
     $installed_recipes = InstalledVersions::getInstalledPackagesByType(Recipe::COMPOSER_PROJECT_TYPE);
     if ($installed_recipes) {
       $name = reset($installed_recipes);
       $path = InstalledVersions::getInstallPath($name);
       return dirname($path);
     }
-    return FALSE;
+    return NULL;
   }
 
   /**

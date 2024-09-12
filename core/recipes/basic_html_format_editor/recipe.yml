@@ -3,6 +3,7 @@ description: 'Provides "Basic HTML" text format along with WYSIWYG editor and re
 type: 'Text format editor'
 install:
   - ckeditor5
+  - user
 config:
   actions:
     user.role.authenticated:

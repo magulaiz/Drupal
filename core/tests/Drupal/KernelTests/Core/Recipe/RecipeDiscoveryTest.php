@@ -113,25 +113,19 @@ class RecipeDiscoveryTest extends KernelTestBase {
   }
 
   /**
-   * Checks that CORE recipes are returned as expected.
-   *
-   * NOTE: Assumes at least 10 valid core recipes. Sometimes core
-   * recipes are invalid, and people may add or remove some, but 10 is a safe
-   * amount to check for.
-   *
-   * @covers ::getAllRecipePaths
+   * Tests finding core recipes only.
    */
-  public function testRecipeDiscoveryGetAllCoreRecipes(): void {
-    $recipeDiscovery = new RecipeDiscovery(
-      NULL,
-      TRUE
-    );
+  public function testFindCoreRecipes(): void {
+    $discovered = static::toPathList(new RecipeDiscovery());
 
-    $found_core_recipes = $recipeDiscovery->getAllRecipes(NULL, TRUE);
-
-    $this->assertGreaterThan(10, count($found_core_recipes));
+    $this->assertNotEmpty($discovered);
+    $not_in_core = preg_grep('/\/core\/recipes\//', $discovered, PREG_GREP_INVERT);
+    $this->assertEmpty($not_in_core);
   }
 
+  /**
+   * Tests skipping over recipes that have validation errors.
+   */
   public function testSkipInvalidRecipes(): void {
     $cookbook_dir = uniqid(FileSystem::getOsTemporaryDirectory() . '/');
     mkdir($cookbook_dir);
@@ -148,16 +142,19 @@ class RecipeDiscoveryTest extends KernelTestBase {
     $discovery = new RecipeDiscovery($cookbook_dir, FALSE, TRUE);
     $logger = new TestLogger();
     $discovery->setLogger($logger);
-    $paths = array_map(
-      fn (Recipe $recipe) => $recipe->path,
-      iterator_to_array($discovery),
-    );
     $expected_recipes = [
       $cookbook_dir . '/a',
       $cookbook_dir . '/c',
     ];
-    $this->assertSame($expected_recipes, $paths);
+    $this->assertSame($expected_recipes, static::toPathList($discovery));
     $this->assertTrue($logger->hasWarningThatContains("Validation errors were found in $cookbook_dir/b/recipe.yml:"));
+  }
+
+  private static function toPathList(RecipeDiscovery $discovery): array {
+    return array_map(
+      fn (Recipe $recipe) => $recipe->path,
+      iterator_to_array($discovery),
+    );
   }
 
 }

@@ -4,6 +4,7 @@ type: 'Comment type'
 install:
   - comment
   - node
+  - user
   - views
 config:
   import:

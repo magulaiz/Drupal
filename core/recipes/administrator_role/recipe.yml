@@ -1,6 +1,8 @@
 name: 'Administrator role'
 description: 'Provides the Administrator role.'
 type: 'User role'
+install:
+  - user
 config:
   actions:
     user.role.administrator:

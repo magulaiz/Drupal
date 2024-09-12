@@ -4,6 +4,7 @@ type: 'Themes'
 install:
   - claro
   - block
+  - system
 config:
   import:
     system:

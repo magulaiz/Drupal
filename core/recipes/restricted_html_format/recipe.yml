@@ -3,6 +3,7 @@ description: 'Provides "Restricted HTML" text format.'
 type: 'Text format'
 install:
   - filter
+  - user
 config:
   import:
     filter: '*'
