@@ -143,18 +143,22 @@
         );
 
         // Handle the resolution of Drupal.toolbar.setSubtrees.
-        // This is handled with a deferred so that the function may be invoked
+        // This is handled with a promise so that the function may be invoked
         // asynchronously.
-        Drupal.toolbar.setSubtrees.done((subtrees) => {
-          menuModel.set('subtrees', subtrees);
-          const theme = drupalSettings.ajaxPageState.theme;
-          localStorage.setItem(
-            `Drupal.toolbar.subtrees.${theme}`,
-            JSON.stringify(subtrees),
-          );
-          // Indicate on the toolbarModel that subtrees are now loaded.
-          model.set('areSubtreesLoaded', true);
-        });
+        Drupal.toolbar.setSubtrees
+          .then((subtrees) => {
+            menuModel.set('subtrees', subtrees);
+            const theme = drupalSettings.ajaxPageState.theme;
+            localStorage.setItem(
+              `Drupal.toolbar.subtrees.${theme}`,
+              JSON.stringify(subtrees),
+            );
+            // Indicate on the toolbarModel that subtrees are now loaded.
+            model.set('areSubtreesLoaded', true);
+          })
+          .catch((error) => {
+            console.error('Error resolving setSubtrees:', error);
+          });
 
         // Trigger an initial attempt to load menu subitems. This first attempt
         // is made after the media query handlers have had an opportunity to
@@ -303,18 +307,6 @@
      * @type {object.<string, object>}
      */
     mql: {},
-
-    /**
-     * Accepts a list of subtree menu elements.
-     *
-     * A deferred object that is resolved by an inlined JavaScript callback.
-     *
-     * @type {jQuery.Deferred}
-     *
-     * @see toolbar_subtrees_jsonp().
-     */
-    setSubtrees: new $.Deferred(),
-
     /**
      * Respond to configured narrow media query changes.
      *
@@ -368,6 +360,21 @@
   };
 
   /**
+   * Accepts a list of subtree menu elements.
+   *
+   * A promise object that is resolved by an inlined JavaScript callback.
+   *
+   * @type {Promise}
+   *
+   * @see toolbar_subtrees_jsonp().
+   */
+
+  Drupal.toolbar.setSubtrees = new Promise((resolve, reject) => {
+    Drupal.toolbar.setSubtreesResolve = resolve;
+    Drupal.toolbar.setSubtreesReject = reject;
+  });
+
+  /**
    * A toggle is an interactive element often bound to a click handler.
    *
    * @return {string}
@@ -396,6 +403,6 @@
     response,
     status,
   ) {
-    Drupal.toolbar.setSubtrees.resolve(response.subtrees);
+    Drupal.toolbar.setSubtreesResolve(response.subtrees);
   };
 })(jQuery, Drupal, drupalSettings);
