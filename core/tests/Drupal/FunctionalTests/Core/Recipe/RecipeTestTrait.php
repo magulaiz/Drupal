@@ -63,20 +63,24 @@ trait RecipeTestTrait {
   protected function applyRecipe(string $path, int $expected_exit_code = 0, array $options = [], string $command = 'recipe'): Process {
     assert($this instanceof BrowserTestBase);
 
+    // If we're applying the recipe, always apply it to the test site.
+    if ($command === 'recipe') {
+      $options[] = '--site=' . substr($this->siteDirectory, 6);
+    }
+
     $arguments = [
       (new PhpExecutableFinder())->find(),
       'core/scripts/drupal',
       $command,
       // Never apply recipes interactively.
       '--no-interaction',
-      // Apply the recipe to the test site.
-      '--site=' . substr($this->siteDirectory, 6),
       ...$options,
       $path,
     ];
     $process = (new Process($arguments))
       ->setWorkingDirectory($this->getDrupalRoot())
       ->setEnv([
+        'DRUPAL_DEV_SITE_PATH' => $this->siteDirectory,
         // Ensure that the command boots Drupal into a state where it knows it's
         // a test site.
         // @see drupal_valid_test_ua()
