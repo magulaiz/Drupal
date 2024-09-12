@@ -71,13 +71,11 @@ class RecipeDiscoveryTest extends KernelTestBase {
    * @covers ::getAllRecipePaths
    */
   public function testRecipeDiscoveryGetAllRecipePathsTestData(): void {
-    // Get recipes.
     $recipeDiscovery = new RecipeDiscovery(
       $this->recipeFixturePath,
        FALSE
     );
     $found_recipe_paths = $recipeDiscovery->getAllRecipePaths();
-
     $expected_recipes = array_merge($this->invalidExpectedRecipePaths, $this->validExpectedRecipePaths);
 
     $this->assertSame(
@@ -110,6 +108,26 @@ class RecipeDiscoveryTest extends KernelTestBase {
     foreach ($found_recipes as $found_recipe) {
       $this->assertTrue($found_recipe instanceof Recipe);
     }
+  }
+
+  /**
+   * Checks that CORE recipes are returned as expected.
+   *
+   * NOTE: Assumes at least 10 valid core recipes. Sometimes core
+   * recipes are invalid, and people may add or remove some, but 10 is a safe
+   * amount to check for.
+   *
+   * @covers ::getAllRecipePaths
+   */
+  public function testRecipeDiscoveryGetAllCoreRecipes(): void {
+    $recipeDiscovery = new RecipeDiscovery(
+      NULL,
+      TRUE
+    );
+
+    $found_core_recipes = $recipeDiscovery->getAllRecipes(NULL, TRUE);
+
+    $this->assertGreaterThan(10, count($found_core_recipes));
   }
 
 }

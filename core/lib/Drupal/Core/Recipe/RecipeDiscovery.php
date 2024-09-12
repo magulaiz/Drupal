@@ -5,26 +5,26 @@ declare(strict_types=1);
 namespace Drupal\Core\Recipe;
 
 use Drupal\Component\Serialization\Json;
-use Drupal\Core\Logger\LoggerChannelTrait;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
-use Psr\Log\LoggerInterface;
-use Symfony\Component\Finder\Exception\DirectoryNotFoundException;
+use Psr\Log\LoggerAwareTrait;
 use Symfony\Component\Finder\Finder;
 
 /**
  * This class facilitates discovering recipes.
  *
- * Borrows method naming convention from:
- * Drupal\Core\Extension\ExtensionDiscovery.
+ * Discovery means scanning a single directory of your choosing, and core's
+ * recipes. It won't discover any recipes anywhere else in the filesystem by
+ * design, differing it intentionally from ExtensionDiscovery despite sometimes
+ * borrowing from it in name and some method naming conventions.
  */
 final class RecipeDiscovery {
-  use LoggerChannelTrait;
+  use LoggerAwareTrait;
   use StringTranslationTrait;
 
   /**
    * Array of directories we will search.
    */
-  const string CORE_RECIPE_DIR = 'core/recipes';
+  private const string CORE_RECIPE_DIR = 'core/recipes';
 
   /**
    * The directories to search.
@@ -34,21 +34,14 @@ final class RecipeDiscovery {
   protected array $directoriesToSearch = [];
 
   /**
-   * Logger for storing messages.
-   *
-   * @var \Psr\Log\LoggerInterface
-   */
-  protected LoggerInterface $logger;
-
-  /**
    * Constructs a recipe discovery object.
    *
    * @param string|null $path
    *   (OPTIONAL) path should be a folder containing directories that contain a
    *   recipe.yml file There will be no traversal further into the directory
-   *   structure. Core recipe will be added. Ideally you'll pass a value,
-   *   relative to Drupal core, where all recipes are expected to be installed
-   *   by Composer; for example DRUPAL_ROOT . '/recipes'.
+   *   structure. You will want to pass an absolute value where recipes are
+   *   expected to be installed by Composer; for example
+   *   \Drupal::root() . . '/recipes'.
    * @param bool $include_core_recipes
    *   (optional) Whether or not to include core recipes. If you're requesting
    *   a specific path, you may not want to include core recipes.
@@ -57,45 +50,39 @@ final class RecipeDiscovery {
     $path ??= self::getComposerRecipePath();
 
     if ($include_core_recipes) {
-      $this->directoriesToSearch[] = DRUPAL_ROOT . '/' . self::CORE_RECIPE_DIR;
+      $this->directoriesToSearch[] = \Drupal::root() . '/' . self::CORE_RECIPE_DIR;
     }
 
+    // In the absence of a path (FALSE) the user will just get core recipes.
     if ($path !== FALSE) {
       if (is_dir($path)) {
         $this->directoriesToSearch[] = $path;
       }
-      else {
-        throw new DirectoryNotFoundException();
-      }
     }
-
-    $this->logger = $this->getLogger('recipe');
 
   }
 
   /**
-   * Gets the path at which composer has installed recipes.
-   *
-   * This will work when Drupal core composer has an install-paths
-   * value of type:drupal-recipe.
-   *
-   * @todo Can composer recipe path come from InstalledVersions or similar?
+   * Gets the path at which Composer has installed recipes.
    *
    * @return string|bool
-   *   Path to composer recipes, FALSE if no composer path.
+   *   Path to Composer recipes, FALSE if no composer path.
    */
   private static function getComposerRecipePath(): string|bool {
-    $composer_values = Json::decode(file_get_contents(DRUPAL_ROOT . '/composer.json'));
-    $installer_types_and_paths = $composer_values['extra']['installer-paths'];
+    if (file_exists(\Drupal::root() . '/composer.json')) {
+      $composer_values = Json::decode(file_get_contents(\Drupal::root() . '/composer.json'));
+      $installer_types_and_paths = $composer_values['extra']['installer-paths'];
 
-    foreach ($installer_types_and_paths as $path => $installer_type) {
-      if (reset($installer_type) == 'type:drupal-recipe') {
-        $recipe_path = explode('/', $path);
-        array_pop($recipe_path);
-        $recipe_path = implode('/', $recipe_path);
-        return DRUPAL_ROOT . '/' . $path;
+      foreach ($installer_types_and_paths as $path => $installer_type) {
+        if (reset($installer_type) == Recipe::COMPOSER_PROJECT_TYPE) {
+          $recipe_path = explode('/', $path);
+          array_pop($recipe_path);
+          $recipe_path = implode('/', $recipe_path);
+          return DRUPAL_ROOT . '/' . $path;
+        }
       }
     }
+
     return FALSE;
   }
 
@@ -132,7 +119,7 @@ final class RecipeDiscovery {
       }
       catch (RecipeFileException $e) {
         // Invalid recipes aren't really our problem, but are worth logging.
-        $this->logger->warning(
+        $this->logger?->debug(
           $this->t("Attempted to load recipe at path '@path', but got a RecipeFileException of: @message",
             ['@path' => $recipePath, '@message' => $e->getMessage()]
         ));
@@ -158,6 +145,7 @@ final class RecipeDiscovery {
       ->files()
       ->name('recipe.yml')
       ->depth(1)
+      ->followLinks()
       ->in($directory);
 
     foreach ($finder as $file) {
