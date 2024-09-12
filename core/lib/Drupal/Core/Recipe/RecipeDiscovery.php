@@ -41,6 +41,8 @@ final class RecipeDiscovery implements \IteratorAggregate, LoggerAwareInterface 
    *   There will be no further traversal into the directory tree.
    * @param bool $include_core_recipes
    *   (optional) Whether or not to include recipes provided by core.
+   * @param bool $skipInvalid
+   *   (optional) Whether recipes that have validation errors should be ignored.
    */
   public function __construct(
     ?string $path = NULL,
@@ -80,7 +82,7 @@ final class RecipeDiscovery implements \IteratorAggregate, LoggerAwareInterface 
   /**
    * {@inheritdoc}
    */
-  public function getIterator(): iterable {
+  public function getIterator(): \Traversable {
     $finder = Finder::create()
       ->files()
       ->name('recipe.yml')
