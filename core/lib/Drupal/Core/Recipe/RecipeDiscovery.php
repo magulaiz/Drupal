@@ -18,24 +18,20 @@ use Symfony\Component\Finder\Finder;
 final class RecipeDiscovery implements \IteratorAggregate {
 
   /**
-   * The directories to search.
+   * The directories to search for recipes.
    *
-   * @var array|string[]
+   * @var string[]
    */
-  protected array $directoriesToSearch = [];
+  private array $directoriesToSearch = [];
 
   /**
    * Constructs a recipe discovery object.
    *
    * @param string|null $path
-   *   (OPTIONAL) path should be a folder containing directories that contain a
-   *   recipe.yml file There will be no traversal further into the directory
-   *   structure. You will want to pass an absolute value where recipes are
-   *   expected to be installed by Composer; for example
-   *   \Drupal::root() . . '/recipes'.
+   *   (optional) A path containing directories that contain a recipe.yml file.
+   *   There will be no further traversal into the directory tree.
    * @param bool $include_core_recipes
-   *   (optional) Whether or not to include core recipes. If you're requesting
-   *   a specific path, you may not want to include core recipes.
+   *   (optional) Whether or not to include recipes provided by core.
    */
   public function __construct(?string $path = NULL, bool $include_core_recipes = TRUE) {
     if ($include_core_recipes) {
