@@ -423,12 +423,15 @@ function user_save($account, $edit = array(), $category = 'account') {
   $transaction = db_transaction();
   try {
     if (isset($edit['pass']) && strlen(trim($edit['pass'])) > 0) {
-      // Allow alternate password hashing schemes.
-      require_once DRUPAL_ROOT . '/' . variable_get('password_inc', 'includes/password.inc');
-      $edit['pass'] = user_hash_password(trim($edit['pass']));
-      // Abort if the hashing failed and returned FALSE.
-      if (!$edit['pass']) {
-        return FALSE;
+      // User registration already encrypts password.
+      if (!(isset($edit['pass_is_encrypted']) && $edit['pass_is_encrypted'] === TRUE)) {
+        // Allow alternate password hashing schemes.
+        require_once DRUPAL_ROOT . '/' . variable_get('password_inc', 'includes/password.inc');
+        $edit['pass'] = user_hash_password(trim($edit['pass']));
+        // Abort if the hashing failed and returned FALSE.
+        if (!$edit['pass']) {
+          return FALSE;
+        }
       }
     }
     else {
@@ -3991,7 +3994,11 @@ function user_register_submit($form, &$form_state) {
   // Remove unneeded values.
   form_state_values_clean($form_state);
 
-  $form_state['values']['pass'] = $pass;
+  // Allow alternate password hashing schemes.
+  require_once DRUPAL_ROOT . '/' . variable_get('password_inc', 'includes/password.inc');
+
+  $form_state['values']['pass'] = user_hash_password(trim($pass));
+  $form_state['values']['pass_is_encrypted'] = TRUE;
   $form_state['values']['init'] = $form_state['values']['mail'];
 
   $account = $form['#user'];
