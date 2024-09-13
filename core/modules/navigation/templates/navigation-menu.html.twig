@@ -9,13 +9,13 @@
 {% macro menu_items(items, attributes, menu_level) %}
   {% for item in items %}
 
-    {% if item.url is not empty %}
-      {% if item.url.isRouted and item.url.routeName == '<nolink>' %}
-        {% set item_link_tag = 'span' %}
-      {% elseif item.url.isRouted and item.url.routeName == '<button>' %}
-        {% set item_link_tag = 'button' %}
-      {% else %}
-        {% set item_link_tag = 'a' %}
+    {% set item_link_tag = 'a' %}
+
+    {% if item.url.isRouted %}
+      {% if item.url.routeName == '<nolink>' %}
+        {% set item_link_tag = constant('\\Drupal\\Core\\GeneratedNoLink::TAG') %}
+      {% elseif item.url.routeName == '<button>' %}
+        {% set item_link_tag = constant('\\Drupal\\Core\\GeneratedButton::TAG') %}
       {% endif %}
     {% endif %}
 
