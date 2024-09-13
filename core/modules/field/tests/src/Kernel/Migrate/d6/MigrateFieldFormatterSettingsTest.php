@@ -53,7 +53,7 @@ class MigrateFieldFormatterSettingsTest extends MigrateDrupal6TestBase {
     $expected = [
       'type' => 'text_trimmed',
       'label' => 'above',
-      'settings' => ['trim_length' => 600],
+      'settings' => ['trim_length' => 600, 'exclude_html_tags' => TRUE],
       'third_party_settings' => [],
       'weight' => 1,
       'region' => 'content',
