@@ -583,7 +583,7 @@ EDITED, file_get_contents($theme_path_absolute . '/src/TestCustomThemePreRender.
     self::assertArrayHasKey('libraries', $info);
     self::assertEquals(['core/jquery'], $info['libraries']);
   }
-  
+
   public function testIncludeDotFiles(): void {
     file_put_contents($this->getWorkspaceDirectory() . '/core/themes/starterkit_theme/.gitignore', '*.map');
     $tester = $this->runCommand(
