@@ -7,6 +7,7 @@ use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Field\BaseFieldDefinition;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
+use Drupal\Core\Url;
 use Drupal\media\MediaInterface;
 use Drupal\media\MediaSourceEntityConstraintsInterface;
 use Drupal\media\MediaSourceFieldConstraintsInterface;
@@ -432,10 +433,15 @@ class Media extends EditorialContentEntityBase implements MediaInterface {
         // Try to set fields provided by the media source and mapped in
         // media type config.
         foreach ($translation->bundle->entity->getFieldMap() as $metadata_attribute_name => $entity_field_name) {
+          // If metadata is a URL object, then convert to a string.
+          $meta_data = $media_source->getMetadata($translation, $metadata_attribute_name);
+          if ($meta_data instanceof Url) {
+            $meta_data = $meta_data->toString();
+          }
           // Only save value in the entity if the field is empty or if the
           // source field changed.
           if ($translation->hasField($entity_field_name) && ($translation->get($entity_field_name)->isEmpty() || $translation->hasSourceFieldChanged())) {
-            $translation->set($entity_field_name, $media_source->getMetadata($translation, $metadata_attribute_name));
+            $translation->set($entity_field_name, $meta_data);
           }
         }
 
