@@ -46,6 +46,8 @@ navigation.settings:
             NotNull: [ ]
             Range:
               min: 0
+      constraints:
+        ValidKeys: '<infer>'
 
 navigation.block_layout:
   type: config_object
