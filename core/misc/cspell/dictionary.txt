@@ -666,6 +666,8 @@ versionable
 versionless
 vfsstream
 viewports
+vincentlanglet
+vocabs
 wcag
 webcal
 webflo
