@@ -32,6 +32,7 @@ class ExtensionMimeTypeGuesser implements MimeTypeGuesserInterface {
       8 => 'application/java-archive',
       9 => 'application/java-serialized-object',
       10 => 'application/java-vm',
+      361 => 'application/json',
       11 => 'application/mac-binhex40',
       12 => 'application/mathematica',
       13 => 'application/msaccess',
@@ -390,7 +391,6 @@ class ExtensionMimeTypeGuesser implements MimeTypeGuesserInterface {
       343 => 'x-conference/x-cooltalk',
       344 => 'x-epoc/x-sisx-app',
       345 => 'x-world/x-vrml',
-      361 => 'application/json',
     ],
 
     // Extensions added to this list MUST be lower-case.
