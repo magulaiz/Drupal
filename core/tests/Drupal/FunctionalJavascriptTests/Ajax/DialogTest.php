@@ -205,11 +205,11 @@ class DialogTest extends WebDriverTestBase {
       'title' => 'Example hover text',
     ];
 
-    $hello_world = $this->assertSession()->elementExists('css', '.ui-dialog-buttonpane')->findButton('Hello world');
+    $dialog_button = $this->assertSession()->elementExists('css', '.ui-dialog-buttonpane')->findButton('Hello world');
 
     // Ensure that supported attributes were copied to the duplicate button.
     foreach ($expected_attrs as $key => $value) {
-      $this->assertEquals($value, $hello_world->getAttribute($key), "Form action has the expected '{$key}' attribute value");
+      $this->assertEquals($value, $dialog_button->getAttribute($key), "Form action has the expected '{$key}' attribute value");
     }
 
     // Reset: close the form.
