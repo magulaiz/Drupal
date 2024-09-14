@@ -242,6 +242,7 @@ formattable
 fouc
 fourcol
 fraîche
+frankenphp
 frontpage
 fudgy
 fulldata
