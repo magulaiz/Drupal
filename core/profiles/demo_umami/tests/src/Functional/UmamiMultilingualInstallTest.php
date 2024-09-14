@@ -34,14 +34,14 @@ class UmamiMultilingualInstallTest extends InstallerTestBase {
     $this->assertSession()->pageTextContains('Crema catalana');
 
     // Confirm there are no errors for the a 'content_moderation_control' block.
-    $message = 'The "%plugin_id" block plugin was not found';
     $errors = Database::getConnection()->select('watchdog')
       ->fields('watchdog', ['message', 'variables'])
-      ->condition('message', $message)
+      ->condition('message', '%block plugin was not found', 'LIKE')
       ->condition('variables', '%content_moderation_control%', 'LIKE')
+      ->countQuery()
       ->execute()
-      ->fetchAll();
-    $this->assertCount(0, $errors);
+      ->fetchField();
+    $this->assertSame(0, (int) $errors);
   }
 
   /**
