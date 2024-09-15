@@ -298,6 +298,9 @@ function theme_dblog_message($variables) {
     }
     // Message to translate with injected variables.
     else {
+      if (!variable_get('validate_watchdog_variables_opt_out', FALSE)) {
+        $event->message = drupal_validate_watchdog_variables($event->message);
+      }
       $output = t($event->message, $event_variables);
     }
     // If the output is expected to be a link, strip all the tags and

@@ -2061,8 +2061,6 @@ function watchdog($type, $message, $variables = array(), $severity = WATCHDOG_NO
     // The user object may not exist in all conditions, so 0 is substituted if needed.
     $user_uid = isset($user->uid) ? $user->uid : 0;
 
-    $variables = drupal_validate_watchdog_variables($variables);
-
     // Prepare the fields to be logged
     $log_entry = array(
       'type'        => $type,
@@ -2089,7 +2087,7 @@ function watchdog($type, $message, $variables = array(), $severity = WATCHDOG_NO
 }
 
 /**
- * Validates variables that will be passed to implementations of hook_watchdog.
+ * Validates variables passed to implementations of hook_watchdog.
  *
  * @param array $variables
  *
