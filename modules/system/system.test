@@ -3390,7 +3390,7 @@ class WatchdogTest extends DrupalWebTestCase {
   }
 
   function setUp() {
-    parent::setUp('dblog');
+    parent::setUp(array('dblog', 'syslog'));
   }
 
   /**
