@@ -67,7 +67,7 @@ interface EntityRepositoryInterface {
    *     The strict mode disables falling back to default language, if it is not
    *     allowed by fallback candidates.
    *   Other values of this context are passed to the function
-   *   LanguageManager::getFallbackCandidates().
+   *   \Drupal\Core\Language\LanguageManagerInterface::getFallbackCandidates().
    *
    * @return \Drupal\Core\Entity\EntityInterface|null
    *   An entity object for the translated data, or NULL if the requested

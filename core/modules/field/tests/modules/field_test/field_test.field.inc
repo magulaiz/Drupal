@@ -5,6 +5,8 @@
  * Defines a field type and its formatters and widgets.
  */
 
+declare(strict_types=1);
+
 use Drupal\Core\Entity\FieldableEntityInterface;
 use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Entity\Exception\FieldStorageDefinitionUpdateForbiddenException;
@@ -47,7 +49,7 @@ function field_test_default_value(FieldableEntityInterface $entity, FieldDefinit
 /**
  * Implements hook_entity_field_access().
  */
-function field_test_entity_field_access($operation, FieldDefinitionInterface $field_definition, AccountInterface $account, FieldItemListInterface $items = NULL) {
+function field_test_entity_field_access($operation, FieldDefinitionInterface $field_definition, AccountInterface $account, ?FieldItemListInterface $items = NULL) {
   if ($field_definition->getName() == "field_no_{$operation}_access") {
     return AccessResult::forbidden();
   }

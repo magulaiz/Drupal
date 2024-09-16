@@ -1,16 +1,28 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\FunctionalJavascriptTests;
 
 use WebDriver\Service\CurlService;
 use WebDriver\Exception\CurlExec;
 use WebDriver\Exception as WebDriverException;
 
+// cspell:ignore curle curlopt customrequest failonerror postfields
+// cspell:ignore returntransfer
+
+@trigger_error('The \Drupal\FunctionalJavascriptTests\WebDriverCurlService class is deprecated in drupal:11.1.0 and is removed from drupal:12.0.0. There is no replacement. See https://www.drupal.org/node/3462152', E_USER_DEPRECATED);
+
 /**
  * Provides a curl service to interact with Selenium driver.
  *
  * Extends WebDriver\Service\CurlService to solve problem with race conditions,
  * when multiple processes requests.
+ *
+ * @deprecated in drupal:11.1.0 and is removed from drupal:12.0.0. There is
+ *   no replacement, use the base class instead.
+ *
+ * @see https://www.drupal.org/node/3462152
  */
 class WebDriverCurlService extends CurlService {
 
@@ -115,7 +127,11 @@ class WebDriverCurlService extends CurlService {
 
         curl_setopt($curl, CURLOPT_HTTPHEADER, $customHeaders);
 
-        $rawResult = trim(curl_exec($curl));
+        $result = curl_exec($curl);
+        $rawResult = NULL;
+        if ($result !== FALSE) {
+          $rawResult = trim($result);
+        }
 
         $info = curl_getinfo($curl);
         $info['request_method'] = $requestMethod;
@@ -136,7 +152,7 @@ class WebDriverCurlService extends CurlService {
         }
         return [$rawResult, $info];
       }
-      catch (CurlExec $exception) {
+      catch (CurlExec) {
         $retries++;
       }
     }

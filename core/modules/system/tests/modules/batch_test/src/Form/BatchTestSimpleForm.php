@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\batch_test\Form;
 
 use Drupal\Core\Form\FormBase;
@@ -34,6 +36,7 @@ class BatchTestSimpleForm extends FormBase {
         'batch_4' => 'batch 4',
         'batch_6' => 'batch 6',
         'batch_7' => 'batch 7',
+        'batch_8' => 'batch 8',
       ],
       '#multiple' => TRUE,
     ];
