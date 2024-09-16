@@ -27,11 +27,10 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
  * - The PHP-TUF plugin is installed.
  * - The plugin is not explicitly blocked by Composer's `allow-plugins`
  *   configuration.
- * - Composer is aware of at least one repository hosted at
- *   packages.drupal.org (since that's currently the only server that supports
- *   TUF), and that those repositories have TUF support explicitly enabled.
+ * - Composer is aware of at least one repository that has TUF support
+ *   explicitly enabled.
  *
- * Until it's more battle-tested, TUF protection is bypassed by default.
+ * Until it's more real world-tested, TUF protection is bypassed by default.
  * Ultimately, though, Package Manager will not treat TUF as optional.
  *
  * @internal

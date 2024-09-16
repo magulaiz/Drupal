@@ -26,16 +26,16 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
  * This validator restricts the use of Composer plugins:
  * - Allowing all plugins to run indiscriminately is discouraged by Composer,
  *   but disallowed by this module (it is too risky):
- *   @code config.allowed-plugins = true @endcode is forbidden.
+ *   `config.allowed-plugins = true` is forbidden.
  * - Installed Composer plugins that are not allowed (in composer.json's
- *   @code config.allowed-plugins @endcode) are not executed by Composer, so
+ *   `config.allowed-plugins ) are not executed by Composer, so
  *   these are safe.
  * - Installed Composer plugins that are allowed need to be either explicitly
  *   supported by this validator (they may still need their own validation to
  *   ensure their configuration is safe, for example Drupal core's vendor
  *   hardening plugin), or explicitly trusted by adding it to the
- *   @code package_manager.settings @endcode configuration's
- *   @code additional_trusted_composer_plugins @endcode list.
+ *   `package_manager.settings` configuration's
+ *   `additional_trusted_composer_plugins` list.
  *
  * @todo Determine how other Composer plugins will be supported in
  *    https://drupal.org/i/3339417.
@@ -55,20 +55,18 @@ final class ComposerPluginsValidator implements EventSubscriberInterface {
   /**
    * Composer plugins known to modify other packages, but are validated.
    *
-   * (The validation guarantees they are safe to use.)
+   * The validation guarantees they are safe to use.
    *
    * @var string[]
    *   Keys are Composer plugin package names, values are version constraints
    *   for those plugins that this validator explicitly supports.
    */
   private const SUPPORTED_PLUGINS_THAT_DO_MODIFY = [
-    // cSpell:disable
     // @see \Drupal\package_manager\Validator\ComposerPatchesValidator
     'cweagans/composer-patches' => '^1.7.3 || ^2',
     // @see \Drupal\package_manager\PathExcluder\VendorHardeningExcluder
     'drupal/core-vendor-hardening' => '*',
     'php-http/discovery' => '*',
-    // cSpell:enable
   ];
 
   /**
@@ -79,20 +77,18 @@ final class ComposerPluginsValidator implements EventSubscriberInterface {
    *   for those plugins that this validator explicitly supports.
    */
   private const SUPPORTED_PLUGINS_THAT_DO_NOT_MODIFY = [
-    // cSpell:disable
     'composer/installers' => '^2.0',
     'dealerdirect/phpcodesniffer-composer-installer' => '^0.7.1 || ^1.0.0',
     'drupal/core-composer-scaffold' => '*',
     'drupal/core-project-message' => '*',
     'phpstan/extension-installer' => '^1.1',
-    // cSpell:enable
     PhpTufValidator::PLUGIN_NAME => '^1',
   ];
 
   /**
    * The additional trusted Composer plugin package names.
    *
-   * Note: these are normalized package names.
+   * The package names are normalized.
    *
    * @var string[]
    *   Keys are package names, values are version constraints.

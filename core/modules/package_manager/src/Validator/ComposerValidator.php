@@ -42,6 +42,7 @@ final class ComposerValidator implements EventSubscriberInterface {
       $message = $this->t('Composer cannot be used because the <code>proc_open()</code> function is disabled.');
       if ($this->moduleHandler->moduleExists('help')) {
         $message = $this->t('@message See <a href=":package-manager-help">the help page</a> for information on how to resolve the problem.', [
+          '@message' => $message,
           ':package-manager-help' => self::getHelpUrl('package-manager-composer-related-faq'),
         ]);
       }

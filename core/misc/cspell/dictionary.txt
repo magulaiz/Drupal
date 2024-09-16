@@ -296,7 +296,6 @@ keyevent
 keypresses
 keyvalue
 kinberg
-kirk
 kolkata
 lamoids
 languageswitcher

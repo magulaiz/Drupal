@@ -59,14 +59,14 @@ class SiteConfigurationExcluder implements EventSubscriberInterface {
   /**
    * Makes the staged `sites/default` directory owner-writable.
    *
-   * This is done to allow the core scaffold plugin to make changes in
-   * `sites/default`, if necessary, without breaking if `sites/default` is not
-   * writable (this can happen because rsync preserves directory permissions,
-   * and Drupal will try to harden the site directory's permissions as much as
-   * possible). We specifically exclude the `default.settings.php` and
-   * `default.services.yml` files from Package Manager operations, so we want to
-   * allow the scaffold plugin to make whatever changes it wants to those files
-   * in the stage directory.
+   * This allows the core scaffold plugin to make changes in `sites/default`,
+   * if needed. Otherwise it would break if `sites/default` is not writable,
+   * which can happen because rsync preserves directory permissions (and Drupal
+   * tries to write-protect the site directory).
+   *
+   * We specifically exclude `default.settings.php` and `default.services.yml`
+   * from Package Manager operations. This allows the scaffold plugin to change
+   * those files in the stage directory.
    *
    * @param \Drupal\package_manager\Event\PostCreateEvent $event
    *   The event being handled.

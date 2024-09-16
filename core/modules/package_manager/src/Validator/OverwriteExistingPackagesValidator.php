@@ -27,7 +27,7 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
  *   at any time without warning. External code should not interact with this
  *   class.
  *
- * @link https://getcomposer.org/doc/04-schema.md#type
+ * @see https://getcomposer.org/doc/04-schema.md#type
  */
 final class OverwriteExistingPackagesValidator implements EventSubscriberInterface {
 

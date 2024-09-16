@@ -63,7 +63,7 @@ final class CollectPathsToExcludeEvent extends StageEvent implements PathListInt
    * *guaranteed* to exist within the web root.
    *
    * @param string[] $paths
-   *   The paths to ignore. These should be relative to the web root, and will
+   *   The paths to ignore. These should be relative to the web root. They will
    *   be made relative to the project root.
    */
   public function addPathsRelativeToWebRoot(array $paths): void {
@@ -110,7 +110,7 @@ final class CollectPathsToExcludeEvent extends StageEvent implements PathListInt
    * Finds all directories in the project root matching the given name.
    *
    * @param string $directory_name
-   *   The directory name to scan for.
+   *   A directory name.
    *
    * @return string[]
    *   All discovered absolute paths matching the given directory name.

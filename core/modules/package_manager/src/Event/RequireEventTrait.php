@@ -51,9 +51,9 @@ trait RequireEventTrait {
    * Gets the runtime (i.e., non-dev) packages.
    *
    * @return string[]
-   *   An array of packages where the values are version constraints and keys
-   *   are package names in the form `vendor/name`. Packages without a version
-   *   constraint will default to `*`.
+   *   An array of packages where the keys are package names in the form
+   *   `vendor/name` and the values are version constraints. Packages without a
+   *   version constraint will default to `*`.
    */
   public function getRuntimePackages(): array {
     return $this->getKeyedPackages($this->runtimePackages);

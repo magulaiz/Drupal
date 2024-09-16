@@ -11,9 +11,9 @@ use Drupal\package_manager\Event\PreRequireEvent;
 use Drupal\package_manager\Event\StatusCheckEvent;
 
 /**
- * Provides helper methods for base requirement validators.
+ * Provides methods for base requirement validators.
  *
- * This trait should only be used validators that check base requirements,
+ * This trait should only be used by validators that check base requirements,
  * which means they run before
  * \Drupal\package_manager\Validator\BaseRequirementsFulfilledValidator.
  *

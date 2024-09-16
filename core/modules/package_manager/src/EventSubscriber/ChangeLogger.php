@@ -28,7 +28,7 @@ final class ChangeLogger implements EventSubscriberInterface, LoggerAwareInterfa
   use StringTranslationTrait;
 
   /**
-   * The metadata key under which to store the installed packages at start.
+   * The key to store the list of packages installed when the stage is created.
    *
    * @var string
    *
@@ -87,7 +87,7 @@ final class ChangeLogger implements EventSubscriberInterface, LoggerAwareInterfa
   }
 
   /**
-   * Logs all Package Manager changes.
+   * Logs changes made by Package Manager.
    *
    * @param \Drupal\package_manager\Event\PostApplyEvent $event
    *   The event being handled.
@@ -125,7 +125,7 @@ final class ChangeLogger implements EventSubscriberInterface, LoggerAwareInterfa
         ]);
       }
     }
-    // It's possible that $requested_log will be empty -- for example, a custom
+    // It's possible that $requested_log will be empty: for example, a custom
     // stage that only does removals, or some other operation, and never
     // dispatches PostRequireEvent.
     if ($requested_log) {

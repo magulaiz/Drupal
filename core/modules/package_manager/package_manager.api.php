@@ -21,8 +21,8 @@
  * At the center of Package Manager is the concept of a stage directory. A
  * stage directory is a complete copy of the active Drupal code base, created
  * in a temporary directory that isn't accessible over the web. The stage
- * directory doesn't include site-specific assets that aren't managed by
- * Composer, such as settings.php, uploaded files, or SQLite databases.
+ * directory doesn't have any site-specific assets like settings.php, uploaded
+ * files, or SQLite databases.
  *
  * Only one stage directory can exist at any given time, and it is "owned" by
  * the user or session that originally created it. Only the owner can perform
@@ -32,8 +32,8 @@
  * Package Manager can run Composer commands in the stage directory to require
  * or update packages in it, and then copy those changes back into the live,
  * running code base (which is referred to as the "active directory"). The
- * stage directory can then be safely deleted. These four distinct operations
- * -- create, require, apply, and destroy -- comprise the "stage life cycle."
+ * stage directory can then be safely deleted. Four distinct operations:
+ * create, require, apply, and destroy. They comprise the "stage life cycle."
  *
  * Package Manager's \Drupal\package_manager\StageBase controls the stage life
  * cycle and is an abstract class that must be subclassed. But in most cases,

@@ -21,7 +21,7 @@ use Symfony\Component\Filesystem\Path;
 /**
  * Excludes unknown paths from stage operations.
  *
- * Any paths in the root directory of the project that are NOT one of the
+ * Any path in the root directory of the project that is NOT one of the
  * following are considered unknown paths:
  * 1. The vendor directory
  * 2. The web root
@@ -29,7 +29,7 @@ use Symfony\Component\Filesystem\Path;
  * 4. composer.lock
  * 5. Scaffold files as determined by the drupal/core-composer-scaffold plugin
  *
- * If web root and project root are the same, nothing is excluded.
+ * If the web root and the project root are the same, nothing is excluded.
  *
  * This excluder can be disabled by changing the config setting
  * `package_manager.settings:include_unknown_files_in_project_root` to TRUE.
@@ -89,9 +89,9 @@ final class UnknownPathExcluder implements EventSubscriberInterface, LoggerAware
     // To determine the files to include, the installed packages must be known,
     // and that requires Composer commands to be able to run. This intentionally
     // does not catch exceptions: failed Composer validation in the project root
-    // implies that this excluder cannot function correctly.
-    // Note: the call to ComposerInspector::getConfig() would
-    // also have triggered this, but explicitness is preferred here.
+    // implies that this excluder cannot function correctly. In such a case, the
+    // call to ComposerInspector::getConfig() would also have triggered an
+    // exception, but explicitness is preferred here.
     // @see \Drupal\package_manager\StatusCheckTrait::runStatusCheck()
     $project_root = $this->pathLocator->getProjectRoot();
     $this->composerInspector->validate($project_root);

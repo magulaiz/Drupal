@@ -13,7 +13,7 @@ use Drupal\package_manager\PathLocator;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 /**
- * Checks that the (about to be) installed packages meet the minimum stability.
+ * Checks that the packages to install meet the minimum stability.
  *
  * @internal
  *   This is an internal part of Package Manager and may be changed or removed
@@ -42,7 +42,7 @@ final class ComposerMinimumStabilityValidator implements EventSubscriberInterfac
 
     foreach ($requested_packages as $package_name => $version) {
       // In the root composer.json, a stability flag can also be specified. They
-      // take the form @code constraint@stability @endcode. A stability flag
+      // take the form `constraint@stability`. A stability flag
       // allow the project owner to deviate from the minimum-stability setting.
       // @see https://getcomposer.org/doc/04-schema.md#package-links
       // @see \Composer\Package\Loader\RootPackageLoader::extractStabilityFlags()

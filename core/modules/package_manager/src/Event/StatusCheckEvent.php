@@ -59,8 +59,8 @@ final class StatusCheckEvent extends PreOperationStageEvent {
    * @param \Drupal\Core\StringTranslation\TranslatableMarkup[] $messages
    *   One or more warning messages.
    * @param \Drupal\Core\StringTranslation\TranslatableMarkup|null $summary
-   *   A summary of warning messages. Required if there is more than one
-   *   message, optional otherwise.
+   *   A summary of warning messages. Must be passed if there is more than one
+   *   message.
    */
   public function addWarning(array $messages, ?TranslatableMarkup $summary = NULL): void {
     $this->addResult(ValidationResult::createWarning($messages, $summary));

@@ -13,7 +13,7 @@ namespace Drupal\package_manager\Exception;
  * code should be restored from a backup.
  *
  * We are extending RuntimeException rather than StageException which makes it
- * clearer that it's unrelated to the stage life cycle.
+ * clear that it's unrelated to the stage life cycle.
  *
  * This exception is different from ApplyFailedException as it focuses on
  * the failure marker being detected outside the stage lifecycle.

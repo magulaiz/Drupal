@@ -353,9 +353,6 @@ class ComposerInspector implements LoggerAwareInterface {
    *
    * @return array
    *   The packages data, with a `type` key added to each package.
-   *
-   * @todo Remove this when https://github.com/composer/composer/pull/11340 and
-   *   we bump our Composer requirement accordingly.
    */
   private function getPackageTypes(array $packages_data, string $working_dir): array {
     $lock_content = file_get_contents($working_dir . DIRECTORY_SEPARATOR . 'composer.lock');
