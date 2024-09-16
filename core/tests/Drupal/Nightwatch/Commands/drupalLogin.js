@@ -19,6 +19,8 @@ exports.command = function drupalLogin({ name, password }) {
       .setValue('input[name="name"]', name)
       .setValue('input[name="pass"]', password)
       .submitForm('#user-login-form');
+    // MongoDB needs a moment.
+    this.pause(50);
     // Assert that a user is logged in.
     this.drupalUserIsLoggedIn((sessionExists) => {
       this.assert.equal(
