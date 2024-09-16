@@ -158,7 +158,7 @@ class GenerateTheme extends Command {
     foreach ($filesToRename as $file) {
       $filepath_segments = explode('/', $file->getRealPath());
       $filename = array_pop($filepath_segments);
-      $filename = str_replace((string) $patterns['old']['machine_name'], (string) $patterns['new']['machine_name'], $filename);
+      $filename = str_replace($patterns['old'], $patterns['new'], $filename);
       $filepath_segments[] = $filename;
       $filesystem->rename($file->getRealPath(), implode('/', $filepath_segments));
     }
