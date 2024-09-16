@@ -6,6 +6,8 @@ use Drupal\Core\Database\Database;
 use Drupal\Core\Database\Connection;
 use Drupal\Core\Database\ConnectionNotDefinedException;
 
+// cspell:ignore sttid
+
 /**
  * Implements a test run results storage compatible with legacy Simpletest.
  *
