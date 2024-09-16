@@ -395,17 +395,6 @@ class NodeViewsData extends EntityViewsData {
       }
     }
 
-    if ($this->connection->driver() == 'mongodb') {
-      // @todo Find out if this is still needed.
-      $data['node']['path'] = [
-        'field' => [
-          'title' => $this->t('Path'),
-          'help' => $this->t('The aliased path to this content.'),
-          'id' => 'node_path',
-        ],
-      ];
-    }
-
     return $data;
   }
 

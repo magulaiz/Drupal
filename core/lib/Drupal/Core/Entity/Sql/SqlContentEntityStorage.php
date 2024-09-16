@@ -2404,13 +2404,7 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
    * {@inheritdoc}
    */
   protected function getQueryServiceName() {
-    // @todo Remove the MongoDB specific entity query service.
-    if ($this->database->driver() == 'mongodb') {
-      return 'mongodb.entity.query.sql';
-    }
-    else {
-      return 'entity.query.sql';
-    }
+    return 'entity.query.sql';
   }
 
   /**
