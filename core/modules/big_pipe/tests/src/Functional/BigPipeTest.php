@@ -343,7 +343,7 @@ class BigPipeTest extends BrowserTestBase {
     // Check that Cache-Control header set to "private".
     $this->assertSession()->responseHeaderContains('Cache-Control', 'private');
     $this->assertSession()->responseHeaderEquals('Surrogate-Control', 'no-store, content="BigPipe/1.0"');
-    // $this->assertSession()->responseHeaderEquals('X-Accel-Buffering', 'no');
+    $this->assertSession()->responseHeaderEquals('X-Accel-Buffering', 'no');
   }
 
   /**
