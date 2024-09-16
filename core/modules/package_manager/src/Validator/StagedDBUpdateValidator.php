@@ -90,6 +90,11 @@ class StagedDBUpdateValidator implements EventSubscriberInterface {
   /**
    * Returns a list of all update functions for a module.
    *
+   * This method only exists because the API in core that scans for available
+   * updates can only examine the active (running) code base, but we need to be
+   * able to scan the staged code base as well to compare it against the active
+   * one.
+   *
    * @param string $root_dir
    *   The root directory of the Drupal code base.
    * @param \Drupal\Core\Extension\Extension $extension
@@ -99,7 +104,7 @@ class StagedDBUpdateValidator implements EventSubscriberInterface {
    *   The names of the update functions in the module's .install and
    *   .post_update.php files.
    */
-  protected function getUpdateFunctions(string $root_dir, Extension $extension): array {
+  private function getUpdateFunctions(string $root_dir, Extension $extension): array {
     $name = $extension->getName();
 
     $path = implode(DIRECTORY_SEPARATOR, [

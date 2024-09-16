@@ -53,10 +53,11 @@ final class ChangeLogger implements EventSubscriberInterface, LoggerAwareInterfa
   /**
    * Records packages installed in the project root.
    *
-   * We need to do this before the stage has been created, so that we have a
-   * complete picture of which requested packages are merely being updated, and
-   * which are being newly added. Once the stage has been created, the installed
-   * packages won't change -- if they do, a validation error will be raised.
+   * We need to do this before the staging environment has been created, so that
+   * we have a complete picture of which requested packages are merely being
+   * updated, and which are being newly added. Once the staging environment has
+   * been created, the installed packages won't change -- if they do, a
+   * validation error will be raised.
    *
    * @param \Drupal\package_manager\Event\PreCreateEvent $event
    *   The event being handled.
