@@ -22,9 +22,24 @@ class PerformanceData {
   protected int $scriptCount = 0;
 
   /**
+   * The total stylesheet bytes requested.
+   */
+  protected int $stylesheetBytes = 0;
+
+  /**
+   * The total script bytes requested.
+   */
+  protected int $scriptBytes = 0;
+
+  /**
    * The number of database queries recorded.
    */
   protected int $queryCount = 0;
+
+  /**
+   * The individual database queries recorded.
+   */
+  protected array $queries = [];
 
   /**
    * The number of cache gets recorded.
@@ -72,6 +87,16 @@ class PerformanceData {
   }
 
   /**
+   * Sets the stylesheet bytes.
+   *
+   * @param int $bytes
+   *   The stylesheet bytes recorded.
+   */
+  public function setStylesheetBytes(int $bytes): void {
+    $this->stylesheetBytes = $bytes;
+  }
+
+  /**
    * Gets the stylesheet request count.
    *
    * @return int
@@ -79,6 +104,16 @@ class PerformanceData {
    */
   public function getStylesheetCount(): int {
     return $this->stylesheetCount;
+  }
+
+  /**
+   * Gets the stylesheet bytes count.
+   *
+   * @return int
+   *   The stylesheet bytes recorded.
+   */
+  public function getStylesheetBytes(): int {
+    return $this->stylesheetBytes;
   }
 
   /**
@@ -92,6 +127,16 @@ class PerformanceData {
   }
 
   /**
+   * Sets the script bytes.
+   *
+   * @param int $bytes
+   *   The script bytes recorded.
+   */
+  public function setScriptBytes(int $bytes): void {
+    $this->scriptBytes = $bytes;
+  }
+
+  /**
    * Gets the script request count.
    *
    * @return int
@@ -102,13 +147,34 @@ class PerformanceData {
   }
 
   /**
-   * Sets the query count.
+   * Gets the script bytes count.
    *
-   * @param int $count
-   *   The number of database queries recorded.
+   * @return int
+   *   The script bytes recorded.
    */
-  public function setQueryCount(int $count): void {
-    $this->queryCount = $count;
+  public function getScriptBytes(): int {
+    return $this->scriptBytes;
+  }
+
+  /**
+   * Logs a database query.
+   *
+   * @param string $query
+   *   The database query recorded.
+   */
+  public function logQuery(string $query): void {
+    $this->queries[] = $query;
+    $this->queryCount++;
+  }
+
+  /**
+   * Gets the queries.
+   *
+   * @return string[]
+   *   The database queries recorded.
+   */
+  public function getQueries(): array {
+    return $this->queries;
   }
 
   /**

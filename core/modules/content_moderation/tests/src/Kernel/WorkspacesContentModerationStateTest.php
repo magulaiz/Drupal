@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\content_moderation\Kernel;
 
 use Drupal\Core\Entity\EntityInterface;
@@ -38,10 +40,30 @@ class WorkspacesContentModerationStateTest extends ContentModerationStateTest {
    */
   protected $revEntityTypeId = 'entity_test_revpub';
 
+  const SKIP_METHODS = [
+    // This test creates published default revisions in Live, which can not be
+    // deleted in a workspace. A test scenario for the case when Content
+    // Moderation and Workspaces are used together is covered in
+    // parent::testContentModerationStateRevisionDataRemoval().
+    'testContentModerationStateDataRemoval',
+    // This test does not assert anything that can be workspace-specific.
+    'testModerationWithFieldConfigOverride',
+    // This test does not assert anything that can be workspace-specific.
+    'testWorkflowDependencies',
+    // This test does not assert anything that can be workspace-specific.
+    'testWorkflowNonConfigBundleDependencies',
+    // This test does not assert anything that can be workspace-specific.
+    'testGetCurrentUserId',
+  ];
+
   /**
    * {@inheritdoc}
    */
   protected function setUp(): void {
+    if (in_array($this->name(), static::SKIP_METHODS, TRUE)) {
+      $this->markTestSkipped('Irrelevant for this test');
+    }
+
     parent::setUp();
 
     $this->initializeWorkspacesModule();
@@ -53,7 +75,7 @@ class WorkspacesContentModerationStateTest extends ContentModerationStateTest {
    *
    * @see \Drupal\workspaces\EntityTypeInfo::entityTypeAlter()
    */
-  public function testWorkspaceEntityTypeModeration() {
+  public function testWorkspaceEntityTypeModeration(): void {
     /** @var \Drupal\content_moderation\ModerationInformationInterface $moderation_info */
     $moderation_info = \Drupal::service('content_moderation.moderation_information');
     $entity_type = \Drupal::entityTypeManager()->getDefinition('workspace');
@@ -65,7 +87,7 @@ class WorkspacesContentModerationStateTest extends ContentModerationStateTest {
    *
    * @see content_moderation_workspace_access()
    */
-  public function testContentModerationIntegrationWithWorkspaces() {
+  public function testContentModerationIntegrationWithWorkspaces(): void {
     $editorial = $this->createEditorialWorkflow();
     $access_handler = \Drupal::entityTypeManager()->getAccessControlHandler('workspace');
 
@@ -173,38 +195,6 @@ class WorkspacesContentModerationStateTest extends ContentModerationStateTest {
         'entity_test_revpub',
       ],
     ];
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function testModerationWithFieldConfigOverride() {
-    // This test does not assert anything that can be workspace-specific.
-    $this->markTestSkipped();
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function testWorkflowDependencies() {
-    // This test does not assert anything that can be workspace-specific.
-    $this->markTestSkipped();
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function testWorkflowNonConfigBundleDependencies() {
-    // This test does not assert anything that can be workspace-specific.
-    $this->markTestSkipped();
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function testGetCurrentUserId() {
-    // This test does not assert anything that can be workspace-specific.
-    $this->markTestSkipped();
   }
 
   /**

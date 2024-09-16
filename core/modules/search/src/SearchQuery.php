@@ -177,6 +177,7 @@ class SearchQuery extends SelectExtender {
    *
    * @var int
    */
+  // phpcs:ignore Drupal.NamingConventions.ValidVariableName.LowerCamelName
   protected $relevance_count = 0;
 
   /**
@@ -466,7 +467,7 @@ class SearchQuery extends SelectExtender {
   /**
    * {@inheritdoc}
    */
-  public function preExecute(SelectInterface $query = NULL) {
+  public function preExecute(?SelectInterface $query = NULL) {
     if (!$this->executedPrepare) {
       $this->prepareAndNormalize();
     }

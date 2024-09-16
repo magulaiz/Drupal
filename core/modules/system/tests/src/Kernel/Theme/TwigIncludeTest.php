@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\system\Kernel\Theme;
 
 use Drupal\Core\DependencyInjection\ContainerBuilder;
@@ -45,7 +47,7 @@ class TwigIncludeTest extends KernelTestBase {
     $element = [];
     $element['test'] = [
       '#type' => 'inline_template',
-      '#template' => "{% include '@__main__\/core/tests/fixtures/files/sql-2.sql' %}",
+      '#template' => "{% include '@__main__/core/tests/fixtures/files/sql-2.sql' %}",
     ];
     try {
       $renderer->renderRoot($element);

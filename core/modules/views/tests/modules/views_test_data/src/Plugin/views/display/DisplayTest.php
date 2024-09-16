@@ -1,24 +1,27 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\views_test_data\Plugin\views\display;
 
 use Drupal\Component\Utility\Unicode;
 use Drupal\Component\Utility\Xss;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
+use Drupal\views\Attribute\ViewsDisplay;
 use Drupal\views\Plugin\views\display\DisplayPluginBase;
 
 /**
  * Defines a Display test plugin.
- *
- * @ViewsDisplay(
- *   id = "display_test",
- *   title = @Translation("Display test"),
- *   help = @Translation("Defines a display test plugin."),
- *   theme = "views_view",
- *   register_theme = FALSE,
- *   contextual_links_locations = {"view"}
- * )
  */
+#[ViewsDisplay(
+  id: "display_test",
+  title: new TranslatableMarkup("Display test"),
+  help: new TranslatableMarkup("Defines a display test plugin."),
+  theme: "views_view",
+  register_theme: FALSE,
+  contextual_links_locations: ["view"]
+)]
 class DisplayTest extends DisplayPluginBase {
 
   /**

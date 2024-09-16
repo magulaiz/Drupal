@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\file\Functional;
 
 use Drupal\file\Entity\File;
@@ -19,7 +21,7 @@ class FileFieldPathTest extends FileFieldTestBase {
   /**
    * Tests the normal formatter display on node display.
    */
-  public function testUploadPath() {
+  public function testUploadPath(): void {
     /** @var \Drupal\node\NodeStorageInterface $node_storage */
     $node_storage = $this->container->get('entity_type.manager')->getStorage('node');
     $field_name = $this->randomMachineName();
