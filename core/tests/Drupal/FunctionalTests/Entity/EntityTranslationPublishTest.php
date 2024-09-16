@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\FunctionalTests\Core\Entity;
 
 use Drupal\language\Entity\ConfigurableLanguage;
@@ -20,7 +22,7 @@ class EntityTranslationPublishTest extends BrowserTestBase {
   /**
    * {@inheritdoc}
    */
-  protected $admin_user;
+  protected $adminUser;
 
   /**
    * {@inheritdoc}
@@ -58,7 +60,7 @@ class EntityTranslationPublishTest extends BrowserTestBase {
       'langcode' => 'en',
     ]);
     // Need admin user to be able to access block admin.
-    $this->admin_user = $this->drupalCreateUser([
+    $this->adminUser = $this->drupalCreateUser([
       'access content',
       'edit own page content',
       'create page content',
@@ -69,7 +71,7 @@ class EntityTranslationPublishTest extends BrowserTestBase {
    * Creates an unpublished node and checks there's no access to it.
    */
   public function testUnpublishedNodeAccess() {
-    $this->drupalLogin($this->admin_user);
+    $this->drupalLogin($this->adminUser);
     $this->drupalLogout();
     $this->drupalGet('node/' . $this->node1->id());
     $this->assertSession()->pageTextContains('Access denied');
@@ -79,7 +81,7 @@ class EntityTranslationPublishTest extends BrowserTestBase {
    * Creates a published node and checks there's access to it.
    */
   public function testPublishedNodeAccess() {
-    $this->drupalLogin($this->admin_user);
+    $this->drupalLogin($this->adminUser);
     $this->node1->set('status', 1);
     $this->node1->set('title', 'Published node');
     $this->node1->save();
@@ -94,7 +96,7 @@ class EntityTranslationPublishTest extends BrowserTestBase {
    * @throws \Drupal\Core\Entity\EntityStorageException
    */
   public function testUnpublishedTranslationAccess() {
-    $this->drupalLogin($this->admin_user);
+    $this->drupalLogin($this->adminUser);
     ConfigurableLanguage::createFromLangcode('fr')->save();
     ConfigurableLanguage::createFromLangcode('es')->save();
 
@@ -113,7 +115,7 @@ class EntityTranslationPublishTest extends BrowserTestBase {
     $this->drupalGet('node/' . $node->id());
     $this->assertSession()->pageTextContains($english_title);
     // Then I add a French translation.
-    $this->drupalLogin($this->admin_user);
+    $this->drupalLogin($this->adminUser);
     $nodeFr = $node->addTranslation('fr');
     $nodeFr->setTitle($french_title);
     $nodeFr->save();
@@ -122,7 +124,7 @@ class EntityTranslationPublishTest extends BrowserTestBase {
     $this->drupalGet('fr/node/' . $node->id());
     $this->assertSession()->pageTextContains($french_title);
     // Add a Spanish translation, unpublished.
-    $this->drupalLogin($this->admin_user);
+    $this->drupalLogin($this->adminUser);
     $nodeEs = $node->addTranslation('es', [
       'title' => $spanish_title,
       'status' => 0,
@@ -139,14 +141,14 @@ class EntityTranslationPublishTest extends BrowserTestBase {
     $this->drupalGet('node/' . $node->id());
     $this->assertSession()->pageTextContains($english_title);
     // Then I try publishing the Spanish version.
-    $this->drupalLogin($this->admin_user);
+    $this->drupalLogin($this->adminUser);
     $nodeEs->set('status', 1);
     $nodeEs->save();
     $this->drupalLogout();
     $this->drupalGet('es/node/' . $nodeEs->id());
     $this->assertSession()->pageTextContains($spanish_title);
     // Unpublishing the French one.
-    $this->drupalLogin($this->admin_user);
+    $this->drupalLogin($this->adminUser);
     $nodeFr->set('status', 0);
     $nodeFr->save();
     $this->drupalLogout();
