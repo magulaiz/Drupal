@@ -147,6 +147,9 @@ function dblog_watchdog(array $log_entry) {
   if (!function_exists('drupal_substr')) {
     require_once DRUPAL_ROOT . '/includes/unicode.inc';
   }
+  if (!variable_get('validate_watchdog_variables_opt_out', FALSE)) {
+    $log_entry['variables'] = drupal_validate_watchdog_variables($log_entry['variables']);
+  }
   try {
     Database::getConnection('default', 'default')->insert('watchdog')
       ->fields(array(
