@@ -312,16 +312,13 @@ field.formatter.settings.string:
     link_to_entity:
       type: boolean
       label: 'Link to the entity'
-
-field.formatter.settings.title:
-  type: field.formatter.settings.string
-  mapping:
     tag:
       type: string
       label: 'Tag'
       constraints:
         Choice:
           choices:
+            - ''
             - 'span'
             - 'div'
             - 'h1'

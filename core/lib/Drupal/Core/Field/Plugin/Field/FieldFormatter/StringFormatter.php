@@ -82,6 +82,7 @@ class StringFormatter extends FormatterBase {
     $options = parent::defaultSettings();
 
     $options['link_to_entity'] = FALSE;
+    $options['tag'] = '';
     return $options;
   }
 
@@ -100,6 +101,22 @@ class StringFormatter extends FormatterBase {
       ];
     }
 
+    $heading_options = [
+      '' => '- None -',
+      'span' => 'span',
+      'div' => 'div',
+    ];
+    foreach (range(1, 6) as $level) {
+      $heading_options['h' . $level] = 'H' . $level;
+    }
+
+    $form['tag'] = [
+      '#title' => $this->t('Display as'),
+      '#type' => 'select',
+      '#options' => $heading_options,
+      '#default_value' => $this->getSetting('tag'),
+    ];
+
     return $form;
   }
 
@@ -114,6 +131,9 @@ class StringFormatter extends FormatterBase {
         $summary[] = $this->t('Linked to the @entity_label', ['@entity_label' => $entity_type->getLabel()]);
       }
     }
+    if ($this->getSetting('tag')) {
+      $summary[] = $this->t('Displayed as @tag', ['@tag' => $this->getSetting('tag')]);
+    }
     return $summary;
   }
 
@@ -123,15 +143,20 @@ class StringFormatter extends FormatterBase {
   public function viewElements(FieldItemListInterface $items, $langcode) {
     $elements = [];
     $url = NULL;
+    $tag = NULL;
     $entity = $items->getEntity();
     $entity_type = $entity->getEntityType();
 
     if ($this->getSetting('link_to_entity') && !$entity->isNew() && $entity_type->hasLinkTemplate('canonical')) {
       $url = $this->getEntityUrl($entity);
     }
+    if ($this->getSetting('tag')) {
+      $tag = $this->getSetting('tag');
+    }
 
     foreach ($items as $delta => $item) {
       $view_value = $this->viewValue($item);
+
       if ($url) {
         $elements[$delta] = [
           '#type' => 'link',
@@ -142,7 +167,13 @@ class StringFormatter extends FormatterBase {
       else {
         $elements[$delta] = $view_value;
       }
+
+      if ($tag) {
+        $elements[$delta]['#prefix'] = "<$tag>";
+        $elements[$delta]['#suffix'] = "</$tag>";
+      }
     }
+
     return $elements;
   }
 
