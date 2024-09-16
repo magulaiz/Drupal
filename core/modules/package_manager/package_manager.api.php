@@ -36,8 +36,9 @@
  * create, require, apply, and destroy. They comprise the "stage life cycle."
  *
  * Package Manager's \Drupal\package_manager\StageBase controls the stage life
- * cycle and is an abstract class that must be subclassed. But in most cases,
- * custom code should use the event system to interact with the stage.
+ * cycle and is an abstract class that must be subclassed. Most of the time,
+ * there should be little need to heavily customize a StageBase subclass;
+ * custom code should generally use the event system to interact with the stage.
  *
  * @see sec_stage_events Stage API: Events
  * Events are dispatched before and after each operation in the stage life

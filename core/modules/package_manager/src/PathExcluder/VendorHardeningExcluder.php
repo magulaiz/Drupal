@@ -40,10 +40,7 @@ final class VendorHardeningExcluder implements EventSubscriberInterface {
     // is present, it may have written security hardening files in the vendor
     // directory. They should always be excluded.
     $vendor_dir = $this->pathLocator->getVendorDirectory();
-    $event->addPathsRelativeToProjectRoot([
-      $vendor_dir . '/web.config',
-      $vendor_dir . '/.htaccess',
-    ]);
+    $event->addPathsRelativeToProjectRoot([$vendor_dir . '/.htaccess']);
   }
 
 }

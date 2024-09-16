@@ -31,10 +31,7 @@ class VendorHardeningExcluderTest extends PackageManagerKernelTestBase {
     $stage->require(['ext-json:*']);
     $stage_dir = $stage->getStageDirectory();
 
-    $excluded = [
-      'vendor/.htaccess',
-      'vendor/web.config',
-    ];
+    $excluded = ['vendor/.htaccess'];
     foreach ($excluded as $path) {
       $this->assertFileExists("$active_dir/$path");
       $this->assertFileDoesNotExist("$stage_dir/$path");

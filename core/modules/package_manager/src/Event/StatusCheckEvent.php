@@ -12,9 +12,6 @@ use PhpTuf\ComposerStager\API\Path\Value\PathListInterface;
 
 /**
  * Event fired to check the status of the system to use Package Manager.
- *
- * The event's stage will be set with the type of stage that will perform the
- * operations. The stage may or may not be currently in use.
  */
 final class StatusCheckEvent extends PreOperationStageEvent {
 
