@@ -43,7 +43,7 @@ function navigation_post_update_set_logo_dimensions_default(array &$sandbox) {
 /**
  * Reorganizes the values for the logo settings.
  */
-function navigation_post_update_reorganize_logo_settings2(array &$sandbox) {
+function navigation_post_update_reorganize_logo_settings(array &$sandbox): void {
   $settings = \Drupal::configFactory()->getEditable('navigation.settings');
   $settings->setData([
     'logo' => [
