@@ -55,11 +55,11 @@ class SiteInformationForm extends ConfigFormBase {
     $this->aliasManager = $alias_manager;
     $this->pathValidator = $path_validator;
     if ($this->app === NULL) {
-      @trigger_error('Calling ' . __METHOD__ . ' without the $app argument is deprecated in drupal:10.1.0 and it will be required in drupal:11.0.0. See https://www.drupal.org/node/3279668', E_USER_DEPRECATED);
+      @trigger_error('Calling ' . __METHOD__ . ' without the $app argument is deprecated in drupal:11.1.0 and is required in drupal:12.0.0. See https://www.drupal.org/node/3279668', E_USER_DEPRECATED);
       $this->app = \Drupal::app();
     }
     elseif ($this->app instanceof RequestContext) {
-      @trigger_error('Drupal\Core\Routing\RequestContext is deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. Use Drupal\Core\App instance instead. See https://www.drupal.org/node/3279668');
+      @trigger_error('Drupal\Core\Routing\RequestContext is deprecated in drupal:11.1.0 and is removed from drupal:12.0.0. Use Drupal\Core\App instance instead. See https://www.drupal.org/node/3279668');
       $this->app = \Drupal::app();
     }
   }

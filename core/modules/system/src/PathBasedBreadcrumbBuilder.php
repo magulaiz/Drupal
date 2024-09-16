@@ -123,7 +123,7 @@ class PathBasedBreadcrumbBuilder implements BreadcrumbBuilderInterface {
    */
   public function __construct(RequestContext $context, AccessManagerInterface $access_manager, RequestMatcherInterface $router, InboundPathProcessorInterface $path_processor, ConfigFactoryInterface $config_factory, TitleResolverInterface $title_resolver, AccountInterface $current_user, CurrentPathStack $current_path, ?PathMatcherInterface $path_matcher = NULL) {
     if ($context instanceof RequestContextLegacy) {
-      @trigger_error('Drupal\Core\Routing\RequestContext is deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. Use Symfony\Component\Routing\RequestContext instance instead. See https://www.drupal.org/node/3279668');
+      @trigger_error('Drupal\Core\Routing\RequestContext is deprecated in drupal:11.1.0 and is removed from drupal:12.0.0. Use Symfony\Component\Routing\RequestContext instance instead. See https://www.drupal.org/node/3279668');
       $context = new RequestContext();
     }
     $this->context = $context;

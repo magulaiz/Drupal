@@ -61,7 +61,7 @@ class LanguageNegotiationUrlTest extends UnitTestCase {
       ->getMock();
     $app->expects($this->any())
       ->method('getBasePath')
-      ->will($this->returnValue(''));
+      ->willReturn('');
 
     $cache_contexts_manager = $this->getMockBuilder('Drupal\Core\Cache\Context\CacheContextsManager')
       ->disableOriginalConstructor()

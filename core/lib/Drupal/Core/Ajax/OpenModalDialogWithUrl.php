@@ -50,8 +50,9 @@ class OpenModalDialogWithUrl implements CommandInterface {
    * Gets the complete base URL.
    */
   private function getBaseUrl() {
-    $requestContext = \Drupal::service('router.request_context');
-    return $requestContext->getCompleteBaseUrl();
+    /** @var \Drupal\Core\App $app */
+    $app = \Drupal::service('app');
+    return $app->getBaseUrl();
   }
 
 }

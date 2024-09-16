@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\Core;
 
 use PHPUnit\Framework\TestCase;
@@ -40,7 +42,7 @@ class AppTest extends TestCase {
   /**
    * Provides test data for testGetBaseUrl().
    */
-  public function providerTestGetBaseUrl(): array {
+  public static function providerTestGetBaseUrl(): array {
     return [
       [
         '/var/www',
@@ -152,7 +154,7 @@ class AppTest extends TestCase {
   /**
    * Provides test data for testGetBasePath().
    */
-  public function providerTestGetBasePath(): array {
+  public static function providerTestGetBasePath(): array {
     return [
       [
         '/var/www',

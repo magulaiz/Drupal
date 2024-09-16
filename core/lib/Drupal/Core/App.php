@@ -9,6 +9,7 @@ use Symfony\Component\HttpFoundation\Request;
  */
 class App {
 
+
   /**
    * The current request.
    *
@@ -37,7 +38,7 @@ class App {
    *   The absolute path to the Drupal root directory.
    */
   public function __construct(
-    protected string $root
+    protected string $root,
   ) {}
 
   /**

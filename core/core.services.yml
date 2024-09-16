@@ -1055,7 +1055,7 @@ services:
       - { name: persist }
     calls:
       - [fromRequestStack, ['@request_stack']]
-    deprecated: The "%service_id%" service is deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. Use Symfony\Component\Routing\RequestContext or "router.symfony_request_context" service instead. See https://www.drupal.org/node/3279668
+    deprecated: The "%service_id%" service is deprecated in drupal:11.1.0 and is removed from drupal:12.0.0. Use Symfony\Component\Routing\RequestContext or "router.symfony_request_context" service instead. See https://www.drupal.org/node/3279668
   Drupal\Core\Routing\RequestContext: '@router.request_context'
   router.admin_context:
     class: Drupal\Core\Routing\AdminContext
@@ -1407,7 +1407,7 @@ services:
     class: Drupal\Core\EventSubscriber\ResponseGeneratorSubscriber
   redirect_response_subscriber:
     class: Drupal\Core\EventSubscriber\RedirectResponseSubscriber
-    autowire: true
+    arguments: ['@unrouted_url_assembler', '@app', '@logger.channel.php']
   redirect_leading_slashes_subscriber:
     class: Drupal\Core\EventSubscriber\RedirectLeadingSlashesSubscriber
   config_import_subscriber:

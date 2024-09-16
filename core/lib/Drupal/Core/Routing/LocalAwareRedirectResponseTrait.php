@@ -14,7 +14,7 @@ trait LocalAwareRedirectResponseTrait {
    *
    * @var \Drupal\Core\Routing\RequestContext
    *
-   * @deprecated in drupal:10.1.0 and is removed from drupal:11.0.0.
+   * @deprecated in drupal:11.1.0 and is removed from drupal:12.0.0.
    *   Use ::baseUrl instead.
    * @see https://www.drupal.org/node/3279668
    */
@@ -74,12 +74,12 @@ trait LocalAwareRedirectResponseTrait {
    * @return \Drupal\Core\Routing\RequestContext
    *   The request context.
    *
-   * @deprecated in drupal:10.1.0 and is removed from drupal:11.0.0.
+   * @deprecated in drupal:11.1.0 and is removed from drupal:12.0.0.
    *   Use ::getBaseUrl() instead.
    * @see https://www.drupal.org/node/3279668
    */
   protected function getRequestContext() {
-    @trigger_error(__METHOD__ . ' is deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. Use ' . __CLASS__ . '::getBaseUrl() instead. See https://www.drupal.org/node/3279668', E_USER_DEPRECATED);
+    @trigger_error(__METHOD__ . ' is deprecated in drupal:11.1.0 and is removed from drupal:12.0.0. Use ' . __CLASS__ . '::getBaseUrl() instead. See https://www.drupal.org/node/3279668', E_USER_DEPRECATED);
     if (!isset($this->requestContext)) {
       $this->requestContext = \Drupal::service('router.request_context');
     }
@@ -94,12 +94,12 @@ trait LocalAwareRedirectResponseTrait {
    *
    * @return $this
    *
-   * @deprecated in drupal:10.1.0 and is removed from drupal:11.0.0.
+   * @deprecated in drupal:11.1.0 and is removed from drupal:12.0.0.
    *   Use ::setBaseUrl() instead.
    * @see https://www.drupal.org/node/3279668
    */
   public function setRequestContext(RequestContext $request_context) {
-    @trigger_error(__METHOD__ . ' is deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. Use ' . __CLASS__ . '::setBaseUrl() instead. See https://www.drupal.org/node/3279668', E_USER_DEPRECATED);
+    @trigger_error(__METHOD__ . ' is deprecated in drupal:11.1.0 and is removed from drupal:12.0.0. Use ' . __CLASS__ . '::setBaseUrl() instead. See https://www.drupal.org/node/3279668', E_USER_DEPRECATED);
     $this->requestContext = $request_context;
 
     return $this;

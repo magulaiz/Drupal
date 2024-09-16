@@ -47,7 +47,7 @@ class NegotiationUrlForm extends ConfigFormBase {
     parent::__construct($config_factory, $typedConfigManager);
     $this->languageManager = $language_manager;
     if ($this->app === NULL) {
-      @trigger_error('Calling ' . __METHOD__ . ' without the $app argument is deprecated in drupal:10.1.0 and it will be required in drupal:11.0.0. See https://www.drupal.org/node/3279668', E_USER_DEPRECATED);
+      @trigger_error('Calling ' . __METHOD__ . ' without the $app argument is deprecated in drupal:11.1.0 and is required in drupal:12.0.0. See https://www.drupal.org/node/3279668', E_USER_DEPRECATED);
       $this->app = \Drupal::app();
     }
   }

@@ -5,6 +5,7 @@ namespace Drupal\Core\Routing;
 use Drupal\Core\Render\BubbleableMetadata;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Routing\Exception\RouteNotFoundException;
+use Symfony\Component\Routing\RequestContext as SymfonyRequestContext;
 use Symfony\Component\Routing\Route;
 
 /**
@@ -20,7 +21,7 @@ class NullGenerator extends UrlGenerator {
    */
   public function __construct(RequestStack $request_stack) {
     $this->requestStack = $request_stack;
-    $this->context = new RequestContext();
+    $this->context = new SymfonyRequestContext();
   }
 
   /**

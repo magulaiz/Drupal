@@ -9,6 +9,7 @@ use Drupal\Core\Ajax\AjaxResponse;
 use Drupal\Core\Ajax\MessageCommand;
 use Drupal\Core\Ajax\RedirectCommand;
 use Drupal\Core\Ajax\ReplaceCommand;
+use Drupal\Core\App;
 use Drupal\Core\Asset\AttachedAssets;
 use Drupal\Core\Asset\AttachedAssetsInterface;
 use Drupal\Core\Config\ConfigFactoryInterface;
@@ -180,9 +181,13 @@ class BigPipe {
     protected EventDispatcherInterface $eventDispatcher,
     protected ConfigFactoryInterface $configFactory,
     protected MessengerInterface $messenger,
-    protected RequestContext $requestContext,
+    protected App|RequestContext $app,
     protected LoggerInterface $logger,
   ) {
+    if ($this->app instanceof RequestContext) {
+      @trigger_error('Passing instance of RequestContext class instead of an App object as an app argument to ' . __METHOD__ . ' is deprecated in drupal:11.1.0 and is removed in drupal:12.0.0. Pass the "app" service dependency instead. See https://www.drupal.org/node/3279668', E_USER_DEPRECATED);
+      $this->app = \Drupal::service('app');
+    }
   }
 
   /**
@@ -581,7 +586,7 @@ EOF;
               // concrete implementation. Default to LocalRedirectResponse, which
               // considers only redirects to within the same site as safe.
               $safe_response = LocalRedirectResponse::createFromRedirectResponse($response);
-              $safe_response->setRequestContext($this->requestContext);
+              $safe_response->setBaseUrl($this->app->getBaseUrl());
               $ajax_response->addCommand(new RedirectCommand($safe_response->getTargetUrl()));
             }
             catch (\InvalidArgumentException) {

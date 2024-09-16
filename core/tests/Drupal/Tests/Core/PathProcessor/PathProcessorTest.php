@@ -66,7 +66,7 @@ class PathProcessorTest extends UnitTestCase {
       ->getMock();
     $this->app->expects($this->any())
       ->method('getBasePath')
-      ->will($this->returnValue(''));
+      ->willReturn('');
 
     // Create a language manager stub.
     $language_manager = $this->getMockBuilder('Drupal\language\ConfigurableLanguageManagerInterface')

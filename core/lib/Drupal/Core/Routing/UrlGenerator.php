@@ -26,7 +26,7 @@ class UrlGenerator implements UrlGeneratorInterface {
   protected $provider;
 
   /**
-   * @var RequestContext
+   * @var \Symfony\Component\Routing\RequestContext
    */
   protected $context;
 
@@ -86,7 +86,7 @@ class UrlGenerator implements UrlGeneratorInterface {
    */
   public function __construct(RouteProviderInterface $provider, OutboundPathProcessorInterface $path_processor, OutboundRouteProcessorInterface $route_processor, RequestStack $request_stack, array $filter_protocols = ['http', 'https']) {
     $this->provider = $provider;
-    $this->context = new RequestContext();
+    $this->context = new SymfonyRequestContext();
 
     $this->pathProcessor = $path_processor;
     $this->routeProcessor = $route_processor;

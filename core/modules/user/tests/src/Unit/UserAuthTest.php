@@ -15,6 +15,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\HttpKernel\Event\ResponseEvent;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
+use Symfony\Component\Routing\RequestContext;
 
 /**
  * @coversDefaultClass \Drupal\user\UserAuth
@@ -295,12 +296,9 @@ class UserAuthTest extends UnitTestCase {
     $response = new TrustedRedirectResponse($frontend_url . '#a_fragment');
 
     $request_context = $this->createMock(RequestContext::class);
-    $request_context
-      ->method('getCompleteBaseUrl')
-      ->willReturn($backend_url);
 
     $container = new ContainerBuilder();
-    $container->set('router.request_context', $request_context);
+    $container->set('router.symfony_request_context', $request_context);
     \Drupal::setContainer($container);
 
     $session_mock = $this->createMock(SessionInterface::class);
