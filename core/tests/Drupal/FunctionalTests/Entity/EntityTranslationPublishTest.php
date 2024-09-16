@@ -39,7 +39,7 @@ class EntityTranslationPublishTest extends BrowserTestBase {
    *
    * @var array
    */
-  public static $modules = [
+  protected static $modules = [
     'node',
     'content_translation',
     'entity_test',
