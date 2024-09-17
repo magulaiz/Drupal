@@ -1009,7 +1009,7 @@
     <div class="ckeditor5-toolbar-disabled">
       <div class="ckeditor5-toolbar-available">
         <label id="ckeditor5-toolbar-available-buttons-label">${Drupal.t(
-          'Available buttons',
+          'Available buttons/plugins',
         )}</label>
         ${availableButtons}
       </div>
@@ -1022,7 +1022,7 @@
     </div>
     <div class="ckeditor5-toolbar-active">
       <label id="ckeditor5-toolbar-active-buttons-label">${Drupal.t(
-        'Active toolbar',
+        'Active toolbar plugins',
       )}</label>
       ${activeToolbar}
     </div>
