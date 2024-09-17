@@ -629,10 +629,10 @@ function locale_config_batch_update_default_config_langcodes(&$context) {
  * @deprecated in drupal:11.1.0 and is removed from drupal:12.0.0. Use
  * locale_config_batch_update_default_config_langcodes(&$context) instead.
  *
- * @see https://www.drupal.org/project/drupal/issues/3422977
+ * @see https://www.drupal.org/node/3475054
  */
 function locale_config_batch_set_config_langcodes(&$context): void {
-  @trigger_error(__METHOD__ . '() is deprecated in drupal:11.1.0 and is removed from drupal:12.0.0. Use locale_config_batch_update_default_config_langcodes() instead. See https://www.drupal.org/project/drupal/issues/3422977', E_USER_DEPRECATED);
+  @trigger_error(__METHOD__ . '() is deprecated in drupal:11.1.0 and is removed from drupal:12.0.0. Use locale_config_batch_update_default_config_langcodes() instead. See https://www.drupal.org/node/3475054', E_USER_DEPRECATED);
   locale_config_batch_update_default_config_langcodes($context);
 }
 
@@ -678,10 +678,10 @@ function locale_config_batch_update_config_translations(array $names, array $lan
  * @deprecated in drupal:11.1.0 and is removed from drupal:12.0.0. Use
  * locale_config_batch_update_config_translations($names, $langcodes, $context) instead.
  *
- * @see https://www.drupal.org/project/drupal/issues/3422977
+ * @see https://www.drupal.org/node/3475054
  */
 function locale_config_batch_refresh_name(array $names, array $langcodes, &$context): void {
-  @trigger_error(__METHOD__ . '() is deprecated in drupal:11.1.0 and is removed from drupal:12.0.0. Use locale_config_batch_update_config_translations() instead. See https://www.drupal.org/project/drupal/issues/3422977', E_USER_DEPRECATED);
+  @trigger_error(__METHOD__ . '() is deprecated in drupal:11.1.0 and is removed from drupal:12.0.0. Use locale_config_batch_update_config_translations() instead. See https://www.drupal.org/node/3475054', E_USER_DEPRECATED);
   locale_config_batch_update_config_translations($names, $langcodes, $context);
 }
 
