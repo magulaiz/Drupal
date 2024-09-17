@@ -378,7 +378,7 @@ abstract class EntityDisplayBase extends ConfigEntityBase implements EntityDispl
    *
    * @see https://www.drupal.org/node/3463668
    */
-  #[ActionMethod(adminLabel: new TranslatableMarkup('Hide component'), name: 'hideComponent')]
+  #[ActionMethod(adminLabel: new TranslatableMarkup('Hide component'), name: 'removeComponent')]
   public function removeComponent($name) {
     // Deprecated method body.
     $this->hidden[$name] = TRUE;
