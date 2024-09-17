@@ -3,7 +3,7 @@
     attach: (context) => {
       // Should be some common attribute.
       const form = $(context).find(
-        '.node-form, .taxonomy-term-form, .media-form'
+        '.node-form, .taxonomy-term-form, .media-form',
       );
       $(once('form-submit-action', form, context)).each(() => {
         const topBar = $('.top-bar__content');
