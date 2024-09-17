@@ -9,7 +9,6 @@ use GuzzleHttp\RequestOptions;
 use Psr\Http\Client\ClientExceptionInterface;
 
 // cspell:ignore nocdata
-
 /**
  * Fetches and caches oEmbed resources.
  */
@@ -90,9 +89,47 @@ class ResourceFetcher implements ResourceFetcherInterface {
       throw new ResourceException('The oEmbed resource could not be decoded.', $url);
     }
 
+    if (isset($data['provider_name']) && $data['provider_name'] === 'Vimeo') {
+      $data['thumbnail_url'] = $this->doVimeoRequest($data)['video']['thumbnail_large'];
+    }
+    if (isset($data['provider_name']) && $data['provider_name'] === 'YouTube') {
+      $data['thumbnail_url'] = str_replace('hqdefault', 'maxresdefault', $data['thumbnail_url']);
+    }
+
     $this->cacheBackend->set($cache_id, $data);
 
     return $this->createResource($data, $url);
+  }
+
+  /**
+   * Do request to Vimeo v2 API to return large thumbnail.
+   *
+   * @param array $data
+   *   The video data.
+   *
+   * @return array
+   *   return large thumbnail
+   *
+   * @throws \Drupal\media\OEmbed\ResourceException
+   * @throws \GuzzleHttp\Exception\GuzzleException
+   */
+  protected function doVimeoRequest(array $data): array{
+    if (isset($data['video_id'])) {
+      $vimeoUrl = 'https://vimeo.com/api/v2/video/' . $data['video_id'] . '.xml';
+    }
+    if (isset($vimeoUrl)) {
+      try {
+        $response = $this->httpClient->request('GET', $vimeoUrl, [
+          RequestOptions::TIMEOUT => 5,
+        ]);
+      }
+      catch (TransferException $e) {
+        throw new ResourceException('Could not retrieve the oEmbed resource.', $vimeoUrl, [], $e);
+      }
+      $content = (string) $response->getBody();
+
+      return $this->parseResourceXml($content, $vimeoUrl);
+    }
   }
 
   /**
