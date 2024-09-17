@@ -2543,12 +2543,6 @@ $ignoreErrors[] = [
 ];
 $ignoreErrors[] = [
 	// identifier: method.deprecated
-	'message' => '#^Call to deprecated method getMockForAbstractClass\\(\\) of class PHPUnit\\\\Framework\\\\TestCase\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/tests/Drupal/Tests/Core/Entity/KeyValueStore/KeyValueEntityStorageTest.php',
-];
-$ignoreErrors[] = [
-	// identifier: method.deprecated
 	'message' => '#^Call to deprecated method getMockForAbstractClass\\(\\) of class PHPUnit\\\\Framework\\\\MockObject\\\\MockBuilder\\.$#',
 	'count' => 3,
 	'path' => __DIR__ . '/tests/Drupal/Tests/Core/Entity/Sql/SqlContentEntityStorageTest.php',

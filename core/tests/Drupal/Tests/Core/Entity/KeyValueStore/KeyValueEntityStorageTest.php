@@ -14,9 +14,10 @@ use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityMalformedException;
 use Drupal\Core\Entity\EntityStorageException;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
+use Drupal\Core\Entity\KeyValueStore\KeyValueEntityStorage;
 use Drupal\Core\Language\Language;
 use Drupal\Tests\UnitTestCase;
-use Drupal\Core\Entity\KeyValueStore\KeyValueEntityStorage;
+use PHPUnit\Framework\MockObject\MockObject;
 
 /**
  * @coversDefaultClass \Drupal\Core\Entity\KeyValueStore\KeyValueEntityStorage
@@ -612,9 +613,9 @@ class KeyValueEntityStorageTest extends UnitTestCase {
    * @param array $methods
    *   (optional) The methods to mock.
    *
-   * @return \Drupal\Core\Entity\EntityInterface|\PHPUnit\Framework\MockObject\MockObject
+   * @return \Drupal\Core\Entity\EntityInterface&\PHPUnit\Framework\MockObject\MockObject
    */
-  public function getMockEntity($class = EntityBaseTest::class, array $arguments = [], $methods = []) {
+  protected function getMockEntity(string $class = EntityBaseTest::class, array $arguments = [], array $methods = []): EntityInterface&MockObject {
     // Ensure the entity is passed at least an array of values and an entity
     // type ID
     if (!isset($arguments[0])) {
@@ -623,7 +624,10 @@ class KeyValueEntityStorageTest extends UnitTestCase {
     if (!isset($arguments[1])) {
       $arguments[1] = 'test_entity_type';
     }
-    return $this->getMockForAbstractClass($class, $arguments, '', TRUE, TRUE, TRUE, $methods);
+    return $this->getMockBuilder($class)
+      ->setConstructorArgs($arguments)
+      ->onlyMethods($methods)
+      ->getMock();
   }
 
 }
