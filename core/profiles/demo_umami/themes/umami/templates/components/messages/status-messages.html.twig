@@ -28,7 +28,7 @@
       'messages--' ~ type,
     ]
   %}
-  <div role="contentinfo" aria-label="{{ status_headings[type] }}"{{ attributes.addClass(classes)|without('role', 'aria-label') }}>
+  <div role="contentinfo" aria-label="{{ status_headings[type] }}" data-drupal-message-id="{{ type }}-{{ random() }}"{{ attributes.addClass(classes)|without('role', 'aria-label') }}>
     <div class="messages__content container">
       {% if type == 'error' %}
         <div role="alert">
