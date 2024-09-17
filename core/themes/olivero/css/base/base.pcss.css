@@ -138,3 +138,9 @@ ul {
   list-style-type: disc;
   list-style-image: none;
 }
+
+.region--content pre {
+  white-space: pre;
+  white-space: pre-wrap;
+  word-wrap: break-word;
+}
