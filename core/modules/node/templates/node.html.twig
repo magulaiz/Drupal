@@ -60,9 +60,7 @@
  * @ingroup themeable
  */
 #}
-{% if not wrapper_element %}
-  {% set wrapper_element = (label and not page) ? 'article' : 'div' %}
-{% endif %}
+{% set wrapper_element = wrapper_element ?: 'article' %}
 <{{ wrapper_element }}{{ attributes }}>
 
   {{ title_prefix }}
