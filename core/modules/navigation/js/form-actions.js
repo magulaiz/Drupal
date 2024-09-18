@@ -2,7 +2,9 @@
   Drupal.behaviors.navigationFormActions = {
     attach: (context) => {
       // Should be some common attribute.
-      const forms = context.querySelectorAll('.node-form, .taxonomy-term-form, .media-form');
+      const forms = context.querySelectorAll(
+        '.node-form, .taxonomy-term-form, .media-form',
+      );
       once('form-submit-action', forms).forEach((form) => {
         const topBar = document.querySelector('.top-bar__content');
         const action = form.querySelector('.form-actions');
