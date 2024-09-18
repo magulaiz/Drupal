@@ -24,6 +24,7 @@ class ContentTranslationAddTranslationTest extends ContentTranslationPendingRevi
    */
   protected function setUp(): void {
     parent::setUp();
+    $this->doSetup();
     $this->enableContentModeration();
   }
 
@@ -90,7 +91,7 @@ class ContentTranslationAddTranslationTest extends ContentTranslationPendingRevi
       'title[0][value]' => 'Test Node (fr)',
       'moderation_state[0][state]' => 'published',
     ];
-    $this->submitForm($edit, t('Save (this translation)'));
+    $this->submitForm($edit, 'Save (this translation)');
     $this->assertSession()->pageTextNotContains("The content has either been modified by another user, or you have already submitted modifications. As a result, your changes cannot be saved.");
     $this->assertSession()->pageTextContains('article Test Node (fr) has been updated');
   }
