@@ -20,11 +20,11 @@ class ConnectionUnitTest extends DriverSpecificConnectionUnitTestBase {
    * {@inheritdoc}
    */
   protected function setUp(): void {
-    parent::setUp();
-
     // @todo The test passes on my local machine. It however fails on the
     // Gitlab CI pipeline.
     $this->markTestSkipped();
+
+    parent::setUp();
   }
 
   /**
