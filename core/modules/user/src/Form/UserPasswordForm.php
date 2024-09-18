@@ -173,7 +173,7 @@ class UserPasswordForm extends FormBase {
     }
     $this->flood->register('user.password_request_ip', $flood_config->get('ip_window'));
     // First, see if the input is possibly valid as a username.
-    $name = trim($form_state->getValue('name'));
+    $name = trim($form_state->getValue('name') ?? '');
     $violations = $this->userNameValidator->validateName($name);
     // Usernames have a maximum length shorter than email addresses. Only print
     // this error if the input is not valid as a username or email address.
