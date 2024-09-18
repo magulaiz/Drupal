@@ -1,23 +1,25 @@
-((Drupal, $, once) => {
+((Drupal, once) => {
   Drupal.behaviors.navigationFormActions = {
     attach: (context) => {
       // Should be some common attribute.
-      const form = $(context).find(
-        '.node-form, .taxonomy-term-form, .media-form',
-      );
-      $(once('form-submit-action', form, context)).each(() => {
-        const topBar = $('.top-bar__content');
-        const action = form.find('.form-actions');
+      const forms = context.querySelectorAll('.node-form, .taxonomy-term-form, .media-form');
+      once('form-submit-action', forms).forEach((form) => {
+        const topBar = document.querySelector('.top-bar__content');
+        const action = form.querySelector('.form-actions');
 
         if (topBar && action) {
-          // Prepend the form action buttons on top bar
-          topBar.prepend(action.contents().unwrap());
+          // Place the form action buttons on top bar.
+          while (action.lastElementChild) {
+            topBar.insertBefore(action.lastElementChild, topBar.firstChild);
+          }
 
           // Set the form attribute for the buttons
           // to define which form these buttons belong to.
-          topBar.find('.form-submit').attr('form', form.attr('id'));
+          topBar.querySelectorAll('.form-submit').forEach((button) => {
+            button.setAttribute('form', form.getAttribute('id'));
+          });
         }
       });
     },
   };
-})(Drupal, jQuery, once);
+})(Drupal, once);
