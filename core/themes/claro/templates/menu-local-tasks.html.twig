@@ -20,8 +20,8 @@
   </nav>
 {% endif %}
 {% if secondary %}
-  <h2 id="secondary-tabs-title" class="visually-hidden">{{ 'Secondary tabs'|t }}</h2>
-  <nav role="navigation" class="tabs-wrapper tabs-wrapper--secondary is-horizontal is-collapsible" aria-labelledby="secondary-tabs-title" data-drupal-nav-tabs>
-    <ul class="tabs tabs--secondary clearfix" data-drupal-nav-tabs-target>{{ secondary }}</ul>
-  </nav>
+  <label for="secondary-tab-dropdown" class="visually-hidden">{{ 'Secondary tabs'|t }}</label>
+  <select id="secondary-tab-dropdown" class="pf-c-select form-element--type-select" onchange="location=this.value;">
+    {{ secondary }}
+  </select>
 {% endif %}
