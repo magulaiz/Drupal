@@ -131,8 +131,8 @@ class Query extends QueryBase implements QueryInterface {
       $this->sqlFields["base_table.$id_field"] = ['base_table', $id_field];
     }
 
-    // Add a self-join to the base revision table if we're querying only the
-    // latest revisions.
+    // Use max and group by to only return the latest revision in the most
+    // optimal way.
     if ($this->latestRevision && $revision_field) {
       // Fetch all latest revision ids in a sub-query.
       $revision_subquery = $this->connection->select($base_table, 'base_table');
