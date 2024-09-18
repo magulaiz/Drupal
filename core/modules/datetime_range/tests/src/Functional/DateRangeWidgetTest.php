@@ -6,6 +6,7 @@ namespace Drupal\Tests\datetime_range\Functional;
 
 use Drupal\Core\Datetime\DrupalDateTime;
 use Drupal\Core\Datetime\Entity\DateFormat;
+use Drupal\datetime\Plugin\Field\FieldType\DateTimeItem;
 use Drupal\datetime_range\Plugin\Field\FieldType\DateRangeItem;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
@@ -33,14 +34,14 @@ class DateRangeWidgetTest extends DateTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function getTestFieldType() {
+  protected function getTestFieldType(): string {
     return 'daterange';
   }
 
   /**
    * Tests daterange field with missing end date.
    */
-  public function testMissingEndDate() {
+  public function testMissingEndDate(): void {
     // Create a test content type.
     $this->drupalCreateContentType(['type' => 'daterange_content']);
 
@@ -49,7 +50,7 @@ class DateRangeWidgetTest extends DateTestBase {
       'field_name' => $field_name,
       'entity_type' => 'node',
       'type' => 'daterange',
-      'settings' => ['datetime_type' => DateRangeItem::DATETIME_TYPE_DATE],
+      'settings' => ['datetime_type' => DateTimeItem::DATETIME_TYPE_DATE],
     ]);
     $field_storage->save();
 

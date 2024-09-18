@@ -32,7 +32,7 @@ function datetime_range_help($route_name, RouteMatchInterface $route_match) {
 /**
  * Implements hook_ENTITY_TYPE_presave() for 'field_config'.
  */
-function datetime_range_field_config_presave(FieldConfigInterface $field) {
+function datetime_range_field_config_presave(FieldConfigInterface $field): void {
   // Don't do anything during a configuration sync or if the field is not a date range field.
   if ($field->isSyncing() || $field->getType() !== 'daterange') {
     return;

@@ -23,7 +23,7 @@ function datetime_range_removed_post_updates() {
 /**
  * Adds optional_values config in daterange field settings.
  */
-function datetime_range_post_update_add_optional_values(&$sandbox = NULL) {
+function datetime_range_post_update_add_optional_values(&$sandbox = NULL): void {
   \Drupal::classResolver(ConfigEntityUpdater::class)->update($sandbox, 'field_config', function (FieldConfigInterface $fieldConfig) {
     if ($fieldConfig->get('field_type') != 'daterange') {
       return FALSE;

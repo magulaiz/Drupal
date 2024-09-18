@@ -33,7 +33,7 @@ class DateRangeItem extends DateTimeItem {
   /**
    * {@inheritdoc}
    */
-  public static function defaultFieldSettings() {
+  public static function defaultFieldSettings(): array {
     return [
       'optional_values' => static::OPTIONAL_NONE,
     ] + parent::defaultFieldSettings();
@@ -103,7 +103,7 @@ class DateRangeItem extends DateTimeItem {
   /**
    * {@inheritdoc}
    */
-  public function fieldSettingsForm(array $form, FormStateInterface $form_state) {
+  public function fieldSettingsForm(array $form, FormStateInterface $form_state): array {
     $element = [];
     $element['optional_values'] = [
       '#type' => 'radios',
@@ -166,7 +166,7 @@ class DateRangeItem extends DateTimeItem {
   /**
    * {@inheritdoc}
    */
-  public function getConstraints() {
+  public function getConstraints(): array {
     $constraints = parent::getConstraints();
     $constraint_manager = \Drupal::typedDataManager()
       ->getValidationConstraintManager();

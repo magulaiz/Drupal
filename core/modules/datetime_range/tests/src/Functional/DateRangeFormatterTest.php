@@ -6,6 +6,7 @@ namespace Drupal\Tests\datetime_range\Functional;
 
 use Drupal\Core\Datetime\DrupalDateTime;
 use Drupal\Core\Datetime\Entity\DateFormat;
+use Drupal\datetime\Plugin\Field\FieldType\DateTimeItem;
 use Drupal\datetime\Plugin\Field\FieldType\DateTimeItemInterface;
 use Drupal\datetime_range\Plugin\Field\FieldType\DateRangeItem;
 use Drupal\Tests\datetime\Functional\DateTestBase;
@@ -31,17 +32,17 @@ class DateRangeFormatterTest extends DateTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function getTestFieldType() {
+  protected function getTestFieldType(): string {
     return 'daterange';
   }
 
   /**
    * Tests daterange field rendering with missing end date.
    */
-  public function testMissingEndDate() {
+  public function testMissingEndDate(): void {
     $field_name = $this->fieldStorage->getName();
     $this->field->setSetting('optional_values', DateRangeItem::OPTIONAL_END)->save();
-    $this->fieldStorage->setSetting('datetime_type', DateRangeItem::DATETIME_TYPE_DATE)->save();
+    $this->fieldStorage->setSetting('datetime_type', DateTimeItem::DATETIME_TYPE_DATE)->save();
 
     // Add new entity with start date only.
     $this->drupalGet('entity_test/add');

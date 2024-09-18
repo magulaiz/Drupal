@@ -12,7 +12,7 @@ use Drupal\Core\StringTranslation\TranslatableMarkup;
 /**
  * Allow NULL in the field end_value column.
  */
-function datetime_range_update_10200(&$sandbox) {
+function datetime_range_update_10300(&$sandbox): PluralTranslatableMarkup|TranslatableMarkup {
   if (!isset($sandbox['configs'])) {
     $sandbox['configs'] = \Drupal::entityTypeManager()
       ->getStorage('field_storage_config')

@@ -108,7 +108,7 @@ class DateRangeItemTest extends FieldKernelTestBase {
   /**
    * Test optional end date.
    */
-  public function testOptionalEndDate() {
+  public function testOptionalEndDate(): void {
     $field_name = $this->fieldStorage->getName();
     $start_date_without_end_date_value = [
       'value' => '2016-09-21',

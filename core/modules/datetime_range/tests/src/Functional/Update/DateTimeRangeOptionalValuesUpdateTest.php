@@ -19,9 +19,9 @@ class DateTimeRangeOptionalValuesUpdateTest extends UpdatePathTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setDatabaseDumpFiles() {
+  protected function setDatabaseDumpFiles(): void {
     $this->databaseDumpFiles = [
-      __DIR__ . '/../../../../../system/tests/fixtures/update/drupal-9.4.0.bare.standard.php.gz',
+      __DIR__ . '/../../../../system/tests/fixtures/update/drupal-10.3.0.filled.standard.php.gz',
       __DIR__ . '/../../../fixtures/update/datetime_range_field_config.php',
 
     ];
@@ -32,7 +32,7 @@ class DateTimeRangeOptionalValuesUpdateTest extends UpdatePathTestBase {
    *
    * @see datetime_range_post_update_add_optional_values()
    */
-  public function testOptionalValuesAddedAfterUpdate() {
+  public function testOptionalValuesAddedAfterUpdate(): void {
     $field_settings = $this->config('field.field.node.page.field_date_range')->get('settings');
     $this->assertArrayNotHasKey('optional_values', $field_settings);
 
