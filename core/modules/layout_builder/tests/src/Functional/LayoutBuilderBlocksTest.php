@@ -161,9 +161,9 @@ class LayoutBuilderBlocksTest extends LayoutBuilderTestBase {
     $this->clickLink('Layout');
     $this->clickLink('Add block');
     $this->clickLink('Test Block View');
+    $page->checkField('settings[label_display]');
     $page->pressButton('Add block');
 
-    $page->checkField('settings[label_display]');
     $assert_session->pageTextContains('Test Block View');
     $assert_session->elementExists('css', '.block-views-blocktest-block-view-block-1');
     $page->pressButton('Save');
