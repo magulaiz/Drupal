@@ -8,6 +8,9 @@ use Drupal\Core\DependencyInjection\ClassResolverInterface;
 use Drupal\Core\DependencyInjection\DependencySerializationTrait;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Plugin\DefaultPluginManager;
+use Drupal\Core\TypedData\Options\DefinitionAwareOptionsProviderInterface;
+use Drupal\Core\TypedData\Options\DependentOptionsProviderInterface;
+use Drupal\Core\TypedData\Options\OptionsProviderResolver;
 use Drupal\Core\TypedData\Attribute\DataType;
 use Drupal\Core\TypedData\Validation\RecursiveValidator;
 use Drupal\Core\Validation\ConstraintManager;
@@ -51,6 +54,13 @@ class TypedDataManager extends DefaultPluginManager implements TypedDataManagerI
   protected $classResolver;
 
   /**
+   * The options provider resolver.
+   *
+   * @var \Drupal\Core\TypedData\Options\OptionsProviderResolver
+   */
+  protected $optionsProviderResolver;
+
+  /**
    * Constructs a new TypedDataManager.
    *
    * @param \Traversable $namespaces
@@ -67,7 +77,7 @@ class TypedDataManager extends DefaultPluginManager implements TypedDataManagerI
     $this->alterInfo('data_type_info');
     $this->setCacheBackend($cache_backend, 'typed_data_types_plugins');
     $this->classResolver = $class_resolver;
-
+    $this->optionsProviderResolver = new OptionsProviderResolver($this->classResolver);
     parent::__construct(
       'Plugin/DataType',
       $namespaces,
@@ -76,6 +86,63 @@ class TypedDataManager extends DefaultPluginManager implements TypedDataManagerI
       DataType::class,
       'Drupal\Core\TypedData\Annotation\DataType',
     );
+  }
+
+  /**
+   * Returns an options provider for the given definition and arguments.
+   *
+   * Option providers are usually defined by a class implementing the
+   * \Drupal\Core\TypedData\OptionsProviderInterface, while in simple cases
+   * options may be defined by a callable, which returns a single set of options
+   * for both settable and possible options.
+   *
+   * Supported definitions are:
+   *  - The name of a class implementing the OptionsProviderInterface.
+   *  - A callable, either as
+   *    - static method via the class::method notation or as
+   *    - method on a service via the service:method notation or as
+   *    - function callback.
+   *
+   * If a class name is given, the class may implement the
+   *   - \Drupal\Core\DependencyInjection\ContainerInjectionInterface, or it is
+   *     instantiated without constructor arguments.
+   *   - \Drupal\Core\TypedData\Options\DefinitionAwareOptionsProviderInterface
+   *     in order to get the data definition passed, or
+   *   - \Drupal\Core\TypedData\Options\DependentOptionsProviderInterface
+   *     in order to provide options in dependence of the current data value.
+   * Depending on the definition object for which options are provided, some
+   * additional interfaces may be supported. E.g., Drupal core also supports
+   *   - \Drupal\Core\Field\TypedData\FieldStorageDefinitionAwareOptionsProviderInterface
+   *     on field storage definitions in order to pass the field storage
+   *     definition or
+   *   - \Drupal\Core\Plugin\Context\DependentOptionsProviderInterface
+   *     on context definitions in order to pass the available context objects.
+   *
+   * @param \Drupal\Core\TypedData\DataDefinitionInterface $definition
+   *   The definition where the options provider is defined.
+   * @param \Drupal\Core\TypedData\TypedDataInterface|null $data
+   *   (optional) The data object holding the current value.
+   *
+   * @return \Drupal\Core\TypedData\OptionsProviderInterface|null
+   *   The options provider, or NULL if none is defined.
+   */
+  public function getOptionsProvider(DataDefinitionInterface $definition, ?TypedDataInterface $data = NULL) {
+    $provider_definition = $definition->getOptionsProviderDefinition();
+    $provider = $this->optionsProviderResolver->getOptionsProvider($provider_definition);
+
+    // Forward all options provider context and add default context.
+    $context = $definition->getOptionsProviderContext();
+    $context[DefinitionAwareOptionsProviderInterface::class]['setDataDefinition'] = [$definition];
+    $context[DependentOptionsProviderInterface::class]['setData'] = [$data];
+
+    foreach ($context as $interface => $methods) {
+      if ($provider instanceof $interface) {
+        foreach ($methods as $method => $arguments) {
+          call_user_func_array([$provider, $method], $arguments);
+        }
+      }
+    }
+    return $provider;
   }
 
   /**

@@ -11,6 +11,7 @@ use Drupal\Core\Field\BaseFieldDefinition;
 use Drupal\Core\Field\FieldException;
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
 use Drupal\Core\TypedData\OptionsProviderInterface;
+use Drupal\Core\Field\TypedData\FieldDefinitionOptionsProviderTrait;
 use Drupal\field\FieldStorageConfigInterface;
 
 /**
@@ -55,6 +56,8 @@ use Drupal\field\FieldStorageConfigInterface;
  * )
  */
 class FieldStorageConfig extends ConfigEntityBase implements FieldStorageConfigInterface {
+
+  use FieldDefinitionOptionsProviderTrait;
 
   /**
    * The maximum length of the field name, in characters.
@@ -680,7 +683,7 @@ class FieldStorageConfig extends ConfigEntityBase implements FieldStorageConfigI
   /**
    * {@inheritdoc}
    */
-  public function getOptionsProvider($property_name, FieldableEntityInterface $entity) {
+  public function getOptionsProvider($property_name = NULL, ?FieldableEntityInterface $entity = NULL, $delta = 0) {
     // If the field item class implements the interface, create an orphaned
     // runtime item object, so that it can be used as the options provider
     // without modifying the entity being worked on.
@@ -792,6 +795,10 @@ class FieldStorageConfig extends ConfigEntityBase implements FieldStorageConfigI
     if (!isset($this->propertyDefinitions)) {
       $class = $this->getFieldItemClass();
       $this->propertyDefinitions = $class::propertyDefinitions($this);
+      $this->addLegacyOptionsProvider($this->propertyDefinitions);
+      $this->addFieldStorageDefinitionContext($this->propertyDefinitions);
+
+      // @todo Allow configurable fields to customize option providers.
     }
     return $this->propertyDefinitions;
   }

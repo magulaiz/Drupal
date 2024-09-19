@@ -3,6 +3,7 @@
 namespace Drupal\Component\Plugin\Discovery;
 
 use Drupal\Component\Plugin\Exception\PluginNotFoundException;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
 
 /**
  * @see Drupal\Component\Plugin\Discovery\DiscoveryInterface
@@ -41,6 +42,9 @@ trait DiscoveryTrait {
    *   Thrown if $plugin_id is invalid and $exception_on_invalid is TRUE.
    */
   protected function doGetDefinition(array $definitions, $plugin_id, $exception_on_invalid) {
+    if ($plugin_id instanceof TranslatableMarkup) {
+      $plugin_id = (string) $plugin_id;
+    }
     // Avoid using a ternary that would create a copy of the array.
     if (isset($definitions[$plugin_id])) {
       return $definitions[$plugin_id];

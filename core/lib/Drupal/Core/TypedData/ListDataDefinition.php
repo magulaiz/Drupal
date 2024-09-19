@@ -2,10 +2,14 @@
 
 namespace Drupal\Core\TypedData;
 
+use Drupal\Core\Field\TypedData\FieldDefinitionOptionsProviderTrait;
+
 /**
  * A typed data definition class for defining lists.
  */
 class ListDataDefinition extends DataDefinition implements ListDataDefinitionInterface {
+
+  use FieldDefinitionOptionsProviderTrait;
 
   /**
    * The data definition of a list item.

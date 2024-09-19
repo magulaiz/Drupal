@@ -148,6 +148,81 @@ interface DataDefinitionInterface {
   public function getSetting($setting_name);
 
   /**
+   * Returns the options provider definition.
+   *
+   * If not specified, the default defined by the data type will be returned.
+   *
+   * @return string|null
+   *   The options provider definition, or NULL if no options provider has been
+   *   defined.
+   *
+   * @see ::getOptionsProvider()
+   */
+  public function getOptionsProviderDefinition();
+
+  /**
+   * Returns an options provider if there are defined options.
+   *
+   * @param \Drupal\Core\TypedData\TypedDataInterface $data
+   *   (optional) The data object for which to get the option provider.
+   *
+   * @return \Drupal\Core\TypedData\OptionsProviderInterface|null
+   *   The options provider, or NULL if no options are defined.
+   *
+   * @see ::getOptionsProviderDefinition()
+   */
+  public function getOptionsProvider($data = NULL);
+
+  /**
+   * Gets all options provider context.
+   *
+   * @return array
+   *   A nested array of options provider context. The array is keyed by
+   *   interface and method names and contains the provided arguments.
+   *
+   * @see ::setOptionsProviderContext()
+   */
+  public function getOptionsProviderContext();
+
+  /**
+   * Allows providing contextual information to options providers.
+   *
+   * If the defined options provider implements the specified interface, the
+   * given method is invoked with the provided arguments in order to provide the
+   * additional context to the options provider object.
+   *
+   * This is usually used by the creator of the object in order to allow the
+   * options provider to take additional context into account. For example, when
+   * a field definition creates the property definition objects, it sets itself
+   * as context available to the options providers of the properties.
+   *
+   * @param string $interface
+   *   The interface the options provider needs to implement.
+   * @param string $method
+   *   The method to call on the options provider.
+   * @param mixed[] $arguments
+   *   The arguments to call the method with.
+   *
+   * @return $this
+   *
+   * @see ::getOptionsProviderContext()
+   * @see ::removeOptionsProviderContext()
+   */
+  public function setOptionsProviderContext($interface, $method, $arguments);
+
+  /**
+   * Removes any options provider context associated with the given interface.
+   *
+   * @param string $interface
+   *   The interface with which the context is associated with.
+   *
+   * @return $this
+   *
+   * @see ::setOptionsProviderContext()
+   */
+  public function removeOptionsProviderContext($interface);
+
+  /**
    * Returns an array of validation constraints.
    *
    * The validation constraints of a definition consist of any for it defined

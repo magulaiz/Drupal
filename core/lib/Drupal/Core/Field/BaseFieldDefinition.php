@@ -7,7 +7,6 @@ use Drupal\Core\Entity\FieldableEntityInterface;
 use Drupal\Core\Field\Entity\BaseFieldOverride;
 use Drupal\Core\Field\TypedData\FieldItemDataDefinition;
 use Drupal\Core\TypedData\ListDataDefinition;
-use Drupal\Core\TypedData\OptionsProviderInterface;
 
 /**
  * A class for defining entity fields.
@@ -555,18 +554,25 @@ class BaseFieldDefinition extends ListDataDefinition implements FieldDefinitionI
   }
 
   /**
-   * {@inheritdoc}
+   * Sets options providers for field item properties.
+   *
+   * @param string $property_name
+   *   The property for which to specify the options provider.
+   * @param string|null $provider_definition
+   *   The options provider definition; e.g. the class name. See
+   *   \Drupal\Core\TypedData\TypedDataManager::getOptionsProvider() for
+   *   supported notations. If NULL is given, the set options provider
+   *   definition is unset.
+   *
+   * @return $this
+   *
+   * @see ::getPropertyDefinitions()
    */
-  public function getOptionsProvider($property_name, FieldableEntityInterface $entity) {
-    // If the field item class implements the interface, create an orphaned
-    // runtime item object, so that it can be used as the options provider
-    // without modifying the entity being worked on.
-    if (is_subclass_of($this->getItemDefinition()->getClass(), OptionsProviderInterface::class)) {
-      $items = $entity->get($this->getName());
-      return \Drupal::service('plugin.manager.field.field_type')->createFieldItem($items, 0);
-    }
-    // @todo Allow setting custom options provider.
-    //   https://www.drupal.org/node/2002138
+  public function setOptionsProviderDefinition($property_name, $provider_definition = NULL) {
+    $this->checkOptionsProviderDefinition($property_name, $provider_definition);
+    // Set the options provider and let getPropertyDefinitions() apply it.
+    $this->definition['options_provider'][$property_name] = $provider_definition;
+    return $this;
   }
 
   /**
@@ -583,11 +589,23 @@ class BaseFieldDefinition extends ListDataDefinition implements FieldDefinitionI
 
   /**
    * {@inheritdoc}
+   *
+   * @see ::setOptionsProviderDefinition()
    */
   public function getPropertyDefinitions() {
     if (!isset($this->propertyDefinitions)) {
       $class = $this->getItemDefinition()->getClass();
       $this->propertyDefinitions = $class::propertyDefinitions($this);
+      $this->addLegacyOptionsProvider($this->propertyDefinitions);
+      $this->addFieldStorageDefinitionContext($this->propertyDefinitions);
+
+      // Incorporate any options providers that have been specified.
+      if (!empty($this->definition['options_provider'])) {
+        $provider_definitions = array_intersect_key($this->definition['options_provider'], $this->propertyDefinitions);
+        foreach ($provider_definitions as $name => $provider_definition) {
+          $this->propertyDefinitions[$name]->setOptionsProviderDefinition($provider_definition);
+        }
+      }
     }
     return $this->propertyDefinitions;
   }

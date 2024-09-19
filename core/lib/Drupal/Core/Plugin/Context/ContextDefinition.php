@@ -61,6 +61,13 @@ class ContextDefinition implements ContextDefinitionInterface {
   protected $defaultValue;
 
   /**
+   * The options provider definition.
+   *
+   * @var string|null
+   */
+  protected $optionsProviderDefinition;
+
+  /**
    * An array of constraints.
    *
    * @var array[]
@@ -197,6 +204,47 @@ class ContextDefinition implements ContextDefinitionInterface {
   /**
    * {@inheritdoc}
    */
+  public function getOptionsProvider(?array $contexts = NULL) {
+    if (isset($this->optionsProviderDefinition)) {
+      $data_definition = $this->getDataDefinition()
+        ->setOptionsProviderContext(ContextAwareOptionsProviderInterface::class, 'setContexts', [$contexts]);
+
+      $provider = \Drupal::typedDataManager()
+        ->getOptionsProvider($data_definition);
+      return $provider;
+    }
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getOptionsProviderDefinition() {
+    return $this->optionsProviderDefinition;
+  }
+
+  /**
+   * Defines the options provider to be used.
+   *
+   * See \Drupal\Core\TypedData\TypedDataManager::getOptionsProvider() for
+   * supported definitions. In addition, specified option provider classes may
+   * implement \Drupal\Core\Plugin\Context\ContextAwareOptionsProviderInterface
+   * in order to provide options depending on the available contexts.
+   *
+   * @param string|null $provider_definition
+   *   The options provider definition; e.g. the class name.
+   *
+   * @return $this
+   *
+   * @see ::getOptionsProviderDefinition()
+   */
+  public function setOptionsProviderDefinition($provider_definition) {
+    $this->optionsProviderDefinition = $provider_definition;
+    return $this;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function getDefaultValue() {
     return $this->defaultValue;
   }
@@ -257,7 +305,8 @@ class ContextDefinition implements ContextDefinitionInterface {
     }
     $definition->setLabel($this->getLabel())
       ->setDescription($this->getDescription())
-      ->setRequired($this->isRequired());
+      ->setRequired($this->isRequired())
+      ->setOptionsProviderDefinition($this->optionsProviderDefinition);
     $constraints = $definition->getConstraints() + $this->getConstraints();
     $definition->setConstraints($constraints);
     return $definition;
