@@ -65,9 +65,12 @@ class UserRouteAlterTest extends KernelTestBase {
     $route = $this->routeProvider->getRouteByName('user.pass.http');
     $requirements = $route->getRequirements();
 
+    // Ensure the '_access' requirement is set to FALSE.
     $this->assertArrayHasKey('_access', $requirements, 'user.pass.http route has "_access" requirement');
     $this->assertEquals('FALSE', $requirements['_access'], 'user.pass.http route "_access" requirement is "FALSE"');
-    $this->assertEquals('json|xml', $requirements['_format'], 'user.login.http route "_format" requirement is "json|xml"');
+
+    // Ensure '_format' is not set for the 'user.pass.http' route.
+    $this->assertArrayNotHasKey('_format', $requirements, 'user.pass.http route does not have "_format" requirement');
   }
 
 }
