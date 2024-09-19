@@ -227,9 +227,12 @@ class Query extends QueryBase implements QueryInterface {
         // Order based on the smallest element of each group if the
         // direction is ascending, or on the largest element of each group
         // if the direction is descending.
-        $function = $direction == 'ASC' ? 'min' : 'max';
-        $expression = "$function($sql_alias)";
-        $expression_alias = $this->sqlQuery->addExpression($expression);
+        if ($direction == 'ASC') {
+          $expression_alias = $this->sqlQuery->addExpressionMin($sql_alias);
+        }
+        else {
+          $expression_alias = $this->sqlQuery->addExpressionMax($sql_alias);
+        }
         $this->sqlQuery->orderBy($expression_alias, $direction);
       }
     }

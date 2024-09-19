@@ -79,7 +79,7 @@ class NodeGrantDatabaseStorage implements NodeGrantDatabaseStorageInterface {
 
     // Check the database for potential access grants.
     $query = $this->database->select('node_access');
-    $query->addExpression('1');
+    $query->addExpressionConstant('1');
     // Only interested for granting in the current operation.
     $query->condition('grant_' . $operation, 1, '>=');
     // Check for grants for this node and the correct langcode. New translations
@@ -136,7 +136,7 @@ class NodeGrantDatabaseStorage implements NodeGrantDatabaseStorageInterface {
    */
   public function checkAll(AccountInterface $account) {
     $query = $this->database->select('node_access');
-    $query->addExpression('COUNT(*)');
+    $query->addExpressionCountAll();
     $query
       ->condition('nid', 0)
       ->condition('grant_view', 1, '>=');

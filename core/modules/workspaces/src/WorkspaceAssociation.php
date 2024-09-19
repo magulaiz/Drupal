@@ -302,7 +302,7 @@ class WorkspaceAssociation implements WorkspaceAssociationInterface, EventSubscr
       $inner_select = $this->database->select(static::TABLE, 'wai')
         ->condition('[wai].[target_entity_type_id]', $entity->getEntityTypeId())
         ->condition('[wai].[target_entity_id]', $entity->id());
-      $inner_select->addExpression('MAX([wai].[target_entity_revision_id])', 'max_revision_id');
+      $inner_select->addExpressionMax('wai.target_entity_revision_id', 'max_revision_id');
 
       $query->join($inner_select, 'waj', '[wa].[target_entity_revision_id] = [waj].[max_revision_id]');
     }
@@ -360,9 +360,7 @@ class WorkspaceAssociation implements WorkspaceAssociationInterface, EventSubscr
   public function initializeWorkspace(WorkspaceInterface $workspace) {
     if ($parent_id = $workspace->parent->target_id) {
       $indexed_rows = $this->database->select(static::TABLE);
-      $indexed_rows->addExpression(':new_id', 'workspace', [
-        ':new_id' => $workspace->id(),
-      ]);
+      $indexed_rows->addExpressionConstant("'" . $workspace->id() . "'", 'workspace');
       $indexed_rows->fields(static::TABLE, [
         'target_entity_type_id',
         'target_entity_id',

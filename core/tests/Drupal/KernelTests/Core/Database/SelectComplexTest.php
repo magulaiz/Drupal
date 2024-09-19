@@ -79,7 +79,7 @@ class SelectComplexTest extends DatabaseTestBase {
    */
   public function testGroupBy(): void {
     $query = $this->connection->select('test_task', 't');
-    $count_field = $query->addExpression('COUNT([task])', 'num');
+    $count_field = $query->addExpressionCount('task', 'num');
     $task_field = $query->addField('t', 'task');
     $query->orderBy($count_field);
     $query->groupBy($task_field);
@@ -120,7 +120,7 @@ class SelectComplexTest extends DatabaseTestBase {
    */
   public function testGroupByAndHaving(): void {
     $query = $this->connection->select('test_task', 't');
-    $count_field = $query->addExpression('COUNT([task])', 'num');
+    $count_field = $query->addExpressionCount('task', 'num');
     $task_field = $query->addField('t', 'task');
     $query->orderBy($count_field);
     $query->groupBy($task_field);
@@ -271,7 +271,7 @@ class SelectComplexTest extends DatabaseTestBase {
     $this->assertEquals(4, $query->countQuery()->execute()->fetchField(), 'Count Query removed fields');
 
     $query = $this->connection->select('test');
-    $query->addExpression('[fail]');
+    $query->addExpressionField('[fail]');
     $this->assertEquals(4, $query->countQuery()->execute()->fetchField(), 'Count Query removed expressions');
   }
 
@@ -304,7 +304,7 @@ class SelectComplexTest extends DatabaseTestBase {
     // reason.
     $query = $this->connection->select('test_task');
     $query->addField('test_task', 'pid', 'pid_alias');
-    $query->addExpression('COUNT([test_task].[task])', 'count');
+    $query->addExpressionCount('test_task.task', 'count');
     $query->groupBy('pid_alias');
     $query->orderBy('pid_alias', 'asc');
 

@@ -160,7 +160,7 @@ class SelectSubqueryTest extends DatabaseTestBase {
 
     // Create subquery 2, which is just a normal query object.
     $subquery2 = $this->connection->select('test_task', 'tt2');
-    $subquery2->addExpression('MIN([tt2].[priority])');
+    $subquery2->addExpressionMin('tt2.priority');
     $subquery2->where('[tt2].[pid] <> [t].[id]');
 
     // Create subquery 3, which is just a normal query object.

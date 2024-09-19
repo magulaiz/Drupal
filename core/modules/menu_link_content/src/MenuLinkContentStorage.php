@@ -22,14 +22,14 @@ class MenuLinkContentStorage extends SqlContentEntityStorage implements MenuLink
 
     $query = $this->database->select($this->getRevisionDataTable(), 'mlfr');
     $query->fields('mlfr', [$id_field]);
-    $query->addExpression("MAX([mlfr].[$revision_field])", $revision_field);
+    $query->addExpressionMax("mlfr.$revision_field", $revision_field);
 
     $query->join($this->getRevisionTable(), 'mlr', "[mlfr].[$revision_field] = [mlr].[$revision_field] AND [mlr].[$revision_default_field] = 0");
 
     $inner_select = $this->database->select($this->getRevisionDataTable(), 't');
     $inner_select->condition("t.$rta_field", '1');
     $inner_select->fields('t', [$id_field, $langcode_field]);
-    $inner_select->addExpression("MAX([t].[$revision_field])", $revision_field);
+    $inner_select->addExpressionMax("t.$revision_field", $revision_field);
     $inner_select
       ->groupBy("t.$id_field")
       ->groupBy("t.$langcode_field");

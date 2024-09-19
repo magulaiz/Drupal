@@ -95,14 +95,14 @@ class ReservedWordTest extends DatabaseTestBase {
 
     // Using aliases.
     $query = $this->connection->select('select', 's');
-    $query->addExpression('COUNT([id])', 'num');
+    $query->addExpressionCount('id', 'num');
     $query->addField('s', 'update');
     $query->groupBy('s.update');
     $this->assertSame('2', $query->execute()->fetchAssoc()['num']);
 
     // Not using aliases.
     $query = $this->connection->select('select');
-    $query->addExpression('COUNT([id])', 'num');
+    $query->addExpressionCount('id', 'num');
     $query->addField('select', 'update');
     $query->groupBy('update');
     $this->assertSame('2', $query->execute()->fetchAssoc()['num']);
