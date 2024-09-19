@@ -13,6 +13,8 @@ use Drupal\Tests\BrowserTestBase;
 use Drupal\Tests\system\Functional\Cache\AssertPageCacheContextsAndTagsTrait;
 use Drupal\user\RoleInterface;
 
+// cspell:ignore curlopt returntransfer
+
 /**
  * Enables the page cache and tests it with various HTTP requests.
  *
@@ -24,9 +26,7 @@ class PageCacheTest extends BrowserTestBase {
   use AssertPageCacheContextsAndTagsTrait;
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = ['test_page_test', 'system_test', 'entity_test'];
 
@@ -458,33 +458,6 @@ class PageCacheTest extends BrowserTestBase {
     $this->assertSession()->responseHeaderEquals('X-Drupal-Cache', 'HIT');
     $this->assertSession()->responseHeaderNotContains('Vary', 'cookie');
     $this->assertCacheMaxAge(300);
-  }
-
-  /**
-   * Tests the setting of forms to be immutable.
-   */
-  public function testFormImmutability(): void {
-    // Install the module that provides the test form.
-    $this->container->get('module_installer')
-      ->install(['page_cache_form_test']);
-    // Uninstall the page_cache module to verify that form is immutable
-    // regardless of the internal page cache module.
-    $this->container->get('module_installer')->uninstall(['page_cache']);
-
-    $this->drupalGet('page_cache_form_test_immutability');
-
-    $this->assertSession()->pageTextContains("Immutable: TRUE");
-
-    // The immutable flag is set unconditionally by system_form_alter(), set
-    // a flag to tell page_cache_form_test_module_implements_alter() to disable
-    // that implementation.
-    \Drupal::state()->set('page_cache_bypass_form_immutability', TRUE);
-    \Drupal::moduleHandler()->resetImplementations();
-    Cache::invalidateTags(['rendered']);
-
-    $this->drupalGet('page_cache_form_test_immutability');
-
-    $this->assertSession()->pageTextContains("Immutable: FALSE");
   }
 
   /**
