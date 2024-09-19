@@ -1056,11 +1056,12 @@ function install_display_output($output, $install_state) {
 
   $bare_html_page_renderer = \Drupal::service('bare_html_page_renderer');
   $response = $bare_html_page_renderer->renderBarePage($output, $output['#title'], 'install_page', $regions);
+  $request_time = \Drupal::time()->getRequestTime();
   $default_headers = [
     'Expires' => 'Sun, 19 Nov 1978 05:00:00 GMT',
-    'Last-Modified' => gmdate(DATE_RFC1123, REQUEST_TIME),
+    'Last-Modified' => gmdate(DATE_RFC1123, $request_time),
     'Cache-Control' => 'no-cache, must-revalidate',
-    'ETag' => '"' . REQUEST_TIME . '"',
+    'ETag' => '"' . $request_time . '"',
   ];
   $response->headers->add($default_headers);
   $response->send();
@@ -1883,7 +1884,7 @@ function install_finished(&$install_state) {
   \Drupal::messenger()->addStatus($success_message);
 
   // Record when this install ran.
-  \Drupal::state()->set('install_time', $_SERVER['REQUEST_TIME']);
+  \Drupal::state()->set('install_time', \Drupal::time()->getRequestTime());
 }
 
 /**
@@ -2299,7 +2300,16 @@ function install_display_requirements($install_state, $requirements) {
         // proceed in a single request so there is no good opportunity (and no
         // good method) to warn the user anyway.
         if (isset($requirement['severity']) && $requirement['severity'] == REQUIREMENT_ERROR) {
-          $failures[] = $requirement['title'] . ': ' . $requirement['value'] . "\n\n" . $requirement['description'];
+          $render_array = [
+            '#type' => 'inline_template',
+            '#template' => '{{ title }}:{{ value }}<br /><br />{{ description }}',
+            '#context' => [
+              'title' => $requirement['title'],
+              'value' => $requirement['value'],
+              'description' => $requirement['description'],
+            ],
+          ];
+          $failures[] = \Drupal::service('renderer')->renderPlain($render_array);
         }
       }
       if (!empty($failures)) {

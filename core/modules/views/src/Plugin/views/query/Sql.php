@@ -973,6 +973,7 @@ class Sql extends QueryPluginBase {
 
   /**
    * Add a complex HAVING clause to the query.
+   *
    * The caller is responsible for ensuring that all fields are fully qualified
    * (TABLE.FIELD) and that the table and an appropriate GROUP BY already exist in the query.
    * Internally the dbtng method "having" is used.
@@ -1350,7 +1351,7 @@ class Sql extends QueryPluginBase {
     $entity_information = $this->getEntityTableInfo();
     if ($entity_information) {
       $params = [];
-      if ($groupby) {
+      if ($this->hasAggregate) {
         // Handle grouping, by retrieving the minimum entity_id.
         $params = [
           'function' => 'min',
@@ -1422,14 +1423,7 @@ class Sql extends QueryPluginBase {
    * Get the arguments attached to the WHERE and HAVING clauses of this query.
    */
   public function getWhereArgs() {
-    $args = [];
-    foreach ($this->where as $where) {
-      $args = array_merge($args, $where['args']);
-    }
-    foreach ($this->having as $having) {
-      $args = array_merge($args, $having['args']);
-    }
-    return $args;
+    return array_merge([], ...array_column($this->where, 'args'), ...array_column($this->having, 'args'));
   }
 
   /**

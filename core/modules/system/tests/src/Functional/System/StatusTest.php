@@ -15,7 +15,7 @@ class StatusTest extends BrowserTestBase {
   /**
    * {@inheritdoc}
    */
-  protected static $modules = ['update_test_postupdate'];
+  protected static $modules = ['update_test_postupdate', 'update'];
 
   /**
    * {@inheritdoc}
@@ -37,14 +37,21 @@ class StatusTest extends BrowserTestBase {
 
     $admin_user = $this->drupalCreateUser([
       'administer site configuration',
+      'access site reports',
     ]);
     $this->drupalLogin($admin_user);
   }
 
   /**
    * Tests that the status page returns.
+   *
+   * @group legacy
    */
   public function testStatusPage() {
+    // Verify if the 'Status report' is the first item link.
+    $this->drupalGet('admin/reports');
+    $this->assertEquals('Status report', $this->cssSelect('.list-group :first-child')[0]->getText());
+
     // Go to Administration.
     $this->drupalGet('admin/reports/status');
     $this->assertSession()->statusCodeEquals(200);
@@ -78,7 +85,7 @@ class StatusTest extends BrowserTestBase {
     $update_registry->setInstalledVersion('update_test_postupdate', 8001);
     /** @var \Drupal\Core\Update\UpdateRegistry $post_update_registry */
     $post_update_registry = \Drupal::service('update.post_update_registry');
-    $post_update_registry->filterOutInvokedUpdatesByModule('update_test_postupdate');
+    $post_update_registry->filterOutInvokedUpdatesByExtension('update_test_postupdate');
     $this->drupalGet('admin/reports/status');
     $this->assertSession()->pageTextContains('Out of date');
 
@@ -121,6 +128,24 @@ class StatusTest extends BrowserTestBase {
     $session->pageTextNotContains('Deprecated modules enabled');
     $session->pageTextNotContains('Deprecated modules found: Deprecated module.');
     $this->assertSession()->elementNotExists('xpath', "//a[contains(@href, 'http://example.com/deprecated')]");
+
+    // Make sure there are no warnings about obsolete modules.
+    $session->pageTextNotContains('Obsolete extensions enabled');
+    $session->pageTextNotContains('Obsolete extensions found: System obsolete status test.');
+
+    // Install an obsolete module. Normally this isn't possible, so write to
+    // configuration directly.
+    $this->config('core.extension')->set('module.system_status_obsolete_test', 0)->save();
+    $this->rebuildAll();
+    $this->drupalGet('admin/reports/status');
+    $session->pageTextContains('Obsolete extensions enabled');
+    $session->pageTextContains('Obsolete extensions found: System obsolete status test.');
+
+    // Make sure the warning is gone after uninstalling the module.
+    $module_installer->uninstall(['system_status_obsolete_test']);
+    $this->drupalGet('admin/reports/status');
+    $session->pageTextNotContains('Obsolete extensions enabled');
+    $session->pageTextNotContains('Obsolete extensions found: System obsolete status test.');
 
     // Install deprecated theme and confirm warning message is displayed.
     $theme_installer = \Drupal::service('theme_installer');
