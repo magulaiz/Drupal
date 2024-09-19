@@ -96,12 +96,6 @@ class BanAdmin extends FormBase {
       '#value' => $this->t('Add'),
       '#name' => 'submit_add',
     ];
-    $form['actions']['delete'] = [
-      '#type' => 'submit',
-      '#value' => $this->t('Unban selected'),
-      '#name' => 'submit_delete',
-    ];
-
     $form['ban_ip_banning_table'] = [
       '#type' => 'tableselect',
       '#header' => $header,
@@ -109,6 +103,13 @@ class BanAdmin extends FormBase {
       '#empty' => $this->t('No blocked IP addresses available.'),
       '#weight' => 120,
     ];
+    $form['delete'] = [
+      '#type' => 'submit',
+      '#value' => $this->t('Unban selected'),
+      '#name' => 'submit_delete',
+      '#weight' => 130,
+    ];
+
     return $form;
   }
 
@@ -128,6 +129,12 @@ class BanAdmin extends FormBase {
         $form_state->setErrorByName('ip', $this->t('Enter a valid IP address.'));
       }
     }
+    elseif ($form_state->getTriggeringElement()['#name'] === 'submit_delete') {
+      $tableSelectArray = $form_state->getValue('ban_ip_banning_table');
+      if (reset($tableSelectArray) === 0) {
+        $form_state->setErrorByName('delete', $this->t('There were no selected IP addresses to unblock.'));
+      }
+    }
   }
 
   /**
@@ -141,10 +148,10 @@ class BanAdmin extends FormBase {
       $form_state->setRedirect('ban.admin_page');
     }
     elseif ($form_state->getTriggeringElement()['#name'] === 'submit_delete') {
-      $tableSelectValue = $form_state->getValue('ban_ip_banning_table');
+      $tableSelectArray = $form_state->getValue('ban_ip_banning_table');
       $tableSelectOptions = $form['ban_ip_banning_table']['#options'];
       $selectedIps = [];
-      foreach ($tableSelectValue as $key => $value) {
+      foreach ($tableSelectArray as $key => $value) {
         if ($value !== 0) {
           $selectedIps[] = $tableSelectOptions[$key]['address'];
         }
