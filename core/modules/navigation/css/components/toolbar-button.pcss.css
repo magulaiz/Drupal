@@ -110,8 +110,15 @@
     mask-repeat: no-repeat;
     mask-position: center center;
     mask-size: 100% auto;
-    -webkit-mask-image: var(--icon);
     mask-image: var(--icon);
+
+    /* In Windows high contrast, the text from the data attribute obscures the
+     * icon. We use a style query below to remove this text. Note that this
+     * doesn't yet support all supported browsers, so there is code below (that
+     * can eventually be removed) that accomplishes the same. */
+    @container style(--icon) {
+      content: "";
+    }
   }
 
   &:hover::before {
@@ -212,6 +219,41 @@
 .toolbar-button--arrow-first {
   &::after {
     order: -1;
+  }
+}
+
+/**
+ * In Windows high contrast mode, the icons can be obscured by the text from the
+ * data attribute. Since this is not needed if the icon exists, we remove it.
+ *
+ * @todo This code replicates the functionality of the style query (line 115).
+ * Not all supported browsers yet support style queries, so this is a fallback
+ * that can eventually be removed.
+ *
+ * @see https: //caniuse.com/css-container-queries-style
+ */
+.toolbar-button--icon--back,
+.toolbar-button--icon--burger,
+.toolbar-button--icon--cross,
+.toolbar-button--icon--system-themes-page,
+.toolbar-button--icon--navigation-blocks,
+.toolbar-button--icon--shortcuts,
+.toolbar-button--icon--system-admin-config,
+.toolbar-button--icon--navigation-content,
+.toolbar-button--icon--navigation-create,
+.toolbar-button--icon--system-modules-list,
+.toolbar-button--icon--navigation-files,
+.toolbar-button--icon--help,
+.toolbar-button--icon--navigation-media,
+.toolbar-button--icon--pencil,
+.toolbar-button--icon--preview,
+.toolbar-button--icon--entity-user-collection,
+.toolbar-button--icon--system-admin-reports,
+.toolbar-button--icon--system-admin-structure,
+.toolbar-button--icon--user,
+.toolbar-button--icon--announcements-feed-announcement {
+  &::before {
+    content: "";
   }
 }
 
