@@ -104,7 +104,7 @@ class BanDeleteMultiple extends ConfirmFormBase {
       $this->ipManager->unbanIp($ip);
     }
     $this->tempStoreFactory->get('ban_ip_delete_multiple')->delete('selected_ips');
-    $this->logger('user')->notice('Deleted %ips_amount IP addresses.', ['%ips_amount' => count($this->banIps)]);
+    $this->logger('user')->notice('Unblocked %ips_amount IP addresses.', ['%ips_amount' => count($this->banIps)]);
     $this->messenger()->addStatus($this->t('The selected IP addresses were unblocked.'));
     $form_state->setRedirectUrl($this->getCancelUrl());
   }
