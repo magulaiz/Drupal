@@ -153,7 +153,9 @@ class BanAdminTest extends UnitTestCase {
   }
 
   /**
-   * Get the mocked IP manager service.
+   * Get the mocked Temp Store service.
+   *
+   * @return Drupal\Core\TempStore\PrivateTempStoreFactory
    */
   protected function getTempStoreMock(): PrivateTempStoreFactory {
     $tempStore = $this->createMock(PrivateTempStoreFactory::class);

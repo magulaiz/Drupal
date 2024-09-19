@@ -68,12 +68,16 @@ class BanFormTest extends BrowserTestBase {
     $page->checkField('edit-ban-ip-banning-table-0');
     $page->checkField('edit-ban-ip-banning-table-2');
     $page->pressButton('edit-delete');
+    // Redirection to the unblock confirmation form. Check that only the selected IP addresses are being deleted.
+    $session->statusCodeEquals(200);
     $session->pageTextContains('1.2.3.4');
     $session->pageTextNotContains('11.22.33.44');
     $session->pageTextNotContains('123.123.123.123');
     $session->pageTextContains('111.111.111.111');
     $session->pageTextNotContains('222.222.222.222');
     $page->pressButton('edit-submit');
+    // The IP addresses are deleted now and we are on the list page again. Check that the deleted IP addresses are gone.
+    $session->statusCodeEquals(200);
     $session->pageTextNotContains('1.2.3.4');
     $session->pageTextContains('11.22.33.44');
     $session->pageTextContains('123.123.123.123');
