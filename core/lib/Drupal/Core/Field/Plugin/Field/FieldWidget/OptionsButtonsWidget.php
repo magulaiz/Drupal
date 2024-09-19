@@ -72,7 +72,7 @@ class OptionsButtonsWidget extends OptionsWidgetBase {
   /**
    * {@inheritdoc}
    */
-  public function settingsSummary() {
+  public function settingsSummary(): array {
     $summary = [];
     $summary[] = $this->t('This widget uses radio buttons if the "Allowed number of values" is set to 1. If the number of allowed values is more than 1 or unlimited, checkboxes will be used.');
     return $summary;
