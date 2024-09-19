@@ -85,6 +85,10 @@ class DatabaseStorage implements StorageInterface {
    */
   public function read($name) {
     $data = FALSE;
+    if (!mb_check_encoding($name, 'ASCII')) {
+      return $data;
+    }
+
     try {
       $raw = $this->connection->query('SELECT [data] FROM {' . $this->connection->escapeTable($this->table) . '} WHERE [collection] = :collection AND [name] = :name', [':collection' => $this->collection, ':name' => $name], $this->options)->fetchField();
       if ($raw !== FALSE) {
@@ -105,7 +109,7 @@ class DatabaseStorage implements StorageInterface {
    * {@inheritdoc}
    */
   public function readMultiple(array $names) {
-    if (empty($names)) {
+    if (empty($names) || !mb_check_encoding(implode('', $names), 'ASCII')) {
       return [];
     }
 
