@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\system\Kernel\Common;
 
 use Drupal\KernelTests\KernelTestBase;
@@ -16,7 +18,7 @@ class PageRenderTest extends KernelTestBase {
   /**
    * Tests hook_page_attachments() exceptions.
    */
-  public function testHookPageAttachmentsExceptions() {
+  public function testHookPageAttachmentsExceptions(): void {
     $this->enableModules(['common_test', 'system']);
 
     $this->assertPageRenderHookExceptions('common_test', 'hook_page_attachments');
@@ -25,7 +27,7 @@ class PageRenderTest extends KernelTestBase {
   /**
    * Tests hook_page_attachments_alter() exceptions.
    */
-  public function testHookPageAlter() {
+  public function testHookPageAlter(): void {
     $this->enableModules(['common_test', 'system']);
 
     $this->assertPageRenderHookExceptions('common_test', 'hook_page_attachments_alter');
@@ -80,8 +82,7 @@ class PageRenderTest extends KernelTestBase {
   }
 
   /**
-   * Assert that HtmlRenderer::invokePageAttachmentHooks is called in a render
-   * context.
+   * Tests HtmlRenderer::invokePageAttachmentHooks in a render context.
    */
   public function testHtmlRendererAttachmentsRenderContext(): void {
     $this->enableModules(['common_test', 'system']);

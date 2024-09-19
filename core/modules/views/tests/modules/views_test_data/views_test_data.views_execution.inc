@@ -5,6 +5,8 @@
  * Provides views data and hooks for views_test_data module.
  */
 
+declare(strict_types=1);
+
 use Drupal\field\FieldStorageConfigInterface;
 use Drupal\views\Plugin\views\cache\CachePluginBase;
 use Drupal\views\ViewExecutable;
@@ -24,7 +26,7 @@ function views_test_data_views_form_substitutions() {
   $render = ['#markup' => '<em>unescaped</em>'];
   return [
     '<!--will-be-escaped-->' => '<em>escaped</em>',
-    '<!--will-be-not-escaped-->' => \Drupal::service('renderer')->renderPlain($render),
+    '<!--will-be-not-escaped-->' => \Drupal::service('renderer')->renderInIsolation($render),
   ];
 }
 

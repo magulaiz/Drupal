@@ -1,10 +1,14 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\Core\Database;
 
 use Drupal\Core\Database\Connection;
 use Drupal\Core\Database\Event\DatabaseEvent;
+use Drupal\Core\Database\Event\StatementEvent;
 use Drupal\Core\Database\Event\StatementExecutionEndEvent;
+use Drupal\Core\Database\Event\StatementExecutionFailureEvent;
 use Drupal\Core\Database\Event\StatementExecutionStartEvent;
 use Drupal\Core\Database\Exception\EventException;
 use Drupal\Tests\Core\Database\Stub\StubConnection;
@@ -27,30 +31,35 @@ class DatabaseEventsTest extends UnitTestCase {
    * {@inheritdoc}
    */
   protected function setUp(): void {
+    parent::setUp();
+
     $this->connection = new StubConnection($this->createMock(StubPDO::class), []);
   }
 
   /**
    * @covers ::isEventEnabled
-   * @covers ::enableEvent
-   * @covers ::disableEvent
+   * @covers ::enableEvents
+   * @covers ::disableEvents
    */
   public function testEventEnablingAndDisabling(): void {
-    $this->connection->enableEvents([
-      StatementExecutionStartEvent::class,
-      StatementExecutionEndEvent::class,
-    ]);
+    $this->connection->enableEvents(StatementEvent::all());
     $this->assertTrue($this->connection->isEventEnabled(StatementExecutionStartEvent::class));
     $this->assertTrue($this->connection->isEventEnabled(StatementExecutionEndEvent::class));
+    $this->assertTrue($this->connection->isEventEnabled(StatementExecutionFailureEvent::class));
     $this->connection->disableEvents([
       StatementExecutionEndEvent::class,
     ]);
     $this->assertTrue($this->connection->isEventEnabled(StatementExecutionStartEvent::class));
     $this->assertFalse($this->connection->isEventEnabled(StatementExecutionEndEvent::class));
+    $this->assertTrue($this->connection->isEventEnabled(StatementExecutionFailureEvent::class));
+    $this->connection->disableEvents(StatementEvent::all());
+    $this->assertFalse($this->connection->isEventEnabled(StatementExecutionStartEvent::class));
+    $this->assertFalse($this->connection->isEventEnabled(StatementExecutionEndEvent::class));
+    $this->assertFalse($this->connection->isEventEnabled(StatementExecutionFailureEvent::class));
   }
 
   /**
-   * @covers ::enableEvent
+   * @covers ::enableEvents
    */
   public function testEnableInvalidEvent(): void {
     $this->expectException(\AssertionError::class);
@@ -59,7 +68,7 @@ class DatabaseEventsTest extends UnitTestCase {
   }
 
   /**
-   * @covers ::disableEvent
+   * @covers ::disableEvents
    */
   public function testDisableInvalidEvent(): void {
     $this->expectException(\AssertionError::class);

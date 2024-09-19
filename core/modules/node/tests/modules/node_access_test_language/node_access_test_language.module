@@ -8,6 +8,8 @@
  * of the node to be marked as private (viewable only by administrators).
  */
 
+declare(strict_types=1);
+
 use Drupal\node\NodeInterface;
 
 /**
@@ -15,7 +17,7 @@ use Drupal\node\NodeInterface;
  *
  * This module defines a single grant realm. All users belong to this group.
  */
-function node_access_test_language_node_grants($account, $op) {
+function node_access_test_language_node_grants($account, $operation) {
   $grants['node_access_language_test'] = [7888];
   return $grants;
 }
@@ -36,7 +38,6 @@ function node_access_test_language_node_access_records(NodeInterface $node) {
       'grant_view' => empty($translation->field_private->value) ? 1 : 0,
       'grant_update' => 0,
       'grant_delete' => 0,
-      'priority' => 0,
       'langcode' => $langcode,
     ];
   }

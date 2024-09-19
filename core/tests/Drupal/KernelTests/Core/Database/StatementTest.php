@@ -1,7 +1,10 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\KernelTests\Core\Database;
 
+use Drupal\Core\Database\DatabaseExceptionWrapper;
 use Drupal\Core\Database\StatementInterface;
 
 /**
@@ -14,7 +17,7 @@ class StatementTest extends DatabaseTestBase {
   /**
    * Tests that a prepared statement object can be reused for multiple inserts.
    */
-  public function testRepeatedInsertStatementReuse() {
+  public function testRepeatedInsertStatementReuse(): void {
     $num_records_before = $this->connection->select('test')->countQuery()->execute()->fetchField();
 
     $sql = "INSERT INTO {test} ([name], [age]) VALUES (:name, :age)";
@@ -65,6 +68,99 @@ class StatementTest extends DatabaseTestBase {
   }
 
   /**
+   * Tests statement fetchAll after a partial traversal.
+   */
+  public function testPartiallyIteratedStatementFetchAll(): void {
+    $statement = $this->connection->query('SELECT * FROM {test}');
+
+    for ($i = 0; $i < 2; $i++) {
+      $statement->fetch();
+    }
+
+    $expected = [
+      0 => (object) [
+        "id" => "3",
+        "name" => "Ringo",
+        "age" => "28",
+        "job" => "Drummer",
+      ],
+      1 => (object) [
+        "id" => "4",
+        "name" => "Paul",
+        "age" => "26",
+        "job" => "Songwriter",
+      ],
+    ];
+
+    $this->assertEquals($expected, $statement->fetchAll());
+    $this->assertSame([], $statement->fetchAll());
+  }
+
+  /**
+   * Tests statement fetchAllKeyed after a partial traversal.
+   */
+  public function testPartiallyIteratedStatementFetchAllKeyed(): void {
+    $statement = $this->connection->query('SELECT * FROM {test}');
+
+    for ($i = 0; $i < 2; $i++) {
+      $statement->fetch();
+    }
+
+    $expected = [
+      "3" => "Ringo",
+      "4" => "Paul",
+    ];
+
+    $this->assertSame($expected, $statement->fetchAllKeyed());
+    $this->assertSame([], $statement->fetchAllKeyed());
+  }
+
+  /**
+   * Tests statement fetchAllAssoc after a partial traversal.
+   */
+  public function testPartiallyIteratedStatementFetchAllAssoc(): void {
+    $statement = $this->connection->query('SELECT * FROM {test}');
+
+    for ($i = 0; $i < 2; $i++) {
+      $statement->fetch();
+    }
+
+    $expected = [
+      "28" => (object) [
+        "id" => "3",
+        "name" => "Ringo",
+        "age" => "28",
+        "job" => "Drummer",
+      ],
+      "26" => (object) [
+        "id" => "4",
+        "name" => "Paul",
+        "age" => "26",
+        "job" => "Songwriter",
+      ],
+    ];
+
+    $this->assertEquals($expected, $statement->fetchAllAssoc('age'));
+    $this->assertSame([], $statement->fetchAllAssoc('age'));
+  }
+
+  /**
+   * Tests statement fetchCol after a partial traversal.
+   */
+  public function testPartiallyIteratedStatementFetchCol(): void {
+    $statement = $this->connection->query('SELECT * FROM {test}');
+
+    for ($i = 0; $i < 2; $i++) {
+      $statement->fetch();
+    }
+
+    $expected = ["3", "4"];
+
+    $this->assertSame($expected, $statement->fetchCol());
+    $this->assertSame([], $statement->fetchCol());
+  }
+
+  /**
    * Tests statement rewinding.
    */
   public function testStatementRewind(): void {
@@ -75,8 +171,8 @@ class StatementTest extends DatabaseTestBase {
     }
 
     // Trying to iterate through the same statement again should fail.
-    $this->expectError();
-    $this->expectErrorMessage('Attempted rewinding a StatementInterface object when fetching has already started. Refactor your code to avoid rewinding statement objects.');
+    $this->expectException(DatabaseExceptionWrapper::class);
+    $this->expectExceptionMessage('Attempted rewinding a StatementInterface object when fetching has already started. Refactor your code to avoid rewinding statement objects.');
     foreach ($statement as $row) {
       $this->assertNotNull($row);
     }
@@ -111,8 +207,8 @@ class StatementTest extends DatabaseTestBase {
     $rowCount = iterator_count($statement);
     $this->assertSame(4, $rowCount);
 
-    $this->expectError();
-    $this->expectErrorMessage('Attempted rewinding a StatementInterface object when fetching has already started. Refactor your code to avoid rewinding statement objects.');
+    $this->expectException(DatabaseExceptionWrapper::class);
+    $this->expectExceptionMessage('Attempted rewinding a StatementInterface object when fetching has already started. Refactor your code to avoid rewinding statement objects.');
     $rowCount = iterator_count($statement);
   }
 
@@ -149,8 +245,8 @@ class StatementTest extends DatabaseTestBase {
     // Restart iterating through the same statement. The foreach loop will try
     // rewinding the statement which should fail, and the counter should not be
     // increased.
-    $this->expectError();
-    $this->expectErrorMessage('Attempted rewinding a StatementInterface object when fetching has already started. Refactor your code to avoid rewinding statement objects.');
+    $this->expectException(DatabaseExceptionWrapper::class);
+    $this->expectExceptionMessage('Attempted rewinding a StatementInterface object when fetching has already started. Refactor your code to avoid rewinding statement objects.');
     foreach ($statement as $row) {
       // No-op.
     }

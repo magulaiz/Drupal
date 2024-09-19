@@ -2,9 +2,10 @@
 
 /**
  * @file
- * Test module for testing the migration source plugin prepareRow() exception
- * handling.
+ * Tests the migration source plugin prepareRow() exception.
  */
+
+declare(strict_types=1);
 
 use Drupal\migrate\Plugin\MigrationInterface;
 use Drupal\migrate\MigrateSkipRowException;
