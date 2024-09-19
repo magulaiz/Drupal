@@ -2,7 +2,7 @@
 
 namespace Drupal\Core\Extension;
 
-use Drupal\Core\DestructableInterface;
+use Drupal\Core\DestructibleInterface;
 
 /**
  * Interface for classes that manage a set of enabled modules.
@@ -11,7 +11,7 @@ use Drupal\Core\DestructableInterface;
  * responsible for loading module files and maintaining information about module
  * dependencies and hook implementations.
  */
-interface ModuleHandlerInterface extends DestructableInterface {
+interface ModuleHandlerInterface extends DestructibleInterface {
 
   /**
    * Includes a module's .module file.

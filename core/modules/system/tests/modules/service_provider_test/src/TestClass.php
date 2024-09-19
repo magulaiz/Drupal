@@ -5,13 +5,13 @@ declare(strict_types=1);
 namespace Drupal\service_provider_test;
 
 use Drupal\Core\State\StateInterface;
-use Drupal\Core\DestructableInterface;
+use Drupal\Core\DestructibleInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpKernel\Event\ResponseEvent;
 use Symfony\Component\HttpKernel\Event\RequestEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
 
-class TestClass implements EventSubscriberInterface, DestructableInterface {
+class TestClass implements EventSubscriberInterface, DestructibleInterface {
 
   /**
    * The state keyvalue collection.

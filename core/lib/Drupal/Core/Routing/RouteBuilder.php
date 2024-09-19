@@ -7,7 +7,7 @@ use Drupal\Core\Controller\ControllerResolverInterface;
 use Drupal\Core\Discovery\YamlDiscovery;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Lock\LockBackendInterface;
-use Drupal\Core\DestructableInterface;
+use Drupal\Core\DestructibleInterface;
 use Drupal\Component\EventDispatcher\Event;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Routing\RouteCollection;
@@ -16,7 +16,7 @@ use Symfony\Component\Routing\Route;
 /**
  * Managing class for rebuilding the router table.
  */
-class RouteBuilder implements RouteBuilderInterface, DestructableInterface {
+class RouteBuilder implements RouteBuilderInterface, DestructibleInterface {
 
   /**
    * The dumper to which we should send collected routes.

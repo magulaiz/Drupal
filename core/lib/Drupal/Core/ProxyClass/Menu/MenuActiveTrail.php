@@ -12,7 +12,7 @@ namespace Drupal\Core\ProxyClass\Menu {
      *
      * @see \Drupal\Component\ProxyBuilder
      */
-    class MenuActiveTrail implements \Drupal\Core\Cache\CacheCollectorInterface, \Drupal\Core\DestructableInterface, \Drupal\Core\Menu\MenuActiveTrailInterface
+    class MenuActiveTrail implements \Drupal\Core\Cache\CacheCollectorInterface, \Drupal\Core\DestructibleInterface, \Drupal\Core\Menu\MenuActiveTrailInterface
     {
 
         use \Drupal\Core\DependencyInjection\DependencySerializationTrait;

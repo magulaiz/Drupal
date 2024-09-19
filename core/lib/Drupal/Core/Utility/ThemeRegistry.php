@@ -5,7 +5,7 @@ namespace Drupal\Core\Utility;
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Cache\CacheCollector;
-use Drupal\Core\DestructableInterface;
+use Drupal\Core\DestructibleInterface;
 use Drupal\Core\Lock\LockBackendInterface;
 
 /**
@@ -16,7 +16,7 @@ use Drupal\Core\Lock\LockBackendInterface;
  * that are actually in use on the site. On cache misses the complete
  * theme registry is loaded and used to update the run-time cache.
  */
-class ThemeRegistry extends CacheCollector implements DestructableInterface {
+class ThemeRegistry extends CacheCollector implements DestructibleInterface {
 
   /**
    * Whether the partial registry can be persisted to the cache.

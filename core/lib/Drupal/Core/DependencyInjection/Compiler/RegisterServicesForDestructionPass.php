@@ -10,7 +10,7 @@ use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
  *
  * Only services tagged with "needs_destruction" are added.
  *
- * @see \Drupal\Core\DestructableInterface
+ * @see \Drupal\Core\DestructibleInterface
  */
 class RegisterServicesForDestructionPass implements CompilerPassInterface {
 

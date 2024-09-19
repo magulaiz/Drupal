@@ -1,5 +1,5 @@
-name: 'Tests for DestructableInterface'
+name: 'Tests for DestructibleInterface'
 type: module
-description: 'Provides test services which implement DestructableInterface.'
+description: 'Provides test services which implement DestructibleInterface.'
 package: Testing
 version: VERSION

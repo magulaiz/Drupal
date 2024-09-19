@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace Drupal\destructable_test;
 
-use Drupal\Core\DestructableInterface;
+use Drupal\Core\DestructibleInterface;
 
-final class Destructable implements DestructableInterface {
+final class Destructable implements DestructibleInterface {
 
   /**
    * Semaphore filename.

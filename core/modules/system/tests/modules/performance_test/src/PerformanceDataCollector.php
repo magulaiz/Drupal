@@ -7,10 +7,10 @@ namespace Drupal\performance_test;
 use Drupal\Core\Database\Event\DatabaseEvent;
 use Drupal\Core\Database\Event\StatementExecutionEndEvent;
 use Drupal\Core\Database\Event\StatementExecutionFailureEvent;
-use Drupal\Core\DestructableInterface;
+use Drupal\Core\DestructibleInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
-class PerformanceDataCollector implements EventSubscriberInterface, DestructableInterface {
+class PerformanceDataCollector implements EventSubscriberInterface, DestructibleInterface {
 
   /**
    * Database events collected during the request.
