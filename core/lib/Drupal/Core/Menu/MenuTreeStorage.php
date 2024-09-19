@@ -653,7 +653,7 @@ class MenuTreeStorage implements MenuTreeStorageInterface {
         ->condition('parent', $link['parent'])
         ->condition('enabled', 1);
 
-      $parent_has_children = ((bool) $query->execute()->fetchField() ? 1 : 0);
+      $parent_has_children = ((bool) $query->execute()->fetchField()) ? 1 : 0;
       $this->connection->update($this->table, $this->options)
         ->fields(['has_children' => $parent_has_children])
         ->condition('id', $link['parent'])
