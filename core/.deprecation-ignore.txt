@@ -38,4 +38,3 @@
 %Since twig/twig 3.12: Getting node "filter" on a "Twig\\Node\\Expression\\Filter\\DefaultFilter" class is deprecated.%
 %Since twig/twig 3.12: Getting node "filter" on a "Twig\\Node\\Expression\\Filter\\RawFilter" class is deprecated.%
 %Since twig/twig 3.12: The "tag" constructor argument of the "Drupal\\Core\\Template\\TwigNodeTrans" class is deprecated and ignored%
-%Since twig/twig 3.12: Twig Filter "spaceless" is deprecated%
