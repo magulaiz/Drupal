@@ -13,8 +13,6 @@
 #}
 {% if children %}
   <div class="dropbutton-wrapper" data-drupal-ajax-container>
-    <div class="dropbutton-widget">
-      {{~ children ~}}
-    </div>
+    <div class="dropbutton-widget">{{- children -}}</div>
   </div>
-{% endif %}
+{%- endif %}

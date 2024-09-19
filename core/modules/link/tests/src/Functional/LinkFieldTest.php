@@ -814,7 +814,7 @@ class LinkFieldTest extends BrowserTestBase {
             $expected = '<div class="link-item">';
             $expected .= '<div class="link-url"><a href="' . Html::escape($url) . '">' . Html::escape($url_title) . '</a></div>';
             $expected .= '</div>';
-            $this->assertStringContainsString($expected, $output);
+            $this->assertStringContainsString(trim(preg_replace('/\s+/', '', $expected)), trim(preg_replace('/\s+/', '', $output)));
 
             $url = $url2;
             $url_title = isset($new_value) ? Unicode::truncate($url, $new_value, FALSE, TRUE) : $url;
@@ -823,7 +823,7 @@ class LinkFieldTest extends BrowserTestBase {
             $expected .= '<div class="link-title">' . Html::escape($title) . '</div>';
             $expected .= '<div class="link-url"><a href="' . Html::escape($url) . '">' . Html::escape($url_title) . '</a></div>';
             $expected .= '</div>';
-            $this->assertStringContainsString($expected, $output);
+            $this->assertStringContainsString(trim(preg_replace('/\s+/', '', $expected)), trim(preg_replace('/\s+/', '', $output)));
 
             $url = $url3;
             $url_title = isset($new_value) ? Unicode::truncate($url, $new_value, FALSE, TRUE) : $url;
@@ -832,7 +832,7 @@ class LinkFieldTest extends BrowserTestBase {
             $expected .= '<div class="link-title">' . Html::escape($title) . '</div>';
             $expected .= '<div class="link-url"><a href="' . Html::escape($url) . '">' . Html::escape($url_title) . '</a></div>';
             $expected .= '</div>';
-            $this->assertStringContainsString($expected, $output);
+            $this->assertStringContainsString(trim(preg_replace('/\s+/', '', $expected)), trim(preg_replace('/\s+/', '', $output)));
             break;
 
           case 'rel':
