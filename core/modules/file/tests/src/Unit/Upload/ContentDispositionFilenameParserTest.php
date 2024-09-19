@@ -9,6 +9,8 @@ use Drupal\Tests\UnitTestCase;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 
+// cspell:ignore résumé
+
 /**
  * Tests the ContentDispositionFilenameParser class.
  *
@@ -35,7 +37,6 @@ class ContentDispositionFilenameParserTest extends UnitTestCase {
     /* cspell:disable-next-line */
     $request = $this->createRequest('filename*="UTF-8\'\'r%C3%A9sum%C3%A9.txt"');
     $filename = ContentDispositionFilenameParser::parseFilename($request);
-    /* cspell:disable-next-line */
     $this->assertEquals('résumé.txt', $filename);
   }
 

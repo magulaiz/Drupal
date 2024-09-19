@@ -18,7 +18,7 @@ use Drupal\user\Entity\User;
 use GuzzleHttp\RequestOptions;
 use Psr\Http\Message\ResponseInterface;
 
-// cspell:ignore èxample msword
+// cspell:ignore èxample msword résumé
 
 /**
  * Tests binary data file upload route.
@@ -226,17 +226,15 @@ class FileUploadTest extends ResourceTestBase {
     $this->assertSame($this->testFileData, file_get_contents('public://foobar/example_0.txt'));
     $this->assertTrue($this->fileStorage->loadUnchanged(1)->isTemporary());
 
-    // Test the file again but using extended 'filename*' in the Content-Disposition
-    // header with an encoded UTF-8 character.
+    // Test the file again but using extended 'filename*' in the
+    // Content-Disposition header with an encoded UTF-8 character.
     /* cspell:disable-next-line */
     $response = $this->fileRequest($uri, $this->testFileData, ['Content-Disposition' => 'filename*="UTF-8\'\'r%C3%A9sum%C3%A9.txt"']);
     $this->assertSame(201, $response->getStatusCode());
-    /* cspell:disable-next-line */
     $expected = $this->getExpectedDocument(3, 'résumé.txt', TRUE);
     $this->assertResponseData($expected, $response);
 
     // Check the actual file data.
-    /* cspell:disable-next-line */
     $this->assertSame($this->testFileData, file_get_contents('public://foobar/résumé.txt'));
 
     // Verify that we can create an entity that references the uploaded file.

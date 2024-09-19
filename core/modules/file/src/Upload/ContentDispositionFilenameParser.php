@@ -47,9 +47,10 @@ final class ContentDispositionFilenameParser {
 
     $content_disposition = $request->headers->get('content-disposition');
 
-    // Parse the header value. This regex does not allow an empty filename. Check for an extended filename first.
-    // i.e. 'filename*=""' or 'filename=""'. This also matches on a word boundary so other keys
-    // like 'not_a_filename' don't work.
+    // Parse the header value. This regex does not allow an empty filename.
+    // Check for an extended filename first. i.e. 'filename*=""' or
+    // 'filename=""'. This also matches on a word boundary so other keys like
+    // 'not_a_filename' don't work.
     if (!preg_match(static::REQUEST_HEADER_EXTENDED_FILENAME_REGEX, $content_disposition, $matches)) {
       if (!preg_match(static::REQUEST_HEADER_FILENAME_REGEX, $content_disposition, $matches)) {
         throw new BadRequestHttpException('No filename found in "Content-Disposition" header. A file name in the format "filename=FILENAME" must be provided.');
@@ -61,7 +62,8 @@ final class ContentDispositionFilenameParser {
     // @see \Drupal\file\Plugin\rest\resource\FileUploadResource::validate()
     $filename = $matches['filename'];
 
-    // Decode filename if character set provided by extended filename. Only UTF-8 currently supported.
+    // Decode the filename if a character set is provided by an extended
+    // filename. Only UTF-8 is supported.
     if (!empty($matches['charset']) && strtolower($matches['charset']) === 'utf-8') {
       $filename = rawurldecode($filename);
     }
