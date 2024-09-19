@@ -78,7 +78,7 @@ interface ViewsPluginInterface extends PluginInspectionInterface, DerivativeInsp
    * @param array $options
    *   The options configured for this plugin.
    */
-  public function init(ViewExecutable $view, DisplayPluginBase $display, array &$options = NULL);
+  public function init(ViewExecutable $view, DisplayPluginBase $display, ?array &$options = NULL);
 
   /**
    * Handle any special handling on the validate form.
@@ -158,8 +158,10 @@ interface ViewsPluginInterface extends PluginInspectionInterface, DerivativeInsp
   public function query();
 
   /**
-   * Unpack options over our existing defaults, drilling down into arrays
-   * so that defaults don't get totally blown away.
+   * Unpacks options over our existing defaults.
+   *
+   * This will drill down into arrays so that defaults don't get totally blown
+   * away.
    */
   public function unpackOptions(&$storage, $options, $definition = NULL, $all = TRUE, $check = TRUE);
 

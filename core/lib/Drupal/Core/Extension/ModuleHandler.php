@@ -334,6 +334,13 @@ class ModuleHandler implements ModuleHandlerInterface {
   /**
    * {@inheritdoc}
    */
+  public function destruct() {
+    $this->writeCache();
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function resetImplementations() {
     $this->implementations = NULL;
     $this->hookInfo = NULL;
@@ -662,8 +669,10 @@ class ModuleHandler implements ModuleHandlerInterface {
   }
 
   /**
-   * Verifies an array of implementations loaded from the cache, by including
-   * the lazy-loaded $module.$group.inc, and checking function_exists().
+   * Verifies an array of implementations loaded from cache.
+   *
+   * Verification is done by including the lazy-loaded $module.$group.inc file,
+   * and checking function_exists().
    *
    * @param string[] $implementations
    *   Implementation "group" by module name.
@@ -715,6 +724,7 @@ class ModuleHandler implements ModuleHandlerInterface {
    * {@inheritdoc}
    */
   public function getName($module) {
+    @trigger_error(__METHOD__ . '() is deprecated in drupal:10.3.0 and is removed from drupal:12.0.0. Use \Drupal\Core\Extension\ModuleExtensionList::getName($module) instead. See https://www.drupal.org/node/3310017', E_USER_DEPRECATED);
     return \Drupal::service('extension.list.module')->getName($module);
   }
 

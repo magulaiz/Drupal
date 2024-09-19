@@ -74,6 +74,7 @@ html:not(.js) .tabs__tab {
   padding-block: 0;
   padding-inline: var(--tabs-padding-inline);
   transition: background-color var(--tabs-transition-duration);
+  -webkit-text-decoration: none;
   text-decoration: none;
   letter-spacing: var(--tabs-letter-spacing);
   color: var(--tabs-text-color);
@@ -165,7 +166,10 @@ html:not(.js) .tabs__trigger {
   inset-inline-start: 0;
   display: block;
   width: 100%;
-  transition: transform var(--tabs-transition-duration), opacity var(--tabs-transition-duration), top var(--tabs-transition-duration);
+  transition:
+    transform var(--tabs-transition-duration),
+    opacity var(--tabs-transition-duration),
+    top var(--tabs-transition-duration);
   border-block-start: solid 2px var(--tabs-highlight-color);
 }
 .tabs__trigger-icon > span:nth-child(1) {

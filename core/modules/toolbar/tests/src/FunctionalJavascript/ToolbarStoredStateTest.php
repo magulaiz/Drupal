@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\toolbar\FunctionalJavascript;
 
 use Drupal\Component\Serialization\Json;
@@ -22,7 +24,7 @@ class ToolbarStoredStateTest extends WebDriverTestBase {
    */
   protected $defaultTheme = 'stark';
 
-  public function testToolbarStoredState() {
+  public function testToolbarStoredState(): void {
     $admin_user = $this->drupalCreateUser([
       'access toolbar',
       'administer site configuration',
@@ -53,6 +55,14 @@ class ToolbarStoredStateTest extends WebDriverTestBase {
     $toolbar_stored_state = JSON::decode(
       $this->getSession()->evaluateScript("sessionStorage.getItem('Drupal.toolbar.toolbarState')")
     );
+
+    // The userButtonMinWidth property will differ depending on the length of
+    // the test-generated username, so it is checked differently and the value
+    // is copied to the expected value array.
+    $this->assertNotNull($toolbar_stored_state['userButtonMinWidth']);
+    $this->assertIsNumeric($toolbar_stored_state['userButtonMinWidth']);
+    $this->assertGreaterThan(60, $toolbar_stored_state['userButtonMinWidth']);
+    $expected['userButtonMinWidth'] = $toolbar_stored_state['userButtonMinWidth'];
 
     $this->assertSame($expected, $toolbar_stored_state);
 
@@ -85,6 +95,7 @@ class ToolbarStoredStateTest extends WebDriverTestBase {
     $this->assertSame($expected, $toolbar_stored_state);
 
     $this->getSession()->resizeWindow(600, 600);
+    $this->getSession()->wait(1000, "JSON.parse(sessionStorage.getItem('Drupal.toolbar.toolbarState')).isFixed == false");
 
     // Update expected state values to reflect the viewport being at a width
     // that is narrow enough that the toolbar isn't fixed.
