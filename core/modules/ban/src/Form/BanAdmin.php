@@ -70,7 +70,7 @@ class BanAdmin extends FormBase {
       $row['address'] = $ip->ip;
       $links = [];
       $links['delete'] = [
-        'title' => $this->t('Unban'),
+        'title' => $this->t('Unblock'),
         'url' => Url::fromRoute('ban.delete', ['ban_id' => $ip->iid]),
       ];
       $row['operations'] = [
@@ -105,7 +105,7 @@ class BanAdmin extends FormBase {
     ];
     $form['delete'] = [
       '#type' => 'submit',
-      '#value' => $this->t('Unban selected'),
+      '#value' => $this->t('Unblock selected'),
       '#name' => 'submit_delete',
       '#weight' => 130,
     ];

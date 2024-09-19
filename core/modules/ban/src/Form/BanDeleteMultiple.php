@@ -13,7 +13,7 @@ use Drupal\Core\Url;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
- * Provides a form to unban IP addresses.
+ * Provides a form to unblock IP addresses.
  *
  * @internal
  */
@@ -60,14 +60,14 @@ class BanDeleteMultiple extends ConfirmFormBase {
    * {@inheritdoc}
    */
   public function getQuestion(): TranslatableMarkup {
-    return $this->t('Are you sure you want to unban %ips_amount IP addresses?', ['%ips_amount' => count($this->banIps)]);
+    return $this->t('Are you sure you want to unblock %ips_amount IP addresses?', ['%ips_amount' => count($this->banIps)]);
   }
 
   /**
    * {@inheritdoc}
    */
   public function getConfirmText(): TranslatableMarkup {
-    return $this->t('Unban');
+    return $this->t('Unblock');
   }
 
   /**
@@ -85,7 +85,7 @@ class BanDeleteMultiple extends ConfirmFormBase {
    * @param \Drupal\Core\Form\FormStateInterface $form_state
    *   The current state of the form.
    * @param string $ban_id
-   *   The IP address record ID to unban.
+   *   The IP address record ID to unblock.
    */
   public function buildForm(array $form, FormStateInterface $form_state, $ban_id = '') {
     $this->banIps = $this->tempStoreFactory->get('ban_ip_delete_multiple')->get('selected_ips');
@@ -105,7 +105,7 @@ class BanDeleteMultiple extends ConfirmFormBase {
     }
     $this->tempStoreFactory->get('ban_ip_delete_multiple')->delete('selected_ips');
     $this->logger('user')->notice('Deleted %ips_amount IP addresses.', ['%ips_amount' => count($this->banIps)]);
-    $this->messenger()->addStatus($this->t('The selected IP addresses were unbanned.'));
+    $this->messenger()->addStatus($this->t('The selected IP addresses were unblocked.'));
     $form_state->setRedirectUrl($this->getCancelUrl());
   }
 
