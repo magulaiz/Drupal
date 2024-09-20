@@ -37,9 +37,9 @@ class ListItemFormatter extends FormatterBase {
    */
   public static function getListTypeOptions() {
     return [
-      'ol' => $this->t('Ordered list'),
-      'ul' => $this->t('Unordered list'),
-      'comma' => $this->t('Comma separated'),
+      'ol' => static::t('Ordered list'),
+      'ul' => static::t('Unordered list'),
+      'comma' => static::t('Comma separated'),
     ];
   }
 
