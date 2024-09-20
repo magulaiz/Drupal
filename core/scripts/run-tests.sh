@@ -1082,13 +1082,13 @@ function sort_tests_by_public_method_count(array &$tests): void {
  *   The test class name.
  */
 function get_test_type_weight(string $class): int {
-    return match(TRUE) {
-      is_subclass_of($class, WebDriverTestBase::class) => 3,
-      is_subclass_of($class, BrowserTestBase::class) => 2,
-      is_subclass_of($class, BuildTestBase::class) => 2,
-      is_subclass_of($class, KernelTestBase::class) => 1,
-      default => 0,
-    };
+  return match(TRUE) {
+    is_subclass_of($class, WebDriverTestBase::class) => 3,
+    is_subclass_of($class, BrowserTestBase::class) => 2,
+    is_subclass_of($class, BuildTestBase::class) => 2,
+    is_subclass_of($class, KernelTestBase::class) => 1,
+    default => 0,
+  };
 }
 
 /**
