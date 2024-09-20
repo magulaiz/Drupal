@@ -127,6 +127,7 @@ class AssetResolver implements AssetResolverInterface {
     $libraries = $assets->getLibraries();
     if ($libraries) {
       $libraries = $this->libraryDependencyResolver->getMinimalRepresentativeSubset($libraries);
+      sort($libraries);
     }
     return array_diff(
       $this->libraryDependencyResolver->getLibrariesWithDependencies($libraries),
