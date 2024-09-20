@@ -3189,9 +3189,7 @@ abstract class ResourceTestBase extends BrowserTestBase {
       $expected_document['errors'][0]['links']['via']['href'] = $relationship_url->toString();
       // Only add node type check tags for non-default revisions.
       $expected_cache_tags = !in_array($relationship_type, $default_revision_types, TRUE) ? Cache::mergeTags($expected_cacheability->getCacheTags(), $this->getExtraRevisionCacheTags()) : $expected_cacheability->getCacheTags();
-      // @todo Remove this workaround after the following Dynamic Page Cache
-      //   issue is resolved:
-      //   https://www.drupal.org/project/drupal/issues/3451483.
+      // @todo Remove this in https://www.drupal.org/project/drupal/issues/3451483.
       $actual_response = $actual_response->withoutHeader('X-Drupal-Dynamic-Cache');
       $this->assertResourceResponse(403, $expected_document, $actual_response, $expected_cache_tags, $expected_cacheability->getCacheContexts());
       // Request the related route.
@@ -3201,9 +3199,7 @@ abstract class ResourceTestBase extends BrowserTestBase {
       $expected_document = $expected_response->getResponseData();
       $expected_cacheability = $expected_response->getCacheableMetadata();
       $expected_document['errors'][0]['links']['via']['href'] = $related_url->toString();
-      // @todo Remove this workaround after the following Dynamic Page Cache
-      //   issue is resolved:
-      //   https://www.drupal.org/project/drupal/issues/3451483.
+      // @todo Remove this in https://www.drupal.org/project/drupal/issues/3451483.
       $actual_response = $actual_response->withoutHeader('X-Drupal-Dynamic-Cache');
       $this->assertResourceResponse(403, $expected_document, $actual_response, $expected_cache_tags, $expected_cacheability->getCacheContexts());
     }
