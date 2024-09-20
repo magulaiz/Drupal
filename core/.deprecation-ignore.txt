@@ -30,10 +30,6 @@
 
 # Twig 3.
 %Since twig/twig 3.11: Changing the value of a "filter" node in a NodeVisitor class is not supported anymore.%
-%Since twig/twig 3.12: Not passing an instance of "TwigFunction" when creating a "attach_library" function of type "Twig\\Node\\Expression\\FunctionExpression" is deprecated.%
-%Since twig/twig 3.12: Not passing an instance of "TwigFunction" when creating a "add_component_context" function of type "Twig\\Node\\Expression\\FunctionExpression" is deprecated.%
-%Since twig/twig 3.12: Not passing an instance of "TwigFunction" when creating a "render_var" function of type "Twig\\Node\\Expression\\FunctionExpression" is deprecated.%
-%Since twig/twig 3.12: Not passing an instance of "TwigFunction" when creating a "validate_component_props" function of type "Twig\\Node\\Expression\\FunctionExpression" is deprecated.%
 %Since twig/twig 3.12: Getting node "filter" on a "Twig\\Node\\Expression\\FilterExpression" class is deprecated.%
 %Since twig/twig 3.12: Getting node "filter" on a "Twig\\Node\\Expression\\Filter\\DefaultFilter" class is deprecated.%
 %Since twig/twig 3.12: Getting node "filter" on a "Twig\\Node\\Expression\\Filter\\RawFilter" class is deprecated.%

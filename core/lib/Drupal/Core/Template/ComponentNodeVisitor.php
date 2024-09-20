@@ -15,6 +15,7 @@ use Twig\Node\ModuleNode;
 use Twig\Node\Node;
 use Twig\Node\PrintNode;
 use Twig\NodeVisitor\NodeVisitorInterface;
+use Twig\TwigFunction;
 
 /**
  * Provides a ComponentNodeVisitor to change the generated parse-tree.
@@ -55,17 +56,17 @@ class ComponentNodeVisitor implements NodeVisitorInterface {
       $print_nodes[] = new PrintNode(new ConstantExpression(sprintf('<!-- %s Component start: %s -->', $emoji, $component_id), $line), $line);
     }
     $print_nodes[] = new PrintNode(new FunctionExpression(
-      'attach_library',
+      new TwigFunction('attach_library', [$env->getExtension('\Drupal\Core\Template\TwigExtension'), 'attachLibrary']),
       new Node([new ConstantExpression($component->getLibraryName(), $line)]),
       $line
     ), $line);
     $print_nodes[] = new PrintNode(new FunctionExpression(
-      'add_component_context',
+      new TwigFunction('add_component_context', [$env->getExtension('\Drupal\Core\Template\ComponentsTwigExtension'), 'addAdditionalContext'], ['needs_context' => TRUE]),
       new Node([new ConstantExpression($component_id, $line)]),
       $line
     ), $line);
     $print_nodes[] = new PrintNode(new FunctionExpression(
-      'validate_component_props',
+      new TwigFunction('validate_component_props', [$env->getExtension('\Drupal\Core\Template\ComponentsTwigExtension'), 'validateProps'], ['needs_context' => TRUE]),
       new Node([new ConstantExpression($component_id, $line)]),
       $line
     ), $line);
