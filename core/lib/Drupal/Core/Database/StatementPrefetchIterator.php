@@ -217,7 +217,7 @@ class StatementPrefetchIterator implements \Iterator, StatementInterface {
   public function rowCount() {
     // SELECT query should not use the method.
     if ($this->rowCountEnabled) {
-      return (int) $this->rowCount;
+      return $this->rowCount;
     }
     else {
       throw new RowCountException();
