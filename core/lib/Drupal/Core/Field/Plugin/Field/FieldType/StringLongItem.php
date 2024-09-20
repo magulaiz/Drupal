@@ -31,7 +31,7 @@ class StringLongItem extends StringItemBase {
    */
   public static function defaultStorageSettings() {
     return [
-      'max_length' => 255,
+      'max_length' => 4080,
     ] + parent::defaultStorageSettings();
   }
 
