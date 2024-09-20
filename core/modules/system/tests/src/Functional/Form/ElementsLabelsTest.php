@@ -141,7 +141,7 @@ class ElementsLabelsTest extends BrowserTestBase {
     // Verify that the #description element is visually-hidden.
     $this->assertSession()->elementExists('xpath', '//input[@id="' . $field_id . '" and @aria-describedby="' . $description_id . '"]/following-sibling::div[contains(@class, "visually-hidden")]');
     // Check #prefix placement element is visually-hidden.
-    $this->assertSession()->elementExists('xpath', '//div[@id="form-test-description-textfield-invisiable-field-prefix"]/following-sibling::div[contains(@class, \'js-form-item-form-textfield-test-description-invisible\')]');
+    $this->assertSession()->elementExists('xpath', '//div[@id="form-test-description-textfield-invisible-field-prefix"]/following-sibling::div[contains(@class, \'js-form-item-form-textfield-test-description-invisible\')]');
   }
 
   /**

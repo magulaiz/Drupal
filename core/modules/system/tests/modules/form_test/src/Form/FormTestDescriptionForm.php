@@ -31,7 +31,7 @@ class FormTestDescriptionForm extends FormBase {
       '#description' => $this->t('Textfield test for description before element'),
       '#description_display' => 'before',
       // Test #prefix placement.
-      '#prefix' => '<div id="form-test-description-textfield-before-field-prefix">' . t(' Textfield #field_prefix element') . '</div>',
+      '#prefix' => '<div id="form-test-description-textfield-before-field-prefix">' . $this->t('Textfield #field_prefix element') . '</div>',
     ];
 
     $form['form_textfield_test_description_after'] = [
@@ -40,7 +40,7 @@ class FormTestDescriptionForm extends FormBase {
       '#description' => 'Textfield test for description after element',
       '#description_display' => 'after',
        // Test #prefix placement.
-      '#prefix' => '<div id="form-test-description-textfield-after-field-prefix">' . t(' Textfield #field_prefix element') . '</div>',
+      '#prefix' => '<div id="form-test-description-textfield-after-field-prefix">' . $this->t('Textfield #field_prefix element') . '</div>',
     ];
 
     $form['form_textfield_test_description_invisible'] = [
@@ -49,7 +49,7 @@ class FormTestDescriptionForm extends FormBase {
       '#description' => 'Textfield test for visually-hidden description',
       '#description_display' => 'invisible',
        // Test #prefix placement.
-      '#prefix' => '<div id="form-test-description-textfield-invisiable-field-prefix">' . t(' Textfield #field_prefix element') . '</div>',
+      '#prefix' => '<div id="form-test-description-textfield-invisible-field-prefix">' . $this->t('Textfield #field_prefix element') . '</div>',
     ];
 
     return $form;
