@@ -887,8 +887,9 @@ abstract class HandlerBase extends PluginBase implements ViewsHandlerInterface {
   }
 
   /**
-   * Pass in a string to be added to an auto generated pattern. That will be
-   * used to find patterns such as x,y,z and x+y+z.
+   * Pass in a string to be added to an auto generated pattern.
+   *
+   * The string will be used to find patterns such as x,y,z and x+y+z.
    *
    * @param string $string
    *   (Optional) A string to use for searching in the pattern. Defaults to ','.
