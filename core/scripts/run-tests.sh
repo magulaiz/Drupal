@@ -942,7 +942,7 @@ function simpletest_script_get_test_list() {
       sort_tests_by_type_and_methods($not_slow_tests);
       $test_list = array_unique(array_merge($slow_tests, $not_slow_tests));
     }
-    else { 
+    else {
       // Sort all tests by the number of public methods on the test class.
       // This is a proxy for the approximate time taken to run the test,
       // which is used in combination with @group #slow to start the slowest tests
@@ -1082,19 +1082,13 @@ function sort_tests_by_public_method_count(array &$tests): void {
  *   The test class name.
  */
 function get_test_type_weight(string $class): int {
-  if (is_a($class, WebDriverTestBase::class, TRUE)) {
-    return 3;
-  }
-  if (is_a($class, BrowserTestBase::class, TRUE)) {
-    return 2;
-  }
-  if (is_a($class, BuildTestBase::class, TRUE)) {
-    return 2;
-  }
-  if (is_a($class, KernelTestBase::class, TRUE)) {
-    return 1;
-  }
-  return 0;
+    return match(TRUE) {
+      is_subclass_of($class, WebDriverTestBase::class) => 3,
+      is_subclass_of($class, BrowserTestBase::class) => 2,
+      is_subclass_of($class, BuildTestBase::class) => 2,
+      is_subclass_of($class, KernelTestBase::class) => 1,
+      default => 0,
+    };
 }
 
 /**
