@@ -604,14 +604,14 @@ class Select extends Query implements SelectInterface {
   /**
    * {@inheritdoc}
    */
-  public function addExpressionConstant(string $constant, ?string $alias = NULL) {
+  public function addExpressionConstant(string $constant, ?string $alias = NULL): string {
     return $this->addExpression($constant, $alias);
   }
 
   /**
    * {@inheritdoc}
    */
-  public function addExpressionField(string $field, ?string $alias = NULL) {
+  public function addExpressionField(string $field, ?string $alias = NULL): string {
     $field = '[' . str_replace('.', '].[', $field) . ']';
     return $this->addExpression($field, $alias);
   }
@@ -619,7 +619,7 @@ class Select extends Query implements SelectInterface {
   /**
    * {@inheritdoc}
    */
-  public function addExpressionMax(string $field, ?string $alias = NULL) {
+  public function addExpressionMax(string $field, ?string $alias = NULL): string {
     $field = '[' . str_replace('.', '].[', $field) . ']';
     return $this->addExpression('MAX(' . $field . ')', $alias);
   }
@@ -627,7 +627,7 @@ class Select extends Query implements SelectInterface {
   /**
    * {@inheritdoc}
    */
-  public function addExpressionMin(string $field, ?string $alias = NULL) {
+  public function addExpressionMin(string $field, ?string $alias = NULL): string {
     $field = '[' . str_replace('.', '].[', $field) . ']';
     return $this->addExpression('MIN(' . $field . ')', $alias);
   }
@@ -635,7 +635,7 @@ class Select extends Query implements SelectInterface {
   /**
    * {@inheritdoc}
    */
-  public function addExpressionSum(string $field, ?string $alias = NULL) {
+  public function addExpressionSum(string $field, ?string $alias = NULL): string {
     $field = '[' . str_replace('.', '].[', $field) . ']';
     return $this->addExpression('SUM(' . $field . ')', $alias);
   }
@@ -643,7 +643,7 @@ class Select extends Query implements SelectInterface {
   /**
    * {@inheritdoc}
    */
-  public function addExpressionCount(string $field, ?string $alias = NULL) {
+  public function addExpressionCount(string $field, ?string $alias = NULL): string {
     $field = '[' . str_replace('.', '].[', $field) . ']';
     return $this->addExpression('COUNT(' . $field . ')', $alias);
   }
@@ -651,14 +651,14 @@ class Select extends Query implements SelectInterface {
   /**
    * {@inheritdoc}
    */
-  public function addExpressionCountAll(?string $alias = NULL) {
+  public function addExpressionCountAll(?string $alias = NULL): string {
     return $this->addExpression('COUNT(*)', $alias);
   }
 
   /**
    * {@inheritdoc}
    */
-  public function addExpressionCountDistinct(string $field, ?string $alias = NULL) {
+  public function addExpressionCountDistinct(string $field, ?string $alias = NULL): string {
     $field = '[' . str_replace('.', '].[', $field) . ']';
     return $this->addExpression('COUNT(DISTINCT(' . $field . '))', $alias);
   }
@@ -666,7 +666,7 @@ class Select extends Query implements SelectInterface {
   /**
    * {@inheritdoc}
    */
-  public function addExpressionCoalesce(array $fields, ?string $alias = NULL) {
+  public function addExpressionCoalesce(array $fields, ?string $alias = NULL): string {
     foreach ($fields as &$field) {
       $field = '[' . str_replace('.', '].[', $field) . ']';
     }
