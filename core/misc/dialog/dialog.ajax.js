@@ -45,7 +45,11 @@
             // Move focus to the first focusable element in the next event loop
             // to allow dialog buttons to be changed first.
             const $focusedElement = $dialog.dialog('instance')._focusedElement;
-            if ($focusedElement.hasClass('field--type-image') && $focusedElement.hasClass('paragraph-top') && $focusedElement.hasClass('form-item--multiple')) {
+            if (
+              $focusedElement.hasClass('field--type-image') &&
+              $focusedElement.hasClass('paragraph-top') &&
+              $focusedElement.hasClass('form-item--multiple')
+            ) {
               $dialog.dialog('instance')._focusedElement = null;
             }
             $dialog.dialog('instance')._focusTabbable();
