@@ -468,7 +468,6 @@ class TermStorage extends SqlContentEntityStorage implements TermStorageInterfac
         $terms[$nid][$tid] = $all_terms[$tid];
       }
     }
-
     return $terms;
   }
 
