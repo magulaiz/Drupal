@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Drupal\Tests\system\Functional\Session;
 
 use Drupal\Component\Utility\Crypt;
-use Drupal\Core\Database\Database;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Tests\BrowserTestBase;
 use GuzzleHttp\Cookie\CookieJar;

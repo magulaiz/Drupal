@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Drupal\Tests\system\Functional\Routing;
 
 use Drupal\Core\Cache\Cache;
-use Drupal\Core\Database\Database;
 use Drupal\Core\EventSubscriber\MainContentViewSubscriber;
 use Drupal\Core\Language\LanguageInterface;
 use Drupal\router_test\TestControllers;
