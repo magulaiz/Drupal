@@ -226,10 +226,12 @@ class DbLogController extends ControllerBase {
    *   If no event found for the given ID.
    */
   public function eventDetails($event_id) {
-    $dblog = $this->database->select('watchdog', 'w')
-      ->condition('wid', (int) $event_id)
-      ->execute()
-      ->fetchObject();
+    $query = $this->database->select('watchdog', 'w')
+      ->fields('w')
+      ->condition('w.wid', (int) $event_id);
+    $query->leftJoin('users', 'u', '[u].[uid] = [w].[uid]');
+    $query->addField('u', 'uid', 'uid');
+    $dblog = $query->execute()->fetchObject();
 
     if (empty($dblog)) {
       throw new NotFoundHttpException();

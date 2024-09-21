@@ -43,6 +43,7 @@ class DbLogResource extends ResourceBase {
   public function get($id = NULL) {
     if ($id) {
       $record = Database::getConnection()->select('watchdog', 'w')
+        ->fields('w')
         ->condition('wid', (int) $id)
         ->execute()
         ->fetchAssoc();

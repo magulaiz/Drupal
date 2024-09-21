@@ -59,7 +59,6 @@ bkmgtpezy
 blockarticles
 blockcontent
 blockfooter
-blocknodebundle
 blockquotes
 blockrecipe
 blockrelated
@@ -136,9 +135,6 @@ crème
 csrftoken
 csslintrc
 csstools
-curle
-curlopt
-customrequest
 cweagans
 daffie
 datelist
@@ -217,7 +213,6 @@ expirable
 extlink
 extrasmall
 extraspace
-failonerror
 fakepath
 falsey
 fapi
@@ -231,7 +226,6 @@ fieldapi
 fieldblock
 fieldgroup
 fieldgroups
-fieldlayout
 fieldnames
 fieldsets
 filemime
@@ -273,7 +267,6 @@ hrefs
 htmlcorrector
 httpheader
 httponly
-hwldf
 icann
 iconwrap
 idekey
@@ -355,13 +348,10 @@ mocktails
 mocky
 moderatable
 modernizr
-modulenarrow
 mojito
 msgctxt
 msgid
 msgstr
-mulrev
-mulrevpub
 multibuys
 multibyte
 multicardinality
@@ -400,20 +390,15 @@ nourriture
 nplurals
 nproc
 ntfs
-nyan
-nyancat
-nyans
 oembed
 omittable
 onecol
 oneplusfourgrid
-onewidgetfield
 optgroups
 optin
 orgchart
 ossp
 outdent
-outro
 overrider
 overrider's
 overriders
@@ -440,9 +425,7 @@ placeholdering
 plusthick
 porterstemmer
 postcondition
-postfields
 postorder
-postupdate
 precache
 preconfigured
 predelete
@@ -460,7 +443,6 @@ prerendered
 presave
 pretransaction
 preuninstall
-processlist
 proname
 prophesize
 prophesized
@@ -489,8 +471,6 @@ referencers
 referer
 refinable
 reindexing
-relname
-relpersistence
 renderable
 renderables
 reparenting
@@ -502,13 +482,10 @@ restrictor
 restripe
 restriped
 restui
-returntransfer
 revisionable
 revisioned
 revisionid
 revisioning
-revlog
-revpub
 ribisi
 rowspans
 rtsp
@@ -530,10 +507,8 @@ shorterthan
 shortlink
 singlebyte
 sirbrillig
-sisko
 sitename
 sitewide
-skiptags
 slatkin
 smacss
 smalldatetime
@@ -594,7 +569,6 @@ subtoken
 subvalue
 subvalues
 subview
-sulaco
 supercede
 svgz
 swisleiden
