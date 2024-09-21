@@ -8,7 +8,7 @@ use Drupal\Core\StringTranslation\TranslatableMarkup;
 /**
  * Defines a Constraint attribute object.
  *
- * Plugin Namespace: Plugin\Validation\Constraint
+ * Plugin Namespace: Plugin\Validation\Constraint.
  *
  * For a working example, see
  * \Drupal\Core\Validation\Plugin\Validation\Constraint\LengthConstraint

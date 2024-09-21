@@ -11,7 +11,7 @@ use Drupal\Core\StringTranslation\TranslatableMarkup;
 /**
  * Defines a ConfigAction attribute object.
  *
- * Plugin Namespace: Plugin\ConfigAction
+ * Plugin Namespace: Plugin\ConfigAction.
  *
  * @ingroup config_action_api
  *

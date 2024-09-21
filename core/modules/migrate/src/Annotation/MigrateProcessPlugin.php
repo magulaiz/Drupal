@@ -7,7 +7,7 @@ use Drupal\Component\Annotation\Plugin;
 /**
  * Defines a migration process plugin annotation object.
  *
- * Plugin Namespace: Plugin\migrate\process
+ * Plugin Namespace: Plugin\migrate\process.
  *
  * For a working example, see
  * \Drupal\migrate\Plugin\migrate\process\DefaultValue

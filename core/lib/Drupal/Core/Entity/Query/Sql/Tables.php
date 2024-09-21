@@ -480,7 +480,7 @@ class Tables implements TablesInterface {
   /**
    * Add the next entity base table.
    *
-   * For example, when building the SQL query for
+   * For example, when building the SQL query for.
    * @code
    * condition('uid.entity.name', 'foo', 'CONTAINS')
    * @endcode

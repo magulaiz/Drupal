@@ -8,7 +8,7 @@ use Drupal\Core\StringTranslation\TranslatableMarkup;
 /**
  * Defines a language negotiation attribute object.
  *
- * Plugin Namespace: Plugin\LanguageNegotiation
+ * Plugin Namespace: Plugin\LanguageNegotiation.
  *
  * For a working example, see
  * \Drupal\language\Plugin\LanguageNegotiation\LanguageNegotiationBrowser.

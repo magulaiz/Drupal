@@ -164,7 +164,7 @@ abstract class WidgetBase extends PluginSettingsBase implements WidgetInterface,
    * Handles generic features for multiple fields:
    * - number of widgets
    * - AHAH-'add more' button
-   * - table display and drag-n-drop value reordering
+   * - table display and drag-n-drop value reordering.
    */
   protected function formMultipleElements(FieldItemListInterface $items, array &$form, FormStateInterface $form_state) {
     $field_name = $this->fieldDefinition->getName();

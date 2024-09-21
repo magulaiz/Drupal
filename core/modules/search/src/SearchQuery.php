@@ -219,7 +219,7 @@ class SearchQuery extends SelectExtender {
    * - $this->words
    * - $this->conditions
    * - $this->simple
-   * - $this->matches
+   * - $this->matches.
    */
   protected function parseSearchExpression() {
     // Matches words optionally prefixed by a - sign. A word in this case is

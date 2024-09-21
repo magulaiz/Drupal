@@ -35,7 +35,7 @@ class ThemeTest extends KernelTestBase {
    * are all merged correctly:
    *   - $variables['attributes'] as passed in to the theme hook implementation.
    *   - the render element's #attributes
-   *   - any attributes set in the template's preprocessing function
+   *   - any attributes set in the template's preprocessing function.
    */
   public function testAttributeMerging(): void {
     $theme_test_render_element = [

@@ -8,7 +8,7 @@ use Drupal\Core\StringTranslation\TranslatableMarkup;
 /**
  * Defines a Workflow type attribute object.
  *
- * Plugin Namespace: Plugin\WorkflowType
+ * Plugin Namespace: Plugin\WorkflowType.
  *
  * For a working example, see \Drupal\content_moderation\Plugin\Workflow\ContentModerate
  *

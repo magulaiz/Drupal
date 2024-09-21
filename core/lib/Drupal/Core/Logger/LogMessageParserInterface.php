@@ -14,7 +14,7 @@ interface LogMessageParserInterface {
    * formats:
    *   - @link https://github.com/php-fig/fig-standards/blob/master/accepted/PSR-3-logger-interface.md#12-message The PSR3 format @endlink
    *   - The Drupal specific string placeholder format, described in
-   *     \Drupal\Component\Render\FormattableMarkup
+   *     \Drupal\Component\Render\FormattableMarkup.
    *
    * Values in PSR3 format will be transformed to
    * \Drupal\Component\Render\FormattableMarkup format.

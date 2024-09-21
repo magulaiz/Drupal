@@ -8,7 +8,7 @@ use Drupal\Core\StringTranslation\TranslatableMarkup;
 /**
  * Defines an EntityReferenceSelection attribute for plugin discovery.
  *
- * Plugin Namespace: Plugin\EntityReferenceSelection
+ * Plugin Namespace: Plugin\EntityReferenceSelection.
  *
  * For a working example, see
  * \Drupal\comment\Plugin\EntityReferenceSelection\CommentSelection

@@ -17,7 +17,7 @@ use Symfony\Component\BrowserKit\Response;
  *
  * This code is heavily based on the following projects:
  * - https://github.com/FriendsOfPHP/Goutte
- * - https://github.com/minkphp/MinkGoutteDriver
+ * - https://github.com/minkphp/MinkGoutteDriver.
  */
 class DrupalTestBrowser extends AbstractBrowser {
 

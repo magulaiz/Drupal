@@ -10,7 +10,7 @@ use Drupal\Core\StringTranslation\TranslatableMarkup;
 /**
  * Defines a Mail attribute for plugin discovery.
  *
- * Plugin Namespace: Plugin\Mail
+ * Plugin Namespace: Plugin\Mail.
  *
  * For a working example, see \Drupal\Core\Mail\Plugin\Mail\PhpMail
  *

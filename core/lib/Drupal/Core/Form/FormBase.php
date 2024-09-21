@@ -92,7 +92,7 @@ abstract class FormBase implements FormInterface, ContainerInjectionInterface {
   /**
    * Retrieves a configuration object.
    *
-   * This is the main entry point to the configuration API. Calling
+   * This is the main entry point to the configuration API. Calling.
    * @code $this->config('my_module.admin') @endcode will return a configuration
    * object in which the my_module module can store its administrative settings.
    *

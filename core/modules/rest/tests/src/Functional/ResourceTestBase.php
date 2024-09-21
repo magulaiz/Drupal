@@ -167,7 +167,7 @@ abstract class ResourceTestBase extends BrowserTestBase {
    * Refreshes the state of the tester to be in sync with the testee.
    *
    * Should be called after every change made to:
-   * - RestResourceConfig entities
+   * - RestResourceConfig entities.
    */
   protected function refreshTestStateAfterRestConfigChange() {
     // Ensure that the cache tags invalidator has its internal values reset.

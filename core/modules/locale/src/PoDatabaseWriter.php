@@ -49,7 +49,7 @@ class PoDatabaseWriter implements PoWriterInterface {
    *  - additions: number of source strings newly added
    *  - updates: number of translations updated
    *  - deletes: number of translations deleted
-   *  - skips: number of strings skipped due to disallowed HTML
+   *  - skips: number of strings skipped due to disallowed HTML.
    *
    * @var array
    */

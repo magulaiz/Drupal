@@ -44,7 +44,7 @@ interface LanguageInterface {
    * Language code referring to the default language of data, e.g. of an entity.
    *
    * See the BCP 47 syntax for defining private language tags:
-   * http://www.rfc-editor.org/rfc/bcp/bcp47.txt
+   * http://www.rfc-editor.org/rfc/bcp/bcp47.txt.
    */
   const LANGCODE_DEFAULT = 'x-default';
 

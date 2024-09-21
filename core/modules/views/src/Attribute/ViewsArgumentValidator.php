@@ -8,7 +8,7 @@ use Drupal\Core\StringTranslation\TranslatableMarkup;
 /**
  * Defines a ViewsArgumentValidator attribute object for plugin discovery.
  *
- * Plugin Namespace: Plugin\ViewsArgumentValidator
+ * Plugin Namespace: Plugin\ViewsArgumentValidator.
  *
  * @see \Drupal\views\Plugin\views\argument_validator\ArgumentValidatorPluginBase
  *

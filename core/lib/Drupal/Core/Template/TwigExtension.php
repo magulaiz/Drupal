@@ -352,7 +352,7 @@ class TwigExtension extends AbstractExtension {
   /**
    * Attaches an asset library to the template, and hence to the response.
    *
-   * Allows Twig templates to attach asset libraries using
+   * Allows Twig templates to attach asset libraries using.
    * @code
    * {{ attach_library('extension/library_name') }}
    * @endcode

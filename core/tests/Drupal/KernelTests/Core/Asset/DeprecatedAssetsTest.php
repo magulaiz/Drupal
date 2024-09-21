@@ -44,7 +44,7 @@ class DeprecatedAssetsTest extends KernelTestBase {
   /**
    * The data provider for testDeprecatedLibraries.
    *
-   * Returns an array in the form of
+   * Returns an array in the form of.
    * @code
    *  [
    *    (string) description => [

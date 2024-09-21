@@ -23,7 +23,7 @@ use Drupal\Tests\BrowserTestBase;
  * - big_pipe_page_attachments()
  * - \Drupal\big_pipe\Controller\BigPipeController
  * - \Drupal\big_pipe\EventSubscriber\HtmlResponseBigPipeSubscriber
- * - \Drupal\big_pipe\Render\BigPipe
+ * - \Drupal\big_pipe\Render\BigPipe.
  *
  * @group big_pipe
  */
@@ -74,7 +74,7 @@ class BigPipeTest extends BrowserTestBase {
    *
    * Covers:
    * - big_pipe_page_attachments()
-   * - \Drupal\big_pipe\Controller\BigPipeController
+   * - \Drupal\big_pipe\Controller\BigPipeController.
    */
   public function testNoJsDetection(): void {
     $no_js_to_js_markup = '<script>document.cookie = "' . BigPipeStrategy::NOJS_COOKIE . '=1; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT"</script>';

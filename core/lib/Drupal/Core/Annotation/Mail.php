@@ -7,7 +7,7 @@ use Drupal\Component\Annotation\Plugin;
 /**
  * Defines a Mail annotation object.
  *
- * Plugin Namespace: Plugin\Mail
+ * Plugin Namespace: Plugin\Mail.
  *
  * For a working example, see \Drupal\Core\Mail\Plugin\Mail\PhpMail
  *

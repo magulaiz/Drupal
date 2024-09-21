@@ -6,7 +6,7 @@ namespace Drupal\Core\Access;
  * Interface for access result value objects.
  *
  * IMPORTANT NOTE: You have to call isAllowed() when you want to know whether
- * someone has access. Just using
+ * someone has access. Just using.
  * @code
  * if ($access_result) {
  *   // The user has access!

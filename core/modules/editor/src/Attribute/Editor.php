@@ -8,7 +8,7 @@ use Drupal\Core\StringTranslation\TranslatableMarkup;
 /**
  * Defines an Editor attribute object.
  *
- * Plugin Namespace: Plugin\Editor
+ * Plugin Namespace: Plugin\Editor.
  *
  * For a working example, see \Drupal\ckeditor5\Plugin\Editor\CKEditor5
  *

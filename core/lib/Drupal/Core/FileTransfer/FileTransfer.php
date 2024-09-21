@@ -397,7 +397,7 @@ abstract class FileTransfer {
   /**
    * Returns the chroot property for this connection.
    *
-   * It does this by moving up the tree until it finds itself
+   * It does this by moving up the tree until it finds itself.
    *
    * @return string|bool
    *   If successful, the chroot path for this connection, otherwise FALSE.

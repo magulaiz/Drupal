@@ -41,7 +41,7 @@ class LanguagesCacheContext implements CalculatedCacheContextInterface {
    * manager, typically:
    * - LanguageInterface::TYPE_INTERFACE
    * - LanguageInterface::TYPE_CONTENT
-   * - LanguageInterface::TYPE_URL
+   * - LanguageInterface::TYPE_URL.
    *
    * @see \Drupal\Core\Language\LanguageManagerInterface::getLanguageTypes()
    *

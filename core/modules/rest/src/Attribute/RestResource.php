@@ -10,7 +10,7 @@ use Drupal\Core\StringTranslation\TranslatableMarkup;
 /**
  * Defines a REST resource attribute object.
  *
- * Plugin Namespace: Plugin\rest\resource
+ * Plugin Namespace: Plugin\rest\resource.
  *
  * For a working example, see \Drupal\dblog\Plugin\rest\resource\DbLogResource
  *

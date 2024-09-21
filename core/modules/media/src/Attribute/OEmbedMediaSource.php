@@ -9,7 +9,7 @@ use Drupal\Core\StringTranslation\TranslatableMarkup;
 /**
  * Defines a OEmbedMediaSource attribute.
  *
- * Plugin namespace: Plugin\media\Source
+ * Plugin namespace: Plugin\media\Source.
  *
  * For a working example, see \Drupal\media\Plugin\media\Source\OEmbed.
  *

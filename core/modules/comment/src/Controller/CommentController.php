@@ -190,7 +190,7 @@ class CommentController extends ControllerBase {
    *
    * There are several cases that have to be handled, including:
    *   - replies to comments
-   *   - replies to entities
+   *   - replies to entities.
    *
    * @param \Symfony\Component\HttpFoundation\Request $request
    *   The current request object.

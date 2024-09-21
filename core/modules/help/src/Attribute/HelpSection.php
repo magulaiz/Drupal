@@ -10,7 +10,7 @@ use Drupal\Core\StringTranslation\TranslatableMarkup;
 /**
  * Defines a HelpSection attribute object for plugin discovery.
  *
- * Plugin Namespace: Plugin\HelpSection
+ * Plugin Namespace: Plugin\HelpSection.
  *
  * For a working example, see \Drupal\help\Plugin\HelpSection\HookHelpSection.
  *

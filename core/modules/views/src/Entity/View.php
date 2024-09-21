@@ -309,7 +309,7 @@ class View extends ConfigEntityBase implements ViewEntityInterface {
    * the view's configuration. This allows Views to determine very efficiently:
    * - the max-age
    * - the cache contexts
-   * - the cache tags
+   * - the cache tags.
    *
    * In other words: this allows us to do the (expensive) work of initializing
    * Views plugins and handlers to determine their effect on the cacheability of

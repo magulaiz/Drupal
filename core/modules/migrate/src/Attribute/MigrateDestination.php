@@ -9,7 +9,7 @@ use Drupal\Component\Plugin\Attribute\Plugin;
 /**
  * Defines a MigrateDestination attribute.
  *
- * Plugin Namespace: Plugin\migrate\destination
+ * Plugin Namespace: Plugin\migrate\destination.
  *
  * For a working example, see
  * \Drupal\migrate\Plugin\migrate\destination\UrlAlias

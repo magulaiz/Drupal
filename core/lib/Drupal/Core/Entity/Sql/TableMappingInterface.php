@@ -130,7 +130,7 @@ interface TableMappingInterface {
    * - base table
    * - data table
    * - revision table
-   * - revision data table
+   * - revision data table.
    *
    * @param string $field_name
    *   The name of the entity field to return the tables names for.

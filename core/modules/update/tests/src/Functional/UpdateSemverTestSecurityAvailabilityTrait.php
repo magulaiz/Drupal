@@ -94,7 +94,7 @@ trait UpdateSemverTestSecurityAvailabilityTrait {
    *   - 8.1.0 Insecure
    *   - 8.0.2 Security update
    *   - 8.0.1 Insecure
-   *   - 8.0.0 Insecure
+   *   - 8.0.0 Insecure.
    */
   public static function securityUpdateAvailabilityProvider() {
     $test_cases = [

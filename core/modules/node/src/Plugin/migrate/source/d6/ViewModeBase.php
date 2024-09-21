@@ -27,7 +27,7 @@ abstract class ViewModeBase extends DrupalSqlBase {
    * NODE_BUILD_RSS = 4
    * NODE_BUILD_PRINT = 5
    * teaser
-   * full
+   * full.
    *
    * @return array
    *   The view mode names.
