@@ -98,6 +98,10 @@ class EntityRevisionsTest extends EntityKernelTestBase {
 
     $loaded->save();
 
+    // Check that the method getRevisionId() always returns an integer value.
+    $this->assertIsInt($entity->getRevisionId());
+    $this->assertIsInt($loaded->getRevisionId());
+
     // After saving, the loaded Revision id set in entity_test_entity_update()
     // and returned from the entity should be the same as the entity's revision
     // id because a new revision wasn't created, the existing revision was

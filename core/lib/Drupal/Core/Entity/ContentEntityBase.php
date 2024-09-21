@@ -450,7 +450,7 @@ abstract class ContentEntityBase extends EntityBase implements \IteratorAggregat
    * {@inheritdoc}
    */
   public function getRevisionId() {
-    return $this->getEntityKey('revision');
+    return !is_null($this->getEntityKey('revision')) ? (int) $this->getEntityKey('revision') : NULL;
   }
 
   /**
