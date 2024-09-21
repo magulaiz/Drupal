@@ -207,6 +207,23 @@ install:
   - config_test
 config:
   actions:
+    config_test.system:
+      setFoo: 'Bar'
+YAML;
+
+    $recipe = $this->createRecipe($recipe_data);
+    $this->expectException(PluginNotFoundException::class);
+    $this->expectExceptionMessage('The "setFoo" plugin does not exist.');
+    RecipeRunner::processRecipe($recipe);
+  }
+
+  public function testInvalidConfigActionAppliedOnConfigEntity() :void {
+    $recipe_data = <<<YAML
+name: Invalid config action
+install:
+  - config_test
+config:
+  actions:
     config_test.dynamic.recipe:
       createIfNotExists:
         label: 'Created by recipe'
@@ -214,9 +231,12 @@ config:
 YAML;
 
     $recipe = $this->createRecipe($recipe_data);
-    $this->expectException(PluginNotFoundException::class);
-    $this->expectExceptionMessage('The "setBody" plugin does not exist.');
-    RecipeRunner::processRecipe($recipe);
+    try {
+      RecipeRunner::processRecipe($recipe);
+    }
+    catch (PluginNotFoundException $e) {
+      $this->assertSame('The "config_test" entity does not support the "setBody" config action. Valid config actions for config_test are: setProtectedProperty, concatProtectedProperty, concatProtectedProperties, concatProtectedPropertyOptional, append, appends, defaultProtectedProperty, addToArray, addToArrayMultipleTimes, setArray, set, setMultiple, enable, disable, setStatus, setThirdPartySetting, setThirdPartySettings, createIfNotExists, create, ensure_exists', $e->getMessage());
+    }
   }
 
   /**
