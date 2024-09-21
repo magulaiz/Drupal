@@ -203,8 +203,6 @@ class EntityDefinitionUpdateManager implements EntityDefinitionUpdateManagerInte
    * {@inheritdoc}
    */
   public function installFieldStorageDefinition($name, $entity_type_id, $provider, FieldStorageDefinitionInterface $storage_definition) {
-    // @todo Pass a mutable field definition interface when we have one. See
-    //   https://www.drupal.org/node/2346329.
     if ($storage_definition instanceof BaseFieldDefinition) {
       $storage_definition
         ->setName($name)
@@ -301,7 +299,6 @@ class EntityDefinitionUpdateManager implements EntityDefinitionUpdateManagerInte
     // @todo Support deleting entity definitions when we support base field
     //   purging.
     // @see https://www.drupal.org/node/2907779
-
     $this->entityTypeManager->useCaches(TRUE);
     $this->entityFieldManager->useCaches(TRUE);
 

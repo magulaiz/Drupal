@@ -226,7 +226,7 @@ class EntityFieldManager implements EntityFieldManagerInterface {
     }
 
     // Retrieve base field definitions.
-    /** @var \Drupal\Core\Field\FieldStorageDefinitionInterface[] $base_field_definitions */
+    /** @var \Drupal\Core\Field\FieldDefinitionInterface[] $base_field_definitions */
     $base_field_definitions = $class::baseFieldDefinitions($entity_type);
 
     // Make sure translatable entity types are correctly defined.
@@ -276,8 +276,6 @@ class EntityFieldManager implements EntityFieldManagerInterface {
     // Assign base field definitions the entity type provider.
     $provider = $entity_type->getProvider();
     foreach ($base_field_definitions as $definition) {
-      // @todo Remove this check once FieldDefinitionInterface exposes a proper
-      //   provider setter. See https://www.drupal.org/node/2346329.
       if ($definition instanceof BaseFieldDefinition) {
         $definition->setProvider($provider);
       }
@@ -291,8 +289,6 @@ class EntityFieldManager implements EntityFieldManagerInterface {
         // Ensure the provider key actually matches the name of the provider
         // defining the field.
         foreach ($module_definitions as $field_name => $definition) {
-          // @todo Remove this check once FieldDefinitionInterface exposes a
-          //   proper provider setter. See https://www.drupal.org/node/2346329.
           if ($definition instanceof BaseFieldDefinition && $definition->getProvider() == NULL) {
             $definition->setProvider($module);
           }
@@ -401,8 +397,6 @@ class EntityFieldManager implements EntityFieldManagerInterface {
 
     $provider = $entity_type->getProvider();
     foreach ($bundle_field_definitions as $definition) {
-      // @todo Remove this check once FieldDefinitionInterface exposes a proper
-      //   provider setter. See https://www.drupal.org/node/2346329.
       if ($definition instanceof BaseFieldDefinition) {
         $definition->setProvider($provider);
       }
@@ -416,8 +410,6 @@ class EntityFieldManager implements EntityFieldManagerInterface {
         // Ensure the provider key actually matches the name of the provider
         // defining the field.
         foreach ($module_definitions as $field_name => $definition) {
-          // @todo Remove this check once FieldDefinitionInterface exposes a
-          //   proper provider setter. See https://www.drupal.org/node/2346329.
           if ($definition instanceof BaseFieldDefinition) {
             $definition->setProvider($module);
           }
@@ -576,7 +568,7 @@ class EntityFieldManager implements EntityFieldManagerInterface {
    *
    * @param string $entity_type_id
    *   The entity type ID. Only entity types that implement
-   *   \Drupal\Core\Entity\FieldableEntityInterface are supported
+   *   \Drupal\Core\Entity\FieldableEntityInterface are supported.
    *
    * @return \Drupal\Core\Field\FieldStorageDefinitionInterface[]
    *   An array of field storage definitions, keyed by field name.
@@ -593,8 +585,6 @@ class EntityFieldManager implements EntityFieldManagerInterface {
         // Ensure the provider key actually matches the name of the provider
         // defining the field.
         foreach ($module_definitions as $field_name => $definition) {
-          // @todo Remove this check once FieldDefinitionInterface exposes a
-          //   proper provider setter. See https://www.drupal.org/node/2346329.
           if ($definition instanceof BaseFieldDefinition) {
             $definition->setProvider($module);
             $definition->setName($field_name);
