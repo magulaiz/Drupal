@@ -175,11 +175,6 @@ class SessionHttpsTest extends BrowserTestBase {
    * Note that the parents $session_id and $loggedInUser is not updated.
    */
   protected function loginHttps(AccountInterface $account) {
-    if (Database::getConnection()->driver() == 'mongodb') {
-      // @todo Fix this test for MongoDB.
-      $this->markTestSkipped();
-    }
-
     $guzzle_cookie_jar = $this->getGuzzleCookieJar();
     $post = [
       'form_id' => 'user_login_form',

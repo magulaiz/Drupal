@@ -47,11 +47,8 @@ class RouterTest extends BrowserTestBase {
     $this->assertSession()->responseHeaderEquals('Content-language', 'en');
     $this->assertSession()->responseHeaderEquals('X-Content-Type-Options', 'nosniff');
     $this->assertSession()->responseHeaderEquals('X-Frame-Options', 'SAMEORIGIN');
-    if (Database::getConnection()->driver() != 'mongodb') {
-      // @todo Fix this for MongoDB.
-      if (strcasecmp($session->getResponseHeader('vary'), 'accept-encoding') !== 0) {
-        $this->assertSession()->responseHeaderDoesNotExist('Vary');
-      }
+    if (strcasecmp($session->getResponseHeader('vary'), 'accept-encoding') !== 0) {
+      $this->assertSession()->responseHeaderDoesNotExist('Vary');
     }
 
     $this->drupalGet('router_test/test2');
