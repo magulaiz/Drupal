@@ -184,14 +184,14 @@ final class SettingsForm extends ConfigFormBase {
       && ($new_logo_provider !== NavigationRenderer::LOGO_PROVIDER_CUSTOM || $previous_logo_fid !== $new_logo_fid)
       && $previous_logo_managed
     ) {
-      $this->fileUsage->delete($previous_logo_managed, 'navigation', 'logo', 1);
+      $this->fileUsage->delete($previous_logo_managed, 'navigation', $previous_logo_managed->getEntityTypeId(), 1);
     }
 
     // Increment usage if different from the previous one.
     if ($new_logo_managed && $new_logo_fid !== $previous_logo_fid) {
       $new_logo_managed->setPermanent();
       $new_logo_managed->save();
-      $this->fileUsage->add($new_logo_managed, 'navigation', 'logo', 1);
+      $this->fileUsage->add($new_logo_managed, 'navigation', $new_logo_managed->getEntityTypeId(), 1);
     }
 
     $config

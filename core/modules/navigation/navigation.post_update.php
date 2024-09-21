@@ -39,3 +39,14 @@ function navigation_post_update_set_logo_dimensions_default(array &$sandbox) {
   }
   $settings->save();
 }
+
+/**
+ * Set the validate type to the file usage for existing uploaded logo.
+ */
+function navigation_post_update_set_logo_type(array &$sandbox) {
+  \Drupal::database()->update('file_usage')
+    ->fields(['type' => 'file'])
+    ->condition('type', 'logo')
+    ->condition('module', 'navigation')
+    ->execute();
+}

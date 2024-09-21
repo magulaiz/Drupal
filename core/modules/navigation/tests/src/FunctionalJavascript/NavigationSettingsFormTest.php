@@ -20,7 +20,7 @@ class NavigationSettingsFormTest extends WebDriverTestBase {
   /**
    * {@inheritdoc}
    */
-  protected static $modules = ['navigation'];
+  protected static $modules = ['navigation', 'views'];
 
   /**
    * {@inheritdoc}
@@ -33,7 +33,10 @@ class NavigationSettingsFormTest extends WebDriverTestBase {
   protected function setUp(): void {
     parent::setUp();
 
-    $admin = $this->drupalCreateUser(['administer site configuration']);
+    $admin = $this->drupalCreateUser([
+      'administer site configuration',
+      'access files overview',
+    ]);
     $this->drupalLogin($admin);
 
     // Set expected logo dimensions smaller than core provided test images.
@@ -78,6 +81,10 @@ class NavigationSettingsFormTest extends WebDriverTestBase {
     $image = \Drupal::service('image.factory')->get($file->getFileUri());
     $this->assertLessThanOrEqual(10, $image->getHeight());
     $this->assertLessThanOrEqual(10, $image->getWidth());
+
+    // Ensure that valid type pass to the file usage API for uploaded file.
+    $this->drupalGet('admin/content/files/usage/' . $file->id());
+    $this->assertSession()->pageTextContains($file->getFilename());
   }
 
 }
