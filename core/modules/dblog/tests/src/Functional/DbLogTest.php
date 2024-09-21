@@ -292,7 +292,7 @@ class DbLogTest extends BrowserTestBase {
       );
     // View the log page to verify it's correct.
     $query = Database::getConnection()->select('watchdog');
-    $query->addExpression('MAX([wid])');
+    $query->addExpressionMax('wid');
     $wid = $query->execute()->fetchField();
     $this->drupalGet('admin/reports/dblog/event/' . $wid);
     $this->assertSession()

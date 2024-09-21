@@ -152,7 +152,7 @@ class DbLogController extends ControllerBase {
       'variables',
       'link',
     ]);
-    $query->leftJoin('users_field_data', 'ufd', $query->joinCondition()->compare('w.uid', 'ufd.uid'));
+    $query->leftJoin('users', 'ufd', $query->joinCondition()->compare('w.uid', 'ufd.uid'));
 
     $this->addFilterToQuery($request, $query);
 
@@ -229,7 +229,7 @@ class DbLogController extends ControllerBase {
     $query = $this->database->select('watchdog', 'w')
       ->fields('w')
       ->condition('w.wid', (int) $event_id);
-    $query->leftJoin('users', 'u', '[u].[uid] = [w].[uid]');
+    $query->leftJoin('users', 'u', $query->joinCondition()->compare('u.uid', 'w.uid'));
     $query->addField('u', 'uid', 'uid');
     $dblog = $query->execute()->fetchObject();
 
