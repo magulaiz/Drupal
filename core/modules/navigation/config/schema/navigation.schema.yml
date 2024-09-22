@@ -15,12 +15,12 @@ navigation.settings:
           - hide
           - custom
     logo_managed:
-      type: integer
+      type: string
       label: 'Custom logo'
       nullable: true
       constraints:
-        Range:
-          min: 0
+        NotBlank:
+          allowNull: true
     logo_max_filesize:
       type: integer
       label: 'Maximum file sizes (bytes)'

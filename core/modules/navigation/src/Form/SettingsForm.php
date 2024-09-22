@@ -118,8 +118,10 @@ final class SettingsForm extends ConfigFormBase {
         ],
       ],
     ];
-    $allowed = 'png jpg jpeg';
-    $current_logo_managed_fid = $config->get('logo_managed') ? [$config->get('logo_managed')] : NULL;
+    $allowed = 'png jpg jpeg svg';
+    if (!empty($config->get('logo_managed'))) {
+      $fid = $this->getFidFromPath($config->get('logo_managed'));
+    }
     $max_navigation_allowed = $config->get('logo_max_filesize');
     $max_system_allowed = Environment::getUploadMaxSize();
     $max_allowed = $max_navigation_allowed < $max_system_allowed ? $max_navigation_allowed : $max_system_allowed;
@@ -139,7 +141,7 @@ final class SettingsForm extends ConfigFormBase {
       '#upload_validators' => $upload_validators,
       '#upload_location' => 'public://navigation-logo',
       '#description' => $this->renderer->renderInIsolation($file_upload_help),
-      '#default_value' => $current_logo_managed_fid,
+      '#default_value' => $config->get('logo_managed') ? [$fid] : [],
       '#multiple' => FALSE,
     ];
     return parent::buildForm($form, $form_state);
@@ -164,10 +166,10 @@ final class SettingsForm extends ConfigFormBase {
    */
   public function submitForm(array &$form, FormStateInterface $form_state): void {
     $config = $this->config('navigation.settings');
-
     // Get the previous config settings.
     $previous_logo_provider = $config->get('logo_provider');
-    $previous_logo_fid = $config->get('logo_managed');
+    $logo_path = $config->get('logo_managed');
+    $previous_logo_fid = $logo_path ? $this->getFidFromPath($logo_path) : NULL;
 
     // Get new values from the form.
     $new_logo_provider = $form_state->getValue('logo_provider');
@@ -189,13 +191,15 @@ final class SettingsForm extends ConfigFormBase {
 
     // Increment usage if different from the previous one.
     if ($new_logo_managed && $new_logo_fid !== $previous_logo_fid) {
+      $logo_path = $new_logo_managed->getFileUri();
       $new_logo_managed->setPermanent();
       $new_logo_managed->save();
       $this->fileUsage->add($new_logo_managed, 'navigation', 'logo', 1);
     }
 
     $config
-      ->set('logo_managed', $new_logo_fid)
+      ->set('logo_provider', $new_logo_provider)
+      ->set('logo_managed', $logo_path)
       ->save();
     parent::submitForm($form, $form_state);
   }
@@ -271,6 +275,21 @@ final class SettingsForm extends ConfigFormBase {
     }
 
     return FALSE;
+  }
+
+  /**
+   * Helper function to get fid from image path.
+   */
+  protected function getFidFromPath(string $file_path): string {
+    $fid = '';
+    $files = $this->entityTypeManager->getStorage('file')
+      ->loadByProperties(['uri' => $file_path]);
+    /** @var \Drupal\file\FileInterface|null $file */
+    $file = reset($files) ?: NULL;
+    if (!empty($file)) {
+      $fid = $file->id();
+    }
+    return $fid;
   }
 
 }

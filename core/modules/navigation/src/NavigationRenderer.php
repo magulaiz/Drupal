@@ -18,8 +18,6 @@ use Drupal\Core\Menu\LocalTaskManagerInterface;
 use Drupal\Core\Plugin\Context\Context;
 use Drupal\Core\Plugin\Context\ContextDefinition;
 use Drupal\Core\Routing\RouteMatchInterface;
-use Drupal\file\Entity\File;
-use Drupal\file\FileInterface;
 use Drupal\layout_builder\SectionStorage\SectionStorageManagerInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
 
@@ -144,9 +142,8 @@ final class NavigationRenderer {
     $page_top['navigation'] = $build;
 
     if ($logo_provider === self::LOGO_PROVIDER_CUSTOM) {
-      $logo_managed = File::load($logo_settings->get('logo_managed'));
-      if ($logo_managed instanceof FileInterface) {
-        $logo_managed_uri = $logo_managed->getFileUri();
+      $logo_managed_uri = $logo_settings->get('logo_managed');
+      if (!empty($logo_managed_uri)) {
         $logo_managed_url = $this->fileUrlGenerator->generateAbsoluteString($logo_managed_uri);
         $page_top['navigation'][0]['settings']['logo_path'] = $logo_managed_url;
         $image = $this->imageFactory->get($logo_managed_uri);
