@@ -1,0 +1,13 @@
+@media print {
+  .admin-toolbar {
+    display: none !important;
+  }
+
+  .page-wrapper {
+    margin: unset !important;
+  }
+
+  .dialog-off-canvas-main-canvas {
+    margin: unset !important;
+  }
+}
