@@ -44,7 +44,7 @@ const SIMPLETEST_SCRIPT_COLOR_PASS = 32;
 const SIMPLETEST_SCRIPT_COLOR_FAIL = 31;
 // An annoying brown.
 const SIMPLETEST_SCRIPT_COLOR_EXCEPTION = 33;
-// An appeasing cyan.
+// An appeasing yellow.
 const SIMPLETEST_SCRIPT_COLOR_YELLOW = 33;
 
 // Restricting the chunk of queries prevents memory exhaustion.
