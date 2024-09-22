@@ -29,6 +29,17 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  * Also serves as a base class for specific types of Entity Reference
  * Selection plugins.
  *
+ * Plugin configuration must contain a key 'handler_settings' referencing an
+ * array. This array in turn may contain the keys:
+ * - auto_create: (Optional) The setting used to auto-create entities that
+ *   do not exist.
+ * - auto_create_bundle: (Optional) The bundle name for auto-created entities
+ *   must be specified, if auto_create is TRUE.
+ * - sort: (Optional) Array with 'field' and 'direction' keys, determining how results
+ *   will be sorted. Defaults to '_none'.
+ * - target_bundles: (Optional) Array of bundles to allow (omit to allow all bundles).
+ *
+ * @see \Drupal\Core\Entity\Element\EntityAutocomplete
  * @see \Drupal\Core\Entity\EntityReferenceSelection\SelectionPluginManager
  * @see \Drupal\Core\Entity\Annotation\EntityReferenceSelection
  * @see \Drupal\Core\Entity\EntityReferenceSelection\SelectionInterface
@@ -141,9 +152,6 @@ class DefaultSelection extends SelectionPluginBase implements ContainerFactoryPl
    */
   public function defaultConfiguration() {
     return [
-      // For the 'target_bundles' setting, a NULL value is equivalent to "allow
-      // entities from any bundle to be referenced" and an empty array value is
-      // equivalent to "no entities from any bundle can be referenced".
       'target_bundles' => NULL,
       'sort' => [
         'field' => '_none',
