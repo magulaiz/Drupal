@@ -1,0 +1,52 @@
+{#
+/**
+ * @file
+ * Default theme implementation to present a layout builder add-section link.
+ *
+ * Included from layout-builder.html.twig.
+ * Variables are inherited from the parent template.
+ *
+ * @ingroup themeable
+ */
+#}
+
+{% set wrapper_attributes = create_attribute({
+  'class': ['layout-builder__add-section'],
+  'data-layout-builder-highlight-id': section_storage.getAddSectionHighlightId(delta),
+}) %}
+
+{% set link_attributes = create_attribute({
+  'class': [
+    'use-ajax',
+    'layout-builder__link',
+    'layout-builder__link--add',
+  ],
+  'data-dialog-type': 'dialog',
+  'data-dialog-renderer': 'off_canvas',
+}) %}
+
+{# Prepare link text based on position in the layout. If the delta and the
+   count are the same, it is either the end of the layout or an empty layout. #}
+{% if delta == total  %}
+  {% if delta == 0 %}
+    {% set title = 'Add section'|t %}
+  {% else %}
+    {% set title = 'Add section <span class="visually-hidden">at end of layout</span>'|t %}
+  {% endif %}
+  {# If the delta and the count are different, it is either the beginning of
+     the layout or in between two sections. #}
+{% else %}
+  {% if delta == 0 %}
+    {% set title = 'Add section <span class="visually-hidden">at start of layout</span>'|t %}
+  {% else %}
+    {% set title = 'Add section <span class="visually-hidden">at end of layout</span>'|t %}
+  {% endif %}
+{% endif %}
+
+<div {{ wrapper_attributes }}>
+  <a {{ link_attributes }} href="{{ path('layout_builder.choose_section', {
+    'section_storage': section_storage.getStorageId,
+    'section_storage_type': section_storage.getStorageType,
+    'delta': delta,
+  }) }}">{{ title }}</a>
+</div>

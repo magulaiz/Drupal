@@ -1,0 +1,39 @@
+{#
+/**
+ * @file
+ * Default theme implementation to present a layout builder element.
+ *
+ * Available variables:
+ * - section_storage: The section storage object.
+ * - status_messages: Placeholder for rendering status messages, present in ajax requests.
+ * - sections: Array keyed by delta: per-section variables:
+ *     build: The section render array.
+ * - element: Additional renderable content for the element.
+ *
+ * @see template_preprocess_media()
+ * @see media_library_preprocess_media()
+ *
+ * @ingroup themeable
+ */
+#}
+{% set attributes = create_attribute({
+  'class': ['layout-builder'],
+  'id': 'layout-builder',
+}) %}
+
+<div {{ attributes }}>
+  {{ status_messages }}
+
+  {# Loop over each section. Ensure we have delta and total if there are no sections. #}
+  {% set delta, total = 0, sections|length %}
+  {% for section in sections %}
+    {% include '@layout_builder/layout-builder--add-section.html.twig' %}
+    {{ section.build }}
+    {% set delta = delta + 1 %}
+  {% endfor %}
+  {% include '@layout_builder/layout-builder--add-section.html.twig' %}
+
+  {# Render any additional content, attached libraries, cache data etc. #}
+  {{ element }}
+
+</div>
