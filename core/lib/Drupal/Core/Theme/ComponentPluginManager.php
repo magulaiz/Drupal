@@ -131,7 +131,7 @@ class ComponentPluginManager extends DefaultPluginManager implements Categorizin
   /**
    * {@inheritdoc}
    */
-  public function getDefinitions() {
+  public function getDefinitions(): array {
     $definitions = parent::getDefinitions();
 
     $development_settings = $this->keyValueFactory->get('development_settings');
