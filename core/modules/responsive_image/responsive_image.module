@@ -513,7 +513,7 @@ function responsive_image_get_mime_type($image_style_name, $extension) {
   else {
     $fake_path = 'responsive_image.' . ImageStyle::load($image_style_name)->getDerivativeExtension($extension);
   }
-  return \Drupal::service('file.mime_type.guesser.extension')->guessMimeType($fake_path);
+  return \Drupal::service('file.mime_type.guesser')->guessMimeType($fake_path);
 }
 
 /**
