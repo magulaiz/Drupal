@@ -55,4 +55,18 @@ class MigrateSource extends Plugin {
     public readonly ?string $deriver = NULL,
   ) {}
 
+  /**
+   * {@inheritdoc}
+   */
+  public function get(): array|object {
+    $value = parent::get();
+    // The 'source_module' property is only required by migrate_drupal, so it
+    // was not included as a class property for this attribute. To prevent
+    // exceptions being thrown when migrate_drupal is installed, set the
+    // source_module value here to the plugin provider.
+    // @todo Remove this when migrate_drupal is removed.
+    $value['source_module'] = $this->getProvider();
+    return $value;
+  }
+
 }
