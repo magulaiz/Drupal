@@ -576,8 +576,8 @@ trait AssertContentTrait {
    * @see https://www.drupal.org/node/1234567
    */
   protected function assertUniqueText($text, $message = '') {
-    return $this->assertUniqueTextHelper($text, $message, NULL, TRUE);
     @trigger_error(__METHOD__ . '() is deprecated in drupal:9.3.0 and is removed from drupal:10.0.0. There is no replacement. See https://www.drupal.org/node/1234567', E_USER_DEPRECATED);
+    return $this->assertUniqueTextHelper($text, $message, NULL, TRUE);
   }
 
   /**
@@ -1164,7 +1164,7 @@ trait AssertContentTrait {
    */
   protected function assertOption($id, $option, $message = '') {
     @trigger_error(__METHOD__ . '() is deprecated in drupal:9.3.0 and is removed from drupal:10.0.0. There is no replacement. See https://www.drupal.org/node/1234567', E_USER_DEPRECATED);
-     $options = $this->xpath('//select[@id=:id]//option[@value=:option]', [':id' => $id, ':option' => $option]);
+    $options = $this->xpath('//select[@id=:id]//option[@value=:option]', [':id' => $id, ':option' => $option]);
     $this->assertTrue(isset($options[0]), $message ? $message : new FormattableMarkup('Option @option for field @id exists.', ['@option' => $option, '@id' => $id]));
   }
 
@@ -1265,7 +1265,7 @@ trait AssertContentTrait {
    *
    * @see https://www.drupal.org/node/1234567
    */
-  protected function assertOptionSelected($id, $option, $message = '', $group = 'Browser') {
+  protected function assertOptionSelected($id, $option, $message = ''): bool {
     @trigger_error(__METHOD__ . '() is deprecated in drupal:9.3.0 and is removed from drupal:10.0.0. There is no replacement. See https://www.drupal.org/node/1234567', E_USER_DEPRECATED);
     $message = $message ? $message : new FormattableMarkup('Option @option for field @id is selected.', ['@option' => $option, '@id' => $id]);
     $elements = $this->xpath('//select[@id=:id]//option[@value=:option]', [':id' => $id, ':option' => $option]);
