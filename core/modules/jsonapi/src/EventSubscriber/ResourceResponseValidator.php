@@ -82,7 +82,7 @@ class ResourceResponseValidator implements EventSubscriberInterface {
   }
 
   /**
-   * Sets the validator service if available.
+   * Sets the validator service if its available.
    */
   public function setValidator(?Validator $validator = NULL) {
     if ($validator) {
