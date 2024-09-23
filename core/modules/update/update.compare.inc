@@ -7,7 +7,6 @@
 use Drupal\Core\Extension\ExtensionVersion;
 use Drupal\update\Project;
 use Drupal\update\ProjectRelease;
-use Drupal\update\UpdateServerProjectInfo;
 use Drupal\update\UpdateFetcherInterface;
 use Drupal\update\UpdateManagerInterface;
 use Drupal\update\ProjectCoreCompatibility;
@@ -281,7 +280,7 @@ function update_calculate_project_update_status(&$project_data, $available) {
   try {
     $existing_major = ExtensionVersion::createFromVersionString($project_data['existing_version'])->getMajorVersion();
   }
-  catch (UnexpectedValueException $exception) {
+  catch (UnexpectedValueException) {
     // If the version has an unexpected value we can't determine updates.
     $project_data['status'] = UpdateFetcherInterface::UNKNOWN;
     $project_data['reason'] = t('Invalid version: @existing_version', ['@existing_version' => $project_data['existing_version']]);
@@ -309,7 +308,7 @@ function update_calculate_project_update_status(&$project_data, $available) {
         $target_major = ExtensionVersion::createFromSupportBranch($supported_branch)->getMajorVersion();
 
       }
-      catch (UnexpectedValueException $exception) {
+      catch (UnexpectedValueException) {
         continue;
       }
     }

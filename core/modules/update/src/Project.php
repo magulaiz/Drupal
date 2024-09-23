@@ -37,7 +37,7 @@ final class Project {
    * @param string|null $existing_version
    *   The existing version of project on the site, if any.
    */
-  private function __construct(UpdateServerProjectInfo $project_info, string $existing_version = NULL) {
+  private function __construct(UpdateServerProjectInfo $project_info, ?string $existing_version = NULL) {
     $this->existingVersion = $existing_version;
     $this->updateServerProjectInfo = $project_info;
   }

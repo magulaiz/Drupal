@@ -34,7 +34,7 @@ class UpdateServerProjectInfo {
    * @param array $releases
    *   The project releases.
    */
-  private function __construct(string $status = NULL, array $supported_branches = [], array $releases = []) {
+  private function __construct(?string $status = NULL, array $supported_branches = [], array $releases = []) {
     $this->status = $status;
     $this->supportedBranches = $supported_branches;
     $this->releases = $releases;
