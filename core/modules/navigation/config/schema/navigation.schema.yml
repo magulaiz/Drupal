@@ -14,13 +14,9 @@ navigation.settings:
           - default
           - hide
           - custom
-    logo_managed:
-      type: integer
-      label: 'Custom logo'
-      nullable: true
-      constraints:
-        Range:
-          min: 0
+    logo_path:
+      type: string
+      label: 'Path'
     logo_max_filesize:
       type: integer
       label: 'Maximum file sizes (bytes)'
