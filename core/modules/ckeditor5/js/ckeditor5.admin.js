@@ -7,7 +7,7 @@
   const toolbarHelp = [
     {
       message: Drupal.t(
-        "The toolbar buttons that don't fit the user's browser window width will be grouped in a dropdown. If multiple toolbar rows are preferred, those can be configured by adding an explicit wrapping breakpoint wherever you want to start a new row.",
+        "The toolbar buttons that don't fit the user's browser window width will be grouped in a dropdown. If multiple toolbar rows are preferred, those can be configured by adding an explicit wrapping breakpoint wherever you want to start a new row. To dynamically wrap each button into the next line, instead of grouping them into the dropdown, place the explicit wrapping breakpoint at the very end.",
         null,
         {
           context:
