@@ -67,13 +67,4 @@ class DbLogViewsTest extends DbLogTest {
     $this->assertEquals('No log messages available.', $area['content']);
   }
 
-  /**
-   * Tests the database log filter functionality at admin/reports/dblog.
-   */
-  public function testFilter(): void {
-    if (Database::getConnection()->driver() == 'mongodb') {
-      $this->markTestSkipped();
-    }
-  }
-
 }
