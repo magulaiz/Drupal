@@ -352,13 +352,13 @@ trait AssertContentTrait {
    * @return bool
    *   TRUE if the assertion succeeded.
    *
-   * @deprecated in drupal:9.3.0 and is removed from drupal:10.0.0. There is no
+   * @deprecated in drupal:11.1.0 and is removed from drupal:12.0.0. There is no
    *   replacement.
    *
-   * @see https://www.drupal.org/node/1234567
+   * @see https://www.drupal.org/node/3476110
    */
   protected function assertNoLinkByHref($href, $message = ''): bool {
-    @trigger_error(__METHOD__ . '() is deprecated in drupal:9.3.0 and is removed from drupal:10.0.0. There is no replacement. See https://www.drupal.org/node/1234567', E_USER_DEPRECATED);
+    @trigger_error(__METHOD__ . '() is deprecated in drupal:11.1.0 and is removed from drupal:12.0.0. There is no replacement. See https://www.drupal.org/node/3476110', E_USER_DEPRECATED);
     $links = $this->xpath('//a[contains(@href, :href)]', [':href' => $href]);
     $message = ($message ? $message : new FormattableMarkup('No link containing href %href found.', ['%href' => $href]));
     $this->assertEmpty($links, $message);
@@ -380,13 +380,13 @@ trait AssertContentTrait {
    * @return bool
    *   TRUE if the assertion succeeded.
    *
-   * @deprecated in drupal:9.3.0 and is removed from drupal:10.0.0. There is no
+   * @deprecated in drupal:11.1.0 and is removed from drupal:12.0.0. There is no
    *   replacement.
    *
-   * @see https://www.drupal.org/node/1234567
+   * @see https://www.drupal.org/node/3476110
    */
   protected function assertNoLinkByHrefInMainRegion($href, $message = ''): bool {
-    @trigger_error(__METHOD__ . '() is deprecated in drupal:9.3.0 and is removed from drupal:10.0.0. There is no replacement. See https://www.drupal.org/node/1234567', E_USER_DEPRECATED);
+    @trigger_error(__METHOD__ . '() is deprecated in drupal:11.1.0 and is removed from drupal:12.0.0. There is no replacement. See https://www.drupal.org/node/3476110', E_USER_DEPRECATED);
     $links = $this->xpath('//main//a[contains(@href, :href)]', [':href' => $href]);
     $message = ($message ? $message : new FormattableMarkup('No link containing href %href found.', ['%href' => $href]));
     $this->assertEmpty($links, $message);
@@ -471,7 +471,7 @@ trait AssertContentTrait {
    *   a string. If left blank, a default message will be displayed.
    */
   protected function assertNoEscaped($raw, $message = ''): void {
-    @trigger_error(__METHOD__ . '() is deprecated in drupal:9.3.0 and is removed from drupal:10.0.0. There is no replacement. See https://www.drupal.org/node/1234567', E_USER_DEPRECATED);
+    @trigger_error(__METHOD__ . '() is deprecated in drupal:11.1.0 and is removed from drupal:12.0.0. There is no replacement. See https://www.drupal.org/node/3476110', E_USER_DEPRECATED);
     if (!$message) {
       $message = 'Escaped "' . Html::escape((string) $raw) . '" not found';
     }
@@ -570,13 +570,13 @@ trait AssertContentTrait {
    * @return bool
    *   TRUE on pass, FALSE on fail.
    *
-   * @deprecated in drupal:9.3.0 and is removed from drupal:10.0.0. There is no
+   * @deprecated in drupal:11.1.0 and is removed from drupal:12.0.0. There is no
    *   replacement.
    *
-   * @see https://www.drupal.org/node/1234567
+   * @see https://www.drupal.org/node/3476110
    */
   protected function assertUniqueText($text, $message = '') {
-    @trigger_error(__METHOD__ . '() is deprecated in drupal:9.3.0 and is removed from drupal:10.0.0. There is no replacement. See https://www.drupal.org/node/1234567', E_USER_DEPRECATED);
+    @trigger_error(__METHOD__ . '() is deprecated in drupal:11.1.0 and is removed from drupal:12.0.0. There is no replacement. See https://www.drupal.org/node/3476110', E_USER_DEPRECATED);
     return $this->assertUniqueTextHelper($text, $message, NULL, TRUE);
   }
 
@@ -599,13 +599,13 @@ trait AssertContentTrait {
    * @return bool
    *   TRUE on pass, FALSE on fail.
    *
-   * @deprecated in drupal:9.3.0 and is removed from drupal:10.0.0. There is no
+   * @deprecated in drupal:11.1.0 and is removed from drupal:12.0.0. There is no
    *   replacement.
    *
-   * @see https://www.drupal.org/node/1234567
+   * @see https://www.drupal.org/node/3476110
    */
   protected function assertNoUniqueText($text, $message = '') {
-    @trigger_error(__METHOD__ . '() is deprecated in drupal:9.3.0 and is removed from drupal:10.0.0. There is no replacement. See https://www.drupal.org/node/1234567', E_USER_DEPRECATED);
+    @trigger_error(__METHOD__ . '() is deprecated in drupal:11.1.0 and is removed from drupal:12.0.0. There is no replacement. See https://www.drupal.org/node/3476110', E_USER_DEPRECATED);
     return $this->assertUniqueTextHelper($text, $message, NULL, FALSE);
   }
 
@@ -631,13 +631,13 @@ trait AssertContentTrait {
    * @return bool
    *   TRUE on pass.
    *
-   * @deprecated in drupal:9.3.0 and is removed from drupal:10.0.0. There is no
+   * @deprecated in drupal:11.1.0 and is removed from drupal:12.0.0. There is no
    *   replacement.
    *
-   * @see https://www.drupal.org/node/1234567
+   * @see https://www.drupal.org/node/3476110
    */
   protected function assertUniqueTextHelper($text, $message = '', $group = NULL, $be_unique = FALSE): bool {
-    @trigger_error(__METHOD__ . '() is deprecated in drupal:9.3.0 and is removed from drupal:10.0.0. There is no replacement. See https://www.drupal.org/node/1234567', E_USER_DEPRECATED);
+    @trigger_error(__METHOD__ . '() is deprecated in drupal:11.1.0 and is removed from drupal:12.0.0. There is no replacement. See https://www.drupal.org/node/3476110', E_USER_DEPRECATED);
     // Cast MarkupInterface objects to string.
     $text = (string) $text;
     if (!$message) {
@@ -710,13 +710,13 @@ trait AssertContentTrait {
    * @return bool
    *   TRUE on pass.
    *
-   * @deprecated in drupal:9.3.0 and is removed from drupal:10.0.0. There is no
+   * @deprecated in drupal:11.1.0 and is removed from drupal:12.0.0. There is no
    *   replacement.
    *
-   * @see https://www.drupal.org/node/1234567
+   * @see https://www.drupal.org/node/3476110
    */
   protected function assertTextPattern($pattern, $message = NULL): bool {
-    @trigger_error(__METHOD__ . '() is deprecated in drupal:9.3.0 and is removed from drupal:10.0.0. There is no replacement. See https://www.drupal.org/node/1234567', E_USER_DEPRECATED);
+    @trigger_error(__METHOD__ . '() is deprecated in drupal:11.1.0 and is removed from drupal:12.0.0. There is no replacement. See https://www.drupal.org/node/3476110', E_USER_DEPRECATED);
     if (!isset($message)) {
       $message = new FormattableMarkup('Pattern "@pattern" found', ['@pattern' => $pattern]);
     }
@@ -767,7 +767,7 @@ trait AssertContentTrait {
    *   a string. If left blank, a default message will be displayed.
    */
   protected function assertNoTitle($title, $message = '') {
-    @trigger_error(__METHOD__ . '() is deprecated in drupal:9.3.0 and is removed from drupal:10.0.0. There is no replacement. See https://www.drupal.org/node/1234567', E_USER_DEPRECATED);
+    @trigger_error(__METHOD__ . '() is deprecated in drupal:11.1.0 and is removed from drupal:12.0.0. There is no replacement. See https://www.drupal.org/node/3476110', E_USER_DEPRECATED);
     $actual = (string) current($this->xpath('//title'));
     if (!$message) {
       $message = new FormattableMarkup('Page title @actual is not equal to @unexpected.', [
@@ -830,7 +830,7 @@ trait AssertContentTrait {
    *   TRUE on pass.
    */
   protected function assertFieldsByValue($fields, $value = NULL, $message = ''): bool {
-    @trigger_error(__METHOD__ . '() is deprecated in drupal:9.3.0 and is removed from drupal:10.0.0. There is no replacement. See https://www.drupal.org/node/1234567', E_USER_DEPRECATED);
+    @trigger_error(__METHOD__ . '() is deprecated in drupal:11.1.0 and is removed from drupal:12.0.0. There is no replacement. See https://www.drupal.org/node/3476110', E_USER_DEPRECATED);
     // If value specified then check array for match.
     $found = TRUE;
     if (isset($value)) {
@@ -933,13 +933,13 @@ trait AssertContentTrait {
    * @return bool
    *   TRUE on pass.
    *
-   * @deprecated in drupal:9.3.0 and is removed from drupal:10.0.0. There is no
+   * @deprecated in drupal:11.1.0 and is removed from drupal:12.0.0. There is no
    *   replacement.
    *
-   * @see https://www.drupal.org/node/1234567
+   * @see https://www.drupal.org/node/3476110
    */
   protected function assertNoFieldByXPath($xpath, $value = NULL, $message = ''): bool {
-    @trigger_error(__METHOD__ . '() is deprecated in drupal:9.3.0 and is removed from drupal:10.0.0. There is no replacement. See https://www.drupal.org/node/1234567', E_USER_DEPRECATED);
+    @trigger_error(__METHOD__ . '() is deprecated in drupal:11.1.0 and is removed from drupal:12.0.0. There is no replacement. See https://www.drupal.org/node/3476110', E_USER_DEPRECATED);
     $fields = $this->xpath($xpath);
 
     // If value specified then check array for match.
@@ -1015,13 +1015,13 @@ trait AssertContentTrait {
    * @return bool
    *   TRUE on pass, FALSE on fail.
    *
-   * @deprecated in drupal:9.3.0 and is removed from drupal:10.0.0. There is no
+   * @deprecated in drupal:11.1.0 and is removed from drupal:12.0.0. There is no
    *   replacement.
    *
-   * @see https://www.drupal.org/node/1234567
+   * @see https://www.drupal.org/node/3476110
    */
   protected function assertNoFieldByName($name, $value = '', $message = '') {
-    @trigger_error(__METHOD__ . '() is deprecated in drupal:9.3.0 and is removed from drupal:10.0.0. There is no replacement. See https://www.drupal.org/node/1234567', E_USER_DEPRECATED);
+    @trigger_error(__METHOD__ . '() is deprecated in drupal:11.1.0 and is removed from drupal:12.0.0. There is no replacement. See https://www.drupal.org/node/3476110', E_USER_DEPRECATED);
     return $this->assertNoFieldByXPath($this->constructFieldXpath('name', $name), $value, $message ? $message : new FormattableMarkup('Did not find field by name @name', ['@name' => $name]));
   }
 
@@ -1045,13 +1045,13 @@ trait AssertContentTrait {
    * @return bool
    *   TRUE on pass, FALSE on fail.
    *
-   * @deprecated in drupal:9.3.0 and is removed from drupal:10.0.0. There is no
+   * @deprecated in drupal:11.1.0 and is removed from drupal:12.0.0. There is no
    *   replacement.
    *
-   * @see https://www.drupal.org/node/1234567
+   * @see https://www.drupal.org/node/3476110
    */
   protected function assertFieldById($id, $value = '', $message = '') {
-    @trigger_error(__METHOD__ . '() is deprecated in drupal:9.3.0 and is removed from drupal:10.0.0. There is no replacement. See https://www.drupal.org/node/1234567', E_USER_DEPRECATED);
+    @trigger_error(__METHOD__ . '() is deprecated in drupal:11.1.0 and is removed from drupal:12.0.0. There is no replacement. See https://www.drupal.org/node/3476110', E_USER_DEPRECATED);
     // Cast MarkupInterface objects to string.
     if (isset($value)) {
       $value = (string) $value;
@@ -1080,13 +1080,13 @@ trait AssertContentTrait {
    * @return bool
    *   TRUE on pass, FALSE on fail.
    *
-   * @deprecated in drupal:9.3.0 and is removed from drupal:10.0.0. There is no
+   * @deprecated in drupal:11.1.0 and is removed from drupal:12.0.0. There is no
    *   replacement.
    *
-   * @see https://www.drupal.org/node/1234567
+   * @see https://www.drupal.org/node/3476110
    */
   protected function assertNoFieldById($id, $value = '', $message = '') {
-    @trigger_error(__METHOD__ . '() is deprecated in drupal:9.3.0 and is removed from drupal:10.0.0. There is no replacement. See https://www.drupal.org/node/1234567', E_USER_DEPRECATED);
+    @trigger_error(__METHOD__ . '() is deprecated in drupal:11.1.0 and is removed from drupal:12.0.0. There is no replacement. See https://www.drupal.org/node/3476110', E_USER_DEPRECATED);
     return $this->assertNoFieldByXPath($this->constructFieldXpath('id', $id), $value, $message ? $message : new FormattableMarkup('Did not find field by id @id', ['@id' => $id]));
   }
 
@@ -1105,13 +1105,13 @@ trait AssertContentTrait {
    * @return bool
    *   TRUE on pass.
    *
-   * @deprecated in drupal:9.3.0 and is removed from drupal:10.0.0. There is no
+   * @deprecated in drupal:11.1.0 and is removed from drupal:12.0.0. There is no
    *   replacement.
    *
-   * @see https://www.drupal.org/node/1234567
+   * @see https://www.drupal.org/node/3476110
    */
   protected function assertFieldChecked($id, $message = ''): bool {
-    @trigger_error(__METHOD__ . '() is deprecated in drupal:9.3.0 and is removed from drupal:10.0.0. There is no replacement. See https://www.drupal.org/node/1234567', E_USER_DEPRECATED);
+    @trigger_error(__METHOD__ . '() is deprecated in drupal:11.1.0 and is removed from drupal:12.0.0. There is no replacement. See https://www.drupal.org/node/3476110', E_USER_DEPRECATED);
     $message = $message ? $message : new FormattableMarkup('Checkbox field @id is checked.', ['@id' => $id]);
     $elements = $this->xpath('//input[@id=:id]', [':id' => $id]);
     $this->assertNotEmpty($elements, $message);
@@ -1134,13 +1134,13 @@ trait AssertContentTrait {
    * @return bool
    *   TRUE on pass.
    *
-   * @deprecated in drupal:9.3.0 and is removed from drupal:10.0.0. There is no
+   * @deprecated in drupal:11.1.0 and is removed from drupal:12.0.0. There is no
    *   replacement.
    *
-   * @see https://www.drupal.org/node/1234567
+   * @see https://www.drupal.org/node/3476110
    */
   protected function assertNoFieldChecked($id, $message = ''): bool {
-    @trigger_error(__METHOD__ . '() is deprecated in drupal:9.3.0 and is removed from drupal:10.0.0. There is no replacement. See https://www.drupal.org/node/1234567', E_USER_DEPRECATED);
+    @trigger_error(__METHOD__ . '() is deprecated in drupal:11.1.0 and is removed from drupal:12.0.0. There is no replacement. See https://www.drupal.org/node/3476110', E_USER_DEPRECATED);
     $message = $message ? $message : new FormattableMarkup('Checkbox field @id is not checked.', ['@id' => $id]);
     $elements = $this->xpath('//input[@id=:id]', [':id' => $id]);
     $this->assertNotEmpty($elements, $message);
@@ -1163,7 +1163,7 @@ trait AssertContentTrait {
    *   a string. If left blank, a default message will be displayed.
    */
   protected function assertOption($id, $option, $message = '') {
-    @trigger_error(__METHOD__ . '() is deprecated in drupal:9.3.0 and is removed from drupal:10.0.0. There is no replacement. See https://www.drupal.org/node/1234567', E_USER_DEPRECATED);
+    @trigger_error(__METHOD__ . '() is deprecated in drupal:11.1.0 and is removed from drupal:12.0.0. There is no replacement. See https://www.drupal.org/node/3476110', E_USER_DEPRECATED);
     $options = $this->xpath('//select[@id=:id]//option[@value=:option]', [':id' => $id, ':option' => $option]);
     $this->assertTrue(isset($options[0]), $message ? $message : new FormattableMarkup('Option @option for field @id exists.', ['@option' => $option, '@id' => $id]));
   }
@@ -1178,13 +1178,13 @@ trait AssertContentTrait {
    * @param string $message
    *   (optional) A message to display with the assertion.
    *
-   * @deprecated in drupal:9.3.0 and is removed from drupal:10.0.0. There is no
+   * @deprecated in drupal:11.1.0 and is removed from drupal:12.0.0. There is no
    *   replacement.
    *
-   * @see https://www.drupal.org/node/1234567
+   * @see https://www.drupal.org/node/3476110
    */
   protected function assertOptionByText($id, $text, $message = '') {
-    @trigger_error(__METHOD__ . '() is deprecated in drupal:9.3.0 and is removed from drupal:10.0.0. There is no replacement. See https://www.drupal.org/node/1234567', E_USER_DEPRECATED);
+    @trigger_error(__METHOD__ . '() is deprecated in drupal:11.1.0 and is removed from drupal:12.0.0. There is no replacement. See https://www.drupal.org/node/3476110', E_USER_DEPRECATED);
     $options = $this->xpath('//select[@id=:id]//option[normalize-space(text())=:text]', [':id' => $id, ':text' => $text]);
     $this->assertTrue(isset($options[0]), $message ?: 'Option with text label ' . $text . ' for select field ' . $id . ' exits.');
   }
@@ -1204,7 +1204,7 @@ trait AssertContentTrait {
    *   a string. If left blank, a default message will be displayed.
    */
   protected function assertOptionWithDrupalSelector($drupal_selector, $option, $message = '') {
-    @trigger_error(__METHOD__ . '() is deprecated in drupal:9.3.0 and is removed from drupal:10.0.0. There is no replacement. See https://www.drupal.org/node/1234567', E_USER_DEPRECATED);
+    @trigger_error(__METHOD__ . '() is deprecated in drupal:11.1.0 and is removed from drupal:12.0.0. There is no replacement. See https://www.drupal.org/node/3476110', E_USER_DEPRECATED);
     $options = $this->xpath('//select[@data-drupal-selector=:data_drupal_selector]//option[@value=:option]', [':data_drupal_selector' => $drupal_selector, ':option' => $option]);
     $this->assertTrue(isset($options[0]), $message ? $message : new FormattableMarkup('Option @option for field @data_drupal_selector exists.', ['@option' => $option, '@data_drupal_selector' => $drupal_selector]));
   }
@@ -1226,13 +1226,13 @@ trait AssertContentTrait {
    * @return bool
    *   TRUE on pass.
    *
-   * @deprecated in drupal:9.3.0 and is removed from drupal:10.0.0. There is no
+   * @deprecated in drupal:11.1.0 and is removed from drupal:12.0.0. There is no
    *   replacement.
    *
-   * @see https://www.drupal.org/node/1234567
+   * @see https://www.drupal.org/node/3476110
    */
   protected function assertNoOption($id, $option, $message = ''): bool {
-    @trigger_error(__METHOD__ . '() is deprecated in drupal:9.3.0 and is removed from drupal:10.0.0. There is no replacement. See https://www.drupal.org/node/1234567', E_USER_DEPRECATED);
+    @trigger_error(__METHOD__ . '() is deprecated in drupal:11.1.0 and is removed from drupal:12.0.0. There is no replacement. See https://www.drupal.org/node/3476110', E_USER_DEPRECATED);
     $message = $message ? $message : new FormattableMarkup('Option @option for field @id does not exist.', ['@option' => $option, '@id' => $id]);
     $selects = $this->xpath('//select[@id=:id]', [':id' => $id]);
     $options = $this->xpath('//select[@id=:id]//option[@value=:option]', [':id' => $id, ':option' => $option]);
@@ -1260,13 +1260,13 @@ trait AssertContentTrait {
    *
    * @todo $id is unusable. Replace with $name.
    *
-   * @deprecated in drupal:9.3.0 and is removed from drupal:10.0.0. There is no
+   * @deprecated in drupal:11.1.0 and is removed from drupal:12.0.0. There is no
    *   replacement.
    *
-   * @see https://www.drupal.org/node/1234567
+   * @see https://www.drupal.org/node/3476110
    */
   protected function assertOptionSelected($id, $option, $message = ''): bool {
-    @trigger_error(__METHOD__ . '() is deprecated in drupal:9.3.0 and is removed from drupal:10.0.0. There is no replacement. See https://www.drupal.org/node/1234567', E_USER_DEPRECATED);
+    @trigger_error(__METHOD__ . '() is deprecated in drupal:11.1.0 and is removed from drupal:12.0.0. There is no replacement. See https://www.drupal.org/node/3476110', E_USER_DEPRECATED);
     $message = $message ? $message : new FormattableMarkup('Option @option for field @id is selected.', ['@option' => $option, '@id' => $id]);
     $elements = $this->xpath('//select[@id=:id]//option[@value=:option]', [':id' => $id, ':option' => $option]);
     $this->assertNotEmpty($elements, $message);
@@ -1293,13 +1293,13 @@ trait AssertContentTrait {
    *
    * @todo $id is unusable. Replace with $name.
    *
-   * @deprecated in drupal:9.3.0 and is removed from drupal:10.0.0. There is no
+   * @deprecated in drupal:11.1.0 and is removed from drupal:12.0.0. There is no
    *   replacement.
    *
-   * @see https://www.drupal.org/node/1234567
+   * @see https://www.drupal.org/node/3476110
    */
   protected function assertOptionSelectedWithDrupalSelector($drupal_selector, $option, $message = ''): bool {
-    @trigger_error(__METHOD__ . '() is deprecated in drupal:9.3.0 and is removed from drupal:10.0.0. There is no replacement. See https://www.drupal.org/node/1234567', E_USER_DEPRECATED);
+    @trigger_error(__METHOD__ . '() is deprecated in drupal:11.1.0 and is removed from drupal:12.0.0. There is no replacement. See https://www.drupal.org/node/3476110', E_USER_DEPRECATED);
     $message = $message ? $message : new FormattableMarkup('Option @option for field @data_drupal_selector is selected.', ['@option' => $option, '@data_drupal_selector' => $drupal_selector]);
     $elements = $this->xpath('//select[@data-drupal-selector=:data_drupal_selector]//option[@value=:option]', [':data_drupal_selector' => $drupal_selector, ':option' => $option]);
     $this->assertNotEmpty($elements, $message);
@@ -1324,13 +1324,13 @@ trait AssertContentTrait {
    * @return bool
    *   TRUE on pass.
    *
-   * @deprecated in drupal:9.3.0 and is removed from drupal:10.0.0. There is no
+   * @deprecated in drupal:11.1.0 and is removed from drupal:12.0.0. There is no
    *   replacement.
    *
-   * @see https://www.drupal.org/node/1234567
+   * @see https://www.drupal.org/node/3476110
    */
   protected function assertNoOptionSelected($id, $option, $message = ''): bool {
-    @trigger_error(__METHOD__ . '() is deprecated in drupal:9.3.0 and is removed from drupal:10.0.0. There is no replacement. See https://www.drupal.org/node/1234567', E_USER_DEPRECATED);
+    @trigger_error(__METHOD__ . '() is deprecated in drupal:11.1.0 and is removed from drupal:12.0.0. There is no replacement. See https://www.drupal.org/node/3476110', E_USER_DEPRECATED);
     $message = $message ? $message : new FormattableMarkup('Option @option for field @id is not selected.', ['@option' => $option, '@id' => $id]);
     $elements = $this->xpath('//select[@id=:id]//option[@value=:option]', [':id' => $id, ':option' => $option]);
     $this->assertNotEmpty($elements, $message);
@@ -1372,13 +1372,13 @@ trait AssertContentTrait {
    * @return bool
    *   TRUE on pass, FALSE on fail.
    *
-   * @deprecated in drupal:9.3.0 and is removed from drupal:10.0.0. There is no
+   * @deprecated in drupal:11.1.0 and is removed from drupal:12.0.0. There is no
    *   replacement.
    *
-   * @see https://www.drupal.org/node/1234567
+   * @see https://www.drupal.org/node/3476110
    */
   protected function assertNoField($field, $message = '') {
-    @trigger_error(__METHOD__ . '() is deprecated in drupal:9.3.0 and is removed from drupal:10.0.0. There is no replacement. See https://www.drupal.org/node/1234567', E_USER_DEPRECATED);
+    @trigger_error(__METHOD__ . '() is deprecated in drupal:11.1.0 and is removed from drupal:12.0.0. There is no replacement. See https://www.drupal.org/node/3476110', E_USER_DEPRECATED);
     return $this->assertNoFieldByXPath($this->constructFieldXpath('name', $field) . '|' . $this->constructFieldXpath('id', $field), NULL, $message);
   }
 
@@ -1404,13 +1404,13 @@ trait AssertContentTrait {
    * @return bool
    *   TRUE on pass.
    *
-   * @deprecated in drupal:9.3.0 and is removed from drupal:10.0.0. There is no
+   * @deprecated in drupal:11.1.0 and is removed from drupal:12.0.0. There is no
    *   replacement.
    *
-   * @see https://www.drupal.org/node/1234567
+   * @see https://www.drupal.org/node/3476110
    */
   protected function assertNoDuplicateIds($message = '', $group = NULL, $ids_to_skip = []): bool {
-    @trigger_error(__METHOD__ . '() is deprecated in drupal:9.3.0 and is removed from drupal:10.0.0. There is no replacement. See https://www.drupal.org/node/1234567', E_USER_DEPRECATED);
+    @trigger_error(__METHOD__ . '() is deprecated in drupal:11.1.0 and is removed from drupal:12.0.0. There is no replacement. See https://www.drupal.org/node/3476110', E_USER_DEPRECATED);
     $status = TRUE;
     foreach ($this->xpath('//*[@id]') as $element) {
       $id = (string) $element['id'];
