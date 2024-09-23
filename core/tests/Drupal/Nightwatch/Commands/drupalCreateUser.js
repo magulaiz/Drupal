@@ -19,7 +19,7 @@ exports.command = function drupalCreateUser(
   callback,
 ) {
   const self = this;
-  const email = Math.random().toString(36).substring(2, 15) + '@example.com';
+  const email = `${Math.random().toString(36).substring(2, 15)}@example.com`;
 
   // Define the name here because the callback from drupalCreateRole can be
   // undefined in some cases.
