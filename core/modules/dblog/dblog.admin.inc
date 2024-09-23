@@ -28,21 +28,15 @@ function dblog_filters() {
   if (!empty($types)) {
     $filters['type'] = [
       'title' => t('Type'),
-      'where' => "w.type = ?",
-      'options' => $types,
       'field' => 'w.type',
-      'value' => array_keys($types),
-      'operator' => 'IN',
+      'options' => $types,
     ];
   }
 
   $filters['severity'] = [
     'title' => t('Severity'),
-    'where' => 'w.severity = ?',
-    'options' => RfcLogLevel::getLevels(),
     'field' => 'w.severity',
-    'value' => array_keys(RfcLogLevel::getLevels()),
-    'operator' => 'IN',
+    'options' => RfcLogLevel::getLevels(),
   ];
 
   return $filters;

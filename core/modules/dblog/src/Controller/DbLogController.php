@@ -263,7 +263,7 @@ class DbLogController extends ControllerBase {
       ],
       [
         ['data' => $this->t('Referrer'), 'header' => TRUE],
-        $this->createLink($dblog->referer ?? ''),
+        $this->createLink($dblog->referer),
       ],
       [
         ['data' => $this->t('Message'), 'header' => TRUE],
@@ -279,7 +279,7 @@ class DbLogController extends ControllerBase {
       ],
       [
         ['data' => $this->t('Operations'), 'header' => TRUE],
-        ['data' => ['#markup' => $dblog->link ?? '']],
+        ['data' => ['#markup' => $dblog->link]],
       ],
     ];
     if (isset($dblog->backtrace)) {
@@ -332,7 +332,7 @@ class DbLogController extends ControllerBase {
         if ($key == 'severity') {
           $value = (int) $value;
         }
-        if (in_array($value, $filters[$key]['value'])) {
+        if (in_array($value, array_keys($filters[$key]['options']))) {
           $condition_or->condition($filters[$key]['field'], $value);
           $condition_or_used = TRUE;
         }
