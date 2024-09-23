@@ -88,10 +88,6 @@ class ResourceResponseValidator implements EventSubscriberInterface {
     if ($validator) {
       $this->validator = $validator;
     }
-    elseif (class_exists(Validator::class)) {
-      // Test runtime of tests with validator enabled.
-      $this->validator = new Validator();
-    }
   }
 
   /**
