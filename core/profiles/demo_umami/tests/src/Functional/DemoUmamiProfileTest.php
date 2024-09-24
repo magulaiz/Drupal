@@ -8,6 +8,7 @@ use Drupal\ckeditor5\Plugin\Editor\CKEditor5;
 use Drupal\Core\Config\FileStorage;
 use Drupal\Core\Config\InstallStorage;
 use Drupal\Core\Config\StorageInterface;
+use Drupal\Core\Database\Database;
 use Drupal\editor\Entity\Editor;
 use Drupal\KernelTests\AssertConfigTrait;
 use Drupal\Tests\BrowserTestBase;
@@ -74,11 +75,16 @@ class DemoUmamiProfileTest extends BrowserTestBase {
     // the cache layer.
     $active_config_storage = $this->container->get('config.storage');
 
+    // The database driver override of the default config storage.
+    $driver = Database::getConnection()->driver();
+
     $default_config_storage = new FileStorage($this->container->get('extension.list.profile')->getPath('demo_umami') . '/' . InstallStorage::CONFIG_INSTALL_DIRECTORY, InstallStorage::DEFAULT_COLLECTION);
-    $this->assertDefaultConfig($default_config_storage, $active_config_storage);
+    $database_driver_extension_config_storage = new FileStorage($this->container->get('extension.list.profile')->getPath('demo_umami') . '/' . InstallStorage::CONFIG_INSTALL_DIRECTORY . '/' . $driver, InstallStorage::DEFAULT_COLLECTION);
+    $this->assertDefaultConfig($default_config_storage, $database_driver_extension_config_storage, $active_config_storage);
 
     $default_config_storage = new FileStorage($this->container->get('extension.list.profile')->getPath('demo_umami') . '/' . InstallStorage::CONFIG_OPTIONAL_DIRECTORY, InstallStorage::DEFAULT_COLLECTION);
-    $this->assertDefaultConfig($default_config_storage, $active_config_storage);
+    $database_driver_extension_config_storage = new FileStorage($this->container->get('extension.list.profile')->getPath('demo_umami') . '/' . InstallStorage::CONFIG_OPTIONAL_DIRECTORY . '/' . $driver, InstallStorage::DEFAULT_COLLECTION);
+    $this->assertDefaultConfig($default_config_storage, $database_driver_extension_config_storage, $active_config_storage);
 
     // Now we have all configuration imported, test all of them for schema
     // conformance. Ensures all imported default configuration is valid when
@@ -116,15 +122,29 @@ class DemoUmamiProfileTest extends BrowserTestBase {
    *
    * @param \Drupal\Core\Config\StorageInterface $default_config_storage
    *   The default configuration storage to check.
+   * @param \Drupal\Core\Config\StorageInterface $override_config_storage
+   *   The database driver override configuration storage to check.
    * @param \Drupal\Core\Config\StorageInterface $active_config_storage
    *   The active configuration storage.
    */
-  protected function assertDefaultConfig(StorageInterface $default_config_storage, StorageInterface $active_config_storage): void {
+  protected function assertDefaultConfig(StorageInterface $default_config_storage, StorageInterface $override_config_storage, StorageInterface $active_config_storage): void {
     /** @var \Drupal\Core\Config\ConfigManagerInterface $config_manager */
     $config_manager = $this->container->get('config.manager');
 
     foreach ($default_config_storage->listAll() as $config_name) {
-      if ($active_config_storage->exists($config_name)) {
+      if ($override_config_storage->exists($config_name)) {
+        $result = $config_manager->diff($override_config_storage, $active_config_storage, $config_name);
+        $this->assertConfigDiff($result, $config_name, [
+          // The filter.format.*:roles key is a special install key.
+          'filter.format.basic_html' => ['roles:', '  - authenticated'],
+          'filter.format.full_html' => ['roles:', '  - administrator'],
+          'filter.format.restricted_html' => ['roles:', '  - anonymous'],
+          // The system.site config is overwritten during tests by
+          // FunctionalTestSetupTrait::installParameters().
+          'system.site' => ['uuid:', 'name:', 'mail:'],
+        ]);
+      }
+      elseif ($active_config_storage->exists($config_name)) {
         $result = $config_manager->diff($default_config_storage, $active_config_storage, $config_name);
         $this->assertConfigDiff($result, $config_name, [
           // The filter.format.*:roles key is a special install key.
