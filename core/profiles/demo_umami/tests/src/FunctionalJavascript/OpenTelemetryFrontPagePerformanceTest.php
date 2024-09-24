@@ -39,10 +39,23 @@ class OpenTelemetryFrontPagePerformanceTest extends PerformanceTestBase {
     //   https://www.drupal.org/project/drupal/issues/3379750
     $this->drupalGet('user/login');
     $this->rebuildAll();
-    $this->collectPerformanceData(function () {
+    $performance_data = $this->collectPerformanceData(function () {
       $this->drupalGet('<front>');
     }, 'umamiFrontPageColdCache');
     $this->assertSession()->pageTextContains('Umami');
+    // var_export($performance_data);
+    // $this->assertSame($expected_queries, $recorded_queries);
+    // $this->assertSame(338, $performance_data->getQueryCount());
+    //$this->assertSame(686, $performance_data->getCacheGetCount());
+    // $this->assertSame(425, $performance_data->getCacheSetCount());
+    $this->assertSame(2, $performance_data->getCacheDeleteCount());
+    // $this->assertSame(253, $performance_data->getCacheTagChecksumCount());
+    // $this->assertSame(85, $performance_data->getCacheTagIsValidCount());
+    $this->assertSame(0, $performance_data->getCacheTagInvalidationCount());
+    $this->assertSame(1, $performance_data->getScriptCount());
+    $this->assertLessThan(7100, $performance_data->getScriptBytes());
+    $this->assertSame(2, $performance_data->getStylesheetCount());
+    $this->assertLessThan(40250, $performance_data->getStylesheetBytes());
   }
 
   /**
