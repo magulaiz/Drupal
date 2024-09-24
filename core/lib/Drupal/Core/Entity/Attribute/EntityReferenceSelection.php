@@ -34,11 +34,12 @@ class EntityReferenceSelection extends Plugin {
    *   The weight of the plugin in its group. This property is used to select
    *   the "best" plugin within a group.
    * @param string $group
-   *   Deprecated in 11.1.0. The selection plugin group. This property is used
-   *   to allow selection plugins to target a specific entity type while also
-   *   inheriting the code of an existing selection plugin. For example, if we
-   *   want to override the NodeSelection from the 'default' selection type, we
-   *   can define the attribute as follows:
+   *   Deprecated in 11.1.0 and will be removed in 12.0.0. The selection plugin
+   *   group. This property is used to allow selection plugins to target a
+   *   specific entity type while also inheriting the code of an existing
+   *   selection plugin. For example, if we want to override the NodeSelection
+   *   from the 'default' selection type, we can define the attribute as
+   *   follows:
    *   @code
    *   #[EntityReferenceSelection(
    *     id: "default:node_advanced",
