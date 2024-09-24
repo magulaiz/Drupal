@@ -30,13 +30,6 @@ class InstantQueue {
   protected Config $config;
 
   /**
-   * The drupal database connection.
-   *
-   * @var \Drupal\Core\Database\Connection
-   */
-  protected Connection $connection;
-
-  /**
    * Array of queues names.
    *
    * @var array
@@ -61,14 +54,13 @@ class InstantQueue {
    * @param mixed[]|null $queue_config
    *   Queue configuration from the service container.
    */
-  public function __construct(QueueFactory $queue_factory, LoggerInterface $logger, QueueWorkerManagerInterface $queue_manager, ConfigFactoryInterface $config_factory, Connection $connection, TimeInterface $time, array $queue_config) {
+  public function __construct(QueueFactory $queue_factory, LoggerInterface $logger, QueueWorkerManagerInterface $queue_manager, ConfigFactoryInterface $config_factory, protected Connection $connection, TimeInterface $time, array $queue_config) {
     $this->queueFactory = $queue_factory;
     $this->logger = $logger;
     $this->queueManager = $queue_manager;
     $this->time = $time;
     $this->queueConfig = $queue_config;
     $this->config = $config_factory->get('automated_cron.settings');
-    $this->connection = $connection;
   }
 
   /**

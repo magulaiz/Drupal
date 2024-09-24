@@ -37,14 +37,14 @@ class CronQueueTestInstantQueue extends QueueWorkerBase implements ContainerFact
   /**
    * {@inheritdoc}
    */
-  public function processItem($data) {
+  public function processItem(mixed $data): void {
     \Drupal::logger('instant_queue')->info(__FUNCTION__);
   }
 
   /**
    * {@inheritdoc}
    */
-  public static function create(DependencyInjectionContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
+  public static function create(DependencyInjectionContainerInterface $container, array $configuration, $plugin_id, $plugin_definition): static {
     return new static(
       $configuration,
       $plugin_id,

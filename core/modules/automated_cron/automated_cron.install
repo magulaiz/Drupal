@@ -8,7 +8,7 @@
 /**
  * Install new config.
  */
-function automated_cron_update_11001() {
+function automated_cron_update_11001(): void {
   \Drupal::configFactory()->getEditable('automated_cron.settings')
     ->set('max_items_to_process', 0)
     ->set('max_concurrent_queue_process', 1)
