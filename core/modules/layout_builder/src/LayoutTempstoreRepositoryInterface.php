@@ -30,7 +30,7 @@ interface LayoutTempstoreRepositoryInterface {
    * @param bool $has_unsaved_changes
    *   (optional) Should be TRUE if $section_storage contains unsaved changes.
    */
-  public function set(SectionStorageInterface $section_storage, $has_unsaved_changes = TRUE);
+  public function set(SectionStorageInterface $section_storage, bool $has_unsaved_changes = TRUE): void;
 
   /**
    * Checks for the existence of a tempstore version of a section storage.
@@ -53,7 +53,7 @@ interface LayoutTempstoreRepositoryInterface {
    *   TRUE if there is a tempstore version of this section storage with unsaved
    *   changes.
    */
-  public function hasUnsavedChanges(SectionStorageInterface $section_storage);
+  public function hasUnsavedChanges(SectionStorageInterface $section_storage): bool;
 
   /**
    * Removes the tempstore version of a section storage.

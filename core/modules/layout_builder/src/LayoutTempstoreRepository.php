@@ -77,7 +77,7 @@ class LayoutTempstoreRepository implements LayoutTempstoreRepositoryInterface {
   /**
    * {@inheritdoc}
    */
-  public function hasUnsavedChanges(SectionStorageInterface $section_storage) {
+  public function hasUnsavedChanges(SectionStorageInterface $section_storage): bool {
     $key = $this->getKey($section_storage);
     // Check if the storage is present in the static cache.
     if (isset($this->cache[$key])) {
@@ -90,7 +90,7 @@ class LayoutTempstoreRepository implements LayoutTempstoreRepositoryInterface {
   /**
    * {@inheritdoc}
    */
-  public function set(SectionStorageInterface $section_storage, $has_unsaved_changes = TRUE) {
+  public function set(SectionStorageInterface $section_storage, bool $has_unsaved_changes = TRUE): void {
     $key = $this->getKey($section_storage);
     $tempstore = [
       'section_storage' => $section_storage,
