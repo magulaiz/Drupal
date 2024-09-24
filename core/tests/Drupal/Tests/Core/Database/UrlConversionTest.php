@@ -304,7 +304,7 @@ class UrlConversionTest extends UnitTestCase {
   /**
    * Tests that the exception for having no module setting is not thrown.
    */
-  public function testNoModuleIsSpecifiedExceptionIsRemoved() {
+  public function testNoModuleIsSpecifiedExceptionIsRemoved(): void {
     // Testing that for all database drivers, when the module setting is not
     // set, that it defaults to the driver name is not possible. We are
     // therefore testing that the exception is no longer being thrown. For non
