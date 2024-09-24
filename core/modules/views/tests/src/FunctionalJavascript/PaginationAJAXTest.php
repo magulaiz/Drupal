@@ -270,6 +270,24 @@ class PaginationAJAXTest extends WebDriverTestBase {
 
     $rows = $page->findAll('css', 'tbody tr');
     $this->assertStringContainsString('Node 11 content', $rows[0]->getHtml());
+
+    // Visit the page with 'foo' and 'page' as query parameters.
+    $this->drupalGet('test-content-ajax-filter', ['query' => ['foo' => 1, 'page' => 3]]);
+    $session_assert->elementExists('css', 'input[name="title"]')->setValue('Node 11 content');
+    $session_assert->elementExists('css', 'input[value="Filter"]')->click();
+    $session_assert->assertWaitOnAjaxRequest();
+
+    $rows = $page->findAll('css', 'tbody tr');
+    $this->assertStringContainsString('Node 11 content', $rows[0]->getHtml());
+
+    // Visit the page with 'q' and 'page' query parameters in various positions.
+    $this->drupalGet('test-content-ajax-filter', ['query' => ['q' => 'bar', 'page' => 3]]);
+    $session_assert->elementExists('css', 'input[name="title"]')->setValue('Node 11 content');
+    $session_assert->elementExists('css', 'input[value="Filter"]')->click();
+    $session_assert->assertWaitOnAjaxRequest();
+
+    $rows = $page->findAll('css', 'tbody tr');
+    $this->assertStringContainsString('Node 11 content', $rows[0]->getHtml());
   }
 
 }
