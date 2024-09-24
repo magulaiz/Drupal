@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Drupal\KernelTests;
 
 use Drupal\Component\Diff\Diff;
-use Drupal\Core\Database\Database;
 
 /**
  * Trait to help with diffing config.
@@ -28,26 +27,14 @@ trait AssertConfigTrait {
    *   Thrown when a configuration is different.
    */
   protected function assertConfigDiff(Diff $result, $config_name, array $skipped_config) {
-    $driver = Database::getConnection()->driver();
     foreach ($result->getEdits() as $op) {
       switch (get_class($op)) {
         case 'Drupal\Component\Diff\Engine\DiffOpCopy':
           // Nothing to do, a copy is what we expect.
           break;
 
-        case 'Drupal\Component\Diff\Engine\DiffOpChange':
-          // Skip all MongoDB config changes that about the "table" setting.
-          if ($driver == 'mongodb') {
-            if (is_array($op->closing)) {
-              foreach ($op->closing as $line) {
-                if (strpos($line, ' table: ') !== FALSE) {
-                  break 2;
-                }
-              }
-            }
-          }
-
         case 'Drupal\Component\Diff\Engine\DiffOpDelete':
+        case 'Drupal\Component\Diff\Engine\DiffOpChange':
           // It is not part of the skipped config, so we can directly throw the
           // exception.
           if (!in_array($config_name, array_keys($skipped_config))) {
@@ -89,18 +76,6 @@ trait AssertConfigTrait {
           // The _core property does not exist in the default config.
           if ($op->closing[0] === '_core:') {
             break;
-          }
-
-          // Skip all MongoDB config changes that add the MongoDB  module as a
-          // requirement.
-          if ($driver == 'mongodb') {
-            if (is_array($op->closing)) {
-              foreach ($op->closing as $line) {
-                if (str_ends_with($line, '  - mongodb')) {
-                  break 2;
-                }
-              }
-            }
           }
 
           foreach ($op->closing as $closing) {
