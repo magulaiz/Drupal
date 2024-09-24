@@ -40,14 +40,16 @@ trait EntityTrait {
    *
    * @param \Drupal\Core\Entity\EntityInterface $entity
    *   The entity to validate.
+   * @param string|null
+   *   (optional) The assertion message.
    */
-  protected function assertEntityValid(EntityInterface $entity): void {
+  protected function assertEntityValid(EntityInterface $entity, ?string $message = NULL): void {
     $violations = $entity->validate();
     $messages = [];
     foreach ($violations as $violation) {
       $messages[] = (string) $violation;
     }
-    $this->assertEmpty($messages, sprintf("The entity failed validation with %s errors:\n%s",
+    $this->assertEmpty($messages, $message ?: sprintf("The entity failed validation with %s errors:\n%s",
       count($violations),
       implode("\n", $messages)
     ));
