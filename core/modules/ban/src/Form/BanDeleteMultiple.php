@@ -24,7 +24,7 @@ class BanDeleteMultiple extends ConfirmFormBase {
    *
    * @var array
    */
-  protected $banIps;
+  protected array $banIps;
 
   /**
    * Constructs a new BanDelete object.
@@ -87,7 +87,7 @@ class BanDeleteMultiple extends ConfirmFormBase {
    * @param string $ban_id
    *   The IP address record ID to unblock.
    */
-  public function buildForm(array $form, FormStateInterface $form_state, $ban_id = '') {
+  public function buildForm(array $form, FormStateInterface $form_state, string $ban_id = ''): array {
     $this->banIps = $this->tempStoreFactory->get('ban_ip_delete_multiple')->get('selected_ips');
     $form['selected_ips'] = [
       '#theme' => 'item_list',
@@ -99,7 +99,7 @@ class BanDeleteMultiple extends ConfirmFormBase {
   /**
    * {@inheritdoc}
    */
-  public function submitForm(array &$form, FormStateInterface $form_state) {
+  public function submitForm(array &$form, FormStateInterface $form_state): void {
     foreach ($this->banIps as $ip) {
       $this->ipManager->unbanIp($ip);
     }

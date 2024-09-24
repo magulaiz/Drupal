@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\ban\Functional;
 
+use Drupal\Core\Session\AccountInterface;
 use Drupal\Tests\BrowserTestBase;
 
 /**
@@ -25,7 +26,7 @@ class BanFormTest extends BrowserTestBase {
    *
    * @var \Drupal\Core\Session\AccountInterface
    */
-  protected $user;
+  protected AccountInterface $user;
 
   /**
    * {@inheritdoc}
