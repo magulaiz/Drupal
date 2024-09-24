@@ -61,16 +61,15 @@ class MultipleValueFieldTest extends BrowserTestBase {
 
     // Step 1: Create a node with initial values.
     $node = $this->createNodeWithValues(['foo', 'bar', 'baz']);
-    
     // Step 2: Assert initial field values.
     $this->assertFieldValues($node->id(), ['foo', 'bar', 'baz']);
 
     // Step 3: Edit the node, removing the first value 'foo'.
     $this->drupalGet('node/' . $node->id() . '/edit');
     $this->submitForm([
-        'field_test_text[0][value]' => '',
-        'field_test_text[1][value]' => 'bar',
-        'field_test_text[2][value]' => 'baz',
+      'field_test_text[0][value]' => '',
+      'field_test_text[1][value]' => 'bar',
+      'field_test_text[2][value]' => 'baz',
     ], 'Save');
 
     // Get the page text to check for validation errors.
@@ -91,8 +90,8 @@ class MultipleValueFieldTest extends BrowserTestBase {
       'field_name' => 'field_test_text',
       'type' => 'text',
       'settings' => [
-          'max_length' => 255,
-      ],
+      'max_length' => 255,
+        ],
       'cardinality' => -1,
       'translatable' => FALSE,
     ]);
@@ -107,7 +106,7 @@ class MultipleValueFieldTest extends BrowserTestBase {
       'required' => TRUE,
       'settings' => [
           'max_length' => 255,
-      ],
+        ],
     ])->save();
 
     // Set the form display for the field.
