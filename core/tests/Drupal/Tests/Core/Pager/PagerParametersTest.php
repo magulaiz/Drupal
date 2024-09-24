@@ -75,7 +75,7 @@ class PagerParametersTest extends UnitTestCase {
    * @covers ::getPagerParameter
    * @dataProvider providePagerQueries
    */
-  public function testGetPagerParameter($raw_query, $parameter) {
+  public function testGetPagerParameter($raw_query, $parameter): void {
     $request_stack = new RequestStack();
     $request_stack->push(new Request());
     $parameters = new PagerParameters($request_stack);
@@ -85,6 +85,12 @@ class PagerParametersTest extends UnitTestCase {
 
   /**
    * Data provider for testGetPagerParameter(), testGetPagerQuery(), and testFindPage().
+   *
+   * @return array
+   *   An associated array containing 3 keys:
+   *   1. raw query
+   *   2. parameter
+   *   3. expected query
    */
   public static function providePagerQueries(): array {
     return [
@@ -92,7 +98,7 @@ class PagerParametersTest extends UnitTestCase {
       // Array values aren't supported, so they default to empty.
       'invalid empty page array' => [[], '', []],
       'invalid populated array' => [[1, 2, 3], '', []],
-      // Nothing to
+      // Nothing to check.
       'empty string' => ['', '', []],
       // Conventional but "zero" page values.
       'page 0 as a string' => ['0', '0', [0]],
