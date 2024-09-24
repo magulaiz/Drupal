@@ -763,7 +763,7 @@ class DateTimeFieldTest extends DateTestBase {
       \Drupal::service('entity_field.manager')->clearCachedFieldDefinitions();
 
       // Create a new node to check that datetime field default value is
-      // relative to the default timezie.
+      // relative to the default timezone.
       $new_node = Node::create(['type' => 'date_content']);
       $expected_date = new DrupalDateTime($relative_value, date_default_timezone_get());
       $this->assertEquals($expected_date->format($storage_format), $new_node->get($field_name)->offsetGet(0)->value);
