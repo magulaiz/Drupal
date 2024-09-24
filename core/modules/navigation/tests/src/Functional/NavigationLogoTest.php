@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\navigation\Functional;
 
-use Drupal\Core\Entity\EntityStorageException;
 use Drupal\file\Entity\File;
 use Drupal\Tests\BrowserTestBase;
 use Drupal\Tests\TestFileCreationTrait;
@@ -24,13 +23,6 @@ class NavigationLogoTest extends BrowserTestBase {
    * @var \Drupal\Core\File\FileSystemInterface
    */
   protected $fileSystem;
-
-  /**
-   * The config factory.
-   *
-   * @var \Drupal\Core\Config\ConfigFactoryInterface
-   */
-  protected $configFactory;
 
   /**
    * A user with administrative permissions.
@@ -57,9 +49,8 @@ class NavigationLogoTest extends BrowserTestBase {
   protected function setUp(): void {
     parent::setUp();
 
-    // Inject the file_system and config.factory services.
+    // Inject the file_system service.
     $this->fileSystem = $this->container->get('file_system');
-    $this->configFactory = $this->container->get('config.factory');
 
     // Create and log in an administrative user.
     $this->adminUser = $this->drupalCreateUser([
@@ -73,6 +64,7 @@ class NavigationLogoTest extends BrowserTestBase {
    * Tests Navigation logo configuration base options.
    */
   public function testSettingsLogoOptionsForm(): void {
+    $test_files = $this->getTestFiles('image');
     // Navigate to the settings form.
     $this->drupalGet('/admin/config/user-interface/navigation/settings');
     $this->assertSession()->statusCodeEquals(200);
@@ -90,7 +82,7 @@ class NavigationLogoTest extends BrowserTestBase {
     $this->assertSession()->elementNotExists('css', 'a.admin-toolbar__logo');
 
     // Option 3: Set the logo provider to custom and upload a logo.
-    $file = current($this->getTestFiles('image'));
+    $file = reset($test_files);
     $logo_file = File::create((array) $file + ['status' => 1]);
     $logo_file->save();
     $this->assertNotEmpty($logo_file, 'File entity is not empty.');
@@ -105,7 +97,7 @@ class NavigationLogoTest extends BrowserTestBase {
     $this->assertSession()->elementExists('css', 'a.admin-toolbar__logo > img');
     $this->assertSession()->elementAttributeContains('css', 'a.admin-toolbar__logo > img', 'src', $logo_file->getFilename());
 
-    //Option 4: Set the custom logo to an image in the source code.
+    // Option 4: Set the custom logo to an image in the source code.
     $edit = [
       'logo_provider' => 'custom',
       'logo_path' => 'core/misc/logo/drupal-logo.svg',
@@ -115,6 +107,19 @@ class NavigationLogoTest extends BrowserTestBase {
     $this->drupalGet('/admin/config/user-interface/navigation/settings');
     $this->assertSession()->elementExists('css', 'a.admin-toolbar__logo > img');
     $this->assertSession()->elementAttributeContains('css', 'a.admin-toolbar__logo > img', 'src', 'drupal-logo.svg');
+
+    // Option 5: Upload custom logo.
+    $file = end($test_files);
+    $edit = [
+      'logo_provider' => 'custom',
+      'files[logo_upload]' => $this->fileSystem->realpath($file->uri),
+    ];
+    $this->submitForm($edit, t('Save configuration'));
+    $this->assertSession()->statusMessageContains('The image was resized to fit within the navigation logo expected dimensions of 40x40 pixels. The new dimensions of the resized image are 40x27 pixels.');
+    // Refresh the page to verify custom logo is placed.
+    $this->drupalGet('/admin/config/user-interface/navigation/settings');
+    $this->assertSession()->elementExists('css', 'a.admin-toolbar__logo > img');
+    $this->assertSession()->elementAttributeContains('css', 'a.admin-toolbar__logo > img', 'src', $file->name);
   }
 
 }
