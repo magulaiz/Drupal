@@ -17,6 +17,8 @@ navigation.settings:
     logo_path:
       type: string
       label: 'Path'
+      constraints:
+        NotNull: [ ]
     logo_max_filesize:
       type: integer
       label: 'Maximum file sizes (bytes)'
