@@ -90,8 +90,8 @@ class MultipleValueFieldTest extends BrowserTestBase {
       'field_name' => 'field_test_text',
       'type' => 'text',
       'settings' => [
-      'max_length' => 255,
-        ],
+        'max_length' => 255,
+      ],
       'cardinality' => -1,
       'translatable' => FALSE,
     ]);
@@ -105,8 +105,8 @@ class MultipleValueFieldTest extends BrowserTestBase {
       'label' => 'Test Text',
       'required' => TRUE,
       'settings' => [
-          'max_length' => 255,
-        ],
+        'max_length' => 255,
+      ],
     ])->save();
 
     // Set the form display for the field.
