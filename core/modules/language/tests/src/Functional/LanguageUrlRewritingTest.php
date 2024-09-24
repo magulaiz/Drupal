@@ -19,9 +19,7 @@ use Symfony\Component\HttpFoundation\Request;
 class LanguageUrlRewritingTest extends BrowserTestBase {
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = ['language', 'language_test'];
 
@@ -69,7 +67,7 @@ class LanguageUrlRewritingTest extends BrowserTestBase {
   /**
    * Check that non-installed languages are not considered.
    */
-  public function testUrlRewritingEdgeCases() {
+  public function testUrlRewritingEdgeCases(): void {
     // Check URL rewriting with a non-installed language.
     $non_existing = new Language(['id' => $this->randomMachineName()]);
     $this->checkUrl($non_existing, 'Path language is ignored if language is not installed.');
@@ -113,7 +111,7 @@ class LanguageUrlRewritingTest extends BrowserTestBase {
   /**
    * Check URL rewriting when using a domain name and a non-standard port.
    */
-  public function testDomainNameNegotiationPort() {
+  public function testDomainNameNegotiationPort(): void {
     global $base_url;
     $language_domain = 'example.fr';
     // Get the current host URI we're running on.

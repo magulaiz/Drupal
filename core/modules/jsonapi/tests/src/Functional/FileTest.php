@@ -201,11 +201,16 @@ class FileTest extends ResourceTestBase {
   }
 
   /**
-   * {@inheritdoc}
+   * Tests POST/PATCH/DELETE for an individual resource.
    */
-  public function testPostIndividual() {
+  public function testIndividual(): void {
     // @todo https://www.drupal.org/node/1927648
-    $this->markTestSkipped();
+    // Add doTestPostIndividual().
+    $this->doTestPatchIndividual();
+    $this->entity = $this->resaveEntity($this->entity, $this->account);
+    $this->revokePermissions();
+    $this->config('jsonapi.settings')->set('read_only', TRUE)->save(TRUE);
+    $this->doTestDeleteIndividual();
   }
 
   /**
@@ -223,7 +228,7 @@ class FileTest extends ResourceTestBase {
   /**
    * {@inheritdoc}
    */
-  public function testCollectionFilterAccess() {
+  public function testCollectionFilterAccess(): void {
     $label_field_name = 'filename';
     // Verify the expected behavior in the common case: when the file is public.
     $this->doTestCollectionFilterAccessBasedOnPermissions($label_field_name, 'access content');

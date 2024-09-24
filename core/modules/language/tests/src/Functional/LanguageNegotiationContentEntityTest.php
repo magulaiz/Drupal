@@ -24,9 +24,7 @@ use Symfony\Component\Routing\Route;
 class LanguageNegotiationContentEntityTest extends BrowserTestBase {
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = [
     'language',
@@ -69,7 +67,7 @@ class LanguageNegotiationContentEntityTest extends BrowserTestBase {
   /**
    * Tests default with content language remaining same as interface language.
    */
-  public function testDefaultConfiguration() {
+  public function testDefaultConfiguration(): void {
     $translation = $this->entity;
     $this->drupalGet($translation->toUrl());
     $last = \Drupal::keyValue('language_test')->get('language_negotiation_last');
@@ -98,7 +96,7 @@ class LanguageNegotiationContentEntityTest extends BrowserTestBase {
   /**
    * Tests enabling the language negotiator language_content_entity.
    */
-  public function testEnabledLanguageContentNegotiator() {
+  public function testEnabledLanguageContentNegotiator(): void {
     // Define the method language-url with a higher priority than
     // language-content-entity. This configuration should match the default one,
     // where the language-content-entity is turned off.

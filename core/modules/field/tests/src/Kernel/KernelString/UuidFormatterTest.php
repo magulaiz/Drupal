@@ -16,9 +16,7 @@ class UuidFormatterTest extends KernelTestBase {
 
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = ['field', 'entity_test', 'system', 'user'];
 
@@ -35,7 +33,7 @@ class UuidFormatterTest extends KernelTestBase {
   /**
    * Tests string formatter output.
    */
-  public function testUuidStringFormatter() {
+  public function testUuidStringFormatter(): void {
     $entity = EntityTest::create([]);
     $entity->save();
 

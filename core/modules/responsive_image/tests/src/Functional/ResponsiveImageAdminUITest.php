@@ -15,9 +15,7 @@ use Drupal\Tests\BrowserTestBase;
 class ResponsiveImageAdminUITest extends BrowserTestBase {
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = [
     'responsive_image',
@@ -43,7 +41,7 @@ class ResponsiveImageAdminUITest extends BrowserTestBase {
   /**
    * Tests responsive image administration functionality.
    */
-  public function testResponsiveImageAdmin() {
+  public function testResponsiveImageAdmin(): void {
     // We start without any default styles.
     $this->drupalGet('admin/config/media/responsive-image-style');
     $this->assertSession()->pageTextContains('There are no responsive image styles yet.');

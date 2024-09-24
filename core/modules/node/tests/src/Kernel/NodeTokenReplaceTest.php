@@ -18,9 +18,7 @@ use Drupal\Tests\system\Kernel\Token\TokenReplaceKernelTestBase;
 class NodeTokenReplaceTest extends TokenReplaceKernelTestBase {
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = ['node', 'filter'];
 
@@ -39,7 +37,7 @@ class NodeTokenReplaceTest extends TokenReplaceKernelTestBase {
   /**
    * Creates a node, then tests the tokens generated from it.
    */
-  public function testNodeTokenReplacement() {
+  public function testNodeTokenReplacement(): void {
     $url_options = [
       'absolute' => TRUE,
       'language' => $this->interfaceLanguage,

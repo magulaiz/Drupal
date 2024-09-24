@@ -29,6 +29,11 @@ trait UiHelperTrait {
   protected $loggedInUser = FALSE;
 
   /**
+   * Use one-time login links instead of submitting the login form.
+   */
+  protected bool $useOneTimeLoginLinks = TRUE;
+
+  /**
    * The number of meta refresh redirects to follow, or NULL if unlimited.
    *
    * @var null|int
@@ -138,7 +143,7 @@ trait UiHelperTrait {
    * For example:
    * @code
    *   // Create a user.
-   *   $account = $this->drupalCreateUser(array());
+   *   $account = $this->drupalCreateUser([]);
    *   $this->drupalLogin($account);
    *   // Load real user object.
    *   $pass_raw = $account->passRaw;
@@ -156,11 +161,21 @@ trait UiHelperTrait {
       $this->drupalLogout();
     }
 
-    $this->drupalGet(Url::fromRoute('user.login'));
-    $this->submitForm([
-      'name' => $account->getAccountName(),
-      'pass' => $account->passRaw,
-    ], 'Log in');
+    if ($this->useOneTimeLoginLinks) {
+      // Reload to get latest login timestamp.
+      $storage = \Drupal::entityTypeManager()->getStorage('user');
+      /** @var \Drupal\user\UserInterface $accountUnchanged */
+      $accountUnchanged = $storage->loadUnchanged($account->id());
+      $login = user_pass_reset_url($accountUnchanged) . '/login?destination=user/' . $account->id();
+      $this->drupalGet($login);
+    }
+    else {
+      $this->drupalGet(Url::fromRoute('user.login'));
+      $this->submitForm([
+        'name' => $account->getAccountName(),
+        'pass' => $account->passRaw,
+      ], 'Log in');
+    }
 
     // @see ::drupalUserIsLoggedIn()
     $account->sessionId = $this->getSession()->getCookie(\Drupal::service('session_configuration')->getOptions(\Drupal::request())['name']);

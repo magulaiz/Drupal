@@ -15,9 +15,7 @@ use Drupal\block\Entity\Block;
 class BlockInvalidRegionTest extends BrowserTestBase {
 
   /**
-   * Modules to install.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = ['block', 'block_test'];
 
@@ -43,7 +41,7 @@ class BlockInvalidRegionTest extends BrowserTestBase {
   /**
    * Tests that blocks assigned to invalid regions work correctly.
    */
-  public function testBlockInInvalidRegion() {
+  public function testBlockInInvalidRegion(): void {
     // Enable a test block and place it in an invalid region.
     $block = $this->drupalPlaceBlock('test_html');
     \Drupal::configFactory()->getEditable('block.block.' . $block->id())->set('region', 'invalid_region')->save();
