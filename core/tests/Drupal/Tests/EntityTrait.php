@@ -45,13 +45,13 @@ trait EntityTrait {
    */
   protected function assertEntityValid(EntityInterface $entity, ?string $message = NULL): void {
     $violations = $entity->validate();
-    $messages = [];
+    $violation_messages = [];
     foreach ($violations as $violation) {
-      $messages[] = (string) $violation;
+      $violation_messages[] = (string) $violation;
     }
-    $this->assertEmpty($messages, $message ?: sprintf("The entity failed validation with %s errors:\n%s",
+    $this->assertEmpty($violation_messages, $message ?: sprintf("The entity failed validation with %s errors:\n%s",
       count($violations),
-      implode("\n", $messages)
+      implode("\n", $violation_messages)
     ));
   }
 
