@@ -37,18 +37,24 @@ class OpenTelemetryFrontPagePerformanceTest extends PerformanceTestBase {
     // @todo Chromedriver doesn't collect tracing performance logs for the very
     //   first request in a test, so warm it up.
     //   https://www.drupal.org/project/drupal/issues/3379750
-    $this->drupalGet('user/login');
+    $this->drupalGet('<front>');
+    // Clear caches to ensure a cold cache.
     $this->rebuildAll();
     $performance_data = $this->collectPerformanceData(function () {
       $this->drupalGet('<front>');
     }, 'umamiFrontPageColdCache');
     $this->assertSession()->pageTextContains('Umami');
+    $this->assertCountBetween(300, 320, $performance_data->getQueryCount());
+    $this->assertCountBetween(540, 560, $performance_data->getCacheGetCount());
+    $this->assertCountBetween(410, 430, $performance_data->getCacheSetCount());
     $this->assertSame(2, $performance_data->getCacheDeleteCount());
+    $this->assertCountBetween(250, 260, $performance_data->getCacheTagChecksumCount());
+    $this->assertCountBetween(70, 90, $performance_data->getCacheTagIsValidCount());
     $this->assertSame(0, $performance_data->getCacheTagInvalidationCount());
     $this->assertSame(1, $performance_data->getScriptCount());
-    $this->assertLessThan(7100, $performance_data->getScriptBytes());
+    $this->assertCountBetween(7000, 7100, $performance_data->getScriptBytes());
     $this->assertSame(2, $performance_data->getStylesheetCount());
-    $this->assertLessThan(40250, $performance_data->getStylesheetBytes());
+    $this->assertCountBetween(40200, 40250, $performance_data->getStylesheetBytes());
   }
 
   /**
