@@ -46,6 +46,7 @@ class NodeAddPerformanceTest extends PerformanceTestBase {
   public function testPerformance(): void {
     $this->testColdCache();
     $this->testHotCache();
+    $this->testWarmCache();
   }
 
   /**
@@ -233,6 +234,40 @@ class NodeAddPerformanceTest extends PerformanceTestBase {
     $this->assertSame(212244, $performance_data->getScriptBytes());
     $this->assertSame(1, $performance_data->getStylesheetCount());
     $this->assertSame(29911, $performance_data->getStylesheetBytes());
+  }
+
+  /**
+   * Logs front page tracing data with an authenticated user and warm cache.
+   */
+  protected function testWarmCache(): void {
+    $user = $this->drupalCreateUser();
+    $this->drupalLogin($user);
+
+    $this->drupalGet('node/add/article');
+    $this->drupalGet('node/add/article');
+
+    $performance_data = $this->collectPerformanceData(function () {
+      $this->drupalGet('node/add/article');
+    }, 'standardNodeAddPageWarmCache');
+
+    $recorded_queries = $performance_data->getQueries();
+    $this->assertSame([
+      'SELECT "session" FROM "sessions" WHERE "sid" = "SESSION_ID" LIMIT 0, 1',
+      'SELECT * FROM "users_field_data" "u" WHERE "u"."uid" = "2" AND "u"."default_langcode" = 1',
+      'SELECT "roles_target_id" FROM "user__roles" WHERE "entity_id" = "2"',
+      'INSERT INTO "watchdog" ("uid", "type", "message", "variables", "severity", "link", "location", "referer", "hostname", "timestamp") VALUES ("2", "access denied", "Path: @uri. %type: @message in %function (line %line of %file).", "WATCHDOG_DATA", 4, "", "LOCATION", "REFERER", "CLIENT_IP", "TIMESTAMP")',
+    ], $recorded_queries);
+    $this->assertSame(4, $performance_data->getQueryCount());
+    $this->assertSame(27, $performance_data->getCacheGetCount());
+    $this->assertSame(0, $performance_data->getCacheSetCount());
+    $this->assertSame(0, $performance_data->getCacheDeleteCount());
+    $this->assertSame(0, $performance_data->getCacheTagChecksumCount());
+    $this->assertSame(12, $performance_data->getCacheTagIsValidCount());
+    $this->assertSame(0, $performance_data->getCacheTagInvalidationCount());
+    $this->assertSame(1, $performance_data->getScriptCount());
+    $this->assertSame(122824, $performance_data->getScriptBytes());
+    $this->assertSame(1, $performance_data->getStylesheetCount());
+    $this->assertSame(4498, $performance_data->getStylesheetBytes());
   }
 
 }
