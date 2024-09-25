@@ -5,9 +5,6 @@ declare(strict_types=1);
 namespace Drupal\Tests\demo_umami\FunctionalJavascript;
 
 use Drupal\FunctionalJavascriptTests\PerformanceTestBase;
-/*
-
- */
 
 /**
  * Tests the performance of the admin/content page in the Umami profile.
@@ -37,7 +34,7 @@ class OpenTelemetryAdminContentPerformanceTest extends PerformanceTestBase {
    */
   public function testAdminContentColdCache(): void {
     $this->rebuildAll();
-    $performance_data = $this->collectPerformanceData(fn () => $this->drupalGet('/admin/content'), 'umamiAdminContentColdCache');
+    $performance_data = $this->collectPerformanceData(fn () => $this->drupalGet('admin/content'), 'umamiAdminContentColdCache');
 
     // Check that the page contains the content overview.
     $this->assertSession()->elementExists('xpath', '//form[@id="views-form-content-page-1"]');
@@ -58,57 +55,19 @@ class OpenTelemetryAdminContentPerformanceTest extends PerformanceTestBase {
   }
 
   /**
-   * Logs admin/content tracing data with a hot cache.
-   *
-   * Hot here means that all possible caches are warmed.
+   * Logs admin/content tracing data with a warm cache.
    */
-  public function _testNodePageHotCache() {
+  public function testAdminContentWarmCache() {
     // Request the page twice so that asset aggregates are definitely cached in
     // the browser cache.
-    $this->drupalGet('node/1');
-    $this->drupalGet('node/1');
-    $this->collectPerformanceData(function () {
-      $this->drupalGet('/node/1');
-    }, 'umamiNodePageHotCache');
+    $this->drupalGet('admin/content');
+    $this->drupalGet('admin/content');
+    $performance_data = $this->collectPerformanceData(fn () => $this->drupalGet('admin/content'), 'umamiAdminContentHotCache');
     $exported_data = var_export($performance_data, TRUE);
     file_put_contents('umamiAdminContentColdCache.json', $exported_data);
-    $this->assertSession()->pageTextContains('quiche');
-  }
 
-  /**
-   * Logs node/1 tracing data with a cool cache.
-   *
-   * Cool here means that 'global' site caches are warm but anything
-   * specific to the route or path is cold.
-   */
-  public function _testNodePageCoolCache() {
-    // First of all visit the node page to ensure the image style exists.
-    $this->drupalGet('node/1');
-    $this->rebuildAll();
-    // Now visit a non-node page to warm non-route-specific caches.
-    $this->drupalGet('/user/login');
-    $this->collectPerformanceData(function () {
-      $this->drupalGet('/node/1');
-    }, 'umamiNodePageCoolCache');
-    $this->assertSession()->pageTextContains('quiche');
-  }
-
-  /**
-   * Log node/1 tracing data with a warm cache.
-   *
-   * Warm here means that 'global' site caches and route-specific caches are
-   * warm but caches specific to this particular node/path are not.
-   */
-  public function _testNodePageWarmCache() {
-    // First of all visit the node page to ensure the image style exists.
-    $this->drupalGet('node/1');
-    $this->rebuildAll();
-    // Now visit a different node page to warm non-path-specific caches.
-    $this->drupalGet('/node/2');
-    $this->collectPerformanceData(function () {
-      $this->drupalGet('/node/1');
-    }, 'umamiNodePageWarmCache');
-    $this->assertSession()->pageTextContains('quiche');
+    // Check that the page contains the content overview.
+    $this->assertSession()->elementExists('xpath', '//form[@id="views-form-content-page-1"]');
   }
 
 }
