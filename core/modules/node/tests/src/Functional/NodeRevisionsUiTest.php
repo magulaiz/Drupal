@@ -191,7 +191,7 @@ class NodeRevisionsUiTest extends NodeTestBase {
         ':href' => 'node/' . $node_id,
       ]
     ));
-    // Check that there is a edit tab linking to /node/1.
+    // Check that there is a edit tab linking to /node/1/edit.
     $this->assertSession()->elementExists('xpath', $this->assertSession()->buildXPathQuery(
       '//ul[@class="tabs primary"]/li[@class="tabs__tab"]/a[@href=:href]', [
         ':href' => 'node/' . $node_id . '/edit',
