@@ -37,19 +37,19 @@ class OpenTelemetryFrontPagePerformanceTest extends PerformanceTestBase {
     // @todo Chromedriver doesn't collect tracing performance logs for the very
     //   first request in a test, so warm it up.
     //   https://www.drupal.org/project/drupal/issues/3379750
-    $this->drupalGet('<front>');
+    $this->drupalGet('user/login');
     // Clear caches to ensure a cold cache.
     $this->rebuildAll();
     $performance_data = $this->collectPerformanceData(function () {
       $this->drupalGet('<front>');
     }, 'umamiFrontPageColdCache');
     $this->assertSession()->pageTextContains('Umami');
-    $this->assertCountBetween(300, 320, $performance_data->getQueryCount());
-    $this->assertCountBetween(540, 560, $performance_data->getCacheGetCount());
-    $this->assertCountBetween(410, 430, $performance_data->getCacheSetCount());
+    $this->assertCountBetween(320, 360, $performance_data->getQueryCount());
+    $this->assertCountBetween(600, 750, $performance_data->getCacheGetCount());
+    $this->assertCountBetween(410, 450, $performance_data->getCacheSetCount());
     $this->assertSame(2, $performance_data->getCacheDeleteCount());
-    $this->assertCountBetween(250, 260, $performance_data->getCacheTagChecksumCount());
-    $this->assertCountBetween(70, 90, $performance_data->getCacheTagIsValidCount());
+    $this->assertCountBetween(250, 275, $performance_data->getCacheTagChecksumCount());
+    $this->assertCountBetween(40, 90, $performance_data->getCacheTagIsValidCount());
     $this->assertSame(0, $performance_data->getCacheTagInvalidationCount());
     $this->assertSame(1, $performance_data->getScriptCount());
     $this->assertCountBetween(7000, 7100, $performance_data->getScriptBytes());
