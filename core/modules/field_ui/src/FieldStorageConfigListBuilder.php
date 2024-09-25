@@ -48,6 +48,13 @@ class FieldStorageConfigListBuilder extends ConfigEntityListBuilder {
   protected $fieldTypeManager;
 
   /**
+   * The bundle info storage.
+   *
+   * @var \Drupal\Core\Entity\EntityTypeBundleInfoInterface
+   */
+  protected $bundleInfoStorage;
+
+  /**
    * Constructs a new FieldStorageConfigListBuilder object.
    *
    * @param \Drupal\Core\Entity\EntityTypeInterface $entity_type
@@ -64,6 +71,7 @@ class FieldStorageConfigListBuilder extends ConfigEntityListBuilder {
 
     $this->entityTypeManager = $entity_type_manager;
     $this->bundles = $bundle_info_service->getAllBundleInfo();
+    $this->bundleInfoStorage = $bundle_info_service;
     $this->fieldTypeManager = $field_type_manager;
     $this->fieldTypes = $this->fieldTypeManager->getDefinitions();
     $this->limit = FALSE;
@@ -125,7 +133,7 @@ class FieldStorageConfigListBuilder extends ConfigEntityListBuilder {
     $row['data']['type'] = $this->t('@type (module: @module)', ['@type' => $field_type['label'], '@module' => $field_type['provider']]);
 
     $usage = [];
-    foreach ($field_storage->getBundles() as $bundle) {
+    foreach ($this->bundleInfoStorage->getFieldStorageBundles($field_storage) as $bundle) {
       if ($route_info = FieldUI::getOverviewRouteInfo($entity_type_id, $bundle)) {
         $usage[] = Link::fromTextAndUrl($this->bundles[$entity_type_id][$bundle]['label'], $route_info)->toRenderable();
       }
