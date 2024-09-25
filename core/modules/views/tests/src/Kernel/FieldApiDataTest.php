@@ -154,10 +154,10 @@ class FieldApiDataTest extends ViewsKernelTestBase {
     $this->assertTrue($data_long[$current_table_long][$field_storage_string_long->getName()]['field']['click sortable']);
 
     $this->assertInstanceOf(MarkupInterface::class, $data[$current_table][$field_storage_string->getName()]['help']);
-    $this->assertEquals('Appears in: page, article. Also known as: Content: GiraffeB&quot; label', $data[$current_table][$field_storage_string->getName()]['help']);
+    $this->assertEquals('Appears in: article, page. Also known as: Content: GiraffeB&quot; label', $data[$current_table][$field_storage_string->getName()]['help']);
 
     $this->assertInstanceOf(MarkupInterface::class, $data[$current_table][$field_storage_string->getName() . '_value']['help']);
-    $this->assertEquals('Appears in: page, article. Also known as: Content: GiraffeA&quot; label (field_string)', $data[$current_table][$field_storage_string->getName() . '_value']['help']);
+    $this->assertEquals('Appears in: article, page. Also known as: Content: GiraffeA&quot; label (field_string)', $data[$current_table][$field_storage_string->getName() . '_value']['help']);
 
     // Since each label is only used once, views_entity_field_label() will
     // return a label using alphabetical sorting.
@@ -181,7 +181,7 @@ class FieldApiDataTest extends ViewsKernelTestBase {
     // selected by views_entity_field_label().
     $this->assertEquals('GiraffeB&quot; label (field_string)', $data[$current_table][$field_storage_string->getName() . '_value']['title']);
     $this->assertInstanceOf(MarkupInterface::class, $data[$current_table][$field_storage_string->getName()]['help']);
-    $this->assertEquals('Appears in: page, article, news. Also known as: Content: GiraffeA&quot; label', $data[$current_table][$field_storage_string->getName()]['help']);
+    $this->assertEquals('Appears in: article, news, page. Also known as: Content: GiraffeA&quot; label', $data[$current_table][$field_storage_string->getName()]['help']);
   }
 
   /**
