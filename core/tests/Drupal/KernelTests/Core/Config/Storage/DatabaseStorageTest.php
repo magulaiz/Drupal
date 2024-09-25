@@ -90,6 +90,21 @@ class DatabaseStorageTest extends ConfigStorageTestBase {
       // Exception was expected
     }
 
+    // Disallowed character handling.
+    try {
+      $exists = $this->storage->exists('config.testáéóú');
+      $this->assertEmpty($exists);
+
+      $read = $this->storage->read('config.testáéóú');
+      $this->assertEmpty($read);
+
+      $read = $this->storage->readMultiple(['config.testáé', 'config.testóú']);
+      $this->assertEmpty($read);
+    }
+    catch (DatabaseExceptionWrapper) {
+      // Exception was expected
+    }
+
     try {
       $this->storage->write('config.settings', ['data' => '']);
       $this->fail('Expected exception not thrown from deleteAll()');

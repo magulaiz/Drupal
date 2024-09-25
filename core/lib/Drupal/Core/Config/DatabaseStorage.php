@@ -64,6 +64,11 @@ class DatabaseStorage implements StorageInterface {
    * {@inheritdoc}
    */
   public function exists($name) {
+
+    if (!mb_check_encoding($name, 'ASCII')) {
+      return FALSE;
+    }
+
     try {
       return (bool) $this->connection->queryRange('SELECT 1 FROM {' . $this->connection->escapeTable($this->table) . '} WHERE [collection] = :collection AND [name] = :name', 0, 1, [
         ':collection' => $this->collection,
