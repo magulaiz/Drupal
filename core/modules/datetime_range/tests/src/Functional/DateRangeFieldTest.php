@@ -6,6 +6,7 @@ namespace Drupal\Tests\datetime_range\Functional;
 
 use Drupal\Core\Datetime\DrupalDateTime;
 use Drupal\Core\Datetime\Entity\DateFormat;
+use Drupal\datetime\Plugin\Field\FieldType\DateTimeItem;
 use Drupal\datetime\Plugin\Field\FieldType\DateTimeItemInterface;
 use Drupal\datetime_range\DateTimeRangeConstantsInterface;
 use Drupal\datetime_range\Plugin\Field\FieldType\DateRangeItem;
@@ -968,8 +969,17 @@ class DateRangeFieldTest extends DateTestBase {
 
   /**
    * Tests default value functionality.
+   *
+   * @param string $type
+   *   The datetime type - 'date' or 'datetime'
+   *
+   * @dataProvider defaultValueProvider
    */
-  public function testDefaultValue(): void {
+  public function testDefaultValue(string $type): void {
+    $storage_format = match ($type) {
+      DateTimeItem::DATETIME_TYPE_DATE => DateTimeItemInterface::DATE_STORAGE_FORMAT,
+      DateTimeItem::DATETIME_TYPE_DATETIME => DateTimeItemInterface::DATETIME_STORAGE_FORMAT,
+    };
     // Create a test content type.
     $this->drupalCreateContentType(['type' => 'date_content']);
 
@@ -979,7 +989,7 @@ class DateRangeFieldTest extends DateTestBase {
       'field_name' => $field_name,
       'entity_type' => 'node',
       'type' => 'daterange',
-      'settings' => ['datetime_type' => DateRangeItem::DATETIME_TYPE_DATE],
+      'settings' => ['datetime_type' => $type],
     ]);
     $field_storage->save();
 
@@ -1022,9 +1032,9 @@ class DateRangeFieldTest extends DateTestBase {
 
     // Create a new node to check that datetime field default value is today.
     $new_node = Node::create(['type' => 'date_content']);
-    $expected_date = new DrupalDateTime('now', DateTimeItemInterface::STORAGE_TIMEZONE);
-    $this->assertEquals($expected_date->format(DateTimeItemInterface::DATE_STORAGE_FORMAT), $new_node->get($field_name)->offsetGet(0)->value);
-    $this->assertEquals($expected_date->format(DateTimeItemInterface::DATE_STORAGE_FORMAT), $new_node->get($field_name)->offsetGet(0)->end_value);
+    $expected_date = new DrupalDateTime('now', date_default_timezone_get());
+    $this->assertEquals($expected_date->format($storage_format), $new_node->get($field_name)->offsetGet(0)->value);
+    $this->assertEquals($expected_date->format($storage_format), $new_node->get($field_name)->offsetGet(0)->end_value);
 
     // Set an invalid relative default_value to test validation.
     $field_edit = [
@@ -1084,10 +1094,10 @@ class DateRangeFieldTest extends DateTestBase {
 
     // Create a new node to check that datetime field default value is +90 days.
     $new_node = Node::create(['type' => 'date_content']);
-    $expected_start_date = new DrupalDateTime('+45 days', DateTimeItemInterface::STORAGE_TIMEZONE);
-    $expected_end_date = new DrupalDateTime('+90 days', DateTimeItemInterface::STORAGE_TIMEZONE);
-    $this->assertEquals($expected_start_date->format(DateTimeItemInterface::DATE_STORAGE_FORMAT), $new_node->get($field_name)->offsetGet(0)->value);
-    $this->assertEquals($expected_end_date->format(DateTimeItemInterface::DATE_STORAGE_FORMAT), $new_node->get($field_name)->offsetGet(0)->end_value);
+    $expected_start_date = new DrupalDateTime('+45 days', date_default_timezone_get());
+    $expected_end_date = new DrupalDateTime('+90 days', date_default_timezone_get());
+    $this->assertEquals($expected_start_date->format($storage_format), $new_node->get($field_name)->offsetGet(0)->value);
+    $this->assertEquals($expected_end_date->format($storage_format), $new_node->get($field_name)->offsetGet(0)->end_value);
 
     // Remove default value.
     $field_edit = [
@@ -1126,7 +1136,7 @@ class DateRangeFieldTest extends DateTestBase {
       ])
       ->save();
 
-    $expected_date = new DrupalDateTime('now', DateTimeItemInterface::STORAGE_TIMEZONE);
+    $expected_date = new DrupalDateTime('now', date_default_timezone_get());
 
     $field_edit = [
       'set_default_value' => '1',
@@ -1154,6 +1164,16 @@ class DateRangeFieldTest extends DateTestBase {
     $this->drupalGet('node/add/date_content');
     $this->assertSession()->fieldValueEquals("{$field_name}[0][value][date]", '');
     $this->assertSession()->fieldValueEquals("{$field_name}[0][end_value][date]", $expected_date->format(DateTimeItemInterface::DATE_STORAGE_FORMAT));
+  }
+
+  /**
+   * Provider for testDefaultValue().
+   */
+  public static function defaultValueProvider() {
+    return [
+      [DateTimeItem::DATETIME_TYPE_DATE],
+      [DateTimeItem::DATETIME_TYPE_DATETIME],
+    ];
   }
 
   /**
