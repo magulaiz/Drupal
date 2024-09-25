@@ -185,6 +185,24 @@ class NodeRevisionsUiTest extends NodeTestBase {
         ':href' => 'node/' . $node_id . '/revisions',
       ]
     ));
+    // Check that there is a view tab linking to /node/1.
+    $this->assertSession()->elementExists('xpath', $this->assertSession()->buildXPathQuery(
+      '//ul[@class="tabs primary"]/li[@class="tabs__tab"]/a[@href=:href]', [
+        ':href' => 'node/' . $node_id,
+      ]
+    ));
+    // Check that there is a edit tab linking to /node/1.
+    $this->assertSession()->elementExists('xpath', $this->assertSession()->buildXPathQuery(
+      '//ul[@class="tabs primary"]/li[@class="tabs__tab"]/a[@href=:href]', [
+        ':href' => 'node/' . $node_id . '/edit',
+      ]
+    ));
+    // Check that there is a delete tab linking to /node/1/delete.
+    $this->assertSession()->elementExists('xpath', $this->assertSession()->buildXPathQuery(
+      '//ul[@class="tabs primary"]/li[@class="tabs__tab"]/a[@href=:href]', [
+        ':href' => 'node/' . $node_id . '/delete',
+      ]
+    ));
 
     // Verify that the latest affected revision having been a default revision
     // is displayed as the current one.
