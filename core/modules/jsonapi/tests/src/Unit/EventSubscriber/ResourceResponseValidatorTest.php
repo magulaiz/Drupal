@@ -31,6 +31,25 @@ class ResourceResponseValidatorTest extends UnitTestCase {
   protected $subscriber;
 
   /**
+   * @return void
+   */
+  public function setUpSubscriber(bool $enable_validation): void {
+    $module_handler = $this->prophesize(ModuleHandlerInterface::class);
+    $module = $this->prophesize(Extension::class);
+    $module_path = dirname(__DIR__, 4);
+    $module->getPath()->willReturn($module_path);
+    $module_handler->getModule('jsonapi')->willReturn($module->reveal());
+    $subscriber = new ResourceResponseValidator(
+      $this->prophesize(LoggerInterface::class)->reveal(),
+      $module_handler->reveal(),
+      '',
+      ['validate_response' => $enable_validation]
+    );
+    $subscriber->setValidator();
+    $this->subscriber = $subscriber;
+  }
+
+  /**
    * {@inheritdoc}
    */
   protected function setUp(): void {
@@ -40,25 +59,16 @@ class ResourceResponseValidatorTest extends UnitTestCase {
       $this->fail('The JSON Schema validator is missing. You can install it with `composer require justinrainbow/json-schema`.');
     }
 
-    $module_handler = $this->prophesize(ModuleHandlerInterface::class);
-    $module = $this->prophesize(Extension::class);
-    $module_path = dirname(__DIR__, 4);
-    $module->getPath()->willReturn($module_path);
-    $module_handler->getModule('jsonapi')->willReturn($module->reveal());
-    $subscriber = new ResourceResponseValidator(
-      $this->prophesize(LoggerInterface::class)->reveal(),
-      $module_handler->reveal(),
-      ''
-    );
-    $subscriber->setValidator();
-    $this->subscriber = $subscriber;
   }
 
   /**
    * @covers ::validateResponse
    * @dataProvider validateResponseProvider
    */
-  public function testValidateResponse($request, $response, $expected, $description): void {
+  public function testValidateResponse($request, $response, $expected, $description, $enable_validation): void {
+
+    $this->setUpSubscriber($enable_validation);
+
     // Expose protected ResourceResponseSubscriber::validateResponse() method.
     $object = new \ReflectionObject($this->subscriber);
     $method = $object->getMethod('validateResponse');
@@ -96,6 +106,7 @@ EOD
         ,
         'expected' => TRUE,
         'description' => 'Response validation flagged a valid response.',
+        'enable_validation' => TRUE,
       ],
       // Test validation failure: no "type" in "data".
       [
@@ -113,6 +124,7 @@ EOD
         ,
         'expected' => FALSE,
         'description' => 'Response validation failed to flag an invalid response.',
+        'enable_validation' => TRUE,
       ],
       // Test validation failure: "errors" at the root level.
       [
@@ -132,18 +144,28 @@ EOD
         ,
         'expected' => FALSE,
         'description' => 'Response validation failed to flag an invalid response.',
+        'enable_validation' => TRUE,
       ],
       // Test validation of an empty response passes.
       [
         'json' => NULL,
         'expected' => TRUE,
         'description' => 'Response validation flagged a valid empty response.',
+        'enable_validation' => TRUE,
       ],
       // Test validation fails on empty object.
       [
         'json' => '{}',
         'expected' => FALSE,
         'description' => 'Response validation flags empty array as invalid.',
+        'enable_validation' => TRUE,
+      ],
+      // Test validation can be disabled.
+      [
+        'json' => '{}',
+        'expected' => FALSE,
+        'description' => 'Response validation flags empty array as invalid.',
+        'enable_validation' => FALSE,
       ],
     ];
 

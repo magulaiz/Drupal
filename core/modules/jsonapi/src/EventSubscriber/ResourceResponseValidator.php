@@ -58,6 +58,14 @@ class ResourceResponseValidator implements EventSubscriberInterface {
   protected $appRoot;
 
   /**
+   * Validate the schema of the response if there is no validator set and
+   * json-schema is installed.
+   *
+   * @var bool
+   */
+  protected bool $validateResponseSchema = FALSE;
+
+  /**
    * Constructs a ResourceResponseValidator object.
    *
    * @param \Psr\Log\LoggerInterface $logger
@@ -67,10 +75,11 @@ class ResourceResponseValidator implements EventSubscriberInterface {
    * @param string $app_root
    *   The application's root file path.
    */
-  public function __construct(LoggerInterface $logger, ModuleHandlerInterface $module_handler, $app_root) {
+  public function __construct(LoggerInterface $logger, ModuleHandlerInterface $module_handler, $app_root, array $jsonapi_config = []) {
     $this->logger = $logger;
     $this->moduleHandler = $module_handler;
     $this->appRoot = $app_root;
+    $this->validateResponseSchema = (isset($this->jsonapiConfig['validate_response']) && $this->jsonapiConfig['validate_response']);
   }
 
   /**
@@ -88,7 +97,7 @@ class ResourceResponseValidator implements EventSubscriberInterface {
     if ($validator) {
       $this->validator = $validator;
     }
-    elseif (class_exists(Validator::class)) {
+    elseif ($this->validateResponseSchema && class_exists(Validator::class)) {
       // Test runtime of tests with enabled validation run 2.
       $this->validator = new Validator();
     }
