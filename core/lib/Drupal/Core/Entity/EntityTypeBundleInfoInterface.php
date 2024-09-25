@@ -44,7 +44,7 @@ interface EntityTypeBundleInfoInterface {
    *   An array of bundle labels, keyed by their machine name and sorted by
    *   label.
    */
-  public function getFieldStorageBundles(FieldStorageDefinitionInterface $field_storage_definition);
+  public function getFieldStorageBundles(FieldStorageDefinitionInterface $field_storage_definition): ?array;
 
   /**
    * Clears static and persistent bundles.

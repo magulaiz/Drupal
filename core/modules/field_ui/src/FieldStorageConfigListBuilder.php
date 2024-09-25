@@ -48,13 +48,6 @@ class FieldStorageConfigListBuilder extends ConfigEntityListBuilder {
   protected $fieldTypeManager;
 
   /**
-   * The bundle info storage.
-   *
-   * @var \Drupal\Core\Entity\EntityTypeBundleInfoInterface
-   */
-  protected $bundleInfoStorage;
-
-  /**
    * Constructs a new FieldStorageConfigListBuilder object.
    *
    * @param \Drupal\Core\Entity\EntityTypeInterface $entity_type
@@ -63,15 +56,14 @@ class FieldStorageConfigListBuilder extends ConfigEntityListBuilder {
    *   The entity type manager.
    * @param \Drupal\Core\Field\FieldTypePluginManagerInterface $field_type_manager
    *   The 'field type' plugin manager.
-   * @param \Drupal\Core\Entity\EntityTypeBundleInfoInterface $bundle_info_service
+   * @param \Drupal\Core\Entity\EntityTypeBundleInfoInterface $bundleInfoStorage
    *   The bundle info service.
    */
-  public function __construct(EntityTypeInterface $entity_type, EntityTypeManagerInterface $entity_type_manager, FieldTypePluginManagerInterface $field_type_manager, EntityTypeBundleInfoInterface $bundle_info_service) {
+  public function __construct(EntityTypeInterface $entity_type, EntityTypeManagerInterface $entity_type_manager, FieldTypePluginManagerInterface $field_type_manager, protected EntityTypeBundleInfoInterface $bundleInfoStorage) {
     parent::__construct($entity_type, $entity_type_manager->getStorage($entity_type->id()));
 
     $this->entityTypeManager = $entity_type_manager;
     $this->bundles = $bundle_info_service->getAllBundleInfo();
-    $this->bundleInfoStorage = $bundle_info_service;
     $this->fieldTypeManager = $field_type_manager;
     $this->fieldTypes = $this->fieldTypeManager->getDefinitions();
     $this->limit = FALSE;

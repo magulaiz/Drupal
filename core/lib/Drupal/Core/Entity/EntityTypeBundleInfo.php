@@ -119,7 +119,7 @@ class EntityTypeBundleInfo implements EntityTypeBundleInfoInterface {
   /**
    * {@inheritdoc}
    */
-  public function getFieldStorageBundles(FieldStorageDefinitionInterface $field_storage_definition) {
+  public function getFieldStorageBundles(FieldStorageDefinitionInterface $field_storage_definition): ?array {
     $bundles = $field_storage_definition->getBundles();
     $entity_type_ids = $field_storage_definition->getTargetEntityTypeId();
 
