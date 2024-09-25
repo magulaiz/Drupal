@@ -445,12 +445,6 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/lib/Drupal/Core/Field/Plugin/Field/FieldType/EntityReferenceItem.php',
 ];
 $ignoreErrors[] = [
-	// identifier: property.notFound
-	'message' => '#^Access to an undefined property Drupal\\\\Core\\\\Field\\\\Plugin\\\\Field\\\\FieldType\\\\NumericItemBase\\:\\:\\$value\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/lib/Drupal/Core/Field/Plugin/Field/FieldType/NumericItemBase.php',
-];
-$ignoreErrors[] = [
 	// identifier: return.missing
 	'message' => '#^Method Drupal\\\\Core\\\\FileTransfer\\\\FileTransfer\\:\\:__get\\(\\) should return bool\\|string but return statement is missing\\.$#',
 	'count' => 1,
@@ -645,12 +639,6 @@ $ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\Core\\\\TypedData\\\\ListDataDefinition\\:\\:setDataType\\(\\) should return static\\(Drupal\\\\Core\\\\TypedData\\\\ListDataDefinition\\) but return statement is missing\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/lib/Drupal/Core/TypedData/ListDataDefinition.php',
-];
-$ignoreErrors[] = [
-	// identifier: property.notFound
-	'message' => '#^Access to an undefined property Drupal\\\\Core\\\\TypedData\\\\TypedData\\:\\:\\$value\\.$#',
-	'count' => 2,
-	'path' => __DIR__ . '/lib/Drupal/Core/TypedData/TypedData.php',
 ];
 $ignoreErrors[] = [
 	// identifier: isset.variable
@@ -1475,12 +1463,6 @@ $ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\options\\\\Plugin\\\\Field\\\\FieldType\\\\ListIntegerItem\\:\\:validateAllowedValue\\(\\) should return string but return statement is missing\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/options/src/Plugin/Field/FieldType/ListIntegerItem.php',
-];
-$ignoreErrors[] = [
-	// identifier: property.notFound
-	'message' => '#^Access to an undefined property Drupal\\\\options\\\\Plugin\\\\Field\\\\FieldType\\\\ListItemBase\\:\\:\\$value\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/options/src/Plugin/Field/FieldType/ListItemBase.php',
 ];
 $ignoreErrors[] = [
 	// identifier: return.missing
