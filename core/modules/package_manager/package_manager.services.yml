@@ -141,11 +141,8 @@ services:
     tags:
       - { name: event_subscriber }
   Drupal\package_manager\PackageManagerUninstallValidator:
-    tags:
-      - { name: module_install.uninstall_validator }
     arguments:
       $eventDispatcher: '@event_dispatcher'
-    lazy: true
   Drupal\package_manager\Validator\SettingsValidator:
     tags:
       - { name: event_subscriber }
