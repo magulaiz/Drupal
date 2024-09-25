@@ -170,12 +170,13 @@ EOD
     ];
 
     $test_cases = array_map(function ($input) use ($defaults) {
-      [$json, $expected, $description, $route_name, $resource_type] = array_values($input + $defaults);
+      [$json, $expected, $description, $route_name, $resource_type, $enable_validation] = array_values($input + $defaults);
       return [
         static::createRequest($route_name, $resource_type),
         static::createResponse($json),
         $expected,
         $description,
+        $enable_validation,
       ];
     }, $test_data);
 
