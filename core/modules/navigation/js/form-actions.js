@@ -7,7 +7,7 @@
       );
       once('form-submit-action', forms).forEach((form) => {
         let actionButtons;
-        const newBtns = [];
+        const newButtons = [];
         const topBar = document.querySelector('.top-bar__content');
         const action = form.querySelector('.form-actions');
 
@@ -27,23 +27,24 @@
                   attribute.includes('id')
                 );
               };
-              newBtns[i] = document.createElement('button');
+              newButtons[i] = document.createElement('button');
               attributesArray.map((attribute) => {
                 if (filterAttribute(attribute.name)) {
-                  newBtns[i].setAttribute(
+                  newButtons[i].setAttribute(
                     attribute.name,
                     actionButtons[i].getAttribute(attribute.name),
                   );
                 }
-                return newBtns;
+                return newButtons;
               });
-              newBtns[i].className = 'toolbar-button toolbar-button--primary';
-              newBtns[i].textContent = newBtns[i].getAttribute('value');
+              newButtons[i].className =
+                'toolbar-button toolbar-button--primary';
+              newButtons[i].textContent = newButtons[i].getAttribute('value');
             } else {
-              newBtns[i] = actionButtons[i].cloneNode(true);
+              newButtons[i] = actionButtons[i].cloneNode(true);
             }
           }
-          newBtns.reverse().forEach(function (item) {
+          newButtons.reverse().forEach(function (item) {
             topBar.insertBefore(item, topBar.firstChild);
           });
 
