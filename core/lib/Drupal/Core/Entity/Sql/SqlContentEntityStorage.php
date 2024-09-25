@@ -1931,7 +1931,7 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
             // current revision.
             foreach ($non_revisionable_translatable_field_names as $non_revisionable_translatable_field_name) {
               if (isset($revision->{$non_revisionable_translatable_field_name}) && isset($revision->{$this->langcodeKey})) {
-                if (!isset($non_revisionable_field_data[$non_revisionable_translatable_field_name])) {
+                if (!isset($non_revisionable_translatable_field_data[$non_revisionable_translatable_field_name])) {
                   $non_revisionable_translatable_field_data[$non_revisionable_translatable_field_name] = [];
                 }
                 $non_revisionable_translatable_field_data[$non_revisionable_translatable_field_name][$revision->{$this->langcodeKey}] = $revision->{$non_revisionable_translatable_field_name};
