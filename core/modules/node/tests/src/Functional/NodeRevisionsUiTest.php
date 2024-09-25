@@ -175,6 +175,10 @@ class NodeRevisionsUiTest extends NodeTestBase {
 
     $this->drupalGet('node/' . $node_id . '/revisions');
 
+    // Verify that the following tabs exist on the page: 'View' linking to /node/$node_id,
+    // 'Edit' linking to /node/$node_id/edit, 'Delete' linking to /node/$node_id/delete and
+    // 'Revisions' linking to /node/$node_id/revisions (the active tab)
+
     // Verify that the latest affected revision having been a default revision
     // is displayed as the current one.
     $this->assertSession()->linkByHrefNotExists('/node/' . $node_id . '/revisions/1/revert');
