@@ -164,7 +164,7 @@ EOD
       [
         'json' => '{}',
         'expected' => FALSE,
-        'description' => 'Response validation flags empty array as invalid.',
+        'description' => 'Response validation disabled doesn\'t flags empty array as invalid.',
         'enable_validation' => FALSE,
       ],
     ];
