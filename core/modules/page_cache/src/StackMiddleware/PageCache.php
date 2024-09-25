@@ -91,7 +91,7 @@ class PageCache implements HttpKernelInterface {
       // Don't indicate non-cacheability on responses to uncacheable requests.
       // @see https://tools.ietf.org/html/rfc7231#section-4.2.3
       if ($request->isMethodCacheable()) {
-        $response->headers->set(self::HEADER, 'UNCACHEABLE (request policy)');
+        $response->headers->set(static::HEADER, 'UNCACHEABLE (request policy)');
       }
     }
 
@@ -243,7 +243,7 @@ class PageCache implements HttpKernelInterface {
     //   so by replacing/extending this middleware service or adding another
     //   one.
     if (!$response instanceof CacheableResponseInterface) {
-      $response->headers->set(self::HEADER, 'UNCACHEABLE (no cacheability)');
+      $response->headers->set(static::HEADER, 'UNCACHEABLE (no cacheability)');
       return FALSE;
     }
 
@@ -257,7 +257,7 @@ class PageCache implements HttpKernelInterface {
 
     // Allow policy rules to further restrict which responses to cache.
     if ($this->responsePolicy->check($response, $request) === ResponsePolicyInterface::DENY) {
-      $response->headers->set(self::HEADER, 'UNCACHEABLE (response policy)');
+      $response->headers->set(static::HEADER, 'UNCACHEABLE (response policy)');
       return FALSE;
     }
 
