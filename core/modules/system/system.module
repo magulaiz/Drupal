@@ -229,6 +229,7 @@ function system_theme() {
         'php' => [],
         'php_memory_limit' => [],
         'webserver' => [],
+        'other_modules' => [],
       ],
     ],
     'admin_page' => [

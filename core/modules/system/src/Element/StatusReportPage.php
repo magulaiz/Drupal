@@ -8,10 +8,9 @@ use Drupal\Core\StringTranslation\PluralTranslatableMarkup;
 
 /**
  * Creates status report page element.
- *
- * @RenderElement("status_report_page")
  */
-class StatusReportPage extends RenderElement {
+#[RenderElement('status_report_page')]
+class StatusReportPage extends RenderElementBase {
 
   /**
    * {@inheritdoc}
@@ -64,6 +63,12 @@ class StatusReportPage extends RenderElement {
             }
           }
           break;
+      }
+
+      // Allow modules to add their information to the General Info section.
+      if (isset($requirement['add_to_general_info']) &&
+        $requirement['add_to_general_info'] === TRUE) {
+        $element['#general_info']['#other_modules'][$key] = $requirement;
       }
     }
 
