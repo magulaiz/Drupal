@@ -1886,6 +1886,20 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
           $entity_id = (string) $entity_id;
         }
 
+        // Get the non-revisionable (translatable and non-translatable) fields.
+        $non_revisionable_translatable_field_names = [];
+        $non_revisionable_non_translatable_field_names = [];
+        foreach ($this->fieldStorageDefinitions as $field_name => $field_definition) {
+          if (!$field_definition->isRevisionable() && !in_array($field_name, [$this->idKey, $this->revisionKey, $this->uuidKey, $this->bundleKey], TRUE)) {
+            if ($field_definition->isTranslatable()) {
+              $non_revisionable_translatable_field_names[] = $field_name;
+            }
+            else {
+              $non_revisionable_non_translatable_field_names[] = $field_name;
+            }
+          }
+        }
+
         $prefixed_table = $this->database->getPrefix() . $this->baseTable;
         $entity_data = $this->database->getConnection()->{$prefixed_table}->findOne(
           [$this->idKey => ['$eq' => $entity_id]],
@@ -1895,12 +1909,33 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
           ],
         );
 
-        // Get the current revision id for setting the default revision field.
+        $non_revisionable_non_translatable_field_data = [];
+        $non_revisionable_translatable_field_data = [];
         if (isset($entity_data->{$this->jsonStorageCurrentRevisionTable})) {
           $current_revision_data = (array) $entity_data->{$this->jsonStorageCurrentRevisionTable};
           foreach ($current_revision_data as $revision) {
+            // Get the current revision id for setting the default revision field.
             if (isset($revision->{$this->revisionKey})) {
               $current_revision_id = $revision->{$this->revisionKey};
+            }
+
+            // Get the non-revisionable non-translatable field values from the
+            // current revision.
+            foreach ($non_revisionable_non_translatable_field_names as $non_revisionable_non_translatable_field_name) {
+              if (isset($revision->{$non_revisionable_non_translatable_field_name})) {
+                $non_revisionable_non_translatable_field_data[$non_revisionable_non_translatable_field_name] = $revision->{$non_revisionable_non_translatable_field_name};
+              }
+            }
+
+            // Get the non-revisionable translatable field values from the
+            // current revision.
+            foreach ($non_revisionable_translatable_field_names as $non_revisionable_translatable_field_name) {
+              if (isset($revision->{$non_revisionable_translatable_field_name}) && isset($revision->{$this->langcodeKey})) {
+                if (!isset($non_revisionable_field_data[$non_revisionable_translatable_field_name])) {
+                  $non_revisionable_translatable_field_data[$non_revisionable_translatable_field_name] = [];
+                }
+                $non_revisionable_translatable_field_data[$non_revisionable_translatable_field_name][$revision->{$this->langcodeKey}] = $revision->{$non_revisionable_translatable_field_name};
+              }
             }
           }
         }
@@ -1911,6 +1946,19 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
           $all_revisions_data = (array) $entity_data->{$this->jsonStorageAllRevisionsTable};
           $all_revisions_data = array_reverse($all_revisions_data);
           foreach ($all_revisions_data as $revision) {
+            // Update the values of non-revisionable non-translatable fields
+            // for all existing revisions.
+            foreach ($non_revisionable_non_translatable_field_data as $non_revisionable_non_translatable_field_name => $non_revisionable_non_translatable_field_value) {
+              $revision->{$non_revisionable_non_translatable_field_name} = $non_revisionable_non_translatable_field_value;
+            }
+
+            // @todo We got no testing for this.
+            // Update the values of non-revisionable translatable fields for
+            // all existing revisions.
+            foreach ($non_revisionable_translatable_field_data as $non_revisionable_translatable_field_name => $non_revisionable_translatable_field_values) {
+              $revision->{$non_revisionable_translatable_field_name} = $non_revisionable_translatable_field_values[$revision->{$this->langcodeKey}];
+            }
+
             $exists = FALSE;
             foreach ($revisions_langcodes as $revision_langcode) {
               if ($this->entityType->isTranslatable()) {
