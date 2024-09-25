@@ -56,22 +56,4 @@ class PerformanceTestBase extends WebDriverTestBase {
     return $this->doGetMinkDriverArgs();
   }
 
-  /**
-   * Checks that the given value is in the range $min to $max, inclusive.
-   *
-   * @param int $min
-   *   The minimum value.
-   * @param int $max
-   *   The maximum value.
-   * @param int $value
-   *   The value to check.
-   * @param string|null $message
-   *   The message to display if the assertion fails.
-   */
-  protected function assertValueInRange(int $min, int $max, int $value, ?string $message = NULL): void {
-    $message = $message ?? sprintf('The value %d is expected to be in the range %d to %d.', $value, $min, $max);
-    $this->assertLessThanOrEqual($max, $value, $message);
-    $this->assertGreaterThanOrEqual($min, $value, $message);
-  }
-
 }
