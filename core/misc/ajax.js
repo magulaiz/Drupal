@@ -1142,11 +1142,10 @@
           // eslint-disable-next-line no-console
           console.error(
             Drupal.t(
-              'An error occurred during the execution of the Ajax response: !error',
-              {
-                '!error': error,
-              },
+              'An error occurred during the execution of the Ajax response:'
             ),
+            // Pass original error object with details:
+            error
           ),
         )
     );
