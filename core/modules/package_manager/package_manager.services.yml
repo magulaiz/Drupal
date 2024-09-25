@@ -117,6 +117,8 @@ services:
     tags:
       - { name: event_subscriber }
   Drupal\package_manager\PathExcluder\SiteFilesExcluder:
+    arguments:
+      $wrappers: [public, private, assets]
     tags:
       - { name: event_subscriber }
   Drupal\package_manager\PathExcluder\SqliteDatabaseExcluder:

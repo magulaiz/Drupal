@@ -43,6 +43,8 @@ class SqliteDatabaseExcluder implements EventSubscriberInterface {
     // If the database is SQLite, it might be located in the project directory
     // and we should exclude it.
     if ($this->database->driver() === 'sqlite') {
+      // @todo Support database connections other than the default in
+      //   https://www.drupal.org/i/3441919.
       $db_path = $this->database->getConnectionOptions()['database'];
       // Exclude the database file and auxiliary files created by SQLite.
       $paths = [$db_path, "$db_path-shm", "$db_path-wal"];
