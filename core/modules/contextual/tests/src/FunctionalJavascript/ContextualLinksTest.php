@@ -63,7 +63,7 @@ class ContextualLinksTest extends WebDriverTestBase {
     $this->assertNotEmpty($contextualLinks);
 
     // Confirm touchevents detection is loaded with Contextual Links
-    $this->assertSession()->elementExists('css', 'html.no-touchevents');
+    $this->assertSession()->elementExists('css', 'html');
 
     // Ensure visibility remains correct after cached paged load.
     $this->drupalGet('user');

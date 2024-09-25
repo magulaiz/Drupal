@@ -644,7 +644,6 @@ tongatapu
 toolkits
 toplevel
 torder
-touchevents
 trackback
 transferthick
 translatables

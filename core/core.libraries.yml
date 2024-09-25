@@ -715,13 +715,6 @@ drupal.timezone:
     - core/once
     - core/drupal
 
-drupal.touchevents-test:
-  header: true
-  version: VERSION
-  js:
-    misc/touchevents-test.js: { weight: -21 }
-  deprecated: The %library_id% asset library is deprecated in Drupal 11.1.0 and will be removed in Drupal 12.0.0. There is no replacement. See https://www.drupal.org/node/3467337
-
 drupal.vertical-tabs:
   version: VERSION
   js:
