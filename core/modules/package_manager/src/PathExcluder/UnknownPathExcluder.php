@@ -13,7 +13,6 @@ use Drupal\package_manager\Event\StatusCheckEvent;
 use Drupal\package_manager\PathLocator;
 use Psr\Log\LoggerAwareInterface;
 use Psr\Log\LoggerAwareTrait;
-use Psr\Log\NullLogger;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\Filesystem\Exception\InvalidArgumentException;
 use Symfony\Component\Filesystem\Path;
@@ -52,9 +51,7 @@ final class UnknownPathExcluder implements EventSubscriberInterface, LoggerAware
     private readonly ComposerInspector $composerInspector,
     private readonly PathLocator $pathLocator,
     private readonly ConfigFactoryInterface $configFactory,
-  ) {
-    $this->setLogger(new NullLogger());
-  }
+  ) {}
 
   /**
    * {@inheritdoc}
@@ -179,7 +176,7 @@ final class UnknownPathExcluder implements EventSubscriberInterface, LoggerAware
         '@project_root' => $this->pathLocator->getProjectRoot(),
         '@list' => implode("\n", $excluded_paths),
       ]);
-      $this->logger->info($message);
+      $this->logger?->info($message);
     }
   }
 

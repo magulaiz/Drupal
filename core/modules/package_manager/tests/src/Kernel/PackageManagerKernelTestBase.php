@@ -167,11 +167,7 @@ abstract class PackageManagerKernelTestBase extends KernelTestBase {
     $container->getDefinition('logger.channel.package_manager')
       ->addTag('persist');
 
-    foreach ($this->disableValidators as $service_id) {
-      if ($container->hasDefinition($service_id)) {
-        $container->getDefinition($service_id)->clearTag('event_subscriber');
-      }
-    }
+    array_walk($this->disableValidators, $container->removeDefinition(...));
   }
 
   /**
