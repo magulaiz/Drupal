@@ -92,12 +92,15 @@ class DatabaseStorageTest extends ConfigStorageTestBase {
 
     // Disallowed character handling.
     try {
+      // cspell:disable-next-line
       $exists = $this->storage->exists('config.testáéóú');
       $this->assertEmpty($exists);
 
+      // cspell:disable-next-line
       $read = $this->storage->read('config.testáéóú');
       $this->assertEmpty($read);
 
+      // cspell:disable-next-line
       $read = $this->storage->readMultiple(['config.testáé', 'config.testóú']);
       $this->assertEmpty($read);
     }
