@@ -6,16 +6,16 @@
         '.node-form, .taxonomy-term-form, .media-form',
       );
       once('form-submit-action', forms).forEach((form) => {
-        let actionBtns;
+        let actionButtons;
         const newBtns = [];
         const topBar = document.querySelector('.top-bar__content');
         const action = form.querySelector('.form-actions');
 
         if (topBar && action) {
-          actionBtns = document.getElementById('edit-actions').children;
-          for (let i = 0; i < actionBtns.length; i++) {
-            if (actionBtns[i].type === 'submit') {
-              const attributesArray = [...actionBtns[i].attributes];
+          actionButtons = document.getElementById('edit-actions').children;
+          for (let i = 0; i < actionButtons.length; i++) {
+            if (actionButtons[i].type === 'submit') {
+              const attributesArray = [...actionButtons[i].attributes];
 
               // Filter attributes.
               const filterAttribute = (attribute) => {
@@ -32,7 +32,7 @@
                 if (filterAttribute(attribute.name)) {
                   newBtns[i].setAttribute(
                     attribute.name,
-                    actionBtns[i].getAttribute(attribute.name),
+                    actionButtons[i].getAttribute(attribute.name),
                   );
                 }
                 return newBtns;
@@ -40,7 +40,7 @@
               newBtns[i].className = 'toolbar-button toolbar-button--primary';
               newBtns[i].textContent = newBtns[i].getAttribute('value');
             } else {
-              newBtns[i] = actionBtns[i].cloneNode(true);
+              newBtns[i] = actionButtons[i].cloneNode(true);
             }
           }
           newBtns.reverse().forEach(function (item) {
