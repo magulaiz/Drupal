@@ -177,7 +177,14 @@ class NodeRevisionsUiTest extends NodeTestBase {
 
     // Verify that the following tabs exist on the page: 'View' linking to /node/$node_id,
     // 'Edit' linking to /node/$node_id/edit, 'Delete' linking to /node/$node_id/delete and
-    // 'Revisions' linking to /node/$node_id/revisions (the active tab)
+    // 'Revisions', the active tab linking to the current path
+
+    // Check that there is an active tab linking to the current path.
+    $this->assertSession()->elementExists('xpath', $this->assertSession()->buildXPathQuery(
+      '//ul[@class="tabs primary"]/li[@class="tabs__tab is-active"]/a[@href=:href]', [
+        ':href' => 'node/' . $node_id . '/revisions',
+      ]
+    ));
 
     // Verify that the latest affected revision having been a default revision
     // is displayed as the current one.
