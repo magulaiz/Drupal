@@ -31,8 +31,7 @@ class NodeAddPerformanceTest extends PerformanceTestBase {
   /**
    * {@inheritdoc}
    */
-  public function setUp(): void
-  {
+  public function setUp(): void {
     parent::setUp();
     user_role_change_permissions(RoleInterface::ANONYMOUS_ID, [
       'create article content' => TRUE,
