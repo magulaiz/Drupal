@@ -123,7 +123,7 @@ class DatelistElementFormTest extends KernelTestBase implements FormInterface, T
    */
   public function testDatelistElementUntrustedCallbacks() : void {
     $this->expectException(UntrustedCallbackException::class);
-    $this->expectExceptionMessage(sprintf('Datelist element #date_date_callbacks callbacks must be methods of a class that implements \Drupal\Core\Security\TrustedCallbackInterface or be an anonymous function. The callback was %s. See https://www.drupal.org/node/3217966', Variable::callableToString([$this, 'datelistDateCallback'])));
+    $this->expectExceptionMessage(sprintf('Datelist element #date_date_callbacks callbacks must be methods with the Drupal\Core\Security\Attribute\TrustedCallback attribute, or be methods of a class that implements \Drupal\Core\Security\TrustedCallbackInterface, or be an anonymous function. The callback was %s. See https://www.drupal.org/node/3217966', Variable::callableToString([$this, 'datelistDateCallback'])));
     $form = \Drupal::formBuilder()->getForm($this, 'datelistDateCallback');
   }
 
