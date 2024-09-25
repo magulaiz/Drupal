@@ -59,11 +59,6 @@
   justify-content: end;
   gap: var(--admin-toolbar-space-16);
   width: 100%;
-
-  .button {
-    margin-block: 0;
-    margin-inline: 0;
-  }
 }
 
 .top-bar__controls {
