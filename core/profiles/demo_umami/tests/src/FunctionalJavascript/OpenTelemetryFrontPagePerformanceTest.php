@@ -109,18 +109,18 @@ class OpenTelemetryFrontPagePerformanceTest extends PerformanceTestBase {
     $this->drupalGet('<front>');
 
     // Clear caches to ensure a cold cache.
-    $this->rebuildAll();
+    $this->clearCaches();
 
     $performance_data = $this->collectPerformanceData(function () {
       $this->drupalGet('<front>');
     }, 'umamiFrontPageColdDrupalCache');
     $this->assertSession()->pageTextContains('Umami');
-    $this->assertCountBetween(315, 330, $performance_data->getQueryCount());
+    $this->assertCountBetween(375, 395, $performance_data->getQueryCount());
     $this->assertCountBetween(540, 565, $performance_data->getCacheGetCount());
-    $this->assertCountBetween(420, 440, $performance_data->getCacheSetCount());
-    $this->assertSame(2, $performance_data->getCacheDeleteCount());
-    $this->assertCountBetween(245, 260, $performance_data->getCacheTagChecksumCount());
-    $this->assertCountBetween(70, 80, $performance_data->getCacheTagIsValidCount());
+    $this->assertCountBetween(465, 490, $performance_data->getCacheSetCount());
+    $this->assertSame(0, $performance_data->getCacheDeleteCount());
+    $this->assertCountBetween(250, 265, $performance_data->getCacheTagChecksumCount());
+    $this->assertCountBetween(55, 60, $performance_data->getCacheTagIsValidCount());
     $this->assertSame(0, $performance_data->getCacheTagInvalidationCount());
     $this->assertSame(1, $performance_data->getScriptCount());
     $this->assertCountBetween(7000, 7100, $performance_data->getScriptBytes());
