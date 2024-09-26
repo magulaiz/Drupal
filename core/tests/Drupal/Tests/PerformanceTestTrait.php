@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\Tests;
 
+use Drupal\Core\Cache\Cache;
 use Drupal\Core\Database\Event\DatabaseEvent;
 use Drupal\performance_test\Cache\CacheTagOperation;
 use OpenTelemetry\API\Trace\SpanKind;
@@ -619,6 +620,19 @@ trait PerformanceTestTrait {
       return is_a($class, '\Drupal\Core\Cache\DatabaseBackend', TRUE) || is_a($class, '\Drupal\Core\Cache\DatabaseCacheTagsChecksum', TRUE);
     }
     return FALSE;
+  }
+
+  /**
+   * Clear caches.
+   *
+   * Contrary to \Drupal\Core\Test\FunctionalTestSetupTrait::rebuildAll() this
+   * only clears the cache bins instead of doing a full cache rebuild. Use this
+   * in tests where you want to avoid purging aggregated CSS/JS files.
+   */
+  protected function clearCaches(): void {
+    foreach (Cache::getBins() as $bin) {
+      $bin->deleteAll();
+    }
   }
 
 }

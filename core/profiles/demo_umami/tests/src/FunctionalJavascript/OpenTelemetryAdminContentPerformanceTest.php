@@ -33,11 +33,16 @@ class OpenTelemetryAdminContentPerformanceTest extends PerformanceTestBase {
    * Logs admin/content tracing data with a cold cache.
    */
   public function testAdminContentColdCache(): void {
-    // Visit the page once to ensure all image styles are generated.
+    // Request the page twice so that asset aggregates are definitely cached in
+    // the browser cache.
+    $this->drupalGet('admin/content');
+    // Wait a moment to ensure all assets have been generated.
+    sleep(2);
     $this->drupalGet('admin/content');
 
-    // Ensure the cache is cold.
-    $this->rebuildAll();
+    // Ensure the cache is cold. Not calling $this->rebuildAll() because we want
+    // to avoid aggregated CSS/JS assets from being purged.
+    $this->clearCaches();
 
     $performance_data = $this->collectPerformanceData(fn () => $this->drupalGet('admin/content'), 'umamiAdminContentColdCache');
 
@@ -46,12 +51,12 @@ class OpenTelemetryAdminContentPerformanceTest extends PerformanceTestBase {
 
     // Check the performance data. Checking approximate values so we don't fail
     // too easily on minor changes.
-    $this->assertCountBetween(550, 600, $performance_data->getQueryCount());
-    $this->assertCountBetween(600, 650, $performance_data->getCacheGetCount());
-    $this->assertCountBetween(425, 475, $performance_data->getCacheSetCount());
-    $this->assertEquals(2, $performance_data->getCacheDeleteCount());
+    $this->assertCountBetween(475, 500, $performance_data->getQueryCount());
+    $this->assertCountBetween(560, 590, $performance_data->getCacheGetCount());
+    $this->assertCountBetween(485, 510, $performance_data->getCacheSetCount());
+    $this->assertEquals(0, $performance_data->getCacheDeleteCount());
     $this->assertCountBetween(250, 300, $performance_data->getCacheTagChecksumCount());
-    $this->assertCountBetween(75, 100, $performance_data->getCacheTagIsValidCount());
+    $this->assertCountBetween(30, 70, $performance_data->getCacheTagIsValidCount());
     $this->assertEquals(0, $performance_data->getCacheTagInvalidationCount());
     $this->assertEquals(2, $performance_data->getStylesheetCount());
     $this->assertEquals(1, $performance_data->getScriptCount());
@@ -66,6 +71,8 @@ class OpenTelemetryAdminContentPerformanceTest extends PerformanceTestBase {
     // Request the page twice so that asset aggregates are definitely cached in
     // the browser cache.
     $this->drupalGet('admin/content');
+    // Wait a moment to ensure all assets have been generated.
+    sleep(2);
     $this->drupalGet('admin/content');
     $performance_data = $this->collectPerformanceData(fn () => $this->drupalGet('admin/content'), 'umamiAdminContentHotCache');
 

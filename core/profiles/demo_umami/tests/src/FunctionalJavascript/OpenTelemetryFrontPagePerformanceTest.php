@@ -97,13 +97,4 @@ class OpenTelemetryFrontPagePerformanceTest extends PerformanceTestBase {
     }, 'umamiFrontPageCoolCache');
   }
 
-  /**
-   * Clear caches.
-   */
-  protected function clearCaches(): void {
-    foreach (Cache::getBins() as $bin) {
-      $bin->deleteAll();
-    }
-  }
-
 }
