@@ -133,7 +133,7 @@ final class ChangeLogger implements EventSubscriberInterface, LoggerAwareInterfa
       $message = $this->t("Requested changes:\n@change_list", [
         '@change_list' => implode("\n", array_map('strval', $requested_log)),
       ]);
-      $this->logger->info($message);
+      $this->logger?->info($message);
     }
 
     // Create a separate log entry listing everything that actually changed.
@@ -167,7 +167,7 @@ final class ChangeLogger implements EventSubscriberInterface, LoggerAwareInterfa
     $message = $this->t("Applied changes:\n@change_list", [
       '@change_list' => implode("\n", array_map('strval', $applied_log)),
     ]);
-    $this->logger->info($message);
+    $this->logger?->info($message);
   }
 
   /**

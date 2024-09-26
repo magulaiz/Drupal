@@ -7,7 +7,6 @@ namespace Drupal\Tests\package_manager\Kernel;
 use ColinODell\PsrTestLogger\TestLogger;
 use Drupal\Core\DependencyInjection\ContainerBuilder;
 use Drupal\fixture_manipulator\ActiveFixtureManipulator;
-use Drupal\package_manager\EventSubscriber\ChangeLogger;
 use Psr\Log\LogLevel;
 
 /**
@@ -36,11 +35,7 @@ class ChangeLoggerTest extends PackageManagerKernelTestBase {
    */
   public function register(ContainerBuilder $container) {
     parent::register($container);
-
-    $container->getDefinition(ChangeLogger::class)
-      ->setMethodCalls([
-        ['setLogger', [$this->logger]],
-      ]);
+    $container->set('logger.channel.package_manager_change_log', $this->logger);
   }
 
   /**

@@ -45,11 +45,7 @@ services:
     arguments:
       $appRoot: '%app.root%'
   Drupal\package_manager\FailureMarker: {}
-  Drupal\package_manager\EventSubscriber\UpdateDataSubscriber:
-    # @todo Autowire this service when https://drupal.org/i/3325557 lands.
-    arguments:
-      - '@update.manager'
-    autowire: false
+  Drupal\package_manager\EventSubscriber\UpdateDataSubscriber: {}
   Drupal\package_manager\EventSubscriber\ChangeLogger:
     calls:
       - [setLogger, ['@logger.channel.package_manager_change_log']]
@@ -63,7 +59,6 @@ services:
     arguments:
       - '%app.root%'
       - '@update.post_update_registry'
-    # @todo Autowire this service when https://drupal.org/i/3325557 lands.
     autowire: false
   Drupal\package_manager\Validator\LockFileValidator: {}
   Drupal\package_manager\Validator\WritableFileSystemValidator: {}
