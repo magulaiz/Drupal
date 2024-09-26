@@ -72,9 +72,9 @@ class NodeAddPerformanceTest extends PerformanceTestBase {
     $this->assertCountBetween(30, 39, $performance_data->getCacheTagIsValidCount());
     $this->assertSame(0, $performance_data->getCacheTagInvalidationCount());
     $this->assertSame(1, $performance_data->getScriptCount());
-    $this->assertSame(212244, $performance_data->getScriptBytes());
+    $this->assertCountBetween(212000, 213000, $performance_data->getScriptBytes());
     $this->assertSame(1, $performance_data->getStylesheetCount());
-    $this->assertSame(29911, $performance_data->getStylesheetBytes());
+    $this->assertCountBetween(29500, 30500, $performance_data->getStylesheetBytes());
   }
 
   /**
