@@ -62,7 +62,7 @@ class OpenTelemetryAdminContentPerformanceTest extends PerformanceTestBase {
   /**
    * Logs admin/content tracing data with a warm cache.
    */
-  public function testAdminContentWarmCache() {
+  public function testAdminContentWarmCache(): void {
     // Request the page twice so that asset aggregates are definitely cached in
     // the browser cache.
     $this->drupalGet('admin/content');
