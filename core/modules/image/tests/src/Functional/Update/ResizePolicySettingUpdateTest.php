@@ -17,7 +17,7 @@ class ResizePolicySettingUpdateTest extends UpdatePathTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setDatabaseDumpFiles() {
+  protected function setDatabaseDumpFiles(): void {
     $this->databaseDumpFiles = [
       __DIR__ . '/../../../../../system/tests/fixtures/update/drupal-10.3.0.filled.standard.php.gz',
     ];
@@ -26,7 +26,7 @@ class ResizePolicySettingUpdateTest extends UpdatePathTestBase {
   /**
    * Tests image_post_update_add_resize_policy().
    */
-  public function testSystemPostUpdateLinksetSettings() {
+  public function testSystemPostUpdateLinksetSettings(): void {
     $storage = \Drupal::entityTypeManager()->getStorage('field_config');
     $imageFields = $storage->loadMultiple();
     $imagesProcessed = FALSE;
