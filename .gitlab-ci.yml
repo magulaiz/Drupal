@@ -413,7 +413,7 @@ default:
     - yarn install
     - yarn run check:ckeditor5
     - yarn run lint:core-js-passing --cache --cache-strategy content --format gitlab
-    - mv /build/eslint-quality-report.json $CI_PROJECT_DIR
+    - mv /build/eslint-quality-report.json $CI_PROJECT_DIR || true
   artifacts:
     reports:
       codequality: eslint-quality-report.json
