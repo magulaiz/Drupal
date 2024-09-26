@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\big_pipe_test\EventSubscriber;
 
 use Drupal\Core\Render\AttachmentsInterface;
@@ -36,7 +38,7 @@ class BigPipeTestSubscriber implements EventSubscriberInterface {
 
     $attachments = $response->getAttachments();
     if (!isset($attachments['big_pipe_placeholders']) && !isset($attachments['big_pipe_nojs_placeholders'])) {
-      if (strpos($response->getContent(), static::CONTENT_TRIGGER_EXCEPTION) !== FALSE) {
+      if (str_contains($response->getContent(), static::CONTENT_TRIGGER_EXCEPTION)) {
         throw new \Exception('Oh noes!');
       }
     }

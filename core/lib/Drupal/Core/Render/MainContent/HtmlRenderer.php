@@ -75,9 +75,9 @@ class HtmlRenderer implements MainContentRendererInterface {
   /**
    * The renderer configuration array.
    *
-   * @see sites/default/default.services.yml
-   *
    * @var array
+   *
+   * @see sites/default/default.services.yml
    */
   protected $rendererConfig;
 
@@ -281,7 +281,9 @@ class HtmlRenderer implements MainContentRendererInterface {
     }
 
     // Allow hooks to add attachments to $page['#attached'].
-    $this->invokePageAttachmentHooks($page);
+    $this->renderer->executeInRenderContext(new RenderContext(), function () use (&$page) {
+      $this->invokePageAttachmentHooks($page);
+    });
 
     return [$page, $title];
   }

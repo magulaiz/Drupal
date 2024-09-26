@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\common_test\Controller;
 
 use Drupal\Component\Utility\Html;
@@ -90,6 +92,21 @@ class CommonTestController {
     $destination = \Drupal::destination()->getAsArray();
     $output = "The destination: " . Html::escape($destination['destination']);
     return new Response($output);
+  }
+
+  /**
+   * Returns a response with early rendering in common_test_page_attachments.
+   *
+   * @return \Symfony\Component\HttpFoundation\Response
+   *   A new Response object.
+   */
+  public function attachments() {
+    \Drupal::state()->set('common_test.hook_page_attachments.early_rendering', TRUE);
+    $build = [
+      '#title' => 'A title',
+      'content' => ['#markup' => 'Some content'],
+    ];
+    return \Drupal::service('main_content_renderer.html')->renderResponse($build, \Drupal::requestStack()->getCurrentRequest(), \Drupal::routeMatch());
   }
 
 }

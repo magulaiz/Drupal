@@ -8,24 +8,19 @@
  * customized by user themes.
  */
 
-use Drupal\Component\Render\FormattableMarkup;
 use Drupal\Core\Url;
 use Drupal\Component\Serialization\Json;
 use Drupal\Component\Utility\Crypt;
 use Drupal\Component\Utility\Html;
-use Drupal\Component\Render\MarkupInterface;
-use Drupal\Core\Cache\CacheableDependencyInterface;
 use Drupal\Core\Config\Config;
 use Drupal\Core\Config\StorageException;
-use Drupal\Core\Render\AttachmentsInterface;
-use Drupal\Core\Render\BubbleableMetadata;
-use Drupal\Core\Render\RenderableInterface;
 use Drupal\Core\Template\Attribute;
 use Drupal\Core\Template\AttributeHelper;
 use Drupal\Core\Theme\ThemeSettings;
 use Drupal\Core\Render\Element;
 use Drupal\Core\Render\Markup;
 use Drupal\Core\Utility\TableSort;
+use Drupal\Core\Installer\InstallerKernel;
 
 /**
  * @defgroup content_flags Content markers
@@ -72,33 +67,6 @@ const RESPONSIVE_PRIORITY_LOW = 'priority-low';
  */
 
 /**
- * Gets the theme registry.
- *
- * @param bool $complete
- *   Optional boolean to indicate whether to return the complete theme registry
- *   array or an instance of the Drupal\Core\Utility\ThemeRegistry class.
- *   If TRUE, the complete theme registry array will be returned. This is useful
- *   if you want to foreach over the whole registry, use array_* functions or
- *   inspect it in a debugger. If FALSE, an instance of the
- *   Drupal\Core\Utility\ThemeRegistry class will be returned, this provides an
- *   ArrayObject which allows it to be accessed with array syntax and isset(),
- *   and should be more lightweight than the full registry. Defaults to TRUE.
- *
- * @return array|\Drupal\Core\Utility\ThemeRegistry
- *   The complete theme registry array, or an instance of the
- *   Drupal\Core\Utility\ThemeRegistry class.
- */
-function theme_get_registry($complete = TRUE) {
-  $theme_registry = \Drupal::service('theme.registry');
-  if ($complete) {
-    return $theme_registry->get();
-  }
-  else {
-    return $theme_registry->getRuntime();
-  }
-}
-
-/**
  * Returns an array of default theme features.
  *
  * @see \Drupal\Core\Extension\ThemeExtensionList::$defaults
@@ -111,16 +79,6 @@ function _system_default_theme_features() {
     'comment_user_picture',
     'comment_user_verification',
   ];
-}
-
-/**
- * Forces the system to rebuild the theme registry.
- *
- * This function should be called when modules are added to the system, or when
- * a dynamic system needs to add more theme hooks.
- */
-function drupal_theme_rebuild() {
-  \Drupal::service('theme.registry')->reset();
 }
 
 /**
@@ -275,7 +233,7 @@ function theme_get_setting($setting_name, $theme = NULL) {
           $cache[$theme]->merge($theme_settings);
         }
       }
-      catch (StorageException $e) {
+      catch (StorageException) {
       }
 
       // If the theme does not support a particular feature, override the global
@@ -325,86 +283,6 @@ function theme_get_setting($setting_name, $theme = NULL) {
 }
 
 /**
- * Escapes and renders variables for theme functions.
- *
- * This method is used in theme functions to ensure that the result is safe for
- * output inside HTML fragments. This mimics the behavior of the auto-escape
- * functionality in Twig.
- *
- * Note: This function should be kept in sync with
- * \Drupal\Core\Template\TwigExtension::escapeFilter().
- *
- * @param mixed $arg
- *   The string, object, or render array to escape if needed.
- *
- * @return string
- *   The rendered string, safe for use in HTML. The string is not safe when used
- *   as any part of an HTML attribute name or value.
- *
- * @throws \Exception
- *   Thrown when an object is passed in which cannot be printed.
- *
- * @see \Drupal\Core\Template\TwigExtension::escapeFilter()
- *
- * @todo Discuss deprecating this in https://www.drupal.org/node/2575081.
- * @todo Refactor this to keep it in sync with Twig filtering in
- *   https://www.drupal.org/node/2575065
- */
-function theme_render_and_autoescape($arg) {
-  // If it's a renderable, then it'll be up to the generated render array it
-  // returns to contain the necessary cacheability & attachment metadata. If
-  // it doesn't implement CacheableDependencyInterface or AttachmentsInterface
-  // then there is nothing to do here.
-  if (!($arg instanceof RenderableInterface) && ($arg instanceof CacheableDependencyInterface || $arg instanceof AttachmentsInterface)) {
-    $arg_bubbleable = [];
-    BubbleableMetadata::createFromObject($arg)
-      ->applyTo($arg_bubbleable);
-    \Drupal::service('renderer')->render($arg_bubbleable);
-  }
-
-  if ($arg instanceof MarkupInterface) {
-    return (string) $arg;
-  }
-  $return = NULL;
-
-  if (is_scalar($arg)) {
-    $return = (string) $arg;
-  }
-  elseif (is_object($arg)) {
-    if ($arg instanceof RenderableInterface) {
-      $arg = $arg->toRenderable();
-    }
-    elseif (method_exists($arg, '__toString')) {
-      $return = (string) $arg;
-    }
-    // You can't throw exceptions in the magic PHP __toString methods, see
-    // http://php.net/manual/language.oop5.magic.php#object.tostring so
-    // we also support a toString method.
-    elseif (method_exists($arg, 'toString')) {
-      $return = $arg->toString();
-    }
-    else {
-      throw new \Exception('Object of type ' . get_class($arg) . ' cannot be printed.');
-    }
-  }
-
-  // We have a string or an object converted to a string: Escape it!
-  if (isset($return)) {
-    return $return instanceof MarkupInterface ? $return : Html::escape($return);
-  }
-
-  // This is a normal render array, which is safe by definition, with special
-  // simple cases already handled.
-
-  // Early return if this element was pre-rendered (no need to re-render).
-  if (isset($arg['#printed']) && $arg['#printed'] == TRUE && isset($arg['#markup']) && strlen($arg['#markup']) > 0) {
-    return (string) $arg['#markup'];
-  }
-  $arg['#printed'] = FALSE;
-  return (string) \Drupal::service('renderer')->render($arg);
-}
-
-/**
  * Converts theme settings to configuration.
  *
  * @see system_theme_settings_submit()
@@ -434,7 +312,7 @@ function theme_settings_convert_to_config(array $theme_settings, Config $config)
     elseif ($key == 'favicon_mimetype') {
       $config->set('favicon.mimetype', $value);
     }
-    elseif (substr($key, 0, 7) == 'toggle_') {
+    elseif (str_starts_with($key, 'toggle_')) {
       $config->set('features.' . mb_substr($key, 7), $value);
     }
     elseif (!in_array($key, ['theme', 'logo_upload'])) {
@@ -605,7 +483,7 @@ function template_preprocess_datetime_wrapper(&$variables) {
  *   - attributes: A keyed array of attributes for the <ul> containing the list
  *     of links.
  *   - set_active_class: (optional) Whether each link should compare the
- *     route_name + route_parameters or url (path), language, and query options
+ *     route_name + route_parameters or URL (path), language, and query options
  *     to the current URL, to determine whether the link is "active". If so,
  *     attributes will be added to the HTML elements for both the link and the
  *     list item that contains it, which will result in an "is-active" class
@@ -849,16 +727,16 @@ function template_preprocess_image(&$variables) {
  *     - Any HTML attributes, such as "colspan", to apply to the table cell.
  *     Here's an example for $rows:
  *     @code
- *     $rows = array(
+ *     $rows = [
  *       // Simple row
- *       array(
+ *       [
  *         'Cell 1', 'Cell 2', 'Cell 3'
- *       ),
+ *       ],
  *       // Row with attributes on the row and some of its cells.
- *       array(
- *         'data' => array('Cell 1', array('data' => 'Cell 2', 'colspan' => 2)), 'class' => array('funky')
- *       ),
- *     );
+ *       [
+ *         'data' => ['Cell 1', ['data' => 'Cell 2', 'colspan' => 2]], 'class' => ['funky']
+ *       ],
+ *     ];
  *     @endcode
  *   - footer: An array of table rows which will be printed within a <tfoot>
  *     tag, in the same format as the rows element (see above).
@@ -874,23 +752,23 @@ function template_preprocess_image(&$variables) {
  *       associative array of HTML attributes.
  *     Here's an example for $colgroup:
  *     @code
- *     $colgroup = array(
+ *     $colgroup = [
  *       // <colgroup> with one <col> element.
- *       array(
- *         array(
- *           'class' => array('funky'), // Attribute for the <col> element.
- *         ),
- *       ),
+ *       [
+ *         [
+ *           'class' => ['funky'], // Attribute for the <col> element.
+ *         ],
+ *       ],
  *       // <colgroup> with attributes and inner <col> elements.
- *       array(
- *         'data' => array(
- *           array(
- *             'class' => array('funky'), // Attribute for the <col> element.
- *           ),
- *         ),
- *         'class' => array('jazzy'), // Attribute for the <colgroup> element.
- *       ),
- *     );
+ *       [
+ *         'data' => [
+ *           [
+ *             'class' => ['funky'], // Attribute for the <col> element.
+ *           ],
+ *         ],
+ *         'class' => ['jazzy'], // Attribute for the <colgroup> element.
+ *       ],
+ *     ];
  *     @endcode
  *     These optional tags are used to group and set properties on columns
  *     within a table. For example, one may easily group three columns and
@@ -1367,14 +1245,14 @@ function template_preprocess_page(&$variables) {
   try {
     $variables['is_front'] = \Drupal::service('path.matcher')->isFrontPage();
   }
-  catch (Exception $e) {
+  catch (Exception) {
     // If the database is not yet available, set default values for these
     // variables.
     $variables['is_front'] = FALSE;
     $variables['db_is_active'] = FALSE;
   }
 
-  if ($node = \Drupal::routeMatch()->getParameter('node')) {
+  if (($node = \Drupal::routeMatch()->getParameter('node')) || ($node = \Drupal::routeMatch()->getParameter('node_preview'))) {
     $variables['node'] = $node;
   }
 }
@@ -1491,13 +1369,18 @@ function template_preprocess_maintenance_page(&$variables) {
  * @see template_preprocess_maintenance_page()
  */
 function template_preprocess_install_page(&$variables) {
+  $installer_active_task = NULL;
+  if (defined('MAINTENANCE_MODE') && MAINTENANCE_MODE === 'install' && InstallerKernel::installationAttempted()) {
+    $installer_active_task = $GLOBALS['install_state']['active_task'];
+  }
+
   template_preprocess_maintenance_page($variables);
 
   // Override the site name that is displayed on the page, since Drupal is
   // still in the process of being installed.
   $distribution_name = drupal_install_profile_distribution_name();
   $variables['site_name'] = $distribution_name;
-  $variables['site_version'] = drupal_install_profile_distribution_version();
+  $variables['site_version'] = $installer_active_task ? drupal_install_profile_distribution_version() : '';
 }
 
 /**
@@ -1607,13 +1490,15 @@ function template_preprocess_field_multiple_value_form(&$variables) {
     $header = [
       [
         'data' => [
-          '#prefix' => '<h4' . $header_attributes . '>',
-          '#markup' => $element['#title'],
-          '#suffix' => '</h4>',
+          '#type' => 'html_tag',
+          '#tag' => 'h4',
+          '#value' => $element['#title'],
+          '#attributes' => $header_attributes,
         ],
         'colspan' => 2,
         'class' => ['field-label'],
       ],
+      [],
       t('Order', [], ['context' => 'Sort order']),
     ];
     $rows = [];
@@ -1641,9 +1526,17 @@ function template_preprocess_field_multiple_value_form(&$variables) {
       $delta_element = $item['_weight'];
       unset($item['_weight']);
 
+      // Render actions in a separate column.
+      $actions = [];
+      if (isset($item['_actions'])) {
+        $actions = $item['_actions'];
+        unset($item['_actions']);
+      }
+
       $cells = [
         ['data' => '', 'class' => ['field-multiple-drag']],
         ['data' => $item],
+        ['data' => $actions],
         ['data' => $delta_element, 'class' => ['delta-order']],
       ];
       $rows[] = [
@@ -1719,6 +1612,7 @@ function template_preprocess_breadcrumb(&$variables) {
  *     - #tags: An array of labels for the controls in the pager.
  *     - #element: An optional integer to distinguish between multiple pagers on
  *       one page.
+ *     - #pagination_heading_level: An optional heading level for the pager.
  *     - #parameters: An associative array of query string parameters to append
  *       to the pager links.
  *     - #route_parameters: An associative array of the route parameters.
@@ -1799,26 +1693,25 @@ function template_preprocess_pager(&$variables) {
     }
   }
 
-  if ($i != $pager_max) {
-    // Add an ellipsis if there are further previous pages.
-    if ($i > 1) {
-      $variables['ellipses']['previous'] = TRUE;
+  // Add an ellipsis if there are further previous pages.
+  if ($i > 1) {
+    $variables['ellipses']['previous'] = TRUE;
+  }
+  // Now generate the actual pager piece.
+  for (; $i <= $pager_last && $i <= $pager_max; $i++) {
+    $options = [
+      'query' => $pager_manager->getUpdatedParameters($parameters, $element, $i - 1),
+    ];
+    $items['pages'][$i]['href'] = Url::fromRoute($route_name, $route_parameters, $options)->toString();
+    $items['pages'][$i]['attributes'] = new Attribute();
+    if ($i == $pager_current) {
+      $variables['current'] = $i;
+      $items['pages'][$i]['attributes']->setAttribute('aria-current', 'page');
     }
-    // Now generate the actual pager piece.
-    for (; $i <= $pager_last && $i <= $pager_max; $i++) {
-      $options = [
-        'query' => $pager_manager->getUpdatedParameters($parameters, $element, $i - 1),
-      ];
-      $items['pages'][$i]['href'] = Url::fromRoute($route_name, $route_parameters, $options)->toString();
-      $items['pages'][$i]['attributes'] = new Attribute();
-      if ($i == $pager_current) {
-        $variables['current'] = $i;
-      }
-    }
-    // Add an ellipsis if there are further next pages.
-    if ($i < $pager_max + 1) {
-      $variables['ellipses']['next'] = TRUE;
-    }
+  }
+  // Add an ellipsis if there are further next pages.
+  if ($i < $pager_max + 1) {
+    $variables['ellipses']['next'] = TRUE;
   }
 
   // Create the "next" and "last" links if we are not on the last page.
@@ -1846,6 +1739,10 @@ function template_preprocess_pager(&$variables) {
 
   $variables['items'] = $items;
   $variables['heading_id'] = Html::getUniqueId('pagination-heading');
+  $variables['pagination_heading_level'] = $variables['pager']['#pagination_heading_level'] ?? 'h4';
+  if (!preg_match('/^h[1-6]$/', $variables['pagination_heading_level'])) {
+    $variables['pagination_heading_level'] = 'h4';
+  }
 
   // The rendered link needs to play well with any other query parameter used
   // on the page, like exposed filters, so for the cacheability all query
@@ -1874,10 +1771,6 @@ function template_preprocess_menu_local_task(&$variables) {
 
   if (!empty($variables['element']['#active'])) {
     $variables['is_active'] = TRUE;
-
-    // Add text to indicate active tab for non-visual users.
-    $active = new FormattableMarkup('<span class="visually-hidden">@label</span>', ['@label' => t('(active tab)')]);
-    $link_text = t('@local-task-title@active', ['@local-task-title' => $link_text, '@active' => $active]);
   }
 
   $link['localized_options']['set_active_class'] = TRUE;
@@ -1997,7 +1890,7 @@ function drupal_common_theme() {
       'variables' => ['items' => [], 'title' => '', 'list_type' => 'ul', 'wrapper_attributes' => [], 'attributes' => [], 'empty' => NULL, 'context' => []],
     ],
     'feed_icon' => [
-      'variables' => ['url' => NULL, 'title' => NULL],
+      'variables' => ['url' => NULL, 'title' => NULL, 'attributes' => []],
     ],
     'progress_bar' => [
       'variables' => ['label' => NULL, 'percent' => NULL, 'message' => NULL],

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\entity_test\Entity;
 
 use Drupal\Core\Entity\EntityTypeInterface;
@@ -10,7 +12,7 @@ use Drupal\Core\Field\BaseFieldDefinition;
  *
  * @ContentEntityType(
  *   id = "entity_test_mulrev_changed",
- *   label = @Translation("Test entity - revisions and data table"),
+ *   label = @Translation("Test entity - mul changed revisions and data table"),
  *   handlers = {
  *     "view_builder" = "Drupal\entity_test\EntityTestViewBuilder",
  *     "access" = "Drupal\entity_test\EntityTestAccessControlHandler",

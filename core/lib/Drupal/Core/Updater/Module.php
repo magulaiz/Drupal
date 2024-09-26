@@ -2,8 +2,6 @@
 
 namespace Drupal\Core\Updater;
 
-use Drupal\Core\Url;
-
 /**
  * Defines a class for updating modules.
  *
@@ -74,63 +72,6 @@ class Module extends Updater implements UpdaterInterface {
    */
   public static function canUpdate($project_name) {
     return (bool) \Drupal::service('extension.list.module')->getPath($project_name);
-  }
-
-  /**
-   * Returns available database schema updates once a new version is installed.
-   *
-   * @return array
-   */
-  public function getSchemaUpdates() {
-    require_once DRUPAL_ROOT . '/core/includes/install.inc';
-    require_once DRUPAL_ROOT . '/core/includes/update.inc';
-
-    if (!self::canUpdate($this->name)) {
-      return [];
-    }
-    \Drupal::moduleHandler()->loadInclude($this->name, 'install');
-
-    if (!\Drupal::service('update.update_hook_registry')->getAvailableUpdates($this->name)) {
-      return [];
-    }
-    $modules_with_updates = update_get_update_list();
-    if ($updates = $modules_with_updates[$this->name]) {
-      if ($updates['start']) {
-        return $updates['pending'];
-      }
-    }
-    return [];
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function postInstallTasks() {
-    // Since this is being called outside of the primary front controller,
-    // the base_url needs to be set explicitly to ensure that links are
-    // relative to the site root.
-    // @todo Simplify with https://www.drupal.org/node/2548095
-    $default_options = [
-      '#type' => 'link',
-      '#options' => [
-        'absolute' => TRUE,
-        'base_url' => $GLOBALS['base_url'],
-      ],
-    ];
-    return [
-      $default_options + [
-        '#url' => Url::fromRoute('update.module_install'),
-        '#title' => t('Add another module'),
-      ],
-      $default_options + [
-        '#url' => Url::fromRoute('system.modules_list'),
-        '#title' => t('Enable newly added modules'),
-      ],
-      $default_options + [
-        '#url' => Url::fromRoute('system.admin'),
-        '#title' => t('Administration pages'),
-      ],
-    ];
   }
 
   /**
