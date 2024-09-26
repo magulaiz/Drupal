@@ -229,7 +229,7 @@ function _drupal_log_error($error, $fatal = FALSE) {
           $error['%file'] = substr($error['%file'], $root_length + 1);
         }
       }
-      else {
+      elseif (str_starts_with($error['%file'], '/')) {
         $error['%file'] = substr($error['%file'], strlen(realpath(__DIR__ . '/../..')) + 1);
       }
 
