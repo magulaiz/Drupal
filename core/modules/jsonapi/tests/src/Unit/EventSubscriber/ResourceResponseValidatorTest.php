@@ -163,7 +163,7 @@ EOD
       // Test validation can be disabled.
       [
         'json' => '{}',
-        'expected' => FALSE,
+        'expected' => TRUE,
         'description' => 'Response validation disabled doesn\'t flags empty array as invalid.',
         'enable_validation' => FALSE,
       ],
