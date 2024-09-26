@@ -37,6 +37,10 @@ class NodeAddPerformanceTest extends PerformanceTestBase {
       'create article content' => TRUE,
       'access content' => TRUE,
     ]);
+    user_role_change_permissions(RoleInterface::AUTHENTICATED_ID, [
+      'create article content' => TRUE,
+      'access content' => TRUE,
+    ]);
   }
 
   /**
@@ -122,24 +126,57 @@ class NodeAddPerformanceTest extends PerformanceTestBase {
       $this->drupalGet('node/add/article');
     }, 'standardNodeAddPageWarmCache');
 
-    $recorded_queries = $performance_data->getQueries();
-    $this->assertSame([
+    $expected_queries = [
       'SELECT "session" FROM "sessions" WHERE "sid" = "SESSION_ID" LIMIT 0, 1',
       'SELECT * FROM "users_field_data" "u" WHERE "u"."uid" = "2" AND "u"."default_langcode" = 1',
       'SELECT "roles_target_id" FROM "user__roles" WHERE "entity_id" = "2"',
-      'INSERT INTO "watchdog" ("uid", "type", "message", "variables", "severity", "link", "location", "referer", "hostname", "timestamp") VALUES ("2", "access denied", "Path: @uri. %type: @message in %function (line %line of %file).", "WATCHDOG_DATA", 4, "", "LOCATION", "REFERER", "CLIENT_IP", "TIMESTAMP")',
-    ], $recorded_queries);
-    $this->assertSame(4, $performance_data->getQueryCount());
-    $this->assertSame(27, $performance_data->getCacheGetCount());
+      'SELECT 1 FROM "key_value" WHERE "collection" = "entity_autocomplete" AND "name" = ""',
+      'SELECT 1 FROM "key_value" WHERE "collection" = "entity_autocomplete" AND "name" = ""',
+      'SELECT "config"."name" AS "name" FROM "config" "config" WHERE ("collection" = "") AND ("name" LIKE "editor.editor.%" ESCAPE \'\\\\\') ORDER BY "collection" ASC, "name" ASC',
+      'SELECT "name", "value" FROM "key_value" WHERE "name" IN ( "theme:stark" ) AND "collection" = "config.entity.key_store.block"',
+    ];
+    $recorded_queries = $performance_data->getQueries();
+
+    // We need to replace queries that are not deterministic removing the random
+    // part.
+    $pattern = '/^SELECT 1 FROM "key_value" WHERE "collection" = "entity_autocomplete" AND "name" = "([^"]*)"/';
+    $replacement = 'SELECT 1 FROM "key_value" WHERE "collection" = "entity_autocomplete" AND "name" = ""';
+    $recorded_queries_cleanded = $this->cleanQueries($pattern, $replacement, $recorded_queries);
+    $this->assertSame($expected_queries, $recorded_queries_cleanded);
+    $this->assertSame(7, $performance_data->getQueryCount());
+    $this->assertSame(85, $performance_data->getCacheGetCount());
     $this->assertSame(0, $performance_data->getCacheSetCount());
     $this->assertSame(0, $performance_data->getCacheDeleteCount());
     $this->assertSame(0, $performance_data->getCacheTagChecksumCount());
-    $this->assertSame(12, $performance_data->getCacheTagIsValidCount());
+    $this->assertSame(39, $performance_data->getCacheTagIsValidCount());
     $this->assertSame(0, $performance_data->getCacheTagInvalidationCount());
-    $this->assertSame(1, $performance_data->getScriptCount());
-    $this->assertSame(122824, $performance_data->getScriptBytes());
+    $this->assertSame(3, $performance_data->getScriptCount());
+    $this->assertCountBetween(1631000, 1632000, $performance_data->getScriptBytes());
     $this->assertSame(1, $performance_data->getStylesheetCount());
-    $this->assertSame(4498, $performance_data->getStylesheetBytes());
+    $this->assertCountBetween(36500, 37500, $performance_data->getStylesheetBytes());
+  }
+
+  /**
+   * Clean queries removing random part based on pattern and replacement.
+   *
+   * @param string $pattern
+   *   The query pattern to search.
+   * @param string $replacement
+   *   The query replacement.
+   * @param $queries
+   *   The queries array.
+   *
+   * @return array
+   *   The cleaned queries.
+   */
+  protected function cleanQueries(string $pattern, string $replacement, array $queries): array {
+    foreach ($queries as &$query) {
+      if (preg_match($pattern, $query)) {
+        $query = preg_replace($pattern, $replacement, $query);
+      }
+    }
+
+    return $queries;
   }
 
 }
