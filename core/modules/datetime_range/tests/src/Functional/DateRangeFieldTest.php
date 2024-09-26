@@ -999,171 +999,179 @@ class DateRangeFieldTest extends DateTestBase {
     ]);
     $field->save();
 
-    // Set now as default_value.
-    $field_edit = [
-      'set_default_value' => '1',
-      'default_value_input[default_date_type]' => 'now',
-      'default_value_input[default_end_date_type]' => 'now',
-    ];
-    $this->drupalGet('admin/structure/types/manage/date_content/fields/node.date_content.' . $field_name);
-    $this->submitForm($field_edit, 'Save settings');
+    // Loop through defined timezones to test that defaults work at the
+    // extremes.
+    foreach (static::$timezones as $timezone) {
 
-    // Check that default value is selected in default value form.
-    $this->drupalGet('admin/structure/types/manage/date_content/fields/node.date_content.' . $field_name);
-    $this->assertTrue($this->assertSession()->optionExists('edit-default-value-input-default-date-type', 'now')->isSelected());
-    // Check that the relative start default value is empty.
-    $this->assertSession()->fieldValueEquals('default_value_input[default_date]', '');
-    $this->assertTrue($this->assertSession()->optionExists('edit-default-value-input-default-end-date-type', 'now')->isSelected());
-    // Check that the relative end default value is empty.
-    $this->assertSession()->fieldValueEquals('default_value_input[default_end_date]', '');
+      $this->setSiteTimezone($timezone);
+      $this->assertEquals($timezone, $this->config('system.date')->get('timezone.default'), 'Time zone set to ' . $timezone);
 
-    // Check if default_date has been stored successfully.
-    $config_entity = $this->config('field.field.node.date_content.' . $field_name)->get();
-    $this->assertEquals([
-      'default_date_type' => 'now',
-      'default_date' => 'now',
-      'default_end_date_type' => 'now',
-      'default_end_date' => 'now',
-    ],
-    $config_entity['default_value'][0], 'Default value has been stored successfully');
+      // Set now as default_value.
+      $field_edit = [
+        'set_default_value' => '1',
+        'default_value_input[default_date_type]' => 'now',
+        'default_value_input[default_end_date_type]' => 'now',
+      ];
+      $this->drupalGet('admin/structure/types/manage/date_content/fields/node.date_content.' . $field_name);
+      $this->submitForm($field_edit, 'Save settings');
 
-    // Clear field cache in order to avoid stale cache values.
-    \Drupal::service('entity_field.manager')->clearCachedFieldDefinitions();
+      // Check that default value is selected in default value form.
+      $this->drupalGet('admin/structure/types/manage/date_content/fields/node.date_content.' . $field_name);
+      $this->assertTrue($this->assertSession()->optionExists('edit-default-value-input-default-date-type', 'now')->isSelected());
+      // Check that the relative start default value is empty.
+      $this->assertSession()->fieldValueEquals('default_value_input[default_date]', '');
+      $this->assertTrue($this->assertSession()->optionExists('edit-default-value-input-default-end-date-type', 'now')->isSelected());
+      // Check that the relative end default value is empty.
+      $this->assertSession()->fieldValueEquals('default_value_input[default_end_date]', '');
 
-    // Create a new node to check that datetime field default value is today.
-    $new_node = Node::create(['type' => 'date_content']);
-    $expected_date = new DrupalDateTime('now', date_default_timezone_get());
-    $this->assertEquals($expected_date->format($storage_format), $new_node->get($field_name)->offsetGet(0)->value);
-    $this->assertEquals($expected_date->format($storage_format), $new_node->get($field_name)->offsetGet(0)->end_value);
+      // Check if default_date has been stored successfully.
+      $config_entity = $this->config('field.field.node.date_content.' . $field_name)->get();
+      $this->assertEquals([
+        'default_date_type' => 'now',
+        'default_date' => 'now',
+        'default_end_date_type' => 'now',
+        'default_end_date' => 'now',
+      ],
+        $config_entity['default_value'][0], 'Default value has been stored successfully');
 
-    // Set an invalid relative default_value to test validation.
-    $field_edit = [
-      'set_default_value' => '1',
-      'default_value_input[default_date_type]' => 'relative',
-      'default_value_input[default_date]' => 'invalid date',
-      'default_value_input[default_end_date_type]' => 'relative',
-      'default_value_input[default_end_date]' => '+1 day',
-    ];
-    $this->drupalGet('admin/structure/types/manage/date_content/fields/node.date_content.' . $field_name);
-    $this->submitForm($field_edit, 'Save settings');
-    $this->assertSession()->pageTextContains('The relative start date value entered is invalid.');
+      // Clear field cache in order to avoid stale cache values.
+      \Drupal::service('entity_field.manager')->clearCachedFieldDefinitions();
 
-    $field_edit = [
-      'set_default_value' => '1',
-      'default_value_input[default_date_type]' => 'relative',
-      'default_value_input[default_date]' => '+1 day',
-      'default_value_input[default_end_date_type]' => 'relative',
-      'default_value_input[default_end_date]' => 'invalid date',
-    ];
-    $this->drupalGet('admin/structure/types/manage/date_content/fields/node.date_content.' . $field_name);
-    $this->submitForm($field_edit, 'Save settings');
-    $this->assertSession()->pageTextContains('The relative end date value entered is invalid.');
+      // Create a new node to check that datetime field default value is today.
+      $new_node = Node::create(['type' => 'date_content']);
+      $expected_date = new DrupalDateTime('now', date_default_timezone_get());
+      $this->assertEquals($expected_date->format($storage_format), $new_node->get($field_name)->offsetGet(0)->value);
+      $this->assertEquals($expected_date->format($storage_format), $new_node->get($field_name)->offsetGet(0)->end_value);
 
-    // Set a relative default_value.
-    $field_edit = [
-      'set_default_value' => '1',
-      'default_value_input[default_date_type]' => 'relative',
-      'default_value_input[default_date]' => '+45 days',
-      'default_value_input[default_end_date_type]' => 'relative',
-      'default_value_input[default_end_date]' => '+90 days',
-    ];
-    $this->drupalGet('admin/structure/types/manage/date_content/fields/node.date_content.' . $field_name);
-    $this->submitForm($field_edit, 'Save settings');
+      // Set an invalid relative default_value to test validation.
+      $field_edit = [
+        'set_default_value' => '1',
+        'default_value_input[default_date_type]' => 'relative',
+        'default_value_input[default_date]' => 'invalid date',
+        'default_value_input[default_end_date_type]' => 'relative',
+        'default_value_input[default_end_date]' => '+1 day',
+      ];
+      $this->drupalGet('admin/structure/types/manage/date_content/fields/node.date_content.' . $field_name);
+      $this->submitForm($field_edit, 'Save settings');
+      $this->assertSession()->pageTextContains('The relative start date value entered is invalid.');
 
-    // Check that default value is selected in default value form.
-    $this->drupalGet('admin/structure/types/manage/date_content/fields/node.date_content.' . $field_name);
-    $this->assertTrue($this->assertSession()->optionExists('edit-default-value-input-default-date-type', 'relative')->isSelected());
-    // Check that the relative start default value is displayed.
-    $this->assertSession()->fieldValueEquals('default_value_input[default_date]', '+45 days');
-    $this->assertTrue($this->assertSession()->optionExists('edit-default-value-input-default-end-date-type', 'relative')->isSelected());
-    // Check that the relative end default value is displayed.
-    $this->assertSession()->fieldValueEquals('default_value_input[default_end_date]', '+90 days');
+      $field_edit = [
+        'set_default_value' => '1',
+        'default_value_input[default_date_type]' => 'relative',
+        'default_value_input[default_date]' => '+1 day',
+        'default_value_input[default_end_date_type]' => 'relative',
+        'default_value_input[default_end_date]' => 'invalid date',
+      ];
+      $this->drupalGet('admin/structure/types/manage/date_content/fields/node.date_content.' . $field_name);
+      $this->submitForm($field_edit, 'Save settings');
+      $this->assertSession()->pageTextContains('The relative end date value entered is invalid.');
 
-    // Check if default_date has been stored successfully.
-    $config_entity = $this->config('field.field.node.date_content.' . $field_name)->get();
-    $this->assertEquals([
-      'default_date_type' => 'relative',
-      'default_date' => '+45 days',
-      'default_end_date_type' => 'relative',
-      'default_end_date' => '+90 days',
-    ],
-    $config_entity['default_value'][0], 'Default value has been stored successfully');
+      // Set a relative default_value.
+      $field_edit = [
+        'set_default_value' => '1',
+        'default_value_input[default_date_type]' => 'relative',
+        'default_value_input[default_date]' => '+45 days',
+        'default_value_input[default_end_date_type]' => 'relative',
+        'default_value_input[default_end_date]' => '+90 days',
+      ];
+      $this->drupalGet('admin/structure/types/manage/date_content/fields/node.date_content.' . $field_name);
+      $this->submitForm($field_edit, 'Save settings');
 
-    // Clear field cache in order to avoid stale cache values.
-    \Drupal::service('entity_field.manager')->clearCachedFieldDefinitions();
+      // Check that default value is selected in default value form.
+      $this->drupalGet('admin/structure/types/manage/date_content/fields/node.date_content.' . $field_name);
+      $this->assertTrue($this->assertSession()->optionExists('edit-default-value-input-default-date-type', 'relative')->isSelected());
+      // Check that the relative start default value is displayed.
+      $this->assertSession()->fieldValueEquals('default_value_input[default_date]', '+45 days');
+      $this->assertTrue($this->assertSession()->optionExists('edit-default-value-input-default-end-date-type', 'relative')->isSelected());
+      // Check that the relative end default value is displayed.
+      $this->assertSession()->fieldValueEquals('default_value_input[default_end_date]', '+90 days');
 
-    // Create a new node to check that datetime field default value is +90 days.
-    $new_node = Node::create(['type' => 'date_content']);
-    $expected_start_date = new DrupalDateTime('+45 days', date_default_timezone_get());
-    $expected_end_date = new DrupalDateTime('+90 days', date_default_timezone_get());
-    $this->assertEquals($expected_start_date->format($storage_format), $new_node->get($field_name)->offsetGet(0)->value);
-    $this->assertEquals($expected_end_date->format($storage_format), $new_node->get($field_name)->offsetGet(0)->end_value);
+      // Check if default_date has been stored successfully.
+      $config_entity = $this->config('field.field.node.date_content.' . $field_name)->get();
+      $this->assertEquals([
+        'default_date_type' => 'relative',
+        'default_date' => '+45 days',
+        'default_end_date_type' => 'relative',
+        'default_end_date' => '+90 days',
+      ],
+        $config_entity['default_value'][0], 'Default value has been stored successfully');
 
-    // Remove default value.
-    $field_edit = [
-      'set_default_value' => '',
-      'default_value_input[default_date_type]' => '',
-      'default_value_input[default_end_date_type]' => '',
-    ];
-    $this->drupalGet('admin/structure/types/manage/date_content/fields/node.date_content.' . $field_name);
-    $this->submitForm($field_edit, 'Save settings');
+      // Clear field cache in order to avoid stale cache values.
+      \Drupal::service('entity_field.manager')->clearCachedFieldDefinitions();
 
-    // Check that default value is selected in default value form.
-    $this->drupalGet('admin/structure/types/manage/date_content/fields/node.date_content.' . $field_name);
-    $this->assertTrue($this->assertSession()->optionExists('edit-default-value-input-default-date-type', '')->isSelected());
-    // Check that the relative start default value is empty.
-    $this->assertSession()->fieldValueEquals('default_value_input[default_date]', '');
-    $this->assertTrue($this->assertSession()->optionExists('edit-default-value-input-default-end-date-type', '')->isSelected());
-    // Check that the relative end default value is empty.
-    $this->assertSession()->fieldValueEquals('default_value_input[default_end_date]', '');
+      // Create a new node to check that datetime field default value is +90 days.
+      $new_node = Node::create(['type' => 'date_content']);
+      $expected_start_date = new DrupalDateTime('+45 days', date_default_timezone_get());
+      $expected_end_date = new DrupalDateTime('+90 days', date_default_timezone_get());
+      $this->assertEquals($expected_start_date->format($storage_format), $new_node->get($field_name)->offsetGet(0)->value);
+      $this->assertEquals($expected_end_date->format($storage_format), $new_node->get($field_name)->offsetGet(0)->end_value);
 
-    // Check if default_date has been stored successfully.
-    $config_entity = $this->config('field.field.node.date_content.' . $field_name)->get();
-    $this->assertEmpty($config_entity['default_value'], 'Empty default value has been stored successfully');
+      // Remove default value.
+      $field_edit = [
+        'set_default_value' => '',
+        'default_value_input[default_date_type]' => '',
+        'default_value_input[default_end_date_type]' => '',
+      ];
+      $this->drupalGet('admin/structure/types/manage/date_content/fields/node.date_content.' . $field_name);
+      $this->submitForm($field_edit, 'Save settings');
 
-    // Clear field cache in order to avoid stale cache values.
-    \Drupal::service('entity_field.manager')->clearCachedFieldDefinitions();
+      // Check that default value is selected in default value form.
+      $this->drupalGet('admin/structure/types/manage/date_content/fields/node.date_content.' . $field_name);
+      $this->assertTrue($this->assertSession()->optionExists('edit-default-value-input-default-date-type', '')->isSelected());
+      // Check that the relative start default value is empty.
+      $this->assertSession()->fieldValueEquals('default_value_input[default_date]', '');
+      $this->assertTrue($this->assertSession()->optionExists('edit-default-value-input-default-end-date-type', '')->isSelected());
+      // Check that the relative end default value is empty.
+      $this->assertSession()->fieldValueEquals('default_value_input[default_end_date]', '');
 
-    // Create a new node to check that datetime field default value is not set.
-    $new_node = Node::create(['type' => 'date_content']);
-    $this->assertNull($new_node->get($field_name)->value, 'Default value is not set');
+      // Check if default_date has been stored successfully.
+      $config_entity = $this->config('field.field.node.date_content.' . $field_name)->get();
+      $this->assertEmpty($config_entity['default_value'], 'Empty default value has been stored successfully');
 
-    // Set now as default_value for start date only.
-    \Drupal::service('entity_display.repository')
-      ->getFormDisplay('node', 'date_content')
-      ->setComponent($field_name, [
-        'type' => 'datetime_default',
-      ])
-      ->save();
+      // Clear field cache in order to avoid stale cache values.
+      \Drupal::service('entity_field.manager')->clearCachedFieldDefinitions();
 
-    $expected_date = new DrupalDateTime('now', date_default_timezone_get());
+      // Create a new node to check that datetime field default value is not set.
+      $new_node = Node::create(['type' => 'date_content']);
+      $this->assertNull($new_node->get($field_name)->value, 'Default value is not set');
 
-    $field_edit = [
-      'set_default_value' => '1',
-      'default_value_input[default_date_type]' => 'now',
-      'default_value_input[default_end_date_type]' => '',
-    ];
-    $this->drupalGet('admin/structure/types/manage/date_content/fields/node.date_content.' . $field_name);
-    $this->submitForm($field_edit, 'Save settings');
+      // Set now as default_value for start date only.
+      \Drupal::service('entity_display.repository')
+        ->getFormDisplay('node', 'date_content')
+        ->setComponent($field_name, [
+          'type' => 'datetime_default',
+        ])
+        ->save();
 
-    // Make sure only the start value is populated on node add page.
-    $this->drupalGet('node/add/date_content');
-    $this->assertSession()->fieldValueEquals("{$field_name}[0][value][date]", $expected_date->format(DateTimeItemInterface::DATE_STORAGE_FORMAT));
-    $this->assertSession()->fieldValueEquals("{$field_name}[0][end_value][date]", '');
+      $expected_date = new DrupalDateTime('now', date_default_timezone_get());
 
-    // Set now as default_value for end date only.
-    $field_edit = [
-      'set_default_value' => '1',
-      'default_value_input[default_date_type]' => '',
-      'default_value_input[default_end_date_type]' => 'now',
-    ];
-    $this->drupalGet('admin/structure/types/manage/date_content/fields/node.date_content.' . $field_name);
-    $this->submitForm($field_edit, 'Save settings');
+      $field_edit = [
+        'set_default_value' => '1',
+        'default_value_input[default_date_type]' => 'now',
+        'default_value_input[default_end_date_type]' => '',
+      ];
+      $this->drupalGet('admin/structure/types/manage/date_content/fields/node.date_content.' . $field_name);
+      $this->submitForm($field_edit, 'Save settings');
 
-    // Make sure only the start value is populated on node add page.
-    $this->drupalGet('node/add/date_content');
-    $this->assertSession()->fieldValueEquals("{$field_name}[0][value][date]", '');
-    $this->assertSession()->fieldValueEquals("{$field_name}[0][end_value][date]", $expected_date->format(DateTimeItemInterface::DATE_STORAGE_FORMAT));
+      // Make sure only the start value is populated on node add page.
+      $this->drupalGet('node/add/date_content');
+      $this->assertSession()->fieldValueEquals("{$field_name}[0][value][date]", $expected_date->format(DateTimeItemInterface::DATE_STORAGE_FORMAT));
+      $this->assertSession()->fieldValueEquals("{$field_name}[0][end_value][date]", '');
+
+      // Set now as default_value for end date only.
+      $field_edit = [
+        'set_default_value' => '1',
+        'default_value_input[default_date_type]' => '',
+        'default_value_input[default_end_date_type]' => 'now',
+      ];
+      $this->drupalGet('admin/structure/types/manage/date_content/fields/node.date_content.' . $field_name);
+      $this->submitForm($field_edit, 'Save settings');
+
+      // Make sure only the start value is populated on node add page.
+      $this->drupalGet('node/add/date_content');
+      $this->assertSession()->fieldValueEquals("{$field_name}[0][value][date]", '');
+      $this->assertSession()->fieldValueEquals("{$field_name}[0][end_value][date]", $expected_date->format(DateTimeItemInterface::DATE_STORAGE_FORMAT));
+    }
   }
 
   /**
