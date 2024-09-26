@@ -113,7 +113,7 @@ class OpenTelemetryFrontPagePerformanceTest extends PerformanceTestBase {
 
     $performance_data = $this->collectPerformanceData(function () {
       $this->drupalGet('<front>');
-    }, 'umamiFrontPageColdCache');
+    }, 'umamiFrontPageColdDrupalCache');
     $this->assertSession()->pageTextContains('Umami');
     $this->assertCountBetween(315, 330, $performance_data->getQueryCount());
     $this->assertCountBetween(540, 565, $performance_data->getCacheGetCount());
