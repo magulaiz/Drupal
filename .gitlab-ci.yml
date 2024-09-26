@@ -414,6 +414,7 @@ default:
     - yarn install
     - yarn run check:ckeditor5
     - yarn run lint:core-js-passing --cache --cache-strategy content --format gitlab
+    - pwd
     - mv /build/eslint-quality-report.json $CI_PROJECT_DIR || true
   artifacts:
     reports:
@@ -443,6 +444,7 @@ default:
     - yarn install
     - yarn run build:css --check
     - yarn run lint:css --cache --cache-location .stylelintcache --cache-strategy content --color --custom-formatter=node_modules/stylelint-formatter-gitlab
+    - pwd
     - mv -f /build/stylelint-quality-report.json $CI_PROJECT_DIR || true
   artifacts:
     reports:
