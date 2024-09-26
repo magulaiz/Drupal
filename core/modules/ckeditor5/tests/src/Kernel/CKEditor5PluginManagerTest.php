@@ -28,7 +28,6 @@ use Symfony\Component\Yaml\Yaml;
  * Tests different ways of enabling CKEditor 5 plugins.
  *
  * @group ckeditor5
- * @group #slow
  * @internal
  */
 class CKEditor5PluginManagerTest extends KernelTestBase {
@@ -73,6 +72,9 @@ class CKEditor5PluginManagerTest extends KernelTestBase {
     Editor::create([
       'format' => 'basic_html',
       'editor' => 'ckeditor5',
+      'image_upload' => [
+        'status' => FALSE,
+      ],
     ])->save();
     FilterFormat::create(
       Yaml::parseFile('core/profiles/standard/config/install/filter.format.full_html.yml')
@@ -80,6 +82,9 @@ class CKEditor5PluginManagerTest extends KernelTestBase {
     Editor::create([
       'format' => 'full_html',
       'editor' => 'ckeditor5',
+      'image_upload' => [
+        'status' => FALSE,
+      ],
     ])->save();
     $this->manager = $this->container->get('plugin.manager.ckeditor5.plugin');
     $this->typedConfig = $this->container->get('config.typed');
@@ -197,7 +202,9 @@ YAML,
       $this->expectExceptionMessage($expected_message);
     }
     $container = $this->mockModuleInVfs('ckeditor5_invalid_plugin', $yaml, $additional_files);
-    $container->get('plugin.manager.ckeditor5.plugin')->getDefinitions();
+    $pluginManager = $container->get('plugin.manager.ckeditor5.plugin');
+    $this->assertNotNull($pluginManager);
+    $this->assertIsArray($pluginManager->getDefinitions());
   }
 
   /**
@@ -1057,6 +1064,9 @@ PHP,
     $text_editor = Editor::create([
       'format' => 'dummy',
       'editor' => 'ckeditor5',
+      'image_upload' => [
+        'status' => FALSE,
+      ],
       'settings' => [
         'plugins' => [
           $sneaky_plugin_id => ['configured_subset' => $configured_subset],
@@ -1110,7 +1120,7 @@ PHP,
   /**
    * Tests the enabling of plugins.
    */
-  public function testEnabledPlugins() {
+  public function testEnabledPlugins(): void {
     $editor = Editor::load('basic_html');
 
     // Case 1: no extra CKEditor 5 plugins.
@@ -1281,7 +1291,7 @@ PHP,
    * @covers \Drupal\ckeditor5\Plugin\CKEditor5PluginManager::getProvidedElements
    * @dataProvider providerTestProvidedElements
    */
-  public function testProvidedElements(array $plugins, array $text_editor_settings, array $expected_elements, string $expected_readable_string) {
+  public function testProvidedElements(array $plugins, array $text_editor_settings, array $expected_elements, string $expected_readable_string): void {
     $this->enableModules(['ckeditor5_plugin_elements_test']);
 
     $text_editor = Editor::create([
@@ -1531,7 +1541,7 @@ PHP,
    *
    * @dataProvider providerTestPluginSupportingElement
    */
-  public function testPluginSupportingElement(string $tag, ?string $expected_plugin_id) {
+  public function testPluginSupportingElement(string $tag, ?string $expected_plugin_id): void {
     $this->enableModules(['ckeditor5_definition_supporting_element']);
     $plugin_id = $this->manager->findPluginSupportingElement($tag);
     $this->assertSame($expected_plugin_id, $plugin_id);

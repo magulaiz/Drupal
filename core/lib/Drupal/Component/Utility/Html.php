@@ -51,10 +51,10 @@ class Html {
    *   tag. That tag only makes sense in an HTML-served-as-HTML context, in
    *   which case relative URLs are guaranteed to work.
    *
+   * @var string[]
+   *
    * @see https://developer.mozilla.org/en-US/docs/Web/HTML/Attributes
    * @see https://stackoverflow.com/questions/2725156/complete-list-of-html-tag-attributes-which-have-a-url-value
-   *
-   * @var string[]
    */
   protected static $uriAttributes = ['href', 'poster', 'src', 'cite', 'data', 'action', 'formaction', 'srcset', 'about'];
 
@@ -95,13 +95,16 @@ class Html {
    * @return string
    *   The cleaned identifier.
    */
-  public static function cleanCssIdentifier($identifier, array $filter = [
-    ' ' => '-',
-    '_' => '-',
-    '/' => '-',
-    '[' => '-',
-    ']' => '',
-  ]) {
+  public static function cleanCssIdentifier(
+    $identifier,
+    array $filter = [
+      ' ' => '-',
+      '_' => '-',
+      '/' => '-',
+      '[' => '-',
+      ']' => '',
+    ],
+  ) {
     // We could also use strtr() here but its much slower than str_replace(). In
     // order to keep '__' to stay '__' we first replace it with a different
     // placeholder after checking that it is not defined as a filter.

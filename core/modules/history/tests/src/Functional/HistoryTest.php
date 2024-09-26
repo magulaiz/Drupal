@@ -19,9 +19,7 @@ class HistoryTest extends BrowserTestBase {
   use AssertPageCacheContextsAndTagsTrait;
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = ['node', 'history'];
 
@@ -106,7 +104,7 @@ class HistoryTest extends BrowserTestBase {
   /**
    * Verifies that the history endpoints work.
    */
-  public function testHistory() {
+  public function testHistory(): void {
     $nid = $this->testNode->id();
 
     // Verify that previews of new entities do not create the history.
@@ -160,7 +158,10 @@ class HistoryTest extends BrowserTestBase {
     $this->assertEquals(403, $response->getStatusCode());
 
     // Additional check to ensure that we did not forget to verify anything.
-    $rows = \Drupal::database()->query('SELECT * FROM {history}')->fetchAll();
+    $rows = \Drupal::database()->select('history')
+      ->fields('history', ['nid', 'uid', 'timestamp'])
+      ->execute()
+      ->fetchAll();
     $this->assertCount(1, $rows);
     $this->assertSame($this->user->id(), $rows[0]->uid);
     $this->assertSame($this->testNode->id(), $rows[0]->nid);

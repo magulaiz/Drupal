@@ -48,7 +48,7 @@ class ConfigTranslationInstallTest extends InstallerTestBase {
    * @return string
    *   Contents for the test .po file.
    */
-  protected function getPo($langcode) {
+  protected function getPo($langcode): string {
     return <<<PO
 msgid ""
 msgstr ""
@@ -64,7 +64,7 @@ msgstr "Language $langcode"
 PO;
   }
 
-  public function testConfigTranslation() {
+  public function testConfigTranslation(): void {
     \Drupal::service('module_installer')->install(['node', 'field_ui']);
     $this->createContentType(['type' => 'article']);
 

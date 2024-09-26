@@ -26,9 +26,7 @@ class SearchMatchTest extends KernelTestBase {
   const SEARCH_TYPE_JPN = '_test3_';
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = ['search'];
 
@@ -44,7 +42,7 @@ class SearchMatchTest extends KernelTestBase {
   /**
    * Tests search indexing.
    */
-  public function testMatching() {
+  public function testMatching(): void {
     $this->_setup();
     $this->_testQueries();
   }

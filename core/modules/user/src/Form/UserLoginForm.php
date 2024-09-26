@@ -232,10 +232,17 @@ class UserLoginForm extends FormBase {
         if ($this->userAuth instanceof UserAuthenticationInterface) {
           $form_state->set('uid', $this->userAuth->authenticateAccount($account, $password) ? $account->id() : FALSE);
         }
+        // The userAuth object is decorated by an object that that has not
+        // been upgraded to the new UserAuthenticationInterface. Fallback
+        // to the authenticate() method.
         else {
           $uid = $this->userAuth->authenticate($form_state->getValue('name'), $password);
           $form_state->set('uid', $uid);
         }
+      }
+      elseif (!$this->userAuth instanceof UserAuthenticationInterface) {
+        $uid = $this->userAuth->authenticate($form_state->getValue('name'), $password);
+        $form_state->set('uid', $uid);
       }
     }
   }
@@ -263,7 +270,7 @@ class UserLoginForm extends FormBase {
           // We did not find a uid, so the limit is IP-based.
           $message = $this->t('Too many failed login attempts from your IP address. This IP address is temporarily blocked. Try again later or <a href=":url">request a new password</a>.', [':url' => Url::fromRoute('user.pass')->toString()]);
         }
-        $response = $this->bareHtmlPageRenderer->renderBarePage(['#markup' => $message], $this->t('Login failed'), 'maintenance_page');
+        $response = $this->bareHtmlPageRenderer->renderBarePage(['#markup' => $message], $this->t('Login failed'), 'maintenance_page__flood');
         $response->setStatusCode(403);
         $form_state->setResponse($response);
       }
