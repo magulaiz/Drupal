@@ -146,7 +146,7 @@ function error_displayable($error = NULL) {
  *   Non-recoverable fatal errors cannot be logged by Drupal.
  */
 function _drupal_log_error($error, $fatal = FALSE) {
-  $is_installer = InstallerKernel::installationAttempted();
+  $is_installer = InstallerKernel::installationAttempted() && \Drupal::hasContainer();
 
   // Backtrace, exception and 'severity_level' are not valid replacement values
   // for t().
@@ -157,7 +157,7 @@ function _drupal_log_error($error, $fatal = FALSE) {
 
   // When running inside the testing framework, we relay the errors
   // to the tested site by the way of HTTP headers.
-  if (DRUPAL_TEST_IN_CHILD_SITE && !headers_sent() && (!defined('SIMPLETEST_COLLECT_ERRORS') || SIMPLETEST_COLLECT_ERRORS)) {
+  if (defined('DRUPAL_TEST_IN_CHILD_SITE') && DRUPAL_TEST_IN_CHILD_SITE && !headers_sent() && (!defined('SIMPLETEST_COLLECT_ERRORS') || SIMPLETEST_COLLECT_ERRORS)) {
     _drupal_error_header($error['@message'], $error['%type'], $error['%function'], $error['%file'], $error['%line']);
   }
 
@@ -229,6 +229,9 @@ function _drupal_log_error($error, $fatal = FALSE) {
           $error['%file'] = substr($error['%file'], $root_length + 1);
         }
       }
+      else {
+        $error['%file'] = substr($error['%file'], strlen(realpath(__DIR__ . '/../..')) + 1);
+      }
 
       // Check if verbose error reporting is on.
       $error_level = _drupal_get_error_level();
@@ -243,14 +246,13 @@ function _drupal_log_error($error, $fatal = FALSE) {
       }
       else {
         // With verbose logging, we will also include a backtrace.
-
         // First trace is the error itself, already contained in the message.
-        // While the second trace is the error source and also contained in the
-        // message, the message doesn't contain argument values, so we output it
-        // once more in the backtrace.
         array_shift($backtrace);
-        // Generate a backtrace containing only scalar argument values.
-        $error['@backtrace'] = Error::formatBacktrace($backtrace);
+        // Strip arguments from the backtrace.
+        $error['@backtrace'] = Error::formatBacktrace(array_map(function ($trace) {
+          unset($trace['args']);
+          return $trace;
+        }, $backtrace));
         $message = new FormattableMarkup('<details class="error-with-backtrace"><summary>' . Error::DEFAULT_ERROR_MESSAGE . '</summary><pre class="backtrace">@backtrace</pre></details>', $error);
       }
     }
@@ -267,8 +269,13 @@ function _drupal_log_error($error, $fatal = FALSE) {
           '#title' => 'Error',
           '#markup' => $message,
         ];
-        install_display_output($output, $GLOBALS['install_state']);
-        exit;
+        try {
+          install_display_output($output, $GLOBALS['install_state']);
+          exit;
+        }
+        catch (Exception) {
+          // The maintenance page failed, so fall back to a plain error message.
+        }
       }
 
       $response->setContent($message);
