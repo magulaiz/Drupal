@@ -216,7 +216,7 @@ trait SqlFieldableEntityTypeListenerTrait {
         $this->handleEntityTypeSchemaUpdateExceptionOnDataCopy($entity_type, $original, $sandbox);
 
         // Re-throw the original exception with a helpful message.
-        $error_revision_id = $load_revisions ? ", revision ID: {$entity->getLoadedRevisionId()}" : '';
+        $error_revision_id = $load_revisions ? ", revision ID: {$entity->getLoadedRevisionId(TRUE)}" : '';
         throw new EntityStorageException("The entity update process failed while processing the entity type {$entity_type->id()}, ID: {$entity->id()}$error_revision_id.", $e->getCode(), $e);
       }
 

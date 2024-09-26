@@ -370,14 +370,14 @@ class EntityDecoupledTranslationRevisionsTest extends EntityKernelTestBase {
         // also when adding a new translation.
         $latest_affected_revision_id = 1;
       }
-      $previous_revision_id = (int) $entity->getLoadedRevisionId();
+      $previous_revision_id = (int) $entity->getLoadedRevisionId(TRUE);
       /** @var \Drupal\Core\Entity\ContentEntityInterface $latest_affected_revision */
       $latest_affected_revision = $this->storage->loadRevision($latest_affected_revision_id);
       $translation = $latest_affected_revision->hasTranslation($active_langcode) ?
         $latest_affected_revision->getTranslation($active_langcode) : $latest_affected_revision->addTranslation($active_langcode);
       $entity = $this->storage->createRevision($translation, $default_revision);
       $this->assertEquals($default_revision, $entity->isDefaultRevision());
-      $this->assertEquals($translation->getLoadedRevisionId(), $entity->getLoadedRevisionId());
+      $this->assertEquals($translation->getLoadedRevisionId(TRUE), $entity->getLoadedRevisionId(TRUE));
       $this->assertEquals($previous_label, $entity->label(), $this->formatMessage('Loaded translatable field value does not match the previous one.'));
     }
 
@@ -409,7 +409,7 @@ class EntityDecoupledTranslationRevisionsTest extends EntityKernelTestBase {
         preg_match('/^\d+ -> (\d+)$/', $previous_untranslatable_field_value, $matches);
         $prev = $matches[1];
       }
-      $value = $prev . ' -> ' . ($entity->getLoadedRevisionId() + 1);
+      $value = $prev . ' -> ' . ($entity->getLoadedRevisionId(TRUE) + 1);
       $entity->set('non_mul_field', $value);
       $previous_untranslatable_field_value = $value;
     }
@@ -470,7 +470,7 @@ class EntityDecoupledTranslationRevisionsTest extends EntityKernelTestBase {
   protected function generateNewEntityLabel(ContentEntityInterface $revision, $previous_revision_id, $next = FALSE): string {
     $language_label = $revision->language()->getName();
     $revision_type = $revision->isDefaultRevision() ? 'Default' : 'Pending';
-    $revision_id = $next ? $this->storage->getLatestRevisionId($revision->id()) + 1 : $revision->getLoadedRevisionId();
+    $revision_id = $next ? $this->storage->getLatestRevisionId($revision->id()) + 1 : $revision->getLoadedRevisionId(TRUE);
     return sprintf('%s (%s %d -> %d)', $language_label, $revision_type, $previous_revision_id, $revision_id);
   }
 

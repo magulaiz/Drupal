@@ -743,7 +743,7 @@ abstract class ContentEntityStorageBase extends EntityStorageBase implements Con
     // Sync the changes made in the fields array to the internal values array.
     $entity->updateOriginalValues();
 
-    if ($entity->getEntityType()->isRevisionable() && !$entity->isNew() && empty($entity->getLoadedRevisionId())) {
+    if ($entity->getEntityType()->isRevisionable() && !$entity->isNew() && empty($entity->getLoadedRevisionId(TRUE))) {
       // Update the loaded revision id for rare special cases when no loaded
       // revision is given when updating an existing entity. This for example
       // happens when calling save() in hook_entity_insert().
@@ -760,7 +760,7 @@ abstract class ContentEntityStorageBase extends EntityStorageBase implements Con
       }
       // Do not allow changing the revision ID when resaving the current
       // revision.
-      if (!$entity->isNewRevision() && $entity->getRevisionId() != $entity->getLoadedRevisionId()) {
+      if (!$entity->isNewRevision() && $entity->getRevisionId() != $entity->getLoadedRevisionId(TRUE)) {
         throw new EntityStorageException("Update existing '{$this->entityTypeId}' entity revision while changing the revision ID is not supported.");
       }
     }

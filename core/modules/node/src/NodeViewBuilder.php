@@ -35,7 +35,7 @@ class NodeViewBuilder extends EntityViewBuilder implements TrustedCallbackInterf
               $view_mode,
               $entity->language()->getId(),
               !empty($entity->in_preview),
-              $entity->isDefaultRevision() ? NULL : $entity->getLoadedRevisionId(),
+              $entity->isDefaultRevision() ? NULL : $entity->getLoadedRevisionId(TRUE),
             ],
           ],
         ];

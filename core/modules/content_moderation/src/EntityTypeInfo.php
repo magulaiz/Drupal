@@ -315,7 +315,7 @@ class EntityTypeInfo implements ContainerInjectionInterface {
       // object will be marked as a new revision again on submit.
       // @see \Drupal\Core\Entity\ContentEntityForm::buildEntity()
       $revision_key = $new_revision->getEntityType()->getKey('revision');
-      $new_revision->set($revision_key, $new_revision->getLoadedRevisionId());
+      $new_revision->set($revision_key, $new_revision->getLoadedRevisionId(TRUE));
       $form_object->setEntity($new_revision);
     }
   }

@@ -695,7 +695,7 @@ class InlineBlockTest extends InlineBlockTestBase {
     $this->drupalGet("node/{$test_node->id()}/layout");
     $this->addInlineBlockToLayout('Example block', 'original content');
     $this->assertSaveLayout();
-    $original_content_revision_id = Node::load($test_node->id())->getLoadedRevisionId();
+    $original_content_revision_id = Node::load($test_node->id())->getLoadedRevisionId(TRUE);
 
     $this->drupalGet("node/{$test_node->id()}/layout");
     $this->configureInlineBlock('original content', 'updated content');

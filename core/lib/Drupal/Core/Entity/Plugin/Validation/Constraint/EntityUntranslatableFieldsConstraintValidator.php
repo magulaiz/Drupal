@@ -103,7 +103,7 @@ class EntityUntranslatableFieldsConstraintValidator extends ConstraintValidator 
       /** @var \Drupal\Core\Entity\RevisionableStorageInterface $storage */
       $storage = $this->entityTypeManager
         ->getStorage($entity->getEntityTypeId());
-      $original = $storage->loadRevision($entity->getLoadedRevisionId());
+      $original = $storage->loadRevision($entity->getLoadedRevisionId(TRUE));
     }
 
     foreach ($entity->getFieldDefinitions() as $field_name => $definition) {

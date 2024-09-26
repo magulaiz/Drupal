@@ -76,7 +76,7 @@ class EntityConverterLatestRevisionTest extends KernelTestBase {
       'load_latest_revision' => TRUE,
       'type' => 'entity:entity_test_mulrev',
     ], 'foo', []);
-    $this->assertEquals($entity->getLoadedRevisionId(), $converted->getLoadedRevisionId());
+    $this->assertEquals($entity->getLoadedRevisionId(TRUE), $converted->getLoadedRevisionId(TRUE));
   }
 
   /**
@@ -95,7 +95,7 @@ class EntityConverterLatestRevisionTest extends KernelTestBase {
       'type' => 'entity:entity_test_mulrev',
     ], 'foo', []);
 
-    $this->assertEquals($entity->getLoadedRevisionId(), $converted->getLoadedRevisionId());
+    $this->assertEquals($entity->getLoadedRevisionId(TRUE), $converted->getLoadedRevisionId(TRUE));
   }
 
   /**
@@ -132,7 +132,7 @@ class EntityConverterLatestRevisionTest extends KernelTestBase {
       'type' => 'entity:entity_test_mulrev',
     ], 'foo', []);
     $this->assertEquals('de', $converted->language()->getId());
-    $this->assertEquals($translated_entity->getLoadedRevisionId(), $converted->getLoadedRevisionId());
+    $this->assertEquals($translated_entity->getLoadedRevisionId(TRUE), $converted->getLoadedRevisionId(TRUE));
 
     // Revert back to English as default language.
     $this->config('system.site')->set('default_langcode', 'en')->save();
@@ -143,7 +143,7 @@ class EntityConverterLatestRevisionTest extends KernelTestBase {
       'type' => 'entity:entity_test_mulrev',
     ], 'foo', []);
     $this->assertEquals('en', $converted->language()->getId());
-    $this->assertEquals($entity->getLoadedRevisionId(), $converted->getLoadedRevisionId());
+    $this->assertEquals($entity->getLoadedRevisionId(TRUE), $converted->getLoadedRevisionId(TRUE));
   }
 
   /**
@@ -171,7 +171,7 @@ class EntityConverterLatestRevisionTest extends KernelTestBase {
       'load_latest_revision' => TRUE,
       'type' => 'entity:entity_test_mulrev',
     ], 'foo', []);
-    $this->assertEquals($entity->getLoadedRevisionId(), $converted->getLoadedRevisionId());
+    $this->assertEquals($entity->getLoadedRevisionId(TRUE), $converted->getLoadedRevisionId(TRUE));
   }
 
   /**

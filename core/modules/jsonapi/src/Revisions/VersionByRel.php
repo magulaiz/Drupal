@@ -55,7 +55,7 @@ class VersionByRel extends NegotiatorBase {
       case static::LATEST_VERSION:
         // The already loaded revision will be the latest version by default.
         // @see \Drupal\Core\Entity\Sql\SqlContentEntityStorage::buildQuery().
-        return $entity->getLoadedRevisionId();
+        return $entity->getLoadedRevisionId(TRUE);
 
       default:
         $message = sprintf('The version specifier must be either `%s` or `%s`, `%s` given.', static::LATEST_VERSION, static::WORKING_COPY, $version_argument);

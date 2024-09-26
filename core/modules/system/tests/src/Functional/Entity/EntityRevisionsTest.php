@@ -237,7 +237,7 @@ class EntityRevisionsTest extends BrowserTestBase {
     $revision_id = $entity->getRevisionId();
     $entity->setNewRevision();
     $this->assertNull($entity->getRevisionId());
-    $this->assertEquals($revision_id, $entity->getLoadedRevisionId());
+    $this->assertEquals($revision_id, $entity->getLoadedRevisionId(TRUE));
     $this->assertTrue($entity->isNewRevision());
 
     // Check that after manually restoring the original revision ID, the entity
@@ -246,23 +246,23 @@ class EntityRevisionsTest extends BrowserTestBase {
     $entity->set($key, $revision_id);
     $entity->save();
     $this->assertEquals($revision_id, $entity->getRevisionId());
-    $this->assertEquals($revision_id, $entity->getLoadedRevisionId());
+    $this->assertEquals($revision_id, $entity->getLoadedRevisionId(TRUE));
 
     // Check that manually restoring the original revision ID causes the "new
     // revision" state to be reverted.
     $entity->setNewRevision();
     $this->assertNull($entity->getRevisionId());
-    $this->assertEquals($revision_id, $entity->getLoadedRevisionId());
+    $this->assertEquals($revision_id, $entity->getLoadedRevisionId(TRUE));
     $this->assertTrue($entity->isNewRevision());
     $entity->set($key, $revision_id);
     $this->assertFalse($entity->isNewRevision());
     $this->assertEquals($revision_id, $entity->getRevisionId());
-    $this->assertEquals($revision_id, $entity->getLoadedRevisionId());
+    $this->assertEquals($revision_id, $entity->getLoadedRevisionId(TRUE));
 
     // Check that flagging a new revision again works correctly.
     $entity->setNewRevision();
     $this->assertNull($entity->getRevisionId());
-    $this->assertEquals($revision_id, $entity->getLoadedRevisionId());
+    $this->assertEquals($revision_id, $entity->getLoadedRevisionId(TRUE));
     $this->assertTrue($entity->isNewRevision());
 
     // Check that calling setNewRevision() on a new entity without a revision ID

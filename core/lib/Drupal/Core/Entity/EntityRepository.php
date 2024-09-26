@@ -299,7 +299,7 @@ class EntityRepository implements EntityRepositoryInterface {
   protected function loadRevision(RevisionableInterface $entity, $revision_id) {
     // We explicitly perform a loose equality check, since a revision ID may be
     // returned as an integer or a string.
-    if ($entity->getLoadedRevisionId() != $revision_id) {
+    if ($entity->getLoadedRevisionId(TRUE) != $revision_id) {
       /** @var \Drupal\Core\Entity\RevisionableStorageInterface $storage */
       $storage = $this->entityTypeManager->getStorage($entity->getEntityTypeId());
       return $storage->loadRevision($revision_id);

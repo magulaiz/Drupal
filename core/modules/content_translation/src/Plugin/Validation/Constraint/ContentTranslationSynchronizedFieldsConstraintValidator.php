@@ -172,7 +172,7 @@ class ContentTranslationSynchronizedFieldsConstraintValidator extends Constraint
     if (!isset($entity->original)) {
       /** @var \Drupal\Core\Entity\RevisionableStorageInterface $storage */
       $storage = $this->entityTypeManager->getStorage($entity->getEntityTypeId());
-      $original = $entity->isDefaultRevision() ? $storage->loadUnchanged($entity->id()) : $storage->loadRevision($entity->getLoadedRevisionId());
+      $original = $entity->isDefaultRevision() ? $storage->loadUnchanged($entity->id()) : $storage->loadRevision($entity->getLoadedRevisionId(TRUE));
     }
     else {
       $original = $entity->original;
