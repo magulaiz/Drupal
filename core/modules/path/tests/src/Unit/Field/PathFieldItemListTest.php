@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\path\Unit\Field;
 
 use Drupal\Core\DependencyInjection\ContainerBuilder;
@@ -103,7 +105,7 @@ class PathFieldItemListTest extends UnitTestCase {
   /**
    * Data provider for testComputeValue.
    */
-  public function providerTestComputeValue(): array {
+  public static function providerTestComputeValue(): array {
     return [
       'new entity' => [
         'is_routed' => FALSE,

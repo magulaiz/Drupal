@@ -25,6 +25,13 @@ use Drupal\Core\TypedData\DataDefinition;
 class PathItem extends FieldItemBase {
 
   /**
+   * The relationship alias.
+   *
+   * @var string
+   */
+  public $alias;
+
+  /**
    * {@inheritdoc}
    */
   public static function propertyDefinitions(FieldStorageDefinitionInterface $field_definition) {
