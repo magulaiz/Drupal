@@ -63,7 +63,7 @@ class FieldStorageConfigListBuilder extends ConfigEntityListBuilder {
     parent::__construct($entity_type, $entity_type_manager->getStorage($entity_type->id()));
 
     $this->entityTypeManager = $entity_type_manager;
-    $this->bundles = $bundle_info_service->getAllBundleInfo();
+    $this->bundles = $bundleInfoStorage->getAllBundleInfo();
     $this->fieldTypeManager = $field_type_manager;
     $this->fieldTypes = $this->fieldTypeManager->getDefinitions();
     $this->limit = FALSE;
