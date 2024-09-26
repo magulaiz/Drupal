@@ -141,8 +141,8 @@ class NodeAddPerformanceTest extends PerformanceTestBase {
     // part.
     $pattern = '/^SELECT 1 FROM "key_value" WHERE "collection" = "entity_autocomplete" AND "name" = "([^"]*)"/';
     $replacement = 'SELECT 1 FROM "key_value" WHERE "collection" = "entity_autocomplete" AND "name" = ""';
-    $recorded_queries_cleanded = $this->cleanQueries($pattern, $replacement, $recorded_queries);
-    $this->assertSame($expected_queries, $recorded_queries_cleanded);
+    $recorded_queries_cleaned = $this->cleanQueries($pattern, $replacement, $recorded_queries);
+    $this->assertSame($expected_queries, $recorded_queries_cleaned);
     $this->assertSame(7, $performance_data->getQueryCount());
     $this->assertSame(85, $performance_data->getCacheGetCount());
     $this->assertSame(0, $performance_data->getCacheSetCount());
