@@ -57,7 +57,7 @@ class NodeTokenReplaceTest extends TokenReplaceKernelTestBase {
     // Generate and test tokens.
     $tests = [];
     $tests['[node:nid]'] = $node->id();
-    $tests['[node:vid]'] = $node->getRevisionId();
+    $tests['[node:vid]'] = $node->getRevisionId(TRUE);
     $tests['[node:type]'] = 'article';
     $tests['[node:type-name]'] = 'Article';
     $tests['[node:title]'] = Html::escape($node->getTitle());

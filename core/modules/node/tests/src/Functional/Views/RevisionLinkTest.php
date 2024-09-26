@@ -49,7 +49,7 @@ class RevisionLinkTest extends NodeTestBase {
       $this->drupalCreateNode(),
     ];
 
-    $first_revision = $nodes[1]->getRevisionId();
+    $first_revision = $nodes[1]->getRevisionId(TRUE);
     // Create revision of the node.
     $nodes[1]->setNewRevision();
     $nodes[1]->save();

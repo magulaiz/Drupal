@@ -304,11 +304,11 @@ class EntityQueryTest extends EntityKernelTestBase {
     $this->queryResults = $this->storage
       ->getQuery()
       ->accessCheck(FALSE)
-      ->condition('revision_id', $first_entity->getRevisionId())
+      ->condition('revision_id', $first_entity->getRevisionId(TRUE))
       ->allRevisions()
       ->execute();
     $this->assertCount(1, $this->queryResults);
-    $this->assertEquals($first_entity->getRevisionId(), key($this->queryResults));
+    $this->assertEquals($first_entity->getRevisionId(TRUE), key($this->queryResults));
     // We changed the entity names, so the current revision should not match.
     $this->queryResults = $this->storage
       ->getQuery()

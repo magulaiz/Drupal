@@ -156,7 +156,7 @@ class RevisionRevertForm extends ConfirmFormBase implements EntityFormInterface 
    * {@inheritdoc}
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
-    $revisionId = $this->revision->getRevisionId();
+    $revisionId = $this->revision->getRevisionId(TRUE);
     $revisionLabel = $this->revision->label();
     $bundleLabel = $this->getBundleLabel($this->revision);
     if ($this->revision instanceof RevisionLogInterface) {

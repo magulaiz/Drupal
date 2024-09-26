@@ -760,7 +760,7 @@ abstract class ContentEntityStorageBase extends EntityStorageBase implements Con
       }
       // Do not allow changing the revision ID when resaving the current
       // revision.
-      if (!$entity->isNewRevision() && $entity->getRevisionId() != $entity->getLoadedRevisionId()) {
+      if (!$entity->isNewRevision() && $entity->getRevisionId(TRUE) != $entity->getLoadedRevisionId()) {
         throw new EntityStorageException("Update existing '{$this->entityTypeId}' entity revision while changing the revision ID is not supported.");
       }
     }

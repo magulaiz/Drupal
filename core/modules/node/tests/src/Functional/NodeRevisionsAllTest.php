@@ -132,7 +132,7 @@ class NodeRevisionsAllTest extends NodeTestBase {
     $this->drupalLogin($content_admin);
 
     // Confirm the correct revision text appears on "view revisions" page.
-    $this->drupalGet("node/" . $node->id() . "/revisions/" . $node->getRevisionId() . "/view");
+    $this->drupalGet("node/" . $node->id() . "/revisions/" . $node->getRevisionId(TRUE) . "/view");
     $this->assertSession()->pageTextContains($node->body->value);
 
     // Confirm the correct revision log message appears on the "revisions

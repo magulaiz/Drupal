@@ -47,11 +47,11 @@ class ArgumentNodeRevisionIdTest extends ViewsKernelTestBase {
     NodeType::create(['type' => 'page', 'name' => 'page'])->save();
     $node = Node::create(['type' => 'page', 'title' => 'test1', 'uid' => 1]);
     $node->save();
-    $first_revision_id = $node->getRevisionId();
+    $first_revision_id = $node->getRevisionId(TRUE);
     $node->setNewRevision();
     $node->setTitle('test2');
     $node->save();
-    $second_revision_id = $node->getRevisionId();
+    $second_revision_id = $node->getRevisionId(TRUE);
 
     $view_nid = Views::getView('test_node_revision_id_argument');
     $this->executeView($view_nid, [$second_revision_id]);

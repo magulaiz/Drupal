@@ -118,11 +118,11 @@ class FieldSqlStorageTest extends EntityKernelTestBase {
       ->getStorage($entity_type)
       ->create();
     $entity->save();
-    $revision_ids[] = $entity->getRevisionId();
+    $revision_ids[] = $entity->getRevisionId(TRUE);
     for ($i = 0; $i < 4; $i++) {
       $entity->setNewRevision();
       $entity->save();
-      $revision_ids[] = $entity->getRevisionId();
+      $revision_ids[] = $entity->getRevisionId(TRUE);
     }
 
     // Generate values and insert them directly in the storage tables.
@@ -171,7 +171,7 @@ class FieldSqlStorageTest extends EntityKernelTestBase {
     // Add a translation in an unavailable language code and verify it is not
     // loaded.
     $unavailable_langcode = 'xx';
-    $values = [$bundle, 0, $entity->id(), $entity->getRevisionId(), 0, $unavailable_langcode, mt_rand(1, 127)];
+    $values = [$bundle, 0, $entity->id(), $entity->getRevisionId(TRUE), 0, $unavailable_langcode, mt_rand(1, 127)];
     $connection->insert($this->table)->fields($columns)->values($values)->execute();
     $connection->insert($this->revisionTable)->fields($columns)->values($values)->execute();
     $entity = $storage->load($entity->id());
@@ -206,7 +206,7 @@ class FieldSqlStorageTest extends EntityKernelTestBase {
         'bundle' => $bundle,
         'deleted' => 0,
         'entity_id' => $entity->id(),
-        'revision_id' => $entity->getRevisionId(),
+        'revision_id' => $entity->getRevisionId(TRUE),
         'langcode' => $entity->language()->getId(),
         'delta' => $delta,
         $this->fieldName . '_value' => $values[$delta]['value'],
@@ -230,7 +230,7 @@ class FieldSqlStorageTest extends EntityKernelTestBase {
         'bundle' => $bundle,
         'deleted' => 0,
         'entity_id' => $entity->id(),
-        'revision_id' => $entity->getRevisionId(),
+        'revision_id' => $entity->getRevisionId(TRUE),
         'langcode' => $entity->language()->getId(),
         'delta' => $delta,
         $this->fieldName . '_value' => $values[$delta]['value'],
@@ -239,7 +239,7 @@ class FieldSqlStorageTest extends EntityKernelTestBase {
     }
 
     // Create a new revision.
-    $revision_values[$entity->getRevisionId()] = $values;
+    $revision_values[$entity->getRevisionId(TRUE)] = $values;
     $values = [];
     for ($delta = 0; $delta < $this->fieldCardinality; $delta++) {
       $values[$delta]['value'] = mt_rand(1, 127);
@@ -247,7 +247,7 @@ class FieldSqlStorageTest extends EntityKernelTestBase {
     $entity->{$this->fieldName} = $values;
     $entity->setNewRevision();
     $entity->save();
-    $revision_values[$entity->getRevisionId()] = $values;
+    $revision_values[$entity->getRevisionId(TRUE)] = $values;
 
     // Check that data for both revisions are in the revision table.
     foreach ($revision_values as $revision_id => $values) {

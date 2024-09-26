@@ -120,7 +120,7 @@ class NodeEditFormTest extends NodeTestBase {
 
     // Ensure that the node revision has been created.
     $revised_node = $this->drupalGetNodeByTitle($edit['title[0][value]'], TRUE);
-    $this->assertNotSame($node->getRevisionId(), $revised_node->getRevisionId(), 'A new revision has been created.');
+    $this->assertNotSame($node->getRevisionId(TRUE), $revised_node->getRevisionId(), 'A new revision has been created.');
     // Ensure that the node author is preserved when it was not changed in the
     // edit form.
     $this->assertSame($node->getOwnerId(), $revised_node->getOwnerId(), 'The node author has been preserved.');

@@ -195,7 +195,7 @@ class RevisionVersionHistoryTest extends BrowserTestBase {
     // Revision has access to individual revision.
     $entity->setName('view all revisions, view revision');
     $entity->save();
-    $firstRevisionId = $entity->getRevisionId();
+    $firstRevisionId = $entity->getRevisionId(TRUE);
 
     // Revision has access to canonical route.
     $entity->setName('view all revisions, view');
@@ -320,7 +320,7 @@ class RevisionVersionHistoryTest extends BrowserTestBase {
     ]);
     $entity->save();
 
-    $firstRevisionId = $entity->getRevisionId();
+    $firstRevisionId = $entity->getRevisionId(TRUE);
 
     for ($i = 0; $i < VersionHistoryController::REVISIONS_PER_PAGE; $i++) {
       $entity->setNewRevision(TRUE);

@@ -159,7 +159,7 @@ abstract class FileFieldTestBase extends BrowserTestBase {
       $node->save();
       $node_storage->resetCache([$nid]);
       $node = $node_storage->load($nid);
-      $this->assertNotEquals($nid, $node->getRevisionId(), 'Node revision exists.');
+      $this->assertNotEquals($nid, $node->getRevisionId(TRUE), 'Node revision exists.');
     }
     $this->drupalGet("node/$nid/edit");
     $page = $this->getSession()->getPage();

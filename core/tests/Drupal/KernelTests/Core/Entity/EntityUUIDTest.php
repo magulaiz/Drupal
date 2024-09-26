@@ -101,9 +101,9 @@ class EntityUUIDTest extends EntityKernelTestBase {
           break;
 
         case 'revision_id':
-          $this->assertNull($entity_duplicate->getRevisionId());
-          $this->assertNotNull($entity->getRevisionId());
-          $this->assertNotEquals($entity->getRevisionId(), $entity_duplicate->getRevisionId());
+          $this->assertNull($entity_duplicate->getRevisionId(TRUE));
+          $this->assertNotNull($entity->getRevisionId(TRUE));
+          $this->assertNotEquals($entity->getRevisionId(TRUE), $entity_duplicate->getRevisionId(TRUE));
           $this->assertNotEquals($entity->{$property}->getValue(), $entity_duplicate->{$property}->getValue());
           break;
 

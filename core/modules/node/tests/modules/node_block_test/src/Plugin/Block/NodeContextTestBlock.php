@@ -32,7 +32,7 @@ class NodeContextTestBlock extends BlockBase {
       '#template' => 'Displaying node #{{ id }}, revision #{{ revision_id }}: {{ title }}',
       '#context' => [
         'id' => $node->id(),
-        'revision_id' => $node->getRevisionId(),
+        'revision_id' => $node->getRevisionId(TRUE),
         'title' => $node->label(),
       ],
     ];

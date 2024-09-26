@@ -55,7 +55,7 @@ final class RevisionVersionHistoryTranslatableTest extends BrowserTestBase {
     $entity->addTranslation('es', ['label' => 'version history test translations es']);
     $entity->save();
 
-    $firstRevisionId = $entity->getRevisionId();
+    $firstRevisionId = $entity->getRevisionId(TRUE);
 
     $entity->setNewRevision();
     $entity->setName($label . ',2')

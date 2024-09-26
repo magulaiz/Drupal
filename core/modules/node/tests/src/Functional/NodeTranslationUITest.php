@@ -510,7 +510,7 @@ class NodeTranslationUITest extends ContentTranslationUITestBase {
     // Create a node.
     $nid = $this->createEntity(['title' => 'First rev en title'], 'en');
     $node = $storage->load($nid);
-    $original_revision_id = $node->getRevisionId();
+    $original_revision_id = $node->getRevisionId(TRUE);
 
     // Add a French translation.
     $translation = $node->addTranslation('fr');

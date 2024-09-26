@@ -1737,7 +1737,7 @@ abstract class ResourceTestBase extends BrowserTestBase {
     $related_link = Url::fromUri("base:/jsonapi/$entity_type_id/$bundle/$id/$relationship_field_name")->setAbsolute();
     if (static::$resourceTypeIsVersionable) {
       assert($entity instanceof RevisionableInterface);
-      $version_query = ['resourceVersion' => 'id:' . $entity->getRevisionId()];
+      $version_query = ['resourceVersion' => 'id:' . $entity->getRevisionId(TRUE)];
       $related_link->setOption('query', $version_query);
     }
     $data = $this->getExpectedGetRelationshipDocumentData($relationship_field_name, $entity);

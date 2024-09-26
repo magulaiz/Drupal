@@ -144,7 +144,7 @@ class NodeRevisionsTest extends NodeTestBase {
   public function testRevisions(): void {
     // Access to the revision page for a node with 1 revision is allowed.
     $node = $this->drupalCreateNode();
-    $this->drupalGet("node/" . $node->id() . "/revisions/" . $node->getRevisionId() . "/view");
+    $this->drupalGet("node/" . $node->id() . "/revisions/" . $node->getRevisionId(TRUE) . "/view");
     $this->assertSession()->statusCodeEquals(200);
 
     $node_storage = $this->container->get('entity_type.manager')->getStorage('node');

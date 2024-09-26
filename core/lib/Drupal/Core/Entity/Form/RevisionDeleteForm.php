@@ -142,7 +142,7 @@ class RevisionDeleteForm extends ConfirmFormBase implements EntityFormInterface 
     $entityTypeId = $this->revision->getEntityTypeId();
     /** @var \Drupal\Core\Entity\RevisionableStorageInterface $entityStorage */
     $entityStorage = $this->entityTypeManager->getStorage($entityTypeId);
-    $entityStorage->deleteRevision($this->revision->getRevisionId());
+    $entityStorage->deleteRevision($this->revision->getRevisionId(TRUE));
 
     $bundleLabel = $this->getBundleLabel($this->revision);
     $messengerArgs = [
@@ -160,7 +160,7 @@ class RevisionDeleteForm extends ConfirmFormBase implements EntityFormInterface 
     $this->logger($this->revision->getEntityType()->getProvider())->info('@type: deleted %title revision %revision.', [
       '@type' => $this->revision->bundle(),
       '%title' => $this->revision->label(),
-      '%revision' => $this->revision->getRevisionId(),
+      '%revision' => $this->revision->getRevisionId(TRUE),
     ]);
 
     // When there is one remaining revision or more, redirect to the version

@@ -249,7 +249,7 @@ class VersionHistoryController extends ControllerBase {
     ];
 
     foreach ($this->loadRevisions($entity) as $revision) {
-      $build['entity_revisions_table']['#rows'][$revision->getRevisionId()] = $this->buildRow($revision);
+      $build['entity_revisions_table']['#rows'][$revision->getRevisionId(TRUE)] = $this->buildRow($revision);
     }
 
     $build['pager'] = ['#type' => 'pager'];

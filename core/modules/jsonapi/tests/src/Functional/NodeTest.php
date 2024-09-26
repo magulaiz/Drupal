@@ -146,7 +146,7 @@ class NodeTest extends ResourceTestBase {
     $author = User::load($this->entity->getOwnerId());
     $base_url = Url::fromUri('base:/jsonapi/node/camelids/' . $this->entity->uuid())->setAbsolute();
     $self_url = clone $base_url;
-    $version_identifier = 'id:' . $this->entity->getRevisionId();
+    $version_identifier = 'id:' . $this->entity->getRevisionId(TRUE);
     $self_url = $self_url->setOption('query', ['resourceVersion' => $version_identifier]);
     $version_query_string = '?resourceVersion=' . urlencode($version_identifier);
     return [

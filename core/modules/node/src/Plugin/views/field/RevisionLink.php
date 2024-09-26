@@ -28,7 +28,7 @@ class RevisionLink extends LinkBase {
     return !$node->isDefaultRevision() ?
       Url::fromRoute('entity.node.revision', [
         'node' => $node->id(),
-        'node_revision' => $node->getRevisionId(),
+        'node_revision' => $node->getRevisionId(TRUE),
       ]) :
       $node->toUrl();
   }
@@ -39,7 +39,7 @@ class RevisionLink extends LinkBase {
   protected function renderLink(ResultRow $row) {
     /** @var \Drupal\node\NodeInterface $node */
     $node = $this->getEntity($row);
-    if (!$node || !$node->getRevisionid()) {
+    if (!$node || !$node->getRevisionId(TRUE)) {
       return '';
     }
     $text = parent::renderLink($row);

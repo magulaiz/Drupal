@@ -76,7 +76,7 @@ class RevisionDeleteFormTest extends BrowserTestBase {
     }
     $entity->setNewRevision();
     $entity->save();
-    $revisionId = $entity->getRevisionId();
+    $revisionId = $entity->getRevisionId(TRUE);
 
     // Create a new latest revision.
     if ($entity instanceof RevisionLogInterface) {

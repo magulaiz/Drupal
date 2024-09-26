@@ -45,7 +45,7 @@ class RevisionRouteProviderTest extends BrowserTestBase {
       ->setName('first revision, view revision')
       ->setNewRevision();
     $entity->save();
-    $revisionId = $entity->getRevisionId();
+    $revisionId = $entity->getRevisionId(TRUE);
 
     // A default revision is created to ensure it is not pulled from the
     // non-revision entity parameter.

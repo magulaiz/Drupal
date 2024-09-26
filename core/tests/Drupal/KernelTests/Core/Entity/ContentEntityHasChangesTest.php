@@ -67,7 +67,7 @@ class ContentEntityHasChangesTest extends KernelTestBase {
     // Update the revision metadata fields and the changed field, which should
     // be skipped from checking for changes in
     // ContentEntityBase::hasTranslationChanges().
-    $entity_previous_rev_id = $entity->getRevisionId();
+    $entity_previous_rev_id = $entity->getRevisionId(TRUE);
     // Revision metadata field revision_timestamp.
     $entity->setRevisionCreationTime(time() + 1);
     // Revision metadata field revision_uid.

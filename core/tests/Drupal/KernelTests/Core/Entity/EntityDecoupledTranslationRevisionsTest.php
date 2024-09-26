@@ -428,7 +428,7 @@ class EntityDecoupledTranslationRevisionsTest extends EntityKernelTestBase {
       // Reload the current revision translation and the default revision to
       // make sure data was stored correctly.
       /** @var \Drupal\Core\Entity\ContentEntityInterface $entity */
-      $entity = $this->storage->loadRevision($entity->getRevisionId());
+      $entity = $this->storage->loadRevision($entity->getRevisionId(TRUE));
       $entity = $entity->getTranslation($active_langcode);
       /** @var \Drupal\Core\Entity\ContentEntityInterface $default_entity */
       $default_entity = $this->storage->loadUnchanged($entity->id());
@@ -450,7 +450,7 @@ class EntityDecoupledTranslationRevisionsTest extends EntityKernelTestBase {
       }
     }
 
-    return $entity->getRevisionId();
+    return $entity->getRevisionId(TRUE);
   }
 
   /**
@@ -583,7 +583,7 @@ class EntityDecoupledTranslationRevisionsTest extends EntityKernelTestBase {
     $en_revision = $this->storage->createRevision($en_revision);
     $en_revision->set('name', 'Test 1.5 EN');
     $this->storage->save($en_revision);
-    $en_revision = $this->storage->loadRevision($en_revision->getRevisionId());
+    $en_revision = $this->storage->loadRevision($en_revision->getRevisionId(TRUE));
     $this->assertFalse($en_revision->hasTranslation('it'));
   }
 

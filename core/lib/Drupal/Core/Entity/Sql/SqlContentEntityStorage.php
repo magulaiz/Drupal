@@ -637,12 +637,12 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
    */
   protected function doDeleteRevisionFieldItems(ContentEntityInterface $revision) {
     $this->database->delete($this->revisionTable)
-      ->condition($this->revisionKey, $revision->getRevisionId())
+      ->condition($this->revisionKey, $revision->getRevisionId(TRUE))
       ->execute();
 
     if ($this->revisionDataTable) {
       $this->database->delete($this->revisionDataTable)
-        ->condition($this->revisionKey, $revision->getRevisionId())
+        ->condition($this->revisionKey, $revision->getRevisionId(TRUE))
         ->execute();
     }
 
@@ -926,7 +926,7 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
             $this->database
               ->update($this->revisionTable)
               ->fields((array) $record)
-              ->condition($this->revisionKey, $entity->getRevisionId())
+              ->condition($this->revisionKey, $entity->getRevisionId(TRUE))
               ->execute();
           }
         }
@@ -998,7 +998,7 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
 
     if (!$revision || !$new_revision) {
       $key = $revision ? $this->revisionKey : $this->idKey;
-      $value = $revision ? $entity->getRevisionId() : $entity->id();
+      $value = $revision ? $entity->getRevisionId(TRUE) : $entity->id();
       // Delete and insert to handle removed values.
       $this->database->delete($table_name)
         ->condition($key, $value)
@@ -1168,10 +1168,10 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
       $this->database
         ->update($this->revisionTable)
         ->fields((array) $record)
-        ->condition($this->revisionKey, $entity->getRevisionId())
+        ->condition($this->revisionKey, $entity->getRevisionId(TRUE))
         ->execute();
     }
-    return $entity->getRevisionId();
+    return $entity->getRevisionId(TRUE);
   }
 
   /**
@@ -1284,7 +1284,7 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
    *   available fields.
    */
   protected function saveToDedicatedTables(ContentEntityInterface $entity, $update = TRUE, $names = []) {
-    $vid = $entity->getRevisionId();
+    $vid = $entity->getRevisionId(TRUE);
     $id = $entity->id();
     $bundle = $entity->bundle();
     $entity_type = $entity->getEntityTypeId();
@@ -1433,7 +1433,7 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
    *   The entity. It must have a revision ID.
    */
   protected function deleteRevisionFromDedicatedTables(ContentEntityInterface $entity) {
-    $vid = $entity->getRevisionId();
+    $vid = $entity->getRevisionId(TRUE);
     if (isset($vid)) {
       $table_mapping = $this->getTableMapping();
       foreach ($this->fieldStorageDefinitions as $storage_definition) {
@@ -1704,7 +1704,7 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
     $table_mapping = $this->getTableMapping();
     $table_name = $table_mapping->getDedicatedDataTableName($storage_definition, $is_deleted);
     $revision_name = $table_mapping->getDedicatedRevisionTableName($storage_definition, $is_deleted);
-    $revision_id = $this->entityType->isRevisionable() ? $entity->getRevisionId() : $entity->id();
+    $revision_id = $this->entityType->isRevisionable() ? $entity->getRevisionId(TRUE) : $entity->id();
     $this->database->delete($table_name)
       ->condition('revision_id', $revision_id)
       ->condition('deleted', 1)

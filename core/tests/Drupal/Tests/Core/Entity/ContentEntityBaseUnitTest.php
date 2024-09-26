@@ -295,7 +295,7 @@ class ContentEntityBaseUnitTest extends UnitTestCase {
    */
   public function testGetRevisionId(): void {
     // The default getRevisionId() implementation returns NULL.
-    $this->assertNull($this->entity->getRevisionId());
+    $this->assertNull($this->entity->getRevisionId(TRUE));
   }
 
   /**

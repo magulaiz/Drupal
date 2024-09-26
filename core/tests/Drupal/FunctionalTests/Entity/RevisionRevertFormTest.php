@@ -78,7 +78,7 @@ class RevisionRevertFormTest extends BrowserTestBase {
     }
     $entity->setNewRevision();
     $entity->save();
-    $revisionId = $entity->getRevisionId();
+    $revisionId = $entity->getRevisionId(TRUE);
 
     // Create a new latest revision.
     if ($entity instanceof RevisionLogInterface) {
@@ -158,7 +158,7 @@ class RevisionRevertFormTest extends BrowserTestBase {
     $entity = EntityTestRev::create();
     $entity->setName('revert');
     $entity->save();
-    $revisionId = $entity->getRevisionId();
+    $revisionId = $entity->getRevisionId(TRUE);
 
     $entity->setNewRevision();
     $entity->save();
@@ -208,7 +208,7 @@ class RevisionRevertFormTest extends BrowserTestBase {
       $entity->setRevisionCreationTime($date->getTimestamp());
     }
     $entity->save();
-    $revisionId = $entity->getRevisionId();
+    $revisionId = $entity->getRevisionId(TRUE);
 
     if ($entity instanceof RevisionLogInterface) {
       $entity->setRevisionCreationTime($date->modify('+1 hour')->getTimestamp());
@@ -308,7 +308,7 @@ class RevisionRevertFormTest extends BrowserTestBase {
     $entity->isDefaultRevision(FALSE);
     $entity->setNewRevision();
     $entity->save();
-    $targetRevertRevisionId = $entity->getRevisionId();
+    $targetRevertRevisionId = $entity->getRevisionId(TRUE);
 
     // Create a another revision so the previous revision can be reverted to.
     $entity->setRevisionCreationTime($date->modify('+1 hour')->getTimestamp());

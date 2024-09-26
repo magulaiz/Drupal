@@ -35,7 +35,7 @@ class EntityDuplicateTest extends EntityKernelTestBase {
       'name' => 'First Revision',
     ]);
     $entity->save();
-    $first_revision_id = $entity->getRevisionId();
+    $first_revision_id = $entity->getRevisionId(TRUE);
 
     $entity->setNewRevision(TRUE);
     $entity->name = 'Second Revision';

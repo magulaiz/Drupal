@@ -99,7 +99,7 @@ class PathItem extends FieldItemBase {
         $path_alias_storage->delete([$path_alias]);
       }
       else {
-        $path_alias_storage->deleteRevision($path_alias->getRevisionID());
+        $path_alias_storage->deleteRevision($path_alias->getRevisionId(TRUE));
       }
     }
   }
