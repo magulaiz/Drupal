@@ -58,6 +58,7 @@ workflow:
 variables:
   _CONFIG_DOCKERHUB_ROOT: "drupalci"
   CACHE_TARGET: "${CI_MERGE_REQUEST_TARGET_BRANCH_NAME}${CI_COMMIT_BRANCH}"
+  CORE_GITLAB_PROJECT_ID: 59858
   # Let composer know what self.version means.
   COMPOSER_ROOT_VERSION: "${CI_MERGE_REQUEST_TARGET_BRANCH_NAME}${CI_COMMIT_BRANCH}-dev"
   COMPOSER_ALLOW_SUPERUSER: 1
@@ -102,30 +103,49 @@ default:
   rules:
     - if: $PERFORMANCE_TEST != "1"
 
+.bind-mount: &bind-mount
+  # Gitlab creates a different build directory for each job, so run lint steps
+  # under a bind mount to normalize the directory. This works around the usage
+  # of absolute paths in phpstan and yarn lint caches.
+  # See https://github.com/phpstan/phpstan/issues/8599
+  - mkdir /tmp/linting/
+  - mount --bind $(pwd) /tmp/linting
+  - cd /tmp/linting
+
 .phpstan-cache: &phpstan-cache
   # Get the phpstan cache file from the artifacts of the latest successful
   # job from the target branch. Allow the job to proceed and pass if the file
   # doesn't exist.
   - mkdir core/phpstan-tmp
-  - 'curl --location --output core/phpstan-tmp/resultCache.php "https://git.drupalcode.org/api/v4/projects/$CI_PROJECT_ID/jobs/artifacts/{$CACHE_TARGET}/raw/core/phpstan-tmp/resultCache.php?job=Lint%20cache%20warming" || true'
+  - 'curl --location --output core/phpstan-tmp/resultCache.php "https://git.drupalcode.org/api/v4/projects/$CORE_GITLAB_PROJECT_ID/jobs/artifacts/{$CACHE_TARGET}/raw/core/phpstan-tmp/resultCache.php?job=Lint%20cache%20warming" || true'
+  - 'sed -i "s#/builds/project/drupal#$PWD#" core/phpstan-tmp/resultCache.php'
 
 .cspell-cache: &cspell-cache
   # Fetch the cspell cache from the artifacts of the latest successful job from
   # the target branch. Allow the job to proceed and pass if the file doesn't
   # exist.
-  - 'curl --location --output core/.cspellcache "https://git.drupalcode.org/api/v4/projects/$CI_PROJECT_ID/jobs/artifacts/{$CACHE_TARGET}/raw/core/.cspellcache?job=Lint%20cache%20warming" || true'
+  - 'curl --location --output core/.cspellcache "https://git.drupalcode.org/api/v4/projects/$CORE_GITLAB_PROJECT_ID/jobs/artifacts/{$CACHE_TARGET}/raw/core/.cspellcache?job=Lint%20cache%20warming" || true'
+  # Rewrite builds/project/drupal to the current working directory so that the
+  # cache file is re-usable regardless of the current working directory.
+  - 'sed -i "s#/builds/project/drupal#$PWD#" core/.cspellcache'
 
 .eslint-cache: &eslint-cache
   # Fetch the eslint cache from the artifacts of the latest successful job from
   # the target branch. Allow the job to proceed and pass if the file doesn't
   # exist.
-  - 'curl --location --output core/.eslintcache "https://git.drupalcode.org/api/v4/projects/$CI_PROJECT_ID/jobs/artifacts/{$CACHE_TARGET}/raw/core/.eslintcache?job=Lint%20cache%20warming" || true'
+  - 'curl --location --output core/.eslintcache "https://git.drupalcode.org/api/v4/projects/$CORE_GITLAB_PROJECT_ID/jobs/artifacts/{$CACHE_TARGET}/raw/core/.eslintcache?job=Lint%20cache%20warming" || true'
+  # Rewrite builds/project/drupal to the current working directory so that the
+  # cache file is re-usable regardless of the current working directory.
+  - 'sed -i "s#/builds/project/drupal#$PWD#" core/.eslintcache'
 
 .stylelint-cache: &stylelint-cache
   # Fetch the stylelint cache from the artifacts of the latest successful job from
   # the target branch. Allow the job to proceed and pass if the file doesn't
   # exist.
-  - 'curl --location --output core/.stylelintcache "https://git.drupalcode.org/api/v4/projects/$CI_PROJECT_ID/jobs/artifacts/{$CACHE_TARGET}/raw/core/.stylelintcache?job=Lint%20cache%20warming" || true'
+  - 'curl --location --output core/.stylelintcache "https://git.drupalcode.org/api/v4/projects/$CORE_GITLAB_PROJECT_ID/jobs/artifacts/{$CACHE_TARGET}/raw/core/.stylelintcache?job=Lint%20cache%20warming" || true'
+  # Rewrite builds/project/drupal to the current working directory so that the
+  # cache file is re-usable regardless of the current working directory.
+  - 'sed -i "s#/builds/project/drupal#$PWD#" core/.stylelintcache'
 
 .core-spellcheck: &core-spellcheck
   - cd core
@@ -298,6 +318,7 @@ default:
   variables:
     KUBERNETES_CPU_REQUEST: "4"
   script:
+    - *bind-mount
     - *phpstan-cache
     - *cspell-cache
     - *eslint-cache
@@ -322,6 +343,7 @@ default:
   variables:
     KUBERNETES_CPU_REQUEST: "4"
   script:
+    - *bind-mount
     - *phpstan-cache
     - composer validate
     - composer install --optimize-autoloader
@@ -393,6 +415,7 @@ default:
     - when: manual
       allow_failure: true
   script:
+    - *bind-mount
     - *eslint-cache
     - cd core
     - corepack enable
@@ -420,6 +443,7 @@ default:
     - when: manual
       allow_failure: true
   script:
+    - *bind-mount
     - *stylelint-cache
     - corepack enable
     - cd core
@@ -436,6 +460,7 @@ default:
   variables:
     KUBERNETES_CPU_REQUEST: "2"
   script:
+    - *bind-mount
     - *cspell-cache
     - *core-spellcheck
   cache:
