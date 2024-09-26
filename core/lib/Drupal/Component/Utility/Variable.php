@@ -85,6 +85,8 @@ class Variable {
       $output = '(object) ' . static::export((array) $var, $prefix);
     }
     else {
+      // @todo var_export() does not use long array syntax. Fix in
+      // https://www.drupal.org/project/drupal/issues/3476894
       $output = var_export($var, TRUE);
     }
 
