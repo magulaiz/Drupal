@@ -281,7 +281,12 @@ class ImageItem extends FileItem {
       '#weight' => 4.3,
       '#open' => TRUE,
       '#tree' => TRUE,
-      '#process' => [[static::class, 'formProcessMergeParent']],
+      '#process' => [
+        [
+          '\Drupal\Core\Field\Plugin\Field\FieldType\EntityReferenceItem',
+          'formProcessMergeParent',
+        ],
+      ],
       '#states' => [
         'visible' => $resize_visibility,
       ],
@@ -550,19 +555,6 @@ class ImageItem extends FileItem {
   public function isDisplayed() {
     // Image items do not have per-item visibility settings.
     return TRUE;
-  }
-
-  /**
-   * Render API callback that moves 'resize_policy' option up a level.
-   *
-   * The 'resize_policy' option is moved for easier processing by
-   * the validation and submission handlers.
-   */
-  public static function formProcessMergeParent($element) {
-    $parents = $element['#parents'];
-    array_pop($parents);
-    $element['#parents'] = $parents;
-    return $element;
   }
 
 }
