@@ -12,6 +12,7 @@ use Drupal\package_manager\PathLocator;
 use Drupal\Tests\package_manager\Kernel\PackageManagerKernelTestBase;
 use PhpTuf\ComposerStager\API\Path\Factory\PathFactoryInterface;
 use Prophecy\Prophecy\ObjectProphecy;
+use Symfony\Component\DependencyInjection\Reference;
 
 /**
  * @covers \Drupal\package_manager\PathExcluder\SqliteDatabaseExcluder
@@ -37,9 +38,10 @@ class SqliteDatabaseExcluderTest extends PackageManagerKernelTestBase {
     $this->mockDatabase->driver()
       ->willReturn('sqlite')
       ->shouldBeCalled();
+    $container->set('mock_database', $this->mockDatabase->reveal());
 
     $container->getDefinition(SqliteDatabaseExcluder::class)
-      ->setArgument('$database', $this->mockDatabase->reveal());
+      ->setArgument('$database', new Reference('mock_database'));
   }
 
   /**
