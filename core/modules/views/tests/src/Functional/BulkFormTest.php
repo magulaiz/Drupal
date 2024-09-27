@@ -232,7 +232,7 @@ class BulkFormTest extends BrowserTestBase {
     // by another user before the loaded bulk form was submitted.
     $this->drupalGet('test_bulk_form');
     // Call the node delete action.
-    foreach ($nodes as $node) {
+    foreach ($nodes as $key => $node) {
       $node->delete();
     }
     $edit = [

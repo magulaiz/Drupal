@@ -325,7 +325,7 @@ abstract class ContentTranslationUITestBase extends ContentTranslationTestBase {
     $values = [];
 
     // Post different authoring information for each translation.
-    foreach ($this->langcodes as $langcode) {
+    foreach ($this->langcodes as $index => $langcode) {
       $user = $this->drupalCreateUser();
       $values[$langcode] = [
         'uid' => $user->id(),

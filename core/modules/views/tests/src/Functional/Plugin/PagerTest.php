@@ -539,7 +539,7 @@ class PagerTest extends ViewTestBase {
       'Next ›' => 'Volgende ›',
       'Last »' => 'Laatste »',
     ];
-    foreach ($labels as $translation) {
+    foreach ($labels as $label => $translation) {
       // Check if we can find the translation.
       $this->assertSession()->pageTextContains($translation);
     }
