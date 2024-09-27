@@ -3,7 +3,6 @@ description: 'Provides a website feedback contact form.'
 type: 'Contact form'
 install:
   - contact
-  - user
 input:
   recipient:
     data_type: email

@@ -4,7 +4,6 @@ description: 'Adds a page that can search site content.'
 install:
   - node
   - search
-  - user
 config:
   import:
     node:

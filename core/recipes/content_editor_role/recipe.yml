@@ -1,8 +1,6 @@
 name: 'Content editor role'
 description: 'Provides the Content editor role.'
 type: 'User role'
-install:
-  - user
 config:
   actions:
     user.role.content_editor:

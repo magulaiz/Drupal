@@ -17,12 +17,15 @@ use Symfony\Component\Filesystem\Filesystem as SymfonyFilesystem;
  */
 class RecipeDiscoveryTest extends KernelTestBase {
 
+  protected static $modules = ['user', 'system'];
+
   /**
    * @testWith [true, true]
    *   [true, false]
    *   [false, true]
    */
   public function testFindRecipes(bool $include_test_recipes, bool $include_core_recipes): void {
+    $this->installConfig(['system', 'user']);
     $drupal_root = $this->getDrupalRoot();
 
     $dir = $include_test_recipes
