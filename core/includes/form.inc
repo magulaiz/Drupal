@@ -217,10 +217,6 @@ function template_preprocess_fieldset(&$variables) {
 
   if (!empty($element['#description'])) {
     $variables['description_display'] = $element['#description_display'];
-    if ($element['#description_display'] === 'invisible') {
-      $description_attributes['class'][] = 'visually-hidden';
-    }
-    $description_attributes['data-drupal-field-elements'] = 'description';
     $variables['description'] = [
       'content' => $element['#description'],
     ];
@@ -230,7 +226,10 @@ function template_preprocess_fieldset(&$variables) {
       // Add the description's id to the fieldset aria attributes.
       $variables['attributes']['aria-describedby'] = $description_id;
       // Add the description's id to the description render array.
-      $attributes = ['id' => $description_id];
+      $attributes = [
+        'id' => $description_id,
+        'data-drupal-field-elements' => 'description',
+      ];
       if ($element['#description_display'] === 'invisible') {
         $attributes['class'][] = 'visually-hidden';
       }
