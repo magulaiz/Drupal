@@ -40,7 +40,7 @@ trait EntityTrait {
    *
    * @param \Drupal\Core\Entity\EntityInterface $entity
    *   The entity to validate.
-   * @param string|null
+   * @param string|null $message
    *   (optional) The assertion message.
    */
   protected function assertEntityValid(EntityInterface $entity, ?string $message = NULL): void {
