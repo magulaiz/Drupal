@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\KernelTests\Core\DependencyInjection;
 
 use Drupal\container_env_test\TestService;
@@ -21,7 +23,6 @@ class EnvironmentVariableTest extends KernelTestBase {
     parent::setUp();
   }
 
-
   public function testEnvironmentVariable(): void {
     $this->assertEquals('test-variable', $this->container->getParameter('container_env_test'));
     $this->assertEquals('some-test', $this->container->getParameter('container_env_test_with_default'));
@@ -30,7 +31,6 @@ class EnvironmentVariableTest extends KernelTestBase {
     $service = \Drupal::service(TestService::class);
     assert($service instanceof TestService);
     $this->assertEquals('test-variable', $service);
-
   }
 
 }
