@@ -7,66 +7,60 @@ use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
 
 /**
- * File test form class.
- */
-/**
- * This class provides methods common for FileTestForm + FileTestSaveUploadFromForm
+ * Provides methods common for FileTestForm + FileTestSaveUploadFromForm.
  */
 abstract class FileTestFormBase extends FormBase {
 
-/**
+  /**
    * {@inheritdoc}
    */
   public function buildForm(array $form, FormStateInterface $form_state) {
 
     $form['file_test_replace'] = [
       '#type' => 'select',
-      '#title' => t('Replace existing image'),
+      '#title' => $this->t('Replace existing image'),
       '#options' => [
-        FileExists::Rename => t('Appends number until name is unique'),
-        FileExists::Replace => t('Replace the existing file'),
-        FileExists::Error => t('Fail with an error'),
+        FileExists::Rename => $this->t('Appends number until name is unique'),
+        FileExists::Replace => $this->t('Replace the existing file'),
+        FileExists::Error => $this->t('Fail with an error'),
       ],
       '#default_value' => FileExists::Rename,
     ];
 
     $form['file_subdir'] = [
       '#type' => 'textfield',
-      '#title' => t('Subdirectory for test file'),
+      '#title' => $this->t('Subdirectory for test file'),
       '#default_value' => '',
     ];
 
     $form['extensions'] = [
       '#type' => 'textfield',
-      '#title' => t('Allowed extensions.'),
+      '#title' => $this->t('Allowed extensions.'),
       '#default_value' => '',
     ];
 
     $form['allow_all_extensions'] = [
-      '#title' => t('Allow all extensions?'),
+      '#title' => $this->t('Allow all extensions?'),
       '#type' => 'radios',
       '#options' => [
-        'false' => 'No',
-        'empty_array' => 'Empty array',
-        'empty_string' => 'Empty string',
+        'false' => $this->t('No'),
+        'empty_array' => $this->t('Empty array'),
+        'empty_string' => $this->t('Empty string'),
       ],
       '#default_value' => 'false',
     ];
 
     $form['is_image_file'] = [
       '#type' => 'checkbox',
-      '#title' => t('Is this an image file?'),
+      '#title' => $this->t('Is this an image file?'),
       '#default_value' => TRUE,
     ];
 
     $form['submit'] = [
       '#type' => 'submit',
-      '#value' => t('Submit'),
+      '#value' => $this->t('Submit'),
     ];
     return $form;
   }
 
-
-
 }
-
