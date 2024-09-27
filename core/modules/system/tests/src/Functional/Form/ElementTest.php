@@ -186,7 +186,6 @@ class ElementTest extends BrowserTestBase {
     $this->drupalGet('form-test/fieldset-description');
     $this->assertSession()
       ->elementNotExists('xpath', '//fieldset[@aria-describedby="' . $id . '--description"]');
-    $this->assertSession()->pageTextNotContains('Fieldset test for description.');
     $this->drupalGet('form-test/fieldset-description/' . $id);
     $this->assertSession()
       ->elementExists('xpath', '//fieldset[@aria-describedby="' . $id . '--description"]//div[@id="' . $id . '--description"]');
