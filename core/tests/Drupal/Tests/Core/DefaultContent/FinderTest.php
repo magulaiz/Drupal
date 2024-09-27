@@ -38,7 +38,6 @@ class FinderTest extends UnitTestCase {
    * Tests that files without UUIDs will raise an exception.
    */
   public function testExceptionIfNoUuid(): void {
-    $this->markTestIncomplete('@todo');
     $dir = FileSystem::getOsTemporaryDirectory();
     $this->assertIsString($dir);
     /** @var string $dir */
