@@ -616,17 +616,23 @@ class EntityField extends FieldPluginBase implements CacheableDependencyInterfac
       '#fieldset' => 'multiple_field_settings',
     ];
 
+    $form['multiple_field_settings_order'] = [
+      '#type' => 'details',
+      '#title' => $this->t('Values order'),
+      '#weight' => 7,
+      '#fieldset' => 'multiple_field_settings',
+    ];
+
     $form['multiple_field_settings_inline'] = [
       '#type' => 'container',
       '#attributes' => ['class' => ['container-inline']],
-      '#fieldset' => 'multiple_field_settings',
     ];
 
     // Make the string translatable by keeping it as a whole rather than
     // translating prefix and suffix separately.
     [$prefix, $suffix] = explode('@count', $this->t('Display @count value(s)'));
 
-    $form['multiple_field_settings_inline']['delta_limit'] = [
+    $form['multiple_field_settings_order']['multiple_field_settings_inline']['delta_limit'] = [
       '#type' => $type,
       '#size' => $size,
       '#field_prefix' => $prefix,
@@ -643,7 +649,7 @@ class EntityField extends FieldPluginBase implements CacheableDependencyInterfac
     ];
 
     [$prefix, $suffix] = explode('@count', $this->t('starting from @count'));
-    $form['multiple_field_settings_inline']['delta_offset'] = [
+    $form['multiple_field_settings_order']['multiple_field_settings_inline']['delta_offset'] = [
       '#type' => 'textfield',
       '#size' => 5,
       '#field_prefix' => $prefix,
@@ -655,10 +661,10 @@ class EntityField extends FieldPluginBase implements CacheableDependencyInterfac
           ':input[name="options[group_rows]"]' => ['checked' => TRUE],
         ],
       ],
-      '#description' => $this->t('(first item is 0)'),
+      '#description' => $this->t('(first item is 0).'),
       '#parents' => ['options', 'delta_offset'],
     ];
-    $form['delta_reversed'] = [
+    $form['multiple_field_settings_order']['delta_reversed'] = [
       '#title' => $this->t('Reversed'),
       '#type' => 'checkbox',
       '#default_value' => $this->options['delta_reversed'],
@@ -667,10 +673,9 @@ class EntityField extends FieldPluginBase implements CacheableDependencyInterfac
           ':input[name="options[group_rows]"]' => ['checked' => TRUE],
         ],
       ],
-      '#description' => $this->t('Start from last values'),
-      '#fieldset' => 'multiple_field_settings',
+      '#description' => $this->t('Start from last values.'),
     ];
-    $form['delta_first_last'] = [
+    $form['multiple_field_settings_order']['delta_first_last'] = [
       '#title' => $this->t('First and last only'),
       '#type' => 'checkbox',
       '#default_value' => $this->options['delta_first_last'],
@@ -679,7 +684,6 @@ class EntityField extends FieldPluginBase implements CacheableDependencyInterfac
           ':input[name="options[group_rows]"]' => ['checked' => TRUE],
         ],
       ],
-      '#fieldset' => 'multiple_field_settings',
     ];
   }
 
