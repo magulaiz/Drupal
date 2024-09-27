@@ -104,8 +104,10 @@ default:
     - if: $PERFORMANCE_TEST != "1"
 
 .prepare-lint-directory: &prepare-lint-directory
-  # To work around changing paths in GitLabCI we run linting in a separate,
+  # PHPStan and yarn linting use absolute paths to determine cache validity. Because GitLab CI
+  # working directories are not consistent, work around this by running linting in a separate,
   # stable path.
+  # See https://github.com/phpstan/phpstan/issues/8599
   - mkdir /build;
   - cp -Ria $CI_PROJECT_DIR/* /build/
   - cd /build
