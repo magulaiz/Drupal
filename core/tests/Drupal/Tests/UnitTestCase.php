@@ -23,6 +23,10 @@ use Symfony\Component\VarDumper\VarDumper;
  * Drupal\Tests\your_module\Functional namespace and live in the
  * modules/your_module/tests/src/Functional directory.
  *
+ * core/lib/Drupal extending UnitTestCase must exist in the
+ * Drupal\Tests\Core namespace and live in the core/lib/tests/Drupal/Tests/Core
+ * directory.
+ *
  * Using Symfony's dump() function in Unit tests will produce output on the
  * command line.
  *
