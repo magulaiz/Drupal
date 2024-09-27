@@ -4,6 +4,7 @@ namespace Drupal\Core\Theme;
 
 use Drupal\Component\Assertion\Inspector;
 use Drupal\Component\Discovery\YamlDirectoryDiscovery;
+use Drupal\Component\Plugin\CategorizingPluginManagerInterface;
 use Drupal\Component\Plugin\Exception\PluginException;
 use Drupal\Component\Utility\UrlHelper;
 use Drupal\Core\Cache\CacheBackendInterface;
@@ -28,7 +29,7 @@ use Drupal\Core\Plugin\Discovery\DirectoryWithMetadataPluginDiscovery;
  *
  * @see plugin_api
  */
-class ComponentPluginManager extends DefaultPluginManager {
+class ComponentPluginManager extends DefaultPluginManager implements CategorizingPluginManagerInterface {
 
   /**
    * {@inheritdoc}
@@ -159,6 +160,50 @@ class ComponentPluginManager extends DefaultPluginManager {
   public function clearCachedDefinitions(): void {
     parent::clearCachedDefinitions();
     $this->componentNegotiator->clearCache();
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getCategories() {
+    // Fetch all categories from definitions and remove duplicates.
+    $categories = array_unique(array_values(array_map(static function ($definition) {
+        return $definition['group'] ?? t('Other');
+    }, $this->getDefinitions())));
+    natcasesort($categories);
+    return array_values($categories);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getSortedDefinitions(?array $definitions = NULL) {
+    // Sort the plugins first by group, then by label.
+    $definitions = $definitions ?? $this->getDefinitions();
+    uasort($definitions, static function ($a, $b) {
+      $a_group = isset($a['group']) ? (string) $a['group'] : '';
+      $b_group = isset($b['group']) ? (string) $b['group'] : '';
+      if ($a_group !== $b_group) {
+        return strnatcasecmp($a_group, $b_group);
+      }
+      $a_label = preg_replace("/[^A-Za-z0-9 ]/", '', $a['name']);
+      $b_label = preg_replace("/[^A-Za-z0-9 ]/", '', $b['name']);
+      return strnatcasecmp($a_label, $b_label);
+    });
+    return $definitions;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getGroupedDefinitions(?array $definitions = NULL) {
+    $definitions = $definitions ?: $this->getSortedDefinitions();
+    $groups = [];
+    foreach ($definitions as $id => $definition) {
+      $group = $definition['group'] ?? t('Other');
+      $groups[$group][$id] = $definition;
+    }
+    return $groups;
   }
 
   /**
