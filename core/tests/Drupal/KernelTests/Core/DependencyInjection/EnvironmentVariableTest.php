@@ -30,7 +30,7 @@ class EnvironmentVariableTest extends KernelTestBase {
 
     $service = \Drupal::service(TestService::class);
     assert($service instanceof TestService);
-    $this->assertEquals('test-variable', $service);
+    $this->assertEquals('test-variable', $service->parameter);
   }
 
 }
