@@ -219,7 +219,8 @@ class BlockTest extends BlockTestBase {
     // Select the 'Powered by Drupal' block to be configured and moved.
     $block = [];
     $block['id'] = 'system_powered_by_block';
-    $block['settings[label]'] = $this->randomMachineName(8);
+    $title = $this->randomMachineName(8);
+    $block['settings[label]'] = $title;
     $block['settings[label_display]'] = TRUE;
     $block['theme'] = $this->config('system.theme')->get('default');
     $block['region'] = 'header';
@@ -306,7 +307,8 @@ class BlockTest extends BlockTestBase {
       $this->assertSession()->titleEquals('Block layout | Drupal');
       // Select the 'Powered by Drupal' block to be placed.
       $block = [];
-      $block['id'] = $this->randomMachineName();
+      $title = $this->randomMachineName();
+      $block['settings[label]'] = $title;
       $block['theme'] = $theme;
       $block['region'] = 'content';
       $this->drupalGet('admin/structure/block/add/system_powered_by_block');
