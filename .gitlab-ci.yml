@@ -123,7 +123,7 @@ default:
   # Fetch the cspell cache from the artifacts of the latest successful job from
   # the target branch. Allow the job to proceed and pass if the file doesn't
   # exist.
-  - 'curl --location --output core/.cspellcache "https://git.drupalcode.org/issue/drupal-3470641/-/jobs/2868076/artifacts/raw/core/.cspellcache?inline=false" || true'
+  - 'curl --location --output core/.cspellcache "https://git.drupalcode.org/api/v4/projects/{$CORE_GITLAB_PROJECT_ID}/jobs/artifacts/{$CACHE_TARGET}/raw/core/.cspellcache?job=Lint%20cache%20warming" || true'
 
 .eslint-cache: &eslint-cache
   # Fetch the eslint cache from the artifacts of the latest successful job from
