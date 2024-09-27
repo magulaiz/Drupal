@@ -231,6 +231,9 @@ function template_preprocess_fieldset(&$variables) {
       $variables['attributes']['aria-describedby'] = $description_id;
       // Add the description's id to the description render array.
       $attributes = ['id' => $description_id];
+      if ($element['#description_display'] === 'invisible') {
+        $attributes['class'][] = 'visually-hidden';
+      }
       $variables['description']['attributes'] = new Attribute($attributes);
     }
   }
