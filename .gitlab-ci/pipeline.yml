@@ -138,4 +138,4 @@ variables:
     CONCURRENCY: 6
   script:
     # Need to pass this along directly.
-    - sudo -u ww  w-data -E vendor/bin/paratest -c core --colors=always --testsuite=$TESTSUITE --processes=$CONCURRENCY
+    - sudo -u www-data -E vendor/bin/paratest -c core --colors=always --testsuite=$TESTSUITE --processes=$CONCURRENCY
