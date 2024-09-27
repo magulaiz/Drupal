@@ -158,6 +158,15 @@ class FileUploadForm extends AddFormBase {
       '#type' => 'container',
     ];
 
+    // @todo: This is just a quickfix:
+    // @see https://www.drupal.org/project/drupal/issues/3477339
+    if($slots != 1){
+      $form['container']['no-upload'] = [
+        '#plain_text' => $this->t('The selected media type has an upload field with multiplicity > 1, which isn\'nt currently supported here.'),
+      ];
+      return $form;
+    }
+
     $process = (array) $this->elementInfo->getInfoProperty('managed_file', '#process', []);
     $form['container']['upload'] = [
       '#type' => 'managed_file',
