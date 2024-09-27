@@ -179,6 +179,21 @@ class ElementTest extends BrowserTestBase {
   }
 
   /**
+   * Tests the description attribute on fieldset elements.
+   */
+  public function testFieldsetDescriptions() {
+    $id = 'fieldset-test';
+    $this->drupalGet('form-test/fieldset-description');
+    $this->assertSession()
+      ->elementNotExists('xpath', '//fieldset[@aria-describedby="' . $id . '--description"]');
+    $this->assertSession()->pageTextNotContains('Fieldset test for description.');
+    $this->drupalGet('form-test/fieldset-description/' . $id);
+    $this->assertSession()
+      ->elementExists('xpath', '//fieldset[@aria-describedby="' . $id . '--description"]//div[@id="' . $id . '--description"]');
+    $this->assertSession()->pageTextContains('Fieldset test for description.');
+  }
+
+  /**
    * Tests a form with an autocomplete setting..
    */
   protected function testFormAutocomplete(): void {
