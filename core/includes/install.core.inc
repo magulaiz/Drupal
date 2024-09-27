@@ -1500,7 +1500,7 @@ function install_check_localization_server($uri) {
  *   - (optional) extra_text: The text part of "extra" (e.g., "alpha").
  *   - (optional) extra_number: The number part of "extra" (e.g., "2").
  *
- * @deprecated in drupal:11.0.0 and is removed from drupal:12.0.0. Use explode() instead.
+ * @deprecated in drupal:11.1.0 and is removed from drupal:12.0.0. Use explode() instead.
  *
  * @see https://www.drupal.org/node/3476950
  */
