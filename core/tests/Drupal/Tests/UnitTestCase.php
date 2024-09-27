@@ -23,7 +23,7 @@ use Symfony\Component\VarDumper\VarDumper;
  * Drupal\Tests\your_module\Functional namespace and live in the
  * modules/your_module/tests/src/Functional directory.
  *
- * core/lib/Drupal extending UnitTestCase must exist in the
+ * Tests for core/lib/Drupal classes extending UnitTestCase must exist in the
  * Drupal\Tests\Core namespace and live in the core/lib/tests/Drupal/Tests/Core
  * directory.
  *
