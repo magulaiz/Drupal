@@ -126,7 +126,7 @@ variables:
 # Documentation: https://docs.gitlab.com/ee/ci/jobs/
 ################
 
-'⚡️ PHPUnit Unit':
+'⚡️ PHPUnit Unit via paratest':
   <<: [ *with-composer, *default-job-settings ]
   services:
     # There are some unit tests that need a database.
@@ -138,4 +138,16 @@ variables:
     CONCURRENCY: 6
   script:
     - sudo HOME=/var/www -u www-data -E vendor/bin/paratest -c core --colors=always --testsuite=$TESTSUITE --processes=$CONCURRENCY
+
+'⚡️ PHPUnit Unit via PHPUnit':
+  <<: [ *with-composer, *default-job-settings ]
+  services:
+    # There are some unit tests that need a database.
+    # @todo Remove after https://www.drupal.org/project/drupal/issues/3386217
+    - <<: *with-database
+  variables:
+    TESTSUITE: unit
+    KUBERNETES_CPU_REQUEST: "1"
+    CONCURRENCY: 6
+  script:
     - sudo HOME=/var/www -u www-data -E vendor/bin/phpunit -c core --testdox --colors=always --testsuite=$TESTSUITE
