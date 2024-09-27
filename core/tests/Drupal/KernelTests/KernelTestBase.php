@@ -48,7 +48,7 @@ use Symfony\Component\VarDumper\VarDumper;
  * modules/your_module/tests/src/Kernel directory.
  *
  * Tests for core/lib/Drupal classes extending KernelTestBase must exist in the
- * Drupal\KernelTests\Core namespace and live in the
+ * \Drupal\KernelTests\Core namespace and live in the
  * core/tests/Drupal/KernelTests directory.
  *
  * This base class should be useful for testing some types of integrations which

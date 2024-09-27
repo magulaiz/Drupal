@@ -35,7 +35,7 @@ use Symfony\Component\VarDumper\VarDumper;
  * modules/your_module/tests/src/Functional directory.
  *
  * Tests for core/lib/Drupal classes extending BrowserTestBase must exist in the
- * Drupal\FunctionalTests\Core namespace and live in the
+ * \Drupal\FunctionalTests\Core namespace and live in the
  * core/tests/Drupal/FunctionalTests directory.
  *
  * Tests extending this base class should only translate text when testing
