@@ -137,4 +137,5 @@ variables:
     KUBERNETES_CPU_REQUEST: "1"
     CONCURRENCY: 6
   script:
-    - sudo HOME=/var/www -u www-data -E vendor/bin/paratest -c core --testdox --colors=always --testsuite=$TESTSUITE --processes=$CONCURRENCY
+    - sudo HOME=/var/www -u www-data -E vendor/bin/paratest -c core --colors=always --testsuite=$TESTSUITE --processes=$CONCURRENCY
+    - sudo HOME=/var/www -u www-data -E vendor/bin/phpunit -c core --testdox --colors=always --testsuite=$TESTSUITE
