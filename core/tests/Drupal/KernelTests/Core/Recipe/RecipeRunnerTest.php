@@ -231,12 +231,9 @@ config:
 YAML;
 
     $recipe = $this->createRecipe($recipe_data);
-    try {
-      RecipeRunner::processRecipe($recipe);
-    }
-    catch (PluginNotFoundException $e) {
-      $this->assertStringStartsWith('The "config_test" entity does not support the "setBody" config action.', $e->getMessage());
-    }
+    $this->expectException(PluginNotFoundException::class);
+    $this->expectExceptionMessage('The "config_test" entity does not support the "setBody" config action.');
+    RecipeRunner::processRecipe($recipe);
   }
 
   /**
