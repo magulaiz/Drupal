@@ -40,6 +40,7 @@ class FormTestFieldsetDescriptionForm extends FormBase {
       '#title' => $this
         ->t('Author'),
       '#description' => 'Fieldset test for description.',
+      '#description_display' => 'invisible',
     ];
 
     if (!empty($id)) {
