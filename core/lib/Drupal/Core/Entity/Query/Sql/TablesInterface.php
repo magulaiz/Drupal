@@ -14,7 +14,7 @@ interface TablesInterface {
    *   The field to add to the query.
    *
    *   For comprehensive documentation on the format, see
-   *   {@link \Drupal\Core\Entity\Query\QueryInterface::condition()}.
+   *   \Drupal\Core\Entity\Query\QueryInterface::condition().
    * @param string $type
    *   Join type, can either be INNER or LEFT.
    * @param string $langcode
