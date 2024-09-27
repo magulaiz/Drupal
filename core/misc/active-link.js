@@ -24,7 +24,11 @@
       const path = drupalSettings.path;
       let queryString = JSON.stringify(path.currentQuery);
       if (queryString) {
-        queryString = queryString.replace(/'/g, "\\'");
+        // Converts single quote to encoding.
+        queryString = queryString.replace(
+          /'/g,
+          (c) => `%${c.charCodeAt(0).toString(16)}`,
+        );
       }
       const querySelector = path.currentQuery
         ? `[data-drupal-link-query='${queryString}']`
