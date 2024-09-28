@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\menu_test\Plugin\Menu\LocalAction;
 
 use Drupal\Core\Config\Config;
@@ -21,7 +23,7 @@ class TestLocalActionWithConfig extends LocalActionDefault {
   /**
    * {@inheritdoc}
    */
-  public function getTitle(Request $request = NULL) {
+  public function getTitle(?Request $request = NULL) {
     return $this->config->get('title');
   }
 

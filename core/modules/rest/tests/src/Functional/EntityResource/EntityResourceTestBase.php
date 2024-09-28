@@ -103,9 +103,9 @@ abstract class EntityResourceTestBase extends ResourceTestBase {
    *
    * Some entities do not specify a 'label' entity key. For example: User.
    *
-   * @see ::getInvalidNormalizedEntityToCreate
-   *
    * @var string|null
+   *
+   * @see ::getInvalidNormalizedEntityToCreate
    */
   protected static $labelFieldName = NULL;
 
@@ -114,9 +114,9 @@ abstract class EntityResourceTestBase extends ResourceTestBase {
    *
    * The default value of 2 should work for most content entities.
    *
-   * @see ::testPost()
-   *
    * @var string|int
+   *
+   * @see ::testPost()
    */
   protected static $firstCreatedEntityId = 2;
 
@@ -125,9 +125,9 @@ abstract class EntityResourceTestBase extends ResourceTestBase {
    *
    * The default value of 3 should work for most content entities.
    *
-   * @see ::testPost()
-   *
    * @var string|int
+   *
+   * @see ::testPost()
    */
   protected static $secondCreatedEntityId = 3;
 
@@ -153,9 +153,7 @@ abstract class EntityResourceTestBase extends ResourceTestBase {
   protected $entityStorage;
 
   /**
-   * Modules to install.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = ['rest_test', 'text'];
 
@@ -408,7 +406,7 @@ abstract class EntityResourceTestBase extends ResourceTestBase {
   /**
    * Tests a GET request for an entity, plus edge cases to ensure good DX.
    */
-  public function testGet() {
+  public function testGet(): void {
     $this->initAuthentication();
     $has_canonical_url = $this->entity->hasLinkTemplate('canonical');
 
@@ -436,6 +434,9 @@ abstract class EntityResourceTestBase extends ResourceTestBase {
         // @see \Drupal\Core\EventSubscriber\AnonymousUserResponseSubscriber::onRespond()
         ->addCacheTags(['config:user.role.anonymous']);
       $expected_cacheability->addCacheableDependency($this->getExpectedUnauthorizedEntityAccessCacheability(FALSE));
+      // Mitigate https://www.drupal.org/project/drupal/issues/3451483 until
+      // it gets resolved.
+      $response = $response->withoutHeader('X-Drupal-Dynamic-Cache');
       $this->assertResourceErrorResponse(403, $this->getExpectedUnauthorizedAccessMessage('GET'), $response, $expected_cacheability->getCacheTags(), $expected_cacheability->getCacheContexts(), 'MISS', FALSE);
     }
     else {
@@ -448,6 +449,9 @@ abstract class EntityResourceTestBase extends ResourceTestBase {
     // response.
     if (static::$auth) {
       $response = $this->request('GET', $url, $request_options);
+      // Mitigate https://www.drupal.org/project/drupal/issues/3451483 until
+      // it gets resolved.
+      $response = $response->withoutHeader('X-Drupal-Dynamic-Cache');
       $this->assertResponseWhenMissingAuthentication('GET', $response);
     }
 
@@ -485,6 +489,9 @@ abstract class EntityResourceTestBase extends ResourceTestBase {
     // DX: 403 because unauthorized.
     $url->setOption('query', ['_format' => static::$format]);
     $response = $this->request('GET', $url, $request_options);
+    // Mitigate https://www.drupal.org/project/drupal/issues/3451483 until
+    // it gets resolved.
+    $response = $response->withoutHeader('X-Drupal-Dynamic-Cache');
     $this->assertResourceErrorResponse(403, FALSE, $response, $expected_403_cacheability->getCacheTags(), $expected_403_cacheability->getCacheContexts(), static::$auth ? FALSE : 'MISS', FALSE);
 
     // Then, what we'll use for the remainder of the test: multiple formats.
@@ -494,7 +501,8 @@ abstract class EntityResourceTestBase extends ResourceTestBase {
     $response = $this->request('GET', $url, $request_options);
     if ($has_canonical_url) {
       $this->assertSame(403, $response->getStatusCode());
-      $this->assertSame(['HIT'], $response->getHeader('X-Drupal-Dynamic-Cache'));
+      $dynamic_cache = str_starts_with($response->getHeader('X-Drupal-Cache-Max-Age')[0], '0') || !empty(array_intersect(['user', 'session'], explode(' ', $response->getHeader('X-Drupal-Cache-Contexts')[0]))) ? 'UNCACHEABLE' : 'MISS';
+      $this->assertSame([$dynamic_cache], $response->getHeader('X-Drupal-Dynamic-Cache'));
     }
     else {
       $this->assertSame(406, $response->getStatusCode());
@@ -505,6 +513,9 @@ abstract class EntityResourceTestBase extends ResourceTestBase {
     // DX: 403 because unauthorized.
     $url->setOption('query', ['_format' => static::$format]);
     $response = $this->request('GET', $url, $request_options);
+    // Mitigate https://www.drupal.org/project/drupal/issues/3451483 until
+    // it gets resolved.
+    $response = $response->withoutHeader('X-Drupal-Dynamic-Cache');
     $this->assertResourceErrorResponse(403, $this->getExpectedUnauthorizedAccessMessage('GET'), $response, $expected_403_cacheability->getCacheTags(), $expected_403_cacheability->getCacheContexts(), static::$auth ? FALSE : 'MISS', FALSE);
     $this->assertArrayNotHasKey('Link', $response->getHeaders());
 
@@ -684,7 +695,7 @@ abstract class EntityResourceTestBase extends ResourceTestBase {
   /**
    * Tests a POST request for an entity, plus edge cases to ensure good DX.
    */
-  public function testPost() {
+  public function testPost(): void {
     // @todo Remove this in https://www.drupal.org/node/2300677.
     if ($this->entity instanceof ConfigEntityInterface) {
       $this->markTestSkipped('POSTing config entities is not yet supported.');
@@ -858,7 +869,7 @@ abstract class EntityResourceTestBase extends ResourceTestBase {
   /**
    * Tests a PATCH request for an entity, plus edge cases to ensure good DX.
    */
-  public function testPatch() {
+  public function testPatch(): void {
     // @todo Remove this in https://www.drupal.org/node/2300677.
     if ($this->entity instanceof ConfigEntityInterface) {
       $this->markTestSkipped('PATCHing config entities is not yet supported.');
@@ -1096,7 +1107,7 @@ abstract class EntityResourceTestBase extends ResourceTestBase {
   /**
    * Tests a DELETE request for an entity, plus edge cases to ensure good DX.
    */
-  public function testDelete() {
+  public function testDelete(): void {
     // @todo Remove this in https://www.drupal.org/node/2300677.
     if ($this->entity instanceof ConfigEntityInterface) {
       $this->markTestSkipped('DELETEing config entities is not yet supported.');
@@ -1223,7 +1234,8 @@ abstract class EntityResourceTestBase extends ResourceTestBase {
     $has_canonical_url = $this->entity->hasLinkTemplate('canonical');
     // Note that the 'canonical' link relation type must be specified explicitly
     // in the call to ::toUrl(). 'canonical' is the default for
-    // \Drupal\Core\Entity\Entity::toUrl(), but ConfigEntityBase overrides this.
+    // \Drupal\Core\Entity\EntityBase::toUrl(), but ConfigEntityBase overrides
+    // this.
     return $has_canonical_url ? $this->entity->toUrl('canonical') : Url::fromUri('base:entity/' . static::$entityTypeId . '/' . $this->entity->id());
   }
 

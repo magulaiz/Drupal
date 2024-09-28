@@ -12,7 +12,6 @@ use Symfony\Component\Validator\ConstraintViolation;
 /**
  * @coversDefaultClass \Drupal\ckeditor5\Plugin\CKEditor5Plugin\Media
  * @group ckeditor5
- * @group #slow
  * @internal
  */
 class MediaLinkabilityTest extends MediaTestBase {
@@ -88,7 +87,7 @@ class MediaLinkabilityTest extends MediaTestBase {
    *
    * @dataProvider providerLinkability
    */
-  public function testLinkability(bool $unrestricted) {
+  public function testLinkability(bool $unrestricted): void {
     // Disable filter_html.
     if ($unrestricted) {
       FilterFormat::load('test_format')
@@ -233,7 +232,7 @@ class MediaLinkabilityTest extends MediaTestBase {
    *
    * @dataProvider providerLinkability
    */
-  public function testLinkManualDecorator(bool $unrestricted) {
+  public function testLinkManualDecorator(bool $unrestricted): void {
     \Drupal::service('module_installer')->install(['ckeditor5_manual_decorator_test']);
     $this->resetAll();
 

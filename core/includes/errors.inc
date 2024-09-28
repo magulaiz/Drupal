@@ -34,7 +34,6 @@ function drupal_error_levels() {
     E_USER_ERROR => ['User error', RfcLogLevel::ERROR],
     E_USER_WARNING => ['User warning', RfcLogLevel::WARNING],
     E_USER_NOTICE => ['User notice', RfcLogLevel::NOTICE],
-    E_STRICT => ['Strict warning', RfcLogLevel::DEBUG],
     E_RECOVERABLE_ERROR => ['Recoverable fatal error', RfcLogLevel::ERROR],
     E_DEPRECATED => ['Deprecated function', RfcLogLevel::DEBUG],
     E_USER_DEPRECATED => ['User deprecated function', RfcLogLevel::DEBUG],
@@ -174,7 +173,7 @@ function _drupal_log_error($error, $fatal = FALSE) {
       // implementations to use it.
       \Drupal::logger('php')->log($severity, '%type: @message in %function (line %line of %file) @backtrace_string.', $error + ['backtrace' => $backtrace, 'exception' => $exception, 'severity_level' => $severity]);
     }
-    catch (\Exception $e) {
+    catch (\Exception) {
       // We can't log, for example because the database connection is not
       // available. At least try to log to PHP error log.
       error_log(strtr('Failed to log error: ' . Error::DEFAULT_ERROR_MESSAGE . ' @backtrace_string', $error));
@@ -322,7 +321,7 @@ function _drupal_get_error_level() {
   try {
     $error_level = \Drupal::config('system.logging')->get('error_level');
   }
-  catch (\Exception $e) {
+  catch (\Exception) {
     $error_level = $GLOBALS['config']['system.logging']['error_level'] ?? ERROR_REPORTING_HIDE;
   }
 
