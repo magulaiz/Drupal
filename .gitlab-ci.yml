@@ -142,7 +142,7 @@ default:
   - cd core
   - corepack enable
   - yarn install
-  - yarn run spellcheck:core --no-must-find-files --cache --cache-strategy content
+  - time yarn run spellcheck:core --no-must-find-files --cache --cache-strategy content
 ################
 # Stages
 #
@@ -349,12 +349,12 @@ default:
     - vendor/bin/phpstan --version
     # Rely on PHPStan caching to execute analysis multiple times without performance drawback.
     # Output a copy in junit.
-    - php vendor/bin/phpstan -vvv analyze --configuration=./core/phpstan.neon.dist --error-format=gitlab > $CI_PROJECT_DIR/phpstan-quality-report.json || EXIT_CODE=$?
-    - php vendor/bin/phpstan -vvv analyze --configuration=./core/phpstan.neon.dist --no-progress --error-format=junit > $CI_PROJECT_DIR/phpstan-junit.xml || true
+    - time php vendor/bin/phpstan -vvv analyze --configuration=./core/phpstan.neon.dist --error-format=gitlab > $CI_PROJECT_DIR/phpstan-quality-report.json || EXIT_CODE=$?
+    - time php vendor/bin/phpstan -vvv analyze --configuration=./core/phpstan.neon.dist --no-progress --error-format=junit > $CI_PROJECT_DIR/phpstan-junit.xml || true
     - |
       if [ -n "$EXIT_CODE" ]; then
         # Output a copy in plain text for human logs.
-        php vendor/bin/phpstan analyze --configuration=./core/phpstan.neon.dist --no-progress || true
+        time php vendor/bin/phpstan analyze --configuration=./core/phpstan.neon.dist --no-progress || true
         # Generate a new baseline.
         echo "Generating an PHPStan baseline file (available as job artifact)."
         php vendor/bin/phpstan analyze --configuration=./core/phpstan.neon.dist --no-progress --generate-baseline=$CI_PROJECT_DIR/core/.phpstan-baseline.php || true
@@ -382,8 +382,8 @@ default:
         composer update --optimize-autoloader;
         composer outdated;
       fi
-    - vendor/bin/phpcs --version
-    - composer phpcs -- -s --report-full --report-summary --report-\\Micheh\\PhpCodeSniffer\\Report\\Gitlab=phpcs-quality-report.json
+    - time vendor/bin/phpcs --version
+    - time composer phpcs -- -s --report-full --report-summary --report-\\Micheh\\PhpCodeSniffer\\Report\\Gitlab=phpcs-quality-report.json
   artifacts:
     expire_in: 1 week
     expose_as: 'web-vendor'
@@ -415,8 +415,8 @@ default:
     - cd core
     - corepack enable
     - yarn install
-    - yarn run check:ckeditor5
-    - yarn run lint:core-js-passing --cache --cache-strategy content --format gitlab
+    - time yarn run check:ckeditor5
+    - time yarn run lint:core-js-passing --cache --cache-strategy content --format gitlab
   artifacts:
     reports:
       codequality: eslint-quality-report.json
@@ -443,8 +443,8 @@ default:
     - corepack enable
     - cd core
     - yarn install
-    - yarn run build:css --check
-    - yarn run lint:css --cache --cache-location .stylelintcache --cache-strategy content --color --custom-formatter=node_modules/stylelint-formatter-gitlab
+    - time yarn run build:css --check
+    - time yarn run lint:css --cache --cache-location .stylelintcache --cache-strategy content --color --custom-formatter=node_modules/stylelint-formatter-gitlab
   artifacts:
     reports:
       codequality: stylelint-quality-report.json
