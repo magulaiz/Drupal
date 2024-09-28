@@ -1522,65 +1522,79 @@ function _filter_url($text, $filter) {
     // markup, especially a '>'. Therefore, remove all comment contents and add
     // them back later.
     _filter_url_escape_comments('', TRUE);
-    $text = preg_replace_callback('`<!--(.*?)-->`s', '_filter_url_escape_comments', $text);
-    // Do not attempt to convert links into URLs if preg_replace() fails.
-    if (preg_last_error()) {
-      $text = $saved_text;
-      continue;
-    }
 
-    // Split at all tags; ensures that no tags or attributes are processed.
-    $chunks = is_null($text) ? array('') : preg_split('/(<.+?>)/is', $text, -1, PREG_SPLIT_DELIM_CAPTURE);
-    // Do not attempt to convert links into URLs if preg_split() fails.
-    if (preg_last_error()) {
-      $text = $saved_text;
-      continue;
-    }
-
-    // PHP ensures that the array consists of alternating delimiters and
-    // literals, and begins and ends with a literal (inserting NULL as
-    // required). Therefore, the first chunk is always text:
-    $chunk_type = 'text';
-    // If a tag of $ignore_tags is found, it is stored in $open_tag and only
-    // removed when the closing tag is found. Until the closing tag is found,
-    // no replacements are made.
-    $open_tag = '';
-
-    for ($i = 0; $i < count($chunks); $i++) {
-      if ($chunk_type == 'text') {
-        // Only process this text if there are no unclosed $ignore_tags.
-        if ($open_tag == '') {
-          // If there is a match, inject a link into this chunk via the callback
-          // function contained in $task.
-          $chunks[$i] = preg_replace_callback($pattern, $task, $chunks[$i]);
-        }
-        // Text chunk is done, so next chunk must be a tag.
-        $chunk_type = 'tag';
+    try {
+      $text = preg_replace_callback('`<!--(.*?)-->`s', '_filter_url_escape_comments', $text);
+      // Do not attempt to convert links into URLs if preg_replace() fails.
+      if (preg_last_error()) {
+        throw new \Exception('Last PCRE regex execution failed.');
       }
-      else {
-        // Only process this tag if there are no unclosed $ignore_tags.
-        if ($open_tag == '') {
-          // Check whether this tag is contained in $ignore_tags.
-          if (preg_match("`<($ignore_tags)(?:\s|>)`i", $chunks[$i], $matches)) {
-            $open_tag = $matches[1];
+  
+      // Split at all tags; ensures that no tags or attributes are processed.
+      $chunks = is_null($text) ? array('') : preg_split('/(<.+?>)/is', $text, -1, PREG_SPLIT_DELIM_CAPTURE);
+      // Do not attempt to convert links into URLs if preg_split() fails.
+      if (preg_last_error()) {
+        throw new \Exception('Last PCRE regex execution failed.');
+      }
+  
+      // PHP ensures that the array consists of alternating delimiters and
+      // literals, and begins and ends with a literal (inserting NULL as
+      // required). Therefore, the first chunk is always text:
+      $chunk_type = 'text';
+      // If a tag of $ignore_tags is found, it is stored in $open_tag and only
+      // removed when the closing tag is found. Until the closing tag is found,
+      // no replacements are made.
+      $open_tag = '';
+  
+      for ($i = 0; $i < count($chunks); $i++) {
+        if ($chunk_type == 'text') {
+          // Only process this text if there are no unclosed $ignore_tags.
+          if ($open_tag == '') {
+            // If there is a match, inject a link into this chunk via the callback
+            // function contained in $task.
+            $chunks[$i] = preg_replace_callback($pattern, $task, $chunks[$i]);
+            if (preg_last_error()) {
+              throw new \Exception('Last PCRE regex execution failed.');
+            }
           }
+          // Text chunk is done, so next chunk must be a tag.
+          $chunk_type = 'tag';
         }
-        // Otherwise, check whether this is the closing tag for $open_tag.
         else {
-          if (preg_match("`<\/$open_tag>`i", $chunks[$i], $matches)) {
-            $open_tag = '';
+          // Only process this tag if there are no unclosed $ignore_tags.
+          if ($open_tag == '') {
+            // Check whether this tag is contained in $ignore_tags.
+            if (preg_match("`<($ignore_tags)(?:\s|>)`i", $chunks[$i], $matches)) {
+              $open_tag = $matches[1];
+            }
+            if (preg_last_error()) {
+              throw new \Exception('Last PCRE regex execution failed.');
+            }
           }
+          // Otherwise, check whether this is the closing tag for $open_tag.
+          else {
+            if (preg_match("`<\/$open_tag>`i", $chunks[$i], $matches)) {
+              $open_tag = '';
+            }
+          }
+          // Tag chunk is done, so next chunk must be text.
+          $chunk_type = 'text';
         }
-        // Tag chunk is done, so next chunk must be text.
-        $chunk_type = 'text';
+  
+        $text = implode($chunks);
       }
-
-      $text = implode($chunks);
+  
+      // Revert back to the original comment contents
+      _filter_url_escape_comments('', FALSE);
+      $text = $text ? preg_replace_callback('`<!--(.*?)-->`', '_filter_url_escape_comments', $text) : $text;        
+      if (preg_last_error()) {
+        throw new \Exception('Last PCRE regex execution failed.');
+      }
     }
-
-    // Revert back to the original comment contents
-    _filter_url_escape_comments('', FALSE);
-    $text = $text ? preg_replace_callback('`<!--(.*?)-->`', '_filter_url_escape_comments', $text) : $text;
+    catch (\Exception $e) {
+      $text = $saved_text;
+      continue;
+    }
   }
 
   // If there is no text at this point revert to the previous text.
