@@ -71,6 +71,28 @@ function views_views_pre_render($view) {
     $view->element['#attached']['library'][] = 'views/views.ajax';
   }
 
+  // Proceed if the view has results and contains relationships.
+  if (!empty($view->result) && !empty($view->relationship)) {
+    $unique_results = [];
+    $unique_ids = [];
+
+    foreach ($view->result as $row) {
+      // Ensure the row contains a valid entity.
+      if (isset($row->_entity) && method_exists($row->_entity, 'id')) {
+        $entity_id = $row->_entity->id();
+
+        // Only add unique entities.
+        if (!in_array($entity_id, $unique_ids)) {
+          $unique_ids[] = $entity_id;
+          $unique_results[] = $row;
+        }
+      }
+    }
+    // Replace the result set with unique entries.
+    $view->result = array_values($unique_results);
+    $view->total_rows = count($unique_results);
+  }
+
   return $view;
 }
 
