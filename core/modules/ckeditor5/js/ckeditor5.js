@@ -421,6 +421,24 @@
               `${calculateLineHeight(rows)}px`,
             );
 
+          // Calculate the toolbar panel width in vw.
+          function calculateToolbarPanelWidth() {
+            const panelwidth =
+              (editor.ui.view.stickyPanel.element.clientWidth /
+                window.innerWidth) *
+              100;
+            return Math.round(panelwidth);
+          }
+
+          // Set the max-width of the dropdown toolbar panel
+          // based the main toolbar panel width.
+          editor.ui.view.stickyPanel.element
+            .querySelector('.ck-toolbar__grouped-dropdown .ck-dropdown__panel')
+            .style.setProperty(
+              '--ck-toolbar-dropdown-max-width',
+              `${calculateToolbarPanelWidth()}vw`,
+            );
+
           // CKEditor 4 had a feature to remove the required attribute
           // see: https://www.drupal.org/project/drupal/issues/1954968
           if (element.hasAttribute('required')) {
