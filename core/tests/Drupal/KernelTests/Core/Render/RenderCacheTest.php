@@ -19,9 +19,7 @@ class RenderCacheTest extends KernelTestBase {
   use UserCreationTrait;
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = ['user', 'system'];
 
@@ -45,14 +43,14 @@ class RenderCacheTest extends KernelTestBase {
   /**
    * Tests that user 1 has a different permission context with the same roles.
    */
-  public function testUser1PermissionContext() {
+  public function testUser1PermissionContext(): void {
     $this->doTestUser1WithContexts(['user.permissions']);
   }
 
   /**
    * Tests that user 1 has a different roles context with the same roles.
    */
-  public function testUser1RolesContext() {
+  public function testUser1RolesContext(): void {
     $this->doTestUser1WithContexts(['user.roles']);
   }
 

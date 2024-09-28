@@ -16,9 +16,7 @@ use Drupal\language\Entity\ConfigurableLanguage;
 class TranslationStringTest extends KernelTestBase {
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = [
     'language',
@@ -35,7 +33,7 @@ class TranslationStringTest extends KernelTestBase {
   /**
    * Tests that TranslatableMarkup objects can be compared.
    */
-  public function testComparison() {
+  public function testComparison(): void {
     $this->rebootAndPrepareSettings();
     $a = \Drupal::service('string_translation')->translate('Example @number', ['@number' => 42], ['langcode' => 'de']);
 

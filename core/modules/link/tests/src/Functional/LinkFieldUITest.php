@@ -21,9 +21,7 @@ class LinkFieldUITest extends BrowserTestBase {
   use FieldUiTestTrait;
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = ['node', 'link', 'field_ui', 'block'];
 
@@ -74,7 +72,7 @@ class LinkFieldUITest extends BrowserTestBase {
   /**
    * Tests the link field UI.
    */
-  public function testFieldUI() {
+  public function testFieldUI(): void {
     foreach ($this->providerTestFieldUI() as $item) {
       [$cardinality, $link_type, $title, $label, $field_name, $default_uri] = $item;
       $this->runFieldUIItem($cardinality, $link_type, $title, $label, $field_name, $default_uri);

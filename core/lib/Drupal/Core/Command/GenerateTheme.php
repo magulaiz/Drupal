@@ -37,9 +37,14 @@ class GenerateTheme extends Command {
   private $root;
 
   /**
-   * {@inheritdoc}
+   * GenerateTheme constructor.
+   *
+   * @param string|null $name
+   *   The name of the command; passing null means it must be set in configure().
+   * @param string|null $root
+   *   The path for the Drupal root.
    */
-  public function __construct(string $name = NULL, ?string $root = NULL) {
+  public function __construct(?string $name = NULL, ?string $root = NULL) {
     parent::__construct($name);
 
     $this->root = $root ?? dirname(__DIR__, 5);
@@ -234,7 +239,7 @@ class GenerateTheme extends Command {
     Extension $theme,
     string $version,
     string $name,
-    string $description
+    string $description,
   ): array {
     $starterkit_config_file = $theme->getPath() . '/' . $theme->getName() . '.starterkit.yml';
     if (!file_exists($starterkit_config_file)) {
@@ -290,7 +295,7 @@ class GenerateTheme extends Command {
 
   private static function getStarterKitVersion(
     Extension $theme,
-    SymfonyStyle $io
+    SymfonyStyle $io,
   ): string {
     $source_version = $theme->info['version'] ?? '';
     if ($source_version === '') {
