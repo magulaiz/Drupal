@@ -8,6 +8,7 @@ use Twig\Node\Expression\FunctionExpression;
 use Twig\Node\Node;
 use Twig\Node\PrintNode;
 use Twig\NodeVisitor\NodeVisitorInterface;
+use Twig\TwigFunction;
 
 /**
  * Provides a TwigNodeVisitor to change the generated parse-tree.
@@ -47,7 +48,11 @@ class TwigNodeVisitor implements NodeVisitorInterface {
       $class = get_class($node);
       $line = $node->getTemplateLine();
       return new $class(
-        new FunctionExpression('render_var', new Node([$node->getNode('expr')]), $line),
+        new FunctionExpression(
+          new TwigFunction('render_var', [$env->getExtension('\Drupal\Core\Template\TwigExtension'), 'renderVar']),
+          new Node([$node->getNode('expr')]),
+          $line
+        ),
         $line
       );
     }
