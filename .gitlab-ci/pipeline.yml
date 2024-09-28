@@ -137,15 +137,12 @@ variables:
     KUBERNETES_CPU_REQUEST: "1"
     CONCURRENCY: 6
   script:
-    - sudo HOME=/var/www -u www-data -E vendor/bin/paratest -c core --colors=always --testsuite=$TESTSUITE --processes=$CONCURRENCY --log-junit ./sites/default/files/simpletest/paratest.xml
+    - sudo HOME=/var/www -u www-data -E vendor/bin/paratest -c core --runner=Drupal\\TestTools\\DrupalParatestRunner --colors=always --testsuite=$TESTSUITE --processes=$CONCURRENCY --log-junit ./sites/default/files/simpletest/paratest.xml
   artifacts:
-    when: always
-    expire_in: 6 mos
     reports:
       junit: ./sites/default/files/simpletest/paratest.xml
     paths:
       - ./sites/default/files/simpletest/paratest.xml
-      - '*.log'
 
 '⚡️ PHPUnit Unit via PHPUnit':
   <<: [ *with-composer, *default-job-settings ]
@@ -160,10 +157,7 @@ variables:
   script:
     - sudo HOME=/var/www -u www-data -E vendor/bin/phpunit -c core --testdox --colors=always --testsuite=$TESTSUITE --log-junit ./sites/default/files/simpletest/phpunit.xml
   artifacts:
-    when: always
-    expire_in: 6 mos
     reports:
       junit: ./sites/default/files/simpletest/phpunit.xml
     paths:
       - ./sites/default/files/simpletest/phpunit.xml
-      - '*.log'

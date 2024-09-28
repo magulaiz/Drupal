@@ -108,7 +108,10 @@
     "autoload-dev": {
         "psr-4": {
             "Drupal\\PHPStan\\Rules\\": "core/tests/PHPStan/Rules"
-        }
+        },
+        "classmap": [
+            "core/tests/Drupal/TestTools/DrupalParatestRunner.php"
+        ]
     },
     "scripts": {
         "pre-install-cmd": "Drupal\\Composer\\Composer::ensureComposerVersion",
