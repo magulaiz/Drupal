@@ -839,12 +839,6 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/datetime/src/Plugin/Field/FieldType/DateTimeFieldItemList.php',
 ];
 $ignoreErrors[] = [
-	// identifier: property.notFound
-	'message' => '#^Access to an undefined property Drupal\\\\datetime\\\\Plugin\\\\Field\\\\FieldType\\\\DateTimeItem\\:\\:\\$date\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/datetime/src/Plugin/Field/FieldType/DateTimeItem.php',
-];
-$ignoreErrors[] = [
 	// identifier: isset.variable
 	'message' => '#^Variable \\$item in isset\\(\\) always exists and is not nullable\\.$#',
 	'count' => 1,
@@ -981,12 +975,6 @@ $ignoreErrors[] = [
 	'message' => '#^Variable \\$rows might not be defined\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/filter/src/Plugin/Filter/FilterHtml.php',
-];
-$ignoreErrors[] = [
-	// identifier: method.deprecated
-	'message' => '#^Call to deprecated method getMockForAbstractClass\\(\\) of class PHPUnit\\\\Framework\\\\TestCase\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/help/tests/src/Unit/HelpTopicTwigTest.php',
 ];
 $ignoreErrors[] = [
 	// identifier: return.missing
@@ -1303,12 +1291,6 @@ $ignoreErrors[] = [
 	'message' => '#^Call to an undefined static method Drupal\\\\Tests\\\\migrate\\\\Kernel\\\\MigrateTestBase\\:\\:migrateDumpAlter\\(\\)\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/migrate/tests/src/Kernel/MigrateTestBase.php',
-];
-$ignoreErrors[] = [
-	// identifier: method.deprecated
-	'message' => '#^Call to deprecated method getMockForAbstractClass\\(\\) of class PHPUnit\\\\Framework\\\\MockObject\\\\MockBuilder\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/migrate/tests/src/Unit/MigrateExecutableTest.php',
 ];
 $ignoreErrors[] = [
 	// identifier: variable.undefined
@@ -2362,21 +2344,6 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/tests/Drupal/BuildTests/Composer/Template/ComposerProjectTemplatesTest.php',
 ];
 $ignoreErrors[] = [
-	'message' => '#^Drupal\\\\Tests\\\\BrowserTestBase\\:\\:\\$defaultTheme is required\\. See https\\://www\\.drupal\\.org/node/3083055, which includes recommendations on which theme to use\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/tests/Drupal/FunctionalTests/Installer/InstallerExistingConfigExistingSettingsTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Drupal\\\\Tests\\\\BrowserTestBase\\:\\:\\$defaultTheme is required\\. See https\\://www\\.drupal\\.org/node/3083055, which includes recommendations on which theme to use\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/tests/Drupal/FunctionalTests/Installer/InstallerExistingConfigNoSystemSiteTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Drupal\\\\Tests\\\\BrowserTestBase\\:\\:\\$defaultTheme is required\\. See https\\://www\\.drupal\\.org/node/3083055, which includes recommendations on which theme to use\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/tests/Drupal/FunctionalTests/Installer/InstallerExistingConfigTest.php',
-];
-$ignoreErrors[] = [
 	// identifier: variable.undefined
 	'message' => '#^Variable \\$found might not be defined\\.$#',
 	'count' => 1,
@@ -2411,18 +2378,6 @@ $ignoreErrors[] = [
 	'message' => '#^Variable \\$new_field_schema_data might not be defined\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/tests/Drupal/KernelTests/Core/Entity/FieldableEntityDefinitionUpdateTest.php',
-];
-$ignoreErrors[] = [
-	// identifier: method.deprecated
-	'message' => '#^Call to deprecated method getMockForAbstractClass\\(\\) of class PHPUnit\\\\Framework\\\\MockObject\\\\MockBuilder\\.$#',
-	'count' => 2,
-	'path' => __DIR__ . '/tests/Drupal/KernelTests/Core/Installer/InstallerRedirectTraitTest.php',
-];
-$ignoreErrors[] = [
-	// identifier: method.deprecated
-	'message' => '#^Call to deprecated method getMockForAbstractClass\\(\\) of class PHPUnit\\\\Framework\\\\TestCase\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/tests/Drupal/KernelTests/Core/Installer/InstallerRedirectTraitTest.php',
 ];
 $ignoreErrors[] = [
 	// identifier: isset.variable
@@ -2522,18 +2477,6 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/tests/Drupal/Tests/Component/Plugin/Factory/ReflectionFactoryTest.php',
 ];
 $ignoreErrors[] = [
-	// identifier: method.deprecated
-	'message' => '#^Call to deprecated method getMockForAbstractClass\\(\\) of class PHPUnit\\\\Framework\\\\TestCase\\.$#',
-	'count' => 4,
-	'path' => __DIR__ . '/tests/Drupal/Tests/Component/Plugin/PluginBaseTest.php',
-];
-$ignoreErrors[] = [
-	// identifier: method.deprecated
-	'message' => '#^Call to deprecated method getMockForAbstractClass\\(\\) of class PHPUnit\\\\Framework\\\\MockObject\\\\MockBuilder\\.$#',
-	'count' => 2,
-	'path' => __DIR__ . '/tests/Drupal/Tests/Component/Plugin/PluginManagerBaseTest.php',
-];
-$ignoreErrors[] = [
 	'message' => '#^Missing cache backend declaration for performance\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/tests/Drupal/Tests/Component/Plugin/StubPluginManagerBaseWithMapper.php',
@@ -2543,12 +2486,6 @@ $ignoreErrors[] = [
 	'message' => '#^Result of static method Drupal\\\\Composer\\\\Composer\\:\\:ensureComposerVersion\\(\\) \\(void\\) is used\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/tests/Drupal/Tests/Composer/ComposerTest.php',
-];
-$ignoreErrors[] = [
-	// identifier: method.deprecated
-	'message' => '#^Call to deprecated method getMockForAbstractClass\\(\\) of class PHPUnit\\\\Framework\\\\TestCase\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/tests/Drupal/Tests/Core/Config/Entity/ConfigEntityStorageTest.php',
 ];
 $ignoreErrors[] = [
 	// identifier: method.deprecated
@@ -2622,12 +2559,6 @@ $ignoreErrors[] = [
 Client\\:\\:getConfig will be removed in guzzlehttp/guzzle\\:8\\.0\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/tests/Drupal/Tests/Core/Http/ClientFactoryTest.php',
-];
-$ignoreErrors[] = [
-	// identifier: method.deprecated
-	'message' => '#^Call to deprecated method getMockForAbstractClass\\(\\) of class PHPUnit\\\\Framework\\\\TestCase\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/tests/Drupal/Tests/Core/Lock/LockBackendAbstractTest.php',
 ];
 $ignoreErrors[] = [
 	// identifier: class.notFound
