@@ -1525,14 +1525,12 @@ function _filter_url($text, $filter) {
 
     try {
       $text = preg_replace_callback('`<!--(.*?)-->`s', '_filter_url_escape_comments', $text);
-      // Do not attempt to convert links into URLs if preg_replace() fails.
       if (preg_last_error()) {
         throw new \Exception('Last PCRE regex execution failed.');
       }
   
       // Split at all tags; ensures that no tags or attributes are processed.
       $chunks = is_null($text) ? array('') : preg_split('/(<.+?>)/is', $text, -1, PREG_SPLIT_DELIM_CAPTURE);
-      // Do not attempt to convert links into URLs if preg_split() fails.
       if (preg_last_error()) {
         throw new \Exception('Last PCRE regex execution failed.');
       }
@@ -1566,9 +1564,6 @@ function _filter_url($text, $filter) {
             // Check whether this tag is contained in $ignore_tags.
             if (preg_match("`<($ignore_tags)(?:\s|>)`i", $chunks[$i], $matches)) {
               $open_tag = $matches[1];
-            }
-            if (preg_last_error()) {
-              throw new \Exception('Last PCRE regex execution failed.');
             }
           }
           // Otherwise, check whether this is the closing tag for $open_tag.
