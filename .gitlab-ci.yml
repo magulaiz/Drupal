@@ -141,7 +141,7 @@ default:
   - cd core
   - corepack enable
   - yarn install
-  - yarn run spellcheck:core --no-must-find-files --cache --cache-strategy content
+  - yarn run spellcheck:core --no-must-find-files --cache --cache-strategy metadata
 ################
 # Stages
 #
@@ -303,11 +303,13 @@ default:
   rules:
     - if: $CI_PIPELINE_SOURCE == "push" && $CI_PROJECT_ROOT_NAMESPACE == "project"
     - if: $CI_PIPELINE_SOURCE == "schedule" && $CI_PROJECT_ROOT_NAMESPACE == "project" && $DAILY_TEST == "1"
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event"
     - when: manual
       allow_failure: true
   variables:
     KUBERNETES_CPU_REQUEST: "4"
   script:
+    - apt update && apt install -y git-restore-mtime && git restore-mtime
     - *prepare-lint-directory
     - *phpstan-cache
     - *cspell-cache
@@ -317,9 +319,9 @@ default:
     - vendor/bin/phpstan --version
     - php vendor/bin/phpstan -vvv analyze --configuration=./core/phpstan.neon.dist
     - *core-spellcheck
-    - yarn run lint:core-js-passing --cache --cache-strategy content
+    - yarn run lint:core-js-passing --cache --cache-strategy metadata
     - yarn run build:css --check
-    - yarn run lint:css --cache --cache-location .stylelintcache --cache-strategy content
+    - yarn run lint:css --cache --cache-location .stylelintcache --cache-strategy metadata
     - mv -f /build/core/phpstan-tmp $CI_PROJECT_DIR/core
     - mv -f /build/core/.cspellcache $CI_PROJECT_DIR/core
     - mv -f  /build/core/.eslintcache $CI_PROJECT_DIR/core
@@ -334,11 +336,14 @@ default:
 '🧹 PHP Static Analysis (phpstan)':
   <<: [ *default-job-settings-lint ]
   stage: 🪄 Lint
+  needs:
+    - 'Lint cache warming'
   variables:
     KUBERNETES_CPU_REQUEST: "4"
   script:
+    - apt update && apt install -y git-restore-mtime && git restore-mtime
     - *prepare-lint-directory
-    - *phpstan-cache
+#     - *phpstan-cache
     - composer validate
     - composer install --optimize-autoloader
     - if [ -n "$COMPOSER_UPDATE" ]; then
@@ -372,9 +377,12 @@ default:
 '🧹 PHP Coding standards (PHPCS)':
   <<: [ *default-job-settings-lint ]
   stage: 🪄 Lint
+  needs:
+    - 'Lint cache warming'
   variables:
     KUBERNETES_CPU_REQUEST: "16"
   script:
+    - apt update && apt install -y git-restore-mtime && git restore-mtime
     - composer validate
     - composer install --optimize-autoloader
     - if [ -n "$COMPOSER_UPDATE" ]; then
@@ -393,6 +401,8 @@ default:
 
 '🧹 JavaScript linting (eslint)':
   stage: 🪄 Lint
+  needs:
+    - 'Lint cache warming'
   variables:
     KUBERNETES_CPU_REQUEST: "2"
   # Run on push, or on MRs if CSS files have changed, or manually.
@@ -409,19 +419,22 @@ default:
     - when: manual
       allow_failure: true
   script:
+    - apt update && apt install -y git-restore-mtime && git restore-mtime
     - *prepare-lint-directory
-    - *eslint-cache
+#     - *eslint-cache
     - cd core
     - corepack enable
     - yarn install
     - yarn run check:ckeditor5
-    - yarn run lint:core-js-passing --cache --cache-strategy content --format gitlab
+    - yarn run lint:core-js-passing --cache --cache-strategy metadata --format gitlab
   artifacts:
     reports:
       codequality: eslint-quality-report.json
 
 '🧹 CSS linting (stylelint)':
   stage: 🪄 Lint
+  needs:
+    - 'Lint cache warming'
   variables:
     KUBERNETES_CPU_REQUEST: "2"
   # Run on push, or on MRs if CSS files have changed, or manually.
@@ -437,13 +450,14 @@ default:
     - when: manual
       allow_failure: true
   script:
+    - apt update && apt install -y git-restore-mtime && git restore-mtime
     - *prepare-lint-directory
-    - *stylelint-cache
+#     - *stylelint-cache
     - corepack enable
     - cd core
     - yarn install
     - yarn run build:css --check
-    - yarn run lint:css --cache --cache-location .stylelintcache --cache-strategy content --color --custom-formatter=node_modules/stylelint-formatter-gitlab
+    - yarn run lint:css --cache --cache-location .stylelintcache --cache-strategy metadata --color --custom-formatter=node_modules/stylelint-formatter-gitlab
   artifacts:
     reports:
       codequality: stylelint-quality-report.json
@@ -451,11 +465,14 @@ default:
 '📔 Spell-checking':
   <<: [ *default-job-settings-lint ]
   stage: 🪄 Lint
+  needs:
+    - 'Lint cache warming'
   variables:
     KUBERNETES_CPU_REQUEST: "2"
   script:
+    - apt update && apt install -y git-restore-mtime && git restore-mtime
     - *prepare-lint-directory
-    - *cspell-cache
+#     - *cspell-cache
     - *core-spellcheck
     - mv -f /build/core/package.json $CI_PROJECT_DIR/core/package.json
     - mv -f /build/core/yarn.lock $CI_PROJECT_DIR/core/yarn.lock
