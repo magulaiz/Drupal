@@ -110,7 +110,8 @@
             "Drupal\\PHPStan\\Rules\\": "core/tests/PHPStan/Rules"
         },
         "classmap": [
-            "core/tests/Drupal/TestTools/DrupalParatestRunner.php"
+            "core/tests/Drupal/TestTools/DrupalParatestRunner.php",
+            "core/tests/Drupal/TestTools/Paratest/ApplicationForWrapperWorker.php"
         ]
     },
     "scripts": {

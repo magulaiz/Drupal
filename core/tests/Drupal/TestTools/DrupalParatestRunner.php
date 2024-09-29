@@ -80,7 +80,7 @@ final class DrupalParatestRunner implements RunnerInterface
     ) {
         $this->printer = new ResultPrinter($output, $options);
         $wrapper = realpath(
-            dirname(__DIR__, 4) . DIRECTORY_SEPARATOR . 'vendor/brianium/paratest' . DIRECTORY_SEPARATOR . 'bin' . DIRECTORY_SEPARATOR . 'phpunit-wrapper.php',
+            __DIR__ . DIRECTORY_SEPARATOR . 'Paratest' . DIRECTORY_SEPARATOR . 'phpunit-wrapper.php',
         );
         assert($wrapper !== false);
         $phpFinder = new PhpExecutableFinder();
