@@ -231,13 +231,14 @@ class EntityLinkSuggesterForm extends EntityForm {
       ];
     }
 
-    // When all entity types are enabled, revert back to NULL.
+    // When all entity types and bundles are enabled, revert back to NULL.
     // @see `core.entity_link_suggestions.*:entity_types`.
     $linkable_entity_types = array_filter(
       $this->entityTypeManager->getDefinitions(),
       fn (EntityTypeInterface $e) => $this->entity->isLinkableEntityType($e)
     );
-    if (count($linkable_entity_types) == count($entity_types)) {
+    $column = array_filter(array_column($entity_types, 'bundles'));
+    if (count($linkable_entity_types) == count($entity_types) && count($column) === 0) {
       $entity_types = NULL;
     }
 
