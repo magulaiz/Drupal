@@ -46,7 +46,7 @@ class EntityValidationException extends MigrateException {
     if ($entity_id = $entity->id()) {
       $locator = sprintf('%s: %s', $locator, $entity_id);
 
-      if ($entity instanceof RevisionableInterface && $revision_id = $entity->getRevisionId()) {
+      if ($entity instanceof RevisionableInterface && $revision_id = $entity->getRevisionId(TRUE)) {
         $locator .= sprintf(', revision: %s', $revision_id);
       }
     }

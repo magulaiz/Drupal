@@ -181,7 +181,7 @@ class EditorFileUsageTest extends EntityKernelTestBase {
     // Test editor_entity_update(): increment, twice, by creating new revisions.
     $node->setNewRevision(TRUE);
     $node->save();
-    $second_revision_id = $node->getRevisionId();
+    $second_revision_id = $node->getRevisionId(TRUE);
     $node->setNewRevision(TRUE);
     $node->save();
     foreach ($image_entities as $key => $image_entity) {

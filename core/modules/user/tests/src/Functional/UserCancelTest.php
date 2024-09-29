@@ -274,7 +274,7 @@ class UserCancelTest extends BrowserTestBase {
     $node_storage->resetCache([$node->id()]);
     $test_node = $node_storage->load($node->id());
     $this->assertFalse($test_node->isPublished(), 'Node of the user has been unpublished.');
-    $test_node = $node_storage->loadRevision($node->getRevisionId());
+    $test_node = $node_storage->loadRevision($node->getRevisionId(TRUE));
     $this->assertFalse($test_node->isPublished(), 'Node revision of the user has been unpublished.');
 
     $storage = \Drupal::entityTypeManager()->getStorage('comment');
@@ -362,7 +362,7 @@ class UserCancelTest extends BrowserTestBase {
     // Create a node with two revisions, the initial one belonging to the
     // cancelling user.
     $revision_node = $this->drupalCreateNode(['uid' => $account->id()]);
-    $revision = $revision_node->getRevisionId();
+    $revision = $revision_node->getRevisionId(TRUE);
     $settings = get_object_vars($revision_node);
     $settings['revision'] = 1;
     // Set new/current revision to someone else.
@@ -497,7 +497,7 @@ class UserCancelTest extends BrowserTestBase {
     // Create a node with two revisions, the initial one belonging to the
     // cancelling user.
     $revision_node = $this->drupalCreateNode(['uid' => $account->id()]);
-    $revision = $revision_node->getRevisionId();
+    $revision = $revision_node->getRevisionId(TRUE);
     $settings = get_object_vars($revision_node);
     $settings['revision'] = 1;
     // Set new/current revision to someone else.

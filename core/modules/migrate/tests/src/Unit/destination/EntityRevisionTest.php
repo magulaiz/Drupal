@@ -179,7 +179,7 @@ class EntityRevisionTest extends UnitTestCase {
     // Syncing should be set once.
     $entity->setSyncing(Argument::exact(TRUE))
       ->shouldBeCalledTimes(1);
-    $entity->getRevisionId()
+    $entity->getRevisionId(TRUE)
       ->shouldBeCalled()
       ->willReturn(1234);
     $destination = $this->getEntityRevisionDestination();

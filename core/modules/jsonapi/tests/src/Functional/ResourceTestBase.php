@@ -2100,7 +2100,7 @@ abstract class ResourceTestBase extends BrowserTestBase {
       $location = Url::fromRoute(sprintf('jsonapi.%s.individual', static::$resourceTypeName), ['entity' => $uuid]);
       if (static::$resourceTypeIsVersionable) {
         assert($created_entity instanceof RevisionableInterface);
-        $location->setOption('query', ['resourceVersion' => 'id:' . $created_entity->getRevisionId()]);
+        $location->setOption('query', ['resourceVersion' => 'id:' . $created_entity->getRevisionId(TRUE)]);
       }
       /* $location = $this->entityStorage->load(static::$firstCreatedEntityId)->toUrl('jsonapi')->setAbsolute(TRUE)->toString(); */
       $this->assertSame([$location->setAbsolute()->toString()], $response->getHeader('Location'));
@@ -2155,7 +2155,7 @@ abstract class ResourceTestBase extends BrowserTestBase {
       /* $location = $this->entityStorage->load(static::$secondCreatedEntityId)->toUrl('jsonapi')->setAbsolute(TRUE)->toString(); */
       if (static::$resourceTypeIsVersionable) {
         assert($created_entity instanceof RevisionableInterface);
-        $location->setOption('query', ['resourceVersion' => 'id:' . $second_created_entity->getRevisionId()]);
+        $location->setOption('query', ['resourceVersion' => 'id:' . $second_created_entity->getRevisionId(TRUE)]);
       }
       $this->assertSame([$location->setAbsolute()->toString()], $response->getHeader('Location'));
 

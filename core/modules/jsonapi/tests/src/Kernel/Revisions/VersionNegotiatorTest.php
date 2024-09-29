@@ -104,7 +104,7 @@ class VersionNegotiatorTest extends JsonapiKernelTestBase {
     ]);
     $this->node->save();
 
-    $this->nodePreviousRevisionId = $this->node->getRevisionId();
+    $this->nodePreviousRevisionId = $this->node->getRevisionId(TRUE);
 
     $this->node->setNewRevision();
     $this->node->setTitle('revised_dummy_title');
@@ -131,7 +131,7 @@ class VersionNegotiatorTest extends JsonapiKernelTestBase {
   public function testOldRevision(): void {
     $revision = $this->versionNegotiator->getRevision($this->node, 'id:' . $this->nodePreviousRevisionId);
     $this->assertEquals($this->node->id(), $revision->id());
-    $this->assertEquals($this->nodePreviousRevisionId, $revision->getRevisionId());
+    $this->assertEquals($this->nodePreviousRevisionId, $revision->getRevisionId(TRUE));
   }
 
   /**
@@ -139,8 +139,8 @@ class VersionNegotiatorTest extends JsonapiKernelTestBase {
    */
   public function testInvalidRevisionId(): void {
     $this->expectException(CacheableNotFoundHttpException::class);
-    $this->expectExceptionMessage(sprintf('The requested version, identified by `id:%s`, could not be found.', $this->node2->getRevisionId()));
-    $this->versionNegotiator->getRevision($this->node, 'id:' . $this->node2->getRevisionId());
+    $this->expectExceptionMessage(sprintf('The requested version, identified by `id:%s`, could not be found.', $this->node2->getRevisionId(TRUE)));
+    $this->versionNegotiator->getRevision($this->node, 'id:' . $this->node2->getRevisionId(TRUE));
   }
 
   /**
@@ -149,7 +149,7 @@ class VersionNegotiatorTest extends JsonapiKernelTestBase {
   public function testLatestVersion(): void {
     $revision = $this->versionNegotiator->getRevision($this->node, 'rel:' . VersionByRel::LATEST_VERSION);
     $this->assertEquals($this->node->id(), $revision->id());
-    $this->assertEquals($this->node->getRevisionId(), $revision->getRevisionId());
+    $this->assertEquals($this->node->getRevisionId(TRUE), $revision->getRevisionId(TRUE));
   }
 
   /**
@@ -159,7 +159,7 @@ class VersionNegotiatorTest extends JsonapiKernelTestBase {
     $revision = $this->versionNegotiator->getRevision($this->node, 'rel:' . VersionByRel::WORKING_COPY);
     $this->assertEquals($this->node->id(), $revision->id());
     $this->assertEquals($this->node->id(), $revision->id());
-    $this->assertEquals($this->node->getRevisionId(), $revision->getRevisionId());
+    $this->assertEquals($this->node->getRevisionId(TRUE), $revision->getRevisionId(TRUE));
   }
 
   /**

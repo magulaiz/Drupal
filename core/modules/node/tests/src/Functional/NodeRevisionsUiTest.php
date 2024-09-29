@@ -74,7 +74,7 @@ class NodeRevisionsUiTest extends NodeTestBase {
     // Load the node again and check the revision is the same as before.
     $node_storage->resetCache([$node->id()]);
     $node_revision = $node_storage->load($node->id(), TRUE);
-    $this->assertEquals($node->getRevisionId(TRUE), $node_revision->getRevisionId(), "After an existing node is saved with 'Create new revision' unchecked, a new revision is not created.");
+    $this->assertEquals($node->getRevisionId(TRUE), $node_revision->getRevisionId(TRUE), "After an existing node is saved with 'Create new revision' unchecked, a new revision is not created.");
 
     // Verify the checkbox is checked on the node edit form.
     $this->drupalGet('node/' . $node->id() . '/edit');
@@ -88,7 +88,7 @@ class NodeRevisionsUiTest extends NodeTestBase {
     // Load the node again and check the revision is different from before.
     $node_storage->resetCache([$node->id()]);
     $node_revision = $node_storage->load($node->id());
-    $this->assertNotEquals($node->getRevisionId(), $node_revision->getRevisionId(), "After an existing node is saved with 'Create new revision' checked, a new revision is created.");
+    $this->assertNotEquals($node->getRevisionId(TRUE), $node_revision->getRevisionId(TRUE), "After an existing node is saved with 'Create new revision' checked, a new revision is created.");
   }
 
   /**
@@ -128,7 +128,7 @@ class NodeRevisionsUiTest extends NodeTestBase {
 
     // Assert the old revision message.
     $date = $this->container->get('date.formatter')->format($nodes[0]->revision_timestamp->value, 'short');
-    $url = new Url('entity.node.revision', ['node' => $nodes[0]->id(), 'node_revision' => $nodes[0]->getRevisionId()]);
+    $url = new Url('entity.node.revision', ['node' => $nodes[0]->id(), 'node_revision' => $nodes[0]->getRevisionId(TRUE)]);
     $this->assertSession()->responseContains(Link::fromTextAndUrl($date, $url)->toString() . ' by ' . $editor);
 
     // Assert the current revision message.

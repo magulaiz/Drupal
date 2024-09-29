@@ -126,14 +126,14 @@ class MediaAccessTest extends MediaFunctionalTestBase {
     $this->drupalGet('media/' . $user_media->id() . '/revisions');
     $this->assertCacheContext('user');
     $assert_session->statusCodeEquals(200);
-    $this->drupalGet('media/' . $user_media->id() . '/revisions/' . $user_media->getRevisionId() . '/view');
+    $this->drupalGet('media/' . $user_media->id() . '/revisions/' . $user_media->getRevisionId(TRUE) . '/view');
     $this->assertCacheContext('user');
     $assert_session->statusCodeEquals(200);
     $this->drupalGet('media/' . $user_media->id() . '/revisions/' . $previous_revision . '/view');
     $this->assertCacheContext('user.permissions');
     $assert_session->statusCodeEquals(200);
     $role->revokePermission('view own unpublished media')->save();
-    $this->drupalGet('media/' . $user_media->id() . '/revisions/' . $user_media->getRevisionId() . '/view');
+    $this->drupalGet('media/' . $user_media->id() . '/revisions/' . $user_media->getRevisionId(TRUE) . '/view');
     $this->assertCacheContext('user.permissions');
     $assert_session->statusCodeEquals(403);
 
@@ -144,7 +144,7 @@ class MediaAccessTest extends MediaFunctionalTestBase {
     $this->drupalLogout();
     $this->drupalGet('media/' . $user_media->id() . '/revisions');
     $assert_session->statusCodeEquals(403);
-    $this->drupalGet('media/' . $user_media->id() . '/revisions/' . $user_media->getRevisionId() . '/view');
+    $this->drupalGet('media/' . $user_media->id() . '/revisions/' . $user_media->getRevisionId(TRUE) . '/view');
     $assert_session->statusCodeEquals(403);
     $this->drupalGet('media/' . $user_media->id() . '/revisions/' . $previous_revision . '/view');
     $assert_session->statusCodeEquals(403);

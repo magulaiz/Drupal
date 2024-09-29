@@ -126,8 +126,8 @@ class TranslationWebTest extends FieldTestBase {
     $this->submitForm($edit, 'Save');
 
     // Check translation revisions.
-    $this->checkTranslationRevisions($entity->id(), $entity->getRevisionId(), $available_langcodes);
-    $this->checkTranslationRevisions($entity->id(), $entity->getRevisionId() + 1, $available_langcodes);
+    $this->checkTranslationRevisions($entity->id(), $entity->getRevisionId(TRUE), $available_langcodes);
+    $this->checkTranslationRevisions($entity->id(), $entity->getRevisionId(TRUE) + 1, $available_langcodes);
   }
 
   /**
@@ -144,7 +144,7 @@ class TranslationWebTest extends FieldTestBase {
     $entity = $storage->loadRevision($revision_id);
     foreach ($available_langcodes as $langcode => $value) {
       $passed = $entity->getTranslation($langcode)->{$field_name}->value == $value + 1;
-      $this->assertTrue($passed, "The $langcode translation for revision {$entity->getRevisionId()} was correctly stored");
+      $this->assertTrue($passed, "The $langcode translation for revision {$entity->getRevisionId(TRUE)} was correctly stored");
     }
   }
 

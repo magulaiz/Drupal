@@ -183,7 +183,7 @@ trait ResourceResponseTestTrait {
     if (!isset($individual_document['data']['relationships']['field_jsonapi_test_entity_ref'])) {
       if (static::$resourceTypeIsVersionable) {
         assert($this->entity instanceof RevisionableInterface);
-        $version_identifier = 'id:' . $this->entity->getRevisionId();
+        $version_identifier = 'id:' . $this->entity->getRevisionId(TRUE);
         $version_query_string = '?resourceVersion=' . urlencode($version_identifier);
       }
       else {

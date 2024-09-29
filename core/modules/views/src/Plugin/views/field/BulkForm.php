@@ -531,7 +531,7 @@ class BulkForm extends FieldPluginBase implements CacheableDependencyInterface, 
     $key_parts = [$entity->language()->getId(), $entity->id()];
 
     if ($entity instanceof RevisionableInterface && $use_revision) {
-      $key_parts[] = $entity->getRevisionId();
+      $key_parts[] = $entity->getRevisionId(TRUE);
     }
 
     // An entity ID could be an arbitrary string (although they are typically

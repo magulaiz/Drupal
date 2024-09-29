@@ -133,7 +133,7 @@ class BlockContentTest extends ResourceTestBase {
   protected function getExpectedDocument(): array {
     $base_url = Url::fromUri('base:/jsonapi/block_content/basic/' . $this->entity->uuid())->setAbsolute();
     $self_url = clone $base_url;
-    $version_identifier = 'id:' . $this->entity->getRevisionId();
+    $version_identifier = 'id:' . $this->entity->getRevisionId(TRUE);
     $self_url = $self_url->setOption('query', ['resourceVersion' => $version_identifier]);
     $version_query_string = '?resourceVersion=' . urlencode($version_identifier);
     return [

@@ -654,7 +654,7 @@ class UserTest extends ResourceTestBase {
     $test_node = $node_storage->load($node->id());
     $this->assertNotNull($test_node, 'Node of the user is not deleted.');
     $this->assertTrue($test_node->isPublished(), 'Node of the user is published.');
-    $test_node = $node_storage->loadRevision($node->getRevisionId());
+    $test_node = $node_storage->loadRevision($node->getRevisionId(TRUE));
     $this->assertTrue($test_node->isPublished(), 'Node revision of the user is published.');
   }
 
@@ -684,7 +684,7 @@ class UserTest extends ResourceTestBase {
     $test_node = $node_storage->load($node->id());
     $this->assertNotNull($test_node, 'Node of the user is not deleted.');
     $this->assertFalse($test_node->isPublished(), 'Node of the user is no longer published.');
-    $test_node = $node_storage->loadRevision($node->getRevisionId());
+    $test_node = $node_storage->loadRevision($node->getRevisionId(TRUE));
     $this->assertFalse($test_node->isPublished(), 'Node revision of the user is no longer published.');
   }
 

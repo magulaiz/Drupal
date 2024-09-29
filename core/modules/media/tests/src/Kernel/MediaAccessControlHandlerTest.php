@@ -61,7 +61,7 @@ class MediaAccessControlHandlerTest extends MediaKernelTestBase {
 
     $load_revision_id = NULL;
     if (!$is_latest_revision) {
-      $load_revision_id = $entity->getRevisionId();
+      $load_revision_id = $entity->getRevisionId(TRUE);
       // Set up for a new revision to be saved.
       $entity = $entity_storage->createRevision($entity);
     }

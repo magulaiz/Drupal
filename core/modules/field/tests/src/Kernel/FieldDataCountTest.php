@@ -126,7 +126,7 @@ class FieldDataCountTest extends FieldKernelTestBase {
     $entity->{$this->fieldTestData->field_name_2} = $values;
     $entity->setNewRevision();
     $entity->save();
-    $first_revision = $entity->getRevisionId();
+    $first_revision = $entity->getRevisionId(TRUE);
 
     $this->assertTrue($this->fieldTestData->field_storage_2->hasData(), 'There are entities with field data.');
     $this->assertSame(1, $this->storageRev->countFieldData($this->fieldTestData->field_storage_2), 'There is 1 entity with field data.');

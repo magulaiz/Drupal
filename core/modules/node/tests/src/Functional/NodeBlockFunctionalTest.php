@@ -227,11 +227,11 @@ class NodeBlockFunctionalTest extends NodeTestBase {
     // Assert that the revision page for both revisions displays the block.
     $this->drupalGet(Url::fromRoute('entity.node.revision', ['node' => $node1->id(), 'node_revision' => $node1_revision_1->getRevisionId(TRUE)]));
     $this->assertSession()->pageTextContains($label);
-    $this->assertSession()->pageTextContains('Displaying node #' . $node1->id() . ', revision #' . $node1_revision_1->getRevisionId() . ': ' . $node1_revision_1->label());
+    $this->assertSession()->pageTextContains('Displaying node #' . $node1->id() . ', revision #' . $node1_revision_1->getRevisionId(TRUE) . ': ' . $node1_revision_1->label());
 
-    $this->drupalGet(Url::fromRoute('entity.node.revision', ['node' => $node1->id(), 'node_revision' => $node1->getRevisionId()]));
+    $this->drupalGet(Url::fromRoute('entity.node.revision', ['node' => $node1->id(), 'node_revision' => $node1->getRevisionId(TRUE)]));
     $this->assertSession()->pageTextContains($label);
-    $this->assertSession()->pageTextContains('Displaying node #' . $node1->id() . ', revision #' . $node1->getRevisionId() . ': Node revision 2 title');
+    $this->assertSession()->pageTextContains('Displaying node #' . $node1->id() . ', revision #' . $node1->getRevisionId(TRUE) . ': Node revision 2 title');
 
     $this->drupalGet('admin/structure/block');
     // Check that block is displayed on the admin/structure/block page.

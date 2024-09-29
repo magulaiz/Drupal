@@ -44,7 +44,7 @@ class BlockContentRevisionsTest extends BlockContentTestBase {
     $logs = [];
 
     // Get original block.
-    $blocks[] = $block->getRevisionId();
+    $blocks[] = $block->getRevisionId(TRUE);
     $logs[] = '';
 
     // Create three revisions.

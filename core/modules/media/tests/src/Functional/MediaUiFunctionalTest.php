@@ -122,7 +122,7 @@ class MediaUiFunctionalTest extends MediaFunctionalTestBase {
     $this->drupalLogin($this->adminUser);
 
     // Enable revisions by default.
-    $previous_revision_id = $media->getRevisionId();
+    $previous_revision_id = $media->getRevisionId(TRUE);
     $media_type->setNewRevision(TRUE);
     $media_type->save();
     $this->drupalGet('media/' . $media_id . '/edit');
@@ -137,7 +137,7 @@ class MediaUiFunctionalTest extends MediaFunctionalTestBase {
       ->getStorage('media')
       ->loadUnchanged($media_id);
     $this->assertSame($media->getRevisionLogMessage(), $revision_log_message);
-    $this->assertNotEquals($previous_revision_id, $media->getRevisionId());
+    $this->assertNotEquals($previous_revision_id, $media->getRevisionId(TRUE));
 
     // Test the status checkbox.
     $this->drupalGet('media/' . $media_id . '/edit');

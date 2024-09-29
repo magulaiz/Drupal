@@ -43,7 +43,7 @@ class BlockContentRevisionRevertTest extends BlockContentTestBase {
       ->setRevisionTranslationAffected(TRUE);
     $entity->setNewRevision();
     $entity->save();
-    $revisionId = $entity->getRevisionId();
+    $revisionId = $entity->getRevisionId(TRUE);
 
     // Cannot revert latest revision.
     $this->drupalGet($entity->toUrl('revision-revert-form'));
@@ -56,7 +56,7 @@ class BlockContentRevisionRevertTest extends BlockContentTestBase {
       ->setNewRevision();
     $entity->isDefaultRevision(FALSE);
     $entity->save();
-    $nonDefaultRevisionId = $entity->getRevisionId();
+    $nonDefaultRevisionId = $entity->getRevisionId(TRUE);
 
     // Reload the default entity.
     $revision = \Drupal::entityTypeManager()->getStorage('block_content')

@@ -302,7 +302,7 @@ class EntityRevisionsTest extends EntityKernelTestBase {
     $this->expectDeprecation('Returning the revision identifier as a string value is deprecated in drupal:11.1.0 and will be removed in drupal:12.0.0. See https://www.drupal.org/node/3476916');
     $entity = EntityTestMulRev::create();
     $entity->save();
-    $this->assertIsString($entity->getRevisionId());
+    $this->assertIsString($entity->getRevisionId(TRUE));
   }
 
 }

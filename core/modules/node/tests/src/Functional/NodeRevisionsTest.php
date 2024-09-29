@@ -155,7 +155,7 @@ class NodeRevisionsTest extends NodeTestBase {
     $node = $nodes[3];
 
     // Confirm the correct revision text appears on "view revisions" page.
-    $this->drupalGet("node/" . $node->id() . "/revisions/" . $node->getRevisionId() . "/view");
+    $this->drupalGet("node/" . $node->id() . "/revisions/" . $node->getRevisionId(TRUE) . "/view");
     $this->assertSession()->pageTextContains($node->body->value);
 
     // Confirm the correct log message appears on "revisions overview" page.
@@ -173,7 +173,7 @@ class NodeRevisionsTest extends NodeTestBase {
     $this->assertTrue($node->isDefaultRevision(), 'Third node revision is the default one.');
 
     // Confirm that revisions revert properly.
-    $this->drupalGet("node/" . $node->id() . "/revisions/" . $nodes[1]->getRevisionid() . "/revert");
+    $this->drupalGet("node/" . $node->id() . "/revisions/" . $nodes[1]->getRevisionId(TRUE) . "/revert");
     $this->submitForm([], 'Revert');
     $this->assertSession()->pageTextContains("Basic page {$nodes[1]->label()} has been reverted to the revision from {$this->container->get('date.formatter')->format($nodes[1]->getRevisionCreationTime())}.");
     $node_storage->resetCache([$node->id()]);
@@ -185,11 +185,11 @@ class NodeRevisionsTest extends NodeTestBase {
     $this->assertNotSame($nodes[1]->getRevisionUserId(), $reverted_node->getRevisionUserId(), 'Node revision author is not original revision author.');
 
     // Confirm that this is not the default version.
-    $node = $node_storage->loadRevision($node->getRevisionId());
+    $node = $node_storage->loadRevision($node->getRevisionId(TRUE));
     $this->assertFalse($node->isDefaultRevision(), 'Third node revision is not the default one.');
 
     // Confirm revisions delete properly.
-    $this->drupalGet("node/" . $node->id() . "/revisions/" . $nodes[1]->getRevisionId() . "/delete");
+    $this->drupalGet("node/" . $node->id() . "/revisions/" . $nodes[1]->getRevisionId(TRUE) . "/delete");
     $this->submitForm([], 'Delete');
     $this->assertSession()->pageTextContains("Revision from {$this->container->get('date.formatter')->format($nodes[1]->getRevisionCreationTime())} of Basic page {$nodes[1]->label()} has been deleted.");
     $connection = Database::getConnection();
@@ -197,7 +197,7 @@ class NodeRevisionsTest extends NodeTestBase {
       ->accessCheck(FALSE)
       ->allRevisions()
       ->condition('nid', $node->id())
-      ->condition('vid', $nodes[1]->getRevisionId())
+      ->condition('vid', $nodes[1]->getRevisionId(TRUE))
       ->execute();
     $this->assertCount(0, $nids);
 
@@ -205,12 +205,12 @@ class NodeRevisionsTest extends NodeTestBase {
     // confirmation message correctly displays the stored revision date.
     $old_revision_date = \Drupal::time()->getRequestTime() - 86400;
     $connection->update('node_revision')
-      ->condition('vid', $nodes[2]->getRevisionId())
+      ->condition('vid', $nodes[2]->getRevisionId(TRUE))
       ->fields([
         'revision_timestamp' => $old_revision_date,
       ])
       ->execute();
-    $this->drupalGet("node/" . $node->id() . "/revisions/" . $nodes[2]->getRevisionId() . "/revert");
+    $this->drupalGet("node/" . $node->id() . "/revisions/" . $nodes[2]->getRevisionId(TRUE) . "/revert");
     $this->submitForm([], 'Revert');
     $this->assertSession()->pageTextContains("Basic page {$nodes[2]->label()} has been reverted to the revision from {$this->container->get('date.formatter')->format($old_revision_date)}.");
 
@@ -252,7 +252,7 @@ class NodeRevisionsTest extends NodeTestBase {
     $this->assertSession()->pageTextNotContains($new_body);
 
     // Verify that the new body text is present on the revision.
-    $this->drupalGet("node/" . $node->id() . "/revisions/" . $new_node_revision->getRevisionId() . "/view");
+    $this->drupalGet("node/" . $node->id() . "/revisions/" . $new_node_revision->getRevisionId(TRUE) . "/view");
     $this->assertSession()->pageTextContains($new_body);
 
     // Verify that the non-default revision vid is greater than the default

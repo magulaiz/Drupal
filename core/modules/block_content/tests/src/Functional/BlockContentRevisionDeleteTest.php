@@ -43,7 +43,7 @@ class BlockContentRevisionDeleteTest extends BlockContentTestBase {
       ->setRevisionTranslationAffected(TRUE);
     $entity->setNewRevision();
     $entity->save();
-    $revisionId = $entity->getRevisionId();
+    $revisionId = $entity->getRevisionId(TRUE);
 
     // Cannot delete latest revision.
     $this->drupalGet($entity->toUrl('revision-delete-form'));

@@ -144,7 +144,7 @@ class BlockContentAccessHandlerTest extends KernelTestBase {
     if (!$isLatest) {
       // Save a historical revision, then setup for a new revision to be saved.
       $this->blockEntity->save();
-      $loadRevisionId = $this->blockEntity->getRevisionId();
+      $loadRevisionId = $this->blockEntity->getRevisionId(TRUE);
       $this->blockEntity = $entityStorage->createRevision($this->blockEntity);
     }
 

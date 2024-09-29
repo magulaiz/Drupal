@@ -120,15 +120,15 @@ class NodeEditFormTest extends NodeTestBase {
 
     // Ensure that the node revision has been created.
     $revised_node = $this->drupalGetNodeByTitle($edit['title[0][value]'], TRUE);
-    $this->assertNotSame($node->getRevisionId(TRUE), $revised_node->getRevisionId(), 'A new revision has been created.');
+    $this->assertNotSame($node->getRevisionId(TRUE), $revised_node->getRevisionId(TRUE), 'A new revision has been created.');
     // Ensure that the node author is preserved when it was not changed in the
     // edit form.
     $this->assertSame($node->getOwnerId(), $revised_node->getOwnerId(), 'The node author has been preserved.');
     // Ensure that the revision authors are different since the revisions were
     // made by different users.
     $node_storage = \Drupal::service('entity_type.manager')->getStorage('node');
-    $first_node_version = $node_storage->loadRevision($node->getRevisionId());
-    $second_node_version = $node_storage->loadRevision($revised_node->getRevisionId());
+    $first_node_version = $node_storage->loadRevision($node->getRevisionId(TRUE));
+    $second_node_version = $node_storage->loadRevision($revised_node->getRevisionId(TRUE));
     $this->assertNotSame($first_node_version->getRevisionUser()->id(), $second_node_version->getRevisionUser()->id(), 'Each revision has a distinct user.');
 
     // Check if the node revision checkbox is rendered on node edit form.

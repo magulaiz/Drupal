@@ -53,7 +53,7 @@ class RevisionLinkTest extends NodeTestBase {
     // Create revision of the node.
     $nodes[1]->setNewRevision();
     $nodes[1]->save();
-    $second_revision = $nodes[1]->getRevisionId();
+    $second_revision = $nodes[1]->getRevisionId(TRUE);
 
     $this->drupalGet('test-node-revision-links');
     $this->assertSession()->statusCodeEquals(200);
@@ -61,9 +61,9 @@ class RevisionLinkTest extends NodeTestBase {
     // access denied if you link to the revision.
     $url = $nodes[0]->toUrl()->toString();
     $this->assertSession()->linkByHrefExists($url);
-    $this->assertSession()->linkByHrefNotExists($url . '/revisions/' . $nodes[0]->getRevisionId() . '/view');
-    $this->assertSession()->linkByHrefNotExists($url . '/revisions/' . $nodes[0]->getRevisionId() . '/delete');
-    $this->assertSession()->linkByHrefNotExists($url . '/revisions/' . $nodes[0]->getRevisionId() . '/revert');
+    $this->assertSession()->linkByHrefNotExists($url . '/revisions/' . $nodes[0]->getRevisionId(TRUE) . '/view');
+    $this->assertSession()->linkByHrefNotExists($url . '/revisions/' . $nodes[0]->getRevisionId(TRUE) . '/delete');
+    $this->assertSession()->linkByHrefNotExists($url . '/revisions/' . $nodes[0]->getRevisionId(TRUE) . '/revert');
 
     // For the second node the current revision got set to the last revision, so
     // the first one should also link to the node page itself.

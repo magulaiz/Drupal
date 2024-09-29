@@ -171,7 +171,7 @@ class RevisionDeleteFormTest extends BrowserTestBase {
     $entity->setPublished();
     $entity->setNewRevision();
     $entity->save();
-    $revisionId = $entity->getRevisionId();
+    $revisionId = $entity->getRevisionId(TRUE);
 
     $entity->isDefaultRevision(FALSE);
     $entity->setUnpublished();
@@ -202,7 +202,7 @@ class RevisionDeleteFormTest extends BrowserTestBase {
     $entity->setName('delete revision');
     $entity->save();
     $entity->isDefaultRevision();
-    $revisionId = $entity->getRevisionId();
+    $revisionId = $entity->getRevisionId(TRUE);
 
     $entity->setNewRevision();
     $entity->save();
@@ -263,7 +263,7 @@ class RevisionDeleteFormTest extends BrowserTestBase {
       $entity->setRevisionCreationTime($date->getTimestamp());
     }
     $entity->save();
-    $revisionId = $entity->getRevisionId();
+    $revisionId = $entity->getRevisionId(TRUE);
 
     $otherRevisionIds = [];
     for ($i = 0; $i < $totalRevisions - 1; $i++) {
@@ -272,7 +272,7 @@ class RevisionDeleteFormTest extends BrowserTestBase {
       }
       $entity->setNewRevision();
       $entity->save();
-      $otherRevisionIds[] = $entity->getRevisionId();
+      $otherRevisionIds[] = $entity->getRevisionId(TRUE);
     }
 
     $revision = $storage->loadRevision($revisionId);

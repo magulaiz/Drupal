@@ -78,7 +78,7 @@ class PathAliasTest extends ResourceTestBase {
   protected function getExpectedDocument(): array {
     $base_url = Url::fromUri('base:/jsonapi/path_alias/path_alias/' . $this->entity->uuid())->setAbsolute();
     $self_url = clone $base_url;
-    $version_identifier = 'id:' . $this->entity->getRevisionId();
+    $version_identifier = 'id:' . $this->entity->getRevisionId(TRUE);
     $self_url = $self_url->setOption('query', ['resourceVersion' => $version_identifier]);
     return [
       'jsonapi' => [
