@@ -202,9 +202,9 @@ class EntityRepositoryTest extends KernelTestBase {
     $storage->save($entity2);
     /** @var \Drupal\Core\Entity\ContentEntityInterface[] $active */
     $active = $this->entityRepository->getActiveMultiple($entity_type_id, [$entity->id(), $entity2->id()], $it_contexts);
-    $this->assertSame($it_revision2->getLoadedRevisionId(), $active[$entity->id()]->getLoadedRevisionId());
+    $this->assertSame($it_revision2->getLoadedRevisionId(TRUE), $active[$entity->id()]->getLoadedRevisionId(TRUE));
     $this->assertSame($it_revision2->language()->getId(), $active[$entity->id()]->language()->getId());
-    $this->assertSame($entity2->getLoadedRevisionId(), $active[$entity2->id()]->getLoadedRevisionId());
+    $this->assertSame($entity2->getLoadedRevisionId(TRUE), $active[$entity2->id()]->getLoadedRevisionId(TRUE));
     $this->assertSame($entity2->language()->getId(), $active[$entity2->id()]->language()->getId());
 
     $this->doTestLanguageFallback('getActive');
