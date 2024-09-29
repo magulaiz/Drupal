@@ -78,11 +78,13 @@ class PathPluginBaseTest extends UnitTestCase {
       ->getMock();
     $argument_manager->expects($this->any())
       ->method('createInstance')
-      ->willReturn($this->returnCallback(
-        fn($plugin_id, $configuration) => isset($configuration['id']) && $configuration['id'] === 'null' ? $null_argument : $broken_argument
-      ));
+      ->willReturnCallback(
+        fn($plugin_id, $configuration) => isset($configuration['plugin_id']) && $configuration['plugin_id'] === 'null'
+          ? $null_argument
+          : $broken_argument
+      );
 
-    $container->set('plugicd n.manager.views.argument', $argument_manager);
+    $container->set('plugin.manager.views.argument', $argument_manager);
 
     $config = [
       'views.settings' => [
@@ -187,10 +189,10 @@ class PathPluginBaseTest extends UnitTestCase {
     ];
     $display['display_options']['arguments'] = [
       'test_null' => [
-        'id' => 'null',
+        'plugin_id' => 'null',
       ],
       'test_id' => [
-        'id' => 'broken',
+        'plugin_id' => 'broken',
       ],
     ];
     $this->pathPlugin->initDisplay($view, $display);
