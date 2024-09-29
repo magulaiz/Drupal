@@ -287,6 +287,7 @@ abstract class EntityBase implements EntityInterface {
       $uri_route_parameters[$parameter_name] = $this->bundle();
     }
     if ($this instanceof RevisionableInterface && str_starts_with($rel, 'revision')) {
+      // @phpstan-ignore-next-line
       $uri_route_parameters[$this->getEntityTypeId() . '_revision'] = $this->getRevisionId(TRUE);
     }
 
