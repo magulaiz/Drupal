@@ -48,12 +48,10 @@ core.entity_link_suggester.*:
             # The order is meaningful: link suggestions will be generated in the same order.
             orderby: ~
             sequence:
-              # @todo Use `EntityBundleExists` constraint once https://www.drupal.org/project/drupal/issues/3382581 lands.
               type: string
               label: 'Allowed bundle'
               constraints:
-                # @todo Replace with `EntityBundleExists: '%parent.entity_type_id'` in https://www.drupal.org/project/drupal/issues/3382581
-                Regex: '/^[a-z0-9_]+$/'
+                EntityBundleExists: '%parent.entity_type_id'
 
 core.entity_view_mode.*.*:
   type: config_entity
