@@ -175,7 +175,7 @@ class EntityOperationsTest extends KernelTestBase {
     // revision should be the default revision, and it should be unpublished.
     $page->moderation_state->value = 'archived';
     $page->save();
-    $new_revision_id = $page->getRevisionId();
+    $new_revision_id = $page->getRevisionId(TRUE);
 
     $storage = \Drupal::entityTypeManager()->getStorage('node');
     $new_revision = $storage->loadRevision($new_revision_id);

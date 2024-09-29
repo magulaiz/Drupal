@@ -73,14 +73,14 @@ class ContentModerationStateStorageSchemaTest extends KernelTestBase {
     $this->assertStorageException([
       'content_entity_type_id' => $node->getEntityTypeId(),
       'content_entity_id' => $node->id(),
-      'content_entity_revision_id' => $node->getRevisionId(),
+      'content_entity_revision_id' => $node->getRevisionId(TRUE),
     ], TRUE);
 
     // No exception for the same values, with a different langcode.
     $this->assertStorageException([
       'content_entity_type_id' => $node->getEntityTypeId(),
       'content_entity_id' => $node->id(),
-      'content_entity_revision_id' => $node->getRevisionId(),
+      'content_entity_revision_id' => $node->getRevisionId(TRUE),
       'langcode' => 'de',
     ], FALSE);
 
@@ -88,7 +88,7 @@ class ContentModerationStateStorageSchemaTest extends KernelTestBase {
     $this->assertStorageException([
       'content_entity_type_id' => $node->getEntityTypeId(),
       'content_entity_id' => $node->id(),
-      'content_entity_revision_id' => $node->getRevisionId(),
+      'content_entity_revision_id' => $node->getRevisionId(TRUE),
       'workflow' => 'foo',
     ], FALSE);
 
@@ -96,7 +96,7 @@ class ContentModerationStateStorageSchemaTest extends KernelTestBase {
     $this->assertStorageException([
       'content_entity_type_id' => 'entity_test',
       'content_entity_id' => $node->id(),
-      'content_entity_revision_id' => $node->getRevisionId(),
+      'content_entity_revision_id' => $node->getRevisionId(TRUE),
     ], FALSE);
 
     // Different entity and revision IDs should not trigger an exception.
@@ -108,7 +108,7 @@ class ContentModerationStateStorageSchemaTest extends KernelTestBase {
 
     // Creating a version of the entity with a previously used, but not current
     // revision ID should trigger an exception.
-    $old_revision_id = $node->getRevisionId();
+    $old_revision_id = $node->getRevisionId(TRUE);
     $node->setNewRevision(TRUE);
     $node->title = 'Updated title';
     $node->moderation_state = 'published';

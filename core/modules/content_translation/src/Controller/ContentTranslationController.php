@@ -388,7 +388,7 @@ class ContentTranslationController extends ControllerBase {
       /** @var \Drupal\Core\Entity\ContentEntityStorageInterface $storage */
       $storage = $this->entityTypeManager()->getStorage($entity->getEntityTypeId());
       $revision_id = $storage->getLatestTranslationAffectedRevisionId($entity->id(), $source->getId());
-      if ($revision_id != $entity->getRevisionId()) {
+      if ($revision_id != $entity->getRevisionId(TRUE)) {
         $entity = $storage->loadRevision($revision_id);
       }
     }

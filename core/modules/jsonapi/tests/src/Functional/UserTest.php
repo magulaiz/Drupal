@@ -730,7 +730,7 @@ class UserTest extends ResourceTestBase {
     }
 
     foreach ($nodes as $node) {
-      $test_node = $node_storage->loadRevision($node->getRevisionId());
+      $test_node = $node_storage->loadRevision($node->getRevisionId(TRUE));
       $this->assertFalse($test_node->isPublished(), 'Node revision of the user is no longer published.');
     }
   }
@@ -761,7 +761,7 @@ class UserTest extends ResourceTestBase {
     $this->assertNotNull($test_node, 'Node of the user is not deleted.');
     $this->assertTrue($test_node->isPublished(), 'Node of the user is still published.');
     $this->assertEquals(0, $test_node->getOwnerId(), 'Node of the user has been attributed to anonymous user.');
-    $test_node = $node_storage->loadRevision($node->getRevisionId());
+    $test_node = $node_storage->loadRevision($node->getRevisionId(TRUE));
     $this->assertTrue($test_node->isPublished(), 'Node revision of the user is still published.');
     $this->assertEquals(0, $test_node->getRevisionUser()->id(), 'Node revision of the user has been attributed to anonymous user.');
   }

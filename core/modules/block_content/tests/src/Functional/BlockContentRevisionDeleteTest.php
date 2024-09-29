@@ -56,7 +56,7 @@ class BlockContentRevisionDeleteTest extends BlockContentTestBase {
       ->setNewRevision();
     $entity->isDefaultRevision(FALSE);
     $entity->save();
-    $nonDefaultRevisionId = $entity->getRevisionId();
+    $nonDefaultRevisionId = $entity->getRevisionId(TRUE);
 
     // Reload the default entity.
     $revision = \Drupal::entityTypeManager()->getStorage('block_content')
