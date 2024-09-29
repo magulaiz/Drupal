@@ -180,11 +180,6 @@ class StringFormatter extends FormatterBase {
       }
     }
 
-    if ($tag) {
-      $elements[$delta]['#prefix'] = "<$tag>";
-      $elements[$delta]['#suffix'] = "</$tag>";
-    }
-
     return $elements;
   }
 
