@@ -58,6 +58,7 @@ workflow:
 variables:
   _CONFIG_DOCKERHUB_ROOT: "drupalci"
   CACHE_TARGET: "${CI_MERGE_REQUEST_TARGET_BRANCH_NAME}${CI_COMMIT_BRANCH}"
+  CORE_GITLAB_PROJECT_ID: 59858
   # Let composer know what self.version means.
   COMPOSER_ROOT_VERSION: "${CI_MERGE_REQUEST_TARGET_BRANCH_NAME}${CI_COMMIT_BRANCH}-dev"
   COMPOSER_ALLOW_SUPERUSER: 1
@@ -102,30 +103,39 @@ default:
   rules:
     - if: $PERFORMANCE_TEST != "1"
 
+.prepare-lint-directory: &prepare-lint-directory
+  # PHPStan and yarn linting use absolute paths to determine cache validity. Because GitLab CI
+  # working directories are not consistent, work around this by running linting in a separate,
+  # stable path.
+  # See https://github.com/phpstan/phpstan/issues/8599
+  - mkdir /build;
+  - cp -Ria $CI_PROJECT_DIR/* /build/
+  - cd /build
+
 .phpstan-cache: &phpstan-cache
   # Get the phpstan cache file from the artifacts of the latest successful
   # job from the target branch. Allow the job to proceed and pass if the file
   # doesn't exist.
   - mkdir core/phpstan-tmp
-  - 'curl --location --output core/phpstan-tmp/resultCache.php "https://git.drupalcode.org/api/v4/projects/$CI_PROJECT_ID/jobs/artifacts/{$CACHE_TARGET}/raw/core/phpstan-tmp/resultCache.php?job=Lint%20cache%20warming" || true'
+  - 'curl --location --output core/phpstan-tmp/resultCache.php "https://git.drupalcode.org/api/v4/projects/{$CORE_GITLAB_PROJECT_ID}/jobs/artifacts/{$CACHE_TARGET}/raw/core/phpstan-tmp/resultCache.php?job=Lint%20cache%20warming" || true'
 
 .cspell-cache: &cspell-cache
   # Fetch the cspell cache from the artifacts of the latest successful job from
   # the target branch. Allow the job to proceed and pass if the file doesn't
   # exist.
-  - 'curl --location --output core/.cspellcache "https://git.drupalcode.org/api/v4/projects/$CI_PROJECT_ID/jobs/artifacts/{$CACHE_TARGET}/raw/core/.cspellcache?job=Lint%20cache%20warming" || true'
+  - 'curl --location --output core/.cspellcache "https://git.drupalcode.org/api/v4/projects/{$CORE_GITLAB_PROJECT_ID}/jobs/artifacts/{$CACHE_TARGET}/raw/core/.cspellcache?job=Lint%20cache%20warming" || true'
 
 .eslint-cache: &eslint-cache
   # Fetch the eslint cache from the artifacts of the latest successful job from
   # the target branch. Allow the job to proceed and pass if the file doesn't
   # exist.
-  - 'curl --location --output core/.eslintcache "https://git.drupalcode.org/api/v4/projects/$CI_PROJECT_ID/jobs/artifacts/{$CACHE_TARGET}/raw/core/.eslintcache?job=Lint%20cache%20warming" || true'
+  - 'curl --location --output core/.eslintcache "https://git.drupalcode.org/api/v4/projects/{$CORE_GITLAB_PROJECT_ID}/jobs/artifacts/{$CACHE_TARGET}/raw/core/.eslintcache?job=Lint%20cache%20warming" || true'
 
 .stylelint-cache: &stylelint-cache
   # Fetch the stylelint cache from the artifacts of the latest successful job from
   # the target branch. Allow the job to proceed and pass if the file doesn't
   # exist.
-  - 'curl --location --output core/.stylelintcache "https://git.drupalcode.org/api/v4/projects/$CI_PROJECT_ID/jobs/artifacts/{$CACHE_TARGET}/raw/core/.stylelintcache?job=Lint%20cache%20warming" || true'
+  - 'curl --location --output core/.stylelintcache "https://git.drupalcode.org/api/v4/projects/{$CORE_GITLAB_PROJECT_ID}/jobs/artifacts/{$CACHE_TARGET}/raw/core/.stylelintcache?job=Lint%20cache%20warming" || true'
 
 .core-spellcheck: &core-spellcheck
   - cd core
