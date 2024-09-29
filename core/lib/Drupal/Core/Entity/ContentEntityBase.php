@@ -323,10 +323,10 @@ abstract class ContentEntityBase extends EntityBase implements \IteratorAggregat
    * Gets the loaded Revision ID of the entity.
    *
    * @param bool $cast_to_int
-   *    (optional) Indicator for how the revision identifier is returned. When
-   *    set to TRUE it will return the revision identifier as an integer value.
-   *    When the indicator is not set or set to FALSE the revision identifier
-   *    will return a string value.
+   *   (optional) Indicator for how the revision identifier is returned. When
+   *   set to TRUE it will return the revision identifier as an integer value.
+   *   When the indicator is not set or set to FALSE the revision identifier
+   *   will return a string value.
    *
    * @return int|null
    *   The loaded Revision identifier of the entity, or NULL if the entity
