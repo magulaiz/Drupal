@@ -203,16 +203,16 @@ class MenuUiNodeTest extends BrowserTestBase {
     $edit = [
       'menu[enabled]' => 1,
       'menu[title]' => $node_title,
-      'menu[weight]' => 17,
     ];
     $this->drupalGet('node/' . $node->id() . '/edit');
+    $this->assertSession()->hiddenFieldExists('menu[weight]');
     $this->submitForm($edit, 'Save');
     // Assert that the link exists.
     $this->drupalGet('test-page');
     $this->assertSession()->linkExists($node_title);
     // Check if menu weight is 17.
     $this->drupalGet('node/' . $node->id() . '/edit');
-    $this->assertSession()->fieldValueEquals('edit-menu-weight', 17);
+    $this->assertSession()->hiddenFieldValueEquals('menu[weight]', '0');
     // Verify that the menu link title field has correct maxlength in node edit
     // form.
     $this->assertSession()->responseMatches('/<input .* id="edit-menu-title" .* maxlength="' . $title_max_length . '" .* \/>/');
@@ -331,7 +331,6 @@ class MenuUiNodeTest extends BrowserTestBase {
     $edit = [
       'menu[enabled]' => 1,
       'menu[title]' => $node_title,
-      'menu[weight]' => 17,
     ];
     $options = ['language' => $languages[$langcodes[0]]];
     $url = $node->toUrl('edit-form', $options);
@@ -342,7 +341,6 @@ class MenuUiNodeTest extends BrowserTestBase {
     $edit = [
       'menu[enabled]' => 1,
       'menu[title]' => $translated_node_title,
-      'menu[weight]' => 17,
     ];
     $options = ['language' => $languages[$langcodes[1]]];
     $url = $node->toUrl('edit-form', $options);

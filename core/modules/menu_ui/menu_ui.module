@@ -297,7 +297,7 @@ function menu_ui_form_node_form_alter(&$form, FormStateInterface $form_state) {
   $form['menu']['link']['menu_parent']['#attributes']['class'][] = 'menu-parent-select';
 
   $form['menu']['link']['weight'] = [
-    '#type' => 'number',
+    '#type' => 'hidden',
     '#title' => t('Weight'),
     '#default_value' => $defaults['weight'],
     '#description' => t('Menu links with lower weights are displayed before links with higher weights.'),
