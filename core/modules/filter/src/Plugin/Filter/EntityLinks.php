@@ -9,23 +9,25 @@ use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityRepositoryInterface;
 use Drupal\Core\GeneratedUrl;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\Core\TypedData\TranslatableInterface;
 use Drupal\Core\Utility\Error;
+use Drupal\filter\Attribute\Filter;
 use Drupal\filter\FilterProcessResult;
 use Drupal\filter\Plugin\FilterBase;
+use Drupal\filter\Plugin\FilterInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Provides the Entity Links filter.
- *
- * @Filter(
- *   id = "entity_links",
- *   title = @Translation("Entity Links"),
- *   description = @Translation("Updates entity links with <code>data-entity-type</code> and <code>data-entity-type-uuid</code> attributes to point to the latest entity URL aliases."),
- *   type = Drupal\filter\Plugin\FilterInterface::TYPE_TRANSFORM_REVERSIBLE
- * )
  */
+#[Filter(
+  id: 'entity_links',
+  title: new TranslatableMarkup('Entity Links'),
+  description: new TranslatableMarkup('Updates entity links with <code>data-entity-type</code> and <code>data-entity-type-uuid</code> attributes to point to the latest entity URL aliases.'),
+  type: FilterInterface::TYPE_TRANSFORM_REVERSIBLE,
+)]
 class EntityLinks extends FilterBase implements ContainerFactoryPluginInterface {
 
   /**
