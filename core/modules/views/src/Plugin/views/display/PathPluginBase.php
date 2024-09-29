@@ -142,18 +142,16 @@ abstract class PathPluginBase extends DisplayPluginBase implements DisplayRouter
     // page arguments so the argument actually comes through.
     $arg_counter = 0;
 
-    // Build arguments of the view display before using them as
-    // $this->view->argument is NULL by default.
-    $this->view->setDisplay($display_id);
-    $this->view->buildTitle();
-
-    // Filter view arguments to skip those who implement the
-    // SkipFromRouteParamsInterface interface.
-    $arguments = array_filter(
-      $this->view->argument ?? [],
-      fn($argument) => !($argument instanceof SkipFromRouteParamsInterface && $argument->skipFromRouteParams())
+    $arguments_plugins = [];
+    foreach ((array) $this->getOption('arguments') as $argument => $configuration) {
+      $arguments_plugins[$argument] = isset($configuration['plugin_id'])
+        ? Views::handlerManager('argument')->createInstance($configuration['plugin_id'], $configuration)
+        : NULL;
+    }
+    $argument_ids = array_filter(
+      $arguments_plugins,
+      fn($argument) => !($argument instanceof SkipFromRouteParamsInterface && $argument->skipFromRouteParams()),
     );
-    $argument_ids = array_keys($arguments);
     $total_arguments = count($argument_ids);
 
     $argument_map = [];
