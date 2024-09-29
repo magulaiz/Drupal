@@ -36,8 +36,10 @@ use Symfony\Component\DependencyInjection\Compiler\PassConfig;
 use Symfony\Component\DependencyInjection\Exception\LogicException;
 use Symfony\Component\DependencyInjection\Reference;
 use Symfony\Component\EventDispatcher\Attribute\AsEventListener;
+use Symfony\Component\EventDispatcher\DependencyInjection\AddEventAliasesPass;
 use Symfony\Component\EventDispatcher\DependencyInjection\RegisterListenersPass;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
+use Symfony\Component\HttpKernel\KernelEvents;
 
 /**
  * ServiceProvider class for mandatory core services.
@@ -115,6 +117,7 @@ class CoreServiceProvider implements ServiceProviderInterface, ServiceModifierIn
     $container->registerForAutoconfiguration(EventSubscriberInterface::class)
       ->addTag('event_subscriber');
 
+    $container->addCompilerPass(new AddEventAliasesPass(KernelEvents::ALIASES));
     $container->registerAttributeForAutoconfiguration(AsEventListener::class, static function (
       ChildDefinition $definition,
       AsEventListener $attribute,
