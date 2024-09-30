@@ -811,7 +811,7 @@ class LinkFieldTest extends BrowserTestBase {
           case 'trim_length':
             $url = $url1;
             $url_title = isset($new_value) ? Unicode::truncate($url, $new_value, FALSE, TRUE) : $url;
-            $expected = '<div class="link-item"><div class="link-url"><a href="' . Html::escape($url) . '">' . Html::escape($url_title) . '</a></div>\n </div>';
+            $expected = '<div class="link-item"><div class="link-url"><a href="' . Html::escape($url) . '">' . Html::escape($url_title) . '</a></div>' . PHP_EOL . ' </div>';
             $this->assertStringContainsString($expected, $output);
 
             $url = $url2;
