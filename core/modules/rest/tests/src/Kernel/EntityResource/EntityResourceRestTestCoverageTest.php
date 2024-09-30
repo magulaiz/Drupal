@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\rest\Kernel\EntityResource;
 
 use Drupal\Core\Config\Entity\ConfigEntityInterface;
@@ -12,12 +14,13 @@ use Drupal\Tests\rest\Functional\EntityResource\ConfigEntityResourceTestBase;
  * Checks that all core content/config entity types have REST test coverage.
  *
  * Every entity type must have test coverage for:
- * - every format in core (json + xml + hal_json)
+ * - every format in core (json + xml)
  * - every authentication provider in core (anon, cookie, basic_auth)
  *
  * Additionally, every entity type must have the correct parent test class.
  *
  * @group rest
+ * @group #slow
  */
 class EntityResourceRestTestCoverageTest extends KernelTestBase {
 
@@ -41,12 +44,13 @@ class EntityResourceRestTestCoverageTest extends KernelTestBase {
 
     $all_modules = $this->container->get('extension.list.module')->getList();
     $stable_core_modules = array_filter($all_modules, function ($module) {
-      // Filter out contrib, hidden, testing, and experimental modules. We also
-      // don't need to enable modules that are already enabled.
+      // Filter out contrib, hidden, testing, deprecated and experimental
+      // modules. We also don't need to enable modules that are already enabled.
       return $module->origin === 'core' &&
         empty($module->info['hidden']) &&
         $module->status == FALSE &&
         $module->info['package'] !== 'Testing' &&
+        $module->info[ExtensionLifecycle::LIFECYCLE_IDENTIFIER] !== ExtensionLifecycle::DEPRECATED &&
         $module->info[ExtensionLifecycle::LIFECYCLE_IDENTIFIER] !== ExtensionLifecycle::EXPERIMENTAL;
     });
 
@@ -64,7 +68,7 @@ class EntityResourceRestTestCoverageTest extends KernelTestBase {
   /**
    * Tests that all core content/config entity types have REST test coverage.
    */
-  public function testEntityTypeRestTestCoverage() {
+  public function testEntityTypeRestTestCoverage(): void {
     $tests = [
       // Test coverage for formats provided by the 'serialization' module.
       'serialization' => [
@@ -76,15 +80,6 @@ class EntityResourceRestTestCoverageTest extends KernelTestBase {
           'XmlAnonTest',
           'XmlBasicAuthTest',
           'XmlCookieTest',
-        ],
-      ],
-      // Test coverage for formats provided by the 'hal' module.
-      'hal' => [
-        'path' => '\Drupal\Tests\PROVIDER\Functional\Hal\CLASS',
-        'class suffix' => [
-          'HalJsonAnonTest',
-          'HalJsonBasicAuthTest',
-          'HalJsonCookieTest',
         ],
       ],
     ];
@@ -102,7 +97,10 @@ class EntityResourceRestTestCoverageTest extends KernelTestBase {
         foreach ($info['class suffix'] as $postfix) {
           $class = str_replace(['PROVIDER', 'CLASS'], [$module_name, $class_name], $path . $postfix);
           $class_alternative = str_replace("\\Drupal\\Tests\\$module_name\\Functional", '\Drupal\FunctionalTests', $class);
-          if (class_exists($class) || class_exists($class_alternative)) {
+          // For entities defined in the system module with Jsonapi tests in
+          // another module.
+          $class_entity_in_system_alternative = str_replace(['PROVIDER', 'CLASS'], [$entity_type_id, $class_name], $path . $postfix);
+          if (class_exists($class) || class_exists($class_alternative) || class_exists($class_entity_in_system_alternative)) {
             continue;
           }
           $missing_tests[] = $postfix;
@@ -117,7 +115,9 @@ class EntityResourceRestTestCoverageTest extends KernelTestBase {
       }
 
       $config_entity = is_subclass_of($class_name_full, ConfigEntityInterface::class);
-      $config_test = is_subclass_of($class, ConfigEntityResourceTestBase::class) || is_subclass_of($class_alternative, ConfigEntityResourceTestBase::class);
+      $config_test = is_subclass_of($class, ConfigEntityResourceTestBase::class)
+        || is_subclass_of($class_alternative, ConfigEntityResourceTestBase::class)
+        || is_subclass_of($class_entity_in_system_alternative, ConfigEntityResourceTestBase::class);
       if ($config_entity && !$config_test) {
         $problems[] = "$entity_type_id: $class_name is a config entity, but the test is for content entities.";
       }

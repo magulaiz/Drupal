@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\node\Functional\Views;
 
 use Drupal\node\Entity\Node;
@@ -17,9 +19,7 @@ use Drupal\node\Entity\NodeType;
 class BulkFormAccessTest extends NodeTestBase {
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = ['node_test_views', 'node_access_test'];
 
@@ -45,8 +45,8 @@ class BulkFormAccessTest extends NodeTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp($import_test_views = TRUE): void {
-    parent::setUp($import_test_views);
+  protected function setUp($import_test_views = TRUE, $modules = ['node_test_views']): void {
+    parent::setUp($import_test_views, $modules);
 
     // Create Article node type.
     $this->drupalCreateContentType(['type' => 'article', 'name' => 'Article']);
@@ -65,7 +65,7 @@ class BulkFormAccessTest extends NodeTestBase {
   /**
    * Tests if nodes that may not be edited, can not be edited in bulk.
    */
-  public function testNodeEditAccess() {
+  public function testNodeEditAccess(): void {
     // Create an account who will be the author of a private node.
     $author = $this->drupalCreateUser();
     // Create a private node (author may view, edit and delete, others may not).
@@ -141,7 +141,7 @@ class BulkFormAccessTest extends NodeTestBase {
   /**
    * Tests if nodes that may not be deleted, can not be deleted in bulk.
    */
-  public function testNodeDeleteAccess() {
+  public function testNodeDeleteAccess(): void {
     // Create an account who will be the author of a private node.
     $author = $this->drupalCreateUser();
     // Create a private node (author may view, edit and delete, others may not).

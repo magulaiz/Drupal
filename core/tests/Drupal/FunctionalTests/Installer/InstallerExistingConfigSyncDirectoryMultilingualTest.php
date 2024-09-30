@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\FunctionalTests\Installer;
 
 use Drupal\Component\Serialization\Yaml;
@@ -11,7 +13,7 @@ use Drupal\Component\Serialization\Yaml;
  *
  * @group Installer
  */
-class InstallerExistingConfigSyncDirectoryMultilingualTest extends InstallerExistingConfigTestBase {
+class InstallerExistingConfigSyncDirectoryMultilingualTest extends InstallerConfigDirectoryTestBase {
 
   /**
    * {@inheritdoc}
@@ -41,8 +43,23 @@ class InstallerExistingConfigSyncDirectoryMultilingualTest extends InstallerExis
   /**
    * {@inheritdoc}
    */
-  protected function getConfigTarball() {
-    return __DIR__ . '/../../../fixtures/config_install/multilingual.tar.gz';
+  protected function getConfigLocation(): string {
+    return __DIR__ . '/../../../fixtures/config_install/multilingual';
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  protected function prepareEnvironment() {
+    parent::prepareEnvironment();
+    // Place custom local translations in the translations directory and fix up
+    // configuration.
+    mkdir($this->publicFilesDirectory . '/translations', 0777, TRUE);
+    file_put_contents($this->publicFilesDirectory . '/translations/drupal-8.0.0.es.po', $this->getPo('es'));
+    $locale_settings = Yaml::decode(file_get_contents($this->siteDirectory . '/config/sync/locale.settings.yml'));
+    $locale_settings['translation']['use_source'] = 'local';
+    $locale_settings['translation']['path'] = $this->publicFilesDirectory . '/translations';
+    file_put_contents($this->siteDirectory . '/config/sync/locale.settings.yml', Yaml::encode($locale_settings));
   }
 
   /**
@@ -63,7 +80,7 @@ class InstallerExistingConfigSyncDirectoryMultilingualTest extends InstallerExis
   /**
    * Confirms that the installation installed the configuration correctly.
    */
-  public function testConfigSync() {
+  public function testConfigSync(): void {
     $comparer = $this->configImporter()->getStorageComparer();
     $expected_changelist_default_collection = [
       'create' => [],
@@ -138,7 +155,7 @@ class InstallerExistingConfigSyncDirectoryMultilingualTest extends InstallerExis
     $this->assertEquals($expected_changelist_spanish_collection, $comparer->getChangelist(NULL, 'language.es'));
 
     // Change a translation and ensure configuration is updated.
-    $po = <<<ENDPO
+    $po = <<<PO
 msgid ""
 msgstr ""
 
@@ -148,7 +165,7 @@ msgstr "Anonymous es"
 msgid "Apply"
 msgstr "Aplicar New"
 
-ENDPO;
+PO;
     file_put_contents($this->publicFilesDirectory . '/translations/drupal-8.0.0.es.po', $po);
 
     // Manually update the translation status so can re-run the import.
@@ -193,8 +210,8 @@ ENDPO;
    * @return string
    *   Contents for the test .po file.
    */
-  protected function getPo($langcode) {
-    return <<<ENDPO
+  protected function getPo($langcode): string {
+    return <<<PO
 msgid ""
 msgstr ""
 
@@ -204,7 +221,7 @@ msgstr "Anonymous $langcode"
 msgid "Apply"
 msgstr "Aplicar"
 
-ENDPO;
+PO;
   }
 
 }

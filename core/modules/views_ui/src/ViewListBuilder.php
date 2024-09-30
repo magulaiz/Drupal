@@ -259,7 +259,7 @@ class ViewListBuilder extends ConfigEntityListBuilder {
       if (!empty($definition['admin'])) {
         if ($display->hasPath()) {
           $path = $display->getPath();
-          if ($view->status() && strpos($path, '%') === FALSE) {
+          if ($view->status() && !str_contains($path, '%')) {
             // Wrap this in a try/catch as trying to generate links to some
             // routes may throw a NotAcceptableHttpException if they do not
             // respond to HTML, such as RESTExports.
@@ -268,7 +268,7 @@ class ViewListBuilder extends ConfigEntityListBuilder {
               //   https://www.drupal.org/node/2423913
               $rendered_path = Link::fromTextAndUrl('/' . $path, Url::fromUserInput('/' . $path))->toString();
             }
-            catch (NotAcceptableHttpException $e) {
+            catch (NotAcceptableHttpException) {
               $rendered_path = '/' . $path;
             }
           }

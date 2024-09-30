@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\block\Functional\Rest;
 
 use Drupal\block\Entity\Block;
@@ -50,7 +52,7 @@ abstract class BlockResourceTestBase extends ConfigEntityResourceTestBase {
       'plugin' => 'llama_block',
       'region' => 'header',
       'id' => 'llama',
-      'theme' => 'classy',
+      'theme' => 'stark',
     ]);
     // All blocks can be viewed by the anonymous user by default. An interesting
     // side effect of this is that any anonymous user is also able to read the
@@ -80,15 +82,15 @@ abstract class BlockResourceTestBase extends ConfigEntityResourceTestBase {
     $normalization = [
       'uuid' => $this->entity->uuid(),
       'id' => 'llama',
-      'weight' => NULL,
+      'weight' => 0,
       'langcode' => 'en',
       'status' => TRUE,
       'dependencies' => [
         'theme' => [
-          'classy',
+          'stark',
         ],
       ],
-      'theme' => 'classy',
+      'theme' => 'stark',
       'region' => 'header',
       'provider' => NULL,
       'plugin' => 'llama_block',
@@ -109,6 +111,7 @@ abstract class BlockResourceTestBase extends ConfigEntityResourceTestBase {
    */
   protected function getNormalizedPostEntity() {
     // @todo Update in https://www.drupal.org/node/2300677.
+    return [];
   }
 
   /**

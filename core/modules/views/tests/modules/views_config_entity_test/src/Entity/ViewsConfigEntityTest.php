@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\views_config_entity_test\Entity;
 
 use Drupal\Core\Config\Entity\ConfigEntityBase;
@@ -19,6 +21,10 @@ use Drupal\Core\Config\Entity\ConfigEntityBase;
  *   entity_keys = {
  *     "id" = "id",
  *     "label" = "name"
+ *   },
+ *   config_export = {
+ *     "id",
+ *     "label",
  *   }
  * )
  */

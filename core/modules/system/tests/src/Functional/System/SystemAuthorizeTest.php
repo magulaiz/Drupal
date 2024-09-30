@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\system\Functional\System;
 
 use Drupal\Tests\BrowserTestBase;
@@ -12,9 +14,7 @@ use Drupal\Tests\BrowserTestBase;
 class SystemAuthorizeTest extends BrowserTestBase {
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = ['system_test'];
 
@@ -23,6 +23,9 @@ class SystemAuthorizeTest extends BrowserTestBase {
    */
   protected $defaultTheme = 'stark';
 
+  /**
+   * {@inheritdoc}
+   */
   protected function setUp(): void {
     parent::setUp();
 
@@ -50,7 +53,7 @@ class SystemAuthorizeTest extends BrowserTestBase {
   /**
    * Tests the FileTransfer hooks.
    */
-  public function testFileTransferHooks() {
+  public function testFileTransferHooks(): void {
     $page_title = $this->randomMachineName(16);
     $this->drupalGetAuthorizePHP($page_title);
     $this->assertSession()->titleEquals("$page_title | Drupal");

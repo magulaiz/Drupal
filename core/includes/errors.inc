@@ -34,7 +34,6 @@ function drupal_error_levels() {
     E_USER_ERROR => ['User error', RfcLogLevel::ERROR],
     E_USER_WARNING => ['User warning', RfcLogLevel::WARNING],
     E_USER_NOTICE => ['User notice', RfcLogLevel::NOTICE],
-    E_STRICT => ['Strict warning', RfcLogLevel::DEBUG],
     E_RECOVERABLE_ERROR => ['Recoverable fatal error', RfcLogLevel::ERROR],
     E_DEPRECATED => ['Deprecated function', RfcLogLevel::DEBUG],
     E_USER_DEPRECATED => ['User deprecated function', RfcLogLevel::DEBUG],
@@ -67,7 +66,7 @@ function _drupal_error_handler_real($error_level, $message, $filename, $line) {
     // As __toString() methods must not throw exceptions (recoverable errors)
     // in PHP, we allow them to trigger a fatal error by emitting a user error
     // using trigger_error().
-    $to_string = $error_level == E_USER_ERROR && substr($caller['function'], -strlen('__toString()')) == '__toString()';
+    $to_string = $error_level == E_USER_ERROR && str_ends_with($caller['function'], '__toString()');
     _drupal_log_error([
       '%type' => isset($types[$error_level]) ? $severity_msg : 'Unknown error',
       // The standard PHP error handler considers that the error messages
@@ -113,7 +112,7 @@ function _drupal_error_handler_real($error_level, $message, $filename, $line) {
  * @param $error
  *   Optional error to examine for ERROR_REPORTING_DISPLAY_SOME.
  *
- * @return
+ * @return bool
  *   TRUE if an error should be displayed.
  */
 function error_displayable($error = NULL) {
@@ -174,10 +173,10 @@ function _drupal_log_error($error, $fatal = FALSE) {
       // implementations to use it.
       \Drupal::logger('php')->log($severity, '%type: @message in %function (line %line of %file) @backtrace_string.', $error + ['backtrace' => $backtrace, 'exception' => $exception, 'severity_level' => $severity]);
     }
-    catch (\Exception $e) {
+    catch (\Exception) {
       // We can't log, for example because the database connection is not
       // available. At least try to log to PHP error log.
-      error_log(strtr('Failed to log error: %type: @message in %function (line %line of %file). @backtrace_string', $error));
+      error_log(strtr('Failed to log error: ' . Error::DEFAULT_ERROR_MESSAGE . ' @backtrace_string', $error));
     }
   }
 
@@ -190,7 +189,7 @@ function _drupal_log_error($error, $fatal = FALSE) {
     if ($fatal) {
       // When called from CLI, simply output a plain text message.
       // Should not translate the string to avoid errors producing more errors.
-      $response->setContent(html_entity_decode(strip_tags(new FormattableMarkup('%type: @message in %function (line %line of %file).', $error))) . "\n");
+      $response->setContent(html_entity_decode(strip_tags(new FormattableMarkup(Error::DEFAULT_ERROR_MESSAGE, $error))) . "\n");
       $response->send();
       exit(1);
     }
@@ -201,7 +200,7 @@ function _drupal_log_error($error, $fatal = FALSE) {
       if (error_displayable($error)) {
         // When called from JavaScript, simply output the error message.
         // Should not translate the string to avoid errors producing more errors.
-        $response->setContent(new FormattableMarkup('%type: @message in %function (line %line of %file).', $error));
+        $response->setContent(new FormattableMarkup(Error::DEFAULT_ERROR_MESSAGE, $error));
         $response->send();
       }
       exit;
@@ -240,7 +239,7 @@ function _drupal_log_error($error, $fatal = FALSE) {
         // We use \Drupal\Component\Render\FormattableMarkup directly here,
         // rather than use t() since we are in the middle of error handling, and
         // we don't want t() to cause further errors.
-        $message = new FormattableMarkup('%type: @message in %function (line %line of %file).', $error);
+        $message = new FormattableMarkup(Error::DEFAULT_ERROR_MESSAGE, $error);
       }
       else {
         // With verbose logging, we will also include a backtrace.
@@ -252,7 +251,7 @@ function _drupal_log_error($error, $fatal = FALSE) {
         array_shift($backtrace);
         // Generate a backtrace containing only scalar argument values.
         $error['@backtrace'] = Error::formatBacktrace($backtrace);
-        $message = new FormattableMarkup('%type: @message in %function (line %line of %file). <pre class="backtrace">@backtrace</pre>', $error);
+        $message = new FormattableMarkup('<details class="error-with-backtrace"><summary>' . Error::DEFAULT_ERROR_MESSAGE . '</summary><pre class="backtrace">@backtrace</pre></details>', $error);
       }
     }
 
@@ -260,7 +259,7 @@ function _drupal_log_error($error, $fatal = FALSE) {
       // We fallback to a maintenance page at this point, because the page generation
       // itself can generate errors.
       // Should not translate the string to avoid errors producing more errors.
-      $message = 'The website encountered an unexpected error. Please try again later.' . '<br />' . $message;
+      $message = 'The website encountered an unexpected error. Try again later.' . '<br />' . $message;
 
       if ($is_installer) {
         // install_display_output() prints the output and ends script execution.
@@ -322,7 +321,7 @@ function _drupal_get_error_level() {
   try {
     $error_level = \Drupal::config('system.logging')->get('error_level');
   }
-  catch (\Exception $e) {
+  catch (\Exception) {
     $error_level = $GLOBALS['config']['system.logging']['error_level'] ?? ERROR_REPORTING_HIDE;
   }
 

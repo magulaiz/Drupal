@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\config_import_test;
 
 use Drupal\Core\Config\ConfigCrudEvent;
@@ -133,7 +135,7 @@ class EventSubscriber implements EventSubscriberInterface {
    * @return array
    *   An array of event listener definitions.
    */
-  public static function getSubscribedEvents() {
+  public static function getSubscribedEvents(): array {
     $events[ConfigEvents::SAVE][] = ['onConfigSave', 40];
     $events[ConfigEvents::DELETE][] = ['onConfigDelete', 40];
     $events[ConfigEvents::IMPORT_VALIDATE] = ['onConfigImporterValidate'];

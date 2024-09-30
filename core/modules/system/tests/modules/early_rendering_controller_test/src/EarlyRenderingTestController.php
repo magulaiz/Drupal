@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\early_rendering_controller_test;
 
 use Drupal\Core\Ajax\AjaxResponse;
@@ -60,10 +62,11 @@ class EarlyRenderingTestController extends ControllerBase {
 
   public function renderArray() {
     return [
-      '#pre_render' => [function () {
-        $elements = $this->earlyRenderContent();
-        return $elements;
-      },
+      '#pre_render' => [
+        function () {
+          $elements = $this->earlyRenderContent();
+          return $elements;
+        },
       ],
     ];
   }
@@ -93,7 +96,7 @@ class EarlyRenderingTestController extends ControllerBase {
 
   public function responseEarly() {
     $render_array = $this->earlyRenderContent();
-    return new Response($this->renderer->render($render_array));
+    return new Response((string) $this->renderer->render($render_array));
   }
 
   public function responseWithAttachments() {
@@ -102,7 +105,7 @@ class EarlyRenderingTestController extends ControllerBase {
 
   public function responseWithAttachmentsEarly() {
     $render_array = $this->earlyRenderContent();
-    return new AttachmentsTestResponse($this->renderer->render($render_array));
+    return new AttachmentsTestResponse((string) $this->renderer->render($render_array));
   }
 
   public function cacheableResponse() {
@@ -111,7 +114,7 @@ class EarlyRenderingTestController extends ControllerBase {
 
   public function cacheableResponseEarly() {
     $render_array = $this->earlyRenderContent();
-    return new CacheableTestResponse($this->renderer->render($render_array));
+    return new CacheableTestResponse((string) $this->renderer->render($render_array));
   }
 
   public function domainObject() {

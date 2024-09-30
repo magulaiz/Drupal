@@ -1,9 +1,10 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\user\Functional;
 
 use Drupal\Tests\views_ui\Functional\UITestBase;
-use Drupal\views\Tests\ViewTestData;
 
 /**
  * Tests views role access plugin UI.
@@ -21,9 +22,7 @@ class AccessRoleUITest extends UITestBase {
   public static $testViews = ['test_access_role'];
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = ['user', 'user_test_views'];
 
@@ -35,16 +34,14 @@ class AccessRoleUITest extends UITestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp($import_test_views = TRUE): void {
-    parent::setUp($import_test_views);
-
-    ViewTestData::createTestViews(static::class, ['user_test_views']);
+  protected function setUp($import_test_views = TRUE, $modules = ['user_test_views']): void {
+    parent::setUp($import_test_views, $modules);
   }
 
   /**
    * Tests the role access plugin UI.
    */
-  public function testAccessRoleUI() {
+  public function testAccessRoleUI(): void {
     $entity_type_manager = $this->container->get('entity_type.manager');
     $entity_type_manager->getStorage('user_role')->create(['id' => 'custom_role', 'label' => 'Custom role'])->save();
     $access_url = "admin/structure/views/nojs/display/test_access_role/default/access_options";

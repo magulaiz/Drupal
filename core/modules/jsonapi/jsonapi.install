@@ -80,7 +80,7 @@ function jsonapi_requirements($phase) {
  * Implements hook_update_last_removed().
  */
 function jsonapi_update_last_removed() {
-  return 8701;
+  return 9401;
 }
 
 /**

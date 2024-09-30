@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\jsonapi\Functional;
 
 use Drupal\Core\Url;
@@ -10,7 +12,7 @@ use Drupal\rest\Entity\RestResourceConfig;
  *
  * @group jsonapi
  */
-class RestResourceConfigTest extends ResourceTestBase {
+class RestResourceConfigTest extends ConfigEntityResourceTestBase {
 
   /**
    * {@inheritdoc}
@@ -73,7 +75,7 @@ class RestResourceConfigTest extends ResourceTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function getExpectedDocument() {
+  protected function getExpectedDocument(): array {
     $self_url = Url::fromUri('base:/jsonapi/rest_resource_config/rest_resource_config/' . $this->entity->uuid())->setAbsolute()->toString(TRUE)->getGeneratedUrl();
     return [
       'jsonapi' => [
@@ -124,8 +126,9 @@ class RestResourceConfigTest extends ResourceTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function getPostDocument() {
+  protected function getPostDocument(): array {
     // @todo Update in https://www.drupal.org/node/2300677.
+    return [];
   }
 
 }

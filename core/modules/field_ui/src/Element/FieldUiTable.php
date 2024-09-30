@@ -3,14 +3,14 @@
 namespace Drupal\field_ui\Element;
 
 use Drupal\Component\Utility\Html;
+use Drupal\Core\Render\Attribute\RenderElement;
 use Drupal\Core\Render\Element;
 use Drupal\Core\Render\Element\Table;
 
 /**
  * Provides a field_ui table element.
- *
- * @RenderElement("field_ui_table")
  */
+#[RenderElement('field_ui_table')]
 class FieldUiTable extends Table {
 
   /**
@@ -31,6 +31,8 @@ class FieldUiTable extends Table {
    * @param array $elements
    *   A structured array containing two sub-levels of elements. Properties
    *   used:
+   *   - #region_callback: A callback that provides the region of the table to
+   *     place the row in.
    *   - #tabledrag: The value is a list of $options arrays that are passed to
    *     drupal_attach_tabledrag(). The HTML ID of the table is added to each
    *     $options array.

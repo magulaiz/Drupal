@@ -106,7 +106,7 @@ interface MigrationInterface extends PluginInspectionInterface, DerivativeInspec
   /**
    * Get a list of required plugin IDs.
    *
-   * @returns string[]
+   * @return string[]
    */
   public function getRequirements(): array;
 
@@ -121,14 +121,17 @@ interface MigrationInterface extends PluginInspectionInterface, DerivativeInspec
   /**
    * Returns the process plugins.
    *
-   * @param array $process
-   *   A process configuration array.
+   * @param array|null $process
+   *   (Optional) A process configuration array. Defaults to NULL. If specified,
+   *   then the plugins from the given process array are returned. If not
+   *   specified, then the plugins from this migration's process array are
+   *   returned.
    *
    * @return \Drupal\migrate\Plugin\MigrateProcessInterface[][]
    *   An associative array. The keys are the destination property names. Values
    *   are process pipelines. Each pipeline contains an array of plugins.
    */
-  public function getProcessPlugins(array $process = NULL);
+  public function getProcessPlugins(?array $process = NULL);
 
   /**
    * Returns the initialized destination plugin.
@@ -195,8 +198,7 @@ interface MigrationInterface extends PluginInspectionInterface, DerivativeInspec
   public function clearInterruptionResult();
 
   /**
-   * Signal that the migration should be interrupted with the specified result
-   * code.
+   * Sets the migration status as interrupted with a given result code.
    *
    * @param int $result
    *   One of the MigrationInterface::RESULT_* constants.
@@ -204,8 +206,7 @@ interface MigrationInterface extends PluginInspectionInterface, DerivativeInspec
   public function interruptMigration($result);
 
   /**
-   * Get the normalized process pipeline configuration describing the process
-   * plugins.
+   * Gets the normalized process plugin configuration.
    *
    * The process configuration is always normalized. All shorthand processing
    * will be expanded into their full representations.
@@ -259,24 +260,6 @@ interface MigrationInterface extends PluginInspectionInterface, DerivativeInspec
   public function mergeProcessOfProperty($property, array $process_of_property);
 
   /**
-   * Checks if the migration should track time of last import.
-   *
-   * @return bool
-   *   TRUE if the migration is tracking last import time.
-   */
-  public function isTrackLastImported();
-
-  /**
-   * Set if the migration should track time of last import.
-   *
-   * @param bool $track_last_imported
-   *   Boolean value to indicate if the migration should track last import time.
-   *
-   * @return $this
-   */
-  public function setTrackLastImported($track_last_imported);
-
-  /**
    * Get the dependencies for this migration.
    *
    * @return array
@@ -299,14 +282,6 @@ interface MigrationInterface extends PluginInspectionInterface, DerivativeInspec
    *   The source configuration.
    */
   public function getSourceConfiguration();
-
-  /**
-   * If true, track time of last import.
-   *
-   * @return bool
-   *   Flag to determine desire of tracking time of last import.
-   */
-  public function getTrackLastImported();
 
   /**
    * The destination identifiers.

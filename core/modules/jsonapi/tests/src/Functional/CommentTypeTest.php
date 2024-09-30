@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\jsonapi\Functional;
 
 use Drupal\comment\Entity\CommentType;
@@ -10,7 +12,7 @@ use Drupal\Core\Url;
  *
  * @group jsonapi
  */
-class CommentTypeTest extends ResourceTestBase {
+class CommentTypeTest extends ConfigEntityResourceTestBase {
 
   /**
    * {@inheritdoc}
@@ -66,7 +68,7 @@ class CommentTypeTest extends ResourceTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function getExpectedDocument() {
+  protected function getExpectedDocument(): array {
     $self_url = Url::fromUri('base:/jsonapi/comment_type/comment_type/' . $this->entity->uuid())->setAbsolute()->toString(TRUE)->getGeneratedUrl();
     return [
       'jsonapi' => [
@@ -102,8 +104,9 @@ class CommentTypeTest extends ResourceTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function getPostDocument() {
+  protected function getPostDocument(): array {
     // @todo Update in https://www.drupal.org/node/2300677.
+    return [];
   }
 
 }

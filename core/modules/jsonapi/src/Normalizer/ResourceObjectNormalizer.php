@@ -23,11 +23,6 @@ use Drupal\jsonapi\Normalizer\Value\CacheableOmission;
 class ResourceObjectNormalizer extends NormalizerBase {
 
   /**
-   * {@inheritdoc}
-   */
-  protected $supportedInterfaceOrClass = ResourceObject::class;
-
-  /**
    * The entity normalization cacher.
    *
    * @var \Drupal\jsonapi\EventSubscriber\ResourceObjectNormalizationCacher
@@ -47,14 +42,14 @@ class ResourceObjectNormalizer extends NormalizerBase {
   /**
    * {@inheritdoc}
    */
-  public function supportsDenormalization($data, $type, $format = NULL) {
+  public function supportsDenormalization($data, string $type, ?string $format = NULL, array $context = []): bool {
     return FALSE;
   }
 
   /**
    * {@inheritdoc}
    */
-  public function normalize($object, $format = NULL, array $context = []) {
+  public function normalize($object, $format = NULL, array $context = []): array|string|int|float|bool|\ArrayObject|NULL {
     assert($object instanceof ResourceObject);
     // If the fields to use were specified, only output those field values.
     $context['resource_object'] = $object;
@@ -170,7 +165,7 @@ class ResourceObjectNormalizer extends NormalizerBase {
     // entities do not have "real" fields and therefore do not have field access
     // restrictions.
     if ($field instanceof FieldItemListInterface) {
-      $field_access_result = $field->access('view', $context['account'], TRUE);
+      $field_access_result = $field->access('view', $context['account'] ?? NULL, TRUE);
       if (!$field_access_result->isAllowed()) {
         return new CacheableOmission(CacheableMetadata::createFromObject($field_access_result));
       }
@@ -192,7 +187,7 @@ class ResourceObjectNormalizer extends NormalizerBase {
       // @todo Replace this workaround after https://www.drupal.org/node/3043245
       //   or remove the need for this in https://www.drupal.org/node/2942975.
       //   See \Drupal\layout_builder\Normalizer\LayoutEntityDisplayNormalizer.
-      if ($context['resource_object']->getResourceType()->getDeserializationTargetClass() === 'Drupal\layout_builder\Entity\LayoutBuilderEntityViewDisplay' && $context['resource_object']->getField('third_party_settings') === $field) {
+      if (is_a($context['resource_object']->getResourceType()->getDeserializationTargetClass(), 'Drupal\layout_builder\Entity\LayoutBuilderEntityViewDisplay', TRUE) && $context['resource_object']->getField('third_party_settings') === $field) {
         unset($field['layout_builder']['sections']);
       }
 
@@ -205,8 +200,10 @@ class ResourceObjectNormalizer extends NormalizerBase {
   /**
    * {@inheritdoc}
    */
-  public function hasCacheableSupportsMethod(): bool {
-    return TRUE;
+  public function getSupportedTypes(?string $format): array {
+    return [
+      ResourceObject::class => TRUE,
+    ];
   }
 
 }

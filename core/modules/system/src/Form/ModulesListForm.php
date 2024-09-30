@@ -17,18 +17,21 @@ use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\KeyValueStore\KeyValueStoreExpirableInterface;
 use Drupal\Core\Link;
 use Drupal\Core\Render\Element;
+use Drupal\Core\Render\Markup;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\user\PermissionHandlerInterface;
 use Drupal\Core\Url;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Drupal\Component\Utility\Xss;
 
 /**
  * Provides module installation interface.
  *
- * The list of modules gets populated by module.info.yml files, which contain
- * each module's name, description, and information about which modules it
- * requires. See \Drupal\Core\Extension\InfoParser for info on module.info.yml
- * descriptors.
+ * The list of modules includes all modules, except obsolete modules. The list
+ * is generated from the data in the info.yml file for each module, which
+ * includes the module name, description, dependencies and other information.
+ *
+ * @see \Drupal\Core\Extension\InfoParser
  *
  * @internal
  */
@@ -172,6 +175,11 @@ class ModulesListForm extends FormBase {
       // The module list needs to be reset so that it can re-scan and include
       // any new modules that may have been added directly into the filesystem.
       $modules = $this->moduleExtensionList->reset()->getList();
+
+      // Remove obsolete modules.
+      $modules = array_filter($modules, function ($module) {
+        return !$module->isObsolete();
+      });
       uasort($modules, [ModuleExtensionList::class, 'sortByName']);
     }
     catch (InfoParserException $e) {
@@ -201,7 +209,7 @@ class ModulesListForm extends FormBase {
     foreach (Element::children($form['modules']) as $package) {
       $form['modules'][$package] += [
         '#type' => 'details',
-        '#title' => $this->t($package),
+        '#title' => Markup::create(Xss::filterAdmin($this->t($package))),
         '#open' => TRUE,
         '#theme' => 'system_modules_details',
         '#attributes' => ['class' => ['package-listing']],
@@ -257,7 +265,7 @@ class ModulesListForm extends FormBase {
           Url::fromUri($module->info[ExtensionLifecycle::LIFECYCLE_LINK_IDENTIFIER], [
             'attributes' =>
               [
-                'class' => 'module-link--non-stable',
+                'class' => ['module-link--non-stable'],
                 'aria-label' => $this->t('View information on the @lifecycle status of the module @module', [
                   '@lifecycle' => ucfirst($lifecycle),
                   '@module' => $module->info['name'],
@@ -266,13 +274,13 @@ class ModulesListForm extends FormBase {
           ])
         )->toString();
     }
-    $row['description']['#markup'] = $this->t($module->info['description']);
+    $row['description']['#markup'] = (string) $this->t($module->info['description']);
     $row['version']['#markup'] = $module->info['version'];
 
     // Generate link for module's help page. Assume that if a hook_help()
     // implementation exists then the module provides an overview page, rather
     // than checking to see if the page exists, which is costly.
-    if ($this->moduleHandler->moduleExists('help') && $module->status && in_array($module->getName(), $this->moduleHandler->getImplementations('help'))) {
+    if ($this->moduleHandler->moduleExists('help') && $module->status && $this->moduleHandler->hasImplementations('help', $module->getName())) {
       $row['links']['help'] = [
         '#type' => 'link',
         '#title' => $this->t('Help <span class="visually-hidden">for @module</span>', ['@module' => $module->info['name']]),

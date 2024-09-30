@@ -1,6 +1,10 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\FunctionalTests\Installer;
+
+// cspell:ignore nmsgid nmsgstr
 
 /**
  * Verifies that the early installer uses the correct language direction.
@@ -36,14 +40,13 @@ class InstallerLanguageDirectionTest extends InstallerTestBase {
     $this->translations['Save and continue'] = 'Save and continue Arabic';
 
     // Verify that language direction is right-to-left.
-    $direction = current($this->xpath('/@dir'))->getText();
-    $this->assertEquals('rtl', $direction);
+    $this->assertSession()->elementTextEquals('xpath', '/@dir', 'rtl');
   }
 
   /**
    * Confirms that the installation succeeded.
    */
-  public function testInstalled() {
+  public function testInstalled(): void {
     $this->assertSession()->addressEquals('user/1');
     $this->assertSession()->statusCodeEquals(200);
   }

@@ -13,7 +13,7 @@ use Drupal\shortcut\ShortcutInterface;
 /**
  * Defines the shortcut entity class.
  *
- * @property \Drupal\link\LinkItemInterface link
+ * @property \Drupal\link\LinkItemInterface $link
  *
  * @ContentEntityType(
  *   id = "shortcut",
@@ -99,9 +99,9 @@ class Shortcut extends ContentEntityBase implements ShortcutInterface {
   public function postSave(EntityStorageInterface $storage, $update = TRUE) {
     parent::postSave($storage, $update);
 
-    // Entity::postSave() calls Entity::invalidateTagsOnSave(), which only
-    // handles the regular cases. The Shortcut entity has one special case: a
-    // newly created shortcut is *also* added to a shortcut set, so we must
+    // EntityBase::postSave() calls EntityBase::invalidateTagsOnSave(), which
+    // only handles the regular cases. The Shortcut entity has one special case:
+    // a newly created shortcut is *also* added to a shortcut set, so we must
     // invalidate the associated shortcut set's cache tag.
     if (!$update) {
       Cache::invalidateTags($this->getCacheTagsToInvalidate());

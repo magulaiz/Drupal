@@ -1,9 +1,14 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\language\Functional;
 
 use Drupal\Core\Url;
+use Drupal\locale\StringStorageInterface;
 use Drupal\Tests\BrowserTestBase;
+
+// cspell:ignore espagnol
 
 /**
  * Adds a new language with translations and tests language list order.
@@ -13,9 +18,7 @@ use Drupal\Tests\BrowserTestBase;
 class LanguageLocaleListTest extends BrowserTestBase {
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = ['language', 'locale'];
 
@@ -23,6 +26,11 @@ class LanguageLocaleListTest extends BrowserTestBase {
    * {@inheritdoc}
    */
   protected $defaultTheme = 'stark';
+
+  /**
+   * @var \Drupal\locale\StringStorageInterface
+   */
+  protected StringStorageInterface $storage;
 
   /**
    * {@inheritdoc}
@@ -36,7 +44,7 @@ class LanguageLocaleListTest extends BrowserTestBase {
   /**
    * Tests adding, editing, and deleting languages.
    */
-  public function testLanguageLocaleList() {
+  public function testLanguageLocaleList(): void {
     // User to add and remove language.
     $admin_user = $this->drupalCreateUser([
       'administer languages',
@@ -50,7 +58,7 @@ class LanguageLocaleListTest extends BrowserTestBase {
     ];
     $this->drupalGet('admin/config/regional/language/add');
     $this->submitForm($edit, 'Add language');
-    $this->assertSession()->pageTextContains('The language French has been created and can now be used');
+    $this->assertSession()->statusMessageContains('The language French has been created and can now be used', 'status');
     $this->assertSession()->addressEquals(Url::fromRoute('entity.configurable_language.collection'));
     $this->rebuildContainer();
 

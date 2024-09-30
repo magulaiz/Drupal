@@ -9,5 +9,5 @@
  * Implements hook_update_last_removed().
  */
 function block_content_update_last_removed() {
-  return 8600;
+  return 10300;
 }

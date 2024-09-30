@@ -8,14 +8,17 @@ use Drupal\Core\Cache\Cache;
 use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Cache\CacheTagsInvalidatorInterface;
 use Drupal\Core\Database\Connection;
-use Drupal\Core\Database\Database;
 use Drupal\Core\Database\DatabaseException;
 use Drupal\Core\Database\Query\SelectInterface;
+
+// cspell:ignore mlid
 
 /**
  * Provides a menu tree storage using the database.
  */
 class MenuTreeStorage implements MenuTreeStorageInterface {
+
+  use MenuLinkFieldDefinitions;
 
   /**
    * The maximum depth of a menu links tree.
@@ -72,35 +75,6 @@ class MenuTreeStorage implements MenuTreeStorageInterface {
    * @var array
    */
   protected $serializedFields;
-
-  /**
-   * List of plugin definition fields.
-   *
-   * @todo Decide how to keep these field definitions in sync.
-   *   https://www.drupal.org/node/2302085
-   *
-   * @see \Drupal\Core\Menu\MenuLinkManager::$defaults
-   *
-   * @var array
-   */
-  protected $definitionFields = [
-    'menu_name',
-    'route_name',
-    'route_parameters',
-    'url',
-    'title',
-    'description',
-    'parent',
-    'weight',
-    'options',
-    'expanded',
-    'enabled',
-    'provider',
-    'metadata',
-    'class',
-    'form_class',
-    'id',
-  ];
 
   /**
    * Constructs a new \Drupal\Core\Menu\MenuTreeStorage.
@@ -310,14 +284,11 @@ class MenuTreeStorage implements MenuTreeStorageInterface {
       }
     }
 
-    $transaction = $this->connection->startTransaction();
     try {
+      $transaction = $this->connection->startTransaction();
       if (!$original) {
         // Generate a new mlid.
-        // @todo Remove the 'return' option in Drupal 11.
-        // @see https://www.drupal.org/project/drupal/issues/3256524
-        $options = ['return' => Database::RETURN_INSERT_ID] + $this->options;
-        $link['mlid'] = $this->connection->insert($this->table, $options)
+        $link['mlid'] = $this->connection->insert($this->table, $this->options)
           ->fields(['id' => $link['id'], 'menu_name' => $link['menu_name']])
           ->execute();
         $fields = $this->preSave($link, []);
@@ -334,7 +305,9 @@ class MenuTreeStorage implements MenuTreeStorageInterface {
       $this->updateParentalStatus($link);
     }
     catch (\Exception $e) {
-      $transaction->rollBack();
+      if (isset($transaction)) {
+        $transaction->rollBack();
+      }
       throw $e;
     }
     return $affected_menus;
@@ -1164,12 +1137,12 @@ class MenuTreeStorage implements MenuTreeStorageInterface {
     try {
       $this->connection->schema()->createTable($this->table, static::schemaDefinition());
     }
-    catch (DatabaseException $e) {
+    catch (DatabaseException) {
       // If another process has already created the config table, attempting to
       // recreate it will throw an exception. In this case just catch the
       // exception and do nothing.
     }
-    catch (\Exception $e) {
+    catch (\Exception) {
       return FALSE;
     }
     return TRUE;
@@ -1196,11 +1169,11 @@ class MenuTreeStorage implements MenuTreeStorageInterface {
   /**
    * Determines fields that are part of the plugin definition.
    *
-   * @return array
+   * @return string[]
    *   The list of the subset of fields that are part of the plugin definition.
    */
   protected function definitionFields() {
-    return $this->definitionFields;
+    return array_keys($this->defaults);
   }
 
   /**

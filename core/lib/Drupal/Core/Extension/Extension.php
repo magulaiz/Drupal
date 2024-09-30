@@ -10,6 +10,7 @@ namespace Drupal\Core\Extension;
  *
  * @see https://bugs.php.net/bug.php?id=66052
  */
+#[\AllowDynamicProperties]
 class Extension {
 
   /**
@@ -48,6 +49,11 @@ class Extension {
    * @var string
    */
   protected $root;
+
+  /**
+   * The extension info array.
+   */
+  public array $info;
 
   /**
    * Constructs a new Extension object.
@@ -151,15 +157,18 @@ class Extension {
   }
 
   /**
-   * Re-routes method calls to SplFileInfo.
+   * Returns SplFileInfo instance for the extension's info file.
    *
-   * Offers all SplFileInfo methods to consumers; e.g., $extension->getMTime().
+   * @return \SplFileInfo
+   *   The object to access a file information of info file.
+   *
+   * @see https://www.php.net/manual/class.splfileinfo.php
    */
-  public function __call($method, array $args) {
+  public function getFileInfo(): \SplFileInfo {
     if (!isset($this->splFileInfo)) {
       $this->splFileInfo = new \SplFileInfo($this->root . '/' . $this->pathname);
     }
-    return call_user_func_array([$this->splFileInfo, $method], $args);
+    return $this->splFileInfo;
   }
 
   /**
@@ -168,7 +177,7 @@ class Extension {
    * @return array
    *   The names of all variables that should be serialized.
    */
-  public function __sleep() {
+  public function __sleep(): array {
     // @todo \Drupal\Core\Extension\ThemeExtensionList is adding custom
     //   properties to the Extension object.
     $properties = get_object_vars($this);
@@ -181,7 +190,7 @@ class Extension {
   /**
    * Magic method implementation to unserialize the extension object.
    */
-  public function __wakeup() {
+  public function __wakeup(): void {
     // Get the app root from the container. While compiling the container we
     // have to discover all the extension service files in
     // \Drupal\Core\DrupalKernel::initializeServiceProviders(). This results in
@@ -199,14 +208,21 @@ class Extension {
    *   TRUE if an extension is marked as experimental, FALSE otherwise.
    */
   public function isExperimental(): bool {
-    // Currently, this function checks for both the key/value pairs
-    // 'experimental: true' and 'lifecycle: experimental' to determine if an
-    // extension is marked as experimental.
-    // @todo Remove the check for 'experimental: true' as part of
-    // https://www.drupal.org/node/3250342
-    return (isset($this->info['experimental']) && $this->info['experimental'])
-    || (isset($this->info[ExtensionLifecycle::LIFECYCLE_IDENTIFIER])
+    return (isset($this->info[ExtensionLifecycle::LIFECYCLE_IDENTIFIER])
         && $this->info[ExtensionLifecycle::LIFECYCLE_IDENTIFIER] === ExtensionLifecycle::EXPERIMENTAL);
+  }
+
+  /**
+   * Checks if an extension is marked as obsolete.
+   *
+   * @return bool
+   *   TRUE if an extension is marked as obsolete, FALSE otherwise.
+   */
+  public function isObsolete(): bool {
+    // This function checks for 'lifecycle: obsolete' to determine if an
+    // extension is marked as obsolete.
+    return (isset($this->info[ExtensionLifecycle::LIFECYCLE_IDENTIFIER])
+        && $this->info[ExtensionLifecycle::LIFECYCLE_IDENTIFIER] === ExtensionLifecycle::OBSOLETE);
   }
 
 }

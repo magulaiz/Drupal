@@ -38,8 +38,6 @@ function locale_translation_flush_projects() {
  *   - "project_type": Project type, e.g. 'module', 'theme'.
  *   - "core": Core release version, e.g. 8.x
  *   - "version": Project release version, e.g. 8.x-1.0
- *     See http://drupalcode.org/project/drupalorg.git/blob/refs/heads/7.x-3.x:/drupalorg_project/plugins/release_packager/DrupalorgProjectPackageRelease.class.php#l219
- *     for how the version strings are created.
  *   - "server_pattern": Translation server po file pattern.
  *   - "status": Project status, 1 = enabled.
  */
@@ -105,7 +103,7 @@ function locale_translation_project_list() {
       'interface translation server pattern',
     ];
     $module_data = _locale_translation_prepare_project_list(\Drupal::service('extension.list.module')->getList(), 'module');
-    $theme_data = _locale_translation_prepare_project_list(\Drupal::service('theme_handler')->rebuildThemeData(), 'theme');
+    $theme_data = _locale_translation_prepare_project_list(\Drupal::service('extension.list.theme')->reset()->getList(), 'theme');
     $project_info = new ProjectInfo();
     $project_info->processInfoList($projects, $module_data, 'module', TRUE, $additional_whitelist);
     $project_info->processInfoList($projects, $theme_data, 'theme', TRUE, $additional_whitelist);
@@ -174,11 +172,8 @@ function locale_translation_default_translation_server() {
  *
  * @param array $projects
  *   Array of project names to check. Defaults to all translatable projects.
- * @param string $langcodes
+ * @param array $langcodes
  *   Array of language codes. Defaults to all translatable languages.
- *
- * @return array
- *   Available sources indexed by project and language.
  *
  * @todo Return batch or NULL.
  */
@@ -191,7 +186,7 @@ function locale_translation_check_projects($projects = [], $langcodes = []) {
   else {
     // Retrieve and save the status of local translations only.
     locale_translation_check_projects_local($projects, $langcodes);
-    \Drupal::state()->set('locale.translation_last_checked', REQUEST_TIME);
+    \Drupal::state()->set('locale.translation_last_checked', \Drupal::time()->getRequestTime());
   }
 }
 
@@ -205,7 +200,7 @@ function locale_translation_check_projects($projects = [], $langcodes = []) {
  *
  * @param array $projects
  *   Array of project names to check. Defaults to all translatable projects.
- * @param string $langcodes
+ * @param array $langcodes
  *   Array of language codes. Defaults to all translatable languages.
  */
 function locale_translation_check_projects_batch($projects = [], $langcodes = []) {
@@ -253,8 +248,7 @@ function locale_translation_batch_status_build($projects = [], $langcodes = []) 
 }
 
 /**
- * Helper function to construct batch operations checking remote translation
- * status.
+ * Constructs batch operations for checking remote translation status.
  *
  * @param array $projects
  *   Array of project names to be processed.
@@ -271,7 +265,8 @@ function _locale_translation_batch_status_operations($projects, $langcodes, $opt
 
   foreach ($projects as $project) {
     foreach ($langcodes as $langcode) {
-      // Check status of local and remote translation sources.
+      // Check version and status translation sources.
+      $operations[] = ['locale_translation_batch_version_check', [$project, $langcode]];
       $operations[] = ['locale_translation_batch_status_check', [$project, $langcode, $options]];
     }
   }

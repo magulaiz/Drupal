@@ -26,7 +26,6 @@ use Drupal\layout_builder\InlineBlockEntityOperations;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\Access\AccessResult;
 use Drupal\layout_builder\Plugin\SectionStorage\OverridesSectionStorage;
-use Drupal\layout_builder\QuickEditIntegration;
 
 /**
  * Implements hook_help().
@@ -47,10 +46,10 @@ function layout_builder_help($route_name, RouteMatchInterface $route_match) {
 
   switch ($route_name) {
     case 'help.page.layout_builder':
-      $output = '<h3>' . t('About') . '</h3>';
-      $output .= '<p>' . t('Layout Builder allows you to use layouts to customize how content, custom blocks, and other <a href=":field_help" title="Field module help, with background on content entities">content entities</a> are displayed.', [':field_help' => Url::fromRoute('help.page', ['name' => 'field'])->toString()]) . '</p>';
+      $output = '<h2>' . t('About') . '</h2>';
+      $output .= '<p>' . t('Layout Builder allows you to use layouts to customize how content, content blocks, and other <a href=":field_help" title="Field module help, with background on content entities">content entities</a> are displayed.', [':field_help' => Url::fromRoute('help.page', ['name' => 'field'])->toString()]) . '</p>';
       $output .= '<p>' . t('For more information, see the <a href=":layout-builder-documentation">online documentation for the Layout Builder module</a>.', [':layout-builder-documentation' => 'https://www.drupal.org/docs/8/core/modules/layout-builder']) . '</p>';
-      $output .= '<h3>' . t('Uses') . '</h3>';
+      $output .= '<h2>' . t('Uses') . '</h2>';
       $output .= '<dl>';
       $output .= '<dt>' . t('Default layouts') . '</dt>';
       $output .= '<dd>' . t('Layout Builder can be selectively enabled on the "Manage Display" page in the <a href=":field_ui">Field UI</a>. This allows you to control the output of each type of display individually. For example, a "Basic page" might have view modes such as Full and Teaser, with each view mode having different layouts selected.', [':field_ui' => Url::fromRoute('help.page', ['name' => 'field_ui'])->toString()]) . '</dd>';
@@ -159,14 +158,8 @@ function layout_builder_entity_view_alter(array &$build, EntityInterface $entity
   // If the entity is displayed within a Layout Builder block and the current
   // route is in the Layout Builder UI, then remove all contextual link
   // placeholders.
-  if ($display instanceof LayoutBuilderEntityViewDisplay && strpos($route_name, 'layout_builder.') === 0) {
+  if ($route_name && $display instanceof LayoutBuilderEntityViewDisplay && str_starts_with($route_name, 'layout_builder.')) {
     unset($build['#contextual_links']);
-  }
-
-  if (\Drupal::moduleHandler()->moduleExists('quickedit')) {
-    /** @var \Drupal\layout_builder\QuickEditIntegration $quick_edit_integration */
-    $quick_edit_integration = \Drupal::classResolver(QuickEditIntegration::class);
-    $quick_edit_integration->entityViewAlter($build, $entity, $display);
   }
 }
 
@@ -233,6 +226,13 @@ function layout_builder_cron() {
  * Implements hook_plugin_filter_TYPE__CONSUMER_alter().
  */
 function layout_builder_plugin_filter_block__layout_builder_alter(array &$definitions, array $extra) {
+  // Remove blocks that are not useful within Layout Builder.
+  unset($definitions['system_messages_block']);
+  unset($definitions['help_block']);
+  unset($definitions['local_tasks_block']);
+  unset($definitions['local_actions_block']);
+
+  // Remove blocks that are non-functional within Layout Builder.
   unset($definitions['system_main_block']);
   // @todo Restore the page title block in https://www.drupal.org/node/2938129.
   unset($definitions['page_title_block']);
@@ -349,15 +349,6 @@ function layout_builder_system_breadcrumb_alter(Breadcrumb &$breadcrumb, RouteMa
     $breadcrumb->setLinks($links);
     $breadcrumb->addCacheableDependency($cacheability);
   }
-}
-
-/**
- * Implements hook_quickedit_render_field().
- */
-function layout_builder_quickedit_render_field(EntityInterface $entity, $field_name, $view_mode_id, $langcode) {
-  /** @var \Drupal\layout_builder\QuickEditIntegration $quick_edit_integration */
-  $quick_edit_integration = \Drupal::classResolver(QuickEditIntegration::class);
-  return $quick_edit_integration->quickEditRenderField($entity, $field_name, $view_mode_id, $langcode);
 }
 
 /**

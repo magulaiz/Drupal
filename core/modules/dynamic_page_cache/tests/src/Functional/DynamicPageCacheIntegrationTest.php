@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\dynamic_page_cache\Functional;
 
 use Drupal\Core\EventSubscriber\MainContentViewSubscriber;
@@ -25,11 +27,6 @@ class DynamicPageCacheIntegrationTest extends BrowserTestBase {
   /**
    * {@inheritdoc}
    */
-  protected $dumpHeaders = TRUE;
-
-  /**
-   * {@inheritdoc}
-   */
   protected static $modules = ['dynamic_page_cache_test'];
 
   /**
@@ -51,7 +48,7 @@ class DynamicPageCacheIntegrationTest extends BrowserTestBase {
   /**
    * Tests that Dynamic Page Cache works correctly, and verifies the edge cases.
    */
-  public function testDynamicPageCache() {
+  public function testDynamicPageCache(): void {
     // Controllers returning plain response objects are ignored by Dynamic Page
     // Cache.
     $url = Url::fromUri('route:dynamic_page_cache_test.response');
@@ -126,6 +123,11 @@ class DynamicPageCacheIntegrationTest extends BrowserTestBase {
     // Cache.
     $this->drupalGet('dynamic-page-cache-test/html/uncacheable/tags');
     $this->assertSession()->responseHeaderEquals(DynamicPageCacheSubscriber::HEADER, 'MISS');
+
+    // Route access checkers can also bubble up cacheability data.
+    $this->drupalGet('/dynamic-page-cache-test/html/uncacheable/route-access');
+    $this->assertSession()->responseHeaderExists(DynamicPageCacheSubscriber::HEADER);
+    $this->assertSession()->responseHeaderEquals(DynamicPageCacheSubscriber::HEADER, 'UNCACHEABLE');
   }
 
 }

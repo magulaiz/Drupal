@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\js_interaction_test\Controller;
 
 use Drupal\Core\Form\FormBase;
@@ -12,7 +14,7 @@ use Drupal\Core\Url;
 class JSInteractionTestForm extends FormBase {
 
   /**
-   * @inheritDoc
+   * {@inheritdoc}
    */
   public function getFormId() {
     return __CLASS__;

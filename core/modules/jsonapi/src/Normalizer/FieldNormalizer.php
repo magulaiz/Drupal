@@ -21,16 +21,9 @@ use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 class FieldNormalizer extends NormalizerBase implements DenormalizerInterface {
 
   /**
-   * The interface or class that this Normalizer supports.
-   *
-   * @var string
-   */
-  protected $supportedInterfaceOrClass = FieldItemListInterface::class;
-
-  /**
    * {@inheritdoc}
    */
-  public function normalize($field, $format = NULL, array $context = []) {
+  public function normalize($field, $format = NULL, array $context = []): array|string|int|float|bool|\ArrayObject|NULL {
     /** @var \Drupal\Core\Field\FieldItemListInterface $field */
     $normalized_items = $this->normalizeFieldItems($field, $format, $context);
     assert($context['resource_object'] instanceof ResourceObject);
@@ -42,7 +35,7 @@ class FieldNormalizer extends NormalizerBase implements DenormalizerInterface {
   /**
    * {@inheritdoc}
    */
-  public function denormalize($data, $class, $format = NULL, array $context = []) {
+  public function denormalize($data, $class, $format = NULL, array $context = []): mixed {
     $field_definition = $context['field_definition'];
     assert($field_definition instanceof FieldDefinitionInterface);
     $resource_type = $context['resource_type'];
@@ -83,7 +76,7 @@ class FieldNormalizer extends NormalizerBase implements DenormalizerInterface {
    * @param array $context
    *   The context array.
    *
-   * @return \Drupal\jsonapi\Normalizer\Value\FieldItemNormalizerValue[]
+   * @return \Drupal\jsonapi\Normalizer\FieldItemNormalizer[]
    *   The array of normalized field items.
    */
   protected function normalizeFieldItems(FieldItemListInterface $field, $format, array $context) {
@@ -99,8 +92,10 @@ class FieldNormalizer extends NormalizerBase implements DenormalizerInterface {
   /**
    * {@inheritdoc}
    */
-  public function hasCacheableSupportsMethod(): bool {
-    return TRUE;
+  public function getSupportedTypes(?string $format): array {
+    return [
+      FieldItemListInterface::class => TRUE,
+    ];
   }
 
 }

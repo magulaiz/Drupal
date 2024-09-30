@@ -7,6 +7,7 @@ use Drupal\Core\Entity\EntityChangedTrait;
 use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Field\BaseFieldDefinition;
+use Drupal\Core\Flood\PrefixFloodInterface;
 use Drupal\Core\Language\LanguageInterface;
 use Drupal\user\RoleInterface;
 use Drupal\user\StatusItem;
@@ -125,6 +126,18 @@ class User extends ContentEntityBase implements UserInterface {
         if ($this->id() == \Drupal::currentUser()->id()) {
           \Drupal::service('session')->migrate();
         }
+
+        $flood_config = \Drupal::config('user.flood');
+        $flood_service = \Drupal::flood();
+        $identifier = $this->id();
+        if ($flood_config->get('uid_only')) {
+          // Clear flood events based on the uid only if configured.
+          $flood_service->clear('user.failed_login_user', $identifier);
+        }
+        elseif ($flood_service instanceof PrefixFloodInterface) {
+          $flood_service->clearByPrefix('user.failed_login_user', $identifier);
+        }
+
       }
 
       // If the user was blocked, delete the user's sessions to force a logout.
@@ -195,6 +208,8 @@ class User extends ContentEntityBase implements UserInterface {
     $roles = $this->getRoles(TRUE);
     $roles[] = $rid;
     $this->set('roles', array_unique($roles));
+
+    return $this;
   }
 
   /**
@@ -202,18 +217,15 @@ class User extends ContentEntityBase implements UserInterface {
    */
   public function removeRole($rid) {
     $this->set('roles', array_diff($this->getRoles(TRUE), [$rid]));
+
+    return $this;
   }
 
   /**
    * {@inheritdoc}
    */
-  public function hasPermission($permission) {
-    // User #1 has all privileges.
-    if ((int) $this->id() === 1) {
-      return TRUE;
-    }
-
-    return $this->getRoleStorage()->isPermissionInRoles($permission, $this->getRoles());
+  public function hasPermission(string $permission) {
+    return \Drupal::service('permission_checker')->hasPermission($permission, $this);
   }
 
   /**
@@ -226,7 +238,7 @@ class User extends ContentEntityBase implements UserInterface {
   /**
    * {@inheritdoc}
    */
-  public function setPassword($password) {
+  public function setPassword(#[\SensitiveParameter] $password) {
     $this->get('pass')->value = $password;
     return $this;
   }
@@ -301,6 +313,9 @@ class User extends ContentEntityBase implements UserInterface {
    * {@inheritdoc}
    */
   public function activate() {
+    if ($this->isAnonymous()) {
+      throw new \LogicException('The anonymous user account should remain blocked at all times.');
+    }
     $this->get('status')->value = 1;
     return $this;
   }
@@ -366,7 +381,7 @@ class User extends ContentEntityBase implements UserInterface {
    * {@inheritdoc}
    */
   public function isAnonymous() {
-    return $this->id() == 0;
+    return $this->id() === 0 || $this->id() === '0';
   }
 
   /**
@@ -396,8 +411,9 @@ class User extends ContentEntityBase implements UserInterface {
   /**
    * {@inheritdoc}
    */
-  public function setExistingPassword($password) {
+  public function setExistingPassword(#[\SensitiveParameter] $password) {
     $this->get('pass')->existing = $password;
+    return $this;
   }
 
   /**
@@ -454,8 +470,8 @@ class User extends ContentEntityBase implements UserInterface {
     $fields['preferred_langcode'] = BaseFieldDefinition::create('language')
       ->setLabel(t('Preferred language code'))
       ->setDescription(t("The user's preferred language code for receiving emails and viewing the site."))
-      // @todo: Define this via an options provider once
-      // https://www.drupal.org/node/2329937 is completed.
+      // @todo Define this via an options provider once
+      //   https://www.drupal.org/node/2329937 is completed.
       ->addPropertyConstraints('value', [
         'AllowedValues' => ['callback' => __CLASS__ . '::getAllowedConfigurableLanguageCodes'],
       ]);
@@ -463,12 +479,12 @@ class User extends ContentEntityBase implements UserInterface {
     $fields['preferred_admin_langcode'] = BaseFieldDefinition::create('language')
       ->setLabel(t('Preferred admin language code'))
       ->setDescription(t("The user's preferred language code for viewing administration pages."))
-      // @todo: A default value of NULL is ignored, so we have to specify
-      // an empty field item structure instead. Fix this in
-      // https://www.drupal.org/node/2318605.
+      // @todo A default value of NULL is ignored, so we have to specify
+      //   an empty field item structure instead. Fix this in
+      //   https://www.drupal.org/node/2318605.
       ->setDefaultValue([0 => ['value' => NULL]])
-      // @todo: Define this via an options provider once
-      // https://www.drupal.org/node/2329937 is completed.
+      // @todo Define this via an options provider once
+      //   https://www.drupal.org/node/2329937 is completed.
       ->addPropertyConstraints('value', [
         'AllowedValues' => ['callback' => __CLASS__ . '::getAllowedConfigurableLanguageCodes'],
       ]);
@@ -504,8 +520,8 @@ class User extends ContentEntityBase implements UserInterface {
       ->setLabel(t('Timezone'))
       ->setDescription(t('The timezone of this user.'))
       ->setSetting('max_length', 32)
-      // @todo: Define this via an options provider once
-      // https://www.drupal.org/node/2329937 is completed.
+      // @todo Define this via an options provider once
+      //   https://www.drupal.org/node/2329937 is completed.
       ->addPropertyConstraints('value', [
         'AllowedValues' => ['callback' => __CLASS__ . '::getAllowedTimezones'],
       ]);
@@ -567,7 +583,7 @@ class User extends ContentEntityBase implements UserInterface {
    *   The allowed values.
    */
   public static function getAllowedTimezones() {
-    return array_keys(system_time_zones());
+    return \DateTimeZone::listIdentifiers();
   }
 
   /**
