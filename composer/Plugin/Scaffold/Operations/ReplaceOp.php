@@ -84,8 +84,12 @@ class ReplaceOp extends AbstractOperation {
    *
    * @param string $destination_path
    *   Path to the destination file.
+   * @param \Composer\IO\IOInterface $io
+   *   IOInterface for output.
+   * @param \Drupal\Composer\Plugin\Scaffold\ScaffoldFilePath\Interpolator $interpolator
+   *   The interpolator for writing messages.
    */
-  public function processDestinationPermissions(string $destination_path):void {
+  public function processDestinationPermissions(string $destination_path, IOInterface $io, $interpolator): void {
     try {
       chmod($destination_path, 0744);
     }
