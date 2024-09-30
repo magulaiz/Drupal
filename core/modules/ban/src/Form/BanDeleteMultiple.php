@@ -17,7 +17,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  *
  * @internal
  */
-class BanDeleteMultiple extends ConfirmFormBase {
+final class BanDeleteMultiple extends ConfirmFormBase {
 
   /**
    * The banned IP addresses.
@@ -42,8 +42,8 @@ class BanDeleteMultiple extends ConfirmFormBase {
   /**
    * {@inheritdoc}
    */
-  public static function create(ContainerInterface $container) {
-    return new static(
+  public static function create(ContainerInterface $container): self {
+    return new self(
       $container->get('ban.ip_manager'),
       $container->get('tempstore.private'),
     );
