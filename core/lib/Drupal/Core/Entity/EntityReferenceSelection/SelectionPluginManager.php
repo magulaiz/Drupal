@@ -62,8 +62,6 @@ class SelectionPluginManager extends DefaultPluginManager implements SelectionPl
     $selection_handler_groups = $this->getSelectionGroups($target_type);
 
     // Sort the selection plugins by weight and select the best match.
-    
-    // Sort the selection plugins by weight and select the best match.
     if ($selection_handler_groups && count($selection_handler_groups) > 1) {
       // Order the data features groups based on the 'weight' element.
       uasort($selection_handler_groups[$base_plugin_id], ['Drupal\Component\Utility\SortArray', 'sortByWeightElement']);
