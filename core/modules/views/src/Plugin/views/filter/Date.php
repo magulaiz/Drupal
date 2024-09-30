@@ -56,11 +56,6 @@ class Date extends NumericFilter {
       return;
     }
 
-    if (empty($this->options['expose']['required'])) {
-      // Who cares what the value is if it's exposed and non-required.
-      return;
-    }
-
     $value = &$form_state->getValue($this->options['expose']['identifier']);
     if (!empty($this->options['expose']['use_operator']) && !empty($this->options['expose']['operator_id'])) {
       $operator = &$form_state->getValue($this->options['expose']['operator_id']);
@@ -69,7 +64,7 @@ class Date extends NumericFilter {
       $operator = $this->operator;
     }
 
-    $this->validateValidTime($this->options['expose']['identifier'], $form_state, $operator, $value);
+    $this->validateValidTimeExposed($form, $form_state, $operator, $value);
 
   }
 
@@ -93,6 +88,33 @@ class Date extends NumericFilter {
       $max = strtotime($value['max']);
       if ($max == -1 || $max === FALSE) {
         $form_state->setError($form['max'], $this->t('Invalid date format.'));
+      }
+    }
+  }
+
+  public function validateValidTimeExposed(&$form, FormStateInterface $form_state, $operator, $value) {
+    $operators = $this->operators();
+
+    if ($operators[$operator]['values'] == 1) {
+      $convert = strtotime($value);
+      if ((!empty($value) || !empty($form[$this->options['expose']['required']]))
+        && !empty($form[$this->options['expose']['identifier']])
+        && ($convert == -1 || $convert === FALSE)
+      ) {
+        $form_state->setError($form[$this->options['expose']['identifier']], $this->t('Invalid date format.'));
+      }
+    }
+    elseif ($operators[$operator]['values'] == 2) {
+      $inner_form = $form[$this->options['expose']['identifier'] . '_wrapper'][$this->options['expose']['identifier']];
+      $min = strtotime($value['min']);
+      if ((!empty($value['min']) || !empty($form[$this->options['expose']['required']]))
+        && ($min == -1 || $min === FALSE)) {
+        $form_state->setError($inner_form['min'], $this->t('Invalid date format.'));
+      }
+      $max = strtotime($value['max']);
+      if ((!empty($value['max']) || !empty($form[$this->options['expose']['required']]))
+        && ($max == -1 || $max === FALSE)) {
+        $form_state->setError($inner_form['max'], $this->t('Invalid date format.'));
       }
     }
   }
