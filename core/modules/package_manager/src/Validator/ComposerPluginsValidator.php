@@ -106,8 +106,8 @@ final class ComposerPluginsValidator implements EventSubscriberInterface {
         [__CLASS__, 'normalizePackageName'],
         $settings->get('additional_trusted_composer_plugins')
       ),
-      // For now, additional_trusted_composer_plugins cannot specify a version
-      // constraint.
+      // The additional_trusted_composer_plugins setting cannot specify a
+      // version constraint. The plugins are either trusted or they're not.
       '*'
     );
   }
