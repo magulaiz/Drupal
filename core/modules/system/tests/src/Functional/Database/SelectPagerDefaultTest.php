@@ -98,7 +98,7 @@ class SelectPagerDefaultTest extends DatabaseTestBase {
   public function testInnerPagerQuery(): void {
     $connection = Database::getConnection();
     $query = $connection->select('test', 't')
-      ->extend('pager');
+      ->extend(PagerSelectExtender::class);
     $query
       ->fields('t', ['age'])
       ->orderBy('age')
@@ -121,7 +121,7 @@ class SelectPagerDefaultTest extends DatabaseTestBase {
    */
   public function testHavingPagerQuery(): void {
     $query = Database::getConnection()->select('test', 't')
-      ->extend('pager');
+      ->extend(PagerSelectExtender::class);
     $query
       ->fields('t', ['name'])
       ->orderBy('name')
@@ -149,7 +149,7 @@ class SelectPagerDefaultTest extends DatabaseTestBase {
 
     $connection = Database::getConnection();
     $query = $connection->select('test', 't')
-      ->extend('pager')
+      ->extend(PagerSelectExtender::class)
       ->element(2)
       ->fields('t', ['name'])
       ->orderBy('age')
@@ -162,7 +162,7 @@ class SelectPagerDefaultTest extends DatabaseTestBase {
     // Setting an element smaller than the previous one should not collide with
     // the existing pager.
     $query = $connection->select('test', 't')
-      ->extend('pager')
+      ->extend(PagerSelectExtender::class)
       ->element(1)
       ->fields('t', ['name'])
       ->orderBy('age')
@@ -173,7 +173,7 @@ class SelectPagerDefaultTest extends DatabaseTestBase {
     $this->assertEquals('George', $name, 'Pager query #2 with a specified element ID returned the correct results.');
 
     $query = $connection->select('test', 't')
-      ->extend('pager')
+      ->extend(PagerSelectExtender::class)
       ->fields('t', ['name'])
       ->orderBy('age')
       ->limit(1);

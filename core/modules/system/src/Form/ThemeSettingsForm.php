@@ -19,8 +19,6 @@ use Drupal\Core\Theme\ThemeManagerInterface;
 
 // cspell:ignore apng
 
-// cspell:ignore apng
-
 /**
  * Displays theme configuration for entire site and individual themes.
  *

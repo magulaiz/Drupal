@@ -139,12 +139,6 @@ class Cookie implements AuthenticationProviderInterface, EventSubscriberInterfac
         if ($response instanceof TrustedRedirectResponse) {
           $response->setTrustedTargetUrl($url);
         }
-        // In the case of trusted redirect, we have to update the list of
-        // trusted URLs because here we've just modified its target URL
-        // which is in the list.
-        if ($response instanceof TrustedRedirectResponse) {
-          $response->setTrustedTargetUrl($url);
-        }
         $response->setTargetUrl($url);
       }
     }

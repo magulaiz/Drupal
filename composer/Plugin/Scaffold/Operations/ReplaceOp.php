@@ -67,7 +67,6 @@ class ReplaceOp extends AbstractOperation {
       $io->write($interpolator->interpolate("  - Skip <info>[dest-rel-path]</info> because it already exists and overwrite is <comment>false</comment>."));
       return new ScaffoldResult($destination, FALSE);
     }
-    $this->processDestinationPermissions(dirname($destination_path));
 
     // Get rid of the destination if it exists, and make sure that
     // the directory where it's going to be placed exists.
@@ -77,21 +76,6 @@ class ReplaceOp extends AbstractOperation {
       return $this->symlinkScaffold($destination, $io);
     }
     return $this->copyScaffold($destination, $io);
-  }
-
-  /**
-   * Allow full control to the destination before the file manipulation.
-   *
-   * @param string $destination_path
-   *   Path to the destination file.
-   */
-  public function processDestinationPermissions(string $destination_path):void {
-    try {
-      chmod($destination_path, 0744);
-    }
-    catch (\Error $e) {
-      $io->write($interpolator->interpolate("Destination overwrite failed due to: " . $e->getMessage()));
-    }
   }
 
   /**

@@ -7,6 +7,7 @@ namespace Drupal\KernelTests\Core\Database;
 use Drupal\Core\Database\InvalidQueryException;
 use Drupal\Core\Database\Database;
 use Drupal\Core\Database\DatabaseExceptionWrapper;
+use Drupal\Core\Database\Query\SelectExtender;
 
 /**
  * Tests the Select query builder.
@@ -282,7 +283,7 @@ class SelectTest extends DatabaseTestBase {
    */
   public function testExtenderAlwaysFalseCondition(): void {
     $names = $this->connection->select('test', 'test')
-      ->extend('test_extender')
+      ->extend(SelectExtender::class)
       ->fields('test', ['name'])
       ->condition('age', 27)
       ->execute()->fetchCol();
@@ -291,7 +292,7 @@ class SelectTest extends DatabaseTestBase {
     $this->assertSame($names[0], 'George');
 
     $names = $this->connection->select('test', 'test')
-      ->extend('test_extender')
+      ->extend(SelectExtender::class)
       ->fields('test', ['name'])
       ->condition('age', 27)
       ->alwaysFalse()

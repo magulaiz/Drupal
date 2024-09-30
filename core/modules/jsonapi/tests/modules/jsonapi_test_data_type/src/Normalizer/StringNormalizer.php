@@ -34,11 +34,4 @@ class StringNormalizer extends NormalizerBase implements DenormalizerInterface {
     return [StringData::class => TRUE];
   }
 
-  /**
-   * {@inheritdoc}
-   */
-  public function hasCacheableSupportsMethod(): bool {
-    return TRUE;
-  }
-
 }

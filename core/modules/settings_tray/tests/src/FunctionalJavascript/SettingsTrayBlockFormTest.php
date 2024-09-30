@@ -234,11 +234,7 @@ class SettingsTrayBlockFormTest extends SettingsTrayTestBase {
     $this->markTestSkipped("Skipped due to frequent random test failures. See https://www.drupal.org/project/drupal/issues/3317520");
     foreach (static::getTestThemes() as $theme) {
       $this->enableTheme($theme);
-      $block = $this->placeBlock('system_powered_by_block', [
-        // @todo Remove this when
-        //   https://www.drupal.org/project/drupal/issues/3257504 is fixed.
-        'region' => 'sidebar_first',
-      ]);
+      $block = $this->placeBlock('system_powered_by_block');
       foreach (['contextual_link', 'toolbar_link'] as $enable_option) {
         $this->drupalGet('user');
         $this->assertEditModeDisabled();

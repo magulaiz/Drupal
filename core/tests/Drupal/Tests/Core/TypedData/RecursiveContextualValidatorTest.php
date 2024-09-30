@@ -10,7 +10,6 @@ use Drupal\Core\TypedData\DataDefinition;
 use Drupal\Core\TypedData\MapDataDefinition;
 use Drupal\Core\TypedData\TypedData as TypedDataBase;
 use Drupal\Core\TypedData\TypedDataManager;
-use Drupal\Core\TypedData\Validation\ExecutionContextFactory;
 use Drupal\Core\TypedData\Validation\RecursiveValidator;
 use Drupal\Core\Validation\ConstraintManager;
 use Drupal\Core\Validation\ExecutionContextFactory;

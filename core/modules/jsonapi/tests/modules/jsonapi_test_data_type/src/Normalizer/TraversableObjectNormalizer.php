@@ -26,11 +26,4 @@ class TraversableObjectNormalizer extends NormalizerBase {
     return [TraversableObject::class => TRUE];
   }
 
-  /**
-   * {@inheritdoc}
-   */
-  public function hasCacheableSupportsMethod(): bool {
-    return TRUE;
-  }
-
 }

@@ -847,40 +847,6 @@ abstract class Connection {
   }
 
   /**
-   * Returns the ID of the last inserted row or sequence value.
-   *
-   * This method should normally be used only within database driver code.
-   *
-   * This is a proxy to invoke lastInsertId() from the wrapped connection.
-   * If a sequence name is not specified for the name parameter, this returns a
-   * string representing the row ID of the last row that was inserted into the
-   * database.
-   * If a sequence name is specified for the name parameter, this returns a
-   * string representing the last value retrieved from the specified sequence
-   * object.
-   *
-   * @param string|null $name
-   *   (Optional) Name of the sequence object from which the ID should be
-   *   returned.
-   *
-   * @return string
-   *   The value returned by the wrapped connection.
-   *
-   * @throws \Drupal\Core\Database\DatabaseExceptionWrapper
-   *   In case of failure.
-   *
-   * @see \PDO::lastInsertId
-   *
-   * @internal
-   */
-  public function lastInsertId(?string $name = NULL): string {
-    if (($last_insert_id = $this->connection->lastInsertId($name)) === FALSE) {
-      throw new DatabaseExceptionWrapper("Could not determine last insert id" . $name === NULL ? '' : " for sequence $name");
-    }
-    return $last_insert_id;
-  }
-
-  /**
    * Prepares and returns a MERGE query object.
    *
    * @param string $table
@@ -1476,14 +1442,8 @@ abstract class Connection {
    *
    * @throws \Drupal\Core\DependencyInjection\ContainerNotInitializedException
    *   If the container has not been initialized yet.
-   *
-   * @deprecated in drupal:9.4.0 and is removed from drupal:10.0.0. Use
-   *   dependency injection instead.
-   *
-   * @see https://www.drupal.org/node/3218001
    */
   public function getPagerManager(): PagerManagerInterface {
-    @trigger_error(__METHOD__ . '() is deprecated in drupal:9.4.0 and will be required in drupal:10.0.0. Use dependency injection instead. See https://www.drupal.org/node/3218001', E_USER_DEPRECATED);
     return \Drupal::service('pager.manager');
   }
 

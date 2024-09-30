@@ -56,7 +56,7 @@ class Search extends ArgumentPluginBase {
    */
   protected function queryParseSearchExpression($input) {
     if (!isset($this->searchQuery)) {
-      $this->searchQuery = \Drupal::service('database.replica')->select('search_index', 'i')->extend('views_search_query');
+      $this->searchQuery = \Drupal::service('database.replica')->select('search_index', 'i')->extend(ViewsSearchQuery::class);
       $this->searchQuery->searchExpression($input, $this->searchType);
       $this->searchQuery->publicParseSearchExpression();
     }

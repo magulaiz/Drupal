@@ -429,7 +429,7 @@ ckeditor5_horizontalLine:
       - <hr>
 
 ckeditor5_alignment:
-  ckeditor5: &alignment_ckeditor5_section
+  ckeditor5:
     plugins: [alignment.Alignment]
     config:
       # @see core/modules/system/css/components/align.module.css
@@ -443,7 +443,7 @@ ckeditor5_alignment:
             className: text-align-right
           - name: justify
             className: text-align-justify
-  drupal: &alignment_drupal_section
+  drupal:
     label: Alignment
     library: core/ckeditor5.alignment
     admin_library: ckeditor5/internal.admin.alignment

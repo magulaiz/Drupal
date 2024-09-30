@@ -64,10 +64,3 @@ function views_post_update_views_data_argument_plugin_id(?array &$sandbox = NULL
     return $view_config_updater->needsEntityArgumentUpdate($view);
   });
 }
-
-/**
- * Clear caches due to adding a relationship from revision table to base table.
- */
-function views_post_update_provide_revision_table_relationship() {
-  // Empty post-update hook.
-}

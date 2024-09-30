@@ -393,7 +393,6 @@ drupal.ajax:
     - core/jquery
     - core/drupal
     - core/drupalSettings
-    - core/drupal.nodelist.foreach
     - core/drupal.progress
     - core/once
     - core/tabbable
@@ -469,11 +468,6 @@ drupal.autocomplete:
     - core/drupal.ajax
     - core/drupal.jquery.position
     - core/tabbable
-
-drupal.array.includes:
-  version: VERSION
-  js:
-    misc/polyfills/array.includes.js: { weight: -20 }
 
 drupal.batch:
   version: VERSION
@@ -719,7 +713,6 @@ drupal.timezone:
   js:
     misc/timezone.js: {}
   dependencies:
-    - core/drupal.nodelist.foreach
     - core/jquery
     - core/once
     - core/drupal

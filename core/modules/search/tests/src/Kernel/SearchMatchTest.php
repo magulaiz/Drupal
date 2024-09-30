@@ -8,6 +8,7 @@ use Drupal\Core\Database\Database;
 use Drupal\Core\Language\LanguageInterface;
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\search\SearchIndexInterface;
+use Drupal\search\SearchQuery;
 
 // cspell:ignore cillum dolore enim veniam
 
@@ -166,7 +167,7 @@ class SearchMatchTest extends KernelTestBase {
     $connection = Database::getConnection();
     foreach ($queries as $query => $results) {
       $result = $connection->select('search_index', 'i')
-        ->extend('search_query')
+        ->extend(SearchQuery::class)
         ->searchExpression($query, static::SEARCH_TYPE)
         ->execute();
 
@@ -186,7 +187,7 @@ class SearchMatchTest extends KernelTestBase {
     ];
     foreach ($queries as $query => $results) {
       $result = $connection->select('search_index', 'i')
-        ->extend('search_query')
+        ->extend(SearchQuery::class)
         ->searchExpression($query, static::SEARCH_TYPE_2)
         ->execute();
 
@@ -209,7 +210,7 @@ class SearchMatchTest extends KernelTestBase {
     ];
     foreach ($queries as $query => $results) {
       $result = $connection->select('search_index', 'i')
-        ->extend('search_query')
+        ->extend(SearchQuery::class)
         ->searchExpression($query, static::SEARCH_TYPE_JPN)
         ->execute();
 

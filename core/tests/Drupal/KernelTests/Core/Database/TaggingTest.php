@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Drupal\KernelTests\Core\Database;
 
+use Drupal\Core\Database\Query\SelectExtender;
+
 /**
  * Tests the tagging capabilities of the Select builder.
  *
@@ -62,7 +64,7 @@ class TaggingTest extends DatabaseTestBase {
    */
   public function testExtenderHasTag(): void {
     $query = $this->connection->select('test')
-      ->extend('test_extender');
+      ->extend(SelectExtender::class);
     $query->addField('test', 'name');
     $query->addField('test', 'age', 'age');
 
@@ -77,7 +79,7 @@ class TaggingTest extends DatabaseTestBase {
    */
   public function testExtenderHasAllTags(): void {
     $query = $this->connection->select('test')
-      ->extend('test_extender');
+      ->extend(SelectExtender::class);
     $query->addField('test', 'name');
     $query->addField('test', 'age', 'age');
 
@@ -93,7 +95,7 @@ class TaggingTest extends DatabaseTestBase {
    */
   public function testExtenderHasAnyTag(): void {
     $query = $this->connection->select('test')
-      ->extend('test_extender');
+      ->extend(SelectExtender::class);
     $query->addField('test', 'name');
     $query->addField('test', 'age', 'age');
 
