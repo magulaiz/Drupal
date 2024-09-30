@@ -155,9 +155,9 @@ class BanAdminTest extends UnitTestCase {
   /**
    * Get the mocked Temp Store service.
    *
-   * @return \Drupal\Core\TempStore\PrivateTempStoreFactory
+   * @return \Drupal\Core\TempStore\PrivateTempStoreFactory|\PHPUnit\Framework\MockObject\MockObject
    */
-  protected function getTempStoreMock(): PrivateTempStoreFactory {
+  protected function getTempStoreMock(): PrivateTempStoreFactory&MockObject {
     $tempStore = $this->createMock(PrivateTempStoreFactory::class);
     $tempStore->expects($this->any())
       ->method('get')
