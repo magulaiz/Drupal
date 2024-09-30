@@ -12,7 +12,7 @@ use Drupal\KernelTests\KernelTestBase;
  * @group core
  * @group legacy
  */
-class InstallVersionInfoDeprecationTest extends KernelTestBase {
+class CoreFunctionDeprecationTest extends KernelTestBase {
 
   /**
    * Tests that _install_get_version_info() triggers a deprecation notice.
