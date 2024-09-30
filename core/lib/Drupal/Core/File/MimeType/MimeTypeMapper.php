@@ -12,14 +12,16 @@ class MimeTypeMapper implements MimeTypeMapperInterface {
   /**
    * Default MIME extension mapping.
    *
-   * @var array
+   * @var array{'mimetypes': array{int,string}, 'extensions': array{string,int}}
    *   An array consisting of two arrays:
    *     - mimetypes: MIME types, keyed by a unique number.
    *     - extensions: an associative array with the MIME type key numbers as
    *       values. The keys are file extensions, in lower case and without any
    *       preceding dot.
+   *
+   * cspell:disable.
    */
-  protected static $defaultMapping = [
+  protected static array $defaultMapping = [
     'mimetypes' => [
       0 => 'application/andrew-inset',
       1 => 'application/atom',
@@ -864,6 +866,7 @@ class MimeTypeMapper implements MimeTypeMapperInterface {
     ],
   ];
 
+  // cspell:enable
 
   /**
    * MIME extension mapping.
@@ -874,19 +877,12 @@ class MimeTypeMapper implements MimeTypeMapperInterface {
    * @var array
    *   Array of mimetypes correlated to the extensions that relate to them.
    */
-  protected $mapping;
-
-  /**
-   * The module handler.
-   *
-   * @var \Drupal\Core\Extension\ModuleHandlerInterface
-   */
-  protected $moduleHandler;
+  protected array $mapping = [];
 
   /**
    * {@inheritdoc}
    */
-  public function alterMapping(ModuleHandlerInterface $module_handler) {
+  public function alterMapping(ModuleHandlerInterface $module_handler): self {
     if (!$this->mapping) {
       $this->mapping = static::$defaultMapping;
       $module_handler->alterDeprecated('This hook is deprecated in drupal:10.1.0 and will be removed before drupal:11.0.0. Implement hook_mimetype_alter() instead. See https://www.drupal.org/node/2311679.', 'file_mimetype_mapping', $this->mapping);

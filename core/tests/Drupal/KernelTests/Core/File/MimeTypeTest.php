@@ -86,6 +86,7 @@ class MimeTypeTest extends FileTestBase {
       'junk' => NULL,
       'file_test_1' => 'application/octet-stream',
       'file_test_2' => 'application/octet-stream',
+      // cspell:ignore msword
       'doc' => 'application/msword',
       'ogg' => 'application/ogg',
       'pdf' => 'application/pdf',

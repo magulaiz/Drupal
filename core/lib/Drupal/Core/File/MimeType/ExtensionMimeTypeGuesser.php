@@ -2,6 +2,7 @@
 
 namespace Drupal\Core\File\MimeType;
 
+use Drupal\Core\DependencyInjection\DeprecatedServicePropertyTrait;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Symfony\Component\Mime\MimeTypeGuesserInterface;
 
@@ -10,89 +11,43 @@ use Symfony\Component\Mime\MimeTypeGuesserInterface;
  */
 class ExtensionMimeTypeGuesser implements MimeTypeGuesserInterface {
 
-  /**
-   * Default MIME extension mapping.
-   *
-   * @var array
-   *   Array of mimetypes correlated to the extensions that relate to them.
-   *
-   * @deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. No
-   *   replacement provided.
-   *
-   * @see https://www.drupal.org/project/drupal/issues/2311679
-   */
-  protected $defaultMapping = [];
+  use DeprecatedServicePropertyTrait;
 
   /**
-   * The MIME types mapping array after going through the module handler.
-   *
-   * @var array
-   *
-   * @deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. No
-   *   replacement provided.
-   *
-   * @see https://www.drupal.org/project/drupal/issues/2311679
+   * {@inheritdoc}
    */
-  protected $mapping;
+  protected array $deprecatedProperties = [
+    'moduleHandler' => 'module_handler',
+  ];
 
   /**
    * The MIME types mapper service.
-   *
-   * @var \Drupal\Core\File\MimeType\MimeTypeMapperInterface
    */
-  protected $mapper;
-
-  /**
-   * The module handler.
-   *
-   * @var \Drupal\Core\Extension\ModuleHandlerInterface
-   *
-   * @deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. No
-   *   replacement provided.
-   *
-   * @see https://www.drupal.org/project/drupal/issues/2311679
-   */
-  protected $moduleHandler;
+  protected MimeTypeMapperInterface $mapper;
 
   /**
    * Constructs a new ExtensionMimeTypeGuesser.
    *
-   * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
-   *   The module handler.
-   * @param \Drupal\Core\Extension\MimeTypeMapperInterface $mapper
+   * @param \Drupal\Core\Extension\ModuleHandlerInterface|\Drupal\Core\File\MimeType\MimeTypeMapperInterface $mapper
    *   The MIME types mapper service.
    */
   public function __construct(
-    ModuleHandlerInterface $module_handler,
-    MimeTypeMapperInterface $mapper = NULL
+    ModuleHandlerInterface | MimeTypeMapperInterface $mapper,
   ) {
-    if ($mapper === NULL) {
+    if (!$mapper instanceof MimeTypeMapperInterface) {
       @trigger_error(
-        'Calling ' . __METHOD__ . '() without the $mapper argument is deprecated in drupal:10.1.0 and will be required before drupal:11.0.0. See https://www.drupal.org/node/2311679.',
+        'Calling ' . __METHOD__ . '() with the $mapper argument as an instance of \Drupal\Core\Extension\ModuleHandlerInterface is deprecated in drupal:11.1.0 and an instance of \Drupal\Core\File\MimeType\MimeTypeMapperInterface is required in drupal:11.0.0. See https://www.drupal.org/node/2311679',
         E_USER_DEPRECATED
       );
       $mapper = \Drupal::service('file.mime_type.mapper');
     }
-    else {
-      $this->mapper = $mapper;
-    }
-    // @todo remove below lines in Drupal 11.0.0.
-    $this->moduleHandler = $module_handler;
-    $this->defaultMapping = $this->mapper->getDefaultMapping();
-    $this->mapping = $this->mapper->getMapping();
+    $this->mapper = $mapper;
   }
 
   /**
    * {@inheritdoc}
    */
   public function guessMimeType($path): ?string {
-    if ($this->mapping === NULL) {
-      $mapping = $this->defaultMapping;
-      // Allow modules to alter the default mapping.
-      $this->moduleHandler->alter('file_mimetype_mapping', $mapping);
-      $this->mapping = $mapping;
-    }
-
     $extension = '';
     $file_parts = explode('.', \Drupal::service('file_system')->basename($path));
 
@@ -106,12 +61,12 @@ class ExtensionMimeTypeGuesser implements MimeTypeGuesserInterface {
     // - awesome.image.jpeg.
     while ($additional_part = array_pop($file_parts)) {
       $extension = strtolower($additional_part . ($extension ? '.' . $extension : ''));
-      if (isset($this->mapping['extensions'][$extension])) {
-        return $this->mapping['mimetypes'][$this->mapping['extensions'][$extension]];
+      if ($mimeType = $this->mapper->getMimeTypeForExtension($extension)) {
+        return $mimeType;
       }
     }
 
-    return 'application/octet-stream';
+    return NULL;
   }
 
   /**
@@ -120,18 +75,19 @@ class ExtensionMimeTypeGuesser implements MimeTypeGuesserInterface {
    * @param array|null $mapping
    *   Passing a NULL mapping will cause guess() to use self::$defaultMapping.
    *
-   * @deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. Use
+   * @deprecated in drupal:11.1.0 and is removed from drupal:12.0.0. Use
    *   \Drupal\Core\File\MimeType\MimeTypeMapper::setMapping() instead.
    *
    * @see https://www.drupal.org/project/drupal/issues/2311679
    */
-  public function setMapping(array $mapping = NULL) {
+  public function setMapping(?array $mapping = NULL): void {
     @trigger_error(
-      __CLASS__ . '::setMapping() is deprecated in drupal:10.1.0, and will be removed in drupal:11.0.0. Use \Drupal\Core\File\MimeType\MimeTypeMapper::setMapping() instead. See https://www.drupal.org/project/drupal/issues/2311679.',
+      __METHOD__ . '() is deprecated in drupal:11.1.0 and is removed from drupal:12.0.0. Use \Drupal\Core\File\MimeType\MimeTypeMapper::setMapping() instead. See https://www.drupal.org/project/drupal/issues/2311679',
       E_USER_DEPRECATED
     );
     $this->mapper->setMapping($mapping);
-    $this->mapping = $mapping;
+    // @phpstan-ignore-next-line property.notFound
+    $this->mapper->alterMapping($this->moduleHandler, $mapping);
   }
 
   /**

@@ -166,7 +166,7 @@ function hook_file_mimetype_mapping_alter(&$mapping) {
  *
  * @see \Drupal\Core\File\MimeType\MimeTypeMapperInterface
  */
-function hook_mimetype_alter(MimeTypeMapperInterface $mime_type_mapper = NULL) {
+function hook_mimetype_alter(?MimeTypeMapperInterface $mime_type_mapper = NULL) {
   // Add new MIME type 'drupal/info', and map it to a new extension
   // '.info.yml'.
   $mime_type_mapper->addMapping('drupal/info', 'info.yml');

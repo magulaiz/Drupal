@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\KernelTests\Core\File;
 
 use Drupal\Core\File\MimeType\ExtensionMimeTypeGuesser;
@@ -28,12 +30,12 @@ class ExtensionMimeTypeGuesserDeprecationTest extends KernelTestBase {
    * @group legacy
    */
   public function testConstructorDeprecation(): void {
-
-    $this->expectDeprecation('Calling ' . ExtensionMimeTypeGuesser::class . '::__construct() without the $mapper argument is deprecated in drupal:10.1.0 and will be required before drupal:11.0.0. See https://www.drupal.org/node/2311679.');
+    $this->expectDeprecation(
+      'Calling Drupal\Core\File\MimeType\ExtensionMimeTypeGuesser::__construct() with the $mapper argument as an instance of \Drupal\Core\Extension\ModuleHandlerInterface is deprecated in drupal:11.1.0 and an instance of \Drupal\Core\File\MimeType\MimeTypeMapperInterface is required in drupal:11.0.0. See https://www.drupal.org/node/2311679'
+    );
 
     new ExtensionMimeTypeGuesser(
       $this->container->get('module_handler'),
-      NULL
     );
   }
 
