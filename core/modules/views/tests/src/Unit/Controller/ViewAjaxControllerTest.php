@@ -10,6 +10,7 @@ use Drupal\Core\Utility\CallableResolver;
 use Drupal\Tests\UnitTestCase;
 use Drupal\views\Ajax\ViewAjaxResponse;
 use Drupal\views\Controller\ViewAjaxController;
+use Drupal\views\ViewExecutable;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -376,7 +377,7 @@ class ViewAjaxControllerTest extends UnitTestCase {
    * @return \Drupal\views\ViewExecutable
    *   The view executable.
    */
-  protected function setupValidMocks($use_ajax = self::USE_AJAX): array {
+  protected function setupValidMocks($use_ajax = self::USE_AJAX): ViewExecutable {
     $view = $this->getMockBuilder('Drupal\views\Entity\View')
       ->disableOriginalConstructor()
       ->getMock();
