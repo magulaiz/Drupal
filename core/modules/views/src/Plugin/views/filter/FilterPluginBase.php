@@ -167,7 +167,7 @@ abstract class FilterPluginBase extends HandlerBase implements CacheableDependen
         'operator' => ['default' => ''],
         'operator_label' => ['default' => ''],
         'operator_limit_selection' => ['default' => FALSE],
-        'operator_list' => ['default' => []],
+        'operator_label' => ['default' => $this->t('Operator')],
         'identifier' => ['default' => ''],
         'required' => ['default' => FALSE],
         'remember' => ['default' => FALSE],
@@ -338,7 +338,7 @@ abstract class FilterPluginBase extends HandlerBase implements CacheableDependen
     if (!empty($options)) {
       $form['operator'] = [
         '#type' => count($options) < 10 ? 'radios' : 'select',
-        '#title' => $this->t('Operator'),
+        '#title' => $this->options['expose']['operator_label'],
         '#default_value' => $this->operator,
         '#options' => $options,
       ];
@@ -881,7 +881,7 @@ abstract class FilterPluginBase extends HandlerBase implements CacheableDependen
       'use_operator' => FALSE,
       'operator' => $this->options['id'] . '_op',
       'operator_limit_selection' => FALSE,
-      'operator_list' => [],
+      'operator_label' => $this->t('Operator'),
       'identifier' => $this->options['id'],
       'label' => $this->definition['title'],
       'description' => NULL,
