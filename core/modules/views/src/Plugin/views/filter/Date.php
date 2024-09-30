@@ -101,20 +101,19 @@ class Date extends NumericFilter {
         && !empty($form[$this->options['expose']['identifier']])
         && ($convert == -1 || $convert === FALSE)
       ) {
-        $form_state->setError($form[$this->options['expose']['identifier']], $this->t('Invalid date format.'));
+        $form_state->setErrorByName($this->options['expose']['identifier'], $this->t('Invalid date format.'));
       }
     }
     elseif ($operators[$operator]['values'] == 2) {
-      $inner_form = $form[$this->options['expose']['identifier'] . '_wrapper'][$this->options['expose']['identifier']];
       $min = strtotime($value['min']);
       if ((!empty($value['min']) || !empty($form[$this->options['expose']['required']]))
         && ($min == -1 || $min === FALSE)) {
-        $form_state->setError($inner_form['min'], $this->t('Invalid date format.'));
+        $form_state->setError($this->options['expose']['identifier'], $this->t('Invalid date format.'));
       }
       $max = strtotime($value['max']);
       if ((!empty($value['max']) || !empty($form[$this->options['expose']['required']]))
         && ($max == -1 || $max === FALSE)) {
-        $form_state->setError($inner_form['max'], $this->t('Invalid date format.'));
+        $form_state->setError($this->options['expose']['identifier'], $this->t('Invalid date format.'));
       }
     }
   }
