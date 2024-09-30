@@ -76,9 +76,9 @@ final class ChangeLogger implements EventSubscriberInterface, LoggerAwareInterfa
    *   The event object.
    */
   public function recordRequestedPackageVersions(PostRequireEvent $event): void {
-    // There could be multiple require operations, so overlay the requested
+    // There could be multiple 'require' operations, so overlay the requested
     // packages from the current operation onto the requested packages from any
-    // previous require operation.
+    // previous 'require' operation.
     $requested_packages = array_merge(
       $event->stage->getMetadata(static::REQUESTED_PACKAGES_KEY) ?? [],
       $event->getRuntimePackages(),
