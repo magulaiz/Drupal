@@ -186,7 +186,7 @@ class RowRenderCacheTest extends ViewsKernelTestBase {
       $expected = $access ? '  <div class="dropbutton-wrapper" data-drupal-ajax-container>' . PHP_EOL .
         '    <div class="dropbutton-widget"><ul class="dropbutton"><li><a href="' . $node_url . '/edit?destination=/" aria-label="Edit ' . $node->label() . '" hreflang="en">Edit</a></li>' .
         '<li><a href="' . $node_url . '/delete?destination=/" aria-label="Delete ' . $node->label() . '" class="use-ajax" data-dialog-type="modal" data-dialog-options="' . Html::escape(Json::encode(['width' => 880])) . '" hreflang="en">Delete</a></li>' .
-        '</ul></div></div>' . PHP_EOL .
+        '</ul></div>' . PHP_EOL .
         '  </div>' : '';
       $output = $view->style_plugin->getField($index, 'operations');
       $this->assertSame($expected, (string) $output);
