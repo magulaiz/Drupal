@@ -60,22 +60,26 @@ class ReplaceOp extends AbstractOperation {
   public function process(ScaffoldFilePath $destination, IOInterface $io, ScaffoldOptions $options) {
     $fs = new Filesystem();
     $destination_path = $destination->fullPath();
+    $interpolator = $destination->getInterpolator();
     // Do nothing if overwrite is 'false' and a file already exists at the
     // destination.
     if ($this->overwrite === FALSE && file_exists($destination_path)) {
-      $interpolator = $destination->getInterpolator();
       $io->write($interpolator->interpolate("  - Skip <info>[dest-rel-path]</info> because it already exists and overwrite is <comment>false</comment>."));
       return new ScaffoldResult($destination, FALSE);
     }
-    $this->processDestinationPermissions(dirname($destination_path));
 
-    // Get rid of the destination if it exists, and make sure that
-    // the directory where it's going to be placed exists.
+    // Process destination permissions
+    $this->processDestinationPermissions(dirname($destination_path), $io, $interpolator);
+
+    // Remove the destination if it exists,
+    // and ensure the destination directory exists.
     $fs->remove($destination_path);
     $fs->ensureDirectoryExists(dirname($destination_path));
+
     if ($options->symlink()) {
       return $this->symlinkScaffold($destination, $io);
     }
+
     return $this->copyScaffold($destination, $io);
   }
 
