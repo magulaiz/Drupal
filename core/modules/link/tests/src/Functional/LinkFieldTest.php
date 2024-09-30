@@ -807,7 +807,6 @@ class LinkFieldTest extends BrowserTestBase {
           ->save();
 
         $output = $this->renderTestEntity($id);
-
         switch ($setting) {
           case 'trim_length':
             $url = $url1;
