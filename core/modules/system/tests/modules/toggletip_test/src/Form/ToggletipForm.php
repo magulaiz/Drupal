@@ -22,7 +22,6 @@ class ToggletipForm extends FormBase {
     return [
       '#attached' => [
         'library' => [
-          'core/drupal.toggletip',
           'core/drupal.dialog.off_canvas',
         ],
       ],

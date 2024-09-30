@@ -211,7 +211,7 @@
             placeButton(button, tipElement, config);
           }
 
-          Drupal.behaviors.tip.attach(tipElement);
+          Drupal.behaviors.tip.attach(button.parentNode);
         },
       );
     },

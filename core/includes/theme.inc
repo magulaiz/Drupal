@@ -1106,6 +1106,7 @@ function template_preprocess(&$variables, $hook, $info) {
       if (!empty($variables[$key]['#input']) && !empty($variables[$key]['#title'])) {
         $variables[$key]['#attributes']['data-drupal-toggletip-form-element'] = '';
       }
+      $variables['#attached']['library'][] = 'core/drupal.toggletip';
     }
     if (isset($variables[$key]['#attributes'])) {
       $variables['attributes'] = AttributeHelper::mergeCollections($variables['attributes'], $variables[$key]['#attributes']);
