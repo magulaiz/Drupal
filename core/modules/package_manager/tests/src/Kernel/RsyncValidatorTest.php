@@ -11,6 +11,7 @@ use Drupal\package_manager\Validator\RsyncValidator;
 use PhpTuf\ComposerStager\API\Exception\LogicException;
 use PhpTuf\ComposerStager\API\Finder\Service\ExecutableFinderInterface;
 use PhpTuf\ComposerStager\API\Translation\Factory\TranslatableFactoryInterface;
+use Symfony\Component\DependencyInjection\Reference;
 
 /**
  * @covers \Drupal\package_manager\Validator\RsyncValidator
@@ -44,8 +45,10 @@ class RsyncValidatorTest extends PackageManagerKernelTestBase {
   public function register(ContainerBuilder $container) {
     parent::register($container);
 
+    $container->set('mock_executable_finder', $this->executableFinder->reveal());
+
     $container->getDefinition(RsyncValidator::class)
-      ->setArgument('$executableFinder', $this->executableFinder->reveal());
+      ->setArgument('$executableFinder', new Reference('mock_executable_finder'));
   }
 
   /**

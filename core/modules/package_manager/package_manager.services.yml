@@ -1,5 +1,6 @@
 services:
   _defaults:
+    autoconfigure: true
     autowire: true
 
   # Underlying Symfony utilities for Composer Stager.
@@ -43,137 +44,59 @@ services:
   Drupal\package_manager\PathLocator:
     arguments:
       $appRoot: '%app.root%'
-  Drupal\package_manager\FailureMarker:
-    tags:
-      - { name: event_subscriber }
-  Drupal\package_manager\EventSubscriber\UpdateDataSubscriber:
-    # @todo Autowire this service when https://drupal.org/i/3325557 lands.
-    arguments:
-      - '@update.manager'
-    autowire: false
-    tags:
-      - { name: event_subscriber }
+  Drupal\package_manager\FailureMarker: {}
+  Drupal\package_manager\EventSubscriber\UpdateDataSubscriber: {}
   Drupal\package_manager\EventSubscriber\ChangeLogger:
     calls:
       - [setLogger, ['@logger.channel.package_manager_change_log']]
-    tags:
-      - { name: event_subscriber }
-  Drupal\package_manager\ComposerInspector:
-    calls:
-      - [setLogger, ['@logger.channel.package_manager']]
+  Drupal\package_manager\ComposerInspector: {}
 
   # Validators.
-  Drupal\package_manager\Validator\EnvironmentSupportValidator:
-    tags:
-      - { name: event_subscriber }
-  Drupal\package_manager\Validator\ComposerValidator:
-    tags:
-      - { name: event_subscriber }
-  Drupal\package_manager\Validator\DiskSpaceValidator:
-    tags:
-      - { name: event_subscriber }
+  Drupal\package_manager\Validator\EnvironmentSupportValidator: {}
+  Drupal\package_manager\Validator\ComposerValidator: {}
+  Drupal\package_manager\Validator\DiskSpaceValidator: {}
   Drupal\package_manager\Validator\PendingUpdatesValidator:
     arguments:
       - '%app.root%'
       - '@update.post_update_registry'
-    # @todo Autowire this service when https://drupal.org/i/3325557 lands.
     autowire: false
-    tags:
-      - { name: event_subscriber }
-  Drupal\package_manager\Validator\LockFileValidator:
-    tags:
-      - { name: event_subscriber }
-  Drupal\package_manager\Validator\WritableFileSystemValidator:
-    tags:
-      - { name: event_subscriber }
-  Drupal\package_manager\Validator\ComposerMinimumStabilityValidator:
-    tags:
-      - { name: event_subscriber }
-  Drupal\package_manager\Validator\MultisiteValidator:
-    tags:
-      - { name: event_subscriber }
-  Drupal\package_manager\Validator\SymlinkValidator:
-    tags:
-      - { name: event_subscriber }
-  Drupal\package_manager\Validator\DuplicateInfoFileValidator:
-    tags:
-      - { name: event_subscriber }
-  Drupal\package_manager\Validator\EnabledExtensionsValidator:
-    tags:
-      - { name: event_subscriber }
-  Drupal\package_manager\Validator\OverwriteExistingPackagesValidator:
-    tags:
-      - { name: event_subscriber }
-  Drupal\package_manager\Validator\AllowedScaffoldPackagesValidator:
-    tags:
-      - { name: event_subscriber }
-  Drupal\package_manager\Validator\StagedDBUpdateValidator:
-    tags:
-      - { name: event_subscriber }
-  Drupal\package_manager\PathExcluder\TestSiteExcluder:
-    tags:
-      - { name: event_subscriber }
-  Drupal\package_manager\PathExcluder\VendorHardeningExcluder:
-    tags:
-      - { name: event_subscriber }
+  Drupal\package_manager\Validator\LockFileValidator: {}
+  Drupal\package_manager\Validator\WritableFileSystemValidator: {}
+  Drupal\package_manager\Validator\ComposerMinimumStabilityValidator: {}
+  Drupal\package_manager\Validator\MultisiteValidator: {}
+  Drupal\package_manager\Validator\SymlinkValidator: {}
+  Drupal\package_manager\Validator\DuplicateInfoFileValidator: {}
+  Drupal\package_manager\Validator\EnabledExtensionsValidator: {}
+  Drupal\package_manager\Validator\OverwriteExistingPackagesValidator: {}
+  Drupal\package_manager\Validator\AllowedScaffoldPackagesValidator: {}
+  Drupal\package_manager\Validator\StagedDBUpdateValidator: {}
+  Drupal\package_manager\PathExcluder\TestSiteExcluder: {}
+  Drupal\package_manager\PathExcluder\VendorHardeningExcluder: {}
   Drupal\package_manager\PathExcluder\SiteFilesExcluder:
-    tags:
-      - { name: event_subscriber }
-  Drupal\package_manager\PathExcluder\SqliteDatabaseExcluder:
-    tags:
-      - { name: event_subscriber }
-  Drupal\package_manager\PathExcluder\GitExcluder:
-    tags:
-      - { name: event_subscriber }
-  Drupal\package_manager\PathExcluder\UnknownPathExcluder:
-    tags:
-      - { name: event_subscriber }
-    calls:
-      - [setLogger, ['@logger.channel.package_manager']]
+    arguments:
+      $wrappers: [public, private, assets]
+  Drupal\package_manager\PathExcluder\SqliteDatabaseExcluder: {}
+  Drupal\package_manager\PathExcluder\GitExcluder: {}
+  Drupal\package_manager\PathExcluder\UnknownPathExcluder: {}
   Drupal\package_manager\PathExcluder\SiteConfigurationExcluder:
     arguments:
       $sitePath: '%site.path%'
-    tags:
-      - { name: event_subscriber }
-  Drupal\package_manager\PathExcluder\NodeModulesExcluder:
-    tags:
-      - { name: event_subscriber }
+  Drupal\package_manager\PathExcluder\NodeModulesExcluder: {}
   Drupal\package_manager\PackageManagerUninstallValidator:
-    tags:
-      - { name: module_install.uninstall_validator }
     arguments:
       $eventDispatcher: '@event_dispatcher'
-    lazy: true
-  Drupal\package_manager\Validator\SettingsValidator:
-    tags:
-      - { name: event_subscriber }
-  Drupal\package_manager\Validator\RsyncValidator:
-    tags:
-      - { name: event_subscriber }
-  Drupal\package_manager\Validator\ComposerPluginsValidator:
-    tags:
-      - { name: event_subscriber }
-  Drupal\package_manager\Validator\ComposerPatchesValidator:
-    tags:
-      - { name: event_subscriber }
-  Drupal\package_manager\Validator\BaseRequirementsFulfilledValidator:
-    tags:
-      - { name: event_subscriber }
-  Drupal\package_manager\Validator\SupportedReleaseValidator:
-    tags:
-      - { name: event_subscriber }
-  Drupal\package_manager\Validator\StageNotInActiveValidator:
-    tags:
-      - { name: event_subscriber }
-  Drupal\package_manager\Validator\PhpExtensionsValidator:
-    tags:
-      - { name: event_subscriber }
+  Drupal\package_manager\Validator\SettingsValidator: {}
+  Drupal\package_manager\Validator\RsyncValidator: {}
+  Drupal\package_manager\Validator\ComposerPluginsValidator: {}
+  Drupal\package_manager\Validator\ComposerPatchesValidator: {}
+  Drupal\package_manager\Validator\BaseRequirementsFulfilledValidator: {}
+  Drupal\package_manager\Validator\SupportedReleaseValidator: {}
+  Drupal\package_manager\Validator\StageNotInActiveValidator: {}
+  Drupal\package_manager\Validator\PhpExtensionsValidator: {}
   Drupal\package_manager\Validator\PhpTufValidator:
     arguments:
       $repositories:
         - 'https://packages.drupal.org/8'
-    tags:
-      - { name: event_subscriber }
   Drupal\package_manager\PackageManagerUpdateProcessor:
     arguments:
       # @todo Autowire $update_fetcher when https://drupal.org/i/3325557 lands.

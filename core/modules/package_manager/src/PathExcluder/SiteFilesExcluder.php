@@ -11,7 +11,7 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\Filesystem\Filesystem;
 
 /**
- * Excludes public and private files from stage operations.
+ * Excludes site files from stage operations.
  *
  * @internal
  *   This is an internal part of Package Manager and may be changed or removed
@@ -23,6 +23,7 @@ final class SiteFilesExcluder implements EventSubscriberInterface {
   public function __construct(
     private readonly StreamWrapperManagerInterface $streamWrapperManager,
     private readonly Filesystem $fileSystem,
+    private readonly array $wrappers,
   ) {}
 
   /**
@@ -41,11 +42,11 @@ final class SiteFilesExcluder implements EventSubscriberInterface {
    *   The event object.
    */
   public function excludeSiteFiles(CollectPathsToExcludeEvent $event): void {
-    // Exclude public and private files. These paths could be either absolute or
-    // relative, depending on site settings. If they are absolute, treat them
-    // as relative to the project root. Otherwise, treat them as relative to
-    // the web root.
-    foreach (['public', 'private'] as $scheme) {
+    // Exclude files handled by the stream wrappers listed in $this->wrappers.
+    // These paths could be either absolute or relative, depending on site
+    // settings. If they are absolute, treat them as relative to the project
+    // root. Otherwise, treat them as relative to the web root.
+    foreach ($this->wrappers as $scheme) {
       $wrapper = $this->streamWrapperManager->getViaScheme($scheme);
       if ($wrapper instanceof LocalStream) {
         $path = $wrapper->getDirectoryPath();
