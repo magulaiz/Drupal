@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\Core\Deprecation;
 
 use Drupal\KernelTests\KernelTestBase;
@@ -15,8 +17,7 @@ class InstallVersionInfoDeprecationTest extends KernelTestBase {
   /**
    * Tests that _install_get_version_info() triggers a deprecation notice.
    */
-  public function testInstallGetVersionInfoDeprecation():void {
-
+  public function testInstallGetVersionInfoDeprecation(): void {
     include_once $this->root . '/core/includes/install.core.inc';
     $version = '8.0.0-alpha2';
     // Expect a deprecation warning.
