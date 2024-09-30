@@ -152,6 +152,7 @@ class BanAdmin extends FormBase {
       $tableSelectOptions = $form['ban_ip_banning_table']['#options'];
       $selectedIps = [];
       foreach ($tableSelectArray as $key => $value) {
+        // Make sure that unchecked checkboxes (0) aren't written to the array.
         if ($value !== 0) {
           $selectedIps[] = $tableSelectOptions[$key]['address'];
         }

@@ -60,7 +60,10 @@ class BanDeleteMultiple extends ConfirmFormBase {
    * {@inheritdoc}
    */
   public function getQuestion(): TranslatableMarkup {
-    return $this->t('Are you sure you want to unblock %ips_amount IP addresses?', ['%ips_amount' => count($this->banIps)]);
+    return $this->formatPlural(count($this->banIps), 'Are you sure you want to unblock %ip_address?', 'Are you sure you want to unblock %ips_amount IP addresses?', [
+      '%ip_address' => $this->banIps[0],
+      '%ips_amount' => count($this->banIps),
+    ]);
   }
 
   /**
