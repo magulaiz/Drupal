@@ -69,10 +69,10 @@
             {% set title = 'Go to page @key'|t({'@key': key}) %}
           {% endif %}
           {% if current != key %}
-            <a href="{{- item.href -}}" title="{{- title -}}" {{- item.attributes|without('href', 'title').addClass('pager__link', current == key ? ' is-active') -}}>
+            <a href="{{ item.href }}" title="{{ title }}" {{ item.attributes|without('href', 'title').addClass('pager__link', current == key ? ' is-active') }}>
           {% endif %}
           <span class="visually-hidden">
-            {{- 'Page'|t -}}
+            {{ 'Page'|t }}
           </span>
           {{- key -}}
           {% if current != key %}
@@ -89,8 +89,8 @@
       {# Print next item if we are not on the last page. #}
       {% if items.next %}
         <li class="pager__item pager__item--control pager__item--next">
-          <a href="{{- items.next.href -}}" title="{{- 'Go to next page'|t -}}" rel="next" {{- items.next.attributes|without('href', 'title', 'rel').addClass('pager__link') -}}>
-            <span class="visually-hidden">{{- 'Next page'|t -}}</span>
+          <a href="{{ items.next.href }}" title="{{ 'Go to next page'|t }}" rel="next"{{ items.next.attributes|without('href', 'title', 'rel').addClass('pager__link') }}>
+            <span class="visually-hidden">{{ 'Next page'|t }}</span>
             {%~ include "@olivero/../images/pager-previous.svg" ~%}
           </a>
         </li>
@@ -99,8 +99,8 @@
       {# Print last item if we are not on the last page. #}
       {% if items.last %}
         <li class="pager__item pager__item--control pager__item--last">
-          <a href="{{- items.last.href -}}" title="{{- 'Go to last page'|t -}}" {{- items.last.attributes|without('href', 'title').addClass('pager__link') -}}>
-            <span class="visually-hidden">{{- 'Last page'|t -}}</span>
+          <a href="{{ items.last.href }}" title="{{ 'Go to last page'|t }}"{{ items.last.attributes|without('href', 'title').addClass('pager__link') }}>
+            <span class="visually-hidden">{{ 'Last page'|t }}</span>
             {%~ include "@olivero/../images/pager-first.svg" ~%}
           </a>
         </li>

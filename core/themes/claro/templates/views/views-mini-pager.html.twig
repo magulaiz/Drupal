@@ -42,7 +42,7 @@
       {% if items.next %}
         <li class="pager__item pager__item--mini pager__item--action pager__item--next">
           <a{{ items.next.attributes.addClass(pager_action_classes).setAttribute('title', 'Go to next page'|t).setAttribute('href', items.next.href) }}>
-            <span class="visually-hidden">{{- 'Next page'|t -}}</span>
+            <span class="visually-hidden">{{ 'Next page'|t }}</span>
           </a>
         </li>
       {% endif %}
