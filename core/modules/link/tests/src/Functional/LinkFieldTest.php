@@ -820,7 +820,10 @@ class LinkFieldTest extends BrowserTestBase {
             $url = $url2;
             $url_title = isset($new_value) ? Unicode::truncate($url, $new_value, FALSE, TRUE) : $url;
             $title = isset($new_value) ? Unicode::truncate($title2, $new_value, FALSE, TRUE) : $title2;
-            $expected = '<div class="link-item"><div class="link-title">' . Html::escape($title) . '</div><div class="link-url"><a href="' . Html::escape($url) . '">' . Html::escape($url_title) . '</a></div>' . PHP_EOL . '</div>';
+            $expected = '<div class="link-item">';
+            $expected .= '<div class="link-title">' . Html::escape($title) . '</div>';
+            $expected .= '<div class="link-url"><a href="' . Html::escape($url) . '">' . Html::escape($url_title) . '</a></div>';
+            $expected .= PHP_EOL . '</div>';
             $this->assertStringContainsString($expected, $output);
 
             $url = $url3;
