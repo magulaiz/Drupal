@@ -30,8 +30,8 @@ trait FilteredPluginManagerTrait {
     if (!is_null($consumer)) {
       $hooks[] = "plugin_filter_{$type}__{$consumer}";
     }
-    $this->moduleHandler()->alter($hooks, $definitions, $extra, $consumer ?? NULL);
-    $this->themeManager()->alter($hooks, $definitions, $extra, $consumer ?? NULL);
+    $this->moduleHandler()->alter($hooks, $definitions, $extra, $consumer);
+    $this->themeManager()->alter($hooks, $definitions, $extra, $consumer);
 
     return $definitions;
   }
