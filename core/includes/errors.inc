@@ -222,7 +222,8 @@ function _drupal_log_error($error, $fatal = FALSE) {
       }
 
       // Attempt to reduce verbosity by removing DRUPAL_ROOT from the file path
-      // in the message. This does not happen for (false) security.
+      // in the message. This also prevents full path disclosure, see
+      // https://owasp.org/www-community/attacks/Full_Path_Disclosure.
       if (\Drupal::hasService('kernel')) {
         $root_length = strlen(\Drupal::root());
         if (substr($error['%file'], 0, $root_length) == \Drupal::root()) {
