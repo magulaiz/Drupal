@@ -62,20 +62,20 @@
                 ({{ theme.notes|safe_join(', ') }})
               {%- endif -%}
             </h3>
-            <details class="js-form-wrapper form-wrapper" id="{{ theme.machine_name }}-description">
-              <summary aria-controls="{{ theme.machine_name }}-description" role="button" aria-expanded="false"><span class="text theme-info__description">{{ theme.description }}</span></summary>
-              <div class="details-wrapper">
-                <div class="details-description">
-                  <div class="requirements">
-                  <div class="admin-requirements">{{ 'Machine name: @module-machine-name'|t({'@module-machine-name': theme.machine_name}) }}</div>
+            <details class="js-form-wrapper form-wrapper theme-list__theme-details claro-details" id="{{ theme.machine_name }}-description">
+              <summary aria-controls="{{ theme.machine_name }}-description" role="button" aria-expanded="false" class="claro-details__summary theme-list__theme-summary"><span class="text theme-info__description">{{ theme.description }}</span></summary>
+              <div class="claro-details__wrapper theme-details__wrapper">
+                <div class="theme-details__description">
+                  <div class="theme-details__requirements">
+                  <div class="theme-details__requirement">{{ 'Machine name: @module-machine-name'|t({'@module-machine-name': theme.machine_name}) }}</div>
                   {% if theme.version %}
-                    <div class="admin-requirements">{{ 'Version: @module-version'|t({'@module-version': theme.version}) }}</div>
+                    <div class="theme-details__requirement">{{ 'Version: @module-version'|t({'@module-version': theme.version}) }}</div>
                   {% endif %}
                   {% if theme.requires %}
-                    <div class="admin-requirements">{{ 'Requires: @module-list'|t({'@module-list': theme.requires|safe_join(', ')}) }}</div>
+                    <div class="theme-details__requirement">{{ 'Requires: @module-list'|t({'@module-list': theme.requires|safe_join(', ')}) }}</div>
                   {% endif %}
                   {% if theme.required_by %}
-                    <div class="admin-requirements">{{ 'Required by: @module-list'|t({'@module-list': theme.required_by|safe_join(', ')}) }}</div>
+                    <div class="theme-details__requirement">{{ 'Required by: @module-list'|t({'@module-list': theme.required_by|safe_join(', ')}) }}</div>
                   {% endif %}
                   </div>
                 </div>
