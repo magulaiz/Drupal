@@ -114,8 +114,12 @@ class DatabaseStorage implements StorageInterface {
    * {@inheritdoc}
    */
   public function readMultiple(array $names) {
-    if (empty($names) || !mb_check_encoding(implode('', $names), 'ASCII')) {
+    if (empty($names)) {
       return [];
+    }
+
+    if (!mb_check_encoding(implode('', $names), 'ASCII')) {
+      throw new \InvalidArgumentException('Non-ASCII characters are not supported for config entity names.'));
     }
 
     $list = [];
