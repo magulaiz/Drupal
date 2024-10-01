@@ -35,27 +35,22 @@ class ModerationLocaleTest extends ModerationStateTestBase {
   /**
    * {@inheritdoc}
    */
+  protected function getAdministratorPermissions(): array {
+    return array_merge($this->permissions, [
+      'create content translations',
+      'bypass node access',
+      'translate any entity',
+    ]);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   protected function setUp(): void {
     parent::setUp();
 
-    $this->drupalLogin($this->drupalCreateUser([
-      'administer content types',
-      'administer content translation',
-      'create content translations',
-      'update content translations',
-      'translate any entity',
-      'access content',
-      'administer nodes',
-      'bypass node access',
-      'access administration pages',
-      'administer filters',
-      'use editorial transition archive',
-      'use editorial transition create_new_draft',
-      'use editorial transition publish',
-      'administer workflows',
-      'view latest version',
-      'view own unpublished content',
-    ]));
+    $this->adminUser = $this->drupalCreateUser($this->getAdministratorPermissions());
+    $this->drupalLogin($this->adminUser);
     // Enable moderation on Article node type.
     $this->createContentTypeFromUi('Article', 'article', TRUE);
 

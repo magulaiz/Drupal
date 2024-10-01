@@ -22,6 +22,16 @@ class ModerationStateBlockTest extends ModerationStateTestBase {
   /**
    * {@inheritdoc}
    */
+  protected function getAdministratorPermissions(): array {
+    return array_merge($this->permissions, [
+      'administer blocks',
+      'administer block content',
+    ]);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   protected function setUp(): void {
     parent::setUp();
 
@@ -56,19 +66,8 @@ class ModerationStateBlockTest extends ModerationStateTestBase {
    * @see \Drupal\content_moderation\Tests\ModerationFormTest::testModerationForm
    */
   public function testCustomBlockModeration(): void {
-    $this->drupalLogin($this->drupalCreateUser([
-      "administer blocks",
-      "edit any basic block content",
-      "administer block content",
-      "use editorial transition create_new_draft",
-      "use editorial transition publish",
-      "view any unpublished content",
-      "view latest version",
-      "access content overview",
-      "administer nodes",
-      "bypass node access",
-      "administer workflows",
-    ]));
+    $this->adminUser = $this->drupalCreateUser($this->getAdministratorPermissions());
+    $this->drupalLogin($this->adminUser);
 
     // Enable moderation for content blocks.
     $edit['bundles[basic]'] = TRUE;

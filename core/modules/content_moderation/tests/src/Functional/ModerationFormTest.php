@@ -35,6 +35,18 @@ class ModerationFormTest extends ModerationStateTestBase {
   /**
    * {@inheritdoc}
    */
+  protected function getAdministratorPermissions(): array {
+    return array_merge($this->permissions, [
+      'administer entity_test content',
+      'view test entity',
+      'translate any entity',
+      'bypass node access',
+    ]);
+  }
+  
+  /**
+   * {@inheritdoc}
+   */
   protected function setUp(): void {
     parent::setUp();
     $this->drupalLogin($this->adminUser);
@@ -188,15 +200,8 @@ class ModerationFormTest extends ModerationStateTestBase {
    * Tests moderation non-bundle entity type.
    */
   public function testNonBundleModerationForm(): void {
-    $admin_user = $this->drupalCreateUser([
-      'use editorial transition create_new_draft',
-      'use editorial transition publish',
-      'view latest version',
-      'view any unpublished content',
-      'administer entity_test content',
-      'view test entity',
-    ]);
-    $this->drupalLogin($admin_user);
+    $this->adminUser = $this->drupalCreateUser($this->getAdministratorPermissions());
+    $this->drupalLogin($this->adminUser);
     $this->workflow->getTypePlugin()->addEntityTypeAndBundle('entity_test_mulrevpub', 'entity_test_mulrevpub');
     $this->workflow->save();
 
@@ -290,17 +295,8 @@ class ModerationFormTest extends ModerationStateTestBase {
    * Tests translated and moderated nodes.
    */
   public function testContentTranslationNodeForm(): void {
-    $admin_user = $this->drupalCreateUser([
-      'view latest version',
-      'view any unpublished content',
-      'access content overview',
-      'use editorial transition create_new_draft',
-      'use editorial transition publish',
-      'use editorial transition archive',
-      'translate any entity',
-      'bypass node access',
-    ]);
-    $this->drupalLogin($admin_user);
+    $this->adminUser = $this->drupalCreateUser($this->getAdministratorPermissions());
+    $this->drupalLogin($this->adminUser);
 
     // Add French language.
     static::createLanguageFromLangcode('fr');

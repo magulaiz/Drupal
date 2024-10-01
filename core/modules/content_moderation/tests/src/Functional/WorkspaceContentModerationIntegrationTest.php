@@ -30,21 +30,21 @@ class WorkspaceContentModerationIntegrationTest extends ModerationStateTestBase 
   /**
    * {@inheritdoc}
    */
+  protected function getAdministratorPermissions(): array {
+    return array_merge($this->permissions, [
+      'bypass node access',
+      'view any workspace',
+    ]);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   protected function setUp(): void {
     parent::setUp();
 
-    $this->drupalLogin($this->drupalCreateUser([
-      'administer content types',
-      'administer permissions',
-      'view all revisions',
-      'bypass node access',
-      'use editorial transition archive',
-      'use editorial transition create_new_draft',
-      'use editorial transition publish',
-      'administer workflows',
-      'view any workspace',
-      'edit any workspace',
-    ]));
+    $this->adminUser = $this->drupalCreateUser($this->getAdministratorPermissions());
+    $this->drupalLogin($this->adminUser);
 
     // Enable moderation on Article node type.
     $this->createContentTypeFromUi('Article', 'article', TRUE);
