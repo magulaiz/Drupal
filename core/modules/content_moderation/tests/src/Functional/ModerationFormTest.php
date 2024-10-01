@@ -43,7 +43,7 @@ class ModerationFormTest extends ModerationStateTestBase {
       'bypass node access',
     ]);
   }
-  
+
   /**
    * {@inheritdoc}
    */
