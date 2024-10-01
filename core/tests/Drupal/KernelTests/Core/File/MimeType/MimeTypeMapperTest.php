@@ -2,8 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Drupal\KernelTests\Core\File;
+namespace Drupal\KernelTests\Core\File\MimeType;
 
+use Drupal\Core\File\MimeType\MimeTypeMapperInterface;
 use Drupal\KernelTests\KernelTestBase;
 
 /**
@@ -18,14 +19,12 @@ class MimeTypeMapperTest extends KernelTestBase {
   /**
    * {@inheritdoc}
    */
-  protected static $modules = ['system', 'file_test'];
+  protected static $modules = ['system'];
 
   /**
    * The MIME type mapper service.
-   *
-   * @var \Drupal\Core\File\MimeType\MimeTypeMapperInterface
    */
-  protected $mapper;
+  protected MimeTypeMapperInterface $mapper;
 
   /**
    * {@inheritdoc}
@@ -58,33 +57,16 @@ class MimeTypeMapperTest extends KernelTestBase {
     $this->setBasicMapping();
 
     $this->mapper->addMapping('image/gif', 'gif');
-    $this->assertEquals([
-      'mimetypes' => [
-        0 => 'application/java-archive',
-        1 => 'image/jpeg',
-        2 => 'image/gif',
-      ],
-      'extensions' => [
-        'jar' => 0,
-        'jpg' => 1,
-        'gif' => 2,
-      ],
-    ], $this->mapper->getMapping());
+    $this->assertEquals(
+      'image/gif',
+      $this->mapper->getMimeTypeForExtension('gif')
+    );
 
     $this->mapper->addMapping('image/jpeg', 'jpeg');
-    $this->assertEquals([
-      'mimetypes' => [
-        0 => 'application/java-archive',
-        1 => 'image/jpeg',
-        2 => 'image/gif',
-      ],
-      'extensions' => [
-        'jar' => 0,
-        'jpg' => 1,
-        'gif' => 2,
-        'jpeg' => 1,
-      ],
-    ], $this->mapper->getMapping());
+    $this->assertEquals(
+      'image/jpeg',
+      $this->mapper->getMimeTypeForExtension('jpeg')
+    );
   }
 
   /**
@@ -94,16 +76,7 @@ class MimeTypeMapperTest extends KernelTestBase {
     $this->setBasicMapping();
 
     $this->assertTrue($this->mapper->removeMapping('jpg'));
-    $this->assertEquals([
-      'mimetypes' => [
-        0 => 'application/java-archive',
-        1 => 'image/jpeg',
-      ],
-      'extensions' => [
-        'jar' => 0,
-      ],
-    ], $this->mapper->getMapping());
-
+    $this->assertNull($this->mapper->getMimeTypeForExtension('jpg'));
     $this->assertFalse($this->mapper->removeMapping('foo'));
   }
 
@@ -114,15 +87,7 @@ class MimeTypeMapperTest extends KernelTestBase {
     $this->setBasicMapping();
 
     $this->assertTrue($this->mapper->removeMimeType('image/jpeg'));
-    $this->assertEquals([
-      'mimetypes' => [
-        0 => 'application/java-archive',
-      ],
-      'extensions' => [
-        'jar' => 0,
-      ],
-    ], $this->mapper->getMapping());
-
+    $this->assertNull($this->mapper->getMimeTypeForExtension('jpg'));
     $this->assertFalse($this->mapper->removeMimeType('foo/bar'));
   }
 
@@ -138,6 +103,7 @@ class MimeTypeMapperTest extends KernelTestBase {
    * @covers ::getMimeTypeForExtension
    */
   public function testGetMimeTypeForExtension() {
+    // Using default mapping.
     $this->assertSame('image/jpeg', $this->mapper->getMimeTypeForExtension('jpe'));
   }
 
@@ -145,6 +111,7 @@ class MimeTypeMapperTest extends KernelTestBase {
    * @covers ::getExtensionsForMimeType
    */
   public function testGetExtensionsForMimeType() {
+    // Using default mapping.
     $this->assertEquals(['jpe', 'jpeg', 'jpg'], $this->mapper->getExtensionsForMimeType('image/jpeg'));
   }
 

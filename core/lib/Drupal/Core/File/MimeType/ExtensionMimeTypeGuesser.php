@@ -4,6 +4,7 @@ namespace Drupal\Core\File\MimeType;
 
 use Drupal\Core\DependencyInjection\DeprecatedServicePropertyTrait;
 use Drupal\Core\Extension\ModuleHandlerInterface;
+use Drupal\Core\File\FileSystemInterface;
 use Symfony\Component\Mime\MimeTypeGuesserInterface;
 
 /**
@@ -30,9 +31,12 @@ class ExtensionMimeTypeGuesser implements MimeTypeGuesserInterface {
    *
    * @param \Drupal\Core\Extension\ModuleHandlerInterface|\Drupal\Core\File\MimeType\MimeTypeMapperInterface $mapper
    *   The MIME types mapper service.
+   * @param \Drupal\Core\File\FileSystemInterface|null $fileSystem
+   *   The file system.
    */
   public function __construct(
     ModuleHandlerInterface | MimeTypeMapperInterface $mapper,
+    protected ?FileSystemInterface $fileSystem = NULL,
   ) {
     if (!$mapper instanceof MimeTypeMapperInterface) {
       @trigger_error(
@@ -42,6 +46,13 @@ class ExtensionMimeTypeGuesser implements MimeTypeGuesserInterface {
       $mapper = \Drupal::service('file.mime_type.mapper');
     }
     $this->mapper = $mapper;
+    if (!$this->fileSystem) {
+      @trigger_error(
+        'Calling ' . __METHOD__ . '() without the $fileSystem argument is deprecated in drupal:11.1.0 and is required in drupal:11.0.0. See https://www.drupal.org/node/2311679',
+        E_USER_DEPRECATED
+      );
+      $this->fileSystem = \Drupal::service('file_system');
+    }
   }
 
   /**
@@ -49,7 +60,7 @@ class ExtensionMimeTypeGuesser implements MimeTypeGuesserInterface {
    */
   public function guessMimeType($path): ?string {
     $extension = '';
-    $file_parts = explode('.', \Drupal::service('file_system')->basename($path));
+    $file_parts = explode('.', $this->fileSystem->basename($path));
 
     // Remove the first part: a full filename should not match an extension.
     array_shift($file_parts);
@@ -87,7 +98,7 @@ class ExtensionMimeTypeGuesser implements MimeTypeGuesserInterface {
     );
     $this->mapper->setMapping($mapping);
     // @phpstan-ignore-next-line property.notFound
-    $this->mapper->alterMapping($this->moduleHandler, $mapping);
+    $this->mapper->alterMapping($this->moduleHandler);
   }
 
   /**

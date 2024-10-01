@@ -77,20 +77,19 @@ class MimeTypeTest extends FileTestBase {
     ];
 
     $test_case2 = [
-      'jar' => 'application/java-archive',
-      'jpeg' => 'image/jpeg',
-      'jpg' => 'image/jpeg',
-      'jar.jpg' => 'image/jpeg',
-      'jpg.jar' => 'application/java-archive',
-      'pcf.z' => 'application/octet-stream',
-      'junk' => NULL,
-      'file_test_1' => 'application/octet-stream',
-      'file_test_2' => 'application/octet-stream',
-      // cspell:ignore msword
-      'doc' => 'application/msword',
-      'ogg' => 'application/ogg',
-      'pdf' => 'application/pdf',
-      'text' => 'application/pdf',
+      'test.jar' => 'application/java-archive',
+      'test.jpeg' => NULL,
+      'test.jpg' => 'image/jpeg',
+      'test.jar.jpg' => 'image/jpeg',
+      'test.jpg.jar' => 'application/java-archive',
+      'test.pcf.z' => NULL,
+      'pcf.z' => NULL,
+      'jar' => NULL,
+      'some.junk' => NULL,
+      'foo.file_test_1' => NULL,
+      'foo.file_test_2' => NULL,
+      'foo.doc' => NULL,
+      'test.ogg' => NULL,
     ];
 
     $mime_type_mapper = $this->container->get('file.mime_type.mapper');

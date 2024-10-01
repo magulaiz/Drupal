@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Drupal\KernelTests\Core\File;
+namespace Drupal\KernelTests\Core\File\MimeType;
 
 use Drupal\KernelTests\KernelTestBase;
 

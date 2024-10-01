@@ -892,32 +892,16 @@ class MimeTypeMapper implements MimeTypeMapperInterface {
   }
 
   /**
-   * Returns the mapping from file extensions to appropriate MIME types.
-   *
-   * @return array
-   *   Array of mimetypes correlated to the extensions that relate to them.
-   *
-   * @internal
-   *
-   * @todo supports BC for ExtensionMimeTypeGuesser. Change visibility to
-   *   protected in Drupal 11.0.0.
-   */
-  public function getMapping() {
-    return $this->mapping;
-  }
-
-  /**
    * {@inheritdoc}
    */
-  public function setMapping(array $mapping) {
+  public function setMapping(array $mapping): void {
     $this->mapping = $mapping;
-    return $this;
   }
 
   /**
    * {@inheritdoc}
    */
-  public function addMapping($mimetype, $extension) {
+  public function addMapping($mimetype, $extension): self {
     $extension = strtolower($extension);
     if (!in_array($mimetype, $this->mapping['mimetypes'])) {
       $this->mapping['mimetypes'][] = $mimetype;
@@ -931,7 +915,7 @@ class MimeTypeMapper implements MimeTypeMapperInterface {
   /**
    * {@inheritdoc}
    */
-  public function removeMapping($extension) {
+  public function removeMapping($extension): bool {
     $extension = strtolower($extension);
     if (isset($this->mapping['extensions'][$extension])) {
       unset($this->mapping['extensions'][$extension]);
@@ -943,7 +927,7 @@ class MimeTypeMapper implements MimeTypeMapperInterface {
   /**
    * {@inheritdoc}
    */
-  public function removeMimeType($mimetype) {
+  public function removeMimeType($mimetype): bool {
     if (!in_array($mimetype, $this->mapping['mimetypes'])) {
       return FALSE;
     }
@@ -958,15 +942,15 @@ class MimeTypeMapper implements MimeTypeMapperInterface {
   /**
    * {@inheritdoc}
    */
-  public function getMimeTypes() {
-    return array_values($this->getMapping()['mimetypes']);
+  public function getMimeTypes(): array {
+    return array_values($this->mapping['mimetypes']);
   }
 
   /**
    * {@inheritdoc}
    */
-  public function getMimeTypeForExtension($extension) {
-    $mapping = $this->getMapping();
+  public function getMimeTypeForExtension($extension): ?string {
+    $mapping = $this->mapping;
     $extension = strtolower($extension);
     $extensions = $mapping['extensions'];
     return isset($extensions[$extension]) ? $mapping['mimetypes'][$extensions[$extension]] : NULL;
@@ -975,8 +959,8 @@ class MimeTypeMapper implements MimeTypeMapperInterface {
   /**
    * {@inheritdoc}
    */
-  public function getExtensionsForMimeType($mimetype) {
-    $mapping = $this->getMapping();
+  public function getExtensionsForMimeType($mimetype): array {
+    $mapping = $this->mapping;
     if (!in_array($mimetype, $mapping['mimetypes'])) {
       return [];
     }
@@ -984,20 +968,6 @@ class MimeTypeMapper implements MimeTypeMapperInterface {
     $extensions = array_keys($mapping['extensions'], $key, TRUE);
     sort($extensions);
     return $extensions;
-  }
-
-  /**
-   * Gets the default mimetypes/extension mapping.
-   *
-   * @return array
-   *   The default mimetypes/extension mapping array.
-   *
-   * @internal
-   *
-   * @todo supports BC for ExtensionMimeTypeGuesser. Remove in Drupal 11.0.0.
-   */
-  public function getDefaultMapping() {
-    return static::$defaultMapping;
   }
 
 }

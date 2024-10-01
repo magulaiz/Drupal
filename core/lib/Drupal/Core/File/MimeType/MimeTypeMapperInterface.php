@@ -21,21 +21,19 @@ interface MimeTypeMapperInterface {
    *
    * @see hook_file_mimetype_mapping_alter()
    */
-  public function alterMapping(ModuleHandlerInterface $module_handler);
+  public function alterMapping(ModuleHandlerInterface $module_handler): self;
 
   /**
    * Set the mapping array between MIME types and file extensions.
    *
-   * @param array $mapping
+   * @param array{'mimetypes': array{int,string}, 'extensions': array{string,int}} $mapping
    *   An array consisting of two arrays:
    *     - mimetypes: MIME types, keyed by a unique number.
    *     - extensions: an associative array with the MIME type key numbers as
    *       values. The keys are file extensions, in lower case and without any
    *       preceding dot.
-   *
-   * @return $this
    */
-  public function setMapping(array $mapping);
+  public function setMapping(array $mapping): void;
 
   /**
    * Adds a mapping between a MIME type and an extension.
@@ -47,7 +45,7 @@ interface MimeTypeMapperInterface {
    *
    * @return $this
    */
-  public function addMapping($mimetype, $extension);
+  public function addMapping(string $mimetype, string $extension): self;
 
   /**
    * Removes the mapping between a MIME type and an extension.
@@ -58,7 +56,7 @@ interface MimeTypeMapperInterface {
    * @return bool
    *   TRUE if the extension was present, FALSE otherwise.
    */
-  public function removeMapping($extension);
+  public function removeMapping(string $extension): bool;
 
   /**
    * Removes a MIME type and all its mapped extensions from the mapping.
@@ -69,7 +67,7 @@ interface MimeTypeMapperInterface {
    * @return bool
    *   TRUE if the MIME type was present, FALSE otherwise.
    */
-  public function removeMimeType($mimetype);
+  public function removeMimeType(string $mimetype): bool;
 
   /**
    * Returns known MIME types.
@@ -77,7 +75,7 @@ interface MimeTypeMapperInterface {
    * @return string[]
    *   An array of MIME types.
    */
-  public function getMimeTypes();
+  public function getMimeTypes(): array;
 
   /**
    * Returns the appropriate MIME type for a given file extension.
@@ -88,7 +86,7 @@ interface MimeTypeMapperInterface {
    * @return string|null
    *   A matching MIME type, or NULL if no MIME type matches the extension.
    */
-  public function getMimeTypeForExtension($extension);
+  public function getMimeTypeForExtension(string $extension): ?string;
 
   /**
    * Returns the appropriate extensions for a given MIME type.
@@ -99,6 +97,6 @@ interface MimeTypeMapperInterface {
    * @return string[]
    *   An array of file extensions matching the MIME type, without leading dot.
    */
-  public function getExtensionsForMimeType($mimetype);
+  public function getExtensionsForMimeType(string $mimetype): array;
 
 }
