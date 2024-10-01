@@ -34,20 +34,23 @@ class BlockContentThemeSuggestionsTest extends BlockContentTestBase {
   protected $defaultTheme = 'stark';
 
   /**
-   * Tests that block content template suggestions work in different scenarios.
+   * Test suggestions for content blocks.
    */
-  public function testBlockContentThemeSuggestions(): void {
-    // Test suggestions for content blocks.
+  public function testBlockContentThemeSuggestionsContent(): void {
     $this->drupalLogin($this->adminUser);
     $block = $this->createBlockContent();
     $this->drupalPlaceBlock('block_content:' . $block->uuid());
-    $this->drupalGet('/');
+    $this->drupalGet('');
     $this->assertSession()->statusCodeEquals(200);
     $this->assertSession()->pageTextContainsOnce('I am a block content template for a specific bundle and view mode!');
+  }
 
-    // Test suggestions for content blocks within extra fields blocks. Extra
-    // field blocks are a block plugin provided by layout builder, so enable
-    // layouts for the test bundle and view a node of that bundle.
+  /**
+   * Test suggestions for content blocks within extra fields blocks.
+   */
+  public function testBlockContentThemeSuggestionsExtraField(): void {
+    // Extra field blocks are a block plugin provided by layout builder, so
+    // enable layouts for the test bundle and view a node of that bundle.
     // @see block_content_theme_suggestions_test.module for extra field hooks.
     $this->drupalLogin($this->drupalCreateUser([
       'configure any layout',
