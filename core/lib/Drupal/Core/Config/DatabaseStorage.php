@@ -119,7 +119,7 @@ class DatabaseStorage implements StorageInterface {
     }
 
     if (!mb_check_encoding(implode('', $names), 'ASCII')) {
-      throw new \InvalidArgumentException('Non-ASCII characters are not supported for config entity names.'));
+      throw new \InvalidArgumentException('Non-ASCII characters are not supported for config entity names.');
     }
 
     $list = [];
