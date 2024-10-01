@@ -337,6 +337,7 @@ default:
   stage: 🪄 Lint
   variables:
     KUBERNETES_CPU_REQUEST: "4"
+    FF_SCRIPT_SECTIONS: 1
   script:
     - *prepare-lint-directory
     - *phpstan-cache
