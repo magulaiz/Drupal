@@ -120,13 +120,13 @@ small .admin-link::after {
   border: 0;
 }
 .extension details > summary {
+  overflow: hidden; /* truncates descriptions if too long */
   padding: 0;
   cursor: default;
-  text-transform: none;
-  overflow: hidden; /* truncates descriptions if too long */
-  font-weight: normal;
   white-space: nowrap;
+  text-transform: none;
   text-overflow: ellipsis;
+  font-weight: normal;
 }
 
 .extension details[open] > summary {
