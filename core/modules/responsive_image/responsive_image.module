@@ -498,10 +498,14 @@ function responsive_image_get_image_dimensions($image_style_name, array $dimensi
  * @param string $extension
  *   The original extension of the image (without the leading dot).
  *
- * @return string
- *   The MIME type of the image after the image style is applied.
+ * @return string|null
+ *   The MIME type of the image after the image style is applied, or NULL if not
+ *   found.
  */
-function responsive_image_get_mime_type($image_style_name, $extension) {
+function responsive_image_get_mime_type(
+  string $image_style_name,
+  string $extension
+): ?string {
   switch ($image_style_name) {
     // The file extension for the empty image is 'gif'.
     case ResponsiveImageStyleInterface::EMPTY_IMAGE:

@@ -81,7 +81,7 @@ abstract class FileMediaFormatterBase extends FileFormatterBase implements FileM
 
     foreach ($extension_list as $extension) {
       $mime_type = $extension_mime_type_guesser->guessMimeType('fakedFile.' . $extension);
-      if (static::mimeTypeApplies($mime_type)) {
+      if ($mime_type !== NULL && static::mimeTypeApplies($mime_type)) {
         return TRUE;
       }
     }
