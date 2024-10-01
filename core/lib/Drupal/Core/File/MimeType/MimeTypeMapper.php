@@ -138,7 +138,6 @@ class MimeTypeMapper implements MimeTypeMapperInterface {
       109 => 'application/x-dms',
       110 => 'application/x-doom',
       111 => 'application/x-dvi',
-      112 => 'application/x-flac',
       113 => 'application/x-font',
       114 => 'application/x-freemind',
       115 => 'application/x-futuresplash',
@@ -158,7 +157,9 @@ class MimeTypeMapper implements MimeTypeMapperInterface {
       129 => 'application/x-iphone',
       130 => 'application/x-iso9660-image',
       131 => 'application/x-java-jnlp-file',
-      132 => 'application/javascript',
+      // Per RFC 9239, text/javascript is preferred over application/javascript.
+      // @see https://www.rfc-editor.org/rfc/rfc9239
+      132 => 'text/javascript',
       133 => 'application/x-jmol',
       134 => 'application/x-kchart',
       135 => 'application/x-killustrator',
@@ -214,7 +215,9 @@ class MimeTypeMapper implements MimeTypeMapperInterface {
       183 => 'application/xhtml+xml',
       184 => 'application/xml',
       185 => 'application/zip',
+      360 => 'audio/aac',
       186 => 'audio/basic',
+      112 => 'audio/flac',
       187 => 'audio/midi',
       346 => 'audio/mp4',
       188 => 'audio/mpeg',
@@ -285,6 +288,7 @@ class MimeTypeMapper implements MimeTypeMapperInterface {
       251 => 'chemical/x-vmd',
       252 => 'chemical/x-xtel',
       253 => 'chemical/x-xyz',
+      362 => 'image/avif',
       254 => 'image/gif',
       255 => 'image/ief',
       256 => 'image/jpeg',
@@ -383,6 +387,7 @@ class MimeTypeMapper implements MimeTypeMapperInterface {
       343 => 'x-conference/x-cooltalk',
       344 => 'x-epoc/x-sisx-app',
       345 => 'x-world/x-vrml',
+      361 => 'application/json',
     ],
 
     // Extensions added to this list MUST be lower-case.
@@ -624,11 +629,11 @@ class MimeTypeMapper implements MimeTypeMapperInterface {
       'kar' => 187,
       'mpega' => 188,
       'mpga' => 188,
-      'm4a' => 188,
       'mp3' => 188,
       'mp2' => 188,
       'ogg' => 189,
       'oga' => 189,
+      'opus' => 189,
       'spx' => 189,
       'sid' => 190,
       'aif' => 191,
@@ -850,6 +855,7 @@ class MimeTypeMapper implements MimeTypeMapperInterface {
       'vrml' => 345,
       'f4a' => 346,
       'f4b' => 346,
+      'm4a' => 346,
       'flv' => 347,
       'm4v' => 348,
       'azw' => 349,
@@ -863,7 +869,12 @@ class MimeTypeMapper implements MimeTypeMapperInterface {
       'webm' => 357,
       'vtt' => 358,
       'gz' => 359,
+      'mjs' => 132,
+      'aac' => 360,
+      'json' => 361,
+      'avif' => 362,
     ],
+    // cspell:enable
   ];
 
   // cspell:enable
