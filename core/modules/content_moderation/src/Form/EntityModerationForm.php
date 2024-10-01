@@ -114,6 +114,7 @@ class EntityModerationForm extends FormBase {
       '#type' => 'select',
       '#title' => $this->t('Change to'),
       '#options' => $target_states,
+      '#required' => TRUE,
     ];
 
     $form['revision_log'] = [
