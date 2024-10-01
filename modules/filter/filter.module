@@ -1530,7 +1530,7 @@ function _filter_url($text, $filter) {
       }
   
       // Split at all tags; ensures that no tags or attributes are processed.
-      $chunks = is_null($text) ? array('') : preg_split('/(<.+?>)/is', $text, -1, PREG_SPLIT_DELIM_CAPTURE);
+      $chunks = preg_split('/(<.+?>)/is', $text, -1, PREG_SPLIT_DELIM_CAPTURE);
       if (preg_last_error()) {
         throw new \Exception('Last PCRE regex execution failed.');
       }
