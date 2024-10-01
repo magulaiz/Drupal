@@ -67,7 +67,6 @@ variables:
   PARENT_PIPELINE_ID: $CI_PIPELINE_ID
   _TARGET_PHP: "8.3-ubuntu"
   FF_SCRIPT_SECTIONS: true
-  FF_USE_NEW_BASH_EVAL_STRATEGY: true
 
 #############
 # Stages    #
@@ -310,7 +309,6 @@ default:
   variables:
     KUBERNETES_CPU_REQUEST: "4"
   script:
-    - set -xv
     - *prepare-lint-directory
     - *phpstan-cache
     - *cspell-cache
@@ -340,7 +338,6 @@ default:
   variables:
     KUBERNETES_CPU_REQUEST: "4"
   script:
-    - set -xv
     - *prepare-lint-directory
     - *phpstan-cache
     - composer validate
@@ -379,7 +376,6 @@ default:
   variables:
     KUBERNETES_CPU_REQUEST: "16"
   script:
-    - set -xv
     - composer validate
     - composer install --optimize-autoloader
     - if [ -n "$COMPOSER_UPDATE" ]; then
@@ -414,7 +410,6 @@ default:
     - when: manual
       allow_failure: true
   script:
-    - set -xv
     - *prepare-lint-directory
     - *eslint-cache
     - cd core
@@ -443,7 +438,6 @@ default:
     - when: manual
       allow_failure: true
   script:
-    - set -xv
     - *prepare-lint-directory
     - *stylelint-cache
     - corepack enable
@@ -461,7 +455,6 @@ default:
   variables:
     KUBERNETES_CPU_REQUEST: "2"
   script:
-    - set -xv
     - *prepare-lint-directory
     - *cspell-cache
     - *core-spellcheck
@@ -513,7 +506,6 @@ default:
       # Temporarily allow this to fail as there's are bugs with adding/removing/modifying config schemas.
       - 1
   script:
-    - set -xv
     # Revert back to the tip of the branch this MR started from.
     - git checkout -f $CI_MERGE_REQUEST_DIFF_BASE_SHA
     # Composer-install Drush & the Config Inspector module.
