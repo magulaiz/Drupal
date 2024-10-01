@@ -123,10 +123,10 @@ small .admin-link::after {
   padding: 0;
   cursor: default;
   text-transform: none;
-  font-weight: normal;
   overflow: hidden; /* truncates descriptions if too long */
-  text-overflow: ellipsis;
+  font-weight: normal;
   white-space: nowrap;
+  text-overflow: ellipsis;
 }
 
 .extension details[open] > summary {

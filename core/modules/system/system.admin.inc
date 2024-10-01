@@ -309,16 +309,16 @@ function template_preprocess_system_themes_page(&$variables) {
         ];
       }
 
-      $version = isset($theme->info['version']) ? $theme->info['version'] : '';
+      $version = $theme->info['version'] ?? '';
 
       $requires = [];
       foreach (array_keys($theme->requires) as $key) {
-        $requires[$key] = isset($theme_infos[$key]) ? $theme_infos[$key] : $key;
+        $requires[$key] = $theme_infos[$key] ?? $key;
       }
 
       $required_by = [];
       foreach (array_keys($theme->required_by) as $key) {
-        $required_by[$key] = isset($theme_infos[$key]) ? $theme_infos[$key] : $key;
+        $required_by[$key] = $theme_infos[$key] ?? $key;
       }
 
       $current_theme['machine_name'] = $theme->getName();
