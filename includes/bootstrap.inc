@@ -3963,7 +3963,7 @@ function drupal_clear_opcode_cache($filepath) {
 /**
  * Checks trusted HTTP Host headers to protect against header injection attacks.
  *
- * @param string $host
+ * @param string|null $host
  *   The host name.
  * @param array $host_patterns
  *   The array of trusted host patterns.
@@ -3972,7 +3972,7 @@ function drupal_clear_opcode_cache($filepath) {
  *   TRUE if the host is trusted, FALSE otherwise.
  */
 function drupal_check_trusted_hosts($host, array $host_patterns) {
-  if (!empty($host_patterns)) {
+  if (!empty($host) && !empty($host_patterns)) {
     // Trim and remove the port number from host; host is lowercase as per
     // RFC 952/2181.
     $host = strtolower(preg_replace('/:\d+$/', '', trim($host)));
