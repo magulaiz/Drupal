@@ -66,7 +66,7 @@ variables:
   GIT_DEPTH: "50"
   PARENT_PIPELINE_ID: $CI_PIPELINE_ID
   _TARGET_PHP: "8.3-ubuntu"
-  FF_SCRIPT_SECTIONS: 1
+  FF_SCRIPT_SECTIONS: "true"
 
 #############
 # Stages    #
