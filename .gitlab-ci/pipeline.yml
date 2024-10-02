@@ -27,7 +27,7 @@ default:
       [[ $_TARGET_DB == mysql* ]] && export SIMPLETEST_DB=mysql://$MYSQL_USER:$MYSQL_PASSWORD@database/$MYSQL_DATABASE?module=mysql
       [[ $_TARGET_DB == mariadb* ]] && export SIMPLETEST_DB=mysql://$MYSQL_USER:$MYSQL_PASSWORD@database/$MYSQL_DATABASE?module=mysql
       [[ $_TARGET_DB == pgsql* ]] && export SIMPLETEST_DB=pgsql://$POSTGRES_USER:$POSTGRES_PASSWORD@database/$POSTGRES_DB?module=pgsql
-      [[ $_TARGET_DB == mongodb* ]] && export SIMPLETEST_DB='mongodb://db:db@database:27017,database:27018,database:27019/db?module=mongodb&replicaSet=dbrs'
+      [[ $_TARGET_DB == mongodb* ]] && export SIMPLETEST_DB='mongodb://db:db@database:27017/db?module=mongodb&replicaSet=dbrs'
     - echo "SIMPLETEST_DB = $SIMPLETEST_DB"
     - $CI_PROJECT_DIR/.gitlab-ci/scripts/server-setup.sh
   after_script:
