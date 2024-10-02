@@ -142,8 +142,7 @@ class DatabaseStorageTest extends ConfigStorageTestBase {
   /**
    * Tests that DatabaseStorage::readMultiple throws an InvalidArgumentException if the config entity name contains invalid characters.
    */
-  public function testInvalidArgumentExceptionIsThrownIfInvalidCharacters(): void
-  {
+  public function testInvalidArgumentExceptionIsThrownIfInvalidCharacters(): void {
     $connection = Database::getConnection();
     if ($connection->databaseType() === 'sqlite') {
       // See: https://www.drupal.org/project/drupal/issues/3349286
@@ -159,7 +158,6 @@ class DatabaseStorageTest extends ConfigStorageTestBase {
     catch (\InvalidArgumentException) {
       // Exception was expected
     }
-    
     $this->assertTrue(TRUE);
   }
 
