@@ -51,6 +51,17 @@ abstract class CommentResourceTestBase extends EntityResourceTestBase {
   protected $entity;
 
   /**
+   * Marks some tests as skipped because XML cannot be deserialized.
+   *
+   * @before
+   */
+  public function commentResourceTestBaseSkipTests(): void {
+    if (static::$format === 'xml' && in_array($this->name(), ['testPostDxWithoutCriticalBaseFields', 'testPostSkipCommentApproval'], TRUE)) {
+      $this->markTestSkipped('Deserialization of the XML format is not supported.');
+    }
+  }
+
+  /**
    * {@inheritdoc}
    */
   protected function setUpAuthorization($method) {
@@ -289,7 +300,7 @@ abstract class CommentResourceTestBase extends EntityResourceTestBase {
    * - base fields that are marked as required, but yet can still result in
    *   validation errors other than "missing required field".
    */
-  public function testPostDxWithoutCriticalBaseFields() {
+  public function testPostDxWithoutCriticalBaseFields(): void {
     $this->initAuthentication();
     $this->provisionEntityResource();
     $this->setUpAuthorization('POST');
@@ -341,7 +352,7 @@ abstract class CommentResourceTestBase extends EntityResourceTestBase {
   /**
    * Tests POSTing a comment with and without 'skip comment approval'.
    */
-  public function testPostSkipCommentApproval() {
+  public function testPostSkipCommentApproval(): void {
     $this->initAuthentication();
     $this->provisionEntityResource();
     $this->setUpAuthorization('POST');

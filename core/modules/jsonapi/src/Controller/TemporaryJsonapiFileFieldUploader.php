@@ -9,6 +9,7 @@ use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Core\File\Event\FileUploadSanitizeNameEvent;
 use Drupal\Core\File\Exception\FileException;
+use Drupal\Core\File\FileExists;
 use Drupal\Core\File\FileSystemInterface;
 use Drupal\Core\Lock\LockBackendInterface;
 use Drupal\Core\Render\BubbleableMetadata;
@@ -18,6 +19,7 @@ use Drupal\file\Entity\File;
 use Drupal\file\FileInterface;
 use Drupal\file\Plugin\Field\FieldType\FileFieldItemList;
 use Drupal\file\Upload\ContentDispositionFilenameParser;
+use Drupal\file\Upload\FileUploadLocationTrait;
 use Drupal\file\Upload\InputStreamFileWriterInterface;
 use Drupal\file\Validation\FileValidatorInterface;
 use Drupal\file\Validation\FileValidatorSettingsTrait;
@@ -41,10 +43,18 @@ use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
  *     entity-level access.
  *
  * @internal This will be removed once https://www.drupal.org/project/drupal/issues/2940383 lands.
+ *
+ * @deprecated in drupal:10.3.0 and is removed from drupal:11.0.0. There is no
+ *   replacement.
+ *
+ * @see https://www.drupal.org/node/3445266
  */
 class TemporaryJsonapiFileFieldUploader {
 
   use FileValidatorSettingsTrait;
+  use FileUploadLocationTrait {
+    getUploadLocation as getUploadDestination;
+  }
 
   /**
    * The regex used to extract the filename from the content disposition header.
@@ -155,7 +165,8 @@ class TemporaryJsonapiFileFieldUploader {
    * @param \Drupal\file\Upload\InputStreamFileWriterInterface|null $input_stream_file_writer
    *   The stream file uploader.
    */
-  public function __construct(LoggerInterface $logger, FileSystemInterface $file_system, $mime_type_guesser, Token $token, LockBackendInterface $lock, ConfigFactoryInterface $config_factory, EventDispatcherInterface $event_dispatcher = NULL, FileValidatorInterface $file_validator = NULL, InputStreamFileWriterInterface $input_stream_file_writer = NULL) {
+  public function __construct(LoggerInterface $logger, FileSystemInterface $file_system, $mime_type_guesser, Token $token, LockBackendInterface $lock, ConfigFactoryInterface $config_factory, ?EventDispatcherInterface $event_dispatcher = NULL, ?FileValidatorInterface $file_validator = NULL, ?InputStreamFileWriterInterface $input_stream_file_writer = NULL) {
+    @\trigger_error(__CLASS__ . ' is deprecated in drupal:10.3.0 and is removed from drupal:11.0.0. There is no replacement. See https://www.drupal.org/node/3445266', E_USER_DEPRECATED);
     $this->logger = $logger;
     $this->fileSystem = $file_system;
     $this->mimeTypeGuesser = $mime_type_guesser;
@@ -200,7 +211,7 @@ class TemporaryJsonapiFileFieldUploader {
   public function handleFileUploadForField(FieldDefinitionInterface $field_definition, $filename, AccountInterface $owner) {
     assert(is_a($field_definition->getClass(), FileFieldItemList::class, TRUE));
     $settings = $field_definition->getSettings();
-    $destination = $this->getUploadLocation($settings);
+    $destination = $this->getUploadDestination($field_definition);
 
     // Check the destination file path is writable.
     if (!$this->fileSystem->prepareDirectory($destination, FileSystemInterface::CREATE_DIRECTORY)) {
@@ -219,7 +230,7 @@ class TemporaryJsonapiFileFieldUploader {
 
     $temp_file_path = $this->streamUploadData();
 
-    $file_uri = $this->fileSystem->getDestinationFilename($file_uri, FileSystemInterface::EXISTS_RENAME);
+    $file_uri = $this->fileSystem->getDestinationFilename($file_uri, FileExists::Rename);
 
     // Lock based on the prepared file URI.
     $lock_id = $this->generateLockIdFromFileUri($file_uri);
@@ -259,10 +270,10 @@ class TemporaryJsonapiFileFieldUploader {
     $file->setFilename($this->fileSystem->basename($file->getFileUri()));
 
     // Move the file to the correct location after validation. Use
-    // FileSystemInterface::EXISTS_ERROR as the file location has already been
+    // FileExists::Error as the file location has already been
     // determined above in FileSystem::getDestinationFilename().
     try {
-      $this->fileSystem->move($temp_file_path, $file_uri, FileSystemInterface::EXISTS_ERROR);
+      $this->fileSystem->move($temp_file_path, $file_uri, FileExists::Error);
     }
     catch (FileException $e) {
       throw new HttpException(500, 'Temporary file could not be moved to file location');
@@ -323,7 +334,7 @@ class TemporaryJsonapiFileFieldUploader {
    * @return \Drupal\Core\Access\AccessResultInterface
    *   The file upload access result.
    */
-  public static function checkFileUploadAccess(AccountInterface $account, FieldDefinitionInterface $field_definition, EntityInterface $entity = NULL) {
+  public static function checkFileUploadAccess(AccountInterface $account, FieldDefinitionInterface $field_definition, ?EntityInterface $entity = NULL) {
     assert(is_null($entity) ||
       $field_definition->getTargetEntityTypeId() === $entity->getEntityTypeId() &&
       // Base fields do not have target bundles.
@@ -427,8 +438,14 @@ class TemporaryJsonapiFileFieldUploader {
    * @return string
    *   An un-sanitized file directory URI with tokens replaced. The result of
    *   the token replacement is then converted to plain text and returned.
+   *
+   * @deprecated in drupal:10.3.0 and is removed from drupal:11.0.0. Use
+   *   \Drupal\file\Upload\FileUploadLocationTrait::getUploadLocation() instead.
+   *
+   * @see https://www.drupal.org/node/3406099
    */
   protected function getUploadLocation(array $settings) {
+    @\trigger_error(__METHOD__ . ' is deprecated in drupal:10.3.0 and is removed from drupal:11.0.0. Use \Drupal\file\Upload\FileUploadLocationTrait::getUploadLocation() instead. See https://www.drupal.org/node/3406099', E_USER_DEPRECATED);
     $destination = trim($settings['file_directory'], '/');
 
     // Replace tokens. As the tokens might contain HTML we convert it to plain

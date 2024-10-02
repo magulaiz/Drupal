@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\KernelTests\Core\Config;
 
 use Drupal\block_content\Entity\BlockContent;
@@ -41,9 +43,7 @@ class ConfigImporterMissingContentTest extends KernelTestBase implements LoggerI
   protected $configImporter;
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = [
     'system',
@@ -103,7 +103,7 @@ class ConfigImporterMissingContentTest extends KernelTestBase implements LoggerI
    * @see \Drupal\Core\Config\ConfigImporter::processMissingContent()
    * @see \Drupal\config_import_test\EventSubscriber
    */
-  public function testMissingContent() {
+  public function testMissingContent(): void {
     \Drupal::state()->set('config_import_test.config_import_missing_content', TRUE);
 
     // Update a configuration entity in the sync directory to have a dependency
@@ -141,7 +141,7 @@ class ConfigImporterMissingContentTest extends KernelTestBase implements LoggerI
    * @see \Drupal\Core\Config\ConfigImporter::processMissingContent()
    * @see \Drupal\config_import_test\EventSubscriber
    */
-  public function testMissingBlockContent() {
+  public function testMissingBlockContent(): void {
     $this->enableModules([
       'block',
       'block_content',

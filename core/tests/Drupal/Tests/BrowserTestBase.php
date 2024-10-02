@@ -101,7 +101,7 @@ abstract class BrowserTestBase extends TestCase {
   protected $configImporter;
 
   /**
-   * Modules to enable.
+   * Modules to install.
    *
    * The test runner will merge the $modules lists from this class, the class
    * it extends, and so on up the class hierarchy. It is not necessary to
@@ -547,7 +547,7 @@ abstract class BrowserTestBase extends TestCase {
    * @return array
    *   Associative array of option keys and values.
    */
-  protected function getOptions($select, Element $container = NULL) {
+  protected function getOptions($select, ?Element $container = NULL) {
     if (is_string($select)) {
       $select = $this->assertSession()->selectExists($select, $container);
     }

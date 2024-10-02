@@ -12,6 +12,7 @@ use Drupal\Tests\migrate_drupal_ui\Functional\MigrateUpgradeExecuteTestBase;
  * The test method is provided by the MigrateUpgradeTestBase class.
  *
  * @group statistics
+ * @group legacy
  */
 class UpgradeTest extends MigrateUpgradeExecuteTestBase {
 
@@ -53,7 +54,7 @@ class UpgradeTest extends MigrateUpgradeExecuteTestBase {
    */
   protected function getEntityCounts() {
     return [
-      'action' => 27,
+      'action' => 24,
       'base_field_override' => 18,
       'block' => 33,
       'block_content' => 1,
@@ -130,7 +131,7 @@ class UpgradeTest extends MigrateUpgradeExecuteTestBase {
   /**
    * Executes all steps of migrations upgrade.
    */
-  public function testUpgrade() {
+  public function testUpgrade(): void {
     // Start the upgrade process.
     $this->submitCredentialForm();
     $session = $this->assertSession();

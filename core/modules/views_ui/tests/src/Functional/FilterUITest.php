@@ -8,6 +8,7 @@ namespace Drupal\Tests\views_ui\Functional;
  * Tests for the filters from the UI.
  *
  * @group views_ui
+ * @group #slow
  */
 class FilterUITest extends UITestBase {
 
@@ -20,9 +21,7 @@ class FilterUITest extends UITestBase {
   public static $testViews = ['test_filter_in_operator_ui', 'test_filter_groups'];
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = ['views_ui', 'node'];
 
@@ -42,7 +41,7 @@ class FilterUITest extends UITestBase {
   /**
    * Tests that an option for a filter is saved as expected from the UI.
    */
-  public function testFilterInOperatorUi() {
+  public function testFilterInOperatorUi(): void {
     $admin_user = $this->drupalCreateUser([
       'administer views',
       'administer site configuration',
@@ -69,7 +68,7 @@ class FilterUITest extends UITestBase {
   /**
    * Tests the filters from the UI.
    */
-  public function testFiltersUI() {
+  public function testFiltersUI(): void {
     $admin_user = $this->drupalCreateUser([
       'administer views',
       'administer site configuration',
@@ -104,7 +103,7 @@ class FilterUITest extends UITestBase {
   /**
    * Tests the identifier settings and restrictions.
    */
-  public function testFilterIdentifier() {
+  public function testFilterIdentifier(): void {
     $admin_user = $this->drupalCreateUser([
       'administer views',
       'administer site configuration',

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\book\Kernel\Migrate\d6;
 
 use Drupal\Tests\SchemaCheckTestTrait;
@@ -9,6 +11,7 @@ use Drupal\Tests\migrate_drupal\Kernel\d6\MigrateDrupal6TestBase;
  * Upgrade variables to book.settings.yml.
  *
  * @group book
+ * @group legacy
  */
 class MigrateBookConfigsTest extends MigrateDrupal6TestBase {
 
@@ -47,7 +50,7 @@ class MigrateBookConfigsTest extends MigrateDrupal6TestBase {
    *
    * @dataProvider providerBookSettings
    */
-  public function testBookSettings($migration_id) {
+  public function testBookSettings($migration_id): void {
     $this->executeMigration($migration_id);
 
     $config = $this->config('book.settings');

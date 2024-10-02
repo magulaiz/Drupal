@@ -8,6 +8,7 @@ use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\node\NodeInterface;
+use Drupal\views\Attribute\ViewsArgument;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -23,9 +24,10 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  * @see \Drupal\views\ManyToOneHelper
  *
  * @ingroup views_argument_handlers
- *
- * @ViewsArgument("date")
  */
+#[ViewsArgument(
+  id: 'date',
+)]
 class Date extends Formula implements ContainerFactoryPluginInterface {
 
   /**
@@ -42,6 +44,7 @@ class Date extends Formula implements ContainerFactoryPluginInterface {
    */
   protected $argFormat = 'Y-m-d';
 
+  // phpcs:ignore Drupal.NamingConventions.ValidVariableName.LowerCamelName
   public $option_name = 'default_argument_date';
 
   /**

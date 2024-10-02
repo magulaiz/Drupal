@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\statistics\Kernel\Plugin\migrate\source;
 
 use Drupal\Tests\migrate\Kernel\MigrateSqlSourceTestBase;
@@ -12,6 +14,7 @@ use Drupal\Tests\migrate\Kernel\MigrateSqlSourceTestBase;
  * @covers \Drupal\statistics\Plugin\migrate\source\NodeCounter
  *
  * @group statistics
+ * @group legacy
  */
 class NodeCounterTest extends MigrateSqlSourceTestBase {
 

@@ -12,6 +12,7 @@ use Drupal\Tests\UnitTestCase;
 /**
  * @coversDefaultClass \Drupal\book\BookManager
  * @group book
+ * @group legacy
  */
 class BookManagerTest extends UnitTestCase {
 
@@ -94,7 +95,7 @@ class BookManagerTest extends UnitTestCase {
    *
    * @dataProvider providerTestGetBookParents
    */
-  public function testGetBookParents($book, $parent, $expected) {
+  public function testGetBookParents($book, $parent, $expected): void {
     $this->assertEquals($expected, $this->bookManager->getBookParents($book, $parent));
   }
 

@@ -19,9 +19,7 @@ use Drupal\views\Entity\View;
 class BlockXssTest extends BrowserTestBase {
 
   /**
-   * Modules to install.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = ['block', 'block_content', 'menu_ui', 'views'];
 
@@ -33,7 +31,7 @@ class BlockXssTest extends BrowserTestBase {
   /**
    * Tests that nothing is escaped other than the blocks explicitly tested.
    */
-  public function testNoUnexpectedEscaping() {
+  public function testNoUnexpectedEscaping(): void {
     $this->drupalLogin($this->drupalCreateUser([
       'administer blocks',
       'access administration pages',
@@ -46,7 +44,7 @@ class BlockXssTest extends BrowserTestBase {
   /**
    * Tests XSS in title.
    */
-  public function testXssInTitle() {
+  public function testXssInTitle(): void {
     $this->container->get('module_installer')->install(['block_test']);
     $this->drupalPlaceBlock('test_xss_title', ['label' => '<script>alert("XSS label");</script>']);
 
@@ -69,7 +67,7 @@ class BlockXssTest extends BrowserTestBase {
   /**
    * Tests XSS in category.
    */
-  public function testXssInCategory() {
+  public function testXssInCategory(): void {
     $this->container->get('module_installer')->install(['block_test']);
     $this->drupalPlaceBlock('test_xss_title');
     $this->drupalLogin($this->drupalCreateUser([
@@ -84,8 +82,11 @@ class BlockXssTest extends BrowserTestBase {
   /**
    * Tests various modules that provide blocks for XSS.
    */
-  public function testBlockXss() {
-    $this->drupalLogin($this->rootUser);
+  public function testBlockXss(): void {
+    $this->drupalLogin($this->drupalCreateUser([
+      'administer blocks',
+      'access administration pages',
+    ]));
 
     $this->doViewTest();
     $this->doMenuTest();

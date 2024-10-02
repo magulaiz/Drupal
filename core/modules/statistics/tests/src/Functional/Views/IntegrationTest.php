@@ -11,6 +11,7 @@ use Drupal\user\Entity\User;
  * Tests basic integration of views data from the statistics module.
  *
  * @group statistics
+ * @group legacy
  * @see
  */
 class IntegrationTest extends ViewTestBase {
@@ -84,7 +85,7 @@ class IntegrationTest extends ViewTestBase {
   /**
    * Tests the integration of the {node_counter} table in views.
    */
-  public function testNodeCounterIntegration() {
+  public function testNodeCounterIntegration(): void {
     $this->drupalLogin($this->webUser);
 
     $this->drupalGet('node/' . $this->node->id());

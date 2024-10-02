@@ -45,9 +45,7 @@ class ResponsiveImageFieldDisplayTest extends ImageFieldTestBase {
   protected $fileUrlGenerator;
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = [
     'field_ui',
@@ -90,7 +88,7 @@ class ResponsiveImageFieldDisplayTest extends ImageFieldTestBase {
   /**
    * Tests responsive image formatters on node display for public files.
    */
-  public function testResponsiveImageFieldFormattersPublic() {
+  public function testResponsiveImageFieldFormattersPublic(): void {
     $this->addTestImageStyleMappings();
     $this->doTestResponsiveImageFieldFormatters('public');
   }
@@ -98,7 +96,7 @@ class ResponsiveImageFieldDisplayTest extends ImageFieldTestBase {
   /**
    * Tests responsive image formatters on node display for private files.
    */
-  public function testResponsiveImageFieldFormattersPrivate() {
+  public function testResponsiveImageFieldFormattersPrivate(): void {
     $this->addTestImageStyleMappings();
     // Remove access content permission from anonymous users.
     user_role_change_permissions(RoleInterface::ANONYMOUS_ID, ['access content' => FALSE]);
@@ -108,7 +106,7 @@ class ResponsiveImageFieldDisplayTest extends ImageFieldTestBase {
   /**
    * Tests responsive image formatters when image style is empty.
    */
-  public function testResponsiveImageFieldFormattersEmptyStyle() {
+  public function testResponsiveImageFieldFormattersEmptyStyle(): void {
     $this->addTestImageStyleMappings(TRUE);
     $this->doTestResponsiveImageFieldFormatters('public', TRUE);
   }
@@ -193,7 +191,7 @@ class ResponsiveImageFieldDisplayTest extends ImageFieldTestBase {
     $renderer = $this->container->get('renderer');
     $node_storage = $this->container->get('entity_type.manager')->getStorage('node');
     $field_name = $this->randomMachineName();
-    $this->createImageField($field_name, 'article', ['uri_scheme' => $scheme]);
+    $this->createImageField($field_name, 'node', 'article', ['uri_scheme' => $scheme]);
     // Create a new node with an image attached. Make sure we use a large image
     // so the scale effects of the image styles always have an effect.
     $test_image = current($this->getTestFiles('image', 39325));
@@ -358,7 +356,7 @@ class ResponsiveImageFieldDisplayTest extends ImageFieldTestBase {
   /**
    * Tests responsive image formatters on node display linked to the file.
    */
-  public function testResponsiveImageFieldFormattersLinkToFile() {
+  public function testResponsiveImageFieldFormattersLinkToFile(): void {
     $this->addTestImageStyleMappings();
     $this->assertResponsiveImageFieldFormattersLink('file');
   }
@@ -366,7 +364,7 @@ class ResponsiveImageFieldDisplayTest extends ImageFieldTestBase {
   /**
    * Tests responsive image formatters on node display linked to the node.
    */
-  public function testResponsiveImageFieldFormattersLinkToNode() {
+  public function testResponsiveImageFieldFormattersLinkToNode(): void {
     $this->addTestImageStyleMappings();
     $this->assertResponsiveImageFieldFormattersLink('content');
   }
@@ -374,7 +372,7 @@ class ResponsiveImageFieldDisplayTest extends ImageFieldTestBase {
   /**
    * Tests responsive image formatter on node display with an empty media query.
    */
-  public function testResponsiveImageFieldFormattersEmptyMediaQuery() {
+  public function testResponsiveImageFieldFormattersEmptyMediaQuery(): void {
     $this->responsiveImgStyle
       // Test the output of an empty media query.
       ->addImageStyleMapping('responsive_image_test_module.empty', '1x', [
@@ -389,7 +387,7 @@ class ResponsiveImageFieldDisplayTest extends ImageFieldTestBase {
       ->save();
     $node_storage = $this->container->get('entity_type.manager')->getStorage('node');
     $field_name = $this->randomMachineName();
-    $this->createImageField($field_name, 'article', ['uri_scheme' => 'public']);
+    $this->createImageField($field_name, 'node', 'article', ['uri_scheme' => 'public']);
     // Create a new node with an image attached.
     $test_image = current($this->getTestFiles('image'));
     $nid = $this->uploadNodeImage($test_image, $field_name, 'article', $this->randomMachineName());
@@ -424,7 +422,7 @@ class ResponsiveImageFieldDisplayTest extends ImageFieldTestBase {
   /**
    * Tests responsive image formatter on node display with one and two sources.
    */
-  public function testResponsiveImageFieldFormattersMultipleSources() {
+  public function testResponsiveImageFieldFormattersMultipleSources(): void {
     // Setup known image style sizes so the test can assert on known sizes.
     $large_style = ImageStyle::load('large');
     assert($large_style instanceof ImageStyleInterface);
@@ -464,7 +462,7 @@ class ResponsiveImageFieldDisplayTest extends ImageFieldTestBase {
       ->save();
     $node_storage = $this->container->get('entity_type.manager')->getStorage('node');
     $field_name = $this->randomMachineName();
-    $this->createImageField($field_name, 'article', ['uri_scheme' => 'public']);
+    $this->createImageField($field_name, 'node', 'article', ['uri_scheme' => 'public']);
     // Create a new node with an image attached.
     $test_image = current($this->getTestFiles('image'));
     $nid = $this->uploadNodeImage($test_image, $field_name, 'article', $this->randomMachineName());
@@ -520,7 +518,7 @@ class ResponsiveImageFieldDisplayTest extends ImageFieldTestBase {
   private function assertResponsiveImageFieldFormattersLink(string $link_type): void {
     $field_name = $this->randomMachineName();
     $field_settings = ['alt_field_required' => 0];
-    $this->createImageField($field_name, 'article', ['uri_scheme' => 'public'], $field_settings);
+    $this->createImageField($field_name, 'node', 'article', ['uri_scheme' => 'public'], $field_settings);
     // Create a new node with an image attached.
     $test_image = current($this->getTestFiles('image'));
 

@@ -56,9 +56,7 @@ class ContentTranslationWorkflowsTest extends ContentTranslationTestBase {
   protected $notEntityOwner;
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = [
     'language',
@@ -157,7 +155,7 @@ class ContentTranslationWorkflowsTest extends ContentTranslationTestBase {
    * @param \Drupal\User\UserInterface|null $user
    *   (optional) The entity owner.
    */
-  protected function setupEntity(UserInterface $user = NULL) {
+  protected function setupEntity(?UserInterface $user = NULL) {
     $default_langcode = $this->langcodes[0];
 
     // Create a test entity.
@@ -190,7 +188,7 @@ class ContentTranslationWorkflowsTest extends ContentTranslationTestBase {
   /**
    * Tests simple and editorial translation workflows.
    */
-  public function testWorkflows() {
+  public function testWorkflows(): void {
     // Test workflows for the editor.
     $expected_status = [
       'edit' => 200,

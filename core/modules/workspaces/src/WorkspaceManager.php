@@ -121,7 +121,7 @@ class WorkspaceManager implements WorkspaceManagerInterface {
    * @param array|null $negotiator_ids
    *   The workspace negotiator service IDs.
    */
-  public function __construct(RequestStack $request_stack, EntityTypeManagerInterface $entity_type_manager, MemoryCacheInterface $entity_memory_cache, AccountProxyInterface $current_user, StateInterface $state, LoggerInterface $logger, ClassResolverInterface $class_resolver, WorkspaceAssociationInterface $workspace_association, protected ?WorkspaceInformationInterface $workspace_information = NULL, array $negotiator_ids = NULL) {
+  public function __construct(RequestStack $request_stack, EntityTypeManagerInterface $entity_type_manager, MemoryCacheInterface $entity_memory_cache, AccountProxyInterface $current_user, StateInterface $state, LoggerInterface $logger, ClassResolverInterface $class_resolver, WorkspaceAssociationInterface $workspace_association, protected ?WorkspaceInformationInterface $workspace_information = NULL, ?array $negotiator_ids = NULL) {
     $this->requestStack = $request_stack;
     $this->entityTypeManager = $entity_type_manager;
     $this->entityMemoryCache = $entity_memory_cache;
@@ -173,21 +173,34 @@ class WorkspaceManager implements WorkspaceManagerInterface {
   public function getActiveWorkspace() {
     if (!isset($this->activeWorkspace)) {
       $request = $this->requestStack->getCurrentRequest();
+
       foreach ($this->negotiatorIds as $negotiator_id) {
+        /** @var \Drupal\workspaces\Negotiator\WorkspaceIdNegotiatorInterface $negotiator */
         $negotiator = $this->classResolver->getInstanceFromDefinition($negotiator_id);
+
         if ($negotiator->applies($request)) {
+          if ($workspace_id = $negotiator->getActiveWorkspaceId($request)) {
+            /** @var \Drupal\workspaces\WorkspaceInterface $negotiated_workspace */
+            $negotiated_workspace = $this->entityTypeManager
+              ->getStorage('workspace')
+              ->load($workspace_id);
+          }
+
           // By default, 'view' access is checked when a workspace is activated,
           // but it should also be checked when retrieving the currently active
           // workspace.
-          if (($negotiated_workspace = $negotiator->getActiveWorkspace($request)) && $negotiated_workspace->access('view')) {
+          if (isset($negotiated_workspace) && $negotiated_workspace->access('view')) {
+            // Notify the negotiator that its workspace has been selected.
+            $negotiator->setActiveWorkspace($negotiated_workspace);
+
             $active_workspace = $negotiated_workspace;
             break;
           }
         }
       }
 
-      // If no negotiator was able to determine the active workspace, default to
-      // the live version of the site.
+      // If no negotiator was able to provide a valid workspace, default to the
+      // live version of the site.
       $this->activeWorkspace = $active_workspace ?? FALSE;
     }
 
@@ -259,7 +272,9 @@ class WorkspaceManager implements WorkspaceManagerInterface {
 
     // Clear the static cache for path aliases. We can't inject the path alias
     // manager service because it would create a circular dependency.
-    \Drupal::service('path_alias.manager')->cacheClear();
+    if (\Drupal::hasService('path_alias.manager')) {
+      \Drupal::service('path_alias.manager')->cacheClear();
+    }
   }
 
   /**

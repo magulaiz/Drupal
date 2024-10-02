@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\views\Kernel;
 
 use Drupal\Core\Entity\Entity\EntityViewMode;
@@ -24,9 +26,7 @@ class TestViewsTest extends KernelTestBase {
   use SchemaCheckTestTrait;
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = [
     'views',
@@ -198,7 +198,7 @@ class TestViewsTest extends KernelTestBase {
   /**
    * Tests default configuration data type.
    */
-  public function testDefaultConfig() {
+  public function testDefaultConfig(): void {
     // Create a typed config manager with access to configuration schema in
     // every module, profile and theme.
     $typed_config = new TypedConfigManager(

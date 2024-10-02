@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\forum\Kernel\Migrate\d6;
 
 use Drupal\block\Entity\Block;
@@ -99,7 +101,7 @@ class MigrateBlockTest extends MigrateDrupal6TestBase {
   /**
    * Tests the block migration.
    */
-  public function testBlockMigration() {
+  public function testBlockMigration(): void {
 
     // Check forum block settings.
     $settings = [

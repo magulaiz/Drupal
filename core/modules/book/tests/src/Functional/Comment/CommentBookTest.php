@@ -14,6 +14,7 @@ use Drupal\comment\Entity\Comment;
  * Tests visibility of comments on book pages.
  *
  * @group book
+ * @group legacy
  */
 class CommentBookTest extends BrowserTestBase {
 
@@ -44,7 +45,7 @@ class CommentBookTest extends BrowserTestBase {
   /**
    * Tests comments in book export.
    */
-  public function testBookCommentPrint() {
+  public function testBookCommentPrint(): void {
     $book_node = Node::create([
       'type' => 'book',
       'title' => 'Book title',

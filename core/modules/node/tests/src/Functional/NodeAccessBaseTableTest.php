@@ -20,9 +20,7 @@ class NodeAccessBaseTableTest extends NodeTestBase {
   use EntityReferenceFieldCreationTrait;
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = [
     'node_access_test',
@@ -122,7 +120,7 @@ class NodeAccessBaseTableTest extends NodeTestBase {
    * - Test that user 4 can view all content created above.
    * - Test that user 4 can view all content on taxonomy listing.
    */
-  public function testNodeAccessBasic() {
+  public function testNodeAccessBasic(): void {
     $num_simple_users = 2;
     $simple_users = [];
 

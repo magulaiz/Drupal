@@ -63,7 +63,7 @@ class Upgrade7Test extends MigrateUpgradeExecuteTestBase {
    */
   protected function getEntityCounts() {
     return [
-      'action' => 27,
+      'action' => 24,
       'base_field_override' => 3,
       'block' => 26,
       'block_content' => 1,
@@ -154,7 +154,7 @@ class Upgrade7Test extends MigrateUpgradeExecuteTestBase {
   /**
    * Executes all steps of migrations upgrade.
    */
-  public function testUpgrade() {
+  public function testUpgrade(): void {
     // Start the upgrade process.
     $this->submitCredentialForm();
     $session = $this->assertSession();

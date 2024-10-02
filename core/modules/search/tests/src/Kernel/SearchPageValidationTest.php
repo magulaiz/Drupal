@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\search\Kernel;
 
 use Drupal\KernelTests\Core\Config\ConfigEntityValidationTestBase;
@@ -11,6 +13,7 @@ use Drupal\search\SearchPageRepository;
  * Tests validation of search_page entities.
  *
  * @group search
+ * @group #slow
  */
 class SearchPageValidationTest extends ConfigEntityValidationTestBase {
 

@@ -23,7 +23,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 class EntityTypeInfo implements ContainerInjectionInterface {
 
   public function __construct(
-    protected readonly WorkspaceInformationInterface $workspaceInfo
+    protected readonly WorkspaceInformationInterface $workspaceInfo,
   ) {
   }
 
@@ -60,6 +60,12 @@ class EntityTypeInfo implements ContainerInjectionInterface {
         if ($entity_type->id() === 'block_content') {
           $entity_type->setHandlerClass('workspace', BlockContentWorkspaceHandler::class);
         }
+      }
+
+      // The 'file' entity type is allowed to perform CRUD operations inside a
+      // workspace without being tracked.
+      if ($entity_type->id() === 'file') {
+        $entity_type->setHandlerClass('workspace', IgnoredWorkspaceHandler::class);
       }
 
       // Internal entity types are allowed to perform CRUD operations inside a

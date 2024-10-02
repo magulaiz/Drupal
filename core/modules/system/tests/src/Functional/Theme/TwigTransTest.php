@@ -19,9 +19,7 @@ use Twig\Error\SyntaxError;
 class TwigTransTest extends BrowserTestBase {
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = [
     'theme_test',
@@ -85,7 +83,7 @@ class TwigTransTest extends BrowserTestBase {
   /**
    * Tests Twig "trans" tags.
    */
-  public function testTwigTransTags() {
+  public function testTwigTransTags(): void {
     // Run this once without and once with Twig debug because trans can work
     // differently depending on that setting.
     $this->drupalGet('twig-theme-test/trans', ['language' => \Drupal::languageManager()->getLanguage('xx')]);
@@ -105,7 +103,7 @@ class TwigTransTest extends BrowserTestBase {
   /**
    * Tests empty Twig "trans" tags.
    */
-  public function testEmptyTwigTransTags() {
+  public function testEmptyTwigTransTags(): void {
     $elements = [
       '#type' => 'inline_template',
       '#template' => '{% trans %}{% endtrans %}',

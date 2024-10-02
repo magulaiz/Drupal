@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\KernelTests\Core\Entity;
 
 use Drupal\entity_test\Entity\EntityTestMulChanged;
@@ -14,9 +16,7 @@ use Drupal\language\Entity\ConfigurableLanguage;
 class ContentEntityChangedTest extends EntityKernelTestBase {
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = [
     'language',
@@ -62,7 +62,7 @@ class ContentEntityChangedTest extends EntityKernelTestBase {
   /**
    * Tests basic EntityChangedInterface functionality.
    */
-  public function testChanged() {
+  public function testChanged(): void {
     $user1 = $this->createUser();
     $user2 = $this->createUser();
 
@@ -239,7 +239,7 @@ class ContentEntityChangedTest extends EntityKernelTestBase {
   /**
    * Tests revisionable EntityChangedInterface functionality.
    */
-  public function testRevisionChanged() {
+  public function testRevisionChanged(): void {
     $user1 = $this->createUser();
     $user2 = $this->createUser();
 

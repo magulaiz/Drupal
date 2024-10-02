@@ -11,6 +11,7 @@ use Drupal\views\Tests\ViewTestData;
  * Tests entity reference relationship data.
  *
  * @group book
+ * @group legacy
  *
  * @see book_views_data()
  */
@@ -148,7 +149,7 @@ class BookRelationshipTest extends ViewTestBase {
   /**
    * Tests using the views relationship.
    */
-  public function testRelationship() {
+  public function testRelationship(): void {
 
     // Create new book.
     /** @var \Drupal\node\NodeInterface[] $nodes */

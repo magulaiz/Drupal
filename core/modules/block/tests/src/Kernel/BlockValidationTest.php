@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\block\Kernel;
 
 use Drupal\block\Entity\Block;
@@ -10,6 +12,7 @@ use Drupal\KernelTests\Core\Config\ConfigEntityValidationTestBase;
  * Tests validation of block entities.
  *
  * @group block
+ * @group #slow
  */
 class BlockValidationTest extends ConfigEntityValidationTestBase {
 

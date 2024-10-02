@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\system\Kernel\Entity;
 
 use Drupal\KernelTests\Core\Config\ConfigEntityValidationTestBase;
@@ -9,6 +11,7 @@ use Drupal\system\Entity\Menu;
  * Tests validation of menu entities.
  *
  * @group system
+ * @group #slow
  */
 class MenuValidationTest extends ConfigEntityValidationTestBase {
 

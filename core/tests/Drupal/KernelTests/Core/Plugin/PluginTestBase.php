@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\KernelTests\Core\Plugin;
 
 use Drupal\Component\Datetime\TimeInterface;
@@ -17,9 +19,7 @@ use Drupal\Core\Extension\ModuleHandler;
 abstract class PluginTestBase extends KernelTestBase {
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = ['plugin_test'];
 

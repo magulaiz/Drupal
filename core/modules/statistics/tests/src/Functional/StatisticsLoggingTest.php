@@ -14,6 +14,7 @@ use Drupal\node\Entity\Node;
  * want to test requests from an anonymous user.
  *
  * @group statistics
+ * @group legacy
  */
 class StatisticsLoggingTest extends BrowserTestBase {
 
@@ -106,7 +107,7 @@ class StatisticsLoggingTest extends BrowserTestBase {
   /**
    * Verifies node hit counter logging and script placement.
    */
-  public function testLogging() {
+  public function testLogging(): void {
     $path = 'node/' . $this->node->id();
     $module_path = $this->getModulePath('statistics');
     $stats_path = base_path() . $module_path . '/statistics.php';

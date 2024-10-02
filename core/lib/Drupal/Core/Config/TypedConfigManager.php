@@ -2,7 +2,6 @@
 
 namespace Drupal\Core\Config;
 
-use Drupal\Component\Render\FormattableMarkup;
 use Drupal\Component\Utility\NestedArray;
 use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Config\Schema\ConfigSchemaAlterException;
@@ -57,7 +56,7 @@ class TypedConfigManager extends TypedDataManager implements TypedConfigManagerI
    * @param \Drupal\Core\DependencyInjection\ClassResolverInterface $class_resolver
    *   (optional) The class resolver.
    */
-  public function __construct(StorageInterface $configStorage, StorageInterface $schemaStorage, CacheBackendInterface $cache, ModuleHandlerInterface $module_handler, ClassResolverInterface $class_resolver = NULL) {
+  public function __construct(StorageInterface $configStorage, StorageInterface $schemaStorage, CacheBackendInterface $cache, ModuleHandlerInterface $module_handler, ?ClassResolverInterface $class_resolver = NULL) {
     $this->configStorage = $configStorage;
     $this->schemaStorage = $schemaStorage;
     $this->setCacheBackend($cache, 'typed_config_definitions');
@@ -83,10 +82,7 @@ class TypedConfigManager extends TypedDataManager implements TypedConfigManagerI
     $data = $this->configStorage->read($name);
     if ($data === FALSE) {
       // For a typed config the data MUST exist.
-      $data = [];
-      trigger_error(new FormattableMarkup('Missing required data for typed configuration: @config', [
-        '@config' => $name,
-      ]), E_USER_ERROR);
+      throw new \InvalidArgumentException("Missing required data for typed configuration: $name");
     }
     return $this->createFromNameAndData($name, $data);
   }
@@ -214,7 +210,7 @@ class TypedConfigManager extends TypedDataManager implements TypedConfigManagerI
       $parent_data_def = $object->getParent()->getDataDefinition();
       $original_mapping_type = match (TRUE) {
         $parent_data_def instanceof MapDataDefinition => $parent_data_def->toArray()['mapping'][$object->getName()]['type'],
-        $parent_data_def instanceof SequenceDataDefinition => $parent_data_def->toArray()['sequence']['type'],
+        $parent_data_def instanceof SequenceDataDefinition => $parent_data_def->toArray()['sequence']['type'] ?? $parent_data_def->toArray()['sequence'][0]['type'],
         default => throw new \LogicException('Invalid config schema detected.'),
       };
 
