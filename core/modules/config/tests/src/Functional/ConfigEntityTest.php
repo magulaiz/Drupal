@@ -322,6 +322,7 @@ class ConfigEntityTest extends BrowserTestBase {
 
     // Try to create a configuration entity with a name containing invalid characters.
     $edit = [
+      // cspell:disable-next-line
       'id' => 'testäáé',
       'label' => 'test',
     ];
