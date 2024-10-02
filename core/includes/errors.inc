@@ -173,7 +173,7 @@ function _drupal_log_error($error, $fatal = FALSE) {
       // implementations to use it.
       \Drupal::logger('php')->log($severity, '%type: @message in %function (line %line of %file) @backtrace_string.', $error + ['backtrace' => $backtrace, 'exception' => $exception, 'severity_level' => $severity]);
     }
-    catch (\Exception) {
+    catch (\Throwable) {
       // We can't log, for example because the database connection is not
       // available. At least try to log to PHP error log.
       error_log(strtr('Failed to log error: ' . Error::DEFAULT_ERROR_MESSAGE . ' @backtrace_string', $error));
@@ -227,7 +227,7 @@ function _drupal_log_error($error, $fatal = FALSE) {
       try {
         $root = \Drupal::root();
       }
-      catch (\Exception) {
+      catch (\Throwable) {
         $root = realpath(dirname(__DIR__, 2));
       }
       if (str_starts_with($error['%file'], $root)) {
@@ -274,7 +274,7 @@ function _drupal_log_error($error, $fatal = FALSE) {
           install_display_output($output, $GLOBALS['install_state']);
           exit;
         }
-        catch (\Exception) {
+        catch (\Throwable) {
           // The maintenance page failed, so fall back to a plain error message.
         }
       }
