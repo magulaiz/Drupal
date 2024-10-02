@@ -571,7 +571,6 @@ subvalues
 subview
 supercede
 svgz
-swisleiden
 synchronizable
 syrop
 tabbingmanager
