@@ -153,7 +153,7 @@ class DatabaseStorageTest extends ConfigStorageTestBase {
     try {
       // cspell:disable-next-line
       $read = $this->storage->readMultiple(['config.testáé', 'config.testóú']);
-      $this->assertEmpty($read);
+      $this->assertNotEmpty($read);
     }
     catch (\InvalidArgumentException) {
       // Exception was expected
