@@ -257,6 +257,9 @@ final class NavigationRenderer {
       // them to render a simple link.
       // @see \Drupal\Core\Menu\LocalTaskManager::getTasksBuild()
       $link = $local_task['#link'];
+      if (empty($link['localized_options'])) {
+        $link['localized_options'] = [];
+      }
       $link['localized_options'] += [
         'set_active_class' => TRUE,
       ];
