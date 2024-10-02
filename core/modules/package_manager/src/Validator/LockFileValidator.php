@@ -67,7 +67,7 @@ final class LockFileValidator implements EventSubscriberInterface {
   }
 
   /**
-   * Stores the SHA-256 hash of the active lock file.
+   * Stores the XXH64 hash of the active lock file.
    *
    * We store the hash of the lock file itself, rather than its content-hash
    * value, which is actually a hash of certain parts of composer.json. Our aim
