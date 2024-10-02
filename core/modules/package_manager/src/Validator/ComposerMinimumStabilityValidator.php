@@ -43,7 +43,7 @@ final class ComposerMinimumStabilityValidator implements EventSubscriberInterfac
     foreach ($requested_packages as $package_name => $version) {
       // In the root composer.json, a stability flag can also be specified. They
       // take the form `constraint@stability`. A stability flag
-      // allow the project owner to deviate from the minimum-stability setting.
+      // allows the project owner to deviate from the minimum-stability setting.
       // @see https://getcomposer.org/doc/04-schema.md#package-links
       // @see \Composer\Package\Loader\RootPackageLoader::extractStabilityFlags()
       if (str_contains($version, '@')) {
