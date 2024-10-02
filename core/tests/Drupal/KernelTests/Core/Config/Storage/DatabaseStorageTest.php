@@ -86,7 +86,7 @@ class DatabaseStorageTest extends ConfigStorageTestBase {
       $this->storage->readMultiple(['config.settings', 'config.settings2']);
       $this->fail('Expected exception not thrown from readMultiple()');
     }
-    catch (\InvalidArgumentException) {
+    catch (DatabaseExceptionWrapper) {
       // Exception was expected
     }
 
