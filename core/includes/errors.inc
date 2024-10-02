@@ -274,7 +274,7 @@ function _drupal_log_error($error, $fatal = FALSE) {
           install_display_output($output, $GLOBALS['install_state']);
           exit;
         }
-        catch (Exception) {
+        catch (\Exception) {
           // The maintenance page failed, so fall back to a plain error message.
         }
       }
