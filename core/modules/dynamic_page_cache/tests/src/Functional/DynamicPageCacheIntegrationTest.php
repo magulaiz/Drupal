@@ -128,7 +128,7 @@ class DynamicPageCacheIntegrationTest extends BrowserTestBase {
     // Route access checkers can also bubble up cacheability data.
     $this->drupalGet('/dynamic-page-cache-test/html/uncacheable/route-access');
     $this->assertSession()->responseHeaderExists(DynamicPageCacheSubscriber::HEADER);
-    $this->assertSession()->responseHeaderEquals(DynamicPageCacheSubscriber::HEADER, 'UNCACHEABLE');
+    $this->assertSession()->responseHeaderEquals(DynamicPageCacheSubscriber::HEADER, 'UNCACHEABLE (poor cacheability)');
   }
 
 }
