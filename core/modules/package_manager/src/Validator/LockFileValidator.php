@@ -40,7 +40,7 @@ final class LockFileValidator implements EventSubscriberInterface {
   ) {}
 
   /**
-   * Returns the SHA-256 hash of a file.
+   * Returns the XXH64 hash of a file.
    *
    * This method is a thin wrapper around hash_file() to facilitate testing. On
    * failure, hash_file() emits a warning but doesn't throw an exception. In
