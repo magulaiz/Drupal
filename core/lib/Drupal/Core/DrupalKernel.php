@@ -893,6 +893,7 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
     $this->containerNeedsRebuild = FALSE;
 
     // Only create a new class if we have a container definition.
+    $container = null;
     if (isset($container_definition)) {
       // Drupal provides two dynamic parameters to access specific paths that
       // are determined from the request.
