@@ -11,7 +11,6 @@ use Drupal\Tests\BrowserTestBase;
  * Tests kernel panic when things are really messed up.
  *
  * @group system
- * @group #slow
  */
 class UncaughtExceptionTest extends BrowserTestBase {
 
@@ -23,9 +22,7 @@ class UncaughtExceptionTest extends BrowserTestBase {
   protected $expectedExceptionMessage;
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = ['error_service_test', 'error_test'];
 
