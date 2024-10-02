@@ -179,8 +179,8 @@ class TaxonomyIndexTid extends ManyToOne {
     }
 
     $form['value'] = [
-      '#title' => $this->options['limit'] ? $this->formatPlural(count($vocabularies), 'Select terms from vocabulary @vocabs', 'Select terms from vocabularies @vocabs', [
-        '@vocabs' => "'" . implode("', '", $this->getVocabularyLabels($vocabularies)) . "'",
+      '#title' => $this->options['limit'] ? $this->formatPlural(count($vocabularies), 'Select terms from vocabulary @vocabularies', 'Select terms from vocabularies @vocabularies', [
+        '@vocabularies' => "'" . implode("', '", $this->getVocabularyLabels($vocabularies)) . "'",
       ]) : $this->t('Select terms'),
     ];
 
