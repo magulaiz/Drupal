@@ -120,7 +120,7 @@ class DatabaseStorage implements StorageInterface {
 
     if (!mb_check_encoding(implode('', $names), 'ASCII')) {
       $current_path = \Drupal::service('path.current')->getPath();
-      throw new \InvalidArgumentException(sprintf('The config name part of the URI "%s" contains non-ASCII characters. Only ASCII characters are permitted.', $current_path));
+      throw new \InvalidArgumentException(sprintf('The config name part of the URI "%s" or command line string contains non-ASCII characters. Only ASCII characters are permitted.', $current_path));
     }
 
     $list = [];
