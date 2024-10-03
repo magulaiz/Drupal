@@ -66,6 +66,7 @@ class UserRoleAdminTest extends BrowserTestBase {
     $this->assertIsObject($role);
 
     // Test adding a role with invalid, non-ASCII characters
+    // cspell:disable-next-line
     $role_name = 'òćďëœ';
     $edit = ['label' => $role_name, 'id' => $role_name];
     $this->drupalGet('admin/people/roles/add');
