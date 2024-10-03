@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Drupal\Core\Recipe;
 
 use Drupal\Core\Config\FileStorage;
+use Drupal\Core\Config\NullStorage;
 use Drupal\Core\Config\StorageInterface;
 
 /**
@@ -132,16 +133,19 @@ final class ConfigConfigurator {
     }
     $storage = RecipeConfigStorageWrapper::createStorageFromArray($storages);
 
+    if ($this->strict) {
+      return $storage;
+    }
     // If we're not in strict mode, we only want to import config that doesn't
     // exist yet in active storage.
-    if (empty($this->strict)) {
-      $names = array_diff(
-        $storage->listAll(),
-        \Drupal::service('config.storage')->listAll(),
-      );
-      $storage = new AllowListConfigStorage($storage, $names);
-    }
-    return $storage;
+
+    $names = array_diff(
+      $storage->listAll(),
+      \Drupal::service('config.storage')->listAll(),
+    );
+    return $names
+      ? new AllowListConfigStorage($storage, $names)
+      : new NullStorage();
   }
 
   /**
