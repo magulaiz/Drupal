@@ -115,7 +115,7 @@ class ExecutionContext implements ExecutionContextInterface {
    *
    * @return void
    */
-  public function addViolation(string $message, array $params = []) {
+  public function addViolation(string|null $message, array $params = []) {
     $this->violations->add(new ConstraintViolation($this->translator->trans($message, $params, $this->translationDomain), $message, $params, $this->root, $this->propertyPath, $this->value, NULL, NULL, $this->constraint));
   }
 
