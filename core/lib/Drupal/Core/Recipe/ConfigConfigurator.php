@@ -112,8 +112,18 @@ final class ConfigConfigurator {
         $storages[] = $storage;
       }
     }
+    $storage = RecipeConfigStorageWrapper::createStorageFromArray($storages);
 
-    return RecipeConfigStorageWrapper::createStorageFromArray($storages);
+    // If we're not in strict mode, we only want to import config that doesn't
+    // exist yet in active storage.
+    if (empty($this->config['strict'])) {
+      $names = array_diff(
+        $storage->listAll(),
+        \Drupal::service('config.storage')->listAll(),
+      );
+      $storage = new AllowList($storage, $names);
+    }
+    return $storage;
   }
 
   /**

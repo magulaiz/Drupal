@@ -8,6 +8,9 @@ use Drupal\Core\Config\StorageInterface;
 
 /**
  * A read-only storage wrapper that only allows access to certain config names.
+ *
+ * @internal
+ *   This API is experimental.
  */
 final class AllowList implements StorageInterface {
 
