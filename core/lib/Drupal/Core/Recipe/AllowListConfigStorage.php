@@ -12,12 +12,16 @@ use Drupal\Core\Config\StorageInterface;
  * @internal
  *   This API is experimental.
  */
-final class AllowList implements StorageInterface {
+final class AllowListConfigStorage implements StorageInterface {
 
   public function __construct(
     private readonly StorageInterface $decorated,
-    private readonly array $names,
-  ) {}
+    private readonly array $allowList,
+  ) {
+    if (empty($allowList)) {
+      throw new \LogicException('AllowListConfigStorage cannot be constructed with an empty allow list.');
+    }
+  }
 
   /**
    * {@inheritdoc}
@@ -37,7 +41,7 @@ final class AllowList implements StorageInterface {
    * {@inheritdoc}
    */
   public function readMultiple(array $names): array {
-    $names = array_intersect($names, $this->names);
+    $names = array_intersect($names, $this->allowList);
     return $this->decorated->readMultiple($names);
   }
 
@@ -80,7 +84,7 @@ final class AllowList implements StorageInterface {
    * {@inheritdoc}
    */
   public function listAll($prefix = ''): array {
-    return array_intersect($this->decorated->listAll($prefix), $this->names);
+    return array_intersect($this->decorated->listAll($prefix), $this->allowList);
   }
 
   /**
@@ -96,7 +100,7 @@ final class AllowList implements StorageInterface {
   public function createCollection($collection): static {
     return new static(
       $this->decorated->createCollection($collection),
-      $this->names,
+      $this->allowList,
     );
   }
 

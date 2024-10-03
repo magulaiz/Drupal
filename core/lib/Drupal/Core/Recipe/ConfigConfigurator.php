@@ -123,7 +123,7 @@ final class ConfigConfigurator {
         );
         // If $names is '*', we'll import all of the extension's config.
         if ($names && is_array($names)) {
-          $storage = new AllowList($storage, $names);
+          $storage = new AllowListConfigStorage($storage, $names);
         }
         $storages[] = $storage;
       }
@@ -137,7 +137,7 @@ final class ConfigConfigurator {
         $storage->listAll(),
         \Drupal::service('config.storage')->listAll(),
       );
-      $storage = new AllowList($storage, $names);
+      $storage = new AllowListConfigStorage($storage, $names);
     }
     return $storage;
   }
