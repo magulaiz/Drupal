@@ -27,10 +27,9 @@ final class ConfigConfigurator {
     $this->recipeConfigDirectory = is_dir($recipe_directory . '/config') ? $recipe_directory . '/config' : NULL;
     $recipe_storage = $this->getConfigStorage();
 
-    $strict = $config['strict'] ?? [];
-    if ($strict === TRUE) {
-      $strict = $recipe_storage->listAll();
-    }
+    $strict = $config['strict'] ?? TRUE;
+    $strict = $strict === TRUE ? $recipe_storage->listAll() : [];
+
     // Everything in the strict list needs to be identical in the recipe and
     // active storage.
     foreach ($strict as $config_name) {
