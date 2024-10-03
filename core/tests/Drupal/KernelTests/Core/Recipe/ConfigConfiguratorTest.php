@@ -5,10 +5,13 @@ declare(strict_types=1);
 namespace Drupal\KernelTests\Core\Recipe;
 
 use Drupal\Component\Serialization\Yaml;
+use Drupal\Core\Entity\EntityDisplayRepositoryInterface;
 use Drupal\Core\Recipe\Recipe;
+use Drupal\Core\Recipe\RecipePreExistingConfigException;
 use Drupal\Core\Recipe\RecipeRunner;
 use Drupal\FunctionalTests\Core\Recipe\RecipeTestTrait;
 use Drupal\KernelTests\KernelTestBase;
+use Drupal\node\Entity\NodeType;
 use org\bovigo\vfs\vfsStream;
 
 /**
@@ -53,11 +56,9 @@ class ConfigConfiguratorTest extends KernelTestBase {
     $this->assertNotEmpty($recipe->config->getConfigStorage()->listAll());
     RecipeRunner::processRecipe($recipe);
 
-    // Clone the recipe into the virtual file system.
-    $recipe_dir = $this->vfsRoot->url() . '/strict_clone';
-    mkdir($recipe_dir);
-    vfsStream::copyFromFileSystem($recipe->path, $this->vfsRoot->getChild('strict_clone'));
-    // Opt the clone into lenient mode.
+    // Clone the recipe into the virtual file system, and opt the clone into
+    // lenient mode.
+    $recipe_dir = $this->cloneRecipe($recipe->path);
     $this->alterRecipe($recipe_dir, function (array $data): array {
       $data['config']['strict'] = FALSE;
       return $data;
@@ -66,6 +67,56 @@ class ConfigConfiguratorTest extends KernelTestBase {
     // exists.
     $recipe = Recipe::createFromDirectory($recipe_dir);
     $this->assertEmpty($recipe->config->getConfigStorage()->listAll());
+  }
+
+  public function testSelectiveStrictness(): void {
+    $recipe = Recipe::createFromDirectory('core/recipes/page_content_type');
+    RecipeRunner::processRecipe($recipe);
+
+    $node_type = NodeType::load('page');
+    $original_description = $node_type->getDescription();
+    $node_type->set('description', 'And now for something completely different.')
+      ->save();
+
+    $form_display = $this->container->get(EntityDisplayRepositoryInterface::class)
+      ->getFormDisplay('node', 'page');
+    $this->assertFalse($form_display->isNew());
+    $this->assertIsArray($form_display->getComponent('uid'));
+    $form_display->removeComponent('uid')->save();
+
+    // Clone the recipe into the virtual file system, and opt only the node
+    // type into strict mode.
+    $clone_dir = $this->cloneRecipe($recipe->path);
+    $this->alterRecipe($clone_dir, function (array $data): array {
+      $data['config']['strict'] = ['node.type.page'];
+      return $data;
+    });
+    // If we try to instantiate this recipe, we should an exception.
+    try {
+      Recipe::createFromDirectory($clone_dir);
+      $this->fail('Expected an exception but none was thrown.');
+    }
+    catch (RecipePreExistingConfigException $e) {
+      $this->assertSame("The configuration 'node.type.page' exists already and does not match the recipe's configuration", $e->getMessage());
+    }
+
+    // If we restore the node type's original description, we should no longer
+    // get an error if we try to instantiate the altered recipe, even though the
+    // form display is still different from what's in the recipe.
+    NodeType::load('page')
+      ->set('description', $original_description)
+      ->save();
+    Recipe::createFromDirectory($clone_dir);
+  }
+
+  private function cloneRecipe(string $original_dir): string {
+    // Clone the recipe into the virtual file system.
+    $name = uniqid();
+    $clone_dir = $this->vfsRoot->url() . '/' . $name;
+    mkdir($clone_dir);
+    $clone_dir = $this->vfsRoot->getChild($name);
+    vfsStream::copyFromFileSystem($original_dir, $clone_dir);
+    return $clone_dir->url();
   }
 
 }
