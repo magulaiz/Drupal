@@ -138,7 +138,7 @@ class TwigExtension extends AbstractExtension {
       ),
 
       // Replace deprecated spaceless filter with our own.
-      new TwigFilter('drupal_spaceless', [$this, 'spacelessFilter'], ['is_safe' => ['html']]),
+      new TwigFilter('drupal_spaceless', [self::class, 'spacelessFilter'], ['is_safe' => ['html']]),
 
       // Implements safe joining.
       // @todo Make that the default for |join? Upstream issue:
