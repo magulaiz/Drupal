@@ -432,12 +432,16 @@
 
           // Set the max-width of the dropdown toolbar panel
           // based the main toolbar panel width.
-          editor.ui.view.stickyPanel.element
-            .querySelector('.ck-toolbar__grouped-dropdown .ck-dropdown__panel')
-            .style.setProperty(
+          const dropdownpanel =
+            editor.ui.view.stickyPanel.element.querySelector(
+              '.ck-toolbar__grouped-dropdown .ck-dropdown__panel',
+            );
+          if (dropdownpanel) {
+            dropdownpanel.style.setProperty(
               '--ck-toolbar-dropdown-max-width',
               `${calculateToolbarPanelWidth()}vw`,
             );
+          }
 
           // CKEditor 4 had a feature to remove the required attribute
           // see: https://www.drupal.org/project/drupal/issues/1954968
