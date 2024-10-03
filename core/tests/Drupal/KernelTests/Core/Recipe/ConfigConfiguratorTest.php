@@ -51,7 +51,11 @@ class ConfigConfiguratorTest extends KernelTestBase {
     $this->assertInstanceOf(Recipe::class, Recipe::createFromDirectory($recipe_dir));
   }
 
-  public function testExistingConfigIsIgnoredInLenientMode(): void {
+  /**
+   * @testWith [false]
+   *   [[]]
+   */
+  public function testExistingConfigIsIgnoredInLenientMode(array|false $strict_value): void {
     $recipe = Recipe::createFromDirectory('core/recipes/page_content_type');
     $this->assertNotEmpty($recipe->config->getConfigStorage()->listAll());
     RecipeRunner::processRecipe($recipe);
@@ -59,8 +63,8 @@ class ConfigConfiguratorTest extends KernelTestBase {
     // Clone the recipe into the virtual file system, and opt the clone into
     // lenient mode.
     $recipe_dir = $this->cloneRecipe($recipe->path);
-    $this->alterRecipe($recipe_dir, function (array $data): array {
-      $data['config']['strict'] = FALSE;
+    $this->alterRecipe($recipe_dir, function (array $data) use ($strict_value): array {
+      $data['config']['strict'] = $strict_value;
       return $data;
     });
     // The recipe should not have any config to install; all of it already
