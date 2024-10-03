@@ -56,7 +56,6 @@ global-styling:
       css/components/system-status-counter.css: {}
       css/components/tableselect.css: {}
       css/components/tabs.css: {}
-      css/components/views-ui.css: {}
     theme:
       css/theme/colors.css: {}
     layout:
@@ -77,13 +76,11 @@ global-styling:
     # attached, therefore it is always attached.
     - core/drupal.touchevents-test
 
-node-form:
+form-two-columns:
   version: VERSION
   css:
     layout:
-      css/layout/node-add.css: {}
-  dependencies:
-    - node/form
+      css/layout/form-two-columns.css: {}
 
 maintenance-page:
   version: VERSION
@@ -127,17 +124,19 @@ claro.drupal.dialog:
   css:
     theme:
       css/components/dialog.css: {}
+  dependencies:
+    - claro/claro.jquery.ui
 
 claro.tabledrag:
   version: VERSION
   js:
     js/tabledrag.js: {}
 
-tour-styling:
+drupal.node.preview:
   version: VERSION
   css:
     theme:
-      css/theme/tour.theme.css: {}
+      css/components/node-preview.css: {}
 
 media-form:
   version: VERSION
@@ -192,6 +191,7 @@ autocomplete:
     js/autocomplete.js: {}
   dependencies:
     - core/once
+    - claro/claro.jquery.ui
 
 drupal.shortcut:
   version: VERSION
@@ -223,6 +223,11 @@ views:
   css:
     component:
       css/components/views-exposed-form.css: {}
+
+views_ui:
+  css:
+    component:
+      css/components/views-ui.css: {}
 
 messages:
   js:
@@ -274,6 +279,11 @@ progress:
     component:
       css/components/progress.css: {}
 
+tabbingmanager:
+  version: VERSION
+  dependencies:
+    - claro/claro.jquery.ui
+
 filter:
   version: VERSION
   css:
@@ -292,23 +302,11 @@ tableselect:
     - core/tabbable
     - core/once
 
-classy.book-navigation:
-  version: VERSION
-  css:
-    component:
-      css/classy/components/book-navigation.css: {}
-
 classy.file:
   version: VERSION
   css:
     component:
       css/classy/components/file.css: { weight: -10 }
-
-classy.forum:
-  version: VERSION
-  css:
-    component:
-      css/classy/components/forum.css: { weight: -10 }
 
 classy.indented:
   version: VERSION

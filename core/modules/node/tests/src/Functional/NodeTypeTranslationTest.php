@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\node\Functional;
 
 use Drupal\language\Entity\ConfigurableLanguage;
@@ -17,9 +19,7 @@ use Drupal\Tests\BrowserTestBase;
 class NodeTypeTranslationTest extends BrowserTestBase {
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = [
     'block',
@@ -102,8 +102,8 @@ class NodeTypeTranslationTest extends BrowserTestBase {
   /**
    * Tests the node type translation.
    */
-  public function testNodeTypeTranslation() {
-    $type = mb_strtolower($this->randomMachineName(16));
+  public function testNodeTypeTranslation(): void {
+    $type = $this->randomMachineName(16);
     $name = $this->randomString();
     $this->drupalLogin($this->adminUser);
     $this->drupalCreateContentType(['type' => $type, 'name' => $name]);
@@ -139,8 +139,8 @@ class NodeTypeTranslationTest extends BrowserTestBase {
   /**
    * Tests the node type title label translation.
    */
-  public function testNodeTypeTitleLabelTranslation() {
-    $type = mb_strtolower($this->randomMachineName(16));
+  public function testNodeTypeTitleLabelTranslation(): void {
+    $type = $this->randomMachineName(16);
     $name = $this->randomString();
     $this->drupalLogin($this->adminUser);
     $this->drupalCreateContentType(['type' => $type, 'name' => $name]);
@@ -170,13 +170,15 @@ class NodeTypeTranslationTest extends BrowserTestBase {
     $this->drupalGet("admin/structure/types/manage/{$type}/fields/add-field");
     $this->submitForm([
       'new_storage_type' => 'email',
+    ], 'Continue');
+    $this->submitForm([
       'label' => 'Email',
       'field_name' => 'email',
-    ], 'Save and continue');
-    $this->submitForm([], 'Save field settings');
+    ], 'Continue');
+    $this->submitForm([], 'Update settings');
     $this->submitForm([], 'Save settings');
 
-    $type = mb_strtolower($this->randomMachineName(16));
+    $type = $this->randomMachineName(16);
     $name = $this->randomString();
     $this->drupalCreateContentType(['type' => $type, 'name' => $name]);
 

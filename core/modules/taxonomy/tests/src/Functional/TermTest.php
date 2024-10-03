@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\taxonomy\Functional;
 
 use Drupal\Component\Utility\Tags;
@@ -33,9 +35,7 @@ class TermTest extends TaxonomyTestBase {
   protected $field;
 
   /**
-   * Modules to enable.
-   *
-   * @var string[]
+   * {@inheritdoc}
    */
   protected static $modules = ['block'];
 
@@ -87,18 +87,9 @@ class TermTest extends TaxonomyTestBase {
   }
 
   /**
-   * The "parent" field must restrict references to the same vocabulary.
-   */
-  public function testParentHandlerSettings() {
-    $vocabulary_fields = \Drupal::service('entity_field.manager')->getFieldDefinitions('taxonomy_term', $this->vocabulary->id());
-    $parent_target_bundles = $vocabulary_fields['parent']->getSetting('handler_settings')['target_bundles'];
-    $this->assertSame([$this->vocabulary->id() => $this->vocabulary->id()], $parent_target_bundles);
-  }
-
-  /**
    * Tests terms in a single and multiple hierarchy.
    */
-  public function testTaxonomyTermHierarchy() {
+  public function testTaxonomyTermHierarchy(): void {
     // Create two taxonomy terms.
     $term1 = $this->createTerm($this->vocabulary);
     $term2 = $this->createTerm($this->vocabulary);
@@ -140,7 +131,7 @@ class TermTest extends TaxonomyTestBase {
   /**
    * Tests that many terms with parents show on each page.
    */
-  public function testTaxonomyTermChildTerms() {
+  public function testTaxonomyTermChildTerms(): void {
     // Set limit to 10 terms per page. Set variable to 9 so 10 terms appear.
     $this->config('taxonomy.settings')->set('terms_per_page_admin', '9')->save();
     $term1 = $this->createTerm($this->vocabulary);
@@ -194,7 +185,7 @@ class TermTest extends TaxonomyTestBase {
   /**
    * Tests term creation with a free-tagging vocabulary from the node form.
    */
-  public function testNodeTermCreationAndDeletion() {
+  public function testNodeTermCreationAndDeletion(): void {
     // Enable tags in the vocabulary.
     $field = $this->field;
     \Drupal::service('entity_display.repository')
@@ -289,7 +280,7 @@ class TermTest extends TaxonomyTestBase {
   /**
    * Save, edit and delete a term using the user interface.
    */
-  public function testTermInterface() {
+  public function testTermInterface(): void {
     \Drupal::service('module_installer')->install(['views']);
     $edit = [
       'name[0][value]' => $this->randomMachineName(12),
@@ -321,12 +312,26 @@ class TermTest extends TaxonomyTestBase {
     $this->assertSession()->pageTextContains($edit['name[0][value]']);
     $this->assertSession()->pageTextContains($edit['description[0][value]']);
 
+    // Test the "Add child" link on the overview page.
+    $this->drupalGet('admin/structure/taxonomy/manage/' . $this->vocabulary->id() . '/overview');
+    $this->assertSession()->linkExistsExact('Add child');
+    $this->clickLink('Add child');
+    $edit = [
+      'name[0][value]' => 'Child term',
+    ];
+    $this->submitForm($edit, 'Save');
+    $terms = \Drupal::entityTypeManager()->getStorage('taxonomy_term')->loadByProperties([
+      'name' => 'Child term',
+    ]);
+    $child = reset($terms);
+    $this->assertNotNull($child, 'Child term found in database.');
+    $this->assertEquals($term->id(), $child->get('parent')->getValue()[0]['target_id']);
+
+    // Edit the term.
     $edit = [
       'name[0][value]' => $this->randomMachineName(14),
       'description[0][value]' => $this->randomMachineName(102),
     ];
-
-    // Edit the term.
     $this->drupalGet('taxonomy/term/' . $term->id() . '/edit');
     $this->submitForm($edit, 'Save');
 
@@ -412,7 +417,7 @@ class TermTest extends TaxonomyTestBase {
   /**
    * Test UI with override_selector TRUE.
    */
-  public function testTermSaveOverrideSelector() {
+  public function testTermSaveOverrideSelector(): void {
     $this->config('taxonomy.settings')->set('override_selector', TRUE)->save();
 
     // Create a Term.
@@ -437,7 +442,7 @@ class TermTest extends TaxonomyTestBase {
   /**
    * Save, edit and delete a term using the user interface.
    */
-  public function testTermReorder() {
+  public function testTermReorder(): void {
     $assert = $this->assertSession();
     $this->createTerm($this->vocabulary);
     $this->createTerm($this->vocabulary);
@@ -505,7 +510,7 @@ class TermTest extends TaxonomyTestBase {
   /**
    * Tests saving a term with multiple parents through the UI.
    */
-  public function testTermMultipleParentsInterface() {
+  public function testTermMultipleParentsInterface(): void {
     // Add two new terms to the vocabulary so that we can have multiple parents.
     // These will be terms with tids of 1 and 2 respectively.
     $this->createTerm($this->vocabulary);
@@ -588,7 +593,7 @@ class TermTest extends TaxonomyTestBase {
    * @return array
    *   A sorted array of tids and 0 if the root is a parent.
    */
-  private function getParentTids($term) {
+  private function getParentTids($term): array {
     $parent_tids = [];
     foreach ($term->get('parent') as $item) {
       $parent_tids[] = (int) $item->target_id;
@@ -601,7 +606,7 @@ class TermTest extends TaxonomyTestBase {
   /**
    * Tests that editing and saving a node with no changes works correctly.
    */
-  public function testReSavingTags() {
+  public function testReSavingTags(): void {
     // Enable tags in the vocabulary.
     $field = $this->field;
     \Drupal::service('entity_display.repository')
@@ -631,7 +636,7 @@ class TermTest extends TaxonomyTestBase {
   /**
    * Check the breadcrumb on edit and delete a term page.
    */
-  public function testTermBreadcrumbs() {
+  public function testTermBreadcrumbs(): void {
     $edit = [
       'name[0][value]' => $this->randomMachineName(14),
       'description[0][value]' => $this->randomMachineName(100),

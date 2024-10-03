@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\file\Functional;
 
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
@@ -24,8 +26,8 @@ class FileFieldDisplayTest extends FileFieldTestBase {
   /**
    * Tests normal formatter display on node display.
    */
-  public function testNodeDisplay() {
-    $field_name = strtolower($this->randomMachineName());
+  public function testNodeDisplay(): void {
+    $field_name = $this->randomMachineName();
     $type_name = 'article';
     $field_storage_settings = [
       'display_field' => '1',
@@ -130,8 +132,8 @@ class FileFieldDisplayTest extends FileFieldTestBase {
   /**
    * Tests default display of File Field.
    */
-  public function testDefaultFileFieldDisplay() {
-    $field_name = strtolower($this->randomMachineName());
+  public function testDefaultFileFieldDisplay(): void {
+    $field_name = $this->randomMachineName();
     $type_name = 'article';
     $field_storage_settings = [
       'display_field' => '1',
@@ -157,10 +159,10 @@ class FileFieldDisplayTest extends FileFieldTestBase {
   /**
    * Tests description toggle for field instance configuration.
    */
-  public function testDescToggle() {
+  public function testDescToggle(): void {
     $type_name = 'test';
     $field_type = 'file';
-    $field_name = strtolower($this->randomMachineName());
+    $field_name = $this->randomMachineName();
     // Use the UI to add a new content type that also contains a file field.
     $edit = [
       'name' => $type_name,
@@ -189,8 +191,8 @@ class FileFieldDisplayTest extends FileFieldTestBase {
   /**
    * Tests description display of File Field.
    */
-  public function testDescriptionDefaultFileFieldDisplay() {
-    $field_name = strtolower($this->randomMachineName());
+  public function testDescriptionDefaultFileFieldDisplay(): void {
+    $field_name = $this->randomMachineName();
     $type_name = 'article';
     $field_storage_settings = [
       'display_field' => '1',

@@ -1,8 +1,9 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\KernelTests\Core\Database;
 
-use Drupal\Core\Database\DatabaseExceptionWrapper;
 use Drupal\Core\Database\IntegrityConstraintViolationException;
 
 /**
@@ -15,7 +16,7 @@ class InsertTest extends DatabaseTestBase {
   /**
    * Tests very basic insert functionality.
    */
-  public function testSimpleInsert() {
+  public function testSimpleInsert(): void {
     $num_records_before = $this->connection->query('SELECT COUNT(*) FROM {test}')->fetchField();
 
     $query = $this->connection->insert('test');
@@ -37,7 +38,7 @@ class InsertTest extends DatabaseTestBase {
   /**
    * Tests that we can insert multiple records in one query object.
    */
-  public function testMultiInsert() {
+  public function testMultiInsert(): void {
     $num_records_before = (int) $this->connection->query('SELECT COUNT(*) FROM {test}')->fetchField();
 
     $query = $this->connection->insert('test');
@@ -76,7 +77,7 @@ class InsertTest extends DatabaseTestBase {
   /**
    * Tests that an insert object can be reused with new data after it executes.
    */
-  public function testRepeatedInsert() {
+  public function testRepeatedInsert(): void {
     $num_records_before = $this->connection->query('SELECT COUNT(*) FROM {test}')->fetchField();
 
     $query = $this->connection->insert('test');
@@ -119,7 +120,7 @@ class InsertTest extends DatabaseTestBase {
   /**
    * Tests that we can specify fields without values and specify values later.
    */
-  public function testInsertFieldOnlyDefinition() {
+  public function testInsertFieldOnlyDefinition(): void {
     // This is useful for importers, when we want to create a query and define
     // its fields once, then loop over a multi-insert execution.
     $this->connection->insert('test')
@@ -139,7 +140,7 @@ class InsertTest extends DatabaseTestBase {
   /**
    * Tests that inserts return the proper auto-increment ID.
    */
-  public function testInsertLastInsertID() {
+  public function testInsertLastInsertID(): void {
     $id = $this->connection->insert('test')
       ->fields([
         'name' => 'Larry',
@@ -153,7 +154,7 @@ class InsertTest extends DatabaseTestBase {
   /**
    * Tests that the INSERT INTO ... SELECT (fields) ... syntax works.
    */
-  public function testInsertSelectFields() {
+  public function testInsertSelectFields(): void {
     $query = $this->connection->select('test_people', 'tp');
     // The query builder will always append expressions after fields.
     // Add the expression first to test that the insert fields are correctly
@@ -179,7 +180,7 @@ class InsertTest extends DatabaseTestBase {
   /**
    * Tests that the INSERT INTO ... SELECT * ... syntax works.
    */
-  public function testInsertSelectAll() {
+  public function testInsertSelectAll(): void {
     $query = $this->connection->select('test_people', 'tp')
       ->fields('tp')
       ->condition('tp.name', 'Meredith');
@@ -200,7 +201,7 @@ class InsertTest extends DatabaseTestBase {
   /**
    * Tests that we can INSERT INTO a special named column.
    */
-  public function testSpecialColumnInsert() {
+  public function testSpecialColumnInsert(): void {
     $this->connection->insert('select')
       ->fields([
         'id' => 2,
@@ -214,7 +215,7 @@ class InsertTest extends DatabaseTestBase {
   /**
    * Tests insertion integrity violation with no default value for a column.
    */
-  public function testInsertIntegrityViolation() {
+  public function testInsertIntegrityViolation(): void {
     // Remove the default from the 'age' column, so that inserting a record
     // without its value specified will lead to integrity failure.
     $this->connection->schema()->changeField('test', 'age', 'age', [
@@ -231,68 +232,6 @@ class InsertTest extends DatabaseTestBase {
       ->fields(['name'])
       ->values(['name' => 'Elvis'])
       ->execute();
-  }
-
-  /**
-   * Tests if inserting boolean to integer field works.
-   */
-  public function testInsertBooleanToIntegerField() {
-    // @todo Remove this when https://www.drupal.org/i/3360420 drops.
-    if ($this->connection->databaseType() == 'sqlite') {
-      $this->markTestSkipped('SQLite does not use strict tables.');
-    }
-    $table_specification = [
-      'fields' => [
-        'id'  => [
-          'type' => 'int',
-          'not null' => TRUE,
-        ],
-        'test_field_1'  => [
-          'type' => 'int',
-        ],
-      ],
-      'primary key' => ['id'],
-    ];
-
-    $this->connection->schema()->createTable('insert_bool', $table_specification);
-
-    $this->expectException(DatabaseExceptionWrapper::class);
-    $this->connection->insert('insert_bool')
-      ->fields(['id' => 1, 'test_field_1' => FALSE])
-      ->execute();
-
-    // We should not have any rows in this table.
-    $this->assertEquals(0, $this->connection->select('insert_bool')->countQuery()->execute()->fetchField());
-  }
-
-  /**
-   * Tests if inserting boolean to integer field works using a query.
-   */
-  public function testQueryInsertBooleanToIntegerField() {
-    // @todo Remove this when https://www.drupal.org/i/3360420 drops.
-    if ($this->connection->databaseType() == 'sqlite') {
-      $this->markTestSkipped('SQLite does not use strict tables.');
-    }
-    $table_specification = [
-      'fields' => [
-        'id' => [
-          'type' => 'int',
-          'not null' => TRUE,
-        ],
-        'test_field_1' => [
-          'type' => 'int',
-        ],
-      ],
-      'primary key' => ['id'],
-    ];
-
-    $this->connection->schema()->createTable('insert_bool', $table_specification);
-
-    $this->expectException(DatabaseExceptionWrapper::class);
-    $this->connection->query('INSERT INTO {insert_bool} (id,test_field_1) VALUES (:id, :test_field_1)', [':id' => 1, ':test_field_1' => FALSE]);
-
-    // We should not have any rows in this table.
-    $this->assertEquals(0, $this->connection->select('insert_bool')->countQuery()->execute()->fetchField());
   }
 
 }

@@ -33,29 +33,36 @@ class FieldType extends DataType {
   /**
    * The human-readable name of the field type.
    *
-   * @ingroup plugin_translatable
-   *
    * @var \Drupal\Core\Annotation\Translation
+   *
+   * @ingroup plugin_translatable
    */
   public $label;
 
   /**
    * A short human readable description for the field type.
    *
-   * @ingroup plugin_translatable
-   *
    * @var \Drupal\Core\Annotation\Translation
+   *
+   * @ingroup plugin_translatable
    */
   public $description;
 
   /**
    * The category under which the field type should be listed in the UI.
    *
-   * @ingroup plugin_translatable
-   *
    * @var \Drupal\Core\Annotation\Translation
+   *
+   * @ingroup plugin_translatable
    */
   public $category = '';
+
+  /**
+   * The weight of the field type.
+   *
+   * @var int
+   */
+  public $weight = 0;
 
   /**
    * The plugin_id of the default widget for this field type.
@@ -66,6 +73,7 @@ class FieldType extends DataType {
    *
    * @var string
    */
+  // phpcs:ignore Drupal.NamingConventions.ValidVariableName.LowerCamelName
   public $default_widget;
 
   /**
@@ -77,6 +85,7 @@ class FieldType extends DataType {
    *
    * @var string
    */
+  // phpcs:ignore Drupal.NamingConventions.ValidVariableName.LowerCamelName
   public $default_formatter;
 
   /**
@@ -84,11 +93,13 @@ class FieldType extends DataType {
    *
    * @var bool
    */
+  // phpcs:ignore Drupal.NamingConventions.ValidVariableName.LowerCamelName
   public $no_ui = FALSE;
 
   /**
    * {@inheritdoc}
    */
+  // phpcs:ignore Drupal.NamingConventions.ValidVariableName.LowerCamelName
   public $list_class;
 
   /**
