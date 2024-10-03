@@ -265,7 +265,7 @@ final class Recipe {
                 new NotBlank(),
                 new Regex('/^.+\./'),
               ]),
-            ]),
+            ], message: 'This value must be a boolean, or a list of config names.', includeInternalMessages: FALSE),
           ]),
           'actions' => new Optional([
             new All([

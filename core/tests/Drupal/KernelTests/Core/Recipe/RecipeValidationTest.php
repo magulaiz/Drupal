@@ -265,9 +265,7 @@ config:
   strict: 40
 YAML,
       [
-        '[config][strict]' => [
-          'This value should satisfy at least one of the following constraints: [1] This value should be of type boolean. [2] Each element of this collection should satisfy its own set of constraints.',
-        ],
+        '[config][strict]' => ['This value must be a boolean, or a list of config names.'],
       ],
     ];
     yield 'config strict is an array of not-strings' => [
@@ -278,9 +276,7 @@ config:
     - 40
 YAML,
       [
-        '[config][strict]' => [
-          'This value should satisfy at least one of the following constraints: [1] This value should be of type boolean. [2] Each element of this collection should satisfy its own set of constraints.',
-        ],
+        '[config][strict]' => ['This value must be a boolean, or a list of config names.'],
       ],
     ];
     yield 'config strict list contains blank strings' => [
@@ -291,9 +287,7 @@ config:
     - ''
 YAML,
       [
-        '[config][strict]' => [
-          'This value should satisfy at least one of the following constraints: [1] This value should be of type boolean. [2] Each element of this collection should satisfy its own set of constraints.',
-        ],
+        '[config][strict]' => ['This value must be a boolean, or a list of config names.'],
       ],
     ];
     yield 'config strict list item does not have a period' => [
@@ -304,9 +298,7 @@ config:
     - 'something'
 YAML,
       [
-        '[config][strict]' => [
-          'This value should satisfy at least one of the following constraints: [1] This value should be of type boolean. [2] Each element of this collection should satisfy its own set of constraints.',
-        ],
+        '[config][strict]' => ['This value must be a boolean, or a list of config names.'],
       ],
     ];
     yield 'valid strict list' => [
