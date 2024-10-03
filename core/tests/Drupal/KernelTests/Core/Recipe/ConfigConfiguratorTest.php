@@ -6,13 +6,18 @@ namespace Drupal\KernelTests\Core\Recipe;
 
 use Drupal\Component\Serialization\Yaml;
 use Drupal\Core\Recipe\Recipe;
+use Drupal\Core\Recipe\RecipeRunner;
+use Drupal\FunctionalTests\Core\Recipe\RecipeTestTrait;
 use Drupal\KernelTests\KernelTestBase;
+use org\bovigo\vfs\vfsStream;
 
 /**
  * @covers \Drupal\Core\Recipe\ConfigConfigurator
  * @group Recipe
  */
 class ConfigConfiguratorTest extends KernelTestBase {
+
+  use RecipeTestTrait;
 
   public function testExistingConfigWithKeysInDifferentOrder(): void {
     $recipe_dir = uniqid('public://recipe_test_');
@@ -41,6 +46,26 @@ class ConfigConfiguratorTest extends KernelTestBase {
     // need to do here is assert that, in fact, we were able to create a recipe
     // object.
     $this->assertInstanceOf(Recipe::class, Recipe::createFromDirectory($recipe_dir));
+  }
+
+  public function testExistingConfigIsIgnoredInLenientMode(): void {
+    $recipe = Recipe::createFromDirectory('core/recipes/page_content_type');
+    $this->assertNotEmpty($recipe->config->getConfigStorage()->listAll());
+    RecipeRunner::processRecipe($recipe);
+
+    // Clone the recipe into the virtual file system.
+    $recipe_dir = $this->vfsRoot->url() . '/strict_clone';
+    mkdir($recipe_dir);
+    vfsStream::copyFromFileSystem($recipe->path, $this->vfsRoot->getChild('strict_clone'));
+    // Opt the clone into lenient mode.
+    $this->alterRecipe($recipe_dir, function (array $data): array {
+      $data['config']['strict'] = FALSE;
+      return $data;
+    });
+    // The recipe should not have any config to install; all of it already
+    // exists.
+    $recipe = Recipe::createFromDirectory($recipe_dir);
+    $this->assertEmpty($recipe->config->getConfigStorage()->listAll());
   }
 
 }
