@@ -7,7 +7,7 @@ use Drupal\Core\Extension\ModuleHandlerInterface;
 /**
  * Provides a sensible mapping between filename extensions and MIME types.
  */
-interface MimeTypeMapperInterface {
+interface MimeTypeMapInterface {
 
   /**
    * Allow modules to alter the default mapping.
@@ -24,28 +24,24 @@ interface MimeTypeMapperInterface {
   public function alterMapping(ModuleHandlerInterface $module_handler): self;
 
   /**
-   * Set the mapping array between MIME types and file extensions.
-   *
-   * @param array{'mimetypes': array{int,string}, 'extensions': array{string,int}} $mapping
-   *   An array consisting of two arrays:
-   *     - mimetypes: MIME types, keyed by a unique number.
-   *     - extensions: an associative array with the MIME type key numbers as
-   *       values. The keys are file extensions, in lower case and without any
-   *       preceding dot.
+   * Resets the mapping to its initial state.
    */
-  public function setMapping(array $mapping): void;
+  public function reset(): void;
 
   /**
    * Adds a mapping between a MIME type and an extension.
    *
    * @param string $mimetype
    *   The MIME type the passed extension should map.
-   * @param string $extension
-   *   The extension that should map to the passed MIME type.
+   * @param string|string[] $extensions
+   *   The extension(s) that should map to the passed MIME type.
    *
    * @return $this
    */
-  public function addMapping(string $mimetype, string $extension): self;
+  public function addMapping(
+    string $mimetype,
+    string | array $extensions,
+  ): self;
 
   /**
    * Removes the mapping between a MIME type and an extension.

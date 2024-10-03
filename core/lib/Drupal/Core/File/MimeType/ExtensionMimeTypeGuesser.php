@@ -24,28 +24,28 @@ class ExtensionMimeTypeGuesser implements MimeTypeGuesserInterface {
   /**
    * The MIME types mapper service.
    */
-  protected MimeTypeMapperInterface $mapper;
+  protected MimeTypeMapInterface $mapper;
 
   /**
    * Constructs a new ExtensionMimeTypeGuesser.
    *
-   * @param \Drupal\Core\Extension\ModuleHandlerInterface|\Drupal\Core\File\MimeType\MimeTypeMapperInterface $mapper
+   * @param \Drupal\Core\Extension\ModuleHandlerInterface|\Drupal\Core\File\MimeType\MimeTypeMapInterface $map
    *   The MIME types mapper service.
    * @param \Drupal\Core\File\FileSystemInterface|null $fileSystem
    *   The file system.
    */
   public function __construct(
-    ModuleHandlerInterface | MimeTypeMapperInterface $mapper,
+    ModuleHandlerInterface | MimeTypeMapInterface $map,
     protected ?FileSystemInterface $fileSystem = NULL,
   ) {
-    if (!$mapper instanceof MimeTypeMapperInterface) {
+    if (!$map instanceof MimeTypeMapInterface) {
       @trigger_error(
-        'Calling ' . __METHOD__ . '() with the $mapper argument as an instance of \Drupal\Core\Extension\ModuleHandlerInterface is deprecated in drupal:11.1.0 and an instance of \Drupal\Core\File\MimeType\MimeTypeMapperInterface is required in drupal:11.0.0. See https://www.drupal.org/node/2311679',
+        'Calling ' . __METHOD__ . '() with the $map argument as an instance of \Drupal\Core\Extension\ModuleHandlerInterface is deprecated in drupal:11.1.0 and an instance of \Drupal\Core\File\MimeType\MimeTypeMapInterface is required in drupal:11.0.0. See https://www.drupal.org/node/2311679',
         E_USER_DEPRECATED
       );
-      $mapper = \Drupal::service('file.mime_type.mapper');
+      $map = \Drupal::service('file.mime_type.map');
     }
-    $this->mapper = $mapper;
+    $this->mapper = $map;
     if (!$this->fileSystem) {
       @trigger_error(
         'Calling ' . __METHOD__ . '() without the $fileSystem argument is deprecated in drupal:11.1.0 and is required in drupal:11.0.0. See https://www.drupal.org/node/2311679',
@@ -87,18 +87,40 @@ class ExtensionMimeTypeGuesser implements MimeTypeGuesserInterface {
    *   Passing a NULL mapping will cause guess() to use self::$defaultMapping.
    *
    * @deprecated in drupal:11.1.0 and is removed from drupal:12.0.0. Use
-   *   \Drupal\Core\File\MimeType\MimeTypeMapper::setMapping() instead.
+   *   \Drupal\Core\File\MimeType\MimeTypeMapInterface::addMapping() instead.
    *
    * @see https://www.drupal.org/project/drupal/issues/2311679
    */
   public function setMapping(?array $mapping = NULL): void {
     @trigger_error(
-      __METHOD__ . '() is deprecated in drupal:11.1.0 and is removed from drupal:12.0.0. Use \Drupal\Core\File\MimeType\MimeTypeMapper::setMapping() instead. See https://www.drupal.org/project/drupal/issues/2311679',
+      __METHOD__ . '() is deprecated in drupal:11.1.0 and is removed from drupal:12.0.0. Use \per::setMapping() instead. See https://www.drupal.org/project/drupal/issues/2311679',
       E_USER_DEPRECATED
     );
-    $this->mapper->setMapping($mapping);
+    $extensionMapping = $this->convertToExtensionKeyed($mapping);
+    $this->mapper->reset();
+    foreach ($extensionMapping as $type => $extensions) {
+      $this->mapper->addMapping($type, $extensions);
+    }
     // @phpstan-ignore-next-line property.notFound
     $this->mapper->alterMapping($this->moduleHandler);
+  }
+
+  /**
+   * Converts the mapping to be keyed by extension.
+   *
+   * @param array $mapping
+   *   The mapping to convert.
+   *
+   * @return array
+   *   The converted mapping.
+   */
+  protected function convertToExtensionKeyed(array $mapping): array {
+    $result = [];
+    foreach ($mapping['mimetypes'] as $index => $mimetype) {
+      $result[$mimetype] = array_keys($mapping['extensions'], $index);
+    }
+
+    return $result;
   }
 
   /**

@@ -523,7 +523,7 @@ function responsive_image_get_mime_type(
       $extension = ImageStyle::load($image_style_name)->getDerivativeExtension($extension);
       break;
   }
-  return \Drupal::service('file.mime_type.mapper')->getMimeTypeForExtension($extension);
+  return \Drupal::service('file.mime_type.map')->getMimeTypeForExtension($extension);
 }
 
 /**

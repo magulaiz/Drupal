@@ -10,7 +10,7 @@
 
 declare(strict_types=1);
 
-use Drupal\Core\File\MimeType\MimeTypeMapperInterface;
+use Drupal\Core\File\MimeType\MimeTypeMapInterface;
 use Drupal\file\Entity\File;
 
 const FILE_URL_TEST_CDN_1 = 'http://cdn1.example.com';
@@ -290,7 +290,7 @@ function file_test_file_url_alter(&$uri) {
 /**
  * Implements hook_mimetype_alter().
  */
-function file_test_mimetype_alter(MimeTypeMapperInterface $mime_type_mapper) {
+function file_test_mimetype_alter(MimeTypeMapInterface $mime_type_mapper) {
   // Add new mappings.
   $mime_type_mapper->addMapping('made_up/file_test_1', 'file_test_1');
   $mime_type_mapper->addMapping('made_up/file_test_2', 'file_test_2');

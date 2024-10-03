@@ -7,7 +7,7 @@ use Drupal\Core\Extension\ModuleHandlerInterface;
 /**
  * Provides a sensible mapping between filename extensions and MIME types.
  */
-class MimeTypeMapper implements MimeTypeMapperInterface {
+class MimeTypeMap implements MimeTypeMapInterface {
 
   /**
    * Default MIME extension mapping.
@@ -905,21 +905,28 @@ class MimeTypeMapper implements MimeTypeMapperInterface {
   /**
    * {@inheritdoc}
    */
-  public function setMapping(array $mapping): void {
-    $this->mapping = $mapping;
+  public function reset(): void {
+    $this->mapping = ['extensions' => [], 'mimetypes' => []];
   }
 
   /**
    * {@inheritdoc}
    */
-  public function addMapping($mimetype, $extension): self {
-    $extension = strtolower($extension);
-    if (!in_array($mimetype, $this->mapping['mimetypes'])) {
-      $this->mapping['mimetypes'][] = $mimetype;
+  public function addMapping(
+    string $mimetype,
+    string | array $extensions,
+  ): self {
+    if (!is_array($extensions)) {
+      $extensions = [$extensions];
     }
-    $key = array_search($mimetype, $this->mapping['mimetypes']);
-    $this->mapping['extensions'][$extension] = $key;
-
+    foreach ($extensions as $extension) {
+      $extension = strtolower($extension);
+      if (!in_array($mimetype, $this->mapping['mimetypes'])) {
+        $this->mapping['mimetypes'][] = $mimetype;
+      }
+      $key = array_search($mimetype, $this->mapping['mimetypes']);
+      $this->mapping['extensions'][$extension] = $key;
+    }
     return $this;
   }
 

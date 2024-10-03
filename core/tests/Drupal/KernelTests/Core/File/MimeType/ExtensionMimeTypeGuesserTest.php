@@ -87,7 +87,7 @@ class ExtensionMimeTypeGuesserTest extends KernelTestBase {
     ];
 
     $this->expectDeprecation(
-      'Drupal\Core\File\MimeType\ExtensionMimeTypeGuesser::setMapping() is deprecated in drupal:11.1.0 and is removed from drupal:12.0.0. Use \Drupal\Core\File\MimeType\MimeTypeMapper::setMapping() instead. See https://www.drupal.org/project/drupal/issues/2311679'
+      'Drupal\Core\File\MimeType\ExtensionMimeTypeGuesser::setMapping() is deprecated in drupal:11.1.0 and is removed from drupal:12.0.0. Use \per::setMapping() instead. See https://www.drupal.org/project/drupal/issues/2311679'
     );
     $extension_guesser->setMapping($mapping);
 
