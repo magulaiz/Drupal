@@ -26,7 +26,14 @@ final class ConfigConfigurator {
   public function __construct(public readonly array $config, string $recipe_directory, StorageInterface $active_configuration) {
     $this->recipeConfigDirectory = is_dir($recipe_directory . '/config') ? $recipe_directory . '/config' : NULL;
     $recipe_storage = $this->getConfigStorage();
-    foreach ($recipe_storage->listAll() as $config_name) {
+
+    $strict = $config['strict'] ?? [];
+    if ($strict === TRUE) {
+      $strict = $recipe_storage->listAll();
+    }
+    // Everything in the strict list needs to be identical in the recipe and
+    // active storage.
+    foreach ($strict as $config_name) {
       if ($active_data = $active_configuration->read($config_name)) {
         // @todo https://www.drupal.org/i/3439714 Investigate if there is any
         //   generic code in core for this.
