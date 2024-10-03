@@ -121,6 +121,7 @@ final class ConfigConfigurator {
           new FileStorage($path . '/config/install'),
           new FileStorage($path . '/config/optional'),
         );
+        // If $names is '*', we'll import all of the extension's config.
         if ($names && is_array($names)) {
           $storage = new AllowList($storage, $names);
         }
