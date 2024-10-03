@@ -15,6 +15,8 @@ final class ConfigConfigurator {
 
   public readonly ?string $recipeConfigDirectory;
 
+  private readonly bool|array $strict;
+
   /**
    * @param array $config
    *   Config options for a recipe.
@@ -25,10 +27,17 @@ final class ConfigConfigurator {
    */
   public function __construct(public readonly array $config, string $recipe_directory, StorageInterface $active_configuration) {
     $this->recipeConfigDirectory = is_dir($recipe_directory . '/config') ? $recipe_directory . '/config' : NULL;
-    $recipe_storage = $this->getConfigStorage();
+    // @todo Default this to FALSE to support the majority use case. Possibly to
+    //   be done in its own issue since it is a change in behavior.
+    $this->strict = $config['strict'] ?? TRUE;
 
-    $strict = $config['strict'] ?? TRUE;
-    $strict = $strict === TRUE ? $recipe_storage->listAll() : [];
+    $recipe_storage = $this->getConfigStorage();
+    if ($this->strict === TRUE) {
+      $strict = $recipe_storage->listAll();
+    }
+    else {
+      $strict = $this->strict ?: [];
+    }
 
     // Everything in the strict list needs to be identical in the recipe and
     // active storage.
@@ -122,7 +131,7 @@ final class ConfigConfigurator {
 
     // If we're not in strict mode, we only want to import config that doesn't
     // exist yet in active storage.
-    if (empty($this->config['strict'])) {
+    if (empty($this->strict)) {
       $names = array_diff(
         $storage->listAll(),
         \Drupal::service('config.storage')->listAll(),
