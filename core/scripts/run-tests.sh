@@ -770,8 +770,8 @@ function simpletest_script_execute_batch(TestRunResultsStorageInterface $test_ru
       ];
     }
 
-    // Wait for children every 200ms.
-    usleep(200000);
+    // Wait for children every 2ms.
+    usleep(2000);
 
     // Check if some children finished.
     foreach ($children as $cid => $child) {
