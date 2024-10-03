@@ -444,6 +444,15 @@ class Schema extends DatabaseSchema {
     // Test for an embedded table.
     $base_table = $this->tableInformation->getTableBaseTable($table);
     $embedded_to_table = $this->tableInformation->getTableEmbeddedToTable($table);
+
+    // If the base table or the embedded table do not exist, reload the table
+    // information and try again.
+    if (empty($embedded_to_table) || empty($base_table)) {
+      $this->tableInformation->load(TRUE);
+      $base_table = $this->tableInformation->getTableBaseTable($table);
+      $embedded_to_table = $this->tableInformation->getTableEmbeddedToTable($table);
+    }
+
     if (!empty($embedded_to_table) && !empty($base_table) && ($table != $base_table) && $this->tableExists($base_table)) {
       return TRUE;
     }
