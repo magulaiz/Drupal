@@ -257,6 +257,16 @@ final class Recipe {
               ]),
             ]),
           ]),
+          'strict' => new Optional([
+            new AtLeastOneOf([
+              new Type('boolean'),
+              new All([
+                new Type('string'),
+                new NotBlank(),
+                new Regex('/^.+\./'),
+              ]),
+            ]),
+          ]),
           'actions' => new Optional([
             new All([
               new Type('array'),
