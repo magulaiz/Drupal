@@ -65,6 +65,15 @@ class UserRoleAdminTest extends BrowserTestBase {
     $role = Role::load($role_name);
     $this->assertIsObject($role);
 
+    // Test adding a role with invalid, non-ASCII characters
+    $role_name = 'òćďëœ';
+    $edit = ['label' => $role_name, 'id' => $role_name];
+    $this->drupalGet('admin/people/roles/add');
+    $this->submitForm($edit, 'Save');
+    $this->assertSession()->pageTextContains("The config name part of the URI");
+    $role = Role::load($role_name);
+    $this->assertIsNotObject($role);
+
     // Check that the role was created in site default language.
     $this->assertEquals($default_langcode, $role->language()->getId());
 
