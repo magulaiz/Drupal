@@ -295,6 +295,7 @@ trait PerformanceTestTrait {
     $messages = [];
     $session = $this->getSession();
     while ($attempts <= 30) {
+      sleep(1);
       $attempts++;
       $performance_log = $session->getDriver()->getWebDriverSession()->log('performance');
 
@@ -327,7 +328,6 @@ trait PerformanceTestTrait {
       if ($lcp_count && empty($performance_log) && ($request_count === $response_count)) {
         break;
       }
-      sleep(1);
     }
     $performance_data = new PerformanceData();
     $this->collectNetworkData($messages, $performance_data);
