@@ -141,6 +141,7 @@
      *   Root margin for the Intersection Observer options object.
      */
     function getRootMargin() {
+      document.addEventListener('DOMContentLoaded', function () {
       let rootMarginTop = 72;
       const { body } = document;
 
@@ -156,6 +157,7 @@
       }
 
       return `${rootMarginTop}px 0px 0px 0px`;
+      });
     }
 
     /**
