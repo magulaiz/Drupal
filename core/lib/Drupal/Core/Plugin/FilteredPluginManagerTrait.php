@@ -27,15 +27,12 @@ trait FilteredPluginManagerTrait {
     $type = $this->getType();
     $hooks = [];
     $hooks[] = "plugin_filter_{$type}";
-    if (!is_null($consumer)) {
+    if ($consumer !== NULL) {
       $hooks[] = "plugin_filter_{$type}__{$consumer}";
-      $this->moduleHandler()->alter($hooks, $definitions, $extra, $consumer);
-      $this->themeManager()->alter($hooks, $definitions, $extra, $consumer);
     }
-    else {
-      $this->moduleHandler()->alter($hooks, $definitions, $extra);
-      $this->themeManager()->alter($hooks, $definitions, $extra);
-    }
+
+    $this->moduleHandler()->alter($hooks, $definitions, $extra, $consumer);
+    $this->themeManager()->alter($hooks, $definitions, $extra, $consumer);
 
     return $definitions;
   }
