@@ -109,6 +109,27 @@ class ConfigConfiguratorTest extends KernelTestBase {
     Recipe::createFromDirectory($clone_dir);
   }
 
+  public function testFullStrictness(): void {
+    $recipe = Recipe::createFromDirectory('core/recipes/page_content_type');
+    RecipeRunner::processRecipe($recipe);
+
+    NodeType::load('page')
+      ->set('description', 'And now for something completely different.')
+      ->save();
+
+    // Clone the recipe into the virtual file system, and opt all of its config
+    // into strict mode.
+    $clone_dir = $this->cloneRecipe($recipe->path);
+    $this->alterRecipe($clone_dir, function (array $data): array {
+      $data['config']['strict'] = TRUE;
+      return $data;
+    });
+    // If we try to instantiate this recipe, we should an exception.
+    $this->expectException(RecipePreExistingConfigException::class);
+    $this->expectExceptionMessage("The configuration 'node.type.page' exists already and does not match the recipe's configuration");
+    Recipe::createFromDirectory($clone_dir);
+  }
+
   private function cloneRecipe(string $original_dir): string {
     // Clone the recipe into the virtual file system.
     $name = uniqid();
