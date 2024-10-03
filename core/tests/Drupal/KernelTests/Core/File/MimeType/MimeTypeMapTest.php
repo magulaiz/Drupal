@@ -10,7 +10,7 @@ use Drupal\KernelTests\KernelTestBase;
 /**
  * Tests the MIME type mapper to extension.
  *
- * @coversDefaultClass \
+ * @coversDefaultClass \Drupal\Core\File\MimeType\MimeTypeMap
  *
  * @group File
  */
