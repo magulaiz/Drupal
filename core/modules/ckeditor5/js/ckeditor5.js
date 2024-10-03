@@ -423,11 +423,11 @@
 
           // Calculate the toolbar panel width in vw.
           function calculateToolbarPanelWidth() {
-            const panelwidth =
+            const panelWidth =
               (editor.ui.view.stickyPanel.element.clientWidth /
                 window.innerWidth) *
               100;
-            return Math.round(panelwidth);
+            return Math.round(panelWidth);
           }
 
           // Set the max-width of the dropdown toolbar panel
