@@ -27,8 +27,7 @@ final class ConfigConfigurator {
    */
   public function __construct(public readonly array $config, string $recipe_directory, StorageInterface $active_configuration) {
     $this->recipeConfigDirectory = is_dir($recipe_directory . '/config') ? $recipe_directory . '/config' : NULL;
-    // @todo Default this to FALSE to support the majority use case. Possibly to
-    //   be done in its own issue since it is a change in behavior.
+    // @todo Consider defaulting this to FALSE in https://drupal.org/i/3478669.
     $this->strict = $config['strict'] ?? TRUE;
 
     $recipe_storage = $this->getConfigStorage();
