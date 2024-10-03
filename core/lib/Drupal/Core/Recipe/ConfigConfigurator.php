@@ -90,10 +90,10 @@ final class ConfigConfigurator {
       $module_list = \Drupal::service('extension.list.module');
       /** @var \Drupal\Core\Extension\ThemeExtensionList $theme_list */
       $theme_list = \Drupal::service('extension.list.theme');
-      foreach ($this->config['import'] as $extension => $config) {
+      foreach ($this->config['import'] as $extension => $names) {
         // If the recipe explicitly does not want to import any config from this
         // extension, skip it.
-        if ($config === NULL) {
+        if ($names === NULL) {
           continue;
         }
         $path = match (TRUE) {
@@ -101,8 +101,15 @@ final class ConfigConfigurator {
           $theme_list->exists($extension) => $theme_list->getPath($extension),
           default => throw new \RuntimeException("$extension is not a theme or module")
         };
-        $config = $config === '*' ? [] : $config;
-        $storages[] = new RecipeExtensionConfigStorage($path, $config);
+
+        $storage = new RecipeConfigStorageWrapper(
+          new FileStorage($path . '/config/install'),
+          new FileStorage($path . '/config/optional'),
+        );
+        if ($names && is_array($names)) {
+          $storage = new AllowList($storage, $names);
+        }
+        $storages[] = $storage;
       }
     }
 
