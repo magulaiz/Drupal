@@ -29,7 +29,7 @@ class ViewsEntitySchemaSubscriberIntegrationTest extends ViewsKernelTestBase {
   /**
    * The entity definition update manager.
    */
-  #[AutowireProperty(service: 'entity.definition_update_manager')]
+  #[AutowireProperty]
   protected EntityDefinitionUpdateManagerInterface $entityDefinitionUpdateManager;
 
   /**
@@ -52,25 +52,25 @@ class ViewsEntitySchemaSubscriberIntegrationTest extends ViewsKernelTestBase {
   /**
    * The event dispatcher.
    */
-  #[AutowireProperty(service: 'event_dispatcher')]
+  #[AutowireProperty]
   protected EventDispatcherInterface $eventDispatcher;
 
   /**
    * The tested event subscriber of views.
    */
-  #[AutowireProperty(service: 'views.entity_schema_subscriber')]
+  #[AutowireProperty]
   protected ViewsEntitySchemaSubscriber $eventSubscriber;
 
   /**
    * The entity type manager service.
    */
-  #[AutowireProperty(service: 'entity_type.manager')]
+  #[AutowireProperty]
   protected EntityTypeManagerInterface $entityTypeManager;
 
   /**
    * The state service.
    */
-  #[AutowireProperty(service: 'state')]
+  #[AutowireProperty]
   protected StateInterface $state;
 
   /**

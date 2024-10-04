@@ -20,7 +20,7 @@ class MapBaseFieldTest extends EntityKernelTestBase {
   /**
    * The entity definition update manager.
    */
-  #[AutowireProperty(service: 'entity.definition_update_manager')]
+  #[AutowireProperty]
   protected EntityDefinitionUpdateManagerInterface $entityDefinitionUpdateManager;
 
   /**

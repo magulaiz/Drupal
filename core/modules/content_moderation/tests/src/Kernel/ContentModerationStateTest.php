@@ -58,9 +58,9 @@ class ContentModerationStateTest extends KernelTestBase {
   ];
 
   /**
-   * @var \Drupal\Core\Entity\EntityTypeManager
+   * The entity type manager.
    */
-  #[AutowireProperty(service: 'entity_type.manager')]
+  #[AutowireProperty]
   protected EntityTypeManagerInterface $entityTypeManager;
 
   /**

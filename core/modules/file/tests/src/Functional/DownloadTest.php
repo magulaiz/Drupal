@@ -24,7 +24,7 @@ class DownloadTest extends FileManagedTestBase {
   /**
    * The file URL generator.
    */
-  #[AutowireProperty(service: 'file_url_generator')]
+  #[AutowireProperty]
   protected FileUrlGeneratorInterface $fileUrlGenerator;
 
   /**
