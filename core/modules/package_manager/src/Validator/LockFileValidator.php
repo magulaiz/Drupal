@@ -50,7 +50,7 @@ final class LockFileValidator implements EventSubscriberInterface {
   }
 
   /**
-   * Returns the SHA-256 hash of a file.
+   * Returns the XXH64 hash of a file.
    *
    * This method is a thin wrapper around hash_file() to facilitate testing. On
    * failure, hash_file() emits a warning but doesn't throw an exception. In
@@ -77,7 +77,7 @@ final class LockFileValidator implements EventSubscriberInterface {
   }
 
   /**
-   * Stores the SHA-256 hash of the active lock file.
+   * Stores the XXH64 hash of the active lock file.
    *
    * We store the hash of the lock file itself, rather than its content-hash
    * value, which is actually a hash of certain parts of composer.json. Our aim

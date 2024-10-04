@@ -14,7 +14,7 @@ namespace Drupal\package_manager\Exception;
 final class ComposerNotReadyException extends \RuntimeException {
 
   /**
-   * Constructs an ComposerNotReadyException object.
+   * Constructs a ComposerNotReadyException object.
    *
    * @param string|null $workingDir
    *   The directory where Composer was run, or NULL if the errors are related
