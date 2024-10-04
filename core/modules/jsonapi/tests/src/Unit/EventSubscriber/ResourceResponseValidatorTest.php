@@ -31,6 +31,22 @@ class ResourceResponseValidatorTest extends UnitTestCase {
   protected $subscriber;
 
   /**
+   * {@inheritdoc}
+   */
+  protected function setUp(): void {
+    parent::setUp();
+    // Check that the validation class is available.
+    if (!class_exists("\\JsonSchema\\Validator")) {
+      $this->fail('The JSON Schema validator is missing. You can install it with `composer require justinrainbow/json-schema`.');
+    }
+
+  }
+
+  /**
+   * Set up the subscriber with the given validation setting.
+   *
+   * @param bool $enable_validation Enable response validation.
+   *
    * @return void
    */
   public function setUpSubscriber(bool $enable_validation): void {
@@ -47,18 +63,6 @@ class ResourceResponseValidatorTest extends UnitTestCase {
     );
     $subscriber->setValidator();
     $this->subscriber = $subscriber;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  protected function setUp(): void {
-    parent::setUp();
-    // Check that the validation class is available.
-    if (!class_exists("\\JsonSchema\\Validator")) {
-      $this->fail('The JSON Schema validator is missing. You can install it with `composer require justinrainbow/json-schema`.');
-    }
-
   }
 
   /**
