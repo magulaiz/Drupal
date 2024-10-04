@@ -204,9 +204,9 @@ class FormHelper {
    */
   public static function processStates(array &$elements) {
     $elements['#attached']['library'][] = 'core/drupal.states';
-    // Elements that have actual input elements, use '#attributes'.
-    // In cases like 'item' that are not actual form input elements or those
-    // like 'password_confirm' that have child elements,
+    // Elements that are actual form input elements, use '#attributes'.
+    // In cases like 'item' that are not actual form input elements or
+    // those like 'password_confirm' that have child elements,
     // use #wrapper_attributes.
     $key = (($elements['#markup'] ?? FALSE) === '' && ($elements['#input'] ?? FALSE) === TRUE) ? '#wrapper_attributes' : '#attributes';
     $elements[$key]['data-drupal-states'] = Json::encode($elements['#states']);
