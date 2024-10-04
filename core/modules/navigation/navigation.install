@@ -37,7 +37,7 @@ function navigation_update_11001(array &$sandbox): void {
         'filesize' => $settings->get('logo_max_filesize'),
         'height' => $settings->get('logo_height'),
         'width' => $settings->get('logo_width'),
-      ]
+      ],
     ],
   ]);
   $settings->save(TRUE);
