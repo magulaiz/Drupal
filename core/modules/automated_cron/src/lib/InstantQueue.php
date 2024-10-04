@@ -48,10 +48,10 @@ class InstantQueue {
    * @param \Drupal\Core\Config\ConfigFactoryInterface $config_factory
    *   The config factory.
    * @param \Drupal\Core\Database\Connection $connection
-   *   The Connection object containing the key-value tables.
-   * @param \Drupal\Component\Datetime\TimeInterface|null $time
+   *   The database connection.
+   * @param \Drupal\Component\Datetime\TimeInterface $time
    *   The time service.
-   * @param mixed[]|null $queue_config
+   * @param array $queue_config
    *   Queue configuration from the service container.
    */
   public function __construct(QueueFactory $queue_factory, LoggerInterface $logger, QueueWorkerManagerInterface $queue_manager, ConfigFactoryInterface $config_factory, protected Connection $connection, TimeInterface $time, array $queue_config) {
@@ -59,7 +59,9 @@ class InstantQueue {
     $this->logger = $logger;
     $this->queueManager = $queue_manager;
     $this->time = $time;
-    $this->queueConfig = $queue_config;
+    $this->queueConfig = $queue_config + [
+      'suspendMaximumWait' => 30.0,
+    ];
     $this->config = $config_factory->get('automated_cron.settings');
   }
 
