@@ -17,6 +17,7 @@
     "require-dev": {
         "behat/mink": "^1.11",
         "behat/mink-browserkit-driver": "^2.2",
+        "brianium/paratest": "^7.4",
         "colinodell/psr-testlogger": "^1.2",
         "composer/composer": "^2.7.7",
         "drupal/coder": "^8.3.10",
@@ -107,7 +108,11 @@
     "autoload-dev": {
         "psr-4": {
             "Drupal\\PHPStan\\Rules\\": "core/tests/PHPStan/Rules"
-        }
+        },
+        "classmap": [
+            "core/tests/Drupal/TestTools/DrupalParatestRunner.php",
+            "core/tests/Drupal/TestTools/Paratest/ApplicationForWrapperWorker.php"
+        ]
     },
     "scripts": {
         "pre-install-cmd": "Drupal\\Composer\\Composer::ensureComposerVersion",
