@@ -80,6 +80,11 @@
             <span class="toolbar-menu__link-title">{{ item.title }}</span>
           </button>
           <ul class="toolbar-menu toolbar-menu--level-{{ menu_level + 1 }}" inert>
+            {% if item.url %}
+              <li class="toolbar-menu__item toolbar-menu__item--level-{{ menu_level + 1}}">
+                {{ link('Overview'|t, item.url, item_link_attributes.addClass(['toolbar-menu__link', 'toolbar-menu__link--' ~ (menu_level + 1)])) }}
+              </li>
+            {% endif %}
             {{ menus.menu_items(item.below, attributes, menu_level + 1) }}
           </ul>
         {% endif %}
