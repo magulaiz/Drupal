@@ -39,20 +39,3 @@ function navigation_post_update_set_logo_dimensions_default(array &$sandbox) {
   }
   $settings->save();
 }
-
-/**
- * Reorganizes the values for the logo settings.
- */
-function navigation_post_update_reorganize_logo_settings(array &$sandbox): void {
-  $settings = \Drupal::configFactory()->getEditable('navigation.settings');
-  $settings->setData([
-    'logo' => [
-      'provider' => $settings->get('logo_provider'),
-      'managed' => $settings->get('logo_managed'),
-      'max_filesize' => $settings->get('logo_max_filesize'),
-      'height' => $settings->get('logo_height'),
-      'width' => $settings->get('logo_width'),
-    ],
-  ]);
-  $settings->save();
-}
