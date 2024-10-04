@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Drupal\Core\File\MimeType;
 
 /**
- * Provides a sensible mapping between filename extensions and MIME types.
+ * Provides an interface for MIME type to file extension mapping.
  */
 interface MimeTypeMapInterface {
 

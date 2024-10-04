@@ -1787,12 +1787,12 @@ services:
     factory: ['@file.mime_type.map.factory', create]
   Drupal\Core\File\MimeType\MimeTypeMapInterface: '@file.mime_type.map'
   file.mime_type.map_modifier.legacy_hook:
-    class: Drupal\Core\File\MimeType\LegacyHookMimeTypeMappingModifier
+    class: Drupal\Core\File\MimeType\LegacyHookMimeTypeMapModifier
     deprecated: The "%service_id%" service is deprecated in drupal:11.0.0 and is removed from drupal:12.0.0. Use the mime_type_map_modifier tag instead. See https://www.drupal.org/node/2311679
     arguments: ['@module_handler']
     tags:
       - {name: mime_type_map_modifier}
-  Drupal\Core\File\MimeType\LegacyHookMimeTypeMappingModifier: '@file.mime_type.map_modifier.legacy_hook'
+  Drupal\Core\File\MimeType\LegacyHookMimeTypeMapModifier: '@file.mime_type.map_modifier.legacy_hook'
   # Currently needs to be public as it is called by
   # \Drupal\Core\Render\Element\StatusMessages.
   # @todo Consider making this service private again after

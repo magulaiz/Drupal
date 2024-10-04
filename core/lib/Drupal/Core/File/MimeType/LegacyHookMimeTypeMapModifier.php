@@ -9,13 +9,12 @@ use Drupal\Core\Extension\ModuleHandlerInterface;
 /**
  * Modifies the MIME type map by calling hook_file_mimetype_mapping_alter().
  *
- * @deprecated in drupal:10.1.0 and is removed from drupal:12.0.0. Use a service
+ * @deprecated in drupal:11.1.0 and is removed from drupal:12.0.0. Use a service
  *   that implements MimeTypeMapModifierInterface instead.
  *
  * @see https://www.drupal.org/node/2311679
  */
-class LegacyHookMimeTypeMappingModifier implements
-  MimeTypeMapModifierInterface {
+class LegacyHookMimeTypeMapModifier implements MimeTypeMapModifierInterface {
 
   public function __construct(
     protected ModuleHandlerInterface $moduleHandler,
