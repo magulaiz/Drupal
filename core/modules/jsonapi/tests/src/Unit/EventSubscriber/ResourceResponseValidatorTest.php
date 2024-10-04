@@ -45,7 +45,8 @@ class ResourceResponseValidatorTest extends UnitTestCase {
   /**
    * Set up the subscriber with the given validation setting.
    *
-   * @param bool $enable_validation Enable response validation.
+   * @param bool $enable_validation
+   *   Enable response validation.
    *
    * @return void
    */
