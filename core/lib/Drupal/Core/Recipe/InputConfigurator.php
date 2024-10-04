@@ -109,9 +109,9 @@ final class InputConfigurator {
     foreach ($this->dependencies->recipes as $dependency) {
       $descriptions = array_merge($descriptions, $dependency->input->describeAll());
     }
-    foreach ($this->data as $key => $data) {
+    foreach ($this->getDataDefinitions() as $key => $definition) {
       $name = $this->prefix . '.' . $key;
-      $descriptions[$name] = $data->getDataDefinition()->getDescription();
+      $descriptions[$name] = $definition->getDescription();
     }
     return $descriptions;
   }
