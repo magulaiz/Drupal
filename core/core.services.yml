@@ -1781,6 +1781,7 @@ services:
     class: Drupal\Core\File\MimeType\DefaultMimeTypeMapFactory
     tags:
       - {name: service_collector, tag: mime_type_map_modifier, call: addModifier}
+  Drupal\Core\File\MimeType\DefaultMimeTypeMapFactory: '@file.mime_type.map.factory'
   file.mime_type.map:
     class: Drupal\Core\File\MimeType\DefaultMimeTypeMap
     factory: ['@file.mime_type.map.factory', create]
@@ -1791,6 +1792,7 @@ services:
     arguments: ['@module_handler']
     tags:
       - {name: mime_type_map_modifier}
+  Drupal\Core\File\MimeType\LegacyHookMimeTypeMappingModifier: '@file.mime_type.map_modifier.legacy_hook'
   # Currently needs to be public as it is called by
   # \Drupal\Core\Render\Element\StatusMessages.
   # @todo Consider making this service private again after
