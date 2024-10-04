@@ -624,12 +624,15 @@ class Connection extends DatabaseConnection {
       return FALSE;
     }
 
+    // A replica set must have members.
     if ($result->members) {
       $members = (array) $result->members;
-      // A replica set must have a minimum of 3 members.
-      if (count($members) < 3) {
+      if (count($members) < 1) {
         return FALSE;
       }
+    }
+    else {
+      return FALSE;
     }
 
     $set = $result->set ?? FALSE;
