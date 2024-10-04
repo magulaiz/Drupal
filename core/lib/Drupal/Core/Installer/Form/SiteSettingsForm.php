@@ -167,7 +167,7 @@ class SiteSettingsForm extends FormBase {
     if ($driver == 'Drupal\mongodb\Driver\Database\mongodb') {
       $hosts = [];
       foreach ([1, 2, 3] as $i) {
-        if (isset($database['host' . $i]['host'])) {
+        if (!empty($database['host' . $i]['host'])) {
           // Add the port setting when it is given and it is not the default
           // port.
           if (isset($database['host' . $i]['port']) && ($database['host' . $i]['port'] != 27017)) {
@@ -181,8 +181,8 @@ class SiteSettingsForm extends FormBase {
               'host' => $database['host' . $i]['host'],
             ];
           }
-          unset($database['host' . $i]);
         }
+        unset($database['host' . $i]);
       }
       if (!empty($hosts)) {
         $database['hosts'] = $hosts;

@@ -173,7 +173,6 @@ class Tasks extends InstallTasks {
       '#size' => 45,
       // Host names can be 255 characters long.
       '#maxlength' => 255,
-      '#required' => TRUE,
     ];
     $form['host2']['port'] = [
       '#type' => 'number',
@@ -196,7 +195,6 @@ class Tasks extends InstallTasks {
       '#size' => 45,
       // Host names can be 255 characters long.
       '#maxlength' => 255,
-      '#required' => TRUE,
     ];
     $form['host3']['port'] = [
       '#type' => 'number',
