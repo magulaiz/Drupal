@@ -2,26 +2,10 @@
 
 namespace Drupal\Core\File\MimeType;
 
-use Drupal\Core\Extension\ModuleHandlerInterface;
-
 /**
  * Provides a sensible mapping between filename extensions and MIME types.
  */
 interface MimeTypeMapInterface {
-
-  /**
-   * Allow modules to alter the default mapping.
-   *
-   * Invokes hook_file_mimetype_mapping_alter().
-   *
-   * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
-   *   The module handler.
-   *
-   * @return $this
-   *
-   * @see hook_file_mimetype_mapping_alter()
-   */
-  public function alterMapping(ModuleHandlerInterface $module_handler): self;
 
   /**
    * Adds a mapping between a MIME type and an extension.

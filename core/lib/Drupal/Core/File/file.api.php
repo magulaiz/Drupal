@@ -6,7 +6,6 @@
  */
 
 use Drupal\Core\StreamWrapper\StreamWrapperManager;
-use Drupal\Core\File\MimeType\MimeTypeMapInterface;
 
 /**
  * @addtogroup hooks
@@ -134,44 +133,6 @@ function hook_file_mimetype_mapping_alter(&$mapping) {
   $mapping['extensions']['info'] = 'example_info';
   // Override existing extension mapping for '.ogg' files.
   $mapping['extensions']['ogg'] = 189;
-}
-
-/**
- * Alter the mapping of MIME types to file extensions.
- *
- * Invoked by \Drupal\Core\File\MimeType\MimeTypeMap::alterMapping().
- *
- * It is used to allow modules to add to or modify the default mapping of
- * MIME type to file extensions.
- *
- * Use the \Drupal\Core\File\MimeType\MimeTypeMapInterface::addMapping()
- * method to add/override MIME type to file extension mapping,
- * \Drupal\Core\File\MimeType\MimeTypeMapInterface::removeMapping() to
- * delete a file extension mapping to a MIME type,
- * \Drupal\Core\File\MimeType\MimeTypeMapInterface::removeMimeType() to
- * entirely remove a MIME type and all file extensions mapping to it.
- * The
- * \Drupal\Core\File\MimeType\MimeTypeMapInterface::getMimeTypeForExtension()
- * and
- * \Drupal\Core\File\MimeType\MimeTypeMapInterface::getExtensionsForMimeType()
- * methods can be used to get the current mapping respectively of the MIME
- * type of a given extension, and of the extensions associated to a given
- * MIME type.
- * The
- * \Drupal\Core\File\MimeType\MimeTypeMapInterface::getMimeTypes() can be
- * used to get the list of supported MIME types.
- *
- * @param \Drupal\Core\File\MimeType\MimeTypeMapInterface $mime_type_mapper
- *   The MIME type mapper object.
- *
- * @see \Interface
- */
-function hook_mimetype_alter(?MimeTypeMapInterface $mime_type_mapper = NULL) {
-  // Add new MIME type 'drupal/info', and map it to a new extension
-  // '.info.yml'.
-  $mime_type_mapper->addMapping('drupal/info', 'info.yml');
-  // Override existing extension mapping for '.ogg' files.
-  $mime_type_mapper->addMapping('audio/ogg', 'ogg');
 }
 
 /**

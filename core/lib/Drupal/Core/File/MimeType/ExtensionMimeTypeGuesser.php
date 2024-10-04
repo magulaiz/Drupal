@@ -104,8 +104,11 @@ class ExtensionMimeTypeGuesser implements MimeTypeGuesserInterface {
         $this->map->addMapping($type, $extension);
       }
     }
-    // @phpstan-ignore-next-line property.notFound
-    $this->map->alterMapping($this->moduleHandler);
+    // @phpstan-ignore-next-line
+    \Drupal::service('file.mime_type.map_modifier.legacy_hook')
+      ->modifyMimeTypeMap(
+        $this->map
+      );
   }
 
   /**

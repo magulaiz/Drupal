@@ -7,7 +7,7 @@ use Drupal\Core\Extension\ModuleHandlerInterface;
 /**
  * Provides a sensible mapping between filename extensions and MIME types.
  */
-class MimeTypeMap implements MimeTypeMapInterface {
+class DefaultMimeTypeMap implements MimeTypeMapInterface {
 
   /**
    * Default MIME extension mapping.
@@ -889,17 +889,12 @@ class MimeTypeMap implements MimeTypeMapInterface {
    *   Array of mimetypes correlated to the extensions that relate to them.
    */
   protected array $mapping = [];
-
+  
   /**
-   * {@inheritdoc}
+   * Loads the default mapping.
    */
-  public function alterMapping(ModuleHandlerInterface $module_handler): self {
-    if (empty($this->mapping)) {
-      $this->mapping = static::$defaultMapping;
-      $module_handler->alterDeprecated('This hook is deprecated in drupal:10.1.0 and will be removed before drupal:11.0.0. Implement hook_mimetype_alter() instead. See https://www.drupal.org/node/2311679.', 'file_mimetype_mapping', $this->mapping);
-      $module_handler->alter('mimetype', $this);
-    }
-    return $this;
+  public function loadDefault(): void {
+    $this->mapping = static::$defaultMapping;
   }
 
   /**
@@ -1007,6 +1002,30 @@ class MimeTypeMap implements MimeTypeMapInterface {
     $extensions = array_keys($this->mapping['extensions'], $key, TRUE);
     \sort($extensions);
     return $extensions;
+  }
+
+  /**
+   * Gets the underlying mapping array.
+   *
+   * @deprecated in drupal:11.1.0 and is removed from drupal:12.0.0. There is no
+   *   replacement for this method.
+   *
+   * @see https://www.drupal.org/node/3245223
+   */
+  public function getMapping(): array {
+    return $this->mapping;
+  }
+
+  /**
+   * Sets the underlying mapping array.
+   *
+   * @deprecated in drupal:11.1.0 and is removed from drupal:12.0.0. There is no
+   *   replacement for this method.
+   *
+   * @see https://www.drupal.org/node/3245223
+   */
+  public function setMapping(array $mapping): void {
+    $this->mapping = $mapping;
   }
 
 }
