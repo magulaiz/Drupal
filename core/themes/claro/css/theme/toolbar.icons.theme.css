@@ -48,11 +48,7 @@
 }
 
 .toolbar .toolbar-menu ul .toolbar-icon {
-  padding-inline-start: 1.3333em; /* LTR */
-}
-
-[dir="rtl"] .toolbar .toolbar-menu ul .toolbar-icon {
-  padding-inline: 0 1.3333em;
+  padding-inline-start: 1.3333em;
 }
 
 .toolbar .toolbar-menu ul a.toolbar-icon::before {
@@ -60,27 +56,15 @@
 }
 
 .toolbar .toolbar-tray-vertical .toolbar-menu ul a {
-  padding-inline-start: 2.75em; /* LTR */
-}
-
-[dir="rtl"] .toolbar .toolbar-tray-vertical .toolbar-menu ul a {
-  padding-inline: 0 2.75em;
+  padding-inline-start: 2.75em;
 }
 
 .toolbar .toolbar-tray-vertical .toolbar-menu ul ul a {
-  padding-inline-start: 3.75em; /* LTR */
-}
-
-[dir="rtl"] .toolbar .toolbar-tray-vertical .toolbar-menu ul ul a {
-  padding-inline: 0 3.75em;
+  padding-inline-start: 3.75em;
 }
 
 .toolbar .toolbar-tray-vertical .toolbar-menu a {
-  padding-inline: 2.75em 4em; /* LTR */ /* LTR */
-}
-
-[dir="rtl"] .toolbar .toolbar-tray-vertical .toolbar-menu a {
-  padding-inline: 4em 2.75em;
+  padding-inline: 2.75em 4em;
 }
 
 .toolbar .toolbar-bar .toolbar-tab > .toolbar-icon.is-active::before {

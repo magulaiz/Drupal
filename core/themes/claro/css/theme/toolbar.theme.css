@@ -69,10 +69,7 @@
   background-color: #fff;
 }
 .toolbar-horizontal .toolbar-tray > .toolbar-lining {
-  padding-inline-end: 5em; /* LTR */
-}
-[dir="rtl"] .toolbar-horizontal .toolbar-tray > .toolbar-lining {
-  padding-inline: 5em 0;
+  padding-inline-end: 5em;
 }
 .toolbar .toolbar-tray-vertical {
   border-inline-end: 1px solid #aaa; /* LTR */

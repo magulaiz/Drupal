@@ -65,7 +65,7 @@
 .ui-dialog .ui-dialog-titlebar-close {
   position: absolute;
   inset-block-start: 50%;
-  inset-inline-end: 0; /* LTR */
+  inset-inline-end: 0;
   box-sizing: border-box;
   inline-size: var(--jui-dialog-close-button-size);
   block-size: var(--jui-dialog-close-button-size);
@@ -77,10 +77,6 @@
   border: 2px solid transparent;
   border-radius: var(--jui-dialog-close-button-border-radius);
   background: none;
-}
-
-[dir="rtl"] .ui-dialog .ui-dialog-titlebar-close {
-  inset-inline: 0 auto;
 }
 
 .ui-dialog .ui-dialog-titlebar-close:hover {

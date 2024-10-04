@@ -19,11 +19,7 @@
 .media-library-wrapper {
   display: flex;
   margin-block: -1rem;
-  margin-inline: -1rem -1.5rem; /* LTR */
-}
-
-[dir="rtl"] .media-library-wrapper {
-  margin-inline: -1.5em -1em;
+  margin-inline: -1rem -1.5rem;
 }
 
 .media-library-wrapper .messages-list,
@@ -439,7 +435,7 @@
   block-size: 1.75rem;
   margin: -0.875rem;
   border: 3px solid var(--color-absolutezero);
-  border-inline-end: 3px dotted transparent;
+  border-inline-end: 0.1875rem dotted transparent;
 }
 
 .media-library-item .ajax-progress__message {

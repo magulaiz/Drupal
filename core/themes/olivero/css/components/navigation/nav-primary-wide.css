@@ -166,7 +166,7 @@
 
   body:not(.is-always-mobile-nav) .primary-nav__menu-link--level-2 .primary-nav__menu-link-inner::after {
     transform-origin: left; /* LTR */
-    border-block-start-width: 3px;
+    border-block-start-width: 0.1875rem;
   }
 
   [dir="rtl"] body:not(.is-always-mobile-nav) .primary-nav__menu-link--level-2 .primary-nav__menu-link-inner::after {
@@ -188,9 +188,9 @@
     transform: translate(-50%, -1.25rem);
     opacity: 0;
     /* Intentionally not using CSS logical properties. */
-    border-inline-end: solid 10px transparent;
-    border-block-end: solid 10px var(--color--primary-50);
-    border-inline-start: solid 10px transparent;
+    border-inline-end: solid 0.625rem transparent;
+    border-block-end: solid 0.625rem var(--color--primary-50);
+    border-inline-start: solid 0.625rem transparent;
   }
 
   body:not(.is-always-mobile-nav) .primary-nav__menu-🥕.is-active-menu-parent {

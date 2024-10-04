@@ -81,12 +81,9 @@ h3 {
   .step-indicator {
     position: absolute;
     inset-block-start: 0.2em;
-    inset-inline-end: 0.5em; /* LTR */
+    inset-inline-end: 0.5em;
     display: block;
     font-size: 1.385em;
-  }
-  [dir="rtl"] .step-indicator {
-    inset-inline: 0.5em auto;
   }
 }
 
@@ -96,26 +93,21 @@ h3 {
     display: none;
   }
   .task-list {
-    margin-inline-start: -3rem; /* LTR */
+    margin-inline-start: -3rem;
     padding: 0;
     list-style-type: none;
     counter-reset: steps;
     font-weight: bold;
   }
-  [dir="rtl"] .task-list {
-    margin-inline: 0 -3rem;
-  }
   .task-list li {
     padding-block: 1rem;
-    padding-inline: 3rem 1rem; /* LTR */
+    padding-inline: 3rem 1rem;
     counter-increment: steps;
     color: var(--color-gray);
     border-radius: 0 2rem 2rem 0 /* LTR */;
     font-weight: 500;
   }
   [dir="rtl"] .task-list li {
-    padding-block: 1rem;
-    padding-inline: 1rem 3rem;
     border-radius: 2rem 0 0 2rem;
   }
   .task-list li::before {

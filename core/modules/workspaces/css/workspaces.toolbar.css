@@ -35,7 +35,7 @@
 }
 
 [dir="rtl"] .toolbar-oriented .toolbar-bar .workspaces-toolbar-tab {
-  float: inline-start;
+  float: left;
 }
 
 @media (min-width: 16.5rem) {
@@ -52,7 +52,7 @@
      */
   }
   [dir="rtl"] .toolbar:not(.toolbar-oriented) .toolbar-bar .workspaces-toolbar-tab {
-    float: inline-start;
+    float: left;
   }
 }
 

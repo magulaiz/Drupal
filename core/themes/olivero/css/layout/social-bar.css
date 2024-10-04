@@ -79,7 +79,7 @@
          */
   }
   [dir="rtl"] .rotate .contextual .trigger {
-    float: inline-end;
+    float: right;
   }
 }
 
