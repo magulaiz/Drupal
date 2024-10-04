@@ -33,15 +33,15 @@ final class ConfigConfigurator {
 
     $recipe_storage = $this->getConfigStorage();
     if ($this->strict === TRUE) {
-      $strict = $recipe_storage->listAll();
+      $strict_list = $recipe_storage->listAll();
     }
     else {
-      $strict = $this->strict ?: [];
+      $strict_list = $this->strict ?: [];
     }
 
     // Everything in the strict list needs to be identical in the recipe and
     // active storage.
-    foreach ($strict as $config_name) {
+    foreach ($strict_list as $config_name) {
       if ($active_data = $active_configuration->read($config_name)) {
         // @todo https://www.drupal.org/i/3439714 Investigate if there is any
         //   generic code in core for this.
