@@ -1,6 +1,7 @@
 logo:
   provider: default
   managed: null
-  max_filesize: 1048576
-  height: 40
-  width: 40
+  max:
+    filesize: 1048576
+    height: 40
+    width: 40

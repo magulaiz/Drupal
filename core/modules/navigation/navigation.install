@@ -33,9 +33,11 @@ function navigation_update_11001(array &$sandbox): void {
     'logo' => [
       'provider' => $settings->get('logo_provider'),
       'managed' => $settings->get('logo_managed'),
-      'max_filesize' => $settings->get('logo_max_filesize'),
-      'height' => $settings->get('logo_height'),
-      'width' => $settings->get('logo_width'),
+      'max' => [
+        'filesize' => $settings->get('logo_max_filesize'),
+        'height' => $settings->get('logo_height'),
+        'width' => $settings->get('logo_width'),
+      ]
     ],
   ]);
   $settings->save(TRUE);

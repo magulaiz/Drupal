@@ -38,8 +38,8 @@ class NavigationSettingsFormTest extends WebDriverTestBase {
 
     // Set expected logo dimensions smaller than core provided test images.
     \Drupal::configFactory()->getEditable('navigation.settings')
-      ->set('logo.height', 10)
-      ->set('logo.width', 10)
+      ->set('logo.max.height', 10)
+      ->set('logo.max.width', 10)
       ->save();
   }
 

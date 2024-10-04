@@ -120,7 +120,7 @@ final class SettingsForm extends ConfigFormBase {
     ];
     $allowed = 'png jpg jpeg';
     $current_logo_managed_fid = $config->get('logo.managed') ? [$config->get('logo.managed')] : NULL;
-    $max_navigation_allowed = $config->get('logo.max_filesize');
+    $max_navigation_allowed = $config->get('logo.max.filesize');
     $max_system_allowed = Environment::getUploadMaxSize();
     $max_allowed = $max_navigation_allowed < $max_system_allowed ? $max_navigation_allowed : $max_system_allowed;
     $upload_validators = [
@@ -215,8 +215,8 @@ final class SettingsForm extends ConfigFormBase {
       return;
     }
 
-    $width = $config->get('logo.width');
-    $height = $config->get('logo.height');
+    $width = $config->get('logo.max.width');
+    $height = $config->get('logo.max.height');
 
     // Skip if the fid has not been modified.
     $fid = reset($logo_managed);
@@ -251,8 +251,8 @@ final class SettingsForm extends ConfigFormBase {
       return FALSE;
     }
 
-    $width = $config->get('logo.width');
-    $height = $config->get('logo.height');
+    $width = $config->get('logo.max.width');
+    $height = $config->get('logo.max.height');
 
     if ($image->getWidth() <= $width && $image->getHeight() <= $height) {
       return TRUE;

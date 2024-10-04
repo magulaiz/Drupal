@@ -25,27 +25,33 @@ navigation.settings:
           constraints:
             Range:
               min: 0
-        max_filesize:
-          type: integer
-          label: 'Maximum file sizes (bytes)'
+        max:
+          type: mapping
+          label: 'Logo maximum settings'
+          mapping:
+            filesize:
+              type: integer
+              label: 'Maximum file sizes (bytes)'
+              constraints:
+                NotNull: [ ]
+                Range:
+                  min: 0
+            height:
+              type: integer
+              label: 'Logo expected height'
+              constraints:
+                NotNull: [ ]
+                Range:
+                  min: 0
+            width:
+              type: integer
+              label: 'Logo expected width'
+              constraints:
+                NotNull: [ ]
+                Range:
+                  min: 0
           constraints:
-            NotNull: [ ]
-            Range:
-              min: 0
-        height:
-          type: integer
-          label: 'Logo expected height'
-          constraints:
-            NotNull: [ ]
-            Range:
-              min: 0
-        width:
-          type: integer
-          label: 'Logo expected width'
-          constraints:
-            NotNull: [ ]
-            Range:
-              min: 0
+            ValidKeys: '<infer>'
       constraints:
         ValidKeys: '<infer>'
 
