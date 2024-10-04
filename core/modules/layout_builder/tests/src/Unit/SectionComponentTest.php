@@ -117,7 +117,7 @@ class SectionComponentTest extends UnitTestCase {
    * @return array
    *   Third party settings.
    */
-  public function providerTestGetThirdPartySettings(): array {
+  public static function providerTestGetThirdPartySettings(): array {
     $data = [];
     $data['Initech third party settings'] = [
       'Initech',
@@ -155,7 +155,7 @@ class SectionComponentTest extends UnitTestCase {
    * @return array
    *   Third party settings.
    */
-  public function providerTestGetThirdPartySetting(): array {
+  public static function providerTestGetThirdPartySetting(): array {
     $data = [];
     $data['Initech third party setting for "Bill Lumbergh" key'] = [
       'Initech',
@@ -201,7 +201,7 @@ class SectionComponentTest extends UnitTestCase {
    * @return array
    *   Third party settings.
    */
-  public function providerTestSetThirdPartySetting(): array {
+  public static function providerTestSetThirdPartySetting(): array {
     $data = [];
     $data['Override "Milton Waddams" third party setting for Initech provider'] = [
       'Initech',
@@ -248,7 +248,7 @@ class SectionComponentTest extends UnitTestCase {
    * @return array
    *   Third party settings.
    */
-  public function providerTestUnsetThirdPartySetting(): array {
+  public static function providerTestUnsetThirdPartySetting(): array {
     $data = [];
     $data['Key with values'] = [
       'Initech',
