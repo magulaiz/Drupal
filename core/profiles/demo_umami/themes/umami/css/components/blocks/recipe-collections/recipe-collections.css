@@ -1,10 +1,11 @@
 .block-views-blockrecipe-collections-block {
-  padding: 3rem 4%;
+  padding-block: 3rem;
+  padding-inline: 4%;
   color: #fff;
   background: #767775;
 }
 .block-views-blockrecipe-collections-block .block__title {
-  margin-bottom: 1.5rem;
+  margin-block-end: 1.5rem;
   text-align: center;
 }
 .block-views-blockrecipe-collections-block .views-field-name a {

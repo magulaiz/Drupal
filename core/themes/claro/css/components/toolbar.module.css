@@ -70,7 +70,7 @@
 .toolbar-horizontal .toolbar-tray {
   position: fixed;
   inset-inline-start: 0;
-  width: 100%;
+  inline-size: 100%;
 }
 /* Position the admin toolbar absolutely when the configured standard breakpoint
  * is active. The toolbar container, that contains the bar and the trays, is
@@ -91,7 +91,7 @@
 .toolbar-oriented .toolbar-tray-vertical {
   position: absolute;
   inset-inline-start: -100%;
-  width: 15rem;
+  inline-size: 15rem;
 }
 /* .toolbar-loading is required by Toolbar JavaScript to pre-render markup
  * style to avoid extra reflow & flicker. */
@@ -110,7 +110,7 @@
  * that is taller than the viewport. */
 .toolbar-tray-open.toolbar-fixed.toolbar-vertical .toolbar-oriented {
   inset-block-end: 0;
-  width: 15rem;
+  inline-size: 15rem;
 }
 /* Present the admin toolbar tabs horizontally as a default on user agents that
  * do not understand media queries or on user agents where JavaScript is
@@ -118,12 +118,12 @@
 .toolbar-loading.toolbar-horizontal .toolbar .toolbar-tray .toolbar-menu > li,
 .toolbar .toolbar-bar .toolbar-tab,
 .toolbar .toolbar-tray-horizontal li {
-  float: left; /* LTR */
+  float: inline-start; /* LTR */
 }
 [dir="rtl"] .toolbar-loading.toolbar-horizontal .toolbar .toolbar-tray .toolbar-menu > li,
 [dir="rtl"] .toolbar .toolbar-bar .toolbar-tab,
 [dir="rtl"] .toolbar .toolbar-tray-horizontal li {
-  float: right;
+  float: inline-end;
 }
 /* Present the admin toolbar tabs vertically by default on user agents that
  * that understand media queries. This will be the small screen default. */
@@ -139,25 +139,25 @@
 @media (min-width: 16.5em) {
   .toolbar .toolbar-bar .toolbar-tab,
   .toolbar .toolbar-tray-horizontal li {
-    float: left; /* LTR */
+    float: inline-start; /* LTR */
   }
   [dir="rtl"] .toolbar .toolbar-bar .toolbar-tab,
   [dir="rtl"] .toolbar .toolbar-tray-horizontal li {
-    float: right;
+    float: inline-end;
   }
 }
 /* Present the admin toolbar tabs horizontally when the configured narrow
  * breakpoint is active. */
 .toolbar-oriented .toolbar-bar .toolbar-tab,
 .toolbar-oriented .toolbar-tray-horizontal li {
-  float: left; /* LTR */
+  float: inline-start; /* LTR */
 }
 [dir="rtl"] .toolbar-oriented .toolbar-bar .toolbar-tab,
 [dir="rtl"] .toolbar-oriented .toolbar-tray-horizontal li {
-  float: right;
+  float: inline-end;
 }
 .toolbar .toolbar-tray-vertical > .toolbar-lining {
-  min-height: 100%;
+  min-block-size: 100%;
 }
 /* Layer the links just above the toolbar-tray. */
 .toolbar .toolbar-bar .toolbar-tab > .toolbar-icon {
@@ -177,7 +177,7 @@
   position: fixed;
   overflow-x: hidden;
   overflow-y: auto;
-  height: 100%;
+  block-size: 100%;
 }
 .toolbar .toolbar-tray.is-active {
   display: block;
@@ -216,11 +216,11 @@
   inset-block-end: 0;
 }
 .toolbar-oriented .toolbar-tray-vertical .toolbar-toggle-orientation {
-  float: right; /* LTR */
-  width: 100%;
+  float: inline-end; /* LTR */
+  inline-size: 100%;
 }
 [dir="rtl"] .toolbar-oriented .toolbar-tray-vertical .toolbar-toggle-orientation {
-  float: left;
+  float: inline-start;
 }
 /**
  * Toolbar home button toggle.
@@ -233,21 +233,20 @@
 }
 /* Anti flicker styling. */
 .toolbar-anti-flicker.toolbar-loading.toolbar-fixed body {
-  padding-top: 2.4375rem;
+  padding-block-start: 2.4375rem;
 }
 .toolbar-anti-flicker.toolbar-loading.toolbar-fixed.toolbar-horizontal.toolbar-tray-open body {
-  padding-top: 4.91331rem;
+  padding-block-start: 4.91331rem;
 }
 .toolbar-anti-flicker.toolbar-vertical.toolbar-tray-open .menu-item + .menu-item {
-  border-top: 1px solid #ddd;
+  border-block-start: 1px solid #ddd;
 }
 .toolbar-loading.toolbar-vertical.toolbar-tray-open .toolbar-tray {
   position: fixed;
   z-index: -1;
-  top: 2.4375rem;
-  bottom: 0;
+  inset-block: 2.4375rem 0;
   display: block;
-  width: 15rem;
+  inline-size: 15rem;
   inset-inline-start: 0;
 }
 .toolbar-tray-lazy-placeholder-link {
@@ -259,15 +258,14 @@
   margin-inline-start: -15rem;
 }
 .toolbar .toolbar-tray-vertical > .toolbar-lining::before {
-  width: 100%;
+  inline-size: 100%;
 }
 .toolbar-oriented .toolbar-tray-vertical > .toolbar-lining::before {
   position: fixed;
   z-index: -1;
-  top: 0;
-  bottom: 0;
+  inset-block: 0;
   display: block;
-  width: 15rem;
+  inline-size: 15rem;
   content: "";
   inset-inline-start: 0;
 }

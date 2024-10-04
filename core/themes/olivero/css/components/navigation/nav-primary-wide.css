@@ -37,10 +37,10 @@
 
   body:not(.is-always-mobile-nav) .primary-nav__menu-link:focus::before {
     position: absolute;
-    top: 50%;
-    left: 50%;
-    width: calc(100% + var(--sp));
-    height: var(--sp3);
+    inset-block-start: 50%;
+    inset-inline-start: 50%;
+    inline-size: calc(100% + var(--sp));
+    block-size: var(--sp3);
     content: "";
     transform: translate(-50%, -50%);
     border: solid 2px var(--color--primary-50);
@@ -52,7 +52,7 @@
   }
 
   body:not(.is-always-mobile-nav) .primary-nav__menu-link--button.primary-nav__menu-link--has-children:focus::before {
-    width: calc(100% + var(--sp1-5));
+    inline-size: calc(100% + var(--sp1-5));
     content: "";
   }
 
@@ -65,14 +65,14 @@
     position: absolute;
     inset-block-start: 50%;
     inset-inline-start: calc(100% - 0.1875rem);
-    width: 0.5rem;
-    height: 0.5rem;
+    inline-size: 0.5rem;
+    block-size: 0.5rem;
     margin-block-start: -2px;
     transform: translateY(-50%) rotate(45deg);
     /* Intentionally not using CSS logical properties. */
-    border-top: 0;
-    border-right: solid 2px currentColor;
-    border-bottom: solid 2px currentColor;
+    border-block-start: 0;
+    border-inline-end: solid 2px currentColor;
+    border-block-end: solid 2px currentColor;
   }
 
   body:not(.is-always-mobile-nav) .primary-nav__menu-link--button.primary-nav__menu-link--has-children[aria-expanded="true"]::after {
@@ -87,7 +87,7 @@
 
   body:not(.is-always-mobile-nav) .primary-nav__menu-link-inner::after {
     transform-origin: center;
-    border-top-width: var(--sp0-5);
+    border-block-start-width: var(--sp0-5);
   }
 
   body:not(.is-always-mobile-nav) .primary-nav__menu--level-1 {
@@ -100,8 +100,8 @@
     position: relative; /* Anchor secondary menu */
     display: flex;
     align-items: center;
-    width: max-content;
-    max-width: 12.5rem;
+    inline-size: max-content;
+    max-inline-size: 12.5rem;
     margin-block: 0;
     margin-inline-start: 0;
     margin-inline-end: 0;
@@ -114,14 +114,14 @@
   body:not(.is-always-mobile-nav) .primary-nav__menu--level-2 {
     position: absolute;
     z-index: 105; /* Appear above search container. */
-    top: calc(100% - var(--sp0-5));
-    left: 50%;
+    inset-block-start: calc(100% - var(--sp0-5));
+    inset-inline-start: 50%;
     visibility: hidden;
     overflow: auto;
-    width: 15.625rem;
+    inline-size: 15.625rem;
     /* Ensure that long level-2 menus will never overflow viewport (focused
        * elements should always be in viewport per accessibility guidelines). */
-    max-height: calc(100vh - var(--site-header-height-wide) - var(--drupal-displace-offset-top, 0px) - var(--drupal-displace-offset-bottom, 0px) - var(--sp));
+    max-block-size: calc(100vh - var(--site-header-height-wide) - var(--drupal-displace-offset-top, 0px) - var(--drupal-displace-offset-bottom, 0px) - var(--sp));
     margin-block-start: 0;
     margin-inline-start: 0;
     padding-block: var(--sp3);
@@ -131,10 +131,10 @@
     transform: translate(-50%, -1.25rem);
     opacity: 0;
     /* Intentionally not using CSS logical properties. */
-    border-top: solid var(--color--primary-50) var(--sp0-5);
-    border-right: solid 1px transparent; /* Transparent borders useful for Windows High Contrast mode. */
-    border-bottom: solid 1px transparent;
-    border-left: solid 1px transparent;
+    border-block-start: solid var(--color--primary-50) var(--sp0-5);
+    border-inline-end: solid 1px transparent; /* Transparent borders useful for Windows High Contrast mode. */
+    border-block-end: solid 1px transparent;
+    border-inline-start: solid 1px transparent;
     border-radius: 0 0 2px 2px;
     background: var(--color--white);
     box-shadow: 0 1px 36px rgba(0, 0, 0, 0.08);
@@ -152,9 +152,9 @@
   }
 
   body:not(.is-always-mobile-nav) .primary-nav__menu-link--level-2:focus::before {
-    top: 0;
-    left: calc(var(--sp0-5) * -1);
-    height: 100%;
+    inset-block-start: 0;
+    inset-inline-start: calc(var(--sp0-5) * -1);
+    block-size: 100%;
     transform: none;
   }
 
@@ -166,7 +166,7 @@
 
   body:not(.is-always-mobile-nav) .primary-nav__menu-link--level-2 .primary-nav__menu-link-inner::after {
     transform-origin: left; /* LTR */
-    border-top-width: 3px;
+    border-block-start-width: 0.1875rem;
   }
 
   [dir="rtl"] body:not(.is-always-mobile-nav) .primary-nav__menu-link--level-2 .primary-nav__menu-link-inner::after {
@@ -180,17 +180,17 @@
   body:not(.is-always-mobile-nav) .primary-nav__menu-🥕 {
     position: absolute;
     z-index: 105; /* Match level 2 menus. */
-    top: calc(100% - var(--sp));
-    left: 50%;
+    inset-block-start: calc(100% - var(--sp));
+    inset-inline-start: 50%;
     visibility: hidden;
-    width: 0;
-    height: 0;
+    inline-size: 0;
+    block-size: 0;
     transform: translate(-50%, -1.25rem);
     opacity: 0;
     /* Intentionally not using CSS logical properties. */
-    border-right: solid 10px transparent;
-    border-bottom: solid 10px var(--color--primary-50);
-    border-left: solid 10px transparent;
+    border-inline-end: solid 0.625rem transparent;
+    border-block-end: solid 0.625rem var(--color--primary-50);
+    border-inline-start: solid 0.625rem transparent;
   }
 
   body:not(.is-always-mobile-nav) .primary-nav__menu-🥕.is-active-menu-parent {
@@ -204,7 +204,7 @@
      * little extra room when the toolbar is fixed (and is shorter).
      */
   body:not(.is-always-mobile-nav) .is-fixed .primary-nav__menu--level-2 {
-    max-height: calc(100vh - var(--site-header-height-wide) - var(--drupal-displace-offset-top, 0px) - var(--drupal-displace-offset-bottom, 0px) - var(--sp) + var(--sp4));
+    max-block-size: calc(100vh - var(--site-header-height-wide) - var(--drupal-displace-offset-top, 0px) - var(--drupal-displace-offset-bottom, 0px) - var(--sp) + var(--sp4));
   }
 }
 

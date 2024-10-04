@@ -10,69 +10,67 @@
   padding: 0;
 }
 .views-admin pre {
-  margin-top: 0;
-  margin-bottom: 0;
+  margin-block: 0;
   white-space: pre-wrap;
 }
 .views-left-25 {
-  float: left; /* LTR */
-  width: 25%;
+  float: inline-start; /* LTR */
+  inline-size: 25%;
 }
 [dir="rtl"] .views-left-25 {
-  float: right;
+  float: inline-end;
 }
 .views-left-30 {
-  float: left; /* LTR */
-  width: 30%;
+  float: inline-start; /* LTR */
+  inline-size: 30%;
 }
 [dir="rtl"] .views-left-30 {
-  float: right;
+  float: inline-end;
 }
 .views-left-40 {
-  float: left; /* LTR */
-  width: 40%;
+  float: inline-start; /* LTR */
+  inline-size: 40%;
 }
 [dir="rtl"] .views-left-40 {
-  float: right;
+  float: inline-end;
 }
 .views-left-50 {
-  float: left; /* LTR */
-  width: 50%;
+  float: inline-start; /* LTR */
+  inline-size: 50%;
 }
 [dir="rtl"] .views-left-50 {
-  float: right;
+  float: inline-end;
 }
 .views-left-75 {
-  float: left; /* LTR */
-  width: 75%;
+  float: inline-start; /* LTR */
+  inline-size: 75%;
 }
 [dir="rtl"] .views-left-75 {
-  float: right;
+  float: inline-end;
 }
 .views-right-50 {
-  float: right; /* LTR */
-  width: 50%;
+  float: inline-end; /* LTR */
+  inline-size: 50%;
 }
 [dir="rtl"] .views-right-50 {
-  float: left;
+  float: inline-start;
 }
 .views-right-60 {
-  float: right; /* LTR */
-  width: 60%;
+  float: inline-end; /* LTR */
+  inline-size: 60%;
 }
 [dir="rtl"] .views-right-60 {
-  float: left;
+  float: inline-start;
 }
 .views-right-70 {
-  float: right; /* LTR */
-  width: 70%;
+  float: inline-end; /* LTR */
+  inline-size: 70%;
 }
 [dir="rtl"] .views-right-70 {
-  float: left;
+  float: inline-start;
 }
 .views-group-box .form-item {
-  margin-right: 3px;
-  margin-left: 3px;
+  margin-inline: 3px;
 }
 
 /*
@@ -88,17 +86,17 @@
   overflow: visible;
   margin: 0;
   padding: 0;
-  border-bottom: 0 none;
+  border-block-end: 0 none;
 }
 .views-displays .tabs > li {
-  float: left; /* LTR */
+  float: inline-start; /* LTR */
   padding: 0;
-  border-right: 0 none; /* LTR */
+  border-inline-end: 0 none; /* LTR */
 }
 [dir="rtl"] .views-displays .tabs > li {
-  float: right;
-  border-right: 1px solid #bfbfbf;
-  border-left: 0 none;
+  float: inline-end;
+  border-inline-end: 1px solid #bfbfbf;
+  border-inline-start: 0 none;
 }
 .views-displays .tabs .open > a {
   position: relative;
@@ -126,13 +124,12 @@
 .views-displays .tabs .action-list {
   position: absolute;
   z-index: 50;
-  top: 23px;
-  left: 0; /* LTR */
+  inset-block-start: 23px;
+  inset-inline-start: 0; /* LTR */
   margin: 0;
 }
 [dir="rtl"] .views-displays .tabs .action-list {
-  right: 0;
-  left: auto;
+  inset-inline: auto 0;
 }
 .views-displays .tabs .action-list li {
   display: block;
@@ -144,27 +141,26 @@
   box-sizing: border-box;
 }
 .views-display-columns > * {
-  margin-bottom: 2em;
+  margin-block-end: 2em;
 }
 
 @media screen and (min-width: 45em) {
   /* 720px */
   .views-display-columns > * {
-    float: left; /* LTR */
-    width: 32%;
-    margin-bottom: 0;
-    margin-left: 2%; /* LTR */
+    float: inline-start; /* LTR */
+    inline-size: 32%;
+    margin-block-end: 0;
+    margin-inline-start: 2%; /* LTR */
   }
   [dir="rtl"] .views-display-columns > * {
-    float: right;
-    margin-right: 2%;
-    margin-left: 0;
+    float: inline-end;
+    margin-inline: 0 2%;
   }
   .views-display-columns > *:first-child {
-    margin-left: 0; /* LTR */
+    margin-inline-start: 0; /* LTR */
   }
   [dir="rtl"] .views-display-columns > *:first-child {
-    margin-right: 0;
+    margin-inline-end: 0;
   }
 }
 
@@ -182,15 +178,15 @@
 /* Don't let the messages overwhelm the modal */
 .views-ui-dialog .views-messages {
   overflow: auto;
-  max-height: 200px;
+  max-block-size: 200px;
 }
 .views-display-setting .label,
 .views-display-setting .views-ajax-link {
-  float: left; /* LTR */
+  float: inline-start; /* LTR */
 }
 [dir="rtl"] .views-display-setting .label,
 [dir="rtl"] .views-display-setting .views-ajax-link {
-  float: right;
+  float: inline-end;
 }
 .form-item-options-value-all {
   display: none;
@@ -205,5 +201,5 @@ html.js span.js-only {
   display: inline;
 }
 .js .views-edit-view .dropbutton-wrapper {
-  width: auto;
+  inline-size: auto;
 }

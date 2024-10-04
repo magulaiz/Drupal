@@ -14,7 +14,7 @@
 @media (min-width: 75rem) {
   .social-bar {
     flex-shrink: 0;
-    width: var(--content-left);
+    inline-size: var(--content-left);
     background-color: var(--color--gray-100);
   }
 }
@@ -29,7 +29,7 @@
 @media (min-width: 75rem) {
   .social-bar__inner {
     position: relative;
-    width: var(--content-left);
+    inline-size: var(--content-left);
     padding-block: var(--sp5);
     padding-inline-start: 0;
     padding-inline-end: 0;
@@ -39,7 +39,7 @@
     position: fixed;
     inset-block-start: var(--sp6);
     inset-inline-start: 0;
-    height: calc(100vh - var(--sp6));
+    block-size: calc(100vh - var(--sp6));
   }
 }
 
@@ -67,7 +67,7 @@
   }
 
   .rotate .contextual .trigger {
-    float: left; /* LTR */
+    float: inline-start; /* LTR */
 
     /**
          * Chromium and Webkit do not yet support flow relative logical properties,
@@ -79,7 +79,7 @@
          */
   }
   [dir="rtl"] .rotate .contextual .trigger {
-    float: right;
+    float: inline-end;
   }
 }
 
@@ -89,14 +89,14 @@
     inset-inline-start: 50%;
     display: flex;
     flex-direction: row-reverse;
-    width: 100vh;
+    inline-size: 100vh;
     transform: rotate(-90deg) translateX(-100%); /* LTR */
     transform-origin: left; /* LTR */
   }
 
   @supports (width: max-content) {
     .rotate {
-      width: max-content;
+      inline-size: max-content;
     }
   }
 }

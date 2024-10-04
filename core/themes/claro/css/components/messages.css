@@ -66,8 +66,8 @@
 }
 
 [dir="rtl"] .messages {
-  border-right-width: var(--messages-border-width);
-  border-left-width: 0;
+  border-inline-end-width: var(--messages-border-width);
+  border-inline-start-width: 0;
 }
 
 .messages--error {

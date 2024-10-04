@@ -27,7 +27,8 @@
   & .announcement--featured {
     position: relative;
     margin-inline: calc(-1 * var(--off-canvas-padding));
-    padding: 0 var(--off-canvas-padding) var(--off-canvas-padding);
+    padding-block: 0 var(--off-canvas-padding);
+    padding-inline: var(--off-canvas-padding);
   }
 
   & .announcement.announcement--featured + .announcement.announcement--standard {

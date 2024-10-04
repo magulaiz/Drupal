@@ -5,10 +5,11 @@
 
 .button {
   display: inline-block;
-  min-width: inherit;
-  max-width: inherit;
+  min-inline-size: inherit;
+  max-inline-size: inherit;
   margin: 0;
-  padding: 0.7rem 1.3rem;
+  padding-block: 0.7rem;
+  padding-inline: 1.3rem;
   cursor: pointer;
   transition: background-color 0.5s ease;
   text-align: center;
@@ -56,12 +57,14 @@
   display: flex;
   flex-wrap: wrap;
   margin: -0.5rem;
-  padding: 0.75rem 0;
+  padding-block: 0.75rem;
+  padding-inline: 0;
 }
 
 @media screen and (min-width: 77em) {
   .form-actions {
-    margin: 1rem -0.5rem;
+    margin-block: 1rem;
+    margin-inline: -0.5rem;
     padding: 0;
   }
 }

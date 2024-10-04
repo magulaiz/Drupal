@@ -43,8 +43,8 @@
 
 .shortcut-action__icon {
   display: inline-block;
-  width: var(--shortcut-icon-size);
-  height: var(--shortcut-icon-size);
+  inline-size: var(--shortcut-icon-size);
+  block-size: var(--shortcut-icon-size);
   vertical-align: -0.0625rem;
   background: transparent url(../../images/shortcut/favstar.svg) left top / calc(var(--shortcut-icon-size) * 4) var(--shortcut-icon-size) no-repeat;
 

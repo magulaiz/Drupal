@@ -9,12 +9,12 @@
   & .site-header__initial {
     @media (--nav) {
       flex-shrink: 0;
-      width: var(--content-left);
+      inline-size: var(--content-left);
     }
   }
 
   & .main-content {
-    min-height: 80vh;
+    min-block-size: 80vh;
   }
 }
 .maintenance-page-icon {

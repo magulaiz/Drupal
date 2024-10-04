@@ -23,14 +23,14 @@
 }
 
 .views-view-responsive-grid--vertical {
-  margin-bottom: calc(var(--views-responsive-grid--layout-gap) * -1); /* Offset the bottom row's padding. */
+  margin-block-end: calc(var(--views-responsive-grid--layout-gap) * -1); /* Offset the bottom row's padding. */
   column-width: var(--views-responsive-grid--cell-min-width);
   column-count: var(--views-responsive-grid--column-count);
   column-gap: var(--views-responsive-grid--layout-gap);
 }
 
 .views-view-responsive-grid--vertical .views-view-responsive-grid__item > * {
-  padding-bottom: var(--views-responsive-grid--layout-gap);
+  padding-block-end: var(--views-responsive-grid--layout-gap);
   page-break-inside: avoid;
   break-inside: avoid;
 }

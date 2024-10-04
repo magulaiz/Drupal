@@ -8,10 +8,10 @@
  *   experimental: https://www.drupal.org/node/2784591.
  */
 .toolbar .toolbar-bar .contextual-toolbar-tab.toolbar-tab {
-  float: left;
+  float: inline-start;
 }
 [dir="rtl"] .toolbar .toolbar-bar .contextual-toolbar-tab.toolbar-tab {
-  float: right;
+  float: inline-end;
 }
 
 .dialog-off-canvas-main-canvas.js-settings-tray-edit-mode a,

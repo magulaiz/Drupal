@@ -18,7 +18,7 @@
 
 .system-modules fieldset {
   border: 0;
-  border-top: 1px solid var(--modules-page-system-modules-fieldset-color);
+  border-block-start: 1px solid var(--modules-page-system-modules-fieldset-color);
 }
 
 .system-modules .fieldset-wrapper {
@@ -35,7 +35,7 @@
 .locale-translation-status-form tr.even,
 .locale-translation-status-form tr.odd {
   border: 0;
-  border-bottom: 10px solid var(--modules-page-system-modules-tr-border-color);
+  border-block-end: 0.625rem solid var(--modules-page-system-modules-tr-border-color);
   background: var(--modules-page-system-modules-tr-bg-color);
 }
 
@@ -47,7 +47,7 @@
 .system-modules table th,
 .locale-translation-status-form table th {
   border: 0;
-  border-bottom: 10px solid var(--modules-page-system-modules-tr-border-color);
+  border-block-end: 0.625rem solid var(--modules-page-system-modules-tr-border-color);
 }
 
 .system-modules .sticky-header th,

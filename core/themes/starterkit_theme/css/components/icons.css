@@ -4,18 +4,20 @@
  */
 
 .icon-help {
-  padding: 1px 0 1px 20px; /* LTR */
+  padding-block: 1px;
+  padding-inline: 20px 0; /* LTR */
   background: url(../../images/icons/help.png) 0 50% no-repeat; /* LTR */
 }
 [dir="rtl"] .icon-help {
-  padding: 1px 20px 1px 0;
+  padding-block: 1px;
+  padding-inline: 0 20px;
   background-position: 100% 50%;
 }
 .feed-icon {
   display: block;
   overflow: hidden;
-  width: 16px;
-  height: 16px;
+  inline-size: 16px;
+  block-size: 16px;
   text-indent: -9999px;
   background: url(../../images/icons/feed.svg) no-repeat;
 }

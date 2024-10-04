@@ -18,7 +18,8 @@
   touch-callout: none;
 }
 .toolbar .toolbar-item {
-  padding: 1em 1.3333em;
+  padding-block: 1em;
+  padding-inline: 1.3333em;
   cursor: pointer;
   text-decoration: none;
   line-height: 1em;
@@ -51,7 +52,7 @@
 }
 .toolbar .toolbar-bar .toolbar-tab > .toolbar-item.is-active {
   color: #000;
-  border-bottom: 1px solid #ddd;
+  border-block-end: 1px solid #ddd;
   background-color: #fff;
 }
 
@@ -62,24 +63,20 @@
   background-color: #fff;
 }
 .toolbar-horizontal .toolbar-tray > .toolbar-lining {
-  padding-right: 5em; /* LTR */
-}
-[dir="rtl"] .toolbar-horizontal .toolbar-tray > .toolbar-lining {
-  padding-right: 0;
-  padding-left: 5em;
+  padding-inline-end: 5em;
 }
 .toolbar .toolbar-tray-vertical {
-  border-right: 1px solid #aaa; /* LTR */
+  border-inline-end: 1px solid #aaa; /* LTR */
   background-color: #f5f5f5;
   box-shadow: -1px 0 5px 2px rgba(0, 0, 0, 0.3333); /* LTR */
 }
 [dir="rtl"] .toolbar .toolbar-tray-vertical {
-  border-right: 0 none;
-  border-left: 1px solid #aaa;
+  border-inline-end: 0 none;
+  border-inline-start: 1px solid #aaa;
   box-shadow: 1px 0 5px 2px rgba(0, 0, 0, 0.3333);
 }
 .toolbar-horizontal .toolbar-tray {
-  border-bottom: 1px solid #aaa;
+  border-block-end: 1px solid #aaa;
   box-shadow: -2px 1px 3px 1px rgba(0, 0, 0, 0.3333); /* LTR */
 }
 [dir="rtl"] .toolbar-horizontal .toolbar-tray {
@@ -90,7 +87,8 @@
 }
 .toolbar-tray a,
 .toolbar-tray a:visited {
-  padding: 1em 1.3333em;
+  padding-block: 1em;
+  padding-inline: 1.3333em;
   cursor: pointer;
   text-decoration: none;
   color: #565656;
@@ -106,40 +104,39 @@
   background-color: #fff;
 }
 .toolbar-horizontal .toolbar-tray .menu-item + .menu-item {
-  border-left: 1px solid #ddd; /* LTR */
+  border-inline-start: 1px solid #ddd; /* LTR */
 }
 [dir="rtl"] .toolbar-horizontal .toolbar-tray .menu-item + .menu-item {
-  border-right: 1px solid #ddd;
-  border-left: 0 none;
+  border-inline-end: 1px solid #ddd;
+  border-inline-start: 0 none;
 }
 .toolbar-horizontal .toolbar-tray .menu-item:last-child {
-  border-right: 1px solid #ddd; /* LTR */
+  border-inline-end: 1px solid #ddd; /* LTR */
 }
 [dir="rtl"] .toolbar-horizontal .toolbar-tray .menu-item:last-child {
-  border-left: 1px solid #ddd;
+  border-inline-start: 1px solid #ddd;
 }
 .toolbar .toolbar-tray-vertical .menu-item + .menu-item {
-  border-top: 1px solid #ddd;
+  border-block-start: 1px solid #ddd;
 }
 .toolbar .toolbar-tray-vertical .menu-item:last-child {
-  border-bottom: 1px solid #ddd;
+  border-block-end: 1px solid #ddd;
 }
 .toolbar .toolbar-tray-vertical .menu-item .menu-item {
   border: 0 none;
 }
 .toolbar .toolbar-tray-vertical .toolbar-menu ul ul {
-  border-top: 1px solid #ddd;
-  border-bottom: 1px solid #ddd;
+  border-block-start: 1px solid #ddd;
+  border-block-end: 1px solid #ddd;
 }
 .toolbar .toolbar-tray-vertical .menu-item:last-child > ul {
-  border-bottom: 0;
+  border-block-end: 0;
 }
 .toolbar .toolbar-tray-vertical .toolbar-menu .toolbar-menu .toolbar-menu .toolbar-menu {
-  margin-left: 0.25em; /* LTR */
+  margin-inline-start: 0.25em; /* LTR */
 }
 [dir="rtl"] .toolbar .toolbar-tray-vertical .toolbar-menu .toolbar-menu .toolbar-menu .toolbar-menu {
-  margin-right: 0.25em;
-  margin-left: 0;
+  margin-inline: 0 0.25em;
 }
 .toolbar .toolbar-menu .toolbar-menu a {
   color: #434343;
@@ -149,22 +146,22 @@
  * Orientation toggle.
  */
 .toolbar .toolbar-toggle-orientation {
-  height: 100%;
+  block-size: 100%;
   padding: 0;
   background-color: #f5f5f5;
 }
 .toolbar-horizontal .toolbar-tray .toolbar-toggle-orientation {
-  border-left: 1px solid #c9c9c9; /* LTR */
+  border-inline-start: 1px solid #c9c9c9; /* LTR */
 }
 [dir="rtl"] .toolbar-horizontal .toolbar-tray .toolbar-toggle-orientation {
-  border-right: 1px solid #c9c9c9;
-  border-left: 0 none;
+  border-inline-end: 1px solid #c9c9c9;
+  border-inline-start: 0 none;
 }
 .toolbar .toolbar-toggle-orientation > .toolbar-lining {
-  float: right; /* LTR */
+  float: inline-end; /* LTR */
 }
 [dir="rtl"] .toolbar .toolbar-toggle-orientation > .toolbar-lining {
-  float: left;
+  float: inline-start;
 }
 .toolbar .toolbar-toggle-orientation button {
   display: inline-block;
@@ -173,9 +170,9 @@
 @media (forced-colors: active) {
   .toolbar-horizontal .toolbar-tray > .toolbar-lining,
   .toolbar-horizontal .toolbar .toolbar-toggle-orientation .toolbar-icon {
-    border-top: 1px solid transparent;
+    border-block-start: 1px solid transparent;
   }
   .toolbar .toolbar-bar {
-    border-bottom: 1px solid transparent;
+    border-block-end: 1px solid transparent;
   }
 }

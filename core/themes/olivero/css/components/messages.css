@@ -23,7 +23,7 @@
 }
 
 .messages {
-  min-height: calc(var(--messages-icon-size) + 2 * var(--sp1));
+  min-block-size: calc(var(--messages-icon-size) + 2 * var(--sp1));
   padding-block: var(--sp1);
   padding-inline-start: var(--sp1-5);
   padding-inline-end: var(--sp1-5);
@@ -87,8 +87,8 @@
 
 .messages__close {
   position: relative;
-  width: 1.5625rem;
-  height: 1.5625rem;
+  inline-size: 1.5625rem;
+  block-size: 1.5625rem;
   padding-block: 0;
   padding-inline-start: 0;
   padding-inline-end: 0;
@@ -102,13 +102,13 @@
 .messages__close::before,
 .messages__close::after {
   position: absolute;
-  top: 50%;
-  left: 50%;
+  inset-block-start: 50%;
+  inset-inline-start: 50%;
   display: block;
-  width: 2.0625rem;
-  height: 0;
+  inline-size: 2.0625rem;
+  block-size: 0;
   content: "";
-  border-top: solid 2px var(--color--gray-60);
+  border-block-start: solid 2px var(--color--gray-60);
 }
 
 .messages__close::before {

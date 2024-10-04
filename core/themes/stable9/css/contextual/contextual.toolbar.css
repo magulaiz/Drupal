@@ -5,10 +5,10 @@
 
 /* Tab appearance. */
 .toolbar .toolbar-bar .contextual-toolbar-tab.toolbar-tab {
-  float: right; /* LTR */
+  float: inline-end; /* LTR */
 }
 [dir="rtl"] .toolbar .toolbar-bar .contextual-toolbar-tab.toolbar-tab {
-  float: left;
+  float: inline-start;
 }
 .toolbar .toolbar-bar .contextual-toolbar-tab .toolbar-item {
   margin: 0;

@@ -70,11 +70,11 @@
 }
 
 .draggable-table {
-  width: 100%;
+  inline-size: 100%;
 }
 
 .draggable-table .form-item {
-  margin-top: 0;
+  margin-block-start: 0;
 }
 
 .text-content table td,

@@ -156,9 +156,9 @@
 
 .card__footer .action-links {
   margin-block: 0;
-  text-align: right; /* LTR */
+  text-align: end; /* LTR */
 }
 
 [dir="rtl"] :is(.card__footer .action-links) {
-  text-align: left;
+  text-align: start;
 }

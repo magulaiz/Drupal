@@ -18,7 +18,7 @@
 }
 
 .messages {
-  min-height: calc(var(--messages-icon-size) + 2 * var(--sp1));
+  min-block-size: calc(var(--messages-icon-size) + 2 * var(--sp1));
   padding-block: var(--sp1);
   padding-inline-start: var(--sp1-5);
   padding-inline-end: var(--sp1-5);
@@ -81,8 +81,8 @@
 
 .messages__close {
   position: relative;
-  width: 25px;
-  height: 25px;
+  inline-size: 25px;
+  block-size: 25px;
   padding-block: 0;
   padding-inline-start: 0;
   padding-inline-end: 0;
@@ -95,13 +95,13 @@
   &::before,
   &::after {
     position: absolute;
-    top: 50%;
-    left: 50%;
+    inset-block-start: 50%;
+    inset-inline-start: 50%;
     display: block;
-    width: 33px;
-    height: 0;
+    inline-size: 33px;
+    block-size: 0;
     content: "";
-    border-top: solid 2px var(--color--gray-60);
+    border-block-start: solid 2px var(--color--gray-60);
   }
 
   &::before {

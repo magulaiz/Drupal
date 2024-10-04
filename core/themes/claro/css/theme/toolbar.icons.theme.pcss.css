@@ -8,19 +8,18 @@
 
 .toolbar .toolbar-icon {
   position: relative;
-  padding-left: 2.75em; /* LTR */
+  padding-inline-start: 2.75em; /* LTR */
 }
 [dir="rtl"] .toolbar .toolbar-icon {
-  padding-right: 2.75em;
-  padding-left: 1.3333em;
+  padding-inline: 1.3333em 2.75em;
 }
 .toolbar .toolbar-icon::before {
   position: absolute;
-  top: 0;
-  left: 0.6667em; /* LTR */
+  inset-block-start: 0;
+  inset-inline-start: 0.6667em; /* LTR */
   display: block;
-  width: 1.538em;
-  height: 100%;
+  inline-size: 1.538em;
+  block-size: 100%;
   content: "";
   background-color: transparent;
   background-repeat: no-repeat;
@@ -29,8 +28,7 @@
   background-size: 100% auto;
 }
 [dir="rtl"] .toolbar .toolbar-icon::before {
-  right: 0.6667em;
-  left: auto;
+  inset-inline: auto 0.6667em;
 }
 .toolbar button.toolbar-icon {
   border: 0;
@@ -38,37 +36,20 @@
   font-size: 1em;
 }
 .toolbar .toolbar-menu ul .toolbar-icon {
-  padding-left: 1.3333em; /* LTR */
-}
-[dir="rtl"] .toolbar .toolbar-menu ul .toolbar-icon {
-  padding-right: 1.3333em;
-  padding-left: 0;
+  padding-inline-start: 1.3333em;
 }
 .toolbar .toolbar-menu ul a.toolbar-icon::before {
   display: none;
 }
 .toolbar .toolbar-tray-vertical .toolbar-menu ul a {
-  padding-left: 2.75em; /* LTR */
-}
-[dir="rtl"] .toolbar .toolbar-tray-vertical .toolbar-menu ul a {
-  padding-right: 2.75em;
-  padding-left: 0;
+  padding-inline-start: 2.75em;
 }
 .toolbar .toolbar-tray-vertical .toolbar-menu ul ul a {
-  padding-left: 3.75em; /* LTR */
-}
-[dir="rtl"] .toolbar .toolbar-tray-vertical .toolbar-menu ul ul a {
-  padding-right: 3.75em;
-  padding-left: 0;
+  padding-inline-start: 3.75em;
 }
 
 .toolbar .toolbar-tray-vertical .toolbar-menu a {
-  padding-right: 4em; /* LTR */
-  padding-left: 2.75em; /* LTR */
-}
-[dir="rtl"] .toolbar .toolbar-tray-vertical .toolbar-menu a {
-  padding-right: 2.75em;
-  padding-left: 4em;
+  padding-inline: 2.75em 4em;
 }
 
 .toolbar .toolbar-bar .toolbar-tab > .toolbar-icon.is-active::before {
@@ -155,51 +136,45 @@
 
 @media only screen and (min-width: 16.5em) {
   .toolbar .toolbar-bar .toolbar-tab > .toolbar-icon {
-    width: 4em;
-    margin-right: 0;
-    margin-left: 0;
-    padding-right: 0;
-    padding-left: 0;
+    inline-size: 4em;
+    margin-inline: 0;
+    padding-inline: 0;
     text-indent: -9999px;
   }
   .toolbar .toolbar-bar .toolbar-tab > .toolbar-icon::before {
-    left: 0; /* LTR */
-    width: 100%;
+    inset-inline-start: 0; /* LTR */
+    inline-size: 100%;
     background-size: 42% auto;
   }
   .no-svg .toolbar .toolbar-bar .toolbar-tab > .toolbar-icon::before {
     background-size: auto auto;
   }
   [dir="rtl"] .toolbar .toolbar-bar .toolbar-tab > .toolbar-icon::before {
-    right: 0;
-    left: auto;
+    inset-inline: auto 0;
   }
 }
 
 @media only screen and (min-width: 36em) {
   .toolbar .toolbar-bar .toolbar-tab > .toolbar-icon {
-    width: auto;
-    padding-right: 1.3333em; /* LTR */
-    padding-left: 2.75em; /* LTR */
+    inline-size: auto;
+    padding-inline: 2.75em 1.3333em; /* LTR */ /* LTR */
     text-indent: 0;
     background-position: left center; /* LTR */
   }
   [dir="rtl"] .toolbar .toolbar-bar .toolbar-tab > .toolbar-icon {
-    padding-right: 2.75em;
-    padding-left: 1.3333em;
+    padding-inline: 1.3333em 2.75em;
     background-position: right center;
   }
   .toolbar .toolbar-bar .toolbar-tab > .toolbar-icon::before {
-    left: 0.6667em; /* LTR */
-    width: 1.538em;
+    inset-inline-start: 0.6667em; /* LTR */
+    inline-size: 1.538em;
     background-size: 100% auto;
   }
   .no-svg .toolbar .toolbar-bar .toolbar-tab > .toolbar-icon::before {
     background-size: auto auto;
   }
   [dir="rtl"] .toolbar .toolbar-bar .toolbar-tab > .toolbar-icon::before {
-    right: 0.6667em;
-    left: 0;
+    inset-inline: 0 0.6667em;
   }
 }
 
@@ -230,15 +205,14 @@
  * Handle.
  */
 .toolbar .toolbar-icon.toolbar-handle {
-  width: 4em;
+  inline-size: 4em;
   text-indent: -9999px;
 }
 .toolbar .toolbar-icon.toolbar-handle::before {
-  left: 1.6667em; /* LTR */
+  inset-inline-start: 1.6667em; /* LTR */
 }
 [dir="rtl"] .toolbar .toolbar-icon.toolbar-handle::before {
-  right: 1.6667em;
-  left: auto;
+  inset-inline: auto 1.6667em;
 }
 .toolbar .toolbar-icon.toolbar-handle::before {
   background-image: url(../../../../misc/icons/5181c6/chevron-disc-down.svg);
@@ -264,15 +238,15 @@
  * Orientation toggle.
  */
 .toolbar .toolbar-toggle-orientation button {
-  width: 39px;
-  height: 39px;
+  inline-size: 39px;
+  block-size: 39px;
   padding: 0;
   text-indent: -999em;
 }
 .toolbar .toolbar-toggle-orientation button::before {
-  right: 0;
-  left: 0;
-  margin: 0 auto;
+  inset-inline: 0;
+  margin-block: 0;
+  margin-inline: auto;
 }
 [dir="rtl"] .toolbar .toolbar-toggle-orientation .toolbar-icon {
   padding: 0;

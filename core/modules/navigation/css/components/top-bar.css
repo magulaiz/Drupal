@@ -23,7 +23,7 @@
     position: fixed;
     inset-block-start: 0;
     inset-inline-start: 0;
-    width: 100vw;
+    inline-size: 100vw;
     padding-block: var(--admin-toolbar-space-12);
     padding-inline: calc(var(--drupal-displace-offset-left, var(--admin-toolbar-sidebar-width)) + var(--admin-toolbar-space-32)) var(--admin-toolbar-space-32);
     box-shadow:
@@ -60,7 +60,7 @@
   align-items: center;
   justify-content: space-between;
   gap: var(--admin-toolbar-space-16);
-  width: 100%;
+  inline-size: 100%;
 }
 .top-bar__controls {
   display: none;

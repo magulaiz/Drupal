@@ -9,7 +9,7 @@
 
 .announcement.announcement--featured + .announcement.announcement--standard {
   padding-block-start: 1rem;
-  border-top: 1px solid #aaa;
+  border-block-start: 1px solid #aaa;
 }
 
 .announcements--view-all {

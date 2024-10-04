@@ -37,7 +37,7 @@
   list-style-image: none;
 }
 .toolbar .menu-item {
-  padding-top: 0;
+  padding-block-start: 0;
 }
 .toolbar .toolbar-bar .toolbar-tab,
 .toolbar .menu-item {
@@ -61,8 +61,8 @@
 }
 .toolbar-horizontal .toolbar-tray {
   position: fixed;
-  left: 0;
-  width: 100%;
+  inset-inline-start: 0;
+  inline-size: 100%;
 }
 /* Position the admin toolbar absolutely when the configured standard breakpoint
  * is active. The toolbar container, that contains the bar and the trays, is
@@ -70,14 +70,12 @@
  * screens, the components of the admin toolbar are positioned statically. */
 .toolbar-oriented .toolbar-bar {
   position: absolute;
-  top: 0;
-  right: 0;
-  left: 0;
+  inset-block-start: 0;
+  inset-inline: 0;
 }
 .toolbar-oriented .toolbar-tray {
   position: absolute;
-  right: 0;
-  left: 0;
+  inset-inline: 0;
 }
 
 /* Layer the bar just above the trays and above contextual link triggers. */
@@ -93,9 +91,9 @@
  * around the trays in order to provide a context for scrolling tray content
  * that is taller than the viewport. */
 .toolbar-tray-open.toolbar-fixed.toolbar-vertical .toolbar-oriented {
-  bottom: 0;
-  width: 240px;
-  width: 15rem;
+  inset-block-end: 0;
+  inline-size: 240px;
+  inline-size: 15rem;
 }
 
 /* Present the admin toolbar tabs horizontally as a default on user agents that
@@ -104,12 +102,7 @@
 .toolbar-loading.toolbar-horizontal .toolbar .toolbar-tray .toolbar-menu > li,
 .toolbar .toolbar-bar .toolbar-tab,
 .toolbar .toolbar-tray-horizontal li {
-  float: left; /* LTR */
-}
-[dir="rtl"] .toolbar-loading.toolbar-horizontal .toolbar .toolbar-tray .toolbar-menu > li,
-[dir="rtl"] .toolbar .toolbar-bar .toolbar-tab,
-[dir="rtl"] .toolbar .toolbar-tray-horizontal li {
-  float: right;
+  float: inline-start;
 }
 /* Present the admin toolbar tabs vertically by default on user agents that
  * that understand media queries. This will be the small screen default. */
@@ -129,23 +122,16 @@
 @media (min-width: 16.5em) {
   .toolbar .toolbar-bar .toolbar-tab,
   .toolbar .toolbar-tray-horizontal li {
-    float: left; /* LTR */
-  }
-  [dir="rtl"] .toolbar .toolbar-bar .toolbar-tab,
-  [dir="rtl"] .toolbar .toolbar-tray-horizontal li {
-    float: right;
+    float: inline-start;
   }
 }
 /* Present the admin toolbar tabs horizontally when the configured narrow
  * breakpoint is active. */
 .toolbar-oriented .toolbar-bar .toolbar-tab,
 .toolbar-oriented .toolbar-tray-horizontal li {
-  float: left; /* LTR */
+  float: inline-start;
 }
 [dir="rtl"] .toolbar-oriented .toolbar-bar .toolbar-tab,
-[dir="rtl"] .toolbar-oriented .toolbar-tray-horizontal li {
-  float: right;
-}
 
 /**
  * Toolbar tray.
@@ -156,16 +142,12 @@
 }
 .toolbar-oriented .toolbar-tray-vertical {
   position: absolute;
-  left: -100%; /* LTR */
-  width: 240px;
-  width: 15rem;
-}
-[dir="rtl"] .toolbar-oriented .toolbar-tray-vertical {
-  right: -100%;
-  left: auto;
+  inset-inline-start: -100%;
+  inline-size: 240px;
+  inline-size: 15rem;
 }
 .toolbar .toolbar-tray-vertical > .toolbar-lining {
-  min-height: 100%;
+  min-block-size: 100%;
 }
 /* Layer the links just above the toolbar-tray. */
 .toolbar .toolbar-bar .toolbar-tab > .toolbar-icon {
@@ -185,18 +167,17 @@
   position: fixed;
   overflow-x: hidden;
   overflow-y: auto;
-  height: 100%;
+  block-size: 100%;
 }
 .toolbar .toolbar-tray.is-active {
   display: block;
 }
 /* Bring the tray into the viewport. By default it is just off-screen. */
 .toolbar-oriented .toolbar-tray-vertical.is-active {
-  left: 0; /* LTR */
+  inset-inline-start: 0; /* LTR */
 }
 [dir="rtl"] .toolbar-oriented .toolbar-tray-vertical.is-active {
-  right: 0;
-  left: auto;
+  inset-inline: auto 0;
 }
 /* When the configured standard breakpoint is active, the tray appears to push
  * the page content away from the edge of the viewport. */
@@ -225,20 +206,15 @@
 }
 .toolbar-oriented .toolbar-tray-horizontal .toolbar-toggle-orientation {
   position: absolute;
-  top: auto;
-  right: 0; /* LTR */
-  bottom: 0;
-}
-[dir="rtl"] .toolbar-oriented .toolbar-tray-horizontal .toolbar-toggle-orientation {
-  right: auto;
-  left: 0;
+  inset-block: auto 0;
+  inset-inline-end: 0;
 }
 .toolbar-oriented .toolbar-tray-vertical .toolbar-toggle-orientation {
-  float: right; /* LTR */
-  width: 100%;
+  float: inline-end; /* LTR */
+  inline-size: 100%;
 }
 [dir="rtl"] .toolbar-oriented .toolbar-tray-vertical .toolbar-toggle-orientation {
-  float: left;
+  float: inline-start;
 }
 
 /**
@@ -253,19 +229,18 @@
 
 /* Anti flicker styling. */
 .toolbar-anti-flicker.toolbar-loading.toolbar-fixed body {
-  padding-top: 2.4375rem;
+  padding-block-start: 2.4375rem;
 }
 .toolbar-anti-flicker.toolbar-loading.toolbar-fixed.toolbar-horizontal.toolbar-tray-open body {
-  padding-top: 4.91331rem;
+  padding-block-start: 4.91331rem;
 }
 
 .toolbar-anti-flicker.toolbar-loading.toolbar-vertical.toolbar-tray-open .toolbar-tray {
   position: fixed;
   z-index: -1;
-  top: 2.4375rem;
-  bottom: 0;
+  inset-block: 2.4375rem 0;
   display: block;
-  width: 15rem;
+  inline-size: 15rem;
   inset-inline-start: 0;
 }
 .toolbar-tray-lazy-placeholder-link {
@@ -277,19 +252,18 @@
   margin-inline-start: -15rem;
 }
 .toolbar .toolbar-tray-vertical > .toolbar-lining::before {
-  width: 100%;
+  inline-size: 100%;
 }
 .toolbar-oriented .toolbar-tray-vertical > .toolbar-lining::before {
   position: fixed;
   z-index: -1;
-  top: 0;
-  bottom: 0;
+  inset-block: 0;
   display: block;
-  width: 15rem;
+  inline-size: 15rem;
   content: "";
   inset-inline-start: 0;
 }
 
 .toolbar-anti-flicker.toolbar-vertical.toolbar-tray-open .menu-item + .menu-item {
-  border-top: 1px solid #ddd;
+  border-block-start: 1px solid #ddd;
 }

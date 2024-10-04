@@ -17,7 +17,7 @@
 .table-file-multiple-widget .tabledrag-cell-content {
   position: relative;
   display: block;
-  height: auto;
+  block-size: auto;
 }
 
 .table-file-multiple-widget .tabledrag-cell-content > * {
@@ -30,7 +30,7 @@
 
 .table-file-multiple-widget .tabledrag-handle,
 .table-file-multiple-widget .tabledrag-changed {
-  float: left;
+  float: inline-start;
 }
 
 .table-file-multiple-widget .tabledrag-changed {
@@ -38,7 +38,7 @@
 }
 
 .table-file-multiple-widget td {
-  height: calc(var(--space-m) * 3);
+  block-size: calc(var(--space-m) * 3);
   padding-block: var(--space-m);
 }
 
@@ -52,7 +52,7 @@
 }
 
 .table-file-multiple-widget th {
-  height: calc(var(--space-m) * 2);
+  block-size: calc(var(--space-m) * 2);
   color: var(--color-gray-800);
   background: var(--color-gray-050);
   font-size: var(--font-size-s);
@@ -68,7 +68,7 @@
 
 [dir="rtl"] .table-file-multiple-widget .tabledrag-handle,
 [dir="rtl"] .table-file-multiple-widget .tabledrag-changed {
-  float: right;
+  float: inline-end;
 }
 
 .no-touchevents .table-file-multiple-widget .checkbox .form-type--boolean {
@@ -80,7 +80,7 @@
  */
 
 .file-operations-cell {
-  width: 1px;
+  inline-size: 1px;
   white-space: nowrap; /* Don't let ajax-progress be broken into a new line. */
 }
 

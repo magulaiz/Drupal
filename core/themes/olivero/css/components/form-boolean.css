@@ -13,8 +13,8 @@
 input[type="checkbox"],
 input[type="radio"] {
   display: inline-block;
-  width: var(--sp1-5);
-  height: var(--sp1-5);
+  inline-size: var(--sp1-5);
+  block-size: var(--sp1-5);
   margin: 0;
   vertical-align: middle;
   border: 1px solid var(--color--gray-60);

@@ -25,7 +25,7 @@
 
 .card-list__item {
   box-sizing: border-box;
-  margin-bottom: var(--card-list-spacing);
+  margin-block-end: var(--card-list-spacing);
 }
 
 .card-list--two-cols .card-list__item,
@@ -37,23 +37,21 @@
 @media screen and (min-width: 36.75rem) {
   .card-list--four-cols .card-list__item {
     flex-basis: var(--cards-two-cols-width);
-    max-width: var(--cards-two-cols-width);
+    max-inline-size: var(--cards-two-cols-width);
   }
 
   .card-list--four-cols .card-list__item {
-    margin-right: var(--card-list-spacing);
+    margin-inline-end: var(--card-list-spacing);
   }
   [dir="rtl"] .card-list--four-cols .card-list__item {
-    margin-right: 0;
-    margin-left: var(--card-list-spacing);
+    margin-inline: var(--card-list-spacing) 0;
   }
 
   .card-list--four-cols .card-list__item:nth-child(even) {
-    margin-right: 0;
+    margin-inline-end: 0;
   }
   [dir="rtl"] .card-list--four-cols .card-list__item:nth-child(even) {
-    margin-right: 0;
-    margin-left: 0;
+    margin-inline: 0;
   }
 }
 
@@ -61,80 +59,72 @@
 @media screen and (max-width: 53.75rem) {
   .toolbar-tray-open.toolbar-vertical.toolbar-fixed .card-list--four-cols .card-list__item {
     flex-basis: 100%;
-    max-width: 100%;
-    margin-right: 0;
-    margin-left: 0;
+    max-inline-size: 100%;
+    margin-inline: 0;
   }
 }
 
 @media screen and (min-width: 70rem) {
   .card-list--four-cols .card-list__item {
     flex-basis: var(--cards-three-cols-width);
-    max-width: var(--cards-three-cols-width);
+    max-inline-size: var(--cards-three-cols-width);
   }
 
   .card-list--four-cols .card-list__item:nth-child(even) {
-    margin-right: var(--card-list-spacing);
+    margin-inline-end: var(--card-list-spacing);
   }
   [dir="rtl"] .card-list--four-cols .card-list__item:nth-child(even) {
-    margin-right: 0;
-    margin-left: var(--card-list-spacing);
+    margin-inline: var(--card-list-spacing) 0;
   }
 
   .card-list--four-cols .card-list__item:nth-child(3n) {
-    margin-right: 0;
+    margin-inline-end: 0;
   }
   [dir="rtl"] .card-list--four-cols .card-list__item:nth-child(3n) {
-    margin-right: 0;
-    margin-left: 0;
+    margin-inline: 0;
   }
 }
 
 @media screen and (min-width: 85.375rem) {
   .card-list--two-cols .card-list__item {
     flex-basis: var(--cards-two-cols-width);
-    max-width: var(--cards-two-cols-width);
-    margin-right: var(--card-list-spacing);
+    max-inline-size: var(--cards-two-cols-width);
+    margin-inline-end: var(--card-list-spacing);
   }
   [dir="rtl"] .card-list--two-cols .card-list__item {
-    margin-right: 0;
-    margin-left: var(--card-list-spacing);
+    margin-inline: var(--card-list-spacing) 0;
   }
 
   .card-list--two-cols .card-list__item:nth-child(even) {
-    margin-right: 0;
+    margin-inline-end: 0;
   }
   [dir="rtl"] .card-list--two-cols .card-list__item:nth-child(even) {
-    margin-right: 0;
-    margin-left: 0;
+    margin-inline: 0;
   }
 
   .card-list--four-cols .card-list__item {
     flex-basis: var(--cards-four-cols-width);
-    max-width: var(--cards-four-cols-width);
+    max-inline-size: var(--cards-four-cols-width);
   }
 
   .card-list--four-cols .card-list__item:nth-child(even) {
-    margin-right: var(--card-list-spacing);
+    margin-inline-end: var(--card-list-spacing);
   }
   [dir="rtl"] .card-list--four-cols .card-list__item:nth-child(even) {
-    margin-right: 0;
-    margin-left: var(--card-list-spacing);
+    margin-inline: var(--card-list-spacing) 0;
   }
 
   .card-list--four-cols .card-list__item:nth-child(3n) {
-    margin-right: var(--card-list-spacing);
+    margin-inline-end: var(--card-list-spacing);
   }
   [dir="rtl"] .card-list--four-cols .card-list__item:nth-child(3n) {
-    margin-right: 0;
-    margin-left: var(--card-list-spacing);
+    margin-inline: var(--card-list-spacing) 0;
   }
 
   .card-list--four-cols .card-list__item:nth-child(4n) {
-    margin-right: 0;
+    margin-inline-end: 0;
   }
   [dir="rtl"] .card-list--four-cols .card-list__item:nth-child(4n) {
-    margin-right: 0;
-    margin-left: 0;
+    margin-inline: 0;
   }
 }

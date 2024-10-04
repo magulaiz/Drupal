@@ -1,28 +1,29 @@
 .layout-builder {
-  padding: 1.5em 1.5em 0.5em;
+  padding-block: 1.5em 0.5em;
+  padding-inline: 1.5em;
   border: 3px solid #2f91da;
   background-color: #fff;
 }
 
 .layout-builder__add-section {
-  width: 100%;
-  margin-bottom: 1.5em;
-  padding: 1.5em 0;
+  inline-size: 100%;
+  margin-block-end: 1.5em;
+  padding-block: 1.5em;
+  padding-inline: 0;
   text-align: center;
   outline: 2px dashed #979797;
   background-color: #f7f7f7;
 }
 
 .layout-builder__link--add {
-  padding-left: 1.3em; /* LTR */
+  padding-inline-start: 1.3em; /* LTR */
   color: #686868;
-  border-bottom: none;
+  border-block-end: none;
   background: url(../../../../misc/icons/787878/plus.svg) transparent center left / 1em no-repeat; /* LTR */
 }
 
 [dir="rtl"] .layout-builder__link--add {
-  padding-right: 1.3em;
-  padding-left: 0;
+  padding-inline: 0 1.3em;
   background-position-x: right;
 }
 
@@ -30,11 +31,11 @@
 .layout-builder__link--add:active,
 .layout-builder__link--add:focus {
   color: #000;
-  border-bottom-style: none;
+  border-block-end-style: none;
 }
 
 .layout-builder__section {
-  margin-bottom: 1.5em;
+  margin-block-end: 1.5em;
 }
 
 .layout-builder__section .ui-sortable-helper {
@@ -54,7 +55,8 @@
 }
 
 .layout-builder__add-block {
-  padding: 1.5em 0;
+  padding-block: 1.5em;
+  padding-inline: 0;
   text-align: center;
   background-color: #eff6fc;
 }
@@ -64,10 +66,9 @@
   z-index: 2;
   display: inline-block;
   box-sizing: border-box;
-  width: 26px;
-  height: 26px;
-  margin-right: 6px; /* LTR */
-  margin-left: -10px; /* LTR */
+  inline-size: 26px;
+  block-size: 26px;
+  margin-inline: -10px 6px; /* LTR */ /* LTR */
   padding: 0;
   white-space: nowrap;
   text-indent: -9999px;
@@ -78,8 +79,7 @@
 }
 
 [dir="rtl"] .layout-builder__link--remove {
-  margin-right: -10px;
-  margin-left: 6px;
+  margin-inline: 6px -10px;
 }
 
 .layout-builder__link--remove:hover {
@@ -115,22 +115,23 @@
 
 .layout-builder--content-preview-disabled .layout-builder-block {
   margin: 0;
-  border-bottom: 2px dashed #979797;
+  border-block-end: 2px dashed #979797;
 }
 
 #drupal-off-canvas .layout-selection li {
   display: block;
-  padding-bottom: 1em;
+  padding-block-end: 1em;
 }
 
 #drupal-off-canvas .layout-selection li a {
   display: block;
-  padding-top: 0.55em;
+  padding-block-start: 0.55em;
 }
 
 #drupal-off-canvas .inline-block-create-button,
 #drupal-off-canvas .inline-block-list__item {
-  margin: 0 -20px;
+  margin-block: 0;
+  margin-inline: -20px;
   background-color: #444;
 }
 
@@ -140,16 +141,17 @@
 }
 
 #drupal-off-canvas .inline-block-list {
-  margin-bottom: 15px;
+  margin-block-end: 15px;
 }
 
 #drupal-off-canvas .inline-block-list__item {
   display: block;
-  padding: 15px 0 15px 25px;
+  padding-block: 15px;
+  padding-inline: 25px 0;
 }
 
 .layout-builder__add-section.is-layout-builder-highlighted {
-  margin-bottom: calc(1.5em - 8px);
+  margin-block-end: calc(1.5em - 8px);
   outline: none;
 }
 .layout-builder__layout.is-layout-builder-highlighted,
@@ -157,7 +159,8 @@
 .layout-builder__add-block.is-layout-builder-highlighted {
   position: relative;
   z-index: 1;
-  margin: -4px -2px;
+  margin-block: -4px;
+  margin-inline: -2px;
 }
 .layout-builder__add-block.is-layout-builder-highlighted,
 .layout-builder__add-section.is-layout-builder-highlighted,
@@ -169,8 +172,8 @@
 
 /* Highlight the active block in the Move Block dialog. */
 #drupal-off-canvas .layout-builder-components-table__block-label--current {
-  padding-left: 17px;
-  border-left: solid 5px;
+  padding-inline-start: 17px;
+  border-inline-start: solid 5px;
 }
 
 /**
@@ -199,7 +202,7 @@
 .layout__region-info {
   padding: 0.5em;
   text-align: center;
-  border-bottom: 2px dashed #979797;
+  border-block-end: 2px dashed #979797;
 }
 
 /**

@@ -20,10 +20,11 @@
 [type="url"],
 [type="week"],
 textarea {
-  width: 100%;
-  max-width: 100%;
-  min-height: var(--sp3);
-  padding: 0 var(--sp);
+  inline-size: 100%;
+  max-inline-size: 100%;
+  min-block-size: var(--sp3);
+  padding-block: 0;
+  padding-inline: var(--sp);
   color: var(--color-text-neutral-loud);
   border: 1px solid var(--color--gray-60);
   border-radius: var(--border-radius);
@@ -62,11 +63,11 @@ textarea {
   }
 
   &.form-element--small {
-    min-height: var(--sp2-5);
+    min-block-size: var(--sp2-5);
   }
 
   @media (--sm) {
-    width: auto;
+    inline-size: auto;
   }
 }
 
@@ -80,11 +81,11 @@ textarea {
 }
 
 [type="file"] {
-  height: auto;
+  block-size: auto;
   padding-block: var(--sp0-75);
 }
 
 [type="color"] {
-  width: var(--sp3);
+  inline-size: var(--sp3);
   padding: 0;
 }

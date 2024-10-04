@@ -4,30 +4,28 @@
  */
 
 .language-content-settings-form .bundle {
-  width: 24%;
+  inline-size: 24%;
 }
 .language-content-settings-form .field {
-  width: 24%;
-  padding-left: 3em; /* LTR */
+  inline-size: 24%;
+  padding-inline-start: 3em; /* LTR */
 }
 [dir="rtl"] .language-content-settings-form .field {
-  padding-right: 3em;
-  padding-left: 1em;
+  padding-inline: 1em 3em;
 }
 .language-content-settings-form .column {
-  padding-left: 5em; /* LTR */
+  padding-inline-start: 5em; /* LTR */
 }
 [dir="rtl"] .language-content-settings-form .column {
-  padding-right: 5em;
-  padding-left: 1em;
+  padding-inline: 1em 5em;
 }
 .language-content-settings-form .field label,
 .language-content-settings-form .column label {
   font-weight: normal;
 }
 .language-content-settings-form .translatable {
-  width: 1%;
+  inline-size: 1%;
 }
 .language-content-settings-form .operations {
-  width: 75%;
+  inline-size: 75%;
 }

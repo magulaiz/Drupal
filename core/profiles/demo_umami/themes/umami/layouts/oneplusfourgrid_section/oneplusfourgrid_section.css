@@ -22,13 +22,11 @@
 @media screen and (min-width: 60rem) {
   /* 960px */
   .layout--oneplusfourgrid-section {
-    margin-right: -1.5%;
-    margin-left: -1.5%;
+    margin-inline: -1.5%;
   }
   .layout--oneplusfourgrid-section > .layout__region--first {
     flex: 0 1 47%;
-    margin-right: 1.5%;
-    margin-left: 1.5%;
+    margin-inline: 1.5%;
   }
   .layout--oneplusfourgrid-section > .layout__four-grid-group {
     flex: 0 1 50%;
@@ -41,7 +39,6 @@
   .layout__four-grid-group > .layout__region--fourth,
   .layout__four-grid-group > .layout__region--fifth {
     flex: 0 1 44%;
-    margin-right: 3%;
-    margin-left: 3%;
+    margin-inline: 3%;
   }
 }

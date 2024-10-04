@@ -1,13 +1,13 @@
 .display-mode-table th:first-child {
-  width: 30%;
+  inline-size: 30%;
 }
 .display-mode-table th:nth-child(2) {
-  width: 50%;
+  inline-size: 50%;
 }
 .display-mode-table th:last-child {
-  width: 20%;
+  inline-size: 20%;
 }
 .display-mode-table td {
-  max-width: 50px;
+  max-inline-size: 50px;
   word-wrap: break-word;
 }

@@ -16,26 +16,25 @@
 @media screen and (min-width: 780px), (orientation: landscape) and (min-device-height: 780px) {
   .layout-region-node-main,
   .layout-region-node-footer {
-    float: left; /* LTR */
+    float: inline-start; /* LTR */
     box-sizing: border-box;
-    width: 65%;
-    padding-right: 2em; /* LTR */
+    inline-size: 65%;
+    padding-inline-end: 2em; /* LTR */
   }
 
   [dir="rtl"] .layout-region-node-main,
   [dir="rtl"] .layout-region-node-footer {
-    float: right;
-    padding-right: 0;
-    padding-left: 2em;
+    float: inline-end;
+    padding-inline: 2em 0;
   }
 
   .layout-region-node-secondary {
-    float: right; /* LTR */
-    width: 35%;
+    float: inline-end; /* LTR */
+    inline-size: 35%;
   }
 
   [dir="rtl"] .layout-region-node-secondary {
-    float: left;
+    float: inline-start;
   }
 
   /* @todo File an issue to add a standard class to all text-like inputs */
@@ -49,8 +48,8 @@
   .layout-region-node-secondary .form-color,
   .layout-region-node-secondary textarea {
     box-sizing: border-box;
-    width: 100%;
-    max-width: 100%;
+    inline-size: 100%;
+    max-inline-size: 100%;
   }
 }
 
@@ -65,7 +64,7 @@
   .toolbar-vertical.toolbar-tray-open .layout-region-node-footer,
   .toolbar-vertical.toolbar-tray-open .layout-region-node-secondary {
     float: none;
-    width: auto;
-    padding-right: 0;
+    inline-size: auto;
+    padding-inline-end: 0;
   }
 }

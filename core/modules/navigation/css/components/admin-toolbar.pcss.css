@@ -29,7 +29,7 @@ body {
     transition: transform var(--admin-toolbar-transition);
 
     @media (--admin-toolbar-desktop) {
-      transition: width var(--admin-toolbar-transition);
+      transition: inline-size var(--admin-toolbar-transition);
 
       ~ .dialog-off-canvas-main-canvas {
         transition: margin-inline-start var(--admin-toolbar-transition);
@@ -49,7 +49,7 @@ body {
   inset-inline-start: 0;
 
   @media (--admin-toolbar-desktop) {
-    width: var(--admin-toolbar-sidebar-width);
+    inline-size: var(--admin-toolbar-sidebar-width);
   }
 }
 
@@ -63,14 +63,14 @@ body {
   z-index: var(--admin-toolbar-z-index);
   display: flex;
   flex-direction: column;
-  height: 100vh;
+  block-size: 100vh;
   transform: translateX(-100%);
   background-color: var(--admin-toolbar-color-white);
   font-family: var(--admin-toolbar-font-family);
   inline-size: calc(var(--admin-toolbar-sidebar-width) + 1px);
 
   [dir="rtl"] & {
-    right: 0;
+    inset-inline-end: 0;
     transform: translateX(100%);
 
     @media (--admin-toolbar-desktop) {
@@ -97,7 +97,7 @@ body {
   }
 
   @media only screen and (max-height: 300px) {
-    min-height: 20rem;
+    min-block-size: 20rem;
   }
 }
 
@@ -138,8 +138,8 @@ body {
   display: none;
   align-items: center;
   justify-content: center;
-  width: calc(2.25 * var(--admin-toolbar-rem));
-  height: calc(2.25 * var(--admin-toolbar-rem));
+  inline-size: calc(2.25 * var(--admin-toolbar-rem));
+  block-size: calc(2.25 * var(--admin-toolbar-rem));
   margin-inline-start: calc(0.125 * var(--admin-toolbar-rem));
   cursor: pointer;
   color: var(--admin-toolbar-color-gray-500);
@@ -154,8 +154,8 @@ body {
   &::before {
     display: block;
     flex-shrink: 0;
-    width: calc(1 * var(--admin-toolbar-rem));
-    height: calc(1 * var(--admin-toolbar-rem));
+    inline-size: calc(1 * var(--admin-toolbar-rem));
+    block-size: calc(1 * var(--admin-toolbar-rem));
     content: "";
     transition:
       opacity var(--admin-toolbar-transition),
@@ -244,7 +244,7 @@ body {
 
   & img {
     display: block;
-    max-width: var(--admin-toolbar-space-40);
+    max-inline-size: var(--admin-toolbar-space-40);
   }
 }
 
@@ -255,7 +255,7 @@ body {
   display: flex;
   overflow-y: auto;
   flex-direction: column;
-  height: 100%;
+  block-size: 100%;
   background: linear-gradient(var(--admin-toolbar-color-white) 30%, var(--admin-toolbar-color-white)), radial-gradient(farthest-side at 50% 0, var(--admin-toolbar-color-shadow-15), var(--admin-toolbar-color-shadow-0));
   background-color: var(--admin-toolbar-color-white);
   background-repeat: no-repeat;
@@ -323,7 +323,7 @@ body {
     --admin-toolbar-z-index-footer: -1;
 
     position: sticky;
-    bottom: 0;
+    inset-block-end: 0;
     background-color: var(--admin-toolbar-color-white);
   }
 }
@@ -356,8 +356,8 @@ body {
   inset-block-start: 0;
   inset-inline-start: 0;
   display: none;
-  width: 100vw;
-  height: 100vh;
+  inline-size: 100vw;
+  block-size: 100vh;
   background-color: rgba(0, 0, 0, 0.14);
 
   :where([data-admin-toolbar="expanded"]) & {

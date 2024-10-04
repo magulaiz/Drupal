@@ -4,15 +4,17 @@
  */
 
 .layout-builder {
-  padding: 1.5em 1.5em 0.5em;
+  padding-block: 1.5em 0.5em;
+  padding-inline: 1.5em;
   border: 3px solid #2f91da;
   background-color: #fff;
 }
 
 .layout-builder__add-section {
-  width: 100%;
-  margin-bottom: 1.5em;
-  padding: 1.5em 0;
+  inline-size: 100%;
+  margin-block-end: 1.5em;
+  padding-block: 1.5em;
+  padding-inline: 0;
   text-align: center;
   outline: 2px dashed #979797;
   background-color: #f7f7f7;
@@ -21,7 +23,7 @@
 .layout-builder__link--add {
   padding-inline-start: 1.3em;
   color: #686868;
-  border-bottom: none;
+  border-block-end: none;
   background: url(../../../misc/icons/787878/plus.svg) transparent center left / 1em no-repeat; /* LTR */
 
   &:dir(rtl) {
@@ -31,12 +33,12 @@
   &:hover,
   &:active {
     color: #000;
-    border-bottom-style: none;
+    border-block-end-style: none;
   }
 }
 
 .layout-builder__section {
-  margin-bottom: 1.5em;
+  margin-block-end: 1.5em;
 
   & .ui-sortable-helper {
     outline: 2px solid #f7f7f7;
@@ -56,7 +58,8 @@
 }
 
 .layout-builder__add-block {
-  padding: 1.5em 0;
+  padding-block: 1.5em;
+  padding-inline: 0;
   text-align: center;
   background-color: #eff6fc;
 }
@@ -66,8 +69,8 @@
   z-index: 2;
   display: inline-block;
   box-sizing: border-box;
-  width: 26px;
-  height: 26px;
+  inline-size: 26px;
+  block-size: 26px;
   margin-inline: -10px 6px;
   padding: 0;
   white-space: nowrap;
@@ -93,7 +96,7 @@
 
   @nest .layout-builder--content-preview-disabled & {
     margin: 0;
-    border-bottom: 2px dashed #979797;
+    border-block-end: 2px dashed #979797;
   }
 }
 
@@ -119,7 +122,7 @@
 }
 
 .layout-builder__add-section.is-layout-builder-highlighted {
-  margin-bottom: calc(1.5em - 8px);
+  margin-block-end: calc(1.5em - 8px);
   outline: none;
 }
 
@@ -128,7 +131,8 @@
 .layout-builder__add-block.is-layout-builder-highlighted {
   position: relative;
   z-index: 1;
-  margin: -4px -2px;
+  margin-block: -4px;
+  margin-inline: -2px;
 }
 
 .layout-builder__add-block.is-layout-builder-highlighted,
@@ -155,7 +159,7 @@
 .layout__region-info {
   padding: 0.5em;
   text-align: center;
-  border-bottom: 2px dashed #979797;
+  border-block-end: 2px dashed #979797;
 }
 
 /**

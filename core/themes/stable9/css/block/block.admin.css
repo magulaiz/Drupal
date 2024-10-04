@@ -1,17 +1,15 @@
 /* Block listing page */
 .region-title__action {
   display: inline-block;
-  margin-left: 1em; /* LTR */
+  margin-inline-start: 1em; /* LTR */
 }
 [dir="rtl"] .region-title__action {
-  margin-right: 1em;
-  margin-left: 0;
+  margin-inline: 0 1em;
 }
 
 /* Block demo mode */
 .block-region {
-  margin-top: 4px;
-  margin-bottom: 4px;
+  margin-block: 4px;
   padding: 3px;
   color: #000;
   background-color: #ff6;
@@ -21,8 +19,9 @@ a.block-demo-backlink:link,
 a.block-demo-backlink:visited {
   position: fixed;
   z-index: 499;
-  left: 20px; /* LTR */
-  padding: 5px 10px;
+  inset-inline-start: 20px; /* LTR */
+  padding-block: 5px;
+  padding-inline: 10px;
   color: #000;
   border-radius: 0 0 10px 10px;
   background-color: #b4d7f0;

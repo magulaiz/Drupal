@@ -26,7 +26,8 @@
 
 .breadcrumb__item + .breadcrumb__item::before {
   display: inline-block;
-  padding: 0 0.75rem;
+  padding-block: 0;
+  padding-inline: 0.75rem;
   content: url(../../images/icons/currentColor/arrow-breadcrumb.svg);
 
   @nest [dir="rtl"] & {
@@ -34,8 +35,8 @@
   }
 
   @media (forced-colors: active) {
-    width: 5px; /* Width and height of the SVG. */
-    height: 8px;
+    inline-size: 5px; /* Width and height of the SVG. */
+    block-size: 8px;
     content: "";
     background-color: canvastext;
     mask-image: url(../../images/icons/currentColor/arrow-breadcrumb.svg);

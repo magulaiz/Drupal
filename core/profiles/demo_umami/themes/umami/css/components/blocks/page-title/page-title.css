@@ -8,10 +8,12 @@
  */
 
 .is-front .block-page-title-block {
-  margin: 1rem 0;
+  margin-block: 1rem;
+  margin-inline: 0;
 }
 
 .block-page-title-block {
-  margin: 1rem 0 3rem;
+  margin-block: 1rem 3rem;
+  margin-inline: 0;
   text-align: center;
 }

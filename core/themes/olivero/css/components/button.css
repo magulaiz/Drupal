@@ -12,7 +12,7 @@
 
 .button {
   display: inline-block;
-  height: var(--sp3);
+  block-size: var(--sp3);
   margin-block: var(--sp1);
   margin-inline-start: 0;
   margin-inline-end: var(--sp1);
@@ -86,7 +86,7 @@
 }
 
 .button--small {
-  height: var(--sp2-5);
+  block-size: var(--sp2-5);
   padding-block: calc((var(--sp2-5) - var(--line-height-s)) / 2);
   padding-inline: var(--sp);
   font-size: var(--font-size-base);
@@ -124,8 +124,8 @@
 
 .button--icon-back::before {
   display: block;
-  width: 0.5em;
-  height: 0.5em;
+  inline-size: 0.5em;
+  block-size: 0.5em;
   margin-inline-end: 0.5em;
   content: "";
   transform: rotate(45deg); /* LTR */

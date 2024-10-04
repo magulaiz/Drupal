@@ -3,19 +3,20 @@
  * This file is used to style the content moderation form.
  */
 .entity-moderation-form {
-  padding-top: 0.5em;
-  padding-right: 1em;
+  padding-block-start: 0.5em;
+  padding-inline-end: 1em;
 }
 .entity-moderation-form .form-item,
 .entity-moderation-form .form-submit {
-  margin: 0.5em 0;
+  margin-block: 0.5em;
+  margin-inline: 0;
 }
 .entity-moderation-form__item .form-text {
-  width: 100%;
+  inline-size: 100%;
 }
 .entity-moderation-form__item:last-child {
-  width: 100%;
+  inline-size: 100%;
 }
 .entity-moderation-form input[type="submit"] {
-  margin-bottom: 1em;
+  margin-block-end: 1em;
 }

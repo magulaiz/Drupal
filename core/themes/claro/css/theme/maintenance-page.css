@@ -13,7 +13,7 @@
  */
 
 .maintenance-page {
-  min-height: 100%;
+  min-block-size: 100%;
   background-color: var(--color-gray-100);
 }
 
@@ -27,20 +27,20 @@ h3 {
 }
 
 .site-name {
-  margin-top: var(--space-s);
+  margin-block-start: var(--space-s);
   word-wrap: break-word;
   color: var(--color-gray);
   font-size: var(--font-size-xl);
 }
 
 .site-name--subtle {
-  margin-top: var(--space-s);
+  margin-block-start: var(--space-s);
   color: var(--color-gray-800);
   font-size: var(--font-size-h4);
 }
 
 .title {
-  margin-top: 0;
+  margin-block-start: 0;
   font-size: var(--font-size-h3);
 }
 
@@ -50,11 +50,11 @@ h3 {
 
 .site-name,
 .title {
-  margin-bottom: var(--space-l);
+  margin-block-end: var(--space-l);
 }
 
 .content {
-  margin-bottom: var(--space-m);
+  margin-block-end: var(--space-m);
   color: var(--color-gray);
 }
 
@@ -65,7 +65,7 @@ h3 {
 .site-name,
 .title,
 .content {
-  max-width: 34rem;
+  max-inline-size: 34rem;
 }
 
 /**
@@ -80,14 +80,10 @@ h3 {
   }
   .step-indicator {
     position: absolute;
-    top: 0.2em;
-    right: 0.5em; /* LTR */
+    inset-block-start: 0.2em;
+    inset-inline-end: 0.5em;
     display: block;
     font-size: 1.385em;
-  }
-  [dir="rtl"] .step-indicator {
-    right: auto;
-    left: 0.5em;
   }
 }
 
@@ -97,34 +93,29 @@ h3 {
     display: none;
   }
   .task-list {
-    margin-left: -3rem; /* LTR */
+    margin-inline-start: -3rem;
     padding: 0;
     list-style-type: none;
     counter-reset: steps;
     font-weight: bold;
   }
-  [dir="rtl"] .task-list {
-    margin-right: -3rem;
-    margin-left: 0;
-  }
   .task-list li {
-    padding: 1rem 1rem 1rem 3rem; /* LTR */
+    padding-block: 1rem;
+    padding-inline: 3rem 1rem;
     counter-increment: steps;
     color: var(--color-gray);
     border-radius: 0 2rem 2rem 0 /* LTR */;
     font-weight: 500;
   }
   [dir="rtl"] .task-list li {
-    padding: 1rem 3rem 1rem 1rem;
     border-radius: 2rem 0 0 2rem;
   }
   .task-list li::before {
-    margin-right: 0.375rem;
+    margin-inline-end: 0.375rem;
     content: counter(steps);
   }
   [dir="rtl"] .task-list li::before {
-    margin-right: 0;
-    margin-left: 0.375rem;
+    margin-inline: 0.375rem 0;
   }
 
   .task-list .is-active {
@@ -143,9 +134,8 @@ h3 {
  */
 
 .layout-container {
-  width: auto;
-  margin-right: 1.25em;
-  margin-left: 1.25em;
+  inline-size: auto;
+  margin-inline: 1.25em;
   padding: var(--space-xl);
   border: 1px solid transparent; /* Required for forced-colors mode. */
   border-radius: 0.5rem;
@@ -164,7 +154,8 @@ h3 {
   /* 768px */
   .layout-container {
     margin: 1.25em;
-    padding: var(--space-m) var(--space-l);
+    padding-block: var(--space-m);
+    padding-inline: var(--space-l);
   }
 
   .layout-sidebar-first {
@@ -180,55 +171,57 @@ h3 {
   .install-page,
   .maintenance-page {
     display: table-cell;
-    padding: 1em 0;
+    padding-block: 1em;
+    padding-inline: 0;
     vertical-align: middle;
   }
   html,
   .install-page,
   .maintenance-page {
-    width: 100%;
-    height: 100%;
+    inline-size: 100%;
+    block-size: 100%;
     margin: 0;
   }
   /**
    * Needed to override rules from system-admin--layout.pcss.
    */
   .layout-container.layout-container.layout-container {
-    width: 75%;
-    max-width: 58.75rem;
-    margin: 0 auto;
+    inline-size: 75%;
+    max-inline-size: 58.75rem;
+    margin-block: 0;
+    margin-inline: auto;
   }
   ul {
-    margin: 0.25em 0;
+    margin-block: 0.25em;
+    margin-inline: 0;
     padding: 0.9375rem;
   }
   [dir="rtl"] ul {
-    margin-right: 0; /* Overrides default [dir="rtl"] ul margin. */
+    margin-inline-end: 0; /* Overrides default [dir="rtl"] ul margin. */
   }
 
   /* Positioning sidebar & content. */
   .layout-sidebar-first {
-    float: left; /* LTR */
-    width: 35%;
+    float: inline-start; /* LTR */
+    inline-size: 35%;
   }
   [dir="rtl"] .layout-sidebar-first {
-    float: right;
+    float: inline-end;
   }
 
   .main-content {
-    float: left; /* LTR */
+    float: inline-start; /* LTR */
     clear: none;
     box-sizing: border-box;
-    width: 65%;
-    padding-left: 3.85em; /* LTR */
+    inline-size: 65%;
+    padding-inline-start: 3.85em; /* LTR */
   }
   [dir="rtl"] .main-content {
-    float: right;
-    padding-right: 3.85em;
-    padding-left: 0;
+    float: inline-end;
+    padding-inline: 0 3.85em;
   }
   .main-content--attached {
-    padding-left: 0;
+    padding-inline-start: 0;
   }
 }
 
@@ -238,19 +231,18 @@ h3 {
 
 .system-status-report__status-title {
   float: none;
-  width: 100%;
+  inline-size: 100%;
 }
 
 .system-status-report__entry__value {
   float: none;
-  width: 100%;
-  padding-top: 0;
-  padding-left: 3em; /* LTR */
+  inline-size: 100%;
+  padding-block-start: 0;
+  padding-inline-start: 3em; /* LTR */
 }
 
 [dir="rtl"] .system-status-report__entry__value {
-  padding-right: 3em;
-  padding-left: 1em;
+  padding-inline: 1em 3em;
 }
 
 /**
@@ -259,7 +251,7 @@ h3 {
 
 .update-results {
   overflow: auto; /* Required to prevent text clipping. */
-  margin-top: 0;
+  margin-block-start: 0;
   padding: var(--space-s);
   border: 1px solid var(--color-gray-100);
   border-radius: var(--base-border-radius);
@@ -267,7 +259,7 @@ h3 {
 }
 
 .update-results > h3:first-child {
-  margin-top: 0;
+  margin-block-start: 0;
 }
 
 .update-results .failure strong {
@@ -279,5 +271,5 @@ h3 {
 }
 
 .item-list > ul {
-  margin-left: 0;
+  margin-inline-start: 0;
 }

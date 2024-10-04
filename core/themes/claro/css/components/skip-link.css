@@ -20,9 +20,10 @@
 
 .skip-link {
   z-index: 503;
-  top: 0;
-  left: 0; /* LTR */
-  padding: 1px 0.625rem 2px;
+  inset-block-start: 0;
+  inset-inline-start: 0; /* LTR */
+  padding-block: 1px 2px;
+  padding-inline: 0.625rem;
   color: var(--skip-link-color);
   border-radius: 0 0 0.625rem 0; /* LTR */
   background: var(--skip-link-bg-color);
@@ -48,7 +49,6 @@
 }
 
 [dir="rtl"] .skip-link {
-  right: 0;
-  left: auto;
+  inset-inline: auto 0;
   border-radius: 0 0 0 0.625rem;
 }

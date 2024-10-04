@@ -7,7 +7,7 @@
  */
 
 .container {
-  max-width: min(calc(100vw - var(--drupal-displace-offset-left, 0px) - var(--drupal-displace-offset-right, 0px) - 2rem), 1200px);
+  max-inline-size: min(calc(100vw - var(--drupal-displace-offset-left, 0px) - var(--drupal-displace-offset-right, 0px) - 2rem), 1200px);
   margin: auto;
 }
 
@@ -26,5 +26,5 @@
 
 .views-view-responsive-grid__item .views-view-responsive-grid__item-inner,
 .views-view-responsive-grid__item .views-view-responsive-grid__item-inner .umami-card {
-  height: 100%;
+  block-size: 100%;
 }

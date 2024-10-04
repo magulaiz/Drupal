@@ -38,7 +38,7 @@
 
 .views-display-columns > * {
   float: none;
-  width: auto;
+  inline-size: auto;
   margin-block: 0 var(--space-l);
   margin-inline: 0;
 }
@@ -46,8 +46,8 @@
 @media screen and (min-width: 60rem) {
   /* 960px */
   .views-display-columns > * {
-    float: left; /* LTR */
-    width: 32%;
+    float: inline-start; /* LTR */
+    inline-size: 32%;
     margin-block-end: 0;
     margin-inline-start: 2%;
   }
@@ -55,7 +55,7 @@
     margin-inline-start: 0;
   }
   [dir="rtl"] .views-display-columns > * {
-    float: right;
+    float: inline-end;
   }
 }
 
@@ -68,7 +68,7 @@
 
 .views-ui-dialog .views-messages {
   overflow: auto;
-  max-height: 12.5rem;
+  max-block-size: 12.5rem;
 }
 
 .form-item--options-value-all {

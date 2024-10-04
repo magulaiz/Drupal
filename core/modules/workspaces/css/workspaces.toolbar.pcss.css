@@ -12,7 +12,7 @@
   background-color: #81c071;
 }
 .toolbar-oriented .toolbar-bar .workspaces-toolbar-tab {
-  float: right; /* LTR */
+  float: inline-end; /* LTR */
 
   /**
    * Chromium and Webkit do not yet support flow relative logical properties,
@@ -23,13 +23,13 @@
    * @see https://github.com/csstools/postcss-plugins/issues/632
    */
   &:dir(rtl) {
-    float: left;
+    float: inline-start;
   }
 }
 
 @media (min-width: 264px) {
   .toolbar:not(.toolbar-oriented) .toolbar-bar .workspaces-toolbar-tab {
-    float: right; /* LTR */
+    float: inline-end; /* LTR */
 
     /**
      * Chromium and Webkit do not yet support flow relative logical properties,
@@ -40,20 +40,20 @@
      * @see https://github.com/csstools/postcss-plugins/issues/632
      */
     &:dir(rtl) {
-      float: left;
+      float: inline-start;
     }
   }
 }
 
 /* Link within the toolbar tab. */
 .toolbar .toolbar-bar .workspaces-toolbar-tab .toolbar-item {
-  width: 100%;
+  inline-size: 100%;
   margin: 0;
   text-align: start;
   color: inherit;
 
   @nest .toolbar-oriented & {
-    width: auto;
+    inline-size: auto;
     text-align: initial;
   }
 }
@@ -64,8 +64,8 @@
 
 @media all and (max-width: 766px) {
   .toolbar-oriented .toolbar-bar .workspaces-toolbar-tab .toolbar-icon-workspace {
-    width: auto;
-    max-width: 8em;
+    inline-size: auto;
+    max-inline-size: 8em;
   }
 
   .toolbar .toolbar-bar .workspaces-toolbar-tab .toolbar-icon-workspace {
@@ -78,7 +78,7 @@
 
   .toolbar .toolbar-bar .workspaces-toolbar-tab .toolbar-icon-workspace::before {
     inset-inline-start: 0.6667em;
-    width: 20px;
+    inline-size: 20px;
     background-size: 100% auto;
   }
 }

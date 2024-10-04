@@ -19,8 +19,9 @@
  */
 
 .ajax-progress-bar {
-  width: 13em;
-  padding: 0 0.3125rem; /* 0 5px */
+  inline-size: 13em;
+  padding-block: 0;
+  padding-inline: 0.3125rem; /* 0 5px */
 }
 
 /**
@@ -31,8 +32,9 @@
   position: relative;
   display: inline-flex;
   align-content: center;
-  height: 1.125rem;
-  margin: -0.1875rem var(--ajax-progress-margin-horizontal) 0;
+  block-size: 1.125rem;
+  margin-block: -0.1875rem 0;
+  margin-inline: var(--ajax-progress-margin-horizontal);
   vertical-align: middle;
   white-space: nowrap;
   line-height: 1.125rem;
@@ -59,11 +61,11 @@
 
 .ajax-progress__throbber {
   box-sizing: border-box;
-  width: 1.125rem;
-  height: 1.125rem;
+  inline-size: 1.125rem;
+  block-size: 1.125rem;
   animation: claro-throbber 0.75s linear infinite;
   border: 2px solid var(--color-absolutezero);
-  border-right: 2px dotted transparent;
+  border-inline-end: 2px dotted transparent;
   border-radius: 50%;
 }
 
@@ -84,8 +86,8 @@
   inset-block-start: 50%;
   inset-inline-start: 50%;
   box-sizing: border-box;
-  width: 3.5rem; /* 56px */
-  height: 3.5rem;
+  inline-size: 3.5rem; /* 56px */
+  block-size: 3.5rem;
   margin: -1.75rem;
   border: var(--input-border-size) solid var(--jui-dropdown-border-color);
   border-radius: 3.5rem;
@@ -98,12 +100,12 @@
   position: absolute;
   inset-block-start: 50%;
   inset-inline-start: 50%;
-  width: 1.75rem; /* 28px */
-  height: 1.75rem; /* 28px */
+  inline-size: 1.75rem; /* 28px */
+  block-size: 1.75rem; /* 28px */
   margin: -0.875rem;
   content: "";
   border: 3px solid var(--color-absolutezero);
-  border-right: 3px dotted transparent;
+  border-inline-end: 0.1875rem dotted transparent;
 }
 
 .ui-dialog .ajax-progress__message {

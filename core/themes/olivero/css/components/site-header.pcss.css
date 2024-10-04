@@ -15,7 +15,7 @@
 
   @media (--nav) {
     /* Necessary to keep the content from jumping up when header transitions to fixed. */
-    min-height: var(--site-header-height-wide);
+    min-block-size: var(--site-header-height-wide);
     border-block-end: solid 1px transparent; /* Will show in Windows high contrast mode. */
   }
 }
@@ -49,7 +49,7 @@
       position: fixed;
       z-index: 102; /* Appear above body content that is position: relative */
       inset-block-start: calc(var(--drupal-displace-offset-top, 0px) - var(--sp4));
-      max-width: var(--max-bg-color);
+      max-inline-size: var(--max-bg-color);
     }
   }
 }
@@ -58,7 +58,7 @@
   position: relative;
   z-index: 1; /* Appear in front of Drupal's tabs. */
   flex-grow: 1;
-  width: calc(100vw - var(--content-left) - var(--drupal-displace-offset-left, 0px) - var(--drupal-displace-offset-right, 0px));
+  inline-size: calc(100vw - var(--content-left) - var(--drupal-displace-offset-left, 0px) - var(--drupal-displace-offset-right, 0px));
   background: var(--color--white);
 }
 
@@ -108,5 +108,5 @@ body:not(.is-always-mobile-nav) .site-header__fixable.is-fixed:not(.is-expanded)
 
 /* Reset width set by layout.css */
 body.is-fixed .site-header__inner__container {
-  width: auto;
+  inline-size: auto;
 }

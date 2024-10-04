@@ -7,15 +7,16 @@
  * Filter information under field.
  */
 .text-format-wrapper > .form-item {
-  margin-bottom: 0;
+  margin-block-end: 0;
 }
 
 .filter-wrapper {
   overflow: hidden;
   margin: 0;
-  padding: 0.5em 0.666em;
+  padding-block: 0.5em;
+  padding-inline: 0.666em;
   border: 1px solid #ccc;
-  border-top: 0;
+  border-block-start: 0;
 }
 .filter-wrapper .form-item {
   margin: 0;
@@ -25,47 +26,36 @@
 }
 
 .filter-help {
-  float: right; /* LTR */
-}
-[dir="rtl"] .filter-help {
-  float: left;
+  float: inline-end;
 }
 .filter-guidelines .filter-guidelines-item {
-  margin-top: 1em;
+  margin-block-start: 1em;
 }
 .filter-help p {
   margin: 0;
 }
 .filter-help a {
   position: relative;
-  margin: 0 20px 0 0; /* LTR */
-}
-[dir="rtl"] .filter-help a {
-  margin: 0 0 0 20px;
+  margin-block: 0;
+  margin-inline: 0 20px;
 }
 .filter-help a::after {
   position: absolute;
-  top: 0;
-  right: -20px; /* LTR */
+  inset-block-start: 0;
+  inset-inline-end: -20px;
   display: block;
-  width: 16px;
-  height: 16px;
+  inline-size: 16px;
+  block-size: 16px;
   content: "";
   background: transparent url(../../../../../../misc/help.png);
 }
-[dir="rtl"] .filter-help a::after {
-  right: auto;
-  left: -20px;
-}
 
 .text-format-wrapper .description {
-  margin-top: 0.5em;
+  margin-block-start: 0.5em;
 }
 .tips {
-  margin-top: 0;
-  margin-bottom: 0;
-  padding-top: 0;
-  padding-bottom: 0;
+  margin-block: 0;
+  padding-block: 0;
   font-size: 0.9em;
 }
 
@@ -73,8 +63,5 @@
  * Improve filter tips position.
  */
 .tips {
-  padding-left: 0; /* LTR */
-}
-[dir="rtl"] .tips {
-  padding-right: 0;
+  padding-inline-start: 0;
 }

@@ -7,7 +7,8 @@
  */
 
 .footer {
-  padding: 2rem 4%;
+  padding-block: 2rem;
+  padding-inline: 4%;
   text-align: center;
   color: #fff;
   background-color: #5f635d;
@@ -22,10 +23,7 @@
 @media screen and (min-width: 60rem) {
   /* 960px */
   .footer {
-    text-align: left; /* LTR */
-  }
-  [dir="rtl"] .footer {
-    text-align: right;
+    text-align: start;
   }
   .region-footer {
     flex-direction: row;
@@ -37,7 +35,8 @@
 @media screen and (min-width: 80rem) {
   /* 1200px (large) + 80px (side margins) = 1280px */
   .footer {
-    padding: 2rem 0;
+    padding-block: 2rem;
+    padding-inline: 0;
   }
 }
 

@@ -8,17 +8,16 @@
 }
 .field--label-inline .field__label,
 .field--label-inline .field__items {
-  float: left; /* LTR */
+  float: inline-start; /* LTR */
 }
 .field--label-inline .field__label,
 .field--label-inline > .field__item,
 .field--label-inline .field__items {
-  padding-right: 0.5em;
+  padding-inline-end: 0.5em;
 }
 [dir="rtl"] .field--label-inline .field__label,
 [dir="rtl"] .field--label-inline .field__items {
-  padding-right: 0;
-  padding-left: 0.5em;
+  padding-inline: 0.5em 0;
 }
 .field--label-inline .field__label::after {
   content: ":";

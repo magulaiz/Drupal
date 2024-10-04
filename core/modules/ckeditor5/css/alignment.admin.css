@@ -18,20 +18,18 @@
   display: flex;
   align-items: center;
   justify-content: flex-end;
-  padding-right: 20px;
+  padding-inline-end: 20px;
   background-position-x: 10px;
 }
 [dir="rtl"] .ckeditor5-toolbar-button-alignment {
-  padding-right: 0;
-  padding-left: 20px;
   background-position-x: 30px;
 }
 .ckeditor5-toolbar-button-alignment::after {
   position: relative;
-  right: -10px;
+  inset-inline-end: -10px;
   display: inline-block;
-  width: 7px;
-  height: 7px;
+  inline-size: 7px;
+  block-size: 7px;
   content: "";
   transform: rotate(135deg);
   color: #000;
@@ -40,6 +38,6 @@
   background-position-x: -10px;
 }
 [dir="rtl"] .ckeditor5-toolbar-button-alignment::after {
-  right: 10px;
+  inset-inline-end: 10px;
   background-position-x: 10px;
 }

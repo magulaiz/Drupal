@@ -24,7 +24,7 @@
 .form-managed-file.no-upload {
   display: inline-flex;
   flex-direction: column;
-  max-width: 100%;
+  max-inline-size: 100%;
 }
 
 .form-managed-file.has-value.is-multiple {
@@ -70,7 +70,7 @@
 }
 
 .form-managed-file__meta .form-element {
-  width: 100%;
+  inline-size: 100%;
 }
 
 /**
@@ -78,7 +78,7 @@
    */
 
 .form-managed-file__meta .form-item {
-  max-width: var(--file-widget-form-item-max-width);
+  max-inline-size: var(--file-widget-form-item-max-width);
   margin-block: 0 var(--space-m); /* Top margin is added by the parent element */
 
   /**
@@ -107,7 +107,7 @@
 
 .form-managed-file__image-preview {
   flex: 0 0 auto;
-  max-width: 100%;
+  max-inline-size: 100%;
   margin-block-end: var(--space-m);
 }
 
@@ -138,7 +138,7 @@ td .form-managed-file.no-meta .form-managed-file__image-preview {
 
 .form-managed-file__meta-items {
   flex: 1 1 var(--file-widget-form-item-min-width);
-  max-width: 100%;
+  max-inline-size: 100%;
 }
 
 /**
@@ -155,7 +155,7 @@ td .form-managed-file.no-meta .form-managed-file__image-preview {
 .form-managed-file__main {
   display: inline-flex;
   align-items: center;
-  max-width: 100%;
+  max-inline-size: 100%;
 }
 
 .form-managed-file__main .file {

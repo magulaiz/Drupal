@@ -50,8 +50,9 @@ a:active,
 }
 
 hr {
-  height: 1px;
-  margin: var(--space-m) 0;
+  block-size: 1px;
+  margin-block: var(--space-m);
+  margin-inline: 0;
   padding: 0;
   border: none;
   background: var(--color-divider);
@@ -68,7 +69,8 @@ summary {
 
 h1,
 .heading-a {
-  margin: var(--space-m) 0 var(--space-s);
+  margin-block: var(--space-m) var(--space-s);
+  margin-inline: 0;
   font-size: var(--font-size-h1);
   font-weight: bold;
   line-height: var(--line-height-heading);
@@ -76,7 +78,8 @@ h1,
 
 h2,
 .heading-b {
-  margin: var(--space-m) 0 var(--space-s);
+  margin-block: var(--space-m) var(--space-s);
+  margin-inline: 0;
   font-size: var(--font-size-h2);
   font-weight: bold;
   line-height: var(--line-height-heading);
@@ -84,7 +87,8 @@ h2,
 
 h3,
 .heading-c {
-  margin: var(--space-m) 0 var(--space-s);
+  margin-block: var(--space-m) var(--space-s);
+  margin-inline: 0;
   font-size: var(--font-size-h3);
   font-weight: bold;
   line-height: var(--line-height-heading);
@@ -92,7 +96,8 @@ h3,
 
 h4,
 .heading-d {
-  margin: var(--space-m) 0 var(--space-s);
+  margin-block: var(--space-m) var(--space-s);
+  margin-inline: 0;
   font-size: var(--font-size-h4);
   font-weight: bold;
   line-height: var(--line-height-heading);
@@ -100,7 +105,8 @@ h4,
 
 h5,
 .heading-e {
-  margin: var(--space-m) 0 var(--space-s);
+  margin-block: var(--space-m) var(--space-s);
+  margin-inline: 0;
   font-size: var(--font-size-h5);
   font-weight: bold;
   line-height: var(--line-height-heading);
@@ -108,18 +114,21 @@ h5,
 
 h6,
 .heading-f {
-  margin: var(--space-m) 0 var(--space-s);
+  margin-block: var(--space-m) var(--space-s);
+  margin-inline: 0;
   font-size: var(--font-size-h6);
   font-weight: bold;
   line-height: var(--line-height-heading);
 }
 
 p {
-  margin: 1em 0;
+  margin-block: 1em;
+  margin-inline: 0;
 }
 
 dl {
-  margin: 0 0 1.25rem;
+  margin-block: 0 1.25rem;
+  margin-inline: 0;
 }
 
 dl dd,
@@ -188,7 +197,7 @@ sup {
 
 abbr,
 acronym {
-  border-bottom: dotted 1px;
+  border-block-end: dotted 1px;
 }
 
 ul {
@@ -206,11 +215,13 @@ ol {
 }
 
 code {
-  margin: 0.5em 0;
+  margin-block: 0.5em;
+  margin-inline: 0;
 }
 
 pre {
-  margin: 0.5em 0;
+  margin-block: 0.5em;
+  margin-inline: 0;
   white-space: pre-wrap;
 }
 
@@ -219,7 +230,8 @@ details {
 }
 
 details summary {
-  padding: 0.95em 1.45em;
+  padding-block: 0.95em;
+  padding-inline: 1.45em;
 }
 
 details summary:focus {
@@ -227,8 +239,8 @@ details summary:focus {
 }
 
 img {
-  max-width: 100%;
-  height: auto;
+  max-inline-size: 100%;
+  block-size: auto;
 }
 
 /**

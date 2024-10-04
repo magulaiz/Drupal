@@ -31,31 +31,31 @@
   line-height: 1em;
 }
 .field-ui-overview .field-plugin-summary {
-  float: left; /* LTR */
+  float: inline-start; /* LTR */
   font-size: 0.9em;
 }
 [dir="rtl"] .field-ui-overview .field-plugin-summary {
-  float: right;
+  float: inline-end;
 }
 .field-ui-overview .field-plugin-summary-cell .warning {
   display: block;
-  float: left; /* LTR */
-  margin-right: 0.5em;
+  float: inline-start; /* LTR */
+  margin-inline-end: 0.5em;
 }
 [dir="rtl"] .field-ui-overview .field-plugin-summary-cell .warning {
-  float: right;
+  float: inline-end;
 }
 .field-ui-overview .field-plugin-settings-edit-wrapper {
-  float: right; /* LTR */
+  float: inline-end; /* LTR */
 }
 [dir="rtl"] .field-ui-overview .field-plugin-settings-edit-wrapper {
-  float: left;
+  float: inline-start;
 }
 .field-ui-overview .field-plugin-settings-edit {
-  float: right; /* LTR */
+  float: inline-end; /* LTR */
 }
 [dir="rtl"] .field-ui-overview .field-plugin-settings-edit {
-  float: left;
+  float: inline-start;
 }
 .field-ui-overview .field-plugin-settings-editing td {
   vertical-align: top;

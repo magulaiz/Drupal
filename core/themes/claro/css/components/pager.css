@@ -26,7 +26,8 @@
   flex-wrap: wrap;
   align-items: flex-end;
   justify-content: center;
-  margin: var(--space-m) 0;
+  margin-block: var(--space-m);
+  margin-inline: 0;
   list-style: none;
   text-align: center;
   font-weight: bold;

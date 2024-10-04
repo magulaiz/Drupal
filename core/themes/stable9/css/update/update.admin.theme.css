@@ -8,17 +8,17 @@
   font-weight: bold;
 }
 .project-update__status {
-  float: right; /* LTR */
+  float: inline-end; /* LTR */
   font-size: 110%;
 }
 [dir="rtl"] .project-update__status {
-  float: left;
+  float: inline-start;
 }
 .project-update__status--not-supported {
-  float: right; /* LTR */
+  float: inline-end; /* LTR */
 }
 [dir="rtl"] .project-update__status--not-supported {
-  float: left;
+  float: inline-start;
 }
 .project-update__status--security-error {
   color: #970f00;
@@ -26,37 +26,38 @@
 }
 
 .project-update__status-icon {
-  padding-left: 0.5em; /* LTR */
+  padding-inline-start: 0.5em; /* LTR */
 }
 [dir="rtl"] .project-update__status-icon {
-  padding-right: 0.5em;
-  padding-left: 0;
+  padding-inline: 0 0.5em;
 }
 .project-update__details {
-  padding: 1em 1em 0.25em 1em;
+  padding-block: 1em 0.25em;
+  padding-inline: 1em;
 }
 
 .project-update__version {
-  padding: 1em 0;
+  padding-block: 1em;
+  padding-inline: 0;
 }
 .project-update__version-date {
   white-space: nowrap;
 }
 .project-update__version-details {
-  padding-right: 0.5em; /* LTR */
+  padding-inline-end: 0.5em; /* LTR */
 }
 [dir="rtl"] .project-update__version-details {
-  padding-left: 0.5em;
+  padding-inline-start: 0.5em;
   direction: ltr; /* Version numbers should always be LTR. */
 }
 .project-update__version-links {
-  padding-right: 1em; /* LTR */
+  padding-inline-end: 1em; /* LTR */
   list-style-type: none;
-  text-align: right; /* LTR */
+  text-align: end; /* LTR */
 }
 [dir="rtl"] .project-update__version-links {
-  padding-left: 1em;
-  text-align: left;
+  padding-inline-start: 1em;
+  text-align: start;
 }
 .project-update__version--recommended-strong .project-update__version-title {
   font-weight: bold;

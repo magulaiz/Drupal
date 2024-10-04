@@ -21,26 +21,23 @@ tr.add-new .tabledrag-changed {
   display: none;
 }
 .draggable a.tabledrag-handle {
-  float: left; /* LTR */
+  float: inline-start;
   overflow: hidden;
-  height: 1.7em;
-  margin-left: -1em; /* LTR */
+  block-size: 1.7em;
+  margin-inline-start: -1em;
   cursor: move;
   text-decoration: none;
-}
-[dir="rtl"] .draggable a.tabledrag-handle {
-  float: right;
-  margin-right: -1em;
-  margin-left: 0;
 }
 a.tabledrag-handle:hover {
   text-decoration: none;
 }
 a.tabledrag-handle .handle {
-  width: 14px;
-  height: 14px;
-  margin: -0.4em 0.5em 0;
-  padding: 0.42em 0.5em;
+  inline-size: 14px;
+  block-size: 14px;
+  margin-block: -0.4em 0;
+  margin-inline: 0.5em;
+  padding-block: 0.42em;
+  padding-inline: 0.5em;
   background: url(../icons/787878/move.svg) no-repeat 6px 7px;
 }
 a.tabledrag-handle:hover .handle,
@@ -63,18 +60,20 @@ a.tabledrag-handle:focus .handle {
 }
 
 .touchevents .draggable td {
-  padding: 0 10px;
+  padding-block: 0;
+  padding-inline: 10px;
 }
 .touchevents .draggable .menu-item__link {
   display: inline-block;
-  padding: 10px 0;
+  padding-block: 10px;
+  padding-inline: 0;
 }
 .touchevents a.tabledrag-handle {
-  width: 40px;
-  height: 44px;
+  inline-size: 40px;
+  block-size: 44px;
 }
 .touchevents a.tabledrag-handle .handle {
-  height: 21px;
+  block-size: 21px;
   background-position: 40% 19px; /* LTR */
 }
 [dir="rtl"] .touch a.tabledrag-handle .handle {
@@ -84,20 +83,14 @@ a.tabledrag-handle:focus .handle {
   background-position: 50% -32px;
 }
 .tabledrag-toggle-weight-wrapper {
-  text-align: right; /* LTR */
-}
-[dir="rtl"] .tabledrag-toggle-weight-wrapper {
-  text-align: left;
+  text-align: end;
 }
 .indentation {
-  float: left; /* LTR */
-  width: 20px;
-  height: 1.7em;
-  margin: -0.4em 0.2em -0.4em -0.4em; /* LTR */
-  padding: 0.42em 0 0.42em 0.6em; /* LTR */
-}
-[dir="rtl"] .indentation {
-  float: right;
-  margin: -0.4em -0.4em -0.4em 0.2em;
-  padding: 0.42em 0.6em 0.42em 0;
+  float: inline-start;
+  inline-size: 20px;
+  block-size: 1.7em;
+  margin-block: -0.4em;
+  margin-inline: -0.4em 0.2em;
+  padding-block: 0.42em;
+  padding-inline: 0.6em 0;
 }

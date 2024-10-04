@@ -18,10 +18,10 @@
   display: none;
   visibility: hidden;
   overflow: hidden;
-  width: calc(100% + var(--content-left));
-  max-width: var(--max-bg-color);
-  height: var(--sp8);
-  max-height: 0;
+  inline-size: calc(100% + var(--content-left));
+  max-inline-size: var(--max-bg-color);
+  block-size: var(--sp8);
+  max-block-size: 0;
   margin-block: 0;
   margin-inline-start: 0;
   margin-inline-end: 0;
@@ -34,7 +34,7 @@
 
   &.is-active {
     visibility: visible;
-    max-height: var(--sp8);
+    max-block-size: var(--sp8);
   }
 
   & form {
@@ -43,8 +43,8 @@
   }
 
   & input[type="search"] {
-    width: calc(100% + var(--sp2));
-    height: var(--sp8);
+    inline-size: calc(100% + var(--sp2));
+    block-size: var(--sp8);
     padding-block: 0;
     padding-inline-start: var(--sp12);
     padding-inline-end: 0;
@@ -76,8 +76,8 @@
     position: relative;
     overflow: hidden;
     align-self: stretch;
-    width: 100px;
-    height: auto;
+    inline-size: 100px;
+    block-size: auto;
     margin-block: 0;
     margin-inline-start: 0;
     margin-inline-end: 0;
@@ -97,8 +97,8 @@
       inset-block-start: 0;
       inset-inline-end: 0;
       display: block;
-      width: 24px; /* Width of the SVG background image. */
-      height: 100%;
+      inline-size: 24px; /* Width of the SVG background image. */
+      block-size: 100%;
       pointer-events: none;
       background-image: url("../../images/search--white.svg");
       background-repeat: no-repeat;
@@ -109,8 +109,8 @@
         position: absolute;
         inset-block-end: 0;
         inset-inline-start: 0;
-        width: 100%;
-        height: 0;
+        inline-size: 100%;
+        block-size: 0;
         content: "";
         transition: transform 0.2s;
         transform: scaleX(0);
@@ -129,7 +129,7 @@
       }
 
       @media screen and (-ms-high-contrast: active) {
-        border-bottom-width: var(--sp0-5);
+        border-block-end-width: var(--sp0-5);
 
         & span::after {
           content: none;
@@ -147,7 +147,7 @@
 }
 
 .block-search-wide__container {
-  max-width: var(--max-width);
+  max-inline-size: var(--max-width);
   padding-inline-end: var(--sp2);
 }
 
@@ -171,8 +171,8 @@
 .block-search-wide__button {
   position: relative;
   display: none;
-  width: var(--sp3);
-  height: var(--sp6);
+  inline-size: var(--sp3);
+  block-size: var(--sp6);
   cursor: pointer;
   color: var(--color-text-neutral-loud); /* Affects SVG search icon. */
   border: 0;
@@ -185,10 +185,10 @@
 
     &::after {
       position: absolute;
-      top: 50%;
-      left: 50%;
-      width: 80%;
-      height: var(--sp3);
+      inset-block-start: 50%;
+      inset-inline-start: 50%;
+      inline-size: 80%;
+      block-size: var(--sp3);
       content: "";
       transform: translate(-50%, -50%);
       border: solid 2px var(--color--primary-50);
@@ -207,10 +207,10 @@
       &::before,
       &::after {
         position: absolute;
-        top: 50%;
-        left: 50%;
-        width: var(--sp1-5);
-        height: 0;
+        inset-block-start: 50%;
+        inset-inline-start: 50%;
+        inline-size: var(--sp1-5);
+        block-size: 0;
         content: "";
         border-block-start: solid 2px var(--color--white);
       }
@@ -246,7 +246,7 @@
 /* Provide rudimentary access to site search if JS is disabled. */
 html:not(.js) .search-block-form:focus-within .block-search-wide__wrapper {
   visibility: visible;
-  max-height: var(--sp8);
+  max-block-size: var(--sp8);
 }
 
 /* Necessary to override specificity of transpiled PostCSS properties from default input focus styling. */

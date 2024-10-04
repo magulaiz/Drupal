@@ -26,13 +26,13 @@
 .form-type--boolean .form-boolean {
   position: relative;
   inset-block-start: calc(var(--space-l) / 2);
-  float: left; /* LTR */
+  float: inline-start; /* LTR */
   margin-inline-start: calc(var(--input--label-spacing) * -1);
   transform: translateY(-50%);
 }
 
 [dir="rtl"] :is(.form-type--boolean .form-boolean) {
-  float: right;
+  float: inline-end;
 }
 
 .form-type--boolean.form-item--no-label {
@@ -62,8 +62,8 @@
 .form-boolean {
   display: inline-block;
   box-sizing: border-box;
-  width: 1.125rem;
-  height: 1.125rem;
+  inline-size: 1.125rem;
+  block-size: 1.125rem;
   vertical-align: text-bottom;
   border: 1px solid var(--input-border-color);
   border-radius: 2px;
@@ -94,8 +94,8 @@
 }
 
 .form-boolean--type-radio {
-  width: 1.1875rem;
-  height: 1.1875rem;
+  inline-size: 1.1875rem;
+  block-size: 1.1875rem;
   border-radius: 1.1875rem;
 }
 

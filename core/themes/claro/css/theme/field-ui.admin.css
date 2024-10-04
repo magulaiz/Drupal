@@ -23,24 +23,14 @@
 /* 'Manage form display' and 'Manage display' overview */
 
 .field-plugin-summary {
-  float: left; /* LTR */
+  float: inline-start;
   font-size: var(--font-size-s);
-}
-
-[dir="rtl"] .field-plugin-summary {
-  float: right;
 }
 
 .field-plugin-summary-cell .warning {
   display: block;
-  float: left; /* LTR */
-  margin-right: 0.5em; /* LTR */
-}
-
-[dir="rtl"] .field-plugin-summary-cell .warning {
-  float: right;
-  margin-right: 0;
-  margin-left: 0.5em;
+  float: inline-start;
+  margin-inline-end: 0.5em;
 }
 
 /* Settings edit. */
@@ -53,9 +43,10 @@
 }
 
 .field-plugin-settings-edit {
-  width: var(--space-m);
+  inline-size: var(--space-m);
   margin: 0;
-  padding: 1px 0.5rem;
+  padding-block: 1px;
+  padding-inline: 0.5rem;
 }
 
 .field-plugin-settings-edit-wrapper .ajax-progress--throbber {

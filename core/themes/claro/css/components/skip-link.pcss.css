@@ -13,9 +13,10 @@
 
 .skip-link {
   z-index: 503;
-  top: 0;
-  left: 0; /* LTR */
-  padding: 1px 10px 2px;
+  inset-block-start: 0;
+  inset-inline-start: 0; /* LTR */
+  padding-block: 1px 2px;
+  padding-inline: 10px;
   color: var(--skip-link-color);
   border-radius: 0 0 10px 0; /* LTR */
   background: var(--skip-link-bg-color);
@@ -36,7 +37,6 @@
   }
 }
 [dir="rtl"] .skip-link {
-  right: 0;
-  left: auto;
+  inset-inline: auto 0;
   border-radius: 0 0 0 10px;
 }

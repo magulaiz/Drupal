@@ -171,7 +171,7 @@ tr .form-item,
 .confirm-parent,
 .password-parent {
   overflow: visible;
-  width: auto;
+  inline-size: auto;
 }
 
 .form-item-options-group-info-identifier,
@@ -187,21 +187,21 @@ tr .form-item,
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  max-width: 100%;
+  max-inline-size: 100%;
 }
 
 .form-item--editor-format .form-item__label,
 .form-item--editor-format .form-item__prefix,
 .form-item--editor-format .form-item__suffix,
 .form-item--editor-format .form-element--editor-format {
-  min-width: 1px;
+  min-inline-size: 1px;
 }
 
 .form-item--editor-format .form-item__label,
 .form-item--editor-format .form-item__prefix,
 .form-item--editor-format .form-item__suffix,
 .form-item--editor-format .form-element--editor-format {
-  min-width: 1px;
+  min-inline-size: 1px;
 }
 
 .form-item--editor-format .form-item__label,
@@ -213,7 +213,7 @@ tr .form-item,
 .form-item--editor-format .form-item__description,
 .form-item--editor-format .form-item__error-message {
   flex: 0 1 100%;
-  min-width: 1px;
+  min-inline-size: 1px;
 }
 
 /**
@@ -224,7 +224,7 @@ tr .form-item,
 
 @media screen and (max-width: 37.5rem) {
   .password-strength {
-    width: 100%;
+    inline-size: 100%;
   }
   div.form-item div.password-suggestions {
     float: none;

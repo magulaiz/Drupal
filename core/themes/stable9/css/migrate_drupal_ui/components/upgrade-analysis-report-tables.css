@@ -4,8 +4,8 @@
  */
 .upgrade-analysis-report__status-icon::before {
   display: inline-block;
-  width: 32px;
-  height: 14px;
+  inline-size: 32px;
+  block-size: 14px;
   content: "";
   background-repeat: no-repeat;
   background-position: left center;

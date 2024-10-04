@@ -30,8 +30,8 @@
       position: absolute;
       inset-block-end: 0;
       inset-inline-start: 0;
-      width: var(--sp4);
-      height: 0;
+      inline-size: var(--sp4);
+      block-size: 0;
       content: "";
       border-block-start: solid 2px var(--color--gray-95);
     }

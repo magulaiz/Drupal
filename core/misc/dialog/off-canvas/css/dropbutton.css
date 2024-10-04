@@ -49,25 +49,22 @@
   padding-inline-end: 0;
 }
 #drupal-off-canvas-wrapper .dropbutton-wrapper.dropbutton-single .dropbutton-action:first-child {
-  border-right: solid 1px var(--off-canvas-dropbutton-border-color); /* LTR */
+  border-inline-end: solid 1px var(--off-canvas-dropbutton-border-color);
   border-radius: var(--off-canvas-dropbutton-border-radius);
-}
-[dir="rtl"] #drupal-off-canvas-wrapper .dropbutton-wrapper.dropbutton-single .dropbutton-action:first-child {
-  border: solid 1px var(--off-canvas-dropbutton-border-color);
 }
 #drupal-off-canvas-wrapper .dropbutton-wrapper.dropbutton-single .dropbutton-action a {
   justify-content: center;
 }
 #drupal-off-canvas-wrapper .dropbutton-widget {
   position: relative;
-  width: max-content;
-  max-width: 100%;
-  height: var(--off-canvas-dropbutton-height);
+  inline-size: max-content;
+  max-inline-size: 100%;
+  block-size: var(--off-canvas-dropbutton-height);
   padding-inline-end: var(--off-canvas-dropbutton-height);
   border-radius: var(--off-canvas-dropbutton-border-radius);
 }
 #drupal-off-canvas-wrapper .dropbutton {
-  height: var(--off-canvas-dropbutton-height);
+  block-size: var(--off-canvas-dropbutton-height);
   margin-block: 0;
   margin-inline-start: 0;
   padding-inline-start: 0;
@@ -81,12 +78,12 @@
 }
 #drupal-off-canvas-wrapper .dropbutton-toggle button {
   position: absolute;
-  top: 0;
+  inset-block-start: 0;
   display: flex;
   align-items: center;
   justify-content: center;
-  width: var(--off-canvas-dropbutton-height);
-  height: var(--off-canvas-dropbutton-height);
+  inline-size: var(--off-canvas-dropbutton-height);
+  block-size: var(--off-canvas-dropbutton-height);
   padding: 0;
   cursor: pointer;
   border-color: var(--off-canvas-dropbutton-border-color);
@@ -100,12 +97,12 @@
 }
 #drupal-off-canvas-wrapper .dropbutton-toggle button::before {
   display: block;
-  width: 0.375rem;
-  height: 0.375rem;
+  inline-size: 0.375rem;
+  block-size: 0.375rem;
   content: "";
   transform: translateY(-25%) rotate(45deg);
-  border-right: solid 2px var(--off-canvas-dropbutton-text-color);
-  border-bottom: solid 2px var(--off-canvas-dropbutton-text-color);
+  border-inline-end: solid 2px var(--off-canvas-dropbutton-text-color);
+  border-block-end: solid 2px var(--off-canvas-dropbutton-text-color);
 }
 [dir="rtl"] #drupal-off-canvas-wrapper .dropbutton-toggle button {
   border-radius: var(--off-canvas-dropbutton-border-radius) 0 0 var(--off-canvas-dropbutton-border-radius);
@@ -124,9 +121,10 @@
 #drupal-off-canvas-wrapper .dropbutton-action a {
   display: flex;
   align-items: center;
-  min-height: var(--off-canvas-dropbutton-height);
-  margin-bottom: -2px;
-  padding: 0 0.5625rem;
+  min-block-size: var(--off-canvas-dropbutton-height);
+  margin-block-end: -2px;
+  padding-block: 0;
+  padding-inline: 0.5625rem;
   -webkit-text-decoration: none;
   text-decoration: none;
   color: var(--off-canvas-dropbutton-text-color);
@@ -142,14 +140,14 @@
 /* These are the <li> elements other than the first. */
 #drupal-off-canvas-wrapper .secondary-action {
   visibility: hidden;
-  width: calc(100% + var(--off-canvas-dropbutton-height));
-  margin-top: var(--off-canvas-dropbutton-border-width);
-  border-right: var(--off-canvas-dropbutton-border-width) solid var(--off-canvas-dropbutton-border-color);
-  border-left: var(--off-canvas-dropbutton-border-width) solid var(--off-canvas-dropbutton-border-color);
+  inline-size: calc(100% + var(--off-canvas-dropbutton-height));
+  margin-block-start: var(--off-canvas-dropbutton-border-width);
+  border-inline-end: var(--off-canvas-dropbutton-border-width) solid var(--off-canvas-dropbutton-border-color);
+  border-inline-start: var(--off-canvas-dropbutton-border-width) solid var(--off-canvas-dropbutton-border-color);
   background-color: var(--off-canvas-dropbutton-primary-background-color);
 }
 #drupal-off-canvas-wrapper .secondary-action:last-child {
-  border-bottom: var(--off-canvas-dropbutton-border-width) solid var(--off-canvas-dropbutton-border-color);
+  border-block-end: var(--off-canvas-dropbutton-border-width) solid var(--off-canvas-dropbutton-border-color);
 }
 #drupal-off-canvas-wrapper .secondary-action a:hover {
   color: var(--off-canvas-dropbutton-text-color-hover);

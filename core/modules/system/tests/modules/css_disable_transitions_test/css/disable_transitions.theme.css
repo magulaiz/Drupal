@@ -22,6 +22,6 @@
      https://bugs.chromium.org/p/chromedriver/issues/detail?id=2758
  */
 iframe.media-oembed-content {
-  width: 0 !important;
-  height: 0 !important;
+  inline-size: 0 !important;
+  block-size: 0 !important;
 }

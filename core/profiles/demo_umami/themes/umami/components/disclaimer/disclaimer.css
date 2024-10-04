@@ -18,21 +18,16 @@
 
   .disclaimer__disclaimer,
   .disclaimer__copyright {
-    margin-bottom: 0;
+    margin-block-end: 0;
     text-align: start;
   }
 
   .disclaimer__disclaimer {
-    max-width: 40%;
-    margin-left: 0.5rem; /* LTR */
-  }
-
-  [dir="rtl"] .disclaimer__disclaimer {
-    margin-right: 0.5rem;
-    margin-left: 0;
+    max-inline-size: 40%;
+    margin-inline-start: 0.5rem;
   }
 
   .disclaimer__copyright {
-    width: 25%;
+    inline-size: 25%;
   }
 }

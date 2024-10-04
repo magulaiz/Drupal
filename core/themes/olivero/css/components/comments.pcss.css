@@ -27,7 +27,7 @@
 .comments__count {
   position: relative;
   display: inline-block;
-  min-width: 34px;
+  min-inline-size: 34px;
   margin-block-start: 0;
   margin-block-end: var(--sp0-5);
   margin-inline-start: var(--sp);
@@ -46,8 +46,8 @@
     position: absolute;
     inset-block-end: -7px;
     inset-inline-start: 8px;
-    width: 0;
-    height: 0;
+    inline-size: 0;
+    block-size: 0;
     content: "";
     border-block-start: 7px solid var(--color--primary-40);
     border-inline-end: 8px solid transparent;
@@ -110,47 +110,47 @@
   position: absolute;
   inset-inline-start: 0;
   overflow: hidden;
-  width: var(--sp2);
-  height: var(--sp2);
+  inline-size: var(--sp2);
+  block-size: var(--sp2);
   border-radius: 50%;
   background-color: var(--color--gray-95);
 
   & *:not(img) {
     display: inherit;
-    width: inherit;
-    height: inherit;
+    inline-size: inherit;
+    block-size: inherit;
   }
 
   & img {
-    width: 100%;
-    height: 100%;
+    inline-size: 100%;
+    block-size: 100%;
     object-fit: cover;
 
     /* @TODO: create image-style for profile's avatar to have image squared by default. */
     @media all and (-ms-high-contrast: active), (-ms-high-contrast: none) {
       position: absolute;
       /* stylelint-disable csstools/use-logical */
-      top: 50%;
-      left: 50%;
+      inset-block-start: 50%;
+      inset-inline-start: 50%;
       /* stylelint-enable csstools/use-logical */
-      width: 100%;
-      height: auto;
+      inline-size: 100%;
+      block-size: auto;
       transform: translate(-50%, -50%);
     }
   }
 
   @media (--grid-md) {
     inset-inline-start: calc(-1 * var(--sp5));
-    width: var(--sp3);
-    height: var(--sp3);
+    inline-size: var(--sp3);
+    block-size: var(--sp3);
   }
 }
 
 .indented .comment__picture {
   @media (--grid-md) {
     inset-inline-start: calc(-1 * var(--sp4));
-    width: var(--sp2);
-    height: var(--sp2);
+    inline-size: var(--sp2);
+    block-size: var(--sp2);
   }
 }
 
@@ -187,8 +187,8 @@
     position: absolute;
     inset-block-start: var(--sp2);
     inset-inline-start: calc(-1 * var(--comment-indentation) - var(--sp)); /* Comment's padding-top */
-    width: 0;
-    height: 100%;
+    inline-size: 0;
+    block-size: 100%;
     content: "";
     border-inline-start: solid 1px var(--color--gray-95);
 

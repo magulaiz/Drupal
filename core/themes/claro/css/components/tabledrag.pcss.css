@@ -48,7 +48,7 @@ body.drag-y {
  * to increase weight to be able to win normalize.css selectors.
  */
 .tabledrag-changed.tabledrag-changed {
-  border-bottom: none;
+  border-block-end: none;
 }
 
 .tabledrag-changed {
@@ -63,8 +63,8 @@ body.drag-y {
   }
 
   @nest .tabledrag-cell--only-drag & {
-    width: var(--space-l);
-    min-width: var(--space-l);
+    inline-size: var(--space-l);
+    min-inline-size: var(--space-l);
   }
 }
 
@@ -84,7 +84,7 @@ body.drag-y {
 .draggable td .form-element--type-select[name$="][_weight]"], /* Multiple field */
 .draggable td .term-weight, /* Taxonomy term list */
 .draggable td .field-weight /* Field UI table */ {
-  width: auto;
+  inline-size: auto;
 }
 
 /**
@@ -100,10 +100,11 @@ body.drag-y {
 
   &::after {
     display: inline-block;
-    width: var(--tabledrag-handle-icon-size);
-    height: var(--tabledrag-handle-icon-size);
+    inline-size: var(--tabledrag-handle-icon-size);
+    block-size: var(--tabledrag-handle-icon-size);
     margin-inline-start: calc(var(--space-m) * -1);
-    padding: var(--space-xs) var(--space-m);
+    padding-block: var(--space-xs);
+    padding-inline: var(--space-m);
     content: "";
     transition: transform 0.1s ease-in-out 0s;
     background: url(../../images/icons/000f33/tabledrag-handle.svg) no-repeat center;
@@ -143,9 +144,10 @@ body.drag-y {
 
   &::before {
     display: block;
-    width: calc(var(--space-m) + (var(--space-xs) * 2)); /* Same as height. */
-    height: calc(var(--space-m) + (var(--space-xs) * 2)); /* Hande svg height + its vertical padding */
-    margin: 0 calc(var(--space-xs) * -1) calc((var(--space-m) + (var(--space-xs) * 2)) * -1); /* Bottom: handle height as negative value. */
+    inline-size: calc(var(--space-m) + (var(--space-xs) * 2)); /* Same as height. */
+    block-size: calc(var(--space-m) + (var(--space-xs) * 2)); /* Hande svg height + its vertical padding */
+    margin-block: 0 calc((var(--space-m) + (var(--space-xs) * 2)) * -1);
+    margin-inline: calc(var(--space-xs) * -1); /* Bottom: handle height as negative value. */
     content: "";
     border-radius: var(--base-border-radius);
     outline: var(--outline-size) dotted transparent;
@@ -208,14 +210,14 @@ body.drag-y {
  * class won't be added.
  */
 .tabledrag-cell--only-drag {
-  width: 1px; /* This forces this cell to use the smallest possible width. */
+  inline-size: 1px; /* This forces this cell to use the smallest possible width. */
   padding-inline-end: 0;
 }
 
 .tabledrag-cell-content {
   display: flex;
   align-items: center;
-  height: 100%;
+  block-size: 100%;
 
   & > * {
     display: table-cell;
@@ -245,9 +247,9 @@ body.drag-y {
 .indentation {
   position: relative;
   inset-inline-start: calc(var(--space-xs) * -0.5);
-  float: left; /* LTR */
-  width: 25px;
-  height: 25px;
+  float: inline-start; /* LTR */
+  inline-size: 25px;
+  block-size: 25px;
   background: none !important;
   line-height: 0;
 
@@ -258,11 +260,11 @@ body.drag-y {
     float: none;
     overflow: hidden;
     flex-direction: column;
-    height: 100%;
+    block-size: 100%;
   }
 
   @nest [dir="rtl"] & {
-    float: right;
+    float: inline-end;
   }
 }
 
@@ -274,8 +276,8 @@ body.drag-y {
  * element.
  */
 .tree {
-  width: 25px;
-  height: 25px;
+  inline-size: 25px;
+  block-size: 25px;
 }
 
 .tree__item {

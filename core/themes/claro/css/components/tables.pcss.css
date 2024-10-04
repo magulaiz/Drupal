@@ -4,13 +4,13 @@
  */
 
 table {
-  width: 100%;
+  inline-size: 100%;
   margin-block: var(--space-l);
   border-collapse: collapse;
 }
 
 .sticky-header {
-  min-width: 0;
+  min-inline-size: 0;
 }
 
 caption {
@@ -20,8 +20,9 @@ caption {
 th {
   position: relative;
   box-sizing: border-box;
-  height: var(--space-xl);
-  padding: var(--space-xs) var(--space-m);
+  block-size: var(--space-xl);
+  padding-block: var(--space-xs);
+  padding-inline: var(--space-m);
   text-align: start;
   color: var(--color-text);
   background: var(--color-gray-050);
@@ -30,7 +31,8 @@ th {
 
 /* The actual sort link. */
 .sortable-heading {
-  padding: 0 var(--space-m);
+  padding-block: 0;
+  padding-inline: var(--space-m);
   & > a {
     display: block;
     padding-block: var(--space-xs);
@@ -60,15 +62,15 @@ th {
       inset-inline-start: 1rem;
       display: block;
       content: "";
-      border-bottom: 0.125rem solid transparent;
+      border-block-end: 0.125rem solid transparent;
     }
 
     &::after {
       position: absolute;
       inset-block-start: 50%;
       inset-inline-end: 1rem;
-      width: 0.875rem;
-      height: 1rem;
+      inline-size: 0.875rem;
+      block-size: 1rem;
       margin-block-start: -0.5rem;
       content: "";
       opacity: 0.5;
@@ -97,7 +99,7 @@ th {
     color: var(--color-absolutezero);
 
     &::before {
-      border-bottom: 0.1875rem solid var(--color-absolutezero);
+      border-block-end: 0.1875rem solid var(--color-absolutezero);
     }
 
     &::after {
@@ -107,7 +109,7 @@ th {
 }
 
 tr {
-  border-bottom: 0.0625rem solid var(--color-gray-200);
+  border-block-end: 0.0625rem solid var(--color-gray-200);
   &:hover,
   &:focus-within {
     color: var(--color-text);
@@ -135,8 +137,9 @@ thead tr {
 
 td {
   box-sizing: border-box;
-  height: 4rem;
-  padding: var(--space-xs) var(--space-m);
+  block-size: 4rem;
+  padding-block: var(--space-xs);
+  padding-inline: var(--space-m);
   text-align: start;
 
   & .item-list ul {
@@ -159,13 +162,13 @@ td {
   & > .form-item > .claro-autocomplete > .form-element,
   & > .ajax-new-content > .form-item > .claro-autocomplete,
   & > .ajax-new-content > .form-item > .claro-autocomplete > .form-element {
-    width: 100%;
+    inline-size: 100%;
   }
 
   & > .form-item > .form-element--type-select,
   & > .ajax-new-content > .form-item > .form-element--type-select {
-    width: max-content;
-    min-width: 100%;
+    inline-size: max-content;
+    min-inline-size: 100%;
   }
 }
 
@@ -175,7 +178,7 @@ th.is-disabled.is-disabled {
 }
 /* Force browsers to calculate the width of a 'select all' <th> element. */
 th.select-all {
-  width: 1px;
+  inline-size: 1px;
 }
 
 /**
@@ -189,10 +192,10 @@ tfoot {
   font-weight: bold;
   & tr {
     &:last-child {
-      border-bottom: 0;
+      border-block-end: 0;
     }
     &:first-child td {
-      border-top: 0.0625rem solid var(--color-gray-500);
+      border-block-start: 0.0625rem solid var(--color-gray-500);
     }
   }
 }

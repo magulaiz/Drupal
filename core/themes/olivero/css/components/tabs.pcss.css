@@ -20,7 +20,7 @@
 
   display: flex;
   flex-direction: column;
-  width: 100%;
+  inline-size: 100%;
   margin: 0;
   margin-inline-start: 0; /* Override [dir] attribute in base <ul> in compiled CSS. */
   padding: 0;
@@ -71,7 +71,7 @@
   display: flex;
   flex-grow: 1;
   align-items: center;
-  height: var(--tabs-height);
+  block-size: var(--tabs-height);
   padding-block: 0;
   padding-inline: var(--tabs-padding-inline);
   transition: background-color var(--tabs-transition-duration);
@@ -106,14 +106,14 @@
       position: absolute;
       inset-block-start: calc(-1 * var(--tabs-border-width));
       inset-inline-start: calc(-1 * var(--tabs-border-width));
-      height: calc(100% + var(--tabs-border-width) * 2);
+      block-size: calc(100% + var(--tabs-border-width) * 2);
       content: "";
       border-inline-start: var(--tabs-active-border-size) solid var(--tabs-highlight-color);
 
       @media (--tabs-layout-switch) {
         inset-block: auto calc(-1 * var(--tabs-border-width));
-        width: calc(100% + 2 * var(--tabs-border-width));
-        height: 0;
+        inline-size: calc(100% + 2 * var(--tabs-border-width));
+        block-size: 0;
         border-block-start: var(--tabs-active-border-size) solid var(--tabs-highlight-color);
         border-inline-start: 0;
       }
@@ -134,7 +134,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  width: var(--tabs-height);
+  inline-size: var(--tabs-height);
   margin-block: 0;
   margin-inline: calc(-1 * var(--tabs-border-width)) 0;
   cursor: pointer;
@@ -164,19 +164,19 @@
 .tabs__trigger-icon {
   position: relative;
   display: block;
-  width: var(--sp);
-  height: 10px;
+  inline-size: var(--sp);
+  block-size: 10px;
   margin-block-start: calc(-2 * var(--tabs-border-width));
 
   & > span {
     position: absolute;
     inset-inline-start: 0;
     display: block;
-    width: 100%;
+    inline-size: 100%;
     transition:
       transform var(--tabs-transition-duration),
       opacity var(--tabs-transition-duration),
-      top var(--tabs-transition-duration);
+      inset-block-start var(--tabs-transition-duration);
     border-block-start: solid 2px var(--tabs-highlight-color);
 
     &:nth-child(1) {

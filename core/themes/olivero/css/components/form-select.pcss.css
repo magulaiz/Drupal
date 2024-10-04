@@ -10,8 +10,8 @@
 }
 
 select {
-  max-width: 100%;
-  height: var(--sp3);
+  max-inline-size: 100%;
+  block-size: var(--sp3);
   padding-block: 0;
   padding-inline-start: var(--sp);
   padding-inline-end: var(--sp3);
@@ -52,7 +52,7 @@ select {
   }
 
   &[multiple] {
-    height: auto;
+    block-size: auto;
     padding: var(--sp0-5);
     background-image: none;
     line-height: 1; /* Needed by non-Chromium based MS Edge browsers. */
@@ -63,7 +63,7 @@ select {
   }
 
   &.form-element--small {
-    height: var(--sp2-5);
+    block-size: var(--sp2-5);
   }
 
   /* Necessary to show chevron in forced colors mode in modern browsers. */

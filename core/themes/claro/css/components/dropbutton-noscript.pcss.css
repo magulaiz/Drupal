@@ -6,7 +6,7 @@ html {
   .dropbutton--small,
   .dropbutton--extrasmall,
   .dropbutton {
-    height: auto;
+    block-size: auto;
   }
 
   .dropbutton-wrapper:not(.open) .dropbutton__item:first-of-type ~ .dropbutton__item {

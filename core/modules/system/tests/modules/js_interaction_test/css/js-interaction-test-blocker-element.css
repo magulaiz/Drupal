@@ -2,11 +2,11 @@
   /* Position the box over the target. */
   position: relative;
   z-index: 1;
-  top: -30px;
-  left: -5px;
+  inset-block-start: -30px;
+  inset-inline-start: -5px;
   /* Size the box to cover the target. */
-  width: 500px;
-  height: 40px;
+  inline-size: 500px;
+  block-size: 40px;
   opacity: 0.5;
   /* Make the blocker element visible. */
   background-color: black;

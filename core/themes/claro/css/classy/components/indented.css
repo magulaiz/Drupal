@@ -7,9 +7,5 @@
  * Indent threaded comments.
  */
 .indented {
-  margin-left: 25px; /* LTR */
-}
-[dir="rtl"] .indented {
-  margin-right: 25px;
-  margin-left: 0;
+  margin-inline-start: 25px;
 }

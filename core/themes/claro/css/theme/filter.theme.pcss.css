@@ -7,7 +7,7 @@
  * Filter information under field.
  */
 .text-full > .form-item {
-  margin-bottom: 0;
+  margin-block-end: 0;
 }
 .form-element--editor-format {
   vertical-align: top;
@@ -16,26 +16,24 @@
 @media screen and (max-width: 600px) {
   /* Leave editor's select auto-scaled. */
   .form-element.form-element--editor-format {
-    width: auto;
+    inline-size: auto;
   }
 }
 
 .filter-wrapper {
-  margin-top: 0.5em; /* (8 / 16) */
-  margin-bottom: 0.5em; /* (8 / 16) */
+  margin-block: 0.5em; /* (8 / 16) */ /* (8 / 16) */
 }
 .filter-wrapper .form-item {
   margin: 0;
 }
 
 .filter-help {
-  float: right; /* LTR */
-  padding-top: 0.25em; /* (3 / 12), because font size is 12px */
-  padding-bottom: 0.25em; /* (3 / 12) */
+  float: inline-end; /* LTR */
+  padding-block: 0.25em; /* (3 / 12), because font size is 12px */ /* (3 / 12) */
   font-size: 0.75em; /* (12 / 16), inherited font size is 16px */
 }
 [dir="rtl"] .filter-help {
-  float: left;
+  float: inline-start;
 }
 
 /**
@@ -44,21 +42,19 @@
  * Wraps filter tips on page '/filter/tips[/name]'.
  */
 .compose-tips__item {
-  margin-top: 1.5em;
-  margin-bottom: 1.5em;
+  margin-block: 1.5em;
 }
 
 /**
  * Filter guidelines.
  */
 .filter-guidelines__item {
-  margin-top: 0.5em; /* (6 / 12) */
+  margin-block-start: 0.5em; /* (6 / 12) */
   color: var(--input-fg-color--description);
   font-size: 0.75em; /* (12 / 16) */
 }
 .filter-guidelines p {
-  margin-top: 0.3333em; /* (4 / 12) */
-  margin-bottom: 0;
+  margin-block: 0.3333em 0; /* (4 / 12) */
 }
 
 /**
@@ -68,14 +64,12 @@
  * below a text format input.
  */
 .filter-tips--long {
-  margin-bottom: 1.5em;
+  margin-block-end: 1.5em;
 }
 .filter-tips__item,
 .filter-tips--long p {
-  margin-top: 0.75em;
-  margin-bottom: 0.75em;
+  margin-block: 0.75em;
 }
 .filter-tips__item--short {
-  margin-top: 0.3333em; /* (4 / 12) */
-  margin-bottom: 0;
+  margin-block: 0.3333em 0; /* (4 / 12) */
 }

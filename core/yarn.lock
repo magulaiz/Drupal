@@ -2413,6 +2413,7 @@ __metadata:
     stylelint-formatter-gitlab: "npm:^1.0.2"
     stylelint-order: "npm:^6.0.4"
     stylelint-prettier: "npm:^4.1.0"
+    stylelint-use-logical-spec: "npm:^5.0.1"
     tabbable: "npm:^6.2.0"
     terser: "npm:^5.31.3"
     terser-webpack-plugin: "npm:^5.3.10"
@@ -8542,6 +8543,15 @@ __metadata:
     prettier: ">=3.0.0"
     stylelint: ">=15.8.0"
   checksum: 10c0/3824fa7fb78ac01f612490af677095c78a22d4a74fc49d0fa16c1c4345e7a015d3a62277ae5c4d7dbbf303c4fdc0eabe2709db3b8eac8e2c8c2130a3d4d6c62d
+  languageName: node
+  linkType: hard
+
+"stylelint-use-logical-spec@npm:^5.0.1":
+  version: 5.0.1
+  resolution: "stylelint-use-logical-spec@npm:5.0.1"
+  peerDependencies:
+    stylelint: ">=11 < 17"
+  checksum: 10c0/deb7b25cb920339822b17e76c1662693832806bb078a8aec6614c2ac1d36bf5e7550e2f481f119a02ea6b06aa1322f9fe8c3a6a2dc72ed6079f84d9f2d061068
   languageName: node
   linkType: hard
 

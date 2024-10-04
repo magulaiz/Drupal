@@ -20,7 +20,7 @@
 }
 
 .toolbar-vertical.toolbar-tray-open .node-preview-container {
-  max-width: calc(100vw - var(--toolbar-tray-vertical-width) - var(--scrollbar-width));
+  max-inline-size: calc(100vw - var(--toolbar-tray-vertical-width) - var(--scrollbar-width));
 }
 
 .node-preview-form-select {

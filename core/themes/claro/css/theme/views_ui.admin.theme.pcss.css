@@ -13,8 +13,8 @@
   text-decoration: none;
 }
 .views-admin .icon {
-  width: 16px;
-  height: 16px;
+  inline-size: 16px;
+  block-size: 16px;
 }
 .views-admin .icon,
 .views-admin .icon-text {
@@ -44,10 +44,10 @@
 }
 .views-admin span.icon {
   position: relative;
-  float: left; /* LTR */
+  float: inline-start; /* LTR */
 }
 [dir="rtl"] .views-admin span.icon {
-  float: right;
+  float: inline-end;
 }
 .views-admin .icon.compact {
   display: block;
@@ -58,11 +58,10 @@
 
 /* Targets any element with an icon -> text combo */
 .views-admin .icon-text {
-  padding-left: 19px; /* LTR */
+  padding-inline-start: 19px; /* LTR */
 }
 [dir="rtl"] .views-admin .icon-text {
-  padding-right: 19px;
-  padding-left: 0;
+  padding-inline: 0 19px;
 }
 .views-admin .icon.linked {
   background-position: center -153px;
@@ -100,15 +99,14 @@ details.box-padding {
   border: none;
 }
 .views-admin details details {
-  margin-bottom: 0;
+  margin-block-end: 0;
 }
 .form-item {
-  margin-top: 9px;
-  padding-top: 0;
-  padding-bottom: 0;
+  margin-block-start: 9px;
+  padding-block: 0;
 }
 .form-type-checkbox {
-  margin-top: 6px;
+  margin-block-start: 6px;
 }
 .form-checkbox,
 .form-radio {
@@ -116,11 +114,10 @@ details.box-padding {
 }
 /* Indent form elements so they're directly underneath the label of the checkbox that reveals them */
 .views-admin .form-type-checkbox + .form-wrapper {
-  margin-left: 16px; /* LTR */
+  margin-inline-start: 16px; /* LTR */
 }
 [dir="rtl"] .views-admin .form-type-checkbox + .form-wrapper {
-  margin-right: 16px;
-  margin-left: 0;
+  margin-inline: 0 16px;
 }
 
 /* Hide 'remove' checkboxes. */
@@ -134,63 +131,60 @@ details.box-padding {
   line-height: 2;
 }
 .views-admin-dependent .form-item {
-  margin-top: 6px;
-  margin-bottom: 6px;
+  margin-block: 6px;
 }
 .views-ui-view-name h3 {
-  margin: 0.25em 0;
+  margin-block: 0.25em;
+  margin-inline: 0;
   font-weight: bold;
 }
 .view-changed {
-  margin-bottom: 21px;
+  margin-block-end: 21px;
 }
 .views-admin .unit-title {
-  margin-top: 18px;
-  margin-bottom: 0;
+  margin-block: 18px 0;
   font-size: 15px;
   line-height: 1.6154;
 }
 .views-ui-view-displays ul {
-  margin-left: 0; /* LTR */
-  padding-left: 0; /* LTR */
+  margin-inline-start: 0; /* LTR */
+  padding-inline-start: 0; /* LTR */
   list-style: none;
 }
 [dir="rtl"] .views-ui-view-displays ul {
-  margin-right: 0;
-  margin-left: inherit;
-  padding-right: 0;
-  padding-left: inherit;
+  margin-inline: inherit 0;
+  padding-inline: inherit 0;
 }
 
 /* These header classes are ambiguous and should be scoped to th elements */
 .views-ui-name {
-  width: 20%;
+  inline-size: 20%;
 }
 .views-ui-description {
-  width: 30%;
+  inline-size: 30%;
 }
 .views-ui-machine-name {
-  width: 15%;
+  inline-size: 15%;
 }
 .views-ui-displays {
-  width: 25%;
+  inline-size: 25%;
 }
 .views-ui-operations {
-  width: 10%;
+  inline-size: 10%;
 }
 
 /**
  * I wish this didn't have to be so specific
  */
 .form-item-description-enable + .form-item-description {
-  margin-top: 0;
+  margin-block-start: 0;
 }
 .form-item-description-enable label {
   font-weight: bold;
 }
 .form-item-page-create,
 .form-item-block-create {
-  margin-top: 13px;
+  margin-block-start: 13px;
 }
 .form-item-page-create label,
 .form-item-block-create label,
@@ -215,31 +209,32 @@ td.group-title {
   font-weight: bold;
 }
 .views-ui-dialog td.group-title {
-  height: 1px;
+  block-size: 1px;
   margin: 0;
   padding: 0;
 }
 .views-ui-dialog td.group-title span {
   display: block;
   overflow: hidden;
-  height: 1px;
+  block-size: 1px;
 }
 .group-message .form-submit,
 .views-remove-group-link,
 .views-add-group {
-  float: right; /* LTR */
+  float: inline-end; /* LTR */
   clear: both;
 }
 [dir="rtl"] .group-message .form-submit,
 [dir="rtl"] .views-remove-group-link,
 [dir="rtl"] .views-add-group {
-  float: left;
+  float: inline-start;
 }
 .views-operator-label {
   position: absolute;
   z-index: 1;
-  bottom: -13px;
-  padding: 0.5px 6px;
+  inset-block-end: -13px;
+  padding-block: 0.5px;
+  padding-inline: 6px;
   text-transform: uppercase;
   border: 1px solid var(--color-gray-200);
   background: #fff;
@@ -248,55 +243,59 @@ td.group-title {
 }
 .grouped-description,
 .exposed-description {
-  float: left; /* LTR */
-  padding-top: 3px;
-  padding-right: 10px; /* LTR */
+  float: inline-start; /* LTR */
+  padding-block-start: 3px;
+  padding-inline-end: 10px; /* LTR */
 }
 [dir="rtl"] .grouped-description,
 [dir="rtl"] .exposed-description {
-  float: right;
-  padding-right: 0;
-  padding-left: 10px;
+  float: inline-end;
+  padding-inline: 10px 0;
 }
 .views-displays {
-  padding-bottom: 36px;
-  border-top: 1px solid var(--color-gray-200-o-80);
-  border-right: 1px solid var(--color-gray-200-o-80);
-  border-left: 1px solid var(--color-gray-200-o-80);
+  padding-block-end: 36px;
+  border-block-start: 1px solid var(--color-gray-200-o-80);
+  border-inline-end: 1px solid var(--color-gray-200-o-80);
+  border-inline-start: 1px solid var(--color-gray-200-o-80);
 }
 .views-display-top {
   position: relative;
   display: flex;
   flex-wrap: wrap;
   justify-content: space-between;
-  padding: var(--space-s) var(--space-s) calc(var(--space-s) - 5px);
-  border-bottom: 1px solid var(--color-gray-200-o-80);
+  padding-block: var(--space-s) calc(var(--space-s) - 5px);
+  padding-inline: var(--space-s);
+  border-block-end: 1px solid var(--color-gray-200-o-80);
   background-color: var(--color-gray-050);
 }
 .form-edit .form-actions,
 .form-edit .field-actions {
-  margin-top: 0;
-  padding: var(--space-s) var(--space-m);
-  border-right: 1px solid var(--color-gray-200-o-80);
-  border-bottom: 1px solid var(--color-gray-200-o-80);
-  border-left: 1px solid var(--color-gray-200-o-80);
+  margin-block-start: 0;
+  padding-block: var(--space-s);
+  padding-inline: var(--space-m);
+  border-inline-end: 1px solid var(--color-gray-200-o-80);
+  border-block-end: 1px solid var(--color-gray-200-o-80);
+  border-inline-start: 1px solid var(--color-gray-200-o-80);
   background-color: var(--color-gray-050);
 }
 .edit-display-settings {
-  margin: var(--space-l) var(--space-l) 0 var(--space-l);
+  margin-block: var(--space-l) 0;
+  margin-inline: var(--space-l);
 }
 .edit-display-settings-top.views-ui-display-tab-bucket.views-ui-display-tab-bucket {
   position: relative;
   display: flex;
   flex-wrap: wrap;
   justify-content: space-between;
-  margin: 0 0 var(--space-l);
+  margin-block: 0 var(--space-l);
+  margin-inline: 0;
   padding: 0;
-  border-bottom: none;
+  border-block-end: none;
   line-height: 20px;
 }
 .edit-display-settings-top.views-ui-display-tab-bucket .views-display-setting {
-  padding: 0.125rem 0 0;
+  padding-block: 0.125rem 0;
+  padding-inline: 0;
 }
 .views-display-column {
   border: 1px solid var(--color-gray-200-o-80);
@@ -304,12 +303,12 @@ td.group-title {
   box-shadow: var(--details-box-shadow);
 }
 .views-display-column + .views-display-column {
-  margin-top: 0;
+  margin-block-start: 0;
 }
 .view-preview-form .form-item--view-args,
 .view-preview-form .form-actions,
 .view-preview-form .field-actions {
-  margin-top: 5px;
+  margin-block-start: 5px;
 }
 .view-preview-form .views-bulk-actions__item {
   margin-block-start: 0;
@@ -318,12 +317,11 @@ td.group-title {
   font-size: 1em;
 }
 .view-preview-form .form-item--view-args {
-  margin-top: var(--space-m);
+  margin-block-start: var(--space-m);
 }
 .view-preview-form .arguments-preview,
 .view-preview-form .form-item--view-args {
-  margin-right: var(--space-m);
-  margin-left: var(--space-m);
+  margin-inline: var(--space-m);
 }
 .preview-submit-wrapper {
   display: inline-block;
@@ -344,35 +342,36 @@ td.group-title {
 /* These are the individual "buckets," or boxes, inside the display settings area */
 .views-ui-display-tab-bucket.views-ui-display-tab-bucket {
   position: relative;
-  margin: 0 0 var(--space-xs);
-  padding-top: var(--space-xs);
-  padding-bottom: var(--space-xs);
-  border-bottom: 1px solid var(--color-gray-200-o-80);
+  margin-block: 0 var(--space-xs);
+  margin-inline: 0;
+  padding-block: var(--space-xs);
+  border-block-end: 1px solid var(--color-gray-200-o-80);
   line-height: 20px;
 }
 .views-ui-display-tab-bucket:last-of-type {
-  margin-bottom: 0;
-  border-bottom: none;
+  margin-block-end: 0;
+  border-block-end: none;
 }
 .views-ui-display-tab-bucket + .views-ui-display-tab-bucket {
-  border-top: medium none;
+  border-block-start: medium none;
 }
 .views-ui-display-tab-bucket__header {
   display: inline-flex;
   justify-content: space-between;
   box-sizing: border-box;
-  width: 100%;
-  padding: var(--space-s) var(--space-m) calc(var(--space-s) + 2px);
+  inline-size: 100%;
+  padding-block: var(--space-s) calc(var(--space-s) + 2px);
+  padding-inline: var(--space-m);
 }
 .views-ui-display-tab-bucket__title {
   margin: 0;
   font-size: var(--font-size-base);
 }
 .views-ui-display-tab-bucket.access {
-  padding-top: 0;
+  padding-block-start: 0;
 }
 .views-ui-display-tab-bucket.page-settings {
-  border-bottom: medium none;
+  border-block-end: medium none;
 }
 
 /** Applies an overridden(italics) font style to overridden buckets.
@@ -390,7 +389,8 @@ td.group-title {
 .views-ui-display-tab-bucket .views-display-setting {
   display: flex;
   flex-wrap: wrap;
-  padding: var(--space-xs) var(--space-m);
+  padding-block: var(--space-xs);
+  padding-inline: var(--space-m);
   color: #666;
   font-size: var(--font-size-s);
 }
@@ -398,30 +398,26 @@ td.group-title {
   background-color: transparent;
 }
 .views-ui-display-tab-bucket .views-group-text {
-  margin-top: 6px;
-  margin-bottom: 6px;
+  margin-block: 6px;
 }
 .views-ui-display-tab-bucket__actions {
-  margin-left: var(--space-xs); /* LTR */
+  margin-inline-start: var(--space-xs); /* LTR */
 }
 [dir="rtl"] .views-ui-display-tab-bucket__actions {
-  margin-right: var(--space-xs);
-  margin-left: 0;
+  margin-inline: 0 var(--space-xs);
 }
 .views-display-setting .label {
-  margin-right: var(--space-xs); /* LTR */
+  margin-inline-end: var(--space-xs); /* LTR */
   white-space: nowrap;
 }
 [dir="rtl"] .views-display-setting .label {
-  margin-right: 0;
-  margin-left: var(--space-xs);
+  margin-inline: var(--space-xs) 0;
 }
 .label--separator.label--separator {
-  margin-right: var(--space-xs);
-  margin-left: var(--space-xs);
+  margin-inline: var(--space-xs);
 }
 .views-edit-view {
-  margin-bottom: 15px;
+  margin-block-end: 15px;
 }
 .views-edit-view.disabled .views-displays {
   background-color: var(--color-red-020);
@@ -431,54 +427,57 @@ td.group-title {
 }
 /* The contents of the popup dialog on the views edit form. */
 .views-filterable-options .form-type-checkbox {
-  padding: 5px 8px;
-  border-top: none;
+  padding-block: 5px;
+  padding-inline: 8px;
+  border-block-start: none;
 }
 .filterable-option .form-item {
-  margin-top: 0;
-  margin-bottom: 0;
+  margin-block: 0;
 }
 .views-filterable-options .form-type-checkbox .description {
-  margin-top: 0;
-  margin-bottom: 0;
+  margin-block: 0;
 }
 .views-filterable-options-controls .form-item {
-  width: 30%;
-  margin: 0 0 0 2%; /* LTR */
+  inline-size: 30%;
+  margin-block: 0;
+  margin-inline: 2% 0; /* LTR */
 }
 [dir="rtl"] .views-filterable-options-controls .form-item {
-  margin: 0 2% 0 0;
+  margin-block: 0;
+  margin-inline: 0 2%;
 }
 .views-filterable-options-controls input,
 .views-filterable-options-controls select {
-  width: 100%;
+  inline-size: 100%;
 }
 .views-ui-dialog.views-ui-dialog > .ui-dialog-content {
   padding: 0;
 }
 
 .views-ui-dialog .views-filterable-options {
-  margin-bottom: 10px;
+  margin-block-end: 10px;
 }
 [id^="views-ui-add-handler-form"] .scroll {
-  padding-top: 0;
-  padding-bottom: 0;
+  padding-block: 0;
 }
 
 .views-ui-dialog .views-add-form-selected {
-  padding: 0 1rem;
+  padding-block: 0;
+  padding-inline: 1rem;
 }
 .views-ui-dialog .views-add-form-selected > div {
   display: block;
   margin: 0;
-  padding: 0.3rem 0.8rem;
+  padding-block: 0.3rem;
+  padding-inline: 0.8rem;
   border: 1px solid #dedfe4;
   border-radius: 2px 2px 0 0;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
 }
 .views-ui-dialog .form-item-selected {
   margin: 0;
-  padding: 6px 16px;
+  padding-block: 6px;
+  padding-inline: 16px;
 }
 .views-ui-dialog .views-add-form-selected .views-selected-options {
   display: inline;
@@ -488,15 +487,16 @@ td.group-title {
 }
 .views-ui-dialog .views-offset-top:not(:empty) {
   position: relative;
-  padding: var(--space-s) var(--space-m) var(--space-xs);
+  padding-block: var(--space-s) var(--space-xs);
+  padding-inline: var(--space-m);
   background-color: var(--color-gray-050);
 }
 .views-ui-dialog .views-offset-top:not(:empty)::after {
   position: absolute;
-  bottom: 0;
-  left: 0;
-  width: 100%;
-  height: 3px;
+  inset-block-end: 0;
+  inset-inline-start: 0;
+  inline-size: 100%;
+  block-size: 3px;
   content: "";
   background: linear-gradient(to bottom, rgba(80, 81, 86, 0.11) 0%, rgba(18, 19, 20, 0.02) 49%, rgba(18, 19, 20, 0) 100%);
 }
@@ -506,20 +506,21 @@ td.group-title {
 }
 
 .views-ui-dialog .views-offset-top .form-item {
-  max-width: 40%;
-  margin: 0 var(--space-s) var(--space-s) 0;
+  max-inline-size: 40%;
+  margin-block: 0 var(--space-s);
+  margin-inline: 0 var(--space-s);
 }
 
 .views-ui-dialog .tabledrag-toggle-weight-wrapper {
-  margin: 0 0 var(--space-m) 0;
+  margin-block: 0 var(--space-m);
+  margin-inline: 0;
 }
 
 .views-ui-dialog details .item-list {
-  padding-left: 2em; /* LTR */
+  padding-inline-start: 2em; /* LTR */
 }
 [dir="rtl"] .views-ui-dialog details .item-list {
-  padding-right: 2em;
-  padding-left: 0;
+  padding-inline: 0 2em;
 }
 .views-display-columns .details-wrapper {
   margin: 0;
@@ -531,32 +532,30 @@ td.group-title {
   border: 1px solid var(--color-gray-200);
 }
 .views-ui-rearrange-filter-form tr[id^="views-row"] {
-  border-right: 1px solid #cdcdcd; /* LTR */
+  border-inline-end: 1px solid #cdcdcd; /* LTR */
 }
 [dir="rtl"] .views-ui-rearrange-filter-form tr[id^="views-row"] {
-  border-right: 0;
-  border-left: 1px solid #cdcdcd;
+  border-inline-end: 0;
+  border-inline-start: 1px solid #cdcdcd;
 }
 .views-ui-rearrange-filter-form .draggable td {
-  border-bottom: 0.0625rem solid var(--color-gray-200);
+  border-block-end: 0.0625rem solid var(--color-gray-200);
 }
 .views-ui-rearrange-filter-form .group-empty {
-  border-bottom: 1px solid #cdcdcd;
+  border-block-end: 1px solid #cdcdcd;
 }
 .form-item-options-expose-required,
 .form-item-options-expose-label,
 .form-item-options-expose-field-identifier,
 .form-item-options-expose-description {
-  margin-top: 6px;
-  margin-bottom: 6px;
-  margin-left: 18px; /* LTR */
+  margin-block: 6px;
+  margin-inline-start: 18px; /* LTR */
 }
 [dir="rtl"] .form-item-options-expose-required,
 [dir="rtl"] .form-item-options-expose-label,
 [dir="rtl"] .form-item-options-expose-field-identifier,
 [dir="rtl"] .form-item-options-expose-description {
-  margin-right: 18px;
-  margin-left: 0;
+  margin-inline: 0 18px;
 }
 .views-preview-wrapper {
   border: 1px solid #ccc;
@@ -565,23 +564,22 @@ td.group-title {
   position: relative;
 }
 .view-preview-form__title {
-  margin-top: 0;
-  padding: 8px 12px;
-  border-bottom: 1px solid #ccc;
+  margin-block-start: 0;
+  padding-block: 8px;
+  padding-inline: 12px;
+  border-block-end: 1px solid #ccc;
   background-color: var(--color-gray-050);
 }
 .view-preview-form .form-item--live-preview {
   position: absolute;
-  top: 0.6875rem;
-  right: var(--space-s);
-  margin-top: 2px;
-  margin-left: 2px; /* LTR */
+  inset-block-start: 0.6875rem;
+  inset-inline-end: var(--space-s);
+  margin-block-start: 2px;
+  margin-inline-start: 2px; /* LTR */
 }
 [dir="rtl"] .view-preview-form .form-item--live-preview {
-  right: auto;
-  left: var(--space-s);
-  margin-right: 2px;
-  margin-left: 0;
+  inset-inline: var(--space-s) auto;
+  margin-inline: 0 2px;
 }
 .views-live-preview {
   padding: var(--space-m);
@@ -591,31 +589,33 @@ td.group-title {
 }
 .views-live-preview .section-title {
   display: inline-block;
-  margin-top: 0;
-  margin-bottom: 0;
+  margin-block: 0;
   color: var(--color-gray-800);
   font-size: 13px;
   font-weight: normal;
   line-height: 1.6154;
 }
 .views-live-preview .view > * {
-  margin-top: var(--space-m);
+  margin-block-start: var(--space-m);
 }
 .views-live-preview .preview-section {
-  margin: 0 -5px;
-  padding: 3px 5px;
+  margin-block: 0;
+  margin-inline: -5px;
+  padding-block: 3px;
+  padding-inline: 5px;
   border: 1px dashed #dedede;
 }
 .views-live-preview li.views-row + li.views-row {
-  margin-top: 18px;
+  margin-block-start: 18px;
 }
 
 /* The div.views-row is intentional and excludes li.views-row, for example */
 .views-live-preview div.views-row + div.views-row {
-  margin-top: 36px;
+  margin-block-start: 36px;
 }
 .views-query-info table {
-  margin: 10px 0;
+  margin-block: 10px;
+  margin-inline: 0;
   border-spacing: 0;
   border-collapse: separate;
   border-color: var(--color-bg);
@@ -625,23 +625,23 @@ td.group-title {
 }
 .views-query-info table th,
 .views-query-info table td {
-  padding: var(--space-xs) var(--space-l);
+  padding-block: var(--space-xs);
+  padding-inline: var(--space-l);
   font-size: var(--font-size-s);
 }
 .messages {
-  margin-bottom: 18px;
+  margin-block-end: 18px;
   line-height: 1.4555;
 }
 
 .js .dropbutton-wrapper .dropbutton .dropbutton-action > .ajax-progress-throbber {
   position: absolute;
   z-index: 2;
-  top: -1px;
-  right: -5px; /* LTR */
+  inset-block-start: -1px;
+  inset-inline-end: -5px; /* LTR */
 }
 [dir="rtl"].js .dropbutton-wrapper .dropbutton .dropbutton-action > .ajax-progress-throbber {
-  right: auto;
-  left: -5px;
+  inset-inline: -5px auto;
 }
 
 /**
@@ -652,34 +652,34 @@ td.group-title {
  * @see https://www.drupal.org/project/drupal/issues/1899236
  */
 .edit-display-settings-top.views-ui-display-tab-bucket .dropbutton-wrapper {
-  top: 0.8125rem;
-  right: var(--space-s); /* LTR */
+  inset-block-start: 0.8125rem;
+  inset-inline-end: var(--space-s); /* LTR */
 }
 [dir="rtl"] .edit-display-settings-top.views-ui-display-tab-bucket .dropbutton-wrapper {
-  right: auto;
-  left: var(--space-s);
+  inset-inline: var(--space-s) auto;
 }
 
 .views-list-section {
-  margin-bottom: 2em;
+  margin-block-end: 2em;
 }
 .form-textarea-wrapper,
 .form-item-options-content {
-  width: 100%;
+  inline-size: 100%;
 }
 
 .views-messages .messages-list,
 .views-messages .messages-list__item {
-  margin-top: 0;
-  margin-bottom: 0;
+  margin-block: 0;
 }
 
 /**
  * Styles on devices with touchevents.
  */
 html:not(.no-touchevents) .views-ui-display-tab-bucket__header--actions {
-  padding: var(--space-l) var(--space-xs);
+  padding-block: var(--space-l);
+  padding-inline: var(--space-xs);
 }
 html:not(.no-touchevents) .edit-display-settings-top.views-ui-display-tab-bucket {
-  padding: var(--space-m) var(--space-xs);
+  padding-block: var(--space-m);
+  padding-inline: var(--space-xs);
 }

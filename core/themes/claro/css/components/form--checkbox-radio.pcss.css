@@ -17,12 +17,12 @@
 .form-type--boolean .form-boolean {
   position: relative;
   inset-block-start: calc(var(--space-l) / 2);
-  float: left; /* LTR */
+  float: inline-start; /* LTR */
   margin-inline-start: calc(var(--input--label-spacing) * -1);
   transform: translateY(-50%);
 
   @nest [dir="rtl"] & {
-    float: right;
+    float: inline-end;
   }
 }
 
@@ -51,8 +51,8 @@
 .form-boolean {
   display: inline-block;
   box-sizing: border-box;
-  width: 18px;
-  height: 18px;
+  inline-size: 18px;
+  block-size: 18px;
   vertical-align: text-bottom;
   border: 1px solid var(--input-border-color);
   border-radius: 2px;
@@ -83,8 +83,8 @@
 }
 
 .form-boolean--type-radio {
-  width: 19px;
-  height: 19px;
+  inline-size: 19px;
+  block-size: 19px;
   border-radius: 19px;
 
   &:checked {

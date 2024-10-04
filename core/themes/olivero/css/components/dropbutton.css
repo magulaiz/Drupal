@@ -29,8 +29,8 @@
 
 .dropbutton-widget {
   position: relative;
-  width: max-content;
-  height: var(--dropbutton--height);
+  inline-size: max-content;
+  block-size: var(--dropbutton--height);
   padding-inline-end: var(--dropbutton--height);
   border-radius: var(--dropbutton--border-radius);
 }
@@ -44,7 +44,7 @@
 }
 
 .dropbutton {
-  height: var(--dropbutton--height);
+  block-size: var(--dropbutton--height);
   margin-block: 0;
   margin-inline-start: 0;
   padding-inline-start: 0;
@@ -56,13 +56,13 @@
 
 .dropbutton-toggle button {
   position: absolute;
-  top: 0;
+  inset-block-start: 0;
   inset-inline-end: 0;
   display: flex;
   align-items: center;
   justify-content: center;
-  width: var(--dropbutton--height);
-  height: var(--dropbutton--height);
+  inline-size: var(--dropbutton--height);
+  block-size: var(--dropbutton--height);
   padding: 0;
   cursor: pointer;
   border-color: transparent;
@@ -77,12 +77,12 @@
 
 .dropbutton-toggle button::before {
   display: block;
-  width: var(--sp0-5);
-  height: var(--sp0-5);
+  inline-size: var(--sp0-5);
+  block-size: var(--sp0-5);
   content: "";
   transform: translateY(-25%) rotate(45deg);
-  border-right: solid 2px var(--dropbutton--outline-color);
-  border-bottom: solid 2px var(--dropbutton--outline-color);
+  border-inline-end: solid 2px var(--dropbutton--outline-color);
+  border-block-end: solid 2px var(--dropbutton--outline-color);
 }
 
 .dropbutton-wrapper.open :is(.dropbutton-toggle button::before) {
@@ -110,8 +110,9 @@
 .dropbutton-action a {
   display: flex;
   align-items: center;
-  margin-bottom: -2px; /* Account for borders. */
-  padding: 0 0.5625rem;
+  margin-block-end: -2px; /* Account for borders. */
+  padding-block: 0;
+  padding-inline: 0.5625rem;
   -webkit-text-decoration: none;
   text-decoration: none;
   color: var(--dropbutton--text-color);
@@ -130,7 +131,7 @@
 /* Special rules if there is only one action. */
 
 .dropbutton-single .dropbutton-action:first-child {
-  border-right: solid 1px transparent; /* LTR */
+  border-inline-end: solid 1px transparent; /* LTR */
   border-radius: var(--dropbutton--border-radius);
 }
 
@@ -146,14 +147,14 @@
 
 .secondary-action {
   visibility: hidden;
-  width: calc(100% + var(--dropbutton--height));
-  border-right: 1px solid var(--dropbutton--active-bg-color);
-  border-left: 1px solid var(--dropbutton--active-bg-color);
+  inline-size: calc(100% + var(--dropbutton--height));
+  border-inline-end: 1px solid var(--dropbutton--active-bg-color);
+  border-inline-start: 1px solid var(--dropbutton--active-bg-color);
   background: var(--dropbutton--secondary-bg-color);
 }
 
 .secondary-action:last-child {
-  border-bottom: 1px solid var(--dropbutton--active-bg-color);
+  border-block-end: 1px solid var(--dropbutton--active-bg-color);
 }
 
 .secondary-action a:hover {

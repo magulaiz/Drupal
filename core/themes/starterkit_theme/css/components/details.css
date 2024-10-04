@@ -7,14 +7,15 @@
  */
 
 details {
-  margin-top: 1em;
-  margin-bottom: 1em;
+  margin-block: 1em;
   border: 1px solid #ccc;
 }
 details > .details-wrapper {
-  padding: 0.5em 1.5em;
+  padding-block: 0.5em;
+  padding-inline: 1.5em;
 }
 summary {
-  padding: 0.2em 0.5em;
+  padding-block: 0.2em;
+  padding-inline: 0.5em;
   cursor: pointer;
 }

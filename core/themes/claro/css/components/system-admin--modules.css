@@ -17,7 +17,8 @@
 
 .modules-table-filter,
 .permissions-table-filter {
-  padding: 0.25rem var(--space-l);
+  padding-block: 0.25rem;
+  padding-inline: var(--space-l);
   border: 1px solid var(--color-gray-200);
   border-radius: 2px 2px 0 0;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
@@ -30,15 +31,14 @@
   position: absolute !important;
   overflow: hidden;
   clip: rect(1px, 1px, 1px, 1px);
-  width: 1px;
-  height: 1px;
+  inline-size: 1px;
+  block-size: 1px;
   word-wrap: normal;
 }
 
 .claro-details.claro-details--package-listing,
 .claro-details.module-list__module-details {
-  margin-top: 2rem;
-  margin-bottom: 0;
+  margin-block: 2rem 0;
   border: none;
   box-shadow: none;
 }
@@ -56,12 +56,12 @@
 }
 
 .module-list {
-  margin-top: 0;
+  margin-block-start: 0;
 }
 
 .module-list__module {
   color: var(--color-text);
-  border-bottom: 1px solid var(--color-gray-200);
+  border-block-end: 1px solid var(--color-gray-200);
   background: none;
 }
 
@@ -70,8 +70,9 @@
 }
 
 .module-list__module td {
-  height: auto;
-  padding: var(--module-table-cell-padding-vertical) var(--module-table-cell-padding-horizontal);
+  block-size: auto;
+  padding-block: var(--module-table-cell-padding-vertical);
+  padding-inline: var(--module-table-cell-padding-horizontal);
   vertical-align: top;
 }
 
@@ -79,7 +80,7 @@
 
 @media screen and (min-width: 60em) {
   td.module-list__module {
-    width: 25%;
+    inline-size: 25%;
   }
 }
 
@@ -88,14 +89,13 @@
 }
 
 .module-list__checkbox {
-  padding-left: 0.6875rem; /* LTR */
-  text-align: left; /* LTR */
+  padding-inline-start: 0.6875rem; /* LTR */
+  text-align: start; /* LTR */
 }
 
 [dir="rtl"] .module-list__checkbox {
-  padding-right: 0.6875rem;
-  padding-left: var(--module-table-cell-padding-horizontal);
-  text-align: right;
+  padding-inline: var(--module-table-cell-padding-horizontal) 0.6875rem;
+  text-align: end;
 }
 
 .module-list__checkbox .form-type--checkbox {
@@ -108,13 +108,12 @@
 }
 
 td.module-list__checkbox {
-  width: 4%;
+  inline-size: 4%;
 }
 
 td.module-list__description {
-  padding-top: 0;
-  padding-right: 0;
-  padding-bottom: 0;
+  padding-block: 0;
+  padding-inline-end: 0;
 }
 
 .claro-details.module-list__module-details {
@@ -122,14 +121,13 @@ td.module-list__description {
 }
 
 .claro-details__summary.module-list__module-summary {
-  padding-top: var(--module-table-cell-padding-vertical);
-  padding-bottom: var(--module-table-cell-padding-vertical);
+  padding-block: var(--module-table-cell-padding-vertical);
   font-weight: normal;
   line-height: var(--details-line-height);
 }
 
 .claro-details__summary.module-list__module-summary::before {
-  top: calc(var(--space-m) + var(--space-s));
+  inset-block-start: calc(var(--space-m) + var(--space-s));
 }
 
 .module-details__description {
@@ -138,41 +136,40 @@ td.module-list__description {
 }
 
 .claro-details__wrapper.module-details__wrapper {
-  margin-top: 0;
-  margin-bottom: 0;
+  margin-block: 0;
 }
 
 .module-details__requirements {
-  margin-bottom: var(--space-m);
+  margin-block-end: var(--space-m);
 }
 
 .module-details__links {
   position: relative;
   /* Negative margin matches the value of action link's top padding. */
-  margin-top: calc((var(--space-s) - ((var(--space-l) - var(--space-s)) / 2)) * -1);
-  margin-bottom: var(--space-m);
+  margin-block: calc((var(--space-s) - ((var(--space-l) - var(--space-s)) / 2)) * -1) var(--space-m);
 }
 
 .module-details__links .action-link + .action-link {
-  margin-left: 0; /* LTR */
+  margin-inline-start: 0; /* LTR */
 }
 
 [dir="rtl"] .module-details__links .action-link + .action-link {
-  margin-right: 0;
+  margin-inline-end: 0;
 }
 
 .claro-details .tableresponsive-toggle {
-  padding: var(--space-m) var(--space-m) var(--space-m) 0;
+  padding-block: var(--space-m);
+  padding-inline: 0 var(--space-m);
 }
 
 .claro-details .tableresponsive-toggle::before {
   /* This adjustment is necessary for better alignment with the adjacent button
    text. */
   position: relative;
-  top: -1px;
+  inset-block-start: -1px;
   display: inline-block;
-  width: calc(var(--space-m) * 2);
-  height: 1.25rem;
+  inline-size: calc(var(--space-m) * 2);
+  block-size: 1.25rem;
   content: "";
   cursor: pointer;
   vertical-align: text-top;
@@ -190,7 +187,7 @@ td.module-list__description {
 }
 
 .claro-details .tableresponsive-toggle-columns button {
-  margin-top: var(--space-xs);
+  margin-block-start: var(--space-xs);
   -webkit-text-decoration: none;
   text-decoration: none;
   color: var(--color-gray-800);

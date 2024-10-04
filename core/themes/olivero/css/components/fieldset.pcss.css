@@ -6,7 +6,7 @@
 @import "../base/media-queries.pcss.css";
 
 .fieldset {
-  min-width: 0;
+  min-inline-size: 0;
   margin-block: var(--sp1);
   margin-inline-start: 0;
   margin-inline-end: 0;
@@ -20,7 +20,7 @@
 }
 
 .fieldset--group {
-  width: 100%;
+  inline-size: 100%;
   color: inherit;
   border: 0;
   border-radius: 0;
@@ -29,18 +29,18 @@
 }
 
 .fieldset__legend {
-  float: left; /* Prevent sticking out of top of fieldset. */
-  width: 100%;
+  float: inline-start; /* Prevent sticking out of top of fieldset. */
+  inline-size: 100%;
   color: inherit;
-  border-top-left-radius: var(--border-radius);
-  border-top-right-radius: var(--border-radius);
+  border-start-start-radius: var(--border-radius);
+  border-start-end-radius: var(--border-radius);
   background-color: var(--color--gray-45);
   font-size: var(--font-size-l);
   font-weight: 700;
   line-height: var(--line-height-base);
 
   & + * {
-    clear: left;
+    clear: inline-start;
   }
 
   & .fieldset__label {
@@ -116,8 +116,8 @@
 
 .fieldset--group .fieldset__legend--visible ~ .fieldset__wrapper {
   border: solid 2px var(--color--gray-45);
-  border-bottom-right-radius: var(--border-radius);
-  border-bottom-left-radius: var(--border-radius);
+  border-end-end-radius: var(--border-radius);
+  border-end-start-radius: var(--border-radius);
 }
 
 .fieldset__wrapper--group {

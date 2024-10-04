@@ -4,7 +4,7 @@
  */
 
 .block-help {
-  margin-bottom: 1em;
+  margin-block-end: 1em;
   padding: 1.26em;
   word-wrap: break-word;
   color: inherit;
@@ -14,17 +14,15 @@
 }
 
 .block-help__container {
-  padding-left: 24px; /* LTR */
+  padding-inline-start: 24px;
   background-image: url(/core/profiles/demo_umami/themes/umami/images/svg/help.svg);
   background-repeat: no-repeat;
   background-position: left 4px; /* LTR */
 }
 [dir="rtl"] .block-help__container {
-  padding-right: 24px;
-  padding-left: 0;
   background-position: right 4px;
 }
 
 .block-help__container > *:last-child {
-  margin-bottom: 0;
+  margin-block-end: 0;
 }

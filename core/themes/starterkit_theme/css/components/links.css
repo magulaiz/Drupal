@@ -6,16 +6,16 @@
 ul.inline,
 ul.links.inline {
   display: inline;
-  padding-left: 0; /* LTR */
+  padding-inline-start: 0; /* LTR */
 }
 [dir="rtl"] ul.inline,
 [dir="rtl"] ul.links.inline {
-  padding-right: 0;
-  padding-left: 15px;
+  padding-inline: 15px 0;
 }
 ul.inline li {
   display: inline;
-  padding: 0 0.5em;
+  padding-block: 0;
+  padding-inline: 0.5em;
   list-style-type: none;
 }
 ul.links a.is-active {

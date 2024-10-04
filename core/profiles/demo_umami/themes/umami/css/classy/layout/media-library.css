@@ -23,6 +23,6 @@
 
 .media-library-views-form .media-library-item {
   justify-content: space-between;
-  max-width: 23%;
+  max-inline-size: 23%;
   margin: 1%;
 }

@@ -7,7 +7,8 @@
  * Reusable layout styles.
  */
 .layout-container {
-  margin: 0 1.5em;
+  margin-block: 0;
+  margin-inline: 1.5em;
 }
 .layout-container::after {
   display: table;
@@ -17,30 +18,27 @@
 
 @media screen and (min-width: 38em) {
   .layout-container {
-    margin: 0 2.5em;
+    margin-block: 0;
+    margin-inline: 2.5em;
   }
   .layout-column {
-    float: left; /* LTR */
+    float: inline-start; /* LTR */
     box-sizing: border-box;
   }
   [dir="rtl"] .layout-column {
-    float: right;
+    float: inline-end;
   }
   .layout-column + .layout-column {
-    padding-left: 10px; /* LTR */
-  }
-  [dir="rtl"] .layout-column + .layout-column {
-    padding-right: 10px;
-    padding-left: 0;
+    padding-inline-start: 10px;
   }
   .layout-column--half {
-    width: 50%;
+    inline-size: 50%;
   }
   .layout-column--quarter {
-    width: 25%;
+    inline-size: 25%;
   }
   .layout-column--three-quarter {
-    width: 75%;
+    inline-size: 75%;
   }
 }
 
@@ -49,18 +47,22 @@
  * Used to visually group items together.
  */
 .panel {
-  padding: 5px 5px 15px;
+  padding-block: 5px 15px;
+  padding-inline: 5px;
 }
 .panel__description {
-  margin: 0 0 3px;
-  padding: 2px 0 3px 0;
+  margin-block: 0 3px;
+  margin-inline: 0;
+  padding-block: 2px 3px;
+  padding-inline: 0;
 }
 
 /**
  * System compact link: to toggle the display of description text.
  */
 .compact-link {
-  margin: 0 0 0.5em 0;
+  margin-block: 0 0.5em;
+  margin-inline: 0;
 }
 
 /**
@@ -83,11 +85,11 @@ small .admin-link::after {
   font-weight: bold;
 }
 .system-modules td.checkbox {
-  width: 4%;
-  min-width: 25px;
+  inline-size: 4%;
+  min-inline-size: 25px;
 }
 .system-modules td.module {
-  width: 25%;
+  inline-size: 25%;
 }
 .system-modules td {
   vertical-align: top;
@@ -103,7 +105,7 @@ small .admin-link::after {
 }
 .system-modules details[open] {
   overflow: visible;
-  height: auto;
+  block-size: auto;
   white-space: normal;
 }
 .system-modules details[open] summary .text {
@@ -126,33 +128,31 @@ small .admin-link::after {
   font-weight: normal;
 }
 .system-modules td {
-  padding-left: 0; /* LTR */
-}
-[dir="rtl"] .system-modules td {
-  padding-right: 0;
-  padding-left: 12px;
+  padding-inline-start: 0;
 }
 
 @media screen and (max-width: 40em) {
   .system-modules td.name {
-    width: 20%;
+    inline-size: 20%;
   }
   .system-modules td.description {
-    width: 40%;
+    inline-size: 40%;
   }
 }
 .system-modules .requirements {
-  max-width: 490px;
-  padding: 5px 0;
+  max-inline-size: 490px;
+  padding-block: 5px;
+  padding-inline: 0;
 }
 .system-modules .links {
   overflow: hidden; /* prevents collapse */
 }
 .system-modules .checkbox {
-  margin: 0 5px;
+  margin-block: 0;
+  margin-inline: 5px;
 }
 .system-modules .checkbox .form-item {
-  margin-bottom: 0;
+  margin-block-end: 0;
 }
 .admin-requirements,
 .admin-required {
@@ -167,13 +167,11 @@ small .admin-link::after {
 }
 .module-link {
   display: block;
-  float: left; /* LTR */
-  margin-top: 2px;
-  padding: 2px 20px;
+  float: inline-start;
+  margin-block-start: 2px;
+  padding-block: 2px;
+  padding-inline: 20px;
   white-space: nowrap;
-}
-[dir="rtl"] .module-link {
-  float: right;
 }
 .module-link-help {
   background: url(../../../misc/icons/787878/questionmark-disc.svg) 0 50% no-repeat; /* LTR */
@@ -194,12 +192,10 @@ small .admin-link::after {
   background-position: top 50% right 0;
 }
 .module-link--non-stable {
-  padding-left: 18px;
+  padding-inline-start: 18px;
   background: url(../../../misc/icons/e29700/warning.svg) 0 50% no-repeat; /* LTR */
 }
 [dir="rtl"] .module-link--non-stable {
-  padding-right: 18px;
-  padding-left: 0;
   background-position: top 50% right 0;
 }
 
@@ -207,28 +203,22 @@ small .admin-link::after {
 .system-status-report__status-title {
   position: relative;
   box-sizing: border-box;
-  width: 100%;
-  padding: 10px 6px 10px 40px; /* LTR */
+  inline-size: 100%;
+  padding-block: 10px;
+  padding-inline: 40px 6px;
   vertical-align: top;
   background-color: transparent;
   font-weight: normal;
 }
-[dir="rtl"] .system-status-report__status-title {
-  padding: 10px 40px 10px 6px;
-}
 .system-status-report__status-icon::before {
   position: absolute;
-  top: 12px;
-  left: 12px; /* LTR */
+  inset-block-start: 12px;
+  inset-inline-start: 12px;
   display: block;
-  width: 16px;
-  height: 16px;
+  inline-size: 16px;
+  block-size: 16px;
   content: "";
   background-repeat: no-repeat;
-}
-[dir="rtl"] .system-status-report__status-icon::before {
-  right: 12px;
-  left: auto;
 }
 .system-status-report__status-icon--error::before {
   background-image: url(../../../misc/icons/e32700/error.svg);
@@ -237,44 +227,45 @@ small .admin-link::after {
   background-image: url(../../../misc/icons/e29700/warning.svg);
 }
 .system-status-report__entry__value {
-  padding: 1em 0.5em;
+  padding-block: 1em;
+  padding-inline: 0.5em;
 }
 
 /**
  * Appearance page.
  */
 .theme-info__header {
-  margin-bottom: 0;
+  margin-block-end: 0;
   font-weight: normal;
 }
 .theme-default .theme-info__header {
   font-weight: bold;
 }
 .theme-info__description {
-  margin-top: 0;
+  margin-block-start: 0;
 }
 .theme-link--non-stable {
-  padding-left: 18px;
+  padding-inline-start: 18px;
   background: url(../../../misc/icons/e29700/warning.svg) 0 50% no-repeat; /* LTR */
 }
 .system-themes-list {
-  margin-bottom: 20px;
+  margin-block-end: 20px;
 }
 .system-themes-list-uninstalled {
-  padding-top: 20px;
-  border-top: 1px solid #cdcdcd;
+  padding-block-start: 20px;
+  border-block-start: 1px solid #cdcdcd;
 }
 .system-themes-list__header {
   margin: 0;
 }
 
 .theme-selector {
-  padding-top: 20px;
+  padding-block-start: 20px;
 }
 .theme-selector .screenshot,
 .theme-selector .no-screenshot {
-  max-width: 100%;
-  height: auto;
+  max-inline-size: 100%;
+  block-size: auto;
   padding: 2px;
   text-align: center;
   vertical-align: bottom;
@@ -285,8 +276,8 @@ small .admin-link::after {
 }
 .system-themes-list-uninstalled .screenshot,
 .system-themes-list-uninstalled .no-screenshot {
-  max-width: 194px;
-  height: auto;
+  max-inline-size: 194px;
+  block-size: auto;
 }
 
 /**
@@ -295,30 +286,23 @@ small .admin-link::after {
 @media screen and (min-width: 45em) {
   body:not(.toolbar-vertical) .system-themes-list-installed .screenshot,
   body:not(.toolbar-vertical) .system-themes-list-installed .no-screenshot {
-    float: left; /* LTR */
-    width: 294px;
-    margin: 0 20px 0 0; /* LTR */
-  }
-  [dir="rtl"] body:not(.toolbar-vertical) .system-themes-list-installed .screenshot,
-  [dir="rtl"] body:not(.toolbar-vertical) .system-themes-list-installed .no-screenshot {
-    float: right;
-    margin: 0 0 0 20px;
+    float: inline-start;
+    inline-size: 294px;
+    margin-block: 0;
+    margin-inline: 0 20px;
   }
   body:not(.toolbar-vertical) .system-themes-list-installed .system-themes-list__header {
-    margin-top: 0;
+    margin-block-start: 0;
   }
   body:not(.toolbar-vertical) .system-themes-list-uninstalled .theme-selector {
-    float: left; /* LTR */
+    float: inline-start;
     box-sizing: border-box;
-    width: 31.25%;
-    padding: 20px 20px 20px 0; /* LTR */
-  }
-  [dir="rtl"] body:not(.toolbar-vertical) .system-themes-list-uninstalled .theme-selector {
-    float: right;
-    padding: 20px 0 20px 20px;
+    inline-size: 31.25%;
+    padding-block: 20px;
+    padding-inline: 0 20px;
   }
   body:not(.toolbar-vertical) .system-themes-list-uninstalled .theme-info {
-    min-height: 170px;
+    min-block-size: 170px;
   }
 }
 
@@ -328,75 +312,60 @@ small .admin-link::after {
 @media screen and (min-width: 60em) {
   .toolbar-vertical .system-themes-list-installed .screenshot,
   .toolbar-vertical .system-themes-list-installed .no-screenshot {
-    float: left; /* LTR */
-    width: 294px;
-    margin: 0 20px 0 0; /* LTR */
-  }
-  [dir="rtl"] .toolbar-vertical .system-themes-list-installed .screenshot,
-  [dir="rtl"] .toolbar-vertical .system-themes-list-installed .no-screenshot {
-    float: right;
-    margin: 0 0 0 20px;
+    float: inline-start;
+    inline-size: 294px;
+    margin-block: 0;
+    margin-inline: 0 20px;
   }
   .toolbar-vertical .system-themes-list-installed .theme-info__header {
-    margin-top: 0;
+    margin-block-start: 0;
   }
   .toolbar-vertical .system-themes-list-uninstalled .theme-selector {
-    float: left; /* LTR */
+    float: inline-start;
     box-sizing: border-box;
-    width: 31.25%;
-    padding: 20px 20px 20px 0; /* LTR */
-  }
-  [dir="rtl"] .toolbar-vertical .system-themes-list-uninstalled .theme-selector {
-    float: right;
-    padding: 20px 0 20px 20px;
+    inline-size: 31.25%;
+    padding-block: 20px;
+    padding-inline: 0 20px;
   }
   .toolbar-vertical .system-themes-list-uninstalled .theme-info {
-    min-height: 170px;
+    min-block-size: 170px;
   }
 }
 .system-themes-list-installed .theme-info {
-  max-width: 940px;
+  max-inline-size: 940px;
 }
 
 .theme-selector .incompatible {
-  margin-top: 10px;
+  margin-block-start: 10px;
   font-weight: bold;
 }
 .theme-selector .operations {
-  margin: 10px 0 0 0;
+  margin-block: 10px 0;
+  margin-inline: 0;
   padding: 0;
 }
 .theme-selector .operations li {
-  float: left; /* LTR */
+  float: inline-start;
   margin: 0;
-  padding: 0 0.7em;
+  padding-block: 0;
+  padding-inline: 0.7em;
   list-style-type: none;
-  border-right: 1px solid #cdcdcd; /* LTR */
-}
-[dir="rtl"] .theme-selector .operations li {
-  float: right;
-  border-right: none;
-  border-left: 1px solid #cdcdcd;
+  border-inline-end: 1px solid #cdcdcd;
 }
 .theme-selector .operations li:last-child {
-  padding: 0 0 0 0.7em; /* LTR */
-  border-right: none; /* LTR */
+  padding-block: 0;
+  padding-inline: 0.7em 0;
+  border-inline-end: none; /* LTR */
 }
 [dir="rtl"] .theme-selector .operations li:last-child {
-  padding: 0 0.7em 0 0;
-  border-left: none;
+  border-inline-start: none;
 }
 .theme-selector .operations li:first-child {
-  padding: 0 0.7em 0 0; /* LTR */
-}
-[dir="rtl"] .theme-selector .operations li:first-child {
-  padding: 0 0 0 0.7em;
+  padding-block: 0;
+  padding-inline: 0 0.7em;
 }
 .system-themes-admin-form {
-  clear: left; /* LTR */
-}
-[dir="rtl"] .system-themes-admin-form {
-  clear: right;
+  clear: inline-start;
 }
 .cron-description__run-cron {
   display: block;

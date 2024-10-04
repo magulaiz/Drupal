@@ -8,8 +8,8 @@
 .primary-nav__button-toggle {
   position: relative;
   overflow: hidden;
-  width: var(--sp2);
-  height: var(--sp2);
+  inline-size: var(--sp2);
+  block-size: var(--sp2);
   margin-block-start: var(--sp0-5); /* Visually align button with menu link text. */
   padding-block: 0;
   padding-inline-start: 0;
@@ -28,11 +28,11 @@
   & .icon--menu-toggle {
     position: absolute;
     /* stylelint-disable csstools/use-logical */
-    top: 50%;
-    left: 50%;
+    inset-block-start: 50%;
+    inset-inline-start: 50%;
     /* stylelint-enable csstools/use-logical */
-    width: 16px;
-    height: 16px;
+    inline-size: 16px;
+    block-size: 16px;
     transition: background-color 0.2s;
     transform: translate(-50%, -50%);
     border-radius: 2px;
@@ -41,15 +41,15 @@
     &::after {
       position: absolute;
       /* stylelint-disable csstools/use-logical */
-      top: 50%;
-      left: 50%;
+      inset-block-start: 50%;
+      inset-inline-start: 50%;
       /* stylelint-enable csstools/use-logical */
-      width: var(--sp);
-      height: 0;
+      inline-size: var(--sp);
+      block-size: 0;
       content: "";
       transform: translate(-50%, -50%);
       /* Intentionally not using CSS logical properties. */
-      border-top: solid 3px var(--color--primary-50);
+      border-block-start: solid 3px var(--color--primary-50);
     }
 
     &::after {
@@ -75,8 +75,8 @@ body:not(.is-always-mobile-nav) {
     & .primary-nav__button-toggle {
       flex-shrink: 0;
       align-self: stretch;
-      width: calc(var(--sp2) + 8px);
-      height: auto;
+      inline-size: calc(var(--sp2) + 8px);
+      block-size: auto;
       margin-block-start: 0;
       margin-inline-end: calc(-1 * var(--sp2));
 
@@ -100,7 +100,7 @@ body:not(.is-always-mobile-nav) {
 
       & .icon--menu-toggle {
         inset-inline-start: 3px;
-        width: 18px;
+        inline-size: 18px;
         transform: translateY(-50%);
         border-radius: 4px;
         background-color: var(--color--white);
@@ -111,18 +111,18 @@ body:not(.is-always-mobile-nav) {
 
         &::after {
           /* stylelint-disable csstools/use-logical */
-          top: calc(50% - 2px);
-          left: 3px;
+          inset-block-start: calc(50% - 2px);
+          inset-inline-start: 3px;
           /* stylelint-enable csstools/use-logical */
-          width: 8px;
-          height: 8px;
+          inline-size: 8px;
+          block-size: 8px;
           content: "";
           transform: translateY(-50%) rotate(45deg);
           opacity: 0.8;
           /* Intentionally not using CSS logical properties. */
-          border-top: none;
-          border-right: solid 2px currentColor;
-          border-bottom: solid 2px currentColor;
+          border-block-start: none;
+          border-inline-end: solid 2px currentColor;
+          border-block-end: solid 2px currentColor;
           background: transparent;
         }
       }
