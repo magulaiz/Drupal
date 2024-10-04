@@ -46,7 +46,7 @@
 }
 
 [dir="rtl"] .filter-help {
-  float: left;
+  float: inline-start;
 }
 
 /**

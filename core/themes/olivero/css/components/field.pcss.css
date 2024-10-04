@@ -26,7 +26,7 @@
    * @see https://github.com/csstools/postcss-plugins/issues/632
    */
   &:dir(rtl) {
-    float: right;
+    float: inline-end;
   }
 }
 

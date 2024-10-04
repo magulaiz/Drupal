@@ -61,7 +61,7 @@ figcaption {
      */
   }
   [dir="rtl"] .align-right {
-    float: left;
+    float: inline-start;
   }
 }
 
@@ -125,7 +125,7 @@ figcaption {
      */
   }
   [dir="rtl"] .align-left {
-    float: right;
+    float: inline-end;
   }
 }
 

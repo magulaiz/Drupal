@@ -34,7 +34,7 @@
 
 [dir="rtl"] .field--label-inline .field__label,
 [dir="rtl"] .field--label-inline .field__items {
-  float: right;
+  float: inline-end;
 }
 
 .field--label-inline .field__label,
