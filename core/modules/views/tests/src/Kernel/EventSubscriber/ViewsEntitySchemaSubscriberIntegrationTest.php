@@ -58,7 +58,7 @@ class ViewsEntitySchemaSubscriberIntegrationTest extends ViewsKernelTestBase {
   /**
    * The tested event subscriber of views.
    */
-  #[AutowireProperty]
+  #[AutowireProperty(service: 'views.entity_schema_subscriber')]
   protected ViewsEntitySchemaSubscriber $eventSubscriber;
 
   /**
