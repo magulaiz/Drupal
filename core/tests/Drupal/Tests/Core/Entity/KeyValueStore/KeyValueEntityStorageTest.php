@@ -605,8 +605,8 @@ class KeyValueEntityStorageTest extends UnitTestCase {
    * Creates an entity with specific methods mocked.
    *
    * @param string $class
-   *   (optional) The concrete entity class to mock. Defaults to
-   *   'Drupal\Core\Entity\EntityBase'.
+   *   (optional) The concrete entity class to mock. Defaults to a stub of
+   *   \Drupal\Core\Entity\EntityBase defined for test purposes.
    * @param array $arguments
    *   (optional) Arguments to pass to the constructor. An empty set of values
    *   and an entity type ID will be provided.
