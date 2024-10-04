@@ -16,8 +16,6 @@
   --module-table-filter-box-shadow: 0 2px 0.25rem rgba(0, 0, 0, 0.1);
 }
 
-/* Visually hide the module filter input description. */
-
 .modules-table-filter,
 .permissions-table-filter {
   padding: 0.25rem var(--space-l);
@@ -28,6 +26,7 @@
 
 .modules-table-filter .form-item__description,
 .permissions-table-filter .form-item__description {
+  /* Visually hide the module filter input description. */
   position: absolute !important;
   overflow: hidden;
   clip: rect(1px, 1px, 1px, 1px);
@@ -137,7 +136,7 @@
 /* Set width only on wider view where description is visible by default. */
 
 @media screen and (min-width: 60em) {
-  module-list__module {
+  .module-list__module {
     width: 25%;
   }
 }
