@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Drupal\Core\Recipe;
 
 use Drupal\Core\TypedData\DataDefinition;
+use Drupal\Core\TypedData\TypedDataInterface;
 use Drupal\Core\TypedData\TypedDataManagerInterface;
 use Symfony\Component\Validator\Exception\ValidationFailedException;
 
@@ -56,7 +57,7 @@ final class InputConfigurator {
   public function __construct(
     array $definitions,
     private readonly RecipeConfigurator $dependencies,
-    private readonly string $prefix,
+    public readonly string $prefix,
     TypedDataManagerInterface $typedDataManager,
   ) {
     // Convert the input definitions to typed data definitions.
@@ -73,6 +74,16 @@ final class InputConfigurator {
       $data_definition->setSettings($definition);
       $this->data[$name] = $typedDataManager->create($data_definition);
     }
+  }
+
+  /**
+   * Returns the typed data definitions for the inputs defined by this recipe.
+   *
+   * @return \Drupal\Core\TypedData\DataDefinitionInterface[]
+   *   The typed data definitions, keyed by input name.
+   */
+  public function getDataDefinitions(): array {
+    return array_map(fn (TypedDataInterface $data) => $data->getDataDefinition(), $this->data);
   }
 
   /**
