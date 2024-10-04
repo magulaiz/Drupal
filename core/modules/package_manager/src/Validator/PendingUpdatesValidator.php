@@ -35,7 +35,7 @@ final class PendingUpdatesValidator implements EventSubscriberInterface {
    */
   public function validate(PreOperationStageEvent $event): void {
     if ($this->updatesExist()) {
-      $message = $this->t('Some modules have database schema updates to install. You should run the <a href=":update">database update script</a> immediately.', [
+      $message = $this->t('Some modules have database updates pending. You should run the <a href=":update">database update script</a> immediately.', [
         ':update' => Url::fromRoute('system.db_update')->toString(),
       ]);
       $event->addError([$message]);

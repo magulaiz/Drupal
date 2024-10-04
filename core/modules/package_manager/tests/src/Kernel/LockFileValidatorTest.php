@@ -148,15 +148,17 @@ class LockFileValidatorTest extends PackageManagerKernelTestBase {
    * @dataProvider providerValidateStageEvents
    */
   public function testNoStoredHash(string $event_class): void {
-    $reflector = new \ReflectionClassConstant(LockFileValidator::class, 'STATE_KEY');
-    $state_key = $reflector->getValue();
+    $reflector = new \ReflectionClassConstant(LockFileValidator::class, 'KEY');
+    $key = $reflector->getValue();
 
     // Add a listener with an extremely high priority to the same event that
     // should throw an exception. Because the validator uses the default
     // priority of 0, this listener deletes stored hash before the validator
     // runs.
-    $this->addEventTestListener(function () use ($state_key) {
-      $this->container->get('state')->delete($state_key);
+    $this->addEventTestListener(function () use ($key) {
+      $this->container->get('keyvalue')
+        ->get('package_manager')
+        ->delete($key);
     }, $event_class);
 
     $stage = $this->createStage();

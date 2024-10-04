@@ -29,22 +29,6 @@ final class ProcessFactory implements ProcessFactoryInterface {
   ) {}
 
   /**
-   * Returns the value of an environment variable.
-   *
-   * @param string $variable
-   *   The name of the variable.
-   *
-   * @return mixed
-   *   The value of the variable.
-   */
-  private function getEnv(string $variable) {
-    if (function_exists('apache_getenv')) {
-      return apache_getenv($variable);
-    }
-    return getenv($variable);
-  }
-
-  /**
    * {@inheritdoc}
    */
   public function create(array $command, ?PathInterface $workingDir = NULL, array $env = []): ProcessInterface {
@@ -56,7 +40,7 @@ final class ProcessFactory implements ProcessFactoryInterface {
     }
     // Ensure that the current PHP installation is the first place that will be
     // searched when looking for the PHP interpreter.
-    $env['PATH'] = static::getPhpDirectory() . ':' . $this->getEnv('PATH');
+    $env['PATH'] = static::getPhpDirectory() . ':' . getenv('PATH');
     $process->setEnv($env);
     return $process;
   }

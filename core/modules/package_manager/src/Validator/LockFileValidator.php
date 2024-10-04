@@ -4,7 +4,8 @@ declare(strict_types=1);
 
 namespace Drupal\package_manager\Validator;
 
-use Drupal\Core\State\StateInterface;
+use Drupal\Core\KeyValueStore\KeyValueFactoryInterface;
+use Drupal\Core\KeyValueStore\KeyValueStoreInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\package_manager\Event\PostApplyEvent;
 use Drupal\package_manager\Event\PreApplyEvent;
@@ -28,16 +29,25 @@ final class LockFileValidator implements EventSubscriberInterface {
   use StringTranslationTrait;
 
   /**
-   * The state key under which to store the hash of the active lock file.
+   * The key under which to store the hash of the active lock file.
    *
    * @var string
    */
-  private const STATE_KEY = 'package_manager.lock_hash';
+  private const KEY = 'lock_hash';
+
+  /**
+   * The key-value store.
+   *
+   * @var \Drupal\Core\KeyValueStore\KeyValueStoreInterface
+   */
+  private readonly KeyValueStoreInterface $keyValue;
 
   public function __construct(
-    private readonly StateInterface $state,
+    KeyValueFactoryInterface $keyValueFactory,
     private readonly PathLocator $pathLocator,
-  ) {}
+  ) {
+    $this->keyValue = $keyValueFactory->get('package_manager');
+  }
 
   /**
    * Returns the SHA-256 hash of a file.
@@ -81,7 +91,7 @@ final class LockFileValidator implements EventSubscriberInterface {
     $active_lock_file_path = $this->pathLocator->getProjectRoot() . DIRECTORY_SEPARATOR . 'composer.lock';
     $hash = $this->getHash($active_lock_file_path);
     if ($hash) {
-      $this->state->set(static::STATE_KEY, $hash);
+      $this->keyValue->set(static::KEY, $hash);
     }
     else {
       $event->addError([
@@ -117,7 +127,7 @@ final class LockFileValidator implements EventSubscriberInterface {
     }
 
     // Ensure we also have a stored hash of the lock file.
-    $active_lock_file_stored_hash = $this->state->get(static::STATE_KEY);
+    $active_lock_file_stored_hash = $this->keyValue->get(static::KEY);
     if (empty($active_lock_file_stored_hash)) {
       throw new \LogicException('Stored hash key deleted.');
     }
@@ -156,7 +166,7 @@ final class LockFileValidator implements EventSubscriberInterface {
    * Deletes the stored lock file hash.
    */
   public function deleteHash(): void {
-    $this->state->delete(static::STATE_KEY);
+    $this->keyValue->delete(static::KEY);
   }
 
   /**

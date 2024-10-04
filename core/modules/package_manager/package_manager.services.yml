@@ -60,7 +60,9 @@ services:
       - '%app.root%'
       - '@update.post_update_registry'
     autowire: false
-  Drupal\package_manager\Validator\LockFileValidator: {}
+  Drupal\package_manager\Validator\LockFileValidator:
+    arguments:
+      $keyValueFactory: '@keyvalue'
   Drupal\package_manager\Validator\WritableFileSystemValidator: {}
   Drupal\package_manager\Validator\ComposerMinimumStabilityValidator: {}
   Drupal\package_manager\Validator\MultisiteValidator: {}
