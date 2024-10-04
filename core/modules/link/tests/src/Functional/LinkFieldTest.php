@@ -547,6 +547,37 @@ class LinkFieldTest extends BrowserTestBase {
         }
       }
     }
+    $this->testLinkElementWithNullValue($this->fieldStorage);
+  }
+
+  /**
+   * Tests null value in link field.
+   *
+   * This test ensures that any edge cases with null values in link field will
+   * not trigger any errors.
+   *
+   * @link https://www.drupal.org/project/drupal/issues/3387013
+   *
+   * @param \Drupal\field\Entity\FieldStorageConfig $fieldStorage
+   *   The field storage.
+   *
+   * @return void
+   */
+  protected function testLinkElementWithNullValue(FieldStorageConfig $fieldStorage) : void {
+    $this->config('system.logging')
+      ->set('error_level', ERROR_REPORTING_DISPLAY_ALL)
+      ->save();
+    $state = $this->container->get('state');
+    // The BASE_FORM_ID_alter hook 'entity_test_form_entity_test_form_alter'
+    // uses this value to call validation constraints associated with the
+    // entity.
+    $state->set('entity_test.form.null_link_test', 1);
+    // Increase the cardinality by 1 and reload entity edit form. This triggers
+    // 'entity_test_form_entity_test_form_alter' which calls validation
+    // constraints associated with the entity.
+    $fieldStorage->setCardinality(4)->save();
+    $this->getSession()->reload();
+    $this->assertSession()->elementNotExists("xpath", "//div[@data-drupal-messages]//*[contains(text(), 'deprecated')]");
   }
 
   /**

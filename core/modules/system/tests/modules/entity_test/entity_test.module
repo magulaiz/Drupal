@@ -334,7 +334,7 @@ function entity_test_entity_extra_field_info() {
 /**
  * Implements hook_form_BASE_FORM_ID_alter().
  */
-function entity_test_form_entity_test_form_alter(&$form) {
+function entity_test_form_entity_test_form_alter(&$form, FormStateInterface $form_state) {
   switch (\Drupal::state()->get('entity_test.form.validate.test')) {
     case 'form-level':
       $form['#validate'][] = 'entity_test_form_entity_test_form_validate';
@@ -343,6 +343,11 @@ function entity_test_form_entity_test_form_alter(&$form) {
 
     case 'button-level':
       $form['actions']['submit']['#validate'][] = 'entity_test_form_entity_test_form_validate';
+  }
+  // Trigger validation when edit form is loaded.
+  if (1 === \Drupal::state()->get('entity_test.form.null_link_test')) {
+    $entity = $form_state->getFormObject()->getEntity();
+    $entity->validate();
   }
 }
 
