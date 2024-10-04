@@ -93,7 +93,7 @@ class ExtensionMimeTypeGuesser implements MimeTypeGuesserInterface {
    */
   public function setMapping(?array $mapping = NULL): void {
     @trigger_error(
-      __METHOD__ . '() is deprecated in drupal:11.1.0 and is removed from drupal:12.0.0. Use \Drupal\Core\File\MimeType\MimeTypeMapInterface::addMapping() instead. See https://www.drupal.org/project/drupal/issues/2311679',
+      __METHOD__ . '() is deprecated in drupal:11.1.0 and is removed from drupal:12.0.0. Use \Drupal\Core\File\MimeType\MimeTypeMapInterface::addMapping() instead or define your own MimeTypeMapInterface implementation. See https://www.drupal.org/project/drupal/issues/2311679',
       E_USER_DEPRECATED
     );
     // Convert the mapping to be keyed by extension.
