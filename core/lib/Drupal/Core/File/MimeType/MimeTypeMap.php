@@ -894,7 +894,7 @@ class MimeTypeMap implements MimeTypeMapInterface {
    * {@inheritdoc}
    */
   public function alterMapping(ModuleHandlerInterface $module_handler): self {
-    if (!$this->mapping) {
+    if (empty($this->mapping)) {
       $this->mapping = static::$defaultMapping;
       $module_handler->alterDeprecated('This hook is deprecated in drupal:10.1.0 and will be removed before drupal:11.0.0. Implement hook_mimetype_alter() instead. See https://www.drupal.org/node/2311679.', 'file_mimetype_mapping', $this->mapping);
       $module_handler->alter('mimetype', $this);
@@ -903,37 +903,33 @@ class MimeTypeMap implements MimeTypeMapInterface {
   }
 
   /**
-   * {@inheritdoc}
+   * Clears the map.
    */
-  public function reset(): void {
-    $this->mapping = ['extensions' => [], 'mimetypes' => []];
+  public function clear(): void {
+    $this->mapping = [];
   }
 
   /**
    * {@inheritdoc}
    */
-  public function addMapping(
-    string $mimetype,
-    string | array $extensions,
-  ): self {
-    if (!is_array($extensions)) {
-      $extensions = [$extensions];
+  public function addMapping(string $mimetype, string $extension): self {
+    $mimetype = strtolower($mimetype);
+    $extension = strtolower($extension);
+    if (!isset($this->mapping['mimetypes']) || !in_array(
+        $mimetype,
+        $this->mapping['mimetypes']
+      )) {
+      $this->mapping['mimetypes'][] = $mimetype;
     }
-    foreach ($extensions as $extension) {
-      $extension = strtolower($extension);
-      if (!in_array($mimetype, $this->mapping['mimetypes'])) {
-        $this->mapping['mimetypes'][] = $mimetype;
-      }
-      $key = array_search($mimetype, $this->mapping['mimetypes']);
-      $this->mapping['extensions'][$extension] = $key;
-    }
+    $key = array_search($mimetype, $this->mapping['mimetypes']);
+    $this->mapping['extensions'][$extension] = $key;
     return $this;
   }
 
   /**
    * {@inheritdoc}
    */
-  public function removeMapping($extension): bool {
+  public function removeMapping(string $mimetype, string $extension): bool {
     $extension = strtolower($extension);
     if (isset($this->mapping['extensions'][$extension])) {
       unset($this->mapping['extensions'][$extension]);
@@ -945,12 +941,13 @@ class MimeTypeMap implements MimeTypeMapInterface {
   /**
    * {@inheritdoc}
    */
-  public function removeMimeType($mimetype): bool {
+  public function removeMimeType(string $mimetype): bool {
+    $mimetype = strtolower($mimetype);
     if (!in_array($mimetype, $this->mapping['mimetypes'])) {
       return FALSE;
     }
     foreach ($this->getExtensionsForMimeType($mimetype) as $extension) {
-      $this->removeMapping($extension);
+      $this->removeMapping($mimetype, $extension);
     }
     $key = array_search($mimetype, $this->mapping['mimetypes']);
     unset($this->mapping['mimetypes'][$key]);
@@ -960,31 +957,55 @@ class MimeTypeMap implements MimeTypeMapInterface {
   /**
    * {@inheritdoc}
    */
-  public function getMimeTypes(): array {
+  public function listMimeTypes(): array {
     return array_values($this->mapping['mimetypes']);
   }
 
   /**
    * {@inheritdoc}
    */
-  public function getMimeTypeForExtension($extension): ?string {
-    $mapping = $this->mapping;
+  public function listExtensions(): array {
+    return array_keys($this->mapping['extensions']);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function hasMimeType(string $mimetype): bool {
+    $mimetype = strtolower($mimetype);
+
+    return in_array($mimetype, $this->mapping['mimetypes']);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function hasExtension(string $extension): bool {
     $extension = strtolower($extension);
-    $extensions = $mapping['extensions'];
-    return isset($extensions[$extension]) ? $mapping['mimetypes'][$extensions[$extension]] : NULL;
+
+    return isset($this->mapping['extensions'][$extension]);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getMimeTypeForExtension($extension): ?string {
+    $extension = strtolower($extension);
+    $extensions = $this->mapping['extensions'];
+
+    return isset($extensions[$extension]) ? $this->mapping['mimetypes'][$extensions[$extension]] : NULL;
   }
 
   /**
    * {@inheritdoc}
    */
   public function getExtensionsForMimeType($mimetype): array {
-    $mapping = $this->mapping;
-    if (!in_array($mimetype, $mapping['mimetypes'])) {
+    $mimetype = strtolower($mimetype);
+    if (!$key = array_search($mimetype, $this->mapping['mimetypes'])) {
       return [];
     }
-    $key = array_search($mimetype, $mapping['mimetypes']);
-    $extensions = array_keys($mapping['extensions'], $key, TRUE);
-    sort($extensions);
+    $extensions = array_keys($this->mapping['extensions'], $key, TRUE);
+    \sort($extensions);
     return $extensions;
   }
 

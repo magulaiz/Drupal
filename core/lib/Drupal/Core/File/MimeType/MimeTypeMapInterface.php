@@ -24,35 +24,29 @@ interface MimeTypeMapInterface {
   public function alterMapping(ModuleHandlerInterface $module_handler): self;
 
   /**
-   * Resets the mapping to its initial state.
-   */
-  public function reset(): void;
-
-  /**
    * Adds a mapping between a MIME type and an extension.
    *
    * @param string $mimetype
    *   The MIME type the passed extension should map.
-   * @param string|string[] $extensions
+   * @param string $extension
    *   The extension(s) that should map to the passed MIME type.
    *
    * @return $this
    */
-  public function addMapping(
-    string $mimetype,
-    string | array $extensions,
-  ): self;
+  public function addMapping(string $mimetype, string $extension): self;
 
   /**
    * Removes the mapping between a MIME type and an extension.
    *
+   * @param string $mimetype
+   *   The MIME type to be removed from the mapping.
    * @param string $extension
    *   The extension to be removed from the mapping.
    *
    * @return bool
    *   TRUE if the extension was present, FALSE otherwise.
    */
-  public function removeMapping(string $extension): bool;
+  public function removeMapping(string $mimetype, string $extension): bool;
 
   /**
    * Removes a MIME type and all its mapped extensions from the mapping.
@@ -71,7 +65,37 @@ interface MimeTypeMapInterface {
    * @return string[]
    *   An array of MIME types.
    */
-  public function getMimeTypes(): array;
+  public function listMimeTypes(): array;
+
+  /**
+   * Returns known file extensions.
+   *
+   * @return string[]
+   *   An array of file extensions.
+   */
+  public function listExtensions(): array;
+
+  /**
+   * Determines if a MIME type exists.
+   *
+   * @param string $mimetype
+   *   The mime type.
+   *
+   * @return bool
+   *   TRUE if the MIME type exists, FALSE otherwise.
+   */
+  public function hasMimeType(string $mimetype): bool;
+
+  /**
+   * Determines if a file extension exists.
+   *
+   * @param string $extension
+   *   The file extension.
+   *
+   * @return bool
+   *   TRUE if the file extension exists, FALSE otherwise.
+   */
+  public function hasExtension(string $extension): bool;
 
   /**
    * Returns the appropriate MIME type for a given file extension.

@@ -17,11 +17,6 @@ use Drupal\KernelTests\KernelTestBase;
 class MimeTypeMapTest extends KernelTestBase {
 
   /**
-   * {@inheritdoc}
-   */
-  protected static $modules = ['system'];
-
-  /**
    * The MIME type mapper service.
    */
   protected MimeTypeMapInterface $map;
@@ -38,7 +33,7 @@ class MimeTypeMapTest extends KernelTestBase {
    * Sets up a very basic mapping array for testing.
    */
   protected function setBasicMapping() {
-    $this->map->reset();
+    $this->map->clear();
     $this->map->addMapping('application/java-archive', 'jar');
     $this->map->addMapping('image/jpeg', 'jpg');
   }
@@ -67,10 +62,9 @@ class MimeTypeMapTest extends KernelTestBase {
    */
   public function testRemoveMapping() {
     $this->setBasicMapping();
-
-    $this->assertTrue($this->map->removeMapping('jpg'));
+    $this->assertTrue($this->map->removeMapping('image/jpeg', 'jpg'));
     $this->assertNull($this->map->getMimeTypeForExtension('jpg'));
-    $this->assertFalse($this->map->removeMapping('foo'));
+    $this->assertFalse($this->map->removeMapping('bar', 'foo'));
   }
 
   /**
@@ -85,12 +79,12 @@ class MimeTypeMapTest extends KernelTestBase {
   }
 
   /**
-   * @covers ::getMimeTypes
+   * @covers ::listMimeTypes
    */
   public function testGetMimeTypes() {
     $this->setBasicMapping();
     $this->assertEquals(['application/java-archive', 'image/jpeg'],
-      $this->map->getMimeTypes());
+      $this->map->listMimeTypes());
   }
 
   /**

@@ -22,15 +22,15 @@ class ExtensionMimeTypeGuesser implements MimeTypeGuesserInterface {
   ];
 
   /**
-   * The MIME types mapper service.
+   * The MIME type map.
    */
-  protected MimeTypeMapInterface $mapper;
+  protected MimeTypeMapInterface $map;
 
   /**
    * Constructs a new ExtensionMimeTypeGuesser.
    *
    * @param \Drupal\Core\Extension\ModuleHandlerInterface|\Drupal\Core\File\MimeType\MimeTypeMapInterface $map
-   *   The MIME types mapper service.
+   *   The MIME type map.
    * @param \Drupal\Core\File\FileSystemInterface|null $fileSystem
    *   The file system.
    */
@@ -45,7 +45,7 @@ class ExtensionMimeTypeGuesser implements MimeTypeGuesserInterface {
       );
       $map = \Drupal::service('file.mime_type.map');
     }
-    $this->mapper = $map;
+    $this->map = $map;
     if (!$this->fileSystem) {
       @trigger_error(
         'Calling ' . __METHOD__ . '() without the $fileSystem argument is deprecated in drupal:11.1.0 and is required in drupal:11.0.0. See https://www.drupal.org/node/2311679',
@@ -72,7 +72,7 @@ class ExtensionMimeTypeGuesser implements MimeTypeGuesserInterface {
     // - awesome.image.jpeg.
     while ($additional_part = array_pop($file_parts)) {
       $extension = strtolower($additional_part . ($extension ? '.' . $extension : ''));
-      if ($mimeType = $this->mapper->getMimeTypeForExtension($extension)) {
+      if ($mimeType = $this->map->getMimeTypeForExtension($extension)) {
         return $mimeType;
       }
     }
@@ -93,16 +93,19 @@ class ExtensionMimeTypeGuesser implements MimeTypeGuesserInterface {
    */
   public function setMapping(?array $mapping = NULL): void {
     @trigger_error(
-      __METHOD__ . '() is deprecated in drupal:11.1.0 and is removed from drupal:12.0.0. Use \per::setMapping() instead. See https://www.drupal.org/project/drupal/issues/2311679',
+      __METHOD__ . '() is deprecated in drupal:11.1.0 and is removed from drupal:12.0.0. Use \Drupal\Core\File\MimeType\MimeTypeMapInterface::addMapping() instead. See https://www.drupal.org/project/drupal/issues/2311679',
       E_USER_DEPRECATED
     );
+    // Convert the mapping to be keyed by extension.
     $extensionMapping = $this->convertToExtensionKeyed($mapping);
-    $this->mapper->reset();
+    $this->map->clear();
     foreach ($extensionMapping as $type => $extensions) {
-      $this->mapper->addMapping($type, $extensions);
+      foreach ($extensions as $extension) {
+        $this->map->addMapping($type, $extension);
+      }
     }
     // @phpstan-ignore-next-line property.notFound
-    $this->mapper->alterMapping($this->moduleHandler);
+    $this->map->alterMapping($this->moduleHandler);
   }
 
   /**
