@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\file_test\MimeType;
 
 use Drupal\Core\File\MimeType\MimeTypeMapInterface;

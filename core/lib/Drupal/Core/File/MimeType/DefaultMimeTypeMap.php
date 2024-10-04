@@ -1,8 +1,8 @@
 <?php
 
-namespace Drupal\Core\File\MimeType;
+declare(strict_types=1);
 
-use Drupal\Core\Extension\ModuleHandlerInterface;
+namespace Drupal\Core\File\MimeType;
 
 /**
  * Provides a sensible mapping between filename extensions and MIME types.
@@ -889,7 +889,7 @@ class DefaultMimeTypeMap implements MimeTypeMapInterface {
    *   Array of mimetypes correlated to the extensions that relate to them.
    */
   protected array $mapping = [];
-  
+
   /**
    * Loads the default mapping.
    */
