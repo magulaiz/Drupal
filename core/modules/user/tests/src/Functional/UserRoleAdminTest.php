@@ -71,11 +71,16 @@ class UserRoleAdminTest extends BrowserTestBase {
     $edit = ['label' => $role_name, 'id' => $role_name];
     $this->drupalGet('admin/people/roles/add');
     $this->submitForm($edit, 'Save');
+    $this->assertSession()->statusCodeNotEquals(500);
     $this->assertSession()->pageTextContains("The config name part of the URI");
     $role = Role::load($role_name);
     $this->assertIsNotObject($role);
 
     // Check that the role was created in site default language.
+    $role_name = '123';
+    $edit = ['label' => $role_name, 'id' => $role_name];
+    $this->drupalGet('admin/people/roles/add');
+    $this->submitForm($edit, 'Save');
     $this->assertEquals($default_langcode, $role->language()->getId());
 
     // Verify permissions local task can be accessed when editing a role.
