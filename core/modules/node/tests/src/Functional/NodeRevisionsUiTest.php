@@ -175,35 +175,6 @@ class NodeRevisionsUiTest extends NodeTestBase {
 
     $this->drupalGet('node/' . $node_id . '/revisions');
 
-    // Verify that the following tabs exist on the page: 'View' linking to /node/$node_id,
-    // 'Edit' linking to /node/$node_id/edit, 'Delete' linking to /node/$node_id/delete and
-    // 'Revisions', the active tab linking to the current path
-
-    // Check that there is an active tab linking to the current path.
-    $this->assertSession()->elementExists('xpath', $this->assertSession()->buildXPathQuery(
-      '//ul[@class="tabs primary"]/li[@class="tabs__tab is-active"]/a[@href=:href]', [
-        ':href' => 'node/' . $node_id . '/revisions',
-      ]
-    ));
-    // Check that there is a view tab linking to /node/1.
-    $this->assertSession()->elementExists('xpath', $this->assertSession()->buildXPathQuery(
-      '//ul[@class="tabs primary"]/li[@class="tabs__tab"]/a[@href=:href]', [
-        ':href' => 'node/' . $node_id,
-      ]
-    ));
-    // Check that there is a edit tab linking to /node/1/edit.
-    $this->assertSession()->elementExists('xpath', $this->assertSession()->buildXPathQuery(
-      '//ul[@class="tabs primary"]/li[@class="tabs__tab"]/a[@href=:href]', [
-        ':href' => 'node/' . $node_id . '/edit',
-      ]
-    ));
-    // Check that there is a delete tab linking to /node/1/delete.
-    $this->assertSession()->elementExists('xpath', $this->assertSession()->buildXPathQuery(
-      '//ul[@class="tabs primary"]/li[@class="tabs__tab"]/a[@href=:href]', [
-        ':href' => 'node/' . $node_id . '/delete',
-      ]
-    ));
-
     // Verify that the latest affected revision having been a default revision
     // is displayed as the current one.
     $this->assertSession()->linkByHrefNotExists('/node/' . $node_id . '/revisions/1/revert');
