@@ -106,7 +106,7 @@ class ExtensionMimeTypeGuesser implements MimeTypeGuesserInterface {
     }
     // @phpstan-ignore-next-line
     \Drupal::service('module_handler')->alterDeprecated(
-      'This hook is deprecated in drupal:11.1.0 and will be removed before drupal:12.0.0. Implement service tagged with mime_type_map_modifier instead. See https://www.drupal.org/node/2311679',
+      'This hook is deprecated in drupal:11.1.0 and will be removed before drupal:12.0.0. Implement a MimeTypeMapLoadedEvent listener instead. See https://www.drupal.org/node/2311679',
       'file_mimetype_mapping',
       $mapping,
     );

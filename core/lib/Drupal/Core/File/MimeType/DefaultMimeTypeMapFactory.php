@@ -4,17 +4,16 @@ declare(strict_types=1);
 
 namespace Drupal\Core\File\MimeType;
 
+use Psr\EventDispatcher\EventDispatcherInterface;
+
 /**
  * Factory for creating the default MIME type map.
  */
 class DefaultMimeTypeMapFactory {
 
-  /**
-   * The MIME map modifiers.
-   *
-   * @var \Drupal\Core\File\MimeType\MimeTypeMapModifierInterface[]
-   */
-  protected array $mapModifiers = [];
+  public function __construct(
+    protected EventDispatcherInterface $eventDispatcher,
+  ) {}
 
   /**
    * Creates an instance of the MIME type map.
@@ -25,20 +24,8 @@ class DefaultMimeTypeMapFactory {
   public function create(): MimeTypeMapInterface {
     $map = new DefaultMimeTypeMap();
     $map->loadDefault();
-    foreach ($this->mapModifiers as $modifier) {
-      $modifier->modifyMimeTypeMap($map);
-    }
-
+    $this->eventDispatcher->dispatch(new MimeTypeMapLoadedEvent($map));
     return $map;
-  }
-
-  /**
-   * Adds a MIME map modifier.
-   *
-   * This is typically called on container build.
-   */
-  public function addModifier(MimeTypeMapModifierInterface $modifier): void {
-    $this->mapModifiers[] = $modifier;
   }
 
 }

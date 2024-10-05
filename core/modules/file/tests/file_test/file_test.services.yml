@@ -20,7 +20,6 @@ services:
     tags:
       - { name: stream_wrapper, scheme: dummy1 }
       - { name: stream_wrapper, scheme: dummy2 }
-  file.mime_type.map_modifier.dummy:
-    class: Drupal\file_test\MimeType\DummyMimeTypeMapModifier
-    tags:
-      - {name: mime_type_map_modifier}
+  Drupal\file_test\MimeType\DummyMimeTypeMapLoadedListener:
+    autowire: true
+    public: false
