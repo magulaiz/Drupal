@@ -17,7 +17,7 @@ class ClaroRevisionsTabsUiTest extends WebDriverTestBase {
   /**
    * {@inheritdoc}
    */
-  protected static $modules = ['block'];
+  protected static $modules = ['block', 'node'];
 
   /**
    * {@inheritdoc}
@@ -75,12 +75,6 @@ class ClaroRevisionsTabsUiTest extends WebDriverTestBase {
    *
    */
   public function testRevisionsUiTabsExist(): void {
-
-    $this->drupalGet('node/' . $this->node_id());
-    $page = $this->getSession()->getPage();
-    $page->waitFor(10, function () use ($page) {
-      return $page->find('css', "main .contextual");
-    });
 
     $this->drupalGet('node/' . $this->node->id() . '/revisions');
     $assert_session = $this->assertSession();
