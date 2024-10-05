@@ -1,5 +1,5 @@
 .umami-card {
-  width: 100%;
+  inline-size: 100%;
   padding: 1rem;
   border: 1px solid #fcece7;
   background-color: #fff;
@@ -48,7 +48,7 @@
   display: grid;
   gap: 1rem;
   grid-template-rows: 1fr auto auto;
-  height: 100%;
+  block-size: 100%;
 }
 
 .umami-card--alt .umami-card__wrapper {
@@ -61,5 +61,5 @@
 
 .umami-card .field--name-field-media-image img {
   display: block;
-  width: 100%;
+  inline-size: 100%;
 }

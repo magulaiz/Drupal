@@ -14,7 +14,7 @@
  */
 
 .install-page {
-  min-height: 100%;
+  min-block-size: 100%;
   background-color: var(--color-gray-100);
 }
 
@@ -28,13 +28,13 @@
 }
 
 .install-page .site-name {
-  margin-top: var(--space-s);
+  margin-block-start: var(--space-s);
   color: var(--color-gray);
   font-size: var(--font-size-xl);
 }
 
 .install-page .title {
-  margin-top: 0;
+  margin-block-start: 0;
   font-size: var(--font-size-h3);
 }
 
@@ -45,7 +45,7 @@
 .install-page .site-name,
 .install-page .title,
 .install-page .content {
-  max-width: 34rem;
+  max-inline-size: 34rem;
 }
 
 /**
@@ -54,12 +54,12 @@
 
 .install-page .password-parent,
 .install-page .confirm-parent {
-  width: auto;
+  inline-size: auto;
 }
 
 .install-page .form-item .password-suggestions {
   float: none;
-  width: auto;
+  inline-size: auto;
 }
 
 .install-page table td {
@@ -76,10 +76,10 @@
 @media all and (max-width: 63.125rem) and (min-width: 48em) {
   .install-page .password-strength,
   .install-page .confirm-parent {
-    width: 100%;
+    inline-size: 100%;
   }
   .install-configure-form .form-type-password {
-    width: 100%;
+    inline-size: 100%;
   }
   .password-confirm,
   .password-field {
@@ -87,7 +87,7 @@
   }
   .password-confirm-match {
     float: none;
-    width: auto;
-    max-width: 100%;
+    inline-size: auto;
+    max-inline-size: 100%;
   }
 }

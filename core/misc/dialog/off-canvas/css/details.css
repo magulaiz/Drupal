@@ -27,19 +27,22 @@
 }
 
 #drupal-off-canvas-wrapper details {
-  margin: var(--off-canvas-vertical-spacing-unit) calc(-1 * var(--off-canvas-padding)); /* Cancel out the padding of the parent. */
-  padding: 0 var(--off-canvas-padding);
+  margin-block: var(--off-canvas-vertical-spacing-unit);
+  margin-inline: calc(-1 * var(--off-canvas-padding)); /* Cancel out the padding of the parent. */
+  padding-block: 0;
+  padding-inline: var(--off-canvas-padding);
   color: var(--off-canvas-details-text-color);
   border: solid var(--off-canvas-details-border-color) var(--off-canvas-details-border-width);
   background: var(--off-canvas-details-background-color);
 }
 
 :is(#drupal-off-canvas-wrapper details) + details {
-  margin-top: calc(-1 * var(--off-canvas-details-border-width));
+  margin-block-start: calc(-1 * var(--off-canvas-details-border-width));
 }
 
 #drupal-off-canvas-wrapper summary {
-  margin: 0 calc(-1 * var(--off-canvas-padding));
+  margin-block: 0;
+  margin-inline: calc(-1 * var(--off-canvas-padding));
   padding: var(--off-canvas-details-summary-padding);
   color: var(--off-canvas-details-summary-text-color);
   border: var(--off-canvas-details-summary-border);
@@ -65,5 +68,6 @@
 }
 
 #drupal-off-canvas-wrapper .details-wrapper {
-  padding: var(--off-canvas-vertical-spacing-unit) 0;
+  padding-block: var(--off-canvas-vertical-spacing-unit);
+  padding-inline: 0;
 }

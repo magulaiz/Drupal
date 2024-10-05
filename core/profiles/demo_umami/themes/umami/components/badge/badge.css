@@ -10,7 +10,7 @@
   .umami-badge__container {
     flex-direction: column;
     gap: 0;
-    width: 100%;
+    inline-size: 100%;
     padding-block: 0.96em;
   }
 }
@@ -19,8 +19,8 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 40px;
-  height: 40px;
+  inline-size: 40px;
+  block-size: 40px;
 }
 
 /* Large */
@@ -28,8 +28,8 @@
   /* 960px */
   .umami-badge__icon {
     align-items: start;
-    width: 56px;
-    height: 64px;
+    inline-size: 56px;
+    block-size: 64px;
   }
 }
 

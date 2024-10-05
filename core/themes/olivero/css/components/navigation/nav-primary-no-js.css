@@ -42,8 +42,8 @@
     position: static;
     visibility: visible;
     flex-basis: 100%;
-    width: 100%;
-    max-width: none;
+    inline-size: 100%;
+    max-inline-size: none;
     margin-block: var(--sp2) 0;
     margin-inline-start: var(--sp2);
     margin-inline-end: var(--sp2);
@@ -94,8 +94,8 @@
     position: static;
     visibility: visible;
     flex-basis: 100%;
-    width: 100%;
-    max-width: none;
+    inline-size: 100%;
+    max-inline-size: none;
     margin-block: var(--sp2) 0;
     margin-inline-start: var(--sp2);
     margin-inline-end: var(--sp2);

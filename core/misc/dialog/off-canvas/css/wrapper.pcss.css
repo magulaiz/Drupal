@@ -12,7 +12,7 @@
   z-index: 501; /* Layer the dialog just under the toolbar. */
   overflow: auto;
   box-sizing: border-box;
-  height: 100%;
+  block-size: 100%;
   border-inline-start: solid var(--off-canvas-wrapper-border-width) var(--off-canvas-wrapper-border-color);
   box-shadow: var(--off-canvas-wrapper-box-shadow);
 
@@ -21,7 +21,7 @@
    * dialog system uses to expand dialog widths.
    */
   @media (max-width: 768px) {
-    width: 100% !important;
+    inline-size: 100% !important;
   }
 }
 
@@ -35,9 +35,9 @@ body.js-off-canvas-dialog-open {
 /* This is a page level content wrapper that shrinks when off-canvas is open. */
 .dialog-off-canvas-main-canvas {
   transition:
-    padding-right 0.7s ease,
-    padding-left 0.7s ease,
-    padding-top 0.3s ease;
+    padding-inline-end 0.7s ease,
+    padding-inline-start 0.7s ease,
+    padding-block-start 0.3s ease;
 
   @media (prefers-reduced-motion: reduce) {
     transition: none;

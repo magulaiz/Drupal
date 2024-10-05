@@ -10,6 +10,6 @@
  */
 
 .divider {
-  height: 1px;
+  block-size: 1px;
   background-color: var(--color-divider);
 }

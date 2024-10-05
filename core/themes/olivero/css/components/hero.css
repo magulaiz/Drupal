@@ -34,7 +34,7 @@
 }
 
 .hero__img img {
-  width: 100%;
+  inline-size: 100%;
 }
 
 @media (min-width: 31.25rem) {

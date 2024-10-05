@@ -8,7 +8,7 @@
 .layout--content-narrow,
 .layout--pass--content-narrow > * {
   grid-column: 1 / 7;
-  width: 100%;
+  inline-size: 100%;
 
   @media (--grid-md) {
     grid-column: 2 / 14;
@@ -61,14 +61,14 @@
       &::after {
         @media (--grid-md) {
           inset-inline-start: calc(-1 * (var(--grid-col-width) + var(--grid-gap)));
-          width: var(--sp);
-          height: calc(100% - 45px);
+          inline-size: var(--sp);
+          block-size: calc(100% - 45px);
           margin-inline-start: 2px;
         }
       }
 
       @media (--grid-md) {
-        width: calc(10 * var(--grid-col-width) + 9 * var(--grid-gap));
+        inline-size: calc(10 * var(--grid-col-width) + 9 * var(--grid-gap));
         margin-block: var(--sp3);
         padding-inline-start: 0;
       }
@@ -80,7 +80,7 @@
       }
 
       @media (--lg) {
-        width: calc(12 * var(--grid-col-width) + 11 * var(--grid-gap));
+        inline-size: calc(12 * var(--grid-col-width) + 11 * var(--grid-gap));
         margin-inline-start: calc(-1 * (var(--grid-col-width) + var(--grid-gap)));
       }
     }
@@ -98,7 +98,7 @@
     & .text-content {
       & blockquote,
       & pre {
-        width: auto;
+        inline-size: auto;
       }
     }
   }

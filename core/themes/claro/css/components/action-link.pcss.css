@@ -9,7 +9,8 @@
  * Action links layout.
  */
 .action-links {
-  margin: var(--space-l) 0;
+  margin-block: var(--space-l);
+  margin-inline: 0;
   list-style: none;
 }
 
@@ -32,7 +33,8 @@
  */
 .action-link {
   display: inline-block;
-  padding: calc(var(--space-m) - ((var(--space-l) - var(--space-m)) / 2)) var(--space-m);
+  padding-block: calc(var(--space-m) - ((var(--space-l) - var(--space-m)) / 2));
+  padding-inline: var(--space-m);
   cursor: pointer;
   text-decoration: none;
   color: var(--color-gray-800);
@@ -74,8 +76,8 @@
     inset-block-start: 0.125rem;
     /* Set the proper vertical alignment */
     display: inline-block;
-    width: 1em;
-    height: 1em;
+    inline-size: 1em;
+    block-size: 1em;
     margin-inline: calc(var(--space-s) - var(--space-m)) 0.5em;
     background-repeat: no-repeat;
     background-position: center;
@@ -100,13 +102,15 @@
 .no-touchevents {
   /* Small variant. */
   & .action-link--small {
-    padding: calc(var(--space-s) - ((var(--space-l) - var(--space-s)) / 2)) var(--space-s);
+    padding-block: calc(var(--space-s) - ((var(--space-l) - var(--space-s)) / 2));
+    padding-inline: var(--space-s);
     font-size: var(--font-size-s);
   }
 
   /* Extra small variant. */
   & .action-link--extrasmall {
-    padding: 0 var(--space-xs);
+    padding-block: 0;
+    padding-inline: var(--space-xs);
     font-size: var(--font-size-s);
   }
 
@@ -138,8 +142,8 @@
 .no-touchevents .action-link--extrasmall::before {
   inset-block-start: 0.0625rem;
   /* Set the proper vertical alignment */
-  width: var(--space-s);
-  height: var(--space-s);
+  inline-size: var(--space-s);
+  block-size: var(--space-s);
   margin-inline: -0.125rem 0.4em;
 }
 

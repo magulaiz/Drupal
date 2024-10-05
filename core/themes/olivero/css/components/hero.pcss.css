@@ -24,7 +24,7 @@
   margin-block-end: var(--sp2);
 
   & img {
-    width: 100%;
+    inline-size: 100%;
   }
 
   @media (--sm) {

@@ -20,14 +20,15 @@
 
 .tabs-wrapper {
   & > nav {
-    width: 100%;
+    inline-size: 100%;
   }
 }
 .tabs {
   display: flex;
   flex-direction: column;
-  width: 100%;
-  margin: 0 0 var(--space-l) 0;
+  inline-size: 100%;
+  margin-block: 0 var(--space-l);
+  margin-inline: 0;
   border: var(--tabs-base-border);
   border-radius: var(--tabs-border-radius-size);
   box-shadow: var(--tabs-base-shadow);
@@ -35,7 +36,7 @@
 
 .tabs__tab {
   position: relative;
-  border-bottom: var(--tabs-base-border);
+  border-block-end: var(--tabs-base-border);
   background-color: var(--color-gray-025);
   font-size: var(--font-size-s);
   font-weight: bold;
@@ -43,7 +44,7 @@
     display: none;
   }
   &:last-child {
-    border-bottom: 0;
+    border-block-end: 0;
   }
   &.is-active {
     display: flex;
@@ -51,17 +52,17 @@
     background-color: var(--color-white);
     box-shadow: var(--tabs-base-shadow);
     &:focus::before {
-      top: calc(var(--tabs--focus-height) * -1);
-      height: calc(var(--tabs-link-height) + 2px);
+      inset-block-start: calc(var(--tabs--focus-height) * -1);
+      block-size: calc(var(--tabs-link-height) + 2px);
     }
     &::before {
       z-index: 2;
-      top: -1px;
+      inset-block-start: -1px;
       inset-inline-start: -1px;
-      width: var(--tabs--active-height);
-      height: calc(100% + 2px);
+      inline-size: var(--tabs--active-height);
+      block-size: calc(100% + 2px);
       border-inline-start: var(--tabs--active-height) solid var(--color-absolutezero);
-      border-top-left-radius: var(--tabs-border-radius-size);
+      border-start-start-radius: var(--tabs-border-radius-size);
     }
   }
 }
@@ -73,13 +74,14 @@
   flex-grow: 1;
   align-items: center;
   box-sizing: border-box;
-  min-height: var(--tabs-link-height);
-  padding: var(--space-s) var(--space-l);
+  min-block-size: var(--tabs-link-height);
+  padding-block: var(--space-s);
+  padding-inline: var(--space-l);
   text-decoration: none;
   color: var(--color-gray-800);
   line-height: 1.2rem;
   &:focus {
-    min-height: calc(var(--tabs-link-height) + var(--tabs--focus-height) - 1px);
+    min-block-size: calc(var(--tabs-link-height) + var(--tabs--focus-height) - 1px);
     margin: -1px;
     padding-inline-start: calc(var(--space-l) - var(--tabs--focus-height) + 1px);
     text-decoration: none;
@@ -98,9 +100,9 @@
     flex-grow: 1;
     color: var(--color-absolutezero);
     &:focus {
-      margin: -1px 0;
-      padding-right: var(--space-l);
-      padding-left: var(--space-l);
+      margin-block: -1px;
+      margin-inline: 0;
+      padding-inline: var(--space-l);
       border-inline-start: none;
       border-radius: 0;
     }
@@ -122,7 +124,7 @@
 .tabs {
   &.is-open {
     & .tabs__tab.is-active::before {
-      border-bottom-left-radius: 0;
+      border-end-start-radius: 0;
     }
   }
 }
@@ -140,12 +142,12 @@
   flex-shrink: 0;
   align-items: center;
   justify-content: center;
-  width: var(--tabs-link-height);
-  padding-right: 1px;
+  inline-size: var(--tabs-link-height);
+  padding-inline-end: 1px;
   text-align: center;
   border-inline-start: var(--tabs-trigger-border);
   &:focus {
-    padding-right: 0;
+    padding-inline-end: 0;
     border: var(--tabs--focus-height) solid var(--color-focus);
     border-radius: var(--tabs-border-radius-size);
     box-shadow: none;
@@ -165,41 +167,42 @@
     & .tabs {
       flex-direction: row;
       align-items: flex-end;
-      width: auto;
+      inline-size: auto;
       margin: 0;
       border: 0;
       box-shadow: none;
     }
     & .tabs--secondary {
       overflow: hidden;
-      margin: calc(calc(var(--tabs--focus-height) + 3px) * -1) calc(calc(var(--tabs--focus-height) + 3px) * -1) 0;
-      padding: calc(var(--tabs--focus-height) + 3px) calc(var(--tabs--focus-height) + 3px) 0;
+      margin-block: calc(calc(var(--tabs--focus-height) + 3px) * -1) 0;
+      margin-inline: calc(calc(var(--tabs--focus-height) + 3px) * -1);
+      padding-block: calc(var(--tabs--focus-height) + 3px) 0;
+      padding-inline: calc(var(--tabs--focus-height) + 3px);
       border-radius: 0;
       &::after {
         position: absolute;
-        bottom: 0;
-        left: 0;
+        inset-block-end: 0;
+        inset-inline-start: 0;
         display: block;
-        width: 100%;
+        inline-size: 100%;
         content: "";
-        border-bottom: 1px solid var(--color-gray-200);
+        border-block-end: 1px solid var(--color-gray-200);
       }
       & .tabs__tab {
         font-size: var(--font-size-s);
       }
       & .tabs__link {
-        min-height: var(--tabs-secondary-link-height);
-        padding-top: var(--space-xs);
-        padding-bottom: var(--space-xs);
+        min-block-size: var(--tabs-secondary-link-height);
+        padding-block: var(--space-xs);
         &:focus {
-          min-height: var(--tabs-secondary-link-height);
+          min-block-size: var(--tabs-secondary-link-height);
         }
       }
     }
     & .tabs__tab {
       display: block;
-      border-top: none;
-      border-bottom: none;
+      border-block-start: none;
+      border-block-end: none;
       background: none;
       font-size: var(--font-size-base);
       &.is-active {
@@ -217,14 +220,12 @@
       }
     }
     & .tabs__link {
-      padding-right: 2rem;
-      padding-left: 2rem;
+      padding-inline: 2rem;
       border-radius: var(--tabs-border-radius-size) var(--tabs-border-radius-size) 0 0;
       &:focus {
-        min-height: var(--tabs-link-height);
+        min-block-size: var(--tabs-link-height);
         margin: 0;
-        padding-right: 2rem;
-        padding-left: 2rem;
+        padding-inline: 2rem;
         color: var(--color-text);
         border: none;
         border-radius: var(--tabs-border-radius-size) var(--tabs-border-radius-size) 0 0;
@@ -239,15 +240,13 @@
       }
       &.is-active {
         &::before {
-          top: auto;
-          right: 0;
-          bottom: 0;
-          left: 0;
-          width: 100%;
-          height: var(--tabs--active-height);
-          border-right: none;
-          border-bottom: var(--tabs--active-height) solid var(--color-absolutezero);
-          border-left: none;
+          inset-block: auto 0;
+          inset-inline: 0;
+          inline-size: 100%;
+          block-size: var(--tabs--active-height);
+          border-inline-end: none;
+          border-block-end: var(--tabs--active-height) solid var(--color-absolutezero);
+          border-inline-start: none;
         }
       }
     }

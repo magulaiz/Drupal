@@ -11,14 +11,14 @@
   position: absolute;
   overflow: hidden;
   clip: rect(1px, 1px, 1px, 1px);
-  width: 1px;
-  height: 1px;
+  inline-size: 1px;
+  block-size: 1px;
 }
 
 @media screen and (min-width: 38em) {
   .translation-set__translated label {
     position: inherit;
-    width: auto;
-    height: auto;
+    inline-size: auto;
+    block-size: auto;
   }
 }

@@ -15,6 +15,6 @@
 }
 
 .region--hero .wide-content {
-  max-width: 100%;
+  max-inline-size: 100%;
   margin-inline: 0;
 }

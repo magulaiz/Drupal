@@ -1,23 +1,23 @@
 /* table style column align */
 .views-align-left {
-  text-align: left;
+  text-align: start;
 }
 .views-align-right {
-  text-align: right;
+  text-align: end;
 }
 .views-align-center {
   text-align: center;
 }
 /* Grid style column align. */
 .views-view-grid .views-col {
-  float: left;
+  float: inline-start;
 }
 .views-view-grid .views-row {
-  float: left;
+  float: inline-start;
   clear: both;
-  width: 100%;
+  inline-size: 100%;
 }
 /* Provide some space between display links. */
 .views-display-link + .views-display-link {
-  margin-left: 0.5em;
+  margin-inline-start: 0.5em;
 }

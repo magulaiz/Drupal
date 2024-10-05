@@ -4,8 +4,8 @@
  */
 
 #language-content-settings-form table .bundle {
-  width: 25%;
+  inline-size: 25%;
 }
 #language-content-settings-form table .operations {
-  width: 75%;
+  inline-size: 75%;
 }

@@ -11,15 +11,15 @@
   flex-wrap: wrap;
   align-items: center;
   justify-content: space-between;
-  padding: 0.75rem 4%;
-  border-bottom: 1px solid #e6eee0;
+  padding-block: 0.75rem;
+  padding-inline: 4%;
+  border-block-end: 1px solid #e6eee0;
 }
 /* Medium */
 @media screen and (min-width: 48rem) {
   /* 768px */
   .region-pre-header {
-    padding-top: 0;
-    padding-bottom: 0;
+    padding-block: 0;
   }
 }
 /* Extra large + side margins */

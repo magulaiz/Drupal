@@ -21,9 +21,10 @@
 
   & .button {
     display: inline-block;
-    width: 100%;
-    height: auto;
-    margin: 0 0 10px;
+    inline-size: 100%;
+    block-size: auto;
+    margin-block: 0 10px;
+    margin-inline: 0;
     padding: var(--off-canvas-button-padding);
     cursor: pointer;
     transition: background 0.5s ease;
@@ -58,7 +59,7 @@
   }
 
   & .button--primary {
-    margin-top: 15px;
+    margin-block-start: 15px;
     color: var(--off-canvas-primary-button-text-color);
     background: var(--off-canvas-primary-button-background-color);
 
@@ -106,7 +107,8 @@
   }
 
   @nest .no-touchevents & .button--small {
-    padding: 2px 1em;
+    padding-block: 2px;
+    padding-inline: 1em;
     font-size: 13px;
   }
 }

@@ -4,8 +4,9 @@
  */
 
 .fieldset {
-  min-width: 0;
-  margin: var(--space-m) 0;
+  min-inline-size: 0;
+  margin-block: var(--space-m);
+  margin-inline: 0;
   padding: 0;
   color: var(--color-text);
   border: var(--details-border-size) solid var(--details-border-color);
@@ -27,8 +28,8 @@
  */
 .fieldset__legend {
   display: contents; /* For Firefox. */
-  float: left; /* iOS Safari, Android Chrome, Edge. */
-  width: 100%; /* iOS Safari, Android Chrome, Edge. */
+  float: inline-start; /* iOS Safari, Android Chrome, Edge. */
+  inline-size: 100%; /* iOS Safari, Android Chrome, Edge. */
   margin-block-end: var(--space-m);
   color: var(--color-gray-800);
   font-weight: bold;
@@ -36,7 +37,7 @@
 
 .fieldset__legend--composite {
   float: none;
-  width: auto;
+  inline-size: auto;
   margin-block-start: calc(var(--space-xs) / 2); /* 4px */
   margin-block-end: calc(var(--space-xs) / 2); /* 4px */
   color: inherit;
@@ -46,7 +47,7 @@
 
 @media screen and (min-width: 48em) {
   .fieldset__legend {
-    margin-bottom: var(--space-l);
+    margin-block-end: var(--space-l);
   }
 }
 
@@ -76,8 +77,7 @@
 
 @media screen and (min-width: 48em) {
   .fieldset__label {
-    padding-right: var(--space-l);
-    padding-left: var(--space-l);
+    padding-inline: var(--space-l);
   }
 
   .fieldset__label--group {
@@ -118,7 +118,8 @@
 
 @media screen and (min-width: 48em) {
   .fieldset__wrapper {
-    margin: var(--space-l) var(--space-l) calc(var(--space-m) + var(--space-s));
+    margin-block: var(--space-l) calc(var(--space-m) + var(--space-s));
+    margin-inline: var(--space-l);
   }
 }
 

@@ -14,7 +14,7 @@
     text-shadow: none !important;
   }
   body {
-    padding-top: 0;
+    padding-block-start: 0;
   }
   pre,
   blockquote {
@@ -29,7 +29,7 @@
     page-break-inside: avoid;
   }
   img {
-    max-width: 100% !important;
+    max-inline-size: 100% !important;
   }
   p,
   h2,
@@ -54,10 +54,11 @@
     border-color: #999;
   }
   .is-collapse-enabled .tabs {
-    max-height: 999em;
+    max-block-size: 999em;
   }
   .is-horizontal .tabs__tab {
-    margin: 0 0.25rem !important;
+    margin-block: 0 !important;
+    margin-inline: 0.25rem !important;
     border-radius: 0.25rem 0.25rem 0 0 !important;
   }
   .dropbutton-multiple .dropbutton .secondary-action {

@@ -11,7 +11,7 @@
  */
 
 .system-status-report-counters__item {
-  width: 100%;
+  inline-size: 100%;
   margin-block: 0.625rem;
   margin-inline: 0;
 }
@@ -26,9 +26,9 @@
     justify-content: space-between;
   }
   .system-status-report-counters__item--half-width {
-    width: 49%;
+    inline-size: 49%;
   }
   .system-status-report-counters__item--third-width {
-    width: 32%;
+    inline-size: 32%;
   }
 }

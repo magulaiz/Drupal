@@ -8,16 +8,20 @@
 
 #drupal-off-canvas-wrapper {
   & .panel {
-    padding: 5px 5px 15px;
+    padding-block: 5px 15px;
+    padding-inline: 5px;
   }
 
   & .panel__description {
-    margin: 0 0 3px;
-    padding: 2px 0 3px 0;
+    margin-block: 0 3px;
+    margin-inline: 0;
+    padding-block: 2px 3px;
+    padding-inline: 0;
   }
 
   & .compact-link {
-    margin: 0 0 10px 0;
+    margin-block: 0 10px;
+    margin-inline: 0;
   }
 
   & small .admin-link::before {

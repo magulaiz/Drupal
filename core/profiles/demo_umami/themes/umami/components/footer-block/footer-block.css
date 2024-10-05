@@ -10,8 +10,8 @@
 
 .footer-block__link::after {
   display: inline-block;
-  width: 14px;
-  height: 14px;
+  inline-size: 14px;
+  block-size: 14px;
   content: "";
   vertical-align: middle;
   background: url("../../images/svg/pointer--white.svg") no-repeat center center;
@@ -30,7 +30,7 @@
 
 @media screen and (min-width: 60rem) {
   .footer-block__title {
-    padding-top: 2rem;
+    padding-block-start: 2rem;
   }
 }
 

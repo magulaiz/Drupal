@@ -10,7 +10,7 @@
 }
 
 .subfield-option.subfield-option .form-item__label {
-  padding-bottom: 10px;
+  padding-block-end: 10px;
 }
 
 .field-option .field-option__description,
