@@ -1,0 +1,90 @@
+<?php
+
+declare(strict_types=1);
+
+namespace Drupal\FunctionalJavascriptTests\Theme;
+
+use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
+use Drupal\node\Entity\Node;
+
+/**
+ * Runs tests on Revisions UI using Claro.
+ *
+ * @group claro
+ */
+class ClaroRevisionsTabsUiTest extends WebDriverTestBase {
+
+  /**
+   * {@inheritdoc}
+   */
+  protected static $modules = ['block'];
+
+  /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'claro';
+
+  /**
+   * {@inheritdoc}
+   */
+  protected function setUp(): void {
+    parent::setUp();
+
+    $this->drupalCreateContentType([
+      'type' => 'page',
+      'name' => 'Basic page',
+      'display_submitted' => FALSE,
+    ]);
+
+    // Create initial node.
+    $node = $this->drupalCreateNode();
+
+    // Create two revisions.
+    $revision_count = 2;
+    for ($i = 0; $i < $revision_count; $i++) {
+
+      // Create revision with a random title and body and update variables.
+      $node->title = $this->randomMachineName();
+      $node->body = [
+        'value' => $this->randomMachineName(32),
+        'format' => filter_default_format(),
+      ];
+      $node->setNewRevision();
+
+      $node->save();
+
+      // Make sure we get revision information.
+      $node = Node::load($node->id());
+    }
+
+    $this->node = $node;
+
+    // Create the test user and log in.
+    $admin_user = $this->drupalCreateUser([
+      'access administration pages',
+      'view the administration theme',
+      'administer nodes',
+      'edit any page content',
+      'view page revisions',
+    ]);
+    $this->drupalLogin($admin_user);
+  }
+
+  /**
+   * Tests Revisions UI displays local tasks tabs.
+   *
+   */
+  public function testRevisionsUiTabsExist(): void {
+
+    $this->drupalGet('node/' . $this->node_id());
+    $page = $this->getSession()->getPage();
+    $page->waitFor(10, function () use ($page) {
+      return $page->find('css', "main .contextual");
+    });
+
+    $this->drupalGet('node/' . $this->node->id() . '/revisions');
+    $assert_session = $this->assertSession();
+    $assert_session->elementExists('css', 'ul.tabs.tabs--primary.clearfix');
+  }
+
+}
