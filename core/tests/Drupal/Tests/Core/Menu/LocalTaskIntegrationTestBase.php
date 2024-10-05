@@ -9,6 +9,8 @@ use Drupal\Core\Plugin\Discovery\YamlDiscovery;
 use Drupal\Tests\UnitTestCase;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpFoundation\RequestStack;
+use Symfony\Component\HttpFoundation\InputBag;
+use Drupal\Core\Menu\LocalTaskInterface;
 
 /**
  * Defines a base unit test for testing existence of local tasks.
@@ -49,6 +51,17 @@ abstract class LocalTaskIntegrationTestBase extends UnitTestCase {
     $config_factory = $this->getConfigFactoryStub([]);
     $container->set('config.factory', $config_factory);
     $container->setParameter('app.root', $this->root);
+
+    $metadataBubblingUrlGenerator = $this->getMockBuilder('Drupal\Core\Render\MetadataBubblingUrlGenerator')
+      ->disableOriginalConstructor()
+      ->getMock();
+    $metadataBubblingUrlGenerator->expects($this->any())
+      ->method('generateFromRoute')
+      ->willReturnCallback(function ($name, $parameters = []) {
+        return '/';
+      });
+    $container->set('url_generator', $metadataBubblingUrlGenerator);
+
     \Drupal::setContainer($container);
     $this->container = $container;
   }
@@ -67,10 +80,19 @@ abstract class LocalTaskIntegrationTestBase extends UnitTestCase {
     $property = new \ReflectionProperty('Drupal\Core\Menu\LocalTaskManager', 'argumentResolver');
     $property->setValue($manager, $argumentResolver);
 
-    // @todo Mock a request with a route.
+    // @todo mock a request with a route.
     $request_stack = new RequestStack();
     $property = new \ReflectionProperty('Drupal\Core\Menu\LocalTaskManager', 'requestStack');
     $property->setValue($manager, $request_stack);
+
+    $route_match = $this->createMock('Drupal\Core\Routing\RouteMatchInterface');
+    $property = new \ReflectionProperty('Drupal\Core\Menu\LocalTaskManager', 'routeMatch');
+    $property->setValue($manager, $route_match);
+    $route_match->expects($this->any())
+      ->method('getRawParameters')
+      ->willReturnCallback(function () {
+        return new InputBag([]);
+      });
 
     $accessManager = $this->createMock('Drupal\Core\Access\AccessManagerInterface');
     $property = new \ReflectionProperty('Drupal\Core\Menu\LocalTaskManager', 'accessManager');
@@ -100,11 +122,20 @@ abstract class LocalTaskIntegrationTestBase extends UnitTestCase {
     $method = new \ReflectionMethod('Drupal\Core\Menu\LocalTaskManager', 'alterInfo');
     $method->invoke($manager, 'local_tasks');
 
-    $plugin_stub = $this->createMock('Drupal\Core\Menu\LocalTaskInterface');
+    $plugin_stub = $this->createMock(LocalTaskInterface::class);
+    $plugin_stub->expects($this->any())
+      ->method('getRouteParameters')
+      ->willReturn([]);
+
+    $plugin_stub->expects($this->any())
+      ->method('getPluginDefinition')
+      ->willReturn([]);
+
     $factory = $this->createMock('Drupal\Component\Plugin\Factory\FactoryInterface');
     $factory->expects($this->any())
       ->method('createInstance')
       ->willReturn($plugin_stub);
+
     $property = new \ReflectionProperty('Drupal\Core\Menu\LocalTaskManager', 'factory');
     $property->setValue($manager, $factory);
 
