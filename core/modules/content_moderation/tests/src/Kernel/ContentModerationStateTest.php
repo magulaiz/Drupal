@@ -5,12 +5,14 @@ declare(strict_types=1);
 namespace Drupal\Tests\content_moderation\Kernel;
 
 use Drupal\content_moderation\Entity\ContentModerationState;
+use Drupal\Core\Entity\EntityDefinitionUpdateManagerInterface;
 use Drupal\Core\Entity\EntityFieldManagerInterface;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityPublishedInterface;
 use Drupal\Core\Entity\EntityStorageException;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Language\LanguageInterface;
+use Drupal\Core\State\StateInterface;
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\language\Entity\ConfigurableLanguage;
 use Drupal\node\Entity\Node;
@@ -61,6 +63,20 @@ class ContentModerationStateTest extends KernelTestBase {
    */
   #[AutowireProperty]
   protected EntityTypeManagerInterface $entityTypeManager;
+
+  /**
+   * The state object.
+   *
+   * This property is used in EntityDefinitionTestTrait, can not be autowired.
+   */
+  protected StateInterface $state;
+
+  /**
+   * The entity definition update manager.
+   *
+   * This property is used in EntityDefinitionTestTrait, can not be autowired.
+   */
+  protected EntityDefinitionUpdateManagerInterface $entityDefinitionUpdateManager;
 
   /**
    * The entity field manager.
