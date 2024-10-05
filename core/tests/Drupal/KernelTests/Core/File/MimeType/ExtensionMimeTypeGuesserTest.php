@@ -17,12 +17,13 @@ class ExtensionMimeTypeGuesserTest extends KernelTestBase {
   /**
    * {@inheritdoc}
    */
-  protected static $modules = ['file_test'];
+  protected static $modules = ['file_deprecated_test'];
 
   /**
    * Tests mapping of mimetypes from filenames.
    *
    * @covers ::guessMimeType
+   * @group legacy
    */
   public function testGuessMimeType(): void {
     $prefixes = ['public://', 'private://', 'temporary://', 'dummy-remote://'];
@@ -44,6 +45,10 @@ class ExtensionMimeTypeGuesserTest extends KernelTestBase {
       'foo.doc' => 'made_up/doc',
       'test.ogg' => 'audio/ogg',
     ];
+
+    $this->expectDeprecation(
+      'The deprecated alter hook hook_file_mimetype_mapping_alter() is implemented in these functions: file_deprecated_test_file_mimetype_mapping_alter. This hook is deprecated in drupal:11.1.0 and will be removed before drupal:12.0.0. Implement a MimeTypeMapLoadedEvent listener instead. See https://www.drupal.org/node/2311679'
+    );
 
     /** @var \Drupal\Core\File\MimeType\ExtensionMimeTypeGuesser $guesser */
     $guesser = $this->container->get('file.mime_type.guesser.extension');

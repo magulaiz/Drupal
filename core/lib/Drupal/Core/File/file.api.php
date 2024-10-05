@@ -114,11 +114,10 @@ function hook_file_url_alter(&$uri) {
  *   The array has 'mimetypes' and 'extensions' elements, each of which is an
  *   array.
  *
- * @deprecated in drupal:10.1.0 and is removed from drupal:11.0.0. Use a service
- * implementing \Drupal\Core\File\MimeType\MimeTypeMapModifierInterface and
- * tagged with mime_type_map_modifier instead.
+ * @deprecated in drupal:11.1.0 and is removed from drupal:12.0.0. Create a
+ *   \Drupal\Core\File\MimeType\MimeTypeMapLoadedEvent listener instead.
  *
- * Invoked by \Drupal\Core\File\MimeType\LegacyHookMimeTypeMapModifier.
+ * Invoked by \Drupal\Core\File\MimeType\LegacyMimeTypeMapLoadedListener.
  *
  * It is used to allow modules to add to or modify the default mapping of
  * MIME type to file extensions.
