@@ -6,6 +6,7 @@ namespace Drupal\Tests\content_moderation\Kernel;
 
 use Drupal\content_moderation\Entity\ContentModerationState;
 use Drupal\Core\Entity\EntityDefinitionUpdateManagerInterface;
+use Drupal\Core\Entity\EntityFieldManagerInterface;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityPublishedInterface;
 use Drupal\Core\Entity\EntityStorageException;
@@ -65,15 +66,21 @@ class ContentModerationStateTest extends KernelTestBase {
 
   /**
    * The state object.
-   *
-   * @var \Drupal\Core\State\StateInterface
    */
+  #[AutowireProperty]
   protected StateInterface $state;
 
   /**
    * The entity definition update manager.
    */
+  #[AutowireProperty]
   protected EntityDefinitionUpdateManagerInterface $entityDefinitionUpdateManager;
+
+  /**
+   * The entity field manager.
+   */
+  #[AutowireProperty]
+  protected EntityFieldManagerInterface $entityFieldManager;
 
   /**
    * The ID of the revisionable entity type used in the tests.
@@ -607,10 +614,10 @@ class ContentModerationStateTest extends KernelTestBase {
     $keys = $entity_type->getKeys();
     unset($keys['langcode']);
     $entity_type->set('entity_keys', $keys);
-    \Drupal::state()->set($this->revEntityTypeId . '.entity_type', $entity_type);
+    $this->state->set($this->revEntityTypeId . '.entity_type', $entity_type);
 
     // Update the entity type in order to remove the 'langcode' field.
-    \Drupal::entityDefinitionUpdateManager()->updateFieldableEntityType($entity_type, \Drupal::service('entity_field.manager')->getFieldStorageDefinitions($entity_type->id()));
+    $this->entityDefinitionUpdateManager->updateFieldableEntityType($entity_type, $this->entityFieldManager->getFieldStorageDefinitions($entity_type->id()));
 
     $workflow = $this->createEditorialWorkflow();
     $this->addEntityTypeAndBundleToWorkflow($workflow, $this->revEntityTypeId, $this->revEntityTypeId);
@@ -835,7 +842,7 @@ class ContentModerationStateTest extends KernelTestBase {
    */
   protected function reloadEntity(EntityInterface $entity, $revision_id = FALSE) {
     /** @var \Drupal\Core\Entity\RevisionableStorageInterface $storage */
-    $storage = \Drupal::entityTypeManager()->getStorage($entity->getEntityTypeId());
+    $storage = $this->entityTypeManager->getStorage($entity->getEntityTypeId());
     $storage->resetCache([$entity->id()]);
     if ($revision_id) {
       return $storage->loadRevision($revision_id);
