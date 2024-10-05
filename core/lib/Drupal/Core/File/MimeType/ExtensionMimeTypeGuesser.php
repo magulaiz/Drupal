@@ -7,6 +7,8 @@ use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\File\FileSystemInterface;
 use Symfony\Component\Mime\MimeTypeGuesserInterface;
 
+use function array_keys;
+
 /**
  * Makes possible to guess the MIME type of a file using its extension.
  */
@@ -96,10 +98,17 @@ class ExtensionMimeTypeGuesser implements MimeTypeGuesserInterface {
       __METHOD__ . '() is deprecated in drupal:11.1.0 and is removed from drupal:12.0.0. Use \Drupal\Core\File\MimeType\MimeTypeMapInterface::addMapping() instead or define your own MimeTypeMapInterface implementation. See https://www.drupal.org/project/drupal/issues/2311679',
       E_USER_DEPRECATED
     );
-    // Convert the mapping to be keyed by extension.
-    $extensionMapping = $this->convertToExtensionKeyed($mapping);
+    if (!$this->map instanceof DefaultMimeTypeMap) {
+      return;
+    }
+    // Convert the mapping to be keyed by type.
+    $typeMapping = [];
+    foreach ($mapping['mimetypes'] as $index => $mimetype) {
+      $typeMapping[$mimetype] = array_keys($mapping['extensions'], $index);
+    }
+
     $this->map->clear();
-    foreach ($extensionMapping as $type => $extensions) {
+    foreach ($typeMapping as $type => $extensions) {
       foreach ($extensions as $extension) {
         $this->map->addMapping($type, $extension);
       }
@@ -110,24 +119,6 @@ class ExtensionMimeTypeGuesser implements MimeTypeGuesserInterface {
       'file_mimetype_mapping',
       $mapping,
     );
-  }
-
-  /**
-   * Converts the mapping to be keyed by extension.
-   *
-   * @param array $mapping
-   *   The mapping to convert.
-   *
-   * @return array
-   *   The converted mapping.
-   */
-  protected function convertToExtensionKeyed(array $mapping): array {
-    $result = [];
-    foreach ($mapping['mimetypes'] as $index => $mimetype) {
-      $result[$mimetype] = array_keys($mapping['extensions'], $index);
-    }
-
-    return $result;
   }
 
   /**
