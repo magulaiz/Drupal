@@ -91,9 +91,10 @@ class ClaroRevisionsTabsUiTest extends WebDriverTestBase {
     $this->drupalGet('node/' . $this->nodes[0]->id() . '/revisions');
     $assert_session = $this->assertSession();
     $assert_session->elementExists('css', 'ul.tabs.tabs--primary.clearfix');
-    $assert_session->pageContains('node/' . $this->nodes[0]->id() . '/delete');
-    $assert_session->pageContains('node/' . $this->nodes[0]->id() . '/edit');
     $assert_session->pageContains('node/' . $this->nodes[0]->id() . '/view');
+    $assert_session->pageContains('node/' . $this->nodes[0]->id() . '/edit');
+    $assert_session->pageContains('node/' . $this->nodes[0]->id() . '/delete');
+    $assert_session->pageContains('node/' . $this->nodes[0]->id() . '/revisions');
   }
 
 }
