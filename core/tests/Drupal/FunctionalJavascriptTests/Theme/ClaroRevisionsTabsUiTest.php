@@ -15,6 +15,13 @@ use Drupal\node\Entity\Node;
 class ClaroRevisionsTabsUiTest extends WebDriverTestBase {
 
   /**
+   * An array of node revisions.
+   *
+   * @var \Drupal\node\NodeInterface[]
+   */
+  protected $nodes;
+
+  /**
    * {@inheritdoc}
    */
   protected static $modules = ['block', 'node'];
@@ -39,6 +46,11 @@ class ClaroRevisionsTabsUiTest extends WebDriverTestBase {
     // Create initial node.
     $node = $this->drupalCreateNode();
 
+    $nodes = [];
+
+    // Get original node.
+    $nodes[] = clone $node;
+
     // Create two revisions.
     $revision_count = 2;
     for ($i = 0; $i < $revision_count; $i++) {
@@ -55,9 +67,10 @@ class ClaroRevisionsTabsUiTest extends WebDriverTestBase {
 
       // Make sure we get revision information.
       $node = Node::load($node->id());
+      $nodes[] = clone $node;
     }
 
-    $this->node = $node;
+    $this->nodes = $nodes;
 
     // Create the test user and log in.
     $admin_user = $this->drupalCreateUser([
@@ -72,11 +85,10 @@ class ClaroRevisionsTabsUiTest extends WebDriverTestBase {
 
   /**
    * Tests Revisions UI displays local tasks tabs.
-   *
    */
   public function testRevisionsUiTabsExist(): void {
 
-    $this->drupalGet('node/' . $this->node->id() . '/revisions');
+    $this->drupalGet('node/' . $this->nodes[0]->id() . '/revisions');
     $assert_session = $this->assertSession();
     $assert_session->elementExists('css', 'ul.tabs.tabs--primary.clearfix');
   }
