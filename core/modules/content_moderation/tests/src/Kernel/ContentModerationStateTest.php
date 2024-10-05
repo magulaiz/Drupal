@@ -12,6 +12,7 @@ use Drupal\Core\Entity\EntityPublishedInterface;
 use Drupal\Core\Entity\EntityStorageException;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Language\LanguageInterface;
+use Drupal\Core\State\StateInterface;
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\language\Entity\ConfigurableLanguage;
 use Drupal\node\Entity\Node;
@@ -62,6 +63,12 @@ class ContentModerationStateTest extends KernelTestBase {
    */
   #[AutowireProperty]
   protected EntityTypeManagerInterface $entityTypeManager;
+
+  /**
+   * The state object.
+   */
+  #[AutowireProperty]
+  protected StateInterface $state;
 
   /**
    * The entity definition update manager.
@@ -607,7 +614,7 @@ class ContentModerationStateTest extends KernelTestBase {
     $keys = $entity_type->getKeys();
     unset($keys['langcode']);
     $entity_type->set('entity_keys', $keys);
-    \Drupal::state()->set($this->revEntityTypeId . '.entity_type', $entity_type);
+    $this->state->set($this->revEntityTypeId . '.entity_type', $entity_type);
 
     // Update the entity type in order to remove the 'langcode' field.
     $this->entityDefinitionUpdateManager->updateFieldableEntityType($entity_type, $this->entityFieldManager->getFieldStorageDefinitions($entity_type->id()));
