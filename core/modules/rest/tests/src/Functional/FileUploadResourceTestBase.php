@@ -830,17 +830,12 @@ abstract class FileUploadResourceTestBase extends ResourceTestBase {
   }
 
   /**
-   * The cacheability of unauthorized 'view' entity access.
+   * Empty function.
    *
-   * @param bool $is_authenticated
-   *   Whether the current request is authenticated or not. This matters for
-   *   some entity access control handlers, but not for most.
-   *
-   * @return \Drupal\Core\Cache\CacheableMetadata
-   *   The expected cacheability.
+   * Needed by PHPStan for unused function
+   * BasicAuthResourceTestTrait::assertResponseWhenMissingAuthentication().
+   * CookieResourceTestTrait::assertResponseWhenMissingAuthentication().
    */
-  protected function getExpectedUnauthorizedEntityAccessCacheability($is_authenticated) {
-    return new CacheableMetadata();
-  }
+  protected function getExpectedUnauthorizedEntityAccessCacheability($is_authenticated) {}
 
 }
