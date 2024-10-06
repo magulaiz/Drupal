@@ -112,7 +112,7 @@ class ExecutionContext implements ExecutionContextInterface {
    * {@inheritdoc}
    */
   public function addViolation(string|null $message, array $params = []): void {
-    if ($message === null) {
+    if ($message === NULL) {
       // Optionally provide a default message or handle null case.
       $message = 'An error occurred.';
     }
