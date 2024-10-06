@@ -13,28 +13,28 @@ class Graph {
   protected $graph;
 
   /**
-   * Instantiates the depth first search object.
+   * Instantiates the directed acyclic graph object.
    *
    * @param $graph
-   *   A three dimensional associated array, with the first keys being the names
-   *   of the vertices, these can be strings or numbers. The second key is
-   *   'edges' and the third one are again vertices, each such key representing
-   *   an edge. Values of array elements are copied over.
+   *   A three-dimensional associative array, keyed by the names of the graph's
+   *   vertices, which can be strings or numbers. Each vertex may have an
+   *   'edges' key, whose value is an array keyed by the names of the vertices
+   *   connected to it; the values in this array can be simply TRUE or may
+   *   contain other data.
    *
    *   Example:
+   *   @code
+   *     1────►2────►3
+   *           │     │
+   *           │     ▼
+   *           └───► 4
+   *   @endcode
+   *
    *   @code
    *     $graph[1]['edges'][2] = 1;
    *     $graph[2]['edges'][3] = 1;
    *     $graph[2]['edges'][4] = 1;
    *     $graph[3]['edges'][4] = 1;
-   *   @endcode
-   *
-   *   On return you will also have:
-   *   @code
-   *     $graph[1]['paths'][2] = 1;
-   *     $graph[1]['paths'][3] = 1;
-   *     $graph[2]['reverse_paths'][1] = 1;
-   *     $graph[3]['reverse_paths'][1] = 1;
    *   @endcode
    */
   public function __construct($graph) {
@@ -54,6 +54,14 @@ class Graph {
    *     the latter is higher.
    *   - 'component': Vertices in the same component have the same component
    *     identifier.
+   *
+   *   On return, you will also have:
+   *   @code
+   *     $graph[1]['paths'][2] = 1;
+   *     $graph[1]['paths'][3] = 1;
+   *     $graph[2]['reverse_paths'][1] = 1;
+   *     $graph[3]['reverse_paths'][1] = 1;
+   *   @endcode
    */
   public function searchAndSort() {
     $state = [
