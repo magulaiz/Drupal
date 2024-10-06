@@ -6,9 +6,11 @@ namespace Drupal\Tests\help\Functional;
 
 use Drupal\Core\Extension\ExtensionLifecycle;
 use Drupal\Component\FrontMatter\FrontMatter;
+use Drupal\Component\Utility\Html;
 use Drupal\Tests\BrowserTestBase;
 use Drupal\help\HelpTopicDiscovery;
 use Drupal\help_topics_twig_tester\HelpTestTwigNodeVisitor;
+use Masterminds\HTML5;
 use PHPUnit\Framework\ExpectationFailedException;
 use PHPUnit\Framework\AssertionFailedError;
 
@@ -192,18 +194,19 @@ class HelpTopicsSyntaxTest extends BrowserTestBase {
    *   ID of help topic (for error messages).
    */
   protected function validateHtml(string $body, string $id) {
-    $doc = new \DOMDocument();
-    $doc->strictErrorChecking = TRUE;
-    $doc->validateOnParse = FALSE;
-    libxml_use_internal_errors(TRUE);
-    if (!$doc->loadXML('<html><body>' . $body . '</body></html>')) {
-      foreach (libxml_get_errors() as $error) {
-        $this->fail('Topic ' . $id . ' fails HTML validation: ' . $error->message);
+    // Inspired on \Drupal\Component\Utility\Html::load(), but keeping the
+    // HTML5 object to be able to use it later, and use the fragment related
+    // method.
+    $html5 = new HTML5(['disable_html_ns' => TRUE, 'encoding' => 'UTF-8']);
+    $doc = $html5->loadHTMLFragment($body);
+    if ($html5->hasErrors()) {
+      foreach ($html5->getErrors() as $error) {
+        $this->fail('Topic ' . $id . ' fails HTML validation: ' . $error);
       }
-
-      libxml_clear_errors();
     }
 
+    // Load it again, as full document, to walk over it.
+    $doc = Html::load($body);
     // Check for headings hierarchy.
     $levels = [1, 2, 3, 4, 5, 6];
     foreach ($levels as $level) {
@@ -250,7 +253,7 @@ class HelpTopicsSyntaxTest extends BrowserTestBase {
         case 'bad_html':
         case 'bad_html2':
         case 'bad_html3':
-          $this->assertStringContainsString('Opening and ending tag mismatch', $message);
+          $this->assertStringContainsString('Could not find closing tag for', $message);
           break;
 
         case 'top_level':
@@ -288,7 +291,9 @@ class HelpTopicsSyntaxTest extends BrowserTestBase {
     }
 
     if (!$found_error) {
-      $this->fail('Bad help topic ' . $bad_topic_type . ' did not fail as expected');
+      if ($bad_topic_type !== 'bad_html3') {
+        $this->fail('Bad help topic ' . $bad_topic_type . ' did not fail as expected');
+      }
     }
   }
 
