@@ -7,8 +7,6 @@ use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\File\FileSystemInterface;
 use Symfony\Component\Mime\MimeTypeGuesserInterface;
 
-use function array_keys;
-
 /**
  * Makes possible to guess the MIME type of a file using its extension.
  */
@@ -42,15 +40,15 @@ class ExtensionMimeTypeGuesser implements MimeTypeGuesserInterface {
   ) {
     if (!$map instanceof MimeTypeMapInterface) {
       @trigger_error(
-        'Calling ' . __METHOD__ . '() with the $map argument as an instance of \Drupal\Core\Extension\ModuleHandlerInterface is deprecated in drupal:11.1.0 and an instance of \Drupal\Core\File\MimeType\MimeTypeMapInterface is required in drupal:11.0.0. See https://www.drupal.org/node/2311679',
+        'Calling ' . __METHOD__ . '() with the $map argument as an instance of \Drupal\Core\Extension\ModuleHandlerInterface is deprecated in drupal:11.1.0 and an instance of \Drupal\Core\File\MimeType\MimeTypeMapInterface is required in drupal:12.0.0. See https://www.drupal.org/node/2311679',
         E_USER_DEPRECATED
       );
-      $map = \Drupal::service('file.mime_type.map');
+      $map = \Drupal::service(MimeTypeMapInterface::class);
     }
     $this->map = $map;
     if (!$this->fileSystem) {
       @trigger_error(
-        'Calling ' . __METHOD__ . '() without the $fileSystem argument is deprecated in drupal:11.1.0 and is required in drupal:11.0.0. See https://www.drupal.org/node/2311679',
+        'Calling ' . __METHOD__ . '() without the $fileSystem argument is deprecated in drupal:11.1.0 and is required in drupal:12.0.0. See https://www.drupal.org/node/2311679',
         E_USER_DEPRECATED
       );
       $this->fileSystem = \Drupal::service('file_system');
@@ -107,17 +105,14 @@ class ExtensionMimeTypeGuesser implements MimeTypeGuesserInterface {
       $typeMapping[$mimetype] = array_keys($mapping['extensions'], $index);
     }
 
-    $this->map->clear();
+    $this->map = new DefaultMimeTypeMap();
     foreach ($typeMapping as $type => $extensions) {
       foreach ($extensions as $extension) {
         $this->map->addMapping($type, $extension);
       }
     }
-    // @phpstan-ignore-next-line
-    \Drupal::service('module_handler')->alterDeprecated(
-      'This hook is deprecated in drupal:11.1.0 and will be removed before drupal:12.0.0. Implement a MimeTypeMapLoadedEvent listener instead. See https://www.drupal.org/node/2311679',
-      'file_mimetype_mapping',
-      $mapping,
+    \Drupal::service('event_dispatcher')->dispatch(
+      new MimeTypeMapLoadedEvent($this->map)
     );
   }
 

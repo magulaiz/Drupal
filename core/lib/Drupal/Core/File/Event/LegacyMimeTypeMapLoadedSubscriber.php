@@ -1,23 +1,25 @@
 <?php
 
-namespace Drupal\Core\File\MimeType;
+namespace Drupal\Core\File\Event;
 
 use Drupal\Core\Extension\ModuleHandlerInterface;
+use Drupal\Core\File\MimeType\DefaultMimeTypeMap;
+use Drupal\Core\File\MimeType\MimeTypeMapLoadedEvent;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 /**
  * Modifies the MIME type map by calling hook_file_mimetype_mapping_alter().
  */
-class LegacyMimeTypeMapLoadedListener implements EventSubscriberInterface {
+class LegacyMimeTypeMapLoadedSubscriber implements EventSubscriberInterface {
 
   public function __construct(
-    protected ModuleHandlerInterface $moduleHandler,
+    protected readonly ModuleHandlerInterface $moduleHandler,
   ) {}
 
   /**
    * Handle the event by calling deprecated hook_file_mimetype_mapping_alter().
    */
-  public function __invoke(MimeTypeMapLoadedEvent $event): void {
+  public function onMimeTypeMapLoaded(MimeTypeMapLoadedEvent $event): void {
     if (!$event->map instanceof DefaultMimeTypeMap) {
       return;
     }
@@ -37,7 +39,7 @@ class LegacyMimeTypeMapLoadedListener implements EventSubscriberInterface {
    */
   public static function getSubscribedEvents(): array {
     $events = [];
-    $events[MimeTypeMapLoadedEvent::class][] = ['__invoke'];
+    $events[MimeTypeMapLoadedEvent::class][] = ['onMimeTypeMapLoaded'];
 
     return $events;
   }

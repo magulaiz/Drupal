@@ -898,16 +898,9 @@ class DefaultMimeTypeMap implements MimeTypeMapInterface {
   }
 
   /**
-   * Clears the map.
-   */
-  public function clear(): void {
-    $this->mapping = [];
-  }
-
-  /**
    * {@inheritdoc}
    */
-  public function addMapping(string $mimetype, string $extension): self {
+  public function addMapping(string $mimetype, string $extension): static {
     $mimetype = strtolower($mimetype);
     $extension = strtolower($extension);
     if (!isset($this->mapping['mimetypes']) || !in_array(
@@ -953,32 +946,34 @@ class DefaultMimeTypeMap implements MimeTypeMapInterface {
    * {@inheritdoc}
    */
   public function listMimeTypes(): array {
-    return array_values($this->mapping['mimetypes']);
+    $mimeTypes = array_values($this->mapping['mimetypes']);
+    sort($mimeTypes);
+
+    return $mimeTypes;
   }
 
   /**
    * {@inheritdoc}
    */
   public function listExtensions(): array {
-    return array_keys($this->mapping['extensions']);
+    $extensions = array_keys($this->mapping['extensions']);
+    sort($extensions);
+
+    return $extensions;
   }
 
   /**
    * {@inheritdoc}
    */
   public function hasMimeType(string $mimetype): bool {
-    $mimetype = strtolower($mimetype);
-
-    return in_array($mimetype, $this->mapping['mimetypes']);
+    return in_array(strtolower($mimetype), $this->mapping['mimetypes']);
   }
 
   /**
    * {@inheritdoc}
    */
   public function hasExtension(string $extension): bool {
-    $extension = strtolower($extension);
-
-    return isset($this->mapping['extensions'][$extension]);
+    return isset($this->mapping['extensions'][strtolower($extension)]);
   }
 
   /**
@@ -986,7 +981,7 @@ class DefaultMimeTypeMap implements MimeTypeMapInterface {
    */
   public function getMimeTypeForExtension($extension): ?string {
     $extension = strtolower($extension);
-    $extensions = $this->mapping['extensions'];
+    $extensions = $this->mapping['extensions'] ?? [];
 
     return isset($extensions[$extension]) ? $this->mapping['mimetypes'][$extensions[$extension]] : NULL;
   }
@@ -1000,7 +995,7 @@ class DefaultMimeTypeMap implements MimeTypeMapInterface {
       return [];
     }
     $extensions = array_keys($this->mapping['extensions'], $key, TRUE);
-    \sort($extensions);
+    sort($extensions);
     return $extensions;
   }
 

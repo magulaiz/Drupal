@@ -5,14 +5,15 @@
  * Responsive image display formatter for image fields.
  */
 
-use Drupal\Core\Url;
-use Drupal\Core\Template\Attribute;
+use Drupal\breakpoint\BreakpointInterface;
+use Drupal\Core\File\MimeType\MimeTypeMapInterface;
 use Drupal\Core\Logger\RfcLogLevel;
 use Drupal\Core\Routing\RouteMatchInterface;
+use Drupal\Core\Template\Attribute;
+use Drupal\Core\Url;
 use Drupal\image\Entity\ImageStyle;
 use Drupal\responsive_image\Entity\ResponsiveImageStyle;
 use Drupal\responsive_image\ResponsiveImageStyleInterface;
-use Drupal\breakpoint\BreakpointInterface;
 
 /**
  * Implements hook_help().
@@ -523,7 +524,10 @@ function responsive_image_get_mime_type(
       $extension = ImageStyle::load($image_style_name)->getDerivativeExtension($extension);
       break;
   }
-  return \Drupal::service('file.mime_type.map')->getMimeTypeForExtension($extension);
+
+  return \Drupal::service(MimeTypeMapInterface::class)->getMimeTypeForExtension(
+    $extension
+  );
 }
 
 /**

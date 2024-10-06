@@ -10,12 +10,12 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 /**
  * Modifies the MIME type map by adding dummy mappings.
  */
-class DummyMimeTypeMapLoadedListener implements EventSubscriberInterface {
+class DummyMimeTypeMapLoadedSubscriber implements EventSubscriberInterface {
 
   /**
    * {@inheritdoc}
    */
-  public function __invoke(MimeTypeMapLoadedEvent $event): void {
+  public function onMimeTypeMapLoaded(MimeTypeMapLoadedEvent $event): void {
     // Add new mappings.
     $event->map->addMapping('made_up/file_test_1', 'file_test_1');
     $event->map->addMapping('made_up/file_test_2', 'file_test_2');
@@ -29,7 +29,7 @@ class DummyMimeTypeMapLoadedListener implements EventSubscriberInterface {
    */
   public static function getSubscribedEvents(): array {
     $events = [];
-    $events[MimeTypeMapLoadedEvent::class][] = ['__invoke'];
+    $events[MimeTypeMapLoadedEvent::class][] = ['onMimeTypeMapLoaded'];
 
     return $events;
   }

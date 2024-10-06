@@ -12,7 +12,7 @@ use Psr\EventDispatcher\EventDispatcherInterface;
 class DefaultMimeTypeMapFactory {
 
   public function __construct(
-    protected EventDispatcherInterface $eventDispatcher,
+    protected readonly EventDispatcherInterface $eventDispatcher,
   ) {}
 
   /**

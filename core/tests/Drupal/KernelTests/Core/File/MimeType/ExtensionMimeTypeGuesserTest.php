@@ -17,7 +17,7 @@ class ExtensionMimeTypeGuesserTest extends KernelTestBase {
   /**
    * {@inheritdoc}
    */
-  protected static $modules = ['file_deprecated_test'];
+  protected static $modules = ['file_deprecated_test', 'file_test'];
 
   /**
    * Tests mapping of mimetypes from filenames.
@@ -106,9 +106,9 @@ class ExtensionMimeTypeGuesserTest extends KernelTestBase {
       'pcf.z' => NULL,
       'jar' => NULL,
       'some.junk' => NULL,
-      'foo.file_test_1' => NULL,
-      'foo.file_test_2' => NULL,
-      'foo.doc' => NULL,
+      'foo.file_test_1' => 'made_up/file_test_1',
+      'foo.file_test_2' => 'made_up/file_test_2',
+      'foo.doc' => 'made_up/doc',
       'test.ogg' => NULL,
     ];
 
