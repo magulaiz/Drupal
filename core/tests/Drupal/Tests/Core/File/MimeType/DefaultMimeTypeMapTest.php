@@ -25,6 +25,7 @@ class DefaultMimeTypeMapTest extends UnitTestCase {
    * {@inheritdoc}
    */
   protected function setUp(): void {
+    parent::setUp();
     $this->map = new DefaultMimeTypeMap();
   }
 
