@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Drupal\Core\File\MimeType;
 
 use FileEye\MimeMap\Map\AbstractMap;
-use FileEye\MimeMap\Map\MapInterface;
 
 /**
  * Class for mapping file extensions to MIME types.
@@ -16,6 +15,7 @@ class FileEyeMimeTypeMap extends AbstractMap {
 
   // @phpstan-disable
   // phpcs:disable
+  // cspell:disable
 
   /**
    * @var MapInterface|null
@@ -28707,6 +28707,7 @@ class FileEyeMimeTypeMap extends AbstractMap {
       ],
   ];
 
+  // cspell:disable
   // phpcs:enable
   // @phpstan-enable
 }

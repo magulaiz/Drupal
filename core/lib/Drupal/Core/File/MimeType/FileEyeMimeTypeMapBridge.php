@@ -14,35 +14,37 @@ class FileEyeMimeTypeMapBridge implements MimeTypeMapInterface {
   ) {}
 
   /**
-   * {@inheritDoc}
+   * {@inheritdoc}
    */
-  public function addMapping(string $mimetype, string $extension): MimeTypeMapInterface {
+  public function addMapping(string $mimetype, string $extension): static {
     $this->mimeMap->addTypeExtensionMapping($mimetype, $extension);
+
+    return $this;
   }
 
   /**
-   * {@inheritDoc}
+   * {@inheritdoc}
    */
   public function removeMapping(string $mimetype, string $extension): bool {
     return $this->mimeMap->removeTypeExtensionMapping($mimetype, $extension);
   }
 
   /**
-   * {@inheritDoc}
+   * {@inheritdoc}
    */
   public function removeMimeType(string $mimetype): bool {
     return $this->mimeMap->removeType($mimetype);
   }
 
   /**
-   * {@inheritDoc}
+   * {@inheritdoc}
    */
   public function listMimeTypes(): array {
     return $this->mimeMap->listTypes();
   }
 
   /**
-   * {@inheritDoc}
+   * {@inheritdoc}
    */
   public function getMimeTypeForExtension(string $extension): ?string {
     // Get the first mime type mapped.
@@ -50,7 +52,7 @@ class FileEyeMimeTypeMapBridge implements MimeTypeMapInterface {
   }
 
   /**
-   * {@inheritDoc}
+   * {@inheritdoc}
    */
   public function getExtensionsForMimeType(string $mimetype): array {
     return $this->mimeMap->getTypeExtensions($mimetype);
