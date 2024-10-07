@@ -22,8 +22,8 @@
 }
 
 .vertical-tabs__menu {
-  position: relative;
-  align-self: flex-start;
+  position: unset;
+  align-self: unset;
   margin: 0;
   margin-inline-start: 0;
   margin-inline-end: 0;
