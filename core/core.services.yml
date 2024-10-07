@@ -1780,8 +1780,11 @@ services:
   Drupal\Core\File\MimeType\DefaultMimeTypeMapFactory:
     autowire: true
     public: false
+  Drupal\Core\File\MimeType\FileEyeMimeTypeMapFactory:
+    autowire: true
+    public: false
   Drupal\Core\File\MimeType\MimeTypeMapInterface:
-    factory: ['@Drupal\Core\File\MimeType\DefaultMimeTypeMapFactory', create]
+    factory: ['@Drupal\Core\File\MimeType\FileEyeMimeTypeMapFactory', create]
   Drupal\Core\File\Event\LegacyMimeTypeMapLoadedSubscriber:
     autowire: true
   # Currently needs to be public as it is called by
