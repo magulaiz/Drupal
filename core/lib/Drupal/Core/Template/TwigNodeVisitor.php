@@ -47,7 +47,11 @@ class TwigNodeVisitor implements NodeVisitorInterface {
       $class = get_class($node);
       $line = $node->getTemplateLine();
       return new $class(
-        new FunctionExpression('render_var', new Node([$node->getNode('expr')]), $line),
+        new FunctionExpression(
+          new TwigFunction('render_var', [$env->getExtension(\Drupal::service('twig.extension')::class), 'renderVar']),
+          new Node([$node->getNode('expr')]),
+          $line
+        ),
         $line
       );
     }
