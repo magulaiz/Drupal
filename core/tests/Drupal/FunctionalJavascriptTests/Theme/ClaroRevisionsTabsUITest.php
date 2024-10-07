@@ -87,14 +87,16 @@ class ClaroRevisionsTabsUITest extends WebDriverTestBase {
    * Tests Revisions UI displays local tasks tabs.
    */
   public function testRevisionsUiTabsExist(): void {
-
-    $this->drupalGet('node/' . $this->nodes[0]->id() . '/revisions');
+    $this->drupalGet('node/' . $this->nodes[0]->id() . '/revisions/1/view');
     $assert_session = $this->assertSession();
-    $assert_session->elementExists('css', 'ul.tabs.tabs--primary.clearfix');
-    $assert_session->pageContains('node/' . $this->nodes[0]->id() . '/view');
-    $assert_session->pageContains('node/' . $this->nodes[0]->id() . '/edit');
-    $assert_session->pageContains('node/' . $this->nodes[0]->id() . '/delete');
-    $assert_session->pageContains('node/' . $this->nodes[0]->id() . '/revisions');
+
+    // The 'Revisions' active primary tab.
+    $assert_session->elementExists('css', 'a.tabs__link.js-tabs-link.is-active');
+    
+    // The 'View', 'Edit' and 'Delete' primary tabs.
+    $assert_session->elementExists('css', 'li.tabs__tab:nth-child(1) > a:nth-child(1)');
+    $assert_session->elementExists('css', 'li.tabs__tab:nth-child(2) > a:nth-child(1)');
+    $assert_session->elementExists('css', 'li.tabs__tab:nth-child(3) > a:nth-child(1)');
   }
 
 }
