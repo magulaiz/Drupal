@@ -22,12 +22,17 @@ DirectoryIndex index.php index.html index.htm
 AddType image/svg+xml svg svgz
 AddEncoding gzip svgz
 
-# Most of the following PHP settings cannot be changed at runtime. See
+# Some PHP settings that cannot be changed at runtime can be set below if PHP
+# is running as an Apache module. See
+# https://www.php.net/manual/en/configuration.changes.php for instructions. See
 # sites/default/default.settings.php and
-# Drupal\Core\DrupalKernel::bootEnvironment() for settings that can be
-# changed at runtime.
+# Drupal\Core\DrupalKernel::bootEnvironment() for settings that can be changed
+# at runtime.
 <IfModule mod_php.c>
-  php_value assert.active                   0
+  # Assertion checks should be disabled unless developing locally. A value of 1
+  # means assertion checking is enabled. Uncomment the following line to
+  # disable assertion checking if you are unable to disable it globally.
+  # php_value zend.assertions 0
 </IfModule>
 
 # Requires mod_expires to be enabled.
