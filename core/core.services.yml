@@ -1781,7 +1781,6 @@ services:
     autowire: true
     public: false
   Drupal\Core\File\MimeType\MimeTypeMapInterface:
-    class: Drupal\Core\File\MimeType\DefaultMimeTypeMap
     factory: ['@Drupal\Core\File\MimeType\DefaultMimeTypeMapFactory', create]
   Drupal\Core\File\Event\LegacyMimeTypeMapLoadedSubscriber:
     autowire: true
