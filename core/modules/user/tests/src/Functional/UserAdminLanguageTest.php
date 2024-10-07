@@ -29,9 +29,7 @@ class UserAdminLanguageTest extends BrowserTestBase {
   protected $regularUser;
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = ['user', 'language', 'language_test', 'user_language_test'];
 
@@ -57,7 +55,7 @@ class UserAdminLanguageTest extends BrowserTestBase {
   /**
    * Tests that admin language is not configurable in single language sites.
    */
-  public function testUserAdminLanguageConfigurationNotAvailableWithOnlyOneLanguage() {
+  public function testUserAdminLanguageConfigurationNotAvailableWithOnlyOneLanguage(): void {
     $this->drupalLogin($this->adminUser);
     $this->setLanguageNegotiation();
     $path = 'user/' . $this->adminUser->id() . '/edit';
@@ -69,7 +67,7 @@ class UserAdminLanguageTest extends BrowserTestBase {
   /**
    * Tests that admin language negotiation is configurable only if enabled.
    */
-  public function testUserAdminLanguageConfigurationAvailableWithAdminLanguageNegotiation() {
+  public function testUserAdminLanguageConfigurationAvailableWithAdminLanguageNegotiation(): void {
     $this->drupalLogin($this->adminUser);
     $this->addCustomLanguage();
     $path = 'user/' . $this->adminUser->id() . '/edit';
@@ -97,7 +95,7 @@ class UserAdminLanguageTest extends BrowserTestBase {
    * have a setting for pages they cannot access, so they should not be able to
    * set a language for those pages.
    */
-  public function testUserAdminLanguageConfigurationAvailableIfAdminLanguageNegotiationIsEnabled() {
+  public function testUserAdminLanguageConfigurationAvailableIfAdminLanguageNegotiationIsEnabled(): void {
     $this->drupalLogin($this->adminUser);
     // Adds a new language, because with only one language, setting won't show.
     $this->addCustomLanguage();
@@ -124,7 +122,7 @@ class UserAdminLanguageTest extends BrowserTestBase {
   /**
    * Tests the actual language negotiation.
    */
-  public function testActualNegotiation() {
+  public function testActualNegotiation(): void {
     $this->drupalLogin($this->adminUser);
     $this->addCustomLanguage();
     $this->setLanguageNegotiation();

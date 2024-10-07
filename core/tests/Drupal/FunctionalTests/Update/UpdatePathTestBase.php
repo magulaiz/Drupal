@@ -49,7 +49,9 @@ abstract class UpdatePathTestBase extends BrowserTestBase {
   }
 
   /**
-   * Modules to enable after the database is loaded.
+   * Modules to install after the database is loaded.
+   *
+   * @var string[]
    */
   protected static $modules = [];
 
@@ -83,17 +85,6 @@ abstract class UpdatePathTestBase extends BrowserTestBase {
    * @var bool
    */
   protected $strictConfigSchema = FALSE;
-
-  /**
-   * {@inheritdoc}
-   */
-  protected function setUp(): void {
-    if (!extension_loaded('zlib')) {
-      $this->markTestSkipped('The zlib extension is not available.');
-    }
-
-    parent::setUp();
-  }
 
   /**
    * Overrides BrowserTestBase::installDrupal() for update testing.

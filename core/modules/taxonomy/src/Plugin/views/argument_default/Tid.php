@@ -181,7 +181,7 @@ class Tid extends ArgumentDefaultPluginBase implements CacheableDependencyInterf
         }
         if (!empty($this->options['limit'])) {
           $tids = [];
-          // filter by vocabulary
+          // Filter by vocabulary
           foreach ($taxonomy as $tid => $vocab) {
             if (!empty($this->options['vids'][$vocab])) {
               $tids[] = $tid;
@@ -195,6 +195,19 @@ class Tid extends ArgumentDefaultPluginBase implements CacheableDependencyInterf
         }
       }
     }
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getCacheTags() {
+    $tags = parent::getCacheTags();
+    if (!empty($this->options['node'])) {
+      if (($node = $this->routeMatch->getParameter('node')) && $node instanceof NodeInterface) {
+        $tags = Cache::mergeTags($tags, $node->getCacheTags());
+      }
+    }
+    return $tags;
   }
 
   /**
