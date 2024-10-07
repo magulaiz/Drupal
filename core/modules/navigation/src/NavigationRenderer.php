@@ -99,7 +99,7 @@ final class NavigationRenderer {
    */
   public function buildNavigation(array &$page_top): void {
     $logo_settings = $this->configFactory->get('navigation.settings');
-    $logo_provider = $logo_settings->get('logo_provider');
+    $logo_provider = $logo_settings->get('logo.provider');
 
     $cacheability = new CacheableMetadata();
     $contexts = [
@@ -142,7 +142,7 @@ final class NavigationRenderer {
     $page_top['navigation'] = $build;
 
     if ($logo_provider === self::LOGO_PROVIDER_CUSTOM) {
-      $logo_path = $logo_settings->get('logo_path');
+      $logo_path = $logo_settings->get('logo.path');
       if (!empty($logo_path) && is_file($logo_path)) {
         $logo_managed_url = $this->fileUrlGenerator->generateAbsoluteString($logo_path);
         $image = $this->imageFactory->get($logo_path);

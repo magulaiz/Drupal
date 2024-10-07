@@ -101,7 +101,7 @@ final class SettingsForm extends ConfigFormBase {
         NavigationRenderer::LOGO_PROVIDER_HIDE => $this->t('Hide logo'),
         NavigationRenderer::LOGO_PROVIDER_CUSTOM => $this->t('Custom logo'),
       ],
-      '#config_target' => 'navigation.settings:logo_provider',
+      '#config_target' => 'navigation.settings:logo.provider',
     ];
 
     $form['logo']['custom'] = [
@@ -140,7 +140,7 @@ final class SettingsForm extends ConfigFormBase {
     ]);
 
     $allowed = 'png jpg jpeg';
-    $max_navigation_allowed = $config->get('logo_max_filesize');
+    $max_navigation_allowed = $config->get('logo.max.filesize');
     $max_system_allowed = Environment::getUploadMaxSize();
     $max_allowed = $max_navigation_allowed < $max_system_allowed ? $max_navigation_allowed : $max_system_allowed;
     $upload_validators = [
@@ -150,8 +150,8 @@ final class SettingsForm extends ConfigFormBase {
     $file_upload_help = [
       '#theme' => 'file_upload_help',
       '#description' => $this->t("If you don't have direct file access to the server, use this field to upload your logo. Recommended image dimension %width x %height pixels.", [
-        '%width' => $config->get('logo_width'),
-        '%height' => $config->get('logo_height'),
+        '%width' => $config->get('logo.max.width'),
+        '%height' => $config->get('logo.max.height'),
       ]),
       '#upload_validators' => $upload_validators,
       '#cardinality' => 1,
@@ -161,7 +161,7 @@ final class SettingsForm extends ConfigFormBase {
       '#title' => $this->t('Path to custom logo'),
       '#default_value' => $default_path,
       '#description' => $description,
-      '#config_target' => 'navigation.settings:logo_path',
+      '#config_target' => 'navigation.settings:logo.path',
     ];
     $form['logo']['custom']['logo_upload'] = [
       '#type' => 'file',
@@ -195,8 +195,8 @@ final class SettingsForm extends ConfigFormBase {
       if ($file) {
         if (!$this->adjustLogoDimensions($file)) {
           $config = $this->config('navigation.settings');
-          $width = $config->get('logo_width');
-          $height = $config->get('logo_height');
+          $width = $config->get('logo.width');
+          $height = $config->get('logo.height');
           $form_state->setErrorByName('logo_upload', $this->t('Image dimensions are bigger than the expected %widthx%height pixels and cannot be used as the navigation logo.',
             [
               '%width' => $width,
@@ -252,8 +252,8 @@ final class SettingsForm extends ConfigFormBase {
       return FALSE;
     }
 
-    $width = $config->get('logo_width');
-    $height = $config->get('logo_height');
+    $width = $config->get('logo.max.width');
+    $height = $config->get('logo.max.height');
 
     if ($image->getWidth() <= $width && $image->getHeight() <= $height) {
       return TRUE;

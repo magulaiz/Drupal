@@ -39,24 +39,3 @@ function navigation_post_update_set_logo_dimensions_default(array &$sandbox) {
   }
   $settings->save();
 }
-
-/**
- * Update for navigation logo to store the file path instead of ID.
- */
-function navigation_post_update_set_logo_path(array &$sandbox) {
-  $settings = \Drupal::configFactory()->getEditable('navigation.settings');
-  $logo_path = '';
-  if (!empty($settings->get('logo_managed'))) {
-    $logo_fid = $settings->get('logo_managed');
-    $file = \Drupal::entityTypeManager()->getStorage('file')->load($logo_fid);
-    if (isset($file)) {
-      $logo_path = $file->getFileUri();
-      // Delete file usage reference because they are not being used anymore.
-      \Drupal::service('file.usage')->delete($file, 'navigation');
-    }
-  }
-
-  $settings->set('logo_path', $logo_path);
-  $settings->clear('logo_managed');
-  $settings->save();
-}
