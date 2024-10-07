@@ -4,6 +4,7 @@ namespace Drupal\update;
 
 use Drupal\Component\Datetime\TimeInterface;
 use Drupal\Component\Utility\Crypt;
+use Drupal\Core\App;
 use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\KeyValueStore\KeyValueFactoryInterface;
 use Drupal\Core\KeyValueStore\KeyValueExpirableFactoryInterface;
@@ -103,6 +104,10 @@ class UpdateProcessor implements UpdateProcessorInterface {
    *   The expirable key/value factory.
    * @param \Drupal\Component\Datetime\TimeInterface $time
    *   The time service.
+   * @param \Drupal\Core\App|null $app
+   *   The application object.
+   *
+   * @see https://www.drupal.org/node/3279668
    */
   public function __construct(
     ConfigFactoryInterface $config_factory,
@@ -113,6 +118,7 @@ class UpdateProcessor implements UpdateProcessorInterface {
     KeyValueFactoryInterface $key_value_factory,
     KeyValueExpirableFactoryInterface $key_value_expirable_factory,
     protected TimeInterface $time,
+    protected ?App $app = NULL,
   ) {
     $this->updateFetcher = $update_fetcher;
     $this->updateSettings = $config_factory->get('update.settings');
@@ -122,6 +128,10 @@ class UpdateProcessor implements UpdateProcessorInterface {
     $this->availableReleasesTempStore = $key_value_expirable_factory->get('update_available_releases');
     $this->stateStore = $state_store;
     $this->privateKey = $private_key;
+    if ($this->app === NULL) {
+      @trigger_error('Calling ' . __METHOD__ . ' without the $app argument is deprecated in drupal:11.1.0 and is required in drupal:12.0.0. See https://www.drupal.org/node/3279668', E_USER_DEPRECATED);
+      $this->app = \Drupal::app();
+    }
     $this->fetchTasks = [];
     $this->failed = [];
   }
@@ -160,8 +170,6 @@ class UpdateProcessor implements UpdateProcessorInterface {
    * {@inheritdoc}
    */
   public function processFetchTask($project) {
-    global $base_url;
-
     // This can be in the middle of a long-running batch.
     $request_time_difference = $this->time->getCurrentTime() - $this->time->getRequestTime();
     if (empty($this->failed)) {
@@ -174,7 +182,7 @@ class UpdateProcessor implements UpdateProcessorInterface {
 
     $success = FALSE;
     $available = [];
-    $site_key = Crypt::hmacBase64($base_url, $this->privateKey->get());
+    $site_key = Crypt::hmacBase64($this->app->getBaseUrl(), $this->privateKey->get());
     $fetch_url_base = $this->updateFetcher->getFetchBaseUrl($project);
     $project_name = $project['name'];
 

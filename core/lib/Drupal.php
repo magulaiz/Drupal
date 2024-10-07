@@ -1,5 +1,6 @@
 <?php
 
+use Drupal\Core\App;
 use Drupal\Core\DependencyInjection\ContainerNotInitializedException;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -743,6 +744,16 @@ class Drupal {
    */
   public static function messenger() {
     return static::getContainer()->get('messenger');
+  }
+
+  /**
+   * Returns the application helper.
+   *
+   * @return \Drupal\Core\App
+   *   The application helper.
+   */
+  public static function app(): App {
+    return static::getContainer()->get('app');
   }
 
 }

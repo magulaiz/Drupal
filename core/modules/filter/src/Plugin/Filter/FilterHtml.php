@@ -363,8 +363,6 @@ class FilterHtml extends FilterBase {
    * {@inheritdoc}
    */
   public function tips($long = FALSE) {
-    global $base_url;
-
     if (!($allowed_html = $this->settings['allowed_html'])) {
       return;
     }
@@ -381,7 +379,7 @@ class FilterHtml extends FilterBase {
     $output .= '<p>' . $this->t('This site allows HTML content. While learning all of HTML may feel intimidating, learning how to use a very small number of the most basic HTML "tags" is very easy. This table provides examples for each tag that is enabled on this site.') . '</p>';
     $output .= '<p>' . $this->t('For more information see the <a href=":html-specifications">HTML Living Standard</a> or use your favorite search engine to find other sites that explain HTML.', [':html-specifications' => 'https://html.spec.whatwg.org/']) . '</p>';
     $tips = [
-      'a' => [$this->t('Anchors are used to make links to other pages.'), '<a href="' . $base_url . '">' . Html::escape(\Drupal::config('system.site')->get('name')) . '</a>'],
+      'a' => [$this->t('Anchors are used to make links to other pages.'), '<a href="' . \Drupal::app()->getBaseUrl() . '">' . Html::escape(\Drupal::config('system.site')->get('name')) . '</a>'],
       'br' => [$this->t('By default line break tags are automatically added, so use this tag to add additional ones. Use of this tag is different because it is not used with an open/close pair like all the others. Use the extra " /" inside the tag to maintain XHTML 1.0 compatibility'), $this->t('Text with <br />line break')],
       'p' => [$this->t('By default paragraph tags are automatically added, so use this tag to add additional ones.'), '<p>' . $this->t('Paragraph one.') . '</p> <p>' . $this->t('Paragraph two.') . '</p>'],
       'strong' => [$this->t('Strong', [], ['context' => 'Font weight']), '<strong>' . $this->t('Strong', [], ['context' => 'Font weight']) . '</strong>'],

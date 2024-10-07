@@ -920,9 +920,8 @@ class FormBuilder implements FormBuilderInterface, FormValidatorInterface, FormS
     // Special handling if we're on the top level form element.
     if (isset($element['#type']) && $element['#type'] == 'form') {
       if (!empty($element['#https']) && !UrlHelper::isExternal($element['#action'])) {
-        global $base_root;
-
         // Not an external URL so ensure that it is secure.
+        $base_root = $this->requestStack->getCurrentRequest()->getSchemeAndHttpHost();
         $element['#action'] = str_replace('http://', 'https://', $base_root) . $element['#action'];
       }
 

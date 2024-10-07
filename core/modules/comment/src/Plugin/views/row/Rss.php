@@ -69,8 +69,6 @@ class Rss extends RssPluginBase {
   }
 
   public function render($row) {
-    global $base_url;
-
     $cid = $row->{$this->field_alias};
     if (!is_numeric($cid)) {
       return;
@@ -100,7 +98,7 @@ class Rss extends RssPluginBase {
       ],
       [
         'key' => 'guid',
-        'value' => 'comment ' . $comment->id() . ' at ' . $base_url,
+        'value' => 'comment ' . $comment->id() . ' at ' . \Drupal::app()->getBaseUrl(),
         'attributes' => ['isPermaLink' => 'false'],
       ],
     ];

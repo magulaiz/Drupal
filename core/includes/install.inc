@@ -506,12 +506,11 @@ function drupal_install_fix_file($file, $mask, $message = TRUE) {
  *   An installer path.
  */
 function install_goto($path) {
-  global $base_url;
   $headers = [
     // Not a permanent redirect.
     'Cache-Control' => 'no-cache',
   ];
-  $response = new RedirectResponse($base_url . '/' . $path, 302, $headers);
+  $response = new RedirectResponse(\Drupal::app()->getBaseUrl() . '/' . $path, 302, $headers);
   $response->send();
 }
 

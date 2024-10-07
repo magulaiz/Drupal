@@ -191,7 +191,7 @@ class FileUrlGenerator implements FileUrlGeneratorInterface {
 
       // @todo Switch to dependency injected request_context service after
       // https://www.drupal.org/project/drupal/issues/3256884 is fixed.
-      if (UrlHelper::externalIsLocal($external_url, \Drupal::service('router.request_context')->getCompleteBaseUrl())) {
+      if (UrlHelper::externalIsLocal($external_url, \Drupal::service('app')->getBaseUrl())) {
         // Attempt to return an external URL using the appropriate wrapper.
         return Url::fromUri('base:' . $this->transformRelative(urldecode($options['path']), FALSE), $options);
       }

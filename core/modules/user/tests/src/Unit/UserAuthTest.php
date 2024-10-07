@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\user\Unit;
 
+use Drupal\Core\App;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
-use Drupal\Core\Routing\RequestContext;
 use Drupal\Core\Routing\TrustedRedirectResponse;
 use Drupal\Tests\UnitTestCase;
 use Drupal\user\Authentication\Provider\Cookie;
@@ -15,6 +15,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\HttpKernel\Event\ResponseEvent;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
+use Symfony\Component\Routing\RequestContext;
 
 /**
  * @coversDefaultClass \Drupal\user\UserAuth
@@ -242,13 +243,15 @@ class UserAuthTest extends UnitTestCase {
     $request = Request::create($backend_url);
     $response = new TrustedRedirectResponse($frontend_url);
 
-    $request_context = $this->createMock(RequestContext::class);
-    $request_context
-      ->method('getCompleteBaseUrl')
+    $app = $this->getMockBuilder(App::class)
+      ->disableOriginalConstructor()
+      ->getMock();
+    $app
+      ->method('getBaseUrl')
       ->willReturn($backend_url);
 
     $container = new ContainerBuilder();
-    $container->set('router.request_context', $request_context);
+    $container->set('app', $app);
     \Drupal::setContainer($container);
 
     $session_mock = $this->createMock(SessionInterface::class);
@@ -293,12 +296,9 @@ class UserAuthTest extends UnitTestCase {
     $response = new TrustedRedirectResponse($frontend_url . '#a_fragment');
 
     $request_context = $this->createMock(RequestContext::class);
-    $request_context
-      ->method('getCompleteBaseUrl')
-      ->willReturn($backend_url);
 
     $container = new ContainerBuilder();
-    $container->set('router.request_context', $request_context);
+    $container->set('router.symfony_request_context', $request_context);
     \Drupal::setContainer($container);
 
     $session_mock = $this->createMock(SessionInterface::class);

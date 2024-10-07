@@ -5,9 +5,9 @@ declare(strict_types=1);
 namespace Drupal\Tests\media\Unit;
 
 use Drupal\Core\PrivateKey;
-use Drupal\Core\Routing\RequestContext;
 use Drupal\media\IFrameUrlHelper;
 use Drupal\Tests\UnitTestCase;
+use Drupal\Core\App;
 
 /**
  * @coversDefaultClass \Drupal\media\IFrameUrlHelper
@@ -78,13 +78,15 @@ class IFrameUrlHelperTest extends UnitTestCase {
    * @dataProvider providerIsSecure
    */
   public function testIsSecure($url, $base_url, $secure): void {
-    $request_context = $this->createMock(RequestContext::class);
-    $request_context->expects($this->any())
-      ->method('getCompleteBaseUrl')
+    $app = $this->getMockBuilder(App::class)
+      ->disableOriginalConstructor()
+      ->getMock();
+    $app
+      ->method('getBaseUrl')
       ->willReturn($base_url);
 
     $url_helper = new IFrameUrlHelper(
-      $request_context,
+      $app,
       $this->createMock(PrivateKey::class)
     );
 

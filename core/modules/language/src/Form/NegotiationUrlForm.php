@@ -2,6 +2,7 @@
 
 namespace Drupal\language\Form;
 
+use Drupal\Core\App;
 use Drupal\Core\Config\TypedConfigManagerInterface;
 use Drupal\Core\Form\ConfigFormBase;
 use Drupal\Core\Form\FormStateInterface;
@@ -37,10 +38,18 @@ class NegotiationUrlForm extends ConfigFormBase {
    *   The typed config manager.
    * @param \Drupal\Core\Language\LanguageManagerInterface $language_manager
    *   The language manager.
+   * @param \Drupal\Core\App|null $app
+   *   The application object.
+   *
+   * @see https://www.drupal.org/node/3279668
    */
-  public function __construct(ConfigFactoryInterface $config_factory, TypedConfigManagerInterface $typedConfigManager, LanguageManagerInterface $language_manager) {
+  public function __construct(ConfigFactoryInterface $config_factory, TypedConfigManagerInterface $typedConfigManager, LanguageManagerInterface $language_manager, protected ?App $app = NULL) {
     parent::__construct($config_factory, $typedConfigManager);
     $this->languageManager = $language_manager;
+    if ($this->app === NULL) {
+      @trigger_error('Calling ' . __METHOD__ . ' without the $app argument is deprecated in drupal:11.1.0 and is required in drupal:12.0.0. See https://www.drupal.org/node/3279668', E_USER_DEPRECATED);
+      $this->app = \Drupal::app();
+    }
   }
 
   /**
@@ -50,7 +59,8 @@ class NegotiationUrlForm extends ConfigFormBase {
     return new static(
       $container->get('config.factory'),
       $container->get('config.typed'),
-      $container->get('language_manager')
+      $container->get('language_manager'),
+      $container->get('app')
     );
   }
 
@@ -72,7 +82,6 @@ class NegotiationUrlForm extends ConfigFormBase {
    * {@inheritdoc}
    */
   public function buildForm(array $form, FormStateInterface $form_state) {
-    global $base_url;
     $config = $this->config('language.negotiation');
 
     $form['language_negotiation_url_part'] = [
@@ -124,7 +133,7 @@ class NegotiationUrlForm extends ConfigFormBase {
         '#title' => $language->isDefault() ? $this->t('%language (%langcode) path prefix (Default language)', $t_args) : $this->t('%language (%langcode) path prefix', $t_args),
         '#maxlength' => 64,
         '#default_value' => $prefixes[$langcode] ?? '',
-        '#field_prefix' => $base_url . '/',
+        '#field_prefix' => $this->app->getBaseUrl() . '/',
       ];
       $form['domain'][$langcode] = [
         '#type' => 'textfield',

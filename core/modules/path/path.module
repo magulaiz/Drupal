@@ -138,7 +138,7 @@ function path_field_widget_single_element_form_alter(&$element, FormStateInterfa
 
   if ($entity_type === 'path_alias') {
     if (($field_name === 'path' || $field_name === 'alias') && $widget_name === 'string_textfield') {
-      $element['value']['#field_prefix'] = \Drupal::service('router.request_context')->getCompleteBaseUrl();
+      $element['value']['#field_prefix'] = \Drupal::service('apg')->getBaseUrl();
     }
 
     if ($field_name === 'langcode') {

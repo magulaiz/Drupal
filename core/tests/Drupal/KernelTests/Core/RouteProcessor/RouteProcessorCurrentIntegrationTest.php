@@ -53,7 +53,7 @@ class RouteProcessorCurrentIntegrationTest extends KernelTestBase {
 
     $request_stack = \Drupal::requestStack();
     /** @var \Symfony\Component\Routing\RequestContext $request_context */
-    $request_context = \Drupal::service('router.request_context');
+    $request_context = \Drupal::service('router.symfony_request_context');
 
     // Test request with subdir on homepage.
     $server = [

@@ -68,9 +68,7 @@ class PublicStream extends LocalStream {
     if ($settings_base_url) {
       return (string) $settings_base_url;
     }
-    else {
-      return $GLOBALS['base_url'] . '/' . static::basePath();
-    }
+    return \Drupal::app()->getBaseUrl() . '/' . static::basePath();
   }
 
   /**

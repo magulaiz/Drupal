@@ -41,7 +41,7 @@ function system_token_info() {
     'name' => t("Base URL"),
     'description' => t("The base URL of the site, currently: @base_url",
       [
-        '@base_url' => \Drupal::service('router.request_context')->getCompleteBaseUrl(),
+        '@base_url' => \Drupal::service('app')->getBaseUrl(),
       ]),
   ];
   $site['base-path'] = [
@@ -145,12 +145,12 @@ function system_tokens($type, $tokens, array $data, array $options, BubbleableMe
 
         case 'base-url':
           $bubbleable_metadata->addCacheContexts(['url.site']);
-          $replacements[$original] = \Drupal::service('router.request_context')->getCompleteBaseUrl();
+          $replacements[$original] = \Drupal::app()->getBaseUrl();
           break;
 
         case 'base-path':
           $bubbleable_metadata->addCacheContexts(['url.site']);
-          $replacements[$original] = \Drupal::request()->getBasePath();
+          $replacements[$original] = \Drupal::app()->getBasePath();
           break;
 
         case 'url':

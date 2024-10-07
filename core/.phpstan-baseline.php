@@ -2606,5 +2606,35 @@ ClientInterface\\:\\:getConfig will be removed in guzzlehttp/guzzle\\:8\\.0\\.$#
 	'count' => 1,
 	'path' => __DIR__ . '/tests/Drupal/Tests/DrupalTestBrowser.php',
 ];
+$ignoreErrors[] = [
+	// identifier: parameter.deprecatedClass
+	'message' => '#^Parameter \\$app of method Drupal\\\\Core\\\\EventSubscriber\\\\RedirectResponseSubscriber\\:\\:__construct\\(\\) has typehint with deprecated class Drupal\\\\Core\\\\Routing\\\\RequestContext\\:\\nin drupal\\:11\\.1\\.0 and is removed from drupal\\:12\\.0\\.0\\. Use\\n  Symfony\\\\Component\\\\Routing\\\\RequestContext instance instead\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/lib/Drupal/Core/EventSubscriber/RedirectResponseSubscriber.php',
+];
+$ignoreErrors[] = [
+	// identifier: parameter.deprecatedClass
+	'message' => '#^Parameter \\$app of method Drupal\\\\big_pipe\\\\Render\\\\BigPipe\\:\\:__construct\\(\\) has typehint with deprecated class Drupal\\\\Core\\\\Routing\\\\RequestContext\\:\\nin drupal\\:11\\.1\\.0 and is removed from drupal\\:12\\.0\\.0\\. Use\\n  Symfony\\\\Component\\\\Routing\\\\RequestContext instance instead\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/big_pipe/src/Render/BigPipe.php',
+];
+$ignoreErrors[] = [
+	// identifier: parameter.deprecatedClass
+	'message' => '#^Parameter \\$app of method Drupal\\\\media\\\\IFrameUrlHelper\\:\\:__construct\\(\\) has typehint with deprecated class Drupal\\\\Core\\\\Routing\\\\RequestContext\\:\\nin drupal\\:11\\.1\\.0 and is removed from drupal\\:12\\.0\\.0\\. Use\\n  Symfony\\\\Component\\\\Routing\\\\RequestContext instance instead\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/media/src/IFrameUrlHelper.php',
+];
+$ignoreErrors[] = [
+	// identifier: parameter.deprecatedClass
+	'message' => '#^Parameter \\$app of method Drupal\\\\system\\\\Form\\\\SiteInformationForm\\:\\:__construct\\(\\) has typehint with deprecated class Drupal\\\\Core\\\\Routing\\\\RequestContext\\:\\nin drupal\\:11\\.1\\.0 and is removed from drupal\\:12\\.0\\.0\\. Use\\n  Symfony\\\\Component\\\\Routing\\\\RequestContext instance instead\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/system/src/Form/SiteInformationForm.php',
+];
+$ignoreErrors[] = [
+	// identifier: method.deprecated
+	'message' => '#^The "router\\.request_context" service is deprecated in drupal\\:11\\.1\\.0 and is removed from drupal\\:12\\.0\\.0\\. Use Symfony\\\\Component\\\\Routing\\\\RequestContext or "router\\.symfony_request_context" service instead\\. See https\\://www\\.drupal\\.org/node/3279668$#',
+	'count' => 2,
+	'path' => __DIR__ . '/lib/Drupal/Core/Routing/LocalAwareRedirectResponseTrait.php',
+];
 
 return ['parameters' => ['ignoreErrors' => $ignoreErrors]];

@@ -1340,7 +1340,7 @@ abstract class FieldPluginBase extends HandlerBase implements FieldHandlerInterf
 
         // Make sure that paths which were run through URL generation work as
         // well.
-        $base_path = base_path();
+        $base_path = \Drupal::app()->getBasePath() . '/';
         // Checks whether the path starts with the base_path.
         if (str_starts_with($more_link_path, $base_path)) {
           $more_link_path = mb_substr($more_link_path, mb_strlen($base_path));

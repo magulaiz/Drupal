@@ -258,7 +258,7 @@ function file_test_file_url_alter(&$uri) {
       $path = str_replace('\\', '/', $path);
 
       // Generate a root-relative URL.
-      $uri = base_path() . '/' . $path;
+      $uri = \Drupal::app()->getBasePath() . '/' . $path;
     }
   }
   // Test alteration of file URLs to use protocol-relative URLs.
@@ -281,7 +281,7 @@ function file_test_file_url_alter(&$uri) {
       $path = str_replace('\\', '/', $path);
 
       // Generate a protocol-relative URL.
-      $uri = '/' . base_path() . '/' . $path;
+      $uri = '/' . \Drupal::app()->getBasePath() . '/' . $path;
     }
   }
 }

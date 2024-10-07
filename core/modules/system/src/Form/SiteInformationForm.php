@@ -2,6 +2,7 @@
 
 namespace Drupal\system\Form;
 
+use Drupal\Core\App;
 use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Config\TypedConfigManagerInterface;
 use Drupal\Core\Form\ConfigFormBase;
@@ -34,13 +35,6 @@ class SiteInformationForm extends ConfigFormBase {
   protected $pathValidator;
 
   /**
-   * The request context.
-   *
-   * @var \Drupal\Core\Routing\RequestContext
-   */
-  protected $requestContext;
-
-  /**
    * Constructs a SiteInformationForm object.
    *
    * @param \Drupal\Core\Config\ConfigFactoryInterface $config_factory
@@ -51,14 +45,23 @@ class SiteInformationForm extends ConfigFormBase {
    *   The path alias manager.
    * @param \Drupal\Core\Path\PathValidatorInterface $path_validator
    *   The path validator.
-   * @param \Drupal\Core\Routing\RequestContext $request_context
-   *   The request context.
+   * @param \Drupal\Core\App|\Drupal\Core\Routing\RequestContext|null $app
+   *   The application object.
+   *
+   * @see https://www.drupal.org/node/3279668
    */
-  public function __construct(ConfigFactoryInterface $config_factory, TypedConfigManagerInterface $typedConfigManager, AliasManagerInterface $alias_manager, PathValidatorInterface $path_validator, RequestContext $request_context) {
+  public function __construct(ConfigFactoryInterface $config_factory, TypedConfigManagerInterface $typedConfigManager, AliasManagerInterface $alias_manager, PathValidatorInterface $path_validator, protected App|RequestContext|null $app = NULL) {
     parent::__construct($config_factory, $typedConfigManager);
     $this->aliasManager = $alias_manager;
     $this->pathValidator = $path_validator;
-    $this->requestContext = $request_context;
+    if ($this->app === NULL) {
+      @trigger_error('Calling ' . __METHOD__ . ' without the $app argument is deprecated in drupal:11.1.0 and is required in drupal:12.0.0. See https://www.drupal.org/node/3279668', E_USER_DEPRECATED);
+      $this->app = \Drupal::app();
+    }
+    elseif ($this->app instanceof RequestContext) {
+      @trigger_error('Drupal\Core\Routing\RequestContext is deprecated in drupal:11.1.0 and is removed from drupal:12.0.0. Use Drupal\Core\App instance instead. See https://www.drupal.org/node/3279668');
+      $this->app = \Drupal::app();
+    }
   }
 
   /**
@@ -70,7 +73,7 @@ class SiteInformationForm extends ConfigFormBase {
       $container->get('config.typed'),
       $container->get('path_alias.manager'),
       $container->get('path.validator'),
-      $container->get('router.request_context')
+      $container->get('app')
     );
   }
 
@@ -135,7 +138,7 @@ class SiteInformationForm extends ConfigFormBase {
       '#required' => TRUE,
       '#size' => 40,
       '#description' => $this->t('Specify a relative URL to display as the front page.'),
-      '#field_prefix' => $this->requestContext->getCompleteBaseUrl(),
+      '#field_prefix' => $this->app->getBaseUrl(),
     ];
     $form['error_page'] = [
       '#type' => 'details',

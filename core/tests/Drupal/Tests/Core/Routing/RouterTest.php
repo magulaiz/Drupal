@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Drupal\Tests\Core\Routing;
 
 use Drupal\Core\Path\CurrentPathStack;
-use Drupal\Core\Routing\RequestContext;
+use Symfony\Component\Routing\RequestContext;
 use Drupal\Core\Routing\RouteCompiler;
 use Drupal\Core\Routing\RouteProviderInterface;
 use Drupal\Core\Routing\Router;

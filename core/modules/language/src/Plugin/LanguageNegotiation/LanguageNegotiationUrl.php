@@ -2,15 +2,18 @@
 
 namespace Drupal\language\Plugin\LanguageNegotiation;
 
+use Drupal\Core\App;
 use Drupal\Core\Language\LanguageInterface;
 use Drupal\Core\PathProcessor\InboundPathProcessorInterface;
 use Drupal\Core\PathProcessor\OutboundPathProcessorInterface;
+use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\Core\Render\BubbleableMetadata;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\Core\Url;
 use Drupal\language\Attribute\LanguageNegotiation;
 use Drupal\language\LanguageNegotiationMethodBase;
 use Drupal\language\LanguageSwitcherInterface;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
@@ -27,7 +30,7 @@ use Symfony\Component\HttpFoundation\Request;
   description: new TranslatableMarkup("Language from the URL (Path prefix or domain)."),
   config_route_name: 'language.negotiation_url'
 )]
-class LanguageNegotiationUrl extends LanguageNegotiationMethodBase implements InboundPathProcessorInterface, OutboundPathProcessorInterface, LanguageSwitcherInterface {
+class LanguageNegotiationUrl extends LanguageNegotiationMethodBase implements InboundPathProcessorInterface, OutboundPathProcessorInterface, LanguageSwitcherInterface, ContainerFactoryPluginInterface {
 
   /**
    * The language negotiation method id.
@@ -43,6 +46,30 @@ class LanguageNegotiationUrl extends LanguageNegotiationMethodBase implements In
    * URL language negotiation: use the domain as URL language indicator.
    */
   const CONFIG_DOMAIN = 'domain';
+
+  /**
+   * Constructs a new language negotiation URL method.
+   *
+   * @param \Drupal\Core\App|null $app
+   *   The application object.
+   *
+   * @see https://www.drupal.org/node/3279668
+   */
+  public function __construct(
+    protected ?App $app = NULL,
+  ) {
+    if ($this->app === NULL) {
+      @trigger_error('Calling ' . __METHOD__ . ' without the $app argument is deprecated in drupal:11.1.0 and is required in drupal:12.0.0. See https://www.drupal.org/node/3279668', E_USER_DEPRECATED);
+      $this->app = \Drupal::app();
+    }
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
+    return new static($container->get('app'));
+  }
 
   /**
    * {@inheritdoc}
@@ -183,7 +210,7 @@ class LanguageNegotiationUrl extends LanguageNegotiationMethodBase implements In
         }
 
         // Add Drupal's subfolder from the base_path if there is one.
-        $options['base_url'] .= rtrim(base_path(), '/');
+        $options['base_url'] .= $this->app->getBasePath();
         if ($bubbleable_metadata) {
           $bubbleable_metadata->addCacheContexts(['languages:' . LanguageInterface::TYPE_URL, 'url.site']);
         }

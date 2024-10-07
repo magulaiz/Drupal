@@ -21,7 +21,7 @@ services:
   Drupal\media\OEmbed\ResourceFetcherInterface: '@media.oembed.resource_fetcher'
   media.oembed.iframe_url_helper:
     class: Drupal\media\IFrameUrlHelper
-    arguments: ['@router.request_context', '@private_key']
+    arguments: ['@app', '@private_key']
   Drupal\media\IFrameUrlHelper: '@media.oembed.iframe_url_helper'
   media.config_subscriber:
     class: Drupal\media\EventSubscriber\MediaConfigSubscriber

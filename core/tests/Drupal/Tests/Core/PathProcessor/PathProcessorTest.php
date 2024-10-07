@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\Core\PathProcessor;
 
+use Drupal\Core\App;
 use Drupal\Core\Language\Language;
 use Drupal\Core\Language\LanguageInterface;
 use Drupal\Core\PathProcessor\PathProcessorDecode;
@@ -14,6 +15,7 @@ use Drupal\language\Plugin\LanguageNegotiation\LanguageNegotiationUrl;
 use Drupal\path_alias\AliasManager;
 use Drupal\path_alias\PathProcessor\AliasPathProcessor;
 use Drupal\Tests\UnitTestCase;
+use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
@@ -29,6 +31,13 @@ class PathProcessorTest extends UnitTestCase {
    * @var \Drupal\Core\Language\LanguageInterface[]
    */
   protected $languages;
+
+  /**
+   * The application object.
+   *
+   * @var \Drupal\Core\App|\PHPUnit\Framework\MockObject\MockObject
+   */
+  protected App|MockObject $app;
 
   /**
    * The language manager stub used to construct a PathProcessorLanguage object.
@@ -51,13 +60,13 @@ class PathProcessorTest extends UnitTestCase {
     }
     $this->languages = $languages;
 
-    // Create a stub configuration.
-    $language_prefixes = array_keys($this->languages);
-    $config = [
-      'url' => [
-        'prefixes' => array_combine($language_prefixes, $language_prefixes),
-      ],
-    ];
+    // Create the app stub.
+    $this->app = $this->getMockBuilder(App::class)
+      ->disableOriginalConstructor()
+      ->getMock();
+    $this->app->expects($this->any())
+      ->method('getBasePath')
+      ->willReturn('');
 
     // Create a language manager stub.
     $language_manager = $this->getMockBuilder('Drupal\language\ConfigurableLanguageManagerInterface')
@@ -125,7 +134,7 @@ class PathProcessorTest extends UnitTestCase {
           'weight' => 9,
         ],
       ]);
-    $method = new LanguageNegotiationUrl();
+    $method = new LanguageNegotiationUrl($this->app);
     $method->setConfig($config_factory_stub);
     $method->setLanguageManager($this->languageManager);
     $negotiator->expects($this->any())

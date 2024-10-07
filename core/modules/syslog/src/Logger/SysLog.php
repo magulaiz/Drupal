@@ -2,6 +2,7 @@
 
 namespace Drupal\syslog\Logger;
 
+use Drupal\Core\App;
 use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Logger\LogMessageParserInterface;
 use Drupal\Core\Logger\RfcLoggerTrait;
@@ -43,10 +44,18 @@ class SysLog implements LoggerInterface {
    *   The configuration factory object.
    * @param \Drupal\Core\Logger\LogMessageParserInterface $parser
    *   The parser to use when extracting message variables.
+   * @param \Drupal\Core\App|null $app
+   *   The application object.
+   *
+   * @see https://www.drupal.org/node/3279668
    */
-  public function __construct(ConfigFactoryInterface $config_factory, LogMessageParserInterface $parser) {
+  public function __construct(ConfigFactoryInterface $config_factory, LogMessageParserInterface $parser, protected ?App $app = NULL) {
     $this->config = $config_factory->get('syslog.settings');
     $this->parser = $parser;
+    if ($this->app === NULL) {
+      @trigger_error('Calling ' . __METHOD__ . ' without the $app argument is deprecated in drupal:11.1.0 and is required in drupal:12.0.0. See https://www.drupal.org/node/3279668', E_USER_DEPRECATED);
+      $this->app = \Drupal::app();
+    }
   }
 
   /**
@@ -68,8 +77,6 @@ class SysLog implements LoggerInterface {
    * {@inheritdoc}
    */
   public function log($level, string|\Stringable $message, array $context = []): void {
-    global $base_url;
-
     $format = $this->config->get('format');
     // If no format is configured then a message will not be written to syslog
     // so return early. This occurs during installation of the syslog module
@@ -89,7 +96,7 @@ class SysLog implements LoggerInterface {
     $message = empty($message_placeholders) ? $message : strtr($message, $message_placeholders);
 
     $entry = strtr($format, [
-      '!base_url' => $base_url,
+      '!base_url' => $this->app->getBaseUrl(),
       '!timestamp' => $context['timestamp'],
       '!type' => $context['channel'],
       '!ip' => $context['ip'],

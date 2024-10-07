@@ -588,8 +588,21 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
     // Register stream wrappers.
     $this->container->get('stream_wrapper_manager')->register();
 
-    // Initialize legacy request globals.
-    $this->initializeRequestGlobals($request);
+    // Initialize application from request.
+    $app = $this->container->get('app');
+    $app->setRequest($request);
+
+    // BC layer. Initialize legacy request globals.
+    /*
+     * @todo remove BC layer in drupal:11.0.0-alpha1.
+     *   See https://www.drupal.org/node/3279668.
+     */
+    $base_url = $app->getBaseUrl();
+    $GLOBALS['base_url'] = $base_url;
+    $GLOBALS['base_path'] = $app->getBasePath() . '/';
+    $GLOBALS['base_root'] = $request->getSchemeAndHttpHost();
+    $GLOBALS['base_secure_url'] = str_replace('http://', 'https://', $base_url);
+    $GLOBALS['base_insecure_url'] = str_replace('https://', 'http://', $base_url);
 
     // Put the request on the stack.
     $this->container->get('request_stack')->push($request);
@@ -929,10 +942,11 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
 
     // The request stack is preserved across container rebuilds. Re-inject the
     // new session into the main request if one was present before.
-    if (($request_stack = $this->container->get('request_stack', ContainerInterface::NULL_ON_INVALID_REFERENCE))) {
+    if ($request_stack = $this->container->get('request_stack', ContainerInterface::NULL_ON_INVALID_REFERENCE)) {
       if ($request = $request_stack->getMainRequest()) {
         $subrequest = TRUE;
         $request->setSession($this->container->get('session'));
+        $this->container->get('app')->setRequest($request);
       }
     }
 
@@ -1065,46 +1079,6 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
         throw new BadRequestHttpException('The provided host name is not valid for this server.');
       }
     }
-  }
-
-  /**
-   * Bootstraps the legacy global request variables.
-   *
-   * @param \Symfony\Component\HttpFoundation\Request $request
-   *   The current request.
-   *
-   * @todo D8: Eliminate this entirely in favor of Request object.
-   */
-  protected function initializeRequestGlobals(Request $request) {
-    global $base_url;
-    // Set and derived from $base_url by this function.
-    global $base_path, $base_root;
-    global $base_secure_url, $base_insecure_url;
-
-    // Create base URL.
-    $base_root = $request->getSchemeAndHttpHost();
-    $base_url = $base_root;
-
-    // For a request URI of '/index.php/foo', $_SERVER['SCRIPT_NAME'] is
-    // '/index.php', whereas $_SERVER['PHP_SELF'] is '/index.php/foo'.
-    if ($dir = rtrim(dirname($request->server->get('SCRIPT_NAME')), '\/')) {
-      // Remove "core" directory if present, allowing install.php,
-      // authorize.php, and others to auto-detect a base path.
-      $core_position = strrpos($dir, '/core');
-      if ($core_position !== FALSE && strlen($dir) - 5 == $core_position) {
-        $base_path = substr($dir, 0, $core_position);
-      }
-      else {
-        $base_path = $dir;
-      }
-      $base_url .= $base_path;
-      $base_path .= '/';
-    }
-    else {
-      $base_path = '/';
-    }
-    $base_secure_url = str_replace('http://', 'https://', $base_url);
-    $base_insecure_url = str_replace('https://', 'http://', $base_url);
   }
 
   /**

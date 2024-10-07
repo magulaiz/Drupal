@@ -55,12 +55,21 @@ class LanguageNegotiationUrlTest extends UnitTestCase {
     $this->user = $this->getMockBuilder('Drupal\Core\Session\AccountInterface')
       ->getMock();
 
+    // Create the app stub.
+    $app = $this->getMockBuilder('Drupal\Core\App')
+      ->disableOriginalConstructor()
+      ->getMock();
+    $app->expects($this->any())
+      ->method('getBasePath')
+      ->willReturn('');
+
     $cache_contexts_manager = $this->getMockBuilder('Drupal\Core\Cache\Context\CacheContextsManager')
       ->disableOriginalConstructor()
       ->getMock();
     $cache_contexts_manager->method('assertValidTokens')->willReturn(TRUE);
     $container = new ContainerBuilder();
     $container->set('cache_contexts_manager', $cache_contexts_manager);
+    $container->set('app', $app);
     \Drupal::setContainer($container);
   }
 
@@ -87,7 +96,7 @@ class LanguageNegotiationUrlTest extends UnitTestCase {
     ]);
 
     $request = Request::create('/' . $prefix . '/foo', 'GET');
-    $method = new LanguageNegotiationUrl();
+    $method = LanguageNegotiationUrl::create(\Drupal::getContainer(), [], LanguageNegotiationUrl::METHOD_ID, []);
     $method->setLanguageManager($this->languageManager);
     $method->setConfig($config);
     $method->setCurrentUser($this->user);
@@ -241,7 +250,7 @@ class LanguageNegotiationUrlTest extends UnitTestCase {
     ]);
 
     $request = Request::create('', 'GET', [], [], [], ['HTTP_HOST' => $http_host]);
-    $method = new LanguageNegotiationUrl();
+    $method = LanguageNegotiationUrl::create(\Drupal::getContainer(), [], LanguageNegotiationUrl::METHOD_ID, []);
     $method->setLanguageManager($this->languageManager);
     $method->setConfig($config);
     $method->setCurrentUser($this->user);

@@ -9,7 +9,6 @@ use Drupal\Core\DependencyInjection\ContainerBuilder;
 use Drupal\Core\PathProcessor\OutboundPathProcessorInterface;
 use Drupal\Core\PathProcessor\PathProcessorManager;
 use Drupal\Core\Render\BubbleableMetadata;
-use Drupal\Core\Routing\RequestContext;
 use Drupal\Core\Routing\RouteProviderInterface;
 use Drupal\Core\Routing\UrlGenerator;
 use Drupal\path_alias\PathProcessor\AliasPathProcessor;
@@ -62,13 +61,6 @@ class UrlGeneratorTest extends UnitTestCase {
    * @var \Symfony\Component\HttpFoundation\RequestStack
    */
   protected $requestStack;
-
-  /**
-   * The request context.
-   *
-   * @var \Drupal\Core\Routing\RequestContext
-   */
-  protected $context;
 
   /**
    * The path processor.
@@ -161,9 +153,6 @@ class UrlGeneratorTest extends UnitTestCase {
     $request = Request::create('/some/path');
     $this->requestStack->push($request);
 
-    $this->context = new RequestContext();
-    $this->context->fromRequestStack($this->requestStack);
-
     $processor = new AliasPathProcessor($this->aliasManager);
     $processor_manager = new PathProcessorManager();
     $processor_manager->addOutbound($processor, 1000);
@@ -174,7 +163,6 @@ class UrlGeneratorTest extends UnitTestCase {
       ->getMock();
 
     $generator = new UrlGenerator($this->provider, $processor_manager, $this->routeProcessorManager, $this->requestStack, ['http', 'https']);
-    $generator->setContext($this->context);
     $this->generator = $generator;
   }
 
@@ -252,7 +240,6 @@ class UrlGeneratorTest extends UnitTestCase {
     $path_processor->processOutbound(Argument::cetera())->shouldNotBeCalled();
 
     $generator = new UrlGenerator($this->provider, $path_processor->reveal(), $this->routeProcessorManager, $this->requestStack, ['http', 'https']);
-    $generator->setContext($this->context);
 
     $url = $this->generator->generateFromRoute('test_1', [], ['path_processing' => FALSE]);
     $this->assertEquals('/test/one', $url);
@@ -269,7 +256,6 @@ class UrlGeneratorTest extends UnitTestCase {
     $provider->getRouteByName('test_1')->willReturn(new Route('/test/one', [], [], ['default_url_options' => ['path_processing' => FALSE]]));
 
     $generator = new UrlGenerator($provider->reveal(), $path_processor->reveal(), $this->routeProcessorManager, $this->requestStack, ['http', 'https']);
-    $generator->setContext($this->context);
 
     $url = $generator->generateFromRoute('test_1', []);
     $this->assertEquals('/test/one', $url);
@@ -286,7 +272,6 @@ class UrlGeneratorTest extends UnitTestCase {
     $provider->getRouteByName('test_1')->willReturn(new Route('/test/one', [], [], ['default_url_options' => ['path_processing' => FALSE]]));
 
     $generator = new UrlGenerator($provider->reveal(), $path_processor->reveal(), $this->routeProcessorManager, $this->requestStack, ['http', 'https']);
-    $generator->setContext($this->context);
 
     $url = $generator->generateFromRoute('test_1', [], ['path_processing' => TRUE]);
     $this->assertEquals('/hello/world', $url);

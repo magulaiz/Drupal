@@ -4,6 +4,7 @@ namespace Drupal\Core\EventSubscriber;
 
 use Drupal\Component\HttpFoundation\SecuredRedirectResponse;
 use Drupal\Component\Utility\UrlHelper;
+use Drupal\Core\App;
 use Drupal\Core\Routing\LocalRedirectResponse;
 use Drupal\Core\Routing\RequestContext;
 use Drupal\Core\Utility\UnroutedUrlAssemblerInterface;
@@ -31,17 +32,21 @@ class RedirectResponseSubscriber implements EventSubscriberInterface {
    *
    * @param \Drupal\Core\Utility\UnroutedUrlAssemblerInterface $unroutedUrlAssembler
    *   The unrouted URL assembler service.
-   * @param \Drupal\Core\Routing\RequestContext $requestContext
-   *   The request context.
+   * @param \Drupal\Core\App|\Drupal\Core\Routing\RequestContext $app
+   *   The application object.
    * @param \Closure $loggerClosure
    *   A closure that wraps the 'logger.channel.php' service.
    */
   public function __construct(
     protected UnroutedUrlAssemblerInterface $unroutedUrlAssembler,
-    protected RequestContext $requestContext,
+    protected App|RequestContext $app,
     #[AutowireServiceClosure('logger.channel.php')]
     protected \Closure $loggerClosure,
   ) {
+    if ($this->app instanceof RequestContext) {
+      @trigger_error('Passing instance of RequestContext class instead of an App object as an app argument to ' . __METHOD__ . ' is deprecated in drupal:10.1.0 and is removed in drupal:11.0.0. Pass the "app" service dependency instead. See https://www.drupal.org/node/3279668', E_USER_DEPRECATED);
+      $this->app = \Drupal::service('app');
+    }
   }
 
   /**
@@ -77,7 +82,7 @@ class RedirectResponseSubscriber implements EventSubscriberInterface {
           // concrete implementation. Default to LocalRedirectResponse, which
           // considers only redirects to within the same site as safe.
           $safe_response = LocalRedirectResponse::createFromRedirectResponse($response);
-          $safe_response->setRequestContext($this->requestContext);
+          $safe_response->setBaseUrl($this->app->getBaseUrl());
         }
         catch (\InvalidArgumentException) {
           // If the above failed, it's because the redirect target wasn't

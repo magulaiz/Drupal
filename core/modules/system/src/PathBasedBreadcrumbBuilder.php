@@ -14,7 +14,7 @@ use Drupal\Core\ParamConverter\ParamNotConvertedException;
 use Drupal\Core\Path\CurrentPathStack;
 use Drupal\Core\Path\PathMatcherInterface;
 use Drupal\Core\PathProcessor\InboundPathProcessorInterface;
-use Drupal\Core\Routing\RequestContext;
+use Drupal\Core\Routing\RequestContext as RequestContextLegacy;
 use Drupal\Core\Routing\RouteMatch;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Session\AccountInterface;
@@ -26,6 +26,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Exception\MethodNotAllowedException;
 use Symfony\Component\Routing\Exception\ResourceNotFoundException;
 use Symfony\Component\Routing\Matcher\RequestMatcherInterface;
+use Symfony\Component\Routing\RequestContext;
 
 /**
  * Defines a class to build path-based breadcrumbs.
@@ -101,7 +102,7 @@ class PathBasedBreadcrumbBuilder implements BreadcrumbBuilderInterface {
   /**
    * Constructs the PathBasedBreadcrumbBuilder.
    *
-   * @param \Drupal\Core\Routing\RequestContext $context
+   * @param \Symfony\Component\Routing\RequestContext $context
    *   The router request context.
    * @param \Drupal\Core\Access\AccessManagerInterface $access_manager
    *   The access check service.
@@ -121,6 +122,10 @@ class PathBasedBreadcrumbBuilder implements BreadcrumbBuilderInterface {
    *   The path matcher service.
    */
   public function __construct(RequestContext $context, AccessManagerInterface $access_manager, RequestMatcherInterface $router, InboundPathProcessorInterface $path_processor, ConfigFactoryInterface $config_factory, TitleResolverInterface $title_resolver, AccountInterface $current_user, CurrentPathStack $current_path, ?PathMatcherInterface $path_matcher = NULL) {
+    if ($context instanceof RequestContextLegacy) {
+      @trigger_error('Drupal\Core\Routing\RequestContext is deprecated in drupal:11.1.0 and is removed from drupal:12.0.0. Use Symfony\Component\Routing\RequestContext instance instead. See https://www.drupal.org/node/3279668');
+      $context = new RequestContext();
+    }
     $this->context = $context;
     $this->accessManager = $access_manager;
     $this->router = $router;

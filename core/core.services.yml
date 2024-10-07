@@ -68,6 +68,10 @@ parameters:
 services:
   _defaults:
     autoconfigure: true
+  app:
+    class: Drupal\Core\App
+    arguments: [ '%app.root%' ]
+  Drupal\Core\App: '@app'
   plugin.manager.config_action:
     class: Drupal\Core\Config\Action\ConfigActionManager
     parent: default_plugin_manager
@@ -1040,12 +1044,18 @@ services:
     tags:
       - { name: backend_overridable }
     lazy: true
+  router.symfony_request_context:
+    class: Symfony\Component\Routing\RequestContext
+    tags:
+      - { name: persist }
+  Symfony\Component\Routing\RequestContext: '@router.symfony_request_context'
   router.request_context:
     class: Drupal\Core\Routing\RequestContext
     tags:
       - { name: persist }
     calls:
       - [fromRequestStack, ['@request_stack']]
+    deprecated: The "%service_id%" service is deprecated in drupal:11.1.0 and is removed from drupal:12.0.0. Use Symfony\Component\Routing\RequestContext or "router.symfony_request_context" service instead. See https://www.drupal.org/node/3279668
   Drupal\Core\Routing\RequestContext: '@router.request_context'
   router.admin_context:
     class: Drupal\Core\Routing\AdminContext
@@ -1068,12 +1078,12 @@ services:
     arguments: ['@router.route_provider', '@path_processor_manager', '@route_processor_manager', '@request_stack', '%filter_protocols%']
     public: false
     calls:
-      - [setContext, ['@?router.request_context']]
+      - [setContext, ['@?router.symfony_request_context']]
   url_generator:
     class: Drupal\Core\Render\MetadataBubblingUrlGenerator
     arguments: ['@url_generator.non_bubbling', '@renderer']
     calls:
-      - [setContext, ['@?router.request_context']]
+      - [setContext, ['@?router.symfony_request_context']]
   Drupal\Core\Routing\UrlGeneratorInterface: '@url_generator'
   Symfony\Component\Routing\Generator\UrlGeneratorInterface: '@url_generator'
   redirect.destination:
@@ -1099,7 +1109,7 @@ services:
       - { name: service_collector, tag: route_enhancer, call: addRouteEnhancer  }
       - { name: service_collector, tag: route_filter, call: addRouteFilter }
     calls:
-      - [setContext, ['@router.request_context']]
+      - [setContext, ['@router.symfony_request_context']]
   router.path_roots_subscriber:
     class: Drupal\Core\EventSubscriber\PathRootsSubscriber
     arguments: ['@state']
@@ -1295,7 +1305,7 @@ services:
   Drupal\Core\Form\FormAjaxResponseBuilderInterface: '@form_ajax_response_builder'
   router_listener:
     class: Symfony\Component\HttpKernel\EventListener\RouterListener
-    arguments: ['@router', '@request_stack', '@router.request_context', NULL]
+    arguments: ['@router', '@request_stack', '@router.symfony_request_context', NULL]
   options_request_listener:
     class: Drupal\Core\EventSubscriber\OptionsRequestSubscriber
     arguments: ['@router.route_provider']
@@ -1397,7 +1407,7 @@ services:
     class: Drupal\Core\EventSubscriber\ResponseGeneratorSubscriber
   redirect_response_subscriber:
     class: Drupal\Core\EventSubscriber\RedirectResponseSubscriber
-    autowire: true
+    arguments: ['@unrouted_url_assembler', '@app', '@logger.channel.php']
   redirect_leading_slashes_subscriber:
     class: Drupal\Core\EventSubscriber\RedirectLeadingSlashesSubscriber
   config_import_subscriber:
