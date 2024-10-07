@@ -2069,18 +2069,6 @@ $ignoreErrors[] = [
 ];
 $ignoreErrors[] = [
 	// identifier: variable.undefined
-	'message' => '#^Variable \\$sort_field might not be defined\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/views/src/Plugin/views/relationship/GroupwiseMax.php',
-];
-$ignoreErrors[] = [
-	// identifier: variable.undefined
-	'message' => '#^Variable \\$sort_table might not be defined\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/views/src/Plugin/views/relationship/GroupwiseMax.php',
-];
-$ignoreErrors[] = [
-	// identifier: variable.undefined
 	'message' => '#^Variable \\$items might not be defined\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/views/src/Plugin/views/sort/Broken.php',
