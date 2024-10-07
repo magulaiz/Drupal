@@ -108,16 +108,20 @@ function hook_file_url_alter(&$uri) {
 /**
  * Alter MIME type mappings used to determine MIME type from a file extension.
  *
- * Invoked by
- * \Drupal\Core\File\MimeType\ExtensionMimeTypeGuesser::guessMimeType(). It is
- * used to allow modules to add to or modify the default mapping from
- * \Drupal\Core\File\MimeType\ExtensionMimeTypeGuesser::$defaultMapping.
  *
  * @param $mapping
  *   An array of mimetypes correlated to the extensions that relate to them.
  *   The array has 'mimetypes' and 'extensions' elements, each of which is an
  *   array.
  *
+ * @deprecated in drupal:11.1.0 and is removed from drupal:12.0.0. Create a
+ *   \Drupal\Core\File\MimeType\MimeTypeMapLoadedEvent subscriber instead.
+ *
+ * It is used to allow modules to add to or modify the default mapping of
+ * MIME type to file extensions.
+ *
+ * @see https://www.drupal.org/node/2311679
+ * @see \Drupal\Core\File\Event\LegacyMimeTypeMapLoadedSubscriber
  * @see \Drupal\Core\File\MimeType\ExtensionMimeTypeGuesser::guessMimeType()
  * @see \Drupal\Core\File\MimeType\ExtensionMimeTypeGuesser::$defaultMapping
  */
