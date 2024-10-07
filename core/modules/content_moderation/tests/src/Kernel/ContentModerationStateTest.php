@@ -356,10 +356,7 @@ class ContentModerationStateTest extends KernelTestBase {
       $entity->removeTranslation($langcode);
       $entity->save();
       $content_moderation_state = ContentModerationState::loadFromModeratedEntity($entity);
-      if (Database::getConnection()->driver() != 'mongodb') {
-        // @todo Fix this for MongoDB.
-        $this->assertFalse($content_moderation_state->hasTranslation($langcode));
-      }
+      $this->assertFalse($content_moderation_state->hasTranslation($langcode));
     }
   }
 

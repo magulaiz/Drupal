@@ -790,6 +790,29 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
         }
       }
 
+      // Get the list of translations from the latest revision.
+      foreach ($values_embedded_tables as $id => $embedded_tables) {
+        foreach ($embedded_tables as $embedded_table_name => $embedded_table_rows) {
+          if (is_array($embedded_table_rows)) {
+            foreach ($embedded_table_rows as $embedded_table_row) {
+              if (empty($embedded_table_row[$this->defaultLangcodeKey])) {
+                $langcode = $embedded_table_row[$this->langcodeKey];
+              }
+              else {
+                $langcode = LanguageInterface::LANGCODE_DEFAULT;
+              }
+
+              if ($embedded_table_name == $this->jsonStorageLatestRevisionTable) {
+                $translations[$id][$langcode] = TRUE;
+              }
+              elseif ($embedded_table_name == $this->jsonStorageTranslationsTable) {
+                $translations[$id][$langcode] = TRUE;
+              }
+            }
+          }
+        }
+      }
+
       // Use the collected embedded table data to retrieve the entity values.
       foreach ($embedded_table_data as $table_rows) {
         if (is_array($table_rows)) {
@@ -810,10 +833,10 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
               $langcode_is_default_langcode = TRUE;
             }
 
-            $translations[$id][$langcode] = TRUE;
-
             foreach ($all_fields as $field_name) {
               if (!in_array($field_name, $base_fields)) {
+                $storage_definition = $storage_definitions[$field_name];
+                $definition_columns = $storage_definition->getColumns();
                 $columns = $table_mapping->getColumnNames($field_name);
 
                 // Do not key single-column fields by property name.
@@ -827,7 +850,9 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
                     $values[$id][$field_name][$langcode] = '0';
                   }
                   else {
-                    $values[$id][$field_name][$langcode] = (string) $table_row[reset($columns)];
+                    $column_name = reset($columns);
+                    $column_attributes = $definition_columns[key($columns)];
+                    $values[$id][$field_name][$langcode] = (!empty($column_attributes['serialize'])) ? unserialize($table_row[$column_name]) : (string) $table_row[$column_name];
                   }
 
                   if ($langcode_is_default_langcode) {
