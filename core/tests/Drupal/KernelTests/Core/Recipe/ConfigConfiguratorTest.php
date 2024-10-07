@@ -6,6 +6,7 @@ namespace Drupal\KernelTests\Core\Recipe;
 
 use Drupal\Component\Serialization\Yaml;
 use Drupal\Core\Entity\EntityDisplayRepositoryInterface;
+use Drupal\Core\Field\Entity\BaseFieldOverride;
 use Drupal\Core\Recipe\Recipe;
 use Drupal\Core\Recipe\RecipePreExistingConfigException;
 use Drupal\Core\Recipe\RecipeRunner;
@@ -88,6 +89,10 @@ class ConfigConfiguratorTest extends KernelTestBase {
     $this->assertIsArray($form_display->getComponent('uid'));
     $form_display->removeComponent('uid')->save();
 
+    // Delete something that the recipe provides, so we can be sure it is
+    // recreated if it's not in the strict list.
+    BaseFieldOverride::loadByName('node', 'page', 'promote')->delete();
+
     // Clone the recipe into the virtual file system, and opt only the node
     // type into strict mode.
     $clone_dir = $this->cloneRecipe($recipe->path);
@@ -110,7 +115,18 @@ class ConfigConfiguratorTest extends KernelTestBase {
     NodeType::load('page')
       ->set('description', $original_description)
       ->save();
-    Recipe::createFromDirectory($clone_dir);
+
+    $recipe = Recipe::createFromDirectory($clone_dir);
+    RecipeRunner::processRecipe($recipe);
+
+    // Make certain that our change to the form display is still there.
+    $component = $this->container->get(EntityDisplayRepositoryInterface::class)
+      ->getFormDisplay('node', 'page')
+      ->getComponent('uid');
+    $this->assertNull($component);
+
+    // The thing we deleted should have been recreated.
+    $this->assertInstanceOf(BaseFieldOverride::class, BaseFieldOverride::loadByName('node', 'page', 'promote'));
   }
 
   public function testFullStrictness(): void {
