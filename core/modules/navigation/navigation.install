@@ -32,11 +32,11 @@ function navigation_update_11001(array &$sandbox): void {
   $settings->setData([
     'logo' => [
       'provider' => $settings->get('logo_provider'),
-      'managed' => $settings->get('logo_managed'),
+      'managed' => is_array($settings->get('logo_managed')) ? current($settings->get('logo_managed')) : $settings->get('logo_managed'),
       'max' => [
         'filesize' => $settings->get('logo_max_filesize'),
-        'height' => $settings->get('logo_height'),
-        'width' => $settings->get('logo_width'),
+        'height' => $settings->get('logo_height') ?? 40,
+        'width' => $settings->get('logo_width') ?? 40,
       ],
     ],
   ]);
