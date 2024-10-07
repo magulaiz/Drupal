@@ -59,19 +59,6 @@ abstract class ConfigFormBase extends FormBase {
   }
 
   /**
-   * Returns the typed config manager service.
-   *
-   * @return \Drupal\Core\Config\TypedConfigManagerInterface
-   *   The typed config manager service.
-   */
-  protected function typedConfigManager(): TypedConfigManagerInterface {
-    if ($this->typedConfigManager instanceof TypedConfigManagerInterface) {
-      return $this->typedConfigManager;
-    }
-    return \Drupal::service('config.typed');
-  }
-
-  /**
    * {@inheritdoc}
    */
   public function buildForm(array $form, FormStateInterface $form_state) {
@@ -203,7 +190,7 @@ abstract class ConfigFormBase extends FormBase {
     foreach (array_keys($map) as $config_name) {
       $config = $this->configFactory()->getEditable($config_name);
       static::copyFormValuesToConfig($config, $form_state, $form);
-      $typed_config = $this->typedConfigManager()->createFromNameAndData($config_name, $config->getRawData());
+      $typed_config = $this->typedConfigManager->createFromNameAndData($config_name, $config->getRawData());
 
       $violations = $typed_config->validate();
       // Rather than immediately applying all violation messages to the
