@@ -402,7 +402,9 @@ class ComposerInspector implements LoggerAwareInterface {
     // inexplicable reason, that option hides *other* relevant information
     // about the installed packages. So, to work around this maddening quirk, we
     // call `composer show` once without the --path option, and once with it,
-    // then merge the results together.
+    // then merge the results together. Composer, for its part, will not support
+    // returning the install path from `composer show`: see
+    // https://github.com/composer/composer/pull/11340.
     $this->runner->run($options, callback: $this->processCallback->reset());
     $output = $this->processCallback->parseJsonOutput();
     // $output['installed'] will not be set if no packages are installed.
