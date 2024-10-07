@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Drupal\Core\Recipe;
 
 use Drupal\Core\TypedData\DataDefinition;
-use Drupal\Core\TypedData\DataDefinitionInterface;
 use Drupal\Core\TypedData\TypedDataInterface;
 use Drupal\Core\TypedData\TypedDataManagerInterface;
 use Symfony\Component\Validator\Exception\ValidationFailedException;
@@ -58,7 +57,7 @@ final class InputConfigurator {
   public function __construct(
     array $definitions,
     private readonly RecipeConfigurator $dependencies,
-    private readonly string $prefix,
+    public readonly string $prefix,
     TypedDataManagerInterface $typedDataManager,
   ) {
     // Convert the input definitions to typed data definitions.
@@ -78,22 +77,13 @@ final class InputConfigurator {
   }
 
   /**
-   * Returns data definitions for this recipe and its dependencies' inputs.
+   * Returns the typed data definitions for the inputs defined by this recipe.
    *
    * @return \Drupal\Core\TypedData\DataDefinitionInterface[]
-   *   The typed data definitions, keyed by the input's fully qualified name
-   *   (i.e., prefixed by the name of the recipe that defines it).
+   *   The typed data definitions, keyed by input name.
    */
-  public function getAllDataDefinitions(): array {
-    $definitions = [];
-    foreach ($this->dependencies->recipes as $dependency) {
-      $definitions = array_merge($definitions, $dependency->input->getAllDataDefinitions());
-    }
-    foreach ($this->data as $name => $data) {
-      $name = $this->prefix . '.' . $name;
-      $definitions[$name] = $data->getDataDefinition();
-    }
-    return $definitions;
+  public function getDataDefinitions(): array {
+    return array_map(fn (TypedDataInterface $data) => $data->getDataDefinition(), $this->data);
   }
 
   /**
@@ -115,10 +105,15 @@ final class InputConfigurator {
    *   by the name of the recipe that defines it).
    */
   public function describeAll(): array {
-    return array_map(
-      fn (DataDefinitionInterface $definition) => $definition->getDescription(),
-      $this->getAllDataDefinitions(),
-    );
+    $descriptions = [];
+    foreach ($this->dependencies->recipes as $dependency) {
+      $descriptions = array_merge($descriptions, $dependency->input->describeAll());
+    }
+    foreach ($this->getDataDefinitions() as $key => $definition) {
+      $name = $this->prefix . '.' . $key;
+      $descriptions[$name] = $definition->getDescription();
+    }
+    return $descriptions;
   }
 
   /**
