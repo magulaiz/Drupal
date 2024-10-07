@@ -115,7 +115,7 @@ final class SettingsForm extends ConfigFormBase {
 
     // If path is a public:// URI, display the path relative to the files
     // directory; stream wrappers are not end-user friendly.
-    $original_path = $config->get('logo_path') ?? '';
+    $original_path = $config->get('logo.path') ?? '';
     $friendly_path = NULL;
     $default_path = $original_path;
     $default = 'logo.png';
