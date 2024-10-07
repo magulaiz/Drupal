@@ -92,7 +92,7 @@ class ClaroRevisionsTabsUITest extends WebDriverTestBase {
 
     // The 'Revisions' active primary tab.
     $assert_session->elementExists('css', 'a.tabs__link.js-tabs-link.is-active');
-    
+
     // The 'View', 'Edit' and 'Delete' primary tabs.
     $assert_session->elementExists('css', 'li.tabs__tab:nth-child(1) > a:nth-child(1)');
     $assert_session->elementExists('css', 'li.tabs__tab:nth-child(2) > a:nth-child(1)');
