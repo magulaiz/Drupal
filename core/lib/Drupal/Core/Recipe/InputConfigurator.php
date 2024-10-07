@@ -57,7 +57,7 @@ final class InputConfigurator {
   public function __construct(
     array $definitions,
     private readonly RecipeConfigurator $dependencies,
-    public readonly string $prefix,
+    private readonly string $prefix,
     TypedDataManagerInterface $typedDataManager,
   ) {
     // Convert the input definitions to typed data definitions.
@@ -78,6 +78,9 @@ final class InputConfigurator {
 
   /**
    * Returns the typed data definitions for the inputs defined by this recipe.
+   *
+   * This does NOT return the data definitions for inputs defined by this
+   * recipe's dependencies.
    *
    * @return \Drupal\Core\TypedData\DataDefinitionInterface[]
    *   The typed data definitions, keyed by input name.
