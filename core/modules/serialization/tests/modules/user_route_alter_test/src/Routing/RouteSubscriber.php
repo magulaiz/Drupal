@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Drupal\user_route_alter_test\Routing;
 
 use Drupal\Core\Routing\RouteSubscriberBase;
+use Drupal\Core\Routing\RoutingEvents;
 use Symfony\Component\Routing\RouteCollection;
 
 /**
@@ -20,6 +21,17 @@ class RouteSubscriber extends RouteSubscriberBase {
       $route->setRequirements([]);
       $route->setRequirement('_access', 'FALSE');
     }
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function getSubscribedEvents(): array {
+    $events = parent::getSubscribedEvents();
+    // Ensure this event is triggered before
+    // \Drupal\serialization\EventSubscriber\UserRouteAlterSubscriber.
+    $events[RoutingEvents::ALTER] = ['onAlterRoutes', 1];
+    return $events;
   }
 
 }
