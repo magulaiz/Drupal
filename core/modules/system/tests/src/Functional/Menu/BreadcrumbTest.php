@@ -229,6 +229,7 @@ class BreadcrumbTest extends BrowserTestBase {
     $edit = [
       'menu[menu_parent]' => $link->getMenuName() . ':' . $link->getPluginId(),
     ];
+    assert(isset($parent));
     $this->drupalGet('node/' . $parent->id() . '/edit');
     $this->submitForm($edit, 'Save');
 

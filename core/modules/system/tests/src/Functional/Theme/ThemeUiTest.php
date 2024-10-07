@@ -99,6 +99,7 @@ class ThemeUiTest extends BrowserTestBase {
       $this->assertSession()->pageTextContains($module_enabled_text);
     };
     // All the modules should be listed as disabled.
+    $expected_required_list_items = [];
     foreach ($all_dependent_modules as $module) {
       $expected_required_list_items[$module] = $this->testModules[$module] . " (disabled)";
     }

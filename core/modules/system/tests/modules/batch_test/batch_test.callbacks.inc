@@ -137,13 +137,11 @@ function _batch_test_nested_batch_callback(array $batches = []) {
  * Provides a common 'finished' callback for batches 1 to 7.
  */
 function _batch_test_finished_helper($batch_id, $success, $results, $operations, $elapsed) {
+  $messages[] = 'none';
   if ($results) {
     foreach ($results as $op => $op_results) {
       $messages[] = 'op ' . Html::escape((string) $op) . ': processed ' . count($op_results) . ' elements';
     }
-  }
-  else {
-    $messages[] = 'none';
   }
 
   if (!$success) {

@@ -279,6 +279,7 @@ abstract class CommentTestBase extends BrowserTestBase {
         $mode_text = 'required';
         break;
     }
+    assert(isset($mode_text));
     $this->setCommentSettings('preview', $mode, new FormattableMarkup('Comment preview @mode_text.', ['@mode_text' => $mode_text]), $field_name);
   }
 

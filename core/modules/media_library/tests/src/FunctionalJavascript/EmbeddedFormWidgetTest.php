@@ -125,6 +125,7 @@ class EmbeddedFormWidgetTest extends WebDriverTestBase {
     $wrapper = $assert_session->elementExists('css', '#media_image_field-media-library-wrapper');
     $wrapper->pressButton('Add media');
     $this->assertNotNull($assert_session->waitForText('Add or select media'));
+    assert(isset($jpg_image));
     $page->attachFileToField('Add file', $this->container->get('file_system')->realpath($jpg_image->uri));
     $this->assertNotNull($assert_session->waitForText('Alternative text'));
     $page->fillField('Alternative text', $this->randomString());

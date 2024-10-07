@@ -131,6 +131,7 @@ class BlockUiTest extends BrowserTestBase {
     // Look for the blocks table.
     $this->assertSession()->elementExists('xpath', "//table[@id='blocks']");
     // Look for test blocks in the table.
+    $edit = [];
     foreach ($this->blockValues as $delta => $values) {
       $block = $this->blocks[$delta];
       $label = $block->label();

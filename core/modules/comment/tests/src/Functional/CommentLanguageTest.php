@@ -114,6 +114,7 @@ class CommentLanguageTest extends BrowserTestBase {
     // is the user language preference. This way we can ensure that node
     // language and interface language do not influence comment language, as
     // only content language has to.
+    $comment_values = [];
     foreach ($this->container->get('language_manager')->getLanguages() as $node_langcode => $node_language) {
       // Create "Article" content.
       $title = $this->randomMachineName();
