@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\language\Kernel;
 
 use Drupal\entity_test\Entity\EntityTestBundle;
@@ -11,7 +13,6 @@ use Drupal\Tests\node\Traits\ContentTypeCreationTrait;
  * Tests validation of content_language_settings entities.
  *
  * @group language
- * @group #slow
  */
 class ContentLanguageSettingsValidationTest extends ConfigEntityValidationTestBase {
 

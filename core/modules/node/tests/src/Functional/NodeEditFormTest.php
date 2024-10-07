@@ -41,9 +41,7 @@ class NodeEditFormTest extends NodeTestBase {
   protected $nodeStorage;
 
   /**
-   * Modules to enable.
-   *
-   * @var string[]
+   * {@inheritdoc}
    */
   protected static $modules = ['block', 'node', 'datetime'];
 
@@ -69,7 +67,7 @@ class NodeEditFormTest extends NodeTestBase {
   /**
    * Checks node edit functionality.
    */
-  public function testNodeEdit() {
+  public function testNodeEdit(): void {
     $this->drupalLogin($this->webUser);
 
     $title_key = 'title[0][value]';
@@ -165,7 +163,7 @@ class NodeEditFormTest extends NodeTestBase {
   /**
    * Tests changing a node's "authored by" field.
    */
-  public function testNodeEditAuthoredBy() {
+  public function testNodeEditAuthoredBy(): void {
     $this->drupalLogin($this->adminUser);
 
     // Create node to edit.
@@ -226,7 +224,7 @@ class NodeEditFormTest extends NodeTestBase {
   /**
    * Tests the node meta information.
    */
-  public function testNodeMetaInformation() {
+  public function testNodeMetaInformation(): void {
     // Check that regular users (i.e. without the 'administer nodes' permission)
     // can not see the meta information.
     $this->drupalLogin($this->webUser);
