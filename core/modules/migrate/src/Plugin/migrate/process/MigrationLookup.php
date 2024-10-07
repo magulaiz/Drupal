@@ -248,11 +248,17 @@ class MigrationLookup extends ProcessPluginBase implements ContainerFactoryPlugi
         $lookup_value = [];
         $source_map = $this->configuration['source_ids'][$lookup_migration_id];
         $row_values = $row->getMultiple($this->configuration['source_ids'][$lookup_migration_id]);
+
+        if (array_is_list($this->configuration['source_ids'][$lookup_migration_id])) {
+          // If the source IDs are specified without keys, we assume they are
+          // the first source IDs in order.
+          $lookup_value = array_values($row_values);
+        }
         foreach ($source_map as $key => $source) {
+          // If the source IDs are specified with keys, use the keys.
           $lookup_value[$key] = $row_values[$source];
         }
       }
-      $lookup_value = (array) $lookup_value;
       $this->skipInvalid($lookup_value);
       if ($this->isPipelineStopped()) {
         return NULL;
