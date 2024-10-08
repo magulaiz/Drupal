@@ -741,7 +741,7 @@ services:
     arguments: ['@entity_type.manager']
   entity.definition_update_manager:
     class: Drupal\Core\Entity\EntityDefinitionUpdateManager
-    arguments: ['@entity_type.manager', '@entity.last_installed_schema.repository', '@entity_field.manager', '@entity_type.listener', '@field_storage_definition.listener']
+    arguments: ['@entity_type.manager', '@update.entity.last_installed_schema.repository', '@entity_field.manager', '@entity_type.listener', '@field_storage_definition.listener']
   Drupal\Core\Entity\EntityDefinitionUpdateManagerInterface: '@entity.definition_update_manager'
   entity.last_installed_schema.repository:
     class: Drupal\Core\Entity\EntityLastInstalledSchemaRepository
@@ -1808,6 +1808,9 @@ services:
   email.validator:
     class: Drupal\Component\Utility\EmailValidator
   Drupal\Component\Utility\EmailValidatorInterface: '@email.validator'
+  update.entity.last_installed_schema.repository:
+    class: Drupal\Core\Update\UpdateEntityLastInstalledSchemaRepository
+    arguments: ['@keyvalue', '@cache.discovery']
   update.update_hook_registry:
     class: Drupal\Core\Update\UpdateHookRegistry
     arguments: ['%container.modules%', '@keyvalue']

@@ -6,13 +6,13 @@ namespace Drupal\FunctionalTests\Update;
 
 use Drupal\Component\Utility\Crypt;
 use Drupal\Component\Utility\Html;
-use Drupal\Core\Site\Settings;
-use Drupal\Tests\BrowserTestBase;
 use Drupal\Core\Database\Database;
 use Drupal\Core\DependencyInjection\ContainerBuilder;
 use Drupal\Core\File\FileSystemInterface;
 use Drupal\Core\Language\Language;
+use Drupal\Core\Site\Settings;
 use Drupal\Core\Url;
+use Drupal\Tests\BrowserTestBase;
 use Drupal\Tests\UpdatePathTestTrait;
 use Symfony\Component\DependencyInjection\Reference;
 use Symfony\Component\HttpFoundation\Request;
@@ -253,7 +253,6 @@ abstract class UpdatePathTestBase extends BrowserTestBase {
 
     // Ensure that all {router} entries can be unserialized. If they cannot be
     // unserialized a notice will be thrown by PHP.
-
     $result = \Drupal::database()->select('router', 'r')
       ->fields('r', ['name', 'route'])
       ->execute()
