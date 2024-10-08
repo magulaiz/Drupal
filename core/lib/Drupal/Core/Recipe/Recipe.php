@@ -393,8 +393,8 @@ final class Recipe {
       ...$recipe_being_validated['install'] ?? [],
       ...$configurator->listAllExtensions(),
     ];
-    // Required modules should always be considered considered installed, which
-    // allows the recipe to be valid even during the early installer.
+    // Explicitly treat required modules as installed, even if Drupal isn't
+    // installed yet, because we know they WILL be installed.
     foreach ($module_list->getAllAvailableInfo() as $name => $info) {
       if (!empty($info['required'])) {
         $all_extensions[] = $name;
