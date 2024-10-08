@@ -212,7 +212,7 @@ class MessageTest extends ResourceTestBase {
     }
 
     // Try with all of the following request bodies.
-    $unparseable_request_body = '!{>}<';
+    $not_parseable_request_body = '!{>}<';
     $parseable_valid_request_body = Json::encode($this->getPostDocument());
     $parseable_invalid_request_body_missing_type = Json::encode($this->removeResourceTypeFromDocument($this->getPostDocument()));
     if ($this->entity->getEntityType()->hasKey('label')) {
@@ -262,9 +262,9 @@ class MessageTest extends ResourceTestBase {
     $response = $this->request('POST', $url, $request_options);
     $this->assertResourceErrorResponse(403, (string) $reason, $url, $response, FALSE);
 
-    $request_options[RequestOptions::BODY] = $unparseable_request_body;
+    $request_options[RequestOptions::BODY] = $not_parseable_request_body;
 
-    // DX: 403 when unparseable request body. Would normally expect 400.
+    // DX: 403 when request body not parseable. Would normally expect 400.
     $response = $this->request('POST', $url, $request_options);
     $this->assertResourceErrorResponse(403, (string) $reason, $url, $response, FALSE);
 

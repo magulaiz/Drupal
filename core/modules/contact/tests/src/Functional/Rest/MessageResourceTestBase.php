@@ -164,7 +164,7 @@ abstract class MessageResourceTestBase extends EntityResourceTestBase {
     $has_canonical_url = $this->entity->hasLinkTemplate('canonical');
 
     // Try with all of the following request bodies.
-    $unparseable_request_body = '!{>}<';
+    $not_parseable_request_body = '!{>}<';
 
     // The URL and Guzzle request options that will be used in this test. The
     // request options will be modified/expanded throughout this test:
@@ -225,9 +225,9 @@ abstract class MessageResourceTestBase extends EntityResourceTestBase {
     $response = $this->request('POST', $url, $request_options);
     $this->assertResourceErrorResponse(403, $forbiddenAccessMessage, $response);
 
-    $request_options[RequestOptions::BODY] = $unparseable_request_body;
+    $request_options[RequestOptions::BODY] = $not_parseable_request_body;
 
-    // DX: 403 when unparseable request body.
+    // DX: 403 when request body not parseable.
     $response = $this->request('POST', $url, $request_options);
     $this->assertResourceErrorResponse(403, $forbiddenAccessMessage, $response);
 
