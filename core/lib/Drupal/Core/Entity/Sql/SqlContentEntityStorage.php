@@ -791,27 +791,27 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
       }
 
       // Get the list of translations from the latest revision.
-      foreach ($values_embedded_tables as $id => $embedded_tables) {
-        foreach ($embedded_tables as $embedded_table_name => $embedded_table_rows) {
-          if (is_array($embedded_table_rows)) {
-            foreach ($embedded_table_rows as $embedded_table_row) {
-              if (empty($embedded_table_row[$this->defaultLangcodeKey])) {
-                $langcode = $embedded_table_row[$this->langcodeKey];
-              }
-              else {
-                $langcode = LanguageInterface::LANGCODE_DEFAULT;
-              }
-
-              if ($embedded_table_name == $this->jsonStorageLatestRevisionTable) {
-                $translations[$id][$langcode] = TRUE;
-              }
-              elseif ($embedded_table_name == $this->jsonStorageTranslationsTable) {
-                $translations[$id][$langcode] = TRUE;
-              }
-            }
-          }
-        }
-      }
+      // foreach ($values_embedded_tables as $id => $embedded_tables) {
+      // foreach ($embedded_tables as $embedded_table_name => $embedded_table_rows) {
+      // if (is_array($embedded_table_rows)) {
+      // foreach ($embedded_table_rows as $embedded_table_row) {
+      // if (empty($embedded_table_row[$this->defaultLangcodeKey])) {
+      // $langcode = $embedded_table_row[$this->langcodeKey];
+      // }
+      // else {
+      // $langcode = LanguageInterface::LANGCODE_DEFAULT;
+      // }
+      //
+      // if ($embedded_table_name == $this->jsonStorageLatestRevisionTable) {
+      // $translations[$id][$langcode] = TRUE;
+      // }
+      // elseif ($embedded_table_name == $this->jsonStorageTranslationsTable) {
+      // $translations[$id][$langcode] = TRUE;
+      // }
+      // }
+      // }
+      // }
+      // }
 
       // Use the collected embedded table data to retrieve the entity values.
       foreach ($embedded_table_data as $table_rows) {
@@ -832,6 +832,8 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
             if (isset($values[$id][$this->langcodeKey][LanguageInterface::LANGCODE_DEFAULT]) && ($values[$id][$this->langcodeKey][LanguageInterface::LANGCODE_DEFAULT] == $langcode)) {
               $langcode_is_default_langcode = TRUE;
             }
+
+            $translations[$id][$langcode] = TRUE;
 
             foreach ($all_fields as $field_name) {
               if (!in_array($field_name, $base_fields)) {
