@@ -239,7 +239,7 @@ class MTimeProtectedFastFileStorage extends FileStorage {
    * If running under Windows, replace illegal filename characters with _.
    *
    * @param string $filename
-   *   The name of the file or directory we want to sanitise.
+   *   The name of the file or directory we want to sanitize.
    *
    * @return string
    *
