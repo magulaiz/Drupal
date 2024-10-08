@@ -73,9 +73,6 @@
   padding: var(--space-s) var(--space-s) var(--space-s) calc(var(--space-l) - var(--vertical-tabs-menu-link--active-border-size)); /* LTR */
   -webkit-text-decoration: none;
   text-decoration: none;
-  word-wrap: break-word;
-  -webkit-hyphens: auto;
-  hyphens: auto;
   color: var(--color-text);
   border: var(--vertical-tabs-border-size) solid transparent;
   border-width: var(--vertical-tabs-border-size) 0 var(--vertical-tabs-border-size) var(--vertical-tabs-menu-link--active-border-size); /* LTR */
@@ -245,7 +242,9 @@
 /* Adjust the focus border on this element so it is not too close to buttons. */
 
 .media-library-add-form__added-media:focus {
-  box-shadow: 0 0 0 calc(var(--focus-border-offset-size) + 2px) var(--color-white), 0 0 0 calc(var(--focus-border-size) + var(--focus-border-offset-size) + 2px) var(--color-focus);
+  box-shadow:
+    0 0 0 calc(var(--focus-border-offset-size) + 2px) var(--color-white),
+    0 0 0 calc(var(--focus-border-size) + var(--focus-border-offset-size) + 2px) var(--color-focus);
 }
 
 .media-library-add-form .file-upload-help {
@@ -462,7 +461,10 @@
   width: calc(100% - 1rem);
   height: calc(100% - 1rem);
   content: "";
-  transition: border-color 0.2s, color 0.2s, background 0.2s;
+  transition:
+    border-color 0.2s,
+    color 0.2s,
+    background 0.2s;
   pointer-events: none;
   border: 1px solid #dbdbdb;
   border-radius: 2px;

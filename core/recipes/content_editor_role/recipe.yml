@@ -1,0 +1,11 @@
+name: 'Content editor role'
+description: 'Provides the Content editor role.'
+type: 'User role'
+config:
+  # If the content_editor role already exists, we don't really care what it looks like.
+  strict: false
+  actions:
+    user.role.content_editor:
+      grantPermissions:
+        - 'access administration pages'
+        - 'view own unpublished content'

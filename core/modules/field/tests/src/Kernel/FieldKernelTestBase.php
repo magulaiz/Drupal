@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\field\Kernel;
 
 use Drupal\Component\Render\FormattableMarkup;
@@ -15,9 +17,7 @@ use Drupal\KernelTests\KernelTestBase;
 abstract class FieldKernelTestBase extends KernelTestBase {
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = [
     'user',
@@ -38,9 +38,9 @@ abstract class FieldKernelTestBase extends KernelTestBase {
    * - $this->fieldTestData->field[suffix]
    * - $this->fieldTestData->field_definition[suffix]
    *
-   * @see \Drupal\field\Tests\FieldUnitTestBase::createFieldWithStorage()
-   *
    * @var \ArrayObject
+   *
+   * @see \Drupal\field\Tests\FieldUnitTestBase::createFieldWithStorage()
    */
   protected $fieldTestData;
 
@@ -155,7 +155,7 @@ abstract class FieldKernelTestBase extends KernelTestBase {
   protected function entityValidateAndSave(EntityInterface $entity) {
     $violations = $entity->validate();
     if ($violations->count()) {
-      $this->fail($violations);
+      $this->fail((string) $violations);
     }
     else {
       $entity->save();

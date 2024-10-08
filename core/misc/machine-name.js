@@ -5,7 +5,7 @@
  * @internal
  */
 
-(function ($, Drupal, drupalSettings, slugify) {
+(function ($, Drupal, drupalSettings, transliterateLibrary) {
   /**
    * Trims string by a character.
    *
@@ -205,7 +205,13 @@
         // If it is editable, append an edit link.
         const $link = $(
           '<span class="admin-link"><button type="button" class="link" aria-label="'
-            .concat(Drupal.t('Edit machine name'), '">')
+            .concat(
+              Drupal.t('Edit machine name'),
+              '" data-drupal-selector="'.concat(
+                $target.data('drupal-selector'),
+              ),
+              '-machine-name-admin-link">',
+            )
             .concat(Drupal.t('Edit'), '</button></span>'),
         )
           .on('click', eventData, clickEditHandler)
@@ -288,21 +294,17 @@
         drupalSettings.transliteration_language_overrides[
           drupalSettings.langcode
         ];
-      const normalizedLanguageOverrides = {};
+      const replace = {};
       if (languageOverrides) {
         Object.keys(languageOverrides).forEach((key) => {
           // Updates the keys from hexadecimal to strings.
-          normalizedLanguageOverrides[String.fromCharCode(key)] =
-            languageOverrides[key];
+          replace[String.fromCharCode(key)] = languageOverrides[key];
         });
       }
-      slugify.config({
-        separator: settings.replace,
-        allowedChars: settings.replace_pattern,
-        replace: normalizedLanguageOverrides,
-      });
 
-      return prepareMachineName(slugify(source), settings);
+      const transliteratedSource = transliterateLibrary(source, { replace });
+
+      return prepareMachineName(transliteratedSource, settings);
     },
   };
-})(jQuery, Drupal, drupalSettings, slugify);
+})(jQuery, Drupal, drupalSettings, transliterate);

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\jsonapi\Functional;
 
 use Drupal\Component\Serialization\Json;
@@ -15,7 +17,6 @@ use Symfony\Component\Routing\Exception\RouteNotFoundException;
  * JSON:API integration test for the "Message" content entity type.
  *
  * @group jsonapi
- * @group #slow
  */
 class MessageTest extends ResourceTestBase {
 
@@ -96,7 +97,7 @@ class MessageTest extends ResourceTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function getPostDocument() {
+  protected function getPostDocument(): array {
     return [
       'data' => [
         'type' => 'contact_message--camelids',
@@ -121,7 +122,7 @@ class MessageTest extends ResourceTestBase {
   /**
    * {@inheritdoc}
    */
-  public function testGetIndividual() {
+  public function testGetIndividual(): void {
     // Contact Message entities are not stored, so they cannot be retrieved.
     $this->expectException(RouteNotFoundException::class);
     $this->expectExceptionMessage('Route "jsonapi.contact_message--camelids.individual" does not exist.');
@@ -132,7 +133,7 @@ class MessageTest extends ResourceTestBase {
   /**
    * {@inheritdoc}
    */
-  public function testPatchIndividual() {
+  protected function doTestPatchIndividual(): void {
     // Contact Message entities are not stored, so they cannot be modified.
     $this->expectException(RouteNotFoundException::class);
     $this->expectExceptionMessage('Route "jsonapi.contact_message--camelids.individual" does not exist.');
@@ -143,7 +144,7 @@ class MessageTest extends ResourceTestBase {
   /**
    * {@inheritdoc}
    */
-  public function testDeleteIndividual() {
+  protected function doTestDeleteIndividual(): void {
     // Contact Message entities are not stored, so they cannot be deleted.
     $this->expectException(RouteNotFoundException::class);
     $this->expectExceptionMessage('Route "jsonapi.contact_message--camelids.individual" does not exist.');
@@ -154,7 +155,7 @@ class MessageTest extends ResourceTestBase {
   /**
    * {@inheritdoc}
    */
-  public function testRelated() {
+  public function testRelated(): void {
     // Contact Message entities are not stored, so they cannot be retrieved.
     $this->expectException(RouteNotFoundException::class);
     $this->expectExceptionMessage('Route "jsonapi.contact_message--camelids.related" does not exist.');
@@ -165,7 +166,7 @@ class MessageTest extends ResourceTestBase {
   /**
    * {@inheritdoc}
    */
-  public function testRelationships() {
+  public function testRelationships(): void {
     // Contact Message entities are not stored, so they cannot be retrieved.
     $this->expectException(RouteNotFoundException::class);
     $this->expectExceptionMessage('Route "jsonapi.contact_message--camelids.relationship.get" does not exist.');
@@ -176,7 +177,7 @@ class MessageTest extends ResourceTestBase {
   /**
    * {@inheritdoc}
    */
-  public function testCollection() {
+  public function testCollection(): void {
     $collection_url = Url::fromRoute('jsonapi.contact_message--camelids.collection.post')->setAbsolute(TRUE);
     $request_options = [];
     $request_options[RequestOptions::HEADERS]['Accept'] = 'application/vnd.api+json';
@@ -192,7 +193,7 @@ class MessageTest extends ResourceTestBase {
   /**
    * {@inheritdoc}
    */
-  public function testRevisions() {
+  public function testRevisions(): void {
     // Contact Message entities are not stored, so they cannot be retrieved.
     $this->expectException(RouteNotFoundException::class);
     $this->expectExceptionMessage('Route "jsonapi.contact_message--camelids.individual" does not exist.');
