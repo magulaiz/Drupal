@@ -12,6 +12,7 @@
         "colinodell/psr-testlogger": "^1.2",
         "composer/composer": "^2.8.1",
         "drupal/coder": "^8.3.10",
+        "drupal/core": "self.version",
         "justinrainbow/json-schema": "^5.2",
         "lullabot/mink-selenium2-driver": "^1.7.3",
         "lullabot/php-webdriver": "^2.0.5",

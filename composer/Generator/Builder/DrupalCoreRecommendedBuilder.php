@@ -52,6 +52,11 @@ class DrupalCoreRecommendedBuilder extends DrupalPackageBuilder {
         $composer['require'][$package['name']] = '~' . $package['version'];
       }
     }
+
+    // Ensure that drupal/core-recommended's version matches drupal/core's version.
+    // This will also ensure it indirectly matches drupal/core-dev's version.
+    $composer['require']['drupal/core'] = 'self.version';
+
     return $composer;
   }
 
