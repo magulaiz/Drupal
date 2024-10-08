@@ -93,6 +93,8 @@ class FileStorage implements PhpStorageInterface {
    *   TRUE if the directory exists or has been created, FALSE otherwise.
    */
   protected function createDirectory($directory, $mode = 0777) {
+    // If running under Windows replace illegal characters with _.
+    $directory = $this->sanitizeFilename($directory);
     // If the directory exists already, there's nothing to do.
     if (is_dir($directory)) {
       return TRUE;

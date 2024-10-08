@@ -63,11 +63,14 @@ class MTimeProtectedFastFileStorage extends FileStorage {
    * {@inheritdoc}
    */
   public function save($name, $data) {
+    // Handle Windows file names.
+    $name = $this->sanitizeFileName($name);
     $this->ensureDirectory($this->directory);
 
     // Write the file out to a temporary location. Prepend with a '.' to keep it
     // hidden from listings and web servers.
-    $temporary_path = $this->tempnam($this->directory, '.');
+    $temporary_path =
+       $this->sanitizeFileName($this->tempnam($this->directory, '.'));
     if (!$temporary_path || !@file_put_contents($temporary_path, $data)) {
       return FALSE;
     }
@@ -82,7 +85,7 @@ class MTimeProtectedFastFileStorage extends FileStorage {
     // compliant systems as well as modern Windows perform the rename operation
     // atomically, i.e. there is no point at which another process attempting to
     // access the new path will find it missing.
-    $directory = $this->getContainingDirectoryFullPath($name);
+    $directory = $this->sanitizeFileName($this->getContainingDirectoryFullPath($name));
     $this->ensureDirectory($directory);
     $full_path = $this->getFullPath($name, $directory, $mtime);
     $result = rename($temporary_path, $full_path);
@@ -217,9 +220,9 @@ class MTimeProtectedFastFileStorage extends FileStorage {
   /**
    * A brute force tempnam implementation supporting streams.
    *
-   * @param $directory
+   * @param string $directory
    *   The directory where the temporary filename will be created.
-   * @param $prefix
+   * @param string $prefix
    *   The prefix of the generated temporary filename.
    *
    * @return string
@@ -230,6 +233,30 @@ class MTimeProtectedFastFileStorage extends FileStorage {
       $path = $directory . '/' . $prefix . Crypt::randomBytesBase64(20);
     } while (file_exists($path));
     return $path;
+  }
+
+  /**
+   * If running under Windows, replace illegal filename characters with _.
+   *
+   * @param string $filename
+   *   The name of the file or directory we want to sanitise.
+   *
+   * @return string
+   *
+   *   Replace illegal characters in filenames if running under Windows.
+   */
+  public function sanitizeFileName($filename) {
+    if (PHP_OS == 'WINNT') {
+      // Define a list of illegal characters in Windows file names.
+      $illegalChars = ['\\', '/', ':', '*', '?', '"', '<', '>', '|'];
+
+      // Replace each illegal character with an underscore.
+      $sanitizedFilename = str_replace($illegalChars, '_', $filename);
+    }
+    else {
+      $sanitizedFilename = $filename;
+    }
+    return $sanitizedFilename;
   }
 
 }
