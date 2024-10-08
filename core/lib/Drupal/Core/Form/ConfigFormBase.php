@@ -19,6 +19,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  * -specific validation logic. To do that, override copyFormValuesToConfig().
  */
 abstract class ConfigFormBase extends FormBase {
+
   use ConfigFormBaseTrait;
 
   /**
