@@ -3,6 +3,7 @@
 namespace Drupal\Core\Language;
 
 use Drupal\Core\StringTranslation\TranslatableMarkup;
+use Drupal\node\Entity\Node;
 
 /**
  * An object containing the information for an interface language.
@@ -173,6 +174,16 @@ class Language implements LanguageInterface {
   protected static function getDefaultLangcode() {
     $language = \Drupal::service('language.default')->get();
     return $language->getId();
+  }
+
+  public function isPseudoLanguage() {
+    $node = Node::create();
+    if (!in_array($node->language()->getId(), [LanguageInterface::LANGCODE_NOT_APPLICABLE, LanguageInterface::LANGCODE_NOT_SPECIFIED], TRUE)) {
+      return FALSE;
+    }
+    else {
+      return TRUE;
+    }
   }
 
 }
