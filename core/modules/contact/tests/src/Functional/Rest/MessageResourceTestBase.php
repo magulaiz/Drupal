@@ -151,7 +151,7 @@ abstract class MessageResourceTestBase extends EntityResourceTestBase {
    *
    * Checks that 403: forbidden returned for all calls.
    */
-  public function testPost() {
+  public function testPost(): void {
     // @todo Remove this in https://www.drupal.org/node/2300677.
     if ($this->entity instanceof ConfigEntityInterface) {
       $this->assertTrue(TRUE, 'POSTing config entities is not yet supported.');
