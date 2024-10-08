@@ -39,8 +39,8 @@
 
 [dir="rtl"] :is(.field-ui__plugin-summary-wrapper .warning) {
   float: right;
-  margin-inline-end: 0;
   margin-inline-start: 0.5em;
+  margin-inline-end: 0;
 }
 
 /* Settings edit. */

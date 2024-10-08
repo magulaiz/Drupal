@@ -28,8 +28,8 @@
 
   @nest [dir="rtl"] & {
     float: right;
-    margin-inline-end: 0;
     margin-inline-start: 0.5em;
+    margin-inline-end: 0;
   }
 }
 
