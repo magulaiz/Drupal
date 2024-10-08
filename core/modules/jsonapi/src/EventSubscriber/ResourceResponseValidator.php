@@ -83,7 +83,7 @@ class ResourceResponseValidator implements EventSubscriberInterface {
     $this->logger = $logger;
     $this->moduleHandler = $module_handler;
     $this->appRoot = $app_root;
-    $this->validateResponseSchema = (isset($jsonapi_config['validate_response']) && $jsonapi_config['validate_response']);
+    $this->validateResponseSchema = (isset($jsonapi_config['validate_schema']) && $jsonapi_config['validate_schema']);
   }
 
   /**

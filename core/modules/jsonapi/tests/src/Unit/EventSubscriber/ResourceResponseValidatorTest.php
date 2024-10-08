@@ -60,7 +60,7 @@ class ResourceResponseValidatorTest extends UnitTestCase {
       $this->prophesize(LoggerInterface::class)->reveal(),
       $module_handler->reveal(),
       '',
-      ['validate_response' => $enable_validation]
+      ['validate_schema' => $enable_validation]
     );
     $subscriber->setValidator();
     $this->subscriber = $subscriber;

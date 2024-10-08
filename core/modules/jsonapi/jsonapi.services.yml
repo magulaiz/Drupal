@@ -1,5 +1,8 @@
 parameters:
   jsonapi.base_path: /jsonapi
+  jsonapi.config:
+    # Validate generate response schema if \JsonSchema\Validator class is available.
+    validate_schema: false
 
 services:
   _defaults:
