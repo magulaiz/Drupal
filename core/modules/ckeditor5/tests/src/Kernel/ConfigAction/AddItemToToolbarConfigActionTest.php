@@ -69,7 +69,8 @@ class AddItemToToolbarConfigActionTest extends KernelTestBase {
    *   [{"item_name": "sourceEditing"}, ["heading", "bold", "italic", "sourceEditing"]]
    *   [{"item_name": "sourceEditing", "position": 1}, ["heading", "sourceEditing", "bold", "italic"]]
    *   [{"item_name": "sourceEditing", "position": 1, "replace": true}, ["heading", "sourceEditing", "italic"]]
-   *   [{"item_name": "bold", "skip_if_exists": true}, ["heading", "bold", "italic"]]
+   *   [{"item_name": "bold"}, ["heading", "bold", "italic"]]
+   *   [{"item_name": "bold", "allow_duplicate": true}, ["heading", "bold", "italic", "bold"]]
    */
   public function testAddItemToToolbar(string|array $action, array $expected_toolbar_items): void {
     $recipe = $this->createRecipe([

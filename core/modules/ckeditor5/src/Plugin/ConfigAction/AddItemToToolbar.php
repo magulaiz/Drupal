@@ -60,14 +60,14 @@ final class AddItemToToolbar implements ConfigActionPluginInterface, ContainerFa
 
     $position = $value['position'] ?? NULL;
 
-    $skip_if_exists = $value['skip_if_exists'] ?? FALSE;
-    assert(is_bool($skip_if_exists));
+    $allow_duplicate = $value['allow_duplicate'] ?? FALSE;
+    assert(is_bool($allow_duplicate));
 
     $editor_settings = $editor->getSettings();
 
-    // If $skip_if_exists is TRUE, don't add a button that's already in the
-    // toolbar.
-    if ($item_name !== '|' && $skip_if_exists && in_array($item_name, $editor_settings['toolbar']['items'], TRUE)) {
+    // If the item is already in the toolbar and we're not allowing duplicate
+    // items, we're done.
+    if (in_array($item_name, $editor_settings['toolbar']['items'], TRUE) && $allow_duplicate === FALSE && $item_name !== '|') {
       return;
     }
 
