@@ -6,12 +6,16 @@ namespace Drupal\file_test\Form;
 
 use Drupal\Core\File\FileExists;
 use Drupal\Core\File\FileSystemInterface;
+use Drupal\Core\Form\FormInterface;
 use Drupal\Core\Form\FormStateInterface;
+
+use Drupal\file_test\Form\FileTestFormTrait;
 
 /**
  * File test form class.
  */
-class FileTestForm extends FileTestFormBase {
+class FileTestForm implements FormInterface {
+use FileTestFormTrait;
 
   /**
    * {@inheritdoc}
@@ -24,7 +28,8 @@ class FileTestForm extends FileTestFormBase {
    * {@inheritdoc}
    */
   public function buildForm(array $form, FormStateInterface $form_state) {
-    $form = parent::buildForm($form, $form_state);
+
+    $form = $this->buildFormTrait($form, $form_state);
 
     $form['file_test_upload'] = [
       '#type' => 'file',
@@ -100,5 +105,4 @@ class FileTestForm extends FileTestFormBase {
       default => FileExists::Rename,
     };
   }
-
 }

@@ -6,15 +6,18 @@ namespace Drupal\file_test\Form;
 
 use Drupal\Core\File\FileExists;
 use Drupal\Core\File\FileSystemInterface;
+use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Messenger\MessengerInterface;
 use Drupal\Core\State\StateInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Drupal\file_test\Form\FileTestFormTrait;
 
 /**
  * File test form class.
  */
-class FileTestSaveUploadFromForm extends FileTestFormBase {
+class FileTestSaveUploadFromForm extends FormBase {
+  use FileTestFormTrait;
 
   /**
    * Stores the state storage service.
@@ -38,7 +41,8 @@ class FileTestSaveUploadFromForm extends FileTestFormBase {
    * @param \Drupal\Core\Messenger\MessengerInterface $messenger
    *   The messenger.
    */
-  public function __construct(StateInterface $state, MessengerInterface $messenger) {
+  public function __construct(StateInterface $state, MessengerInterface $messenger)
+  {
     $this->state = $state;
     $this->messenger = $messenger;
   }
@@ -46,7 +50,8 @@ class FileTestSaveUploadFromForm extends FileTestFormBase {
   /**
    * {@inheritdoc}
    */
-  public static function create(ContainerInterface $container) {
+  public static function create(ContainerInterface $container)
+  {
     return new static(
       $container->get('state'),
       $container->get('messenger')
@@ -56,15 +61,18 @@ class FileTestSaveUploadFromForm extends FileTestFormBase {
   /**
    * {@inheritdoc}
    */
-  public function getFormId() {
+  public function getFormId()
+  {
     return '_file_test_save_upload_from_form';
   }
 
   /**
    * {@inheritdoc}
    */
-  public function buildForm(array $form, FormStateInterface $form_state) {
-    $form = parent::buildForm($form, $form_state);
+  public function buildForm(array $form, FormStateInterface $form_state)
+  {
+
+    $form = $this->buildFormTrait($form, $form_state);
 
     $form['file_test_upload'] = [
       '#type' => 'file',
@@ -84,14 +92,14 @@ class FileTestSaveUploadFromForm extends FileTestFormBase {
   /**
    * {@inheritdoc}
    */
-  public function validateForm(array &$form, FormStateInterface $form_state) {
+  public function validateForm(array &$form, FormStateInterface $form_state)
+  {
     // Process the upload and perform validation. Note: we're using the
     // form value for the $replace parameter.
     if (!$form_state->isValueEmpty('file_subdir')) {
       $destination = 'temporary://' . $form_state->getValue('file_subdir');
       \Drupal::service('file_system')->prepareDirectory($destination, FileSystemInterface::CREATE_DIRECTORY);
-    }
-    else {
+    } else {
       $destination = FALSE;
     }
 
@@ -109,11 +117,9 @@ class FileTestSaveUploadFromForm extends FileTestFormBase {
     $allow = $form_state->getValue('allow_all_extensions');
     if ($allow === 'empty_array') {
       $validators['FileExtension'] = [];
-    }
-    elseif ($allow === 'empty_string') {
+    } elseif ($allow === 'empty_string') {
       $validators['FileExtension'] = ['extensions' => ''];
-    }
-    elseif (!$form_state->isValueEmpty('extensions')) {
+    } elseif (!$form_state->isValueEmpty('extensions')) {
       $validators['FileExtension'] = ['extensions' => $form_state->getValue('extensions')];
     }
 
@@ -137,8 +143,7 @@ class FileTestSaveUploadFromForm extends FileTestFormBase {
       $this->messenger->addStatus($this->t('File name is @filename.', ['@filename' => $file->getFilename()]));
       $this->messenger->addStatus($this->t('File MIME type is @mimetype.', ['@mimetype' => $file->getMimeType()]));
       $this->messenger->addStatus($this->t('You WIN!'));
-    }
-    elseif ($file === FALSE) {
+    } elseif ($file === FALSE) {
       $this->messenger->addError($this->t('Epic upload FAIL!'));
     }
   }
@@ -151,12 +156,12 @@ class FileTestSaveUploadFromForm extends FileTestFormBase {
   /**
    * Get a FileExists enum from its name.
    */
-  protected static function fileExistsFromName(string $name): FileExists {
+  protected static function fileExistsFromName(string $name): FileExists
+  {
     return match ($name) {
       FileExists::Replace->name => FileExists::Replace,
       FileExists::Error->name => FileExists::Error,
       default => FileExists::Rename,
     };
   }
-
 }
