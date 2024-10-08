@@ -47,30 +47,40 @@ final class AddItemToToolbar implements ConfigActionPluginInterface, ContainerFa
       throw new ConfigActionException(sprintf('The %s config action only works with editors that use CKEditor 5.', $this->pluginId));
     }
 
-    $editor_settings = $editor->getSettings();
     if (is_string($value)) {
-      $editor_settings['toolbar']['items'][] = $item_name = $value;
+      $value = ['item_name' => $value];
+    }
+    assert(is_array($value));
+
+    $item_name = $value['item_name'];
+    assert(is_string($item_name));
+
+    $replace = $value['replace'] ?? FALSE;
+    assert(is_bool($replace));
+
+    $position = $value['position'] ?? NULL;
+
+    $skip_if_exists = $value['skip_if_exists'] ?? FALSE;
+    assert(is_bool($skip_if_exists));
+
+    $editor_settings = $editor->getSettings();
+
+    // If $skip_if_exists is TRUE, don't add a button that's already in the
+    // toolbar.
+    if ($item_name !== '|' && $skip_if_exists && in_array($item_name, $editor_settings['toolbar']['items'], TRUE)) {
+      return;
+    }
+
+    if (is_int($position)) {
+      // If we want to replace the item at this position, then `replace`
+      // should be true. This would be useful if, for example, we wanted to
+      // replace the Image button with the Media Library.
+      array_splice($editor_settings['toolbar']['items'], $position, $replace ? 1 : 0, $item_name);
     }
     else {
-      assert(is_array($value));
-
-      $item_name = $value['item_name'];
-      assert(is_string($item_name));
-
-      $replace = $value['replace'] ?? FALSE;
-      assert(is_bool($replace));
-
-      $position = $value['position'] ?? NULL;
-      if (is_int($position)) {
-        // If we want to replace the item at this position, then `replace`
-        // should be true. This would be useful if, for example, we wanted to
-        // replace the Image button with the Media Library.
-        array_splice($editor_settings['toolbar']['items'], $position, $replace ? 1 : 0, $item_name);
-      }
-      else {
-        $editor_settings['toolbar']['items'][] = $item_name;
-      }
+      $editor_settings['toolbar']['items'][] = $item_name;
     }
+
     // If we're just adding a vertical separator, there's nothing else we need
     // to do at this point.
     if ($item_name === '|') {
