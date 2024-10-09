@@ -1,9 +1,6 @@
 langcode: en
 status: true
 dependencies:
-  enforced:
-    config:
-      - workflows.workflow.editorial
   config:
     - core.entity_view_mode.node.full
     - field.field.node.article.field_body
@@ -11,6 +8,7 @@ dependencies:
     - field.field.node.article.field_tags
     - field.field.node.article.layout_builder__layout
     - node.type.article
+    - workflows.workflow.editorial
   module:
     - layout_builder
     - layout_discovery

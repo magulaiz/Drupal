@@ -138,6 +138,10 @@ class ExtraFieldBlockDeriver extends DeriverBase implements ContainerDeriverInte
             'entity' => $context_definition,
           ];
 
+          if (isset($extra_field['config_dependencies'])) {
+            $derivative['config_dependencies'] = $extra_field['config_dependencies'];
+          }
+
           $derivative_id = $entity_type_id . PluginBase::DERIVATIVE_SEPARATOR . $bundle_id . PluginBase::DERIVATIVE_SEPARATOR . $extra_field_id;
           $this->derivatives[$derivative_id] = $derivative;
         }
