@@ -259,12 +259,12 @@ class LinkWidget extends WidgetBase {
       ];
     }
 
-    $title_default_value = isset($default_values[$delta]['title']) ? $default_values[$delta]['title'] : NULL;
+    $title_default_value = $default_values[$delta]['title'] ?? NULL;
     $element['title'] = [
       '#type' => 'textfield',
       '#title' => $this->t('Link text'),
       '#placeholder' => $this->getSetting('placeholder_title'),
-      '#default_value' => isset($items[$delta]->title) ? $items[$delta]->title : $title_default_value,
+      '#default_value' => $items[$delta]->title ?? $title_default_value,
       '#maxlength' => 255,
       '#access' => $this->getFieldSetting('title') != DRUPAL_DISABLED,
       '#required' => $this->getFieldSetting('title') === DRUPAL_REQUIRED && $element['#required'],
@@ -514,7 +514,7 @@ class LinkWidget extends WidgetBase {
         // Put delta mapping in $form_state, so that flagErrors() can use it.
         $field_state = static::getWidgetState($form['#parents'], $field_name, $form_state);
         foreach ($items as $delta => $item) {
-          $field_state['original_deltas'][$delta] = isset($item->_original_delta) ? $item->_original_delta : $delta;
+          $field_state['original_deltas'][$delta] = $item->_original_delta ?? $delta;
           unset($item->_original_delta, $item->_weight);
         }
         static::setWidgetState($form['#parents'], $field_name, $form_state, $field_state);
