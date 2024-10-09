@@ -119,7 +119,6 @@ class MessageTest extends ResourceTestBase {
     return parent::getExpectedUnauthorizedAccessMessage($method);
   }
 
-
   /**
    * {@inheritdoc}
    */
@@ -192,15 +191,6 @@ class MessageTest extends ResourceTestBase {
     $request_options[RequestOptions::HEADERS]['Content-Type'] = 'application/vnd.api+json';
 
     // 201 for well-formed request.
-    $response = $this->request('POST', $url, $request_options);
-    $this->assertResourceResponse(403, FALSE, $response);
-
-    // 201 for well-formed request that creates another entity.
-    // If the entity is stored, delete the first created entity (in case there
-    // is a uniqueness constraint).
-    if (get_class($this->entityStorage) !== ContentEntityNullStorage::class) {
-      $this->entityStorage->load(static::$firstCreatedEntityId)->delete();
-    }
     $response = $this->request('POST', $url, $request_options);
     $this->assertResourceResponse(403, FALSE, $response);
   }
