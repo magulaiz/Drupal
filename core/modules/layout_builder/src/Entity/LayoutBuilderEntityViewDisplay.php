@@ -38,11 +38,11 @@ class LayoutBuilderEntityViewDisplay extends BaseEntityViewDisplay implements La
   protected $entityFieldManager;
 
   /**
-   * A list of entities being created.
+   * A list of entities being created with layout builder enabled.
    *
    * @var static[]
    */
-  protected static array $creating = [];
+  protected static array $creatingLayoutBuilderEnabled = [];
 
   /**
    * {@inheritdoc}
@@ -147,7 +147,7 @@ class LayoutBuilderEntityViewDisplay extends BaseEntityViewDisplay implements La
     // If we're saving this entity and Layout Builder is enabled store the ID.
     $set_enabled = $this->isLayoutBuilderEnabled();
     if ($set_enabled && $this->isNew()) {
-      static::$creating[$this->id()] = $this;
+      static::$creatingLayoutBuilderEnabled[$this->id()] = $this;
     }
 
     parent::preSave($storage);
@@ -172,12 +172,12 @@ class LayoutBuilderEntityViewDisplay extends BaseEntityViewDisplay implements La
   }
 
   /**
-   * Gets the entities currently being created.
+   * Gets layout builder enabled entities currently being created.
    *
    * @return static[]
    */
   public static function getEntitiesBeingCreated(): array {
-    return static::$creating;
+    return static::$creatingLayoutBuilderEnabled;
   }
 
   /**
@@ -200,7 +200,7 @@ class LayoutBuilderEntityViewDisplay extends BaseEntityViewDisplay implements La
     parent::postSave($storage, $update);
 
     // Remove the ID from the creating list if present.
-    unset(static::$creating[$this->id()]);
+    unset(static::$creatingLayoutBuilderEnabled[$this->id()]);
   }
 
   /**
