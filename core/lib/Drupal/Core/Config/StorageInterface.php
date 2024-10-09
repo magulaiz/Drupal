@@ -52,6 +52,10 @@ interface StorageInterface {
    * @return array
    *   A list of the configuration data stored for the configuration object name
    *   that could be loaded for the passed list of names.
+   *
+   * @throws \InvalidArgumentException
+   *   If any value in the $names array contains non-ASCII characters throw an
+   *   understandable exception.
    */
   public function readMultiple(array $names);
 
