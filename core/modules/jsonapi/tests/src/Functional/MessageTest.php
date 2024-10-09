@@ -119,6 +119,92 @@ class MessageTest extends ResourceTestBase {
     return parent::getExpectedUnauthorizedAccessMessage($method);
   }
 
+
+  /**
+   * {@inheritdoc}
+   */
+  protected function doTestPostIndividual(): void {
+
+    // Try with all of the following request bodies.
+    $not_parseable_request_body = '!{>}<';
+    $parseable_valid_request_body = Json::encode($this->getPostDocument());
+    $parseable_invalid_request_body_missing_type = Json::encode($this->removeResourceTypeFromDocument($this->getPostDocument()));
+
+    // The URL and Guzzle request options that will be used in this test. The
+    // request options will be modified/expanded throughout this test:
+    // - to first test all mistakes a developer might make, and assert that the
+    //   error responses provide a good DX
+    // - to eventually result in a well-formed request that succeeds.
+    $url = Url::fromRoute(sprintf('jsonapi.%s.collection.post', static::$resourceTypeName));
+    $request_options = [];
+    $request_options[RequestOptions::HEADERS]['Accept'] = 'application/vnd.api+json';
+    $request_options = NestedArray::mergeDeep($request_options, $this->getAuthenticationRequestOptions());
+
+    // DX: 405 when read-only mode is enabled.
+    $response = $this->request('POST', $url, $request_options);
+    $this->assertResourceErrorResponse(405, sprintf("JSON:API is configured to accept only read operations. Site administrators can configure this at %s.", Url::fromUri('base:/admin/config/services/jsonapi')->setAbsolute()->toString(TRUE)->getGeneratedUrl()), $url, $response);
+    if ($this->resourceType->isLocatable()) {
+      $this->assertSame(['GET'], $response->getHeader('Allow'));
+    }
+    else {
+      $this->assertSame([''], $response->getHeader('Allow'));
+    }
+
+    $this->config('jsonapi.settings')->set('read_only', FALSE)->save(TRUE);
+
+    // DX: 415 when no Content-Type request header.
+    $response = $this->request('POST', $url, $request_options);
+    $this->assertSame(415, $response->getStatusCode());
+
+    $request_options[RequestOptions::HEADERS]['Content-Type'] = 'application/vnd.api+json';
+
+    // DX: 403 when unauthorized.
+    $response = $this->request('POST', $url, $request_options);
+    $reason = $this->getExpectedUnauthorizedAccessMessage('POST');
+    $this->assertResourceErrorResponse(403, (string) $reason, $url, $response);
+
+    $this->setUpAuthorization('POST');
+
+    // DX: 400 when no request body.
+    $response = $this->request('POST', $url, $request_options);
+    $this->assertResourceErrorResponse(403, 'Empty request body.', $url, $response, FALSE);
+
+    $request_options[RequestOptions::BODY] = $not_parseable_request_body;
+
+    // DX: 400 when un-parseable request body.
+    $response = $this->request('POST', $url, $request_options);
+    $this->assertResourceErrorResponse(403, 'Syntax error', $url, $response, FALSE);
+
+    $request_options[RequestOptions::BODY] = $parseable_invalid_request_body_missing_type;
+
+    // DX: 400 when invalid JSON:API request body.
+    $response = $this->request('POST', $url, $request_options);
+    $this->assertResourceErrorResponse(403, 'Resource object must include a "type".', $url, $response, FALSE);
+
+    $request_options[RequestOptions::BODY] = $parseable_valid_request_body;
+
+    $request_options[RequestOptions::HEADERS]['Content-Type'] = 'text/xml';
+
+    // DX: 415 when request body in existing but not allowed format.
+    $response = $this->request('POST', $url, $request_options);
+    $this->assertResourceErrorResponse(403, 'No route found that matches "Content-Type: text/xml"', $url, $response);
+
+    $request_options[RequestOptions::HEADERS]['Content-Type'] = 'application/vnd.api+json';
+
+    // 201 for well-formed request.
+    $response = $this->request('POST', $url, $request_options);
+    $this->assertResourceResponse(403, FALSE, $response);
+
+    // 201 for well-formed request that creates another entity.
+    // If the entity is stored, delete the first created entity (in case there
+    // is a uniqueness constraint).
+    if (get_class($this->entityStorage) !== ContentEntityNullStorage::class) {
+      $this->entityStorage->load(static::$firstCreatedEntityId)->delete();
+    }
+    $response = $this->request('POST', $url, $request_options);
+    $this->assertResourceResponse(403, FALSE, $response);
+  }
+
   /**
    * {@inheritdoc}
    */
