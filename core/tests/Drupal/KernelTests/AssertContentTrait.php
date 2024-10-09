@@ -766,7 +766,7 @@ trait AssertContentTrait {
    *   \Drupal\Component\Render\FormattableMarkup unless you cast the object to
    *   a string. If left blank, a default message will be displayed.
    */
-  protected function assertNoTitle($title, $message = ''): bool {
+  protected function assertNoTitle($title, $message = '') {
     @trigger_error(__METHOD__ . '() is deprecated in drupal:11.1.0 and is removed from drupal:12.0.0. There is no replacement. See https://www.drupal.org/node/3476110', E_USER_DEPRECATED);
     $actual = (string) current($this->xpath('//title'));
     if (!$message) {
