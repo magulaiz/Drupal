@@ -12,6 +12,7 @@ use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Plugin\Context\EntityContextDefinition;
 use Drupal\Core\Plugin\Discovery\ContainerDeriverInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
+use Drupal\layout_builder\Entity\LayoutBuilderEntityViewDisplay;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Drupal\Core\Entity\EntityTypeRepositoryInterface;
 
@@ -156,6 +157,7 @@ class ExtraFieldBlockDeriver extends DeriverBase implements ContainerDeriverInte
     $displays = $this->entityTypeManager->getStorage('entity_view_display')->loadByProperties([
       'third_party_settings.layout_builder.enabled' => TRUE,
     ]);
+    $displays = array_merge($displays, LayoutBuilderEntityViewDisplay::getEntitiesBeingCreated());
     $layout_bundles = [];
     foreach ($displays as $display) {
       $bundle = $display->getTargetBundle();

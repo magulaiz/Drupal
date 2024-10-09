@@ -1,6 +1,9 @@
 langcode: en
 status: true
 dependencies:
+  enforced:
+    config:
+      - workflows.workflow.editorial
   config:
     - core.entity_view_mode.node.full
     - field.field.node.page.field_body
