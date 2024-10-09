@@ -64,9 +64,12 @@ class DatabaseStorage implements StorageInterface {
    * {@inheritdoc}
    */
   public function exists($name) {
-
-    if (empty($name) || !mb_check_encoding($name, 'ASCII')) {
+    if (empty($name)) {
       return FALSE;
+    }
+
+    if (!mb_check_encoding($name, 'ASCII')) {
+      throw new \InvalidArgumentException('The existence of the configuration object in the database cannot be checked because its name contains invalid (non-ASCII) characters.');
     }
 
     try {
@@ -90,8 +93,12 @@ class DatabaseStorage implements StorageInterface {
    */
   public function read($name) {
     $data = FALSE;
-    if (empty($name) || !mb_check_encoding($name, 'ASCII')) {
+    if (empty($name)) {
       return $data;
+    }
+
+    if (!mb_check_encoding($name, 'ASCII')) {
+      throw new \InvalidArgumentException('The name of the configuration object cannot be read because it contains invalid (non-ASCII) characters.');
     }
 
     try {
