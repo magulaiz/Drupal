@@ -66,14 +66,19 @@ function config_help($route_name, RouteMatchInterface $route_match) {
 function config_file_download($uri) {
   $scheme = StreamWrapperManager::getScheme($uri);
   $target = StreamWrapperManager::getTarget($uri);
-  if ($scheme == 'temporary' && $target == 'config.tar.gz') {
+  if ($scheme == 'temporary') {
     if (\Drupal::currentUser()->hasPermission('export configuration')) {
-      $request = \Drupal::request();
-      $date = DateTime::createFromFormat('U', $request->server->get('REQUEST_TIME'));
-      $date_string = $date->format('Y-m-d-H-i');
-      $hostname = str_replace('.', '-', $request->getHttpHost());
-      $filename = 'config-' . $hostname . '-' . $date_string . '.tar.gz';
-      $disposition = 'attachment; filename="' . $filename . '"';
+      if ($target == 'config.tar.gz') {
+        $request = \Drupal::request();
+        $date = DateTime::createFromFormat('U', $request->server->get('REQUEST_TIME'));
+        $date_string = $date->format('Y-m-d-H-i');
+        $hostname = str_replace('.', '-', $request->getHttpHost());
+        $filename = 'config-' . $hostname . '-' . $date_string . '.tar.gz';
+        $disposition = 'attachment; filename="' . $filename . '"';
+      }
+      else {
+        $disposition = 'attachment; filename="' . $target . '"';
+      }
       return [
         'Content-disposition' => $disposition,
       ];

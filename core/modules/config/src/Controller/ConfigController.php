@@ -128,6 +128,17 @@ class ConfigController implements ContainerInjectionInterface {
   }
 
   /**
+   * Downloads a single configuration file.
+   */
+  public function downloadSingleExport($filename) {
+    if (!empty($filename)) {
+      $request = new Request(['file' => $filename]);
+      $result = $this->fileDownloadController->download($request, 'temporary');
+      return $result;
+    }
+  }
+
+  /**
    * Downloads a tarball of the site configuration.
    */
   public function downloadExport() {

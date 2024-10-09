@@ -271,6 +271,27 @@ EOD;
     $fallback_date = \Drupal::entityTypeManager()->getStorage('date_format')->load('fallback');
     $yaml_text = $this->assertSession()->fieldExists('export')->getValue();
     $this->assertEquals(Yaml::decode($yaml_text), $fallback_date->toArray(), 'The fallback date format config entity export code is displayed.');
+
+    // Verify the export page with download submit button is available.
+    $this->drupalGet('admin/config/development/configuration/single/export');
+    $this->assertSession()->buttonExists('Download');
+
+    // Download the configuration.
+    $edit = [
+      'config_type' => 'system.simple',
+      'config_name' => 'system.site',
+    ];
+    $this->submitForm($edit, 'Download');
+    $this->assertSession()->statusCodeEquals(200);
+    $fileContents = $this->getSession()->getPage()->getContent();
+    $filePath = \Drupal::service('file_system')->getTempDirectory() . '/' . $this->randomMachineName();
+    file_put_contents($filePath, $fileContents);
+
+    // Assert the file exists.
+    $this->assertFileExists($filePath, 'The file exists in the expected directory.');
+    $fileContents = file_get_contents($filePath);
+    // Check if the file contents are not empty.
+    $this->assertNotEmpty($fileContents, 'File contents are not empty');
   }
 
 }

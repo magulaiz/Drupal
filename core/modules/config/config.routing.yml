@@ -29,6 +29,17 @@ config.export_download:
   requirements:
     _permission: 'export configuration'
 
+config.export_single_download:
+  path: '/admin/config/development/configuration/single/export-download/{filename}'
+  defaults:
+    _controller: '\Drupal\config\Controller\ConfigController::downloadSingleExport'
+  options:
+    parameters:
+      filename:
+        type: string
+  requirements:
+    _permission: 'export configuration'
+
 config.export_full:
   path: '/admin/config/development/configuration/full/export'
   defaults:
