@@ -470,7 +470,7 @@ class LinkWidget extends WidgetBase {
    * when in the default value form. This makes it possible to save a default
    * value for "Link text" without requiring a default value for "URL".
    */
-  public function extractFormValues(FieldItemListInterface $items, array $form, FormStateInterface $form_state) {
+  public function extractFormValues(FieldItemListInterface $items, array $form, FormStateInterface $form_state): void {
     if (!$this->isDefaultValueWidget($form_state)) {
       parent::extractFormValues($items, $form, $form_state);
     }

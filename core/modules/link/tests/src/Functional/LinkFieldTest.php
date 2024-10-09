@@ -1138,7 +1138,7 @@ class LinkFieldTest extends BrowserTestBase {
   /**
    * Test default_value attribute for link field.
    */
-  public function testDefaultFieldValues() {
+  public function testDefaultFieldValues(): void {
     $field_name = mb_strtolower($this->randomMachineName());
     // Create a field with settings to validate.
     $this->fieldStorage = FieldStorageConfig::create([
