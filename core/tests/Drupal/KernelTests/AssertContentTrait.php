@@ -728,8 +728,11 @@ trait AssertContentTrait {
    *   message text, or use sprintf() if necessary. Avoid the use of
    *   \Drupal\Component\Render\FormattableMarkup unless you cast the object to
    *   a string. If left blank, a default message will be displayed.
+   *
+   * @return bool
+   *   TRUE on pass.
    */
-  protected function assertNoTitle($title, $message = ''): void {
+  protected function assertNoTitle($title, $message = ''): bool {
     $actual = (string) current($this->xpath('//title'));
     if (!$message) {
       $message = new FormattableMarkup('Page title @actual is not equal to @unexpected.', [
@@ -738,6 +741,7 @@ trait AssertContentTrait {
       ]);
     }
     $this->assertNotEquals($title, $actual, $message);
+    return TRUE;
   }
 
   /**
