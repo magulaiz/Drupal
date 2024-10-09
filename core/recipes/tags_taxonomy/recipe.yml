@@ -3,9 +3,7 @@ description: 'Provides "Tags" taxonomy vocabulary and related configuration. Use
 type: 'Taxonomy'
 install:
   - taxonomy
+  - views
 config:
   import:
-    taxonomy:
-      - core.entity_view_mode.taxonomy_term.full
-      - system.action.taxonomy_term_publish_action
-      - system.action.taxonomy_term_unpublish_action
+    taxonomy: '*'
