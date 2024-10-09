@@ -56,7 +56,7 @@ trait AssertContentTrait {
   /**
    * Sets the raw content (e.g. HTML).
    *
-   * @param string $content
+   * @param string|\Stringable $content
    *   The raw content to set.
    */
   protected function setRawContent($content) {
@@ -604,7 +604,7 @@ trait AssertContentTrait {
    *
    * @see https://www.drupal.org/node/3476110
    */
-  protected function assertNoUniqueText($text, $message = '') {
+  protected function assertNoUniqueText($text, $message = ''): bool {
     @trigger_error(__METHOD__ . '() is deprecated in drupal:11.1.0 and is removed from drupal:12.0.0. There is no replacement. See https://www.drupal.org/node/3476110', E_USER_DEPRECATED);
     return $this->assertUniqueTextHelper($text, $message, NULL, FALSE);
   }
@@ -766,7 +766,7 @@ trait AssertContentTrait {
    *   \Drupal\Component\Render\FormattableMarkup unless you cast the object to
    *   a string. If left blank, a default message will be displayed.
    */
-  protected function assertNoTitle($title, $message = '') {
+  protected function assertNoTitle($title, $message = ''): bool {
     @trigger_error(__METHOD__ . '() is deprecated in drupal:11.1.0 and is removed from drupal:12.0.0. There is no replacement. See https://www.drupal.org/node/3476110', E_USER_DEPRECATED);
     $actual = (string) current($this->xpath('//title'));
     if (!$message) {
@@ -885,7 +885,7 @@ trait AssertContentTrait {
    * @return bool
    *   TRUE on pass, FALSE on fail.
    */
-  protected function assertFieldByXPath($xpath, $value = NULL, $message = '') {
+  protected function assertFieldByXPath($xpath, $value = NULL, $message = ''): bool {
     $fields = $this->xpath($xpath);
 
     return $this->assertFieldsByValue($fields, $value, $message);
@@ -977,7 +977,7 @@ trait AssertContentTrait {
    * @return bool
    *   TRUE on pass, FALSE on fail.
    */
-  protected function assertFieldByName($name, $value = NULL, $message = NULL) {
+  protected function assertFieldByName($name, $value = NULL, $message = NULL): bool {
     if (!isset($message)) {
       if (!isset($value)) {
         $message = new FormattableMarkup('Found field with name @name', [
@@ -1019,7 +1019,7 @@ trait AssertContentTrait {
    *
    * @see https://www.drupal.org/node/3476110
    */
-  protected function assertNoFieldByName($name, $value = '', $message = '') {
+  protected function assertNoFieldByName($name, $value = '', $message = ''): bool {
     @trigger_error(__METHOD__ . '() is deprecated in drupal:11.1.0 and is removed from drupal:12.0.0. There is no replacement. See https://www.drupal.org/node/3476110', E_USER_DEPRECATED);
     return $this->assertNoFieldByXPath($this->constructFieldXpath('name', $name), $value, $message ? $message : new FormattableMarkup('Did not find field by name @name', ['@name' => $name]));
   }
@@ -1049,7 +1049,7 @@ trait AssertContentTrait {
    *
    * @see https://www.drupal.org/node/3476110
    */
-  protected function assertFieldById($id, $value = '', $message = '') {
+  protected function assertFieldById($id, $value = '', $message = ''): bool {
     @trigger_error(__METHOD__ . '() is deprecated in drupal:11.1.0 and is removed from drupal:12.0.0. There is no replacement. See https://www.drupal.org/node/3476110', E_USER_DEPRECATED);
     // Cast MarkupInterface objects to string.
     if (isset($value)) {
@@ -1084,7 +1084,7 @@ trait AssertContentTrait {
    *
    * @see https://www.drupal.org/node/3476110
    */
-  protected function assertNoFieldById($id, $value = '', $message = '') {
+  protected function assertNoFieldById($id, $value = '', $message = ''): bool {
     @trigger_error(__METHOD__ . '() is deprecated in drupal:11.1.0 and is removed from drupal:12.0.0. There is no replacement. See https://www.drupal.org/node/3476110', E_USER_DEPRECATED);
     return $this->assertNoFieldByXPath($this->constructFieldXpath('id', $id), $value, $message ? $message : new FormattableMarkup('Did not find field by id @id', ['@id' => $id]));
   }
@@ -1352,7 +1352,7 @@ trait AssertContentTrait {
    * @return bool
    *   TRUE on pass, FALSE on fail.
    */
-  protected function assertField($field, $message = '') {
+  protected function assertField($field, $message = ''): bool {
     return $this->assertFieldByXPath($this->constructFieldXpath('name', $field) . '|' . $this->constructFieldXpath('id', $field), NULL, $message);
   }
 
@@ -1376,7 +1376,7 @@ trait AssertContentTrait {
    *
    * @see https://www.drupal.org/node/3476110
    */
-  protected function assertNoField($field, $message = '') {
+  protected function assertNoField($field, $message = ''): bool {
     @trigger_error(__METHOD__ . '() is deprecated in drupal:11.1.0 and is removed from drupal:12.0.0. There is no replacement. See https://www.drupal.org/node/3476110', E_USER_DEPRECATED);
     return $this->assertNoFieldByXPath($this->constructFieldXpath('name', $field) . '|' . $this->constructFieldXpath('id', $field), NULL, $message);
   }
