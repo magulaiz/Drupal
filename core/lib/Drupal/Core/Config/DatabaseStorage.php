@@ -63,7 +63,7 @@ class DatabaseStorage implements StorageInterface {
   /**
    * {@inheritdoc}
    */
-  public function exists(string $name) {
+  public function exists($name) {
 
     if (empty($name) || !mb_check_encoding($name, 'ASCII')) {
       return FALSE;
@@ -88,7 +88,7 @@ class DatabaseStorage implements StorageInterface {
   /**
    * {@inheritdoc}
    */
-  public function read(string $name) {
+  public function read($name) {
     $data = FALSE;
     if (empty($name) || !mb_check_encoding($name, 'ASCII')) {
       return $data;
