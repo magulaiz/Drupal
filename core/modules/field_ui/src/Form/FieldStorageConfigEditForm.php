@@ -138,7 +138,7 @@ class FieldStorageConfigEditForm extends EntityForm {
       '#title' => $this->t('Allowed number of values'),
       '#attributes' => [
         'class' => [
-          'container-inline',
+          'form--inline',
           'fieldgroup',
           'form-composite',
         ],

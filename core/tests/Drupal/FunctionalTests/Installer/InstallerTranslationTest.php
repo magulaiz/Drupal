@@ -109,7 +109,7 @@ class InstallerTranslationTest extends InstallerTestBase {
     $this->drupalGet('admin/config/development/performance');
     $this->submitForm($edit, 'Save configuration');
     $this->drupalGet('<front>');
-    $this->assertSession()->responseContains('my_theme/css/my-container-inline.css');
+    $this->assertSession()->responseContains('my_theme/css/my-form--inline.css');
 
     // Verify the strings from the translation files were imported.
     $test_samples = ['Save and continue', 'Anonymous'];

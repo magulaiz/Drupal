@@ -61,7 +61,7 @@ class MessageForm extends FormBase {
     ];
     $form['filters']['actions'] = [
       '#type' => 'actions',
-      '#attributes' => ['class' => ['container-inline']],
+      '#attributes' => ['class' => ['form--inline']],
     ];
     $form['filters']['actions']['submit'] = [
       '#type' => 'submit',

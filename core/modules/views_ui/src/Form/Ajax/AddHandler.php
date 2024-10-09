@@ -171,7 +171,7 @@ class AddHandler extends ViewsFormBase {
       '#markup' => '<span class="views-ui-view-title">' . $this->t('Selected:') . '</span> ' . '<div class="views-selected-options"></div>',
       '#theme_wrappers' => ['form_element', 'views_ui_container'],
       '#attributes' => [
-        'class' => ['container-inline', 'views-add-form-selected', 'views-offset-bottom'],
+        'class' => ['form--inline', 'views-add-form-selected', 'views-offset-bottom'],
         'data-drupal-views-offset' => 'bottom',
       ],
     ];

@@ -670,7 +670,7 @@ function node_page_top(array &$page_top) {
     $page_top['node_preview'] = [
       '#type' => 'container',
       '#attributes' => [
-        'class' => ['node-preview-container', 'container-inline'],
+        'class' => ['node-preview-container', 'form--inline'],
       ],
       'view_mode' => \Drupal::formBuilder()->getForm(
         NodePreviewForm::class,

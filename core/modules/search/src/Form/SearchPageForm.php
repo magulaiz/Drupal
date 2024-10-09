@@ -47,7 +47,7 @@ class SearchPageForm extends FormBase implements WorkspaceSafeFormInterface {
     $form['basic'] = [
       '#type' => 'container',
       '#attributes' => [
-        'class' => ['container-inline'],
+        'class' => ['form--inline'],
       ],
     ];
     $form['basic']['keys'] = [

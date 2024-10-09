@@ -5,7 +5,7 @@ base:
     component:
       css/components/align.module.css: { weight: -10 }
       css/components/fieldgroup.module.css: { weight: -10 }
-      css/components/container-inline.module.css: { weight: -10 }
+      css/components/form--inline.module.css: { weight: -10 }
       css/components/clearfix.module.css: { weight: -10 }
       css/components/details.module.css: { weight: -10 }
       css/components/hidden.module.css: { weight: -10 }

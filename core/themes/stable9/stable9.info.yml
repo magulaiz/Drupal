@@ -221,7 +221,7 @@ libraries-override:
       component:
         css/components/align.module.css: css/system/components/align.module.css
         css/components/fieldgroup.module.css: css/system/components/fieldgroup.module.css
-        css/components/container-inline.module.css: css/system/components/container-inline.module.css
+        css/components/form--inline.module.css: css/system/components/form--inline.module.css
         css/components/clearfix.module.css: css/system/components/clearfix.module.css
         css/components/details.module.css: css/system/components/details.module.css
         css/components/hidden.module.css: css/system/components/hidden.module.css

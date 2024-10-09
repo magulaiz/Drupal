@@ -69,7 +69,7 @@ class NestedConfigTargetForm extends TreeConfigTargetForm {
       '#type' => 'textfield',
       '#title' => 'I could not live without',
       '#placeholder' => 'vegetables',
-      '#wrapper_attributes' => ['class' => ['container-inline']],
+      '#wrapper_attributes' => ['class' => ['form--inline']],
       '#config_target' => new ConfigTarget(
         'form_test.object',
         'could_not_live_without',

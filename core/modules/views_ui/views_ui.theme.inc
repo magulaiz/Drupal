@@ -225,7 +225,7 @@ function template_preprocess_views_ui_rearrange_filter_form(&$variables) {
       $row = [];
       // Add a cell to the first row, containing the group operator.
       $row[] = [
-        'class' => ['group', 'group-operator', 'container-inline'],
+        'class' => ['group', 'group-operator', 'form--inline'],
         'data' => $form['filter_groups']['groups'][$group_id],
         'rowspan' => max([2, count($contents) + 1]),
       ];

@@ -161,7 +161,7 @@ class ModerationStateWidget extends OptionsSelectWidget {
         '#markup' => $default->label(),
         '#access' => !$entity->isNew(),
         '#wrapper_attributes' => [
-          'class' => ['container-inline'],
+          'class' => ['form--inline'],
         ],
       ],
       'state' => [
@@ -172,7 +172,7 @@ class ModerationStateWidget extends OptionsSelectWidget {
         '#default_value' => $default_value,
         '#access' => !empty($transition_labels),
         '#wrapper_attributes' => [
-          'class' => ['container-inline'],
+          'class' => ['form--inline'],
         ],
       ],
     ];
