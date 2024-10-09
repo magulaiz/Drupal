@@ -439,7 +439,7 @@ function system_theme_settings($form, &$form_state, $key = '') {
     '#description' => t('Enable or disable the display of certain page elements.'),
   );
   foreach ($toggles as $name => $title) {
-    if ((!$key) || in_array($name, $features ?? [])) {
+    if ((!$key) || in_array($name, $features)) {
       $form['theme_settings']['toggle_' . $name] = array('#type' => 'checkbox', '#title' => $title, '#default_value' => theme_get_setting('toggle_' . $name, $key));
       // Disable checkboxes for features not supported in the current configuration.
       if (isset($disabled['toggle_' . $name])) {
@@ -455,7 +455,7 @@ function system_theme_settings($form, &$form_state, $key = '') {
   }
 
   // Logo settings
-  if ((!$key) || in_array('logo', $features ?? [])) {
+  if ((!$key) || in_array('logo', $features)) {
     $form['logo'] = array(
       '#type' => 'fieldset',
       '#title' => t('Logo image settings'),
@@ -492,7 +492,7 @@ function system_theme_settings($form, &$form_state, $key = '') {
     );
   }
 
-  if ((!$key) || in_array('favicon', $features ?? [])) {
+  if ((!$key) || in_array('favicon', $features)) {
     $form['favicon'] = array(
       '#type' => 'fieldset',
       '#title' => t('Shortcut icon settings'),
