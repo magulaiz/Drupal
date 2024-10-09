@@ -204,7 +204,7 @@ class MessageTest extends ResourceTestBase {
   /**
    * Tests POSTing an individual resource, plus edge cases to ensure good DX.
    */
-  public function testPostIndividual() {
+  public function testPostIndividual(): void {
     // @todo Remove this in https://www.drupal.org/node/2300677.
     if ($this->entity instanceof ConfigEntityInterface) {
       $this->assertTrue(TRUE, 'POSTing config entities is not yet supported.');
