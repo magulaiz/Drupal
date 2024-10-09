@@ -512,7 +512,7 @@ function image_field_config_delete(FieldConfigInterface $field) {
 /**
  * Implements hook_ENTITY_TYPE_presave() for 'field_config'.
  */
-function image_field_config_presave(FieldConfigInterface $field) {
+function image_field_config_presave(FieldConfigInterface $field): void {
   $config_updater = \Drupal::classResolver(ImageConfigUpdater::class);
   $config_updater->updateField($field);
 }

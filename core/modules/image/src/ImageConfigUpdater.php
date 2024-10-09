@@ -37,7 +37,7 @@ class ImageConfigUpdater implements ContainerInjectionInterface {
   /**
    * {@inheritdoc}
    */
-  public static function create(ContainerInterface $container) {
+  public static function create(ContainerInterface $container): static {
     return new static();
   }
 
@@ -47,7 +47,7 @@ class ImageConfigUpdater implements ContainerInjectionInterface {
    * @param bool $enabled
    *   Whether deprecations should be enabled.
    */
-  public function setDeprecationsEnabled($enabled) {
+  public function setDeprecationsEnabled(bool $enabled): void {
     $this->deprecationsEnabled = $enabled;
   }
 
