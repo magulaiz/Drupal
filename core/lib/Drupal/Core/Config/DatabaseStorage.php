@@ -67,7 +67,7 @@ class DatabaseStorage implements StorageInterface {
     if (empty($name)) {
       return FALSE;
     }
-    
+
     try {
       return (bool) $this->connection->queryRange('SELECT 1 FROM {' . $this->connection->escapeTable($this->table) . '} WHERE [collection] = :collection AND [name] = :name', 0, 1, [
         ':collection' => $this->collection,
