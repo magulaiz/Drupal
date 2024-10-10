@@ -95,12 +95,17 @@ class DatabaseStorageTest extends ConfigStorageTestBase {
       // cspell:disable-next-line
       $exists = $this->storage->exists('config.testáéóú');
       $this->assertEmpty($exists);
+    }
+    catch (DatabaseExceptionWrapper) {
+      // Exception was expected
+    }
 
+    try {
       // cspell:disable-next-line
       $read = $this->storage->read('config.testáéóú');
       $this->assertEmpty($read);
     }
-    catch (DatabaseExceptionWrapper) {
+    catch (\InvalidArgumentException) {
       // Exception was expected
     }
 
