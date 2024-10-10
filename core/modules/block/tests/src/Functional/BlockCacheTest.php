@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\block\Functional;
 
-use Drupal\Core\Cache\Cache;
 use Drupal\Tests\BrowserTestBase;
 
 /**
@@ -93,6 +92,7 @@ class BlockCacheTest extends BrowserTestBase {
 
     $old_content = $current_content;
     $current_content = $this->randomMachineName();
+    $this->assertNotEquals($current_content, $old_content);
     \Drupal::state()->set('block_test.content', $current_content);
 
     // Block content served from cache.
