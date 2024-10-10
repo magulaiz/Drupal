@@ -374,9 +374,10 @@ default:
   stage: 🪄 Lint
   variables:
     KUBERNETES_CPU_REQUEST: "2"
-  # Run if PHPStan files have changed, or manually.
+  # Run on push, if PHPStan files have changed, or manually.
   rules:
-    - if: $PERFORMANCE_TEST != "1"
+    - if: $CI_PIPELINE_SOURCE == "push" && $CI_PROJECT_ROOT_NAMESPACE == "project"
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event"
       changes:
         - core/tests/PHPStan/*
         - composer/Metapackage/PinnedDevDependencies/composer.json
