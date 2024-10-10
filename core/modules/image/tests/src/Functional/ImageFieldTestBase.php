@@ -8,7 +8,7 @@ use Drupal\Tests\image\Kernel\ImageFieldCreationTrait;
 use Drupal\Tests\BrowserTestBase;
 
 /**
- * TODO: Test the following functions.
+ * @todo Test the following functions.
  *
  * In file:
  * - image.effects.inc:
@@ -29,9 +29,7 @@ abstract class ImageFieldTestBase extends BrowserTestBase {
   use ImageFieldCreationTrait;
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = [
     'node',

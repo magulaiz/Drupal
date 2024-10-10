@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\field\Kernel\Entity;
 
 use Drupal\entity_test\Entity\EntityTestBundle;
@@ -13,7 +15,6 @@ use Drupal\Tests\node\Traits\ContentTypeCreationTrait;
  * Tests validation of field_config entities.
  *
  * @group field
- * @group #slow
  */
 class FieldConfigValidationTest extends ConfigEntityValidationTestBase {
 
