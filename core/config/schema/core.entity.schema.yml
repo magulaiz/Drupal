@@ -1,58 +1,5 @@
 # Schema for Configuration files of the entity module.
 
-core.entity_link_suggester.*:
-  type: config_entity
-  constraints:
-    FullyValidatable: ~
-  label: 'Entity Link Suggester'
-  mapping:
-    id:
-      type: machine_name
-      label: 'ID'
-    admin_label:
-      type: required_label
-      label: 'Administrative label'
-    entity_types:
-      type: sequence
-      label: 'Allowed linkable entity types'
-      # Optional: when null, link suggestions will be provided for all entity types.
-      nullable: true
-      # The order is meaningful: link suggestions will be generated in the same order.
-      orderby: ~
-      constraints:
-        NotBlank:
-          allowNull: true
-          message: "Allow suggestions for at least one entity type, or specify null to allow suggestions for all."
-        # @todo Move this constraint out of the CKEditor 5 module, into core.
-        #UniqueLabelInList:
-        #  labelKey: entity_type
-      sequence:
-        type: mapping
-        mapping:
-          entity_type:
-            type: string
-            label: 'Linkable entity type'
-            constraints:
-              # @todo Validate that this is a linkable entity type.
-              # @see \Drupal\Core\Entity\Entity\EntityLinkSuggester::isLinkableEntityType()
-              PluginExists:
-                manager: entity_type.manager
-          bundles:
-            type: sequence
-            label: 'Allowed bundles (if this entity type supports bundles)'
-            # Optional: when null, link suggestions will be provided for all bundles.
-            nullable: true
-            constraints:
-              NotBlank:
-                allowNull: true
-            # The order is meaningful: link suggestions will be generated in the same order.
-            orderby: ~
-            sequence:
-              type: string
-              label: 'Allowed bundle'
-              constraints:
-                EntityBundleExists: '%parent.entity_type_id'
-
 core.entity_view_mode.*.*:
   type: config_entity
   label: 'Entity view mode settings'
