@@ -23,7 +23,7 @@ class RequiredConfigDependenciesConstraintValidator extends ConstraintValidator 
 
   public function __construct(
     protected EntityTypeManagerInterface $entityTypeManager,
-    protected readonly ConfigManagerInterface $configManager
+    protected readonly ConfigManagerInterface $configManager,
   ) {}
 
   /**
