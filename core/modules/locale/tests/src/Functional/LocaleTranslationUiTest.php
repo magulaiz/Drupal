@@ -19,9 +19,7 @@ use Drupal\Core\Language\LanguageInterface;
 class LocaleTranslationUiTest extends BrowserTestBase {
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = ['locale'];
 
@@ -29,6 +27,11 @@ class LocaleTranslationUiTest extends BrowserTestBase {
    * {@inheritdoc}
    */
   protected $defaultTheme = 'stark';
+
+  /**
+   * {@inheritdoc}
+   */
+  protected bool $useOneTimeLoginLinks = FALSE;
 
   /**
    * Enable interface translation to English.

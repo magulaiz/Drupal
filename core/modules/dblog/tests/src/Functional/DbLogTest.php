@@ -25,9 +25,7 @@ class DbLogTest extends BrowserTestBase {
   use AssertBreadcrumbTrait;
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = [
     'dblog',
@@ -293,7 +291,9 @@ class DbLogTest extends BrowserTestBase {
         ['foo' => 'bar', 'path' => '/baz', 'value' => 'horse']
       );
     // View the log page to verify it's correct.
-    $wid = \Drupal::database()->query('SELECT MAX(wid) FROM {watchdog}')->fetchField();
+    $query = Database::getConnection()->select('watchdog');
+    $query->addExpression('MAX([wid])');
+    $wid = $query->execute()->fetchField();
     $this->drupalGet('admin/reports/dblog/event/' . $wid);
     $this->assertSession()
       ->responseContains('Incorrect parameter {bar} in path /baz: horse');
