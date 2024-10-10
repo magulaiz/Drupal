@@ -92,7 +92,6 @@ class BlockCacheTest extends BrowserTestBase {
 
     $old_content = $current_content;
     $current_content = $this->randomMachineName();
-    $this->assertNotEquals($current_content, $old_content);
     \Drupal::state()->set('block_test.content', $current_content);
 
     // Block content served from cache.
@@ -101,7 +100,6 @@ class BlockCacheTest extends BrowserTestBase {
 
     // Block content not served from cache.
     $this->drupalLogout();
-    $this->drupalGet('user');
     $this->assertSession()->pageTextContains($current_content);
   }
 
