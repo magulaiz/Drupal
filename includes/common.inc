@@ -582,17 +582,25 @@ function drupal_parse_url($url) {
   // External URLs: not using parse_url() here, so we do not have to rebuild
   // the scheme, host, and path without having any use for it.
   if (strpos($url, '://') !== FALSE) {
-    // Split off everything before the query string into 'path'.
-    $parts = explode('?', $url);
-    $options['path'] = $parts[0];
-    // If there is a query string, transform it into keyed query parameters.
-    if (isset($parts[1])) {
-      $query_parts = explode('#', $parts[1]);
-      parse_str($query_parts[0], $options['query']);
-      // Take over the fragment, if there is any.
-      if (isset($query_parts[1])) {
-        $options['fragment'] = $query_parts[1];
-      }
+    $query_position = strpos($url, '?');
+    $fragment_position = strpos($url, '#');
+
+    // Extract query path.
+    $path_end = ($query_position !== false && $fragment_position !== false)
+      ? min($query_position, $fragment_position)
+      : strlen($url);
+    $options['path'] = $query_position !== FALSE ? substr($url, 0, $path_end) : $url;
+
+    // Extract fragment.
+    if ($fragment_position !== FALSE) {
+      $options['fragment'] = substr($url, $fragment_position + 1);
+    }
+
+    // Extract query string.
+    if ($query_position !== FALSE) {
+      $end_of_query = $fragment_position !== FALSE ? $fragment_position : strlen($url);
+      $query = substr($url, $query_position + 1, $end_of_query - $query_position - 1);
+      parse_str($query, $options['query']);
     }
   }
   // Internal URLs.
