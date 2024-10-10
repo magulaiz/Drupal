@@ -598,7 +598,7 @@ function drupal_parse_url($url) {
     else {
       $path_end = strlen($url);
     }
-    $options['path'] = $query_position !== FALSE ? substr($url, 0, $path_end) : $url;
+    $options['path'] = substr($url, 0, $path_end);
 
     // Extract fragment.
     if ($fragment_position !== FALSE) {
