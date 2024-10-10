@@ -198,6 +198,9 @@ class MemoryBackend implements CacheBackendInterface, CacheTagsInvalidatorInterf
    * {@inheritdoc}
    */
   public function garbageCollection() {
+    $this->cache = array_filter($this->cache, function ($item) {
+      return $item->expire == Cache::PERMANENT || $item->expire >= $this->time->getRequestTime();
+    });
   }
 
   /**
