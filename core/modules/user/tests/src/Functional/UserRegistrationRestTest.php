@@ -276,6 +276,6 @@ class UserRegistrationRestTest extends ResourceTestBase {
    * Needed by PHPStan for unused function
    * CookieResourceTestTrait::assertResponseWhenMissingAuthentication().
    */
-  protected function getExpectedUnauthorizedEntityAccessCacheability(bool $is_authenticated) {}
+  protected function getExpectedUnauthorizedEntityAccessCacheability(bool $is_authenticated): void {}
 
 }
