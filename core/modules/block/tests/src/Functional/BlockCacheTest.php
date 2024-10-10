@@ -82,7 +82,7 @@ class BlockCacheTest extends BrowserTestBase {
   public function testCachePermissions(): void {
     // user.permissions is a required context, so a user with different
     // permissions will see a different version of the block.
-    \Drupal::state()->set('block_test.cache_contexts', []);
+    \Drupal::state()->set('block_test.cache _contexts', []);
 
     $current_content = $this->randomMachineName();
     \Drupal::state()->set('block_test.content', $current_content);
@@ -100,6 +100,7 @@ class BlockCacheTest extends BrowserTestBase {
 
     // Block content not served from cache.
     $this->drupalLogout();
+    $this->drupalGet('<front>');
     $this->assertSession()->pageTextContains($current_content);
   }
 
