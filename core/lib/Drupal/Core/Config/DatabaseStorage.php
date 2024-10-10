@@ -67,11 +67,7 @@ class DatabaseStorage implements StorageInterface {
     if (empty($name)) {
       return FALSE;
     }
-
-    if (!mb_check_encoding($name, 'ASCII')) {
-      throw new \InvalidArgumentException('The existence of the configuration object in the database cannot be checked because its name contains invalid (non-ASCII) characters.');
-    }
-
+    
     try {
       return (bool) $this->connection->queryRange('SELECT 1 FROM {' . $this->connection->escapeTable($this->table) . '} WHERE [collection] = :collection AND [name] = :name', 0, 1, [
         ':collection' => $this->collection,
@@ -125,7 +121,7 @@ class DatabaseStorage implements StorageInterface {
       return [];
     }
 
-    if (!mb_check_encoding(implode('', $names), 'ASCII')) {
+    if (!mb_check_encoding(implode(' ', $names), 'ASCII')) {
       $current_path = \Drupal::service('path.current')->getPath();
       throw new \InvalidArgumentException(sprintf('The config name part of the URI "%s" or command line string contains non-ASCII characters. Only ASCII characters are permitted.', $current_path));
     }
