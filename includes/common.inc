@@ -586,9 +586,18 @@ function drupal_parse_url($url) {
     $fragment_position = strpos($url, '#');
 
     // Extract query path.
-    $path_end = ($query_position !== false && $fragment_position !== false)
-      ? min($query_position, $fragment_position)
-      : strlen($url);
+    if ($query_position !== FALSE && $fragment_position !== FALSE) {
+      $path_end = min($fragment_position, $query_position);
+    }
+    elseif ($query_position !== FALSE) {
+      $path_end = $query_position;
+    }
+    elseif ($fragment_position !== FALSE) {
+      $path_end = $fragment_position;
+    }
+    else {
+      $path_end = strlen($url);
+    }
     $options['path'] = $query_position !== FALSE ? substr($url, 0, $path_end) : $url;
 
     // Extract fragment.
