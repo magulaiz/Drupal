@@ -13205,12 +13205,6 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/block_content/tests/modules/block_content_test/src/Plugin/EntityReferenceSelection/TestSelection.php',
 ];
 $ignoreErrors[] = [
-	// identifier: variable.undefined
-	'message' => '#^Variable \\$loaded might not be defined\\.$#',
-	'count' => 9,
-	'path' => __DIR__ . '/modules/block_content/tests/src/Functional/BlockContentRevisionsTest.php',
-];
-$ignoreErrors[] = [
 	// identifier: missingType.return
 	'message' => '#^Method Drupal\\\\Tests\\\\block_content\\\\Functional\\\\BlockContentTranslationUITest\\:\\:getEditValues\\(\\) has no return type specified\\.$#',
 	'count' => 1,
@@ -15011,12 +15005,6 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/comment/tests/src/Functional/CommentAccessTest.php',
 ];
 $ignoreErrors[] = [
-	// identifier: variable.undefined
-	'message' => '#^Variable \\$position might not be defined\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/comment/tests/src/Functional/CommentBlockTest.php',
-];
-$ignoreErrors[] = [
 	// identifier: missingType.return
 	'message' => '#^Method Drupal\\\\Tests\\\\comment\\\\Functional\\\\CommentCacheTagsTest\\:\\:addDefaultCommentField\\(\\) has no return type specified\\.$#',
 	'count' => 1,
@@ -15031,12 +15019,6 @@ $ignoreErrors[] = [
 $ignoreErrors[] = [
 	// identifier: missingType.return
 	'message' => '#^Method Drupal\\\\Tests\\\\comment\\\\Functional\\\\CommentLanguageTest\\:\\:addDefaultCommentField\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/comment/tests/src/Functional/CommentLanguageTest.php',
-];
-$ignoreErrors[] = [
-	// identifier: variable.undefined
-	'message' => '#^Variable \\$comment_values might not be defined\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/comment/tests/src/Functional/CommentLanguageTest.php',
 ];
@@ -15175,12 +15157,6 @@ $ignoreErrors[] = [
 $ignoreErrors[] = [
 	// identifier: missingType.return
 	'message' => '#^Method Drupal\\\\Tests\\\\comment\\\\Functional\\\\CommentTestBase\\:\\:setCommentsPerPage\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/comment/tests/src/Functional/CommentTestBase.php',
-];
-$ignoreErrors[] = [
-	// identifier: variable.undefined
-	'message' => '#^Variable \\$mode_text might not be defined\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/comment/tests/src/Functional/CommentTestBase.php',
 ];
@@ -20777,12 +20753,6 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/field/tests/src/Kernel/EntityReference/Views/SelectionTest.php',
 ];
 $ignoreErrors[] = [
-	// identifier: variable.undefined
-	'message' => '#^Variable \\$values might not be defined\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/field/tests/src/Kernel/FieldAttachStorageTest.php',
-];
-$ignoreErrors[] = [
 	// identifier: missingType.return
 	'message' => '#^Method Drupal\\\\Tests\\\\field\\\\Kernel\\\\FieldKernelTestBase\\:\\:assertFieldValues\\(\\) has no return type specified\\.$#',
 	'count' => 1,
@@ -24359,12 +24329,6 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/image/tests/src/Functional/ImageFieldTestBase.php',
 ];
 $ignoreErrors[] = [
-	// identifier: variable.undefined
-	'message' => '#^Variable \\$image_that_is_too_small_file might not be defined\\.$#',
-	'count' => 2,
-	'path' => __DIR__ . '/modules/image/tests/src/Functional/ImageFieldValidateTest.php',
-];
-$ignoreErrors[] = [
 	// identifier: missingType.return
 	'message' => '#^Method Drupal\\\\Tests\\\\image\\\\Functional\\\\ImageOnTranslatedEntityTest\\:\\:disableBundleTranslation\\(\\) has no return type specified\\.$#',
 	'count' => 1,
@@ -25334,24 +25298,6 @@ $ignoreErrors[] = [
 	// identifier: missingType.return
 	'message' => '#^Method Drupal\\\\Tests\\\\jsonapi\\\\Functional\\\\ResourceTestBase\\:\\:sortResourceCollection\\(\\) has no return type specified\\.$#',
 	'count' => 1,
-	'path' => __DIR__ . '/modules/jsonapi/tests/src/Functional/ResourceTestBase.php',
-];
-$ignoreErrors[] = [
-	// identifier: variable.undefined
-	'message' => '#^Variable \\$created_entity might not be defined\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/jsonapi/tests/src/Functional/ResourceTestBase.php',
-];
-$ignoreErrors[] = [
-	// identifier: variable.undefined
-	'message' => '#^Variable \\$dynamic_cache might not be defined\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/jsonapi/tests/src/Functional/ResourceTestBase.php',
-];
-$ignoreErrors[] = [
-	// identifier: variable.undefined
-	'message' => '#^Variable \\$parseable_invalid_request_body might not be defined\\.$#',
-	'count' => 2,
 	'path' => __DIR__ . '/modules/jsonapi/tests/src/Functional/ResourceTestBase.php',
 ];
 $ignoreErrors[] = [
@@ -30837,12 +30783,6 @@ $ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\Tests\\\\media_library\\\\FunctionalJavascript\\\\ContentModerationTest\\:\\:createEntityReferenceField\\(\\) has no return type specified\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/media_library/tests/src/FunctionalJavascript/ContentModerationTest.php',
-];
-$ignoreErrors[] = [
-	// identifier: variable.undefined
-	'message' => '#^Variable \\$jpg_image might not be defined\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/media_library/tests/src/FunctionalJavascript/EmbeddedFormWidgetTest.php',
 ];
 $ignoreErrors[] = [
 	// identifier: missingType.return
@@ -37591,12 +37531,6 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/rest/tests/src/Functional/EntityResource/EntityResourceTestBase.php',
 ];
 $ignoreErrors[] = [
-	// identifier: variable.undefined
-	'message' => '#^Variable \\$created_entity might not be defined\\.$#',
-	'count' => 4,
-	'path' => __DIR__ . '/modules/rest/tests/src/Functional/EntityResource/EntityResourceTestBase.php',
-];
-$ignoreErrors[] = [
 	// identifier: missingType.return
 	'message' => '#^Method Drupal\\\\Tests\\\\rest\\\\Functional\\\\EntityResource\\\\ModeratedNode\\\\ModeratedNodeJsonAnonTest\\:\\:assertAuthenticationEdgeCases\\(\\) has no return type specified\\.$#',
 	'count' => 1,
@@ -41163,12 +41097,6 @@ $ignoreErrors[] = [
 $ignoreErrors[] = [
 	// identifier: missingType.return
 	'message' => '#^Function _batch_test_nested_batch_callback\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/system/tests/modules/batch_test/batch_test.callbacks.inc',
-];
-$ignoreErrors[] = [
-	// identifier: variable.undefined
-	'message' => '#^Variable \\$messages might not be defined\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/system/tests/modules/batch_test/batch_test.callbacks.inc',
 ];
@@ -46165,12 +46093,6 @@ $ignoreErrors[] = [
 	// identifier: missingType.return
 	'message' => '#^Method Drupal\\\\Tests\\\\system\\\\Functional\\\\Menu\\\\BreadcrumbTest\\:\\:assertMenuActiveTrail\\(\\) has no return type specified\\.$#',
 	'count' => 1,
-	'path' => __DIR__ . '/modules/system/tests/src/Functional/Menu/BreadcrumbTest.php',
-];
-$ignoreErrors[] = [
-	// identifier: variable.undefined
-	'message' => '#^Variable \\$parent might not be defined\\.$#',
-	'count' => 3,
 	'path' => __DIR__ . '/modules/system/tests/src/Functional/Menu/BreadcrumbTest.php',
 ];
 $ignoreErrors[] = [
@@ -59290,12 +59212,6 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/views/tests/src/Functional/SearchMultilingualTest.php',
 ];
 $ignoreErrors[] = [
-	// identifier: variable.undefined
-	'message' => '#^Variable \\$link might not be defined\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/views/tests/src/Functional/TaxonomyGlossaryTest.php',
-];
-$ignoreErrors[] = [
 	// identifier: missingType.return
 	'message' => '#^Method Drupal\\\\Tests\\\\views\\\\Functional\\\\ViewTestBase\\:\\:dataSet\\(\\) has no return type specified\\.$#',
 	'count' => 1,
@@ -63922,12 +63838,6 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/tests/Drupal/BuildTests/Composer/Template/ComposerProjectTemplatesTest.php',
 ];
 $ignoreErrors[] = [
-	// identifier: variable.undefined
-	'message' => '#^Variable \\$project_stabilities might not be defined\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/tests/Drupal/BuildTests/Composer/Template/ComposerProjectTemplatesTest.php',
-];
-$ignoreErrors[] = [
 	// identifier: missingType.return
 	'message' => '#^Method Drupal\\\\BuildTests\\\\Framework\\\\BuildTestBase\\:\\:assertCommandExitCode\\(\\) has no return type specified\\.$#',
 	'count' => 1,
@@ -65302,12 +65212,6 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/tests/Drupal/KernelTests/Core/Database/DatabaseTestBase.php',
 ];
 $ignoreErrors[] = [
-	// identifier: variable.undefined
-	'message' => '#^Variable \\$expected_driver might not be defined\\.$#',
-	'count' => 2,
-	'path' => __DIR__ . '/tests/Drupal/KernelTests/Core/Database/DriverSpecificKernelTestBase.php',
-];
-$ignoreErrors[] = [
 	// identifier: missingType.return
 	'message' => '#^Method Drupal\\\\KernelTests\\\\Core\\\\Database\\\\DriverSpecificSchemaTestBase\\:\\:assertIndexOnColumns\\(\\) has no return type specified\\.$#',
 	'count' => 1,
@@ -65600,12 +65504,6 @@ $ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\KernelTests\\\\Core\\\\Entity\\\\ContentEntityNonRevisionableFieldTest\\:\\:updateEntityTypeToTranslatable\\(\\) has no return type specified\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/tests/Drupal/KernelTests/Core/Entity/ContentEntityNonRevisionableFieldTest.php',
-];
-$ignoreErrors[] = [
-	// identifier: variable.undefined
-	'message' => '#^Variable \\$title might not be defined\\.$#',
-	'count' => 2,
-	'path' => __DIR__ . '/tests/Drupal/KernelTests/Core/Entity/CreateSampleEntityTest.php',
 ];
 $ignoreErrors[] = [
 	// identifier: missingType.return
@@ -66600,18 +66498,6 @@ $ignoreErrors[] = [
 $ignoreErrors[] = [
 	// identifier: missingType.return
 	'message' => '#^Method Drupal\\\\KernelTests\\\\Core\\\\Entity\\\\FieldableEntityDefinitionUpdateTest\\:\\:updateEntityTypeToTranslatable\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/tests/Drupal/KernelTests/Core/Entity/FieldableEntityDefinitionUpdateTest.php',
-];
-$ignoreErrors[] = [
-	// identifier: variable.undefined
-	'message' => '#^Variable \\$e might not be defined\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/tests/Drupal/KernelTests/Core/Entity/FieldableEntityDefinitionUpdateTest.php',
-];
-$ignoreErrors[] = [
-	// identifier: variable.undefined
-	'message' => '#^Variable \\$new_field_schema_data might not be defined\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/tests/Drupal/KernelTests/Core/Entity/FieldableEntityDefinitionUpdateTest.php',
 ];
