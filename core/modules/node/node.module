@@ -1238,7 +1238,7 @@ function node_config_translation_info_alter(&$info) {
 /**
  * Implements hook_menu_local_tasks_alter().
  */
-function node_menu_local_tasks_alter(&$local_tasks, $route_name, RefinableCacheableDependencyInterface &$cacheability) {
+function node_menu_local_tasks_alter(&$local_tasks, $route_name, RefinableCacheableDependencyInterface &$cacheability): void {
   if ($route_name === 'entity.node.revision') {
     // Show the same local tasks on node revision pages as the ones displayed
     // on node canonical pages.
