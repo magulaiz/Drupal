@@ -5,11 +5,10 @@ namespace Drupal\Core\Entity\Attribute;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 
 /**
- * Defines a config entity type for plugin discovery.
+ * Defines a configuration entity type attribute object.
  *
- * Config entity type plugins use an object-based attribute method, rather than
- * an array-type (as commonly used on other plugin types). The attribute
- * properties of config entity types are found on
+ * Configuration entity type plugins use an object-based attribute method. The
+ * attribute properties of configuration entity types are found on
  * \Drupal\Core\Config\Entity\ConfigEntityType and are accessed using get/set
  * methods defined in \Drupal\Core\Entity\EntityTypeInterface.
  *

@@ -8,10 +8,10 @@ use Drupal\Core\StringTranslation\TranslatableMarkup;
 /**
  * Defines an entity type for plugin discovery.
  *
- * Entity type plugins use an object-based attribute method, rather than an
- * array-type (as commonly used on other plugin types). The attribute properties
- * of entity types are found on \Drupal\Core\Entity\EntityType and are accessed
- * using get/set methods defined in \Drupal\Core\Entity\EntityTypeInterface.
+ * Entity type plugins use an object-based attribute method. The attribute
+ * properties of entity types are found on \Drupal\Core\Entity\EntityType and
+ * are accessed using get/set methods defined in
+ * \Drupal\Core\Entity\EntityTypeInterface.
  *
  * @ingroup entity_api
  *
