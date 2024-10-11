@@ -229,6 +229,7 @@ body {
   margin-inline-start: var(--admin-toolbar-space-2);
   border-radius: var(--admin-toolbar-space-8);
   background-color: transparent;
+  flex-shrink: 0;
 }
 .admin-toolbar__logo:hover {
   outline: 2px solid var(--admin-toolbar-color-blue-200);
