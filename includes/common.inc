@@ -573,49 +573,38 @@ function drupal_get_destination() {
  * @ingroup php_wrappers
  */
 function drupal_parse_url($url) {
-  $options = array(
+  $options = [
     'path' => NULL,
-    'query' => array(),
+    'query' => [],
     'fragment' => '',
-  );
-
+  ];
   // External URLs: not using parse_url() here, so we do not have to rebuild
   // the scheme, host, and path without having any use for it.
-  if (strpos($url, '://') !== FALSE) {
-    $query_position = strpos($url, '?');
-    $fragment_position = strpos($url, '#');
-
-    // Extract query path.
-    if ($query_position !== FALSE && $fragment_position !== FALSE) {
-      $path_end = min($fragment_position, $query_position);
+  // The URL is considered external if it contains the '://' delimiter. Since
+  // a URL can also be passed as a query argument, we check if this delimiter
+  // appears in front of the '?' query argument delimiter.
+  $scheme_delimiter_position = strpos($url, '://');
+  $query_delimiter_position = strpos($url, '?');
+  if ($scheme_delimiter_position !== FALSE && ($query_delimiter_position === FALSE || $scheme_delimiter_position < $query_delimiter_position)) {
+    // Split off the fragment, if any.
+    if (strpos($url, '#') !== FALSE) {
+      list($url, $options['fragment']) = explode('#', $url, 2);
     }
-    elseif ($query_position !== FALSE) {
-      $path_end = $query_position;
+    // Split off everything before the query string into 'path'.
+    $parts = explode('?', $url, 2);
+    // Don't support URLs without a path, like 'http://'.
+    list(, $path) = explode('://', $parts[0], 2);
+    if ($path != '') {
+      $options['path'] = $parts[0];
     }
-    elseif ($fragment_position !== FALSE) {
-      $path_end = $fragment_position;
-    }
-    else {
-      $path_end = strlen($url);
-    }
-    $options['path'] = substr($url, 0, $path_end);
-
-    // Extract fragment.
-    if ($fragment_position !== FALSE) {
-      $options['fragment'] = substr($url, $fragment_position + 1);
-    }
-
-    // Extract query string.
-    if ($query_position !== FALSE) {
-      $end_of_query = $fragment_position !== FALSE ? $fragment_position : strlen($url);
-      $query = substr($url, $query_position + 1, $end_of_query - $query_position - 1);
-      parse_str($query, $options['query']);
+    // If there is a query string, transform it into keyed query parameters.
+    if (isset($parts[1])) {
+      parse_str($parts[1], $options['query']);
     }
   }
-  // Internal URLs.
   else {
-    // parse_url() does not support relative URLs, so make it absolute. E.g. the
-    // relative URL "foo/bar:1" isn't properly parsed.
+    // parse_url() does not support relative URLs, so make it absolute. For
+    // instance, the relative URL "foo/bar:1" isn't properly parsed.
     $parts = parse_url('http://example.com/' . $url);
     // Strip the leading slash that was just added.
     $options['path'] = substr($parts['path'], 1);
