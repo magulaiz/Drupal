@@ -21,7 +21,7 @@ const FILE_URL_TEST_CDN_2 = 'http://cdn2.example.com';
  * @see file_test_get_calls()
  * @see file_test_reset()
  */
-function file_test_reset() {
+function file_test_reset(): void {
   // Keep track of calls to these hooks
   $results = [
     'load' => [],
@@ -58,7 +58,7 @@ function file_test_reset() {
  * @see _file_test_log_call()
  * @see file_test_reset()
  */
-function file_test_get_calls($op) {
+function file_test_get_calls($op): array {
   $results = \Drupal::state()->get('file_test.results', []);
   return $results[$op];
 }
@@ -123,7 +123,7 @@ function _file_test_get_return($op) {
  * @see _file_test_get_return()
  * @see file_test_reset()
  */
-function file_test_set_return($op, $value) {
+function file_test_set_return($op, $value): void {
   $return = \Drupal::state()->get('file_test.return', []);
   $return[$op] = $value;
   \Drupal::state()->set('file_test.return', $return);
@@ -132,7 +132,7 @@ function file_test_set_return($op, $value) {
 /**
  * Implements hook_ENTITY_TYPE_load() for file entities.
  */
-function file_test_file_load($files) {
+function file_test_file_load($files): void {
   foreach ($files as $file) {
     _file_test_log_call('load', [$file->id()]);
     // Assign a value on the object so that we can test that the $file is passed
@@ -144,7 +144,7 @@ function file_test_file_load($files) {
 /**
  * Implements hook_file_download().
  */
-function file_test_file_download($uri) {
+function file_test_file_download($uri): array | int {
   if (\Drupal::state()->get('file_test.allow_all', FALSE)) {
     $files = \Drupal::entityTypeManager()->getStorage('file')->loadByProperties(['uri' => $uri]);
     $file = reset($files);
@@ -157,42 +157,42 @@ function file_test_file_download($uri) {
 /**
  * Implements hook_ENTITY_TYPE_insert() for file entities.
  */
-function file_test_file_insert(File $file) {
+function file_test_file_insert(File $file): void {
   _file_test_log_call('insert', [$file->id()]);
 }
 
 /**
  * Implements hook_ENTITY_TYPE_update() for file entities.
  */
-function file_test_file_update(File $file) {
+function file_test_file_update(File $file): void {
   _file_test_log_call('update', [$file->id()]);
 }
 
 /**
  * Implements hook_file_copy().
  */
-function file_test_file_copy(File $file, $source) {
+function file_test_file_copy(File $file, $source): void {
   _file_test_log_call('copy', [$file->id(), $source->id()]);
 }
 
 /**
  * Implements hook_file_move().
  */
-function file_test_file_move(File $file, File $source) {
+function file_test_file_move(File $file, File $source): void {
   _file_test_log_call('move', [$file->id(), $source->id()]);
 }
 
 /**
  * Implements hook_ENTITY_TYPE_predelete() for file entities.
  */
-function file_test_file_predelete(File $file) {
+function file_test_file_predelete(File $file): void {
   _file_test_log_call('delete', [$file->id()]);
 }
 
 /**
  * Implements hook_file_url_alter().
  */
-function file_test_file_url_alter(&$uri) {
+function file_test_file_url_alter(&$uri): void {
   /** @var \Drupal\Core\StreamWrapper\StreamWrapperManagerInterface $stream_wrapper_manager */
   $stream_wrapper_manager = \Drupal::service('stream_wrapper_manager');
 
@@ -289,7 +289,7 @@ function file_test_file_url_alter(&$uri) {
 /**
  * Implements hook_file_mimetype_mapping_alter().
  */
-function file_test_file_mimetype_mapping_alter(&$mapping) {
+function file_test_file_mimetype_mapping_alter(&$mapping): void {
   // Add new mappings.
   $mapping['mimetypes']['file_test_mimetype_1'] = 'made_up/file_test_1';
   $mapping['mimetypes']['file_test_mimetype_2'] = 'made_up/file_test_2';
@@ -304,7 +304,7 @@ function file_test_file_mimetype_mapping_alter(&$mapping) {
 /**
  * Helper validator that returns the $errors parameter.
  */
-function file_test_validator(File $file, $errors) {
+function file_test_validator(File $file, $errors): array {
   return $errors;
 }
 
@@ -340,14 +340,14 @@ function file_test_file_scan_callback($filepath = NULL, $reset = FALSE) {
 /**
  * Reset static variables used by file_test_file_scan_callback().
  */
-function file_test_file_scan_callback_reset() {
+function file_test_file_scan_callback_reset(): void {
   file_test_file_scan_callback(NULL, TRUE);
 }
 
 /**
  * Implements hook_entity_info_alter().
  */
-function file_test_entity_type_alter(&$entity_types) {
+function file_test_entity_type_alter(&$entity_types): void {
   if (\Drupal::state()->get('file_test_alternate_access_handler', FALSE)) {
     /** @var \Drupal\Core\Entity\EntityTypeInterface[] $entity_types */
     $entity_types['file']

@@ -95,7 +95,7 @@ class DummyExternalReadOnlyWrapper extends ReadOnlyStream {
   /**
    * {@inheritdoc}
    */
-  public function stream_close() {
+  public function stream_close(): bool {
     return FALSE;
   }
 
