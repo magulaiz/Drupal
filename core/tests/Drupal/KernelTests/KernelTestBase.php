@@ -44,6 +44,7 @@ use Symfony\Component\HttpFoundation\Request;
 use org\bovigo\vfs\vfsStream;
 use org\bovigo\vfs\visitor\vfsStreamPrintVisitor;
 use Drupal\Core\Routing\RouteObjectInterface;
+use Drupal\Tests\BrowserHtmlDebugTrait;
 use Drupal\Tests\HiddenFieldSelector;
 use Drupal\Tests\WebAssert;
 use Symfony\Component\Routing\Route;
@@ -111,6 +112,7 @@ abstract class KernelTestBase extends TestCase implements ServiceProviderInterfa
   use PhpUnitCompatibilityTrait;
   use ProphecyTrait;
   use ExpectDeprecationTrait;
+  use BrowserHtmlDebugTrait;
 
   /**
    * {@inheritdoc}
@@ -976,10 +978,14 @@ abstract class KernelTestBase extends TestCase implements ServiceProviderInterfa
 
     $session->visit($path);
 
+    // TODO: This doesn't work yet because $this->siteDirectory is in the VFS
+    // by this point, which means that initBrowserOutputFile() sets up
+    // $this->htmlOutputTestId incorrectly.
     // if ($this->htmlOutputEnabled) {
-    //   $html_output = 'GET request to: ' . $url;
-    //   $html_output .= '<hr />' . $content;
-    //   $html_output .= $this->formatHtmlOutputHeaders($response->headers->all());
+    //   $html_output = 'GET request to: ' . $path;
+    //   $out = $session->getPage()->getContent();
+    //   $html_output .= '<hr />' . $out;
+    //   $html_output .= $this->getHtmlOutputHeaders();
     //   $this->htmlOutput($html_output);
     // }
   }
@@ -999,6 +1005,8 @@ abstract class KernelTestBase extends TestCase implements ServiceProviderInterfa
     // necessarily the case with Kernel tests.
     if (!isset($this->mink)) {
       $this->initMink();
+      // Set up the browser test output file.
+      $this->initBrowserOutputFile();
     }
 
     return $this->mink->getSession($name);
