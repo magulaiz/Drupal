@@ -87,7 +87,7 @@ function file_test_get_all_calls() {
  * @see file_test_get_calls()
  * @see file_test_reset()
  */
-function _file_test_log_call($op, $args) {
+function _file_test_log_call($op, $args): void {
   if (\Drupal::state()->get('file_test.count_hook_invocations', TRUE)) {
     $results = \Drupal::state()->get('file_test.results', []);
     $results[$op][] = $args;
