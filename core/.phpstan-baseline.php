@@ -12210,18 +12210,6 @@ $ignoreErrors[] = [
 ];
 $ignoreErrors[] = [
 	// identifier: missingType.return
-	'message' => '#^Method Drupal\\\\Tests\\\\announcements_feed\\\\Kernel\\\\AnnounceFetcherUserTest\\:\\:grantPermissions\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/announcements_feed/tests/src/Kernel/AnnounceFetcherUserTest.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
-	'message' => '#^Method Drupal\\\\Tests\\\\announcements_feed\\\\Kernel\\\\AnnounceFetcherUserTest\\:\\:setCurrentUser\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/announcements_feed/tests/src/Kernel/AnnounceFetcherUserTest.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
 	'message' => '#^Function automated_cron_form_system_cron_settings_alter\\(\\) has no return type specified\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/automated_cron/automated_cron.module',
@@ -13578,18 +13566,6 @@ $ignoreErrors[] = [
 ];
 $ignoreErrors[] = [
 	// identifier: missingType.return
-	'message' => '#^Method Drupal\\\\Tests\\\\block_content\\\\Kernel\\\\BlockContentAccessHandlerTest\\:\\:grantPermissions\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/block_content/tests/src/Kernel/BlockContentAccessHandlerTest.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
-	'message' => '#^Method Drupal\\\\Tests\\\\block_content\\\\Kernel\\\\BlockContentAccessHandlerTest\\:\\:setCurrentUser\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/block_content/tests/src/Kernel/BlockContentAccessHandlerTest.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
 	'message' => '#^Method Drupal\\\\Tests\\\\block_content\\\\Kernel\\\\BlockContentEntityReferenceSelectionTest\\:\\:fieldConditionProvider\\(\\) has no return type specified\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/block_content/tests/src/Kernel/BlockContentEntityReferenceSelectionTest.php',
@@ -13603,18 +13579,6 @@ $ignoreErrors[] = [
 $ignoreErrors[] = [
 	// identifier: missingType.return
 	'message' => '#^Method Drupal\\\\Tests\\\\block_content\\\\Kernel\\\\BlockContentTest\\:\\:getNumberOfPlurals\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/block_content/tests/src/Kernel/BlockContentTest.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
-	'message' => '#^Method Drupal\\\\Tests\\\\block_content\\\\Kernel\\\\BlockContentTest\\:\\:grantPermissions\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/block_content/tests/src/Kernel/BlockContentTest.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
-	'message' => '#^Method Drupal\\\\Tests\\\\block_content\\\\Kernel\\\\BlockContentTest\\:\\:setCurrentUser\\(\\) has no return type specified\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/block_content/tests/src/Kernel/BlockContentTest.php',
 ];
@@ -13647,18 +13611,6 @@ $ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\Tests\\\\block_content\\\\Kernel\\\\Plugin\\\\migrate\\\\source\\\\d7\\\\BlockCustomTranslationTest\\:\\:providerSource\\(\\) has no return type specified\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/block_content/tests/src/Kernel/Plugin/migrate/source/d7/BlockCustomTranslationTest.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
-	'message' => '#^Method Drupal\\\\Tests\\\\block_content\\\\Kernel\\\\Views\\\\RevisionUserTest\\:\\:grantPermissions\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/block_content/tests/src/Kernel/Views/RevisionUserTest.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
-	'message' => '#^Method Drupal\\\\Tests\\\\block_content\\\\Kernel\\\\Views\\\\RevisionUserTest\\:\\:setCurrentUser\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/block_content/tests/src/Kernel/Views/RevisionUserTest.php',
 ];
 $ignoreErrors[] = [
 	// identifier: missingType.return
@@ -15522,18 +15474,6 @@ $ignoreErrors[] = [
 ];
 $ignoreErrors[] = [
 	// identifier: missingType.return
-	'message' => '#^Method Drupal\\\\Tests\\\\comment\\\\Kernel\\\\CommentIntegrationTest\\:\\:grantPermissions\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/comment/tests/src/Kernel/CommentIntegrationTest.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
-	'message' => '#^Method Drupal\\\\Tests\\\\comment\\\\Kernel\\\\CommentIntegrationTest\\:\\:setCurrentUser\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/comment/tests/src/Kernel/CommentIntegrationTest.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
 	'message' => '#^Method Drupal\\\\Tests\\\\comment\\\\Kernel\\\\CommentOrphanTest\\:\\:providerTestOrphan\\(\\) has no return type specified\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/comment/tests/src/Kernel/CommentOrphanTest.php',
@@ -15603,30 +15543,6 @@ $ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\Tests\\\\comment\\\\Kernel\\\\Views\\\\CommentAdminViewTest\\:\\:doTestFilters\\(\\) has no return type specified\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/comment/tests/src/Kernel/Views/CommentAdminViewTest.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
-	'message' => '#^Method Drupal\\\\Tests\\\\comment\\\\Kernel\\\\Views\\\\CommentFieldNameTest\\:\\:grantPermissions\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/comment/tests/src/Kernel/Views/CommentFieldNameTest.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
-	'message' => '#^Method Drupal\\\\Tests\\\\comment\\\\Kernel\\\\Views\\\\CommentFieldNameTest\\:\\:setCurrentUser\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/comment/tests/src/Kernel/Views/CommentFieldNameTest.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
-	'message' => '#^Method Drupal\\\\Tests\\\\comment\\\\Kernel\\\\Views\\\\FilterAndArgumentUserUidTest\\:\\:grantPermissions\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/comment/tests/src/Kernel/Views/FilterAndArgumentUserUidTest.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
-	'message' => '#^Method Drupal\\\\Tests\\\\comment\\\\Kernel\\\\Views\\\\FilterAndArgumentUserUidTest\\:\\:setCurrentUser\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/comment/tests/src/Kernel/Views/FilterAndArgumentUserUidTest.php',
 ];
 $ignoreErrors[] = [
 	// identifier: missingType.return
@@ -17994,18 +17910,6 @@ $ignoreErrors[] = [
 ];
 $ignoreErrors[] = [
 	// identifier: missingType.return
-	'message' => '#^Method Drupal\\\\Tests\\\\content_moderation\\\\Kernel\\\\ContentModerationAccessTest\\:\\:grantPermissions\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/content_moderation/tests/src/Kernel/ContentModerationAccessTest.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
-	'message' => '#^Method Drupal\\\\Tests\\\\content_moderation\\\\Kernel\\\\ContentModerationAccessTest\\:\\:setCurrentUser\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/content_moderation/tests/src/Kernel/ContentModerationAccessTest.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
 	'message' => '#^Method Drupal\\\\Tests\\\\content_moderation\\\\Kernel\\\\ContentModerationResaveTest\\:\\:addEntityTypeAndBundleToWorkflow\\(\\) has no return type specified\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/content_moderation/tests/src/Kernel/ContentModerationResaveTest.php',
@@ -18240,18 +18144,6 @@ $ignoreErrors[] = [
 ];
 $ignoreErrors[] = [
 	// identifier: missingType.return
-	'message' => '#^Method Drupal\\\\Tests\\\\content_moderation\\\\Kernel\\\\EntityStateChangeValidationTest\\:\\:grantPermissions\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/content_moderation/tests/src/Kernel/EntityStateChangeValidationTest.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
-	'message' => '#^Method Drupal\\\\Tests\\\\content_moderation\\\\Kernel\\\\EntityStateChangeValidationTest\\:\\:setCurrentUser\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/content_moderation/tests/src/Kernel/EntityStateChangeValidationTest.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
 	'message' => '#^Method Drupal\\\\Tests\\\\content_moderation\\\\Kernel\\\\EntityStateChangeValidationTest\\:\\:transitionAccessValidationTestCases\\(\\) has no return type specified\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/content_moderation/tests/src/Kernel/EntityStateChangeValidationTest.php',
@@ -18300,12 +18192,6 @@ $ignoreErrors[] = [
 ];
 $ignoreErrors[] = [
 	// identifier: missingType.return
-	'message' => '#^Method Drupal\\\\Tests\\\\content_moderation\\\\Kernel\\\\ModerationStateFieldItemListTest\\:\\:grantPermissions\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/content_moderation/tests/src/Kernel/ModerationStateFieldItemListTest.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
 	'message' => '#^Method Drupal\\\\Tests\\\\content_moderation\\\\Kernel\\\\ModerationStateFieldItemListTest\\:\\:moderatedEntityWithExistingIdTestCases\\(\\) has no return type specified\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/content_moderation/tests/src/Kernel/ModerationStateFieldItemListTest.php',
@@ -18318,12 +18204,6 @@ $ignoreErrors[] = [
 ];
 $ignoreErrors[] = [
 	// identifier: missingType.return
-	'message' => '#^Method Drupal\\\\Tests\\\\content_moderation\\\\Kernel\\\\ModerationStateFieldItemListTest\\:\\:setCurrentUser\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/content_moderation/tests/src/Kernel/ModerationStateFieldItemListTest.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
 	'message' => '#^Method Drupal\\\\Tests\\\\content_moderation\\\\Kernel\\\\ModerationStateWidgetTest\\:\\:addEntityTypeAndBundleToWorkflow\\(\\) has no return type specified\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/content_moderation/tests/src/Kernel/ModerationStateWidgetTest.php',
@@ -18331,18 +18211,6 @@ $ignoreErrors[] = [
 $ignoreErrors[] = [
 	// identifier: missingType.return
 	'message' => '#^Method Drupal\\\\Tests\\\\content_moderation\\\\Kernel\\\\NodeAccessTest\\:\\:addEntityTypeAndBundleToWorkflow\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/content_moderation/tests/src/Kernel/NodeAccessTest.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
-	'message' => '#^Method Drupal\\\\Tests\\\\content_moderation\\\\Kernel\\\\NodeAccessTest\\:\\:grantPermissions\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/content_moderation/tests/src/Kernel/NodeAccessTest.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
-	'message' => '#^Method Drupal\\\\Tests\\\\content_moderation\\\\Kernel\\\\NodeAccessTest\\:\\:setCurrentUser\\(\\) has no return type specified\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/content_moderation/tests/src/Kernel/NodeAccessTest.php',
 ];
@@ -18367,18 +18235,6 @@ $ignoreErrors[] = [
 $ignoreErrors[] = [
 	// identifier: missingType.return
 	'message' => '#^Method Drupal\\\\Tests\\\\content_moderation\\\\Kernel\\\\ViewsModerationStateFilterTest\\:\\:addEntityTypeAndBundleToWorkflow\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/content_moderation/tests/src/Kernel/ViewsModerationStateFilterTest.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
-	'message' => '#^Method Drupal\\\\Tests\\\\content_moderation\\\\Kernel\\\\ViewsModerationStateFilterTest\\:\\:grantPermissions\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/content_moderation/tests/src/Kernel/ViewsModerationStateFilterTest.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
-	'message' => '#^Method Drupal\\\\Tests\\\\content_moderation\\\\Kernel\\\\ViewsModerationStateFilterTest\\:\\:setCurrentUser\\(\\) has no return type specified\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/content_moderation/tests/src/Kernel/ViewsModerationStateFilterTest.php',
 ];
@@ -18414,19 +18270,7 @@ $ignoreErrors[] = [
 ];
 $ignoreErrors[] = [
 	// identifier: missingType.return
-	'message' => '#^Method Drupal\\\\Tests\\\\content_moderation\\\\Kernel\\\\WorkspacesContentModerationStateTest\\:\\:grantPermissions\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/content_moderation/tests/src/Kernel/WorkspacesContentModerationStateTest.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
 	'message' => '#^Method Drupal\\\\Tests\\\\content_moderation\\\\Kernel\\\\WorkspacesContentModerationStateTest\\:\\:initializeWorkspacesModule\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/content_moderation/tests/src/Kernel/WorkspacesContentModerationStateTest.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
-	'message' => '#^Method Drupal\\\\Tests\\\\content_moderation\\\\Kernel\\\\WorkspacesContentModerationStateTest\\:\\:setCurrentUser\\(\\) has no return type specified\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/content_moderation/tests/src/Kernel/WorkspacesContentModerationStateTest.php',
 ];
@@ -21156,30 +21000,6 @@ $ignoreErrors[] = [
 ];
 $ignoreErrors[] = [
 	// identifier: missingType.return
-	'message' => '#^Method Drupal\\\\Tests\\\\field\\\\Kernel\\\\KernelString\\\\StringFormatterTest\\:\\:grantPermissions\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/field/tests/src/Kernel/KernelString/StringFormatterTest.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
-	'message' => '#^Method Drupal\\\\Tests\\\\field\\\\Kernel\\\\KernelString\\\\StringFormatterTest\\:\\:setCurrentUser\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/field/tests/src/Kernel/KernelString/StringFormatterTest.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
-	'message' => '#^Method Drupal\\\\Tests\\\\field\\\\Kernel\\\\KernelString\\\\UuidFormatterTest\\:\\:grantPermissions\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/field/tests/src/Kernel/KernelString/UuidFormatterTest.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
-	'message' => '#^Method Drupal\\\\Tests\\\\field\\\\Kernel\\\\KernelString\\\\UuidFormatterTest\\:\\:setCurrentUser\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/field/tests/src/Kernel/KernelString/UuidFormatterTest.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
 	'message' => '#^Method Drupal\\\\Tests\\\\field\\\\Kernel\\\\Migrate\\\\d6\\\\MigrateFieldInstanceLabelDescriptionTest\\:\\:migrateDumpAlter\\(\\) has no return type specified\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/field/tests/src/Kernel/Migrate/d6/MigrateFieldInstanceLabelDescriptionTest.php',
@@ -22686,33 +22506,9 @@ $ignoreErrors[] = [
 ];
 $ignoreErrors[] = [
 	// identifier: missingType.return
-	'message' => '#^Method Drupal\\\\Tests\\\\file\\\\Kernel\\\\AccessTest\\:\\:grantPermissions\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/file/tests/src/Kernel/AccessTest.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
-	'message' => '#^Method Drupal\\\\Tests\\\\file\\\\Kernel\\\\AccessTest\\:\\:setCurrentUser\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/file/tests/src/Kernel/AccessTest.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
 	'message' => '#^Method Drupal\\\\Tests\\\\file\\\\Kernel\\\\FileItemValidationTest\\:\\:getFileTypes\\(\\) has no return type specified\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/file/tests/src/Kernel/FileItemValidationTest.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
-	'message' => '#^Method Drupal\\\\Tests\\\\file\\\\Kernel\\\\FileManagedAccessTest\\:\\:grantPermissions\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/file/tests/src/Kernel/FileManagedAccessTest.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
-	'message' => '#^Method Drupal\\\\Tests\\\\file\\\\Kernel\\\\FileManagedAccessTest\\:\\:setCurrentUser\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/file/tests/src/Kernel/FileManagedAccessTest.php',
 ];
 $ignoreErrors[] = [
 	// identifier: empty.variable
@@ -22842,18 +22638,6 @@ $ignoreErrors[] = [
 ];
 $ignoreErrors[] = [
 	// identifier: missingType.return
-	'message' => '#^Method Drupal\\\\Tests\\\\file\\\\Kernel\\\\SaveTest\\:\\:grantPermissions\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/file/tests/src/Kernel/SaveTest.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
-	'message' => '#^Method Drupal\\\\Tests\\\\file\\\\Kernel\\\\SaveTest\\:\\:setCurrentUser\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/file/tests/src/Kernel/SaveTest.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
 	'message' => '#^Method Drupal\\\\Tests\\\\file\\\\Kernel\\\\UsageTest\\:\\:createTempFiles\\(\\) has no return type specified\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/file/tests/src/Kernel/UsageTest.php',
@@ -22863,18 +22647,6 @@ $ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\Tests\\\\file\\\\Kernel\\\\UsageTest\\:\\:doTestRemoveUsage\\(\\) has no return type specified\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/file/tests/src/Kernel/UsageTest.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
-	'message' => '#^Method Drupal\\\\Tests\\\\file\\\\Kernel\\\\Views\\\\RelationshipUserFileDataTest\\:\\:grantPermissions\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/file/tests/src/Kernel/Views/RelationshipUserFileDataTest.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
-	'message' => '#^Method Drupal\\\\Tests\\\\file\\\\Kernel\\\\Views\\\\RelationshipUserFileDataTest\\:\\:setCurrentUser\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/file/tests/src/Kernel/Views/RelationshipUserFileDataTest.php',
 ];
 $ignoreErrors[] = [
 	// identifier: missingType.return
@@ -25296,18 +25068,6 @@ $ignoreErrors[] = [
 ];
 $ignoreErrors[] = [
 	// identifier: missingType.return
-	'message' => '#^Method Drupal\\\\Tests\\\\jsonapi\\\\Functional\\\\EntryPointTest\\:\\:grantPermissions\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/jsonapi/tests/src/Functional/EntryPointTest.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
-	'message' => '#^Method Drupal\\\\Tests\\\\jsonapi\\\\Functional\\\\EntryPointTest\\:\\:setCurrentUser\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/jsonapi/tests/src/Functional/EntryPointTest.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
 	'message' => '#^Method Drupal\\\\Tests\\\\jsonapi\\\\Functional\\\\FieldConfigTest\\:\\:setUpAuthorization\\(\\) has no return type specified\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/jsonapi/tests/src/Functional/FieldConfigTest.php',
@@ -25830,31 +25590,7 @@ $ignoreErrors[] = [
 ];
 $ignoreErrors[] = [
 	// identifier: missingType.return
-	'message' => '#^Method Drupal\\\\Tests\\\\jsonapi\\\\Kernel\\\\Normalizer\\\\LinkCollectionNormalizerTest\\:\\:grantPermissions\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/jsonapi/tests/src/Kernel/Normalizer/LinkCollectionNormalizerTest.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
-	'message' => '#^Method Drupal\\\\Tests\\\\jsonapi\\\\Kernel\\\\Normalizer\\\\LinkCollectionNormalizerTest\\:\\:setCurrentUser\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/jsonapi/tests/src/Kernel/Normalizer/LinkCollectionNormalizerTest.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
-	'message' => '#^Method Drupal\\\\Tests\\\\jsonapi\\\\Kernel\\\\Normalizer\\\\RelationshipNormalizerTest\\:\\:grantPermissions\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/jsonapi/tests/src/Kernel/Normalizer/RelationshipNormalizerTest.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
 	'message' => '#^Method Drupal\\\\Tests\\\\jsonapi\\\\Kernel\\\\Normalizer\\\\RelationshipNormalizerTest\\:\\:normalizeProvider\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/jsonapi/tests/src/Kernel/Normalizer/RelationshipNormalizerTest.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
-	'message' => '#^Method Drupal\\\\Tests\\\\jsonapi\\\\Kernel\\\\Normalizer\\\\RelationshipNormalizerTest\\:\\:setCurrentUser\\(\\) has no return type specified\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/jsonapi/tests/src/Kernel/Normalizer/RelationshipNormalizerTest.php',
 ];
@@ -28704,19 +28440,7 @@ $ignoreErrors[] = [
 ];
 $ignoreErrors[] = [
 	// identifier: missingType.return
-	'message' => '#^Method Drupal\\\\Tests\\\\layout_builder\\\\Kernel\\\\OverridesSectionStorageTest\\:\\:grantPermissions\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/layout_builder/tests/src/Kernel/OverridesSectionStorageTest.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
 	'message' => '#^Method Drupal\\\\Tests\\\\layout_builder\\\\Kernel\\\\OverridesSectionStorageTest\\:\\:providerTestAccess\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/layout_builder/tests/src/Kernel/OverridesSectionStorageTest.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
-	'message' => '#^Method Drupal\\\\Tests\\\\layout_builder\\\\Kernel\\\\OverridesSectionStorageTest\\:\\:setCurrentUser\\(\\) has no return type specified\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/layout_builder/tests/src/Kernel/OverridesSectionStorageTest.php',
 ];
@@ -31170,18 +30894,6 @@ $ignoreErrors[] = [
 ];
 $ignoreErrors[] = [
 	// identifier: missingType.return
-	'message' => '#^Method Drupal\\\\Tests\\\\media\\\\Kernel\\\\MediaAccessControlHandlerTest\\:\\:grantPermissions\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/media/tests/src/Kernel/MediaAccessControlHandlerTest.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
-	'message' => '#^Method Drupal\\\\Tests\\\\media\\\\Kernel\\\\MediaAccessControlHandlerTest\\:\\:setCurrentUser\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/media/tests/src/Kernel/MediaAccessControlHandlerTest.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
 	'message' => '#^Method Drupal\\\\Tests\\\\media\\\\Kernel\\\\MediaEmbedFilterTest\\:\\:providerAccessUnpublished\\(\\) has no return type specified\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/media/tests/src/Kernel/MediaEmbedFilterTest.php',
@@ -31218,18 +30930,6 @@ $ignoreErrors[] = [
 ];
 $ignoreErrors[] = [
 	// identifier: missingType.return
-	'message' => '#^Method Drupal\\\\Tests\\\\media\\\\Kernel\\\\MediaEmbedFilterTestBase\\:\\:grantPermissions\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/media/tests/src/Kernel/MediaEmbedFilterTestBase.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
-	'message' => '#^Method Drupal\\\\Tests\\\\media\\\\Kernel\\\\MediaEmbedFilterTestBase\\:\\:setCurrentUser\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/media/tests/src/Kernel/MediaEmbedFilterTestBase.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
 	'message' => '#^Method Drupal\\\\Tests\\\\media\\\\Kernel\\\\MediaEmbedFilterTranslationTest\\:\\:providerTranslationSituations\\(\\) has no return type specified\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/media/tests/src/Kernel/MediaEmbedFilterTranslationTest.php',
@@ -31251,18 +30951,6 @@ $ignoreErrors[] = [
 	'message' => '#^Method class@anonymous/core/modules/media/tests/src/Kernel/OEmbedResourceConstraintValidatorTest\\.php\\:107\\:\\:getEntity\\(\\) has no return type specified\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/media/tests/src/Kernel/OEmbedResourceConstraintValidatorTest.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
-	'message' => '#^Method Drupal\\\\Tests\\\\media\\\\Kernel\\\\Views\\\\RevisionUserTest\\:\\:grantPermissions\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/media/tests/src/Kernel/Views/RevisionUserTest.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
-	'message' => '#^Method Drupal\\\\Tests\\\\media\\\\Kernel\\\\Views\\\\RevisionUserTest\\:\\:setCurrentUser\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/media/tests/src/Kernel/Views/RevisionUserTest.php',
 ];
 $ignoreErrors[] = [
 	// identifier: missingType.return
@@ -31782,42 +31470,6 @@ $ignoreErrors[] = [
 ];
 $ignoreErrors[] = [
 	// identifier: missingType.return
-	'message' => '#^Method Drupal\\\\Tests\\\\media_library\\\\Kernel\\\\MediaLibraryAccessTest\\:\\:grantPermissions\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/media_library/tests/src/Kernel/MediaLibraryAccessTest.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
-	'message' => '#^Method Drupal\\\\Tests\\\\media_library\\\\Kernel\\\\MediaLibraryAccessTest\\:\\:setCurrentUser\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/media_library/tests/src/Kernel/MediaLibraryAccessTest.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
-	'message' => '#^Method Drupal\\\\Tests\\\\media_library\\\\Kernel\\\\MediaLibraryAddFormTest\\:\\:grantPermissions\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/media_library/tests/src/Kernel/MediaLibraryAddFormTest.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
-	'message' => '#^Method Drupal\\\\Tests\\\\media_library\\\\Kernel\\\\MediaLibraryAddFormTest\\:\\:setCurrentUser\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/media_library/tests/src/Kernel/MediaLibraryAddFormTest.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
-	'message' => '#^Method Drupal\\\\Tests\\\\media_library\\\\Kernel\\\\MediaLibraryWidgetTest\\:\\:grantPermissions\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/media_library/tests/src/Kernel/MediaLibraryWidgetTest.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
-	'message' => '#^Method Drupal\\\\Tests\\\\media_library\\\\Kernel\\\\MediaLibraryWidgetTest\\:\\:setCurrentUser\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/media_library/tests/src/Kernel/MediaLibraryWidgetTest.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
 	'message' => '#^Function menu_link_content_update_last_removed\\(\\) has no return type specified\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/menu_link_content/menu_link_content.install',
@@ -32070,18 +31722,6 @@ $ignoreErrors[] = [
 ];
 $ignoreErrors[] = [
 	// identifier: missingType.return
-	'message' => '#^Method Drupal\\\\Tests\\\\menu_link_content\\\\Kernel\\\\MenuLinkContentCacheabilityBubblingTest\\:\\:grantPermissions\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/menu_link_content/tests/src/Kernel/MenuLinkContentCacheabilityBubblingTest.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
-	'message' => '#^Method Drupal\\\\Tests\\\\menu_link_content\\\\Kernel\\\\MenuLinkContentCacheabilityBubblingTest\\:\\:setCurrentUser\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/menu_link_content/tests/src/Kernel/MenuLinkContentCacheabilityBubblingTest.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
 	'message' => '#^Method Drupal\\\\Tests\\\\menu_link_content\\\\Kernel\\\\MenuLinksTest\\:\\:createLinkHierarchy\\(\\) has no return type specified\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/menu_link_content/tests/src/Kernel/MenuLinksTest.php',
@@ -32094,54 +31734,6 @@ $ignoreErrors[] = [
 ];
 $ignoreErrors[] = [
 	// identifier: missingType.return
-	'message' => '#^Method Drupal\\\\Tests\\\\menu_link_content\\\\Kernel\\\\Migrate\\\\d6\\\\MigrateMenuLinkLocalizedTest\\:\\:grantPermissions\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/menu_link_content/tests/src/Kernel/Migrate/d6/MigrateMenuLinkLocalizedTest.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
-	'message' => '#^Method Drupal\\\\Tests\\\\menu_link_content\\\\Kernel\\\\Migrate\\\\d6\\\\MigrateMenuLinkLocalizedTest\\:\\:setCurrentUser\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/menu_link_content/tests/src/Kernel/Migrate/d6/MigrateMenuLinkLocalizedTest.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
-	'message' => '#^Method Drupal\\\\Tests\\\\menu_link_content\\\\Kernel\\\\Migrate\\\\d6\\\\MigrateMenuLinkTest\\:\\:grantPermissions\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/menu_link_content/tests/src/Kernel/Migrate/d6/MigrateMenuLinkTest.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
-	'message' => '#^Method Drupal\\\\Tests\\\\menu_link_content\\\\Kernel\\\\Migrate\\\\d6\\\\MigrateMenuLinkTest\\:\\:setCurrentUser\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/menu_link_content/tests/src/Kernel/Migrate/d6/MigrateMenuLinkTest.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
-	'message' => '#^Method Drupal\\\\Tests\\\\menu_link_content\\\\Kernel\\\\Migrate\\\\d6\\\\MigrateMenuLinkTranslationTest\\:\\:grantPermissions\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/menu_link_content/tests/src/Kernel/Migrate/d6/MigrateMenuLinkTranslationTest.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
-	'message' => '#^Method Drupal\\\\Tests\\\\menu_link_content\\\\Kernel\\\\Migrate\\\\d6\\\\MigrateMenuLinkTranslationTest\\:\\:setCurrentUser\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/menu_link_content/tests/src/Kernel/Migrate/d6/MigrateMenuLinkTranslationTest.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
-	'message' => '#^Method Drupal\\\\Tests\\\\menu_link_content\\\\Kernel\\\\Migrate\\\\d7\\\\MigrateMenuLinkTest\\:\\:grantPermissions\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/menu_link_content/tests/src/Kernel/Migrate/d7/MigrateMenuLinkTest.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
-	'message' => '#^Method Drupal\\\\Tests\\\\menu_link_content\\\\Kernel\\\\Migrate\\\\d7\\\\MigrateMenuLinkTest\\:\\:setCurrentUser\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/menu_link_content/tests/src/Kernel/Migrate/d7/MigrateMenuLinkTest.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
 	'message' => '#^Method Drupal\\\\Tests\\\\menu_link_content\\\\Kernel\\\\PathAliasMenuLinkContentTest\\:\\:assertPathAliasExists\\(\\) has no return type specified\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/menu_link_content/tests/src/Kernel/PathAliasMenuLinkContentTest.php',
@@ -32151,18 +31743,6 @@ $ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\Tests\\\\menu_link_content\\\\Kernel\\\\PathAliasMenuLinkContentTest\\:\\:assertPathAliasNotExists\\(\\) has no return type specified\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/menu_link_content/tests/src/Kernel/PathAliasMenuLinkContentTest.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
-	'message' => '#^Method Drupal\\\\Tests\\\\menu_link_content\\\\Kernel\\\\Plugin\\\\migrate\\\\process\\\\LinkUriTest\\:\\:grantPermissions\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/menu_link_content/tests/src/Kernel/Plugin/migrate/process/LinkUriTest.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
-	'message' => '#^Method Drupal\\\\Tests\\\\menu_link_content\\\\Kernel\\\\Plugin\\\\migrate\\\\process\\\\LinkUriTest\\:\\:setCurrentUser\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/menu_link_content/tests/src/Kernel/Plugin/migrate/process/LinkUriTest.php',
 ];
 $ignoreErrors[] = [
 	// identifier: missingType.return
@@ -32475,18 +32055,6 @@ $ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\Tests\\\\menu_ui\\\\FunctionalJavascript\\\\MenuUiJavascriptTest\\:\\:toggleContextualTriggerVisibility\\(\\) has no return type specified\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/menu_ui/tests/src/FunctionalJavascript/MenuUiJavascriptTest.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
-	'message' => '#^Method Drupal\\\\Tests\\\\menu_ui\\\\Kernel\\\\MenuBlockTest\\:\\:grantPermissions\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/menu_ui/tests/src/Kernel/MenuBlockTest.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
-	'message' => '#^Method Drupal\\\\Tests\\\\menu_ui\\\\Kernel\\\\MenuBlockTest\\:\\:setCurrentUser\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/menu_ui/tests/src/Kernel/MenuBlockTest.php',
 ];
 $ignoreErrors[] = [
 	// identifier: missingType.return
@@ -33469,18 +33037,6 @@ $ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\Tests\\\\migrate\\\\Kernel\\\\process\\\\FileCopyTest\\:\\:providerSuccessfulReuse\\(\\) has no return type specified\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/migrate/tests/src/Kernel/process/FileCopyTest.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
-	'message' => '#^Method Drupal\\\\Tests\\\\migrate\\\\Kernel\\\\process\\\\RouteTest\\:\\:grantPermissions\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/migrate/tests/src/Kernel/process/RouteTest.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
-	'message' => '#^Method Drupal\\\\Tests\\\\migrate\\\\Kernel\\\\process\\\\RouteTest\\:\\:setCurrentUser\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/migrate/tests/src/Kernel/process/RouteTest.php',
 ];
 $ignoreErrors[] = [
 	// identifier: missingType.return
@@ -36806,18 +36362,6 @@ $ignoreErrors[] = [
 ];
 $ignoreErrors[] = [
 	// identifier: missingType.return
-	'message' => '#^Method Drupal\\\\Tests\\\\node\\\\Kernel\\\\Migrate\\\\d6\\\\NodeTranslationRedirectTest\\:\\:grantPermissions\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/node/tests/src/Kernel/Migrate/d6/NodeTranslationRedirectTest.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
-	'message' => '#^Method Drupal\\\\Tests\\\\node\\\\Kernel\\\\Migrate\\\\d6\\\\NodeTranslationRedirectTest\\:\\:setCurrentUser\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/node/tests/src/Kernel/Migrate/d6/NodeTranslationRedirectTest.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
 	'message' => '#^Method Drupal\\\\Tests\\\\node\\\\Kernel\\\\Migrate\\\\d7\\\\MigrateNodeCompleteTest\\:\\:assertEntity\\(\\) has no return type specified\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/node/tests/src/Kernel/Migrate/d7/MigrateNodeCompleteTest.php',
@@ -36896,18 +36440,6 @@ $ignoreErrors[] = [
 ];
 $ignoreErrors[] = [
 	// identifier: missingType.return
-	'message' => '#^Method Drupal\\\\Tests\\\\node\\\\Kernel\\\\Migrate\\\\d7\\\\NodeTranslationRedirectTest\\:\\:grantPermissions\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/node/tests/src/Kernel/Migrate/d7/NodeTranslationRedirectTest.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
-	'message' => '#^Method Drupal\\\\Tests\\\\node\\\\Kernel\\\\Migrate\\\\d7\\\\NodeTranslationRedirectTest\\:\\:setCurrentUser\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/node/tests/src/Kernel/Migrate/d7/NodeTranslationRedirectTest.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
 	'message' => '#^Method Drupal\\\\Tests\\\\node\\\\Kernel\\\\NodeAccessTestBase\\:\\:assertNodeAccess\\(\\) has no return type specified\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/node/tests/src/Kernel/NodeAccessTestBase.php',
@@ -36915,18 +36447,6 @@ $ignoreErrors[] = [
 $ignoreErrors[] = [
 	// identifier: missingType.return
 	'message' => '#^Method Drupal\\\\Tests\\\\node\\\\Kernel\\\\NodeAccessTestBase\\:\\:assertNodeCreateAccess\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/node/tests/src/Kernel/NodeAccessTestBase.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
-	'message' => '#^Method Drupal\\\\Tests\\\\node\\\\Kernel\\\\NodeAccessTestBase\\:\\:grantPermissions\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/node/tests/src/Kernel/NodeAccessTestBase.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
-	'message' => '#^Method Drupal\\\\Tests\\\\node\\\\Kernel\\\\NodeAccessTestBase\\:\\:setCurrentUser\\(\\) has no return type specified\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/node/tests/src/Kernel/NodeAccessTestBase.php',
 ];
@@ -36995,78 +36515,6 @@ $ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\Tests\\\\node\\\\Kernel\\\\Plugin\\\\migrate\\\\source\\\\d7\\\\NodeTypeTest\\:\\:providerSource\\(\\) has no return type specified\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/node/tests/src/Kernel/Plugin/migrate/source/d7/NodeTypeTest.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
-	'message' => '#^Method Drupal\\\\Tests\\\\node\\\\Kernel\\\\SummaryLengthTest\\:\\:grantPermissions\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/node/tests/src/Kernel/SummaryLengthTest.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
-	'message' => '#^Method Drupal\\\\Tests\\\\node\\\\Kernel\\\\SummaryLengthTest\\:\\:setCurrentUser\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/node/tests/src/Kernel/SummaryLengthTest.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
-	'message' => '#^Method Drupal\\\\Tests\\\\node\\\\Kernel\\\\Views\\\\ArgumentUidRevisionTest\\:\\:grantPermissions\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/node/tests/src/Kernel/Views/ArgumentUidRevisionTest.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
-	'message' => '#^Method Drupal\\\\Tests\\\\node\\\\Kernel\\\\Views\\\\ArgumentUidRevisionTest\\:\\:setCurrentUser\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/node/tests/src/Kernel/Views/ArgumentUidRevisionTest.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
-	'message' => '#^Method Drupal\\\\Tests\\\\node\\\\Kernel\\\\Views\\\\FilterUidRevisionTest\\:\\:grantPermissions\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/node/tests/src/Kernel/Views/FilterUidRevisionTest.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
-	'message' => '#^Method Drupal\\\\Tests\\\\node\\\\Kernel\\\\Views\\\\FilterUidRevisionTest\\:\\:setCurrentUser\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/node/tests/src/Kernel/Views/FilterUidRevisionTest.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
-	'message' => '#^Method Drupal\\\\Tests\\\\node\\\\Kernel\\\\Views\\\\PathPluginTest\\:\\:grantPermissions\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/node/tests/src/Kernel/Views/PathPluginTest.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
-	'message' => '#^Method Drupal\\\\Tests\\\\node\\\\Kernel\\\\Views\\\\PathPluginTest\\:\\:setCurrentUser\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/node/tests/src/Kernel/Views/PathPluginTest.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
-	'message' => '#^Method Drupal\\\\Tests\\\\node\\\\Kernel\\\\Views\\\\RevisionUidTest\\:\\:grantPermissions\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/node/tests/src/Kernel/Views/RevisionUidTest.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
-	'message' => '#^Method Drupal\\\\Tests\\\\node\\\\Kernel\\\\Views\\\\RevisionUidTest\\:\\:setCurrentUser\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/node/tests/src/Kernel/Views/RevisionUidTest.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
-	'message' => '#^Method Drupal\\\\Tests\\\\node\\\\Kernel\\\\Views\\\\RowPluginTest\\:\\:grantPermissions\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/node/tests/src/Kernel/Views/RowPluginTest.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
-	'message' => '#^Method Drupal\\\\Tests\\\\node\\\\Kernel\\\\Views\\\\RowPluginTest\\:\\:setCurrentUser\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/node/tests/src/Kernel/Views/RowPluginTest.php',
 ];
 $ignoreErrors[] = [
 	// identifier: missingType.return
@@ -39587,18 +39035,6 @@ $ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\Tests\\\\search\\\\Kernel\\\\SearchMatchTest\\:\\:getText2\\(\\) has no return type specified\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/search/tests/src/Kernel/SearchMatchTest.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
-	'message' => '#^Method Drupal\\\\Tests\\\\search\\\\Kernel\\\\SearchSetLocaleTest\\:\\:grantPermissions\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/search/tests/src/Kernel/SearchSetLocaleTest.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
-	'message' => '#^Method Drupal\\\\Tests\\\\search\\\\Kernel\\\\SearchSetLocaleTest\\:\\:setCurrentUser\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/search/tests/src/Kernel/SearchSetLocaleTest.php',
 ];
 $ignoreErrors[] = [
 	// identifier: missingType.return
@@ -47231,19 +46667,7 @@ $ignoreErrors[] = [
 ];
 $ignoreErrors[] = [
 	// identifier: missingType.return
-	'message' => '#^Method Drupal\\\\Tests\\\\system\\\\Functional\\\\Menu\\\\LinksetControllerTestBase\\:\\:grantPermissions\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/system/tests/src/Functional/Menu/LinksetControllerTestBase.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
 	'message' => '#^Method Drupal\\\\Tests\\\\system\\\\Functional\\\\Menu\\\\LinksetControllerTestBase\\:\\:rebuildIfNeeded\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/system/tests/src/Functional/Menu/LinksetControllerTestBase.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
-	'message' => '#^Method Drupal\\\\Tests\\\\system\\\\Functional\\\\Menu\\\\LinksetControllerTestBase\\:\\:setCurrentUser\\(\\) has no return type specified\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/system/tests/src/Functional/Menu/LinksetControllerTestBase.php',
 ];
@@ -48899,18 +48323,6 @@ $ignoreErrors[] = [
 ];
 $ignoreErrors[] = [
 	// identifier: missingType.return
-	'message' => '#^Method Drupal\\\\Tests\\\\system\\\\Kernel\\\\DateFormatAccessControlHandlerTest\\:\\:grantPermissions\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/system/tests/src/Kernel/DateFormatAccessControlHandlerTest.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
-	'message' => '#^Method Drupal\\\\Tests\\\\system\\\\Kernel\\\\DateFormatAccessControlHandlerTest\\:\\:setCurrentUser\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/system/tests/src/Kernel/DateFormatAccessControlHandlerTest.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
 	'message' => '#^Method Drupal\\\\Tests\\\\system\\\\Kernel\\\\DateFormatAccessControlHandlerTest\\:\\:testAccessProvider\\(\\) has no return type specified\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/system/tests/src/Kernel/DateFormatAccessControlHandlerTest.php',
@@ -48959,18 +48371,6 @@ $ignoreErrors[] = [
 ];
 $ignoreErrors[] = [
 	// identifier: missingType.return
-	'message' => '#^Method Drupal\\\\Tests\\\\system\\\\Kernel\\\\Entity\\\\EntityReferenceSelection\\\\EntityReferenceSelectionAccessTest\\:\\:grantPermissions\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/system/tests/src/Kernel/Entity/EntityReferenceSelection/EntityReferenceSelectionAccessTest.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
-	'message' => '#^Method Drupal\\\\Tests\\\\system\\\\Kernel\\\\Entity\\\\EntityReferenceSelection\\\\EntityReferenceSelectionAccessTest\\:\\:setCurrentUser\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/system/tests/src/Kernel/Entity/EntityReferenceSelection/EntityReferenceSelectionAccessTest.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
 	'message' => '#^Method Drupal\\\\Tests\\\\system\\\\Kernel\\\\Entity\\\\EntityReferenceSelectionReferenceableTest\\:\\:createEntityReferenceField\\(\\) has no return type specified\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/system/tests/src/Kernel/Entity/EntityReferenceSelectionReferenceableTest.php',
@@ -49013,18 +48413,6 @@ $ignoreErrors[] = [
 ];
 $ignoreErrors[] = [
 	// identifier: missingType.return
-	'message' => '#^Method Drupal\\\\Tests\\\\system\\\\Kernel\\\\MenuAccessControlHandlerTest\\:\\:grantPermissions\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/system/tests/src/Kernel/MenuAccessControlHandlerTest.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
-	'message' => '#^Method Drupal\\\\Tests\\\\system\\\\Kernel\\\\MenuAccessControlHandlerTest\\:\\:setCurrentUser\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/system/tests/src/Kernel/MenuAccessControlHandlerTest.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
 	'message' => '#^Method Drupal\\\\Tests\\\\system\\\\Kernel\\\\MenuAccessControlHandlerTest\\:\\:testAccessProvider\\(\\) has no return type specified\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/system/tests/src/Kernel/MenuAccessControlHandlerTest.php',
@@ -49052,30 +48440,6 @@ $ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\Tests\\\\system\\\\Kernel\\\\Migrate\\\\d7\\\\MigrateActionConfigsTest\\:\\:assertConfigSchemaByName\\(\\) has no return type specified\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/system/tests/src/Kernel/Migrate/d7/MigrateActionConfigsTest.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
-	'message' => '#^Method Drupal\\\\Tests\\\\system\\\\Kernel\\\\Module\\\\PrepareModulesEntityUninstallFormTest\\:\\:grantPermissions\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/system/tests/src/Kernel/Module/PrepareModulesEntityUninstallFormTest.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
-	'message' => '#^Method Drupal\\\\Tests\\\\system\\\\Kernel\\\\Module\\\\PrepareModulesEntityUninstallFormTest\\:\\:setCurrentUser\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/system/tests/src/Kernel/Module/PrepareModulesEntityUninstallFormTest.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
-	'message' => '#^Method Drupal\\\\Tests\\\\system\\\\Kernel\\\\ModuleAdminLinksHelperTest\\:\\:grantPermissions\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/system/tests/src/Kernel/ModuleAdminLinksHelperTest.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
-	'message' => '#^Method Drupal\\\\Tests\\\\system\\\\Kernel\\\\ModuleAdminLinksHelperTest\\:\\:setCurrentUser\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/system/tests/src/Kernel/ModuleAdminLinksHelperTest.php',
 ];
 $ignoreErrors[] = [
 	// identifier: missingType.return
@@ -49124,18 +48488,6 @@ $ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\Tests\\\\system\\\\Kernel\\\\Theme\\\\TwigIncludeTest\\:\\:register\\(\\) has no return type specified\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/system/tests/src/Kernel/Theme/TwigIncludeTest.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
-	'message' => '#^Method Drupal\\\\Tests\\\\system\\\\Kernel\\\\TimezoneResolverTest\\:\\:grantPermissions\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/system/tests/src/Kernel/TimezoneResolverTest.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
-	'message' => '#^Method Drupal\\\\Tests\\\\system\\\\Kernel\\\\TimezoneResolverTest\\:\\:setCurrentUser\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/system/tests/src/Kernel/TimezoneResolverTest.php',
 ];
 $ignoreErrors[] = [
 	// identifier: missingType.return
@@ -50543,45 +49895,9 @@ $ignoreErrors[] = [
 ];
 $ignoreErrors[] = [
 	// identifier: missingType.return
-	'message' => '#^Method Drupal\\\\Tests\\\\taxonomy\\\\Kernel\\\\TermKernelTest\\:\\:grantPermissions\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/taxonomy/tests/src/Kernel/TermKernelTest.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
-	'message' => '#^Method Drupal\\\\Tests\\\\taxonomy\\\\Kernel\\\\TermKernelTest\\:\\:setCurrentUser\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/taxonomy/tests/src/Kernel/TermKernelTest.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
 	'message' => '#^Method Drupal\\\\Tests\\\\taxonomy\\\\Kernel\\\\TokenReplaceTest\\:\\:createEntityReferenceField\\(\\) has no return type specified\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/taxonomy/tests/src/Kernel/TokenReplaceTest.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
-	'message' => '#^Method Drupal\\\\Tests\\\\taxonomy\\\\Kernel\\\\Views\\\\TaxonomyFieldTidTest\\:\\:grantPermissions\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/taxonomy/tests/src/Kernel/Views/TaxonomyFieldTidTest.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
-	'message' => '#^Method Drupal\\\\Tests\\\\taxonomy\\\\Kernel\\\\Views\\\\TaxonomyFieldTidTest\\:\\:setCurrentUser\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/taxonomy/tests/src/Kernel/Views/TaxonomyFieldTidTest.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
-	'message' => '#^Method Drupal\\\\Tests\\\\taxonomy\\\\Kernel\\\\Views\\\\TaxonomyFieldVidTest\\:\\:grantPermissions\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/taxonomy/tests/src/Kernel/Views/TaxonomyFieldVidTest.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
-	'message' => '#^Method Drupal\\\\Tests\\\\taxonomy\\\\Kernel\\\\Views\\\\TaxonomyFieldVidTest\\:\\:setCurrentUser\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/taxonomy/tests/src/Kernel/Views/TaxonomyFieldVidTest.php',
 ];
 $ignoreErrors[] = [
 	// identifier: missingType.return
@@ -50591,19 +49907,7 @@ $ignoreErrors[] = [
 ];
 $ignoreErrors[] = [
 	// identifier: missingType.return
-	'message' => '#^Method Drupal\\\\Tests\\\\taxonomy\\\\Kernel\\\\Views\\\\TaxonomyTestBase\\:\\:grantPermissions\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/taxonomy/tests/src/Kernel/Views/TaxonomyTestBase.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
 	'message' => '#^Method Drupal\\\\Tests\\\\taxonomy\\\\Kernel\\\\Views\\\\TaxonomyTestBase\\:\\:mockStandardInstall\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/taxonomy/tests/src/Kernel/Views/TaxonomyTestBase.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
-	'message' => '#^Method Drupal\\\\Tests\\\\taxonomy\\\\Kernel\\\\Views\\\\TaxonomyTestBase\\:\\:setCurrentUser\\(\\) has no return type specified\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/taxonomy/tests/src/Kernel/Views/TaxonomyTestBase.php',
 ];
@@ -50684,18 +49988,6 @@ $ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\Tests\\\\text\\\\Kernel\\\\TextItemBaseTest\\:\\:providerTextFieldSampleValue\\(\\) has no return type specified\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/text/tests/src/Kernel/TextItemBaseTest.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
-	'message' => '#^Method Drupal\\\\Tests\\\\text\\\\Kernel\\\\TextSummaryTest\\:\\:grantPermissions\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/text/tests/src/Kernel/TextSummaryTest.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
-	'message' => '#^Method Drupal\\\\Tests\\\\text\\\\Kernel\\\\TextSummaryTest\\:\\:setCurrentUser\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/text/tests/src/Kernel/TextSummaryTest.php',
 ];
 $ignoreErrors[] = [
 	// identifier: missingType.return
@@ -51152,18 +50444,6 @@ $ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\Tests\\\\update\\\\Kernel\\\\Migrate\\\\d6\\\\MigrateUpdateConfigsTest\\:\\:assertConfigSchemaByName\\(\\) has no return type specified\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/update/tests/src/Kernel/Migrate/d6/MigrateUpdateConfigsTest.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
-	'message' => '#^Method Drupal\\\\Tests\\\\update\\\\Kernel\\\\UpdateReportTest\\:\\:grantPermissions\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/update/tests/src/Kernel/UpdateReportTest.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
-	'message' => '#^Method Drupal\\\\Tests\\\\update\\\\Kernel\\\\UpdateReportTest\\:\\:setCurrentUser\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/update/tests/src/Kernel/UpdateReportTest.php',
 ];
 $ignoreErrors[] = [
 	// identifier: missingType.return
@@ -52667,18 +51947,6 @@ $ignoreErrors[] = [
 ];
 $ignoreErrors[] = [
 	// identifier: missingType.return
-	'message' => '#^Method Drupal\\\\Tests\\\\user\\\\Kernel\\\\Controller\\\\UserControllerTest\\:\\:grantPermissions\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/user/tests/src/Kernel/Controller/UserControllerTest.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
-	'message' => '#^Method Drupal\\\\Tests\\\\user\\\\Kernel\\\\Controller\\\\UserControllerTest\\:\\:setCurrentUser\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/user/tests/src/Kernel/Controller/UserControllerTest.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
 	'message' => '#^Method Drupal\\\\Tests\\\\user\\\\Kernel\\\\Migrate\\\\MigrateUserStubTest\\:\\:performStubTest\\(\\) has no return type specified\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/user/tests/src/Kernel/Migrate/MigrateUserStubTest.php',
@@ -52748,18 +52016,6 @@ $ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\Tests\\\\user\\\\Kernel\\\\Migrate\\\\d7\\\\MigrateUserSettingsTest\\:\\:assertConfigSchemaByName\\(\\) has no return type specified\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/user/tests/src/Kernel/Migrate/d7/MigrateUserSettingsTest.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
-	'message' => '#^Method Drupal\\\\Tests\\\\user\\\\Kernel\\\\ModulePermissionsLinkHelperTest\\:\\:grantPermissions\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/user/tests/src/Kernel/ModulePermissionsLinkHelperTest.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
-	'message' => '#^Method Drupal\\\\Tests\\\\user\\\\Kernel\\\\ModulePermissionsLinkHelperTest\\:\\:setCurrentUser\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/user/tests/src/Kernel/ModulePermissionsLinkHelperTest.php',
 ];
 $ignoreErrors[] = [
 	// identifier: missingType.return
@@ -52841,30 +52097,6 @@ $ignoreErrors[] = [
 ];
 $ignoreErrors[] = [
 	// identifier: missingType.return
-	'message' => '#^Method Drupal\\\\Tests\\\\user\\\\Kernel\\\\UserDeleteTest\\:\\:grantPermissions\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/user/tests/src/Kernel/UserDeleteTest.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
-	'message' => '#^Method Drupal\\\\Tests\\\\user\\\\Kernel\\\\UserDeleteTest\\:\\:setCurrentUser\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/user/tests/src/Kernel/UserDeleteTest.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
-	'message' => '#^Method Drupal\\\\Tests\\\\user\\\\Kernel\\\\UserEntityLabelTest\\:\\:grantPermissions\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/user/tests/src/Kernel/UserEntityLabelTest.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
-	'message' => '#^Method Drupal\\\\Tests\\\\user\\\\Kernel\\\\UserEntityLabelTest\\:\\:setCurrentUser\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/user/tests/src/Kernel/UserEntityLabelTest.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
 	'message' => '#^Method Drupal\\\\Tests\\\\user\\\\Kernel\\\\UserEntityReferenceTest\\:\\:createEntityReferenceField\\(\\) has no return type specified\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/user/tests/src/Kernel/UserEntityReferenceTest.php',
@@ -52883,93 +52115,9 @@ $ignoreErrors[] = [
 ];
 $ignoreErrors[] = [
 	// identifier: missingType.return
-	'message' => '#^Method Drupal\\\\Tests\\\\user\\\\Kernel\\\\UserPassRehashTest\\:\\:grantPermissions\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/user/tests/src/Kernel/UserPassRehashTest.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
-	'message' => '#^Method Drupal\\\\Tests\\\\user\\\\Kernel\\\\UserPassRehashTest\\:\\:setCurrentUser\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/user/tests/src/Kernel/UserPassRehashTest.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
-	'message' => '#^Method Drupal\\\\Tests\\\\user\\\\Kernel\\\\Views\\\\AccessPermissionTest\\:\\:grantPermissions\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/user/tests/src/Kernel/Views/AccessPermissionTest.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
-	'message' => '#^Method Drupal\\\\Tests\\\\user\\\\Kernel\\\\Views\\\\AccessPermissionTest\\:\\:setCurrentUser\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/user/tests/src/Kernel/Views/AccessPermissionTest.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
-	'message' => '#^Method Drupal\\\\Tests\\\\user\\\\Kernel\\\\Views\\\\ArgumentDefaultTest\\:\\:grantPermissions\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/user/tests/src/Kernel/Views/ArgumentDefaultTest.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
-	'message' => '#^Method Drupal\\\\Tests\\\\user\\\\Kernel\\\\Views\\\\ArgumentDefaultTest\\:\\:setCurrentUser\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/user/tests/src/Kernel/Views/ArgumentDefaultTest.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
-	'message' => '#^Method Drupal\\\\Tests\\\\user\\\\Kernel\\\\Views\\\\ArgumentValidateTest\\:\\:grantPermissions\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/user/tests/src/Kernel/Views/ArgumentValidateTest.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
-	'message' => '#^Method Drupal\\\\Tests\\\\user\\\\Kernel\\\\Views\\\\ArgumentValidateTest\\:\\:setCurrentUser\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/user/tests/src/Kernel/Views/ArgumentValidateTest.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
-	'message' => '#^Method Drupal\\\\Tests\\\\user\\\\Kernel\\\\Views\\\\HandlerArgumentUserUidTest\\:\\:grantPermissions\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/user/tests/src/Kernel/Views/HandlerArgumentUserUidTest.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
-	'message' => '#^Method Drupal\\\\Tests\\\\user\\\\Kernel\\\\Views\\\\HandlerArgumentUserUidTest\\:\\:setCurrentUser\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/user/tests/src/Kernel/Views/HandlerArgumentUserUidTest.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
-	'message' => '#^Method Drupal\\\\Tests\\\\user\\\\Kernel\\\\Views\\\\RelationshipRepresentativeNodeTest\\:\\:grantPermissions\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/user/tests/src/Kernel/Views/RelationshipRepresentativeNodeTest.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
-	'message' => '#^Method Drupal\\\\Tests\\\\user\\\\Kernel\\\\Views\\\\RelationshipRepresentativeNodeTest\\:\\:setCurrentUser\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/user/tests/src/Kernel/Views/RelationshipRepresentativeNodeTest.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
 	'message' => '#^Method Drupal\\\\Tests\\\\user\\\\Kernel\\\\Views\\\\UserKernelTestBase\\:\\:setupPermissionTestData\\(\\) has no return type specified\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/user/tests/src/Kernel/Views/UserKernelTestBase.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
-	'message' => '#^Method Drupal\\\\Tests\\\\user\\\\Kernel\\\\WhoIsOnlineBlockTest\\:\\:grantPermissions\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/user/tests/src/Kernel/WhoIsOnlineBlockTest.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
-	'message' => '#^Method Drupal\\\\Tests\\\\user\\\\Kernel\\\\WhoIsOnlineBlockTest\\:\\:setCurrentUser\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/user/tests/src/Kernel/WhoIsOnlineBlockTest.php',
 ];
 $ignoreErrors[] = [
 	// identifier: missingType.return
@@ -61199,31 +60347,7 @@ $ignoreErrors[] = [
 ];
 $ignoreErrors[] = [
 	// identifier: missingType.return
-	'message' => '#^Method Drupal\\\\Tests\\\\views\\\\Kernel\\\\Handler\\\\FieldDropbuttonTest\\:\\:grantPermissions\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/views/tests/src/Kernel/Handler/FieldDropbuttonTest.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
-	'message' => '#^Method Drupal\\\\Tests\\\\views\\\\Kernel\\\\Handler\\\\FieldDropbuttonTest\\:\\:setCurrentUser\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/views/tests/src/Kernel/Handler/FieldDropbuttonTest.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
 	'message' => '#^Method Drupal\\\\Tests\\\\views\\\\Kernel\\\\Handler\\\\FieldEntityLinkTest\\:\\:doTestEntityLink\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/views/tests/src/Kernel/Handler/FieldEntityLinkTest.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
-	'message' => '#^Method Drupal\\\\Tests\\\\views\\\\Kernel\\\\Handler\\\\FieldEntityLinkTest\\:\\:grantPermissions\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/views/tests/src/Kernel/Handler/FieldEntityLinkTest.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
-	'message' => '#^Method Drupal\\\\Tests\\\\views\\\\Kernel\\\\Handler\\\\FieldEntityLinkTest\\:\\:setCurrentUser\\(\\) has no return type specified\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/views/tests/src/Kernel/Handler/FieldEntityLinkTest.php',
 ];
@@ -61238,18 +60362,6 @@ $ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\Tests\\\\views\\\\Kernel\\\\Handler\\\\FieldFieldAccessTestBase\\:\\:assertFieldAccess\\(\\) has no return type specified\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/views/tests/src/Kernel/Handler/FieldFieldAccessTestBase.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
-	'message' => '#^Method Drupal\\\\Tests\\\\views\\\\Kernel\\\\Handler\\\\FieldFieldTest\\:\\:grantPermissions\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/views/tests/src/Kernel/Handler/FieldFieldTest.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
-	'message' => '#^Method Drupal\\\\Tests\\\\views\\\\Kernel\\\\Handler\\\\FieldFieldTest\\:\\:setCurrentUser\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/views/tests/src/Kernel/Handler/FieldFieldTest.php',
 ];
 $ignoreErrors[] = [
 	// identifier: missingType.return
@@ -61367,18 +60479,6 @@ $ignoreErrors[] = [
 ];
 $ignoreErrors[] = [
 	// identifier: missingType.return
-	'message' => '#^Method Drupal\\\\Tests\\\\views\\\\Kernel\\\\Handler\\\\FilterEntityReferenceTest\\:\\:grantPermissions\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/views/tests/src/Kernel/Handler/FilterEntityReferenceTest.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
-	'message' => '#^Method Drupal\\\\Tests\\\\views\\\\Kernel\\\\Handler\\\\FilterEntityReferenceTest\\:\\:setCurrentUser\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/views/tests/src/Kernel/Handler/FilterEntityReferenceTest.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
 	'message' => '#^Method Drupal\\\\Tests\\\\views\\\\Kernel\\\\Handler\\\\FilterEqualityTest\\:\\:viewsData\\(\\) has no return type specified\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/views/tests/src/Kernel/Handler/FilterEqualityTest.php',
@@ -61481,18 +60581,6 @@ $ignoreErrors[] = [
 ];
 $ignoreErrors[] = [
 	// identifier: missingType.return
-	'message' => '#^Method Drupal\\\\Tests\\\\views\\\\Kernel\\\\Plugin\\\\RelationshipJoinInTest\\:\\:grantPermissions\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/views/tests/src/Kernel/Plugin/RelationshipJoinInTest.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
-	'message' => '#^Method Drupal\\\\Tests\\\\views\\\\Kernel\\\\Plugin\\\\RelationshipJoinInTest\\:\\:setCurrentUser\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/views/tests/src/Kernel/Plugin/RelationshipJoinInTest.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
 	'message' => '#^Method Drupal\\\\Tests\\\\views\\\\Kernel\\\\Plugin\\\\RelationshipJoinInTest\\:\\:viewsData\\(\\) has no return type specified\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/views/tests/src/Kernel/Plugin/RelationshipJoinInTest.php',
@@ -61517,31 +60605,7 @@ $ignoreErrors[] = [
 ];
 $ignoreErrors[] = [
 	// identifier: missingType.return
-	'message' => '#^Method Drupal\\\\Tests\\\\views\\\\Kernel\\\\Plugin\\\\RelationshipTest\\:\\:grantPermissions\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/views/tests/src/Kernel/Plugin/RelationshipTest.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
-	'message' => '#^Method Drupal\\\\Tests\\\\views\\\\Kernel\\\\Plugin\\\\RelationshipTest\\:\\:setCurrentUser\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/views/tests/src/Kernel/Plugin/RelationshipTest.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
 	'message' => '#^Method Drupal\\\\Tests\\\\views\\\\Kernel\\\\Plugin\\\\RowRenderCacheTest\\:\\:doTestRenderedOutput\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/views/tests/src/Kernel/Plugin/RowRenderCacheTest.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
-	'message' => '#^Method Drupal\\\\Tests\\\\views\\\\Kernel\\\\Plugin\\\\RowRenderCacheTest\\:\\:grantPermissions\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/views/tests/src/Kernel/Plugin/RowRenderCacheTest.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
-	'message' => '#^Method Drupal\\\\Tests\\\\views\\\\Kernel\\\\Plugin\\\\RowRenderCacheTest\\:\\:setCurrentUser\\(\\) has no return type specified\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/views/tests/src/Kernel/Plugin/RowRenderCacheTest.php',
 ];
@@ -61550,18 +60614,6 @@ $ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\Tests\\\\views\\\\Kernel\\\\Plugin\\\\RowRenderCacheTest\\:\\:setUpFixtures\\(\\) has no return type specified\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/views/tests/src/Kernel/Plugin/RowRenderCacheTest.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
-	'message' => '#^Method Drupal\\\\Tests\\\\views\\\\Kernel\\\\Plugin\\\\RssFieldsTest\\:\\:grantPermissions\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/views/tests/src/Kernel/Plugin/RssFieldsTest.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
-	'message' => '#^Method Drupal\\\\Tests\\\\views\\\\Kernel\\\\Plugin\\\\RssFieldsTest\\:\\:setCurrentUser\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/views/tests/src/Kernel/Plugin/RssFieldsTest.php',
 ];
 $ignoreErrors[] = [
 	// identifier: missingType.return
@@ -63011,18 +62063,6 @@ $ignoreErrors[] = [
 ];
 $ignoreErrors[] = [
 	// identifier: missingType.return
-	'message' => '#^Method Drupal\\\\Tests\\\\views_ui\\\\Kernel\\\\ViewsBlockTest\\:\\:grantPermissions\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/views_ui/tests/src/Kernel/ViewsBlockTest.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
-	'message' => '#^Method Drupal\\\\Tests\\\\views_ui\\\\Kernel\\\\ViewsBlockTest\\:\\:setCurrentUser\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/views_ui/tests/src/Kernel/ViewsBlockTest.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
 	'message' => '#^Function views_ui_test_theme_views_ui_display_tab_alter\\(\\) has no return type specified\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/views_ui/tests/themes/views_ui_test_theme/views_ui_test_theme.theme',
@@ -63590,18 +62630,6 @@ $ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\Tests\\\\workflows\\\\Functional\\\\Rest\\\\WorkflowXmlCookieTest\\:\\:initAuthentication\\(\\) has no return type specified\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/workflows/tests/src/Functional/Rest/WorkflowXmlCookieTest.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
-	'message' => '#^Method Drupal\\\\Tests\\\\workflows\\\\Kernel\\\\WorkflowAccessControlHandlerTest\\:\\:grantPermissions\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/workflows/tests/src/Kernel/WorkflowAccessControlHandlerTest.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
-	'message' => '#^Method Drupal\\\\Tests\\\\workflows\\\\Kernel\\\\WorkflowAccessControlHandlerTest\\:\\:setCurrentUser\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/workflows/tests/src/Kernel/WorkflowAccessControlHandlerTest.php',
 ];
 $ignoreErrors[] = [
 	// identifier: missingType.return
@@ -64415,19 +63443,7 @@ $ignoreErrors[] = [
 ];
 $ignoreErrors[] = [
 	// identifier: missingType.return
-	'message' => '#^Method Drupal\\\\Tests\\\\workspaces\\\\Functional\\\\UpdateSystem\\\\ActiveWorkspaceUpdateTest\\:\\:grantPermissions\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/workspaces/tests/src/Functional/UpdateSystem/ActiveWorkspaceUpdateTest.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
 	'message' => '#^Method Drupal\\\\Tests\\\\workspaces\\\\Functional\\\\UpdateSystem\\\\ActiveWorkspaceUpdateTest\\:\\:runUpdates\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/workspaces/tests/src/Functional/UpdateSystem/ActiveWorkspaceUpdateTest.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
-	'message' => '#^Method Drupal\\\\Tests\\\\workspaces\\\\Functional\\\\UpdateSystem\\\\ActiveWorkspaceUpdateTest\\:\\:setCurrentUser\\(\\) has no return type specified\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/workspaces/tests/src/Functional/UpdateSystem/ActiveWorkspaceUpdateTest.php',
 ];
@@ -64763,19 +63779,7 @@ $ignoreErrors[] = [
 ];
 $ignoreErrors[] = [
 	// identifier: missingType.return
-	'message' => '#^Method Drupal\\\\Tests\\\\workspaces\\\\Kernel\\\\EntityReferenceSupportedNewEntitiesConstraintValidatorTest\\:\\:grantPermissions\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/workspaces/tests/src/Kernel/EntityReferenceSupportedNewEntitiesConstraintValidatorTest.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
 	'message' => '#^Method Drupal\\\\Tests\\\\workspaces\\\\Kernel\\\\EntityReferenceSupportedNewEntitiesConstraintValidatorTest\\:\\:initializeWorkspacesModule\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/workspaces/tests/src/Kernel/EntityReferenceSupportedNewEntitiesConstraintValidatorTest.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
-	'message' => '#^Method Drupal\\\\Tests\\\\workspaces\\\\Kernel\\\\EntityReferenceSupportedNewEntitiesConstraintValidatorTest\\:\\:setCurrentUser\\(\\) has no return type specified\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/workspaces/tests/src/Kernel/EntityReferenceSupportedNewEntitiesConstraintValidatorTest.php',
 ];
@@ -64799,19 +63803,7 @@ $ignoreErrors[] = [
 ];
 $ignoreErrors[] = [
 	// identifier: missingType.return
-	'message' => '#^Method Drupal\\\\Tests\\\\workspaces\\\\Kernel\\\\EntityWorkspaceConflictConstraintValidatorTest\\:\\:grantPermissions\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/workspaces/tests/src/Kernel/EntityWorkspaceConflictConstraintValidatorTest.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
 	'message' => '#^Method Drupal\\\\Tests\\\\workspaces\\\\Kernel\\\\EntityWorkspaceConflictConstraintValidatorTest\\:\\:initializeWorkspacesModule\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/workspaces/tests/src/Kernel/EntityWorkspaceConflictConstraintValidatorTest.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
-	'message' => '#^Method Drupal\\\\Tests\\\\workspaces\\\\Kernel\\\\EntityWorkspaceConflictConstraintValidatorTest\\:\\:setCurrentUser\\(\\) has no return type specified\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/workspaces/tests/src/Kernel/EntityWorkspaceConflictConstraintValidatorTest.php',
 ];
@@ -64820,18 +63812,6 @@ $ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\Tests\\\\workspaces\\\\Kernel\\\\EntityWorkspaceConflictConstraintValidatorTest\\:\\:switchToWorkspace\\(\\) has no return type specified\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/workspaces/tests/src/Kernel/EntityWorkspaceConflictConstraintValidatorTest.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
-	'message' => '#^Method Drupal\\\\Tests\\\\workspaces\\\\Kernel\\\\WorkspaceAccessTest\\:\\:grantPermissions\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/workspaces/tests/src/Kernel/WorkspaceAccessTest.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
-	'message' => '#^Method Drupal\\\\Tests\\\\workspaces\\\\Kernel\\\\WorkspaceAccessTest\\:\\:setCurrentUser\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/workspaces/tests/src/Kernel/WorkspaceAccessTest.php',
 ];
 $ignoreErrors[] = [
 	// identifier: missingType.return
@@ -64853,19 +63833,7 @@ $ignoreErrors[] = [
 ];
 $ignoreErrors[] = [
 	// identifier: missingType.return
-	'message' => '#^Method Drupal\\\\Tests\\\\workspaces\\\\Kernel\\\\WorkspaceAssociationTest\\:\\:grantPermissions\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/workspaces/tests/src/Kernel/WorkspaceAssociationTest.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
 	'message' => '#^Method Drupal\\\\Tests\\\\workspaces\\\\Kernel\\\\WorkspaceAssociationTest\\:\\:initializeWorkspacesModule\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/workspaces/tests/src/Kernel/WorkspaceAssociationTest.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
-	'message' => '#^Method Drupal\\\\Tests\\\\workspaces\\\\Kernel\\\\WorkspaceAssociationTest\\:\\:setCurrentUser\\(\\) has no return type specified\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/workspaces/tests/src/Kernel/WorkspaceAssociationTest.php',
 ];
@@ -64889,19 +63857,7 @@ $ignoreErrors[] = [
 ];
 $ignoreErrors[] = [
 	// identifier: missingType.return
-	'message' => '#^Method Drupal\\\\Tests\\\\workspaces\\\\Kernel\\\\WorkspaceCRUDTest\\:\\:grantPermissions\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/workspaces/tests/src/Kernel/WorkspaceCRUDTest.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
 	'message' => '#^Method Drupal\\\\Tests\\\\workspaces\\\\Kernel\\\\WorkspaceCRUDTest\\:\\:initializeWorkspacesModule\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/workspaces/tests/src/Kernel/WorkspaceCRUDTest.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
-	'message' => '#^Method Drupal\\\\Tests\\\\workspaces\\\\Kernel\\\\WorkspaceCRUDTest\\:\\:setCurrentUser\\(\\) has no return type specified\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/workspaces/tests/src/Kernel/WorkspaceCRUDTest.php',
 ];
@@ -64925,19 +63881,7 @@ $ignoreErrors[] = [
 ];
 $ignoreErrors[] = [
 	// identifier: missingType.return
-	'message' => '#^Method Drupal\\\\Tests\\\\workspaces\\\\Kernel\\\\WorkspaceContentTranslationTest\\:\\:grantPermissions\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/workspaces/tests/src/Kernel/WorkspaceContentTranslationTest.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
 	'message' => '#^Method Drupal\\\\Tests\\\\workspaces\\\\Kernel\\\\WorkspaceContentTranslationTest\\:\\:initializeWorkspacesModule\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/workspaces/tests/src/Kernel/WorkspaceContentTranslationTest.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
-	'message' => '#^Method Drupal\\\\Tests\\\\workspaces\\\\Kernel\\\\WorkspaceContentTranslationTest\\:\\:setCurrentUser\\(\\) has no return type specified\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/workspaces/tests/src/Kernel/WorkspaceContentTranslationTest.php',
 ];
@@ -64961,19 +63905,7 @@ $ignoreErrors[] = [
 ];
 $ignoreErrors[] = [
 	// identifier: missingType.return
-	'message' => '#^Method Drupal\\\\Tests\\\\workspaces\\\\Kernel\\\\WorkspaceEntityDeleteTest\\:\\:grantPermissions\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/workspaces/tests/src/Kernel/WorkspaceEntityDeleteTest.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
 	'message' => '#^Method Drupal\\\\Tests\\\\workspaces\\\\Kernel\\\\WorkspaceEntityDeleteTest\\:\\:initializeWorkspacesModule\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/workspaces/tests/src/Kernel/WorkspaceEntityDeleteTest.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
-	'message' => '#^Method Drupal\\\\Tests\\\\workspaces\\\\Kernel\\\\WorkspaceEntityDeleteTest\\:\\:setCurrentUser\\(\\) has no return type specified\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/workspaces/tests/src/Kernel/WorkspaceEntityDeleteTest.php',
 ];
@@ -64997,19 +63929,7 @@ $ignoreErrors[] = [
 ];
 $ignoreErrors[] = [
 	// identifier: missingType.return
-	'message' => '#^Method Drupal\\\\Tests\\\\workspaces\\\\Kernel\\\\WorkspaceInformationTest\\:\\:grantPermissions\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/workspaces/tests/src/Kernel/WorkspaceInformationTest.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
 	'message' => '#^Method Drupal\\\\Tests\\\\workspaces\\\\Kernel\\\\WorkspaceInformationTest\\:\\:initializeWorkspacesModule\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/workspaces/tests/src/Kernel/WorkspaceInformationTest.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
-	'message' => '#^Method Drupal\\\\Tests\\\\workspaces\\\\Kernel\\\\WorkspaceInformationTest\\:\\:setCurrentUser\\(\\) has no return type specified\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/workspaces/tests/src/Kernel/WorkspaceInformationTest.php',
 ];
@@ -65039,12 +63959,6 @@ $ignoreErrors[] = [
 ];
 $ignoreErrors[] = [
 	// identifier: missingType.return
-	'message' => '#^Method Drupal\\\\Tests\\\\workspaces\\\\Kernel\\\\WorkspaceIntegrationTest\\:\\:grantPermissions\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/workspaces/tests/src/Kernel/WorkspaceIntegrationTest.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
 	'message' => '#^Method Drupal\\\\Tests\\\\workspaces\\\\Kernel\\\\WorkspaceIntegrationTest\\:\\:initializeWorkspacesModule\\(\\) has no return type specified\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/workspaces/tests/src/Kernel/WorkspaceIntegrationTest.php',
@@ -65052,12 +63966,6 @@ $ignoreErrors[] = [
 $ignoreErrors[] = [
 	// identifier: missingType.return
 	'message' => '#^Method Drupal\\\\Tests\\\\workspaces\\\\Kernel\\\\WorkspaceIntegrationTest\\:\\:providerTestAllowedEntityCrudInNonDefaultWorkspace\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/workspaces/tests/src/Kernel/WorkspaceIntegrationTest.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
-	'message' => '#^Method Drupal\\\\Tests\\\\workspaces\\\\Kernel\\\\WorkspaceIntegrationTest\\:\\:setCurrentUser\\(\\) has no return type specified\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/workspaces/tests/src/Kernel/WorkspaceIntegrationTest.php',
 ];
@@ -65081,19 +63989,7 @@ $ignoreErrors[] = [
 ];
 $ignoreErrors[] = [
 	// identifier: missingType.return
-	'message' => '#^Method Drupal\\\\Tests\\\\workspaces\\\\Kernel\\\\WorkspaceMergerTest\\:\\:grantPermissions\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/workspaces/tests/src/Kernel/WorkspaceMergerTest.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
 	'message' => '#^Method Drupal\\\\Tests\\\\workspaces\\\\Kernel\\\\WorkspaceMergerTest\\:\\:initializeWorkspacesModule\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/workspaces/tests/src/Kernel/WorkspaceMergerTest.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
-	'message' => '#^Method Drupal\\\\Tests\\\\workspaces\\\\Kernel\\\\WorkspaceMergerTest\\:\\:setCurrentUser\\(\\) has no return type specified\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/workspaces/tests/src/Kernel/WorkspaceMergerTest.php',
 ];
@@ -65102,18 +63998,6 @@ $ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\Tests\\\\workspaces\\\\Kernel\\\\WorkspaceMergerTest\\:\\:switchToWorkspace\\(\\) has no return type specified\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/workspaces/tests/src/Kernel/WorkspaceMergerTest.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
-	'message' => '#^Method Drupal\\\\Tests\\\\workspaces\\\\Kernel\\\\WorkspaceQueryParameterNegotiatorTest\\:\\:grantPermissions\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/workspaces/tests/src/Kernel/WorkspaceQueryParameterNegotiatorTest.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
-	'message' => '#^Method Drupal\\\\Tests\\\\workspaces\\\\Kernel\\\\WorkspaceQueryParameterNegotiatorTest\\:\\:setCurrentUser\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/workspaces/tests/src/Kernel/WorkspaceQueryParameterNegotiatorTest.php',
 ];
 $ignoreErrors[] = [
 	// identifier: missingType.return
@@ -65135,19 +64019,7 @@ $ignoreErrors[] = [
 ];
 $ignoreErrors[] = [
 	// identifier: missingType.return
-	'message' => '#^Method Drupal\\\\Tests\\\\workspaces\\\\Kernel\\\\WorkspaceViewsIntegrationTest\\:\\:grantPermissions\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/workspaces/tests/src/Kernel/WorkspaceViewsIntegrationTest.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
 	'message' => '#^Method Drupal\\\\Tests\\\\workspaces\\\\Kernel\\\\WorkspaceViewsIntegrationTest\\:\\:initializeWorkspacesModule\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/workspaces/tests/src/Kernel/WorkspaceViewsIntegrationTest.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
-	'message' => '#^Method Drupal\\\\Tests\\\\workspaces\\\\Kernel\\\\WorkspaceViewsIntegrationTest\\:\\:setCurrentUser\\(\\) has no return type specified\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/workspaces/tests/src/Kernel/WorkspaceViewsIntegrationTest.php',
 ];
@@ -65171,19 +64043,7 @@ $ignoreErrors[] = [
 ];
 $ignoreErrors[] = [
 	// identifier: missingType.return
-	'message' => '#^Method Drupal\\\\Tests\\\\workspaces\\\\Kernel\\\\WorkspacesFileItemTest\\:\\:grantPermissions\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/workspaces/tests/src/Kernel/WorkspacesFileItemTest.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
 	'message' => '#^Method Drupal\\\\Tests\\\\workspaces\\\\Kernel\\\\WorkspacesFileItemTest\\:\\:initializeWorkspacesModule\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/workspaces/tests/src/Kernel/WorkspacesFileItemTest.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
-	'message' => '#^Method Drupal\\\\Tests\\\\workspaces\\\\Kernel\\\\WorkspacesFileItemTest\\:\\:setCurrentUser\\(\\) has no return type specified\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/workspaces/tests/src/Kernel/WorkspacesFileItemTest.php',
 ];
@@ -67781,18 +66641,6 @@ $ignoreErrors[] = [
 ];
 $ignoreErrors[] = [
 	// identifier: missingType.return
-	'message' => '#^Method Drupal\\\\KernelTests\\\\Core\\\\Cache\\\\CacheContextOptimizationTest\\:\\:grantPermissions\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/tests/Drupal/KernelTests/Core/Cache/CacheContextOptimizationTest.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
-	'message' => '#^Method Drupal\\\\KernelTests\\\\Core\\\\Cache\\\\CacheContextOptimizationTest\\:\\:setCurrentUser\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/tests/Drupal/KernelTests/Core/Cache/CacheContextOptimizationTest.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
 	'message' => '#^Method Drupal\\\\KernelTests\\\\Core\\\\Cache\\\\DatabaseBackendTagTest\\:\\:register\\(\\) has no return type specified\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/tests/Drupal/KernelTests/Core/Cache/DatabaseBackendTagTest.php',
@@ -68162,18 +67010,6 @@ $ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\KernelTests\\\\Core\\\\Datetime\\\\Element\\\\TimezoneTest\\:\\:validateForm\\(\\) has no return type specified\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/tests/Drupal/KernelTests/Core/Datetime/Element/TimezoneTest.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
-	'message' => '#^Method Drupal\\\\KernelTests\\\\Core\\\\DefaultContent\\\\AdminAccountSwitcherTest\\:\\:grantPermissions\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/tests/Drupal/KernelTests/Core/DefaultContent/AdminAccountSwitcherTest.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
-	'message' => '#^Method Drupal\\\\KernelTests\\\\Core\\\\DefaultContent\\\\AdminAccountSwitcherTest\\:\\:setCurrentUser\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/tests/Drupal/KernelTests/Core/DefaultContent/AdminAccountSwitcherTest.php',
 ];
 $ignoreErrors[] = [
 	// identifier: missingType.return
@@ -68975,18 +67811,6 @@ $ignoreErrors[] = [
 ];
 $ignoreErrors[] = [
 	// identifier: missingType.return
-	'message' => '#^Method Drupal\\\\KernelTests\\\\Core\\\\Entity\\\\EntityKernelTestBase\\:\\:drupalGrantPermissions\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/tests/Drupal/KernelTests/Core/Entity/EntityKernelTestBase.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
-	'message' => '#^Method Drupal\\\\KernelTests\\\\Core\\\\Entity\\\\EntityKernelTestBase\\:\\:drupalSetCurrentUser\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/tests/Drupal/KernelTests/Core/Entity/EntityKernelTestBase.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
 	'message' => '#^Method Drupal\\\\KernelTests\\\\Core\\\\Entity\\\\EntityKernelTestBase\\:\\:installModule\\(\\) has no return type specified\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/tests/Drupal/KernelTests/Core/Entity/EntityKernelTestBase.php',
@@ -69048,18 +67872,6 @@ $ignoreErrors[] = [
 $ignoreErrors[] = [
 	// identifier: missingType.return
 	'message' => '#^Method Drupal\\\\KernelTests\\\\Core\\\\Entity\\\\EntityRepositoryTest\\:\\:doTestLanguageFallback\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/tests/Drupal/KernelTests/Core/Entity/EntityRepositoryTest.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
-	'message' => '#^Method Drupal\\\\KernelTests\\\\Core\\\\Entity\\\\EntityRepositoryTest\\:\\:grantPermissions\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/tests/Drupal/KernelTests/Core/Entity/EntityRepositoryTest.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
-	'message' => '#^Method Drupal\\\\KernelTests\\\\Core\\\\Entity\\\\EntityRepositoryTest\\:\\:setCurrentUser\\(\\) has no return type specified\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/tests/Drupal/KernelTests/Core/Entity/EntityRepositoryTest.php',
 ];
@@ -69479,37 +68291,13 @@ $ignoreErrors[] = [
 ];
 $ignoreErrors[] = [
 	// identifier: missingType.return
-	'message' => '#^Method Drupal\\\\KernelTests\\\\Core\\\\Entity\\\\RevisionRouteProviderTest\\:\\:grantPermissions\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/tests/Drupal/KernelTests/Core/Entity/RevisionRouteProviderTest.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
-	'message' => '#^Method Drupal\\\\KernelTests\\\\Core\\\\Entity\\\\RevisionRouteProviderTest\\:\\:setCurrentUser\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/tests/Drupal/KernelTests/Core/Entity/RevisionRouteProviderTest.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
 	'message' => '#^Method Drupal\\\\KernelTests\\\\Core\\\\Entity\\\\RevisionableContentEntityBaseTest\\:\\:createRevision\\(\\) has no return type specified\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/tests/Drupal/KernelTests/Core/Entity/RevisionableContentEntityBaseTest.php',
 ];
 $ignoreErrors[] = [
 	// identifier: missingType.return
-	'message' => '#^Method Drupal\\\\KernelTests\\\\Core\\\\Entity\\\\RouteProviderTest\\:\\:grantPermissions\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/tests/Drupal/KernelTests/Core/Entity/RouteProviderTest.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
 	'message' => '#^Method Drupal\\\\KernelTests\\\\Core\\\\Entity\\\\RouteProviderTest\\:\\:httpKernelHandle\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/tests/Drupal/KernelTests/Core/Entity/RouteProviderTest.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
-	'message' => '#^Method Drupal\\\\KernelTests\\\\Core\\\\Entity\\\\RouteProviderTest\\:\\:setCurrentUser\\(\\) has no return type specified\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/tests/Drupal/KernelTests/Core/Entity/RouteProviderTest.php',
 ];
@@ -69701,42 +68489,6 @@ $ignoreErrors[] = [
 ];
 $ignoreErrors[] = [
 	// identifier: missingType.return
-	'message' => '#^Method Drupal\\\\KernelTests\\\\Core\\\\ParamConverter\\\\EntityConverterLatestRevisionTest\\:\\:grantPermissions\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/tests/Drupal/KernelTests/Core/ParamConverter/EntityConverterLatestRevisionTest.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
-	'message' => '#^Method Drupal\\\\KernelTests\\\\Core\\\\ParamConverter\\\\EntityConverterLatestRevisionTest\\:\\:setCurrentUser\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/tests/Drupal/KernelTests/Core/ParamConverter/EntityConverterLatestRevisionTest.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
-	'message' => '#^Method Drupal\\\\KernelTests\\\\Core\\\\ParamConverter\\\\EntityConverterTest\\:\\:grantPermissions\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/tests/Drupal/KernelTests/Core/ParamConverter/EntityConverterTest.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
-	'message' => '#^Method Drupal\\\\KernelTests\\\\Core\\\\ParamConverter\\\\EntityConverterTest\\:\\:setCurrentUser\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/tests/Drupal/KernelTests/Core/ParamConverter/EntityConverterTest.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
-	'message' => '#^Method Drupal\\\\KernelTests\\\\Core\\\\Path\\\\PathValidatorTest\\:\\:grantPermissions\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/tests/Drupal/KernelTests/Core/Path/PathValidatorTest.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
-	'message' => '#^Method Drupal\\\\KernelTests\\\\Core\\\\Path\\\\PathValidatorTest\\:\\:setCurrentUser\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/tests/Drupal/KernelTests/Core/Path/PathValidatorTest.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
 	'message' => '#^Method Drupal\\\\KernelTests\\\\Core\\\\Plugin\\\\Condition\\\\ConditionTestDualUserTest\\:\\:doTestDifferentUser\\(\\) has no return type specified\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/tests/Drupal/KernelTests/Core/Plugin/Condition/ConditionTestDualUserTest.php',
@@ -69875,18 +68627,6 @@ $ignoreErrors[] = [
 ];
 $ignoreErrors[] = [
 	// identifier: missingType.return
-	'message' => '#^Method Drupal\\\\KernelTests\\\\Core\\\\Recipe\\\\PermissionsPerBundleTest\\:\\:grantPermissions\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/tests/Drupal/KernelTests/Core/Recipe/PermissionsPerBundleTest.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
-	'message' => '#^Method Drupal\\\\KernelTests\\\\Core\\\\Recipe\\\\PermissionsPerBundleTest\\:\\:setCurrentUser\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/tests/Drupal/KernelTests/Core/Recipe/PermissionsPerBundleTest.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
 	'message' => '#^Method Drupal\\\\KernelTests\\\\Core\\\\Render\\\\Element\\\\ActionsTest\\:\\:submitForm\\(\\) has no return type specified\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/tests/Drupal/KernelTests/Core/Render/Element/ActionsTest.php',
@@ -69912,18 +68652,6 @@ $ignoreErrors[] = [
 $ignoreErrors[] = [
 	// identifier: missingType.return
 	'message' => '#^Method Drupal\\\\KernelTests\\\\Core\\\\Render\\\\RenderCacheTest\\:\\:doTestUser1WithContexts\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/tests/Drupal/KernelTests/Core/Render/RenderCacheTest.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
-	'message' => '#^Method Drupal\\\\KernelTests\\\\Core\\\\Render\\\\RenderCacheTest\\:\\:grantPermissions\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/tests/Drupal/KernelTests/Core/Render/RenderCacheTest.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
-	'message' => '#^Method Drupal\\\\KernelTests\\\\Core\\\\Render\\\\RenderCacheTest\\:\\:setCurrentUser\\(\\) has no return type specified\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/tests/Drupal/KernelTests/Core/Render/RenderCacheTest.php',
 ];
@@ -69968,30 +68696,6 @@ $ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\KernelTests\\\\Core\\\\ServiceProvider\\\\ServiceProviderTest\\:\\:register\\(\\) has no return type specified\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/tests/Drupal/KernelTests/Core/ServiceProvider/ServiceProviderTest.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
-	'message' => '#^Method Drupal\\\\KernelTests\\\\Core\\\\Session\\\\SuperUserPermissionsTest\\:\\:grantPermissions\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/tests/Drupal/KernelTests/Core/Session/SuperUserPermissionsTest.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
-	'message' => '#^Method Drupal\\\\KernelTests\\\\Core\\\\Session\\\\SuperUserPermissionsTest\\:\\:setCurrentUser\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/tests/Drupal/KernelTests/Core/Session/SuperUserPermissionsTest.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
-	'message' => '#^Method Drupal\\\\KernelTests\\\\Core\\\\Session\\\\UserRolesPermissionsTest\\:\\:grantPermissions\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/tests/Drupal/KernelTests/Core/Session/UserRolesPermissionsTest.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
-	'message' => '#^Method Drupal\\\\KernelTests\\\\Core\\\\Session\\\\UserRolesPermissionsTest\\:\\:setCurrentUser\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/tests/Drupal/KernelTests/Core/Session/UserRolesPermissionsTest.php',
 ];
 $ignoreErrors[] = [
 	// identifier: missingType.return
@@ -70064,18 +68768,6 @@ $ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\KernelTests\\\\Core\\\\TypedData\\\\TypedDataTest\\:\\:createTypedData\\(\\) has no return type specified\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/tests/Drupal/KernelTests/Core/TypedData/TypedDataTest.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
-	'message' => '#^Method Drupal\\\\KernelTests\\\\Core\\\\Validation\\\\UniqueValuesConstraintValidatorTest\\:\\:grantPermissions\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/tests/Drupal/KernelTests/Core/Validation/UniqueValuesConstraintValidatorTest.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
-	'message' => '#^Method Drupal\\\\KernelTests\\\\Core\\\\Validation\\\\UniqueValuesConstraintValidatorTest\\:\\:setCurrentUser\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/tests/Drupal/KernelTests/Core/Validation/UniqueValuesConstraintValidatorTest.php',
 ];
 $ignoreErrors[] = [
 	// identifier: missingType.return
@@ -70584,12 +69276,6 @@ $ignoreErrors[] = [
 ];
 $ignoreErrors[] = [
 	// identifier: missingType.return
-	'message' => '#^Method Drupal\\\\Tests\\\\BrowserTestBase\\:\\:grantPermissions\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/tests/Drupal/Tests/BrowserTestBase.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
 	'message' => '#^Method Drupal\\\\Tests\\\\BrowserTestBase\\:\\:htmlOutput\\(\\) has no return type specified\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/tests/Drupal/Tests/BrowserTestBase.php',
@@ -70711,12 +69397,6 @@ $ignoreErrors[] = [
 $ignoreErrors[] = [
 	// identifier: missingType.return
 	'message' => '#^Method Drupal\\\\Tests\\\\BrowserTestBase\\:\\:setContainerParameter\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/tests/Drupal/Tests/BrowserTestBase.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
-	'message' => '#^Method Drupal\\\\Tests\\\\BrowserTestBase\\:\\:setCurrentUser\\(\\) has no return type specified\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/tests/Drupal/Tests/BrowserTestBase.php',
 ];
