@@ -228,16 +228,6 @@ abstract class KernelTestBase extends TestCase implements ServiceProviderInterfa
   protected ?Mink $mink;
 
   /**
-   * The Mink session.
-   * KILL
-   *
-   * This is lazily initialised.
-   *
-   * @var \Behat\Mink\Session|null
-   */
-  protected ?Session $minkSession;
-
-  /**
    * Registers the dumper CLI handler when the DebugDump extension is enabled.
    */
   #[BeforeClass]
@@ -965,16 +955,6 @@ abstract class KernelTestBase extends TestCase implements ServiceProviderInterfa
    */
   protected function drupalGet($path, array $options = [], array $headers = []) {
     $session = $this->getSession();
-
-    // // todo convert to using initMink
-    // if (!isset($this->minkSession)) {
-    //   // Initialise the Mink session if this is the first request.
-    //   $http_kernel = $this->container->get('http_kernel');
-    //   $browserkit_client = new KernelTestHttpKernelBrowser($http_kernel);
-    //   $driver = new BrowserKitDriver($browserkit_client);
-    //   $session = new Session($driver);
-    //   $session->start();
-    // }
 
     $session->visit($path);
 
