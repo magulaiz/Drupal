@@ -1239,12 +1239,6 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/file/file.module',
 ];
 $ignoreErrors[] = [
-	// identifier: argument.invalidPregQuote
-	'message' => '#^Call to preg_quote\\(\\) is missing delimiter / to be effective\\.$#',
-	'count' => 2,
-	'path' => __DIR__ . '/modules/file/src/EventSubscriber/FileEventSubscriber.php',
-];
-$ignoreErrors[] = [
 	// identifier: empty.variable
 	'message' => '#^Variable \\$rows in empty\\(\\) always exists and is not falsy\\.$#',
 	'count' => 1,
@@ -1877,12 +1871,6 @@ in drupal\\:10\\.2\\.0 and is removed from drupal\\:11\\.0\\.0\\. There is
 	'path' => __DIR__ . '/modules/pgsql/src/Driver/Database/pgsql/Schema.php',
 ];
 $ignoreErrors[] = [
-	// identifier: argument.invalidPregQuote
-	'message' => '#^Call to preg_quote\\(\\) is missing delimiter / to be effective\\.$#',
-	'count' => 3,
-	'path' => __DIR__ . '/modules/pgsql/src/Driver/Database/pgsql/Schema.php',
-];
-$ignoreErrors[] = [
 	// identifier: variable.undefined
 	'message' => '#^Variable \\$table_field might not be defined\\.$#',
 	'count' => 1,
@@ -1985,12 +1973,6 @@ $ignoreErrors[] = [
 	'message' => '#^Variable \\$statement might not be defined\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/sqlite/src/Driver/Database/sqlite/Connection.php',
-];
-$ignoreErrors[] = [
-	// identifier: argument.invalidPregQuote
-	'message' => '#^Call to preg_quote\\(\\) is missing delimiter / to be effective\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/sqlite/src/Driver/Database/sqlite/Statement.php',
 ];
 $ignoreErrors[] = [
 	// identifier: return.missing
@@ -2811,12 +2793,6 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/tests/Drupal/KernelTests/Core/Entity/FieldableEntityDefinitionUpdateTest.php',
 ];
 $ignoreErrors[] = [
-	// identifier: argument.invalidPregQuote
-	'message' => '#^Call to preg_quote\\(\\) is missing delimiter / to be effective\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/tests/Drupal/KernelTests/KernelTestBase.php',
-];
-$ignoreErrors[] = [
 	// identifier: isset.variable
 	'message' => '#^Variable \\$value in isset\\(\\) always exists and is not nullable\\.$#',
 	'count' => 1,
@@ -3042,12 +3018,6 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/tests/Drupal/Tests/Core/Plugin/TestPluginManager.php',
 ];
 $ignoreErrors[] = [
-	// identifier: argument.invalidPregQuote
-	'message' => '#^Call to preg_quote\\(\\) is missing delimiter / to be effective\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/tests/Drupal/Tests/Core/Test/AssertContentTraitTest.php',
-];
-$ignoreErrors[] = [
 	// identifier: isset.variable
 	'message' => '#^Variable \\$value in isset\\(\\) always exists and is not nullable\\.$#',
 	'count' => 1,
@@ -3091,12 +3061,6 @@ $ignoreErrors[] = [
 The `TestListener` interface is deprecated$#',
 	'count' => 1,
 	'path' => __DIR__ . '/tests/Drupal/Tests/Listeners/DrupalListener.php',
-];
-$ignoreErrors[] = [
-	// identifier: argument.invalidPregQuote
-	'message' => '#^Call to preg_quote\\(\\) is missing delimiter / to be effective\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/tests/Drupal/Tests/WebAssert.php',
 ];
 $ignoreErrors[] = [
 	// identifier: class.extendsDeprecatedClass
