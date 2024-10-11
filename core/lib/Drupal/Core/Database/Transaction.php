@@ -46,13 +46,13 @@ class Transaction {
   }
 
   /**
-   * Commits the transaction.
+   * Yields the transaction to the parent level.
    *
    * Depending on the state of the transaction stack, this leads to a COMMIT
    * operation (if this transaction is a root one), or to a RELEASE SAVEPOINT
    * operation (if this transaction is a savepoint one).
    */
-  public function commit(): void {
+  public function yield(): void {
     $this->connection->transactionManager()->unpile($this->name, $this->id);
   }
 

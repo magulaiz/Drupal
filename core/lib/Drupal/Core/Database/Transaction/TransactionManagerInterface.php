@@ -53,7 +53,7 @@ interface TransactionManagerInterface {
    * Removes a Drupal transaction from the stack.
    *
    * The unpiled item does not necessarily need to be the last on the stack.
-   * This method should only be called by a Transaction object's ::commit()
+   * This method should only be called by a Transaction object's ::yield()
    * method.
    *
    * This method should only be called internally by a database driver.

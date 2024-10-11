@@ -265,8 +265,8 @@ class DriverSpecificTransactionTestBase extends DriverSpecificDatabaseTestBase {
     // Insert a row.
     $this->insertRow('Syd');
 
-    // Commit root. Corresponds to 'COMMIT' on the database.
-    $transaction->commit();
+    // Yield root. Corresponds to 'COMMIT' on the database.
+    $transaction->yield();
     $this->assertRowPresent('David');
     $this->assertRowAbsent('Roger');
     $this->assertRowPresent('Syd');
@@ -292,9 +292,9 @@ class DriverSpecificTransactionTestBase extends DriverSpecificDatabaseTestBase {
     // Insert a row.
     $this->insertRow('Syd');
 
-    // Try committing savepoint. Should fail since it was released already.
+    // Try yielding savepoint. Should fail since it was released already.
     try {
-      $savepoint->commit();
+      $savepoint->yield();
       $this->fail('Expected TransactionOutOfOrderException was not thrown');
     }
     catch (\Exception $e) {
@@ -307,8 +307,8 @@ class DriverSpecificTransactionTestBase extends DriverSpecificDatabaseTestBase {
     $this->assertTrue($this->connection->inTransaction());
     $this->assertSame(1, $this->connection->transactionManager()->stackDepth());
 
-    // Commit root. Corresponds to 'COMMIT' on the database.
-    $transaction->commit();
+    // Yield root. Corresponds to 'COMMIT' on the database.
+    $transaction->yield();
     $this->assertRowPresent('David');
     $this->assertRowAbsent('Roger');
     $this->assertRowPresent('Syd');
@@ -323,9 +323,9 @@ class DriverSpecificTransactionTestBase extends DriverSpecificDatabaseTestBase {
     $transaction = $this->createRootTransaction();
     $savepoint = $this->createFirstSavepointTransaction();
 
-    // Commit savepoint. It should get released too. Corresponds to 'RELEASE
+    // Yield savepoint. It should get released too. Corresponds to 'RELEASE
     // savepoint_1' on the database.
-    $savepoint->commit();
+    $savepoint->yield();
     $this->assertRowPresent('David');
     $this->assertRowPresent('Roger');
     $this->assertTrue($this->connection->inTransaction());
@@ -349,8 +349,8 @@ class DriverSpecificTransactionTestBase extends DriverSpecificDatabaseTestBase {
     $this->assertTrue($this->connection->inTransaction());
     $this->assertSame(1, $this->connection->transactionManager()->stackDepth());
 
-    // Commit root. Corresponds to 'COMMIT' on the database.
-    $transaction->commit();
+    // Yield root. Corresponds to 'COMMIT' on the database.
+    $transaction->yield();
     $this->assertRowPresent('David');
     $this->assertRowPresent('Roger');
     $this->assertRowPresent('Syd');
@@ -436,7 +436,7 @@ class DriverSpecificTransactionTestBase extends DriverSpecificDatabaseTestBase {
       // $this->assertFalse($this->connection->inTransaction());
     }
 
-    $savepoint->commit();
+    $savepoint->yield();
     $this->assertRowPresent('David');
     $this->assertRowPresent('Roger');
     if ($this->connection->supportsTransactionalDDL()) {
@@ -447,7 +447,7 @@ class DriverSpecificTransactionTestBase extends DriverSpecificDatabaseTestBase {
       // $this->assertFalse($this->connection->inTransaction());
     }
 
-    $transaction->commit();
+    $transaction->yield();
     $this->assertRowPresent('David');
     $this->assertRowPresent('Roger');
     if ($this->connection->supportsTransactionalDDL()) {
@@ -488,7 +488,7 @@ class DriverSpecificTransactionTestBase extends DriverSpecificDatabaseTestBase {
     $transaction = $this->createRootTransaction('', FALSE);
     $this->insertRow('row');
     $this->executeDDLStatement();
-    $transaction->commit();
+    $transaction->yield();
     $this->assertRowPresent('row');
 
     // Even in different order.
@@ -496,7 +496,7 @@ class DriverSpecificTransactionTestBase extends DriverSpecificDatabaseTestBase {
     $transaction = $this->createRootTransaction('', FALSE);
     $this->executeDDLStatement();
     $this->insertRow('row');
-    $transaction->commit();
+    $transaction->yield();
     $this->assertRowPresent('row');
 
     // Even with stacking.
@@ -507,7 +507,7 @@ class DriverSpecificTransactionTestBase extends DriverSpecificDatabaseTestBase {
     unset($transaction2);
     $transaction3 = $this->connection->startTransaction();
     $this->insertRow('row');
-    $transaction3->commit();
+    $transaction3->yield();
     unset($transaction);
     $this->assertRowPresent('row');
 
@@ -541,10 +541,10 @@ class DriverSpecificTransactionTestBase extends DriverSpecificDatabaseTestBase {
       $transaction = $this->createRootTransaction('', FALSE);
       $transaction2 = $this->createFirstSavepointTransaction('', FALSE);
       $this->executeDDLStatement();
-      $transaction2->commit();
+      $transaction2->yield();
       $transaction3 = $this->connection->startTransaction();
       $this->insertRow('row');
-      $transaction3->commit();
+      $transaction3->yield();
       $transaction->rollBack();
       unset($transaction);
       $this->assertRowAbsent('row');
@@ -647,10 +647,10 @@ class DriverSpecificTransactionTestBase extends DriverSpecificDatabaseTestBase {
     $transaction2 = $this->createFirstSavepointTransaction('', FALSE);
     $this->insertRow('inner');
     // Pop the inner transaction.
-    $transaction2->commit();
+    $transaction2->yield();
     $this->assertTrue($this->connection->inTransaction(), 'Still in a transaction after popping the inner transaction');
     // Pop the outer transaction.
-    $transaction->commit();
+    $transaction->yield();
     $this->assertFalse($this->connection->inTransaction(), 'Transaction closed after popping the outer transaction');
     $this->assertRowPresent('outer');
     $this->assertRowPresent('inner');
@@ -667,7 +667,7 @@ class DriverSpecificTransactionTestBase extends DriverSpecificDatabaseTestBase {
     $this->assertTrue($this->connection->inTransaction(), 'Still in a transaction after popping the outer transaction');
     // Pop the outer transaction, it should commit.
     $this->insertRow('outer-after-inner-rollback');
-    $transaction->commit();
+    $transaction->yield();
     $this->assertFalse($this->connection->inTransaction(), 'Transaction closed after popping the inner transaction');
     $this->assertRowPresent('outer');
     $this->assertRowAbsent('inner');
@@ -786,7 +786,7 @@ class DriverSpecificTransactionTestBase extends DriverSpecificDatabaseTestBase {
       ->execute();
 
     // Commit the transaction.
-    $transaction->commit();
+    $transaction->yield();
 
     $saved_age = $this->connection->query('SELECT [age] FROM {test} WHERE [name] = :name', [':name' => 'David'])->fetchField();
     $this->assertEquals('24', $saved_age);
@@ -814,18 +814,18 @@ class DriverSpecificTransactionTestBase extends DriverSpecificDatabaseTestBase {
 
     $this->insertRow('row');
 
-    // Commit a savepoint transaction. Corresponds to 'RELEASE SAVEPOINT
+    // Yield a savepoint transaction. Corresponds to 'RELEASE SAVEPOINT
     // savepoint_2' on the database.
-    $savepoint2->commit();
+    $savepoint2->yield();
     // Since we have committed an intermediate savepoint Transaction object,
     // the savepoints created later have been dropped by the database already.
     $this->assertSame(2, $this->connection->transactionManager()->stackDepth());
     $this->assertRowPresent('row');
 
-    // Commit the remaining Transaction objects. The client transaction is
+    // Yield the remaining Transaction objects. The client transaction is
     // eventually committed.
-    $savepoint1->commit();
-    $transaction->commit();
+    $savepoint1->yield();
+    $transaction->yield();
     $this->assertFalse($this->connection->inTransaction());
     $this->assertRowPresent('row');
   }
@@ -844,8 +844,8 @@ class DriverSpecificTransactionTestBase extends DriverSpecificDatabaseTestBase {
 
     $this->insertRow('row');
 
-    // Commit the root transaction. Corresponds to 'COMMIT' on the database.
-    $transaction->commit();
+    // Yield the root transaction. Corresponds to 'COMMIT' on the database.
+    $transaction->yield();
     // Since we have committed the outer (root) Transaction object, the inner
     // (savepoint) ones have been dropped by the database already, and we are
     // no longer in an active transaction state.
