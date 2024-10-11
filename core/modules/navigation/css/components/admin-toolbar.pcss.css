@@ -232,6 +232,7 @@ body {
 
 .admin-toolbar__logo {
   display: inline-flex;
+  flex-shrink: 0;
   align-items: center;
   justify-content: center;
   width: var(--admin-toolbar-space-40);
@@ -239,7 +240,6 @@ body {
   margin-inline-start: var(--admin-toolbar-space-2);
   border-radius: var(--admin-toolbar-space-8);
   background-color: transparent;
-  flex-shrink: 0;
 
   &:hover {
     outline: 2px solid var(--admin-toolbar-color-blue-200);
