@@ -1,8 +1,9 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\shortcut\Functional;
 
-use Drupal\Component\Render\FormattableMarkup;
 use Drupal\Tests\content_translation\Functional\ContentTranslationUITestBase;
 use Drupal\Core\Entity\EntityChangedInterface;
 use Drupal\Core\Language\Language;
@@ -20,9 +21,7 @@ class ShortcutTranslationUITest extends ContentTranslationUITestBase {
   protected $defaultCacheContexts = ['languages:language_interface', 'session', 'theme', 'user', 'url.path', 'url.query_args', 'url.site'];
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = [
     'language',
@@ -44,12 +43,13 @@ class ShortcutTranslationUITest extends ContentTranslationUITestBase {
     $this->entityTypeId = 'shortcut';
     $this->bundle = 'default';
     parent::setUp();
+    $this->doSetup();
   }
 
   /**
    * {@inheritdoc}
    */
-  protected function getTranslatorPermissions() {
+  protected function getTranslatorPermissions(): array {
     return array_merge(parent::getTranslatorPermissions(), ['access shortcuts', 'administer shortcuts', 'access toolbar']);
   }
 
@@ -120,7 +120,7 @@ class ShortcutTranslationUITest extends ContentTranslationUITestBase {
 
     $this->assertFalse(
       $entity instanceof EntityChangedInterface,
-      new FormattableMarkup('%entity is not implementing EntityChangedInterface.', ['%entity' => $this->entityTypeId])
+      "$this->entityTypeId is not implementing EntityChangedInterface."
     );
   }
 
