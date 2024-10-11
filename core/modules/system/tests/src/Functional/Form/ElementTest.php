@@ -181,7 +181,7 @@ class ElementTest extends BrowserTestBase {
   /**
    * Tests the description attribute on fieldset elements.
    */
-  public function testFieldsetDescriptions() {
+  public function testFieldsetDescriptions(): void {
     $id = 'fieldset-test';
     $this->drupalGet('form-test/fieldset-description/' . $id);
     $this->assertSession()
