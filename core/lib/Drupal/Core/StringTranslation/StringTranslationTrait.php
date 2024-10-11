@@ -76,7 +76,7 @@ trait StringTranslationTrait {
    *
    * @see \Drupal\Core\StringTranslation\TranslationInterface::formatPlural()
    */
-  protected function formatPlural($count, $singular, $plural, array $args = [], array $options = []) {
+  protected function formatPlural($count, $singular, $plural, array $args = [], array $options = []): PluralTranslatableMarkup {
     return new PluralTranslatableMarkup($count, $singular, $plural, $args, $options, $this->getStringTranslation());
   }
 
@@ -85,7 +85,7 @@ trait StringTranslationTrait {
    *
    * @see \Drupal\locale\PluralFormulaInterface::getNumberOfPlurals()
    */
-  protected function getNumberOfPlurals($langcode = NULL) {
+  protected function getNumberOfPlurals($langcode = NULL): int {
     if (\Drupal::hasService('locale.plural.formula')) {
       return \Drupal::service('locale.plural.formula')->getNumberOfPlurals($langcode);
     }
