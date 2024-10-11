@@ -9,21 +9,24 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\DependencyInjection\Exception\AutowiringFailedException;
 
 /**
- * Allows plugins extending ContainerFactoryPluginInterface to use autowiring.
- *
- * @see \Drupal\Core\Plugin\ContainerFactoryPluginInterface
+ * Defines a base trait for automatically wiring dependency arguments.
  */
-trait AutowirePluginTrait {
+trait AutowireArgumentsTrait {
 
   /**
-   * {@inheritdoc}
+   * Instantiates a new instance of the implementing class using autowiring.
+   *
+   * @param \Symfony\Component\DependencyInjection\ContainerInterface $container
+   *   The service container this instance should use.
+   * @param ...$args
+   *   Any predefined arguments to pass to the constructor.
+   *
+   * @return static
    */
-  public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
-    $args = [$configuration, $plugin_id, $plugin_definition];
-
+  public static function autowireArguments(ContainerInterface $container, ...$args) {
     if (method_exists(static::class, '__construct')) {
       $constructor = new \ReflectionMethod(static::class, '__construct');
-      foreach (array_slice($constructor->getParameters(), 3) as $parameter) {
+      foreach (array_slice($constructor->getParameters(), count($args)) as $parameter) {
         $service = ltrim((string) $parameter->getType(), '?');
         foreach ($parameter->getAttributes(Autowire::class) as $attribute) {
           $service = (string) $attribute->newInstance()->value;
