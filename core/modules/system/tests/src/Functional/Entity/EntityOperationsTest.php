@@ -53,7 +53,12 @@ class EntityOperationsTest extends BrowserTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function createRole(array $permissions, $rid = NULL, $name = NULL, $weight = NULL) {
+  protected function createRole(
+    array $permissions,
+    $rid = NULL,
+    $name = NULL,
+    $weight = NULL,
+  ): false | string {
     // The parent method uses random strings by default, which may include HTML
     // entities for the entity label. Since in this test the entity label is
     // used to generate a link, and AssertContentTrait::assertLink() is not
