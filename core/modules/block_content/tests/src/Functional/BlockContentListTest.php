@@ -46,9 +46,7 @@ class BlockContentListTest extends BlockContentTestBase {
   ];
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = ['block', 'block_content', 'config_translation'];
 
@@ -90,7 +88,7 @@ class BlockContentListTest extends BlockContentTestBase {
   /**
    * Tests the content block listing page with different permissions.
    */
-  public function testListing() {
+  public function testListing(): void {
     // Test with the admin user.
     $this->drupalLogin($this->drupalCreateUser(['access block library', 'administer block content']));
     $this->drupalGet('admin/content/block');
@@ -154,7 +152,7 @@ class BlockContentListTest extends BlockContentTestBase {
     $this->assertSession()->linkByHrefExists('admin/content/block/' . $block->id() . '/delete');
     $this->clickLink('Delete');
     $this->assertSession()->statusCodeEquals(200);
-    $this->assertSession()->titleEquals("Are you sure you want to delete the content block $new_label? | $new_label | Drupal");
+    $this->assertSession()->titleEquals("Are you sure you want to delete the content block $new_label? | Drupal");
     $this->submitForm([], 'Delete');
 
     // Verify that the text of the label and machine name does not appear in
