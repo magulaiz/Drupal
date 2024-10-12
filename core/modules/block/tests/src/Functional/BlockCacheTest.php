@@ -84,6 +84,7 @@ class BlockCacheTest extends BrowserTestBase {
     $current_content = $this->randomMachineName();
     \Drupal::state()->set('block_test.content', $current_content);
 
+    $this->drupalGet('');
     $this->assertSession()->pageTextContains($current_content);
 
     $old_content = $current_content;
