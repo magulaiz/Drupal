@@ -48,7 +48,7 @@ class BlockTest extends BlockTestBase {
     $this->assertSession()->checkboxChecked('edit-visibility-request-path-negate-0');
 
     $this->submitForm($edit, 'Save block');
-    $this->assertSession()->statusMessageContains('The '. $block_name . ' block configuration has been saved.', 'status');
+    $this->assertSession()->statusMessageContains('The ' . $block_name . ' block configuration has been saved.', 'status');
 
     $this->clickLink('Configure');
     $this->assertSession()->checkboxChecked('edit-visibility-request-path-negate-1');
