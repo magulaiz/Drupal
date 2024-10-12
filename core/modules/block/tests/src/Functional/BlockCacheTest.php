@@ -62,16 +62,7 @@ class BlockCacheTest extends BrowserTestBase {
       'administer blocks',
       'access administration pages',
     ]);
-    
-    // @todo If our block does not contain any content then the cache context
-    //   is not bubbling up and the test fails. Remove this line once the cache
-    //   contexts are properly set. See https://www.drupal.org/node/2529980.
-    \Drupal::state()->set('block_test.content', 'Needs to have some content');
-
     $this->drupalLogin($this->adminUser);
-
-    // Enable our test block.
-    $this->block = $this->drupalPlaceBlock('test_cache');
   }
 
   /**
