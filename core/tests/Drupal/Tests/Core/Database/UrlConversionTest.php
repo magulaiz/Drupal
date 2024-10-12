@@ -8,6 +8,8 @@ use Drupal\Core\Database\Database;
 use Drupal\Core\Extension\Exception\UnknownExtensionException;
 use Drupal\Tests\UnitTestCase;
 
+// cspell:ignore dummydb
+
 /**
  * Tests for database URL to/from database connection array conversions.
  *
