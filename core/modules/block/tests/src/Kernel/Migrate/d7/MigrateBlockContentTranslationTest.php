@@ -10,7 +10,6 @@ use Drupal\Tests\migrate_drupal\Kernel\d7\MigrateDrupal7TestBase;
  * Tests migration of i18n block translations.
  *
  * @group migrate_drupal_7
- * @group #slow
  */
 class MigrateBlockContentTranslationTest extends MigrateDrupal7TestBase {
 
@@ -59,7 +58,7 @@ class MigrateBlockContentTranslationTest extends MigrateDrupal7TestBase {
   /**
    * Tests the migration of block title translation.
    */
-  public function testBlockContentTranslation() {
+  public function testBlockContentTranslation(): void {
     // @todo Skipped due to frequent random test failures.
     // See https://www.drupal.org/project/drupal/issues/3389365
     $this->markTestSkipped();
