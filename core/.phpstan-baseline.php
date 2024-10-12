@@ -22421,10 +22421,10 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/file/tests/src/Functional/FileUploadJsonBasicAuthTest.php',
 ];
 $ignoreErrors[] = [
-	// identifier: method.notFound
-	'message' => '#^Call to an undefined method Drupal\\\\Tests\\\\file\\\\Functional\\\\FileUploadJsonCookieTest\\:\\:getExpectedUnauthorizedEntityAccessCacheability\\(\\)\\.$#',
+	// identifier: method.void
+	'message' => '#^Result of method Drupal\\\\Tests\\\\rest\\\\Functional\\\\FileUploadResourceTestBase\\:\\:getExpectedUnauthorizedEntityAccessCacheability\\(\\) \\(void\\) is used\\.$#',
 	'count' => 1,
-	'path' => __DIR__ . '/modules/file/tests/src/Functional/FileUploadJsonCookieTest.php',
+	'path' => __DIR__ . '/modules/file/tests/src/Functional/FileUploadJsonBasicAuthTest.php',
 ];
 $ignoreErrors[] = [
 	// identifier: missingType.return
@@ -22441,6 +22441,12 @@ $ignoreErrors[] = [
 $ignoreErrors[] = [
 	// identifier: missingType.return
 	'message' => '#^Method Drupal\\\\Tests\\\\file\\\\Functional\\\\FileUploadJsonCookieTest\\:\\:initAuthentication\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/file/tests/src/Functional/FileUploadJsonCookieTest.php',
+];
+$ignoreErrors[] = [
+	// identifier: method.void
+	'message' => '#^Result of method Drupal\\\\Tests\\\\rest\\\\Functional\\\\FileUploadResourceTestBase\\:\\:getExpectedUnauthorizedEntityAccessCacheability\\(\\) \\(void\\) is used\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/file/tests/src/Functional/FileUploadJsonCookieTest.php',
 ];
@@ -50732,12 +50738,6 @@ $ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\Tests\\\\user\\\\Functional\\\\UserPictureTest\\:\\:saveUserPicture\\(\\) has no return type specified\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/user/tests/src/Functional/UserPictureTest.php',
-];
-$ignoreErrors[] = [
-	// identifier: method.notFound
-	'message' => '#^Call to an undefined method Drupal\\\\Tests\\\\user\\\\Functional\\\\UserRegistrationRestTest\\:\\:getExpectedUnauthorizedEntityAccessCacheability\\(\\)\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/user/tests/src/Functional/UserRegistrationRestTest.php',
 ];
 $ignoreErrors[] = [
 	// identifier: missingType.return
