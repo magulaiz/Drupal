@@ -311,8 +311,8 @@ class UrlConversionTest extends UnitTestCase {
     // core database driver the next exception that will be thrown is that for
     // the module that does not exist.
     $this->expectException(UnknownExtensionException::class);
-    $this->expectExceptionMessage('The database_driver Drupal\mongodb\Driver\Database\mongodb does not exist.');
-    $url = 'mongodb://test_user:test_pass@test_host/test_database';
+    $this->expectExceptionMessage('The database_driver Drupal\dummydb\Driver\Database\dummydb does not exist.');
+    $url = 'dummydb://test_user:test_pass@test_host/test_database';
     Database::convertDbUrlToConnectionInfo($url, $this->root);
   }
 
