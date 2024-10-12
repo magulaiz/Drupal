@@ -58,17 +58,21 @@ class BlockCacheTest extends BrowserTestBase {
     parent::setUp();
 
     // Create an admin user, log in and enable test blocks.
-    $this->adminUser = $this->drupalCreateUser([
-      'administer blocks',
-      'access administration pages',
-    ]);
-    $this->drupalLogin($this->adminUser);
+
+    // Enable our test block.
+    $this->block = $this->drupalPlaceBlock('test_cache');
   }
 
   /**
    * Tests a cacheable block without any additional cache context.
    */
   public function testCachePermissions(): void {
+    $this->adminUser = $this->drupalCreateUser([
+      'administer blocks',
+      'access administration pages',
+    ]);
+    $this->drupalLogin($this->adminUser);
+
     $current_content = $this->randomMachineName();
     \Drupal::state()->set('block_test.content', $current_content);
 
