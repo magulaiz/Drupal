@@ -8,6 +8,7 @@ services:
       - '@Psr\EventDispatcher\EventDispatcherInterface'
       - '@?Symfony\Contracts\HttpClient\HttpClientInterface'
       - '@logger.channel.mail'
+  Symfony\Component\Mailer\Transport\AbstractTransportFactory: '@mailer.transport_factory.abstract'
   mailer.transport_factory.native:
     parent: mailer.transport_factory.abstract
     class: Symfony\Component\Mailer\Transport\NativeTransportFactory
