@@ -16,8 +16,8 @@ class BlockCacheTest extends BrowserTestBase {
   /**
    * {@inheritdoc}
    */
-  protected static $modules = ['block_test'];
-
+  protected static $modules = ['block', 'block_test', 'test_page_test'];
+  
   /**
    * {@inheritdoc}
    */
