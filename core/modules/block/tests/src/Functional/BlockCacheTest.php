@@ -16,7 +16,7 @@ class BlockCacheTest extends BrowserTestBase {
   /**
    * {@inheritdoc}
    */
-  protected static $modules = ['block', 'block_test', 'test_page_test'];
+  protected static $modules = ['block_test'];
 
   /**
    * {@inheritdoc}
@@ -24,59 +24,20 @@ class BlockCacheTest extends BrowserTestBase {
   protected $defaultTheme = 'stark';
 
   /**
-   * A user with permission to administer blocks.
-   *
-   * @var object
-   */
-  protected $adminUser;
-
-  /**
-   * An authenticated user to test block caching.
-   *
-   * @var object
-   */
-  protected $normalUser;
-
-  /**
-   * Another authenticated user to test block caching.
-   *
-   * @var object
-   */
-  protected $normalUserAlt;
-
-  /**
-   * The block used by this test.
-   *
-   * @var \Drupal\block\BlockInterface
-   */
-  protected $block;
-
-  /**
-   * {@inheritdoc}
-   */
-  protected function setUp(): void {
-    parent::setUp();
-
-    // Create an admin user, log in and enable test blocks.
-
-    // Enable our test block.
-    $this->block = $this->drupalPlaceBlock('test_cache');
-  }
-
-  /**
    * Tests a cacheable block without any additional cache context.
    */
   public function testCachePermissions(): void {
-    $this->adminUser = $this->drupalCreateUser([
+    $adminUser = $this->drupalCreateUser([
       'administer blocks',
       'access administration pages',
     ]);
-    $this->drupalLogin($this->adminUser);
-
     $current_content = $this->randomMachineName();
     \Drupal::state()->set('block_test.content', $current_content);
 
-    $this->drupalGet('');
+    $this->drupalPlaceBlock('test_cache');
+
+    $this->drupalLogin($adminUser);
+
     $this->assertSession()->pageTextContains($current_content);
 
     $old_content = $current_content;
