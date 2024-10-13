@@ -30,9 +30,7 @@ use Drupal\Tests\BrowserTestBase;
 class BigPipeTest extends BrowserTestBase {
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = ['big_pipe', 'big_pipe_test', 'dblog'];
 
@@ -78,7 +76,7 @@ class BigPipeTest extends BrowserTestBase {
    * - big_pipe_page_attachments()
    * - \Drupal\big_pipe\Controller\BigPipeController
    */
-  public function testNoJsDetection() {
+  public function testNoJsDetection(): void {
     $no_js_to_js_markup = '<script>document.cookie = "' . BigPipeStrategy::NOJS_COOKIE . '=1; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT"</script>';
 
     // 1. No session (anonymous).
@@ -142,7 +140,7 @@ class BigPipeTest extends BrowserTestBase {
    *
    * @see \Drupal\big_pipe_test\BigPipePlaceholderTestCases
    */
-  public function testBigPipe() {
+  public function testBigPipe(): void {
     // Simulate production.
     $this->config('system.logging')->set('error_level', ERROR_REPORTING_HIDE)->save();
 
@@ -219,6 +217,16 @@ class BigPipeTest extends BrowserTestBase {
     $this->assertSession()->responseNotContains('</body>');
     // The exception is expected. Do not interpret it as a test failure.
     unlink($this->root . '/' . $this->siteDirectory . '/error.log');
+
+    // Tests the enforced redirect response exception handles redirecting to
+    // a trusted redirect.
+    $this->drupalGet(Url::fromRoute('big_pipe_test_trusted_redirect'));
+    $this->assertSession()->responseContains('application/vnd.drupal-ajax');
+    $this->assertSession()->responseContains('[{"command":"redirect","url":"\/big_pipe_test"}]');
+
+    // Test that it rejects an untrusted redirect.
+    $this->drupalGet(Url::fromRoute('big_pipe_test_untrusted_redirect'));
+    $this->assertSession()->responseContains('Redirects to external URLs are not allowed by default');
   }
 
   /**
@@ -231,7 +239,7 @@ class BigPipeTest extends BrowserTestBase {
    *
    * @see \Drupal\big_pipe_test\BigPipePlaceholderTestCases
    */
-  public function testBigPipeNoJs() {
+  public function testBigPipeNoJs(): void {
     // Simulate production.
     $this->config('system.logging')->set('error_level', ERROR_REPORTING_HIDE)->save();
 
@@ -294,7 +302,7 @@ class BigPipeTest extends BrowserTestBase {
   /**
    * Tests BigPipe with a multi-occurrence placeholder.
    */
-  public function testBigPipeMultiOccurrencePlaceholders() {
+  public function testBigPipeMultiOccurrencePlaceholders(): void {
     $this->drupalLogin($this->rootUser);
     $this->assertSessionCookieExists('1');
     $this->assertBigPipeNoJsCookieExists('0');
