@@ -32,10 +32,6 @@ config_test.dynamic.*:
   type: config_test_dynamic
   label: 'Config test dynamic settings'
 
-config_test.dynamic.*.*:
-  type: config_test_dynamic
-  label: 'Config test dynamic settings'
-
 config_test.dynamic.*.third_party.node:
   type: mapping
   mapping:
@@ -183,7 +179,7 @@ config_test.types.fully_validatable:
   constraints:
     FullyValidatable: ~
 
-config_test.no_status.default:
+config_test.no_status.*:
   type: config_object
   label: 'Configuration no status default'
   mapping:

@@ -89,6 +89,10 @@ class ContentTranslationSynchronizedFieldsConstraintValidator extends Constraint
     /** @var \Drupal\content_translation\Plugin\Validation\Constraint\ContentTranslationSynchronizedFieldsConstraint $constraint */
     /** @var \Drupal\Core\Entity\ContentEntityInterface $entity */
     $entity = $value;
+    // @todo Figure out how the hell this could possibly be getting called for config!
+    if (is_array($value)) {
+      return;
+    }
     if ($entity->isNew() || !$entity->getEntityType()->isRevisionable()) {
       return;
     }

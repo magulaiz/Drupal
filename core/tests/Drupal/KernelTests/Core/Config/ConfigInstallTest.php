@@ -78,10 +78,15 @@ class ConfigInstallTest extends KernelTestBase {
     // After module installation the new schema should exist.
     $this->assertTrue(\Drupal::service('config.typed')->hasConfigSchema('config_schema_test.some_schema'), 'Configuration schema for config_schema_test.some_schema exists.');
 
-    // Test that uninstalling configuration removes configuration schema.
-    $this->config('core.extension')->set('module', [])->save();
-    \Drupal::service('config.manager')->uninstall('module', 'config_test');
-    $this->assertFalse(\Drupal::service('config.typed')->hasConfigSchema('config_schema_test.some_schema'), 'Configuration schema for config_schema_test.some_schema does not exist.');
+    // Test that uninstalling the module removes configuration schema.
+    // TRICKY: only uninstalling using ConfigManager::uninstall() could have
+    // worked too, except that system_config_schema_info_alter() uses the Entity
+    // Type Manager to keep validation constraints in sync between config entity
+    // types and corresponding config schema types. The Entity Type Manager is
+    // not updated when using ConfigManager::uninstall(). Hence a proper module
+    // uninstallation is necessary.
+    $this->disableModules(['config_schema_test']);
+    $this->assertFalse($this->container->get('config.typed')->hasConfigSchema('config_schema_test.some_schema'), 'Configuration schema for config_schema_test.some_schema does not exist.');
   }
 
   /**

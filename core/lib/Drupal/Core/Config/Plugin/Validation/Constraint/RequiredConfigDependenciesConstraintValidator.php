@@ -4,6 +4,8 @@ declare(strict_types = 1);
 
 namespace Drupal\Core\Config\Plugin\Validation\Constraint;
 
+use Drupal\Component\Utility\NestedArray;
+use Drupal\Core\Config\ConfigManagerInterface;
 use Drupal\Core\Config\Entity\ConfigEntityInterface;
 use Drupal\Core\Config\Entity\ConfigEntityTypeInterface;
 use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
@@ -19,29 +21,18 @@ use Symfony\Component\Validator\Exception\UnexpectedTypeException;
  */
 class RequiredConfigDependenciesConstraintValidator extends ConstraintValidator implements ContainerInjectionInterface {
 
-  /**
-   * The entity type manager service.
-   *
-   * @var \Drupal\Core\Entity\EntityTypeManagerInterface
-   */
-  protected EntityTypeManagerInterface $entityTypeManager;
-
-  /**
-   * Constructs a RequiredConfigDependenciesConstraintValidator object.
-   *
-   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
-   *   The entity type manager service.
-   */
-  public function __construct(EntityTypeManagerInterface $entity_type_manager) {
-    $this->entityTypeManager = $entity_type_manager;
-  }
+  public function __construct(
+    protected EntityTypeManagerInterface $entityTypeManager,
+    protected readonly ConfigManagerInterface $configManager,
+  ) {}
 
   /**
    * {@inheritdoc}
    */
   public static function create(ContainerInterface $container) {
     return new static(
-      $container->get('entity_type.manager')
+      $container->get('entity_type.manager'),
+      $container->get('config.manager')
     );
   }
 
@@ -51,12 +42,27 @@ class RequiredConfigDependenciesConstraintValidator extends ConstraintValidator 
   public function validate(mixed $entity, Constraint $constraint): void {
     assert($constraint instanceof RequiredConfigDependenciesConstraint);
 
-    // Only config entities can have config dependencies.
-    if (!$entity instanceof ConfigEntityInterface) {
-      throw new UnexpectedTypeException($entity, ConfigEntityInterface::class);
+    // Config entities can be represented using either ConfigEntityAdapter or a
+    // plain array.
+    // @see \Drupal\Core\Entity\Plugin\DataType\ConfigEntityAdapter::createFromEntity()
+    // @see \Drupal\Core\Config\TypedConfigManager::processDefinition()
+    if ($entity instanceof ConfigEntityInterface) {
+      $validated_entity_type_id = $entity->getEntityTypeId();
+      $entity = $entity->toArray();
+    }
+    else {
+      $validated_entity_type_id = $this->configManager->getEntityTypeIdByName($this->context->getObject()->getName());
+    }
+    if (!is_array($entity)) {
+      throw new UnexpectedTypeException($entity, 'array');
     }
 
-    $config_dependencies = $entity->getDependencies()['config'] ?? [];
+    // Merge the enforced config dependencies into the list of dependencies.
+    // @see \Drupal\Core\Config\Entity\ConfigEntityBase::getDependencies()
+    $config_dependencies = NestedArray::mergeDeep(
+      $entity['dependencies']['config'] ?? [],
+      $entity['dependencies']['enforced']['config'] ?? [],
+    );
 
     foreach ($constraint->entityTypes as $entity_type_id) {
       $entity_type = $this->entityTypeManager->getDefinition($entity_type_id);
@@ -70,7 +76,7 @@ class RequiredConfigDependenciesConstraintValidator extends ConstraintValidator 
       $pattern = sprintf('/^%s\\.\\w+/', $entity_type->getConfigPrefix());
       if (!preg_grep($pattern, $config_dependencies)) {
         $this->context->addViolation($constraint->message, [
-          '@entity_type' => $entity->getEntityType()->getSingularLabel(),
+          '@entity_type' => $this->entityTypeManager->getDefinition($validated_entity_type_id)->getSingularLabel(),
           '@dependency_type' => $entity_type->getSingularLabel(),
         ]);
       }

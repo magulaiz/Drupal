@@ -227,7 +227,7 @@ class ConfigSchemaTest extends KernelTestBase {
     $expected['type'] = 'image.style.*';
     $expected['constraints'] = [
       'ValidKeys' => '<infer>',
-      'FullyValidatable' => NULL,
+      'FullyValidatable' => ['name'],
     ];
 
     $this->assertEquals($expected, $definition);

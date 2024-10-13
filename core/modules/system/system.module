@@ -12,6 +12,7 @@ use Drupal\Component\Utility\UrlHelper;
 use Drupal\Core\Asset\AttachedAssetsInterface;
 use Drupal\Core\Block\BlockPluginInterface;
 use Drupal\Core\Cache\Cache;
+use Drupal\Core\Config\Entity\ConfigEntityTypeInterface;
 use Drupal\Core\Database\Query\AlterableInterface;
 use Drupal\Core\Entity\ContentEntityTypeInterface;
 use Drupal\Core\Extension\Extension;
@@ -1194,5 +1195,49 @@ function system_archiver_info_alter(&$info) {
   if (!class_exists(\ZipArchive::class)) {
     // PHP Zip extension is missing.
     unset($info['Zip']);
+  }
+}
+
+/**
+ * Implements hook_config_schema_info_alter().
+ */
+function system_config_schema_info_alter(&$definitions) {
+  $config_entity_types = array_filter(
+    \Drupal::entityTypeManager()->getDefinitions(),
+    fn ($entity_type) => $entity_type instanceof ConfigEntityTypeInterface,
+  );
+  foreach ($config_entity_types as $config_entity_type) {
+    // Find the config schema type for this config entity type.
+    assert($config_entity_type instanceof ConfigEntityTypeInterface);
+    $prefix = $config_entity_type->getConfigPrefix();
+    $matches = array_filter(
+      array_keys($definitions),
+      fn (string $config_schema_type) => str_starts_with($config_schema_type, "$prefix.") && str_ends_with($config_schema_type, '.*'),
+    );
+    if (count($matches) !== 1) {
+      throw new \LogicException(sprintf('The "%s" config entity type prefix (%s) should only match one config schema type, but it matched %d: %s.',
+        count($matches),
+        $config_entity_type->getLabel(),
+        $prefix,
+        implode(', ', $matches),
+      ));
+    }
+    $matching_config_schema_type = reset($matches);
+
+    // The config schema type for a config entity type may have validation
+    // constraints defined, but so may the ConfigEntityType definition. Both are
+    // needed.
+    // @see \Drupal\Core\Entity\Plugin\DataType\ConfigEntityAdapter::createFromEntity()
+    if (!array_key_exists('constraints', $definitions[$matching_config_schema_type])) {
+      $definitions[$matching_config_schema_type]['constraints'] = [];
+    }
+    // The config schema constraints should take precedence over the ones
+    // defined by the entity type. This is enforced in the opposite
+    // direction by
+    // \Drupal\Core\Entity\Plugin\DataType\ConfigEntityAdapter::createFromEntity(),
+    // and if there was any disagreement, the validation results would be
+    // different depending on whether the data is validated as config or as a
+    // typed data object, which is a discrepancy our tests would catch.
+    $definitions[$matching_config_schema_type]['constraints'] += $config_entity_type->getConstraints();
   }
 }

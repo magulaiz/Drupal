@@ -35,7 +35,7 @@ class ImmutablePropertiesConstraintValidatorTest extends KernelTestBase {
     $data = $this->container->get(TypedDataManagerInterface::class)
       ->create($definition, 39);
     $this->expectException(UnexpectedValueException::class);
-    $this->expectExceptionMessage('Expected argument of type "' . ConfigEntityInterface::class . '", "int" given');
+    $this->expectExceptionMessage('Expected argument of type "' . ConfigEntityInterface::class . '|array", "int" given');
     $data->validate();
   }
 

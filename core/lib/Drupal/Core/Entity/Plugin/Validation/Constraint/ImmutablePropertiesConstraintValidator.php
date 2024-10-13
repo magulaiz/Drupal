@@ -5,6 +5,7 @@ declare(strict_types = 1);
 namespace Drupal\Core\Entity\Plugin\Validation\Constraint;
 
 use Drupal\Core\Config\Entity\ConfigEntityInterface;
+use Drupal\Core\Config\StorageInterface;
 use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -19,21 +20,18 @@ use Symfony\Component\Validator\Exception\UnexpectedValueException;
  */
 class ImmutablePropertiesConstraintValidator extends ConstraintValidator implements ContainerInjectionInterface {
 
-  /**
-   * Constructs an ImmutablePropertiesConstraintValidator object.
-   *
-   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entityTypeManager
-   *   The entity type manager service.
-   */
-  public function __construct(protected EntityTypeManagerInterface $entityTypeManager) {
-  }
+  public function __construct(
+    protected EntityTypeManagerInterface $entityTypeManager,
+    protected readonly StorageInterface $configStorage,
+  ) {}
 
   /**
    * {@inheritdoc}
    */
   public static function create(ContainerInterface $container): static {
     return new static(
-      $container->get('entity_type.manager')
+      $container->get('entity_type.manager'),
+      $container->get('config.storage'),
     );
   }
 
@@ -43,32 +41,50 @@ class ImmutablePropertiesConstraintValidator extends ConstraintValidator impleme
   public function validate(mixed $value, Constraint $constraint): void {
     assert($constraint instanceof ImmutablePropertiesConstraint);
 
-    if (!$value instanceof ConfigEntityInterface) {
-      throw new UnexpectedValueException($value, ConfigEntityInterface::class);
-    }
-    // This validation is irrelevant on new entities.
-    if ($value->isNew()) {
-      return;
+    if (!$value instanceof ConfigEntityInterface && !is_array($value)) {
+      throw new UnexpectedValueException($value, ConfigEntityInterface::class . '|array');
     }
 
-    $id = $value->getOriginalId() ?: $value->id();
-    if (empty($id)) {
-      throw new LogicException('The entity does not have an ID.');
+    // Config entities can be represented using either ConfigEntityAdapter or a
+    // plain array.
+    // @see \Drupal\Core\Entity\Plugin\DataType\ConfigEntityAdapter::createFromEntity()
+    // @see \Drupal\Core\Config\TypedConfigManager::processDefinition()
+    if ($value instanceof ConfigEntityInterface) {
+      // This validation is irrelevant on new entities.
+      if ($value->isNew()) {
+        return;
+      }
+
+      $id = $value->getOriginalId() ?: $value->id();
+      if (empty($id)) {
+        throw new LogicException('The entity does not have an ID.');
+      }
+      $original = $this->entityTypeManager->getStorage($value->getEntityTypeId())
+        ->loadUnchanged($id);
+    }
+    else {
+      $config_name = $this->context->getObject()->getName();
+
+      // This validation is irrelevant on new entities.
+      if (!$this->configStorage->exists($config_name)) {
+        return;
+      }
+      $original = $this->configStorage->read($config_name);
     }
 
-    $original = $this->entityTypeManager->getStorage($value->getEntityTypeId())
-      ->loadUnchanged($id);
     if (empty($original)) {
       throw new RuntimeException('The original entity could not be loaded.');
     }
 
     foreach ($constraint->properties as $name) {
       // The property must be concretely defined in the class.
-      if (!property_exists($value, $name)) {
+      if ((is_object($value) && !property_exists($value, $name))|| (is_array($value) && !array_key_exists($name, $value))) {
         throw new LogicException("The entity does not have a '$name' property.");
       }
 
-      if ($original->get($name) !== $value->get($name)) {
+      $original_value = is_array($original) ? $original[$name] : $original->get($name);
+      $current_value = is_array($value) ? $value[$name] : $value->get($name);
+      if ($original_value !== $current_value) {
         $this->context->addViolation($constraint->message, ['@name' => $name]);
       }
     }
