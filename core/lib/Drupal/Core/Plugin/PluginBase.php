@@ -14,7 +14,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  *
  * @ingroup plugin_api
  */
-abstract class PluginBase extends ComponentPluginBase {
+abstract class PluginBase extends ComponentPluginBase implements ContainerFactoryPluginInterface {
 
   use AutowireArgumentsTrait;
   use StringTranslationTrait;
