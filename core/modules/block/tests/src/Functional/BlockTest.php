@@ -48,7 +48,7 @@ class BlockTest extends BlockTestBase {
     $this->assertSession()->checkboxChecked('edit-visibility-request-path-negate-0');
 
     $this->submitForm($edit, 'Save block');
-    $this->assertSession()->statusMessageContains('The ' . $block_name . ' block configuration has been saved.', 'status');
+    $this->assertSession()->statusMessageContains('The ' . $title . ' block configuration has been saved.', 'status');
 
     $this->clickLink('Configure');
     $this->assertSession()->checkboxChecked('edit-visibility-request-path-negate-1');
@@ -138,7 +138,7 @@ class BlockTest extends BlockTestBase {
     // authenticated users.
     $this->drupalGet('admin/structure/block/add/' . $block_name . '/' . $default_theme);
     $this->submitForm($edit, 'Save block');
-    $this->assertSession()->statusMessageContains('The ' . $block_name . ' block configuration has been saved.', 'status');
+    $this->assertSession()->statusMessageContains('The ' . $title . ' block configuration has been saved.', 'status');
 
     // Confirm that block was not displayed according to block visibility
     // rules.
@@ -357,7 +357,7 @@ class BlockTest extends BlockTestBase {
     ];
     $this->drupalGet('admin/structure/block/add/' . $block_name . '/' . $default_theme);
     $this->submitForm($edit, 'Save block');
-    $this->assertSession()->statusMessageContains('The ' . $block_name . 'block configuration has been saved.', 'status');
+    $this->assertSession()->statusMessageContains('The ' . $title . ' block configuration has been saved.', 'status');
 
     // Confirm that the block is not displayed by default.
     $this->drupalGet('user');
