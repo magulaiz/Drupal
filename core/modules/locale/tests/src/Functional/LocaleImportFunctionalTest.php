@@ -401,7 +401,7 @@ class LocaleImportFunctionalTest extends BrowserTestBase {
   /**
    * Tests if a translations directory gets created.
    */
-  public function testTranslationDirectoryCreation() {
+  public function testTranslationDirectoryCreation(): void {
     $directory = 'translations://';
     /** @var \Drupal\Core\File\FileSystemInterface $file_system */
     $file_system = \Drupal::service('file_system');
