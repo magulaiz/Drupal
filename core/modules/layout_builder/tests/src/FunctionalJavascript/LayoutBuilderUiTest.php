@@ -306,7 +306,6 @@ class LayoutBuilderUiTest extends WebDriverTestBase {
     $assert_session->assertNoElementAfterWait('css', '.is-layout-builder-highlighted');
   }
 
-
   /**
    * Tests for hide block functionality.
    */
