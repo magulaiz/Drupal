@@ -7,7 +7,6 @@ namespace Drupal\block_test\Plugin\Block;
 use Drupal\Core\Block\Attribute\Block;
 use Drupal\Core\Block\BlockBase;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
-//use function PHPUnit\Framework\assertNotEmpty;
 
 /**
  * Provides a block to test caching.
@@ -23,10 +22,6 @@ class TestCacheBlock extends BlockBase {
    */
   public function build() {
     $content = \Drupal::state()->get('block_test.content');
-//    assertNotEmpty($content);
-//    $block_test_hit = \Drupal::state()->get('block_test.hit', 0);
-//
-//    \Drupal::state()->set('block_test.hit', $block_test_hit + 1);
 
     $build = [];
     if (!empty($content)) {
