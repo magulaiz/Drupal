@@ -259,6 +259,7 @@ class MigrationLookup extends ProcessPluginBase implements ContainerFactoryPlugi
           $lookup_value[$key] = $row_values[$source];
         }
       }
+      $lookup_value = (array) $lookup_value;
       $this->skipInvalid($lookup_value);
       if ($this->isPipelineStopped()) {
         return NULL;
