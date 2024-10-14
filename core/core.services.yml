@@ -1500,6 +1500,7 @@ services:
     calls:
       - [setWriteSafeHandler, ['@session_handler.write_safe']]
   Drupal\Core\Session\SessionManagerInterface: '@session_manager'
+  Symfony\Component\HttpFoundation\Session\Storage\SessionStorageInterface: '@session_manager'
   session_manager.metadata_bag:
     class: Drupal\Core\Session\MetadataBag
   Drupal\Core\Session\MetadataBag: '@session_manager.metadata_bag'
