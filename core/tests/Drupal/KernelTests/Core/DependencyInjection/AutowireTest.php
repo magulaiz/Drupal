@@ -193,8 +193,17 @@ class AutowireTest extends KernelTestBase {
 
     $autowire = [];
     foreach ($services as $id => $service) {
-      if ($id === 'cache_tags.invalidator.checksum') {
-        // @todo Autowiring this breaks ServiceProviderTest.
+      $ignored = [
+        'cache_tags.invalidator.checksum',
+        'cache.backend.database',
+        'lock',
+      ];
+      if (in_array($id, $ignored)) {
+        // @todo Autowiring these breaks ServiceProviderTest and
+        // DrupalKernelTest, because ServiceProviderTestServiceProvider and
+        // ContainerRebuildTestServiceProvider tries to get instances of
+        // services during the compiler's ModifyServiceDefinitionsPass, before
+        // autowire pass populates the constructor parameters.
         continue;
       }
 
