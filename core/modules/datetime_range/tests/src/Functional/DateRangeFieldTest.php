@@ -1177,7 +1177,7 @@ class DateRangeFieldTest extends DateTestBase {
   /**
    * Provider for testDefaultValue().
    */
-  public static function defaultValueProvider() {
+  public static function defaultValueProvider(): array {
     return [
       [DateTimeItem::DATETIME_TYPE_DATE],
       [DateTimeItem::DATETIME_TYPE_DATETIME],
