@@ -193,6 +193,7 @@ services:
   variation_cache_factory:
     class: Drupal\Core\Cache\VariationCacheFactory
   Drupal\Core\Cache\VariationCacheFactory: '@variation_cache_factory'
+  Drupal\Core\Cache\VariationCacheFactoryInterface: '@variation_cache_factory'
   cache_contexts_manager:
     class: Drupal\Core\Cache\Context\CacheContextsManager
     arguments: ['@service_container', '%cache_contexts%' ]
@@ -1466,7 +1467,6 @@ services:
   Drupal\Core\Session\SessionConfigurationInterface: '@session_configuration'
   session:
     class: Symfony\Component\HttpFoundation\Session\Session
-    arguments: ['@session_manager', '@session.attribute_bag', '@session.flash_bag']
     tags:
       - { name: service_collector, tag: session_bag, call: registerBag }
   Symfony\Component\HttpFoundation\Session\SessionInterface: '@session'
@@ -1566,7 +1566,6 @@ services:
     tags:
       - { name: twig.extension, priority: 100 }
   Drupal\Core\Template\ComponentsTwigExtension:
-    arguments: ['@plugin.manager.sdc', '@Drupal\Core\Theme\Component\ComponentValidator']
     tags:
       - { name: twig.extension, priority: 101 }
   twig.extension.debug:
@@ -1629,7 +1628,6 @@ services:
   Drupal\Core\Render\PlaceholderGeneratorInterface: '@render_placeholder_generator'
   render_cache:
     class: Drupal\Core\Render\PlaceholderingRenderCache
-    arguments: ['@request_stack', '@variation_cache_factory', '@cache_contexts_manager', '@render_placeholder_generator']
   Drupal\Core\Render\RenderCacheInterface: '@render_cache'
   renderer:
     class: Drupal\Core\Render\Renderer
