@@ -83,6 +83,7 @@ class BlockCacheTest extends BrowserTestBase {
   public function testCachePermissions(): void {
     $current_content = $this->randomMachineName();
     \Drupal::state()->set('block_test.content', $current_content);
+    $this->assertEquals($current_content, \Drupal::state()->get('block_test.content'));
 
     $this->drupalGet('');
     $this->assertSession()->pageTextContains($current_content);
@@ -90,6 +91,7 @@ class BlockCacheTest extends BrowserTestBase {
     $old_content = $current_content;
     $current_content = $this->randomMachineName();
     \Drupal::state()->set('block_test.content', $current_content);
+    $this->assertEquals($current_content, \Drupal::state()->get('block_test.content'));
 
     // Block content served from cache.
     $this->drupalGet('user');
@@ -97,7 +99,7 @@ class BlockCacheTest extends BrowserTestBase {
 
     // Block content not served from cache.
     $this->drupalLogout();
-//    sleep(2);
+    $this->assertEquals($current_content, \Drupal::state()->get('block_test.content'));
     $this->assertSession()->pageTextContains($current_content);
   }
 
