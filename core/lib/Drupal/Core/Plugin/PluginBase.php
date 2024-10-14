@@ -25,6 +25,8 @@ abstract class PluginBase extends ComponentPluginBase {
    * Instantiates a new instance of the implementing class using autowiring.
    *
    * @see \Drupal\Core\Plugin\ContainerFactoryPluginInterface
+   *
+   * @return static
    */
   public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
     return static::autowireArguments($container, $configuration, $plugin_id, $plugin_definition);
