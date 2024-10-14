@@ -93,7 +93,7 @@ class BlockCacheTest extends BrowserTestBase {
     $this->assertEquals($current_content, \Drupal::state()->get('block_test.content'));
 
     // Block content served from cache.
-    $this->drupalGet('user');
+    $this->drupalGet('user/' . $this->adminUser->id());
     $this->assertEquals($current_content, \Drupal::state()->get('block_test.content'));
     $this->assertSession()->pageTextContains($old_content);
     $this->assertEquals($current_content, \Drupal::state()->get('block_test.content'));
