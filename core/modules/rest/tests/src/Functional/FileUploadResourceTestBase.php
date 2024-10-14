@@ -836,6 +836,8 @@ abstract class FileUploadResourceTestBase extends ResourceTestBase {
    * BasicAuthResourceTestTrait::assertResponseWhenMissingAuthentication().
    * CookieResourceTestTrait::assertResponseWhenMissingAuthentication().
    */
-  protected function getExpectedUnauthorizedEntityAccessCacheability(bool $is_authenticated): void {}
+  protected function getExpectedUnauthorizedEntityAccessCacheability(bool $is_authenticated): CacheableMetadata {
+    return new CacheableMetadata();
+  }
 
 }
