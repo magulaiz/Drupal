@@ -200,17 +200,17 @@ trait UiHelperTrait {
     // Target the submit button using the name rather than the value to work
     // regardless of the user interface language.
     $this->submitForm([], 'op', 'user-logout-confirm');
+    $this->drupalResetSession();
+
     $assert_session->fieldExists('name');
     $assert_session->fieldExists('pass');
-
-    $this->drupalResetSession();
   }
 
   /**
    * Resets the current active session back to Anonymous session.
    */
   protected function drupalResetSession(): void {
-    // @see BrowserTestBase::drupalUserIsLoggedIn()
+    // @see ::drupalUserIsLoggedIn()
     unset($this->loggedInUser->sessionId);
     $this->loggedInUser = FALSE;
     \Drupal::currentUser()->setAccount(new AnonymousUserSession());

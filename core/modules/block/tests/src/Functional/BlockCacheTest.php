@@ -97,7 +97,7 @@ class BlockCacheTest extends BrowserTestBase {
 
     // Block content not served from cache.
     $this->drupalLogout();
-    sleep(2);
+//    sleep(2);
     $this->assertSession()->pageTextContains($current_content);
   }
 
