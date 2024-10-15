@@ -59,7 +59,7 @@ trait ComposerInstallersTrait {
    * @param string $directory
    *   The fixture directory.
    */
-  private function setInstallerPaths(array $installer_paths, string $directory):void {
+  private function setInstallerPaths(array $installer_paths, string $directory): void {
     // Respect any existing installer paths.
     $extra = $this->container->get(ComposerInspector::class)
       ->getConfig('extra', $directory . '/composer.json');
