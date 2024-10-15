@@ -203,8 +203,20 @@ body {
   align-items: center;
   justify-content: space-between;
   margin-block-start: calc(var(--admin-toolbar-sidebar-header) * -1);
-  padding-block-start: var(--admin-toolbar-space-16);
+  padding-block: var(--admin-toolbar-space-8);
+  padding-inline: var(--admin-toolbar-space-16);
+  border-block-end: 1px solid transparent;
   background-color: var(--admin-toolbar-color-white);
+
+  :where([data-detected-y-overflow="true"]) & {
+    border-color: var(--admin-toolbar-color-gray-100);
+    box-shadow: 0 0 56px 0 rgba(0, 0, 0, 0.14);
+
+    @media (--admin-toolbar-desktop) {
+      border-color: transparent;
+      box-shadow: none;
+    }
+  }
 
   & + .toolbar-block {
     margin-block-start: calc(var(--admin-toolbar-space-10) * -1);
@@ -326,6 +338,11 @@ body {
     bottom: 0;
     background-color: var(--admin-toolbar-color-white);
   }
+}
+
+[data-detected-y-overflow="true"] ~ .admin-toolbar__footer {
+  border-color: var(--admin-toolbar-color-gray-100);
+  box-shadow: 0 0 56px 0 rgba(0, 0, 0, 0.14);
 }
 
 /**

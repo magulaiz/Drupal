@@ -35,7 +35,7 @@
   {# This lil' div will get the Drupal.displace() attributes added to it via JS. #}
   <div class="admin-toolbar__displace-placeholder"></div>
 
-  <div class="admin-toolbar__scroll-wrapper">
+  <div class="admin-toolbar__scroll-wrapper" data-detect-overflow>
     {% set title_menu = 'admin-toolbar-title'|clean_unique_id %}
     {# @todo - We should get rid of this ID below. #}
     <nav {{ region_attributes.content.setAttribute('id', 'menu-builder').addClass('admin-toolbar__content').setAttribute('aria-labelledby', title_menu) }}>
@@ -68,18 +68,19 @@
         } only %}
       </div>
 
-      {{ content.content }}
-    </nav>
-
-    {% set title_menu_footer = 'admin-toolbar-footer'|clean_unique_id %}
-    <nav {{ region_attributes.footer.setAttribute('id', 'menu-footer').addClass('admin-toolbar__footer').setAttribute('aria-labelledby', title_menu_footer) }}>
-      <h3 id="{{ title_menu_footer }}" class="visually-hidden">{{ 'Administrative toolbar footer'|t }}</h3>
-      {{ content.footer }}
-      <button aria-controls="admin-toolbar" class="admin-toolbar__expand-button" type="button">
-        <span class="visually-hidden" data-text>{{ 'Collapse sidebar'|t }}</span>
-      </button>
+      <div class="admin-toolbar__scroll">
+        {{ content.content }}
+      </div>
     </nav>
   </div>
+  {% set title_menu_footer = 'admin-toolbar-footer'|clean_unique_id %}
+  <nav id="menu-footer" class="admin-toolbar__footer" aria-labelledby="{{ title_menu_footer }}">
+    <h3 id="{{ title_menu_footer }}" class="visually-hidden">{{ 'Administrative toolbar footer'|t }}</h3>
+    {{ content.footer }}
+    <button aria-controls="admin-toolbar" class="admin-toolbar__expand-button">
+      <span class="visually-hidden" data-text>{{ 'Collapse sidebar'|t }}</span>
+    </button>
+  </nav>
 </aside>
 <div class="admin-toolbar-overlay" aria-controls="admin-toolbar" data-drupal-admin-styles></div>
 <script>
