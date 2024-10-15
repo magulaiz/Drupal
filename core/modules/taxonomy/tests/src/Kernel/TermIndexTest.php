@@ -5,15 +5,19 @@ declare(strict_types=1);
 namespace Drupal\Tests\taxonomy\Kernel;
 
 use Drupal\Core\Database\Database;
-use Drupal\Core\Field\FieldStorageDefinitionInterface;
+use Drupal\field\Entity\FieldConfig;
+use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\KernelTests\KernelTestBase;
+use Drupal\taxonomy\Entity\Term;
+use Drupal\taxonomy\Entity\Vocabulary;
+use Drupal\node\Entity\Node;
 
 /**
  * Tests the taxonomy index maintenance.
  *
  * @group taxonomy
  */
-class TermIndexKernelTest extends KernelTestBase {
+class TermIndexTest extends KernelTestBase {
 
   /**
    * {@inheritdoc}
@@ -24,6 +28,7 @@ class TermIndexKernelTest extends KernelTestBase {
     'field',
     'user',
     'system',
+    'text',
   ];
 
   /**
@@ -58,45 +63,73 @@ class TermIndexKernelTest extends KernelTestBase {
     $this->installEntitySchema('node');
     $this->installEntitySchema('user');
     $this->installSchema('taxonomy', ['taxonomy_index']);
+    $this->installSchema('node', ['node_access']);
 
     // Create a vocabulary.
-    $this->vocabulary = $this->createVocabulary();
+    $this->vocabulary = Vocabulary::create([
+      'name' => 'Test Vocabulary',
+      'vid' => 'test_vocabulary',
+    ]);
+    $this->vocabulary->save();
 
-    // Create taxonomy term reference fields for the 'article' content type.
-    $this->fieldName1 = $this->randomMachineName();
-    $this->fieldName2 = $this->randomMachineName();
+    // Create two taxonomy term reference fields on the article content type.
+    $this->fieldName1 = 'field_' . $this->randomMachineName();
+    $this->fieldName2 = 'field_' . $this->randomMachineName();
+    $this->createTaxonomyField($this->fieldName1);
+    $this->createTaxonomyField($this->fieldName2);
+  }
 
-    $handler_settings = [
-      'target_bundles' => [
-        $this->vocabulary->id() => $this->vocabulary->id(),
+  /**
+   * Helper function to create a taxonomy term reference field.
+   */
+  protected function createTaxonomyField(string $field_name): void {
+    $field_storage = FieldStorageConfig::create([
+      'field_name' => $field_name,
+      'entity_type' => 'node',
+      'type' => 'entity_reference',
+      'settings' => [
+        'target_type' => 'taxonomy_term',
       ],
-      'auto_create' => TRUE,
-    ];
+      'cardinality' => -1,
+    ]);
+    $field_storage->save();
 
-    $this->createEntityReferenceField('node', 'article', $this->fieldName1, 'Taxonomy field 1', 'taxonomy_term', 'default', $handler_settings, FieldStorageDefinitionInterface::CARDINALITY_UNLIMITED);
-    $this->createEntityReferenceField('node', 'article', $this->fieldName2, 'Taxonomy field 2', 'taxonomy_term', 'default', $handler_settings, FieldStorageDefinitionInterface::CARDINALITY_UNLIMITED);
+    FieldConfig::create([
+      'field_storage' => $field_storage,
+      'bundle' => 'article',
+      'label' => $field_name,
+    ])->save();
   }
 
   /**
    * Tests that the taxonomy index is maintained properly.
    */
   public function testTaxonomyIndex(): void {
-    $node_storage = $this->container->get('entity_type.manager')->getStorage('node');
+    $connection = Database::getConnection();
 
     // Create terms in the vocabulary.
-    $term_1 = $this->createTerm($this->vocabulary);
-    $term_2 = $this->createTerm($this->vocabulary);
+    $term_1 = Term::create([
+      'name' => 'Term 1',
+      'vid' => $this->vocabulary->id(),
+    ]);
+    $term_1->save();
 
-    // Create a node referencing the first term.
-    $node = $this->createNode([
+    $term_2 = Term::create([
+      'name' => 'Term 2',
+      'vid' => $this->vocabulary->id(),
+    ]);
+    $term_2->save();
+
+    // Create a node and assign terms.
+    $node = Node::create([
       'type' => 'article',
-      'title' => $this->randomString(),
+      'title' => $this->randomMachineName(),
       $this->fieldName1 => [['target_id' => $term_1->id()]],
       $this->fieldName2 => [['target_id' => $term_1->id()]],
     ]);
+    $node->save();
 
-    // Check that the term is indexed, and only once.
-    $connection = Database::getConnection();
+    // Check that the term is indexed once.
     $index_count = $connection->select('taxonomy_index')
       ->condition('nid', $node->id())
       ->condition('tid', $term_1->id())
@@ -144,39 +177,6 @@ class TermIndexKernelTest extends KernelTestBase {
       ->execute()
       ->fetchField();
     $this->assertEquals(1, $index_count, 'Term 2 is indexed once.');
-  }
-
-  /**
-   * Creates a taxonomy term for a given vocabulary.
-   *
-   * @param \Drupal\taxonomy\VocabularyInterface $vocabulary
-   *   The vocabulary to which the term will belong.
-   *
-   * @return \Drupal\taxonomy\TermInterface
-   *   The created term.
-   */
-  protected function createTerm($vocabulary) {
-    $term = $this->container->get('entity_type.manager')->getStorage('taxonomy_term')->create([
-      'vid' => $vocabulary->id(),
-      'name' => $this->randomString(),
-    ]);
-    $term->save();
-    return $term;
-  }
-
-  /**
-   * Creates a node with the given values.
-   *
-   * @param array $values
-   *   The values to create the node with.
-   *
-   * @return \Drupal\node\NodeInterface
-   *   The created node.
-   */
-  protected function createNode(array $values) {
-    $node = $this->container->get('entity_type.manager')->getStorage('node')->create($values);
-    $node->save();
-    return $node;
   }
 
 }
