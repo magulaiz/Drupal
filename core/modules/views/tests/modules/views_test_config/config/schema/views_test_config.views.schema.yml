@@ -9,7 +9,7 @@ views.area.test_example:
       label: 'The shown text of the area'
     custom_access:
       type: boolean
-      label: 'Should access to the area be allowed'
+      label: 'Should access to the area be allowed?'
 
 views.cache.non_existent:
   type: views_cache
