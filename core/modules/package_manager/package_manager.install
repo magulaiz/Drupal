@@ -28,7 +28,7 @@ function package_manager_requirements(string $phase) {
     }
     catch (StageFailureMarkerException $exception) {
       $requirements['package_manager_failure_marker'] = [
-        'title' => t('Failed update detected'),
+        'title' => t('Failed Package Manager update detected'),
         'description' => $exception->getMessage(),
         'severity' => REQUIREMENT_ERROR,
       ];

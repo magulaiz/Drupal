@@ -66,7 +66,7 @@ class FailureMarkerRequirementTest extends BrowserTestBase {
 
     $this->drupalGet('/admin/reports/status');
     $assert_session = $this->assertSession();
-    $assert_session->pageTextContains('Failed update detected');
+    $assert_session->pageTextContains('Failed Package Manager update detected');
     $assert_session->pageTextContains($message->render());
   }
 
