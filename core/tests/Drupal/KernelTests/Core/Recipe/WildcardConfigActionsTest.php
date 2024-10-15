@@ -13,6 +13,7 @@ use Drupal\entity_test\Entity\EntityTestBundle;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\FunctionalTests\Core\Recipe\RecipeTestTrait;
+use Drupal\image\Entity\ImageStyle;
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\language\Entity\ContentLanguageSettings;
 use Drupal\Tests\node\Traits\ContentTypeCreationTrait;
@@ -56,8 +57,8 @@ class WildcardConfigActionsTest extends KernelTestBase {
     parent::setUp();
     $this->installConfig('node');
 
-    $this->createContentType(['type' => 'one']);
-    $this->createContentType(['type' => 'two']);
+    $this->createContentType(['type' => 'one', 'name' => 'Type A']);
+    $this->createContentType(['type' => 'two', 'name' => 'Type B']);
 
     EntityTestBundle::create(['id' => 'one'])->save();
     EntityTestBundle::create(['id' => 'two'])->save();
@@ -165,9 +166,7 @@ YAML;
     // The created entities should be validated.
     try {
       $manager->applyAction('createForEach', 'node.type.*', [
-        'image.style.node__%bundle' => [
-          'name' => 'node__%bundle',
-        ],
+        'image.style.node__%bundle' => [],
       ]);
       $this->fail('Expected an exception to be thrown but it was not.');
     }
@@ -177,6 +176,15 @@ YAML;
       $this->assertSame('label', $e->violations[0]->getPropertyPath());
       $this->assertSame(NotNull::IS_NULL_ERROR, $e->violations[0]->getCode());
     }
+
+    // We should be able to use the `%label` placeholder.
+    $manager->applyAction('createForEach', 'node.type.*', [
+      'image.style.node_%bundle_big' => [
+        'label' => 'Big image for %label content',
+      ],
+    ]);
+    $this->assertSame('Big image for Type A content', ImageStyle::load('node_one_big')?->label());
+    $this->assertSame('Big image for Type B content', ImageStyle::load('node_two_big')?->label());
 
     // We should get an error if the entity already exists.
     try {

@@ -49,9 +49,9 @@ final class CreateForEachBundle implements ConfigActionPluginInterface, Containe
 
     // In all of the options passed to this action, replace the `%bundle`
     // placeholder with the actual ID of the entity we're working on.
-    $bundle_id = $this->configManager->loadConfigEntityByName($configName)?->id();
-    assert(is_string($bundle_id));
-    $value = static::replaceBundleIdPlaceholder($value, $bundle_id);
+    $bundle = $this->configManager->loadConfigEntityByName($configName);
+    assert(is_object($bundle));
+    $value = static::replacePlaceholders($value, $bundle->id(), $bundle->label());
 
     foreach ($value as $name => $values) {
       // Invoke the actual create action via the config action manager, so that
@@ -60,18 +60,20 @@ final class CreateForEachBundle implements ConfigActionPluginInterface, Containe
     }
   }
 
-  private static function replaceBundleIdPlaceholder(mixed $subject, string $replace): mixed {
-    $search = '%bundle';
+  private static function replacePlaceholders(mixed $subject, string $bundle_id, string $label): mixed {
+    $search = ['%bundle', '%label'];
+    $replace = [$bundle_id, $label];
 
     if (is_string($subject)) {
       $subject = str_replace($search, $replace, $subject);
     }
     elseif (is_array($subject)) {
       foreach ($subject as $old_key => $value) {
-        $value = static::replaceBundleIdPlaceholder($value, $replace);
+        $value = static::replacePlaceholders($value, $bundle_id, $label);
 
-        $new_key = str_replace($search, $replace, $old_key);
-        if (str_contains($old_key, $search)) {
+        // Only replace the `%bundle` placeholder in array keys.
+        $new_key = str_replace($search[0], $replace[0], $old_key);
+        if ($old_key !== $new_key) {
           unset($subject[$old_key]);
         }
         $subject[$new_key] = $value;
