@@ -76862,5 +76862,35 @@ $ignoreErrors[] = [
 	'count' => 1,
 	'path' => __DIR__ . '/themes/starterkit_theme/starterkit_theme.theme',
 ];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\package_manager\\\\.+\\:\\:formatPlural\\(\\) has no return type specified\\.$#',
+	'path' => __DIR__ . '/modules/package_manager/*',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\package_manager\\\\.+\\:\\:getNumberOfPlurals\\(\\) has no return type specified\\.$#',
+	'path' => __DIR__ . '/modules/package_manager/*',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\Tests\\\\package_manager\\\\.+\\:\\:formatPlural\\(\\) has no return type specified\\.$#',
+	'path' => __DIR__ . '/modules/package_manager/*',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\Tests\\\\package_manager\\\\.+\\:\\:getNumberOfPlurals\\(\\) has no return type specified\\.$#',
+	'path' => __DIR__ . '/modules/package_manager/*',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\Tests\\\\package_manager\\\\.+\\:\\:grantPermissions\\(\\) has no return type specified\\.$#',
+	'path' => __DIR__ . '/modules/package_manager/*',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\Tests\\\\package_manager\\\\.+\\:\\:setCurrentUser\\(\\) has no return type specified\\.$#',
+	'path' => __DIR__ . '/modules/package_manager/*',
+];
 
 return ['parameters' => ['ignoreErrors' => $ignoreErrors]];
