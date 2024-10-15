@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\views\Kernel\Plugin\field;
 
 use Drupal\Component\Render\MarkupInterface;
@@ -69,7 +71,7 @@ class FieldDecimalFormatterTest extends ViewsKernelTestBase {
     NodeType::create([
       'type' => 'test',
       'name' => 'Test node',
-      ])->save();
+    ])->save();
 
     FieldStorageConfig::create([
       'entity_type' => 'node',
@@ -129,7 +131,8 @@ class FieldDecimalFormatterTest extends ViewsKernelTestBase {
   /**
    * Helper function to retrieve rendered row.
    *
-   * @param ViewExecutable $view
+   * @param \Drupal\views\ViewExecutable $view
+   *   The view being tested.
    *
    * @return \Drupal\Component\Render\MarkupInterface|string
    *   The advanced rendered output. If the output is safe, it will be wrapped
