@@ -6,6 +6,7 @@ namespace Drupal\KernelTests\Core\Recipe;
 
 use Drupal\Core\Config\Action\ConfigActionException;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
+use Drupal\Core\Recipe\InvalidConfigException;
 use Drupal\Core\Recipe\RecipeRunner;
 use Drupal\entity_test\Entity\EntityTestBundle;
 use Drupal\field\Entity\FieldConfig;
@@ -35,6 +36,15 @@ class WildcardConfigActionsTest extends KernelTestBase {
     'system',
     'text',
     'user',
+  ];
+
+  /**
+   * {@inheritdoc}
+   */
+  protected static $configSchemaCheckerExclusions = [
+    // @see ::testCreateForEach()
+    'image.style.node__one',
+    'image.style.node__two',
   ];
 
   /**
@@ -134,7 +144,7 @@ YAML;
   }
 
   public function testCreateForEach(): void {
-    $this->enableModules(['language']);
+    $this->enableModules(['image', 'language']);
 
     /** @var \Drupal\Core\Config\Action\ConfigActionManager $manager */
     $manager = $this->container->get('plugin.manager.config_action');
@@ -146,6 +156,15 @@ YAML;
     ]);
     $this->assertIsObject(ContentLanguageSettings::load('node.one'));
     $this->assertIsObject(ContentLanguageSettings::load('node.two'));
+
+    // The created entities should be validated.
+    $this->expectException(InvalidConfigException::class);
+    $this->expectExceptionMessageMatches("/image.style.node__one:\n- label: This value should not be null./");
+    $manager->applyAction('createForEach', 'node.type.*', [
+      'image.style.node__%bundle' => [
+        'name' => 'node__%bundle',
+      ],
+    ]);
   }
 
 }
