@@ -14,7 +14,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  * @internal
  *   This API is experimental.
  */
-final class CreateForBundleDeriver extends DeriverBase implements ContainerDeriverInterface {
+final class CreateForEachBundleDeriver extends DeriverBase implements ContainerDeriverInterface {
 
   public function __construct(
     private readonly EntityTypeManagerInterface $entityTypeManager,

@@ -7,7 +7,7 @@ namespace Drupal\Core\Config\Action\Plugin\ConfigAction;
 use Drupal\Core\Config\Action\Attribute\ConfigAction;
 use Drupal\Core\Config\Action\ConfigActionManager;
 use Drupal\Core\Config\Action\ConfigActionPluginInterface;
-use Drupal\Core\Config\Action\Plugin\ConfigAction\Deriver\CreateForBundleDeriver;
+use Drupal\Core\Config\Action\Plugin\ConfigAction\Deriver\CreateForEachBundleDeriver;
 use Drupal\Core\Config\ConfigManagerInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
@@ -18,15 +18,14 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  *   This API is experimental.
  */
 #[ConfigAction(
-  id: 'create_for_bundle',
+  id: 'create_for_each_bundle',
   admin_label: new TranslatableMarkup('Create entities for each bundle of an entity type'),
-  deriver: CreateForBundleDeriver::class,
+  deriver: CreateForEachBundleDeriver::class,
 )]
-final class CreateForBundle implements ConfigActionPluginInterface, ContainerFactoryPluginInterface {
+final class CreateForEachBundle implements ConfigActionPluginInterface, ContainerFactoryPluginInterface {
 
   public function __construct(
     private readonly ConfigManagerInterface $configManager,
-    private readonly string $pluginId,
     private readonly string $createAction,
     private readonly ConfigActionManager $configActionManager,
   ) {}
@@ -37,7 +36,6 @@ final class CreateForBundle implements ConfigActionPluginInterface, ContainerFac
   public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition): static {
     return new static(
       $container->get(ConfigManagerInterface::class),
-      $plugin_id,
       $plugin_definition['create_action'],
       $container->get('plugin.manager.config_action'),
     );
@@ -62,20 +60,22 @@ final class CreateForBundle implements ConfigActionPluginInterface, ContainerFac
     }
   }
 
-  private static function replaceBundleIdPlaceholder(string|array $subject, string $replace): string|array {
+  private static function replaceBundleIdPlaceholder(mixed $subject, string $replace): mixed {
     $search = '%bundle';
 
     if (is_string($subject)) {
-      return str_replace($search, $replace, $subject);
+      $subject = str_replace($search, $replace, $subject);
     }
-    foreach ($subject as $old_key => $value) {
-      $value = static::replaceBundleIdPlaceholder($value, $replace);
+    elseif (is_array($subject)) {
+      foreach ($subject as $old_key => $value) {
+        $value = static::replaceBundleIdPlaceholder($value, $replace);
 
-      $new_key = str_replace($search, $replace, $old_key);
-      if (str_contains($old_key, $search)) {
-        unset($subject[$old_key]);
+        $new_key = str_replace($search, $replace, $old_key);
+        if (str_contains($old_key, $search)) {
+          unset($subject[$old_key]);
+        }
+        $subject[$new_key] = $value;
       }
-      $subject[$new_key] = $value;
     }
     return $subject;
   }

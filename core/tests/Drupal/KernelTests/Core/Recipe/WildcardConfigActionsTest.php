@@ -145,6 +145,9 @@ YAML;
     RecipeRunner::processRecipe($recipe);
   }
 
+  /**
+   * @covers \Drupal\Core\Config\Action\Plugin\ConfigAction\CreateForEachBundle
+   */
   public function testCreateForEach(): void {
     $this->enableModules(['image', 'language']);
 
