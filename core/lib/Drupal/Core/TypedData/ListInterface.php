@@ -97,7 +97,7 @@ interface ListInterface extends TraversableTypedDataInterface, \ArrayAccess, \Co
    * @return \Drupal\Core\TypedData\TypedDataInterface|null
    *   The last item in this list, or NULL if there are no items.
    */
-  public function last();
+  public function last(): TypedDataInterface|null;
 
   /**
    * Appends a new item to the list.
