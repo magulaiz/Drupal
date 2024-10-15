@@ -13,8 +13,8 @@
   display: flex;
   padding-inline: var(--admin-toolbar-space-4);
   padding-block: var(--admin-toolbar-space-4);
-  background-color: white;
-  box-shadow: 0 0 8px 0 var(--admin-toolbar-color-shadow-15);
+  background-color: var(--admin-toolbar-color-white);
+  box-shadow: 0 0 var(--admin-toolbar-space-8) 0 var(--admin-toolbar-color-shadow-15);
   font-family: var(--admin-toolbar-font-family);
 }
 @media (min-width: 64rem) {
@@ -27,8 +27,8 @@
     padding-block: var(--admin-toolbar-space-12);
     padding-inline: calc(var(--drupal-displace-offset-left, var(--admin-toolbar-sidebar-width)) + var(--admin-toolbar-space-32)) var(--admin-toolbar-space-32);
     box-shadow:
-      0 0 40px 0 var(--admin-toolbar-color-shadow-6),
-      0 4px 4px 0 var(--admin-toolbar-color-shadow-8);
+      0 0 var(--admin-toolbar-space-40) 0 var(--admin-toolbar-color-shadow-6),
+      0 var(--admin-toolbar-space-4) var(--admin-toolbar-space-4) 0 var(--admin-toolbar-color-shadow-8);
   }
 
   [dir="rtl"] .top-bar {

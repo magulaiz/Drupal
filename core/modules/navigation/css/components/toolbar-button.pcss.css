@@ -11,7 +11,7 @@
 }
 
 /* In top bar mobile we need small outline offset. */
-:where(.top-bar) {
+:where(.admin-toolbar-control-bar) {
   --toolbar-button-outline-offset: calc(-1 * var(--admin-toolbar-space-4));
 
   @media (--admin-toolbar-desktop) {
@@ -45,7 +45,7 @@
   &:hover {
     z-index: 20;
     color: var(--admin-toolbar-color-gray-990);
-    outline: 2px solid var(--admin-toolbar-color-blue-200);
+    outline: var(--admin-toolbar-space-2) solid var(--admin-toolbar-color-blue-200);
     outline-offset: var(--toolbar-button-outline-offset);
     background-color: var(--admin-toolbar-color-gray-050);
   }
@@ -53,7 +53,7 @@
   &:focus {
     z-index: 10;
     color: var(--admin-toolbar-color-blue-700);
-    outline: 2px solid var(--admin-toolbar-color-focus);
+    outline: var(--admin-toolbar-space-2) solid var(--admin-toolbar-color-focus);
     outline-offset: var(--toolbar-button-outline-offset);
     background-color: transparent;
   }
@@ -314,8 +314,8 @@ html:not([data-admin-toolbar="expanded"]) {
     position: absolute;
     overflow: hidden;
     clip: rect(0 0 0 0);
-    width: 1px;
-    height: 1px;
+    width: var(--admin-toolbar-space-1);
+    height: var(--admin-toolbar-space-1);
     white-space: nowrap;
     clip-path: inset(50%);
     opacity: 0;

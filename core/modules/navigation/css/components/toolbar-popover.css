@@ -58,12 +58,12 @@
     padding-block-start: var(--admin-toolbar-space-16);
     transform: translateX(0);
     box-shadow:
-      0 0 72px rgba(0, 0, 0, 0.2),
-      0 0 8px rgba(0, 0, 0, 0.04),
-      0 0 40px rgba(0, 0, 0, 0.06);
+      0 0 var(--admin-toolbar-space-72) rgba(0, 0, 0, 0.2),
+      0 0 var(--admin-toolbar-space-8) rgba(0, 0, 0, 0.04),
+      0 0 var(--admin-toolbar-space-40) rgba(0, 0, 0, 0.06);
     inline-size: var(--admin-toolbar-popover-width);
     inset-block-start: 0;
-    inset-inline-start: 1px;
+    inset-inline-start: var(--admin-toolbar-space-1);
   }
 }
 [data-toolbar-popover-safe-triangle] {
