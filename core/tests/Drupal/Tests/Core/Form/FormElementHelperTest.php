@@ -24,7 +24,7 @@ class FormElementHelperTest extends UnitTestCase {
    *
    * @dataProvider getElementByNameProvider
    */
-  public function testGetElementByName($name, $form, $expected) {
+  public function testGetElementByName($name, $form, $expected): void {
     $this->assertSame($expected, FormElementHelper::getElementByName($name, $form));
   }
 
@@ -99,6 +99,15 @@ class FormElementHelperTest extends UnitTestCase {
         '#parents' => ['fieldset', 'id'],
       ],
     ];
+    $data[] = [
+      'id_noparent',
+      [
+        'id_noparent' => [
+          '#title' => 'ID',
+        ],
+      ],
+      [],
+    ];
     return $data;
   }
 
@@ -109,7 +118,7 @@ class FormElementHelperTest extends UnitTestCase {
    *
    * @dataProvider getElementTitleProvider
    */
-  public function testGetElementTitle($name, $form, $expected) {
+  public function testGetElementTitle($name, $form, $expected): void {
     $element = FormElementHelper::getElementByName($name, $form);
     $this->assertSame($expected, FormElementHelper::getElementTitle($element));
   }
@@ -169,6 +178,15 @@ class FormElementHelperTest extends UnitTestCase {
         ],
       ],
       'ID',
+    ];
+    $data[] = [
+      'id_noparent',
+      [
+        'id_noparent' => [
+          '#title' => 'ID',
+        ],
+      ],
+      '',
     ];
     return $data;
   }
