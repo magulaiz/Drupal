@@ -12,6 +12,7 @@ use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\FunctionalTests\Core\Recipe\RecipeTestTrait;
 use Drupal\KernelTests\KernelTestBase;
+use Drupal\language\Entity\ContentLanguageSettings;
 use Drupal\Tests\node\Traits\ContentTypeCreationTrait;
 
 /**
@@ -130,6 +131,21 @@ YAML;
     $this->expectException(ConfigActionException::class);
     $this->expectExceptionMessage($expected_exception_message);
     RecipeRunner::processRecipe($recipe);
+  }
+
+  public function testCreateForEach(): void {
+    $this->enableModules(['language']);
+
+    /** @var \Drupal\Core\Config\Action\ConfigActionManager $manager */
+    $manager = $this->container->get('plugin.manager.config_action');
+    $manager->applyAction('createForEach', 'node.type.*', [
+      'language.content_settings.node.%bundle' => [
+        'target_entity_type_id' => 'node',
+        'target_bundle' => '%bundle',
+      ],
+    ]);
+    $this->assertIsObject(ContentLanguageSettings::load('node.one'));
+    $this->assertIsObject(ContentLanguageSettings::load('node.two'));
   }
 
 }

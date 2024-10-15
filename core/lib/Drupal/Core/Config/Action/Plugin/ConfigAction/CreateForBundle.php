@@ -5,10 +5,9 @@ declare(strict_types=1);
 namespace Drupal\Core\Config\Action\Plugin\ConfigAction;
 
 use Drupal\Core\Config\Action\Attribute\ConfigAction;
-use Drupal\Core\Config\Action\ConfigActionException;
 use Drupal\Core\Config\Action\ConfigActionManager;
 use Drupal\Core\Config\Action\ConfigActionPluginInterface;
-use Drupal\Core\Config\Action\Plugin\ConfigAction\Deriver\CreateForEachDeriver;
+use Drupal\Core\Config\Action\Plugin\ConfigAction\Deriver\CreateForBundleDeriver;
 use Drupal\Core\Config\ConfigManagerInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
@@ -20,11 +19,10 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  */
 #[ConfigAction(
   id: 'create_for_bundle',
-  admin_label: new TranslatableMarkup('Create entities based for each bundle'),
-  entity_types: '*',
-  deriver: CreateForEachDeriver::class,
+  admin_label: new TranslatableMarkup('Create entities for each bundle of an entity type'),
+  deriver: CreateForBundleDeriver::class,
 )]
-final class CreateForEach implements ConfigActionPluginInterface, ContainerFactoryPluginInterface {
+final class CreateForBundle implements ConfigActionPluginInterface, ContainerFactoryPluginInterface {
 
   public function __construct(
     private readonly ConfigManagerInterface $configManager,
@@ -51,36 +49,35 @@ final class CreateForEach implements ConfigActionPluginInterface, ContainerFacto
   public function apply(string $configName, mixed $value): void {
     assert(is_array($value));
 
-    // Ensure the entity we're working on is a bundle of another entity type --
-    // for example, a node type, media type, taxonomy vocabulary, etc.
-    $bundle = $this->configManager->loadConfigEntityByName($configName);
-    $bundle_of = $bundle?->getEntityType()->getBundleOf();
-    if (empty($bundle_of)) {
-      throw new ConfigActionException("The $this->pluginId action only works on config entities that are bundles of another entity type.");
-    }
-
     // In all of the options passed to this action, replace the `%bundle`
     // placeholder with the actual ID of the entity we're working on.
-    $value = static::replaceBundleIdPlaceholder($value, $bundle->id());
+    $bundle_id = $this->configManager->loadConfigEntityByName($configName)?->id();
+    assert(is_string($bundle_id));
+    $value = static::replaceBundleIdPlaceholder($value, $bundle_id);
 
     foreach ($value as $name => $values) {
       // Invoke the actual create action via the config action manager, so that
       // the created entity will be validated.
-      $this->configActionManager->applyAction($this->createAction, $name, $values);
+      $this->configActionManager->applyAction('entity_create:' . $this->createAction, $name, $values);
     }
   }
 
-  private static function replaceBundleIdPlaceholder(string|array $values, string $replace): string|array {
+  private static function replaceBundleIdPlaceholder(string|array $subject, string $replace): string|array {
     $search = '%bundle';
 
-    if (is_string($values)) {
-      return str_replace($search, $replace, $values);
+    if (is_string($subject)) {
+      return str_replace($search, $replace, $subject);
     }
-    foreach ($values as $key => $value) {
-      $key = str_replace($search, $replace, $key);
-      $values[$key] = static::replaceBundleIdPlaceholder($value, $replace);
+    foreach ($subject as $old_key => $value) {
+      $value = static::replaceBundleIdPlaceholder($value, $replace);
+
+      $new_key = str_replace($search, $replace, $old_key);
+      if (str_contains($old_key, $search)) {
+        unset($subject[$old_key]);
+      }
+      $subject[$new_key] = $value;
     }
-    return $values;
+    return $subject;
   }
 
 }
