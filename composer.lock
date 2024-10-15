@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "908d2dee8a074801f0477101e8047eac",
+    "content-hash": "4c9f0780927b5b8741b5a4f4af7abab3",
     "packages": [
         {
             "name": "asm89/stack-cors",
@@ -491,7 +491,7 @@
         },
         {
             "name": "drupal/core",
-            "version": "dev-main",
+            "version": "10.4.x-dev",
             "dist": {
                 "type": "path",
                 "url": "core",
@@ -652,7 +652,7 @@
         },
         {
             "name": "drupal/core-project-message",
-            "version": "dev-main",
+            "version": "10.4.x-dev",
             "dist": {
                 "type": "path",
                 "url": "composer/Plugin/ProjectMessage",
@@ -685,7 +685,7 @@
         },
         {
             "name": "drupal/core-vendor-hardening",
-            "version": "dev-main",
+            "version": "10.4.x-dev",
             "dist": {
                 "type": "path",
                 "url": "composer/Plugin/VendorHardening",
