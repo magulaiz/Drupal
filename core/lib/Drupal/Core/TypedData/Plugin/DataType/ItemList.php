@@ -306,7 +306,7 @@ class ItemList extends TypedData implements \IteratorAggregate, ListInterface {
   /**
    * {@inheritdoc}
    */
-  public function last() {
+  public function last(): TypedDataInterface|null {
     return $this->get($this->count() - 1);
   }
 
