@@ -16,7 +16,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  *   },
  *   field = {
  *     "id" = "field_language",
- *   }
+ *   },
  *   argument = {
  *     "id" = "language",
  *   },
