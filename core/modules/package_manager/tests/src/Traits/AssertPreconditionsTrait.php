@@ -14,9 +14,9 @@ trait AssertPreconditionsTrait {
   /**
    * Invokes the test preconditions assertion before the first test is run.
    *
-   * "Use" this trait on any Automatic Updates class that directly extends a
+   * "Use" this trait on any Package Manager test class that directly extends a
    * Core test class, i.e., any class that does NOT extend a test class in a
-   * Automatic Updates test namespace. If that class implements this hook, too,
+   * Package Manager test namespace. If that class implements this method, too,
    * be sure to call this first thing in it.
    */
   public static function setUpBeforeClass(): void {
