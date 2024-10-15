@@ -37,7 +37,7 @@ final class Cleaner extends QueueWorkerBase implements ContainerFactoryPluginInt
   /**
    * {@inheritdoc}
    */
-  public function processItem($dir) {
+  public function processItem($dir): void {
     assert(is_string($dir));
 
     if (file_exists($dir)) {

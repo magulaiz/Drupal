@@ -22,7 +22,7 @@ final class PackageManagerBypassServiceProvider extends ServiceProviderBase {
   /**
    * {@inheritdoc}
    */
-  public function alter(ContainerBuilder $container) {
+  public function alter(ContainerBuilder $container): void {
     parent::alter($container);
 
     // By default, \Drupal\package_manager_bypass\NoOpStager is applied, except

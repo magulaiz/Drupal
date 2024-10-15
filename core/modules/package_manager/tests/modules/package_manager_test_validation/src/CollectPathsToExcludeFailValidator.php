@@ -39,7 +39,7 @@ class CollectPathsToExcludeFailValidator implements EventSubscriberInterface {
   /**
    * Fails when composer.json is deleted to simulate failure on excluders.
    */
-  public function callToComposer() {
+  public function callToComposer(): void {
     $this->composerInspector->validate($this->pathLocator->getProjectRoot());
   }
 

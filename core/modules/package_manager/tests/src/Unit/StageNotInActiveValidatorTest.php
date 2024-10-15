@@ -34,7 +34,7 @@ class StageNotInActiveValidatorTest extends UnitTestCase {
    *
    * @dataProvider providerTestCheckNotInActive
    */
-  public function testCheckNotInActive(array $expected, string $project_root, string $staging_root) {
+  public function testCheckNotInActive(array $expected, string $project_root, string $staging_root): void {
     $path_locator_prophecy = $this->prophesize(PathLocator::class);
     $path_locator_prophecy->getProjectRoot()->willReturn(Path::canonicalize($project_root));
     $path_locator_prophecy->getStagingRoot()->willReturn(Path::canonicalize($staging_root));
