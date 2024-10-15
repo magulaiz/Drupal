@@ -53,7 +53,7 @@ class StageEventsTest extends PackageManagerKernelTestBase implements EventSubsc
   /**
    * {@inheritdoc}
    */
-  public function register(ContainerBuilder $container) {
+  public function register(ContainerBuilder $container): void {
     parent::register($container);
 
     // Since this test adds arbitrary event listeners that aren't services, we

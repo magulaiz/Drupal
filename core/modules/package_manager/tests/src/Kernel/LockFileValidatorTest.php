@@ -43,7 +43,7 @@ class LockFileValidatorTest extends PackageManagerKernelTestBase {
   /**
    * {@inheritdoc}
    */
-  public function register(ContainerBuilder $container) {
+  public function register(ContainerBuilder $container): void {
     parent::register($container);
 
     // Temporarily mock the Composer inspector to prevent it from complaining

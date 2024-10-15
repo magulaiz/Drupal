@@ -16,7 +16,7 @@ use PhpTuf\ComposerStager\API\Finder\Service\ExecutableFinderInterface;
 /**
  * Implements hook_requirements().
  */
-function package_manager_requirements(string $phase) {
+function package_manager_requirements(string $phase): array {
   $requirements = [];
   // If we're able to check for the presence of the failure marker at all, do it
   // irrespective of the current run phase. If the failure marker is there, the

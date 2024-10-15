@@ -53,7 +53,7 @@ class StageBaseTest extends PackageManagerKernelTestBase {
   /**
    * {@inheritdoc}
    */
-  public function register(ContainerBuilder $container) {
+  public function register(ContainerBuilder $container): void {
     parent::register($container);
 
     $container->getDefinition('datetime.time')
@@ -577,7 +577,7 @@ class StageBaseTest extends PackageManagerKernelTestBase {
    *
    * @dataProvider providerStoreDestroyInfo
    */
-  public function testStoreDestroyInfo(bool $force, bool $changes_applied, ?TranslatableMarkup $message, string $expected_exception_message) {
+  public function testStoreDestroyInfo(bool $force, bool $changes_applied, ?TranslatableMarkup $message, string $expected_exception_message): void {
     $stage = $this->createStage();
     $stage_id = $stage->create();
     $stage->require(['drupal/core:9.8.1']);
@@ -602,7 +602,7 @@ class StageBaseTest extends PackageManagerKernelTestBase {
   /**
    * Tests exception message once temp store message has expired.
    */
-  public function testTempStoreMessageExpired() {
+  public function testTempStoreMessageExpired(): void {
     $stage = $this->createStage();
     $stage_id = $stage->create();
     $stage->require(['drupal/core:9.8.1']);

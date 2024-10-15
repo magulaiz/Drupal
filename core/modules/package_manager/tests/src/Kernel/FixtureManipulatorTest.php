@@ -215,7 +215,7 @@ class FixtureManipulatorTest extends PackageManagerKernelTestBase {
   /**
    * @covers ::addDotGitFolder
    */
-  public function testAddDotGitFolder() {
+  public function testAddDotGitFolder(): void {
     $path_locator = $this->container->get(PathLocator::class);
     $project_root = $path_locator->getProjectRoot();
     $this->assertFalse(is_dir($project_root . "/relative/path/.git"));

@@ -138,7 +138,7 @@ abstract class PackageManagerKernelTestBase extends KernelTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function enableModules(array $modules) {
+  protected function enableModules(array $modules): void {
     parent::enableModules($modules);
     $this->registerPostUpdateFunctions();
   }
@@ -146,7 +146,7 @@ abstract class PackageManagerKernelTestBase extends KernelTestBase {
   /**
    * {@inheritdoc}
    */
-  public function register(ContainerBuilder $container) {
+  public function register(ContainerBuilder $container): void {
     parent::register($container);
 
     // If we previously set up a mock HTTP client in ::setReleaseMetadata(),

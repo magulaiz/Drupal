@@ -77,7 +77,7 @@ final class StageFixtureManipulator extends FixtureManipulator implements Beginn
   /**
    * Handles test tear down to ensure all changes were committed.
    */
-  public static function handleTearDown() {
+  public static function handleTearDown(): void {
     if (!empty(\Drupal::state()->get(self::STATE_KEY))) {
       throw new \LogicException('The StageFixtureManipulator has arguments that were not cleared. This likely means that the PostCreateEvent was never fired.');
     }

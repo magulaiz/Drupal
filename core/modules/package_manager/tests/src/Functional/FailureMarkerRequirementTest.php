@@ -38,7 +38,7 @@ class FailureMarkerRequirementTest extends BrowserTestBase {
   /**
    * Tests that error is shown if failure marker already exists.
    */
-  public function testFailureMarkerExists() {
+  public function testFailureMarkerExists(): void {
     $account = $this->drupalCreateUser([
       'administer site configuration',
     ]);

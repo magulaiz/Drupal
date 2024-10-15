@@ -33,7 +33,7 @@ class ChangeLoggerTest extends PackageManagerKernelTestBase {
   /**
    * {@inheritdoc}
    */
-  public function register(ContainerBuilder $container) {
+  public function register(ContainerBuilder $container): void {
     parent::register($container);
     $container->set('logger.channel.package_manager_change_log', $this->logger);
   }

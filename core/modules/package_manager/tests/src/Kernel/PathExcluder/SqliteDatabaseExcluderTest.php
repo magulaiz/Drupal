@@ -31,7 +31,7 @@ class SqliteDatabaseExcluderTest extends PackageManagerKernelTestBase {
   /**
    * {@inheritdoc}
    */
-  public function register(ContainerBuilder $container) {
+  public function register(ContainerBuilder $container): void {
     parent::register($container);
 
     $this->mockDatabase = $this->prophesize(Connection::class);

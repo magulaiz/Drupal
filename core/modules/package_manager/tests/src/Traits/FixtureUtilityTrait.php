@@ -44,7 +44,7 @@ trait FixtureUtilityTrait {
    * @param string $dir
    *   The directory to be iterated through.
    */
-  protected static function renameInfoYmlFiles(string $dir) {
+  protected static function renameInfoYmlFiles(string $dir): void {
     // Construct the iterator.
     $it = new RecursiveDirectoryIterator($dir, \RecursiveIteratorIterator::SELF_FIRST);
 
@@ -63,7 +63,7 @@ trait FixtureUtilityTrait {
    * @param string $dir
    *   The directory to be iterated through.
    */
-  private static function renameGitDirectories(string $dir) {
+  private static function renameGitDirectories(string $dir): void {
     $iter = new \RecursiveIteratorIterator(
       new RecursiveDirectoryIterator($dir, RecursiveDirectoryIterator::SKIP_DOTS),
       \RecursiveIteratorIterator::SELF_FIRST,

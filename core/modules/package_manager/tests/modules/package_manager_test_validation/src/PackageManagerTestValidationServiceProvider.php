@@ -17,7 +17,7 @@ class PackageManagerTestValidationServiceProvider extends ServiceProviderBase {
   /**
    * {@inheritdoc}
    */
-  public function alter(ContainerBuilder $container) {
+  public function alter(ContainerBuilder $container): void {
     parent::alter($container);
 
     $service_id = StagedDBUpdateValidator::class;

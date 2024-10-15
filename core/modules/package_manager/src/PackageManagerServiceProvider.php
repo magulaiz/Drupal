@@ -26,7 +26,7 @@ final class PackageManagerServiceProvider extends ServiceProviderBase {
   /**
    * {@inheritdoc}
    */
-  public function register(ContainerBuilder $container) {
+  public function register(ContainerBuilder $container): void {
     parent::register($container);
 
     // Use an interface that we know exists to determine the absolute path where

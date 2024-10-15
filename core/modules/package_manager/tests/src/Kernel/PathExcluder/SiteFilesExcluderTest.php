@@ -58,7 +58,7 @@ class SiteFilesExcluderTest extends PackageManagerKernelTestBase {
   /**
    * Tests that invalid file settings do not cause errors.
    */
-  public function testInvalidFileSettings() {
+  public function testInvalidFileSettings(): void {
     $invalid_path = '/path/does/not/exist';
     $this->assertFileDoesNotExist($invalid_path);
     $this->setSetting('file_public_path', $invalid_path);

@@ -7,7 +7,6 @@
 
 declare(strict_types=1);
 
-use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\package_manager\ComposerInspector;
 
 // cspell:ignore grasmash
@@ -15,7 +14,7 @@ use Drupal\package_manager\ComposerInspector;
 /**
  * Implements hook_help().
  */
-function package_manager_help($route_name, RouteMatchInterface $route_match) {
+function package_manager_help($route_name): array {
   switch ($route_name) {
     case 'help.page.package_manager':
       $output = '<h3 id="package-manager-about">' . t('About') . '</h3>';

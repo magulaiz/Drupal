@@ -185,7 +185,7 @@ abstract class TemplateProjectTestBase extends QuickStartTestBase {
   /**
    * {@inheritdoc}
    */
-  public function installQuickStart($profile, $working_dir = NULL) {
+  public function installQuickStart($profile, $working_dir = NULL): void {
     parent::installQuickStart("$profile --no-ansi", $working_dir ?: $this->webRoot);
 
     // Always allow test modules to be installed in the UI and, for easier
@@ -207,7 +207,7 @@ END;
   /**
    * {@inheritdoc}
    */
-  public function formLogin($username, $password, $working_dir = NULL) {
+  public function formLogin($username, $password, $working_dir = NULL): void {
     parent::formLogin($username, $password, $working_dir ?: $this->webRoot);
   }
 
@@ -724,7 +724,7 @@ END;
   /**
    * {@inheritdoc}
    */
-  public function copyCodebase(?\Iterator $iterator = NULL, $working_dir = NULL) {
+  public function copyCodebase(?\Iterator $iterator = NULL, $working_dir = NULL): void {
     parent::copyCodebase($iterator, $working_dir);
 
     // Create a local Composer repository for all third-party dependencies and

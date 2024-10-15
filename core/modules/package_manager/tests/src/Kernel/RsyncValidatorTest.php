@@ -42,7 +42,7 @@ class RsyncValidatorTest extends PackageManagerKernelTestBase {
   /**
    * {@inheritdoc}
    */
-  public function register(ContainerBuilder $container) {
+  public function register(ContainerBuilder $container): void {
     parent::register($container);
 
     $container->set('mock_executable_finder', $this->executableFinder->reveal());
