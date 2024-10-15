@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\KernelTests\Core\Recipe;
 
+use Drupal\Component\Plugin\Exception\PluginNotFoundException;
 use Drupal\Core\Config\Action\ConfigActionException;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Recipe\InvalidConfigException;
@@ -15,6 +16,7 @@ use Drupal\FunctionalTests\Core\Recipe\RecipeTestTrait;
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\language\Entity\ContentLanguageSettings;
 use Drupal\Tests\node\Traits\ContentTypeCreationTrait;
+use Symfony\Component\Validator\Constraints\NotNull;
 
 /**
  * Tests config actions targeting multiple entities using wildcards.
@@ -158,13 +160,49 @@ YAML;
     $this->assertIsObject(ContentLanguageSettings::load('node.two'));
 
     // The created entities should be validated.
-    $this->expectException(InvalidConfigException::class);
-    $this->expectExceptionMessageMatches("/image.style.node__one:\n- label: This value should not be null./");
-    $manager->applyAction('createForEach', 'node.type.*', [
-      'image.style.node__%bundle' => [
-        'name' => 'node__%bundle',
-      ],
-    ]);
+    try {
+      $manager->applyAction('createForEach', 'node.type.*', [
+        'image.style.node__%bundle' => [
+          'name' => 'node__%bundle',
+        ],
+      ]);
+      $this->fail('Expected an exception to be thrown but it was not.');
+    }
+    catch (InvalidConfigException $e) {
+      $this->assertSame('image.style.node__one', $e->data->getName());
+      $this->assertCount(1, $e->violations);
+      $this->assertSame('label', $e->violations[0]->getPropertyPath());
+      $this->assertSame(NotNull::IS_NULL_ERROR, $e->violations[0]->getCode());
+    }
+
+    // We should get an error if the entity already exists.
+    try {
+      $manager->applyAction('createForEach', 'node.type.*', [
+        'language.content_settings.node.%bundle' => [
+          'target_entity_type_id' => 'node',
+          'target_bundle' => '%bundle',
+        ],
+      ]);
+      $this->fail('Expected an exception to be thrown but it was not.');
+    }
+    catch (ConfigActionException $e) {
+      $this->assertSame('Entity language.content_settings.node.one exists', $e->getMessage());
+
+      // But it should work fine if we use the createForEachIfNotExists
+      // derivative.
+      $manager->applyAction('createForEachIfNotExists', 'node.type.*', [
+        'language.content_settings.node.%bundle' => [
+          'target_entity_type_id' => 'node',
+          'target_bundle' => '%bundle',
+        ],
+      ]);
+    }
+
+    // We should not be able to use this action on entities that aren't
+    // themselves bundles of another entity type.
+    $this->expectException(PluginNotFoundException::class);
+    $this->expectExceptionMessage('The "language_content_settings" entity does not support the "createForEach" config action.');
+    $manager->applyAction('createForEach', 'language.content_settings.node.*', []);
   }
 
 }
