@@ -44,17 +44,17 @@ final class EntityClone implements ConfigActionPluginInterface, ContainerFactory
   public function apply(string $configName, mixed $duplicate_id): void {
     assert(is_string($duplicate_id));
 
-    // If the original doesn't exist, there's nothing to duplicate.
+    // If the original doesn't exist, there's nothing to clone.
     $original = $this->configManager->loadConfigEntityByName($configName);
     if (empty($original)) {
       return;
     }
-    $duplicate = $original->createDuplicate();
-    $duplicate->set($original->getEntityType()->getKey('id'), $duplicate_id);
+    $clone = $original->createDuplicate();
+    $clone->set($original->getEntityType()->getKey('id'), $duplicate_id);
 
     // Use the config action manager to invoke the `entity_create` action on
-    // the duplicate, which will ensure that the duplicate is validated.
-    $this->configActionManager->applyAction('entity_create:createIfNotExists', $duplicate->getConfigDependencyName(), $duplicate->toArray());
+    // the clone, so that it will be validated.
+    $this->configActionManager->applyAction('entity_create:createIfNotExists', $clone->getConfigDependencyName(), $clone->toArray());
   }
 
 }
