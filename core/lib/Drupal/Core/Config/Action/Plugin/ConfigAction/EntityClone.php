@@ -19,7 +19,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 #[ConfigAction(
   id: 'cloneAs',
   admin_label: new TranslatableMarkup('Clone entity with a new ID'),
-  entity_types: '*',
+  entity_types: ['*'],
 )]
 final class EntityClone implements ConfigActionPluginInterface, ContainerFactoryPluginInterface {
 
