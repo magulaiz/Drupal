@@ -130,13 +130,13 @@ class ErrorHandlerTest extends BrowserTestBase {
     ];
     $select = \Drupal::database()->select('bananas_are_awesome', 'b')->fields('b');
     if (Database::getConnection()->driver() != 'mongodb') {
-      $message = \Drupal::database()->prepareStatement((string)$select, [])->getQueryString();
+      $message = \Drupal::database()->prepareStatement((string) $select, [])->getQueryString();
       $message = str_replace(["\r", "\n"], ' ', $message);
       $error_pdo_exception = [
         '%type' => 'DatabaseExceptionWrapper',
         '@message' => PHP_VERSION_ID >= 80400 ?
-          $message :
-          'SELECT "b".* FROM {bananas_are_awesome} "b"',
+        $message :
+        'SELECT "b".* FROM {bananas_are_awesome} "b"',
         '%function' => 'Drupal\error_test\Controller\ErrorTestController->triggerPDOException()',
         '%line' => 64,
         '%file' => $this->getModulePath('error_test') . '/error_test.module',
