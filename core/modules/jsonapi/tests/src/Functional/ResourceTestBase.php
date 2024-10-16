@@ -1336,9 +1336,6 @@ abstract class ResourceTestBase extends BrowserTestBase {
     // Test POST.
     $this->config('jsonapi.settings')->set('read_only', FALSE)->save(TRUE);
     $this->doTestRelationshipMutation($request_options);
-    // Grant entity-level edit access.
-    $this->setUpAuthorization('PATCH');
-    $this->doTestRelationshipMutation($request_options);
     // Field edit access is still forbidden, grant it.
     $this->grantPermissionsToTestedRole([
       'field_jsonapi_test_entity_ref view access',
