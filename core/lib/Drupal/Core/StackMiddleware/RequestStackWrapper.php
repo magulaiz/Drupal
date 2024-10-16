@@ -12,7 +12,7 @@ use Symfony\Component\HttpFoundation\RequestStack;
  * the caller from pushing / popping to the normal request stack. The other
  * functions of RequestStack work as normal.
  *
- * RequestStackWrapper is injected into Symfony's HttpKernel via it's
+ * RequestStackWrapper is injected into Symfony's HttpKernel via its
  * constructor.
  *
  * This is necessary because Drupal needs the request stack to be populated
