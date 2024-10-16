@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Drupal\Core\Config\Action\Plugin\ConfigAction;
 
 use Drupal\Core\Config\Action\Attribute\ConfigAction;
+use Drupal\Core\Config\Action\ConfigActionException;
 use Drupal\Core\Config\Action\ConfigActionManager;
 use Drupal\Core\Config\Action\ConfigActionPluginInterface;
 use Drupal\Core\Config\ConfigManagerInterface;
@@ -47,7 +48,7 @@ final class EntityClone implements ConfigActionPluginInterface, ContainerFactory
     // If the original doesn't exist, there's nothing to clone.
     $original = $this->configManager->loadConfigEntityByName($configName);
     if (empty($original)) {
-      return;
+      throw new ConfigActionException("Cannot clone '$configName' because it does not exist.");
     }
     $clone = $original->createDuplicate();
     $clone->set($original->getEntityType()->getKey('id'), $duplicate_id);
