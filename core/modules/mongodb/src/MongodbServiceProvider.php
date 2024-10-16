@@ -33,7 +33,7 @@ class MongodbServiceProvider extends ServiceProviderBase {
    */
   public function alter(ContainerBuilder $container) {
     $modules = $container->getParameter('container.modules');
-    // Test.
+
     if (isset($modules['file'])) {
       $definition = $container->getDefinition('file.usage');
       $definition->setClass('Drupal\mongodb\modules\file\DatabaseFileUsageBackend')

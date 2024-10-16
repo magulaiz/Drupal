@@ -6779,7 +6779,9 @@ $ignoreErrors[] = [
 	// identifier: variable.undefined
 	'message' => '#^Variable \\$dedicated_translations_table might not be defined\\.$#',
 	'count' => 3,
-=======
+	'path' => __DIR__ . '/lib/Drupal/Core/Entity/Sql/SqlContentEntityStorageSchema.php',
+];
+$ignoreErrors[] = [
 	// identifier: missingType.return
 	'message' => '#^Method Drupal\\\\Core\\\\Entity\\\\Sql\\\\SqlContentEntityStorageSchema\\:\\:addSharedTableFieldForeignKey\\(\\) has no return type specified\\.$#',
 	'count' => 1,
@@ -6993,7 +6995,6 @@ $ignoreErrors[] = [
 	// identifier: missingType.return
 	'message' => '#^Method Drupal\\\\Core\\\\Entity\\\\Sql\\\\SqlContentEntityStorageSchema\\:\\:updateSharedTableSchema\\(\\) has no return type specified\\.$#',
 	'count' => 1,
->>>>>>> 11.x
 	'path' => __DIR__ . '/lib/Drupal/Core/Entity/Sql/SqlContentEntityStorageSchema.php',
 ];
 $ignoreErrors[] = [
