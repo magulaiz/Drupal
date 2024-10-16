@@ -47,7 +47,7 @@ function views_token_info() {
   ];
   $info['tokens']['view']['total-rows'] = [
     'name' => t('Total rows'),
-    'description' => t('The total amount of results returned from the view. The current display will be used.'),
+    'description' => t('The total amount of results returned from the view. The current display will be used. The number returned can be affected by limits applied by the Pager and if the More link is enabled.'),
   ];
   $info['tokens']['view']['items-per-page'] = [
     'name' => t('Items per page'),
