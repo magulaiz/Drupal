@@ -2288,13 +2288,7 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/lib/Drupal/Core/Block/BlockManager.php',
 ];
 $ignoreErrors[] = [
-	// identifier: variable.undefined
-	'message' => '#^Variable \\$session_started might not be defined\\.$#',
-	'count' => 2,
-	'path' => __DIR__ . '/lib/Drupal/Core/Cache/DatabaseBackend.php',
-];
-$ignoreErrors[] = [
-  // identifier: missingType.return
+	// identifier: missingType.return
 	'message' => '#^Method Drupal\\\\Core\\\\Block\\\\BlockManager\\:\\:formatPlural\\(\\) has no return type specified\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/lib/Drupal/Core/Block/BlockManager.php',
@@ -2975,6 +2969,12 @@ $ignoreErrors[] = [
 	// identifier: missingType.return
 	'message' => '#^Method Drupal\\\\Core\\\\Cache\\\\DatabaseBackend\\:\\:setMultiple\\(\\) has no return type specified\\.$#',
 	'count' => 1,
+	'path' => __DIR__ . '/lib/Drupal/Core/Cache/DatabaseBackend.php',
+];
+$ignoreErrors[] = [
+	// identifier: variable.undefined
+	'message' => '#^Variable \\$session_started might not be defined\\.$#',
+	'count' => 2,
 	'path' => __DIR__ . '/lib/Drupal/Core/Cache/DatabaseBackend.php',
 ];
 $ignoreErrors[] = [
@@ -6537,6 +6537,12 @@ $ignoreErrors[] = [
 ];
 $ignoreErrors[] = [
 	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\Core\\\\Entity\\\\Sql\\\\SqlContentEntityStorage\\:\\:cleanupEntityAllRevisionData\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/lib/Drupal/Core/Entity/Sql/SqlContentEntityStorage.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
 	'message' => '#^Method Drupal\\\\Core\\\\Entity\\\\Sql\\\\SqlContentEntityStorage\\:\\:delete\\(\\) has no return type specified\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/lib/Drupal/Core/Entity/Sql/SqlContentEntityStorage.php',
@@ -6579,6 +6585,12 @@ $ignoreErrors[] = [
 ];
 $ignoreErrors[] = [
 	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\Core\\\\Entity\\\\Sql\\\\SqlContentEntityStorage\\:\\:getEmbeddedDedicatedTablesRecords\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/lib/Drupal/Core/Entity/Sql/SqlContentEntityStorage.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
 	'message' => '#^Method Drupal\\\\Core\\\\Entity\\\\Sql\\\\SqlContentEntityStorage\\:\\:initTableLayout\\(\\) has no return type specified\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/lib/Drupal/Core/Entity/Sql/SqlContentEntityStorage.php',
@@ -6586,6 +6598,18 @@ $ignoreErrors[] = [
 $ignoreErrors[] = [
 	// identifier: missingType.return
 	'message' => '#^Method Drupal\\\\Core\\\\Entity\\\\Sql\\\\SqlContentEntityStorage\\:\\:loadFromDedicatedTables\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/lib/Drupal/Core/Entity/Sql/SqlContentEntityStorage.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\Core\\\\Entity\\\\Sql\\\\SqlContentEntityStorage\\:\\:loadFromEmbeddedDedicatedTables\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/lib/Drupal/Core/Entity/Sql/SqlContentEntityStorage.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\Core\\\\Entity\\\\Sql\\\\SqlContentEntityStorage\\:\\:loadFromEmbeddedTables\\(\\) has no return type specified\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/lib/Drupal/Core/Entity/Sql/SqlContentEntityStorage.php',
 ];
@@ -6740,45 +6764,9 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/lib/Drupal/Core/Entity/Sql/SqlContentEntityStorage.php',
 ];
 $ignoreErrors[] = [
-	// identifier: variable.undefined
-	'message' => '#^Undefined variable\\: \\$transaction$#',
-	'count' => 1,
-	'path' => __DIR__ . '/lib/Drupal/Core/Entity/Sql/SqlContentEntityStorageSchema.php',
-];
-$ignoreErrors[] = [
 	// identifier: missingType.return
 	'message' => '#^Method Drupal\\\\Core\\\\Entity\\\\Sql\\\\SqlContentEntityStorageSchema\\:\\:addIndex\\(\\) has no return type specified\\.$#',
 	'count' => 1,
-	'path' => __DIR__ . '/lib/Drupal/Core/Entity/Sql/SqlContentEntityStorageSchema.php',
-];
-$ignoreErrors[] = [
-	// identifier: variable.undefined
-	'message' => '#^Variable \\$dedicated_all_revisions_table might not be defined\\.$#',
-	'count' => 3,
-	'path' => __DIR__ . '/lib/Drupal/Core/Entity/Sql/SqlContentEntityStorageSchema.php',
-];
-$ignoreErrors[] = [
-	// identifier: variable.undefined
-	'message' => '#^Variable \\$dedicated_base_table might not be defined\\.$#',
-	'count' => 3,
-	'path' => __DIR__ . '/lib/Drupal/Core/Entity/Sql/SqlContentEntityStorageSchema.php',
-];
-$ignoreErrors[] = [
-	// identifier: variable.undefined
-	'message' => '#^Variable \\$dedicated_current_revision_table might not be defined\\.$#',
-	'count' => 3,
-	'path' => __DIR__ . '/lib/Drupal/Core/Entity/Sql/SqlContentEntityStorageSchema.php',
-];
-$ignoreErrors[] = [
-	// identifier: variable.undefined
-	'message' => '#^Variable \\$dedicated_latest_revision_table might not be defined\\.$#',
-	'count' => 3,
-	'path' => __DIR__ . '/lib/Drupal/Core/Entity/Sql/SqlContentEntityStorageSchema.php',
-];
-$ignoreErrors[] = [
-	// identifier: variable.undefined
-	'message' => '#^Variable \\$dedicated_translations_table might not be defined\\.$#',
-	'count' => 3,
 	'path' => __DIR__ . '/lib/Drupal/Core/Entity/Sql/SqlContentEntityStorageSchema.php',
 ];
 $ignoreErrors[] = [
@@ -6963,6 +6951,18 @@ $ignoreErrors[] = [
 ];
 $ignoreErrors[] = [
 	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\Core\\\\Entity\\\\Sql\\\\SqlContentEntityStorageSchema\\:\\:processJsonStorageRevisionsTable\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/lib/Drupal/Core/Entity/Sql/SqlContentEntityStorageSchema.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\Core\\\\Entity\\\\Sql\\\\SqlContentEntityStorageSchema\\:\\:processJsonStorageTranslationsTable\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/lib/Drupal/Core/Entity/Sql/SqlContentEntityStorageSchema.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
 	'message' => '#^Method Drupal\\\\Core\\\\Entity\\\\Sql\\\\SqlContentEntityStorageSchema\\:\\:processRevisionDataTable\\(\\) has no return type specified\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/lib/Drupal/Core/Entity/Sql/SqlContentEntityStorageSchema.php',
@@ -6998,8 +6998,62 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/lib/Drupal/Core/Entity/Sql/SqlContentEntityStorageSchema.php',
 ];
 $ignoreErrors[] = [
+	// identifier: variable.undefined
+	'message' => '#^Undefined variable\\: \\$transaction$#',
+	'count' => 1,
+	'path' => __DIR__ . '/lib/Drupal/Core/Entity/Sql/SqlContentEntityStorageSchema.php',
+];
+$ignoreErrors[] = [
+	// identifier: variable.undefined
+	'message' => '#^Variable \\$dedicated_all_revisions_table might not be defined\\.$#',
+	'count' => 3,
+	'path' => __DIR__ . '/lib/Drupal/Core/Entity/Sql/SqlContentEntityStorageSchema.php',
+];
+$ignoreErrors[] = [
+	// identifier: variable.undefined
+	'message' => '#^Variable \\$dedicated_base_table might not be defined\\.$#',
+	'count' => 3,
+	'path' => __DIR__ . '/lib/Drupal/Core/Entity/Sql/SqlContentEntityStorageSchema.php',
+];
+$ignoreErrors[] = [
+	// identifier: variable.undefined
+	'message' => '#^Variable \\$dedicated_current_revision_table might not be defined\\.$#',
+	'count' => 3,
+	'path' => __DIR__ . '/lib/Drupal/Core/Entity/Sql/SqlContentEntityStorageSchema.php',
+];
+$ignoreErrors[] = [
+	// identifier: variable.undefined
+	'message' => '#^Variable \\$dedicated_latest_revision_table might not be defined\\.$#',
+	'count' => 3,
+	'path' => __DIR__ . '/lib/Drupal/Core/Entity/Sql/SqlContentEntityStorageSchema.php',
+];
+$ignoreErrors[] = [
+	// identifier: variable.undefined
+	'message' => '#^Variable \\$dedicated_translations_table might not be defined\\.$#',
+	'count' => 3,
+	'path' => __DIR__ . '/lib/Drupal/Core/Entity/Sql/SqlContentEntityStorageSchema.php',
+];
+$ignoreErrors[] = [
 	// identifier: empty.variable
 	'message' => '#^Variable \\$initial_storage_value in empty\\(\\) always exists and is not falsy\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/lib/Drupal/Core/Entity/Sql/SqlContentEntityStorageSchema.php',
+];
+$ignoreErrors[] = [
+	// identifier: variable.undefined
+	'message' => '#^Variable \\$revision_table might not be defined\\.$#',
+	'count' => 3,
+	'path' => __DIR__ . '/lib/Drupal/Core/Entity/Sql/SqlContentEntityStorageSchema.php',
+];
+$ignoreErrors[] = [
+	// identifier: variable.undefined
+	'message' => '#^Variable \\$table might not be defined\\.$#',
+	'count' => 3,
+	'path' => __DIR__ . '/lib/Drupal/Core/Entity/Sql/SqlContentEntityStorageSchema.php',
+];
+$ignoreErrors[] = [
+	// identifier: isset.variable
+	'message' => '#^Variable \\$transaction in isset\\(\\) is never defined\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/lib/Drupal/Core/Entity/Sql/SqlContentEntityStorageSchema.php',
 ];
@@ -7352,6 +7406,12 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/lib/Drupal/Core/EventSubscriber/MenuRouterRebuildSubscriber.php',
 ];
 $ignoreErrors[] = [
+	// identifier: variable.undefined
+	'message' => '#^Variable \\$session_started might not be defined\\.$#',
+	'count' => 2,
+	'path' => __DIR__ . '/lib/Drupal/Core/EventSubscriber/MenuRouterRebuildSubscriber.php',
+];
+$ignoreErrors[] = [
 	// identifier: missingType.return
 	'message' => '#^Method Drupal\\\\Core\\\\EventSubscriber\\\\ModuleRouteSubscriber\\:\\:alterRoutes\\(\\) has no return type specified\\.$#',
 	'count' => 1,
@@ -7482,30 +7542,6 @@ $ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\Core\\\\Extension\\\\ExtensionList\\:\\:setPathname\\(\\) has no return type specified\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/lib/Drupal/Core/Extension/ExtensionList.php',
-];
-$ignoreErrors[] = [
-	// identifier: variable.undefined
-	'message' => '#^Variable \\$revision_table might not be defined\\.$#',
-	'count' => 3,
-	'path' => __DIR__ . '/lib/Drupal/Core/Entity/Sql/SqlContentEntityStorageSchema.php',
-];
-$ignoreErrors[] = [
-	// identifier: variable.undefined
-	'message' => '#^Variable \\$table might not be defined\\.$#',
-	'count' => 3,
-	'path' => __DIR__ . '/lib/Drupal/Core/Entity/Sql/SqlContentEntityStorageSchema.php',
-];
-$ignoreErrors[] = [
-	// identifier: isset.variable
-	'message' => '#^Variable \\$transaction in isset\\(\\) is never defined\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/lib/Drupal/Core/Entity/Sql/SqlContentEntityStorageSchema.php',
-];
-$ignoreErrors[] = [
-	// identifier: variable.undefined
-	'message' => '#^Variable \\$session_started might not be defined\\.$#',
-	'count' => 2,
-	'path' => __DIR__ . '/lib/Drupal/Core/EventSubscriber/MenuRouterRebuildSubscriber.php',
 ];
 $ignoreErrors[] = [
 	// identifier: variable.undefined
@@ -9960,12 +9996,6 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/lib/Drupal/Core/Menu/MenuLinkManager.php',
 ];
 $ignoreErrors[] = [
-	// identifier: variable.undefined
-	'message' => '#^Variable \\$session_started might not be defined\\.$#',
-	'count' => 2,
-	'path' => __DIR__ . '/lib/Drupal/Core/Menu/MenuTreeStorage.php',
-];
-$ignoreErrors[] = [
 	// identifier: missingType.return
 	'message' => '#^Method Drupal\\\\Core\\\\Menu\\\\MenuLinkManagerInterface\\:\\:deleteLinksInMenu\\(\\) has no return type specified\\.$#',
 	'count' => 1,
@@ -10068,9 +10098,9 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/lib/Drupal/Core/Menu/MenuTreeStorage.php',
 ];
 $ignoreErrors[] = [
-	// identifier: isset.variable
-	'message' => '#^Variable \\$transaction in isset\\(\\) always exists and is not nullable\\.$#',
-	'count' => 1,
+	// identifier: variable.undefined
+	'message' => '#^Variable \\$session_started might not be defined\\.$#',
+	'count' => 2,
 	'path' => __DIR__ . '/lib/Drupal/Core/Menu/MenuTreeStorage.php',
 ];
 $ignoreErrors[] = [
@@ -10967,12 +10997,6 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/lib/Drupal/Core/Render/Renderer.php',
 ];
 $ignoreErrors[] = [
-	// identifier: variable.undefined
-	'message' => '#^Variable \\$session_started might not be defined\\.$#',
-	'count' => 2,
-	'path' => __DIR__ . '/lib/Drupal/Core/Routing/MatcherDumper.php',
-];
-$ignoreErrors[] = [
 	// identifier: missingType.return
 	'message' => '#^Method Drupal\\\\Core\\\\Render\\\\RendererInterface\\:\\:addCacheableDependency\\(\\) has no return type specified\\.$#',
 	'count' => 1,
@@ -11057,9 +11081,9 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/lib/Drupal/Core/Routing/MatcherDumper.php',
 ];
 $ignoreErrors[] = [
-	// identifier: isset.variable
-	'message' => '#^Variable \\$transaction in isset\\(\\) always exists and is not nullable\\.$#',
-	'count' => 1,
+	// identifier: variable.undefined
+	'message' => '#^Variable \\$session_started might not be defined\\.$#',
+	'count' => 2,
 	'path' => __DIR__ . '/lib/Drupal/Core/Routing/MatcherDumper.php',
 ];
 $ignoreErrors[] = [
@@ -15065,6 +15089,12 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/comment/src/Plugin/EntityReferenceSelection/CommentSelection.php',
 ];
 $ignoreErrors[] = [
+	// identifier: variable.undefined
+	'message' => '#^Variable \\$data_table might not be defined\\.$#',
+	'count' => 2,
+	'path' => __DIR__ . '/modules/comment/src/Plugin/EntityReferenceSelection/CommentSelection.php',
+];
+$ignoreErrors[] = [
 	// identifier: missingType.return
 	'message' => '#^Method Drupal\\\\comment\\\\Plugin\\\\Menu\\\\LocalTask\\\\UnapprovedComments\\:\\:formatPlural\\(\\) has no return type specified\\.$#',
 	'count' => 1,
@@ -15087,12 +15117,6 @@ $ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\comment\\\\Plugin\\\\migrate\\\\destination\\\\EntityComment\\:\\:processStubRow\\(\\) has no return type specified\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/comment/src/Plugin/migrate/destination/EntityComment.php',
-];
-$ignoreErrors[] = [
-	// identifier: variable.undefined
-	'message' => '#^Variable \\$data_table might not be defined\\.$#',
-	'count' => 2,
-	'path' => __DIR__ . '/modules/comment/src/Plugin/EntityReferenceSelection/CommentSelection.php',
 ];
 $ignoreErrors[] = [
 	// identifier: variable.undefined
@@ -26129,12 +26153,6 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/jsonapi/src/Revisions/VersionNegotiator.php',
 ];
 $ignoreErrors[] = [
-	// identifier: phpunit.callParent
-	'message' => '#^Missing call to parent\\:\\:setUp\\(\\) method\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/jsonapi/tests/src/Functional/MenuLinkContentTest.php',
-];
-$ignoreErrors[] = [
 	// identifier: missingType.return
 	'message' => '#^Method Drupal\\\\jsonapi\\\\Revisions\\\\VersionNegotiator\\:\\:throwBadRequestHttpException\\(\\) has no return type specified\\.$#',
 	'count' => 1,
@@ -26545,6 +26563,12 @@ $ignoreErrors[] = [
 $ignoreErrors[] = [
 	// identifier: missingType.return
 	'message' => '#^Method Drupal\\\\Tests\\\\jsonapi\\\\Functional\\\\MenuLinkContentTest\\:\\:setUpAuthorization\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/jsonapi/tests/src/Functional/MenuLinkContentTest.php',
+];
+$ignoreErrors[] = [
+	// identifier: phpunit.callParent
+	'message' => '#^Missing call to parent\\:\\:setUp\\(\\) method\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/jsonapi/tests/src/Functional/MenuLinkContentTest.php',
 ];
@@ -32502,7 +32526,7 @@ $ignoreErrors[] = [
 ];
 $ignoreErrors[] = [
 	// identifier: missingType.return
-	'message' => '#^Method class@anonymous/core/modules/media/tests/src/Kernel/OEmbedResourceConstraintValidatorTest\\.php\\:107\\:\\:getEntity\\(\\) has no return type specified\\.$#',
+	'message' => '#^Method class@anonymous/core/modules/media/tests/src/Kernel/OEmbedResourceConstraintValidatorTest\\.php\\:108\\:\\:getEntity\\(\\) has no return type specified\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/media/tests/src/Kernel/OEmbedResourceConstraintValidatorTest.php',
 ];
@@ -33203,12 +33227,6 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/menu_link_content/src/Plugin/Menu/MenuLinkContent.php',
 ];
 $ignoreErrors[] = [
-	// identifier: phpunit.callParent
-	'message' => '#^Missing call to parent\\:\\:setUp\\(\\) method\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/menu_link_content/tests/src/Functional/Rest/MenuLinkContentResourceTestBase.php',
-];
-$ignoreErrors[] = [
 	// identifier: missingType.return
 	'message' => '#^Method Drupal\\\\menu_link_content\\\\Plugin\\\\Validation\\\\Constraint\\\\MenuTreeHierarchyConstraintValidator\\:\\:create\\(\\) has no return type specified\\.$#',
 	'count' => 1,
@@ -33283,6 +33301,12 @@ $ignoreErrors[] = [
 $ignoreErrors[] = [
 	// identifier: missingType.return
 	'message' => '#^Method Drupal\\\\Tests\\\\menu_link_content\\\\Functional\\\\Rest\\\\MenuLinkContentResourceTestBase\\:\\:setUpAuthorization\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/menu_link_content/tests/src/Functional/Rest/MenuLinkContentResourceTestBase.php',
+];
+$ignoreErrors[] = [
+	// identifier: phpunit.callParent
+	'message' => '#^Missing call to parent\\:\\:setUp\\(\\) method\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/menu_link_content/tests/src/Functional/Rest/MenuLinkContentResourceTestBase.php',
 ];
@@ -36115,132 +36139,6 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/migrate_drupal_ui/tests/src/Functional/MultilingualReviewPageTestBase.php',
 ];
 $ignoreErrors[] = [
-	// identifier: return.missing
-	'message' => '#^Method Drupal\\\\mongodb\\\\Driver\\\\Database\\\\mongodb\\\\Delete\\:\\:execute\\(\\) should return int but return statement is missing\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/mongodb/src/Driver/Database/mongodb/Delete.php',
-];
-$ignoreErrors[] = [
-	// identifier: method.notFound
-	'message' => '#^Call to an undefined method Drupal\\\\mongodb\\\\Driver\\\\Database\\\\mongodb\\\\SearchQuery\\:\\:addGroupField\\(\\)\\.$#',
-	'count' => 2,
-	'path' => __DIR__ . '/modules/mongodb/src/Driver/Database/mongodb/SearchQuery.php',
-];
-$ignoreErrors[] = [
-	// identifier: method.notFound
-	'message' => '#^Call to an undefined method Drupal\\\\mongodb\\\\Driver\\\\Database\\\\mongodb\\\\SearchQuery\\:\\:addSumMultiplyExpression\\(\\)\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/mongodb/src/Driver/Database/mongodb/SearchQuery.php',
-];
-$ignoreErrors[] = [
-	// identifier: method.notFound
-	'message' => '#^Call to an undefined method Drupal\\\\mongodb\\\\Driver\\\\Database\\\\mongodb\\\\SearchQuery\\:\\:havingConditionWithType\\(\\)\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/mongodb/src/Driver/Database/mongodb/SearchQuery.php',
-];
-$ignoreErrors[] = [
-	// identifier: method.notFound
-	'message' => '#^Call to an undefined method Drupal\\\\mongodb\\\\Driver\\\\Database\\\\mongodb\\\\SearchQuery\\:\\:unwindJoinAndAddFields\\(\\)\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/mongodb/src/Driver/Database/mongodb/SearchQuery.php',
-];
-$ignoreErrors[] = [
-	// identifier: unset.offset
-	'message' => '#^Cannot unset offset \'session\' on array\\{limit\\: int, skip\\: int\\}\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/mongodb/src/Driver/Database/mongodb/Select.php',
-];
-$ignoreErrors[] = [
-	// identifier: empty.variable
-	'message' => '#^Variable \\$_ids in empty\\(\\) always exists and is not falsy\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/mongodb/src/Driver/Database/mongodb/Select.php',
-];
-$ignoreErrors[] = [
-	// identifier: variable.undefined
-	'message' => '#^Variable \\$relationship_specifier might not be defined\\.$#',
-	'count' => 5,
-	'path' => __DIR__ . '/modules/mongodb/src/EntityQuery/Condition.php',
-];
-$ignoreErrors[] = [
-	// identifier: return.missing
-	'message' => '#^Method Drupal\\\\mongodb\\\\EntityQuery\\\\Query\\:\\:getMongodbFieldName\\(\\) should return string but return statement is missing\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/mongodb/src/EntityQuery/Query.php',
-];
-$ignoreErrors[] = [
-	// identifier: property.notFound
-	'message' => '#^Access to an undefined property Drupal\\\\mongodb\\\\Plugin\\\\views\\\\argument\\\\Formula\\:\\:\\$argFormat\\.$#',
-	'count' => 2,
-	'path' => __DIR__ . '/modules/mongodb/src/Plugin/views/argument/Formula.php',
-];
-$ignoreErrors[] = [
-	// identifier: property.notFound
-	'message' => '#^Access to an undefined property Drupal\\\\mongodb\\\\Plugin\\\\views\\\\argument\\\\Formula\\:\\:\\$mongodbOperator\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/mongodb/src/Plugin/views/argument/Formula.php',
-];
-$ignoreErrors[] = [
-	// identifier: variable.undefined
-	'message' => '#^Variable \\$inner_count might not be defined\\.$#',
-	'count' => 2,
-	'path' => __DIR__ . '/modules/mongodb/src/Plugin/views/argument/TaxonomyIndexTidDepth.php',
-];
-$ignoreErrors[] = [
-	// identifier: return.missing
-	'message' => '#^Method Drupal\\\\mongodb\\\\Plugin\\\\views\\\\field\\\\Date\\:\\:render\\(\\) should return Drupal\\\\Component\\\\Render\\\\MarkupInterface\\|string but return statement is missing\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/mongodb/src/Plugin/views/field/Date.php',
-];
-$ignoreErrors[] = [
-	// identifier: variable.undefined
-	'message' => '#^Variable \\$custom_format might not be defined\\.$#',
-	'count' => 9,
-	'path' => __DIR__ . '/modules/mongodb/src/Plugin/views/field/Date.php',
-];
-$ignoreErrors[] = [
-	// identifier: return.missing
-	'message' => '#^Method Drupal\\\\mongodb\\\\Plugin\\\\views\\\\field\\\\HistoryUserTimestamp\\:\\:render\\(\\) should return Drupal\\\\Component\\\\Render\\\\MarkupInterface\\|string but return statement is missing\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/mongodb/src/Plugin/views/field/HistoryUserTimestamp.php',
-];
-$ignoreErrors[] = [
-	// identifier: variable.undefined
-	'message' => '#^Undefined variable\\: \\$placeholder$#',
-	'count' => 2,
-	'path' => __DIR__ . '/modules/mongodb/src/Plugin/views/filter/Combine.php',
-];
-$ignoreErrors[] = [
-	// identifier: variable.undefined
-	'message' => '#^Variable \\$or_condition might not be defined\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/mongodb/src/Plugin/views/filter/HistoryUserTimestamp.php',
-];
-$ignoreErrors[] = [
-	// identifier: variable.undefined
-	'message' => '#^Variable \\$inner_count might not be defined\\.$#',
-	'count' => 2,
-	'path' => __DIR__ . '/modules/mongodb/src/Plugin/views/filter/TaxonomyIndexTidDepth.php',
-];
-$ignoreErrors[] = [
-	// identifier: empty.variable
-	'message' => '#^Variable \\$joined_table_alias in empty\\(\\) always exists and is not falsy\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/mongodb/src/Plugin/views/query/ViewsQuery.php',
-];
-$ignoreErrors[] = [
-	// identifier: return.missing
-	'message' => '#^Method Drupal\\\\mongodb\\\\modules\\\\node\\\\NodeGrantDatabaseStorage\\:\\:alterQuery\\(\\) should return int but return statement is missing\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/mongodb/src/modules/node/NodeGrantDatabaseStorage.php',
-];
-$ignoreErrors[] = [
-	// identifier: variable.undefined
-	'message' => '#^Variable \\$conditions might not be defined\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/mongodb/src/modules/node/NodeGrantDatabaseStorage.php',
-];
-$ignoreErrors[] = [
 	// identifier: missingType.return
 	'message' => '#^Method Drupal\\\\Tests\\\\migrate_drupal_ui\\\\Functional\\\\MultilingualReviewPageTestBase\\:\\:createContent\\(\\) has no return type specified\\.$#',
 	'count' => 1,
@@ -36299,6 +36197,2988 @@ $ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\Tests\\\\migrate_drupal_ui\\\\FunctionalJavascript\\\\SettingsTest\\:\\:providerTestCredentialForm\\(\\) has no return type specified\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/migrate_drupal_ui/tests/src/FunctionalJavascript/SettingsTest.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Function mongodb_requirements\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/mongodb.install',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Function _mongodb_block_content_has_reusable_condition\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/mongodb.module',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Function mongodb_entity_type_alter\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/mongodb.module',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Function mongodb_field_info_alter\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/mongodb.module',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Function mongodb_query_entity_reference_alter\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/mongodb.module',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Function mongodb_search_plugin_alter\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/mongodb.module',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Function mongodb_field_views_data_alter\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/mongodb.views.inc',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Function mongodb_views_data_alter\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/mongodb.views.inc',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Function mongodb_views_data_mongodb_alter\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/mongodb.views.inc',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Function mongodb_views_plugins_argument_alter\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/mongodb.views.inc',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Function mongodb_views_plugins_field_alter\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/mongodb.views.inc',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Function mongodb_views_plugins_filter_alter\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/mongodb.views.inc',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Function mongodb_views_plugins_join_alter\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/mongodb.views.inc',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Function mongodb_views_plugins_query_alter\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/mongodb.views.inc',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Function mongodb_views_plugins_relationship_alter\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/mongodb.views.inc',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Function mongodb_views_plugins_row_alter\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/mongodb.views.inc',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Function mongodb_views_plugins_sort_alter\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/mongodb.views.inc',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\mongodb\\\\Driver\\\\Database\\\\mongodb\\\\Condition\\:\\:compile\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/src/Driver/Database/mongodb/Condition.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\mongodb\\\\Driver\\\\Database\\\\mongodb\\\\Condition\\:\\:setMetaData\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/src/Driver/Database/mongodb/Condition.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\mongodb\\\\Driver\\\\Database\\\\mongodb\\\\Condition\\:\\:setMongodbBaseAlias\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/src/Driver/Database/mongodb/Condition.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\mongodb\\\\Driver\\\\Database\\\\mongodb\\\\Condition\\:\\:setMongodbBaseTable\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/src/Driver/Database/mongodb/Condition.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\mongodb\\\\Driver\\\\Database\\\\mongodb\\\\Condition\\:\\:setMongodbEmbeddedTableProjection\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/src/Driver/Database/mongodb/Condition.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\mongodb\\\\Driver\\\\Database\\\\mongodb\\\\Condition\\:\\:setUnwoundTables\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/src/Driver/Database/mongodb/Condition.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\mongodb\\\\Driver\\\\Database\\\\mongodb\\\\Connection\\:\\:createDatabase\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/src/Driver/Database/mongodb/Connection.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\mongodb\\\\Driver\\\\Database\\\\mongodb\\\\Connection\\:\\:destroy\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/src/Driver/Database/mongodb/Connection.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\mongodb\\\\Driver\\\\Database\\\\mongodb\\\\Connection\\:\\:queryTemporary\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/src/Driver/Database/mongodb/Connection.php',
+];
+$ignoreErrors[] = [
+	// identifier: return.missing
+	'message' => '#^Method Drupal\\\\mongodb\\\\Driver\\\\Database\\\\mongodb\\\\Delete\\:\\:execute\\(\\) should return int but return statement is missing\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/src/Driver/Database/mongodb/Delete.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\mongodb\\\\Driver\\\\Database\\\\mongodb\\\\EmbeddedTableData\\:\\:compile\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/src/Driver/Database/mongodb/EmbeddedTableData.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\mongodb\\\\Driver\\\\Database\\\\mongodb\\\\EmbeddedTableData\\:\\:getInsertPlaceholderFragment\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/src/Driver/Database/mongodb/EmbeddedTableData.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\mongodb\\\\Driver\\\\Database\\\\mongodb\\\\EmbeddedTableData\\:\\:validateDataForTableInsert\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/src/Driver/Database/mongodb/EmbeddedTableData.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\mongodb\\\\Driver\\\\Database\\\\mongodb\\\\Insert\\:\\:validateDataForTableInsert\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/src/Driver/Database/mongodb/Insert.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\mongodb\\\\Driver\\\\Database\\\\mongodb\\\\Install\\\\Tasks\\:\\:checkCreateCollection\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/src/Driver/Database/mongodb/Install/Tasks.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\mongodb\\\\Driver\\\\Database\\\\mongodb\\\\Install\\\\Tasks\\:\\:checkDeleteCollection\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/src/Driver/Database/mongodb/Install/Tasks.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\mongodb\\\\Driver\\\\Database\\\\mongodb\\\\Install\\\\Tasks\\:\\:checkDropCollection\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/src/Driver/Database/mongodb/Install/Tasks.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\mongodb\\\\Driver\\\\Database\\\\mongodb\\\\Install\\\\Tasks\\:\\:checkDropCollectionIfExists\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/src/Driver/Database/mongodb/Install/Tasks.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\mongodb\\\\Driver\\\\Database\\\\mongodb\\\\Install\\\\Tasks\\:\\:checkInsertCollection\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/src/Driver/Database/mongodb/Install/Tasks.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\mongodb\\\\Driver\\\\Database\\\\mongodb\\\\Install\\\\Tasks\\:\\:checkUpdateCollection\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/src/Driver/Database/mongodb/Install/Tasks.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\mongodb\\\\Driver\\\\Database\\\\mongodb\\\\Install\\\\Tasks\\:\\:enableModule\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/src/Driver/Database/mongodb/Install/Tasks.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\mongodb\\\\Driver\\\\Database\\\\mongodb\\\\Install\\\\Tasks\\:\\:ensureReplicaSet\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/src/Driver/Database/mongodb/Install/Tasks.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\mongodb\\\\Driver\\\\Database\\\\mongodb\\\\Schema\\:\\:addField\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/src/Driver/Database/mongodb/Schema.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\mongodb\\\\Driver\\\\Database\\\\mongodb\\\\Schema\\:\\:addIndex\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/src/Driver/Database/mongodb/Schema.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\mongodb\\\\Driver\\\\Database\\\\mongodb\\\\Schema\\:\\:addPrimaryKey\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/src/Driver/Database/mongodb/Schema.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\mongodb\\\\Driver\\\\Database\\\\mongodb\\\\Schema\\:\\:addUniqueKey\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/src/Driver/Database/mongodb/Schema.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\mongodb\\\\Driver\\\\Database\\\\mongodb\\\\Schema\\:\\:changeField\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/src/Driver/Database/mongodb/Schema.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\mongodb\\\\Driver\\\\Database\\\\mongodb\\\\Schema\\:\\:createEmbeddedTable\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/src/Driver/Database/mongodb/Schema.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\mongodb\\\\Driver\\\\Database\\\\mongodb\\\\Schema\\:\\:createKeys\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/src/Driver/Database/mongodb/Schema.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\mongodb\\\\Driver\\\\Database\\\\mongodb\\\\Schema\\:\\:createTable\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/src/Driver/Database/mongodb/Schema.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\mongodb\\\\Driver\\\\Database\\\\mongodb\\\\Schema\\:\\:fieldSetDefault\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/src/Driver/Database/mongodb/Schema.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\mongodb\\\\Driver\\\\Database\\\\mongodb\\\\Schema\\:\\:fieldSetNoDefault\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/src/Driver/Database/mongodb/Schema.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\mongodb\\\\Driver\\\\Database\\\\mongodb\\\\Schema\\:\\:getComment\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/src/Driver/Database/mongodb/Schema.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\mongodb\\\\Driver\\\\Database\\\\mongodb\\\\Schema\\:\\:renameTable\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/src/Driver/Database/mongodb/Schema.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\mongodb\\\\Driver\\\\Database\\\\mongodb\\\\Schema\\:\\:uniqueKeyExists\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/src/Driver/Database/mongodb/Schema.php',
+];
+$ignoreErrors[] = [
+	// identifier: method.notFound
+	'message' => '#^Call to an undefined method Drupal\\\\mongodb\\\\Driver\\\\Database\\\\mongodb\\\\SearchQuery\\:\\:addGroupField\\(\\)\\.$#',
+	'count' => 2,
+	'path' => __DIR__ . '/modules/mongodb/src/Driver/Database/mongodb/SearchQuery.php',
+];
+$ignoreErrors[] = [
+	// identifier: method.notFound
+	'message' => '#^Call to an undefined method Drupal\\\\mongodb\\\\Driver\\\\Database\\\\mongodb\\\\SearchQuery\\:\\:addSumMultiplyExpression\\(\\)\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/src/Driver/Database/mongodb/SearchQuery.php',
+];
+$ignoreErrors[] = [
+	// identifier: method.notFound
+	'message' => '#^Call to an undefined method Drupal\\\\mongodb\\\\Driver\\\\Database\\\\mongodb\\\\SearchQuery\\:\\:havingConditionWithType\\(\\)\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/src/Driver/Database/mongodb/SearchQuery.php',
+];
+$ignoreErrors[] = [
+	// identifier: method.notFound
+	'message' => '#^Call to an undefined method Drupal\\\\mongodb\\\\Driver\\\\Database\\\\mongodb\\\\SearchQuery\\:\\:unwindJoinAndAddFields\\(\\)\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/src/Driver/Database/mongodb/SearchQuery.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\mongodb\\\\Driver\\\\Database\\\\mongodb\\\\SearchQuery\\:\\:parseSearchExpression\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/src/Driver/Database/mongodb/SearchQuery.php',
+];
+$ignoreErrors[] = [
+	// identifier: unset.offset
+	'message' => '#^Cannot unset offset \'session\' on array\\{limit\\: int, skip\\: int\\}\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/src/Driver/Database/mongodb/Select.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\mongodb\\\\Driver\\\\Database\\\\mongodb\\\\Select\\:\\:addCoalesceValueField\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/src/Driver/Database/mongodb/Select.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\mongodb\\\\Driver\\\\Database\\\\mongodb\\\\Select\\:\\:addConcatField\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/src/Driver/Database/mongodb/Select.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\mongodb\\\\Driver\\\\Database\\\\mongodb\\\\Select\\:\\:addConditionField\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/src/Driver/Database/mongodb/Select.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\mongodb\\\\Driver\\\\Database\\\\mongodb\\\\Select\\:\\:addDateDateFormattedField\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/src/Driver/Database/mongodb/Select.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\mongodb\\\\Driver\\\\Database\\\\mongodb\\\\Select\\:\\:addDateStringFormattedField\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/src/Driver/Database/mongodb/Select.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\mongodb\\\\Driver\\\\Database\\\\mongodb\\\\Select\\:\\:addFieldLength\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/src/Driver/Database/mongodb/Select.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\mongodb\\\\Driver\\\\Database\\\\mongodb\\\\Select\\:\\:addGreatestField\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/src/Driver/Database/mongodb/Select.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\mongodb\\\\Driver\\\\Database\\\\mongodb\\\\Select\\:\\:addGroupByOperation\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/src/Driver/Database/mongodb/Select.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\mongodb\\\\Driver\\\\Database\\\\mongodb\\\\Select\\:\\:addGroupField\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/src/Driver/Database/mongodb/Select.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\mongodb\\\\Driver\\\\Database\\\\mongodb\\\\Select\\:\\:addLiteralField\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/src/Driver/Database/mongodb/Select.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\mongodb\\\\Driver\\\\Database\\\\mongodb\\\\Select\\:\\:addMultiplyField\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/src/Driver/Database/mongodb/Select.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\mongodb\\\\Driver\\\\Database\\\\mongodb\\\\Select\\:\\:addPreJoinField\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/src/Driver/Database/mongodb/Select.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\mongodb\\\\Driver\\\\Database\\\\mongodb\\\\Select\\:\\:addSubstringField\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/src/Driver/Database/mongodb/Select.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\mongodb\\\\Driver\\\\Database\\\\mongodb\\\\Select\\:\\:addSumField\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/src/Driver/Database/mongodb/Select.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\mongodb\\\\Driver\\\\Database\\\\mongodb\\\\Select\\:\\:addSumMultiplyExpression\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/src/Driver/Database/mongodb/Select.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\mongodb\\\\Driver\\\\Database\\\\mongodb\\\\Select\\:\\:compile\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/src/Driver/Database/mongodb/Select.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\mongodb\\\\Driver\\\\Database\\\\mongodb\\\\Select\\:\\:createTemporaryTable\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/src/Driver/Database/mongodb/Select.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\mongodb\\\\Driver\\\\Database\\\\mongodb\\\\Select\\:\\:havingConditionWithType\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/src/Driver/Database/mongodb/Select.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\mongodb\\\\Driver\\\\Database\\\\mongodb\\\\Select\\:\\:setMongodbGroup\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/src/Driver/Database/mongodb/Select.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\mongodb\\\\Driver\\\\Database\\\\mongodb\\\\Select\\:\\:setMongodbGroupHelper\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/src/Driver/Database/mongodb/Select.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\mongodb\\\\Driver\\\\Database\\\\mongodb\\\\Select\\:\\:setMongodbProjection\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/src/Driver/Database/mongodb/Select.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\mongodb\\\\Driver\\\\Database\\\\mongodb\\\\Select\\:\\:unwindJoinAndAddFields\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/src/Driver/Database/mongodb/Select.php',
+];
+$ignoreErrors[] = [
+	// identifier: empty.variable
+	'message' => '#^Variable \\$_ids in empty\\(\\) always exists and is not falsy\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/src/Driver/Database/mongodb/Select.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\mongodb\\\\Driver\\\\Database\\\\mongodb\\\\Sequences\\:\\:setEntityId\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/src/Driver/Database/mongodb/Sequences.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\mongodb\\\\Driver\\\\Database\\\\mongodb\\\\Sequences\\:\\:setId\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/src/Driver/Database/mongodb/Sequences.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\mongodb\\\\Driver\\\\Database\\\\mongodb\\\\Sequences\\:\\:setRevisionId\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/src/Driver/Database/mongodb/Sequences.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\mongodb\\\\Driver\\\\Database\\\\mongodb\\\\Statement\\:\\:getFields\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/src/Driver/Database/mongodb/Statement.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\mongodb\\\\Driver\\\\Database\\\\mongodb\\\\StatementCountQuery\\:\\:setFetchMode\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/src/Driver/Database/mongodb/StatementCountQuery.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\mongodb\\\\Driver\\\\Database\\\\mongodb\\\\TableInformation\\:\\:load\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/src/Driver/Database/mongodb/TableInformation.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\mongodb\\\\Driver\\\\Database\\\\mongodb\\\\TranslateSchema\\:\\:createTable\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/src/Driver/Database/mongodb/TranslateSchema.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\mongodb\\\\Driver\\\\Database\\\\mongodb\\\\TranslateSql\\:\\:projectionToFields\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/src/Driver/Database/mongodb/TranslateSql.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\mongodb\\\\Driver\\\\Database\\\\mongodb\\\\TranslateSql\\:\\:query\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/src/Driver/Database/mongodb/TranslateSql.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\mongodb\\\\Driver\\\\Database\\\\mongodb\\\\TranslateSql\\:\\:queryRange\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/src/Driver/Database/mongodb/TranslateSql.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\mongodb\\\\Driver\\\\Database\\\\mongodb\\\\Update\\:\\:validateDataForTableInsert\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/src/Driver/Database/mongodb/Update.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\mongodb\\\\Driver\\\\Database\\\\mongodb\\\\Upsert\\:\\:validateDataForTableInsert\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/src/Driver/Database/mongodb/Upsert.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\mongodb\\\\EntityQuery\\\\Condition\\:\\:addConditions\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/src/EntityQuery/Condition.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\mongodb\\\\EntityQuery\\\\Condition\\:\\:compile\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/src/EntityQuery/Condition.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\mongodb\\\\EntityQuery\\\\Condition\\:\\:translateCondition\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/src/EntityQuery/Condition.php',
+];
+$ignoreErrors[] = [
+	// identifier: variable.undefined
+	'message' => '#^Variable \\$relationship_specifier might not be defined\\.$#',
+	'count' => 5,
+	'path' => __DIR__ . '/modules/mongodb/src/EntityQuery/Condition.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\mongodb\\\\EntityQuery\\\\ConditionAggregate\\:\\:compile\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/src/EntityQuery/ConditionAggregate.php',
+];
+$ignoreErrors[] = [
+	// identifier: return.missing
+	'message' => '#^Method Drupal\\\\mongodb\\\\EntityQuery\\\\Query\\:\\:getMongodbFieldName\\(\\) should return string but return statement is missing\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/src/EntityQuery/Query.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\mongodb\\\\EntityQuery\\\\QueryAggregate\\:\\:addAggregate\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/src/EntityQuery/QueryAggregate.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\mongodb\\\\EntityQuery\\\\QueryAggregate\\:\\:addGroupBy\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/src/EntityQuery/QueryAggregate.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\mongodb\\\\EntityQuery\\\\QueryAggregate\\:\\:addSortAggregate\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/src/EntityQuery/QueryAggregate.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\mongodb\\\\EntityQuery\\\\QueryAggregate\\:\\:compileAggregate\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/src/EntityQuery/QueryAggregate.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\mongodb\\\\Menu\\\\MenuTreeStorage\\:\\:moveChildren\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/src/Menu/MenuTreeStorage.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\mongodb\\\\Menu\\\\MenuTreeStorage\\:\\:updateParentalStatus\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/src/Menu/MenuTreeStorage.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\mongodb\\\\MongodbServiceProvider\\:\\:alter\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/src/MongodbServiceProvider.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\mongodb\\\\MongodbServiceProvider\\:\\:register\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/src/MongodbServiceProvider.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\mongodb\\\\Plugin\\\\Search\\\\HelpSearch\\:\\:updateIndex\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/src/Plugin/Search/HelpSearch.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\mongodb\\\\Plugin\\\\Search\\\\NodeSearch\\:\\:updateIndex\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/src/Plugin/Search/NodeSearch.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\mongodb\\\\Plugin\\\\views\\\\argument\\\\CommentUserUid\\:\\:query\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/src/Plugin/views/argument/CommentUserUid.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\mongodb\\\\Plugin\\\\views\\\\argument\\\\CommentUserUid\\:\\:title\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/src/Plugin/views/argument/CommentUserUid.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\mongodb\\\\Plugin\\\\views\\\\argument\\\\Date\\:\\:query\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/src/Plugin/views/argument/Date.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\mongodb\\\\Plugin\\\\views\\\\argument\\\\Date\\:\\:summaryQuery\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/src/Plugin/views/argument/Date.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\mongodb\\\\Plugin\\\\views\\\\argument\\\\DatetimeDate\\:\\:query\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/src/Plugin/views/argument/DatetimeDate.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\mongodb\\\\Plugin\\\\views\\\\argument\\\\DatetimeDate\\:\\:summaryQuery\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/src/Plugin/views/argument/DatetimeDate.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\mongodb\\\\Plugin\\\\views\\\\argument\\\\DatetimeDayDate\\:\\:query\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/src/Plugin/views/argument/DatetimeDayDate.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\mongodb\\\\Plugin\\\\views\\\\argument\\\\DatetimeDayDate\\:\\:summaryQuery\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/src/Plugin/views/argument/DatetimeDayDate.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\mongodb\\\\Plugin\\\\views\\\\argument\\\\DatetimeFullDate\\:\\:query\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/src/Plugin/views/argument/DatetimeFullDate.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\mongodb\\\\Plugin\\\\views\\\\argument\\\\DatetimeFullDate\\:\\:summaryQuery\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/src/Plugin/views/argument/DatetimeFullDate.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\mongodb\\\\Plugin\\\\views\\\\argument\\\\DatetimeMonthDate\\:\\:query\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/src/Plugin/views/argument/DatetimeMonthDate.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\mongodb\\\\Plugin\\\\views\\\\argument\\\\DatetimeMonthDate\\:\\:summaryQuery\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/src/Plugin/views/argument/DatetimeMonthDate.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\mongodb\\\\Plugin\\\\views\\\\argument\\\\DatetimeWeekDate\\:\\:query\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/src/Plugin/views/argument/DatetimeWeekDate.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\mongodb\\\\Plugin\\\\views\\\\argument\\\\DatetimeWeekDate\\:\\:summaryQuery\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/src/Plugin/views/argument/DatetimeWeekDate.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\mongodb\\\\Plugin\\\\views\\\\argument\\\\DatetimeYearDate\\:\\:query\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/src/Plugin/views/argument/DatetimeYearDate.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\mongodb\\\\Plugin\\\\views\\\\argument\\\\DatetimeYearDate\\:\\:summaryQuery\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/src/Plugin/views/argument/DatetimeYearDate.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\mongodb\\\\Plugin\\\\views\\\\argument\\\\DatetimeYearMonthDate\\:\\:query\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/src/Plugin/views/argument/DatetimeYearMonthDate.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\mongodb\\\\Plugin\\\\views\\\\argument\\\\DatetimeYearMonthDate\\:\\:summaryQuery\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/src/Plugin/views/argument/DatetimeYearMonthDate.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\mongodb\\\\Plugin\\\\views\\\\argument\\\\DayDate\\:\\:query\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/src/Plugin/views/argument/DayDate.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\mongodb\\\\Plugin\\\\views\\\\argument\\\\DayDate\\:\\:summaryQuery\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/src/Plugin/views/argument/DayDate.php',
+];
+$ignoreErrors[] = [
+	// identifier: property.notFound
+	'message' => '#^Access to an undefined property Drupal\\\\mongodb\\\\Plugin\\\\views\\\\argument\\\\Formula\\:\\:\\$argFormat\\.$#',
+	'count' => 2,
+	'path' => __DIR__ . '/modules/mongodb/src/Plugin/views/argument/Formula.php',
+];
+$ignoreErrors[] = [
+	// identifier: property.notFound
+	'message' => '#^Access to an undefined property Drupal\\\\mongodb\\\\Plugin\\\\views\\\\argument\\\\Formula\\:\\:\\$mongodbOperator\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/src/Plugin/views/argument/Formula.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\mongodb\\\\Plugin\\\\views\\\\argument\\\\Formula\\:\\:query\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/src/Plugin/views/argument/Formula.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\mongodb\\\\Plugin\\\\views\\\\argument\\\\Formula\\:\\:summaryQuery\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/src/Plugin/views/argument/Formula.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\mongodb\\\\Plugin\\\\views\\\\argument\\\\FullDate\\:\\:query\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/src/Plugin/views/argument/FullDate.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\mongodb\\\\Plugin\\\\views\\\\argument\\\\FullDate\\:\\:summaryQuery\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/src/Plugin/views/argument/FullDate.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\mongodb\\\\Plugin\\\\views\\\\argument\\\\GroupByNumeric\\:\\:query\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/src/Plugin/views/argument/GroupByNumeric.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\mongodb\\\\Plugin\\\\views\\\\argument\\\\LanguageArgument\\:\\:query\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/src/Plugin/views/argument/LanguageArgument.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\mongodb\\\\Plugin\\\\views\\\\argument\\\\ManyToOne\\:\\:query\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/src/Plugin/views/argument/ManyToOne.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\mongodb\\\\Plugin\\\\views\\\\argument\\\\MonthDate\\:\\:query\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/src/Plugin/views/argument/MonthDate.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\mongodb\\\\Plugin\\\\views\\\\argument\\\\MonthDate\\:\\:summaryQuery\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/src/Plugin/views/argument/MonthDate.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\mongodb\\\\Plugin\\\\views\\\\argument\\\\Nid\\:\\:query\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/src/Plugin/views/argument/Nid.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\mongodb\\\\Plugin\\\\views\\\\argument\\\\NumberListField\\:\\:query\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/src/Plugin/views/argument/NumberListField.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\mongodb\\\\Plugin\\\\views\\\\argument\\\\NumericArgument\\:\\:query\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/src/Plugin/views/argument/NumericArgument.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\mongodb\\\\Plugin\\\\views\\\\argument\\\\RolesRid\\:\\:init\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/src/Plugin/views/argument/RolesRid.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\mongodb\\\\Plugin\\\\views\\\\argument\\\\RolesRid\\:\\:query\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/src/Plugin/views/argument/RolesRid.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\mongodb\\\\Plugin\\\\views\\\\argument\\\\Standard\\:\\:query\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/src/Plugin/views/argument/Standard.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\mongodb\\\\Plugin\\\\views\\\\argument\\\\StringArgument\\:\\:query\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/src/Plugin/views/argument/StringArgument.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\mongodb\\\\Plugin\\\\views\\\\argument\\\\StringListField\\:\\:query\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/src/Plugin/views/argument/StringListField.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\mongodb\\\\Plugin\\\\views\\\\argument\\\\TaxonomyIndexTidDepth\\:\\:query\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/src/Plugin/views/argument/TaxonomyIndexTidDepth.php',
+];
+$ignoreErrors[] = [
+	// identifier: variable.undefined
+	'message' => '#^Variable \\$inner_count might not be defined\\.$#',
+	'count' => 2,
+	'path' => __DIR__ . '/modules/mongodb/src/Plugin/views/argument/TaxonomyIndexTidDepth.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\mongodb\\\\Plugin\\\\views\\\\argument\\\\Type\\:\\:query\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/src/Plugin/views/argument/Type.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\mongodb\\\\Plugin\\\\views\\\\argument\\\\Uid\\:\\:query\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/src/Plugin/views/argument/Uid.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\mongodb\\\\Plugin\\\\views\\\\argument\\\\UidRevision\\:\\:query\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/src/Plugin/views/argument/UidRevision.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\mongodb\\\\Plugin\\\\views\\\\argument\\\\Vid\\:\\:query\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/src/Plugin/views/argument/Vid.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\mongodb\\\\Plugin\\\\views\\\\argument\\\\WeekDate\\:\\:query\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/src/Plugin/views/argument/WeekDate.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\mongodb\\\\Plugin\\\\views\\\\argument\\\\WeekDate\\:\\:summaryQuery\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/src/Plugin/views/argument/WeekDate.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\mongodb\\\\Plugin\\\\views\\\\argument\\\\YearDate\\:\\:query\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/src/Plugin/views/argument/YearDate.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\mongodb\\\\Plugin\\\\views\\\\argument\\\\YearDate\\:\\:summaryQuery\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/src/Plugin/views/argument/YearDate.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\mongodb\\\\Plugin\\\\views\\\\argument\\\\YearMonthDate\\:\\:query\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/src/Plugin/views/argument/YearMonthDate.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\mongodb\\\\Plugin\\\\views\\\\argument\\\\YearMonthDate\\:\\:summaryQuery\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/src/Plugin/views/argument/YearMonthDate.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\mongodb\\\\Plugin\\\\views\\\\field\\\\Boolean\\:\\:addAdditionalFields\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/src/Plugin/views/field/Boolean.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\mongodb\\\\Plugin\\\\views\\\\field\\\\BulkForm\\:\\:addAdditionalFields\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/src/Plugin/views/field/BulkForm.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\mongodb\\\\Plugin\\\\views\\\\field\\\\Counter\\:\\:addAdditionalFields\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/src/Plugin/views/field/Counter.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\mongodb\\\\Plugin\\\\views\\\\field\\\\Custom\\:\\:addAdditionalFields\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/src/Plugin/views/field/Custom.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\mongodb\\\\Plugin\\\\views\\\\field\\\\Date\\:\\:addAdditionalFields\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/src/Plugin/views/field/Date.php',
+];
+$ignoreErrors[] = [
+	// identifier: return.missing
+	'message' => '#^Method Drupal\\\\mongodb\\\\Plugin\\\\views\\\\field\\\\Date\\:\\:render\\(\\) should return Drupal\\\\Component\\\\Render\\\\MarkupInterface\\|string but return statement is missing\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/src/Plugin/views/field/Date.php',
+];
+$ignoreErrors[] = [
+	// identifier: variable.undefined
+	'message' => '#^Variable \\$custom_format might not be defined\\.$#',
+	'count' => 9,
+	'path' => __DIR__ . '/modules/mongodb/src/Plugin/views/field/Date.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\mongodb\\\\Plugin\\\\views\\\\field\\\\Dropbutton\\:\\:addAdditionalFields\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/src/Plugin/views/field/Dropbutton.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\mongodb\\\\Plugin\\\\views\\\\field\\\\EntityField\\:\\:addAdditionalFields\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/src/Plugin/views/field/EntityField.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\mongodb\\\\Plugin\\\\views\\\\field\\\\EntityField\\:\\:clickSort\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/src/Plugin/views/field/EntityField.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\mongodb\\\\Plugin\\\\views\\\\field\\\\EntityLabel\\:\\:addAdditionalFields\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/src/Plugin/views/field/EntityLabel.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\mongodb\\\\Plugin\\\\views\\\\field\\\\EntityLink\\:\\:addAdditionalFields\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/src/Plugin/views/field/EntityLink.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\mongodb\\\\Plugin\\\\views\\\\field\\\\EntityLinkDelete\\:\\:addAdditionalFields\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/src/Plugin/views/field/EntityLinkDelete.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\mongodb\\\\Plugin\\\\views\\\\field\\\\EntityLinkEdit\\:\\:addAdditionalFields\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/src/Plugin/views/field/EntityLinkEdit.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\mongodb\\\\Plugin\\\\views\\\\field\\\\EntityOperations\\:\\:addAdditionalFields\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/src/Plugin/views/field/EntityOperations.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\mongodb\\\\Plugin\\\\views\\\\field\\\\FileSize\\:\\:addAdditionalFields\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/src/Plugin/views/field/FileSize.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\mongodb\\\\Plugin\\\\views\\\\field\\\\HistoryUserTimestamp\\:\\:addAdditionalFields\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/src/Plugin/views/field/HistoryUserTimestamp.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\mongodb\\\\Plugin\\\\views\\\\field\\\\HistoryUserTimestamp\\:\\:buildOptionsForm\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/src/Plugin/views/field/HistoryUserTimestamp.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\mongodb\\\\Plugin\\\\views\\\\field\\\\HistoryUserTimestamp\\:\\:init\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/src/Plugin/views/field/HistoryUserTimestamp.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\mongodb\\\\Plugin\\\\views\\\\field\\\\HistoryUserTimestamp\\:\\:query\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/src/Plugin/views/field/HistoryUserTimestamp.php',
+];
+$ignoreErrors[] = [
+	// identifier: return.missing
+	'message' => '#^Method Drupal\\\\mongodb\\\\Plugin\\\\views\\\\field\\\\HistoryUserTimestamp\\:\\:render\\(\\) should return Drupal\\\\Component\\\\Render\\\\MarkupInterface\\|string but return statement is missing\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/src/Plugin/views/field/HistoryUserTimestamp.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\mongodb\\\\Plugin\\\\views\\\\field\\\\HistoryUserTimestamp\\:\\:usesGroupBy\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/src/Plugin/views/field/HistoryUserTimestamp.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\mongodb\\\\Plugin\\\\views\\\\field\\\\LanguageField\\:\\:addAdditionalFields\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/src/Plugin/views/field/LanguageField.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\mongodb\\\\Plugin\\\\views\\\\field\\\\MachineName\\:\\:addAdditionalFields\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/src/Plugin/views/field/MachineName.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\mongodb\\\\Plugin\\\\views\\\\field\\\\Markup\\:\\:addAdditionalFields\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/src/Plugin/views/field/Markup.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\mongodb\\\\Plugin\\\\views\\\\field\\\\ModerationStateField\\:\\:clickSort\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/src/Plugin/views/field/ModerationStateField.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\mongodb\\\\Plugin\\\\views\\\\field\\\\ModerationStateField\\:\\:ensureMyTable\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/src/Plugin/views/field/ModerationStateField.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\mongodb\\\\Plugin\\\\views\\\\field\\\\Node\\:\\:addAdditionalFields\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/src/Plugin/views/field/Node.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\mongodb\\\\Plugin\\\\views\\\\field\\\\Node\\:\\:init\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/src/Plugin/views/field/Node.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\mongodb\\\\Plugin\\\\views\\\\field\\\\NodeBulkForm\\:\\:addAdditionalFields\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/src/Plugin/views/field/NodeBulkForm.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\mongodb\\\\Plugin\\\\views\\\\field\\\\NodeNewComments\\:\\:preRender\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/src/Plugin/views/field/NodeNewComments.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\mongodb\\\\Plugin\\\\views\\\\field\\\\NumericField\\:\\:addAdditionalFields\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/src/Plugin/views/field/NumericField.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\mongodb\\\\Plugin\\\\views\\\\field\\\\Permissions\\:\\:addAdditionalFields\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/src/Plugin/views/field/Permissions.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\mongodb\\\\Plugin\\\\views\\\\field\\\\Permissions\\:\\:init\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/src/Plugin/views/field/Permissions.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\mongodb\\\\Plugin\\\\views\\\\field\\\\RenderedEntity\\:\\:addAdditionalFields\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/src/Plugin/views/field/RenderedEntity.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\mongodb\\\\Plugin\\\\views\\\\field\\\\RevisionLink\\:\\:addAdditionalFields\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/src/Plugin/views/field/RevisionLink.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\mongodb\\\\Plugin\\\\views\\\\field\\\\RevisionLinkDelete\\:\\:addAdditionalFields\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/src/Plugin/views/field/RevisionLinkDelete.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\mongodb\\\\Plugin\\\\views\\\\field\\\\RevisionLinkRevert\\:\\:addAdditionalFields\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/src/Plugin/views/field/RevisionLinkRevert.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\mongodb\\\\Plugin\\\\views\\\\field\\\\Roles\\:\\:addAdditionalFields\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/src/Plugin/views/field/Roles.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\mongodb\\\\Plugin\\\\views\\\\field\\\\Roles\\:\\:init\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/src/Plugin/views/field/Roles.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\mongodb\\\\Plugin\\\\views\\\\field\\\\Roles\\:\\:preRender\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/src/Plugin/views/field/Roles.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\mongodb\\\\Plugin\\\\views\\\\field\\\\Serialized\\:\\:addAdditionalFields\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/src/Plugin/views/field/Serialized.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\mongodb\\\\Plugin\\\\views\\\\field\\\\TimeInterval\\:\\:addAdditionalFields\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/src/Plugin/views/field/TimeInterval.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\mongodb\\\\Plugin\\\\views\\\\field\\\\Url\\:\\:addAdditionalFields\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/src/Plugin/views/field/Url.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\mongodb\\\\Plugin\\\\views\\\\field\\\\UserBulkForm\\:\\:addAdditionalFields\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/src/Plugin/views/field/UserBulkForm.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\mongodb\\\\Plugin\\\\views\\\\field\\\\UserData\\:\\:addAdditionalFields\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/src/Plugin/views/field/UserData.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\mongodb\\\\Plugin\\\\views\\\\filter\\\\Access\\:\\:query\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/src/Plugin/views/filter/Access.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\mongodb\\\\Plugin\\\\views\\\\filter\\\\BooleanOperator\\:\\:query\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/src/Plugin/views/filter/BooleanOperator.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\mongodb\\\\Plugin\\\\views\\\\filter\\\\BooleanOperator\\:\\:queryOpBoolean\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/src/Plugin/views/filter/BooleanOperator.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\mongodb\\\\Plugin\\\\views\\\\filter\\\\BooleanOperatorString\\:\\:query\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/src/Plugin/views/filter/BooleanOperatorString.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\mongodb\\\\Plugin\\\\views\\\\filter\\\\Bundle\\:\\:opEmpty\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/src/Plugin/views/filter/Bundle.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\mongodb\\\\Plugin\\\\views\\\\filter\\\\Bundle\\:\\:opSimple\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/src/Plugin/views/filter/Bundle.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\mongodb\\\\Plugin\\\\views\\\\filter\\\\Bundle\\:\\:query\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/src/Plugin/views/filter/Bundle.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\mongodb\\\\Plugin\\\\views\\\\filter\\\\Combine\\:\\:opContains\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/src/Plugin/views/filter/Combine.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\mongodb\\\\Plugin\\\\views\\\\filter\\\\Combine\\:\\:opContainsWord\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/src/Plugin/views/filter/Combine.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\mongodb\\\\Plugin\\\\views\\\\filter\\\\Combine\\:\\:opEmpty\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/src/Plugin/views/filter/Combine.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\mongodb\\\\Plugin\\\\views\\\\filter\\\\Combine\\:\\:opEndsWith\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/src/Plugin/views/filter/Combine.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\mongodb\\\\Plugin\\\\views\\\\filter\\\\Combine\\:\\:opEqual\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/src/Plugin/views/filter/Combine.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\mongodb\\\\Plugin\\\\views\\\\filter\\\\Combine\\:\\:opNotEndsWith\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/src/Plugin/views/filter/Combine.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\mongodb\\\\Plugin\\\\views\\\\filter\\\\Combine\\:\\:opNotLike\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/src/Plugin/views/filter/Combine.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\mongodb\\\\Plugin\\\\views\\\\filter\\\\Combine\\:\\:opNotStartsWith\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/src/Plugin/views/filter/Combine.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\mongodb\\\\Plugin\\\\views\\\\filter\\\\Combine\\:\\:opRegex\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/src/Plugin/views/filter/Combine.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\mongodb\\\\Plugin\\\\views\\\\filter\\\\Combine\\:\\:opStartsWith\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/src/Plugin/views/filter/Combine.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\mongodb\\\\Plugin\\\\views\\\\filter\\\\Combine\\:\\:query\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/src/Plugin/views/filter/Combine.php',
+];
+$ignoreErrors[] = [
+	// identifier: variable.undefined
+	'message' => '#^Undefined variable\\: \\$placeholder$#',
+	'count' => 2,
+	'path' => __DIR__ . '/modules/mongodb/src/Plugin/views/filter/Combine.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\mongodb\\\\Plugin\\\\views\\\\filter\\\\Current\\:\\:query\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/src/Plugin/views/filter/Current.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\mongodb\\\\Plugin\\\\views\\\\filter\\\\Date\\:\\:opBetween\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/src/Plugin/views/filter/Date.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\mongodb\\\\Plugin\\\\views\\\\filter\\\\Date\\:\\:opEmpty\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/src/Plugin/views/filter/Date.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\mongodb\\\\Plugin\\\\views\\\\filter\\\\Date\\:\\:opSimple\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/src/Plugin/views/filter/Date.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\mongodb\\\\Plugin\\\\views\\\\filter\\\\Date\\:\\:query\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/src/Plugin/views/filter/Date.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\mongodb\\\\Plugin\\\\views\\\\filter\\\\DatetimeDate\\:\\:opBetween\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/src/Plugin/views/filter/DatetimeDate.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\mongodb\\\\Plugin\\\\views\\\\filter\\\\DatetimeDate\\:\\:opEmpty\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/src/Plugin/views/filter/DatetimeDate.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\mongodb\\\\Plugin\\\\views\\\\filter\\\\DatetimeDate\\:\\:opSimple\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/src/Plugin/views/filter/DatetimeDate.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\mongodb\\\\Plugin\\\\views\\\\filter\\\\DatetimeDate\\:\\:query\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/src/Plugin/views/filter/DatetimeDate.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\mongodb\\\\Plugin\\\\views\\\\filter\\\\DblogTypes\\:\\:valueForm\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/src/Plugin/views/filter/DblogTypes.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\mongodb\\\\Plugin\\\\views\\\\filter\\\\Equality\\:\\:query\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/src/Plugin/views/filter/Equality.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\mongodb\\\\Plugin\\\\views\\\\filter\\\\FilterBooleanOperatorDefaultTest\\:\\:query\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/src/Plugin/views/filter/FilterBooleanOperatorDefaultTest.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\mongodb\\\\Plugin\\\\views\\\\filter\\\\FilterTest\\:\\:query\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/src/Plugin/views/filter/FilterTest.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\mongodb\\\\Plugin\\\\views\\\\filter\\\\GroupByNumeric\\:\\:opBetween\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/src/Plugin/views/filter/GroupByNumeric.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\mongodb\\\\Plugin\\\\views\\\\filter\\\\GroupByNumeric\\:\\:opEmpty\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/src/Plugin/views/filter/GroupByNumeric.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\mongodb\\\\Plugin\\\\views\\\\filter\\\\GroupByNumeric\\:\\:opSimple\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/src/Plugin/views/filter/GroupByNumeric.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\mongodb\\\\Plugin\\\\views\\\\filter\\\\GroupByNumeric\\:\\:query\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/src/Plugin/views/filter/GroupByNumeric.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\mongodb\\\\Plugin\\\\views\\\\filter\\\\HistoryUserTimestamp\\:\\:query\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/src/Plugin/views/filter/HistoryUserTimestamp.php',
+];
+$ignoreErrors[] = [
+	// identifier: variable.undefined
+	'message' => '#^Variable \\$or_condition might not be defined\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/src/Plugin/views/filter/HistoryUserTimestamp.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\mongodb\\\\Plugin\\\\views\\\\filter\\\\InOperator\\:\\:opEmpty\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/src/Plugin/views/filter/InOperator.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\mongodb\\\\Plugin\\\\views\\\\filter\\\\InOperator\\:\\:opSimple\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/src/Plugin/views/filter/InOperator.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\mongodb\\\\Plugin\\\\views\\\\filter\\\\InOperator\\:\\:query\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/src/Plugin/views/filter/InOperator.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\mongodb\\\\Plugin\\\\views\\\\filter\\\\LanguageFilter\\:\\:opEmpty\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/src/Plugin/views/filter/LanguageFilter.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\mongodb\\\\Plugin\\\\views\\\\filter\\\\LanguageFilter\\:\\:opSimple\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/src/Plugin/views/filter/LanguageFilter.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\mongodb\\\\Plugin\\\\views\\\\filter\\\\LanguageFilter\\:\\:query\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/src/Plugin/views/filter/LanguageFilter.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\mongodb\\\\Plugin\\\\views\\\\filter\\\\LatestRevision\\:\\:query\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/src/Plugin/views/filter/LatestRevision.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\mongodb\\\\Plugin\\\\views\\\\filter\\\\LatestTranslationAffectedRevision\\:\\:query\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/src/Plugin/views/filter/LatestTranslationAffectedRevision.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\mongodb\\\\Plugin\\\\views\\\\filter\\\\ListField\\:\\:init\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/src/Plugin/views/filter/ListField.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\mongodb\\\\Plugin\\\\views\\\\filter\\\\ManyToOne\\:\\:init\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/src/Plugin/views/filter/ManyToOne.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\mongodb\\\\Plugin\\\\views\\\\filter\\\\ManyToOne\\:\\:opEmpty\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/src/Plugin/views/filter/ManyToOne.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\mongodb\\\\Plugin\\\\views\\\\filter\\\\ManyToOne\\:\\:opSimple\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/src/Plugin/views/filter/ManyToOne.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\mongodb\\\\Plugin\\\\views\\\\filter\\\\ManyToOne\\:\\:query\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/src/Plugin/views/filter/ManyToOne.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\mongodb\\\\Plugin\\\\views\\\\filter\\\\MediaStatus\\:\\:query\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/src/Plugin/views/filter/MediaStatus.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\mongodb\\\\Plugin\\\\views\\\\filter\\\\ModerationStateFilter\\:\\:ensureMyTable\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/src/Plugin/views/filter/ModerationStateFilter.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\mongodb\\\\Plugin\\\\views\\\\filter\\\\ModerationStateFilter\\:\\:opEmpty\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/src/Plugin/views/filter/ModerationStateFilter.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\mongodb\\\\Plugin\\\\views\\\\filter\\\\ModerationStateFilter\\:\\:opSimple\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/src/Plugin/views/filter/ModerationStateFilter.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\mongodb\\\\Plugin\\\\views\\\\filter\\\\ModerationStateFilter\\:\\:query\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/src/Plugin/views/filter/ModerationStateFilter.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\mongodb\\\\Plugin\\\\views\\\\filter\\\\NumericFilter\\:\\:opBetween\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/src/Plugin/views/filter/NumericFilter.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\mongodb\\\\Plugin\\\\views\\\\filter\\\\NumericFilter\\:\\:opEmpty\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/src/Plugin/views/filter/NumericFilter.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\mongodb\\\\Plugin\\\\views\\\\filter\\\\NumericFilter\\:\\:opNotRegex\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/src/Plugin/views/filter/NumericFilter.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\mongodb\\\\Plugin\\\\views\\\\filter\\\\NumericFilter\\:\\:opRegex\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/src/Plugin/views/filter/NumericFilter.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\mongodb\\\\Plugin\\\\views\\\\filter\\\\NumericFilter\\:\\:opSimple\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/src/Plugin/views/filter/NumericFilter.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\mongodb\\\\Plugin\\\\views\\\\filter\\\\NumericFilter\\:\\:query\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/src/Plugin/views/filter/NumericFilter.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\mongodb\\\\Plugin\\\\views\\\\filter\\\\Permissions\\:\\:init\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/src/Plugin/views/filter/Permissions.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\mongodb\\\\Plugin\\\\views\\\\filter\\\\Permissions\\:\\:opEmpty\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/src/Plugin/views/filter/Permissions.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\mongodb\\\\Plugin\\\\views\\\\filter\\\\Permissions\\:\\:opSimple\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/src/Plugin/views/filter/Permissions.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\mongodb\\\\Plugin\\\\views\\\\filter\\\\Permissions\\:\\:query\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/src/Plugin/views/filter/Permissions.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\mongodb\\\\Plugin\\\\views\\\\filter\\\\Roles\\:\\:query\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/src/Plugin/views/filter/Roles.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\mongodb\\\\Plugin\\\\views\\\\filter\\\\Standard\\:\\:query\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/src/Plugin/views/filter/Standard.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\mongodb\\\\Plugin\\\\views\\\\filter\\\\Status\\:\\:query\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/src/Plugin/views/filter/Status.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\mongodb\\\\Plugin\\\\views\\\\filter\\\\StringFilter\\:\\:opContains\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/src/Plugin/views/filter/StringFilter.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\mongodb\\\\Plugin\\\\views\\\\filter\\\\StringFilter\\:\\:opContainsWord\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/src/Plugin/views/filter/StringFilter.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\mongodb\\\\Plugin\\\\views\\\\filter\\\\StringFilter\\:\\:opEmpty\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/src/Plugin/views/filter/StringFilter.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\mongodb\\\\Plugin\\\\views\\\\filter\\\\StringFilter\\:\\:opEndsWith\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/src/Plugin/views/filter/StringFilter.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\mongodb\\\\Plugin\\\\views\\\\filter\\\\StringFilter\\:\\:opEqual\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/src/Plugin/views/filter/StringFilter.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\mongodb\\\\Plugin\\\\views\\\\filter\\\\StringFilter\\:\\:opLongerThan\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/src/Plugin/views/filter/StringFilter.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\mongodb\\\\Plugin\\\\views\\\\filter\\\\StringFilter\\:\\:opNotEndsWith\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/src/Plugin/views/filter/StringFilter.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\mongodb\\\\Plugin\\\\views\\\\filter\\\\StringFilter\\:\\:opNotLike\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/src/Plugin/views/filter/StringFilter.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\mongodb\\\\Plugin\\\\views\\\\filter\\\\StringFilter\\:\\:opNotRegex\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/src/Plugin/views/filter/StringFilter.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\mongodb\\\\Plugin\\\\views\\\\filter\\\\StringFilter\\:\\:opNotStartsWith\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/src/Plugin/views/filter/StringFilter.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\mongodb\\\\Plugin\\\\views\\\\filter\\\\StringFilter\\:\\:opRegex\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/src/Plugin/views/filter/StringFilter.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\mongodb\\\\Plugin\\\\views\\\\filter\\\\StringFilter\\:\\:opShorterThan\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/src/Plugin/views/filter/StringFilter.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\mongodb\\\\Plugin\\\\views\\\\filter\\\\StringFilter\\:\\:opStartsWith\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/src/Plugin/views/filter/StringFilter.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\mongodb\\\\Plugin\\\\views\\\\filter\\\\StringFilter\\:\\:query\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/src/Plugin/views/filter/StringFilter.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\mongodb\\\\Plugin\\\\views\\\\filter\\\\TaxonomyIndexTid\\:\\:adminSummary\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/src/Plugin/views/filter/TaxonomyIndexTid.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\mongodb\\\\Plugin\\\\views\\\\filter\\\\TaxonomyIndexTid\\:\\:buildExposeForm\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/src/Plugin/views/filter/TaxonomyIndexTid.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\mongodb\\\\Plugin\\\\views\\\\filter\\\\TaxonomyIndexTid\\:\\:buildExtraOptionsForm\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/src/Plugin/views/filter/TaxonomyIndexTid.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\mongodb\\\\Plugin\\\\views\\\\filter\\\\TaxonomyIndexTid\\:\\:hasExtraOptions\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/src/Plugin/views/filter/TaxonomyIndexTid.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\mongodb\\\\Plugin\\\\views\\\\filter\\\\TaxonomyIndexTid\\:\\:init\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/src/Plugin/views/filter/TaxonomyIndexTid.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\mongodb\\\\Plugin\\\\views\\\\filter\\\\TaxonomyIndexTid\\:\\:validateExposed\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/src/Plugin/views/filter/TaxonomyIndexTid.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\mongodb\\\\Plugin\\\\views\\\\filter\\\\TaxonomyIndexTid\\:\\:valueForm\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/src/Plugin/views/filter/TaxonomyIndexTid.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\mongodb\\\\Plugin\\\\views\\\\filter\\\\TaxonomyIndexTid\\:\\:valueSubmit\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/src/Plugin/views/filter/TaxonomyIndexTid.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\mongodb\\\\Plugin\\\\views\\\\filter\\\\TaxonomyIndexTid\\:\\:valueValidate\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/src/Plugin/views/filter/TaxonomyIndexTid.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\mongodb\\\\Plugin\\\\views\\\\filter\\\\TaxonomyIndexTidDepth\\:\\:buildExtraOptionsForm\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/src/Plugin/views/filter/TaxonomyIndexTidDepth.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\mongodb\\\\Plugin\\\\views\\\\filter\\\\TaxonomyIndexTidDepth\\:\\:operatorOptions\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/src/Plugin/views/filter/TaxonomyIndexTidDepth.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\mongodb\\\\Plugin\\\\views\\\\filter\\\\TaxonomyIndexTidDepth\\:\\:query\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/src/Plugin/views/filter/TaxonomyIndexTidDepth.php',
+];
+$ignoreErrors[] = [
+	// identifier: variable.undefined
+	'message' => '#^Variable \\$inner_count might not be defined\\.$#',
+	'count' => 2,
+	'path' => __DIR__ . '/modules/mongodb/src/Plugin/views/filter/TaxonomyIndexTidDepth.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\mongodb\\\\Plugin\\\\views\\\\filter\\\\UidRevision\\:\\:query\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/src/Plugin/views/filter/UidRevision.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\mongodb\\\\Plugin\\\\views\\\\filter\\\\UserName\\:\\:opEmpty\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/src/Plugin/views/filter/UserName.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\mongodb\\\\Plugin\\\\views\\\\filter\\\\UserName\\:\\:opSimple\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/src/Plugin/views/filter/UserName.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\mongodb\\\\Plugin\\\\views\\\\filter\\\\UserName\\:\\:query\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/src/Plugin/views/filter/UserName.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\mongodb\\\\Plugin\\\\views\\\\filter\\\\ViewsTestCacheContextFilter\\:\\:query\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/src/Plugin/views/filter/ViewsTestCacheContextFilter.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\mongodb\\\\Plugin\\\\views\\\\join\\\\CastedIntFieldJoin\\:\\:buildMongodbJoin\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/src/Plugin/views/join/CastedIntFieldJoin.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\mongodb\\\\Plugin\\\\views\\\\join\\\\FieldOrLanguageJoin\\:\\:buildMongodbJoin\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/src/Plugin/views/join/FieldOrLanguageJoin.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\mongodb\\\\Plugin\\\\views\\\\join\\\\FieldOrLanguageJoin\\:\\:joinAddExtra\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/src/Plugin/views/join/FieldOrLanguageJoin.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\mongodb\\\\Plugin\\\\views\\\\join\\\\JoinTest\\:\\:buildMongodbJoin\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/src/Plugin/views/join/JoinTest.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\mongodb\\\\Plugin\\\\views\\\\join\\\\JoinTest\\:\\:setJoinValue\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/src/Plugin/views/join/JoinTest.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\mongodb\\\\Plugin\\\\views\\\\join\\\\Standard\\:\\:buildMongodbJoin\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/src/Plugin/views/join/Standard.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\mongodb\\\\Plugin\\\\views\\\\join\\\\Subquery\\:\\:buildMongodbJoin\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/src/Plugin/views/join/Subquery.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\mongodb\\\\Plugin\\\\views\\\\query\\\\DateSql\\:\\:setFieldTimezoneOffset\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/src/Plugin/views/query/DateSql.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\mongodb\\\\Plugin\\\\views\\\\query\\\\DateSql\\:\\:setTimezoneOffset\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/src/Plugin/views/query/DateSql.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\mongodb\\\\Plugin\\\\views\\\\query\\\\ViewsQuery\\:\\:addConcatField\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/src/Plugin/views/query/ViewsQuery.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\mongodb\\\\Plugin\\\\views\\\\query\\\\ViewsQuery\\:\\:addCondition\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/src/Plugin/views/query/ViewsQuery.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\mongodb\\\\Plugin\\\\views\\\\query\\\\ViewsQuery\\:\\:addConditionField\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/src/Plugin/views/query/ViewsQuery.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\mongodb\\\\Plugin\\\\views\\\\query\\\\ViewsQuery\\:\\:addDateDateFormattedField\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/src/Plugin/views/query/ViewsQuery.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\mongodb\\\\Plugin\\\\views\\\\query\\\\ViewsQuery\\:\\:addDateStringFormattedField\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/src/Plugin/views/query/ViewsQuery.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\mongodb\\\\Plugin\\\\views\\\\query\\\\ViewsQuery\\:\\:addFieldLength\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/src/Plugin/views/query/ViewsQuery.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\mongodb\\\\Plugin\\\\views\\\\query\\\\ViewsQuery\\:\\:addFieldsForNonRelationalDatabases\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/src/Plugin/views/query/ViewsQuery.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\mongodb\\\\Plugin\\\\views\\\\query\\\\ViewsQuery\\:\\:addFilterUnwindPath\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/src/Plugin/views/query/ViewsQuery.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\mongodb\\\\Plugin\\\\views\\\\query\\\\ViewsQuery\\:\\:addGroupByOperation\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/src/Plugin/views/query/ViewsQuery.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\mongodb\\\\Plugin\\\\views\\\\query\\\\ViewsQuery\\:\\:addGroupByQueryCondition\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/src/Plugin/views/query/ViewsQuery.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\mongodb\\\\Plugin\\\\views\\\\query\\\\ViewsQuery\\:\\:addHavingCondition\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/src/Plugin/views/query/ViewsQuery.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\mongodb\\\\Plugin\\\\views\\\\query\\\\ViewsQuery\\:\\:addHavingExpression\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/src/Plugin/views/query/ViewsQuery.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\mongodb\\\\Plugin\\\\views\\\\query\\\\ViewsQuery\\:\\:addJoins\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/src/Plugin/views/query/ViewsQuery.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\mongodb\\\\Plugin\\\\views\\\\query\\\\ViewsQuery\\:\\:addOrderBy\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/src/Plugin/views/query/ViewsQuery.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\mongodb\\\\Plugin\\\\views\\\\query\\\\ViewsQuery\\:\\:addQueryCondition\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/src/Plugin/views/query/ViewsQuery.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\mongodb\\\\Plugin\\\\views\\\\query\\\\ViewsQuery\\:\\:addSubstringField\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/src/Plugin/views/query/ViewsQuery.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\mongodb\\\\Plugin\\\\views\\\\query\\\\ViewsQuery\\:\\:addSumMultiplyExpression\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/src/Plugin/views/query/ViewsQuery.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\mongodb\\\\Plugin\\\\views\\\\query\\\\ViewsQuery\\:\\:addWhere\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/src/Plugin/views/query/ViewsQuery.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\mongodb\\\\Plugin\\\\views\\\\query\\\\ViewsQuery\\:\\:addWhereExpression\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/src/Plugin/views/query/ViewsQuery.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\mongodb\\\\Plugin\\\\views\\\\query\\\\ViewsQuery\\:\\:buildCondition\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/src/Plugin/views/query/ViewsQuery.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\mongodb\\\\Plugin\\\\views\\\\query\\\\ViewsQuery\\:\\:compileFields\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/src/Plugin/views/query/ViewsQuery.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\mongodb\\\\Plugin\\\\views\\\\query\\\\ViewsQuery\\:\\:compileFieldsEmptyFieldTable\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/src/Plugin/views/query/ViewsQuery.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\mongodb\\\\Plugin\\\\views\\\\query\\\\ViewsQuery\\:\\:compileFieldsNotEmptyFieldFunction\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/src/Plugin/views/query/ViewsQuery.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\mongodb\\\\Plugin\\\\views\\\\query\\\\ViewsQuery\\:\\:execute\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/src/Plugin/views/query/ViewsQuery.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\mongodb\\\\Plugin\\\\views\\\\query\\\\ViewsQuery\\:\\:getResultIdValueForNonRelationalDatabases\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/src/Plugin/views/query/ViewsQuery.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\mongodb\\\\Plugin\\\\views\\\\query\\\\ViewsQuery\\:\\:hasLatestRevisionFilter\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/src/Plugin/views/query/ViewsQuery.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\mongodb\\\\Plugin\\\\views\\\\query\\\\ViewsQuery\\:\\:isAggregateQuery\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/src/Plugin/views/query/ViewsQuery.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\mongodb\\\\Plugin\\\\views\\\\query\\\\ViewsQuery\\:\\:loadEntities\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/src/Plugin/views/query/ViewsQuery.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\mongodb\\\\Plugin\\\\views\\\\query\\\\ViewsQuery\\:\\:placeholder\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/src/Plugin/views/query/ViewsQuery.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\mongodb\\\\Plugin\\\\views\\\\query\\\\ViewsQuery\\:\\:query\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/src/Plugin/views/query/ViewsQuery.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\mongodb\\\\Plugin\\\\views\\\\query\\\\ViewsQuery\\:\\:removeCurrentRevisionTableForNonRelationalDatabases\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/src/Plugin/views/query/ViewsQuery.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\mongodb\\\\Plugin\\\\views\\\\query\\\\ViewsQuery\\:\\:removeEmbeddedTableDataForNonRelationalDatabases\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/src/Plugin/views/query/ViewsQuery.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\mongodb\\\\Plugin\\\\views\\\\query\\\\ViewsQuery\\:\\:setLatestTranslationAffectedRevision\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/src/Plugin/views/query/ViewsQuery.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\mongodb\\\\Plugin\\\\views\\\\query\\\\ViewsQuery\\:\\:truncateAlias\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/src/Plugin/views/query/ViewsQuery.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\mongodb\\\\Plugin\\\\views\\\\query\\\\ViewsQuery\\:\\:updateBaseFieldForRevisionableForNonRelationalDatabases\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/src/Plugin/views/query/ViewsQuery.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\mongodb\\\\Plugin\\\\views\\\\query\\\\ViewsQuery\\:\\:updateFieldForGroupByQuery\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/src/Plugin/views/query/ViewsQuery.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\mongodb\\\\Plugin\\\\views\\\\query\\\\ViewsQuery\\:\\:updateLatestTranslationAffectedRevision\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/src/Plugin/views/query/ViewsQuery.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\mongodb\\\\Plugin\\\\views\\\\query\\\\ViewsQuery\\:\\:updateViewsResultForNonRelationalDatabases\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/src/Plugin/views/query/ViewsQuery.php',
+];
+$ignoreErrors[] = [
+	// identifier: empty.variable
+	'message' => '#^Variable \\$joined_table_alias in empty\\(\\) always exists and is not falsy\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/src/Plugin/views/query/ViewsQuery.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\mongodb\\\\Plugin\\\\views\\\\relationship\\\\EntityReverse\\:\\:query\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/src/Plugin/views/relationship/EntityReverse.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\mongodb\\\\Plugin\\\\views\\\\relationship\\\\GroupwiseMax\\:\\:query\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/src/Plugin/views/relationship/GroupwiseMax.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\mongodb\\\\Plugin\\\\views\\\\relationship\\\\NodeTermData\\:\\:query\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/src/Plugin/views/relationship/NodeTermData.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\mongodb\\\\Plugin\\\\views\\\\relationship\\\\RelationshipPluginBase\\:\\:init\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/src/Plugin/views/relationship/RelationshipPluginBase.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\mongodb\\\\Plugin\\\\views\\\\relationship\\\\RelationshipPluginBase\\:\\:query\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/src/Plugin/views/relationship/RelationshipPluginBase.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\mongodb\\\\Plugin\\\\views\\\\row\\\\EntityRow\\:\\:init\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/src/Plugin/views/row/EntityRow.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\mongodb\\\\Plugin\\\\views\\\\sort\\\\Date\\:\\:query\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/src/Plugin/views/sort/Date.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\mongodb\\\\Plugin\\\\views\\\\sort\\\\DatetimeDate\\:\\:query\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/src/Plugin/views/sort/DatetimeDate.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\mongodb\\\\Plugin\\\\views\\\\sort\\\\ModerationStateSort\\:\\:ensureMyTable\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/src/Plugin/views/sort/ModerationStateSort.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\mongodb\\\\Plugin\\\\views\\\\sort\\\\ModerationStateSort\\:\\:query\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/src/Plugin/views/sort/ModerationStateSort.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\mongodb\\\\modules\\\\comment\\\\CommentStatistics\\:\\:update\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/src/modules/comment/CommentStatistics.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\mongodb\\\\modules\\\\file\\\\DatabaseFileUsageBackend\\:\\:add\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/src/modules/file/DatabaseFileUsageBackend.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\mongodb\\\\modules\\\\file\\\\DatabaseFileUsageBackend\\:\\:delete\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/src/modules/file/DatabaseFileUsageBackend.php',
+];
+$ignoreErrors[] = [
+	// identifier: return.missing
+	'message' => '#^Method Drupal\\\\mongodb\\\\modules\\\\node\\\\NodeGrantDatabaseStorage\\:\\:alterQuery\\(\\) should return int but return statement is missing\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/src/modules/node/NodeGrantDatabaseStorage.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\mongodb\\\\modules\\\\node\\\\NodeGrantDatabaseStorage\\:\\:deleteNodeRecords\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/src/modules/node/NodeGrantDatabaseStorage.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\mongodb\\\\modules\\\\node\\\\NodeGrantDatabaseStorage\\:\\:write\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/src/modules/node/NodeGrantDatabaseStorage.php',
+];
+$ignoreErrors[] = [
+	// identifier: variable.undefined
+	'message' => '#^Variable \\$conditions might not be defined\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/src/modules/node/NodeGrantDatabaseStorage.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\mongodb\\\\modules\\\\node\\\\NodeStorage\\:\\:clearRevisionsLanguage\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/src/modules/node/NodeStorage.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\mongodb\\\\modules\\\\search\\\\SearchIndex\\:\\:updateWordWeights\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/src/modules/search/SearchIndex.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\mongodb\\\\modules\\\\user\\\\UserData\\:\\:delete\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/src/modules/user/UserData.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\mongodb\\\\modules\\\\user\\\\UserData\\:\\:set\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/src/modules/user/UserData.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\mongodb\\\\modules\\\\user\\\\UserStorage\\:\\:deleteRoleReferences\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/src/modules/user/UserStorage.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\mongodb\\\\modules\\\\user\\\\UserStorage\\:\\:doSaveFieldItems\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/src/modules/user/UserStorage.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\mongodb\\\\modules\\\\user\\\\UserStorage\\:\\:updateLastAccessTimestamp\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/src/modules/user/UserStorage.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\mongodb\\\\modules\\\\user\\\\UserStorage\\:\\:updateLastLoginTimestamp\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/src/modules/user/UserStorage.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\mongodb\\\\modules\\\\views\\\\ManyToOneHelper\\:\\:addTable\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/src/modules/views/ManyToOneHelper.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\mongodb\\\\modules\\\\views\\\\ManyToOneHelper\\:\\:ensureMyTable\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/src/modules/views/ManyToOneHelper.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\mongodb\\\\modules\\\\views\\\\ManyToOneHelper\\:\\:getField\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/src/modules/views/ManyToOneHelper.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\mongodb\\\\modules\\\\views\\\\TranslationLanguageRenderer\\:\\:query\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/src/modules/views/TranslationLanguageRenderer.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\mongodb\\\\modules\\\\workspaces\\\\EntityQuery\\\\Query\\:\\:traitPrepare\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/src/modules/workspaces/EntityQuery/Query.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\mongodb\\\\modules\\\\workspaces\\\\EntityQuery\\\\QueryAggregate\\:\\:traitPrepare\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/src/modules/workspaces/EntityQuery/QueryAggregate.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\Tests\\\\mongodb\\\\Functional\\\\Rest\\\\ViewJsonAnonTest\\:\\:assertAuthenticationEdgeCases\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/tests/src/Functional/Rest/ViewJsonAnonTest.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\Tests\\\\mongodb\\\\Functional\\\\Rest\\\\ViewJsonAnonTest\\:\\:assertResponseWhenMissingAuthentication\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/tests/src/Functional/Rest/ViewJsonAnonTest.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\Tests\\\\mongodb\\\\Functional\\\\Rest\\\\ViewJsonBasicAuthTest\\:\\:assertAuthenticationEdgeCases\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/tests/src/Functional/Rest/ViewJsonBasicAuthTest.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\Tests\\\\mongodb\\\\Functional\\\\Rest\\\\ViewJsonBasicAuthTest\\:\\:assertResponseWhenMissingAuthentication\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/tests/src/Functional/Rest/ViewJsonBasicAuthTest.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\Tests\\\\mongodb\\\\Functional\\\\Rest\\\\ViewJsonCookieTest\\:\\:assertAuthenticationEdgeCases\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/tests/src/Functional/Rest/ViewJsonCookieTest.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\Tests\\\\mongodb\\\\Functional\\\\Rest\\\\ViewJsonCookieTest\\:\\:assertResponseWhenMissingAuthentication\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/tests/src/Functional/Rest/ViewJsonCookieTest.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\Tests\\\\mongodb\\\\Functional\\\\Rest\\\\ViewJsonCookieTest\\:\\:initAuthentication\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/tests/src/Functional/Rest/ViewJsonCookieTest.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\Tests\\\\mongodb\\\\Functional\\\\Rest\\\\ViewXmlAnonTest\\:\\:assertAuthenticationEdgeCases\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/tests/src/Functional/Rest/ViewXmlAnonTest.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\Tests\\\\mongodb\\\\Functional\\\\Rest\\\\ViewXmlAnonTest\\:\\:assertResponseWhenMissingAuthentication\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/tests/src/Functional/Rest/ViewXmlAnonTest.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\Tests\\\\mongodb\\\\Functional\\\\Rest\\\\ViewXmlBasicAuthTest\\:\\:assertAuthenticationEdgeCases\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/tests/src/Functional/Rest/ViewXmlBasicAuthTest.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\Tests\\\\mongodb\\\\Functional\\\\Rest\\\\ViewXmlBasicAuthTest\\:\\:assertResponseWhenMissingAuthentication\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/tests/src/Functional/Rest/ViewXmlBasicAuthTest.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\Tests\\\\mongodb\\\\Functional\\\\Rest\\\\ViewXmlCookieTest\\:\\:assertAuthenticationEdgeCases\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/tests/src/Functional/Rest/ViewXmlCookieTest.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\Tests\\\\mongodb\\\\Functional\\\\Rest\\\\ViewXmlCookieTest\\:\\:assertResponseWhenMissingAuthentication\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/tests/src/Functional/Rest/ViewXmlCookieTest.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\Tests\\\\mongodb\\\\Functional\\\\Rest\\\\ViewXmlCookieTest\\:\\:initAuthentication\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/tests/src/Functional/Rest/ViewXmlCookieTest.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\Tests\\\\mongodb\\\\Kernel\\\\AliasedFieldsTest\\:\\:testSelectAliasedFields\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/tests/src/Kernel/AliasedFieldsTest.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\Tests\\\\mongodb\\\\Kernel\\\\AliasedFieldsTest\\:\\:testSelectAliasedFieldsWithGroupBy\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/tests/src/Kernel/AliasedFieldsTest.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\Tests\\\\mongodb\\\\Kernel\\\\AliasedFieldsTest\\:\\:testSelectAliasedFieldsWithOrderByAge\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/tests/src/Kernel/AliasedFieldsTest.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\Tests\\\\mongodb\\\\Kernel\\\\AliasedFieldsTest\\:\\:testSelectAliasedFieldsWithOrderByName\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/tests/src/Kernel/AliasedFieldsTest.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\Tests\\\\mongodb\\\\Kernel\\\\InsertTest\\:\\:testEmbeddedEmbeddedInsert\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/tests/src/Kernel/InsertTest.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\Tests\\\\mongodb\\\\Kernel\\\\InsertTest\\:\\:testEmbeddedInsert\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/tests/src/Kernel/InsertTest.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\Tests\\\\mongodb\\\\Kernel\\\\InsertTest\\:\\:testInsert\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/tests/src/Kernel/InsertTest.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\Tests\\\\mongodb\\\\Kernel\\\\SchemaFieldTest\\:\\:testAddField\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/tests/src/Kernel/SchemaFieldTest.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\Tests\\\\mongodb\\\\Kernel\\\\SchemaFieldTest\\:\\:testAddFieldForEmbeddedTableDoesNotExist\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/tests/src/Kernel/SchemaFieldTest.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\Tests\\\\mongodb\\\\Kernel\\\\SchemaFieldTest\\:\\:testAddFieldForNewEmbeddedFieldExists\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/tests/src/Kernel/SchemaFieldTest.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\Tests\\\\mongodb\\\\Kernel\\\\SchemaFieldTest\\:\\:testAddFieldForNewFieldExists\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/tests/src/Kernel/SchemaFieldTest.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\Tests\\\\mongodb\\\\Kernel\\\\SchemaFieldTest\\:\\:testAddFieldForTableDoesNotExist\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/tests/src/Kernel/SchemaFieldTest.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\Tests\\\\mongodb\\\\Kernel\\\\SchemaFieldTest\\:\\:testChangeField\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/tests/src/Kernel/SchemaFieldTest.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\Tests\\\\mongodb\\\\Kernel\\\\SchemaFieldTest\\:\\:testChangeFieldForBaseTableDoesNotExist\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/tests/src/Kernel/SchemaFieldTest.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\Tests\\\\mongodb\\\\Kernel\\\\SchemaFieldTest\\:\\:testChangeFieldForFieldDoesNotExist\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/tests/src/Kernel/SchemaFieldTest.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\Tests\\\\mongodb\\\\Kernel\\\\SchemaFieldTest\\:\\:testChangeFieldForNewEmbeddedFieldExists\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/tests/src/Kernel/SchemaFieldTest.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\Tests\\\\mongodb\\\\Kernel\\\\SchemaFieldTest\\:\\:testChangeFieldForNewFieldExists\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/tests/src/Kernel/SchemaFieldTest.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\Tests\\\\mongodb\\\\Kernel\\\\SchemaFieldTest\\:\\:testChangedFieldForEmbeddedFieldDoesNotExist\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/tests/src/Kernel/SchemaFieldTest.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\Tests\\\\mongodb\\\\Kernel\\\\SchemaFieldTest\\:\\:testDropField\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/tests/src/Kernel/SchemaFieldTest.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\Tests\\\\mongodb\\\\Kernel\\\\SchemaFieldTest\\:\\:testDropFieldForEmbeddedFieldDoesNotExist\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/tests/src/Kernel/SchemaFieldTest.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\Tests\\\\mongodb\\\\Kernel\\\\SchemaFieldTest\\:\\:testDropFieldForEmbeddedTableDoesNotExist\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/tests/src/Kernel/SchemaFieldTest.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\Tests\\\\mongodb\\\\Kernel\\\\SchemaFieldTest\\:\\:testDropFieldForFieldDoesNotExist\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/tests/src/Kernel/SchemaFieldTest.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\Tests\\\\mongodb\\\\Kernel\\\\SchemaFieldTest\\:\\:testDropFieldForTableDoesNotExist\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/tests/src/Kernel/SchemaFieldTest.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\Tests\\\\mongodb\\\\Kernel\\\\SchemaFieldTest\\:\\:testEmbeddedFieldExists\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/tests/src/Kernel/SchemaFieldTest.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\Tests\\\\mongodb\\\\Kernel\\\\SchemaFieldTest\\:\\:testFieldExists\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/tests/src/Kernel/SchemaFieldTest.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\Tests\\\\mongodb\\\\Kernel\\\\SchemaNotTableOrFieldTest\\:\\:testAddIndex\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/tests/src/Kernel/SchemaNotTableOrFieldTest.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\Tests\\\\mongodb\\\\Kernel\\\\SchemaNotTableOrFieldTest\\:\\:testAddIndexForEmbeddedIndexExists\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/tests/src/Kernel/SchemaNotTableOrFieldTest.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\Tests\\\\mongodb\\\\Kernel\\\\SchemaNotTableOrFieldTest\\:\\:testAddIndexForEmbeddedIndexExistsOnTheSameFields\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/tests/src/Kernel/SchemaNotTableOrFieldTest.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\Tests\\\\mongodb\\\\Kernel\\\\SchemaNotTableOrFieldTest\\:\\:testAddIndexForEmbeddedTableDoesNotExist\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/tests/src/Kernel/SchemaNotTableOrFieldTest.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\Tests\\\\mongodb\\\\Kernel\\\\SchemaNotTableOrFieldTest\\:\\:testAddIndexForIndexExist\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/tests/src/Kernel/SchemaNotTableOrFieldTest.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\Tests\\\\mongodb\\\\Kernel\\\\SchemaNotTableOrFieldTest\\:\\:testAddIndexForIndexExistsOnTheSameFields\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/tests/src/Kernel/SchemaNotTableOrFieldTest.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\Tests\\\\mongodb\\\\Kernel\\\\SchemaNotTableOrFieldTest\\:\\:testAddIndexForTableDoesNotExist\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/tests/src/Kernel/SchemaNotTableOrFieldTest.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\Tests\\\\mongodb\\\\Kernel\\\\SchemaNotTableOrFieldTest\\:\\:testAddPrimaryKey\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/tests/src/Kernel/SchemaNotTableOrFieldTest.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\Tests\\\\mongodb\\\\Kernel\\\\SchemaNotTableOrFieldTest\\:\\:testAddPrimaryKeyForEmbeddedPrimaryKeyExists\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/tests/src/Kernel/SchemaNotTableOrFieldTest.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\Tests\\\\mongodb\\\\Kernel\\\\SchemaNotTableOrFieldTest\\:\\:testAddPrimaryKeyForEmbeddedUniqueKeyExistsOnTheSameFields\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/tests/src/Kernel/SchemaNotTableOrFieldTest.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\Tests\\\\mongodb\\\\Kernel\\\\SchemaNotTableOrFieldTest\\:\\:testAddPrimaryKeyForPrimaryKeyExist\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/tests/src/Kernel/SchemaNotTableOrFieldTest.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\Tests\\\\mongodb\\\\Kernel\\\\SchemaNotTableOrFieldTest\\:\\:testAddPrimaryKeyForTableDoesNotExist\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/tests/src/Kernel/SchemaNotTableOrFieldTest.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\Tests\\\\mongodb\\\\Kernel\\\\SchemaNotTableOrFieldTest\\:\\:testAddPrimaryKeyForUniqueKeyExistsOnTheSameFields\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/tests/src/Kernel/SchemaNotTableOrFieldTest.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\Tests\\\\mongodb\\\\Kernel\\\\SchemaNotTableOrFieldTest\\:\\:testAddUniqueKey\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/tests/src/Kernel/SchemaNotTableOrFieldTest.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\Tests\\\\mongodb\\\\Kernel\\\\SchemaNotTableOrFieldTest\\:\\:testAddUniqueKeyForEmbeddedPrimaryKeyExistsOnTheSameFields\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/tests/src/Kernel/SchemaNotTableOrFieldTest.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\Tests\\\\mongodb\\\\Kernel\\\\SchemaNotTableOrFieldTest\\:\\:testAddUniqueKeyForEmbeddedUniqueKeyExists\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/tests/src/Kernel/SchemaNotTableOrFieldTest.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\Tests\\\\mongodb\\\\Kernel\\\\SchemaNotTableOrFieldTest\\:\\:testAddUniqueKeyForEmbeddedUniqueKeyExistsOnTheSameFields\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/tests/src/Kernel/SchemaNotTableOrFieldTest.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\Tests\\\\mongodb\\\\Kernel\\\\SchemaNotTableOrFieldTest\\:\\:testAddUniqueKeyForPrimaryKeyExistsOnTheSameFields\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/tests/src/Kernel/SchemaNotTableOrFieldTest.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\Tests\\\\mongodb\\\\Kernel\\\\SchemaNotTableOrFieldTest\\:\\:testAddUniqueKeyForTableDoesNotExist\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/tests/src/Kernel/SchemaNotTableOrFieldTest.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\Tests\\\\mongodb\\\\Kernel\\\\SchemaNotTableOrFieldTest\\:\\:testAddUniqueKeyForUniqueKeyExist\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/tests/src/Kernel/SchemaNotTableOrFieldTest.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\Tests\\\\mongodb\\\\Kernel\\\\SchemaNotTableOrFieldTest\\:\\:testAddUniqueKeyForUniqueKeyExistsOnTheSameFields\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/tests/src/Kernel/SchemaNotTableOrFieldTest.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\Tests\\\\mongodb\\\\Kernel\\\\SchemaNotTableOrFieldTest\\:\\:testDropIndex\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/tests/src/Kernel/SchemaNotTableOrFieldTest.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\Tests\\\\mongodb\\\\Kernel\\\\SchemaNotTableOrFieldTest\\:\\:testDropIndexForEmbeddedIndexDoesNotExist\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/tests/src/Kernel/SchemaNotTableOrFieldTest.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\Tests\\\\mongodb\\\\Kernel\\\\SchemaNotTableOrFieldTest\\:\\:testDropIndexForIndexDoesNotExist\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/tests/src/Kernel/SchemaNotTableOrFieldTest.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\Tests\\\\mongodb\\\\Kernel\\\\SchemaNotTableOrFieldTest\\:\\:testDropPrimaryKey\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/tests/src/Kernel/SchemaNotTableOrFieldTest.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\Tests\\\\mongodb\\\\Kernel\\\\SchemaNotTableOrFieldTest\\:\\:testDropPrimaryKeyForEmbeddedPrimaryKeyDoesNotExist\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/tests/src/Kernel/SchemaNotTableOrFieldTest.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\Tests\\\\mongodb\\\\Kernel\\\\SchemaNotTableOrFieldTest\\:\\:testDropPrimaryKeyForPrimaryKeyDoesNotExist\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/tests/src/Kernel/SchemaNotTableOrFieldTest.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\Tests\\\\mongodb\\\\Kernel\\\\SchemaNotTableOrFieldTest\\:\\:testDropUniqueKey\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/tests/src/Kernel/SchemaNotTableOrFieldTest.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\Tests\\\\mongodb\\\\Kernel\\\\SchemaNotTableOrFieldTest\\:\\:testDropUniqueKeyForEmbeddedUniqueKeyDoesNotExist\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/tests/src/Kernel/SchemaNotTableOrFieldTest.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\Tests\\\\mongodb\\\\Kernel\\\\SchemaNotTableOrFieldTest\\:\\:testDropUniqueKeyForTableDoesNotExist\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/tests/src/Kernel/SchemaNotTableOrFieldTest.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\Tests\\\\mongodb\\\\Kernel\\\\SchemaNotTableOrFieldTest\\:\\:testDropUniqueKeyForUniqueKeyDoesNotExist\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/tests/src/Kernel/SchemaNotTableOrFieldTest.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\Tests\\\\mongodb\\\\Kernel\\\\SchemaNotTableOrFieldTest\\:\\:testFieldSetDefault\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/tests/src/Kernel/SchemaNotTableOrFieldTest.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\Tests\\\\mongodb\\\\Kernel\\\\SchemaNotTableOrFieldTest\\:\\:testFieldSetDefaultForFieldDoesNotExist\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/tests/src/Kernel/SchemaNotTableOrFieldTest.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\Tests\\\\mongodb\\\\Kernel\\\\SchemaNotTableOrFieldTest\\:\\:testFieldSetDefaultForTableDoesNotExist\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/tests/src/Kernel/SchemaNotTableOrFieldTest.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\Tests\\\\mongodb\\\\Kernel\\\\SchemaNotTableOrFieldTest\\:\\:testFieldSetNoDefault\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/tests/src/Kernel/SchemaNotTableOrFieldTest.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\Tests\\\\mongodb\\\\Kernel\\\\SchemaNotTableOrFieldTest\\:\\:testFieldSetNoDefaultForFieldDoesNotExist\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/tests/src/Kernel/SchemaNotTableOrFieldTest.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\Tests\\\\mongodb\\\\Kernel\\\\SchemaNotTableOrFieldTest\\:\\:testFieldSetNoDefaultForTableDoesNotExist\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/tests/src/Kernel/SchemaNotTableOrFieldTest.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\Tests\\\\mongodb\\\\Kernel\\\\SchemaNotTableOrFieldTest\\:\\:testMongodbTableServiceFullPathAndBaseTable\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/tests/src/Kernel/SchemaNotTableOrFieldTest.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\Tests\\\\mongodb\\\\Kernel\\\\SchemaTableTest\\:\\:testCreateEmbeddedTableForBaseTableDoesNotExist\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/tests/src/Kernel/SchemaTableTest.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\Tests\\\\mongodb\\\\Kernel\\\\SchemaTableTest\\:\\:testCreateEmbeddedTableForEmbeddedTableExists\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/tests/src/Kernel/SchemaTableTest.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\Tests\\\\mongodb\\\\Kernel\\\\SchemaTableTest\\:\\:testCreateEmbeddedTableForEmbeddedTableExistsAsBaseTable\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/tests/src/Kernel/SchemaTableTest.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\Tests\\\\mongodb\\\\Kernel\\\\SchemaTableTest\\:\\:testCreateEmbeddedTableForEmbeddedTableExistsOnOtherBaseTable\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/tests/src/Kernel/SchemaTableTest.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\Tests\\\\mongodb\\\\Kernel\\\\SchemaTableTest\\:\\:testCreateTable\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/tests/src/Kernel/SchemaTableTest.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\Tests\\\\mongodb\\\\Kernel\\\\SchemaTableTest\\:\\:testCreateTableForTableExists\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/tests/src/Kernel/SchemaTableTest.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\Tests\\\\mongodb\\\\Kernel\\\\SchemaTableTest\\:\\:testDropTableForEmbeddedTableDoesNotExist\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/tests/src/Kernel/SchemaTableTest.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\Tests\\\\mongodb\\\\Kernel\\\\SchemaTableTest\\:\\:testDropTableForTableDoesNotExist\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/tests/src/Kernel/SchemaTableTest.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\Tests\\\\mongodb\\\\Kernel\\\\SchemaTableTest\\:\\:testDropTableWithEmbeddedTables\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/tests/src/Kernel/SchemaTableTest.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\Tests\\\\mongodb\\\\Kernel\\\\SchemaTableTest\\:\\:testRenameTable\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/tests/src/Kernel/SchemaTableTest.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\Tests\\\\mongodb\\\\Kernel\\\\SchemaTableTest\\:\\:testRenameTableForEmbeddedTableDoesNotExist\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/tests/src/Kernel/SchemaTableTest.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\Tests\\\\mongodb\\\\Kernel\\\\SchemaTableTest\\:\\:testRenameTableForEmbeddedTableExistsOnOtherBaseTable\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/tests/src/Kernel/SchemaTableTest.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\Tests\\\\mongodb\\\\Kernel\\\\SchemaTableTest\\:\\:testRenameTableForNewEmbeddedTableExistAsBaseTable\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/tests/src/Kernel/SchemaTableTest.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\Tests\\\\mongodb\\\\Kernel\\\\SchemaTableTest\\:\\:testRenameTableForNewTableExistsAsBaseTable\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/tests/src/Kernel/SchemaTableTest.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\Tests\\\\mongodb\\\\Kernel\\\\SchemaTableTest\\:\\:testRenameTableForNewTableExistsAsEmbeddedTable\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/tests/src/Kernel/SchemaTableTest.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\Tests\\\\mongodb\\\\Kernel\\\\SchemaTableTest\\:\\:testRenameTableForTableDoesNotExist\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/tests/src/Kernel/SchemaTableTest.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\Tests\\\\mongodb\\\\Kernel\\\\SchemaTestBase\\:\\:checkEmbeddedTableIndexes\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/tests/src/Kernel/SchemaTestBase.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\Tests\\\\mongodb\\\\Kernel\\\\SchemaTestBase\\:\\:checkExpectedIndexesAgainstDatabase\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/tests/src/Kernel/SchemaTestBase.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\Tests\\\\mongodb\\\\Kernel\\\\SchemaTestBase\\:\\:checkIndexFields\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/tests/src/Kernel/SchemaTestBase.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\Tests\\\\mongodb\\\\Kernel\\\\SchemaTestBase\\:\\:checkTableIndexes\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/tests/src/Kernel/SchemaTestBase.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\Tests\\\\mongodb\\\\Kernel\\\\SchemaTestBase\\:\\:checkTableNumberOfIndexes\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/tests/src/Kernel/SchemaTestBase.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\Tests\\\\mongodb\\\\Kernel\\\\SchemaTestBase\\:\\:checkTableSchema\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/tests/src/Kernel/SchemaTestBase.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\Tests\\\\mongodb\\\\Kernel\\\\SchemaTestBase\\:\\:checkTableValidation\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/tests/src/Kernel/SchemaTestBase.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\Tests\\\\mongodb\\\\Kernel\\\\UpdateTest\\:\\:testDeleteCondition\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/tests/src/Kernel/UpdateTest.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\Tests\\\\mongodb\\\\Kernel\\\\UpdateTest\\:\\:testDeleteConditionAndInsert\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/tests/src/Kernel/UpdateTest.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\Tests\\\\mongodb\\\\Kernel\\\\UpdateTest\\:\\:testDeleteConditionMultiple\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/tests/src/Kernel/UpdateTest.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\Tests\\\\mongodb\\\\Kernel\\\\UpdateTest\\:\\:testDeleteConditionOr\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/tests/src/Kernel/UpdateTest.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\Tests\\\\mongodb\\\\Kernel\\\\UpdateTest\\:\\:testUpdateEmbeddedEmbeddedTableData\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/tests/src/Kernel/UpdateTest.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\Tests\\\\mongodb\\\\Kernel\\\\UpdateTest\\:\\:testUpdateEmbeddedEmbeddedTableData2\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/tests/src/Kernel/UpdateTest.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\Tests\\\\mongodb\\\\Kernel\\\\UpdateTest\\:\\:testUpdateEmbeddedTableData\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/tests/src/Kernel/UpdateTest.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\Tests\\\\mongodb\\\\Kernel\\\\UpdateTest\\:\\:testUpdateEmbeddedTableDataDeleteOldData\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/tests/src/Kernel/UpdateTest.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\Tests\\\\mongodb\\\\Kernel\\\\UpdateTest\\:\\:testUpdateEmbeddedTableNoFieldsException\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/tests/src/Kernel/UpdateTest.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\Tests\\\\mongodb\\\\Kernel\\\\mongodb\\\\DatabaseExceptionWrapperTest\\:\\:testPrepareStatementFailOnExecution\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/tests/src/Kernel/mongodb/DatabaseExceptionWrapperTest.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\Tests\\\\mongodb\\\\Kernel\\\\mongodb\\\\DatabaseExceptionWrapperTest\\:\\:testPrepareStatementFailOnPreparation\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/mongodb/tests/src/Kernel/mongodb/DatabaseExceptionWrapperTest.php',
 ];
 $ignoreErrors[] = [
 	// identifier: missingType.return
@@ -51106,12 +53986,6 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/taxonomy/src/Plugin/views/argument/IndexTidDepth.php',
 ];
 $ignoreErrors[] = [
-	// identifier: property.notFound
-	'message' => '#^Access to an undefined property Drupal\\\\taxonomy\\\\Plugin\\\\views\\\\filter\\\\TaxonomyIndexTid\\:\\:\\$mongodbField\\.$#',
-	'count' => 5,
-	'path' => __DIR__ . '/modules/taxonomy/src/Plugin/views/filter/TaxonomyIndexTid.php',
-];
-$ignoreErrors[] = [
 	// identifier: variable.undefined
 	'message' => '#^Variable \\$inner_count might not be defined\\.$#',
 	'count' => 1,
@@ -51208,6 +54082,12 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/taxonomy/src/Plugin/views/field/TermName.php',
 ];
 $ignoreErrors[] = [
+	// identifier: property.notFound
+	'message' => '#^Access to an undefined property Drupal\\\\taxonomy\\\\Plugin\\\\views\\\\filter\\\\TaxonomyIndexTid\\:\\:\\$mongodbField\\.$#',
+	'count' => 5,
+	'path' => __DIR__ . '/modules/taxonomy/src/Plugin/views/filter/TaxonomyIndexTid.php',
+];
+$ignoreErrors[] = [
 	// identifier: missingType.return
 	'message' => '#^Method Drupal\\\\taxonomy\\\\Plugin\\\\views\\\\filter\\\\TaxonomyIndexTid\\:\\:adminSummary\\(\\) has no return type specified\\.$#',
 	'count' => 1,
@@ -51234,6 +54114,24 @@ $ignoreErrors[] = [
 $ignoreErrors[] = [
 	// identifier: missingType.return
 	'message' => '#^Method Drupal\\\\taxonomy\\\\Plugin\\\\views\\\\filter\\\\TaxonomyIndexTid\\:\\:init\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/taxonomy/src/Plugin/views/filter/TaxonomyIndexTid.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\taxonomy\\\\Plugin\\\\views\\\\filter\\\\TaxonomyIndexTid\\:\\:opEmpty\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/taxonomy/src/Plugin/views/filter/TaxonomyIndexTid.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\taxonomy\\\\Plugin\\\\views\\\\filter\\\\TaxonomyIndexTid\\:\\:opSimple\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/taxonomy/src/Plugin/views/filter/TaxonomyIndexTid.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\taxonomy\\\\Plugin\\\\views\\\\filter\\\\TaxonomyIndexTid\\:\\:query\\(\\) has no return type specified\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/taxonomy/src/Plugin/views/filter/TaxonomyIndexTid.php',
 ];
@@ -56458,18 +59356,6 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/views/src/Plugin/views/argument/Broken.php',
 ];
 $ignoreErrors[] = [
-	// identifier: property.notFound
-	'message' => '#^Access to an undefined property Drupal\\\\views\\\\Plugin\\\\views\\\\argument\\\\Formula\\:\\:\\$argFormat\\.$#',
-	'count' => 2,
-	'path' => __DIR__ . '/modules/views/src/Plugin/views/argument/Formula.php',
-];
-$ignoreErrors[] = [
-	// identifier: property.notFound
-	'message' => '#^Access to an undefined property Drupal\\\\views\\\\Plugin\\\\views\\\\argument\\\\Formula\\:\\:\\$mongodbOperator\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/views/src/Plugin/views/argument/Formula.php',
-];
-$ignoreErrors[] = [
 	// identifier: missingType.return
 	'message' => '#^Method Drupal\\\\views\\\\Plugin\\\\views\\\\argument\\\\Date\\:\\:defaultArgumentForm\\(\\) has no return type specified\\.$#',
 	'count' => 1,
@@ -56516,6 +59402,18 @@ $ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\views\\\\Plugin\\\\views\\\\argument\\\\EntityReferenceArgument\\:\\:summaryName\\(\\) has no return type specified\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/views/src/Plugin/views/argument/EntityReferenceArgument.php',
+];
+$ignoreErrors[] = [
+	// identifier: property.notFound
+	'message' => '#^Access to an undefined property Drupal\\\\views\\\\Plugin\\\\views\\\\argument\\\\Formula\\:\\:\\$argFormat\\.$#',
+	'count' => 2,
+	'path' => __DIR__ . '/modules/views/src/Plugin/views/argument/Formula.php',
+];
+$ignoreErrors[] = [
+	// identifier: property.notFound
+	'message' => '#^Access to an undefined property Drupal\\\\views\\\\Plugin\\\\views\\\\argument\\\\Formula\\:\\:\\$mongodbOperator\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/views/src/Plugin/views/argument/Formula.php',
 ];
 $ignoreErrors[] = [
 	// identifier: missingType.return
@@ -61186,12 +64084,6 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/views/src/Plugin/views/wizard/WizardPluginBase.php',
 ];
 $ignoreErrors[] = [
-	// identifier: staticMethod.notFound
-	'message' => '#^Call to an undefined static method Drupal\\\\views\\\\Plugin\\\\views\\\\join\\\\JoinPluginBase\\:\\:buildMongodbJoin\\(\\)\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/views/tests/modules/views_test_data/src/Plugin/views/join/JoinTest.php',
-];
-$ignoreErrors[] = [
 	// identifier: missingType.return
 	'message' => '#^Method Drupal\\\\views\\\\ResultRow\\:\\:resetEntityData\\(\\) has no return type specified\\.$#',
 	'count' => 1,
@@ -61696,8 +64588,20 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/views/tests/modules/views_test_data/src/Plugin/views/filter/ViewsTestCacheContextFilter.php',
 ];
 $ignoreErrors[] = [
+	// identifier: staticMethod.notFound
+	'message' => '#^Call to an undefined static method Drupal\\\\views\\\\Plugin\\\\views\\\\join\\\\JoinPluginBase\\:\\:buildMongodbJoin\\(\\)\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/views/tests/modules/views_test_data/src/Plugin/views/join/JoinTest.php',
+];
+$ignoreErrors[] = [
 	// identifier: missingType.return
 	'message' => '#^Method Drupal\\\\views_test_data\\\\Plugin\\\\views\\\\join\\\\JoinTest\\:\\:buildJoin\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/views/tests/modules/views_test_data/src/Plugin/views/join/JoinTest.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\views_test_data\\\\Plugin\\\\views\\\\join\\\\JoinTest\\:\\:buildMongodbJoin\\(\\) has no return type specified\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/views/tests/modules/views_test_data/src/Plugin/views/join/JoinTest.php',
 ];
@@ -62585,6 +65489,12 @@ $ignoreErrors[] = [
 ];
 $ignoreErrors[] = [
 	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\Tests\\\\views\\\\Kernel\\\\Entity\\\\EntityViewsWithMultivalueBasefieldTest\\:\\:testView\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/views/tests/src/Kernel/Entity/EntityViewsWithMultivalueBasefieldTest.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
 	'message' => '#^Method Drupal\\\\Tests\\\\views\\\\Kernel\\\\Entity\\\\FieldEntityTest\\:\\:addDefaultCommentField\\(\\) has no return type specified\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/views/tests/src/Kernel/Entity/FieldEntityTest.php',
@@ -62768,6 +65678,12 @@ $ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\Tests\\\\views\\\\Kernel\\\\EventSubscriber\\\\ViewsEntitySchemaSubscriberIntegrationTest\\:\\:updateEntityTypeToTranslatable\\(\\) has no return type specified\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/views/tests/src/Kernel/EventSubscriber/ViewsEntitySchemaSubscriberIntegrationTest.php',
+];
+$ignoreErrors[] = [
+	// identifier: variable.undefined
+	'message' => '#^Variable \\$revision_table might not be defined\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/views/tests/src/Kernel/FieldApiDataTest.php',
 ];
 $ignoreErrors[] = [
 	// identifier: missingType.return
@@ -63251,12 +66167,6 @@ $ignoreErrors[] = [
 ];
 $ignoreErrors[] = [
 	// identifier: variable.undefined
-	'message' => '#^Variable \\$revision_table might not be defined\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/views/tests/src/Kernel/FieldApiDataTest.php',
-];
-$ignoreErrors[] = [
-	// identifier: variable.undefined
 	'message' => '#^Variable \\$rand1 might not be defined\\.$#',
 	'count' => 2,
 	'path' => __DIR__ . '/modules/views/tests/src/Kernel/Plugin/StyleTest.php',
@@ -63548,18 +66458,6 @@ $ignoreErrors[] = [
 	'message' => '#^Call to deprecated method getMockForAbstractClass\\(\\) of class PHPUnit\\\\Framework\\\\MockObject\\\\MockBuilder\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/views/tests/src/Unit/Plugin/views/field/EntityOperationsUnitTest.php',
-];
-$ignoreErrors[] = [
-	// identifier: variable.undefined
-	'message' => '#^Variable \\$argument might not be defined\\.$#',
-	'count' => 2,
-	'path' => __DIR__ . '/modules/views/views.views.inc',
-];
-$ignoreErrors[] = [
-	// identifier: variable.undefined
-	'message' => '#^Variable \\$data_table might not be defined\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/views/views.views.inc',
 ];
 $ignoreErrors[] = [
 	// identifier: missingType.return
@@ -63910,26 +66808,44 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/views/views.views.inc',
 ];
 $ignoreErrors[] = [
-	// identifier: variable.undefined
-	'message' => '#^Variable \\$entity_revision_data_table might not be defined\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/views/views.views.inc',
-];
-$ignoreErrors[] = [
 	// identifier: missingType.return
 	'message' => '#^Function views_entity_field_label\\(\\) has no return type specified\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/views/views.views.inc',
 ];
 $ignoreErrors[] = [
-	// identifier: variable.undefined
-	'message' => '#^Variable \\$entity_revision_table might not be defined\\.$#',
+	// identifier: missingType.return
+	'message' => '#^Function views_views_data\\(\\) has no return type specified\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/views/views.views.inc',
 ];
 $ignoreErrors[] = [
 	// identifier: missingType.return
-	'message' => '#^Function views_views_data\\(\\) has no return type specified\\.$#',
+	'message' => '#^Function views_views_data_alter\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/views/views.views.inc',
+];
+$ignoreErrors[] = [
+	// identifier: variable.undefined
+	'message' => '#^Variable \\$argument might not be defined\\.$#',
+	'count' => 2,
+	'path' => __DIR__ . '/modules/views/views.views.inc',
+];
+$ignoreErrors[] = [
+	// identifier: variable.undefined
+	'message' => '#^Variable \\$data_table might not be defined\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/views/views.views.inc',
+];
+$ignoreErrors[] = [
+	// identifier: variable.undefined
+	'message' => '#^Variable \\$entity_revision_data_table might not be defined\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/views/views.views.inc',
+];
+$ignoreErrors[] = [
+	// identifier: variable.undefined
+	'message' => '#^Variable \\$entity_revision_table might not be defined\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/views/views.views.inc',
 ];
@@ -63967,12 +66883,6 @@ $ignoreErrors[] = [
 	// identifier: variable.undefined
 	'message' => '#^Variable \\$table_alias might not be defined\\.$#',
 	'count' => 17,
-	'path' => __DIR__ . '/modules/views/views.views.inc',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
-	'message' => '#^Function views_views_data_alter\\(\\) has no return type specified\\.$#',
-	'count' => 1,
 	'path' => __DIR__ . '/modules/views/views.views.inc',
 ];
 $ignoreErrors[] = [
@@ -65752,12 +68662,6 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/workspaces/src/Plugin/Validation/Constraint/EntityWorkspaceConflictConstraintValidator.php',
 ];
 $ignoreErrors[] = [
-	// identifier: variable.undefined
-	'message' => '#^Variable \\$session_started might not be defined\\.$#',
-	'count' => 2,
-	'path' => __DIR__ . '/modules/workspaces/src/WorkspaceAssociation.php',
-];
-$ignoreErrors[] = [
 	// identifier: missingType.return
 	'message' => '#^Method Drupal\\\\workspaces\\\\ViewsQueryAlter\\:\\:alterQuery\\(\\) has no return type specified\\.$#',
 	'count' => 1,
@@ -65806,9 +68710,9 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/workspaces/src/WorkspaceAssociation.php',
 ];
 $ignoreErrors[] = [
-	// identifier: isset.variable
-	'message' => '#^Variable \\$transaction in isset\\(\\) always exists and is not nullable\\.$#',
-	'count' => 1,
+	// identifier: variable.undefined
+	'message' => '#^Variable \\$session_started might not be defined\\.$#',
+	'count' => 2,
 	'path' => __DIR__ . '/modules/workspaces/src/WorkspaceAssociation.php',
 ];
 $ignoreErrors[] = [
@@ -65884,21 +68788,15 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/workspaces/src/WorkspaceMerger.php',
 ];
 $ignoreErrors[] = [
-	// identifier: variable.undefined
-	'message' => '#^Variable \\$session_started might not be defined\\.$#',
-	'count' => 2,
-	'path' => __DIR__ . '/modules/workspaces/src/WorkspaceMerger.php',
-];
-$ignoreErrors[] = [
 	// identifier: missingType.return
 	'message' => '#^Method Drupal\\\\workspaces\\\\WorkspaceMerger\\:\\:merge\\(\\) has no return type specified\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/workspaces/src/WorkspaceMerger.php',
 ];
 $ignoreErrors[] = [
-	// identifier: isset.variable
-	'message' => '#^Variable \\$transaction in isset\\(\\) always exists and is not nullable\\.$#',
-	'count' => 1,
+	// identifier: variable.undefined
+	'message' => '#^Variable \\$session_started might not be defined\\.$#',
+	'count' => 2,
 	'path' => __DIR__ . '/modules/workspaces/src/WorkspaceMerger.php',
 ];
 $ignoreErrors[] = [
@@ -65929,6 +68827,12 @@ $ignoreErrors[] = [
 	// identifier: missingType.return
 	'message' => '#^Method Drupal\\\\workspaces\\\\WorkspacePublisher\\:\\:publish\\(\\) has no return type specified\\.$#',
 	'count' => 1,
+	'path' => __DIR__ . '/modules/workspaces/src/WorkspacePublisher.php',
+];
+$ignoreErrors[] = [
+	// identifier: variable.undefined
+	'message' => '#^Variable \\$session_started might not be defined\\.$#',
+	'count' => 2,
 	'path' => __DIR__ . '/modules/workspaces/src/WorkspacePublisher.php',
 ];
 $ignoreErrors[] = [
@@ -67232,12 +70136,6 @@ $ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\demo_umami_content\\\\InstallHelper\\:\\:storeCreatedContentUuids\\(\\) has no return type specified\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/profiles/demo_umami/modules/demo_umami_content/src/InstallHelper.php',
-];
-$ignoreErrors[] = [
-	// identifier: variable.undefined
-	'message' => '#^Variable \\$session_started might not be defined\\.$#',
-	'count' => 2,
-	'path' => __DIR__ . '/modules/workspaces/src/WorkspacePublisher.php',
 ];
 $ignoreErrors[] = [
 	// identifier: variable.undefined
@@ -69892,6 +72790,12 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/tests/Drupal/KernelTests/Core/Database/DriverSpecificSchemaTestBase.php',
 ];
 $ignoreErrors[] = [
+	// identifier: variable.undefined
+	'message' => '#^Variable \\$introspect_index_schema might not be defined\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/tests/Drupal/KernelTests/Core/Database/DriverSpecificSchemaTestBase.php',
+];
+$ignoreErrors[] = [
 	// identifier: missingType.return
 	'message' => '#^Method Drupal\\\\KernelTests\\\\Core\\\\Database\\\\DriverSpecificTransactionTestBase\\:\\:cleanUp\\(\\) has no return type specified\\.$#',
 	'count' => 1,
@@ -70214,12 +73118,6 @@ $ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\KernelTests\\\\Core\\\\Entity\\\\ContentEntityNonRevisionableFieldTest\\:\\:updateEntityTypeToTranslatable\\(\\) has no return type specified\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/tests/Drupal/KernelTests/Core/Entity/ContentEntityNonRevisionableFieldTest.php',
-];
-$ignoreErrors[] = [
-	// identifier: variable.undefined
-	'message' => '#^Variable \\$introspect_index_schema might not be defined\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/tests/Drupal/KernelTests/Core/Database/DriverSpecificSchemaTestBase.php',
 ];
 $ignoreErrors[] = [
 	// identifier: variable.undefined
