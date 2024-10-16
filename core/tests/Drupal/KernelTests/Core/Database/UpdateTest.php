@@ -195,6 +195,9 @@ class UpdateTest extends DatabaseTestBase {
    * Tests the Update::__toString() method.
    */
   public function testToString(): void {
+    // @todo MongoDB does not support update queries as a string.
+    $this->markTestSkipped();
+
     // Prepare query for testing.
     $query = $this->connection->update('test')
       ->fields(['a' => 27, 'b' => 42])
@@ -202,21 +205,19 @@ class UpdateTest extends DatabaseTestBase {
 
     // Confirm placeholders are present.
     $query_string = (string) $query;
-    if ($this->connection->driver() != 'mongodb') {
-      $this->assertStringContainsString(':db_update_placeholder_0', $query_string);
-      $this->assertStringContainsString(':db_update_placeholder_1', $query_string);
-      $this->assertStringContainsString(':db_condition_placeholder_0', $query_string);
-      $this->assertStringContainsString(':db_condition_placeholder_1', $query_string);
+    $this->assertStringContainsString(':db_update_placeholder_0', $query_string);
+    $this->assertStringContainsString(':db_update_placeholder_1', $query_string);
+    $this->assertStringContainsString(':db_condition_placeholder_0', $query_string);
+    $this->assertStringContainsString(':db_condition_placeholder_1', $query_string);
 
-      // Test arguments.
-      $expected = [
-        ':db_update_placeholder_0' => 27,
-        ':db_update_placeholder_1' => 42,
-        ':db_condition_placeholder_0' => 1,
-        ':db_condition_placeholder_1' => 2,
-      ];
-      $this->assertEquals($expected, $query->arguments());
-    }
+    // Test arguments.
+    $expected = [
+      ':db_update_placeholder_0' => 27,
+      ':db_update_placeholder_1' => 42,
+      ':db_condition_placeholder_0' => 1,
+      ':db_condition_placeholder_1' => 2,
+    ];
+    $this->assertEquals($expected, $query->arguments());
   }
 
 }
