@@ -4,6 +4,9 @@
  * https://www.drupal.org/node/3084859
  * @preserve
  */
+@page {
+  margin: 0.5cm;
+}
 @media print {
   * {
     /* Black prints faster */
@@ -31,6 +34,19 @@
   img {
     max-width: 100% !important;
   }
+  video,
+  audio,
+  object,
+  embed,
+  iframe {
+    display: none;
+  }
+  .node a:after {
+    content: " (" attr(href) ")";
+  }
+  .node a[href^="#"]:after {
+    content: "";
+  }
   p,
   h2,
   h3 {
@@ -53,6 +69,11 @@
     border-width: 1px;
     border-color: #999;
   }
+  .shortcut-action,
+  .messages-list,
+  .tabs {
+    display: none !important;
+  }
   .is-collapse-enabled .tabs {
     max-height: 999em;
   }
@@ -73,6 +94,13 @@
   .js .dropbutton-multiple .dropbutton-widget {
     border-radius: 0.25rem;
     background: none;
+  }
+  .comment-form__title,
+  .comment-form {
+    display: none;
+  }
+  ul.inline {
+    display: none !important;
   }
   input.form-autocomplete,
   input.form-text,
