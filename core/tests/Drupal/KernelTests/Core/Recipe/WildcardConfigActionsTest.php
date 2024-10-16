@@ -22,6 +22,7 @@ use Symfony\Component\Validator\Constraints\NotNull;
 /**
  * Tests config actions targeting multiple entities using wildcards.
  *
+ * @covers \Drupal\Core\Config\Action\Plugin\ConfigAction\CreateForEachBundle
  * @group Recipe
  */
 class WildcardConfigActionsTest extends KernelTestBase {
@@ -146,9 +147,6 @@ YAML;
     RecipeRunner::processRecipe($recipe);
   }
 
-  /**
-   * @covers \Drupal\Core\Config\Action\Plugin\ConfigAction\CreateForEachBundle
-   */
   public function testCreateForEach(): void {
     $this->enableModules(['image', 'language']);
 
@@ -162,12 +160,16 @@ YAML;
     ]);
     $this->assertIsObject(ContentLanguageSettings::load('node.one'));
     $this->assertIsObject(ContentLanguageSettings::load('node.two'));
+  }
 
-    // The created entities should be validated.
+  public function testCreateForEachValidatesCreatedEntities(): void {
+    $this->enableModules(['image']);
+
     try {
-      $manager->applyAction('createForEach', 'node.type.*', [
-        'image.style.node__%bundle' => [],
-      ]);
+      $this->container->get('plugin.manager.config_action')
+        ->applyAction('createForEach', 'node.type.*', [
+          'image.style.node__%bundle' => [],
+        ]);
       $this->fail('Expected an exception to be thrown but it was not.');
     }
     catch (InvalidConfigException $e) {
@@ -176,44 +178,68 @@ YAML;
       $this->assertSame('label', $e->violations[0]->getPropertyPath());
       $this->assertSame(NotNull::IS_NULL_ERROR, $e->violations[0]->getCode());
     }
+  }
+
+  public function testCreateForEachWithLabel(): void {
+    $this->enableModules(['image']);
 
     // We should be able to use the `%label` placeholder.
-    $manager->applyAction('createForEach', 'node.type.*', [
-      'image.style.node_%bundle_big' => [
-        'label' => 'Big image for %label content',
-      ],
-    ]);
+    $this->container->get('plugin.manager.config_action')
+      ->applyAction('createForEach', 'node.type.*', [
+        'image.style.node_%bundle_big' => [
+          'label' => 'Big image for %label content',
+        ],
+      ]);
     $this->assertSame('Big image for Type A content', ImageStyle::load('node_one_big')?->label());
     $this->assertSame('Big image for Type B content', ImageStyle::load('node_two_big')?->label());
+  }
 
-    // We should get an error if the entity already exists.
-    try {
-      $manager->applyAction('createForEach', 'node.type.*', [
+  public function testCreateForEachIfNotExists(): void {
+    $this->enableModules(['language']);
+
+    ContentLanguageSettings::create([
+      'target_entity_type_id' => 'node',
+      'target_bundle' => 'one',
+    ])->save();
+
+    $this->container->get('plugin.manager.config_action')
+      ->applyAction('createForEachIfNotExists', 'node.type.*', [
         'language.content_settings.node.%bundle' => [
           'target_entity_type_id' => 'node',
           'target_bundle' => '%bundle',
         ],
       ]);
-      $this->fail('Expected an exception to be thrown but it was not.');
-    }
-    catch (ConfigActionException $e) {
-      $this->assertSame('Entity language.content_settings.node.one exists', $e->getMessage());
+    $this->assertIsObject(ContentLanguageSettings::loadByEntityTypeBundle('node', 'two'));
+  }
 
-      // But it should work fine if we use the createForEachIfNotExists
-      // derivative.
-      $manager->applyAction('createForEachIfNotExists', 'node.type.*', [
+  public function testCreateForEachErrorsIfAlreadyExists(): void {
+    $this->enableModules(['language']);
+
+    ContentLanguageSettings::create([
+      'target_entity_type_id' => 'node',
+      'target_bundle' => 'one',
+    ])->save();
+
+    $this->expectExceptionMessage(ConfigActionException::class);
+    $this->expectExceptionMessage('Entity language.content_settings.node.one exists');
+    $this->container->get('plugin.manager.config_action')
+      ->applyAction('createForEach', 'node.type.*', [
         'language.content_settings.node.%bundle' => [
           'target_entity_type_id' => 'node',
           'target_bundle' => '%bundle',
         ],
       ]);
-    }
+  }
+
+  public function testCreateForEachNotAvailableOnNonBundleEntities(): void {
+    $this->enableModules(['language']);
 
     // We should not be able to use this action on entities that aren't
     // themselves bundles of another entity type.
     $this->expectException(PluginNotFoundException::class);
     $this->expectExceptionMessage('The "language_content_settings" entity does not support the "createForEach" config action.');
-    $manager->applyAction('createForEach', 'language.content_settings.node.*', []);
+    $this->container->get('plugin.manager.config_action')
+      ->applyAction('createForEach', 'language.content_settings.node.*', []);
   }
 
 }

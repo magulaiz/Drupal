@@ -24,6 +24,10 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 )]
 final class CreateForEachBundle implements ConfigActionPluginInterface, ContainerFactoryPluginInterface {
 
+  private const BUNDLE_PLACEHOLDER = '%bundle';
+
+  private const LABEL_PLACEHOLDER = '%label';
+
   public function __construct(
     private readonly ConfigManagerInterface $configManager,
     private readonly string $createAction,
@@ -51,7 +55,10 @@ final class CreateForEachBundle implements ConfigActionPluginInterface, Containe
     // placeholder with the actual ID of the entity we're working on.
     $bundle = $this->configManager->loadConfigEntityByName($configName);
     assert(is_object($bundle));
-    $value = static::replacePlaceholders($value, $bundle->id(), $bundle->label());
+    $value = static::replacePlaceholders($value, [
+      static::BUNDLE_PLACEHOLDER => $bundle->id(),
+      static::LABEL_PLACEHOLDER => $bundle->label(),
+    ]);
 
     foreach ($value as $name => $values) {
       // Invoke the actual create action via the config action manager, so that
@@ -60,19 +67,18 @@ final class CreateForEachBundle implements ConfigActionPluginInterface, Containe
     }
   }
 
-  private static function replacePlaceholders(mixed $subject, string $bundle_id, string $label): mixed {
-    $search = ['%bundle', '%label'];
-    $replace = [$bundle_id, $label];
+  private static function replacePlaceholders(mixed $subject, array $replacements): mixed {
+    assert(array_key_exists(static::BUNDLE_PLACEHOLDER, $replacements));
 
     if (is_string($subject)) {
-      $subject = str_replace($search, $replace, $subject);
+      $subject = str_replace(array_keys($replacements), $replacements, $subject);
     }
     elseif (is_array($subject)) {
       foreach ($subject as $old_key => $value) {
-        $value = static::replacePlaceholders($value, $bundle_id, $label);
+        $value = static::replacePlaceholders($value, $replacements);
 
         // Only replace the `%bundle` placeholder in array keys.
-        $new_key = str_replace($search[0], $replace[0], $old_key);
+        $new_key = str_replace(static::BUNDLE_PLACEHOLDER, $replacements[static::BUNDLE_PLACEHOLDER], $old_key);
         if ($old_key !== $new_key) {
           unset($subject[$old_key]);
         }
