@@ -118,7 +118,7 @@ final class InputConfigurator {
    *   Thrown if any of the collected values violate their validation
    *   constraints.
    */
-  public function collectAll(InputCollectorInterface $collector, array $processed = []): void {
+  public function collectAll(InputCollectorInterface $collector, array &$processed = []): void {
     if (is_array($this->values)) {
       throw new \LogicException('Input values cannot be changed once they have been set.');
     }
