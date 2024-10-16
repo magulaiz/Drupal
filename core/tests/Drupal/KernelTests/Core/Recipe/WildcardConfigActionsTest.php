@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\KernelTests\Core\Recipe;
 
+use Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException;
 use Drupal\Component\Plugin\Exception\PluginNotFoundException;
 use Drupal\Core\Config\Action\ConfigActionException;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
@@ -18,6 +19,7 @@ use Drupal\KernelTests\KernelTestBase;
 use Drupal\language\Entity\ContentLanguageSettings;
 use Drupal\Tests\node\Traits\ContentTypeCreationTrait;
 use Symfony\Component\Validator\Constraints\NotNull;
+use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
 /**
  * Tests config actions targeting multiple entities using wildcards.
@@ -40,15 +42,6 @@ class WildcardConfigActionsTest extends KernelTestBase {
     'system',
     'text',
     'user',
-  ];
-
-  /**
-   * {@inheritdoc}
-   */
-  protected static $configSchemaCheckerExclusions = [
-    // @see ::testCreateForEach()
-    'image.style.node__one',
-    'image.style.node__two',
   ];
 
   /**
@@ -165,6 +158,14 @@ YAML;
   public function testCreateForEachValidatesCreatedEntities(): void {
     $this->enableModules(['image']);
 
+    // To prove that the validation runs, we need to disable strict schema
+    // checking in this test. We need to explicitly unsubscribe it from events
+    // because by this point in the test it has been fully wired up into the
+    // container and can't be changed.
+    $schema_checker = $this->container->get('testing.config_schema_checker');
+    $this->container->get(EventDispatcherInterface::class)
+      ->removeSubscriber($schema_checker);
+
     try {
       $this->container->get('plugin.manager.config_action')
         ->applyAction('createForEach', 'node.type.*', [
@@ -240,6 +241,16 @@ YAML;
     $this->expectExceptionMessage('The "language_content_settings" entity does not support the "createForEach" config action.');
     $this->container->get('plugin.manager.config_action')
       ->applyAction('createForEach', 'language.content_settings.node.*', []);
+  }
+
+  public function testErrorIfNoBundleEntityTypesExist(): void {
+    $this->disableModules(['node', 'entity_test']);
+
+    $manager = $this->container->get('plugin.manager.config_action');
+    $manager->clearCachedDefinitions();
+    $this->expectException(InvalidPluginDefinitionException::class);
+    $this->expectExceptionMessage('The create_for_each_bundle:createForEach config action must be restricted to entity types that are bundles of another entity type.');
+    $manager->applyAction('create_for_each_bundle:createForEach', 'node.type.*', []);
   }
 
 }

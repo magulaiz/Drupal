@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\Core\Config\Action\Plugin\ConfigAction;
 
+use Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException;
 use Drupal\Core\Config\Action\Attribute\ConfigAction;
 use Drupal\Core\Config\Action\ConfigActionManager;
 use Drupal\Core\Config\Action\ConfigActionPluginInterface;
@@ -38,6 +39,11 @@ final class CreateForEachBundle implements ConfigActionPluginInterface, Containe
    * {@inheritdoc}
    */
   public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition): static {
+    // If there are no bundle entity types, this plugin should not be usable.
+    if (empty($plugin_definition['entity_types'])) {
+      throw new InvalidPluginDefinitionException($plugin_id, "The $plugin_id config action must be restricted to entity types that are bundles of another entity type.");
+    }
+
     return new static(
       $container->get(ConfigManagerInterface::class),
       $plugin_definition['create_action'],
