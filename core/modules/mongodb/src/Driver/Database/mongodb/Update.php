@@ -458,4 +458,12 @@ class Update extends QueryUpdate {
     return $fields;
   }
 
+  /**
+   * {@inheritdoc}
+   */
+  public function __toString() {
+    // Nothing to do.
+    return '';
+  }
+
 }
