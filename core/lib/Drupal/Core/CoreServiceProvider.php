@@ -158,7 +158,7 @@ class CoreServiceProvider implements ServiceProviderInterface, ServiceModifierIn
     // Add the HTTP request middleware to Guzzle.
     $container
       ->register('test.http_client.middleware', 'Drupal\Core\Test\HttpClientMiddleware\TestHttpClientMiddleware')
-      ->addTag('http_client_middleware');
+      ->addTag('http_client_middleware', ['priority' => -512]);
     // Add the wait terminate middleware which acquires a lock to signal request
     // termination to the test runner.
     $container
