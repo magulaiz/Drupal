@@ -4,9 +4,6 @@
  * https://www.drupal.org/node/3084859
  * @preserve
  */
-@page {
-  margin: 0.5cm;
-}
 @media print {
   * {
     /* Black prints faster */
@@ -41,10 +38,10 @@
   iframe {
     display: none;
   }
-  .node a:after {
+  .node a::after {
     content: " (" attr(href) ")";
   }
-  .node a[href^="#"]:after {
+  .node a[href^="#"]::after {
     content: "";
   }
   p,
