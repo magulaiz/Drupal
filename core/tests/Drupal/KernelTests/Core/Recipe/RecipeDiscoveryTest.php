@@ -17,6 +17,9 @@ use Symfony\Component\Filesystem\Filesystem as SymfonyFilesystem;
  */
 class RecipeDiscoveryTest extends KernelTestBase {
 
+  /**
+   * {@inheritdoc}
+   */
   protected static $modules = ['user', 'system'];
 
   /**
