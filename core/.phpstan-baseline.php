@@ -52162,6 +52162,12 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/system/tests/src/Functional/System/DateTimeTest.php',
 ];
 $ignoreErrors[] = [
+	// identifier: variable.undefined
+	'message' => '#^Variable \\$error_pdo_exception might not be defined\\.$#',
+	'count' => 3,
+	'path' => __DIR__ . '/modules/system/tests/src/Functional/System/ErrorHandlerTest.php',
+];
+$ignoreErrors[] = [
 	// identifier: missingType.return
 	'message' => '#^Method Drupal\\\\Tests\\\\system\\\\Functional\\\\System\\\\PageNotFoundTest\\:\\:assertCacheContext\\(\\) has no return type specified\\.$#',
 	'count' => 1,
