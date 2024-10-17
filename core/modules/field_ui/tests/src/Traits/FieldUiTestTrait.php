@@ -33,7 +33,15 @@ trait FieldUiTestTrait {
    *   (optional) Parameter for conditional execution of second and third step
    *   (Saving the storage settings and field settings). Defaults to 'TRUE'.
    */
-  public function fieldUIAddNewField($bundle_path, $field_name, $label = NULL, $field_type = 'test_field', array $storage_edit = [], array $field_edit = [], bool $save_settings = TRUE) {
+  public function fieldUIAddNewField(
+    $bundle_path,
+    $field_name,
+    $label = NULL,
+    $field_type = 'test_field',
+    array $storage_edit = [],
+    array $field_edit = [],
+    bool $save_settings = TRUE,
+  ): void {
     // Generate a label containing only letters and numbers to prevent random
     // test failure.
     // See https://www.drupal.org/project/drupal/issues/3030902
@@ -122,7 +130,12 @@ trait FieldUiTestTrait {
    *   (optional) $edit parameter for submitForm() on the second step
    *   ('Field settings' form).
    */
-  public function fieldUIAddExistingField($bundle_path, $existing_storage_name, $label = NULL, array $field_edit = []) {
+  public function fieldUIAddExistingField(
+    $bundle_path,
+    $existing_storage_name,
+    $label = NULL,
+    array $field_edit = [],
+  ): void {
     $label = $label ?: $this->randomMachineName();
     $field_edit['edit-label'] = $label;
 
@@ -165,7 +178,13 @@ trait FieldUiTestTrait {
    * @param string $source_label
    *   (optional) The label of the source entity type bundle.
    */
-  public function fieldUIDeleteField($bundle_path, $field_name, $label, $bundle_label, string $source_label = '') {
+  public function fieldUIDeleteField(
+    $bundle_path,
+    $field_name,
+    $label,
+    $bundle_label,
+    string $source_label = '',
+  ): void {
     // Display confirmation form.
     $this->drupalGet("$bundle_path/fields/$field_name/delete");
     $this->assertSession()->pageTextContains("Are you sure you want to delete the field $label");
@@ -225,7 +244,10 @@ trait FieldUiTestTrait {
    * @param string $label
    *   The field label.
    */
-  protected function assertFieldDoesNotExist(string $bundle_path, string $label) {
+  protected function assertFieldDoesNotExist(
+    string $bundle_path,
+    string $label,
+  ): void {
     $original_url = $this->getUrl();
     $this->drupalGet(explode('/fields', $bundle_path)[0] . '/fields');
     $this->assertFieldDoesNotExistOnOverview($label);
@@ -240,7 +262,7 @@ trait FieldUiTestTrait {
    *
    * @throws \Behat\Mink\Exception\ElementNotFoundException
    */
-  protected function assertFieldExistsOnOverview(string $label) {
+  protected function assertFieldExistsOnOverview(string $label): void {
     $xpath = $this->assertSession()
       ->buildXPathQuery("//table[@id=\"field-overview\"]//tr/td[1 and text() = :label]", [
         ':label' => $label,
@@ -257,7 +279,7 @@ trait FieldUiTestTrait {
    * @param string $label
    *   The field label.
    */
-  protected function assertFieldDoesNotExistOnOverview(string $label) {
+  protected function assertFieldDoesNotExistOnOverview(string $label): void {
     $xpath = $this->assertSession()
       ->buildXPathQuery("//table[@id=\"field-overview\"]//tr/td[1 and text() = :label]", [
         ':label' => $label,
