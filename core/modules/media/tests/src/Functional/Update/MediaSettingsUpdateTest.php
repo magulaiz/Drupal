@@ -15,7 +15,7 @@ class MediaSettingsUpdateTest extends UpdatePathTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setDatabaseDumpFiles() {
+  protected function setDatabaseDumpFiles(): void {
     $this->databaseDumpFiles = [
       __DIR__ . '/../../../fixtures/update/11.0-x-minimal-media.php.gz',
     ];
@@ -24,7 +24,7 @@ class MediaSettingsUpdateTest extends UpdatePathTestBase {
   /**
    * Tests update path for media oembed discovery setting.
    */
-  public function testRunUpdates() {
+  public function testRunUpdates(): void {
     self::assertNull(\Drupal::config('media.settings')->get('oembed_discovery'));
     $this->runUpdates();
     self::assertTrue(\Drupal::config('media.settings')->get('oembed_discovery'));
