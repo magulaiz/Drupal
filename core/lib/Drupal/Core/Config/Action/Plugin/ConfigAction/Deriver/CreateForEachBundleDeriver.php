@@ -11,6 +11,8 @@ use Drupal\Core\Plugin\Discovery\ContainerDeriverInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
+ * Generates derivatives for the create_for_each_bundle config action.
+ *
  * @internal
  *   This API is experimental.
  */

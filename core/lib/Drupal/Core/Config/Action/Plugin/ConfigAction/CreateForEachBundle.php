@@ -15,6 +15,25 @@ use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
+ * Creates config entities for each bundle of a particular entity type.
+ *
+ * An example of using this in a recipe's config actions would be:
+ * @code
+ * node.type.*:
+ *   createForEach:
+ *     language.content_settings.node.%bundle:
+ *       target_entity_type_id: node
+ *       target_bundle: %bundle
+ *     image.style.node_%bundle_big:
+ *       label: 'Big images for %label content'
+ * @endcode
+ * This will create two entities for each existing content type: a content
+ * language settings entity, and an image style. For example, for a content type
+ * called `blog`, this will create `language.content_settings.node.blog` and
+ * `image.style.node_blog_big`, with the given values. The `%bundle` and
+ * `%label` placeholders will be replaced with the ID and label of the content
+ * type, respectively.
+ *
  * @internal
  *   This API is experimental.
  */
@@ -25,8 +44,18 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 )]
 final class CreateForEachBundle implements ConfigActionPluginInterface, ContainerFactoryPluginInterface {
 
+  /**
+   * The placeholder which is replaced with the ID of the current bundle.
+   *
+   * @var string
+   */
   private const BUNDLE_PLACEHOLDER = '%bundle';
 
+  /**
+   * The placeholder which is replaced with the label of the current bundle.
+   *
+   * @var string
+   */
   private const LABEL_PLACEHOLDER = '%label';
 
   public function __construct(
@@ -73,25 +102,40 @@ final class CreateForEachBundle implements ConfigActionPluginInterface, Containe
     }
   }
 
-  private static function replacePlaceholders(mixed $subject, array $replacements): mixed {
+  /**
+   * Replaces placeholders recursively.
+   *
+   * @param mixed $data
+   *   The data to process. If this is an array, it'll be processed recursively.
+   * @param array $replacements
+   *   An array whose keys are the placeholders to replace in the data, and
+   *   whose values are the the replacements. Normally this will only mention
+   *   the `%bundle` and `%label` placeholders. If $data is an array, the
+   *   `%bundle` placeholder will only be replaced in the array's keys, not
+   *   its values.
+   *
+   * @return mixed
+   *   The given $data, with the `%bundle` and `%label` placeholders replaced.
+   */
+  private static function replacePlaceholders(mixed $data, array $replacements): mixed {
     assert(array_key_exists(static::BUNDLE_PLACEHOLDER, $replacements));
 
-    if (is_string($subject)) {
-      $subject = str_replace(array_keys($replacements), $replacements, $subject);
+    if (is_string($data)) {
+      $data = str_replace(array_keys($replacements), $replacements, $data);
     }
-    elseif (is_array($subject)) {
-      foreach ($subject as $old_key => $value) {
+    elseif (is_array($data)) {
+      foreach ($data as $old_key => $value) {
         $value = static::replacePlaceholders($value, $replacements);
 
         // Only replace the `%bundle` placeholder in array keys.
         $new_key = str_replace(static::BUNDLE_PLACEHOLDER, $replacements[static::BUNDLE_PLACEHOLDER], $old_key);
         if ($old_key !== $new_key) {
-          unset($subject[$old_key]);
+          unset($data[$old_key]);
         }
-        $subject[$new_key] = $value;
+        $data[$new_key] = $value;
       }
     }
-    return $subject;
+    return $data;
   }
 
 }

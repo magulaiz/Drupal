@@ -140,6 +140,9 @@ YAML;
     RecipeRunner::processRecipe($recipe);
   }
 
+  /**
+   * Tests that the createForEach action works as expected in normal conditions.
+   */
   public function testCreateForEach(): void {
     $this->enableModules(['image', 'language']);
 
@@ -155,6 +158,9 @@ YAML;
     $this->assertIsObject(ContentLanguageSettings::load('node.two'));
   }
 
+  /**
+   * Tests that the createForEach action validates the config it creates.
+   */
   public function testCreateForEachValidatesCreatedEntities(): void {
     $this->enableModules(['image']);
 
@@ -181,6 +187,9 @@ YAML;
     }
   }
 
+  /**
+   * Tests using the `%label` placeholder with the createForEach action.
+   */
   public function testCreateForEachWithLabel(): void {
     $this->enableModules(['image']);
 
@@ -195,6 +204,9 @@ YAML;
     $this->assertSame('Big image for Type B content', ImageStyle::load('node_two_big')?->label());
   }
 
+  /**
+   * Tests that the createForEachIfNotExists action ignores existing config.
+   */
   public function testCreateForEachIfNotExists(): void {
     $this->enableModules(['language']);
 
@@ -213,6 +225,9 @@ YAML;
     $this->assertIsObject(ContentLanguageSettings::loadByEntityTypeBundle('node', 'two'));
   }
 
+  /**
+   * Tests that the createForEach action errs on conflict with existing config.
+   */
   public function testCreateForEachErrorsIfAlreadyExists(): void {
     $this->enableModules(['language']);
 
@@ -232,6 +247,9 @@ YAML;
       ]);
   }
 
+  /**
+   * Tests that the createForEach action only works on bundle entities.
+   */
   public function testCreateForEachNotAvailableOnNonBundleEntities(): void {
     $this->enableModules(['language']);
 
@@ -243,7 +261,10 @@ YAML;
       ->applyAction('createForEach', 'language.content_settings.node.*', []);
   }
 
-  public function testErrorIfNoBundleEntityTypesExist(): void {
+  /**
+   * Tests that the createForEach action requires bundle entity types to exist.
+   */
+  public function testCreateForEachErrorsIfNoBundleEntityTypesExist(): void {
     $this->disableModules(['node', 'entity_test']);
 
     $manager = $this->container->get('plugin.manager.config_action');
