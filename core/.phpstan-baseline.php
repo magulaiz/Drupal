@@ -13183,7 +13183,7 @@ $ignoreErrors[] = [
 $ignoreErrors[] = [
 	// identifier: return.missing
 	'message' => '#^Method Drupal\\\\block_content\\\\BlockContentForm\\:\\:save\\(\\) should return int but return statement is missing\\.$#',
-	'count' => 1,
+	'count' => 2,
 	'path' => __DIR__ . '/modules/block_content/src/BlockContentForm.php',
 ];
 $ignoreErrors[] = [
@@ -67904,11 +67904,6 @@ $ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\FunctionalTests\\\\Installer\\\\InstallerExistingConfigNoConfigTest\\:\\:setUpSite\\(\\) has no return type specified\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/tests/Drupal/FunctionalTests/Installer/InstallerExistingConfigNoConfigTest.php',
-];
-$ignoreErrors[] = [
-	'message' => '#^Drupal\\\\Tests\\\\BrowserTestBase\\:\\:\\$defaultTheme is required\\. See https\\://www\\.drupal\\.org/node/3083055, which includes recommendations on which theme to use\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/tests/Drupal/FunctionalTests/Installer/InstallerExistingConfigNoSystemSiteTest.php',
 ];
 $ignoreErrors[] = [
 	// identifier: missingType.return
