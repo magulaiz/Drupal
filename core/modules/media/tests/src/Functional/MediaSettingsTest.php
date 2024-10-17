@@ -53,7 +53,6 @@ class MediaSettingsTest extends MediaFunctionalTestBase {
     $this->assertNull($this->config('media.settings')->get('iframe_domain'));
     $this->drupalGet(Url::fromRoute('media.settings'));
     $assert_session->fieldExists('iframe_domain');
-    $assert_session->fieldExists('oembed_discovery');
 
     // Explicitly submitting an empty string does not result in the
     // `iframe_domain` property getting set to the empty string: it is converted
@@ -61,12 +60,9 @@ class MediaSettingsTest extends MediaFunctionalTestBase {
     // @see \Drupal\media\Form\MediaSettingsForm::submitForm()
     $this->submitForm([
       'iframe_domain' => '',
-      'oembed_discovery' => FALSE,
     ], 'Save configuration');
     $assert_session->statusMessageContains('The configuration options have been saved.', 'status');
-    $config = $this->config('media.settings');
-    $this->assertNull($config->get('iframe_domain'));
-    self::assertFalse($config->get('oembed_discovery'));
+    $this->assertNull($this->config('media.settings')->get('iframe_domain'));
   }
 
 }
