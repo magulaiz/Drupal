@@ -160,14 +160,14 @@ class PathLanguageUiTest extends PathTestBase {
     $node2 = $this->drupalCreateNode();
     // Create a language-unspecified alias in the admin UI.
     $edit = [
-      'path[0][value]' => '/node/' . $node->id(),
+      'path[0][value]' => '/node/' . $node2->id(),
       'alias[0][value]' => '/' . $name,
       'langcode[0][value]' => LanguageInterface::LANGCODE_NOT_SPECIFIED,
     ];
     $this->drupalGet('admin/config/search/path/add');
 
     $this->submitForm($edit, 'Save');
-    $this->drupalGet($node->toUrl('edit-form'));
+    $this->drupalGet($node2->toUrl('edit-form'));
     $this->assertSession()->fieldValueEquals('path[0][alias]', $edit['alias[0][value]']);
     $this->submitForm([], 'Save');
 
