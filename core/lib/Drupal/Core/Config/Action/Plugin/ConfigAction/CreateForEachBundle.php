@@ -86,8 +86,6 @@ final class CreateForEachBundle implements ConfigActionPluginInterface, Containe
   public function apply(string $configName, mixed $value): void {
     assert(is_array($value));
 
-    // In all of the options passed to this action, replace the `%bundle`
-    // placeholder with the actual ID of the entity we're working on.
     $bundle = $this->configManager->loadConfigEntityByName($configName);
     assert(is_object($bundle));
     $value = static::replacePlaceholders($value, [
@@ -110,9 +108,8 @@ final class CreateForEachBundle implements ConfigActionPluginInterface, Containe
    * @param array $replacements
    *   An array whose keys are the placeholders to replace in the data, and
    *   whose values are the the replacements. Normally this will only mention
-   *   the `%bundle` and `%label` placeholders. If $data is an array, the
-   *   `%bundle` placeholder will only be replaced in the array's keys, not
-   *   its values.
+   *   the `%bundle` and `%label` placeholders. If $data is an array, the only
+   *   placeholder that is replaced in the array's keys is `%bundle`.
    *
    * @return mixed
    *   The given $data, with the `%bundle` and `%label` placeholders replaced.
