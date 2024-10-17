@@ -100,9 +100,9 @@ class FormElementHelperTest extends UnitTestCase {
       ],
     ];
     $data[] = [
-      'id_noparent',
+      'id',
       [
-        'id_noparent' => [
+        'id' => [
           '#title' => 'ID',
         ],
       ],
@@ -180,9 +180,9 @@ class FormElementHelperTest extends UnitTestCase {
       'ID',
     ];
     $data[] = [
-      'id_noparent',
+      'id',
       [
-        'id_noparent' => [
+        'id' => [
           '#title' => 'ID',
         ],
       ],
