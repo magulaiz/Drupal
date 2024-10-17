@@ -6,6 +6,7 @@ namespace Drupal\Tests\content_moderation\Functional;
 
 use Drupal\Core\Url;
 use Drupal\node\Entity\Node;
+use Drupal\user\Entity\Role;
 
 /**
  * Tests general content moderation workflow for nodes.
@@ -179,6 +180,108 @@ class ModerationStateNodeTest extends ModerationStateTestBase {
       'title[0][value]' => 'moderated content',
     ], 'Save');
     $session_assert->pageTextContains('You do not have access to transition from Draft to Draft');
+  }
+
+  /**
+   * Tests that o user cancel the default revision still the same.
+   */
+  public function testUserCancel() {
+
+    // Set the user cancel default method.
+    $this->config('user.settings')
+      ->set('cancel_method', 'user_cancel_reassign')
+      ->save();
+
+    // Add permissions to admin of cancel account.
+    $role_ids = $this->adminUser->getRoles();
+    $role_id = reset($role_ids);
+    $role = Role::load($role_id);
+    $role->grantPermission('administer users');
+    $role->grantPermission('view any unpublished content');
+    $role->save();
+
+    // Create the first user.
+    $web_user = $this->drupalCreateUser([
+      'view any unpublished content',
+      'access content overview',
+      'use editorial transition create_new_draft',
+      'use editorial transition publish',
+      'use editorial transition archive',
+      'use editorial transition archived_draft',
+      'use editorial transition archived_published',
+    ]);
+
+    $this->grantUserPermissionToCreateContentOfType($web_user, 'moderated_content');
+    $this->drupalLogin($web_user);
+
+    // Create the first revision of the content.
+    // The author will be "web_user".
+    $this->drupalGet('node/add/moderated_content');
+    $this->submitForm([
+      'title[0][value]' => 'First version of the content.',
+      'moderation_state[0][state]' => 'draft',
+    ], 'Save');
+
+    $node = $this->getNodeByTitle('First version of the content.');
+    if (!$node) {
+      $this->fail('Test node was not saved correctly.');
+    }
+    $this->assertEquals('draft', $node->moderation_state->value);
+
+    $edit_path = sprintf('node/%d/edit', $node->id());
+
+    // After saving, we should be at the canonical URL and viewing the first
+    // revision.
+    $this->assertSession()
+      ->addressEquals(Url::fromRoute('entity.node.canonical', ['node' => $node->id()]));
+    $this->assertSession()->pageTextContains('First version of the content.');
+
+    // Create a second user.
+    $second_web_user = $this->drupalCreateUser([
+      'view any unpublished content',
+      'access content overview',
+      'use editorial transition create_new_draft',
+      'use editorial transition publish',
+      'use editorial transition archive',
+      'use editorial transition archived_draft',
+      'use editorial transition archived_published',
+    ]);
+
+    $this->grantUserPermissionToCreateContentOfType($second_web_user, 'moderated_content');
+    $this->drupalLogin($second_web_user);
+
+    // Create a second revision.
+    $this->drupalGet($edit_path);
+    $this->submitForm([
+      'title[0][value]' => 'Second version of the content.',
+      'moderation_state[0][state]' => 'draft',
+    ], 'Save');
+
+    $this->assertSession()
+      ->addressEquals(Url::fromRoute('entity.node.canonical', ['node' => $node->id()]));
+    $this->assertSession()->pageTextContains('Second version of the content.');
+
+    \Drupal::entityTypeManager()->getStorage('node')->resetCache([$node->id()]);
+    $node = \Drupal::entityTypeManager()->getStorage('node')->load($node->id());
+
+    // Cancel "web_user" account.
+    $this->drupalLogin($this->adminUser);
+    $this->drupalGet('user/' . $web_user->id() . '/cancel');
+    $this->submitForm([], 'Confirm');
+
+    // Confirm deletion.
+    $this->assertSession()
+      ->pageTextContains("Account {$web_user->getAccountName()} has been deleted.");
+
+    // Check that after cancel the account, the default revision still the same.
+    $this->drupalGet(Url::fromRoute('entity.node.canonical', ['node' => $node->id()]));
+    $this->assertSession()->pageTextContains('Second version of the content.');
+
+    // Check that the author is anonymous.
+    \Drupal::entityTypeManager()->getStorage('node')->resetCache([$node->id()]);
+    $node = \Drupal::entityTypeManager()->getStorage('node')->load($node->id());
+    $this->assertEquals(0, $node->uid->entity->id());
+    $this->assertEquals('Second version of the content.', $node->title->value);
   }
 
 }
