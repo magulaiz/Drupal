@@ -418,7 +418,7 @@ $ignoreErrors[] = [
 $ignoreErrors[] = [
 	// identifier: return.missing
 	'message' => '#^Function install_download_translation\\(\\) should return string but return statement is missing\\.$#',
-	'count' => 2,
+	'count' => 1,
 	'path' => __DIR__ . '/includes/install.core.inc',
 ];
 $ignoreErrors[] = [
@@ -4108,18 +4108,6 @@ $ignoreErrors[] = [
 $ignoreErrors[] = [
 	// identifier: missingType.return
 	'message' => '#^Method Drupal\\\\Core\\\\Cron\\:\\:invokeCronHandlers\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/lib/Drupal/Core/Cron.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
-	'message' => '#^Method Drupal\\\\Core\\\\Cron\\:\\:processQueue\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/lib/Drupal/Core/Cron.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
-	'message' => '#^Method Drupal\\\\Core\\\\Cron\\:\\:processQueues\\(\\) has no return type specified\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/lib/Drupal/Core/Cron.php',
 ];
@@ -13195,7 +13183,7 @@ $ignoreErrors[] = [
 $ignoreErrors[] = [
 	// identifier: return.missing
 	'message' => '#^Method Drupal\\\\block_content\\\\BlockContentForm\\:\\:save\\(\\) should return int but return statement is missing\\.$#',
-	'count' => 2,
+	'count' => 1,
 	'path' => __DIR__ . '/modules/block_content/src/BlockContentForm.php',
 ];
 $ignoreErrors[] = [
@@ -17023,7 +17011,7 @@ $ignoreErrors[] = [
 $ignoreErrors[] = [
 	// identifier: return.missing
 	'message' => '#^Method Drupal\\\\contact\\\\MessageForm\\:\\:save\\(\\) should return int but return statement is missing\\.$#',
-	'count' => 2,
+	'count' => 1,
 	'path' => __DIR__ . '/modules/contact/src/MessageForm.php',
 ];
 $ignoreErrors[] = [
@@ -19643,6 +19631,12 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/datetime/src/Plugin/Field/FieldType/DateTimeFieldItemList.php',
 ];
 $ignoreErrors[] = [
+	// identifier: property.notFound
+	'message' => '#^Access to an undefined property Drupal\\\\datetime\\\\Plugin\\\\Field\\\\FieldType\\\\DateTimeItem\\:\\:\\$date\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/datetime/src/Plugin/Field/FieldType/DateTimeItem.php',
+];
+$ignoreErrors[] = [
 	// identifier: missingType.return
 	'message' => '#^Method Drupal\\\\datetime\\\\Plugin\\\\Field\\\\FieldType\\\\DateTimeItem\\:\\:onChange\\(\\) has no return type specified\\.$#',
 	'count' => 1,
@@ -21015,12 +21009,6 @@ $ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\Tests\\\\field\\\\Functional\\\\MultipleWidgetFormTest\\:\\:widgetAlterTest\\(\\) has no return type specified\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/field/tests/src/Functional/MultipleWidgetFormTest.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
-	'message' => '#^Method Drupal\\\\Tests\\\\field\\\\Functional\\\\ReEnableModuleFieldTest\\:\\:cronRun\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/field/tests/src/Functional/ReEnableModuleFieldTest.php',
 ];
 $ignoreErrors[] = [
 	// identifier: missingType.return
@@ -22927,7 +22915,7 @@ $ignoreErrors[] = [
 $ignoreErrors[] = [
 	// identifier: return.missing
 	'message' => '#^Method Drupal\\\\file\\\\Plugin\\\\Field\\\\FieldType\\\\FileFieldItemList\\:\\:postSave\\(\\) should return bool but return statement is missing\\.$#',
-	'count' => 2,
+	'count' => 1,
 	'path' => __DIR__ . '/modules/file/src/Plugin/Field/FieldType/FileFieldItemList.php',
 ];
 $ignoreErrors[] = [
@@ -24513,12 +24501,6 @@ $ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\Tests\\\\help\\\\Functional\\\\HelpTest\\:\\:verifyHelp\\(\\) has no return type specified\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/help/tests/src/Functional/HelpTest.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
-	'message' => '#^Method Drupal\\\\Tests\\\\help\\\\Functional\\\\HelpTopicSearchTest\\:\\:cronRun\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/help/tests/src/Functional/HelpTopicSearchTest.php',
 ];
 $ignoreErrors[] = [
 	// identifier: missingType.return
@@ -30637,7 +30619,7 @@ $ignoreErrors[] = [
 $ignoreErrors[] = [
 	// identifier: return.missing
 	'message' => '#^Method Drupal\\\\locale\\\\LocaleDefaultConfigStorage\\:\\:read\\(\\) should return array but return statement is missing\\.$#',
-	'count' => 2,
+	'count' => 1,
 	'path' => __DIR__ . '/modules/locale/src/LocaleDefaultConfigStorage.php',
 ];
 $ignoreErrors[] = [
@@ -31167,12 +31149,6 @@ $ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\Tests\\\\locale\\\\Functional\\\\LocaleUpdateBase\\:\\:setTranslationsDirectory\\(\\) has no return type specified\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/locale/tests/src/Functional/LocaleUpdateBase.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
-	'message' => '#^Method Drupal\\\\Tests\\\\locale\\\\Functional\\\\LocaleUpdateCronTest\\:\\:cronRun\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/locale/tests/src/Functional/LocaleUpdateCronTest.php',
 ];
 $ignoreErrors[] = [
 	// identifier: missingType.return
@@ -36705,7 +36681,7 @@ $ignoreErrors[] = [
 $ignoreErrors[] = [
 	// identifier: return.missing
 	'message' => '#^Method Drupal\\\\node\\\\ConfigTranslation\\\\NodeTypeMapper\\:\\:setEntity\\(\\) should return bool but return statement is missing\\.$#',
-	'count' => 2,
+	'count' => 1,
 	'path' => __DIR__ . '/modules/node/src/ConfigTranslation/NodeTypeMapper.php',
 ];
 $ignoreErrors[] = [
@@ -36927,7 +36903,7 @@ $ignoreErrors[] = [
 $ignoreErrors[] = [
 	// identifier: return.missing
 	'message' => '#^Method Drupal\\\\node\\\\NodeForm\\:\\:save\\(\\) should return int but return statement is missing\\.$#',
-	'count' => 2,
+	'count' => 1,
 	'path' => __DIR__ . '/modules/node/src/NodeForm.php',
 ];
 $ignoreErrors[] = [
@@ -38667,7 +38643,7 @@ $ignoreErrors[] = [
 $ignoreErrors[] = [
 	// identifier: return.missing
 	'message' => '#^Method Drupal\\\\path\\\\Plugin\\\\Field\\\\FieldType\\\\PathItem\\:\\:postSave\\(\\) should return bool but return statement is missing\\.$#',
-	'count' => 3,
+	'count' => 1,
 	'path' => __DIR__ . '/modules/path/src/Plugin/Field/FieldType/PathItem.php',
 ];
 $ignoreErrors[] = [
@@ -39279,7 +39255,7 @@ $ignoreErrors[] = [
 $ignoreErrors[] = [
 	// identifier: return.missing
 	'message' => '#^Method Drupal\\\\responsive_image\\\\ResponsiveImageStyleForm\\:\\:save\\(\\) should return int but return statement is missing\\.$#',
-	'count' => 2,
+	'count' => 1,
 	'path' => __DIR__ . '/modules/responsive_image/src/ResponsiveImageStyleForm.php',
 ];
 $ignoreErrors[] = [
@@ -40670,12 +40646,6 @@ $ignoreErrors[] = [
 ];
 $ignoreErrors[] = [
 	// identifier: missingType.return
-	'message' => '#^Method Drupal\\\\Tests\\\\search\\\\Functional\\\\SearchCommentTest\\:\\:cronRun\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/search/tests/src/Functional/SearchCommentTest.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
 	'message' => '#^Method Drupal\\\\Tests\\\\search\\\\Functional\\\\SearchCommentTest\\:\\:setRolePermissions\\(\\) has no return type specified\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/search/tests/src/Functional/SearchCommentTest.php',
@@ -40691,18 +40661,6 @@ $ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\Tests\\\\search\\\\Functional\\\\SearchConfigSettingsFormTest\\:\\:verifySearchPageOperations\\(\\) has no return type specified\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/search/tests/src/Functional/SearchConfigSettingsFormTest.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
-	'message' => '#^Method Drupal\\\\Tests\\\\search\\\\Functional\\\\SearchNumberMatchingTest\\:\\:cronRun\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/search/tests/src/Functional/SearchNumberMatchingTest.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
-	'message' => '#^Method Drupal\\\\Tests\\\\search\\\\Functional\\\\SearchNumbersTest\\:\\:cronRun\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/search/tests/src/Functional/SearchNumbersTest.php',
 ];
 $ignoreErrors[] = [
 	// identifier: missingType.return
@@ -40779,12 +40737,6 @@ $ignoreErrors[] = [
 $ignoreErrors[] = [
 	// identifier: missingType.return
 	'message' => '#^Method Drupal\\\\Tests\\\\search\\\\Functional\\\\SearchRankingTest\\:\\:addDefaultCommentField\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/search/tests/src/Functional/SearchRankingTest.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
-	'message' => '#^Method Drupal\\\\Tests\\\\search\\\\Functional\\\\SearchRankingTest\\:\\:cronRun\\(\\) has no return type specified\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/search/tests/src/Functional/SearchRankingTest.php',
 ];
@@ -48941,12 +48893,6 @@ $ignoreErrors[] = [
 ];
 $ignoreErrors[] = [
 	// identifier: missingType.return
-	'message' => '#^Method Drupal\\\\Tests\\\\system\\\\Functional\\\\SecurityAdvisories\\\\SecurityAdvisoryTest\\:\\:cronRun\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/system/tests/src/Functional/SecurityAdvisories/SecurityAdvisoryTest.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
 	'message' => '#^Method Drupal\\\\Tests\\\\system\\\\Functional\\\\Session\\\\SessionHttpsTest\\:\\:loginHttp\\(\\) has no return type specified\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/system/tests/src/Functional/Session/SessionHttpsTest.php',
@@ -48998,12 +48944,6 @@ $ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\Tests\\\\system\\\\Functional\\\\System\\\\AccessDeniedTest\\:\\:enablePageCaching\\(\\) has no return type specified\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/system/tests/src/Functional/System/AccessDeniedTest.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
-	'message' => '#^Method Drupal\\\\Tests\\\\system\\\\Functional\\\\System\\\\CronRunTest\\:\\:cronRun\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/system/tests/src/Functional/System/CronRunTest.php',
 ];
 $ignoreErrors[] = [
 	// identifier: missingType.return
@@ -51114,7 +51054,7 @@ $ignoreErrors[] = [
 $ignoreErrors[] = [
 	// identifier: return.missing
 	'message' => '#^Method Drupal\\\\taxonomy\\\\TermForm\\:\\:validateForm\\(\\) should return Drupal\\\\Core\\\\Entity\\\\ContentEntityInterface but return statement is missing\\.$#',
-	'count' => 2,
+	'count' => 1,
 	'path' => __DIR__ . '/modules/taxonomy/src/TermForm.php',
 ];
 $ignoreErrors[] = [
@@ -52385,12 +52325,6 @@ $ignoreErrors[] = [
 ];
 $ignoreErrors[] = [
 	// identifier: missingType.return
-	'message' => '#^Method Drupal\\\\Tests\\\\update\\\\Functional\\\\UpdateMiscTest\\:\\:cronRun\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/update/tests/src/Functional/UpdateMiscTest.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
 	'message' => '#^Method Drupal\\\\Tests\\\\update\\\\Functional\\\\UpdateSemverContribSecurityAvailabilityTest\\:\\:securityUpdateAvailabilityProvider\\(\\) has no return type specified\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/update/tests/src/Functional/UpdateSemverContribSecurityAvailabilityTest.php',
@@ -52418,12 +52352,6 @@ $ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\Tests\\\\update\\\\Functional\\\\UpdateSemverCoreTestBase\\:\\:setProjectInstalledVersion\\(\\) has no return type specified\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/update/tests/src/Functional/UpdateSemverCoreTestBase.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
-	'message' => '#^Method Drupal\\\\Tests\\\\update\\\\Functional\\\\UpdateSemverTestBase\\:\\:cronRun\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/update/tests/src/Functional/UpdateSemverTestBase.php',
 ];
 $ignoreErrors[] = [
 	// identifier: missingType.return
@@ -53430,7 +53358,7 @@ $ignoreErrors[] = [
 $ignoreErrors[] = [
 	// identifier: return.missing
 	'message' => '#^Method Drupal\\\\user\\\\RegisterForm\\:\\:save\\(\\) should return int but return statement is missing\\.$#',
-	'count' => 4,
+	'count' => 1,
 	'path' => __DIR__ . '/modules/user/src/RegisterForm.php',
 ];
 $ignoreErrors[] = [
@@ -62219,18 +62147,6 @@ $ignoreErrors[] = [
 ];
 $ignoreErrors[] = [
 	// identifier: missingType.return
-	'message' => '#^Method Drupal\\\\Tests\\\\views\\\\Functional\\\\SearchIntegrationTest\\:\\:cronRun\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/views/tests/src/Functional/SearchIntegrationTest.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
-	'message' => '#^Method Drupal\\\\Tests\\\\views\\\\Functional\\\\SearchMultilingualTest\\:\\:cronRun\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/views/tests/src/Functional/SearchMultilingualTest.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
 	'message' => '#^Method Drupal\\\\Tests\\\\views\\\\Functional\\\\SearchMultilingualTest\\:\\:disableBundleTranslation\\(\\) has no return type specified\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/views/tests/src/Functional/SearchMultilingualTest.php',
@@ -64170,7 +64086,7 @@ $ignoreErrors[] = [
 $ignoreErrors[] = [
 	// identifier: return.missing
 	'message' => '#^Method Drupal\\\\views_ui\\\\ViewUI\\:\\:set\\(\\) should return \\$this\\(Drupal\\\\views_ui\\\\ViewUI\\) but return statement is missing\\.$#',
-	'count' => 2,
+	'count' => 1,
 	'path' => __DIR__ . '/modules/views_ui/src/ViewUI.php',
 ];
 $ignoreErrors[] = [
@@ -65298,7 +65214,7 @@ $ignoreErrors[] = [
 $ignoreErrors[] = [
 	// identifier: return.missing
 	'message' => '#^Method Drupal\\\\workspaces\\\\Form\\\\WorkspaceForm\\:\\:save\\(\\) should return int but return statement is missing\\.$#',
-	'count' => 2,
+	'count' => 1,
 	'path' => __DIR__ . '/modules/workspaces/src/Form/WorkspaceForm.php',
 ];
 $ignoreErrors[] = [
@@ -67558,6 +67474,12 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/tests/Drupal/FunctionalJavascriptTests/JavascriptErrorsTest.php',
 ];
 $ignoreErrors[] = [
+	// identifier: classConstant.notFound
+	'message' => '#^Access to undefined constant OpenTelemetry\\\\SemConv\\\\ResourceAttributes\\:\\:DEPLOYMENT_ENVIRONMENT_NAME\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/tests/Drupal/FunctionalJavascriptTests/PerformanceTestBase.php',
+];
+$ignoreErrors[] = [
 	// identifier: missingType.return
 	'message' => '#^Method Drupal\\\\FunctionalJavascriptTests\\\\PerformanceTestBase\\:\\:doInstallModulesFromClassProperty\\(\\) has no return type specified\\.$#',
 	'count' => 1,
@@ -67650,12 +67572,6 @@ $ignoreErrors[] = [
 $ignoreErrors[] = [
 	// identifier: missingType.return
 	'message' => '#^Method Drupal\\\\FunctionalTests\\\\BrowserTestBaseTest\\:\\:assertPathAliasNotExists\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/tests/Drupal/FunctionalTests/BrowserTestBaseTest.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
-	'message' => '#^Method Drupal\\\\FunctionalTests\\\\BrowserTestBaseTest\\:\\:cronRun\\(\\) has no return type specified\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/tests/Drupal/FunctionalTests/BrowserTestBaseTest.php',
 ];
@@ -67990,6 +67906,11 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/tests/Drupal/FunctionalTests/Installer/InstallerExistingConfigDirectoryTest.php',
 ];
 $ignoreErrors[] = [
+	'message' => '#^Drupal\\\\Tests\\\\BrowserTestBase\\:\\:\\$defaultTheme is required\\. See https\\://www\\.drupal\\.org/node/3083055, which includes recommendations on which theme to use\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/tests/Drupal/FunctionalTests/Installer/InstallerExistingConfigExistingSettingsTest.php',
+];
+$ignoreErrors[] = [
 	// identifier: missingType.return
 	'message' => '#^Method Drupal\\\\FunctionalTests\\\\Installer\\\\InstallerExistingConfigExistingSettingsTest\\:\\:prepareEnvironment\\(\\) has no return type specified\\.$#',
 	'count' => 1,
@@ -68000,6 +67921,11 @@ $ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\FunctionalTests\\\\Installer\\\\InstallerExistingConfigNoConfigTest\\:\\:setUpSite\\(\\) has no return type specified\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/tests/Drupal/FunctionalTests/Installer/InstallerExistingConfigNoConfigTest.php',
+];
+$ignoreErrors[] = [
+	'message' => '#^Drupal\\\\Tests\\\\BrowserTestBase\\:\\:\\$defaultTheme is required\\. See https\\://www\\.drupal\\.org/node/3083055, which includes recommendations on which theme to use\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/tests/Drupal/FunctionalTests/Installer/InstallerExistingConfigNoSystemSiteTest.php',
 ];
 $ignoreErrors[] = [
 	// identifier: missingType.return
@@ -68090,6 +68016,11 @@ $ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\FunctionalTests\\\\Installer\\\\InstallerExistingConfigSyncDirectoryProfileMismatchTest\\:\\:setUpSite\\(\\) has no return type specified\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/tests/Drupal/FunctionalTests/Installer/InstallerExistingConfigSyncDirectoryProfileMismatchTest.php',
+];
+$ignoreErrors[] = [
+	'message' => '#^Drupal\\\\Tests\\\\BrowserTestBase\\:\\:\\$defaultTheme is required\\. See https\\://www\\.drupal\\.org/node/3083055, which includes recommendations on which theme to use\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/tests/Drupal/FunctionalTests/Installer/InstallerExistingConfigTest.php',
 ];
 $ignoreErrors[] = [
 	// identifier: missingType.return
@@ -75892,18 +75823,6 @@ $ignoreErrors[] = [
 $ignoreErrors[] = [
 	// identifier: missingType.return
 	'message' => '#^Method Drupal\\\\Tests\\\\Core\\\\Update\\\\UpdateRegistryTest\\:\\:setupBasicExtensions\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/tests/Drupal/Tests/Core/Update/UpdateRegistryTest.php',
-];
-$ignoreErrors[] = [
-	// identifier: includeOnce.fileNotFound
-	'message' => '#^Path in include_once\\(\\) "vfs\\://drupal/sites/default/modules/module_a/module_a\\.post_update\\.php" is not a file or it does not exist\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/tests/Drupal/Tests/Core/Update/UpdateRegistryTest.php',
-];
-$ignoreErrors[] = [
-	// identifier: includeOnce.fileNotFound
-	'message' => '#^Path in include_once\\(\\) "vfs\\://drupal/sites/default/modules/module_b/module_b\\.post_update\\.php" is not a file or it does not exist\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/tests/Drupal/Tests/Core/Update/UpdateRegistryTest.php',
 ];
