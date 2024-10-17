@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\jsonapi\Functional;
 
 use Drupal\Component\Render\PlainTextOutput;
@@ -16,13 +18,12 @@ use Drupal\user\Entity\User;
 use GuzzleHttp\RequestOptions;
 use Psr\Http\Message\ResponseInterface;
 
-// cspell:ignore èxample
+// cspell:ignore èxample msword
 
 /**
  * Tests binary data file upload route.
  *
  * @group jsonapi
- * @group #slow
  */
 class FileUploadTest extends ResourceTestBase {
 
@@ -107,9 +108,20 @@ class FileUploadTest extends ResourceTestBase {
   protected $fileStorage;
 
   /**
+   * A list of test methods to skip.
+   *
+   * @var array
+   */
+  const SKIP_METHODS = ['testGetIndividual', 'testIndividual', 'testCollection', 'testRelationships'];
+
+  /**
    * {@inheritdoc}
    */
   protected function setUp(): void {
+    if (in_array($this->name(), static::SKIP_METHODS, TRUE)) {
+      $this->markTestSkipped('Irrelevant for this test');
+    }
+
     parent::setUp();
 
     $this->fileStorage = $this->container->get('entity_type.manager')
@@ -148,48 +160,6 @@ class FileUploadTest extends ResourceTestBase {
   /**
    * {@inheritdoc}
    */
-  public function testGetIndividual() {
-    $this->markTestSkipped('Irrelevant for this test');
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function testPostIndividual() {
-    $this->markTestSkipped('Irrelevant for this test');
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function testPatchIndividual() {
-    $this->markTestSkipped('Irrelevant for this test');
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function testDeleteIndividual() {
-    $this->markTestSkipped('Irrelevant for this test');
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function testCollection() {
-    $this->markTestSkipped('Irrelevant for this test');
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function testRelationships() {
-    $this->markTestSkipped('Irrelevant for this test');
-  }
-
-  /**
-   * {@inheritdoc}
-   */
   protected function createEntity() {
     // Create an entity that a file can be attached to.
     $entity_test = EntityTest::create([
@@ -205,7 +175,7 @@ class FileUploadTest extends ResourceTestBase {
   /**
    * {@inheritdoc}
    */
-  public function testRelated() {
+  public function testRelated(): void {
     \Drupal::service('router.builder')->rebuild();
     parent::testRelated();
   }
@@ -213,7 +183,7 @@ class FileUploadTest extends ResourceTestBase {
   /**
    * Tests using the file upload POST route; needs second request to "use" file.
    */
-  public function testPostFileUpload() {
+  public function testPostFileUpload(): void {
     \Drupal::service('router.builder')->rebuild();
     $uri = Url::fromUri('base:' . static::$postUri);
 
@@ -278,7 +248,7 @@ class FileUploadTest extends ResourceTestBase {
   /**
    * Tests using the 'file upload and "use" file in single request" POST route.
    */
-  public function testPostFileUploadAndUseInSingleRequest() {
+  public function testPostFileUploadAndUseInSingleRequest(): void {
     \Drupal::service('router.builder')->rebuild();
     // Update the test entity so it already has a file. This allows verifying
     // that this route appends files, and does not replace them.
@@ -317,7 +287,7 @@ class FileUploadTest extends ResourceTestBase {
     // This request fails despite the upload succeeding, because we're not
     // allowed to view the entity we're uploading to.
     $response = $this->fileRequest($uri, $this->testFileData);
-    $this->assertResourceErrorResponse(403, $this->getExpectedUnauthorizedAccessMessage('GET'), $uri, $response, FALSE, ['4xx-response', 'http_response'], ['url.site', 'user.permissions']);
+    $this->assertResourceErrorResponse(403, $this->getExpectedUnauthorizedAccessMessage('GET'), $uri, $response, FALSE, ['4xx-response', 'http_response'], ['url.query_args', 'url.site', 'user.permissions']);
 
     $this->setUpAuthorization('GET');
 
@@ -368,7 +338,7 @@ class FileUploadTest extends ResourceTestBase {
    * @see ::testPostFileUpload()
    * @see \Drupal\Tests\jsonapi\Functional\EntityTestTest::getPostDocument()
    */
-  protected function getPostDocument() {
+  protected function getPostDocument(): array {
     return [
       'data' => [
         'type' => 'entity_test--entity_test',
@@ -429,7 +399,7 @@ class FileUploadTest extends ResourceTestBase {
    *
    * A new file should be created with a suffixed name.
    */
-  public function testPostFileUploadDuplicateFile() {
+  public function testPostFileUploadDuplicateFile(): void {
     \Drupal::service('router.builder')->rebuild();
     $this->setUpAuthorization('POST');
     $this->config('jsonapi.settings')->set('read_only', FALSE)->save(TRUE);
@@ -470,7 +440,7 @@ class FileUploadTest extends ResourceTestBase {
    *
    * @see https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Disposition#Directives
    */
-  public function testFileUploadStrippedFilePath() {
+  public function testFileUploadStrippedFilePath(): void {
     \Drupal::service('router.builder')->rebuild();
     $this->setUpAuthorization('POST');
     $this->config('jsonapi.settings')->set('read_only', FALSE)->save(TRUE);
@@ -517,7 +487,7 @@ class FileUploadTest extends ResourceTestBase {
   /**
    * Tests invalid file uploads.
    */
-  public function testInvalidFileUploads() {
+  public function testInvalidFileUploads(): void {
     \Drupal::service('router.builder')->rebuild();
     $this->setUpAuthorization('POST');
     $this->config('jsonapi.settings')->set('read_only', FALSE)->save(TRUE);
@@ -530,7 +500,7 @@ class FileUploadTest extends ResourceTestBase {
   /**
    * Tests using the file upload route with a unicode file name.
    */
-  public function testFileUploadUnicodeFilename() {
+  public function testFileUploadUnicodeFilename(): void {
     \Drupal::service('router.builder')->rebuild();
     $this->setUpAuthorization('POST');
     $this->config('jsonapi.settings')->set('read_only', FALSE)->save(TRUE);
@@ -549,7 +519,7 @@ class FileUploadTest extends ResourceTestBase {
   /**
    * Tests using the file upload route with a zero byte file.
    */
-  public function testFileUploadZeroByteFile() {
+  public function testFileUploadZeroByteFile(): void {
     \Drupal::service('router.builder')->rebuild();
     $this->setUpAuthorization('POST');
     $this->config('jsonapi.settings')->set('read_only', FALSE)->save(TRUE);
@@ -721,7 +691,7 @@ class FileUploadTest extends ResourceTestBase {
   /**
    * Tests using the file upload POST route no configuration.
    */
-  public function testFileUploadNoConfiguration() {
+  public function testFileUploadNoConfiguration(): void {
     $this->setUpAuthorization('POST');
     $this->config('jsonapi.settings')->set('read_only', FALSE)->save(TRUE);
 
@@ -751,7 +721,7 @@ class FileUploadTest extends ResourceTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function getExpectedUnauthorizedAccessMessage($method) {
+  protected function getExpectedUnauthorizedAccessMessage($method): string {
     switch ($method) {
       case 'GET':
         return "The current user is not allowed to view this relationship. The 'view test entity' permission is required.";
@@ -780,9 +750,10 @@ class FileUploadTest extends ResourceTestBase {
    * @return array
    *   A JSON:API response document.
    */
-  protected function getExpectedDocument($fid = 1, $expected_filename = 'example.txt', $expected_as_filename = FALSE, $expected_status = FALSE) {
+  protected function getExpectedDocument($fid = 1, $expected_filename = 'example.txt', $expected_as_filename = FALSE, $expected_status = FALSE): array {
     $author = User::load($this->account->id());
     $file = File::load($fid);
+    $this->assertInstanceOf(File::class, $file);
     $self_url = Url::fromUri('base:/jsonapi/file/file/' . $file->uuid())->setAbsolute()->toString(TRUE)->getGeneratedUrl();
 
     return [
@@ -903,7 +874,7 @@ class FileUploadTest extends ResourceTestBase {
    */
   protected function assertResponseData(array $expected, ResponseInterface $response): void {
     static::recursiveKSort($expected);
-    $actual = Json::decode((string) $response->getBody());
+    $actual = $this->getDocumentFromResponse($response);
     static::recursiveKSort($actual);
 
     $this->assertSame($expected, $actual);

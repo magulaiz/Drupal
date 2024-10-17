@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace Drupal\KernelTests\Core\Config;
 
@@ -78,7 +78,7 @@ class SimpleConfigValidationTest extends KernelTestBase {
    * @return array[]
    *   The test cases.
    */
-  public function providerSpecialCharacters(): array {
+  public static function providerSpecialCharacters(): array {
     $data = [];
 
     for ($code_point = 0; $code_point < 32; $code_point++) {
@@ -159,6 +159,7 @@ class SimpleConfigValidationTest extends KernelTestBase {
    *   is expected to raise a "plugin does not exist" error.
    *
    * @testWith ["system.mail", "interface.0"]
+   *   ["system.image", "toolkit"]
    */
   public function testInvalidPluginId(string $config_name, string $property): void {
     $config = $this->config($config_name);

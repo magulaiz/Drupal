@@ -24,7 +24,7 @@ class DatabaseBackendFactoryTest extends UnitTestCase {
    * @covers ::get
    * @dataProvider getProvider
    */
-  public function testGet(array $settings, $expected_max_rows_foo, $expected_max_rows_bar) {
+  public function testGet(array $settings, $expected_max_rows_foo, $expected_max_rows_bar): void {
     $database_backend_factory = new DatabaseBackendFactory(
       $this->prophesize(Connection::class)->reveal(),
       $this->prophesize(CacheTagsChecksumInterface::class)->reveal(),
@@ -37,7 +37,7 @@ class DatabaseBackendFactoryTest extends UnitTestCase {
     $this->assertSame($expected_max_rows_bar, $database_backend_factory->get('bar')->getMaxRows());
   }
 
-  public function getProvider() {
+  public static function getProvider() {
     return [
       'default' => [
         [],
