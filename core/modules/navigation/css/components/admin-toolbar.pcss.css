@@ -202,13 +202,10 @@ body {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-block-start: calc(var(--admin-toolbar-sidebar-header) * -1);
-  padding-block-start: var(--admin-toolbar-space-16);
+  margin-block-start: calc(var(--admin-toolbar-space-40) * -1);
   background-color: var(--admin-toolbar-color-white);
 
   & + .toolbar-block {
-    margin-block-start: calc(var(--admin-toolbar-space-10) * -1);
-
     @media (--admin-toolbar-desktop) {
       margin-block-start: 0;
     }
@@ -224,8 +221,8 @@ body {
     position: static;
     align-items: start;
     margin-block-start: revert;
-    padding-block-start: revert;
-    padding-block-end: 0;
+    padding-block-start: var(--admin-toolbar-space-2);
+    padding-block-end: var(--admin-toolbar-space-2);
   }
 }
 
@@ -235,14 +232,27 @@ body {
 
 .admin-toolbar__logo {
   display: inline-flex;
-  overflow: hidden;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  width: var(--admin-toolbar-space-40);
+  height: var(--admin-toolbar-space-40);
+  margin-inline-start: var(--admin-toolbar-space-2);
   border-radius: var(--admin-toolbar-space-8);
+  background-color: transparent;
 
   &:hover {
+    outline: 2px solid var(--admin-toolbar-color-blue-200);
+    background-color: var(--admin-toolbar-color-gray-050);
+  }
+
+  &:focus {
+    outline: 2px solid var(--admin-toolbar-color-focus);
     background-color: transparent;
   }
 
-  & img {
+  & img,
+  & svg {
     display: block;
     max-width: var(--admin-toolbar-space-40);
   }
