@@ -12,6 +12,7 @@ use Drupal\Core\File\FileSystemInterface;
 use Drupal\Core\Form\ConfigFormBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Image\ImageFactory;
+use Drupal\Core\Messenger\MessengerInterface;
 use Drupal\Core\Render\RendererInterface;
 use Drupal\Core\StreamWrapper\PublicStream;
 use Drupal\Core\StreamWrapper\StreamWrapperManager;
@@ -222,15 +223,23 @@ final class SettingsForm extends ConfigFormBase {
     // If the user uploaded a new logo, save it to a permanent location
     // and use it in place of the default navigation-provided file.
     $default_scheme = $this->config('system.file')->get('default_scheme');
+    $values = $form_state->getValues();
     try {
-      $value = $form_state->getValue('logo_upload');
-      if (!empty($value)) {
-        $filename = $this->fileSystem->copy($value->getFileUri(), $default_scheme . '://');
-        $form_state->setValue('logo_path', $filename);
+      if (!empty($values['logo_upload'])) {
+        $filename = $this->fileSystem->copy($values['logo_upload']->getFileUri(), $default_scheme . '://');
+        $values['logo_path'] = $filename;
       }
     }
     catch (FileException) {
-      // Ignore.
+      $this->messenger->deleteByType(MessengerInterface::TYPE_STATUS);
+      $this->messenger->addError($this->t('The file %file could not be copied to the permanent destination. Contact the site administrator if the problem persists.', ['%file' => $values['logo_upload']->getFilename()]));
+      return;
+    }
+
+    // If the user entered a path relative to the system files directory for
+    // the logo, store a public:// URI so the theme system can handle it.
+    if (!empty($values['logo_path'])) {
+      $form_state->setValue('logo_path', $this->validateLogoPath($values['logo_path']));
     }
 
     parent::submitForm($form, $form_state);
