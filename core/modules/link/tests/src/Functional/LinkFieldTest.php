@@ -101,6 +101,8 @@ class LinkFieldTest extends BrowserTestBase {
       'settings' => [
         'title' => DRUPAL_DISABLED,
         'link_type' => LinkItemInterface::LINK_GENERIC,
+        'handler' => 'default',
+        'handler_settings' => [],
       ],
     ]);
     $this->field->save();
@@ -111,6 +113,8 @@ class LinkFieldTest extends BrowserTestBase {
         'type' => 'link_default',
         'settings' => [
           'placeholder_url' => 'http://example.com',
+          'match_limit' => 10,
+          'match_operator' => 'CONTAINS',
         ],
       ])
       ->save();
@@ -289,6 +293,8 @@ class LinkFieldTest extends BrowserTestBase {
       'settings' => [
         'title' => DRUPAL_OPTIONAL,
         'link_type' => LinkItemInterface::LINK_GENERIC,
+        'handler' => 'default',
+        'handler_settings' => [],
       ],
     ]);
     $this->field->save();
@@ -300,6 +306,8 @@ class LinkFieldTest extends BrowserTestBase {
         'settings' => [
           'placeholder_url' => 'http://example.com',
           'placeholder_title' => 'Enter the text for this link',
+          'match_limit' => 10,
+          'match_operator' => 'CONTAINS',
         ],
       ])
       ->save();
@@ -415,6 +423,8 @@ class LinkFieldTest extends BrowserTestBase {
       'settings' => [
         'title' => DRUPAL_OPTIONAL,
         'link_type' => LinkItemInterface::LINK_GENERIC,
+        'handler' => 'default',
+        'handler_settings' => [],
       ],
     ])->save();
     /** @var \Drupal\Core\Entity\EntityDisplayRepositoryInterface $display_repository */
@@ -422,6 +432,10 @@ class LinkFieldTest extends BrowserTestBase {
     $display_repository->getFormDisplay('entity_test', 'entity_test')
       ->setComponent($field_name, [
         'type' => 'link_default',
+        'settings' => [
+          'match_limit' => 10,
+          'match_operator' => 'CONTAINS',
+        ],
       ])
       ->save();
     $display_options = [
@@ -750,6 +764,8 @@ class LinkFieldTest extends BrowserTestBase {
       'settings' => [
         'title' => DRUPAL_OPTIONAL,
         'link_type' => LinkItemInterface::LINK_GENERIC,
+        'handler' => 'default',
+        'handler_settings' => [],
       ],
     ])->save();
     $display_options = [
@@ -761,6 +777,10 @@ class LinkFieldTest extends BrowserTestBase {
     $display_repository->getFormDisplay('entity_test', 'entity_test')
       ->setComponent($field_name, [
         'type' => 'link_default',
+        'settings' => [
+          'match_limit' => 10,
+          'match_operator' => 'CONTAINS',
+        ],
       ])
       ->save();
     $display_repository->getViewDisplay('entity_test', 'entity_test', 'full')
@@ -881,6 +901,8 @@ class LinkFieldTest extends BrowserTestBase {
       'settings' => [
         'title' => DRUPAL_OPTIONAL,
         'link_type' => $link_type,
+        'handler' => 'default',
+        'handler_settings' => [],
       ],
     ])->save();
 
@@ -889,6 +911,10 @@ class LinkFieldTest extends BrowserTestBase {
       ->load('entity_test.entity_test.default')
       ->setComponent($field_name, [
         'type' => 'link_default',
+        'settings' => [
+          'match_limit' => 10,
+          'match_operator' => 'CONTAINS',
+        ],
       ])
       ->save();
 
@@ -926,6 +952,10 @@ class LinkFieldTest extends BrowserTestBase {
       ->load('entity_test.entity_test.default')
       ->setComponent('field_link', [
         'type' => 'link_default',
+        'settings' => [
+          'match_limit' => 10,
+          'match_operator' => 'CONTAINS',
+        ],
       ])
       ->save();
 
@@ -977,6 +1007,8 @@ class LinkFieldTest extends BrowserTestBase {
       'settings' => [
         'title' => DRUPAL_OPTIONAL,
         'link_type' => LinkItemInterface::LINK_INTERNAL,
+        'handler' => 'default',
+        'handler_settings' => [],
       ],
     ])->save();
 
@@ -985,6 +1017,10 @@ class LinkFieldTest extends BrowserTestBase {
       ->load('entity_test.entity_test.default')
       ->setComponent($field_name, [
         'type' => 'link_default',
+        'settings' => [
+          'match_limit' => 10,
+          'match_operator' => 'CONTAINS',
+        ],
       ])
       ->save();
 

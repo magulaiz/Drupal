@@ -89,6 +89,8 @@ class RouteCachingLanguageTest extends BrowserTestBase {
       'settings' => [
         'title' => DRUPAL_OPTIONAL,
         'link_type' => LinkItemInterface::LINK_GENERIC,
+        'handler' => 'default',
+        'handler_settings' => [],
       ],
     ]);
     $field->save();
