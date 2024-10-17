@@ -141,7 +141,7 @@ class PathLanguageUiTest extends PathTestBase {
   public function testSpecifiedNode(): void {
     // Common alias name.
     $name = $this->getRandomGenerator()->word(8);
-   
+
     // Create a language-specified alias in the admin UI.
     $node1 = $this->drupalCreateNode();
     $edit = [
