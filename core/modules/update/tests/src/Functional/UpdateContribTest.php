@@ -27,9 +27,7 @@ class UpdateContribTest extends UpdateTestBase {
   protected $updateProject = 'aaa_update_test';
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = [
     'aaa_update_test',
@@ -54,7 +52,7 @@ class UpdateContribTest extends UpdateTestBase {
   /**
    * Tests when there is no available release data for a contrib module.
    */
-  public function testNoReleasesAvailable() {
+  public function testNoReleasesAvailable(): void {
     $this->mockInstalledExtensionsInfo([
       'aaa_update_test' => [
         'project' => 'aaa_update_test',
@@ -83,7 +81,7 @@ class UpdateContribTest extends UpdateTestBase {
   /**
    * Tests the basic functionality of a contrib module on the status report.
    */
-  public function testUpdateContribBasic() {
+  public function testUpdateContribBasic(): void {
     $installed_extensions = [
       'aaa_update_test' => [
         'project' => 'aaa_update_test',
@@ -147,7 +145,7 @@ class UpdateContribTest extends UpdateTestBase {
    * if you sort alphabetically by module name (which is the order we see things
    * inside \Drupal\Core\Extension\ExtensionList::getList() for example).
    */
-  public function testUpdateContribOrder() {
+  public function testUpdateContribOrder(): void {
     // We want core to be version 8.0.0.
     $this->mockDefaultExtensionsInfo(['version' => '8.0.0']);
     // All the rest should be visible as contrib modules at version 8.x-1.0.
@@ -210,7 +208,7 @@ class UpdateContribTest extends UpdateTestBase {
   /**
    * Tests that subthemes are notified about security updates for base themes.
    */
-  public function testUpdateBaseThemeSecurityUpdate() {
+  public function testUpdateBaseThemeSecurityUpdate(): void {
     // @todo https://www.drupal.org/node/2338175 base themes have to be
     //   installed.
     // Only install the subtheme, not the base theme.
@@ -245,7 +243,7 @@ class UpdateContribTest extends UpdateTestBase {
   /**
    * Tests the Update Manager module when one normal update is available.
    */
-  public function testNormalUpdateAvailable() {
+  public function testNormalUpdateAvailable(): void {
     $assert_session = $this->assertSession();
     // Ensure that the update check requires a token.
     $this->drupalGet('admin/reports/updates/check');
@@ -340,7 +338,7 @@ class UpdateContribTest extends UpdateTestBase {
    * @todo https://www.drupal.org/node/2338175 extensions can not be hidden and
    *   base themes have to be installed.
    */
-  public function testUpdateShowDisabledThemes() {
+  public function testUpdateShowDisabledThemes(): void {
     $update_settings = $this->config('update.settings');
     // Make sure all the update_test_* themes are uninstalled.
     $extension_config = $this->config('core.extension');
@@ -403,7 +401,7 @@ class UpdateContribTest extends UpdateTestBase {
   /**
    * Tests updates with a hidden base theme.
    */
-  public function testUpdateHiddenBaseTheme() {
+  public function testUpdateHiddenBaseTheme(): void {
     \Drupal::moduleHandler()->loadInclude('update', 'inc', 'update.compare');
 
     // Install the subtheme.
@@ -433,7 +431,7 @@ class UpdateContribTest extends UpdateTestBase {
   /**
    * Makes sure that if we fetch from a broken URL, sane things happen.
    */
-  public function testUpdateBrokenFetchURL() {
+  public function testUpdateBrokenFetchURL(): void {
     $this->mockInstalledExtensionsInfo([
       'aaa_update_test' => [
         'project' => 'aaa_update_test',
@@ -496,7 +494,7 @@ class UpdateContribTest extends UpdateTestBase {
    * hook_update_status_alter() to try to mark this as missing a security
    * update, then assert if we see the appropriate warnings on the right pages.
    */
-  public function testHookUpdateStatusAlter() {
+  public function testHookUpdateStatusAlter(): void {
     $update_admin_user = $this->drupalCreateUser([
       'administer site configuration',
       'administer software updates',
@@ -552,7 +550,7 @@ class UpdateContribTest extends UpdateTestBase {
   /**
    * Tests that core compatibility messages are displayed.
    */
-  public function testCoreCompatibilityMessage() {
+  public function testCoreCompatibilityMessage(): void {
     $this->mockInstalledExtensionsInfo([
       'aaa_update_test' => [
         'project' => 'aaa_update_test',
@@ -587,6 +585,15 @@ class UpdateContribTest extends UpdateTestBase {
 
   /**
    * Tests update status of security releases.
+   */
+  public function testSecurityUpdateAvailability(): void {
+    foreach (static::securityUpdateAvailabilityProvider() as $case) {
+      $this->doTestSecurityUpdateAvailability($case['module_version'], $case['expected_security_releases'], $case['expected_update_message_type'], $case['fixture']);
+    }
+  }
+
+  /**
+   * Tests update status of security releases.
    *
    * @param string $module_version
    *   The module version the site is using.
@@ -596,10 +603,8 @@ class UpdateContribTest extends UpdateTestBase {
    *   The type of update message expected.
    * @param string $fixture
    *   The fixture file to use.
-   *
-   * @dataProvider securityUpdateAvailabilityProvider
    */
-  public function testSecurityUpdateAvailability($module_version, array $expected_security_releases, $expected_update_message_type, $fixture) {
+  protected function doTestSecurityUpdateAvailability($module_version, array $expected_security_releases, $expected_update_message_type, $fixture): void {
     $this->mockInstalledExtensionsInfo([
       'aaa_update_test' => [
         'project' => 'aaa_update_test',
@@ -726,7 +731,7 @@ class UpdateContribTest extends UpdateTestBase {
    * They both have an '8.x-1.0' release that is unpublished and an '8.x-2.0'
    * release that is published and is the expected update.
    */
-  public function testRevokedRelease() {
+  public function testRevokedRelease(): void {
     $this->mockInstalledExtensionsInfo([
       'aaa_update_test' => [
         'project' => 'aaa_update_test',
@@ -764,7 +769,7 @@ class UpdateContribTest extends UpdateTestBase {
    * 'unsupported' and an '8.x-2.0' release that has the 'Release type' value of
    * 'supported' and is the expected update.
    */
-  public function testUnsupportedRelease() {
+  public function testUnsupportedRelease(): void {
     $this->mockInstalledExtensionsInfo([
       'aaa_update_test' => [
         'project' => 'aaa_update_test',
@@ -790,7 +795,7 @@ class UpdateContribTest extends UpdateTestBase {
   /**
    * Tests messages for invalid, empty and missing version strings.
    */
-  public function testNonStandardVersionStrings() {
+  public function testNonStandardVersionStrings(): void {
     $version_infos = [
       'invalid' => [
         'version' => 'llama',
