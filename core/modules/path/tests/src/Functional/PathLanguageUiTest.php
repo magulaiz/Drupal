@@ -136,7 +136,7 @@ class PathLanguageUiTest extends PathTestBase {
   }
 
   /**
-   * Tests same aliases for diffrent node with diffrent language.
+   * Tests same aliases for different node with different language.
    */
   public function testSpecifiedNode(): void {
     // Common alias name.
