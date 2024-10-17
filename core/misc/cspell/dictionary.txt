@@ -79,7 +79,6 @@ bundleless
 bundlenode
 buttonpane
 buttonset
-buttontext
 buytaert
 bytea
 cachetag
@@ -103,7 +102,9 @@ checkboxify
 checkboxradio
 chocolatiers
 chromedriver
+chtext
 chumillas
+chvotes
 cidhash
 cids
 circlesmall
@@ -171,7 +172,6 @@ dflt
 dialogsave
 diffchange
 differring
-divs
 dnumber
 dockerhub
 docroot
@@ -213,6 +213,7 @@ endtrans
 enoki
 entityviewedit
 errmode
+eslintcache
 etag
 eurozone
 evenodd
@@ -380,7 +381,6 @@ mulrevpub
 multibuys
 multibyte
 multicardinality
-multipass
 multisite
 multistep
 multivalue
@@ -589,6 +589,7 @@ strs
 sttid
 styleguide
 stylelint
+stylelintcache
 stylescombo
 subarrays
 subchild
@@ -639,7 +640,6 @@ tablesort's
 tablesorts
 tabset
 tabwidth
-tappable
 taskless
 tcomment
 testbot
@@ -719,10 +719,12 @@ urandom
 userinfo
 userref
 vampirize
+varchar
 versionable
 versionless
 vfsstream
 viewports
+vocabs
 wcag
 webassert
 webcal

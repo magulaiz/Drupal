@@ -289,8 +289,8 @@ All arguments are long options.
 
   --file      Run tests identified by specific file names, instead of group names.
               Specify the path and the extension
-              (i.e. 'core/modules/user/user.test'). This argument must be last
-              on the command line.
+              (i.e. 'core/modules/user/tests/src/Functional/UserCreateTest.php').
+              This argument must be last on the command line.
 
   --types
 
@@ -359,7 +359,7 @@ Drupal installation as the webserver user (differs per configuration), or root:
 sudo -u [wwwrun|www-data|etc] php ./core/scripts/{$args['script']}
   --url http://example.com/ --all
 sudo -u [wwwrun|www-data|etc] php ./core/scripts/{$args['script']}
-  --url http://example.com/ --class Drupal\block\Tests\BlockTest
+  --url http://example.com/ --class Drupal\Tests\block\Functional\BlockTest
 
 Without a preinstalled Drupal site, specify a SQLite database pathname to create
 and the default database connection info to use in tests:
@@ -816,12 +816,15 @@ function simpletest_script_execute_batch(TestRunResultsStorageInterface $test_ru
  */
 function simpletest_script_run_phpunit(TestRun $test_run, $class) {
   $runner = PhpUnitTestRunner::create(\Drupal::getContainer());
+  $start = microtime(TRUE);
   $results = $runner->execute($test_run, $class, $status);
+  $time = microtime(TRUE) - $start;
+
   $runner->processPhpUnitResults($test_run, $results);
 
   $summaries = $runner->summarizeResults($results);
   foreach ($summaries as $class => $summary) {
-    simpletest_script_reporter_display_summary($class, $summary);
+    simpletest_script_reporter_display_summary($class, $summary, $time);
   }
   return $status;
 }
@@ -1077,14 +1080,17 @@ function simpletest_script_reporter_init() {
  *   The test class name that was run.
  * @param array $results
  *   The assertion results using #pass, #fail, #exception, #debug array keys.
+ * @param int|null $duration
+ *   The time taken for the test to complete.
  */
-function simpletest_script_reporter_display_summary($class, $results) {
+function simpletest_script_reporter_display_summary($class, $results, $duration = NULL) {
   // Output all test results vertically aligned.
   // Cut off the class name after 60 chars, and pad each group with 3 digits
   // by default (more than 999 assertions are rare).
-  $output = vsprintf('%-60.60s %10s %9s %14s %12s', [
+  $output = vsprintf('%-60.60s %10s %5s %9s %14s %12s', [
     $class,
     $results['#pass'] . ' passes',
+    isset($duration) ? ceil($duration) . 's' : '',
     !$results['#fail'] ? '' : $results['#fail'] . ' fails',
     !$results['#exception'] ? '' : $results['#exception'] . ' exceptions',
     !$results['#debug'] ? '' : $results['#debug'] . ' messages',
