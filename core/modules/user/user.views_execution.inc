@@ -5,6 +5,8 @@
  * Provide views runtime hooks for user.module.
  */
 
+use Drupal\Core\Hook\Attribute\LegacyHook;
+use Drupal\user\Hook\UserViewsExecutionHooks;
 use Drupal\views\ViewExecutable;
 
 /**
@@ -12,6 +14,7 @@ use Drupal\views\ViewExecutable;
  *
  * Allow replacement of current user ID so we can cache these queries.
  */
+#[LegacyHook]
 function user_views_query_substitutions(ViewExecutable $view) {
-  return ['***CURRENT_USER***' => \Drupal::currentUser()->id()];
+  return \Drupal::service(UserViewsExecutionHooks::CLASS)->userViewsQuerySubstitutions($view);
 }
