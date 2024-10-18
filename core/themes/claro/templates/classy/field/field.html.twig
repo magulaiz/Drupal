@@ -67,9 +67,7 @@
   {% endif %}
 {% else %}
   <div{{ attributes.addClass(classes) }}>
-    <div{{ title_attributes.addClass(title_classes) }}>
-      {{ label }}{% if label_display == 'inline' %}{{ ':'|t }}{% endif %}
-    </div>
+    <div{{ title_attributes.addClass(title_classes) }}>{{ label }}{% if label_display == 'inline' %}{{ ':'|t }}{% endif %}</div>
     {% if multiple %}
       <div class="field__items">
     {% endif %}
