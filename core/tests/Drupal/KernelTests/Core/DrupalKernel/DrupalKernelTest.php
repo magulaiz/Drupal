@@ -322,4 +322,20 @@ class DrupalKernelTest extends KernelTestBase {
     $this->assertSame($utf8_string, escapeshellcmd($utf8_string));
   }
 
+  /**
+   * Tests that the request pushed in preHandle() is popped in terminate().
+   *
+   * @covers ::preHandle
+   * @covers ::terminate
+   */
+  public function testRequestStackHandling(): void {
+    $request = Request::createFromGlobals();
+    $kernel = $this->getTestKernel($request);
+    $response = $kernel->handle($request);
+    $request_stack = $kernel->getContainer()->get('request_stack');
+    $this->assertSame($request, $request_stack->getMainRequest());
+    $kernel->terminate($request, $response);
+    $this->assertNull($request_stack->getMainRequest());
+  }
+
 }
