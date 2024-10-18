@@ -8,9 +8,8 @@ install:
   - views
 config:
   strict:
-    # Only treat config which influences the database layout strictly.
+    # Treat field storages strictly, since they influence the database layout.
     - field.storage.media.field_media_audio_file
-    - media.type.audio
   import:
     file:
       - views.view.files
