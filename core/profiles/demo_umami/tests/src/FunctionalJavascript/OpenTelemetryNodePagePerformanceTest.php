@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Drupal\Tests\demo_umami\FunctionalJavascript;
 
 use Drupal\FunctionalJavascriptTests\PerformanceTestBase;
-use Drupal\Tests\PerformanceTestTrait;
 
 /**
  * Tests demo_umami profile performance.
@@ -15,8 +14,6 @@ use Drupal\Tests\PerformanceTestTrait;
  * @requires extension apcu
  */
 class OpenTelemetryNodePagePerformanceTest extends PerformanceTestBase {
-
-  use PerformanceTestTrait;
 
   /**
    * {@inheritdoc}
