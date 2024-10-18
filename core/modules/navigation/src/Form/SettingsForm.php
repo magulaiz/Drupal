@@ -12,7 +12,6 @@ use Drupal\Core\File\FileSystemInterface;
 use Drupal\Core\Form\ConfigFormBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Image\ImageFactory;
-use Drupal\Core\Messenger\MessengerInterface;
 use Drupal\Core\Render\RendererInterface;
 use Drupal\Core\StreamWrapper\PublicStream;
 use Drupal\Core\StreamWrapper\StreamWrapperManager;
@@ -194,7 +193,8 @@ final class SettingsForm extends ConfigFormBase {
     else {
       $file = _file_save_upload_from_form($form['logo']['custom']['logo_upload'], $form_state, 0);
       if ($file) {
-        if (!$this->adjustLogoDimensions($file)) {
+        $logo_dimensions = $this->adjustLogoDimensions($file);
+        if (!$logo_dimensions) {
           $config = $this->config('navigation.settings');
           $width = $config->get('logo.width');
           $height = $config->get('logo.height');
@@ -207,6 +207,7 @@ final class SettingsForm extends ConfigFormBase {
         // Put the temporary file in form_values so we can save it on submit.
         $form_state->setValue('logo_upload', $file);
         $form_state->setValue('logo_path', $file->getFileUri());
+        $form_state->setValue('logo_dimensions', $logo_dimensions);
       }
 
       if (empty($form_state->getValue('logo_path'))) {
@@ -228,13 +229,21 @@ final class SettingsForm extends ConfigFormBase {
       if (!empty($values['logo_upload'])) {
         $filename = $this->fileSystem->copy($values['logo_upload']->getFileUri(), $default_scheme . '://');
         $values['logo_path'] = $filename;
+        if ($values['logo_dimensions']['resize']) {
+          $config = $this->config('navigation.settings');
+          $this->messenger()->addStatus($this->t('The image was resized to fit within the navigation logo expected dimensions of %widthx%height pixels. The new dimensions of the resized image are %new_widthx%new_height pixels.',
+            [
+              '%width' => $config->get('logo.max.width'),
+              '%height' => $config->get('logo.max.height'),
+              '%new_width' => $values['logo_dimensions']['width'],
+              '%new_height' => $values['logo_dimensions']['height'],
+            ]));
+        }
+
       }
     }
     catch (FileException) {
-      // Get rid of previous success messages, like the image resize one, given
-      // that the overall process failed and could be confusing.
-      $this->messenger->deleteByType(MessengerInterface::TYPE_STATUS);
-      $this->messenger->addError($this->t('The file %file could not be copied to the permanent destination. Contact the site administrator if the problem persists.', ['%file' => $values['logo_upload']->getFilename()]));
+      $this->messenger()->addError($this->t('The file %file could not be copied to the permanent destination. Contact the site administrator if the problem persists.', ['%file' => $values['logo_upload']->getFilename()]));
       return;
     }
 
@@ -253,36 +262,36 @@ final class SettingsForm extends ConfigFormBase {
    * @param \Drupal\file\Entity\File $file
    *   The file entity that contains the image.
    *
-   * @return bool
-   *   TRUE if the logo image dimensions are properly adjusted. FALSE otherwise.
+   * @return array|null
+   *   Array containing the logo dimensions properly adjusted. NULL if fails.
    */
-  protected function adjustLogoDimensions(File $file): bool {
+  protected function adjustLogoDimensions(File $file): ?array {
     $config = $this->config('navigation.settings');
     $image = $this->imageFactory->get($file->getFileUri());
     if (!$image->isValid()) {
-      return FALSE;
+      return NULL;
     }
 
     $width = $config->get('logo.max.width');
     $height = $config->get('logo.max.height');
 
     if ($image->getWidth() <= $width && $image->getHeight() <= $height) {
-      return TRUE;
+      return [
+        'width' => $width,
+        'height' => $width,
+        'resize' => FALSE,
+      ];
     }
 
     if ($image->scale($width, $height) && $image->save()) {
-      $this->messenger()->addStatus($this->t('The image was resized to fit within the navigation logo expected dimensions of %widthx%height pixels. The new dimensions of the resized image are %new_widthx%new_height pixels.',
-        [
-          '%width' => $width,
-          '%height' => $height,
-          '%new_width' => $image->getWidth(),
-          '%new_height' => $image->getHeight(),
-        ]));
-
-      return TRUE;
+      return [
+        'width' => $image->getWidth(),
+        'height' => $image->getHeight(),
+        'resize' => TRUE,
+      ];
     }
 
-    return FALSE;
+    return NULL;
   }
 
   /**
