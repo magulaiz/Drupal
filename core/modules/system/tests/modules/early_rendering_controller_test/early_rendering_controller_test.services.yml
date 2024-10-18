@@ -3,3 +3,5 @@ services:
     autoconfigure: true
   test_domain_object.view_subscriber:
     class: Drupal\early_rendering_controller_test\TestDomainObjectViewSubscriber
+  early_rendering_controller_argument_subscriber:
+    class: Drupal\early_rendering_controller_test\EarlyRenderingControllerArgumentSubscriber
