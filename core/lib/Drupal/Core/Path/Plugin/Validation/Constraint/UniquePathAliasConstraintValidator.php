@@ -26,10 +26,10 @@ class UniquePathAliasConstraintValidator extends ConstraintValidator implements 
    *
    * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entityTypeManager
    *   The entity type manager.
-   * @param \Symfony\Component\HttpFoundation\RequestStack $currentRequest
+   * @param \Symfony\Component\HttpFoundation\RequestStack $request_stack
    *   The current request stack.
    */
-  public function __construct(protected EntityTypeManagerInterface $entityTypeManager, RequestStack $currentRequest) {
+  public function __construct(protected EntityTypeManagerInterface $entityTypeManager, RequestStack $request_stack) {
     $this->currentRequest = $request_stack->getCurrentRequest();
   }
 
