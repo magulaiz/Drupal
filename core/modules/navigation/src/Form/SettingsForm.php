@@ -231,6 +231,8 @@ final class SettingsForm extends ConfigFormBase {
       }
     }
     catch (FileException) {
+      // Get rid of previous success messages, like the image resize one, given
+      // that the overall process failed and could be confusing.
       $this->messenger->deleteByType(MessengerInterface::TYPE_STATUS);
       $this->messenger->addError($this->t('The file %file could not be copied to the permanent destination. Contact the site administrator if the problem persists.', ['%file' => $values['logo_upload']->getFilename()]));
       return;
