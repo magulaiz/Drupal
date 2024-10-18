@@ -8,6 +8,7 @@ install:
 config:
   strict:
     # Treat field storages strictly, since they influence the database layout.
+    - field.storage.comment.comment_body
     - field.storage.node.comment
   import:
     comment:
