@@ -6,6 +6,10 @@ install:
   - path
   - views
 config:
+  strict:
+    # Only treat config which influences the database layout strictly.
+    - field.storage.media.field_media_oembed_video
+    - media.type.remote_video
   import:
     media_library:
       - core.entity_view_mode.media.media_library
