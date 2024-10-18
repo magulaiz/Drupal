@@ -6,6 +6,7 @@ use Drupal\Component\Utility\Html;
 use Drupal\Component\Utility\UrlHelper;
 use Drupal\Core\Ajax\PrependCommand;
 use Drupal\Core\Ajax\ReplaceCommand;
+use Drupal\Core\Ajax\ScrollTopCommand;
 use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
 use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\EventSubscriber\MainContentViewSubscriber;
@@ -13,13 +14,12 @@ use Drupal\Core\Form\FormBuilderInterface;
 use Drupal\Core\Path\CurrentPathStack;
 use Drupal\Core\Render\RendererInterface;
 use Drupal\Core\Routing\RedirectDestinationInterface;
-use Drupal\Core\Ajax\ScrollTopCommand;
 use Drupal\views\Ajax\ViewAjaxResponse;
 use Drupal\views\ViewExecutableFactory;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
  * Defines a controller to load a view via AJAX.
@@ -127,18 +127,33 @@ class ViewAjaxController implements ContainerInjectionInterface {
    */
   public function ajaxView(Request $request) {
     $name = $request->get('view_name');
-    $display_id = $request->get('view_display_id');
-    if (isset($name) && isset($display_id)) {
-      $args = $request->get('view_args', '');
-      $args = $args !== '' ? explode('/', Html::decodeEntities($args)) : [];
+    if (isset($name) && !$this->isValid($name)) {
+      throw new NotFoundHttpException();
+    }
 
-      // Arguments can be empty, make sure they are passed on as NULL so that
-      // argument validation is not triggered.
-      $args = array_map(function ($arg) {
-        return ($arg == '' ? NULL : $arg);
-      }, $args);
+    $display_id = $request->get('view_display_id');
+    if (isset($display_id) && !$this->isValid($display_id)) {
+      throw new NotFoundHttpException();
+    }
+
+    if (isset($name) && isset($display_id)) {
+      $args = [];
+      $args_raw = $request->get('view_args', '');
+      if ($args_raw !== '' && is_scalar($args_raw)) {
+        $args = explode('/', Html::decodeEntities($args_raw));
+
+        // Arguments can be empty, make sure they are passed on as NULL so that
+        // argument validation is not triggered.
+        $args = array_map(function ($arg) {
+          return ($arg == '' ? NULL : $arg);
+        }, $args);
+      }
 
       $path = $request->get('view_path');
+      if (isset($path) && !$this->isValid($path)) {
+        throw new NotFoundHttpException();
+      }
+
       $dom_id = $request->get('view_dom_id');
       $dom_id = isset($dom_id) ? preg_replace('/[^a-zA-Z0-9_-]+/', '-', $dom_id) : NULL;
       $pager_element = $request->get('pager_element');
@@ -227,6 +242,20 @@ class ViewAjaxController implements ContainerInjectionInterface {
     else {
       throw new NotFoundHttpException();
     }
+  }
+
+  /**
+   * Validates given value to protect from unexpected requests.
+   *
+   * @param mixed $value
+   *   Given value for validation.
+   *
+   * @return bool
+   *   Returns TRUE if value valid, otherwise FALSE
+   */
+  private function isValid(mixed $value): bool {
+    return is_scalar($value)
+      && mb_check_encoding($value, 'ASCII');
   }
 
 }

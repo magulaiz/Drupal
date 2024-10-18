@@ -10,8 +10,8 @@ use Drupal\Core\Utility\CallableResolver;
 use Drupal\Tests\UnitTestCase;
 use Drupal\views\Ajax\ViewAjaxResponse;
 use Drupal\views\Controller\ViewAjaxController;
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
@@ -144,6 +144,56 @@ class ViewAjaxControllerTest extends UnitTestCase {
       ->method('load')
       ->with('test_view')
       ->willReturn(FALSE);
+
+    $this->expectException(NotFoundHttpException::class);
+    $this->viewAjaxController->ajaxView($request);
+  }
+
+  /**
+   * Test a view with malicious view_name.
+   */
+  public function testMaliciousViewName(): void {
+    $request = new Request();
+    $request->request->set('view_name', 'test_view~!鎈"');
+    $request->request->set('view_display_id', 'page_1');
+
+    $this->viewStorage
+      ->method('load')
+      ->with('test_view~!鎈"')
+      ->willReturn(FALSE);
+
+    $this->expectException(NotFoundHttpException::class);
+    $this->viewAjaxController->ajaxView($request);
+  }
+
+  /**
+   * Test a view with malicious view_display_id.
+   */
+  public function testMaliciousViewDisplay(): void {
+    $request = new Request();
+    $request->request->set('view_name', 'test_view');
+    $request->request->set('view_display_id', 'page_1~!鎈"');
+
+    $this->viewStorage
+      ->method('load')
+      ->with('test_view')
+      ->willReturn(FALSE);
+
+    $this->expectException(NotFoundHttpException::class);
+    $this->viewAjaxController->ajaxView($request);
+  }
+
+  /**
+   * Tests a valid view with malicious path.
+   */
+  public function testMaliciousViewPath(): void {
+    $request = new Request();
+    $request->query->set('view_name', 'test_view');
+    $request->query->set('view_display_id', 'page_1');
+    $request->query->set('view_path', '/test-page?arg=~!鎈"');
+    $request->query->set('_wrapper_format', 'ajax');
+    $request->query->set('ajax_page_state', 'drupal.settings[]');
+    $request->query->set('type', 'article');
 
     $this->expectException(NotFoundHttpException::class);
     $this->viewAjaxController->ajaxView($request);
