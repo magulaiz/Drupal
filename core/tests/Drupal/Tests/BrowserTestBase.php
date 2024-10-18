@@ -15,7 +15,6 @@ use Drupal\Component\Utility\UrlHelper;
 use Drupal\Core\Database\Database;
 use Drupal\Core\Test\FunctionalTestSetupTrait;
 use Drupal\Core\Test\TestSetupTrait;
-use Drupal\Core\Url;
 use Drupal\Core\Utility\Error;
 use Drupal\Tests\block\Traits\BlockCreationTrait;
 use Drupal\Tests\node\Traits\ContentTypeCreationTrait;
@@ -31,7 +30,7 @@ use Symfony\Component\VarDumper\VarDumper;
 /**
  * Provides a test case for functional Drupal tests.
  *
- * Tests extending BrowserTestBase must exist in the
+ * Module tests extending BrowserTestBase must exist in the
  * Drupal\Tests\your_module\Functional namespace and live in the
  * modules/your_module/tests/src/Functional directory.
  *
@@ -99,7 +98,7 @@ abstract class BrowserTestBase extends TestCase {
   protected $configImporter;
 
   /**
-   * Modules to enable.
+   * Modules to install.
    *
    * The test runner will merge the $modules lists from this class, the class
    * it extends, and so on up the class hierarchy. It is not necessary to
@@ -352,6 +351,7 @@ abstract class BrowserTestBase extends TestCase {
     parent::setUp();
 
     $this->setUpAppRoot();
+    chdir($this->root);
 
     // Allow tests to compare MarkupInterface objects via assertEquals().
     $this->registerComparator(new MarkupInterfaceComparator());
@@ -370,10 +370,6 @@ abstract class BrowserTestBase extends TestCase {
     // Set up the browser test output file.
     $this->initBrowserOutputFile();
 
-    // Ensure that the test is not marked as risky because of no assertions. In
-    // PHPUnit 6 tests that only make assertions using $this->assertSession()
-    // can be marked as risky.
-    $this->addToAssertionCount(1);
   }
 
   /**
@@ -431,6 +427,11 @@ abstract class BrowserTestBase extends TestCase {
    * {@inheritdoc}
    */
   protected function tearDown(): void {
+    // Close any mink sessions as early as possible to free a new browser
+    // session up for the next test method or test.
+    if ($this->mink) {
+      $this->mink->stopSessions();
+    }
     parent::tearDown();
 
     if ($this->container) {
@@ -449,10 +450,6 @@ abstract class BrowserTestBase extends TestCase {
 
     // Ensure that internal logged in variable is reset.
     $this->loggedInUser = FALSE;
-
-    if ($this->mink) {
-      $this->mink->stopSessions();
-    }
 
     // Restore original shutdown callbacks.
     if (function_exists('drupal_register_shutdown_function')) {
@@ -526,7 +523,7 @@ abstract class BrowserTestBase extends TestCase {
    * @return array
    *   Associative array of option keys and values.
    */
-  protected function getOptions($select, Element $container = NULL) {
+  protected function getOptions($select, ?Element $container = NULL) {
     if (is_string($select)) {
       $select = $this->assertSession()->selectExists($select, $container);
     }
@@ -556,10 +553,6 @@ abstract class BrowserTestBase extends TestCase {
     // Clear the static cache so that subsequent cache invalidations will work
     // as expected.
     $this->container->get('cache_tags.invalidator')->resetChecksums();
-
-    // Generate a route to prime the URL generator with the correct base URL.
-    // @todo Remove in https://www.drupal.org/project/drupal/issues/3207896.
-    Url::fromRoute('<front>')->setAbsolute()->toString();
 
     // Explicitly call register() again on the container registered in \Drupal.
     // @todo This should already be called through

@@ -17,9 +17,7 @@ use Drupal\user\Entity\Role;
 class FileListingTest extends FileFieldTestBase {
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = ['views', 'file', 'image', 'entity_test'];
 
@@ -80,7 +78,7 @@ class FileListingTest extends FileFieldTestBase {
   /**
    * Tests file overview with different user permissions.
    */
-  public function testFileListingPages() {
+  public function testFileListingPages(): void {
     $file_usage = $this->container->get('file.usage');
     // Users without sufficient permissions should not see file listing.
     $this->drupalLogin($this->baseUser);
@@ -210,7 +208,7 @@ class FileListingTest extends FileFieldTestBase {
   /**
    * Tests file listing usage page for entities with no canonical link template.
    */
-  public function testFileListingUsageNoLink() {
+  public function testFileListingUsageNoLink(): void {
     // Login with user with right permissions and test listing.
     $this->drupalLogin($this->adminUser);
 
@@ -249,8 +247,7 @@ class FileListingTest extends FileFieldTestBase {
     $this->drupalGet('admin/content/files/usage/' . $file->id());
 
     $this->assertSession()->statusCodeEquals(200);
-    // Entity name should be displayed, but not linked if Entity::toUrl
-    // throws an exception
+    // Entity name should be displayed.
     $this->assertSession()->pageTextContains($entity_name);
     $this->assertSession()->linkNotExists($entity_name, 'Linked entity name not added to file usage listing.');
     $this->assertSession()->linkExists($node->getTitle());
