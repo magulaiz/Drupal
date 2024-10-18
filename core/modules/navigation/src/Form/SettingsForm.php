@@ -121,7 +121,7 @@ final class SettingsForm extends ConfigFormBase {
     $default_path = $original_path;
     $default = 'logo.png';
 
-    if (StreamWrapperManager::getScheme($original_path) == 'public') {
+    if (StreamWrapperManager::getScheme($original_path) === 'public') {
       $friendly_path = StreamWrapperManager::getTarget($original_path);
       $default_path = $friendly_path;
     }
