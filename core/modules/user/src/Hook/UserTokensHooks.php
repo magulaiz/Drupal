@@ -8,7 +8,7 @@ use Drupal\Core\Render\BubbleableMetadata;
 use Drupal\user\Entity\User;
 
 /**
- *
+ * Implementations of hooks by the user module.
  */
 class UserTokensHooks {
 

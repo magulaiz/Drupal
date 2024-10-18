@@ -5,7 +5,7 @@ namespace Drupal\user\Hook;
 use Drupal\Core\Hook\Hook;
 
 /**
- *
+ * Implementations of hooks by the user module.
  */
 class UserViewsHooks {
 

@@ -6,7 +6,7 @@ use Drupal\Core\Hook\Hook;
 use Drupal\views\ViewExecutable;
 
 /**
- *
+ * Implementations of hooks by the user module.
  */
 class UserViewsExecutionHooks {
 

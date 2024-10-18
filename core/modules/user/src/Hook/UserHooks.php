@@ -26,7 +26,7 @@ use Drupal\user\RoleInterface;
 use Drupal\user\UserInterface;
 
 /**
- *
+ * Implementations of hooks by the user module.
  */
 class UserHooks {
 
