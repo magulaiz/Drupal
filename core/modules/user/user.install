@@ -122,12 +122,12 @@ function user_requirements($phase): array {
     ->execute();
   if ($result === FALSE) {
     $requirements['anonymous user'] = [
-        'title' => t('Anonymous user'),
-        'description' => t('The anonymous user does not exist. See the <a href=":url">restore the anonymous (user ID 0) user record</a> for more information', [
-          ':url' => 'https://www.drupal.org/node/1029506',
-        ]),
-        'severity' => REQUIREMENT_WARNING,
-      ];
+      'title' => t('Anonymous user'),
+      'description' => t('The anonymous user does not exist. See the <a href=":url">restore the anonymous (user ID 0) user record</a> for more information', [
+        ':url' => 'https://www.drupal.org/node/1029506',
+      ]),
+      'severity' => REQUIREMENT_WARNING,
+    ];
   }
 
   return $requirements;
