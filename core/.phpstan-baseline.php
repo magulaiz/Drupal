@@ -54467,195 +54467,129 @@ $ignoreErrors[] = [
 ];
 $ignoreErrors[] = [
 	// identifier: missingType.return
-	'message' => '#^Function user_cancel\\(\\) has no return type specified\\.$#',
+	'message' => '#^Function userHelp\\(\\) has no return type specified\\.$#',
 	'count' => 1,
-	'path' => __DIR__ . '/modules/user/user.module',
+	'path' => __DIR__ . '/modules/user/src/Hook/UserHooks.php',
 ];
 $ignoreErrors[] = [
 	// identifier: missingType.return
-	'message' => '#^Function user_cookie_delete\\(\\) has no return type specified\\.$#',
+	'message' => '#^Function userTheme\\(\\) has no return type specified\\.$#',
 	'count' => 1,
-	'path' => __DIR__ . '/modules/user/user.module',
+	'path' => __DIR__ . '/modules/user/src/Hook/UserHooks.php',
 ];
 $ignoreErrors[] = [
 	// identifier: missingType.return
-	'message' => '#^Function user_cookie_save\\(\\) has no return type specified\\.$#',
+	'message' => '#^Function userPictureEnabled\\(\\) has no return type specified\\.$#',
 	'count' => 1,
-	'path' => __DIR__ . '/modules/user/user.module',
+	'path' => __DIR__ . '/modules/user/src/Hook/UserHooks.php',
 ];
 $ignoreErrors[] = [
 	// identifier: missingType.return
-	'message' => '#^Function user_element_info_alter\\(\\) has no return type specified\\.$#',
+	'message' => '#^Function userEntityExtraFieldInfo\\(\\) has no return type specified\\.$#',
 	'count' => 1,
-	'path' => __DIR__ . '/modules/user/user.module',
+	'path' => __DIR__ . '/modules/user/src/Hook/UserHooks.php',
 ];
 $ignoreErrors[] = [
 	// identifier: missingType.return
-	'message' => '#^Function user_entity_extra_field_info\\(\\) has no return type specified\\.$#',
+	'message' => '#^Function userLoadByMail\\(\\) has no return type specified\\.$#',
 	'count' => 1,
-	'path' => __DIR__ . '/modules/user/user.module',
+	'path' => __DIR__ . '/modules/user/src/Hook/UserHooks.php',
 ];
 $ignoreErrors[] = [
 	// identifier: missingType.return
-	'message' => '#^Function user_entity_operation\\(\\) has no return type specified\\.$#',
+	'message' => '#^Function userLoadByName\\(\\) has no return type specified\\.$#',
 	'count' => 1,
-	'path' => __DIR__ . '/modules/user/user.module',
+	'path' => __DIR__ . '/modules/user/src/Hook/UserHooks.php',
 ];
 $ignoreErrors[] = [
 	// identifier: missingType.return
-	'message' => '#^Function user_filter_format_disable\\(\\) has no return type specified\\.$#',
+	'message' => '#^Function userValidateName\\(\\) has no return type specified\\.$#',
 	'count' => 1,
-	'path' => __DIR__ . '/modules/user/user.module',
+	'path' => __DIR__ . '/modules/user/src/Hook/UserHooks.php',
 ];
 $ignoreErrors[] = [
 	// identifier: missingType.return
-	'message' => '#^Function user_form_process_password_confirm\\(\\) has no return type specified\\.$#',
+	'message' => '#^Function userIsBlocked\\(\\) has no return type specified\\.$#',
 	'count' => 1,
-	'path' => __DIR__ . '/modules/user/user.module',
+	'path' => __DIR__ . '/modules/user/src/Hook/UserHooks.php',
 ];
 $ignoreErrors[] = [
 	// identifier: missingType.return
-	'message' => '#^Function user_form_system_regional_settings_alter\\(\\) has no return type specified\\.$#',
+	'message' => '#^Function userPassResetUrl\\(\\) has no return type specified\\.$#',
 	'count' => 1,
-	'path' => __DIR__ . '/modules/user/user.module',
+	'path' => __DIR__ . '/modules/user/src/Hook/UserHooks.php',
 ];
 $ignoreErrors[] = [
 	// identifier: missingType.return
-	'message' => '#^Function user_form_system_regional_settings_submit\\(\\) has no return type specified\\.$#',
+	'message' => '#^Function userCancelUrl\\(\\) has no return type specified\\.$#',
 	'count' => 1,
-	'path' => __DIR__ . '/modules/user/user.module',
+	'path' => __DIR__ . '/modules/user/src/Hook/UserHooks.php',
 ];
 $ignoreErrors[] = [
 	// identifier: missingType.return
-	'message' => '#^Function user_help\\(\\) has no return type specified\\.$#',
+	'message' => '#^Function userPassRehash\\(\\) has no return type specified\\.$#',
 	'count' => 1,
-	'path' => __DIR__ . '/modules/user/user.module',
+	'path' => __DIR__ . '/modules/user/src/Hook/UserHooks.php',
 ];
 $ignoreErrors[] = [
 	// identifier: missingType.return
-	'message' => '#^Function user_js_settings_alter\\(\\) has no return type specified\\.$#',
+	'message' => '#^Function userCancel\\(\\) has no return type specified\\.$#',
 	'count' => 1,
-	'path' => __DIR__ . '/modules/user/user.module',
+	'path' => __DIR__ . '/modules/user/src/Hook/UserHooks.php',
 ];
 $ignoreErrors[] = [
 	// identifier: missingType.return
-	'message' => '#^Function user_login_finalize\\(\\) has no return type specified\\.$#',
+	'message' => '#^Function userCancelMethods\\(\\) has no return type specified\\.$#',
 	'count' => 1,
-	'path' => __DIR__ . '/modules/user/user.module',
+	'path' => __DIR__ . '/modules/user/src/Hook/UserHooks.php',
 ];
 $ignoreErrors[] = [
 	// identifier: missingType.return
-	'message' => '#^Function user_logout\\(\\) has no return type specified\\.$#',
+	'message' => '#^Function userUserRoleInsert\\(\\) has no return type specified\\.$#',
 	'count' => 1,
-	'path' => __DIR__ . '/modules/user/user.module',
+	'path' => __DIR__ . '/modules/user/src/Hook/UserHooks.php',
 ];
 $ignoreErrors[] = [
 	// identifier: missingType.return
-	'message' => '#^Function user_mail\\(\\) has no return type specified\\.$#',
+	'message' => '#^Function userUserRoleDelete\\(\\) has no return type specified\\.$#',
 	'count' => 1,
-	'path' => __DIR__ . '/modules/user/user.module',
+	'path' => __DIR__ . '/modules/user/src/Hook/UserHooks.php',
 ];
 $ignoreErrors[] = [
 	// identifier: missingType.return
-	'message' => '#^Function user_mail_tokens\\(\\) has no return type specified\\.$#',
+	'message' => '#^Function userFormProcessPasswordConfirm\\(\\) has no return type specified\\.$#',
 	'count' => 1,
-	'path' => __DIR__ . '/modules/user/user.module',
+	'path' => __DIR__ . '/modules/user/src/Hook/UserHooks.php',
 ];
 $ignoreErrors[] = [
 	// identifier: missingType.return
-	'message' => '#^Function user_modules_uninstalled\\(\\) has no return type specified\\.$#',
+	'message' => '#^Function userToolbar\\(\\) has no return type specified\\.$#',
 	'count' => 1,
-	'path' => __DIR__ . '/modules/user/user.module',
+	'path' => __DIR__ . '/modules/user/src/Hook/UserHooks.php',
 ];
 $ignoreErrors[] = [
 	// identifier: missingType.return
-	'message' => '#^Function user_picture_enabled\\(\\) has no return type specified\\.$#',
+	'message' => '#^Function userEntityOperation\\(\\) has no return type specified\\.$#',
 	'count' => 1,
-	'path' => __DIR__ . '/modules/user/user.module',
+	'path' => __DIR__ . '/modules/user/src/Hook/UserHooks.php',
 ];
 $ignoreErrors[] = [
 	// identifier: missingType.return
-	'message' => '#^Function user_preprocess_block\\(\\) has no return type specified\\.$#',
+	'message' => '#^Function userTokenInfo\\(\\) has no return type specified\\.$#',
 	'count' => 1,
-	'path' => __DIR__ . '/modules/user/user.module',
+	'path' => __DIR__ . '/modules/user/src/Hook/UserTokensHooks.php',
 ];
 $ignoreErrors[] = [
 	// identifier: missingType.return
-	'message' => '#^Function user_role_change_permissions\\(\\) has no return type specified\\.$#',
+	'message' => '#^Function userTokens\\(\\) has no return type specified\\.$#',
 	'count' => 1,
-	'path' => __DIR__ . '/modules/user/user.module',
+	'path' => __DIR__ . '/modules/user/src/Hook/UserTokensHooks.php',
 ];
 $ignoreErrors[] = [
 	// identifier: missingType.return
-	'message' => '#^Function user_role_grant_permissions\\(\\) has no return type specified\\.$#',
+	'message' => '#^Function userViewsQuerySubstitutions\\(\\) has no return type specified\\.$#',
 	'count' => 1,
-	'path' => __DIR__ . '/modules/user/user.module',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
-	'message' => '#^Function user_role_revoke_permissions\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/user/user.module',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
-	'message' => '#^Function user_template_preprocess_default_variables_alter\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/user/user.module',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
-	'message' => '#^Function user_theme\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/user/user.module',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
-	'message' => '#^Function user_toolbar\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/user/user.module',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
-	'message' => '#^Function user_user_login\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/user/user.module',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
-	'message' => '#^Function user_user_logout\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/user/user.module',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
-	'message' => '#^Function user_user_presave\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/user/user.module',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
-	'message' => '#^Function user_user_role_delete\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/user/user.module',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
-	'message' => '#^Function user_user_role_insert\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/user/user.module',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
-	'message' => '#^Function user_user_view\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/user/user.module',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
-	'message' => '#^Function user_user_view_alter\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/user/user.module',
+	'path' => __DIR__ . '/modules/user/src/Hook/UserViewsExecutionHooks.php',
 ];
 $ignoreErrors[] = [
 	// identifier: missingType.return
