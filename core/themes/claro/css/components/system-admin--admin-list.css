@@ -23,15 +23,6 @@
   margin: -1em -1.5em;
 }
 
-.admin-list li.first-non-promoted {
-  border-top: none;
-  margin-top: 36px;
-}
-
-.admin-list li.menu-link-promoted a .label {
-  font-size: 1.25em;
-}
-
 /**
  * Admin item.
  */
