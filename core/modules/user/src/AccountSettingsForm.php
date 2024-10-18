@@ -447,6 +447,11 @@ class AccountSettingsForm extends ConfigFormBase {
   public function validateForm(array &$form, FormStateInterface $form_state) {
     $default_cancel_method = $form_state->getValue('user_cancel_method');
     $cancel_methods_options = $form_state->getValue('user_cancel_method_options');
+    $boolean_values = [];
+    foreach ($cancel_methods_options as $key => $value) {
+      $boolean_values[$key] = (boolean) $value;
+    }
+    $form_state->setValue('user_cancel_method_options', $boolean_values);
     // Remove disabled cancel options.
     $cancel_methods_options = array_filter($cancel_methods_options);
     if (empty($cancel_methods_options)) {
