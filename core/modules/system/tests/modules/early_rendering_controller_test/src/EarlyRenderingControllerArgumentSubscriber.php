@@ -13,7 +13,6 @@ class EarlyRenderingControllerArgumentSubscriber implements EventSubscriberInter
   public function onKernelController(ControllerArgumentsEvent $event): void {
     $arguments = $event->getArguments();
     if (!count($arguments)) {
-      $controller = $event->getController();
       return;
     }
 
