@@ -7,10 +7,13 @@
 
 declare(strict_types=1);
 
+use Drupal\Core\Hook\Attribute\LegacyHook;
+use Drupal\user_form_test\Hook\UserFormTestHooks;
+
 /**
  * Implements hook_form_FORM_ID_alter() for user_cancel_form().
  */
+#[LegacyHook]
 function user_form_test_form_user_cancel_form_alter(&$form, &$form_state) {
-  $form['user_cancel_confirm']['#default_value'] = FALSE;
-  $form['access']['#value'] = \Drupal::currentUser()->hasPermission('cancel other accounts');
+  \Drupal::service(UserFormTestHooks::CLASS)->userFormTestFormUserCancelFormAlter($form, $form_state);
 }
