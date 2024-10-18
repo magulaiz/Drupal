@@ -25,7 +25,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
   description: new TranslatableMarkup("Ensures that the latest versions of images uploaded via a Text Editor are displayed, along with their dimensions."),
   type: FilterInterface::TYPE_TRANSFORM_REVERSIBLE
 )]
-class EditorFileReference extends FilterBase implements ContainerFactoryPluginInterface {
+final class EditorFileReference extends FilterBase implements ContainerFactoryPluginInterface {
 
   /**
    * The entity repository.
@@ -65,7 +65,7 @@ class EditorFileReference extends FilterBase implements ContainerFactoryPluginIn
    * {@inheritdoc}
    */
   public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
-    return new static(
+    return new self(
       $configuration,
       $plugin_id,
       $plugin_definition,
@@ -103,7 +103,14 @@ class EditorFileReference extends FilterBase implements ContainerFactoryPluginIn
                 // Maintain aspect ratio.
                 if ($node->hasAttribute('height')) {
                   $image_height = $node->getAttribute('height');
-                  $width = round(($image_height / $height) * $width);
+                  // Calculate width if height is a numeric value.
+                  if (is_numeric($image_height)) {
+                    $width = round(($image_height / $height) * $width);
+                  }
+                  // Set to auto otherwise.
+                  else {
+                    $width = 'auto';
+                  }
                 }
                 $node->setAttribute('width', (string) $width);
               }
@@ -111,7 +118,14 @@ class EditorFileReference extends FilterBase implements ContainerFactoryPluginIn
                 // Maintain aspect ratio.
                 if ($node->hasAttribute('width')) {
                   $image_width = $node->getAttribute('width');
-                  $height = round(($image_width / $width) * $height);
+                  // Calculate height if width is a numeric value.
+                  if (is_numeric($image_width)) {
+                    $height = round(($image_width / $width) * $height);
+                  }
+                  // Set to auto otherwise.
+                  else {
+                    $height = 'auto';
+                  }
                 }
                 $node->setAttribute('height', (string) $height);
               }
