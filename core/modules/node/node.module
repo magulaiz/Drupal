@@ -630,12 +630,30 @@ function node_user_cancel($edit, UserInterface $account, $method) {
 
     case 'user_cancel_reassign':
       // Anonymize all of the nodes for this old account.
+      /** @var \Drupal\node\NodeStorageInterface $nodeStorage */
       \Drupal::moduleHandler()->loadInclude('node', 'inc', 'node.admin');
-      $vids = \Drupal::entityTypeManager()->getStorage('node')->userRevisionIds($account);
-      node_mass_update($vids, [
-        'uid' => 0,
-        'revision_uid' => 0,
-      ], NULL, TRUE, TRUE);
+      $nodeStorage = \Drupal::entityTypeManager()->getStorage('node');
+      $query = \Drupal::database()->select('node_field_revision', 'n');
+      $query->fields('n', ['langcode']);
+      $query->addExpression('GROUP_CONCAT(vid)', 'revisions');
+      $query->condition('uid', $account->id());
+      $query->groupBy('langcode');
+      $result = $query->execute();
+      $result->setFetchMode(\PDO::FETCH_ASSOC);
+      $revision_list = [];
+      foreach ($result->fetchAll() as $value) {
+        $revision_list[$value['langcode']] = explode(',', $value['revisions']);
+      }
+
+      foreach ($revision_list as $langcode => $revisions) {
+        node_mass_update($revisions, ['uid' => 0], $langcode, TRUE, TRUE, TRUE);
+      }
+
+      // Reassign revision authors.
+      $revision_id_author = $nodeStorage->userRevisionIdsByRevisionAuthor($account);
+      if (!empty($revision_id_author)) {
+        node_mass_update($revision_id_author, ['revision_uid' => 0], NULL, TRUE, TRUE, TRUE);
+      }
       break;
   }
 }
