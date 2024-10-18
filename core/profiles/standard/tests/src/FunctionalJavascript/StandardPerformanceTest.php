@@ -120,14 +120,14 @@ class StandardPerformanceTest extends PerformanceTestBase {
       'DELETE FROM "semaphore"  WHERE ("name" = "theme_registry:runtime:stark:Drupal\Core\Utility\ThemeRegistry") AND ("value" = "LOCK_ID")',
       'INSERT INTO "semaphore" ("name", "value", "expire") VALUES ("library_info:stark:Drupal\Core\Cache\CacheCollector", "LOCK_ID", "EXPIRE")',
       'DELETE FROM "semaphore"  WHERE ("name" = "library_info:stark:Drupal\Core\Cache\CacheCollector") AND ("value" = "LOCK_ID")',
-      'INSERT INTO "semaphore" ("name", "value", "expire") VALUES ("path_alias_whitelist:Drupal\Core\Cache\CacheCollector", "LOCK_ID", "EXPIRE")',
-      'DELETE FROM "semaphore"  WHERE ("name" = "path_alias_whitelist:Drupal\Core\Cache\CacheCollector") AND ("value" = "LOCK_ID")',
+      'INSERT INTO "semaphore" ("name", "value", "expire") VALUES ("path_alias_prefix_list:Drupal\Core\Cache\CacheCollector", "LOCK_ID", "EXPIRE")',
+      'DELETE FROM "semaphore"  WHERE ("name" = "path_alias_prefix_list:Drupal\Core\Cache\CacheCollector") AND ("value" = "LOCK_ID")',
     ];
     $recorded_queries = $performance_data->getQueries();
     $this->assertSame($expected_queries, $recorded_queries);
     $this->assertSame(34, $performance_data->getQueryCount());
-    $this->assertSame(124, $performance_data->getCacheGetCount());
-    $this->assertSame(45, $performance_data->getCacheSetCount());
+    $this->assertSame(122, $performance_data->getCacheGetCount());
+    $this->assertSame(44, $performance_data->getCacheSetCount());
     $this->assertSame(0, $performance_data->getCacheDeleteCount());
     $this->assertSame(36, $performance_data->getCacheTagChecksumCount());
     $this->assertSame(43, $performance_data->getCacheTagIsValidCount());
@@ -154,8 +154,8 @@ class StandardPerformanceTest extends PerformanceTestBase {
     $recorded_queries = $performance_data->getQueries();
     $this->assertSame($expected_queries, $recorded_queries);
     $this->assertSame(8, $performance_data->getQueryCount());
-    $this->assertSame(94, $performance_data->getCacheGetCount());
-    $this->assertSame(16, $performance_data->getCacheSetCount());
+    $this->assertSame(92, $performance_data->getCacheGetCount());
+    $this->assertSame(15, $performance_data->getCacheSetCount());
     $this->assertSame(0, $performance_data->getCacheDeleteCount());
     $this->assertCountBetween(23, 24, $performance_data->getCacheTagChecksumCount());
     $this->assertCountBetween(39, 40, $performance_data->getCacheTagIsValidCount());
@@ -187,7 +187,7 @@ class StandardPerformanceTest extends PerformanceTestBase {
     $recorded_queries = $performance_data->getQueries();
     $this->assertSame($expected_queries, $recorded_queries);
     $this->assertSame(12, $performance_data->getQueryCount());
-    $this->assertSame(78, $performance_data->getCacheGetCount());
+    $this->assertSame(77, $performance_data->getCacheGetCount());
     $this->assertSame(16, $performance_data->getCacheSetCount());
     $this->assertSame(0, $performance_data->getCacheDeleteCount());
     $this->assertSame(22, $performance_data->getCacheTagChecksumCount());
@@ -233,15 +233,16 @@ class StandardPerformanceTest extends PerformanceTestBase {
       'SELECT "data".* FROM "users_field_data" "data" WHERE "data"."uid" IN (2) ORDER BY "data"."uid" ASC',
       'SELECT "t".* FROM "user__roles" "t" WHERE ("entity_id" IN (2)) AND ("deleted" = 0) AND ("langcode" IN ("en", "und", "zxx")) ORDER BY "delta" ASC',
       'SELECT "t".* FROM "user__user_picture" "t" WHERE ("entity_id" IN (2)) AND ("deleted" = 0) AND ("langcode" IN ("en", "und", "zxx")) ORDER BY "delta" ASC',
+      'SELECT "name", "value" FROM "key_value" WHERE "name" IN ( "theme:stark" ) AND "collection" = "config.entity.key_store.block"',
     ];
     $recorded_queries = $performance_data->getQueries();
     $this->assertSame($expected_queries, $recorded_queries);
-    $this->assertSame(16, $performance_data->getQueryCount());
-    $this->assertSame(60, $performance_data->getCacheGetCount());
+    $this->assertSame(17, $performance_data->getQueryCount());
+    $this->assertSame(84, $performance_data->getCacheGetCount());
     $this->assertSame(1, $performance_data->getCacheSetCount());
     $this->assertSame(1, $performance_data->getCacheDeleteCount());
     $this->assertSame(1, $performance_data->getCacheTagChecksumCount());
-    $this->assertSame(23, $performance_data->getCacheTagIsValidCount());
+    $this->assertSame(37, $performance_data->getCacheTagIsValidCount());
     $this->assertSame(0, $performance_data->getCacheTagInvalidationCount());
     $this->drupalLogout();
   }
@@ -291,7 +292,7 @@ class StandardPerformanceTest extends PerformanceTestBase {
     $recorded_queries = $performance_data->getQueries();
     $this->assertSame($expected_queries, $recorded_queries);
     $this->assertSame(18, $performance_data->getQueryCount());
-    $this->assertSame(107, $performance_data->getCacheGetCount());
+    $this->assertSame(105, $performance_data->getCacheGetCount());
     $this->assertSame(1, $performance_data->getCacheSetCount());
     $this->assertSame(1, $performance_data->getCacheDeleteCount());
     $this->assertSame(1, $performance_data->getCacheTagChecksumCount());
