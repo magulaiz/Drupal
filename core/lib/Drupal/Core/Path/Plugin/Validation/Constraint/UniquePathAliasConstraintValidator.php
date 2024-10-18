@@ -15,13 +15,6 @@ use Symfony\Component\Validator\ConstraintValidator;
 class UniquePathAliasConstraintValidator extends ConstraintValidator implements ContainerInjectionInterface {
 
   /**
-   * The entity type manager.
-   *
-   * @var \Drupal\Core\Entity\EntityTypeManagerInterface
-   */
-  protected $entityTypeManager;
-
-  /**
    * The current request.
    *
    * @var \Symfony\Component\HttpFoundation\Request
@@ -31,13 +24,12 @@ class UniquePathAliasConstraintValidator extends ConstraintValidator implements 
   /**
    * Creates a new UniquePathAliasConstraintValidator instance.
    *
-   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
+   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entityTypeManager
    *   The entity type manager.
-   * @param \Symfony\Component\HttpFoundation\RequestStack $request_stack
+   * @param \Symfony\Component\HttpFoundation\RequestStack $currentRequest
    *   The current request stack.
    */
-  public function __construct(EntityTypeManagerInterface $entity_type_manager, RequestStack $request_stack) {
-    $this->entityTypeManager = $entity_type_manager;
+  public function __construct(protected EntityTypeManagerInterface $entityTypeManager, RequestStack $currentRequest) {
     $this->currentRequest = $request_stack->getCurrentRequest();
   }
 
