@@ -5,8 +5,6 @@ namespace Drupal\user\Hook;
 use Drupal\Component\Assertion\Inspector;
 use Drupal\Component\Render\PlainTextOutput;
 use Drupal\Component\Utility\Crypt;
-use Drupal\Component\Utility\Unicode;
-use Drupal\Core\Access\AccessibleInterface;
 use Drupal\Core\Asset\AttachedAssetsInterface;
 use Drupal\Core\Batch\BatchBuilder;
 use Drupal\Core\Entity\Display\EntityViewDisplayInterface;
@@ -751,36 +749,36 @@ class UserHooks {
     public function userToolbar() {
       $user = \Drupal::currentUser();
       $items['user'] = [
-      '#type' => 'toolbar_item',
-      'tab' => [
-      '#type' => 'link',
-      '#title' => $user->getDisplayName(),
-      '#url' => Url::fromRoute('user.page'),
-      '#attributes' => ['title' => \t('My account'), 'class' => ['toolbar-icon', 'toolbar-icon-user']],
-      '#cache' => [
+        '#type' => 'toolbar_item',
+        'tab' => [
+          '#type' => 'link',
+          '#title' => $user->getDisplayName(),
+          '#url' => Url::fromRoute('user.page'),
+          '#attributes' => ['title' => \t('My account'), 'class' => ['toolbar-icon', 'toolbar-icon-user']],
+          '#cache' => [
             // Vary cache for anonymous and authenticated users.
-        'contexts' => ['user.roles:anonymous'],
-      ]
-],
-      'tray' => ['#heading' => \t('User account actions')],
-      '#weight' => 100,
-      '#attached' => ['library' => ['user/drupal.user.icons']]
-];
+            'contexts' => ['user.roles:anonymous'],
+          ],
+        ],
+        'tray' => ['#heading' => \t('User account actions')],
+        '#weight' => 100,
+        '#attached' => ['library' => ['user/drupal.user.icons']],
+      ];
       if ($user->isAnonymous()) {
         $links = ['login' => ['title' => \t('Log in'), 'url' => Url::fromRoute('user.page')]];
         $items['user']['tray']['user_links'] = ['#theme' => 'links__toolbar_user', '#links' => $links, '#attributes' => ['class' => ['toolbar-menu']]];
       }
       else {
         $items['user']['tab']['#title'] = [
-        '#lazy_builder' => ['user.toolbar_link_builder:renderDisplayName', []],
-        '#create_placeholder' => \TRUE,
-        '#lazy_builder_preview' => [
+          '#lazy_builder' => ['user.toolbar_link_builder:renderDisplayName', []],
+          '#create_placeholder' => \TRUE,
+          '#lazy_builder_preview' => [
               // Add a line of whitespace to the placeholder to ensure the icon is
               // positioned in the same place it will be when the lazy loaded content
               // appears.
-          '#markup' => '&nbsp;',
-        ]
-      ];
+            '#markup' => '&nbsp;',
+          ],
+        ];
         $items['user']['tray']['user_links'] = ['#lazy_builder' => ['user.toolbar_link_builder:renderToolbarLinks', []], '#create_placeholder' => \TRUE, '#lazy_builder_preview' => ['#markup' => '<a href="#" class="toolbar-tray-lazy-placeholder-link">&nbsp;</a>']];
       }
       return $items;
@@ -811,13 +809,13 @@ class UserHooks {
       $config = \Drupal::config('system.date');
       $form['timezone']['configurable_timezones'] = ['#type' => 'checkbox', '#title' => \t('Users may set their own time zone'), '#default_value' => $config->get('timezone.user.configurable')];
       $form['timezone']['configurable_timezones_wrapper'] = [
-      '#type' => 'container',
-      '#states' => [
+        '#type' => 'container',
+        '#states' => [
             // Hide the user configured timezone settings when users are forced to use
             // the default setting.
-        'invisible' => ['input[name="configurable_timezones"]' => ['checked' => \FALSE]],
-      ]
-];
+          'invisible' => ['input[name="configurable_timezones"]' => ['checked' => \FALSE]],
+        ],
+      ];
       $form['timezone']['configurable_timezones_wrapper']['empty_timezone_message'] = ['#type' => 'checkbox', '#title' => \t('Remind users at login if their time zone is not set'), '#default_value' => $config->get('timezone.user.warn'), '#description' => \t('Only applied if users may set their own time zone.')];
       $form['timezone']['configurable_timezones_wrapper']['user_default_timezone'] = ['#type' => 'radios', '#title' => \t('Time zone for new users'), '#default_value' => $config->get('timezone.user.default'), '#options' => [UserInterface::TIMEZONE_DEFAULT => \t('Default time zone'), UserInterface::TIMEZONE_EMPTY => \t('Empty time zone'), UserInterface::TIMEZONE_SELECT => \t('Users may set their own time zone at registration')], '#description' => \t('Only applied if users may set their own time zone.')];
       $form['#submit'][] = 'user_form_system_regional_settings_submit';

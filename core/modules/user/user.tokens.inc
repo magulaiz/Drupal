@@ -5,10 +5,8 @@
  * Builds placeholder replacement tokens for user-related data.
  */
 
-use Drupal\Core\Datetime\Entity\DateFormat;
 use Drupal\Core\Hook\LegacyHook;
 use Drupal\Core\Render\BubbleableMetadata;
-use Drupal\user\Entity\User;
 use Drupal\user\Hook\UserTokensHooks;
 
 /**
