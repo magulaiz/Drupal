@@ -967,10 +967,6 @@ services:
     arguments: ['%cors.config%']
     tags:
       - { name: http_middleware, priority: 250 }
-  http_middleware.stack_middleware_subscriber:
-    class: Drupal\Core\EventSubscriber\StackMiddlewareSubscriber
-    arguments: ['@request_stack']
-  Drupal\Core\EventSubscriber\StackMiddlewareSubscriber: '@http_middleware.stack_middleware_subscriber'
   psr7.http_foundation_factory:
     class: Symfony\Bridge\PsrHttpMessage\Factory\HttpFoundationFactory
   Symfony\Bridge\PsrHttpMessage\HttpFoundationFactoryInterface: '@psr7.http_foundation_factory'

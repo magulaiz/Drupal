@@ -693,6 +693,11 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
           $service->destruct();
         }
       }
+
+      // Pop the transaction added in ::preHandle().
+      if ($this->prepared === TRUE) {
+        $this->container->get('request_stack')->pop();
+      }
     }
   }
 
