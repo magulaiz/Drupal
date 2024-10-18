@@ -57,7 +57,7 @@ class RequestStackWrapper extends RequestStack {
   /**
    * {@inheritdoc}
    */
-  public function push(Request $request) {
+  public function push(Request $request): void {
     $this->localRequests[] = $request;
   }
 
@@ -84,13 +84,6 @@ class RequestStackWrapper extends RequestStack {
    */
   public function getMainRequest(): ?Request {
     return $this->wrappedRequestStack->getMainRequest();
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function getMasterRequest() {
-    return $this->wrappedRequestStack->getMasterRequest();
   }
 
   /**

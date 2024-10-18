@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\Core\StackMiddleware;
 
 use Drupal\Core\Url;
@@ -31,7 +33,7 @@ class RequestStackMiddlewareTest extends KernelTestBase {
    * StackedHttpKernel::terminate(), and some simple
    * push() & pop() calls.
    */
-  public function testRequest() {
+  public function testRequest(): void {
     /** @var \Symfony\Component\HttpFoundation\RequestStack $request_stack */
     $request_stack = \Drupal::service('request_stack');
 
