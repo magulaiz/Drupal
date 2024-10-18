@@ -6,6 +6,7 @@ namespace Drupal\Tests\demo_umami\FunctionalJavascript;
 
 use Drupal\Core\Cache\Cache;
 use Drupal\FunctionalJavascriptTests\PerformanceTestBase;
+use Drupal\Tests\PerformanceTestTrait;
 
 /**
  * Tests demo_umami profile performance.
@@ -15,6 +16,8 @@ use Drupal\FunctionalJavascriptTests\PerformanceTestBase;
  * @requires extension apcu
  */
 class OpenTelemetryNodePagePerformanceTest extends PerformanceTestBase {
+
+  use PerformanceTestTrait;
 
   /**
    * {@inheritdoc}
@@ -103,15 +106,6 @@ class OpenTelemetryNodePagePerformanceTest extends PerformanceTestBase {
       $this->drupalGet('node/1');
     }, 'umamiNodePageWarmCache');
     $this->assertSession()->pageTextContains('quiche');
-  }
-
-  /**
-   * Clear caches.
-   */
-  protected function clearCaches(): void {
-    foreach (Cache::getBins() as $bin) {
-      $bin->deleteAll();
-    }
   }
 
 }
