@@ -76,7 +76,7 @@ class UserSubAdminTest extends BrowserTestBase {
    * @throws \Behat\Mink\Exception\ExpectationException
    * @throws \Drupal\Core\Entity\EntityStorageException
    */
-  public function testCancelAccount() {
+  public function testCancelAccount(): void {
     $admin_user = $this->drupalCreateUser(['administer users']);
 
     $config = $this->config('user.settings');
@@ -103,7 +103,7 @@ class UserSubAdminTest extends BrowserTestBase {
    * @throws \Behat\Mink\Exception\ExpectationException
    * @throws \Drupal\Core\Entity\EntityStorageException
    */
-  public function testCancelAccountValidations() {
+  public function testCancelAccountValidations(): void {
     $admin_user = $this->drupalCreateUser([
       'administer users',
       'administer account settings',

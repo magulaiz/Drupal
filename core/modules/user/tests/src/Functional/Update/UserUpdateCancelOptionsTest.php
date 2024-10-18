@@ -15,14 +15,14 @@ class UserUpdateCancelOptionsTest extends UpdatePathTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setDatabaseDumpFiles() {
+  protected function setDatabaseDumpFiles(): void {
     $this->databaseDumpFiles[] = __DIR__ . '/../../../../../system/tests/fixtures/update/drupal-9.4.0.bare.standard.php.gz';
   }
 
   /**
    * Tests that cancel methods are set correctly on user.settings.
    */
-  public function testRolePermissions() {
+  public function testRolePermissions(): void {
 
     $cancel_methods = $this->config('user.settings')->get('cancel_method_options');
     $this->assertNull($cancel_methods);

@@ -94,7 +94,7 @@ function user_install() {
 /**
  * Implements hook_requirements().
  */
-function user_requirements($phase) {
+function user_requirements($phase): array {
 
   if ($phase !== 'runtime') {
     return [];

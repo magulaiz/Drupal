@@ -20,7 +20,7 @@ function user_removed_post_updates() {
 /**
  * Creates the new user cancellation methods configuration.
  */
-function user_post_update_configure_cancel_options() {
+function user_post_update_configure_cancel_options(): void {
   $config = \Drupal::configFactory()->getEditable('user.settings');
   $methods = user_cancel_methods();
   foreach (array_keys($methods['#options']) as $method_name) {
