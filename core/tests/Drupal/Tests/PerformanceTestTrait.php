@@ -47,7 +47,7 @@ trait PerformanceTestTrait {
    *
    * @see \Drupal\Tests\BrowserTestBase::installModulesFromClassProperty()
    */
-  private function doInstallModulesFromClassProperty(ContainerInterface $container) {
+  private function doInstallModulesFromClassProperty(ContainerInterface $container): void {
     // Bypass everything that WebDriverTestBase does here to get closer to
     // a production configuration.
     BrowserTestBase::installModulesFromClassProperty($container);
