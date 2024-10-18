@@ -56,7 +56,9 @@ final class EntityClone implements ConfigActionPluginInterface, ContainerFactory
     if ($original instanceof EntityDisplayInterface) {
       // Let the duplicate ID be either the full `ENTITY_TYPE.BUNDLE.MODE`, or
       // just the view mode.
-      $duplicate_id = explode('.', $duplicate_id, 3)[2];
+      if (substr_count($duplicate_id, '.') === 2) {
+        $duplicate_id = explode('.', $duplicate_id, 3)[2];
+      }
       $clone = $original->createCopy($duplicate_id);
     }
     else {
