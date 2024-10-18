@@ -330,10 +330,12 @@ class DrupalKernelTest extends KernelTestBase {
    */
   public function testRequestStackHandling(): void {
     $request = Request::createFromGlobals();
+    $this->assertNull($request->headers->get('X-Php-Ob-Level'));
     $kernel = $this->getTestKernel($request);
     $response = $kernel->handle($request);
     $request_stack = $kernel->getContainer()->get('request_stack');
     $this->assertSame($request, $request_stack->getMainRequest());
+    $this->assertNotNull($request->headers->get('X-Php-Ob-Level'));
     $kernel->terminate($request, $response);
     $this->assertNull($request_stack->getMainRequest());
   }
