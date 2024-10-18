@@ -395,6 +395,7 @@ class ModuleHandlerTest extends UnitTestCase {
    * Tests getImplementations.
    *
    * @covers ::invokeAllWith
+   * @covers ::verifyImplementations
    */
   public function testCachedGetImplementationsMissingMethod(): void {
     $this->cacheBackend->expects($this->exactly(1))
@@ -421,7 +422,6 @@ class ModuleHandlerTest extends UnitTestCase {
       ])
       ->onlyMethods(['buildImplementationInfo'])
       ->getMock();
-    $module_handler->load('module_handler_test');
 
     $module_handler->expects($this->never())->method('buildImplementationInfo');
     $implementors = [];
@@ -535,6 +535,28 @@ class ModuleHandlerTest extends UnitTestCase {
     $module_handler->setModuleList([]);
     $module_handler->addModule('node', 'core/modules/node');
     $this->assertEquals(['node' => $this->root . '/core/modules/node'], $module_handler->getModuleDirectories());
+  }
+
+  /**
+   * Tests that modules are included in case of a partial cache miss.
+   *
+   * @covers ::hasImplementations
+   * @covers ::getImplementationInfo
+   * @covers ::buildImplementationInfo
+   */
+  public function testMissingHookImplementationCache() {
+    // Simulate missing cache entry for hook implementations, but existing one
+    // for hook info.
+    $this->cacheBackend
+      ->expects($this->exactly(2))
+      ->method('get')
+      ->willReturnMap([
+        ['hook_info', FALSE, (object) ['data' => []]],
+        ['module_implements', FALSE, FALSE],
+      ]);
+
+    $module_handler = $this->getModuleHandler();
+    $this->assertTrue($module_handler->hasImplementations('hook', 'module_handler_test'));
   }
 
 }
