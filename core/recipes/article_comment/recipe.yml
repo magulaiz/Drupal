@@ -27,3 +27,7 @@ config:
           third_party_settings: {  }
           weight: 110
           region: content
+  # Treat this recipe strictly so that, if the `comment` field already exists
+  # on the Article content type and is not a comment field, we don't try to
+  # set it up for display as a comment field.
+  strict: true
