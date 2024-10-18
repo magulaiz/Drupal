@@ -7,19 +7,10 @@
 
 use Drupal\Component\Utility\Unicode;
 use Drupal\Core\Access\AccessibleInterface;
-use Drupal\Core\Asset\AttachedAssetsInterface;
-use Drupal\Core\Entity\Display\EntityViewDisplayInterface;
-use Drupal\Core\Entity\EntityInterface;
-use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Render\Element;
-use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\Session\AnonymousUserSession;
 use Drupal\Core\Url;
-use Drupal\filter\FilterFormatInterface;
-use Drupal\user\Hook\UserHooks;
-use Drupal\user\RoleInterface;
-use Drupal\user\UserInterface;
 
 /**
  * Prepares variables for username templates.
