@@ -16,8 +16,8 @@ class UserViewsExecutionHooks {
    * Allow replacement of current user ID so we can cache these queries.
    */
   #[Hook('views_query_substitutions')]
-    public function userViewsQuerySubstitutions(ViewExecutable $view) {
+  public function userViewsQuerySubstitutions(ViewExecutable $view) {
     return ['***CURRENT_USER***' => \Drupal::currentUser()->id()];
-    }
+  }
 
 }
