@@ -54516,7 +54516,7 @@ $ignoreErrors[] = [
 $ignoreErrors[] = [
 	// identifier: missingType.return
 	'message' => '#^Function .+ has no return type specified\\.$#',
-	'path' => __DIR__ . '/modules/user/user.module',
+	'path' => __DIR__ . '/modules/user/src/Hook',
 ];
 $ignoreErrors[] = [
 	// identifier: missingType.return
