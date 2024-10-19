@@ -77,3 +77,19 @@ services:
     class: Drupal\user\UserNameValidator
     arguments: ['@validation.basic_recursive_validator_factory', '@validation.constraint']
   Drupal\user\UserNameValidator: '@user.name_validator'
+
+  Drupal\user\Hook\UserHooks:
+    class: Drupal\user\Hook\UserHooks
+    autowire: true
+
+  Drupal\user\Hook\UserTokensHooks:
+    class: Drupal\user\Hook\UserTokensHooks
+    autowire: true
+
+  Drupal\user\Hook\UserViewsHooks:
+    class: Drupal\user\Hook\UserViewsHooks
+    autowire: true
+
+  Drupal\user\Hook\UserViewsExecutionHooks:
+    class: Drupal\user\Hook\UserViewsExecutionHooks
+    autowire: true

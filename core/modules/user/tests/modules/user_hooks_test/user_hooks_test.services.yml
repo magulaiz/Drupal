@@ -1,0 +1,5 @@
+
+services:
+  Drupal\user_hooks_test\Hook\UserHooksTestHooks:
+    class: Drupal\user_hooks_test\Hook\UserHooksTestHooks
+    autowire: true
