@@ -53531,24 +53531,6 @@ $ignoreErrors[] = [
 ];
 $ignoreErrors[] = [
 	// identifier: missingType.return
-	'message' => '#^Function user_access_test_entity_create_access\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/user/tests/modules/user_access_test/user_access_test.module',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
-	'message' => '#^Function user_access_test_entity_field_access\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/user/tests/modules/user_access_test/user_access_test.module',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
-	'message' => '#^Function user_access_test_user_access\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/user/tests/modules/user_access_test/user_access_test.module',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
 	'message' => '#^Method Drupal\\\\user_language_test\\\\Controller\\\\UserLanguageTestController\\:\\:buildPostResponse\\(\\) has no return type specified\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/user/tests/modules/user_language_test/src/Controller/UserLanguageTestController.php',
