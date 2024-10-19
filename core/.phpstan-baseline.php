@@ -53531,36 +53531,6 @@ $ignoreErrors[] = [
 ];
 $ignoreErrors[] = [
 	// identifier: missingType.return
-	'message' => '#^Function user_access_test_entity_create_access\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/user/tests/modules/user_access_test/user_access_test.module',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
-	'message' => '#^Function user_access_test_entity_field_access\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/user/tests/modules/user_access_test/user_access_test.module',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
-	'message' => '#^Function user_access_test_user_access\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/user/tests/modules/user_access_test/user_access_test.module',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
-	'message' => '#^Function user_form_test_form_user_cancel_form_alter\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/user/tests/modules/user_form_test/user_form_test.module',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
-	'message' => '#^Function user_hooks_test_user_format_name_alter\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/user/tests/modules/user_hooks_test/user_hooks_test.module',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
 	'message' => '#^Method Drupal\\\\user_language_test\\\\Controller\\\\UserLanguageTestController\\:\\:buildPostResponse\\(\\) has no return type specified\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/user/tests/modules/user_language_test/src/Controller/UserLanguageTestController.php',
@@ -54485,55 +54455,13 @@ $ignoreErrors[] = [
 ];
 $ignoreErrors[] = [
 	// identifier: missingType.return
-	'message' => '#^Function user_element_info_alter\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/user/user.module',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
-	'message' => '#^Function user_entity_extra_field_info\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/user/user.module',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
-	'message' => '#^Function user_entity_operation\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/user/user.module',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
-	'message' => '#^Function user_filter_format_disable\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/user/user.module',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
 	'message' => '#^Function user_form_process_password_confirm\\(\\) has no return type specified\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/user/user.module',
 ];
 $ignoreErrors[] = [
 	// identifier: missingType.return
-	'message' => '#^Function user_form_system_regional_settings_alter\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/user/user.module',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
 	'message' => '#^Function user_form_system_regional_settings_submit\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/user/user.module',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
-	'message' => '#^Function user_help\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/user/user.module',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
-	'message' => '#^Function user_js_settings_alter\\(\\) has no return type specified\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/user/user.module',
 ];
@@ -54551,19 +54479,7 @@ $ignoreErrors[] = [
 ];
 $ignoreErrors[] = [
 	// identifier: missingType.return
-	'message' => '#^Function user_mail\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/user/user.module',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
 	'message' => '#^Function user_mail_tokens\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/user/user.module',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
-	'message' => '#^Function user_modules_uninstalled\\(\\) has no return type specified\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/user/user.module',
 ];
@@ -54599,93 +54515,147 @@ $ignoreErrors[] = [
 ];
 $ignoreErrors[] = [
 	// identifier: missingType.return
-	'message' => '#^Function user_template_preprocess_default_variables_alter\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/user/user.module',
+	'message' => '#^Method Drupal\\\\user\\\\Hook\\\\UserHooks\\:\\:elementInfoAlter\\(\\) has no return type specified\\.$#"',
+  'count' => 1,
+  'path' => __DIR__ . '/modules/user/src/Hook/UserHooks.php',
 ];
 $ignoreErrors[] = [
 	// identifier: missingType.return
-	'message' => '#^Function user_theme\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/user/user.module',
+	'message' => '#^Method Drupal\\\\user\\\\Hook\\\\UserHooks\\:\\:entityExtraFieldInfo\\(\\) has no return type specified\\.$#"',
+  'count' => 1,
+  'path' => __DIR__ . '/modules/user/src/Hook/UserHooks.php',
 ];
 $ignoreErrors[] = [
 	// identifier: missingType.return
-	'message' => '#^Function user_toolbar\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/user/user.module',
+	'message' => '#^Method Drupal\\\\user\\\\Hook\\\\UserHooks\\:\\:entityOperation\\(\\) has no return type specified\\.$#"',
+  'count' => 1,
+  'path' => __DIR__ . '/modules/user/src/Hook/UserHooks.php',
 ];
 $ignoreErrors[] = [
 	// identifier: missingType.return
-	'message' => '#^Function user_user_login\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/user/user.module',
+	'message' => '#^Method Drupal\\\\user\\\\Hook\\\\UserHooks\\:\\:filterFormatDisable\\(\\) has no return type specified\\.$#"',
+  'count' => 1,
+  'path' => __DIR__ . '/modules/user/src/Hook/UserHooks.php',
 ];
 $ignoreErrors[] = [
 	// identifier: missingType.return
-	'message' => '#^Function user_user_logout\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/user/user.module',
+	'message' => '#^Method Drupal\\\\user\\\\Hook\\\\UserHooks\\:\\:formSystemRegionalSettingsAlter\\(\\) has no return type specified\\.$#"',
+  'count' => 1,
+  'path' => __DIR__ . '/modules/user/src/Hook/UserHooks.php',
 ];
 $ignoreErrors[] = [
 	// identifier: missingType.return
-	'message' => '#^Function user_user_presave\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/user/user.module',
+	'message' => '#^Method Drupal\\\\user\\\\Hook\\\\UserHooks\\:\\:help\\(\\) has no return type specified\\.$#"',
+  'count' => 1,
+  'path' => __DIR__ . '/modules/user/src/Hook/UserHooks.php',
 ];
 $ignoreErrors[] = [
 	// identifier: missingType.return
-	'message' => '#^Function user_user_role_delete\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/user/user.module',
+	'message' => '#^Method Drupal\\\\user\\\\Hook\\\\UserHooks\\:\\:jsSettingsAlter\\(\\) has no return type specified\\.$#"',
+  'count' => 1,
+  'path' => __DIR__ . '/modules/user/src/Hook/UserHooks.php',
 ];
 $ignoreErrors[] = [
 	// identifier: missingType.return
-	'message' => '#^Function user_user_role_insert\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/user/user.module',
+	'message' => '#^Method Drupal\\\\user\\\\Hook\\\\UserHooks\\:\\:mail\\(\\) has no return type specified\\.$#"',
+  'count' => 1,
+  'path' => __DIR__ . '/modules/user/src/Hook/UserHooks.php',
 ];
 $ignoreErrors[] = [
 	// identifier: missingType.return
-	'message' => '#^Function user_user_view\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/user/user.module',
+	'message' => '#^Method Drupal\\\\user\\\\Hook\\\\UserHooks\\:\\:modulesUninstalled\\(\\) has no return type specified\\.$#"',
+  'count' => 1,
+  'path' => __DIR__ . '/modules/user/src/Hook/UserHooks.php',
 ];
 $ignoreErrors[] = [
 	// identifier: missingType.return
-	'message' => '#^Function user_user_view_alter\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/user/user.module',
+	'message' => '#^Method Drupal\\\\user\\\\Hook\\\\UserHooks\\:\\:templatePreprocessDefaultVariablesAlter\\(\\) has no return type specified\\.$#"',
+  'count' => 1,
+  'path' => __DIR__ . '/modules/user/src/Hook/UserHooks.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\user\\\\Hook\\\\UserHooks\\:\\:theme\\(\\) has no return type specified\\.$#"',
+  'count' => 1,
+  'path' => __DIR__ . '/modules/user/src/Hook/UserHooks.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\user\\\\Hook\\\\UserHooks\\:\\:toolbar\\(\\) has no return type specified\\.$#"',
+  'count' => 1,
+  'path' => __DIR__ . '/modules/user/src/Hook/UserHooks.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\user\\\\Hook\\\\UserHooks\\:\\:userLogin\\(\\) has no return type specified\\.$#"',
+  'count' => 1,
+  'path' => __DIR__ . '/modules/user/src/Hook/UserHooks.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\user\\\\Hook\\\\UserHooks\\:\\:userLogout\\(\\) has no return type specified\\.$#"',
+  'count' => 1,
+  'path' => __DIR__ . '/modules/user/src/Hook/UserHooks.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\user\\\\Hook\\\\UserHooks\\:\\:userPresave\\(\\) has no return type specified\\.$#"',
+  'count' => 1,
+  'path' => __DIR__ . '/modules/user/src/Hook/UserHooks.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\user\\\\Hook\\\\UserHooks\\:\\:userRoleDelete\\(\\) has no return type specified\\.$#"',
+  'count' => 1,
+  'path' => __DIR__ . '/modules/user/src/Hook/UserHooks.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\user\\\\Hook\\\\UserHooks\\:\\:userRoleInsert\\(\\) has no return type specified\\.$#"',
+  'count' => 1,
+  'path' => __DIR__ . '/modules/user/src/Hook/UserHooks.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\user\\\\Hook\\\\UserHooks\\:\\:userView\\(\\) has no return type specified\\.$#"',
+  'count' => 1,
+  'path' => __DIR__ . '/modules/user/src/Hook/UserHooks.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\user\\\\Hook\\\\UserHooks\\:\\:userViewAlter\\(\\) has no return type specified\\.$#"',
+  'count' => 1,
+  'path' => __DIR__ . '/modules/user/src/Hook/UserHooks.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\user\\\\Hook\\\\UserTokensHooks\\:\\:tokenInfo\\(\\) has no return type specified\\.$#"',
+  'count' => 1,
+  'path' => __DIR__ . '/modules/user/src/Hook/UserTokensHooks.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\user\\\\Hook\\\\UserTokensHooks\\:\\:tokens\\(\\) has no return type specified\\.$#"',
+  'count' => 1,
+  'path' => __DIR__ . '/modules/user/src/Hook/UserTokensHooks.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\user\\\\Hook\\\\UserViewsExecutionHooks\\:\\:viewsQuerySubstitutions\\(\\) has no return type specified\\.$#"',
+  'count' => 1,
+  'path' => __DIR__ . '/modules/user/src/Hook/UserViewsExecutionHooks.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\user\\\\Hook\\\\UserViewsHooks\\:\\:viewsPluginsArgumentValidatorAlter\\(\\) has no return type specified\\.$#"'
+    'count' => 1,
+    'path' => __DIR__ . '/modules/user/src/Hook/UserViewsHooks.php',
 ];
 $ignoreErrors[] = [
 	// identifier: missingType.return
 	'message' => '#^Function user_removed_post_updates\\(\\) has no return type specified\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/user/user.post_update.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
-	'message' => '#^Function user_token_info\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/user/user.tokens.inc',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
-	'message' => '#^Function user_tokens\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/user/user.tokens.inc',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
-	'message' => '#^Function user_views_plugins_argument_validator_alter\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/user/user.views.inc',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
-	'message' => '#^Function user_views_query_substitutions\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/user/user.views_execution.inc',
 ];
 $ignoreErrors[] = [
 	// identifier: missingType.return
