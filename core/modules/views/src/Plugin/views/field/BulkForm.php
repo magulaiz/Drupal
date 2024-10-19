@@ -401,7 +401,7 @@ class BulkForm extends FieldPluginBase implements CacheableDependencyInterface, 
    */
   public function viewsFormSubmit(&$form, FormStateInterface $form_state) {
     // Ensure this is for us:
-    if ($form_state->getTriggeringElement()['#parents'][0] !== 'submit') {
+    if ($form_state->getTriggeringElement()['#parents'][0] ?? '' !== 'submit') {
       return;
     }
     if ($form_state->get('step') == 'views_form_views_form') {
@@ -486,7 +486,7 @@ class BulkForm extends FieldPluginBase implements CacheableDependencyInterface, 
    */
   public function viewsFormValidate(&$form, FormStateInterface $form_state) {
     // Ensure this is for us:
-    if ($form_state->getTriggeringElement()['#parents'][0] !== 'submit') {
+    if ($form_state->getTriggeringElement()['#parents'][0] ?? '' !== 'submit') {
       return;
     }
 
