@@ -16,7 +16,7 @@ class UserAccessTestHooks {
   /**
    * Implements hook_ENTITY_TYPE_access() for entity type "user".
    */
-  #[Hook('access_test_user_access', module: 'user')]
+  #[Hook('user_access', module: 'user')]
   public function userAccess(User $entity, $operation, $account) {
     if ($entity->getAccountName() == "no_edit" && $operation == "update") {
       // Deny edit access.
