@@ -49,10 +49,10 @@ function shortcut_schema() {
 /**
  * Implements hook_install().
  */
-function shortcut_install() {
+function shortcut_install($is_syncing) {
   // Theme settings are not configuration entities and cannot depend on modules
   // so to set a module-specific setting, we need to set it with logic.
-  if (\Drupal::service('theme_handler')->themeExists('claro')) {
+  if (!$is_syncing &&\Drupal::service('theme_handler')->themeExists('claro')) {
     \Drupal::configFactory()
       ->getEditable("claro.settings")
       ->set('third_party_settings.shortcut.module_link', TRUE)
@@ -63,10 +63,10 @@ function shortcut_install() {
 /**
  * Implements hook_uninstall().
  */
-function shortcut_uninstall() {
+function shortcut_uninstall($is_syncing) {
   // Theme settings are not configuration entities and cannot depend on modules
   // so to unset a module-specific setting, we need to unset it with logic.
-  if (\Drupal::service('theme_handler')->themeExists('claro')) {
+  if (!$is_syncing && \Drupal::service('theme_handler')->themeExists('claro')) {
     \Drupal::configFactory()
       ->getEditable("claro.settings")
       ->clear('third_party_settings.shortcut')
