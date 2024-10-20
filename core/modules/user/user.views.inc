@@ -2,14 +2,20 @@
 
 /**
  * @file
+ */
+
+use Drupal\Core\Hook\Attribute\LegacyHook;
+use Drupal\user\Hook\UserViewsHooks;
+
+/**
+ * @file
  * Provide views data for user.module.
  */
 
 /**
  * Implements hook_views_plugins_argument_validator_alter().
  */
+#[LegacyHook]
 function user_views_plugins_argument_validator_alter(array &$plugins) {
-  $plugins['entity:user']['title'] = t('User ID');
-  $plugins['entity:user']['class'] = 'Drupal\user\Plugin\views\argument_validator\User';
-  $plugins['entity:user']['provider'] = 'user';
+  \Drupal::service(UserViewsHooks::CLASS)->userViewsPluginsArgumentValidatorAlter($plugins);
 }
