@@ -56,4 +56,5 @@ class NodeDeleteTest extends EntityKernelTestBase {
     $node->delete();
     $this->assertEquals(0, $this->nodeCount(), 'Expect 0 nodes after creation.');
   }
+
 }
