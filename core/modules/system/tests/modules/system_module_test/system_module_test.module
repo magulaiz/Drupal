@@ -1,8 +1,0 @@
-<?php
-
-/**
- * @file
- * Provides System module hook implementations for testing purposes.
- */
-
-declare(strict_types=1);

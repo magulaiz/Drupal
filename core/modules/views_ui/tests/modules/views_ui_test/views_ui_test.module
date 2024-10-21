@@ -1,8 +1,0 @@
-<?php
-
-/**
- * @file
- * Helper module for Views UI tests.
- */
-
-declare(strict_types=1);

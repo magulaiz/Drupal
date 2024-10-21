@@ -1,8 +1,0 @@
-<?php
-
-/**
- * @file
- * Helper module for the lazy route provider tests.
- */
-
-declare(strict_types=1);

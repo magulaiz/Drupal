@@ -1,8 +1,0 @@
-<?php
-
-/**
- * @file
- * Support module for testing theme suggestions.
- */
-
-declare(strict_types=1);

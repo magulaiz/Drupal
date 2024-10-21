@@ -1,8 +1,0 @@
-<?php
-
-/**
- * @file
- * Contains datetime_range_test.module.
- */
-
-declare(strict_types=1);

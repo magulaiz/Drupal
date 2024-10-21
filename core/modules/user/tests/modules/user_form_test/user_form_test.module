@@ -1,8 +1,0 @@
-<?php
-
-/**
- * @file
- * Support module for user form testing.
- */
-
-declare(strict_types=1);

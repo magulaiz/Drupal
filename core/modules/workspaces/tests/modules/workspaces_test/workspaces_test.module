@@ -1,8 +1,0 @@
-<?php
-
-/**
- * @file
- * Provides supporting code for testing workspaces.
- */
-
-declare(strict_types=1);
