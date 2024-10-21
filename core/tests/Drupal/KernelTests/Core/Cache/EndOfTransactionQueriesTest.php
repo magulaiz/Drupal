@@ -99,9 +99,9 @@ class EndOfTransactionQueriesTest extends KernelTestBase {
     // DO NOT depend on invalidated cache tags DO get written. Of course, if we
     // read either one now, outside of the context of the transaction, we expect
     // the same.
-    $this->assertNotEmpty(\Drupal::state()->get('delay_cache_tags_invalidation_entity_test_insert__pretransaction_foobar'));
-    $this->assertNotEmpty(\Drupal::cache()->get('delay_cache_tags_invalidation_entity_test_insert__during_transaction_foobar'));
-    $this->assertNotEmpty(\Drupal::state()->get('delay_cache_tags_invalidation_user_insert__during_transaction_foobar'));
+    $this->assertNotEmpty(\Drupal::state()->get('entityTestInsert__pretransaction_foobar'));
+    $this->assertNotEmpty(\Drupal::cache()->get('entityTestInsert__during_transaction_foobar'));
+    $this->assertNotEmpty(\Drupal::state()->get('userInsert__during_transaction_foobar'));
     $this->assertNotEmpty(\Drupal::cache()->get('test_cache_pretransaction_foobar'));
 
     // Cache reads occurring during a transaction that DO depend on invalidated
@@ -109,9 +109,9 @@ class EndOfTransactionQueriesTest extends KernelTestBase {
     // on invalidated cache tags DO NOT get written. Of course, if we read
     // either one now, outside of the context of the transaction, we expect the
     // same.
-    $this->assertFalse(\Drupal::state()->get('delay_cache_tags_invalidation_entity_test_insert__pretransaction_entity_test_list'));
-    $this->assertFalse(\Drupal::cache()->get('delay_cache_tags_invalidation_entity_test_insert__during_transaction_entity_test_list'));
-    $this->assertFalse(\Drupal::state()->get('delay_cache_tags_invalidation_user_insert__during_transaction_entity_test_list'));
+    $this->assertFalse(\Drupal::state()->get('entityTestInsert__pretransaction_entity_test_list'));
+    $this->assertFalse(\Drupal::cache()->get('entityTestInsert__during_transaction_entity_test_list'));
+    $this->assertFalse(\Drupal::state()->get('userInsert__during_transaction_entity_test_list'));
     $this->assertFalse(\Drupal::cache()->get('test_cache_pretransaction_entity_test_list'));
   }
 
