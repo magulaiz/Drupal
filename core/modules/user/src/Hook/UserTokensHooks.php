@@ -20,17 +20,17 @@ class UserTokensHooks {
     $types['user'] = [
       'name' => \t('Users'),
       'description' => \t('Tokens related to individual user accounts.'),
-      'needs-data' => 'user'
+      'needs-data' => 'user',
     ];
     $types['current-user'] = [
       'name' => \t('Current user'),
       'description' => \t('Tokens related to the currently logged in user.'),
-      'type' => 'user'
+      'type' => 'user',
     ];
     $user['uid'] = ['name' => \t('User ID'), 'description' => \t("The unique ID of the user account.")];
     $user['name'] = [
       'name' => \t("Deprecated: User Name"),
-      'description' => \t("Deprecated: Use account-name or display-name instead.")
+      'description' => \t("Deprecated: Use account-name or display-name instead."),
     ];
     $user['account-name'] = ['name' => \t("Account Name"), 'description' => \t("The login name of the user account.")];
     $user['display-name'] = ['name' => \t("Display Name"), 'description' => \t("The display name of the user account.")];
@@ -40,12 +40,12 @@ class UserTokensHooks {
     $user['last-login'] = [
       'name' => \t("Last login"),
       'description' => \t("The date the user last logged in to the site."),
-      'type' => 'date'
+      'type' => 'date',
     ];
     $user['created'] = [
       'name' => \t("Created"),
       'description' => \t("The date the user account was created."),
-      'type' => 'date'
+      'type' => 'date',
     ];
     return ['types' => $types, 'tokens' => ['user' => $user]];
   }

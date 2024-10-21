@@ -79,7 +79,7 @@ class UserHooks {
   public function theme() {
     return [
       'user' => [
-        'render element' => 'elements'
+        'render element' => 'elements',
       ],
       'username' => [
         'variables' => [
@@ -158,7 +158,7 @@ class UserHooks {
     if ($account->isAuthenticated() && $display->getComponent('member_for')) {
       $build['member_for'] = [
         '#type' => 'item',
-        '#markup' => '<h4 class="label">' . \t('Member for') . '</h4> ' . \Drupal::service('date.formatter')->formatTimeDiffSince($account->getCreatedTime())
+        '#markup' => '<h4 class="label">' . \t('Member for') . '</h4> ' . \Drupal::service('date.formatter')->formatTimeDiffSince($account->getCreatedTime()),
       ];
     }
   }
@@ -219,7 +219,7 @@ class UserHooks {
         'Configure your <a href=":user-edit">account time zone setting</a>.',
         [
           ':user-edit' => $account->toUrl('edit-form',
-          ['query' => \Drupal::destination()->getAsArray(), 'fragment' => 'edit-timezone'])->toString()
+          ['query' => \Drupal::destination()->getAsArray(), 'fragment' => 'edit-timezone'])->toString(),
         ]
       ));
     }
@@ -275,9 +275,9 @@ class UserHooks {
             ['@label' => $role->label()]
           ),
           'configuration' => [
-            'rid' => $role->id()
+            'rid' => $role->id(),
           ],
-          'plugin' => 'user_add_role_action'
+          'plugin' => 'user_add_role_action',
         ]
       );
       $action->trustData()->save();
@@ -293,7 +293,7 @@ class UserHooks {
             ['@label' => $role->label()]
           ),
           'configuration' => [
-            'rid' => $role->id()
+            'rid' => $role->id(),
           ],
           'plugin' => 'user_remove_role_action',
         ]
@@ -359,7 +359,7 @@ class UserHooks {
         '#links' => $links,
         '#attributes' => [
           'class' => [
-            'toolbar-menu'
+            'toolbar-menu',
           ],
         ],
       ];
@@ -382,7 +382,7 @@ class UserHooks {
         ],
         '#create_placeholder' => \TRUE,
         '#lazy_builder_preview' => [
-          '#markup' => '<a href="#" class="toolbar-tray-lazy-placeholder-link">&nbsp;</a>'
+          '#markup' => '<a href="#" class="toolbar-tray-lazy-placeholder-link">&nbsp;</a>',
         ],
       ];
     }
@@ -398,7 +398,7 @@ class UserHooks {
     $form['timezone']['configurable_timezones'] = [
       '#type' => 'checkbox',
       '#title' => \t('Users may set their own time zone'),
-      '#default_value' => $config->get('timezone.user.configurable')
+      '#default_value' => $config->get('timezone.user.configurable'),
     ];
     $form['timezone']['configurable_timezones_wrapper'] = [
       '#type' => 'container',
@@ -412,7 +412,7 @@ class UserHooks {
       '#type' => 'checkbox',
       '#title' => \t('Remind users at login if their time zone is not set'),
       '#default_value' => $config->get('timezone.user.warn'),
-      '#description' => \t('Only applied if users may set their own time zone.')
+      '#description' => \t('Only applied if users may set their own time zone.'),
     ];
     $form['timezone']['configurable_timezones_wrapper']['user_default_timezone'] = [
       '#type' => 'radios',
@@ -421,9 +421,9 @@ class UserHooks {
       '#options' => [
         UserInterface::TIMEZONE_DEFAULT => \t('Default time zone'),
         UserInterface::TIMEZONE_EMPTY => \t('Empty time zone'),
-        UserInterface::TIMEZONE_SELECT => \t('Users may set their own time zone at registration')
+        UserInterface::TIMEZONE_SELECT => \t('Users may set their own time zone at registration'),
       ],
-      '#description' => \t('Only applied if users may set their own time zone.')
+      '#description' => \t('Only applied if users may set their own time zone.'),
     ];
     $form['#submit'][] = 'user_form_system_regional_settings_submit';
   }
