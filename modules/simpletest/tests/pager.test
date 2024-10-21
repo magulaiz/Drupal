@@ -172,4 +172,87 @@ class PagerFunctionalWebTestCase extends DrupalWebTestCase {
     }
     $this->assertTrue(strpos((string) $element['class'], $class) === FALSE, $message);
   }
+
+  /**
+   * Tests that pager_find_page() finds 0 when the query is actually empty or invalid.
+   */
+  public function testFindPage() {
+    $data = $this->providePagerQueries();
+    foreach ($data as $test_name => $dataset) {
+      list($raw_query, $parameter, $expected_query) = $dataset;
+
+      // Simulate the request and the pager behavior.
+      $_GET['page'] = $raw_query;
+
+      // Ensure findPage finds 0 when the query is actually empty or invalid.
+      $expected_query = !empty($expected_query) ? $expected_query : array(0);
+      foreach ($expected_query as $key => $value) {
+        $this->assertIdentical($value, pager_find_page($key), "$test_name: Test findPage() for input: $raw_query");
+      }
+
+      // Clean up $_GET.
+      unset($_GET['page']);
+    }
+  }
+
+  /**
+   * Tests that pager_get_parameter() returns expected parameter.
+   */
+  public function testGetPagerParameter() {
+    $data = $this->providePagerQueries();
+    foreach ($data as $test_name => $dataset) {
+      list($raw_query, $parameter) = $dataset;
+
+      // Simulate the request and the pager behavior.
+      $_GET['page'] = $raw_query;
+
+      // Assert that the parameter is as expected.
+      $this->assertIdentical($parameter, pager_get_parameter(), "$test_name: Test getPagerParameter() for input: $raw_query");
+
+      // Clean up $_GET.
+      unset($_GET['page']);
+    }
+  }
+
+  /**
+   * Ensure missing request is handled cleanly.
+   */
+  public function testGetPagerParameterNoRequest() {
+    $this->assertIdentical('', pager_get_parameter());
+  }
+
+  /**
+   * Data provider for testGetPagerParameter(), testGetPagerQuery(), and testFindPage().
+   *
+   * @return array
+   *   An associated array containing 3 keys:
+   *   1. raw query
+   *   2. parameter
+   *   3. expected query
+   */
+  protected static function providePagerQueries() {
+    return array(
+      'defensive null page value' => array(NULL, '', array()),
+      // Array values aren't supported, so they default to empty.
+      'invalid empty page array' => array(array(), '', array()),
+      'invalid populated array' => array(array(1, 2, 3), '', array()),
+      // Nothing to check.
+      'empty string' => array('', '', array()),
+      // Conventional but "zero" page values.
+      'page 0 as a string' => array('0', '0', array(0)),
+      'page 0 as a integer' => array(0, '0', array(0)),
+      // Conventional pager values.
+      'page 1' => array('1', '1', array(1)),
+      'simple list of page values' => array(
+        '1,2,3,4',
+        '1,2,3,4',
+        array(1, 2, 3, 4),
+      ),
+      'reversed list of page values' => array(
+        '4,3,2,1',
+        '4,3,2,1',
+        array(4, 3, 2, 1),
+      ),
+    );
+  }
 }

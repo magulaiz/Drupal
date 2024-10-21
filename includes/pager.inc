@@ -200,12 +200,31 @@ class PagerDefault extends SelectQueryExtender {
  * @see pager_default_initialize()
  */
 function pager_find_page($element = 0) {
-  $page = isset($_GET['page']) ? $_GET['page'] : '';
-  $page_array = explode(',', $page);
+  $query = pager_get_parameter();
+  $page_array = $query !== '' ? array_map('intval', explode(',', $query)) : [];
   if (!isset($page_array[$element])) {
     $page_array[$element] = 0;
   }
   return (int) $page_array[$element];
+}
+
+/**
+ * Returns the current page being requested for display within a pager.
+ *
+ * @return
+ *  The number of the current requested page, within the pager represented by
+ *  $_GET['page'], or 0 by default. Note that this number may differ from the
+ *  actual page being displayed. For example, if a search for "example text" brings
+ *  up three pages of results, but a users visits search/node/example+text?page=10,
+ *  this function will return 10, even though the default pager implementation
+ *  adjusts for this and still displays the third page of search results at that
+ *  URL.
+ *
+ * @see pager_default_initialize()
+ */
+function pager_get_parameter() {
+  $page = $_GET['page'] ?? '';
+  return is_scalar($page) ? (string) $page : '';
 }
 
 /**
@@ -643,7 +662,7 @@ function theme_pager_link($variables) {
   $parameters = $variables['parameters'];
   $attributes = $variables['attributes'];
 
-  $page = isset($_GET['page']) ? $_GET['page'] : '';
+  $page = pager_get_parameter();
   if ($new_page = implode(',', pager_load_array($page_new[$element], $element, explode(',', $page)))) {
     $parameters['page'] = $new_page;
   }
