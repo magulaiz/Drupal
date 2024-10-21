@@ -1,0 +1,19 @@
+<?php
+
+namespace Drupal\node_test_exception\Hook;
+
+use Drupal\node\NodeInterface;
+use Drupal\Core\Hook\Attribute\Hook;
+class NodeTestExceptionHooks
+{
+    /**
+     * Implements hook_ENTITY_TYPE_insert() for node entities.
+     */
+    #[Hook('node_insert')]
+    public function nodeInsert(\Drupal\node\NodeInterface $node)
+    {
+        if ($node->getTitle() == 'testing_transaction_exception') {
+            throw new \Exception('Test exception for rollback.');
+        }
+    }
+}

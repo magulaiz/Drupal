@@ -1,0 +1,24 @@
+<?php
+
+namespace Drupal\link_test_base_field\Hook;
+
+use Drupal\Core\Entity\EntityTypeInterface;
+use Drupal\Core\Field\BaseFieldDefinition;
+use Drupal\Core\Field\FieldStorageDefinitionInterface;
+use Drupal\link\LinkItemInterface;
+use Drupal\Core\Hook\Attribute\Hook;
+class LinkTestBaseFieldHooks
+{
+    /**
+     * Implements hook_entity_base_field_info().
+     */
+    #[Hook('entity_base_field_info')]
+    public function entityBaseFieldInfo(\Drupal\Core\Entity\EntityTypeInterface $entity_type)
+    {
+        $fields = [];
+        if ($entity_type->id() === 'entity_test') {
+            $fields['links'] = \Drupal\Core\Field\BaseFieldDefinition::create('link')->setLabel(\t('Links'))->setRevisionable(\TRUE)->setCardinality(\Drupal\Core\Field\FieldStorageDefinitionInterface::CARDINALITY_UNLIMITED)->setDescription(\t('Add links to the entity.'))->setRequired(\FALSE)->setSettings(['link_type' => \Drupal\link\LinkItemInterface::LINK_GENERIC, 'title' => \DRUPAL_REQUIRED])->setDisplayOptions('form', ['type' => 'link_default', 'weight' => 49]);
+        }
+        return $fields;
+    }
+}

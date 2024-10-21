@@ -1,0 +1,16 @@
+<?php
+
+namespace Drupal\toolbar_disable_user_toolbar\Hook;
+
+use Drupal\Core\Hook\Attribute\Hook;
+class ToolbarDisableUserToolbarHooks
+{
+    /**
+     * Implements hook_toolbar_alter().
+     */
+    #[Hook('toolbar_alter')]
+    public function toolbarAlter(&$items)
+    {
+        unset($items['user']);
+    }
+}

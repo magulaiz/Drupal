@@ -1,0 +1,17 @@
+<?php
+
+namespace Drupal\settings_tray_test_css\Hook;
+
+use Drupal\Core\Hook\Attribute\Hook;
+class SettingsTrayTestCssHooks
+{
+    /**
+     * Implements hook_page_attachments().
+     */
+    #[Hook('page_attachments')]
+    public function pageAttachments(array &$attachments)
+    {
+        // Unconditionally attach an asset to the page.
+        $attachments['#attached']['library'][] = 'settings_tray_test_css/drupal.css_fix';
+    }
+}

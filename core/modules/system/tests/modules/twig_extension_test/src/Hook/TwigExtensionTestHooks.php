@@ -1,0 +1,16 @@
+<?php
+
+namespace Drupal\twig_extension_test\Hook;
+
+use Drupal\Core\Hook\Attribute\Hook;
+class TwigExtensionTestHooks
+{
+    /**
+     * Implements hook_theme().
+     */
+    #[Hook('theme')]
+    public function theme($existing, $type, $theme, $path)
+    {
+        return ['twig_extension_test_filter' => ['variables' => ['message' => \NULL, 'safe_join_items' => \NULL], 'template' => 'twig_extension_test.filter'], 'twig_extension_test_function' => ['render element' => 'element', 'template' => 'twig_extension_test.function']];
+    }
+}

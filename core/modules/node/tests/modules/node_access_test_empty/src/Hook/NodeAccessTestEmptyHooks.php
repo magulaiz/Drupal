@@ -1,0 +1,25 @@
+<?php
+
+namespace Drupal\node_access_test_empty\Hook;
+
+use Drupal\node\NodeInterface;
+use Drupal\Core\Hook\Attribute\Hook;
+class NodeAccessTestEmptyHooks
+{
+    /**
+     * Implements hook_node_grants().
+     */
+    #[Hook('node_grants')]
+    public function nodeGrants($account, $operation)
+    {
+        return [];
+    }
+    /**
+     * Implements hook_node_access_records().
+     */
+    #[Hook('node_access_records')]
+    public function nodeAccessRecords(\Drupal\node\NodeInterface $node)
+    {
+        return [];
+    }
+}
