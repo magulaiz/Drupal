@@ -22,11 +22,11 @@ class DelayCacheTagsInvalidationHooks {
     }
     // Read the pre-transaction cache writes.
     // @see \Drupal\KernelTests\Core\Cache\EndOfTransactionQueriesTest::testEntitySave()
-    \Drupal::state()->set(__FUNCTION__ . '__pretransaction_foobar', \Drupal::cache()->get('test_cache_pretransaction_foobar'));
-    \Drupal::state()->set(__FUNCTION__ . '__pretransaction_entity_test_list', \Drupal::cache()->get('test_cache_pretransaction_entity_test_list'));
+    \Drupal::state()->set(__METHOD__ . '__pretransaction_foobar', \Drupal::cache()->get('test_cache_pretransaction_foobar'));
+    \Drupal::state()->set(__METHOD__ . '__pretransaction_entity_test_list', \Drupal::cache()->get('test_cache_pretransaction_entity_test_list'));
     // Write during the transaction.
-    \Drupal::cache()->set(__FUNCTION__ . '__during_transaction_foobar', 'something', Cache::PERMANENT, ['foobar']);
-    \Drupal::cache()->set(__FUNCTION__ . '__during_transaction_entity_test_list', 'something', Cache::PERMANENT, ['entity_test_list']);
+    \Drupal::cache()->set(__METHOD__ . '__during_transaction_foobar', 'something', Cache::PERMANENT, ['foobar']);
+    \Drupal::cache()->set(__METHOD__ . '__during_transaction_entity_test_list', 'something', Cache::PERMANENT, ['entity_test_list']);
     // Trigger a nested entity save and hence a nested transaction.
     User::create(['name' => 'john doe', 'status' => 1])->save();
     }
@@ -39,8 +39,8 @@ class DelayCacheTagsInvalidationHooks {
       if ($entity->getAccountName() === 'john doe') {
         // Read the in-transaction cache writes.
         // @see  delay_cache_tags_invalidation_entity_test_insert()
-        \Drupal::state()->set(__FUNCTION__ . '__during_transaction_foobar', \Drupal::cache()->get('delay_cache_tags_invalidation_entity_test_insert__during_transaction_foobar'));
-        \Drupal::state()->set(__FUNCTION__ . '__during_transaction_entity_test_list', \Drupal::cache()->get('delay_cache_tags_invalidation_entity_test_insert__during_transaction_entity_test_list'));
+        \Drupal::state()->set(__METHOD__ . '__during_transaction_foobar', \Drupal::cache()->get('delay_cache_tags_invalidation_entity_test_insert__during_transaction_foobar'));
+        \Drupal::state()->set(__METHOD__ . '__during_transaction_entity_test_list', \Drupal::cache()->get('delay_cache_tags_invalidation_entity_test_insert__during_transaction_entity_test_list'));
       }
     }
 
