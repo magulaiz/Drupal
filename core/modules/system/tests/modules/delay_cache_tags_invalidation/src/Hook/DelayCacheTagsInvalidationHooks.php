@@ -38,9 +38,9 @@ class DelayCacheTagsInvalidationHooks {
     public function userInsert(UserInterface $entity) {
       if ($entity->getAccountName() === 'john doe') {
         // Read the in-transaction cache writes.
-        // @see  delay_cache_tags_invalidation_entity_test_insert()
-        \Drupal::state()->set(__METHOD__ . '__during_transaction_foobar', \Drupal::cache()->get('delay_cache_tags_invalidation_entity_test_insert__during_transaction_foobar'));
-        \Drupal::state()->set(__METHOD__ . '__during_transaction_entity_test_list', \Drupal::cache()->get('delay_cache_tags_invalidation_entity_test_insert__during_transaction_entity_test_list'));
+        // @see  DelayCacheTagsInvalidationHooks::entityTestInsert()
+        \Drupal::state()->set(__METHOD__ . '__during_transaction_foobar', \Drupal::cache()->get('entityTestInsert__during_transaction_foobar'));
+        \Drupal::state()->set(__METHOD__ . '__during_transaction_entity_test_list', \Drupal::cache()->get('entityTestInsert__during_transaction_entity_test_list'));
       }
     }
 
