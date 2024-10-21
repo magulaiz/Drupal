@@ -2,15 +2,14 @@
 
 namespace Drupal\user\Hook;
 
-/**
- * @file
- * Builds placeholder replacement tokens for user-related data.
- */
-use Drupal\user\Entity\User;
 use Drupal\Core\Datetime\Entity\DateFormat;
-use Drupal\Core\Render\BubbleableMetadata;
 use Drupal\Core\Hook\Attribute\Hook;
+use Drupal\Core\Render\BubbleableMetadata;
+use Drupal\user\Entity\User;
 
+/**
+ * Hooks related to user tokens.
+ */
 class UserTokensHooks {
 
   /**
@@ -18,17 +17,36 @@ class UserTokensHooks {
    */
   #[Hook('token_info')]
   public function tokenInfo() {
-    $types['user'] = ['name' => \t('Users'), 'description' => \t('Tokens related to individual user accounts.'), 'needs-data' => 'user'];
-    $types['current-user'] = ['name' => \t('Current user'), 'description' => \t('Tokens related to the currently logged in user.'), 'type' => 'user'];
+    $types['user'] = [
+      'name' => \t('Users'),
+      'description' => \t('Tokens related to individual user accounts.'),
+      'needs-data' => 'user'
+    ];
+    $types['current-user'] = [
+      'name' => \t('Current user'),
+      'description' => \t('Tokens related to the currently logged in user.'),
+      'type' => 'user'
+    ];
     $user['uid'] = ['name' => \t('User ID'), 'description' => \t("The unique ID of the user account.")];
-    $user['name'] = ['name' => \t("Deprecated: User Name"), 'description' => \t("Deprecated: Use account-name or display-name instead.")];
+    $user['name'] = [
+      'name' => \t("Deprecated: User Name"),
+      'description' => \t("Deprecated: Use account-name or display-name instead.")
+    ];
     $user['account-name'] = ['name' => \t("Account Name"), 'description' => \t("The login name of the user account.")];
     $user['display-name'] = ['name' => \t("Display Name"), 'description' => \t("The display name of the user account.")];
     $user['mail'] = ['name' => \t("Email"), 'description' => \t("The email address of the user account.")];
     $user['url'] = ['name' => \t("URL"), 'description' => \t("The URL of the account profile page.")];
     $user['edit-url'] = ['name' => \t("Edit URL"), 'description' => \t("The URL of the account edit page.")];
-    $user['last-login'] = ['name' => \t("Last login"), 'description' => \t("The date the user last logged in to the site."), 'type' => 'date'];
-    $user['created'] = ['name' => \t("Created"), 'description' => \t("The date the user account was created."), 'type' => 'date'];
+    $user['last-login'] = [
+      'name' => \t("Last login"),
+      'description' => \t("The date the user last logged in to the site."),
+      'type' => 'date'
+    ];
+    $user['created'] = [
+      'name' => \t("Created"),
+      'description' => \t("The date the user account was created."),
+      'type' => 'date'
+    ];
     return ['types' => $types, 'tokens' => ['user' => $user]];
   }
 

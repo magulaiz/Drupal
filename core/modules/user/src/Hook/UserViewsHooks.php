@@ -4,12 +4,10 @@ namespace Drupal\user\Hook;
 
 use Drupal\Core\Hook\Attribute\Hook;
 
+/**
+ * Views hooks for the user module.
+ */
 class UserViewsHooks {
-  /**
-   * @file
-   * Provide views data for user.module.
-   */
-
   /**
    * Implements hook_views_plugins_argument_validator_alter().
    */

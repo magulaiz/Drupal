@@ -2,28 +2,27 @@
 
 namespace Drupal\user\Hook;
 
-/**
- * @file
- * Enables the user registration and login system.
- */
-use Drupal\Core\Entity\EntityInterface;
-use Drupal\user\Entity\Role;
-use Drupal\filter\FilterFormatInterface;
-use Drupal\Core\Form\FormStateInterface;
-use Drupal\system\Entity\Action;
 use Drupal\Component\Assertion\Inspector;
-use Drupal\user\RoleInterface;
 use Drupal\Component\Render\PlainTextOutput;
-use Drupal\Core\Session\AccountInterface;
-use Drupal\image\Plugin\Field\FieldType\ImageItem;
-use Drupal\Core\Render\Element;
-use Drupal\Core\Entity\Display\EntityViewDisplayInterface;
-use Drupal\user\UserInterface;
 use Drupal\Core\Asset\AttachedAssetsInterface;
-use Drupal\Core\Url;
-use Drupal\Core\Routing\RouteMatchInterface;
+use Drupal\Core\Entity\Display\EntityViewDisplayInterface;
+use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Hook\Attribute\Hook;
+use Drupal\Core\Render\Element;
+use Drupal\Core\Routing\RouteMatchInterface;
+use Drupal\Core\Session\AccountInterface;
+use Drupal\Core\Url;
+use Drupal\filter\FilterFormatInterface;
+use Drupal\image\Plugin\Field\FieldType\ImageItem;
+use Drupal\system\Entity\Action;
+use Drupal\user\Entity\Role;
+use Drupal\user\RoleInterface;
+use Drupal\user\UserInterface;
 
+/**
+ * General hooks for the user module.
+ */
 class UserHooks {
 
   /**
@@ -78,7 +77,18 @@ class UserHooks {
    */
   #[Hook('theme')]
   public function theme() {
-    return ['user' => ['render element' => 'elements'], 'username' => ['variables' => ['account' => \NULL, 'attributes' => [], 'link_options' => []]]];
+    return [
+      'user' => [
+        'render element' => 'elements'
+      ],
+      'username' => [
+        'variables' => [
+          'account' => \NULL,
+          'attributes' => [],
+          'link_options' => [],
+        ],
+      ],
+    ];
   }
 
   /**
@@ -101,12 +111,28 @@ class UserHooks {
    */
   #[Hook('entity_extra_field_info')]
   public function entityExtraFieldInfo() {
-    $fields['user']['user']['form']['account'] = ['label' => \t('User name and password'), 'description' => \t('User module account form elements.'), 'weight' => -10];
-    $fields['user']['user']['form']['language'] = ['label' => \t('Language settings'), 'description' => \t('User module form element.'), 'weight' => 0];
+    $fields['user']['user']['form']['account'] = [
+      'label' => \t('User name and password'),
+      'description' => \t('User module account form elements.'),
+      'weight' => -10,
+    ];
+    $fields['user']['user']['form']['language'] = [
+      'label' => \t('Language settings'),
+      'description' => \t('User module form element.'),
+      'weight' => 0,
+    ];
     if (\Drupal::config('system.date')->get('timezone.user.configurable')) {
-      $fields['user']['user']['form']['timezone'] = ['label' => \t('Timezone'), 'description' => \t('System module form element.'), 'weight' => 6];
+      $fields['user']['user']['form']['timezone'] = [
+        'label' => \t('Timezone'),
+        'description' => \t('System module form element.'),
+        'weight' => 6,
+      ];
     }
-    $fields['user']['user']['display']['member_for'] = ['label' => \t('Member for'), 'description' => \t("User module 'member for' view element."), 'weight' => 5];
+    $fields['user']['user']['display']['member_for'] = [
+      'label' => \t('Member for'),
+      'description' => \t("User module 'member for' view element."),
+      'weight' => 5,
+    ];
     return $fields;
   }
 
@@ -130,7 +156,10 @@ class UserHooks {
   #[Hook('user_view')]
   public function userView(array &$build, UserInterface $account, EntityViewDisplayInterface $display) {
     if ($account->isAuthenticated() && $display->getComponent('member_for')) {
-      $build['member_for'] = ['#type' => 'item', '#markup' => '<h4 class="label">' . \t('Member for') . '</h4> ' . \Drupal::service('date.formatter')->formatTimeDiffSince($account->getCreatedTime())];
+      $build['member_for'] = [
+        '#type' => 'item',
+        '#markup' => '<h4 class="label">' . \t('Member for') . '</h4> ' . \Drupal::service('date.formatter')->formatTimeDiffSince($account->getCreatedTime())
+      ];
     }
   }
 
@@ -186,7 +215,13 @@ class UserHooks {
     // If the user has a NULL time zone, notify them to set a time zone.
     $config = \Drupal::config('system.date');
     if (!$account->getTimezone() && $config->get('timezone.user.configurable') && $config->get('timezone.user.warn')) {
-      \Drupal::messenger()->addStatus(\t('Configure your <a href=":user-edit">account time zone setting</a>.', [':user-edit' => $account->toUrl('edit-form', ['query' => \Drupal::destination()->getAsArray(), 'fragment' => 'edit-timezone'])->toString()]));
+      \Drupal::messenger()->addStatus(\t(
+        'Configure your <a href=":user-edit">account time zone setting</a>.',
+        [
+          ':user-edit' => $account->toUrl('edit-form',
+          ['query' => \Drupal::destination()->getAsArray(), 'fragment' => 'edit-timezone'])->toString()
+        ]
+      ));
     }
   }
 
@@ -231,12 +266,38 @@ class UserHooks {
     \assert(Inspector::assertStringable($role->label()), 'Role label is expected to be a string.');
     $add_id = 'user_add_role_action.' . $role->id();
     if (!Action::load($add_id)) {
-      $action = Action::create(['id' => $add_id, 'type' => 'user', 'label' => \t('Add the @label role to the selected user(s)', ['@label' => $role->label()]), 'configuration' => ['rid' => $role->id()], 'plugin' => 'user_add_role_action']);
+      $action = Action::create(
+        [
+          'id' => $add_id,
+          'type' => 'user',
+          'label' => \t(
+            'Add the @label role to the selected user(s)',
+            ['@label' => $role->label()]
+          ),
+          'configuration' => [
+            'rid' => $role->id()
+          ],
+          'plugin' => 'user_add_role_action'
+        ]
+      );
       $action->trustData()->save();
     }
     $remove_id = 'user_remove_role_action.' . $role->id();
     if (!Action::load($remove_id)) {
-      $action = Action::create(['id' => $remove_id, 'type' => 'user', 'label' => \t('Remove the @label role from the selected user(s)', ['@label' => $role->label()]), 'configuration' => ['rid' => $role->id()], 'plugin' => 'user_remove_role_action']);
+      $action = Action::create(
+        [
+          'id' => $remove_id,
+          'type' => 'user',
+          'label' => \t(
+            'Remove the @label role from the selected user(s)',
+            ['@label' => $role->label()]
+          ),
+          'configuration' => [
+            'rid' => $role->id()
+          ],
+          'plugin' => 'user_remove_role_action',
+        ]
+      );
       $action->trustData()->save();
     }
   }
@@ -293,7 +354,15 @@ class UserHooks {
     ];
     if ($user->isAnonymous()) {
       $links = ['login' => ['title' => \t('Log in'), 'url' => Url::fromRoute('user.page')]];
-      $items['user']['tray']['user_links'] = ['#theme' => 'links__toolbar_user', '#links' => $links, '#attributes' => ['class' => ['toolbar-menu']]];
+      $items['user']['tray']['user_links'] = [
+        '#theme' => 'links__toolbar_user',
+        '#links' => $links,
+        '#attributes' => [
+          'class' => [
+            'toolbar-menu'
+          ],
+        ],
+      ];
     }
     else {
       $items['user']['tab']['#title'] = [
@@ -306,7 +375,16 @@ class UserHooks {
           '#markup' => '&nbsp;',
         ],
       ];
-      $items['user']['tray']['user_links'] = ['#lazy_builder' => ['user.toolbar_link_builder:renderToolbarLinks', []], '#create_placeholder' => \TRUE, '#lazy_builder_preview' => ['#markup' => '<a href="#" class="toolbar-tray-lazy-placeholder-link">&nbsp;</a>']];
+      $items['user']['tray']['user_links'] = [
+        '#lazy_builder' => [
+          'user.toolbar_link_builder:renderToolbarLinks',
+          [],
+        ],
+        '#create_placeholder' => \TRUE,
+        '#lazy_builder_preview' => [
+          '#markup' => '<a href="#" class="toolbar-tray-lazy-placeholder-link">&nbsp;</a>'
+        ],
+      ];
     }
     return $items;
   }
@@ -317,7 +395,11 @@ class UserHooks {
   #[Hook('form_system_regional_settings_alter')]
   public function formSystemRegionalSettingsAlter(&$form, FormStateInterface $form_state) {
     $config = \Drupal::config('system.date');
-    $form['timezone']['configurable_timezones'] = ['#type' => 'checkbox', '#title' => \t('Users may set their own time zone'), '#default_value' => $config->get('timezone.user.configurable')];
+    $form['timezone']['configurable_timezones'] = [
+      '#type' => 'checkbox',
+      '#title' => \t('Users may set their own time zone'),
+      '#default_value' => $config->get('timezone.user.configurable')
+    ];
     $form['timezone']['configurable_timezones_wrapper'] = [
       '#type' => 'container',
       '#states' => [
@@ -326,8 +408,23 @@ class UserHooks {
         'invisible' => ['input[name="configurable_timezones"]' => ['checked' => \FALSE]],
       ],
     ];
-    $form['timezone']['configurable_timezones_wrapper']['empty_timezone_message'] = ['#type' => 'checkbox', '#title' => \t('Remind users at login if their time zone is not set'), '#default_value' => $config->get('timezone.user.warn'), '#description' => \t('Only applied if users may set their own time zone.')];
-    $form['timezone']['configurable_timezones_wrapper']['user_default_timezone'] = ['#type' => 'radios', '#title' => \t('Time zone for new users'), '#default_value' => $config->get('timezone.user.default'), '#options' => [UserInterface::TIMEZONE_DEFAULT => \t('Default time zone'), UserInterface::TIMEZONE_EMPTY => \t('Empty time zone'), UserInterface::TIMEZONE_SELECT => \t('Users may set their own time zone at registration')], '#description' => \t('Only applied if users may set their own time zone.')];
+    $form['timezone']['configurable_timezones_wrapper']['empty_timezone_message'] = [
+      '#type' => 'checkbox',
+      '#title' => \t('Remind users at login if their time zone is not set'),
+      '#default_value' => $config->get('timezone.user.warn'),
+      '#description' => \t('Only applied if users may set their own time zone.')
+    ];
+    $form['timezone']['configurable_timezones_wrapper']['user_default_timezone'] = [
+      '#type' => 'radios',
+      '#title' => \t('Time zone for new users'),
+      '#default_value' => $config->get('timezone.user.default'),
+      '#options' => [
+        UserInterface::TIMEZONE_DEFAULT => \t('Default time zone'),
+        UserInterface::TIMEZONE_EMPTY => \t('Empty time zone'),
+        UserInterface::TIMEZONE_SELECT => \t('Users may set their own time zone at registration')
+      ],
+      '#description' => \t('Only applied if users may set their own time zone.')
+    ];
     $form['#submit'][] = 'user_form_system_regional_settings_submit';
   }
 

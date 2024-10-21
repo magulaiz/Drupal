@@ -2,13 +2,12 @@
 
 namespace Drupal\user\Hook;
 
-/**
- * @file
- * Provide views runtime hooks for user.module.
- */
-use Drupal\views\ViewExecutable;
 use Drupal\Core\Hook\Attribute\Hook;
+use Drupal\views\ViewExecutable;
 
+/**
+ * Views Query Substitution for the user module.
+ */
 class UserViewsExecutionHooks {
 
   /**
