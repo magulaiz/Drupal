@@ -159,6 +159,8 @@ function hook_system_info_alter(array &$info, \Drupal\Core\Extension\Extension $
 /**
  * Perform necessary actions before a module is installed.
  *
+ * Only procedural implementations are supported for this hook.
+ *
  * @param string $module
  *   The name of the module about to be installed.
  * @param bool $is_syncing
@@ -175,6 +177,8 @@ function hook_module_preinstall($module, bool $is_syncing) {
 
 /**
  * Perform necessary actions after modules are installed.
+ *
+ * Only procedural implementations are supported for this hook.
  *
  * This function differs from hook_install() in that it gives all other modules
  * a chance to perform actions when a module is installed, whereas
@@ -208,6 +212,8 @@ function hook_modules_installed($modules, $is_syncing) {
 
 /**
  * Perform setup tasks when the module is installed.
+ *
+ * Only procedural implementations are supported for this hook.
  *
  * If the module implements hook_schema(), the database tables will
  * be created before this hook is fired.
@@ -257,6 +263,8 @@ function hook_install($is_syncing) {
 /**
  * Perform necessary actions before a module is uninstalled.
  *
+ * Only procedural implementations are supported for this hook.
+ *
  * @param string $module
  *   The name of the module about to be uninstalled.
  * @param bool $is_syncing
@@ -272,6 +280,8 @@ function hook_module_preuninstall($module, bool $is_syncing) {
 
 /**
  * Perform necessary actions after modules are uninstalled.
+ *
+ * Only procedural implementations are supported for this hook.
  *
  * This function differs from hook_uninstall() in that it gives all other
  * modules a chance to perform actions when a module is uninstalled, whereas
@@ -303,6 +313,8 @@ function hook_modules_uninstalled($modules, $is_syncing) {
 
 /**
  * Remove any information that the module sets.
+ *
+ * Only procedural implementations are supported for this hook.
  *
  * The information that the module should remove includes:
  * - state that the module has set using \Drupal::state()
@@ -529,6 +541,8 @@ function hook_install_tasks_alter(&$tasks, $install_state) {
 /**
  * Perform a single update between minor versions.
  *
+ * Only procedural implementations are supported for this hook.
+ *
  * Modules should use hook hook_update_N() to update between minor or major
  * versions of the module. Sites upgrading from Drupal 6 or 7 to any higher
  * version should use the @link migrate Migrate API @endlink instead.
@@ -541,8 +555,6 @@ function hook_install_tasks_alter(&$tasks, $install_state) {
  * name)_update_(number).
  *
  * The number (N) must be higher than hook_update_last_removed().
- *
- * @see hook_update_last_removed()
  *
  * The numbers are normally composed of three parts:
  * - 1 or 2 digits for Drupal core compatibility (Drupal 8, 9, 10, etc.). This
@@ -741,7 +753,7 @@ function hook_install_tasks_alter(&$tasks, $install_state) {
  *
  *   // The rest of the update function.
  * }
- * @encode
+ * @endcode
  *
  * @param array $sandbox
  *   Stores information for batch updates. See above for more information.
@@ -823,6 +835,8 @@ function hook_update_N(&$sandbox) {
 
 /**
  * Executes an update which is intended to update data, like entities.
+ *
+ * Only procedural implementations are supported for this hook.
  *
  * These implementations have to be placed in a MODULE.post_update.php file or
  * a THEME.post_update.php file.
@@ -962,6 +976,8 @@ function hook_update_dependencies() {
 /**
  * Return a number which is no longer available as hook_update_N().
  *
+ * Only procedural implementations are supported for this hook.
+ *
  * If you remove some update functions from your my_module.install file, you
  * should notify Drupal of those missing functions. This way, Drupal can
  * ensure that no update is accidentally skipped.
@@ -988,7 +1004,7 @@ function hook_update_last_removed() {
  *
  * Drupal\Core\Updater\Updater is a class that knows how to update various parts
  * of the Drupal file system, for example to update modules that have newer
- * releases, or to install a new theme.
+ * releases.
  *
  * @return array
  *   An associative array of information about the updater(s) being provided.
@@ -1028,8 +1044,7 @@ function hook_updater_info() {
  * Alter the Updater information array.
  *
  * An Updater is a class that knows how to update various parts of the Drupal
- * file system, for example to update modules that have newer releases, or to
- * install a new theme.
+ * file system, for example to update modules that have newer releases.
  *
  * @param array $updaters
  *   Associative array of updaters as defined through hook_updater_info().

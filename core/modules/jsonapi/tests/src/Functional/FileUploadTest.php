@@ -24,7 +24,6 @@ use Psr\Http\Message\ResponseInterface;
  * Tests binary data file upload route.
  *
  * @group jsonapi
- * @group #slow
  */
 class FileUploadTest extends ResourceTestBase {
 
@@ -109,9 +108,20 @@ class FileUploadTest extends ResourceTestBase {
   protected $fileStorage;
 
   /**
+   * A list of test methods to skip.
+   *
+   * @var array
+   */
+  const SKIP_METHODS = ['testGetIndividual', 'testIndividual', 'testCollection', 'testRelationships'];
+
+  /**
    * {@inheritdoc}
    */
   protected function setUp(): void {
+    if (in_array($this->name(), static::SKIP_METHODS, TRUE)) {
+      $this->markTestSkipped('Irrelevant for this test');
+    }
+
     parent::setUp();
 
     $this->fileStorage = $this->container->get('entity_type.manager')
@@ -145,48 +155,6 @@ class FileUploadTest extends ResourceTestBase {
 
     // Reload entity so that it has the new field.
     $this->entity = $this->entityStorage->loadUnchanged($this->entity->id());
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function testGetIndividual(): void {
-    $this->markTestSkipped('Irrelevant for this test');
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function testPostIndividual(): void {
-    $this->markTestSkipped('Irrelevant for this test');
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function testPatchIndividual(): void {
-    $this->markTestSkipped('Irrelevant for this test');
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function testDeleteIndividual(): void {
-    $this->markTestSkipped('Irrelevant for this test');
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function testCollection(): void {
-    $this->markTestSkipped('Irrelevant for this test');
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function testRelationships(): void {
-    $this->markTestSkipped('Irrelevant for this test');
   }
 
   /**
@@ -370,7 +338,7 @@ class FileUploadTest extends ResourceTestBase {
    * @see ::testPostFileUpload()
    * @see \Drupal\Tests\jsonapi\Functional\EntityTestTest::getPostDocument()
    */
-  protected function getPostDocument() {
+  protected function getPostDocument(): array {
     return [
       'data' => [
         'type' => 'entity_test--entity_test',
@@ -753,7 +721,7 @@ class FileUploadTest extends ResourceTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function getExpectedUnauthorizedAccessMessage($method) {
+  protected function getExpectedUnauthorizedAccessMessage($method): string {
     switch ($method) {
       case 'GET':
         return "The current user is not allowed to view this relationship. The 'view test entity' permission is required.";
@@ -782,7 +750,7 @@ class FileUploadTest extends ResourceTestBase {
    * @return array
    *   A JSON:API response document.
    */
-  protected function getExpectedDocument($fid = 1, $expected_filename = 'example.txt', $expected_as_filename = FALSE, $expected_status = FALSE) {
+  protected function getExpectedDocument($fid = 1, $expected_filename = 'example.txt', $expected_as_filename = FALSE, $expected_status = FALSE): array {
     $author = User::load($this->account->id());
     $file = File::load($fid);
     $this->assertInstanceOf(File::class, $file);
