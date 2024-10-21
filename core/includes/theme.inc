@@ -1429,7 +1429,7 @@ function template_preprocess_field(&$variables, $hook) {
   $variables['label'] = $element['#title'];
 
   // Append translatable ':' after label if inline label
-  // display is selected. 
+  // display is selected.
   if ($variables['label_display'] == 'inline') {
     $variables['label'] .= t(':');
   }
