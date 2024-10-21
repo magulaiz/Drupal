@@ -9,7 +9,7 @@ use Drupal\node\Entity\Node;
 use Drupal\node\Entity\NodeType;
 
 /**
- * Tests node deletion.
+ * Tests node validation constraints.
  *
  * @group node
  */
@@ -26,19 +26,34 @@ class NodeDeleteTest extends EntityKernelTestBase {
   protected function setUp(): void {
     parent::setUp();
 
+    $this->installSchema('node', ['node_access']);
+
     // Create a node type for testing.
     $type = NodeType::create(['type' => 'page', 'name' => 'page']);
     $type->save();
   }
 
   /**
-   * Tests the node deletion.
+   * Counts the total number of nodes.
+   *
+   * @return int
+   *   Total number of nodes.
+   */
+  protected function nodeCount(): int {
+    $query = \Drupal::entityQuery('node')->accessCheck(FALSE);
+    $result = $query->count()->execute();
+    return $result;
+  }
+
+  /**
+   * Tests the node validation constraints.
    */
   public function testDelete(): void {
     $this->createUser();
     $node = Node::create(['type' => 'page', 'title' => 'test', 'uid' => 1]);
     $node->save();
+    $this->assertEquals(1, $this->nodeCount(), 'Expect 1 node after creation.');
     $node->delete();
+    $this->assertEquals(0, $this->nodeCount(), 'Expect 0 nodes after creation.');
   }
-
 }
