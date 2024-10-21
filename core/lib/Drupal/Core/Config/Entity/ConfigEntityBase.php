@@ -104,6 +104,13 @@ abstract class ConfigEntityBase extends EntityBase implements ConfigEntityInterf
    * @var bool
    */
   protected $trustedData = FALSE;
+ 
+  /**
+   * Sort collator.
+   *
+   * @var \Collator
+   */
+  protected $sortCollator;
 
   /**
    * {@inheritdoc}
@@ -117,6 +124,7 @@ abstract class ConfigEntityBase extends EntityBase implements ConfigEntityInterf
     if ($original_id !== NULL && $original_id !== '') {
       $this->setOriginalId($original_id);
     }
+    self::$sortCollator = \Collator::create('en');
   }
 
   /**
@@ -241,8 +249,7 @@ abstract class ConfigEntityBase extends EntityBase implements ConfigEntityInterf
     if ($a_weight == $b_weight) {
       $a_label = $a->label() ?? '';
       $b_label = $b->label() ?? '';
-      $collator = \Collator::create((!extension_loaded('intl')) ? ('en') : (\Drupal::service('language_manager')->getCurrentLanguage()->getId()));
-      return $collator->compare($a_label, $b_label);
+      return self::$sortCollator->compare($a_label, $b_label);
     }
     return $a_weight <=> $b_weight;
   }

@@ -28,6 +28,7 @@ class ConfigEntityListBuilder extends EntityListBuilder {
 
     // Sort the entities using the entity class's sort() method.
     // See \Drupal\Core\Config\Entity\ConfigEntityBase::sort().
+    $this->entityType->getClass()::$sortCollator =  \Collator::create((!extension_loaded('intl')) ? ('en') : (\Drupal::service('language_manager')->getCurrentLanguage()->getId()));
     uasort($entities, [$this->entityType->getClass(), 'sort']);
     return $entities;
   }
