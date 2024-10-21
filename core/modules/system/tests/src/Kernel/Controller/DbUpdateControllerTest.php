@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\system\Kernel\Controller;
 
 use Drupal\Core\Render\BareHtmlPageRendererInterface;
@@ -81,7 +83,7 @@ class DbUpdateControllerTest extends KernelTestBase {
    *
    * @var \Drupal\Core\Asset\AssetQueryStringInterface
    */
-  protected $AssetQueryStringInterface;
+  protected $assetQueryStringInterface;
 
   /**
    * Modules to enable.
@@ -94,7 +96,7 @@ class DbUpdateControllerTest extends KernelTestBase {
   ];
 
   /**
-   * {@inheritDoc}
+   * {@inheritdoc}
    */
   public function setUp(): void {
     parent::setup();
@@ -109,8 +111,8 @@ class DbUpdateControllerTest extends KernelTestBase {
     $this->moduleHandler = $this->container->get('module_handler');
     $this->account = $this->container->get('current_user');
     $this->postUpdateRegistry = $this->container->get('update.post_update_registry');
-    $this->AssetQueryStringInterface = $this->container->get('asset.query_string');
-    
+    $this->assetQueryStringInterface = $this->container->get('asset.query_string');
+
     $html_response = $this->prophesize(HtmlResponse::class);
     $this->bareHtmlPageRenderer = $this->prophesize(BareHtmlPageRendererInterface::class);
     $this->bareHtmlPageRenderer
@@ -120,8 +122,6 @@ class DbUpdateControllerTest extends KernelTestBase {
 
   /**
    * Tests the handle method.
-   *
-   * @covers ::handle
    */
   public function testhandle(): void {
     $session = new Session();
