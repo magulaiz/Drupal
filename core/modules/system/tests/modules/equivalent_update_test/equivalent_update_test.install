@@ -9,13 +9,13 @@ declare(strict_types=1);
 
 use Drupal\Core\Update\EquivalentUpdate;
 
-if (\Drupal::state()->get('equivalent_update_test_last_removed', FALSE)) {
+if (Drupal::state()->get('equivalent_update_test_last_removed', FALSE)) {
 
   /**
    * Implements hook_update_last_removed().
    */
   function equivalent_update_test_update_last_removed() {
-    return \Drupal::state()->get('equivalent_update_test_update_last_removed', 100000);
+    return Drupal::state()->get('equivalent_update_test_update_last_removed', 100000);
   }
 
   /**
@@ -35,13 +35,13 @@ else {
    * Used to determine the initial schema version.
    */
   function equivalent_update_test_update_100000() {
-    throw new \Exception('This code should never be reached.');
+    throw new Exception('This code should never be reached.');
   }
 
 }
 
 
-if (\Drupal::state()->get('equivalent_update_test_update_100002', FALSE)) {
+if (Drupal::state()->get('equivalent_update_test_update_100002', FALSE)) {
 
   /**
    * Schema version 100002.
@@ -49,12 +49,12 @@ if (\Drupal::state()->get('equivalent_update_test_update_100002', FALSE)) {
    * Tests that the future update 100101 can be marked as an equivalent.
    */
   function equivalent_update_test_update_100002() {
-    \Drupal::service('update.update_hook_registry')->markFutureUpdateEquivalent(100101, '11.1.0');
+    Drupal::service('update.update_hook_registry')->markFutureUpdateEquivalent(100101, '11.1.0');
   }
 
 }
 
-if (\Drupal::state()->get('equivalent_update_test_update_100101', FALSE)) {
+if (Drupal::state()->get('equivalent_update_test_update_100101', FALSE)) {
 
   /**
    * Schema version 100101.
@@ -62,12 +62,12 @@ if (\Drupal::state()->get('equivalent_update_test_update_100101', FALSE)) {
    * This update will be skipped due 100002.
    */
   function equivalent_update_test_update_100101() {
-    throw new \Exception('This code should never be reached.');
+    throw new Exception('This code should never be reached.');
   }
 
 }
 
-if (\Drupal::state()->get('equivalent_update_test_update_100201', FALSE)) {
+if (Drupal::state()->get('equivalent_update_test_update_100201', FALSE)) {
 
   /**
    * Schema version 100201.
@@ -75,19 +75,19 @@ if (\Drupal::state()->get('equivalent_update_test_update_100201', FALSE)) {
    * This update tests that updates can be skipped using inline code.
    */
   function equivalent_update_test_update_100201() {
-    \Drupal::service('update.update_hook_registry')->markFutureUpdateEquivalent(100201, '11.1.0');
+    Drupal::service('update.update_hook_registry')->markFutureUpdateEquivalent(100201, '11.1.0');
     // Test calling the getEquivalentUpdate() method in an update function to
     // ensure it correctly determines the update number.
-    $equivalent_update = \Drupal::service('update.update_hook_registry')->getEquivalentUpdate();
+    $equivalent_update = Drupal::service('update.update_hook_registry')->getEquivalentUpdate();
     if ($equivalent_update instanceof EquivalentUpdate) {
       return $equivalent_update->toSkipMessage();
     }
-    throw new \Exception('This code should never be reached.');
+    throw new Exception('This code should never be reached.');
   }
 
 }
 
-if (\Drupal::state()->get('equivalent_update_test_update_100301', FALSE)) {
+if (Drupal::state()->get('equivalent_update_test_update_100301', FALSE)) {
 
   /**
    * Schema version 100301.
@@ -96,12 +96,12 @@ if (\Drupal::state()->get('equivalent_update_test_update_100301', FALSE)) {
    * correctly and return a NULL when it does not match.
    */
   function equivalent_update_test_update_100301() {
-    \Drupal::service('update.update_hook_registry')->markFutureUpdateEquivalent(100302, '11.1.0');
+    Drupal::service('update.update_hook_registry')->markFutureUpdateEquivalent(100302, '11.1.0');
     // Test calling the getEquivalentUpdate() method in an update function to
     // ensure it correctly determines the update number.
-    $equivalent_update = \Drupal::service('update.update_hook_registry')->getEquivalentUpdate();
+    $equivalent_update = Drupal::service('update.update_hook_registry')->getEquivalentUpdate();
     if ($equivalent_update instanceof EquivalentUpdate) {
-      throw new \Exception('This code should never be reached.');
+      throw new Exception('This code should never be reached.');
     }
   }
 
@@ -111,12 +111,12 @@ if (\Drupal::state()->get('equivalent_update_test_update_100301', FALSE)) {
    * This update will be skipped by 100301.
    */
   function equivalent_update_test_update_100302() {
-    throw new \Exception('This code should never be reached.');
+    throw new Exception('This code should never be reached.');
   }
 
 }
 
-if (\Drupal::state()->get('equivalent_update_test_update_100400', FALSE)) {
+if (Drupal::state()->get('equivalent_update_test_update_100400', FALSE)) {
 
   /**
    * Schema version 100400.
@@ -124,12 +124,12 @@ if (\Drupal::state()->get('equivalent_update_test_update_100400', FALSE)) {
    * Tests that the future update 100402 can be marked as an equivalent.
    */
   function equivalent_update_test_update_100400() {
-    \Drupal::service('update.update_hook_registry')->markFutureUpdateEquivalent(100402, '11.2.0');
+    Drupal::service('update.update_hook_registry')->markFutureUpdateEquivalent(100402, '11.2.0');
   }
 
 }
 
-if (\Drupal::state()->get('equivalent_update_test_update_100401', FALSE)) {
+if (Drupal::state()->get('equivalent_update_test_update_100401', FALSE)) {
 
   /**
    * Schema version 100401.
@@ -137,12 +137,12 @@ if (\Drupal::state()->get('equivalent_update_test_update_100401', FALSE)) {
    * Tests that the future update 100402 can be marked as an equivalent again.
    */
   function equivalent_update_test_update_100401() {
-    \Drupal::service('update.update_hook_registry')->markFutureUpdateEquivalent(100402, '11.2.0');
+    Drupal::service('update.update_hook_registry')->markFutureUpdateEquivalent(100402, '11.2.0');
   }
 
 }
 
-if (\Drupal::state()->get('equivalent_update_test_update_100402', FALSE)) {
+if (Drupal::state()->get('equivalent_update_test_update_100402', FALSE)) {
 
   /**
    * Schema version 100402.
@@ -150,12 +150,12 @@ if (\Drupal::state()->get('equivalent_update_test_update_100402', FALSE)) {
    * This update will be skipped by 100400 and 100401.
    */
   function equivalent_update_test_update_100402() {
-    throw new \Exception('This code should never be reached.');
+    throw new Exception('This code should never be reached.');
   }
 
 }
 
-if (\Drupal::state()->get('equivalent_update_test_update_100501', FALSE)) {
+if (Drupal::state()->get('equivalent_update_test_update_100501', FALSE)) {
 
   /**
    * Schema version 100501.
@@ -163,7 +163,7 @@ if (\Drupal::state()->get('equivalent_update_test_update_100501', FALSE)) {
    * This update will trigger an exception because 100501 is bigger than 100302.
    */
   function equivalent_update_test_update_100501() {
-    \Drupal::service('update.update_hook_registry')->markFutureUpdateEquivalent(100302, '11.1.0');
+    Drupal::service('update.update_hook_registry')->markFutureUpdateEquivalent(100302, '11.1.0');
   }
 
 }

@@ -24,31 +24,31 @@ function new_dependency_test_update_8001() {
 
   // Gather the state of the services prior to installing the
   // new_dependency_test_with_service module.
-  \Drupal::state()->set(
+  Drupal::state()->set(
     'new_dependency_test_update_8001.decorated_service',
-    \Drupal::service('new_dependency_test.another_service')->isDecorated()
+    Drupal::service('new_dependency_test.another_service')->isDecorated()
   );
 
-  \Drupal::state()->set(
+  Drupal::state()->set(
     'new_dependency_test_update_8001.decorated_service_custom_inner',
-    \Drupal::service('new_dependency_test.another_service_two')->isDecorated()
+    Drupal::service('new_dependency_test.another_service_two')->isDecorated()
   );
 
   $map = [];
   foreach ($services as $id) {
-    $map[$id] = \Drupal::hasService($id);
+    $map[$id] = Drupal::hasService($id);
   }
-  \Drupal::state()->set('new_dependency_test_update_8001.has_before_install', $map);
+  Drupal::state()->set('new_dependency_test_update_8001.has_before_install', $map);
 
   // During the update hooks the container is cleaned up to contain only
   // services that have their dependencies met. Core services are available.
-  \Drupal::getContainer()->get('module_installer')->install(['new_dependency_test_with_service']);
+  Drupal::getContainer()->get('module_installer')->install(['new_dependency_test_with_service']);
 
   // Gather the state of the services after installing the
   // new_dependency_test_with_service module.
   $map = [];
   foreach ($services as $id) {
-    $map[$id] = \Drupal::hasService($id);
+    $map[$id] = Drupal::hasService($id);
   }
-  \Drupal::state()->set('new_dependency_test_update_8001.has_after_install', $map);
+  Drupal::state()->set('new_dependency_test_update_8001.has_after_install', $map);
 }

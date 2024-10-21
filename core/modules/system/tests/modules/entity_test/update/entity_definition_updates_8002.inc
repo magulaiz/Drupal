@@ -16,7 +16,7 @@ function entity_test_update_8002() {
   // To update the field schema we need to have no field data in the storage,
   // thus we retrieve it, delete it from storage, and write it back to the
   // storage after updating the schema.
-  $database = \Drupal::database();
+  $database = Drupal::database();
 
   // Retrieve existing entity data.
   $query = $database->select('entity_test__user_id', 'et')
@@ -28,7 +28,7 @@ function entity_test_update_8002() {
   $database->truncate('entity_test__user_id')->execute();
 
   // Update definitions and schema.
-  $manager = \Drupal::entityDefinitionUpdateManager();
+  $manager = Drupal::entityDefinitionUpdateManager();
   $storage_definition = $manager->getFieldStorageDefinition('user_id', 'entity_test');
   $storage_definition->setCardinality(1);
   $manager->updateFieldStorageDefinition($storage_definition);
