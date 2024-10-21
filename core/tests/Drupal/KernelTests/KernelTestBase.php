@@ -4,10 +4,6 @@ declare(strict_types=1);
 
 namespace Drupal\KernelTests;
 
-use Behat\Mink\Session;
-use Behat\Mink\Driver\BrowserKitDriver;
-use Behat\Mink\Mink;
-use Behat\Mink\Selector\SelectorsHandler;
 use Drupal\Component\FileCache\ApcuFileCacheBackend;
 use Drupal\Component\FileCache\FileCache;
 use Drupal\Component\FileCache\FileCacheFactory;
@@ -32,7 +28,6 @@ use Drupal\TestTools\Comparator\MarkupInterfaceComparator;
 use Drupal\TestTools\Extension\DeprecationBridge\ExpectDeprecationTrait;
 use Drupal\TestTools\Extension\Dump\DebugDump;
 use Drupal\TestTools\Extension\SchemaInspector;
-use Drupal\TestTools\HttpKernel\KernelTestHttpKernelBrowser;
 use PHPUnit\Framework\Attributes\After;
 use PHPUnit\Framework\Attributes\BeforeClass;
 use PHPUnit\Framework\Exception;
@@ -44,9 +39,6 @@ use Symfony\Component\HttpFoundation\Request;
 use org\bovigo\vfs\vfsStream;
 use org\bovigo\vfs\visitor\vfsStreamPrintVisitor;
 use Drupal\Core\Routing\RouteObjectInterface;
-use Drupal\Tests\BrowserHtmlDebugTrait;
-use Drupal\Tests\HiddenFieldSelector;
-use Drupal\Tests\WebAssert;
 use Symfony\Component\Routing\Route;
 use Symfony\Component\VarDumper\VarDumper;
 
@@ -112,7 +104,6 @@ abstract class KernelTestBase extends TestCase implements ServiceProviderInterfa
   use PhpUnitCompatibilityTrait;
   use ProphecyTrait;
   use ExpectDeprecationTrait;
-  use BrowserHtmlDebugTrait;
 
   /**
    * {@inheritdoc}
@@ -217,15 +208,6 @@ abstract class KernelTestBase extends TestCase implements ServiceProviderInterfa
    * @see \Drupal\Core\Session\SuperUserAccessPolicy
    */
   protected bool $usesSuperUserAccessPolicy;
-
-  /**
-   * Mink session manager.
-   *
-   * This is lazily initialized by the first call to self::drupalGet().
-   *
-   * @var \Behat\Mink\Mink|null
-   */
-  protected ?Mink $mink;
 
   /**
    * Registers the dumper CLI handler when the DebugDump extension is enabled.
@@ -929,113 +911,6 @@ abstract class KernelTestBase extends TestCase implements ServiceProviderInterfa
         throw new \RuntimeException("$module module is not uninstalled after uninstalling it.");
       }
     }
-  }
-
-  /**
-   * Retrieves a Drupal path.
-   *
-   * Requests are sent to the HTTP kernel.
-   *
-   * There is no logged in user. Use \Drupal\Tests\user\Traits\UserCreationTrait
-   * to set a current user.
-   *
-   * There is no theme. To place blocks, a test must first install a theme and
-   * set it as active.
-   *
-   * @param string|\Drupal\Core\Url $path
-   *   Drupal path or URL to load into Mink controlled browser.
-   * @param array $options
-   *   (optional) Options to be forwarded to the URL generator.
-   * @param string[] $headers
-   *   An array containing additional HTTP request headers, the array keys are
-   *   the header names and the array values the header values. This is useful
-   *   to set for example the "Accept-Language" header for requesting the page
-   *   in a different language. Note that not all headers are supported, for
-   *   example the "Accept" header is always overridden by the browser. For
-   *   testing REST APIs it is recommended to obtain a separate HTTP client
-   *   using getHttpClient() and performing requests that way.
-   *
-   * @see \Drupal\Tests\BrowserTestBase::getHttpClient()
-   */
-  protected function drupalGet($path, array $options = [], array $headers = []): void {
-    $session = $this->getSession();
-
-    $session->visit($path);
-
-    if ($this->htmlOutputEnabled) {
-      $html_output = 'GET request to: ' . $path;
-      $out = $session->getPage()->getContent();
-      $html_output .= '<hr />' . $out;
-      $html_output .= $this->getHtmlOutputHeaders();
-      $this->htmlOutput($html_output);
-    }
-  }
-
-  /**
-   * Returns Mink session.
-   *
-   * @param string $name
-   *   (optional) Name of the session. Defaults to the active session.
-   *
-   * @return \Behat\Mink\Session
-   *   The active Mink session object.
-   */
-  public function getSession($name = NULL) {
-    // Lazily initialize the Mink session. We do this because unlike Browser
-    // tests where there should definitely be requests made, this is not
-    // necessarily the case with Kernel tests.
-    if (!isset($this->mink)) {
-      $this->initMink();
-      // Set up the browser test output file.
-      $this->initBrowserOutputFile();
-    }
-
-    return $this->mink->getSession($name);
-  }
-
-  /**
-   * Initializes Mink sessions.
-   */
-  protected function initMink(): void {
-    $driver = $this->getDefaultDriverInstance();
-
-    $selectors_handler = new SelectorsHandler([
-      'hidden_field_selector' => new HiddenFieldSelector(),
-    ]);
-    $session = new Session($driver, $selectors_handler);
-    $this->mink = new Mink();
-    $this->mink->registerSession('default', $session);
-    $this->mink->setDefaultSessionName('default');
-  }
-
-  /**
-   * Gets an instance of the default Mink driver.
-   *
-   * @return \Behat\Mink\Driver\DriverInterface
-   *   Instance of default Mink driver.
-   *
-   * @throws \InvalidArgumentException
-   *   When provided default Mink driver class can't be instantiated.
-   */
-  protected function getDefaultDriverInstance() {
-    $http_kernel = $this->container->get('http_kernel');
-    $browserkit_client = new KernelTestHttpKernelBrowser($http_kernel);
-    $driver = new BrowserKitDriver($browserkit_client);
-    return $driver;
-  }
-
-  /**
-   * Returns WebAssert object.
-   *
-   * @param string $name
-   *   (optional) Name of the session. Defaults to the active session.
-   *
-   * @return \Drupal\Tests\WebAssert
-   *   A new web-assert option for asserting the presence of elements with.
-   */
-  public function assertSession($name = NULL) {
-    $this->addToAssertionCount(1);
-    return new WebAssert($this->getSession($name));
   }
 
   /**
