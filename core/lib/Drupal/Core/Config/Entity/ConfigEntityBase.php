@@ -104,7 +104,7 @@ abstract class ConfigEntityBase extends EntityBase implements ConfigEntityInterf
    * @var bool
    */
   protected $trustedData = FALSE;
- 
+
   /**
    * Sort collator.
    *
