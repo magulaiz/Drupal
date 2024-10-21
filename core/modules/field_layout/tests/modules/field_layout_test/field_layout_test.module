@@ -1,8 +1,0 @@
-<?php
-
-/**
- * @file
- * Contains hook implementations for field_layout_test.
- */
-
-declare(strict_types=1);

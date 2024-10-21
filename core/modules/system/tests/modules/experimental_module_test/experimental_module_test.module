@@ -1,8 +1,0 @@
-<?php
-
-/**
- * @file
- * Experimental Test module to test the Core (Experimental) package.
- */
-
-declare(strict_types=1);

@@ -1,8 +1,0 @@
-<?php
-
-/**
- * @file
- * Provides a way to bypass Big Pipe JavaScript.
- */
-
-declare(strict_types=1);

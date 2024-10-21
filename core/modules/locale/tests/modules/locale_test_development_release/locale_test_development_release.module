@@ -1,8 +1,0 @@
-<?php
-
-/**
- * @file
- * Simulate a Drupal version.
- */
-
-declare(strict_types=1);

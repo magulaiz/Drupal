@@ -1,8 +1,0 @@
-<?php
-
-/**
- * @file
- * Contains hook implementations for testing the off-canvas area.
- */
-
-declare(strict_types=1);

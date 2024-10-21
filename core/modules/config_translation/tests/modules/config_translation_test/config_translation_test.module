@@ -1,8 +1,0 @@
-<?php
-
-/**
- * @file
- * Configuration Translation Test module.
- */
-
-declare(strict_types=1);

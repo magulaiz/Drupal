@@ -1,8 +1,0 @@
-<?php
-
-/**
- * @file
- * Module for testing Update Manager functionality.
- */
-
-declare(strict_types=1);

@@ -1,8 +1,0 @@
-<?php
-
-/**
- * @file
- * Test module for help.
- */
-
-declare(strict_types=1);

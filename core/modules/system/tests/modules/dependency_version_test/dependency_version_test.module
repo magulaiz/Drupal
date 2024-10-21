@@ -1,8 +1,0 @@
-<?php
-
-/**
- * @file
- * Module for testing the dependency version comparisons.
- */
-
-declare(strict_types=1);

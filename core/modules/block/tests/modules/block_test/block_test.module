@@ -1,8 +1,0 @@
-<?php
-
-/**
- * @file
- * Provide test blocks.
- */
-
-declare(strict_types=1);

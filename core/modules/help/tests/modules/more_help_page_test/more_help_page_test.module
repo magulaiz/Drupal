@@ -1,8 +1,0 @@
-<?php
-
-/**
- * @file
- * More Help Page Test module to test the help blocks.
- */
-
-declare(strict_types=1);

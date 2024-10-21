@@ -1,8 +1,0 @@
-<?php
-
-/**
- * @file
- * Contains hook implementations for Entity Operation Test Module.
- */
-
-declare(strict_types=1);

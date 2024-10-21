@@ -1,8 +1,0 @@
-<?php
-
-/**
- * @file
- * Helper module for the JavaScript AJAX request tests.
- */
-
-declare(strict_types=1);

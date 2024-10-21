@@ -1,8 +1,0 @@
-<?php
-
-/**
- * @file
- * Contains hook implementations for the media_library_test module.
- */
-
-declare(strict_types=1);

@@ -1,8 +1,0 @@
-<?php
-
-/**
- * @file
- * Contains unique_field_constraint_test.module.
- */
-
-declare(strict_types=1);

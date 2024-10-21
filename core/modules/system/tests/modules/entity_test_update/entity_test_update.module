@@ -1,8 +1,0 @@
-<?php
-
-/**
- * @file
- * Provides an entity type for testing definition and schema updates.
- */
-
-declare(strict_types=1);

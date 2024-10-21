@@ -1,8 +1,0 @@
-<?php
-
-/**
- * @file
- * Module for testing denying access to boolean fields.
- */
-
-declare(strict_types=1);

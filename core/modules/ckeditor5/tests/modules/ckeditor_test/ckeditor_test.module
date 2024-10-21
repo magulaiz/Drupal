@@ -1,8 +1,0 @@
-<?php
-
-/**
- * @file
- * Implements hooks for the CKEditor test module.
- */
-
-declare(strict_types=1);

@@ -1,8 +1,0 @@
-<?php
-
-/**
- * @file
- * Helper module for the plugin tests.
- */
-
-declare(strict_types=1);

@@ -1,8 +1,0 @@
-<?php
-
-/**
- * @file
- * Simulate a custom module with a local po file.
- */
-
-declare(strict_types=1);

@@ -1,8 +1,0 @@
-<?php
-
-/**
- * @file
- * ViewsUI Test field module.
- */
-
-declare(strict_types=1);

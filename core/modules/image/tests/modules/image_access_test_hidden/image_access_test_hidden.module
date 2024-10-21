@@ -1,8 +1,0 @@
-<?php
-
-/**
- * @file
- * Image field access for hidden fields.
- */
-
-declare(strict_types=1);

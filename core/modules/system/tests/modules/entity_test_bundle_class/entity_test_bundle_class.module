@@ -1,8 +1,0 @@
-<?php
-
-/**
- * @file
- * Support module for testing entity bundle classes.
- */
-
-declare(strict_types=1);

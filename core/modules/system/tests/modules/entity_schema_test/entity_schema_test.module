@@ -1,8 +1,0 @@
-<?php
-
-/**
- * @file
- * Test module for the entity API providing a bundle field.
- */
-
-declare(strict_types=1);

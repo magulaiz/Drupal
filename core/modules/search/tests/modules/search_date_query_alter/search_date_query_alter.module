@@ -1,8 +1,0 @@
-<?php
-
-/**
- * @file
- * Adds date conditions to node searches.
- */
-
-declare(strict_types=1);

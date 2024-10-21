@@ -1,8 +1,0 @@
-<?php
-
-/**
- * @file
- * Helper module for the Entity Reference tests.
- */
-
-declare(strict_types=1);

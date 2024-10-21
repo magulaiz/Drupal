@@ -1,8 +1,0 @@
-<?php
-
-/**
- * @file
- * Support module for user hooks testing.
- */
-
-declare(strict_types=1);

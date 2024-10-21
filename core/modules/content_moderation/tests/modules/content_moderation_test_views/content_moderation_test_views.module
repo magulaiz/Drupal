@@ -1,8 +1,0 @@
-<?php
-
-/**
- * @file
- * Module file for the content moderation test views module.
- */
-
-declare(strict_types=1);
