@@ -9,7 +9,7 @@ use Drupal\node\Entity\Node;
 use Drupal\node\Entity\NodeType;
 
 /**
- * Tests node validation constraints.
+ * Tests node deletion.
  *
  * @group node
  */
@@ -32,7 +32,7 @@ class NodeDeleteTest extends EntityKernelTestBase {
   }
 
   /**
-   * Tests the node validation constraints.
+   * Tests the node deletion.
    */
   public function testDelete(): void {
     $this->createUser();
@@ -40,4 +40,5 @@ class NodeDeleteTest extends EntityKernelTestBase {
     $node->save();
     $node->delete();
   }
+
 }
