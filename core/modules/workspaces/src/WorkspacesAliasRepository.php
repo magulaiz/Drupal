@@ -40,16 +40,17 @@ class WorkspacesAliasRepository extends AliasRepository {
 
     $active_workspace = $this->workspaceManager->getActiveWorkspace();
 
-    $query = $this->connection->select('path_alias', 'base_table_2');
+    $query = $this->connection->select('path_alias', 'original_base_table');
     $wa_join = $query->leftJoin('workspace_association', NULL,
       $query->joinCondition()
         ->condition("%alias.target_entity_type_id", 'path_alias')
-        ->compare("%alias.target_entity_id", "base_table_2.id")
+        ->compare("%alias.target_entity_id", "original_base_table.id")
         ->condition("%alias.workspace", $active_workspace->id())
     );
     $query->innerJoin('path_alias_revision', 'base_table',
       $query->joinCondition()
-        ->where("[%alias].[revision_id] = COALESCE([$wa_join].[target_entity_revision_id], [base_table_2].[revision_id])")
+        ->where("[%alias].[revision_id] = COALESCE([$wa_join].[target_entity_revision_id], [original_base_table].[revision_id])")
+        ->condition('base_table.status', 1)
     );
 
     return $query;
