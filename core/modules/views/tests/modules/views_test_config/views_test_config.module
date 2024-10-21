@@ -7,9 +7,6 @@
 
 declare(strict_types=1);
 
-use Drupal\views\Plugin\views\cache\CachePluginBase;
-use Drupal\views\ViewExecutable;
-
 function _views_test_config_disable_broken_handler(array &$definitions, string $handler_type): void {
   if (in_array($handler_type, \Drupal::state()->get('views_test_config_disable_broken_handler', []))) {
     unset($definitions['broken']);

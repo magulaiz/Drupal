@@ -7,9 +7,6 @@
 
 declare(strict_types=1);
 
-use Drupal\Core\Extension\Extension;
-use Drupal\Core\Routing\RouteMatchInterface;
-
 /**
  * Implements hook_modules_installed().
  */

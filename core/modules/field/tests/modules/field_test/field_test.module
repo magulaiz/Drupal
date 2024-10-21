@@ -14,11 +14,8 @@
 
 declare(strict_types=1);
 
-use Drupal\Core\Entity\EntityTypeInterface;
-use Drupal\Core\Entity\Query\QueryInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Render\Element;
-use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\field\FieldStorageConfigInterface;
 
 require_once __DIR__ . '/field_test.entity.inc';

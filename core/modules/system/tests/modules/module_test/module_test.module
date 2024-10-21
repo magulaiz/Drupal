@@ -7,8 +7,6 @@
 
 declare(strict_types=1);
 
-use Drupal\Core\Extension\Extension;
-
 /**
  * Load function used by module_test_hook_dynamic_loading_invoke_all_during_load().
  *

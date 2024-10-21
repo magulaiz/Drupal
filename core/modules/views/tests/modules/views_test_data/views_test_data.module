@@ -7,9 +7,6 @@
 
 declare(strict_types=1);
 
-use Drupal\Core\Form\FormStateInterface;
-use Drupal\views\ViewEntityInterface;
-
 /**
  * Access callback for the generic handler test.
  *

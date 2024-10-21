@@ -1,19 +1,22 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\contextual_test\Hook;
 
 use Drupal\Core\Block\BlockPluginInterface;
 use Drupal\Core\Hook\Attribute\Hook;
-class ContextualTestHooks
-{
-    /**
-     * Implements hook_block_view_alter().
-     */
-    #[Hook('block_view_alter')]
-    public function blockViewAlter(array &$build, \Drupal\Core\Block\BlockPluginInterface $block)
-    {
-        $build['#contextual_links']['contextual_test'] = ['route_parameters' => []];
+
+class ContextualTestHooks {
+
+  /**
+   * Implements hook_block_view_alter().
+   */
+  #[Hook('block_view_alter')]
+    public function blockViewAlter(array &$build, BlockPluginInterface $block) {
+    $build['#contextual_links']['contextual_test'] = ['route_parameters' => []];
     }
+
     /**
      * Implements hook_contextual_links_view_alter().
      *
@@ -22,18 +25,18 @@ class ContextualTestHooks
      * Is that a problem? Should the contextual module itself do the attaching?
      */
     #[Hook('contextual_links_view_alter')]
-    public function contextualLinksViewAlter(&$element, $items)
-    {
-        if (isset($element['#links']['contextual-test-ajax'])) {
-            $element['#attached']['library'][] = 'core/drupal.dialog.ajax';
-        }
+    public function contextualLinksViewAlter(&$element, $items) {
+      if (isset($element['#links']['contextual-test-ajax'])) {
+        $element['#attached']['library'][] = 'core/drupal.dialog.ajax';
+      }
     }
+
     /**
      * Implements hook_page_attachments_alter().
      */
     #[Hook('page_attachments_alter')]
-    public function pageAttachmentsAlter(array &$attachments)
-    {
-        $attachments['#attached']['library'][] = 'core/drupal.dialog.ajax';
+    public function pageAttachmentsAlter(array &$attachments) {
+      $attachments['#attached']['library'][] = 'core/drupal.dialog.ajax';
     }
+
 }

@@ -7,11 +7,6 @@
 
 declare(strict_types=1);
 
-use Drupal\Core\Access\AccessResult;
-use Drupal\Core\Session\AccountInterface;
-use Drupal\workflow_type_test\Plugin\WorkflowType\WorkflowCustomAccessType;
-use Drupal\workflows\WorkflowInterface;
-
 /**
  * Sets the type plugin definitions override and clear the cache.
  *

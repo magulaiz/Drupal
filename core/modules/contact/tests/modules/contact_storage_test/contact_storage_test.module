@@ -8,8 +8,6 @@
 declare(strict_types=1);
 
 use Drupal\contact\ContactFormInterface;
-use Drupal\Core\Entity\EntityTypeInterface;
-use Drupal\Core\Field\BaseFieldDefinition;
 use Drupal\Core\Form\FormStateInterface;
 
 /**

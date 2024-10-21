@@ -8,12 +8,7 @@
 declare(strict_types=1);
 
 use Drupal\Core\Entity\FieldableEntityInterface;
-use Drupal\Core\Access\AccessResult;
-use Drupal\Core\Entity\Exception\FieldStorageDefinitionUpdateForbiddenException;
 use Drupal\Core\Field\FieldDefinitionInterface;
-use Drupal\Core\Field\FieldItemListInterface;
-use Drupal\Core\Session\AccountInterface;
-use Drupal\field\FieldStorageConfigInterface;
 
 /**
  * Sample 'default value' callback.

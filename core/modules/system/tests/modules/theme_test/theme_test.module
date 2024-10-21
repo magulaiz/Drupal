@@ -7,9 +7,6 @@
 
 declare(strict_types=1);
 
-use Drupal\Component\Utility\NestedArray;
-use Drupal\Core\Extension\Extension;
-
 /**
  * Implements hook_preprocess_HOOK() for HTML document templates.
  */

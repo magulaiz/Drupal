@@ -21,12 +21,9 @@
 
 declare(strict_types=1);
 
-use Drupal\Core\Session\AccountInterface;
-use Drupal\Core\Access\AccessResult;
 use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\node\NodeTypeInterface;
-use Drupal\node\NodeInterface;
 
 /**
  * Adds the private field to a node type.

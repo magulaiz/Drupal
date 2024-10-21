@@ -1,22 +1,25 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\mail_cancel_test\Hook;
 
 use Drupal\Core\Hook\Attribute\Hook;
-class MailCancelTestHooks
-{
-    /**
-     * Implements hook_mail_alter().
-     *
-     * Aborts sending of messages with ID 'mail_cancel_test_cancel_test'.
-     *
-     * @see MailTestCase::testCancelMessage()
-     */
-    #[Hook('mail_alter')]
-    public function mailAlter(&$message)
-    {
-        if ($message['id'] == 'mail_cancel_test_cancel_test') {
-            $message['send'] = \FALSE;
-        }
+
+class MailCancelTestHooks {
+
+  /**
+   * Implements hook_mail_alter().
+   *
+   * Aborts sending of messages with ID 'mail_cancel_test_cancel_test'.
+   *
+   * @see MailTestCase::testCancelMessage()
+   */
+  #[Hook('mail_alter')]
+    public function mailAlter(&$message) {
+    if ($message['id'] == 'mail_cancel_test_cancel_test') {
+      $message['send'] = \FALSE;
     }
+    }
+
 }

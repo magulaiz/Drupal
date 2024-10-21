@@ -1,46 +1,49 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\config_translation_test\Hook;
 
-use Drupal\Core\Extension\Extension;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Extension\Extension;
 use Drupal\Core\Hook\Attribute\Hook;
-class ConfigTranslationTestHooks
-{
-    /**
-     * Implements hook_system_info_alter().
-     */
-    #[Hook('system_info_alter')]
-    public function systemInfoAlter(array &$info, \Drupal\Core\Extension\Extension $file, $type)
-    {
-        // @see \Drupal\config_translation\Tests\ConfigTranslationUiThemeTest
-        if ($file->getType() == 'theme' && $file->getName() == 'config_translation_test_theme') {
-            $info['hidden'] = \FALSE;
-        }
+
+class ConfigTranslationTestHooks {
+
+  /**
+   * Implements hook_system_info_alter().
+   */
+  #[Hook('system_info_alter')]
+    public function systemInfoAlter(array &$info, Extension $file, $type) {
+    // @see \Drupal\config_translation\Tests\ConfigTranslationUiThemeTest
+    if ($file->getType() == 'theme' && $file->getName() == 'config_translation_test_theme') {
+      $info['hidden'] = \FALSE;
     }
+    }
+
     /**
      * Implements hook_entity_type_alter().
      */
     #[Hook('entity_type_alter')]
-    public function entityTypeAlter(array &$entity_types)
-    {
-        // Remove entity definition for these entity types from config_test module.
-        unset($entity_types['config_test_no_status']);
-        unset($entity_types['config_query_test']);
+    public function entityTypeAlter(array &$entity_types) {
+      // Remove entity definition for these entity types from config_test module.
+      unset($entity_types['config_test_no_status']);
+      unset($entity_types['config_query_test']);
     }
+
     /**
      * Implements hook_config_translation_info_alter().
      */
     #[Hook('config_translation_info_alter')]
-    public function configTranslationInfoAlter(&$info)
-    {
-        if (\Drupal::state()->get('config_translation_test_config_translation_info_alter')) {
-            // Limit account settings config files to only one of them.
-            $info['entity.user.admin_form']['names'] = ['user.settings'];
-            // Add one more config file to the site information page.
-            $info['system.site_information_settings']['names'][] = 'system.rss';
-        }
+    public function configTranslationInfoAlter(&$info) {
+      if (\Drupal::state()->get('config_translation_test_config_translation_info_alter')) {
+        // Limit account settings config files to only one of them.
+        $info['entity.user.admin_form']['names'] = ['user.settings'];
+        // Add one more config file to the site information page.
+        $info['system.site_information_settings']['names'][] = 'system.rss';
+      }
     }
+
     /**
      * Implements hook_form_BASE_FORM_ID_alter() for ConfigTranslationFormBase.
      *
@@ -50,12 +53,12 @@ class ConfigTranslationTestHooks
      * @see \Drupal\config_translation\Form\ConfigTranslationFormBase
      */
     #[Hook('form_config_translation_form_alter')]
-    public function formConfigTranslationFormAlter(&$form, \Drupal\Core\Form\FormStateInterface $form_state)
-    {
-        if (\Drupal::state()->get('config_translation_test_alter_form_alter')) {
-            $form['#base_altered'] = \TRUE;
-        }
+    public function formConfigTranslationFormAlter(&$form, FormStateInterface $form_state) {
+      if (\Drupal::state()->get('config_translation_test_alter_form_alter')) {
+        $form['#base_altered'] = \TRUE;
+      }
     }
+
     /**
      * Implements hook_form_FORM_ID_alter() for ConfigTranslationAddForm.
      *
@@ -64,12 +67,12 @@ class ConfigTranslationTestHooks
      * @see \Drupal\config_translation\Form\ConfigTranslationAddForm
      */
     #[Hook('form_config_translation_add_form_alter')]
-    public function formConfigTranslationAddFormAlter(&$form, \Drupal\Core\Form\FormStateInterface $form_state)
-    {
-        if (\Drupal::state()->get('config_translation_test_alter_form_alter')) {
-            $form['#altered'] = \TRUE;
-        }
+    public function formConfigTranslationAddFormAlter(&$form, FormStateInterface $form_state) {
+      if (\Drupal::state()->get('config_translation_test_alter_form_alter')) {
+        $form['#altered'] = \TRUE;
+      }
     }
+
     /**
      * Implements hook_form_FORM_ID_alter() for ConfigTranslationEditForm.
      *
@@ -82,10 +85,10 @@ class ConfigTranslationTestHooks
      * @see \Drupal\config_translation\Form\ConfigTranslationEditForm
      */
     #[Hook('form_config_translation_edit_form_alter')]
-    public function formConfigTranslationEditFormAlter(&$form, \Drupal\Core\Form\FormStateInterface $form_state)
-    {
-        if (\Drupal::state()->get('config_translation_test_alter_form_alter')) {
-            $form['#altered'] = \TRUE;
-        }
+    public function formConfigTranslationEditFormAlter(&$form, FormStateInterface $form_state) {
+      if (\Drupal::state()->get('config_translation_test_alter_form_alter')) {
+        $form['#altered'] = \TRUE;
+      }
     }
+
 }

@@ -7,9 +7,6 @@
 
 declare(strict_types=1);
 
-use Drupal\Core\Cache\RefinableCacheableDependencyInterface;
-use Drupal\Core\Url;
-
 /**
  * Sets a static variable for the testMenuName() test.
  *

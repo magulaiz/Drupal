@@ -7,8 +7,6 @@
 
 declare(strict_types=1);
 
-use Drupal\media\OEmbed\Provider;
-
 /**
  * Implements hook_preprocess_media_oembed_iframe().
  */
