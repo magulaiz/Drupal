@@ -122,8 +122,10 @@ class DbUpdateControllerTest extends KernelTestBase {
 
   /**
    * Tests the handle method.
+   *
+   * @covers ::handle
    */
-  public function testhandle(): void {
+  public function testHandle(): void {
     $session = new Session();
     $session->start();
     $request = Request::createFromGlobals();
