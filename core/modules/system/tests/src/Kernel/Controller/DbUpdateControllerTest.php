@@ -134,7 +134,7 @@ class DbUpdateControllerTest extends KernelTestBase {
 
     $db_update_controller = new DbUpdateController($this->root, $this->keyValueExpirableFactory,
     $this->cache, $this->state, $this->moduleHandler, $this->account,
-    $this->bareHtmlPageRenderer->reveal(), $this->postUpdateRegistry, $this->AssetQueryStringInterface);
+    $this->bareHtmlPageRenderer->reveal(), $this->postUpdateRegistry, $this->assetQueryStringInterface);
 
     $db_update_controller->handle('op', $request);
     $this->expectDeprecation('op is deprecated in drupal:11.1.0 and is removed from drupal:12.0.0. Rename $op to $operation arguments with BC usage in update.php. See https://www.drupal.org/node/1025928');
