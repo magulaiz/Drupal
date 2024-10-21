@@ -46960,12 +46960,6 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/system/tests/modules/plugin_test/src/Plugin/TestPluginManager.php',
 ];
 $ignoreErrors[] = [
-	// identifier: attribute.notAttribute
-	'message' => '#^Class Drupal\\\\plugin_test\\\\Plugin\\\\Attribute\\\\PluginExample is not an Attribute class\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/system/tests/modules/plugin_test/src/Plugin/plugin_test/custom_annotation/Example3.php',
-];
-$ignoreErrors[] = [
 	// identifier: attribute.notFound
 	'message' => '#^Attribute class Drupal\\\\plugin_test\\\\Plugin\\\\plugin_test\\\\custom_annotation\\\\Attribute does not exist\\.$#',
 	'count' => 1,
@@ -48674,12 +48668,6 @@ $ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\Tests\\\\system\\\\Functional\\\\Menu\\\\MenuRouterTest\\:\\:doTestTitleMenuCallback\\(\\) has no return type specified\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/system/tests/src/Functional/Menu/MenuRouterTest.php',
-];
-$ignoreErrors[] = [
-	// identifier: constant.notFound
-	'message' => '#^Constant MODULE_AUTOLOAD_TEST_CONSTANT not found\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/system/tests/src/Functional/Module/ClassLoaderTest.php',
 ];
 $ignoreErrors[] = [
 	// identifier: missingType.return
