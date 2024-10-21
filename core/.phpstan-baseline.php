@@ -52781,6 +52781,12 @@ $ignoreErrors[] = [
 ];
 $ignoreErrors[] = [
 	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\user\\\\AccountSettingsForm\\:\\:validateForm\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/user/src/AccountSettingsForm.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
 	'message' => '#^Method Drupal\\\\user\\\\Authentication\\\\Provider\\\\Cookie\\:\\:addCheckToUrl\\(\\) has no return type specified\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/user/src/Authentication/Provider/Cookie.php',

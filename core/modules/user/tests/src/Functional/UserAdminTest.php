@@ -235,7 +235,7 @@ class UserAdminTest extends BrowserTestBase {
   /**
    * Test that we can't update anonymous account name similar to existing user.
    */
-  public function testAnonymousNameValidation() {
+  public function testAnonymousNameValidation(): void {
     $account = $this->drupalCreateUser();
     $this->drupalLogin($this->rootUser);
 
