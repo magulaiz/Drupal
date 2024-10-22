@@ -90,11 +90,22 @@ class EntityViewDisplayValidationTest extends ConfigEntityValidationTestBase {
   /**
    * {@inheritdoc}
    */
-  public function testImmutableProperties(array $valid_values = []): void {
+  public function testImmutableProperties(array $valid_values = [], ?array $expected_errors = NULL): void {
+    $expected_errors = [
+      'id' => [
+        '' => [
+          "The 'id' property cannot be changed.",
+          "The 'targetEntityType' property cannot be changed.",
+          "The 'bundle' property cannot be changed.",
+          "The 'mode' property cannot be changed.",
+        ],
+      ],
+    ];
     parent::testImmutableProperties([
+      'id' => 'entity_test_with_bundle.two.full',
       'targetEntityType' => 'entity_test_with_bundle',
       'bundle' => 'two',
-    ]);
+    ], $expected_errors);
   }
 
 }

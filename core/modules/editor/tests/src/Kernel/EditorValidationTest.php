@@ -66,7 +66,7 @@ class EditorValidationTest extends ConfigEntityValidationTestBase {
   /**
    * {@inheritdoc}
    */
-  public function testImmutableProperties(array $valid_values = [], ?array $additional_expected_validation_errors_when_missing = NULL): void {
+  public function testImmutableProperties(array $valid_values = [], ?array $expected_errors = NULL): void {
     // TRICKY: Every Text Editor is associated with a Text Format. It must exist
     // to avoid triggering a validation error.
     // @see \Drupal\editor\EditorInterface::hasAssociatedFilterFormat
