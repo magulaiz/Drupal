@@ -259,9 +259,7 @@ class FileListingTest extends FileFieldTestBase {
   }
 
   /**
-   * Test file deletion with multi-language & domain setup.
-   *
-   * Issue: https://www.drupal.org/project/drupal/issues/3424701.
+   * Tests file deletion with multi-language and domain prefix.
    */
   public function testFileDeleteWithMultipleDomain(): void {
 
@@ -271,11 +269,7 @@ class FileListingTest extends FileFieldTestBase {
     // Add the German language.
     ConfigurableLanguage::createFromLangcode('de')->save();
 
-    // Rebuild the container so that the new language is picked up by services
-    // that hold a list of languages.
-    $this->rebuildContainer();
-
-    // Log in with user with right permissions and test listing.
+    // Log in with user with correct permissions and test listing.
     $content_owner = $this->drupalCreateUser([
       'access files overview',
       'bypass node access',
@@ -307,7 +301,7 @@ class FileListingTest extends FileFieldTestBase {
       'type' => 'article',
     ]);
 
-    // Add the file to the node.
+    // Add a file to the node.
     $this->drupalGet('node/' . $node->id() . '/edit');
     $file = $this->getTestFile('image');
     $edit = [

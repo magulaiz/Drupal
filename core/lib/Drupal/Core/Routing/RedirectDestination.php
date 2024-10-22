@@ -66,7 +66,7 @@ class RedirectDestination implements RedirectDestinationInterface {
       }
       else {
         $this->destination = $this->urlGenerator->generateFromRoute('<current>', [], ['query' => UrlHelper::filterQueryParameters($query->all())]);
-        // If an absolute url was generated for change it to relative path.
+        // If an absolute URL was generated, convert it to a relative path.
         if (str_starts_with($this->destination, 'http')) {
           $request = \Drupal::request();
           $base_url = $request->getSchemeAndHttpHost();
