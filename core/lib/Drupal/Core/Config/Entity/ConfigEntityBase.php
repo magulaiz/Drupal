@@ -107,13 +107,6 @@ abstract class ConfigEntityBase extends EntityBase implements ConfigEntityInterf
   protected $trustedData = FALSE;
 
   /**
-   * Sort collator.
-   *
-   * @var \Collator
-   */
-  protected $sortCollator;
-
-  /**
    * {@inheritdoc}
    */
   public function __construct(array $values, $entity_type) {
@@ -125,7 +118,6 @@ abstract class ConfigEntityBase extends EntityBase implements ConfigEntityInterf
     if ($original_id !== NULL && $original_id !== '') {
       $this->setOriginalId($original_id);
     }
-    self::$sortCollator = \Collator::create('en');
   }
 
   /**
