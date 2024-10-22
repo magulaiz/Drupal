@@ -183,6 +183,10 @@ class EntityDisplayBaseTest extends KernelTestBase {
     $this->assertSame('node', $display->getTargetEntityTypeId());
     $this->assertSame('page', $display->getTargetBundle());
     $this->assertSame('rss', $display->getMode());
+
+    $this->expectException(\InvalidArgumentException::class);
+    $this->expectExceptionMessage("'a.b' is not a valid entity display ID.");
+    $display->set('id', 'a.b');
   }
 
 }
