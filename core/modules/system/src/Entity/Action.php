@@ -175,7 +175,7 @@ class Action extends ConfigEntityBase implements ActionConfigEntityInterface, En
     $a_type = $a->getType();
     $b_type = $b->getType();
     if ($a_type != $b_type) {
-      return  $collator->compare($a_type, $b_type);
+      return $collator->compare($a_type, $b_type);
     }
     return parent::compare($a, $b, $collator);
   }
