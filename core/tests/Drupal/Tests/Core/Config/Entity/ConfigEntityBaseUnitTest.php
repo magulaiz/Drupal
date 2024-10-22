@@ -536,25 +536,27 @@ class ConfigEntityBaseUnitTest extends UnitTestCase {
       // cSpell:disable-next-line
       ->willReturn('åwesome');
 
+    $collator = \Collator::create('en');
+
     // Test sorting by label.
     $list = [$entity_a, $entity_b];
-    usort($list, '\Drupal\Core\Config\Entity\ConfigEntityBase::sort');
-    $this->assertSame($entity_b, $list[0]);
+    ConfigEntityBase::sortEntities($list, $collator);
+    $this->assertSame($entity_b, reset($list));
 
     $list = [$entity_b, $entity_a];
-    usort($list, '\Drupal\Core\Config\Entity\ConfigEntityBase::sort');
-    $this->assertSame($entity_b, $list[0]);
+    ConfigEntityBase::sortEntities($list, $collator);
+    $this->assertSame($entity_b, reset($list));
 
     // Test sorting by weight.
     $entity_a->weight = 0;
     $entity_b->weight = 1;
     $list = [$entity_b, $entity_a];
-    usort($list, '\Drupal\Core\Config\Entity\ConfigEntityBase::sort');
-    $this->assertSame($entity_a, $list[0]);
+    ConfigEntityBase::sortEntities($list, $collator);
+    $this->assertSame($entity_a, reset($list));
 
     $list = [$entity_a, $entity_b];
-    usort($list, '\Drupal\Core\Config\Entity\ConfigEntityBase::sort');
-    $this->assertSame($entity_a, $list[0]);
+    ConfigEntityBase::sortEntities($list, $collator);
+    $this->assertSame($entity_a, reset($list));
   }
 
   /**
