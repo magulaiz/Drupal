@@ -236,8 +236,8 @@ abstract class ConfigEntityBase extends EntityBase implements ConfigEntityInterf
   /**
    * Sorts entities using collator.
    */
-  public static function sortEntities(EntityInterface[] $entities, \Collator $collator) {
-    uasort($entities, function($a, $b) use ($collator) {
+  public static function sortEntities(array $entities, \Collator $collator) {
+    uasort($entities, function ($a, $b) use ($collator) {
       return self::compare($a, $b, $collator);
     });
     return $entities;
@@ -262,6 +262,8 @@ abstract class ConfigEntityBase extends EntityBase implements ConfigEntityInterf
    * 
    * @deprecated in drupal:11.1.0 and is removed from drupal:12.0.0. Use
    * \Drupal\Core\Config\Entity\ConfigEntityBase::sortEntities() instead.
+   * 
+   * @see https://www.drupal.org/project/drupal/issues/2265487
    */
   public static function sort(ConfigEntityInterface $a, ConfigEntityInterface $b) {
     $a_weight = $a->weight ?? 0;
@@ -273,7 +275,6 @@ abstract class ConfigEntityBase extends EntityBase implements ConfigEntityInterf
     }
     return $a_weight <=> $b_weight;
   }
-
 
   /**
    * {@inheritdoc}
