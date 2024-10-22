@@ -105,7 +105,9 @@ class SearchPageRepository implements SearchPageRepositoryInterface {
    */
   public function sortSearchPages($search_pages) {
     $entity_type = $this->storage->getEntityType();
-    uasort($search_pages, [$entity_type->getClass(), 'sort']);
+    // Sort the entities using the entity class's sortEntities() method.
+    $collator = \Collator::create((!extension_loaded('intl')) ? ('en') : (\Drupal::service('language_manager')->getCurrentLanguage()->getId()));
+    $entity_type->getClass()::sortEntities($search_pages, $collator);
     return $search_pages;
   }
 
