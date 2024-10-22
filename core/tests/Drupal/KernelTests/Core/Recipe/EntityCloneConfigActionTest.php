@@ -94,14 +94,14 @@ class EntityCloneConfigActionTest extends KernelTestBase {
     /** @var \Drupal\Core\Config\Action\ConfigActionManager $manager */
     $manager = $this->container->get('plugin.manager.config_action');
     $manager->applyAction('cloneAs', 'core.entity_view_display.node.alpha.default', 'node.alpha.rss');
-    $manager->applyAction('cloneAs', 'core.entity_view_display.node.beta.default', 'rss');
+    $manager->applyAction('entity_method:core.entity_view_display:createCopy', 'core.entity_view_display.node.beta.default', 'rss');
     $this->assertFalse($display_repository->getViewDisplay('node', 'alpha', 'rss')->isNew());
     $this->assertFalse($display_repository->getViewDisplay('node', 'beta', 'rss')->isNew());
 
     // Ensure that this also works with wildcards.
     $this->assertTrue($display_repository->getViewDisplay('node', 'alpha', 'search_result')->isNew());
     $this->assertTrue($display_repository->getViewDisplay('node', 'beta', 'search_result')->isNew());
-    $manager->applyAction('cloneAs', 'core.entity_view_display.node.*.default', 'search_result');
+    $manager->applyAction('entity_method:core.entity_view_display:createCopy', 'core.entity_view_display.node.*.default', 'search_result');
     $this->assertFalse($display_repository->getViewDisplay('node', 'alpha', 'search_result')->isNew());
     $this->assertFalse($display_repository->getViewDisplay('node', 'beta', 'search_result')->isNew());
   }

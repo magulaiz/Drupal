@@ -324,6 +324,7 @@ abstract class EntityDisplayBase extends ConfigEntityBase implements EntityDispl
   /**
    * {@inheritdoc}
    */
+  #[ActionMethod(adminLabel: new TranslatableMarkup('Copy to another mode'), pluralize: FALSE)]
   public function createCopy($mode) {
     $display = $this->createDuplicate();
     $display->mode = $display->originalMode = $mode;
@@ -586,6 +587,26 @@ abstract class EntityDisplayBase extends ConfigEntityBase implements EntityDispl
    */
   protected function getLogger() {
     return \Drupal::logger('system');
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function set($property_name, $value): static {
+    // If changing the entity ID, also update the target entity type, bundle,
+    // and view mode.
+    if ($property_name === $this->getEntityType()->getKey('id')) {
+      if (substr_count($value, '.') !== 2) {
+        throw new \InvalidArgumentException("'$value' is not a valid entity display ID.");
+      }
+      parent::set($property_name, $value);
+
+      [$target_entity_type_id, $target_bundle, $view_mode] = explode('.', $value);
+      return $this->set('targetEntityType', $target_entity_type_id)
+        ->setTargetBundle($target_bundle)
+        ->set('mode', $view_mode);
+    }
+    return $this;
   }
 
 }

@@ -9,7 +9,6 @@ use Drupal\Core\Config\Action\ConfigActionException;
 use Drupal\Core\Config\Action\ConfigActionManager;
 use Drupal\Core\Config\Action\ConfigActionPluginInterface;
 use Drupal\Core\Config\ConfigManagerInterface;
-use Drupal\Core\Entity\Display\EntityDisplayInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -51,20 +50,8 @@ final class EntityClone implements ConfigActionPluginInterface, ContainerFactory
     if (empty($original)) {
       throw new ConfigActionException("Cannot clone '$configName' because it does not exist.");
     }
-
-    // Entity displays have specialized cloning logic that we need to handle.
-    if ($original instanceof EntityDisplayInterface) {
-      // Let the duplicate ID be either the full `ENTITY_TYPE.BUNDLE.MODE`, or
-      // just the view mode.
-      if (substr_count($duplicate_id, '.') === 2) {
-        $duplicate_id = explode('.', $duplicate_id, 3)[2];
-      }
-      $clone = $original->createCopy($duplicate_id);
-    }
-    else {
-      $clone = $original->createDuplicate();
-      $clone->set($original->getEntityType()->getKey('id'), $duplicate_id);
-    }
+    $clone = $original->createDuplicate();
+    $clone->set($original->getEntityType()->getKey('id'), $duplicate_id);
 
     // Use the config action manager to invoke the `entity_create` action on
     // the clone, so that it will be validated.
