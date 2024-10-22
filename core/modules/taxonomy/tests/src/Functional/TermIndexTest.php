@@ -264,7 +264,7 @@ class TermIndexTest extends TaxonomyTestBase {
    * @param array $expected_numbers
    *   The expected number of entries keyed by the langcode.
    */
-  protected function checkNumberOfEntriesPerLanguage($nid, $tid, array $expected_numbers) {
+  protected function checkNumberOfEntriesPerLanguage(int $nid, int $tid, array $expected_numbers): array {
     $connection = Database::getConnection();
     foreach ($expected_numbers as $langcode => $expected_number) {
       $index_count = $connection->query('SELECT COUNT(*) FROM {taxonomy_index} WHERE nid = :nid AND tid = :tid AND langcode = :langcode', [
@@ -279,7 +279,7 @@ class TermIndexTest extends TaxonomyTestBase {
   /**
    * Tests that the taxonomy index is maintained properly.
    */
-  public function testTaxonomyIndexMultilingual() {
+  public function testTaxonomyIndexMultilingual(): void {
     \Drupal::service('module_installer')->install(['language', 'content_translation']);
     // Create an Urdu language for translations.
     ConfigurableLanguage::createFromLangcode('ur')->save();

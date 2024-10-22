@@ -19,7 +19,7 @@ function taxonomy_update_last_removed(): int {
  *
  * Content needs to be updated.
  */
-function taxonomy_update_10101() {
+function taxonomy_update_10300(): void {
   if (!Database::getConnection()->schema()->fieldExists('taxonomy_index', 'langcode')) {
     Database::getConnection()
       ->schema()
