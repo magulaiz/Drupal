@@ -117,6 +117,7 @@ class LayoutBuilderUiTest extends WebDriverTestBase {
     // Go back to layout form.
     $this->drupalGet(static::FIELD_UI_PREFIX . '/display/default/layout');
     $assert_session->pageTextNotContains('You have unsaved changes.');
+
     // Reload the page.
     $this->drupalGet(static::FIELD_UI_PREFIX . '/display/default/layout');
     $assert_session->pageTextNotContains('You have unsaved changes.');
