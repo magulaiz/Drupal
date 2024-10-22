@@ -28782,19 +28782,7 @@ $ignoreErrors[] = [
 ];
 $ignoreErrors[] = [
 	// identifier: missingType.return
-	'message' => '#^Method Drupal\\\\layout_builder\\\\LayoutTempstoreRepository\\:\\:set\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/layout_builder/src/LayoutTempstoreRepository.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
 	'message' => '#^Method Drupal\\\\layout_builder\\\\LayoutTempstoreRepositoryInterface\\:\\:delete\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/layout_builder/src/LayoutTempstoreRepositoryInterface.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
-	'message' => '#^Method Drupal\\\\layout_builder\\\\LayoutTempstoreRepositoryInterface\\:\\:set\\(\\) has no return type specified\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/layout_builder/src/LayoutTempstoreRepositoryInterface.php',
 ];
@@ -63599,13 +63587,13 @@ $ignoreErrors[] = [
 ];
 $ignoreErrors[] = [
 	// identifier: missingType.return
-	'message' => '#^Function views_field_views_data\\(\\) has no return type specified\\.$#',
+	'message' => '#^Function views_entity_field_label\\(\\) has no return type specified\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/views/views.views.inc',
 ];
 $ignoreErrors[] = [
 	// identifier: missingType.return
-	'message' => '#^Function views_entity_field_label\\(\\) has no return type specified\\.$#',
+	'message' => '#^Function views_field_views_data\\(\\) has no return type specified\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/views/views.views.inc',
 ];
