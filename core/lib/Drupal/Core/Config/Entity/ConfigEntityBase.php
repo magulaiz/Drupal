@@ -8,6 +8,7 @@ use Drupal\Core\Config\Action\Attribute\ActionMethod;
 use Drupal\Core\Config\Schema\SchemaIncompleteException;
 use Drupal\Core\Entity\EntityBase;
 use Drupal\Core\Config\ConfigDuplicateUUIDException;
+use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Entity\EntityWithPluginCollectionInterface;
@@ -241,7 +242,34 @@ abstract class ConfigEntityBase extends EntityBase implements ConfigEntityInterf
   }
 
   /**
+   * Sorts entities using collator.
+   */
+  public static function sortEntities(EntityInterface[] $entities, \Collator $collator) {
+    uasort($entities, function($a, $b) use ($collator) {
+      return self::compare($a, $b, $collator);
+    });
+    return $entities;
+  }
+
+  /**
+   * Helper callback for uasort() to compare configuration entities by weight and label.
+   */
+  public static function compare(ConfigEntityInterface $a, ConfigEntityInterface $b, \Collator $collator) {
+    $a_weight = $a->weight ?? 0;
+    $b_weight = $b->weight ?? 0;
+    if ($a_weight == $b_weight) {
+      $a_label = $a->label() ?? '';
+      $b_label = $b->label() ?? '';
+      return $collator->compare($a_label, $b_label);
+    }
+    return $a_weight <=> $b_weight;
+  }
+
+  /**
    * Helper callback for uasort() to sort configuration entities by weight and label.
+   * 
+   * @deprecated in drupal:11.1.0 and is removed from drupal:12.0.0. Use
+   * \Drupal\Core\Config\Entity\ConfigEntityBase::sortEntities() instead.
    */
   public static function sort(ConfigEntityInterface $a, ConfigEntityInterface $b) {
     $a_weight = $a->weight ?? 0;
@@ -249,10 +277,11 @@ abstract class ConfigEntityBase extends EntityBase implements ConfigEntityInterf
     if ($a_weight == $b_weight) {
       $a_label = $a->label() ?? '';
       $b_label = $b->label() ?? '';
-      return self::$sortCollator->compare($a_label, $b_label);
+      return strnatcasecmp($a_label, $b_label);
     }
     return $a_weight <=> $b_weight;
   }
+
 
   /**
    * {@inheritdoc}
