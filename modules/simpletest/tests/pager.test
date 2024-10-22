@@ -187,11 +187,23 @@ class PagerFunctionalWebTestCase extends DrupalWebTestCase {
       // Ensure findPage finds 0 when the query is actually empty or invalid.
       $expected_query = !empty($expected_query) ? $expected_query : array(0);
       foreach ($expected_query as $key => $value) {
-        $this->assertIdentical($value, pager_find_page($key), "$test_name: Test findPage() for input: $raw_query");
+        $this->assertIdentical($value, pager_find_page($key), "$test_name: Test pager_find_page() for input: " . print_r($raw_query, TRUE));
       }
 
       // Clean up $_GET.
       unset($_GET['page']);
+    }
+  }
+
+  public function testPagerGetQuery() {
+    $data = $this->providePagerQueries();
+    foreach ($data as $test_name => $dataset) {
+      list($raw_query, $parameter, $expected_query) = $dataset;
+
+      // Simulate the request and the pager behavior.
+      $_GET['page'] = $raw_query;
+
+      $this->assertEqual($expected_query, pager_get_query(), "$test_name: Test pager_get_query() for input: " . print_r($raw_query, TRUE));
     }
   }
 
@@ -207,18 +219,11 @@ class PagerFunctionalWebTestCase extends DrupalWebTestCase {
       $_GET['page'] = $raw_query;
 
       // Assert that the parameter is as expected.
-      $this->assertIdentical($parameter, pager_get_parameter(), "$test_name: Test getPagerParameter() for input: $raw_query");
+      $this->assertIdentical($parameter, pager_get_parameter(), "$test_name: Test paper_get_parameter() for input: " . print_r($raw_query, TRUE));
 
       // Clean up $_GET.
       unset($_GET['page']);
     }
-  }
-
-  /**
-   * Ensure missing request is handled cleanly.
-   */
-  public function testGetPagerParameterNoRequest() {
-    $this->assertIdentical('', pager_get_parameter());
   }
 
   /**

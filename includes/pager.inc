@@ -199,13 +199,20 @@ class PagerDefault extends SelectQueryExtender {
  *
  * @see pager_default_initialize()
  */
-function pager_find_page($element = 0) {
+function pager_find_page($pager_id = 0) {
+  $pages = pager_get_query();
+  return (int) (isset($pages[$pager_id]) ? $pages[$pager_id] : 0);
+}
+
+/**
+ * Returns the query parameters for the pager.
+ *
+ * @return
+ *   An associative array of page numbers to display within the pager.
+ */
+function pager_get_query() {
   $query = pager_get_parameter();
-  $page_array = $query !== '' ? array_map('intval', explode(',', $query)) : [];
-  if (!isset($page_array[$element])) {
-    $page_array[$element] = 0;
-  }
-  return (int) $page_array[$element];
+  return $query !== '' ? array_map('intval', explode(',', $query)) : array();
 }
 
 /**
@@ -219,11 +226,9 @@ function pager_find_page($element = 0) {
  *  this function will return 10, even though the default pager implementation
  *  adjusts for this and still displays the third page of search results at that
  *  URL.
- *
- * @see pager_default_initialize()
  */
 function pager_get_parameter() {
-  $page = $_GET['page'] ?? '';
+  $page = isset($_GET['page']) ? $_GET['page'] : NULL;
   return is_scalar($page) ? (string) $page : '';
 }
 
