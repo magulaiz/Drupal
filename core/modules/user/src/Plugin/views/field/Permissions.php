@@ -125,7 +125,7 @@ class Permissions extends PrerenderList {
   /**
    * Renders a single item of a row.
    *
-   * @param int $count
+   * @param int|string $count
    *   The index of the item inside the row.
    * @param mixed $item
    *   The item for the field to render.
@@ -133,7 +133,7 @@ class Permissions extends PrerenderList {
    * @return string
    *   The rendered output.
    */
-  public function renderItem(int $count, array $item): string {
+  public function renderItem(int|string $count, array $item): string {
     return $item['permission'];
   }
 
