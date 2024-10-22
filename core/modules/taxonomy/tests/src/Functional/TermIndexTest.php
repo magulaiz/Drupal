@@ -263,6 +263,9 @@ class TermIndexTest extends TaxonomyTestBase {
    *   The taxonomy term ID.
    * @param array $expected_numbers
    *   The expected number of entries keyed by the langcode.
+   *
+   * @return array
+   *   An array of results for each language code, including the expected number and actual count.
    */
   protected function checkNumberOfEntriesPerLanguage(int $nid, int $tid, array $expected_numbers): array {
     $connection = Database::getConnection();

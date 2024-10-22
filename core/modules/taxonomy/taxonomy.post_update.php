@@ -27,7 +27,7 @@ function taxonomy_removed_post_updates(): array {
 /**
  * Populate taxonomy index new langcode column.
  */
-function taxonomy_post_update_populate_taxonomy_index_langcode(&$sandbox = NULL) {
+function taxonomy_post_update_populate_taxonomy_index_langcode(&$sandbox = NULL): void {
   /** @var \Drupal\node\NodeStorageInterface $node_storage */
   $node_storage = \Drupal::entityTypeManager()->getStorage('node');
   $database = \Drupal::database();
