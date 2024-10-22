@@ -985,7 +985,7 @@ class EntityField extends FieldPluginBase implements CacheableDependencyInterfac
    * @return string
    *   The rendered output.
    */
-  public function renderItem(int $count, array $item): string {
+  public function renderItem(int $count, array $item): object|string {
     return $this->renderer->render($item['rendered']);
   }
 

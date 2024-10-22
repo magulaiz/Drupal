@@ -1211,8 +1211,6 @@ abstract class FieldPluginBase extends HandlerBase implements FieldHandlerInterf
       if ($this instanceof MultiItemsFieldHandlerInterface) {
         $items = [];
         foreach ($raw_items as $count => $item) {
-          // Ensure $count is an integer.
-          $count = (int) $count;
           $value = $this->renderItem($count, $item);
           if (is_array($value)) {
             $value = (string) $this->getRenderer()->render($value);

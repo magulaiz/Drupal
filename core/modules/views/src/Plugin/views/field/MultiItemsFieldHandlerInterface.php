@@ -38,7 +38,7 @@ interface MultiItemsFieldHandlerInterface extends FieldHandlerInterface {
    * @return string
    *   The rendered output.
    */
-  public function renderItem(int $count, array $item): string;
+  public function renderItem(int $count, array $item): object|string;
 
   /**
    * Gets an array of items for the field.
