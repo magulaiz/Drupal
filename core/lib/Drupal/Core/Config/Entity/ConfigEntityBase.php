@@ -235,7 +235,7 @@ abstract class ConfigEntityBase extends EntityBase implements ConfigEntityInterf
   /**
    * Sorts entities using collator.
    */
-  public static function sortEntities(array $entities, \Collator $collator) {
+  public static function sortEntities(array $entities, \Collator $collator): array {
     uasort($entities, function ($a, $b) use ($collator) {
       return self::compare($a, $b, $collator);
     });
@@ -245,7 +245,7 @@ abstract class ConfigEntityBase extends EntityBase implements ConfigEntityInterf
   /**
    * Helper callback for uasort() to compare configuration entities by weight and label.
    */
-  public static function compare(ConfigEntityInterface $a, ConfigEntityInterface $b, \Collator $collator) {
+  public static function compare(ConfigEntityInterface $a, ConfigEntityInterface $b, \Collator $collator): int {
     $a_weight = $a->weight ?? 0;
     $b_weight = $b->weight ?? 0;
     if ($a_weight == $b_weight) {
