@@ -7,7 +7,6 @@ namespace Drupal\config_test\Entity;
 use Drupal\Core\Config\Action\Attribute\ActionMethod;
 use Drupal\Core\Config\Entity\ConfigEntityBase;
 use Drupal\config_test\ConfigTestInterface;
-use Drupal\Core\Config\Entity\ConfigEntityInterface;
 use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 
@@ -98,8 +97,16 @@ class ConfigTest extends ConfigEntityBase implements ConfigTestInterface {
   /**
    * {@inheritdoc}
    */
-  public static function sortEntities(array $entities, \Collator $collator): array {
+  public static function sort(ConfigEntityInterface $a, ConfigEntityInterface $b) {
     \Drupal::state()->set('config_entity_sort', TRUE);
+    return parent::sort($a, $b);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function sortEntities(array $entities, \Collator $collator): array {
+    \Drupal::state()->set('config_entity_sortEntities', TRUE);
     return parent::sortEntities($entities, $collator);
   }
 
