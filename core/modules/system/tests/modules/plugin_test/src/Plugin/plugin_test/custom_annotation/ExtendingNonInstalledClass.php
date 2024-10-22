@@ -10,7 +10,7 @@ use Drupal\non_installed_module\NonExisting;
 /**
  * This class does not have a plugin attribute or plugin annotation on purpose.
  */
-#[\Attribute]
+#[Attribute]
 class ExtendingNonInstalledClass extends NonExisting {
 
   #[TrustedCallback]

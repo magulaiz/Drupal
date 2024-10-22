@@ -13,20 +13,6 @@ use Drupal\Core\Entity\Sql\SqlEntityStorageInterface;
 use Drupal\Core\Entity\Sql\DefaultTableMapping;
 
 /**
- * Implements hook_query_TAG_alter() for the 'media_access' query tag.
- */
-function views_test_query_access_query_media_access_alter(AlterableInterface $query) {
-  _views_test_query_access_restrict_by_uuid($query);
-}
-
-/**
- * Implements hook_query_TAG_alter() for the 'block_content_access' query tag.
- */
-function views_test_query_access_query_block_content_access_alter(AlterableInterface $query) {
-  _views_test_query_access_restrict_by_uuid($query);
-}
-
-/**
  * Excludes entities with the 'hidden-ENTITY_TYPE_ID' UUID from a query.
  *
  * @param \Drupal\Core\Database\Query\AlterableInterface $query
@@ -41,7 +27,7 @@ function _views_test_query_access_restrict_by_uuid(AlterableInterface $query) {
   $view = $query->getMetaData('view');
   $entity_type = $view->getBaseEntityType();
 
-  $storage = \Drupal::entityTypeManager()->getStorage($entity_type->id());
+  $storage = Drupal::entityTypeManager()->getStorage($entity_type->id());
   if (!($storage instanceof SqlEntityStorageInterface)) {
     return;
   }
@@ -64,7 +50,7 @@ function _views_test_query_access_restrict_by_uuid(AlterableInterface $query) {
   }
 
   // Figure out the column name of the UUID field and add a condition on that.
-  $base_field_definitions = \Drupal::service('entity_field.manager')
+  $base_field_definitions = Drupal::service('entity_field.manager')
     ->getBaseFieldDefinitions($entity_type->id());
   $uuid_key = $entity_type->getKey('uuid');
   $uuid_column_name = $table_mapping->getFieldColumnName($base_field_definitions[$uuid_key], NULL);

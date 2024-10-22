@@ -16,7 +16,7 @@ use Drupal\Core\Form\FormState;
 function _batch_test_nested_drupal_form_submit_callback($value) {
   $form_state = (new FormState())
     ->setValue('test_value', $value);
-  \Drupal::formBuilder()->submitForm('Drupal\batch_test\Form\BatchTestMockForm', $form_state);
+  Drupal::formBuilder()->submitForm('Drupal\batch_test\Form\BatchTestMockForm', $form_state);
 }
 
 /**
@@ -24,7 +24,7 @@ function _batch_test_nested_drupal_form_submit_callback($value) {
  */
 function _batch_test_batch_0() {
   $batch_builder = (new BatchBuilder())
-    ->setFile(\Drupal::service('extension.list.module')->getPath('batch_test') . '/batch_test.callbacks.inc')
+    ->setFile(Drupal::service('extension.list.module')->getPath('batch_test') . '/batch_test.callbacks.inc')
     ->setFinishCallback('_batch_test_finished_0');
   return $batch_builder->toArray() + ['batch_test_id' => 'batch_0'];
 }
@@ -40,7 +40,7 @@ function _batch_test_batch_1() {
   $sleep = (1000000 / $total) * 2;
 
   $batch_builder = (new BatchBuilder())
-    ->setFile(\Drupal::service('extension.list.module')->getPath('batch_test') . '/batch_test.callbacks.inc')
+    ->setFile(Drupal::service('extension.list.module')->getPath('batch_test') . '/batch_test.callbacks.inc')
     ->setFinishCallback('_batch_test_finished_1');
 
   for ($i = 1; $i <= $total; $i++) {
@@ -61,7 +61,7 @@ function _batch_test_batch_2() {
   $sleep = (1000000 / $total) * 2;
 
   $batch_builder = (new BatchBuilder())
-    ->setFile(\Drupal::service('extension.list.module')->getPath('batch_test') . '/batch_test.callbacks.inc')
+    ->setFile(Drupal::service('extension.list.module')->getPath('batch_test') . '/batch_test.callbacks.inc')
     ->addOperation('_batch_test_callback_2', [1, $total, $sleep])
     ->setFinishCallback('_batch_test_finished_2');
 
@@ -83,7 +83,7 @@ function _batch_test_batch_3() {
   $sleep = (1000000 / $total) * 2;
 
   $batch_builder = (new BatchBuilder())
-    ->setFile(\Drupal::service('extension.list.module')->getPath('batch_test') . '/batch_test.callbacks.inc')
+    ->setFile(Drupal::service('extension.list.module')->getPath('batch_test') . '/batch_test.callbacks.inc')
     ->setFinishCallback('_batch_test_finished_3');
   for ($i = 1; $i <= round($total / 2); $i++) {
     $batch_builder->addOperation('_batch_test_callback_1', [$i, $sleep]);
@@ -111,7 +111,7 @@ function _batch_test_batch_4() {
   $sleep = (1000000 / $total) * 2;
 
   $batch_builder = (new BatchBuilder())
-    ->setFile(\Drupal::service('extension.list.module')->getPath('batch_test') . '/batch_test.callbacks.inc')
+    ->setFile(Drupal::service('extension.list.module')->getPath('batch_test') . '/batch_test.callbacks.inc')
     ->setFinishCallback('_batch_test_finished_4');
   for ($i = 1; $i <= round($total / 2); $i++) {
     $batch_builder->addOperation('_batch_test_callback_1', [$i, $sleep]);
@@ -135,7 +135,7 @@ function _batch_test_batch_5() {
   $sleep = (1000000 / $total) * 2;
 
   $batch_builder = (new BatchBuilder())
-    ->setFile(\Drupal::service('extension.list.module')->getPath('batch_test') . '/batch_test.callbacks.inc')
+    ->setFile(Drupal::service('extension.list.module')->getPath('batch_test') . '/batch_test.callbacks.inc')
     ->setFinishCallback('_batch_test_finished_5');
   for ($i = 1; $i <= $total; $i++) {
     $batch_builder->addOperation('_batch_test_callback_5', [$i, $sleep]);
@@ -155,7 +155,7 @@ function _batch_test_batch_6() {
   $sleep = (1000000 / $total) * 2;
 
   $batch_builder = (new BatchBuilder())
-    ->setFile(\Drupal::service('extension.list.module')->getPath('batch_test') . '/batch_test.callbacks.inc')
+    ->setFile(Drupal::service('extension.list.module')->getPath('batch_test') . '/batch_test.callbacks.inc')
     ->setFinishCallback('_batch_test_finished_6');
   for ($i = 1; $i <= $total; $i++) {
     $batch_builder->addOperation('_batch_test_callback_6', [$i, $sleep]);
@@ -179,7 +179,7 @@ function _batch_test_batch_7() {
   $sleep = (1000000 / $total) * 2;
 
   $batch_builder = (new BatchBuilder())
-    ->setFile(\Drupal::service('extension.list.module')->getPath('batch_test') . '/batch_test.callbacks.inc')
+    ->setFile(Drupal::service('extension.list.module')->getPath('batch_test') . '/batch_test.callbacks.inc')
     ->setFinishCallback('_batch_test_finished_7');
   for ($i = 1; $i <= $total / 2; $i++) {
     $batch_builder->addOperation('_batch_test_callback_7', [$i, $sleep]);
@@ -197,7 +197,7 @@ function _batch_test_batch_7() {
  */
 function _batch_test_batch_8(): array {
   $batch_builder = (new BatchBuilder())
-    ->setFile(\Drupal::service('extension.list.module')->getPath('batch_test') . '/batch_test.callbacks.inc')
+    ->setFile(Drupal::service('extension.list.module')->getPath('batch_test') . '/batch_test.callbacks.inc')
     ->addOperation('_batch_test_callback_8', [FALSE])
     ->addOperation('_batch_test_callback_8', [TRUE]);
   return $batch_builder->toArray() + ['batch_test_id' => 'batch_8'];
@@ -214,7 +214,7 @@ function _batch_test_theme_callback() {
   // theme is being used on the batch processing page by viewing that page
   // directly. Instead, we save the theme being used in a variable here, so
   // that it can be loaded and inspected in the thread running the test.
-  $theme = \Drupal::theme()->getActiveTheme()->getName();
+  $theme = Drupal::theme()->getActiveTheme()->getName();
   batch_test_stack($theme);
 }
 
@@ -227,9 +227,9 @@ function _batch_test_title_callback() {
   // title is being used on the batch processing page by viewing that page
   // directly. Instead, we save the title being used in a variable here, so
   // that it can be loaded and inspected in the thread running the test.
-  $request = \Drupal::request();
-  $route_match = \Drupal::routeMatch();
-  $title = \Drupal::service('title_resolver')->getTitle($request, $route_match->getRouteObject());
+  $request = Drupal::request();
+  $route_match = Drupal::routeMatch();
+  $title = Drupal::service('title_resolver')->getTitle($request, $route_match->getRouteObject());
   batch_test_stack($title);
 }
 
@@ -237,7 +237,7 @@ function _batch_test_title_callback() {
  * Helper function: Stores or retrieves traced execution data.
  */
 function batch_test_stack($data = NULL, $reset = FALSE) {
-  $state = \Drupal::state();
+  $state = Drupal::state();
   if ($reset) {
     $state->delete('batch_test.stack');
   }

@@ -129,7 +129,7 @@ function _batch_test_nested_batch_callback(array $batches = []) {
     $function = '_batch_test_batch_' . $batch;
     batch_set($function());
   }
-  \Drupal::state()
+  Drupal::state()
     ->set('batch_test_nested_order_multiple_batches', batch_get());
 }
 
@@ -166,9 +166,9 @@ function _batch_test_finished_helper($batch_id, $success, $results, $operations,
     ],
   ];
 
-  \Drupal::messenger()->addStatus(\Drupal::service('renderer')->renderInIsolation($error_message));
+  Drupal::messenger()->addStatus(Drupal::service('renderer')->renderInIsolation($error_message));
 
-  \Drupal::messenger()->addMessage('elapsed time: ' . $elapsed);
+  Drupal::messenger()->addMessage('elapsed time: ' . $elapsed);
 }
 
 /**

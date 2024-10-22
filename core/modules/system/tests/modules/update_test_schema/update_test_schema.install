@@ -36,7 +36,7 @@ function update_test_schema_requirements($phase) {
  * The schema defined here will vary on state to allow for update hook testing.
  */
 function update_test_schema_schema() {
-  $schema_version = \Drupal::state()->get('update_test_schema_version', 8000);
+  $schema_version = Drupal::state()->get('update_test_schema_version', 8000);
   $table = [
     'fields' => [
       'a' => ['type' => 'int', 'not null' => TRUE],
@@ -53,7 +53,7 @@ function update_test_schema_schema() {
 }
 
 // Update hooks are defined depending on state as well.
-$schema_version = \Drupal::state()->get('update_test_schema_version', 8000);
+$schema_version = Drupal::state()->get('update_test_schema_version', 8000);
 
 if ($schema_version >= 8001) {
 
@@ -97,10 +97,10 @@ if ($schema_version >= 8003) {
   function update_test_schema_update_8003() {
     // Uninstall a module with no dependencies installed by the Standard
     // profile.
-    \Drupal::service('module_installer')->uninstall(['page_cache']);
+    Drupal::service('module_installer')->uninstall(['page_cache']);
     // Install a test module that is not installed in any of the database
     // dumps.
-    \Drupal::service('module_installer')->install(['module_test']);
+    Drupal::service('module_installer')->install(['module_test']);
   }
 
 }

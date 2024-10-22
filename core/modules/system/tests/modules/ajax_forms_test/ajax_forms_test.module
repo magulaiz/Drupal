@@ -221,8 +221,8 @@ function ajax_forms_test_advanced_commands_add_css_callback($form, FormStateInte
  * Ajax form callback: Selects the 'driver_text' element of the validation form.
  */
 function ajax_forms_test_validation_form_callback($form, FormStateInterface $form_state) {
-  \Drupal::messenger()->addStatus("ajax_forms_test_validation_form_callback invoked");
-  \Drupal::messenger()->addStatus(t("Callback: driver_text=%driver_text, spare_required_field=%spare_required_field", ['%driver_text' => $form_state->getValue('driver_text'), '%spare_required_field' => $form_state->getValue('spare_required_field')]));
+  Drupal::messenger()->addStatus("ajax_forms_test_validation_form_callback invoked");
+  Drupal::messenger()->addStatus(t("Callback: driver_text=%driver_text, spare_required_field=%spare_required_field", ['%driver_text' => $form_state->getValue('driver_text'), '%spare_required_field' => $form_state->getValue('spare_required_field')]));
   return ['#markup' => '<div id="message_area">ajax_forms_test_validation_form_callback at ' . date('c') . '</div>'];
 }
 
@@ -230,8 +230,8 @@ function ajax_forms_test_validation_form_callback($form, FormStateInterface $for
  * Ajax form callback: Selects the 'driver_number' element of the validation form.
  */
 function ajax_forms_test_validation_number_form_callback($form, FormStateInterface $form_state) {
-  \Drupal::messenger()->addStatus("ajax_forms_test_validation_number_form_callback invoked");
-  \Drupal::messenger()->addStatus(t("Callback: driver_number=%driver_number, spare_required_field=%spare_required_field", ['%driver_number' => $form_state->getValue('driver_number'), '%spare_required_field' => $form_state->getValue('spare_required_field')]));
+  Drupal::messenger()->addStatus("ajax_forms_test_validation_number_form_callback invoked");
+  Drupal::messenger()->addStatus(t("Callback: driver_number=%driver_number, spare_required_field=%spare_required_field", ['%driver_number' => $form_state->getValue('driver_number'), '%spare_required_field' => $form_state->getValue('spare_required_field')]));
   return ['#markup' => '<div id="message_area_number">ajax_forms_test_validation_number_form_callback at ' . date('c') . '</div>'];
 }
 

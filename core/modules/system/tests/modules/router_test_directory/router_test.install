@@ -15,5 +15,5 @@ use Drupal\Core\Url;
 function router_test_install() {
   // Ensure a URL can be generated for routes provided by the module during
   // installation.
-  \Drupal::state()->set(__FUNCTION__, Url::fromRoute('router_test.1')->toString());
+  Drupal::state()->set(__FUNCTION__, Url::fromRoute('router_test.1')->toString());
 }
