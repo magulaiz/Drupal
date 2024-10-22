@@ -28,7 +28,8 @@ interface LayoutTempstoreRepositoryInterface {
    * @param \Drupal\layout_builder\SectionStorageInterface $section_storage
    *   The section storage to set in tempstore.
    * @param bool $has_unsaved_changes
-   *   (optional) Indicates that the section has unsaved changes. Defaults to TRUE.
+   *   (optional) Indicates that the section has unsaved changes. Defaults to
+   *   TRUE.
    */
   public function set(SectionStorageInterface $section_storage, bool $has_unsaved_changes = TRUE): void;
 
