@@ -14,7 +14,7 @@ trait UpdateSemverTestSecurityAvailabilityTrait {
    */
   public function testSecurityUpdateAvailability(): void {
     foreach (static::securityUpdateAvailabilityProvider() as $case) {
-      $this->doTestSecurityUpdateAvailability($case['site_patch_version'], $case['expected_security_releases'], $case['expected_update_message_type'], $case['fixture']);
+      $this->doTestSecurityUpdateAvailability($case['site_patch_version'], $case['expected_security_releases'], $case['expected_update_message_type'], $case['fixture'], $case['recommended_security_release']);
     }
   }
 
