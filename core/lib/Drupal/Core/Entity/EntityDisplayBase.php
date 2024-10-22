@@ -600,8 +600,8 @@ abstract class EntityDisplayBase extends ConfigEntityBase implements EntityDispl
         throw new \InvalidArgumentException("'$value' is not a valid entity display ID.");
       }
       [$this->targetEntityType, $this->bundle, $this->mode] = explode('.', $value);
-      parent::set($property_name, $value);
     }
+    parent::set($property_name, $value);
     return $this;
   }
 

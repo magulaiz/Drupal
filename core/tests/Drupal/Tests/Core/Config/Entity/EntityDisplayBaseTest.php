@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace Drupal\Tests\Core\Config\Entity;
 
 use Drupal\Core\Entity\EntityDisplayBase;
+use Drupal\Core\Entity\EntityType;
+use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Tests\UnitTestCase;
 use PHPUnit\Framework\MockObject\MockObject;
 
@@ -25,6 +27,7 @@ class EntityDisplayBaseTest extends UnitTestCase {
    */
   protected function setUp(): void {
     parent::setUp();
+
     $this->entityDisplay = $this->getMockBuilder(EntityDisplayBaseMockableClass::class)
       ->disableOriginalConstructor()
       ->onlyMethods([])
@@ -89,6 +92,14 @@ class EntityDisplayBaseMockableClass extends EntityDisplayBase {
 
   public function getRenderer($field_name) {
     return NULL;
+  }
+
+  public function getEntityType() {
+    return new EntityType([
+      'entity_keys' => [
+        'id' => 'id',
+      ],
+    ]);
   }
 
 }
