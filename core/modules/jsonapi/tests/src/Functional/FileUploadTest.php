@@ -18,7 +18,7 @@ use Drupal\user\Entity\User;
 use GuzzleHttp\RequestOptions;
 use Psr\Http\Message\ResponseInterface;
 
-// cspell:ignore èxample msword
+// cspell:ignore èxample msword résumé
 
 /**
  * Tests binary data file upload route.
@@ -226,6 +226,17 @@ class FileUploadTest extends ResourceTestBase {
     $this->assertSame($this->testFileData, file_get_contents('public://foobar/example_0.txt'));
     $this->assertTrue($this->fileStorage->loadUnchanged(1)->isTemporary());
 
+    // Test the file again but using extended 'filename*' in the
+    // Content-Disposition header with an encoded UTF-8 character.
+    /* cspell:disable-next-line */
+    $response = $this->fileRequest($uri, $this->testFileData, ['Content-Disposition' => 'filename*="UTF-8\'\'r%C3%A9sum%C3%A9.txt"']);
+    $this->assertSame(201, $response->getStatusCode());
+    $expected = $this->getExpectedDocument(3, 'résumé.txt', TRUE);
+    $this->assertResponseData($expected, $response);
+
+    // Check the actual file data.
+    $this->assertSame($this->testFileData, file_get_contents('public://foobar/résumé.txt'));
+
     // Verify that we can create an entity that references the uploaded file.
     $entity_test_post_url = Url::fromRoute('jsonapi.entity_test--entity_test.collection.post');
     $request_options = [];
@@ -388,10 +399,6 @@ class FileUploadTest extends ResourceTestBase {
     // a 400.
     $response = $this->fileRequest($uri, $this->testFileData, ['Content-Disposition' => 'not_a_filename="example.txt"']);
     $this->assertResourceErrorResponse(400, 'No filename found in "Content-Disposition" header. A file name in the format "filename=FILENAME" must be provided.', $uri, $response);
-
-    // Using filename* extended format is not currently supported.
-    $response = $this->fileRequest($uri, $this->testFileData, ['Content-Disposition' => 'filename*="UTF-8 \' \' example.txt"']);
-    $this->assertResourceErrorResponse(400, 'The extended "filename*" format is currently not supported in the "Content-Disposition" header.', $uri, $response);
   }
 
   /**

@@ -9,6 +9,8 @@ use Drupal\Tests\UnitTestCase;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 
+// cspell:ignore résumé
+
 /**
  * Tests the ContentDispositionFilenameParser class.
  *
@@ -30,6 +32,16 @@ class ContentDispositionFilenameParserTest extends UnitTestCase {
 
   /**
    * @covers ::parseFilename
+   */
+  public function testParseFilenameExtendedSuccess(): void {
+    /* cspell:disable-next-line */
+    $request = $this->createRequest('filename*="UTF-8\'\'r%C3%A9sum%C3%A9.txt"');
+    $filename = ContentDispositionFilenameParser::parseFilename($request);
+    $this->assertEquals('résumé.txt', $filename);
+  }
+
+  /**
+   * @covers ::parseFilename
    * @dataProvider invalidHeaderProvider
    */
   public function testParseFilenameInvalid(string | bool $contentDisposition): void {
@@ -47,16 +59,6 @@ class ContentDispositionFilenameParserTest extends UnitTestCase {
     $this->expectExceptionMessage('"Content-Disposition" header is required. A file name in the format "filename=FILENAME" must be provided.');
     $request = new Request();
     ContentDispositionFilenameParser::parseFilename($request);
-  }
-
-  /**
-   * @covers ::parseFilename
-   */
-  public function testParseFilenameExtended(): void {
-    $this->expectException(BadRequestHttpException::class);
-    $this->expectExceptionMessage('The extended "filename*" format is currently not supported in the "Content-Disposition" header.');
-    $request = $this->createRequest('filename*="UTF-8 \' \' example.txt"');
-    $filename = ContentDispositionFilenameParser::parseFilename($request);
   }
 
   /**
