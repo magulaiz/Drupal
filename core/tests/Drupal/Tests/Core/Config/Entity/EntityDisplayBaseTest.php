@@ -6,7 +6,6 @@ namespace Drupal\Tests\Core\Config\Entity;
 
 use Drupal\Core\Entity\EntityDisplayBase;
 use Drupal\Core\Entity\EntityType;
-use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Tests\UnitTestCase;
 use PHPUnit\Framework\MockObject\MockObject;
 
