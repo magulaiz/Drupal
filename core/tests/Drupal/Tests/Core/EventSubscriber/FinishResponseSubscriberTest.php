@@ -193,7 +193,7 @@ class FinishResponseSubscriberTest extends UnitTestCase {
   }
 
   /**
-   * Finish subscriber breaks large tags and context into parts.
+   * Tests that the subscriber splits long tags and context into multiple lines.
    *
    * @covers ::onRespond
    */

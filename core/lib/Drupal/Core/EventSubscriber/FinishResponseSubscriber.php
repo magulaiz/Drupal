@@ -23,13 +23,14 @@ use Symfony\Component\HttpKernel\KernelEvents;
 class FinishResponseSubscriber implements EventSubscriberInterface {
 
   /**
-   * A character length limit for headers with possibly long values.
+   * The character length limit for Drupal cache headers.
    *
-   * Less than 8KB.
+   * This is used for the 'X-Drupal-Cache-Tags' and 'X-Drupal-Cache-Contexts'
+   * headers.
    *
    * @var int
    */
-  protected const RESPONSE_HEADER_VALUE_LENGTH_LIMIT = 8000;
+  protected const RESPONSE_HEADER_MAX_LENGTH = 8000;
 
   /**
    * A config object for the system performance configuration.
@@ -133,14 +134,13 @@ class FinishResponseSubscriber implements EventSubscriberInterface {
       // X-Drupal-Cache-Contexts and X-Drupal-Cache-Tags header respectively.
       $response_cacheability = $response->getCacheableMetadata();
 
-      // Build the potentially longer header values incrementally to avoid
-      // situations where the header value length exceeds its maximum. If the
-      // maximum length is exceeded, create additional headers with suffixes
-      // to store the additional data.
+      // If a header exceeds the maximum response header length then split the
+      // data across multiple headers. The additional headers add a suffix to
+      // the header name.
       $add_header_with_long_value = static function (string $header_name, array $values) use ($response): void {
         sort($values);
         $values_as_string = implode(' ', $values);
-        foreach (explode("\n", wordwrap($values_as_string, static::RESPONSE_HEADER_VALUE_LENGTH_LIMIT)) as $delta => $row) {
+        foreach (explode("\n", wordwrap($values_as_string, static::RESPONSE_HEADER_MAX_LENGTH)) as $delta => $row) {
           $response->headers->set($header_name . ($delta > 0 ? "-{$delta}" : ''), $row);
         }
       };
