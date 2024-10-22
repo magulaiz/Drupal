@@ -8,7 +8,6 @@ use Drupal\Core\Config\Action\Attribute\ActionMethod;
 use Drupal\Core\Config\Schema\SchemaIncompleteException;
 use Drupal\Core\Entity\EntityBase;
 use Drupal\Core\Config\ConfigDuplicateUUIDException;
-use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Entity\EntityWithPluginCollectionInterface;
@@ -259,10 +258,10 @@ abstract class ConfigEntityBase extends EntityBase implements ConfigEntityInterf
 
   /**
    * Helper callback for uasort() to sort configuration entities by weight and label.
-   * 
+   *
    * @deprecated in drupal:11.1.0 and is removed from drupal:12.0.0. Use
    * \Drupal\Core\Config\Entity\ConfigEntityBase::sortEntities() instead.
-   * 
+   *
    * @see https://www.drupal.org/project/drupal/issues/2265487
    */
   public static function sort(ConfigEntityInterface $a, ConfigEntityInterface $b) {
