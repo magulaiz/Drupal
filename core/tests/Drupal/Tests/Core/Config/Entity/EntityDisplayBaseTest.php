@@ -95,6 +95,7 @@ class EntityDisplayBaseMockableClass extends EntityDisplayBase {
 
   public function getEntityType() {
     return new EntityType([
+      'id' => 'entity_view_display',
       'entity_keys' => [
         'id' => 'id',
       ],
