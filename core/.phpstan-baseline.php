@@ -14264,6 +14264,12 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/comment/tests/src/Kernel/CommentValidationTest.php',
 ];
 $ignoreErrors[] = [
+	'message' => '#^Method Drupal\\\\Tests\\\\comment\\\\Kernel\\\\CommentUriTest\\:\\:createEntityReferenceField\\(\\) has no return type specified\\.$#',
+	'identifier' => 'missingType.return',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/comment/tests/src/Kernel/CommentUriTest.php',
+];
+$ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\Tests\\\\comment\\\\Kernel\\\\Migrate\\\\MigrateCommentStubTest\\:\\:performStubTest\\(\\) has no return type specified\\.$#',
 	'identifier' => 'missingType.return',
 	'count' => 1,
@@ -14328,6 +14334,12 @@ $ignoreErrors[] = [
 	'identifier' => 'missingType.return',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/comment/tests/src/Kernel/Views/CommentFieldNameTest.php',
+];
+$ignoreErrors[] = [
+	'message' => '#^Method Drupal\\\\Tests\\\\comment\\\\Kernel\\\\CommentUriTest\\:\\:addDefaultCommentField\\(\\) has no return type specified\\.$#',
+	'identifier' => 'missingType.return',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/comment/tests/src/Kernel/CommentUriTest.php',
 ];
 $ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\Tests\\\\comment\\\\Kernel\\\\Views\\\\FilterAndArgumentUserUidTest\\:\\:addDefaultCommentField\\(\\) has no return type specified\\.$#',
