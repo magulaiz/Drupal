@@ -264,6 +264,7 @@ abstract class ConfigEntityBase extends EntityBase implements ConfigEntityInterf
    * @see https://www.drupal.org/project/drupal/issues/2265487
    */
   public static function sort(ConfigEntityInterface $a, ConfigEntityInterface $b) {
+    @trigger_error(__CLASS__ . '::' . __FUNCTION__ . ' is deprecated in drupal:11.1.0 and is removed from drupal:12.0.0. Use \Drupal\Core\Config\Entity\ConfigEntityBase::sortEntities() instead. See https://www.drupal.org/project/drupal/issues/2265487', E_USER_DEPRECATED);
     $a_weight = $a->weight ?? 0;
     $b_weight = $b->weight ?? 0;
     if ($a_weight == $b_weight) {
