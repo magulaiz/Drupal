@@ -540,22 +540,22 @@ class ConfigEntityBaseUnitTest extends UnitTestCase {
 
     // Test sorting by label.
     $list = [$entity_a, $entity_b];
-    $list = ConfigEntityBase::sortEntities($list, $collator);
+    ConfigEntityBase::sortEntities($list, $collator);
     $this->assertSame($entity_b, reset($list));
 
     $list = [$entity_b, $entity_a];
-    $list = ConfigEntityBase::sortEntities($list, $collator);
+    ConfigEntityBase::sortEntities($list, $collator);
     $this->assertSame($entity_b, reset($list));
 
     // Test sorting by weight.
     $entity_a->weight = 0;
     $entity_b->weight = 1;
     $list = [$entity_b, $entity_a];
-    $list = ConfigEntityBase::sortEntities($list, $collator);
+    ConfigEntityBase::sortEntities($list, $collator);
     $this->assertSame($entity_a, reset($list));
 
     $list = [$entity_a, $entity_b];
-    $list = ConfigEntityBase::sortEntities($list, $collator);
+    ConfigEntityBase::sortEntities($list, $collator);
     $this->assertSame($entity_a, reset($list));
   }
 

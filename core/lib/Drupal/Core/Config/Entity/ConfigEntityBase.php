@@ -235,11 +235,10 @@ abstract class ConfigEntityBase extends EntityBase implements ConfigEntityInterf
   /**
    * Sorts entities using collator.
    */
-  public static function sortEntities(array $entities, \Collator $collator): array {
-    uasort($entities, function ($a, $b) use ($collator) {
+  public static function sortEntities(array &$entities, \Collator $collator): bool {
+    return uasort($entities, function ($a, $b) use ($collator) {
       return self::compare($a, $b, $collator);
     });
-    return $entities;
   }
 
   /**

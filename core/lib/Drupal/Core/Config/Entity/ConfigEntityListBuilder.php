@@ -28,7 +28,7 @@ class ConfigEntityListBuilder extends EntityListBuilder {
 
     // Sort the entities using the entity class's sortEntities() method.
     $collator = \Collator::create((!extension_loaded('intl')) ? ('en') : (\Drupal::service('language_manager')->getCurrentLanguage()->getId()));
-    $entities = $this->entityType->getClass()::sortEntities($entities, $collator);
+    $this->entityType->getClass()::sortEntities($entities, $collator);
     return $entities;
   }
 

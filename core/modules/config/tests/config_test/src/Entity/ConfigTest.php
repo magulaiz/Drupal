@@ -106,7 +106,7 @@ class ConfigTest extends ConfigEntityBase implements ConfigTestInterface {
   /**
    * {@inheritdoc}
    */
-  public static function sortEntities(array $entities, \Collator $collator): array {
+  public static function sortEntities(array &$entities, \Collator $collator): bool {
     \Drupal::state()->set('config_entity_sortEntities', TRUE);
     return parent::sortEntities($entities, $collator);
   }
