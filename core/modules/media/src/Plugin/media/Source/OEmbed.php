@@ -13,7 +13,6 @@ use Drupal\Core\Field\FieldTypePluginManagerInterface;
 use Drupal\Core\File\Exception\FileException;
 use Drupal\Core\File\FileSystemInterface;
 use Drupal\Core\Form\FormStateInterface;
-use Drupal\Core\Link;
 use Drupal\Core\Messenger\MessengerInterface;
 use Drupal\Core\Url;
 use Drupal\Core\Utility\Token;
@@ -243,10 +242,7 @@ class OEmbed extends MediaSourceBase implements OEmbedInterface {
       $resource = $this->resourceFetcher->fetchResource($resource_url);
     }
     catch (ResourceException $e) {
-      $editLink = $media->toUrl('edit-form', ['attributes' => ['target' => '_blank']]);
-      $message = $this->t('An error occurred: @message', ['@message' => $e->getMessage()]);
-      $fullMessage = $message . ' ' . Link::fromTextAndUrl($media->label(), $editLink)->toString();
-      $this->messenger->addError($fullMessage);
+      $this->messenger->addError($e->getMessage());
       return NULL;
     }
 
