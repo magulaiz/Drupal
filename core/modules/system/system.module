@@ -8,8 +8,10 @@
 use Drupal\Component\FileSecurity\FileSecurity;
 use Drupal\Component\Gettext\PoItem;
 use Drupal\Component\Render\PlainTextOutput;
+use Drupal\Component\Serialization\Json;
 use Drupal\Component\Utility\UrlHelper;
 use Drupal\Core\Asset\AttachedAssetsInterface;
+use Drupal\Core\Asset\ImportMapsManagerInterface;
 use Drupal\Core\Block\BlockPluginInterface;
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Database\Query\AlterableInterface;
@@ -1111,7 +1113,7 @@ function system_theme_registry_alter(array &$theme_registry) {
 /**
  * Implements hook_page_top().
  */
-function system_page_top() {
+function system_page_top(array &$page_top) {
   /** @var \Drupal\Core\Routing\AdminContext $admin_context */
   $admin_context = \Drupal::service('router.admin_context');
   if ($admin_context->isAdminRoute() && \Drupal::currentUser()->hasPermission('administer site configuration')) {
@@ -1146,6 +1148,17 @@ function system_page_top() {
         }
       }
     }
+  }
+  $map = \Drupal::service(ImportMapsManagerInterface::class)->getImportMapForTheme(\Drupal::theme()->getActiveTheme()->getName());
+  if (\array_key_exists('imports', $map) && \count($map['imports']) > 0) {
+    $page_top['importmaps'] = [
+      '#type' => 'html_tag',
+      '#tag' => 'script',
+      '#value' => Json::encode($map),
+      '#attributes' => ['type' => 'importmap'],
+      // This varies by route because of the active theme resolution.
+      '#cache' => ['contexts' => ['route']],
+    ];
   }
 }
 
