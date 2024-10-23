@@ -78,10 +78,9 @@ class BlockRepository implements BlockRepositoryInterface {
 
     // Merge it with the actual values to maintain the region ordering.
     $assignments = array_intersect_key(array_merge($empty, $full), $empty);
-    $collator = \Collator::create((!extension_loaded('intl')) ? ('en') : (\Drupal::service('language_manager')->getCurrentLanguage()->getId()));
     foreach ($assignments as &$assignment) {
       // Sort the entities using the entity class's sortEntities() method.
-      Block::sortEntities($assignment, $collator);
+      Block::sortEntities($assignment);
     }
     return $assignments;
   }

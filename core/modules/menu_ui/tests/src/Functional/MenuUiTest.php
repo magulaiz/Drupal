@@ -194,8 +194,7 @@ class MenuUiTest extends BrowserTestBase {
       $menu_entity->save();
     }
     // Sort the entities using the entity class's sortEntities() method.
-    $collator = \Collator::create((!extension_loaded('intl')) ? ('en') : (\Drupal::service('language_manager')->getCurrentLanguage()->getId()));
-    Menu::sortEntities($menu_entities, $collator);
+    Menu::sortEntities($menu_entities);
     $menu_entities = array_values($menu_entities);
     $this->drupalGet('/admin/structure/menu');
     $base_path = parse_url($this->baseUrl, PHP_URL_PATH) ?? '';
@@ -220,8 +219,7 @@ class MenuUiTest extends BrowserTestBase {
     sort($menu_entities);
     $menu_entities_page_one = array_slice($menu_entities, 50, 64, TRUE);
     // Sort the entities using the entity class's sortEntities() method.
-    $collator = \Collator::create((!extension_loaded('intl')) ? ('en') : (\Drupal::service('language_manager')->getCurrentLanguage()->getId()));
-    Menu::sortEntities($menu_entities_page_one, $collator);
+    Menu::sortEntities($menu_entities_page_one);
     $menu_entities_page_one = array_values($menu_entities_page_one);
 
     $this->drupalGet('/admin/structure/menu', [

@@ -83,8 +83,7 @@ class BlockContentController extends ControllerBase {
       }
     }
     // Sort the entities using the entity class's sortEntities() method.
-    $collator = \Collator::create((!extension_loaded('intl')) ? ('en') : (\Drupal::service('language_manager')->getCurrentLanguage()->getId()));
-    $this->blockContentTypeStorage->getEntityType()->getClass()::sortEntities($types, $collator);
+    $this->blockContentTypeStorage->getEntityType()->getClass()::sortEntities($types);
     if ($types && count($types) == 1) {
       $type = reset($types);
       return $this->addForm($type, $request);

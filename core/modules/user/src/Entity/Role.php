@@ -171,8 +171,7 @@ class Role extends ConfigEntityBase implements RoleInterface {
   public static function postLoad(EntityStorageInterface $storage, array &$entities) {
     parent::postLoad($storage, $entities);
     // Sort the entities using the entity class's sortEntities() method.
-    $collator = \Collator::create((!extension_loaded('intl')) ? ('en') : (\Drupal::service('language_manager')->getCurrentLanguage()->getId()));
-    static::class::sortEntities($entities, $collator);
+    static::class::sortEntities($entities);
   }
 
   /**
