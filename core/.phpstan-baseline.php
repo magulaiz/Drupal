@@ -12156,36 +12156,6 @@ $ignoreErrors[] = [
 ];
 $ignoreErrors[] = [
 	// identifier: missingType.return
-	'message' => '#^Function announcements_feed_cron\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/announcements_feed/announcements_feed.module',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
-	'message' => '#^Function announcements_feed_help\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/announcements_feed/announcements_feed.module',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
-	'message' => '#^Function announcements_feed_theme\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/announcements_feed/announcements_feed.module',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
-	'message' => '#^Function announcements_feed_toolbar\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/announcements_feed/announcements_feed.module',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
-	'message' => '#^Function announcements_feed_toolbar_alter\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/announcements_feed/announcements_feed.module',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
 	'message' => '#^Method Drupal\\\\announcements_feed\\\\AnnounceRenderer\\:\\:formatPlural\\(\\) has no return type specified\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/announcements_feed/src/AnnounceRenderer.php',
@@ -12195,6 +12165,36 @@ $ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\announcements_feed\\\\AnnounceRenderer\\:\\:getNumberOfPlurals\\(\\) has no return type specified\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/announcements_feed/src/AnnounceRenderer.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\announcements_feed\\\\Hook\\\\AnnouncementsFeedHooks\\:\\:cron\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/announcements_feed/src/Hook/AnnouncementsFeedHooks.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\announcements_feed\\\\Hook\\\\AnnouncementsFeedHooks\\:\\:help\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/announcements_feed/src/Hook/AnnouncementsFeedHooks.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\announcements_feed\\\\Hook\\\\AnnouncementsFeedHooks\\:\\:theme\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/announcements_feed/src/Hook/AnnouncementsFeedHooks.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\announcements_feed\\\\Hook\\\\AnnouncementsFeedHooks\\:\\:toolbar\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/announcements_feed/src/Hook/AnnouncementsFeedHooks.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\announcements_feed\\\\Hook\\\\AnnouncementsFeedHooks\\:\\:toolbarAlter\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/announcements_feed/src/Hook/AnnouncementsFeedHooks.php',
 ];
 $ignoreErrors[] = [
 	// identifier: missingType.return
@@ -63593,13 +63593,13 @@ $ignoreErrors[] = [
 ];
 $ignoreErrors[] = [
 	// identifier: missingType.return
-	'message' => '#^Function views_field_views_data\\(\\) has no return type specified\\.$#',
+	'message' => '#^Function views_entity_field_label\\(\\) has no return type specified\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/views/views.views.inc',
 ];
 $ignoreErrors[] = [
 	// identifier: missingType.return
-	'message' => '#^Function views_entity_field_label\\(\\) has no return type specified\\.$#',
+	'message' => '#^Function views_field_views_data\\(\\) has no return type specified\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/views/views.views.inc',
 ];
