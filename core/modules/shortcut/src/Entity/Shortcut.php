@@ -178,7 +178,7 @@ class Shortcut extends ContentEntityBase implements ShortcutInterface {
     return $a_weight <=> $b_weight;
   }
 
- /**
+  /**
    * Helper callback for uasort() to sort configuration entities by weight and label.
    *
    * @deprecated in drupal:11.1.0 and is removed from drupal:12.0.0. Use
