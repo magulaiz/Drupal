@@ -43,7 +43,7 @@ class AnnouncementsFeedHooks {
       'tab' => [
         '#lazy_builder' => [
           'announcements_feed.lazy_builders:renderAnnouncements',
-                 [],
+          [],
         ],
         '#create_placeholder' => \TRUE,
         '#cache' => [
@@ -124,7 +124,7 @@ class AnnouncementsFeedHooks {
     $interval = $config->get('cron_interval');
     $last_check = \Drupal::state()->get('announcements_feed.last_fetch', 0);
     $time = \Drupal::time()->getRequestTime();
-    if ($time - $last_check > $interval) {
+    if (($time - $last_check) > $interval) {
       \Drupal::service('announcements_feed.fetcher')->fetch(\TRUE);
       \Drupal::state()->set('announcements_feed.last_fetch', $time);
     }
