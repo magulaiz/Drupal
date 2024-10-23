@@ -15,7 +15,7 @@ class DeprecationHookAttributeTestHooks {
    * Implements hook_deprecated_hook().
    */
   #[Hook('deprecated_hook')]
-  public function deprecatedHook($arg) {
+  public function deprecatedHook($arg): mixed {
     return $arg;
   }
 
@@ -23,7 +23,7 @@ class DeprecationHookAttributeTestHooks {
    * Implements hook_deprecated_alter_alter().
    */
   #[Hook('deprecated_alter_alter')]
-  public function deprecatedAlterAlterFirst(&$data, $context1, $context2) {
+  public function deprecatedAlterAlterFirst(&$data, $context1, $context2): void {
     $data = [$context1, $context2];
   }
 
