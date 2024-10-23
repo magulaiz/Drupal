@@ -269,7 +269,8 @@ class TermIndexTest extends TaxonomyTestBase {
    */
   protected function checkNumberOfEntriesPerLanguage(int $nid, int $tid, array $expected_numbers): array {
     $connection = Database::getConnection();
-    $results = []; // Initialize an array to store the results.
+    // Initialize an array to store the results.
+    $results = [];
 
     foreach ($expected_numbers as $langcode => $expected_number) {
       $index_count = $connection->query('SELECT COUNT(*) FROM {taxonomy_index} WHERE nid = :nid AND tid = :tid AND langcode = :langcode', [
