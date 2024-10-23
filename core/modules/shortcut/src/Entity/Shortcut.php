@@ -167,6 +167,15 @@ class Shortcut extends ContentEntityBase implements ShortcutInterface {
   }
 
   /**
+   * Sorts entities using collator.
+   */
+  public static function sortEntities(array &$entities, \Collator $collator): bool {
+    return uasort($entities, function ($a, $b) use ($collator) {
+      return static::compare($a, $b, $collator);
+    });
+  }
+
+  /**
    * Helper callback for uasort() to compare configuration entities by weight and label.
    */
   public static function compare(ShortcutInterface $a, ShortcutInterface $b, \Collator $collator): int {
