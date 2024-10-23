@@ -195,7 +195,7 @@ class Shortcut extends ContentEntityBase implements ShortcutInterface {
    *
    * @see https://www.drupal.org/project/drupal/issues/2265487
    */
-  public static function sort(ShortcutInterface $a, ShortcutInterface $b) {
+  public static function sort(ShortcutInterface $a, ShortcutInterface $b): int {
     @trigger_error(__CLASS__ . '::' . __FUNCTION__ . ' is deprecated in drupal:11.1.0 and is removed from drupal:12.0.0. Use ' . __CLASS__ . '::sortEntities() instead. See https://www.drupal.org/project/drupal/issues/2265487', E_USER_DEPRECATED);
     $a_weight = $a->getWeight();
     $b_weight = $b->getWeight();
