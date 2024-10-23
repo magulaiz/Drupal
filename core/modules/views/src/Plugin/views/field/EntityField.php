@@ -1101,19 +1101,17 @@ class EntityField extends FieldPluginBase implements CacheableDependencyInterfac
    * {@inheritdoc}
    */
   public function getValue(ResultRow $values, $field = NULL) {
+    // Ensure that we're getting the specific entity for the current row.
     $entity = $this->getEntity($values);
 
     // Ensure the object is not NULL before attempting to translate it.
     if ($entity === NULL) {
       return NULL;
     }
-
-    // Retrieve the translated object.
+    // Retrieve the translated object for this specific row.
     $translated_entity = $this->getEntityFieldRenderer()->getEntityTranslationByRelationship($entity, $values);
 
-    // Some bundles might not have a specific field, in which case the entity
-    // (potentially a fake one) doesn't have it either.
-    /** @var \Drupal\Core\Field\FieldItemListInterface $field_item_list */
+    // Fetch the field items for the current entity's row.
     $field_item_list = $translated_entity->{$this->definition['field_name']} ?? NULL;
 
     if (!isset($field_item_list)) {
@@ -1129,20 +1127,30 @@ class EntityField extends FieldPluginBase implements CacheableDependencyInterfac
       if ($field) {
         $values[] = $field_item->$field;
       }
-      // Find the value using the main property of the field. If no main
-      // property is provided fall back to 'value'.
+      // Find the value using the main property of the field.
       elseif ($main_property_name = $field_item->mainPropertyName()) {
         $values[] = $field_item->{$main_property_name};
       }
       else {
+        // Default to using the 'value' property.
         $values[] = $field_item->value;
       }
     }
+    // Ensure the field is handled based on its cardinality.
     if ($field_item_definition->getFieldStorageDefinition()->getCardinality() == 1) {
+      // Single cardinality field should return a single value.
       return reset($values);
     }
     else {
-      return $values;
+      // Multi-value field handling.
+      // Check if grouping is enabled or not.
+      if ($this->options['group_rows'] === FALSE) {
+        // If grouping is disabled, return individual values.
+        return $values;
+      } else {
+        // If grouping is enabled, return the values as a concatenated string.
+        return implode(', ', $values);
+      }
     }
   }
 
