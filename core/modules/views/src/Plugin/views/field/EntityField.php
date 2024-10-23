@@ -1147,7 +1147,8 @@ class EntityField extends FieldPluginBase implements CacheableDependencyInterfac
       if ($this->options['group_rows'] === FALSE) {
         // If grouping is disabled, return individual values.
         return $values;
-      } else {
+      }
+      else {
         // If grouping is enabled, return the values as a concatenated string.
         return implode(', ', $values);
       }
