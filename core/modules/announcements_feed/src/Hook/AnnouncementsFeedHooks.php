@@ -8,7 +8,7 @@ use Drupal\Core\Link;
 use Drupal\Core\Routing\RouteMatchInterface;
 
 /**
- *
+ * Announcment Feed Implementations.
  */
 class AnnouncementsFeedHooks {
 
@@ -16,7 +16,7 @@ class AnnouncementsFeedHooks {
    * Implements hook_help().
    */
   #[Hook('help')]
-    public function help($route_name, RouteMatchInterface $route_match) {
+  public function help($route_name, RouteMatchInterface $route_match) {
     switch ($route_name) {
       case 'help.page.announcements_feed':
         $output = '';
@@ -28,64 +28,64 @@ class AnnouncementsFeedHooks {
         $output .= '</dl>';
         return $output;
     }
-    }
+  }
 
-    /**
-     * Implements hook_toolbar().
-     */
-    #[Hook('toolbar')]
-    public function toolbar() {
-      if (!\Drupal::currentUser()->hasPermission('access announcements')) {
-        return ['#cache' => ['contexts' => ['user.permissions']]];
-      }
-      $items['announcement'] = ['#type' => 'toolbar_item', 'tab' => ['#lazy_builder' => ['announcements_feed.lazy_builders:renderAnnouncements', []], '#create_placeholder' => TRUE, '#cache' => ['tags' => ['announcements_feed:feed']]], '#wrapper_attributes' => ['class' => ['announce-toolbar-tab']], '#cache' => ['contexts' => ['user.permissions']], '#weight' => 3399];
-      // \Drupal\toolbar\Element\ToolbarItem::preRenderToolbarItem adds an
-      // #attributes property to each toolbar item's tab child automatically.
-      // Lazy builders don't support an #attributes property so we need to
-      // add another render callback to remove the #attributes property. We start by
-      // adding the defaults, and then we append our own pre render callback.
-      $items['announcement'] += \Drupal::service('plugin.manager.element_info')->getInfo('toolbar_item');
-      $items['announcement']['#pre_render'][] = [RenderCallbacks::class, 'removeTabAttributes'];
-      return $items;
+  /**
+   * Implements hook_toolbar().
+   */
+  #[Hook('toolbar')]
+  public function toolbar() {
+    if (!\Drupal::currentUser()->hasPermission('access announcements')) {
+      return ['#cache' => ['contexts' => ['user.permissions']]];
     }
+    $items['announcement'] = ['#type' => 'toolbar_item', 'tab' => ['#lazy_builder' => ['announcements_feed.lazy_builders:renderAnnouncements', []], '#create_placeholder' => TRUE, '#cache' => ['tags' => ['announcements_feed:feed']]], '#wrapper_attributes' => ['class' => ['announce-toolbar-tab']], '#cache' => ['contexts' => ['user.permissions']], '#weight' => 3399];
+    // \Drupal\toolbar\Element\ToolbarItem::preRenderToolbarItem adds an
+    // #attributes property to each toolbar item's tab child automatically.
+    // Lazy builders don't support an #attributes property so we need to
+    // add another render callback to remove the #attributes property. We start by
+    // adding the defaults, and then we append our own pre render callback.
+    $items['announcement'] += \Drupal::service('plugin.manager.element_info')->getInfo('toolbar_item');
+    $items['announcement']['#pre_render'][] = [RenderCallbacks::class, 'removeTabAttributes'];
+    return $items;
+  }
 
-    /**
-     * Implements hook_toolbar_alter().
-     */
-    #[Hook('toolbar_alter')]
-    public function toolbarAlter(&$items) {
-      // As the "Announcements" link is shown already in the top toolbar bar, we
-      // don't need it again in the administration menu tray, so hide it.
-      if (!empty($items['administration']['tray'])) {
-        $callable = function (array $element) {
-          unset($element['administration_menu']['#items']['announcements_feed.announcement']);
-          return $element;
-        };
-        $items['administration']['tray']['toolbar_administration']['#pre_render'][] = $callable;
-      }
+  /**
+   * Implements hook_toolbar_alter().
+   */
+  #[Hook('toolbar_alter')]
+  public function toolbarAlter(&$items) {
+    // As the "Announcements" link is shown already in the top toolbar bar, we
+    // don't need it again in the administration menu tray, so hide it.
+    if (!empty($items['administration']['tray'])) {
+      $callable = function (array $element) {
+        unset($element['administration_menu']['#items']['announcements_feed.announcement']);
+        return $element;
+      };
+      $items['administration']['tray']['toolbar_administration']['#pre_render'][] = $callable;
     }
+  }
 
-    /**
-     * Implements hook_theme().
-     */
-    #[Hook('theme')]
-    public function theme($existing, $type, $theme, $path) {
-      return ['announcements_feed' => ['variables' => ['featured' => NULL, 'standard' => NULL, 'count' => 0, 'feed_link' => '']], 'announcements_feed_admin' => ['variables' => ['featured' => NULL, 'standard' => NULL, 'count' => 0, 'feed_link' => '']]];
-    }
+  /**
+   * Implements hook_theme().
+   */
+  #[Hook('theme')]
+  public function theme($existing, $type, $theme, $path) {
+    return ['announcements_feed' => ['variables' => ['featured' => NULL, 'standard' => NULL, 'count' => 0, 'feed_link' => '']], 'announcements_feed_admin' => ['variables' => ['featured' => NULL, 'standard' => NULL, 'count' => 0, 'feed_link' => '']]];
+  }
 
-    /**
-     * Implements hook_cron().
-     */
-    #[Hook('cron')]
-    public function cron() {
-      $config = \Drupal::config('announcements_feed.settings');
-      $interval = $config->get('cron_interval');
-      $last_check = \Drupal::state()->get('announcements_feed.last_fetch', 0);
-      $time = \Drupal::time()->getRequestTime();
-      if ($time - $last_check > $interval) {
-        \Drupal::service('announcements_feed.fetcher')->fetch(TRUE);
-        \Drupal::state()->set('announcements_feed.last_fetch', $time);
-      }
+  /**
+   * Implements hook_cron().
+   */
+  #[Hook('cron')]
+  public function cron() {
+    $config = \Drupal::config('announcements_feed.settings');
+    $interval = $config->get('cron_interval');
+    $last_check = \Drupal::state()->get('announcements_feed.last_fetch', 0);
+    $time = \Drupal::time()->getRequestTime();
+    if ($time - $last_check > $interval) {
+      \Drupal::service('announcements_feed.fetcher')->fetch(TRUE);
+      \Drupal::state()->set('announcements_feed.last_fetch', $time);
     }
+  }
 
 }
