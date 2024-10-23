@@ -269,6 +269,8 @@ class TermIndexTest extends TaxonomyTestBase {
    */
   protected function checkNumberOfEntriesPerLanguage(int $nid, int $tid, array $expected_numbers): array {
     $connection = Database::getConnection();
+    $results = []; // Initialize an array to store the results.
+
     foreach ($expected_numbers as $langcode => $expected_number) {
       $index_count = $connection->query('SELECT COUNT(*) FROM {taxonomy_index} WHERE nid = :nid AND tid = :tid AND langcode = :langcode', [
         ':nid' => $nid,
@@ -276,7 +278,16 @@ class TermIndexTest extends TaxonomyTestBase {
         ':langcode' => $langcode,
       ])->fetchField();
       $this->assertEquals($expected_number, $index_count, 'The actual number of entry ' . $index_count . ' for langcode ' . $langcode . ' is matching the expected number of ' . $expected_number);
+
+      // Store the result in the array.
+      $results[$langcode] = [
+        'expected' => $expected_number,
+        'actual' => $index_count,
+      ];
     }
+
+    // Return the results array.
+    return $results;
   }
 
   /**
