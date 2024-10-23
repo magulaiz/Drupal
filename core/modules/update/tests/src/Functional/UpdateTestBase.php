@@ -110,8 +110,10 @@ abstract class UpdateTestBase extends BrowserTestBase {
    *   The type of update message expected.
    * @param string $update_element_css_locator
    *   The CSS locator for the page element that contains the security updates.
+   * @param string $recommended_security_release
+   *   The recommended security release.
    */
-  protected function assertSecurityUpdates($project_path_part, array $expected_security_releases, $expected_update_message_type, $update_element_css_locator) {
+  protected function assertSecurityUpdates($project_path_part, array $expected_security_releases, $expected_update_message_type, $update_element_css_locator, string $recommended_security_release) {
     $assert_session = $this->assertSession();
     $page = $this->getSession()->getPage();
     $this->standardTests();
@@ -119,6 +121,9 @@ abstract class UpdateTestBase extends BrowserTestBase {
     $all_security_release_urls = array_map(function ($link) {
       return $link->getAttribute('href');
     }, $page->findAll('css', "$update_element_css_locator .version-security a[href$='-release']"));
+    if ($recommended_security_release) {
+      $assert_session->elementTextContains('css', $update_element_css_locator, 'Recommended security update');
+    }
     if ($expected_security_releases) {
       $expected_release_urls = [];
       if ($expected_update_message_type === static::SECURITY_UPDATE_REQUIRED) {

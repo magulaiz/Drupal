@@ -172,7 +172,7 @@ function template_preprocess_update_project_status(&$variables) {
         && count($project['security updates']) == 1
         && $project['security updates'][0]['version'] === $project['recommended']
       ) {
-        $security_class[] = 'project-update__version--recommended';
+        $security_class[] = 'project-update__version--recommended-strong';
         $security_class[] = 'project-update__version---strong';
       }
       else {
@@ -190,24 +190,35 @@ function template_preprocess_update_project_status(&$variables) {
         ) {
           $version_class[] = 'project-update__version--recommended-strong';
         }
-        $versions_inner[] = [
-          '#theme' => 'update_version',
-          '#version' => $project['releases'][$project['recommended']],
-          '#title' => t('Recommended version:'),
-          '#attributes' => ['class' => $version_class],
-        ];
       }
+      // The recommended version may be a security version.
+      $class = $version_class;
+      $title = t('Recommended version:');
+      if (in_array('Security update', $project['releases'][$project['recommended']]['terms']['Release type'])) {
+        $title = t('Recommended security update:');
+        $class = array_merge($security_class, ['version-security']);
+      }
+      $versions_inner[] = [
+        '#theme' => 'update_version',
+        '#version' => $project['releases'][$project['recommended']],
+        '#title' => $title,
+        '#attributes' => ['class' => $class],
+      ];
 
       // Now, print any security updates.
       if (!empty($project['security updates'])) {
         $security_class[] = 'version-security';
+        // Display all security releases unless a security release is the
+        // recommended update version.
         foreach ($project['security updates'] as $security_update) {
-          $versions_inner[] = [
-            '#theme' => 'update_version',
-            '#version' => $security_update,
-            '#title' => t('Security update:'),
-            '#attributes' => ['class' => $security_class],
-          ];
+          if ($security_update['version'] !== $project['recommended']) {
+            $versions_inner[] = [
+              '#theme' => 'update_version',
+              '#version' => $security_update,
+              '#title' => t('Security update:'),
+              '#attributes' => ['class' => $security_class],
+            ];
+          }
         }
       }
     }

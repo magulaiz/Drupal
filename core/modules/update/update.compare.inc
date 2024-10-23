@@ -511,6 +511,12 @@ function update_calculate_project_update_status(&$project_data, $available) {
     }
   }
 
+  // If there is a later security release for this minor then use it as the
+  // recommended version.
+  if (isset($project_data['security updates'])) {
+    update_recommended($project_data);
+  }
+
   // If we were unable to find a recommended version, then make the latest
   // version the recommended version if possible.
   if (!isset($project_data['recommended']) && isset($project_data['latest_version']) && $release_is_supported) {
@@ -572,4 +578,51 @@ function update_calculate_project_update_status(&$project_data, $available) {
       $project_data['status'] = UpdateFetcherInterface::UNKNOWN;
       $project_data['reason'] = t('Invalid info');
   }
+}
+
+/**
+ * Updates recommended if there is a later security release in the same minor.
+ *
+ * @param $project_data
+ *   An array containing information about a specific project.
+ */
+function update_recommended(array &$project_data): void {
+  $installed_version = ExtensionVersion::createFromVersionString($project_data['existing_version']);
+  $installed_minor_version = $installed_version->getMinorVersion();
+  foreach ($project_data['security updates'] as $security_update) {
+    try {
+      $security_release = ProjectRelease::createFromArray($security_update);
+    }
+    catch (UnexpectedValueException $exception) {
+      // Ignore releases that are in an invalid format. Although this is highly
+      // unlikely we should still process releases in the correct format.
+      Error::logException(
+        \Drupal::logger('update'),
+        $exception,
+        'Invalid project format: @release',
+        ['@release' => print_r($security_update, TRUE)]
+      );
+      continue;
+    }
+    try {
+      $security_version = ExtensionVersion::createFromVersionString($security_release->getVersion());
+    }
+    catch (UnexpectedValueException $exception) {
+      // Ignore unexpected version information. Although this is highly
+      // unlikely we should still process releases in the correct format.
+      Error::logException(
+        \Drupal::logger('update'),
+        $exception,
+        'Invalid version format: ' . $security_release->getVersion()
+      );
+      continue;
+    }
+
+    if ($installed_minor_version === $security_version->getMinorVersion()) {
+      // Set the security release as the recommended version.
+      $project_data['recommended'] = $security_update['version'];
+      $project_data['releases'][$security_update['version']] = $security_update;
+    }
+  }
+
 }

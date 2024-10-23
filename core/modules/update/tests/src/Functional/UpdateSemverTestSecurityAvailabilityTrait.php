@@ -14,7 +14,7 @@ trait UpdateSemverTestSecurityAvailabilityTrait {
    */
   public function testSecurityUpdateAvailability(): void {
     foreach (static::securityUpdateAvailabilityProvider() as $case) {
-      $this->doTestSecurityUpdateAvailability($case['site_patch_version'], $case['expected_security_releases'], $case['expected_update_message_type'], $case['fixture']);
+      $this->doTestSecurityUpdateAvailability($case['site_patch_version'], $case['expected_security_releases'], $case['expected_update_message_type'], $case['fixture'], $case['recommended_security_release']);
     }
   }
 
@@ -29,11 +29,13 @@ trait UpdateSemverTestSecurityAvailabilityTrait {
    *   The type of update message expected.
    * @param string $fixture
    *   The test fixture that contains the test XML.
+   * @param string $recommended_security_release
+   *   The recommended security release.
    */
-  protected function doTestSecurityUpdateAvailability($site_patch_version, array $expected_security_releases, $expected_update_message_type, $fixture): void {
+  protected function doTestSecurityUpdateAvailability($site_patch_version, array $expected_security_releases, $expected_update_message_type, $fixture, $recommended_security_release): void {
     $this->setProjectInstalledVersion("8.$site_patch_version");
     $this->refreshUpdateStatus([$this->updateProject => $fixture]);
-    $this->assertSecurityUpdates("{$this->updateProject}-8", $expected_security_releases, $expected_update_message_type, $this->updateTableLocator);
+    $this->assertSecurityUpdates("{$this->updateProject}-8", $expected_security_releases, $expected_update_message_type, $this->updateTableLocator, $recommended_security_release);
   }
 
   /**
@@ -105,6 +107,7 @@ trait UpdateSemverTestSecurityAvailabilityTrait {
         'expected_security_releases' => ['0.2'],
         'expected_update_message_type' => static::SECURITY_UPDATE_REQUIRED,
         'fixture' => 'sec.8.0.2',
+        'recommended_security_release' => '0.2',
       ],
       // Site on latest security release available for site minor release 0.
       // Minor release 1 also has a security release, and the current release
@@ -114,6 +117,7 @@ trait UpdateSemverTestSecurityAvailabilityTrait {
         'expected_security_releases' => ['1.2', '2.0-rc2'],
         'expected_update_message_type' => static::UPDATE_AVAILABLE,
         'fixture' => 'sec.8.2.0-rc2',
+        'recommended_security_release' => '',
       ],
       // Two security releases available for site minor release 0.
       // 0.1 security release marked as insecure.
@@ -123,6 +127,7 @@ trait UpdateSemverTestSecurityAvailabilityTrait {
         'expected_security_releases' => ['0.2'],
         'expected_update_message_type' => static::SECURITY_UPDATE_REQUIRED,
         'fixture' => 'sec.8.0.1_8.0.2',
+        'recommended_security_release' => '0.2',
       ],
       // Security release available for site minor release 1.
       // No releases for next minor.
@@ -131,6 +136,7 @@ trait UpdateSemverTestSecurityAvailabilityTrait {
         'expected_security_releases' => ['1.2'],
         'expected_update_message_type' => static::SECURITY_UPDATE_REQUIRED,
         'fixture' => 'sec.8.1.2',
+        'recommended_security_release' => '1.2',
       ],
       // Security release available for site minor release 0.
       // Security release also available for next minor.
@@ -139,6 +145,7 @@ trait UpdateSemverTestSecurityAvailabilityTrait {
         'expected_security_releases' => ['0.2', '1.2', '2.0-rc2'],
         'expected_update_message_type' => static::SECURITY_UPDATE_REQUIRED,
         'fixture' => 'sec.8.2.0-rc2',
+        'recommended_security_release' => '0.2',
       ],
       // No newer security release for site minor 1.
       // Previous minor has security release.
@@ -147,6 +154,7 @@ trait UpdateSemverTestSecurityAvailabilityTrait {
         'expected_security_releases' => [],
         'expected_update_message_type' => static::UPDATE_NONE,
         'fixture' => 'sec.8.2.0-rc2',
+        'recommended_security_release' => '',
       ],
       // No security release available for site minor release 0.
       // Security release available for next minor.
@@ -155,6 +163,7 @@ trait UpdateSemverTestSecurityAvailabilityTrait {
         'expected_security_releases' => ['1.2'],
         'expected_update_message_type' => static::SECURITY_UPDATE_REQUIRED,
         'fixture' => 'sec.8.1.2_insecure',
+        'recommended_security_release' => '',
       ],
       // No security release available for site minor release 0.
       // Site minor is not a supported branch.
@@ -164,6 +173,7 @@ trait UpdateSemverTestSecurityAvailabilityTrait {
         'expected_security_releases' => ['1.2'],
         'expected_update_message_type' => static::SECURITY_UPDATE_REQUIRED,
         'fixture' => 'sec.8.1.2_insecure-unsupported',
+        'recommended_security_release' => '',
       ],
       // All releases for minor 0 are secure.
       // Security release available for next minor.
@@ -172,12 +182,14 @@ trait UpdateSemverTestSecurityAvailabilityTrait {
         'expected_security_releases' => ['1.2'],
         'expected_update_message_type' => static::UPDATE_AVAILABLE,
         'fixture' => 'sec.8.1.2',
+        'recommended_security_release' => '',
       ],
       '0.2, 1.2, secure' => [
         'site_patch_version' => '0.2',
         'expected_security_releases' => ['1.2'],
         'expected_update_message_type' => static::UPDATE_AVAILABLE,
         'fixture' => 'sec.8.1.2',
+        'recommended_security_release' => '',
       ],
       // Site on 2.0-rc2 which is a security release.
       '2.0-rc2, 0.2 1.2' => [
@@ -185,6 +197,7 @@ trait UpdateSemverTestSecurityAvailabilityTrait {
         'expected_security_releases' => [],
         'expected_update_message_type' => static::UPDATE_NONE,
         'fixture' => 'sec.8.2.0-rc2',
+        'recommended_security_release' => '',
       ],
       // Ensure that 8.0.2 security release is not shown because it is earlier
       // version than 1.0.
@@ -193,6 +206,7 @@ trait UpdateSemverTestSecurityAvailabilityTrait {
         'expected_security_releases' => ['1.2', '2.0-rc2'],
         'expected_update_message_type' => static::SECURITY_UPDATE_REQUIRED,
         'fixture' => 'sec.8.2.0-rc2',
+        'recommended_security_release' => '1.2',
       ],
     ];
     $pre_releases = [
@@ -213,6 +227,7 @@ trait UpdateSemverTestSecurityAvailabilityTrait {
         'expected_security_releases' => [],
         'expected_update_message_type' => $pre_release === '2.0-rc2' ? static::UPDATE_NONE : static::UPDATE_AVAILABLE,
         'fixture' => 'sec.8.2.0-rc2-b',
+        'recommended_security_release' => '',
       ];
       // If the site is on an alpha/beta/RC of an upcoming minor and there is
       // an RC version with a security update, it should be recommended.
@@ -221,8 +236,12 @@ trait UpdateSemverTestSecurityAvailabilityTrait {
         'expected_security_releases' => $pre_release === '2.0-rc2' ? [] : ['2.0-rc2'],
         'expected_update_message_type' => $pre_release === '2.0-rc2' ? static::UPDATE_NONE : static::SECURITY_UPDATE_REQUIRED,
         'fixture' => 'sec.8.2.0-rc2',
+        'recommended_security_release' => '2.0-rc2',
       ];
     }
+    // In fixture 'sec.8.2.0-rc2' the security version is 2.0-rc2. When that is
+    // the same as the installed version it will not be recommended.
+    $test_cases["Pre-release:2.0-rc2, security update"]['recommended_security_release'] = '';
     return $test_cases;
   }
 
