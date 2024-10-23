@@ -153,8 +153,10 @@ final class NavigationContentLinks implements ContainerInjectionInterface {
     // Sort all types within an entity type alphabetically.
     $definition = $this->entityTypeManager->getDefinition($entity_type);
     $types = $this->entityTypeManager->getStorage($entity_type)->loadMultiple();
-    if (method_exists($definition->getClass(), 'sort')) {
-      uasort($types, [$definition->getClass(), 'sort']);
+    if (method_exists($definition->getClass(), 'sortEntities')) {
+      // Sort the entities using the entity class's sortEntities() method.
+      $collator = \Collator::create((!extension_loaded('intl')) ? ('en') : (\Drupal::service('language_manager')->getCurrentLanguage()->getId()));
+      $definition->getClass()::sortEntities($types, $collator);
     }
 
     $add_content_links = [];

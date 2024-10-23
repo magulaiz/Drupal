@@ -79,7 +79,9 @@ class NodeController extends ControllerBase implements ContainerInjectionInterfa
     $content = [];
 
     $types = $this->entityTypeManager()->getStorage('node_type')->loadMultiple();
-    uasort($types, [$definition->getClass(), 'sort']);
+    // Sort the entities using the entity class's sortEntities() method.
+    $collator = \Collator::create((!extension_loaded('intl')) ? ('en') : (\Drupal::service('language_manager')->getCurrentLanguage()->getId()));
+    $definition->getClass()::sortEntities($types, $collator);
     // Only use node types the user has access to.
     foreach ($types as $type) {
       $access = $this->entityTypeManager()->getAccessControlHandler('node')->createAccess($type->id(), NULL, [], TRUE);

@@ -85,9 +85,9 @@ class LanguageListBuilder extends DraggableListBuilder {
   public function load() {
     $entities = $this->storage->loadByProperties(['locked' => FALSE]);
 
-    // Sort the entities using the entity class's sort() method.
-    // See \Drupal\Core\Config\Entity\ConfigEntityBase::sort().
-    uasort($entities, [$this->entityType->getClass(), 'sort']);
+    // Sort the entities using the entity class's sortEntities() method.
+    $collator = \Collator::create((!extension_loaded('intl')) ? ('en') : (\Drupal::service('language_manager')->getCurrentLanguage()->getId()));
+    $this->entityType->getClass()::sortEntities($entities, $collator);
     return $entities;
   }
 

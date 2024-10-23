@@ -4,6 +4,7 @@ namespace Drupal\shortcut\Entity;
 
 use Drupal\Core\Config\Entity\ConfigEntityBundleBase;
 use Drupal\Core\Entity\EntityStorageInterface;
+use Drupal\shortcut\Entity\Shortcut;
 use Drupal\shortcut\ShortcutSetInterface;
 
 /**
@@ -125,7 +126,9 @@ class ShortcutSet extends ConfigEntityBundleBase implements ShortcutSetInterface
    */
   public function getShortcuts() {
     $shortcuts = \Drupal::entityTypeManager()->getStorage('shortcut')->loadByProperties(['shortcut_set' => $this->id()]);
-    uasort($shortcuts, ['\Drupal\shortcut\Entity\Shortcut', 'sort']);
+    // Sort the entities using the entity class's sortEntities() method.
+    $collator = \Collator::create((!extension_loaded('intl')) ? ('en') : (\Drupal::service('language_manager')->getCurrentLanguage()->getId()));
+    Shortcut::sortEntities($shortcuts, $collator);
     return $shortcuts;
   }
 
