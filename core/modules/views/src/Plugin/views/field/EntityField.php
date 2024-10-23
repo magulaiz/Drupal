@@ -1114,7 +1114,7 @@ class EntityField extends FieldPluginBase implements CacheableDependencyInterfac
     // Fetch the field items for the current entity's row.
     $field_item_list = $translated_entity->{$this->definition['field_name']} ?? NULL;
 
-    if (!isset($field_item_list)) {
+    if ($field_item_list === NULL) {
       // There isn't anything we can do without a valid field.
       return NULL;
     }
