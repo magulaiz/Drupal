@@ -573,11 +573,11 @@ function drupal_get_destination() {
  * @ingroup php_wrappers
  */
 function drupal_parse_url($url) {
-  $options = [
+  $options = array(
     'path' => NULL,
-    'query' => [],
+    'query' => array(),
     'fragment' => '',
-  ];
+  );
   // External URLs: not using parse_url() here, so we do not have to rebuild
   // the scheme, host, and path without having any use for it.
   // The URL is considered external if it contains the '://' delimiter. Since
@@ -588,18 +588,18 @@ function drupal_parse_url($url) {
   if ($scheme_delimiter_position !== FALSE && ($query_delimiter_position === FALSE || $scheme_delimiter_position < $query_delimiter_position)) {
     // Split off the fragment, if any.
     if (str_contains($url, '#')) {
-      [
+      list(
         $url,
         $options['fragment'],
-      ] = explode('#', $url, 2);
+      ) = explode('#', $url, 2);
     }
     // Split off everything before the query string into 'path'.
     $parts = explode('?', $url, 2);
     // Don't support URLs without a path, like 'http://'.
-    [
+    list(
       ,
       $path,
-    ] = explode('://', $parts[0], 2);
+    ) = explode('://', $parts[0], 2);
     if ($path != '') {
       $options['path'] = $parts[0];
     }

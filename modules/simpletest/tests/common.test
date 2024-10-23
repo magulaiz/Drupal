@@ -250,7 +250,7 @@ class CommonURLUnitTest extends DrupalWebTestCase {
     $url = 'http://drupal.org/path#foo=bar?baz=qux';
     $result = array(
       'path' => 'http://drupal.org/path',
-      'query' => null,
+      'query' => NULL,
       'fragment' => 'foo=bar?baz=qux',
     );
     $this->assertEqual(drupal_parse_url($url), $result, 'URL with question mark in fragment parsed correctly.');
@@ -259,7 +259,7 @@ class CommonURLUnitTest extends DrupalWebTestCase {
     $url = 'http://drupal.org/path#foo';
     $result = array(
       'path' => 'http://drupal.org/path',
-      'query' => null,
+      'query' => NULL,
       'fragment' => 'foo',
     );
     $this->assertEqual(drupal_parse_url($url), $result, 'URL with a fragment value "foo" but no query string parsed correctly.');
