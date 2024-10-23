@@ -127,7 +127,7 @@ class ShortcutSet extends ConfigEntityBundleBase implements ShortcutSetInterface
     $shortcuts = \Drupal::entityTypeManager()->getStorage('shortcut')->loadByProperties(['shortcut_set' => $this->id()]);
     // Sort the entities using the entity class's sortEntities() method.
     $collator = \Collator::create((!extension_loaded('intl')) ? ('en') : (\Drupal::service('language_manager')->getCurrentLanguage()->getId()));
-    \Drupal\shortcut\Entity\Shortcut::sortEntities($shortcuts, $collator);
+    Shortcut::sortEntities($shortcuts, $collator);
     return $shortcuts;
   }
 
