@@ -8,7 +8,7 @@ use Drupal\Core\Link;
 use Drupal\Core\Routing\RouteMatchInterface;
 
 /**
- * Announcment Feed Implementations.
+ * Announcements Feed Implementations.
  */
 class AnnouncementsFeedHooks {
 
