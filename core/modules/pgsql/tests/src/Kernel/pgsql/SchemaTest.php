@@ -468,16 +468,16 @@ class SchemaTest extends DriverSpecificSchemaTestBase {
       ],
       'primary key' => ['id'],
     ];
-     $table_name = 'index_with_object';
-     $this->schema->createTable($table_name, $specification);
-     $this->assertIndexOnColumns($table_name, ['json']);
-     $introspect_index_schema = new \ReflectionMethod(get_class($this->schema), 'introspectIndexSchema');
-     $index_schema = $introspect_index_schema->invoke($this->schema, 'index_with_object');
-     $this->assertCount(1, $index_schema['index_definitions']);
-     $this->assertStringContainsString('USING gin', current($index_schema['index_definitions']));
-     $this->schema->dropIndex('index_with_object', 'json_column_index');
-     $index_schema = $introspect_index_schema->invoke($this->schema, 'index_with_object');
-     $this->assertEmpty($index_schema['indexes']);
+    $table_name = 'index_with_object';
+    $this->schema->createTable($table_name, $specification);
+    $this->assertIndexOnColumns($table_name, ['json']);
+    $introspect_index_schema = new \ReflectionMethod(get_class($this->schema), 'introspectIndexSchema');
+    $index_schema = $introspect_index_schema->invoke($this->schema, 'index_with_object');
+    $this->assertCount(1, $index_schema['index_definitions']);
+    $this->assertStringContainsString('USING gin', current($index_schema['index_definitions']));
+    $this->schema->dropIndex('index_with_object', 'json_column_index');
+    $index_schema = $introspect_index_schema->invoke($this->schema, 'index_with_object');
+    $this->assertEmpty($index_schema['indexes']);
   }
 
   /**
