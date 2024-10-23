@@ -211,7 +211,7 @@ class Condition extends ConditionBase implements JsonConditionInterface {
    * @return $this
    *   The called object.
    */
-  public function jsonCondition(string $field, string $jsonpath, string|int|float|array|bool|null $value = NULL, string $operator = '=', ?string $langcode = NULL) {
+  public function jsonCondition(string $field, string $jsonpath, string|int|float|array|bool|null $value = NULL, string $operator = '=', ?string $langcode = NULL): self {
     $this->conditions[] = [
       'field' => $field,
       'jsonpath' => $jsonpath,

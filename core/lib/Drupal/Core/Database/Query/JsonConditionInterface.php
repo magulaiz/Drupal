@@ -30,6 +30,6 @@ interface JsonConditionInterface extends StrictSqlParamsConditionInterface {
    * @throws \Drupal\Core\Database\InvalidQueryException
    *   If passed invalid arguments, such as an empty array as $value.
    */
-  public function jsonCondition(string $field, string $jsonpath, string|int|float|array|bool|null $value = NULL, string $operator = '=');
+  public function jsonCondition(string $field, string $jsonpath, string|int|float|array|bool|null $value = NULL, string $operator = '='): self;
 
 }

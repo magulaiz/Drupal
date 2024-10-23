@@ -1154,7 +1154,7 @@ EOD;
    * @return string
    *   Database statement.
    */
-  protected function _createIndexSql(string $table, string $name, iterable $fields): string {
+  protected function _createIndexSql(string $table, string $name, iterable $fields) {
     $query = 'CREATE INDEX ' . $this->ensureIdentifiersLength($table, $name, 'idx') . ' ON {' . $table . '} ';
     $operator = '';
     if ($fields instanceof Index && ($config = $fields->getDriverConfig('pgsql')) && !empty($config['type']) && $config['type'] instanceof IndexType) {

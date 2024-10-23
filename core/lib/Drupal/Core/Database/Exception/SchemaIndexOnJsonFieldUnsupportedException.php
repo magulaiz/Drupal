@@ -22,7 +22,7 @@ final class SchemaIndexOnJsonFieldUnsupportedException extends SchemaException i
    * @param string $column
    *   Column name.
    */
-  public static function forColumn(string $table, string $index, string $column) {
+  public static function forColumn(string $table, string $index, string $column): self {
     return new self(sprintf(
       'Database does not support creating indexes directly on JSON data column: Index %s for table %s, JSON data column %s. Specify "json_hotpaths" in the schema, instead.',
       $index,

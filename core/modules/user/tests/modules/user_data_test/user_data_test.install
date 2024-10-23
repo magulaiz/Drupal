@@ -12,7 +12,7 @@ declare(strict_types=1);
 /**
  * Implements hook_schema().
  */
-function user_data_test_schema() {
+function user_data_test_schema(): array {
   $schema['users_data_json'] = [
     'description' => 'Stores module data as key/value pairs per user.',
     'fields' => [

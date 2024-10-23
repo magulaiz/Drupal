@@ -79,7 +79,7 @@ class JsonBackedUserData implements UserDataInterface {
   /**
    * {@inheritdoc}
    */
-  public function set($module, $uid, $name, $value) {
+  public function set($module, $uid, $name, $value): void {
     $record = $this->getAllForUser($uid);
     $record[$module][$name] = $value;
     $this->setRecordForUser($uid, $record);
@@ -99,7 +99,7 @@ class JsonBackedUserData implements UserDataInterface {
   /**
    * {@inheritdoc}
    */
-  public function delete($module = NULL, $uid = NULL, $name = NULL) {
+  public function delete($module = NULL, $uid = NULL, $name = NULL): void {
     // In theory we could get even more polymorphic than the legacy
     // service, but let's not get too crazy quite yet.
     // Note, this does not implement multiple module deletion and other

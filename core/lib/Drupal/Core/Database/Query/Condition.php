@@ -142,7 +142,7 @@ class Condition implements ConditionInterface, JsonConditionInterface, \Countabl
   /**
    * {@inheritdoc}
    */
-  public function jsonCondition(string $field, string $jsonpath, string|int|float|array|bool|null $value = NULL, string $operator = '=') {
+  public function jsonCondition(string $field, string $jsonpath, string|int|float|array|bool|null $value = NULL, string $operator = '='): self {
     $array_operators = ['@>'];
     $scalar_operators = ['=', '<>', '!=', '<', '<=', '>', '>='];
     if (!in_array($operator, [...$scalar_operators, ...$array_operators], TRUE)) {

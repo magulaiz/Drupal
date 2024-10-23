@@ -360,7 +360,7 @@ class Query extends QueryBase implements QueryInterface, JsonConditionInterface 
   /**
    * {@inheritdoc}
    */
-  public function jsonCondition(string $field, string $jsonpath, string|int|float|array|bool|null $value = NULL, string $operator = '=') {
+  public function jsonCondition(string $field, string $jsonpath, string|int|float|array|bool|null $value = NULL, string $operator = '='): self {
     assert($this->condition instanceof JsonConditionInterface);
     $this->condition->jsonCondition($field, $jsonpath, $value, $operator);
     return $this;
