@@ -340,7 +340,7 @@ class TermIndexTest extends TaxonomyTestBase {
     $node->save();
 
     // Check taxonomy index entries after translation creation.
-    $this->checkNumberOfEntriesPerLanguage($nid, $term_1->id(), [
+    $this->checkNumberOfEntriesPerLanguage((int) $nid, (int) $term_1->id(), [
       'en' => 1,
       'ur' => 1,
       'fr' => 0,
@@ -353,7 +353,7 @@ class TermIndexTest extends TaxonomyTestBase {
       $term_1->id(),
     ]);
     $translation->save();
-    $this->checkNumberOfEntriesPerLanguage($nid, $term_1->id(), [
+    $this->checkNumberOfEntriesPerLanguage((int) $nid, (int) $term_1->id(), [
       'en' => 1,
       'ur' => 1,
       'fr' => 1,
@@ -363,7 +363,7 @@ class TermIndexTest extends TaxonomyTestBase {
     $node = $node_storage->load($nid);
     $node->removeTranslation('ur');
     $node->save();
-    $this->checkNumberOfEntriesPerLanguage($nid, $term_1->id(), [
+    $this->checkNumberOfEntriesPerLanguage((int) $nid, (int) $term_1->id(), [
       'en' => 1,
       'ur' => 0,
       'fr' => 1,
@@ -372,7 +372,7 @@ class TermIndexTest extends TaxonomyTestBase {
     // Delete the whole node.
     $node = $node_storage->load($nid);
     $node->delete();
-    $this->checkNumberOfEntriesPerLanguage($nid, $term_1->id(), [
+    $this->checkNumberOfEntriesPerLanguage((int) $nid, (int) $term_1->id(), [
       'en' => 0,
       'ur' => 0,
       'fr' => 0,
