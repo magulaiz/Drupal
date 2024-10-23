@@ -50,13 +50,13 @@ class ContentModerationSyncingTest extends KernelTestBase {
       'name' => 'foo',
     ]);
     $entity->save();
-    $initial_revision_id = $entity->getRevisionId();
+    $initial_revision_id = $entity->getRevisionId(TRUE);
 
     $entity->setSyncing(TRUE);
     $entity->name = 'bar';
     $entity->save();
 
-    $this->assertEquals($entity->getRevisionId(), $initial_revision_id);
+    $this->assertEquals($entity->getRevisionId(TRUE), $initial_revision_id);
   }
 
   /**
@@ -68,7 +68,7 @@ class ContentModerationSyncingTest extends KernelTestBase {
       'name' => 'foo',
     ]);
     $entity->save();
-    $initial_revision_id = $entity->getRevisionId();
+    $initial_revision_id = $entity->getRevisionId(TRUE);
     $this->assertTrue($entity->isDefaultRevision());
     $this->assertTrue($entity->isPublished());
 
@@ -79,7 +79,7 @@ class ContentModerationSyncingTest extends KernelTestBase {
     // If a moderation state is changed to a draft while syncing, it will revert
     // to the same properties of an item of content that was initially created
     // as a draft.
-    $this->assertEquals($initial_revision_id, $entity->getRevisionId());
+    $this->assertEquals($initial_revision_id, $entity->getRevisionId(TRUE));
     $this->assertFalse($entity->isPublished());
     $this->assertTrue($entity->isDefaultRevision());
     $this->assertEquals('draft', $entity->moderation_state->value);
@@ -97,13 +97,13 @@ class ContentModerationSyncingTest extends KernelTestBase {
 
     $entity->name = 'bar';
     $entity->save();
-    $latest_revision_id = $entity->getRevisionId();
+    $latest_revision_id = $entity->getRevisionId(TRUE);
 
     $entity->setSyncing(TRUE);
     $entity->moderation_state = 'draft';
     $entity->save();
 
-    $this->assertEquals($latest_revision_id, $entity->getRevisionId());
+    $this->assertEquals($latest_revision_id, $entity->getRevisionId(TRUE));
     $this->assertEquals('draft', $entity->moderation_state->value);
     $this->assertEquals('bar', $entity->name->value);
     // The default revision will not automatically be assigned to another
@@ -125,7 +125,7 @@ class ContentModerationSyncingTest extends KernelTestBase {
       'name' => 'foo',
     ]);
     $entity->save();
-    $original_revision_id = $entity->getRevisionId();
+    $original_revision_id = $entity->getRevisionId(TRUE);
 
     $entity->name = 'bar';
     $entity->save();
@@ -157,12 +157,12 @@ class ContentModerationSyncingTest extends KernelTestBase {
     $entity->moderation_state = 'draft';
     $entity->name = 'bar';
     $entity->save();
-    $draft_revision_id = $entity->getRevisionId();
+    $draft_revision_id = $entity->getRevisionId(TRUE);
 
     $entity->name = 'baz';
     $entity->moderation_state = 'published';
     $entity->save();
-    $default_revision_id = $entity->getRevisionId();
+    $default_revision_id = $entity->getRevisionId(TRUE);
 
     // Update the draft revision moderation state to published, which would
     // typically change the default status of a revision during moderation.
@@ -174,7 +174,7 @@ class ContentModerationSyncingTest extends KernelTestBase {
 
     // Ensure the default revision is not changed during the sync.
     $reloaded_default_revision = $storage->load($entity->id());
-    $this->assertEquals($default_revision_id, $reloaded_default_revision->getRevisionId());
+    $this->assertEquals($default_revision_id, $reloaded_default_revision->getRevisionId(TRUE));
     $this->assertEquals([
       'foo',
       'qux',

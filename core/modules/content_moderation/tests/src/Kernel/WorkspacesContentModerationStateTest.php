@@ -226,14 +226,14 @@ class WorkspacesContentModerationStateTest extends ContentModerationStateTest {
     $entity_with_revision = $this->reloadEntity($entity_with_revision);
     // Confirm unpublished earlier revision.
     $this->assertEquals('draft', $entity_with_revision->moderation_state->value);
-    $earlier_revision_id = $entity_with_revision->getRevisionId();
+    $earlier_revision_id = $entity_with_revision->getRevisionId(TRUE);
     // Publish.
     $entity_with_revision->moderation_state->value = 'published';
     $entity_with_revision->save();
     $entity_with_revision = $this->reloadEntity($entity_with_revision);
     // Confirm publish revision.
     $this->assertEquals('published', $entity_with_revision->moderation_state->value);
-    $published_revision_id = $entity_with_revision->getRevisionId();
+    $published_revision_id = $entity_with_revision->getRevisionId(TRUE);
     $this->assertNotEquals($earlier_revision_id, $published_revision_id);
 
     // Create an entity that has a default revision id the same as the previous
@@ -249,7 +249,7 @@ class WorkspacesContentModerationStateTest extends ContentModerationStateTest {
 
     // Current published revisions of second entity has the same revision as
     // earlier unpublished revision of first entity.
-    $this->assertEquals($entity_without_revision->getRevisionId(), $earlier_revision_id);
+    $this->assertEquals($entity_without_revision->getRevisionId(TRUE), $earlier_revision_id);
     $this->workspaces['stage']->publish();
   }
 
@@ -325,7 +325,7 @@ class WorkspacesContentModerationStateTest extends ContentModerationStateTest {
     // In the context of a workspace, the default revision ID is always the
     // latest workspace-specific revision, so we need to adjust the expectation
     // of the parent assertion.
-    $revision_id = (int) $this->entityTypeManager->getStorage($entity->getEntityTypeId())->load($entity->id())->getRevisionId();
+    $revision_id = (int) $this->entityTypeManager->getStorage($entity->getEntityTypeId())->load($entity->id())->getRevisionId(TRUE);
 
     // Additionally, the publishing status of the default revision is not
     // relevant in a workspace, because getting an entity to a "published"

@@ -330,7 +330,7 @@ abstract class ContentEntityBase extends EntityBase implements \IteratorAggregat
    * {@inheritdoc}
    */
   public function updateLoadedRevisionId() {
-    $this->loadedRevisionId = $this->getRevisionId() ?: $this->loadedRevisionId;
+    $this->loadedRevisionId = $this->getRevisionId(TRUE) ?: $this->loadedRevisionId;
     return $this;
   }
 
@@ -338,7 +338,7 @@ abstract class ContentEntityBase extends EntityBase implements \IteratorAggregat
    * {@inheritdoc}
    */
   public function isNewRevision() {
-    return $this->newRevision || ($this->getEntityType()->hasKey('revision') && !$this->getRevisionId());
+    return $this->newRevision || ($this->getEntityType()->hasKey('revision') && !$this->getRevisionId(TRUE));
   }
 
   /**
@@ -447,10 +447,24 @@ abstract class ContentEntityBase extends EntityBase implements \IteratorAggregat
   }
 
   /**
-   * {@inheritdoc}
+   * Gets the revision identifier of the entity.
+   *
+   * @param bool $cast_to_int
+   *   (optional) Indicator for how the revision identifier is returned. When
+   *   set to TRUE it will return the revision identifier as an integer value.
+   *   When the indicator is not set or set to FALSE the revision identifier
+   *   will return a string value.
+   *
+   * @return int|null
+   *   The revision identifier of the entity, or NULL if the entity does not
+   *   have a revision identifier.
    */
-  public function getRevisionId() {
-    return $this->getEntityKey('revision');
+  public function getRevisionId(bool $cast_to_int = FALSE) {
+    if (!$cast_to_int) {
+      @trigger_error('Returning the revision identifier as a string value is deprecated in drupal:11.1.0 and will be removed in drupal:12.0.0. See https://www.drupal.org/node/3476916', E_USER_DEPRECATED);
+      return $this->getEntityKey('revision');
+    }
+    return !is_null($this->getEntityKey('revision')) ? (int) $this->getEntityKey('revision') : NULL;
   }
 
   /**
@@ -823,7 +837,7 @@ abstract class ContentEntityBase extends EntityBase implements \IteratorAggregat
         // If the revision identifier field is being populated with the original
         // value, we need to make sure the "new revision" flag is reset
         // accordingly.
-        if ($key === 'revision' && $this->getRevisionId() == $this->getLoadedRevisionId() && !$this->isNew()) {
+        if ($key === 'revision' && $this->getRevisionId(TRUE) == $this->getLoadedRevisionId() && !$this->isNew()) {
           $this->newRevision = FALSE;
         }
       }

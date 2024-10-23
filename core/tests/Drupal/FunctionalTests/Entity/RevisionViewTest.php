@@ -86,7 +86,7 @@ class RevisionViewTest extends BrowserTestBase {
       $entity->setRevisionCreationTime($date->getTimestamp());
     }
     $entity->save();
-    $revisionId = $entity->getRevisionId();
+    $revisionId = $entity->getRevisionId(TRUE);
 
     $entity->setName('revision 2, view revision');
     $revision2Body = $this->randomMachineName();

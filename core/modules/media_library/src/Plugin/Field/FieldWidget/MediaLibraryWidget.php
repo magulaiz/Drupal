@@ -503,7 +503,7 @@ class MediaLibraryWidget extends WidgetBase implements TrustedCallbackInterface 
       $opener_parameters['entity_id'] = (string) $entity->id();
 
       if ($entity->getEntityType()->isRevisionable()) {
-        $opener_parameters['revision_id'] = (string) $entity->getRevisionId();
+        $opener_parameters['revision_id'] = (string) $entity->getRevisionId(TRUE);
       }
     }
     $state = MediaLibraryState::create('media_library.opener.field_widget', $allowed_media_type_ids, $selected_type_id, $remaining, $opener_parameters);

@@ -121,7 +121,7 @@ function node_tokens($type, $tokens, array $data, array $options, BubbleableMeta
           break;
 
         case 'vid':
-          $replacements[$original] = $node->getRevisionId();
+          $replacements[$original] = $node->getRevisionId(TRUE);
           break;
 
         case 'type':

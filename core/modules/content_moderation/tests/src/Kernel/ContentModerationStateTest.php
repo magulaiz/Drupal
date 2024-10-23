@@ -264,7 +264,7 @@ class ContentModerationStateTest extends KernelTestBase {
     // 3 are kept in place.
     /** @var \Drupal\Core\Entity\RevisionableStorageInterface $entity_storage */
     $entity_storage = $this->entityTypeManager->getStorage($entity_type_id);
-    $entity_storage->deleteRevision($revision_2->getRevisionId());
+    $entity_storage->deleteRevision($revision_2->getRevisionId(TRUE));
 
     $this->assertNotNull(ContentModerationState::loadFromModeratedEntity($revision_1));
     $this->assertNull(ContentModerationState::loadFromModeratedEntity($revision_2));
@@ -295,7 +295,7 @@ class ContentModerationStateTest extends KernelTestBase {
 
     /** @var \Drupal\Core\Entity\RevisionableStorageInterface $entity_storage */
     $entity_storage = $this->entityTypeManager->getStorage($entity_type_id);
-    $entity_storage->deleteRevision($entity->getRevisionId());
+    $entity_storage->deleteRevision($entity->getRevisionId(TRUE));
 
     $content_moderation_state = ContentModerationState::loadFromModeratedEntity($entity);
     $this->assertNull($content_moderation_state);
@@ -309,7 +309,7 @@ class ContentModerationStateTest extends KernelTestBase {
     $storage = $this->entityTypeManager->getStorage('entity_test_mulrevpub');
 
     $entity = $this->createEntity('entity_test_mulrevpub', 'published', FALSE);
-    $original_revision_id = $entity->getRevisionId();
+    $original_revision_id = $entity->getRevisionId(TRUE);
 
     $workflow = $this->createEditorialWorkflow();
     $this->addEntityTypeAndBundleToWorkflow($workflow, $entity->getEntityTypeId(), $entity->bundle());
@@ -318,7 +318,7 @@ class ContentModerationStateTest extends KernelTestBase {
     $entity->moderation_state = 'draft';
     $entity->save();
 
-    $storage->deleteRevision($entity->getRevisionId());
+    $storage->deleteRevision($entity->getRevisionId(TRUE));
 
     $entity = $this->reloadEntity($entity);
     $this->assertEquals('published', $entity->moderation_state->value);
@@ -443,7 +443,7 @@ class ContentModerationStateTest extends KernelTestBase {
     $content_moderation_state->setNewRevision(TRUE);
     // Revision 8 (en, fr).
     $content_moderation_state->save();
-    $english_node = $this->reloadEntity($french_node, $french_node->getRevisionId() + 1);
+    $english_node = $this->reloadEntity($french_node, $french_node->getRevisionId(TRUE) + 1);
 
     $this->assertEquals('draft', $english_node->moderation_state->value);
     $french_node = $this->reloadEntity($english_node)->getTranslation('fr');
@@ -457,7 +457,7 @@ class ContentModerationStateTest extends KernelTestBase {
     // Revision 9 (en, fr).
     $content_moderation_state->save();
 
-    $english_node = $this->reloadEntity($english_node, $english_node->getRevisionId());
+    $english_node = $this->reloadEntity($english_node, $english_node->getRevisionId(TRUE));
     $this->assertEquals('draft', $english_node->moderation_state->value);
     $french_node = $this->reloadEntity($english_node, '9')->getTranslation('fr');
     $this->assertEquals('draft', $french_node->moderation_state->value);
@@ -860,7 +860,7 @@ class ContentModerationStateTest extends KernelTestBase {
   protected function assertDefaultRevision(EntityInterface $entity, int $revision_id, $published = TRUE): void {
     // Get the default revision.
     $entity = $this->reloadEntity($entity);
-    $this->assertEquals($revision_id, $entity->getRevisionId());
+    $this->assertEquals($revision_id, $entity->getRevisionId(TRUE));
 
     if ($published !== NULL && $entity instanceof EntityPublishedInterface) {
       $this->assertSame($published, $entity->isPublished());

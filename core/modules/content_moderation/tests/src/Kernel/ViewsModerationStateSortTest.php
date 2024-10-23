@@ -116,21 +116,21 @@ class ViewsModerationStateSortTest extends ViewsKernelTestBase {
       'moderation_state' => 'published',
     ]);
     $node->save();
-    $published_revision_id = $node->getRevisionId();
+    $published_revision_id = $node->getRevisionId(TRUE);
 
     $node->moderation_state = 'draft';
     $node->save();
-    $draft_revision_id = $node->getRevisionId();
+    $draft_revision_id = $node->getRevisionId(TRUE);
 
     $node->moderation_state = 'aa_draft';
     $node->save();
-    $aa_draft_revision_id = $node->getRevisionId();
+    $aa_draft_revision_id = $node->getRevisionId(TRUE);
 
     $translated = $node->addTranslation('fr');
     $translated->moderation_state = 'zz_draft';
     $translated->title = 'Translated';
     $translated->save();
-    $zz_draft_revision_id = $translated->getRevisionId();
+    $zz_draft_revision_id = $translated->getRevisionId(TRUE);
 
     // A second aa_draft revision will be created for the non-translated
     // revision. Since in this case there will be two revisions with "aa_draft"
@@ -138,7 +138,7 @@ class ViewsModerationStateSortTest extends ViewsKernelTestBase {
     // Secondary sorting is not an option in views when using exposed sorting
     // and table click sorting, so in order to maintain the same level of
     // coverage this is required.
-    $second_aa_draft_revision_id = $translated->getRevisionId();
+    $second_aa_draft_revision_id = $translated->getRevisionId(TRUE);
 
     $this->assertSortResults('test_content_moderation_state_sort_revision_table', 'vid', 'ASC', [
       ['vid' => $aa_draft_revision_id],

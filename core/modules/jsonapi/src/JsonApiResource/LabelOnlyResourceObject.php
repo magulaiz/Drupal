@@ -32,7 +32,7 @@ final class LabelOnlyResourceObject extends ResourceObject {
       $entity,
       $resource_type,
       $entity->uuid(),
-      $resource_type->isVersionable() && $entity instanceof RevisionableInterface ? $entity->getRevisionId() : NULL,
+      $resource_type->isVersionable() && $entity instanceof RevisionableInterface ? $entity->getRevisionId(TRUE) : NULL,
       static::extractFieldsFromEntity($resource_type, $entity),
       static::buildLinksFromEntity($resource_type, $entity, $links ?: new LinkCollection([]))
     );

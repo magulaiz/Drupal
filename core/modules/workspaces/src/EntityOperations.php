@@ -221,7 +221,7 @@ class EntityOperations implements ContainerInjectionInterface {
 
     // Only track new revisions.
     /** @var \Drupal\Core\Entity\RevisionableInterface $entity */
-    if ($entity->getLoadedRevisionId() != $entity->getRevisionId()) {
+    if ($entity->getLoadedRevisionId() != $entity->getRevisionId(TRUE)) {
       $this->workspaceAssociation->trackEntity($entity, $this->workspaceManager->getActiveWorkspace());
     }
   }

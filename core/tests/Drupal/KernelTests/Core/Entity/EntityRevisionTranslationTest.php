@@ -47,7 +47,7 @@ class EntityRevisionTranslationTest extends EntityKernelTestBase {
       'language' => 'en',
     ]);
     $entity->save();
-    $old_rev_id = $entity->getRevisionId();
+    $old_rev_id = $entity->getRevisionId(TRUE);
 
     $translation = $entity->addTranslation('de');
     $translation->setNewRevision();
@@ -55,9 +55,9 @@ class EntityRevisionTranslationTest extends EntityKernelTestBase {
 
     // Verify that the saved translation for the new translation has a newer
     // revision ID.
-    $this->assertGreaterThan($old_rev_id, $translation->getRevisionId());
+    $this->assertGreaterThan($old_rev_id, $translation->getRevisionId(TRUE));
     // Verify that the entity from the storage has a newer revision ID.
-    $this->assertGreaterThan($old_rev_id, $this->reloadEntity($entity)->getRevisionId());
+    $this->assertGreaterThan($old_rev_id, $this->reloadEntity($entity)->getRevisionId(TRUE));
   }
 
   /**
@@ -75,7 +75,7 @@ class EntityRevisionTranslationTest extends EntityKernelTestBase {
       'language' => 'en',
     ]);
     $entity->save();
-    $old_rev_id = $entity->getRevisionId();
+    $old_rev_id = $entity->getRevisionId(TRUE);
 
     $translation = $entity->addTranslation('de');
     $translation->setNewRevision();
@@ -127,7 +127,7 @@ class EntityRevisionTranslationTest extends EntityKernelTestBase {
     $pending_revision_translation->name = 'pending revision - de';
     $pending_revision_translation->save();
 
-    $pending_revision_id = $pending_revision->getRevisionId();
+    $pending_revision_id = $pending_revision->getRevisionId(TRUE);
     $pending_revision = $storage->loadRevision($pending_revision_id);
 
     // Change the value of the field in the default language, save the pending
@@ -185,7 +185,7 @@ class EntityRevisionTranslationTest extends EntityKernelTestBase {
 
       $entity->save();
       $entity_id = $entity->id();
-      $entity_rev_id = $entity->getRevisionId();
+      $entity_rev_id = $entity->getRevisionId(TRUE);
       $entity = $storage->loadUnchanged($entity_id);
 
       $entity->setNewRevision(TRUE);
@@ -193,7 +193,7 @@ class EntityRevisionTranslationTest extends EntityKernelTestBase {
       $entity->save();
       $entity = $storage->loadUnchanged($entity_id);
 
-      $this->assertEquals($entity_rev_id, $entity->getRevisionId(), 'A new entity revision was not created.');
+      $this->assertEquals($entity_rev_id, $entity->getRevisionId(TRUE), 'A new entity revision was not created.');
     }
   }
 

@@ -50,7 +50,7 @@ interface RevisionableInterface extends EntityInterface {
   /**
    * Gets the revision identifier of the entity.
    *
-   * @return int|null|string
+   * @return int|null
    *   The revision identifier of the entity, or NULL if the entity does not
    *   have a revision identifier.
    */

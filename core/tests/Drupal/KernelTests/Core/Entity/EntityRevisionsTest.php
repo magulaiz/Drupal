@@ -50,15 +50,15 @@ class EntityRevisionsTest extends EntityKernelTestBase {
     // Before saving, the loaded Revision ID should be the same as the created
     // entity, not the same as the loaded entity (which does not have a revision
     // ID yet).
-    $this->assertEquals($entity->getRevisionId(), $loaded->getLoadedRevisionId());
-    $this->assertNotEquals($loaded->getRevisionId(), $loaded->getLoadedRevisionId());
-    $this->assertNull($loaded->getRevisionId());
+    $this->assertEquals($entity->getRevisionId(TRUE), $loaded->getLoadedRevisionId());
+    $this->assertNotEquals($loaded->getRevisionId(TRUE), $loaded->getLoadedRevisionId());
+    $this->assertNull($loaded->getRevisionId(TRUE));
 
     // After updating the loaded Revision ID the result should be the same.
     $loaded->updateLoadedRevisionId();
-    $this->assertEquals($entity->getRevisionId(), $loaded->getLoadedRevisionId());
-    $this->assertNotEquals($loaded->getRevisionId(), $loaded->getLoadedRevisionId());
-    $this->assertNull($loaded->getRevisionId());
+    $this->assertEquals($entity->getRevisionId(TRUE), $loaded->getLoadedRevisionId());
+    $this->assertNotEquals($loaded->getRevisionId(TRUE), $loaded->getLoadedRevisionId());
+    $this->assertNull($loaded->getRevisionId(TRUE));
 
     $loaded->save();
 
@@ -66,15 +66,15 @@ class EntityRevisionsTest extends EntityKernelTestBase {
     // state. This should be the same as we had before calling $loaded->save().
     /** @var \Drupal\Core\Entity\ContentEntityInterface $loaded_original */
     $loadedRevisionId = \Drupal::state()->get('entity_test.loadedRevisionId');
-    $this->assertEquals($entity->getRevisionId(), $loadedRevisionId);
-    $this->assertNotEquals($loaded->getRevisionId(), $loadedRevisionId);
+    $this->assertEquals($entity->getRevisionId(TRUE), $loadedRevisionId);
+    $this->assertNotEquals($loaded->getRevisionId(TRUE), $loadedRevisionId);
 
     // The revision ID and loaded Revision ID should be different for the two
     // versions of the entity, but the same for a saved entity.
-    $this->assertNotEquals($loaded->getRevisionId(), $entity->getRevisionId());
+    $this->assertNotEquals($loaded->getRevisionId(TRUE), $entity->getRevisionId(TRUE));
     $this->assertNotEquals($loaded->getLoadedRevisionId(), $entity->getLoadedRevisionId());
-    $this->assertEquals($entity->getRevisionId(), $entity->getLoadedRevisionId());
-    $this->assertEquals($loaded->getRevisionId(), $loaded->getLoadedRevisionId());
+    $this->assertEquals($entity->getRevisionId(TRUE), $entity->getLoadedRevisionId());
+    $this->assertEquals($loaded->getRevisionId(TRUE), $loaded->getLoadedRevisionId());
   }
 
   /**
@@ -94,17 +94,21 @@ class EntityRevisionsTest extends EntityKernelTestBase {
     $loaded->set('name', 'dublin');
 
     // The revision id and loaded Revision id should still be the same.
-    $this->assertEquals($loaded->getRevisionId(), $loaded->getLoadedRevisionId());
+    $this->assertEquals($loaded->getRevisionId(TRUE), $loaded->getLoadedRevisionId());
 
     $loaded->save();
+
+    // Check that the method getRevisionId(TRUE) always returns an integer value.
+    $this->assertIsInt($entity->getRevisionId(TRUE));
+    $this->assertIsInt($loaded->getRevisionId(TRUE));
 
     // After saving, the loaded Revision id set in entity_test_entity_update()
     // and returned from the entity should be the same as the entity's revision
     // id because a new revision wasn't created, the existing revision was
     // updated.
     $loadedRevisionId = \Drupal::state()->get('entity_test.loadedRevisionId');
-    $this->assertEquals($loaded->getRevisionId(), $loadedRevisionId);
-    $this->assertEquals($loaded->getRevisionId(), $loaded->getLoadedRevisionId());
+    $this->assertEquals($loaded->getRevisionId(TRUE), $loadedRevisionId);
+    $this->assertEquals($loaded->getRevisionId(TRUE), $loaded->getLoadedRevisionId());
 
     // Creating a clone should keep the loaded Revision ID.
     $clone = clone $loaded;
@@ -133,27 +137,27 @@ class EntityRevisionsTest extends EntityKernelTestBase {
     // Check it all works with translations.
     $french = $loaded->addTranslation('fr');
     // Adding a revision should return the same for each language.
-    $this->assertEquals($french->getRevisionId(), $french->getLoadedRevisionId());
-    $this->assertEquals($loaded->getRevisionId(), $french->getLoadedRevisionId());
+    $this->assertEquals($french->getRevisionId(TRUE), $french->getLoadedRevisionId());
+    $this->assertEquals($loaded->getRevisionId(TRUE), $french->getLoadedRevisionId());
     $this->assertEquals($loaded->getLoadedRevisionId(), $french->getLoadedRevisionId());
     $french->save();
     // After saving nothing should change.
-    $this->assertEquals($french->getRevisionId(), $french->getLoadedRevisionId());
-    $this->assertEquals($loaded->getRevisionId(), $french->getLoadedRevisionId());
+    $this->assertEquals($french->getRevisionId(TRUE), $french->getLoadedRevisionId());
+    $this->assertEquals($loaded->getRevisionId(TRUE), $french->getLoadedRevisionId());
     $this->assertEquals($loaded->getLoadedRevisionId(), $french->getLoadedRevisionId());
-    $first_revision_id = $french->getRevisionId();
+    $first_revision_id = $french->getRevisionId(TRUE);
     $french->setNewRevision();
     // Setting a new revision will reset the loaded Revision ID.
     $this->assertEquals($first_revision_id, $french->getLoadedRevisionId());
     $this->assertEquals($first_revision_id, $loaded->getLoadedRevisionId());
-    $this->assertNotEquals($french->getRevisionId(), $french->getLoadedRevisionId());
-    $this->assertGreaterThan($french->getRevisionId(), $french->getLoadedRevisionId());
-    $this->assertNotEquals($loaded->getRevisionId(), $loaded->getLoadedRevisionId());
-    $this->assertGreaterThan($loaded->getRevisionId(), $loaded->getLoadedRevisionId());
+    $this->assertNotEquals($french->getRevisionId(TRUE), $french->getLoadedRevisionId());
+    $this->assertGreaterThan($french->getRevisionId(TRUE), $french->getLoadedRevisionId());
+    $this->assertNotEquals($loaded->getRevisionId(TRUE), $loaded->getLoadedRevisionId());
+    $this->assertGreaterThan($loaded->getRevisionId(TRUE), $loaded->getLoadedRevisionId());
     $french->save();
     // Saving the new revision will reset the origin revision ID again.
-    $this->assertEquals($french->getRevisionId(), $french->getLoadedRevisionId());
-    $this->assertEquals($loaded->getRevisionId(), $loaded->getLoadedRevisionId());
+    $this->assertEquals($french->getRevisionId(TRUE), $french->getLoadedRevisionId());
+    $this->assertEquals($loaded->getRevisionId(TRUE), $loaded->getLoadedRevisionId());
   }
 
   /**
@@ -165,7 +169,7 @@ class EntityRevisionsTest extends EntityKernelTestBase {
     $entity->save();
     $loadedRevisionId = \Drupal::state()->get('entity_test.loadedRevisionId');
     $this->assertEquals($entity->getLoadedRevisionId(), $loadedRevisionId);
-    $this->assertEquals($entity->getRevisionId(), $entity->getLoadedRevisionId());
+    $this->assertEquals($entity->getRevisionId(TRUE), $entity->getLoadedRevisionId());
   }
 
   /**
@@ -287,6 +291,18 @@ class EntityRevisionsTest extends EntityKernelTestBase {
     $entity->isDefaultRevision(TRUE);
     $entity->save();
     $this->assertTrue($entity->wasDefaultRevision());
+  }
+
+  /**
+   * Tests deprecation of returning a string value with getRevisionId().
+   *
+   * @group legacy
+   */
+  public function testGetRevisionIdReturningString(): void {
+    $this->expectDeprecation('Returning the revision identifier as a string value is deprecated in drupal:11.1.0 and will be removed in drupal:12.0.0. See https://www.drupal.org/node/3476916');
+    $entity = EntityTestMulRev::create();
+    $entity->save();
+    $this->assertIsString($entity->getRevisionId());
   }
 
 }

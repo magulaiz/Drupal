@@ -164,7 +164,7 @@ class StringFormatterTest extends KernelTestBase {
     $this->assertLinkByHref($entity->toUrl('revision')->toString());
 
     // Make the entity a new revision.
-    $old_revision_id = $entity->getRevisionId();
+    $old_revision_id = $entity->getRevisionId(TRUE);
     $entity->setNewRevision(TRUE);
     $value2 = $this->randomMachineName();
     $entity->{$this->fieldName}->value = $value2;
@@ -179,7 +179,7 @@ class StringFormatterTest extends KernelTestBase {
 
     $this->renderEntityFields($entity_new_revision, $this->display);
     $this->assertLink($value, 0);
-    $this->assertLinkByHref('/entity_test_rev/' . $entity_new_revision->id() . '/revision/' . $entity_new_revision->getRevisionId() . '/view');
+    $this->assertLinkByHref('/entity_test_rev/' . $entity_new_revision->id() . '/revision/' . $entity_new_revision->getRevisionId(TRUE) . '/view');
 
     // Check that linking to a revisionable entity works if the entity type does
     // not specify a 'revision' link template.

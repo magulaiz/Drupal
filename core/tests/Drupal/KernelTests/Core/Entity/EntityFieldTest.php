@@ -116,7 +116,7 @@ class EntityFieldTest extends EntityKernelTestBase {
     $entity->field_test_text->value = 'bar';
     $entity->save();
 
-    $forward_revision_id = $entity->getRevisionId();
+    $forward_revision_id = $entity->getRevisionId(TRUE);
 
     // Load the forward revision and set the field value to equal the value of
     // the default revision.

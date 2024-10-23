@@ -379,7 +379,7 @@ class MenuLinksTest extends KernelTestBase {
     $child1_pending_revision->save();
 
     $storage->resetCache();
-    $child1_pending_revision = $storage->loadRevision($child1_pending_revision->getRevisionId());
+    $child1_pending_revision = $storage->loadRevision($child1_pending_revision->getRevisionId(TRUE));
     $this->assertFalse($child1_pending_revision->isDefaultRevision());
     $this->assertEquals($pending_child1_title, $child1_pending_revision->getTitle());
     $this->assertEquals('/#test', $child1_pending_revision->getUrlObject()->toString());

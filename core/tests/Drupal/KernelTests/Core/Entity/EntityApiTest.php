@@ -180,11 +180,11 @@ class EntityApiTest extends EntityKernelTestBase {
     $ids = [];
     $entity = $storage->create(['name' => 'test_rev']);
     $entity->save();
-    $ids[] = $entity->getRevisionId();
+    $ids[] = $entity->getRevisionId(TRUE);
 
     $revision = $storage->createRevision($entity, TRUE);
     $revision->save();
-    $ids[] = $revision->getRevisionId();
+    $ids[] = $revision->getRevisionId(TRUE);
 
     $entities = $storage->loadMultipleRevisions($ids);
     $this->assertEquals($ids, array_keys($entities));

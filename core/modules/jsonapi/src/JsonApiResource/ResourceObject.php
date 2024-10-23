@@ -122,7 +122,7 @@ class ResourceObject implements CacheableDependencyInterface, ResourceIdentifier
       $entity,
       $resource_type,
       $entity->uuid(),
-      $resource_type->isVersionable() && $entity instanceof RevisionableInterface ? $entity->getRevisionId() : NULL,
+      $resource_type->isVersionable() && $entity instanceof RevisionableInterface ? $entity->getRevisionId(TRUE) : NULL,
       static::extractFieldsFromEntity($resource_type, $entity),
       static::buildLinksFromEntity($resource_type, $entity, $links ?: new LinkCollection([])),
       $entity->language()
@@ -269,7 +269,7 @@ class ResourceObject implements CacheableDependencyInterface, ResourceIdentifier
           // link for the represented version. This helps a client track
           // revision changes and to disambiguate resource objects with the same
           // `type` and `id` in a `version-history` collection.
-          $self_with_version_url = $self_url->setOption('query', [JsonApiSpec::VERSION_QUERY_PARAMETER => 'id:' . $entity->getRevisionId()]);
+          $self_with_version_url = $self_url->setOption('query', [JsonApiSpec::VERSION_QUERY_PARAMETER => 'id:' . $entity->getRevisionId(TRUE)]);
           $links = $links->withLink('self', new Link(new CacheableMetadata(), $self_with_version_url, 'self'));
         }
         if (!$entity->isDefaultRevision()) {

@@ -514,7 +514,7 @@ class FormTest extends FieldTestBase {
     /** @var \Drupal\Core\Entity\RevisionableStorageInterface $storage */
     $storage = $this->container->get('entity_type.manager')
       ->getStorage($entity_type);
-    $entity = $storage->loadRevision($entity->getRevisionId());
+    $entity = $storage->loadRevision($entity->getRevisionId(TRUE));
     $this->assertEquals(99, $entity->{$field_name_no_access}->value, 'New revision has the expected value for the field with no edit access.');
     $this->assertEquals(2, $entity->{$field_name}->value, 'New revision has the expected value for the field with edit access.');
   }

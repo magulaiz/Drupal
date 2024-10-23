@@ -74,13 +74,13 @@ class RevisionRouteProviderTest extends KernelTestBase {
     $entity = EntityTestRev::create()
       ->setName('first revision');
     $entity->save();
-    $noAccessRevisionId = $entity->getRevisionId();
+    $noAccessRevisionId = $entity->getRevisionId(TRUE);
 
     $entity
       ->setName($entityLabel)
       ->setNewRevision();
     $entity->save();
-    $hasAccessRevisionId = $entity->getRevisionId();
+    $hasAccessRevisionId = $entity->getRevisionId(TRUE);
 
     $this->assertNotEquals($noAccessRevisionId, $hasAccessRevisionId);
 

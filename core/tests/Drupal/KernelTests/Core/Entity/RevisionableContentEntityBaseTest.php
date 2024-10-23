@@ -50,7 +50,7 @@ class RevisionableContentEntityBaseTest extends EntityKernelTestBase {
 
     // Save the entity, this creates the first revision.
     $entity->save();
-    $revision_ids[] = $entity->getRevisionId();
+    $revision_ids[] = $entity->getRevisionId(TRUE);
     $this->assertItemsTableCount(1, $definition);
 
     // Create the second revision.
@@ -58,7 +58,7 @@ class RevisionableContentEntityBaseTest extends EntityKernelTestBase {
     $random_timestamp = rand(100_000_000, 200_000_000);
     $this->createRevision($entity, $user, $random_timestamp, 'This is my log message');
 
-    $revision_id = $entity->getRevisionId();
+    $revision_id = $entity->getRevisionId(TRUE);
     $revision_ids[] = $revision_id;
 
     /** @var \Drupal\Core\Entity\RevisionableStorageInterface $storage */
@@ -73,13 +73,13 @@ class RevisionableContentEntityBaseTest extends EntityKernelTestBase {
     $random_timestamp = rand(100_000_000, 200_000_000);
     $this->createRevision($entity, $user, $random_timestamp, 'This is my log message');
     $this->assertItemsTableCount(3, $definition);
-    $revision_ids[] = $entity->getRevisionId();
+    $revision_ids[] = $entity->getRevisionId(TRUE);
 
     // Create another 3 revisions.
     foreach (range(1, 3) as $count) {
       $timestamp = rand(100_000_000, 200_000_000);
       $this->createRevision($entity, $user, $timestamp, 'This is my log message number: ' . $count);
-      $revision_ids[] = $entity->getRevisionId();
+      $revision_ids[] = $entity->getRevisionId(TRUE);
     }
     $this->assertItemsTableCount(6, $definition);
 

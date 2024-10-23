@@ -131,7 +131,7 @@ class EntityContentComplete extends EntityContentBase {
     parent::save($entity, $old_destination_id_values);
     return [
       $entity->id(),
-      $entity->getRevisionId(),
+      $entity->getRevisionId(TRUE),
     ];
   }
 

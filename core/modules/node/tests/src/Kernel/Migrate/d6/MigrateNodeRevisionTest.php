@@ -68,7 +68,7 @@ class MigrateNodeRevisionTest extends MigrateNodeTestBase {
     $node = \Drupal::entityTypeManager()->getStorage('node')->loadRevision(2001);
     /** @var \Drupal\node\NodeInterface $node */
     $this->assertSame('1', $node->id());
-    $this->assertSame('2001', $node->getRevisionId());
+    $this->assertSame(2001, $node->getRevisionId(TRUE));
     $this->assertSame('und', $node->langcode->value);
     $this->assertSame('Test title rev 3', $node->getTitle());
     $this->assertSame('body test rev 3', $node->body->value);

@@ -68,7 +68,7 @@ abstract class ModeratedNodeResourceTestBase extends NodeResourceTestBase {
       ],
       'vid' => [
         [
-          'value' => (int) $this->entity->getRevisionId(),
+          'value' => (int) $this->entity->getRevisionId(TRUE),
         ],
       ],
     ]);

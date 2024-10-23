@@ -68,7 +68,7 @@ class TaxonomyRevisionRevertTest extends BrowserTestBase {
       ->setRevisionTranslationAffected(TRUE);
     $entity->setNewRevision();
     $entity->save();
-    $revisionId = $entity->getRevisionId();
+    $revisionId = $entity->getRevisionId(TRUE);
 
     $this->drupalLogin($this->drupalCreateUser($this->permissions));
 

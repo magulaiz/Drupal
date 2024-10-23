@@ -44,7 +44,7 @@ class BlockContentRevisionsTest extends BlockContentTestBase {
     $logs = [];
 
     // Get original block.
-    $blocks[] = $block->getRevisionId();
+    $blocks[] = $block->getRevisionId(TRUE);
     $logs[] = '';
 
     // Create three revisions.
@@ -56,7 +56,7 @@ class BlockContentRevisionsTest extends BlockContentTestBase {
       $block->setRevisionCreationTime(time());
       $logs[] = $block->getRevisionLogMessage();
       $block->save();
-      $blocks[] = $block->getRevisionId();
+      $blocks[] = $block->getRevisionId(TRUE);
     }
 
     $this->blocks = $blocks;
@@ -105,7 +105,7 @@ class BlockContentRevisionsTest extends BlockContentTestBase {
     // revision id.
     $default_revision = BlockContent::load($loaded->id());
     // Verify that the revision ID is greater than the default revision ID.
-    $this->assertGreaterThan($default_revision->getRevisionId(), $loaded->getRevisionId());
+    $this->assertGreaterThan($default_revision->getRevisionId(TRUE), $loaded->getRevisionId(TRUE));
   }
 
 }

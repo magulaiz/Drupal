@@ -291,7 +291,7 @@ class InlineBlock extends BlockBase implements ContainerFactoryPluginInterface, 
       }
       $block->save();
       $this->configuration['block_id'] = $block->id();
-      $this->configuration['block_revision_id'] = $block->getRevisionId();
+      $this->configuration['block_revision_id'] = $block->getRevisionId(TRUE);
       $this->configuration['block_serialized'] = NULL;
     }
   }

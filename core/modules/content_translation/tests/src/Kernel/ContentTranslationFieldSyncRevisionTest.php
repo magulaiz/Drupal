@@ -567,7 +567,7 @@ class ContentTranslationFieldSyncRevisionTest extends EntityKernelTestBase {
     /** @var \Drupal\Core\Entity\ContentEntityInterface $entity */
     $entity = $this->storage->loadRevision($this->storage->getLatestRevisionId($entity_id));
     @[$revision_id, $target_id_en, $target_id_it, $alt_en, $alt_it] = $expected_values;
-    $this->assertEquals($revision_id, $entity->getRevisionId());
+    $this->assertEquals($revision_id, $entity->getRevisionId(TRUE));
     $this->assertEquals($target_id_en, $entity->get($this->fieldName)->target_id);
     $this->assertEquals($alt_en, $entity->get($this->fieldName)->alt);
     if ($entity->hasTranslation('it')) {

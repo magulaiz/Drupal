@@ -76,12 +76,12 @@ class NodeAccessTest extends KernelTestBase {
 
     // Create a node.
     $node = $this->createNode(['type' => 'page']);
-    $this->assertEquals($node->getRevisionId(), $this->moderationInformation->getDefaultRevisionId('node', $node->id()));
+    $this->assertEquals($node->getRevisionId(TRUE), $this->moderationInformation->getDefaultRevisionId('node', $node->id()));
 
     // Create a non-admin user.
     $user = $this->createUser();
     \Drupal::currentUser()->setAccount($user);
-    $this->assertEquals($node->getRevisionId(), $this->moderationInformation->getDefaultRevisionId('node', $node->id()));
+    $this->assertEquals($node->getRevisionId(TRUE), $this->moderationInformation->getDefaultRevisionId('node', $node->id()));
   }
 
 }

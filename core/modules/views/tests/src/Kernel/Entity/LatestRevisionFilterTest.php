@@ -45,26 +45,26 @@ class LatestRevisionFilterTest extends ViewsKernelTestBase {
       'type' => 'article',
     ]);
     $node->save();
-    $all_revisions[$node->getRevisionId()] = $node;
+    $all_revisions[$node->getRevisionId(TRUE)] = $node;
 
     $node->setTitle('First node - v2 - pending');
     $node->setNewRevision(TRUE);
     $node->isDefaultRevision(FALSE);
     $node->save();
-    $all_revisions[$node->getRevisionId()] = $node;
+    $all_revisions[$node->getRevisionId(TRUE)] = $node;
 
     $node->setTitle('First node - v3 - default');
     $node->setNewRevision(TRUE);
     $node->isDefaultRevision(TRUE);
     $node->save();
-    $all_revisions[$node->getRevisionId()] = $node;
+    $all_revisions[$node->getRevisionId(TRUE)] = $node;
 
     $node->setTitle('First node - v4 - pending');
     $node->setNewRevision(TRUE);
     $node->isDefaultRevision(TRUE);
     $node->save();
-    $all_revisions[$node->getRevisionId()] = $node;
-    $latest_revisions[$node->getRevisionId()] = $node;
+    $all_revisions[$node->getRevisionId(TRUE)] = $node;
+    $latest_revisions[$node->getRevisionId(TRUE)] = $node;
 
     // Create a node that has a default and a pending revision.
     $node = Node::create([
@@ -72,14 +72,14 @@ class LatestRevisionFilterTest extends ViewsKernelTestBase {
       'type' => 'article',
     ]);
     $node->save();
-    $all_revisions[$node->getRevisionId()] = $node;
+    $all_revisions[$node->getRevisionId(TRUE)] = $node;
 
     $node->setTitle('Second node - v2 - pending');
     $node->setNewRevision(TRUE);
     $node->isDefaultRevision(FALSE);
     $node->save();
-    $all_revisions[$node->getRevisionId()] = $node;
-    $latest_revisions[$node->getRevisionId()] = $node;
+    $all_revisions[$node->getRevisionId(TRUE)] = $node;
+    $latest_revisions[$node->getRevisionId(TRUE)] = $node;
 
     // Create a node that only has a default revision.
     $node = Node::create([
@@ -87,8 +87,8 @@ class LatestRevisionFilterTest extends ViewsKernelTestBase {
       'type' => 'article',
     ]);
     $node->save();
-    $all_revisions[$node->getRevisionId()] = $node;
-    $latest_revisions[$node->getRevisionId()] = $node;
+    $all_revisions[$node->getRevisionId(TRUE)] = $node;
+    $latest_revisions[$node->getRevisionId(TRUE)] = $node;
 
     // Create a node that only has a pending revision.
     $node = Node::create([
@@ -97,8 +97,8 @@ class LatestRevisionFilterTest extends ViewsKernelTestBase {
     ]);
     $node->isDefaultRevision(FALSE);
     $node->save();
-    $all_revisions[$node->getRevisionId()] = $node;
-    $latest_revisions[$node->getRevisionId()] = $node;
+    $all_revisions[$node->getRevisionId(TRUE)] = $node;
+    $latest_revisions[$node->getRevisionId(TRUE)] = $node;
 
     $view = Views::getView('test_latest_revision_filter');
 

@@ -164,7 +164,7 @@ class EntityOperations implements ContainerInjectionInterface {
    */
   protected function updateOrCreateFromEntity(EntityInterface $entity) {
     /** @var \Drupal\Core\Entity\ContentEntityInterface $entity */
-    $entity_revision_id = $entity->getRevisionId();
+    $entity_revision_id = $entity->getRevisionId(TRUE);
     $workflow = $this->moderationInfo->getWorkflowForEntity($entity);
     $content_moderation_state = ContentModerationStateEntity::loadFromModeratedEntity($entity);
     /** @var \Drupal\Core\Entity\ContentEntityStorageInterface $storage */
@@ -242,7 +242,7 @@ class EntityOperations implements ContainerInjectionInterface {
       else {
         $this->entityTypeManager
           ->getStorage('content_moderation_state')
-          ->deleteRevision($content_moderation_state->getRevisionId());
+          ->deleteRevision($content_moderation_state->getRevisionId(TRUE));
       }
     }
   }

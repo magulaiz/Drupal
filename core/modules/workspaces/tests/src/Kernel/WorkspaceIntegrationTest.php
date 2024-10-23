@@ -413,7 +413,7 @@ class WorkspaceIntegrationTest extends KernelTestBase {
 
     // Check that the entity object that was saved has been updated to point to
     // the workspace-specific revision.
-    $this->assertEquals(6, $node->getRevisionId());
+    $this->assertEquals(6, $node->getRevisionId(TRUE));
 
     // Delete revision '6' and check that the workspace association does not
     // track it anymore.
@@ -666,7 +666,7 @@ class WorkspaceIntegrationTest extends KernelTestBase {
       ->condition('field_test_entity.entity.uuid', $entity_test->uuid());
 
     $result = $query->execute();
-    $this->assertSame([$node_2->getRevisionId() => $node_2->id()], $result);
+    $this->assertSame([$node_2->getRevisionId(TRUE) => $node_2->id()], $result);
   }
 
   /**
@@ -807,7 +807,7 @@ class WorkspaceIntegrationTest extends KernelTestBase {
       ->accessCheck(FALSE)
       ->condition('title', 'live node 1')
       ->execute();
-    $this->assertEquals([$live_node->getRevisionId() => $node->id()], $result);
+    $this->assertEquals([$live_node->getRevisionId(TRUE) => $node->id()], $result);
 
     // Try the same assertions in the context of the 'stage' workspace.
     $this->workspaceManager->executeInWorkspace('stage', function () use ($node, $storage) {
@@ -820,7 +820,7 @@ class WorkspaceIntegrationTest extends KernelTestBase {
         ->accessCheck(FALSE)
         ->condition('title', 'stage node 1')
         ->execute();
-      $this->assertEquals([$stage_node->getRevisionId() => $stage_node->id()], $result);
+      $this->assertEquals([$stage_node->getRevisionId(TRUE) => $stage_node->id()], $result);
     });
 
     // Check that the 'stage' workspace was not persisted by the workspace
@@ -910,7 +910,7 @@ class WorkspaceIntegrationTest extends KernelTestBase {
     $entities = $this->entityTypeManager->getStorage($entity_type_id)->loadMultiple(array_column($expected_default_revisions, $id_key));
     foreach ($expected_default_revisions as $expected_default_revision) {
       $entity_id = $expected_default_revision[$id_key];
-      $this->assertEquals($expected_default_revision[$revision_key], $entities[$entity_id]->getRevisionId());
+      $this->assertEquals($expected_default_revision[$revision_key], $entities[$entity_id]->getRevisionId(TRUE));
       $this->assertEquals($expected_default_revision[$label_key], $entities[$entity_id]->label());
       $this->assertEquals($expected_default_revision[$published_key], $entities[$entity_id]->isPublished());
     }
@@ -922,7 +922,7 @@ class WorkspaceIntegrationTest extends KernelTestBase {
       $entity_id = $expected_default_revision[$id_key];
       $entities = $this->entityTypeManager->getStorage($entity_type_id)->loadMultiple([$entity_id]);
       $this->assertCount(1, $entities);
-      $this->assertEquals($expected_default_revision[$revision_key], $entities[$entity_id]->getRevisionId());
+      $this->assertEquals($expected_default_revision[$revision_key], $entities[$entity_id]->getRevisionId(TRUE));
       $this->assertEquals($expected_default_revision[$label_key], $entities[$entity_id]->label());
       $this->assertEquals($expected_default_revision[$published_key], $entities[$entity_id]->isPublished());
     }
@@ -931,7 +931,7 @@ class WorkspaceIntegrationTest extends KernelTestBase {
     foreach ($expected_default_revisions as $expected_default_revision) {
       /** @var \Drupal\Core\Entity\RevisionableInterface|\Drupal\Core\Entity\EntityPublishedInterface $entity */
       $entity = $this->entityTypeManager->getStorage($entity_type_id)->loadUnchanged($expected_default_revision[$id_key]);
-      $this->assertEquals($expected_default_revision[$revision_key], $entity->getRevisionId());
+      $this->assertEquals($expected_default_revision[$revision_key], $entity->getRevisionId(TRUE));
       $this->assertEquals($expected_default_revision[$label_key], $entity->label());
       $this->assertEquals($expected_default_revision[$published_key], $entity->isPublished());
     }
@@ -959,7 +959,7 @@ class WorkspaceIntegrationTest extends KernelTestBase {
     foreach ($expected_values as $expected_revision) {
       $revision_id = $expected_revision[$revision_key];
       $this->assertEquals($expected_revision[$id_key], $entities[$revision_id]->id());
-      $this->assertEquals($expected_revision[$revision_key], $entities[$revision_id]->getRevisionId());
+      $this->assertEquals($expected_revision[$revision_key], $entities[$revision_id]->getRevisionId(TRUE));
       $this->assertEquals($expected_revision[$label_key], $entities[$revision_id]->label());
       $this->assertEquals($expected_revision[$published_key], $entities[$revision_id]->isPublished());
     }

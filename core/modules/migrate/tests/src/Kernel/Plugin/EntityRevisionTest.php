@@ -71,7 +71,7 @@ class EntityRevisionTest extends MigrateTestBase {
         'data_rows' => [
           [
             'nid' => $node->id(),
-            'vid' => $node->getRevisionId(),
+            'vid' => $node->getRevisionId(TRUE),
             'langcode' => 'fr',
             'title' => 'Titre nouveau, tabarnak!',
           ],
@@ -112,12 +112,12 @@ class EntityRevisionTest extends MigrateTestBase {
     // translation), so we should be able to look up the source IDs by revision
     // ID and langcode.
     $source_ids = $migration->getIdMap()->lookupSourceID([
-      'vid' => $node->getRevisionId(),
+      'vid' => $node->getRevisionId(TRUE),
       'langcode' => 'fr',
     ]);
     $this->assertNotEmpty($source_ids);
     $this->assertSame($node->id(), $source_ids['nid']);
-    $this->assertSame($node->getRevisionId(), $source_ids['vid']);
+    $this->assertSame($node->getRevisionId(TRUE), (int) $source_ids['vid']);
     $this->assertSame('fr', $source_ids['langcode']);
 
     // Confirm the french revision was used in the migration, instead of the

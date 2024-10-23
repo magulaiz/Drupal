@@ -57,7 +57,7 @@ class MediaRevisionTest extends MediaFunctionalTestBase {
     $assert = $this->assertSession();
 
     $media = $this->createMedia('Sample media');
-    $originalRevisionId = $media->getRevisionId();
+    $originalRevisionId = $media->getRevisionId(TRUE);
 
     // You can access the revision page when there is only 1 revision.
     $this->drupalGet($media->toUrl('revision'));
@@ -139,7 +139,7 @@ class MediaRevisionTest extends MediaFunctionalTestBase {
     $media = $this->container->get('entity_type.manager')
       ->getStorage('media')
       ->loadUnchanged(1);
-    $this->drupalGet("media/" . $media->id() . "/revisions/" . $media->getRevisionId() . "/view");
+    $this->drupalGet("media/" . $media->id() . "/revisions/" . $media->getRevisionId(TRUE) . "/view");
     $assert->pageTextContains('Foo');
   }
 
@@ -188,7 +188,7 @@ class MediaRevisionTest extends MediaFunctionalTestBase {
     $media = $this->container->get('entity_type.manager')
       ->getStorage('media')
       ->loadUnchanged(1);
-    $this->drupalGet("media/" . $media->id() . "/revisions/" . $media->getRevisionId() . "/view");
+    $this->drupalGet("media/" . $media->id() . "/revisions/" . $media->getRevisionId(TRUE) . "/view");
     $assert->pageTextContains('Foo');
   }
 
@@ -263,7 +263,7 @@ class MediaRevisionTest extends MediaFunctionalTestBase {
 
     $media = $this->createMedia('Sample media');
     $this->createMediaWithRevision($media);
-    $originalRevisionId = $media->getRevisionId();
+    $originalRevisionId = $media->getRevisionId(TRUE);
 
     // Cannot delete latest revision.
     $this->drupalGet($media->toUrl('revision-delete-form'));
@@ -311,7 +311,7 @@ class MediaRevisionTest extends MediaFunctionalTestBase {
 
     $media = $this->createMedia('Initial title');
     $this->createMediaWithRevision($media);
-    $originalRevisionId = $media->getRevisionId();
+    $originalRevisionId = $media->getRevisionId(TRUE);
     $originalRevisionLabel = $media->getName();
 
     // Cannot revert latest revision.

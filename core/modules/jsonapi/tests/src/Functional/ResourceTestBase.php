@@ -1736,7 +1736,7 @@ abstract class ResourceTestBase extends BrowserTestBase {
     $related_link = Url::fromUri("base:/jsonapi/$entity_type_id/$bundle/$id/$relationship_field_name")->setAbsolute();
     if (static::$resourceTypeIsVersionable) {
       assert($entity instanceof RevisionableInterface);
-      $version_query = ['resourceVersion' => 'id:' . $entity->getRevisionId()];
+      $version_query = ['resourceVersion' => 'id:' . $entity->getRevisionId(TRUE)];
       $related_link->setOption('query', $version_query);
     }
     $data = $this->getExpectedGetRelationshipDocumentData($relationship_field_name, $entity);
@@ -2099,7 +2099,7 @@ abstract class ResourceTestBase extends BrowserTestBase {
       $location = Url::fromRoute(sprintf('jsonapi.%s.individual', static::$resourceTypeName), ['entity' => $uuid]);
       if (static::$resourceTypeIsVersionable) {
         assert($created_entity instanceof RevisionableInterface);
-        $location->setOption('query', ['resourceVersion' => 'id:' . $created_entity->getRevisionId()]);
+        $location->setOption('query', ['resourceVersion' => 'id:' . $created_entity->getRevisionId(TRUE)]);
       }
       /* $location = $this->entityStorage->load(static::$firstCreatedEntityId)->toUrl('jsonapi')->setAbsolute(TRUE)->toString(); */
       $this->assertSame([$location->setAbsolute()->toString()], $response->getHeader('Location'));
@@ -2154,7 +2154,7 @@ abstract class ResourceTestBase extends BrowserTestBase {
       /* $location = $this->entityStorage->load(static::$secondCreatedEntityId)->toUrl('jsonapi')->setAbsolute(TRUE)->toString(); */
       if (static::$resourceTypeIsVersionable) {
         assert($created_entity instanceof RevisionableInterface);
-        $location->setOption('query', ['resourceVersion' => 'id:' . $second_created_entity->getRevisionId()]);
+        $location->setOption('query', ['resourceVersion' => 'id:' . $second_created_entity->getRevisionId(TRUE)]);
       }
       $this->assertSame([$location->setAbsolute()->toString()], $response->getHeader('Location'));
 
@@ -2200,7 +2200,7 @@ abstract class ResourceTestBase extends BrowserTestBase {
       $this->markTestSkipped('PATCHing config entities is not yet supported.');
     }
 
-    $prior_revision_id = (int) $this->entityLoadUnchanged($this->entity->id())->getRevisionId();
+    $prior_revision_id = (int) $this->entityLoadUnchanged($this->entity->id())->getRevisionId(TRUE);
 
     // Patch testing requires that another entity of the same type exists.
     $this->anotherEntity = $this->createAnotherEntity('dupe');
@@ -2342,8 +2342,8 @@ abstract class ResourceTestBase extends BrowserTestBase {
     $response = $this->request('PATCH', $url, $request_options);
     $this->assertResourceResponse(200, FALSE, $response);
     $updated_entity = $this->entityLoadUnchanged($this->entity->id());
-    $this->assertSame(static::$newRevisionsShouldBeAutomatic, $prior_revision_id < (int) $updated_entity->getRevisionId());
-    $prior_revision_id = (int) $updated_entity->getRevisionId();
+    $this->assertSame(static::$newRevisionsShouldBeAutomatic, $prior_revision_id < (int) $updated_entity->getRevisionId(TRUE));
+    $prior_revision_id = (int) $updated_entity->getRevisionId(TRUE);
 
     $request_options[RequestOptions::BODY] = $parseable_valid_request_body;
     $request_options[RequestOptions::HEADERS]['Content-Type'] = 'text/xml';
@@ -2361,7 +2361,7 @@ abstract class ResourceTestBase extends BrowserTestBase {
     // Assert that the entity was indeed updated, and that the response body
     // contains the serialized updated entity.
     $updated_entity = $this->entityLoadUnchanged($this->entity->id());
-    $this->assertSame(static::$newRevisionsShouldBeAutomatic, $prior_revision_id < (int) $updated_entity->getRevisionId());
+    $this->assertSame(static::$newRevisionsShouldBeAutomatic, $prior_revision_id < (int) $updated_entity->getRevisionId(TRUE));
     if ($this->entity instanceof RevisionLogInterface) {
       if (static::$newRevisionsShouldBeAutomatic) {
         $this->assertNotSame((int) $this->entity->getRevisionCreationTime(), (int) $updated_entity->getRevisionCreationTime());
@@ -2373,7 +2373,7 @@ abstract class ResourceTestBase extends BrowserTestBase {
     $updated_entity_document = $this->normalize($updated_entity, $url);
     $document = $this->getDocumentFromResponse($response);
     $this->assertSame($updated_entity_document, $document);
-    $prior_revision_id = (int) $updated_entity->getRevisionId();
+    $prior_revision_id = (int) $updated_entity->getRevisionId(TRUE);
     // Assert that the entity was indeed created using the PATCHed values.
     foreach ($this->getPatchDocument()['data']['attributes'] as $field_name => $field_normalization) {
       // If the value is an array of properties, only verify that the sent
@@ -2412,8 +2412,8 @@ abstract class ResourceTestBase extends BrowserTestBase {
     $this->assertResourceResponse(200, FALSE, $response);
     $updated_entity = $this->entityLoadUnchanged($this->entity->id());
     $this->assertSame([0 => ['value' => 'Two']], $updated_entity->get('field_rest_test_multivalue')->getValue());
-    $this->assertSame(static::$newRevisionsShouldBeAutomatic, $prior_revision_id < (int) $updated_entity->getRevisionId());
-    $prior_revision_id = (int) $updated_entity->getRevisionId();
+    $this->assertSame(static::$newRevisionsShouldBeAutomatic, $prior_revision_id < (int) $updated_entity->getRevisionId(TRUE));
+    $prior_revision_id = (int) $updated_entity->getRevisionId(TRUE);
 
     // Multi-value field: add one item before the existing one, and one after.
     $doc_add_items = $doc_multi_value_tests;
@@ -2428,8 +2428,8 @@ abstract class ResourceTestBase extends BrowserTestBase {
     ];
     $updated_entity = $this->entityLoadUnchanged($this->entity->id());
     $this->assertSame($expected_document, $updated_entity->get('field_rest_test_multivalue')->getValue());
-    $this->assertSame(static::$newRevisionsShouldBeAutomatic, $prior_revision_id < (int) $updated_entity->getRevisionId());
-    $prior_revision_id = (int) $updated_entity->getRevisionId();
+    $this->assertSame(static::$newRevisionsShouldBeAutomatic, $prior_revision_id < (int) $updated_entity->getRevisionId(TRUE));
+    $prior_revision_id = (int) $updated_entity->getRevisionId(TRUE);
 
     // Finally, assert that when Content Moderation is installed, a new revision
     // is automatically created when PATCHing for entity types that have a
@@ -2461,10 +2461,10 @@ abstract class ResourceTestBase extends BrowserTestBase {
     $updated_entity = $this->entityLoadUnchanged($this->entity->id());
     $this->assertSame($expected_document, $updated_entity->get('field_rest_test_multivalue')->getValue());
     if ($this->entity->getEntityType()->hasHandlerClass('moderation')) {
-      $this->assertLessThan((int) $updated_entity->getRevisionId(), $prior_revision_id);
+      $this->assertLessThan((int) $updated_entity->getRevisionId(TRUE), $prior_revision_id);
     }
     else {
-      $this->assertSame(static::$newRevisionsShouldBeAutomatic, $prior_revision_id < (int) $updated_entity->getRevisionId());
+      $this->assertSame(static::$newRevisionsShouldBeAutomatic, $prior_revision_id < (int) $updated_entity->getRevisionId(TRUE));
     }
 
     // Ensure that PATCHing an entity that is not the latest revision is
@@ -2824,12 +2824,12 @@ abstract class ResourceTestBase extends BrowserTestBase {
     /** @var \Drupal\Core\Entity\FieldableEntityInterface $entity */
     $entity->set('field_revisionable_number', 42);
     $entity->save();
-    $original_revision_id = (int) $entity->getRevisionId();
+    $original_revision_id = (int) $entity->getRevisionId(TRUE);
 
     $entity->set('field_revisionable_number', 99);
     $entity->setNewRevision();
     $entity->save();
-    $latest_revision_id = (int) $entity->getRevisionId();
+    $latest_revision_id = (int) $entity->getRevisionId(TRUE);
 
     // @todo Remove line below in favor of commented line in https://www.drupal.org/project/drupal/issues/2878463.
     $url = Url::fromRoute(sprintf('jsonapi.%s.individual', static::$resourceTypeName), ['entity' => $this->entity->uuid()])->setAbsolute();
@@ -2989,7 +2989,7 @@ abstract class ResourceTestBase extends BrowserTestBase {
     $entity->set('moderation_state', 'published');
     $entity->setNewRevision();
     $entity->save();
-    $default_revision_id = (int) $entity->getRevisionId();
+    $default_revision_id = (int) $entity->getRevisionId(TRUE);
 
     // Fetch the published revision by using the `rel` version negotiator and
     // the `latest-version` version argument. With content_moderation, this is
@@ -3059,7 +3059,7 @@ abstract class ResourceTestBase extends BrowserTestBase {
     $entity->set('moderation_state', 'draft');
     $entity->setNewRevision();
     $entity->save();
-    $forward_revision_id = (int) $entity->getRevisionId();
+    $forward_revision_id = (int) $entity->getRevisionId(TRUE);
 
     // The `latest-version` link should *still* reference the same revision
     // since a draft is not a default revision.

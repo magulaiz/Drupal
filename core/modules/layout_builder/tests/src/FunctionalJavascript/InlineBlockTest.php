@@ -152,7 +152,7 @@ class InlineBlockTest extends InlineBlockTestBase {
     $this->assertCount(1, $blocks);
     /** @var \Drupal\Core\Entity\ContentEntityBase $block */
     $block = array_pop($blocks);
-    $revision_id = $block->getRevisionId();
+    $revision_id = $block->getRevisionId(TRUE);
 
     // Confirm the block can be edited.
     $this->drupalGet('node/1/layout');
@@ -173,7 +173,7 @@ class InlineBlockTest extends InlineBlockTestBase {
 
       $this->assertCount(1, $blocks);
       $block = array_pop($blocks);
-      $this->assertEquals($block->getRevisionId(), $revision_id);
+      $this->assertEquals($block->getRevisionId(TRUE), $revision_id);
       $this->assertEquals('The block body', $block->get('body')->getValue()[0]['value']);
     }
     else {

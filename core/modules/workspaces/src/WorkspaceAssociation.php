@@ -68,7 +68,7 @@ class WorkspaceAssociation implements WorkspaceAssociationInterface, EventSubscr
       if ($tracked_revision_id) {
         $this->database->update(static::TABLE)
           ->fields([
-            'target_entity_revision_id' => $entity->getRevisionId(),
+            'target_entity_revision_id' => $entity->getRevisionId(TRUE),
           ])
           ->condition('workspace', $affected_workspaces, 'IN')
           ->condition('target_entity_type_id', $entity->getEntityTypeId())
@@ -95,7 +95,7 @@ class WorkspaceAssociation implements WorkspaceAssociationInterface, EventSubscr
             'workspace' => $workspace_id,
             'target_entity_type_id' => $entity->getEntityTypeId(),
             'target_entity_id' => $entity->id(),
-            'target_entity_revision_id' => $entity->getRevisionId(),
+            'target_entity_revision_id' => $entity->getRevisionId(TRUE),
           ]);
         }
         $insert_query->execute();

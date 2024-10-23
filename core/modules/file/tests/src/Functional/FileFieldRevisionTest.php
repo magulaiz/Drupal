@@ -52,7 +52,7 @@ class FileFieldRevisionTest extends FileFieldTestBase {
     $node_storage->resetCache([$nid]);
     $node = $node_storage->load($nid);
     $node_file_r1 = File::load($node->{$field_name}->target_id);
-    $node_vid_r1 = $node->getRevisionId();
+    $node_vid_r1 = $node->getRevisionId(TRUE);
     $this->assertFileExists($node_file_r1->getFileUri());
     $this->assertFileEntryExists($node_file_r1, 'File entry exists in database on node creation.');
     $this->assertFileIsPermanent($node_file_r1, 'File is permanent.');
@@ -62,7 +62,7 @@ class FileFieldRevisionTest extends FileFieldTestBase {
     $node_storage->resetCache([$nid]);
     $node = $node_storage->load($nid);
     $node_file_r2 = File::load($node->{$field_name}->target_id);
-    $node_vid_r2 = $node->getRevisionId();
+    $node_vid_r2 = $node->getRevisionId(TRUE);
     $this->assertFileExists($node_file_r2->getFileUri());
     $this->assertFileEntryExists($node_file_r2, 'Replacement file entry exists in database after creating new revision.');
     $this->assertFileIsPermanent($node_file_r2, 'Replacement file is permanent.');
@@ -82,7 +82,7 @@ class FileFieldRevisionTest extends FileFieldTestBase {
     $node_storage->resetCache([$nid]);
     $node = $node_storage->load($nid);
     $node_file_r3 = File::load($node->{$field_name}->target_id);
-    $node_vid_r3 = $node->getRevisionId();
+    $node_vid_r3 = $node->getRevisionId(TRUE);
     $this->assertEquals($node_file_r2->id(), $node_file_r3->id(), 'Previous revision file still in place after creating a new revision without a new file.');
     $this->assertFileIsPermanent($node_file_r3, 'New revision file is permanent.');
 

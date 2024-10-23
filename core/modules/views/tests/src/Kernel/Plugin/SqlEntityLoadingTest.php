@@ -71,9 +71,9 @@ class SqlEntityLoadingTest extends ViewsKernelTestBase {
       [
         'nid' => $node->id(),
         // The default revision ID.
-        'vid_1' => $revision->getRevisionId(),
+        'vid_1' => $revision->getRevisionId(TRUE),
         // The latest revision ID.
-        'vid' => $revision2->getRevisionId(),
+        'vid' => $revision2->getRevisionId(TRUE),
       ],
     ];
     $this->assertIdenticalResultset($view, $expected, [

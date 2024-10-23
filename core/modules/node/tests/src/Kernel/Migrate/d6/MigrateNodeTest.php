@@ -69,7 +69,7 @@ class MigrateNodeTest extends MigrateNodeTestBase {
     $this->assertSame('Test title rev 3', $node_revision->getTitle());
     $this->assertSame('2', $node_revision->getRevisionUser()->id(), 'Node revision has the correct user');
     $this->assertSame('1', $node_revision->id(), 'Node 1 loaded.');
-    $this->assertSame('2001', $node_revision->getRevisionId(), 'Node 1 revision 2001 loaded.');
+    $this->assertSame(2001, $node_revision->getRevisionId(TRUE), 'Node 1 revision 2001 loaded.');
     // This is empty on the first revision.
     $this->assertSame('modified rev 3', $node_revision->revision_log->value);
     $this->assertSame('This is a shared text field', $node->field_test->value);
