@@ -18,13 +18,6 @@ use Composer\Semver\Comparator;
 final class InstalledPackagesList extends \ArrayObject {
 
   /**
-   * The statically cached names of the Drupal core packages.
-   *
-   * @var string[]
-   */
-  private static ?array $corePackages = NULL;
-
-  /**
    * {@inheritdoc}
    */
   public function append(mixed $value): never {
