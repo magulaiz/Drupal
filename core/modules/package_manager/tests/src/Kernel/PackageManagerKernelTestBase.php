@@ -461,7 +461,7 @@ class TestStage extends StageBase {
   protected string $type = 'package_manager:test';
 
   /**
-   * {@inheritdoc}
+   * Implements the magic __sleep() method.
    *
    * TRICKY: without this, any failed ::assertStatusCheckResults()
    * will fail, because PHPUnit will want to serialize all arguments in the call

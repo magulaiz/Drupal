@@ -115,9 +115,6 @@ class SiteConfigurationExcluderTest extends PackageManagerKernelTestBase {
  */
 class TestSiteConfigurationExcluder extends SiteConfigurationExcluder {
 
-  /**
-   * {@inheritdoc}
-   */
   public string $sitePath;
 
 }
