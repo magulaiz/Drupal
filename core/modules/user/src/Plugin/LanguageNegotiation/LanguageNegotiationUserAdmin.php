@@ -90,7 +90,7 @@ class LanguageNegotiationUserAdmin extends LanguageNegotiationMethodBase impleme
   public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
     return new static(
       $container->get('router.admin_context'),
-      $container->get('router'),
+      $container->get('router.no_access_checks'),
       $container->get('path_processor_manager'),
       $container->get('current_route_match')
     );
