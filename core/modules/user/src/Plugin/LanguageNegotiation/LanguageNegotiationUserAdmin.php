@@ -42,14 +42,11 @@ class LanguageNegotiationUserAdmin extends LanguageNegotiationMethodBase impleme
   protected $adminContext;
 
   /**
-   * The router.
-   *
-   * This is only used when called from an event subscriber, before the request
-   * has been populated with the route info.
+   * A router implementation which does not check access.
    *
    * @var \Symfony\Component\Routing\Matcher\UrlMatcherInterface
    */
-  protected $router;
+  protected $accessUnawareRouter;
 
   /**
    * The path processor manager.
@@ -70,14 +67,14 @@ class LanguageNegotiationUserAdmin extends LanguageNegotiationMethodBase impleme
    *
    * @param \Drupal\Core\Routing\AdminContext $admin_context
    *   The admin context.
-   * @param \Symfony\Component\Routing\Matcher\UrlMatcherInterface $router
+   * @param \Symfony\Component\Routing\Matcher\UrlMatcherInterface $accessUnawareRouter
    *   The router.
    * @param \Drupal\Core\PathProcessor\PathProcessorManager $path_processor_manager
    *   The path processor manager.
    * @param \Drupal\Core\Routing\StackedRouteMatchInterface $stacked_route_match
    *   The stacked route match.
    */
-  public function __construct(AdminContext $admin_context, UrlMatcherInterface $router, PathProcessorManager $path_processor_manager, StackedRouteMatchInterface $stacked_route_match) {
+  public function __construct(AdminContext $admin_context, UrlMatcherInterface $accessUnawareRouter, PathProcessorManager $path_processor_manager, StackedRouteMatchInterface $stacked_route_match) {
     $this->adminContext = $admin_context;
     $this->router = $router;
     $this->pathProcessorManager = $path_processor_manager;
