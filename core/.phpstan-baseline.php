@@ -25481,6 +25481,12 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/jsonapi/tests/src/Functional/MenuLinkContentTest.php',
 ];
 $ignoreErrors[] = [
+	// identifier: phpunit.callParent
+	'message' => '#^Missing call to parent\\:\\:setUp\\(\\) method\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/jsonapi/tests/src/Functional/MenuLinkContentTest.php',
+];
+$ignoreErrors[] = [
 	// identifier: missingType.return
 	'message' => '#^Method Drupal\\\\Tests\\\\jsonapi\\\\Functional\\\\NodeTest\\:\\:createEntityReferenceField\\(\\) has no return type specified\\.$#',
 	'count' => 1,
@@ -62678,6 +62684,12 @@ $ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\Tests\\\\views\\\\FunctionalJavascript\\\\Plugin\\\\views\\\\Handler\\\\FieldTest\\:\\:assertConfigSchemaByName\\(\\) has no return type specified\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/views/tests/src/FunctionalJavascript/Plugin/views/Handler/FieldTest.php',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\Tests\\\\views\\\\Kernel\\\\Entity\\\\EntityViewsWithMultivalueBasefieldTest\\:\\:testView\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/views/tests/src/Kernel/Entity/EntityViewsWithMultivalueBasefieldTest.php',
 ];
 $ignoreErrors[] = [
 	// identifier: missingType.return
