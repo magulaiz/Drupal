@@ -190,7 +190,8 @@ function views_views_data() {
     /** @var \Drupal\field\FieldStorageConfigInterface $field_storage */
     foreach ($entity_type_manager->getStorage('field_storage_config')->loadMultiple() as $field_storage) {
       if (_views_field_get_entity_type_storage($field_storage)) {
-        $result = (array) $module_handler->invoke($field_storage->getTypeProvider(), 'field_views_data', [$field_storage]);
+        $provider = $field_storage->getTypeProvider();
+        $result = (array) $module_handler->invoke($provider === 'core' ? 'views' : $provider, 'field_views_data', [$field_storage]);
         if (empty($result)) {
           $result = views_field_default_views_data($field_storage);
         }
@@ -767,11 +768,12 @@ function views_field_default_views_data(FieldStorageConfigInterface $field_stora
 /**
  * Implements hook_field_views_data().
  *
- * The function implements the hook in behalf of 'core' because it adds a
+ * The function implements the hook on behalf of 'core' because it adds a
  * relationship and a reverse relationship to entity_reference field type, which
- * is provided by core.
+ * is provided by core. This function also provides an argument plugin for
+ * entity_reference fields that handles title token replacement.
  */
-function core_field_views_data(FieldStorageConfigInterface $field_storage) {
+function views_field_views_data(FieldStorageConfigInterface $field_storage) {
   $data = views_field_default_views_data($field_storage);
 
   // The code below only deals with the Entity reference field type.
@@ -838,6 +840,11 @@ function core_field_views_data(FieldStorageConfigInterface $field_storage) {
         ],
       ];
     }
+
+    // Provide an argument plugin that has a meaningful titleQuery()
+    // implementation getting the entity label.
+    $data[$table_name][$field_name . '_target_id']['argument']['id'] = 'entity_target_id';
+    $data[$table_name][$field_name . '_target_id']['argument']['target_entity_type_id'] = $target_entity_type_id;
   }
 
   return $data;

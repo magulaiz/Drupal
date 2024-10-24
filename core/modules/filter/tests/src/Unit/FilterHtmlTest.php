@@ -42,12 +42,12 @@ class FilterHtmlTest extends UnitTestCase {
    * @param string $expected
    *   The expected output string.
    */
-  public function testfilterAttributes($html, $expected) {
+  public function testFilterAttributes($html, $expected): void {
     $this->assertSame($expected, $this->filter->filterAttributes($html));
   }
 
   /**
-   * Provides data for testfilterAttributes.
+   * Provides data for testFilterAttributes.
    *
    * @return array
    *   An array of test data.
@@ -82,7 +82,7 @@ class FilterHtmlTest extends UnitTestCase {
   /**
    * @covers ::setConfiguration
    */
-  public function testSetConfiguration() {
+  public function testSetConfiguration(): void {
     $configuration['settings'] = [
       // New lines and spaces are replaced with a single space.
       'allowed_html' => "<a>  <br>\r\n  <p>",

@@ -50,7 +50,7 @@
  *     all operations have finished, this is passed to callback_batch_finished()
  *     where results may be referenced to display information to the end-user,
  *     such as how many total items were processed.
- *   It is discouraged to typehint this parameter as an array, to allow an
+ *   It is discouraged to type hint this parameter as an array, to allow an
  *   object implement \ArrayAccess to be passed.
  */
 function callback_batch_operation($multiple_params, &$context) {
@@ -186,13 +186,13 @@ function hook_ajax_render_alter(array &$data) {
  * hook_form_FORM_ID_alter(). So, for each module, the more general hooks are
  * called first followed by the more specific.
  *
- * @param $form
+ * @param array $form
  *   Nested array of form elements that comprise the form.
- * @param $form_state
+ * @param \Drupal\Core\Form\FormStateInterface $form_state
  *   The current state of the form. The arguments that
  *   \Drupal::formBuilder()->getForm() was originally called with are available
  *   in the array $form_state->getBuildInfo()['args'].
- * @param $form_id
+ * @param string $form_id
  *   A string that is the unique ID of the form, set by
  *   Drupal\Core\Form\FormInterface::getFormId().
  *
@@ -235,13 +235,13 @@ function hook_form_alter(&$form, \Drupal\Core\Form\FormStateInterface $form_stat
  * hook_form_FORM_ID_alter(). So, for each module, the more general hooks are
  * called first followed by the more specific.
  *
- * @param $form
+ * @param array $form
  *   Nested array of form elements that comprise the form.
- * @param $form_state
+ * @param \Drupal\Core\Form\FormStateInterface $form_state
  *   The current state of the form. The arguments that
  *   \Drupal::formBuilder()->getForm() was originally called with are available
  *   in the array $form_state->getBuildInfo()['args'].
- * @param $form_id
+ * @param string $form_id
  *   String representing the name of the form itself. Typically this is the
  *   name of the function that generated the form.
  *
@@ -293,11 +293,11 @@ function hook_form_FORM_ID_alter(&$form, \Drupal\Core\Form\FormStateInterface $f
  * hook_form_FORM_ID_alter(). So, for each module, the more general hooks are
  * called first followed by the more specific.
  *
- * @param $form
+ * @param array $form
  *   Nested array of form elements that comprise the form.
- * @param $form_state
+ * @param \Drupal\Core\Form\FormStateInterface $form_state
  *   The current state of the form.
- * @param $form_id
+ * @param string $form_id
  *   String representing the name of the form itself. Typically this is the
  *   name of the function that generated the form.
  *

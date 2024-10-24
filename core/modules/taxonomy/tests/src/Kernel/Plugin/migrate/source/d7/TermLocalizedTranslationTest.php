@@ -1,8 +1,10 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\taxonomy\Kernel\Plugin\migrate\source\d7;
 
-// cspell:ignore ltlanguage objectid objectindex tdlanguage tsid
+// cspell:ignore ltlanguage objectid objectindex plid tdlanguage tsid
 
 /**
  * Tests D7 i18n term localized source plugin.
