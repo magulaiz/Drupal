@@ -405,7 +405,7 @@ class SessionTest extends BrowserTestBase {
   /**
    * Reset the cookie file so that it refers to the specified user.
    */
-  public function sessionReset() {
+  public function sessionReset(): void {
     // Close the internal browser.
     $this->mink->resetSessions();
     $this->loggedInUser = FALSE;

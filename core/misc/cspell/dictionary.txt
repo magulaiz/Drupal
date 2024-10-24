@@ -275,6 +275,7 @@ imagecache
 imagetextalternative
 indexname
 inited
+inlines
 inno
 instantiator
 interactable

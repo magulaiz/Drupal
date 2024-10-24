@@ -59,7 +59,8 @@ class WorkspacesAliasRepository extends AliasRepository {
 
       $query->innerJoin('path_alias', 'base_table',
         $query->joinCondition()
-          ->compare("base_table.path_alias_current_revision.revision_id", serialize($coalesce_field)),
+          ->compare("base_table.path_alias_current_revision.revision_id", serialize($coalesce_field))
+          ->condition('base_table.path_alias_current_revision.status', TRUE),
       );
     }
     else {
@@ -72,6 +73,7 @@ class WorkspacesAliasRepository extends AliasRepository {
       $query->innerJoin('path_alias_revision', 'base_table',
         $query->joinCondition()
           ->where("[%alias].[revision_id] = COALESCE([$wa_join].[target_entity_revision_id], [base_table_2].[revision_id])")
+          ->condition('base_table.status', 1)
       );
     }
 

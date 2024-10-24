@@ -120,7 +120,7 @@ class HandlerFieldFieldTest extends KernelTestBase {
   /**
    * Tests simple field rendering.
    */
-  public function doTestSimpleFieldRender() {
+  public function doTestSimpleFieldRender(): void {
     $view = Views::getView('test_view_fieldapi');
     $this->prepareView($view);
     $view->preview();
@@ -139,7 +139,7 @@ class HandlerFieldFieldTest extends KernelTestBase {
   /**
    * Tests inaccessible field rendering.
    */
-  public function doTestInaccessibleFieldRender() {
+  public function doTestInaccessibleFieldRender(): void {
     $view = Views::getView('test_view_fieldapi');
     $this->prepareView($view);
     $view->preview();
@@ -161,7 +161,7 @@ class HandlerFieldFieldTest extends KernelTestBase {
   /**
    * Tests that fields with formatters runs as expected.
    */
-  public function doTestFormatterSimpleFieldRender() {
+  public function doTestFormatterSimpleFieldRender(): void {
     $view = Views::getView('test_view_fieldapi');
     $this->prepareView($view);
     $view->displayHandlers->get('default')->options['fields'][$this->fieldStorages[5]->getName()]['type'] = 'text_trimmed';
@@ -183,7 +183,7 @@ class HandlerFieldFieldTest extends KernelTestBase {
   /**
    * Tests multi-value field rendering.
    */
-  public function doTestMultipleFieldRender() {
+  public function doTestMultipleFieldRender(): void {
     $view = Views::getView('test_view_fieldapi');
     $field_name = $this->fieldStorages[3]->getName();
 
@@ -324,7 +324,7 @@ class HandlerFieldFieldTest extends KernelTestBase {
    * @param \Drupal\views\ViewExecutable $view
    *   The view to add field data to.
    */
-  protected function prepareView(ViewExecutable $view) {
+  protected function prepareView(ViewExecutable $view): void {
     $view->storage->invalidateCaches();
     $view->initDisplay();
     $connection = Database::getConnection();
@@ -345,7 +345,7 @@ class HandlerFieldFieldTest extends KernelTestBase {
   /**
    * Creates the testing fields.
    */
-  protected function createFields() {
+  protected function createFields(): void {
     $fields_data = [
       [
         'field_name' => 'field_name_0',

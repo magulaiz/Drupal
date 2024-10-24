@@ -82,7 +82,7 @@ class UserTest extends ResourceTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUpAuthorization($method) {
+  protected function setUpAuthorization($method): void {
     // @todo Remove this in
     $this->grantPermissionsToTestedRole(['access content']);
 
@@ -832,7 +832,7 @@ class UserTest extends ResourceTestBase {
    * @param string $cancel_method
    *   The cancel method.
    */
-  private function sendDeleteRequestForUser(UserInterface $account, string $cancel_method) {
+  private function sendDeleteRequestForUser(UserInterface $account, string $cancel_method): void {
     $url = Url::fromRoute(sprintf('jsonapi.%s.individual', static::$resourceTypeName), ['entity' => $account->uuid()]);
     $request_options = [];
     $request_options[RequestOptions::HEADERS]['Accept'] = 'application/vnd.api+json';
