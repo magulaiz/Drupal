@@ -133,7 +133,7 @@ final class LockFileValidator implements EventSubscriberInterface {
     }
 
     // If we have both hashes, ensure they match.
-    if ($active_lock_file_hash && $active_lock_file_stored_hash && !hash_equals($active_lock_file_stored_hash, $active_lock_file_hash)) {
+    if ($active_lock_file_hash && !hash_equals($active_lock_file_stored_hash, $active_lock_file_hash)) {
       $messages[] = $this->t('Unexpected changes were detected in the active lock file (@file), which indicates that other Composer operations were performed since this Package Manager operation started. This can put the code base into an unreliable state and therefore is not allowed.', [
         '@file' => $active_lock_file_path,
       ]);

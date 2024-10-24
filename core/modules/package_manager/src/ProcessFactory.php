@@ -91,7 +91,7 @@ final class ProcessFactory implements ProcessFactoryInterface {
     $executable = $command[0];
     $executable_parts = explode('/', $executable);
     $file = array_pop($executable_parts);
-    return strpos($file, 'composer') === 0;
+    return str_starts_with($file, 'composer');
   }
 
 }

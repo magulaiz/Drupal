@@ -82,9 +82,7 @@ abstract class TemplateProjectTestBase extends QuickStartTestBase {
    * {@inheritdoc}
    */
   protected function tearDown(): void {
-    if ($this->metadataServer) {
-      $this->metadataServer->stop();
-    }
+    $this->metadataServer?->stop();
     parent::tearDown();
   }
 

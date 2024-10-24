@@ -32,11 +32,8 @@ final class LegacyVersionUtility {
       if (count($version_parts) === 2) {
         $version .= '-' . $version_parts[1];
       }
-      return $version;
     }
-    else {
-      return $version;
-    }
+    return $version;
   }
 
   /**
