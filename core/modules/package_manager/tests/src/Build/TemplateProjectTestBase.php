@@ -89,7 +89,7 @@ abstract class TemplateProjectTestBase extends QuickStartTestBase {
   }
 
   /**
-   * Data provider for tests which use all of the core project templates.
+   * Data provider for tests which use all the core project templates.
    *
    * @return string[][]
    *   The test cases.
@@ -287,8 +287,8 @@ END;
     self::unboundCoreConstraints($data['require-dev']);
 
     // Do not run development Composer plugin, since it tries to run an
-    // executable that might not exist while dependencies are being installed
-    // and it adds no value to this test.
+    // executable that might not exist while dependencies are being installed.
+    // It adds no value to this test.
     $data['config']['allow-plugins']['dealerdirect/phpcodesniffer-composer-installer'] = FALSE;
 
     // Always force Composer to mirror path repositories. This is necessary

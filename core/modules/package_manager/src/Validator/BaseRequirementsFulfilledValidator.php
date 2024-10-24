@@ -49,8 +49,8 @@ final class BaseRequirementsFulfilledValidator implements EventSubscriberInterfa
    */
   public function validate(PreOperationStageEvent $event): void {
     // If there are any errors from the validators which ran before this one,
-    // base requirements are not fulfilled and we should stop any further
-    // validators from running.
+    // base requirements are not fulfilled. Stop any further validators from
+    // running.
     if ($event->getResults(SystemManager::REQUIREMENT_ERROR)) {
       $event->stopPropagation();
     }

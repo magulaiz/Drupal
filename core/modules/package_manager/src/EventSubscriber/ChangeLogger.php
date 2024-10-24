@@ -98,7 +98,7 @@ final class ChangeLogger implements EventSubscriberInterface, LoggerAwareInterfa
     $installed_post_apply = $this->composerInspector->getInstalledPackagesList($this->pathLocator->getProjectRoot());
 
     // Compare the packages which were installed when the stage was created
-    // against the package versions that were requested over all of the stage's
+    // against the package versions that were requested over all the stage's
     // require operations, and create a log entry listing all of it.
     $requested_log = [];
 

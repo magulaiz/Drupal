@@ -26,7 +26,7 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
  * installed:
  * - It must be installed in both places, or in neither of them. It can't, for
  *   example, be installed in the active directory but not the stage directory
- *   (or vice-versa).
+ *   (or vice versa).
  * - It must be one of the project's direct runtime or dev dependencies.
  * - It cannot be installed or removed by Package Manager. In other words, it
  *   must be added to the project at the command line by someone technical

@@ -134,7 +134,8 @@ class StageBaseTest extends PackageManagerKernelTestBase {
     $this->assertNull($stage->getMetadata('new_key'));
     $stage->destroy();
 
-    // Ensure metadata cannot be get or set unless the stage has been claimed.
+    // Ensure metadata cannot be accessed or set unless the stage has been
+    // claimed.
     $stage = $this->createStage();
     try {
       $stage->getMetadata('new_key');
@@ -265,7 +266,7 @@ class StageBaseTest extends PackageManagerKernelTestBase {
    * @param string $event_class
    *   The event class for which to attempt to destroy the stage.
    * @param bool $force
-   *   Whether or not the stage should be force destroyed.
+   *   Whether the stage should be force destroyed.
    * @param int $time_offset
    *   How many simulated seconds should have elapsed between the PreApplyEvent
    *   being dispatched and the attempt to destroy the stage.

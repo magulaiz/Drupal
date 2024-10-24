@@ -61,8 +61,8 @@ class SiteConfigurationExcluder implements EventSubscriberInterface {
    * Makes the staged `sites/default` directory owner-writable.
    *
    * This allows the core scaffold plugin to make changes in `sites/default`,
-   * if needed. Otherwise it would break if `sites/default` is not writable,
-   * which can happen because rsync preserves directory permissions (and Drupal
+   * if needed. Otherwise, it would break if `sites/default` is not writable.
+   * This can happen because rsync preserves directory permissions (and Drupal
    * tries to write-protect the site directory).
    *
    * We specifically exclude `default.settings.php` and `default.services.yml`

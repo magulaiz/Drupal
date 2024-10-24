@@ -81,7 +81,7 @@ final class PackageManagerUpdateProcessor extends UpdateProcessor {
   public function processFetchTask($project) {
     // The parent method will set 'update.last_check' which will be used to
     // inform the user when the last time update information was checked. In
-    // order to leave this value unaffected we will reset this to it's previous
+    // order to leave this value unaffected we will reset this to its previous
     // value.
     $last_check = $this->stateStore->get('update.last_check');
     $success = parent::processFetchTask($project);

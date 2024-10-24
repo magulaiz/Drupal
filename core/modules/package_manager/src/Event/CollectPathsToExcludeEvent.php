@@ -14,7 +14,7 @@ use PhpTuf\ComposerStager\API\Path\Value\PathListInterface;
  * Defines an event that collects paths to exclude.
  *
  * These paths are excluded by Composer Stager and are never copied into the
- * stage directory from the active directory, or vice-versa.
+ * stage directory from the active directory, or vice versa.
  */
 final class CollectPathsToExcludeEvent extends StageEvent implements PathListInterface {
 

@@ -29,7 +29,7 @@ final class LoggingCommitter implements CommitterInterface {
   private $inner;
 
   /**
-   * Constructs an Committer object.
+   * Constructs a Committer object.
    *
    * @param \Drupal\Core\State\StateInterface $state
    *   The state service.

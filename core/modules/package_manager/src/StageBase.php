@@ -319,11 +319,11 @@ abstract class StageBase implements LoggerAwareInterface {
     // while the event is being processed, the stage is marked as available.
     // @see ::dispatch()
     // We specifically generate a random 32-character alphanumeric name in order
-    // to guarantee that the the stage ID won't start with -, which could cause
-    // it to be interpreted as an option if it's used as a command-line
-    // argument. (For example,
-    // \Drupal\Component\Utility\Crypt::randomBytesBase64() would be vulnerable
-    // to this; the stage ID needs to be unique, but not cryptographically so.)
+    // to guarantee that the stage ID won't start with -, which could cause it
+    // to be interpreted as an option if it's used as a command-line argument.
+    // (For example, \Drupal\Component\Utility\Crypt::randomBytesBase64() would
+    // be vulnerable to this; the stage ID needs to be unique, but not
+    // cryptographically so.)
     $id = (new Random())->name(32);
     // Re-acquire the tempstore to ensure that the lock is written by whoever is
     // actually logged in (or not) right now, since it's possible that the stage

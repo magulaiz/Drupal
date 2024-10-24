@@ -40,8 +40,8 @@ class SqliteDatabaseExcluder implements EventSubscriberInterface {
    *   The event object.
    */
   public function excludeDatabaseFiles(CollectPathsToExcludeEvent $event): void {
-    // If the database is SQLite, it might be located in the project directory
-    // and we should exclude it.
+    // If the database is SQLite, it might be located in the project directory,
+    // and should be excluded.
     if ($this->database->driver() === 'sqlite') {
       // @todo Support database connections other than the default in
       //   https://www.drupal.org/i/3441919.
@@ -56,7 +56,7 @@ class SqliteDatabaseExcluder implements EventSubscriberInterface {
           $event->addPathsRelativeToProjectRoot($paths);
         }
         catch (\LogicException) {
-          // The database is outside of the project root, so we're done.
+          // The database is outside the project root, so we're done.
         }
       }
       else {

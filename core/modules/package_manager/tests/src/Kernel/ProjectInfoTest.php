@@ -237,8 +237,8 @@ class ProjectInfoTest extends PackageManagerKernelTestBase {
    * @param string $release_xml
    *   The path of the release metadata.
    * @param bool $expected_to_be_safe
-   *   Whether or not the installed version of the project is expected to be
-   *   found safe.
+   *   Whether the installed version of the project is expected to be found
+   *   safe.
    *
    * @covers ::isInstalledVersionSafe
    *

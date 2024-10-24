@@ -60,10 +60,10 @@ final class NoOpStager implements StagerInterface {
   }
 
   /**
-   * Sets whether or not ::stage() should simulate a change in the lock file.
+   * Sets whether ::stage() should simulate a change in the lock file.
    *
    * @param bool $value
-   *   (optional) Whether or not to simulate a change in the lock file when
+   *   (optional) Whether to simulate a change in the lock file when
    *   ::stage() is called. Defaults to TRUE.
    */
   public static function setLockFileShouldChange(bool $value = TRUE): void {

@@ -28,7 +28,7 @@ class TestController extends ControllerBase {
       $file = $xml_map['#all'];
     }
     else {
-      // The test didn't specify (for example, the webroot has other modules and
+      // The test didn't specify, for example, the webroot has other modules and
       // themes installed but they're disabled by the version of the site
       // running the test. So, we default to a file we know won't exist, so at
       // least we'll get an empty xml response instead of a bunch of Drupal page

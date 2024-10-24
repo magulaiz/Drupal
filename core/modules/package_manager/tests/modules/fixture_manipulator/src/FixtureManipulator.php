@@ -84,9 +84,9 @@ class FixtureManipulator {
    * @param array $package
    *   A Composer package definition. Must include the `name` and `type` keys.
    * @param bool $is_dev_requirement
-   *   Whether or not the package is a development requirement.
+   *   Whether the package is a development requirement.
    * @param bool $allow_plugins
-   *   Whether or not to use the '--no-plugins' option.
+   *   Whether to use the '--no-plugins' option.
    * @param array|null $extra_files
    *   An array extra files to create in the package. The keys are the file
    *   paths under package and values are the file contents.
@@ -154,9 +154,9 @@ class FixtureManipulator {
    * @param string $version
    *   A version constraint.
    * @param bool $is_dev_requirement
-   *   Whether or not the package is a development requirement.
+   *   Whether the package is a development requirement.
    * @param bool $allow_plugins
-   *   Whether or not to use the '--no-plugins' option.
+   *   Whether to use the '--no-plugins' option.
    */
   public function requirePackage(string $package, string $version, bool $is_dev_requirement = FALSE, bool $allow_plugins = FALSE): self {
     if (!$this->committingChanges) {
@@ -187,7 +187,7 @@ class FixtureManipulator {
    * @param array $config
    *   The config to be added to the package's composer.json.
    * @param bool $is_dev_requirement
-   *   Whether or not the package is a development requirement.
+   *   Whether the package is a development requirement.
    *
    * @see \Composer\Command\ConfigCommand
    */
@@ -213,7 +213,7 @@ class FixtureManipulator {
    * @param string $version
    *   The version.
    * @param bool $is_dev_requirement
-   *   Whether or not the package is a development requirement.
+   *   Whether the package is a development requirement.
    *
    * @return $this
    */
@@ -231,7 +231,7 @@ class FixtureManipulator {
    * @param string $name
    *   The name of the package to remove.
    * @param bool $is_dev_requirement
-   *   Whether or not the package is a developer requirement.
+   *   Whether the package is a developer requirement.
    */
   public function removePackage(string $name, bool $is_dev_requirement = FALSE): self {
     if (!$this->committingChanges) {

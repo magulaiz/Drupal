@@ -15,7 +15,7 @@ use Drupal\package_manager\Exception\StageFailureMarkerException;
  * Handles failure marker file operation.
  *
  * The failure marker is a file placed in the active directory while staged
- * code is copied back into it, and then removed afterwards. This allows us to
+ * code is copied back into it, and then removed afterward. This allows us to
  * know if a commit operation failed midway through, which could leave the site
  * code base in an indeterminate state -- which, in the worst case scenario,
  * might render Drupal being unable to boot.

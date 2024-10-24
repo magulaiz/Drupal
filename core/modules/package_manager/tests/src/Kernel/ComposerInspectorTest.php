@@ -355,7 +355,7 @@ class ComposerInspectorTest extends PackageManagerKernelTestBase {
    * Tests that the installed path of metapackages is always NULL.
    *
    * @param bool $is_metapackage
-   *   Whether or not the test package will be a metapackage.
+   *   Whether the test package will be a metapackage.
    * @param string|null $install_path
    *   The package install path that Composer should report. If NULL, the
    *   reported path will be unchanged. The token <PROJECT_ROOT> will be

@@ -114,7 +114,7 @@ final class ValidationResult {
    *   The validation results.
    *
    * @return int
-   *   The overall severity of the results. Will be be one of the
+   *   The overall severity of the results. Will be one of the
    *   SystemManager::REQUIREMENT_* constants.
    */
   public static function getOverallSeverity(array $results): int {
