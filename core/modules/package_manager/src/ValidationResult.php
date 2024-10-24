@@ -35,7 +35,7 @@ final class ValidationResult {
    */
   private function __construct(
     public readonly int $severity,
-    private array $messages,
+    private readonly array $messages,
     public readonly ?TranslatableMarkup $summary,
     bool $assert_translatable,
   ) {

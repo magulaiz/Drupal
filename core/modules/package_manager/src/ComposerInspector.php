@@ -243,14 +243,10 @@ class ComposerInspector implements LoggerAwareInterface {
     catch (RuntimeException $e) {
       // Assume any error from `composer config` is about an undefined key-value
       // pair which may have a known default value.
-      switch ($key) {
-        case 'extra':
-          return '{}';
-
-        default:
-          // Otherwise, re-throw the exception.
-          throw $e;
-      }
+      return match ($key) {
+        'extra' => '{}',
+        default => throw $e,
+      };
     }
     $output = $this->processCallback->getOutput();
     return $output ? trim(implode('', $output)) : NULL;

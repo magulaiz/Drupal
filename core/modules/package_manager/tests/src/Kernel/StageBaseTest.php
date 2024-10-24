@@ -669,7 +669,7 @@ class StageBaseTest extends PackageManagerKernelTestBase {
   /**
    * Tests when Composer Stager throws an exception during an operation.
    *
-   * @param string $throwing_class
+   * @param class-string $throwing_class
    *   The fully qualified name of the Composer Stager class that should throw
    *   an exception. It is expected to have a static ::setException() method,
    *   provided by \Drupal\package_manager_bypass\ComposerStagerExceptionTrait.
