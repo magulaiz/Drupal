@@ -168,7 +168,7 @@ function update_manager_archive_extract($file, $directory) {
 
   // Unfortunately, we can only use the directory name to determine the project
   // name. Some archivers list the first file as the directory (i.e., MODULE/)
-  // and others list an actual file (i.e., MODULE/README.TXT).
+  // and others list an actual file (i.e., MODULE/README.md).
   $project = strtok($files[0], '/\\');
 
   $extract_location = $directory . '/' . $project;
