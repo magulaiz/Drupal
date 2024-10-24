@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace Drupal\package_manager;
 
+use Composer\InstalledVersions;
 use Drupal\Core\DependencyInjection\ContainerBuilder;
 use Drupal\Core\DependencyInjection\ServiceProviderBase;
-use PhpTuf\ComposerStager\API\Core\BeginnerInterface;
 
 /**
  * Defines dynamic container services for Package Manager.
@@ -29,10 +29,7 @@ final class PackageManagerServiceProvider extends ServiceProviderBase {
   public function register(ContainerBuilder $container): void {
     parent::register($container);
 
-    // Use an interface that we know exists to determine the absolute path where
-    // Composer Stager is installed.
-    $mirror = new \ReflectionClass(BeginnerInterface::class);
-    $path = dirname($mirror->getFileName(), 3);
+    $path = InstalledVersions::getInstallPath('php-tuf/composer-stager') . '/src';
 
     // Certain subdirectories of Composer Stager shouldn't be scanned for
     // services.
@@ -49,7 +46,7 @@ final class PackageManagerServiceProvider extends ServiceProviderBase {
 
     // Find all `.php` files in Composer Stager which aren't in the ignored
     // directories.
-    $iterator = new \RecursiveDirectoryIterator($path, \FilesystemIterator::CURRENT_AS_SELF | \FilesystemIterator::SKIP_DOTS);
+    $iterator = new \RecursiveDirectoryIterator($path, \FilesystemIterator::CURRENT_AS_SELF | \FilesystemIterator::SKIP_DOTS | \FilesystemIterator::FOLLOW_SYMLINKS);
     $iterator = new \RecursiveCallbackFilterIterator($iterator, static function (\SplFileInfo $current) use ($ignore_directories): bool {
       if ($current->isDir()) {
         return !in_array($current->getPathname(), $ignore_directories, TRUE);
