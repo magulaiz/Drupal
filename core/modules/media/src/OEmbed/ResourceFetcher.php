@@ -93,7 +93,20 @@ class ResourceFetcher implements ResourceFetcherInterface {
       $data['thumbnail_url'] = $this->doVimeoRequest($data)['video']['thumbnail_large'];
     }
     if (isset($data['provider_name']) && $data['provider_name'] === 'YouTube') {
-      $data['thumbnail_url'] = str_replace('hqdefault', 'maxresdefault', $data['thumbnail_url']);
+      // Check for high quality thumbnail.
+      $high_quality_thumbnail = str_replace('hqdefault', 'maxresdefault', $data['thumbnail_url']);
+      try {
+        $response = $this->httpClient->request('GET', $high_quality_thumbnail, [
+          RequestOptions::TIMEOUT => 5,
+        ]);
+
+        if ($response->getStatusCode() === 200) {
+          $data['thumbnail_url'] = $high_quality_thumbnail;
+        }
+      }
+      catch (TransferException $e) {
+        // Use default thumbnail.
+      }
     }
 
     $this->cacheBackend->set($cache_id, $data);
