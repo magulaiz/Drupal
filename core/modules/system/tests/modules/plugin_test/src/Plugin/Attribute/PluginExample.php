@@ -9,7 +9,7 @@ use Drupal\Component\Plugin\Attribute\Plugin;
 /**
  * Defines a custom PluginExample attribute.
  */
-#[Attribute(Attribute::TARGET_CLASS)]
+#[\Attribute(\Attribute::TARGET_CLASS)]
 class PluginExample extends Plugin {
 
   /**
