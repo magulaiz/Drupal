@@ -666,11 +666,8 @@ versionable
 versionless
 vfsstream
 viewports
-<<<<<<< HEAD
 vocabs
 warmable
-=======
->>>>>>> 11.x
 wcag
 webcal
 webflo
