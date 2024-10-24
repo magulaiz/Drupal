@@ -261,7 +261,6 @@ class ViewsConfigUpdater implements ContainerInjectionInterface {
     return $changed;
   }
 
-
   /**
    * Checks for table style views needing a default CSS table class value.
    *
