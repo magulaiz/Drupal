@@ -31,31 +31,7 @@ class ApiController extends ControllerBase {
    */
   protected $finishedRoute = 'package_manager_test_api.finish';
 
-  /**
-   * The stage.
-   *
-   * @var \Drupal\package_manager\StageBase
-   */
-  protected $stage;
-
-  /**
-   * The path locator service.
-   *
-   * @var \Drupal\package_manager\PathLocator
-   */
-  private $pathLocator;
-
-  /**
-   * Constructs an ApiController object.
-   *
-   * @param \Drupal\package_manager\StageBase $stage
-   *   The stage.
-   * @param \Drupal\package_manager\PathLocator $path_locator
-   *   The path locator service.
-   */
-  public function __construct(StageBase $stage, PathLocator $path_locator) {
-    $this->stage = $stage;
-    $this->pathLocator = $path_locator;
+  public function __construct(protected StageBase $stage) {
   }
 
   /**
@@ -74,10 +50,7 @@ class ApiController extends ControllerBase {
       $container->get(PathFactoryInterface::class),
       $container->get(FailureMarker::class),
     );
-    return new static(
-      $stage,
-      $container->get(PathLocator::class),
-    );
+    return new static($stage);
   }
 
   /**
