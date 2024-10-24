@@ -23,7 +23,7 @@ abstract class InstallerConfigDirectoryTestBase extends InstallerTestBase {
   protected $profile = NULL;
 
   /**
-   * @todo Fill out docblock.
+   * @var bool
    */
   protected $existingSyncDirectory = FALSE;
 
