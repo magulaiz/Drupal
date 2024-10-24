@@ -24,7 +24,6 @@ class ProcessFactoryTest extends PackageManagerKernelTestBase {
     // Ensure that the directory of the PHP interpreter can be found.
     $reflector = new \ReflectionObject($factory);
     $method = $reflector->getMethod('getPhpDirectory');
-    $method->setAccessible(TRUE);
     $php_dir = $method->invoke(NULL);
     $this->assertNotEmpty($php_dir);
 

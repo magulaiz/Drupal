@@ -28,7 +28,6 @@ class StageBaseTest extends UnitTestCase {
   public function testValidateRequirements(?string $expected_exception, string $requirement): void {
     $reflector = new \ReflectionClass(StageBase::class);
     $method = $reflector->getMethod('validateRequirements');
-    $method->setAccessible(TRUE);
 
     if ($expected_exception) {
       $this->expectException($expected_exception);
