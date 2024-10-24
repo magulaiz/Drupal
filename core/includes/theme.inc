@@ -1431,7 +1431,7 @@ function template_preprocess_field(&$variables, $hook) {
   // Append translatable ':' after label if inline label
   // display is selected.
   if ($variables['label_display'] == 'inline') {
-    $variables['label'] .= t(':');
+    $variables['label'] = t('@label_inline:', ['@label_inline' => $variables['label']]);
   }
 
   $variables['multiple'] = $element['#is_multiple'];
