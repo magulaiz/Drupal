@@ -6,7 +6,7 @@ namespace Drupal\package_manager;
 
 use Composer\InstalledVersions;
 use Drupal\Core\DependencyInjection\ContainerBuilder;
-use Drupal\Core\DependencyInjection\ServiceProviderBase;
+use Drupal\Core\DependencyInjection\ServiceProviderInterface;
 
 /**
  * Defines dynamic container services for Package Manager.
@@ -21,14 +21,12 @@ use Drupal\Core\DependencyInjection\ServiceProviderBase;
  *   at any time without warning. External code should not interact with this
  *   class.
  */
-final class PackageManagerServiceProvider extends ServiceProviderBase {
+final class PackageManagerServiceProvider implements ServiceProviderInterface {
 
   /**
    * {@inheritdoc}
    */
   public function register(ContainerBuilder $container): void {
-    parent::register($container);
-
     $path = InstalledVersions::getInstallPath('php-tuf/composer-stager') . '/src';
 
     // Certain subdirectories of Composer Stager shouldn't be scanned for
