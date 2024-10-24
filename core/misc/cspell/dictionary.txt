@@ -40,9 +40,6 @@ backporting
 backports
 bakeware
 barchart
-basefield
-basepath
-basetheme
 beatle
 bebebe
 beforeclose
@@ -275,6 +272,7 @@ imagecache
 imagetextalternative
 indexname
 inited
+inlines
 inno
 instantiator
 interactable
