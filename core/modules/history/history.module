@@ -26,7 +26,7 @@ define('HISTORY_READ_LIMIT', ((int) $_SERVER['REQUEST_TIME']) - 30 * 24 * 60 * 6
 /**
  * Implements hook_help().
  */
-function history_help($route_name, RouteMatchInterface $route_match) {
+function history_help($route_name, RouteMatchInterface $route_match): string {
   switch ($route_name) {
     case 'help.page.history':
       $output = '<h2>' . t('About') . '</h2>';

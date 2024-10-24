@@ -19,7 +19,7 @@ use Drupal\user\RoleInterface;
 /**
  * Implements hook_help().
  */
-function filter_help($route_name, RouteMatchInterface $route_match) {
+function filter_help($route_name, RouteMatchInterface $route_match): string {
   switch ($route_name) {
     case 'help.page.filter':
       $output = '';

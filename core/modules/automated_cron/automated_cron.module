@@ -12,7 +12,7 @@ use Drupal\Core\Form\FormStateInterface;
 /**
  * Implements hook_help().
  */
-function automated_cron_help($route_name, RouteMatchInterface $route_match) {
+function automated_cron_help($route_name, RouteMatchInterface $route_match): string {
   switch ($route_name) {
     case 'help.page.automated_cron':
       $output = '';

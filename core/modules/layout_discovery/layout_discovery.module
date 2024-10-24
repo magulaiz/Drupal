@@ -11,7 +11,7 @@ use Drupal\Core\Template\Attribute;
 /**
  * Implements hook_help().
  */
-function layout_discovery_help($route_name) {
+function layout_discovery_help($route_name): string {
   switch ($route_name) {
     case 'help.page.layout_discovery':
       $output = '<h2>' . t('About') . '</h2>';

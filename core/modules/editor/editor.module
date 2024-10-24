@@ -23,7 +23,7 @@ use Drupal\text\Plugin\Field\FieldType\TextItemBase;
 /**
  * Implements hook_help().
  */
-function editor_help($route_name, RouteMatchInterface $route_match) {
+function editor_help($route_name, RouteMatchInterface $route_match): string {
   switch ($route_name) {
     case 'help.page.editor':
       $output = '';

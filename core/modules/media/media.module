@@ -23,7 +23,7 @@ use Drupal\views\ViewExecutable;
 /**
  * Implements hook_help().
  */
-function media_help($route_name, RouteMatchInterface $route_match) {
+function media_help($route_name, RouteMatchInterface $route_match): string {
   switch ($route_name) {
     case 'help.page.media':
       $output = '<h2>' . t('About') . '</h2>';

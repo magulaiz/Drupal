@@ -18,7 +18,7 @@ use Drupal\views\ViewExecutable;
 /**
  * Implements hook_help().
  */
-function dblog_help($route_name, RouteMatchInterface $route_match) {
+function dblog_help($route_name, RouteMatchInterface $route_match): string {
   switch ($route_name) {
     case 'help.page.dblog':
       $output = '';

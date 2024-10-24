@@ -24,7 +24,7 @@ define('IMAGE_DERIVATIVE_TOKEN', 'itok');
 /**
  * Implements hook_help().
  */
-function image_help($route_name, RouteMatchInterface $route_match) {
+function image_help($route_name, RouteMatchInterface $route_match): string {
   switch ($route_name) {
     case 'help.page.image':
       $field_ui_url = \Drupal::moduleHandler()->moduleExists('field_ui') ? Url::fromRoute('help.page', ['name' => 'field_ui'])->toString() : '#';

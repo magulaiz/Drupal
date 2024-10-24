@@ -14,7 +14,7 @@ use Drupal\filter\Entity\FilterFormat;
 /**
  * Implements hook_help().
  */
-function text_help($route_name, RouteMatchInterface $route_match) {
+function text_help($route_name, RouteMatchInterface $route_match): string {
   switch ($route_name) {
     case 'help.page.text':
       $output = '';

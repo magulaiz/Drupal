@@ -21,7 +21,7 @@ use Drupal\update\UpdateManagerInterface;
 /**
  * Implements hook_help().
  */
-function update_help($route_name, RouteMatchInterface $route_match) {
+function update_help($route_name, RouteMatchInterface $route_match): string {
   switch ($route_name) {
     case 'help.page.update':
       $output = '';

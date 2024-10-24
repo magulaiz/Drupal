@@ -12,7 +12,7 @@ use Drupal\Core\Url;
 /**
  * Implements hook_help().
  */
-function big_pipe_help($route_name, RouteMatchInterface $route_match) {
+function big_pipe_help($route_name, RouteMatchInterface $route_match): string {
   switch ($route_name) {
     case 'help.page.big_pipe':
       $output = '<h2>' . t('About') . '</h2>';

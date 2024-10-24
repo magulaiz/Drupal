@@ -34,7 +34,7 @@ use Drupal\views\Entity\View;
 /**
  * Implements hook_help().
  */
-function content_moderation_help($route_name, RouteMatchInterface $route_match) {
+function content_moderation_help($route_name, RouteMatchInterface $route_match): string {
   switch ($route_name) {
     // Main module help for the content_moderation module.
     case 'help.page.content_moderation':

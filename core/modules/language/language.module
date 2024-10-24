@@ -27,7 +27,7 @@ use Drupal\language\Plugin\LanguageNegotiation\LanguageNegotiationUrlFallback;
 /**
  * Implements hook_help().
  */
-function language_help($route_name, RouteMatchInterface $route_match) {
+function language_help($route_name, RouteMatchInterface $route_match): string {
   switch ($route_name) {
     case 'help.page.language':
       $output = '';

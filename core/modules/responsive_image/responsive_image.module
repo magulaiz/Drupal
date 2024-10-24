@@ -17,7 +17,7 @@ use Drupal\breakpoint\BreakpointInterface;
 /**
  * Implements hook_help().
  */
-function responsive_image_help($route_name, RouteMatchInterface $route_match) {
+function responsive_image_help($route_name, RouteMatchInterface $route_match): string {
   switch ($route_name) {
     case 'help.page.responsive_image':
       $output = '';

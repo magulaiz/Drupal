@@ -80,7 +80,7 @@ const JSONAPI_FILTER_AMONG_OWN = 'filter_among_own';
 /**
  * Implements hook_help().
  */
-function jsonapi_help($route_name, RouteMatchInterface $route_match) {
+function jsonapi_help($route_name, RouteMatchInterface $route_match): string {
   switch ($route_name) {
     case 'help.page.jsonapi':
       $output = '<h2>' . t('About') . '</h2>';

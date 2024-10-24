@@ -20,7 +20,7 @@ use Drupal\path\PathAliasListBuilder;
 /**
  * Implements hook_help().
  */
-function path_help($route_name, RouteMatchInterface $route_match) {
+function path_help($route_name, RouteMatchInterface $route_match): string {
   switch ($route_name) {
     case 'help.page.path':
       $output = '';

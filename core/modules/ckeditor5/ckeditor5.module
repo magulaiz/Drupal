@@ -26,7 +26,7 @@ use Drupal\Core\Url;
 /**
  * Implements hook_help().
  */
-function ckeditor5_help($route_name, RouteMatchInterface $route_match) {
+function ckeditor5_help($route_name, RouteMatchInterface $route_match): string {
   switch ($route_name) {
     case 'help.page.ckeditor5':
       $output = '';

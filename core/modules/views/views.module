@@ -21,7 +21,7 @@ use Drupal\views\ViewsConfigUpdater;
 /**
  * Implements hook_help().
  */
-function views_help($route_name, RouteMatchInterface $route_match) {
+function views_help($route_name, RouteMatchInterface $route_match): string {
   switch ($route_name) {
     case 'help.page.views':
       $output = '';

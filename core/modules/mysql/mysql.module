@@ -10,7 +10,7 @@ use Drupal\Core\Routing\RouteMatchInterface;
 /**
  * Implements hook_help().
  */
-function mysql_help($route_name, RouteMatchInterface $route_match) {
+function mysql_help($route_name, RouteMatchInterface $route_match): string {
   switch ($route_name) {
     case 'help.page.mysql':
       $output = '';

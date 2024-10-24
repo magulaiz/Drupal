@@ -10,7 +10,7 @@ use Drupal\Core\Routing\RouteMatchInterface;
 /**
  * Implements hook_help().
  */
-function dynamic_page_cache_help($route_name, RouteMatchInterface $route_match) {
+function dynamic_page_cache_help($route_name, RouteMatchInterface $route_match): string {
   switch ($route_name) {
     case 'help.page.dynamic_page_cache':
       $output = '<h2>' . t('About') . '</h2>';

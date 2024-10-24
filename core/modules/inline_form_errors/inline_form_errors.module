@@ -11,7 +11,7 @@ use Drupal\inline_form_errors\RenderElementHelper;
 /**
  * Implements hook_help().
  */
-function inline_form_errors_help($route_name, RouteMatchInterface $route_match) {
+function inline_form_errors_help($route_name, RouteMatchInterface $route_match): string {
   switch ($route_name) {
     case 'help.page.inline_form_errors':
       $output = '';

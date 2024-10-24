@@ -15,7 +15,7 @@ use Drupal\field\FieldStorageConfigInterface;
 /**
  * Implements hook_help().
  */
-function options_help($route_name, RouteMatchInterface $route_match) {
+function options_help($route_name, RouteMatchInterface $route_match): string {
   switch ($route_name) {
     case 'help.page.options':
       $output = '';

@@ -27,7 +27,7 @@ use Drupal\system\MenuInterface;
 /**
  * Implements hook_help().
  */
-function menu_ui_help($route_name, RouteMatchInterface $route_match) {
+function menu_ui_help($route_name, RouteMatchInterface $route_match): string {
   switch ($route_name) {
     case 'help.page.menu_ui':
       $output = '';

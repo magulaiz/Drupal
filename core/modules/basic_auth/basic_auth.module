@@ -11,7 +11,7 @@ use Drupal\Core\Routing\RouteMatchInterface;
 /**
  * Implements hook_help().
  */
-function basic_auth_help($route_name, RouteMatchInterface $route_match) {
+function basic_auth_help($route_name, RouteMatchInterface $route_match): string {
   switch ($route_name) {
     case 'help.page.basic_auth':
       $output = '';

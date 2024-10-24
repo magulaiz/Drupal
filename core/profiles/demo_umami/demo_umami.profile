@@ -13,7 +13,7 @@ use Drupal\Core\Url;
 /**
  * Implements hook_help().
  */
-function demo_umami_help($route_name, RouteMatchInterface $route_match) {
+function demo_umami_help($route_name, RouteMatchInterface $route_match): string {
   switch ($route_name) {
     case 'help.page.demo_umami':
       $output = '';

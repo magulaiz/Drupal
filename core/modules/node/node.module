@@ -36,7 +36,7 @@ use Drupal\node\Form\NodePreviewForm;
 /**
  * Implements hook_help().
  */
-function node_help($route_name, RouteMatchInterface $route_match) {
+function node_help($route_name, RouteMatchInterface $route_match): string {
   // Remind site administrators about the {node_access} table being flagged
   // for rebuild. We don't need to issue the message on the confirm form, or
   // while the rebuild is being processed.

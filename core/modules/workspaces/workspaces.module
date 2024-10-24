@@ -24,7 +24,7 @@ use Drupal\workspaces\ViewsQueryAlter;
 /**
  * Implements hook_help().
  */
-function workspaces_help($route_name, RouteMatchInterface $route_match) {
+function workspaces_help($route_name, RouteMatchInterface $route_match): string {
   switch ($route_name) {
     // Main module help for the Workspaces module.
     case 'help.page.workspaces':

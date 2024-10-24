@@ -23,7 +23,7 @@ use Drupal\language\ContentLanguageSettingsInterface;
 /**
  * Implements hook_help().
  */
-function content_translation_help($route_name, RouteMatchInterface $route_match) {
+function content_translation_help($route_name, RouteMatchInterface $route_match): string {
   switch ($route_name) {
     case 'help.page.content_translation':
       $output = '';

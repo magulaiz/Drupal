@@ -42,7 +42,7 @@ define('COMMENT_NEW_LIMIT', ((int) $_SERVER['REQUEST_TIME']) - 30 * 24 * 60 * 60
 /**
  * Implements hook_help().
  */
-function comment_help($route_name, RouteMatchInterface $route_match) {
+function comment_help($route_name, RouteMatchInterface $route_match): string {
   switch ($route_name) {
     case 'help.page.comment':
       $output = '<h2>' . t('About') . '</h2>';

@@ -16,7 +16,7 @@ use Drupal\navigation\RenderCallbacks;
 /**
  * Implements hook_help().
  */
-function navigation_help($route_name, RouteMatchInterface $route_match) {
+function navigation_help($route_name, RouteMatchInterface $route_match): string {
   switch ($route_name) {
     case 'help.page.navigation':
       $output = '';

@@ -148,7 +148,7 @@ const LOCALE_TRANSLATION_CURRENT = 'current';
 /**
  * Implements hook_help().
  */
-function locale_help($route_name, RouteMatchInterface $route_match) {
+function locale_help($route_name, RouteMatchInterface $route_match): string {
   switch ($route_name) {
     case 'help.page.locale':
       $output = '';

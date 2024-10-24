@@ -10,7 +10,7 @@ declare(strict_types=1);
 /**
  * Implements hook_help().
  */
-function experimental_module_requirements_test_help($route_name) {
+function experimental_module_requirements_test_help($route_name): string {
   switch ($route_name) {
     case 'help.page.experimental_module_requirements_test':
       // Make the help text conform to core standards.

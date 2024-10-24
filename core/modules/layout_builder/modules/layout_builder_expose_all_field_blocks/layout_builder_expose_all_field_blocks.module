@@ -10,7 +10,7 @@ use Drupal\Core\Routing\RouteMatchInterface;
 /**
  * Implements hook_help().
  */
-function layout_builder_expose_all_field_blocks_help($route_name, RouteMatchInterface $route_match) {
+function layout_builder_expose_all_field_blocks_help($route_name, RouteMatchInterface $route_match): string {
   switch ($route_name) {
     case 'help.page.layout_builder_expose_all_field_blocks':
       $output = '<h2>' . t('About') . '</h2>';

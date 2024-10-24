@@ -20,7 +20,7 @@ use Drupal\field_layout\Form\FieldLayoutEntityViewDisplayEditForm;
 /**
  * Implements hook_help().
  */
-function field_layout_help($route_name, RouteMatchInterface $route_match) {
+function field_layout_help($route_name, RouteMatchInterface $route_match): string {
   switch ($route_name) {
     case 'help.page.field_layout':
       $output = '<h2>' . t('About') . '</h2>';

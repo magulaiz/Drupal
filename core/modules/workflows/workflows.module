@@ -11,7 +11,7 @@ use Drupal\Core\Url;
 /**
  * Implements hook_help().
  */
-function workflows_help($route_name, RouteMatchInterface $route_match) {
+function workflows_help($route_name, RouteMatchInterface $route_match): string {
   switch ($route_name) {
     case 'help.page.workflows':
       $content_moderation_url = NULL;

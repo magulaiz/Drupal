@@ -11,7 +11,7 @@ use Drupal\Core\Routing\RouteMatchInterface;
 /**
  * Implements hook_help().
  */
-function phpass_help($route_name, RouteMatchInterface $route_match) {
+function phpass_help($route_name, RouteMatchInterface $route_match): string {
   switch ($route_name) {
     case 'help.page.phpass':
       $output = '';
