@@ -95,7 +95,7 @@ final class InstalledPackage {
   private function scanForProjectName(): ?string {
     $iterator = new \RecursiveDirectoryIterator($this->path);
     $iterator = new \RecursiveIteratorIterator($iterator);
-    $iterator = new \RegexIterator($iterator, '/.+\.info\.yml$/', \RecursiveRegexIterator::GET_MATCH);
+    $iterator = new \RegexIterator($iterator, '/.+\.info\.yml$/', \RegexIterator::GET_MATCH);
 
     foreach ($iterator as $match) {
       $info = file_get_contents($match[0]);
