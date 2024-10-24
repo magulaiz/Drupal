@@ -53,7 +53,10 @@ class CachePreWarmer implements CachePreWarmerInterface {
    */
   protected array $calledServices = [];
 
-  public function __construct(protected readonly ClassResolverInterface $classResolver, protected readonly array $serviceIds) {}
+  public function __construct(
+    protected readonly ClassResolverInterface $classResolver,
+    protected readonly array $serviceIds,
+  ) {}
 
   /**
    * {@inheritdoc}
