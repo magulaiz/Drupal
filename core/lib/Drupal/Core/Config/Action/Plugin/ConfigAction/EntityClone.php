@@ -43,11 +43,13 @@ final class EntityClone implements ConfigActionPluginInterface, ContainerFactory
    * {@inheritdoc}
    */
   public function apply(string $configName, mixed $value): void {
-    if (is_string($value)) {
+    if (!is_array($value)) {
       $value = ['id' => $value];
     }
-    assert(is_array($value));
+    assert(is_string($value['id']));
+
     $value += ['fail_if_exists' => FALSE];
+    assert(is_bool($value['fail_if_exists']));
 
     // If the original doesn't exist, there's nothing to clone.
     $original = $this->configManager->loadConfigEntityByName($configName);
