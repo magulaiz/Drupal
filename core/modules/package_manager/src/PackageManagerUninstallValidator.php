@@ -55,10 +55,8 @@ final class PackageManagerUninstallValidator implements ModuleUninstallValidator
       $this->time,
       $this->pathFactory,
       $this->failureMarker) extends StageBase {};
-    if ($stage->isAvailable() || !$stage->isApplying()) {
-      return [];
-    }
-    if ($stage->isApplying()) {
+    $reasons = [];
+    if (!$stage->isAvailable() && $stage->isApplying()) {
       $reasons[] = $this->t('Modules cannot be uninstalled while Package Manager is applying staged changes to the active code base.');
     }
     return $reasons;
