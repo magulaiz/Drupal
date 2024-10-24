@@ -106,8 +106,7 @@
   <rule ref="Drupal.Commenting.PostStatementComment"/>
   <rule ref="Drupal.Commenting.TodoComment" />
   <rule ref="Drupal.Commenting.VariableComment">
-    <!-- Sniff for: DuplicateVar, EmptyVar, IncorrectVarType, InlineVariableName, WrongStyle -->
-    <exclude name="Drupal.Commenting.VariableComment.MissingVar"/>
+    <!-- Sniff for: DuplicateVar, EmptyVar, IncorrectVarType, InlineVariableName, MissingVar, WrongStyle -->
   </rule>
   <rule ref="Drupal.Commenting.VariableComment.Missing">
     <exclude-pattern>./core/tests/*</exclude-pattern>
