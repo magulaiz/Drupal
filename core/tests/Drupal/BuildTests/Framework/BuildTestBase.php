@@ -11,7 +11,6 @@ use Composer\InstalledVersions;
 use Drupal\Component\FileSystem\FileSystem as DrupalFilesystem;
 use Drupal\Tests\DrupalTestBrowser;
 use Drupal\Tests\PhpUnitCompatibilityTrait;
-use Drupal\Tests\Traits\PhpUnitWarnings;
 use Drupal\TestTools\Extension\RequiresComposerTrait;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Filesystem\Filesystem as SymfonyFilesystem;
@@ -55,7 +54,6 @@ use Symfony\Component\Process\Process;
 abstract class BuildTestBase extends TestCase {
 
   use RequiresComposerTrait;
-  use PhpUnitWarnings;
   use PhpUnitCompatibilityTrait;
 
   /**
@@ -160,7 +158,7 @@ abstract class BuildTestBase extends TestCase {
     // Set up the workspace directory.
     // @todo Glean working directory from env vars, etc.
     $fs = new SymfonyFilesystem();
-    $this->workspaceDir = $fs->tempnam(DrupalFilesystem::getOsTemporaryDirectory(), '/build_workspace_' . md5($this->getName() . microtime(TRUE)));
+    $this->workspaceDir = $fs->tempnam(DrupalFilesystem::getOsTemporaryDirectory(), '/build_workspace_' . md5($this->name() . microtime(TRUE)));
     $fs->remove($this->workspaceDir);
     $fs->mkdir($this->workspaceDir);
     $this->initMink();
@@ -185,7 +183,7 @@ abstract class BuildTestBase extends TestCase {
         ->directories()
         ->ignoreVCS(FALSE)
         ->ignoreDotFiles(FALSE)
-        // composer script is a symlink and fails chmod. Ignore it.
+        // Composer script is a symlink and fails chmod. Ignore it.
         ->notPath('/^vendor\/bin\/composer$/');
       $fs->chmod($finder->getIterator(), 0775, 0000);
       $fs->remove($ws);
@@ -468,7 +466,7 @@ abstract class BuildTestBase extends TestCase {
    * @throws \RuntimeException
    *   Thrown when there are no available ports within the range.
    */
-  protected function findAvailablePort() {
+  protected function findAvailablePort(): int {
     $store = new FlockStore(DrupalFilesystem::getOsTemporaryDirectory());
     $lock_factory = new LockFactory($store);
 
@@ -505,7 +503,7 @@ abstract class BuildTestBase extends TestCase {
    *
    * @return bool
    */
-  protected function checkPortIsAvailable($port) {
+  protected function checkPortIsAvailable($port): bool {
     $fp = @fsockopen(self::$hostName, $port, $errno, $errstr, 1);
     // If fsockopen() fails to connect, probably nothing is listening.
     // It could be a firewall but that's impossible to detect, so as a
@@ -526,7 +524,7 @@ abstract class BuildTestBase extends TestCase {
    *
    * @return int
    */
-  protected function getPortNumber() {
+  protected function getPortNumber(): int {
     if (empty($this->hostPort)) {
       $this->hostPort = $this->findAvailablePort();
     }
@@ -549,7 +547,7 @@ abstract class BuildTestBase extends TestCase {
    *   (optional) Relative path within the test workspace file system that will
    *   contain the copy of the codebase. Defaults to the workspace directory.
    */
-  public function copyCodebase(\Iterator $iterator = NULL, $working_dir = NULL) {
+  public function copyCodebase(?\Iterator $iterator = NULL, $working_dir = NULL) {
     $working_path = $this->getWorkingPath($working_dir);
 
     if ($iterator === NULL) {
@@ -600,6 +598,16 @@ abstract class BuildTestBase extends TestCase {
    *   The full path to the root of this Drupal codebase.
    */
   public function getDrupalRoot() {
+    return self::getDrupalRootStatic();
+  }
+
+  /**
+   * Get the root path of this Drupal codebase.
+   *
+   * @return string
+   *   The full path to the root of this Drupal codebase.
+   */
+  public static function getDrupalRootStatic() {
     // Given this code is in the drupal/core package, $core cannot be NULL.
     /** @var string $core */
     $core = InstalledVersions::getInstallPath('drupal/core');

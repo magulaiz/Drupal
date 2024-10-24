@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\jsonapi\Functional;
 
 use Drupal\Core\Url;
@@ -9,7 +11,6 @@ use Drupal\user\Entity\Role;
  * JSON:API integration test for the "Role" config entity type.
  *
  * @group jsonapi
- * @group #slow
  */
 class RoleTest extends ConfigEntityResourceTestBase {
 
@@ -43,7 +44,7 @@ class RoleTest extends ConfigEntityResourceTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUpAuthorization($method) {
+  protected function setUpAuthorization($method): void {
     $this->grantPermissionsToTestedRole(['administer permissions']);
   }
 
@@ -63,7 +64,7 @@ class RoleTest extends ConfigEntityResourceTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function getExpectedDocument() {
+  protected function getExpectedDocument(): array {
     $self_url = Url::fromUri('base:/jsonapi/user_role/user_role/' . $this->entity->uuid())->setAbsolute()->toString(TRUE)->getGeneratedUrl();
     return [
       'jsonapi' => [
@@ -89,7 +90,7 @@ class RoleTest extends ConfigEntityResourceTestBase {
           'status' => TRUE,
           'dependencies' => [],
           'label' => 'Llama',
-          'is_admin' => NULL,
+          'is_admin' => FALSE,
           'permissions' => [],
           'drupal_internal__id' => 'llama',
         ],
@@ -100,7 +101,7 @@ class RoleTest extends ConfigEntityResourceTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function getPostDocument() {
+  protected function getPostDocument(): array {
     // @todo Update in https://www.drupal.org/node/2300677.
     return [];
   }

@@ -217,7 +217,7 @@
  *
  * Configuration is divided into individual objects, each of which has a
  * unique name or key. Some modules will have only one configuration object,
- * typically called 'mymodule.settings'; some modules will have many. Within
+ * typically called 'my_module.settings'; some modules will have many. Within
  * a configuration object, configuration settings have data types (integer,
  * string, Boolean, etc.) and settings can also exist in a nested hierarchy,
  * known as a "mapping".
@@ -283,10 +283,10 @@
  * The first task in using the simple configuration API is to define the
  * configuration file structure, file name, and schema of your settings (see
  * @ref sec_yaml above). Once you have done that, you can retrieve the active
- * configuration object that corresponds to configuration file mymodule.foo.yml
+ * configuration object that corresponds to configuration file my_module.foo.yml
  * with a call to:
  * @code
- * $config = \Drupal::config('mymodule.foo');
+ * $config = \Drupal::config('my_module.foo');
  * @endcode
  *
  * This will be an object of class \Drupal\Core\Config\Config, which has methods
@@ -313,7 +313,7 @@
  * you will instead need to get the Config object by making a call to
  * getEditable() on the config factory:
  * @code
- * $config =\Drupal::service('config.factory')->getEditable('mymodule.foo');
+ * $config =\Drupal::service('config.factory')->getEditable('my_module.foo');
  * @endcode
  *
  * Individual configuration values can be changed or added using the set()
@@ -430,7 +430,7 @@
  *
  * Example:
  * @code
- * $cid = 'mymodule_example:' . \Drupal::languageManager()->getCurrentLanguage()->getId();
+ * $cid = 'my_module_example:' . \Drupal::languageManager()->getCurrentLanguage()->getId();
  *
  * $data = NULL;
  * if ($cache = \Drupal::cache()->get($cid)) {
@@ -537,16 +537,16 @@
  * Example:
  * @code
  * // A cache item with nodes, users, and some custom module data.
- * $tags = array(
+ * $tags = [
  *   'my_custom_tag',
  *   'node:1',
  *   'node:3',
  *   'user:7',
- * );
+ * ];
  * \Drupal::cache()->set($cid, $data, CacheBackendInterface::CACHE_PERMANENT, $tags);
  *
  * // Invalidate all cache items with certain tags.
- * \Drupal\Core\Cache\Cache::invalidateTags(array('user:1'));
+ * \Drupal\Core\Cache\Cache::invalidateTags(['user:1']);
  * @endcode
  *
  * Drupal is a content management system, so naturally you want changes to your
@@ -559,8 +559,8 @@
  * the ability to override any of the default behavior if needed.
  * See \Drupal\Core\Cache\CacheableDependencyInterface::getCacheTags(),
  * \Drupal\Core\Entity\EntityTypeInterface::getListCacheTags(),
- * \Drupal\Core\Entity\Entity::invalidateTagsOnSave() and
- * \Drupal\Core\Entity\Entity::invalidateTagsOnDelete().
+ * \Drupal\Core\Entity\EntityBase::invalidateTagsOnSave() and
+ * \Drupal\Core\Entity\EntityBase::invalidateTagsOnDelete().
  *
  * @section context Cache contexts
  *
@@ -764,7 +764,7 @@
  * @code
  * path_alias.manager:
  *   class: Drupal\path_alias\AliasManager
- *   arguments: ['@path_alias.repository', '@path_alias.whitelist', '@language_manager']
+ *   arguments: ['@path_alias.repository', '@path_alias.prefix_list', '@language_manager']
  * @endcode
  * Some services use other services as factories; a typical service definition
  * is:
@@ -1415,8 +1415,8 @@
  *   class and the parent (default) plugin manager service to inherit
  *   constructor arguments:
  *   @code
- *   plugin.manager.mymodule:
- *     class: Drupal\mymodule\MyPluginManager
+ *   plugin.manager.my_module:
+ *     class: Drupal\my_module\MyPluginManager
  *     parent: default_plugin_manager
  *   @endcode
  * - If your plugin is configurable, you will also need to define the
@@ -1555,9 +1555,7 @@
  * Ideally, all code that is included in Drupal Core and contributed modules,
  * themes, and distributions will be secure, internationalized, maintainable,
  * and efficient. In order to facilitate this, the Drupal community has
- * developed a set of guidelines and standards for developers to follow. Most of
- * these standards can be found under
- * @link https://www.drupal.org/developing/best-practices Best practices on Drupal.org @endlink
+ * developed a set of guidelines and standards for developers to follow.
  *
  * Standards and best practices that developers should be aware of include:
  * - Security: https://www.drupal.org/writing-secure-code and the
@@ -1598,7 +1596,7 @@
  * Define functions that alter the behavior of Drupal core.
  *
  * One way for modules to alter the core behavior of Drupal (or another module)
- * is to use hooks. Hooks are specially-named functions that a module defines
+ * is to use hooks. Hooks are functions or methods that a module defines
  * (this is known as "implementing the hook"), which are discovered and called
  * at specific times to alter or add to the base behavior or data (this is
  * known as "invoking the hook"). Each hook has a name (example:
@@ -1607,15 +1605,73 @@
  * modules that they interact with. Your modules can also define their own
  * hooks, in order to let other modules interact with them.
  *
- * To implement a hook:
- * - Locate the documentation for the hook. Hooks are documented in *.api.php
- *   files, by defining functions whose name starts with "hook_" (these
- *   files and their functions are never loaded by Drupal -- they exist solely
- *   for documentation). The function should have a documentation header, as
- *   well as a sample function body. For example, in the core file form.api.php,
- *   you can find hooks such as hook_batch_alter(). Also, if you are viewing
- *   this documentation on an API reference site, the Core hooks will be listed
- *   in this topic.
+ * @section implementing Implementing a hook
+ *
+ * There are two ways to implement a hook:
+ * - Class method, by adding an attribute to a class or a method. This is the
+ *   preferred method.
+ * - Procedural, by defining a specially-named function. Some hooks can only be
+ *   implemented as procedural.
+ *
+ * In both cases, first locate the documentation for the hook. Hooks are
+ * documented in *.api.php files, by defining functions whose name starts with
+ * "hook_" (these files and their functions are never loaded by Drupal -- they
+ * exist solely for documentation). The function should have a documentation
+ * header, as well as a sample function body. For example, in the core file
+ * form.api.php, you can find hooks such as hook_batch_alter(). Also, if you are
+ * viewing this documentation on an API reference site, the Core hooks will be
+ * listed in this topic.
+ *
+ * @subsection oo-hooks Class method hook implementation
+ *
+ * Class method hooks use the attribute \Drupal\Core\Hook\Attribute\Hook to
+ * declare a method as being the hook implementation. The first parameter to the
+ * attribute is the short hook name, that is, with the 'hook_' prefix removed.
+ *
+ * The Hook attribute can be used in any of the following ways:
+ * - On a method, use the attribute with the hook name:
+ *   @code
+ *   #[Hook('user_cancel')]
+ *   public method userCancel(...)
+ *   @endcode
+ * - On a class, specify the method name as well as the hook name:
+ *   @code
+ *   #[Hook('user_cancel', method: 'userCancel')]
+ *   class Hooks {
+ *     method userCancel(...) {}
+ *   }
+ *   @endcode
+ * - On a class with an __invoke method, which is taken to be the hook
+ *   implementation:
+ *   @code
+ *   #[Hook('user_cancel')]
+ *   class Hooks {
+ *     method __invoke(...) {}
+ *   }
+ *   @endcode
+ *
+ * The following hooks can not be implemented as a class method, and must be
+ * implemented as procedural:
+ *
+ * Install hooks:
+ * - hook_install()
+ * - hook_module_preinstall()
+ * - hook_module_preuninstall()
+ * - hook_modules_installed()
+ * - hook_modules_uninstalled()
+ * - hook_post_update_NAME()
+ * - hook_schema()
+ * - hook_uninstall()
+ * - hook_update_last_removed()
+ * - hook_update_N()
+ *
+ * Theme hooks:
+ * - hook_preprocess_HOOK()
+ * - hook_process_HOOK()
+ *
+ * @subsection procedural-hooks Procedural hook implementation
+ *
+ * Procedural implementation should use the following technique:
  * - Copy the function to your module's .module file.
  * - Change the name of the function, substituting your module's short name
  *   (name of the module's directory, and .info.yml file without the extension)
@@ -1626,6 +1682,8 @@
  * - Edit the body of the function, substituting in what you need your module
  *   to do.
  *
+ * @section defining Defining a hook
+ *
  * To define a hook:
  * - Choose a unique name for your hook. It should start with "hook_", followed
  *   by your module's short name.
@@ -1633,6 +1691,8 @@
  *   directory. See the "implementing" section above for details of what this
  *   should contain (parameters, return value, and sample function body).
  * - Invoke the hook in your module's code.
+ *
+ * @section invoking Invoking a hook
  *
  * To invoke a hook, use methods on
  * \Drupal\Core\Extension\ModuleHandlerInterface such as alter(), invoke(),
@@ -1644,6 +1704,7 @@
  * @see themeable
  * @see callbacks
  * @see \Drupal\Core\Extension\ModuleHandlerInterface
+ * @see \Drupal\Core\Hook\Attribute\Hook
  * @see \Drupal::moduleHandler()
  *
  * @}
@@ -1701,7 +1762,7 @@
  *
  * Here is an example of a Form class:
  * @code
- * namespace Drupal\mymodule\Form;
+ * namespace Drupal\my_module\Form;
  *
  * use Drupal\Core\Form\FormBase;
  * use Drupal\Core\Form\FormStateInterface;
@@ -1714,14 +1775,14 @@
  *
  *   public function buildForm(array $form, FormStateInterface $form_state) {
  *     // Create a $form API array.
- *     $form['phone_number'] = array(
+ *     $form['phone_number'] = [
  *       '#type' => 'tel',
  *       '#title' => $this->t('Your phone number'),
- *     );
- *     $form['save'] = array(
+ *     ];
+ *     $form['save'] = [
  *       '#type' => 'submit',
  *       '#value' => $this->t('Save'),
- *     );
+ *     ];
  *     return $form;
  *   }
  *
@@ -1739,7 +1800,7 @@
  * \Drupal::formBuilder()->getForm() should be used to handle retrieving,
  * processing, and displaying a rendered HTML form. Given the ExampleForm
  * defined above,
- * \Drupal::formBuilder()->getForm('Drupal\mymodule\Form\ExampleForm') would
+ * \Drupal::formBuilder()->getForm('Drupal\my_module\Form\ExampleForm') would
  * return the rendered HTML of the form defined by ExampleForm::buildForm(), or
  * call the validateForm() and submitForm(), methods depending on the current
  * processing state.
@@ -1752,14 +1813,14 @@
  * For example:
  * @code
  * $extra = '612-123-4567';
- * $form = \Drupal::formBuilder()->getForm('Drupal\mymodule\Form\ExampleForm', $extra);
+ * $form = \Drupal::formBuilder()->getForm('Drupal\my_module\Form\ExampleForm', $extra);
  * ...
  * public function buildForm(array $form, FormStateInterface $form_state, $extra = NULL)
- *   $form['phone_number'] = array(
+ *   $form['phone_number'] = [
  *     '#type' => 'tel',
  *     '#title' => $this->t('Your phone number'),
  *     '#value' => $extra,
- *   );
+ *   ];
  *   return $form;
  * }
  * @endcode
@@ -1774,7 +1835,7 @@
  *   path: '/example-form'
  *   defaults:
  *     _title: 'Example form'
- *     _form: '\Drupal\mymodule\Form\ExampleForm'
+ *     _form: '\Drupal\my_module\Form\ExampleForm'
  * @endcode
  *
  * The $form argument to form-related functions is a specialized render array
@@ -1925,17 +1986,17 @@
 function hook_cron() {
   // Short-running operation example, not using a queue:
   // Delete all expired records since the last cron run.
-  $expires = \Drupal::state()->get('mymodule.last_check', 0);
+  $expires = \Drupal::state()->get('my_module.last_check', 0);
   $request_time = \Drupal::time()->getRequestTime();
-  \Drupal::database()->delete('mymodule_table')
+  \Drupal::database()->delete('my_module_table')
     ->condition('expires', $expires, '>=')
     ->execute();
-  \Drupal::state()->set('mymodule.last_check', $request_time);
+  \Drupal::state()->set('my_module.last_check', $request_time);
 
   // Long-running operation example, leveraging a queue:
   // Queue news feeds for updates once their refresh interval has elapsed.
-  $queue = \Drupal::queue('mymodule.feeds');
-  $ids = \Drupal::entityTypeManager()->getStorage('mymodule_feed')->getFeedIdsToRefresh();
+  $queue = \Drupal::queue('my_module.feeds');
+  $ids = \Drupal::entityTypeManager()->getStorage('my_module_feed')->getFeedIdsToRefresh();
   foreach (Feed::loadMultiple($ids) as $feed) {
     if ($queue->createItem($feed)) {
       // Add timestamp to avoid queueing item more than once.
@@ -1943,7 +2004,7 @@ function hook_cron() {
       $feed->save();
     }
   }
-  $ids = \Drupal::entityQuery('mymodule_feed')
+  $ids = \Drupal::entityQuery('my_module_feed')
     ->accessCheck(FALSE)
     ->condition('queued', $request_time - (3600 * 6), '<')
     ->execute();
@@ -1965,7 +2026,7 @@ function hook_cron() {
  * @see hook_data_type_info()
  */
 function hook_data_type_info_alter(&$data_types) {
-  $data_types['email']['class'] = '\Drupal\mymodule\Type\Email';
+  $data_types['email']['class'] = '\Drupal\my_module\Type\Email';
 }
 
 /**
@@ -1986,7 +2047,7 @@ function hook_data_type_info_alter(&$data_types) {
 function hook_queue_info_alter(&$queues) {
   // This site has many feeds so let's spend 90 seconds on each cron run
   // updating feeds instead of the default 60.
-  $queues['mymodule_feeds']['cron']['time'] = 90;
+  $queues['my_module_feeds']['cron']['time'] = 90;
 }
 
 /**
@@ -1999,7 +2060,7 @@ function hook_condition_info_alter(array &$definitions) {
   // Add custom or modify existing condition definitions.
   if (isset($definitions['node_type']) && $definitions['node_type']['class'] == 'Drupal\node\Plugin\Condition\NodeType') {
     // If the node_type's class is unaltered, use a custom implementation.
-    $definitions['node_type']['class'] = 'Drupal\mymodule\Plugin\Condition\NodeType';
+    $definitions['node_type']['class'] = 'Drupal\my_module\Plugin\Condition\NodeType';
   }
 }
 
@@ -2169,7 +2230,7 @@ function hook_countries_alter(&$countries) {
  *   The array of display variant definitions, keyed by plugin ID.
  *
  * @see \Drupal\Core\Display\VariantManager
- * @see \Drupal\Core\Display\Annotation\DisplayVariant
+ * @see \Drupal\Core\Display\Attribute\DisplayVariant
  */
 function hook_display_variant_plugin_alter(array &$definitions) {
   $definitions['full_page']['admin_label'] = t('Block layout');
@@ -2299,10 +2360,10 @@ function hook_config_schema_info_alter(&$definitions) {
  *   The array of validation constraint definitions, keyed by plugin ID.
  *
  * @see \Drupal\Core\Validation\ConstraintManager
- * @see \Drupal\Core\Validation\Annotation\Constraint
+ * @see \Drupal\Core\Validation\Attribute\Constraint
  */
 function hook_validation_constraint_alter(array &$definitions) {
-  $definitions['Null']['class'] = '\Drupal\mymodule\Plugin\Validation\Constraints\MyClass';
+  $definitions['Null']['class'] = '\Drupal\my_module\Plugin\Validation\Constraints\MyClass';
 }
 
 /**
@@ -2342,14 +2403,14 @@ function hook_validation_constraint_alter(array &$definitions) {
  * Ajax response. This is done in the text field form array element
  * in \Drupal\config_translation\FormElement\DateFormat::getFormElement():
  * @code
- * '#ajax' => array(
+ * '#ajax' => [
  *   'callback' => 'Drupal\config_translation\FormElement\DateFormat::ajaxSample',
  *   'event' => 'keyup',
- *   'progress' => array(
+ *   'progress' => [
  *     'type' => 'throbber',
  *     'message' => NULL,
- *   ),
- * ),
+ *   ],
+ * ],
  * @endcode
  *
  * As you can see from this example, the #ajax property for a form element is
@@ -2437,7 +2498,7 @@ function hook_validation_constraint_alter(array &$definitions) {
  * 'wrapper' method and return HTML markup. This is not the case if you return
  * commands, but if you would like to show status messages, you can add
  * @code
- * array('#type' => 'status_messages')
+ * ['#type' => 'status_messages']
  * @endcode
  * to a render array, use \Drupal::service('renderer')->render() to render it,
  * and add a command to place the messages in an appropriate location.
@@ -2465,7 +2526,7 @@ function hook_validation_constraint_alter(array &$definitions) {
  * @section sec_query Query parameters in Ajax requests
  * If a form uses an Ajax field, all the query parameters in the current request
  * will be also added to the Ajax POST requests along with an additional
- * 'ajax_form=1' parameter (See \Drupal\Core\Render\Element\RenderElement).
+ * 'ajax_form=1' parameter (See \Drupal\Core\Render\Element\RenderElementBase).
  * @code
  * $settings['options']['query'] += \Drupal::request()->query->all();
  * $settings['options']['query'][FormBuilderInterface::AJAX_FORM_REQUEST] = TRUE;
@@ -2596,11 +2657,11 @@ function hook_validation_constraint_alter(array &$definitions) {
  *   this class is subscribed to, and which methods on the class should be
  *   called for each one. Example:
  *   @code
- *   public static function getSubscribedEvents() {
+ *   public static function getSubscribedEvents(): array {
  *     // Subscribe to kernel terminate with priority 100.
- *     $events[KernelEvents::TERMINATE][] = array('onTerminate', 100);
+ *     $events[KernelEvents::TERMINATE][] = ['onTerminate', 100];
  *     // Subscribe to kernel request with default priority of 0.
- *     $events[KernelEvents::REQUEST][] = array('onRequest');
+ *     $events[KernelEvents::REQUEST][] = ['onRequest'];
  *     return $events;
  *   }
  *   @endcode
@@ -2645,8 +2706,8 @@ function hook_validation_constraint_alter(array &$definitions) {
  * @code
  * public function counter(Request $request) {
  *   $session = $request->getSession();
- *   $count = $session->get('mymodule.counter', 0) + 1;
- *   $session->set('mymodule.counter', $count);
+ *   $count = $session->get('my_module.counter', 0) + 1;
+ *   $session->set('my_module.counter', $count);
  *
  *   return [
  *     '#markup' => $this->t('Page Views: @count', ['@count' => $count]),
@@ -2658,7 +2719,7 @@ function hook_validation_constraint_alter(array &$definitions) {
  *
  * public function reset(Request $request) {
  *   $session = $request->getSession();
- *   $session->remove('mymodule.counter');
+ *   $session->remove('my_module.counter');
  * }
  * @endcode
  *
