@@ -35,7 +35,7 @@ final class TranslatableStringFactory implements TranslatableFactoryInterface {
   /**
    * {@inheritdoc}
    */
-  public function createTranslatableMessage(string $message, ?TranslationParametersInterface $parameters = NULL, ?string $domain = NULL,): TranslatableInterface {
+  public function createTranslatableMessage(string $message, ?TranslationParametersInterface $parameters = NULL, ?string $domain = NULL): TranslatableInterface {
     return new TranslatableStringAdapter(
       $message,
       $parameters?->getAll() ?? [],

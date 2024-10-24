@@ -32,7 +32,7 @@ class LoggingCommitter implements CommitterInterface {
   /**
    * {@inheritdoc}
    */
-  public function commit(PathInterface $stagingDir, PathInterface $activeDir, ?PathListInterface $exclusions = NULL, ?OutputCallbackInterface $callback = NULL, int $timeout = ProcessInterface::DEFAULT_TIMEOUT,): void {
+  public function commit(PathInterface $stagingDir, PathInterface $activeDir, ?PathListInterface $exclusions = NULL, ?OutputCallbackInterface $callback = NULL, int $timeout = ProcessInterface::DEFAULT_TIMEOUT): void {
     $path = $this->configFactory->get('package_manager.settings')->get('log');
     if ($path) {
       $callback = new FileProcessOutputCallback($path, $callback);

@@ -29,7 +29,7 @@ final class LoggingStager implements StagerInterface {
   /**
    * {@inheritdoc}
    */
-  public function stage(array $composerCommand, PathInterface $activeDir, PathInterface $stagingDir, ?OutputCallbackInterface $callback = NULL, int $timeout = ProcessInterface::DEFAULT_TIMEOUT,): void {
+  public function stage(array $composerCommand, PathInterface $activeDir, PathInterface $stagingDir, ?OutputCallbackInterface $callback = NULL, int $timeout = ProcessInterface::DEFAULT_TIMEOUT): void {
     $path = $this->configFactory->get('package_manager.settings')->get('log');
     if ($path) {
       $callback = new FileProcessOutputCallback($path, $callback);

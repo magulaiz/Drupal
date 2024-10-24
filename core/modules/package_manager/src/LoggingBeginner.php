@@ -32,7 +32,7 @@ final class LoggingBeginner implements BeginnerInterface {
   /**
    * {@inheritdoc}
    */
-  public function begin(PathInterface $activeDir, PathInterface $stagingDir, ?PathListInterface $exclusions = NULL, ?OutputCallbackInterface $callback = NULL, int $timeout = ProcessInterface::DEFAULT_TIMEOUT,): void {
+  public function begin(PathInterface $activeDir, PathInterface $stagingDir, ?PathListInterface $exclusions = NULL, ?OutputCallbackInterface $callback = NULL, int $timeout = ProcessInterface::DEFAULT_TIMEOUT): void {
     $path = $this->configFactory->get('package_manager.settings')->get('log');
     if ($path) {
       $callback = new FileProcessOutputCallback($path, $callback);
