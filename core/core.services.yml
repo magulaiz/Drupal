@@ -737,8 +737,6 @@ services:
   entity_field.manager:
     class: Drupal\Core\Entity\EntityFieldManager
     arguments: ['@entity_type.manager', '@entity_type.bundle.info', '@entity_display.repository', '@typed_data_manager', '@language_manager', '@keyvalue', '@module_handler', '@cache.discovery', '@entity.last_installed_schema.repository']
-    tags:
-      - { name: cache_prewarmable }
   Drupal\Core\Entity\EntityFieldManagerInterface: '@entity_field.manager'
   entity_type.listener:
     class: Drupal\Core\Entity\EntityTypeListener
@@ -1490,8 +1488,6 @@ services:
   plugin.manager.element_info:
     class: Drupal\Core\Render\ElementInfoManager
     arguments: ['@container.namespaces', '@cache.discovery', '@theme_handler', '@module_handler', '@theme.manager']
-    tags:
-      - { name: cache_prewarmable }
   Drupal\Core\Render\ElementInfoManagerInterface: '@plugin.manager.element_info'
   stream_wrapper_manager:
     class: Drupal\Core\StreamWrapper\StreamWrapperManager
