@@ -60,8 +60,11 @@ interface CachePreWarmerInterface {
 
   /**
    * Prewarms one PreWarmable service.
+   *
+   * @return bool
+   *   TRUE if a cache was prewarmed, FALSE if there was nothing to prewarm.
    */
-  public function preWarmOneCache(): void;
+  public function preWarmOneCache(): bool;
 
   /**
    * Prewarms all PreWarmable services.

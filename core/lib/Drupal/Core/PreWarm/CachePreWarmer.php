@@ -56,38 +56,31 @@ class CachePreWarmer implements CachePreWarmerInterface {
   public function __construct(
     protected readonly ClassResolverInterface $classResolver,
     protected readonly array $serviceIds,
-  ) {}
+  ) {
+    // Ensure the serviceId order is random to reduce chances of conflicts.
+    shuffle($this->serviceIds);
+  }
 
   /**
    * {@inheritdoc}
    */
-  public function preWarmOneCache(): void {
-    $candidates = array_diff($this->serviceIds, $this->calledServices);
-    // If we've tried to prewarm all the available services, don't try to do it
-    // again. We're most likely to hit this case if a request comes in late
-    // during a stampede and everything was warmed up just before we reached
-    // here.
-    if ($candidates) {
-      // Pick a prewarmable service to prewarm the cache for at random.
-      $key = array_rand($candidates);
-      $this->calledServices[] = $key;
-      $service = $this->classResolver->getInstanceFromDefinition($this->serviceIds[$key]);
-      $service->preWarm();
+  public function preWarmOneCache(): bool {
+    $candidate = array_pop($this->serviceIds);
+    if ($candidate === NULL) {
+      return FALSE;
     }
+    $service = $this->classResolver->getInstanceFromDefinition($candidate);
+    $service->preWarm();
+    return TRUE;
   }
 
   /**
    * {@inheritdoc}
    */
   public function preWarmAllCaches(): void {
-    $candidates = $this->serviceIds;
-    shuffle($candidates);
-    while ($candidates) {
-      $key = key($candidates);
-      $service = $this->classResolver->getInstanceFromDefinition($candidates[$key]);
-      unset($candidates[$key]);
-      $service->preWarm();
-    }
+    do {
+      $continue = $this->preWarmOneCache();
+    } while ($continue);
   }
 
 }
