@@ -1,8 +1,8 @@
 This directory is used as the basis for quasi-functional tests of Package Manager based on `\Drupal\Tests\package_manager\Kernel\PackageManagerKernelTestBase`. It provides a bare-bones simulation of a real Drupal site layout, including:
 
 * A `.git` directory and `.gitignore` file
-* A Drupal core directory with npm modules installed 
-* An `example` contrib module with its own `.git` directory and npm modules 
+* A Drupal core directory with npm modules installed
+* An `example` contrib module with its own `.git` directory and npm modules
 * A directory in which to store private files (`private`)
 * A default site directory with site-specific config files, as well as default versions of them
 * A "real" site directory (`example.com`), with a public `files` directory, site-specific config files, and a SQLite database
