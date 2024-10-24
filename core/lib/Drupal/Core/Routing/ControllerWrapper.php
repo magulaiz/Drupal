@@ -41,9 +41,8 @@ final class ControllerWrapper {
     $context = new RenderContext();
 
     $controller = $this->controller;
-    $response = $this->renderer->executeInRenderContext($context, function () use ($controller, $arguments) {
-      // Now call the actual controller, just like HttpKernel does.
-      return call_user_func_array($controller, $arguments);
+    // Now call the actual controller, just like HttpKernel does.
+    $response = $this->renderer->executeInRenderContext($context, static fn () => call_user_func_array($controller, $arguments));
     });
 
     // If early rendering happened, i.e. if code in the controller called
