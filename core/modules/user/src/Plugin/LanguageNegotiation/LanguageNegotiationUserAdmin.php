@@ -67,16 +67,16 @@ class LanguageNegotiationUserAdmin extends LanguageNegotiationMethodBase impleme
    *
    * @param \Drupal\Core\Routing\AdminContext $admin_context
    *   The admin context.
-   * @param \Symfony\Component\Routing\Matcher\UrlMatcherInterface $accessUnawareRouter
+   * @param \Symfony\Component\Routing\Matcher\UrlMatcherInterface $access_unaware_router
    *   The router.
    * @param \Drupal\Core\PathProcessor\PathProcessorManager $path_processor_manager
    *   The path processor manager.
    * @param \Drupal\Core\Routing\StackedRouteMatchInterface $stacked_route_match
    *   The stacked route match.
    */
-  public function __construct(AdminContext $admin_context, UrlMatcherInterface $accessUnawareRouter, PathProcessorManager $path_processor_manager, StackedRouteMatchInterface $stacked_route_match) {
+  public function __construct(AdminContext $admin_context, UrlMatcherInterface $access_unaware_router, PathProcessorManager $path_processor_manager, StackedRouteMatchInterface $stacked_route_match) {
     $this->adminContext = $admin_context;
-    $this->router = $router;
+    $this->accessUnawareRouter = $access_unaware_router;
     $this->pathProcessorManager = $path_processor_manager;
     $this->stackedRouteMatch = $stacked_route_match;
   }
@@ -134,7 +134,7 @@ class LanguageNegotiationUserAdmin extends LanguageNegotiationMethodBase impleme
           // prefixes and other path components that inbound processing would
           // clear out, so we can attempt to load the route clearly.
           $path = $this->pathProcessorManager->processInbound(urldecode(rtrim($cloned_request->getPathInfo(), '/')), $cloned_request);
-          $attributes = $this->router->match($path);
+          $attributes = $this->accessUnawareRouter->match($path);
         }
         catch (ExceptionInterface | HttpException) {
           return FALSE;
