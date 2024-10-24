@@ -149,16 +149,14 @@ class TestSubscriber implements EventSubscriberInterface {
    * {@inheritdoc}
    */
   public static function getSubscribedEvents(): array {
-    $priority = defined('PACKAGE_MANAGER_TEST_VALIDATOR_PRIORITY') ? PACKAGE_MANAGER_TEST_VALIDATOR_PRIORITY : 5;
-
     return [
-      PreCreateEvent::class => ['handleEvent', $priority],
-      PostCreateEvent::class => ['handleEvent', $priority],
-      PreRequireEvent::class => ['handleEvent', $priority],
-      PostRequireEvent::class => ['handleEvent', $priority],
-      PreApplyEvent::class => ['handleEvent', $priority],
-      PostApplyEvent::class => ['handleEvent', $priority],
-      StatusCheckEvent::class => ['handleEvent', $priority],
+      PreCreateEvent::class => ['handleEvent', 5],
+      PostCreateEvent::class => ['handleEvent', 5],
+      PreRequireEvent::class => ['handleEvent', 5],
+      PostRequireEvent::class => ['handleEvent', 5],
+      PreApplyEvent::class => ['handleEvent', 5],
+      PostApplyEvent::class => ['handleEvent', 5],
+      StatusCheckEvent::class => ['handleEvent', 5],
     ];
   }
 
