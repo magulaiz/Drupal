@@ -27,14 +27,14 @@ final class ProcessOutputCallback implements OutputCallbackInterface, LoggerAwar
   /**
    * The output buffer.
    *
-   * @var string
+   * @var array
    */
   private array $outBuffer = [];
 
   /**
    * The error buffer.
    *
-   * @var string
+   * @var array
    */
   private array $errorBuffer = [];
 
@@ -63,8 +63,8 @@ final class ProcessOutputCallback implements OutputCallbackInterface, LoggerAwar
    *
    * If there is anything in the error buffer, it will be logged as a warning.
    *
-   * @return string|null
-   *   The output or NULL if there is none.
+   * @return array
+   *   The output buffer.
    */
   public function getOutput(): array {
     $error_output = $this->getErrorOutput();
@@ -91,8 +91,8 @@ final class ProcessOutputCallback implements OutputCallbackInterface, LoggerAwar
   /**
    * Gets the error output.
    *
-   * @return string|null
-   *   The error output or NULL if there isn't any.
+   * @return array
+   *   The error output buffer.
    */
   public function getErrorOutput(): array {
     return $this->errorBuffer;

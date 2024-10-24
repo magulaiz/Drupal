@@ -408,7 +408,7 @@ class StageBaseTest extends PackageManagerKernelTestBase {
    *
    * @param string $thrown_class
    *   The throwable class that should be thrown by Composer Stager.
-   * @param string|null $expected_class
+   * @param string $expected_class
    *   The expected exception class, if different from $thrown_class.
    *
    * @dataProvider providerCommitException

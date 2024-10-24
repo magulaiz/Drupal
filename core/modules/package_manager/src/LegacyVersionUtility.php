@@ -45,7 +45,7 @@ final class LegacyVersionUtility {
    * @param string $version_string
    *   The version number.
    *
-   * @return string
+   * @return string|null
    *   The version number, converted if needed, or NULL if not possible. Only
    *   semantic version numbers that have patch level of 0 can be converted into
    *   legacy version numbers.
