@@ -33,8 +33,8 @@ final class ProcessFactory implements ProcessFactoryInterface {
   /**
    * {@inheritdoc}
    */
-  public function create(array $command, ?PathInterface $workingDir = NULL, array $env = []): ProcessInterface {
-    $process = $this->decorated->create($command, $workingDir, $env);
+  public function create(array $command, ?PathInterface $cwd = NULL, array $env = []): ProcessInterface {
+    $process = $this->decorated->create($command, $cwd, $env);
 
     $env = $process->getEnv();
     $env['COMPOSER_MIRROR_PATH_REPOS'] = '1';

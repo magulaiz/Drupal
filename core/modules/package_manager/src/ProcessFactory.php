@@ -31,8 +31,8 @@ final class ProcessFactory implements ProcessFactoryInterface {
   /**
    * {@inheritdoc}
    */
-  public function create(array $command, ?PathInterface $workingDir = NULL, array $env = []): ProcessInterface {
-    $process = $this->decorated->create($command, $workingDir, $env);
+  public function create(array $command, ?PathInterface $cwd = NULL, array $env = []): ProcessInterface {
+    $process = $this->decorated->create($command, $cwd, $env);
 
     $env = $process->getEnv();
     if ($command && $this->isComposerCommand($command)) {
