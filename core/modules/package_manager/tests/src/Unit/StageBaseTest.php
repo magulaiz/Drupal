@@ -129,6 +129,7 @@ class StageBaseTest extends UnitTestCase {
       /**
        * {@inheritdoc}
        */
+      // phpcs:ignore DrupalPractice.CodeAnalysis.VariableAnalysis.UnusedVariable
       protected string $type = 'package_manager:good_grandchild';
 
     };

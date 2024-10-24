@@ -430,7 +430,9 @@ class FixtureManipulator {
 
   protected function runComposerCommand(array $command_options): OutputCallbackInterface {
     $plain_output = new class() implements OutputCallbackInterface {
+      // phpcs:ignore DrupalPractice.CodeAnalysis.VariableAnalysis.UnusedVariable
       public string $stdout = '';
+      // phpcs:ignore DrupalPractice.CodeAnalysis.VariableAnalysis.UnusedVariable
       public string $stderr = '';
 
       /**
@@ -439,11 +441,9 @@ class FixtureManipulator {
       public function __invoke(OutputTypeEnum $type, string $buffer): void {
         if ($type === OutputTypeEnum::OUT) {
           $this->stdout .= $buffer;
-          return;
         }
         elseif ($type === OutputTypeEnum::ERR) {
           $this->stderr .= $buffer;
-          return;
         }
       }
 
