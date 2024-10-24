@@ -418,8 +418,7 @@ class WorkspaceListBuilder extends EntityListBuilder {
    */
   protected function isPublishable(WorkspaceInterface $workspace): bool {
     return !$workspace->hasParent() &&
-      $this->workspaceAssociation->getTrackedEntities($workspace->id()) !== [] &&
-      $this->storage->getQuery()->condition('parent', $workspace->id())->accessCheck(FALSE)->count()->execute() === 0;
+      $this->workspaceAssociation->getTrackedEntities($workspace->id()) !== [];
   }
 
 }
