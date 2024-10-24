@@ -820,7 +820,6 @@ module.exports = {
             const regexVertical = /top|center|bottom/;
             const regexOffset = /[+-]\d+(\.[\d]+)?%?/;
             const regexPosition = /^\w+/;
-            const regexPercent = /%$/;
             let positions = offset.split(' ');
             if (positions.length === 1) {
               if (regexHorizontal.test(positions[0])) {
@@ -837,13 +836,13 @@ module.exports = {
             return {
               horizontalOffset: horizontalOffset
                 ? parseFloat(horizontalOffset[0]) *
-                  (regexPercent.test(horizontalOffset[0])
+                  (horizontalOffset[0].endsWith('%')
                     ? element.offsetWidth / 100
                     : 1)
                 : 0,
               verticalOffset: verticalOffset
                 ? parseFloat(verticalOffset[0]) *
-                  (regexPercent.test(verticalOffset[0])
+                  (verticalOffset[0].endsWith('%')
                     ? element.offsetWidth / 100
                     : 1)
                 : 0,
@@ -898,7 +897,7 @@ module.exports = {
                   } else if (atOffsets.vertical === 'bottom') {
                     y = document.documentElement.clientHeight - y;
                   } else {
-                    y += window.pageYOffset;
+                    y += window.scrollY;
                   }
                 } else {
                   // Measure the distance of the tip from the reference element.
@@ -909,9 +908,8 @@ module.exports = {
                   y -= refRect.y;
                 }
                 if (!withinRange(x, options.x) || !withinRange(y, options.y)) {
-                  toReturn[
-                    idKey
-                  ] = `${idKey} EXPECTED x:${options.x} y:${options.y} ACTUAL x:${x} y:${y}`;
+                  toReturn[idKey] =
+                    `${idKey} EXPECTED x:${options.x} y:${options.y} ACTUAL x:${x} y:${y}`;
                 } else {
                   toReturn[idKey] = true;
                 }

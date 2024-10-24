@@ -23,6 +23,7 @@ use Twig\Node\Expression\ConstantExpression;
 use Twig\Node\Node;
 use Twig\TwigFilter;
 use Twig\TwigFunction;
+use Twig\Runtime\EscaperRuntime;
 
 /**
  * A class providing Drupal Twig extensions.
@@ -461,7 +462,7 @@ class TwigExtension extends AbstractExtension {
       if ($strategy == 'html') {
         return Html::escape($return);
       }
-      return twig_escape_filter($env, $return, $strategy, $charset, $autoescape);
+      return $env->getRuntime(EscaperRuntime::class)->escape($arg, $strategy, $charset, $autoescape);
     }
 
     // This is a normal render array, which is safe by definition, with
@@ -606,15 +607,18 @@ class TwigExtension extends AbstractExtension {
   /**
    * Creates an Attribute object.
    *
-   * @param array $attributes
-   *   (optional) An associative array of key-value pairs to be converted to
-   *   HTML attributes.
+   * @param Attribute|array $attributes
+   *   (optional) An existing attribute object or an associative array of
+   *   key-value pairs to be converted to HTML attributes.
    *
    * @return \Drupal\Core\Template\Attribute
    *   An attributes object that has the given attributes.
    */
-  public function createAttribute(array $attributes = []) {
-    return new Attribute($attributes);
+  public function createAttribute(Attribute|array $attributes = []) {
+    if (\is_array($attributes)) {
+      return new Attribute($attributes);
+    }
+    return $attributes;
   }
 
   /**

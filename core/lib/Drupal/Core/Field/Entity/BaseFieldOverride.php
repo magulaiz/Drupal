@@ -151,6 +151,13 @@ class BaseFieldOverride extends FieldConfigBase {
   /**
    * {@inheritdoc}
    */
+  public function isInternal(): bool {
+    return $this->getBaseFieldDefinition()->isInternal();
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function getClass() {
     return $this->getBaseFieldDefinition()->getClass();
   }
@@ -252,7 +259,7 @@ class BaseFieldOverride extends FieldConfigBase {
   /**
    * Implements the magic __sleep() method.
    */
-  public function __sleep() {
+  public function __sleep(): array {
     // Only serialize necessary properties, excluding those that can be
     // recalculated.
     unset($this->baseFieldDefinition);

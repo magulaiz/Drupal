@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\field_ui\Functional;
 
 use Drupal\field\Entity\FieldConfig;
@@ -19,9 +21,7 @@ class FieldUIDeleteTest extends BrowserTestBase {
   use FieldUiTestTrait;
 
   /**
-   * Modules to install.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = [
     'node',
@@ -72,7 +72,7 @@ class FieldUIDeleteTest extends BrowserTestBase {
   /**
    * Tests that deletion removes field storages and fields as expected.
    */
-  public function testDeleteField() {
+  public function testDeleteField(): void {
     $field_label = $this->randomMachineName();
     $field_name_input = 'test';
     $field_name = 'field_test';
@@ -113,7 +113,7 @@ class FieldUIDeleteTest extends BrowserTestBase {
     $this->assertSession()->pageTextNotContains('test_view_field_delete');
 
     // Delete the first field.
-    $this->fieldUIDeleteField($bundle_path1, "node.$type_name1.$field_name", $field_label, $type_name1);
+    $this->fieldUIDeleteField($bundle_path1, "node.$type_name1.$field_name", $field_label, $type_name1, 'content type');
 
     // Check that the field was deleted.
     $this->assertNull(FieldConfig::loadByName('node', $type_name1, $field_name), 'Field was deleted.');
@@ -129,7 +129,7 @@ class FieldUIDeleteTest extends BrowserTestBase {
     $this->assertSession()->elementNotExists('css', '#edit-entity-deletes');
 
     // Delete the second field.
-    $this->fieldUIDeleteField($bundle_path2, "node.$type_name2.$field_name", $field_label, $type_name2);
+    $this->fieldUIDeleteField($bundle_path2, "node.$type_name2.$field_name", $field_label, $type_name2, 'content type');
 
     // Check that the field was deleted.
     $this->assertNull(FieldConfig::loadByName('node', $type_name2, $field_name), 'Field was deleted.');

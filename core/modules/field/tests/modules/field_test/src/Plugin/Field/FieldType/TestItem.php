@@ -1,24 +1,25 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\field_test\Plugin\Field\FieldType;
 
-use Drupal\Core\Field\FieldStorageDefinitionInterface;
-use Drupal\Core\StringTranslation\TranslatableMarkup;
-use Drupal\Core\Form\FormStateInterface;
-use Drupal\Core\TypedData\DataDefinition;
+use Drupal\Core\Field\Attribute\FieldType;
 use Drupal\Core\Field\FieldItemBase;
+use Drupal\Core\Field\FieldStorageDefinitionInterface;
+use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
+use Drupal\Core\TypedData\DataDefinition;
 
 /**
  * Defines the 'test_field' entity field item.
- *
- * @FieldType(
- *   id = "test_field",
- *   label = @Translation("Test field"),
- *   description = @Translation("Dummy field type used for tests."),
- *   default_widget = "test_field_widget",
- *   default_formatter = "field_test_default"
- * )
  */
+#[FieldType(
+  id: "test_field",
+  label: new TranslatableMarkup("Test field"),
+  default_widget: "test_field_widget",
+  default_formatter: "field_test_default"
+)]
 class TestItem extends FieldItemBase {
 
   /**
@@ -75,6 +76,11 @@ class TestItem extends FieldItemBase {
    * {@inheritdoc}
    */
   public function storageSettingsForm(array &$form, FormStateInterface $form_state, $has_data) {
+    $form['cardinality_container'][] = [
+      '#type' => 'html_tag',
+      '#tag' => 'p',
+      '#value' => 'Greetings from ' . __METHOD__,
+    ];
     $element = [];
     $element['test_field_storage_setting'] = [
       '#type' => 'textfield',

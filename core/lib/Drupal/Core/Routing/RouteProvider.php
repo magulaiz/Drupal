@@ -16,6 +16,8 @@ use Symfony\Component\Routing\Exception\RouteNotFoundException;
 use Symfony\Component\Routing\RouteCollection;
 use Drupal\Core\Database\Connection;
 
+// cspell:ignore filesort
+
 /**
  * A Route Provider front-end for all Drupal-stored routes.
  */
@@ -123,7 +125,7 @@ class RouteProvider implements CacheableRouteProviderInterface, PreloadableRoute
    * @param \Drupal\Core\Language\LanguageManagerInterface $language_manager
    *   (Optional) The language manager.
    */
-  public function __construct(Connection $connection, StateInterface $state, CurrentPathStack $current_path, CacheBackendInterface $cache_backend, InboundPathProcessorInterface $path_processor, CacheTagsInvalidatorInterface $cache_tag_invalidator, $table = 'router', LanguageManagerInterface $language_manager = NULL) {
+  public function __construct(Connection $connection, StateInterface $state, CurrentPathStack $current_path, CacheBackendInterface $cache_backend, InboundPathProcessorInterface $path_processor, CacheTagsInvalidatorInterface $cache_tag_invalidator, $table = 'router', ?LanguageManagerInterface $language_manager = NULL) {
     $this->connection = $connection;
     $this->state = $state;
     $this->currentPath = $current_path;
@@ -167,6 +169,9 @@ class RouteProvider implements CacheableRouteProviderInterface, PreloadableRoute
     if ($cached = $this->cache->get($cid)) {
       $this->currentPath->setPath($cached->data['path'], $request);
       $request->query->replace($cached->data['query']);
+      if ($cached->data['routes'] === FALSE) {
+        return new RouteCollection();
+      }
       return $cached->data['routes'];
     }
     else {
@@ -181,7 +186,7 @@ class RouteProvider implements CacheableRouteProviderInterface, PreloadableRoute
       $cache_value = [
         'path' => $path,
         'query' => $query_parameters,
-        'routes' => $routes,
+        'routes' => $routes->count() === 0 ? FALSE : $routes,
       ];
       $this->cache->set($cid, $cache_value, CacheBackendInterface::CACHE_PERMANENT, ['route_match']);
       return $routes;
@@ -223,42 +228,19 @@ class RouteProvider implements CacheableRouteProviderInterface, PreloadableRoute
       $cid = static::ROUTE_LOAD_CID_PREFIX . hash('sha512', serialize($routes_to_load));
       if ($cache = $this->cache->get($cid)) {
         $routes = $cache->data;
-        $this->serializedRoutes += $routes;
-        return;
       }
-      // This runs directly in the critical path for every HTML request, and
-      // because it's via an event listener for the kernel.request event,
-      // before the controller is executed, it is one of the very first caches
-      // to be requested and built. Therefore, if we get a cache miss here,
-      // we're almost certainly in a cold cache situation for the entire site.
-      // DrupalKernel::handleRequest() executes request handling in a Fiber,
-      // and if a Fiber suspends, it calls the cache prewarming API in an
-      // attempt to distribute the warming of different caches in the case of
-      // a potential cache stampede. Therefore, detect if we're being executed
-      // inside a Fiber, and if so, suspend, to allow other caches to be
-      // prewarmed prior to moving on. If this isn't a stampede situation, it
-      // merely results in later caches being built out of order, but
-      // PreWarmableInterface implementations should ensure they protect
-      // against caches being built twice in a request.
-      if (\Fiber::getCurrent() !== NULL) {
-        \Fiber::suspend();
-        // Check for the cache item again in case it was set while we
-        // were suspended.
-        if ($cache = $this->cache->get($cid)) {
-          $routes = $cache->data;
-          $this->serializedRoutes += $routes;
-          return;
+      else {
+        try {
+          $result = $this->connection->query('SELECT [name], [route] FROM {' . $this->connection->escapeTable($this->tableName) . '} WHERE [name] IN ( :names[] )', [':names[]' => $routes_to_load]);
+          $routes = $result->fetchAllKeyed();
+
+          $this->cache->set($cid, $routes, Cache::PERMANENT, ['routes']);
+        }
+        catch (\Exception) {
+          $routes = [];
         }
       }
-      try {
-        $result = $this->connection->query('SELECT [name], [route] FROM {' . $this->connection->escapeTable($this->tableName) . '} WHERE [name] IN ( :names[] )', [':names[]' => $routes_to_load]);
-        $routes = $result->fetchAllKeyed();
 
-        $this->cache->set($cid, $routes, Cache::PERMANENT, ['routes']);
-      }
-      catch (\Exception $e) {
-        $routes = [];
-      }
       $this->serializedRoutes += $routes;
     }
   }
@@ -391,7 +373,7 @@ class RouteProvider implements CacheableRouteProviderInterface, PreloadableRoute
       ])
         ->fetchAll(\PDO::FETCH_ASSOC);
     }
-    catch (\Exception $e) {
+    catch (\Exception) {
       $routes = [];
     }
 
@@ -474,6 +456,8 @@ class RouteProvider implements CacheableRouteProviderInterface, PreloadableRoute
     // based on the domain.
     $this->addExtraCacheKeyPart('language', $this->getCurrentLanguageCacheIdPart());
 
+    $this->addExtraCacheKeyPart('query_parameters', $this->getQueryParametersCacheIdPart($request));
+
     // Sort the cache key parts by their provider in order to have predictable
     // cache keys.
     ksort($this->extraCacheKeyParts);
@@ -482,7 +466,52 @@ class RouteProvider implements CacheableRouteProviderInterface, PreloadableRoute
       $key_parts[] = '[' . $provider . ']=' . $key_part;
     }
 
-    return 'route:' . implode(':', $key_parts) . ':' . $request->getPathInfo() . ':' . $request->getQueryString();
+    return 'route:' . implode(':', $key_parts) . ':' . $request->getPathInfo();
+  }
+
+  /**
+   * Returns the query parameters identifier for the route collection cache.
+   *
+   * The query parameters on the request may be altered programmatically, e.g.
+   * while serving private files or in subrequests. As such, we must vary on
+   * both the query string from the client and the parameter bag after incoming
+   * route processors have modified the request object.
+   *
+   * @param \Symfony\Component\HttpFoundation\Request $request
+   *   Request.
+   *
+   * @return string
+   */
+  protected function getQueryParametersCacheIdPart(Request $request) {
+    // @todo Use \Symfony\Component\HttpFoundation\Request::normalizeQueryString
+    //   for recursive key ordering if support is added in the future.
+    $recursive_sort = function (&$array) use (&$recursive_sort) {
+      foreach ($array as &$v) {
+        if (is_array($v)) {
+          $recursive_sort($v);
+        }
+      }
+      ksort($array);
+    };
+    // Recursively normalize the query parameters to ensure maximal cache hits.
+    // If we did not normalize the order, functionally identical query string
+    // sets could be sent in differing order creating a potential DoS vector
+    // and decreasing cache hit rates.
+    $sorted_resolved_parameters = $request->query->all();
+    $recursive_sort($sorted_resolved_parameters);
+    $sorted_original_parameters = Request::create('/?' . $request->getQueryString())->query->all();
+    $recursive_sort($sorted_original_parameters);
+    // Hash this portion to help shorten the total key length.
+    $resolved_hash = $sorted_resolved_parameters
+      ? sha1(http_build_query($sorted_resolved_parameters))
+      : NULL;
+    return implode(
+      ',',
+      array_filter([
+        http_build_query($sorted_original_parameters),
+        $resolved_hash,
+      ])
+    );
   }
 
   /**

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\jsonapi\Functional;
 
 use Drupal\Core\Entity\EntityInterface;
@@ -14,7 +16,6 @@ use Drupal\user\Entity\User;
  * JSON:API integration test for the "Media" content entity type.
  *
  * @group jsonapi
- * @group #slow
  */
 class MediaTest extends ResourceTestBase {
 
@@ -65,7 +66,7 @@ class MediaTest extends ResourceTestBase {
   protected function setUpAuthorization($method) {
     switch ($method) {
       case 'GET':
-        $this->grantPermissionsToTestedRole(['view media']);
+        $this->grantPermissionsToTestedRole(['view media', 'view any camelids media revisions']);
         break;
 
       case 'POST':
@@ -151,7 +152,7 @@ class MediaTest extends ResourceTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function getExpectedDocument() {
+  protected function getExpectedDocument(): array {
     $file = File::load(1);
     $thumbnail = File::load(3);
     $author = User::load($this->entity->getOwnerId());
@@ -184,7 +185,7 @@ class MediaTest extends ResourceTestBase {
           'status' => TRUE,
           'created' => '1973-11-29T21:33:09+00:00',
           'changed' => (new \DateTime())->setTimestamp($this->entity->getChangedTime())->setTimezone(new \DateTimeZone('UTC'))->format(\DateTime::RFC3339),
-          'revision_created' => (new \DateTime())->setTimestamp($this->entity->getRevisionCreationTime())->setTimezone(new \DateTimeZone('UTC'))->format(\DateTime::RFC3339),
+          'revision_created' => (new \DateTime())->setTimestamp((int) $this->entity->getRevisionCreationTime())->setTimezone(new \DateTimeZone('UTC'))->format(\DateTime::RFC3339),
           'default_langcode' => TRUE,
           'revision_log_message' => NULL,
           // @todo Attempt to remove this in https://www.drupal.org/project/drupal/issues/2933518.
@@ -292,13 +293,13 @@ class MediaTest extends ResourceTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function getPostDocument() {
+  protected function getPostDocument(): array {
     $file = File::load(2);
     return [
       'data' => [
         'type' => 'media--camelids',
         'attributes' => [
-          'name' => 'Dramallama',
+          'name' => 'Drama llama',
         ],
         'relationships' => [
           'field_media_file' => [
@@ -342,7 +343,7 @@ class MediaTest extends ResourceTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function getEditorialPermissions() {
+  protected function getEditorialPermissions(): array {
     return array_merge(parent::getEditorialPermissions(), ['view any unpublished content']);
   }
 
@@ -358,16 +359,16 @@ class MediaTest extends ResourceTestBase {
   /**
    * {@inheritdoc}
    */
-  public function testPostIndividual() {
+  protected function doTestPostIndividual(): void {
     // @todo Mimic \Drupal\Tests\rest\Functional\EntityResource\Media\MediaResourceTestBase::testPost()
     // @todo Later, use https://www.drupal.org/project/drupal/issues/2958554 to upload files rather than the REST module.
-    parent::testPostIndividual();
+    parent::doTestPostIndividual();
   }
 
   /**
    * {@inheritdoc}
    */
-  protected function getExpectedGetRelationshipDocumentData($relationship_field_name, EntityInterface $entity = NULL) {
+  protected function getExpectedGetRelationshipDocumentData($relationship_field_name, ?EntityInterface $entity = NULL) {
     $data = parent::getExpectedGetRelationshipDocumentData($relationship_field_name, $entity);
     switch ($relationship_field_name) {
       case 'thumbnail':
@@ -404,7 +405,7 @@ class MediaTest extends ResourceTestBase {
   /**
    * {@inheritdoc}
    */
-  public function testCollectionFilterAccess() {
+  public function testCollectionFilterAccess(): void {
     $this->doTestCollectionFilterAccessForPublishableEntities('name', 'view media', 'administer media');
   }
 
