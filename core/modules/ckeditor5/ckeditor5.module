@@ -97,7 +97,7 @@ function ckeditor5_field_widget_single_element_form_alter(&$element, FormStateIn
  * Implements hook_entity_bundle_info_alter().
  */
 function ckeditor5_entity_bundle_info_alter(&$bundles) {
-  foreach ($bundles['node'] as $key $bundle) {
+  foreach ($bundles['node'] as $key => $bundle) {
     $bundles['node'][$key]['ckeditor5_link_suggestions'] = TRUE;
   }
 }

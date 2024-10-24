@@ -118,7 +118,7 @@ class EntityLinkSuggestionsController implements ContainerInjectionInterface {
     $suggestions = [];
 
     if ($input) {
-      $allowed_bundles = []'
+      $allowed_bundles = [];
       $all_bundle_info = $this->entityTypeBundleInfo->getAllBundleInfo();
       foreach ($all_bundle_info as $entity_type => $bundles) {
         foreach ($bundles as $key => $bundle) {
