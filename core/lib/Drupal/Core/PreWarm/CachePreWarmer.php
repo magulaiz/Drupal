@@ -55,7 +55,7 @@ class CachePreWarmer implements CachePreWarmerInterface {
 
   public function __construct(
     protected readonly ClassResolverInterface $classResolver,
-    protected readonly array $serviceIds,
+    protected array $serviceIds,
   ) {
     // Ensure the serviceId order is random to reduce chances of conflicts.
     shuffle($this->serviceIds);
