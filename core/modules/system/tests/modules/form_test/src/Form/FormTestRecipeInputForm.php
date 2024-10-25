@@ -4,14 +4,11 @@ declare(strict_types=1);
 
 namespace Drupal\form_test\Form;
 
-use Drupal\Component\Utility\NestedArray;
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Recipe\Recipe;
 use Drupal\Core\Recipe\RecipeInputFormTrait;
 use Drupal\Core\Recipe\RecipeRunner;
-use Drupal\Core\TypedData\TypedDataInterface;
-use Symfony\Component\Validator\Exception\ValidationFailedException;
 
 class FormTestRecipeInputForm extends FormBase {
 
@@ -41,7 +38,7 @@ class FormTestRecipeInputForm extends FormBase {
   /**
    * {@inheritdoc}
    */
-  public function validateForm(array &$form, FormStateInterface $form_state) {
+  public function validateForm(array &$form, FormStateInterface $form_state): void {
     $recipe = Recipe::createFromDirectory('core/recipes/feedback_contact_form');
     $this->validateRecipeInput($recipe, $form, $form_state);
   }
