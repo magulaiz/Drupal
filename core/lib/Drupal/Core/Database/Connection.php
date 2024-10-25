@@ -374,15 +374,28 @@ abstract class Connection {
     // portions of the statement. They are then passed over when matching
     // the second half of the pattern finding curly-braced table names which
     // require prefixing.
-    return preg_replace_callback(
-      "/(?:'.*(?<!\\\)')|({(\w+)})/U",
+    $retSql = preg_replace_callback(
+      "/(?:'(.*(?<!\\\))')|(?'simple'{(\w+)})/U",
       function ($matches) {
-        return count($matches) > 1
-          ? "{$this->tablePlaceholderReplacements[0]}{$matches[2]}{$this->tablePlaceholderReplacements[1]}"
-          : $matches[0];
+        return match (true) {
+          // Curly brace table not contained inside single quotes.
+          array_key_exists('simple', $matches) => "{$this->tablePlaceholderReplacements[0]}{$matches[3]}{$this->tablePlaceholderReplacements[1]}",
+          // BC layer: Some table names are contained inside single quotes, but
+          // still require expansion. This was historically valid, but makes
+          // these cases difficult to isolate from inlined JSON.
+          // This check determines if there are curly braces in the string,
+          // and determines they need replacement if the overall string is not
+          // itself valid JSON. This would match '{table1}' but not
+          // '{"table": 1}'. The return value is the original, simple logic
+          // from this method.
+          preg_match('/[{}]+/', $matches[1]) && !json_validate($matches[1]) => str_replace(['{', '}'], $this->tablePlaceholderReplacements, $matches[1]),
+          // Return single-quoted string as-is.
+          default => $matches[0],
+        };
       },
       $sql
     );
+    return $retSql;
   }
 
   /**
