@@ -41,6 +41,14 @@ class RecipeFormInputTest extends BrowserTestBase {
       'feedback_contact_form[recipient]' => '',
     ], 'Apply recipe');
     $assert_session->statusMessageContains('Feedback form email address field is required.', 'error');
+    // All inputs should be validated with their own constraints.
+    $invalid_value = $this->randomString();
+    $this->submitForm([
+      'feedback_contact_form[recipient]' => $invalid_value,
+    ], 'Apply recipe');
+    $assert_session->statusMessageContains("The email address $invalid_value is not valid.", 'error');
+    // The correct element should be flagged as invalid.
+    $assert_session->elementAttributeExists('named', ['field', 'feedback_contact_form[recipient]'], 'aria-invalid');
     // Submit the form with a valid value and apply the recipe, to prove that
     // it was passed through correctly.
     $this->submitForm([

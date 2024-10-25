@@ -7,6 +7,8 @@ namespace Drupal\Core\Recipe;
 use Drupal\Component\Utility\NestedArray;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\TypedData\DataDefinitionInterface;
+use Drupal\Core\TypedData\TypedDataInterface;
+use Symfony\Component\Validator\Exception\ValidationFailedException;
 
 /**
  * Defines helper methods for forms which collect input on behalf of recipes.
@@ -42,6 +44,19 @@ trait RecipeInputFormTrait {
     };
     $recipe->input->collectAll($collector);
     return $collector->form;
+  }
+
+  protected function validateRecipeInput(Recipe $recipe, array &$form, FormStateInterface $form_state): void {
+    try {
+      $this->setRecipeInput($recipe, $form_state);
+    }
+    catch (ValidationFailedException $e) {
+      $data = $e->getValue();
+      assert($data instanceof TypedDataInterface);
+
+      $element = NestedArray::getValue($form, explode('.', $data->getName(), 2));
+      $form_state->setError($element, $e->getMessage());
+    }
   }
 
   protected function setRecipeInput(Recipe $recipe, FormStateInterface $form_state): void {
