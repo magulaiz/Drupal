@@ -27,6 +27,10 @@ class FormTestRecipeInputForm extends FormBase {
     $recipe = Recipe::createFromDirectory('core/recipes/standard');
     $form['input'] = $this->getRecipeInputForm($recipe);
 
+    $form['apply'] = [
+      '#type' => 'submit',
+      '#value' => $this->t('Apply recipe'),
+    ];
     return $form;
   }
 

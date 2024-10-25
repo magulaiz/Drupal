@@ -15,6 +15,7 @@ input:
         question: 'What email address should receive website feedback?'
     form:
       '#type': email
+      '#title': 'Feedback form email address'
     default:
       source: config
       config: ['system.site', 'mail']

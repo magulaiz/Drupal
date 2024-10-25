@@ -27,6 +27,8 @@ trait RecipeInputFormTrait {
             '#description' => $definition->getDescription(),
             '#default_value' => $default_value,
           ];
+          // Recipe inputs are always required.
+          $element['#required'] = TRUE;
           NestedArray::setValue($this->form, explode('.', $name), $element);
         }
         return $default_value;
