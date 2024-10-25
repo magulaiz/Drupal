@@ -28,6 +28,7 @@ class RecipeFormInputTest extends BrowserTestBase {
   public function testRecipeInputViaForm(): void {
     $this->drupalGet('/form-test/recipe-input');
     $this->assertSession()->statusCodeEquals(200);
+    $this->getSession()->getPage()->fillField('input[feedback_contact_form][recipient]', 'it.works@drupal.test');
   }
 
 }

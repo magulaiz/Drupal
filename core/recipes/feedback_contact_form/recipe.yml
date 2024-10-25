@@ -13,6 +13,8 @@ input:
       method: ask
       arguments:
         question: 'What email address should receive website feedback?'
+    form:
+      '#type': email
     default:
       source: config
       config: ['system.site', 'mail']

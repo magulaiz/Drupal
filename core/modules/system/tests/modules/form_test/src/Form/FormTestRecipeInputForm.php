@@ -6,6 +6,7 @@ namespace Drupal\form_test\Form;
 
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Recipe\Recipe;
 use Drupal\Core\Recipe\RecipeInputFormTrait;
 
 class FormTestRecipeInputForm extends FormBase {
@@ -23,6 +24,9 @@ class FormTestRecipeInputForm extends FormBase {
    * {@inheritdoc}
    */
   public function buildForm(array $form, FormStateInterface $form_state): array {
+    $recipe = Recipe::createFromDirectory('core/recipes/standard');
+    $form['input'] = $this->getRecipeInputForm($recipe);
+
     return $form;
   }
 
