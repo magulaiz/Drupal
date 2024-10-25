@@ -82,7 +82,6 @@ form-two-columns:
   css:
     layout:
       css/layout/form-two-columns.css: {}
-      css/layout/node-add.css: {}
 
 maintenance-page:
   version: VERSION
