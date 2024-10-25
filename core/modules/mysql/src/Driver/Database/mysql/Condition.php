@@ -60,8 +60,8 @@ class Condition extends QueryCondition {
       // ::getJsonFieldFragment().
       // @todo When MySQL 8.0.21+ is required, use JSON_VALUE().
       ? sprintf('CAST(%s AS DECIMAL)', $fragment)
-      // MySQL will otherwise cast the result to an int, so be explicit.
-      : $fragment . (!$connection->isMariaDb() && is_bool($value) ? ' = true' : '');
+      // MySQL/MariaDB will otherwise cast the result to an int, so be explicit.
+      : $fragment . (is_bool($value) ? ' = true' : '');
   }
 
 }
