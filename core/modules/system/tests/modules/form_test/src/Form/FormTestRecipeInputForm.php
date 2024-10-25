@@ -8,6 +8,7 @@ use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Recipe\Recipe;
 use Drupal\Core\Recipe\RecipeInputFormTrait;
+use Drupal\Core\Recipe\RecipeRunner;
 
 class FormTestRecipeInputForm extends FormBase {
 
@@ -24,8 +25,8 @@ class FormTestRecipeInputForm extends FormBase {
    * {@inheritdoc}
    */
   public function buildForm(array $form, FormStateInterface $form_state): array {
-    $recipe = Recipe::createFromDirectory('core/recipes/standard');
-    $form['input'] = $this->getRecipeInputForm($recipe);
+    $recipe = Recipe::createFromDirectory('core/recipes/feedback_contact_form');
+    $form += $this->getRecipeInputForm($recipe);
 
     $form['apply'] = [
       '#type' => 'submit',
@@ -38,6 +39,9 @@ class FormTestRecipeInputForm extends FormBase {
    * {@inheritdoc}
    */
   public function submitForm(array &$form, FormStateInterface $form_state): void {
+    $recipe = Recipe::createFromDirectory('core/recipes/feedback_contact_form');
+    $this->setRecipeInput($recipe, $form_state);
+    RecipeRunner::processRecipe($recipe);
   }
 
 }

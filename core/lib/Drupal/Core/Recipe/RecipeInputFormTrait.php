@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Drupal\Core\Recipe;
 
 use Drupal\Component\Utility\NestedArray;
+use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\TypedData\DataDefinitionInterface;
 
 /**
@@ -29,7 +30,7 @@ trait RecipeInputFormTrait {
           ];
           // Recipe inputs are always required.
           $element['#required'] = TRUE;
-          NestedArray::setValue($this->form, explode('.', $name), $element);
+          NestedArray::setValue($this->form, explode('.', $name, 2), $element);
         }
         return $default_value;
       }
@@ -40,6 +41,23 @@ trait RecipeInputFormTrait {
       $collector->form['#tree'] = TRUE;
     }
     return $collector->form;
+  }
+
+  protected function setRecipeInput(Recipe $recipe, FormStateInterface $form_state): void {
+    $recipe->input->collectAll(new class ($form_state) implements InputCollectorInterface {
+
+      public function __construct(
+        private readonly FormStateInterface $formState,
+      ) {}
+
+      /**
+       * {@inheritdoc}
+       */
+      public function collectValue(string $name, DataDefinitionInterface $definition, mixed $default_value): mixed {
+        return $this->formState->getValue(explode('.', $name, 2), $default_value);
+      }
+
+    });
   }
 
 }
