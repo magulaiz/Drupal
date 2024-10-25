@@ -60,6 +60,9 @@ function image_help($route_name, RouteMatchInterface $route_match): string {
       $effect = $route_match->getParameter('image_style')->getEffect($route_match->getParameter('image_effect'));
       $effect_definition = $effect->getPluginDefinition();
       return isset($effect_definition['description']) ? ('<p>' . $effect_definition['description'] . '</p>') : NULL;
+      
+    default:
+      return '';
   }
 }
 

@@ -34,6 +34,9 @@ function block_content_help($route_name, RouteMatchInterface $route_match): stri
       $output .= '<dd>' . t('Users with the <em>Administer blocks</em> permission can create, edit, and delete content blocks of each defined block type, from the <a href=":block-library">Content blocks page</a>. After creating a block, place it in a region from the <a href=":blocks">Block layout page</a>, just like blocks provided by other modules.', [':blocks' => Url::fromRoute('block.admin_display')->toString(), ':block-library' => Url::fromRoute('entity.block_content.collection')->toString()]) . '</dd>';
       $output .= '</dl>';
       return $output;
+      
+    default:
+      return '';
   }
 }
 

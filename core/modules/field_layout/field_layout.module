@@ -27,6 +27,9 @@ function field_layout_help($route_name, RouteMatchInterface $route_match): strin
       $output .= '<p>' . t('The Field Layout module allows you to arrange fields into regions on forms and displays of entities such as nodes and users.') . '</p>';
       $output .= '<p>' . t('For more information, see the <a href=":field-layout-documentation">online documentation for the Field Layout module</a>.', [':field-layout-documentation' => 'https://www.drupal.org/documentation/modules/field_layout']) . '</p>';
       return $output;
+      
+    default:
+      return '';
   }
 }
 

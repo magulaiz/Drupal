@@ -97,6 +97,9 @@ function contextual_help($route_name, RouteMatchInterface $route_match): string 
       $output .= '</dd>';
       $output .= '</dl>';
       return $output;
+      
+    default:
+      return '';
   }
 }
 

@@ -77,6 +77,9 @@ function hook_help($route_name, \Drupal\Core\Routing\RouteMatchInterface $route_
     // Help for another path in the block module.
     case 'block.admin_display':
       return '<p>' . t('This page provides a drag-and-drop interface for assigning a block to a region, and for controlling the order of blocks within regions. Since not all themes implement the same regions, or display regions in the same way, blocks are positioned on a per-theme basis. Remember that your changes will not be saved until you click the <em>Save blocks</em> button at the bottom of the page.') . '</p>';
+      
+    default:
+      return '';
   }
 }
 

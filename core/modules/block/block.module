@@ -41,6 +41,9 @@ function block_help($route_name, RouteMatchInterface $route_match): string {
       $output .= '<dd>' . t('You can add content blocks, if the <em>Block Content</em> module is installed. For more information, see the <a href=":blockcontent-help">Block Content help page</a>.', [':blockcontent-help' => $block_content]) . '</dd>';
       $output .= '</dl>';
       return $output;
+      
+    default:
+      return '';
   }
   if ($route_name == 'block.admin_display' || $route_name == 'block.admin_display_theme') {
     $demo_theme = $route_match->getParameter('theme') ?: \Drupal::config('system.theme')->get('default');

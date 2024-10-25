@@ -20,6 +20,9 @@ function layout_builder_expose_all_field_blocks_help($route_name, RouteMatchInte
       $output .= '<p>' . t("For example, if Layout Builder is enabled on a Node bundle (Content type), and that bundle's display is using field blocks from the User entity (e.g. the Author's name), but Layout Builder is not enabled for the User bundle, then that field block would no longer exist after uninstalling this module.") . '</p>';
       $output .= '<p>' . t('For more information, see the <a href=":href">online documentation for the Layout Builder Expose All Field Blocks module</a>.', [':href' => 'https://www.drupal.org/node/3223395#s-layout-builder-expose-all-field-blocks']) . '</p>';
       return $output;
+      
+    default:
+      return '';
   }
   return NULL;
 }

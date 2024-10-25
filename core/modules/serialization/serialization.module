@@ -22,5 +22,8 @@ function serialization_help($route_name, RouteMatchInterface $route_match): stri
       $output .= '<p>' . t('This module does not have a user interface. It is used by other modules which need to serialize data, such as <a href=":rest">REST</a>.', [':rest' => (\Drupal::moduleHandler()->moduleExists('rest')) ? Url::fromRoute('help.page', ['name' => 'rest'])->toString() : '#']) . '</p>';
       $output .= '<p>' . t('For more information, see the <a href=":doc_url">online documentation for the Serialization module</a>.', [':doc_url' => 'https://www.drupal.org/documentation/modules/serialization']) . '</p>';
       return $output;
+      
+    default:
+      return '';
   }
 }

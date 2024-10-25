@@ -98,6 +98,9 @@ function node_help($route_name, RouteMatchInterface $route_match): string {
       $type = $route_match->getParameter('node_type');
       $help = $type->getHelp();
       return (!empty($help) ? Xss::filterAdmin($help) : '');
+      
+    default:
+      return '';
   }
 }
 

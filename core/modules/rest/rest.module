@@ -32,5 +32,8 @@ function rest_help($route_name, RouteMatchInterface $route_match): string {
       ]) . '</dd>';
       $output .= '</dl>';
       return $output;
+      
+    default:
+      return '';
   }
 }

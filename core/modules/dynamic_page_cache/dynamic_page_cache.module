@@ -23,5 +23,8 @@ function dynamic_page_cache_help($route_name, RouteMatchInterface $route_match):
       $output .= '</dl>';
 
       return $output;
+      
+    default:
+      return '';
   }
 }

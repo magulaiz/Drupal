@@ -59,6 +59,9 @@ function help_help($route_name, RouteMatchInterface $route_match): string {
       return '<p>' . t('See the <a href=":help_page">Help page</a> for more topics.', [
         ':help_page' => $help_home,
       ]) . '</p>';
+      
+    default:
+      return '';
   }
 }
 

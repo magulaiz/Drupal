@@ -41,6 +41,9 @@ function menu_ui_help($route_name, RouteMatchInterface $route_match): string {
       $output .= '<dd>' . t('If you have the Block module installed, then each menu that you create is rendered in a block that you enable and position on the <a href=":blocks">Block layout page</a>. In some <a href=":themes">themes</a>, the main menu and possibly the secondary menu will be output automatically; you may be able to disable this behavior on the <a href=":themes">theme\'s settings page</a>.', [':blocks' => (\Drupal::moduleHandler()->moduleExists('block')) ? Url::fromRoute('block.admin_display')->toString() : '#', ':themes' => Url::fromRoute('system.themes_page')->toString(), ':theme_settings' => Url::fromRoute('system.theme_settings')->toString()]) . '</dd>';
       $output .= '</dl>';
       return $output;
+      
+    default:
+      return '';
   }
   if ($route_name == 'entity.menu.add_form' && \Drupal::moduleHandler()->moduleExists('block') && \Drupal::currentUser()->hasPermission('administer blocks')) {
     return '<p>' . t('You can enable the newly-created block for this menu on the <a href=":blocks">Block layout page</a>.', [':blocks' => Url::fromRoute('block.admin_display')->toString()]) . '</p>';

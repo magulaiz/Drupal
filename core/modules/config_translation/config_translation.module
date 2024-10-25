@@ -34,6 +34,9 @@ function config_translation_help($route_name, RouteMatchInterface $route_match):
     case 'config_translation.mapper_list':
       $output = '<p>' . t('This page lists all configuration items on your site that have translatable text, like your site name, role names, etc.') . '</p>';
       return $output;
+      
+    default:
+      return '';
   }
 }
 
