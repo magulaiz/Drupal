@@ -300,7 +300,20 @@ function user_pass_reset($form, &$form_state, $uid, $timestamp, $hashed_pass, $a
 /**
  * Menu callback; logs the current user out, and redirects to the home page.
  */
-function user_logout() {
+function user_logout_form($form, &$form_state) {
+  return confirm_form($form,
+    t('Are you sure you want to log out?'),
+    '<front>',
+    t('This action will log you out of the current session.'),
+    t('Log out'), t('Cancel'),
+    'user_confirm_delete'
+  );
+}
+
+/**
+ * Form submission handler for user_logout_form().
+ */
+function user_logout_submit() {
   user_logout_current_user();
   drupal_goto();
 }
