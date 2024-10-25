@@ -65,7 +65,7 @@ function comment_help($route_name, RouteMatchInterface $route_match): string {
     case 'entity.comment_type.collection':
       $output = '<p>' . t('This page provides a list of all comment types on the site and allows you to manage the fields, form and display settings for each.') . '</p>';
       return $output;
-      
+
     default:
       return '';
   }

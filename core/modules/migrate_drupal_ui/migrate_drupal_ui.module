@@ -37,7 +37,7 @@ function migrate_drupal_ui_help($route_name, RouteMatchInterface $route_match): 
       $output .= '<dd>' . t('Rolling back an upgrade is not yet supported through the user interface.') . '</dd>';
       $output .= '</dl>';
       return $output;
-      
+
     default:
       return '';
   }

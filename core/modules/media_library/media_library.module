@@ -73,7 +73,7 @@ function media_library_help($route_name, RouteMatchInterface $route_match): stri
       ]) . '</li>';
       $output .= '</ul>';
       return $output;
-      
+
     default:
       return '';
   }

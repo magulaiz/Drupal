@@ -28,7 +28,7 @@ function menu_link_content_help($route_name, RouteMatchInterface $route_match): 
       }
       $output .= '</p>';
       return $output;
-      
+
     default:
       return '';
   }

@@ -31,7 +31,7 @@ function settings_tray_help($route_name, RouteMatchInterface $route_match): stri
       $output .= '</dd>';
       $output .= '</dl>';
       return ['#markup' => $output];
-      
+
     default:
       return '';
   }

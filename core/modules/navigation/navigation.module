@@ -26,7 +26,7 @@ function navigation_help($route_name, RouteMatchInterface $route_match): string 
         ':docs' => 'https://www.drupal.org/project/navigation',
       ]) . '</p>';
       return $output;
-      
+
     default:
       return '';
   }

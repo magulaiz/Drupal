@@ -62,7 +62,7 @@ function layout_builder_help($route_name, RouteMatchInterface $route_match): str
       ]) . '</dd>';
       $output .= '</dl>';
       return $output;
-      
+
     default:
       return '';
   }

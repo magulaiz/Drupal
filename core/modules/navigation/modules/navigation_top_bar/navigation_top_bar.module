@@ -24,7 +24,7 @@ function navigation_top_bar_help($route_name, RouteMatchInterface $route_match):
         ':docs' => 'https://www.drupal.org/project/navigation',
       ]) . '</p>';
       return $output;
-      
+
     default:
       return '';
   }

@@ -24,7 +24,7 @@ function big_pipe_help($route_name, RouteMatchInterface $route_match): string {
       $output .= '</dl>';
 
       return $output;
-      
+
     default:
       return '';
   }
