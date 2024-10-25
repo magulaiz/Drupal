@@ -16,6 +16,7 @@ trait RecipeInputFormTrait {
   protected function getRecipeInputForm(Recipe $recipe): array {
     $collector = new class () implements InputCollectorInterface {
 
+      // phpcs:ignore DrupalPractice.CodeAnalysis.VariableAnalysis.UnusedVariable
       public array $form = [];
 
       /**

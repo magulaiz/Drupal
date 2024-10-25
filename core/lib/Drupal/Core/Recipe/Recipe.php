@@ -220,7 +220,8 @@ final class Recipe {
                 new Sequentially([
                   new Type('associative_array'),
                   // Every element in the `form` array has to be a form API
-                  // property, prefixed with `#`. Child elements aren't allowed.
+                  // property, prefixed with `#`. Because recipe inputs can only
+                  // be primitive data types, child elements aren't allowed.
                   new Callback(function (array $element, ExecutionContextInterface $context): void {
                     if (Element::children($element)) {
                       $context->addViolation('Form elements for recipe inputs cannot have child elements.');
