@@ -160,7 +160,7 @@ class AjaxFormsTestSimpleForm extends FormBase {
     return $form;
   }
 
-  public static function textfieldInsertHtmlCallback($form) {
+  public static function textfieldInsertHtmlCallback($form): AjaxResponse {
     $response = new AjaxResponse();
     $response->addCommand(new HtmlCommand('#block-umami-content', $form));
     return $response;

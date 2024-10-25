@@ -344,9 +344,9 @@ JS;
     $has_focus_id = $this->getSession()->evaluateScript('document.activeElement.id');
     $this->assertEquals('edit-textfield-3', $has_focus_id);
 
-    // Test cursor position after html insert re-focus
+    // Test cursor position after html insert re-focus.
     $expected_value = "Fox says erm";
-    // since the driver can not simulate raw keyboard input I'm doing my best here to simulate it in JS
+    // Since the driver can not simulate raw keyboard input, I'm doing my best here to simulate it in JS.
     foreach (mb_str_split($expected_value) as $char) {
       $this->getSession()->executeScript(<<<JS
 /** @type {HTMLInputElement} */
