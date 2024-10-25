@@ -6,7 +6,6 @@ namespace Drupal\Tests\system\Functional\Form;
 
 use Drupal\contact\Entity\ContactForm;
 use Drupal\Tests\BrowserTestBase;
-use Drupal\user\Entity\User;
 
 /**
  * @covers \Drupal\Core\Recipe\RecipeInputFormTrait
@@ -28,35 +27,27 @@ class RecipeFormInputTest extends BrowserTestBase {
    * Tests collecting recipe input via a form.
    */
   public function testRecipeInputViaForm(): void {
-    User::load(1)->addRole($this->createAdminRole());
-
     $this->drupalGet('/form-test/recipe-input');
 
     $assert_session = $this->assertSession();
     // There should only be one nested input element on the page: the one
-    // defined by the feedback_contact_form recipe.
+    // defined by the input_test recipe.
     $assert_session->elementsCount('css', 'input[name*="["]', 1);
+    // The default value and description should be visible.
+    $assert_session->fieldValueEquals('input_test[owner]', 'Dries Buytaert');
+    $assert_session->pageTextContains('The name of the site owner.');
     // All recipe inputs are required.
-    $this->submitForm([
-      'feedback_contact_form[recipient]' => '',
-    ], 'Apply recipe');
-    $assert_session->statusMessageContains('Feedback form email address field is required.', 'error');
+    $this->submitForm(['input_test[owner]' => ''], 'Apply recipe');
+    $assert_session->statusMessageContains("Site owner's name field is required.", 'error');
     // All inputs should be validated with their own constraints.
-    $invalid_value = $this->randomString();
-    $this->submitForm([
-      'feedback_contact_form[recipient]' => $invalid_value,
-    ], 'Apply recipe');
-    $assert_session->statusMessageContains("The email address $invalid_value is not valid.", 'error');
+    $this->submitForm(['input_test[owner]' => 'Hacker Joe'], 'Apply recipe');
+    $assert_session->statusMessageContains("I don't think you should be owning sites.", 'error');
     // The correct element should be flagged as invalid.
-    $assert_session->elementAttributeExists('named', ['field', 'feedback_contact_form[recipient]'], 'aria-invalid');
+    $assert_session->elementAttributeExists('named', ['field', 'input_test[owner]'], 'aria-invalid');
     // Submit the form with a valid value and apply the recipe, to prove that
     // it was passed through correctly.
-    $this->submitForm([
-      'feedback_contact_form[recipient]' => 'it.works@drupal.test',
-    ], 'Apply recipe');
-
-    $this->resetAll();
-    $this->assertContains('it.works@drupal.test', ContactForm::load('feedback')->getRecipients());
+    $this->submitForm(['input_test[owner]' => 'Legitimate Human'], 'Apply recipe');
+    $this->assertSame("Legitimate Human's Turf", $this->config('system.site')->get('name'));
   }
 
 }

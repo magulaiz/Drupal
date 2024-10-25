@@ -21,12 +21,15 @@ class FormTestRecipeInputForm extends FormBase {
     return 'form_test_recipe_input';
   }
 
+  private function getRecipe(): Recipe {
+    return Recipe::createFromDirectory('core/tests/fixtures/recipes/input_test');
+  }
+
   /**
    * {@inheritdoc}
    */
   public function buildForm(array $form, FormStateInterface $form_state): array {
-    $recipe = Recipe::createFromDirectory('core/recipes/feedback_contact_form');
-    $form += $this->buildRecipeInputForm($recipe);
+    $form += $this->buildRecipeInputForm($this->getRecipe());
 
     $form['apply'] = [
       '#type' => 'submit',
@@ -39,15 +42,14 @@ class FormTestRecipeInputForm extends FormBase {
    * {@inheritdoc}
    */
   public function validateForm(array &$form, FormStateInterface $form_state): void {
-    $recipe = Recipe::createFromDirectory('core/recipes/feedback_contact_form');
-    $this->validateRecipeInput($recipe, $form, $form_state);
+    $this->validateRecipeInput($this->getRecipe(), $form, $form_state);
   }
 
   /**
    * {@inheritdoc}
    */
   public function submitForm(array &$form, FormStateInterface $form_state): void {
-    $recipe = Recipe::createFromDirectory('core/recipes/feedback_contact_form');
+    $recipe = $this->getRecipe();
     $this->setRecipeInput($recipe, $form_state);
     RecipeRunner::processRecipe($recipe);
   }
