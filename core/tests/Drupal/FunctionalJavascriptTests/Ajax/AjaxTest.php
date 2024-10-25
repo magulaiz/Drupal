@@ -351,7 +351,6 @@ JS;
       $this->getSession()->executeScript(<<<JS
 /** @type {HTMLInputElement} */
 const element = document.getElementById("edit-textfield-4");
-element.focus();
 const selectionStart = element.selectionStart ?? 0;
 const selectionEnd = element.selectionEnd ?? selectionStart;
 element.value = element.value.slice(0, selectionStart) + "$char" + element.value.slice(selectionEnd);
