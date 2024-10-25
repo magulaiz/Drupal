@@ -26,7 +26,7 @@ class LayoutBuilderUpdateBlockAccessCheck extends LayoutBuilderBlockAccessBase {
    *   The Layout Builder tempstore repository service.
    */
   public function __construct(
-    protected readonly LayoutTempstoreRepositoryInterface $layoutTempstoreRepository
+    protected readonly LayoutTempstoreRepositoryInterface $layoutTempstoreRepository,
   ) {}
 
   /**

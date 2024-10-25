@@ -26,7 +26,7 @@ class LayoutBuilderAddBlockAccessCheck extends LayoutBuilderBlockAccessBase {
    *   The block plugin manager.
    */
   public function __construct(
-    protected readonly BlockManagerInterface $blockManager
+    protected readonly BlockManagerInterface $blockManager,
   ) {}
 
   /**
