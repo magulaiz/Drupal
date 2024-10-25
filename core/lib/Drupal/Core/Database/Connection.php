@@ -377,7 +377,7 @@ abstract class Connection {
     $retSql = preg_replace_callback(
       "/(?:'(.*(?<!\\\))')|(?'simple'{(\w+)})/U",
       function ($matches) {
-        return match (true) {
+        return match (TRUE) {
           // Curly brace table not contained inside single quotes.
           array_key_exists('simple', $matches) => "{$this->tablePlaceholderReplacements[0]}{$matches[3]}{$this->tablePlaceholderReplacements[1]}",
           // BC layer: Some table names are contained inside single quotes, but
