@@ -522,7 +522,7 @@ input:
 YAML,
       [
         '[input][foo][form]' => ['This value should be of type associative_array.'],
-      ]
+      ],
     ];
     yield 'form element is an indexed array' => [
       <<<YAML
@@ -538,7 +538,7 @@ input:
 YAML,
       [
         '[input][foo][form]' => ['This value should be of type associative_array.'],
-      ]
+      ],
     ];
     yield 'form element is an empty array' => [
       <<<YAML
@@ -554,7 +554,7 @@ input:
 YAML,
       [
         '[input][foo][form]' => ['This value should be of type associative_array.'],
-      ]
+      ],
     ];
     yield 'form element has children' => [
       <<<YAML
@@ -573,7 +573,7 @@ input:
 YAML,
       [
         '[input][foo][form]' => ['Form elements for recipe inputs cannot have child elements.'],
-      ]
+      ],
     ];
     yield 'Valid form element' => [
       <<<YAML

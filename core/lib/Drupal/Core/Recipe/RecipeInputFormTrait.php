@@ -14,7 +14,7 @@ use Drupal\Core\TypedData\DataDefinitionInterface;
 trait RecipeInputFormTrait {
 
   protected function getRecipeInputForm(Recipe $recipe): array {
-    $collector = new class implements InputCollectorInterface {
+    $collector = new class () implements InputCollectorInterface {
 
       public array $form = [];
 
@@ -31,24 +31,23 @@ trait RecipeInputFormTrait {
           // Recipe inputs are always required.
           $element['#required'] = TRUE;
           NestedArray::setValue($this->form, explode('.', $name, 2), $element);
+
+          // Always return the input elements as a tree.
+          $this->form['#tree'] = TRUE;
         }
         return $default_value;
       }
 
     };
     $recipe->input->collectAll($collector);
-    if ($collector->form) {
-      $collector->form['#tree'] = TRUE;
-    }
     return $collector->form;
   }
 
   protected function setRecipeInput(Recipe $recipe, FormStateInterface $form_state): void {
     $recipe->input->collectAll(new class ($form_state) implements InputCollectorInterface {
 
-      public function __construct(
-        private readonly FormStateInterface $formState,
-      ) {}
+      public function __construct(private readonly FormStateInterface $formState) {
+      }
 
       /**
        * {@inheritdoc}
