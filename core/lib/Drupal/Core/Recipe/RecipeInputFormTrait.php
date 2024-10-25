@@ -25,7 +25,7 @@ trait RecipeInputFormTrait {
    *   A nested array of form elements for collecting input values for the given
    *   recipe and its dependencies. The elements will be grouped by the recipe
    *   that defined the input -- for example, $return['recipe_name']['input1'],
-   *   $retrun['recipe_name']['input2'], $return['dependency']['input_name'],
+   *   $return['recipe_name']['input2'], $return['dependency']['input_name'],
    *   and so forth. The returned array will have the `#tree` property set to
    *   TRUE.
    */
