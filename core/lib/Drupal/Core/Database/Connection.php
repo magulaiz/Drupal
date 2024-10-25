@@ -388,7 +388,7 @@ abstract class Connection {
           // itself valid JSON. This would match '{table1}' but not
           // '{"table": 1}'. The return value is the original, simple logic
           // from this method.
-          preg_match('/[{}]+/', $matches[1]) && !json_validate($matches[1]) => str_replace(['{', '}'], $this->tablePlaceholderReplacements, $matches[1]),
+          preg_match('/[{}]+/', $matches[1]) && !json_validate($matches[1]) => str_replace(['{', '}'], $this->tablePlaceholderReplacements, $matches[0]),
           // Return single-quoted string as-is.
           default => $matches[0],
         };

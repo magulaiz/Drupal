@@ -136,6 +136,8 @@ class SchemaTest extends DriverSpecificSchemaTestBase {
       $table_specification['indexes'][$new_index_name] = $columns;
     }
 
+    // This is added for testing convenience and is not part of the spec.
+    unset($index_schema['index_definitions']);
     $this->assertEquals($table_specification, $index_schema);
   }
 
