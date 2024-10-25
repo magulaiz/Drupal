@@ -17,6 +17,7 @@ use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Language\Language;
 use Drupal\Tests\UnitTestCase;
 use Drupal\Core\Entity\KeyValueStore\KeyValueEntityStorage;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 /**
  * @coversDefaultClass \Drupal\Core\Entity\KeyValueStore\KeyValueEntityStorage
@@ -137,6 +138,7 @@ class KeyValueEntityStorageTest extends UnitTestCase {
     $this->languageManager->expects($this->any())
       ->method('getCurrentLanguage')
       ->willReturn($language);
+    $event_dispatcher = $this->prophesize(EventDispatcherInterface::class);
 
     $this->entityStorage = new KeyValueEntityStorage($this->entityType, $this->keyValueStore, $this->uuidService, $this->languageManager, new MemoryCache(new Time()));
     $this->entityStorage->setModuleHandler($this->moduleHandler);
@@ -144,6 +146,7 @@ class KeyValueEntityStorageTest extends UnitTestCase {
     $container = new ContainerBuilder();
     $container->set('entity_field.manager', $this->entityFieldManager);
     $container->set('entity_type.manager', $this->entityTypeManager);
+    $container->set('event_dispatcher', $event_dispatcher->reveal());
     $container->set('language_manager', $this->languageManager);
     $container->set('cache_tags.invalidator', $this->cacheTagsInvalidator);
     \Drupal::setContainer($container);
