@@ -8,7 +8,7 @@ use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\announcements_feed\RenderCallbacks;
 
 /**
- * Hook implementations for Announcements Feed.
+ * Hook implementations for announcements_feed.
  */
 class AnnouncementsFeedHooks {
 
