@@ -26,7 +26,7 @@ class FormTestRecipeInputForm extends FormBase {
    */
   public function buildForm(array $form, FormStateInterface $form_state): array {
     $recipe = Recipe::createFromDirectory('core/recipes/feedback_contact_form');
-    $form += $this->getRecipeInputForm($recipe);
+    $form += $this->buildRecipeInputForm($recipe);
 
     $form['apply'] = [
       '#type' => 'submit',
