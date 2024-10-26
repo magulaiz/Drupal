@@ -45,7 +45,7 @@ class CachedDiscoveryClearer implements CachedDiscoveryClearerInterface {
    */
   public function __construct(
     #[AutowireIterator(tag: 'plugin_manager_cache_clear')]
-  protected \Traversable $cachedDiscoveries,
+    protected \Traversable $cachedDiscoveries,
   ) {}
 
   /**
