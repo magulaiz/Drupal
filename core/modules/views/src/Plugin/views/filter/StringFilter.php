@@ -4,6 +4,7 @@ namespace Drupal\views\Plugin\views\filter;
 
 use Drupal\Core\Database\Connection;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\views\Attribute\ViewsFilter;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -12,9 +13,8 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  * Including equality, like, not like, etc.
  *
  * @ingroup views_filter_handlers
- *
- * @ViewsFilter("string")
  */
+#[ViewsFilter("string")]
 class StringFilter extends FilterPluginBase implements FilterOperatorsInterface {
 
   /**
@@ -42,7 +42,7 @@ class StringFilter extends FilterPluginBase implements FilterOperatorsInterface 
    * @param array $configuration
    *   A configuration array containing information about the plugin instance.
    * @param string $plugin_id
-   *   The plugin_id for the plugin instance.
+   *   The plugin ID for the plugin instance.
    * @param mixed $plugin_definition
    *   The plugin implementation definition.
    * @param \Drupal\Core\Database\Connection $connection
@@ -186,7 +186,7 @@ class StringFilter extends FilterPluginBase implements FilterOperatorsInterface 
         'values' => 1,
       ],
     ];
-    // if the definition allows for the empty operator, add it.
+    // If the definition allows for the empty operator, add it.
     if (!empty($this->definition['allow empty'])) {
       $operators += [
         'empty' => [
@@ -265,7 +265,7 @@ class StringFilter extends FilterPluginBase implements FilterOperatorsInterface 
       $identifier = $this->options['expose']['identifier'];
 
       if (empty($this->options['expose']['use_operator']) || empty($this->options['expose']['operator_id'])) {
-        // exposed and locked.
+        // Exposed and locked.
         $which = in_array($this->operator, $this->operatorValues(1)) ? 'value' : 'none';
       }
       else {
@@ -390,7 +390,7 @@ class StringFilter extends FilterPluginBase implements FilterOperatorsInterface 
       return;
     }
 
-    // previously this was a call_user_func_array but that's unnecessary
+    // Previously this was a call_user_func_array but that's unnecessary
     // as views will unpack an array that is a single arg.
     $this->query->addWhere($this->options['group'], $where);
   }

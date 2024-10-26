@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\config_test\Entity;
 
 /**
@@ -45,5 +47,14 @@ class ConfigQueryTest extends ConfigTest {
    * @var array
    */
   public $array = [];
+
+  /**
+   * {@inheritdoc}
+   */
+  public function concatProtectedProperty(string $value1, string $value2): static {
+    // This method intentionally does not have the config action attribute to
+    // ensure it is still discovered.
+    return parent::concatProtectedProperty($value1, $value2);
+  }
 
 }

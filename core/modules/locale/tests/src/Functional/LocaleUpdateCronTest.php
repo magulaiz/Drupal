@@ -16,8 +16,6 @@ class LocaleUpdateCronTest extends LocaleUpdateBase {
 
   use CronRunTrait;
 
-  protected $batchOutput = [];
-
   /**
    * {@inheritdoc}
    */
@@ -42,7 +40,7 @@ class LocaleUpdateCronTest extends LocaleUpdateBase {
   /**
    * Tests interface translation update using cron.
    */
-  public function testUpdateCron() {
+  public function testUpdateCron(): void {
     // Set a flag to let the locale_test module replace the project data with a
     // set of test projects.
     \Drupal::state()->set('locale.test_projects_alter', TRUE);

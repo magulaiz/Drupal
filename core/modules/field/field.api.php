@@ -20,8 +20,8 @@
  * and so on. The data type(s) accepted by a field are defined in the class
  * implementing \Drupal\Core\Field\FieldItemInterface::schema() method.
  *
- * Field types are plugins annotated with class
- * \Drupal\Core\Field\Annotation\FieldType, and implement plugin interface
+ * Field types are plugins with \Drupal\Core\Field\Attribute\FieldType
+ * attributes and implement plugin interface
  * \Drupal\Core\Field\FieldItemInterface. Field Type plugins are managed by the
  * \Drupal\Core\Field\FieldTypePluginManager class. Field type classes usually
  * extend base class \Drupal\Core\Field\FieldItemBase. Field-type plugins need
@@ -257,10 +257,10 @@ function hook_field_widget_single_element_WIDGET_TYPE_form_alter(array &$element
 /**
  * Alter the complete form for field widgets provided by other modules.
  *
- * @param $field_widget_complete_form
+ * @param array $field_widget_complete_form
  *   The field widget form element as constructed by
  *   \Drupal\Core\Field\WidgetBaseInterface::form().
- * @param $form_state
+ * @param \Drupal\Core\Form\FormStateInterface $form_state
  *   The current state of the form.
  * @param $context
  *   An associative array containing the following key-value pairs:

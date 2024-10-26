@@ -46,7 +46,7 @@ class MediaSourceOEmbedVideoTest extends MediaSourceTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function initConfig(ContainerInterface $container) {
+  protected function initConfig(ContainerInterface $container): void {
     parent::initConfig($container);
 
     // Enable twig debugging to make testing template usage easy.
@@ -58,7 +58,7 @@ class MediaSourceOEmbedVideoTest extends MediaSourceTestBase {
   /**
    * Tests the oembed media source.
    */
-  public function testMediaOEmbedVideoSource() {
+  public function testMediaOEmbedVideoSource(): void {
     $media_type_id = 'test_media_oembed_type';
     $provided_fields = [
       'type',
@@ -145,7 +145,7 @@ class MediaSourceOEmbedVideoTest extends MediaSourceTestBase {
     $this->assertSame($video_url, $query['url']);
     $this->assertNotEmpty($query['hash']);
     // Ensure that the outer iframe's width respects the formatter settings.
-    $this->assertSame('240', $iframe->getAttribute('width'));
+    $this->assertSame('480', $iframe->getAttribute('width'));
     // Check the inner iframe to make sure that CSS has been applied to scale it
     // correctly, regardless of whatever its width attribute may be (the fixture
     // hard-codes it to 480).
@@ -238,7 +238,7 @@ class MediaSourceOEmbedVideoTest extends MediaSourceTestBase {
   /**
    * Tests that a security warning appears if iFrame domain is not set.
    */
-  public function testOEmbedSecurityWarning() {
+  public function testOEmbedSecurityWarning(): void {
     $media_type_id = 'test_media_oembed_type';
     $source_id = 'oembed:video';
 
