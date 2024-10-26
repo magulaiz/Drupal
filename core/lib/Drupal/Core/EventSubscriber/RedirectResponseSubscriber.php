@@ -40,7 +40,7 @@ class RedirectResponseSubscriber implements EventSubscriberInterface {
     protected UnroutedUrlAssemblerInterface $unroutedUrlAssembler,
     protected RequestContext $requestContext,
     #[AutowireServiceClosure('logger.channel.php')]
-  protected \Closure $loggerClosure,
+    protected \Closure $loggerClosure,
   ) {
   }
 

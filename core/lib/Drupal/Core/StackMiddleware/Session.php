@@ -34,7 +34,7 @@ class Session implements HttpKernelInterface {
   public function __construct(
     HttpKernelInterface $http_kernel,
     #[AutowireServiceClosure('session')]
-  protected \Closure $sessionClosure,
+    protected \Closure $sessionClosure,
   ) {
     $this->httpKernel = $http_kernel;
   }

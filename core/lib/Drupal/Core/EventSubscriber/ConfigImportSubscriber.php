@@ -53,7 +53,7 @@ class ConfigImportSubscriber extends ConfigImportValidateEventSubscriberBase {
     ThemeExtensionList $theme_extension_list,
     ModuleExtensionList $extension_list_module,
     #[AutowireIterator(tag: 'module_install.uninstall_validator')]
-  protected \Traversable $uninstallValidators,
+    protected \Traversable $uninstallValidators,
   ) {
     $this->themeList = $theme_extension_list;
     $this->moduleExtensionList = $extension_list_module;
