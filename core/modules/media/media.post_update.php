@@ -50,7 +50,7 @@ function media_post_update_set_blank_iframe_domain_to_null() {
 /**
  * Disable contextual links for media embeds in all text formats.
  */
-function media_post_update_add_show_contextual_links_as_falsse(&$sandbox = NULL): TranslatableMarkup {
+function media_post_update_add_show_contextual_links_as_false(&$sandbox = NULL): TranslatableMarkup {
   // Initialize batch variables if this is the first run.
   if (!isset($sandbox['total'])) {
     $query = \Drupal::entityQuery('filter_format');
