@@ -13,7 +13,7 @@ class SessionTestHooks {
    * Implements hook_user_login().
    */
   #[Hook('user_login')]
-    public function userLogin(UserInterface $account) {
+  public function userLogin(UserInterface $account) {
     if ($account->getAccountName() == 'session_test_user') {
       // Exit so we can verify that the session was regenerated
       // before hook_user_login() was called.
@@ -21,6 +21,6 @@ class SessionTestHooks {
     }
     // Add some data in the session for retrieval testing purpose.
     \Drupal::request()->getSession()->set("session_test_key", "foobar");
-    }
+  }
 
 }

@@ -13,16 +13,16 @@ class ViewsTestQueryAccessHooks {
    * Implements hook_query_TAG_alter() for the 'media_access' query tag.
    */
   #[Hook('query_media_access_alter')]
-    public function queryMediaAccessAlter(AlterableInterface $query) {
+  public function queryMediaAccessAlter(AlterableInterface $query) {
     \_views_test_query_access_restrict_by_uuid($query);
-    }
+  }
 
-    /**
-     * Implements hook_query_TAG_alter() for the 'block_content_access' query tag.
-     */
-    #[Hook('query_block_content_access_alter')]
-    public function queryBlockContentAccessAlter(AlterableInterface $query) {
-      \_views_test_query_access_restrict_by_uuid($query);
-    }
+  /**
+   * Implements hook_query_TAG_alter() for the 'block_content_access' query tag.
+   */
+  #[Hook('query_block_content_access_alter')]
+  public function queryBlockContentAccessAlter(AlterableInterface $query) {
+    \_views_test_query_access_restrict_by_uuid($query);
+  }
 
 }

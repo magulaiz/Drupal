@@ -18,21 +18,21 @@ class UpdateScriptTestHooks {
    * @see UpdateScriptFunctionalTest::testRequirements()
    */
   #[Hook('cache_flush')]
-    public function cacheFlush() {
+  public function cacheFlush() {
     \Drupal::messenger()->addStatus(\t('hook_cache_flush() invoked for update_script_test.module.'));
-    }
+  }
 
-    /**
-     * Implements hook_system_info_alter().
-     */
-    #[Hook('system_info_alter')]
-    public function systemInfoAlter(array &$info, Extension $file, $type) {
-      $new_info = \Drupal::state()->get('update_script_test.system_info_alter');
-      if ($new_info) {
-        if ($file->getName() == 'update_script_test') {
-          $info = $new_info + $info;
-        }
+  /**
+   * Implements hook_system_info_alter().
+   */
+  #[Hook('system_info_alter')]
+  public function systemInfoAlter(array &$info, Extension $file, $type) {
+    $new_info = \Drupal::state()->get('update_script_test.system_info_alter');
+    if ($new_info) {
+      if ($file->getName() == 'update_script_test') {
+        $info = $new_info + $info;
       }
     }
+  }
 
 }

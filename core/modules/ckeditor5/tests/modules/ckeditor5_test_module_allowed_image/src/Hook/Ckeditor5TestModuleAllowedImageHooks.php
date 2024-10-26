@@ -13,7 +13,7 @@ class Ckeditor5TestModuleAllowedImageHooks {
    * Implements hook_ckeditor5_plugin_info_alter().
    */
   #[Hook('ckeditor5_plugin_info_alter')]
-    public function ckeditor5PluginInfoAlter(array &$plugin_definitions) : void {
+  public function ckeditor5PluginInfoAlter(array &$plugin_definitions) : void {
     // Add a custom file type to the image upload plugin. Note that 'svg+xml'
     // below should be an IANA image media type Name, with the "image/" prefix
     // omitted. In other words: a subtype of type image.
@@ -22,6 +22,6 @@ class Ckeditor5TestModuleAllowedImageHooks {
     $image_upload_plugin_definition = $plugin_definitions['ckeditor5_imageUpload']->toArray();
     $image_upload_plugin_definition['ckeditor5']['config']['image']['upload']['types'][] = 'svg+xml';
     $plugin_definitions['ckeditor5_imageUpload'] = new CKEditor5PluginDefinition($image_upload_plugin_definition);
-    }
+  }
 
 }

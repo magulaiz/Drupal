@@ -20,7 +20,7 @@ class EntityTestBundleClassHooks {
    * Implements hook_entity_bundle_info_alter().
    */
   #[Hook('entity_bundle_info_alter')]
-    public function entityBundleInfoAlter(&$bundles) {
+  public function entityBundleInfoAlter(&$bundles) {
     if (!empty($bundles['entity_test']['bundle_class'])) {
       $bundles['entity_test']['bundle_class']['class'] = EntityTestBundleClass::class;
     }
@@ -41,32 +41,32 @@ class EntityTestBundleClassHooks {
     // Have two bundles share the same base entity class.
     $bundles['shared_type']['bundle_a'] = ['label' => 'Bundle A', 'class' => SharedEntityTestBundleClassA::class];
     $bundles['shared_type']['bundle_b'] = ['label' => 'Bundle B', 'class' => SharedEntityTestBundleClassB::class];
-    }
+  }
 
-    /**
-     * Implements hook_entity_type_alter().
-     */
-    #[Hook('entity_type_alter')]
-    public function entityTypeAlter(&$entity_types) {
-      /** @var \Drupal\Core\Entity\EntityTypeInterface[] $entity_types */
-      if (\Drupal::state()->get('entity_test_bundle_class_override_base_class', \FALSE) && isset($entity_types['entity_test'])) {
-        $entity_types['entity_test']->setClass(EntityTestVariant::class);
-      }
+  /**
+   * Implements hook_entity_type_alter().
+   */
+  #[Hook('entity_type_alter')]
+  public function entityTypeAlter(&$entity_types) {
+    /** @var \Drupal\Core\Entity\EntityTypeInterface[] $entity_types */
+    if (\Drupal::state()->get('entity_test_bundle_class_override_base_class', \FALSE) && isset($entity_types['entity_test'])) {
+      $entity_types['entity_test']->setClass(EntityTestVariant::class);
     }
+  }
 
-    /**
-     * Implements hook_entity_type_build().
-     */
-    #[Hook('entity_type_build')]
-    public function entityTypeBuild(array &$entity_types) : void {
-      // Have multiple entity types share the same class as Entity Test.
-      // This allows us to test that AmbiguousBundleClassException does not
-      // get thrown when sharing classes.
-      /** @var \Drupal\Core\Entity\ContentEntityType $original_type */
-      $cloned_type = clone $entity_types['entity_test'];
-      $cloned_type->set('bundle_of', 'entity_test');
-      $entity_types['shared_type'] = $cloned_type;
-      $entity_types['shared_type']->setClass(EntityTest::class);
-    }
+  /**
+   * Implements hook_entity_type_build().
+   */
+  #[Hook('entity_type_build')]
+  public function entityTypeBuild(array &$entity_types) : void {
+    // Have multiple entity types share the same class as Entity Test.
+    // This allows us to test that AmbiguousBundleClassException does not
+    // get thrown when sharing classes.
+    /** @var \Drupal\Core\Entity\ContentEntityType $original_type */
+    $cloned_type = clone $entity_types['entity_test'];
+    $cloned_type->set('bundle_of', 'entity_test');
+    $entity_types['shared_type'] = $cloned_type;
+    $entity_types['shared_type']->setClass(EntityTest::class);
+  }
 
 }

@@ -13,7 +13,7 @@ class HelpPageTestHooks {
    * Implements hook_help().
    */
   #[Hook('help')]
-    public function help($route_name, RouteMatchInterface $route_match) {
+  public function help($route_name, RouteMatchInterface $route_match) {
     switch ($route_name) {
       case 'help.page.help_page_test':
         // Make the help text conform to core standards. See
@@ -29,6 +29,6 @@ class HelpPageTestHooks {
     // Ensure that hook_help() can return an empty string and not cause the block
     // to display.
     return '';
-    }
+  }
 
 }

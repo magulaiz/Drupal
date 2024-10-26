@@ -13,10 +13,10 @@ class NodeTestExceptionHooks {
    * Implements hook_ENTITY_TYPE_insert() for node entities.
    */
   #[Hook('node_insert')]
-    public function nodeInsert(NodeInterface $node) {
+  public function nodeInsert(NodeInterface $node) {
     if ($node->getTitle() == 'testing_transaction_exception') {
       throw new \Exception('Test exception for rollback.');
     }
-    }
+  }
 
 }

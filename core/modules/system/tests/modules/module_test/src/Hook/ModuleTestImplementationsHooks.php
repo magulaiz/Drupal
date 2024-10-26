@@ -14,8 +14,8 @@ class ModuleTestImplementationsHooks {
    * @see module_test_module_implements_alter()
    */
   #[Hook('altered_test_hook')]
-    public function alteredTestHook() {
+  public function alteredTestHook() {
     return 'module_test_altered_test_hook';
-    }
+  }
 
 }

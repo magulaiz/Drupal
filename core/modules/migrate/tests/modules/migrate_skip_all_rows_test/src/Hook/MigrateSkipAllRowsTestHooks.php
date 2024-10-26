@@ -16,10 +16,10 @@ class MigrateSkipAllRowsTestHooks {
    * Implements hook_migrate_prepare_row().
    */
   #[Hook('migrate_prepare_row')]
-    public function migratePrepareRow(Row $row, MigrateSourceInterface $source, MigrationInterface $migration) {
+  public function migratePrepareRow(Row $row, MigrateSourceInterface $source, MigrationInterface $migration) {
     if (\Drupal::state()->get('migrate_skip_all_rows_test_migrate_prepare_row')) {
       throw new MigrateSkipRowException();
     }
-    }
+  }
 
 }

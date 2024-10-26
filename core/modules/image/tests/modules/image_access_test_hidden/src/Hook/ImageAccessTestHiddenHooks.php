@@ -16,11 +16,11 @@ class ImageAccessTestHiddenHooks {
    * Implements hook_entity_field_access().
    */
   #[Hook('entity_field_access')]
-    public function entityFieldAccess($operation, FieldDefinitionInterface $field_definition, AccountInterface $account, ?FieldItemListInterface $items = \NULL) {
+  public function entityFieldAccess($operation, FieldDefinitionInterface $field_definition, AccountInterface $account, ?FieldItemListInterface $items = \NULL) {
     if ($field_definition->getName() == 'field_image' && $operation == 'edit') {
       return AccessResult::forbidden();
     }
     return AccessResult::neutral();
-    }
+  }
 
 }

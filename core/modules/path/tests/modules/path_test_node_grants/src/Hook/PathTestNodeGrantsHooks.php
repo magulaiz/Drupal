@@ -13,9 +13,9 @@ class PathTestNodeGrantsHooks {
    * Implements hook_node_grants().
    */
   #[Hook('node_grants')]
-    public function nodeGrants(AccountInterface $account, $operation) : array {
+  public function nodeGrants(AccountInterface $account, $operation) : array {
     $grants = [];
     return $grants;
-    }
+  }
 
 }

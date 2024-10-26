@@ -12,8 +12,8 @@ class ToolbarDisableUserToolbarHooks {
    * Implements hook_toolbar_alter().
    */
   #[Hook('toolbar_alter')]
-    public function toolbarAlter(&$items) {
+  public function toolbarAlter(&$items) {
     unset($items['user']);
-    }
+  }
 
 }

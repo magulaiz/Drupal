@@ -17,12 +17,12 @@ class EntitySerializationTestHooks {
    * @see Drupal\serialization\Tests\EntitySerializationTest::testUserNormalize()
    */
   #[Hook('entity_field_access_alter')]
-    public function entityFieldAccessAlter(array &$grants, array $context) {
+  public function entityFieldAccessAlter(array &$grants, array $context) {
     // Override default access control from UserAccessControlHandler to allow
     // access to 'pass' field for the test user.
     if ($context['field_definition']->getName() == 'pass' && $context['account']->getAccountName() == 'serialization_test_user') {
       $grants[':default'] = AccessResult::allowed()->inheritCacheability($grants[':default'])->addCacheableDependency($context['items']->getEntity());
     }
-    }
+  }
 
 }

@@ -13,19 +13,19 @@ class PluginTestHooks {
    * Implements hook_test_plugin_info().
    */
   #[Hook('test_plugin_info')]
-    public function testPluginInfo() {
+  public function testPluginInfo() {
     return ['apple' => ['id' => 'apple', 'class' => Apple::class]];
-    }
+  }
 
-    /**
-     * Implements hook_plugin_test_alter().
-     */
-    #[Hook('plugin_test_alter')]
-    public function pluginTestAlter(&$definitions) {
-      foreach ($definitions as &$definition) {
-        $definition['altered'] = \TRUE;
-      }
-      $definitions['user_login']['altered_single'] = \TRUE;
+  /**
+   * Implements hook_plugin_test_alter().
+   */
+  #[Hook('plugin_test_alter')]
+  public function pluginTestAlter(&$definitions) {
+    foreach ($definitions as &$definition) {
+      $definition['altered'] = \TRUE;
     }
+    $definitions['user_login']['altered_single'] = \TRUE;
+  }
 
 }

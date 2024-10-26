@@ -13,8 +13,8 @@ class TaxonomyCrudHooks {
    * Implements hook_ENTITY_TYPE_presave() for taxonomy_vocabulary entities.
    */
   #[Hook('taxonomy_vocabulary_presave')]
-    public function taxonomyVocabularyPresave(VocabularyInterface $vocabulary) {
+  public function taxonomyVocabularyPresave(VocabularyInterface $vocabulary) {
     $vocabulary->setThirdPartySetting('taxonomy_crud', 'foo', 'bar');
-    }
+  }
 
 }

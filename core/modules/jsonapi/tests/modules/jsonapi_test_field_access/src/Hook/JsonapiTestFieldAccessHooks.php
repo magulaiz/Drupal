@@ -15,7 +15,7 @@ class JsonapiTestFieldAccessHooks {
    * Implements hook_entity_field_access().
    */
   #[Hook('entity_field_access')]
-    public function entityFieldAccess($operation, FieldDefinitionInterface $field_definition, AccountInterface $account) {
+  public function entityFieldAccess($operation, FieldDefinitionInterface $field_definition, AccountInterface $account) {
     // @see \Drupal\Tests\jsonapi\Functional\ResourceTestBase::testRelationships().
     if ($field_definition->getName() === 'field_jsonapi_test_entity_ref') {
       // Forbid access in all cases.
@@ -25,6 +25,6 @@ class JsonapiTestFieldAccessHooks {
     }
     // No opinion.
     return AccessResult::neutral();
-    }
+  }
 
 }

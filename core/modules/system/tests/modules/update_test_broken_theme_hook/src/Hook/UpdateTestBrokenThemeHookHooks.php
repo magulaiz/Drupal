@@ -12,8 +12,8 @@ class UpdateTestBrokenThemeHookHooks {
    * Implements hook_theme().
    */
   #[Hook('theme')]
-    public function theme($existing, $type, $theme, $path) {
+  public function theme($existing, $type, $theme, $path) {
     throw new \Exception('This mimics an exception caused by unstable dependencies.');
-    }
+  }
 
 }

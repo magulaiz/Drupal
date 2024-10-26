@@ -17,8 +17,8 @@ class CommonTestCronHelperHooks {
    * @see common_test_cron()
    */
   #[Hook('cron')]
-    public function cron() {
+  public function cron() {
     \Drupal::state()->set('common_test.cron', 'success');
-    }
+  }
 
 }

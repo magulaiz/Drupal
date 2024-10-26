@@ -13,16 +13,16 @@ class NodeAccessTestEmptyHooks {
    * Implements hook_node_grants().
    */
   #[Hook('node_grants')]
-    public function nodeGrants($account, $operation) {
+  public function nodeGrants($account, $operation) {
     return [];
-    }
+  }
 
-    /**
-     * Implements hook_node_access_records().
-     */
-    #[Hook('node_access_records')]
-    public function nodeAccessRecords(NodeInterface $node) {
-      return [];
-    }
+  /**
+   * Implements hook_node_access_records().
+   */
+  #[Hook('node_access_records')]
+  public function nodeAccessRecords(NodeInterface $node) {
+    return [];
+  }
 
 }

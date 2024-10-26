@@ -14,7 +14,7 @@ class UniqueFieldConstraintTestHooks {
    * Implements hook_entity_base_field_info_alter().
    */
   #[Hook('entity_base_field_info_alter')]
-    public function entityBaseFieldInfoAlter(&$fields, EntityTypeInterface $entity_type) {
+  public function entityBaseFieldInfoAlter(&$fields, EntityTypeInterface $entity_type) {
     if ($entity_type->id() === 'entity_test_string_id') {
       /** @var \Drupal\Core\Field\BaseFieldDefinition[] $fields */
       $fields['name']->addConstraint('UniqueField');
@@ -23,16 +23,16 @@ class UniqueFieldConstraintTestHooks {
       /** @var \Drupal\Core\Field\BaseFieldDefinition[] $fields */
       $fields['name']->addConstraint('UniqueField');
     }
-    }
+  }
 
-    /**
-     * Implements hook_query_entity_test_access_alter().
-     */
-    #[Hook('query_entity_test_access_alter')]
-    public function queryEntityTestAccessAlter(AlterableInterface $query) {
-      // Set an impossible condition to filter out all entities.
-      /** @var \Drupal\Core\Database\Query\Select|\Drupal\Core\Database\Query\AlterableInterface $query */
-      $query->condition('entity_test.id', 0);
-    }
+  /**
+   * Implements hook_query_entity_test_access_alter().
+   */
+  #[Hook('query_entity_test_access_alter')]
+  public function queryEntityTestAccessAlter(AlterableInterface $query) {
+    // Set an impossible condition to filter out all entities.
+    /** @var \Drupal\Core\Database\Query\Select|\Drupal\Core\Database\Query\AlterableInterface $query */
+    $query->condition('entity_test.id', 0);
+  }
 
 }

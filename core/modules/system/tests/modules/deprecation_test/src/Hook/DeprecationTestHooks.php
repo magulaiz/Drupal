@@ -12,16 +12,16 @@ class DeprecationTestHooks {
    * Implements hook_deprecated_hook().
    */
   #[Hook('deprecated_hook')]
-    public function deprecatedHook($arg) {
+  public function deprecatedHook($arg) {
     return $arg;
-    }
+  }
 
-    /**
-     * Implements hook_deprecated_alter_alter().
-     */
-    #[Hook('deprecated_alter_alter')]
-    public function deprecatedAlterAlter(&$data, $context1, $context2) {
-      $data = [$context1, $context2];
-    }
+  /**
+   * Implements hook_deprecated_alter_alter().
+   */
+  #[Hook('deprecated_alter_alter')]
+  public function deprecatedAlterAlter(&$data, $context1, $context2) {
+    $data = [$context1, $context2];
+  }
 
 }

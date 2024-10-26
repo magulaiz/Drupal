@@ -17,11 +17,11 @@ class LocaleTestTranslateHooks {
    * setting the hidden status to FALSE.
    */
   #[Hook('system_info_alter')]
-    public function systemInfoAlter(&$info, Extension $file, $type) {
+  public function systemInfoAlter(&$info, Extension $file, $type) {
     if ($file->getName() == 'locale_test_translate') {
       // Don't hide the module.
       $info['hidden'] = \FALSE;
     }
-    }
+  }
 
 }

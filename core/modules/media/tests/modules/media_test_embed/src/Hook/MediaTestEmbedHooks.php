@@ -16,17 +16,17 @@ class MediaTestEmbedHooks {
    * Implements hook_entity_view_alter().
    */
   #[Hook('entity_view_alter')]
-    public function entityViewAlter(&$build, EntityInterface $entity, EntityViewDisplayInterface $display) {
+  public function entityViewAlter(&$build, EntityInterface $entity, EntityViewDisplayInterface $display) {
     $build['#attributes']['data-media-embed-test-active-theme'] = \Drupal::theme()->getActiveTheme()->getName();
     $build['#attributes']['data-media-embed-test-view-mode'] = $display->getMode();
-    }
+  }
 
-    /**
-     * Implements hook_entity_access().
-     */
-    #[Hook('entity_access')]
-    public function entityAccess(EntityInterface $entity, $operation, AccountInterface $account) {
-      return AccessResult::neutral()->addCacheTags(['_media_test_embed_filter_access:' . $entity->getEntityTypeId() . ':' . $entity->id()]);
-    }
+  /**
+   * Implements hook_entity_access().
+   */
+  #[Hook('entity_access')]
+  public function entityAccess(EntityInterface $entity, $operation, AccountInterface $account) {
+    return AccessResult::neutral()->addCacheTags(['_media_test_embed_filter_access:' . $entity->getEntityTypeId() . ':' . $entity->id()]);
+  }
 
 }

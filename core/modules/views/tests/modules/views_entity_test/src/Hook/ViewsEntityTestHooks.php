@@ -18,7 +18,7 @@ class ViewsEntityTestHooks {
    * @see \Drupal\system\Tests\Entity\FieldAccessTest::testFieldAccess()
    */
   #[Hook('entity_field_access')]
-    public function entityFieldAccess($operation, FieldDefinitionInterface $field_definition, AccountInterface $account, ?FieldItemListInterface $items = \NULL) {
+  public function entityFieldAccess($operation, FieldDefinitionInterface $field_definition, AccountInterface $account, ?FieldItemListInterface $items = \NULL) {
     if ($field_definition->getName() == 'test_text_access') {
       if ($items) {
         if ($items->value == 'no access value') {
@@ -28,24 +28,24 @@ class ViewsEntityTestHooks {
     }
     // No opinion.
     return AccessResult::neutral();
-    }
+  }
 
-    /**
-     * Implements hook_entity_load().
-     *
-     * @see \Drupal\Tests\views\Kernel\Handler\FieldFieldTest::testSimpleExecute()
-     */
-    #[Hook('entity_load')]
-    public function entityLoad(array $entities, $entity_type_id) {
-      if ($entity_type_id === 'entity_test') {
-        // Cast the value of an entity field to be something else than a string so
-        // we can check that
-        // \Drupal\views\Tests\ViewResultAssertionTrait::assertIdenticalResultsetHelper()
-        // takes care of converting all field values to strings.
-        foreach ($entities as $entity) {
-          $entity->user_id->target_id = (int) $entity->user_id->target_id;
-        }
+  /**
+   * Implements hook_entity_load().
+   *
+   * @see \Drupal\Tests\views\Kernel\Handler\FieldFieldTest::testSimpleExecute()
+   */
+  #[Hook('entity_load')]
+  public function entityLoad(array $entities, $entity_type_id) {
+    if ($entity_type_id === 'entity_test') {
+      // Cast the value of an entity field to be something else than a string so
+      // we can check that
+      // \Drupal\views\Tests\ViewResultAssertionTrait::assertIdenticalResultsetHelper()
+      // takes care of converting all field values to strings.
+      foreach ($entities as $entity) {
+        $entity->user_id->target_id = (int) $entity->user_id->target_id;
       }
     }
+  }
 
 }

@@ -15,8 +15,8 @@ class WorkspaceAccessTestHooks {
    * Implements hook_ENTITY_TYPE_access() for the 'workspace' entity type.
    */
   #[Hook('workspace_access')]
-    public function workspaceAccess(EntityInterface $entity, $operation, AccountInterface $account) {
+  public function workspaceAccess(EntityInterface $entity, $operation, AccountInterface $account) {
     return \Drupal::state()->get("workspace_access_test.result.{$operation}", AccessResult::neutral());
-    }
+  }
 
 }

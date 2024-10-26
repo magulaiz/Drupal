@@ -15,7 +15,7 @@ class ModuleTestHooks {
    * Manipulate module dependencies to test dependency chains.
    */
   #[Hook('system_info_alter')]
-    public function systemInfoAlter(&$info, Extension $file, $type) {
+  public function systemInfoAlter(&$info, Extension $file, $type) {
     if (\Drupal::state()->get('module_test.dependency') == 'missing dependency') {
       if ($file->getName() == 'dblog') {
         // Make dblog module depend on config.
@@ -57,36 +57,36 @@ class ModuleTestHooks {
     if ($file->getName() == 'stark' && $type == 'theme') {
       $info['regions']['test_region'] = 'Test region';
     }
-    }
+  }
 
-    /**
-     * Implements hook_hook_info().
-     */
-    #[Hook('hook_info')]
-    public function hookInfo() {
-      $hooks['test_hook'] = ['group' => 'file'];
-      return $hooks;
-    }
+  /**
+   * Implements hook_hook_info().
+   */
+  #[Hook('hook_info')]
+  public function hookInfo() {
+    $hooks['test_hook'] = ['group' => 'file'];
+    return $hooks;
+  }
 
-    /**
-     * Implements hook_module_implements_alter().
-     *
-     * @see module_test_altered_test_hook()
-     * @see \Drupal\system\Tests\Module\ModuleImplementsAlterTest::testModuleImplementsAlter()
-     */
-    #[Hook('module_implements_alter')]
-    public function moduleImplementsAlter(&$implementations, $hook) {
-      if ($hook === 'altered_test_hook') {
-        // Add a hook implementation, that will be found in
-        // module_test.implementation.inc.
-        $implementations['module_test'] = 'implementations';
-      }
-      if ($hook === 'unimplemented_test_hook') {
-        // Add the non-existing function module_test_unimplemented_test_hook(). This
-        // should cause an exception to be thrown in
-        // \Drupal\Core\Extension\ModuleHandler::buildImplementationInfo('unimplemented_test_hook').
-        $implementations['module_test'] = \FALSE;
-      }
+  /**
+   * Implements hook_module_implements_alter().
+   *
+   * @see module_test_altered_test_hook()
+   * @see \Drupal\system\Tests\Module\ModuleImplementsAlterTest::testModuleImplementsAlter()
+   */
+  #[Hook('module_implements_alter')]
+  public function moduleImplementsAlter(&$implementations, $hook) {
+    if ($hook === 'altered_test_hook') {
+      // Add a hook implementation, that will be found in
+      // module_test.implementation.inc.
+      $implementations['module_test'] = 'implementations';
     }
+    if ($hook === 'unimplemented_test_hook') {
+      // Add the non-existing function module_test_unimplemented_test_hook(). This
+      // should cause an exception to be thrown in
+      // \Drupal\Core\Extension\ModuleHandler::buildImplementationInfo('unimplemented_test_hook').
+      $implementations['module_test'] = \FALSE;
+    }
+  }
 
 }

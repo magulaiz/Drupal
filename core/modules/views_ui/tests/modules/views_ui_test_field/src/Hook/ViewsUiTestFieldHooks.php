@@ -16,8 +16,8 @@ class ViewsUiTestFieldHooks {
    * searched on.
    */
   #[Hook('form_views_ui_add_handler_form_alter')]
-    public function formViewsUiAddHandlerFormAlter(&$form, FormStateInterface $form_state) {
+  public function formViewsUiAddHandlerFormAlter(&$form, FormStateInterface $form_state) {
     $form['options']['name']['#options']['views.views_test_field_1']['title']['data']['#title'] .= ' FIELD_1_LABEL';
-    }
+  }
 
 }

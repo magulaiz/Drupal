@@ -12,7 +12,7 @@ class TwigThemeTestHooks {
    * Implements hook_theme().
    */
   #[Hook('theme')]
-    public function theme($existing, $type, $theme, $path) {
+  public function theme($existing, $type, $theme, $path) {
     $items['twig_theme_test_filter'] = ['variables' => ['quote' => [], 'attributes' => []], 'template' => 'twig_theme_test.filter'];
     $items['twig_theme_test_php_variables'] = ['template' => 'twig_theme_test.php_variables'];
     $items['twig_theme_test_trans'] = ['variables' => [], 'template' => 'twig_theme_test.trans'];
@@ -32,6 +32,6 @@ class TwigThemeTestHooks {
     $items['twig_theme_test_embed_tag'] = ['variables' => [], 'template' => 'twig_theme_test.embed_tag'];
     $items['twig_theme_test_dump'] = ['variables' => [], 'template' => 'twig_theme_test.dump'];
     return $items;
-    }
+  }
 
 }

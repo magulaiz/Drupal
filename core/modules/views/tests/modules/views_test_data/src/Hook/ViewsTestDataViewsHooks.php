@@ -14,7 +14,7 @@ class ViewsTestDataViewsHooks {
    * Implements hook_views_data().
    */
   #[Hook('views_data')]
-    public function viewsData() {
+  public function viewsData() {
     $state = \Drupal::service('state');
     $state->set('views_hook_test_views_data', \TRUE);
     // We use a state variable to keep track of how many times this function is
@@ -26,36 +26,36 @@ class ViewsTestDataViewsHooks {
     $count++;
     $state->set('views_test_data_views_data_count', $count);
     return $state->get('views_test_data_views_data', []);
-    }
+  }
 
-    /**
-     * Implements hook_views_data_alter().
-     */
-    #[Hook('views_data_alter')]
-    public function viewsDataAlter(array &$data) {
-      \Drupal::state()->set('views_hook_test_views_data_alter', \TRUE);
-      \Drupal::state()->set('views_hook_test_views_data_alter_data', $data);
-    }
+  /**
+   * Implements hook_views_data_alter().
+   */
+  #[Hook('views_data_alter')]
+  public function viewsDataAlter(array &$data) {
+    \Drupal::state()->set('views_hook_test_views_data_alter', \TRUE);
+    \Drupal::state()->set('views_hook_test_views_data_alter_data', $data);
+  }
 
-    /**
-     * Implements hook_views_analyze().
-     */
-    #[Hook('views_analyze')]
-    public function viewsAnalyze(ViewExecutable $view) {
-      \Drupal::state()->set('views_hook_test_views_analyze', \TRUE);
-      $ret = [];
-      $ret[] = Analyzer::formatMessage(\t('Test ok message'), 'ok');
-      $ret[] = Analyzer::formatMessage(\t('Test warning message'), 'warning');
-      $ret[] = Analyzer::formatMessage(\t('Test error message'), 'error');
-      return $ret;
-    }
+  /**
+   * Implements hook_views_analyze().
+   */
+  #[Hook('views_analyze')]
+  public function viewsAnalyze(ViewExecutable $view) {
+    \Drupal::state()->set('views_hook_test_views_analyze', \TRUE);
+    $ret = [];
+    $ret[] = Analyzer::formatMessage(\t('Test ok message'), 'ok');
+    $ret[] = Analyzer::formatMessage(\t('Test warning message'), 'warning');
+    $ret[] = Analyzer::formatMessage(\t('Test error message'), 'error');
+    return $ret;
+  }
 
-    /**
-     * Implements hook_views_invalidate_cache().
-     */
-    #[Hook('views_invalidate_cache')]
-    public function viewsInvalidateCache() {
-      \Drupal::state()->set('views_hook_test_views_invalidate_cache', \TRUE);
-    }
+  /**
+   * Implements hook_views_invalidate_cache().
+   */
+  #[Hook('views_invalidate_cache')]
+  public function viewsInvalidateCache() {
+    \Drupal::state()->set('views_hook_test_views_invalidate_cache', \TRUE);
+  }
 
 }

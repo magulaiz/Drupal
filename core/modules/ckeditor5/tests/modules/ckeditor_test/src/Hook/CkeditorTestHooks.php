@@ -12,10 +12,10 @@ class CkeditorTestHooks {
    * Implements hook_editor_info_alter().
    */
   #[Hook('editor_info_alter')]
-    public function editorInfoAlter(array &$editors) {
+  public function editorInfoAlter(array &$editors) {
     // Drupal 9 used to have an editor called ckeditor. Copy the Unicorn editor to
     // it to be able to test upgrading to CKEditor 5.
     $editors['ckeditor'] = $editors['unicorn'];
-    }
+  }
 
 }

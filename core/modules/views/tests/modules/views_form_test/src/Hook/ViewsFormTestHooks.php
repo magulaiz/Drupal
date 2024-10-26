@@ -13,10 +13,10 @@ class ViewsFormTestHooks {
    * Implements hook_form_BASE_FORM_ID_alter().
    */
   #[Hook('form_views_form_media_media_page_list_alter')]
-    public function formViewsFormMediaMediaPageListAlter(&$form, FormStateInterface $form_state, $form_id) {
+  public function formViewsFormMediaMediaPageListAlter(&$form, FormStateInterface $form_state, $form_id) {
     $state = \Drupal::state();
     $count = $state->get('hook_form_BASE_FORM_ID_alter_count', 0);
     $state->set('hook_form_BASE_FORM_ID_alter_count', $count + 1);
-    }
+  }
 
 }

@@ -14,8 +14,8 @@ class BigPipeRegressionTestHooks {
    * @see \Drupal\Tests\big_pipe\FunctionalJavascript\BigPipeRegressionTest::testBigPipeLargeContent
    */
   #[Hook('theme')]
-    public function theme() {
+  public function theme() {
     return ['big_pipe_test_large_content' => ['variables' => []]];
-    }
+  }
 
 }

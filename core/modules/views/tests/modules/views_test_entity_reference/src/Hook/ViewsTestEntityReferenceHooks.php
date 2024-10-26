@@ -12,7 +12,7 @@ class ViewsTestEntityReferenceHooks {
    * Implements hook_views_data_alter().
    */
   #[Hook('views_data_alter')]
-    public function viewsDataAlter(&$data) {
+  public function viewsDataAlter(&$data) {
     $manager = \Drupal::entityTypeManager();
     $field_config_storage = $manager->getStorage('field_config');
     /** @var \Drupal\field\FieldConfigInterface[] $field_configs */
@@ -24,6 +24,6 @@ class ViewsTestEntityReferenceHooks {
         $data[$table_name][$column_name]['filter']['id'] = 'entity_reference';
       }
     }
-    }
+  }
 
 }

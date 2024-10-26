@@ -13,7 +13,7 @@ class DatabaseTestHooks {
    * Implements hook_query_alter().
    */
   #[Hook('query_alter')]
-    public function queryAlter(AlterableInterface $query) {
+  public function queryAlter(AlterableInterface $query) {
     if ($query->hasTag('database_test_alter_add_range')) {
       $query->range(0, 2);
     }
@@ -34,16 +34,16 @@ class DatabaseTestHooks {
       $expressions =& $query->getExpressions();
       $expressions['double_age']['expression'] = '[age]*3';
     }
-    }
+  }
 
-    /**
-     * Implements hook_query_TAG_alter().
-     *
-     * Called by DatabaseTestCase::testAlterRemoveRange.
-     */
-    #[Hook('query_database_test_alter_remove_range_alter')]
-    public function queryDatabaseTestAlterRemoveRangeAlter(AlterableInterface $query) {
-      $query->range();
-    }
+  /**
+   * Implements hook_query_TAG_alter().
+   *
+   * Called by DatabaseTestCase::testAlterRemoveRange.
+   */
+  #[Hook('query_database_test_alter_remove_range_alter')]
+  public function queryDatabaseTestAlterRemoveRangeAlter(AlterableInterface $query) {
+    $query->range();
+  }
 
 }

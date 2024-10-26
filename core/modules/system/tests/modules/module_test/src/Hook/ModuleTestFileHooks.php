@@ -12,8 +12,8 @@ class ModuleTestFileHooks {
    * Implements hook_test_hook().
    */
   #[Hook('test_hook')]
-    public function testHook() {
+  public function testHook() {
     return ['module_test' => 'success!'];
-    }
+  }
 
 }

@@ -13,7 +13,7 @@ class ImageModuleTestHooks {
    * Implements hook_image_effect_info_alter().
    */
   #[Hook('image_effect_info_alter')]
-    public function imageEffectInfoAlter(&$effects) {
+  public function imageEffectInfoAlter(&$effects) {
     $state = \Drupal::state();
     // The 'image_module_test.counter' state variable value is set and accessed
     // from the ImageEffectsTest::testImageEffectsCaching() test and used to
@@ -24,25 +24,25 @@ class ImageModuleTestHooks {
     // Increase the test counter, signaling that image effects were processed,
     // rather than being served from the cache.
     $state->set('image_module_test.counter', ++$counter);
-    }
+  }
 
-    /**
-     * Implements hook_image_style_presave().
-     *
-     * Used to save test third party settings in the image style entity.
-     */
-    #[Hook('image_style_presave')]
-    public function imageStylePresave(ImageStyleInterface $style) {
-      $style->setThirdPartySetting('image_module_test', 'foo', 'bar');
-    }
+  /**
+   * Implements hook_image_style_presave().
+   *
+   * Used to save test third party settings in the image style entity.
+   */
+  #[Hook('image_style_presave')]
+  public function imageStylePresave(ImageStyleInterface $style) {
+    $style->setThirdPartySetting('image_module_test', 'foo', 'bar');
+  }
 
-    /**
-     * Implements hook_image_style_flush().
-     */
-    #[Hook('image_style_flush')]
-    public function imageStyleFlush($style, $path = \NULL) {
-      $state = \Drupal::state();
-      $state->set('image_module_test_image_style_flush.called', $path);
-    }
+  /**
+   * Implements hook_image_style_flush().
+   */
+  #[Hook('image_style_flush')]
+  public function imageStyleFlush($style, $path = \NULL) {
+    $state = \Drupal::state();
+    $state->set('image_module_test_image_style_flush.called', $path);
+  }
 
 }

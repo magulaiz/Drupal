@@ -14,8 +14,8 @@ class EntityTestOperationHooks {
    * Implements hook_entity_operation().
    */
   #[Hook('entity_operation')]
-    public function entityOperation(EntityInterface $entity) {
+  public function entityOperation(EntityInterface $entity) {
     return ['test' => ['title' => \t('Front page'), 'url' => Url::fromRoute('<front>'), 'weight' => 0]];
-    }
+  }
 
 }
