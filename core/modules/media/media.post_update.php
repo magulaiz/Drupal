@@ -6,6 +6,7 @@
  */
 
 use Drupal\Core\StringTranslation\TranslatableMarkup;
+use Drupal\filter\Entity\FilterFormat;
 
 /**
  * Implements hook_removed_post_updates().
@@ -42,7 +43,7 @@ function media_post_update_add_show_contextual_links_as_false(&$sandbox = NULL):
   }
   // Load the filter formats in chunks of 50.
   $ids = array_splice($sandbox['ids'], 0, 50);
-  $filter_formats = \Drupal\filter\Entity\FilterFormat::loadMultiple($ids);
+  $filter_formats = FilterFormat::loadMultiple($ids);
   /** @var \Drupal\filter\Entity\FilterFormat $filter_format */
   foreach ($filter_formats as $filter_format) {
     $filters = $filter_format->get('filters');
