@@ -6,7 +6,6 @@
  */
 
 use Drupal\Core\StringTranslation\TranslatableMarkup;
-use Drupal\filter\Entity\FilterFormat;
 
 /**
  * Implements hook_removed_post_updates().
@@ -30,31 +29,37 @@ function media_removed_post_updates() {
 function media_post_update_add_show_contextual_links_as_false(&$sandbox = NULL): TranslatableMarkup {
   // Initialize batch variables if this is the first run.
   if (!isset($sandbox['total'])) {
-    $query = \Drupal::entityQuery('filter_format');
-    $sandbox['ids'] = $query->execute();
-    $sandbox['total'] = count($sandbox['ids']);
+    // Load all filter_format configurations.
+    $config_names = \Drupal::service('config.storage')->listAll('filter.format.');
+    $sandbox['config_names'] = $config_names;
+    $sandbox['total'] = count($sandbox['config_names']);
     $sandbox['progress'] = 0;
 
-    // In case there are no entities to process.
+    // In case there are no configurations to process.
     if ($sandbox['total'] == 0) {
       $sandbox['total'] = 1;
       $sandbox['progress'] = 1;
     }
   }
-  // Load the filter formats in chunks of 50.
-  $ids = array_splice($sandbox['ids'], 0, 50);
-  $filter_formats = FilterFormat::loadMultiple($ids);
-  /** @var \Drupal\filter\Entity\FilterFormat $filter_format */
-  foreach ($filter_formats as $filter_format) {
-    $filters = $filter_format->get('filters');
+
+  // Process configurations in chunks of 50.
+  $config_names = array_splice($sandbox['config_names'], 0, 50);
+
+  foreach ($config_names as $config_name) {
+    $config = \Drupal::service('config.factory')->getEditable($config_name);
+    $filters = $config->get('filters');
+
     if (isset($filters['media_embed'])) {
       $media_embed_settings = $filters['media_embed'];
       if (empty($media_embed_settings['settings']['show_contextual_links'])) {
         $media_embed_settings['settings']['show_contextual_links'] = FALSE;
-        $filter_format->setFilterConfig('media_embed', $media_embed_settings);
-        $filter_format->save();
+        // Update the settings in the filters array.
+        $filters['media_embed'] = $media_embed_settings;
+        $config->set('filters', $filters);
+        $config->save();
       }
     }
+
     $sandbox['progress']++;
   }
 
