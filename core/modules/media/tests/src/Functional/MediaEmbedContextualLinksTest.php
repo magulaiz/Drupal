@@ -30,7 +30,7 @@ class MediaEmbedContextualLinksTest extends MediaFunctionalTestBase {
   /**
    * Tests contextual links for an embed media to node body.
    */
-  public function testMediaEmbedShowContextualLinks() {
+  public function testMediaEmbedShowContextualLinks(): void {
     $this->drupalLogin($this->drupalCreateUser([
       'administer filters',
       'administer media',
