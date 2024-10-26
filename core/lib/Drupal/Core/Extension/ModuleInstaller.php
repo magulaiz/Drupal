@@ -94,9 +94,9 @@ class ModuleInstaller implements ModuleInstallerInterface {
     Connection $connection,
     UpdateHookRegistry $update_registry,
     #[Autowire(service: 'logger.channel.default')]
-    protected LoggerInterface $logger,
+  protected LoggerInterface $logger,
     #[AutowireIterator(tag: 'module_install.uninstall_validator')]
-    protected ?\Traversable $uninstallValidators = NULL,
+  protected ?\Traversable $uninstallValidators = NULL,
   ) {
     $this->root = $root;
     $this->moduleHandler = $module_handler;

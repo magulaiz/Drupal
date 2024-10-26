@@ -36,7 +36,7 @@ class QueueFactory {
   public function __construct(
     Settings $settings,
     #[AutowireLocator('queue_factory')]
-    protected ContainerInterface $container,
+  protected ContainerInterface $container,
   ) {
     $this->settings = $settings;
   }
