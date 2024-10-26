@@ -5,10 +5,7 @@
  * Post update functions for Media.
  */
 
-use Drupal\Core\Config\Entity\ConfigEntityUpdater;
-use Drupal\Core\Entity\Display\EntityViewDisplayInterface;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
-use Drupal\media\MediaConfigUpdater;
 
 /**
  * Implements hook_removed_post_updates().
