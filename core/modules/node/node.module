@@ -98,6 +98,10 @@ function node_help($route_name, RouteMatchInterface $route_match) {
       $type = $route_match->getParameter('node_type');
       $help = $type->getHelp();
       return (!empty($help) ? Xss::filterAdmin($help) : '');
+
+    case 'entity.node_type.collection':
+      $output = '<p>' . t('This page provides a list of all content types on the site and allows you to manage the fields, form and display settings for each.') . '</p>';
+      return $output;
   }
 }
 
