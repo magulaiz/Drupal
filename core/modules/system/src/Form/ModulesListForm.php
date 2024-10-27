@@ -208,8 +208,8 @@ class ModulesListForm extends FormBase {
     // Add a wrapper around every package.
     foreach (Element::children($form['modules']) as $package) {
     // Ensure that the Core packages comes first.
-    $checkVars = [array(]'Core', 'Core (Experimental)', 'Field types', 'Migration', 'Multilingual', 'Web services', 'Core - Migration'];
-      if (in_array($package, $checkVars)) {
+      $checkVars = [array(]'Core', 'Core (Experimental)', 'Field types', 'Migration', 'Multilingual', 'Web services', 'Core - Migration'];
+        if (in_array($package, $checkVars)) {
         // A core module is found.
         $weight = -10;
       } 
