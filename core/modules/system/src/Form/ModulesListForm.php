@@ -212,7 +212,7 @@ class ModulesListForm extends FormBase {
       if (in_array($package, $checkVars)) {
         // A core module is found.
         $weight = -10;
-      } 
+      }
       else {
         $weight = NULL;
       }
