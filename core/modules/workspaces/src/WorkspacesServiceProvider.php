@@ -4,6 +4,7 @@ namespace Drupal\workspaces;
 
 use Drupal\Core\DependencyInjection\ContainerBuilder;
 use Drupal\Core\DependencyInjection\ServiceProviderBase;
+use Drupal\Core\Extension\ProceduralCall;
 use Drupal\Core\Hook\HookOrder;
 use Drupal\Core\Update\UpdateKernel;
 use Symfony\Component\DependencyInjection\Reference;
