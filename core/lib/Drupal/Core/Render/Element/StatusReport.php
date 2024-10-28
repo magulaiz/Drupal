@@ -43,10 +43,11 @@ class StatusReport extends RenderElementBase {
       else {
         if (defined('MAINTENANCE_MODE') && MAINTENANCE_MODE === 'install') {
           $severity = $severities[REQUIREMENT_OK];
-        } else {
+        }
+        else {
           $severity = $severities[REQUIREMENT_INFO];
         }
-      }      
+      }
 
       $grouped_requirements[$severity['status']]['title'] = $severity['title'];
       $grouped_requirements[$severity['status']]['type'] = $severity['status'];
