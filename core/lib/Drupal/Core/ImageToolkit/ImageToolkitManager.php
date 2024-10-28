@@ -65,8 +65,7 @@ class ImageToolkitManager extends DefaultPluginManager {
     if (!isset($toolkits[$toolkit_id]) || !class_exists($toolkits[$toolkit_id]['class'])) {
       // The selected toolkit isn't available so return the first one found. If
       // none are available this will return FALSE.
-      reset($toolkits);
-      $toolkit_id = key($toolkits);
+      $toolkit_id = array_key_first($toolkits);
     }
 
     return $toolkit_id;
@@ -104,6 +103,21 @@ class ImageToolkitManager extends DefaultPluginManager {
     }
 
     return $output;
+  }
+
+  /**
+   * Returns all valid extensions.
+   *
+   * @return string[]
+   *   All possible valid extensions.
+   *
+   * @see \Drupal\image\Plugin\ImageEffect\ConvertImageEffect::buildConfigurationForm()
+   *
+   * @internal
+   * @todo Revisit in https://www.drupal.org/node/3446364
+   */
+  public static function getAllValidExtensions(): array {
+    return \Drupal::service('image.toolkit.manager')->getDefaultToolkit()->getSupportedExtensions();
   }
 
 }

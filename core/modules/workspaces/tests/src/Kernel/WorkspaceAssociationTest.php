@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\workspaces\Kernel;
 
 use Drupal\KernelTests\KernelTestBase;
@@ -39,7 +41,6 @@ class WorkspaceAssociationTest extends KernelTestBase {
     'text',
     'user',
     'system',
-    'path_alias',
     'workspaces',
   ];
 
@@ -82,7 +83,7 @@ class WorkspaceAssociationTest extends KernelTestBase {
    * @covers ::getTrackedEntities
    * @covers ::getAssociatedRevisions
    */
-  public function testWorkspaceAssociation() {
+  public function testWorkspaceAssociation(): void {
     $this->createNode(['title' => 'Test article 1 - live - unpublished', 'type' => 'article', 'status' => 0]);
     $this->createNode(['title' => 'Test article 2 - live - published', 'type' => 'article']);
 
@@ -131,9 +132,38 @@ class WorkspaceAssociationTest extends KernelTestBase {
       'dev' => [3, 4, 5, 6, 7, 8, 9],
     ];
     $expected_initial_revisions += [
-      'stage' => [7, 8],
+      'dev' => [7, 8],
     ];
     $this->assertWorkspaceAssociations('node', $expected_latest_revisions, $expected_all_revisions, $expected_initial_revisions);
+
+    // Merge 'dev' into 'stage' and check the workspace associations.
+    /** @var \Drupal\workspaces\WorkspaceMergerInterface $workspace_merger */
+    $workspace_merger = \Drupal::service('workspaces.operation_factory')->getMerger($this->workspaces['dev'], $this->workspaces['stage']);
+    $workspace_merger->merge();
+
+    // The latest revisions from 'dev' are now tracked in 'stage'.
+    $expected_latest_revisions['stage'] = $expected_latest_revisions['dev'];
+
+    // Two revisions (8 and 9) were created for 'Test article 6', but only the
+    // latest one (9) is being merged into 'stage'.
+    $expected_all_revisions['stage'] = [3, 4, 5, 6, 7, 9];
+
+    // Revision 7 was both an initial and latest revision in 'dev', so it is now
+    // considered an initial revision in 'stage'.
+    $expected_initial_revisions['stage'] = [4, 5, 7];
+
+    // Which leaves revision 8 as the only remaining initial revision in 'dev'.
+    $expected_initial_revisions['dev'] = [8];
+
+    $this->assertWorkspaceAssociations('node', $expected_latest_revisions, $expected_all_revisions, $expected_initial_revisions);
+
+    // Publish 'stage' and check the workspace associations.
+    /** @var \Drupal\workspaces\WorkspacePublisherInterface $workspace_publisher */
+    $workspace_publisher = \Drupal::service('workspaces.operation_factory')->getPublisher($this->workspaces['stage']);
+    $workspace_publisher->publish();
+
+    $expected_revisions['stage'] = $expected_revisions['dev'] = [];
+    $this->assertWorkspaceAssociations('node', $expected_revisions, $expected_revisions, $expected_revisions);
   }
 
   /**
@@ -149,7 +179,7 @@ class WorkspaceAssociationTest extends KernelTestBase {
    *   An array of expected values for the initial revisions, i.e. for the
    *   entities that were created in the specified workspace.
    */
-  protected function assertWorkspaceAssociations($entity_type_id, array $expected_latest_revisions, array $expected_all_revisions, array $expected_initial_revisions) {
+  protected function assertWorkspaceAssociations($entity_type_id, array $expected_latest_revisions, array $expected_all_revisions, array $expected_initial_revisions): void {
     $workspace_association = \Drupal::service('workspaces.association');
     foreach ($expected_latest_revisions as $workspace_id => $expected_tracked_revision_ids) {
       $tracked_entities = $workspace_association->getTrackedEntities($workspace_id, $entity_type_id);

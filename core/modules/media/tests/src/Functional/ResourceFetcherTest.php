@@ -7,6 +7,8 @@ namespace Drupal\Tests\media\Functional;
 use Drupal\media\OEmbed\Resource;
 use Drupal\Tests\media\Traits\OEmbedTestTrait;
 
+// cspell:ignore dailymotion Schipulcon
+
 /**
  * Tests the oEmbed resource fetcher service.
  *
@@ -66,7 +68,7 @@ class ResourceFetcherTest extends MediaFunctionalTestBase {
    *
    * @dataProvider providerFetchResource
    */
-  public function testFetchResource($resource_url, $provider_name, $title) {
+  public function testFetchResource($resource_url, $provider_name, $title): void {
     /** @var \Drupal\media\OEmbed\Resource $resource */
     $resource = $this->container->get('media.oembed.resource_fetcher')
       ->fetchResource($resource_url);

@@ -42,7 +42,7 @@ class UpdateManager implements UpdateManagerInterface {
   protected $updateProcessor;
 
   /**
-   * An array of installed and enabled projects.
+   * An array of installed projects.
    *
    * @var array
    */
@@ -182,10 +182,8 @@ class UpdateManager implements UpdateManagerInterface {
       'system.modules_list',
       'system.theme_install',
       'update.module_update',
-      'update.module_install',
       'update.status',
       'update.report_update',
-      'update.report_install',
       'update.settings',
       'system.status',
       'update.manual_status',

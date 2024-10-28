@@ -28,9 +28,7 @@ class UserLoginHttpTest extends BrowserTestBase {
   }
 
   /**
-   * Modules to install.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = ['dblog'];
 
@@ -103,7 +101,7 @@ class UserLoginHttpTest extends BrowserTestBase {
   /**
    * Tests user session life cycle.
    */
-  public function testLogin() {
+  public function testLogin(): void {
     // Without the serialization module only JSON is supported.
     $this->doTestLogin('json');
 
@@ -121,7 +119,7 @@ class UserLoginHttpTest extends BrowserTestBase {
    * @param string $format
    *   Serialization format.
    */
-  protected function doTestLogin($format) {
+  protected function doTestLogin($format): void {
     $client = \Drupal::httpClient();
     // Create new user for each iteration to reset flood.
     // Grant the user administer users permissions to they can see the
@@ -239,7 +237,7 @@ class UserLoginHttpTest extends BrowserTestBase {
   /**
    * Tests user password reset.
    */
-  public function testPasswordReset() {
+  public function testPasswordReset(): void {
     // Create a user account.
     $account = $this->drupalCreateUser();
 
@@ -284,7 +282,7 @@ class UserLoginHttpTest extends BrowserTestBase {
   /**
    * Resets all flood entries.
    */
-  protected function resetFlood() {
+  protected function resetFlood(): void {
     $this->container->get('database')->delete(DatabaseBackend::TABLE_NAME)->execute();
   }
 
@@ -532,7 +530,7 @@ class UserLoginHttpTest extends BrowserTestBase {
    * @param \Drupal\user\UserInterface $account
    *   Test account.
    */
-  protected function doTestPasswordReset($format, $account) {
+  protected function doTestPasswordReset($format, $account): void {
     $response = $this->passwordRequest([], $format);
     $this->assertHttpResponseWithMessage($response, 400, 'Missing credentials.name or credentials.mail', $format);
 
@@ -599,7 +597,7 @@ class UserLoginHttpTest extends BrowserTestBase {
   /**
    * Login from reset password email.
    */
-  protected function loginFromResetEmail() {
+  protected function loginFromResetEmail(): void {
     $_emails = $this->drupalGetMails();
     $email = end($_emails);
     $urls = [];

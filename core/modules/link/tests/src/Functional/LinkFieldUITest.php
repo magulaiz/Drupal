@@ -21,9 +21,7 @@ class LinkFieldUITest extends BrowserTestBase {
   use FieldUiTestTrait;
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = ['node', 'link', 'field_ui', 'block'];
 
@@ -74,7 +72,7 @@ class LinkFieldUITest extends BrowserTestBase {
   /**
    * Tests the link field UI.
    */
-  public function testFieldUI() {
+  public function testFieldUI(): void {
     foreach ($this->providerTestFieldUI() as $item) {
       [$cardinality, $link_type, $title, $label, $field_name, $default_uri] = $item;
       $this->runFieldUIItem($cardinality, $link_type, $title, $label, $field_name, $default_uri);
@@ -96,7 +94,7 @@ class LinkFieldUITest extends BrowserTestBase {
       DRUPAL_OPTIONAL,
     ];
     $link_types = [
-      LinkItemInterface::LINK_EXTERNAL => 'http://example.com',
+      LinkItemInterface::LINK_EXTERNAL => 'https://example.com',
       LinkItemInterface::LINK_GENERIC => '',
       LinkItemInterface::LINK_INTERNAL => '<front>',
     ];
@@ -119,7 +117,7 @@ class LinkFieldUITest extends BrowserTestBase {
             ]);
 
             // Use a unique label that contains some HTML.
-            $label = '<img src="http://example.com">' . $id;
+            $label = '<img src="https://example.com">' . $id;
 
             yield [
               $cardinality,
@@ -151,7 +149,7 @@ class LinkFieldUITest extends BrowserTestBase {
    * @param string $default_uri
    *   The default URI value.
    */
-  public function runFieldUIItem($cardinality, $link_type, $title, $label, $field_name, $default_uri) {
+  public function runFieldUIItem($cardinality, $link_type, $title, $label, $field_name, $default_uri): void {
     $this->drupalLogin($this->adminUser);
     $type_path = 'admin/structure/types/manage/' . $this->contentType->id();
 
@@ -191,8 +189,8 @@ class LinkFieldUITest extends BrowserTestBase {
     $this->drupalGet($add_path);
 
     $expected_help_texts = [
-      LinkItemInterface::LINK_EXTERNAL => 'This must be an external URL such as <em class="placeholder">http://example.com</em>.',
-      LinkItemInterface::LINK_GENERIC => 'You can also enter an internal path such as <em class="placeholder">/node/add</em> or an external URL such as <em class="placeholder">http://example.com</em>. Enter <em class="placeholder">&lt;front&gt;</em> to link to the front page. Enter <em class="placeholder">&lt;nolink&gt;</em> to display link text only',
+      LinkItemInterface::LINK_EXTERNAL => 'This must be an external URL such as <em class="placeholder">https://example.com</em>.',
+      LinkItemInterface::LINK_GENERIC => 'You can also enter an internal path such as <em class="placeholder">/node/add</em> or an external URL such as <em class="placeholder">https://example.com</em>. Enter <em class="placeholder">&lt;front&gt;</em> to link to the front page. Enter <em class="placeholder">&lt;nolink&gt;</em> to display link text only',
       LinkItemInterface::LINK_INTERNAL => rtrim(Url::fromRoute('<front>', [], ['absolute' => TRUE])->toString(), '/'),
     ];
 

@@ -46,9 +46,7 @@ class BlockContentListTest extends BlockContentTestBase {
   ];
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = ['block', 'block_content', 'config_translation'];
 
@@ -72,9 +70,25 @@ class BlockContentListTest extends BlockContentTestBase {
   }
 
   /**
+   * Tests the region value when a new block is saved.
+   */
+  public function testBlockRegionPlacement(): void {
+    $this->drupalLogin($this->drupalCreateUser($this->permissions));
+    $this->drupalGet("admin/structure/block/library/stark", ['query' => ['region' => 'content']]);
+
+    $this->clickLink('Add content block');
+    $this->assertSession()->statusCodeEquals(200);
+    $edit = [
+      'info[0][value]' => 'foo',
+    ];
+    $this->submitForm($edit, 'Save');
+    $this->assertSession()->fieldValueEquals('region', 'content');
+  }
+
+  /**
    * Tests the content block listing page with different permissions.
    */
-  public function testListing() {
+  public function testListing(): void {
     // Test with the admin user.
     $this->drupalLogin($this->drupalCreateUser(['access block library', 'administer block content']));
     $this->drupalGet('admin/content/block');
