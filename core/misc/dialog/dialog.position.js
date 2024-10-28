@@ -64,10 +64,11 @@
    */
   function resetSize(event) {
     // Ensure the UI dialog instance exists/is valid.
-    // If the dialog is closed very rapidly, the jQuery UI instance may have
-    // been destroyed, but debounce might still call this function within the
-    // setTimeout interval.
-    if (!event.data.$element.data('ui-dialog')) {
+    if (
+      !event.data ||
+      !event.data.$element ||
+      !event.data.$element.data('ui-dialog')
+    ) {
       return;
     }
 
