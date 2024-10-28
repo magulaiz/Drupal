@@ -57,28 +57,28 @@ class BigPipeHooks {
       if (!$has_big_pipe_nojs_cookie) {
         // Let server set the BigPipe no-JS cookie.
         $page['#attached']['html_head'][] = [
-              [
-                  // Redirect through a 'Refresh' meta tag if JavaScript is disabled.
-                '#tag' => 'meta',
-                '#noscript' => TRUE,
-                '#attributes' => [
-                  'http-equiv' => 'Refresh',
-                  'content' => '0; URL=' . Url::fromRoute('big_pipe.nojs', [], [
-                    'query' => \Drupal::service('redirect.destination')->getAsArray(),
-                  ])->toString(),
-                ],
-              ],
-              'big_pipe_detect_nojs',
+          [
+            // Redirect through a 'Refresh' meta tag if JavaScript is disabled.
+            '#tag' => 'meta',
+            '#noscript' => TRUE,
+            '#attributes' => [
+              'http-equiv' => 'Refresh',
+              'content' => '0; URL=' . Url::fromRoute('big_pipe.nojs', [], [
+                'query' => \Drupal::service('redirect.destination')->getAsArray(),
+              ])->toString(),
+            ],
+          ],
+          'big_pipe_detect_nojs',
         ];
       }
       else {
         // Let client delete the BigPipe no-JS cookie.
         $page['#attached']['html_head'][] = [
-              [
-                '#tag' => 'script',
-                '#value' => 'document.cookie = "' . BigPipeStrategy::NOJS_COOKIE . '=1; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT"',
-              ],
-              'big_pipe_detect_js',
+          [
+            '#tag' => 'script',
+            '#value' => 'document.cookie = "' . BigPipeStrategy::NOJS_COOKIE . '=1; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT"',
+          ],
+          'big_pipe_detect_js',
         ];
       }
     }
