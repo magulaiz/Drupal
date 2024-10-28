@@ -10595,12 +10595,6 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/lib/Drupal/Core/Queue/QueueWorkerManager.php',
 ];
 $ignoreErrors[] = [
-	// identifier: function.notFound
-	'message' => '#^Function system_page_attachments not found\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/lib/Drupal/Core/Render/BareHtmlPageRenderer.php',
-];
-$ignoreErrors[] = [
 	// identifier: missingType.return
 	'message' => '#^Method Drupal\\\\Core\\\\Render\\\\BubbleableMetadata\\:\\:applyTo\\(\\) has no return type specified\\.$#',
 	'count' => 1,
@@ -13019,42 +13013,6 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/block/tests/src/Kernel/BlockRebuildTest.php',
 ];
 $ignoreErrors[] = [
-	// identifier: function.notFound
-	'message' => '#^Function block_rebuild not found\\.$#',
-	'count' => 3,
-	'path' => __DIR__ . '/modules/block/tests/src/Kernel/BlockRebuildTest.php',
-];
-$ignoreErrors[] = [
-	// identifier: function.notFound
-	'message' => '#^Function block_rebuild not found\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/block/tests/src/Kernel/Migrate/d6/MigrateBlockContentTranslationTest.php',
-];
-$ignoreErrors[] = [
-	// identifier: function.notFound
-	'message' => '#^Function block_rebuild not found\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/block/tests/src/Kernel/Migrate/d6/MigrateBlockTest.php',
-];
-$ignoreErrors[] = [
-	// identifier: function.notFound
-	'message' => '#^Function block_rebuild not found\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/block/tests/src/Kernel/Migrate/d7/MigrateBlockContentTranslationTest.php',
-];
-$ignoreErrors[] = [
-	// identifier: function.notFound
-	'message' => '#^Function block_rebuild not found\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/block/tests/src/Kernel/Migrate/d7/MigrateBlockNoBlockContentTest.php',
-];
-$ignoreErrors[] = [
-	// identifier: function.notFound
-	'message' => '#^Function block_rebuild not found\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/block/tests/src/Kernel/Migrate/d7/MigrateBlockTest.php',
-];
-$ignoreErrors[] = [
 	// identifier: missingType.return
 	'message' => '#^Method Drupal\\\\Tests\\\\block\\\\Kernel\\\\Plugin\\\\migrate\\\\source\\\\BlockTest\\:\\:providerSource\\(\\) has no return type specified\\.$#',
 	'count' => 1,
@@ -13555,7 +13513,7 @@ $ignoreErrors[] = [
 $ignoreErrors[] = [
 	// identifier: function.notFound
 	'message' => '#^Function block_content_entity_operation not found\\.$#',
-	'count' => 2,
+	'count' => 1,
 	'path' => __DIR__ . '/modules/block_content/tests/src/Kernel/BlockContentTest.php',
 ];
 $ignoreErrors[] = [
@@ -13581,12 +13539,6 @@ $ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\Tests\\\\block_content\\\\Kernel\\\\BlockContentTest\\:\\:setCurrentUser\\(\\) has no return type specified\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/block_content/tests/src/Kernel/BlockContentTest.php',
-];
-$ignoreErrors[] = [
-	// identifier: function.notFound
-	'message' => '#^Function block_content_theme_suggestions_block_alter not found\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/block_content/tests/src/Kernel/BlockTemplateSuggestionsTest.php',
 ];
 $ignoreErrors[] = [
 	// identifier: missingType.return
@@ -17157,12 +17109,6 @@ $ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\Tests\\\\contact\\\\Kernel\\\\Plugin\\\\migrate\\\\source\\\\d6\\\\ContactSettingsTest\\:\\:providerSource\\(\\) has no return type specified\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/contact/tests/src/Kernel/Plugin/migrate/source/d6/ContactSettingsTest.php',
-];
-$ignoreErrors[] = [
-	// identifier: function.notFound
-	'message' => '#^Function contact_menu_local_tasks_alter not found\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/contact/tests/src/Unit/ContactTest.php',
 ];
 $ignoreErrors[] = [
 	// identifier: missingType.return
@@ -28259,12 +28205,6 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/layout_builder/tests/src/Kernel/EntityViewAlterTest.php',
 ];
 $ignoreErrors[] = [
-	// identifier: function.notFound
-	'message' => '#^Function layout_builder_entity_view_alter not found\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/layout_builder/tests/src/Kernel/EntityViewAlterTest.php',
-];
-$ignoreErrors[] = [
 	// identifier: missingType.return
 	'message' => '#^Method Drupal\\\\Tests\\\\layout_builder\\\\Kernel\\\\FieldBlockTest\\:\\:providerTestBlockAccessEntityAllowedFieldHasValue\\(\\) has no return type specified\\.$#',
 	'count' => 1,
@@ -28281,12 +28221,6 @@ $ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\Tests\\\\layout_builder\\\\Kernel\\\\FieldBlockTest\\:\\:providerTestBuild\\(\\) has no return type specified\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/layout_builder/tests/src/Kernel/FieldBlockTest.php',
-];
-$ignoreErrors[] = [
-	// identifier: function.notFound
-	'message' => '#^Function layout_builder_system_breadcrumb_alter not found\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/layout_builder/tests/src/Kernel/LayoutBuilderBreadcrumbAlterTest.php',
 ];
 $ignoreErrors[] = [
 	// identifier: missingType.return
@@ -29693,12 +29627,6 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/locale/tests/src/Functional/LocaleUpdateBase.php',
 ];
 $ignoreErrors[] = [
-	// identifier: function.notFound
-	'message' => '#^Function locale_cron not found\\.$#',
-	'count' => 3,
-	'path' => __DIR__ . '/modules/locale/tests/src/Functional/LocaleUpdateCronTest.php',
-];
-$ignoreErrors[] = [
 	// identifier: missingType.return
 	'message' => '#^Method Drupal\\\\Tests\\\\locale\\\\Functional\\\\LocaleUpdateCronTest\\:\\:cronRun\\(\\) has no return type specified\\.$#',
 	'count' => 1,
@@ -30657,6 +30585,18 @@ $ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\Tests\\\\media\\\\Functional\\\\UrlResolverTest\\:\\:useFixtureProviders\\(\\) has no return type specified\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/media/tests/src/Functional/UrlResolverTest.php',
+];
+$ignoreErrors[] = [
+	// identifier: phpunit.coversMethod
+	'message' => '#^@covers value \\:\\:media_form_filter_format_add_form_alter references an invalid method\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/media/tests/src/FunctionalJavascript/MediaEmbedFilterConfigurationUiAddTest.php',
+];
+$ignoreErrors[] = [
+	// identifier: phpunit.coversMethod
+	'message' => '#^@covers value \\:\\:media_form_filter_format_edit_form_alter references an invalid method\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/media/tests/src/FunctionalJavascript/MediaEmbedFilterConfigurationUiEditTest.php',
 ];
 $ignoreErrors[] = [
 	// identifier: missingType.return
@@ -33356,12 +33296,6 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/migrate_drupal/tests/src/Kernel/MigrateDrupalTestBase.php',
 ];
 $ignoreErrors[] = [
-	// identifier: function.notFound
-	'message' => '#^Function migrate_drupal_migration_plugins_alter not found\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/migrate_drupal/tests/src/Kernel/NodeMigrationTypePluginAlterTest.php',
-];
-$ignoreErrors[] = [
 	// identifier: missingType.return
 	'message' => '#^Method Drupal\\\\Tests\\\\migrate_drupal\\\\Kernel\\\\NodeMigrationTypePluginAlterTest\\:\\:makeNodeMigrateMapTable\\(\\) has no return type specified\\.$#',
 	'count' => 1,
@@ -34319,12 +34253,6 @@ $ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\navigation\\\\Form\\\\SettingsForm\\:\\:create\\(\\) has no return type specified\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/navigation/src/Form/SettingsForm.php',
-];
-$ignoreErrors[] = [
-	// identifier: function.notFound
-	'message' => '#^Function layout_builder_help not found\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/navigation/src/Hook/NavigationHooks.php',
 ];
 $ignoreErrors[] = [
 	// identifier: missingType.return
@@ -50380,12 +50308,6 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/update/tests/src/Unit/UpdateMailTest.php',
 ];
 $ignoreErrors[] = [
-	// identifier: function.notFound
-	'message' => '#^Function update_mail not found\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/update/tests/src/Unit/UpdateMailTest.php',
-];
-$ignoreErrors[] = [
 	// identifier: missingType.return
 	'message' => '#^Function _update_authorize_clear_update_status\\(\\) has no return type specified\\.$#',
 	'count' => 1,
@@ -60742,6 +60664,12 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/views/tests/src/Kernel/ViewsKernelTestBase.php',
 ];
 $ignoreErrors[] = [
+	// identifier: phpunit.covers
+	'message' => '#^@covers value views_theme_suggestions_container_alter references an invalid class or function\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/views/tests/src/Kernel/ViewsTemplateTest.php',
+];
+$ignoreErrors[] = [
 	// identifier: missingType.return
 	'message' => '#^Method Drupal\\\\Tests\\\\views\\\\Unit\\\\EventSubscriber\\\\TestRouteSubscriber\\:\\:getApplicableViews\\(\\) has no return type specified\\.$#',
 	'count' => 1,
@@ -60954,12 +60882,6 @@ $ignoreErrors[] = [
 $ignoreErrors[] = [
 	// identifier: missingType.return
 	'message' => '#^Function views_preprocess_node\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/views/views.module',
-];
-$ignoreErrors[] = [
-	// identifier: function.notFound
-	'message' => '#^Function views_query_views_alter not found\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/views/views.module',
 ];
@@ -61800,7 +61722,7 @@ $ignoreErrors[] = [
 $ignoreErrors[] = [
 	// identifier: function.notFound
 	'message' => '#^Function views_ui_entity_operation not found\\.$#',
-	'count' => 2,
+	'count' => 1,
 	'path' => __DIR__ . '/modules/views_ui/tests/src/Kernel/ViewsBlockTest.php',
 ];
 $ignoreErrors[] = [
@@ -67372,12 +67294,6 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/tests/Drupal/KernelTests/Core/Field/Entity/BaseFieldOverrideTest.php',
 ];
 $ignoreErrors[] = [
-	// identifier: function.notFound
-	'message' => '#^Function system_cron not found\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/tests/Drupal/KernelTests/Core/File/DirectoryTest.php',
-];
-$ignoreErrors[] = [
 	// identifier: missingType.return
 	'message' => '#^Method Drupal\\\\KernelTests\\\\Core\\\\File\\\\FileTestBase\\:\\:assertDirectoryPermissions\\(\\) has no return type specified\\.$#',
 	'count' => 1,
@@ -67454,12 +67370,6 @@ $ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\KernelTests\\\\Core\\\\Form\\\\TriggeringElementProgrammedTest\\:\\:submitForm\\(\\) has no return type specified\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/tests/Drupal/KernelTests/Core/Form/TriggeringElementProgrammedTest.php',
-];
-$ignoreErrors[] = [
-	// identifier: function.notFound
-	'message' => '#^Function system_cron not found\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/tests/Drupal/KernelTests/Core/KeyValueStore/GarbageCollectionTest.php',
 ];
 $ignoreErrors[] = [
 	// identifier: missingType.return
@@ -71260,12 +71170,6 @@ $ignoreErrors[] = [
 $ignoreErrors[] = [
 	// identifier: missingType.return
 	'message' => '#^Function Drupal\\\\Core\\\\Theme\\\\get_defined_functions\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/tests/Drupal/Tests/Core/Theme/RegistryTest.php',
-];
-$ignoreErrors[] = [
-	// identifier: function.notFound
-	'message' => '#^Function theme_test_theme not found\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/tests/Drupal/Tests/Core/Theme/RegistryTest.php',
 ];
