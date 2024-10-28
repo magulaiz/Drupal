@@ -49,7 +49,7 @@ class HookOrderTest extends HookOrderTestBase {
    */
   public function testFirst(): void {
     // "c" was first, make "a" the first.
-    HookOrder::first($this->container, 'test', 'a::a');
+    HookOrder::first($this->container, 'test', 'a', 'a');
     $this->assertGreaterThan($this->getPriority('c'), $this->getPriority('a'));
     $this->assertGreaterThan($this->getPriority('b'), $this->getPriority('a'));
     // The other two shouldn't change.
@@ -61,7 +61,7 @@ class HookOrderTest extends HookOrderTestBase {
    */
   public function testLast(): void {
     // "c" was first, make it the last.
-    HookOrder::last($this->container, 'test', 'c::c');
+    HookOrder::last($this->container, 'test', 'c', 'c');
     $this->assertGreaterThan($this->getPriority('c'), $this->getPriority('a'));
     $this->assertGreaterThan($this->getPriority('c'), $this->getPriority('b'));
     // The other two shouldn't change.
@@ -73,7 +73,7 @@ class HookOrderTest extends HookOrderTestBase {
    */
   public function testBefore(): void {
     // "a" was last, move it before "b".
-    HookOrder::before($this->container, 'test', 'a::a', 'b::b');
+    HookOrder::before($this->container, 'test', 'a', 'a', 'b', 'b');
     $this->assertGreaterThan($this->getPriority('b'), $this->getPriority('a'));
     // The relation between these should not change. The actual priority
     // might.
@@ -86,7 +86,7 @@ class HookOrderTest extends HookOrderTestBase {
    */
   public function testAfter(): void {
     // "c" was first, move it after "b".
-    HookOrder::after($this->container, 'test', 'c::c', 'b::b');
+    HookOrder::after($this->container, 'test', 'c', 'c', 'b', 'b');
     $this->assertGreaterThan($this->getPriority('c'), $this->getPriority('b'));
     // The relation between these should not change. The actual priority
     // might.
@@ -99,7 +99,7 @@ class HookOrderTest extends HookOrderTestBase {
    */
   public function testFirstNoChange(): void {
     // "c" was first, making it first should be a no-op.
-    HookOrder::first($this->container, 'test', 'c::c');
+    HookOrder::first($this->container, 'test', 'c', 'c');
     $this->assertNoChange();
   }
 
@@ -108,7 +108,7 @@ class HookOrderTest extends HookOrderTestBase {
    */
   public function testLastNoChange(): void {
     // "a" was last, making it last should be a no-op.
-    HookOrder::last($this->container, 'test', 'a::a');
+    HookOrder::last($this->container, 'test', 'a', 'a');
     $this->assertNoChange();
   }
 
@@ -117,7 +117,7 @@ class HookOrderTest extends HookOrderTestBase {
    */
   public function testBeforeNoChange(): void {
     // "b" is already firing before "a", this should be a no-op.
-    HookOrder::before($this->container, 'test', 'b::b');
+    HookOrder::before($this->container, 'test', 'b', 'b');
     $this->assertNoChange();
   }
 
@@ -126,7 +126,7 @@ class HookOrderTest extends HookOrderTestBase {
    */
   public function testAfterNoChange(): void {
     // "b' is already firing after "c", this should be a no-op.
-    HookOrder::after($this->container, 'test', 'b::b');
+    HookOrder::after($this->container, 'test', 'b', 'b');
     $this->assertNoChange();
   }
 
