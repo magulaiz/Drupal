@@ -78,6 +78,8 @@ class ModuleHandler implements ModuleHandlerInterface {
    *   The event dispatcher.
    * @param array $hookImplementationsMap
    *   An array keyed by hook, classname, method and the value is the module.
+   * @param array $groupIncludes
+   *   An array of .inc files to get helpers from.
    *
    * @see \Drupal\Core\DrupalKernel
    * @see \Drupal\Core\CoreServiceProvider

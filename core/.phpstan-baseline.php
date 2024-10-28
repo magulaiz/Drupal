@@ -30659,18 +30659,6 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/media/tests/src/Functional/UrlResolverTest.php',
 ];
 $ignoreErrors[] = [
-	// identifier: phpunit.coversMethod
-	'message' => '#^@covers value \\:\\:media_form_filter_format_add_form_alter references an invalid method\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/media/tests/src/FunctionalJavascript/MediaEmbedFilterConfigurationUiAddTest.php',
-];
-$ignoreErrors[] = [
-	// identifier: phpunit.coversMethod
-	'message' => '#^@covers value \\:\\:media_form_filter_format_edit_form_alter references an invalid method\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/media/tests/src/FunctionalJavascript/MediaEmbedFilterConfigurationUiEditTest.php',
-];
-$ignoreErrors[] = [
 	// identifier: missingType.return
 	'message' => '#^Method Drupal\\\\Tests\\\\media\\\\FunctionalJavascript\\\\MediaEmbedFilterTestBase\\:\\:showHiddenFields\\(\\) has no return type specified\\.$#',
 	'count' => 1,
@@ -60752,12 +60740,6 @@ $ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\Tests\\\\views\\\\Kernel\\\\ViewsKernelTestBase\\:\\:viewsData\\(\\) has no return type specified\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/views/tests/src/Kernel/ViewsKernelTestBase.php',
-];
-$ignoreErrors[] = [
-	// identifier: phpunit.covers
-	'message' => '#^@covers value views_theme_suggestions_container_alter references an invalid class or function\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/views/tests/src/Kernel/ViewsTemplateTest.php',
 ];
 $ignoreErrors[] = [
 	// identifier: missingType.return
