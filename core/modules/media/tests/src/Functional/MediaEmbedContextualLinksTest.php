@@ -7,7 +7,6 @@ namespace Drupal\Tests\media\Functional;
 use Drupal\media\Entity\Media;
 use Drupal\node\Entity\Node;
 use Drupal\node\Entity\NodeType;
-use phpDocumentor\Reflection\PseudoTypes\True_;
 
 /**
  * Tests views contextual links on embed media.
