@@ -67,7 +67,7 @@ class HookCollectorPass implements CompilerPassInterface {
    */
   protected int $priority = 0;
 
-    /**
+  /**
    * A list of functions implementing hook_info().
    *
    * (This is required only for BC.)
