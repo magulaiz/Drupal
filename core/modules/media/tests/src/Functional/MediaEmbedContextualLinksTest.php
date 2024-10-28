@@ -22,6 +22,7 @@ class MediaEmbedContextualLinksTest extends MediaFunctionalTestBase {
     'contextual',
     'filter',
     'media',
+    'node',
   ];
 
   /**
