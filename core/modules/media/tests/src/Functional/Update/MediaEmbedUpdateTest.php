@@ -17,16 +17,14 @@ class MediaEmbedUpdateTest extends UpdatePathTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setDatabaseDumpFiles(): void {
-    $this->databaseDumpFiles = [
-      __DIR__ . '/../../../../../system/tests/fixtures/update/drupal-10.3.0.filled.standard.php.gz',
-    ];
-  }
+  protected $profile = 'demo_umami';
 
   /**
    * {@inheritdoc}
    */
-  protected static $modules = ['media', 'filter', 'contextual'];
+  protected function setUp(): void {
+    parent::setUp();
+  }
 
   /**
    * Tests the update to add the show_contextual_links setting to media_embed filter.
