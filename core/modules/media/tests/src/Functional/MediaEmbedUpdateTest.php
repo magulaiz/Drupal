@@ -18,10 +18,7 @@ class MediaEmbedUpdateTest extends UpdatePathTestBase {
    * {@inheritdoc}
    */
   protected function setDatabaseDumpFiles(): void {
-    // If you need a specific database state, set the path to a database dump file.
-    // This is optional and can be skipped if creating configurations directly in the test.
     $this->databaseDumpFiles = [
-      // Adjust the path according to your module and setup.
       __DIR__ . '/../../../../../system/tests/fixtures/update/drupal-9.4.0.bare.standard.php.gz',
     ];
   }
