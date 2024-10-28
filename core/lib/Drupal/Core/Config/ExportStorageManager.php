@@ -94,7 +94,7 @@ final class ExportStorageManager implements StorageManagerInterface {
 
     $transaction = $this->connection->startTransaction();
     self::replaceStorageContents($this->active, $this->storage);
-    $this->connection->popTransaction($transaction->name());
+    unset($transaction);
 
     $this->eventDispatcher->dispatch(new StorageTransformEvent($this->storage), ConfigEvents::STORAGE_TRANSFORM_EXPORT);
 
