@@ -73,7 +73,7 @@ class BlockTemplateSuggestionsTest extends KernelTestBase {
     $variables['elements']['content']['#block_content'] = $this->blockContent;
     $suggestions_empty = [];
     $suggestions_empty[] = 'block__block_content__' . $block->uuid();
-    $suggestions = block_content_theme_suggestions_block_alter($suggestions_empty, $variables);
+    $suggestions = \Drupal::moduleHandler()->invoke('block_content', 'theme_suggestions_block_alter', [$suggestions_empty, $variables]);
 
     $this->assertSame([
       'block__block_content__' . $block->uuid(),

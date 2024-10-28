@@ -65,6 +65,7 @@ class ViewsBlockTest extends ViewsKernelTestBase {
     $this->setUpCurrentUser(['uid' => 1], ['administer views']);
 
     // The admin user does have the "administer block" permission.
+    $viewsUiEntityOperation = \Drupal::moduleHandler()->invoke('views_ui', 'entity_operation', [$block]);
     $this->assertEquals([
       'view-edit' => [
         'title' => 'Edit view',
@@ -74,7 +75,7 @@ class ViewsBlockTest extends ViewsKernelTestBase {
         ]),
         'weight' => 50,
       ],
-    ], views_ui_entity_operation($block));
+    ], $viewsUiEntityOperation);
   }
 
 }

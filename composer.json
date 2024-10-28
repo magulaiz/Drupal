@@ -12,14 +12,15 @@
         "composer/installers": "^2.3",
         "drupal/core": "self.version",
         "drupal/core-project-message": "self.version",
-        "drupal/core-vendor-hardening": "self.version"
+        "drupal/core-vendor-hardening": "self.version",
+        "palantirnet/drupal-rector": "dev-rectorOOPHooks"
     },
     "require-dev": {
         "behat/mink": "^1.11",
         "behat/mink-browserkit-driver": "^2.2",
         "colinodell/psr-testlogger": "^1.2",
         "composer/composer": "^2.8.1",
-        "drupal/coder": "^8.3.10",
+        "drupal/coder": "^8.3",
         "justinrainbow/json-schema": "^5.2",
         "lullabot/mink-selenium2-driver": "^1.7.3",
         "lullabot/php-webdriver": "^2.0.5",

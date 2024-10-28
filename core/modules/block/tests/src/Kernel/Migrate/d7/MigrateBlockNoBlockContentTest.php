@@ -52,7 +52,7 @@ class MigrateBlockNoBlockContentTest extends MigrateDrupal7TestBase {
       'd7_user_role',
       'd7_block',
     ]);
-    block_rebuild();
+    \Drupal::moduleHandler()->invoke('block', 'rebuild');
   }
 
   /**

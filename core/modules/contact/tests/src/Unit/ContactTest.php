@@ -17,7 +17,7 @@ class ContactTest extends UnitTestCase {
   public function testLocalTasksAlter(): void {
     require_once $this->root . '/core/modules/contact/contact.module';
     $data = [];
-    \contact_menu_local_tasks_alter($data, 'entity.user.canonical');
+    \Drupal::moduleHandler()->invoke('contact', 'menu_local_tasks_alter', [$data, 'entity.user.canonical']);
     $this->assertTrue(TRUE, 'No warning thrown');
   }
 
