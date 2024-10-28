@@ -112,7 +112,7 @@ class SelectionPluginManager extends DefaultPluginManager implements SelectionPl
   /**
    * {@inheritdoc}
    */
-  public function processDefinition(&$definition, $plugin_id) {
+  public function processDefinition(&$definition, $plugin_id): void {
     parent::processDefinition($definition, $plugin_id);
 
     if (!empty($definition['group'])) {
