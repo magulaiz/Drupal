@@ -406,7 +406,7 @@ class FieldBlock extends BlockBase implements ContextAwarePluginInterface, Conta
    * @return string
    *   The field name.
    */
-  public function getFieldName() {
+  public function getFieldName(): string {
     return $this->fieldDefinition->getName();
   }
 
