@@ -27,20 +27,6 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 /**
  * Provides a filter to embed media items using a custom tag.
  *
- * @Filter(
- *   id = "media_embed",
- *   title = @Translation("Embed media"),
- *   description = @Translation("Embeds media items using a custom tag, <code>&lt;drupal-media&gt;</code>. If used in conjunction with the 'Align/Caption' filters, make sure this filter is configured to run after them."),
- *   type = Drupal\filter\Plugin\FilterInterface::TYPE_TRANSFORM_REVERSIBLE,
- *   settings = {
- *     "default_view_mode" = "default",
- *     "allowed_view_modes" = {},
- *     "allowed_media_types" = {},
- *     "show_contextual_links" = false,
- *   },
- *   weight = 100,
- * )
- *
  * @internal
  */
 #[Filter(

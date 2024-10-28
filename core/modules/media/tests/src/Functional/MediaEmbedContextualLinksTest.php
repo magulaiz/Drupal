@@ -7,6 +7,7 @@ namespace Drupal\Tests\media\Functional;
 use Drupal\media\Entity\Media;
 use Drupal\node\Entity\Node;
 use Drupal\node\Entity\NodeType;
+use phpDocumentor\Reflection\PseudoTypes\True_;
 
 /**
  * Tests views contextual links on embed media.
@@ -20,6 +21,8 @@ class MediaEmbedContextualLinksTest extends MediaFunctionalTestBase {
    */
   protected static $modules = [
     'contextual',
+    'filter',
+    'media',
   ];
 
   /**
@@ -41,7 +44,7 @@ class MediaEmbedContextualLinksTest extends MediaFunctionalTestBase {
       'name' => 'Media embed with contextual links',
       'format' => 'media_embed_with_contextual_link',
       'filters[media_embed][status]' => 1,
-      'filters[media_embed][settings][show_contextual_links]' => 1,
+      'filters[media_embed][settings][show_contextual_links]' => TRUE,
     ], 'Save configuration');
     $this->assertSession()
       ->pageTextContains('Added text format Media embed with contextual links.');
