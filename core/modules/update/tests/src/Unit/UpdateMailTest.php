@@ -147,7 +147,7 @@ class UpdateMailTest extends UnitTestCase {
     \Drupal::setContainer($this->container);
 
     // Generate the email message.
-    update_mail($key, $message, $params);
+    \Drupal::moduleHandler()->invoke('update', 'mail', [$key, $message, $params]);
 
     // Confirm the subject.
     $this->assertSame("New release(s) available for $site_name", $message['subject']);

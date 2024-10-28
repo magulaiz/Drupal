@@ -49,7 +49,7 @@ class MigrateBlockContentTranslationTest extends MigrateDrupal6TestBase {
       'd6_block',
       'd6_block_translation',
     ]);
-    block_rebuild();
+    \Drupal::moduleHandler()->invoke('block', 'rebuild');
   }
 
   /**
