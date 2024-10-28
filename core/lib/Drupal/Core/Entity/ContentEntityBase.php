@@ -324,11 +324,12 @@ abstract class ContentEntityBase extends EntityBase implements \IteratorAggregat
    *
    * @param bool $cast_to_int
    *   (optional) Indicator for how the revision identifier is returned. When
-   *   set to TRUE it will return the revision identifier as an integer value.
-   *   When the indicator is not set or set to FALSE the revision identifier
-   *   will return a string value.
+   *   set to TRUE it will return the revision identifier as an integer value
+   *   when the loaded revision ID only contains numeric characters. When the
+   *   indicator is not set or set to FALSE the revision identifier will return
+   *   a string value.
    *
-   * @return int|null
+   * @return int|string|null
    *   The loaded Revision identifier of the entity, or NULL if the entity
    *   does not have a revision identifier.
    */
@@ -337,7 +338,15 @@ abstract class ContentEntityBase extends EntityBase implements \IteratorAggregat
       @trigger_error('Returning the loaded revision identifier as a string value is deprecated in drupal:11.1.0 and will be removed in drupal:12.0.0. See https://www.drupal.org/node/3476934', E_USER_DEPRECATED);
       return $this->loadedRevisionId;
     }
-    return !is_null($this->loadedRevisionId) ? (int) $this->loadedRevisionId : NULL;
+
+    if (is_null($this->loadedRevisionId)) {
+      return NULL;
+    }
+    elseif (is_string($this->loadedRevisionId) && ctype_digit($this->loadedRevisionId)) {
+      return (int) $this->loadedRevisionId;
+    }
+
+    return $this->loadedRevisionId;
   }
 
   /**
