@@ -19985,12 +19985,6 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/field/field.install',
 ];
 $ignoreErrors[] = [
-	// identifier: function.notFound
-	'message' => '#^Function field_field_config_create not found\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/field/field.module',
-];
-$ignoreErrors[] = [
 	// identifier: missingType.return
 	'message' => '#^Function field_form_field_config_edit_form_entity_builder\\(\\) has no return type specified\\.$#',
 	'count' => 1,
@@ -20133,12 +20127,6 @@ $ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\field\\\\FieldUninstallValidator\\:\\:getNumberOfPlurals\\(\\) has no return type specified\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/field/src/FieldUninstallValidator.php',
-];
-$ignoreErrors[] = [
-	// identifier: function.notFound
-	'message' => '#^Function field_field_config_create not found\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/field/src/Hook/FieldHooks.php',
 ];
 $ignoreErrors[] = [
 	// identifier: missingType.return
