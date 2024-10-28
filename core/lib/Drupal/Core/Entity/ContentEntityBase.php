@@ -339,10 +339,7 @@ abstract class ContentEntityBase extends EntityBase implements \IteratorAggregat
       return $this->loadedRevisionId;
     }
 
-    if (is_null($this->loadedRevisionId)) {
-      return NULL;
-    }
-    elseif (is_string($this->loadedRevisionId) && ctype_digit($this->loadedRevisionId)) {
+    if (is_string($this->loadedRevisionId) && ctype_digit($this->loadedRevisionId)) {
       return (int) $this->loadedRevisionId;
     }
 
