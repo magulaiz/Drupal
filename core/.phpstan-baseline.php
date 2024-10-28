@@ -41911,24 +41911,24 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/system/tests/modules/deprecated_twig_template/src/Hook/DeprecatedTwigTemplateHooks.php',
 ];
 $ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Function deprecation_test_deprecated_alter_alter\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/system/tests/modules/deprecation_test/deprecation_test.module',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
+	'message' => '#^Function deprecation_test_deprecated_hook\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/system/tests/modules/deprecation_test/deprecation_test.module',
+];
+$ignoreErrors[] = [
 	// identifier: function.deprecated
 	'message' => '#^Call to deprecated function deprecation_test_function\\(\\)\\:
 in drupal\\:8\\.4\\.0 and is removed from drupal\\:9\\.0\\.0\\. This is
   the deprecation message for deprecated_test_function\\(\\)\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/system/tests/modules/deprecation_test/src/DeprecatedController.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
-	'message' => '#^Method Drupal\\\\deprecation_test\\\\Hook\\\\DeprecationTestHooks\\:\\:deprecatedAlterAlter\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/system/tests/modules/deprecation_test/src/Hook/DeprecationTestHooks.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
-	'message' => '#^Method Drupal\\\\deprecation_test\\\\Hook\\\\DeprecationTestHooks\\:\\:deprecatedHook\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/system/tests/modules/deprecation_test/src/Hook/DeprecationTestHooks.php',
 ];
 $ignoreErrors[] = [
 	// identifier: missingType.return
