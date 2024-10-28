@@ -68,7 +68,7 @@ class BigPipeHooks {
                   ])->toString(),
                 ],
               ],
-          'big_pipe_detect_nojs',
+              'big_pipe_detect_nojs',
         ];
       }
       else {
@@ -78,7 +78,7 @@ class BigPipeHooks {
                 '#tag' => 'script',
                 '#value' => 'document.cookie = "' . BigPipeStrategy::NOJS_COOKIE . '=1; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT"',
               ],
-          'big_pipe_detect_js',
+              'big_pipe_detect_js',
         ];
       }
     }

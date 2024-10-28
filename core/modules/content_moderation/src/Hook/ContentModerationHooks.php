@@ -2,6 +2,8 @@
 
 namespace Drupal\content_moderation\Hook;
 
+use Drupal\views\Plugin\views\filter\Broken;
+use Drupal\views\ViewExecutable;
 use Drupal\views\Views;
 use Drupal\workflows\Entity\Workflow;
 use Drupal\content_moderation\Plugin\Action\ModerationOptOutUnpublish;
@@ -350,7 +352,7 @@ class ContentModerationHooks {
     \Drupal::service('entity_field.manager')->clearCachedFieldDefinitions();
     // Clear the views data cache so the extra field is available in views.
     if (\Drupal::moduleHandler()->moduleExists('views')) {
-      \Drupal\views\Views::viewsData()->clear();
+      Views::viewsData()->clear();
     }
   }
 
@@ -358,11 +360,11 @@ class ContentModerationHooks {
    * Implements hook_views_post_execute().
    */
   #[Hook('views_post_execute')]
-  public function viewsPostExecute(\Drupal\views\ViewExecutable $view) {
+  public function viewsPostExecute(ViewExecutable $view) {
     // @todo Remove this once broken handlers in views configuration result in
     //   a view no longer returning results. https://www.drupal.org/node/2907954.
     foreach ($view->filter as $id => $filter) {
-      if (str_starts_with($id, 'moderation_state') && $filter instanceof \Drupal\views\Plugin\views\filter\Broken) {
+      if (str_starts_with($id, 'moderation_state') && $filter instanceof Broken) {
         $view->result = [];
         break;
       }
