@@ -4,7 +4,9 @@ namespace Drupal\workspaces;
 
 use Drupal\Core\DependencyInjection\ContainerBuilder;
 use Drupal\Core\DependencyInjection\ServiceProviderBase;
+use Drupal\Core\Hook\HookOrder;
 use Drupal\Core\Update\UpdateKernel;
+use Drupal\workspaces\Hook\WorkspacesHooks;
 use Symfony\Component\DependencyInjection\Reference;
 
 /**
@@ -49,6 +51,10 @@ class WorkspacesServiceProvider extends ServiceProviderBase {
         }
       }
     }
+
+    $class = WorkspacesHooks::class . '::';
+    HookOrder::first($container, 'entity_presave', $class . 'entityPresave');
+    HookOrder::last($container, 'entity_insert', $class . 'entityInsert');
   }
 
 }
