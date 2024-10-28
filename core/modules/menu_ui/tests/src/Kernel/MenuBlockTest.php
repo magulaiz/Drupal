@@ -80,8 +80,7 @@ class MenuBlockTest extends KernelTestBase {
 
     $this->setUpCurrentUser();
     // Test when user doesn't have "administer menu" permission.
-
-    $this->assertEmpty(\Drupal::moduleHandler()->invoke('menu_ui', 'entity_operation', [$block]););
+    $this->assertEmpty(menu_ui_entity_operation($block));
   }
 
 }
