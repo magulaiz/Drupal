@@ -187,7 +187,7 @@ class MediaEmbed extends FilterBase implements ContainerFactoryPluginInterface, 
       '#title' => $this->t("Show contextual links for embedded media"),
       '#type' => 'checkbox',
       '#default_value' => $this->settings['show_contextual_links'],
-      '#description' => $this->t('If selected, displays contextual links to edit/delete/etc. embedded media items.'),
+      '#description' => $this->t('If selected, displays contextual links to edit/delete/etc. embedded media items if contextual module enabled.'),
     ];
 
     return $form;
