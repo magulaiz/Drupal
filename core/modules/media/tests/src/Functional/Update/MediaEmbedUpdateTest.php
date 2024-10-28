@@ -33,7 +33,7 @@ class MediaEmbedUpdateTest extends UpdatePathTestBase {
   /**
    * {@inheritdoc}
    */
-  protected $modules = ['media', 'filter', 'contextual'];
+  protected static $modules = ['media', 'filter', 'contextual'];
 
   /**
    * Tests the update to add the show_contextual_links setting to media_embed filter.
