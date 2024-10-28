@@ -24,6 +24,13 @@ class MediaEmbedUpdateTest extends UpdatePathTestBase {
   }
 
   /**
+   * The profile to install as a basis for testing.
+   *
+   * @var string
+   */
+  protected $profile = 'demo_umami';
+
+  /**
    * {@inheritdoc}
    */
   protected $installProfile = 'demo_umami';
