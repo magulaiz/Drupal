@@ -89,7 +89,7 @@ class NodeAccessRecordsTest extends NodeAccessTestBase {
     // Create a user that is allowed to access content.
     $web_user = $this->drupalCreateUser(['access content']);
     foreach ($operations as $op) {
-      $nodeTestHook = new NodeTestHooks;
+      $nodeTestHook = new NodeTestHooks();
       $grants = $nodeTestHook->nodeGrants($web_user, $op);
       $altered_grants = $grants;
       \Drupal::moduleHandler()->alter('node_grants', $altered_grants, $web_user, $op);
