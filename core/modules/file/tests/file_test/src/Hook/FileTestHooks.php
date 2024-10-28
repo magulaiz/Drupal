@@ -7,6 +7,9 @@ namespace Drupal\file_test\Hook;
 use Drupal\file\Entity\File;
 use Drupal\Core\Hook\Attribute\Hook;
 
+// cspell:ignore tarz
+// cspell:ignore garply
+
 /**
  * Hook implementations for file_test.
  */
