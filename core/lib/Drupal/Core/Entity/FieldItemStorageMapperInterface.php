@@ -10,7 +10,7 @@ use Drupal\Core\Field\FieldItemInterface;
 interface FieldItemStorageMapperInterface extends FieldItemInterface {
 
   /**
-   * Map columns on load.
+   * Maps columns on load.
    *
    * @param array $columns
    *   The columns to map.
@@ -21,7 +21,7 @@ interface FieldItemStorageMapperInterface extends FieldItemInterface {
   public static function mapColumnsOnLoad(array $columns): array;
 
   /**
-   * Map columns on save.
+   * Maps columns on save.
    *
    * @param array $properties
    *   The field properties to map.

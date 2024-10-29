@@ -1487,7 +1487,7 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
   }
 
   /**
-   * Convert a value to its stored representation, e.g. serialized.
+   * Converts a value to its stored representation, e.g. serialized.
    *
    * This is not the same as type casting, and exists to provide a single point
    * for abstracting out calls such as serialization and JSON encoding.
@@ -1511,7 +1511,7 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
   }
 
   /**
-   * Convert a stored value to its appropriate PHP representation.
+   * Converts a stored value to its appropriate PHP representation.
    *
    * @param mixed $value
    *   Stored value.
@@ -1526,8 +1526,7 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
       return json_decode($value, TRUE, flags: JSON_THROW_ON_ERROR);
     }
     if (!empty($column_attributes['serialize'])) {
-      // @todo Hardening - Provide a way to guard allowed classes.
-      return unserialize($value);
+      return unserialize($value, ['allowed_classes' => FALSE]);
     }
     return $value;
   }
@@ -1923,7 +1922,7 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
   }
 
   /**
-   * Map columns on load.
+   * Maps columns on load.
    *
    * @param string $field_name
    *   Field name.
@@ -1947,7 +1946,7 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
   }
 
   /**
-   * Map properties to column values on save.
+   * Maps properties to column values on save.
    *
    * @param string $field_name
    *   Field name.

@@ -8,7 +8,7 @@ namespace Drupal\Core\Entity\Sql;
 interface StorageMapperInterface {
 
   /**
-   * Map columns on load.
+   * Maps columns on load.
    *
    * @param array $columns
    *   The columns to map.
@@ -19,7 +19,7 @@ interface StorageMapperInterface {
   public function mapColumnsOnLoad(array $columns): ?array;
 
   /**
-   * Map columns on save.
+   * Maps columns on save.
    *
    * @param array $columns
    *   The columns to map.

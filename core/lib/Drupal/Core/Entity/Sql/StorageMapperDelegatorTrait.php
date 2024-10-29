@@ -20,7 +20,7 @@ trait StorageMapperDelegatorTrait {
   abstract protected function getFieldItemClass();
 
   /**
-   * Map columns on load.
+   * Maps columns on load.
    *
    * @param array $columns
    *   The field properties to map.
@@ -37,7 +37,7 @@ trait StorageMapperDelegatorTrait {
   }
 
   /**
-   * Map columns on save.
+   * Maps columns on save.
    *
    * @param array $columns
    *   The columns to map.
