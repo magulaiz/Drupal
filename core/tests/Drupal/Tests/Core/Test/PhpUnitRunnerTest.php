@@ -23,7 +23,7 @@ class PhpUnitRunnerTest extends UnitTestCase {
    *
    * @covers ::runOneTestClass
    */
-  public function testRunOneTestClassError() {
+  public function testRunOneTestClassError(): void {
     $test_id = 23;
     $log_path = 'test_log_path';
 
@@ -79,7 +79,7 @@ class PhpUnitRunnerTest extends UnitTestCase {
   /**
    * @covers ::phpUnitCommand
    */
-  public function testPhpUnitCommand() {
+  public function testPhpUnitCommand(): void {
     $runner = new PhpUnitRunner($this->root, sys_get_temp_dir());
     $invokableMethod = new \ReflectionMethod($runner, 'phpUnitCommand');
     $this->assertMatchesRegularExpression('/phpunit/', $invokableMethod->invoke($runner));
