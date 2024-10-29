@@ -4,6 +4,8 @@ namespace Drupal\workspaces;
 
 use Drupal\Core\DependencyInjection\ContainerBuilder;
 use Drupal\Core\DependencyInjection\ServiceProviderBase;
+use Drupal\Core\Extension\ProceduralCall;
+use Drupal\Core\Hook\HookOrder;
 use Drupal\Core\Update\UpdateKernel;
 use Symfony\Component\DependencyInjection\Reference;
 
@@ -49,6 +51,10 @@ class WorkspacesServiceProvider extends ServiceProviderBase {
         }
       }
     }
+
+    $proceduralCall = ProceduralCall::class . '::';
+    HookOrder::first($container, 'entity_presave', $proceduralCall . 'workspaces_entity_presave');
+    HookOrder::last($container, 'entity_insert', $proceduralCall . 'workspaces_entity_insert');
   }
 
 }
