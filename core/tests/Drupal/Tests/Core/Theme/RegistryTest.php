@@ -155,10 +155,11 @@ class RegistryTest extends UnitTestCase {
     // Include the module and theme files so that hook_theme can be called.
     include_once $this->root . '/core/modules/system/tests/modules/theme_test/theme_test.module';
     include_once $this->root . '/core/tests/fixtures/test_stable/test_stable.theme';
+    $testThemeHook = \Drupal::moduleHandler()->invoke('theme_test', 'theme', [NULL, NULL, NULL, NULL]);
     $this->moduleHandler->expects($this->atLeastOnce())
       ->method('invoke')
       ->with('theme_test', 'theme')
-      ->willReturn(theme_test_theme(NULL, NULL, NULL, NULL));
+      ->willReturn($testThemeHook);
     $this->moduleHandler->expects($this->atLeastOnce())
       ->method('invokeAllWith')
       ->with('theme')

@@ -57,7 +57,7 @@ class EntityViewAlterTest extends KernelTestBase {
     $request->setSession(new Session(new MockArraySessionStorage()));
     \Drupal::requestStack()->push($request);
     // Assert the contextual links are removed.
-    layout_builder_entity_view_alter($build, $entity, $display);
+    \Drupal::moduleHandler()->invoke('layout_builder', 'entity_view_alter', [$build, $entity, $display]);
     $this->assertArrayNotHasKey('#contextual_links', $build);
   }
 

@@ -106,7 +106,7 @@ class DirectoryTest extends FileTestBase {
     // Remove .htaccess file again to test that it is re-created by a cron run.
     @$file_system->unlink($default_scheme . '://.htaccess');
     $this->assertFileDoesNotExist($default_scheme . '://.htaccess');
-    system_cron();
+    \Drupal::moduleHandler()->invoke('system', 'cron');
     $this->assertFileExists($default_scheme . '://.htaccess');
 
     // Verify contents of .htaccess file.
