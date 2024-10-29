@@ -681,7 +681,7 @@ abstract class PluginBase extends ComponentPluginBase implements ContainerFactor
    * @return string
    *   The XSS sanitized text.
    */
-  protected static function sanitizeTextContent(string $text) {
+  protected static function sanitizeTextContent(string $text): string {
     return Xss::filterAdmin($text, ['video', 'source', 'track', 'iframe']);
   }
 
