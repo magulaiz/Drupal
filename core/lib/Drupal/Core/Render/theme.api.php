@@ -1389,7 +1389,7 @@ function hook_template_preprocess_default_variables_alter(&$variables) {
  * @see https://developer.mozilla.org/en-US/docs/Web/HTML/Element/script/type/importmap
  * @see \Drupal\Core\Asset\ImportMapManagerInterface
  */
-function hook_importmaps_alter(array &$import_maps, string $extension): void {
+function hook_importmap_alter(array &$import_maps, string $extension): void {
   if ($extension !== 'react') {
     return;
   }
