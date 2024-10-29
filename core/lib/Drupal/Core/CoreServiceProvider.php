@@ -9,6 +9,7 @@ use Drupal\Core\DependencyInjection\Compiler\BackendCompilerPass;
 use Drupal\Core\DependencyInjection\Compiler\CorsCompilerPass;
 use Drupal\Core\DependencyInjection\Compiler\DeprecatedServicePass;
 use Drupal\Core\DependencyInjection\Compiler\DevelopmentSettingsPass;
+use Drupal\Core\Hook\HookCollectorPass;
 use Drupal\Core\DependencyInjection\Compiler\LoggerAwarePass;
 use Drupal\Core\DependencyInjection\Compiler\ModifyServiceDefinitionsPass;
 use Drupal\Core\DependencyInjection\Compiler\ProxyServicesPass;
@@ -24,6 +25,7 @@ use Drupal\Core\DependencyInjection\Compiler\TwigExtensionPass;
 use Drupal\Core\DependencyInjection\ContainerBuilder;
 use Drupal\Core\DependencyInjection\ServiceModifierInterface;
 use Drupal\Core\DependencyInjection\ServiceProviderInterface;
+use Drupal\Core\Extension\ModuleUninstallValidatorInterface;
 use Drupal\Core\Plugin\PluginManagerPass;
 use Drupal\Core\Queue\QueueFactoryInterface;
 use Drupal\Core\Render\MainContent\MainContentRenderersPass;
@@ -60,9 +62,11 @@ class CoreServiceProvider implements ServiceProviderInterface, ServiceModifierIn
         ->addTag('stream_wrapper', ['scheme' => 'private']);
     }
 
+    $container->addCompilerPass(new HookCollectorPass());
     // Add the compiler pass that lets service providers modify existing
-    // service definitions. This pass must come first so that later
-    // list-building passes are operating on the post-alter services list.
+    // service definitions. This pass must come before all passes operating on
+    // services so that later list-building passes are operating on the
+    // post-alter services list.
     $container->addCompilerPass(new ModifyServiceDefinitionsPass());
 
     $container->addCompilerPass(new DevelopmentSettingsPass());
@@ -113,6 +117,9 @@ class CoreServiceProvider implements ServiceProviderInterface, ServiceModifierIn
 
     $container->registerForAutoconfiguration(QueueFactoryInterface::class)
       ->addTag('queue_factory');
+
+    $container->registerForAutoconfiguration(ModuleUninstallValidatorInterface::class)
+      ->addTag('module_install.uninstall_validator');
   }
 
   /**

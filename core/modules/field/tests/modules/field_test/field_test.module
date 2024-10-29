@@ -12,6 +12,8 @@
  * test helper functions
  */
 
+declare(strict_types=1);
+
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Entity\Query\QueryInterface;
 use Drupal\Core\Form\FormStateInterface;
@@ -52,7 +54,7 @@ require_once __DIR__ . '/field_test.field.inc';
  *
  *   // make sure hook_field_storage_config_create() is invoked correctly
  *   assertEquals(1, count($mem['field_test_field_storage_config_create']));
- *   assertEquals(array($field), $mem['field_test_field_storage_config_create'][0]);
+ *   assertEquals([$field], $mem['field_test_field_storage_config_create'][0]);
  * @endcode
  *
  * @param $key

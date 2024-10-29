@@ -152,7 +152,7 @@ class WorkspaceAssociation implements WorkspaceAssociationInterface, EventSubscr
   /**
    * {@inheritdoc}
    */
-  public function getTrackedEntitiesForListing($workspace_id, int $pager_id = NULL, int|false $limit = 50): array {
+  public function getTrackedEntitiesForListing($workspace_id, ?int $pager_id = NULL, int|false $limit = 50): array {
     $query = $this->database->select(static::TABLE)
       ->extend(PagerSelectExtender::class)
       ->limit($limit);
@@ -391,7 +391,12 @@ class WorkspaceAssociation implements WorkspaceAssociationInterface, EventSubscr
    *   The workspace publish event.
    */
   public function onPostPublish(WorkspacePublishEvent $event): void {
-    $this->deleteAssociations($event->getWorkspace()->id());
+    // Cleanup associations for the published workspace as well as its
+    // descendants.
+    $affected_workspaces = $this->workspaceRepository->getDescendantsAndSelf($event->getWorkspace()->id());
+    foreach ($affected_workspaces as $workspace_id) {
+      $this->deleteAssociations($workspace_id);
+    }
   }
 
 }

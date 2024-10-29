@@ -59,11 +59,10 @@ class NavigationBlockUiTest extends WebDriverTestBase {
     $this->drupalPlaceBlock('page_title_block', ['id' => 'title']);
     // Create an administrative user.
     $this->adminUser = $this->drupalCreateUser([
-      'administer navigation_block',
+      'configure navigation layout',
       'access administration pages',
       'access navigation',
       'access shortcuts',
-      'configure any layout',
       'access contextual links',
       'administer shortcuts',
       'administer site configuration',
@@ -166,7 +165,7 @@ class NavigationBlockUiTest extends WebDriverTestBase {
    * @todo move this from into a trait from
    *   \Drupal\Tests\layout_builder\FunctionalJavascript\LayoutBuilderTest
    */
-  private function openAddBlockForm($block_title) {
+  private function openAddBlockForm($block_title): void {
     $this->assertSession()->linkExists('Add block');
     $this->clickLink('Add block');
     $this->assertSession()->assertWaitOnAjaxRequest();

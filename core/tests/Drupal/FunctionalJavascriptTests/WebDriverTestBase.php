@@ -12,6 +12,10 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 /**
  * Runs a browser test using a driver that supports JavaScript.
  *
+ * Module tests extending WebDriverTestBase must exist in the
+ * Drupal\Tests\your_module\FunctionalJavascript namespace and live in the
+ * modules/your_module/tests/src/FunctionalJavascript directory.
+ *
  * Base class for testing browser interaction implemented in JavaScript.
  *
  * @ingroup testing
@@ -142,11 +146,6 @@ abstract class WebDriverTestBase extends BrowserTestBase {
       $json = getenv('MINK_DRIVER_ARGS_WEBDRIVER') ?: parent::getMinkDriverArgs();
       if (!($json === FALSE || $json === '')) {
         $args = json_decode($json, TRUE);
-        if (isset($args[1]['chromeOptions'])) {
-          @trigger_error('The "chromeOptions" array key is deprecated in drupal:10.3.0 and is removed from drupal:11.0.0. Use "goog:chromeOptions instead. See https://www.drupal.org/node/3422624', E_USER_DEPRECATED);
-          $args[1]['goog:chromeOptions'] = $args[1]['chromeOptions'];
-          unset($args[1]['chromeOptions']);
-        }
         if (isset($args[0]) && $args[0] === 'chrome' && !isset($args[1]['goog:chromeOptions']['w3c'])) {
           // @todo https://www.drupal.org/project/drupal/issues/3421202
           //   Deprecate defaulting behavior and require w3c to be set.
