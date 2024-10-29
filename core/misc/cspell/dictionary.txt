@@ -271,7 +271,6 @@ iframeupload
 imagecache
 imagetextalternative
 importmap
-importmaps
 indexname
 inited
 inlines
