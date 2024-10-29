@@ -16,14 +16,15 @@ class SettingsCacheContext implements CacheContextInterface {
   /**
    * {@inheritdoc}
    */
-  public static function getLabel() {
+  public static function getLabel(): TranslatableMarkup|string
+  {
     return t('Settings');
   }
 
   /**
    * {@inheritdoc}
    */
-  public function getContext() {
+  public function getContext(): string {
     $settings = Settings::getAll();
     return Crypt::hmacBase64(serialize($settings), Settings::getHashSalt());
   }
@@ -31,7 +32,7 @@ class SettingsCacheContext implements CacheContextInterface {
   /**
    * {@inheritdoc}
    */
-  public function getCacheableMetadata() {
+  public function getCacheableMetadata(): CacheableMetadata {
     return new CacheableMetadata();
   }
 
