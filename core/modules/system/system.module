@@ -11,7 +11,7 @@ use Drupal\Component\Render\PlainTextOutput;
 use Drupal\Component\Serialization\Json;
 use Drupal\Component\Utility\UrlHelper;
 use Drupal\Core\Asset\AttachedAssetsInterface;
-use Drupal\Core\Asset\ImportMapsManagerInterface;
+use Drupal\Core\Asset\ImportMapManagerInterface;
 use Drupal\Core\Block\BlockPluginInterface;
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Database\Query\AlterableInterface;
@@ -1149,7 +1149,7 @@ function system_page_top(array &$page_top) {
       }
     }
   }
-  $map = \Drupal::service(ImportMapsManagerInterface::class)->getImportMapForTheme(\Drupal::theme()->getActiveTheme()->getName());
+  $map = \Drupal::service(ImportMapManagerInterface::class)->getImportMapForTheme(\Drupal::theme()->getActiveTheme()->getName());
   if (\array_key_exists('imports', $map) && \count($map['imports']) > 0) {
     $page_top['importmaps'] = [
       '#type' => 'html_tag',

@@ -1886,6 +1886,6 @@ services:
     tags:
       - { name: twig.loader, priority: 5 }
   Drupal\Core\EventSubscriber\CsrfExceptionSubscriber: ~
-  Drupal\Core\Asset\ImportMapsManagerInterface:
-    class: Drupal\Core\Asset\ImportMapsManager
+  Drupal\Core\Asset\ImportMapManagerInterface:
+    class: Drupal\Core\Asset\ImportMapManager
     autowire: true
