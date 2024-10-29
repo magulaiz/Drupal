@@ -15,7 +15,7 @@ trait StorageMapperDelegatorTrait {
    * @return string
    *   The field item class.
    */
-  abstract protected function getFieldItemClass();
+  abstract protected function getFieldItemClass(): string;
 
   /**
    * Map columns on load.
