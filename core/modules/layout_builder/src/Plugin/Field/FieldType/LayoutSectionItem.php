@@ -100,7 +100,7 @@ class LayoutSectionItem extends FieldItemBase implements FieldItemStorageMapperI
   public static function mapColumnsOnLoad(array $columns): array {
     // @todo Remove the array check/BC layer in Drupal 12.
     // @see https://www.drupal.org/project/drupal/issues/3484469
-    if (is_array($columns['section'])) {
+    if (!empty($columns['section']) && is_array($columns['section'])) {
       $columns['section'] = Section::fromArray($columns['section']);
     }
     return $columns;
