@@ -18563,18 +18563,6 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/content_translation/src/ContentTranslationServiceProvider.php',
 ];
 $ignoreErrors[] = [
-	// identifier: arguments.count
-	'message' => '#^Static method Drupal\\\\Core\\\\Hook\\\\HookOrder\\:\\:first\\(\\) invoked with 3 parameters, 4 required\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/content_translation/src/ContentTranslationServiceProvider.php',
-];
-$ignoreErrors[] = [
-	// identifier: arguments.count
-	'message' => '#^Static method Drupal\\\\Core\\\\Hook\\\\HookOrder\\:\\:last\\(\\) invoked with 3 parameters, 4 required\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/content_translation/src/ContentTranslationServiceProvider.php',
-];
-$ignoreErrors[] = [
 	// identifier: missingType.return
 	'message' => '#^Method Drupal\\\\content_translation\\\\Controller\\\\ContentTranslationController\\:\\:prepareTranslation\\(\\) has no return type specified\\.$#',
 	'count' => 1,
@@ -27443,12 +27431,6 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/layout_builder/src/LayoutBuilderServiceProvider.php',
 ];
 $ignoreErrors[] = [
-	// identifier: arguments.count
-	'message' => '#^Static method Drupal\\\\Core\\\\Hook\\\\HookOrder\\:\\:last\\(\\) invoked with 3 parameters, 4 required\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/layout_builder/src/LayoutBuilderServiceProvider.php',
-];
-$ignoreErrors[] = [
 	// identifier: missingType.return
 	'message' => '#^Method Drupal\\\\layout_builder\\\\LayoutTempstoreRepository\\:\\:delete\\(\\) has no return type specified\\.$#',
 	'count' => 1,
@@ -34317,12 +34299,6 @@ $ignoreErrors[] = [
 $ignoreErrors[] = [
 	// identifier: missingType.return
 	'message' => '#^Method Drupal\\\\navigation\\\\NavigationServiceProvider\\:\\:alter\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/navigation/src/NavigationServiceProvider.php',
-];
-$ignoreErrors[] = [
-	// identifier: arguments.count
-	'message' => '#^Static method Drupal\\\\Core\\\\Hook\\\\HookOrder\\:\\:last\\(\\) invoked with 3 parameters, 4 required\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/navigation/src/NavigationServiceProvider.php',
 ];
@@ -41697,12 +41673,6 @@ $ignoreErrors[] = [
 $ignoreErrors[] = [
 	// identifier: missingType.return
 	'message' => '#^Method Drupal\\\\common_test\\\\CommonTestServiceProvider\\:\\:alter\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/system/tests/modules/common_test/src/CommonTestServiceProvider.php',
-];
-$ignoreErrors[] = [
-	// identifier: arguments.count
-	'message' => '#^Static method Drupal\\\\Core\\\\Hook\\\\HookOrder\\:\\:last\\(\\) invoked with 3 parameters, 4 required\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/system/tests/modules/common_test/src/CommonTestServiceProvider.php',
 ];
@@ -62994,18 +62964,6 @@ $ignoreErrors[] = [
 $ignoreErrors[] = [
 	// identifier: missingType.return
 	'message' => '#^Method Drupal\\\\workspaces\\\\WorkspacesServiceProvider\\:\\:alter\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/workspaces/src/WorkspacesServiceProvider.php',
-];
-$ignoreErrors[] = [
-	// identifier: arguments.count
-	'message' => '#^Static method Drupal\\\\Core\\\\Hook\\\\HookOrder\\:\\:first\\(\\) invoked with 3 parameters, 4 required\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/workspaces/src/WorkspacesServiceProvider.php',
-];
-$ignoreErrors[] = [
-	// identifier: arguments.count
-	'message' => '#^Static method Drupal\\\\Core\\\\Hook\\\\HookOrder\\:\\:last\\(\\) invoked with 3 parameters, 4 required\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/workspaces/src/WorkspacesServiceProvider.php',
 ];
