@@ -19,8 +19,6 @@ class ConditionPluginCollection extends DefaultLazyPluginCollection {
 
   /**
    * {@inheritdoc}
-   *
-   * @return \Drupal\Core\Condition\ConditionInterface
    */
   public function &get($instance_id) {
     return parent::get($instance_id);

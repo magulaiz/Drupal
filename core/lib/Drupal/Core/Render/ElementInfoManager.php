@@ -134,8 +134,6 @@ class ElementInfoManager extends DefaultPluginManager implements ElementInfoMana
 
   /**
    * {@inheritdoc}
-   *
-   * @return \Drupal\Core\Render\Element\ElementInterface
    */
   public function createInstance($plugin_id, array $configuration = []) {
     return parent::createInstance($plugin_id, $configuration);

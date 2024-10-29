@@ -74,6 +74,9 @@ abstract class LazyPluginCollection implements \IteratorAggregate, \Countable {
    *
    * @param string $instance_id
    *   The ID of the plugin instance being retrieved.
+   *
+   * @return mixed
+   *   The instantiated plugin instance.
    */
   public function &get($instance_id) {
     if (!isset($this->pluginInstances[$instance_id])) {

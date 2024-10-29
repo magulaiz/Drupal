@@ -622,8 +622,6 @@ abstract class Database {
    *   Internal param to denote that the method is being called by
    *   _drupal_shutdown_function().
    *
-   * @return void
-   *
    * @internal
    *   This method exists only to work around a bug caused by Drupal incorrectly
    *   relying on object destruction order to commit transactions. Xdebug 3.3.0

@@ -136,15 +136,11 @@ interface EntityTypeManagerInterface extends PluginManagerInterface, CachedDisco
 
   /**
    * {@inheritdoc}
-   *
-   * @return \Drupal\Core\Entity\EntityTypeInterface|null
    */
   public function getDefinition($entity_type_id, $exception_on_invalid = TRUE);
 
   /**
    * {@inheritdoc}
-   *
-   * @return \Drupal\Core\Entity\EntityTypeInterface[]
    */
   public function getDefinitions();
 
