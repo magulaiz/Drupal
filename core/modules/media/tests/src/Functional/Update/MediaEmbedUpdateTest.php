@@ -51,8 +51,10 @@ class MediaEmbedUpdateTest extends UpdatePathTestBase {
     // Assert that the new setting is not present.
     $this->assertArrayNotHasKey('show_contextual_links', $existing_full_html_filters_media_embed_settings);
     $existing_basic_html = FilterFormat::load('basic_html');
+    $existing_basic_html_filters = $existing_basic_html->get('filters');
+    $existing_basic_html_filters_media_embed_settings = $existing_basic_html_filters['media_embed']['settings'];
     // Assert that the new setting is not present.
-    $this->assertArrayNotHasKey('show_contextual_links', $existing_basic_html->get('filters')['media_embed']['settings']);
+    $this->assertArrayNotHasKey('show_contextual_links', $existing_basic_html_filters_media_embed_settings);
 
     // Run the update function.
     $this->runUpdates();
@@ -62,8 +64,8 @@ class MediaEmbedUpdateTest extends UpdatePathTestBase {
     $updated_full_html = FilterFormat::load('full_html');
     $updated_basic_html = FilterFormat::load('basic_html');
     // Assert that the new setting is added and set to FALSE.
-    $this->assertArrayHasKey('show_contextual_links', $updated_format->get('filters')['media_embed']['settings'], 'The show_contextual_links setting has been added.');
-    $this->assertFalse($updated_format->get('filters')['media_embed']['settings']['show_contextual_links'], 'The show_contextual_links setting is set to FALSE by default.');
+    $this->assertArrayHasKey('show_contextual_links', $updated_media_embed_settings, 'The show_contextual_links setting has been added.');
+    $this->assertFalse($updated_media_embed_settings['show_contextual_links'], 'The show_contextual_links setting is set to FALSE by default.');
     // Assert that the new setting is added to the full_html format and set to FALSE after running the update.
     $this->assertArrayHasKey('show_contextual_links', $updated_full_html->get('filters')['media_embed']['settings'], 'The show_contextual_links setting has been added.');
     $this->assertFalse($updated_full_html->get('filters')['media_embed']['settings']['show_contextual_links'], 'The show_contextual_links setting is set to FALSE by default.');
