@@ -1526,7 +1526,13 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
       return json_decode($value, TRUE, flags: JSON_THROW_ON_ERROR);
     }
     if (!empty($column_attributes['serialize'])) {
-      return unserialize($value, ['allowed_classes' => FALSE]);
+      $unserialized = unserialize($value, ['allowed_classes' => FALSE]);
+      // @todo Remove this BC layer in Drupal 12.
+      if ($unserialized instanceof \__PHP_Incomplete_Class) {
+        @trigger_error('Unserializing PHP objects from storage is deprecated in 11.2.0 and forbidden in drupal:12.0.0. Consider using JSON or plain PHP array serialized data and hydrating the target object in code. See https://www.drupal.org/node/3484452', E_USER_DEPRECATED);
+        $unserialized = unserialize($value);
+      }
+      return $unserialized;
     }
     return $value;
   }
