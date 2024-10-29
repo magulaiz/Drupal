@@ -16,8 +16,7 @@ class SettingsCacheContext implements CacheContextInterface {
   /**
    * {@inheritdoc}
    */
-  public static function getLabel(): TranslatableMarkup|string
-  {
+  public static function getLabel(): string {
     return t('Settings');
   }
 
