@@ -52,6 +52,8 @@ Visit the [Support page][support] or browse [over a thousand Drupal
 providers][service providers] offering design, strategy, development, and
 hosting services.
 
+Trigger tests.
+
 ## Legal matters
 
 Know your rights when using Drupal by reading Drupal core's
