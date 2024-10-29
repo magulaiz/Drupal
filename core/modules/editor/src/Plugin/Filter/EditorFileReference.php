@@ -25,7 +25,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
   description: new TranslatableMarkup("Ensures that the latest versions of images uploaded via a Text Editor are displayed, along with their dimensions."),
   type: FilterInterface::TYPE_TRANSFORM_REVERSIBLE
 )]
-final class EditorFileReference extends FilterBase implements ContainerFactoryPluginInterface {
+class EditorFileReference extends FilterBase implements ContainerFactoryPluginInterface {
 
   /**
    * The entity repository.
@@ -65,7 +65,7 @@ final class EditorFileReference extends FilterBase implements ContainerFactoryPl
    * {@inheritdoc}
    */
   public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
-    return new self(
+    return new static(
       $configuration,
       $plugin_id,
       $plugin_definition,
