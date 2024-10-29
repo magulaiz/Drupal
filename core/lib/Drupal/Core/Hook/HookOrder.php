@@ -18,15 +18,13 @@ class HookOrder {
    *   The container builder.
    * @param string $hook
    *   The name of the hook.
-   * @param string $class
-   *   Class containing the hook implementation which should be changed.
-   * @param string $method
-   *   Method which should be changed.
+   * @param string $class_and_method
+   *   Class and method separated by :: containing the hook implementation.
    *
    * @return void
    */
-  public static function first(ContainerBuilder $container, string $hook, string $class, string $method): void {
-    self::changePriority($container, $hook, "$class::$method", TRUE);
+  public static function first(ContainerBuilder $container, string $hook, string $class_and_method): void {
+    self::changePriority($container, $hook, $class_and_method, TRUE);
   }
 
   /**
@@ -36,15 +34,13 @@ class HookOrder {
    *   The container builder.
    * @param string $hook
    *   The name of the hook.
-   * @param string $class
-   *   Class containing the hook implementation which should be changed.
-   * @param string $method
-   *   Method which should be changed.
+   * @param string $class_and_method
+   *   Class and method separated by :: containing the hook implementation.
    *
    * @return void
    */
-  public static function last(ContainerBuilder $container, string $hook, string $class, string $method): void {
-    self::changePriority($container, $hook, "$class::$method", FALSE);
+  public static function last(ContainerBuilder $container, string $hook, string $class_and_method): void {
+    self::changePriority($container, $hook, $class_and_method, FALSE);
   }
 
   /**
@@ -58,18 +54,17 @@ class HookOrder {
    *   The container builder.
    * @param string $hook
    *   The name of the hook.
-   * @param string $class
-   *   Class containing the hook implementation which should be changed.
-   * @param string $method
-   *   Method which should be changed.
+   * @param string $class_and_method
+   *   Class and method separated by :: containing the hook implementation which
+   *   should be changed.
    * @param string ...$others
    *   A list specifying the other implementations this hook should fire
    *   before. Every list member is a class and method separated by ::.
    *
    * @return void
    */
-  public static function before(ContainerBuilder $container, string $hook, string $class, string $method, string ...$others): void {
-    self::changePriority($container, $hook, "$class::$method", TRUE, $others);
+  public static function before(ContainerBuilder $container, string $hook, string $class_and_method, string ...$others): void {
+    self::changePriority($container, $hook, $class_and_method, TRUE, array_flip($others));
   }
 
   /**
@@ -83,18 +78,17 @@ class HookOrder {
    *   The container builder.
    * @param string $hook
    *   The name of the hook.
-   * @param string $class
-   *   Class containing the hook implementation which should be changed.
-   * @param string $method
-   *   Method which should be changed.
+   * @param string $class_and_method
+   *   Class and method separated by :: containing the hook implementation which
+   *   should be changed.
    * @param string ...$others
    *   A list specifying the other implementations this hook should fire
    *   before. Every list member is a class and method separated by ::.
    *
    * @return void
    */
-  public static function after(ContainerBuilder $container, string $hook, string $class, string $method, string ...$others): void {
-    self::changePriority($container, $hook, "$class::$method", FALSE, $others);
+  public static function after(ContainerBuilder $container, string $hook, string $class_and_method, string ...$others): void {
+    self::changePriority($container, $hook, $class_and_method, FALSE, array_flip($others));
   }
 
   /**
@@ -111,19 +105,13 @@ class HookOrder {
    *   TRUE for before/first, FALSE for after/last. Larger priority listeners
    *   fire first.
    * @param array|null $others
-   *   Other hook implementations to compare to, if any. The array is an
-   *   alternating list of class and method names.
+   *   Other hook implementations to compare to, if any. The array is keyed by
+   *   string containing a class and method separated by ::, the value is not
+   *   used.
    *
    * @return void
    */
   protected static function changePriority(ContainerBuilder $container, string $hook, string $class_and_method, bool $should_be_larger, ?array $others = NULL): void {
-    if (isset($others)) {
-      $mapped = [];
-      for ($i = 0; $i < count($others); $i += 2) {
-        $mapped[$others[$i] . '::' . $others[$i + 1]] = TRUE;
-      }
-      $others = $mapped;
-    }
     $event = "drupal_hook.$hook";
     foreach ($container->findTaggedServiceIds('kernel.event_listener') as $id => $attributes) {
       foreach ($attributes as $key => $tag) {
