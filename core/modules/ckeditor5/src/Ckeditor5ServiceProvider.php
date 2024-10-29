@@ -15,7 +15,8 @@ class Ckeditor5ServiceProvider extends ServiceProviderBase {
     HookOrder::after($container, 'form_filter_format_form_alter',
       'Drupal\\ckeditor5\\Hook\\Ckeditor5Hooks::formFilterFormatFormAlter',
       'Drupal\\editor\\Hook\\EditorHooks::formFilterFormatFormAlter',
-      'Drupal\\media\\Hook\\MediaHooks::formFilterFormatFormAlter');
+      'Drupal\\media\\Hook\\MediaHooks::formFilterFormatEditFormAlter',
+      'Drupal\\media\\Hook\\MediaHooks::formFilterFormatAddFormAlter');
   }
 
 }
