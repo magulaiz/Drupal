@@ -8,6 +8,7 @@ use Drupal\comment\Entity\CommentType;
 use Drupal\comment\Tests\CommentTestTrait;
 use Drupal\KernelTests\Core\Entity\EntityKernelTestBase;
 use Drupal\Tests\field\Traits\EntityReferenceFieldCreationTrait;
+use Drupal\user\UserInterface;
 
 /**
  * Performs kernel tests on comment_uri method.
@@ -28,7 +29,7 @@ class CommentUriTest extends EntityKernelTestBase {
    *
    * @var \Drupal\user\UserInterface
    */
-  protected $commentUser;
+  protected UserInterface $commentUser;
 
   /**
    * {@inheritdoc}
