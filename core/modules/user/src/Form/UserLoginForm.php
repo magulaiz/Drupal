@@ -103,7 +103,8 @@ class UserLoginForm extends FormBase implements WorkspaceSafeFormInterface {
       $container->get('entity_type.manager')->getStorage('user'),
       $container->get('user.auth'),
       $container->get('renderer'),
-      $container->get('bare_html_page_renderer')
+      $container->get('bare_html_page_renderer'),
+      $container->get('email.validator')
     );
   }
 
