@@ -345,8 +345,8 @@ body {
   }
 }
 
-[data-drupal-tooltip]:hover + .admin-toolbar__tooltip,
-[data-drupal-tooltip]:focus + .admin-toolbar__tooltip {
+.admin-toolbar [data-drupal-tooltip]:hover + .admin-toolbar__tooltip,
+.admin-toolbar [data-drupal-tooltip]:focus + .admin-toolbar__tooltip {
   [data-admin-toolbar="expanded"] & {
     display: none;
   }

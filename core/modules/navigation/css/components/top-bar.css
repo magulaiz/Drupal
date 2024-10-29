@@ -46,6 +46,16 @@
     margin-block-start: var(--admin-toolbar-top-bar-height);
   }
 }
+.top-bar__actions {
+  display: flex;
+  gap: 0.5rem;
+}
+@media (min-width: 64rem) {
+  .top-bar__actions {
+    justify-content: end;
+    gap: var(--admin-toolbar-space-4);
+  }
+}
 .top-bar__burger {
   align-self: start;
 }
@@ -62,6 +72,13 @@
   gap: var(--admin-toolbar-space-16);
   width: 100%;
 }
+@media (min-width: 64rem) {
+  .top-bar__content {
+    grid-template-columns: auto 1fr auto;
+    gap: var(--admin-toolbar-space-24);
+    grid-auto-flow: row;
+  }
+}
 .top-bar__controls {
   display: none;
 }
@@ -70,4 +87,17 @@
     display: flex;
     gap: var(--admin-toolbar-space-8);
   }
+}
+.top-bar__path {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+  justify-content: start;
+}
+.top-bar__title {
+  margin-block: 0;
+}
+.top-bar__tools {
+  display: flex;
+  gap: 0.5rem;
 }
