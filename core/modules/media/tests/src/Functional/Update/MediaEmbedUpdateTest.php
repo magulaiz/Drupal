@@ -10,7 +10,7 @@ use Drupal\filter\Entity\FilterFormat;
 /**
  * Tests update functions for the Media module.
  *
- * @group chris
+ * @group media
  */
 class MediaEmbedUpdateTest extends UpdatePathTestBase {
 
@@ -48,18 +48,26 @@ class MediaEmbedUpdateTest extends UpdatePathTestBase {
     $existing_full_html = FilterFormat::load('full_html');
     // Assert that the new setting is not present.
     $this->assertArrayNotHasKey('show_contextual_links', $existing_full_html->get('filters')['media_embed']['settings']);
+    $existing_basic_html = FilterFormat::load('basic_html');
+    // Assert that the new setting is not present.
+    $this->assertArrayNotHasKey('show_contextual_links', $existing_basic_html->get('filters')['media_embed']['settings']);
+
     // Run the update function.
     $this->runUpdates();
     // Reload the filter format configuration after running updates.
     $updated_format = FilterFormat::load('test_format');
     $updated_media_embed_settings = $updated_format->get('filters')['media_embed']['settings'];
     $updated_full_html = FilterFormat::load('full_html');
+    $updated_basic_html = FilterFormat::load('basic_html');
     // Assert that the new setting is added and set to FALSE.
     $this->assertArrayHasKey('show_contextual_links', $updated_format->get('filters')['media_embed']['settings'], 'The show_contextual_links setting has been added.');
     $this->assertFalse($updated_format->get('filters')['media_embed']['settings']['show_contextual_links'], 'The show_contextual_links setting is set to FALSE by default.');
     // Assert that the new setting is added to the full_html format and set to FALSE after running the update.
     $this->assertArrayHasKey('show_contextual_links', $updated_full_html->get('filters')['media_embed']['settings'], 'The show_contextual_links setting has been added.');
     $this->assertFalse($updated_full_html->get('filters')['media_embed']['settings']['show_contextual_links'], 'The show_contextual_links setting is set to FALSE by default.');
+    // Assert that the new setting is added to the basic_html format and set to FALSE after running the update.
+    $this->assertArrayHasKey('show_contextual_links', $updated_basic_html->get('filters')['media_embed']['settings'], 'The show_contextual_links setting has been added.');
+    $this->assertFalse($updated_basic_html->get('filters')['media_embed']['settings']['show_contextual_links'], 'The show_contextual_links setting is set to FALSE by default.');
     // Assert that the new setting is added and set to FALSE.
     $this->assertArrayHasKey('show_contextual_links', $updated_media_embed_settings, 'The show_contextual_links setting has been added.');
     $this->assertFalse($updated_media_embed_settings['show_contextual_links'], 'The show_contextual_links setting is set to FALSE by default.');
