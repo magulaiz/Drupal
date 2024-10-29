@@ -17,7 +17,6 @@ use Drupal\Component\Gettext\PoItem;
 use Drupal\Core\Language\LanguageInterface;
 use Drupal\Core\Routing\StackedRouteMatchInterface;
 use Drupal\Core\Asset\AttachedAssetsInterface;
-use Drupal\Component\Utility\UrlHelper;
 use Drupal\Core\Url;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Hook\Attribute\Hook;

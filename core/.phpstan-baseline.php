@@ -40646,12 +40646,6 @@ $ignoreErrors[] = [
 ];
 $ignoreErrors[] = [
 	// identifier: missingType.return
-	'message' => '#^Method Drupal\\\\system\\\\Hook\\\\SystemHooks\\:\\:theme\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/system/src/Hook/SystemHooks.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
 	'message' => '#^Method Drupal\\\\system\\\\Hook\\\\SystemHooks\\:\\:themeRegistryAlter\\(\\) has no return type specified\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/system/src/Hook/SystemHooks.php',
@@ -72127,6 +72121,18 @@ $ignoreErrors[] = [
 	'message' => '#^Function starterkit_theme_preprocess_image_widget\\(\\) has no return type specified\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/themes/starterkit_theme/starterkit_theme.theme',
+];
+$ignoreErrors[] = [
+  // identifier: missingType.return
+  'message' => '#^Function system_theme\\(\\) has no return type specified\\.$#',
+  'count' => 1,
+  'path' => __DIR__ . '/modules/system/system.module',
+];
+$ignoreErrors[] = [
+  // identifier: missingType.return
+  'message' => '#^Function system_page_attachments\\(\\) has no return type specified\\.$#',
+  'count' => 1,
+  'path' => __DIR__ . '/modules/system/system.module',
 ];
 
 return ['parameters' => ['ignoreErrors' => $ignoreErrors]];
