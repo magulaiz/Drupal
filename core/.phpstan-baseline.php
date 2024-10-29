@@ -13644,6 +13644,12 @@ $ignoreErrors[] = [
 ];
 $ignoreErrors[] = [
 	// identifier: missingType.return
+	'message' => '#^Function ckeditor5_module_implements_alter\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/ckeditor5/ckeditor5.module',
+];
+$ignoreErrors[] = [
+	// identifier: missingType.return
 	'message' => '#^Function ckeditor5_removed_post_updates\\(\\) has no return type specified\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/ckeditor5/ckeditor5.post_update.php',
@@ -13653,12 +13659,6 @@ $ignoreErrors[] = [
 	'message' => '#^Method Drupal\\\\ckeditor5\\\\Annotation\\\\CKEditor5Plugin\\:\\:setClass\\(\\) has no return type specified\\.$#',
 	'count' => 1,
 	'path' => __DIR__ . '/modules/ckeditor5/src/Annotation/CKEditor5Plugin.php',
-];
-$ignoreErrors[] = [
-	// identifier: missingType.return
-	'message' => '#^Method Drupal\\\\ckeditor5\\\\Ckeditor5ServiceProvider\\:\\:alter\\(\\) has no return type specified\\.$#',
-	'count' => 1,
-	'path' => __DIR__ . '/modules/ckeditor5/src/Ckeditor5ServiceProvider.php',
 ];
 $ignoreErrors[] = [
 	// identifier: missingType.return
@@ -40621,10 +40621,10 @@ $ignoreErrors[] = [
 	'path' => __DIR__ . '/modules/system/src/Hook/SystemHooks.php',
 ];
 $ignoreErrors[] = [
-        // identifier: missingType.return
-        'message' => '#^Method Drupal\\\\system\\\\Hook\\\\SystemHooks\\:\\:pageAttachments\\(\\) has no return type specified\\.$#',
-        'count' => 1,
-        'path' => __DIR__ . '/modules/system/src/Hook/SystemHooks.php',
+	// identifier: missingType.return
+	'message' => '#^Method Drupal\\\\system\\\\Hook\\\\SystemHooks\\:\\:pageAttachments\\(\\) has no return type specified\\.$#',
+	'count' => 1,
+	'path' => __DIR__ . '/modules/system/src/Hook/SystemHooks.php',
 ];
 $ignoreErrors[] = [
 	// identifier: missingType.return
