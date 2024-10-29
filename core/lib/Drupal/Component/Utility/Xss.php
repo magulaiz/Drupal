@@ -112,7 +112,7 @@ class Xss {
    * @param string $string
    *   The string to apply the filter to.
    * @param array $additional_tags
-   *   Additional tags that can be used inside the HTML.
+   *   Additional tags that can be used inside the HTML. Defaults to empty array.
    *
    * @return string
    *   The filtered string.
