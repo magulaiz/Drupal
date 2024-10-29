@@ -46,8 +46,10 @@ class MediaEmbedUpdateTest extends UpdatePathTestBase {
     $this->assertArrayHasKey('show_contextual_links', $new_format->get('filters')['media_embed']['settings']);
     // Get the umami format.
     $existing_full_html = FilterFormat::load('full_html');
+    $existing_full_html_filters = $existing_full_html->get('filters');
+    $existing_full_html_filters_media_embed_settings = $existing_full_html_filters['media_embed']['settings'];
     // Assert that the new setting is not present.
-    $this->assertArrayNotHasKey('show_contextual_links', $existing_full_html->get('filters')['media_embed']['settings']);
+    $this->assertArrayNotHasKey('show_contextual_links', $existing_full_html_filters_media_embed_settings);
     $existing_basic_html = FilterFormat::load('basic_html');
     // Assert that the new setting is not present.
     $this->assertArrayNotHasKey('show_contextual_links', $existing_basic_html->get('filters')['media_embed']['settings']);
