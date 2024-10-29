@@ -5,9 +5,10 @@ namespace Drupal\Core\Database;
 /**
  * Base Database exception handler class.
  *
- * This class handles exceptions thrown by the database layer. Database driver
- * implementation can provide an alternative implementation to support special
- * handling required by that database.
+ * This class handles exceptions thrown by the database layer of a PDO-based
+ * database connection. Database driver implementations can provide an
+ * alternative implementation to support special handling required by that
+ * database.
  */
 class ExceptionHandler {
 
@@ -25,10 +26,6 @@ class ExceptionHandler {
    * @throws \Drupal\Core\Database\DatabaseExceptionWrapper
    */
   public function handleStatementException(\Exception $exception, string $sql, array $options = []): void {
-    if (!($options['throw_exception'] ?? TRUE)) {
-      return;
-    }
-
     if ($exception instanceof \PDOException) {
       // Wrap the exception in another exception, because PHP does not allow
       // overriding Exception::getMessage(). Its message is the extra database
@@ -57,10 +54,6 @@ class ExceptionHandler {
    * @throws \Drupal\Core\Database\IntegrityConstraintViolationException
    */
   public function handleExecutionException(\Exception $exception, StatementInterface $statement, array $arguments = [], array $options = []): void {
-    if (!($options['throw_exception'] ?? TRUE)) {
-      return;
-    }
-
     if ($exception instanceof \PDOException) {
       // Wrap the exception in another exception, because PHP does not allow
       // overriding Exception::getMessage(). Its message is the extra database

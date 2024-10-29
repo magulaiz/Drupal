@@ -13,8 +13,10 @@ use Symfony\Component\Validator\ConstraintViolationList;
 use Symfony\Component\Validator\ConstraintViolationListInterface;
 
 /**
- * Configuration entity that contains widget options for all components of an
- * entity form in a given form mode.
+ * Configuration entity.
+ *
+ * Contains widget options for all components of an entity form in a given
+ * form mode.
  *
  * @ConfigEntityType(
  *   id = "entity_form_display",
@@ -33,6 +35,9 @@ use Symfony\Component\Validator\ConstraintViolationListInterface;
  *     "mode",
  *     "content",
  *     "hidden",
+ *   },
+ *   constraints = {
+ *     "ImmutableProperties" = {"id", "targetEntityType", "bundle", "mode"},
  *   }
  * )
  */
@@ -82,7 +87,11 @@ class EntityFormDisplay extends EntityDisplayBase implements EntityFormDisplayIn
     $bundle = $entity->bundle();
 
     // Allow modules to change the form mode.
-    \Drupal::moduleHandler()->alter('entity_form_mode', $form_mode, $entity);
+    \Drupal::moduleHandler()->alter(
+      [$entity_type . '_form_mode', 'entity_form_mode'],
+      $form_mode,
+      $entity
+    );
 
     // Check the existence and status of:
     // - the display for the form mode,
@@ -197,6 +206,11 @@ class EntityFormDisplay extends EntityDisplayBase implements EntityFormDisplayIn
     // Associate the cache tags for the form display.
     $this->renderer->addCacheableDependency($form, $this);
 
+    // The form might not have the correct cacheability metadata, so make it
+    // uncacheable by default.
+    // @todo Remove this in https://www.drupal.org/node/3395524.
+    $form['#cache']['max-age'] = 0;
+
     // Add a process callback so we can assign weights and hide extra fields.
     $form['#process'][] = [$this, 'processForm'];
   }
@@ -216,7 +230,7 @@ class EntityFormDisplay extends EntityDisplayBase implements EntityFormDisplayIn
 
     // Hide extra fields.
     $extra_fields = \Drupal::service('entity_field.manager')->getExtraFields($this->targetEntityType, $this->bundle);
-    $extra_fields = isset($extra_fields['form']) ? $extra_fields['form'] : [];
+    $extra_fields = $extra_fields['form'] ?? [];
     foreach ($extra_fields as $extra_field => $info) {
       if (!$this->getComponent($extra_field)) {
         $element[$extra_field]['#access'] = FALSE;

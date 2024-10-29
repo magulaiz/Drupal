@@ -5,6 +5,8 @@
  * Test module.
  */
 
+declare(strict_types=1);
+
 use Drupal\Core\Extension\Extension;
 
 /**
@@ -12,7 +14,7 @@ use Drupal\Core\Extension\Extension;
  */
 function theme_page_test_system_info_alter(&$info, Extension $file, $type) {
   // Make sure that all themes are visible on the Appearance form.
-  if ($type == 'theme') {
+  if ($type === 'theme') {
     unset($info['hidden']);
   }
 }

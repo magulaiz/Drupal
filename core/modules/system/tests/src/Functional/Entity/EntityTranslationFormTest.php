@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\system\Functional\Entity;
 
 use Drupal\Core\Language\LanguageInterface;
@@ -16,9 +18,7 @@ use Drupal\Tests\BrowserTestBase;
 class EntityTranslationFormTest extends BrowserTestBase {
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = ['entity_test', 'language', 'node'];
 
@@ -27,8 +27,14 @@ class EntityTranslationFormTest extends BrowserTestBase {
    */
   protected $defaultTheme = 'stark';
 
+  /**
+   * The test language codes.
+   */
   protected $langcodes;
 
+  /**
+   * {@inheritdoc}
+   */
   protected function setUp(): void {
     parent::setUp();
     // Enable translations for the test entity type.
@@ -49,7 +55,7 @@ class EntityTranslationFormTest extends BrowserTestBase {
   /**
    * Tests entity form language.
    */
-  public function testEntityFormLanguage() {
+  public function testEntityFormLanguage(): void {
     $this->drupalCreateContentType(['type' => 'page', 'name' => 'Basic page']);
 
     $web_user = $this->drupalCreateUser([
@@ -86,8 +92,9 @@ class EntityTranslationFormTest extends BrowserTestBase {
     // Enable language selector.
     $this->drupalGet('admin/structure/types/manage/page');
     $edit = ['language_configuration[language_alterable]' => TRUE, 'language_configuration[langcode]' => LanguageInterface::LANGCODE_NOT_SPECIFIED];
-    $this->drupalPostForm('admin/structure/types/manage/page', $edit, 'Save content type');
-    $this->assertRaw(t('The content type %type has been updated.', ['%type' => 'Basic page']));
+    $this->drupalGet('admin/structure/types/manage/page');
+    $this->submitForm($edit, 'Save');
+    $this->assertSession()->pageTextContains("The content type Basic page has been updated.");
 
     // Create a node with language.
     $edit = [];
@@ -95,8 +102,9 @@ class EntityTranslationFormTest extends BrowserTestBase {
     $edit['title[0][value]'] = $this->randomMachineName(8);
     $edit['body[0][value]'] = $this->randomMachineName(16);
     $edit['langcode[0][value]'] = $langcode;
-    $this->drupalPostForm('node/add/page', $edit, 'Save');
-    $this->assertText('Basic page ' . $edit['title[0][value]'] . ' has been created.');
+    $this->drupalGet('node/add/page');
+    $this->submitForm($edit, 'Save');
+    $this->assertSession()->pageTextContains('Basic page ' . $edit['title[0][value]'] . ' has been created.');
 
     // Verify that the creation message contains a link to a node.
     $this->assertSession()->elementExists('xpath', '//div[@data-drupal-messages]//a[contains(@href, "node/")]');

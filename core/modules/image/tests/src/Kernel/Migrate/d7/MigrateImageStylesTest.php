@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\image\Kernel\Migrate\d7;
 
 use Drupal\image\Entity\ImageStyle;
@@ -29,9 +31,9 @@ class MigrateImageStylesTest extends MigrateDrupal7TestBase {
   }
 
   /**
-   * Test the image styles migration.
+   * Tests the image styles migration.
    */
-  public function testImageStylesMigration() {
+  public function testImageStylesMigration(): void {
     $this->assertEntity('custom_image_style_1', "Custom image style 1", ['image_scale_and_crop', 'image_desaturate'], [['width' => 55, 'height' => 55, 'anchor' => 'center-center'], []]);
     $this->assertEntity('custom_image_style_2', "Custom image style 2", ['image_resize', 'image_rotate'], [['width' => 55, 'height' => 100], ['degrees' => 45, 'bgcolor' => '#FFFFFF', 'random' => FALSE]]);
     $this->assertEntity('custom_image_style_3', "Custom image style 3", ['image_scale', 'image_crop'], [['width' => 150, 'height' => NULL, 'upscale' => FALSE], ['width' => 50, 'height' => 50, 'anchor' => 'left-top']]);
@@ -49,7 +51,7 @@ class MigrateImageStylesTest extends MigrateDrupal7TestBase {
    * @param array $expected_effect_config
    *   An array of expected configuration for each effect in the image style
    */
-  protected function assertEntity($id, $label, array $expected_effect_plugins, array $expected_effect_config) {
+  protected function assertEntity(string $id, string $label, array $expected_effect_plugins, array $expected_effect_config): void {
     $style = ImageStyle::load($id);
     $this->assertInstanceOf(ImageStyleInterface::class, $style);
     /** @var \Drupal\image\ImageStyleInterface $style */
@@ -58,7 +60,7 @@ class MigrateImageStylesTest extends MigrateDrupal7TestBase {
 
     // Check the number of effects associated with the style.
     $effects = $style->getEffects();
-    $this->assertSame(count($expected_effect_plugins), count($effects));
+    $this->assertSameSize($expected_effect_plugins, $effects);
 
     $index = 0;
     foreach ($effects as $effect) {

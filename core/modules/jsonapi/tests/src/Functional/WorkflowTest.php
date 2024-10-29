@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\jsonapi\Functional;
 
 use Drupal\Core\Url;
@@ -10,7 +12,7 @@ use Drupal\workflows\Entity\Workflow;
  *
  * @group jsonapi
  */
-class WorkflowTest extends ResourceTestBase {
+class WorkflowTest extends ConfigEntityResourceTestBase {
 
   /**
    * {@inheritdoc}
@@ -42,7 +44,7 @@ class WorkflowTest extends ResourceTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUpAuthorization($method) {
+  protected function setUpAuthorization($method): void {
     $this->grantPermissionsToTestedRole(['administer workflows']);
   }
 
@@ -70,7 +72,7 @@ class WorkflowTest extends ResourceTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function getExpectedDocument() {
+  protected function getExpectedDocument(): array {
     $self_url = Url::fromUri('base:/jsonapi/workflow/workflow/' . $this->entity->uuid())->setAbsolute()->toString(TRUE)->getGeneratedUrl();
     return [
       'jsonapi' => [
@@ -124,8 +126,9 @@ class WorkflowTest extends ResourceTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function getPostDocument() {
+  protected function getPostDocument(): array {
     // @todo Update in https://www.drupal.org/node/2300677.
+    return [];
   }
 
 }

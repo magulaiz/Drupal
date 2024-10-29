@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\system\Functional\UpdateSystem;
 
 use Drupal\Core\Url;
@@ -24,9 +26,9 @@ class RebuildScriptTest extends BrowserTestBase {
   protected $defaultTheme = 'stark';
 
   /**
-   * Test redirect in rebuild.php.
+   * Tests redirect in rebuild.php.
    */
-  public function testRebuild() {
+  public function testRebuild(): void {
     $cache = $this->container->get('cache.default');
 
     $cache->set('rebuild_test', TRUE);

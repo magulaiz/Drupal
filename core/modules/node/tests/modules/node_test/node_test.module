@@ -8,6 +8,8 @@
  * interaction with the Node module.
  */
 
+declare(strict_types=1);
+
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\Display\EntityViewDisplayInterface;
 use Drupal\Core\Form\FormStateInterface;
@@ -18,6 +20,9 @@ use Drupal\node\NodeInterface;
  * Implements hook_ENTITY_TYPE_view() for node entities.
  */
 function node_test_node_view(array &$build, NodeInterface $node, EntityViewDisplayInterface $display, $view_mode) {
+  if ($node->isNew()) {
+    return;
+  }
   if ($view_mode == 'rss') {
     // Add RSS elements and namespaces when building the RSS feed.
     $node->rss_elements[] = [
@@ -45,14 +50,14 @@ function node_test_node_view(array &$build, NodeInterface $node, EntityViewDispl
  */
 function node_test_node_build_defaults_alter(array &$build, NodeInterface &$node, $view_mode = 'full') {
   if ($view_mode == 'rss') {
-    $node->rss_namespaces['xmlns:drupaltest'] = 'http://example.com/test-namespace';
+    $node->rss_namespaces['xmlns:test'] = 'http://example.com/test-namespace';
   }
 }
 
 /**
  * Implements hook_node_grants().
  */
-function node_test_node_grants(AccountInterface $account, $op) {
+function node_test_node_grants(AccountInterface $account, $operation) {
   // Give everyone full grants so we don't break other node tests.
   // Our node access tests asserts three realms of access.
   // See testGrantAlter().
@@ -80,7 +85,6 @@ function node_test_node_access_records(NodeInterface $node) {
       'grant_view' => 1,
       'grant_update' => 0,
       'grant_delete' => 0,
-      'priority' => 0,
     ];
   }
   elseif ($node->getType() == 'page') {
@@ -91,7 +95,6 @@ function node_test_node_access_records(NodeInterface $node) {
       'grant_view' => 1,
       'grant_update' => 0,
       'grant_delete' => 0,
-      'priority' => 0,
     ];
   }
   return $grants;
@@ -115,7 +118,7 @@ function node_test_node_access_records_alter(&$grants, NodeInterface $node) {
 /**
  * Implements hook_node_grants_alter().
  */
-function node_test_node_grants_alter(&$grants, AccountInterface $account, $op) {
+function node_test_node_grants_alter(&$grants, AccountInterface $account, $operation) {
   // Return an empty array of grants to prove that we can alter by reference.
   $grants = [];
 }

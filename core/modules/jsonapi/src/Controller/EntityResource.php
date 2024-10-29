@@ -245,7 +245,7 @@ class EntityResource {
       // User resource objects contain a read-only attribute that is not a
       // real field on the user entity type.
       // @see \Drupal\jsonapi\JsonApiResource\ResourceObject::extractContentEntityFields()
-      // @todo: eliminate this special casing in https://www.drupal.org/project/drupal/issues/3079254.
+      // @todo Eliminate this special casing in https://www.drupal.org/project/drupal/issues/3079254.
       if ($resource_type->getEntityTypeId() === 'user') {
         $field_mapping = array_diff($field_mapping, [$resource_type->getPublicName('display_name')]);
       }
@@ -315,11 +315,11 @@ class EntityResource {
 
     $body = Json::decode($request->getContent());
     $data = $body['data'];
-    if ($data['id'] != $entity->uuid()) {
+    if (!isset($data['id']) || $data['id'] != $entity->uuid()) {
       throw new BadRequestHttpException(sprintf(
         'The selected entity (%s) does not match the ID in the payload (%s).',
         $entity->uuid(),
-        $data['id']
+        $data['id'] ?? '',
       ));
     }
     $data += ['attributes' => [], 'relationships' => []];
@@ -328,7 +328,7 @@ class EntityResource {
     // User resource objects contain a read-only attribute that is not a real
     // field on the user entity type.
     // @see \Drupal\jsonapi\JsonApiResource\ResourceObject::extractContentEntityFields()
-    // @todo: eliminate this special casing in https://www.drupal.org/project/drupal/issues/3079254.
+    // @todo Eliminate this special casing in https://www.drupal.org/project/drupal/issues/3079254.
     if ($entity->getEntityTypeId() === 'user') {
       $field_names = array_diff($field_names, [$resource_type->getPublicName('display_name')]);
     }
@@ -369,7 +369,25 @@ class EntityResource {
    *   The response.
    */
   public function deleteIndividual(EntityInterface $entity) {
-    $entity->delete();
+    // @todo Replace with entity handlers in: https://www.drupal.org/project/drupal/issues/3230434
+    if ($entity->getEntityTypeId() === 'user') {
+      $cancel_method = \Drupal::service('config.factory')->get('user.settings')->get('cancel_method');
+
+      // Allow other modules to act.
+
+      user_cancel([], $entity->id(), $cancel_method);
+      // Since user_cancel() is not invoked via Form API, batch processing
+      // needs to be invoked manually.
+      $batch =& batch_get();
+      // Mark this batch as non-progressive to bypass the progress bar and
+      // redirect.
+      $batch['progressive'] = FALSE;
+      batch_process();
+    }
+    else {
+      $entity->delete();
+    }
+
     return new ResourceResponse(NULL, 204);
   }
 
@@ -411,7 +429,7 @@ class EntityResource {
       // For example: getting users with a particular role, which is a config
       // entity type: https://www.drupal.org/project/drupal/issues/2959445.
       // @todo Remove the message parsing in https://www.drupal.org/project/drupal/issues/3028967.
-      if (strpos($e->getMessage(), 'Getting the base fields is not supported for entity type') === 0) {
+      if (str_starts_with($e->getMessage(), 'Getting the base fields is not supported for entity type')) {
         preg_match('/entity type (.*)\./', $e->getMessage(), $matches);
         $config_entity_type_id = $matches[1];
         $cacheability = (new CacheableMetadata())->addCacheContexts(['url.path', 'url.query_args:filter']);
@@ -511,14 +529,14 @@ class EntityResource {
    *   The response.
    */
   public function getRelated(ResourceType $resource_type, FieldableEntityInterface $entity, $related, Request $request) {
-    /* @var \Drupal\Core\Field\EntityReferenceFieldItemListInterface $field_list */
+    /** @var \Drupal\Core\Field\EntityReferenceFieldItemListInterface $field_list */
     $resource_relationship = $resource_type->getFieldByPublicName($related);
     $field_list = $entity->get($resource_relationship->getInternalName());
 
     // Remove the entities pointing to a resource that may be disabled. Even
     // though the normalizer skips disabled references, we can avoid unnecessary
     // work by checking here too.
-    /* @var \Drupal\Core\Entity\EntityInterface[] $referenced_entities */
+    /** @var \Drupal\Core\Entity\EntityInterface[] $referenced_entities */
     $referenced_entities = array_filter(
       $field_list->referencedEntities(),
       function (EntityInterface $entity) {
@@ -562,7 +580,7 @@ class EntityResource {
    *   The response.
    */
   public function getRelationship(ResourceType $resource_type, FieldableEntityInterface $entity, $related, Request $request, $response_code = 200) {
-    /* @var \Drupal\Core\Field\EntityReferenceFieldItemListInterface $field_list */
+    /** @var \Drupal\Core\Field\EntityReferenceFieldItemListInterface $field_list */
     $field_list = $entity->get($resource_type->getInternalName($related));
     // Access will have already been checked by the RelationshipRouteAccessCheck
     // service, so we don't need to call ::getAccessCheckedResourceObject().
@@ -606,9 +624,9 @@ class EntityResource {
     $internal_relationship_field_name = $resource_type->getInternalName($related);
     // According to the specification, you are only allowed to POST to a
     // relationship if it is a to-many relationship.
-    /* @var \Drupal\Core\Field\EntityReferenceFieldItemListInterface $field_list */
+    /** @var \Drupal\Core\Field\EntityReferenceFieldItemListInterface $field_list */
     $field_list = $entity->{$internal_relationship_field_name};
-    /* @var \Drupal\field\Entity\FieldConfig $field_definition */
+    /** @var \Drupal\field\Entity\FieldConfig $field_definition */
     $field_definition = $field_list->getFieldDefinition();
     $is_multiple = $field_definition->getFieldStorageDefinition()->isMultiple();
     if (!$is_multiple) {
@@ -666,12 +684,12 @@ class EntityResource {
    *   Thrown when the updated entity does not pass validation.
    */
   public function replaceRelationshipData(ResourceType $resource_type, EntityInterface $entity, $related, Request $request) {
+    /** @var \Drupal\Core\Field\EntityReferenceFieldItemListInterface $resource_identifiers */
     $resource_identifiers = $this->deserialize($resource_type, $request, ResourceIdentifier::class, $related);
     $internal_relationship_field_name = $resource_type->getInternalName($related);
-    /* @var \Drupal\Core\Field\EntityReferenceFieldItemListInterface $resource_identifiers */
     // According to the specification, PATCH works a little bit different if the
     // relationship is to-one or to-many.
-    /* @var \Drupal\Core\Field\EntityReferenceFieldItemListInterface $field_list */
+    /** @var \Drupal\Core\Field\EntityReferenceFieldItemListInterface $field_list */
     $field_list = $entity->{$internal_relationship_field_name};
     $field_definition = $field_list->getFieldDefinition();
     $is_multiple = $field_definition->getFieldStorageDefinition()->isMultiple();
@@ -751,7 +769,7 @@ class EntityResource {
   public function removeFromRelationshipData(ResourceType $resource_type, EntityInterface $entity, $related, Request $request) {
     $resource_identifiers = $this->deserialize($resource_type, $request, ResourceIdentifier::class, $related);
     $internal_relationship_field_name = $resource_type->getInternalName($related);
-    /* @var \Drupal\Core\Field\EntityReferenceFieldItemListInterface $field_list */
+    /** @var \Drupal\Core\Field\EntityReferenceFieldItemListInterface $field_list */
     $field_list = $entity->{$internal_relationship_field_name};
     $is_multiple = $field_list->getFieldDefinition()
       ->getFieldStorageDefinition()
@@ -883,8 +901,8 @@ class EntityResource {
     if (isset($params[Sort::KEY_NAME]) && $sort = $params[Sort::KEY_NAME]) {
       foreach ($sort->fields() as $field) {
         $path = $this->fieldResolver->resolveInternalEntityQueryPath($resource_type, $field[Sort::PATH_KEY]);
-        $direction = isset($field[Sort::DIRECTION_KEY]) ? $field[Sort::DIRECTION_KEY] : 'ASC';
-        $langcode = isset($field[Sort::LANGUAGE_KEY]) ? $field[Sort::LANGUAGE_KEY] : NULL;
+        $direction = $field[Sort::DIRECTION_KEY] ?? 'ASC';
+        $langcode = $field[Sort::LANGUAGE_KEY] ?? NULL;
         $query->sort($path, $direction, $langcode);
       }
     }
@@ -993,7 +1011,7 @@ class EntityResource {
    * @return \Drupal\jsonapi\ResourceResponse
    *   The response.
    */
-  protected function buildWrappedResponse(TopLevelDataInterface $data, Request $request, IncludedData $includes, $response_code = 200, array $headers = [], LinkCollection $links = NULL, array $meta = []) {
+  protected function buildWrappedResponse(TopLevelDataInterface $data, Request $request, IncludedData $includes, $response_code = 200, array $headers = [], ?LinkCollection $links = NULL, array $meta = []) {
     $links = ($links ?: new LinkCollection([]));
     if (!$links->hasLinkWithKey('self')) {
       $self_link = new Link(new CacheableMetadata(), self::getRequestLink($request), 'self');
@@ -1217,13 +1235,13 @@ class EntityResource {
    */
   protected function getJsonApiParams(Request $request, ResourceType $resource_type) {
     if ($request->query->has('filter')) {
-      $params[Filter::KEY_NAME] = Filter::createFromQueryParameter($request->query->get('filter'), $resource_type, $this->fieldResolver);
+      $params[Filter::KEY_NAME] = Filter::createFromQueryParameter($request->query->all('filter'), $resource_type, $this->fieldResolver);
     }
     if ($request->query->has('sort')) {
-      $params[Sort::KEY_NAME] = Sort::createFromQueryParameter($request->query->get('sort'));
+      $params[Sort::KEY_NAME] = Sort::createFromQueryParameter($request->query->all()['sort']);
     }
     if ($request->query->has('page')) {
-      $params[OffsetPage::KEY_NAME] = OffsetPage::createFromQueryParameter($request->query->get('page'));
+      $params[OffsetPage::KEY_NAME] = OffsetPage::createFromQueryParameter($request->query->all('page'));
     }
     else {
       $params[OffsetPage::KEY_NAME] = OffsetPage::createFromQueryParameter(['page' => ['offset' => OffsetPage::DEFAULT_OFFSET, 'limit' => OffsetPage::SIZE_MAX]]);
@@ -1272,7 +1290,6 @@ class EntityResource {
     if (!empty($link_context['total_count']) && !$total = (int) $link_context['total_count']) {
       return $pager_links;
     }
-    /* @var \Drupal\jsonapi\Query\OffsetPage $page_param */
     $offset = $page_param->getOffset();
     $size = $page_param->getSize();
     if ($size <= 0) {

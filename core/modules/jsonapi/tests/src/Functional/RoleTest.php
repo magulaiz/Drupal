@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\jsonapi\Functional;
 
 use Drupal\Core\Url;
@@ -10,8 +12,7 @@ use Drupal\user\Entity\Role;
  *
  * @group jsonapi
  */
-class RoleTest extends ResourceTestBase {
-
+class RoleTest extends ConfigEntityResourceTestBase {
 
   /**
    * {@inheritdoc}
@@ -43,7 +44,7 @@ class RoleTest extends ResourceTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUpAuthorization($method) {
+  protected function setUpAuthorization($method): void {
     $this->grantPermissionsToTestedRole(['administer permissions']);
   }
 
@@ -53,7 +54,7 @@ class RoleTest extends ResourceTestBase {
   protected function createEntity() {
     $role = Role::create([
       'id' => 'llama',
-      'name' => $this->randomString(),
+      'label' => 'Llama',
     ]);
     $role->save();
 
@@ -63,7 +64,7 @@ class RoleTest extends ResourceTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function getExpectedDocument() {
+  protected function getExpectedDocument(): array {
     $self_url = Url::fromUri('base:/jsonapi/user_role/user_role/' . $this->entity->uuid())->setAbsolute()->toString(TRUE)->getGeneratedUrl();
     return [
       'jsonapi' => [
@@ -88,8 +89,8 @@ class RoleTest extends ResourceTestBase {
           'langcode' => 'en',
           'status' => TRUE,
           'dependencies' => [],
-          'label' => NULL,
-          'is_admin' => NULL,
+          'label' => 'Llama',
+          'is_admin' => FALSE,
           'permissions' => [],
           'drupal_internal__id' => 'llama',
         ],
@@ -100,8 +101,9 @@ class RoleTest extends ResourceTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function getPostDocument() {
+  protected function getPostDocument(): array {
     // @todo Update in https://www.drupal.org/node/2300677.
+    return [];
   }
 
 }

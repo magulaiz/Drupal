@@ -5,6 +5,8 @@
  * Batch callbacks for the Batch API tests.
  */
 
+declare(strict_types=1);
+
 use Drupal\Component\Utility\Html;
 use Drupal\Core\Url;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -107,6 +109,18 @@ function _batch_test_callback_7($id, $sleep, &$context) {
 /**
  * Implements callback_batch_operation().
  *
+ * Performs a simple batch operation that optionally throws an exception.
+ */
+function _batch_test_callback_8(bool $throw_exception): void {
+  usleep(500);
+  if ($throw_exception) {
+    throw new Exception('Exception in batch');
+  }
+}
+
+/**
+ * Implements callback_batch_operation().
+ *
  * Performs a batch operation setting up its own batch(es).
  */
 function _batch_test_nested_batch_callback(array $batches = []) {
@@ -125,7 +139,7 @@ function _batch_test_nested_batch_callback(array $batches = []) {
 function _batch_test_finished_helper($batch_id, $success, $results, $operations, $elapsed) {
   if ($results) {
     foreach ($results as $op => $op_results) {
-      $messages[] = 'op ' . Html::escape($op) . ': processed ' . count($op_results) . ' elements';
+      $messages[] = 'op ' . Html::escape((string) $op) . ': processed ' . count($op_results) . ' elements';
     }
   }
   else {
@@ -152,7 +166,7 @@ function _batch_test_finished_helper($batch_id, $success, $results, $operations,
     ],
   ];
 
-  \Drupal::messenger()->addStatus(\Drupal::service('renderer')->renderPlain($error_message));
+  \Drupal::messenger()->addStatus(\Drupal::service('renderer')->renderInIsolation($error_message));
 
   \Drupal::messenger()->addMessage('elapsed time: ' . $elapsed);
 }

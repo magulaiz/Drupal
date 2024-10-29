@@ -2,8 +2,10 @@
 
 namespace Drupal\user\Entity;
 
+use Drupal\Core\Config\Action\Attribute\ActionMethod;
 use Drupal\Core\Config\Entity\ConfigEntityBase;
 use Drupal\Core\Entity\EntityStorageInterface;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\user\RoleInterface;
 
 /**
@@ -86,7 +88,7 @@ class Role extends ConfigEntityBase implements RoleInterface {
    *
    * @var bool
    */
-  protected $is_admin;
+  protected $is_admin = FALSE;
 
   /**
    * {@inheritdoc}
@@ -126,6 +128,7 @@ class Role extends ConfigEntityBase implements RoleInterface {
   /**
    * {@inheritdoc}
    */
+  #[ActionMethod(adminLabel: new TranslatableMarkup('Add permission to role'))]
   public function grantPermission($permission) {
     if ($this->isAdmin()) {
       return $this;
@@ -169,7 +172,7 @@ class Role extends ConfigEntityBase implements RoleInterface {
     parent::postLoad($storage, $entities);
     // Sort the queried roles by their weight.
     // See \Drupal\Core\Config\Entity\ConfigEntityBase::sort().
-    uasort($entities, 'static::sort');
+    uasort($entities, [static::class, 'sort']);
   }
 
   /**
@@ -178,19 +181,102 @@ class Role extends ConfigEntityBase implements RoleInterface {
   public function preSave(EntityStorageInterface $storage) {
     parent::preSave($storage);
 
-    if (!isset($this->weight) && ($roles = $storage->loadMultiple())) {
+    if (!isset($this->weight)) {
       // Set a role weight to make this new role last.
-      $max = array_reduce($roles, function ($max, $role) {
-        return $max > $role->weight ? $max : $role->weight;
-      });
-      $this->weight = $max + 1;
+      $this->weight = array_reduce($storage->loadMultiple(), function ($max, $role) {
+        return $max > $role->weight ? $max : $role->weight + 1;
+      }, 0);
     }
 
-    if (!$this->isSyncing()) {
+    if (!$this->isSyncing() && $this->hasTrustedData()) {
       // Permissions are always ordered alphabetically to avoid conflicts in the
-      // exported configuration.
+      // exported configuration. If the save is not trusted then the
+      // configuration will be sorted by StorableConfigBase.
       sort($this->permissions);
     }
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function calculateDependencies() {
+    parent::calculateDependencies();
+    // Load all permission definitions.
+    $permission_definitions = \Drupal::service('user.permissions')->getPermissions();
+    $valid_permissions = array_intersect($this->permissions, array_keys($permission_definitions));
+    $invalid_permissions = array_diff($this->permissions, $valid_permissions);
+    if (!empty($invalid_permissions)) {
+      throw new \RuntimeException('Adding non-existent permissions to a role is not allowed. The incorrect permissions are "' . implode('", "', $invalid_permissions) . '".');
+    }
+    foreach ($valid_permissions as $permission) {
+      // Depend on the module that is providing this permissions.
+      $this->addDependency('module', $permission_definitions[$permission]['provider']);
+      // Depend on any other dependencies defined by permissions granted to
+      // this role.
+      if (!empty($permission_definitions[$permission]['dependencies'])) {
+        $this->addDependencies($permission_definitions[$permission]['dependencies']);
+      }
+    }
+    return $this;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function onDependencyRemoval(array $dependencies) {
+    $changed = parent::onDependencyRemoval($dependencies);
+    // Load all permission definitions.
+    $permission_definitions = \Drupal::service('user.permissions')->getPermissions();
+
+    // Convert config and content entity dependencies to a list of names to make
+    // it easier to check.
+    foreach (['content', 'config'] as $type) {
+      $dependencies[$type] = array_keys($dependencies[$type]);
+    }
+
+    // Remove any permissions from the role that are dependent on anything being
+    // deleted or uninstalled.
+    foreach ($this->permissions as $key => $permission) {
+      if (!isset($permission_definitions[$permission])) {
+        // If the permission is not defined then there's nothing we can do.
+        continue;
+      }
+
+      if (in_array($permission_definitions[$permission]['provider'], $dependencies['module'], TRUE)) {
+        unset($this->permissions[$key]);
+        $changed = TRUE;
+        // Process the next permission.
+        continue;
+      }
+
+      if (isset($permission_definitions[$permission]['dependencies'])) {
+        foreach ($permission_definitions[$permission]['dependencies'] as $type => $list) {
+          if (array_intersect($list, $dependencies[$type])) {
+            unset($this->permissions[$key]);
+            $changed = TRUE;
+            // Process the next permission.
+            continue 2;
+          }
+        }
+      }
+    }
+
+    return $changed;
+  }
+
+  /**
+   * Returns all valid permissions.
+   *
+   * @return string[]
+   *   All possible valid permissions.
+   *
+   * @see \Drupal\user\PermissionHandler::getPermissions()
+   *
+   * @internal
+   * @todo Revisit in https://www.drupal.org/node/3446364
+   */
+  public static function getAllValidPermissions(): array {
+    return array_keys(\Drupal::service('user.permissions')->getPermissions());
   }
 
 }

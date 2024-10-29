@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\entity_test\Entity;
 
 use Drupal\Core\Entity\EntityChangedInterface;
@@ -12,7 +14,7 @@ use Drupal\Core\Field\BaseFieldDefinition;
  *
  * @ContentEntityType(
  *   id = "entity_test_mul_changed",
- *   label = @Translation("Test entity - data table"),
+ *   label = @Translation("Test entity - multiple changed and data table"),
  *   handlers = {
  *     "view_builder" = "Drupal\entity_test\EntityTestViewBuilder",
  *     "access" = "Drupal\entity_test\EntityTestAccessControlHandler",
@@ -72,7 +74,7 @@ class EntityTestMulChanged extends EntityTestMul implements EntityChangedInterfa
   public function save() {
     // Ensure a new timestamp.
     sleep(1);
-    parent::save();
+    return parent::save();
   }
 
 }

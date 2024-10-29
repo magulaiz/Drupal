@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\Composer\Generator;
 
 use Drupal\Composer\Generator\Builder\DrupalCoreRecommendedBuilder;
@@ -18,9 +20,9 @@ use PHPUnit\Framework\TestCase;
 class MetapackageUpdateTest extends TestCase {
 
   /**
-   * Test data for testUpdated.
+   * Provides test data for testUpdated.
    */
-  public function updatedTestData() {
+  public static function updatedTestData() {
     return [
       [
         DrupalCoreRecommendedBuilder::class,
@@ -38,7 +40,7 @@ class MetapackageUpdateTest extends TestCase {
   }
 
   /**
-   * Test to see if the generated metapackages are in sync with composer.lock.
+   * Tests to see if the generated metapackages are in sync with composer.lock.
    *
    * Note that this is not a test of code correctness, but rather it merely
    * confirms if the package builder was used on the most recent set of
@@ -53,7 +55,7 @@ class MetapackageUpdateTest extends TestCase {
    *
    *  @dataProvider updatedTestData
    */
-  public function testUpdated($builderClass, $path) {
+  public function testUpdated($builderClass, $path): void {
     // Create a DrupalCoreComposer for the System Under Test (current repo)
     $repositoryRoot = dirname(__DIR__, 6);
     $drupalCoreInfo = DrupalCoreComposer::createFromPath($repositoryRoot);

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\migrate\Unit\process;
 
 use Drupal\migrate\Plugin\migrate\process\MachineName;
@@ -53,9 +55,9 @@ class MachineNameTest extends MigrateProcessTestCase {
       ->expects($this->once())
       ->method('transliterate')
       ->with($human_name)
-      ->will($this->returnCallback(function (string $string): string {
+      ->willReturnCallback(function (string $string): string {
         return str_replace(['á', 'é', 'ő'], ['a', 'e', 'o'], $string);
-      }));
+      });
 
     $plugin = new MachineName($configuration, 'machine_name', [], $this->transliteration);
     $value = $plugin->transform($human_name, $this->migrateExecutable, $this->row, 'destination_property');
@@ -68,7 +70,7 @@ class MachineNameTest extends MigrateProcessTestCase {
    * @return array
    *   An array of test cases.
    */
-  public function providerTestMachineNames(): array {
+  public static function providerTestMachineNames(): array {
     return [
       // Tests the following transformations:
       // - non-alphanumeric character (including spaces) -> underscore,

@@ -10,6 +10,7 @@
  * the Update Manager module.
  */
 
+use Drupal\Core\Batch\BatchBuilder;
 use Drupal\Core\Updater\UpdaterException;
 use Drupal\Core\Url;
 
@@ -36,85 +37,26 @@ use Drupal\Core\Url;
  *   should use that response for the current page request.
  */
 function update_authorize_run_update($filetransfer, $projects) {
-  $operations = [];
+  $batch_builder = (new BatchBuilder())
+    ->setFile(\Drupal::service('extension.list.module')->getPath('update') . '/update.authorize.inc')
+    ->setInitMessage(t('Preparing to update your site'))
+    ->setFinishCallback('update_authorize_update_batch_finished');
+
   foreach ($projects as $project_info) {
-    $operations[] = [
-      'update_authorize_batch_copy_project',
-      [
-        $project_info['project'],
-        $project_info['updater_name'],
-        $project_info['local_url'],
-        $filetransfer,
-      ],
-    ];
+    $batch_builder->addOperation('update_authorize_batch_copy_project', [
+      $project_info['project'],
+      $project_info['updater_name'],
+      $project_info['local_url'],
+      $filetransfer,
+    ]);
   }
 
-  $batch = [
-    'init_message' => t('Preparing to update your site'),
-    'operations' => $operations,
-    'finished' => 'update_authorize_update_batch_finished',
-    'file' => drupal_get_path('module', 'update') . '/update.authorize.inc',
-  ];
-  batch_set($batch);
+  batch_set($batch_builder->toArray());
 
   // Since authorize.php has its own method for setting the page title, set it
   // manually here rather than passing it in to batch_set() as would normally
   // be done.
-  \Drupal::request()->getSession()->set('authorize_page_title', t('Installing updates'));
-
-  // Invoke the batch via authorize.php.
-  return system_authorized_batch_process();
-}
-
-/**
- * Installs a new project when invoked by authorize.php.
- *
- * Callback for system_authorized_init() in
- * update_manager_install_form_submit().
- *
- * @param FileTransfer $filetransfer
- *   The FileTransfer object created by authorize.php for use during this
- *   operation.
- * @param string $project
- *   The canonical project short name; i.e., the name of the module, theme, or
- *   profile.
- * @param string $updater_name
- *   The name of the Drupal\Core\Updater\Updater class to use for installing
- *   this project.
- * @param string $local_url
- *   The URL to the locally installed temp directory where the project has
- *   already been downloaded and extracted into.
- *
- * @return \Symfony\Component\HttpFoundation\Response|null
- *   The result of processing the batch that installs the project. If this is
- *   an instance of \Symfony\Component\HttpFoundation\Response the calling code
- *   should use that response for the current page request.
- */
-function update_authorize_run_install($filetransfer, $project, $updater_name, $local_url) {
-  $operations[] = [
-    'update_authorize_batch_copy_project',
-    [
-      $project,
-      $updater_name,
-      $local_url,
-      $filetransfer,
-    ],
-  ];
-
-  // @todo Instantiate our Updater to set the human-readable title?
-  $batch = [
-    'init_message' => t('Preparing to add'),
-    'operations' => $operations,
-    // @todo Use a different finished callback for different messages?
-    'finished' => 'update_authorize_install_batch_finished',
-    'file' => drupal_get_path('module', 'update') . '/update.authorize.inc',
-  ];
-  batch_set($batch);
-
-  // Since authorize.php has its own method for setting the page title, set it
-  // manually here rather than passing it in to batch_set() as would normally
-  // be done.
-  \Drupal::request()->getSession()->set('authorize_page_title', t('Adding %project', ['%project' => $project]));
+  \Drupal::request()->getSession()->set('authorize_page_title', t('Downloading updates'));
 
   // Invoke the batch via authorize.php.
   return system_authorized_batch_process();
@@ -133,7 +75,7 @@ function update_authorize_run_install($filetransfer, $project, $updater_name, $l
  * @param string $local_url
  *   The URL to the locally installed temp directory where the project has
  *   already been downloaded and extracted into.
- * @param FileTransfer $filetransfer
+ * @param \Drupal\Core\FileTransfer\FileTransfer $filetransfer
  *   The FileTransfer object to use for performing this operation.
  * @param array $context
  *   Reference to an array used for Batch API storage.
@@ -267,69 +209,6 @@ function update_authorize_update_batch_finished($success, $results) {
     ],
     '#access' => $url->access(\Drupal::currentUser()),
   ];
-
-  // Set all these values into the SESSION so authorize.php can display them.
-  $session->set('authorize_results', [
-    'success' => $success,
-    'page_message' => $page_message,
-    'messages' => $results['log'],
-    'tasks' => $results['tasks'],
-  ]);
-  $session->set('authorize_page_title', t('Update manager'));
-}
-
-/**
- * Implements callback_batch_finished().
- *
- * Performs actions when the authorized install batch is done.
- *
- * This processes the results and stashes them into SESSION such that
- * authorize.php will render a report. Also responsible for putting the site
- * back online after a successful install if necessary.
- *
- * @param $success
- *   TRUE if the batch operation was a success; FALSE if there were errors.
- * @param $results
- *   An associative array of results from the batch operation.
- */
-function update_authorize_install_batch_finished($success, $results) {
-  foreach ($results['log'] as $messages) {
-    if (!empty($messages['#abort'])) {
-      $success = FALSE;
-    }
-  }
-  $offline = \Drupal::state()->get('system.maintenance_mode');
-  $session = \Drupal::request()->getSession();
-  // Unset the variable since it is no longer needed.
-  $maintenance_mode = $session->remove('maintenance_mode');
-  if ($success) {
-    // Take the site out of maintenance mode if it was previously that way.
-    if ($offline && $maintenance_mode === FALSE) {
-      \Drupal::state()->set('system.maintenance_mode', FALSE);
-      $page_message = [
-        'message' => t('Files were added successfully. Your site has been taken out of maintenance mode.'),
-        'type' => 'status',
-      ];
-    }
-    else {
-      $page_message = [
-        'message' => t('Files were added successfully.'),
-        'type' => 'status',
-      ];
-    }
-  }
-  elseif (!$success && !$offline) {
-    $page_message = [
-      'message' => t('File add failed! See the log below for more information.'),
-      'type' => 'error',
-    ];
-  }
-  else {
-    $page_message = [
-      'message' => t('File add failed! See the log below for more information. Your site is still in maintenance mode.'),
-      'type' => 'error',
-    ];
-  }
 
   // Set all these values into the SESSION so authorize.php can display them.
   $session->set('authorize_results', [

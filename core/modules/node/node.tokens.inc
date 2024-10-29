@@ -25,6 +25,10 @@ function node_token_info() {
     'name' => t("Content ID"),
     'description' => t('The unique ID of the content item, or "node".'),
   ];
+  $node['uuid'] = [
+    'name' => t('UUID'),
+    'description' => t('The UUID of the content item, or "node".'),
+  ];
   $node['vid'] = [
     'name' => t("Revision ID"),
     'description' => t("The unique ID of the node's latest revision."),
@@ -50,6 +54,10 @@ function node_token_info() {
   $node['langcode'] = [
     'name' => t('Language code'),
     'description' => t('The language code of the language the node is written in.'),
+  ];
+  $node['published_status'] = [
+    'name' => t('Published'),
+    'description' => t('The publication status of the node ("Published" or "Unpublished").'),
   ];
   $node['url'] = [
     'name' => t("URL"),
@@ -106,6 +114,10 @@ function node_tokens($type, $tokens, array $data, array $options, BubbleableMeta
         // Simple key values on the node.
         case 'nid':
           $replacements[$original] = $node->id();
+          break;
+
+        case 'uuid':
+          $replacements[$original] = $node->uuid();
           break;
 
         case 'vid':
@@ -165,6 +177,10 @@ function node_tokens($type, $tokens, array $data, array $options, BubbleableMeta
 
         case 'langcode':
           $replacements[$original] = $node->language()->getId();
+          break;
+
+        case 'published_status':
+          $replacements[$original] = $node->isPublished() ? t('Published') : t('Unpublished');
           break;
 
         case 'url':

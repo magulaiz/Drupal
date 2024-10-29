@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\jsonapi\Functional;
 
 use Drupal\Core\Entity\Entity\EntityViewMode;
@@ -10,12 +12,12 @@ use Drupal\Core\Url;
  *
  * @group jsonapi
  */
-class EntityViewModeTest extends ResourceTestBase {
+class EntityViewModeTest extends ConfigEntityResourceTestBase {
 
   /**
    * {@inheritdoc}
    *
-   * @todo: Remove 'field_ui' when https://www.drupal.org/node/2867266.
+   * @todo Remove 'field_ui' when https://www.drupal.org/node/2867266.
    */
   protected static $modules = ['user', 'field_ui'];
 
@@ -44,7 +46,7 @@ class EntityViewModeTest extends ResourceTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUpAuthorization($method) {
+  protected function setUpAuthorization($method): void {
     $this->grantPermissionsToTestedRole(['administer display modes']);
   }
 
@@ -55,6 +57,7 @@ class EntityViewModeTest extends ResourceTestBase {
     $entity_view_mode = EntityViewMode::create([
       'id' => 'user.test',
       'label' => 'Test',
+      'description' => '',
       'targetEntityType' => 'user',
     ]);
     $entity_view_mode->save();
@@ -64,7 +67,7 @@ class EntityViewModeTest extends ResourceTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function getExpectedDocument() {
+  protected function getExpectedDocument(): array {
     $self_url = Url::fromUri('base:/jsonapi/entity_view_mode/entity_view_mode/' . $this->entity->uuid())->setAbsolute()->toString(TRUE)->getGeneratedUrl();
     return [
       'jsonapi' => [
@@ -93,6 +96,7 @@ class EntityViewModeTest extends ResourceTestBase {
           ],
           'label' => 'Test',
           'langcode' => 'en',
+          'description' => '',
           'status' => TRUE,
           'targetEntityType' => 'user',
           'drupal_internal__id' => 'user.test',
@@ -104,8 +108,9 @@ class EntityViewModeTest extends ResourceTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function getPostDocument() {
+  protected function getPostDocument(): array {
     // @todo Update in https://www.drupal.org/node/2300677.
+    return [];
   }
 
 }

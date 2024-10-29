@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\jsonapi\Functional;
 
 use Drupal\block\Entity\Block;
@@ -11,7 +13,7 @@ use Drupal\Core\Url;
  *
  * @group jsonapi
  */
-class BlockTest extends ResourceTestBase {
+class BlockTest extends ConfigEntityResourceTestBase {
 
   /**
    * {@inheritdoc}
@@ -38,12 +40,12 @@ class BlockTest extends ResourceTestBase {
   /**
    * {@inheritdoc}
    */
-  protected $defaultTheme = 'classy';
+  protected $defaultTheme = 'stark';
 
   /**
    * {@inheritdoc}
    */
-  protected function setUpAuthorization($method) {
+  protected function setUpAuthorization($method): void {
     switch ($method) {
       case 'GET':
         $this->entity->setVisibilityConfig('user_role', [])->save();
@@ -59,7 +61,7 @@ class BlockTest extends ResourceTestBase {
       'plugin' => 'llama_block',
       'region' => 'header',
       'id' => 'llama',
-      'theme' => 'classy',
+      'theme' => 'stark',
     ]);
     // All blocks can be viewed by the anonymous user by default. An interesting
     // side effect of this is that any anonymous user is also able to read the
@@ -85,7 +87,7 @@ class BlockTest extends ResourceTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function getExpectedDocument() {
+  protected function getExpectedDocument(): array {
     $self_url = Url::fromUri('base:/jsonapi/block/block/' . $this->entity->uuid())->setAbsolute()->toString(TRUE)->getGeneratedUrl();
     return [
       'jsonapi' => [
@@ -106,15 +108,15 @@ class BlockTest extends ResourceTestBase {
           'self' => ['href' => $self_url],
         ],
         'attributes' => [
-          'weight' => NULL,
+          'weight' => 0,
           'langcode' => 'en',
           'status' => TRUE,
           'dependencies' => [
             'theme' => [
-              'classy',
+              'stark',
             ],
           ],
-          'theme' => 'classy',
+          'theme' => 'stark',
           'region' => 'header',
           'provider' => NULL,
           'plugin' => 'llama_block',
@@ -134,14 +136,15 @@ class BlockTest extends ResourceTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function getPostDocument() {
+  protected function getPostDocument(): array {
     // @todo Update once https://www.drupal.org/node/2300677 is fixed.
+    return [];
   }
 
   /**
    * {@inheritdoc}
    */
-  protected function getExpectedCacheContexts(array $sparse_fieldset = NULL) {
+  protected function getExpectedCacheContexts(?array $sparse_fieldset = NULL): array {
     // @see ::createEntity()
     return array_values(array_diff(parent::getExpectedCacheContexts(), ['user.permissions']));
   }
@@ -149,7 +152,7 @@ class BlockTest extends ResourceTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function getExpectedCacheTags(array $sparse_fieldset = NULL) {
+  protected function getExpectedCacheTags(?array $sparse_fieldset = NULL): array {
     // Because the 'user.permissions' cache context is missing, the cache tag
     // for the anonymous user role is never added automatically.
     return array_values(array_diff(parent::getExpectedCacheTags(), ['config:user.role.anonymous']));
@@ -180,13 +183,13 @@ class BlockTest extends ResourceTestBase {
         'http_response',
         'user:2',
       ])
-      ->setCacheContexts(['url.site', 'user.roles']);
+      ->setCacheContexts(['url.query_args', 'url.site', 'user.roles']);
   }
 
   /**
    * {@inheritdoc}
    */
-  protected static function getExpectedCollectionCacheability(AccountInterface $account, array $collection, array $sparse_fieldset = NULL, $filtered = FALSE) {
+  protected static function getExpectedCollectionCacheability(AccountInterface $account, array $collection, ?array $sparse_fieldset = NULL, $filtered = FALSE) {
     return parent::getExpectedCollectionCacheability($account, $collection, $sparse_fieldset, $filtered)
       ->addCacheTags(['user:2'])
       ->addCacheContexts(['user.roles']);

@@ -5,6 +5,8 @@
  * Test to ensure theme compatibility with managed files.
  */
 
+declare(strict_types=1);
+
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\file\Entity\File;
 
@@ -17,10 +19,10 @@ function test_theme_settings_form_system_theme_settings_alter(&$form, FormStateI
     '#title' => t('Secondary logo.'),
     '#default_value' => theme_get_setting('custom_logo'),
     '#progress_indicator' => 'bar',
-    '#progress_message'   => t('Please wait...'),
+    '#progress_message'   => t('Processing...'),
     '#upload_location' => 'public://test',
     '#upload_validators'  => [
-      'file_validate_extensions' => ['gif png jpg jpeg'],
+      'FileExtension' => ['extensions' => 'gif png jpg jpeg'],
     ],
   ];
 
@@ -31,7 +33,7 @@ function test_theme_settings_form_system_theme_settings_alter(&$form, FormStateI
     '#default_value' => theme_get_setting('multi_file'),
     '#upload_location' => 'public://test',
     '#upload_validators'  => [
-      'file_validate_extensions' => [],
+      'FileExtension' => [],
     ],
   ];
 

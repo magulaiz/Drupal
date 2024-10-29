@@ -31,11 +31,11 @@ abstract class ContentEntityBase extends EntityBase implements \IteratorAggregat
    * are keyed by language code, whereas LanguageInterface::LANGCODE_DEFAULT
    * is used for values in default language.
    *
-   * @todo: Add methods for getting original fields and for determining
-   * changes.
-   * @todo: Provide a better way for defining default values.
-   *
    * @var array
+   *
+   * @todo Add methods for getting original fields and for determining
+   * changes.
+   * @todo Provide a better way for defining default values.
    */
   protected $values = [];
 
@@ -49,9 +49,9 @@ abstract class ContentEntityBase extends EntityBase implements \IteratorAggregat
   /**
    * Local cache for field definitions.
    *
-   * @see ContentEntityBase::getFieldDefinitions()
-   *
    * @var array
+   *
+   * @see ContentEntityBase::getFieldDefinitions()
    */
   protected $fieldDefinitions;
 
@@ -80,11 +80,23 @@ abstract class ContentEntityBase extends EntityBase implements \IteratorAggregat
    * Language code identifying the entity active language.
    *
    * This is the language field accessors will use to determine which field
-   * values manipulate.
+   * values to manipulate.
    *
    * @var string
    */
   protected $activeLangcode = LanguageInterface::LANGCODE_DEFAULT;
+
+  /**
+   * Override the result of isDefaultTranslation().
+   *
+   * Under certain circumstances, such as when changing default translation, the
+   * default value needs to be overridden.
+   *
+   * @var bool|null
+   *
+   * @internal
+   */
+  protected ?bool $enforceDefaultTranslation = NULL;
 
   /**
    * Local cache for the default language code.
@@ -97,8 +109,8 @@ abstract class ContentEntityBase extends EntityBase implements \IteratorAggregat
    * An array of entity translation metadata.
    *
    * An associative array keyed by translation language code. Every value is an
-   * array containing the translation status and the translation object, if it has
-   * already been instantiated.
+   * array containing the translation status and the translation object, if it
+   * has already been instantiated.
    *
    * @var array
    */
@@ -196,7 +208,7 @@ abstract class ContentEntityBase extends EntityBase implements \IteratorAggregat
     foreach ($values as $key => $value) {
       // If the key matches an existing property set the value to the property
       // to set properties like isDefaultRevision.
-      // @todo: Should this be converted somehow?
+      // @todo Should this be converted somehow?
       if (property_exists($this, $key) && isset($value[LanguageInterface::LANGCODE_DEFAULT])) {
         $this->$key = $value[LanguageInterface::LANGCODE_DEFAULT];
       }
@@ -410,9 +422,27 @@ abstract class ContentEntityBase extends EntityBase implements \IteratorAggregat
   }
 
   /**
+   * Set or clear an override of the isDefaultTranslation() result.
+   *
+   * @param bool|null $enforce_default_translation
+   *   If boolean value is passed, the value will override the result of
+   *   isDefaultTranslation() method. If NULL is passed, the default logic will
+   *   be used.
+   *
+   * @return $this
+   */
+  public function setDefaultTranslationEnforced(?bool $enforce_default_translation): static {
+    $this->enforceDefaultTranslation = $enforce_default_translation;
+    return $this;
+  }
+
+  /**
    * {@inheritdoc}
    */
   public function isDefaultTranslation() {
+    if ($this->enforceDefaultTranslation !== NULL) {
+      return $this->enforceDefaultTranslation;
+    }
     return $this->activeLangcode === LanguageInterface::LANGCODE_DEFAULT;
   }
 
@@ -440,8 +470,7 @@ abstract class ContentEntityBase extends EntityBase implements \IteratorAggregat
     // An entity requiring validation should not be saved if it has not been
     // actually validated.
     if ($this->validationRequired && !$this->validated) {
-      // @todo Make this an assertion in https://www.drupal.org/node/2408013.
-      throw new \LogicException('Entity validation was skipped.');
+      throw new \LogicException('Entity validation is required, but was skipped.');
     }
     else {
       $this->validated = FALSE;
@@ -506,7 +535,7 @@ abstract class ContentEntityBase extends EntityBase implements \IteratorAggregat
   }
 
   /**
-   * Clear entity translation object cache to remove stale references.
+   * Clears entity translation object cache to remove stale references.
    */
   protected function clearTranslationCache() {
     foreach ($this->translations as &$translation) {
@@ -517,7 +546,7 @@ abstract class ContentEntityBase extends EntityBase implements \IteratorAggregat
   /**
    * {@inheritdoc}
    */
-  public function __sleep() {
+  public function __sleep(): array {
     // Get the values of instantiated field objects, only serialize the values.
     foreach ($this->fields as $name => $fields) {
       foreach ($fields as $langcode => $field) {
@@ -606,7 +635,7 @@ abstract class ContentEntityBase extends EntityBase implements \IteratorAggregat
           // $this->defaultLangcode might not be set if we are initializing the
           // default language code cache, in which case there is no valid
           // langcode to assign.
-          $field_langcode = isset($this->defaultLangcode) ? $this->defaultLangcode : LanguageInterface::LANGCODE_NOT_SPECIFIED;
+          $field_langcode = $this->defaultLangcode ?? LanguageInterface::LANGCODE_NOT_SPECIFIED;
         }
         else {
           $field_langcode = $langcode;
@@ -658,7 +687,7 @@ abstract class ContentEntityBase extends EntityBase implements \IteratorAggregat
   /**
    * {@inheritdoc}
    */
-  public function getIterator() {
+  public function getIterator(): \ArrayIterator {
     return new \ArrayIterator($this->getFields());
   }
 
@@ -698,7 +727,7 @@ abstract class ContentEntityBase extends EntityBase implements \IteratorAggregat
   /**
    * {@inheritdoc}
    */
-  public function access($operation, AccountInterface $account = NULL, $return_as_object = FALSE) {
+  public function access($operation, ?AccountInterface $account = NULL, $return_as_object = FALSE) {
     if ($operation == 'create') {
       return $this->entityTypeManager()
         ->getAccessControlHandler($this->entityTypeId)
@@ -768,7 +797,7 @@ abstract class ContentEntityBase extends EntityBase implements \IteratorAggregat
    * Updates language for already instantiated fields.
    */
   protected function updateFieldLangcodes($langcode) {
-    foreach ($this->fields as $name => $items) {
+    foreach ($this->fields as $items) {
       if (!empty($items[LanguageInterface::LANGCODE_DEFAULT])) {
         $items[LanguageInterface::LANGCODE_DEFAULT]->setLangcode($langcode);
       }
@@ -1041,7 +1070,7 @@ abstract class ContentEntityBase extends EntityBase implements \IteratorAggregat
   /**
    * Implements the magic method for getting object properties.
    *
-   * @todo: A lot of code still uses non-fields (e.g. $entity->content in view
+   * @todo A lot of code still uses non-fields (e.g. $entity->content in view
    *   builders) by reference. Clean that up.
    */
   public function &__get($name) {
@@ -1123,6 +1152,23 @@ abstract class ContentEntityBase extends EntityBase implements \IteratorAggregat
     else {
       unset($this->values[$name]);
     }
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function create(array $values = []) {
+    $entity_type_repository = \Drupal::service('entity_type.repository');
+    $entity_type_manager = \Drupal::entityTypeManager();
+    $class_name = static::class;
+    $storage = $entity_type_manager->getStorage($entity_type_repository->getEntityTypeFromClass($class_name));
+
+    // Always explicitly specify the bundle if the entity has a bundle class.
+    if ($storage instanceof BundleEntityStorageInterface && ($bundle = $storage->getBundleFromClass($class_name))) {
+      $values[$storage->getEntityType()->getKey('bundle')] = $bundle;
+    }
+
+    return $storage->create($values);
   }
 
   /**
@@ -1404,7 +1450,7 @@ abstract class ContentEntityBase extends EntityBase implements \IteratorAggregat
     $original = $this->original ? $this->original : NULL;
 
     if (!$original) {
-      $id = $this->getOriginalId() !== NULL ? $this->getOriginalId() : $this->id();
+      $id = $this->getOriginalId() ?? $this->id();
       $original = $this->entityTypeManager()->getStorage($this->getEntityTypeId())->loadUnchanged($id);
     }
 
@@ -1434,7 +1480,7 @@ abstract class ContentEntityBase extends EntityBase implements \IteratorAggregat
 
     foreach ($this->getFieldDefinitions() as $field_name => $definition) {
       // @todo Avoid special-casing the following fields. See
-      //    https://www.drupal.org/node/2329253.
+      //   https://www.drupal.org/node/2329253.
       if (in_array($field_name, $skip_fields, TRUE) || ($skip_untranslatable_fields && !$definition->isTranslatable())) {
         continue;
       }

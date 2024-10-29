@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\test_page_test\Controller;
 
 use Drupal\user\Entity\Role;
@@ -29,7 +31,7 @@ class TestPageTestController {
    * Returns a test page and with the call to the dump() function.
    */
   public function testPageVarDump() {
-    $role = Role::create(['id' => 'test_role']);
+    $role = Role::create(['id' => 'test_role', 'label' => 'Test role']);
     dump($role);
     return [
       '#title' => t('Test page with var dump'),

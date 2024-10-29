@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\KernelTests\Core\File;
 
 /**
@@ -12,32 +14,32 @@ class FileDeleteRecursiveTest extends FileTestBase {
   /**
    * Delete a normal file.
    */
-  public function testSingleFile() {
+  public function testSingleFile(): void {
     // Create a file for testing
     $filepath = 'public://' . $this->randomMachineName();
     file_put_contents($filepath, '');
 
     // Delete the file.
     $this->assertTrue(\Drupal::service('file_system')->deleteRecursive($filepath), 'Function reported success.');
-    $this->assertFileNotExists($filepath);
+    $this->assertFileDoesNotExist($filepath);
   }
 
   /**
    * Try deleting an empty directory.
    */
-  public function testEmptyDirectory() {
+  public function testEmptyDirectory(): void {
     // A directory to operate on.
     $directory = $this->createDirectory();
 
     // Delete the directory.
     $this->assertTrue(\Drupal::service('file_system')->deleteRecursive($directory), 'Function reported success.');
-    $this->assertDirectoryNotExists($directory);
+    $this->assertDirectoryDoesNotExist($directory);
   }
 
   /**
    * Try deleting a directory with some files.
    */
-  public function testDirectory() {
+  public function testDirectory(): void {
     // A directory to operate on.
     $directory = $this->createDirectory();
     $filepathA = $directory . '/A';
@@ -47,15 +49,15 @@ class FileDeleteRecursiveTest extends FileTestBase {
 
     // Delete the directory.
     $this->assertTrue(\Drupal::service('file_system')->deleteRecursive($directory), 'Function reported success.');
-    $this->assertFileNotExists($filepathA);
-    $this->assertFileNotExists($filepathB);
-    $this->assertDirectoryNotExists($directory);
+    $this->assertFileDoesNotExist($filepathA);
+    $this->assertFileDoesNotExist($filepathB);
+    $this->assertDirectoryDoesNotExist($directory);
   }
 
   /**
    * Try deleting subdirectories with some files.
    */
-  public function testSubDirectory() {
+  public function testSubDirectory(): void {
     // A directory to operate on.
     $directory = $this->createDirectory();
     $subdirectory = $this->createDirectory($directory . '/sub');
@@ -66,10 +68,10 @@ class FileDeleteRecursiveTest extends FileTestBase {
 
     // Delete the directory.
     $this->assertTrue(\Drupal::service('file_system')->deleteRecursive($directory), 'Function reported success.');
-    $this->assertFileNotExists($filepathA);
-    $this->assertFileNotExists($filepathB);
-    $this->assertDirectoryNotExists($subdirectory);
-    $this->assertDirectoryNotExists($directory);
+    $this->assertFileDoesNotExist($filepathA);
+    $this->assertFileDoesNotExist($filepathB);
+    $this->assertDirectoryDoesNotExist($subdirectory);
+    $this->assertDirectoryDoesNotExist($directory);
   }
 
 }

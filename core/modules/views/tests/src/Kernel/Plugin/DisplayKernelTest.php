@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\views\Kernel\Plugin;
 
 use Drupal\views\Views;
@@ -20,9 +22,7 @@ use Drupal\views\Plugin\views\row\RowPluginBase;
 class DisplayKernelTest extends ViewsKernelTestBase {
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = ['block', 'node', 'field', 'user'];
 
@@ -61,7 +61,7 @@ class DisplayKernelTest extends ViewsKernelTestBase {
   /**
    * Tests the default display options.
    */
-  public function testDefaultOptions() {
+  public function testDefaultOptions(): void {
     // Save the view.
     $view = Views::getView('test_display_defaults');
     $view->mergeDefaults();
@@ -89,7 +89,7 @@ class DisplayKernelTest extends ViewsKernelTestBase {
   /**
    * Tests the \Drupal\views\Plugin\views\display\DisplayPluginBase::getPlugin() method.
    */
-  public function testGetPlugin() {
+  public function testGetPlugin(): void {
     $view = Views::getView('test_display_defaults');
     $view->initDisplay();
     $display_handler = $view->display_handler;
@@ -118,7 +118,7 @@ class DisplayKernelTest extends ViewsKernelTestBase {
   /**
    * Tests the ::isIdentifierUnique method.
    */
-  public function testisIdentifierUnique() {
+  public function testisIdentifierUnique(): void {
     $view = Views::getView('test_view');
     $view->initDisplay();
 
@@ -130,7 +130,10 @@ class DisplayKernelTest extends ViewsKernelTestBase {
         'table' => 'views_test_data',
         'plugin_id' => 'standard',
         'order' => 'asc',
-        'expose' => ['label' => 'id'],
+        'expose' => [
+          'label' => 'Id',
+          'field_identifier' => 'name',
+        ],
         'exposed' => TRUE,
       ],
     ];
@@ -156,10 +159,16 @@ class DisplayKernelTest extends ViewsKernelTestBase {
     ];
     $view->display_handler->setOption('sorts', $sorts);
     $view->display_handler->setOption('filters', $filters);
-    $view->save();
 
     $this->assertTrue($view->display_handler->isIdentifierUnique('some_id', 'some_id'));
     $this->assertFalse($view->display_handler->isIdentifierUnique('some_id', 'id'));
+
+    // Check that an exposed filter is able to use the same identifier as an
+    // exposed sort.
+    $sorts['name']['expose']['field_identifier'] = 'id';
+    $view->display_handler->handlers = [];
+    $view->display_handler->setOption('sorts', $sorts);
+    $this->assertTrue($view->display_handler->isIdentifierUnique('id', 'id'));
   }
 
 }

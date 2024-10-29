@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\migrate_drupal\Traits;
 
 use Drupal\Component\Discovery\YamlDiscovery;
@@ -30,7 +32,7 @@ trait ValidateMigrationStateTestTrait {
    * made for the two cases where migrations are yet to be written and where
    * migrations are not needed.
    */
-  public function testMigrationState() {
+  public function testMigrationState(): void {
 
     // Level separator of destination and source properties.
     $separator = ',';
@@ -90,10 +92,12 @@ trait ValidateMigrationStateTestTrait {
       return $value . '/migrations/state/';
     }, \Drupal::moduleHandler()->getModuleDirectories())))->findAll();
 
-    $declared = [];
-    $states = [MigrationState::FINISHED, MigrationState::NOT_FINISHED];
+    $declared = [
+      MigrationState::FINISHED => [],
+      MigrationState::NOT_FINISHED => [],
+    ];
     foreach ($system_info as $module => $info) {
-      foreach ($states as $state) {
+      foreach (array_keys($declared) as $state) {
         if (isset($info[$state][$version])) {
           foreach ($info[$state][$version] as $source => $destination) {
             // Do not add the source module i18nstrings or i18_string. The

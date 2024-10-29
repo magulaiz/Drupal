@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\entity_test_revlog\Entity;
 
 use Drupal\Core\Entity\EntityPublishedInterface;
@@ -41,7 +43,7 @@ class EntityTestMulWithRevisionLogPub extends EntityTestWithRevisionLog implemen
    * {@inheritdoc}
    */
   public static function baseFieldDefinitions(EntityTypeInterface $entity_type) {
-    return parent::baseFieldDefinitions($entity_type) + EntityPublishedTrait::publishedBaseFieldDefinitions($entity_type);
+    return parent::baseFieldDefinitions($entity_type) + static::publishedBaseFieldDefinitions($entity_type);
   }
 
 }

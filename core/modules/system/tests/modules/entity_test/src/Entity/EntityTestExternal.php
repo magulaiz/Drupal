@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\entity_test\Entity;
 
 use Drupal\Core\Url;
@@ -26,7 +28,7 @@ class EntityTestExternal extends EntityTest {
   /**
    * {@inheritdoc}
    */
-  public function toUrl($rel = 'canonical', array $options = []) {
+  public function toUrl($rel = NULL, array $options = []) {
     if ($rel === 'canonical') {
       return Url::fromUri('http://example.com', $options);
     }

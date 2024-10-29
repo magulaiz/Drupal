@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\Tests\jsonapi\Functional;
 
 use Drupal\block_content\Entity\BlockContentType;
@@ -10,7 +12,7 @@ use Drupal\Core\Url;
  *
  * @group jsonapi
  */
-class BlockContentTypeTest extends ResourceTestBase {
+class BlockContentTypeTest extends ConfigEntityResourceTestBase {
 
   /**
    * {@inheritdoc}
@@ -42,8 +44,8 @@ class BlockContentTypeTest extends ResourceTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUpAuthorization($method) {
-    $this->grantPermissionsToTestedRole(['administer blocks']);
+  protected function setUpAuthorization($method): void {
+    $this->grantPermissionsToTestedRole(['administer block types']);
   }
 
   /**
@@ -65,7 +67,7 @@ class BlockContentTypeTest extends ResourceTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function getExpectedDocument() {
+  protected function getExpectedDocument(): array {
     $self_url = Url::fromUri('base:/jsonapi/block_content_type/block_content_type/' . $this->entity->uuid())->setAbsolute()->toString(TRUE)->getGeneratedUrl();
     return [
       'jsonapi' => [
@@ -90,7 +92,7 @@ class BlockContentTypeTest extends ResourceTestBase {
           'description' => 'Provides a competitive alternative to the "basic" type',
           'label' => 'Pascal',
           'langcode' => 'en',
-          'revision' => 0,
+          'revision' => FALSE,
           'status' => TRUE,
           'drupal_internal__id' => 'pascal',
         ],
@@ -101,8 +103,9 @@ class BlockContentTypeTest extends ResourceTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function getPostDocument() {
+  protected function getPostDocument(): array {
     // @todo Update in https://www.drupal.org/node/2300677.
+    return [];
   }
 
 }
