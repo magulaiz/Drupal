@@ -45,21 +45,10 @@ class BlockRebuildTest extends KernelTestBase {
   }
 
   /**
-   * {@inheritdoc}
-   */
-  public static function setUpBeforeClass(): void {
-    parent::setUpBeforeClass();
-
-    // @todo Once block_rebuild() is refactored to auto-loadable code, remove
-    //   this require statement.
-    require_once static::getDrupalRoot() . '/core/modules/block/block.module';
-  }
-
-  /**
    * @covers ::block_rebuild
    */
   public function testRebuildNoBlocks(): void {
-    block_rebuild();
+    \Drupal::moduleHandler()->invoke('block', 'rebuild');
     $messages = \Drupal::messenger()->all();
     \Drupal::messenger()->deleteAll();
     $this->assertEquals([], $messages);
@@ -71,7 +60,7 @@ class BlockRebuildTest extends KernelTestBase {
   public function testRebuildNoInvalidBlocks(): void {
     $this->placeBlock('system_powered_by_block', ['region' => 'content']);
 
-    block_rebuild();
+    \Drupal::moduleHandler()->invoke('block', 'rebuild');
     $messages = \Drupal::messenger()->all();
     \Drupal::messenger()->deleteAll();
     $this->assertEquals([], $messages);
@@ -102,7 +91,7 @@ class BlockRebuildTest extends KernelTestBase {
     $this->assertSame('INVALID', $block2->getRegion());
     $this->assertFalse($block2->status());
 
-    block_rebuild();
+    \Drupal::moduleHandler()->invoke('block', 'rebuild');
 
     // Reload block entities.
     $block1 = Block::load($block1->id());
