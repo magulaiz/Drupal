@@ -4,6 +4,16 @@ namespace Drupal\Core\Entity\Sql;
 
 /**
  * Interface for field storage definitions that support storage mapping.
+ *
+ * Field storage definitions may control the mapping of properties to storage
+ * columns. Such definitions must implement this interface. Drupal's default
+ * field storage attempts to further delegate to field item classes which
+ * implement \Drupal\Core\Entity\FieldItemStorageMapperInterface.
+ *
+ * @see https://www.drupal.org/node/3377624
+ * @see \Drupal\Core\Entity\Sql\SqlContentEntityStorage::saveToDedicatedTables
+ * @see \Drupal\Core\Entity\Sql\StorageMapperDelegatorTrait
+ * @see \Drupal\Core\Entity\FieldItemStorageMapperInterface
  */
 interface StorageMapperInterface {
 

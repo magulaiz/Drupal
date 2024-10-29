@@ -1439,7 +1439,7 @@ class SqlContentEntityStorage extends ContentEntityStorageBase implements SqlEnt
             'delta' => $delta,
             'langcode' => $langcode,
           ];
-          // Try field item mapping.
+          // Try field item mapping. Storage definitions
           if ($storage_definition instanceof StorageMapperInterface) {
             $item_value = $item ? $item->getValue() : [];
             $maybe_mapped_columns = $this->mapColumnsOnSave(
