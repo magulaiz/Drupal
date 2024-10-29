@@ -18,9 +18,10 @@ class HookOrder {
    *   The container builder.
    * @param string $hook
    *   The name of the hook.
-   * @param array $class_and_method
-   *   First element is the class, second is the method containing the hook
-   *   implementation.
+   * @param string $class
+   *   Class containing the hook implementation which should be changed.
+   * @param string $method
+   *   Method which should be changed.
    *
    * @return void
    */
@@ -35,6 +36,10 @@ class HookOrder {
    *   The container builder.
    * @param string $hook
    *   The name of the hook.
+   * @param string $class
+   *   Class containing the hook implementation which should be changed.
+   * @param string $method
+   *   Method which should be changed.
    *
    * @return void
    */
@@ -53,9 +58,10 @@ class HookOrder {
    *   The container builder.
    * @param string $hook
    *   The name of the hook.
-   * @param string $class_and_method
-   *   Class and method separated by :: containing the hook implementation which
-   *   should be changed.
+   * @param string $class
+   *   Class containing the hook implementation which should be changed.
+   * @param string $method
+   *   Method which should be changed.
    * @param string ...$others
    *   A list specifying the other implementations this hook should fire
    *   before. Every list member is a class and method separated by ::.
@@ -77,9 +83,10 @@ class HookOrder {
    *   The container builder.
    * @param string $hook
    *   The name of the hook.
-   * @param string $class_and_method
-   *   Class and method separated by :: containing the hook implementation which
-   *   should be changed.
+   * @param string $class
+   *   Class containing the hook implementation which should be changed.
+   * @param string $method
+   *   Method which should be changed.
    * @param string ...$others
    *   A list specifying the other implementations this hook should fire
    *   before. Every list member is a class and method separated by ::.
@@ -112,7 +119,6 @@ class HookOrder {
   protected static function changePriority(ContainerBuilder $container, string $hook, string $class_and_method, bool $should_be_larger, ?array $others = NULL): void {
     if (isset($others)) {
       $mapped = [];
-      file_put_contents('/tmp/log.txt', print_r($others, TRUE), \FILE_APPEND);
       for ($i = 0; $i < count($others); $i += 2) {
         $mapped[$others[$i] . '::' . $others[$i + 1]] = TRUE;
       }
