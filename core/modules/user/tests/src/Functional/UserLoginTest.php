@@ -387,7 +387,7 @@ class UserLoginTest extends BrowserTestBase {
   /**
    * Test that login credentials work with each method.
    */
-  public function testLoginByEmail() {
+  public function testLoginByEmail(): void {
 
     $account = $this->drupalCreateUser([]);
 
