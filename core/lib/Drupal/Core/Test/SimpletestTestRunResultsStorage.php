@@ -6,6 +6,8 @@ use Drupal\Core\Database\Database;
 use Drupal\Core\Database\Connection;
 use Drupal\Core\Database\ConnectionNotDefinedException;
 
+// cspell:ignore sttid
+
 /**
  * Implements a test run results storage compatible with legacy Simpletest.
  *
@@ -64,7 +66,7 @@ class SimpletestTestRunResultsStorage implements TestRunResultsStorageInterface 
   }
 
   /**
-   * @todo
+   * @todo Add doc.
    */
   public function getTestConfiguration(int|string $testId): array {
     $raw = $this->connection->select('simpletest_test_id', 'sttid')

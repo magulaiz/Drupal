@@ -26,7 +26,7 @@ class TestRun {
   protected $testClass;
 
   /**
-   * @todo
+   * @todo Add doc.
    */
   public readonly bool $failOnDeprecation;
   public readonly ?string $testFilePath;
@@ -57,7 +57,7 @@ class TestRun {
     try {
       $this->testFilePath = (new \ReflectionClass($this->testClassName))->getFileName();
     }
-    catch (\ReflectionException $e) {
+    catch (\ReflectionException) {
       $this->testFilePath = NULL;
     }
 
